@@ -175,7 +175,11 @@ def publish(args):
         if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}', asset_id) or asset_id in assets:
             raise ValueError('Invalid or duplicate asset id')
         if item.get('existing_sha256'):
-            file = ((state.get('manifest') or {}).get('assets') or {}).get(asset_id)
+            current = ((state.get('manifest') or {}).get('assets') or {})
+            file = current.get(asset_id)
+            if not file:
+                # The same stored bytes under another name in this build: reuse that file, never re-upload it.
+                file = next((f for f in current.values() if f.get('sha256') == item['existing_sha256']), None)
             if not file or file.get('sha256') != item['existing_sha256']:
                 raise ValueError(f'Existing asset {asset_id} changed or is missing; refresh the mapping')
         else:

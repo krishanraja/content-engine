@@ -18,8 +18,9 @@ export interface FWPMockProps {
   posterPosition?: string
 }
 export const FWP_SPLIT_SEAM_Y = 760
-export const FWP_STAGE_SCALE = 0.76
-const STAGE_LEFT = (1080 - 1080 * FWP_STAGE_SCALE) / 2
+// Frozen mocks only. Real beats never use this stage scale.
+export const FWP_MOCK_STAGE_SCALE = 0.76
+const STAGE_LEFT = (1080 - 1080 * FWP_MOCK_STAGE_SCALE) / 2
 export const FWP_SPLIT_CAPTION_ZONE = { left: 72, top: 1460, width: 900, height: 180 } as const
 /** Poster crop defaults for the Thursday still; override after camera-plate review. */
 export const FWP_POSTER_POSITIONS = { hook: '50% 88%', face: '50% 0%', proof: '50% 88%', close: '50% 88%' } as const
@@ -63,7 +64,7 @@ function Frame({ children, caption, face = false, tokens, posterSrc, logoSrc, se
     {!face && <div data-proof-stage style={{ position: 'absolute', left: 0, top: 0, width: 1080, height: FWP_SPLIT_SEAM_Y,
       background: tokens.cream, overflow: 'hidden' }}>
       <div data-stage-graphics style={{ position: 'absolute', left: STAGE_LEFT, top: 0,
-        width: 1080, height: 1000, transform: `scale(${FWP_STAGE_SCALE})`,
+        width: 1080, height: 1000, transform: `scale(${FWP_MOCK_STAGE_SCALE})`,
         transformOrigin: 'top left', overflow: 'hidden' }}>{children}</div>
     </div>}
     <header style={{ position: 'absolute', left: 72, top: 79, width: 888, height: 56,
@@ -91,8 +92,8 @@ export const FWP_TARGETS = {
 /** Frame-pixel targets after the same centred transform as the stage graphics.
  * Device parameters retain stage coordinates to avoid applying the scale twice. */
 export const FWP_SCALED_TARGETS = Object.fromEntries(Object.entries(FWP_TARGETS).map(([name, t]) => [name, {
-  x: STAGE_LEFT + t.x * FWP_STAGE_SCALE, y: t.y * FWP_STAGE_SCALE,
-  w: t.w * FWP_STAGE_SCALE, h: t.h * FWP_STAGE_SCALE,
+  x: STAGE_LEFT + t.x * FWP_MOCK_STAGE_SCALE, y: t.y * FWP_MOCK_STAGE_SCALE,
+  w: t.w * FWP_MOCK_STAGE_SCALE, h: t.h * FWP_MOCK_STAGE_SCALE,
 }])) as Record<keyof typeof FWP_TARGETS, { x: number; y: number; w: number; h: number }>
 function Annotation({ tokens, name, params }: { tokens: EngineTokens; name: keyof typeof FWP_TARGETS;
   params: EngineObject['params'] }) {
