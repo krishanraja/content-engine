@@ -113,7 +113,10 @@ describe('word caption build', () => {
     const at12 = renderToStaticMarkup(createElement(WordCaption, { props: word, frame: 12 }))
     expect(at12).toContain('First')
     expect(at12).not.toContain('answer')
-    expect(renderToStaticMarkup(createElement(WordCaption, { props: word, frame: 16 }))).toContain('italic')
+    // The loud word is the upright house serif, never italic (Krish, 2026-11-03: "add the upright Fraunces to the kit").
+    const loud = renderToStaticMarkup(createElement(WordCaption, { props: word, frame: 16 }))
+    expect(loud).toContain('MYMU Fraunces')
+    expect(loud).not.toContain('italic')
     expect(WORD_CAPTION.tall.centerY - WORD_CAPTION.tall.size).toBeGreaterThan(1300)
     expect(renderToStaticMarkup(createElement(HeldTitle, { props: word, frame: 12 }))).toContain('Give your AI two rules')
   })
