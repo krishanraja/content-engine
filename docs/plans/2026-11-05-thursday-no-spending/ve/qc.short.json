@@ -1,6 +1,6 @@
 {
   "file": ".cache/produce/2026-11-05-no-spending/out/thu-short.mp4",
-  "sha256": "cfe4ece225028e7a7a45a651a084c20a11bc4cf4cb6ba703547791a2f1cd19a7",
+  "sha256": "806e66ecee03a752d9195efac5c997dddfc576aa5a44153d3f3addcce4de29ff",
   "duration_s": 47.51,
   "format": "face-with-proof",
   "checks": {
@@ -196,7 +196,7 @@
         {
           "page": 11,
           "frame": 519,
-          "text": "it can",
+          "text": "itcan",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
@@ -236,9 +236,9 @@
         {
           "page": 16,
           "frame": 644,
-          "text": "sending rule.",
+          "text": "sending [rule.]",
           "agreement": 1.0,
-          "variant": "normalised",
+          "variant": "highlight",
           "pass": true
         },
         {
@@ -427,7 +427,7 @@
         {
           "beat": "hook",
           "frame": 87,
-          "score": 0.978065196567882,
+          "score": 0.9784497601514062,
           "pass": true
         },
         {
@@ -445,25 +445,25 @@
         {
           "beat": "b4-8am",
           "frame": 528,
-          "score": 0.9780193950986293,
+          "score": 0.9780176115669423,
           "pass": true
         },
         {
           "beat": "b5-rule",
           "frame": 599,
-          "score": 0.978434810342501,
+          "score": 0.978549271192353,
           "pass": true
         },
         {
           "beat": "own-words",
           "frame": 704,
-          "score": 0.9780394413699538,
+          "score": 0.978067102469719,
           "pass": true
         },
         {
           "beat": "b7-prompt",
           "frame": 924,
-          "score": 0.977966289234067,
+          "score": 0.9780297433036134,
           "pass": true
         },
         {
@@ -484,8 +484,8 @@
           "atFrame": 0,
           "peak_frame": 4,
           "lag_frames": 4,
-          "peak_difference": 0.5724142789840698,
-          "event_difference": 0.5039637088775635,
+          "peak_difference": 0.1876591145992279,
+          "event_difference": 0.16993489861488342,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -493,10 +493,10 @@
         {
           "event": "hook-1",
           "atFrame": 0,
-          "peak_frame": 1,
-          "lag_frames": 1,
-          "peak_difference": 0.00163010333199054,
-          "event_difference": 0.00163010333199054,
+          "peak_frame": 5,
+          "lag_frames": 5,
+          "peak_difference": 0.000535768223926425,
+          "event_difference": 0.00021943698811810464,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -504,10 +504,10 @@
         {
           "event": "hook-2",
           "atFrame": 0,
-          "peak_frame": 1,
-          "lag_frames": 1,
-          "peak_difference": 0.00163010333199054,
-          "event_difference": 0.00163010333199054,
+          "peak_frame": 5,
+          "lag_frames": 5,
+          "peak_difference": 0.000535768223926425,
+          "event_difference": 0.00021943698811810464,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -517,8 +517,8 @@
           "atFrame": 88,
           "peak_frame": 89,
           "lag_frames": 1,
-          "peak_difference": 19.621835708618164,
-          "event_difference": 19.621835708618164,
+          "peak_difference": 19.639318466186523,
+          "event_difference": 19.639318466186523,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -526,11 +526,11 @@
         {
           "event": "hook-4",
           "atFrame": 128,
-          "peak_frame": 134,
-          "lag_frames": 6,
-          "peak_difference": 7.95334529876709,
-          "event_difference": 7.845205307006836,
-          "threshold": 0.6705880612134933,
+          "peak_frame": 129,
+          "lag_frames": 1,
+          "peak_difference": 8.389330863952637,
+          "event_difference": 8.389330863952637,
+          "threshold": 0.23177048563957214,
           "gradual": false,
           "pass": true
         },
@@ -572,9 +572,20 @@
           "atFrame": 458,
           "peak_frame": 458,
           "lag_frames": 0,
-          "peak_difference": 1.9024549722671509,
-          "event_difference": 1.9024549722671509,
-          "threshold": 0.0003289473752374761,
+          "peak_difference": 1.9020321369171143,
+          "event_difference": 1.9020321369171143,
+          "threshold": 0.0003106725125689991,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "proof-4",
+          "atFrame": 458,
+          "peak_frame": 459,
+          "lag_frames": 1,
+          "peak_difference": 13.067315101623535,
+          "event_difference": 13.067315101623535,
+          "threshold": 0.0013224889116827399,
           "gradual": false,
           "pass": true
         },
@@ -583,9 +594,9 @@
           "atFrame": 504,
           "peak_frame": 504,
           "lag_frames": 0,
-          "peak_difference": 6.911404609680176,
-          "event_difference": 6.911404609680176,
-          "threshold": 0.0029892328893765807,
+          "peak_difference": 5.031867504119873,
+          "event_difference": 5.031867504119873,
+          "threshold": 0.00027859348483616486,
           "gradual": false,
           "pass": true
         },
@@ -594,8 +605,8 @@
           "atFrame": 504,
           "peak_frame": 504,
           "lag_frames": 0,
-          "peak_difference": 6.911404609680176,
-          "event_difference": 6.911404609680176,
+          "peak_difference": 5.031867504119873,
+          "event_difference": 5.031867504119873,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -605,8 +616,8 @@
           "atFrame": 528,
           "peak_frame": 534,
           "lag_frames": 6,
-          "peak_difference": 5.284049987792969,
-          "event_difference": 3.383537769317627,
+          "peak_difference": 5.277659893035889,
+          "event_difference": 3.374314069747925,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -616,8 +627,8 @@
           "atFrame": 534,
           "peak_frame": 534,
           "lag_frames": 0,
-          "peak_difference": 5.284049987792969,
-          "event_difference": 5.284049987792969,
+          "peak_difference": 5.277659893035889,
+          "event_difference": 5.277659893035889,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -627,9 +638,9 @@
           "atFrame": 594,
           "peak_frame": 598,
           "lag_frames": 4,
-          "peak_difference": 25.561357498168945,
-          "event_difference": 5.895991802215576,
-          "threshold": 0.009133348474279046,
+          "peak_difference": 25.50328826904297,
+          "event_difference": 5.899904727935791,
+          "threshold": 0.007145546609535813,
           "gradual": false,
           "pass": true
         },
@@ -638,9 +649,9 @@
           "atFrame": 598,
           "peak_frame": 598,
           "lag_frames": 0,
-          "peak_difference": 62.59100341796875,
-          "event_difference": 62.59100341796875,
-          "threshold": 0.0006923431938048452,
+          "peak_difference": 62.49365234375,
+          "event_difference": 62.49365234375,
+          "threshold": 0.00019231755140936002,
           "gradual": false,
           "pass": true
         },
@@ -649,9 +660,9 @@
           "atFrame": 625,
           "peak_frame": 625,
           "lag_frames": 0,
-          "peak_difference": 25.7857723236084,
-          "event_difference": 25.7857723236084,
-          "threshold": 0.07759553007781506,
+          "peak_difference": 25.791461944580078,
+          "event_difference": 25.791461944580078,
+          "threshold": 0.08700432814657688,
           "gradual": false,
           "pass": true
         },
@@ -660,9 +671,9 @@
           "atFrame": 625,
           "peak_frame": 625,
           "lag_frames": 0,
-          "peak_difference": 60.32496643066406,
-          "event_difference": 60.32496643066406,
-          "threshold": 0.00030770809098612517,
+          "peak_difference": 60.3249397277832,
+          "event_difference": 60.3249397277832,
+          "threshold": 0.0007308066997211426,
           "gradual": false,
           "pass": true
         },
@@ -671,8 +682,8 @@
           "atFrame": 642,
           "peak_frame": 646,
           "lag_frames": 4,
-          "peak_difference": 73.72443389892578,
-          "event_difference": 9.170777320861816,
+          "peak_difference": 73.6473388671875,
+          "event_difference": 9.141402244567871,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -682,8 +693,8 @@
           "atFrame": 885,
           "peak_frame": 891,
           "lag_frames": 6,
-          "peak_difference": 32.672420501708984,
-          "event_difference": 3.041079044342041,
+          "peak_difference": 27.34539031982422,
+          "event_difference": 10.0495023727417,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -693,8 +704,8 @@
           "atFrame": 885,
           "peak_frame": 891,
           "lag_frames": 6,
-          "peak_difference": 32.49530792236328,
-          "event_difference": 3.5884788036346436,
+          "peak_difference": 32.21915054321289,
+          "event_difference": 5.327517032623291,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -704,8 +715,8 @@
           "atFrame": 885,
           "peak_frame": 891,
           "lag_frames": 6,
-          "peak_difference": 14.583284378051758,
-          "event_difference": 1.978958010673523,
+          "peak_difference": 14.3631010055542,
+          "event_difference": 2.6551637649536133,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -715,8 +726,8 @@
           "atFrame": 885,
           "peak_frame": 891,
           "lag_frames": 6,
-          "peak_difference": 10.82657527923584,
-          "event_difference": 1.8812018632888794,
+          "peak_difference": 10.914019584655762,
+          "event_difference": 2.8277363777160645,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -726,8 +737,8 @@
           "atFrame": 899,
           "peak_frame": 899,
           "lag_frames": 0,
-          "peak_difference": 3.9839630126953125,
-          "event_difference": 3.9839630126953125,
+          "peak_difference": 3.961697816848755,
+          "event_difference": 3.961697816848755,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -737,8 +748,8 @@
           "atFrame": 953,
           "peak_frame": 953,
           "lag_frames": 0,
-          "peak_difference": 2.533686876296997,
-          "event_difference": 2.533686876296997,
+          "peak_difference": 2.5076935291290283,
+          "event_difference": 2.5076935291290283,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -748,8 +759,8 @@
           "atFrame": 966,
           "peak_frame": 966,
           "lag_frames": 0,
-          "peak_difference": 4.229275226593018,
-          "event_difference": 4.229275226593018,
+          "peak_difference": 4.231561183929443,
+          "event_difference": 4.231561183929443,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -759,8 +770,8 @@
           "atFrame": 1014,
           "peak_frame": 1012,
           "lag_frames": -2,
-          "peak_difference": 5.583628177642822,
-          "event_difference": 5.583628177642822,
+          "peak_difference": 5.585724830627441,
+          "event_difference": 5.585724830627441,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -770,8 +781,8 @@
           "atFrame": 1021,
           "peak_frame": 1021,
           "lag_frames": 0,
-          "peak_difference": 5.233922958374023,
-          "event_difference": 5.233922958374023,
+          "peak_difference": 5.270995616912842,
+          "event_difference": 5.270995616912842,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -792,8 +803,8 @@
           "atFrame": 1128,
           "peak_frame": 1128,
           "lag_frames": 0,
-          "peak_difference": 60.3151969909668,
-          "event_difference": 60.3151969909668,
+          "peak_difference": 60.31525802612305,
+          "event_difference": 60.31525802612305,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -804,7 +815,7 @@
           "peak_frame": 1128,
           "lag_frames": -6,
           "peak_difference": 48.15259552001953,
-          "event_difference": 9.202676773071289,
+          "event_difference": 9.218668937683105,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -814,9 +825,9 @@
           "atFrame": 1201,
           "peak_frame": 1202,
           "lag_frames": 1,
-          "peak_difference": 4.518289089202881,
-          "event_difference": 4.518289089202881,
-          "threshold": 0.09107786603271961,
+          "peak_difference": 8.598738670349121,
+          "event_difference": 8.598738670349121,
+          "threshold": 0.08696827478706837,
           "gradual": false,
           "pass": true
         }
@@ -1591,7 +1602,7 @@
             "text": "sending rule.",
             "change_frame": 631,
             "frame": 642,
-            "read": "sending rule.",
+            "read": "sending [rule.]",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -1911,7 +1922,7 @@
     "keyframe_match": {
       "value": {
         "hook": {
-          "ssim": 0.7865967987838756,
+          "ssim": 0.7880411383962379,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
@@ -1925,7 +1936,7 @@
           "frame": 328
         },
         "proof": {
-          "ssim": 0.8610498037875781,
+          "ssim": 0.8518160614981619,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
@@ -1978,7 +1989,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 99.95
+              "value": 99.94
             },
             "small_text": {
               "pass": true,
@@ -2219,7 +2230,7 @@
     "pass": true,
     "beats": {
       "hook": {
-        "ssim": 0.7865967987838756,
+        "ssim": 0.7880411383962379,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
@@ -2233,7 +2244,7 @@
         "frame": 328
       },
       "proof": {
-        "ssim": 0.8610498037875781,
+        "ssim": 0.8518160614981619,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
@@ -2286,7 +2297,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 99.95
+            "value": 99.94
           },
           "small_text": {
             "pass": true,
