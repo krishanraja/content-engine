@@ -1231,29 +1231,37 @@
     {
       "obj": "ask",
       "device": "typing_bubble",
-      "meaning": "his AI tool asking him its questions back, and his three picks",
+      "meaning": "his AI tool asking him its question back, and his three answers staying on screen as its rules",
       "fromFrame": 767,
       "toFrame": 1085,
       "variants": {},
       "params": {
-        "kind": "choice",
+        "kind": "chat",
         "rows": [
           {
-            "who": "AI",
-            "text": "Before I act for you, which of these should need your yes?"
+            "who": "Your AI",
+            "text": "Before I act for you, which of these should need your yes?",
+            "side": "left"
+          },
+          {
+            "text": "Approve every individual send",
+            "side": "right"
+          },
+          {
+            "text": "Approve every financial commitment",
+            "side": "right"
+          },
+          {
+            "text": "Zero unapproved usage costs",
+            "side": "right"
           }
         ],
-        "options": [
-          "Approve every individual send",
-          "Approve every financial commitment",
-          "Zero unapproved usage costs"
-        ],
         "place": {
-          "left": 56,
-          "top": 200,
+          "left": 139,
+          "top": 52,
           "width": 920,
-          "height": 560,
-          "scale": 1
+          "height": 100,
+          "scale": 0.95
         }
       }
     }
@@ -1388,22 +1396,22 @@
     {
       "id": "b7-prompt-2",
       "obj": "ask",
-      "verb": "pick",
-      "toState": "0",
+      "verb": "type",
+      "toState": "1",
       "atFrame": 953
     },
     {
       "id": "b7-prompt-3",
       "obj": "ask",
-      "verb": "pick",
-      "toState": "1",
+      "verb": "type",
+      "toState": "2",
       "atFrame": 967
     },
     {
       "id": "b7-prompt-4",
       "obj": "ask",
-      "verb": "pick",
-      "toState": "2",
+      "verb": "type",
+      "toState": "3",
       "atFrame": 1016
     },
     {

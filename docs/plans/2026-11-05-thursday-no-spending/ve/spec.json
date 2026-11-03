@@ -258,30 +258,38 @@
   {
    "obj": "ask",
    "device": "typing_bubble",
-   "meaning": "his AI tool asking him its questions back, and his three picks",
+   "meaning": "his AI tool asking him its question back, and his three answers staying on screen as its rules",
    "persist": {
     "from_beat": "b7-prompt",
     "to_beat": "b7-prompt"
    },
    "params": {
-    "kind": "choice",
+    "kind": "chat",
     "rows": [
      {
-      "who": "AI",
-      "text": "Before I act for you, which of these should need your yes?"
+      "who": "Your AI",
+      "text": "Before I act for you, which of these should need your yes?",
+      "side": "left"
+     },
+     {
+      "text": "Approve every individual send",
+      "side": "right"
+     },
+     {
+      "text": "Approve every financial commitment",
+      "side": "right"
+     },
+     {
+      "text": "Zero unapproved usage costs",
+      "side": "right"
      }
     ],
-    "options": [
-     "Approve every individual send",
-     "Approve every financial commitment",
-     "Zero unapproved usage costs"
-    ],
     "place": {
-     "left": 56,
-     "top": 200,
+     "left": 139,
+     "top": 52,
      "width": 920,
-     "height": 560,
-     "scale": 1
+     "height": 100,
+     "scale": 0.95
     }
    }
   }
@@ -588,22 +596,22 @@
       {
        "at_w": 101,
        "obj": "ask",
-       "verb": "pick",
-       "to_state": "0",
+       "verb": "type",
+       "to_state": "1",
        "silent": true
       },
       {
        "at_w": 103,
        "obj": "ask",
-       "verb": "pick",
-       "to_state": "1",
+       "verb": "type",
+       "to_state": "2",
        "silent": true
       },
       {
        "at_w": 111,
        "obj": "ask",
-       "verb": "pick",
-       "to_state": "2",
+       "verb": "type",
+       "to_state": "3",
        "silent": true
       },
       {

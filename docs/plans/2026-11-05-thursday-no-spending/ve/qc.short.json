@@ -1,6 +1,6 @@
 {
   "file": ".cache/produce/2026-11-05-no-spending/out/thu-short.mp4",
-  "sha256": "a1161f27924a8bf6b9c11d9c0e8c38400da3b4f537a4164e9a58c03da825c583",
+  "sha256": "8ec3e27cec0593f23cec77c98a6b5f7d9d72ebfe095ab8e8bd23d67b50998e87",
   "duration_s": 47.47,
   "format": "face-with-proof",
   "checks": {
@@ -455,6 +455,7 @@
           "peak_difference": 5.155863285064697,
           "event_difference": 1.021462321281433,
           "threshold": 1e-06,
+          "gradual": false,
           "pass": true
         },
         {
@@ -465,6 +466,7 @@
           "peak_difference": 2.1652424335479736,
           "event_difference": 2.0309903621673584,
           "threshold": 1e-06,
+          "gradual": false,
           "pass": true
         },
         {
@@ -474,7 +476,8 @@
           "lag_frames": 0,
           "peak_difference": 6.709559917449951,
           "event_difference": 6.709559917449951,
-          "threshold": 0.006193057866767049,
+          "threshold": 1e-06,
+          "gradual": true,
           "pass": true
         },
         {
@@ -482,9 +485,10 @@
           "atFrame": 86,
           "peak_frame": 87,
           "lag_frames": 1,
-          "peak_difference": 0.3177960515022278,
-          "event_difference": 0.3177960515022278,
-          "threshold": 0.0045211989199742675,
+          "peak_difference": 19.626554489135742,
+          "event_difference": 19.626554489135742,
+          "threshold": 0.009009009227156639,
+          "gradual": false,
           "pass": true
         },
         {
@@ -495,6 +499,7 @@
           "peak_difference": 7.929934501647949,
           "event_difference": 7.929934501647949,
           "threshold": 0.6697354316711426,
+          "gradual": false,
           "pass": true
         },
         {
@@ -505,6 +510,7 @@
           "peak_difference": 68.1161117553711,
           "event_difference": 68.1161117553711,
           "threshold": 1.424941509962082,
+          "gradual": false,
           "pass": true
         },
         {
@@ -515,6 +521,7 @@
           "peak_difference": 3.649446964263916,
           "event_difference": 3.649446964263916,
           "threshold": 6.578947613888886e-05,
+          "gradual": false,
           "pass": true
         },
         {
@@ -522,9 +529,10 @@
           "atFrame": 410,
           "peak_frame": 411,
           "lag_frames": 1,
-          "peak_difference": 3.649446964263916,
-          "event_difference": 3.649446964263916,
-          "threshold": 6.578947613888886e-05,
+          "peak_difference": 20.859111785888672,
+          "event_difference": 20.859111785888672,
+          "threshold": 1e-06,
+          "gradual": false,
           "pass": true
         },
         {
@@ -535,6 +543,7 @@
           "peak_difference": 10.091891288757324,
           "event_difference": 10.091891288757324,
           "threshold": 0.0004439839976839721,
+          "gradual": false,
           "pass": true
         },
         {
@@ -544,7 +553,8 @@
           "lag_frames": 0,
           "peak_difference": 10.091891288757324,
           "event_difference": 10.091891288757324,
-          "threshold": 0.0004439839976839721,
+          "threshold": 1e-06,
+          "gradual": true,
           "pass": true
         },
         {
@@ -554,8 +564,9 @@
           "lag_frames": -6,
           "peak_difference": 1.1804503202438354,
           "event_difference": 0.5818253755569458,
-          "threshold": 2.9550769329071045,
-          "pass": false
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
         },
         {
           "event": "b4-8am-3",
@@ -564,8 +575,9 @@
           "lag_frames": 0,
           "peak_difference": 0.11157453060150146,
           "event_difference": 0.11157453060150146,
-          "threshold": 0.24589987099170685,
-          "pass": false
+          "threshold": 1e-06,
+          "gradual": true,
+          "pass": true
         },
         {
           "event": "b5-rule-0",
@@ -575,6 +587,7 @@
           "peak_difference": 60.89363479614258,
           "event_difference": 60.89363479614258,
           "threshold": 1e-06,
+          "gradual": false,
           "pass": true
         },
         {
@@ -585,6 +598,7 @@
           "peak_difference": 24.901737213134766,
           "event_difference": 24.901737213134766,
           "threshold": 0.09363734722137451,
+          "gradual": false,
           "pass": true
         },
         {
@@ -595,26 +609,29 @@
           "peak_difference": 60.26205062866211,
           "event_difference": 60.26205062866211,
           "threshold": 1e-06,
+          "gradual": false,
           "pass": true
         },
         {
           "event": "b5-rule-3",
           "atFrame": 641,
-          "peak_frame": 635,
-          "lag_frames": -6,
-          "peak_difference": 1.5882724523544312,
-          "event_difference": 0.12567372620105743,
-          "threshold": 4.291154980659485,
-          "pass": false
+          "peak_frame": 642,
+          "lag_frames": 1,
+          "peak_difference": 8.642370223999023,
+          "event_difference": 8.642370223999023,
+          "threshold": 0.024745392613112926,
+          "gradual": false,
+          "pass": true
         },
         {
           "event": "b7-prompt-0",
           "atFrame": 855,
           "peak_frame": 857,
           "lag_frames": 2,
-          "peak_difference": 5.947889804840088,
-          "event_difference": 5.947889804840088,
+          "peak_difference": 5.673440933227539,
+          "event_difference": 5.673440933227539,
           "threshold": 1e-06,
+          "gradual": false,
           "pass": true
         },
         {
@@ -622,9 +639,10 @@
           "atFrame": 912,
           "peak_frame": 912,
           "lag_frames": 0,
-          "peak_difference": 10.293339729309082,
-          "event_difference": 10.293339729309082,
-          "threshold": 0.00012089705705875531,
+          "peak_difference": 11.924360275268555,
+          "event_difference": 11.924360275268555,
+          "threshold": 1e-06,
+          "gradual": true,
           "pass": true
         },
         {
@@ -632,9 +650,10 @@
           "atFrame": 953,
           "peak_frame": 953,
           "lag_frames": 0,
-          "peak_difference": 0.2278909534215927,
-          "event_difference": 0.2278909534215927,
-          "threshold": 0.3386427238583565,
+          "peak_difference": 0.16136036813259125,
+          "event_difference": 0.16136036813259125,
+          "threshold": 0.2393518164753914,
+          "gradual": false,
           "pass": false
         },
         {
@@ -642,9 +661,10 @@
           "atFrame": 967,
           "peak_frame": 967,
           "lag_frames": 0,
-          "peak_difference": 0.05148199573159218,
-          "event_difference": 0.05148199573159218,
-          "threshold": 0.002538838132750243,
+          "peak_difference": 0.06806881725788116,
+          "event_difference": 0.06806881725788116,
+          "threshold": 0.001447502727387473,
+          "gradual": false,
           "pass": true
         },
         {
@@ -652,29 +672,32 @@
           "atFrame": 1016,
           "peak_frame": 1016,
           "lag_frames": 0,
-          "peak_difference": 0.0,
-          "event_difference": 0.0,
+          "peak_difference": 0.037581995129585266,
+          "event_difference": 0.037581995129585266,
           "threshold": 1e-06,
-          "pass": false
+          "gradual": false,
+          "pass": true
         },
         {
           "event": "b7-prompt-5",
           "atFrame": 1023,
-          "peak_frame": 1023,
-          "lag_frames": 0,
-          "peak_difference": 0.0,
-          "event_difference": 0.0,
+          "peak_frame": 1025,
+          "lag_frames": 2,
+          "peak_difference": 0.0001544002880109474,
+          "event_difference": 0.0001544002880109474,
           "threshold": 1e-06,
-          "pass": false
+          "gradual": true,
+          "pass": true
         },
         {
           "event": "close-0",
           "atFrame": 1115,
           "peak_frame": 1115,
           "lag_frames": 0,
-          "peak_difference": 46.49541091918945,
-          "event_difference": 46.49541091918945,
-          "threshold": 0.0007308066997211426,
+          "peak_difference": 46.49721908569336,
+          "event_difference": 46.49721908569336,
+          "threshold": 1e-06,
+          "gradual": false,
           "pass": true
         },
         {
@@ -682,9 +705,10 @@
           "atFrame": 1133,
           "peak_frame": 1133,
           "lag_frames": 0,
-          "peak_difference": 47.01091003417969,
-          "event_difference": 47.01091003417969,
-          "threshold": 0.0006538796878885478,
+          "peak_difference": 47.01533508300781,
+          "event_difference": 47.01533508300781,
+          "threshold": 0.00023078105732565746,
+          "gradual": false,
           "pass": true
         },
         {
@@ -692,9 +716,10 @@
           "atFrame": 1134,
           "peak_frame": 1134,
           "lag_frames": 0,
-          "peak_difference": 9.343985557556152,
-          "event_difference": 9.343985557556152,
-          "threshold": 0.0004312865494284779,
+          "peak_difference": 45.81053924560547,
+          "event_difference": 45.81053924560547,
+          "threshold": 0.0027775439084507525,
+          "gradual": false,
           "pass": true
         },
         {
@@ -702,9 +727,10 @@
           "atFrame": 1204,
           "peak_frame": 1205,
           "lag_frames": 1,
-          "peak_difference": 4.511697769165039,
-          "event_difference": 4.511697769165039,
-          "threshold": 0.09197909384965897,
+          "peak_difference": 4.517718315124512,
+          "event_difference": 4.517718315124512,
+          "threshold": 0.09133021160960197,
+          "gradual": false,
           "pass": true
         }
       ],
@@ -822,11 +848,10 @@
             "text": "AI that does things before",
             "change_frame": 79,
             "frame": 104,
-            "read": "mwmwsak  H..6UlUumwlMUlté<“iC—~OSCOCW!””COC;«‘“‘(RSCTCOéiC(«C;“CO(;$SSCC O§QO. 3 lloyy",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 1 reads \"mwmwsak  H..6UlUumwlMUlté<“iC—~OSCOCW!””COC;«‘“‘(RSCTCOéiC(«\" near frame 104, not \"AI that does things before\" (score 0.0, needs an exact match and 0.98)"
+            "read": "Al that does things\nbefore",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 2,
@@ -834,11 +859,10 @@
             "text": "you ask offers to do",
             "change_frame": 114,
             "frame": 146,
-            "read": "ee a, Fe le _— oe",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 2 reads \"ee a, Fe le _— oe\" near frame 146, not \"you ask offers to do\" (score 0.0, needs an exact match and 0.98)"
+            "read": "you ask offers to do",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 3,
@@ -857,11 +881,10 @@
             "text": "Amazon for your groceries,",
             "change_frame": 410,
             "frame": 422,
-            "read": "mm",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 4 reads \"mm\" near frame 422, not \"Amazon for your groceries,\" (score 0.0, needs an exact match and 0.98)"
+            "read": "Amazon for your\ngroceries,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 5,
@@ -891,31 +914,29 @@
             "text": "dangerous. So my first step",
             "change_frame": 540,
             "frame": 582,
-            "read": "i “De ea a 2 I Rei i eee tan er es YD hUmNmhCUrelCUml\na = Ws ee",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 7 reads \"i “De ea a 2 I Rei i eee tan er es YD hUmNmhCUrelCUml\na = Ws\" near frame 582, not \"dangerous. So my first step\" (score 0.0, needs an exact match and 0.98)"
+            "read": "dangerous. So my\nfirst step",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 8,
             "fromFrame": 589,
             "text": "is the no spending,",
             "change_frame": 589,
-            "frame": 607,
-            "read": "ee oO |",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 8 reads \"ee oO |\" near frame 607, not \"is the no spending,\" (score 0.0, needs an exact match and 0.98)"
+            "frame": 609,
+            "read": "is the/no] spending, |",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 9,
             "fromFrame": 626,
             "text": "no sending",
             "change_frame": 626,
-            "frame": 631,
-            "read": "no sending",
+            "frame": 632,
+            "read": "[no] sending\n—",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -926,11 +947,10 @@
             "text": "so. And the fun part",
             "change_frame": 752,
             "frame": 777,
-            "read": "ee > re r,s",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 10 reads \"ee > re r,s\" near frame 777, not \"so. And the fun part\" (score 0.0, needs an exact match and 0.98)"
+            "read": "so. And the fun part",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 11,
@@ -938,11 +958,10 @@
             "text": "is I didn't even write",
             "change_frame": 785,
             "frame": 805,
-            "read": " i  rr rr rr es",
-            "score": 0.1667,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 11 reads \" i  rr rr rr es\" near frame 805, not \"is I didn't even write\" (score 0.1667, needs an exact match and 0.98)"
+            "read": "is I didn't even write",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 12,
@@ -960,12 +979,11 @@
             "fromFrame": 851,
             "text": "I just put one prompt",
             "change_frame": 851,
-            "frame": 867,
-            "read": "Diset nit one eee",
-            "score": 0.2,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 13 reads \"Diset nit one eee\" near frame 867, not \"I just put one prompt\" (score 0.2, needs an exact match and 0.98)"
+            "frame": 874,
+            "read": "I just put one/prompt]",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 14,
@@ -973,11 +991,10 @@
             "text": "into my AI tool and",
             "change_frame": 875,
             "frame": 901,
-            "read": "ee ee ae |",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 14 reads \"ee ee ae |\" near frame 901, not \"into my AI tool and\" (score 0.0, needs an exact match and 0.98)"
+            "read": "into my Al tool and",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 15,
@@ -985,23 +1002,21 @@
             "text": "it started asking me questions",
             "change_frame": 904,
             "frame": 925,
-            "read": "3 cs |",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 15 reads \"3 cs |\" near frame 925, not \"it started asking me questions\" (score 0.0, needs an exact match and 0.98)"
+            "read": "it started asking me\nquestions",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 16,
             "fromFrame": 934,
             "text": "back, then it locks itself",
             "change_frame": 934,
-            "frame": 980,
-            "read": "zZ.h0UC“‘OCOC‘C;}N;UC;*COW™W™!”™”™CSCSD a ‘“‘###(}UCNARNRAGiCisa“—a‘i#t#i”C ‘CMA esgawoC‘B$STa awe elSCNyRNR®—Cdi«Cd@it“‘i“=l{’yCSCMSCSC*iésSC",
-            "score": 0.0588,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 16 reads \"zZ.h0UC“‘OCOC‘C;}N;UC;*COW™W™!”™”™CSCSD a ‘“‘###(}UCNARNRAGi\" near frame 980, not \"back, then it locks itself\" (score 0.0588, needs an exact match and 0.98)"
+            "frame": 974,
+            "read": "back, then it locks\nitself",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 17,
@@ -1009,11 +1024,10 @@
             "text": "down or tells you how",
             "change_frame": 984,
             "frame": 1008,
-            "read": "ey ec",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 17 reads \"ey ec\" near frame 1008, not \"down or tells you how\" (score 0.0, needs an exact match and 0.98)"
+            "read": "down or tells you\nhow",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 18,
@@ -1032,11 +1046,10 @@
             "text": "Prompt's in the comments,",
             "change_frame": 1046,
             "frame": 1058,
-            "read": "eee 2 ee ee 2 eee",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 19 reads \"eee 2 ee ee 2 eee\" near frame 1058, not \"Prompt's in the comments,\" (score 0.0, needs an exact match and 0.98)"
+            "read": "Prompt's in the\ncomments,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 20,
@@ -1044,11 +1057,10 @@
             "text": "make sure you do this,",
             "change_frame": 1085,
             "frame": 1105,
-            "read": "",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 20 reads \"\" near frame 1105, not \"make sure you do this,\" (score 0.0, needs an exact match and 0.98)"
+            "read": "make sure you do\nthis,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 21,
@@ -1056,10 +1068,11 @@
             "text": "no spending,",
             "change_frame": 1115,
             "frame": 1117,
-            "read": "no spending,",
-            "score": 1.0,
-            "exact": true,
-            "status": "pass"
+            "read": "no[spending,] pending\nF —_",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 21 reads \"no[spending,] pending\nF —_\" near frame 1117, not \"no spending,\" (score 0.6667, needs an exact match and 0.98)"
           },
           {
             "page": 22,
@@ -1067,10 +1080,11 @@
             "text": "no sending,",
             "change_frame": 1133,
             "frame": 1134,
-            "read": "no sending,",
+            "read": "no[sending,] g\n‘ ~",
             "score": 1.0,
-            "exact": true,
-            "status": "pass"
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 22 reads \"no[sending,] g\n‘ ~\" near frame 1134, not \"no sending,\" (score 1.0, needs an exact match and 0.98)"
           },
           {
             "page": 23,
@@ -1078,11 +1092,10 @@
             "text": "one easy step so you",
             "change_frame": 1145,
             "frame": 1173,
-            "read": "ee eee re se er ee me ee, Serer ae. ee ee",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 23 reads \"ee eee re se er ee me ee, Serer ae. ee ee\" near frame 1173, not \"one easy step so you\" (score 0.0, needs an exact match and 0.98)"
+            "read": "one easy step so you",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 24,
@@ -1090,11 +1103,10 @@
             "text": "can save yourself and enjoy",
             "change_frame": 1176,
             "frame": 1204,
-            "read": "ee eee. en. ee en, See ee beeen ae ae",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 24 reads \"ee eee. en. ee en, See ee beeen ae ae\" near frame 1204, not \"can save yourself and enjoy\" (score 0.0, needs an exact match and 0.98)"
+            "read": "can save yourself\nand enjoy",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 25,
@@ -1113,11 +1125,10 @@
             "text": "without any of those weird",
             "change_frame": 1239,
             "frame": 1271,
-            "read": "",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 26 reads \"\" near frame 1271, not \"without any of those weird\" (score 0.0, needs an exact match and 0.98)"
+            "read": "without any of those\nweird",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 27,
@@ -1125,11 +1136,10 @@
             "text": "moments or fails.",
             "change_frame": 1279,
             "frame": 1300,
-            "read": "re, i, ee | ce",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 27 reads \"re, i, ee | ce\" near frame 1300, not \"moments or fails.\" (score 0.0, needs an exact match and 0.98)"
+            "read": "moments or fails.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
           },
           {
             "page": 0,
@@ -1203,225 +1213,33 @@
         ],
         "failed": [
           {
-            "page": 1,
-            "fromFrame": 79,
-            "text": "AI that does things before",
-            "change_frame": 79,
-            "frame": 104,
-            "read": "mwmwsak  H..6UlUumwlMUlté<“iC—~OSCOCW!””COC;«‘“‘(RSCTCOéiC(«C;“CO(;$SSCC O§QO. 3 lloyy",
-            "score": 0.0,
+            "page": 21,
+            "fromFrame": 1115,
+            "text": "no spending,",
+            "change_frame": 1115,
+            "frame": 1117,
+            "read": "no[spending,] pending\nF —_",
+            "score": 0.6667,
             "exact": false,
             "status": "fail",
-            "message": "caption page 1 reads \"mwmwsak  H..6UlUumwlMUlté<“iC—~OSCOCW!””COC;«‘“‘(RSCTCOéiC(«\" near frame 104, not \"AI that does things before\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 21 reads \"no[spending,] pending\nF —_\" near frame 1117, not \"no spending,\" (score 0.6667, needs an exact match and 0.98)"
           },
           {
-            "page": 2,
-            "fromFrame": 114,
-            "text": "you ask offers to do",
-            "change_frame": 114,
-            "frame": 146,
-            "read": "ee a, Fe le _— oe",
-            "score": 0.0,
+            "page": 22,
+            "fromFrame": 1133,
+            "text": "no sending,",
+            "change_frame": 1133,
+            "frame": 1134,
+            "read": "no[sending,] g\n‘ ~",
+            "score": 1.0,
             "exact": false,
             "status": "fail",
-            "message": "caption page 2 reads \"ee a, Fe le _— oe\" near frame 146, not \"you ask offers to do\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 4,
-            "fromFrame": 410,
-            "text": "Amazon for your groceries,",
-            "change_frame": 410,
-            "frame": 422,
-            "read": "mm",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 4 reads \"mm\" near frame 422, not \"Amazon for your groceries,\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 7,
-            "fromFrame": 540,
-            "text": "dangerous. So my first step",
-            "change_frame": 540,
-            "frame": 582,
-            "read": "i “De ea a 2 I Rei i eee tan er es YD hUmNmhCUrelCUml\na = Ws ee",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 7 reads \"i “De ea a 2 I Rei i eee tan er es YD hUmNmhCUrelCUml\na = Ws\" near frame 582, not \"dangerous. So my first step\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 8,
-            "fromFrame": 589,
-            "text": "is the no spending,",
-            "change_frame": 589,
-            "frame": 607,
-            "read": "ee oO |",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 8 reads \"ee oO |\" near frame 607, not \"is the no spending,\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 10,
-            "fromFrame": 752,
-            "text": "so. And the fun part",
-            "change_frame": 752,
-            "frame": 777,
-            "read": "ee > re r,s",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 10 reads \"ee > re r,s\" near frame 777, not \"so. And the fun part\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 11,
-            "fromFrame": 785,
-            "text": "is I didn't even write",
-            "change_frame": 785,
-            "frame": 805,
-            "read": " i  rr rr rr es",
-            "score": 0.1667,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 11 reads \" i  rr rr rr es\" near frame 805, not \"is I didn't even write\" (score 0.1667, needs an exact match and 0.98)"
-          },
-          {
-            "page": 13,
-            "fromFrame": 851,
-            "text": "I just put one prompt",
-            "change_frame": 851,
-            "frame": 867,
-            "read": "Diset nit one eee",
-            "score": 0.2,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 13 reads \"Diset nit one eee\" near frame 867, not \"I just put one prompt\" (score 0.2, needs an exact match and 0.98)"
-          },
-          {
-            "page": 14,
-            "fromFrame": 875,
-            "text": "into my AI tool and",
-            "change_frame": 875,
-            "frame": 901,
-            "read": "ee ee ae |",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 14 reads \"ee ee ae |\" near frame 901, not \"into my AI tool and\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 15,
-            "fromFrame": 904,
-            "text": "it started asking me questions",
-            "change_frame": 904,
-            "frame": 925,
-            "read": "3 cs |",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 15 reads \"3 cs |\" near frame 925, not \"it started asking me questions\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 16,
-            "fromFrame": 934,
-            "text": "back, then it locks itself",
-            "change_frame": 934,
-            "frame": 980,
-            "read": "zZ.h0UC“‘OCOC‘C;}N;UC;*COW™W™!”™”™CSCSD a ‘“‘###(}UCNARNRAGiCisa“—a‘i#t#i”C ‘CMA esgawoC‘B$STa awe elSCNyRNR®—Cdi«Cd@it“‘i“=l{’yCSCMSCSC*iésSC",
-            "score": 0.0588,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 16 reads \"zZ.h0UC“‘OCOC‘C;}N;UC;*COW™W™!”™”™CSCSD a ‘“‘###(}UCNARNRAGi\" near frame 980, not \"back, then it locks itself\" (score 0.0588, needs an exact match and 0.98)"
-          },
-          {
-            "page": 17,
-            "fromFrame": 984,
-            "text": "down or tells you how",
-            "change_frame": 984,
-            "frame": 1008,
-            "read": "ey ec",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 17 reads \"ey ec\" near frame 1008, not \"down or tells you how\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 19,
-            "fromFrame": 1046,
-            "text": "Prompt's in the comments,",
-            "change_frame": 1046,
-            "frame": 1058,
-            "read": "eee 2 ee ee 2 eee",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 19 reads \"eee 2 ee ee 2 eee\" near frame 1058, not \"Prompt's in the comments,\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 20,
-            "fromFrame": 1085,
-            "text": "make sure you do this,",
-            "change_frame": 1085,
-            "frame": 1105,
-            "read": "",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 20 reads \"\" near frame 1105, not \"make sure you do this,\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 23,
-            "fromFrame": 1145,
-            "text": "one easy step so you",
-            "change_frame": 1145,
-            "frame": 1173,
-            "read": "ee eee re se er ee me ee, Serer ae. ee ee",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 23 reads \"ee eee re se er ee me ee, Serer ae. ee ee\" near frame 1173, not \"one easy step so you\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 24,
-            "fromFrame": 1176,
-            "text": "can save yourself and enjoy",
-            "change_frame": 1176,
-            "frame": 1204,
-            "read": "ee eee. en. ee en, See ee beeen ae ae",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 24 reads \"ee eee. en. ee en, See ee beeen ae ae\" near frame 1204, not \"can save yourself and enjoy\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 26,
-            "fromFrame": 1239,
-            "text": "without any of those weird",
-            "change_frame": 1239,
-            "frame": 1271,
-            "read": "",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 26 reads \"\" near frame 1271, not \"without any of those weird\" (score 0.0, needs an exact match and 0.98)"
-          },
-          {
-            "page": 27,
-            "fromFrame": 1279,
-            "text": "moments or fails.",
-            "change_frame": 1279,
-            "frame": 1300,
-            "read": "re, i, ee | ce",
-            "score": 0.0,
-            "exact": false,
-            "status": "fail",
-            "message": "caption page 27 reads \"re, i, ee | ce\" near frame 1300, not \"moments or fails.\" (score 0.0, needs an exact match and 0.98)"
+            "message": "caption page 22 reads \"no[sending,] g\n‘ ~\" near frame 1134, not \"no sending,\" (score 1.0, needs an exact match and 0.98)"
           }
         ],
         "changes_found": 109,
         "status": "fail",
-        "reason": "18 of 28 caption page(s) are not drawn as the props say near their start",
+        "reason": "2 of 28 caption page(s) are not drawn as the props say near their start",
         "pass": false,
         "regions": [
           [
@@ -1442,7 +1260,7 @@
       "pass": false,
       "status": "measured",
       "agreement": null,
-      "summary": "18 of 28 caption page(s) are not drawn as the props say near their start: caption page 1 reads \"mwmwsak  H..6UlUumwlMUlté<“iC—~OSCOCW!””COC;«‘“‘(RSCTCOéiC(«\" near frame 104, not \"AI that does things before\" (score 0.0, needs an exact match and 0.98); caption page 2 reads \"ee a, Fe le _— oe\" near frame 146, not \"you ask offers to do\" (score 0.0, needs an exact match and 0.98); caption page 4 reads \"mm\" near frame 422, not \"Amazon for your groceries,\" (score 0.0, needs an exact match and 0.98); caption page 7 reads \"i “De ea a 2 I Rei i eee tan er es YD hUmNmhCUrelCUml\na = Ws\" near frame 582, not \"dangerous. So my first step\" (score 0.0, needs an exact match and 0.98) (and 14 more)"
+      "summary": "2 of 28 caption page(s) are not drawn as the props say near their start: caption page 21 reads \"no[spending,] pending\nF —_\" near frame 1117, not \"no spending,\" (score 0.6667, needs an exact match and 0.98); caption page 22 reads \"no[sending,] g\n‘ ~\" near frame 1134, not \"no sending,\" (score 1.0, needs an exact match and 0.98)"
     },
     "keyframe_match": {
       "value": {
@@ -1672,7 +1490,7 @@
           "frame": 743
         },
         "b7-prompt": {
-          "pass": false,
+          "pass": true,
           "checks": {
             "fill_pct": {
               "pass": true,
@@ -1683,17 +1501,8 @@
               "value": []
             },
             "caption_zone": {
-              "pass": false,
-              "value": [
-                {
-                  "text": "tolockit",
-                  "conf": 85.229095,
-                  "x": 116,
-                  "y": 1480,
-                  "w": 327,
-                  "h": 50
-                }
-              ]
+              "pass": true,
+              "value": []
             },
             "platform_zone": {
               "pass": true,
@@ -1704,9 +1513,7 @@
               "value": []
             }
           },
-          "findings": [
-            "caption_zone contains 'tolockit', the limit is 0 unlisted words."
-          ],
+          "findings": [],
           "frame": 1021
         },
         "close": {
@@ -1738,7 +1545,7 @@
         }
       },
       "target": "design lock composition thresholds",
-      "pass": false,
+      "pass": true,
       "status": "measured"
     }
   },
@@ -1807,7 +1614,7 @@
   },
   "composition": {
     "applies": true,
-    "pass": false,
+    "pass": true,
     "beats": {
       "hook": {
         "pass": true,
@@ -1972,7 +1779,7 @@
         "frame": 743
       },
       "b7-prompt": {
-        "pass": false,
+        "pass": true,
         "checks": {
           "fill_pct": {
             "pass": true,
@@ -1983,17 +1790,8 @@
             "value": []
           },
           "caption_zone": {
-            "pass": false,
-            "value": [
-              {
-                "text": "tolockit",
-                "conf": 85.229095,
-                "x": 116,
-                "y": 1480,
-                "w": 327,
-                "h": 50
-              }
-            ]
+            "pass": true,
+            "value": []
           },
           "platform_zone": {
             "pass": true,
@@ -2004,9 +1802,7 @@
             "value": []
           }
         },
-        "findings": [
-          "caption_zone contains 'tolockit', the limit is 0 unlisted words."
-        ],
+        "findings": [],
         "frame": 1021
       },
       "close": {
