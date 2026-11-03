@@ -146,11 +146,10 @@ describe('the board page\'s live overlay', () => {
     expect(dom.approve.dataset.liveStale).toBe('')
     expect(dom.bar.hidden).toBe(true)
   })
-  it('says the generic line when only the record\'s time says a rebuild is needed, and nothing when nothing changed', async () => {
+  it('stays quiet when only the record\'s time changed: the overlay already shows what changed (a step, Growth\'s post)', async () => {
     let dom = page(LONG, SHORT)
     await run(dom, state({ rebuild_needed: true }))
-    expect(dom.bar.hidden).toBe(false)
-    expect(dom.bar.textContent).toBe('This page was built before the record changed. The steps here are live; a rebuild shows the rest.')
+    expect(dom.bar.hidden).toBe(true)
     dom = page(LONG, SHORT)
     await run(dom, state({ build_id: null }))
     expect(dom.bar.hidden).toBe(true)

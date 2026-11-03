@@ -1978,6 +1978,15 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function boardPolicy(storeUrl?: string)`
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
 
+### `apps/control-plane/api/board/_live.ts`
+
+- `interface LiveStep`
+- `interface LiveCut`
+- `interface LiveDay`
+- `interface WeekLive`
+- `function liveDay(piece: Body, date: string): LiveDay`
+- `async function weekLive(db: SupabaseClient, week: string, builtAt: string | null): Promise<WeekLive>`
+
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
 A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, locking the off-day mock: Improve
