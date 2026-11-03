@@ -247,6 +247,8 @@ class BriefTest(unittest.TestCase):
         self.assertEqual(b['style']['motion_system']['id'], 'data-story')
         self.assertIn('3D charts', b['style']['never_in_plate'])
         self.assertTrue(set(plain['style']['must_say']) < set(b['style']['must_say']))
+        self.assertEqual(brief.card_fields(b)['motion_style'], 'data-story')
+        self.assertNotIn('motion_style', brief.card_fields(plain))
         with self.assertRaises(ValueError):
             brief.build_briefs({**self.spec, 'style': {'motion': {'module': 'live-scoreboard'}}}, cut='proof-tall')
 
