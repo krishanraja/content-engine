@@ -1,3 +1,0 @@
-Status: Engine heal is on main (#364, #367): reference gate, captions off the face, channel safe zones (advisory), the signed motion standard with word captions as the face-with-proof default, upright Fraunces, and SPLIT graphics at full width. #366 makes the post's 3 Posts folder the one home for everything ready to post (Ruling, Krish, 2026-11-03), carries the measured Instagram zones in config/studio.json, and fixes QC completeness on main. Codex card ve-motion-3 (word on the seam) is building on the home computer; ve-motion-2 (mark clearance) and ve-motion-4 (channel-safe tall layouts) are booked one at a time after it.
-Next: Krish starts the Thursday 5 Nov video sessions on main.
-North Star check (2026-11-03): holds.
