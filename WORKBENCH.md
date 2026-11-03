@@ -136,8 +136,9 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   for the consumer, what it means for someone starting or building a
   business, and how the old way is changing, creatively and in who gets paid
   (house rule `THREE_LENSES`). Every visual uses the real logos of the
-  companies it names, and the cover and share picture carry Krish's face
-  (`LOGOS_AND_FACE`; `scripts/pages` cover facts, `"portrait": true`).
+  companies it names. Every cover and thumbnail is the Receipt: a real proof
+  from a checked source, the wordmark and the logos, never his face (`THE_RECEIPT`, 2026-11-02;
+  `scripts/pages` cover facts, `"proof"`).
 - Every video script opens with its series line, then the hook, and says
   "I'm Krish" only there (house rule `SERIES_OPENER`, Krish, 2026-10-12). And
   an ordinary 12-year-old must follow every script heard once. His words:

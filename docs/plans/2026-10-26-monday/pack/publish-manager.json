@@ -8,25 +8,25 @@
   {
    "id": "cover",
    "role": "cover",
-   "file": "../../../../.cache/pack/2026-10-26-monday/pages/cover.png",
+   "file": "../../../../.cache/pack/2026-10-26-monday/pages/cover-1200x630.png",
    "alt": "Cover: Google paid $2.7B first"
   },
   {
    "id": "vertical",
    "role": "vertical-cover",
-   "file": "../../../../.cache/pack/2026-10-26-monday/pages/vertical.png",
+   "file": "../../../../.cache/pack/2026-10-26-monday/pages/cover-1080x1920.png",
    "alt": "Vertical cover: Disney is eating the scraps of bankrupt Character.AI"
   },
   {
    "id": "square",
    "role": "square-cover",
-   "file": "../../../../.cache/pack/2026-10-26-monday/pages/square.png",
+   "file": "../../../../.cache/pack/2026-10-26-monday/pages/cover-1080x1080.png",
    "alt": "Square cover: Disney is eating the scraps of bankrupt Character.AI"
   },
   {
    "id": "share",
    "role": "share-card-cover",
-   "file": "../../../../.cache/pack/2026-10-26-monday/pages/share.png",
+   "file": "../../../../.cache/pack/2026-10-26-monday/pages/cover-1200x675.png",
    "alt": "Share card: Google paid $2.7B first"
   }
  ],
