@@ -21,22 +21,42 @@ MARGIN = 0.10  # the face box grows by this share each side: hair, chin and a mo
 CHAR_WIDTH = 0.62  # an Archivo bold glyph is about this share of the font size wide
 
 
-def word_geometry(aspect: str) -> dict:
+def word_geometry(aspect: str, layout: str | None = None, plate=None) -> dict:
     source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'chrome' / 'WordCaption.tsx').read_text(encoding='utf-8')
     row = re.search(r'\b' + ('tall' if aspect == '9:16' else 'wide') + r': \{([^}]*)\}', source).group(1)
-    return {key: int(value) for key, value in re.findall(r'(\w+): (\d+)', row)}
+    seam_source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
+    seam = re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', seam_source).group(1)
+    row = row.replace('FWP_SPLIT_SEAM_Y', seam)
+    geometry = {}
+    for key, expression in re.findall(r'(\w+): ([^,]+)', row):
+        factors = expression.strip().split('*')
+        geometry[key] = float(factors[0]) * (float(factors[1]) if len(factors) == 2 else 1)
+    geometry['centerY'] = (geometry['splitCenterY'] if layout == 'SPLIT' else
+                           geometry['graphicsCenterY'] if plate == 'none' else geometry['centerY'])
+    return geometry
 
 
 def page_text(page: dict) -> str:
     return ' '.join(str(w.get('text') or w.get('word') or '') for w in page.get('words', [])).strip()
 
 
-def caption_box(page: dict, style: str, aspect: str, region) -> tuple[int, int, int, int]:
+def caption_box(page: dict, style: str, aspect: str, region, *, layout=None, plate=None) -> tuple[int, int, int, int]:
     """x, y, w, h of the caption as drawn."""
     if style == 'word':
-        g = word_geometry(aspect)
+        # qc.py already marks sampled SPLIT pages with their own region.
+        if layout is None and page.get('region') is not None:
+            source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
+            zone = re.search(r'export const FWP_SPLIT_CAPTION_ZONE = \{([^}]*)\}', source).group(1)
+            split_region = tuple(int(n) for n in re.findall(r': (\d+)', zone))
+            region_box = page['region']
+            if isinstance(region_box, dict):
+                keys = ('x', 'y', 'width', 'height') if 'x' in region_box else ('left', 'top', 'width', 'height')
+                region_box = [region_box[k] for k in keys]
+            if tuple(region_box) == split_region:
+                layout = 'SPLIT'
+        g = word_geometry(aspect, layout or page.get('layout'), plate or page.get('plate'))
         width = min(g['width'], max(g['size'], int(len(page_text(page)) * g['size'] * CHAR_WIDTH)))
-        return (g['width'] - width) // 2, int(g['centerY'] - g['size'] * 0.6), width, int(g['size'] * 1.2)
+        return int((g['width'] - width) // 2), int(g['centerY'] - g['size'] * 0.6), width, int(g['size'] * 1.2)
     box = page.get('region') or region
     if isinstance(box, dict):
         box = [box[k] for k in ('x', 'y', 'width', 'height')] if 'x' in box else [box[k] for k in ('left', 'top', 'width', 'height')]
@@ -99,7 +119,7 @@ def default_detector():
 
 
 def off_face(video: str, pages: list, *, style: str = 'house', aspect: str = '9:16', region=None,
-             fps: float = 30, detector=None, grab=None) -> dict:
+             fps: float = 30, detector=None, grab=None, beats=None) -> dict:
     detector = detector or default_detector()
     target = 'no caption page overlaps the face box (+10%)'
     if detector is None:
@@ -110,7 +130,9 @@ def off_face(video: str, pages: list, *, style: str = 'house', aspect: str = '9:
     on_face = []
     for page in pages:
         frame = sampled_frame(page)
-        box = caption_box(page, style, aspect, region)
+        beat = next((b for b in (beats or []) if b['fromFrame'] <= frame < b['toFrame']), {})
+        box = caption_box(page, style, aspect, region, layout=beat.get('layout'),
+                          plate=(beat.get('plate') or {}).get('source'))
         faces = detector(grab(frame))
         hits = [f for f in faces if overlap(box, grown(f))]
         if hits:
