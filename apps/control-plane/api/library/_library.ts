@@ -41,6 +41,9 @@ export const LIBRARY_POST_SECTIONS = ['0 Publish', '1 Article', '2 Covers and im
 export const LIBRARY_POST_README = 'READ ME.txt'
 /** The live subchannels as the brand writes them, from the Studio's series. */
 export const LIBRARY_SUBCHANNELS = LIVE_SERIES.map((id) => id.replace(/_/g, '.'))
+/** An off-day post has no series; its folder carries this label where a series name would go
+ *  (config/library-paths.cases.json, off_day_label; Krish, 2026-11-03). */
+export const LIBRARY_OFF_DAY = 'off.day'
 
 // Every type a post, the brand kit or the channel art holds. The extension
 // decides the type, so a sender cannot choose one; the bucket allows exactly
@@ -124,7 +127,7 @@ export const CONTROL = /[\u0000-\u001f\u007f-\u009f]/
 export const RESERVED = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
 const POST_FOLDER = new RegExp(
-  `^([0-9]{4})-([0-9]{2})-([0-9]{2}) (?:(${WEEKDAYS.join('|')}) (${LIBRARY_SUBCHANNELS.map((name) => name.replace(/\./g, '\\.')).join('|')})|Launch) - \\S`,
+  `^([0-9]{4})-([0-9]{2})-([0-9]{2}) (?:(${WEEKDAYS.join('|')}) (${[...LIBRARY_SUBCHANNELS, LIBRARY_OFF_DAY].map((name) => name.replace(/\./g, '\\.')).join('|')})|Launch) - \\S`,
 )
 
 function refuse(refusal: LibraryPathRefusal): LibraryPathCheck {
