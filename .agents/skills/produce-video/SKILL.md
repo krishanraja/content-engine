@@ -9,6 +9,16 @@ model: sonnet
 > Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
 
 
+## Fallback limits (audit, 3 Nov 2026)
+
+This route is the fallback until ve passes Phase 3 (AGENTS.md, Video production), and today it is held to less than
+ve. It builds Archivo house captions only (no word caption build, which the signed motion standard makes the default
+for face-with-proof), has no upright Fraunces, never reads `style.motion`, has no reference gate (F26) and only warns on
+channel safe zones (`receipt['channel_safe']`). So before cutting a piece here that the signed standard
+(`docs/ve/MOTION_STANDARD.md`) covers, tell Krish in one line which of these it will miss, and open the inspiration
+board's cards for it anyway; never call such a cut ready to the standard. Filing is the same on both routes: the post's
+`3 Posts` folder, `off.day` on Tue, Thu and Sat.
+
 ## Mandatory quality floor
 
 For every production request, including just "Produce this video", load
@@ -829,7 +839,8 @@ python scripts/post-pack/send.py "ARCHIVE FOLDER" --as "3 Posts/POST FOLDER/3 Vi
 ```
 
 then without `--dry-run`. `POST FOLDER` is the pack folder `making.py show`
-names. An archive folder is not a pack, so `send.py` records nothing on the
+names; on a Tuesday, Thursday or Saturday it is `YYYY-MM-DD Ddd off.day - Subject`
+whatever series dress the piece wears (`library.post_folder` names it so), never 4 Growth. An archive folder is not a pack, so `send.py` records nothing on the
 piece.
 
 ## 9. Put both cuts on the record

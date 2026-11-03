@@ -78,7 +78,26 @@ def motion_section(style_id: str) -> str:
             f'{rules}\nNever:\n{avoid}\n')
 
 
+def _piece_motion(fields: dict) -> None:
+    """A card for one piece (fields['spec'], the piece's ve spec) carries that piece's motion style, so no route can
+    send Codex a piece card without it. A library device card names no spec and stays style-free: it serves every
+    piece. A piece due from creative_direction.MOTION_FROM with no style.motion is refused, as ve lint refuses it."""
+    spec_path = fields.pop('spec', None)
+    if not spec_path or fields.get('motion_style'):
+        return
+    spec = load_json(ROOT / spec_path if not Path(spec_path).is_absolute() else Path(spec_path))
+    module = ((spec.get('style') or {}).get('motion') or {}).get('module')
+    if module:
+        fields['motion_style'] = module
+        return
+    sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+    import creative_direction  # noqa: E402
+    if str(spec.get('publish_day') or '') >= creative_direction.MOTION_FROM:
+        sys.exit(f've card: {spec_path} names no style.motion; pick one from the bank before a card goes to Codex')
+
+
 def write_card(path: Path, **fields) -> Path:
+    _piece_motion(fields)
     _require_design_lock(fields)
     fields.setdefault('model', MODEL)
     fields.setdefault('effort', EFFORT)

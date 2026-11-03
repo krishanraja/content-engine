@@ -22,7 +22,7 @@ Session: https://claude.ai/code/session_01JRhKysZwHtkCdtU6aGbKrp. Krish asked to
    board assets via `--assets`), `drive` = the 3 Posts folder, `mock` = the new cover; Tuesday's `drive` should move
    from the 4 Growth folder to its 3 Posts folder (`2026-11-03 Tue off.day - AI agents translator`). Keep every press
    and comment; read the build back; never approve for him.
-4. Make Growth's off-day filing use send.py to 3 Posts (per the new ruling), not 4 Growth.
+4. Make Growth's off-day filing use send.py to 3 Posts (per the new ruling), not 4 Growth. Written into docs/GROWTH-HANDOFF.md (audit, 2026-11-03); the board now refuses a card that names 4 Growth (week_board.posts_needs).
 
 ## Waiting on Krish
 - His Approve on the Saturday mock on the board's Saturday tab.
