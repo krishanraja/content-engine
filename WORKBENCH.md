@@ -2,6 +2,13 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
+## 3 November: Wednesday 11 Nov (AI in the songs) waits on its narrative lock (make-piece, GitHub Actions)
+
+- Piece `36886e0b` (under.the.hood, Wed 11 Nov). Krish pressed it on the Ideas tab at 06:47 on 3 Nov, seven seconds after pressing wed-1 (Anthropic and Git); the board keeps the songs piece as Wednesday.
+- **No signed lock**, so nothing is written (make-piece, "From the signed narrative lock"). Wednesday's tab is in draft with one review box, `docs/plans/2026-11-09-week/wed-lock-questions.md` (best guesses for the answer, the use, the outline, the facts and the bed; his close left for his own words), and one waiting line. Board build `1b6d5e43`, read back.
+- **Next:** the Sunday room (plan-week) turns his answers into `narrative-lock-wed.md` for him to sign; then a fresh make-piece run starts the scripts.
+- **Board note:** the build before this one (`5bb61393`, another run) has an empty asset manifest while Monday's Download links point at `/api/board/2026-11-09/assets/mon-*`; this build kept Monday verbatim. Whether those downloads still serve is not checked here.
+
 ## 29 October: the Sunday loop, no name, the bar, zero routines (Claude Code)
 
 On session branch `claude/fervent-brown-d8e55b`, going to main by pull request (the ve part by hand after green CI). `NOW.md` has the detail; the plan for what follows is `docs/plans/2026-11-07-wave-2.md`, then `docs/plans/2026-11-14-wave-3.md`.
