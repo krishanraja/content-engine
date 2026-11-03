@@ -378,6 +378,8 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    before it reaches the tab; they go into ideas.json `offdays` and reach
    the tab only through `week_board.py --ideas`, never by patching the page,
    and until the board has its Off days part the room says so in step 8.
+   Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week,
+   its four fresh stories found by the Sunday run before that week.
    Growth makes what he approved. **His own
    ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
    idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day
@@ -391,7 +393,10 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    `covers` is the board idea's own `covers` list, unchanged: the engine keeps it on the piece (`meta.covers`, never
    cleared), so once he picks it the Inspiration card the piece became is known for good
    (`inspiration_card_pieces`; krishanraja/inspirationhouse `docs/TWO_WAY.md`, step 3).
-   A piece already scheduled for its day (a pick carried over) needs no options.
+   A piece already scheduled for its day (a pick carried over) needs no options: write it into ideas.json
+   `locked`, `{"mon": {"piece_id", "so_what", "why"}}`, and give that day none. The board shows it as Already
+   picked; `board_feed.py cover` and the build refuse options on a scheduled day (Krish, 2026-11-02: "Monday's piece
+   is already done").
    A new idea that is not yet a row is created first with
    `POST /api/content-ideas {"raw_text": "...", "source_type": "week_research"}`.
    Never leave out `source_type` and never use `manual`: a manual row is what

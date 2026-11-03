@@ -81,9 +81,43 @@ class Composition(unittest.TestCase):
         self.assertTrue(self.measure([self.word(y=1250)], caption_words=['hello'])['checks']['caption_zone']['pass'])
         self.assertTrue(self.measure([self.word(text='CAPTION', y=1250)])['checks']['caption_zone']['pass'])
         self.assertFalse(self.measure([self.word(y=1250)], caption_words=[])['checks']['caption_zone']['pass'])
+        # Thursday 5 Nov: OCR clipped "emails," and read "ero" inside the highlighted "dangerous."
+        for clipped in ('mails,', 'ero'):
+            self.assertTrue(self.measure([self.word(text=clipped, y=1250)], caption_words=['emails,', 'dangerous.'])
+                            ['checks']['caption_zone']['pass'], clipped)
+        self.assertFalse(self.measure([self.word(text='xyz', y=1250)], caption_words=['emails,'])['checks']['caption_zone']['pass'])
         self.assertTrue(self.measure([self.word(h=21)])['checks']['small_text']['pass'])
         self.assertTrue(self.measure([self.word(y=1750)])['checks']['platform_zone']['pass'])
         self.assertTrue(self.measure([self.word(h=14, conf=59)])['checks']['small_text']['pass'])
+
+    def test_split_footage_below_the_seam_is_picture_until_the_ending(self):
+        # Thursday 5 Nov: his fingertips under the seam read as "4" at (834, 1873) on the proof beat.
+        props = {'aspect': '9:16', 'captions': [], 'objects': [], 'events': [], 'durationFrames': 300,
+                 'ending': {'fromFrame': 200},
+                 'beats': [{'id': 'proof', 'layout': 'SPLIT', 'fromFrame': 0, 'toFrame': 300}]}
+        four = self.word(text='4', x=834, y=1873, w=16, h=36)
+        stray = self.word(text='STRAY', x=300, y=1480, w=200, h=40)  # inside the split caption zone
+        for at, ending_exempt in ((100, True), (250, False)):
+            with self.subTest(frame=at), patch.object(comp, '_frame', return_value=(self.image(), at)), \
+                    patch.object(comp, '_words', return_value=[four, stray]):
+                row = comp.composition_checks('cut.mp4', props, self.lock)['beats']['proof']
+                self.assertEqual(row['checks']['platform_zone']['pass'], ending_exempt, row['findings'])
+                self.assertFalse(row['checks']['caption_zone']['pass'], row['findings'])
+
+    def test_the_ending_band_is_measured_for_its_type(self):
+        # Thursday 5 Nov: no beat's key frame fell inside the band, so its text was never measured.
+        props = {'aspect': '9:16', 'captions': [], 'objects': [], 'events': [], 'durationFrames': 300,
+                 'ending': {'fromFrame': 200}, 'beats': []}
+        url = self.word(text='makeyourmindup.ai', x=700, y=1250)
+        tiny = self.word(text='THURSDAY', x=700, y=900, h=12)
+        with patch.object(comp, '_frame', return_value=(self.image(), 250)) as frame, \
+                patch.object(comp, '_words', return_value=[url]):
+            row = comp.composition_checks('cut.mp4', props, self.lock)['beats']['ending']
+        self.assertEqual(frame.call_args[0][1]['keyFrame'], 250)
+        self.assertTrue(row['pass'], row['findings'])  # a dark panel, a url in the caption zone: by design
+        self.assertEqual(set(row['checks']), {'small_text', 'platform_zone', 'edges'})
+        with patch.object(comp, '_frame', return_value=(self.image(), 250)), patch.object(comp, '_words', return_value=[tiny]):
+            self.assertFalse(comp.composition_checks('cut.mp4', props, self.lock)['beats']['ending']['pass'])
 
     def test_no_illustration_tag_is_checked_or_required(self):
         # Krish, 28 Oct 2026, on the ILLUSTRATION tag: "Yes remove those." A frame on a plate passes with no tag, and

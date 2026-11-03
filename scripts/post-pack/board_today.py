@@ -153,12 +153,18 @@ def _card(d, p, i):
     primary = ' go' if p['status'] == 'concept' else ''
     chans = p.get('channels') or []
     waiting = f'<span class="wait">Waiting: {E(p["waiting"])}</span>' if p.get('waiting') else (p.get('claim') and f'<span class="claim">{E(p["claim"])}</span>') or '<span class="claim"></span>'
-    return (f'<article class="card{" need" if primary else ""}" id="td-post-{d["key"]}-{i}">'
+    # One clear action (Krish, 2026-11-02: "the buttons that do things don't really go anywhere clear, like why would I
+    # give feedback and then go and See Option?"): the card's one button is his yes to the day, drawn live by web.js
+    # from the week's state (hidden until it has read it, so a page with no runtime shows no dead button); Open is a
+    # plain link to the detail, and Save only saves his note.
+    return (f'<article class="card{" need" if primary else ""}" id="td-post-{d["key"]}-{i}" data-live-day="{d["key"]}">'
             f'<div class="c-meta">{_pill(p)}<span class="c-time">{E(p["time"])}</span><span class="c-st tone-{tone}">{E(label)}</span></div>'
-            f'<div class="c-mid">{_preview(p, "s")}<div class="c-txt"><h4 class="c-title">{E(p["title"])}</h4>{waiting}</div></div>'
+            f'<div class="c-mid">{_preview(p, "s")}<div class="c-txt"><h4 class="c-title">{E(p["title"])}</h4>{waiting}'
+            f'<span class="claim yes-why" data-yes-why></span></div></div>'
             f'{_lane(p["stage"])}{_assets(p)}'
-            f'{_note(d, p, i)}<div class="c-foot"><button type="button" class="btn ghost fb-save" data-fb-save="{_note_id(d, i)}" disabled>Save</button>'
-            f'<span class="fb-st" data-fb-st="{_note_id(d, i)}"></span><a class="btn{primary}" href="{E(act["href"])}">{E(act["label"])}</a></div></article>')
+            f'{_note(d, p, i)}<div class="c-foot"><button type="button" class="btn ghost fb-save" data-fb-save="{_note_id(d, i)}" disabled>Save note</button>'
+            f'<span class="fb-st" data-fb-st="{_note_id(d, i)}"></span><a class="btn ghost" href="{E(act["href"])}">{E("Open" if act["label"] in ("See option", "Approve") else act["label"])}</a>'
+            f'<button type="button" class="btn go" data-yes-day="{d["key"]}" hidden>Yes</button></div></article>')
 
 
 def _empty_card(d):

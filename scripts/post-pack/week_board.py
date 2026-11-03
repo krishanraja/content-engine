@@ -1300,6 +1300,61 @@ def coverage_problems(data, sources):
     return out
 
 
+# Krish, 2026-11-02, of the 9 Nov Ideas tab: "Monday's piece is already done", Tuesday "is already being used this
+# week", "I have zero idea what this even means", and a Sunday on a board after Sunday was dropped. The file was written
+# ten days before the week and never checked again. From that week a board is built only from a gather of the last
+# GATHER_FRESH_DAYS days (while the week has not started) and runs board_feed.check whole.
+CHECKED_FROM = date(2026, 11, 9)
+GATHER_FRESH_DAYS = 2
+
+
+def stale_sources(sources, monday, today=None):
+    """Why sources.json is too old to build a board from, or None. Only before the week starts: once it is live a
+    rebuild for a made day is never held up by the Ideas tab."""
+    today = today or date.today()
+    if monday < CHECKED_FROM or today >= monday:
+        return None
+    at = str((sources or {}).get('gathered_at') or '')[:10]
+    try:
+        age = (today - date.fromisoformat(at)).days
+    except ValueError:
+        return f'sources.json says nothing of when it was gathered; run board_feed.py gather {monday.isoformat()} again'
+    if age > GATHER_FRESH_DAYS:
+        return (f'sources.json was gathered on {at}, {age} days ago; run board_feed.py gather {monday.isoformat()} again '
+                f'so what changed since (a day picked, an off day used) is checked')
+    return None
+
+
+class Ideas(dict):
+    """{day: [idea]}, with .locked: {day: {piece_id, so_what, why}} for each day already picked."""
+    locked = {}
+
+
+def read_locked(data, problems):
+    """{day: {piece_id, so_what, why}} from ideas.json `locked`: a publishing day whose piece is already picked or made
+    (Krish, 2026-11-02: "Monday's piece is already done"). The board shows it as locked, with no options."""
+    raw = data.get('locked') or {}
+    if not isinstance(raw, dict):
+        problems.append('locked is an object, {"mon": {"piece_id", "so_what", "why"}}')
+        return {}
+    days = {k: w for k, _, w, *_ in DAYS}
+    out = {}
+    for key, lock in raw.items():
+        if key not in days:
+            problems.append(f'locked: {key} is not a publishing day ({", ".join(days)})')
+            continue
+        lock = lock if isinstance(lock, dict) else {}
+        missing = [f for f in ('piece_id', 'so_what', 'why') if not str(lock.get(f) or '').strip()]
+        if missing:
+            problems.append(f'locked {days[key]}: no {", ".join(missing)}')
+            continue
+        if not UUID.match(str(lock['piece_id'])):
+            problems.append(f'locked {days[key]}: piece_id {lock["piece_id"]!r} is not a piece id')
+            continue
+        out[key] = {f: str(lock[f]).strip() for f in ('piece_id', 'so_what', 'why')}
+    return out
+
+
 def read_ideas(data, monday, where='--ideas'):
     """{day: [idea]} from an ideas file (docs/plans/<week>/ideas.json). Every
     idea is checked before it reaches him: what a business person finds out
@@ -1311,9 +1366,16 @@ def read_ideas(data, monday, where='--ideas'):
         raise BoardError(f'{where}: give {{"week_start": ..., "days": {{"mon": [ideas], "wed": [...], "fri": [...]}}}}')
     if data.get('week_start') and data['week_start'] != monday.isoformat():
         raise BoardError(f'{where} is for the week of {data["week_start"]}, not {monday.isoformat()}')
-    out, problems = {}, []
+    out, problems = Ideas(), []
+    out.locked = read_locked(data, problems)
     for key, _, weekday, *_ in DAYS:
         ideas = data['days'].get(key) or []
+        if key in out.locked:
+            # Ruling (Krish, 2026-11-02): "Monday's piece is already done". A day already picked offers nothing to pick.
+            if ideas:
+                problems.append(f'{weekday} is locked to its piece {out.locked[key]["piece_id"]}; it takes no options, give it none')
+            out[key] = []
+            continue
         if len(ideas) < MIN_IDEAS:
             problems.append(f'{weekday}: {len(ideas)} idea(s); give at least {MIN_IDEAS} to pick from')
         rows, seen = [], set()
@@ -1570,6 +1632,14 @@ def off_rich(o, problems, label):
             row['mock'] = {'url': mock['url'], 'note': _line(mock.get('note'), 300)}
     # A finished file Krish takes away from the card (Krish, 2026-11-02: "put the translator video on the board as a
     # download"): the board's own stored asset, so the link never moves.
+    # A settled option leaves the Today view (Krish, 2026-11-02, on Today: "I can barely ever see what the current state
+    # of things are there"): merged into another, or not chosen. It stays on the Ideas tab as history.
+    closed = o.get('closed')
+    if closed is not None:
+        if not _line(closed, 300):
+            problems.append(f'{label}: closed is one line saying why it is settled')
+        else:
+            row['closed'] = _line(closed, 300)
     download = o.get('download')
     if download is not None:
         if not isinstance(download, dict) or not str(download.get('url') or '').startswith('https://') or not _line(download.get('label'), 120):
@@ -1591,7 +1661,7 @@ def side_sha(o, side):
     return hashlib.sha256(json.dumps(shown, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
 
-def read_offdays(data, where='ideas.json offdays'):
+def read_offdays(data, where='ideas.json offdays', whole=False):
     """{day: [{'id', 'format', 'source', 'url', 'copy', 'copy_sha256'}]}, or None when there are none. Each day given
     holds 2 to 6 options; a day left out is said on the tab."""
     if data is None:
@@ -1649,6 +1719,21 @@ def read_offdays(data, where='ideas.json offdays'):
                 if not found:
                     row['cards'] = [{'words': ' '.join(c['words'].split()), 'picture': ' '.join(c['picture'].split())} for c in cards]
             row.update(off_rich(o, problems, f'{weekday} option {n}'))
+            if o.get('stories'):
+                found = story_problems(o['stories'])
+                problems.extend(f'{weekday} option {n}: stories {p}' for p in found)
+                if not found:
+                    row['stories'] = [{k: s[k] for k in ('headline', 'what', 'why', 'date', 'source', 'media')} for s in o['stories']]
+            for k in ('weekly', 'stories_due'):
+                if o.get(k) is not None:
+                    row[k] = str(o[k])
+            if whole:
+                # Krish, 2026-11-02, of a one-blob Thursday option: "I have zero idea what this even means". From the
+                # 9 Nov week every option he judges shows its hook, what he will see and why it lands, and its direction.
+                gaps = [f for f, ok in (('hook', row.get('hook')), ('pitch.see', (row.get('pitch') or {}).get('see')),
+                                        ('pitch.lands', (row.get('pitch') or {}).get('lands')), ('direction', row.get('direction'))) if not ok]
+                if gaps:
+                    problems.append(f'{weekday} option {n}: no {", ".join(gaps)}; he judges an option by these')
             for side in OFF_SIDES:
                 if side != 'mock' or row.get('mock'):
                     row[f'{side}_sha256'] = side_sha(row, side)
@@ -1665,6 +1750,33 @@ def read_offdays(data, where='ideas.json offdays'):
         out[key] = rows
     if problems:
         raise BoardError(f'{where} is not ready to show:\n  ' + '\n  '.join(problems))
+    return out
+
+
+STORY_COUNT = 4  # the weekly good news (Krish, 2026-11-02: "find the actual good news on Sunday ... so that the news items are fresh")
+
+
+def story_problems(stories):
+    """Why a weekly good-news option's stories are not ready to show, or []: four real stories, each with its headline,
+    what happened, why it matters, its date, its source and its own photo or clip (Krish, 2026-11-02, Improve on the
+    7 Nov good news: "I want actual news items and the content we are going to use here - embedded real world images or
+    videos")."""
+    if not isinstance(stories, list) or len(stories) != STORY_COUNT:
+        return [f'is a list of {STORY_COUNT} stories']
+    out = []
+    for i, st in enumerate(stories, 1):
+        st = st if isinstance(st, dict) else {}
+        src, media = st.get('source') or {}, st.get('media') or {}
+        if not all(_line(st.get(k), 400) for k in ('headline', 'what', 'why')):
+            out.append(f'{i} needs its headline, what happened and why it matters')
+        try:
+            date.fromisoformat(str(st.get('date')))
+        except ValueError:
+            out.append(f'{i} needs its date, YYYY-MM-DD')
+        if not (isinstance(src, dict) and _line(src.get('label'), 200) and str(src.get('url') or '').startswith('https://')):
+            out.append(f'{i} needs its source {{"label", "url" (https)}}')
+        if not (isinstance(media, dict) and media.get('kind') in ('photo', 'clip') and str(media.get('url') or '').startswith('https://')):
+            out.append(f'{i} needs its own photo or clip {{"kind": "photo" or "clip", "url" (https)}}')
     return out
 
 
@@ -1729,7 +1841,7 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
                      'copy': o.get('draft'), 'share_line': o.get('share_line'),
                      'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else []),
                      # The rich fields ride through as Growth wrote them (Ruling, Krish, 2026-11-01), never flattened into the copy.
-                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download')
+                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download', 'closed')
                         if o.get(k) is not None}}
                     for o in opts]
     return out, warnings
@@ -1739,7 +1851,8 @@ def previous_option(o):
     """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
     for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards',
-              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download'):
+              'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'download',
+              'stories', 'weekly', 'stories_due', 'closed'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -1897,14 +2010,20 @@ def off_option_card(monday, key, when, o):
             + (f' data-direction="{E(json.dumps(d, sort_keys=True, separators=(",", ":")))}"' if d else '')
             + (f' data-covers="{E(" ".join(o["covers"]))}"' if o.get('covers') else '') + '>'
             f'<div class="id-flags">{flags}</div><h4 class="hook">{E(o.get("hook") or off_title(o))}</h4>'
-            + (f'<div class="pitch">{rows}</div>' if rows else '') + copy
+            # Cut back (Krish, 2026-11-02: "confusing outdated verbal diahorrea of a mess of a section"): the card shows
+            # the idea, its picture and his buttons; everything else waits one tap away under Details, unchanged.
+            + (f'<p class="off-lead">{E(pitch["see"])}</p>' if pitch.get('see') else copy)
+            # A weekly good-news option's real stories are the idea itself, so they stay on the card.
+            + stories_block(o) + mock + off_press_row(did, 'idea', 'The idea')
+            + f'<details class="off-more"><summary>Details</summary>'
+            + (f'<div class="pitch">{rows}</div>' if rows else '') + (copy if pitch.get('see') else '')
             + (f'<ol class="off-cards" aria-label="Card by card">{cards}</ol>' if cards else '')
             + inspo + learned + revised
             + (f'<p class="id-how">Still needs: {E("; ".join(o["needs"]))}</p>' if o.get('needs') else '')
             + f'<p class="id-why"><span class="id-why-k">Source</span> {src}</p>'
-            + mock + direction + off_press_row(did, 'idea', 'The idea')
+            + direction
             # The idea's presses first, then the direction's, as in the locked mock.
-            + (off_press_row(did, 'direction', 'The direction') if d else '')
+            + (off_press_row(did, 'direction', 'The direction') if d else '') + '</details>'
             # His open words on anything, always there whatever he pressed (Krish, 2026-11-02: "I still need to be able
             # to provide actual feedback on anything in open text format"; "it would contain the exact meme text to put
             # above the meme video"). Several lines, kept exactly as typed, handed to Growth with the option.
@@ -1915,11 +2034,30 @@ def off_option_card(monday, key, when, o):
             + f'<p class="tri-state" data-offstate="{E(did)}" aria-live="polite"></p></article>')
 
 
+def stories_block(o):
+    """A weekly good-news option's real stories, each with its source and its own photo or clip; before they are found,
+    the day they are due."""
+    if o.get('stories'):
+        items = ''.join(
+            f'<li class="story"><b>{E(st["headline"])}</b> <span class="st-date">{E(st["date"])}</span>'
+            f'<p>{E(st["what"])}</p><p class="st-why">{E(st["why"])}</p>'
+            f'<p class="st-links"><a href="{E(st["source"]["url"])}" target="_blank" rel="noopener">{E(st["source"]["label"])}</a> · '
+            f'<a href="{E(st["media"]["url"])}" target="_blank" rel="noopener">its {E(st["media"]["kind"])}</a></p></li>'
+            for st in o['stories'])
+        return f'<ol class="off-stories" data-stories="{len(o["stories"])}" aria-label="This week\'s stories">{items}</ol>'
+    if o.get('weekly'):
+        return f'<p class="id-how" data-stories="0">A weekly series: this week\'s stories are found fresh on Sunday {E(o.get("stories_due") or "")}.</p>'
+    return ''
+
+
 def offdays_section(monday, offdays):
     """The Off days part of the Ideas tab, in the shape Krish locked on 1 Nov 2026: the slate across the top, then each
     day's options, each an idea and a suggested creative direction he approves, improves or rejects for a reason. A
     piece he records keeps its own Approve and Skip on its exact words (offdayRecorded on the server)."""
     head = f'<section class="off-days" id="ideas-offdays" data-week="{monday.isoformat()}"><div class="sec-head"><h2>Off days</h2></div>'
+    # A settled option (closed: merged into another piece, as he asked) leaves the Ideas tab and its counts.
+    offdays = {k: [o for o in v or [] if not o.get('closed')] for k, v in (offdays or {}).items()}
+    offdays = {k: v for k, v in offdays.items() if v}
     if not offdays:
         return head + slot_empty('No options for Tuesday, Thursday, Saturday or Sunday yet.') + '</section>'
     parts = [head, '<p class="id-how">Each option comes with its idea and a suggested direction. Approve, improve or reject '
@@ -2010,6 +2148,11 @@ def ideas_panel(monday, ideas, hidden, queue=None, offdays=None):
                      f'<div class="sec-head"><h2>{weekday} {when.day} {when.strftime("%B")}</h2>'
                      f'<span class="id-series">{E(series_label)}</span></div>'
                      f'<p class="id-state" data-pickstate="{key}" aria-live="polite"></p>' + queue_block(queue, key, slug))
+        lock = (getattr(ideas, 'locked', None) or {}).get(key)
+        if lock:
+            parts.append(f'<article class="id-card id-locked" data-locked-day="{key}" data-idea-id="{E(lock["piece_id"])}">'
+                         f'<div class="id-flags"><span class="id-flag">Already picked</span></div>'
+                         f'<p class="id-sowhat">{E(lock["so_what"])}</p><p class="id-story">{E(lock["why"])}</p></article>')
         for idea in ideas.get(key, []):
             pid, src = idea['pick'], idea['source']
             kind = idea.get('source_kind')
@@ -2754,13 +2897,20 @@ def run_sheet_problems(name, panel, tag):
     return out
 
 
+def open_offday_count(offdays):
+    """How many off-day options still wait on him: every option not closed."""
+    return sum(1 for v in (offdays or {}).values() for o in v or [] if not o.get('closed'))
+
+
 def ideas_waiting_panel(monday, hidden, offdays=None):
     sunday = monday - timedelta(days=1)
     return (f'<div class="pm fixed" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" '
             f'data-state="ideas-waiting" tabindex="-1"{" hidden" if hidden else ""}>'
             f'<div class="day-head"><div class="kick">{E(week_span(monday))}</div><h1>Ideas</h1></div>'
-            + slot_empty(f'This week\'s ideas arrive by {short_date(sunday)}: fresh ones from the ideas you drop in Control Center, '
-                         'Content Inspo (once Cold Ideas and Inspo) and the engine\'s own research, with what you queued earlier first.')
+            # Once the week is under way the waiting note is out of date; only an empty week before its Sunday shows it.
+            + ('' if open_offday_count(offdays) else
+               slot_empty(f'This week\'s ideas arrive by {short_date(sunday)}: fresh ones from the ideas you drop in Control Center, '
+                          'Content Inspo (once Cold Ideas and Inspo) and the engine\'s own research, with what you queued earlier first.'))
             + offdays_section(monday, offdays) + '</div>')
 
 
@@ -3048,6 +3198,16 @@ def kept_panel(text, key):
             break
         panel = panel.replace(div_at(panel, m.start()), '', 1)
     return drop_channels(panel, key)
+
+
+def with_kept_covers(parsed, kept):
+    """The parsed day pages, plus a cover for each kept day whose panel holds a ready cover download. A kept day has no
+    publish page to parse, so without this a rebuild turned its ready cover back to missing (2 Nov 2026)."""
+    seen = dict(parsed)
+    for k, panel in (kept or {}).items():
+        if k not in seen and re.search(r'data-state="ready"[^>]*data-formats="cover"', panel):
+            seen[k] = {'images': [{'id': 'cover', 'role': 'cover'}]}
+    return seen
 
 
 DAY_ATTR = re.compile(r'(?<=["\'#\s])((?:rvs?|rvp)-)?(mon|wed|fri)-')
@@ -3531,7 +3691,7 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
             elif state == 'made' and not live:
                 out['asks'].append({'what': f'Publish, {short(when)}', 'detail': 'Approve, then post it',
                                     'cta': 'Approve', 'href': f'#{name}/publish', 'day': key})
-        opts = (offdays or {}).get(key) or []
+        opts = [o for o in (offdays or {}).get(key) or [] if not o.get('closed')]
         for o in opts:
             posts.append({'kind': off_kind(o),
                           'title': off_title(o), 'claim': f'From: {o.get("source")}' if o.get('source') else None,
@@ -3607,7 +3767,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             f'<button type="button" role="tab" id="tab-ideas" aria-controls="panel-ideas" '
             f'aria-selected="{"true" if opened == "ideas" else "false"}" tabindex="{"0" if opened == "ideas" else "-1"}" data-day="ideas">'
             f'<span class="t-day">Ideas</span><span class="t-dot"> · </span>'
-            f'<span class="t-prog" data-tabprog="ideas">{f"pick {n}" if n else "not yet"}</span><span class="t-ch">Sunday</span></button>')
+            f'<span class="t-prog" data-tabprog="ideas">{f"pick {n}" if n else (f"{m} off-day" if (m := open_offday_count(offdays)) else "not yet")}</span>'
+            f'<span class="t-ch">{"Sunday" if n or not m else "options"}</span></button>')
         panels.append(queue_panel(monday, queue, True, combine))
         tabs.append(
             '<button type="button" role="tab" id="tab-queue" aria-controls="panel-queue" aria-selected="false" tabindex="-1" data-day="queue">'
@@ -3751,7 +3912,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             f'data-day="{ARCHIVE_TAB}"><span class="t-day">Archive</span><span class="t-dot"> · </span>'
             f'<span class="t-prog" data-tabprog="{ARCHIVE_TAB}">{len(archive or [])} pieces</span><span class="t-ch">Every piece</span></button>')
     if TODAY_ON:
-        model = today_model(monday, days, videos or {}, posted, offdays, parsed, gates=gates)
+        model = today_model(monday, days, videos or {}, posted, offdays, with_kept_covers(parsed, kept), gates=gates)
         panels.insert(0, f'<div class="pm fixed" id="panel-{TODAY_TAB}" role="tabpanel" aria-labelledby="tab-{TODAY_TAB}" '
                          f'data-day="{TODAY_TAB}" tabindex="-1"><div class="day-head"><div class="kick">{E(week_span(monday))}</div>'
                          f'<h1>{E(model["label"])}</h1></div>{board_today.inner(model, heading=False)}</div>')
@@ -3943,6 +4104,10 @@ def verify(page):
             checked = [c for c in cards if 'data-pick="' in c and re.search(r'<dt>Source</dt><dd><a href="https://', c)
                        and '<dt>Strongest checked fact</dt><dd>' in c and 'class="id-sowhat"' in c and marks(c)
                        and (not fixed or 'data-source-kind="' in c)]
+            if day and 'data-locked-day="' in day.group(0):
+                if checked:
+                    out.append(f'ideas: {weekday} is locked to its piece and still offers {len(checked)} idea(s) to pick')
+                continue
             if len(checked) < MIN_IDEAS:
                 out.append(f'ideas: {weekday} has {len(checked)} checked idea(s) with a pick box; it needs {MIN_IDEAS}, each with what a business person finds out, a pick box, '
                            + ('Wider piece, Future trend, Next week and Reject, and where it came from' if fixed else 'the triage buttons and a Queue mark'))
@@ -4286,13 +4451,23 @@ def build(args, get=None):
         raw = read_json(args.ideas, '--ideas')
         ideas = read_ideas(raw, monday)
         if fixed_layout(monday):
-            offdays = read_offdays(raw.get('offdays') if isinstance(raw, dict) else None)
+            offdays = read_offdays(raw.get('offdays') if isinstance(raw, dict) else None, whole=monday >= CHECKED_FROM)
             # Krish, 2026-10-24: his Inspiration House read properly, and styles he can choose from that push. The
             # gather's sources.json sits beside ideas.json; a fixed week without it was never gathered.
             src = Path(args.ideas).resolve().parent / 'sources.json'
             if not src.exists():
                 raise BoardError(f'--ideas: no sources.json beside {args.ideas}; run board_feed.py gather {monday.isoformat()} first')
-            owed = coverage_problems(raw, read_json(str(src), 'sources.json')) + style_problems(raw)
+            sources = read_json(str(src), 'sources.json')
+            stale = stale_sources(sources, monday)
+            if stale:
+                raise BoardError(f'--ideas: {stale}')
+            if monday >= CHECKED_FROM:
+                # Krish, 2026-11-02: the build runs every check the Sunday run does (locked days, no repeat of the last
+                # weeks' pieces and off days), on a fresh gather, never only the coverage.
+                import board_feed
+                owed = board_feed.check(raw, sources, sys.modules[__name__])
+            else:
+                owed = coverage_problems(raw, sources) + style_problems(raw)
             if owed:
                 raise BoardError('--ideas is not ready to show (board_feed.py cover):\n  ' + '\n  '.join(owed))
     if getattr(args, 'offdays_plan', None):
@@ -4682,6 +4857,10 @@ def _self_test():
           kept_mon == original and 'ready-stage' not in kept_page and original.split('>', 1)[1] in kept_page
           and [d['state'] for d in kept_manifest['days']] == ['made', 'not_picked', 'not_picked']
           and re.search(r'<div class="pm" id="panel-monday"[^>]*hidden>', kept_page) is None)
+    ready_cover = '<li class="dl-item" data-dl="img-cover" data-state="ready" data-asset="img-cover" data-formats="cover"></li>'
+    covers = with_kept_covers({}, {'mon': f'<div>{ready_cover}</div>', 'wed': '<div>no cover</div>'})
+    check('--keep: a kept day with a ready cover download keeps its cover; one without does not',
+          [im['role'] for im in covers['mon']['images']] == ['cover'] and 'wed' not in covers)
     try:
         kept_panel(page, 'wed')
         check('--keep: a day the board does not hold as made is refused', False)
@@ -4968,6 +5147,27 @@ def _growth_offday_checks(check, week, ideas):
           rcard.count('data-side="direction" data-value=') == 3 and rcard.count('data-side="idea" data-value=') == 4
           and f'data-idea-sha256="{six["tue"][0]["idea_sha256"]}"' in rcard and f'data-direction-sha256="{six["tue"][0]["direction_sha256"]}"' in rcard
           and six['tue'][0]['idea_sha256'] != six['tue'][0]['direction_sha256'] and 'data-shown=' in rcard and 'data-direction=' in rcard)
+    try:
+        read_offdays({'tue': [rich, plain]}, whole=True)
+        check('off days: from 9 Nov an option with no hook, pitch or direction is refused', False)
+    except BoardError as error:
+        check('off days: from 9 Nov an option with no hook, pitch or direction is refused', 'option 2: no hook, pitch.see' in str(error))
+    # Krish, 2026-11-02: the weekly good news, its four real stories found on Sunday, each with its source and its own picture.
+    st = lambda n, **kw: dict({'headline': f'Story {n}', 'what': 'What happened.', 'why': 'Why it matters.', 'date': '2026-11-05',
+                               'source': {'label': 'Src', 'url': 'https://example.com/s'}, 'media': {'kind': 'photo', 'url': 'https://example.com/p.jpg'}}, **kw)
+    weekly = dict(rich, id='goodnews', weekly='good_news', stories_due='2026-11-08')
+    got = read_offdays({'sat': [weekly, plain]})
+    check('off days: a weekly option before Sunday says its stories are found then',
+          'found fresh on Sunday 2026-11-08' in stories_block(got['sat'][0]) and 'data-stories="0"' in stories_block(got['sat'][0]))
+    got = read_offdays({'sat': [dict(weekly, stories=[st(n) for n in range(1, 5)]), plain]})
+    check('off days: its four stories show with their source and their own photo or clip',
+          stories_block(got['sat'][0]).count('<li class="story">') == 4 and 'its photo' in stories_block(got['sat'][0])
+          and previous_option(got['sat'][0])['stories'] == got['sat'][0]['stories'])
+    try:
+        read_offdays({'sat': [dict(weekly, stories=[st(1), st(2), st(3), st(4, media={'kind': 'photo', 'url': ''})]), plain]})
+        check('off days: a story with no photo or clip is refused', False)
+    except BoardError as error:
+        check('off days: a story with no photo or clip is refused', 'its own photo or clip' in str(error))
     revised = read_offdays({'tue': [dict(rich, direction=dict(rich['direction'], tone='Warm.'), revised={'side': 'direction', 'words': 'warmer please'}), plain]})
     check('off-day option: a revised direction has a new hash, so his old press reads as answered, and says what it answers',
           revised['tue'][0]['direction_sha256'] != six['tue'][0]['direction_sha256'] and revised['tue'][0]['idea_sha256'] == six['tue'][0]['idea_sha256']
@@ -4981,6 +5181,15 @@ def _growth_offday_checks(check, week, ideas):
             check(f'off-day option: a bad {want} is refused', False)
         except BoardError as error:
             check(f'off-day option: a bad {want} is refused', want in str(error))
+    shut = today_model(week, {}, {}, {}, read_offdays({'tue': [dict(rich, closed='Merged into the to-camera piece'), plain]}), {})
+    check('off-day option: a closed option leaves the Today view, its day keeping the rest',
+          [p['title'] for d in shut['days'] if d['key'] == 'tue' for p in d['posts']] == [off_title(read_offdays({'tue': [plain, rich]})['tue'][0])])
+    shut_sec = offdays_section(week, read_offdays({'tue': [dict(rich, closed='Merged into the to-camera piece'), plain]}))
+    check('off-day option: a closed option leaves the Ideas tab and its day\'s count',
+          shut_sec.count('class="off-card opt"') == 1 and 'data-day-count="tue">1 option<' in shut_sec)
+    check('the Ideas tab drops its waiting note and says what waits once off-day options are in',
+          'arrive by' not in ideas_waiting_panel(week, False, read_offdays({'tue': [plain, rich]}))
+          and 'arrive by' in ideas_waiting_panel(week, False, {}))
     dl_page = board(week, ideas=ideas, offdays=read_offdays({'tue': [dict(rich, download={'url': 'https://board.asset/v.mp4', 'label': 'the video'}), plain]}))[0]
     check('off-day option: a finished file is a Download link on its card',
           '<a class="btn-s" href="https://board.asset/v.mp4" download>Download: the video</a>' in dl_page and verify(dl_page) == [])
@@ -5720,6 +5929,24 @@ def _ideas_checks(check):
     mon_panel = picked[picked.index('id="panel-monday"'):picked.index('id="panel-wednesday"')]
     check('ideas: a picked day shows the weekday as its heading and the idea in plain words, never the engine line',
           '<h1>Monday</h1>' in mon_panel and 'A business person finds out mon1.' in mon_panel and 'never a title' not in mon_panel)
+    # Krish, 2026-11-02: "Monday's piece is already done". A locked day shows its piece and no pick box.
+    lock = {'mon': {'piece_id': MON_ID, 'so_what': 'Locked so-what.', 'why': 'Picked 19 Oct; made.'}}
+    lk = read_ideas(dict(data, days=dict(data['days'], mon=[]), locked=lock), wk)
+    lpage, _, _ = board(wk, ideas=lk)
+    lmon = lpage[lpage.index('id="ideas-mon"'):lpage.index('id="ideas-wed"')]
+    check('ideas: a locked day shows its piece, Already picked, and no pick box, and --verify passes it',
+          'Locked so-what.' in lmon and 'Already picked' in lmon and 'data-pick="' not in lmon and verify(lpage) == [])
+    try:
+        read_ideas(dict(data, locked=lock), wk)
+        check('ideas: a locked day given options is refused', False)
+    except BoardError as error:
+        check('ideas: a locked day given options is refused', 'takes no options' in str(error))
+    check('ideas: a board for 9 Nov on is built from a gather of the last two days, before its week only',
+          'gathered on 2026-11-01' in (stale_sources({'gathered_at': '2026-11-01T06:00:00Z'}, date(2026, 11, 9), date(2026, 11, 4)) or '')
+          and stale_sources({'gathered_at': '2026-11-03T06:00:00Z'}, date(2026, 11, 9), date(2026, 11, 4)) is None
+          and 'nothing of when' in (stale_sources({}, date(2026, 11, 9), date(2026, 11, 4)) or '')
+          and stale_sources({}, date(2026, 11, 9), date(2026, 11, 10)) is None
+          and stale_sources({}, date(2026, 11, 2), date(2026, 11, 1)) is None)
     check('ideas: triage is saved to queue/<pick> and posted as a comment',
           'qdb.doc("queue/" + pid).set(body)' in js and 'QUEUE ${pid}' in js and 'curious' in js)
     for name, bad, want in (

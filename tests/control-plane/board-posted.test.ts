@@ -197,7 +197,7 @@ describe('GET /api/board/<Monday>/pieces', () => {
     { id: '66666666-2222-4333-8444-555555555555', scheduled_for: '2026-11-08', lane_slot: 'mind_the_gap', state: 'drafting', meta: { offday: { date: '2026-11-08', slot: 'noonish' } }, updated_at: '2026-10-29T00:00:00Z' },
   ]
   const MIX = { kind: 'mix', approved: true, days: { tue: ['carousel'], sat: ['meme'] }, mix_sha256: 'a'.repeat(64), at: '2026-11-01T18:00:00Z' }
-  const db = (fail = false, mix: unknown = null, off: Array<{ doc_id: string; body: unknown }> = []) => {
+  const db = (fail = false, mix: unknown = null, off: Array<{ doc_id: string; body: unknown }> = [], said: Array<{ doc_id: string; body: unknown; updated_by: string }> = []) => {
     const f: Record<string, unknown> = {}
     const q: any = {
       select: () => q,
@@ -205,9 +205,17 @@ describe('GET /api/board/<Monday>/pieces', () => {
       lte: (k: string, v: string) => { f.lte = [k, v]; return Promise.resolve(fail ? { data: null, error: { message: 'down' } } : { data: rows.filter(r => r.scheduled_for >= String((f.gte as string[])[1]) && r.scheduled_for <= v), error: null }) },
     }
     const doc: any = { select: () => doc, eq: () => doc, maybeSingle: async () => ({ data: mix ? { body: mix } : null, error: null }),
-      like: async (k: string, v: string) => { expect([k, v]).toEqual(['doc_id', 'off-%']); return { data: off, error: null } } }
+      like: async (k: string, v: string) => { expect([k, v]).toEqual(['doc_id', 'off-%']); return { data: off, error: null } },
+      or: async (f: string) => { expect(f).toBe('doc_id.like.yes-%,doc_id.like.%-publish'); return { data: said, error: null } } }
     return { from: (t: string) => { expect(['content_ideas', 'board_documents']).toContain(t); return t === 'board_documents' ? doc : q } }
   }
+  it('carries his yes for each day, from wherever he gave it (one yes anywhere, Ruling, Krish, 2026-11-02)', async () => {
+    const said = [{ doc_id: 'yes-wed-words', updated_by: 'engine_operator', body: { kind: 'yes', day: 'wed', via: 'words', approved: true,
+      at: '2026-11-02T21:30:00Z', words: 'can you just approve Weds, Fri and Sat for me here', said_at: '2026-11-02T21:25:00Z',
+      said_where: 'a session', session_ref: 'https://claude.ai/code/s' } }]
+    const out = await readPieces(db(false, null, [], said) as never, '2026-11-02')
+    expect(out.body.yes.wed).toMatchObject({ approved: true, via: 'words', words: 'can you just approve Weds, Fri and Sat for me here' })
+  })
   it('lists each day once: a series day its own series\' piece, an off day with its slot', async () => {
     const out = await readPieces(db() as never, '2026-11-02')
     expect(out.status).toBe(200)
@@ -215,7 +223,7 @@ describe('GET /api/board/<Monday>/pieces', () => {
       { day: 'mon', date: '2026-11-02', piece_id: B, channels: [...SERIES_DAY_CHANNELS] },
       { day: 'thu', date: '2026-11-05', piece_id: C, channels: [...OFF_DAY_CHANNELS], slot: '17:30' },
       { day: 'sun', date: '2026-11-08', piece_id: '66666666-2222-4333-8444-555555555555', channels: [...OFF_DAY_CHANNELS], slot: '12:30' },
-    ], mix: null, offdays: [] })
+    ], mix: null, offdays: [], yes: {} })
     expect((await readPieces(db(true) as never, '2026-11-02')).status).toBe(503)
   })
   it('carries his one press on the week\'s mix, so Growth fills only what he approved (Ruling, Krish, 2026-10-30)', async () => {

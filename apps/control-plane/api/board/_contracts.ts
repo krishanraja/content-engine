@@ -100,6 +100,24 @@ export function scoreBody(id: string, body: Record<string, unknown>): boolean {
     && (SCORE_BASES as readonly unknown[]).includes(body.basis) && !('send' in body)
     && (!('note' in body) || body.note === null || typeof body.note === 'string' && body.note.length <= 4000)
 }
+// One yes anywhere (Ruling, Krish, 2026-11-02: "yes, start with one yes anywhere"; "the reason I dont press approve is
+// cos this board is crap and outdated all the time, and yet you refuse to do work until i press approve"). His yes to
+// a day is one record readable by the board, the piece manifest and Growth's scheduler, from either place he gives it:
+//   picks/yes-<day>-board  his press on the board (Yes, or Undo), written only through his own login;
+//   picks/yes-<day>-words  his exact typed words from a session, carried by the engine with when and where he typed
+//                          them and the session link, so it can never pass for a press he did not make.
+// The later of the two by `at` is his answer for the day; his Undo on the board beats an earlier chat yes.
+export const YES_ID = /^yes-(mon|tue|wed|thu|fri|sat|sun)-(board|words)$/
+export function yesBody(id: string, body: Record<string, unknown>): boolean {
+  const m = YES_ID.exec(id)
+  if (!m || body.kind !== 'yes' || body.day !== m[1] || body.via !== m[2] || typeof body.approved !== 'boolean' || 'send' in body) return false
+  if (typeof body.at !== 'string' || !Number.isFinite(Date.parse(body.at))) return false
+  if (m[2] === 'board') return !('words' in body) || body.words === null || typeof body.words === 'string' && body.words.length <= 2000
+  // From his words: the words themselves, verbatim, when and where he typed them, and the session they came from.
+  return body.approved === true && typeof body.words === 'string' && body.words.trim().length > 0 && body.words.length <= 2000
+    && typeof body.said_at === 'string' && Number.isFinite(Date.parse(body.said_at))
+    && oneLine(body.said_where, 300) && typeof body.session_ref === 'string' && /^https:\/\/[^\s]{1,290}$/.test(body.session_ref)
+}
 export const SCRIPT_CUTS = ['long', 'short', 'feature'] as const
 export const TITLE_SURFACES = ['long_title', 'short_title', 'long_thumbnail', 'short_thumbnail'] as const
 const oneLine = (v: unknown, max: number) => typeof v === 'string' && v.trim().length > 0 && v.length <= max && !/[\x00-\x1f\x7f]/.test(v)
@@ -147,6 +165,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'links') return day(id) && ['article', 'youtube'].every(k => text(k, 2048) && (!body[k] || /^https?:\/\//.test(body[k] as string)))
   if (collection === 'edits') return text('text') && day(body.day) && text('item', 100) && id === `${body.day}-${body.item}`
   // His pick for a day, with his optional saved note; or one of his decisions on a day's tab (decisionBody).
+  if (collection === 'picks' && (YES_ID.test(id) || body.kind === 'yes')) return yesBody(id, body)
   if (collection === 'picks' && FEEL_ID.test(id)) return feelBody(id, body)
   if (collection === 'picks' && (id === MIX_ID || body.kind === 'mix')) return id === MIX_ID && mixBody(body)
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
@@ -256,6 +275,9 @@ export function combineWriterRefused(collection: string, body: unknown, who: str
  *  them; any other writer gets the code to refuse with. A plain comment stays open to the engine. */
 export function hisOnlyRefusal(collection: string, body: unknown, who: string | null): string | null {
   if (who === 'Krish') return null
+  // His typed yes, carried from a session: the engine may write it, only as his words (yesBody holds them verbatim
+  // with where, when and the session link), and only a yes; a board press, or taking a yes back, is his alone.
+  if (collection === 'picks' && object(body) && body.kind === 'yes') return body.via === 'words' && body.approved === true ? null : 'yes_press_is_his'
   if (combineWriterRefused(collection, body, who)) return 'combine_is_his_tap'
   if (collection === 'edits') return 'edit_is_his_save'
   if (collection === 'comments' && object(body) && 'act' in body) return 'tap_is_his'

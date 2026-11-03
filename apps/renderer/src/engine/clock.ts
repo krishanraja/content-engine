@@ -22,12 +22,16 @@ export interface DeviceState {
   current: EngineEvent | null
   /** Events already fired, oldest first. */
   fired: EngineEvent[]
-  /** Frames since `current` fired (0 on its frame); Infinity before the first event. */
+  /** Frames since `current` fired; opening entrances are already landed. Infinity before the first event. */
   sinceFrames: number
 }
 
 export function stateAt(events: readonly EngineEvent[], obj: string, frame: number): DeviceState {
-  const fired = events.filter((e) => e.obj === obj && e.atFrame <= frame).sort((a, b) => a.atFrame - b.atFrame)
+  // Pre-roll opening entrances internally, including staggered children. Props keep their
+  // original non-negative cues; later events and exits retain their exact times.
+  const fired = events.filter((e) => e.obj === obj && e.atFrame <= frame)
+    .map(e => e.atFrame === 0 && e.verb === 'enter' ? { ...e, atFrame: -Number.MAX_SAFE_INTEGER } : e)
+    .sort((a, b) => a.atFrame - b.atFrame)
   const current = fired.at(-1) ?? null
   return { current, fired, sinceFrames: current ? frame - current.atFrame : Number.POSITIVE_INFINITY }
 }
@@ -42,4 +46,10 @@ export function progress(sinceFrames: number, durationFrames: number, easing: (t
 export function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number {
   if (toFrame <= fromFrame) return 0
   return interpolate(frame, [fromFrame, toFrame], [0, pct / 100], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+}
+
+/** Opening text is already typed; later rows retain their lead and reveal duration. */
+export function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number {
+  if (cue.atFrame === 0 && frame >= 0) return 1
+  return progress(frame - cue.atFrame - leadFrames, durationFrames, t => t)
 }

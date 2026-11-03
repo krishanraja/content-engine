@@ -26,7 +26,7 @@ from pathlib import Path
 
 from . import gaps as rule
 from .common import ffmpeg, load_json, sha256_file, write_json
-from .takes import check_media, list_takes, load_take
+from .takes import check_media, list_takes, load_take, silences, voiced_onset
 
 SCHEMA = 've-edl/1'
 FPS = 30
@@ -290,6 +290,7 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
                       'from': {'take': segments[k - 1]['take'], 'src_s': segments[k - 1]['src_out_s']},
                       'to': {'take': segments[k]['take'], 'src_s': segments[k]['src_in_s']}})
 
+    pauses = {name: silences(clocks[name].record) for name in clocks}
     words = []
     for word in script:
         if word['w'] in removed:
@@ -300,7 +301,12 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
 
         def out(t, s=segment):
             return round(s['out_in_s'] + (t - s['src_in_s']) / speed, 4)
-        row = {'w': word['w'], 'word': word['word'], 'onset_s': out(a['onset_s']), 'end_s': out(a['end_s']), 'take': take}
+        # The voice starts after any pause the aligner folded into the word (Thursday 5 Nov: "Muse" and "without"
+        # captions showed half a second early, in his pause).
+        onset = voiced_onset(a['onset_s'], a['end_s'], pauses[take])
+        row = {'w': word['w'], 'word': word['word'], 'onset_s': out(onset), 'end_s': out(a['end_s']), 'take': take}
+        if onset != a['onset_s']:
+            row['heard_onset_s'] = out(a['onset_s'])
         match = next((b for b in clocks[take].b if token(b['text']) == token(a['text'])
                       and abs(b['onset_s'] - a['onset_s']) <= CONFIRM_S), None)
         if match:

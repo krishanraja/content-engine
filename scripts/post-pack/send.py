@@ -160,7 +160,7 @@ def brand_kit_purpose(relative):
     return BRAND_KIT_PURPOSES.get(first, BRAND_KIT_DEFAULT)
 
 
-def plan(folder, prefix=None, purpose=None, brand_kit=False):
+def plan(folder, prefix=None, purpose=None, brand_kit=False, lib=library.MAKEYOURMINDUP):
     """[(library path, Path, purpose)] for everything in folder, checked
     against the library's rule. Raises SendError listing every problem."""
     folder = Path(folder)
@@ -171,8 +171,13 @@ def plan(folder, prefix=None, purpose=None, brand_kit=False):
         data = json.loads((folder / MANIFEST).read_text(encoding='utf-8'))
         manifest = {item['path']: item['purpose'] for item in data.get('files', [])}
         prefix = prefix or data.get('library_prefix')
+        lib = data.get('library') or lib
+    if lib not in library.LIBRARIES:
+        raise SendError(library.explain('library_unknown'))
     if brand_kit:
         prefix = prefix or BRAND_KIT
+    if not prefix and lib == library.HEARTSIDE:
+        raise SendError('say which post these are, with --as "Posts/<post id>" (for example Posts/F01)')
     if not prefix:
         raise SendError('say where in the library these go, with --as: "1 Brand kit (permanent)", '
                         '"2 Channel art (permanent)" or "3 Posts/<post folder>"')
@@ -184,9 +189,9 @@ def plan(folder, prefix=None, purpose=None, brand_kit=False):
     for relative, path in files:
         target = f'{prefix}/{relative}'
         why = manifest.get(relative) or purpose or (brand_kit_purpose(relative) if brand_kit else None)
-        code = library.refusal(target)
+        code = library.refusal(target, lib)
         if code:
-            problems.append(f'  {target}\n    cannot go into the library: {library.explain(code)}')
+            problems.append(f'  {target}\n    cannot go into the {lib} library: {library.explain(code, lib)}')
         elif not why:
             problems.append(f'  {target}\n    says nothing about what it is for: rebuild the pack with build.py, or give --purpose')
         elif path.stat().st_size > library.MAX_BYTES:
@@ -267,8 +272,10 @@ def refusal_text(status, body):
     return f'{words} [{code or status}]'
 
 
-def send(planned, engine_api, out=print):
-    """Sends each planned file. Returns {'sent', 'already', 'confirmed_only'}."""
+def send(planned, engine_api, out=print, lib=library.MAKEYOURMINDUP):
+    """Sends each planned file. Returns {'sent', 'already', 'confirmed_only'}.
+    A request names its library only when it is not makeyourmindup, the engine's default."""
+    named = {} if lib == library.MAKEYOURMINDUP else {'library': lib}
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'quick-edit'))
     import quality
     planned = list(planned)
@@ -282,7 +289,7 @@ def send(planned, engine_api, out=print):
         sha, md5 = hashes(path)
         size = path.stat().st_size
         status, answer = engine_api.post('/api/library/upload-url', {'path': target, 'sha256': sha, 'md5': md5,
-                                                                    'bytes': size, 'purpose': why})
+                                                                    'bytes': size, 'purpose': why, **named})
         if not (200 <= status < 300 and isinstance(answer, dict) and answer.get('ok') is True):
             raise SendError(f'{target}: {refusal_text(status, answer)}. Stopped; the files above went in.')
         if answer.get('already_there'):
@@ -295,7 +302,7 @@ def send(planned, engine_api, out=print):
             # 409: the bytes landed already (a second sender, or a retry); confirm checks them.
             if not (200 <= put < 300 or put == 409):
                 raise SendError(f'{target}: the upload was refused ({put}). Stopped; the files above went in.')
-        status, confirmed = engine_api.post('/api/library/confirm', {'path': target, 'sha256': sha})
+        status, confirmed = engine_api.post('/api/library/confirm', {'path': target, 'sha256': sha, **named})
         if not (200 <= status < 300 and isinstance(confirmed, dict) and confirmed.get('ok') is True):
             raise SendError(f'{target}: {refusal_text(status, confirmed)}. Stopped; the files above went in.')
         if upload:
@@ -321,14 +328,14 @@ class FakeEngine:
         self.calls.append((path, body['path']))
         if self.fail_on and body['path'].endswith(self.fail_on):
             return 503, {'ok': False, 'error': {'code': 'library_store_unavailable'}}
-        code = library.refusal(body['path'])
+        code = library.refusal(body['path'], body.get('library', library.MAKEYOURMINDUP))
         if code:
             return 400, {'ok': False, 'error': {'code': 'invalid_library_path', 'reason': code}}
-        key = (body['path'], body['sha256'])
+        key = (body.get('library', library.MAKEYOURMINDUP), body['path'], body['sha256'])
         if path == '/api/library/upload-url':
             row = self.files.get(key)
             if row and row['ready']:
-                newest = max((r for (p, _), r in self.files.items() if p == body['path'] and r['ready']), key=lambda r: r['at'])
+                newest = max((r for (lib, p, _), r in self.files.items() if lib == key[0] and p == body['path'] and r['ready']), key=lambda r: r['at'])
                 again = newest is not row
                 if again:
                     self.clock += 1
@@ -410,6 +417,23 @@ def self_test():
         check('the earlier version sent again', send(plan(pack), fake, lines.append)['already'], 4)
         check('says it is the newest again', any('the newest again' in line for line in lines), True)
 
+        # The Heartside library: its own folder rule, named on every request.
+        hs = tmp / 'heartside-F01'
+        hs.mkdir()
+        (hs / 'heartside_F01_becoming-the-mug_reel.mp4').write_bytes(b'reel')
+        (hs / 'heartside_F01_becoming-the-mug_cover.jpg').write_bytes(b'cover')
+        hs_planned = plan(hs, 'Posts/F01', 'Heartside post F01, for Codex to post.', lib=library.HEARTSIDE)
+        check('a Heartside post goes under Posts/<post id>', [t for t, _, _ in hs_planned],
+              ['Posts/F01/heartside_F01_becoming-the-mug_cover.jpg', 'Posts/F01/heartside_F01_becoming-the-mug_reel.mp4'])
+        refused('a Heartside path is not a makeyourmindup path', lambda: plan(hs, 'Posts/F01', 'x'), 'cannot go into the makeyourmindup library')
+        refused('a makeyourmindup path is not a Heartside path', lambda: plan(pack, lib=library.HEARTSIDE), 'cannot go into the heartside library')
+        refused('a Heartside send needs its post', lambda: plan(hs, None, 'x', lib=library.HEARTSIDE), 'Posts/<post id>')
+        refused('an unknown library', lambda: plan(hs, 'Posts/F01', 'x', lib='elsewhere'), 'not one of')
+        hs_fake = FakeEngine()
+        check('Heartside send', send(hs_planned, hs_fake, quiet, lib=library.HEARTSIDE), {'sent': 2, 'already': 0, 'confirmed_only': 0})
+        check('Heartside files are kept apart', sorted({k[0] for k in hs_fake.files}), ['heartside'])
+        check('makeyourmindup requests name no library', all(k[0] == 'makeyourmindup' for k in fake.files), True)
+
         (pack / '1 Article/stray.html').write_bytes(b'x')
         refused('a file the pack does not list', lambda: plan(pack), 'says nothing about what it is for')
         check('it may be sent with --purpose', len(plan(pack, purpose='A stray page.')), 5)
@@ -472,6 +496,8 @@ def main():
     ap = argparse.ArgumentParser(description="Send files to the engine's library, for Krish's machine to write into his asset library on Drive.")
     ap.add_argument('folder', nargs='?', help='a pack from build.py, or any folder (with --as)')
     ap.add_argument('--as', dest='prefix', help='where in the library: "2 Channel art (permanent)", or "3 Posts/<post folder>" (a pack knows its own)')
+    ap.add_argument('--library', default=library.MAKEYOURMINDUP, choices=library.LIBRARIES,
+                    help='which library on Drive: makeyourmindup (default) or heartside, whose files go in "Posts/<post id>"')
     ap.add_argument('--brand-kit', help='the unpacked brand kit, or its .zip: goes into "1 Brand kit (permanent)"')
     ap.add_argument('--purpose', help='what the files are for, in one line, when the folder is not a pack')
     ap.add_argument('--client', default=default_client(), help='who is sending, as the engine records it (default: %(default)s)')
@@ -485,6 +511,8 @@ def main():
             sys.exit(f'send self-test failed: {len(failures)} of {count} checks')
         print(f'send self-test passed: {count} checks')
         return
+    if a.brand_kit and a.library != library.MAKEYOURMINDUP:
+        ap.error('the brand kit belongs to the makeyourmindup library')
     if bool(a.folder) == bool(a.brand_kit):
         ap.error('give a folder to send, or --brand-kit KIT')
     if a.purpose is not None and (library.CONTROL.search(a.purpose) or not 0 < len(a.purpose.strip()) <= 200):
@@ -498,7 +526,7 @@ def main():
                 source = unzip(source, unpacked)
             planned = plan(kit_root(source), a.prefix, a.purpose, brand_kit=True)
         else:
-            planned = plan(a.folder, a.prefix, a.purpose)
+            planned = plan(a.folder, a.prefix, a.purpose, lib=a.library)
         if a.folder and (Path(a.folder) / MANIFEST).is_file():
             # W3.5: the post folder is bound to its piece and its name freezes at the first send.
             import post_binding
@@ -517,7 +545,10 @@ def main():
                 print(f'{target}  ({size_text(path.stat().st_size)})\n    {why}')
             print(f'{len(planned)} files would be sent. Nothing was sent.')
             return
-        done = send(planned, Engine(a.client))
+        lib = a.library
+        if a.folder and (Path(a.folder) / MANIFEST).is_file():
+            lib = json.loads((Path(a.folder) / MANIFEST).read_text(encoding='utf-8')).get('library') or lib
+        done = send(planned, Engine(a.client), lib=lib)
     except (SendError, LibraryError) as error:
         sys.exit(f'send: {error}')
     finally:

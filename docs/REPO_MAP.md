@@ -1955,6 +1955,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const SCORE_ID`
 - `const SCORE_BASES`
 - `function scoreBody(id: string, body: Record<string, unknown>): boolean`
+- `const YES_ID`
+- `function yesBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
@@ -2019,6 +2021,14 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
+
+### `apps/control-plane/api/board/_yes.ts`
+
+One yes anywhere (Ruling, Krish, 2026-11-02): his answer for each day, read from the board's picks. A day's answer is
+
+- `type YesRow`
+- `type DayYes`
+- `function yesByDay(rows: YesRow[]): Record<string, DayYes>`
 
 ### `apps/control-plane/api/board/index.ts`
 
@@ -2454,6 +2464,12 @@ What the compiler looks for, as pure functions.
 ### `apps/control-plane/api/library/_library.ts`
 
 - `const LIBRARY_BUCKET`
+- `const LIBRARY_NAMES`
+- `type LibraryName = typeof LIBRARY_NAMES[number]`
+- `const LIBRARY_DEFAULT: LibraryName`
+- `const HEARTSIDE_POSTS`
+- `const HEARTSIDE_POST_ID`
+- `function parseLibraryName(value: unknown): LibraryName | null`
 - `const LIBRARY_MAX_BYTES`
 - `const LIBRARY_PATH_MAX`
 - `const LIBRARY_PART_MAX`
@@ -2464,6 +2480,7 @@ What the compiler looks for, as pure functions.
 - `const LIBRARY_POST_SECTIONS`
 - `const LIBRARY_POST_README`
 - `const LIBRARY_SUBCHANNELS`
+- `const LIBRARY_OFF_DAY`
 - `const LIBRARY_CONTENT_TYPES: Readonly<Record<string, string>>`
 - `function libraryMimeTypes(): string[]`
 - `const LIBRARY_OPTIONAL_MIME_TYPES: readonly string[]`
@@ -2474,7 +2491,7 @@ What the compiler looks for, as pure functions.
 - `const CONTROL`
 - `const RESERVED`
 - `function isLibraryPostFolder(name: string): boolean`
-- `function checkLibraryPath(value: unknown): LibraryPathCheck`
+- `function checkLibraryPath(value: unknown, library: LibraryName = LIBRARY_DEFAULT): LibraryPathCheck`
 - `function libraryObjectKey(sha256: string, extension: string): string`
 - `const MD5_RE`
 - `type Parsed<T>`
@@ -2484,10 +2501,10 @@ What the compiler looks for, as pure functions.
 - `function parseLibraryConfirmRequest(value: unknown): Parsed<{ path: LibraryPath; sha256: string }>`
 - `const LIBRARY_PENDING_DEFAULT`
 - `const LIBRARY_PENDING_MAX`
-- `function parseLibraryPendingQuery(query: unknown): { machine: string; limit: number } | null`
+- `function parseLibraryPendingQuery(query: unknown): { machine: string; limit: number; library: LibraryName } | null`
 - `interface LibraryWrittenItem`
 - `function isBesideName(path: string, candidate: unknown): candidate is string`
-- `function parseLibraryWrittenRequest(value: unknown): { machine: string; items: LibraryWrittenItem[] } | null`
+- `function parseLibraryWrittenRequest(value: unknown): { machine: string; items: LibraryWrittenItem[]; library: LibraryNa…`
 - `type LibraryStoreError`
 - `interface LibraryStoreConfig`
 - `async function configuredLibraryStore(): Promise<{ config: LibraryStoreConfig | null; error: LibraryStoreError | null }>`
@@ -3425,6 +3442,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `interface BrandFrameProps`
 - `function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement`
+- `function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
@@ -3485,6 +3503,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `function stateAt(events: readonly EngineEvent[], obj: string, frame: number): DeviceState`
 - `function progress(sinceFrames: number, durationFrames: number, easing: (t: number) => number = ENTER): number`
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
+- `function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number`
 
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
 
@@ -3566,6 +3585,11 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function orbitState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>, count: number, chips: …`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/logo_orbit/mark.tsx`
+
+- `const MARK_BOUNDS: Record<string, { canvas: [number, number, number, number]; drawn: [number, number, number, number] }>`
+- `function Mark({ id, size }: { id: string; size: number })`
 
 ### `apps/renderer/src/engine/devices/logo_orbit/schema.ts`
 
@@ -3830,7 +3854,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 ### `apps/renderer/src/engine/kit/overlay.ts`
 
 - `const houseTokens = (tokens: EngineTokens) =>`
-- `const halftone = (tokens: EngineTokens) =>`
+- `const halftone = (tokens: EngineTokens, colour = tokens.channel) =>`
 - `function overlayState(object: EngineObject, events: readonly EngineEvent[], frame: number, verb = 'enter', duration: nu…`
 - `function canvasRect(x: number, y: number, w: number, h: number)`
 - `function rotatedBounds(x: number, y: number, w: number, h: number, degrees: number, shadow = 0)`
@@ -3874,6 +3898,20 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 ### `apps/renderer/src/engine/layouts/index.ts`
 
 - `function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[]`
+- `function splitCameraBox(aspect: Aspect): Box`
+- `function splitPlatePosition(crop?: string): string`
+
+### `apps/renderer/src/engine/mocks/face-with-proof.tsx`
+
+- `interface FWPMockProps`
+- `const FWP_SPLIT_SEAM_Y`
+- `const FWP_STAGE_SCALE`
+- `const FWP_SPLIT_CAPTION_ZONE`
+- `const FWP_POSTER_POSITIONS`
+- `const FWP_PLACEMENTS`
+- `const FWP_TARGETS`
+- `const FWP_SCALED_TARGETS`
+- `const FWP_MOCKS`
 
 ### `apps/renderer/src/engine/props.ts`
 

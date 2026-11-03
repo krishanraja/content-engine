@@ -255,6 +255,12 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     # "Sometimes it just turns off randomly. Sometimes it's quiet. Sometimes it gets louder." and of its ducked
     # 90-second cut: "Same issue with the 90-second video on that day". So no cut carries a ducked bed.
     long_cuts = [cid for cid, cut in spec['cuts'].items() if cut['max_s'] > LONG_CUT_S and not cut.get('excerpt')]
+    # Every finished cut carries the approved episode bed, short cuts too: its ledger levels lift the music before
+    # the first word and over the ending band, which a flat continuous bed never does (Krish, 2026-11-03: "We
+    # fucking have standards for intro, background audio and outro"). Only a proof excerpt may run a plain bed.
+    whole_cuts = [cid for cid, cut in spec['cuts'].items() if not cut.get('excerpt')]
+    if whole_cuts and bed_mode != 'episode_bed' and not long_cuts:
+        out.append(f'sound.whole_cut_bed audio.bed.mode: {", ".join(whole_cuts)} is a finished cut, so the bed is episode_bed (the approved intro, bed and outro levels), not {bed_mode}')
     if long_cuts and bed_mode != 'episode_bed':
         out.append(f'sound.long_cut_bed audio.bed.mode: {", ".join(long_cuts)} run past {LONG_CUT_S} s, so the bed is episode_bed, not {bed_mode}')
     elif bed_mode == 'ducked':

@@ -1556,7 +1556,89 @@
       ]
     },
     {
-      "id": "F23-frame-grab-headshot",
+      "id": "F23-ideas-board-stale-and-unread",
+      "on": "2026-11-02",
+      "krish": "1. Monday's piece is already done. 2. The filler day's ideas: Tuesday is already being used this week \"What happens when your AI stops waiting for you to ask? \", and the other idea \"CLAUDE CHOSE JUSTIN BIEBER OVER GRANDMA \" is just a copy of a post from my inspo board but way worse. I have zero idea what this even means ... We also eliminated Sunday from ALL publishing, permanently.",
+      "what": "The 9 Nov Ideas tab, written by the Sunday run on 30 Oct, offered four options for a Monday already made, a Tuesday option made from the idea Thursday 5 Nov was already using, a meme that copied a saved inspo post, a coin-toss pitch nobody could follow, and two Sunday options after Sunday was dropped.",
+      "symptom": "Krish found five faults on one Ideas tab, each one a rule the engine already had in words.",
+      "cause": "The board for a week is written ten days ahead and was never checked again; the build ran only the coverage check; the no-repeat check read Mon/Wed/Fri pieces and ids only, never the off days or a used idea; a picked day had no code exemption from four options; no reader read an off-day pitch, and nothing compared an inspo-made option with its original.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/post-pack/board_feed.py",
+          "contains": "def locked_problems(",
+          "how": "a publishing day with a scheduled piece is locked to it and offers no options; the board draws it as Already picked",
+          "test": "python3 scripts/post-pack/board_feed.py self-test"
+        },
+        {
+          "file": "scripts/post-pack/board_feed.py",
+          "contains": "def recent_offdays(",
+          "how": "the gather reads this week's and the two earlier weeks' off days with his presses; an option covering one, or recording an idea that has left the pool, is refused",
+          "test": "python3 scripts/post-pack/board_feed.py self-test"
+        },
+        {
+          "file": "scripts/post-pack/board_feed.py",
+          "contains": "def readback_problems(",
+          "how": "from the 9 Nov week every off-day option carries two fresh readers' one-line read-back against every recent piece and off day, and an inspo-made one says what it adds, with a side-by-side reader",
+          "test": "python3 scripts/post-pack/board_feed.py self-test"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def stale_sources(",
+          "how": "a board for a week not yet started is built only from a gather of the last two days, and the build runs board_feed.check whole",
+          "test": "python3 scripts/post-pack/week_board.py --self-test"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "he judges an option by these",
+          "how": "from the 9 Nov week an off-day option with no hook, pitch.see, pitch.lands or direction is refused",
+          "test": "python3 scripts/post-pack/week_board.py --self-test"
+        },
+        {
+          "file": "scripts/post-pack/board_feed.py",
+          "contains": "def goodnews_problems(",
+          "how": "the weekly Saturday good news holds four stories from the seven days before its Sunday, each with its source and its own photo or clip, none a recent off day ran; the Sunday run fills them (sunday_ideas.py goodnews)",
+          "test": "python3 scripts/post-pack/board_feed.py self-test"
+        }
+      ]
+    },
+    {
+      "id": "F24-cut-below-house-intro-bed-outro",
+      "on": "2026-11-03",
+      "krish": "This is not acceptable per the standards of what this engine produces. We fucking have standards for intro, background audio and outro",
+      "what": "Thursday 5 Nov's ve preview went to Krish with no outro (the ending band was only compiled for a cut with a dated call), a flat continuous music bed instead of the approved episode bed (no intro or outro lift), and an opening frame of bare cream waiting for the first word, with the horizontal logo unreadable on cream.",
+      "symptom": "Krish had to restate three standards the engine already holds in config/music-library.json levels, the face-with-proof intro_outro rule and the rejection floor (floor.py --format intro_outro / short_video).",
+      "cause": "The session never ran floor.py --format short_video or intro_outro before building the spec, as CLAUDE.md requires; compile tied the ending band to spec.call; lint let a short finished cut use a continuous bed; nothing put the hook on frame 0.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "if not cut.get('excerpt', False):\n        props['ending']",
+          "how": "every whole cut closes on the ending band, call or not",
+          "test": "python3 -m unittest tests/ve_compile_test.py"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "sound.whole_cut_bed",
+          "how": "lint refuses a finished cut whose bed is not the approved episode bed (intro and outro lifts)",
+          "test": "python3 scripts/ve.py lint <spec>"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "if index == 0 and event['verb'] in ('enter', 'type') and event['at_w'] == beat['span']['from_w']:",
+          "how": "an entrance on the first word lands on frame 0, so the hook is the first frame",
+          "test": "python3 -m unittest tests/ve_compile_test.py"
+        },
+        {
+          "file": "apps/renderer/src/engine/BrandFrame.tsx",
+          "contains": "{beat.layout === 'STAGE' ? <StageHeader props={props} /> : <>",
+          "how": "SPLIT beats keep the legible mark tile and series pill",
+          "test": "npx vitest run apps/renderer/src/engine/layouts/split.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "F25-frame-grab-headshot",
       "on": "2026-11-02",
       "krish": "What was responsible for this absolutely fucking awful headshot inside the thumbnail cards for today's publish? How do we ensure that that never happens again? It looks ridiculous.",
       "what": "Monday 2 Nov's cover and share card (and Wednesday 4 Nov's) showed a frame grabbed from his recorded take, mid-word under a cap with a wall behind, instead of one of his approved headshots. A session on 31 Oct wrote a path to that grab into the pieces' cover facts.",

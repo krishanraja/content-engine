@@ -1,5 +1,5 @@
 """Monday 2 November's two thumbnails (1280x720 for the 5-minute cut, 1080x1920 for the 90-second one): his approved
-headshot (brand.PORTRAITS, never a frame from a take: F23) beside the ladder with no bottom rung, and the words he picked. The words are never baked in here: Krish
+headshot (brand.PORTRAITS, never a frame from a take: F25) beside the ladder with no bottom rung, and the words he picked. The words are never baked in here: Krish
 rejected the first titles round (31 Oct), so they come in as an argument once he has picked again.
 
     python docs/plans/2026-11-02-monday/video/thumbnails.py --words "THE WORDS HE PICKED"

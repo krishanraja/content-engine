@@ -50,6 +50,7 @@ describe('ve', () => {
     ['a card is held to its own max_minutes and max_calls (W2.12)', 'tests/ve_card_limits_test.py'],
     ['the Codex lane: a session with no Codex queues the card, the home computer claims, builds and reports it', 'tests/ve_lane_test.py'],
     ['ve conform cuts only in gaps both aligners agree on, with 20-40 ms fades and one speed for picture and sound (F09, F10)', 'tests/ve_conform_test.py'],
+    ['captions are timed by two local forced aligners, never whisper or a paid aligner (Thursday 5 Nov)', 'tests/ve_forced_align_test.py'],
     ['ve in shadow: draft locks wait for Gate 2, file needs READY, briefs carry the floor, golden slots wait for his words', 'tests/ve_shadow_test.py'],
     ['one local layout: every reader resolves from config/studio.json and the path guard fails on a planted path', 'tests/ve_local_roots_test.py'],
     ['the route check at parity: per-piece code is banned only for a move that has a device', 'tests/ve_route_test.py'],

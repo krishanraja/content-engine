@@ -31,6 +31,36 @@ def _words(image):
     return qc_captions.read_words(executable, np.asarray(image.convert('L')))
 
 
+
+def _fused(text, allowed) -> bool:
+    """OCR fuses tightly set caption words ("to lock it" -> "tolockit"): a word made wholly of caption words in a
+    row is caption text, not a stray word in the caption zone."""
+    words = {qc_captions.fold(a) for a in allowed if qc_captions.fold(a)}
+    target = ''.join(qc_captions.fold(t) for t in qc_captions._tokens(text))
+    if not target:
+        return False
+    reach = [True] + [False] * len(target)
+    for i in range(len(target)):
+        if reach[i]:
+            for w in words:
+                if target.startswith(w, i):
+                    reach[i + len(w)] = True
+    return reach[-1]
+
+def split_seam() -> int:
+    """FWP_SPLIT_SEAM_Y, read from the mocks file the renderer imports, never copied."""
+    import re  # noqa: PLC0415
+    mocks = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
+    return int(re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', mocks).group(1))
+
+
+def _fragment(text, allowed) -> bool:
+    """OCR clips a caption word at the box edge or inside the highlight ("emails," read as "mails,", "dangerous." as
+    "ero", Thursday 5 Nov): three or more letters found inside a caption word on screen are that word, not a stray."""
+    target = ''.join(qc_captions.fold(t) for t in qc_captions._tokens(text))
+    return len(target) >= 3 and any(target in qc_captions.fold(a) for a in allowed if qc_captions.fold(a))
+
+
 def _inside(x, y, box):
     if isinstance(box, dict):
         box = [box[k] for k in ('x', 'y', 'w', 'h')]
@@ -77,7 +107,8 @@ def measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None) -> di
         if h < minimum and solid and not _inside(x + w / 2, y + h / 2, zones['marquee']):
             small.append(word)
         if ((solid or float(word['conf']) >= 90) and _inside(x + w / 2, y + h / 2, zones['caption'])
-                and not {qc_captions.fold(t) for t in qc_captions._tokens(word['text'])}.issubset({qc_captions.fold(a) for a in allowed})):
+                and not {qc_captions.fold(t) for t in qc_captions._tokens(word['text'])}.issubset({qc_captions.fold(a) for a in allowed})
+                and not _fused(word['text'], allowed) and not _fragment(word['text'], allowed)):
             caption.append(word)
         strong = solid or float(word['conf']) >= 90  # one stray glyph on a photo is OCR noise, not a layout fault
         if (strong and not _inside(x + w / 2, y + h / 2, zones['marquee'])
@@ -139,6 +170,31 @@ def composition_checks(video, props, lock) -> dict:
                    for word in page['words']
                    for token in qc_captions._tokens(word['text'] if isinstance(word, dict) else str(word))}
         allowed |= call_card_tokens(props, beat)
-        rows[beat['id']] = measure(image, lock, caption_words=allowed, exempt=_footage_boxes(props, at))
+        beat_lock, exempt = lock, _footage_boxes(props, at)
+        if beat.get('layout') == 'SPLIT':
+            # A SPLIT beat's caption sits in the frozen split zone; the house zone there is his face and hands.
+            from .qc import _split_geometry
+            x, y, w, h = _split_geometry()[1]
+            beat_lock = {**lock, 'zones': {**lock['zones'], 'caption': {**lock['zones']['caption'], 'x': x, 'y': y, 'w': w, 'h': h}}}
+            if at < (props.get('ending') or {}).get('fromFrame', props.get('durationFrames', at + 1)):
+                # Below the seam is his take: a fingertip or the print on his top read as "4" (Thursday 5 Nov) is
+                # picture, not type. The caption zone inside it is still checked; the ending band is never exempt.
+                exempt += [(0, split_seam(), 1080, y - split_seam()), (0, y + h, 1080, 1920 - (y + h))]
+        rows[beat['id']] = measure(image, beat_lock, caption_words=allowed, exempt=exempt)
         rows[beat['id']]['frame'] = at
+    ending = props.get('ending')
+    if ending and ending.get('fromFrame', props.get('durationFrames', 0)) < props.get('durationFrames', 0):
+        # The ending band closes every whole cut and no beat's key frame falls inside it (Thursday 5 Nov: the close
+        # beat was sampled at 1273, the band runs 1320 to 1425), so it is measured on its own, at its middle.
+        start, end = ending['fromFrame'], props['durationFrames']
+        image, at = _frame(video, {'fromFrame': start, 'toFrame': end, 'keyFrame': (start + end) // 2})
+        row = measure(image, lock, caption_words=set())
+        # The band is the house's designed close: a dark panel (fill does not apply) with no captions under it (its
+        # url sits where captions would). It answers for its type: size, platform zone and edges.
+        held = ('small_text', 'platform_zone', 'edges')
+        row['checks'] = {name: row['checks'][name] for name in held}
+        row['findings'] = [f for f in row['findings'] if f.split(' ', 1)[0] in held]
+        row['pass'] = all(check['pass'] for check in row['checks'].values())
+        row['frame'] = at
+        rows['ending'] = row
     return {'applies': True, 'pass': bool(rows) and all(row['pass'] for row in rows.values()), 'beats': rows}

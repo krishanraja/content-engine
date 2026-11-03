@@ -2,6 +2,18 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
+## 3 November: Friday 13 Nov (f3fcd5e1, "counting rat tails") scripts on its tab (Claude Code, make-piece run)
+
+From the signed lock, both scripts are written and recorded on the piece (`making.py scripts`; Scripts: done):
+`docs/plans/2026-11-13-draft-script.md` and `-90s.md`. Checks, facts and the three read-back rounds:
+`docs/plans/2026-11-09-week/fri-scripts-check.md`. Every retelling matched, but no round came back
+all "nothing", so the words went to Krish. Friday's tab on the 9 Nov web board (build 9db178ac, Monday kept,
+Wednesday unchanged) is in draft with both scripts as review boxes and one waiting line. **Next:** his
+Approve scripts press (or edits, carried by `edit_sweep.py`); then `making.py read-back --krish-words`
+per cut, the creative direction (Scripts step 7), and the article in the background. The article must not use
+"tokenmaxxing is at odds with frugality": neither the CNBC nor the CIO source holds those words. Not recorded:
+this run's own Actions link (the session line points at the workflow page).
+
 ## 29 October: the Sunday loop, no name, the bar, zero routines (Claude Code)
 
 On session branch `claude/fervent-brown-d8e55b`, going to main by pull request (the ve part by hand after green CI). `NOW.md` has the detail; the plan for what follows is `docs/plans/2026-11-07-wave-2.md`, then `docs/plans/2026-11-14-wave-3.md`.

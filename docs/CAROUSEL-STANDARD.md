@@ -144,3 +144,11 @@ or learning store. The route is documented and the pilot approved; automated
 volume throughput, runtime feedback import and audience results are not
 proved by this document. Private accepted assets and evidence remain in the
 existing review package until imported through the tracked Studio route.
+
+## Saturday good-news carousel (Ruling, Krish, 2 November 2026)
+
+His words: "we need 5 stories", then "take the five stories" and "encode that 2nd request as a standard for the Saturday posts".
+
+- Every Saturday good-news carousel carries exactly five stories.
+- Each story is about real people who benefited from AI in a way a reader feels at once: a named person or group, what changed for them. His words: "Frontier models lowering prices isn't really fitting with how humans are benefitting from AI". Price cuts, model launches, funding rounds and lab or pharma deals are not stories.
+- Each story is checked against its primary source and dated as close to the week as the stories allow. Every card carries its source and its date.

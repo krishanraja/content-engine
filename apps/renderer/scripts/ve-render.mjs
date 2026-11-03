@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** Render compiled EngineRenderProps through the registered FormatMaster. */
-import { readFile, mkdtemp, copyFile, mkdir, rm, stat } from 'node:fs/promises'
+import { readFile, mkdtemp, copyFile, mkdir, rm, stat, realpath } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -72,6 +72,36 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
     }
   }
   for (const object of inputProps.objects) await stageParams(object.params)
+  const logoIds = new Set()
+  for (const object of inputProps.objects) {
+    if (!['logo_card', 'logo_orbit'].includes(object.device)) continue
+    for (const logo of object.params.logos ?? []) logoIds.add(logo.id)
+  }
+  const centres = inputProps.objects.filter(object => object.device === 'logo_orbit')
+    .map(object => object.params.centre).filter(Boolean)
+  if (logoIds.size || centres.length) {
+    const { marks } = JSON.parse(await readFile(path.join(repositoryRoot, 'config/logo-registry.json'), 'utf8'))
+    const findMark = id => marks.find(mark => `${mark.company}:${mark.variant}` === id ||
+      (mark.company === id && mark.variant === 'full_colour'))
+    for (const id of centres) if (findMark(id)) logoIds.add(id)
+    const logoRoot = path.resolve(repositoryRoot, 'assets/logos')
+    const copied = new Set()
+    for (const id of logoIds) {
+      const mark = findMark(id)
+      if (!mark?.file) throw new Error(`Unregistered logo asset: ${id}`)
+      const local = path.resolve(repositoryRoot, mark.file)
+      if (!mark.file.startsWith('assets/logos/') || mark.file.includes('\\') ||
+          !local.startsWith(logoRoot + path.sep)) throw new Error(`logo escapes assets/logos: ${mark.file}`)
+      const canonicalRoot = await realpath(logoRoot)
+      if (!(await realpath(local)).startsWith(canonicalRoot + path.sep))
+        throw new Error(`logo escapes assets/logos: ${mark.file}`)
+      if (copied.has(local)) continue
+      const target = path.join(publicDir, path.relative(repositoryRoot, local))
+      await mkdir(path.dirname(target), { recursive: true })
+      await copyFile(local, target)
+      copied.add(local)
+    }
+  }
   if (inputProps.objects.some(object => object.device === 'hand_phone_stage')) {
     // The device uses staticFile('plates/<format>/<name>'); keep that tree.
     const plateDir = path.join(repositoryRoot, 'assets', 'plates', inputProps.format)

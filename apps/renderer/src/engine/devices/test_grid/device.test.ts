@@ -108,9 +108,13 @@ describe('test_grid persistent scoreboard', () => {
   })
 
   it('drops for eight frames, fades for six, and hides outside the object lifespan', () => {
-    expect(at(0).dropY).toBe(-48)
-    expect(at(4).dropY).toBeGreaterThan(-48)
-    expect(at(8).dropY).toBeCloseTo(0, 6)
+    // An entrance on the cut's first frame is already landed there (the hook is whole on frame 0, ve-thu-9).
+    expect(at(0).dropY).toBeCloseTo(0, 6)
+    // Any later entrance still drops for eight frames.
+    const later = events.map((event) => event.verb === 'enter' && event.atFrame === 0 ? { ...event, atFrame: 10 } : event)
+    expect(at(10, later).dropY).toBe(-48)
+    expect(at(14, later).dropY).toBeGreaterThan(-48)
+    expect(at(18, later).dropY).toBeCloseTo(0, 6)
     expect(at(210).opacity).toBe(1)
     expect(at(213).opacity).toBeGreaterThan(0)
     expect(at(213).opacity).toBeLessThan(1)

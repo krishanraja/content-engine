@@ -1,3 +1,4 @@
+import { yesByDay, type YesRow } from './_yes.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
@@ -142,6 +143,25 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       if (!monday(week)) throw new BoardError(400, 'invalid_week')
       const offset = Number(req.query.offset || 0)
       if (!Number.isSafeInteger(offset) || offset < 0) throw new BoardError(400, 'invalid_offset')
+      if (op === 'state') {
+        // The live state the Today view reads on every poll (Krish, 2026-11-02: "the whole Today board seems totally
+        // outdated, and I can barely ever see what the current state of things are there"): his yes for each day
+        // (_yes.ts), what Growth has posted (its ticks), and the build that is live, so an open tab can say it is old.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        const said = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'picks')
+          .or('doc_id.like.yes-%,doc_id.like.%-publish')
+        must(said)
+        const ticks = await db.from('board_ticks').select('tick_id,body,updated_by').eq('week', week)
+        must(ticks)
+        const posted: Record<string, string[]> = {}
+        for (const t of ticks.data || []) {
+          const b = t.body as Record<string, unknown> | null
+          if (!b || b.done !== true || t.updated_by !== 'growth' || typeof b.day !== 'string' || typeof b.step !== 'string') continue
+          ;(posted[b.day] ||= []).push(b.step)
+        }
+        const live = await current(db, week)
+        return res.status(200).json({ ok: true, week, build_id: live.build_id, yes: yesByDay((said.data || []) as YesRow[]), posted })
+      }
       if (collection === 'archive') {
         // The Archive (_archive.ts): every published piece and his scores, read-only.
         if (method !== 'GET' || id) throw new BoardError(400, 'read_only_view')

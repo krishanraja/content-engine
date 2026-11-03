@@ -26,6 +26,17 @@ ENDING_FRAMES = 105
 OPENING = 'hook'
 
 
+
+def _series_day(series_day: str, publish_day: str | None) -> str:
+    """The day the ending band and its strip name. A piece published on its series' own day keeps the series day
+    ("Wednesdays"); one published on another day names that day ("Thursday"), so an off-day cut never claims the
+    wrong day (Thursday 5 Nov's under.the.hood cut read WEDNESDAYS; Krish, 2026-11-03)."""
+    if not publish_day:
+        return series_day
+    from datetime import date
+    weekday = date.fromisoformat(publish_day).strftime('%A')
+    return series_day if series_day.lower().rstrip('s') == weekday.lower() else weekday
+
 def source(path: str, assets_dir: str | Path) -> str:
     """Resolve only relative media paths contained by the assets folder."""
     root = Path(assets_dir).resolve()
@@ -71,6 +82,38 @@ def caption_line_count(rows: list[dict], aspect: str = '9:16', emphasis=()) -> i
     return lines
 
 
+def _zone_runs(rows: list[dict], beats: list[dict]) -> list[list[dict]]:
+    """Rows split where a beat change moves the caption between the SPLIT zone and the house zone, so no page jumps
+    zones mid-phrase (Thursday 5 Nov: "things. Awesome," began under his chin and finished in the house zone). A run of
+    one word stays with its neighbour: a jump beats a one-word orphan."""
+    def split_at(frame):
+        beat = next((b for b in beats if b['fromFrame'] <= frame < b['toFrame']), None)
+        return beat is not None and beat['layout'] == 'SPLIT'
+    runs = []
+    for row in rows:
+        if runs and split_at(row['atFrame']) == split_at(runs[-1][-1]['atFrame']):
+            runs[-1].append(row)
+        else:
+            runs.append([row])
+    merged = []
+    for run in runs:
+        if merged and (len(run) == 1 or len(merged[-1]) == 1):
+            merged[-1].extend(run)
+        else:
+            merged.append(run)
+    return merged
+
+
+LAST_WORD_HELD_FRAMES = 6  # a page's last word shows at least this long before the next page replaces it
+
+
+def _held(rows: list[dict], end: int) -> bool:
+    """Whether a page ending before rows[end] leaves its last word on screen for LAST_WORD_HELD_FRAMES."""
+    if end >= len(rows) or 'atFrame' not in rows[end] or 'atFrame' not in rows[end - 1]:
+        return True
+    return rows[end]['atFrame'] - rows[end - 1]['atFrame'] >= LAST_WORD_HELD_FRAMES
+
+
 def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list[list[dict]]:
     """Fit 2-5 words per page, preferring punctuation without stranding orphans."""
     size, available = (54, 1316) if aspect == '16:9' else (68, 816)
@@ -83,6 +126,10 @@ def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list
                       if start + n in choices
                       and sum(r['w'] in emphasis for r in rows[start:start + n]) <= 1
                       and caption_line_count(rows[start:start + n], aspect, emphasis) <= 2]
+        # A page's last word is on screen long enough to read before the page flips, where another split allows it
+        # (Thursday 5 Nov: "one easy step so you" showed "you" for 2 frames before "can save yourself").
+        held = [n for n in candidates if _held(rows, start + n)]
+        candidates = held or candidates
         punctuated = [n for n in candidates if re.search(r'[,.!?;:]["\x27)\u2019\u201d]*$', rows[start + n - 1]['text'])]
         if candidates:
             choices[start] = punctuated[0] if punctuated else candidates[-1]
@@ -205,6 +252,12 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         beats[-1]['keyFrame'] = min(end - 1, start + round((end - start) * fraction))
         for event_index, event in enumerate(beat.get('events', [])):
             event_frame = at(event['at_w'])
+            # The hook is the intro: an entrance on the cut's first word lands on frame 0, so the first frame is the
+            # hook in the brand's dress, never a bare stage waiting for the first syllable (Krish, 2026-11-03: "We
+            # fucking have standards for intro, background audio and outro"). Text typed on that word is typed by then
+            # too (the renderer lands frame-0 entrances and typing whole, ve-thu-9).
+            if index == 0 and event['verb'] in ('enter', 'type') and event['at_w'] == beat['span']['from_w']:
+                event_frame = 0
             if not start <= event_frame < end:
                 raise ValueError(f'event outside beat {beat["id"]}')
             compiled = {'id': f'{beat["id"]}-{event_index}', 'obj': event['obj'], 'verb': event['verb'],
@@ -265,7 +318,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     channel = spec['brand']['series'].replace('.', '_')
     identity = house['channels'][channel]
     emphasis = set(cut['captions'].get('emphasis', []))
-    groups = _caption_groups(rows, cut['aspect'], emphasis)
+    groups = [g for part in _zone_runs(rows, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
     captions = []
     for index, group in enumerate(groups):
         hits = [i for i, word in enumerate(group) if word['w'] in emphasis]
@@ -285,7 +338,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         'fps': FPS, 'durationFrames': duration,
         'tokens': {'ink': tokens['ink'], 'inkDeep': tokens['ink_deep'], 'inkSoft': tokens['ink_soft'],
                    'cream': tokens['cream'], 'mint': tokens['mint'], 'channel': publication['channel_colors'][channel]},
-        'series': {'label': spec['brand']['series'], 'day': identity['day'], 'promise': identity['promise'], 'site': house['copy']['site']},
+        'series': {'label': spec['brand']['series'], 'day': _series_day(identity['day'], spec.get('publish_day')), 'promise': identity['promise'], 'site': house['copy']['site']},
         'brand': {key: {'src': resolve_source(publication[key]['source_path']), 'pixelWidth': publication[key]['pixel_width'],
                         'pixelHeight': publication[key]['pixel_height']} for key in ('mark', 'logo', 'stacked')},
         'segments': [] if spec['audio']['master'] == 'vo' else [
@@ -314,7 +367,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             report['edl'] = {'cut': cut_id, 'joins_s': [join['at_s'] for join in edl.get('joins', [])],
                              'duration_frames': edl.get('duration_frames'),
                              'picture_short_frames': max(0, duration - int(edl.get('duration_frames') or 0))}
-    if spec.get('call') and not cut.get('excerpt', False):
+    # Every whole cut closes on the ending band (one calm close, held long enough to read: config/ve/formats
+    # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro"), not only a
+    # cut that carries a dated call; the call card still needs a call.
+    if not cut.get('excerpt', False):
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site']}
         if spec.get('style', {}).get('ending_ticker') is False:
             props['ending']['ticker'] = False  # no scrolling promise strip (Krish: no marquee)

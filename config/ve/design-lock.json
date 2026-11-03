@@ -270,7 +270,7 @@
   ],
   "formats": {
     "hand-held-screen": {
-      "role": "base",
+      "role": "module",
       "beats": [
         "open",
         "result_a",
@@ -391,15 +391,10 @@
         }
       },
       "frozen_on": "2026-10-28"
-    }
-  },
-  "drafts": {
+    },
     "face-with-proof": {
       "role": "base",
       "aspect": "9:16",
-      "status": "awaiting Gate 2",
-      "drafted": "2026-10-29",
-      "awaiting": "Krish's Gate 2 approval of one still per beat; then ve lock freeze face-with-proof --from <stills dir>",
       "purpose": "He on camera carries the argument; the proof arrives beside or over him on the words that name it",
       "beats": [
         "hook",
@@ -414,13 +409,55 @@
       "frames_dir": "fixtures/ve/design-lock/face-with-proof",
       "anatomy": "docs/ve/design/formats/F-anatomy.md",
       "motion": "docs/ve/design/formats/F-motion.md",
-      "keyframe_slots": {
-        "hook": null,
-        "face": null,
-        "proof": null,
-        "close": null
+      "keyframes": {
+        "hook": {
+          "file": "fixtures/ve/design-lock/face-with-proof/hook.jpg",
+          "sha256": "b1b9dcd358b52e13645ae9d3f6c66e9caa658cf56fadcf80af274b36da92bfd8",
+          "source_sha256": "0702c3d569eb59137e4aae1f3c97f17e5999e4a9a3dea21c166f89e62f5f059b",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "face": {
+          "file": "fixtures/ve/design-lock/face-with-proof/face.jpg",
+          "sha256": "549783ce531170e3515dc009b95c6d2ea1a40dc91d638f8a566f10f2ad500d21",
+          "source_sha256": "7856ae49a3474058292adfe8b79e2937fdecf46f34e8cdb15f2e7347ba00e233",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "proof": {
+          "file": "fixtures/ve/design-lock/face-with-proof/proof.jpg",
+          "sha256": "2353787fb50dbbacfc0ab309eac07e7beacd3fc43a1c4fbf78529199c9b873d7",
+          "source_sha256": "5355a1c8255fb9e8c0684234b0a0b3e311e75bfbc164606894b31c608f14af97",
+          "size": [
+            540,
+            960
+          ]
+        },
+        "close": {
+          "file": "fixtures/ve/design-lock/face-with-proof/close.jpg",
+          "sha256": "a0268d6cd26c91240e58714510bcf96977766f565dbf2a9098383bceb1934a59",
+          "source_sha256": "4913007cc04c7077a4879c8c6f2abd12c4bfcfb9982e1572f43d63b4ec6af4dd",
+          "size": [
+            540,
+            960
+          ]
+        }
+      },
+      "frozen_on": "2026-11-03",
+      "approved": {
+        "by": "Krish",
+        "on": "2026-11-03",
+        "words": "Looks good to me.",
+        "where": "Claude Code session in krishanraja/content-engine, on the round 3 stills",
+        "scope": "face-with-proof 9:16 key frames: split seam y 760, stage scale 0.76, split poster 50% 88%"
       }
-    },
+    }
+  },
+  "drafts": {
     "face-with-proof@16:9": {
       "role": "base",
       "aspect": "16:9",

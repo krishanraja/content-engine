@@ -1168,7 +1168,7 @@
         },
         {
           "file": "scripts/post-pack/board_feed.py",
-          "contains": "def gather(week, call=None, out_dir=None):",
+          "contains": "def gather(week, call=None, out_dir=None",
           "how": "one read-only gather writes sources.json and names any empty source"
         },
         {

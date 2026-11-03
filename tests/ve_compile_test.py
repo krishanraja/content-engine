@@ -204,8 +204,36 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(excerpt['beats'][-1]['toFrame'], base)
         self.assertTrue(all(o['toFrame'] == base + ENDING_FRAMES for o in whole['objects'] if o['toFrame'] > base - 1
                             and o['toFrame'] >= excerpt['beats'][-1]['fromFrame']))
+        # Every whole cut closes on the ending band, with or without a dated call (Krish, 2026-11-03: "We fucking
+        # have standards for intro, background audio and outro").
         del spec['call']
-        self.assertNotIn('ending', compile_cut(spec, 'proof-tall', words, FIXTURE))
+        self.assertEqual(compile_cut(spec, 'proof-tall', words, FIXTURE)['ending'], {'fromFrame': base, 'url': whole['series']['site']})
+
+    def test_first_word_entrances_land_on_frame_zero(self):
+        # Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro". An entrance on the
+        # cut's first word is on screen from frame 0; later events keep their word's frame.
+        spec = load_json(FIXTURE / 'spec.json')
+        words = timed_words()
+        first = spec['cuts']['proof-tall']['beats'][0]
+        entrances = [e for e in first['events'] if e['verb'] == 'enter' and e['at_w'] == first['span']['from_w']]
+        self.assertTrue(entrances)
+        props = compile_cut(spec, 'proof-tall', words, FIXTURE)
+        for event in props['events']:
+            if event['id'].startswith(first['id'] + '-') and event['verb'] == 'enter' and event['obj'] in {e['obj'] for e in entrances}:
+                self.assertEqual(event['atFrame'], 0)
+        # Text typed on the first word is typed on frame 0 too (Thursday 5 Nov: the card landed whole, empty).
+        typed = json.loads(json.dumps(spec))
+        hook = typed['cuts']['proof-tall']['beats'][0]
+        typed['objects'].append({'obj': 'note', 'device': 'typing_bubble', 'meaning': 'the opening notification',
+                                 'persist': {'from_beat': hook['id'], 'to_beat': hook['id']},
+                                 'params': {'kind': 'notification', 'rows': [{'text': 'Done! Booked it'}]}})
+        hook['uses'] = list(hook.get('uses', [])) + ['note']
+        hook['events'] += [{'at_w': hook['span']['from_w'], 'obj': 'note', 'verb': verb, 'to_state': state, 'silent': True}
+                           for verb, state in (('enter', 'visible'), ('type', '0'))]
+        late = [dict(word, onset_s=word['onset_s'] + 1.0, end_s=word['end_s'] + 1.0) for word in words]
+        props = compile_cut(typed, 'proof-tall', late, FIXTURE)
+        self.assertEqual(sorted((e['verb'], e['atFrame']) for e in props['events'] if e['obj'] == 'note'),
+                         [('enter', 0), ('type', 0)])
 
     def test_the_hook_is_the_intro(self):
         # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns
@@ -240,6 +268,22 @@ class CompileTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'W{50}'):
             _caption_groups([{'w': 0, 'text': 'W' * 50}, {'w': 1, 'text': 'ok'}])
         self.assertAlmostEqual(_text_width('A ', 68), (862 - 15 + 233 - 15) * 68 / 1000)
+        # Thursday 5 Nov: a page never ends on a word the next page replaces within 6 frames, when a split allows it.
+        timed = [{'w': i, 'text': t, 'atFrame': f} for i, (t, f) in enumerate(
+            [('one', 1144), ('easy', 1149), ('step', 1159), ('so', 1167), ('you', 1171), ('can', 1173),
+             ('save', 1178), ('yourself', 1186), ('and', 1199), ('enjoy', 1201)])]
+        # A page never jumps between the SPLIT zone and the house zone mid-phrase; a lone word keeps its neighbour.
+        from velib.compile import _zone_runs
+        beats = [{'layout': 'SPLIT', 'fromFrame': 0, 'toFrame': 1160}, {'layout': 'P1', 'fromFrame': 1160, 'toFrame': 1300}]
+        runs = [[r['text'] for r in run] for run in _zone_runs(timed, beats)]
+        self.assertEqual(runs, [['one', 'easy', 'step'], ['so', 'you', 'can', 'save', 'yourself', 'and', 'enjoy']])
+        lone = [{'layout': 'SPLIT', 'fromFrame': 0, 'toFrame': 1145}, {'layout': 'P1', 'fromFrame': 1145, 'toFrame': 1300}]
+        self.assertEqual(len(_zone_runs(timed, lone)), 1)
+        pages = [[r['text'] for r in g] for g in _caption_groups(timed)]
+        self.assertNotIn(['one', 'easy', 'step', 'so', 'you'], pages)
+        for page, following in zip(pages, pages[1:]):
+            last = next(r for r in timed if r['text'] == page[-1])['atFrame']
+            self.assertGreaterEqual(next(r for r in timed if r['text'] == following[0])['atFrame'] - last, 6, pages)
 
     def test_caption_renderer_parity(self):
         spec = load_json(FIXTURE / 'spec.json')

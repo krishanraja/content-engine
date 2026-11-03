@@ -1224,6 +1224,28 @@ function Update-Source {
   if ($code -ne 0) { Write-Log "git pull did not finish ($($output -join ' ')); this pass runs on the copy as it is" }
 }
 
+function Update-LibrarySource {
+  # The library sync runs from its own clone beside this one (library-source),
+  # which until 2026-11-03 nothing brought up to date. This pass pulls it too,
+  # so a change to the library lane (Krish, 2026-11-03: "Why don't you
+  # duplicate that Python script for Heartside then?") reaches the machine
+  # without anyone running git pull. The library sync notices its script
+  # changed and its scheduled task starts the new one. Fast-forward only;
+  # nothing else is touched.
+  if ((Split-Path -Leaf $RepoRoot) -ne $SourceFolderName) { return }
+  $library = Join-Path (Split-Path -Parent $RepoRoot) 'library-source'
+  if (-not (Test-Path -LiteralPath (Join-Path $library '.git'))) { return }
+  $git = Get-Command git.exe -ErrorAction SilentlyContinue
+  if ($null -eq $git) { return }
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    $output = @(& $git.Source -C $library pull --ff-only --quiet 2>&1)
+    $code = $LASTEXITCODE
+  } finally { $ErrorActionPreference = $previous }
+  if ($code -ne 0) { Write-Log "git pull of library-source did not finish ($($output -join ' '))" }
+}
+
 # ---- one pass, or a pass every few minutes -----------------------------------
 
 $mutex = [System.Threading.Mutex]::new($false, 'Local\MindmakeRecordingsUpload')
@@ -1260,6 +1282,7 @@ try {
   Write-Log "recordings upload started: a pass every $EveryMinutes minutes"
   while ($true) {
     try { Update-Source } catch { Write-Log "the update check failed: $($_.Exception.Message)" }
+    try { Update-LibrarySource } catch { Write-Log "the library-source update failed: $($_.Exception.Message)" }
     if ((Get-SourceStamp) -ne $scriptSha) {
       Write-Log 'recordings-upload.ps1 or windowless.ps1 has changed; ending so the scheduled task starts the new version'
       exit 0
