@@ -84,6 +84,11 @@ def behaviour(register, run=False):
     return proved, marker_only, failed
 
 
+def surfaced(register):
+    """The lines every session reads before it works: entries with a `surface` rule, in register order."""
+    return [f'  EVERY SESSION ({f["id"]}): {f["surface"]}' for f in register['failures'] if f.get('surface')]
+
+
 def main():
     run = '--run' in sys.argv[1:]
     register = json.loads((ROOT / 'config' / 'failures.json').read_text(encoding='utf-8'))
@@ -96,6 +101,9 @@ def main():
           f'{len(marker_only)} marker only, configuration coverage, not proof), {len(open_)} open, {len(declined)} declined by Krish')
     for f in open_:
         print(f'  OPEN {f["id"]}: {f["what"]}')
+    # Guarded or not, a failure of session behaviour is said at every session start: its `surface` line.
+    for line in surfaced(register):
+        print(line)
     learnings = json.loads((ROOT / 'config' / 'learnings.json').read_text(encoding='utf-8'))
     lb, lo = check_learnings(learnings)
     broken += lb

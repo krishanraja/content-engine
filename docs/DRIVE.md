@@ -110,7 +110,31 @@ The first three are in `04_Content` (`1ELCdOmMGXWmLpuheEoAKA-_4jvYbmbn3`).
 
 - A raw recording: the top of `makeyourmindup > Video Engine > Inbox`, one file per cut, any name. This is the one way a take comes back: Krish reads his scripts in teleprompter.com, which holds scripts only (Descript, set up for takes on 12 October, was retired the same day: "Descript is permanently gone"). It reaches the engine within about ten minutes, from whichever home computer is on, and that machine then places it on its piece and cut by itself (`scripts/post-pack/recording_match.py`, run by the recordings upload), asking Krish on the board only when it is unsure. `python scripts/post-pack/recording.py get NAME` fetches it, or `get "recordings/<sha256>.<ext>"` once it is on a piece. Nothing in the Inbox is moved or renamed by any of it.
 - A licensed music track: `makeyourmindup > 00_Brand-Assets > 07_Music`, with its licence certificate beside it in the same folder (no subfolder). Then a session on a home computer adds it to the ledger with `scripts/quick-edit/music.py add`, and it is used once Krish approves it in words. Never the Inbox.
-- A finished Make Your Mind Up post and its pieces: `makeyourmindup > 3 Posts`, in the post's own folder.
+- A finished Make Your Mind Up post and its pieces: `makeyourmindup > 3 Posts`, in the post's own folder (the
+  production original), **and** the finished files Krish posts from in `makeyourmindup > 4 Growth`, see below.
+
+## One filing home for finished assets: 4 Growth (3 Nov 2026, proposed for Krish to confirm)
+
+Krish, 2026-11-03: "where do the off-day assets go? I feel like I've asked you this before, but I'm not seeing them,
+any of them, in any Google Drive", then "The translator video isn't in the drive... Why is it not in there?" He looks in
+`makeyourmindup > 4 Growth` (`1Ck0Eulgcs5pFIpS_Ds1vJ6mEAW__Xjwy`, beside `3 Posts` in the same library), where Growth
+keeps one dated folder per campaign, named by its own `START HERE - Growth library.txt`:
+`YYYY-MM-DD - Topic - Channels`, for example `2026-11-03 - AI agents translator - Instagram, TikTok, YouTube Shorts
+and X`.
+
+The decision, for Krish to confirm:
+
+- `3 Posts` keeps the production original and its sources, as before. Nothing moves or is deleted.
+- Every finished asset also lands in its `4 Growth` folder: `ve file` copies each approved cut there (tall:
+  `Instagram, TikTok, YouTube Shorts and X`; wide: `YouTube`), hash-checked, and records it in the piece's
+  `filed.json`. `ve file --growth-only` adds the Growth copy to a cut filed before this rule.
+- Nothing is called done until it is read back from `4 Growth`: `ve status` prints `delivered: DONE <path>` only then,
+  and a finished off-day card on the publish board says "Not in 4 Growth yet" until its `growth_drive` file and
+  folder ids are recorded, then links them.
+- Asked to put something in Drive, the session puts it in `4 Growth`, reads it back and replies "Done" with the link
+  (`config/failures.json` F27, F29).
+
+Still open: the Saturday 7 Nov good-news carousel is filed only in `3 Posts`; its board card now says so.
 - A content idea, or a one-off main-channel script: `Ventures > Inspiration > Content Inspo` (Krish, 2026-10-24), where the inspiration scan reads it.
 - Anything an AI session cannot place: `Inbox from My AI` at the top of his Drive, never loose at the top.
 - Sales material: `Sales Materials`.
