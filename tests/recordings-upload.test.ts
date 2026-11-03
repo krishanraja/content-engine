@@ -125,6 +125,17 @@ describe('the recordings upload on Krish\'s runner machines', () => {
     expect(loop.indexOf('(Get-SourceStamp) -ne $scriptSha')).toBeLessThan(loop.indexOf('Invoke-Pass'))
   })
 
+  it('pulls the library sync\'s own clone too, fast-forward only, so a library lane change needs no hand pull (2026-11-03)', () => {
+    const update = fn('Update-LibrarySource')
+    expect(update).toContain("Join-Path (Split-Path -Parent $RepoRoot) 'library-source'")
+    expect(update).toContain('pull --ff-only --quiet')
+    // Its one git call is a fast-forward pull of that clone: never reset, clean, checkout or clone.
+    expect(update.match(/& \$git\.Source[^\n]*/g)).toEqual(['& $git.Source -C $library pull --ff-only --quiet 2>&1)'])
+    const loop = upload.slice(upload.indexOf('while ($true) {'))
+    expect(loop.indexOf('Update-LibrarySource')).toBeGreaterThan(-1)
+    expect(loop.indexOf('Update-LibrarySource')).toBeLessThan(loop.indexOf('Invoke-Pass'))
+  })
+
   it('runs one at a time on a machine', () => {
     expect(upload).toContain("[System.Threading.Mutex]::new($false, 'Local\\MindmakeRecordingsUpload')")
   })

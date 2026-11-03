@@ -380,10 +380,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "$dir\scripts\install-librar
 The first try on 2026-10-06 ran `-File scripts\install-library-sync.ps1` from
 a folder with no such file (not a copy of this repository, or one without the
 day's changes), and PowerShell said the file does not exist; the full path
-above works from anywhere. Since 2026-11-03 the sync pulls its own
-`library-source` copy before each check, as the recordings upload does, so a
-newer sync reaches the machine by itself; the three lines are needed once more
-only on a machine whose copy predates that.
+above works from anywhere. Since 2026-11-03 a newer sync reaches the
+machine by itself: the recordings upload pulls `library-source` each pass
+(fast-forward only), and the sync then pulls its own copy too. The three lines
+are needed only to install it on a new machine.
 
 ### The Heartside library
 
