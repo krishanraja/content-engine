@@ -1,0 +1,880 @@
+{
+  "file": ".cache/produce/2026-11-05-no-spending/out/thu-short.mp4",
+  "sha256": "3c5a23d196feca724d3be14817e14a687963eb2bfb6163e2754322c651e77238",
+  "duration_s": 43.97,
+  "format": "face-with-proof",
+  "checks": {
+    "loudness.integrated": {
+      "value": -14.2,
+      "target": "-14 ±1",
+      "pass": true
+    },
+    "loudness.true_peak": {
+      "value": -1.7,
+      "target": "<= -1",
+      "pass": true
+    },
+    "loudness.long_silence": {
+      "value": [],
+      "target": "none over 0.7 s below -50 dB",
+      "pass": true
+    },
+    "motion.change_density": {
+      "value": 1.0,
+      "target": ">= 0.5",
+      "pass": true
+    },
+    "motion.longest_still": {
+      "value": 0,
+      "target": "<= 4 s",
+      "pass": true,
+      "runs": []
+    },
+    "motion.periodicity": {
+      "value": null,
+      "target": "no repeating loop 2-10 s",
+      "pass": true
+    },
+    "sync.av_xcorr": {
+      "value": [
+        {
+          "segment": 0,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999995
+        },
+        {
+          "segment": 1,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999994
+        },
+        {
+          "segment": 2,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999992
+        },
+        {
+          "segment": 3,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999987
+        },
+        {
+          "segment": 4,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999984
+        },
+        {
+          "segment": 5,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999986
+        },
+        {
+          "segment": 6,
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999985
+        },
+        {
+          "segment": 7,
+          "lag_ms": null,
+          "pass": false,
+          "reason": "Segment is too short or extends beyond decoded audio"
+        }
+      ],
+      "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
+      "pass": false,
+      "status": "measured"
+    },
+    "joins.decoder": {
+      "value": [],
+      "target": "RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5",
+      "pass": true,
+      "status": "measured",
+      "join_times_s": [],
+      "failed_join_times_s": []
+    },
+    "captions.ocr": {
+      "value": [
+        {
+          "page": 0,
+          "frame": 67,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 1,
+          "frame": 109,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 2,
+          "frame": 149,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 3,
+          "frame": 189,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 4,
+          "frame": 257,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 5,
+          "frame": 314,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 6,
+          "frame": 345,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 7,
+          "frame": 400,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 8,
+          "frame": 442,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 9,
+          "frame": 490,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 10,
+          "frame": 538,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 11,
+          "frame": 586,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 12,
+          "frame": 617,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 13,
+          "frame": 636,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 14,
+          "frame": 670,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 15,
+          "frame": 723,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 16,
+          "frame": 749,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 17,
+          "frame": 781,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 18,
+          "frame": 812,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 19,
+          "frame": 838,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 20,
+          "frame": 871,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 21,
+          "frame": 903,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 22,
+          "frame": 930,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 23,
+          "frame": 979,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 24,
+          "frame": 1010,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 25,
+          "frame": 1035,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 26,
+          "frame": 1072,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 27,
+          "frame": 1110,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 28,
+          "frame": 1125,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 29,
+          "frame": 1140,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 30,
+          "frame": 1175,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 31,
+          "frame": 1208,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 32,
+          "frame": 1232,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 33,
+          "frame": 1275,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        },
+        {
+          "page": 34,
+          "frame": 1310,
+          "pass": null,
+          "status": "not_run",
+          "reason": "tesseract is not on PATH"
+        }
+      ],
+      "target": "token agreement >= 0.98 on every page",
+      "pass": null,
+      "status": "not_run",
+      "reason": "tesseract is not on PATH"
+    },
+    "brand.mark_tile": {
+      "value": [
+        {
+          "beat": "hook",
+          "frame": 91,
+          "score": 0.04236057943202437,
+          "pass": false
+        },
+        {
+          "beat": "face",
+          "frame": 267,
+          "score": 0.9780562152067991,
+          "pass": true
+        },
+        {
+          "beat": "proof",
+          "frame": 427,
+          "score": 0.0,
+          "pass": false
+        },
+        {
+          "beat": "b4-8am",
+          "frame": 531,
+          "score": 0.04278042021269011,
+          "pass": false
+        },
+        {
+          "beat": "b5-rule",
+          "frame": 604,
+          "score": 0.10788915237329068,
+          "pass": false
+        },
+        {
+          "beat": "own-words",
+          "frame": 707,
+          "score": 0.9781416119385382,
+          "pass": true
+        },
+        {
+          "beat": "b7-prompt",
+          "frame": 925,
+          "score": 0.07493768465544527,
+          "pass": false
+        },
+        {
+          "beat": "close",
+          "frame": 1201,
+          "score": 0.10928339861927425,
+          "pass": false
+        }
+      ],
+      "target": "mark NCC >= 0.8 at every beat midpoint",
+      "pass": false,
+      "status": "measured"
+    },
+    "motion.cue_sync": {
+      "value": [
+        {
+          "event": "hook-0",
+          "atFrame": 11,
+          "peak_frame": 17,
+          "lag_frames": 6,
+          "peak_difference": 3.3016374111175537,
+          "event_difference": 0.39880239963531494,
+          "threshold": 0.0036659357137978077,
+          "pass": true
+        },
+        {
+          "event": "hook-1",
+          "atFrame": 11,
+          "peak_frame": 17,
+          "lag_frames": 6,
+          "peak_difference": 3.3016374111175537,
+          "event_difference": 0.39880239963531494,
+          "threshold": 0.0036659357137978077,
+          "pass": true
+        },
+        {
+          "event": "hook-2",
+          "atFrame": 27,
+          "peak_frame": 21,
+          "lag_frames": -6,
+          "peak_difference": 4.81518030166626,
+          "event_difference": 1.3406566381454468,
+          "threshold": 5.371940732002258,
+          "pass": false
+        },
+        {
+          "event": "hook-3",
+          "atFrame": 86,
+          "peak_frame": 87,
+          "lag_frames": 1,
+          "peak_difference": 0.31595271825790405,
+          "event_difference": 0.31595271825790405,
+          "threshold": 0.0005884502897970378,
+          "pass": true
+        },
+        {
+          "event": "hook-4",
+          "atFrame": 127,
+          "peak_frame": 128,
+          "lag_frames": 1,
+          "peak_difference": 5.772388935089111,
+          "event_difference": 5.772388935089111,
+          "threshold": 0.00020467837020987645,
+          "pass": true
+        },
+        {
+          "event": "proof-0",
+          "atFrame": 352,
+          "peak_frame": 352,
+          "lag_frames": 0,
+          "peak_difference": 71.63804626464844,
+          "event_difference": 71.63804626464844,
+          "threshold": 1.4139729738235474,
+          "pass": true
+        },
+        {
+          "event": "proof-1",
+          "atFrame": 410,
+          "peak_frame": 411,
+          "lag_frames": 1,
+          "peak_difference": 3.5482981204986572,
+          "event_difference": 3.5482981204986572,
+          "threshold": 0.00010599415327305906,
+          "pass": true
+        },
+        {
+          "event": "proof-2",
+          "atFrame": 410,
+          "peak_frame": 411,
+          "lag_frames": 1,
+          "peak_difference": 3.5482981204986572,
+          "event_difference": 3.5482981204986572,
+          "threshold": 0.00010599415327305906,
+          "pass": true
+        },
+        {
+          "event": "b4-8am-0",
+          "atFrame": 503,
+          "peak_frame": 503,
+          "lag_frames": 0,
+          "peak_difference": 4.73410701751709,
+          "event_difference": 4.73410701751709,
+          "threshold": 0.0008625730988569558,
+          "pass": true
+        },
+        {
+          "event": "b4-8am-1",
+          "atFrame": 503,
+          "peak_frame": 503,
+          "lag_frames": 0,
+          "peak_difference": 4.73410701751709,
+          "event_difference": 4.73410701751709,
+          "threshold": 0.0008625730988569558,
+          "pass": true
+        },
+        {
+          "event": "b4-8am-2",
+          "atFrame": 521,
+          "peak_frame": 521,
+          "lag_frames": 0,
+          "peak_difference": 2.238394260406494,
+          "event_difference": 2.238394260406494,
+          "threshold": 0.6466191709041595,
+          "pass": true
+        },
+        {
+          "event": "b4-8am-3",
+          "atFrame": 536,
+          "peak_frame": 536,
+          "lag_frames": 0,
+          "peak_difference": 2.473397970199585,
+          "event_difference": 2.473397970199585,
+          "threshold": 1.8895795941352844,
+          "pass": true
+        },
+        {
+          "event": "b5-rule-0",
+          "atFrame": 601,
+          "peak_frame": 601,
+          "lag_frames": 0,
+          "peak_difference": 10.82190227508545,
+          "event_difference": 10.82190227508545,
+          "threshold": 0.00038377194141503423,
+          "pass": true
+        },
+        {
+          "event": "b5-rule-1",
+          "atFrame": 626,
+          "peak_frame": 626,
+          "lag_frames": 0,
+          "peak_difference": 10.61643123626709,
+          "event_difference": 10.61643123626709,
+          "threshold": 0.0003874268877552822,
+          "pass": true
+        },
+        {
+          "event": "b5-rule-2",
+          "atFrame": 626,
+          "peak_frame": 626,
+          "lag_frames": 0,
+          "peak_difference": 10.61643123626709,
+          "event_difference": 10.61643123626709,
+          "threshold": 0.0003874268877552822,
+          "pass": true
+        },
+        {
+          "event": "b5-rule-3",
+          "atFrame": 641,
+          "peak_frame": 635,
+          "lag_frames": -6,
+          "peak_difference": 2.796180486679077,
+          "event_difference": 0.1265338659286499,
+          "threshold": 7.5822365283966064,
+          "pass": false
+        },
+        {
+          "event": "b7-prompt-0",
+          "atFrame": 855,
+          "peak_frame": 857,
+          "lag_frames": 2,
+          "peak_difference": 2.9936232566833496,
+          "event_difference": 2.9936232566833496,
+          "threshold": 1e-06,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-1",
+          "atFrame": 912,
+          "peak_frame": 912,
+          "lag_frames": 0,
+          "peak_difference": 7.948792457580566,
+          "event_difference": 7.948792457580566,
+          "threshold": 0.0008991228241939098,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-2",
+          "atFrame": 953,
+          "peak_frame": 953,
+          "lag_frames": 0,
+          "peak_difference": 0.08267544209957123,
+          "event_difference": 0.08267544209957123,
+          "threshold": 0.11904239282011986,
+          "pass": false
+        },
+        {
+          "event": "b7-prompt-3",
+          "atFrame": 967,
+          "peak_frame": 967,
+          "lag_frames": 0,
+          "peak_difference": 0.033569689840078354,
+          "event_difference": 0.033569689840078354,
+          "threshold": 0.0030921053839847445,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-4",
+          "atFrame": 1016,
+          "peak_frame": 1016,
+          "lag_frames": 0,
+          "peak_difference": 0.03426291421055794,
+          "event_difference": 0.03426291421055794,
+          "threshold": 6.213450251379982e-05,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-5",
+          "atFrame": 1023,
+          "peak_frame": 1017,
+          "lag_frames": -6,
+          "peak_difference": 0.032418373972177505,
+          "event_difference": 0.0028996102046221495,
+          "threshold": 0.00015350877220043913,
+          "pass": true
+        },
+        {
+          "event": "close-0",
+          "atFrame": 1115,
+          "peak_frame": 1116,
+          "lag_frames": 1,
+          "peak_difference": 9.501887321472168,
+          "event_difference": 9.501887321472168,
+          "threshold": 0.0003581871424103156,
+          "pass": true
+        },
+        {
+          "event": "close-1",
+          "atFrame": 1133,
+          "peak_frame": 1134,
+          "lag_frames": 1,
+          "peak_difference": 9.393842697143555,
+          "event_difference": 9.393842697143555,
+          "threshold": 0.0011695906869135797,
+          "pass": true
+        },
+        {
+          "event": "close-2",
+          "atFrame": 1134,
+          "peak_frame": 1134,
+          "lag_frames": 0,
+          "peak_difference": 9.393842697143555,
+          "event_difference": 9.393842697143555,
+          "threshold": 0.0011695906869135797,
+          "pass": true
+        },
+        {
+          "event": "close-3",
+          "atFrame": 1204,
+          "peak_frame": 1205,
+          "lag_frames": 1,
+          "peak_difference": 1.6442043781280518,
+          "event_difference": 1.6442043781280518,
+          "threshold": 0.0003947368240915239,
+          "pass": true
+        }
+      ],
+      "target": "change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)",
+      "pass": false,
+      "status": "measured"
+    },
+    "audio.bed": {
+      "value": [
+        {
+          "check": "bed present",
+          "value": true,
+          "pass": true
+        },
+        {
+          "check": "under speech",
+          "value": -18.12,
+          "target": "-21.0 to -12.0 dB re voice",
+          "pass": true
+        },
+        {
+          "check": "true peak",
+          "value": -1.69,
+          "target": "<= -1.0 dBTP",
+          "pass": true
+        },
+        {
+          "check": "a steady bed",
+          "value": "continuous",
+          "target": "episode_bed or continuous",
+          "pass": true
+        }
+      ],
+      "target": "bed present, under speech in range, true peak, (ducked) breathing in pauses, (episode) one steady level with no drop-outs",
+      "pass": true,
+      "status": "measured"
+    },
+    "audio.bed_continuity": {
+      "value": [],
+      "target": "no 0.25 s under -50.0 dBFS (50 ms RMS) from 1.5 to 42.5 s",
+      "pass": true,
+      "status": "measured"
+    },
+    "words.lost": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "joins.in_gaps": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.clock": {
+      "value": null,
+      "target": "see config/gates.json",
+      "pass": null,
+      "status": "not_run"
+    },
+    "captions.render": {
+      "value": null,
+      "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
+      "pass": null,
+      "status": "not_run",
+      "reason": "tesseract is not on PATH, so the burned captions cannot be read back; the check is missing and the cut is held"
+    },
+    "keyframe_match": {
+      "value": {
+        "hook": {
+          "ssim": 0.8465792302291069,
+          "min": 0.75,
+          "pass": true,
+          "golden": "face-with-proof",
+          "frame": 146
+        },
+        "face": {
+          "ssim": 0.8328796052233949,
+          "min": 0.75,
+          "pass": true,
+          "golden": "face-with-proof",
+          "frame": 318
+        },
+        "proof": {
+          "ssim": 0.8639678946042373,
+          "min": 0.75,
+          "pass": true,
+          "golden": "face-with-proof",
+          "frame": 473
+        },
+        "b4-8am": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "b5-rule": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "own-words": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "b7-prompt": {
+          "ssim": null,
+          "min": 0.75,
+          "pass": true,
+          "golden": null,
+          "note": "extra beat: no golden, composition-checked"
+        },
+        "close": {
+          "ssim": 0.8926878323012504,
+          "min": 0.75,
+          "pass": true,
+          "golden": "face-with-proof",
+          "frame": 1272
+        }
+      },
+      "target": "approved golden keyframes",
+      "pass": true,
+      "status": "measured"
+    },
+    "composition": {
+      "value": {},
+      "target": "design lock composition thresholds",
+      "pass": false,
+      "status": "measured"
+    }
+  },
+  "keyframes": {
+    "applies": true,
+    "pass": true,
+    "beats": {
+      "hook": {
+        "ssim": 0.8465792302291069,
+        "min": 0.75,
+        "pass": true,
+        "golden": "face-with-proof",
+        "frame": 146
+      },
+      "face": {
+        "ssim": 0.8328796052233949,
+        "min": 0.75,
+        "pass": true,
+        "golden": "face-with-proof",
+        "frame": 318
+      },
+      "proof": {
+        "ssim": 0.8639678946042373,
+        "min": 0.75,
+        "pass": true,
+        "golden": "face-with-proof",
+        "frame": 473
+      },
+      "b4-8am": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "b5-rule": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "own-words": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "b7-prompt": {
+        "ssim": null,
+        "min": 0.75,
+        "pass": true,
+        "golden": null,
+        "note": "extra beat: no golden, composition-checked"
+      },
+      "close": {
+        "ssim": 0.8926878323012504,
+        "min": 0.75,
+        "pass": true,
+        "golden": "face-with-proof",
+        "frame": 1272
+      }
+    },
+    "findings": []
+  },
+  "composition": {
+    "applies": true,
+    "pass": false,
+    "beats": {},
+    "findings": [
+      "tesseract is not on PATH; composition text checks cannot run"
+    ]
+  },
+  "measured_pass": false,
+  "complete": false
+}
