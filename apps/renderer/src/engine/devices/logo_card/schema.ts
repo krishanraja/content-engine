@@ -15,6 +15,11 @@ export function resolveLogo(id: string): string {
 export const ParamsSchema = z.object({
   logos: z.array(z.object({ id: z.string().min(1).refine(id => {
     try { resolveLogo(id); return true } catch { return false }
-  }, 'Logo needs an approved mark in config/logo-registry.json') }).strict()).min(1).max(4),
+  }, 'Logo needs an approved mark in config/logo-registry.json') }).strict()).min(1).max(6),
+  tiles: z.literal(true).optional(),
   label: z.string().min(1).max(100).optional(),
-}).strict()
+}).strict().superRefine((params, ctx) => {
+  if (!params.tiles && params.logos.length > 4) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['logos'], message: 'At most four logos without tiles mode' })
+  }
+})
