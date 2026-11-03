@@ -209,6 +209,7 @@ def card_fields(brief: dict) -> dict:
                      f'The floor (never ships):\n{nevers}\n'
                      f'Write each candidate to {work}/<file> with a sidecar <file>.json holding {", ".join(SIDECAR_FIELDS)}.'),
         'acceptance': f'python scripts/ve.py brief {brief["piece"]} --cut {brief["cut"]} --plate {brief["plate"]} --check {work}',
+        **({'motion_style': brief['style']['motion_system']['id']} if brief['style'].get('motion_system') else {}),
     }
 
 
