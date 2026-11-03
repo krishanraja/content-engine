@@ -38,11 +38,14 @@ def caption_box_height(lines: int, wide: bool) -> int:
     return int(34 + 38 + lines * size * 1.06 + 6)
 
 
-def crop_to_caption_box(pixels, lines: int, wide: bool):
+def crop_to_caption_box(pixels, lines: int, wide: bool, compact: bool = False):
     """Keep the caption box only. The OCR region is fixed but the box is as tall as its lines: on a tall cut it hangs
     from the top of the region, on a wide cut it sits on the bottom. The rest of the region is the picture (cream
     passport paper, a phone, a headline) and reads as stray words."""
     height = caption_box_height(lines, wide)
+    if compact:
+        # A SPLIT caption keeps 10 px above and below (BrandFrame.tsx SplitCaptionTrack), not 34 and 38.
+        height = height - 34 - 38 + 20
     if height >= pixels.shape[0]:
         return pixels
     return pixels[-height:] if wide else pixels[:height]
@@ -188,10 +191,12 @@ def ocr(render, pages, region) -> dict:
             rows.append({'page': index, 'frame': frame, 'pass': None, 'status': 'not_run',
                          'reason': 'tesseract is not on PATH'})
             continue
-        pixels = gray_frames(render, frame, frame, region)[0].astype('uint8')
+        page_region = page.get('region', region)  # a SPLIT page reads its own zone (qc.inputs_from_props)
+        _, _, w, h = pixel_box(page_region)
+        pixels = gray_frames(render, frame, frame, page_region)[0].astype('uint8')
         words = ' '.join(word['text'] if isinstance(word, dict) else str(word) for word in page['words'])
         expected = _tokens(words)
-        best = _read_candidates(executable, crop_to_caption_box(pixels.reshape(h, w), page_lines(page, w > 1000), w > 1000), expected)
+        best = _read_candidates(executable, crop_to_caption_box(pixels.reshape(h, w), page_lines(page, w > 1000), w > 1000, 'region' in page), expected)
         rows.append({'page': index, 'frame': frame, **best,
                      'pass': bool(expected) and best['agreement'] >= 0.98})
     report = measurement(rows, 'token agreement >= 0.98 on every page')

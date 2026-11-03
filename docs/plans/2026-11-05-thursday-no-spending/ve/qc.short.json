@@ -86,13 +86,13 @@
         },
         {
           "segment": 7,
-          "lag_ms": null,
-          "pass": false,
-          "reason": "Segment is too short or extends beyond decoded audio"
+          "lag_ms": 0,
+          "pass": true,
+          "correlation": 0.999986
         }
       ],
       "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
-      "pass": false,
+      "pass": true,
       "status": "measured"
     },
     "joins.decoder": {
@@ -108,253 +108,287 @@
         {
           "page": 0,
           "frame": 67,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "Proactive Alis\ncoming.",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         },
         {
           "page": 1,
           "frame": 109,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "Al that does things\nbefore",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 2,
           "frame": 149,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "you ask offers to do",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 3,
           "frame": 189,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "things. Awesome,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 4,
           "frame": 257,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "really cool features\nand really",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 5,
           "frame": 314,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "helpful but a bit\ndangerous",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         },
         {
           "page": 6,
           "frame": 345,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "because once\nthey're connected",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 7,
           "frame": 400,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "Muse into your\nWhatsApp,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 8,
           "frame": 442,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "Amazon for your\ngroceries,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 9,
           "frame": 490,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "Google for your\nemails,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 10,
           "frame": 538,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "it can geta bit",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 11,
           "frame": 586,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "dangerous. So my\nfirst step",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         },
         {
           "page": 12,
           "frame": 617,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "is the fif-) spending,",
+          "agreement": 0.75,
+          "variant": "raw",
+          "pass": false
         },
         {
           "page": 13,
           "frame": 636,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "[YJ sending",
+          "agreement": 0.5,
+          "variant": "raw",
+          "pass": false
         },
         {
           "page": 14,
           "frame": 670,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "rule. It doesn't\nspend my",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         },
         {
           "page": 15,
           "frame": 723,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "money, doesn't send\nanything out",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 16,
           "frame": 749,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "for me unless I say",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 17,
           "frame": 781,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "so. And the fun part",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 18,
           "frame": 812,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "is I didn't even write",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 19,
           "frame": 838,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "this myself.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 20,
           "frame": 871,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "Ijust put one prompt",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         },
         {
           "page": 21,
           "frame": 903,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "into my Al tool and",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 22,
           "frame": 930,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "it started asking me\nquestions",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 23,
           "frame": 979,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "back, then it locks\nitself",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 24,
           "frame": 1010,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "down or tells you\nhow",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 25,
           "frame": 1035,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "to lock it down.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 26,
           "frame": 1072,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "Prompt's in the\ncomments,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 27,
           "frame": 1110,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "make sure you do\nthis,",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 28,
           "frame": 1125,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "no spending,",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         },
         {
           "page": 29,
           "frame": 1140,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "no sending,",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         },
         {
           "page": 30,
           "frame": 1175,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "one easy step so you",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 31,
           "frame": 1208,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "can save yourself\nand enjoy",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 32,
           "frame": 1232,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "these new\ntechnologies",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 33,
           "frame": 1275,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "without any of those\nweird",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         },
         {
           "page": 34,
           "frame": 1310,
-          "pass": null,
-          "status": "not_run",
-          "reason": "tesseract is not on PATH"
+          "text": "moments or fails.",
+          "agreement": 1.0,
+          "variant": "raw",
+          "pass": true
         }
       ],
       "target": "token agreement >= 0.98 on every page",
-      "pass": null,
-      "status": "not_run",
-      "reason": "tesseract is not on PATH"
+      "pass": false,
+      "status": "measured"
     },
     "brand.mark_tile": {
       "value": [
@@ -418,8 +452,8 @@
           "atFrame": 0,
           "peak_frame": 6,
           "lag_frames": 6,
-          "peak_difference": 2.1110026836395264,
-          "event_difference": 0.39876827597618103,
+          "peak_difference": 5.155863285064697,
+          "event_difference": 1.021462321281433,
           "threshold": 1e-06,
           "pass": true
         },
@@ -428,19 +462,19 @@
           "atFrame": 0,
           "peak_frame": 6,
           "lag_frames": 6,
-          "peak_difference": 2.1110026836395264,
-          "event_difference": 0.39876827597618103,
+          "peak_difference": 2.1652424335479736,
+          "event_difference": 2.0309903621673584,
           "threshold": 1e-06,
           "pass": true
         },
         {
           "event": "hook-2",
           "atFrame": 27,
-          "peak_frame": 32,
-          "lag_frames": 5,
-          "peak_difference": 1.3814815282821655,
-          "event_difference": 1.3451048135757446,
-          "threshold": 0.0015679823700338602,
+          "peak_frame": 27,
+          "lag_frames": 0,
+          "peak_difference": 6.709559917449951,
+          "event_difference": 6.709559917449951,
+          "threshold": 0.006193057866767049,
           "pass": true
         },
         {
@@ -458,9 +492,9 @@
           "atFrame": 127,
           "peak_frame": 128,
           "lag_frames": 1,
-          "peak_difference": 3.414764881134033,
-          "event_difference": 3.414764881134033,
-          "threshold": 0.0016301168943755329,
+          "peak_difference": 7.929934501647949,
+          "event_difference": 7.929934501647949,
+          "threshold": 0.6697354316711426,
           "pass": true
         },
         {
@@ -498,9 +532,9 @@
           "atFrame": 503,
           "peak_frame": 503,
           "lag_frames": 0,
-          "peak_difference": 4.8215131759643555,
-          "event_difference": 4.8215131759643555,
-          "threshold": 0.00026681287272367626,
+          "peak_difference": 10.091891288757324,
+          "event_difference": 10.091891288757324,
+          "threshold": 0.0004439839976839721,
           "pass": true
         },
         {
@@ -508,39 +542,39 @@
           "atFrame": 503,
           "peak_frame": 503,
           "lag_frames": 0,
-          "peak_difference": 4.8215131759643555,
-          "event_difference": 4.8215131759643555,
-          "threshold": 0.00026681287272367626,
+          "peak_difference": 10.091891288757324,
+          "event_difference": 10.091891288757324,
+          "threshold": 0.0004439839976839721,
           "pass": true
         },
         {
           "event": "b4-8am-2",
           "atFrame": 521,
-          "peak_frame": 521,
-          "lag_frames": 0,
-          "peak_difference": 2.2664217948913574,
-          "event_difference": 2.2664217948913574,
-          "threshold": 0.9438377022743225,
-          "pass": true
+          "peak_frame": 515,
+          "lag_frames": -6,
+          "peak_difference": 1.1804503202438354,
+          "event_difference": 0.5818253755569458,
+          "threshold": 2.9550769329071045,
+          "pass": false
         },
         {
           "event": "b4-8am-3",
           "atFrame": 536,
           "peak_frame": 536,
           "lag_frames": 0,
-          "peak_difference": 2.2820966243743896,
-          "event_difference": 2.2820966243743896,
-          "threshold": 1.9089472889900208,
-          "pass": true
+          "peak_difference": 0.11157453060150146,
+          "event_difference": 0.11157453060150146,
+          "threshold": 0.24589987099170685,
+          "pass": false
         },
         {
           "event": "b5-rule-0",
           "atFrame": 601,
           "peak_frame": 601,
           "lag_frames": 0,
-          "peak_difference": 10.112170219421387,
-          "event_difference": 10.112170219421387,
-          "threshold": 0.00016447368761873804,
+          "peak_difference": 60.89363479614258,
+          "event_difference": 60.89363479614258,
+          "threshold": 1e-06,
           "pass": true
         },
         {
@@ -548,9 +582,9 @@
           "atFrame": 626,
           "peak_frame": 626,
           "lag_frames": 0,
-          "peak_difference": 10.606705665588379,
-          "event_difference": 10.606705665588379,
-          "threshold": 0.00038377194141503423,
+          "peak_difference": 24.901737213134766,
+          "event_difference": 24.901737213134766,
+          "threshold": 0.09363734722137451,
           "pass": true
         },
         {
@@ -558,9 +592,9 @@
           "atFrame": 626,
           "peak_frame": 626,
           "lag_frames": 0,
-          "peak_difference": 10.606705665588379,
-          "event_difference": 10.606705665588379,
-          "threshold": 0.00038377194141503423,
+          "peak_difference": 60.26205062866211,
+          "event_difference": 60.26205062866211,
+          "threshold": 1e-06,
           "pass": true
         },
         {
@@ -578,9 +612,9 @@
           "atFrame": 855,
           "peak_frame": 857,
           "lag_frames": 2,
-          "peak_difference": 3.039668560028076,
-          "event_difference": 3.039668560028076,
-          "threshold": 5.8479534345678985e-05,
+          "peak_difference": 5.947889804840088,
+          "event_difference": 5.947889804840088,
+          "threshold": 1e-06,
           "pass": true
         },
         {
@@ -588,9 +622,9 @@
           "atFrame": 912,
           "peak_frame": 912,
           "lag_frames": 0,
-          "peak_difference": 7.125840663909912,
-          "event_difference": 7.125840663909912,
-          "threshold": 0.00011695906869135797,
+          "peak_difference": 10.293339729309082,
+          "event_difference": 10.293339729309082,
+          "threshold": 0.00012089705705875531,
           "pass": true
         },
         {
@@ -598,9 +632,9 @@
           "atFrame": 953,
           "peak_frame": 953,
           "lag_frames": 0,
-          "peak_difference": 0.08321759104728699,
-          "event_difference": 0.08321759104728699,
-          "threshold": 0.12403509020805359,
+          "peak_difference": 0.2278909534215927,
+          "event_difference": 0.2278909534215927,
+          "threshold": 0.3386427238583565,
           "pass": false
         },
         {
@@ -608,9 +642,9 @@
           "atFrame": 967,
           "peak_frame": 967,
           "lag_frames": 0,
-          "peak_difference": 0.03562256321310997,
-          "event_difference": 0.03562256321310997,
-          "threshold": 0.0019298245897516608,
+          "peak_difference": 0.05148199573159218,
+          "event_difference": 0.05148199573159218,
+          "threshold": 0.002538838132750243,
           "pass": true
         },
         {
@@ -618,39 +652,39 @@
           "atFrame": 1016,
           "peak_frame": 1016,
           "lag_frames": 0,
-          "peak_difference": 0.017826510593295097,
-          "event_difference": 0.017826510593295097,
-          "threshold": 1.0964912007693783e-05,
-          "pass": true
+          "peak_difference": 0.0,
+          "event_difference": 0.0,
+          "threshold": 1e-06,
+          "pass": false
         },
         {
           "event": "b7-prompt-5",
           "atFrame": 1023,
-          "peak_frame": 1025,
-          "lag_frames": 2,
-          "peak_difference": 1.827485357352998e-05,
-          "event_difference": 1.827485357352998e-05,
-          "threshold": 1.0964912007693783e-05,
-          "pass": true
+          "peak_frame": 1023,
+          "lag_frames": 0,
+          "peak_difference": 0.0,
+          "event_difference": 0.0,
+          "threshold": 1e-06,
+          "pass": false
         },
         {
           "event": "close-0",
           "atFrame": 1115,
-          "peak_frame": 1116,
-          "lag_frames": 1,
-          "peak_difference": 8.773945808410645,
-          "event_difference": 8.773945808410645,
-          "threshold": 0.00023026314738672227,
+          "peak_frame": 1115,
+          "lag_frames": 0,
+          "peak_difference": 46.49541091918945,
+          "event_difference": 46.49541091918945,
+          "threshold": 0.0007308066997211426,
           "pass": true
         },
         {
           "event": "close-1",
           "atFrame": 1133,
-          "peak_frame": 1134,
-          "lag_frames": 1,
-          "peak_difference": 9.343985557556152,
-          "event_difference": 9.343985557556152,
-          "threshold": 0.0004312865494284779,
+          "peak_frame": 1133,
+          "lag_frames": 0,
+          "peak_difference": 47.01091003417969,
+          "event_difference": 47.01091003417969,
+          "threshold": 0.0006538796878885478,
           "pass": true
         },
         {
@@ -668,9 +702,9 @@
           "atFrame": 1204,
           "peak_frame": 1205,
           "lag_frames": 1,
-          "peak_difference": 0.9048087000846863,
-          "event_difference": 0.9048087000846863,
-          "threshold": 1.4619883586419746e-05,
+          "peak_difference": 4.511697769165039,
+          "event_difference": 4.511697769165039,
+          "threshold": 0.09197909384965897,
           "pass": true
         }
       ],
@@ -757,11 +791,489 @@
       "status": "not_run"
     },
     "captions.render": {
-      "value": null,
+      "value": {
+        "machine": "scripts/cutgates/captions.py",
+        "version": "captions/1",
+        "part": "renderer",
+        "region": [
+          72,
+          1460,
+          900,
+          180
+        ],
+        "window_frames": 3,
+        "min_score": 0.98,
+        "pixel_change_status": "placeholder, to be measured on Monday 26",
+        "pages": [
+          {
+            "page": 0,
+            "fromFrame": 11,
+            "text": "Proactive AI is coming.",
+            "change_frame": 11,
+            "frame": 55,
+            "read": "Proactive Alis\ncoming.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 1,
+            "fromFrame": 79,
+            "text": "AI that does things before",
+            "change_frame": 79,
+            "frame": 104,
+            "read": "Al that does things\nbefore",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 2,
+            "fromFrame": 114,
+            "text": "you ask offers to do",
+            "change_frame": 114,
+            "frame": 146,
+            "read": "you ask offers to do",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 3,
+            "fromFrame": 352,
+            "text": "Muse into your WhatsApp,",
+            "change_frame": 352,
+            "frame": 389,
+            "read": "Muse into your\nWhatsApp,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 4,
+            "fromFrame": 410,
+            "text": "Amazon for your groceries,",
+            "change_frame": 410,
+            "frame": 422,
+            "read": "Amazon for your\ngroceries,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 5,
+            "fromFrame": 462,
+            "text": "Google for your emails,",
+            "change_frame": 462,
+            "frame": 476,
+            "read": "Google for your\nemails,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 6,
+            "fromFrame": 503,
+            "text": "it can get a bit",
+            "change_frame": 503,
+            "frame": 536,
+            "read": "it can geta bit",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 7,
+            "fromFrame": 540,
+            "text": "dangerous. So my first step",
+            "change_frame": 540,
+            "frame": 582,
+            "read": "dangerous. So my\nfirst step",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 8,
+            "fromFrame": 589,
+            "text": "is the no spending,",
+            "change_frame": 589,
+            "frame": 607,
+            "read": "is the [J spending,\n: —=—_— ~<«.,",
+            "score": 0.75,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 8 reads \"is the [J spending,\n: —=—_— ~<«.,\" near frame 607, not \"is the no spending,\" (score 0.75, needs an exact match and 0.98)"
+          },
+          {
+            "page": 9,
+            "fromFrame": 626,
+            "text": "no sending",
+            "change_frame": 626,
+            "frame": 631,
+            "read": "[YJ sending",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 9 reads \"[YJ sending\" near frame 631, not \"no sending\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 10,
+            "fromFrame": 752,
+            "text": "so. And the fun part",
+            "change_frame": 752,
+            "frame": 777,
+            "read": "so. And the fun part",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 11,
+            "fromFrame": 785,
+            "text": "is I didn't even write",
+            "change_frame": 785,
+            "frame": 805,
+            "read": "is I didn't even write",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 12,
+            "fromFrame": 818,
+            "text": "this myself.",
+            "change_frame": 818,
+            "frame": 824,
+            "read": "this myself.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 13,
+            "fromFrame": 851,
+            "text": "I just put one prompt",
+            "change_frame": 851,
+            "frame": 874,
+            "read": "I just put one fyryin 4\noe",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 13 reads \"I just put one fyryin 4\noe\" near frame 874, not \"I just put one prompt\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 14,
+            "fromFrame": 875,
+            "text": "into my AI tool and",
+            "change_frame": 875,
+            "frame": 901,
+            "read": "into my Al tool and",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 15,
+            "fromFrame": 904,
+            "text": "it started asking me questions",
+            "change_frame": 904,
+            "frame": 925,
+            "read": "it started asking me\nquestions",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 16,
+            "fromFrame": 934,
+            "text": "back, then it locks itself",
+            "change_frame": 934,
+            "frame": 974,
+            "read": "back, then it locks\nitself",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 17,
+            "fromFrame": 984,
+            "text": "down or tells you how",
+            "change_frame": 984,
+            "frame": 1008,
+            "read": "down or tells you\nhow",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 18,
+            "fromFrame": 1012,
+            "text": "to lock it down.",
+            "change_frame": 1012,
+            "frame": 1023,
+            "read": "to lock it down.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 19,
+            "fromFrame": 1046,
+            "text": "Prompt's in the comments,",
+            "change_frame": 1046,
+            "frame": 1058,
+            "read": "Prompt's in the\ncomments,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 20,
+            "fromFrame": 1085,
+            "text": "make sure you do this,",
+            "change_frame": 1085,
+            "frame": 1105,
+            "read": "make sure you do\nthis,",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 21,
+            "fromFrame": 1115,
+            "text": "no spending,",
+            "change_frame": 1115,
+            "frame": 1115,
+            "read": "no |",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 21 reads \"no |\" near frame 1115, not \"no spending,\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 22,
+            "fromFrame": 1133,
+            "text": "no sending,",
+            "change_frame": 1133,
+            "frame": 1133,
+            "read": "no |",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 22 reads \"no |\" near frame 1133, not \"no sending,\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 23,
+            "fromFrame": 1145,
+            "text": "one easy step so you",
+            "change_frame": 1145,
+            "frame": 1173,
+            "read": "one easy step so you",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 24,
+            "fromFrame": 1176,
+            "text": "can save yourself and enjoy",
+            "change_frame": 1176,
+            "frame": 1204,
+            "read": "can save yourself\nand enjoy",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 25,
+            "fromFrame": 1212,
+            "text": "these new technologies",
+            "change_frame": 1212,
+            "frame": 1224,
+            "read": "these new\ntechnologies",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 26,
+            "fromFrame": 1239,
+            "text": "without any of those weird",
+            "change_frame": 1239,
+            "frame": 1271,
+            "read": "without any of those\nweird",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 27,
+            "fromFrame": 1279,
+            "text": "moments or fails.",
+            "change_frame": 1279,
+            "frame": 1300,
+            "read": "moments or fails.",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 0,
+            "fromFrame": 151,
+            "text": "things. Awesome,",
+            "status": "fail",
+            "message": "caption page 0 (\"things. Awesome,\"): no change in the caption zone within 3 frames of its start, frame 151"
+          },
+          {
+            "page": 1,
+            "fromFrame": 194,
+            "text": "really cool features and really",
+            "change_frame": 194,
+            "frame": 248,
+            "read": "really cool features\nand really",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 2,
+            "fromFrame": 266,
+            "text": "helpful but a bit dangerous",
+            "change_frame": 266,
+            "frame": 307,
+            "read": "helpful but a bit\ndangerous",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 3,
+            "fromFrame": 320,
+            "text": "because once they're connected",
+            "change_frame": 320,
+            "frame": 338,
+            "read": "because once\nthey're connected",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 4,
+            "fromFrame": 641,
+            "text": "rule. It doesn't spend my",
+            "status": "fail",
+            "message": "caption page 4 (\"rule. It doesn't spend my\"): no change in the caption zone within 3 frames of its start, frame 641"
+          },
+          {
+            "page": 5,
+            "fromFrame": 673,
+            "text": "money, doesn't send anything out",
+            "change_frame": 673,
+            "frame": 718,
+            "read": "money, doesn't send\nanything out",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          },
+          {
+            "page": 6,
+            "fromFrame": 727,
+            "text": "for me unless I say",
+            "change_frame": 727,
+            "frame": 746,
+            "read": "for me unless I say",
+            "score": 1.0,
+            "exact": true,
+            "status": "pass"
+          }
+        ],
+        "failed": [
+          {
+            "page": 8,
+            "fromFrame": 589,
+            "text": "is the no spending,",
+            "change_frame": 589,
+            "frame": 607,
+            "read": "is the [J spending,\n: —=—_— ~<«.,",
+            "score": 0.75,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 8 reads \"is the [J spending,\n: —=—_— ~<«.,\" near frame 607, not \"is the no spending,\" (score 0.75, needs an exact match and 0.98)"
+          },
+          {
+            "page": 9,
+            "fromFrame": 626,
+            "text": "no sending",
+            "change_frame": 626,
+            "frame": 631,
+            "read": "[YJ sending",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 9 reads \"[YJ sending\" near frame 631, not \"no sending\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 13,
+            "fromFrame": 851,
+            "text": "I just put one prompt",
+            "change_frame": 851,
+            "frame": 874,
+            "read": "I just put one fyryin 4\noe",
+            "score": 0.6667,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 13 reads \"I just put one fyryin 4\noe\" near frame 874, not \"I just put one prompt\" (score 0.6667, needs an exact match and 0.98)"
+          },
+          {
+            "page": 21,
+            "fromFrame": 1115,
+            "text": "no spending,",
+            "change_frame": 1115,
+            "frame": 1115,
+            "read": "no |",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 21 reads \"no |\" near frame 1115, not \"no spending,\" (score 0.5, needs an exact match and 0.98)"
+          },
+          {
+            "page": 22,
+            "fromFrame": 1133,
+            "text": "no sending,",
+            "change_frame": 1133,
+            "frame": 1133,
+            "read": "no |",
+            "score": 0.5,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 22 reads \"no |\" near frame 1133, not \"no sending,\" (score 0.5, needs an exact match and 0.98)"
+          }
+        ],
+        "changes_found": 109,
+        "status": "fail",
+        "reason": "5 of 28 caption page(s) are not drawn as the props say near their start",
+        "pass": false,
+        "regions": [
+          [
+            72,
+            1460,
+            900,
+            180
+          ],
+          [
+            72,
+            1180,
+            900,
+            217
+          ]
+        ]
+      },
       "target": "a page change within 3 frames of each start; exact text, OCR score >= 0.98",
-      "pass": null,
-      "status": "not_run",
-      "reason": "tesseract is not on PATH, so the burned captions cannot be read back; the check is missing and the cut is held"
+      "pass": false,
+      "status": "measured",
+      "agreement": null,
+      "summary": "5 of 28 caption page(s) are not drawn as the props say near their start: caption page 8 reads \"is the [J spending,\n: —=—_— ~<«.,\" near frame 607, not \"is the no spending,\" (score 0.75, needs an exact match and 0.98); caption page 9 reads \"[YJ sending\" near frame 631, not \"no sending\" (score 0.5, needs an exact match and 0.98); caption page 13 reads \"I just put one fyryin 4\noe\" near frame 874, not \"I just put one prompt\" (score 0.6667, needs an exact match and 0.98); caption page 21 reads \"no |\" near frame 1115, not \"no spending,\" (score 0.5, needs an exact match and 0.98) (and 1 more)"
     },
     "keyframe_match": {
       "value": {
@@ -827,7 +1339,235 @@
       "status": "measured"
     },
     "composition": {
-      "value": {},
+      "value": {
+        "hook": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 99.95
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 146
+        },
+        "face": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 318
+        },
+        "proof": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 473
+        },
+        "b4-8am": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 549
+        },
+        "b5-rule": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 631
+        },
+        "own-words": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 743
+        },
+        "b7-prompt": {
+          "pass": false,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": false,
+              "value": [
+                {
+                  "text": "tolockit",
+                  "conf": 85.229095,
+                  "x": 116,
+                  "y": 1480,
+                  "w": 327,
+                  "h": 50
+                }
+              ]
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [
+            "caption_zone contains 'tolockit', the limit is 0 unlisted words."
+          ],
+          "frame": 1021
+        },
+        "close": {
+          "pass": true,
+          "checks": {
+            "fill_pct": {
+              "pass": true,
+              "value": 100.0
+            },
+            "small_text": {
+              "pass": true,
+              "value": []
+            },
+            "caption_zone": {
+              "pass": true,
+              "value": []
+            },
+            "platform_zone": {
+              "pass": true,
+              "value": []
+            },
+            "edges": {
+              "pass": true,
+              "value": []
+            }
+          },
+          "findings": [],
+          "frame": 1272
+        }
+      },
       "target": "design lock composition thresholds",
       "pass": false,
       "status": "measured"
@@ -899,10 +1639,235 @@
   "composition": {
     "applies": true,
     "pass": false,
-    "beats": {},
-    "findings": [
-      "tesseract is not on PATH; composition text checks cannot run"
-    ]
+    "beats": {
+      "hook": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 99.95
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 146
+      },
+      "face": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 318
+      },
+      "proof": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 473
+      },
+      "b4-8am": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 549
+      },
+      "b5-rule": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 631
+      },
+      "own-words": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 743
+      },
+      "b7-prompt": {
+        "pass": false,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": false,
+            "value": [
+              {
+                "text": "tolockit",
+                "conf": 85.229095,
+                "x": 116,
+                "y": 1480,
+                "w": 327,
+                "h": 50
+              }
+            ]
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [
+          "caption_zone contains 'tolockit', the limit is 0 unlisted words."
+        ],
+        "frame": 1021
+      },
+      "close": {
+        "pass": true,
+        "checks": {
+          "fill_pct": {
+            "pass": true,
+            "value": 100.0
+          },
+          "small_text": {
+            "pass": true,
+            "value": []
+          },
+          "caption_zone": {
+            "pass": true,
+            "value": []
+          },
+          "platform_zone": {
+            "pass": true,
+            "value": []
+          },
+          "edges": {
+            "pass": true,
+            "value": []
+          }
+        },
+        "findings": [],
+        "frame": 1272
+      }
+    }
   },
   "measured_pass": false,
   "complete": false

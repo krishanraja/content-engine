@@ -139,6 +139,12 @@ def composition_checks(video, props, lock) -> dict:
                    for word in page['words']
                    for token in qc_captions._tokens(word['text'] if isinstance(word, dict) else str(word))}
         allowed |= call_card_tokens(props, beat)
-        rows[beat['id']] = measure(image, lock, caption_words=allowed, exempt=_footage_boxes(props, at))
+        beat_lock = lock
+        if beat.get('layout') == 'SPLIT':
+            # A SPLIT beat's caption sits in the frozen split zone; the house zone there is his face and hands.
+            from .qc import _split_geometry
+            x, y, w, h = _split_geometry()[1]
+            beat_lock = {**lock, 'zones': {**lock['zones'], 'caption': {**lock['zones']['caption'], 'x': x, 'y': y, 'w': w, 'h': h}}}
+        rows[beat['id']] = measure(image, beat_lock, caption_words=allowed, exempt=_footage_boxes(props, at))
         rows[beat['id']]['frame'] = at
     return {'applies': True, 'pass': bool(rows) and all(row['pass'] for row in rows.values()), 'beats': rows}
