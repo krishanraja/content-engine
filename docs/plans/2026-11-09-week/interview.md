@@ -24,6 +24,8 @@ Each line: the question, the best guess offered, then his exact answer. His word
 - Friday research: his Perplexity corpus "ai-metrics-gaming-research.md" (Drive 1zMFJXhODYuqMxbmf98gIrhgH_syu6V1G, Content Inspo, 3 Nov 2026).
 - Friday Q1 to Q7 (Hanoi rats open with the cobra as punchline; mandates, leaderboards, U-turns arc; Token Legend humour, forum lines labelled; the 95% figure as one line; close "If you're counting how much AI your people use, you're counting rat tails."; debate script, talking head with cutaways). Krish: "Friday, I agree with everything except for the takeaway lines. Still not sure what I would put, but those are Difficult because I don't think many businesses can see what requests are being made by their staff and the others feel a bit difficult to understand very quickly, they'd need a lot more explanation"
 
+- Friday takeaways, re-offered: scrap AI-use targets and rankings; make "AI didn't help here" a good answer; judge AI on a number you already track. Krish: "Agreed on those"
+
 ## Still open
 
-- Friday: the three takeaway steps (simple enough to need no explanation, and doable without seeing staff's AI requests).
+- Friday: his signature on the lock.
