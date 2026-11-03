@@ -459,13 +459,9 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    piece's point types> --format <long_video|short_video|...>`, pick one of
    the shortlist from the bank's motion layer, and say in its `reason` which
    point it makes land faster; its rules and avoid list then reach every
-   plate brief. The cards the cut is held to (`brand.references`, look,
-   motion and captions) come from the inspiration board, by card id, never
-   from `config/style-references.json` or a typed name: `ve init <piece>`
-   offers the top card per role from `GET /api/inspiration/candidates`
-   marked `offered: true`; open each, confirm it (delete `offered`, write
-   its takeaway) or swap in another board card with its `id`, and `ve refs`
-   checks them against the board (the `ve` skill, step 6). A style he has not rated yet is untested: say so on the
+   plate brief. Its `brand.references` come from the inspiration board by
+   card id, never a typed name (`ve init`, `ve refs`: the `ve` skill, step
+   6). A style he has not rated yet is untested: say so on the
    storyboard. Every
    picture adds meaning beyond the words (Krish, 2026-10-29: "They have to
    be additive in meaning. I'm all up for visually clear ideas."): a
