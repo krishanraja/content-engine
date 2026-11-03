@@ -1,0 +1,43 @@
+name: Auto-merge
+
+# Every pull request merges itself once CI is green, ve included (Ruling, Krish, 2026-11-03: "Change everything to
+# auto-merge all the time. No manual merging"). main has no required checks (Krish, 2026-10-25: "No merge checks."), so
+# GitHub's own auto-merge would not wait for CI; this job merges on green CI instead. Red CI never merges: the branch
+# is fixed and the next green run merges it. A branch with no open pull request is never touched.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: auto-merge-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge the pull request whose CI is green
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          pr=$(gh pr list -R "$REPO" --head "$BRANCH" --state open --json number,headRefOid,isDraft \
+            --jq "[.[] | select(.isDraft | not) | select(.headRefOid == \"$SHA\")][0].number // empty")
+          if [ -z "$pr" ]; then echo "No open, ready pull request at $SHA on $BRANCH; nothing to merge."; exit 0; fi
+          # Push and pull_request both run CI on the same commit: merge only when every CI run on it is green.
+          waiting=$(gh api "repos/$REPO/actions/runs?head_sha=$SHA&per_page=100" \
+            --jq '[.workflow_runs[] | select(.name == "CI") | select(.status != "completed" or .conclusion != "success")] | length')
+          if [ "$waiting" != "0" ]; then echo "$waiting other CI run(s) on $SHA are not green yet; the last green one merges."; exit 0; fi
+          gh pr merge "$pr" -R "$REPO" --merge
+          echo "Merged #$pr ($SHA) on green CI."
+          # A merge made with GitHub's own token starts no push workflow on main; start the docs steward by hand.
+          gh workflow run docs-steward.yml -R "$REPO" --ref main || echo "::warning::docs-steward was not started; its nightly run picks the merge up."
