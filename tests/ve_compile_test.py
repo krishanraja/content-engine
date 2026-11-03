@@ -255,6 +255,22 @@ class CompileTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'W{50}'):
             _caption_groups([{'w': 0, 'text': 'W' * 50}, {'w': 1, 'text': 'ok'}])
         self.assertAlmostEqual(_text_width('A ', 68), (862 - 15 + 233 - 15) * 68 / 1000)
+        # Thursday 5 Nov: a page never ends on a word the next page replaces within 6 frames, when a split allows it.
+        timed = [{'w': i, 'text': t, 'atFrame': f} for i, (t, f) in enumerate(
+            [('one', 1144), ('easy', 1149), ('step', 1159), ('so', 1167), ('you', 1171), ('can', 1173),
+             ('save', 1178), ('yourself', 1186), ('and', 1199), ('enjoy', 1201)])]
+        # A page never jumps between the SPLIT zone and the house zone mid-phrase; a lone word keeps its neighbour.
+        from velib.compile import _zone_runs
+        beats = [{'layout': 'SPLIT', 'fromFrame': 0, 'toFrame': 1160}, {'layout': 'P1', 'fromFrame': 1160, 'toFrame': 1300}]
+        runs = [[r['text'] for r in run] for run in _zone_runs(timed, beats)]
+        self.assertEqual(runs, [['one', 'easy', 'step'], ['so', 'you', 'can', 'save', 'yourself', 'and', 'enjoy']])
+        lone = [{'layout': 'SPLIT', 'fromFrame': 0, 'toFrame': 1145}, {'layout': 'P1', 'fromFrame': 1145, 'toFrame': 1300}]
+        self.assertEqual(len(_zone_runs(timed, lone)), 1)
+        pages = [[r['text'] for r in g] for g in _caption_groups(timed)]
+        self.assertNotIn(['one', 'easy', 'step', 'so', 'you'], pages)
+        for page, following in zip(pages, pages[1:]):
+            last = next(r for r in timed if r['text'] == page[-1])['atFrame']
+            self.assertGreaterEqual(next(r for r in timed if r['text'] == following[0])['atFrame'] - last, 6, pages)
 
     def test_caption_renderer_parity(self):
         spec = load_json(FIXTURE / 'spec.json')

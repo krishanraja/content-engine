@@ -9,1792 +9,1792 @@
   },
   "aligners": {
     "a": {
-      "name": "faster-whisper:small.en",
+      "name": "torchaudio:mms-fa",
       "words": [
         {
           "i": 0,
           "text": "Proactive",
-          "onset_s": 1.18,
-          "end_s": 1.7
+          "onset_s": 1.02,
+          "end_s": 1.681
         },
         {
           "i": 1,
           "text": "AI",
-          "onset_s": 1.7,
-          "end_s": 2.22
+          "onset_s": 1.841,
+          "end_s": 2.281
         },
         {
           "i": 2,
           "text": "is",
-          "onset_s": 2.22,
-          "end_s": 2.62
+          "onset_s": 2.441,
+          "end_s": 2.621
         },
         {
           "i": 3,
           "text": "coming.",
-          "onset_s": 2.62,
-          "end_s": 3.12
+          "onset_s": 2.881,
+          "end_s": 3.181
         },
         {
           "i": 4,
           "text": "AI",
-          "onset_s": 3.42,
-          "end_s": 3.42
+          "onset_s": 3.261,
+          "end_s": 3.481
         },
         {
           "i": 5,
           "text": "that",
-          "onset_s": 3.42,
-          "end_s": 3.66
+          "onset_s": 3.521,
+          "end_s": 3.621
         },
         {
           "i": 6,
           "text": "does",
-          "onset_s": 3.66,
-          "end_s": 4.02
+          "onset_s": 3.841,
+          "end_s": 4.041
         },
         {
           "i": 7,
           "text": "things",
-          "onset_s": 4.02,
-          "end_s": 4.28
+          "onset_s": 4.122,
+          "end_s": 4.322
         },
         {
           "i": 8,
           "text": "before",
-          "onset_s": 4.28,
-          "end_s": 4.6
+          "onset_s": 4.362,
+          "end_s": 4.642
         },
         {
           "i": 9,
           "text": "you",
-          "onset_s": 4.6,
-          "end_s": 4.74
+          "onset_s": 4.662,
+          "end_s": 4.742
         },
         {
           "i": 10,
           "text": "ask",
-          "onset_s": 4.74,
-          "end_s": 5.02
+          "onset_s": 4.842,
+          "end_s": 5.082
         },
         {
           "i": 11,
           "text": "offers",
-          "onset_s": 5.02,
-          "end_s": 5.42
+          "onset_s": 5.182,
+          "end_s": 5.522
         },
         {
           "i": 12,
           "text": "to",
-          "onset_s": 5.42,
-          "end_s": 5.66
+          "onset_s": 5.562,
+          "end_s": 5.642
         },
         {
           "i": 13,
           "text": "do",
-          "onset_s": 5.66,
-          "end_s": 5.84
+          "onset_s": 5.702,
+          "end_s": 5.782
         },
         {
           "i": 14,
           "text": "things.",
-          "onset_s": 5.84,
-          "end_s": 6.18
+          "onset_s": 5.902,
+          "end_s": 6.182
         },
         {
           "i": 15,
           "text": "Awesome,",
-          "onset_s": 6.9,
-          "end_s": 7.1
+          "onset_s": 6.782,
+          "end_s": 7.183
         },
         {
           "i": 16,
           "text": "really",
-          "onset_s": 7.28,
-          "end_s": 7.64
+          "onset_s": 7.423,
+          "end_s": 7.743
         },
         {
           "i": 17,
           "text": "cool",
-          "onset_s": 7.64,
-          "end_s": 8.06
+          "onset_s": 7.823,
+          "end_s": 8.043
         },
         {
           "i": 18,
           "text": "features",
-          "onset_s": 8.06,
-          "end_s": 8.5
+          "onset_s": 8.123,
+          "end_s": 8.703
         },
         {
           "i": 19,
           "text": "and",
-          "onset_s": 8.5,
-          "end_s": 9.08
+          "onset_s": 8.903,
+          "end_s": 9.083
         },
         {
           "i": 20,
           "text": "really",
-          "onset_s": 9.08,
-          "end_s": 9.66
+          "onset_s": 9.483,
+          "end_s": 9.744
         },
         {
           "i": 21,
           "text": "helpful",
-          "onset_s": 9.66,
-          "end_s": 10.1
+          "onset_s": 9.824,
+          "end_s": 10.224
         },
         {
           "i": 22,
           "text": "but",
-          "onset_s": 10.1,
-          "end_s": 10.82
+          "onset_s": 10.724,
+          "end_s": 10.824
         },
         {
           "i": 23,
           "text": "a",
-          "onset_s": 10.82,
-          "end_s": 10.9
+          "onset_s": 10.864,
+          "end_s": 10.884
         },
         {
           "i": 24,
           "text": "bit",
-          "onset_s": 10.9,
-          "end_s": 11.04
+          "onset_s": 10.924,
+          "end_s": 11.064
         },
         {
           "i": 25,
           "text": "dangerous",
-          "onset_s": 11.04,
-          "end_s": 11.46
+          "onset_s": 11.124,
+          "end_s": 11.524
         },
         {
           "i": 26,
           "text": "because",
-          "onset_s": 11.46,
-          "end_s": 11.64
+          "onset_s": 11.524,
+          "end_s": 11.684
         },
         {
           "i": 27,
           "text": "once",
-          "onset_s": 11.64,
-          "end_s": 11.84
+          "onset_s": 11.744,
+          "end_s": 11.904
         },
         {
           "i": 28,
           "text": "they're",
-          "onset_s": 11.84,
-          "end_s": 12.08
+          "onset_s": 11.924,
+          "end_s": 12.064
         },
         {
           "i": 29,
           "text": "connected",
-          "onset_s": 12.08,
-          "end_s": 12.54
+          "onset_s": 12.084,
+          "end_s": 12.585
         },
         {
           "i": 30,
           "text": "muse",
-          "onset_s": 12.54,
-          "end_s": 13.28
+          "onset_s": 13.085,
+          "end_s": 13.385
         },
         {
           "i": 31,
           "text": "into",
-          "onset_s": 13.28,
-          "end_s": 13.58
+          "onset_s": 13.405,
+          "end_s": 13.585
         },
         {
           "i": 32,
           "text": "your",
-          "onset_s": 13.58,
-          "end_s": 13.76
+          "onset_s": 13.625,
+          "end_s": 13.725
         },
         {
           "i": 33,
           "text": "WhatsApp,",
-          "onset_s": 13.76,
-          "end_s": 14.04
+          "onset_s": 13.765,
+          "end_s": 14.205
         },
         {
           "i": 34,
           "text": "Amazon",
-          "onset_s": 14.46,
-          "end_s": 14.46
+          "onset_s": 14.305,
+          "end_s": 14.605
         },
         {
           "i": 35,
           "text": "for",
-          "onset_s": 14.46,
-          "end_s": 14.74
+          "onset_s": 14.645,
+          "end_s": 14.725
         },
         {
           "i": 36,
           "text": "your",
-          "onset_s": 14.74,
-          "end_s": 14.88
+          "onset_s": 14.745,
+          "end_s": 14.865
         },
         {
           "i": 37,
           "text": "groceries,",
-          "onset_s": 14.88,
-          "end_s": 15.34
+          "onset_s": 14.885,
+          "end_s": 15.486
         },
         {
           "i": 38,
           "text": "Google",
-          "onset_s": 16.2,
-          "end_s": 16.3
+          "onset_s": 16.146,
+          "end_s": 16.446
         },
         {
           "i": 39,
           "text": "for",
-          "onset_s": 16.3,
-          "end_s": 16.56
+          "onset_s": 16.466,
+          "end_s": 16.526
         },
         {
           "i": 40,
           "text": "your",
-          "onset_s": 16.56,
-          "end_s": 16.68
+          "onset_s": 16.546,
+          "end_s": 16.646
         },
         {
           "i": 41,
           "text": "emails,",
-          "onset_s": 16.68,
-          "end_s": 16.94
+          "onset_s": 16.706,
+          "end_s": 17.146
         },
         {
           "i": 42,
           "text": "it",
-          "onset_s": 17.58,
-          "end_s": 17.8
+          "onset_s": 17.707,
+          "end_s": 17.787
         },
         {
           "i": 43,
           "text": "can",
-          "onset_s": 17.8,
-          "end_s": 18.16
+          "onset_s": 17.867,
+          "end_s": 18.187
         },
         {
           "i": 44,
           "text": "get",
-          "onset_s": 18.16,
-          "end_s": 18.6
+          "onset_s": 18.487,
+          "end_s": 18.607
         },
         {
           "i": 45,
           "text": "a",
-          "onset_s": 18.6,
-          "end_s": 18.68
+          "onset_s": 18.647,
+          "end_s": 18.667
         },
         {
           "i": 46,
           "text": "bit",
-          "onset_s": 18.68,
-          "end_s": 18.8
+          "onset_s": 18.687,
+          "end_s": 18.807
         },
         {
           "i": 47,
           "text": "dangerous.",
-          "onset_s": 18.8,
-          "end_s": 19.2
+          "onset_s": 18.867,
+          "end_s": 19.267
         },
         {
           "i": 48,
           "text": "So",
-          "onset_s": 19.48,
-          "end_s": 19.56
+          "onset_s": 19.347,
+          "end_s": 19.447
         },
         {
           "i": 49,
           "text": "my",
-          "onset_s": 19.56,
-          "end_s": 19.96
+          "onset_s": 19.847,
+          "end_s": 19.947
         },
         {
           "i": 50,
           "text": "first",
-          "onset_s": 19.96,
-          "end_s": 20.2
+          "onset_s": 20.027,
+          "end_s": 20.247
         },
         {
           "i": 51,
           "text": "step",
-          "onset_s": 20.2,
-          "end_s": 20.44
+          "onset_s": 20.267,
+          "end_s": 20.488
         },
         {
           "i": 52,
           "text": "is",
-          "onset_s": 20.44,
-          "end_s": 20.64
+          "onset_s": 20.548,
+          "end_s": 20.648
         },
         {
           "i": 53,
           "text": "the",
-          "onset_s": 20.64,
-          "end_s": 20.82
+          "onset_s": 20.688,
+          "end_s": 20.768
         },
         {
           "i": 54,
           "text": "no",
-          "onset_s": 20.82,
-          "end_s": 21.04
+          "onset_s": 20.848,
+          "end_s": 20.948
         },
         {
           "i": 55,
           "text": "spending,",
-          "onset_s": 21.04,
-          "end_s": 21.48
+          "onset_s": 21.208,
+          "end_s": 21.648
         },
         {
           "i": 56,
           "text": "no",
-          "onset_s": 21.66,
-          "end_s": 21.84
+          "onset_s": 21.728,
+          "end_s": 21.808
         },
         {
           "i": 57,
           "text": "sending",
-          "onset_s": 21.84,
-          "end_s": 22.18
+          "onset_s": 21.948,
+          "end_s": 22.248
         },
         {
           "i": 58,
           "text": "rule.",
-          "onset_s": 22.18,
-          "end_s": 22.38
+          "onset_s": 22.288,
+          "end_s": 22.428
         },
         {
           "i": 59,
           "text": "It",
-          "onset_s": 22.44,
-          "end_s": 22.48
+          "onset_s": 22.428,
+          "end_s": 22.488
         },
         {
           "i": 60,
           "text": "doesn't",
-          "onset_s": 22.48,
-          "end_s": 22.74
+          "onset_s": 22.508,
+          "end_s": 22.808
         },
         {
           "i": 61,
           "text": "spend",
-          "onset_s": 22.74,
-          "end_s": 23.04
+          "onset_s": 22.888,
+          "end_s": 23.109
         },
         {
           "i": 62,
           "text": "my",
-          "onset_s": 23.04,
-          "end_s": 23.22
+          "onset_s": 23.129,
+          "end_s": 23.229
         },
         {
           "i": 63,
           "text": "money,",
-          "onset_s": 23.22,
-          "end_s": 23.52
+          "onset_s": 23.289,
+          "end_s": 23.489
         },
         {
           "i": 64,
           "text": "doesn't",
-          "onset_s": 23.84,
-          "end_s": 24.24
+          "onset_s": 23.969,
+          "end_s": 24.249
         },
         {
           "i": 65,
           "text": "send",
-          "onset_s": 24.24,
-          "end_s": 24.5
+          "onset_s": 24.349,
+          "end_s": 24.549
         },
         {
           "i": 66,
           "text": "anything",
-          "onset_s": 24.5,
-          "end_s": 24.74
+          "onset_s": 24.589,
+          "end_s": 24.889
         },
         {
           "i": 67,
           "text": "out",
-          "onset_s": 24.74,
-          "end_s": 25.02
+          "onset_s": 24.929,
+          "end_s": 25.049
         },
         {
           "i": 68,
           "text": "for",
-          "onset_s": 25.02,
-          "end_s": 25.18
+          "onset_s": 25.069,
+          "end_s": 25.169
         },
         {
           "i": 69,
           "text": "me",
-          "onset_s": 25.18,
-          "end_s": 25.28
+          "onset_s": 25.189,
+          "end_s": 25.229
         },
         {
           "i": 70,
           "text": "unless",
-          "onset_s": 25.28,
-          "end_s": 25.44
+          "onset_s": 25.309,
+          "end_s": 25.529
         },
         {
           "i": 71,
           "text": "I",
-          "onset_s": 25.44,
-          "end_s": 25.68
+          "onset_s": 25.649,
+          "end_s": 25.669
         },
         {
           "i": 72,
           "text": "say",
-          "onset_s": 25.68,
-          "end_s": 25.86
+          "onset_s": 25.729,
+          "end_s": 25.87
         },
         {
           "i": 73,
           "text": "so.",
-          "onset_s": 25.86,
-          "end_s": 26.12
+          "onset_s": 25.97,
+          "end_s": 26.05
         },
         {
           "i": 74,
           "text": "And",
-          "onset_s": 26.38,
-          "end_s": 26.44
+          "onset_s": 26.37,
+          "end_s": 26.45
         },
         {
           "i": 75,
           "text": "the",
-          "onset_s": 26.44,
-          "end_s": 26.54
+          "onset_s": 26.45,
+          "end_s": 26.51
         },
         {
           "i": 76,
           "text": "fun",
-          "onset_s": 26.54,
-          "end_s": 26.7
+          "onset_s": 26.57,
+          "end_s": 26.71
         },
         {
           "i": 77,
           "text": "part",
-          "onset_s": 26.7,
-          "end_s": 26.96
+          "onset_s": 26.77,
+          "end_s": 26.99
         },
         {
           "i": 78,
           "text": "is",
-          "onset_s": 26.96,
-          "end_s": 27.1
+          "onset_s": 27.01,
+          "end_s": 27.11
         },
         {
           "i": 79,
           "text": "I",
-          "onset_s": 27.1,
-          "end_s": 27.22
+          "onset_s": 27.19,
+          "end_s": 27.21
         },
         {
           "i": 80,
           "text": "didn't",
-          "onset_s": 27.22,
-          "end_s": 27.36
+          "onset_s": 27.23,
+          "end_s": 27.41
         },
         {
           "i": 81,
           "text": "even",
-          "onset_s": 27.36,
-          "end_s": 27.62
+          "onset_s": 27.43,
+          "end_s": 27.61
         },
         {
           "i": 82,
           "text": "write",
-          "onset_s": 27.62,
-          "end_s": 28.06
+          "onset_s": 27.89,
+          "end_s": 28.15
         },
         {
           "i": 83,
           "text": "this",
-          "onset_s": 28.06,
-          "end_s": 28.28
+          "onset_s": 28.17,
+          "end_s": 28.31
         },
         {
           "i": 84,
           "text": "myself.",
-          "onset_s": 28.28,
-          "end_s": 28.68
+          "onset_s": 28.35,
+          "end_s": 28.731
         },
         {
           "i": 85,
           "text": "I",
-          "onset_s": 29.16,
-          "end_s": 29.18
+          "onset_s": 29.151,
+          "end_s": 29.191
         },
         {
           "i": 86,
           "text": "just",
-          "onset_s": 29.18,
-          "end_s": 29.3
+          "onset_s": 29.211,
+          "end_s": 29.331
         },
         {
           "i": 87,
           "text": "put",
-          "onset_s": 29.3,
-          "end_s": 29.48
+          "onset_s": 29.371,
+          "end_s": 29.511
         },
         {
           "i": 88,
           "text": "one",
-          "onset_s": 29.48,
-          "end_s": 29.7
+          "onset_s": 29.611,
+          "end_s": 29.731
         },
         {
           "i": 89,
           "text": "prompt",
-          "onset_s": 29.7,
-          "end_s": 29.96
+          "onset_s": 29.751,
+          "end_s": 30.031
         },
         {
           "i": 90,
           "text": "into",
-          "onset_s": 29.96,
-          "end_s": 30.16
+          "onset_s": 30.071,
+          "end_s": 30.191
         },
         {
           "i": 91,
           "text": "my",
-          "onset_s": 30.16,
-          "end_s": 30.34
+          "onset_s": 30.211,
+          "end_s": 30.311
         },
         {
           "i": 92,
           "text": "AI",
-          "onset_s": 30.34,
-          "end_s": 30.58
+          "onset_s": 30.411,
+          "end_s": 30.651
         },
         {
           "i": 93,
           "text": "tool",
-          "onset_s": 30.58,
-          "end_s": 30.82
+          "onset_s": 30.691,
+          "end_s": 30.851
         },
         {
           "i": 94,
           "text": "and",
-          "onset_s": 30.82,
-          "end_s": 30.92
+          "onset_s": 30.871,
+          "end_s": 30.951
         },
         {
           "i": 95,
           "text": "it",
-          "onset_s": 30.92,
-          "end_s": 31.02
+          "onset_s": 30.951,
+          "end_s": 31.011
         },
         {
           "i": 96,
           "text": "started",
-          "onset_s": 31.02,
-          "end_s": 31.2
+          "onset_s": 31.051,
+          "end_s": 31.272
         },
         {
           "i": 97,
           "text": "asking",
-          "onset_s": 31.2,
-          "end_s": 31.46
+          "onset_s": 31.332,
+          "end_s": 31.552
         },
         {
           "i": 98,
           "text": "me",
-          "onset_s": 31.46,
-          "end_s": 31.64
+          "onset_s": 31.552,
+          "end_s": 31.592
         },
         {
           "i": 99,
           "text": "questions",
-          "onset_s": 31.64,
-          "end_s": 31.94
+          "onset_s": 31.672,
+          "end_s": 32.072
         },
         {
           "i": 100,
           "text": "back,",
-          "onset_s": 31.94,
-          "end_s": 32.32
+          "onset_s": 32.112,
+          "end_s": 32.352
         },
         {
           "i": 101,
           "text": "then",
-          "onset_s": 32.56,
-          "end_s": 32.8
+          "onset_s": 32.672,
+          "end_s": 32.812
         },
         {
           "i": 102,
           "text": "it",
-          "onset_s": 32.8,
-          "end_s": 33.04
+          "onset_s": 32.932,
+          "end_s": 33.012
         },
         {
           "i": 103,
           "text": "locks",
-          "onset_s": 33.04,
-          "end_s": 33.28
+          "onset_s": 33.112,
+          "end_s": 33.352
         },
         {
           "i": 104,
           "text": "itself",
-          "onset_s": 33.28,
-          "end_s": 33.6
+          "onset_s": 33.392,
+          "end_s": 33.672
         },
         {
           "i": 105,
           "text": "down",
-          "onset_s": 33.6,
-          "end_s": 33.86
+          "onset_s": 33.712,
+          "end_s": 33.912
         },
         {
           "i": 106,
           "text": "or",
-          "onset_s": 33.86,
-          "end_s": 33.98
+          "onset_s": 33.932,
+          "end_s": 34.013
         },
         {
           "i": 107,
           "text": "tells",
-          "onset_s": 33.98,
-          "end_s": 34.16
+          "onset_s": 34.033,
+          "end_s": 34.273
         },
         {
           "i": 108,
           "text": "you",
-          "onset_s": 34.16,
-          "end_s": 34.4
+          "onset_s": 34.313,
+          "end_s": 34.413
         },
         {
           "i": 109,
           "text": "how",
-          "onset_s": 34.4,
-          "end_s": 34.54
+          "onset_s": 34.453,
+          "end_s": 34.553
         },
         {
           "i": 110,
           "text": "to",
-          "onset_s": 34.54,
-          "end_s": 34.66
+          "onset_s": 34.593,
+          "end_s": 34.653
         },
         {
           "i": 111,
           "text": "lock",
-          "onset_s": 34.66,
-          "end_s": 34.78
+          "onset_s": 34.693,
+          "end_s": 34.813
         },
         {
           "i": 112,
           "text": "it",
-          "onset_s": 34.78,
-          "end_s": 34.9
+          "onset_s": 34.833,
+          "end_s": 34.893
         },
         {
           "i": 113,
           "text": "down.",
-          "onset_s": 34.9,
-          "end_s": 35.18
+          "onset_s": 34.933,
+          "end_s": 35.093
         },
         {
           "i": 114,
           "text": "Prompts",
-          "onset_s": 35.68,
-          "end_s": 35.86
+          "onset_s": 35.553,
+          "end_s": 35.853
         },
         {
           "i": 115,
           "text": "in",
-          "onset_s": 35.86,
-          "end_s": 35.94
+          "onset_s": 35.893,
+          "end_s": 35.953
         },
         {
           "i": 116,
           "text": "the",
-          "onset_s": 35.94,
-          "end_s": 36.08
+          "onset_s": 35.973,
+          "end_s": 36.033
         },
         {
           "i": 117,
           "text": "comments,",
-          "onset_s": 36.08,
-          "end_s": 36.36
+          "onset_s": 36.073,
+          "end_s": 36.493
         },
         {
           "i": 118,
           "text": "make",
-          "onset_s": 36.96,
-          "end_s": 37.2
+          "onset_s": 37.074,
+          "end_s": 37.234
         },
         {
           "i": 119,
           "text": "sure",
-          "onset_s": 37.2,
-          "end_s": 37.36
+          "onset_s": 37.274,
+          "end_s": 37.414
         },
         {
           "i": 120,
           "text": "you",
-          "onset_s": 37.36,
-          "end_s": 37.5
+          "onset_s": 37.434,
+          "end_s": 37.514
         },
         {
           "i": 121,
           "text": "do",
-          "onset_s": 37.5,
-          "end_s": 37.64
+          "onset_s": 37.554,
+          "end_s": 37.614
         },
         {
           "i": 122,
           "text": "this,",
-          "onset_s": 37.64,
-          "end_s": 37.86
+          "onset_s": 37.694,
+          "end_s": 37.874
         },
         {
           "i": 123,
           "text": "no",
-          "onset_s": 37.96,
-          "end_s": 38.04
+          "onset_s": 37.954,
+          "end_s": 38.014
         },
         {
           "i": 124,
           "text": "spending,",
-          "onset_s": 38.04,
-          "end_s": 38.36
+          "onset_s": 38.114,
+          "end_s": 38.474
         },
         {
           "i": 125,
           "text": "no",
-          "onset_s": 38.56,
-          "end_s": 38.6
+          "onset_s": 38.494,
+          "end_s": 38.554
         },
         {
           "i": 126,
           "text": "sending,",
-          "onset_s": 38.6,
-          "end_s": 38.88
+          "onset_s": 38.694,
+          "end_s": 38.974
         },
         {
           "i": 127,
           "text": "one",
-          "onset_s": 38.98,
-          "end_s": 39.1
+          "onset_s": 39.034,
+          "end_s": 39.154
         },
         {
           "i": 128,
           "text": "easy",
-          "onset_s": 39.1,
-          "end_s": 39.38
+          "onset_s": 39.214,
+          "end_s": 39.435
         },
         {
           "i": 129,
           "text": "step",
-          "onset_s": 39.38,
-          "end_s": 39.72
+          "onset_s": 39.535,
+          "end_s": 39.775
         },
         {
           "i": 130,
           "text": "so",
-          "onset_s": 39.72,
-          "end_s": 39.9
+          "onset_s": 39.815,
+          "end_s": 39.875
         },
         {
           "i": 131,
           "text": "you",
-          "onset_s": 39.9,
-          "end_s": 40.0
+          "onset_s": 39.935,
+          "end_s": 39.995
         },
         {
           "i": 132,
           "text": "can",
-          "onset_s": 40.0,
-          "end_s": 40.12
+          "onset_s": 40.015,
+          "end_s": 40.115
         },
         {
           "i": 133,
           "text": "save",
-          "onset_s": 40.12,
-          "end_s": 40.36
+          "onset_s": 40.175,
+          "end_s": 40.415
         },
         {
           "i": 134,
           "text": "yourself",
-          "onset_s": 40.36,
-          "end_s": 40.72
+          "onset_s": 40.435,
+          "end_s": 40.815
         },
         {
           "i": 135,
           "text": "and",
-          "onset_s": 40.72,
-          "end_s": 40.92
+          "onset_s": 40.855,
+          "end_s": 40.935
         },
         {
           "i": 136,
           "text": "enjoy",
-          "onset_s": 40.92,
-          "end_s": 41.2
+          "onset_s": 40.935,
+          "end_s": 41.255
         },
         {
           "i": 137,
           "text": "these",
-          "onset_s": 41.2,
-          "end_s": 41.44
+          "onset_s": 41.275,
+          "end_s": 41.475
         },
         {
           "i": 138,
           "text": "new",
-          "onset_s": 41.44,
-          "end_s": 41.6
+          "onset_s": 41.495,
+          "end_s": 41.615
         },
         {
           "i": 139,
           "text": "technologies",
-          "onset_s": 41.6,
-          "end_s": 42.1
+          "onset_s": 41.635,
+          "end_s": 42.216
         },
         {
           "i": 140,
           "text": "without",
-          "onset_s": 42.1,
-          "end_s": 42.76
+          "onset_s": 42.636,
+          "end_s": 42.856
         },
         {
           "i": 141,
           "text": "any",
-          "onset_s": 42.76,
-          "end_s": 42.96
+          "onset_s": 42.876,
+          "end_s": 42.936
         },
         {
           "i": 142,
           "text": "of",
-          "onset_s": 42.96,
-          "end_s": 43.04
+          "onset_s": 42.976,
+          "end_s": 43.036
         },
         {
           "i": 143,
           "text": "those",
-          "onset_s": 43.04,
-          "end_s": 43.18
+          "onset_s": 43.056,
+          "end_s": 43.236
         },
         {
           "i": 144,
           "text": "weird",
-          "onset_s": 43.18,
-          "end_s": 43.42
+          "onset_s": 43.296,
+          "end_s": 43.496
         },
         {
           "i": 145,
           "text": "moments",
-          "onset_s": 43.42,
-          "end_s": 43.82
+          "onset_s": 43.536,
+          "end_s": 43.936
         },
         {
           "i": 146,
           "text": "or",
-          "onset_s": 43.82,
-          "end_s": 44.12
+          "onset_s": 44.036,
+          "end_s": 44.096
         },
         {
           "i": 147,
           "text": "fails.",
-          "onset_s": 44.12,
-          "end_s": 44.36
+          "onset_s": 44.136,
+          "end_s": 44.516
         }
       ],
-      "file_sha256": "67242cb01fe131fa1633830e75940dc9926424c8a4aa9707e61fc87de6512f6e"
+      "file_sha256": "753643461d2d075716b5deb262e3d359540a7c47bebdf272079fa5675ecbd546"
     },
     "b": {
-      "name": "faster-whisper:base.en",
+      "name": "torchaudio:wav2vec2-base-960h",
       "words": [
         {
           "i": 0,
           "text": "Proactive",
-          "onset_s": 0.92,
-          "end_s": 1.44
+          "onset_s": 1.06,
+          "end_s": 1.661
         },
         {
           "i": 1,
           "text": "AI",
-          "onset_s": 1.44,
-          "end_s": 1.96
+          "onset_s": 1.881,
+          "end_s": 2.241
         },
         {
           "i": 2,
           "text": "is",
-          "onset_s": 1.96,
-          "end_s": 2.62
+          "onset_s": 2.481,
+          "end_s": 2.601
         },
         {
           "i": 3,
           "text": "coming.",
-          "onset_s": 2.62,
-          "end_s": 3.02
+          "onset_s": 2.901,
+          "end_s": 3.181
         },
         {
           "i": 4,
           "text": "AI",
-          "onset_s": 3.24,
-          "end_s": 3.32
+          "onset_s": 3.261,
+          "end_s": 3.461
         },
         {
           "i": 5,
           "text": "that",
-          "onset_s": 3.32,
-          "end_s": 3.62
+          "onset_s": 3.501,
+          "end_s": 3.621
         },
         {
           "i": 6,
           "text": "does",
-          "onset_s": 3.62,
-          "end_s": 3.96
+          "onset_s": 3.861,
+          "end_s": 4.041
         },
         {
           "i": 7,
           "text": "things",
-          "onset_s": 3.96,
-          "end_s": 4.22
+          "onset_s": 4.122,
+          "end_s": 4.322
         },
         {
           "i": 8,
           "text": "before",
-          "onset_s": 4.22,
-          "end_s": 4.52
+          "onset_s": 4.382,
+          "end_s": 4.622
         },
         {
           "i": 9,
           "text": "you",
-          "onset_s": 4.52,
-          "end_s": 4.72
+          "onset_s": 4.662,
+          "end_s": 4.742
         },
         {
           "i": 10,
           "text": "ask",
-          "onset_s": 4.72,
-          "end_s": 4.94
+          "onset_s": 4.882,
+          "end_s": 5.002
         },
         {
           "i": 11,
           "text": "offers",
-          "onset_s": 4.94,
-          "end_s": 5.38
+          "onset_s": 5.202,
+          "end_s": 5.522
         },
         {
           "i": 12,
           "text": "to",
-          "onset_s": 5.38,
-          "end_s": 5.62
+          "onset_s": 5.562,
+          "end_s": 5.642
         },
         {
           "i": 13,
           "text": "do",
-          "onset_s": 5.62,
-          "end_s": 5.76
+          "onset_s": 5.702,
+          "end_s": 5.822
         },
         {
           "i": 14,
           "text": "things.",
-          "onset_s": 5.76,
-          "end_s": 6.14
+          "onset_s": 5.902,
+          "end_s": 6.142
         },
         {
           "i": 15,
           "text": "Awesome,",
-          "onset_s": 6.56,
-          "end_s": 6.84
+          "onset_s": 6.823,
+          "end_s": 7.163
         },
         {
           "i": 16,
           "text": "really",
-          "onset_s": 7.56,
-          "end_s": 7.56
+          "onset_s": 7.443,
+          "end_s": 7.763
         },
         {
           "i": 17,
           "text": "cool",
-          "onset_s": 7.56,
-          "end_s": 7.96
+          "onset_s": 7.843,
+          "end_s": 8.063
         },
         {
           "i": 18,
           "text": "features",
-          "onset_s": 7.96,
-          "end_s": 8.36
+          "onset_s": 8.163,
+          "end_s": 8.643
         },
         {
           "i": 19,
           "text": "and",
-          "onset_s": 8.36,
-          "end_s": 9.0
+          "onset_s": 8.943,
+          "end_s": 9.043
         },
         {
           "i": 20,
           "text": "really",
-          "onset_s": 9.0,
-          "end_s": 9.58
+          "onset_s": 9.483,
+          "end_s": 9.764
         },
         {
           "i": 21,
           "text": "helpful",
-          "onset_s": 9.58,
-          "end_s": 9.96
+          "onset_s": 9.844,
+          "end_s": 10.204
         },
         {
           "i": 22,
           "text": "but",
-          "onset_s": 9.96,
-          "end_s": 10.78
+          "onset_s": 10.724,
+          "end_s": 10.824
         },
         {
           "i": 23,
           "text": "a",
-          "onset_s": 10.78,
-          "end_s": 10.86
+          "onset_s": 10.864,
+          "end_s": 10.904
         },
         {
           "i": 24,
           "text": "bit",
-          "onset_s": 10.86,
-          "end_s": 11.0
+          "onset_s": 10.944,
+          "end_s": 11.084
         },
         {
           "i": 25,
           "text": "dangerous",
-          "onset_s": 11.0,
-          "end_s": 11.4
+          "onset_s": 11.124,
+          "end_s": 11.504
         },
         {
           "i": 26,
           "text": "because",
-          "onset_s": 11.4,
-          "end_s": 11.6
+          "onset_s": 11.524,
+          "end_s": 11.684
         },
         {
           "i": 27,
           "text": "once",
-          "onset_s": 11.6,
-          "end_s": 11.76
+          "onset_s": 11.744,
+          "end_s": 11.864
         },
         {
           "i": 28,
           "text": "they're",
-          "onset_s": 11.76,
-          "end_s": 12.02
+          "onset_s": 11.924,
+          "end_s": 12.084
         },
         {
           "i": 29,
-          "text": "connected,",
-          "onset_s": 12.02,
-          "end_s": 12.6
+          "text": "connected",
+          "onset_s": 12.104,
+          "end_s": 12.565
         },
         {
           "i": 30,
-          "text": "mues",
-          "onset_s": 12.98,
-          "end_s": 13.26
+          "text": "muse",
+          "onset_s": 13.105,
+          "end_s": 13.365
         },
         {
           "i": 31,
           "text": "into",
-          "onset_s": 13.26,
-          "end_s": 13.44
+          "onset_s": 13.445,
+          "end_s": 13.585
         },
         {
           "i": 32,
           "text": "your",
-          "onset_s": 13.44,
-          "end_s": 13.7
+          "onset_s": 13.625,
+          "end_s": 13.745
         },
         {
           "i": 33,
           "text": "WhatsApp,",
-          "onset_s": 13.7,
-          "end_s": 14.02
+          "onset_s": 13.785,
+          "end_s": 14.185
         },
         {
           "i": 34,
           "text": "Amazon",
-          "onset_s": 14.38,
-          "end_s": 14.42
+          "onset_s": 14.325,
+          "end_s": 14.605
         },
         {
           "i": 35,
           "text": "for",
-          "onset_s": 14.42,
-          "end_s": 14.7
+          "onset_s": 14.645,
+          "end_s": 14.725
         },
         {
           "i": 36,
           "text": "your",
-          "onset_s": 14.7,
-          "end_s": 14.8
+          "onset_s": 14.765,
+          "end_s": 14.865
         },
         {
           "i": 37,
           "text": "groceries,",
-          "onset_s": 14.8,
-          "end_s": 15.14
+          "onset_s": 14.925,
+          "end_s": 15.446
         },
         {
           "i": 38,
           "text": "Google",
-          "onset_s": 16.2,
-          "end_s": 16.24
+          "onset_s": 16.146,
+          "end_s": 16.446
         },
         {
           "i": 39,
           "text": "for",
-          "onset_s": 16.24,
-          "end_s": 16.52
+          "onset_s": 16.486,
+          "end_s": 16.546
         },
         {
           "i": 40,
           "text": "your",
-          "onset_s": 16.52,
-          "end_s": 16.62
+          "onset_s": 16.566,
+          "end_s": 16.666
         },
         {
           "i": 41,
           "text": "emails,",
-          "onset_s": 16.62,
-          "end_s": 16.86
+          "onset_s": 16.726,
+          "end_s": 17.106
         },
         {
           "i": 42,
           "text": "it",
-          "onset_s": 17.46,
-          "end_s": 17.74
+          "onset_s": 17.727,
+          "end_s": 17.787
         },
         {
           "i": 43,
           "text": "can",
-          "onset_s": 17.74,
-          "end_s": 18.04
+          "onset_s": 17.887,
+          "end_s": 18.167
         },
         {
           "i": 44,
           "text": "get",
-          "onset_s": 18.04,
-          "end_s": 18.54
+          "onset_s": 18.487,
+          "end_s": 18.607
         },
         {
           "i": 45,
           "text": "a",
-          "onset_s": 18.54,
-          "end_s": 18.62
+          "onset_s": 18.647,
+          "end_s": 18.687
         },
         {
           "i": 46,
           "text": "bit",
-          "onset_s": 18.62,
-          "end_s": 18.76
+          "onset_s": 18.707,
+          "end_s": 18.827
         },
         {
           "i": 47,
           "text": "dangerous.",
-          "onset_s": 18.76,
-          "end_s": 19.12
+          "onset_s": 18.887,
+          "end_s": 19.287
         },
         {
           "i": 48,
           "text": "So",
-          "onset_s": 19.48,
-          "end_s": 19.48
+          "onset_s": 19.347,
+          "end_s": 19.507
         },
         {
           "i": 49,
           "text": "my",
-          "onset_s": 19.48,
-          "end_s": 19.9
+          "onset_s": 19.867,
+          "end_s": 19.947
         },
         {
           "i": 50,
           "text": "first",
-          "onset_s": 19.9,
-          "end_s": 20.12
+          "onset_s": 20.047,
+          "end_s": 20.247
         },
         {
           "i": 51,
           "text": "step",
-          "onset_s": 20.12,
-          "end_s": 20.4
+          "onset_s": 20.287,
+          "end_s": 20.468
         },
         {
           "i": 52,
           "text": "is",
-          "onset_s": 20.4,
-          "end_s": 20.6
+          "onset_s": 20.568,
+          "end_s": 20.648
         },
         {
           "i": 53,
           "text": "the",
-          "onset_s": 20.6,
-          "end_s": 20.74
+          "onset_s": 20.708,
+          "end_s": 20.788
         },
         {
           "i": 54,
           "text": "no",
-          "onset_s": 20.74,
-          "end_s": 20.98
+          "onset_s": 20.868,
+          "end_s": 21.008
         },
         {
           "i": 55,
           "text": "spending,",
-          "onset_s": 20.98,
-          "end_s": 21.42
+          "onset_s": 21.228,
+          "end_s": 21.628
         },
         {
           "i": 56,
           "text": "no",
-          "onset_s": 21.64,
-          "end_s": 21.8
+          "onset_s": 21.748,
+          "end_s": 21.828
         },
         {
           "i": 57,
           "text": "sending",
-          "onset_s": 21.8,
-          "end_s": 22.08
+          "onset_s": 21.948,
+          "end_s": 22.228
         },
         {
           "i": 58,
           "text": "rule.",
-          "onset_s": 22.08,
-          "end_s": 22.34
+          "onset_s": 22.288,
+          "end_s": 22.428
         },
         {
           "i": 59,
           "text": "It",
-          "onset_s": 22.46,
-          "end_s": 22.46
+          "onset_s": 22.448,
+          "end_s": 22.488
         },
         {
           "i": 60,
           "text": "doesn't",
-          "onset_s": 22.46,
-          "end_s": 22.72
+          "onset_s": 22.528,
+          "end_s": 22.808
         },
         {
           "i": 61,
           "text": "spend",
-          "onset_s": 22.72,
-          "end_s": 22.96
+          "onset_s": 22.888,
+          "end_s": 23.089
         },
         {
           "i": 62,
           "text": "my",
-          "onset_s": 22.96,
-          "end_s": 23.18
+          "onset_s": 23.149,
+          "end_s": 23.229
         },
         {
           "i": 63,
           "text": "money,",
-          "onset_s": 23.18,
-          "end_s": 23.48
+          "onset_s": 23.309,
+          "end_s": 23.509
         },
         {
           "i": 64,
           "text": "doesn't",
-          "onset_s": 23.82,
-          "end_s": 24.18
+          "onset_s": 23.969,
+          "end_s": 24.269
         },
         {
           "i": 65,
           "text": "send",
-          "onset_s": 24.18,
-          "end_s": 24.42
+          "onset_s": 24.349,
+          "end_s": 24.529
         },
         {
           "i": 66,
           "text": "anything",
-          "onset_s": 24.42,
-          "end_s": 24.7
+          "onset_s": 24.609,
+          "end_s": 24.889
         },
         {
           "i": 67,
           "text": "out",
-          "onset_s": 24.7,
-          "end_s": 24.98
+          "onset_s": 24.949,
+          "end_s": 25.029
         },
         {
           "i": 68,
           "text": "for",
-          "onset_s": 24.98,
-          "end_s": 25.12
+          "onset_s": 25.069,
+          "end_s": 25.169
         },
         {
           "i": 69,
           "text": "me",
-          "onset_s": 25.12,
-          "end_s": 25.24
+          "onset_s": 25.209,
+          "end_s": 25.249
         },
         {
           "i": 70,
           "text": "unless",
-          "onset_s": 25.24,
-          "end_s": 25.38
+          "onset_s": 25.309,
+          "end_s": 25.529
         },
         {
           "i": 71,
           "text": "I",
-          "onset_s": 25.38,
-          "end_s": 25.62
+          "onset_s": 25.609,
+          "end_s": 25.629
         },
         {
           "i": 72,
           "text": "say",
-          "onset_s": 25.62,
-          "end_s": 25.82
+          "onset_s": 25.729,
+          "end_s": 25.89
         },
         {
           "i": 73,
           "text": "so.",
-          "onset_s": 25.82,
-          "end_s": 26.08
+          "onset_s": 25.97,
+          "end_s": 26.09
         },
         {
           "i": 74,
           "text": "And",
-          "onset_s": 26.34,
-          "end_s": 26.42
+          "onset_s": 26.37,
+          "end_s": 26.45
         },
         {
           "i": 75,
           "text": "the",
-          "onset_s": 26.42,
-          "end_s": 26.5
+          "onset_s": 26.47,
+          "end_s": 26.53
         },
         {
           "i": 76,
           "text": "fun",
-          "onset_s": 26.5,
-          "end_s": 26.64
+          "onset_s": 26.59,
+          "end_s": 26.71
         },
         {
           "i": 77,
           "text": "part",
-          "onset_s": 26.64,
-          "end_s": 26.84
+          "onset_s": 26.79,
+          "end_s": 26.99
         },
         {
           "i": 78,
           "text": "is",
-          "onset_s": 26.84,
-          "end_s": 27.08
+          "onset_s": 27.05,
+          "end_s": 27.11
         },
         {
           "i": 79,
           "text": "I",
-          "onset_s": 27.08,
-          "end_s": 27.16
+          "onset_s": 27.17,
+          "end_s": 27.19
         },
         {
           "i": 80,
           "text": "didn't",
-          "onset_s": 27.16,
-          "end_s": 27.36
+          "onset_s": 27.23,
+          "end_s": 27.41
         },
         {
           "i": 81,
           "text": "even",
-          "onset_s": 27.36,
-          "end_s": 27.56
+          "onset_s": 27.45,
+          "end_s": 27.63
         },
         {
           "i": 82,
           "text": "write",
-          "onset_s": 27.56,
-          "end_s": 27.98
+          "onset_s": 27.93,
+          "end_s": 28.11
         },
         {
           "i": 83,
           "text": "this",
-          "onset_s": 27.98,
-          "end_s": 28.22
+          "onset_s": 28.17,
+          "end_s": 28.31
         },
         {
           "i": 84,
           "text": "myself.",
-          "onset_s": 28.22,
-          "end_s": 28.6
+          "onset_s": 28.37,
+          "end_s": 28.711
         },
         {
           "i": 85,
           "text": "I",
-          "onset_s": 29.06,
-          "end_s": 29.14
+          "onset_s": 29.131,
+          "end_s": 29.151
         },
         {
           "i": 86,
           "text": "just",
-          "onset_s": 29.14,
-          "end_s": 29.26
+          "onset_s": 29.211,
+          "end_s": 29.331
         },
         {
           "i": 87,
           "text": "put",
-          "onset_s": 29.26,
-          "end_s": 29.44
+          "onset_s": 29.371,
+          "end_s": 29.511
         },
         {
           "i": 88,
           "text": "one",
-          "onset_s": 29.44,
-          "end_s": 29.66
+          "onset_s": 29.631,
+          "end_s": 29.731
         },
         {
           "i": 89,
           "text": "prompt",
-          "onset_s": 29.66,
-          "end_s": 29.86
+          "onset_s": 29.771,
+          "end_s": 30.031
         },
         {
           "i": 90,
           "text": "into",
-          "onset_s": 29.86,
-          "end_s": 30.1
+          "onset_s": 30.091,
+          "end_s": 30.191
         },
         {
           "i": 91,
           "text": "my",
-          "onset_s": 30.1,
-          "end_s": 30.28
+          "onset_s": 30.231,
+          "end_s": 30.311
         },
         {
           "i": 92,
           "text": "AI",
-          "onset_s": 30.28,
-          "end_s": 30.5
+          "onset_s": 30.431,
+          "end_s": 30.591
         },
         {
           "i": 93,
           "text": "tool",
-          "onset_s": 30.5,
-          "end_s": 30.76
+          "onset_s": 30.711,
+          "end_s": 30.811
         },
         {
           "i": 94,
           "text": "and",
-          "onset_s": 30.76,
-          "end_s": 30.9
+          "onset_s": 30.871,
+          "end_s": 30.931
         },
         {
           "i": 95,
           "text": "it",
-          "onset_s": 30.9,
-          "end_s": 30.98
+          "onset_s": 30.951,
+          "end_s": 31.011
         },
         {
           "i": 96,
           "text": "started",
-          "onset_s": 30.98,
-          "end_s": 31.12
+          "onset_s": 31.031,
+          "end_s": 31.292
         },
         {
           "i": 97,
           "text": "asking",
-          "onset_s": 31.12,
-          "end_s": 31.46
+          "onset_s": 31.332,
+          "end_s": 31.552
         },
         {
           "i": 98,
           "text": "me",
-          "onset_s": 31.46,
-          "end_s": 31.6
+          "onset_s": 31.592,
+          "end_s": 31.632
         },
         {
           "i": 99,
           "text": "questions",
-          "onset_s": 31.6,
-          "end_s": 31.9
+          "onset_s": 31.712,
+          "end_s": 32.072
         },
         {
           "i": 100,
-          "text": "back.",
-          "onset_s": 31.9,
-          "end_s": 32.22
+          "text": "back,",
+          "onset_s": 32.132,
+          "end_s": 32.312
         },
         {
           "i": 101,
-          "text": "Then",
-          "onset_s": 32.62,
-          "end_s": 32.76
+          "text": "then",
+          "onset_s": 32.672,
+          "end_s": 32.792
         },
         {
           "i": 102,
           "text": "it",
-          "onset_s": 32.76,
-          "end_s": 32.96
+          "onset_s": 32.952,
+          "end_s": 33.012
         },
         {
           "i": 103,
           "text": "locks",
-          "onset_s": 32.96,
-          "end_s": 33.18
+          "onset_s": 33.112,
+          "end_s": 33.332
         },
         {
           "i": 104,
           "text": "itself",
-          "onset_s": 33.18,
-          "end_s": 33.56
+          "onset_s": 33.392,
+          "end_s": 33.652
         },
         {
           "i": 105,
           "text": "down",
-          "onset_s": 33.56,
-          "end_s": 33.82
+          "onset_s": 33.732,
+          "end_s": 33.872
         },
         {
           "i": 106,
           "text": "or",
-          "onset_s": 33.82,
-          "end_s": 33.96
+          "onset_s": 33.932,
+          "end_s": 33.993
         },
         {
           "i": 107,
           "text": "tells",
-          "onset_s": 33.96,
-          "end_s": 34.12
+          "onset_s": 34.053,
+          "end_s": 34.253
         },
         {
           "i": 108,
           "text": "you",
-          "onset_s": 34.12,
-          "end_s": 34.36
+          "onset_s": 34.313,
+          "end_s": 34.413
         },
         {
           "i": 109,
           "text": "how",
-          "onset_s": 34.36,
-          "end_s": 34.52
+          "onset_s": 34.473,
+          "end_s": 34.533
         },
         {
           "i": 110,
           "text": "to",
-          "onset_s": 34.52,
-          "end_s": 34.6
+          "onset_s": 34.593,
+          "end_s": 34.653
         },
         {
           "i": 111,
           "text": "lock",
-          "onset_s": 34.6,
-          "end_s": 34.76
+          "onset_s": 34.693,
+          "end_s": 34.813
         },
         {
           "i": 112,
           "text": "it",
-          "onset_s": 34.76,
-          "end_s": 34.86
+          "onset_s": 34.853,
+          "end_s": 34.893
         },
         {
           "i": 113,
           "text": "down.",
-          "onset_s": 34.86,
-          "end_s": 35.02
+          "onset_s": 34.933,
+          "end_s": 35.053
         },
         {
           "i": 114,
           "text": "Prompts",
-          "onset_s": 35.42,
-          "end_s": 35.84
+          "onset_s": 35.573,
+          "end_s": 35.833
         },
         {
           "i": 115,
           "text": "in",
-          "onset_s": 35.84,
-          "end_s": 35.9
+          "onset_s": 35.893,
+          "end_s": 35.933
         },
         {
           "i": 116,
           "text": "the",
-          "onset_s": 35.9,
-          "end_s": 36.0
+          "onset_s": 35.993,
+          "end_s": 36.053
         },
         {
           "i": 117,
           "text": "comments,",
-          "onset_s": 36.0,
-          "end_s": 36.26
+          "onset_s": 36.093,
+          "end_s": 36.453
         },
         {
           "i": 118,
           "text": "make",
-          "onset_s": 36.76,
-          "end_s": 37.12
+          "onset_s": 37.094,
+          "end_s": 37.234
         },
         {
           "i": 119,
           "text": "sure",
-          "onset_s": 37.12,
-          "end_s": 37.32
+          "onset_s": 37.274,
+          "end_s": 37.414
         },
         {
           "i": 120,
           "text": "you",
-          "onset_s": 37.32,
-          "end_s": 37.48
+          "onset_s": 37.434,
+          "end_s": 37.514
         },
         {
           "i": 121,
           "text": "do",
-          "onset_s": 37.48,
-          "end_s": 37.6
+          "onset_s": 37.574,
+          "end_s": 37.654
         },
         {
           "i": 122,
           "text": "this,",
-          "onset_s": 37.6,
-          "end_s": 37.78
+          "onset_s": 37.714,
+          "end_s": 37.874
         },
         {
           "i": 123,
           "text": "no",
-          "onset_s": 37.98,
-          "end_s": 37.98
+          "onset_s": 37.954,
+          "end_s": 38.034
         },
         {
           "i": 124,
           "text": "spending,",
-          "onset_s": 37.98,
-          "end_s": 38.26
+          "onset_s": 38.134,
+          "end_s": 38.474
         },
         {
           "i": 125,
           "text": "no",
-          "onset_s": 38.46,
-          "end_s": 38.54
+          "onset_s": 38.514,
+          "end_s": 38.594
         },
         {
           "i": 126,
-          "text": "sending",
-          "onset_s": 38.54,
-          "end_s": 38.8
+          "text": "sending,",
+          "onset_s": 38.694,
+          "end_s": 38.954
         },
         {
           "i": 127,
           "text": "one",
-          "onset_s": 38.8,
-          "end_s": 39.02
+          "onset_s": 39.054,
+          "end_s": 39.134
         },
         {
           "i": 128,
           "text": "easy",
-          "onset_s": 39.02,
-          "end_s": 39.26
+          "onset_s": 39.254,
+          "end_s": 39.455
         },
         {
           "i": 129,
           "text": "step",
-          "onset_s": 39.26,
-          "end_s": 39.68
+          "onset_s": 39.555,
+          "end_s": 39.755
         },
         {
           "i": 130,
           "text": "so",
-          "onset_s": 39.68,
-          "end_s": 39.84
+          "onset_s": 39.815,
+          "end_s": 39.875
         },
         {
           "i": 131,
           "text": "you",
-          "onset_s": 39.84,
-          "end_s": 39.96
+          "onset_s": 39.935,
+          "end_s": 39.995
         },
         {
           "i": 132,
           "text": "can",
-          "onset_s": 39.96,
-          "end_s": 40.06
+          "onset_s": 40.015,
+          "end_s": 40.115
         },
         {
           "i": 133,
           "text": "save",
-          "onset_s": 40.06,
-          "end_s": 40.26
+          "onset_s": 40.175,
+          "end_s": 40.395
         },
         {
           "i": 134,
           "text": "yourself",
-          "onset_s": 40.26,
-          "end_s": 40.54
+          "onset_s": 40.435,
+          "end_s": 40.775
         },
         {
           "i": 135,
           "text": "and",
-          "onset_s": 40.54,
-          "end_s": 40.88
+          "onset_s": 40.875,
+          "end_s": 40.935
         },
         {
           "i": 136,
           "text": "enjoy",
-          "onset_s": 40.88,
-          "end_s": 41.1
+          "onset_s": 40.975,
+          "end_s": 41.235
         },
         {
           "i": 137,
           "text": "these",
-          "onset_s": 41.1,
-          "end_s": 41.4
+          "onset_s": 41.315,
+          "end_s": 41.455
         },
         {
           "i": 138,
           "text": "new",
-          "onset_s": 41.4,
-          "end_s": 41.54
+          "onset_s": 41.515,
+          "end_s": 41.615
         },
         {
           "i": 139,
           "text": "technologies",
-          "onset_s": 41.54,
-          "end_s": 41.92
+          "onset_s": 41.675,
+          "end_s": 42.196
         },
         {
           "i": 140,
           "text": "without",
-          "onset_s": 41.92,
-          "end_s": 42.68
+          "onset_s": 42.616,
+          "end_s": 42.836
         },
         {
           "i": 141,
           "text": "any",
-          "onset_s": 42.68,
-          "end_s": 42.92
+          "onset_s": 42.876,
+          "end_s": 42.956
         },
         {
           "i": 142,
           "text": "of",
-          "onset_s": 42.92,
-          "end_s": 43.0
+          "onset_s": 42.996,
+          "end_s": 43.036
         },
         {
           "i": 143,
           "text": "those",
-          "onset_s": 43.0,
-          "end_s": 43.12
+          "onset_s": 43.056,
+          "end_s": 43.196
         },
         {
           "i": 144,
           "text": "weird",
-          "onset_s": 43.12,
-          "end_s": 43.38
+          "onset_s": 43.296,
+          "end_s": 43.496
         },
         {
           "i": 145,
           "text": "moments",
-          "onset_s": 43.38,
-          "end_s": 43.68
+          "onset_s": 43.556,
+          "end_s": 43.916
         },
         {
           "i": 146,
           "text": "or",
-          "onset_s": 43.68,
-          "end_s": 44.04
+          "onset_s": 44.036,
+          "end_s": 44.076
         },
         {
           "i": 147,
           "text": "fails.",
-          "onset_s": 44.04,
-          "end_s": 44.28
+          "onset_s": 44.176,
+          "end_s": 44.456
         }
       ],
-      "file_sha256": "e97a5ebe50eb9351ce1fde8dea14bd1eaf78b06dc76047520603d1a1f147dd4b"
+      "file_sha256": "123d44ca743eac4006930e464eaf329de5de52096e5f7835f5c67b07edd8aab2"
     }
   },
   "ingested_on": "2026-11-03"

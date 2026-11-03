@@ -87,6 +87,12 @@ def captions_render(path: str, pages, region, ocr=None) -> dict:
         result = dict(parts[0])
         result['pages'] = [row for part in parts for row in part.get('pages', [])]
         result['pass'] = all(part.get('pass') for part in parts)
+        result['failed'] = [row for part in parts for row in part.get('failed', [])]
+        # The row's pass is read from status: every region must pass, or the whole read fails (Thursday 5 Nov: the
+        # first region's "pass" was copied while the second failed two pages, and qc reported a pass).
+        statuses = [part.get('status') for part in parts]
+        result['status'] = ('missing' if 'missing' in statuses else 'pass' if all(s == 'pass' for s in statuses)
+                            else 'fail')
         result['regions'] = [list(zone) for zone in groups]
     return _gate_row(result, f"a page change within {rule['ocr_window_frames']} frames of each start; exact text, OCR score >= "
                              f"{rule['ocr_min_score']}", captions.summary)
