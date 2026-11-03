@@ -274,6 +274,45 @@ credential; do not paste it into a prompt, file, generated HTML or command line.
 - Comments include roots and replies with stable anchors. Read the whole thread,
   retain original metadata and distinguish notes from authorization to publish.
 
+## Always current: the live overlay
+
+Ruling (Krish, 2026-11-03): "The Publish Board should just be makeyourmindup
+weekly content calendar, always up to date." A built board is an immutable
+snapshot, so the page reads the week's live state every 5 seconds (and when the
+tab regains focus) from `GET /api/board?week=<Monday>&op=state`
+(`apps/control-plane/api/board/_live.ts`) and redraws what the records say now.
+No session is needed to keep it current.
+
+What refreshes by itself:
+
+- His ticks, his presses and his yes for each day, and Growth's posted boxes (as before).
+- Each day's step notes (Drafts, Record, Publish) from the piece's making record:
+  done ("signed off", "recorded", "published"), what is still to do ("short cut
+  still to record", "2 of 5 channels"), "blocked: ..." when a gate failed, where
+  the scripts are in Teleprompter, and the channels it was posted to. Brief keeps
+  the word it was built with. The day's piece is chosen as Growth's read chooses
+  it (`piecesByDay`, `_posted.ts`).
+- Approve scripts is held when the record's checked words for a cut are neither
+  the words the page was built with (`data-live-sha-<cut>`) nor the words now in
+  the box (his saved edit): the card says "The words changed since this page was
+  built: this tab needs a rebuild". The overlay never replaces a word or a file
+  the page shows, since his presses bind the hash of the words he saw.
+
+What still needs a rebuild, and how the page says so: the yellow bar names it,
+line by line, when the record holds something the page has no place for ("Monday's
+piece is on the record", "Monday's short cut is on the record", "Monday's short
+script changed on the record"; each ends "rebuild to show it"). When the state's
+`rebuild_needed` is true (a piece of the week was written after the live build
+was made, `board_builds.created_at`) and nothing more precise applies, the bar
+says "This page was built before the record changed. The steps here are live; a
+rebuild shows the rest." A newer build than the open tab still says "A newer
+version of this board is live" with Reload. The hooks are `data-live-day`,
+`data-live-piece`, `data-live-cuts`, `data-live-thumbs` on a day's tab,
+`data-live-step` on its step chips and `data-live-sha-<cut>` on Approve scripts;
+they are attributes only and change nothing a reader sees
+(`tests/board_live_hooks_test.py`). The state carries no address, link, path,
+secret or transcript.
+
 ## Update a board
 
 Fetch the authenticated `/board/WEEK` HTML into a local file for `--previous`;
