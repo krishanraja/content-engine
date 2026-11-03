@@ -8,7 +8,7 @@ type Aspect = EngineRenderProps['aspect']
 // These are key-content regions. The segment plate itself remains full bleed.
 // Each aspect is authored in its own frame coordinates, never scaled.
 const TALL: Record<Layout, readonly Box[]> = {
-  SPLIT: [{ left: 0, top: 0, width: 1080, height: FWP_SPLIT_SEAM_Y }],
+  SPLIT: [{ left: 60, top: 300, width: 960, height: FWP_SPLIT_SEAM_Y - 360 }],
   STAGE: [
     { left: 0, top: 0, width: 1080, height: 1920 },
   ],
