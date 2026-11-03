@@ -82,6 +82,16 @@ def caption_line_count(rows: list[dict], aspect: str = '9:16', emphasis=()) -> i
     return lines
 
 
+LAST_WORD_HELD_FRAMES = 6  # a page's last word shows at least this long before the next page replaces it
+
+
+def _held(rows: list[dict], end: int) -> bool:
+    """Whether a page ending before rows[end] leaves its last word on screen for LAST_WORD_HELD_FRAMES."""
+    if end >= len(rows) or 'atFrame' not in rows[end] or 'atFrame' not in rows[end - 1]:
+        return True
+    return rows[end]['atFrame'] - rows[end - 1]['atFrame'] >= LAST_WORD_HELD_FRAMES
+
+
 def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list[list[dict]]:
     """Fit 2-5 words per page, preferring punctuation without stranding orphans."""
     size, available = (54, 1316) if aspect == '16:9' else (68, 816)
@@ -94,6 +104,10 @@ def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list
                       if start + n in choices
                       and sum(r['w'] in emphasis for r in rows[start:start + n]) <= 1
                       and caption_line_count(rows[start:start + n], aspect, emphasis) <= 2]
+        # A page's last word is on screen long enough to read before the page flips, where another split allows it
+        # (Thursday 5 Nov: "one easy step so you" showed "you" for 2 frames before "can save yourself").
+        held = [n for n in candidates if _held(rows, start + n)]
+        candidates = held or candidates
         punctuated = [n for n in candidates if re.search(r'[,.!?;:]["\x27)\u2019\u201d]*$', rows[start + n - 1]['text'])]
         if candidates:
             choices[start] = punctuated[0] if punctuated else candidates[-1]
