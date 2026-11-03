@@ -1,0 +1,15 @@
+{
+  "path": "docs/ve/cards/thu-5-nov/ve-thu-8-mint-and-logos.md",
+  "card_id": "ve-thu-8-mint-and-logos",
+  "kind": "code",
+  "title": "Two render faults Thursday showed: block stamps ignore paint, and registry logos never reach the render",
+  "goal": [
+    "Claude rendered Thursday's cut with the placements from ve-thu-7 (merged) and found two engine faults, both against the frozen face-with-proof key frames.\n\n1. A block stamp with `paint: 'mint'` still shows the series colour: stamp/index.tsx sets background to tokens[paint] but then spreads halftone(tokens) (apps/renderer/src/engine/kit/overlay.ts), whose backgroundColor and backgroundImage use tokens.channel. Give halftone the fill colour (halftone(tokens, colour), default tokens.channel so every other caller is unchanged) and have the stamp pass tokens[paint]. Test: a mint block stamp's style names tokens.mint in backgroundColor and backgroundImage and never tokens.channel; the default stamp is unchanged.\n2. logo_card (tiles and row) and logo_orbit draw `<image href={resolveLogo(id)}>`, a repository path such as assets/logos/meta-logo.svg, but apps/renderer/scripts/ve-render.mjs stageRenderAssets stages only src/logoSrc params, the brand, the stem, sfx, segments and plates, so in a real render every mark is blank (Thursday's five tiles render as empty white squares). Stage every registry mark an object names (logos[].id, and logo_orbit's centre when it is a registry id) into the public folder at its own relative path (public/assets/logos/<file>), and have resolveLogo's users draw through Remotion's staticFile so the bundle finds them; keep the schema refusal for unregistered ids. Tests (the staging test lives in apps/renderer/src/engine/render-assets.test.ts, where vitest looks): stageRenderAssets copies exactly the registry files a props' objects name, refuses a registry file that escapes assets/logos, and a logo_card fixture's image hrefs are staticFile paths."
+  ],
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. Change no device.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices\nnpx vitest run apps/renderer/src/engine\nnode node_modules/typescript/bin/tsc --noEmit --pretty false",
+  "write_allow": "[apps/renderer/src/engine/kit/overlay.ts, apps/renderer/src/engine/devices/stamp/index.tsx, apps/renderer/src/engine/devices/stamp/device.test.ts, apps/renderer/scripts/ve-render.mjs, apps/renderer/src/engine/render-assets.test.ts, apps/renderer/src/engine/devices/logo_card/schema.ts, apps/renderer/src/engine/devices/logo_card/index.tsx, apps/renderer/src/engine/devices/logo_card/device.test.ts, apps/renderer/src/engine/devices/logo_orbit/mark.tsx, apps/renderer/src/engine/devices/logo_orbit/index.tsx, apps/renderer/src/engine/devices/logo_orbit/device.test.ts]",
+  "read": "apps/renderer/**, config/logo-registry.json, assets/logos/**, docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json",
+  "max_minutes": 60,
+  "max_calls": 60
+}

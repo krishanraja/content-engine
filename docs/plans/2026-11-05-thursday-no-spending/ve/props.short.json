@@ -953,7 +953,7 @@
       "uses": [
         "slab_spend",
         "slab_send",
-        "buddy",
+        "buddy_rule",
         "tick"
       ],
       "transitionOut": "cut",
@@ -993,7 +993,7 @@
       "uses": [
         "slab_spend",
         "slab_send",
-        "buddy",
+        "buddy_rule",
         "tick"
       ],
       "transitionOut": "cut",
@@ -1007,10 +1007,35 @@
       "device": "cursor_buddy",
       "meaning": "the proactive assistant as a cursor with a face, proud then sulking then behaving",
       "fromFrame": 0,
+      "toFrame": 183,
+      "variants": {},
+      "params": {
+        "mood": "proud",
+        "place": {
+          "left": 66,
+          "top": 190,
+          "width": 900,
+          "height": 1100,
+          "scale": 1
+        }
+      }
+    },
+    {
+      "obj": "buddy_rule",
+      "device": "cursor_buddy",
+      "meaning": "the same cursor buddy at the rule, sulking by the fence, then behaving",
+      "fromFrame": 560,
       "toFrame": 1319,
       "variants": {},
       "params": {
-        "mood": "proud"
+        "mood": "sulk",
+        "place": {
+          "left": 390,
+          "top": 400,
+          "width": 640,
+          "height": 800,
+          "scale": 1
+        }
       }
     },
     {
@@ -1026,7 +1051,14 @@
           {
             "text": "Done! Booked the team offsite in Ibiza"
           }
-        ]
+        ],
+        "place": {
+          "left": 56,
+          "top": 160,
+          "width": 920,
+          "height": 300,
+          "scale": 1
+        }
       }
     },
     {
@@ -1116,7 +1148,14 @@
             "side": "right"
           }
         ],
-        "status": "Sent"
+        "status": "Sent",
+        "place": {
+          "left": 56,
+          "top": 160,
+          "width": 920,
+          "height": 420,
+          "scale": 1
+        }
       }
     },
     {
@@ -1131,10 +1170,18 @@
         "main": "NO SPENDING",
         "tiltDeg": 0,
         "at": {
-          "x": 72,
-          "y": 230,
-          "w": 828,
-          "h": 163.2
+          "x": 0,
+          "y": 0,
+          "w": 345,
+          "h": 68
+        },
+        "paint": "mint",
+        "place": {
+          "left": 72,
+          "top": 230,
+          "width": 345,
+          "height": 68,
+          "scale": 2.4
         }
       }
     },
@@ -1150,10 +1197,18 @@
         "main": "NO SENDING",
         "tiltDeg": 0,
         "at": {
-          "x": 72,
-          "y": 440,
-          "w": 828,
-          "h": 163.2
+          "x": 0,
+          "y": 0,
+          "w": 345,
+          "h": 68
+        },
+        "paint": "mint",
+        "place": {
+          "left": 72,
+          "top": 440,
+          "width": 345,
+          "height": 68,
+          "scale": 2.4
         }
       }
     },
@@ -1192,7 +1247,14 @@
           "Approve every individual send",
           "Approve every financial commitment",
           "Zero unapproved usage costs"
-        ]
+        ],
+        "place": {
+          "left": 56,
+          "top": 60,
+          "width": 920,
+          "height": 640,
+          "scale": 1
+        }
       }
     }
   ],
@@ -1290,16 +1352,16 @@
     },
     {
       "id": "b5-rule-1",
-      "obj": "slab_send",
-      "verb": "stamp",
-      "toState": "NO SENDING",
+      "obj": "buddy_rule",
+      "verb": "enter",
+      "toState": "sulk",
       "atFrame": 626
     },
     {
       "id": "b5-rule-2",
-      "obj": "buddy",
-      "verb": "sulk",
-      "toState": "sulk",
+      "obj": "slab_send",
+      "verb": "stamp",
+      "toState": "NO SENDING",
       "atFrame": 626
     },
     {
@@ -1374,7 +1436,7 @@
     },
     {
       "id": "close-3",
-      "obj": "buddy",
+      "obj": "buddy_rule",
       "verb": "wave",
       "toState": "cool",
       "atFrame": 1204
