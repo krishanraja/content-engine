@@ -15,6 +15,7 @@ import {
   parseLibraryUploadRequest,
   verifyStoredLibraryObject,
   type LibraryFileRow,
+  type LibraryName,
 } from './_library.js'
 
 // POST /api/library/upload-url, on the engine key (or Krish's cookie).
@@ -38,10 +39,11 @@ const SIGNED_UPLOAD_TTL_SECONDS = 2 * 60 * 60
 // is about sixty files, two calls each.
 const SENDER_IDENTITY = hashVideoStudioIdentity('library', 'sender')
 
-async function findFile(path: string, sha256: string): Promise<{ row: LibraryFileRow | null; error: boolean }> {
+async function findFile(library: LibraryName, path: string, sha256: string): Promise<{ row: LibraryFileRow | null; error: boolean }> {
   const found = await supabase
     .from('content_library_files')
     .select(LIBRARY_FILE_COLUMNS)
+    .eq('library', library)
     .eq('path', path)
     .eq('sha256', sha256)
     .maybeSingle()
@@ -52,10 +54,11 @@ async function findFile(path: string, sha256: string): Promise<{ row: LibraryFil
 }
 
 /** The newest ready version of a path, by when it became ready. */
-async function newestReady(path: string): Promise<{ sha256: string | null; error: boolean }> {
+async function newestReady(library: LibraryName, path: string): Promise<{ sha256: string | null; error: boolean }> {
   const found = await supabase
     .from('content_library_files')
     .select('sha256')
+    .eq('library', library)
     .eq('path', path)
     .eq('state', 'ready')
     .order('ready_at', { ascending: false })
@@ -81,7 +84,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const sentBy = operatorAttribution(req.headers.authorization, req.body)?.client ?? 'Krish'
   const objectKey = libraryObjectKey(body.sha256, body.path.extension)
 
-  let existing = await findFile(body.path.path, body.sha256)
+  let existing = await findFile(body.path.library, body.path.path, body.sha256)
   if (existing.error) return sendVideoStudioError(res, 503, 'library_index_unavailable')
   if (existing.row && (existing.row.bytes !== body.bytes || existing.row.md5 !== body.md5)) {
     // The same sha256 with a different size or MD5 is not the same file.
@@ -89,7 +92,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (existing.row?.state === 'ready') {
-    const newest = await newestReady(body.path.path)
+    const newest = await newestReady(body.path.library, body.path.path)
     if (newest.error) return sendVideoStudioError(res, 503, 'library_index_unavailable')
     let row = existing.row
     let newestAgain = false
@@ -121,6 +124,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const inserted = await supabase
       .from('content_library_files')
       .upsert({
+        library: body.path.library,
         path: body.path.path,
         sha256: body.sha256,
         md5: body.md5,
@@ -130,10 +134,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         purpose: body.purpose,
         sent_by: sentBy,
         state: 'reserved',
-      }, { onConflict: 'path,sha256', ignoreDuplicates: true })
+      }, { onConflict: 'library,path,sha256', ignoreDuplicates: true })
     if (inserted.error) return sendVideoStudioError(res, 503, 'library_index_unavailable')
     // Read it back: a second sender may have reserved the same file first.
-    existing = await findFile(body.path.path, body.sha256)
+    existing = await findFile(body.path.library, body.path.path, body.sha256)
     if (existing.error || !existing.row) return sendVideoStudioError(res, 503, 'library_index_unavailable')
     if (existing.row.bytes !== body.bytes || existing.row.md5 !== body.md5) return sendVideoStudioError(res, 409, 'library_file_conflict')
   }

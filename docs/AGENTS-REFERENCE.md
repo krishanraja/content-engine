@@ -65,6 +65,13 @@ agents never write into his Drive; this is his explicit instruction for that
 one folder, carried out by his own machine, and it covers that folder only.
 `scripts/post-pack/README.md` has the layout and the commands.
 
+The same lane carries a second library, by his word: Heartside's social
+library (Krish, 2026-11-03: "Why don't you duplicate that Python script for Heartside then? We're going to need to do a lot more of this type of stuff moving forward", after "You also can queue stuff for the home computer to upload in the
+right place"). krishanraja/growth-heartside sends each post's media with
+`send.py --library heartside --as "Posts/<post id>"`; the sync writes it into
+`Heartside > 05_Social-Library` (`config/heartside-library.json`), under
+`Posts` only, by the same rules. It covers that folder only.
+
 <a id="rule-08"></a>
 
 **content-watcher files fetched posts into his two inspiration folders.** Krish,

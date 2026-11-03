@@ -16,7 +16,7 @@ import {
 
 // POST /api/library/confirm, on the engine key (or Krish's cookie).
 //
-//   { path, sha256 }
+//   { path, sha256, library? }   (library: makeyourmindup unless named)
 //
 // After the PUT: checks the stored object has the size, type and (where
 // Storage reports one) the MD5 the sender declared, then marks the file
@@ -38,6 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const found = await supabase
     .from('content_library_files')
     .select(LIBRARY_FILE_COLUMNS)
+    .eq('library', body.path.library)
     .eq('path', body.path.path)
     .eq('sha256', body.sha256)
     .maybeSingle()

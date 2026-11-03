@@ -42,7 +42,8 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
     let order: { key: string; ascending: boolean } | null = null
     let limit: number | null = null
     const matching = () => {
-      let rows = db.files.filter((row) => filters.every(([key, value]) => row[key] === value))
+      // A row seeded without a library is makeyourmindup, as the migration's column default makes it.
+      let rows = db.files.filter((row) => filters.every(([key, value]) => (key === 'library' ? row[key] ?? 'makeyourmindup' : row[key]) === value))
       if (order) {
         const { key, ascending } = order
         rows = [...rows].sort((a, b) => (a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0) * (ascending ? 1 : -1))
@@ -63,8 +64,8 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
       },
       upsert: async (row: Row, options: { onConflict: string; ignoreDuplicates: boolean }) => {
         if (db.indexDown) return down
-        expect(options).toEqual({ onConflict: 'path,sha256', ignoreDuplicates: true })
-        if (!db.files.some((f) => f.path === row.path && f.sha256 === row.sha256)) {
+        expect(options).toEqual({ onConflict: 'library,path,sha256', ignoreDuplicates: true })
+        if (!db.files.some((f) => (f.library ?? 'makeyourmindup') === row.library && f.path === row.path && f.sha256 === row.sha256)) {
           db.files.push({ id: `id-${db.nextId++}`, sent_at: '2026-10-06T09:00:00.000Z', ready_at: null, written: {}, ...row })
         }
         return { data: null, error: null }
@@ -382,7 +383,7 @@ describe('GET /api/library/pending', () => {
     db.pending = [row(), row({ path: `${POST}/READ ME.txt`, sha256: 'b'.repeat(64), content_type: 'text/plain', object_key: `files/${'b'.repeat(64)}.txt`, previous_sha256: 'c'.repeat(64) })]
     const res = await call(pending, asRunner('GET', { query: { machine, limit: '1' } }))
     expect(res.statusCode).toBe(200)
-    expect(db.rpc.find((c) => c.name === 'content_library_pending')?.args).toEqual({ p_machine_hash: hash, p_limit: 2 })
+    expect(db.rpc.find((c) => c.name === 'content_library_pending')?.args).toEqual({ p_machine_hash: hash, p_limit: 2, p_library: 'makeyourmindup' })
     expect(res.body).toMatchObject({ ok: true, schema_version: 1, machine: hash.slice(0, 8), skipped: 0, more: true })
     expect(res.body.files).toEqual([{
       path: PATH, sha256: SHA, bytes: 1234, content_type: 'text/html', purpose: "Paste into Substack's editor",
@@ -439,6 +440,7 @@ describe('POST /api/library/written', () => {
     ] } }))
     expect(res.statusCode).toBe(200)
     expect(db.rpc.find((c) => c.name === 'content_library_record_written')?.args).toEqual({
+      p_library: 'makeyourmindup',
       p_machine_hash: hash,
       p_items: [{ path: readme, sha256: SHA, written_as: `${POST}/READ ME (2).txt` }],
     })
@@ -470,6 +472,7 @@ describe('POST /api/library/written', () => {
     ] } }))
     expect(res.statusCode).toBe(200)
     expect(db.rpc.find((c) => c.name === 'content_library_record_written')?.args).toEqual({
+      p_library: 'makeyourmindup',
       p_machine_hash: hash,
       p_items: [{ path: PATH, sha256: SHA, written_as: beside }, { path: `${POST}/READ ME.txt`, sha256: 'b'.repeat(64), written_as: null }],
     })
@@ -495,5 +498,62 @@ describe('the runner guard', () => {
   it('identifies each machine by the same hash the runner routes use', () => {
     const expected = createHash('sha256').update(['runner', RUNNER, 'library-x'].join('\u0000')).digest('hex')
     expect(videoStudioRunnerIdentity('library-x')).toBe(expected)
+  })
+})
+
+// Krish, 2026-11-03: "Why don't you duplicate that Python script for Heartside
+// then?" Heartside's social library rides the same routes, named on each
+// request, and its rows never mix with makeyourmindup's.
+describe('the Heartside library on the same routes', () => {
+  const HS_PATH = 'Posts/F01/heartside_F01_becoming-the-mug_reel.mp4'
+  const HS_KEY = `files/${SHA}.mp4`
+  const hsSend = (over: Record<string, unknown> = {}) => send({ path: HS_PATH, purpose: 'Heartside post F01, for Codex to post.', library: 'heartside', ...over })
+  const machine = 'library-1d7c0e4e-1b0f-4c47-9f39-6c4c3b1f0a55'
+  const hash = videoStudioRunnerIdentity(machine)
+
+  it('refuses a Heartside path sent without its library, and an unknown library', async () => {
+    let res = await call(uploadUrl, asEngine(hsSend({ library: undefined })))
+    expect(res.statusCode).toBe(400)
+    expect(res.body).toEqual({ ok: false, error: { code: 'invalid_library_path', reason: 'path_wrong_top_folder' } })
+    res = await call(uploadUrl, asEngine(hsSend({ library: 'elsewhere' })))
+    expect(res.statusCode).toBe(400)
+    expect(res.body).toEqual({ ok: false, error: { code: 'invalid_library' } })
+    res = await call(uploadUrl, asEngine(send({ library: 'heartside' })))
+    expect(res.body).toEqual({ ok: false, error: { code: 'invalid_library_path', reason: 'path_wrong_top_folder' } })
+    expect(db.files).toEqual([])
+  })
+
+  it('reserves a Heartside file as a Heartside row, then confirms it', async () => {
+    const res = await call(uploadUrl, asEngine(hsSend()))
+    expect(res.statusCode).toBe(200)
+    expect(db.files).toHaveLength(1)
+    expect(db.files[0]).toMatchObject({ library: 'heartside', path: HS_PATH, object_key: HS_KEY, state: 'reserved' })
+    db.objects.set(HS_KEY, { size: 1234, contentType: 'video/mp4', etag: `"${MD5}"` })
+    const done = await call(confirm, asEngine({ path: HS_PATH, sha256: SHA, library: 'heartside' }))
+    expect(done.statusCode).toBe(200)
+    expect(db.files[0]!.state).toBe('ready')
+  })
+
+  it('keeps the same bytes at a makeyourmindup path apart from a Heartside one', async () => {
+    db.files.push(readyRow({ library: 'heartside', path: HS_PATH, content_type: 'video/mp4', object_key: HS_KEY }))
+    const res = await call(confirm, asEngine({ path: PATH, sha256: SHA }))
+    expect(res.statusCode).toBe(404)
+    expect(res.body).toEqual({ ok: false, error: { code: 'library_file_not_found' } })
+  })
+
+  it('asks the database for one library at a time', async () => {
+    db.pending = [{ path: HS_PATH, sha256: SHA, bytes: 1234, content_type: 'video/mp4', object_key: HS_KEY, purpose: 'The reel.', sent_by: 'claude_code',
+      sent_at: '2026-11-03T08:00:00.000Z', ready_at: '2026-11-03T08:01:00.000Z', previous_sha256: null }]
+    const res = await call(pending, asRunner('GET', { query: { machine, library: 'heartside' } }))
+    expect(res.statusCode).toBe(200)
+    expect(db.rpc.find((c) => c.name === 'content_library_pending')?.args).toEqual({ p_machine_hash: hash, p_limit: 26, p_library: 'heartside' })
+    expect(res.body).toMatchObject({ library: 'heartside', skipped: 0 })
+    expect(res.body.files.map((f: { path: string }) => f.path)).toEqual([HS_PATH])
+    const bad = await call(pending, asRunner('GET', { query: { machine, library: 'elsewhere' } }))
+    expect(bad.statusCode).toBe(400)
+    db.written = [{ item_path: HS_PATH, item_sha256: SHA, outcome: 'recorded' }]
+    const ok = await call(written, asRunner('POST', { body: { schema_version: 1, machine, library: 'heartside', items: [{ path: HS_PATH, sha256: SHA }] } }))
+    expect(ok.statusCode).toBe(200)
+    expect(db.rpc.find((c) => c.name === 'content_library_record_written')?.args).toMatchObject({ p_library: 'heartside' })
   })
 })
