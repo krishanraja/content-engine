@@ -5,6 +5,12 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-03
+
+- reconciled at `4a70858`: NOW.md carried `head: de5b942` while 307 non-steward commits (30 October to 2 November) had landed. The working sessions had already closed out each change in NOW.md through the closeout fold, and the NOW.md audit passed, so this run moved `head` to `4a70858` and `as_of` to 2026-11-03, and corrected the "Next" line, which still asked to merge the live-board pull request: it merged as #344 (`4a70858`) on 2 November. No closeout notes were waiting in `now-notes/`.
+- decision: added the Historical banner to `docs/history/2026-10-31-NOW-moved-4.md`, moved into `docs/history/` by a working session without one. Body unchanged.
+- not checked in this run: the digest lists stamps older than the newest code change on `README.md`, `docs/CAROUSEL_ENGINE_STATE.md`, `docs/CONTENT_ENGINE.md`, `docs/GLOSSARY.md`, `docs/STUDIO.md`, `docs/SYSTEM_MAP.md` and two dated proposal and research files. Their stamps are left as they are, not bumped without a check; `docs/NORTH_STAR.md` is never edited by the steward.
+
 ## 2026-10-29
 
 - folded the eight closeout notes in `now-notes/` (2026-10-28-overnight-preflight and seven of 2026-10-29: copy, engine, floor, story, ve, vendor, video) into NOW.md with `foldRepository` from `.claude/hooks/harness-closeout.mjs`, which deleted them. The folded file (26,581 characters, 15 "Where it is right now" and 19 "What changed recently" bullets) is kept whole in `docs/history/2026-10-29-NOW-closeout-fold.md`; NOW.md was then rewritten to the audit's limits and checked against the code.

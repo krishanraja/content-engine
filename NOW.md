@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-02
-head: de5b942
+as_of: 2026-11-03
+head: 4a70858
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,7 +30,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-02)
+## Where it is right now (as of 2026-11-03)
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":0,"current_as_of":"2026-11-02","current_source":"Control Center content_ideas in the publication's series (0 published in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (0% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 4 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
@@ -56,7 +56,7 @@ Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recentl
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-02): merge the live-board PR on green, record his chat yes for Wed, Fri and Sat, republish the 2 Nov board; then Thursday key frames round 2 (Codex). Then the Sunday run on Sat 7 Nov fills the 9 Nov Saturday good news; read the board back after it.
+- Next (2026-11-02, live-board PR #344 merged): record his chat yes for Wed, Fri and Sat, republish the 2 Nov board; then Thursday key frames round 2 (Codex). Then the Sunday run on Sat 7 Nov fills the 9 Nov Saturday good news; read the board back after it.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
