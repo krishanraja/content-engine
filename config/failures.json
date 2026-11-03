@@ -1710,29 +1710,23 @@
       "id": "F27-filed-where-krish-does-not-look",
       "on": "2026-11-03",
       "krish": "where do the off-day assets go? I feel like I've asked you this before, but I'm not seeing them, any of them, in any Google Drive. The translator video isn't in the drive... Why is it not in there?",
-      "what": "Finished assets, off-day posts included, were filed only under makeyourmindup > 3 Posts. Krish looks in makeyourmindup > 4 Growth > <date> - <topic> - <channels>, Growth's delivery folders, so he found nothing; the translator video was copied there by hand (file 1ox6jRwrX0TUlSTclbV1_zbD6zD8-ILum).",
+      "what": "Krish could not find finished assets, off-day posts included, in Drive; the session told him they were filed and then sent the translator video to a second home (4 Growth). Krish's ruling (3 Nov): the one home is the post's 3 Posts folder.",
       "symptom": "He asked twice where the assets were; the session said they were filed.",
-      "cause": "Two filing homes and nothing joining them: ve file and the off-day route wrote 3 Posts only, and 'filed' was taken from the receipt, never read back from the folder he opens.",
+      "cause": "Nothing read back that a finished asset had reached its post's 3 Posts folder; 'filed' was taken from the receipt, and the session sent him to a second home instead of the one he named.",
       "status": "guarded",
-      "surface": "Every finished asset goes into its 4 Growth folder (YYYY-MM-DD - Topic - Channels) as well as 3 Posts; check that folder, the one Krish opens, before saying anything is filed.",
+      "surface": "Everything ready to post goes in its post's 3 Posts folder, read back before it is called filed (Ruling, Krish, 2026-11-03: \"everything ready for post goes in the posts folder, not the growth folder\").",
       "guards": [
         {
           "file": "scripts/velib/filing.py",
-          "contains": "def growth_folder(",
-          "how": "ve file copies each approved cut into 4 Growth by Growth's naming rule and refuses a library without 4 Growth",
-          "test": "python3 tests/ve_shadow_test.py"
-        },
-        {
-          "file": "scripts/velib/filing.py",
           "contains": "def delivered(",
-          "how": "ve status calls a cut DONE, with its path, only when the 4 Growth copy is read back from disk with the approved hash",
+          "how": "ve status calls a cut DONE, with its 3 Posts path, only when that copy is read back from disk with the approved hash",
           "test": "python3 tests/ve_packet_test.py"
         },
         {
           "file": "scripts/post-pack/week_board.py",
-          "contains": "def growth_needs(",
-          "how": "a finished off-day card says 'Not in 4 Growth yet' until its growth_drive file and folder ids are recorded, and links them when they are",
-          "test": "python3 tests/board_growth_test.py"
+          "contains": "def posts_needs(",
+          "how": "a finished off-day card says 'Not in its 3 Posts folder yet' until it links that folder",
+          "test": "python3 tests/board_posts_test.py"
         }
       ]
     },
@@ -1761,7 +1755,7 @@
       "symptom": "Long replies about filing instead of the file in the folder.",
       "cause": "No rule said what the reply to a Drive request is, and the session did not check the folder he looks in.",
       "status": "guarded",
-      "surface": "When Krish asks for something in Drive: put it in its 4 Growth folder, read it back, and reply \"Done\" with the link. Nothing else.",
+      "surface": "When Krish asks for something in Drive: put it in its post's 3 Posts folder, read it back, and reply \"Done\" with the link. Nothing else.",
       "guards": [
         {
           "file": "AGENTS.md",

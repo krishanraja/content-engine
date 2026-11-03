@@ -160,6 +160,10 @@ def motion_lints(spec: dict) -> list[str]:
     if spec['signature']['hero']['device'] == 'stamp':
         out.append('motion.stamp_not_hero signature.hero.device: the stamp draws fixed 30 px mono text; it labels, it is '
                    'never the hero (docs/ve/MOTION_STANDARD.md)')
+    day = spec.get('publish_day')
+    if spec['format'] == 'face-with-proof' and spec['brand'].get('captions') != 'word' and not (day and day < REFERENCE_FROM):
+        out.append('captions.word_default brand.captions: face-with-proof uses the word caption build, one word at a time '
+                   'off the face (signed by Krish, 3 Nov 2026, docs/ve/MOTION_STANDARD.md)')
     for cut_id, cut in spec['cuts'].items():
         for index, beat in enumerate(cut['beats']):
             used = [objects[name]['device'] for name in beat['uses'] if name in objects]

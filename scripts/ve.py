@@ -509,8 +509,8 @@ def cmd_status(args) -> int:
         print('  design: ' + ('NOT APPROVED (' + '; '.join(design) + ')' if design else 'APPROVED'))
         reasons = mechanical + design + final
         print(f"{cut}: {'READY' if not reasons else 'NOT READY (' + '; '.join(reasons) + ')'}")
-        # Done means in the 4 Growth folder Krish opens, read back from the library, never from the receipt alone
-        # (Krish, 2026-11-03: "The translator video isn't in the drive... Why is it not in there?").
+        # Done means in the post's 3 Posts folder, read back from the library, never from the receipt alone
+        # (Ruling, Krish, 2026-11-03: "everything ready for post goes in the posts folder, not the growth folder").
         if not reasons:
             there, where = filing.delivered(record, root, cut)
             print(f"  delivered: {'DONE ' + where if there else 'NO (' + where + ')'}")
@@ -612,13 +612,8 @@ def cmd_file(args) -> int:
     from velib import filing
     try:
         _spec_file, spec, directory = _ve_dir(args.piece)
-        if getattr(args, 'growth_only', False):
-            record = filing.file_growth_only(directory, library_at=args.library)
-            for item in record['files']:
-                print(f"  {item['cut']} ({item['shape']}) -> {item['growth']}")
-            return 0
         if not args.subject:
-            raise ValueError('--subject is required: the topic both the 3 Posts and the 4 Growth folders are named by')
+            raise ValueError('--subject is required: the topic the post folder is named by')
         cuts = args.cut or list(spec['cuts'])
         result = filing.file(spec, directory, cuts, subject=args.subject, when=args.date, archive_at=args.archive,
                              library_at=args.library, dry_run=args.dry_run)
@@ -630,7 +625,6 @@ def cmd_file(args) -> int:
         print(f"ve file: archive {result['archive']}")
         for item in result['files']:
             print(f"  {item['cut']} ({item['shape']}, {item['sha256'][:12]}) -> {item['library']}")
-            print(f"  {item['cut']} for Growth -> {item['growth']}")
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(f've file: {error}', file=sys.stderr)
@@ -1093,9 +1087,8 @@ def main() -> int:
     p.add_argument('--render', action='store_true', help='render the conformed picture and dialogue in one graph')
     p.add_argument('--assets-dir'); p.add_argument('--joins-reel', action='store_true')
     p.set_defaults(fn=cmd_conform)
-    p = sub.add_parser('file', help="file READY cuts in the archive, the post's 3 Video folder and its 4 Growth folder")
+    p = sub.add_parser('file', help="file READY cuts in the archive and the post's 3 Video folder, bound to piece_id")
     p.add_argument('piece'); p.add_argument('--subject'); p.add_argument('--date')
-    p.add_argument('--growth-only', action='store_true', help='add the 4 Growth copy to a cut filed before that rule')
     p.add_argument('--cut', action='append', help='a cut to file (default: every cut; one per shape)')
     p.add_argument('--archive', help='the archive folder (default MINDMAKE_ARCHIVE_ROOT)')
     p.add_argument('--library', help='the makeyourmindup library folder (default MINDMAKE_LIBRARY_ROOT)')
