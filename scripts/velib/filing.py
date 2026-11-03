@@ -5,6 +5,10 @@ It uses the routes the quick-edit and post-pack tools already use, never a copy 
     `Video Engine > Archive` folder on Drive, docs/DRIVE.md);
   - the library: scripts/post-pack/library.py (post_folder, refusal) and plan_files.library_roots
     (MINDMAKE_LIBRARY_ROOT, the `makeyourmindup` library on Drive, whose `3 Posts/<post>/3 Video` Library Sync reads).
+  - the Growth delivery folder: `4 Growth/<YYYY-MM-DD> - <Topic> - <Channels>`, beside `3 Posts` in the same
+    library, named by Growth's own rule (its START HERE file: "one dated Topic - Channel folder per campaign"). This
+    is the folder Krish opens (Krish, 2026-11-03: "The translator video isn't in the drive... Why is it not in
+    there?"), so a cut is not done until it is there; `3 Posts` keeps the production original.
 Both are local folders that Google Drive for desktop syncs on a home computer, so filing never calls a Drive API,
 never shares and never publishes. A cut is filed only when `ve status` would call it READY: QC bound to its hash, a
 Critic verdict and Krish's final approval of that exact file. Nothing is overwritten.
@@ -23,6 +27,43 @@ import archive  # noqa: E402
 import library  # noqa: E402
 
 SHAPE = {'9:16': 'tall', '16:9': 'wide'}
+GROWTH = '4 Growth'
+# Where each shape goes, as Growth names its folders (4 Growth, 3 Nov 2026: "2026-11-03 - AI agents translator -
+# Instagram, TikTok, YouTube Shorts and X").
+CHANNELS = {'tall': 'Instagram, TikTok, YouTube Shorts and X', 'wide': 'YouTube'}
+GROWTH_FOLDER_MAX = 100
+
+
+def growth_folder(when: str, subject: str, shape: str) -> str:
+    """'2026-11-03 - AI agents translator - Instagram, TikTok, YouTube Shorts and X'."""
+    archive.check_date(when)
+    clean = archive.safe_text(subject or '')
+    if not clean:
+        raise ValueError('the subject has nothing a folder name can keep')
+    tail = f' - {CHANNELS[shape]}'
+    head = f'{when} - '
+    return head + archive._shorten(clean, GROWTH_FOLDER_MAX - len(head) - len(tail)) + tail
+
+
+def growth_path(when: str, subject: str, shape: str, name: str) -> str:
+    return f'{GROWTH}/{growth_folder(when, subject, shape)}/{name}'
+
+
+def delivered(record: dict | None, root: Path | None, cut: str) -> tuple[bool, str]:
+    """(is the cut in the folder Krish opens, where): read back from disk, never assumed from the receipt."""
+    if not record:
+        return False, 'not filed: run ve file'
+    item = next((f for f in record.get('files', []) if f['cut'] == cut), None)
+    if not item or not item.get('growth'):
+        return False, f'not in {GROWTH}: filed before the Growth folder rule, run ve file --growth-only'
+    if root is None:
+        return False, f"cannot see the library here to read back {item['growth']}"
+    target = Path(root) / item['growth']
+    if not target.is_file():
+        return False, f"missing from Drive: {item['growth']}"
+    if sha256_file(target) != item['sha256']:
+        return False, f"{item['growth']} is not the approved file"
+    return True, item.get('growth_url') or item['growth']
 
 
 def readiness(spec: dict, cut: str, directory: Path) -> tuple[list[str], str | None, str | None]:
@@ -61,7 +102,8 @@ def plan(spec: dict, cuts: list[str], *, subject: str, when: str | None = None) 
         refused = library.refusal(relative)
         if refused:
             raise ValueError(f'the library refuses {relative}: {library.explain(refused)}')
-        files.append({'cut': shapes[item['shape']], 'shape': item['shape'], 'name': item['file'], 'library': relative})
+        files.append({'cut': shapes[item['shape']], 'shape': item['shape'], 'name': item['file'], 'library': relative,
+                      'growth': growth_path(when, subject, item['shape'], item['file'])})
     return {'date': when, 'subject': subject, 'post_folder': post, 'archive_folder': planned['folder'], 'files': files}
 
 
@@ -89,7 +131,10 @@ def file(spec: dict, directory: Path, cuts: list[str], *, subject: str, when: st
         if sha256_file(video) != digest:
             raise ValueError(f'{cut}: {video} changed after its approval')
     sidecar = Path(root) / library.POSTS / planned['post_folder'] / library.VIDEO / f've-{spec["piece_id"]}.json'
-    for target in [sidecar] + [Path(root) / item['library'] for item in planned['files']]:
+    if not (Path(root) / GROWTH).is_dir():
+        raise ValueError(f'{Path(root) / GROWTH} does not exist: the library root must be the one that holds both '
+                         f'{library.POSTS} and {GROWTH}')
+    for target in [sidecar] + [Path(root) / item[key] for item in planned['files'] for key in ('library', 'growth')]:
         if target.exists():
             raise ValueError(f'{target} already exists: nothing is overwritten')
     by_shape = {item['shape']: videos[item['cut']][0] for item in planned['files']}
@@ -100,13 +145,46 @@ def file(spec: dict, directory: Path, cuts: list[str], *, subject: str, when: st
     for item in planned['files']:
         video, digest = videos[item['cut']]
         target = Path(root) / item['library']
-        archive.copy_new(video, target)
-        if sha256_file(target) != digest:
-            raise ValueError(f'{target}: the copy does not match the approved file')
+        growth = Path(root) / item['growth']
+        for copy in (target, growth):
+            copy.parent.mkdir(parents=True, exist_ok=True)
+            archive.copy_new(video, copy)
+            if sha256_file(copy) != digest:
+                raise ValueError(f'{copy}: the copy does not match the approved file')
         record['files'].append({'cut': item['cut'], 'shape': item['shape'], 'sha256': digest,
-                                'library': item['library'],
+                                'library': item['library'], 'growth': item['growth'],
                                 'archive': str(Path(archived['path']) / next(f['file'] for f in archived['files']
                                                                             if f['shape'] == item['shape']))})
     write_json(sidecar, record)
     write_json(directory / 'filed.json', record)
     return record
+
+
+def file_growth_only(directory: Path, library_at=None) -> dict:
+    """Add the 4 Growth copy to a cut filed before that rule, from its verified 3 Posts copy. Nothing is overwritten."""
+    directory = Path(directory)
+    record_path = directory / 'filed.json'
+    if not record_path.is_file():
+        raise ValueError('not filed yet: run ve file')
+    import json  # noqa: PLC0415
+    record = json.loads(record_path.read_text(encoding='utf-8'))
+    root = library_root(library_at)
+    if not (Path(root) / GROWTH).is_dir():
+        raise ValueError(f'{Path(root) / GROWTH} does not exist: give the library root that holds {GROWTH}')
+    for item in record['files']:
+        if item.get('growth'):
+            continue
+        source = Path(root) / item['library']
+        if not source.is_file() or sha256_file(source) != item['sha256']:
+            raise ValueError(f"{item['library']} is missing or is not the approved file")
+        item['growth'] = growth_path(record['date'], record['subject'], item['shape'], Path(item['library']).name)
+        target = Path(root) / item['growth']
+        if target.exists():
+            raise ValueError(f'{target} already exists: nothing is overwritten')
+        target.parent.mkdir(parents=True, exist_ok=True)
+        archive.copy_new(source, target)
+        if sha256_file(target) != item['sha256']:
+            raise ValueError(f'{target}: the copy does not match the approved file')
+    write_json(record_path, record)
+    return record
+

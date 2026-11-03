@@ -1676,6 +1676,128 @@
           "how": "the cover site's renamed photos are where the drawer looks, so a missing file never forces a stand-in"
         }
       ]
+    },
+    {
+      "id": "F26-designed-without-its-references",
+      "on": "2026-11-03",
+      "krish": "This video is a literal 1/10. I even gave literal inspiration in the inspiration board on the quality I expect, and also the subtitle builds we could have. No, its the georgia subtitles build, and the motion and graphics of the other one. The graphics in your previous car are honestly fucking embarrassing. I'm not publishing that.",
+      "what": "The 3 Nov session designed and cut the Thursday short without opening the inspiration board, where Krish had put the two reels that set the bar: instagram_DePHDr_jRed (the word-at-a-time caption build) and instagram_DeZuQ7-lATg (full-width product cards with glow, fast motion). ve lint, QC and the Critic all passed a cut he rated 1/10.",
+      "symptom": "Small boxed cards in a corner, captions over his face, fixed 30 px stamps used as headline type; nothing like either reference.",
+      "cause": "Nothing in ve asked which references a piece is held to, and no check put the cut beside a reference: lint checks the spec against rules, QC measures the file, and the Critic judged the cut against the lens alone.",
+      "status": "guarded",
+      "surface": "Before designing anything, open the inspiration board's cards for this piece and name them in brand.references (look, motion, captions); ve lint refuses a spec without them and the Critic scores the cut against each.",
+      "guards": [
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "def reference_lints(",
+          "how": "a spec publishing after 5 Nov names a board card for look, motion and captions or ve lint refuses it",
+          "test": "python3 tests/ve_lint_test.py"
+        },
+        {
+          "file": "scripts/velib/refgate.py",
+          "contains": "def scores_problems(",
+          "how": "ve refs puts the cut's frames above each reference's frames; a verdict without a score of 8/10 or more against every card leaves the cut NOT READY",
+          "test": "python3 tests/ve_refgate_test.py"
+        },
+        {
+          "file": ".claude/agents/ve-critic.md",
+          "contains": "## Against its references",
+          "how": "the Critic opens each reference sheet first and scores the cut against what each card is for"
+        }
+      ]
+    },
+    {
+      "id": "F27-filed-where-krish-does-not-look",
+      "on": "2026-11-03",
+      "krish": "where do the off-day assets go? I feel like I've asked you this before, but I'm not seeing them, any of them, in any Google Drive. The translator video isn't in the drive... Why is it not in there?",
+      "what": "Finished assets, off-day posts included, were filed only under makeyourmindup > 3 Posts. Krish looks in makeyourmindup > 4 Growth > <date> - <topic> - <channels>, Growth's delivery folders, so he found nothing; the translator video was copied there by hand (file 1ox6jRwrX0TUlSTclbV1_zbD6zD8-ILum).",
+      "symptom": "He asked twice where the assets were; the session said they were filed.",
+      "cause": "Two filing homes and nothing joining them: ve file and the off-day route wrote 3 Posts only, and 'filed' was taken from the receipt, never read back from the folder he opens.",
+      "status": "guarded",
+      "surface": "Every finished asset goes into its 4 Growth folder (YYYY-MM-DD - Topic - Channels) as well as 3 Posts; check that folder, the one Krish opens, before saying anything is filed.",
+      "guards": [
+        {
+          "file": "scripts/velib/filing.py",
+          "contains": "def growth_folder(",
+          "how": "ve file copies each approved cut into 4 Growth by Growth's naming rule and refuses a library without 4 Growth",
+          "test": "python3 tests/ve_shadow_test.py"
+        },
+        {
+          "file": "scripts/velib/filing.py",
+          "contains": "def delivered(",
+          "how": "ve status calls a cut DONE, with its path, only when the 4 Growth copy is read back from disk with the approved hash",
+          "test": "python3 tests/ve_packet_test.py"
+        },
+        {
+          "file": "scripts/post-pack/week_board.py",
+          "contains": "def growth_needs(",
+          "how": "a finished off-day card says 'Not in 4 Growth yet' until its growth_drive file and folder ids are recorded, and links them when they are",
+          "test": "python3 tests/board_growth_test.py"
+        }
+      ]
+    },
+    {
+      "id": "F28-captions-on-his-face",
+      "on": "2026-11-03",
+      "krish": "The subtitles just go straight over my face.",
+      "what": "The Thursday short's captions were drawn across his face on the take beats.",
+      "symptom": "Words over his mouth and eyes.",
+      "cause": "QC read the caption words (OCR) and their timing, but never where they sat against his face.",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/velib/qc_faces.py",
+          "contains": "def off_face(",
+          "how": "ve qc finds the face in the frame each caption page is read at and fails any page whose box overlaps the face box grown by 10%; not_run, never pass, without a detector",
+          "test": "python3 tests/ve_qc_faces_test.py"
+        }
+      ]
+    },
+    {
+      "id": "F29-drive-request-not-answered-done",
+      "on": "2026-11-03",
+      "krish": "WHEN I ASK YOU TO PUTTHINGS IN DRIVE IT SHOULD JUST BE REPLIED TO WITH 'DONE'. Why can't you remember any of this and we have to be corrected constantly?!",
+      "what": "Asked to put assets in Drive, the session explained routes and folders back to him, talked to itself and repeated corrected mistakes.",
+      "symptom": "Long replies about filing instead of the file in the folder.",
+      "cause": "No rule said what the reply to a Drive request is, and the session did not check the folder he looks in.",
+      "status": "guarded",
+      "surface": "When Krish asks for something in Drive: put it in its 4 Growth folder, read it back, and reply \"Done\" with the link. Nothing else.",
+      "guards": [
+        {
+          "file": "AGENTS.md",
+          "contains": "reply \"Done\" with the link",
+          "how": "the guarded rules every client reads say what a Drive request's reply is"
+        }
+      ]
+    },
+    {
+      "id": "F30-designed-blind-to-the-channel",
+      "on": "2026-11-03",
+      "krish": "Also have a look at Monday's Instagram post. Something doesn't look right. It looks cramped. It looks like you almost didn't design this thoughtfully for the format or the channel. Can you figure out what's gone wrong here and how to permanently fix that across, so that anything published for any specific channel is created in such a way that it doesn't look stupid when it's uploaded?",
+      "what": "Monday 2 Nov's 9:16 cut, posted as an Instagram Reel, put its headline slab under Instagram's back arrow and camera, its ladder graphic under the handle and caption, and its caption beside the like rail.",
+      "symptom": "Cramped: the brand chrome, headline, graphic and caption all fight Instagram's own buttons and text.",
+      "cause": "The platform safe zones lived only in config/studio.json, read by the older v2 render path. quick-edit (which made Monday's cut) and ve never read them, nothing checked a finished frame, and the Instagram numbers there understated the overlay (bottom 420 px against 547 measured, rail 140 against 185). config/studio.json is bound into the signed media standard's hash, so its numbers stay until Krish signs the measured ones.",
+      "status": "guarded",
+      "surface": "A tall cut, card or cover is laid out for the channel it posts to: nothing to read under its buttons (config/channel-safe-zones.json; scripts/channel_safe.py FILE checks any finished file).",
+      "guards": [
+        {
+          "file": "scripts/channel_safe.py",
+          "contains": "def frame_violations(",
+          "how": "any finished video or image: words read in a channel's button zones fail",
+          "test": "python3 tests/channel_safe_test.py"
+        },
+        {
+          "file": "scripts/velib/qc_channel.py",
+          "contains": "def safe_zones(",
+          "how": "ve qc row channel.safe_zones lists every caption, title or slot box under a channel's buttons; advisory (listed, not counted) until card ve-motion-4-channel-safe-tall moves the tall layouts, then it counts",
+          "test": "python3 tests/channel_safe_test.py"
+        },
+        {
+          "file": "scripts/quick-edit/make.py",
+          "contains": "receipt['channel_safe']",
+          "how": "every quick-edit tall cut measures and lists what sits under a channel's buttons; it holds once card ve-motion-4-channel-safe-tall moves the layout"
+        }
+      ]
     }
   ]
 }

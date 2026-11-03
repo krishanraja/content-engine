@@ -35,10 +35,16 @@ def validate(value):
     errors = []
     required = {'schema', 'piece', 'cut', 'sha256', 'reviewer', 'reviewed_at',
                 'lens_sha256', 'frames_viewed', 'findings', 'blocking'}
+    # ve-verdict/2 adds `references`: the Critic's score of the cut against each inspiration-board card (refgate).
+    if isinstance(value, dict) and value.get('schema') == 've-verdict/2':
+        required = required | {'references'}
     if not isinstance(value, dict) or set(value) != required:
         return ['invalid verdict fields']
-    if value['schema'] != 've-verdict/1':
+    if value['schema'] not in ('ve-verdict/1', 've-verdict/2'):
         errors.append('invalid verdict schema')
+    if value['schema'] == 've-verdict/2':
+        from .refgate import score_errors
+        errors.extend(score_errors(value['references']))
     for key in ('piece', 'cut', 'reviewer', 'reviewed_at'):
         if not isinstance(value[key], str) or not value[key].strip():
             errors.append(f'{key} must be non-empty')
@@ -114,10 +120,12 @@ def reasons(spec, cut, directory, digest):
         out.append('Critic blocks: ' + next(f['text'] for f in value['findings'] if f['severity'] == 'block'))
     if not viewed_every_beat(value, spec, cut, directory):
         out.append('Critic did not view every beat')
+    from .refgate import scores_problems
+    out.extend(scores_problems(spec, cut, directory, value.get('references'), digest))
     return out
 
 
-def write(spec, cut, directory, reviewer, findings, viewed):
+def write(spec, cut, directory, reviewer, findings, viewed, references=None):
     if cut not in spec['cuts']:
         raise ValueError(f'unknown cut {cut}')
     qc = read(directory / f'qc.{cut}.json')
@@ -128,12 +136,22 @@ def write(spec, cut, directory, reviewer, findings, viewed):
         raise ValueError('qc is for a different file')
     if spec['cuts'][cut]['aspect'] == '9:16' and 'composition' not in qc.get('checks', {}):
         raise ValueError('missing composition row')
-    value = dict(schema='ve-verdict/1', piece=spec['piece_id'], cut=cut,
+    from .refgate import required, sheet_is_for
+    if required(spec):
+        if references is None:
+            raise ValueError('this spec is held to its references: give the Critic\'s reference scores (--references)')
+        missing = [r['card'] for r in (spec.get('brand') or {}).get('references') or []
+                   if not sheet_is_for(directory, cut, r['card'], qc.get('sha256'))]
+        if missing:
+            raise ValueError(f"no reference sheet for {', '.join(missing)}: run ve refs first, the Critic scores what it saw")
+    value = dict(schema='ve-verdict/2' if references is not None else 've-verdict/1', piece=spec['piece_id'], cut=cut,
                  sha256=sha256_file(video), reviewer=reviewer,
                  reviewed_at=datetime.now(timezone.utc).isoformat(),
                  lens_sha256=sha256_file(CONFIG / 'crew/critic.lens.md'),
                  frames_viewed=[{'at_s': at} for at in viewed], findings=findings,
                  blocking=any(isinstance(f, dict) and f.get('severity') == 'block' for f in findings))
+    if references is not None:
+        value['references'] = references
     errors = validate(value)
     if errors:
         raise ValueError('; '.join(errors))

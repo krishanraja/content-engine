@@ -1,0 +1,15 @@
+{
+  "card_id": "ve-motion-1-split-full-width",
+  "title": "SPLIT draws its graphic half at full width, not shrunk into a corner",
+  "goal": [
+    "Krish, 3 Nov 2026: \"The graphics in your previous car are honestly fucking embarrassing.\" FormatMaster scales the whole SPLIT stage by FWP_STAGE_SCALE (0.76) with a top-centre origin, so every card on a split beat is drawn at three quarters of its size in a box beside the mark tile. His reference (instagram_DeZuQ7-lATg) draws product cards at 89% of the width with 60 px margins on our canvas.\n\n1. Remove the stage scale from SPLIT in FormatMaster: the graphic half is the canvas above FWP_SPLIT_SEAM_Y at full width. Keep FWP_STAGE_SCALE exported for the frozen mocks only, and name it so (FWP_MOCK_STAGE_SCALE) with a comment that real beats never use it.\n2. A SPLIT object with no `place` gets a default box: left 60, top 300, width 960, height FWP_SPLIT_SEAM_Y - 360.\n3. Update scripts/velib/qc.py's _split_geometry reader to the new name, so QC reads the same number.\n\nTests: a SPLIT beat's wrapper has no scale transform; an unplaced object's box is 60,300,960,(seam-360); `place` still works; the mocks still pass with the renamed constant."
+  ],
+  "write_allow": "[apps/renderer/src/engine/FormatMaster.tsx, apps/renderer/src/engine/layouts/index.ts, apps/renderer/src/engine/layouts/split.test.ts, apps/renderer/src/engine/mocks/face-with-proof.tsx, apps/renderer/src/engine/mocks/face-with-proof.test.ts, scripts/velib/qc.py]",
+  "read": "apps/renderer/src/engine/**, docs/ve/MOTION_STANDARD.md, config/ve/design-lock.json",
+  "path": "docs/ve/cards/motion-standard/ve-motion-1-split-full-width.md",
+  "kind": "code",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. The standard is docs/ve/MOTION_STANDARD.md; every number below is measured there from Krish's inspiration-board reels.",
+  "acceptance": "npx vitest run apps/renderer/src/engine\nnode node_modules/typescript/bin/tsc --noEmit --pretty false\npython3 tests/ve_qc_modules_test.py",
+  "max_minutes": 50,
+  "max_calls": 50
+}

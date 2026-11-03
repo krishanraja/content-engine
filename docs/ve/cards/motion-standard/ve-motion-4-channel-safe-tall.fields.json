@@ -1,0 +1,15 @@
+{
+  "path": "docs/ve/cards/motion-standard/ve-motion-4-channel-safe-tall.md",
+  "card_id": "ve-motion-4-channel-safe-tall",
+  "kind": "code",
+  "title": "Tall cuts clear every channel's buttons: chrome, headline, graphics and captions out of the zones",
+  "goal": [
+    "Krish, 3 Nov 2026, on Monday's Instagram Reel: \"It looks cramped. It looks like you almost didn't design this thoughtfully for the format or the channel.\" On his phone the headline slab sat under Instagram's back arrow and camera, the ladder graphic under the handle and caption, and the caption beside the like rail. The zones are config/channel-safe-zones.json (measured on his phone): top 0-200, right rail x 880-1080 from y 520 to 1700, bottom from y 1320. scripts/channel_safe.py box_violations checks boxes against them.\n\n1. ve (apps/renderer/src/engine/layouts/index.ts, the TALL table, and the tall header/headline geometry): every slot box, the series pill and the headline sit inside x 60-860 between y 200 and 1320, or full width only above y 520. The mark tile may stay in the top-left corner (it is decoration, never words).\n2. quick-edit (scripts/quick-edit/kit.py PANEL_LAYOUT and FRAME, scripts/quick-edit/advisory_qc.py CAPTION_BANDS, and wherever make.py draws the 9x16 headline and caption bands): the same rule; the caption bands become [60, 1060, 800, 200] (normal) and [60, 994, 800, 200] (over_graphic), with the renderer moved to match.\n3. Then make quick-edit's tall check holding: in scripts/quick-edit/make.py the channel_safe rows, now warnings, append to words_held when channel_safe.box_violations finds anything.\n\nTests: a layout walk over the TALL table and the quick-edit bands returns no box_violations; tests/channel_safe_test.py test_quick_edit_caption_bands_are_measured flips to assert none; the renderer and quick-edit tests pass."
+  ],
+  "contract": "The zones and the rule are docs/ve/MOTION_STANDARD.md (Channels) and config/channel-safe-zones.json; never copy the numbers, read the table. Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Colour roles from tokens, never raw hex.",
+  "acceptance": "npx vitest run apps/renderer/src/engine\npython3 tests/channel_safe_test.py\npython3 scripts/quick-edit/kit.py --self-test\nnode node_modules/typescript/bin/tsc --noEmit --pretty false",
+  "write_allow": "[apps/renderer/src/engine/layouts/index.ts, apps/renderer/src/engine/layouts/channel-safe.test.ts, apps/renderer/src/engine/chrome/**, scripts/quick-edit/kit.py, scripts/quick-edit/advisory_qc.py, scripts/quick-edit/make.py, tests/channel_safe_test.py]",
+  "read": "apps/renderer/src/engine/**, scripts/quick-edit/**, config/channel-safe-zones.json, docs/ve/MOTION_STANDARD.md",
+  "max_minutes": 60,
+  "max_calls": 60
+}

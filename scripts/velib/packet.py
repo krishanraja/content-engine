@@ -118,6 +118,7 @@ def assemble(spec, directory, out, legacy_ok=()):
             for kind in ('qc', 'verdict'):
                 shutil.copyfile(directory / f'{kind}.{cut}.json', stage / f'{kind}.{cut}.json')
             contact_sheet(video, qc.get('duration_s'), stage / f'contact.{cut}.jpg')
+            lines += reference_lines(spec, cut, directory, stage)
             lines += ['### Measurements', *measurement_lines(qc.get('checks', {})),
                       *measurement_lines(qc.get('composition', {}), 'composition'),
                       *measurement_lines(qc.get('keyframes', {}), 'keyframes'), '', '### Critic findings']
@@ -137,6 +138,25 @@ def assemble(spec, directory, out, legacy_ok=()):
     finally:
         shutil.rmtree(stage)
     return out
+
+
+def reference_lines(spec, cut, directory, stage):
+    """Each board card beside the cut, with the Critic's score: Krish sees what it was held to."""
+    from . import refgate
+    refs = (spec.get('brand') or {}).get('references') or []
+    if not refs:
+        return []
+    scores = {row['card']: row for row in verdict.read(Path(directory) / f'verdict.{cut}.json').get('references') or []}
+    lines = ['### Against its references']
+    for ref in refs:
+        source = refgate.sheet_path(directory, cut, ref['card'])
+        if not source.is_file():
+            raise ValueError(f"{cut}: no reference sheet for {ref['card']}")
+        shutil.copyfile(source, stage / source.name)
+        row = scores.get(ref['card'], {})
+        lines += [f"- {ref['card']} ({', '.join(ref['for'])}): {ref['takeaway']}",
+                  f"  Critic: {row.get('score', 'unscored')}/10, {row.get('note', 'no note')} ({source.name})"]
+    return lines + ['']
 
 
 def readiness(spec, cut, directory) -> dict:
