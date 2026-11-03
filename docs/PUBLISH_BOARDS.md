@@ -24,6 +24,14 @@ layout, the same every week:
   brief and scripts are due on that Sunday. Earlier boards keep version 2. Feed it with
   `python3 scripts/post-pack/board_feed.py archive <Monday>` (read-only, `GET /api/board/<Monday>/archive`) and
   build with `--archive docs/plans/<Monday>-week/archive.json`.
+- **Off days with a finished asset get their own tab** (Ruling, Krish, 2026-11-03: "I should also see Saturday on this
+  inside the top navigation bar. I should see Tuesday and Thursday with the approved assets in all published boards
+  moving forward in the future"). Tuesday, Thursday and Saturday each become a tab, between the series days in calendar
+  order, once an open option for that day carries `slides` or a `video`. The tab shows every slide as its own picture
+  or the video to play, Open in Drive (`drive`, required with either), the download as a secondary link, and the same
+  mock presses as the option's card on the Ideas tab, saved to the same record. Sunday stays off (Ruling, Krish,
+  2026-11-02). Built by `week_board.py` from the option's fields; `fixed_problems` refuses an off-day tab asset that
+  cannot be seen or has no Drive link.
 - **Four steps in every day, in this order:** Brief, Drafts, Record, Publish.
   A step with nothing yet says when it fills, from the layout's `rhythm`: every
   day's brief on the Sunday morning and its scripts by Sunday midday, because

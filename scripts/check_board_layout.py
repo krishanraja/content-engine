@@ -125,6 +125,14 @@ def weeks(tmp):
     mon3 = wb.stand_in(tmp, 'mon3', TITLE, 'follow.the.money')
     out['archive'] = wb.board(wb.V3_FROM, {'mon': mon3}, {'mon': wb.MON_ID}, archive=archive,
                               videos={'mon': [video('long', 'a', 305), video('short', 'c', 86)]})[0]
+    # Off days with a finished asset (Ruling, Krish, 2026-11-03): every slide or the video on the board, Open in Drive, and
+    # each such day its own tab between the series days.
+    drive = 'https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQr'
+    done = {'tue': [dict(opt('tue', 1), video={'url': 'https://board.asset/t.mp4'}, drive=drive), opt('tue', 2)],
+            'sat': [dict(opt('sat', 2), mock={'url': 'https://board.asset/s1.jpg', 'note': 'Remade'}, drive=drive,
+                         slides=[{'url': f'https://board.asset/s{i}.jpg'} for i in range(1, 8)],
+                         download={'url': 'https://board.asset/all.zip', 'label': 'the seven cards (zip)'}), opt('sat', 1)]}
+    out['offday_assets'] = wb.board(wb.V3_FROM, ideas=ideas, offdays=wb.read_offdays(done))[0]
     return out
 
 
@@ -178,6 +186,15 @@ def structure(page):
     card = re.search(r'<article class="off-card".*?</article>', page, re.S)
     if card:
         out['offday_card'] = blocks(card.group(0)[card.group(0).index('>') + 1:-len('</article>')])
+    # The off days' own tabs: each one's top-level blocks and what one finished asset holds (Krish, 2026-11-03).
+    for name in wb.OFF_TABS.values():
+        at = page.find(f'id="panel-{name}"')
+        if at >= 0:
+            panel = wb.div_at(page, page.rfind('<div', 0, at))
+            out[f'tab_{name}'] = blocks(panel[panel.index('>') + 1:-len('</div>')])
+    asset = re.search(r'<div class="off-asset".*?<p class="tri-state"', page, re.S)
+    if asset:
+        out['offday_asset'] = blocks(asset.group(0)[asset.group(0).index('>') + 1:])
     # Layout v3: the Archive tab's blocks and what one row holds (W2.1).
     at = page.find(f'id="panel-{wb.ARCHIVE_TAB}"')
     if at >= 0:

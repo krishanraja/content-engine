@@ -1975,6 +1975,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 ### `apps/control-plane/api/board/_handler.ts`
 
+- `function boardPolicy(storeUrl?: string)`
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
 
 ### `apps/control-plane/api/board/_offdayRevise.ts`

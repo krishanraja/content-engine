@@ -143,6 +143,21 @@ class DesignLockTest(unittest.TestCase):
         return dict(card_id='test', kind='device', cwd=str(self.root), write_allow='[]', read='',
                     title='test', goal='test', contract='test', acceptance='python test.py')
 
+    def test_a_card_carries_its_motion_style_for_codex(self):
+        path = cards.write_card(self.root / 'styled.md', motion_style='data-story', **self.fields())
+        text = path.read_text()
+        self.assertIn('## Motion style: Data story (data-story', text)
+        self.assertIn('3D charts', text)
+        self.assertLess(text.index('## Motion style'), text.index('## Acceptance'))
+        meta = cards.parse_card(path)
+        self.assertEqual(meta['motion_style'], 'data-story')
+        self.assertEqual(meta['acceptance'], ['python test.py'])
+        for bad in ('live-scoreboard', 'no-such-style'):
+            with self.assertRaises(SystemExit):
+                cards.write_card(self.root / f'{bad}.md', motion_style=bad, **self.fields())
+        plain = cards.write_card(self.root / 'plain.md', **self.fields()).read_text()
+        self.assertNotIn('Motion style', plain)
+
     def test_card_and_dispatch_refuse_before_side_effects(self):
         path = self.root / 'card.md'
         phrase = f'no frozen design lock for {FMT}: run ve lock freeze'

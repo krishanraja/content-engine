@@ -36,7 +36,12 @@ python3 scripts/post-pack/creative_direction.py check docs/plans/PLAN/creative-d
 python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his signature binds to
 ```
 
-- `style`: the script and production format he picked, from the bank.
+- `style`: the script and production format he picked, from the bank, and from 9 November `style.motion`
+  (`{"module", "reason"}`): the piece's one motion system from the bank's `motion` layer, 17 styles studied from
+  awesomeclaude.ai/claude-motion-graphics and rewritten on the house base (brand tokens and the design lock always win).
+  `creative_direction.py motion --points number,comparison --format long_video` gives a ranked shortlist: only styles
+  made for that format, never one he marked not for us, his liked ones first. Each style enters `untested` and becomes
+  a default only once he rates a trial on his own footage.
 - `brand`: the series, a `reference` (an approved earlier frame or board, a path or a link), the captions module and
   the intro sting.
 - `cuts.<long|short|feature>`: the `take` (on_camera or voiceover) and its `beats`. Each beat has:
