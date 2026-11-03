@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-02
+as_of: 2026-11-03
 head: de5b942
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,7 +30,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-02)
+## Where it is right now (as of 2026-11-03)
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":1,"current_as_of":"2026-11-03","current_source":"Control Center content_ideas in the publication's series (1 published in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (25% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 4 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
