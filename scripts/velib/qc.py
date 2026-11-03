@@ -200,7 +200,16 @@ def inputs_from_props(props: dict) -> dict:
         beat = active[0]
         slot_index = 0 if beat['layout'] in ('STAGE', 'SPLIT') else beat['uses'].index(event['obj'])
         box = layouts[aspect][beat['layout']][slot_index]
-        place = (objects.get(event['obj']) or {}).get('params', {}).get('place') if beat['layout'] == 'SPLIT' else None
+        params = (objects.get(event['obj']) or {}).get('params', {}) if beat['layout'] == 'SPLIT' else {}
+        place = params.get('place')
+        if not place and (objects.get(event['obj']) or {}).get('device') == 'scribble':
+            # A scribble on a SPLIT stage is measured where it draws (its target, or its centre and size).
+            if isinstance(params.get('target'), dict):
+                tg = params['target']
+                place = {'left': tg['x'] - 20, 'top': tg['y'] - 20, 'width': tg['w'] + 40, 'height': tg['h'] + 40}
+            elif {'cx', 'cy', 'size'} <= set(params):
+                place = {'left': params['cx'] - params['size'], 'top': params['cy'] - params['size'],
+                         'width': 2 * params['size'], 'height': 2 * params['size']}
         if place:
             # A placed SPLIT object is measured in its own box, not the whole stage (Thursday 5 Nov: a slab landing
             # beside the tick read as the tick firing 6 frames early). The stage scales about its top centre.

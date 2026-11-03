@@ -78,9 +78,12 @@ def captions_render(path: str, pages, region, ocr=None) -> dict:
     for page in pages:
         groups.setdefault(tuple(page.get('region', region)), []).append(page)
     if len(groups) <= 1:
-        result = captions.renderer_truth(path, pages, tuple(next(iter(groups), region)), ocr=ocr)
+        result = captions.renderer_truth(path, pages, tuple(next(iter(groups), region)), ocr=ocr,
+                                         compact=any('region' in p for p in pages))
     else:
-        parts = [captions.renderer_truth(path, group, zone, ocr=ocr) for zone, group in groups.items()]
+        # A page with its own region is a SPLIT page: read its compact box only (cutgates TesseractReader).
+        parts = [captions.renderer_truth(path, group, zone, ocr=ocr, compact=any('region' in p for p in group))
+                 for zone, group in groups.items()]
         result = dict(parts[0])
         result['pages'] = [row for part in parts for row in part.get('pages', [])]
         result['pass'] = all(part.get('pass') for part in parts)
