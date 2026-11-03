@@ -42,6 +42,11 @@ def main():
     nine['floor']['nevers'].append(dict(nine['floor']['nevers'][0], id='a_ninth_rule'))
     if not floor.blocking_problems(nine):
         problems.append('a ninth blocking rule is refused')
+    # The floor alone, with no bar file beside it, is whole: how inspirationhouse checks the file it writes
+    # (test/rejection.int.test.ts, --bar-file no-bar.json).
+    code, text = run(['--check', '--file', str(FIXTURE), '--bar-file', str(ROOT / 'tests' / 'fixtures' / 'floor' / 'no-bar.json')])
+    if code != 0 or 'nevers' in text:
+        problems.append(f'--check with no bar file passes the floor alone ({code}: {text.strip()[:120]})')
     code, text = run(['--format', 'short_video', '--file', str(FIXTURE)])
     if code != 0 or 'TEST REJECT (synthetic, filed by a clocked run)' not in text or 'Synthetic test reject: this card holds too long.' not in text:
         problems.append('floor.py --format short_video shows the test reject with his words')
