@@ -16,7 +16,10 @@ Each line: the question, the best guess offered, then his exact answer. His word
 - Friday 13 Nov (Q1 to Q5). Krish: "On Friday, the 13th of November, I'll provide you the Perplexity research first and then you can come back with your questions. The main goal is to give a business leader non-generic advice like what you've suggested, with three really specific steps they can take."
 - Wednesday 11 Nov (Q6 to Q11). Krish: "On Wednesday the 11th the main goal is to get people who just think about things in binary terms (AI music versus human music) to realise that AI is infiltrating everything at every layer. It's useless to try and compare one to the other and see who's better because it's very quickly entering the mainstream and it's also very quickly becoming how humans create. It's the two Hugel songs that I put in the inspiration board. This is not a problem. They're so widespread everywhere and I can just reference them while I'm talking. This piece doesn't need the three things you can do. It needs people to think differently and to be surprised and enjoy the piece."
 
+- Q2 (Wednesday) the second song. Krish: "The two songs are actually by imael angel who is an AI-generated singer. Hugo is the human DJ who's actually remixed one of the songs and that's now in the charts."
+  Checked against the research addendum (Drive 1DLGWmThTPnQP-pv1EeAuLc2tkvnLhdW4): the songs are Movin' To The Sun (HUGEL, Imael Angel and Ultra Nate, UK top 10) and Bad Times (re-recorded with human vocalist Cali Bee, licensed to Universal); "Hugo" read as HUGEL.
+
 ## Still open
 
-- Wednesday: his close in his own words; the second HUGEL song's name (the 55 s Short, youtube.com/shorts/oEODyXtV49M); the music bed.
+- Wednesday: his close in his own words; the music bed.
 - Friday: waits on his Perplexity research, then its questions.
