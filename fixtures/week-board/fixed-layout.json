@@ -1,7 +1,7 @@
 {
  "_about": "The fixed layout of the publish board, as check_board_layout.py reads it from three fed weeks, the hash of its layout file and colours, and the words Krish approved it in. It changes only with --update --approved (Ruling, Krish, 2026-10-21: the layout is held by CI and changes only with his recorded words).",
  "layout_version": 3,
- "approved": "Krish, 2026-11-02: Let's eliminate Sunday from Publishing anythign permanently. Sunday is rest and planning and ideation day.",
+ "approved": "Krish, 2026-11-03: I should be able to see the assets directly in the publish board or have a link to the Google Drive where the assets are. I shouldn't have to download a fucking zip and then look at it that way. That's just too long. I should also see Saturday on this inside the top navigation bar. I should see Tuesday and Thursday with the approved assets in all published boards moving forward in the future.",
  "files": {
   "config/board-layout.json": "8a950d89d3440ffcf1b620bb81248986bcb6bacda4023750a6aa22178c1743ed",
   "scripts/post-pack/tokens.css": "a38811b2df781b9169b3576986fa59cca5d870469190560bf8f5e9515c4de42f"
@@ -402,6 +402,124 @@
     "p.ar-links",
     "p.ar-scores",
     "div.rec sc"
+   ]
+  },
+  "offday_assets": {
+   "tabs": [
+    "today",
+    "ideas",
+    "queue",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "friday",
+    "saturday",
+    "archive"
+   ],
+   "days": {
+    "monday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    },
+    "wednesday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    },
+    "friday": {
+     "brief": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "drafts": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "record": [
+      "p.st-what",
+      "div.slot-empty"
+     ],
+     "publish": [
+      "p.st-what",
+      "div.slot-empty"
+     ]
+    }
+   },
+   "idea_card": [
+    "label.pick",
+    "div.id-flags",
+    "p.id-sowhat",
+    "p.id-story",
+    "ol.id-beats",
+    "dl.id-facts",
+    "div.tri-why",
+    "div.tri-row",
+    "div.tri-why",
+    "p.tri-state"
+   ],
+   "queue": [
+    "div.day-head",
+    "p.st-what",
+    "section.q-combine",
+    "section.q-day",
+    "section.q-day",
+    "section.q-day",
+    "section.q-day"
+   ],
+   "offdays": [
+    "div.sec-head",
+    "p.id-how",
+    "div.slate",
+    "div.off-day",
+    "div.off-day",
+    "div.off-day"
+   ],
+   "tab_tuesday": [
+    "div.day-head",
+    "div.off-asset"
+   ],
+   "tab_saturday": [
+    "div.day-head",
+    "div.off-asset"
+   ],
+   "offday_asset": [
+    "div.id-flags",
+    "h3.hook",
+    "p.row off-links",
+    "div.press three",
+    "div.say",
+    "p.id-how"
+   ],
+   "archive": [
+    "div.day-head",
+    "p.slot-empty"
    ]
   }
  }
