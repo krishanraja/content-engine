@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { AbsoluteFill, OffthreadVideo, Sequence } from 'remotion'
 import { BrandFrame } from './BrandFrame'
 import { useEngineFrame } from './clock'
@@ -7,6 +8,13 @@ import { slotsFor, splitCameraBox, splitPlatePosition } from './layouts'
 import { setActiveCanvas } from './kit/lock'
 import { EngineAudio } from './audio'
 import type { EngineRenderProps } from './props'
+
+// Placement belongs to the composition, never to a strict device schema.
+const PlaceSchema = z.object({
+  left: z.number().finite(), top: z.number().finite(),
+  width: z.number().finite().positive(), height: z.number().finite().positive(),
+  scale: z.number().finite().positive(),
+}).strict()
 
 /** The composition owns the clock; every device and chrome layer receives global frames. */
 export function FormatMaster(props: EngineRenderProps) {
@@ -52,14 +60,20 @@ export function FormatMaster(props: EngineRenderProps) {
               if (!object) throw new Error(`ve: no object ${id}`)
               const Device = Object.hasOwn(DEVICES, object.device) ? DEVICES[object.device] : undefined
               if (!Device) throw new Error(`ve: no device ${object.device}`)
-              const box = slots[index]
+              const { place, ...params } = object.params
+              if (Object.hasOwn(object.params, 'place') && beat.layout !== 'SPLIT')
+                throw new Error(`ve: place on non-SPLIT object ${id}`)
+              const placement = Object.hasOwn(object.params, 'place')
+                ? PlaceSchema.parse(place) : undefined
+              const deviceObject = placement ? { ...object, params } : object
+              const box = placement ? { left: 0, top: 0, width: placement.width, height: placement.height } : slots[index]
               if (!box) throw new Error(`ve: no slot ${index} in ${beat.layout}`)
               // Clip in frame coordinates so the device receives the original slot box.
               // STAGE shares the whole canvas; other layouts retain their slot clips.
               const clipPath = `inset(${box.top}px ${width - box.left - box.width}px ${height - box.top - box.height}px ${box.left}px${beat.layout === 'P6' && index === 1 ? ' round 40px' : ''})`
               return (
-                <AbsoluteFill key={id} style={beat.layout === 'SPLIT' ? {} : { clipPath }}>
-                  <Device object={object} events={props.events} box={box} tokens={props.tokens} aspect={props.aspect} frame={frame} />
+                <AbsoluteFill key={id} style={placement ? { left: placement.left, top: placement.top, width: placement.width, height: placement.height, transform: `scale(${placement.scale})`, transformOrigin: 'top left' } : beat.layout === 'SPLIT' ? {} : { clipPath }}>
+                  <Device object={deviceObject} events={props.events} box={box} tokens={props.tokens} aspect={props.aspect} frame={frame} />
                 </AbsoluteFill>
               )
             })}
