@@ -166,7 +166,7 @@
         },
         {
           "text": "really",
-          "atFrame": 248
+          "atFrame": 258
         }
       ],
       "swipeIndex": null
@@ -181,7 +181,7 @@
         },
         {
           "text": "but",
-          "atFrame": 279
+          "atFrame": 298
         },
         {
           "text": "a",
@@ -200,7 +200,7 @@
     },
     {
       "fromFrame": 320,
-      "toFrame": 352,
+      "toFrame": 367,
       "words": [
         {
           "text": "because",
@@ -222,12 +222,12 @@
       "swipeIndex": null
     },
     {
-      "fromFrame": 352,
+      "fromFrame": 367,
       "toFrame": 410,
       "words": [
         {
           "text": "Muse",
-          "atFrame": 352
+          "atFrame": 367
         },
         {
           "text": "into",
@@ -269,7 +269,7 @@
     },
     {
       "fromFrame": 462,
-      "toFrame": 503,
+      "toFrame": 506,
       "words": [
         {
           "text": "Google",
@@ -291,12 +291,12 @@
       "swipeIndex": null
     },
     {
-      "fromFrame": 503,
+      "fromFrame": 506,
       "toFrame": 540,
       "words": [
         {
           "text": "it",
-          "atFrame": 503
+          "atFrame": 506
         },
         {
           "text": "can",
@@ -419,7 +419,7 @@
         },
         {
           "text": "doesn't",
-          "atFrame": 691
+          "atFrame": 695
         },
         {
           "text": "send",
@@ -623,7 +623,7 @@
         },
         {
           "text": "then",
-          "atFrame": 953
+          "atFrame": 956
         },
         {
           "text": "it",
@@ -692,7 +692,7 @@
     },
     {
       "fromFrame": 1046,
-      "toFrame": 1085,
+      "toFrame": 1088,
       "words": [
         {
           "text": "Prompt's",
@@ -714,12 +714,12 @@
       "swipeIndex": null
     },
     {
-      "fromFrame": 1085,
+      "fromFrame": 1088,
       "toFrame": 1115,
       "words": [
         {
           "text": "make",
-          "atFrame": 1085
+          "atFrame": 1088
         },
         {
           "text": "sure",
@@ -826,7 +826,7 @@
     },
     {
       "fromFrame": 1212,
-      "toFrame": 1239,
+      "toFrame": 1255,
       "words": [
         {
           "text": "these",
@@ -844,12 +844,12 @@
       "swipeIndex": null
     },
     {
-      "fromFrame": 1239,
+      "fromFrame": 1255,
       "toFrame": 1279,
       "words": [
         {
           "text": "without",
-          "atFrame": 1239
+          "atFrame": 1255
         },
         {
           "text": "any",
@@ -911,31 +911,31 @@
       "role": "bridge",
       "layout": "P1",
       "fromFrame": 183,
-      "toFrame": 352,
+      "toFrame": 367,
       "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
-      "keyFrame": 318
+      "keyFrame": 330
     },
     {
       "id": "proof",
       "role": "anchor",
       "layout": "SPLIT",
-      "fromFrame": 352,
-      "toFrame": 503,
+      "fromFrame": 367,
+      "toFrame": 506,
       "uses": [
         "logos",
         "amazon_loop"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
-      "keyFrame": 473
+      "keyFrame": 478
     },
     {
       "id": "b4-8am",
       "role": "anchor",
       "layout": "SPLIT",
-      "fromFrame": 503,
+      "fromFrame": 506,
       "toFrame": 560,
       "uses": [
         "chat"
@@ -976,19 +976,19 @@
       "role": "anchor",
       "layout": "SPLIT",
       "fromFrame": 767,
-      "toFrame": 1085,
+      "toFrame": 1088,
       "uses": [
         "ask"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
-      "keyFrame": 1021
+      "keyFrame": 1024
     },
     {
       "id": "close",
       "role": "payoff",
       "layout": "SPLIT",
-      "fromFrame": 1085,
+      "fromFrame": 1088,
       "toFrame": 1424,
       "uses": [
         "slab_spend",
@@ -998,7 +998,7 @@
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
-      "keyFrame": 1272
+      "keyFrame": 1273
     }
   ],
   "objects": [
@@ -1084,8 +1084,8 @@
       "obj": "logos",
       "device": "logo_card",
       "meaning": "the apps he names the assistants live inside, on equal tiles",
-      "fromFrame": 352,
-      "toFrame": 503,
+      "fromFrame": 367,
+      "toFrame": 506,
       "variants": {},
       "params": {
         "tiles": true,
@@ -1112,8 +1112,8 @@
       "obj": "amazon_loop",
       "device": "scribble",
       "meaning": "circles Amazon as he says it",
-      "fromFrame": 352,
-      "toFrame": 503,
+      "fromFrame": 367,
+      "toFrame": 506,
       "variants": {},
       "params": {
         "colour": "mint",
@@ -1131,7 +1131,7 @@
       "obj": "chat",
       "device": "typing_bubble",
       "meaning": "the 8am reply the assistant sends for him",
-      "fromFrame": 503,
+      "fromFrame": 506,
       "toFrame": 560,
       "variants": {},
       "params": {
@@ -1233,7 +1233,7 @@
       "device": "typing_bubble",
       "meaning": "his AI tool asking him its question back, and his three answers staying on screen as its rules",
       "fromFrame": 767,
-      "toFrame": 1085,
+      "toFrame": 1088,
       "variants": {},
       "params": {
         "kind": "chat",
@@ -1307,7 +1307,7 @@
       "obj": "logos",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 352
+      "atFrame": 367
     },
     {
       "id": "proof-1",
@@ -1328,14 +1328,14 @@
       "obj": "chat",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 503
+      "atFrame": 506
     },
     {
       "id": "b4-8am-1",
       "obj": "chat",
       "verb": "type",
       "toState": "0",
-      "atFrame": 503
+      "atFrame": 506
     },
     {
       "id": "b4-8am-2",
@@ -1398,7 +1398,7 @@
       "obj": "ask",
       "verb": "type",
       "toState": "1",
-      "atFrame": 953
+      "atFrame": 956
     },
     {
       "id": "b7-prompt-3",

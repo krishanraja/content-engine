@@ -284,9 +284,10 @@
     {
       "w": 20,
       "word": "really",
-      "onset_s": 8.28,
+      "onset_s": 8.6,
       "end_s": 8.86,
       "take": "thursday-take-1",
+      "heard_onset_s": 8.28,
       "b_onset_s": 8.2,
       "b_end_s": 8.78
     },
@@ -302,9 +303,10 @@
     {
       "w": 22,
       "word": "but",
-      "onset_s": 9.3,
+      "onset_s": 9.9333,
       "end_s": 10.02,
       "take": "thursday-take-1",
+      "heard_onset_s": 9.3,
       "b_onset_s": 9.16,
       "b_end_s": 9.98
     },
@@ -374,9 +376,10 @@
     {
       "w": 30,
       "word": "Muse",
-      "onset_s": 11.74,
+      "onset_s": 12.2333,
       "end_s": 12.48,
-      "take": "thursday-take-1"
+      "take": "thursday-take-1",
+      "heard_onset_s": 11.74
     },
     {
       "w": 31,
@@ -480,9 +483,10 @@
     {
       "w": 42,
       "word": "it",
-      "onset_s": 16.78,
+      "onset_s": 16.8667,
       "end_s": 17.0,
       "take": "thursday-take-1",
+      "heard_onset_s": 16.78,
       "b_onset_s": 16.66,
       "b_end_s": 16.94
     },
@@ -678,9 +682,10 @@
     {
       "w": 64,
       "word": "doesn't",
-      "onset_s": 23.04,
+      "onset_s": 23.1667,
       "end_s": 23.44,
       "take": "thursday-take-1",
+      "heard_onset_s": 23.04,
       "b_onset_s": 23.02,
       "b_end_s": 23.38
     },
@@ -1011,9 +1016,10 @@
     {
       "w": 101,
       "word": "then",
-      "onset_s": 31.76,
+      "onset_s": 31.8667,
       "end_s": 32.0,
       "take": "thursday-take-1",
+      "heard_onset_s": 31.76,
       "b_onset_s": 31.82,
       "b_end_s": 31.96
     },
@@ -1162,9 +1168,10 @@
     {
       "w": 118,
       "word": "make",
-      "onset_s": 36.16,
+      "onset_s": 36.2667,
       "end_s": 36.4,
-      "take": "thursday-take-1"
+      "take": "thursday-take-1",
+      "heard_onset_s": 36.16
     },
     {
       "w": 119,
@@ -1354,9 +1361,10 @@
     {
       "w": 140,
       "word": "without",
-      "onset_s": 41.3,
+      "onset_s": 41.8333,
       "end_s": 41.96,
-      "take": "thursday-take-1"
+      "take": "thursday-take-1",
+      "heard_onset_s": 41.3
     },
     {
       "w": 141,
