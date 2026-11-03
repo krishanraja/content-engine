@@ -7,7 +7,7 @@ import { parseLibraryWrittenRequest } from './_library.js'
 
 // POST /api/library/written, on the runner bearer.
 //
-//   { schema_version: 1, machine, items: [{ path, sha256, written_as? }] }
+//   { schema_version: 1, machine, library?, items: [{ path, sha256, written_as? }] }   (library: makeyourmindup unless named)
 //
 // Krish's machine says which files it has written into the library folder,
 // with the sha256 it checked. `written_as` is the name it used when it kept a
@@ -26,6 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { data, error } = await supabase.rpc('content_library_record_written', {
     p_machine_hash: machineHash,
     p_items: body.items,
+    p_library: body.library,
   })
   if (error || !Array.isArray(data)) return sendVideoStudioError(res, 503, 'library_index_unavailable')
   let recorded = 0

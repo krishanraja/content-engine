@@ -19,9 +19,14 @@ import {
   LIBRARY_OFF_DAY,
   LIBRARY_SUBCHANNELS,
   LIBRARY_TOP_FOLDERS,
+  HEARTSIDE_POSTS,
+  HEARTSIDE_POST_ID,
+  LIBRARY_NAMES,
   checkLibraryPath,
   isLibraryPostFolder,
   libraryMimeTypes,
+  parseLibraryConfirmRequest,
+  parseLibraryName,
   parseLibraryPendingQuery,
   parseLibraryUploadRequest,
   parseLibraryWrittenRequest,
@@ -48,6 +53,8 @@ interface Cases {
   content_types: Record<string, string>
   paths: Array<{ why: string; path: string; refused?: string }>
   post_folders: Array<{ why: string; folder?: string; error?: string }>
+  library_names: string[]
+  libraries: { heartside: { top_folders: string[]; post_id_pattern: string; paths: Array<{ why: string; path: string; refused?: string }> } }
 }
 const cases = JSON.parse(readFileSync('config/library-paths.cases.json', 'utf8')) as Cases
 const migration = readFileSync('supabase/migrations/20261006120000_content_library.sql', 'utf8')
@@ -129,8 +136,8 @@ describe('the requests the routes take', () => {
   })
 
   it('pending names one machine and a limit up to 100', () => {
-    expect(parseLibraryPendingQuery({ machine: 'library-0f3c' })).toEqual({ machine: 'library-0f3c', limit: 25 })
-    expect(parseLibraryPendingQuery({ machine: 'library-0f3c', limit: '100' })).toEqual({ machine: 'library-0f3c', limit: 100 })
+    expect(parseLibraryPendingQuery({ machine: 'library-0f3c' })).toEqual({ machine: 'library-0f3c', limit: 25, library: 'makeyourmindup' })
+    expect(parseLibraryPendingQuery({ machine: 'library-0f3c', limit: '100' })).toEqual({ machine: 'library-0f3c', limit: 100, library: 'makeyourmindup' })
     expect(parseLibraryPendingQuery({ machine: 'library-0f3c', limit: '101' })).toBeNull()
     expect(parseLibraryPendingQuery({ machine: 'library-0f3c', limit: '0' })).toBeNull()
     expect(parseLibraryPendingQuery({ machine: ['a', 'b'] })).toBeNull()
@@ -184,5 +191,79 @@ describe('the migration matches the code', () => {
 
   it('keeps the database\'s own path check in step with the top folders', () => {
     expect(migration).toContain("path ~ '^(1 Brand kit \\(permanent\\)|2 Channel art \\(permanent\\)|3 Posts/[^/]+)/[^/]'")
+  })
+})
+
+// Krish, 2026-11-03: "Why don't you duplicate that Python script for Heartside
+// then? We're going to need to do a lot more of this type of stuff moving
+// forward." Heartside is a second library in the same lane: its own folder
+// rule, its own rows, and makeyourmindup stays the default for every request
+// that names none.
+describe('the Heartside library', () => {
+  const heartside = cases.libraries.heartside
+  const heartsideMigration = readFileSync('supabase/migrations/20261121090000_content_library_heartside.sql', 'utf8')
+  const sha = 'a'.repeat(64)
+  const md5 = 'b'.repeat(32)
+
+  it('keeps the same rule as the cases', () => {
+    expect([...LIBRARY_NAMES]).toEqual(cases.library_names)
+    expect([HEARTSIDE_POSTS]).toEqual(heartside.top_folders)
+    expect(HEARTSIDE_POST_ID.source).toBe(`^${heartside.post_id_pattern}$`)
+    expect(heartside.paths.some((item) => item.refused === 'path_post_id_invalid')).toBe(true)
+  })
+
+  it.each(heartside.paths.map((item) => [item.why, item] as const))('heartside path: %s', (_why, item) => {
+    const checked = checkLibraryPath(item.path, 'heartside')
+    if (item.refused) {
+      expect(checked).toEqual({ ok: false, refusal: item.refused })
+    } else {
+      expect(checked.ok).toBe(true)
+      if (checked.ok) {
+        expect(checked.library).toBe('heartside')
+        expect(checked.top).toBe(HEARTSIDE_POSTS)
+      }
+      // A Heartside path is never a makeyourmindup path.
+      expect(checkLibraryPath(item.path).ok).toBe(false)
+    }
+  })
+
+  it('names makeyourmindup when a request names no library, and refuses one there is not', () => {
+    expect(parseLibraryName(undefined)).toBe('makeyourmindup')
+    expect(parseLibraryName(null)).toBe('makeyourmindup')
+    expect(parseLibraryName('heartside')).toBe('heartside')
+    for (const bad of ['Heartside', 'elsewhere', '', 7, ['heartside']]) expect(parseLibraryName(bad)).toBeNull()
+  })
+
+  it('reads the library from every request', () => {
+    const upload = { path: 'Posts/F01/heartside_F01_reel.mp4', sha256: sha, md5, bytes: 10, purpose: 'The reel.' }
+    expect(parseLibraryUploadRequest(upload)).toEqual({ ok: false, code: 'invalid_library_path', reason: 'path_wrong_top_folder' })
+    const parsed = parseLibraryUploadRequest({ ...upload, library: 'heartside' })
+    expect(parsed.ok && parsed.value.path.library).toBe('heartside')
+    expect(parseLibraryUploadRequest({ ...upload, library: 'elsewhere' })).toEqual({ ok: false, code: 'invalid_library' })
+    const confirmed = parseLibraryConfirmRequest({ path: upload.path, sha256: sha, library: 'heartside' })
+    expect(confirmed.ok && confirmed.value.path.library).toBe('heartside')
+    expect(parseLibraryPendingQuery({ machine: 'library-1' })).toEqual({ machine: 'library-1', limit: 25, library: 'makeyourmindup' })
+    expect(parseLibraryPendingQuery({ machine: 'library-1', library: 'heartside' })).toEqual({ machine: 'library-1', limit: 25, library: 'heartside' })
+    expect(parseLibraryPendingQuery({ machine: 'library-1', library: 'elsewhere' })).toBeNull()
+    const written = { schema_version: 1, machine: 'library-1', items: [{ path: upload.path, sha256: sha }] }
+    expect(parseLibraryWrittenRequest(written)).toBeNull()
+    expect(parseLibraryWrittenRequest({ ...written, library: 'heartside' })?.library).toBe('heartside')
+  })
+
+  it('keeps the database in step: a library column, a per-library path check and per-library functions', () => {
+    expect(heartsideMigration).toContain("add column if not exists library text not null default 'makeyourmindup'")
+    expect(heartsideMigration).toContain("check (library in ('makeyourmindup', 'heartside'))")
+    expect(heartsideMigration).toContain("path ~ '^(1 Brand kit \\(permanent\\)|2 Channel art \\(permanent\\)|3 Posts/[^/]+)/[^/]'")
+    expect(heartsideMigration).toContain(`path ~ '^Posts/${heartside.post_id_pattern.replace('(?:', '(')}/[^/]+$'`)
+    expect(heartsideMigration).toContain(`char_length(path) between 1 and ${LIBRARY_PATH_MAX}`)
+    expect(heartsideMigration).toContain('unique (library, path, sha256)')
+    for (const fn of ['content_library_pending(text, integer, text)', 'content_library_record_written(text, jsonb, text)']) {
+      expect(heartsideMigration).toContain(`revoke all on function public.${fn} from public, anon, authenticated;`)
+      expect(heartsideMigration).toContain(`grant execute on function public.${fn} to service_role;`)
+    }
+    expect(heartsideMigration.match(/f\.library = coalesce\(p_library, 'makeyourmindup'\)/g)?.length).toBe(3)
+    expect(heartsideMigration.match(/set search_path = ''/g)?.length).toBe(2)
+    expect(heartsideMigration).not.toMatch(/security definer/i)
+    expect(heartsideMigration).not.toMatch(/\bdrop table\b|\bdelete from\b|\btruncate\b|\bdrop column\b/i)
   })
 })

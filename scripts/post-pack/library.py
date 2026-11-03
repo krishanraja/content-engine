@@ -119,8 +119,21 @@ def is_post_folder(name):
     return match[4] is None or match[4] == WEEKDAYS[day.weekday()]
 
 
-def refusal(path):
+# A second library (Krish, 2026-11-03: "Why don't you duplicate that Python
+# script for Heartside then? We're going to need to do a lot more of this type
+# of stuff moving forward"): Heartside's social library on Drive,
+# Heartside/05_Social-Library, where the growth engine files each post's media
+# as Posts/<post id>/<file> for Codex to post. Same lane, same checks, its own
+# folder rule; makeyourmindup stays the default.
+MAKEYOURMINDUP, HEARTSIDE = LIBRARIES = ('makeyourmindup', 'heartside')
+HEARTSIDE_POSTS = 'Posts'
+HEARTSIDE_POST_ID = re.compile(r'[A-Z][0-9]{2,3}(?:-[a-z0-9]+)*')
+
+
+def refusal(path, library=MAKEYOURMINDUP):
     """None when the path may go into the library, else the engine's reason code."""
+    if library not in LIBRARIES:
+        return 'library_unknown'
     if not isinstance(path, str) or not path:
         return 'path_not_text'
     if utf16_length(path) > PATH_MAX:
@@ -147,9 +160,16 @@ def refusal(path):
             return 'path_reserved_name'
         if utf16_length(part) > PART_MAX:
             return 'path_part_too_long'
-    if parts[0] not in TOP_FOLDERS:
+    if library == HEARTSIDE:
+        if parts[0] != HEARTSIDE_POSTS:
+            return 'path_wrong_top_folder'
+        if len(parts) < 3:
+            return 'path_no_file'
+        if len(parts) > 3 or not HEARTSIDE_POST_ID.fullmatch(parts[1]):
+            return 'path_post_id_invalid'
+    elif parts[0] not in TOP_FOLDERS:
         return 'path_wrong_top_folder'
-    if parts[0] == POSTS:
+    elif parts[0] == POSTS:
         if len(parts) < 3:
             return 'path_no_file'
         if not is_post_folder(parts[1]):
@@ -192,10 +212,15 @@ REFUSALS = {
     'path_type_not_allowed': 'the library does not take this kind of file',
     'path_test_folder': 'it is a canary or test post; those never go into the real library',
     'path_render_outside_video': f'a rendered video goes in {VIDEO} of its post, nowhere else',
+    'path_post_id_invalid': 'in the Heartside library a file goes straight in Posts/<post id>/, and the id looks like F01 or F06-frenchie',
+    'library_unknown': f'the library is not one of {", ".join(LIBRARIES)}',
 }
+HEARTSIDE_REFUSALS = {'path_wrong_top_folder': f'in the Heartside library everything goes under "{HEARTSIDE_POSTS}"'}
 
 
-def explain(code):
+def explain(code, library=MAKEYOURMINDUP):
+    if library == HEARTSIDE and code in HEARTSIDE_REFUSALS:
+        return HEARTSIDE_REFUSALS[code]
     return REFUSALS.get(code, code)
 
 
@@ -267,4 +292,10 @@ def check_cases(cases):
             continue
         check(label, got, item['folder'])
         check(f'{label} (a library path)', refusal(f'{POSTS}/{got}/{POST_README}'), None)
+    heartside = cases['libraries'][HEARTSIDE]
+    check('heartside top folders', [HEARTSIDE_POSTS], heartside['top_folders'])
+    check('heartside post id', HEARTSIDE_POST_ID.pattern, heartside['post_id_pattern'])
+    check('libraries', list(LIBRARIES), cases['library_names'])
+    for item in heartside['paths']:
+        check(f'heartside path: {item["why"]}', refusal(item['path'], HEARTSIDE), item.get('refused'))
     return count, failures

@@ -41,7 +41,10 @@ describe('the library sync on Krish\'s machine', () => {
     for (const name of ['MINDMAKE_DRIVE_ROOT', 'MINDMAKE_MEDIA_INBOX', 'MINDMAKE_ARCHIVE_ROOT']) expect(sync).toContain(`$env:${name}`)
     expect(sync).toMatch(/Test-SamePath \$root \$folder\) -or \(Test-Inside \$root \$folder\) -or \$underWritten/)
     // Video Engine may sit inside the library folder, never inside a folder the sync writes to (2026-10-07).
-    expect(sync).toMatch(/\$TopFolders \| Where-Object \{ \$top = Join-Path \$root \$_/)
+    // One guard serves both libraries: each passes its own top folders.
+    expect(sync).toMatch(/\$Tops \| Where-Object \{ \$top = Join-Path \$root \$_/)
+    expect(sync).toContain('Assert-NoStudioOverlap $root $TopFolders $runtime')
+    expect(sync).toContain('Assert-NoStudioOverlap $root $HeartsideTopFolders $runtime')
     expect(sync).not.toMatch(/\\Inbox|\\Archive/)
   })
 
@@ -115,5 +118,41 @@ describe('the installer', () => {
   it('leaves the runner\'s task and checkout alone', () => {
     expect(installer).not.toContain('Mindmake Video Studio Runner')
     expect(code(installer)).not.toMatch(/runner-source|verify-runner-source|set-credential/)
+  })
+})
+
+// Krish, 2026-11-03: "Why don't you duplicate that Python script for Heartside
+// then?" The same sync files Heartside's social library, under Posts only, in a
+// pass of its own that can never stop makeyourmindup's.
+describe('the Heartside library in the same sync', () => {
+  const heartside = (JSON.parse(read('config/library-paths.cases.json')) as { libraries: { heartside: { top_folders: string[]; post_id_pattern: string } } }).libraries.heartside
+  const config = JSON.parse(read('config/heartside-library.json')) as { root: string; drive_id: string }
+
+  it('writes only under Posts/<post id>, the same rule the engine holds', () => {
+    const listed = /^\$HeartsideTopFolders = @\((.*)\)$/m.exec(sync)
+    expect([...listed![1]!.matchAll(/'([^']+)'/g)].map((m) => m[1])).toEqual(heartside.top_folders)
+    expect(sync).toContain(`$HeartsidePostId = [regex]'^${heartside.post_id_pattern.replace('(?:', '(')}$'`)
+    expect(sync).toContain('$parts.Count -ne 3')
+  })
+
+  it('finds its folder from config/heartside-library.json (never studio.json, which the media standard hashes), and skips it when none is set', () => {
+    expect(config.root).toBe('H:\\My Drive\\Ventures\\Active Ventures\\Heartside\\05_Social-Library')
+    expect(config.drive_id).toBe('1AHZLgwj1nHemNJeP56fQU6iTpgIEALzZ')
+    expect(sync).toContain("Join-Path $RepoRoot 'config\\heartside-library.json'")
+    expect(read('config/studio.json')).not.toContain('heartside')
+    expect(sync).toContain("Get-Setting 'MINDMAKE_HEARTSIDE_LIBRARY_ROOT'")
+    expect(sync).toContain("'heartside_library_root_missing'")
+  })
+
+  it('asks for and reports Heartside files by name, and never treats them as the brand kit', () => {
+    expect(sync).toContain("$query += '&library=' + [uri]::EscapeDataString($Library)")
+    expect(sync).toContain('$report.library = $Library')
+    expect(sync).toContain("$isBrandKit = $Library -ne 'heartside' -and")
+    expect(sync).toMatch(/catch \{\n\s+Write-Log "the Heartside library pass stopped/)
+  })
+
+  it('keeps its own clone up to date, as the recordings lane does', () => {
+    expect(sync).toContain("$SourceFolderName = 'library-source'")
+    expect(sync).toContain('pull --ff-only --quiet')
   })
 })

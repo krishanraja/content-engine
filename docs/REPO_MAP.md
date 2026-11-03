@@ -2464,6 +2464,12 @@ What the compiler looks for, as pure functions.
 ### `apps/control-plane/api/library/_library.ts`
 
 - `const LIBRARY_BUCKET`
+- `const LIBRARY_NAMES`
+- `type LibraryName = typeof LIBRARY_NAMES[number]`
+- `const LIBRARY_DEFAULT: LibraryName`
+- `const HEARTSIDE_POSTS`
+- `const HEARTSIDE_POST_ID`
+- `function parseLibraryName(value: unknown): LibraryName | null`
 - `const LIBRARY_MAX_BYTES`
 - `const LIBRARY_PATH_MAX`
 - `const LIBRARY_PART_MAX`
@@ -2485,7 +2491,7 @@ What the compiler looks for, as pure functions.
 - `const CONTROL`
 - `const RESERVED`
 - `function isLibraryPostFolder(name: string): boolean`
-- `function checkLibraryPath(value: unknown): LibraryPathCheck`
+- `function checkLibraryPath(value: unknown, library: LibraryName = LIBRARY_DEFAULT): LibraryPathCheck`
 - `function libraryObjectKey(sha256: string, extension: string): string`
 - `const MD5_RE`
 - `type Parsed<T>`
@@ -2495,10 +2501,10 @@ What the compiler looks for, as pure functions.
 - `function parseLibraryConfirmRequest(value: unknown): Parsed<{ path: LibraryPath; sha256: string }>`
 - `const LIBRARY_PENDING_DEFAULT`
 - `const LIBRARY_PENDING_MAX`
-- `function parseLibraryPendingQuery(query: unknown): { machine: string; limit: number } | null`
+- `function parseLibraryPendingQuery(query: unknown): { machine: string; limit: number; library: LibraryName } | null`
 - `interface LibraryWrittenItem`
 - `function isBesideName(path: string, candidate: unknown): candidate is string`
-- `function parseLibraryWrittenRequest(value: unknown): { machine: string; items: LibraryWrittenItem[] } | null`
+- `function parseLibraryWrittenRequest(value: unknown): { machine: string; items: LibraryWrittenItem[]; library: LibraryNa…`
 - `type LibraryStoreError`
 - `interface LibraryStoreConfig`
 - `async function configuredLibraryStore(): Promise<{ config: LibraryStoreConfig | null; error: LibraryStoreError | null }>`

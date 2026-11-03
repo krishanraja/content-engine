@@ -8,7 +8,8 @@
     "The extension decides the type, from content_types; nothing else is taken. A file is at most max_bytes.",
     "A post's folder: YYYY-MM-DD <Day> <subchannel> - <Subject>, with the day the date fell on (Mon, Tue, Wed, Thu, Fri, Sat or Sun) and the subchannel as the brand writes it; a launch post is YYYY-MM-DD Launch - <Subject>. The subject is made safe by the archive naming rule (config/archive-naming.cases.json) and cut at a space so the whole name stays within part_max.",
     "A canary, test, smoke-test, dry-run or fixture post is refused (path_test_folder), and a rendered video (mp4, mov, webm) inside a post goes only in 3 Video (path_render_outside_video); W3.5.",
-    "Off-day posts (Tuesday, Thursday, Saturday) have no series, so their folder carries the label off.day where a series name would go: '2026-11-03 Tue off.day - AI agents translator' (Krish, 2026-11-03: \"get the drive and publish board fully up to date\"; off-day assets had no valid folder and were never filed)."
+    "Off-day posts (Tuesday, Thursday, Saturday) have no series, so their folder carries the label off.day where a series name would go: '2026-11-03 Tue off.day - AI agents translator' (Krish, 2026-11-03: \"get the drive and publish board fully up to date\"; off-day assets had no valid folder and were never filed).",
+    "A second library, Heartside (Krish, 2026-11-03: \"Why don't you duplicate that Python script for Heartside then? We're going to need to do a lot more of this type of stuff moving forward\"): Heartside/05_Social-Library on Drive, where each post's media goes in Posts/<post id>/<file> for Codex to post. A request names it with \"library\": \"heartside\"; without one it is makeyourmindup, and everything above is makeyourmindup's rule. The Windows-safety checks, content_types, path_max, part_max and max_bytes are shared; libraries.heartside holds its own folder rule and cases."
   ],
   "top_folders": [
     "1 Brand kit (permanent)",
@@ -505,5 +506,75 @@
       "subject": "AI agents translator",
       "folder": "2026-11-03 Tue off.day - AI agents translator"
     }
-  ]
+  ],
+  "library_names": [
+    "makeyourmindup",
+    "heartside"
+  ],
+  "libraries": {
+    "heartside": {
+      "top_folders": [
+        "Posts"
+      ],
+      "post_id_pattern": "[A-Z][0-9]{2,3}(?:-[a-z0-9]+)*",
+      "paths": [
+        {
+          "why": "a reel",
+          "path": "Posts/F01/heartside_F01_becoming-the-mug_reel.mp4"
+        },
+        {
+          "why": "a cover",
+          "path": "Posts/F01/heartside_F01_becoming-the-mug_cover.jpg"
+        },
+        {
+          "why": "a carousel slide of a breed variant",
+          "path": "Posts/F06-frenchie/heartside_F06-frenchie_roast-frenchie_slide1.jpg"
+        },
+        {
+          "why": "the manifest",
+          "path": "Posts/F10/manifest.json"
+        },
+        {
+          "why": "outside Posts",
+          "path": "Media/F01/reel.mp4",
+          "refused": "path_wrong_top_folder"
+        },
+        {
+          "why": "a makeyourmindup path is not a Heartside path",
+          "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/READ ME.txt",
+          "refused": "path_wrong_top_folder"
+        },
+        {
+          "why": "Posts alone",
+          "path": "Posts/F01",
+          "refused": "path_no_file"
+        },
+        {
+          "why": "a post id in lower case",
+          "path": "Posts/f01/reel.mp4",
+          "refused": "path_post_id_invalid"
+        },
+        {
+          "why": "a post id with a space",
+          "path": "Posts/F01 final/reel.mp4",
+          "refused": "path_post_id_invalid"
+        },
+        {
+          "why": "a folder inside a post",
+          "path": "Posts/F01/extra/reel.mp4",
+          "refused": "path_post_id_invalid"
+        },
+        {
+          "why": "a type the library does not take",
+          "path": "Posts/F01/notes.docx",
+          "refused": "path_type_not_allowed"
+        },
+        {
+          "why": "the shared safety checks still apply",
+          "path": "Posts/../F01/reel.mp4",
+          "refused": "path_escapes_library"
+        }
+      ]
+    }
+  }
 }
