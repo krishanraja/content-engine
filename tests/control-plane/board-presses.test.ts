@@ -57,6 +57,9 @@ describe('what each press may carry', () => {
     expect(validBody('queue', 'mon-2', press('not_for_us', { reason: 'Done to death this month.' }))).toBe(true)
     expect(validBody('queue', 'mon-2', press('not_for_us'))).toBe(false)
     expect(validBody('queue', 'mon-2', press('not_for_us', { reason: '   ' }))).toBe(false)
+    // A No from Control Center's one list carries no words, and none are written for him.
+    expect(validBody('queue', 'mon-2', press('not_for_us', { via: 'list' }))).toBe(true)
+    expect(validBody('queue', 'mon-2', press('not_for_us', { via: 'somewhere' }))).toBe(false)
     expect(validBody('queue', 'mon-2', press(null, { reason: null }))).toBe(true)
     expect(validBody('queue', 'mon-2', press('next_week', { target_week: '2026-11-16' }))).toBe(true)
     expect(validBody('queue', 'mon-2', press('next_week'))).toBe(false)

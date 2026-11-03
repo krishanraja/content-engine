@@ -142,6 +142,25 @@ export async function recordPosted(db: SupabaseClient, week: string, raw: unknow
 export interface PieceDay { day: PostedDay; date: string; piece_id: string; channels: PostedChannel[]; slot?: string }
 const SLOT = /^([01]\d|2[0-3]):[0-5]\d$/
 
+/** The one piece on each day of a week, from the week's content_ideas rows (scheduled_for, lane_slot, state, buried_at,
+ *  meta, updated_at): scheduled for that date and not buried or dropped. When two share a date, a series day keeps the
+ *  piece of its own series, an off day the piece whose meta.offday names that date, then the one changed last. Growth's
+ *  read (readPieces) and the board's live overlay (_live.ts) both use it, so the two never disagree on a day's piece. */
+export function piecesByDay(week: string, raw: Body[]): Array<{ day: PostedDay; date: string; piece: Body; series: boolean }> {
+  const rows = raw.filter(r => !r.buried_at && r.state !== 'dropped' && typeof r.id === 'string' && UUID.test(r.id))
+  const out: Array<{ day: PostedDay; date: string; piece: Body; series: boolean }> = []
+  for (const day of DAYS) {
+    const date = dayDate(week, day)
+    const series = SERIES_DAYS.includes(day)
+    const offday = (r: Body) => isObj(r.meta) && isObj(r.meta.offday) && !r.meta.offday.withdrawn_at && r.meta.offday.date === date
+    const rank = (r: Body) => (series ? (r.lane_slot === DAY_SERIES[day] ? 2 : 0) : (offday(r) ? 2 : 0))
+    const here = rows.filter(r => r.scheduled_for === date)
+      .sort((a, b) => rank(b) - rank(a) || String(b.updated_at || '').localeCompare(String(a.updated_at || '')) || String(a.id).localeCompare(String(b.id)))
+    if (here[0]) out.push({ day, date, piece: here[0], series })
+  }
+  return out
+}
+
 /** Which piece sits on which day of the week, and its boxes. A piece is on a day when it is scheduled for that date
  *  and not buried or dropped. When two share a date, a series day keeps the piece of its own series, an off day the
  *  piece whose meta.offday names that date, then the one changed last; one piece a day, as Growth reads it. */
@@ -150,24 +169,14 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
   const read = await db.from('content_ideas').select('id, scheduled_for, lane_slot, state, buried_at, meta, updated_at')
     .gte('scheduled_for', week).lte('scheduled_for', end)
   if (read.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
-  const rows = ((read.data || []) as Body[]).filter(r => !r.buried_at && r.state !== 'dropped' && typeof r.id === 'string' && UUID.test(r.id))
-  const days: PieceDay[] = []
-  for (const day of DAYS) {
-    const date = dayDate(week, day)
-    const series = SERIES_DAYS.includes(day)
-    const offday = (r: Body) => isObj(r.meta) && isObj(r.meta.offday) && !r.meta.offday.withdrawn_at && r.meta.offday.date === date
-    const rank = (r: Body) => (series ? (r.lane_slot === DAY_SERIES[day] ? 2 : 0) : (offday(r) ? 2 : 0))
-    const here = rows.filter(r => r.scheduled_for === date)
-      .sort((a, b) => rank(b) - rank(a) || String(b.updated_at || '').localeCompare(String(a.updated_at || '')) || String(a.id).localeCompare(String(b.id)))
-    const piece = here[0]
-    if (!piece) continue
+  const days: PieceDay[] = piecesByDay(week, (read.data || []) as Body[]).map(({ day, date, piece, series }) => {
     const entry: PieceDay = { day, date, piece_id: String(piece.id).toLowerCase(), channels: [...(series ? SERIES_DAY_CHANNELS : OFF_DAY_CHANNELS)] }
     if (!series) {
       const own = isObj(piece.meta) && isObj(piece.meta.offday) ? String(piece.meta.offday.slot || '') : ''
       entry.slot = SLOT.test(own) ? own : OFF_DAY_SLOT
     }
-    days.push(entry)
-  }
+    return entry
+  })
   // His one press on the week's filler (picks/mix, Ruling, Krish, 2026-10-30): Growth makes and posts within this mix,
   // and only once approved is true. Null until he presses.
   const pressed = await db.from('board_documents').select('body').eq('week', week).eq('collection', 'picks').eq('doc_id', 'mix').maybeSingle()

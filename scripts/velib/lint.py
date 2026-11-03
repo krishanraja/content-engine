@@ -146,7 +146,21 @@ def reference_lints(spec: dict) -> list[str]:
     for role in REFERENCE_ROLES:
         if not any(role in r.get('for', []) for r in refs):
             out.append(f'reference.required brand.references: name an inspiration-board card for {role} '
-                       f'(card, for, drive_id, takeaway); read the board before designing')
+                       f'(id, card, for, drive_id, takeaway); take it from the board: GET /api/inspiration/candidates, '
+                       f'or ve init')
+    # A card is named by its board id, so the board, the making record and card_uses join on it (Wave 3,
+    # docs/handovers/2026-11-03-engine-audit.md). Whether the id is a live production card is checked online by ve refs;
+    # lint stays offline and deterministic.
+    for index, ref in enumerate(refs):
+        if not ref.get('id'):
+            out.append(f'reference.id brand.references.{index}: {ref["card"]} needs its Inspiration card id '
+                       '(inspiration_items.id); read it from GET /api/inspiration/cards or the candidates route')
+        if ref.get('offered'):
+            out.append(f'reference.offered brand.references.{index}: {ref["card"]} was offered by ve init, not chosen; '
+                       'open the card, confirm it serves this piece and delete "offered", or replace it')
+    ids = [r['id'] for r in refs if r.get('id')]
+    for card_id in sorted({i for i in ids if ids.count(i) > 1}):
+        out.append(f'reference.duplicate brand.references: card id {card_id} is listed twice; give it one entry with every role it serves')
     cards = [r['card'] for r in refs]
     for card in sorted({c for c in cards if cards.count(c) > 1}):
         out.append(f'reference.duplicate brand.references: {card} is listed twice; give it one entry with every role it serves')

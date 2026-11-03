@@ -1262,7 +1262,8 @@ function offdayNoteParts(note){
   function render(){
     for (const c of approves) {
       const day = c.dataset.approveDay, id = day + "-scripts", v = saved[id], b = c.querySelector('[data-act="approve-scripts"]');
-      b.disabled = mode !== "live" || !!busy[id];
+      // liveStale: the live overlay (web.js drawLive) found words on the record this page was not built with.
+      b.disabled = mode !== "live" || !!busy[id] || c.dataset.liveStale === "1";
       if (busy[id]) continue;
       if (mode === "off") { say(`[data-approvestate="${day}"]`, off, true); continue }
       if (!v || v.approved !== true) { say(`[data-approvestate="${day}"]`, ""); continue }
@@ -1329,6 +1330,7 @@ function offdayNoteParts(note){
     const a = e.target.closest && e.target.closest('[data-act="approve-scripts"]');
     if (a) {
       const c = a.closest(".rec.ap"), day = c.dataset.approveDay, state = `[data-approvestate="${day}"]`;
+      if (c.dataset.liveStale === "1") { say(state, "The words changed since this page was built: this tab needs a rebuild", true); return; }
       if (document.querySelector(`.rv-save[data-save-day="${day}"]`)?.classList.contains("dirty") || document.querySelector(".rv-pedit")) {
         say(state, "Save your changes first, then approve.", true); return;
       }
