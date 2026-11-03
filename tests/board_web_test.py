@@ -56,6 +56,13 @@ class BoardWebTests(unittest.TestCase):
             with patch.object(board_web,'call',api), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.media_standard,'enforced',return_value=False):
                 board_web.publish(args)
             self.assertNotIn('delivery_review',sent[0]['manifest'])
+            # The same stored bytes under another name in the build are reused, never uploaded again.
+            sent.clear();uploads.clear()
+            mapping.write_text(json.dumps([dict(id='drive-renamed',source_url=source,existing_sha256='a'*64)]))
+            with patch.object(board_web,'call',api), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                board_web.publish(args)
+            self.assertEqual(sent[0]['manifest']['assets']['drive-renamed'],asset)
+            self.assertEqual(len(uploads),1)
 
     def test_a_ready_video_needs_a_passing_receipt_for_its_bytes(self):
         import html as html_mod
