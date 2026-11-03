@@ -4,7 +4,7 @@ import { OffthreadVideo } from 'remotion'
 import { describe, expect, it, vi } from 'vitest'
 import fixture from '../../../../../fixtures/ve/engine-core/props.json'
 import { slotsFor, splitCameraBox, splitPlatePosition } from './index'
-import { FWP_SPLIT_SEAM_Y, FWP_STAGE_SCALE, FWP_SPLIT_CAPTION_ZONE, FWP_POSTER_POSITIONS } from '../mocks/face-with-proof'
+import { FWP_SPLIT_SEAM_Y, FWP_SPLIT_CAPTION_ZONE, FWP_POSTER_POSITIONS } from '../mocks/face-with-proof'
 import { EngineRenderPropsSchema } from '../props'
 import { FormatMaster } from '../FormatMaster'
 import { BrandFrame, SplitCaptionTrack } from '../BrandFrame'
@@ -23,6 +23,8 @@ function propsForSplit() {
   props.aspect = '9:16'
   props.beats[1]!.layout = 'SPLIT'
   props.beats[1]!.role = 'anchor'
+  props.objects = [{ obj: 'proof', device: 'stamp', meaning: 'proof', variants: {}, params: { main: 'Proof' }, fromFrame: 0, toFrame: 120 }]
+  props.beats[1]!.uses = ['proof']
   props.captions = [{ fromFrame: 0, toFrame: 120, words: [{ text: 'Proof', atFrame: 0 }], swipeIndex: null }]
   return props
 }
@@ -33,7 +35,7 @@ it('accepts SPLIT and refuses unknown engine layouts', () => {
 })
 describe('frozen SPLIT geometry', () => {
   it('shares the stage for every device and refuses wide even without devices', () => {
-    const box = { left: 0, top: 0, width: 1080, height: FWP_SPLIT_SEAM_Y }
+    const box = { left: 60, top: 300, width: 960, height: FWP_SPLIT_SEAM_Y - 360 }
     expect(slotsFor('SPLIT', '9:16', 3)).toEqual([box, box, box])
     expect(slotsFor('SPLIT', '9:16', 0)).toEqual([])
     expect(() => slotsFor('SPLIT', '16:9', 0)).toThrow('no wide lock')
@@ -46,7 +48,7 @@ describe('frozen SPLIT geometry', () => {
     expect(splitPlatePosition('face-close')).toBe(FWP_POSTER_POSITIONS.proof)
     expect(splitPlatePosition()).toBe(FWP_POSTER_POSITIONS.proof)
   })
-  it('crops camera below the stage and scales graphics once, leaving chrome outside', () => {
+  it('crops camera below the full-width stage with no scale, leaving chrome outside', () => {
     const props = propsForSplit()
     props.beats[1]!.plate = { source: 'take', crop: '50% 92%' }
     props.segments = [{ src: 'take.mp4', trimBeforeFrames: 5, fromFrame: 0, durationFrames: 120 }]
@@ -55,16 +57,28 @@ describe('frozen SPLIT geometry', () => {
     expect(video.props.style).toMatchObject({ objectFit: 'cover', objectPosition: '50% 92%' })
     const camera = nodes.find((n) => elements(n.props.children as ReactNode).includes(video) && (n.props.style as Record<string, unknown>)?.top === FWP_SPLIT_SEAM_Y)!
     expect(camera.props.style).toMatchObject(splitCameraBox('9:16'))
-    const scaled = nodes.filter((n) => (n.props.style as Record<string, unknown>)?.transform === `scale(${FWP_STAGE_SCALE})`)
-    expect(scaled).toHaveLength(1)
-    expect(scaled[0]!.props.style).toMatchObject({ transformOrigin: 'top center' })
-    expect(elements(scaled[0]!.props.children as ReactNode).some((n) => n.type === BrandFrame)).toBe(false)
+    expect(nodes.filter((n) => (n.props.style as Record<string, unknown>)?.transform)).toHaveLength(0)
+    const device = nodes.find((n) => n.props.object && n.props.box)!
+    expect(device.props.box).toEqual({ left: 60, top: 300, width: 960, height: FWP_SPLIT_SEAM_Y - 360 })
     const stage = nodes.find((n) => (n.props.style as Record<string, unknown>)?.backgroundColor === props.tokens.cream)!
     expect(stage.props.style).toMatchObject({ height: FWP_SPLIT_SEAM_Y, overflow: 'hidden' })
     // The mark tile and pill, legible on cream, not the ink-only horizontal logo (Krish, 2026-11-03).
     const chrome = elements(BrandFrame({ props, beat: props.beats[1]!, frame: 75 }))
     expect(chrome.some((n) => n.type === StageHeader)).toBe(false)
     expect(chrome.some((n) => n.type === MarkTile)).toBe(true)
+  })
+  it('preserves explicit placement and strips it from device params', () => {
+    const props = propsForSplit()
+    const id = props.beats[1]!.uses[0]!
+    const object = props.objects.find((object) => object.obj === id)!
+    const place = { left: 80, top: 320, width: 800, height: 300, scale: 0.9 }
+    object.params = { ...object.params, place }
+    const nodes = elements(FormatMaster(props))
+    const wrapper = nodes.find((n) => (n.props.style as Record<string, unknown>)?.transform === 'scale(0.9)')!
+    expect(wrapper.props.style).toMatchObject({ left: 80, top: 320, width: 800, height: 300, transformOrigin: 'top left' })
+    const device = elements(wrapper.props.children as ReactNode).find((n) => n.props.object)!
+    expect(device.props.box).toEqual({ left: 0, top: 0, width: 800, height: 300 })
+    expect((device.props.object as typeof object).params).not.toHaveProperty('place')
   })
   it('places one and two caption lines inside the frozen zone and preserves normal captions', () => {
     const props = propsForSplit()

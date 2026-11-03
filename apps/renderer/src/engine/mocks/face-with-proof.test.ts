@@ -2,7 +2,7 @@ import { staticFile } from 'remotion'
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { FWP_PLACEMENTS, FWP_MOCKS, FWP_SPLIT_SEAM_Y, FWP_STAGE_SCALE, FWP_SCALED_TARGETS, FWP_SPLIT_CAPTION_ZONE, FWP_POSTER_POSITIONS, FWP_TARGETS, type FWPMockProps } from './face-with-proof'
+import { FWP_PLACEMENTS, FWP_MOCKS, FWP_SPLIT_SEAM_Y, FWP_MOCK_STAGE_SCALE, FWP_SCALED_TARGETS, FWP_SPLIT_CAPTION_ZONE, FWP_POSTER_POSITIONS, FWP_TARGETS, type FWPMockProps } from './face-with-proof'
 import { MARK_BOUNDS } from '../devices/logo_orbit/mark'
 import registry from '../../../../../config/logo-registry.json'
 
@@ -46,7 +46,7 @@ describe('face-with-proof Gate 2 stills', () => {
       expect(mark[4]).toBe(bounds.drawn.join(' '))
       const [, , w, h] = bounds.drawn
       const scale = Math.min(Number(mark[2]) / w, Number(mark[3]) / h)
-      expect(Math.abs(Math.max(w * scale, h * scale) * FWP_STAGE_SCALE - 140 * 0.76)).toBeLessThanOrEqual(1)
+      expect(Math.abs(Math.max(w * scale, h * scale) * FWP_MOCK_STAGE_SCALE - 140 * 0.76)).toBeLessThanOrEqual(1)
     }
     expect(html.match(/<rect width="240" height="240" rx="24" fill="white"/g)).toHaveLength(5)
     expect(html.match(/translate\(\d+ 220\)/g)).toHaveLength(3)
@@ -96,9 +96,9 @@ describe('round 3 geometry', () => {
       expect(html).toContain(`data-scribble-shape="${{ hook: 'underline', proof: 'loop', close: 'tick' }[beat]}"`)
       const encoded = html.match(/data-target-box="([^"]+)"/)![1]!
       const t = JSON.parse(encoded.replaceAll('&quot;', '"')), e = {
-        x: (1080 - 1080 * FWP_STAGE_SCALE) / 2 + elements[name].x * FWP_STAGE_SCALE,
-        y: elements[name].y * FWP_STAGE_SCALE,
-        w: elements[name].w * FWP_STAGE_SCALE, h: elements[name].h * FWP_STAGE_SCALE,
+        x: (1080 - 1080 * FWP_MOCK_STAGE_SCALE) / 2 + elements[name].x * FWP_MOCK_STAGE_SCALE,
+        y: elements[name].y * FWP_MOCK_STAGE_SCALE,
+        w: elements[name].w * FWP_MOCK_STAGE_SCALE, h: elements[name].h * FWP_MOCK_STAGE_SCALE,
       }
       expect(t).toEqual(FWP_SCALED_TARGETS[name])
       expect(FWP_TARGETS[name]).toEqual(elements[name])
@@ -116,7 +116,7 @@ describe('higher split and single stage transform', () => {
     it(`${beat} fits its clipped graphics viewport above the 760px seam`, () => {
       const html = render(beat)
       expect(FWP_SPLIT_SEAM_Y).toBe(760)
-      expect(FWP_STAGE_SCALE).toBe(0.76)
+      expect(FWP_MOCK_STAGE_SCALE).toBe(0.76)
       expect(FWP_POSTER_POSITIONS[beat]).toBe('50% 88%')
       expect(html).toContain('data-camera-plate="true" src="fixture-recording-poster.jpg" alt="" style="position:absolute;left:0;top:760px;width:1080px;height:1160px;object-fit:cover;object-position:50% 88%')
       expect(html).toContain('data-proof-stage="true" style="position:absolute;left:0;top:0;width:1080px;height:760px;background:cream;overflow:hidden')

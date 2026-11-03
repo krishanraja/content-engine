@@ -143,9 +143,9 @@ def measurement(rows: list, target: str) -> dict:
 
 
 def _split_geometry() -> tuple[float, tuple[int, int, int, int]]:
-    """The SPLIT stage scale and caption zone, read from the mocks file the renderer imports, never copied."""
+    """The frozen mock stage scale and caption zone, read from the mocks file, never copied."""
     mocks = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
-    scale = float(re.search(r'export const FWP_STAGE_SCALE = ([0-9.]+)', mocks).group(1))
+    scale = float(re.search(r'export const FWP_MOCK_STAGE_SCALE = ([0-9.]+)', mocks).group(1))
     zone = re.search(r'export const FWP_SPLIT_CAPTION_ZONE = \{([^}]*)\}', mocks).group(1)
     get = lambda key: int(re.search(key + r': (\d+)', zone).group(1))
     return scale, (get('left'), get('top'), get('width'), get('height'))
@@ -161,6 +161,8 @@ def _renderer_layouts() -> dict:
     for aspect, name in (('9:16', 'TALL'), ('16:9', 'WIDE')):
         block = re.search(r'const ' + name + r': Record<.*?readonly Box\[\]> = \{(.*?)\n\}\n', source, re.S).group(1)
         block = re.sub(r'\b(FWP_[A-Z_]+)\b', lambda m: constants[m.group(1)], block)
+        # Layout dimensions may subtract a fixed inset from an imported seam.
+        block = re.sub(r'(-?\d+)\s*-\s*(\d+)', lambda m: str(int(m[1]) - int(m[2])), block)
         result[aspect] = {layout: [tuple(int(n) for n in re.findall(r'-?\d+', box)) for box in re.findall(r'\{ left:[^}]*\}', body)]
                           for layout, body in re.findall(r'\n  (\w+): \[(.*?)\],?(?=\n|$)', block, re.S)}
     return result
