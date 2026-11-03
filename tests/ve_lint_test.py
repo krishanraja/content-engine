@@ -175,5 +175,49 @@ class NoNameOnScreen(unittest.TestCase):
         self.assertFalse(pattern.search('Krish'))
 
 
+GEORGIA = {'card': 'instagram_DePHDr_jRed', 'for': ['captions'], 'drive_id': '1Fs7Mq2kiYyAMWgPkLApeMWcfSCBmGNH9',
+           'takeaway': 'one word at a time, white, at chest height, never over the face, held yellow title'}
+JACK = {'card': 'instagram_DeZuQ7-lATg', 'for': ['look', 'motion'], 'drive_id': '1RgI6ypWidvR_0KbP0LM0igbUEbU-qkWe',
+        'takeaway': 'product-UI cards at 80 to 90 percent width with glow, settling in four frames'}
+
+
+def dated(spec, refs=None):
+    spec['publish_day'] = '2026-11-09'
+    if refs is not None:
+        spec['brand']['references'] = refs
+
+
+class ReferencesAreRequired(unittest.TestCase):
+    """Krish, 2026-11-03: "I even gave literal inspiration in the inspiration board on the quality I expect"."""
+
+    def test_a_new_piece_without_references_is_refused(self):
+        found = [p for p in lint_lines(mutate(dated)) if p.startswith('reference.required')]
+        self.assertEqual(len(found), 3, found)
+
+    def test_look_motion_and_captions_cards_pass(self):
+        found = codes_for(mutate(lambda s: dated(s, [GEORGIA, JACK])))
+        self.assertNotIn('reference.required', found)
+
+    def test_a_caption_card_alone_is_refused_for_look_and_motion(self):
+        found = [p for p in lint_lines(mutate(lambda s: dated(s, [GEORGIA]))) if p.startswith('reference.required')]
+        self.assertEqual(len(found), 2)
+        self.assertTrue(any('for look' in p for p in found) and any('for motion' in p for p in found))
+
+    def test_a_reference_without_a_drive_id_fails_the_schema(self):
+        bad = {k: v for k, v in JACK.items() if k != 'drive_id'}
+        found = lint_lines(mutate(lambda s: dated(s, [GEORGIA, bad])))
+        self.assertTrue(any('drive_id' in line for line in found), found)
+
+    def test_pieces_in_flight_on_5_nov_are_exempt(self):
+        spec = mutate(lambda s: s.update(publish_day='2026-11-05'))
+        self.assertNotIn('reference.required', codes_for(spec))
+
+
+class StampsNeverCarryTheHero(unittest.TestCase):
+    def test_a_stamp_hero_is_refused(self):
+        spec = mutate(lambda s: s['signature']['hero'].update(device='stamp'))
+        self.assertIn('motion.stamp_not_hero', codes_for(spec))
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -130,8 +130,47 @@ def beat_sequence_problem(lock: dict, fmt: str, ids: list) -> str | None:
     return None
 
 
+# Krish, 2026-11-03: "I even gave literal inspiration in the inspiration board on the quality I expect, and also the
+# subtitle builds we could have." A spec names the board cards it is held to: one each for look, motion and the
+# caption build. Pieces publishing on or before 5 Nov were in flight when this gate landed and are exempt.
+REFERENCE_ROLES = ('look', 'motion', 'captions')
+REFERENCE_FROM = '2026-11-06'
+
+
+def reference_lints(spec: dict) -> list[str]:
+    day = spec.get('publish_day')
+    if day and day < REFERENCE_FROM:
+        return []
+    refs = spec['brand'].get('references') or []
+    out = []
+    for role in REFERENCE_ROLES:
+        if not any(role in r.get('for', []) for r in refs):
+            out.append(f'reference.required brand.references: name an inspiration-board card for {role} '
+                       f'(card, for, drive_id, takeaway); read the board before designing')
+    cards = [r['card'] for r in refs]
+    for card in sorted({c for c in cards if cards.count(c) > 1}):
+        out.append(f'reference.duplicate brand.references: {card} is listed twice; give it one entry with every role it serves')
+    return out
+
+
+def motion_lints(spec: dict) -> list[str]:
+    """The premium motion standard (docs/ve/MOTION_STANDARD.md) where a spec alone can show it."""
+    out = []
+    objects = {o['obj']: o for o in spec['objects']}
+    if spec['signature']['hero']['device'] == 'stamp':
+        out.append('motion.stamp_not_hero signature.hero.device: the stamp draws fixed 30 px mono text; it labels, it is '
+                   'never the hero (docs/ve/MOTION_STANDARD.md)')
+    for cut_id, cut in spec['cuts'].items():
+        for index, beat in enumerate(cut['beats']):
+            used = [objects[name]['device'] for name in beat['uses'] if name in objects]
+            if used and all(device == 'stamp' for device in used):
+                out.append(f'motion.stamp_not_hero cuts.{cut_id}.beats.{index}: beat {beat["id"]} shows only stamps; '
+                           'a stamp labels a hero card, it never carries a beat alone')
+    return out
+
+
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
-    out: list[str] = []
+    out: list[str] = reference_lints(spec) + motion_lints(spec)
     from . import designlock
     lock = designlock.load()
     if spec['format'] in lock['formats'] and not designlock.frozen(lock, spec['format'])[0]:
@@ -243,7 +282,9 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         if cut['aspect'] == '9:16' and whole:
             minutes = max(1.0, (beats[-1]['span']['to_w'] - beats[0]['span']['from_w']) / (WORDS_PER_SECOND * 60))
             need = math.ceil(fmt['qc'].get('layout_types_per_min_tall', 1) * min(minutes, 1.0))
-            if len(layouts) < need:
+            # Krish may waive variety for a piece in his own words (an exception approval), as for Thursday 5 Nov:
+            # "This Thursday video should be the simplest to produce and feature my face minimally".
+            if len(layouts) < need and not any(a['gate'] == 'exception' for a in spec['approvals']):
                 out.append(f'motion.layout_variety {where}: {len(layouts)} layout types, the format needs at least {need} a minute')
 
     bed_mode = spec['audio']['bed']['mode']

@@ -1650,6 +1650,12 @@ def off_rich(o, problems, label):
             problems.append(f'{label}: download is {{"url" (https, the finished file), "label"}}')
         else:
             row['download'] = {'url': download['url'], 'label': _line(download['label'], 120)}
+    growth = o.get('growth_drive')
+    if growth is not None:
+        if growth_drive_problem(growth):
+            problems.append(f'{label}: {growth_drive_problem(growth)}')
+        else:
+            row['growth_drive'] = {'file_id': growth['file_id'], 'folder_id': growth['folder_id']}
     # The finished asset shown on the board itself (Ruling, Krish, 2026-11-03: "I should be able to see the assets directly
     # in the publish board or have a link to the Google Drive where the assets are. I shouldn't have to download a fucking
     # zip and then look at it that way"): every slide as its own picture, or the video to play, and the Drive folder.
@@ -1675,6 +1681,26 @@ def off_rich(o, problems, label):
         else:
             row['drive'] = drive
     return {k: v for k, v in row.items() if v is not None}
+
+
+# A finished asset is done only when it is in the 4 Growth folder Krish opens (Krish, 2026-11-03: "The translator video
+# isn't in the drive... Why is it not in there?"): the file's Drive id and its 4 Growth folder id, read back by the
+# session that filed it. Until then the card says so instead of offering the file as ready.
+NOT_IN_GROWTH = 'Not in 4 Growth yet: file it in its dated 4 Growth folder and record growth_drive before it counts as ready'
+DRIVE_ID_RE = re.compile(r'^[A-Za-z0-9_-]{20,}$')
+
+
+def growth_drive_problem(growth):
+    if not isinstance(growth, dict) or set(growth) != {'file_id', 'folder_id'} or not all(
+            isinstance(growth.get(k), str) and DRIVE_ID_RE.match(growth[k]) for k in ('file_id', 'folder_id')):
+        return 'growth_drive is {"file_id", "folder_id"}: the Drive ids of the finished file and its 4 Growth folder'
+    return None
+
+
+def growth_needs(o):
+    """The needs line a finished off-day option carries until its 4 Growth file is recorded."""
+    finished = bool(o.get('download')) or bool(o.get('ready'))
+    return [NOT_IN_GROWTH] if finished and (o.get('growth_drive') is None or growth_drive_problem(o['growth_drive'])) else []
 
 
 def side_sha(o, side):
@@ -1875,9 +1901,10 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
         out[key] = [{'id': o.get('concept_id'), 'format': ', '.join(o.get('formats') or []) or o.get('lane'),
                      'source': {'label': 'Source', 'url': o['source_url']} if str(o.get('source_url') or '').startswith('https://') else (o.get('lane') or 'Growth'),
                      'copy': o.get('draft'), 'share_line': o.get('share_line'),
-                     'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else []),
+                     'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else [])
+                     + growth_needs(o),
                      # The rich fields ride through as Growth wrote them (Ruling, Krish, 2026-11-01), never flattened into the copy.
-                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'download', 'closed')
+                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'download', 'closed', 'growth_drive')
                         if o.get(k) is not None}}
                     for o in opts]
     return out, warnings
@@ -1888,7 +1915,7 @@ def previous_option(o):
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
     for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards',
               'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'download',
-              'stories', 'weekly', 'stories_due', 'closed'):
+              'stories', 'weekly', 'stories_due', 'closed', 'growth_drive'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -2033,6 +2060,11 @@ def off_option_card(monday, key, when, o):
                 f'<div><p class="row"><span class="id-why-k">Mock back</span> {E(m.get("note") or "Made in the brand kit from the direction you approved.")}</p>'
                 + off_press_row(did, 'mock', 'The mock') + '</div></div>')
     mock += asset_links(o)
+    if o.get('growth_drive') and not growth_drive_problem(o['growth_drive']):
+        g = o['growth_drive']
+        mock += (f'<p class="row"><a class="btn-s" href="{E("https://drive.google.com/drive/folders/" + g["folder_id"])}" '
+                 f'target="_blank" rel="noopener">In Drive: 4 Growth</a> '
+                 f'<a class="btnlink" href="{E("https://drive.google.com/file/d/" + g["file_id"] + "/view")}" target="_blank" rel="noopener">Open the file</a></p>')
     # What his Approve on the idea hands Growth: exactly the object its hash is taken over (side_sha), the copy and the
     # cards included, so the words he approved are the words that get made.
     shown = {'copy': o.get('copy'), 'hook': o.get('hook'), 'pitch': o.get('pitch'), 'cards': o.get('cards')}

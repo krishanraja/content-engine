@@ -437,11 +437,33 @@ def cmd_verdict(args) -> int:
         if not isinstance(findings, list):
             raise ValueError('findings file must hold a list')
         viewed = [float(s) for s in args.viewed.split(',') if s.strip()]
-        path = verdict.write(spec, args.cut, verdict.ve_dir(spec_file), args.reviewer, findings, viewed)
+        references = load_json(args.references) if getattr(args, 'references', None) else None
+        path = verdict.write(spec, args.cut, verdict.ve_dir(spec_file), args.reviewer, findings, viewed, references)
         print(f've verdict: {path}')
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(f've verdict: {error}')
+        return 1
+
+
+def cmd_refs(args) -> int:
+    """Write the reference sheets the Critic scores against: the cut's frames above each board card's frames."""
+    from velib import refgate, verdict
+    try:
+        spec_file = spec_path_for(args.piece)
+        spec = load_json(spec_file)
+        directory = verdict.ve_dir(spec_file)
+        qc = verdict.read(directory / f'qc.{args.cut}.json')
+        video = verdict.video_path(qc, directory)
+        if not video.is_file():
+            raise ValueError(f'no QC-bound video for {args.cut}: run ve qc first')
+        if not spec['brand'].get('references'):
+            raise ValueError('the spec names no inspiration-board references (brand.references); read the board and add them')
+        for path in refgate.sheets(spec, args.cut, directory, video):
+            print(f've refs: {path}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've refs: {error}')
         return 1
 
 
@@ -471,6 +493,12 @@ def cmd_status(args) -> int:
         print('NOT READY: the spec does not pass its schema')
         return 1
     directory = verdict.ve_dir(spec_file)
+    from velib import filing
+    record = load_json(directory / 'filed.json') if (directory / 'filed.json').is_file() else None
+    try:
+        root = filing.library_root()
+    except ValueError:
+        root = None
     ready = not problems
     print(f"lint: {'clean' if not problems else f'{len(problems)} finding(s)'}")
     for cut in spec['cuts']:
@@ -481,6 +509,12 @@ def cmd_status(args) -> int:
         print('  design: ' + ('NOT APPROVED (' + '; '.join(design) + ')' if design else 'APPROVED'))
         reasons = mechanical + design + final
         print(f"{cut}: {'READY' if not reasons else 'NOT READY (' + '; '.join(reasons) + ')'}")
+        # Done means in the 4 Growth folder Krish opens, read back from the library, never from the receipt alone
+        # (Krish, 2026-11-03: "The translator video isn't in the drive... Why is it not in there?").
+        if not reasons:
+            there, where = filing.delivered(record, root, cut)
+            print(f"  delivered: {'DONE ' + where if there else 'NO (' + where + ')'}")
+            reasons = [] if there else [where]
         ready = ready and not reasons
     return 0 if ready else 1
 
@@ -578,6 +612,13 @@ def cmd_file(args) -> int:
     from velib import filing
     try:
         _spec_file, spec, directory = _ve_dir(args.piece)
+        if getattr(args, 'growth_only', False):
+            record = filing.file_growth_only(directory, library_at=args.library)
+            for item in record['files']:
+                print(f"  {item['cut']} ({item['shape']}) -> {item['growth']}")
+            return 0
+        if not args.subject:
+            raise ValueError('--subject is required: the topic both the 3 Posts and the 4 Growth folders are named by')
         cuts = args.cut or list(spec['cuts'])
         result = filing.file(spec, directory, cuts, subject=args.subject, when=args.date, archive_at=args.archive,
                              library_at=args.library, dry_run=args.dry_run)
@@ -589,6 +630,7 @@ def cmd_file(args) -> int:
         print(f"ve file: archive {result['archive']}")
         for item in result['files']:
             print(f"  {item['cut']} ({item['shape']}, {item['sha256'][:12]}) -> {item['library']}")
+            print(f"  {item['cut']} for Growth -> {item['growth']}")
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(f've file: {error}', file=sys.stderr)
@@ -981,7 +1023,10 @@ def main() -> int:
     a = actions.add_parser('write'); a.add_argument('piece'); a.add_argument('cut')
     a.add_argument('--reviewer', required=True); a.add_argument('--findings', required=True)
     a.add_argument('--viewed', default='', help='comma-separated viewed frame times in seconds')
+    a.add_argument('--references', help="JSON list of the Critic's scores against each board card (refgate)")
     a.set_defaults(fn=cmd_verdict)
+    p = sub.add_parser('refs', help="put the cut's frames beside each inspiration-board reference for the Critic")
+    p.add_argument('piece'); p.add_argument('cut'); p.set_defaults(fn=cmd_refs)
     p = sub.add_parser('packet', help='assemble measured and judged cuts for approval')
     p.add_argument('piece'); p.add_argument('--out')
     p.add_argument('--legacy-ok', action='append', default=[], metavar='CUT',
@@ -1048,8 +1093,9 @@ def main() -> int:
     p.add_argument('--render', action='store_true', help='render the conformed picture and dialogue in one graph')
     p.add_argument('--assets-dir'); p.add_argument('--joins-reel', action='store_true')
     p.set_defaults(fn=cmd_conform)
-    p = sub.add_parser('file', help="file READY cuts in the archive and the post's 3 Video folder, bound to piece_id")
-    p.add_argument('piece'); p.add_argument('--subject', required=True); p.add_argument('--date')
+    p = sub.add_parser('file', help="file READY cuts in the archive, the post's 3 Video folder and its 4 Growth folder")
+    p.add_argument('piece'); p.add_argument('--subject'); p.add_argument('--date')
+    p.add_argument('--growth-only', action='store_true', help='add the 4 Growth copy to a cut filed before that rule')
     p.add_argument('--cut', action='append', help='a cut to file (default: every cut; one per shape)')
     p.add_argument('--archive', help='the archive folder (default MINDMAKE_ARCHIVE_ROOT)')
     p.add_argument('--library', help='the makeyourmindup library folder (default MINDMAKE_LIBRARY_ROOT)')
