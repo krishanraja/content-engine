@@ -7,7 +7,8 @@
     "Every name is safe on Windows and Google Drive: no . or .. folder, no name starting with a dot, none of < > : \" \\ | ? * or a control character, no space at either end or dot at the end, none of Windows' reserved device names. Accented letters are written in their composed form (NFC). At most path_max characters in the whole path and part_max in one name, counted as Windows counts them (UTF-16 code units).",
     "The extension decides the type, from content_types; nothing else is taken. A file is at most max_bytes.",
     "A post's folder: YYYY-MM-DD <Day> <subchannel> - <Subject>, with the day the date fell on (Mon, Tue, Wed, Thu, Fri, Sat or Sun) and the subchannel as the brand writes it; a launch post is YYYY-MM-DD Launch - <Subject>. The subject is made safe by the archive naming rule (config/archive-naming.cases.json) and cut at a space so the whole name stays within part_max.",
-    "A canary, test, smoke-test, dry-run or fixture post is refused (path_test_folder), and a rendered video (mp4, mov, webm) inside a post goes only in 3 Video (path_render_outside_video); W3.5."
+    "A canary, test, smoke-test, dry-run or fixture post is refused (path_test_folder), and a rendered video (mp4, mov, webm) inside a post goes only in 3 Video (path_render_outside_video); W3.5.",
+    "Off-day posts (Tuesday, Thursday, Saturday) have no series, so their folder carries the label off.day where a series name would go: '2026-11-03 Tue off.day - AI agents translator' (Krish, 2026-11-03: \"get the drive and publish board fully up to date\"; off-day assets had no valid folder and were never filed)."
   ],
   "top_folders": [
     "1 Brand kit (permanent)",
@@ -27,6 +28,7 @@
     "mind.the.gap",
     "under.the.hood"
   ],
+  "off_day_label": "off.day",
   "path_max": 180,
   "part_max": 100,
   "max_bytes": 2147483648,
@@ -399,6 +401,14 @@
       "why": "a rendered video outside 3 Video is refused, any case (W3.5)",
       "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/2 Covers and images/loop.MOV",
       "refused": "path_render_outside_video"
+    },
+    {
+      "why": "an off-day post's video in its own folder",
+      "path": "3 Posts/2026-11-03 Tue off.day - AI agents translator/3 Video/translator-9x16.mp4"
+    },
+    {
+      "why": "off.day on a series day is still a valid label",
+      "path": "3 Posts/2026-11-05 Thu off.day - No spending no sending/4 Social/still.jpg"
     }
   ],
   "post_folders": [
@@ -487,6 +497,13 @@
       "subchannel": "follow.the.money",
       "subject": "::??",
       "error": "nothing a folder name can keep"
+    },
+    {
+      "why": "an off-day post",
+      "date": "2026-11-03",
+      "subchannel": "off.day",
+      "subject": "AI agents translator",
+      "folder": "2026-11-03 Tue off.day - AI agents translator"
     }
   ]
 }

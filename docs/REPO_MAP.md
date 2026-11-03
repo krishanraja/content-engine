@@ -2474,6 +2474,7 @@ What the compiler looks for, as pure functions.
 - `const LIBRARY_POST_SECTIONS`
 - `const LIBRARY_POST_README`
 - `const LIBRARY_SUBCHANNELS`
+- `const LIBRARY_OFF_DAY`
 - `const LIBRARY_CONTENT_TYPES: Readonly<Record<string, string>>`
 - `function libraryMimeTypes(): string[]`
 - `const LIBRARY_OPTIONAL_MIME_TYPES: readonly string[]`
