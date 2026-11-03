@@ -1,0 +1,15 @@
+{
+  "path": "docs/ve/cards/thu-5-nov/ve-thu-4-fwp-keyframe-mocks-v2.md",
+  "card_id": "ve-thu-4-fwp-keyframe-mocks-v2",
+  "kind": "docs",
+  "title": "Face-with-proof key-frame mocks, round 2: eyes clear, equal marks, scribbles that mean something",
+  "goal": [
+    "Claude rendered the round 1 mocks (merged on main: apps/renderer/src/engine/mocks/face-with-proof.tsx) with a real frame of Krish's Thursday take and found three faults before his Gate 2. Fix only these; keep everything else.\n\n1. His eyes are covered. In hook, proof and close the caption box (the lock's zone x 72, y 1180, w 900, h 320) lands on his eyes, because the face band starts at y 1000. In the split beats, frame the camera plate so his eyes sit near y 1150 (object-position on the poster, chosen per beat and exported as a prop default) and move the caption into the band y 1460 to 1640, under his chin; keep the face beat's caption where it is. Export the split caption zone so the lock can carry it. Test: in split beats no caption pixel box overlaps the band y 1080 to 1260.\n2. The marks are unequal (Meta renders as a small wordmark, Amazon huge, xAI thin). In proof use the approved logo_orbit device's Mark fitter (apps/renderer/src/engine/devices/logo_orbit/mark.tsx, MARK_BOUNDS) so every mark's drawn box is 140 px on its long side, Meta as its infinity symbol, on equal white tiles in two rows (3 then 2). Test: every mark's fitted long side equals 140 px within 1 px.\n3. The scribbles mean nothing. One scribble per beat, and it marks the word the caption says: in hook an underline under 'Done!' only; in proof a loop round the Amazon tile; in close a tick beside NO SENDING. Test: each scribble's target box intersects its named element's box."
+  ],
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Reuse devices as they are; scale with a wrapper transform only. Pure functions of props, no Math.random, no wall clock.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/mocks/face-with-proof.test.ts\nnpx vitest run apps/renderer/src/engine/devices\nnode node_modules/typescript/bin/tsc --noEmit --pretty false",
+  "write_allow": "[apps/renderer/src/engine/mocks/face-with-proof.tsx, apps/renderer/src/engine/mocks/face-with-proof.test.ts]",
+  "read": "apps/renderer/src/engine/devices/**, apps/renderer/src/engine/props.ts, apps/renderer/src/house/**, docs/ve/design/TEMPLATE.md, docs/ve/design/formats/F-anatomy.md, docs/ve/design/formats/F-motion.md, config/ve/design-lock.json, config/logo-registry.json, fixtures/ve/my-test-19s/**, fixtures/ve/design-lock/approved/**, docs/plans/2026-11-02-week/thu-storyboard.md, apps/renderer/src/engine/devices/logo_orbit/**",
+  "max_minutes": 45,
+  "max_calls": 45
+}

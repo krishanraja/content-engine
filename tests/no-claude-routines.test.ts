@@ -150,6 +150,33 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     expect(text).toContain('every question for Krish goes on the day\'s tab')
   })
 
+  it('the same Saturday run fills the weekly good news of the week that starts the next day', () => {
+    // Krish, 2026-11-02: "You will need to find the actual good news on Sunday as per the usual system so that the news
+    // items are fresh".
+    const py = (code: string) => spawnSync('python3', ['-c', code], { cwd: ROOT, encoding: 'utf8' })
+    const run = py(`
+import sys, json, tempfile, datetime as dt
+from pathlib import Path
+sys.path.insert(0, 'scripts'); sys.path.insert(0, 'scripts/post-pack')
+import sunday_ideas as s
+print(s.goodnews_monday(dt.date.fromisoformat('2026-11-07')).isoformat())
+with tempfile.TemporaryDirectory() as d:
+    folder = Path(d) / '2026-11-09-week'; folder.mkdir()
+    opt = {'id': 'goodnews', 'weekly': 'good_news', 'stories_due': '2026-11-08'}
+    (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [opt]}}))
+    m = dt.date(2026, 11, 9)
+    print(s.goodnews_due(m, dt.date(2026, 11, 3), Path(d)), s.goodnews_due(m, dt.date(2026, 11, 7), Path(d)))
+    (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [dict(opt, stories=[{}])]}}))
+    print(s.goodnews_due(m, dt.date(2026, 11, 7), Path(d)))
+`)
+    expect(run.stderr).toBe('')
+    expect(run.stdout.trim().split(/\r?\n/)).toEqual(['2026-11-09', 'False True', 'False'])
+    const text = read('.github/workflows/sunday-ideas.yml')
+    expect(text).toContain('python3 scripts/sunday_ideas.py goodnews >> "$GITHUB_OUTPUT"')
+    expect(text).toMatch(/if: always\(\) && steps\.goodnews\.outputs\.gn_due == 'true'\n\s+uses: anthropics\/claude-code-action/)
+    expect(text).toContain('"The Saturday good news"')
+  })
+
   it('the guard plans the week eight days after the recording Sunday and reads only a live Ideas tab as built', () => {
     const py = (code: string) => spawnSync('python3', ['-c', code], { cwd: ROOT, encoding: 'utf8' })
     const run = py(`

@@ -47,6 +47,22 @@ def lock_tree(root: Path) -> Path:
     return path
 
 
+def redraft(path: Path) -> None:
+    """Put the frozen 9:16 face-with-proof back to the draft it was before Krish's Gate 2 (3 Nov 2026), so the
+    promotion path is still tested on a temp copy after the real lock froze."""
+    lock = json.loads(path.read_text(encoding='utf-8'))
+    entry = lock['formats'].pop('face-with-proof')
+    for frame in (entry.get('keyframes') or {}).values():
+        (path.parents[2] / frame['file']).unlink(missing_ok=True)
+    for key in ('keyframes', 'frozen_on', 'approved'):
+        entry.pop(key, None)
+    entry.update(status='awaiting Gate 2', keyframe_slots={beat: None for beat in BEATS})
+    lock.setdefault('drafts', {})['face-with-proof'] = entry
+    for module in entry.get('modules', []):
+        lock['formats'][module]['role'] = 'base'
+    path.write_text(json.dumps(lock), encoding='utf-8')
+
+
 class DraftLockTest(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='ve-shadow-lock-')
@@ -64,20 +80,24 @@ class DraftLockTest(unittest.TestCase):
             mapping[beat] = name
         return mapping
 
-    def test_the_real_lock_holds_both_face_with_proof_drafts_unfrozen(self):
+    def test_the_real_lock_froze_face_with_proof_at_his_gate_2_and_keeps_the_wide_draft(self):
         lock = designlock.load()
         self.assertEqual(designlock.validate(lock), [])
-        for key in ('face-with-proof', 'face-with-proof@16:9'):
-            draft = lock['drafts'][key]
-            self.assertEqual(draft['status'], 'awaiting Gate 2')
-            self.assertEqual(draft['beats'], BEATS)
-            self.assertEqual(draft['keyframe_slots'], {beat: None for beat in BEATS})
-            self.assertEqual(draft['modules'], ['hand-held-screen', 'two-passports'])
-            self.assertNotIn(key, lock['formats'])  # never frozen by an agent
-        self.assertEqual(lock['drafts']['face-with-proof@16:9']['canvas'], {'w': 1920, 'h': 1080})
-        self.assertEqual(lock['formats']['hand-held-screen']['role'], 'base')  # becomes a module only at Gate 2
+        tall = lock['formats']['face-with-proof']
+        self.assertEqual(tall['beats'], BEATS)
+        self.assertEqual(set(tall['keyframes']), set(BEATS))
+        self.assertTrue(designlock.frozen(lock, 'face-with-proof', ROOT)[0])
+        # Frozen only on his words at Gate 2, never by an agent's own call.
+        self.assertEqual((tall['approved']['by'], tall['approved']['words']), ('Krish', 'Looks good to me.'))
+        draft = lock['drafts']['face-with-proof@16:9']
+        self.assertEqual(draft['status'], 'awaiting Gate 2')
+        self.assertEqual(draft['keyframe_slots'], {beat: None for beat in BEATS})
+        self.assertNotIn('face-with-proof@16:9', lock['formats'])
+        self.assertEqual(draft['canvas'], {'w': 1920, 'h': 1080})
+        self.assertEqual(lock['formats']['hand-held-screen']['role'], 'module')  # joined it at Gate 2
 
     def test_a_draft_is_promoted_only_by_freeze_and_its_modules_join_it(self):
+        redraft(self.path)
         designlock.freeze('face-with-proof', self.src, self.stills((1080, 1920), 'tall'), lock_path=self.path, today='2026-11-06')
         lock = designlock.load(self.path)
         self.assertIn('face-with-proof', lock['formats'])
@@ -110,6 +130,7 @@ class DraftLockTest(unittest.TestCase):
                              motion='docs/ve/design/formats/H-motion.md', lock_path=self.path)
 
     def test_the_lock_cli_drafts_and_lists_without_freezing(self):
+        redraft(self.path)
         out = io.StringIO()
         with patch.object(designlock, '_path', lambda path=None: self.path), redirect_stdout(out), \
                 patch.object(sys, 'argv', ['ve', 'lock', 'check']):

@@ -166,9 +166,24 @@ def seal(draft_bytes, approval):
     bad = problems(d, draft=True)
     if bad:
         raise ManifestError('the draft is not Growth\'s shape:\n  ' + '\n  '.join(bad))
+    body = approval.get('body') if isinstance(approval, dict) and isinstance(approval.get('body'), dict) else {}
+    # One yes anywhere (Ruling, Krish, 2026-11-02): his yes in his own typed words, carried by a session
+    # (picks/<day>... yes-<day>-words, yes.py), approves the day's package as it stands when sealed. It is never a
+    # press he did not make: it holds his words verbatim with where, when and the session link.
+    if isinstance(approval, dict) and re.fullmatch(r'yes-(mon|wed|fri)-(words|board)', str(approval.get('id') or '')):
+        via = str(approval['id']).rsplit('-', 1)[1]
+        if body.get('kind') != 'yes' or body.get('via') != via or body.get('approved') is not True:
+            raise ManifestError('his yes is not approved (or he took it back)')
+        if via == 'board' and approval.get('updated_by') != 'Krish':
+            raise ManifestError('a board yes counts only from his own login')
+        if via == 'words' and not (str(body.get('words') or '').strip() and body.get('said_at') and body.get('session_ref')):
+            raise ManifestError('a yes in his words carries the words, when he typed them and the session link')
+        if d['qa']['state'] != 'passed':
+            raise ManifestError(f'QA is {d["qa"]["state"]}: Growth holds every slot until QA has passed')
+        return {**{k: d[k] for k in ('schema', 'piece_id')}, 'approval_sha256': sha256(canonical(body)),
+                **{k: d[k] for k in ('qa', 'assets', 'channels')}}
     if not isinstance(approval, dict) or approval.get('updated_by') != 'Krish':
         raise ManifestError('the approval is not his: only a picks/<day>-publish document Krish wrote counts')
-    body = approval.get('body') if isinstance(approval.get('body'), dict) else {}
     if not re.fullmatch(r'(mon|wed|fri)-publish', str(approval.get('id') or '')) or body.get('kind') != 'approve_publish':
         raise ManifestError('the approval is his Approve for publish press, picks/<day>-publish')
     if body.get('approved') is not True:
@@ -277,6 +292,20 @@ def self_test():
         pass
     except Exception as error:  # noqa: BLE001 - a schema failure is reported as a failed check
         check(f'the sealed manifest passes Growth\'s JSON schema ({error})', False)
+    # One yes anywhere: his yes in his own typed words seals; a board yes not from his login, or a taken-back yes, does not.
+    said = {'id': 'mon-words', 'updated_by': 'engine_operator', 'body': {'kind': 'yes', 'day': 'mon', 'via': 'words', 'approved': True,
+            'at': '2026-11-02T21:30:00Z', 'words': 'approve Monday', 'said_at': '2026-11-02T21:25:00Z', 'said_where': 'a session',
+            'session_ref': 'https://claude.ai/code/s'}}
+    said['id'] = 'yes-mon-words'
+    check('his typed yes seals the package, its digest over his words', seal(db, said)['approval_sha256'] == sha256(canonical(said['body'])))
+    for bad, why in ((dict(said, id='yes-mon-board'), 'a board yes a session wrote'),
+                     (dict(said, body=dict(said['body'], approved=False)), 'a yes taken back'),
+                     (dict(said, body=dict(said['body'], words='')), 'a yes without his words')):
+        try:
+            seal(db, bad)
+            check(f'the seal refuses {why}', False)
+        except ManifestError:
+            pass
     for change, why in (({'updated_by': 'engine_operator'}, 'a document a session wrote'),
                         ({'body': dict(approval['body'], approved=False)}, 'an approval taken back'),
                         ({'body': dict(approval['body'], manifest_sha256='f' * 64)}, 'an approval of another manifest'),

@@ -1,0 +1,1461 @@
+{
+  "schema": "ve-edl/1",
+  "piece": "2026-11-05-thursday-no-spending",
+  "cut": "short",
+  "aspect": "9:16",
+  "fps": 30,
+  "edit": {
+    "remove": [],
+    "speed": 1
+  },
+  "speed": 1,
+  "crossfade_ms": 30.0,
+  "rule": {
+    "min_gap_ms": 80.0,
+    "clearance_ms": 30.0,
+    "crossfade_ms": [
+      20.0,
+      40.0
+    ],
+    "aligners": "both"
+  },
+  "script_sha256": "3d478e60afaccb745154433f6a5e6eb2a9373018fdc62932876dcb8a9c645e64",
+  "takes": {
+    "thursday-take-1": {
+      "media": {
+        "path": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/thurs5Novrecording-nospendingnosending.mp4",
+        "sha256": "203d10c946954c5343ccec5b0e3a3626e9b2dfd7ef376485ff1bbbf4f35dddd5",
+        "duration_s": 47.0
+      },
+      "aligners": [
+        "torchaudio:mms-fa",
+        "torchaudio:wav2vec2-base-960h"
+      ]
+    }
+  },
+  "lines": [
+    {
+      "line": 1,
+      "text": "Proactive AI is coming.",
+      "take": "thursday-take-1",
+      "from_w": 0,
+      "to_w": 3,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 2,
+      "text": "AI that does things before you ask offers to do things.",
+      "take": "thursday-take-1",
+      "from_w": 4,
+      "to_w": 14,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 3,
+      "text": "Awesome, really cool features and really helpful but a bit dangerous because once they're connected Muse into your WhatsApp, Amazon for your groceries, Google for your emails, it can get a bit dangerous.",
+      "take": "thursday-take-1",
+      "from_w": 15,
+      "to_w": 47,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 4,
+      "text": "So my first step is the no spending, no sending rule.",
+      "take": "thursday-take-1",
+      "from_w": 48,
+      "to_w": 58,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 5,
+      "text": "It doesn't spend my money, doesn't send anything out for me unless I say so.",
+      "take": "thursday-take-1",
+      "from_w": 59,
+      "to_w": 73,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 6,
+      "text": "And the fun part is I didn't even write this myself.",
+      "take": "thursday-take-1",
+      "from_w": 74,
+      "to_w": 84,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 7,
+      "text": "I just put one prompt into my AI tool and it started asking me questions back, then it locks itself down or tells you how to lock it down.",
+      "take": "thursday-take-1",
+      "from_w": 85,
+      "to_w": 113,
+      "unconfirmed_words": 0
+    },
+    {
+      "line": 8,
+      "text": "Prompt's in the comments, make sure you do this, no spending, no sending, one easy step so you can save yourself and enjoy these new technologies without any of those weird moments or fails.",
+      "take": "thursday-take-1",
+      "from_w": 114,
+      "to_w": 147,
+      "unconfirmed_words": 0
+    }
+  ],
+  "segments": [
+    {
+      "take": "thursday-take-1",
+      "src_in_s": 0.9,
+      "src_out_s": 45.016,
+      "out_in_s": 0.0,
+      "out_out_s": 44.116,
+      "first_word": 0,
+      "last_word": 147,
+      "frames": 1323
+    }
+  ],
+  "joins": [],
+  "words": [
+    {
+      "w": 0,
+      "word": "Proactive",
+      "onset_s": 0.1333,
+      "end_s": 0.781,
+      "take": "thursday-take-1",
+      "heard_onset_s": 0.12,
+      "b_onset_s": 0.16,
+      "b_end_s": 0.761
+    },
+    {
+      "w": 1,
+      "word": "AI",
+      "onset_s": 0.941,
+      "end_s": 1.381,
+      "take": "thursday-take-1",
+      "b_onset_s": 0.981,
+      "b_end_s": 1.341
+    },
+    {
+      "w": 2,
+      "word": "is",
+      "onset_s": 1.541,
+      "end_s": 1.721,
+      "take": "thursday-take-1",
+      "b_onset_s": 1.581,
+      "b_end_s": 1.701
+    },
+    {
+      "w": 3,
+      "word": "coming.",
+      "onset_s": 1.981,
+      "end_s": 2.281,
+      "take": "thursday-take-1",
+      "b_onset_s": 2.001,
+      "b_end_s": 2.281
+    },
+    {
+      "w": 4,
+      "word": "AI",
+      "onset_s": 2.361,
+      "end_s": 2.581,
+      "take": "thursday-take-1",
+      "b_onset_s": 2.361,
+      "b_end_s": 2.561
+    },
+    {
+      "w": 5,
+      "word": "that",
+      "onset_s": 2.621,
+      "end_s": 2.721,
+      "take": "thursday-take-1",
+      "b_onset_s": 2.601,
+      "b_end_s": 2.721
+    },
+    {
+      "w": 6,
+      "word": "does",
+      "onset_s": 2.941,
+      "end_s": 3.141,
+      "take": "thursday-take-1",
+      "b_onset_s": 2.961,
+      "b_end_s": 3.141
+    },
+    {
+      "w": 7,
+      "word": "things",
+      "onset_s": 3.222,
+      "end_s": 3.422,
+      "take": "thursday-take-1",
+      "b_onset_s": 3.222,
+      "b_end_s": 3.422
+    },
+    {
+      "w": 8,
+      "word": "before",
+      "onset_s": 3.462,
+      "end_s": 3.742,
+      "take": "thursday-take-1",
+      "b_onset_s": 3.482,
+      "b_end_s": 3.722
+    },
+    {
+      "w": 9,
+      "word": "you",
+      "onset_s": 3.762,
+      "end_s": 3.842,
+      "take": "thursday-take-1",
+      "b_onset_s": 3.762,
+      "b_end_s": 3.842
+    },
+    {
+      "w": 10,
+      "word": "ask",
+      "onset_s": 3.942,
+      "end_s": 4.182,
+      "take": "thursday-take-1",
+      "b_onset_s": 3.982,
+      "b_end_s": 4.102
+    },
+    {
+      "w": 11,
+      "word": "offers",
+      "onset_s": 4.282,
+      "end_s": 4.622,
+      "take": "thursday-take-1",
+      "b_onset_s": 4.302,
+      "b_end_s": 4.622
+    },
+    {
+      "w": 12,
+      "word": "to",
+      "onset_s": 4.662,
+      "end_s": 4.742,
+      "take": "thursday-take-1",
+      "b_onset_s": 4.662,
+      "b_end_s": 4.742
+    },
+    {
+      "w": 13,
+      "word": "do",
+      "onset_s": 4.802,
+      "end_s": 4.882,
+      "take": "thursday-take-1",
+      "b_onset_s": 4.802,
+      "b_end_s": 4.922
+    },
+    {
+      "w": 14,
+      "word": "things.",
+      "onset_s": 5.002,
+      "end_s": 5.282,
+      "take": "thursday-take-1",
+      "b_onset_s": 5.002,
+      "b_end_s": 5.242
+    },
+    {
+      "w": 15,
+      "word": "Awesome,",
+      "onset_s": 5.882,
+      "end_s": 6.283,
+      "take": "thursday-take-1",
+      "b_onset_s": 5.923,
+      "b_end_s": 6.263
+    },
+    {
+      "w": 16,
+      "word": "really",
+      "onset_s": 6.523,
+      "end_s": 6.843,
+      "take": "thursday-take-1",
+      "b_onset_s": 6.543,
+      "b_end_s": 6.863
+    },
+    {
+      "w": 17,
+      "word": "cool",
+      "onset_s": 6.923,
+      "end_s": 7.143,
+      "take": "thursday-take-1",
+      "b_onset_s": 6.943,
+      "b_end_s": 7.163
+    },
+    {
+      "w": 18,
+      "word": "features",
+      "onset_s": 7.223,
+      "end_s": 7.803,
+      "take": "thursday-take-1",
+      "b_onset_s": 7.263,
+      "b_end_s": 7.743
+    },
+    {
+      "w": 19,
+      "word": "and",
+      "onset_s": 8.003,
+      "end_s": 8.183,
+      "take": "thursday-take-1",
+      "b_onset_s": 8.043,
+      "b_end_s": 8.143
+    },
+    {
+      "w": 20,
+      "word": "really",
+      "onset_s": 8.583,
+      "end_s": 8.844,
+      "take": "thursday-take-1",
+      "b_onset_s": 8.583,
+      "b_end_s": 8.864
+    },
+    {
+      "w": 21,
+      "word": "helpful",
+      "onset_s": 8.924,
+      "end_s": 9.324,
+      "take": "thursday-take-1",
+      "b_onset_s": 8.944,
+      "b_end_s": 9.304
+    },
+    {
+      "w": 22,
+      "word": "but",
+      "onset_s": 9.8333,
+      "end_s": 9.924,
+      "take": "thursday-take-1",
+      "heard_onset_s": 9.824,
+      "b_onset_s": 9.824,
+      "b_end_s": 9.924
+    },
+    {
+      "w": 23,
+      "word": "a",
+      "onset_s": 9.964,
+      "end_s": 9.984,
+      "take": "thursday-take-1",
+      "b_onset_s": 9.964,
+      "b_end_s": 10.004
+    },
+    {
+      "w": 24,
+      "word": "bit",
+      "onset_s": 10.024,
+      "end_s": 10.164,
+      "take": "thursday-take-1",
+      "b_onset_s": 10.044,
+      "b_end_s": 10.184
+    },
+    {
+      "w": 25,
+      "word": "dangerous",
+      "onset_s": 10.224,
+      "end_s": 10.624,
+      "take": "thursday-take-1",
+      "b_onset_s": 10.224,
+      "b_end_s": 10.604
+    },
+    {
+      "w": 26,
+      "word": "because",
+      "onset_s": 10.624,
+      "end_s": 10.784,
+      "take": "thursday-take-1",
+      "b_onset_s": 10.624,
+      "b_end_s": 10.784
+    },
+    {
+      "w": 27,
+      "word": "once",
+      "onset_s": 10.844,
+      "end_s": 11.004,
+      "take": "thursday-take-1",
+      "b_onset_s": 10.844,
+      "b_end_s": 10.964
+    },
+    {
+      "w": 28,
+      "word": "they're",
+      "onset_s": 11.024,
+      "end_s": 11.164,
+      "take": "thursday-take-1",
+      "b_onset_s": 11.024,
+      "b_end_s": 11.184
+    },
+    {
+      "w": 29,
+      "word": "connected",
+      "onset_s": 11.184,
+      "end_s": 11.685,
+      "take": "thursday-take-1",
+      "b_onset_s": 11.204,
+      "b_end_s": 11.665
+    },
+    {
+      "w": 30,
+      "word": "Muse",
+      "onset_s": 12.185,
+      "end_s": 12.485,
+      "take": "thursday-take-1",
+      "b_onset_s": 12.205,
+      "b_end_s": 12.465
+    },
+    {
+      "w": 31,
+      "word": "into",
+      "onset_s": 12.505,
+      "end_s": 12.685,
+      "take": "thursday-take-1",
+      "b_onset_s": 12.545,
+      "b_end_s": 12.685
+    },
+    {
+      "w": 32,
+      "word": "your",
+      "onset_s": 12.725,
+      "end_s": 12.825,
+      "take": "thursday-take-1",
+      "b_onset_s": 12.725,
+      "b_end_s": 12.845
+    },
+    {
+      "w": 33,
+      "word": "WhatsApp,",
+      "onset_s": 12.865,
+      "end_s": 13.305,
+      "take": "thursday-take-1",
+      "b_onset_s": 12.885,
+      "b_end_s": 13.285
+    },
+    {
+      "w": 34,
+      "word": "Amazon",
+      "onset_s": 13.405,
+      "end_s": 13.705,
+      "take": "thursday-take-1",
+      "b_onset_s": 13.425,
+      "b_end_s": 13.705
+    },
+    {
+      "w": 35,
+      "word": "for",
+      "onset_s": 13.745,
+      "end_s": 13.825,
+      "take": "thursday-take-1",
+      "b_onset_s": 13.745,
+      "b_end_s": 13.825
+    },
+    {
+      "w": 36,
+      "word": "your",
+      "onset_s": 13.845,
+      "end_s": 13.965,
+      "take": "thursday-take-1",
+      "b_onset_s": 13.865,
+      "b_end_s": 13.965
+    },
+    {
+      "w": 37,
+      "word": "groceries,",
+      "onset_s": 13.985,
+      "end_s": 14.586,
+      "take": "thursday-take-1",
+      "b_onset_s": 14.025,
+      "b_end_s": 14.546
+    },
+    {
+      "w": 38,
+      "word": "Google",
+      "onset_s": 15.2667,
+      "end_s": 15.546,
+      "take": "thursday-take-1",
+      "heard_onset_s": 15.246,
+      "b_onset_s": 15.246,
+      "b_end_s": 15.546
+    },
+    {
+      "w": 39,
+      "word": "for",
+      "onset_s": 15.566,
+      "end_s": 15.626,
+      "take": "thursday-take-1",
+      "b_onset_s": 15.586,
+      "b_end_s": 15.646
+    },
+    {
+      "w": 40,
+      "word": "your",
+      "onset_s": 15.646,
+      "end_s": 15.746,
+      "take": "thursday-take-1",
+      "b_onset_s": 15.666,
+      "b_end_s": 15.766
+    },
+    {
+      "w": 41,
+      "word": "emails,",
+      "onset_s": 15.806,
+      "end_s": 16.246,
+      "take": "thursday-take-1",
+      "b_onset_s": 15.826,
+      "b_end_s": 16.206
+    },
+    {
+      "w": 42,
+      "word": "it",
+      "onset_s": 16.807,
+      "end_s": 16.887,
+      "take": "thursday-take-1",
+      "b_onset_s": 16.827,
+      "b_end_s": 16.887
+    },
+    {
+      "w": 43,
+      "word": "can",
+      "onset_s": 16.967,
+      "end_s": 17.287,
+      "take": "thursday-take-1",
+      "b_onset_s": 16.987,
+      "b_end_s": 17.267
+    },
+    {
+      "w": 44,
+      "word": "get",
+      "onset_s": 17.587,
+      "end_s": 17.707,
+      "take": "thursday-take-1",
+      "b_onset_s": 17.587,
+      "b_end_s": 17.707
+    },
+    {
+      "w": 45,
+      "word": "a",
+      "onset_s": 17.747,
+      "end_s": 17.767,
+      "take": "thursday-take-1",
+      "b_onset_s": 17.747,
+      "b_end_s": 17.787
+    },
+    {
+      "w": 46,
+      "word": "bit",
+      "onset_s": 17.787,
+      "end_s": 17.907,
+      "take": "thursday-take-1",
+      "b_onset_s": 17.807,
+      "b_end_s": 17.927
+    },
+    {
+      "w": 47,
+      "word": "dangerous.",
+      "onset_s": 17.967,
+      "end_s": 18.367,
+      "take": "thursday-take-1",
+      "b_onset_s": 17.987,
+      "b_end_s": 18.387
+    },
+    {
+      "w": 48,
+      "word": "So",
+      "onset_s": 18.447,
+      "end_s": 18.547,
+      "take": "thursday-take-1",
+      "b_onset_s": 18.447,
+      "b_end_s": 18.607
+    },
+    {
+      "w": 49,
+      "word": "my",
+      "onset_s": 18.947,
+      "end_s": 19.047,
+      "take": "thursday-take-1",
+      "b_onset_s": 18.967,
+      "b_end_s": 19.047
+    },
+    {
+      "w": 50,
+      "word": "first",
+      "onset_s": 19.127,
+      "end_s": 19.347,
+      "take": "thursday-take-1",
+      "b_onset_s": 19.147,
+      "b_end_s": 19.347
+    },
+    {
+      "w": 51,
+      "word": "step",
+      "onset_s": 19.367,
+      "end_s": 19.588,
+      "take": "thursday-take-1",
+      "b_onset_s": 19.387,
+      "b_end_s": 19.568
+    },
+    {
+      "w": 52,
+      "word": "is",
+      "onset_s": 19.648,
+      "end_s": 19.748,
+      "take": "thursday-take-1",
+      "b_onset_s": 19.668,
+      "b_end_s": 19.748
+    },
+    {
+      "w": 53,
+      "word": "the",
+      "onset_s": 19.788,
+      "end_s": 19.868,
+      "take": "thursday-take-1",
+      "b_onset_s": 19.808,
+      "b_end_s": 19.888
+    },
+    {
+      "w": 54,
+      "word": "no",
+      "onset_s": 19.948,
+      "end_s": 20.048,
+      "take": "thursday-take-1",
+      "b_onset_s": 19.968,
+      "b_end_s": 20.108
+    },
+    {
+      "w": 55,
+      "word": "spending,",
+      "onset_s": 20.308,
+      "end_s": 20.748,
+      "take": "thursday-take-1",
+      "b_onset_s": 20.328,
+      "b_end_s": 20.728
+    },
+    {
+      "w": 56,
+      "word": "no",
+      "onset_s": 20.828,
+      "end_s": 20.908,
+      "take": "thursday-take-1",
+      "b_onset_s": 20.848,
+      "b_end_s": 20.928
+    },
+    {
+      "w": 57,
+      "word": "sending",
+      "onset_s": 21.048,
+      "end_s": 21.348,
+      "take": "thursday-take-1",
+      "b_onset_s": 21.048,
+      "b_end_s": 21.328
+    },
+    {
+      "w": 58,
+      "word": "rule.",
+      "onset_s": 21.388,
+      "end_s": 21.528,
+      "take": "thursday-take-1",
+      "b_onset_s": 21.388,
+      "b_end_s": 21.528
+    },
+    {
+      "w": 59,
+      "word": "It",
+      "onset_s": 21.528,
+      "end_s": 21.588,
+      "take": "thursday-take-1",
+      "b_onset_s": 21.548,
+      "b_end_s": 21.588
+    },
+    {
+      "w": 60,
+      "word": "doesn't",
+      "onset_s": 21.608,
+      "end_s": 21.908,
+      "take": "thursday-take-1",
+      "b_onset_s": 21.628,
+      "b_end_s": 21.908
+    },
+    {
+      "w": 61,
+      "word": "spend",
+      "onset_s": 21.988,
+      "end_s": 22.209,
+      "take": "thursday-take-1",
+      "b_onset_s": 21.988,
+      "b_end_s": 22.189
+    },
+    {
+      "w": 62,
+      "word": "my",
+      "onset_s": 22.229,
+      "end_s": 22.329,
+      "take": "thursday-take-1",
+      "b_onset_s": 22.249,
+      "b_end_s": 22.329
+    },
+    {
+      "w": 63,
+      "word": "money,",
+      "onset_s": 22.389,
+      "end_s": 22.589,
+      "take": "thursday-take-1",
+      "b_onset_s": 22.409,
+      "b_end_s": 22.609
+    },
+    {
+      "w": 64,
+      "word": "doesn't",
+      "onset_s": 23.069,
+      "end_s": 23.349,
+      "take": "thursday-take-1",
+      "b_onset_s": 23.069,
+      "b_end_s": 23.369
+    },
+    {
+      "w": 65,
+      "word": "send",
+      "onset_s": 23.449,
+      "end_s": 23.649,
+      "take": "thursday-take-1",
+      "b_onset_s": 23.449,
+      "b_end_s": 23.629
+    },
+    {
+      "w": 66,
+      "word": "anything",
+      "onset_s": 23.689,
+      "end_s": 23.989,
+      "take": "thursday-take-1",
+      "b_onset_s": 23.709,
+      "b_end_s": 23.989
+    },
+    {
+      "w": 67,
+      "word": "out",
+      "onset_s": 24.029,
+      "end_s": 24.149,
+      "take": "thursday-take-1",
+      "b_onset_s": 24.049,
+      "b_end_s": 24.129
+    },
+    {
+      "w": 68,
+      "word": "for",
+      "onset_s": 24.169,
+      "end_s": 24.269,
+      "take": "thursday-take-1",
+      "b_onset_s": 24.169,
+      "b_end_s": 24.269
+    },
+    {
+      "w": 69,
+      "word": "me",
+      "onset_s": 24.289,
+      "end_s": 24.329,
+      "take": "thursday-take-1",
+      "b_onset_s": 24.309,
+      "b_end_s": 24.349
+    },
+    {
+      "w": 70,
+      "word": "unless",
+      "onset_s": 24.409,
+      "end_s": 24.629,
+      "take": "thursday-take-1",
+      "b_onset_s": 24.409,
+      "b_end_s": 24.629
+    },
+    {
+      "w": 71,
+      "word": "I",
+      "onset_s": 24.749,
+      "end_s": 24.769,
+      "take": "thursday-take-1",
+      "b_onset_s": 24.709,
+      "b_end_s": 24.729
+    },
+    {
+      "w": 72,
+      "word": "say",
+      "onset_s": 24.829,
+      "end_s": 24.97,
+      "take": "thursday-take-1",
+      "b_onset_s": 24.829,
+      "b_end_s": 24.99
+    },
+    {
+      "w": 73,
+      "word": "so.",
+      "onset_s": 25.07,
+      "end_s": 25.15,
+      "take": "thursday-take-1",
+      "b_onset_s": 25.07,
+      "b_end_s": 25.19
+    },
+    {
+      "w": 74,
+      "word": "And",
+      "onset_s": 25.47,
+      "end_s": 25.55,
+      "take": "thursday-take-1",
+      "b_onset_s": 25.47,
+      "b_end_s": 25.55
+    },
+    {
+      "w": 75,
+      "word": "the",
+      "onset_s": 25.55,
+      "end_s": 25.61,
+      "take": "thursday-take-1",
+      "b_onset_s": 25.57,
+      "b_end_s": 25.63
+    },
+    {
+      "w": 76,
+      "word": "fun",
+      "onset_s": 25.67,
+      "end_s": 25.81,
+      "take": "thursday-take-1",
+      "b_onset_s": 25.69,
+      "b_end_s": 25.81
+    },
+    {
+      "w": 77,
+      "word": "part",
+      "onset_s": 25.87,
+      "end_s": 26.09,
+      "take": "thursday-take-1",
+      "b_onset_s": 25.89,
+      "b_end_s": 26.09
+    },
+    {
+      "w": 78,
+      "word": "is",
+      "onset_s": 26.11,
+      "end_s": 26.21,
+      "take": "thursday-take-1",
+      "b_onset_s": 26.15,
+      "b_end_s": 26.21
+    },
+    {
+      "w": 79,
+      "word": "I",
+      "onset_s": 26.29,
+      "end_s": 26.31,
+      "take": "thursday-take-1",
+      "b_onset_s": 26.27,
+      "b_end_s": 26.29
+    },
+    {
+      "w": 80,
+      "word": "didn't",
+      "onset_s": 26.33,
+      "end_s": 26.51,
+      "take": "thursday-take-1",
+      "b_onset_s": 26.33,
+      "b_end_s": 26.51
+    },
+    {
+      "w": 81,
+      "word": "even",
+      "onset_s": 26.53,
+      "end_s": 26.71,
+      "take": "thursday-take-1",
+      "b_onset_s": 26.55,
+      "b_end_s": 26.73
+    },
+    {
+      "w": 82,
+      "word": "write",
+      "onset_s": 26.99,
+      "end_s": 27.25,
+      "take": "thursday-take-1",
+      "b_onset_s": 27.03,
+      "b_end_s": 27.21
+    },
+    {
+      "w": 83,
+      "word": "this",
+      "onset_s": 27.27,
+      "end_s": 27.41,
+      "take": "thursday-take-1",
+      "b_onset_s": 27.27,
+      "b_end_s": 27.41
+    },
+    {
+      "w": 84,
+      "word": "myself.",
+      "onset_s": 27.45,
+      "end_s": 27.831,
+      "take": "thursday-take-1",
+      "b_onset_s": 27.47,
+      "b_end_s": 27.811
+    },
+    {
+      "w": 85,
+      "word": "I",
+      "onset_s": 28.251,
+      "end_s": 28.291,
+      "take": "thursday-take-1",
+      "b_onset_s": 28.231,
+      "b_end_s": 28.251
+    },
+    {
+      "w": 86,
+      "word": "just",
+      "onset_s": 28.311,
+      "end_s": 28.431,
+      "take": "thursday-take-1",
+      "b_onset_s": 28.311,
+      "b_end_s": 28.431
+    },
+    {
+      "w": 87,
+      "word": "put",
+      "onset_s": 28.471,
+      "end_s": 28.611,
+      "take": "thursday-take-1",
+      "b_onset_s": 28.471,
+      "b_end_s": 28.611
+    },
+    {
+      "w": 88,
+      "word": "one",
+      "onset_s": 28.711,
+      "end_s": 28.831,
+      "take": "thursday-take-1",
+      "b_onset_s": 28.731,
+      "b_end_s": 28.831
+    },
+    {
+      "w": 89,
+      "word": "prompt",
+      "onset_s": 28.851,
+      "end_s": 29.131,
+      "take": "thursday-take-1",
+      "b_onset_s": 28.871,
+      "b_end_s": 29.131
+    },
+    {
+      "w": 90,
+      "word": "into",
+      "onset_s": 29.171,
+      "end_s": 29.291,
+      "take": "thursday-take-1",
+      "b_onset_s": 29.191,
+      "b_end_s": 29.291
+    },
+    {
+      "w": 91,
+      "word": "my",
+      "onset_s": 29.311,
+      "end_s": 29.411,
+      "take": "thursday-take-1",
+      "b_onset_s": 29.331,
+      "b_end_s": 29.411
+    },
+    {
+      "w": 92,
+      "word": "AI",
+      "onset_s": 29.511,
+      "end_s": 29.751,
+      "take": "thursday-take-1",
+      "b_onset_s": 29.531,
+      "b_end_s": 29.691
+    },
+    {
+      "w": 93,
+      "word": "tool",
+      "onset_s": 29.791,
+      "end_s": 29.951,
+      "take": "thursday-take-1",
+      "b_onset_s": 29.811,
+      "b_end_s": 29.911
+    },
+    {
+      "w": 94,
+      "word": "and",
+      "onset_s": 29.971,
+      "end_s": 30.051,
+      "take": "thursday-take-1",
+      "b_onset_s": 29.971,
+      "b_end_s": 30.031
+    },
+    {
+      "w": 95,
+      "word": "it",
+      "onset_s": 30.051,
+      "end_s": 30.111,
+      "take": "thursday-take-1",
+      "b_onset_s": 30.051,
+      "b_end_s": 30.111
+    },
+    {
+      "w": 96,
+      "word": "started",
+      "onset_s": 30.151,
+      "end_s": 30.372,
+      "take": "thursday-take-1",
+      "b_onset_s": 30.131,
+      "b_end_s": 30.392
+    },
+    {
+      "w": 97,
+      "word": "asking",
+      "onset_s": 30.432,
+      "end_s": 30.652,
+      "take": "thursday-take-1",
+      "b_onset_s": 30.432,
+      "b_end_s": 30.652
+    },
+    {
+      "w": 98,
+      "word": "me",
+      "onset_s": 30.652,
+      "end_s": 30.692,
+      "take": "thursday-take-1",
+      "b_onset_s": 30.692,
+      "b_end_s": 30.732
+    },
+    {
+      "w": 99,
+      "word": "questions",
+      "onset_s": 30.772,
+      "end_s": 31.172,
+      "take": "thursday-take-1",
+      "b_onset_s": 30.812,
+      "b_end_s": 31.172
+    },
+    {
+      "w": 100,
+      "word": "back,",
+      "onset_s": 31.212,
+      "end_s": 31.452,
+      "take": "thursday-take-1",
+      "b_onset_s": 31.232,
+      "b_end_s": 31.412
+    },
+    {
+      "w": 101,
+      "word": "then",
+      "onset_s": 31.772,
+      "end_s": 31.912,
+      "take": "thursday-take-1",
+      "b_onset_s": 31.772,
+      "b_end_s": 31.892
+    },
+    {
+      "w": 102,
+      "word": "it",
+      "onset_s": 32.032,
+      "end_s": 32.112,
+      "take": "thursday-take-1",
+      "b_onset_s": 32.052,
+      "b_end_s": 32.112
+    },
+    {
+      "w": 103,
+      "word": "locks",
+      "onset_s": 32.212,
+      "end_s": 32.452,
+      "take": "thursday-take-1",
+      "b_onset_s": 32.212,
+      "b_end_s": 32.432
+    },
+    {
+      "w": 104,
+      "word": "itself",
+      "onset_s": 32.492,
+      "end_s": 32.772,
+      "take": "thursday-take-1",
+      "b_onset_s": 32.492,
+      "b_end_s": 32.752
+    },
+    {
+      "w": 105,
+      "word": "down",
+      "onset_s": 32.812,
+      "end_s": 33.012,
+      "take": "thursday-take-1",
+      "b_onset_s": 32.832,
+      "b_end_s": 32.972
+    },
+    {
+      "w": 106,
+      "word": "or",
+      "onset_s": 33.032,
+      "end_s": 33.113,
+      "take": "thursday-take-1",
+      "b_onset_s": 33.032,
+      "b_end_s": 33.093
+    },
+    {
+      "w": 107,
+      "word": "tells",
+      "onset_s": 33.133,
+      "end_s": 33.373,
+      "take": "thursday-take-1",
+      "b_onset_s": 33.153,
+      "b_end_s": 33.353
+    },
+    {
+      "w": 108,
+      "word": "you",
+      "onset_s": 33.413,
+      "end_s": 33.513,
+      "take": "thursday-take-1",
+      "b_onset_s": 33.413,
+      "b_end_s": 33.513
+    },
+    {
+      "w": 109,
+      "word": "how",
+      "onset_s": 33.553,
+      "end_s": 33.653,
+      "take": "thursday-take-1",
+      "b_onset_s": 33.573,
+      "b_end_s": 33.633
+    },
+    {
+      "w": 110,
+      "word": "to",
+      "onset_s": 33.693,
+      "end_s": 33.753,
+      "take": "thursday-take-1",
+      "b_onset_s": 33.693,
+      "b_end_s": 33.753
+    },
+    {
+      "w": 111,
+      "word": "lock",
+      "onset_s": 33.793,
+      "end_s": 33.913,
+      "take": "thursday-take-1",
+      "b_onset_s": 33.793,
+      "b_end_s": 33.913
+    },
+    {
+      "w": 112,
+      "word": "it",
+      "onset_s": 33.933,
+      "end_s": 33.993,
+      "take": "thursday-take-1",
+      "b_onset_s": 33.953,
+      "b_end_s": 33.993
+    },
+    {
+      "w": 113,
+      "word": "down.",
+      "onset_s": 34.033,
+      "end_s": 34.193,
+      "take": "thursday-take-1",
+      "b_onset_s": 34.033,
+      "b_end_s": 34.153
+    },
+    {
+      "w": 114,
+      "word": "Prompt's",
+      "onset_s": 34.6667,
+      "end_s": 34.953,
+      "take": "thursday-take-1",
+      "heard_onset_s": 34.653,
+      "b_onset_s": 34.673,
+      "b_end_s": 34.933
+    },
+    {
+      "w": 115,
+      "word": "in",
+      "onset_s": 34.993,
+      "end_s": 35.053,
+      "take": "thursday-take-1",
+      "b_onset_s": 34.993,
+      "b_end_s": 35.033
+    },
+    {
+      "w": 116,
+      "word": "the",
+      "onset_s": 35.073,
+      "end_s": 35.133,
+      "take": "thursday-take-1",
+      "b_onset_s": 35.093,
+      "b_end_s": 35.153
+    },
+    {
+      "w": 117,
+      "word": "comments,",
+      "onset_s": 35.173,
+      "end_s": 35.593,
+      "take": "thursday-take-1",
+      "b_onset_s": 35.193,
+      "b_end_s": 35.553
+    },
+    {
+      "w": 118,
+      "word": "make",
+      "onset_s": 36.174,
+      "end_s": 36.334,
+      "take": "thursday-take-1",
+      "b_onset_s": 36.194,
+      "b_end_s": 36.334
+    },
+    {
+      "w": 119,
+      "word": "sure",
+      "onset_s": 36.374,
+      "end_s": 36.514,
+      "take": "thursday-take-1",
+      "b_onset_s": 36.374,
+      "b_end_s": 36.514
+    },
+    {
+      "w": 120,
+      "word": "you",
+      "onset_s": 36.534,
+      "end_s": 36.614,
+      "take": "thursday-take-1",
+      "b_onset_s": 36.534,
+      "b_end_s": 36.614
+    },
+    {
+      "w": 121,
+      "word": "do",
+      "onset_s": 36.654,
+      "end_s": 36.714,
+      "take": "thursday-take-1",
+      "b_onset_s": 36.674,
+      "b_end_s": 36.754
+    },
+    {
+      "w": 122,
+      "word": "this,",
+      "onset_s": 36.794,
+      "end_s": 36.974,
+      "take": "thursday-take-1",
+      "b_onset_s": 36.814,
+      "b_end_s": 36.974
+    },
+    {
+      "w": 123,
+      "word": "no",
+      "onset_s": 37.054,
+      "end_s": 37.114,
+      "take": "thursday-take-1",
+      "b_onset_s": 37.054,
+      "b_end_s": 37.134
+    },
+    {
+      "w": 124,
+      "word": "spending,",
+      "onset_s": 37.214,
+      "end_s": 37.574,
+      "take": "thursday-take-1",
+      "b_onset_s": 37.234,
+      "b_end_s": 37.574
+    },
+    {
+      "w": 125,
+      "word": "no",
+      "onset_s": 37.594,
+      "end_s": 37.654,
+      "take": "thursday-take-1",
+      "b_onset_s": 37.614,
+      "b_end_s": 37.694
+    },
+    {
+      "w": 126,
+      "word": "sending,",
+      "onset_s": 37.794,
+      "end_s": 38.074,
+      "take": "thursday-take-1",
+      "b_onset_s": 37.794,
+      "b_end_s": 38.054
+    },
+    {
+      "w": 127,
+      "word": "one",
+      "onset_s": 38.134,
+      "end_s": 38.254,
+      "take": "thursday-take-1",
+      "b_onset_s": 38.154,
+      "b_end_s": 38.234
+    },
+    {
+      "w": 128,
+      "word": "easy",
+      "onset_s": 38.314,
+      "end_s": 38.535,
+      "take": "thursday-take-1",
+      "b_onset_s": 38.354,
+      "b_end_s": 38.555
+    },
+    {
+      "w": 129,
+      "word": "step",
+      "onset_s": 38.635,
+      "end_s": 38.875,
+      "take": "thursday-take-1",
+      "b_onset_s": 38.655,
+      "b_end_s": 38.855
+    },
+    {
+      "w": 130,
+      "word": "so",
+      "onset_s": 38.915,
+      "end_s": 38.975,
+      "take": "thursday-take-1",
+      "b_onset_s": 38.915,
+      "b_end_s": 38.975
+    },
+    {
+      "w": 131,
+      "word": "you",
+      "onset_s": 39.035,
+      "end_s": 39.095,
+      "take": "thursday-take-1",
+      "b_onset_s": 39.035,
+      "b_end_s": 39.095
+    },
+    {
+      "w": 132,
+      "word": "can",
+      "onset_s": 39.115,
+      "end_s": 39.215,
+      "take": "thursday-take-1",
+      "b_onset_s": 39.115,
+      "b_end_s": 39.215
+    },
+    {
+      "w": 133,
+      "word": "save",
+      "onset_s": 39.275,
+      "end_s": 39.515,
+      "take": "thursday-take-1",
+      "b_onset_s": 39.275,
+      "b_end_s": 39.495
+    },
+    {
+      "w": 134,
+      "word": "yourself",
+      "onset_s": 39.535,
+      "end_s": 39.915,
+      "take": "thursday-take-1",
+      "b_onset_s": 39.535,
+      "b_end_s": 39.875
+    },
+    {
+      "w": 135,
+      "word": "and",
+      "onset_s": 39.955,
+      "end_s": 40.035,
+      "take": "thursday-take-1",
+      "b_onset_s": 39.975,
+      "b_end_s": 40.035
+    },
+    {
+      "w": 136,
+      "word": "enjoy",
+      "onset_s": 40.035,
+      "end_s": 40.355,
+      "take": "thursday-take-1",
+      "b_onset_s": 40.075,
+      "b_end_s": 40.335
+    },
+    {
+      "w": 137,
+      "word": "these",
+      "onset_s": 40.375,
+      "end_s": 40.575,
+      "take": "thursday-take-1",
+      "b_onset_s": 40.415,
+      "b_end_s": 40.555
+    },
+    {
+      "w": 138,
+      "word": "new",
+      "onset_s": 40.595,
+      "end_s": 40.715,
+      "take": "thursday-take-1",
+      "b_onset_s": 40.615,
+      "b_end_s": 40.715
+    },
+    {
+      "w": 139,
+      "word": "technologies",
+      "onset_s": 40.735,
+      "end_s": 41.316,
+      "take": "thursday-take-1",
+      "b_onset_s": 40.775,
+      "b_end_s": 41.296
+    },
+    {
+      "w": 140,
+      "word": "without",
+      "onset_s": 41.736,
+      "end_s": 41.956,
+      "take": "thursday-take-1",
+      "b_onset_s": 41.716,
+      "b_end_s": 41.936
+    },
+    {
+      "w": 141,
+      "word": "any",
+      "onset_s": 41.976,
+      "end_s": 42.036,
+      "take": "thursday-take-1",
+      "b_onset_s": 41.976,
+      "b_end_s": 42.056
+    },
+    {
+      "w": 142,
+      "word": "of",
+      "onset_s": 42.076,
+      "end_s": 42.136,
+      "take": "thursday-take-1",
+      "b_onset_s": 42.096,
+      "b_end_s": 42.136
+    },
+    {
+      "w": 143,
+      "word": "those",
+      "onset_s": 42.156,
+      "end_s": 42.336,
+      "take": "thursday-take-1",
+      "b_onset_s": 42.156,
+      "b_end_s": 42.296
+    },
+    {
+      "w": 144,
+      "word": "weird",
+      "onset_s": 42.396,
+      "end_s": 42.596,
+      "take": "thursday-take-1",
+      "b_onset_s": 42.396,
+      "b_end_s": 42.596
+    },
+    {
+      "w": 145,
+      "word": "moments",
+      "onset_s": 42.636,
+      "end_s": 43.036,
+      "take": "thursday-take-1",
+      "b_onset_s": 42.656,
+      "b_end_s": 43.016
+    },
+    {
+      "w": 146,
+      "word": "or",
+      "onset_s": 43.136,
+      "end_s": 43.196,
+      "take": "thursday-take-1",
+      "b_onset_s": 43.136,
+      "b_end_s": 43.176
+    },
+    {
+      "w": 147,
+      "word": "fails.",
+      "onset_s": 43.236,
+      "end_s": 43.616,
+      "take": "thursday-take-1",
+      "b_onset_s": 43.276,
+      "b_end_s": 43.556
+    }
+  ],
+  "flubs_removed": [],
+  "unscripted_kept": [],
+  "duration_s": 44.116,
+  "duration_frames": 1323,
+  "conformed": {
+    "picture": "conformed.short.mp4",
+    "dialogue": "dialogue.short.wav"
+  }
+}

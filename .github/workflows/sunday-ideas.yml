@@ -97,14 +97,23 @@ jobs:
             echo "go=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Is this Saturday's good news due for the week that starts the next day?
+        id: goodnews
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        run: |
+          # Krish, 2026-11-02: "You will need to find the actual good news on Sunday as per the usual system so that
+          # the news items are fresh". The weekly good news of the week starting the day after this Sunday.
+          python3 scripts/sunday_ideas.py goodnews >> "$GITHUB_OUTPUT"
+
       - uses: actions/setup-node@v4
-        if: steps.guard.outputs.go == 'true'
+        if: steps.guard.outputs.go == 'true' || steps.goodnews.outputs.gn_due == 'true'
         with:
           node-version: '24'
           cache: npm
 
       - name: Install the tools the skill runs
-        if: steps.guard.outputs.go == 'true'
+        if: steps.guard.outputs.go == 'true' || steps.goodnews.outputs.gn_due == 'true'
         run: |
           python -m pip install --require-hashes --no-deps -r requirements-ci.txt
           npm ci
@@ -146,6 +155,31 @@ jobs:
             disk and do not commit or push: the workflow keeps that folder on a branch for the Sunday room.
             If the board refuses a build, fix the inputs and build again; if it still refuses, stop and say why.
 
+      - name: This Saturday's good news, in Claude Code on his subscription
+        if: always() && steps.goodnews.outputs.gn_due == 'true'
+        uses: anthropics/claude-code-action@v1
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          GN_MONDAY: ${{ steps.goodnews.outputs.gn_monday }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          claude_args: >-
+            --max-turns 150
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --disallowedTools "Read(//proc/**)"
+          prompt: |
+            The Saturday good news for the week starting Monday ${{ steps.goodnews.outputs.gn_monday }}, fired by
+            GitHub Actions (.github/workflows/sunday-ideas.yml). No one reads this run's chat.
+
+            Follow the section "The Saturday good news" in .agents/skills/plan-week/references/offdays.md exactly:
+            find the four stories, check each against its primary source, write them into that week's
+            docs/plans/<Monday>-week/ideas.json, run board_feed.py cover, rebuild that week's board from its live
+            build keeping every made day, and publish it with board_web.py publish-web --apply. Research with the
+            built-in web search and web fetch. Change nothing but that option's stories; never patch the built page;
+            do not commit or push: the workflow keeps that folder on a branch for the Sunday room. If the board refuses
+            a build, fix the stories and build again; if it still refuses, stop and say why.
+
       - name: The Ideas tab is live
         if: steps.guard.outputs.go == 'true'
         env:
@@ -159,18 +193,22 @@ jobs:
           fi
 
       - name: Keep the week's ideas for the Sunday room
-        if: always() && steps.guard.outputs.go == 'true'
+        if: always() && (steps.guard.outputs.go == 'true' || steps.goodnews.outputs.gn_due == 'true')
         env:
           MONDAY: ${{ steps.guard.outputs.monday }}
+          GN_MONDAY: ${{ steps.goodnews.outputs.gn_monday }}
           RUN_ID: ${{ github.run_id }}
           GH_TOKEN: ${{ github.token }}
         run: |
           folder="docs/plans/$MONDAY-week"
-          [ -d "$folder" ] || { echo "::warning::No $folder was written."; exit 0; }
+          # The good news writes the week that starts the next day; it rides the same branch.
+          news="docs/plans/$GN_MONDAY-week"
+          [ -d "$folder" ] || [ -d "$news" ] || { echo "::warning::No $folder was written."; exit 0; }
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch -c "sunday-ideas/$MONDAY-$RUN_ID"
-          git add -- "$folder"
+          [ -d "$folder" ] && git add -- "$folder"
+          [ -n "$GN_MONDAY" ] && [ -d "$news" ] && git add -- "$news"
           git diff --cached --quiet && { echo "Nothing new in $folder."; exit 0; }
           git commit -q -m "Sunday ideas for the week of $MONDAY (run $RUN_ID)" \
             -m "Written by the Sunday ideas run in GitHub Actions on Krish's subscription; the Sunday room merges it." \

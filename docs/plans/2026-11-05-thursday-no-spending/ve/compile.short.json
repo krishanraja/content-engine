@@ -1,0 +1,12 @@
+{
+  "lint": "clean",
+  "sfx_missing": [],
+  "opening": "hook",
+  "edl": {
+    "cut": "short",
+    "joins_s": [],
+    "duration_frames": 1323,
+    "picture_short_frames": 0
+  },
+  "props_sha256": "0cf4cea14a87ff64dc5e77acf513e3c89403bf022b0bf9abc8d1de07790bcfdd"
+}

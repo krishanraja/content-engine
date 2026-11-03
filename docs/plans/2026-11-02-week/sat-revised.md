@@ -68,3 +68,32 @@ Candidates so far, each to be checked against its primary source:
 
 The final three are picked on Friday 6 Nov from the whole week, in these lanes. Each card carries the real headline,
 the source and the date.
+
+## Five stories, people who benefited (2 Nov, after Krish's correction)
+
+His words (2 Nov): "Frontier models lowering prices isn't really fitting with how humans are benefitting from AI- and we need 5 stories". Price cuts, launches, funding and lab deals are out.
+
+Each was opened and checked against its source on 2 Nov. All five fall between 24 and 30 Oct, just before the 31 Oct to 7 Nov window. Nothing in the window meets the bar yet.
+
+1. **Vince B. Bailey.**
+   - A stroke left him unable to say "apple". He typed words into ChatGPT, had them read back and repeated them until he could speak them. He wrote a novel and is back at work.
+   - Source: Gazetteer SF, 29 Oct, his own first-person piece. https://sf.gazetteer.co/how-ai-helps-me-live-with-aphasia
+   - Media: the photos are his ("Courtesy of the author"); ask him or link.
+2. **Aníbal Martín.**
+   - A teacher with ALS near Madrid. He saved a digital copy of his own voice, free, through Spain's ALS association (adELA) and ElevenLabs. Spain is the first country to offer it nationally.
+   - Source: ElevenLabs, 28 Oct. https://elevenlabs.io/blog/elevenlabs-adela
+   - Media: no images; ask adELA.
+3. **Anwita Chaudhry.**
+   - A Northeastern student. She is building ExpressAI, which gives nonverbal students a voice with emotion. She won federal funding and a Women Who Empower award.
+   - Source: Northeastern Global News, 30 Oct. https://news.northeastern.edu/2026/10/30/ai-text-to-speech-app
+   - Media: two credited university photos.
+4. **The Eve Appeal.**
+   - A gynaecological cancer charity whose nurse line saw demand rise 1,141%. Its AI, built only on its own checked advice, answered about 95% of routine questions in a 359-user trial, so nurses keep the hard cases.
+   - Source: Nursing Times, 29 Oct. https://www.nursingtimes.net/cancer/spike-in-demand-to-nurse-advice-line-leads-to-ai-launch-29-10-2026/
+   - Media: ask the charity.
+5. **Brown County, Wisconsin.**
+   - In its first week, an AI assistant took over 60% of about 1,950 non-emergency calls, freeing 58 dispatcher hours for real emergencies.
+   - Source: FOX 11, 30 Oct. https://fox11online.com/newsletter-daily/ai-assistant-is-helping-brown-county-911-field-non-emergency-calls-automated-virtual-assistant-ava-police-fire-ems-green-bay-technology
+   - Media: the station's photos; link only.
+
+Not found yet: an AI-music story where artists were actually paid, and a personal agent doing a real task for a named person. Both are re-searched midweek.

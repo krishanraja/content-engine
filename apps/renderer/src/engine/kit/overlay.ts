@@ -3,10 +3,10 @@ import type { EngineEvent, EngineObject, EngineTokens } from '../props'
 import { ACTIVE_CANVAS } from './lock'
 
 export const houseTokens = (tokens: EngineTokens) => ({ ...tokens, section: tokens.channel })
-export const halftone = (tokens: EngineTokens) => ({
-  backgroundColor: tokens.channel,
+export const halftone = (tokens: EngineTokens, colour = tokens.channel) => ({
+  backgroundColor: colour,
   // felt more than seen: soft dots so ink type on the block stays crisp
-  backgroundImage: `radial-gradient(circle at 7px 7px, color-mix(in srgb, ${tokens.ink} 38%, ${tokens.channel}) 1.5px, ${tokens.channel} 1.9px)`,
+  backgroundImage: `radial-gradient(circle at 7px 7px, color-mix(in srgb, ${tokens.ink} 38%, ${colour}) 1.5px, ${colour} 1.9px)`,
   backgroundSize: '14px 14px',
 })
 

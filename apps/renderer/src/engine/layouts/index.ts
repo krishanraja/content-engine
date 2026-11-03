@@ -1,3 +1,4 @@
+import { FWP_SPLIT_SEAM_Y, FWP_POSTER_POSITIONS } from '../mocks/face-with-proof'
 import type { Box } from '../devices/types'
 import type { EngineBeat, EngineRenderProps } from '../props'
 
@@ -7,6 +8,7 @@ type Aspect = EngineRenderProps['aspect']
 // These are key-content regions. The segment plate itself remains full bleed.
 // Each aspect is authored in its own frame coordinates, never scaled.
 const TALL: Record<Layout, readonly Box[]> = {
+  SPLIT: [{ left: 0, top: 0, width: 1080, height: FWP_SPLIT_SEAM_Y }],
   STAGE: [
     { left: 0, top: 0, width: 1080, height: 1920 },
   ],
@@ -34,7 +36,7 @@ const TALL: Record<Layout, readonly Box[]> = {
   ],
 }
 
-const WIDE: Record<Layout, readonly Box[]> = {
+const WIDE: Record<Exclude<Layout, 'SPLIT'>, readonly Box[]> = {
   STAGE: [
     { left: 0, top: 0, width: 1920, height: 1080 },
   ],
@@ -66,7 +68,22 @@ const WIDE: Record<Layout, readonly Box[]> = {
  * F1: slot 0 is the persistent context object (the grid), slot 1 the dominant focus object,
  * and slot 2 a stat strip. */
 export function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[] {
-  const boxes = (aspect === '9:16' ? TALL : WIDE)[layout]
-  if (layout === 'STAGE') return Array.from({ length: count }, () => ({ ...boxes[0]! }))
+  if (layout === 'SPLIT' && aspect === '16:9') throw new Error('ve: SPLIT has no wide lock; use 9:16')
+  const boxes = aspect === '9:16' ? TALL[layout] : WIDE[layout as Exclude<Layout, 'SPLIT'>]
+  if (layout === 'STAGE' || layout === 'SPLIT') return Array.from({ length: count }, () => ({ ...boxes[0]! }))
   return boxes.map((box) => ({ ...box }))
+}
+
+/** Camera geometry shares the frozen seam with stage slots. */
+export function splitCameraBox(aspect: Aspect): Box {
+  if (aspect !== '9:16') throw new Error('ve: SPLIT has no wide lock; use 9:16')
+  return { left: 0, top: FWP_SPLIT_SEAM_Y, width: 1080, height: 1920 - FWP_SPLIT_SEAM_Y }
+}
+
+/** Named editorial crops are not CSS object positions. */
+export function splitPlatePosition(crop?: string): string {
+  const tokens = crop?.trim().split(/\s+/)
+  return tokens && tokens.length >= 1 && tokens.length <= 4
+    && tokens.every((token) => /^(?:left|right|top|bottom|center|0|-?\d+(?:\.\d+)?(?:%|px))$/.test(token))
+    ? crop!.trim() : FWP_POSTER_POSITIONS.proof
 }

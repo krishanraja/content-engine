@@ -380,8 +380,25 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "$dir\scripts\install-librar
 The first try on 2026-10-06 ran `-File scripts\install-library-sync.ps1` from
 a folder with no such file (not a copy of this repository, or one without the
 day's changes), and PowerShell said the file does not exist; the full path
-above works from anywhere. To pick up a newer
-sync later, run the same three lines again.
+above works from anywhere. Since 2026-11-03 a newer sync reaches the
+machine by itself: the recordings upload pulls `library-source` each pass
+(fast-forward only), and the sync then pulls its own copy too. The three lines
+are needed only to install it on a new machine.
+
+### The Heartside library
+
+Krish, 2026-11-03: "Why don't you duplicate that Python script for Heartside then? We're going to need to do a lot more of this type of stuff moving forward". The same lane files Heartside's social library: the
+growth engine sends a post's media with
+
+```
+python scripts/post-pack/send.py FOLDER --library heartside --as "Posts/F01" --purpose "Heartside post F01, for Codex to post"
+```
+
+and the sync writes it into `Heartside\05_Social-Library\Posts\F01\`
+(`config/heartside-library.json`), after the makeyourmindup pass and apart
+from it. A Heartside path is `Posts/<post id>/<file>`, the id like `F01` or
+`F06-frenchie`, nothing deeper (`config/library-paths.cases.json`,
+`libraries.heartside`).
 
 It first runs the sync with `-Check`, which writes nothing: the library folder
 must be reachable, the runner key must be on the machine and the engine must

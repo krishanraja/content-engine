@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { isValidElement, type ReactElement, type ReactNode } from 'react'
 import { Audio, OffthreadVideo, Sequence } from 'remotion'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -27,7 +28,7 @@ function elements(node: ReactNode): ReactElement<Record<string, unknown>>[] {
   return [node, ...elements(node.props.children as ReactNode)]
 }
 
-const layouts: Exclude<EngineBeat['layout'], 'STAGE'>[] = ['P1', 'P3', 'P6', 'F1', 'F3']
+const layouts: Exclude<EngineBeat['layout'], 'STAGE' | 'SPLIT'>[] = ['P1', 'P3', 'P6', 'F1', 'F3']
 const aspects: EngineRenderProps['aspect'][] = ['9:16', '16:9']
 
 describe('ve layouts', () => {
@@ -220,5 +221,38 @@ describe('STAGE render props', () => {
     const clips = nodes.filter((node) => (node.props.style as { clipPath?: string } | undefined)?.clipPath)
     expect(clips).toHaveLength(3)
     for (const clip of clips) expect(clip.props.style).toEqual({ clipPath: 'inset(0px 0px 0px 0px)' })
+  })
+})
+
+describe('SPLIT object placement', () => {
+  const place = { left: 72, top: 230, width: 345, height: 68, scale: 2.4 }
+  function placedProps(layout: EngineBeat['layout'] = 'SPLIT') {
+    const props = EngineRenderPropsSchema.parse(fixture)
+    props.aspect = '9:16'
+    props.objects = [{ obj: 'slab', device: 'fixture-device', meaning: 'slab', variants: {}, params: { main: 'Answer', place }, fromFrame: 0, toFrame: 120 }]
+    props.beats[1]!.layout = layout
+    props.beats[1]!.uses = ['slab']
+    return props
+  }
+  it('strips place before strict parsing and gives the device a local box inside its transformed wrapper', () => {
+    const props = placedProps()
+    const nodes = elements(FormatMaster(props))
+    const device = nodes.find(n => n.type === DEVICES['fixture-device'])!
+    const object = device.props.object as EngineRenderProps['objects'][number]
+    expect(z.object({ main: z.string() }).strict().parse(object.params)).toEqual({ main: 'Answer' })
+    expect(device.props.box).toEqual({ left: 0, top: 0, width: 345, height: 68 })
+    const wrapper = nodes.find(n => n.props.children === device)!
+    expect(wrapper.props.style).toEqual({ left: 72, top: 230, width: 345, height: 68, transform: 'scale(2.4)', transformOrigin: 'top left' })
+    expect(props.objects[0]!.params.place).toEqual(place)
+  })
+  it('preserves the whole stage and original object when unplaced', () => {
+    const props = placedProps()
+    delete props.objects[0]!.params.place
+    const device = elements(FormatMaster(props)).find(n => n.type === DEVICES['fixture-device'])!
+    expect(device.props.object).toBe(props.objects[0])
+    expect(device.props.box).toEqual(slotsFor('SPLIT', '9:16')[0])
+  })
+  it('refuses placement on P1 naming the object', () => {
+    expect(() => FormatMaster(placedProps('P1'))).toThrow('ve: place on non-SPLIT object slab')
   })
 })

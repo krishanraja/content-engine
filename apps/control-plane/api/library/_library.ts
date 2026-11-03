@@ -24,6 +24,27 @@ import { normalizedStorageMd5Etag } from '../video-studio/_previewStorage.js'
 // and in scripts/post-pack/library.py, and both are tested against every case.
 
 export const LIBRARY_BUCKET = 'content-library'
+
+// A second library (Krish, 2026-11-03: "Why don't you duplicate that Python
+// script for Heartside then? We're going to need to do a lot more of this type
+// of stuff moving forward"): Heartside's social library, the Drive folder
+// Heartside/05_Social-Library, where the growth engine files each post's media
+// as Posts/<post id>/<file> for Codex to post. Same bucket, routes and sync,
+// its own folder rule. A request names it with "library": "heartside";
+// without one it is makeyourmindup, so every earlier sender is unchanged. Like
+// makeyourmindup's folder, it is Krish's explicit instruction for that one
+// folder, written by his own machine.
+export const LIBRARY_NAMES = ['makeyourmindup', 'heartside'] as const
+export type LibraryName = typeof LIBRARY_NAMES[number]
+export const LIBRARY_DEFAULT: LibraryName = 'makeyourmindup'
+export const HEARTSIDE_POSTS = 'Posts'
+export const HEARTSIDE_POST_ID = /^[A-Z][0-9]{2,3}(?:-[a-z0-9]+)*$/
+
+/** The library a request names: makeyourmindup when it names none, null when it names one there is not. */
+export function parseLibraryName(value: unknown): LibraryName | null {
+  if (value === undefined || value === null) return LIBRARY_DEFAULT
+  return typeof value === 'string' && (LIBRARY_NAMES as readonly string[]).includes(value) ? value as LibraryName : null
+}
 /** 2 GiB since 2026-10-18 (Krish: "Yes, raise to 2 GB", so a 14-minute deep-cut take of 1.1 GB reaches a cloud
  *  session; migration 20261018160000). It was 500 MiB: a two-minute 1080p master runs 35 to 75 MB, so this leaves room
  *  for a long master. The bucket's file_size_limit is set to exactly this by
@@ -41,6 +62,9 @@ export const LIBRARY_POST_SECTIONS = ['0 Publish', '1 Article', '2 Covers and im
 export const LIBRARY_POST_README = 'READ ME.txt'
 /** The live subchannels as the brand writes them, from the Studio's series. */
 export const LIBRARY_SUBCHANNELS = LIVE_SERIES.map((id) => id.replace(/_/g, '.'))
+/** An off-day post has no series; its folder carries this label where a series name would go
+ *  (config/library-paths.cases.json, off_day_label; Krish, 2026-11-03). */
+export const LIBRARY_OFF_DAY = 'off.day'
 
 // Every type a post, the brand kit or the channel art holds. The extension
 // decides the type, so a sender cannot choose one; the bucket allows exactly
@@ -107,10 +131,12 @@ export type LibraryPathRefusal =
   | 'path_test_folder'
   | 'path_render_outside_video'
   | 'path_type_not_allowed'
+  | 'path_post_id_invalid'
 
 export interface LibraryPath {
   path: string
-  top: typeof LIBRARY_TOP_FOLDERS[number]
+  top: typeof LIBRARY_TOP_FOLDERS[number] | typeof HEARTSIDE_POSTS
+  library: LibraryName
   extension: string
   contentType: string
 }
@@ -124,7 +150,7 @@ export const CONTROL = /[\u0000-\u001f\u007f-\u009f]/
 export const RESERVED = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
 const POST_FOLDER = new RegExp(
-  `^([0-9]{4})-([0-9]{2})-([0-9]{2}) (?:(${WEEKDAYS.join('|')}) (${LIBRARY_SUBCHANNELS.map((name) => name.replace(/\./g, '\\.')).join('|')})|Launch) - \\S`,
+  `^([0-9]{4})-([0-9]{2})-([0-9]{2}) (?:(${WEEKDAYS.join('|')}) (${[...LIBRARY_SUBCHANNELS, LIBRARY_OFF_DAY].map((name) => name.replace(/\./g, '\\.')).join('|')})|Launch) - \\S`,
 )
 
 function refuse(refusal: LibraryPathRefusal): LibraryPathCheck {
@@ -148,7 +174,7 @@ export function isLibraryPostFolder(name: string): boolean {
 /** A path inside the library, relative and with forward slashes, confined to
  *  the brand kit, the channel art or one post's folder. Anything else is
  *  refused with the reason. */
-export function checkLibraryPath(value: unknown): LibraryPathCheck {
+export function checkLibraryPath(value: unknown, library: LibraryName = LIBRARY_DEFAULT): LibraryPathCheck {
   if (typeof value !== 'string' || !value) return refuse('path_not_text')
   if (value.length > LIBRARY_PATH_MAX) return refuse('path_too_long')
   if (value.normalize('NFC') !== value) return refuse('path_not_nfc')
@@ -164,23 +190,32 @@ export function checkLibraryPath(value: unknown): LibraryPathCheck {
     if (RESERVED.test(part)) return refuse('path_reserved_name')
     if (part.length > LIBRARY_PART_MAX) return refuse('path_part_too_long')
   }
-  const top = LIBRARY_TOP_FOLDERS.find((folder) => folder === parts[0])
-  if (!top) return refuse('path_wrong_top_folder')
-  if (top === LIBRARY_POSTS) {
+  let top: LibraryPath['top'] | undefined
+  if (library === 'heartside') {
+    // Heartside: Posts/<post id>/<file>, nothing deeper.
+    if (parts[0] !== HEARTSIDE_POSTS) return refuse('path_wrong_top_folder')
+    top = HEARTSIDE_POSTS
     if (parts.length < 3) return refuse('path_no_file')
-    if (!isLibraryPostFolder(parts[1]!)) return refuse('path_post_folder_invalid')
-    // W3.5: a canary or test post never reaches the real library, and a rendered video lives only in 3 Video.
-    if (TEST_SUBJECT.test(parts[1]!.split(' - ').slice(1).join(' - '))) return refuse('path_test_folder')
-    const inside = parts.slice(2)
-    const placed = inside.length === 1
-      ? inside[0] === LIBRARY_POST_README
-      : (LIBRARY_POST_SECTIONS as readonly string[]).includes(inside[0]!)
-    if (!placed) return refuse('path_post_section_invalid')
-    const last = parts[parts.length - 1]!
-    const ext = last.lastIndexOf('.') > 0 ? last.slice(last.lastIndexOf('.') + 1).toLowerCase() : ''
-    if (inside[0] !== '3 Video' && RENDERS.includes(ext)) return refuse('path_render_outside_video')
-  } else if (parts.length < 2) {
-    return refuse('path_no_file')
+    if (parts.length > 3 || !HEARTSIDE_POST_ID.test(parts[1]!)) return refuse('path_post_id_invalid')
+  } else {
+    top = LIBRARY_TOP_FOLDERS.find((folder) => folder === parts[0])
+    if (!top) return refuse('path_wrong_top_folder')
+    if (top === LIBRARY_POSTS) {
+      if (parts.length < 3) return refuse('path_no_file')
+      if (!isLibraryPostFolder(parts[1]!)) return refuse('path_post_folder_invalid')
+      // W3.5: a canary or test post never reaches the real library, and a rendered video lives only in 3 Video.
+      if (TEST_SUBJECT.test(parts[1]!.split(' - ').slice(1).join(' - '))) return refuse('path_test_folder')
+      const inside = parts.slice(2)
+      const placed = inside.length === 1
+        ? inside[0] === LIBRARY_POST_README
+        : (LIBRARY_POST_SECTIONS as readonly string[]).includes(inside[0]!)
+      if (!placed) return refuse('path_post_section_invalid')
+      const last = parts[parts.length - 1]!
+      const ext = last.lastIndexOf('.') > 0 ? last.slice(last.lastIndexOf('.') + 1).toLowerCase() : ''
+      if (inside[0] !== '3 Video' && RENDERS.includes(ext)) return refuse('path_render_outside_video')
+    } else if (parts.length < 2) {
+      return refuse('path_no_file')
+    }
   }
   const name = parts[parts.length - 1]!
   const dot = name.lastIndexOf('.')
@@ -189,7 +224,7 @@ export function checkLibraryPath(value: unknown): LibraryPathCheck {
     ? LIBRARY_CONTENT_TYPES[extension]
     : undefined
   if (!contentType) return refuse('path_type_not_allowed')
-  return { ok: true, path: value, top, extension, contentType }
+  return { ok: true, path: value, top, library, extension, contentType }
 }
 
 /** Content-addressed: the same bytes sent for two posts are one object. */
@@ -228,7 +263,9 @@ export function libraryPurpose(value: unknown): string | null {
 export function parseLibraryUploadRequest(value: unknown): Parsed<LibraryUploadRequest> {
   const body = record(value)
   if (!body) return { ok: false, code: 'invalid_library_upload_request' }
-  const path = checkLibraryPath(body.path)
+  const library = parseLibraryName(body.library)
+  if (!library) return { ok: false, code: 'invalid_library' }
+  const path = checkLibraryPath(body.path, library)
   if (path.ok === false) return { ok: false, code: 'invalid_library_path', reason: path.refusal }
   const purpose = libraryPurpose(body.purpose)
   if (
@@ -245,7 +282,9 @@ export function parseLibraryUploadRequest(value: unknown): Parsed<LibraryUploadR
 export function parseLibraryConfirmRequest(value: unknown): Parsed<{ path: LibraryPath; sha256: string }> {
   const body = record(value)
   if (!body) return { ok: false, code: 'invalid_library_confirm_request' }
-  const path = checkLibraryPath(body.path)
+  const library = parseLibraryName(body.library)
+  if (!library) return { ok: false, code: 'invalid_library' }
+  const path = checkLibraryPath(body.path, library)
   if (path.ok === false) return { ok: false, code: 'invalid_library_path', reason: path.refusal }
   if (typeof body.sha256 !== 'string' || !SHA256_RE.test(body.sha256)) return { ok: false, code: 'invalid_library_confirm_request' }
   const { ok: _ok, ...checked } = path
@@ -255,16 +294,18 @@ export function parseLibraryConfirmRequest(value: unknown): Parsed<{ path: Libra
 export const LIBRARY_PENDING_DEFAULT = 25
 export const LIBRARY_PENDING_MAX = 100
 
-export function parseLibraryPendingQuery(query: unknown): { machine: string; limit: number } | null {
+export function parseLibraryPendingQuery(query: unknown): { machine: string; limit: number; library: LibraryName } | null {
   const q = record(query) ?? {}
   const machine = q.machine
   if (typeof machine !== 'string' || !MACHINE_RE.test(machine)) return null
+  const library = parseLibraryName(q.library)
+  if (!library) return null
   const rawLimit = q.limit
-  if (rawLimit === undefined) return { machine, limit: LIBRARY_PENDING_DEFAULT }
+  if (rawLimit === undefined) return { machine, limit: LIBRARY_PENDING_DEFAULT, library }
   if (typeof rawLimit !== 'string' || !/^[0-9]{1,3}$/.test(rawLimit)) return null
   const limit = Number(rawLimit)
   if (limit < 1 || limit > LIBRARY_PENDING_MAX) return null
-  return { machine, limit }
+  return { machine, limit, library }
 }
 
 export interface LibraryWrittenItem { path: string; sha256: string; written_as: string | null }
@@ -297,16 +338,18 @@ export function isBesideName(path: string, candidate: unknown): candidate is str
   return String(copy) === m[1] && copy >= 2 && copy <= 99
 }
 
-export function parseLibraryWrittenRequest(value: unknown): { machine: string; items: LibraryWrittenItem[] } | null {
+export function parseLibraryWrittenRequest(value: unknown): { machine: string; items: LibraryWrittenItem[]; library: LibraryName } | null {
   const body = record(value)
   if (!body || body.schema_version !== 1) return null
   if (typeof body.machine !== 'string' || !MACHINE_RE.test(body.machine)) return null
+  const library = parseLibraryName(body.library)
+  if (!library) return null
   if (!Array.isArray(body.items) || body.items.length < 1 || body.items.length > LIBRARY_PENDING_MAX) return null
   const items: LibraryWrittenItem[] = []
   for (const raw of body.items) {
     const item = record(raw)
     if (!item) return null
-    const path = checkLibraryPath(item.path)
+    const path = checkLibraryPath(item.path, library)
     if (!path.ok || typeof item.sha256 !== 'string' || !SHA256_RE.test(item.sha256)) return null
     let writtenAs: string | null = null
     if (item.written_as !== undefined && item.written_as !== null && item.written_as !== item.path) {
@@ -317,7 +360,7 @@ export function parseLibraryWrittenRequest(value: unknown): { machine: string; i
     }
     items.push({ path: path.path, sha256: item.sha256, written_as: writtenAs })
   }
-  return { machine: body.machine, items }
+  return { machine: body.machine, items, library }
 }
 
 // ── the private bucket ──────────────────────────────────────────────────────
@@ -385,10 +428,11 @@ export async function verifyStoredLibraryObject(
 
 // ── the index ───────────────────────────────────────────────────────────────
 
-export const LIBRARY_FILE_COLUMNS = 'id, path, sha256, md5, bytes, content_type, object_key, purpose, sent_by, sent_at, state, ready_at'
+export const LIBRARY_FILE_COLUMNS = 'id, library, path, sha256, md5, bytes, content_type, object_key, purpose, sent_by, sent_at, state, ready_at'
 
 export interface LibraryFileRow {
   id: string
+  library: LibraryName
   path: string
   sha256: string
   md5: string
@@ -418,8 +462,11 @@ export function libraryFileRow(value: unknown): LibraryFileRow | null {
     || typeof row.sent_at !== 'string'
     || (row.state !== 'reserved' && row.state !== 'ready')
   ) return null
+  const library = parseLibraryName(row.library)
+  if (!library) return null
   return {
     id: row.id,
+    library,
     path: row.path,
     sha256: row.sha256,
     md5: row.md5,

@@ -145,21 +145,21 @@ def page_changes(video, region, *, threshold: float | None = None, frames=None) 
     return [f for k, f in enumerate(hot) if k == 0 or hot[k - 1] != f - 1]
 
 
-def tesseract_reader(video, region):
+def tesseract_reader(video, region, compact: bool = False):
     """The OCR the renderer check uses: tesseract on one frame of the caption zone, through ve's caption reader
     (qc_captions._read_candidates: the same polarity handling and confusable folding as ve qc). None when
     tesseract is not on PATH."""
     executable = shutil.which('tesseract')
     if not executable:
         return None
-    return TesseractReader(executable, video, region)
+    return TesseractReader(executable, video, region, compact)
 
 
 class TesseractReader:
     """Reads caption-zone frames with tesseract. prefetch() decodes every frame the check will read in one pass
     from the start of the file (a seek per frame would decode the file again for each page)."""
 
-    def __init__(self, executable, video, region):
+    def __init__(self, executable, video, region, compact: bool = False):
         import sys
         scripts = str(settings.ROOT / 'scripts')
         if scripts not in sys.path:
@@ -167,6 +167,10 @@ class TesseractReader:
         from velib import qc_captions
         self.executable, self.video, self.region, self.qc_captions = executable, str(video), [int(v) for v in region], qc_captions
         self.frames = {}
+        # A SPLIT caption zone is taller than its compact box: the rows below are his face and hands, which read as
+        # stray words ("no spending," read as "no spending, pending", Thursday 5 Nov). Read the box only, at each
+        # height a page of one or two lines draws, and keep the best read.
+        self.compact = compact
 
     def prefetch(self, frames):
         import numpy as np
@@ -196,7 +200,14 @@ class TesseractReader:
             self.prefetch([frame])
         if frame not in self.frames:
             return {'text': '', 'score': 0.0}
-        best = self.qc_captions._read_candidates(self.executable, self.frames[frame], self.qc_captions._tokens(expected_text))
+        pixels, expected = self.frames[frame], self.qc_captions._tokens(expected_text)
+        if self.compact:
+            reads = [self.qc_captions._read_candidates(
+                self.executable, self.qc_captions.crop_to_caption_box(pixels, lines, False, True), expected)
+                for lines in (1, 2)]
+            best = max(reads, key=lambda r: float(r['agreement']))
+        else:
+            best = self.qc_captions._read_candidates(self.executable, pixels, expected)
         return {'text': best['text'], 'score': float(best['agreement'])}
 
 
@@ -212,13 +223,16 @@ def read_frames(page, change, win):
     landed = [int(w['atFrame']) for w in page.get('words', [])
               if isinstance(w, dict) and isinstance(w.get('atFrame'), (int, float))]
     full = max(landed) if landed else None
-    if full is not None and full > start + win:
+    # A page whose last word lands after its start (word by word, or a swiped emphasis word that slides in over a few
+    # frames) is read from that landing on; reading inside the start window caught "no" before its highlighted
+    # "spending," had arrived (Thursday 5 Nov). Reading stops at the first exact match.
+    if full is not None and (full > start + win or page.get('swipeIndex') is not None and full > start):
         return range(full, min(full + REVEALED_READ_FRAMES, end - 1) + 1)
     return range(max(change, start - win), min(start + win, end - 1) + 1)
 
 
 def renderer_truth(video, pages, region, *, ocr=None, window: int | None = None, min_score: float | None = None,
-                   threshold: float | None = None, changes=None) -> dict:
+                   threshold: float | None = None, changes=None, compact: bool = False) -> dict:
     """Each page found as a pixel change within the window of its start, and read there by OCR."""
     rule = settings.rule('captions')
     win = int(rule['ocr_window_frames'] if window is None else window)
@@ -228,7 +242,7 @@ def renderer_truth(video, pages, region, *, ocr=None, window: int | None = None,
     if not pages:
         report.update(status='fail', reason='no caption pages were given, so the burned captions cannot be read back')
         return report
-    reader = ocr if ocr is not None else tesseract_reader(video, region)
+    reader = ocr if ocr is not None else tesseract_reader(video, region, compact)
     if reader is None:
         report.update(status='missing', reason='tesseract is not on PATH, so the burned captions cannot be read back; '
                                                'the check is missing and the cut is held')

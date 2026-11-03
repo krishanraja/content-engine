@@ -33,9 +33,14 @@ def cue_sync(render, events, slots) -> dict:
         lag = peak - at
         local = changes[max(0, at - 2 - first):at + 2 - first + 1]
         difference = float(local.max())
+        # A bubble's typing and its sent status reveal text a few letters a frame: a gradual change, never a spike
+        # over the frames before it (which are often the row above being typed). They pass when the slot visibly
+        # changes on the cue; every other verb must stand out from its own baseline.
+        gradual = event.get('verb') in ('type', 'send')
+        passed = difference > FLOOR if gradual else difference > threshold
         rows.append({'event': event.get('id', index), 'atFrame': at, 'peak_frame': peak,
                      'lag_frames': lag, 'peak_difference': maximum, 'event_difference': difference,
-                     'threshold': threshold, 'pass': difference > threshold})
+                     'threshold': FLOOR if gradual else threshold, 'gradual': gradual, 'pass': passed})
     report = measurement(rows, 'change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)')
     if not rows:
         report['reason'] = 'no cues to check'

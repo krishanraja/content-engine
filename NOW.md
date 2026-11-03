@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-02
+as_of: 2026-11-03
 head: de5b942
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,37 +30,36 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-02)
+## Where it is right now (as of 2026-11-03)
 
-<!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":0,"current_as_of":"2026-11-02","current_source":"Control Center content_ideas in the publication's series (0 published in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (0% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 4 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
+<!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":1,"current_as_of":"2026-11-03","current_source":"Control Center content_ideas in the publication's series (1 published in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (25% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 4 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The Ideas board is checked at build (F23): a picked day is locked with no options; the gather reads the last three weeks' off days and his presses, and a used idea or off day is refused; from 9 Nov every off-day option has a hook, pitch and direction, two fresh readers' read-back, and says what an inspo-made option adds; a board for a week not yet started is built only from a gather of the last two days. The 9 Nov board is republished with Krish's yes (build 6b650dff): Monday locked, Tue, Thu and Sat four options each, no Sunday. Saturday good news is a weekly series: the Saturday Sunday-ideas run now also finds that week's four stories (seven days to the Sunday, primary source, own photo or clip) and republishes that week's board. (2026-11-02)
 - Krish approved the v3 cursor buddy and typing bubble at Gate 2 ("I agree", 2 Nov); both are merged into the engine. The logo orbit goes back to Codex as v4: its rings did not show and the Meta and xAI marks were smaller than the rest. (2026-11-02)
 - Off-day cards can now carry a finished file as a Download link (`download` {url, label}, read through `read_offdays`). Tuesday's translator video is on the 2 Nov board as a download, build 696dc375, and the link serves bytes identical to the local file (sha256 42e02585). (2026-11-02)
-- Thursday's three new ve devices (cursor_buddy, logo_orbit, typing_bubble) are built by the Codex lane, pass their acceptance (132 device tests) and are merged into one branch; their stills went to Krish for Gate 2. (2026-11-02)
-- The Codex lane now follows every queued card live (ve lane wait), refuses a device card whose verbs main does not accept, and makes a re-queued card take in main before it builds (F22). Thursday's three device cards are re-issued as -v2 and building. (2026-11-02)
 - Krish signed off Friday's last three fact lines ("sign off all three Friday lines"); the gate passes. The 2 Nov board is republished as build 57b5c6a1. It carries Friday's clear status line, the revised Tue, Thu and Sat off days, and the idea queue, with all 22 assets kept by sha256. Thursday's recording is in the Inbox. (2026-11-02)
 - Thursday 5 Nov is now the No-Spending, No-Sending rule, written by Krish and trimmed to 193 words with his pick. Teleprompter A55B6A69 was updated in place and read back identical. The art direction is set to his steer: the assistants' logo wall and three simulated fails. His prompt is the pinned comment for every post. (2026-11-02)
 - Krish's feedback on the 2 Nov week's off days is acted on. Sunday is a rest day permanently (Ruling, Krish, 2026-11-02), on the board and the server, and in Growth. Buffer holds nothing for Sun 8 Nov. The Thursday merged to-camera script is in docs/plans/2026-11-02-week/thu-acts-first-script.txt (story check clean but for the off-day article close; two of two fresh readers "nothing lost") and waits on his Approve. The Saturday revised options are in docs/plans/2026-11-02-week/sat-revised.md and wait on his yes. Improve now reaches a revision run for weeks Growth feeds (offday_pending reads offdays-growth.json). (2026-11-02)
-- The off-day "Your words" box now says how his words were read, with the rule Growth uses (Ruling, Krish, 2026-11-02: "only where i specifically give a quote to use - i dont want requests put verbatim in the posts"). Quoted text goes on the picture or video exactly as written; the rest is direction, never printed; a quote that reads as what not to say is held. The page and Growth are tested on the same cases (fixtures/offday-note-cases.json). (2026-11-02)
 - The four rebuilt 2 and 4 Nov cuts pass every delivery check, are filed in the library and on both pieces' records, and are ready on the 2 Nov board (build 208e3742, all 22 assets read back by sha256); Monday's thumbnails are redrawn and pass the phone check (docs/plans/2026-11-02-week/FILE-REBUILT-CUTS.md). Wednesday's two contradicted lines (plans, connector count) are reworded and pass the fact gate; Krish signed off the last three open lines ("sign off all three"), so both fact steps read done and nothing waits on him. (2026-11-02)
 - **No public word names Krish (rulings of 28 and 29 October).** House rule `NO_NAME` (`60b87ff`), the copy lint's `no_name`, the kill list's `personal_name` veto, the pack, the story check, the Studio, the publish check, ve's spec lint and quick-edit's caption check all refuse it. Articles speak as "we"; the article byline is "makeyourmindup" with no face; scripts keep "I"; his face stays in video, covers and thumbnails.
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). Friday 23's short and long cut were made whole in ve (#237, #240), each with a fresh Critic SEND; his Gate 2 verdict on them and on the re-rendered format H proof is his.
+- **The library lane carries a second library, Heartside's** (Krish, 2026-11-03). `send.py --library heartside`; the sync writes it after the makeyourmindup pass. Migration `20261121090000` applied 2026-11-03. (2026-11-03)
 - **Known red check:** `npm run verify` passes on the session branch except `tests/quick-edit-mix.test.ts` (`mix_test`, this container's ffmpeg 6.1.1; the repository pins 8.1.2). Migrations `20261116090000_rejections.sql`, `20261116100000_ux_feedback_recordings.sql` and `20261117090000_taste_ventures.sql` are not recorded as applied as of 2026-10-28.
 
 ## What changed recently
 
-- 2026-11-02 Krish approved the rebuilt openings and the words on screen, cleared the flagged pictures and two side-on sync windows ("1. accept. 2 clear"), and his eye may now clear a named sync window the scorer cannot read, never one it measures out of sync.
-- 2026-11-01 off-day options carry their own creative direction and are approved, improved or rejected per option; the week's mix press is gone.
-Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, and `docs/history/2026-11-02-NOW-moved-2.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`.
+- 2026-11-02 Krish found five faults on the 9 Nov Ideas tab, each a rule the engine held only in words; then asked for the Saturday good news to be found fresh on Sunday.
+Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, and `docs/history/2026-11-02-NOW-moved-2.md` and `-5.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`, and one 2 November line in `docs/history/2026-11-03-NOW-moved-1.md`, two in `-moved-2.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-02): Codex builds the logo orbit v4; then its stills go to Krish for Gate 2.
+- Next (2026-11-03): Codex builds Thursday key frames round 3 (split at y 760, his whole head in frame; Krish approved the mock); check its stills, freeze the lock, render Thursday. Then the Sunday run on Sat 7 Nov fills the 9 Nov Saturday good news.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
-- North Star check (2026-11-02): holds.
+- 9 Nov week (2026-11-03): Wed, Fri locks signed (`docs/plans/2026-11-09-week/`), briefs agreed (board ea1c8653). Next: rerun make-piece.yml for both. Gaps: picks not in `scheduled_for`; Monday fact gate fails; mcpskin needs his Next week press.
+- North Star check (2026-11-03): holds.
 
 ## Read next
 

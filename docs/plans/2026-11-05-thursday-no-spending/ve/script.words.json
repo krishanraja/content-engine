@@ -1,0 +1,748 @@
+{
+ "source": "Krish's Thursday 5 Nov take thurs5Novrecording-nospendingnosending.mp4 (47 s), heard with faster-whisper small.en on 2 Nov; the storyboard he signed on 2 Nov follows these words",
+ "note": "ASR wrote \"muse\" and \"Prompts\"; set to \"Muse\" (the Meta assistant he names) and \"Prompt's\" as he said it",
+ "script_sha256": "72e8dda15dc9cc87950b435183f9e9a5ad5d2aaf9eac19104f90e6a1c11ba303",
+ "text": "Proactive AI is coming. AI that does things before you ask offers to do things. Awesome, really cool features and really helpful but a bit dangerous because once they're connected Muse into your WhatsApp, Amazon for your groceries, Google for your emails, it can get a bit dangerous. So my first step is the no spending, no sending rule. It doesn't spend my money, doesn't send anything out for me unless I say so. And the fun part is I didn't even write this myself. I just put one prompt into my AI tool and it started asking me questions back, then it locks itself down or tells you how to lock it down. Prompt's in the comments, make sure you do this, no spending, no sending, one easy step so you can save yourself and enjoy these new technologies without any of those weird moments or fails.",
+ "words": [
+  {
+   "w": 0,
+   "word": "Proactive",
+   "source_onset_s": 1.18
+  },
+  {
+   "w": 1,
+   "word": "AI",
+   "source_onset_s": 1.7
+  },
+  {
+   "w": 2,
+   "word": "is",
+   "source_onset_s": 2.22
+  },
+  {
+   "w": 3,
+   "word": "coming.",
+   "source_onset_s": 2.62
+  },
+  {
+   "w": 4,
+   "word": "AI",
+   "source_onset_s": 3.42
+  },
+  {
+   "w": 5,
+   "word": "that",
+   "source_onset_s": 3.42
+  },
+  {
+   "w": 6,
+   "word": "does",
+   "source_onset_s": 3.66
+  },
+  {
+   "w": 7,
+   "word": "things",
+   "source_onset_s": 4.02
+  },
+  {
+   "w": 8,
+   "word": "before",
+   "source_onset_s": 4.28
+  },
+  {
+   "w": 9,
+   "word": "you",
+   "source_onset_s": 4.6
+  },
+  {
+   "w": 10,
+   "word": "ask",
+   "source_onset_s": 4.74
+  },
+  {
+   "w": 11,
+   "word": "offers",
+   "source_onset_s": 5.02
+  },
+  {
+   "w": 12,
+   "word": "to",
+   "source_onset_s": 5.42
+  },
+  {
+   "w": 13,
+   "word": "do",
+   "source_onset_s": 5.66
+  },
+  {
+   "w": 14,
+   "word": "things.",
+   "source_onset_s": 5.84
+  },
+  {
+   "w": 15,
+   "word": "Awesome,",
+   "source_onset_s": 6.9
+  },
+  {
+   "w": 16,
+   "word": "really",
+   "source_onset_s": 7.28
+  },
+  {
+   "w": 17,
+   "word": "cool",
+   "source_onset_s": 7.64
+  },
+  {
+   "w": 18,
+   "word": "features",
+   "source_onset_s": 8.06
+  },
+  {
+   "w": 19,
+   "word": "and",
+   "source_onset_s": 8.5
+  },
+  {
+   "w": 20,
+   "word": "really",
+   "source_onset_s": 9.08
+  },
+  {
+   "w": 21,
+   "word": "helpful",
+   "source_onset_s": 9.66
+  },
+  {
+   "w": 22,
+   "word": "but",
+   "source_onset_s": 10.1
+  },
+  {
+   "w": 23,
+   "word": "a",
+   "source_onset_s": 10.82
+  },
+  {
+   "w": 24,
+   "word": "bit",
+   "source_onset_s": 10.9
+  },
+  {
+   "w": 25,
+   "word": "dangerous",
+   "source_onset_s": 11.04
+  },
+  {
+   "w": 26,
+   "word": "because",
+   "source_onset_s": 11.48
+  },
+  {
+   "w": 27,
+   "word": "once",
+   "source_onset_s": 11.64
+  },
+  {
+   "w": 28,
+   "word": "they're",
+   "source_onset_s": 11.84
+  },
+  {
+   "w": 29,
+   "word": "connected",
+   "source_onset_s": 12.08
+  },
+  {
+   "w": 30,
+   "word": "Muse",
+   "source_onset_s": 12.52
+  },
+  {
+   "w": 31,
+   "word": "into",
+   "source_onset_s": 13.28
+  },
+  {
+   "w": 32,
+   "word": "your",
+   "source_onset_s": 13.58
+  },
+  {
+   "w": 33,
+   "word": "WhatsApp,",
+   "source_onset_s": 13.76
+  },
+  {
+   "w": 34,
+   "word": "Amazon",
+   "source_onset_s": 14.46
+  },
+  {
+   "w": 35,
+   "word": "for",
+   "source_onset_s": 14.46
+  },
+  {
+   "w": 36,
+   "word": "your",
+   "source_onset_s": 14.74
+  },
+  {
+   "w": 37,
+   "word": "groceries,",
+   "source_onset_s": 14.88
+  },
+  {
+   "w": 38,
+   "word": "Google",
+   "source_onset_s": 16.2
+  },
+  {
+   "w": 39,
+   "word": "for",
+   "source_onset_s": 16.3
+  },
+  {
+   "w": 40,
+   "word": "your",
+   "source_onset_s": 16.56
+  },
+  {
+   "w": 41,
+   "word": "emails,",
+   "source_onset_s": 16.68
+  },
+  {
+   "w": 42,
+   "word": "it",
+   "source_onset_s": 17.58
+  },
+  {
+   "w": 43,
+   "word": "can",
+   "source_onset_s": 17.8
+  },
+  {
+   "w": 44,
+   "word": "get",
+   "source_onset_s": 18.16
+  },
+  {
+   "w": 45,
+   "word": "a",
+   "source_onset_s": 18.6
+  },
+  {
+   "w": 46,
+   "word": "bit",
+   "source_onset_s": 18.68
+  },
+  {
+   "w": 47,
+   "word": "dangerous.",
+   "source_onset_s": 18.8
+  },
+  {
+   "w": 48,
+   "word": "So",
+   "source_onset_s": 19.5
+  },
+  {
+   "w": 49,
+   "word": "my",
+   "source_onset_s": 19.56
+  },
+  {
+   "w": 50,
+   "word": "first",
+   "source_onset_s": 19.96
+  },
+  {
+   "w": 51,
+   "word": "step",
+   "source_onset_s": 20.2
+  },
+  {
+   "w": 52,
+   "word": "is",
+   "source_onset_s": 20.46
+  },
+  {
+   "w": 53,
+   "word": "the",
+   "source_onset_s": 20.64
+  },
+  {
+   "w": 54,
+   "word": "no",
+   "source_onset_s": 20.82
+  },
+  {
+   "w": 55,
+   "word": "spending,",
+   "source_onset_s": 21.04
+  },
+  {
+   "w": 56,
+   "word": "no",
+   "source_onset_s": 21.66
+  },
+  {
+   "w": 57,
+   "word": "sending",
+   "source_onset_s": 21.84
+  },
+  {
+   "w": 58,
+   "word": "rule.",
+   "source_onset_s": 22.18
+  },
+  {
+   "w": 59,
+   "word": "It",
+   "source_onset_s": 22.44
+  },
+  {
+   "w": 60,
+   "word": "doesn't",
+   "source_onset_s": 22.48
+  },
+  {
+   "w": 61,
+   "word": "spend",
+   "source_onset_s": 22.74
+  },
+  {
+   "w": 62,
+   "word": "my",
+   "source_onset_s": 23.04
+  },
+  {
+   "w": 63,
+   "word": "money,",
+   "source_onset_s": 23.22
+  },
+  {
+   "w": 64,
+   "word": "doesn't",
+   "source_onset_s": 23.84
+  },
+  {
+   "w": 65,
+   "word": "send",
+   "source_onset_s": 24.24
+  },
+  {
+   "w": 66,
+   "word": "anything",
+   "source_onset_s": 24.5
+  },
+  {
+   "w": 67,
+   "word": "out",
+   "source_onset_s": 24.76
+  },
+  {
+   "w": 68,
+   "word": "for",
+   "source_onset_s": 25.02
+  },
+  {
+   "w": 69,
+   "word": "me",
+   "source_onset_s": 25.18
+  },
+  {
+   "w": 70,
+   "word": "unless",
+   "source_onset_s": 25.28
+  },
+  {
+   "w": 71,
+   "word": "I",
+   "source_onset_s": 25.44
+  },
+  {
+   "w": 72,
+   "word": "say",
+   "source_onset_s": 25.68
+  },
+  {
+   "w": 73,
+   "word": "so.",
+   "source_onset_s": 25.86
+  },
+  {
+   "w": 74,
+   "word": "And",
+   "source_onset_s": 26.38
+  },
+  {
+   "w": 75,
+   "word": "the",
+   "source_onset_s": 26.44
+  },
+  {
+   "w": 76,
+   "word": "fun",
+   "source_onset_s": 26.54
+  },
+  {
+   "w": 77,
+   "word": "part",
+   "source_onset_s": 26.7
+  },
+  {
+   "w": 78,
+   "word": "is",
+   "source_onset_s": 26.96
+  },
+  {
+   "w": 79,
+   "word": "I",
+   "source_onset_s": 27.1
+  },
+  {
+   "w": 80,
+   "word": "didn't",
+   "source_onset_s": 27.22
+  },
+  {
+   "w": 81,
+   "word": "even",
+   "source_onset_s": 27.34
+  },
+  {
+   "w": 82,
+   "word": "write",
+   "source_onset_s": 27.6
+  },
+  {
+   "w": 83,
+   "word": "this",
+   "source_onset_s": 28.06
+  },
+  {
+   "w": 84,
+   "word": "myself.",
+   "source_onset_s": 28.28
+  },
+  {
+   "w": 85,
+   "word": "I",
+   "source_onset_s": 29.16
+  },
+  {
+   "w": 86,
+   "word": "just",
+   "source_onset_s": 29.18
+  },
+  {
+   "w": 87,
+   "word": "put",
+   "source_onset_s": 29.3
+  },
+  {
+   "w": 88,
+   "word": "one",
+   "source_onset_s": 29.48
+  },
+  {
+   "w": 89,
+   "word": "prompt",
+   "source_onset_s": 29.7
+  },
+  {
+   "w": 90,
+   "word": "into",
+   "source_onset_s": 29.96
+  },
+  {
+   "w": 91,
+   "word": "my",
+   "source_onset_s": 30.16
+  },
+  {
+   "w": 92,
+   "word": "AI",
+   "source_onset_s": 30.34
+  },
+  {
+   "w": 93,
+   "word": "tool",
+   "source_onset_s": 30.58
+  },
+  {
+   "w": 94,
+   "word": "and",
+   "source_onset_s": 30.82
+  },
+  {
+   "w": 95,
+   "word": "it",
+   "source_onset_s": 30.92
+  },
+  {
+   "w": 96,
+   "word": "started",
+   "source_onset_s": 31.02
+  },
+  {
+   "w": 97,
+   "word": "asking",
+   "source_onset_s": 31.2
+  },
+  {
+   "w": 98,
+   "word": "me",
+   "source_onset_s": 31.46
+  },
+  {
+   "w": 99,
+   "word": "questions",
+   "source_onset_s": 31.64
+  },
+  {
+   "w": 100,
+   "word": "back,",
+   "source_onset_s": 31.92
+  },
+  {
+   "w": 101,
+   "word": "then",
+   "source_onset_s": 32.56
+  },
+  {
+   "w": 102,
+   "word": "it",
+   "source_onset_s": 32.8
+  },
+  {
+   "w": 103,
+   "word": "locks",
+   "source_onset_s": 33.04
+  },
+  {
+   "w": 104,
+   "word": "itself",
+   "source_onset_s": 33.28
+  },
+  {
+   "w": 105,
+   "word": "down",
+   "source_onset_s": 33.6
+  },
+  {
+   "w": 106,
+   "word": "or",
+   "source_onset_s": 33.86
+  },
+  {
+   "w": 107,
+   "word": "tells",
+   "source_onset_s": 33.98
+  },
+  {
+   "w": 108,
+   "word": "you",
+   "source_onset_s": 34.16
+  },
+  {
+   "w": 109,
+   "word": "how",
+   "source_onset_s": 34.4
+  },
+  {
+   "w": 110,
+   "word": "to",
+   "source_onset_s": 34.54
+  },
+  {
+   "w": 111,
+   "word": "lock",
+   "source_onset_s": 34.66
+  },
+  {
+   "w": 112,
+   "word": "it",
+   "source_onset_s": 34.78
+  },
+  {
+   "w": 113,
+   "word": "down.",
+   "source_onset_s": 34.9
+  },
+  {
+   "w": 114,
+   "word": "Prompt's",
+   "source_onset_s": 35.68
+  },
+  {
+   "w": 115,
+   "word": "in",
+   "source_onset_s": 35.86
+  },
+  {
+   "w": 116,
+   "word": "the",
+   "source_onset_s": 35.94
+  },
+  {
+   "w": 117,
+   "word": "comments,",
+   "source_onset_s": 36.08
+  },
+  {
+   "w": 118,
+   "word": "make",
+   "source_onset_s": 36.94
+  },
+  {
+   "w": 119,
+   "word": "sure",
+   "source_onset_s": 37.2
+  },
+  {
+   "w": 120,
+   "word": "you",
+   "source_onset_s": 37.36
+  },
+  {
+   "w": 121,
+   "word": "do",
+   "source_onset_s": 37.52
+  },
+  {
+   "w": 122,
+   "word": "this,",
+   "source_onset_s": 37.64
+  },
+  {
+   "w": 123,
+   "word": "no",
+   "source_onset_s": 37.96
+  },
+  {
+   "w": 124,
+   "word": "spending,",
+   "source_onset_s": 38.04
+  },
+  {
+   "w": 125,
+   "word": "no",
+   "source_onset_s": 38.56
+  },
+  {
+   "w": 126,
+   "word": "sending,",
+   "source_onset_s": 38.6
+  },
+  {
+   "w": 127,
+   "word": "one",
+   "source_onset_s": 38.98
+  },
+  {
+   "w": 128,
+   "word": "easy",
+   "source_onset_s": 39.1
+  },
+  {
+   "w": 129,
+   "word": "step",
+   "source_onset_s": 39.38
+  },
+  {
+   "w": 130,
+   "word": "so",
+   "source_onset_s": 39.72
+  },
+  {
+   "w": 131,
+   "word": "you",
+   "source_onset_s": 39.9
+  },
+  {
+   "w": 132,
+   "word": "can",
+   "source_onset_s": 40.0
+  },
+  {
+   "w": 133,
+   "word": "save",
+   "source_onset_s": 40.14
+  },
+  {
+   "w": 134,
+   "word": "yourself",
+   "source_onset_s": 40.36
+  },
+  {
+   "w": 135,
+   "word": "and",
+   "source_onset_s": 40.72
+  },
+  {
+   "w": 136,
+   "word": "enjoy",
+   "source_onset_s": 40.92
+  },
+  {
+   "w": 137,
+   "word": "these",
+   "source_onset_s": 41.2
+  },
+  {
+   "w": 138,
+   "word": "new",
+   "source_onset_s": 41.44
+  },
+  {
+   "w": 139,
+   "word": "technologies",
+   "source_onset_s": 41.6
+  },
+  {
+   "w": 140,
+   "word": "without",
+   "source_onset_s": 42.1
+  },
+  {
+   "w": 141,
+   "word": "any",
+   "source_onset_s": 42.76
+  },
+  {
+   "w": 142,
+   "word": "of",
+   "source_onset_s": 42.96
+  },
+  {
+   "w": 143,
+   "word": "those",
+   "source_onset_s": 43.04
+  },
+  {
+   "w": 144,
+   "word": "weird",
+   "source_onset_s": 43.18
+  },
+  {
+   "w": 145,
+   "word": "moments",
+   "source_onset_s": 43.42
+  },
+  {
+   "w": 146,
+   "word": "or",
+   "source_onset_s": 43.82
+  },
+  {
+   "w": 147,
+   "word": "fails.",
+   "source_onset_s": 44.12
+  }
+ ]
+}
