@@ -1,0 +1,31 @@
+---
+card: ve-thu-7-split-placement
+kind: code
+model: gpt-6.1-sol
+effort: medium
+max_minutes: 60
+max_calls: 60
+cwd: /tmp/v3home\dev\makeyourmindup\.worktrees\content-engine\ve-card\ve-thu-7-split-placement
+write_allow: [apps/renderer/src/engine/FormatMaster.tsx, apps/renderer/src/engine/layouts/index.ts, apps/renderer/src/engine/layouts/split.test.ts, apps/renderer/src/engine/mocks/face-with-proof.tsx, apps/renderer/src/engine/mocks/face-with-proof.test.ts, apps/renderer/src/engine/devices/stamp/schema.ts, apps/renderer/src/engine/devices/stamp/index.tsx, apps/renderer/src/engine/devices/stamp/device.test.ts, apps/renderer/src/engine/engine.test.ts]
+read: apps/renderer/src/engine/**, packages/contracts/src/**, config/ve/design-lock.json, fixtures/ve/design-lock/face-with-proof/**, docs/plans/2026-11-05-thursday-no-spending/ve/spec.json
+never: NOW.md, WORKBENCH.md, docs/plans/**, git commands, network, MCP tools, publishing, new dependencies, raw hex colours, useCurrentFrame outside apps/renderer/src/engine/clock.ts, edits outside write_allow
+---
+
+# SPLIT placement: put each stage object where the frozen key frames put it, and a mint block stamp
+
+## Goal
+["Claude rendered Thursday's cut on the SPLIT layout (merged from ve-thu-5-split-layout-v2) and it does not match the frozen face-with-proof key frames (fixtures/ve/design-lock/face-with-proof/), because SPLIT hands every object the whole stage: the notification bubble sits under the header, cut off; the NO SPENDING / NO SENDING block stamps draw their 30 px text in a 828 px box, so it reads tiny, and in the series colour instead of mint; the cursor buddy lands on top of the slabs. The approved mocks (apps/renderer/src/engine/mocks/face-with-proof.tsx) place each device with its own slot box, an offset and a scale (the Still helper). Give the real composition the same placement.\n\n1. An object on a SPLIT beat may carry `place: { left, top, width, height, scale }` in its params, in stage coordinates before the stage scale (FWP_STAGE_SCALE), with the meaning of the mocks' Still helper: the device receives box { left: 0, top: 0, width, height } and is drawn inside a wrapper at (left, top) with transform scale(scale), top-left origin. FormatMaster removes `place` from the params before the device sees them, so every device schema stays strict and unchanged. An object with no `place` keeps today's behaviour (the whole stage). `place` on a non-SPLIT beat is an error naming the object.\n2. The stamp device gets an optional `paint: 'channel' | 'mint'` param (default 'channel', today's look): with 'mint' a block stamp fills with tokens.mint, as the Close mock does by binding channel to mint.\n3. Export the mocks' placements as one table, FWP_PLACEMENTS (hook: note bubble slot 56,160,920,300 scale 1; buddy slot 0,0,900,1100 at 66,190; close: each block stamp slot 0,0,345,68 scale 2.4 at 72,230 and 72,440; buddy slot 0,0,640,800 at 390,400), and have the mocks read it, so the mocks and a spec that copies it cannot drift.\n\nTests: `place` is stripped before the device parses its params; a placed object's wrapper has the given left, top and scale and its device the given width and height; an unplaced object is unchanged; `place` on a P1 beat throws naming the object; stamp paint mint fills with tokens.mint and the default is unchanged; the mocks still pass their own tests reading FWP_PLACEMENTS."]
+
+## Contract
+Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. Change no device.
+
+## Acceptance (every command must exit 0 inside your sandbox)
+npx vitest run apps/renderer/src/engine/mocks
+npx vitest run apps/renderer/src/engine
+npx vitest run tests/ve-stage-spec.test.ts
+node node_modules/typescript/bin/tsc --noEmit --pretty false
+
+## Return
+Your final message is only JSON matching config/ve/task-result.schema.json:
+{"card": "ve-thu-7-split-placement", "files_changed": [...], "commands": [{"cmd": "...", "exit_code": 0}], "open_questions": [...]}
+Stop after two failed attempts at the same acceptance command and report the failure in open_questions.

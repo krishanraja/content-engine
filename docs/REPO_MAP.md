@@ -2474,6 +2474,7 @@ What the compiler looks for, as pure functions.
 - `const LIBRARY_POST_SECTIONS`
 - `const LIBRARY_POST_README`
 - `const LIBRARY_SUBCHANNELS`
+- `const LIBRARY_OFF_DAY`
 - `const LIBRARY_CONTENT_TYPES: Readonly<Record<string, string>>`
 - `function libraryMimeTypes(): string[]`
 - `const LIBRARY_OPTIONAL_MIME_TYPES: readonly string[]`
@@ -3435,6 +3436,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `interface BrandFrameProps`
 - `function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement`
+- `function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
@@ -3889,6 +3891,8 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 ### `apps/renderer/src/engine/layouts/index.ts`
 
 - `function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[]`
+- `function splitCameraBox(aspect: Aspect): Box`
+- `function splitPlatePosition(crop?: string): string`
 
 ### `apps/renderer/src/engine/mocks/face-with-proof.tsx`
 
