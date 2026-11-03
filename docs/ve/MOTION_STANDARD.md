@@ -1,7 +1,7 @@
 # The premium motion standard
 
-Status: Proposed for Krish's sign-off, 3 Nov 2026. The checks named below already run; the numbers become the
-house standard when he signs it.
+Status: Signed by Krish, 3 Nov 2026 ("I signed the motion standards"), with the word caption build as the default for
+face-with-proof (ve lint `captions.word_default`). The house standard from that day.
 
 Krish, 3 Nov 2026: "This video is a literal 1/10", "No, its the georgia subtitles build, and the motion and graphics of
 the other one", "The graphics in your previous car are honestly fucking embarrassing. I'm not publishing that."
@@ -90,10 +90,12 @@ other fashionable free display serifs, purple-to-blue gradients, glowing neural 
 icons). For the loud word that meant the house serif's own upright cut, now in the kit (`Fraunces-Upright-Variable`, from the
 brand kit in Drive; Krish, 2026-11-03: "add the upright Fraunces to the kit"), not a borrowed face.
 
-## Waiting on Krish
+## Signed and approved (Krish, 3 Nov 2026)
 
-- Sign this standard, and word mode as the default caption build for face-with-proof.
-- Spend for the four Codex cards above (each is written, none dispatched).
+- The standard, and word captions as the default for face-with-proof: "I signed the motion standards".
+- Spend for the four Codex cards above: "I approved the spend". They are queued to the home computer's Codex lane.
+- The Instagram zones in `config/studio.json` brought up to the measured ones: "I approve updating the Instagram
+  button zones".
 
 ## How it was measured
 

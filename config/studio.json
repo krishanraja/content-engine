@@ -50,7 +50,7 @@
       "youtube_shorts": { "delivery": "private_upload_or_local", "safe_zones": { "top_px": 140, "right_px": 120, "bottom_px": 360, "left_px": 80 } },
       "linkedin": { "delivery": "local_package", "safe_zones": { "top_px": 120, "right_px": 100, "bottom_px": 260, "left_px": 100 } },
       "tiktok": { "delivery": "local_package", "safe_zones": { "top_px": 160, "right_px": 180, "bottom_px": 420, "left_px": 80 } },
-      "instagram_reels": { "delivery": "local_package", "safe_zones": { "top_px": 180, "right_px": 140, "bottom_px": 420, "left_px": 80 } }
+      "instagram_reels": { "delivery": "local_package", "safe_zones": { "top_px": 200, "right_px": 200, "bottom_px": 600, "left_px": 80 } }
     }
   },
   "carousel_director": {

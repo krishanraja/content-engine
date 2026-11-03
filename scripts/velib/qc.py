@@ -234,7 +234,7 @@ def inputs_from_props(props: dict) -> dict:
     # never be applied to it; compare each beat at its position in this master.
     # The ending band carries no speech, so lip sync is measured up to its start, never across it.
     stop = (props.get('ending') or {}).get('fromFrame', props.get('durationFrames'))
-    edl = [{'fromFrame': b['fromFrame'], 'toFrame': min(b['toFrame'], stop),
+    edl = [{'fromFrame': b['fromFrame'], 'toFrame': b['toFrame'] if stop is None else min(b['toFrame'], stop),
             'trimBeforeFrames': b['fromFrame'] + stem.get('trimBeforeFrames', 0)} for b in beats
            if stop is None or b['fromFrame'] < stop]
     joins = sorted({s['fromFrame'] / props.get('fps', 30) for s in props.get('segments', []) if s['fromFrame'] > 0})
@@ -279,8 +279,11 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     # The calibrated cut gates quick-edit runs too (plan W2.4, scripts/cutgates, config/gates.json).
     for name in ('words.lost', 'joins.in_gaps', 'captions.clock', 'captions.render'):
         checks[name] = {'value': None, 'target': 'see config/gates.json', 'pass': None, 'status': 'not_run'}
-    checks['captions.off_face'] = {'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not_run'}
-    checks['channel.safe_zones'] = {'value': None, 'target': 'nothing under a channel button', 'pass': None, 'status': 'not_run'}
+    # No caption pages means nothing can sit on the face; the channel row is advisory (qc_channel.ADVISORY).
+    checks['captions.off_face'] = ({'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not applicable'}
+                                   if pages is not None and not pages else
+                                   {'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not_run'})
+    checks['channel.safe_zones'] = {'value': None, 'target': 'nothing under a channel button', 'pass': None, 'status': 'advisory'}
     from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel
     optional = [
         ('sync.av_xcorr', dialogue_master is not None and edl is not None,
