@@ -267,7 +267,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             raise ValueError(f'beat {beat["id"]} has no positive frame interval')
         beats.append({'id': beat['id'], 'role': beat['role'], 'layout': beat['layout'],
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
-                      'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0})
+                      'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
+                      **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {})})
         # The v2 spec reserves extensible metadata in style; beat-level keyFrame
         # is not yet in its strict schema. Always emit an explicit engine frame.
         fraction = spec.get('style', {}).get('keyFrames', {}).get(beat['id'], 0.8)
@@ -362,7 +363,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         'fps': FPS, 'durationFrames': duration,
         'tokens': {'ink': tokens['ink'], 'inkDeep': tokens['ink_deep'], 'inkSoft': tokens['ink_soft'],
                    'cream': tokens['cream'], 'mint': tokens['mint'], 'channel': publication['channel_colors'][channel]},
-        'series': {'label': spec['brand']['series'], 'day': _series_day(identity['day'], spec.get('publish_day')), 'promise': identity['promise'], 'site': house['copy']['site']},
+        # An off-day piece wears the house dress of a series but never another day's name (Krish, 2026-11-03, of
+        # Thursday's under.the.hood tag: "The branding is wrong").
+        'series': {'label': spec['brand']['series'] if _series_day(identity['day'], spec.get('publish_day')) == identity['day']
+                   else 'off.day', 'day': _series_day(identity['day'], spec.get('publish_day')), 'promise': identity['promise'], 'site': house['copy']['site']},
         'brand': {key: {'src': resolve_source(publication[key]['source_path']), 'pixelWidth': publication[key]['pixel_width'],
                         'pixelHeight': publication[key]['pixel_height']} for key in ('mark', 'logo', 'stacked')},
         'segments': [] if spec['audio']['master'] == 'vo' else [

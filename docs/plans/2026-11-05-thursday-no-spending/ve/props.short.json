@@ -14,7 +14,7 @@
     "channel": "#B7A6FF"
   },
   "series": {
-    "label": "under.the.hood",
+    "label": "off.day",
     "day": "Thursday",
     "promise": "Free from jargon",
     "site": "makeyourmindup.ai"
@@ -211,7 +211,7 @@
     },
     {
       "fromFrame": 325,
-      "toFrame": 366,
+      "toFrame": 375,
       "words": [
         {
           "text": "once",
@@ -224,18 +224,18 @@
         {
           "text": "connected",
           "atFrame": 336
+        },
+        {
+          "text": "Muse",
+          "atFrame": 366
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 366,
+      "fromFrame": 375,
       "toFrame": 402,
       "words": [
-        {
-          "text": "Muse",
-          "atFrame": 366
-        },
         {
           "text": "into",
           "atFrame": 375
@@ -929,33 +929,41 @@
     {
       "id": "hook",
       "role": "hook",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 0,
       "toFrame": 176,
       "uses": [
-        "buddy",
         "note",
         "underline"
       ],
       "transitionOut": "cut",
       "sectionBeat": true,
+      "plate": {
+        "source": "none"
+      },
       "keyFrame": 141
     },
     {
       "id": "face",
       "role": "bridge",
-      "layout": "P1",
+      "layout": "STAGE",
       "fromFrame": 176,
       "toFrame": 366,
-      "uses": [],
+      "uses": [
+        "stamp_helpful",
+        "stamp_danger"
+      ],
       "transitionOut": "cut",
       "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
       "keyFrame": 328
     },
     {
       "id": "proof",
       "role": "anchor",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 366,
       "toFrame": 504,
       "uses": [
@@ -964,12 +972,15 @@
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
       "keyFrame": 476
     },
     {
       "id": "b4-8am",
       "role": "anchor",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 504,
       "toFrame": 553,
       "uses": [
@@ -977,40 +988,50 @@
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
       "keyFrame": 543
     },
     {
       "id": "b5-rule",
       "role": "pivot",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 553,
       "toFrame": 646,
       "uses": [
         "chat",
         "slab_spend",
         "slab_send",
-        "buddy_rule",
         "tick"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
       "keyFrame": 627
     },
     {
       "id": "own-words",
       "role": "anchor",
-      "layout": "F3",
+      "layout": "STAGE",
       "fromFrame": 646,
       "toFrame": 764,
-      "uses": [],
+      "uses": [
+        "rule_card"
+      ],
       "transitionOut": "cut",
       "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
       "keyFrame": 740
     },
     {
       "id": "b7-prompt",
       "role": "anchor",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 764,
       "toFrame": 1085,
       "uses": [
@@ -1021,62 +1042,32 @@
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
       "keyFrame": 1021
     },
     {
       "id": "close",
       "role": "payoff",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 1085,
       "toFrame": 1425,
       "uses": [
         "slab_spend",
         "slab_send",
-        "buddy_rule",
-        "tick"
+        "tick",
+        "rule_close"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
       "keyFrame": 1273
     }
   ],
   "objects": [
-    {
-      "obj": "buddy",
-      "device": "cursor_buddy",
-      "meaning": "the proactive assistant as a cursor with a face, proud then sulking then behaving",
-      "fromFrame": 0,
-      "toFrame": 176,
-      "variants": {},
-      "params": {
-        "mood": "proud",
-        "place": {
-          "left": 66,
-          "top": 477,
-          "width": 900,
-          "height": 1100,
-          "scale": 0.6
-        }
-      }
-    },
-    {
-      "obj": "buddy_rule",
-      "device": "cursor_buddy",
-      "meaning": "the same cursor buddy at the rule, sulking by the fence, then behaving",
-      "fromFrame": 553,
-      "toFrame": 1425,
-      "variants": {},
-      "params": {
-        "mood": "sulk",
-        "place": {
-          "left": 390,
-          "top": 480,
-          "width": 640,
-          "height": 800,
-          "scale": 0.75
-        }
-      }
-    },
     {
       "obj": "note",
       "device": "typing_bubble",
@@ -1090,14 +1081,7 @@
           {
             "text": "Done! Booked the team offsite in Ibiza"
           }
-        ],
-        "place": {
-          "left": 56,
-          "top": 340,
-          "width": 920,
-          "height": 300,
-          "scale": 1
-        }
+        ]
       }
     },
     {
@@ -1138,14 +1122,7 @@
           {
             "id": "Google"
           }
-        ],
-        "place": {
-          "left": -120,
-          "top": 260,
-          "width": 960,
-          "height": 520,
-          "scale": 1.45
-        }
+        ]
       }
     },
     {
@@ -1160,10 +1137,10 @@
         "seed": "fwp",
         "shape": "loop",
         "target": {
-          "x": 400,
-          "y": 460,
-          "w": 350,
-          "h": 350
+          "x": 380,
+          "y": 810,
+          "w": 310,
+          "h": 310
         }
       }
     },
@@ -1187,14 +1164,7 @@
             "text": "Absolutely not, it's my lie-in day",
             "side": "right"
           }
-        ],
-        "place": {
-          "left": 139,
-          "top": 250,
-          "width": 920,
-          "height": 420,
-          "scale": 1
-        }
+        ]
       }
     },
     {
@@ -1209,19 +1179,12 @@
         "main": "NO SPENDING",
         "tiltDeg": 0,
         "at": {
-          "x": 0,
-          "y": 0,
-          "w": 345,
-          "h": 68
+          "x": 290,
+          "y": 1300,
+          "w": 500,
+          "h": 100
         },
-        "paint": "mint",
-        "place": {
-          "left": 132,
-          "top": 300,
-          "width": 345,
-          "height": 68,
-          "scale": 2.4
-        }
+        "paint": "mint"
       }
     },
     {
@@ -1236,19 +1199,12 @@
         "main": "NO SENDING",
         "tiltDeg": 0,
         "at": {
-          "x": 0,
-          "y": 0,
-          "w": 345,
-          "h": 68
+          "x": 290,
+          "y": 1440,
+          "w": 500,
+          "h": 100
         },
-        "paint": "mint",
-        "place": {
-          "left": 132,
-          "top": 500,
-          "width": 345,
-          "height": 68,
-          "scale": 2.4
-        }
+        "paint": "mint"
       }
     },
     {
@@ -1262,9 +1218,9 @@
         "colour": "mint",
         "seed": "fwp",
         "shape": "tick",
-        "cx": 1005,
-        "cy": 592,
-        "size": 72
+        "cx": 860,
+        "cy": 1490,
+        "size": 80
       }
     },
     {
@@ -1294,52 +1250,124 @@
             "text": "Zero unapproved incremental usage costs",
             "side": "right"
           }
-        ],
-        "place": {
-          "left": 139,
-          "top": 100,
-          "width": 920,
-          "height": 100,
-          "scale": 0.9
+        ]
+      }
+    },
+    {
+      "obj": "stamp_helpful",
+      "device": "stamp",
+      "meaning": "what proactive assistants are: really helpful",
+      "fromFrame": 176,
+      "toFrame": 366,
+      "variants": {},
+      "params": {
+        "kind": "block",
+        "main": "REALLY HELPFUL",
+        "tiltDeg": 0,
+        "at": {
+          "x": 260,
+          "y": 1300,
+          "w": 560,
+          "h": 100
+        },
+        "paint": "mint"
+      }
+    },
+    {
+      "obj": "stamp_danger",
+      "device": "stamp",
+      "meaning": "and a bit dangerous once connected to your apps",
+      "fromFrame": 176,
+      "toFrame": 366,
+      "variants": {},
+      "params": {
+        "kind": "block",
+        "main": "A BIT DANGEROUS",
+        "tiltDeg": -3,
+        "at": {
+          "x": 240,
+          "y": 1440,
+          "w": 600,
+          "h": 100
         }
+      }
+    },
+    {
+      "obj": "rule_card",
+      "device": "typing_bubble",
+      "meaning": "his rule in his own words: no spending, no sending without his say-so",
+      "fromFrame": 646,
+      "toFrame": 764,
+      "variants": {},
+      "params": {
+        "kind": "notification",
+        "rows": [
+          {
+            "who": "Your AI",
+            "text": "Doesn't spend your money."
+          },
+          {
+            "text": "Doesn't send anything unless you say so."
+          }
+        ]
+      }
+    },
+    {
+      "obj": "rule_close",
+      "device": "typing_bubble",
+      "meaning": "his rule in his own words: no spending, no sending without his say-so",
+      "fromFrame": 1085,
+      "toFrame": 1425,
+      "variants": {},
+      "params": {
+        "kind": "notification",
+        "rows": [
+          {
+            "who": "Your AI",
+            "text": "Doesn't spend your money."
+          },
+          {
+            "text": "Doesn't send anything unless you say so."
+          }
+        ]
       }
     }
   ],
   "events": [
     {
       "id": "hook-0",
-      "obj": "buddy",
-      "verb": "enter",
-      "toState": "proud",
-      "atFrame": 0
-    },
-    {
-      "id": "hook-1",
       "obj": "note",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 0
     },
     {
-      "id": "hook-2",
+      "id": "hook-1",
       "obj": "note",
       "verb": "type",
       "toState": "0",
       "atFrame": 0
     },
     {
-      "id": "hook-3",
+      "id": "hook-2",
       "obj": "underline",
       "verb": "draw",
       "toState": "Done!",
       "atFrame": 88
     },
     {
-      "id": "hook-4",
-      "obj": "buddy",
-      "verb": "wave",
-      "toState": "proud",
-      "atFrame": 128
+      "id": "face-0",
+      "obj": "stamp_helpful",
+      "verb": "stamp",
+      "toState": "REALLY HELPFUL",
+      "atFrame": 268
+    },
+    {
+      "id": "face-1",
+      "obj": "stamp_danger",
+      "verb": "stamp",
+      "toState": "A BIT DANGEROUS",
+      "atFrame": 307
     },
     {
       "id": "proof-0",
@@ -1420,24 +1448,45 @@
     },
     {
       "id": "b5-rule-2",
-      "obj": "buddy_rule",
-      "verb": "enter",
-      "toState": "sulk",
-      "atFrame": 625
-    },
-    {
-      "id": "b5-rule-3",
       "obj": "slab_send",
       "verb": "stamp",
       "toState": "NO SENDING",
       "atFrame": 625
     },
     {
-      "id": "b5-rule-4",
+      "id": "b5-rule-3",
       "obj": "tick",
       "verb": "draw",
       "toState": "NO SENDING",
       "atFrame": 642
+    },
+    {
+      "id": "own-words-0",
+      "obj": "rule_card",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 646
+    },
+    {
+      "id": "own-words-1",
+      "obj": "rule_card",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 648
+    },
+    {
+      "id": "own-words-2",
+      "obj": "rule_card",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 692
+    },
+    {
+      "id": "own-words-3",
+      "obj": "rule_card",
+      "verb": "send",
+      "toState": "0",
+      "atFrame": 732
     },
     {
       "id": "b7-prompt-0",
@@ -1525,10 +1574,24 @@
     },
     {
       "id": "close-3",
-      "obj": "buddy_rule",
-      "verb": "wave",
-      "toState": "sulk",
-      "atFrame": 1201
+      "obj": "rule_close",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1149
+    },
+    {
+      "id": "close-4",
+      "obj": "rule_close",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 1149
+    },
+    {
+      "id": "close-5",
+      "obj": "rule_close",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 1171
     }
   ],
   "ending": {

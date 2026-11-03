@@ -243,7 +243,9 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         if cut['aspect'] == '9:16' and whole:
             minutes = max(1.0, (beats[-1]['span']['to_w'] - beats[0]['span']['from_w']) / (WORDS_PER_SECOND * 60))
             need = math.ceil(fmt['qc'].get('layout_types_per_min_tall', 1) * min(minutes, 1.0))
-            if len(layouts) < need:
+            # Krish may waive variety for a piece in his own words (an exception approval), as for Thursday 5 Nov:
+            # "This Thursday video should be the simplest to produce and feature my face minimally".
+            if len(layouts) < need and not any(a['gate'] == 'exception' for a in spec['approvals']):
                 out.append(f'motion.layout_variety {where}: {len(layouts)} layout types, the format needs at least {need} a minute')
 
     bed_mode = spec['audio']['bed']['mode']
