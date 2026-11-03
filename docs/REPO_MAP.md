@@ -3488,6 +3488,12 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function StageHeader({ props }: { props: EngineRenderProps })`
 
+### `apps/renderer/src/engine/chrome/WordCaption.tsx`
+
+- `const WORD_CAPTION`
+- `function WordCaption({ props, frame }: { props: EngineRenderProps; frame: number })`
+- `function HeldTitle({ props, frame }: { props: EngineRenderProps; frame: number })`
+
 ### `apps/renderer/src/engine/chrome/tokens.ts`
 
 - `function houseTokens(tokens: EngineTokens): HouseTokens`
@@ -4505,6 +4511,7 @@ Artifact-bound user confirmation references.
 - `const VeAudioSchema`
 - `const VeApprovalSchema`
 - `const VeCallSchema`
+- `const VeReferenceSchema`
 - `const ProductionSpecV2Schema`
 - `type ProductionSpecV2 = z.infer<typeof ProductionSpecV2Schema>`
 - `type VeBeat = z.infer<typeof VeBeatSchema>`

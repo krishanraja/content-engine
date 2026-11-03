@@ -2759,6 +2759,21 @@ def main():
                 pages=advisory_qc.caption_pages(groups, wins, asp, tl['intro_s'], FPS),
                 beats=advisory_qc.beats_of(wins, tl['main_s'], tl['intro_s'], FPS),
                 mark=P(cfg['brand_mark']) if cfg.get('brand_mark') else None)
+            # Nothing he must read under Instagram's, TikTok's or Shorts' own buttons (Krish, 2026-11-03: "It looks
+            # cramped. It looks like you almost didn't design this thoughtfully for the format or the channel").
+            # Measured and listed on every tall cut; it holds the cut once the tall layout clears the zones
+            # (docs/ve/MOTION_STANDARD.md, scripts/channel_safe.py).
+            if asp == '9x16':
+                import channel_safe  # noqa: PLC0415
+                bands = channel_safe.box_violations(
+                    [(f'caption band {band}', tuple(box)) for band, box in advisory_qc.CAPTION_BANDS['9x16'].items()])
+                words = channel_safe.frame_violations(final, 'tall', every=2.0)
+                receipt['channel_safe'] = {'bands': bands, 'frames': words}
+                for hit in bands:
+                    warnings.append(f"{hit['what']} sits under {hit['channel']}'s {hit['zone']}")
+                if words.get('pass') is False:
+                    warnings.append(f"{words['value']['count']} word(s) read under a channel's buttons "
+                                    f"(first: '{words['value']['in_zones'][0]['word']}' at {words['value']['in_zones'][0]['at_s']} s)")
             Path(str(final)+'.validation.json').write_text(json.dumps(receipt,indent=2),encoding='utf-8')
         shapes[asp] = {
             'file': final.name, 'opening': opening_of(intro), 'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],

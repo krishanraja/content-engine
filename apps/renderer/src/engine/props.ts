@@ -84,6 +84,9 @@ export const EngineRenderPropsSchema = z.object({
   segments: z.array(EngineSegmentSchema).default([]),
   audio: EngineAudioSchema,
   captions: z.array(EngineCaptionPageSchema).min(1),
+  /** 'house' pages in the ink box; 'word' shows one word at a time, off the face, under a held title. */
+  captionStyle: z.enum(['house', 'word']).optional(),
+  title: z.string().min(1).optional(),
   beats: z.array(EngineBeatSchema).min(1),
   objects: z.array(EngineObjectSchema),
   events: z.array(EngineEventSchema),

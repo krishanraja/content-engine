@@ -246,14 +246,15 @@ def inputs_from_props(props: dict) -> dict:
             page['region'] = split_caption
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
-                edl=edl, joins=joins)
+                edl=edl, joins=joins, caption_style=props.get('captionStyle') or 'house')
 
 
 def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            dialogue_master: str | None = None, edl=None, joins=None, pages=None, region=None,
            mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None,
            composition_props=None, script: str | None = None, take_words=None, heard: dict | None = None,
-           captions_drawn_by: str = 'faster-whisper', caption_ocr=None, fps: float = 30) -> dict:
+           captions_drawn_by: str = 'faster-whisper', caption_ocr=None, fps: float = 30,
+           caption_style: str = 'house', face_detector=None) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
@@ -276,7 +277,9 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     # The calibrated cut gates quick-edit runs too (plan W2.4, scripts/cutgates, config/gates.json).
     for name in ('words.lost', 'joins.in_gaps', 'captions.clock', 'captions.render'):
         checks[name] = {'value': None, 'target': 'see config/gates.json', 'pass': None, 'status': 'not_run'}
-    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates
+    checks['captions.off_face'] = {'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not_run'}
+    checks['channel.safe_zones'] = {'value': None, 'target': 'nothing under a channel button', 'pass': None, 'status': 'not_run'}
+    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel
     optional = [
         ('sync.av_xcorr', dialogue_master is not None and edl is not None,
          lambda: qc_sync.av_xcorr(path, dialogue_master, edl)),
@@ -294,6 +297,11 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
          lambda: qc_gates.captions_clock(pages, heard, captions_drawn_by, fps)),
         ('captions.render', pages is not None and region is not None,
          lambda: qc_gates.captions_render(path, pages, region, caption_ocr)),
+        ('captions.off_face', bool(pages) and aspect is not None,
+         lambda: qc_faces.off_face(path, pages, style=caption_style, aspect=aspect, region=region, fps=fps,
+                                   detector=face_detector)),
+        ('channel.safe_zones', aspect is not None and (bool(pages) or bool(beats)),
+         lambda: qc_channel.safe_zones(pages, beats, aspect, region, caption_style)),
     ]
     # STAGE beats compose the whole screen under a moving camera. The square mark tile is replaced by the logo in
     # the stage header, and an object's slot is the full canvas, so "change near the event inside its slot" cannot
@@ -342,7 +350,8 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         'pass': composition.get('pass'),
         'status': composition.get('status', 'measured') if composition['applies'] else 'not applicable',
     }
-    applicable = [c for c in checks.values() if c.get('status') != 'not applicable']
+    # An advisory row is measured and shown, never counted (scripts/velib/qc_channel.py until its layout card lands).
+    applicable = [c for c in checks.values() if c.get('status') not in ('not applicable', 'advisory')]
     built = [c['pass'] for c in applicable if c['pass'] is not None]
     return {'file': path, 'sha256': sha256_file(path), 'duration_s': round(duration_s(path), 3), 'format': format_id,
             'checks': checks, 'keyframes': keyframes, 'composition': composition, 'measured_pass': all(built),

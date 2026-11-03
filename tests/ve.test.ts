@@ -55,6 +55,10 @@ describe('ve', () => {
     ['one local layout: every reader resolves from config/studio.json and the path guard fails on a planted path', 'tests/ve_local_roots_test.py'],
     ['the route check at parity: per-piece code is banned only for a move that has a device', 'tests/ve_route_test.py'],
     ['the weekly device sprint: briefs, cards from filled fields, Gate 2 in his words, the Archive feed', 'tests/ve_sprint_test.py'],
+    ['a cut is scored beside its inspiration-board references and under 8/10 is not ready (F26)', 'tests/ve_refgate_test.py'],
+    ['no caption page sits on his face (F28)', 'tests/ve_qc_faces_test.py'],
+    ['nothing to read under a channel button, zones measured on his phone (F30)', 'tests/channel_safe_test.py'],
+    ['a finished off-day card is not ready until its 4 Growth file is recorded (F27)', 'tests/board_growth_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])

@@ -43,7 +43,7 @@ export const VeBeatSchema = z.object({
   viewer_task: NarrativeBeatV1Schema.shape.viewer_task,
   point: z.string().min(12),
   layout: VeLayoutSchema,
-  plate: z.object({ source: z.string().regex(/^(take|asset:[a-z0-9][a-z0-9_-]*)$/), crop: z.string().min(1).optional() }).strict(),
+  plate: z.object({ source: z.string().regex(/^(take|none|asset:[a-z0-9][a-z0-9_-]*)$/), crop: z.string().min(1).optional() }).strict(),
   uses: z.array(z.string().min(1)).default([]),
   events: z.array(VeEventSchema).default([]),
   transition_out: VeTransitionSchema.default('cut'),
@@ -143,6 +143,17 @@ export const VeCallSchema = z.object({
   confidence_percent: z.number().int().min(1).max(99),
 }).strict()
 
+// A card on Krish's inspiration board that this piece is held to (Krish, 2026-11-03: "I even gave literal inspiration in
+// the inspiration board on the quality I expect, and also the subtitle builds we could have"). `card` is the board's
+// own name for the clip (its file stem, instagram_DePHDr_jRed); `drive_id` is where its video lives, read at packet
+// time and never copied into the repository; `takeaway` says in words what the cut must match.
+export const VeReferenceSchema = z.object({
+  card: z.string().regex(/^[a-z]+_[A-Za-z0-9_-]{4,}$/, 'the board card name, the clip file stem (instagram_DePHDr_jRed)'),
+  for: z.array(z.enum(['look', 'motion', 'captions'])).min(1),
+  drive_id: z.string().regex(/^[A-Za-z0-9_-]{20,}$/, 'the Drive file id of the reference video'),
+  takeaway: z.string().min(12),
+}).strict()
+
 export const ProductionSpecV2Schema = z.object({
   schema_version: z.literal(2),
   piece_id: IdentifierV1Schema,
@@ -151,8 +162,14 @@ export const ProductionSpecV2Schema = z.object({
   theme: SlugSchema,
   brand: z.object({
     series: VeSeriesSchema,
-    captions: z.literal('house'),
+    // 'word': one word at a time, off the face, under a held title (Krish, 2026-11-03: "its the georgia subtitles
+    // build, and the motion and graphics of the other one"; inspiration card instagram_DePHDr_jRed).
+    captions: z.enum(['house', 'word']),
+    title: z.string().min(3).max(48).optional(),
     reference: z.string().min(1).optional(),
+    // Required by ve lint for every piece publishing after 5 Nov 2026: at least one card for look, one for motion
+    // and one for the caption build (scripts/velib/lint.py, reference_lints).
+    references: z.array(VeReferenceSchema).optional(),
     intro_sting: z.string().min(1).optional(),
   }).strict(),
   call: VeCallSchema.optional(),

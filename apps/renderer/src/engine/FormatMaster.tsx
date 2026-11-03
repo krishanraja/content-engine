@@ -53,7 +53,10 @@ export function FormatMaster(props: EngineRenderProps) {
         if (frame < beat.fromFrame || frame >= beat.toFrame) return null
         const slots = slotsFor(beat.layout, props.aspect, beat.uses.length)
         return (
-          <AbsoluteFill key={`devices-${beat.id}`} style={beat.layout === 'SPLIT' ? { height: slots[0]?.height ?? splitCameraBox(props.aspect).top, backgroundColor: props.tokens.cream, overflow: 'hidden' } : {}}>
+          <AbsoluteFill key={`devices-${beat.id}`} style={beat.layout === 'SPLIT' ? { height: slots[0]?.height ?? splitCameraBox(props.aspect).top, backgroundColor: props.tokens.cream, overflow: 'hidden' }
+            // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
+            // the ground StageHeader's logo is drawn for.
+            : beat.plate?.source === 'none' ? { backgroundColor: props.tokens.ink } : {}}>
             <AbsoluteFill style={beat.layout === 'SPLIT' ? { transform: `scale(${FWP_STAGE_SCALE})`, transformOrigin: 'top center' } : {}}>
             {beat.uses.map((id, index) => {
               const object = objects.get(id)

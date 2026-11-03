@@ -141,7 +141,21 @@ class PacketTest(unittest.TestCase):
         self.assertEqual(code,1)
         self.assertIn('design: APPROVED',text)
         self.spec['approvals'] = [{'gate':'final','by':'Krish','artifact_hash':sha256_file(self.video)}]
-        self.assertEqual(self.status()[0],0)
+        # Approved is not done: the cut must be in the 4 Growth folder Krish opens (Krish, 2026-11-03).
+        code, text = self.status()
+        self.assertEqual(code, 1)
+        self.assertIn('delivered: NO (not filed: run ve file)', text)
+        library = self.root / 'library'
+        growth = '4 Growth/2026-11-06 - Test - Instagram, TikTok, YouTube Shorts and X/test.mp4'
+        (library / growth).parent.mkdir(parents=True)
+        (library / growth).write_bytes(self.video.read_bytes())
+        write_json(self.directory / 'filed.json', {'files': [{'cut': 'short', 'shape': 'tall', 'growth': growth,
+                                                             'sha256': sha256_file(self.video)}]})
+        with patch.dict('os.environ', {'MINDMAKE_LIBRARY_ROOT': str(library / '3 Posts')}), \
+                patch('plan_files.library_roots', return_value=[library / '3 Posts']):
+            code, text = self.status()
+        self.assertEqual(code, 0, text)
+        self.assertIn('delivered: DONE 4 Growth/', text)
 
     def test_status_legacy_proof(self):
         self.spec['format'] = 'voice-led-pictures'

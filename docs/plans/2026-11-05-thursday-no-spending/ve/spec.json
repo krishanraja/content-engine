@@ -6,7 +6,8 @@
  "theme": "makeyourmindup-video-v1",
  "brand": {
   "series": "under.the.hood",
-  "captions": "house"
+  "captions": "word",
+  "title": "Give your AI two rules"
  },
  "signature": {
   "hero": {
@@ -19,44 +20,6 @@
   "variants": {}
  },
  "objects": [
-  {
-   "obj": "buddy",
-   "device": "cursor_buddy",
-   "meaning": "the proactive assistant as a cursor with a face, proud then sulking then behaving",
-   "persist": {
-    "from_beat": "hook",
-    "to_beat": "hook"
-   },
-   "params": {
-    "mood": "proud",
-    "place": {
-     "left": 66,
-     "top": 477,
-     "width": 900,
-     "height": 1100,
-     "scale": 0.6
-    }
-   }
-  },
-  {
-   "obj": "buddy_rule",
-   "device": "cursor_buddy",
-   "meaning": "the same cursor buddy at the rule, sulking by the fence, then behaving",
-   "persist": {
-    "from_beat": "b5-rule",
-    "to_beat": "close"
-   },
-   "params": {
-    "mood": "sulk",
-    "place": {
-     "left": 390,
-     "top": 480,
-     "width": 640,
-     "height": 800,
-     "scale": 0.75
-    }
-   }
-  },
   {
    "obj": "note",
    "device": "typing_bubble",
@@ -71,34 +34,7 @@
      {
       "text": "Done! Booked the team offsite in Ibiza"
      }
-    ],
-    "place": {
-     "left": 56,
-     "top": 340,
-     "width": 920,
-     "height": 300,
-     "scale": 1
-    }
-   }
-  },
-  {
-   "obj": "underline",
-   "device": "scribble",
-   "meaning": "marks the word Done! in the notification",
-   "persist": {
-    "from_beat": "hook",
-    "to_beat": "hook"
-   },
-   "params": {
-    "colour": "mint",
-    "seed": "fwp",
-    "shape": "underline",
-    "target": {
-     "x": 120,
-     "y": 436,
-     "w": 126,
-     "h": 58
-    }
+    ]
    }
   },
   {
@@ -174,85 +110,12 @@
      }
     ],
     "place": {
-     "left": 139,
-     "top": 250,
-     "width": 920,
-     "height": 420,
-     "scale": 1
+     "left": -135,
+     "top": 210,
+     "width": 1080,
+     "height": 640,
+     "scale": 1.25
     }
-   }
-  },
-  {
-   "obj": "slab_spend",
-   "device": "stamp",
-   "meaning": "the first half of the rule",
-   "persist": {
-    "from_beat": "b5-rule",
-    "to_beat": "close"
-   },
-   "params": {
-    "kind": "block",
-    "main": "NO SPENDING",
-    "tiltDeg": 0,
-    "at": {
-     "x": 0,
-     "y": 0,
-     "w": 345,
-     "h": 68
-    },
-    "paint": "mint",
-    "place": {
-     "left": 132,
-     "top": 300,
-     "width": 345,
-     "height": 68,
-     "scale": 2.4
-    }
-   }
-  },
-  {
-   "obj": "slab_send",
-   "device": "stamp",
-   "meaning": "the second half of the rule",
-   "persist": {
-    "from_beat": "b5-rule",
-    "to_beat": "close"
-   },
-   "params": {
-    "kind": "block",
-    "main": "NO SENDING",
-    "tiltDeg": 0,
-    "at": {
-     "x": 0,
-     "y": 0,
-     "w": 345,
-     "h": 68
-    },
-    "paint": "mint",
-    "place": {
-     "left": 132,
-     "top": 500,
-     "width": 345,
-     "height": 68,
-     "scale": 2.4
-    }
-   }
-  },
-  {
-   "obj": "tick",
-   "device": "scribble",
-   "meaning": "ticks NO SENDING as done",
-   "persist": {
-    "from_beat": "b5-rule",
-    "to_beat": "close"
-   },
-   "params": {
-    "colour": "mint",
-    "seed": "fwp",
-    "shape": "tick",
-    "cx": 1005,
-    "cy": 592,
-    "size": 72
    }
   },
   {
@@ -283,13 +146,139 @@
       "text": "Zero unapproved incremental usage costs",
       "side": "right"
      }
+    ]
+   }
+  },
+  {
+   "obj": "rule_card",
+   "device": "typing_bubble",
+   "meaning": "his rule in his own words: no spending, no sending without his say-so",
+   "persist": {
+    "from_beat": "own-words",
+    "to_beat": "own-words"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Your AI",
+      "text": "Doesn't spend your money."
+     },
+     {
+      "text": "Doesn't send anything unless you say so."
+     }
     ],
     "place": {
-     "left": 139,
-     "top": 100,
-     "width": 920,
-     "height": 100,
-     "scale": 0.9
+     "left": -135,
+     "top": 210,
+     "width": 1080,
+     "height": 640,
+     "scale": 1.25
+    }
+   }
+  },
+  {
+   "obj": "rule_close",
+   "device": "typing_bubble",
+   "meaning": "his rule in his own words: no spending, no sending without his say-so",
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Your AI",
+      "text": "Doesn't spend your money."
+     },
+     {
+      "text": "Doesn't send anything unless you say so."
+     }
+    ],
+    "place": {
+     "left": -135,
+     "top": 210,
+     "width": 1080,
+     "height": 640,
+     "scale": 1.25
+    }
+   },
+   "persist": {
+    "from_beat": "close",
+    "to_beat": "close"
+   }
+  },
+  {
+   "obj": "rules",
+   "device": "typing_bubble",
+   "meaning": "the two rules, as his AI would read them",
+   "persist": {
+    "from_beat": "b5-rule",
+    "to_beat": "b5-rule"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Your AI",
+      "text": "No spending."
+     },
+     {
+      "text": "No sending."
+     }
+    ],
+    "place": {
+     "left": -135,
+     "top": 210,
+     "width": 1080,
+     "height": 640,
+     "scale": 1.25
+    }
+   }
+  },
+  {
+   "obj": "rules_held",
+   "device": "typing_bubble",
+   "meaning": "the two rules held while he explains the prompt",
+   "persist": {
+    "from_beat": "b7-prompt",
+    "to_beat": "b7-prompt"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Your AI",
+      "text": "No spending."
+     },
+     {
+      "text": "No sending."
+     }
+    ]
+   }
+  },
+  {
+   "obj": "verdict",
+   "device": "typing_bubble",
+   "meaning": "AI that acts first: really helpful, a bit dangerous",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "AI that acts first",
+      "text": "Really helpful."
+     },
+     {
+      "text": "A bit dangerous."
+     }
+    ],
+    "place": {
+     "left": -135,
+     "top": 210,
+     "width": 1080,
+     "height": 640,
+     "scale": 1.25
     }
    }
   }
@@ -336,25 +325,15 @@
       "to_w": 14
      },
      "viewer_task": "locate_story",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "Proactive AI already acts before you ask: it booked the offsite in Ibiza without checking",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
      "uses": [
-      "buddy",
-      "note",
-      "underline"
+      "note"
      ],
      "events": [
-      {
-       "at_w": 0,
-       "obj": "buddy",
-       "verb": "enter",
-       "to_state": "proud",
-       "silent": true
-      },
       {
        "at_w": 0,
        "obj": "note",
@@ -368,20 +347,6 @@
        "verb": "type",
        "to_state": "0",
        "silent": true
-      },
-      {
-       "at_w": 6,
-       "obj": "underline",
-       "verb": "draw",
-       "to_state": "Done!",
-       "silent": true
-      },
-      {
-       "at_w": 11,
-       "obj": "buddy",
-       "verb": "wave",
-       "to_state": "proud",
-       "silent": true
       }
      ]
     },
@@ -393,14 +358,38 @@
       "to_w": 29
      },
      "viewer_task": "connect_with_speaker",
-     "layout": "P1",
+     "layout": "SPLIT",
      "point": "Awesome, really helpful features, but a bit dangerous once they are connected to your apps",
      "plate": {
-      "source": "take"
+      "source": "take",
+      "crop": "50% 88%"
      },
-     "uses": [],
-     "events": [],
-     "override_reason": "the locked face beat: his face full frame with no graphic, as the frozen face key frame"
+     "uses": [
+      "verdict"
+     ],
+     "events": [
+      {
+       "at_w": 15,
+       "obj": "verdict",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 21,
+       "obj": "verdict",
+       "verb": "type",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 25,
+       "obj": "verdict",
+       "verb": "type",
+       "to_state": "1",
+       "silent": true
+      }
+     ]
     },
     {
      "id": "proof",
@@ -522,10 +511,7 @@
      },
      "uses": [
       "chat",
-      "slab_spend",
-      "slab_send",
-      "buddy_rule",
-      "tick"
+      "rules"
      ],
      "events": [
       {
@@ -537,30 +523,23 @@
       },
       {
        "at_w": 54,
-       "obj": "slab_spend",
-       "verb": "stamp",
-       "to_state": "NO SPENDING",
-       "silent": true
-      },
-      {
-       "at_w": 56,
-       "obj": "buddy_rule",
+       "obj": "rules",
        "verb": "enter",
-       "to_state": "sulk",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 54,
+       "obj": "rules",
+       "verb": "type",
+       "to_state": "0",
        "silent": true
       },
       {
        "at_w": 56,
-       "obj": "slab_send",
-       "verb": "stamp",
-       "to_state": "NO SENDING",
-       "silent": true
-      },
-      {
-       "at_w": 58,
-       "obj": "tick",
-       "verb": "draw",
-       "to_state": "NO SENDING",
+       "obj": "rules",
+       "verb": "type",
+       "to_state": "1",
        "silent": true
       }
      ]
@@ -573,14 +552,45 @@
       "to_w": 73
      },
      "viewer_task": "connect_with_speaker",
-     "layout": "F3",
+     "layout": "SPLIT",
      "point": "In his own words: it never spends his money or sends anything unless he says so",
      "plate": {
-      "source": "take"
+      "source": "take",
+      "crop": "50% 88%"
      },
-     "uses": [],
-     "events": [],
-     "override_reason": "his rule in his own words, face full frame with no graphic, as the storyboard he signed (beat 5)"
+     "uses": [
+      "rule_card"
+     ],
+     "events": [
+      {
+       "at_w": 59,
+       "obj": "rule_card",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 60,
+       "obj": "rule_card",
+       "verb": "type",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 64,
+       "obj": "rule_card",
+       "verb": "type",
+       "to_state": "1",
+       "silent": true
+      },
+      {
+       "at_w": 70,
+       "obj": "rule_card",
+       "verb": "send",
+       "to_state": "0",
+       "silent": true
+      }
+     ]
     },
     {
      "id": "b7-prompt",
@@ -590,38 +600,28 @@
       "to_w": 117
      },
      "viewer_task": "inspect_artifact",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "He did not write the rule himself: one prompt and the AI asked him questions, then locked itself down",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
      "uses": [
-      "slab_spend",
-      "slab_send",
-      "tick",
+      "rules_held",
       "ask"
      ],
      "events": [
       {
-       "at_w": 92,
-       "obj": "slab_spend",
-       "verb": "exit",
-       "to_state": "gone",
+       "at_w": 74,
+       "obj": "rules_held",
+       "verb": "enter",
+       "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 92,
-       "obj": "slab_send",
-       "verb": "exit",
-       "to_state": "gone",
-       "silent": true
-      },
-      {
-       "at_w": 92,
-       "obj": "tick",
-       "verb": "exit",
-       "to_state": "gone",
+       "at_w": 74,
+       "obj": "rules_held",
+       "verb": "type",
+       "to_state": "1",
        "silent": true
       },
       {
@@ -629,6 +629,13 @@
        "obj": "ask",
        "verb": "enter",
        "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 92,
+       "obj": "rules_held",
+       "verb": "exit",
+       "to_state": "gone",
        "silent": true
       },
       {
@@ -683,38 +690,35 @@
       "crop": "50% 88%"
      },
      "uses": [
-      "slab_spend",
-      "slab_send",
-      "buddy_rule",
-      "tick"
+      "rule_close"
      ],
      "events": [
       {
-       "at_w": 123,
-       "obj": "slab_spend",
-       "verb": "stamp",
-       "to_state": "NO SPENDING",
+       "at_w": 128,
+       "obj": "rule_close",
+       "verb": "enter",
+       "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 125,
-       "obj": "slab_send",
-       "verb": "stamp",
-       "to_state": "NO SENDING",
+       "at_w": 128,
+       "obj": "rule_close",
+       "verb": "type",
+       "to_state": "0",
        "silent": true
       },
       {
-       "at_w": 126,
-       "obj": "tick",
-       "verb": "draw",
-       "to_state": "NO SENDING",
+       "at_w": 131,
+       "obj": "rule_close",
+       "verb": "type",
+       "to_state": "1",
        "silent": true
       },
       {
-       "at_w": 136,
-       "obj": "buddy_rule",
-       "verb": "wave",
-       "to_state": "sulk",
+       "at_w": 140,
+       "obj": "rule_close",
+       "verb": "send",
+       "to_state": "0",
        "silent": true
       }
      ]
@@ -722,7 +726,15 @@
    ]
   }
  },
- "approvals": [],
+ "approvals": [
+  {
+   "gate": "exception",
+   "by": "Krish",
+   "said": "This Thursday video should be the simplest to produce and feature my face minimally compared to the Monday, Wednesday, and Friday videos.",
+   "on": "2026-11-03",
+   "artifact_hash": "517cdd9472636c3a5aad20df0725e7c59d1369bf045ffb103228207b2c41d90d"
+  }
+ ],
  "budget": {
   "tokens_cap": 3300000,
   "credits": {
