@@ -58,6 +58,17 @@ Set-StrictMode -Version Latest
 
 $RepoRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $TopFolders = @('1 Brand kit (permanent)', '2 Channel art (permanent)', '3 Posts')
+# A second library (Krish, 2026-11-03: "Why don't you duplicate that Python
+# script for Heartside then? We're going to need to do a lot more of this type
+# of stuff moving forward"): Heartside's social library, Heartside\05_Social-Library,
+# where each post's media goes in Posts\<post id>\. Its root is "root" in
+# config\heartside-library.json (or the setting MINDMAKE_HEARTSIDE_LIBRARY_ROOT);
+# with neither, it is skipped. It is written
+# only under Posts, by the same rules: never deleted, never renamed, every file
+# checked against its sha256 first.
+$HeartsideTopFolders = @('Posts')
+$HeartsidePostId = [regex]'^[A-Z][0-9]{2,3}(-[a-z0-9]+)*$'
+$SourceFolderName = 'library-source'
 $BrandKitFolder = '1 Brand kit (permanent)'
 $BrandKitUrl = 'https://raw.githubusercontent.com/krishanraja/makeyourmindup/main/brand-kit/makeyourmindup-brand-kit.zip'
 $RunnerCredential = 'MindmakeVideoStudio/control-center-runner-token-v3'
@@ -168,17 +179,41 @@ function Resolve-LibraryRoot($Config) {
   # 2026-10-07 (Krish moved makeyourmindup to Ventures\Active, "the moves were
   # made on purpose") Video Engine sits inside the library folder beside the
   # three top folders; the sync writes only under those, so that is allowed.
+  Assert-NoStudioOverlap $root $TopFolders $runtime
+  if (-not (Test-Path -LiteralPath $root -PathType Container)) {
+    $script:Problems.Add('library_root_missing')
+    throw "The library folder $root cannot be reached. Check that Google Drive is running and signed in, and that config\studio.json runtime.library_root is its path."
+  }
+  return $root
+}
+
+function Assert-NoStudioOverlap([string]$root, [string[]]$Tops, $runtime) {
   $studio = @((Get-Field $runtime 'drive_root'), (Get-Field $runtime 'media_inbox'), (Get-Field $runtime 'archive_root'),
     $env:MINDMAKE_DRIVE_ROOT, $env:MINDMAKE_MEDIA_INBOX, $env:MINDMAKE_ARCHIVE_ROOT) | Where-Object { $_ }
   foreach ($folder in $studio) {
-    $underWritten = @($TopFolders | Where-Object { $top = Join-Path $root $_; (Test-SamePath $folder $top) -or (Test-Inside $folder $top) -or (Test-Inside $top $folder) }).Count -gt 0
+    $underWritten = @($Tops | Where-Object { $top = Join-Path $root $_; (Test-SamePath $folder $top) -or (Test-Inside $folder $top) -or (Test-Inside $top $folder) }).Count -gt 0
     if ((Test-SamePath $root $folder) -or (Test-Inside $root $folder) -or $underWritten) {
       throw "The library folder $root overlaps the Studio's Video Engine folder $folder. Refusing to write anything."
     }
   }
+}
+
+function Resolve-HeartsideRoot($Config) {
+  # MINDMAKE_HEARTSIDE_LIBRARY_ROOT when it names a folder that is there, else
+  # "root" in config\heartside-library.json (kept out of studio.json, whose
+  # contents are bound into the media standard). Neither set: no Heartside
+  # library on this machine, and nothing is written for it.
+  $runtime = Get-Field $Config 'runtime'
+  $root = [string](Get-Field (Read-JsonFile (Join-Path $RepoRoot 'config\heartside-library.json')) 'root')
+  $setting = Get-Setting 'MINDMAKE_HEARTSIDE_LIBRARY_ROOT'
+  if ($setting -and ((Test-Path -LiteralPath $setting -PathType Container) -or -not $root)) { $root = $setting }
+  if (-not $root) { return $null }
+  if (-not [System.IO.Path]::IsPathRooted($root)) { throw "The Heartside library folder must be a full path: $root" }
+  $root = [System.IO.Path]::GetFullPath($root).TrimEnd('\')
+  Assert-NoStudioOverlap $root $HeartsideTopFolders $runtime
   if (-not (Test-Path -LiteralPath $root -PathType Container)) {
-    $script:Problems.Add('library_root_missing')
-    throw "The library folder $root cannot be reached. Check that Google Drive is running and signed in, and that config\studio.json runtime.library_root is its path."
+    $script:Problems.Add('heartside_library_root_missing')
+    throw "The Heartside library folder $root cannot be reached. Check that Google Drive is running and signed in, and that config\heartside-library.json names it."
   }
   return $root
 }
@@ -291,14 +326,19 @@ function Save-Download($Client, [string]$Url, [string]$Destination, [hashtable]$
 
 # ---- writing into the library ------------------------------------------------
 
-function Get-LibraryTarget([string]$Root, [string]$Path) {
+function Get-LibraryTarget([string]$Root, [string]$Path, [string]$Library = 'makeyourmindup') {
   # The same boundary the engine holds (config/library-paths.cases.json), checked
   # again here: relative, forward slashes, a known top folder, nothing that climbs out.
   if (-not $Path -or $Path.Length -gt 180 -or $Path.Contains('\') -or $Path.StartsWith('/') -or $Path -match '^[A-Za-z]:') {
     throw "refused a path the library does not take: $Path"
   }
   $parts = $Path.Split('/')
-  if ($TopFolders -cnotcontains $parts[0] -or $parts.Count -lt 2) { throw "refused a path outside the library's folders: $Path" }
+  if ($TopFolders -cnotcontains $parts[0] -or $parts.Count -lt 2) {
+    if ($Library -ne 'heartside') { throw "refused a path outside the library's folders: $Path" }
+  }
+  if ($Library -eq 'heartside' -and ($HeartsideTopFolders -cnotcontains $parts[0] -or $parts.Count -ne 3 -or -not $HeartsidePostId.IsMatch($parts[1]))) {
+    throw "refused a path outside the Heartside library's Posts\<post id> folders: $Path"
+  }
   foreach ($part in $parts) {
     if (-not $part -or $part -eq '.' -or $part -eq '..' -or $part.StartsWith('.') -or $Unsafe.IsMatch($part) -or $part.EndsWith('.') -or $part.EndsWith(' ') -or $part.StartsWith(' ')) {
       throw "refused a path the library does not take: $Path"
@@ -316,10 +356,10 @@ function Get-BesideName([string]$Target, [int]$Copy) {
   return Join-Path $folder ("{0} ({1}){2}" -f $stem, $Copy, $extension)
 }
 
-function Write-IntoLibrary([string]$Root, [string]$Path, [string]$Temporary, [string]$Sha256, $Previous) {
+function Write-IntoLibrary([string]$Root, [string]$Path, [string]$Temporary, [string]$Sha256, $Previous, [string]$Library = 'makeyourmindup') {
   # Returns the library path the file is now at. Never deletes or renames a file.
-  $target = Get-LibraryTarget $Root $Path
-  $isBrandKit = $Path.StartsWith("$BrandKitFolder/")
+  $target = Get-LibraryTarget $Root $Path $Library
+  $isBrandKit = $Library -ne 'heartside' -and $Path.StartsWith("$BrandKitFolder/")
   $candidates = @($target) + @(2..99 | ForEach-Object { Get-BesideName $target $_ })
   foreach ($candidate in $candidates) {
     if (-not (Test-Path -LiteralPath $candidate)) {
@@ -347,12 +387,13 @@ function Write-IntoLibrary([string]$Root, [string]$Path, [string]$Temporary, [st
   return $relative
 }
 
-function Sync-Pending($Client, [string]$Base, [string]$Token, [string]$Root, [string]$Machine, [string]$WorkDir) {
+function Sync-Pending($Client, [string]$Base, [string]$Token, [string]$Root, [string]$Machine, [string]$WorkDir, [string]$Library = 'makeyourmindup') {
   $started = Get-Date
   $written = 0
   $failed = 0
   for ($round = 1; $round -le $RoundsPerPass; $round++) {
     $query = '/api/library/pending?machine={0}&limit={1}' -f [uri]::EscapeDataString($Machine), $PendingBatch
+    if ($Library -ne 'makeyourmindup') { $query += '&library=' + [uri]::EscapeDataString($Library) }
     $answer = Invoke-Engine $Client $Base $Token 'GET' $query $null
     if ($round -eq 1 -and $Check) { Write-Log "The engine knows this machine as $(Get-Field $answer 'machine')." }
     if ([int](Get-Field $answer 'skipped') -gt 0) { Write-Log "The engine held back $(Get-Field $answer 'skipped') file(s) that break the library's rule or have no stored copy." }
@@ -376,7 +417,7 @@ function Sync-Pending($Client, [string]$Base, [string]$Token, [string]$Root, [st
           [void](Save-Download $Client $address $temporary)
           if ((Get-Item -LiteralPath $temporary).Length -ne [int64]$file.bytes) { throw 'the download is the wrong size' }
           if ((Get-Sha256 $temporary) -ne [string]$file.sha256) { throw 'the download does not match its sha256' }
-          $as = Write-IntoLibrary $Root $path $temporary ([string]$file.sha256) ([string](Get-Field $file 'previous_sha256'))
+          $as = Write-IntoLibrary $Root $path $temporary ([string]$file.sha256) ([string](Get-Field $file 'previous_sha256')) $Library
         } finally {
           if (Test-Path -LiteralPath $temporary) { Remove-Item -LiteralPath $temporary -Force }
         }
@@ -391,7 +432,9 @@ function Sync-Pending($Client, [string]$Base, [string]$Token, [string]$Root, [st
       }
     }
     if ($done.Count -gt 0) {
-      $result = Invoke-Engine $Client $Base $Token 'POST' '/api/library/written' ([ordered]@{ schema_version = 1; machine = $Machine; items = $done.ToArray() })
+      $report = [ordered]@{ schema_version = 1; machine = $Machine; items = $done.ToArray() }
+      if ($Library -ne 'makeyourmindup') { $report.library = $Library }
+      $result = Invoke-Engine $Client $Base $Token 'POST' '/api/library/written' $report
       foreach ($unknown in @(Get-Field $result 'unknown')) { if ($unknown) { Write-Log "the engine does not hold $(Get-Field $unknown 'path') as ready" } }
     }
     if ($Check -or -not (Get-Field $answer 'more') -or $done.Count -eq 0 -or ((Get-Date) - $started) -gt $PassBudget) { break }
@@ -503,11 +546,42 @@ function Invoke-Pass {
     $machine = Get-MachineId
     $result = Sync-Pending $client $base $token $root $machine $workDir
     if ($result.written -gt 0 -or $result.failed -gt 0) { Write-Log "wrote $($result.written) file(s); $($result.failed) could not be written and will be tried again" }
-    return ($result.failed -eq 0)
+    # Heartside's library, after makeyourmindup's and apart from it: a problem
+    # here is logged and reported, and never stops the makeyourmindup pass.
+    $heartsideOk = $true
+    try {
+      $heartside = Resolve-HeartsideRoot $config
+      if ($heartside) {
+        if ($Check) { Write-Log "Checking only: nothing is written. Heartside library: $heartside" }
+        $hs = Sync-Pending $client $base $token $heartside $machine $workDir 'heartside'
+        if ($hs.written -gt 0 -or $hs.failed -gt 0) { Write-Log "Heartside: wrote $($hs.written) file(s); $($hs.failed) could not be written and will be tried again" }
+        $heartsideOk = ($hs.failed -eq 0)
+      }
+    } catch {
+      Write-Log "the Heartside library pass stopped: $($_.Exception.Message)"
+      $heartsideOk = $false
+    }
+    return ($result.failed -eq 0 -and $heartsideOk)
   } finally {
     $client.Dispose()
     if (Test-Path -LiteralPath $workDir) { Remove-Item -LiteralPath $workDir -Recurse -Force }
   }
+}
+
+function Update-Source {
+  # Brings the dedicated library-source clone up to date, so a fix on main
+  # reaches the machine without anyone running git pull (as recordings-upload.ps1
+  # does for its own clone). Never the runner's checkout, never a session's copy.
+  if ((Split-Path -Leaf $RepoRoot) -ne $SourceFolderName) { return }
+  $git = Get-Command git.exe -ErrorAction SilentlyContinue
+  if ($null -eq $git) { Write-Log 'git is not on this machine; this copy is not updated'; return }
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    $output = @(& $git.Source -C $RepoRoot pull --ff-only --quiet 2>&1)
+    $code = $LASTEXITCODE
+  } finally { $ErrorActionPreference = $previous }
+  if ($code -ne 0) { Write-Log "git pull did not finish ($($output -join ' ')); this pass runs on the copy as it is" }
 }
 
 # ---- one pass, or a pass every few minutes -----------------------------------
@@ -543,6 +617,7 @@ try {
     catch { Write-Log "this pass stopped: $($_.Exception.Message). Trying again in $EveryMinutes minutes." }
     Send-LaneReport $ok
     Start-Sleep -Seconds ($EveryMinutes * 60)
+    try { Update-Source } catch { Write-Log "the update check failed: $($_.Exception.Message)" }
     if ((Get-Sha256 $scriptPath) -ne $scriptSha) {
       Write-Log 'library-sync.ps1 has changed; ending so the scheduled task starts the new version'
       exit 0
