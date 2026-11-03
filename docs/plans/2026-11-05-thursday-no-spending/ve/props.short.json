@@ -1009,6 +1009,7 @@
       "uses": [
         "slab_spend",
         "slab_send",
+        "tick",
         "ask"
       ],
       "transitionOut": "cut",
@@ -1348,6 +1349,13 @@
       "atFrame": 412
     },
     {
+      "id": "proof-3",
+      "obj": "logos",
+      "verb": "highlight",
+      "toState": "2",
+      "atFrame": 458
+    },
+    {
       "id": "b4-8am-0",
       "obj": "chat",
       "verb": "enter",
@@ -1426,41 +1434,48 @@
     },
     {
       "id": "b7-prompt-2",
+      "obj": "tick",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 885
+    },
+    {
+      "id": "b7-prompt-3",
       "obj": "ask",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 885
     },
     {
-      "id": "b7-prompt-3",
+      "id": "b7-prompt-4",
       "obj": "ask",
       "verb": "type",
       "toState": "0",
       "atFrame": 899
     },
     {
-      "id": "b7-prompt-4",
+      "id": "b7-prompt-5",
       "obj": "ask",
       "verb": "type",
       "toState": "1",
       "atFrame": 953
     },
     {
-      "id": "b7-prompt-5",
+      "id": "b7-prompt-6",
       "obj": "ask",
       "verb": "type",
       "toState": "2",
       "atFrame": 966
     },
     {
-      "id": "b7-prompt-6",
+      "id": "b7-prompt-7",
       "obj": "ask",
       "verb": "type",
       "toState": "3",
       "atFrame": 1014
     },
     {
-      "id": "b7-prompt-7",
+      "id": "b7-prompt-8",
       "obj": "ask",
       "verb": "send",
       "toState": "0",

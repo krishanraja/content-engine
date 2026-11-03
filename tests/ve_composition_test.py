@@ -104,6 +104,21 @@ class Composition(unittest.TestCase):
                 self.assertEqual(row['checks']['platform_zone']['pass'], ending_exempt, row['findings'])
                 self.assertFalse(row['checks']['caption_zone']['pass'], row['findings'])
 
+    def test_the_ending_band_is_measured_for_its_type(self):
+        # Thursday 5 Nov: no beat's key frame fell inside the band, so its text was never measured.
+        props = {'aspect': '9:16', 'captions': [], 'objects': [], 'events': [], 'durationFrames': 300,
+                 'ending': {'fromFrame': 200}, 'beats': []}
+        url = self.word(text='makeyourmindup.ai', x=700, y=1250)
+        tiny = self.word(text='THURSDAY', x=700, y=900, h=12)
+        with patch.object(comp, '_frame', return_value=(self.image(), 250)) as frame, \
+                patch.object(comp, '_words', return_value=[url]):
+            row = comp.composition_checks('cut.mp4', props, self.lock)['beats']['ending']
+        self.assertEqual(frame.call_args[0][1]['keyFrame'], 250)
+        self.assertTrue(row['pass'], row['findings'])  # a dark panel, a url in the caption zone: by design
+        self.assertEqual(set(row['checks']), {'small_text', 'platform_zone', 'edges'})
+        with patch.object(comp, '_frame', return_value=(self.image(), 250)), patch.object(comp, '_words', return_value=[tiny]):
+            self.assertFalse(comp.composition_checks('cut.mp4', props, self.lock)['beats']['ending']['pass'])
+
     def test_no_illustration_tag_is_checked_or_required(self):
         # Krish, 28 Oct 2026, on the ILLUSTRATION tag: "Yes remove those." A frame on a plate passes with no tag, and
         # no word gets the tag's smaller-text allowance any more.
