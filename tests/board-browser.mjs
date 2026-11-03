@@ -120,7 +120,10 @@ export async function checkBrowser({modulePath, origin, cookie, api, write, scre
       await write('edits','fri-article',{...before.body,text:`Other session ${width}`},before.revision)
       const tickBefore=(await api('ticks')).documents.find(d=>d.id==='mon-substack')
       await write('ticks','mon-substack',{...tickBefore.body,done:false},tickBefore.revision)
-      await page.waitForTimeout(5500)
+      // Wait for the poll that brings the other session's writes, not a fixed 5.5 s: the poll (every 5 s) also
+      // reads the live overlay now, so a fixed sleep raced it on a loaded runner (PR #370).
+      for(let i=0;i<40&&await tick.isChecked();i++) await page.waitForTimeout(250)
+      await page.waitForTimeout(500)
       await page.unroute('**/edits/fri-article')
       assert.equal(await edit.inputValue(),`Unsaved words ${width}`)
       assert.equal(await tick.isChecked(),false,'remote API change refreshes the visible tick')
