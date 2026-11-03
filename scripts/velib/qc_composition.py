@@ -31,6 +31,22 @@ def _words(image):
     return qc_captions.read_words(executable, np.asarray(image.convert('L')))
 
 
+
+def _fused(text, allowed) -> bool:
+    """OCR fuses tightly set caption words ("to lock it" -> "tolockit"): a word made wholly of caption words in a
+    row is caption text, not a stray word in the caption zone."""
+    words = {qc_captions.fold(a) for a in allowed if qc_captions.fold(a)}
+    target = ''.join(qc_captions.fold(t) for t in qc_captions._tokens(text))
+    if not target:
+        return False
+    reach = [True] + [False] * len(target)
+    for i in range(len(target)):
+        if reach[i]:
+            for w in words:
+                if target.startswith(w, i):
+                    reach[i + len(w)] = True
+    return reach[-1]
+
 def _inside(x, y, box):
     if isinstance(box, dict):
         box = [box[k] for k in ('x', 'y', 'w', 'h')]
@@ -77,7 +93,8 @@ def measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None) -> di
         if h < minimum and solid and not _inside(x + w / 2, y + h / 2, zones['marquee']):
             small.append(word)
         if ((solid or float(word['conf']) >= 90) and _inside(x + w / 2, y + h / 2, zones['caption'])
-                and not {qc_captions.fold(t) for t in qc_captions._tokens(word['text'])}.issubset({qc_captions.fold(a) for a in allowed})):
+                and not {qc_captions.fold(t) for t in qc_captions._tokens(word['text'])}.issubset({qc_captions.fold(a) for a in allowed})
+                and not _fused(word['text'], allowed)):
             caption.append(word)
         strong = solid or float(word['conf']) >= 90  # one stray glyph on a photo is OCR noise, not a layout fault
         if (strong and not _inside(x + w / 2, y + h / 2, zones['marquee'])
@@ -139,6 +156,12 @@ def composition_checks(video, props, lock) -> dict:
                    for word in page['words']
                    for token in qc_captions._tokens(word['text'] if isinstance(word, dict) else str(word))}
         allowed |= call_card_tokens(props, beat)
-        rows[beat['id']] = measure(image, lock, caption_words=allowed, exempt=_footage_boxes(props, at))
+        beat_lock = lock
+        if beat.get('layout') == 'SPLIT':
+            # A SPLIT beat's caption sits in the frozen split zone; the house zone there is his face and hands.
+            from .qc import _split_geometry
+            x, y, w, h = _split_geometry()[1]
+            beat_lock = {**lock, 'zones': {**lock['zones'], 'caption': {**lock['zones']['caption'], 'x': x, 'y': y, 'w': w, 'h': h}}}
+        rows[beat['id']] = measure(image, beat_lock, caption_words=allowed, exempt=_footage_boxes(props, at))
         rows[beat['id']]['frame'] = at
     return {'applies': True, 'pass': bool(rows) and all(row['pass'] for row in rows.values()), 'beats': rows}

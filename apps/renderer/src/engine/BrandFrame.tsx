@@ -22,7 +22,10 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
   const ending = !!props.ending && frame >= props.ending.fromFrame
   return <>
     <Grain />
-    {(beat.layout === 'STAGE' || beat.layout === 'SPLIT') ? <StageHeader props={props} /> : <>
+    {/* SPLIT keeps the mark tile and series pill of every face-with-proof beat: the horizontal logo is drawn for ink
+        and cannot be read on the cream stage (Krish, 2026-11-03: "We fucking have standards for intro, background
+        audio and outro"; the house mark sits at the start of every beat, Krish 2026-09-26). */}
+    {beat.layout === 'STAGE' ? <StageHeader props={props} /> : <>
       <MarkTile props={props} />
       <ChannelPill props={props} beat={beat} />
     </>}

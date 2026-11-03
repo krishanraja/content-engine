@@ -169,6 +169,29 @@ class MutationTests(Stand):
         short = {'fromFrame': 100, 'toFrame': 118, 'words': [{'text': 'a', 'atFrame': 100}, {'text': 'b', 'atFrame': 110}]}
         self.assertEqual(list(captions.read_frames(short, 100, 3)), list(range(110, 118)))
 
+    def test_a_swiped_emphasis_page_is_read_from_its_landing(self):
+        swiped = {'fromFrame': 100, 'toFrame': 160, 'swipeIndex': 1,
+                  'words': [{'text': 'no', 'atFrame': 100}, {'text': 'spending,', 'atFrame': 102}]}
+        self.assertEqual(captions.read_frames(swiped, 100, 3)[0], 102)
+
+    def test_a_split_reader_reads_the_compact_box_not_his_face_below_it(self):
+        # Thursday 5 Nov: the 180 px SPLIT zone holds a one-line box of about 98 px; the rows under it are his hands
+        # and read as stray words ("no spending, pending").
+        import numpy as np
+        reader = captions.TesseractReader('tesseract', 'unused.mp4', (72, 1460, 900, 180), compact=True)
+        reader.frames[5] = np.zeros((180, 900), np.uint8)
+        heights = []
+
+        def read(executable, pixels, expected):
+            heights.append(pixels.shape[0])
+            return {'text': 'no spending,', 'agreement': 1.0 if pixels.shape[0] < 120 else 0.4}
+
+        with patch.object(reader.qc_captions, '_read_candidates', side_effect=read):
+            self.assertEqual(reader(5, 'no spending,')['score'], 1.0)
+        self.assertTrue(heights and max(heights) < 180, heights)
+        whole = captions.TesseractReader('tesseract', 'unused.mp4', (72, 1180, 900, 217))
+        self.assertFalse(whole.compact)
+
     def test_without_tesseract_the_renderer_check_is_missing_and_holds(self):
         case = self.build('intact')
         with patch('cutgates.captions.shutil.which', return_value=None):

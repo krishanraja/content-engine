@@ -141,6 +141,15 @@ def measurement(rows: list, target: str) -> dict:
             'status': 'measured'}
 
 
+
+def _split_geometry() -> tuple[float, tuple[int, int, int, int]]:
+    """The SPLIT stage scale and caption zone, read from the mocks file the renderer imports, never copied."""
+    mocks = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
+    scale = float(re.search(r'export const FWP_STAGE_SCALE = ([0-9.]+)', mocks).group(1))
+    zone = re.search(r'export const FWP_SPLIT_CAPTION_ZONE = \{([^}]*)\}', mocks).group(1)
+    get = lambda key: int(re.search(key + r': (\d+)', zone).group(1))
+    return scale, (get('left'), get('top'), get('width'), get('height'))
+
 def _renderer_layouts() -> dict:
     """Slot boxes parsed from the renderer's own table (apps/renderer/src/engine/layouts/index.ts),
     so QC can never measure a stale copy. Boxes are x, y, width, height in beat.uses order."""
@@ -177,6 +186,10 @@ def inputs_from_props(props: dict) -> dict:
     # boxes are x, y, width, height in beat.uses order, authored per aspect.
     layouts = _renderer_layouts()
     aspect, beats, events = props['aspect'], props['beats'], props['events']
+    objects = {o['obj']: o for o in props.get('objects', [])}
+    split_scale, split_caption = _split_geometry()
+    split_seam = int(re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks'
+                                / 'face-with-proof.tsx').read_text(encoding='utf-8')).group(1))
     slots = {}
     for event in events:
         at = event['atFrame']
@@ -189,6 +202,26 @@ def inputs_from_props(props: dict) -> dict:
         beat = active[0]
         slot_index = 0 if beat['layout'] in ('STAGE', 'SPLIT') else beat['uses'].index(event['obj'])
         box = layouts[aspect][beat['layout']][slot_index]
+        params = (objects.get(event['obj']) or {}).get('params', {}) if beat['layout'] == 'SPLIT' else {}
+        place = params.get('place')
+        if not place and (objects.get(event['obj']) or {}).get('device') == 'scribble':
+            # A scribble on a SPLIT stage is measured where it draws (its target, or its centre and size).
+            if isinstance(params.get('target'), dict):
+                tg = params['target']
+                place = {'left': tg['x'] - 20, 'top': tg['y'] - 20, 'width': tg['w'] + 40, 'height': tg['h'] + 40}
+            elif {'cx', 'cy', 'size'} <= set(params):
+                place = {'left': params['cx'] - params['size'], 'top': params['cy'] - params['size'],
+                         'width': 2 * params['size'], 'height': 2 * params['size']}
+        if place:
+            # A placed SPLIT object is measured in its own box, not the whole stage (Thursday 5 Nov: a slab landing
+            # beside the tick read as the tick firing 6 frames early). The stage scales about its top centre.
+            s = split_scale
+            w, h = place['width'] * place.get('scale', 1), place['height'] * place.get('scale', 1)
+            box = (round(540 + (place['left'] - 540) * s), round(place['top'] * s), round(w * s), round(h * s))
+            if (objects.get(event['obj']) or {}).get('device') == 'typing_bubble':
+                # A bubble grows down from its box with every row it types, past the box it was placed in (Thursday
+                # 5 Nov: three answers typed below a 100 px place box read as no change). Measure it to the seam.
+                box = (box[0], box[1], box[2], max(box[3], split_seam - box[1]))
         slots[event.get('id', event['obj'])] = box
         slots.setdefault(event['obj'], box)
     # boxFor('caption') in apps/renderer/src/engine/geometry.ts, using
@@ -197,10 +230,21 @@ def inputs_from_props(props: dict) -> dict:
     stem = props['audio']['stem']
     # The stem is already assembled. Source-take trims in props.segments must
     # never be applied to it; compare each beat at its position in this master.
-    edl = [{'fromFrame': b['fromFrame'], 'toFrame': b['toFrame'],
-            'trimBeforeFrames': b['fromFrame'] + stem.get('trimBeforeFrames', 0)} for b in beats]
+    # The ending band carries no speech, so lip sync is measured up to its start, never across it.
+    stop = (props.get('ending') or {}).get('fromFrame', props.get('durationFrames'))
+    edl = [{'fromFrame': b['fromFrame'], 'toFrame': min(b['toFrame'], stop),
+            'trimBeforeFrames': b['fromFrame'] + stem.get('trimBeforeFrames', 0)} for b in beats
+           if stop is None or b['fromFrame'] < stop]
     joins = sorted({s['fromFrame'] / props.get('fps', 30) for s in props.get('segments', []) if s['fromFrame'] > 0})
-    return dict(pages=caption_pages_shown(props), beats=beats, aspect=aspect, events=events, slots=slots,
+    pages = caption_pages_shown(props)
+    for page in pages:
+        # A caption on a SPLIT beat sits in the frozen split zone, under his chin, not in the house zone.
+        # Judged at the frame OCR samples (the page can start in one beat and be read in the next).
+        revealed = max(page['fromFrame'], max((int(w['atFrame']) for w in page['words']), default=page['fromFrame']) + 2)
+        sampled = (revealed + page['toFrame'] - 1) // 2
+        if any(b['layout'] == 'SPLIT' and b['fromFrame'] <= sampled < b['toFrame'] for b in beats):
+            page['region'] = split_caption
+    return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
                 edl=edl, joins=joins)
 

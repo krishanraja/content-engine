@@ -1,4 +1,5 @@
 import React from 'react'
+import { staticFile } from 'remotion'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import { EXIT, MOTION, progress, stateAt } from '../../clock'
 import type { DeviceProps } from '../types'
@@ -87,7 +88,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
         const y = box.height * (layout.rowY + layout.rowH / 2)
         return <g key={i} data-cell-width={cell} opacity={l.opacity}
           transform={`translate(${x} ${y}) rotate(${l.rotation}) scale(${l.scale})`}>
-          <image href={resolveLogo(logo.id)} x={-cell * 0.4} y={-box.height * layout.rowH / 2}
+          <image href={staticFile(resolveLogo(logo.id))} x={-cell * 0.4} y={-box.height * layout.rowH / 2}
             width={cell * 0.8} height={box.height * layout.rowH} preserveAspectRatio="xMidYMid meet" />
         </g>
       })}
