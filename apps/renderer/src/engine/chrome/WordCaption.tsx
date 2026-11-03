@@ -4,8 +4,7 @@ import type { EngineRenderProps } from '../props'
 import { captionPageAt } from './CaptionTrack'
 
 /** The word build (Krish, 2026-11-03: "its the georgia subtitles build"; inspiration card instagram_DePHDr_jRed):
- *  one word at a time in white, at chest height so it never sits on the face, a serif word with the page's
- *  swiped word set in the heavy sans, and the piece's title held at the top. */
+ *  one word at a time in white, at chest height so it never sits on the face, the emphasized word in the serif, and the piece's title held at the top. */
 export const WORD_CAPTION = {
   tall: { centerY: 1440, size: 88, titleTop: 250, titleSize: 66, width: 1080 },
   wide: { centerY: 830, size: 72, titleTop: 120, titleSize: 54, width: 1920 },
@@ -30,10 +29,12 @@ export function WordCaption({ props, frame }: { props: EngineRenderProps; frame:
     display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none',
   }}>
     <span style={{
-      fontFamily: loud ? HOUSE_FONTS.structure : HOUSE_FONTS.dek, fontWeight: loud ? 900 : 700,
+      // The house serif is italic only, so the build is the heavy sans with the page's loud word in the serif.
+      fontFamily: loud ? HOUSE_FONTS.dek : HOUSE_FONTS.structure, fontWeight: loud ? 700 : 800,
+      fontStyle: loud ? 'italic' : 'normal',
       fontSize: g.size, lineHeight: 1, color: '#FFFFFF', textShadow: SHADOW, whiteSpace: 'nowrap',
       letterSpacing: loud ? '-0.01em' : '-0.005em',
-      transform: `scale(${0.9 + 0.1 * pop})`, opacity: 0.4 + 0.6 * pop,
+      transform: `scale(${0.9 + 0.1 * pop})`,
     }}>{word.text}</span>
   </div>
 }
