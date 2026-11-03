@@ -2006,6 +2006,7 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `function dayDate(week: string, day: PostedDay): string`
 - `async function recordPosted(db: SupabaseClient, week: string, raw: unknown, now: string): Promise<PostedResult>`
 - `interface PieceDay`
+- `function piecesByDay(week: string, raw: Body[]): Array<{ day: PostedDay; date: string; piece: Body; series: boolean }>`
 - `async function readPieces(db: SupabaseClient, week: string): Promise<{ status: number; body: Body }>`
 
 ### `apps/control-plane/api/board/_presses.ts`

@@ -150,6 +150,8 @@
   function drawToday() {
     if (!liveState) return;
     for (const card of document.querySelectorAll("[data-live-day]")) {
+      // A Today card has its Yes; a day's tab (.pm) is redrawn by drawLive, never here.
+      if (!card.querySelector("[data-yes-day]")) continue;
       const day = card.dataset.liveDay, yes = liveState.yes?.[day], posted = liveState.posted?.[day] || [];
       const chip = card.querySelector(".c-st"), btn = card.querySelector("[data-yes-day]"), why = card.querySelector("[data-yes-why]");
       // The chip says only what is true now: posted, his yes, or that it waits on his yes (never a build's guess).
@@ -167,13 +169,120 @@
       }
     }
   }
+  // The live overlay (Ruling, Krish, 2026-11-03: "The Publish Board should just be makeyourmindup weekly content
+  // calendar, always up to date"; docs/PUBLISH_BOARDS.md, "Always current: the live overlay"). The state's live block
+  // holds each day's piece as its making record holds it now. drawLive redraws each day's step notes from it, and
+  // never a word or a file the page shows: his presses bind the hash of the words he saw. Where the record holds
+  // words this page was not built with, that day's Approve scripts is held and says so; what the record holds that the
+  // page has no place for (a new piece on a day, a new cut) is said, precisely, in the yellow bar.
+  const LIVE_GROUPS = { drafts: ["draft", "visual_gate", "scripts"], record: ["record"], publish: ["video", "publish"] };
+  const LIVE_DONE = { drafts: "signed off", record: "recorded", publish: "published" };
+  const LIVE_LABEL = { draft: "the fact gate", visual_gate: "the visual gate", scripts: "the scripts' check", record: "the recording", video: "the video", publish: "publishing" };
+  const live = document.createElement("style");
+  live.textContent = '.st[data-live-state=failed] .st-note{color:var(--bad,#b3261e)}.st[data-live-state=done] .st-note::before{content:"\\2713 "}';
+  document.head.append(live);
+  const tpWord = tp => {
+    const states = Object.values(tp || {});
+    if (!states.length) return null;
+    if (states.every(s => s === "in")) return "in Teleprompter";
+    return states.includes("failed") ? "the Teleprompter send failed" : states.includes("older") ? "Teleprompter has an older script" : "not in Teleprompter yet";
+  };
+  function stepWord(key, steps, entry) {
+    const here = (LIVE_GROUPS[key] || []).map(k => steps[k]).filter(Boolean);
+    if (!here.length) return [null];
+    const failed = here.find(s => s.state === "failed");
+    if (failed) return ["blocked: " + (failed.note || LIVE_LABEL[failed.key] + " did not pass"), "failed"];
+    const posted = key === "publish" && entry.posted?.length ? "posted: " + entry.posted.join(", ") : "";
+    if (here.every(s => s.state === "done")) return [[LIVE_DONE[key], posted].filter(Boolean).join("; "), "done"];
+    const now = here.filter(s => s.state === "now" && s.note).pop();
+    if (now) return [[now.note, posted].filter(Boolean).join("; "), "now"];
+    if (key === "record") { const tp = tpWord(entry.teleprompter); if (tp) return [tp, "now"]; }
+    return posted ? [posted, "now"] : [null];
+  }
+  const normalScript = text => {
+    const lines = String(text || "").normalize("NFC").replace(/^﻿+/, "").replace(/\r\n?/g, "\n").split("\n").map(l => l.replace(/\s+$/, ""));
+    while (lines.length && !lines[0]) lines.shift();
+    while (lines.length && !lines[lines.length - 1]) lines.pop();
+    return lines.length ? lines.join("\n") + "\n" : "";
+  };
+  async function sha256(text) {
+    if (!crypto?.subtle) return null;
+    const bytes = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)));
+    return [...bytes].map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+  // The cuts whose words on the record are neither the words this page was built with nor the words now in its box.
+  async function changedWords(card, entry) {
+    const changed = [];
+    for (const cut of (card.dataset.cuts || "").split(" ").filter(Boolean)) {
+      const k = cut[0].toUpperCase() + cut.slice(1), held = entry.script_hashes?.[cut];
+      const baked = (card.dataset["liveSha" + k] || "").split(" ").filter(Boolean);
+      if (!held || !baked.length || baked.includes(held)) continue;
+      const shown = document.querySelector(`textarea[data-review-id="${card.dataset["box" + k]}"]`)?.value;
+      if (typeof shown === "string" && await sha256(normalScript(shown)) === held) continue;
+      changed.push(cut);
+    }
+    return changed;
+  }
+  function holdApprove(card, changed) {
+    const stale = changed.length > 0, b = card.querySelector('[data-act="approve-scripts"]');
+    card.dataset.liveStale = stale ? "1" : "";
+    let note = card.querySelector("[data-live-note]");
+    if (stale && !note && b) {
+      note = document.createElement("p"); note.className = "tri-state bad"; note.dataset.liveNote = ""; note.setAttribute("role", "status");
+      b.before(note);
+    }
+    if (note) { note.hidden = !stale; note.textContent = stale ? "The words changed since this page was built: this tab needs a rebuild" : ""; }
+    if (b && stale) b.disabled = true;
+  }
+  async function drawLive() {
+    const days = liveState?.live;
+    if (!days) return [];
+    const lines = [];
+    for (const panel of document.querySelectorAll(".pm[data-live-day]")) {
+      const day = panel.dataset.liveDay, entry = days[day], baked = (panel.dataset.livePiece || "").toLowerCase();
+      if (!entry) { if (baked) lines.push(`${nice(day)}'s piece is no longer scheduled on the record; rebuild to show it`); continue; }
+      if (entry.piece_id !== baked) { lines.push(baked ? `${nice(day)} holds another piece on the record; rebuild to show it` : `${nice(day)}'s piece is on the record; rebuild to show it`); continue; }
+      const steps = Object.fromEntries((entry.steps || []).map(s => [s.key, s]));
+      for (const chip of panel.querySelectorAll("[data-live-step]")) {
+        const note = chip.querySelector(".st-note");
+        if (!note) continue;
+        if (chip.dataset.liveBaked === undefined) chip.dataset.liveBaked = note.textContent;
+        const [text, tone] = stepWord(chip.dataset.liveStep, steps, entry);
+        note.textContent = text ?? chip.dataset.liveBaked;
+        if (tone && text) chip.dataset.liveState = tone; else delete chip.dataset.liveState;
+      }
+      const cuts = new Set((panel.dataset.liveCuts || "").split(" ").filter(Boolean));
+      const thumbs = new Set((panel.dataset.liveThumbs || "").split(" ").filter(Boolean));
+      for (const c of entry.cuts || []) {
+        if (!cuts.has(c.cut)) lines.push(`${nice(day)}'s ${c.cut} cut is on the record; rebuild to show it`);
+        else if (c.thumbnail && !thumbs.has(c.cut)) lines.push(`${nice(day)}'s ${c.cut} cut thumbnail is on the record; rebuild to show it`);
+      }
+      const card = panel.querySelector(".rec.ap[data-approve-day]");
+      if (card) {
+        const changed = await changedWords(card, entry);
+        holdApprove(card, changed);
+        if (changed.length) lines.push(`${nice(day)}'s ${changed.join(" and ")} script changed on the record; rebuild to show it`);
+      }
+    }
+    return lines;
+  }
+  let barBaked = null;
+  function showBar(state, lines) {
+    const bar = document.getElementById("stale-bar");
+    if (!bar) return;
+    barBaked ??= bar.innerHTML;
+    if (state.build_id && firstBuild && state.build_id !== firstBuild) { bar.innerHTML = barBaked; bar.hidden = false; return; }
+    if (!lines.length && !state.rebuild_needed) { bar.hidden = true; return; }
+    bar.textContent = lines.length ? "This page was built before the record changed. " + lines.join(". ") + "."
+      : "This page was built before the record changed. The steps here are live; a rebuild shows the rest.";
+    bar.hidden = false;
+  }
   async function refreshState() {
     if (document.hidden) return;
     try {
       const state = await request("/state");
       firstBuild ??= state.build_id; liveState = state; drawToday();
-      const bar = document.getElementById("stale-bar");
-      if (bar && state.build_id && firstBuild && state.build_id !== firstBuild) bar.hidden = false;
+      showBar(state, await drawLive());
     } catch { /* the next poll tries again; the built page still shows */ }
   }
   document.addEventListener("click", async e => {
