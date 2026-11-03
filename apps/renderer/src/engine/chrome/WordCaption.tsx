@@ -1,13 +1,14 @@
 import React from 'react'
 import { HOUSE_FONTS } from '../../house/geometry'
 import type { EngineRenderProps } from '../props'
+import { FWP_SPLIT_SEAM_Y } from '../mocks/face-with-proof'
 import { captionPageAt } from './CaptionTrack'
 
 /** The word build (Krish, 2026-11-03: "its the georgia subtitles build"; inspiration card instagram_DePHDr_jRed):
- *  one word at a time in white, at chest height so it never sits on the face, the emphasized word in the serif, and the piece's title held at the top. */
+ *  one word at a time in white, on the split seam, at chest height on face beats, or at 66% on graphics, the emphasized word in the serif, and the piece's title held at the top. */
 export const WORD_CAPTION = {
-  tall: { centerY: 1440, size: 88, titleTop: 250, titleSize: 66, width: 1080 },
-  wide: { centerY: 830, size: 72, titleTop: 120, titleSize: 54, width: 1920 },
+  tall: { centerY: 1440, splitCenterY: FWP_SPLIT_SEAM_Y, graphicsCenterY: 1920 * 0.66, size: 88, titleTop: 250, titleSize: 66, width: 1080 },
+  wide: { centerY: 830, splitCenterY: FWP_SPLIT_SEAM_Y, graphicsCenterY: 1080 * 0.66, size: 72, titleTop: 120, titleSize: 54, width: 1920 },
   /** The reference's pale title yellow; the one colour here that is not a house token. */
   titleColour: '#F4EC86',
   popFrames: 4,
@@ -22,10 +23,13 @@ export function WordCaption({ props, frame }: { props: EngineRenderProps; frame:
   const word = page?.words[0]
   if (!page || !word || word.atFrame > frame) return null
   const g = props.aspect === '16:9' ? WORD_CAPTION.wide : WORD_CAPTION.tall
+  const beat = props.beats.find((beat) => beat.fromFrame <= frame && frame < beat.toFrame)
+  const centerY = beat?.layout === 'SPLIT' ? g.splitCenterY
+    : beat?.plate?.source === 'none' ? g.graphicsCenterY : g.centerY
   const pop = Math.min(1, (frame - word.atFrame) / WORD_CAPTION.popFrames)
   const loud = page.swipeIndex === 0
   return <div data-word-caption style={{
-    position: 'absolute', left: 0, width: g.width, top: g.centerY - g.size * 0.6, height: g.size * 1.2,
+    position: 'absolute', left: 0, width: g.width, top: centerY - g.size * 0.6, height: g.size * 1.2,
     display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none',
   }}>
     <span style={{
