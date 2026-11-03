@@ -729,7 +729,7 @@
         },
         {
           "file": "AGENTS.md",
-          "contains": "turn on auto-merge, so GitHub merges it to main once CI passes",
+          "contains": "`.github/workflows/auto-merge.yml` merges it to main once CI is green",
           "how": "the standing rule every agent reads: verify, push, PR, auto-merge"
         }
       ]
