@@ -1,16 +1,16 @@
 {
   "file": ".cache/produce/2026-11-05-no-spending/out/thu-short.mp4",
-  "sha256": "3c5a23d196feca724d3be14817e14a687963eb2bfb6163e2754322c651e77238",
-  "duration_s": 43.97,
+  "sha256": "a1161f27924a8bf6b9c11d9c0e8c38400da3b4f537a4164e9a58c03da825c583",
+  "duration_s": 47.47,
   "format": "face-with-proof",
   "checks": {
     "loudness.integrated": {
-      "value": -14.2,
+      "value": -14.1,
       "target": "-14 ±1",
       "pass": true
     },
     "loudness.true_peak": {
-      "value": -1.7,
+      "value": -1.6,
       "target": "<= -1",
       "pass": true
     },
@@ -20,15 +20,20 @@
       "pass": true
     },
     "motion.change_density": {
-      "value": 1.0,
+      "value": 0.936,
       "target": ">= 0.5",
       "pass": true
     },
     "motion.longest_still": {
-      "value": 0,
+      "value": 3,
       "target": "<= 4 s",
       "pass": true,
-      "runs": []
+      "runs": [
+        [
+          44,
+          3
+        ]
+      ]
     },
     "motion.periodicity": {
       "value": null,
@@ -41,31 +46,31 @@
           "segment": 0,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999995
+          "correlation": 0.999994
         },
         {
           "segment": 1,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999994
+          "correlation": 0.999992
         },
         {
           "segment": 2,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999992
+          "correlation": 0.99999
         },
         {
           "segment": 3,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999987
+          "correlation": 0.999983
         },
         {
           "segment": 4,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999984
+          "correlation": 0.999981
         },
         {
           "segment": 5,
@@ -77,7 +82,7 @@
           "segment": 6,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999985
+          "correlation": 0.999991
         },
         {
           "segment": 7,
@@ -356,8 +361,8 @@
         {
           "beat": "hook",
           "frame": 91,
-          "score": 0.04236057943202437,
-          "pass": false
+          "score": 0.9779638565769256,
+          "pass": true
         },
         {
           "beat": "face",
@@ -368,84 +373,84 @@
         {
           "beat": "proof",
           "frame": 427,
-          "score": 0.0,
-          "pass": false
+          "score": 0.9780554653953619,
+          "pass": true
         },
         {
           "beat": "b4-8am",
           "frame": 531,
-          "score": 0.04278042021269011,
-          "pass": false
+          "score": 0.9780086235523794,
+          "pass": true
         },
         {
           "beat": "b5-rule",
           "frame": 604,
-          "score": 0.10788915237329068,
-          "pass": false
+          "score": 0.9785800925921436,
+          "pass": true
         },
         {
           "beat": "own-words",
           "frame": 707,
-          "score": 0.9781416119385382,
+          "score": 0.9779331576654758,
           "pass": true
         },
         {
           "beat": "b7-prompt",
           "frame": 925,
-          "score": 0.07493768465544527,
-          "pass": false
+          "score": 0.978024978167973,
+          "pass": true
         },
         {
           "beat": "close",
-          "frame": 1201,
-          "score": 0.10928339861927425,
-          "pass": false
+          "frame": 1254,
+          "score": 0.9784845972461166,
+          "pass": true
         }
       ],
       "target": "mark NCC >= 0.8 at every beat midpoint",
-      "pass": false,
+      "pass": true,
       "status": "measured"
     },
     "motion.cue_sync": {
       "value": [
         {
           "event": "hook-0",
-          "atFrame": 11,
-          "peak_frame": 17,
+          "atFrame": 0,
+          "peak_frame": 6,
           "lag_frames": 6,
-          "peak_difference": 3.3016374111175537,
-          "event_difference": 0.39880239963531494,
-          "threshold": 0.0036659357137978077,
+          "peak_difference": 2.1110026836395264,
+          "event_difference": 0.39876827597618103,
+          "threshold": 1e-06,
           "pass": true
         },
         {
           "event": "hook-1",
-          "atFrame": 11,
-          "peak_frame": 17,
+          "atFrame": 0,
+          "peak_frame": 6,
           "lag_frames": 6,
-          "peak_difference": 3.3016374111175537,
-          "event_difference": 0.39880239963531494,
-          "threshold": 0.0036659357137978077,
+          "peak_difference": 2.1110026836395264,
+          "event_difference": 0.39876827597618103,
+          "threshold": 1e-06,
           "pass": true
         },
         {
           "event": "hook-2",
           "atFrame": 27,
-          "peak_frame": 21,
-          "lag_frames": -6,
-          "peak_difference": 4.81518030166626,
-          "event_difference": 1.3406566381454468,
-          "threshold": 5.371940732002258,
-          "pass": false
+          "peak_frame": 32,
+          "lag_frames": 5,
+          "peak_difference": 1.3814815282821655,
+          "event_difference": 1.3451048135757446,
+          "threshold": 0.0015679823700338602,
+          "pass": true
         },
         {
           "event": "hook-3",
           "atFrame": 86,
           "peak_frame": 87,
           "lag_frames": 1,
-          "peak_difference": 0.31595271825790405,
-          "event_difference": 0.31595271825790405,
-          "threshold": 0.0005884502897970378,
+          "peak_difference": 0.3177960515022278,
+          "event_difference": 0.3177960515022278,
+          "threshold": 0.0045211989199742675,
           "pass": true
         },
         {
@@ -453,9 +458,9 @@
           "atFrame": 127,
           "peak_frame": 128,
           "lag_frames": 1,
-          "peak_difference": 5.772388935089111,
-          "event_difference": 5.772388935089111,
-          "threshold": 0.00020467837020987645,
+          "peak_difference": 3.414764881134033,
+          "event_difference": 3.414764881134033,
+          "threshold": 0.0016301168943755329,
           "pass": true
         },
         {
@@ -463,9 +468,9 @@
           "atFrame": 352,
           "peak_frame": 352,
           "lag_frames": 0,
-          "peak_difference": 71.63804626464844,
-          "event_difference": 71.63804626464844,
-          "threshold": 1.4139729738235474,
+          "peak_difference": 68.1161117553711,
+          "event_difference": 68.1161117553711,
+          "threshold": 1.424941509962082,
           "pass": true
         },
         {
@@ -473,9 +478,9 @@
           "atFrame": 410,
           "peak_frame": 411,
           "lag_frames": 1,
-          "peak_difference": 3.5482981204986572,
-          "event_difference": 3.5482981204986572,
-          "threshold": 0.00010599415327305906,
+          "peak_difference": 3.649446964263916,
+          "event_difference": 3.649446964263916,
+          "threshold": 6.578947613888886e-05,
           "pass": true
         },
         {
@@ -483,9 +488,9 @@
           "atFrame": 410,
           "peak_frame": 411,
           "lag_frames": 1,
-          "peak_difference": 3.5482981204986572,
-          "event_difference": 3.5482981204986572,
-          "threshold": 0.00010599415327305906,
+          "peak_difference": 3.649446964263916,
+          "event_difference": 3.649446964263916,
+          "threshold": 6.578947613888886e-05,
           "pass": true
         },
         {
@@ -493,9 +498,9 @@
           "atFrame": 503,
           "peak_frame": 503,
           "lag_frames": 0,
-          "peak_difference": 4.73410701751709,
-          "event_difference": 4.73410701751709,
-          "threshold": 0.0008625730988569558,
+          "peak_difference": 4.8215131759643555,
+          "event_difference": 4.8215131759643555,
+          "threshold": 0.00026681287272367626,
           "pass": true
         },
         {
@@ -503,9 +508,9 @@
           "atFrame": 503,
           "peak_frame": 503,
           "lag_frames": 0,
-          "peak_difference": 4.73410701751709,
-          "event_difference": 4.73410701751709,
-          "threshold": 0.0008625730988569558,
+          "peak_difference": 4.8215131759643555,
+          "event_difference": 4.8215131759643555,
+          "threshold": 0.00026681287272367626,
           "pass": true
         },
         {
@@ -513,9 +518,9 @@
           "atFrame": 521,
           "peak_frame": 521,
           "lag_frames": 0,
-          "peak_difference": 2.238394260406494,
-          "event_difference": 2.238394260406494,
-          "threshold": 0.6466191709041595,
+          "peak_difference": 2.2664217948913574,
+          "event_difference": 2.2664217948913574,
+          "threshold": 0.9438377022743225,
           "pass": true
         },
         {
@@ -523,9 +528,9 @@
           "atFrame": 536,
           "peak_frame": 536,
           "lag_frames": 0,
-          "peak_difference": 2.473397970199585,
-          "event_difference": 2.473397970199585,
-          "threshold": 1.8895795941352844,
+          "peak_difference": 2.2820966243743896,
+          "event_difference": 2.2820966243743896,
+          "threshold": 1.9089472889900208,
           "pass": true
         },
         {
@@ -533,9 +538,9 @@
           "atFrame": 601,
           "peak_frame": 601,
           "lag_frames": 0,
-          "peak_difference": 10.82190227508545,
-          "event_difference": 10.82190227508545,
-          "threshold": 0.00038377194141503423,
+          "peak_difference": 10.112170219421387,
+          "event_difference": 10.112170219421387,
+          "threshold": 0.00016447368761873804,
           "pass": true
         },
         {
@@ -543,9 +548,9 @@
           "atFrame": 626,
           "peak_frame": 626,
           "lag_frames": 0,
-          "peak_difference": 10.61643123626709,
-          "event_difference": 10.61643123626709,
-          "threshold": 0.0003874268877552822,
+          "peak_difference": 10.606705665588379,
+          "event_difference": 10.606705665588379,
+          "threshold": 0.00038377194141503423,
           "pass": true
         },
         {
@@ -553,9 +558,9 @@
           "atFrame": 626,
           "peak_frame": 626,
           "lag_frames": 0,
-          "peak_difference": 10.61643123626709,
-          "event_difference": 10.61643123626709,
-          "threshold": 0.0003874268877552822,
+          "peak_difference": 10.606705665588379,
+          "event_difference": 10.606705665588379,
+          "threshold": 0.00038377194141503423,
           "pass": true
         },
         {
@@ -563,9 +568,9 @@
           "atFrame": 641,
           "peak_frame": 635,
           "lag_frames": -6,
-          "peak_difference": 2.796180486679077,
-          "event_difference": 0.1265338659286499,
-          "threshold": 7.5822365283966064,
+          "peak_difference": 1.5882724523544312,
+          "event_difference": 0.12567372620105743,
+          "threshold": 4.291154980659485,
           "pass": false
         },
         {
@@ -573,9 +578,9 @@
           "atFrame": 855,
           "peak_frame": 857,
           "lag_frames": 2,
-          "peak_difference": 2.9936232566833496,
-          "event_difference": 2.9936232566833496,
-          "threshold": 1e-06,
+          "peak_difference": 3.039668560028076,
+          "event_difference": 3.039668560028076,
+          "threshold": 5.8479534345678985e-05,
           "pass": true
         },
         {
@@ -583,9 +588,9 @@
           "atFrame": 912,
           "peak_frame": 912,
           "lag_frames": 0,
-          "peak_difference": 7.948792457580566,
-          "event_difference": 7.948792457580566,
-          "threshold": 0.0008991228241939098,
+          "peak_difference": 7.125840663909912,
+          "event_difference": 7.125840663909912,
+          "threshold": 0.00011695906869135797,
           "pass": true
         },
         {
@@ -593,9 +598,9 @@
           "atFrame": 953,
           "peak_frame": 953,
           "lag_frames": 0,
-          "peak_difference": 0.08267544209957123,
-          "event_difference": 0.08267544209957123,
-          "threshold": 0.11904239282011986,
+          "peak_difference": 0.08321759104728699,
+          "event_difference": 0.08321759104728699,
+          "threshold": 0.12403509020805359,
           "pass": false
         },
         {
@@ -603,9 +608,9 @@
           "atFrame": 967,
           "peak_frame": 967,
           "lag_frames": 0,
-          "peak_difference": 0.033569689840078354,
-          "event_difference": 0.033569689840078354,
-          "threshold": 0.0030921053839847445,
+          "peak_difference": 0.03562256321310997,
+          "event_difference": 0.03562256321310997,
+          "threshold": 0.0019298245897516608,
           "pass": true
         },
         {
@@ -613,19 +618,19 @@
           "atFrame": 1016,
           "peak_frame": 1016,
           "lag_frames": 0,
-          "peak_difference": 0.03426291421055794,
-          "event_difference": 0.03426291421055794,
-          "threshold": 6.213450251379982e-05,
+          "peak_difference": 0.017826510593295097,
+          "event_difference": 0.017826510593295097,
+          "threshold": 1.0964912007693783e-05,
           "pass": true
         },
         {
           "event": "b7-prompt-5",
           "atFrame": 1023,
-          "peak_frame": 1017,
-          "lag_frames": -6,
-          "peak_difference": 0.032418373972177505,
-          "event_difference": 0.0028996102046221495,
-          "threshold": 0.00015350877220043913,
+          "peak_frame": 1025,
+          "lag_frames": 2,
+          "peak_difference": 1.827485357352998e-05,
+          "event_difference": 1.827485357352998e-05,
+          "threshold": 1.0964912007693783e-05,
           "pass": true
         },
         {
@@ -633,9 +638,9 @@
           "atFrame": 1115,
           "peak_frame": 1116,
           "lag_frames": 1,
-          "peak_difference": 9.501887321472168,
-          "event_difference": 9.501887321472168,
-          "threshold": 0.0003581871424103156,
+          "peak_difference": 8.773945808410645,
+          "event_difference": 8.773945808410645,
+          "threshold": 0.00023026314738672227,
           "pass": true
         },
         {
@@ -643,9 +648,9 @@
           "atFrame": 1133,
           "peak_frame": 1134,
           "lag_frames": 1,
-          "peak_difference": 9.393842697143555,
-          "event_difference": 9.393842697143555,
-          "threshold": 0.0011695906869135797,
+          "peak_difference": 9.343985557556152,
+          "event_difference": 9.343985557556152,
+          "threshold": 0.0004312865494284779,
           "pass": true
         },
         {
@@ -653,9 +658,9 @@
           "atFrame": 1134,
           "peak_frame": 1134,
           "lag_frames": 0,
-          "peak_difference": 9.393842697143555,
-          "event_difference": 9.393842697143555,
-          "threshold": 0.0011695906869135797,
+          "peak_difference": 9.343985557556152,
+          "event_difference": 9.343985557556152,
+          "threshold": 0.0004312865494284779,
           "pass": true
         },
         {
@@ -663,9 +668,9 @@
           "atFrame": 1204,
           "peak_frame": 1205,
           "lag_frames": 1,
-          "peak_difference": 1.6442043781280518,
-          "event_difference": 1.6442043781280518,
-          "threshold": 0.0003947368240915239,
+          "peak_difference": 0.9048087000846863,
+          "event_difference": 0.9048087000846863,
+          "threshold": 1.4619883586419746e-05,
           "pass": true
         }
       ],
@@ -682,7 +687,7 @@
         },
         {
           "check": "under speech",
-          "value": -18.12,
+          "value": -17.12,
           "target": "-21.0 to -12.0 dB re voice",
           "pass": true
         },
@@ -694,8 +699,32 @@
         },
         {
           "check": "a steady bed",
-          "value": "continuous",
+          "value": "episode_bed",
           "target": "episode_bed or continuous",
+          "pass": true
+        },
+        {
+          "check": "bed level in the master",
+          "value": -32.0,
+          "target": "-31 ±1.5 LUFS short-term median",
+          "pass": true
+        },
+        {
+          "check": "bed holds one level",
+          "value": 3.9,
+          "target": "<= 4.0 LU short-term p95-p5 outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never swells or sags",
+          "value": 2.8,
+          "target": "<= 3.0 LU from the median, held 1.0 s, outside lifts",
+          "pass": true
+        },
+        {
+          "check": "bed never drops out",
+          "value": [],
+          "target": "no 0.25 s 15 dB under its own running level (50 ms windows)",
           "pass": true
         }
       ],
@@ -705,7 +734,7 @@
     },
     "audio.bed_continuity": {
       "value": [],
-      "target": "no 0.25 s under -50.0 dBFS (50 ms RMS) from 1.5 to 42.5 s",
+      "target": "no 0.25 s under -49.0 dBFS (50 ms RMS) from 1.5 to 46.0 s",
       "pass": true,
       "status": "measured"
     },
@@ -737,7 +766,7 @@
     "keyframe_match": {
       "value": {
         "hook": {
-          "ssim": 0.8465792302291069,
+          "ssim": 0.7944470827755904,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
@@ -751,7 +780,7 @@
           "frame": 318
         },
         "proof": {
-          "ssim": 0.8639678946042373,
+          "ssim": 0.8434720257873725,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
@@ -786,7 +815,7 @@
           "note": "extra beat: no golden, composition-checked"
         },
         "close": {
-          "ssim": 0.8926878323012504,
+          "ssim": 0.8274868353451502,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
@@ -809,7 +838,7 @@
     "pass": true,
     "beats": {
       "hook": {
-        "ssim": 0.8465792302291069,
+        "ssim": 0.7944470827755904,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
@@ -823,7 +852,7 @@
         "frame": 318
       },
       "proof": {
-        "ssim": 0.8639678946042373,
+        "ssim": 0.8434720257873725,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
@@ -858,7 +887,7 @@
         "note": "extra beat: no golden, composition-checked"
       },
       "close": {
-        "ssim": 0.8926878323012504,
+        "ssim": 0.8274868353451502,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
