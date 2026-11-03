@@ -248,6 +248,18 @@ class CompileTest(unittest.TestCase):
         for page in pages('really cool features and really helpful but a bit dangerous because once they\'re connected')[:-1]:
             self.assertNotIn(page.split()[-1], {'a', 'the', 'but', 'once'}, page)
 
+    def test_word_captions_are_one_word_a_page_under_the_title(self):
+        # Krish, 2026-11-03: "its the georgia subtitles build".
+        spec = load_json(FIXTURE / 'spec.json')
+        spec['brand'] = {**spec['brand'], 'captions': 'word', 'title': 'Give your AI two rules'}
+        cut_id = next(iter(spec['cuts']))
+        props = compile_cut(spec, cut_id, timed_words(), FIXTURE)
+        self.assertEqual(props['captionStyle'], 'word')
+        self.assertEqual(props['title'], 'Give your AI two rules')
+        self.assertEqual({len(page['words']) for page in props['captions']}, {1})
+        for page, after in zip(props['captions'], props['captions'][1:]):
+            self.assertEqual(page['toFrame'], after['fromFrame'])
+
     def test_the_hook_is_the_intro(self):
         # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns
         # frame 0 even when the first word comes later; no story card or logo sting is compiled ahead of it, and the

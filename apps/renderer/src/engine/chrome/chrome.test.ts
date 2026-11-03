@@ -102,3 +102,19 @@ describe('chrome zone', () => {
     else expect(zone).toEqual({ left: 48, top: 40, width: 812, height: 152 })
   })
 })
+
+describe('word caption build', () => {
+  it('shows only the word already spoken, below the face line, and nothing before it', async () => {
+    const { WordCaption, HeldTitle, WORD_CAPTION } = await import('./WordCaption')
+    const word = { ...props, captionStyle: 'word' as const, title: 'Give your AI two rules',
+      captions: [{ fromFrame: 10, toFrame: 15, words: [{ text: 'First', atFrame: 10 }], swipeIndex: null },
+        { fromFrame: 15, toFrame: 20, words: [{ text: 'answer', atFrame: 15 }], swipeIndex: 0 }] }
+    expect(renderToStaticMarkup(createElement(WordCaption, { props: word, frame: 9 }))).toBe('')
+    const at12 = renderToStaticMarkup(createElement(WordCaption, { props: word, frame: 12 }))
+    expect(at12).toContain('First')
+    expect(at12).not.toContain('answer')
+    expect(renderToStaticMarkup(createElement(WordCaption, { props: word, frame: 16 }))).toContain('italic')
+    expect(WORD_CAPTION.tall.centerY - WORD_CAPTION.tall.size).toBeGreaterThan(1300)
+    expect(renderToStaticMarkup(createElement(HeldTitle, { props: word, frame: 12 }))).toContain('Give your AI two rules')
+  })
+})
