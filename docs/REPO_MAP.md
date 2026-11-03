@@ -3901,6 +3901,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `const FWP_STAGE_SCALE`
 - `const FWP_SPLIT_CAPTION_ZONE`
 - `const FWP_POSTER_POSITIONS`
+- `const FWP_PLACEMENTS`
 - `const FWP_TARGETS`
 - `const FWP_SCALED_TARGETS`
 - `const FWP_MOCKS`

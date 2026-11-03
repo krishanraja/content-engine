@@ -1,7 +1,7 @@
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { FWP_MOCKS, FWP_SPLIT_SEAM_Y, FWP_STAGE_SCALE, FWP_SCALED_TARGETS, FWP_SPLIT_CAPTION_ZONE, FWP_POSTER_POSITIONS, FWP_TARGETS, type FWPMockProps } from './face-with-proof'
+import { FWP_PLACEMENTS, FWP_MOCKS, FWP_SPLIT_SEAM_Y, FWP_STAGE_SCALE, FWP_SCALED_TARGETS, FWP_SPLIT_CAPTION_ZONE, FWP_POSTER_POSITIONS, FWP_TARGETS, type FWPMockProps } from './face-with-proof'
 import { MARK_BOUNDS } from '../devices/logo_orbit/mark'
 import registry from '../../../../../config/logo-registry.json'
 
@@ -149,4 +149,28 @@ describe('higher split and single stage transform', () => {
     expect(html).not.toContain('data-stage-graphics')
     expect(html).not.toContain('data-proof-stage')
   })
+})
+
+it('renders every exported placement in the frozen mocks', () => {
+  expect(FWP_PLACEMENTS).toEqual({
+    hook: {
+      bubble: { left: 56, top: 160, width: 920, height: 300, scale: 1 },
+      buddy: { left: 66, top: 190, width: 900, height: 1100, scale: 1 },
+    },
+    close: {
+      stamps: [
+        { left: 72, top: 230, width: 345, height: 68, scale: 2.4 },
+        { left: 72, top: 440, width: 345, height: 68, scale: 2.4 },
+      ],
+      buddy: { left: 390, top: 400, width: 640, height: 800, scale: 1 },
+    },
+  })
+  for (const beat of ['hook', 'close'] as const) {
+    const html = render(beat)
+    const placements = beat === 'hook' ? Object.values(FWP_PLACEMENTS.hook)
+      : [...FWP_PLACEMENTS.close.stamps, FWP_PLACEMENTS.close.buddy]
+    for (const p of placements) {
+      expect(html).toContain(`left:${p.left}px;top:${p.top}px;transform:scale(${p.scale});transform-origin:top left`)
+    }
+  }
 })
