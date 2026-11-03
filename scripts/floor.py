@@ -987,7 +987,10 @@ def main(argv=None):
     if a.check:
         problems = [f'rejection floor: {problem}' for problem in (check(doc) if doc is not None else [])]
         bar, error = read_bar(a.bar_file)
-        problems += [f'the bar: {error}'] if error else bar_check(bar) + [f'the bar: {x}' for x in blocking_problems(bar)]
+        # No bar file is the floor alone (inspirationhouse checks its file that way): bar_check passes it, and so do the
+        # nevers, which live in the bar. A bar that is there holds exactly his eight.
+        problems += [f'the bar: {error}'] if error else bar_check(bar) + (
+            [f'the bar: {x}' for x in blocking_problems(bar)] if bar is not None else [])
         if doc is None:
             print(NO_FLOOR)
         for problem in problems:
