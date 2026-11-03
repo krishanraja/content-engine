@@ -20,44 +20,6 @@
  },
  "objects": [
   {
-   "obj": "buddy",
-   "device": "cursor_buddy",
-   "meaning": "the proactive assistant as a cursor with a face, proud then sulking then behaving",
-   "persist": {
-    "from_beat": "hook",
-    "to_beat": "hook"
-   },
-   "params": {
-    "mood": "proud",
-    "place": {
-     "left": 66,
-     "top": 477,
-     "width": 900,
-     "height": 1100,
-     "scale": 0.6
-    }
-   }
-  },
-  {
-   "obj": "buddy_rule",
-   "device": "cursor_buddy",
-   "meaning": "the same cursor buddy at the rule, sulking by the fence, then behaving",
-   "persist": {
-    "from_beat": "b5-rule",
-    "to_beat": "close"
-   },
-   "params": {
-    "mood": "sulk",
-    "place": {
-     "left": 390,
-     "top": 480,
-     "width": 640,
-     "height": 800,
-     "scale": 0.75
-    }
-   }
-  },
-  {
    "obj": "note",
    "device": "typing_bubble",
    "meaning": "the assistant reports a booking it made before anyone asked",
@@ -71,14 +33,7 @@
      {
       "text": "Done! Booked the team offsite in Ibiza"
      }
-    ],
-    "place": {
-     "left": 56,
-     "top": 340,
-     "width": 920,
-     "height": 300,
-     "scale": 1
-    }
+    ]
    }
   },
   {
@@ -121,14 +76,7 @@
      {
       "id": "Google"
      }
-    ],
-    "place": {
-     "left": -120,
-     "top": 260,
-     "width": 960,
-     "height": 520,
-     "scale": 1.45
-    }
+    ]
    }
   },
   {
@@ -144,10 +92,10 @@
     "seed": "fwp",
     "shape": "loop",
     "target": {
-     "x": 400,
-     "y": 460,
-     "w": 350,
-     "h": 350
+     "x": 380,
+     "y": 810,
+     "w": 310,
+     "h": 310
     }
    }
   },
@@ -172,14 +120,7 @@
       "text": "Absolutely not, it's my lie-in day",
       "side": "right"
      }
-    ],
-    "place": {
-     "left": 139,
-     "top": 250,
-     "width": 920,
-     "height": 420,
-     "scale": 1
-    }
+    ]
    }
   },
   {
@@ -195,19 +136,12 @@
     "main": "NO SPENDING",
     "tiltDeg": 0,
     "at": {
-     "x": 0,
-     "y": 0,
-     "w": 345,
-     "h": 68
+     "x": 290,
+     "y": 1300,
+     "w": 500,
+     "h": 100
     },
-    "paint": "mint",
-    "place": {
-     "left": 132,
-     "top": 300,
-     "width": 345,
-     "height": 68,
-     "scale": 2.4
-    }
+    "paint": "mint"
    }
   },
   {
@@ -223,19 +157,12 @@
     "main": "NO SENDING",
     "tiltDeg": 0,
     "at": {
-     "x": 0,
-     "y": 0,
-     "w": 345,
-     "h": 68
+     "x": 290,
+     "y": 1440,
+     "w": 500,
+     "h": 100
     },
-    "paint": "mint",
-    "place": {
-     "left": 132,
-     "top": 500,
-     "width": 345,
-     "height": 68,
-     "scale": 2.4
-    }
+    "paint": "mint"
    }
   },
   {
@@ -250,9 +177,9 @@
     "colour": "mint",
     "seed": "fwp",
     "shape": "tick",
-    "cx": 1005,
-    "cy": 592,
-    "size": 72
+    "cx": 860,
+    "cy": 1490,
+    "size": 80
    }
   },
   {
@@ -283,14 +210,90 @@
       "text": "Zero unapproved incremental usage costs",
       "side": "right"
      }
-    ],
-    "place": {
-     "left": 139,
-     "top": 100,
-     "width": 920,
-     "height": 100,
-     "scale": 0.9
+    ]
+   }
+  },
+  {
+   "obj": "stamp_helpful",
+   "device": "stamp",
+   "meaning": "what proactive assistants are: really helpful",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "kind": "block",
+    "main": "REALLY HELPFUL",
+    "tiltDeg": 0,
+    "at": {
+     "x": 260,
+     "y": 1300,
+     "w": 560,
+     "h": 100
+    },
+    "paint": "mint"
+   }
+  },
+  {
+   "obj": "stamp_danger",
+   "device": "stamp",
+   "meaning": "and a bit dangerous once connected to your apps",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "kind": "block",
+    "main": "A BIT DANGEROUS",
+    "tiltDeg": -3,
+    "at": {
+     "x": 240,
+     "y": 1440,
+     "w": 600,
+     "h": 100
     }
+   }
+  },
+  {
+   "obj": "rule_card",
+   "device": "typing_bubble",
+   "meaning": "his rule in his own words: no spending, no sending without his say-so",
+   "persist": {
+    "from_beat": "own-words",
+    "to_beat": "own-words"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Your AI",
+      "text": "Doesn't spend your money."
+     },
+     {
+      "text": "Doesn't send anything unless you say so."
+     }
+    ]
+   }
+  },
+  {
+   "obj": "rule_close",
+   "device": "typing_bubble",
+   "meaning": "his rule in his own words: no spending, no sending without his say-so",
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Your AI",
+      "text": "Doesn't spend your money."
+     },
+     {
+      "text": "Doesn't send anything unless you say so."
+     }
+    ]
+   },
+   "persist": {
+    "from_beat": "close",
+    "to_beat": "close"
    }
   }
  ],
@@ -336,25 +339,16 @@
       "to_w": 14
      },
      "viewer_task": "locate_story",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "Proactive AI already acts before you ask: it booked the offsite in Ibiza without checking",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
      "uses": [
-      "buddy",
       "note",
       "underline"
      ],
      "events": [
-      {
-       "at_w": 0,
-       "obj": "buddy",
-       "verb": "enter",
-       "to_state": "proud",
-       "silent": true
-      },
       {
        "at_w": 0,
        "obj": "note",
@@ -375,13 +369,6 @@
        "verb": "draw",
        "to_state": "Done!",
        "silent": true
-      },
-      {
-       "at_w": 11,
-       "obj": "buddy",
-       "verb": "wave",
-       "to_state": "proud",
-       "silent": true
       }
      ]
     },
@@ -393,14 +380,31 @@
       "to_w": 29
      },
      "viewer_task": "connect_with_speaker",
-     "layout": "P1",
+     "layout": "STAGE",
      "point": "Awesome, really helpful features, but a bit dangerous once they are connected to your apps",
      "plate": {
-      "source": "take"
+      "source": "none"
      },
-     "uses": [],
-     "events": [],
-     "override_reason": "the locked face beat: his face full frame with no graphic, as the frozen face key frame"
+     "uses": [
+      "stamp_helpful",
+      "stamp_danger"
+     ],
+     "events": [
+      {
+       "at_w": 21,
+       "obj": "stamp_helpful",
+       "verb": "stamp",
+       "to_state": "REALLY HELPFUL",
+       "silent": true
+      },
+      {
+       "at_w": 25,
+       "obj": "stamp_danger",
+       "verb": "stamp",
+       "to_state": "A BIT DANGEROUS",
+       "silent": true
+      }
+     ]
     },
     {
      "id": "proof",
@@ -410,11 +414,10 @@
       "to_w": 41
      },
      "viewer_task": "verify_evidence",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "Meta Muse in WhatsApp, Amazon for groceries, Google for email: the assistants are already inside the apps",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
      "uses": [
       "logos",
@@ -466,11 +469,10 @@
       "to_w": 47
      },
      "viewer_task": "inspect_artifact",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "It can get dangerous: left alone, the assistant answers your boss for you",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
      "uses": [
       "chat"
@@ -514,17 +516,15 @@
       "to_w": 58
      },
      "viewer_task": "understand_mechanism",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "His first step is one rule: no spending and no sending without him",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
      "uses": [
       "chat",
       "slab_spend",
       "slab_send",
-      "buddy_rule",
       "tick"
      ],
      "events": [
@@ -540,13 +540,6 @@
        "obj": "slab_spend",
        "verb": "stamp",
        "to_state": "NO SPENDING",
-       "silent": true
-      },
-      {
-       "at_w": 56,
-       "obj": "buddy_rule",
-       "verb": "enter",
-       "to_state": "sulk",
        "silent": true
       },
       {
@@ -573,14 +566,44 @@
       "to_w": 73
      },
      "viewer_task": "connect_with_speaker",
-     "layout": "F3",
+     "layout": "STAGE",
      "point": "In his own words: it never spends his money or sends anything unless he says so",
      "plate": {
-      "source": "take"
+      "source": "none"
      },
-     "uses": [],
-     "events": [],
-     "override_reason": "his rule in his own words, face full frame with no graphic, as the storyboard he signed (beat 5)"
+     "uses": [
+      "rule_card"
+     ],
+     "events": [
+      {
+       "at_w": 59,
+       "obj": "rule_card",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 60,
+       "obj": "rule_card",
+       "verb": "type",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 64,
+       "obj": "rule_card",
+       "verb": "type",
+       "to_state": "1",
+       "silent": true
+      },
+      {
+       "at_w": 70,
+       "obj": "rule_card",
+       "verb": "send",
+       "to_state": "0",
+       "silent": true
+      }
+     ]
     },
     {
      "id": "b7-prompt",
@@ -590,11 +613,10 @@
       "to_w": 117
      },
      "viewer_task": "inspect_artifact",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "He did not write the rule himself: one prompt and the AI asked him questions, then locked itself down",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
      "uses": [
       "slab_spend",
@@ -676,17 +698,16 @@
       "to_w": 147
      },
      "viewer_task": "land_payoff",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "Do this one easy step today: no spending, no sending, and enjoy the new tools without the fails",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
      "uses": [
       "slab_spend",
       "slab_send",
-      "buddy_rule",
-      "tick"
+      "tick",
+      "rule_close"
      ],
      "events": [
       {
@@ -711,10 +732,24 @@
        "silent": true
       },
       {
-       "at_w": 136,
-       "obj": "buddy_rule",
-       "verb": "wave",
-       "to_state": "sulk",
+       "at_w": 128,
+       "obj": "rule_close",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 128,
+       "obj": "rule_close",
+       "verb": "type",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 131,
+       "obj": "rule_close",
+       "verb": "type",
+       "to_state": "1",
        "silent": true
       }
      ]
@@ -722,7 +757,15 @@
    ]
   }
  },
- "approvals": [],
+ "approvals": [
+  {
+   "gate": "exception",
+   "by": "Krish",
+   "said": "This Thursday video should be the simplest to produce and feature my face minimally compared to the Monday, Wednesday, and Friday videos.",
+   "on": "2026-11-03",
+   "artifact_hash": "517cdd9472636c3a5aad20df0725e7c59d1369bf045ffb103228207b2c41d90d"
+  }
+ ],
  "budget": {
   "tokens_cap": 3300000,
   "credits": {

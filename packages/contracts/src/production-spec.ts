@@ -43,7 +43,7 @@ export const VeBeatSchema = z.object({
   viewer_task: NarrativeBeatV1Schema.shape.viewer_task,
   point: z.string().min(12),
   layout: VeLayoutSchema,
-  plate: z.object({ source: z.string().regex(/^(take|asset:[a-z0-9][a-z0-9_-]*)$/), crop: z.string().min(1).optional() }).strict(),
+  plate: z.object({ source: z.string().regex(/^(take|none|asset:[a-z0-9][a-z0-9_-]*)$/), crop: z.string().min(1).optional() }).strict(),
   uses: z.array(z.string().min(1)).default([]),
   events: z.array(VeEventSchema).default([]),
   transition_out: VeTransitionSchema.default('cut'),
