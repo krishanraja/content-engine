@@ -42,3 +42,13 @@ it('slaps only on stamp and renders all verdict treatments with a part leader', 
     expect(html).toContain(`3px ${kind === 'dashed' ? 'dashed' : 'solid'}`)
   }
 })
+
+it('uses mint for answer blocks and preserves channel paint by default', () => {
+  for (const paint of [undefined, 'channel', 'mint']) {
+    const params = { ...object.params, kind: 'block', ...(paint ? { paint } : {}) }
+    const html = renderToStaticMarkup(React.createElement(Device, {
+      ...overlayTestProps, object: { ...object, params }, events, frame: 40,
+    }))
+    expect(html).toContain(`background:${paint === 'mint' ? overlayTestProps.tokens.mint : overlayTestProps.tokens.channel}`)
+  }
+})
