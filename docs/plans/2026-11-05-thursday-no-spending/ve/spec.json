@@ -31,10 +31,10 @@
     "mood": "proud",
     "place": {
      "left": 66,
-     "top": 426,
+     "top": 477,
      "width": 900,
      "height": 1100,
-     "scale": 0.8
+     "scale": 0.6
     }
    }
   },
@@ -279,10 +279,10 @@
     ],
     "place": {
      "left": 139,
-     "top": 52,
+     "top": 100,
      "width": 920,
      "height": 100,
-     "scale": 0.95
+     "scale": 0.9
     }
    }
   }
@@ -441,6 +441,13 @@
        "obj": "logos",
        "verb": "highlight",
        "to_state": "2",
+       "silent": true
+      },
+      {
+       "at_w": 38,
+       "obj": "amazon_loop",
+       "verb": "exit",
+       "to_state": "gone",
        "silent": true
       }
      ]
@@ -700,8 +707,8 @@
       {
        "at_w": 136,
        "obj": "buddy_rule",
-       "verb": "wave",
-       "to_state": "cool",
+       "verb": "bounce",
+       "to_state": "sulk",
        "silent": true
       }
      ]

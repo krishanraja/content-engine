@@ -1045,10 +1045,10 @@
         "mood": "proud",
         "place": {
           "left": 66,
-          "top": 426,
+          "top": 477,
           "width": 900,
           "height": 1100,
-          "scale": 0.8
+          "scale": 0.6
         }
       }
     },
@@ -1283,10 +1283,10 @@
         ],
         "place": {
           "left": 139,
-          "top": 52,
+          "top": 100,
           "width": 920,
           "height": 100,
-          "scale": 0.95
+          "scale": 0.9
         }
       }
     }
@@ -1353,6 +1353,13 @@
       "obj": "logos",
       "verb": "highlight",
       "toState": "2",
+      "atFrame": 458
+    },
+    {
+      "id": "proof-4",
+      "obj": "amazon_loop",
+      "verb": "exit",
+      "toState": "gone",
       "atFrame": 458
     },
     {
@@ -1505,8 +1512,8 @@
     {
       "id": "close-3",
       "obj": "buddy_rule",
-      "verb": "wave",
-      "toState": "cool",
+      "verb": "bounce",
+      "toState": "sulk",
       "atFrame": 1201
     }
   ],
