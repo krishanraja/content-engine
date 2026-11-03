@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-02
+as_of: 2026-11-03
 head: de5b942
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -60,7 +60,8 @@ Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recentl
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether a make run's pull request auto-merges on green CI; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): CI stays advisory, so a session waits for green before it merges.
-- North Star check (2026-11-02): holds.
+- Week of 9 Nov (2026-11-03): presses read back and his chat answers kept in `docs/plans/2026-11-09-week/interview.md`; the board is rebuilt with Wednesday (HUGEL AI music, draft brief waiting for his yes) and Friday (cobra / AI usage) picked, build 94ae8077. Next: Wednesday's close in his words and the second HUGEL song, then its narrative lock; Friday waits on his Perplexity research. His Wed and Fri picks had not reached their pieces' `scheduled_for`; the board carries them by `--piece`.
+- North Star check (2026-11-03): holds.
 
 ## Read next
 
