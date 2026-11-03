@@ -4,7 +4,7 @@
   "format": "face-with-proof",
   "aspect": "9:16",
   "fps": 30,
-  "durationFrames": 1319,
+  "durationFrames": 1424,
   "tokens": {
     "ink": "#0C1512",
     "inkDeep": "#070D0B",
@@ -15,7 +15,7 @@
   },
   "series": {
     "label": "under.the.hood",
-    "day": "Wednesdays",
+    "day": "Thursday",
     "promise": "Free from jargon",
     "site": "makeyourmindup.ai"
   },
@@ -989,7 +989,7 @@
       "role": "payoff",
       "layout": "SPLIT",
       "fromFrame": 1085,
-      "toFrame": 1319,
+      "toFrame": 1424,
       "uses": [
         "slab_spend",
         "slab_send",
@@ -1013,10 +1013,10 @@
         "mood": "proud",
         "place": {
           "left": 66,
-          "top": 190,
+          "top": 426,
           "width": 900,
           "height": 1100,
-          "scale": 1
+          "scale": 0.8
         }
       }
     },
@@ -1025,16 +1025,16 @@
       "device": "cursor_buddy",
       "meaning": "the same cursor buddy at the rule, sulking by the fence, then behaving",
       "fromFrame": 560,
-      "toFrame": 1319,
+      "toFrame": 1424,
       "variants": {},
       "params": {
         "mood": "sulk",
         "place": {
           "left": 390,
-          "top": 400,
+          "top": 480,
           "width": 640,
           "height": 800,
-          "scale": 1
+          "scale": 0.75
         }
       }
     },
@@ -1054,7 +1054,7 @@
         ],
         "place": {
           "left": 56,
-          "top": 160,
+          "top": 340,
           "width": 920,
           "height": 300,
           "scale": 1
@@ -1074,7 +1074,7 @@
         "shape": "underline",
         "target": {
           "x": 120,
-          "y": 256,
+          "y": 436,
           "w": 126,
           "h": 58
         }
@@ -1151,7 +1151,7 @@
         "status": "Sent",
         "place": {
           "left": 56,
-          "top": 160,
+          "top": 250,
           "width": 920,
           "height": 420,
           "scale": 1
@@ -1163,7 +1163,7 @@
       "device": "stamp",
       "meaning": "the first half of the rule",
       "fromFrame": 560,
-      "toFrame": 1319,
+      "toFrame": 1424,
       "variants": {},
       "params": {
         "kind": "block",
@@ -1178,7 +1178,7 @@
         "paint": "mint",
         "place": {
           "left": 72,
-          "top": 230,
+          "top": 300,
           "width": 345,
           "height": 68,
           "scale": 2.4
@@ -1190,7 +1190,7 @@
       "device": "stamp",
       "meaning": "the second half of the rule",
       "fromFrame": 560,
-      "toFrame": 1319,
+      "toFrame": 1424,
       "variants": {},
       "params": {
         "kind": "block",
@@ -1205,7 +1205,7 @@
         "paint": "mint",
         "place": {
           "left": 72,
-          "top": 440,
+          "top": 500,
           "width": 345,
           "height": 68,
           "scale": 2.4
@@ -1217,14 +1217,14 @@
       "device": "scribble",
       "meaning": "ticks NO SENDING as done",
       "fromFrame": 560,
-      "toFrame": 1319,
+      "toFrame": 1424,
       "variants": {},
       "params": {
         "colour": "mint",
         "seed": "fwp",
         "shape": "tick",
         "cx": 926,
-        "cy": 522,
+        "cy": 592,
         "size": 72
       }
     },
@@ -1250,9 +1250,9 @@
         ],
         "place": {
           "left": 56,
-          "top": 60,
+          "top": 200,
           "width": 920,
-          "height": 640,
+          "height": 560,
           "scale": 1
         }
       }
@@ -1264,14 +1264,14 @@
       "obj": "buddy",
       "verb": "enter",
       "toState": "proud",
-      "atFrame": 11
+      "atFrame": 0
     },
     {
       "id": "hook-1",
       "obj": "note",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 11
+      "atFrame": 0
     },
     {
       "id": "hook-2",
@@ -1441,5 +1441,10 @@
       "toState": "cool",
       "atFrame": 1204
     }
-  ]
+  ],
+  "ending": {
+    "fromFrame": 1319,
+    "url": "makeyourmindup.ai",
+    "ticker": false
+  }
 }
