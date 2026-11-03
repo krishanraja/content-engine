@@ -20,9 +20,9 @@ name: Make a piece
 #
 # What the run commits is pushed to its own branch, claude/make-<piece>-<run>, with a pull request. A push made with
 # GitHub's own token starts no CI, so the keep step starts CI on the branch itself (`gh workflow run ci.yml`, which
-# does start a run; its checks land on the pull request's head). Merge: by hand, once CI is green. A piece Claude made
-# with nobody watching is content, not engine work, so this run does not turn on auto-merge; whether it should
-# (AGENTS.md's auto-merge rule for engine work) is Krish's decision, and until he makes it the merge stays by hand.
+# does start a run; its checks land on the pull request's head). A piece Claude made
+# with nobody watching merges itself once CI is green, like every pull request (.github/workflows/auto-merge.yml;
+# Ruling, Krish, 2026-11-03: "Change everything to auto-merge all the time. No manual merging").
 # This repository is public: Claude's full output stays out of the log (claude-code-action's default).
 #
 # The run may read untrusted web pages, so it is fenced by permissions, not by its prompt: Bash only for the named
@@ -175,7 +175,7 @@ jobs:
           git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$BRANCH"
           gh pr create --base "$BASE" --head "$BRANCH" \
             --title "Make piece ${PIECE:0:8} (run ${{ github.run_id }})" \
-            --body "Made by the Make a piece run in GitHub Actions on Krish's subscription for piece $PIECE. CI was started on the branch by the run; merge by hand once it is green." \
+            --body "Made by the Make a piece run in GitHub Actions on Krish's subscription for piece $PIECE. CI was started on the branch by the run; it merges itself once CI is green (auto-merge.yml)." \
             || echo "::warning::The branch $BRANCH is pushed; no pull request was opened."
           # A push with GitHub's own token starts no CI; a workflow_dispatch made with it does.
           gh workflow run ci.yml --ref "$BRANCH" \

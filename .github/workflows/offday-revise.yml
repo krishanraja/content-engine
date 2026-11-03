@@ -180,5 +180,5 @@ jobs:
           # A week whose ideas were on main gets one pull request for its revisions, so they reach main.
           if [ "$TO" = "offday-revise/$WEEK" ] && [ -z "$(gh pr list --head "$TO" --state open --json number --jq '.[].number')" ]; then
             gh pr create --head "$TO" --base main --title "Off-day revisions for the week of $WEEK" \
-              --body "His Improve on off-day options for the week of $WEEK, revised by .github/workflows/offday-revise.yml. Merge by hand once CI is green; the board shows them at its next build." || true
+              --body "His Improve on off-day options for the week of $WEEK, revised by .github/workflows/offday-revise.yml. It merges itself once CI is green (auto-merge.yml); the board shows them at its next build." || true
           fi

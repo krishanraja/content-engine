@@ -74,6 +74,19 @@ def _move(beat: dict, duration: float | None, moves: dict, override: str | None)
     return {'name': name, **table[name]}
 
 
+def _motion(spec: dict) -> dict | None:
+    """The piece's one motion system (style.motion.module) from the style bank's motion layer, with its rules and
+    avoid list; None when the spec names none. A name the bank does not hold is refused."""
+    mid = ((spec.get('style') or {}).get('motion') or {}).get('module')
+    if not mid:
+        return None
+    bank = load_json(ROOT / 'config' / 'style-references.json').get('bank') or []
+    module = next((m for m in bank if m.get('id') == mid and m.get('layer') == 'motion'), None)
+    if module is None:
+        raise ValueError(f'style.motion.module {mid!r} is not a motion module in config/style-references.json')
+    return {'id': mid, 'name': module.get('name'), 'rules': module.get('rules', []), 'avoid': module.get('avoid', [])}
+
+
 def _line(script, span) -> str | None:
     if not script:
         return None
@@ -114,6 +127,7 @@ def build_briefs(spec: dict, *, cut=None, script=None, words=None, beats=None, m
     tools = load_json(CONFIG / 'tools.json')['tools']
     plates = lock.get('plates', {})
     nevers = floor_nevers()
+    motion = _motion(spec)
     briefs = []
     for cut_id in cuts:
         aspect = spec['cuts'][cut_id]['aspect']
@@ -132,8 +146,10 @@ def build_briefs(spec: dict, *, cut=None, script=None, words=None, beats=None, m
                 'style': {
                     'theme': spec.get('theme'), 'series': spec['brand']['series'],
                     'finish': spec.get('signature', {}).get('finish_pack'),
-                    'must_say': plates.get('must_say', []), 'never_in_plate': plates.get('never_in_plate', []),
+                    'must_say': plates.get('must_say', []) + (motion['rules'] if motion else []),
+                    'never_in_plate': plates.get('never_in_plate', []) + (motion['avoid'] if motion else []),
                     'colour': 'brand roles only (config/ve/brand-tokens.json), never hex',
+                    'motion_system': motion and {'id': motion['id'], 'name': motion['name']},
                 },
                 'move': move,
                 'floor_nevers': nevers,
@@ -193,6 +209,7 @@ def card_fields(brief: dict) -> dict:
                      f'The floor (never ships):\n{nevers}\n'
                      f'Write each candidate to {work}/<file> with a sidecar <file>.json holding {", ".join(SIDECAR_FIELDS)}.'),
         'acceptance': f'python scripts/ve.py brief {brief["piece"]} --cut {brief["cut"]} --plate {brief["plate"]} --check {work}',
+        **({'motion_style': brief['style']['motion_system']['id']} if brief['style'].get('motion_system') else {}),
     }
 
 
