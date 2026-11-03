@@ -145,11 +145,15 @@ def _renderer_layouts() -> dict:
     """Slot boxes parsed from the renderer's own table (apps/renderer/src/engine/layouts/index.ts),
     so QC can never measure a stale copy. Boxes are x, y, width, height in beat.uses order."""
     source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'layouts' / 'index.ts').read_text(encoding='utf-8')
+    # Named numbers the table imports (the SPLIT seam, FWP_SPLIT_SEAM_Y) are read from their own file, never copied.
+    mocks = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks' / 'face-with-proof.tsx').read_text(encoding='utf-8')
+    constants = {name: value for name, value in re.findall(r'export const (FWP_[A-Z_]+) = (-?\d+)\b', mocks)}
     result = {}
     for aspect, name in (('9:16', 'TALL'), ('16:9', 'WIDE')):
-        block = re.search(r'const ' + name + r': Record<Layout, readonly Box\[\]> = \{(.*?)\n\}\n', source, re.S).group(1)
+        block = re.search(r'const ' + name + r': Record<.*?readonly Box\[\]> = \{(.*?)\n\}\n', source, re.S).group(1)
+        block = re.sub(r'\b(FWP_[A-Z_]+)\b', lambda m: constants[m.group(1)], block)
         result[aspect] = {layout: [tuple(int(n) for n in re.findall(r'-?\d+', box)) for box in re.findall(r'\{ left:[^}]*\}', body)]
-                          for layout, body in re.findall(r'\n  (\w+): \[(.*?)\n  \],', block, re.S)}
+                          for layout, body in re.findall(r'\n  (\w+): \[(.*?)\],?(?=\n|$)', block, re.S)}
     return result
 
 
@@ -183,7 +187,7 @@ def inputs_from_props(props: dict) -> dict:
         if len(active) != 1:
             raise ValueError(f"Cue {event.get('id', event['obj'])} has no unique beat slot")
         beat = active[0]
-        slot_index = 0 if beat['layout'] == 'STAGE' else beat['uses'].index(event['obj'])
+        slot_index = 0 if beat['layout'] in ('STAGE', 'SPLIT') else beat['uses'].index(event['obj'])
         box = layouts[aspect][beat['layout']][slot_index]
         slots[event.get('id', event['obj'])] = box
         slots.setdefault(event['obj'], box)

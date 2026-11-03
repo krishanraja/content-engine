@@ -376,8 +376,11 @@ class RendererLayoutMirrorTest(unittest.TestCase):
         layouts = _renderer_layouts()
         self.assertEqual(layouts['9:16']['F1'][0], (120, 852, 660, 290))
         self.assertEqual(layouts['16:9']['F1'][0], (1176, 54, 648, 490))
+        # SPLIT is tall only (no wide lock); its stage box reads the seam from the mocks file (FWP_SPLIT_SEAM_Y).
+        self.assertEqual(set(layouts['9:16']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT'})
+        self.assertEqual(set(layouts['16:9']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE'})
+        self.assertEqual(layouts['9:16']['SPLIT'], [(0, 0, 1080, 760)])
         for aspect in layouts.values():
-            self.assertEqual(set(aspect), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE'})
             self.assertTrue(all(len(box) == 4 for boxes in aspect.values() for box in boxes))
 
 
