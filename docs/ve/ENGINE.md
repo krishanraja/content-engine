@@ -68,6 +68,8 @@ ingest <piece> --take <id> --media <file> --aligner-a <name> --aligner-b <name> 
 conform <piece> --cut <cut> [--script <words.json>] [--takes <id> ...] [--crossfade-ms 20..40] [--render --assets-dir <assets> [--joins-reel]]
 brief <piece> [--cut <cut>] [--beat <id> ...] [--move <beat>=<move> ...] [--check <dir> --plate <id>]
 golden show|check|fill <slot> --reference <file> --at <mm:ss.s> --said <his words>
+init <piece> [--format <clip format>]
+refs <piece> <cut>
 lock draft <format> --aspect 9:16|16:9 --beats <b> ... [--modules <format> ...] --anatomy <md> --motion <md>
 stills [rest ...]
 ledger <piece>
@@ -115,6 +117,7 @@ Render transports string values as ASCII escapes, decoded for drawing. It measur
 
 Every cut is held to the signed [motion standard](MOTION_STANDARD.md); each piece names one style from the bank (`style.motion`, `ve lint` `motion.required` from 9 Nov 2026). Codex is a visual asset maker (Ruling, Krish, 2026-10-28: "Visual asset maker"). It makes pictures; the engine assembles every cut. Two jobs:
 
+- **References are board cards, by id (Wave 3, 3 Nov 2026).** Each `brand.references[]` entry carries `id`, the card's `inspiration_items.id`, with the file stem kept as `card`, its label. `ve init <piece>` offers the top card per unnamed role from `GET /api/inspiration/candidates` (production lane, not dismissed; ranked by what the card `teaches`, then his kept or liked signal, then never used, then newest), each marked `offered: true`. ve lint (offline, deterministic) refuses, from 6 Nov 2026, a reference with no `id` or with `offered` left. `ve refs` checks every id against `GET /api/inspiration/cards` and refuses an unknown, dismissed, strategy-lane or non-clip card, or a Drive id that is not the card's; unreachable, it prints `board NOT CHECKED` and goes on. `ve verdict` posts one `card_uses` row per reference and role with the Critic's score (`POST /api/inspiration/uses`); the making route marks them published when a channel is posted.
 - **Library devices.** Claude writes exact cards from fields JSON. A card for a piece takes `spec: <the piece's spec.json>` (or `motion_style: <id>`) in its fields, and is refused when a piece due from 9 Nov names no style; and `ve card` writes that style's rules and never-list from `config/style-references.json` into the card (a style not in the bank's motion layer, or one Krish marked not for us, is refused); `ve brief` adds it to plate cards by itself. Codex builds devices in worktrees between pieces. dispatch uses the plugin companion with pinned model/effort. verify-card reruns acceptance outside the sandbox/checks write_allow; Claude then renders golden stills/reviews one contact sheet.
 - **Visual plates into named slots.** A slot is named in the spec, with its geometry, its duration and the line it sits under; Codex makes candidate pictures for it (stills first, then motion of an approved still: `docs/ve/design/TEMPLATE.md`, "Images: how plates are made"), and the engine places the chosen one. Codex never picks a slot's size, timing or position. Compile still refuses generated plates until Phase 2 (above). `ve brief` writes the per-plate brief and its card fields (above); dispatching it and the Critic's ranking of the eight candidates are not automated yet.
 

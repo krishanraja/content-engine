@@ -357,6 +357,19 @@ describe('the making record', () => {
     expect(bad.body.problems[0]).toMatch(/unknown channel "myspace"/)
   })
 
+  it('a posted channel marks every Inspiration card use on the piece published; a cleared channel marks none (Wave 3)', async () => {
+    db.tables.card_uses = [
+      { id: 'u1', card_id: 'c1', piece_id: ID, published: false },
+      { id: 'u2', card_id: 'c2', piece_id: 'another-piece', published: false },
+    ]
+    await call('POST', { channels: { youtube: null } }, 'krish')
+    expect(db.tables.card_uses.map(u => u.published)).toEqual([false, false])
+    const out = await call('POST', { channels: { substack: { url: 'https://makeyourmindup.substack.com/p/why-so-many-ais' } } }, 'krish')
+    expect(out.status).toBe(200)
+    expect(out.body.card_uses_problem).toBeUndefined()
+    expect(db.tables.card_uses.map(u => [u.id, u.published])).toEqual([['u1', true], ['u2', false]])
+  })
+
   it('the 15-minute feature\'s two board cards record as their own channels, and never count toward the five', async () => {
     const one = await call('POST', { channels: { substack: {}, feature_youtube: { url: 'https://youtu.be/feature' }, feature_spotify: {} } }, 'krish')
     expect(one.status).toBe(200)
