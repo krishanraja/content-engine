@@ -29,9 +29,10 @@ export function WordCaption({ props, frame }: { props: EngineRenderProps; frame:
     display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none',
   }}>
     <span style={{
-      // The house serif is italic only, so the build is the heavy sans with the page's loud word in the serif.
+      // The heavy sans, with the page's loud word in the upright house serif (Krish, 2026-11-03: "add the upright
+      // Fraunces to the kit"), as the reference reel sets its quoted word.
       fontFamily: loud ? HOUSE_FONTS.dek : HOUSE_FONTS.structure, fontWeight: loud ? 700 : 800,
-      fontStyle: loud ? 'italic' : 'normal',
+      fontStyle: 'normal',
       fontSize: g.size, lineHeight: 1, color: '#FFFFFF', textShadow: SHADOW, whiteSpace: 'nowrap',
       letterSpacing: loud ? '-0.01em' : '-0.005em',
       transform: `scale(${0.9 + 0.1 * pop})`,

@@ -56,7 +56,7 @@ to 7 frames; a ring or waveform keeps moving underneath. A move that restarts on
 | Word colour and weight | white, heavy sans, soft shadow, no box | white Archivo bold, shadow |
 | Word position, face shot | centre at 66% of the height, on the chest, under the chin | centre at about y 1270 to 1440, and never on the face |
 | Held title | yellow, two lines, top at 19% of the height, about 44 px cap height of 718 | `brand.title`, top at y 250, 66 px |
-| Loud word | a large upright serif in quotes ("SPEAK") over the chest in the jackroberts reel | the house serif (Fraunces); see "The brand may evolve" below |
+| Loud word | a large upright serif in quotes ("SPEAK") over the chest in the jackroberts reel | the upright house serif (Fraunces, added to the kit 3 Nov 2026: "add the upright Fraunces to the kit") |
 
 **Never on the face.** `ve qc` fails any caption page whose box overlaps the face found in that frame, grown by 10%
 (`captions.off_face`, `scripts/velib/qc_faces.py`). On a SPLIT beat his face is in the lower half, so a word at chest
@@ -87,13 +87,12 @@ need, but do not use bog standard AI cliches". So a look the references need is 
 the kit has nothing that does the job, the brand may grow, as a proposal to Krish naming what it adds that the kit
 cannot. A face, colour or device that is everywhere in AI-made content is never proposed (Instrument Serif and the
 other fashionable free display serifs, purple-to-blue gradients, glowing neural meshes, robots and brains, sparkle
-icons). For the loud word that means the house serif: the kit carries Fraunces italic only, and the upright cut of the
-same family is the evolution to propose, not a borrowed face.
+icons). For the loud word that meant the house serif's own upright cut, now in the kit (`Fraunces-Upright-Variable`, from the
+brand kit in Drive; Krish, 2026-11-03: "add the upright Fraunces to the kit"), not a borrowed face.
 
 ## Waiting on Krish
 
 - Sign this standard, and word mode as the default caption build for face-with-proof.
-- Whether the loud word gets the upright Fraunces cut added to the kit, or stays italic.
 - Spend for the four Codex cards above (each is written, none dispatched).
 
 ## How it was measured
