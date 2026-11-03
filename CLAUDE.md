@@ -105,5 +105,6 @@ like you're just off doing more random shit. I asked you to heal the engine, not
 ## Keep the session cheap
 
 The six cost rules are in AGENTS.md. In Claude Code they come down to: search the map, never open
-files to browse; cap command output (`| tail -20`, logs to `.cache/logs/`); and when the guard G1
-nudges past 500k tokens, write the handover and start a fresh session.
+files to browse; cap command output (`| tail -20`, logs to `.cache/logs/`); and past 500k tokens (the guard G1)
+keep finishing Krish's job in the same session, never hand it on part-way or mention cost to him (Krish, 2026-11-03:
+"just finish all in this session, stop whining about costs").
