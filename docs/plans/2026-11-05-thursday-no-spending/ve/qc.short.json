@@ -1,6 +1,6 @@
 {
   "file": ".cache/produce/2026-11-05-no-spending/out/thu-short.mp4",
-  "sha256": "b14062e8d3abecac5d8c37b2d25a392e8df5a996a7665cc0acc34225a9e3b031",
+  "sha256": "b1d361af04e7b2d43193235574eddbc1a3ec342b64feffc597cdd0f4eb3aa525",
   "duration_s": 47.47,
   "format": "face-with-proof",
   "checks": {
@@ -64,7 +64,7 @@
           "segment": 3,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999983
+          "correlation": 0.999981
         },
         {
           "segment": 4,
@@ -88,7 +88,7 @@
           "segment": 7,
           "lag_ms": 0,
           "pass": true,
-          "correlation": 0.999986
+          "correlation": 0.999985
         }
       ],
       "target": "every segment |lag| <= 33 ms; correlation >= 0.5",
@@ -139,7 +139,7 @@
         },
         {
           "page": 4,
-          "frame": 257,
+          "frame": 262,
           "text": "really cool features\nand really",
           "agreement": 1.0,
           "variant": "raw",
@@ -155,7 +155,7 @@
         },
         {
           "page": 6,
-          "frame": 345,
+          "frame": 353,
           "text": "because once\nthey're connected",
           "agreement": 1.0,
           "variant": "raw",
@@ -179,7 +179,7 @@
         },
         {
           "page": 9,
-          "frame": 490,
+          "frame": 491,
           "text": "Google for your\nemails,",
           "agreement": 1.0,
           "variant": "raw",
@@ -315,7 +315,7 @@
         },
         {
           "page": 26,
-          "frame": 1072,
+          "frame": 1073,
           "text": "Prompt's in the\ncomments,",
           "agreement": 1.0,
           "variant": "raw",
@@ -363,7 +363,7 @@
         },
         {
           "page": 32,
-          "frame": 1232,
+          "frame": 1240,
           "text": "these new\ntechnologies",
           "agreement": 1.0,
           "variant": "raw",
@@ -400,43 +400,43 @@
         },
         {
           "beat": "face",
-          "frame": 267,
+          "frame": 274,
           "score": 0.9780562152067991,
           "pass": true
         },
         {
           "beat": "proof",
-          "frame": 427,
-          "score": 0.9780554653953619,
+          "frame": 436,
+          "score": 0.9780557961709819,
           "pass": true
         },
         {
           "beat": "b4-8am",
-          "frame": 531,
-          "score": 0.9780086235523794,
+          "frame": 532,
+          "score": 0.978044223846151,
           "pass": true
         },
         {
           "beat": "b5-rule",
           "frame": 604,
-          "score": 0.9785800925921436,
+          "score": 0.9785045815203816,
           "pass": true
         },
         {
           "beat": "own-words",
           "frame": 707,
-          "score": 0.9779331576654758,
+          "score": 0.9779894830091419,
           "pass": true
         },
         {
           "beat": "b7-prompt",
-          "frame": 925,
+          "frame": 927,
           "score": 0.978024978167973,
           "pass": true
         },
         {
           "beat": "close",
-          "frame": 1254,
+          "frame": 1255,
           "score": 0.9784845972461166,
           "pass": true
         }
@@ -504,12 +504,12 @@
         },
         {
           "event": "proof-0",
-          "atFrame": 352,
-          "peak_frame": 352,
+          "atFrame": 367,
+          "peak_frame": 367,
           "lag_frames": 0,
-          "peak_difference": 68.1161117553711,
-          "event_difference": 68.1161117553711,
-          "threshold": 1.424941509962082,
+          "peak_difference": 68.31136322021484,
+          "event_difference": 68.31136322021484,
+          "threshold": 1.3509868383407593,
           "gradual": false,
           "pass": true
         },
@@ -518,9 +518,9 @@
           "atFrame": 410,
           "peak_frame": 411,
           "lag_frames": 1,
-          "peak_difference": 3.649446964263916,
-          "event_difference": 3.649446964263916,
-          "threshold": 6.578947613888886e-05,
+          "peak_difference": 3.649327516555786,
+          "event_difference": 3.649327516555786,
+          "threshold": 0.0004130116867600009,
           "gradual": false,
           "pass": true
         },
@@ -529,30 +529,30 @@
           "atFrame": 410,
           "peak_frame": 411,
           "lag_frames": 1,
-          "peak_difference": 20.859111785888672,
-          "event_difference": 20.859111785888672,
-          "threshold": 1e-06,
+          "peak_difference": 20.860631942749023,
+          "event_difference": 20.860631942749023,
+          "threshold": 0.000991866661934182,
           "gradual": false,
           "pass": true
         },
         {
           "event": "b4-8am-0",
-          "atFrame": 503,
-          "peak_frame": 503,
+          "atFrame": 506,
+          "peak_frame": 506,
           "lag_frames": 0,
-          "peak_difference": 5.647918224334717,
-          "event_difference": 5.647918224334717,
-          "threshold": 0.00024847525492077693,
+          "peak_difference": 5.6482768058776855,
+          "event_difference": 5.6482768058776855,
+          "threshold": 0.0001430615157005377,
           "gradual": false,
           "pass": true
         },
         {
           "event": "b4-8am-1",
-          "atFrame": 503,
-          "peak_frame": 503,
+          "atFrame": 506,
+          "peak_frame": 506,
           "lag_frames": 0,
-          "peak_difference": 5.647918224334717,
-          "event_difference": 5.647918224334717,
+          "peak_difference": 5.6482768058776855,
+          "event_difference": 5.6482768058776855,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -562,8 +562,8 @@
           "atFrame": 521,
           "peak_frame": 521,
           "lag_frames": 0,
-          "peak_difference": 4.511834144592285,
-          "event_difference": 4.511834144592285,
+          "peak_difference": 4.5198655128479,
+          "event_difference": 4.5198655128479,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -573,8 +573,8 @@
           "atFrame": 536,
           "peak_frame": 536,
           "lag_frames": 0,
-          "peak_difference": 4.607632637023926,
-          "event_difference": 4.607632637023926,
+          "peak_difference": 4.609632968902588,
+          "event_difference": 4.609632968902588,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -584,9 +584,9 @@
           "atFrame": 601,
           "peak_frame": 601,
           "lag_frames": 0,
-          "peak_difference": 60.89363479614258,
-          "event_difference": 60.89363479614258,
-          "threshold": 1e-06,
+          "peak_difference": 60.8823127746582,
+          "event_difference": 60.8823127746582,
+          "threshold": 0.00015385404549306259,
           "gradual": false,
           "pass": true
         },
@@ -595,9 +595,9 @@
           "atFrame": 626,
           "peak_frame": 626,
           "lag_frames": 0,
-          "peak_difference": 24.901737213134766,
-          "event_difference": 24.901737213134766,
-          "threshold": 0.09363734722137451,
+          "peak_difference": 24.90228843688965,
+          "event_difference": 24.90228843688965,
+          "threshold": 0.09799927845597267,
           "gradual": false,
           "pass": true
         },
@@ -606,8 +606,8 @@
           "atFrame": 626,
           "peak_frame": 626,
           "lag_frames": 0,
-          "peak_difference": 60.26205062866211,
-          "event_difference": 60.26205062866211,
+          "peak_difference": 60.2619743347168,
+          "event_difference": 60.2619743347168,
           "threshold": 1e-06,
           "gradual": false,
           "pass": true
@@ -639,19 +639,19 @@
           "atFrame": 912,
           "peak_frame": 912,
           "lag_frames": 0,
-          "peak_difference": 4.004649639129639,
-          "event_difference": 4.004649639129639,
+          "peak_difference": 4.004235744476318,
+          "event_difference": 4.004235744476318,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
         },
         {
           "event": "b7-prompt-2",
-          "atFrame": 953,
-          "peak_frame": 953,
-          "lag_frames": 0,
-          "peak_difference": 2.5458102226257324,
-          "event_difference": 2.5458102226257324,
+          "atFrame": 956,
+          "peak_frame": 960,
+          "lag_frames": 4,
+          "peak_difference": 2.68945574760437,
+          "event_difference": 2.539719343185425,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -661,8 +661,8 @@
           "atFrame": 967,
           "peak_frame": 967,
           "lag_frames": 0,
-          "peak_difference": 4.2096428871154785,
-          "event_difference": 4.2096428871154785,
+          "peak_difference": 4.340577125549316,
+          "event_difference": 4.340577125549316,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -683,8 +683,8 @@
           "atFrame": 1023,
           "peak_frame": 1023,
           "lag_frames": 0,
-          "peak_difference": 3.154863119125366,
-          "event_difference": 3.154863119125366,
+          "peak_difference": 3.1547043323516846,
+          "event_difference": 3.1547043323516846,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -694,9 +694,9 @@
           "atFrame": 1115,
           "peak_frame": 1115,
           "lag_frames": 0,
-          "peak_difference": 46.47209930419922,
-          "event_difference": 46.47209930419922,
-          "threshold": 0.0008077337115537375,
+          "peak_difference": 46.48906326293945,
+          "event_difference": 46.48906326293945,
+          "threshold": 0.0009615877352189273,
           "gradual": false,
           "pass": true
         },
@@ -705,9 +705,9 @@
           "atFrame": 1133,
           "peak_frame": 1133,
           "lag_frames": 0,
-          "peak_difference": 47.082313537597656,
-          "event_difference": 47.082313537597656,
-          "threshold": 0.00015385404549306259,
+          "peak_difference": 47.049503326416016,
+          "event_difference": 47.049503326416016,
+          "threshold": 0.00019231755140936002,
           "gradual": false,
           "pass": true
         },
@@ -716,9 +716,9 @@
           "atFrame": 1134,
           "peak_frame": 1134,
           "lag_frames": 0,
-          "peak_difference": 45.79319763183594,
-          "event_difference": 45.79319763183594,
-          "threshold": 0.0022725359885953367,
+          "peak_difference": 45.85851287841797,
+          "event_difference": 45.85851287841797,
+          "threshold": 0.0035350561374798417,
           "gradual": false,
           "pass": true
         },
@@ -727,9 +727,9 @@
           "atFrame": 1204,
           "peak_frame": 1205,
           "lag_frames": 1,
-          "peak_difference": 4.517844200134277,
-          "event_difference": 4.517844200134277,
-          "threshold": 0.10072098299860954,
+          "peak_difference": 4.5166425704956055,
+          "event_difference": 4.5166425704956055,
+          "threshold": 0.09336698055267334,
           "gradual": false,
           "pass": true
         }
@@ -835,7 +835,7 @@
         },
         "aligners": [
           "small",
-          "base"
+          "mmsfa"
         ],
         "agreement": "2 aligners",
         "per_aligner": {
@@ -843,7 +843,7 @@
             "status": "pass",
             "lost": []
           },
-          "base": {
+          "mmsfa": {
             "status": "pass",
             "lost": []
           }
@@ -867,7 +867,7 @@
         },
         "aligners": [
           "small",
-          "base"
+          "mmsfa"
         ],
         "agreement": "2 aligners",
         "joins": [],
@@ -886,7 +886,7 @@
         "version": "captions/1",
         "part": "clock",
         "drawn_by": "small",
-        "heard_by": "base",
+        "heard_by": "mmsfa",
         "independent": true,
         "agreement": "heard by the aligner that did not draw the captions",
         "tolerance_frames": 2,
@@ -897,33 +897,33 @@
             "fromFrame": 11,
             "text": "Proactive AI is coming.",
             "heard_word": "Proactive",
-            "heard_s": 0.0,
-            "heard_frame": 0,
-            "delta_frames": 11,
+            "heard_s": 0.24,
+            "heard_frame": 7,
+            "delta_frames": 4,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 0 (\"Proactive AI is coming.\") starts at frame 11, 11 frames late on \"Proactive\" as base heard it at 0.000 s (tolerance 2)"
+            "message": "caption page 0 (\"Proactive AI is coming.\") starts at frame 11, 4 frames late on \"Proactive\" as mmsfa heard it at 0.240 s (tolerance 2)"
           },
           {
             "page": 1,
             "fromFrame": 79,
             "text": "AI that does things before",
             "heard_word": "AI",
-            "heard_s": 2.44,
-            "heard_frame": 73,
-            "delta_frames": 6,
+            "heard_s": 2.46,
+            "heard_frame": 74,
+            "delta_frames": 5,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 1 (\"AI that does things before\") starts at frame 79, 6 frames late on \"AI\" as base heard it at 2.440 s (tolerance 2)"
+            "message": "caption page 1 (\"AI that does things before\") starts at frame 79, 5 frames late on \"AI\" as mmsfa heard it at 2.460 s (tolerance 2)"
           },
           {
             "page": 2,
             "fromFrame": 114,
             "text": "you ask offers to do",
             "heard_word": "you",
-            "heard_s": 3.74,
-            "heard_frame": 112,
-            "delta_frames": 2,
+            "heard_s": 3.861,
+            "heard_frame": 116,
+            "delta_frames": -2,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -932,9 +932,9 @@
             "fromFrame": 151,
             "text": "things. Awesome,",
             "heard_word": "things.",
-            "heard_s": 4.96,
-            "heard_frame": 149,
-            "delta_frames": 2,
+            "heard_s": 5.101,
+            "heard_frame": 153,
+            "delta_frames": -2,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -943,80 +943,78 @@
             "fromFrame": 194,
             "text": "really cool features and really",
             "heard_word": "really",
-            "heard_s": 6.76,
-            "heard_frame": 203,
-            "delta_frames": -9,
+            "heard_s": 6.641,
+            "heard_frame": 199,
+            "delta_frames": -5,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 4 (\"really cool features and really\") starts at frame 194, 9 frames early on \"really\" as base heard it at 6.760 s (tolerance 2)"
+            "message": "caption page 4 (\"really cool features and really\") starts at frame 194, 5 frames early on \"really\" as mmsfa heard it at 6.641 s (tolerance 2)"
           },
           {
             "page": 5,
             "fromFrame": 266,
             "text": "helpful but a bit dangerous",
-            "heard_word": "helpful,",
-            "heard_s": 8.78,
-            "heard_frame": 263,
-            "delta_frames": 3,
+            "heard_word": "helpful",
+            "heard_s": 9.021,
+            "heard_frame": 271,
+            "delta_frames": -5,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 5 (\"helpful but a bit dangerous\") starts at frame 266, 3 frames late on \"helpful,\" as base heard it at 8.780 s (tolerance 2)"
+            "message": "caption page 5 (\"helpful but a bit dangerous\") starts at frame 266, 5 frames early on \"helpful\" as mmsfa heard it at 9.021 s (tolerance 2)"
           },
           {
             "page": 6,
             "fromFrame": 320,
             "text": "because once they're connected",
             "heard_word": "because",
-            "heard_s": 10.78,
-            "heard_frame": 323,
-            "delta_frames": -3,
+            "heard_s": 10.722,
+            "heard_frame": 322,
+            "delta_frames": -2,
             "matched_exactly": true,
-            "status": "fail",
-            "message": "caption page 6 (\"because once they're connected\") starts at frame 320, 3 frames early on \"because\" as base heard it at 10.780 s (tolerance 2)"
+            "status": "pass"
           },
           {
             "page": 7,
-            "fromFrame": 352,
+            "fromFrame": 367,
             "text": "Muse into your WhatsApp,",
-            "heard_word": "muse",
-            "heard_s": 12.36,
-            "heard_frame": 371,
-            "delta_frames": -19,
+            "heard_word": "Muse",
+            "heard_s": 12.282,
+            "heard_frame": 368,
+            "delta_frames": -1,
             "matched_exactly": true,
-            "status": "fail",
-            "message": "caption page 7 (\"Muse into your WhatsApp,\") starts at frame 352, 19 frames early on \"muse\" as base heard it at 12.360 s (tolerance 2)"
+            "status": "pass"
           },
           {
             "page": 8,
             "fromFrame": 410,
             "text": "Amazon for your groceries,",
             "heard_word": "Amazon",
-            "heard_s": 13.5,
+            "heard_s": 13.502,
             "heard_frame": 405,
             "delta_frames": 5,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 8 (\"Amazon for your groceries,\") starts at frame 410, 5 frames late on \"Amazon\" as base heard it at 13.500 s (tolerance 2)"
+            "message": "caption page 8 (\"Amazon for your groceries,\") starts at frame 410, 5 frames late on \"Amazon\" as mmsfa heard it at 13.502 s (tolerance 2)"
           },
           {
             "page": 9,
             "fromFrame": 462,
             "text": "Google for your emails,",
             "heard_word": "Google",
-            "heard_s": 15.42,
-            "heard_frame": 463,
-            "delta_frames": -1,
+            "heard_s": 15.342,
+            "heard_frame": 460,
+            "delta_frames": 2,
             "matched_exactly": true,
             "status": "pass"
           },
           {
             "page": 10,
-            "fromFrame": 503,
+            "fromFrame": 506,
             "text": "it can get a bit",
             "heard_word": "it",
-            "heard_s": 16.72,
-            "heard_frame": 502,
-            "delta_frames": 1,
+            "heard_s": 16.902,
+            "heard_frame": 507,
+            "delta_frames": -1,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1025,9 +1023,9 @@
             "fromFrame": 540,
             "text": "dangerous. So my first step",
             "heard_word": "dangerous.",
-            "heard_s": 17.96,
-            "heard_frame": 539,
-            "delta_frames": 1,
+            "heard_s": 18.063,
+            "heard_frame": 542,
+            "delta_frames": -2,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1036,20 +1034,21 @@
             "fromFrame": 589,
             "text": "is the no spending,",
             "heard_word": "is",
-            "heard_s": 19.6,
-            "heard_frame": 588,
-            "delta_frames": 1,
+            "heard_s": 19.743,
+            "heard_frame": 592,
+            "delta_frames": -3,
             "matched_exactly": true,
-            "status": "pass"
+            "status": "fail",
+            "message": "caption page 12 (\"is the no spending,\") starts at frame 589, 3 frames early on \"is\" as mmsfa heard it at 19.743 s (tolerance 2)"
           },
           {
             "page": 13,
             "fromFrame": 626,
             "text": "no sending",
             "heard_word": "no",
-            "heard_s": 20.82,
-            "heard_frame": 625,
-            "delta_frames": 1,
+            "heard_s": 20.923,
+            "heard_frame": 628,
+            "delta_frames": -2,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1058,20 +1057,21 @@
             "fromFrame": 641,
             "text": "rule. It doesn't spend my",
             "heard_word": "rule.",
-            "heard_s": 21.3,
-            "heard_frame": 639,
-            "delta_frames": 2,
+            "heard_s": 21.483,
+            "heard_frame": 644,
+            "delta_frames": -3,
             "matched_exactly": true,
-            "status": "pass"
+            "status": "fail",
+            "message": "caption page 14 (\"rule. It doesn't spend my\") starts at frame 641, 3 frames early on \"rule.\" as mmsfa heard it at 21.483 s (tolerance 2)"
           },
           {
             "page": 15,
             "fromFrame": 673,
             "text": "money, doesn't send anything out",
             "heard_word": "money,",
-            "heard_s": 22.38,
-            "heard_frame": 671,
-            "delta_frames": 2,
+            "heard_s": 22.483,
+            "heard_frame": 674,
+            "delta_frames": -1,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1079,11 +1079,11 @@
             "page": 16,
             "fromFrame": 727,
             "text": "for me unless I say",
-            "heard_word": "from",
-            "heard_s": 24.18,
-            "heard_frame": 725,
-            "delta_frames": 2,
-            "matched_exactly": false,
+            "heard_word": "for",
+            "heard_s": 24.263,
+            "heard_frame": 728,
+            "delta_frames": -1,
+            "matched_exactly": true,
             "status": "pass"
           },
           {
@@ -1091,67 +1091,67 @@
             "fromFrame": 752,
             "text": "so. And the fun part",
             "heard_word": "so.",
-            "heard_s": 25.02,
-            "heard_frame": 751,
-            "delta_frames": 1,
+            "heard_s": 25.164,
+            "heard_frame": 755,
+            "delta_frames": -3,
             "matched_exactly": true,
-            "status": "pass"
+            "status": "fail",
+            "message": "caption page 17 (\"so. And the fun part\") starts at frame 752, 3 frames early on \"so.\" as mmsfa heard it at 25.164 s (tolerance 2)"
           },
           {
             "page": 18,
             "fromFrame": 785,
             "text": "is I didn't even write",
             "heard_word": "is",
-            "heard_s": 26.04,
-            "heard_frame": 781,
-            "delta_frames": 4,
+            "heard_s": 26.224,
+            "heard_frame": 787,
+            "delta_frames": -2,
             "matched_exactly": true,
-            "status": "fail",
-            "message": "caption page 18 (\"is I didn't even write\") starts at frame 785, 4 frames late on \"is\" as base heard it at 26.040 s (tolerance 2)"
+            "status": "pass"
           },
           {
             "page": 19,
             "fromFrame": 818,
             "text": "this myself.",
             "heard_word": "this",
-            "heard_s": 27.2,
-            "heard_frame": 816,
-            "delta_frames": 2,
+            "heard_s": 27.364,
+            "heard_frame": 821,
+            "delta_frames": -3,
             "matched_exactly": true,
-            "status": "pass"
+            "status": "fail",
+            "message": "caption page 19 (\"this myself.\") starts at frame 818, 3 frames early on \"this\" as mmsfa heard it at 27.364 s (tolerance 2)"
           },
           {
             "page": 20,
             "fromFrame": 851,
             "text": "I just put one prompt",
             "heard_word": "I",
-            "heard_s": 27.7,
-            "heard_frame": 831,
-            "delta_frames": 20,
+            "heard_s": 28.364,
+            "heard_frame": 851,
+            "delta_frames": 0,
             "matched_exactly": true,
-            "status": "fail",
-            "message": "caption page 20 (\"I just put one prompt\") starts at frame 851, 20 frames late on \"I\" as base heard it at 27.700 s (tolerance 2)"
+            "status": "pass"
           },
           {
             "page": 21,
             "fromFrame": 875,
             "text": "into my AI tool and",
             "heard_word": "into",
-            "heard_s": 29.06,
-            "heard_frame": 872,
-            "delta_frames": 3,
+            "heard_s": 29.284,
+            "heard_frame": 879,
+            "delta_frames": -4,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 21 (\"into my AI tool and\") starts at frame 875, 3 frames late on \"into\" as base heard it at 29.060 s (tolerance 2)"
+            "message": "caption page 21 (\"into my AI tool and\") starts at frame 875, 4 frames early on \"into\" as mmsfa heard it at 29.284 s (tolerance 2)"
           },
           {
             "page": 22,
             "fromFrame": 904,
             "text": "it started asking me questions",
             "heard_word": "it",
-            "heard_s": 30.1,
-            "heard_frame": 903,
-            "delta_frames": 1,
+            "heard_s": 30.144,
+            "heard_frame": 904,
+            "delta_frames": 0,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1160,31 +1160,33 @@
             "fromFrame": 934,
             "text": "back, then it locks itself",
             "heard_word": "back,",
-            "heard_s": 31.06,
-            "heard_frame": 932,
-            "delta_frames": 2,
+            "heard_s": 31.324,
+            "heard_frame": 940,
+            "delta_frames": -6,
             "matched_exactly": true,
-            "status": "pass"
+            "status": "fail",
+            "message": "caption page 23 (\"back, then it locks itself\") starts at frame 934, 6 frames early on \"back,\" as mmsfa heard it at 31.324 s (tolerance 2)"
           },
           {
             "page": 24,
             "fromFrame": 984,
             "text": "down or tells you how",
             "heard_word": "down",
-            "heard_s": 32.78,
-            "heard_frame": 983,
-            "delta_frames": 1,
+            "heard_s": 32.925,
+            "heard_frame": 988,
+            "delta_frames": -4,
             "matched_exactly": true,
-            "status": "pass"
+            "status": "fail",
+            "message": "caption page 24 (\"down or tells you how\") starts at frame 984, 4 frames early on \"down\" as mmsfa heard it at 32.925 s (tolerance 2)"
           },
           {
             "page": 25,
             "fromFrame": 1012,
             "text": "to lock it down.",
             "heard_word": "to",
-            "heard_s": 33.7,
-            "heard_frame": 1011,
-            "delta_frames": 1,
+            "heard_s": 33.785,
+            "heard_frame": 1014,
+            "delta_frames": -2,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1192,22 +1194,22 @@
             "page": 26,
             "fromFrame": 1046,
             "text": "Prompt's in the comments,",
-            "heard_word": "Prompts",
-            "heard_s": 34.6,
-            "heard_frame": 1038,
-            "delta_frames": 8,
+            "heard_word": "Prompt's",
+            "heard_s": 34.745,
+            "heard_frame": 1042,
+            "delta_frames": 4,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 26 (\"Prompt's in the comments,\") starts at frame 1046, 8 frames late on \"Prompts\" as base heard it at 34.600 s (tolerance 2)"
+            "message": "caption page 26 (\"Prompt's in the comments,\") starts at frame 1046, 4 frames late on \"Prompt's\" as mmsfa heard it at 34.745 s (tolerance 2)"
           },
           {
             "page": 27,
-            "fromFrame": 1085,
+            "fromFrame": 1088,
             "text": "make sure you do this,",
             "heard_word": "make",
-            "heard_s": 36.1,
-            "heard_frame": 1083,
-            "delta_frames": 2,
+            "heard_s": 36.265,
+            "heard_frame": 1088,
+            "delta_frames": 0,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1216,9 +1218,9 @@
             "fromFrame": 1115,
             "text": "no spending,",
             "heard_word": "no",
-            "heard_s": 37.18,
-            "heard_frame": 1115,
-            "delta_frames": 0,
+            "heard_s": 37.145,
+            "heard_frame": 1114,
+            "delta_frames": 1,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1227,7 +1229,7 @@
             "fromFrame": 1133,
             "text": "no sending,",
             "heard_word": "no",
-            "heard_s": 37.7,
+            "heard_s": 37.685,
             "heard_frame": 1131,
             "delta_frames": 2,
             "matched_exactly": true,
@@ -1238,7 +1240,7 @@
             "fromFrame": 1145,
             "text": "one easy step so you",
             "heard_word": "one",
-            "heard_s": 38.22,
+            "heard_s": 38.225,
             "heard_frame": 1147,
             "delta_frames": -2,
             "matched_exactly": true,
@@ -1249,9 +1251,9 @@
             "fromFrame": 1176,
             "text": "can save yourself and enjoy",
             "heard_word": "can",
-            "heard_s": 39.16,
-            "heard_frame": 1175,
-            "delta_frames": 1,
+            "heard_s": 39.186,
+            "heard_frame": 1176,
+            "delta_frames": 0,
             "matched_exactly": true,
             "status": "pass"
           },
@@ -1260,35 +1262,34 @@
             "fromFrame": 1212,
             "text": "these new technologies",
             "heard_word": "these",
-            "heard_s": 40.3,
-            "heard_frame": 1209,
-            "delta_frames": 3,
+            "heard_s": 40.466,
+            "heard_frame": 1214,
+            "delta_frames": -2,
             "matched_exactly": true,
-            "status": "fail",
-            "message": "caption page 32 (\"these new technologies\") starts at frame 1212, 3 frames late on \"these\" as base heard it at 40.300 s (tolerance 2)"
+            "status": "pass"
           },
           {
             "page": 33,
-            "fromFrame": 1239,
+            "fromFrame": 1255,
             "text": "without any of those weird",
             "heard_word": "without",
-            "heard_s": 41.66,
-            "heard_frame": 1250,
-            "delta_frames": -11,
+            "heard_s": 41.826,
+            "heard_frame": 1255,
+            "delta_frames": 0,
             "matched_exactly": true,
-            "status": "fail",
-            "message": "caption page 33 (\"without any of those weird\") starts at frame 1239, 11 frames early on \"without\" as base heard it at 41.660 s (tolerance 2)"
+            "status": "pass"
           },
           {
             "page": 34,
             "fromFrame": 1279,
             "text": "moments or fails.",
             "heard_word": "moments",
-            "heard_s": 42.58,
-            "heard_frame": 1277,
-            "delta_frames": 2,
+            "heard_s": 42.726,
+            "heard_frame": 1282,
+            "delta_frames": -3,
             "matched_exactly": true,
-            "status": "pass"
+            "status": "fail",
+            "message": "caption page 34 (\"moments or fails.\") starts at frame 1279, 3 frames early on \"moments\" as mmsfa heard it at 42.726 s (tolerance 2)"
           }
         ],
         "failed": [
@@ -1297,167 +1298,179 @@
             "fromFrame": 11,
             "text": "Proactive AI is coming.",
             "heard_word": "Proactive",
-            "heard_s": 0.0,
-            "heard_frame": 0,
-            "delta_frames": 11,
+            "heard_s": 0.24,
+            "heard_frame": 7,
+            "delta_frames": 4,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 0 (\"Proactive AI is coming.\") starts at frame 11, 11 frames late on \"Proactive\" as base heard it at 0.000 s (tolerance 2)"
+            "message": "caption page 0 (\"Proactive AI is coming.\") starts at frame 11, 4 frames late on \"Proactive\" as mmsfa heard it at 0.240 s (tolerance 2)"
           },
           {
             "page": 1,
             "fromFrame": 79,
             "text": "AI that does things before",
             "heard_word": "AI",
-            "heard_s": 2.44,
-            "heard_frame": 73,
-            "delta_frames": 6,
+            "heard_s": 2.46,
+            "heard_frame": 74,
+            "delta_frames": 5,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 1 (\"AI that does things before\") starts at frame 79, 6 frames late on \"AI\" as base heard it at 2.440 s (tolerance 2)"
+            "message": "caption page 1 (\"AI that does things before\") starts at frame 79, 5 frames late on \"AI\" as mmsfa heard it at 2.460 s (tolerance 2)"
           },
           {
             "page": 4,
             "fromFrame": 194,
             "text": "really cool features and really",
             "heard_word": "really",
-            "heard_s": 6.76,
-            "heard_frame": 203,
-            "delta_frames": -9,
+            "heard_s": 6.641,
+            "heard_frame": 199,
+            "delta_frames": -5,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 4 (\"really cool features and really\") starts at frame 194, 9 frames early on \"really\" as base heard it at 6.760 s (tolerance 2)"
+            "message": "caption page 4 (\"really cool features and really\") starts at frame 194, 5 frames early on \"really\" as mmsfa heard it at 6.641 s (tolerance 2)"
           },
           {
             "page": 5,
             "fromFrame": 266,
             "text": "helpful but a bit dangerous",
-            "heard_word": "helpful,",
-            "heard_s": 8.78,
-            "heard_frame": 263,
-            "delta_frames": 3,
+            "heard_word": "helpful",
+            "heard_s": 9.021,
+            "heard_frame": 271,
+            "delta_frames": -5,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 5 (\"helpful but a bit dangerous\") starts at frame 266, 3 frames late on \"helpful,\" as base heard it at 8.780 s (tolerance 2)"
-          },
-          {
-            "page": 6,
-            "fromFrame": 320,
-            "text": "because once they're connected",
-            "heard_word": "because",
-            "heard_s": 10.78,
-            "heard_frame": 323,
-            "delta_frames": -3,
-            "matched_exactly": true,
-            "status": "fail",
-            "message": "caption page 6 (\"because once they're connected\") starts at frame 320, 3 frames early on \"because\" as base heard it at 10.780 s (tolerance 2)"
-          },
-          {
-            "page": 7,
-            "fromFrame": 352,
-            "text": "Muse into your WhatsApp,",
-            "heard_word": "muse",
-            "heard_s": 12.36,
-            "heard_frame": 371,
-            "delta_frames": -19,
-            "matched_exactly": true,
-            "status": "fail",
-            "message": "caption page 7 (\"Muse into your WhatsApp,\") starts at frame 352, 19 frames early on \"muse\" as base heard it at 12.360 s (tolerance 2)"
+            "message": "caption page 5 (\"helpful but a bit dangerous\") starts at frame 266, 5 frames early on \"helpful\" as mmsfa heard it at 9.021 s (tolerance 2)"
           },
           {
             "page": 8,
             "fromFrame": 410,
             "text": "Amazon for your groceries,",
             "heard_word": "Amazon",
-            "heard_s": 13.5,
+            "heard_s": 13.502,
             "heard_frame": 405,
             "delta_frames": 5,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 8 (\"Amazon for your groceries,\") starts at frame 410, 5 frames late on \"Amazon\" as base heard it at 13.500 s (tolerance 2)"
+            "message": "caption page 8 (\"Amazon for your groceries,\") starts at frame 410, 5 frames late on \"Amazon\" as mmsfa heard it at 13.502 s (tolerance 2)"
           },
           {
-            "page": 18,
-            "fromFrame": 785,
-            "text": "is I didn't even write",
+            "page": 12,
+            "fromFrame": 589,
+            "text": "is the no spending,",
             "heard_word": "is",
-            "heard_s": 26.04,
-            "heard_frame": 781,
-            "delta_frames": 4,
+            "heard_s": 19.743,
+            "heard_frame": 592,
+            "delta_frames": -3,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 18 (\"is I didn't even write\") starts at frame 785, 4 frames late on \"is\" as base heard it at 26.040 s (tolerance 2)"
+            "message": "caption page 12 (\"is the no spending,\") starts at frame 589, 3 frames early on \"is\" as mmsfa heard it at 19.743 s (tolerance 2)"
           },
           {
-            "page": 20,
-            "fromFrame": 851,
-            "text": "I just put one prompt",
-            "heard_word": "I",
-            "heard_s": 27.7,
-            "heard_frame": 831,
-            "delta_frames": 20,
+            "page": 14,
+            "fromFrame": 641,
+            "text": "rule. It doesn't spend my",
+            "heard_word": "rule.",
+            "heard_s": 21.483,
+            "heard_frame": 644,
+            "delta_frames": -3,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 20 (\"I just put one prompt\") starts at frame 851, 20 frames late on \"I\" as base heard it at 27.700 s (tolerance 2)"
+            "message": "caption page 14 (\"rule. It doesn't spend my\") starts at frame 641, 3 frames early on \"rule.\" as mmsfa heard it at 21.483 s (tolerance 2)"
+          },
+          {
+            "page": 17,
+            "fromFrame": 752,
+            "text": "so. And the fun part",
+            "heard_word": "so.",
+            "heard_s": 25.164,
+            "heard_frame": 755,
+            "delta_frames": -3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 17 (\"so. And the fun part\") starts at frame 752, 3 frames early on \"so.\" as mmsfa heard it at 25.164 s (tolerance 2)"
+          },
+          {
+            "page": 19,
+            "fromFrame": 818,
+            "text": "this myself.",
+            "heard_word": "this",
+            "heard_s": 27.364,
+            "heard_frame": 821,
+            "delta_frames": -3,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 19 (\"this myself.\") starts at frame 818, 3 frames early on \"this\" as mmsfa heard it at 27.364 s (tolerance 2)"
           },
           {
             "page": 21,
             "fromFrame": 875,
             "text": "into my AI tool and",
             "heard_word": "into",
-            "heard_s": 29.06,
-            "heard_frame": 872,
-            "delta_frames": 3,
+            "heard_s": 29.284,
+            "heard_frame": 879,
+            "delta_frames": -4,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 21 (\"into my AI tool and\") starts at frame 875, 3 frames late on \"into\" as base heard it at 29.060 s (tolerance 2)"
+            "message": "caption page 21 (\"into my AI tool and\") starts at frame 875, 4 frames early on \"into\" as mmsfa heard it at 29.284 s (tolerance 2)"
+          },
+          {
+            "page": 23,
+            "fromFrame": 934,
+            "text": "back, then it locks itself",
+            "heard_word": "back,",
+            "heard_s": 31.324,
+            "heard_frame": 940,
+            "delta_frames": -6,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 23 (\"back, then it locks itself\") starts at frame 934, 6 frames early on \"back,\" as mmsfa heard it at 31.324 s (tolerance 2)"
+          },
+          {
+            "page": 24,
+            "fromFrame": 984,
+            "text": "down or tells you how",
+            "heard_word": "down",
+            "heard_s": 32.925,
+            "heard_frame": 988,
+            "delta_frames": -4,
+            "matched_exactly": true,
+            "status": "fail",
+            "message": "caption page 24 (\"down or tells you how\") starts at frame 984, 4 frames early on \"down\" as mmsfa heard it at 32.925 s (tolerance 2)"
           },
           {
             "page": 26,
             "fromFrame": 1046,
             "text": "Prompt's in the comments,",
-            "heard_word": "Prompts",
-            "heard_s": 34.6,
-            "heard_frame": 1038,
-            "delta_frames": 8,
+            "heard_word": "Prompt's",
+            "heard_s": 34.745,
+            "heard_frame": 1042,
+            "delta_frames": 4,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 26 (\"Prompt's in the comments,\") starts at frame 1046, 8 frames late on \"Prompts\" as base heard it at 34.600 s (tolerance 2)"
+            "message": "caption page 26 (\"Prompt's in the comments,\") starts at frame 1046, 4 frames late on \"Prompt's\" as mmsfa heard it at 34.745 s (tolerance 2)"
           },
           {
-            "page": 32,
-            "fromFrame": 1212,
-            "text": "these new technologies",
-            "heard_word": "these",
-            "heard_s": 40.3,
-            "heard_frame": 1209,
-            "delta_frames": 3,
+            "page": 34,
+            "fromFrame": 1279,
+            "text": "moments or fails.",
+            "heard_word": "moments",
+            "heard_s": 42.726,
+            "heard_frame": 1282,
+            "delta_frames": -3,
             "matched_exactly": true,
             "status": "fail",
-            "message": "caption page 32 (\"these new technologies\") starts at frame 1212, 3 frames late on \"these\" as base heard it at 40.300 s (tolerance 2)"
-          },
-          {
-            "page": 33,
-            "fromFrame": 1239,
-            "text": "without any of those weird",
-            "heard_word": "without",
-            "heard_s": 41.66,
-            "heard_frame": 1250,
-            "delta_frames": -11,
-            "matched_exactly": true,
-            "status": "fail",
-            "message": "caption page 33 (\"without any of those weird\") starts at frame 1239, 11 frames early on \"without\" as base heard it at 41.660 s (tolerance 2)"
+            "message": "caption page 34 (\"moments or fails.\") starts at frame 1279, 3 frames early on \"moments\" as mmsfa heard it at 42.726 s (tolerance 2)"
           }
         ],
         "located_fraction": 1.0,
         "status": "fail",
-        "reason": "13 of 35 caption page(s) start off the heard clock by more than 2 frames"
+        "reason": "14 of 35 caption page(s) start off the heard clock by more than 2 frames"
       },
       "target": "each page's first frame within 2 frames of its first word as heard",
       "pass": false,
       "status": "measured",
       "agreement": "heard by the aligner that did not draw the captions",
-      "summary": "13 of 35 caption page(s) start off the heard clock by more than 2 frames: caption page 0 (\"Proactive AI is coming.\") starts at frame 11, 11 frames late on \"Proactive\" as base heard it at 0.000 s (tolerance 2); caption page 1 (\"AI that does things before\") starts at frame 79, 6 frames late on \"AI\" as base heard it at 2.440 s (tolerance 2); caption page 4 (\"really cool features and really\") starts at frame 194, 9 frames early on \"really\" as base heard it at 6.760 s (tolerance 2); caption page 5 (\"helpful but a bit dangerous\") starts at frame 266, 3 frames late on \"helpful,\" as base heard it at 8.780 s (tolerance 2) (and 9 more)"
+      "summary": "14 of 35 caption page(s) start off the heard clock by more than 2 frames: caption page 0 (\"Proactive AI is coming.\") starts at frame 11, 4 frames late on \"Proactive\" as mmsfa heard it at 0.240 s (tolerance 2); caption page 1 (\"AI that does things before\") starts at frame 79, 5 frames late on \"AI\" as mmsfa heard it at 2.460 s (tolerance 2); caption page 4 (\"really cool features and really\") starts at frame 194, 5 frames early on \"really\" as mmsfa heard it at 6.641 s (tolerance 2); caption page 5 (\"helpful but a bit dangerous\") starts at frame 266, 5 frames early on \"helpful\" as mmsfa heard it at 9.021 s (tolerance 2) (and 10 more)"
     },
     "captions.render": {
       "value": {
@@ -1509,9 +1522,9 @@
           },
           {
             "page": 3,
-            "fromFrame": 352,
+            "fromFrame": 367,
             "text": "Muse into your WhatsApp,",
-            "change_frame": 352,
+            "change_frame": 367,
             "frame": 389,
             "read": "Muse into your\nWhatsApp,",
             "score": 1.0,
@@ -1542,9 +1555,9 @@
           },
           {
             "page": 6,
-            "fromFrame": 503,
+            "fromFrame": 506,
             "text": "it can get a bit",
-            "change_frame": 503,
+            "change_frame": 506,
             "frame": 536,
             "read": "it can geta bit",
             "score": 1.0,
@@ -1696,9 +1709,9 @@
           },
           {
             "page": 20,
-            "fromFrame": 1085,
+            "fromFrame": 1088,
             "text": "make sure you do this,",
-            "change_frame": 1085,
+            "change_frame": 1088,
             "frame": 1105,
             "read": "make sure you do\nthis,",
             "score": 1.0,
@@ -1762,9 +1775,9 @@
           },
           {
             "page": 26,
-            "fromFrame": 1239,
+            "fromFrame": 1255,
             "text": "without any of those weird",
-            "change_frame": 1239,
+            "change_frame": 1255,
             "frame": 1271,
             "read": "without any of those\nweird",
             "score": 1.0,
@@ -1794,7 +1807,7 @@
             "fromFrame": 194,
             "text": "really cool features and really",
             "change_frame": 194,
-            "frame": 248,
+            "frame": 258,
             "read": "really cool features\nand really",
             "score": 1.0,
             "exact": true,
@@ -1853,7 +1866,7 @@
           }
         ],
         "failed": [],
-        "changes_found": 109,
+        "changes_found": 110,
         "status": "pass",
         "pass": false,
         "regions": [
@@ -1887,18 +1900,18 @@
           "frame": 146
         },
         "face": {
-          "ssim": 0.8328796052233949,
+          "ssim": 0.8415276800931668,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
-          "frame": 318
+          "frame": 330
         },
         "proof": {
-          "ssim": 0.8434720257873725,
+          "ssim": 0.8549672497127649,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
-          "frame": 473
+          "frame": 478
         },
         "b4-8am": {
           "ssim": null,
@@ -1929,11 +1942,11 @@
           "note": "extra beat: no golden, composition-checked"
         },
         "close": {
-          "ssim": 0.8274868353451502,
+          "ssim": 0.8271441302547514,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
-          "frame": 1272
+          "frame": 1273
         }
       },
       "target": "approved golden keyframes",
@@ -1994,7 +2007,7 @@
             }
           },
           "findings": [],
-          "frame": 318
+          "frame": 330
         },
         "proof": {
           "pass": true,
@@ -2021,7 +2034,7 @@
             }
           },
           "findings": [],
-          "frame": 473
+          "frame": 478
         },
         "b4-8am": {
           "pass": true,
@@ -2129,7 +2142,7 @@
             }
           },
           "findings": [],
-          "frame": 1021
+          "frame": 1024
         },
         "close": {
           "pass": true,
@@ -2156,7 +2169,7 @@
             }
           },
           "findings": [],
-          "frame": 1272
+          "frame": 1273
         }
       },
       "target": "design lock composition thresholds",
@@ -2176,18 +2189,18 @@
         "frame": 146
       },
       "face": {
-        "ssim": 0.8328796052233949,
+        "ssim": 0.8415276800931668,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
-        "frame": 318
+        "frame": 330
       },
       "proof": {
-        "ssim": 0.8434720257873725,
+        "ssim": 0.8549672497127649,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
-        "frame": 473
+        "frame": 478
       },
       "b4-8am": {
         "ssim": null,
@@ -2218,11 +2231,11 @@
         "note": "extra beat: no golden, composition-checked"
       },
       "close": {
-        "ssim": 0.8274868353451502,
+        "ssim": 0.8271441302547514,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
-        "frame": 1272
+        "frame": 1273
       }
     },
     "findings": []
@@ -2283,7 +2296,7 @@
           }
         },
         "findings": [],
-        "frame": 318
+        "frame": 330
       },
       "proof": {
         "pass": true,
@@ -2310,7 +2323,7 @@
           }
         },
         "findings": [],
-        "frame": 473
+        "frame": 478
       },
       "b4-8am": {
         "pass": true,
@@ -2418,7 +2431,7 @@
           }
         },
         "findings": [],
-        "frame": 1021
+        "frame": 1024
       },
       "close": {
         "pass": true,
@@ -2445,7 +2458,7 @@
           }
         },
         "findings": [],
-        "frame": 1272
+        "frame": 1273
       }
     }
   },
