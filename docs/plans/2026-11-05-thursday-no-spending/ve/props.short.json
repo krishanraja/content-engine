@@ -1,0 +1,1383 @@
+{
+  "pieceId": "2026-11-05-thursday-no-spending",
+  "cutId": "short",
+  "format": "face-with-proof",
+  "aspect": "9:16",
+  "fps": 30,
+  "durationFrames": 1319,
+  "tokens": {
+    "ink": "#0C1512",
+    "inkDeep": "#070D0B",
+    "inkSoft": "#16221D",
+    "cream": "#F4EFE4",
+    "mint": "#7EF0C0",
+    "channel": "#B7A6FF"
+  },
+  "series": {
+    "label": "under.the.hood",
+    "day": "Wednesdays",
+    "promise": "Free from jargon",
+    "site": "makeyourmindup.ai"
+  },
+  "brand": {
+    "mark": {
+      "src": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets/src/assets/brand/makeyourmindup/makeyourmindup-mark.png",
+      "pixelWidth": 831,
+      "pixelHeight": 740
+    },
+    "logo": {
+      "src": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets/src/assets/brand/makeyourmindup/makeyourmindup-horizontal.png",
+      "pixelWidth": 1200,
+      "pixelHeight": 141
+    },
+    "stacked": {
+      "src": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets/src/assets/brand/makeyourmindup/makeyourmindup-stacked.png",
+      "pixelWidth": 2415,
+      "pixelHeight": 740
+    }
+  },
+  "segments": [
+    {
+      "src": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets/conformed.short.mp4",
+      "trimBeforeFrames": 0,
+      "fromFrame": 0,
+      "durationFrames": 1319
+    }
+  ],
+  "audio": {
+    "stem": {
+      "src": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets/audio.short.wav",
+      "trimBeforeFrames": 0
+    },
+    "sfx": []
+  },
+  "captions": [
+    {
+      "fromFrame": 11,
+      "toFrame": 79,
+      "words": [
+        {
+          "text": "Proactive",
+          "atFrame": 11
+        },
+        {
+          "text": "AI",
+          "atFrame": 27
+        },
+        {
+          "text": "is",
+          "atFrame": 43
+        },
+        {
+          "text": "coming.",
+          "atFrame": 55
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 79,
+      "toFrame": 114,
+      "words": [
+        {
+          "text": "AI",
+          "atFrame": 79
+        },
+        {
+          "text": "that",
+          "atFrame": 79
+        },
+        {
+          "text": "does",
+          "atFrame": 86
+        },
+        {
+          "text": "things",
+          "atFrame": 97
+        },
+        {
+          "text": "before",
+          "atFrame": 104
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 114,
+      "toFrame": 151,
+      "words": [
+        {
+          "text": "you",
+          "atFrame": 114
+        },
+        {
+          "text": "ask",
+          "atFrame": 118
+        },
+        {
+          "text": "offers",
+          "atFrame": 127
+        },
+        {
+          "text": "to",
+          "atFrame": 139
+        },
+        {
+          "text": "do",
+          "atFrame": 146
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 151,
+      "toFrame": 194,
+      "words": [
+        {
+          "text": "things.",
+          "atFrame": 151
+        },
+        {
+          "text": "Awesome,",
+          "atFrame": 183
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 194,
+      "toFrame": 266,
+      "words": [
+        {
+          "text": "really",
+          "atFrame": 194
+        },
+        {
+          "text": "cool",
+          "atFrame": 205
+        },
+        {
+          "text": "features",
+          "atFrame": 218
+        },
+        {
+          "text": "and",
+          "atFrame": 231
+        },
+        {
+          "text": "really",
+          "atFrame": 248
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 266,
+      "toFrame": 320,
+      "words": [
+        {
+          "text": "helpful",
+          "atFrame": 266
+        },
+        {
+          "text": "but",
+          "atFrame": 279
+        },
+        {
+          "text": "a",
+          "atFrame": 301
+        },
+        {
+          "text": "bit",
+          "atFrame": 303
+        },
+        {
+          "text": "dangerous",
+          "atFrame": 307
+        }
+      ],
+      "swipeIndex": 4
+    },
+    {
+      "fromFrame": 320,
+      "toFrame": 352,
+      "words": [
+        {
+          "text": "because",
+          "atFrame": 320
+        },
+        {
+          "text": "once",
+          "atFrame": 325
+        },
+        {
+          "text": "they're",
+          "atFrame": 331
+        },
+        {
+          "text": "connected",
+          "atFrame": 338
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 352,
+      "toFrame": 410,
+      "words": [
+        {
+          "text": "Muse",
+          "atFrame": 352
+        },
+        {
+          "text": "into",
+          "atFrame": 374
+        },
+        {
+          "text": "your",
+          "atFrame": 383
+        },
+        {
+          "text": "WhatsApp,",
+          "atFrame": 389
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 410,
+      "toFrame": 462,
+      "words": [
+        {
+          "text": "Amazon",
+          "atFrame": 410
+        },
+        {
+          "text": "for",
+          "atFrame": 410
+        },
+        {
+          "text": "your",
+          "atFrame": 418
+        },
+        {
+          "text": "groceries,",
+          "atFrame": 422
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 462,
+      "toFrame": 503,
+      "words": [
+        {
+          "text": "Google",
+          "atFrame": 462
+        },
+        {
+          "text": "for",
+          "atFrame": 465
+        },
+        {
+          "text": "your",
+          "atFrame": 473
+        },
+        {
+          "text": "emails,",
+          "atFrame": 476
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 503,
+      "toFrame": 540,
+      "words": [
+        {
+          "text": "it",
+          "atFrame": 503
+        },
+        {
+          "text": "can",
+          "atFrame": 510
+        },
+        {
+          "text": "get",
+          "atFrame": 521
+        },
+        {
+          "text": "a",
+          "atFrame": 534
+        },
+        {
+          "text": "bit",
+          "atFrame": 536
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 540,
+      "toFrame": 589,
+      "words": [
+        {
+          "text": "dangerous.",
+          "atFrame": 540
+        },
+        {
+          "text": "So",
+          "atFrame": 560
+        },
+        {
+          "text": "my",
+          "atFrame": 563
+        },
+        {
+          "text": "first",
+          "atFrame": 575
+        },
+        {
+          "text": "step",
+          "atFrame": 582
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 589,
+      "toFrame": 626,
+      "words": [
+        {
+          "text": "is",
+          "atFrame": 589
+        },
+        {
+          "text": "the",
+          "atFrame": 595
+        },
+        {
+          "text": "no",
+          "atFrame": 601
+        },
+        {
+          "text": "spending,",
+          "atFrame": 607
+        }
+      ],
+      "swipeIndex": 2
+    },
+    {
+      "fromFrame": 626,
+      "toFrame": 641,
+      "words": [
+        {
+          "text": "no",
+          "atFrame": 626
+        },
+        {
+          "text": "sending",
+          "atFrame": 631
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 641,
+      "toFrame": 673,
+      "words": [
+        {
+          "text": "rule.",
+          "atFrame": 641
+        },
+        {
+          "text": "It",
+          "atFrame": 649
+        },
+        {
+          "text": "doesn't",
+          "atFrame": 650
+        },
+        {
+          "text": "spend",
+          "atFrame": 658
+        },
+        {
+          "text": "my",
+          "atFrame": 667
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 673,
+      "toFrame": 727,
+      "words": [
+        {
+          "text": "money,",
+          "atFrame": 673
+        },
+        {
+          "text": "doesn't",
+          "atFrame": 691
+        },
+        {
+          "text": "send",
+          "atFrame": 703
+        },
+        {
+          "text": "anything",
+          "atFrame": 711
+        },
+        {
+          "text": "out",
+          "atFrame": 718
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 727,
+      "toFrame": 752,
+      "words": [
+        {
+          "text": "for",
+          "atFrame": 727
+        },
+        {
+          "text": "me",
+          "atFrame": 731
+        },
+        {
+          "text": "unless",
+          "atFrame": 734
+        },
+        {
+          "text": "I",
+          "atFrame": 739
+        },
+        {
+          "text": "say",
+          "atFrame": 746
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 752,
+      "toFrame": 785,
+      "words": [
+        {
+          "text": "so.",
+          "atFrame": 752
+        },
+        {
+          "text": "And",
+          "atFrame": 767
+        },
+        {
+          "text": "the",
+          "atFrame": 769
+        },
+        {
+          "text": "fun",
+          "atFrame": 772
+        },
+        {
+          "text": "part",
+          "atFrame": 777
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 785,
+      "toFrame": 818,
+      "words": [
+        {
+          "text": "is",
+          "atFrame": 785
+        },
+        {
+          "text": "I",
+          "atFrame": 789
+        },
+        {
+          "text": "didn't",
+          "atFrame": 793
+        },
+        {
+          "text": "even",
+          "atFrame": 797
+        },
+        {
+          "text": "write",
+          "atFrame": 805
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 818,
+      "toFrame": 851,
+      "words": [
+        {
+          "text": "this",
+          "atFrame": 818
+        },
+        {
+          "text": "myself.",
+          "atFrame": 824
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 851,
+      "toFrame": 875,
+      "words": [
+        {
+          "text": "I",
+          "atFrame": 851
+        },
+        {
+          "text": "just",
+          "atFrame": 851
+        },
+        {
+          "text": "put",
+          "atFrame": 855
+        },
+        {
+          "text": "one",
+          "atFrame": 860
+        },
+        {
+          "text": "prompt",
+          "atFrame": 867
+        }
+      ],
+      "swipeIndex": 4
+    },
+    {
+      "fromFrame": 875,
+      "toFrame": 904,
+      "words": [
+        {
+          "text": "into",
+          "atFrame": 875
+        },
+        {
+          "text": "my",
+          "atFrame": 881
+        },
+        {
+          "text": "AI",
+          "atFrame": 886
+        },
+        {
+          "text": "tool",
+          "atFrame": 893
+        },
+        {
+          "text": "and",
+          "atFrame": 901
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 904,
+      "toFrame": 934,
+      "words": [
+        {
+          "text": "it",
+          "atFrame": 904
+        },
+        {
+          "text": "started",
+          "atFrame": 907
+        },
+        {
+          "text": "asking",
+          "atFrame": 912
+        },
+        {
+          "text": "me",
+          "atFrame": 920
+        },
+        {
+          "text": "questions",
+          "atFrame": 925
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 934,
+      "toFrame": 984,
+      "words": [
+        {
+          "text": "back,",
+          "atFrame": 934
+        },
+        {
+          "text": "then",
+          "atFrame": 953
+        },
+        {
+          "text": "it",
+          "atFrame": 960
+        },
+        {
+          "text": "locks",
+          "atFrame": 967
+        },
+        {
+          "text": "itself",
+          "atFrame": 974
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 984,
+      "toFrame": 1012,
+      "words": [
+        {
+          "text": "down",
+          "atFrame": 984
+        },
+        {
+          "text": "or",
+          "atFrame": 992
+        },
+        {
+          "text": "tells",
+          "atFrame": 995
+        },
+        {
+          "text": "you",
+          "atFrame": 1001
+        },
+        {
+          "text": "how",
+          "atFrame": 1008
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1012,
+      "toFrame": 1046,
+      "words": [
+        {
+          "text": "to",
+          "atFrame": 1012
+        },
+        {
+          "text": "lock",
+          "atFrame": 1016
+        },
+        {
+          "text": "it",
+          "atFrame": 1019
+        },
+        {
+          "text": "down.",
+          "atFrame": 1023
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1046,
+      "toFrame": 1085,
+      "words": [
+        {
+          "text": "Prompt's",
+          "atFrame": 1046
+        },
+        {
+          "text": "in",
+          "atFrame": 1052
+        },
+        {
+          "text": "the",
+          "atFrame": 1054
+        },
+        {
+          "text": "comments,",
+          "atFrame": 1058
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1085,
+      "toFrame": 1115,
+      "words": [
+        {
+          "text": "make",
+          "atFrame": 1085
+        },
+        {
+          "text": "sure",
+          "atFrame": 1092
+        },
+        {
+          "text": "you",
+          "atFrame": 1097
+        },
+        {
+          "text": "do",
+          "atFrame": 1101
+        },
+        {
+          "text": "this,",
+          "atFrame": 1105
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1115,
+      "toFrame": 1133,
+      "words": [
+        {
+          "text": "no",
+          "atFrame": 1115
+        },
+        {
+          "text": "spending,",
+          "atFrame": 1117
+        }
+      ],
+      "swipeIndex": 1
+    },
+    {
+      "fromFrame": 1133,
+      "toFrame": 1145,
+      "words": [
+        {
+          "text": "no",
+          "atFrame": 1133
+        },
+        {
+          "text": "sending,",
+          "atFrame": 1134
+        }
+      ],
+      "swipeIndex": 1
+    },
+    {
+      "fromFrame": 1145,
+      "toFrame": 1176,
+      "words": [
+        {
+          "text": "one",
+          "atFrame": 1145
+        },
+        {
+          "text": "easy",
+          "atFrame": 1149
+        },
+        {
+          "text": "step",
+          "atFrame": 1157
+        },
+        {
+          "text": "so",
+          "atFrame": 1168
+        },
+        {
+          "text": "you",
+          "atFrame": 1173
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1176,
+      "toFrame": 1212,
+      "words": [
+        {
+          "text": "can",
+          "atFrame": 1176
+        },
+        {
+          "text": "save",
+          "atFrame": 1180
+        },
+        {
+          "text": "yourself",
+          "atFrame": 1187
+        },
+        {
+          "text": "and",
+          "atFrame": 1198
+        },
+        {
+          "text": "enjoy",
+          "atFrame": 1204
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1212,
+      "toFrame": 1239,
+      "words": [
+        {
+          "text": "these",
+          "atFrame": 1212
+        },
+        {
+          "text": "new",
+          "atFrame": 1219
+        },
+        {
+          "text": "technologies",
+          "atFrame": 1224
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1239,
+      "toFrame": 1279,
+      "words": [
+        {
+          "text": "without",
+          "atFrame": 1239
+        },
+        {
+          "text": "any",
+          "atFrame": 1259
+        },
+        {
+          "text": "of",
+          "atFrame": 1265
+        },
+        {
+          "text": "those",
+          "atFrame": 1267
+        },
+        {
+          "text": "weird",
+          "atFrame": 1271
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 1279,
+      "toFrame": 1319,
+      "words": [
+        {
+          "text": "moments",
+          "atFrame": 1279
+        },
+        {
+          "text": "or",
+          "atFrame": 1291
+        },
+        {
+          "text": "fails.",
+          "atFrame": 1300
+        }
+      ],
+      "swipeIndex": null
+    }
+  ],
+  "beats": [
+    {
+      "id": "hook",
+      "role": "hook",
+      "layout": "SPLIT",
+      "fromFrame": 0,
+      "toFrame": 183,
+      "uses": [
+        "buddy",
+        "note",
+        "underline"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": true,
+      "keyFrame": 146
+    },
+    {
+      "id": "face",
+      "role": "bridge",
+      "layout": "P1",
+      "fromFrame": 183,
+      "toFrame": 352,
+      "uses": [],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 318
+    },
+    {
+      "id": "proof",
+      "role": "anchor",
+      "layout": "SPLIT",
+      "fromFrame": 352,
+      "toFrame": 503,
+      "uses": [
+        "logos",
+        "amazon_loop"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 473
+    },
+    {
+      "id": "b4-8am",
+      "role": "anchor",
+      "layout": "SPLIT",
+      "fromFrame": 503,
+      "toFrame": 560,
+      "uses": [
+        "chat"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 549
+    },
+    {
+      "id": "b5-rule",
+      "role": "pivot",
+      "layout": "SPLIT",
+      "fromFrame": 560,
+      "toFrame": 649,
+      "uses": [
+        "slab_spend",
+        "slab_send",
+        "buddy",
+        "tick"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 631
+    },
+    {
+      "id": "own-words",
+      "role": "anchor",
+      "layout": "F3",
+      "fromFrame": 649,
+      "toFrame": 767,
+      "uses": [],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 743
+    },
+    {
+      "id": "b7-prompt",
+      "role": "anchor",
+      "layout": "SPLIT",
+      "fromFrame": 767,
+      "toFrame": 1085,
+      "uses": [
+        "ask"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1021
+    },
+    {
+      "id": "close",
+      "role": "payoff",
+      "layout": "SPLIT",
+      "fromFrame": 1085,
+      "toFrame": 1319,
+      "uses": [
+        "slab_spend",
+        "slab_send",
+        "buddy",
+        "tick"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "keyFrame": 1272
+    }
+  ],
+  "objects": [
+    {
+      "obj": "buddy",
+      "device": "cursor_buddy",
+      "meaning": "the proactive assistant as a cursor with a face, proud then sulking then behaving",
+      "fromFrame": 0,
+      "toFrame": 1319,
+      "variants": {},
+      "params": {
+        "mood": "proud"
+      }
+    },
+    {
+      "obj": "note",
+      "device": "typing_bubble",
+      "meaning": "the assistant reports a booking it made before anyone asked",
+      "fromFrame": 0,
+      "toFrame": 183,
+      "variants": {},
+      "params": {
+        "kind": "notification",
+        "rows": [
+          {
+            "text": "Done! Booked the team offsite in Ibiza"
+          }
+        ]
+      }
+    },
+    {
+      "obj": "underline",
+      "device": "scribble",
+      "meaning": "marks the word Done! in the notification",
+      "fromFrame": 0,
+      "toFrame": 183,
+      "variants": {},
+      "params": {
+        "colour": "mint",
+        "seed": "fwp",
+        "shape": "underline",
+        "target": {
+          "x": 120,
+          "y": 256,
+          "w": 126,
+          "h": 58
+        }
+      }
+    },
+    {
+      "obj": "logos",
+      "device": "logo_card",
+      "meaning": "the apps he names the assistants live inside, on equal tiles",
+      "fromFrame": 352,
+      "toFrame": 503,
+      "variants": {},
+      "params": {
+        "tiles": true,
+        "logos": [
+          {
+            "id": "Meta"
+          },
+          {
+            "id": "Amazon"
+          },
+          {
+            "id": "Google"
+          },
+          {
+            "id": "xAI"
+          },
+          {
+            "id": "Anthropic"
+          }
+        ]
+      }
+    },
+    {
+      "obj": "amazon_loop",
+      "device": "scribble",
+      "meaning": "circles Amazon as he says it",
+      "fromFrame": 352,
+      "toFrame": 503,
+      "variants": {},
+      "params": {
+        "colour": "mint",
+        "seed": "fwp",
+        "shape": "loop",
+        "target": {
+          "x": 420,
+          "y": 220,
+          "w": 240,
+          "h": 240
+        }
+      }
+    },
+    {
+      "obj": "chat",
+      "device": "typing_bubble",
+      "meaning": "the 8am reply the assistant sends for him",
+      "fromFrame": 503,
+      "toFrame": 560,
+      "variants": {},
+      "params": {
+        "kind": "chat",
+        "rows": [
+          {
+            "who": "Boss",
+            "text": "Can you join the 8am?",
+            "side": "left"
+          },
+          {
+            "who": "You",
+            "text": "Absolutely not, it's my lie-in day",
+            "side": "right"
+          }
+        ],
+        "status": "Sent"
+      }
+    },
+    {
+      "obj": "slab_spend",
+      "device": "stamp",
+      "meaning": "the first half of the rule",
+      "fromFrame": 560,
+      "toFrame": 1319,
+      "variants": {},
+      "params": {
+        "kind": "block",
+        "main": "NO SPENDING",
+        "tiltDeg": 0,
+        "at": {
+          "x": 72,
+          "y": 230,
+          "w": 828,
+          "h": 163.2
+        }
+      }
+    },
+    {
+      "obj": "slab_send",
+      "device": "stamp",
+      "meaning": "the second half of the rule",
+      "fromFrame": 560,
+      "toFrame": 1319,
+      "variants": {},
+      "params": {
+        "kind": "block",
+        "main": "NO SENDING",
+        "tiltDeg": 0,
+        "at": {
+          "x": 72,
+          "y": 440,
+          "w": 828,
+          "h": 163.2
+        }
+      }
+    },
+    {
+      "obj": "tick",
+      "device": "scribble",
+      "meaning": "ticks NO SENDING as done",
+      "fromFrame": 560,
+      "toFrame": 1319,
+      "variants": {},
+      "params": {
+        "colour": "mint",
+        "seed": "fwp",
+        "shape": "tick",
+        "cx": 926,
+        "cy": 522,
+        "size": 72
+      }
+    },
+    {
+      "obj": "ask",
+      "device": "typing_bubble",
+      "meaning": "his AI tool asking him its questions back, and his three picks",
+      "fromFrame": 767,
+      "toFrame": 1085,
+      "variants": {},
+      "params": {
+        "kind": "choice",
+        "rows": [
+          {
+            "who": "AI",
+            "text": "Before I act for you, which of these should need your yes?"
+          }
+        ],
+        "options": [
+          "Approve every individual send",
+          "Approve every financial commitment",
+          "Zero unapproved usage costs"
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "hook-0",
+      "obj": "buddy",
+      "verb": "enter",
+      "toState": "proud",
+      "atFrame": 11
+    },
+    {
+      "id": "hook-1",
+      "obj": "note",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 11
+    },
+    {
+      "id": "hook-2",
+      "obj": "note",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 27
+    },
+    {
+      "id": "hook-3",
+      "obj": "underline",
+      "verb": "draw",
+      "toState": "Done!",
+      "atFrame": 86
+    },
+    {
+      "id": "hook-4",
+      "obj": "buddy",
+      "verb": "bounce",
+      "toState": "proud",
+      "atFrame": 127
+    },
+    {
+      "id": "proof-0",
+      "obj": "logos",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 352
+    },
+    {
+      "id": "proof-1",
+      "obj": "logos",
+      "verb": "highlight",
+      "toState": "1",
+      "atFrame": 410
+    },
+    {
+      "id": "proof-2",
+      "obj": "amazon_loop",
+      "verb": "draw",
+      "toState": "Amazon",
+      "atFrame": 410
+    },
+    {
+      "id": "b4-8am-0",
+      "obj": "chat",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 503
+    },
+    {
+      "id": "b4-8am-1",
+      "obj": "chat",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 503
+    },
+    {
+      "id": "b4-8am-2",
+      "obj": "chat",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 521
+    },
+    {
+      "id": "b4-8am-3",
+      "obj": "chat",
+      "verb": "send",
+      "toState": "1",
+      "atFrame": 536
+    },
+    {
+      "id": "b5-rule-0",
+      "obj": "slab_spend",
+      "verb": "stamp",
+      "toState": "NO SPENDING",
+      "atFrame": 601
+    },
+    {
+      "id": "b5-rule-1",
+      "obj": "slab_send",
+      "verb": "stamp",
+      "toState": "NO SENDING",
+      "atFrame": 626
+    },
+    {
+      "id": "b5-rule-2",
+      "obj": "buddy",
+      "verb": "sulk",
+      "toState": "sulk",
+      "atFrame": 626
+    },
+    {
+      "id": "b5-rule-3",
+      "obj": "tick",
+      "verb": "draw",
+      "toState": "NO SENDING",
+      "atFrame": 641
+    },
+    {
+      "id": "b7-prompt-0",
+      "obj": "ask",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 855
+    },
+    {
+      "id": "b7-prompt-1",
+      "obj": "ask",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 912
+    },
+    {
+      "id": "b7-prompt-2",
+      "obj": "ask",
+      "verb": "pick",
+      "toState": "0",
+      "atFrame": 953
+    },
+    {
+      "id": "b7-prompt-3",
+      "obj": "ask",
+      "verb": "pick",
+      "toState": "1",
+      "atFrame": 967
+    },
+    {
+      "id": "b7-prompt-4",
+      "obj": "ask",
+      "verb": "pick",
+      "toState": "2",
+      "atFrame": 1016
+    },
+    {
+      "id": "b7-prompt-5",
+      "obj": "ask",
+      "verb": "send",
+      "toState": "0",
+      "atFrame": 1023
+    },
+    {
+      "id": "close-0",
+      "obj": "slab_spend",
+      "verb": "stamp",
+      "toState": "NO SPENDING",
+      "atFrame": 1115
+    },
+    {
+      "id": "close-1",
+      "obj": "slab_send",
+      "verb": "stamp",
+      "toState": "NO SENDING",
+      "atFrame": 1133
+    },
+    {
+      "id": "close-2",
+      "obj": "tick",
+      "verb": "draw",
+      "toState": "NO SENDING",
+      "atFrame": 1134
+    },
+    {
+      "id": "close-3",
+      "obj": "buddy",
+      "verb": "wave",
+      "toState": "cool",
+      "atFrame": 1204
+    }
+  ]
+}
