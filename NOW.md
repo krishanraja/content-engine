@@ -53,7 +53,7 @@ Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everyt
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-03): Krish starts the Thursday 5 Nov video sessions on main.
+- Next (2026-11-03): Thursday 5 Nov re-cut is NOT READY (Critic 5/10 captions, 4/10 look and motion; QC fails); Krish chooses the Codex device cards and a Gate 2 re-freeze, or quick-edit (`docs/plans/2026-11-05-thursday-no-spending/ve/`).
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
