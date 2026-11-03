@@ -1,0 +1,1766 @@
+# Approval packet
+
+Not yet approved: design and final, both Krish's, both by exact file hash.
+
+## short
+SHA-256: 517cdd9472636c3a5aad20df0725e7c59d1369bf045ffb103228207b2c41d90d
+
+### Measurements
+- loudness.integrated.value: -14.1
+- loudness.integrated.target: -14 ±1
+- loudness.integrated.pass: True
+- loudness.true_peak.value: -1.6
+- loudness.true_peak.target: <= -1
+- loudness.true_peak.pass: True
+- loudness.long_silence.target: none over 0.7 s below -50 dB
+- loudness.long_silence.pass: True
+- motion.change_density.value: 0.936
+- motion.change_density.target: >= 0.5
+- motion.change_density.pass: True
+- motion.longest_still.value: 3
+- motion.longest_still.target: <= 4 s
+- motion.longest_still.pass: True
+- motion.longest_still.runs[0][0]: 44
+- motion.longest_still.runs[0][1]: 3
+- motion.periodicity.value: None
+- motion.periodicity.target: no repeating loop 2-10 s
+- motion.periodicity.pass: True
+- sync.av_xcorr.value[0].segment: 0
+- sync.av_xcorr.value[0].lag_ms: 0
+- sync.av_xcorr.value[0].pass: True
+- sync.av_xcorr.value[0].correlation: 0.999994
+- sync.av_xcorr.value[1].segment: 1
+- sync.av_xcorr.value[1].lag_ms: 0
+- sync.av_xcorr.value[1].pass: True
+- sync.av_xcorr.value[1].correlation: 0.999994
+- sync.av_xcorr.value[2].segment: 2
+- sync.av_xcorr.value[2].lag_ms: 0
+- sync.av_xcorr.value[2].pass: True
+- sync.av_xcorr.value[2].correlation: 0.99998
+- sync.av_xcorr.value[3].segment: 3
+- sync.av_xcorr.value[3].lag_ms: 0
+- sync.av_xcorr.value[3].pass: True
+- sync.av_xcorr.value[3].correlation: 0.999981
+- sync.av_xcorr.value[4].segment: 4
+- sync.av_xcorr.value[4].lag_ms: 0
+- sync.av_xcorr.value[4].pass: True
+- sync.av_xcorr.value[4].correlation: 0.999988
+- sync.av_xcorr.value[5].segment: 5
+- sync.av_xcorr.value[5].lag_ms: 0
+- sync.av_xcorr.value[5].pass: True
+- sync.av_xcorr.value[5].correlation: 0.999987
+- sync.av_xcorr.value[6].segment: 6
+- sync.av_xcorr.value[6].lag_ms: 0
+- sync.av_xcorr.value[6].pass: True
+- sync.av_xcorr.value[6].correlation: 0.999988
+- sync.av_xcorr.value[7].segment: 7
+- sync.av_xcorr.value[7].lag_ms: 0
+- sync.av_xcorr.value[7].pass: True
+- sync.av_xcorr.value[7].correlation: 0.999983
+- sync.av_xcorr.target: every segment |lag| <= 33 ms; correlation >= 0.5
+- sync.av_xcorr.pass: True
+- sync.av_xcorr.status: measured
+- joins.decoder.target: RMS step <= 6 dB, click <= 6x median, spectral flux <= 0.5
+- joins.decoder.pass: True
+- joins.decoder.status: measured
+- captions.ocr.value[0].page: 0
+- captions.ocr.value[0].frame: 65
+- captions.ocr.value[0].text: Proactive Alis
+coming.
+- captions.ocr.value[0].agreement: 1.0
+- captions.ocr.value[0].variant: normalised
+- captions.ocr.value[0].pass: True
+- captions.ocr.value[1].page: 1
+- captions.ocr.value[1].frame: 109
+- captions.ocr.value[1].text: Al that does things
+before
+- captions.ocr.value[1].agreement: 1.0
+- captions.ocr.value[1].variant: raw
+- captions.ocr.value[1].pass: True
+- captions.ocr.value[2].page: 2
+- captions.ocr.value[2].frame: 134
+- captions.ocr.value[2].text: you ask offers
+- captions.ocr.value[2].agreement: 1.0
+- captions.ocr.value[2].variant: raw
+- captions.ocr.value[2].pass: True
+- captions.ocr.value[3].page: 3
+- captions.ocr.value[3].frame: 163
+- captions.ocr.value[3].text: to do things.
+- captions.ocr.value[3].agreement: 1.0
+- captions.ocr.value[3].variant: raw
+- captions.ocr.value[3].pass: True
+- captions.ocr.value[4].page: 4
+- captions.ocr.value[4].frame: 229
+- captions.ocr.value[4].text: Awesome, really
+cool features
+- captions.ocr.value[4].agreement: 1.0
+- captions.ocr.value[4].variant: raw
+- captions.ocr.value[4].pass: True
+- captions.ocr.value[5].page: 5
+- captions.ocr.value[5].frame: 282
+- captions.ocr.value[5].text: and really helpful
+- captions.ocr.value[5].agreement: 1.0
+- captions.ocr.value[5].variant: raw
+- captions.ocr.value[5].pass: True
+- captions.ocr.value[6].page: 6
+- captions.ocr.value[6].frame: 322
+- captions.ocr.value[6].text: but a bit dangerous
+because
+- captions.ocr.value[6].agreement: 1.0
+- captions.ocr.value[6].variant: normalised
+- captions.ocr.value[6].pass: True
+- captions.ocr.value[7].page: 7
+- captions.ocr.value[7].frame: 351
+- captions.ocr.value[7].text: once they're
+connected
+- captions.ocr.value[7].agreement: 1.0
+- captions.ocr.value[7].variant: raw
+- captions.ocr.value[7].pass: True
+- captions.ocr.value[8].page: 8
+- captions.ocr.value[8].frame: 394
+- captions.ocr.value[8].text: Muse into your
+WhatsApp,
+- captions.ocr.value[8].agreement: 1.0
+- captions.ocr.value[8].variant: raw
+- captions.ocr.value[8].pass: True
+- captions.ocr.value[9].page: 9
+- captions.ocr.value[9].frame: 439
+- captions.ocr.value[9].text: Amazon for your
+groceries,
+- captions.ocr.value[9].agreement: 1.0
+- captions.ocr.value[9].variant: raw
+- captions.ocr.value[9].pass: True
+- captions.ocr.value[10].page: 10
+- captions.ocr.value[10].frame: 489
+- captions.ocr.value[10].text: Google for your
+emails,
+- captions.ocr.value[10].agreement: 1.0
+- captions.ocr.value[10].variant: raw
+- captions.ocr.value[10].pass: True
+- captions.ocr.value[11].page: 11
+- captions.ocr.value[11].frame: 530
+- captions.ocr.value[11].text: it can get
+- captions.ocr.value[11].agreement: 1.0
+- captions.ocr.value[11].variant: raw
+- captions.ocr.value[11].pass: True
+- captions.ocr.value[12].page: 12
+- captions.ocr.value[12].frame: 546
+- captions.ocr.value[12].text: a bit dangerous.
+- captions.ocr.value[12].agreement: 1.0
+- captions.ocr.value[12].variant: normalised
+- captions.ocr.value[12].pass: True
+- captions.ocr.value[13].page: 13
+- captions.ocr.value[13].frame: 585
+- captions.ocr.value[13].text: So my first step
+- captions.ocr.value[13].agreement: 1.0
+- captions.ocr.value[13].variant: raw
+- captions.ocr.value[13].pass: True
+- captions.ocr.value[14].page: 14
+- captions.ocr.value[14].frame: 617
+- captions.ocr.value[14].text: is the no spending,
+- captions.ocr.value[14].agreement: 1.0
+- captions.ocr.value[14].variant: normalised
+- captions.ocr.value[14].pass: True
+- captions.ocr.value[15].page: 15
+- captions.ocr.value[15].frame: 644
+- captions.ocr.value[15].text: no sending rule.
+- captions.ocr.value[15].agreement: 1.0
+- captions.ocr.value[15].variant: normalised
+- captions.ocr.value[15].pass: True
+- captions.ocr.value[16].page: 16
+- captions.ocr.value[16].frame: 682
+- captions.ocr.value[16].text: it doesn't spend my
+money,
+- captions.ocr.value[16].agreement: 1.0
+- captions.ocr.value[16].variant: raw
+- captions.ocr.value[16].pass: True
+- captions.ocr.value[17].page: 17
+- captions.ocr.value[17].frame: 716
+- captions.ocr.value[17].text: doesn't send
+anything
+- captions.ocr.value[17].agreement: 1.0
+- captions.ocr.value[17].variant: raw
+- captions.ocr.value[17].pass: True
+- captions.ocr.value[18].page: 18
+- captions.ocr.value[18].frame: 737
+- captions.ocr.value[18].text: out for me unless
+- captions.ocr.value[18].agreement: 1.0
+- captions.ocr.value[18].variant: raw
+- captions.ocr.value[18].pass: True
+- captions.ocr.value[19].page: 19
+- captions.ocr.value[19].frame: 758
+- captions.ocr.value[19].text: I say so.
+- captions.ocr.value[19].agreement: 1.0
+- captions.ocr.value[19].variant: raw
+- captions.ocr.value[19].pass: True
+- captions.ocr.value[20].page: 20
+- captions.ocr.value[20].frame: 780
+- captions.ocr.value[20].text: And the fun part
+- captions.ocr.value[20].agreement: 1.0
+- captions.ocr.value[20].variant: raw
+- captions.ocr.value[20].pass: True
+- captions.ocr.value[21].page: 21
+- captions.ocr.value[21].frame: 803
+- captions.ocr.value[21].text: is I didn't even
+- captions.ocr.value[21].agreement: 1.0
+- captions.ocr.value[21].variant: raw
+- captions.ocr.value[21].pass: True
+- captions.ocr.value[22].page: 22
+- captions.ocr.value[22].frame: 836
+- captions.ocr.value[22].text: write this myself.
+- captions.ocr.value[22].agreement: 1.0
+- captions.ocr.value[22].variant: raw
+- captions.ocr.value[22].pass: True
+- captions.ocr.value[23].page: 23
+- captions.ocr.value[23].frame: 871
+- captions.ocr.value[23].text: Ijust put one prompt
+- captions.ocr.value[23].agreement: 1.0
+- captions.ocr.value[23].variant: normalised
+- captions.ocr.value[23].pass: True
+- captions.ocr.value[24].page: 24
+- captions.ocr.value[24].frame: 890
+- captions.ocr.value[24].text: into my Al
+- captions.ocr.value[24].agreement: 1.0
+- captions.ocr.value[24].variant: raw
+- captions.ocr.value[24].pass: True
+- captions.ocr.value[25].page: 25
+- captions.ocr.value[25].frame: 917
+- captions.ocr.value[25].text: tool and it started
+asking
+- captions.ocr.value[25].agreement: 1.0
+- captions.ocr.value[25].variant: raw
+- captions.ocr.value[25].pass: True
+- captions.ocr.value[26].page: 26
+- captions.ocr.value[26].frame: 945
+- captions.ocr.value[26].text: me questions back,
+- captions.ocr.value[26].agreement: 1.0
+- captions.ocr.value[26].variant: raw
+- captions.ocr.value[26].pass: True
+- captions.ocr.value[27].page: 27
+- captions.ocr.value[27].frame: 980
+- captions.ocr.value[27].text: then it locks itself
+- captions.ocr.value[27].agreement: 1.0
+- captions.ocr.value[27].variant: raw
+- captions.ocr.value[27].pass: True
+- captions.ocr.value[28].page: 28
+- captions.ocr.value[28].frame: 998
+- captions.ocr.value[28].text: down or tells
+- captions.ocr.value[28].agreement: 1.0
+- captions.ocr.value[28].variant: raw
+- captions.ocr.value[28].pass: True
+- captions.ocr.value[29].page: 29
+- captions.ocr.value[29].frame: 1016
+- captions.ocr.value[29].text: you how to lock
+- captions.ocr.value[29].agreement: 1.0
+- captions.ocr.value[29].variant: raw
+- captions.ocr.value[29].pass: True
+- captions.ocr.value[30].page: 30
+- captions.ocr.value[30].frame: 1031
+- captions.ocr.value[30].text: it down.
+- captions.ocr.value[30].agreement: 1.0
+- captions.ocr.value[30].variant: raw
+- captions.ocr.value[30].pass: True
+- captions.ocr.value[31].page: 31
+- captions.ocr.value[31].frame: 1070
+- captions.ocr.value[31].text: Prompt's in the
+comments,
+- captions.ocr.value[31].agreement: 1.0
+- captions.ocr.value[31].variant: raw
+- captions.ocr.value[31].pass: True
+- captions.ocr.value[32].page: 32
+- captions.ocr.value[32].frame: 1108
+- captions.ocr.value[32].text: make sure you do
+this,
+- captions.ocr.value[32].agreement: 1.0
+- captions.ocr.value[32].variant: raw
+- captions.ocr.value[32].pass: True
+- captions.ocr.value[33].page: 33
+- captions.ocr.value[33].frame: 1122
+- captions.ocr.value[33].text: no spending,
+- captions.ocr.value[33].agreement: 1.0
+- captions.ocr.value[33].variant: normalised
+- captions.ocr.value[33].pass: True
+- captions.ocr.value[34].page: 34
+- captions.ocr.value[34].frame: 1139
+- captions.ocr.value[34].text: no sending,
+- captions.ocr.value[34].agreement: 1.0
+- captions.ocr.value[34].variant: normalised
+- captions.ocr.value[34].pass: True
+- captions.ocr.value[35].page: 35
+- captions.ocr.value[35].frame: 1163
+- captions.ocr.value[35].text: one easy step
+- captions.ocr.value[35].agreement: 1.0
+- captions.ocr.value[35].variant: raw
+- captions.ocr.value[35].pass: True
+- captions.ocr.value[36].page: 36
+- captions.ocr.value[36].frame: 1193
+- captions.ocr.value[36].text: so you can save
+yourself
+- captions.ocr.value[36].agreement: 1.0
+- captions.ocr.value[36].variant: raw
+- captions.ocr.value[36].pass: True
+- captions.ocr.value[37].page: 37
+- captions.ocr.value[37].frame: 1237
+- captions.ocr.value[37].text: and enjoy these new
+technologies
+- captions.ocr.value[37].agreement: 1.0
+- captions.ocr.value[37].variant: raw
+- captions.ocr.value[37].pass: True
+- captions.ocr.value[38].page: 38
+- captions.ocr.value[38].frame: 1276
+- captions.ocr.value[38].text: without any of those
+weird
+- captions.ocr.value[38].agreement: 1.0
+- captions.ocr.value[38].variant: raw
+- captions.ocr.value[38].pass: True
+- captions.ocr.value[39].page: 39
+- captions.ocr.value[39].frame: 1309
+- captions.ocr.value[39].text: moments or fails.
+- captions.ocr.value[39].agreement: 1.0
+- captions.ocr.value[39].variant: raw
+- captions.ocr.value[39].pass: True
+- captions.ocr.target: token agreement >= 0.98 on every page
+- captions.ocr.pass: True
+- captions.ocr.status: measured
+- brand.mark_tile.value[0].beat: hook
+- brand.mark_tile.value[0].frame: 87
+- brand.mark_tile.value[0].score: 0.9784497601514062
+- brand.mark_tile.value[0].pass: True
+- brand.mark_tile.value[1].beat: face
+- brand.mark_tile.value[1].frame: 270
+- brand.mark_tile.value[1].score: 0.9780565886802044
+- brand.mark_tile.value[1].pass: True
+- brand.mark_tile.value[2].beat: proof
+- brand.mark_tile.value[2].frame: 434
+- brand.mark_tile.value[2].score: 0.9780579008893497
+- brand.mark_tile.value[2].pass: True
+- brand.mark_tile.value[3].beat: b4-8am
+- brand.mark_tile.value[3].frame: 528
+- brand.mark_tile.value[3].score: 0.978012170120297
+- brand.mark_tile.value[3].pass: True
+- brand.mark_tile.value[4].beat: b5-rule
+- brand.mark_tile.value[4].frame: 599
+- brand.mark_tile.value[4].score: 0.9785270367007923
+- brand.mark_tile.value[4].pass: True
+- brand.mark_tile.value[5].beat: own-words
+- brand.mark_tile.value[5].frame: 704
+- brand.mark_tile.value[5].score: 0.9780199545085976
+- brand.mark_tile.value[5].pass: True
+- brand.mark_tile.value[6].beat: b7-prompt
+- brand.mark_tile.value[6].frame: 924
+- brand.mark_tile.value[6].score: 0.9780297433036134
+- brand.mark_tile.value[6].pass: True
+- brand.mark_tile.value[7].beat: close
+- brand.mark_tile.value[7].frame: 1254
+- brand.mark_tile.value[7].score: 0.9784811792446821
+- brand.mark_tile.value[7].pass: True
+- brand.mark_tile.target: mark NCC >= 0.8 at every beat midpoint
+- brand.mark_tile.pass: True
+- brand.mark_tile.status: measured
+- motion.cue_sync.value[0].event: hook-0
+- motion.cue_sync.value[0].atFrame: 0
+- motion.cue_sync.value[0].peak_frame: 4
+- motion.cue_sync.value[0].lag_frames: 4
+- motion.cue_sync.value[0].peak_difference: 0.1876591145992279
+- motion.cue_sync.value[0].event_difference: 0.16993489861488342
+- motion.cue_sync.value[0].threshold: 1e-06
+- motion.cue_sync.value[0].gradual: False
+- motion.cue_sync.value[0].pass: True
+- motion.cue_sync.value[1].event: hook-1
+- motion.cue_sync.value[1].atFrame: 0
+- motion.cue_sync.value[1].peak_frame: 5
+- motion.cue_sync.value[1].lag_frames: 5
+- motion.cue_sync.value[1].peak_difference: 0.000535768223926425
+- motion.cue_sync.value[1].event_difference: 0.00021943698811810464
+- motion.cue_sync.value[1].threshold: 1e-06
+- motion.cue_sync.value[1].gradual: False
+- motion.cue_sync.value[1].pass: True
+- motion.cue_sync.value[2].event: hook-2
+- motion.cue_sync.value[2].atFrame: 0
+- motion.cue_sync.value[2].peak_frame: 5
+- motion.cue_sync.value[2].lag_frames: 5
+- motion.cue_sync.value[2].peak_difference: 0.000535768223926425
+- motion.cue_sync.value[2].event_difference: 0.00021943698811810464
+- motion.cue_sync.value[2].threshold: 1e-06
+- motion.cue_sync.value[2].gradual: True
+- motion.cue_sync.value[2].pass: True
+- motion.cue_sync.value[3].event: hook-3
+- motion.cue_sync.value[3].atFrame: 88
+- motion.cue_sync.value[3].peak_frame: 89
+- motion.cue_sync.value[3].lag_frames: 1
+- motion.cue_sync.value[3].peak_difference: 19.639318466186523
+- motion.cue_sync.value[3].event_difference: 19.639318466186523
+- motion.cue_sync.value[3].threshold: 1e-06
+- motion.cue_sync.value[3].gradual: False
+- motion.cue_sync.value[3].pass: True
+- motion.cue_sync.value[4].event: hook-4
+- motion.cue_sync.value[4].atFrame: 128
+- motion.cue_sync.value[4].peak_frame: 129
+- motion.cue_sync.value[4].lag_frames: 1
+- motion.cue_sync.value[4].peak_difference: 3.713886022567749
+- motion.cue_sync.value[4].event_difference: 3.713886022567749
+- motion.cue_sync.value[4].threshold: 0.23446699976921082
+- motion.cue_sync.value[4].gradual: False
+- motion.cue_sync.value[4].pass: True
+- motion.cue_sync.value[5].event: proof-0
+- motion.cue_sync.value[5].atFrame: 366
+- motion.cue_sync.value[5].peak_frame: 366
+- motion.cue_sync.value[5].lag_frames: 0
+- motion.cue_sync.value[5].peak_difference: 71.57819366455078
+- motion.cue_sync.value[5].event_difference: 71.57819366455078
+- motion.cue_sync.value[5].threshold: 1.943749487400055
+- motion.cue_sync.value[5].gradual: False
+- motion.cue_sync.value[5].pass: True
+- motion.cue_sync.value[6].event: proof-1
+- motion.cue_sync.value[6].atFrame: 402
+- motion.cue_sync.value[6].peak_frame: 403
+- motion.cue_sync.value[6].lag_frames: 1
+- motion.cue_sync.value[6].peak_difference: 3.4516077041625977
+- motion.cue_sync.value[6].event_difference: 3.4516077041625977
+- motion.cue_sync.value[6].threshold: 0.011045239632949233
+- motion.cue_sync.value[6].gradual: False
+- motion.cue_sync.value[6].pass: True
+- motion.cue_sync.value[7].event: proof-2
+- motion.cue_sync.value[7].atFrame: 412
+- motion.cue_sync.value[7].peak_frame: 413
+- motion.cue_sync.value[7].lag_frames: 1
+- motion.cue_sync.value[7].peak_difference: 8.89851188659668
+- motion.cue_sync.value[7].event_difference: 8.89851188659668
+- motion.cue_sync.value[7].threshold: 0.014004291035234928
+- motion.cue_sync.value[7].gradual: False
+- motion.cue_sync.value[7].pass: True
+- motion.cue_sync.value[8].event: proof-3
+- motion.cue_sync.value[8].atFrame: 458
+- motion.cue_sync.value[8].peak_frame: 458
+- motion.cue_sync.value[8].lag_frames: 0
+- motion.cue_sync.value[8].peak_difference: 4.277260780334473
+- motion.cue_sync.value[8].event_difference: 4.277260780334473
+- motion.cue_sync.value[8].threshold: 0.007853403221815825
+- motion.cue_sync.value[8].gradual: False
+- motion.cue_sync.value[8].pass: True
+- motion.cue_sync.value[9].event: proof-4
+- motion.cue_sync.value[9].atFrame: 458
+- motion.cue_sync.value[9].peak_frame: 459
+- motion.cue_sync.value[9].lag_frames: 1
+- motion.cue_sync.value[9].peak_difference: 11.759587287902832
+- motion.cue_sync.value[9].event_difference: 11.759587287902832
+- motion.cue_sync.value[9].threshold: 0.0009587289823684841
+- motion.cue_sync.value[9].gradual: False
+- motion.cue_sync.value[9].pass: True
+- motion.cue_sync.value[10].event: b4-8am-0
+- motion.cue_sync.value[10].atFrame: 504
+- motion.cue_sync.value[10].peak_frame: 504
+- motion.cue_sync.value[10].lag_frames: 0
+- motion.cue_sync.value[10].peak_difference: 7.427957057952881
+- motion.cue_sync.value[10].event_difference: 7.427957057952881
+- motion.cue_sync.value[10].threshold: 0.009758301079273224
+- motion.cue_sync.value[10].gradual: False
+- motion.cue_sync.value[10].pass: True
+- motion.cue_sync.value[11].event: b4-8am-1
+- motion.cue_sync.value[11].atFrame: 504
+- motion.cue_sync.value[11].peak_frame: 504
+- motion.cue_sync.value[11].lag_frames: 0
+- motion.cue_sync.value[11].peak_difference: 7.427957057952881
+- motion.cue_sync.value[11].event_difference: 7.427957057952881
+- motion.cue_sync.value[11].threshold: 1e-06
+- motion.cue_sync.value[11].gradual: True
+- motion.cue_sync.value[11].pass: True
+- motion.cue_sync.value[12].event: b4-8am-2
+- motion.cue_sync.value[12].atFrame: 528
+- motion.cue_sync.value[12].peak_frame: 534
+- motion.cue_sync.value[12].lag_frames: 6
+- motion.cue_sync.value[12].peak_difference: 5.2840776443481445
+- motion.cue_sync.value[12].event_difference: 3.374826192855835
+- motion.cue_sync.value[12].threshold: 1e-06
+- motion.cue_sync.value[12].gradual: True
+- motion.cue_sync.value[12].pass: True
+- motion.cue_sync.value[13].event: b4-8am-3
+- motion.cue_sync.value[13].atFrame: 534
+- motion.cue_sync.value[13].peak_frame: 534
+- motion.cue_sync.value[13].lag_frames: 0
+- motion.cue_sync.value[13].peak_difference: 5.2840776443481445
+- motion.cue_sync.value[13].event_difference: 5.2840776443481445
+- motion.cue_sync.value[13].threshold: 1e-06
+- motion.cue_sync.value[13].gradual: True
+- motion.cue_sync.value[13].pass: True
+- motion.cue_sync.value[14].event: b5-rule-0
+- motion.cue_sync.value[14].atFrame: 594
+- motion.cue_sync.value[14].peak_frame: 598
+- motion.cue_sync.value[14].lag_frames: 4
+- motion.cue_sync.value[14].peak_difference: 25.552980422973633
+- motion.cue_sync.value[14].event_difference: 5.88916015625
+- motion.cue_sync.value[14].threshold: 0.002070627291686833
+- motion.cue_sync.value[14].gradual: False
+- motion.cue_sync.value[14].pass: True
+- motion.cue_sync.value[15].event: b5-rule-1
+- motion.cue_sync.value[15].atFrame: 598
+- motion.cue_sync.value[15].peak_frame: 598
+- motion.cue_sync.value[15].lag_frames: 0
+- motion.cue_sync.value[15].peak_difference: 62.50678253173828
+- motion.cue_sync.value[15].event_difference: 62.50678253173828
+- motion.cue_sync.value[15].threshold: 0.0009231242293026298
+- motion.cue_sync.value[15].gradual: False
+- motion.cue_sync.value[15].pass: True
+- motion.cue_sync.value[16].event: b5-rule-2
+- motion.cue_sync.value[16].atFrame: 625
+- motion.cue_sync.value[16].peak_frame: 625
+- motion.cue_sync.value[16].lag_frames: 0
+- motion.cue_sync.value[16].peak_difference: 25.786571502685547
+- motion.cue_sync.value[16].event_difference: 25.786571502685547
+- motion.cue_sync.value[16].threshold: 0.08997837267816067
+- motion.cue_sync.value[16].gradual: False
+- motion.cue_sync.value[16].pass: True
+- motion.cue_sync.value[17].event: b5-rule-3
+- motion.cue_sync.value[17].atFrame: 625
+- motion.cue_sync.value[17].peak_frame: 625
+- motion.cue_sync.value[17].lag_frames: 0
+- motion.cue_sync.value[17].peak_difference: 60.32510757446289
+- motion.cue_sync.value[17].event_difference: 60.32510757446289
+- motion.cue_sync.value[17].threshold: 0.0005000256205676123
+- motion.cue_sync.value[17].gradual: False
+- motion.cue_sync.value[17].pass: True
+- motion.cue_sync.value[18].event: b5-rule-4
+- motion.cue_sync.value[18].atFrame: 642
+- motion.cue_sync.value[18].peak_frame: 646
+- motion.cue_sync.value[18].lag_frames: 4
+- motion.cue_sync.value[18].peak_difference: 73.78125
+- motion.cue_sync.value[18].event_difference: 9.221866607666016
+- motion.cue_sync.value[18].threshold: 1e-06
+- motion.cue_sync.value[18].gradual: False
+- motion.cue_sync.value[18].pass: True
+- motion.cue_sync.value[19].event: b7-prompt-0
+- motion.cue_sync.value[19].atFrame: 885
+- motion.cue_sync.value[19].peak_frame: 891
+- motion.cue_sync.value[19].lag_frames: 6
+- motion.cue_sync.value[19].peak_difference: 27.34539031982422
+- motion.cue_sync.value[19].event_difference: 10.0495023727417
+- motion.cue_sync.value[19].threshold: 1e-06
+- motion.cue_sync.value[19].gradual: False
+- motion.cue_sync.value[19].pass: True
+- motion.cue_sync.value[20].event: b7-prompt-1
+- motion.cue_sync.value[20].atFrame: 885
+- motion.cue_sync.value[20].peak_frame: 891
+- motion.cue_sync.value[20].lag_frames: 6
+- motion.cue_sync.value[20].peak_difference: 32.21915054321289
+- motion.cue_sync.value[20].event_difference: 5.327517032623291
+- motion.cue_sync.value[20].threshold: 1e-06
+- motion.cue_sync.value[20].gradual: False
+- motion.cue_sync.value[20].pass: True
+- motion.cue_sync.value[21].event: b7-prompt-2
+- motion.cue_sync.value[21].atFrame: 885
+- motion.cue_sync.value[21].peak_frame: 891
+- motion.cue_sync.value[21].lag_frames: 6
+- motion.cue_sync.value[21].peak_difference: 14.3631010055542
+- motion.cue_sync.value[21].event_difference: 2.6551637649536133
+- motion.cue_sync.value[21].threshold: 1e-06
+- motion.cue_sync.value[21].gradual: False
+- motion.cue_sync.value[21].pass: True
+- motion.cue_sync.value[22].event: b7-prompt-3
+- motion.cue_sync.value[22].atFrame: 885
+- motion.cue_sync.value[22].peak_frame: 891
+- motion.cue_sync.value[22].lag_frames: 6
+- motion.cue_sync.value[22].peak_difference: 10.914019584655762
+- motion.cue_sync.value[22].event_difference: 2.8277363777160645
+- motion.cue_sync.value[22].threshold: 1e-06
+- motion.cue_sync.value[22].gradual: False
+- motion.cue_sync.value[22].pass: True
+- motion.cue_sync.value[23].event: b7-prompt-4
+- motion.cue_sync.value[23].atFrame: 899
+- motion.cue_sync.value[23].peak_frame: 899
+- motion.cue_sync.value[23].lag_frames: 0
+- motion.cue_sync.value[23].peak_difference: 3.961697816848755
+- motion.cue_sync.value[23].event_difference: 3.961697816848755
+- motion.cue_sync.value[23].threshold: 1e-06
+- motion.cue_sync.value[23].gradual: True
+- motion.cue_sync.value[23].pass: True
+- motion.cue_sync.value[24].event: b7-prompt-5
+- motion.cue_sync.value[24].atFrame: 953
+- motion.cue_sync.value[24].peak_frame: 953
+- motion.cue_sync.value[24].lag_frames: 0
+- motion.cue_sync.value[24].peak_difference: 2.5076935291290283
+- motion.cue_sync.value[24].event_difference: 2.5076935291290283
+- motion.cue_sync.value[24].threshold: 1e-06
+- motion.cue_sync.value[24].gradual: True
+- motion.cue_sync.value[24].pass: True
+- motion.cue_sync.value[25].event: b7-prompt-6
+- motion.cue_sync.value[25].atFrame: 966
+- motion.cue_sync.value[25].peak_frame: 966
+- motion.cue_sync.value[25].lag_frames: 0
+- motion.cue_sync.value[25].peak_difference: 4.231561183929443
+- motion.cue_sync.value[25].event_difference: 4.231561183929443
+- motion.cue_sync.value[25].threshold: 1e-06
+- motion.cue_sync.value[25].gradual: True
+- motion.cue_sync.value[25].pass: True
+- motion.cue_sync.value[26].event: b7-prompt-7
+- motion.cue_sync.value[26].atFrame: 1014
+- motion.cue_sync.value[26].peak_frame: 1012
+- motion.cue_sync.value[26].lag_frames: -2
+- motion.cue_sync.value[26].peak_difference: 5.585724830627441
+- motion.cue_sync.value[26].event_difference: 5.585724830627441
+- motion.cue_sync.value[26].threshold: 1e-06
+- motion.cue_sync.value[26].gradual: True
+- motion.cue_sync.value[26].pass: True
+- motion.cue_sync.value[27].event: b7-prompt-8
+- motion.cue_sync.value[27].atFrame: 1021
+- motion.cue_sync.value[27].peak_frame: 1021
+- motion.cue_sync.value[27].lag_frames: 0
+- motion.cue_sync.value[27].peak_difference: 5.270995616912842
+- motion.cue_sync.value[27].event_difference: 5.270995616912842
+- motion.cue_sync.value[27].threshold: 1e-06
+- motion.cue_sync.value[27].gradual: True
+- motion.cue_sync.value[27].pass: True
+- motion.cue_sync.value[28].event: close-0
+- motion.cue_sync.value[28].atFrame: 1112
+- motion.cue_sync.value[28].peak_frame: 1112
+- motion.cue_sync.value[28].lag_frames: 0
+- motion.cue_sync.value[28].peak_difference: 62.254180908203125
+- motion.cue_sync.value[28].event_difference: 62.254180908203125
+- motion.cue_sync.value[28].threshold: 1e-06
+- motion.cue_sync.value[28].gradual: False
+- motion.cue_sync.value[28].pass: True
+- motion.cue_sync.value[29].event: close-1
+- motion.cue_sync.value[29].atFrame: 1128
+- motion.cue_sync.value[29].peak_frame: 1128
+- motion.cue_sync.value[29].lag_frames: 0
+- motion.cue_sync.value[29].peak_difference: 60.31525802612305
+- motion.cue_sync.value[29].event_difference: 60.31525802612305
+- motion.cue_sync.value[29].threshold: 1e-06
+- motion.cue_sync.value[29].gradual: False
+- motion.cue_sync.value[29].pass: True
+- motion.cue_sync.value[30].event: close-2
+- motion.cue_sync.value[30].atFrame: 1134
+- motion.cue_sync.value[30].peak_frame: 1128
+- motion.cue_sync.value[30].lag_frames: -6
+- motion.cue_sync.value[30].peak_difference: 48.15259552001953
+- motion.cue_sync.value[30].event_difference: 9.218668937683105
+- motion.cue_sync.value[30].threshold: 1e-06
+- motion.cue_sync.value[30].gradual: False
+- motion.cue_sync.value[30].pass: True
+- motion.cue_sync.value[31].event: close-3
+- motion.cue_sync.value[31].atFrame: 1201
+- motion.cue_sync.value[31].peak_frame: 1202
+- motion.cue_sync.value[31].lag_frames: 1
+- motion.cue_sync.value[31].peak_difference: 4.509030342102051
+- motion.cue_sync.value[31].event_difference: 4.509030342102051
+- motion.cue_sync.value[31].threshold: 0.08107426017522812
+- motion.cue_sync.value[31].gradual: False
+- motion.cue_sync.value[31].pass: True
+- motion.cue_sync.target: change within +/-2 frames > max(FLOOR, 3x median of previous 15 frames)
+- motion.cue_sync.pass: True
+- motion.cue_sync.status: measured
+- audio.bed.value[0].check: bed present
+- audio.bed.value[0].value: True
+- audio.bed.value[0].pass: True
+- audio.bed.value[1].check: under speech
+- audio.bed.value[1].value: -17.13
+- audio.bed.value[1].target: -21.0 to -12.0 dB re voice
+- audio.bed.value[1].pass: True
+- audio.bed.value[2].check: true peak
+- audio.bed.value[2].value: -1.69
+- audio.bed.value[2].target: <= -1.0 dBTP
+- audio.bed.value[2].pass: True
+- audio.bed.value[3].check: a steady bed
+- audio.bed.value[3].value: episode_bed
+- audio.bed.value[3].target: episode_bed or continuous
+- audio.bed.value[3].pass: True
+- audio.bed.value[4].check: bed level in the master
+- audio.bed.value[4].value: -32.0
+- audio.bed.value[4].target: -31 ±1.5 LUFS short-term median
+- audio.bed.value[4].pass: True
+- audio.bed.value[5].check: bed holds one level
+- audio.bed.value[5].value: 3.9
+- audio.bed.value[5].target: <= 4.0 LU short-term p95-p5 outside lifts
+- audio.bed.value[5].pass: True
+- audio.bed.value[6].check: bed never swells or sags
+- audio.bed.value[6].value: 2.9
+- audio.bed.value[6].target: <= 3.0 LU from the median, held 1.0 s, outside lifts
+- audio.bed.value[6].pass: True
+- audio.bed.value[7].check: bed never drops out
+- audio.bed.value[7].target: no 0.25 s 15 dB under its own running level (50 ms windows)
+- audio.bed.value[7].pass: True
+- audio.bed.target: bed present, under speech in range, true peak, (ducked) breathing in pauses, (episode) one steady level with no drop-outs
+- audio.bed.pass: True
+- audio.bed.status: measured
+- audio.bed_continuity.target: no 0.25 s under -49.0 dBFS (50 ms RMS) from 1.5 to 46.0 s
+- audio.bed_continuity.pass: True
+- audio.bed_continuity.status: measured
+- words.lost.value.machine: scripts/quick-edit/words_gate.py
+- words.lost.value.version: words-gate/4
+- words.lost.value.status: pass
+- words.lost.value.adlib_losses[0].word: Prompts
+- words.lost.value.adlib_losses[0].token: prompts
+- words.lost.value.adlib_losses[0].take_index: 114
+- words.lost.value.adlib_losses[0].take_s: 35.553
+- words.lost.value.adlib_losses[0].take_e: 35.853
+- words.lost.value.adlib_losses[0].final_between_s[0]: 34.187
+- words.lost.value.adlib_losses[0].final_between_s[1]: 34.987
+- words.lost.value.adlib_losses[0].context: ... to lock it down. [Prompts] in the comments, make ...
+- words.lost.value.adlib_losses[0].final_heard_there: Prompt's
+- words.lost.value.added_in_final[0].word: Prompt's
+- words.lost.value.added_in_final[0].final_s: 34.647
+- words.lost.value.calibration.status: uncalibrated
+- words.lost.value.calibration.note: OPEN until calibrated on real cuts (plan W3 3a): Monday 26 Oct's accepted long and short must pass; Wednesday 21 Oct's published long cut and Friday's 90-second cut from the 17 Oct words file must fail. A clipped tail the transcriber still hears whole is caught by joins-in-gaps (scripts/cutgates/gaps.py). The harness is scripts/cutgates/calibrate.py on config/gate-calibration.json.
+- words.lost.value.counts.script_words: 148
+- words.lost.value.counts.take_words: 148
+- words.lost.value.counts.final_words: 148
+- words.lost.value.counts.removed_by_edl: 0
+- words.lost.value.counts.compared: 148
+- words.lost.value.counts.take_tokens_not_in_script: 1
+- words.lost.value.counts.script_content_words_not_said_in_take: 0
+- words.lost.value.counts.lost: 0
+- words.lost.value.counts.unapproved_removals: 0
+- words.lost.value.counts.cleared_by_krish: 0
+- words.lost.value.counts.unmeasured: 0
+- words.lost.value.counts.near_homophones: 0
+- words.lost.value.counts.function_word_differences: 0
+- words.lost.value.counts.adlib_losses: 1
+- words.lost.value.counts.heard_by_one_aligner: 0
+- words.lost.value.aligners[0]: mms
+- words.lost.value.aligners[1]: w2v
+- words.lost.value.agreement: 2 aligners
+- words.lost.value.per_aligner.mms.status: pass
+- words.lost.value.per_aligner.w2v.status: pass
+- words.lost.target: no content word of the signed script lost on every aligner's pass
+- words.lost.pass: True
+- words.lost.status: measured
+- words.lost.agreement: 2 aligners
+- words.lost.summary: no content word lost
+- joins.in_gaps.value.machine: scripts/cutgates/gaps.py
+- joins.in_gaps.value.version: joins-in-gaps/1
+- joins.in_gaps.value.rule.min_gap_ms: 80.0
+- joins.in_gaps.value.rule.clearance_ms: 30.0
+- joins.in_gaps.value.aligners[0]: mms
+- joins.in_gaps.value.aligners[1]: w2v
+- joins.in_gaps.value.agreement: 2 aligners
+- joins.in_gaps.value.status: pass
+- joins.in_gaps.target: every join in an agreed gap >= 80 ms, 30 ms clear each side
+- joins.in_gaps.pass: True
+- joins.in_gaps.status: measured
+- joins.in_gaps.agreement: 2 aligners
+- joins.in_gaps.summary: every join is in an agreed gap (2 aligners)
+- captions.clock.value.machine: scripts/cutgates/captions.py
+- captions.clock.value.version: captions/1
+- captions.clock.value.part: clock
+- captions.clock.value.drawn_by: mms
+- captions.clock.value.heard_by: w2v
+- captions.clock.value.independent: True
+- captions.clock.value.agreement: heard by the aligner that did not draw the captions
+- captions.clock.value.tolerance_frames: 2
+- captions.clock.value.tolerance_status: placeholder, to be measured on Monday 26
+- captions.clock.value.pages[0].page: 0
+- captions.clock.value.pages[0].fromFrame: 4
+- captions.clock.value.pages[0].text: Proactive AI is coming.
+- captions.clock.value.pages[0].heard_word: Proactive
+- captions.clock.value.pages[0].heard_s: 0.16
+- captions.clock.value.pages[0].heard_frame: 5
+- captions.clock.value.pages[0].delta_frames: -1
+- captions.clock.value.pages[0].matched_exactly: True
+- captions.clock.value.pages[0].status: pass
+- captions.clock.value.pages[1].page: 1
+- captions.clock.value.pages[1].fromFrame: 71
+- captions.clock.value.pages[1].text: AI that does things before
+- captions.clock.value.pages[1].heard_word: AI
+- captions.clock.value.pages[1].heard_s: 2.38
+- captions.clock.value.pages[1].heard_frame: 71
+- captions.clock.value.pages[1].delta_frames: 0
+- captions.clock.value.pages[1].matched_exactly: True
+- captions.clock.value.pages[1].status: pass
+- captions.clock.value.pages[2].page: 2
+- captions.clock.value.pages[2].fromFrame: 113
+- captions.clock.value.pages[2].text: you ask offers
+- captions.clock.value.pages[2].heard_word: you
+- captions.clock.value.pages[2].heard_s: 3.761
+- captions.clock.value.pages[2].heard_frame: 113
+- captions.clock.value.pages[2].delta_frames: 0
+- captions.clock.value.pages[2].matched_exactly: True
+- captions.clock.value.pages[2].status: pass
+- captions.clock.value.pages[3].page: 3
+- captions.clock.value.pages[3].fromFrame: 140
+- captions.clock.value.pages[3].text: to do things.
+- captions.clock.value.pages[3].heard_word: to
+- captions.clock.value.pages[3].heard_s: 4.661
+- captions.clock.value.pages[3].heard_frame: 140
+- captions.clock.value.pages[3].delta_frames: 0
+- captions.clock.value.pages[3].matched_exactly: True
+- captions.clock.value.pages[3].status: pass
+- captions.clock.value.pages[4].page: 4
+- captions.clock.value.pages[4].fromFrame: 176
+- captions.clock.value.pages[4].text: Awesome, really cool features
+- captions.clock.value.pages[4].heard_word: Awesome,
+- captions.clock.value.pages[4].heard_s: 5.901
+- captions.clock.value.pages[4].heard_frame: 177
+- captions.clock.value.pages[4].delta_frames: -1
+- captions.clock.value.pages[4].matched_exactly: True
+- captions.clock.value.pages[4].status: pass
+- captions.clock.value.pages[5].page: 5
+- captions.clock.value.pages[5].fromFrame: 240
+- captions.clock.value.pages[5].text: and really helpful
+- captions.clock.value.pages[5].heard_word: and
+- captions.clock.value.pages[5].heard_s: 8.042
+- captions.clock.value.pages[5].heard_frame: 241
+- captions.clock.value.pages[5].delta_frames: -1
+- captions.clock.value.pages[5].matched_exactly: True
+- captions.clock.value.pages[5].status: pass
+- captions.clock.value.pages[6].page: 6
+- captions.clock.value.pages[6].fromFrame: 295
+- captions.clock.value.pages[6].text: but a bit dangerous because
+- captions.clock.value.pages[6].heard_word: but
+- captions.clock.value.pages[6].heard_s: 9.822
+- captions.clock.value.pages[6].heard_frame: 295
+- captions.clock.value.pages[6].delta_frames: 0
+- captions.clock.value.pages[6].matched_exactly: True
+- captions.clock.value.pages[6].status: pass
+- captions.clock.value.pages[7].page: 7
+- captions.clock.value.pages[7].fromFrame: 325
+- captions.clock.value.pages[7].text: once they're connected
+- captions.clock.value.pages[7].heard_word: once
+- captions.clock.value.pages[7].heard_s: 10.862
+- captions.clock.value.pages[7].heard_frame: 326
+- captions.clock.value.pages[7].delta_frames: -1
+- captions.clock.value.pages[7].matched_exactly: True
+- captions.clock.value.pages[7].status: pass
+- captions.clock.value.pages[8].page: 8
+- captions.clock.value.pages[8].fromFrame: 366
+- captions.clock.value.pages[8].text: Muse into your WhatsApp,
+- captions.clock.value.pages[8].heard_word: Muse
+- captions.clock.value.pages[8].heard_s: 12.202
+- captions.clock.value.pages[8].heard_frame: 366
+- captions.clock.value.pages[8].delta_frames: 0
+- captions.clock.value.pages[8].matched_exactly: True
+- captions.clock.value.pages[8].status: pass
+- captions.clock.value.pages[9].page: 9
+- captions.clock.value.pages[9].fromFrame: 402
+- captions.clock.value.pages[9].text: Amazon for your groceries,
+- captions.clock.value.pages[9].heard_word: Amazon
+- captions.clock.value.pages[9].heard_s: 13.423
+- captions.clock.value.pages[9].heard_frame: 403
+- captions.clock.value.pages[9].delta_frames: -1
+- captions.clock.value.pages[9].matched_exactly: True
+- captions.clock.value.pages[9].status: pass
+- captions.clock.value.pages[10].page: 10
+- captions.clock.value.pages[10].fromFrame: 458
+- captions.clock.value.pages[10].text: Google for your emails,
+- captions.clock.value.pages[10].heard_word: Google
+- captions.clock.value.pages[10].heard_s: 15.243
+- captions.clock.value.pages[10].heard_frame: 457
+- captions.clock.value.pages[10].delta_frames: 1
+- captions.clock.value.pages[10].matched_exactly: True
+- captions.clock.value.pages[10].status: pass
+- captions.clock.value.pages[11].page: 11
+- captions.clock.value.pages[11].fromFrame: 504
+- captions.clock.value.pages[11].text: it can get
+- captions.clock.value.pages[11].heard_word: it
+- captions.clock.value.pages[11].heard_s: 16.823
+- captions.clock.value.pages[11].heard_frame: 505
+- captions.clock.value.pages[11].delta_frames: -1
+- captions.clock.value.pages[11].matched_exactly: True
+- captions.clock.value.pages[11].status: pass
+- captions.clock.value.pages[12].page: 12
+- captions.clock.value.pages[12].fromFrame: 532
+- captions.clock.value.pages[12].text: a bit dangerous.
+- captions.clock.value.pages[12].heard_word: a
+- captions.clock.value.pages[12].heard_s: 17.743
+- captions.clock.value.pages[12].heard_frame: 532
+- captions.clock.value.pages[12].delta_frames: 0
+- captions.clock.value.pages[12].matched_exactly: True
+- captions.clock.value.pages[12].status: pass
+- captions.clock.value.pages[13].page: 13
+- captions.clock.value.pages[13].fromFrame: 553
+- captions.clock.value.pages[13].text: So my first step
+- captions.clock.value.pages[13].heard_word: So
+- captions.clock.value.pages[13].heard_s: 18.444
+- captions.clock.value.pages[13].heard_frame: 553
+- captions.clock.value.pages[13].delta_frames: 0
+- captions.clock.value.pages[13].matched_exactly: True
+- captions.clock.value.pages[13].status: pass
+- captions.clock.value.pages[14].page: 14
+- captions.clock.value.pages[14].fromFrame: 589
+- captions.clock.value.pages[14].text: is the no spending,
+- captions.clock.value.pages[14].heard_word: is
+- captions.clock.value.pages[14].heard_s: 19.684
+- captions.clock.value.pages[14].heard_frame: 591
+- captions.clock.value.pages[14].delta_frames: -2
+- captions.clock.value.pages[14].matched_exactly: True
+- captions.clock.value.pages[14].status: pass
+- captions.clock.value.pages[15].page: 15
+- captions.clock.value.pages[15].fromFrame: 625
+- captions.clock.value.pages[15].text: no sending rule.
+- captions.clock.value.pages[15].heard_word: no
+- captions.clock.value.pages[15].heard_s: 20.844
+- captions.clock.value.pages[15].heard_frame: 625
+- captions.clock.value.pages[15].delta_frames: 0
+- captions.clock.value.pages[15].matched_exactly: True
+- captions.clock.value.pages[15].status: pass
+- captions.clock.value.pages[16].page: 16
+- captions.clock.value.pages[16].fromFrame: 646
+- captions.clock.value.pages[16].text: It doesn't spend my money,
+- captions.clock.value.pages[16].heard_word: It
+- captions.clock.value.pages[16].heard_s: 21.544
+- captions.clock.value.pages[16].heard_frame: 646
+- captions.clock.value.pages[16].delta_frames: 0
+- captions.clock.value.pages[16].matched_exactly: True
+- captions.clock.value.pages[16].status: pass
+- captions.clock.value.pages[17].page: 17
+- captions.clock.value.pages[17].fromFrame: 692
+- captions.clock.value.pages[17].text: doesn't send anything
+- captions.clock.value.pages[17].heard_word: doesn't
+- captions.clock.value.pages[17].heard_s: 23.065
+- captions.clock.value.pages[17].heard_frame: 692
+- captions.clock.value.pages[17].delta_frames: 0
+- captions.clock.value.pages[17].matched_exactly: True
+- captions.clock.value.pages[17].status: pass
+- captions.clock.value.pages[18].page: 18
+- captions.clock.value.pages[18].fromFrame: 721
+- captions.clock.value.pages[18].text: out for me unless
+- captions.clock.value.pages[18].heard_word: out
+- captions.clock.value.pages[18].heard_s: 24.045
+- captions.clock.value.pages[18].heard_frame: 721
+- captions.clock.value.pages[18].delta_frames: 0
+- captions.clock.value.pages[18].matched_exactly: True
+- captions.clock.value.pages[18].status: pass
+- captions.clock.value.pages[19].page: 19
+- captions.clock.value.pages[19].fromFrame: 742
+- captions.clock.value.pages[19].text: I say so.
+- captions.clock.value.pages[19].heard_word: I
+- captions.clock.value.pages[19].heard_s: 24.705
+- captions.clock.value.pages[19].heard_frame: 741
+- captions.clock.value.pages[19].delta_frames: 1
+- captions.clock.value.pages[19].matched_exactly: True
+- captions.clock.value.pages[19].status: pass
+- captions.clock.value.pages[20].page: 20
+- captions.clock.value.pages[20].fromFrame: 764
+- captions.clock.value.pages[20].text: And the fun part
+- captions.clock.value.pages[20].heard_word: And
+- captions.clock.value.pages[20].heard_s: 25.465
+- captions.clock.value.pages[20].heard_frame: 764
+- captions.clock.value.pages[20].delta_frames: 0
+- captions.clock.value.pages[20].matched_exactly: True
+- captions.clock.value.pages[20].status: pass
+- captions.clock.value.pages[21].page: 21
+- captions.clock.value.pages[21].fromFrame: 783
+- captions.clock.value.pages[21].text: is I didn't even
+- captions.clock.value.pages[21].heard_word: is
+- captions.clock.value.pages[21].heard_s: 26.145
+- captions.clock.value.pages[21].heard_frame: 784
+- captions.clock.value.pages[21].delta_frames: -1
+- captions.clock.value.pages[21].matched_exactly: True
+- captions.clock.value.pages[21].status: pass
+- captions.clock.value.pages[22].page: 22
+- captions.clock.value.pages[22].fromFrame: 810
+- captions.clock.value.pages[22].text: write this myself.
+- captions.clock.value.pages[22].heard_word: write
+- captions.clock.value.pages[22].heard_s: 27.025
+- captions.clock.value.pages[22].heard_frame: 811
+- captions.clock.value.pages[22].delta_frames: -1
+- captions.clock.value.pages[22].matched_exactly: True
+- captions.clock.value.pages[22].status: pass
+- captions.clock.value.pages[23].page: 23
+- captions.clock.value.pages[23].fromFrame: 848
+- captions.clock.value.pages[23].text: I just put one prompt
+- captions.clock.value.pages[23].heard_word: I
+- captions.clock.value.pages[23].heard_s: 28.226
+- captions.clock.value.pages[23].heard_frame: 847
+- captions.clock.value.pages[23].delta_frames: 1
+- captions.clock.value.pages[23].matched_exactly: True
+- captions.clock.value.pages[23].status: pass
+- captions.clock.value.pages[24].page: 24
+- captions.clock.value.pages[24].fromFrame: 875
+- captions.clock.value.pages[24].text: into my AI
+- captions.clock.value.pages[24].heard_word: into
+- captions.clock.value.pages[24].heard_s: 29.186
+- captions.clock.value.pages[24].heard_frame: 876
+- captions.clock.value.pages[24].delta_frames: -1
+- captions.clock.value.pages[24].matched_exactly: True
+- captions.clock.value.pages[24].status: pass
+- captions.clock.value.pages[25].page: 25
+- captions.clock.value.pages[25].fromFrame: 894
+- captions.clock.value.pages[25].text: tool and it started asking
+- captions.clock.value.pages[25].heard_word: tool
+- captions.clock.value.pages[25].heard_s: 29.786
+- captions.clock.value.pages[25].heard_frame: 894
+- captions.clock.value.pages[25].delta_frames: 0
+- captions.clock.value.pages[25].matched_exactly: True
+- captions.clock.value.pages[25].status: pass
+- captions.clock.value.pages[26].page: 26
+- captions.clock.value.pages[26].fromFrame: 920
+- captions.clock.value.pages[26].text: me questions back,
+- captions.clock.value.pages[26].heard_word: me
+- captions.clock.value.pages[26].heard_s: 30.686
+- captions.clock.value.pages[26].heard_frame: 921
+- captions.clock.value.pages[26].delta_frames: -1
+- captions.clock.value.pages[26].matched_exactly: True
+- captions.clock.value.pages[26].status: pass
+- captions.clock.value.pages[27].page: 27
+- captions.clock.value.pages[27].fromFrame: 953
+- captions.clock.value.pages[27].text: then it locks itself
+- captions.clock.value.pages[27].heard_word: then
+- captions.clock.value.pages[27].heard_s: 31.786
+- captions.clock.value.pages[27].heard_frame: 954
+- captions.clock.value.pages[27].delta_frames: -1
+- captions.clock.value.pages[27].matched_exactly: True
+- captions.clock.value.pages[27].status: pass
+- captions.clock.value.pages[28].page: 28
+- captions.clock.value.pages[28].fromFrame: 984
+- captions.clock.value.pages[28].text: down or tells
+- captions.clock.value.pages[28].heard_word: down
+- captions.clock.value.pages[28].heard_s: 32.826
+- captions.clock.value.pages[28].heard_frame: 985
+- captions.clock.value.pages[28].delta_frames: -1
+- captions.clock.value.pages[28].matched_exactly: True
+- captions.clock.value.pages[28].status: pass
+- captions.clock.value.pages[29].page: 29
+- captions.clock.value.pages[29].fromFrame: 1002
+- captions.clock.value.pages[29].text: you how to lock
+- captions.clock.value.pages[29].heard_word: you
+- captions.clock.value.pages[29].heard_s: 33.427
+- captions.clock.value.pages[29].heard_frame: 1003
+- captions.clock.value.pages[29].delta_frames: -1
+- captions.clock.value.pages[29].matched_exactly: True
+- captions.clock.value.pages[29].status: pass
+- captions.clock.value.pages[30].page: 30
+- captions.clock.value.pages[30].fromFrame: 1018
+- captions.clock.value.pages[30].text: it down.
+- captions.clock.value.pages[30].heard_word: it
+- captions.clock.value.pages[30].heard_s: 33.947
+- captions.clock.value.pages[30].heard_frame: 1018
+- captions.clock.value.pages[30].delta_frames: 0
+- captions.clock.value.pages[30].matched_exactly: True
+- captions.clock.value.pages[30].status: pass
+- captions.clock.value.pages[31].page: 31
+- captions.clock.value.pages[31].fromFrame: 1040
+- captions.clock.value.pages[31].text: Prompt's in the comments,
+- captions.clock.value.pages[31].heard_word: Prompt's
+- captions.clock.value.pages[31].heard_s: 34.667
+- captions.clock.value.pages[31].heard_frame: 1040
+- captions.clock.value.pages[31].delta_frames: 0
+- captions.clock.value.pages[31].matched_exactly: True
+- captions.clock.value.pages[31].status: pass
+- captions.clock.value.pages[32].page: 32
+- captions.clock.value.pages[32].fromFrame: 1085
+- captions.clock.value.pages[32].text: make sure you do this,
+- captions.clock.value.pages[32].heard_word: make
+- captions.clock.value.pages[32].heard_s: 36.187
+- captions.clock.value.pages[32].heard_frame: 1086
+- captions.clock.value.pages[32].delta_frames: -1
+- captions.clock.value.pages[32].matched_exactly: True
+- captions.clock.value.pages[32].status: pass
+- captions.clock.value.pages[33].page: 33
+- captions.clock.value.pages[33].fromFrame: 1112
+- captions.clock.value.pages[33].text: no spending,
+- captions.clock.value.pages[33].heard_word: no
+- captions.clock.value.pages[33].heard_s: 37.047
+- captions.clock.value.pages[33].heard_frame: 1111
+- captions.clock.value.pages[33].delta_frames: 1
+- captions.clock.value.pages[33].matched_exactly: True
+- captions.clock.value.pages[33].status: pass
+- captions.clock.value.pages[34].page: 34
+- captions.clock.value.pages[34].fromFrame: 1128
+- captions.clock.value.pages[34].text: no sending,
+- captions.clock.value.pages[34].heard_word: no
+- captions.clock.value.pages[34].heard_s: 37.607
+- captions.clock.value.pages[34].heard_frame: 1128
+- captions.clock.value.pages[34].delta_frames: 0
+- captions.clock.value.pages[34].matched_exactly: True
+- captions.clock.value.pages[34].status: pass
+- captions.clock.value.pages[35].page: 35
+- captions.clock.value.pages[35].fromFrame: 1144
+- captions.clock.value.pages[35].text: one easy step
+- captions.clock.value.pages[35].heard_word: one
+- captions.clock.value.pages[35].heard_s: 38.147
+- captions.clock.value.pages[35].heard_frame: 1144
+- captions.clock.value.pages[35].delta_frames: 0
+- captions.clock.value.pages[35].matched_exactly: True
+- captions.clock.value.pages[35].status: pass
+- captions.clock.value.pages[36].page: 36
+- captions.clock.value.pages[36].fromFrame: 1167
+- captions.clock.value.pages[36].text: so you can save yourself
+- captions.clock.value.pages[36].heard_word: so
+- captions.clock.value.pages[36].heard_s: 38.908
+- captions.clock.value.pages[36].heard_frame: 1167
+- captions.clock.value.pages[36].delta_frames: 0
+- captions.clock.value.pages[36].matched_exactly: True
+- captions.clock.value.pages[36].status: pass
+- captions.clock.value.pages[37].page: 37
+- captions.clock.value.pages[37].fromFrame: 1199
+- captions.clock.value.pages[37].text: and enjoy these new technologies
+- captions.clock.value.pages[37].heard_word: and
+- captions.clock.value.pages[37].heard_s: 39.968
+- captions.clock.value.pages[37].heard_frame: 1199
+- captions.clock.value.pages[37].delta_frames: 0
+- captions.clock.value.pages[37].matched_exactly: True
+- captions.clock.value.pages[37].status: pass
+- captions.clock.value.pages[38].page: 38
+- captions.clock.value.pages[38].fromFrame: 1252
+- captions.clock.value.pages[38].text: without any of those weird
+- captions.clock.value.pages[38].heard_word: without
+- captions.clock.value.pages[38].heard_s: 41.728
+- captions.clock.value.pages[38].heard_frame: 1252
+- captions.clock.value.pages[38].delta_frames: 0
+- captions.clock.value.pages[38].matched_exactly: True
+- captions.clock.value.pages[38].status: pass
+- captions.clock.value.pages[39].page: 39
+- captions.clock.value.pages[39].fromFrame: 1279
+- captions.clock.value.pages[39].text: moments or fails.
+- captions.clock.value.pages[39].heard_word: moments
+- captions.clock.value.pages[39].heard_s: 42.648
+- captions.clock.value.pages[39].heard_frame: 1279
+- captions.clock.value.pages[39].delta_frames: 0
+- captions.clock.value.pages[39].matched_exactly: True
+- captions.clock.value.pages[39].status: pass
+- captions.clock.value.located_fraction: 1.0
+- captions.clock.value.status: pass
+- captions.clock.target: each page's first frame within 2 frames of its first word as heard
+- captions.clock.pass: True
+- captions.clock.status: measured
+- captions.clock.agreement: heard by the aligner that did not draw the captions
+- captions.clock.summary: every caption page is on the heard clock
+- captions.render.value.machine: scripts/cutgates/captions.py
+- captions.render.value.version: captions/1
+- captions.render.value.part: renderer
+- captions.render.value.region[0]: 72
+- captions.render.value.region[1]: 1460
+- captions.render.value.region[2]: 900
+- captions.render.value.region[3]: 180
+- captions.render.value.window_frames: 3
+- captions.render.value.min_score: 0.98
+- captions.render.value.pixel_change_status: placeholder, to be measured on Monday 26
+- captions.render.value.pages[0].page: 0
+- captions.render.value.pages[0].fromFrame: 4
+- captions.render.value.pages[0].text: Proactive AI is coming.
+- captions.render.value.pages[0].change_frame: 2
+- captions.render.value.pages[0].frame: 59
+- captions.render.value.pages[0].read: Proactive Alis
+coming.
+- captions.render.value.pages[0].score: 1.0
+- captions.render.value.pages[0].exact: True
+- captions.render.value.pages[0].status: pass
+- captions.render.value.pages[1].page: 1
+- captions.render.value.pages[1].fromFrame: 71
+- captions.render.value.pages[1].text: AI that does things before
+- captions.render.value.pages[1].change_frame: 71
+- captions.render.value.pages[1].frame: 104
+- captions.render.value.pages[1].read: Al that does things
+before
+- captions.render.value.pages[1].score: 1.0
+- captions.render.value.pages[1].exact: True
+- captions.render.value.pages[1].status: pass
+- captions.render.value.pages[2].page: 2
+- captions.render.value.pages[2].fromFrame: 113
+- captions.render.value.pages[2].text: you ask offers
+- captions.render.value.pages[2].change_frame: 113
+- captions.render.value.pages[2].frame: 128
+- captions.render.value.pages[2].read: you ask offers
+- captions.render.value.pages[2].score: 1.0
+- captions.render.value.pages[2].exact: True
+- captions.render.value.pages[2].status: pass
+- captions.render.value.pages[3].page: 3
+- captions.render.value.pages[3].fromFrame: 140
+- captions.render.value.pages[3].text: to do things.
+- captions.render.value.pages[3].change_frame: 140
+- captions.render.value.pages[3].frame: 150
+- captions.render.value.pages[3].read: to do things.
+- captions.render.value.pages[3].score: 1.0
+- captions.render.value.pages[3].exact: True
+- captions.render.value.pages[3].status: pass
+- captions.render.value.pages[4].page: 4
+- captions.render.value.pages[4].fromFrame: 366
+- captions.render.value.pages[4].text: Muse into your WhatsApp,
+- captions.render.value.pages[4].change_frame: 366
+- captions.render.value.pages[4].frame: 386
+- captions.render.value.pages[4].read: Muse into your
+WhatsApp,
+- captions.render.value.pages[4].score: 1.0
+- captions.render.value.pages[4].exact: True
+- captions.render.value.pages[4].status: pass
+- captions.render.value.pages[5].page: 5
+- captions.render.value.pages[5].fromFrame: 402
+- captions.render.value.pages[5].text: Amazon for your groceries,
+- captions.render.value.pages[5].change_frame: 402
+- captions.render.value.pages[5].frame: 420
+- captions.render.value.pages[5].read: Amazon for your
+groceries,
+- captions.render.value.pages[5].score: 1.0
+- captions.render.value.pages[5].exact: True
+- captions.render.value.pages[5].status: pass
+- captions.render.value.pages[6].page: 6
+- captions.render.value.pages[6].fromFrame: 458
+- captions.render.value.pages[6].text: Google for your emails,
+- captions.render.value.pages[6].change_frame: 458
+- captions.render.value.pages[6].frame: 474
+- captions.render.value.pages[6].read: Google for your
+emails,
+- captions.render.value.pages[6].score: 1.0
+- captions.render.value.pages[6].exact: True
+- captions.render.value.pages[6].status: pass
+- captions.render.value.pages[7].page: 7
+- captions.render.value.pages[7].fromFrame: 504
+- captions.render.value.pages[7].text: it can get
+- captions.render.value.pages[7].change_frame: 504
+- captions.render.value.pages[7].frame: 528
+- captions.render.value.pages[7].read: it can get
+- captions.render.value.pages[7].score: 1.0
+- captions.render.value.pages[7].exact: True
+- captions.render.value.pages[7].status: pass
+- captions.render.value.pages[8].page: 8
+- captions.render.value.pages[8].fromFrame: 532
+- captions.render.value.pages[8].text: a bit dangerous.
+- captions.render.value.pages[8].change_frame: 532
+- captions.render.value.pages[8].frame: 539
+- captions.render.value.pages[8].read: a bit dangerous.
+- captions.render.value.pages[8].score: 1.0
+- captions.render.value.pages[8].exact: True
+- captions.render.value.pages[8].status: pass
+- captions.render.value.pages[9].page: 9
+- captions.render.value.pages[9].fromFrame: 553
+- captions.render.value.pages[9].text: So my first step
+- captions.render.value.pages[9].change_frame: 553
+- captions.render.value.pages[9].frame: 581
+- captions.render.value.pages[9].read: So my first step
+- captions.render.value.pages[9].score: 1.0
+- captions.render.value.pages[9].exact: True
+- captions.render.value.pages[9].status: pass
+- captions.render.value.pages[10].page: 10
+- captions.render.value.pages[10].fromFrame: 589
+- captions.render.value.pages[10].text: is the no spending,
+- captions.render.value.pages[10].change_frame: 589
+- captions.render.value.pages[10].frame: 609
+- captions.render.value.pages[10].read: is the no spending,
+- captions.render.value.pages[10].score: 1.0
+- captions.render.value.pages[10].exact: True
+- captions.render.value.pages[10].status: pass
+- captions.render.value.pages[11].page: 11
+- captions.render.value.pages[11].fromFrame: 625
+- captions.render.value.pages[11].text: no sending rule.
+- captions.render.value.pages[11].change_frame: 625
+- captions.render.value.pages[11].frame: 642
+- captions.render.value.pages[11].read: no sending rule.
+- captions.render.value.pages[11].score: 1.0
+- captions.render.value.pages[11].exact: True
+- captions.render.value.pages[11].status: pass
+- captions.render.value.pages[12].page: 12
+- captions.render.value.pages[12].fromFrame: 764
+- captions.render.value.pages[12].text: And the fun part
+- captions.render.value.pages[12].change_frame: 763
+- captions.render.value.pages[12].frame: 776
+- captions.render.value.pages[12].read: And the fun part
+- captions.render.value.pages[12].score: 1.0
+- captions.render.value.pages[12].exact: True
+- captions.render.value.pages[12].status: pass
+- captions.render.value.pages[13].page: 13
+- captions.render.value.pages[13].fromFrame: 783
+- captions.render.value.pages[13].text: is I didn't even
+- captions.render.value.pages[13].change_frame: 783
+- captions.render.value.pages[13].frame: 796
+- captions.render.value.pages[13].read: is I didn't even
+- captions.render.value.pages[13].score: 1.0
+- captions.render.value.pages[13].exact: True
+- captions.render.value.pages[13].status: pass
+- captions.render.value.pages[14].page: 14
+- captions.render.value.pages[14].fromFrame: 810
+- captions.render.value.pages[14].text: write this myself.
+- captions.render.value.pages[14].change_frame: 810
+- captions.render.value.pages[14].frame: 824
+- captions.render.value.pages[14].read: write this myself.
+- captions.render.value.pages[14].score: 1.0
+- captions.render.value.pages[14].exact: True
+- captions.render.value.pages[14].status: pass
+- captions.render.value.pages[15].page: 15
+- captions.render.value.pages[15].fromFrame: 848
+- captions.render.value.pages[15].text: I just put one prompt
+- captions.render.value.pages[15].change_frame: 848
+- captions.render.value.pages[15].frame: 866
+- captions.render.value.pages[15].read: Ijust put one prompt
+- captions.render.value.pages[15].score: 1.0
+- captions.render.value.pages[15].exact: True
+- captions.render.value.pages[15].status: pass
+- captions.render.value.pages[16].page: 16
+- captions.render.value.pages[16].fromFrame: 875
+- captions.render.value.pages[16].text: into my AI
+- captions.render.value.pages[16].change_frame: 875
+- captions.render.value.pages[16].frame: 885
+- captions.render.value.pages[16].read: into my Al
+- captions.render.value.pages[16].score: 1.0
+- captions.render.value.pages[16].exact: True
+- captions.render.value.pages[16].status: pass
+- captions.render.value.pages[17].page: 17
+- captions.render.value.pages[17].fromFrame: 894
+- captions.render.value.pages[17].text: tool and it started asking
+- captions.render.value.pages[17].change_frame: 894
+- captions.render.value.pages[17].frame: 913
+- captions.render.value.pages[17].read: tool and it started
+asking
+- captions.render.value.pages[17].score: 1.0
+- captions.render.value.pages[17].exact: True
+- captions.render.value.pages[17].status: pass
+- captions.render.value.pages[18].page: 18
+- captions.render.value.pages[18].fromFrame: 920
+- captions.render.value.pages[18].text: me questions back,
+- captions.render.value.pages[18].change_frame: 920
+- captions.render.value.pages[18].frame: 936
+- captions.render.value.pages[18].read: me questions back,
+- captions.render.value.pages[18].score: 1.0
+- captions.render.value.pages[18].exact: True
+- captions.render.value.pages[18].status: pass
+- captions.render.value.pages[19].page: 19
+- captions.render.value.pages[19].fromFrame: 953
+- captions.render.value.pages[19].text: then it locks itself
+- captions.render.value.pages[19].change_frame: 953
+- captions.render.value.pages[19].frame: 975
+- captions.render.value.pages[19].read: then it locks itself
+- captions.render.value.pages[19].score: 1.0
+- captions.render.value.pages[19].exact: True
+- captions.render.value.pages[19].status: pass
+- captions.render.value.pages[20].page: 20
+- captions.render.value.pages[20].fromFrame: 984
+- captions.render.value.pages[20].text: down or tells
+- captions.render.value.pages[20].change_frame: 984
+- captions.render.value.pages[20].frame: 994
+- captions.render.value.pages[20].read: down or tells
+- captions.render.value.pages[20].score: 1.0
+- captions.render.value.pages[20].exact: True
+- captions.render.value.pages[20].status: pass
+- captions.render.value.pages[21].page: 21
+- captions.render.value.pages[21].fromFrame: 1002
+- captions.render.value.pages[21].text: you how to lock
+- captions.render.value.pages[21].change_frame: 1002
+- captions.render.value.pages[21].frame: 1014
+- captions.render.value.pages[21].read: you how to lock
+- captions.render.value.pages[21].score: 1.0
+- captions.render.value.pages[21].exact: True
+- captions.render.value.pages[21].status: pass
+- captions.render.value.pages[22].page: 22
+- captions.render.value.pages[22].fromFrame: 1018
+- captions.render.value.pages[22].text: it down.
+- captions.render.value.pages[22].change_frame: 1018
+- captions.render.value.pages[22].frame: 1021
+- captions.render.value.pages[22].read: it down.
+- captions.render.value.pages[22].score: 1.0
+- captions.render.value.pages[22].exact: True
+- captions.render.value.pages[22].status: pass
+- captions.render.value.pages[23].page: 23
+- captions.render.value.pages[23].fromFrame: 1040
+- captions.render.value.pages[23].text: Prompt's in the comments,
+- captions.render.value.pages[23].change_frame: 1040
+- captions.render.value.pages[23].frame: 1055
+- captions.render.value.pages[23].read: Prompt's in the
+comments,
+- captions.render.value.pages[23].score: 1.0
+- captions.render.value.pages[23].exact: True
+- captions.render.value.pages[23].status: pass
+- captions.render.value.pages[24].page: 24
+- captions.render.value.pages[24].fromFrame: 1085
+- captions.render.value.pages[24].text: make sure you do this,
+- captions.render.value.pages[24].change_frame: 1085
+- captions.render.value.pages[24].frame: 1104
+- captions.render.value.pages[24].read: make sure you do
+this,
+- captions.render.value.pages[24].score: 1.0
+- captions.render.value.pages[24].exact: True
+- captions.render.value.pages[24].status: pass
+- captions.render.value.pages[25].page: 25
+- captions.render.value.pages[25].fromFrame: 1112
+- captions.render.value.pages[25].text: no spending,
+- captions.render.value.pages[25].change_frame: 1112
+- captions.render.value.pages[25].frame: 1116
+- captions.render.value.pages[25].read: no spending,
+- captions.render.value.pages[25].score: 1.0
+- captions.render.value.pages[25].exact: True
+- captions.render.value.pages[25].status: pass
+- captions.render.value.pages[26].page: 26
+- captions.render.value.pages[26].fromFrame: 1128
+- captions.render.value.pages[26].text: no sending,
+- captions.render.value.pages[26].change_frame: 1128
+- captions.render.value.pages[26].frame: 1134
+- captions.render.value.pages[26].read: no sending,
+- captions.render.value.pages[26].score: 1.0
+- captions.render.value.pages[26].exact: True
+- captions.render.value.pages[26].status: pass
+- captions.render.value.pages[27].page: 27
+- captions.render.value.pages[27].fromFrame: 1144
+- captions.render.value.pages[27].text: one easy step
+- captions.render.value.pages[27].change_frame: 1144
+- captions.render.value.pages[27].frame: 1159
+- captions.render.value.pages[27].read: one easy step
+- captions.render.value.pages[27].score: 1.0
+- captions.render.value.pages[27].exact: True
+- captions.render.value.pages[27].status: pass
+- captions.render.value.pages[28].page: 28
+- captions.render.value.pages[28].fromFrame: 1167
+- captions.render.value.pages[28].text: so you can save yourself
+- captions.render.value.pages[28].change_frame: 1167
+- captions.render.value.pages[28].frame: 1186
+- captions.render.value.pages[28].read: so you can save
+yourself
+- captions.render.value.pages[28].score: 1.0
+- captions.render.value.pages[28].exact: True
+- captions.render.value.pages[28].status: pass
+- captions.render.value.pages[29].page: 29
+- captions.render.value.pages[29].fromFrame: 1199
+- captions.render.value.pages[29].text: and enjoy these new technologies
+- captions.render.value.pages[29].change_frame: 1199
+- captions.render.value.pages[29].frame: 1222
+- captions.render.value.pages[29].read: and enjoy these new
+technologies
+- captions.render.value.pages[29].score: 1.0
+- captions.render.value.pages[29].exact: True
+- captions.render.value.pages[29].status: pass
+- captions.render.value.pages[30].page: 30
+- captions.render.value.pages[30].fromFrame: 1252
+- captions.render.value.pages[30].text: without any of those weird
+- captions.render.value.pages[30].change_frame: 1252
+- captions.render.value.pages[30].frame: 1272
+- captions.render.value.pages[30].read: without any of those
+weird
+- captions.render.value.pages[30].score: 1.0
+- captions.render.value.pages[30].exact: True
+- captions.render.value.pages[30].status: pass
+- captions.render.value.pages[31].page: 31
+- captions.render.value.pages[31].fromFrame: 1279
+- captions.render.value.pages[31].text: moments or fails.
+- captions.render.value.pages[31].change_frame: 1279
+- captions.render.value.pages[31].frame: 1297
+- captions.render.value.pages[31].read: moments or fails.
+- captions.render.value.pages[31].score: 1.0
+- captions.render.value.pages[31].exact: True
+- captions.render.value.pages[31].status: pass
+- captions.render.value.pages[32].page: 0
+- captions.render.value.pages[32].fromFrame: 176
+- captions.render.value.pages[32].text: Awesome, really cool features
+- captions.render.value.pages[32].change_frame: 176
+- captions.render.value.pages[32].frame: 217
+- captions.render.value.pages[32].read: Awesome, really
+cool features
+- captions.render.value.pages[32].score: 1.0
+- captions.render.value.pages[32].exact: True
+- captions.render.value.pages[32].status: pass
+- captions.render.value.pages[33].page: 1
+- captions.render.value.pages[33].fromFrame: 240
+- captions.render.value.pages[33].text: and really helpful
+- captions.render.value.pages[33].change_frame: 240
+- captions.render.value.pages[33].frame: 268
+- captions.render.value.pages[33].read: and really helpful
+- captions.render.value.pages[33].score: 1.0
+- captions.render.value.pages[33].exact: True
+- captions.render.value.pages[33].status: pass
+- captions.render.value.pages[34].page: 2
+- captions.render.value.pages[34].fromFrame: 295
+- captions.render.value.pages[34].text: but a bit dangerous because
+- captions.render.value.pages[34].change_frame: 295
+- captions.render.value.pages[34].frame: 319
+- captions.render.value.pages[34].read: but a bit dangerous
+because
+- captions.render.value.pages[34].score: 1.0
+- captions.render.value.pages[34].exact: True
+- captions.render.value.pages[34].status: pass
+- captions.render.value.pages[35].page: 3
+- captions.render.value.pages[35].fromFrame: 325
+- captions.render.value.pages[35].text: once they're connected
+- captions.render.value.pages[35].change_frame: 325
+- captions.render.value.pages[35].frame: 336
+- captions.render.value.pages[35].read: once they're
+connected
+- captions.render.value.pages[35].score: 1.0
+- captions.render.value.pages[35].exact: True
+- captions.render.value.pages[35].status: pass
+- captions.render.value.pages[36].page: 4
+- captions.render.value.pages[36].fromFrame: 646
+- captions.render.value.pages[36].text: It doesn't spend my money,
+- captions.render.value.pages[36].change_frame: 646
+- captions.render.value.pages[36].frame: 672
+- captions.render.value.pages[36].read: it doesn't spend my
+money,
+- captions.render.value.pages[36].score: 1.0
+- captions.render.value.pages[36].exact: True
+- captions.render.value.pages[36].status: pass
+- captions.render.value.pages[37].page: 5
+- captions.render.value.pages[37].fromFrame: 692
+- captions.render.value.pages[37].text: doesn't send anything
+- captions.render.value.pages[37].change_frame: 692
+- captions.render.value.pages[37].frame: 711
+- captions.render.value.pages[37].read: doesn't send
+anything
+- captions.render.value.pages[37].score: 1.0
+- captions.render.value.pages[37].exact: True
+- captions.render.value.pages[37].status: pass
+- captions.render.value.pages[38].page: 6
+- captions.render.value.pages[38].fromFrame: 721
+- captions.render.value.pages[38].text: out for me unless
+- captions.render.value.pages[38].change_frame: 721
+- captions.render.value.pages[38].frame: 732
+- captions.render.value.pages[38].read: out for me unless
+- captions.render.value.pages[38].score: 1.0
+- captions.render.value.pages[38].exact: True
+- captions.render.value.pages[38].status: pass
+- captions.render.value.pages[39].page: 7
+- captions.render.value.pages[39].fromFrame: 742
+- captions.render.value.pages[39].text: I say so.
+- captions.render.value.pages[39].change_frame: 742
+- captions.render.value.pages[39].frame: 752
+- captions.render.value.pages[39].read: I say so.
+- captions.render.value.pages[39].score: 1.0
+- captions.render.value.pages[39].exact: True
+- captions.render.value.pages[39].status: pass
+- captions.render.value.changes_found: 115
+- captions.render.value.status: pass
+- captions.render.value.pass: True
+- captions.render.value.regions[0][0]: 72
+- captions.render.value.regions[0][1]: 1460
+- captions.render.value.regions[0][2]: 900
+- captions.render.value.regions[0][3]: 180
+- captions.render.value.regions[1][0]: 72
+- captions.render.value.regions[1][1]: 1180
+- captions.render.value.regions[1][2]: 900
+- captions.render.value.regions[1][3]: 217
+- captions.render.target: a page change within 3 frames of each start; exact text, OCR score >= 0.98
+- captions.render.pass: True
+- captions.render.status: measured
+- captions.render.agreement: None
+- captions.render.summary: every caption page reads as the props say
+- keyframe_match.value.hook.ssim: 0.7880290959370123
+- keyframe_match.value.hook.min: 0.75
+- keyframe_match.value.hook.pass: True
+- keyframe_match.value.hook.golden: face-with-proof
+- keyframe_match.value.hook.frame: 141
+- keyframe_match.value.face.ssim: 0.8396878907737663
+- keyframe_match.value.face.min: 0.75
+- keyframe_match.value.face.pass: True
+- keyframe_match.value.face.golden: face-with-proof
+- keyframe_match.value.face.frame: 328
+- keyframe_match.value.proof.ssim: 0.8406541967766835
+- keyframe_match.value.proof.min: 0.75
+- keyframe_match.value.proof.pass: True
+- keyframe_match.value.proof.golden: face-with-proof
+- keyframe_match.value.proof.frame: 476
+- keyframe_match.value.b4-8am.ssim: None
+- keyframe_match.value.b4-8am.min: 0.75
+- keyframe_match.value.b4-8am.pass: True
+- keyframe_match.value.b4-8am.golden: None
+- keyframe_match.value.b4-8am.note: extra beat: no golden, composition-checked
+- keyframe_match.value.b5-rule.ssim: None
+- keyframe_match.value.b5-rule.min: 0.75
+- keyframe_match.value.b5-rule.pass: True
+- keyframe_match.value.b5-rule.golden: None
+- keyframe_match.value.b5-rule.note: extra beat: no golden, composition-checked
+- keyframe_match.value.own-words.ssim: None
+- keyframe_match.value.own-words.min: 0.75
+- keyframe_match.value.own-words.pass: True
+- keyframe_match.value.own-words.golden: None
+- keyframe_match.value.own-words.note: extra beat: no golden, composition-checked
+- keyframe_match.value.b7-prompt.ssim: None
+- keyframe_match.value.b7-prompt.min: 0.75
+- keyframe_match.value.b7-prompt.pass: True
+- keyframe_match.value.b7-prompt.golden: None
+- keyframe_match.value.b7-prompt.note: extra beat: no golden, composition-checked
+- keyframe_match.value.close.ssim: 0.8213135028292148
+- keyframe_match.value.close.min: 0.75
+- keyframe_match.value.close.pass: True
+- keyframe_match.value.close.golden: face-with-proof
+- keyframe_match.value.close.frame: 1273
+- keyframe_match.target: approved golden keyframes
+- keyframe_match.pass: True
+- keyframe_match.status: measured
+- composition.value.hook.pass: True
+- composition.value.hook.checks.fill_pct.pass: True
+- composition.value.hook.checks.fill_pct.value: 99.95
+- composition.value.hook.checks.small_text.pass: True
+- composition.value.hook.checks.caption_zone.pass: True
+- composition.value.hook.checks.platform_zone.pass: True
+- composition.value.hook.checks.edges.pass: True
+- composition.value.hook.frame: 141
+- composition.value.face.pass: True
+- composition.value.face.checks.fill_pct.pass: True
+- composition.value.face.checks.fill_pct.value: 100.0
+- composition.value.face.checks.small_text.pass: True
+- composition.value.face.checks.caption_zone.pass: True
+- composition.value.face.checks.platform_zone.pass: True
+- composition.value.face.checks.edges.pass: True
+- composition.value.face.frame: 328
+- composition.value.proof.pass: True
+- composition.value.proof.checks.fill_pct.pass: True
+- composition.value.proof.checks.fill_pct.value: 100.0
+- composition.value.proof.checks.small_text.pass: True
+- composition.value.proof.checks.caption_zone.pass: True
+- composition.value.proof.checks.platform_zone.pass: True
+- composition.value.proof.checks.edges.pass: True
+- composition.value.proof.frame: 476
+- composition.value.b4-8am.pass: True
+- composition.value.b4-8am.checks.fill_pct.pass: True
+- composition.value.b4-8am.checks.fill_pct.value: 100.0
+- composition.value.b4-8am.checks.small_text.pass: True
+- composition.value.b4-8am.checks.caption_zone.pass: True
+- composition.value.b4-8am.checks.platform_zone.pass: True
+- composition.value.b4-8am.checks.edges.pass: True
+- composition.value.b4-8am.frame: 543
+- composition.value.b5-rule.pass: True
+- composition.value.b5-rule.checks.fill_pct.pass: True
+- composition.value.b5-rule.checks.fill_pct.value: 100.0
+- composition.value.b5-rule.checks.small_text.pass: True
+- composition.value.b5-rule.checks.caption_zone.pass: True
+- composition.value.b5-rule.checks.platform_zone.pass: True
+- composition.value.b5-rule.checks.edges.pass: True
+- composition.value.b5-rule.frame: 627
+- composition.value.own-words.pass: True
+- composition.value.own-words.checks.fill_pct.pass: True
+- composition.value.own-words.checks.fill_pct.value: 100.0
+- composition.value.own-words.checks.small_text.pass: True
+- composition.value.own-words.checks.caption_zone.pass: True
+- composition.value.own-words.checks.platform_zone.pass: True
+- composition.value.own-words.checks.edges.pass: True
+- composition.value.own-words.frame: 740
+- composition.value.b7-prompt.pass: True
+- composition.value.b7-prompt.checks.fill_pct.pass: True
+- composition.value.b7-prompt.checks.fill_pct.value: 100.0
+- composition.value.b7-prompt.checks.small_text.pass: True
+- composition.value.b7-prompt.checks.caption_zone.pass: True
+- composition.value.b7-prompt.checks.platform_zone.pass: True
+- composition.value.b7-prompt.checks.edges.pass: True
+- composition.value.b7-prompt.frame: 1021
+- composition.value.close.pass: True
+- composition.value.close.checks.fill_pct.pass: True
+- composition.value.close.checks.fill_pct.value: 100.0
+- composition.value.close.checks.small_text.pass: True
+- composition.value.close.checks.caption_zone.pass: True
+- composition.value.close.checks.platform_zone.pass: True
+- composition.value.close.checks.edges.pass: True
+- composition.value.close.frame: 1273
+- composition.value.ending.pass: True
+- composition.value.ending.checks.small_text.pass: True
+- composition.value.ending.checks.platform_zone.pass: True
+- composition.value.ending.checks.edges.pass: True
+- composition.value.ending.frame: 1372
+- composition.target: design lock composition thresholds
+- composition.pass: True
+- composition.status: measured
+- composition.applies: True
+- composition.pass: True
+- composition.beats.hook.pass: True
+- composition.beats.hook.checks.fill_pct.pass: True
+- composition.beats.hook.checks.fill_pct.value: 99.95
+- composition.beats.hook.checks.small_text.pass: True
+- composition.beats.hook.checks.caption_zone.pass: True
+- composition.beats.hook.checks.platform_zone.pass: True
+- composition.beats.hook.checks.edges.pass: True
+- composition.beats.hook.frame: 141
+- composition.beats.face.pass: True
+- composition.beats.face.checks.fill_pct.pass: True
+- composition.beats.face.checks.fill_pct.value: 100.0
+- composition.beats.face.checks.small_text.pass: True
+- composition.beats.face.checks.caption_zone.pass: True
+- composition.beats.face.checks.platform_zone.pass: True
+- composition.beats.face.checks.edges.pass: True
+- composition.beats.face.frame: 328
+- composition.beats.proof.pass: True
+- composition.beats.proof.checks.fill_pct.pass: True
+- composition.beats.proof.checks.fill_pct.value: 100.0
+- composition.beats.proof.checks.small_text.pass: True
+- composition.beats.proof.checks.caption_zone.pass: True
+- composition.beats.proof.checks.platform_zone.pass: True
+- composition.beats.proof.checks.edges.pass: True
+- composition.beats.proof.frame: 476
+- composition.beats.b4-8am.pass: True
+- composition.beats.b4-8am.checks.fill_pct.pass: True
+- composition.beats.b4-8am.checks.fill_pct.value: 100.0
+- composition.beats.b4-8am.checks.small_text.pass: True
+- composition.beats.b4-8am.checks.caption_zone.pass: True
+- composition.beats.b4-8am.checks.platform_zone.pass: True
+- composition.beats.b4-8am.checks.edges.pass: True
+- composition.beats.b4-8am.frame: 543
+- composition.beats.b5-rule.pass: True
+- composition.beats.b5-rule.checks.fill_pct.pass: True
+- composition.beats.b5-rule.checks.fill_pct.value: 100.0
+- composition.beats.b5-rule.checks.small_text.pass: True
+- composition.beats.b5-rule.checks.caption_zone.pass: True
+- composition.beats.b5-rule.checks.platform_zone.pass: True
+- composition.beats.b5-rule.checks.edges.pass: True
+- composition.beats.b5-rule.frame: 627
+- composition.beats.own-words.pass: True
+- composition.beats.own-words.checks.fill_pct.pass: True
+- composition.beats.own-words.checks.fill_pct.value: 100.0
+- composition.beats.own-words.checks.small_text.pass: True
+- composition.beats.own-words.checks.caption_zone.pass: True
+- composition.beats.own-words.checks.platform_zone.pass: True
+- composition.beats.own-words.checks.edges.pass: True
+- composition.beats.own-words.frame: 740
+- composition.beats.b7-prompt.pass: True
+- composition.beats.b7-prompt.checks.fill_pct.pass: True
+- composition.beats.b7-prompt.checks.fill_pct.value: 100.0
+- composition.beats.b7-prompt.checks.small_text.pass: True
+- composition.beats.b7-prompt.checks.caption_zone.pass: True
+- composition.beats.b7-prompt.checks.platform_zone.pass: True
+- composition.beats.b7-prompt.checks.edges.pass: True
+- composition.beats.b7-prompt.frame: 1021
+- composition.beats.close.pass: True
+- composition.beats.close.checks.fill_pct.pass: True
+- composition.beats.close.checks.fill_pct.value: 100.0
+- composition.beats.close.checks.small_text.pass: True
+- composition.beats.close.checks.caption_zone.pass: True
+- composition.beats.close.checks.platform_zone.pass: True
+- composition.beats.close.checks.edges.pass: True
+- composition.beats.close.frame: 1273
+- composition.beats.ending.pass: True
+- composition.beats.ending.checks.small_text.pass: True
+- composition.beats.ending.checks.platform_zone.pass: True
+- composition.beats.ending.checks.edges.pass: True
+- composition.beats.ending.frame: 1372
+- keyframes.applies: True
+- keyframes.pass: True
+- keyframes.beats.hook.ssim: 0.7880290959370123
+- keyframes.beats.hook.min: 0.75
+- keyframes.beats.hook.pass: True
+- keyframes.beats.hook.golden: face-with-proof
+- keyframes.beats.hook.frame: 141
+- keyframes.beats.face.ssim: 0.8396878907737663
+- keyframes.beats.face.min: 0.75
+- keyframes.beats.face.pass: True
+- keyframes.beats.face.golden: face-with-proof
+- keyframes.beats.face.frame: 328
+- keyframes.beats.proof.ssim: 0.8406541967766835
+- keyframes.beats.proof.min: 0.75
+- keyframes.beats.proof.pass: True
+- keyframes.beats.proof.golden: face-with-proof
+- keyframes.beats.proof.frame: 476
+- keyframes.beats.b4-8am.ssim: None
+- keyframes.beats.b4-8am.min: 0.75
+- keyframes.beats.b4-8am.pass: True
+- keyframes.beats.b4-8am.golden: None
+- keyframes.beats.b4-8am.note: extra beat: no golden, composition-checked
+- keyframes.beats.b5-rule.ssim: None
+- keyframes.beats.b5-rule.min: 0.75
+- keyframes.beats.b5-rule.pass: True
+- keyframes.beats.b5-rule.golden: None
+- keyframes.beats.b5-rule.note: extra beat: no golden, composition-checked
+- keyframes.beats.own-words.ssim: None
+- keyframes.beats.own-words.min: 0.75
+- keyframes.beats.own-words.pass: True
+- keyframes.beats.own-words.golden: None
+- keyframes.beats.own-words.note: extra beat: no golden, composition-checked
+- keyframes.beats.b7-prompt.ssim: None
+- keyframes.beats.b7-prompt.min: 0.75
+- keyframes.beats.b7-prompt.pass: True
+- keyframes.beats.b7-prompt.golden: None
+- keyframes.beats.b7-prompt.note: extra beat: no golden, composition-checked
+- keyframes.beats.close.ssim: 0.8213135028292148
+- keyframes.beats.close.min: 0.75
+- keyframes.beats.close.pass: True
+- keyframes.beats.close.golden: face-with-proof
+- keyframes.beats.close.frame: 1273
+
+### Critic findings
+note at 4.37 s (composition):
+CLOSED. Hook wave in place; clear of the note card at 125-140.
+
+note at 40.13 s (composition):
+CLOSED. Close wave in place; NO SENDING reads whole at 1198-1213.
+
+note at 12.0 s (composition):
+The split opens about 6 frames before the logos land.
+
+note at 14.47 s (composition):
+The logo row fills about half the top panel's height.
+
+note at 34.67 s (composition):
+Advisory: card body text looks near the 30 px floor; QC small_text passes.
+
+### Anything not measured
+- Design judgment and final approval are not mechanical measurements.
+

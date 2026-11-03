@@ -31,10 +31,10 @@
     "mood": "proud",
     "place": {
      "left": 66,
-     "top": 426,
+     "top": 477,
      "width": 900,
      "height": 1100,
-     "scale": 0.8
+     "scale": 0.6
     }
    }
   },
@@ -121,7 +121,14 @@
      {
       "id": "Google"
      }
-    ]
+    ],
+    "place": {
+     "left": -120,
+     "top": 260,
+     "width": 960,
+     "height": 520,
+     "scale": 1.45
+    }
    }
   },
   {
@@ -137,10 +144,10 @@
     "seed": "fwp",
     "shape": "loop",
     "target": {
-     "x": 420,
-     "y": 220,
-     "w": 240,
-     "h": 240
+     "x": 400,
+     "y": 460,
+     "w": 350,
+     "h": 350
     }
    }
   },
@@ -279,10 +286,10 @@
     ],
     "place": {
      "left": 139,
-     "top": 52,
+     "top": 100,
      "width": 920,
      "height": 100,
-     "scale": 0.95
+     "scale": 0.9
     }
    }
   }
@@ -313,9 +320,8 @@
      0,
      25,
      47,
-     54,
-     56,
-     58,
+     55,
+     57,
      89,
      124,
      126
@@ -373,7 +379,7 @@
       {
        "at_w": 11,
        "obj": "buddy",
-       "verb": "bounce",
+       "verb": "wave",
        "to_state": "proud",
        "silent": true
       }
@@ -441,6 +447,13 @@
        "obj": "logos",
        "verb": "highlight",
        "to_state": "2",
+       "silent": true
+      },
+      {
+       "at_w": 38,
+       "obj": "amazon_loop",
+       "verb": "exit",
+       "to_state": "gone",
        "silent": true
       }
      ]
@@ -701,7 +714,7 @@
        "at_w": 136,
        "obj": "buddy_rule",
        "verb": "wave",
-       "to_state": "cool",
+       "to_state": "sulk",
        "silent": true
       }
      ]
