@@ -104,7 +104,7 @@
     },
     {
       "fromFrame": 113,
-      "toFrame": 150,
+      "toFrame": 140,
       "words": [
         {
           "text": "you",
@@ -117,7 +117,14 @@
         {
           "text": "offers",
           "atFrame": 128
-        },
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 140,
+      "toFrame": 176,
+      "words": [
         {
           "text": "to",
           "atFrame": 140
@@ -125,29 +132,22 @@
         {
           "text": "do",
           "atFrame": 144
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 150,
-      "toFrame": 196,
-      "words": [
+        },
         {
           "text": "things.",
           "atFrame": 150
-        },
-        {
-          "text": "Awesome,",
-          "atFrame": 176
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 196,
-      "toFrame": 268,
+      "fromFrame": 176,
+      "toFrame": 257,
       "words": [
+        {
+          "text": "Awesome,",
+          "atFrame": 176
+        },
         {
           "text": "really",
           "atFrame": 196
@@ -163,18 +163,18 @@
         {
           "text": "and",
           "atFrame": 240
-        },
-        {
-          "text": "really",
-          "atFrame": 257
         }
       ],
       "swipeIndex": null
     },
     {
-      "fromFrame": 268,
-      "toFrame": 319,
+      "fromFrame": 257,
+      "toFrame": 307,
       "words": [
+        {
+          "text": "really",
+          "atFrame": 257
+        },
         {
           "text": "helpful",
           "atFrame": 268
@@ -190,18 +190,18 @@
         {
           "text": "bit",
           "atFrame": 301
-        },
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 307,
+      "toFrame": 331,
+      "words": [
         {
           "text": "dangerous",
           "atFrame": 307
-        }
-      ],
-      "swipeIndex": 4
-    },
-    {
-      "fromFrame": 319,
-      "toFrame": 366,
-      "words": [
+        },
         {
           "text": "because",
           "atFrame": 319
@@ -209,7 +209,14 @@
         {
           "text": "once",
           "atFrame": 325
-        },
+        }
+      ],
+      "swipeIndex": 0
+    },
+    {
+      "fromFrame": 331,
+      "toFrame": 366,
+      "words": [
         {
           "text": "they're",
           "atFrame": 331
@@ -353,7 +360,7 @@
     },
     {
       "fromFrame": 589,
-      "toFrame": 625,
+      "toFrame": 609,
       "words": [
         {
           "text": "is",
@@ -366,37 +373,44 @@
         {
           "text": "no",
           "atFrame": 598
-        },
-        {
-          "text": "spending,",
-          "atFrame": 609
         }
       ],
       "swipeIndex": 2
     },
     {
-      "fromFrame": 625,
-      "toFrame": 642,
+      "fromFrame": 609,
+      "toFrame": 631,
       "words": [
+        {
+          "text": "spending,",
+          "atFrame": 609
+        },
         {
           "text": "no",
           "atFrame": 625
-        },
+        }
+      ],
+      "swipeIndex": 1
+    },
+    {
+      "fromFrame": 631,
+      "toFrame": 646,
+      "words": [
         {
           "text": "sending",
           "atFrame": 631
-        }
-      ],
-      "swipeIndex": 0
-    },
-    {
-      "fromFrame": 642,
-      "toFrame": 667,
-      "words": [
+        },
         {
           "text": "rule.",
           "atFrame": 642
-        },
+        }
+      ],
+      "swipeIndex": 1
+    },
+    {
+      "fromFrame": 646,
+      "toFrame": 692,
+      "words": [
         {
           "text": "It",
           "atFrame": 646
@@ -408,14 +422,7 @@
         {
           "text": "spend",
           "atFrame": 660
-        }
-      ],
-      "swipeIndex": 0
-    },
-    {
-      "fromFrame": 667,
-      "toFrame": 692,
-      "words": [
+        },
         {
           "text": "my",
           "atFrame": 667
@@ -972,6 +979,7 @@
       "fromFrame": 553,
       "toFrame": 646,
       "uses": [
+        "chat",
         "slab_spend",
         "slab_send",
         "buddy_rule",
@@ -999,6 +1007,8 @@
       "fromFrame": 764,
       "toFrame": 1085,
       "uses": [
+        "slab_spend",
+        "slab_send",
         "ask"
       ],
       "transitionOut": "cut",
@@ -1119,12 +1129,6 @@
           },
           {
             "id": "Google"
-          },
-          {
-            "id": "xAI"
-          },
-          {
-            "id": "Anthropic"
           }
         ]
       }
@@ -1153,7 +1157,7 @@
       "device": "typing_bubble",
       "meaning": "the 8am reply the assistant sends for him",
       "fromFrame": 504,
-      "toFrame": 553,
+      "toFrame": 646,
       "variants": {},
       "params": {
         "kind": "chat",
@@ -1169,9 +1173,8 @@
             "side": "right"
           }
         ],
-        "status": "Sent",
         "place": {
-          "left": 56,
+          "left": 139,
           "top": 250,
           "width": 920,
           "height": 420,
@@ -1198,7 +1201,7 @@
         },
         "paint": "mint",
         "place": {
-          "left": 72,
+          "left": 132,
           "top": 300,
           "width": 345,
           "height": 68,
@@ -1225,7 +1228,7 @@
         },
         "paint": "mint",
         "place": {
-          "left": 72,
+          "left": 132,
           "top": 500,
           "width": 345,
           "height": 68,
@@ -1244,7 +1247,7 @@
         "colour": "mint",
         "seed": "fwp",
         "shape": "tick",
-        "cx": 926,
+        "cx": 1005,
         "cy": 592,
         "size": 72
       }
@@ -1261,7 +1264,7 @@
         "rows": [
           {
             "who": "Your AI",
-            "text": "Before I act for you, which of these should need your yes?",
+            "text": "Which should need your yes?",
             "side": "left"
           },
           {
@@ -1273,7 +1276,7 @@
             "side": "right"
           },
           {
-            "text": "Zero unapproved usage costs",
+            "text": "Zero unapproved incremental usage costs",
             "side": "right"
           }
         ],
@@ -1307,7 +1310,7 @@
       "obj": "note",
       "verb": "type",
       "toState": "0",
-      "atFrame": 28
+      "atFrame": 4
     },
     {
       "id": "hook-3",
@@ -1374,27 +1377,34 @@
     },
     {
       "id": "b5-rule-0",
+      "obj": "chat",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 594
+    },
+    {
+      "id": "b5-rule-1",
       "obj": "slab_spend",
       "verb": "stamp",
       "toState": "NO SPENDING",
       "atFrame": 598
     },
     {
-      "id": "b5-rule-1",
+      "id": "b5-rule-2",
       "obj": "buddy_rule",
       "verb": "enter",
       "toState": "sulk",
       "atFrame": 625
     },
     {
-      "id": "b5-rule-2",
+      "id": "b5-rule-3",
       "obj": "slab_send",
       "verb": "stamp",
       "toState": "NO SENDING",
       "atFrame": 625
     },
     {
-      "id": "b5-rule-3",
+      "id": "b5-rule-4",
       "obj": "tick",
       "verb": "draw",
       "toState": "NO SENDING",
@@ -1402,41 +1412,55 @@
     },
     {
       "id": "b7-prompt-0",
-      "obj": "ask",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 854
+      "obj": "slab_spend",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 885
     },
     {
       "id": "b7-prompt-1",
-      "obj": "ask",
-      "verb": "type",
-      "toState": "0",
-      "atFrame": 913
+      "obj": "slab_send",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 885
     },
     {
       "id": "b7-prompt-2",
+      "obj": "ask",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 885
+    },
+    {
+      "id": "b7-prompt-3",
+      "obj": "ask",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 899
+    },
+    {
+      "id": "b7-prompt-4",
       "obj": "ask",
       "verb": "type",
       "toState": "1",
       "atFrame": 953
     },
     {
-      "id": "b7-prompt-3",
+      "id": "b7-prompt-5",
       "obj": "ask",
       "verb": "type",
       "toState": "2",
       "atFrame": 966
     },
     {
-      "id": "b7-prompt-4",
+      "id": "b7-prompt-6",
       "obj": "ask",
       "verb": "type",
       "toState": "3",
       "atFrame": 1014
     },
     {
-      "id": "b7-prompt-5",
+      "id": "b7-prompt-7",
       "obj": "ask",
       "verb": "send",
       "toState": "0",

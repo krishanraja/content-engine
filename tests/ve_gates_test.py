@@ -68,6 +68,22 @@ class VeGateTests(unittest.TestCase):
         self.assertEqual(row['status'], 'not_run')
         self.assertIsNone(row['pass'])
 
+    def test_a_region_that_fails_fails_the_whole_render_row(self):
+        # Thursday 5 Nov: pages read in two zones; the first zone passed, the second failed two pages, and the row
+        # copied the first zone's status and reported a pass.
+        from unittest.mock import patch
+        pages = [{'fromFrame': 0, 'toFrame': 30, 'words': ['a']},
+                 {'fromFrame': 30, 'toFrame': 60, 'words': ['b'], 'region': [72, 1460, 900, 180]}]
+        results = iter([{'status': 'pass', 'pass': True, 'pages': [{'page': 0, 'status': 'pass'}], 'failed': []},
+                        {'status': 'fail', 'pass': False, 'pages': [{'page': 0, 'status': 'fail'}], 'failed': [0]}])
+        _, captions, *_ = qc_gates._cutgates()
+        with patch.object(captions, 'renderer_truth', side_effect=lambda *a, **k: next(results)), \
+                patch.object(captions, 'summary', return_value='summary'):
+            row = qc_gates.captions_render('cut.mp4', pages, (72, 1180, 900, 217))
+        self.assertFalse(row['pass'])
+        self.assertEqual(row['value']['status'], 'fail')
+        self.assertEqual(row['value']['failed'], [0])
+
     def test_the_command_reads_heard_words_and_a_script(self):
         case = self.build('lost_word')
         folder = Path(case['video']).parent
