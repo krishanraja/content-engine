@@ -1,6 +1,6 @@
 {
   "file": ".cache/produce/2026-11-05-no-spending/out/thu-short.mp4",
-  "sha256": "e83de283632fb23ab78e6de347f773bcf337e94ff8cdc6ae316214d07f9e1071",
+  "sha256": "517cdd9472636c3a5aad20df0725e7c59d1369bf045ffb103228207b2c41d90d",
   "duration_s": 47.51,
   "format": "face-with-proof",
   "checks": {
@@ -536,9 +536,9 @@
           "atFrame": 128,
           "peak_frame": 129,
           "lag_frames": 1,
-          "peak_difference": 8.389330863952637,
-          "event_difference": 8.389330863952637,
-          "threshold": 0.23177048563957214,
+          "peak_difference": 3.713886022567749,
+          "event_difference": 3.713886022567749,
+          "threshold": 0.23446699976921082,
           "gradual": false,
           "pass": true
         },
@@ -833,9 +833,9 @@
           "atFrame": 1201,
           "peak_frame": 1202,
           "lag_frames": 1,
-          "peak_difference": 8.603629112243652,
-          "event_difference": 8.603629112243652,
-          "threshold": 0.080353282392025,
+          "peak_difference": 4.509030342102051,
+          "event_difference": 4.509030342102051,
+          "threshold": 0.08107426017522812,
           "gradual": false,
           "pass": true
         }
@@ -1952,7 +1952,7 @@
     "keyframe_match": {
       "value": {
         "hook": {
-          "ssim": 0.7880411383962379,
+          "ssim": 0.7880290959370123,
           "min": 0.75,
           "pass": true,
           "golden": "face-with-proof",
@@ -2019,7 +2019,7 @@
           "checks": {
             "fill_pct": {
               "pass": true,
-              "value": 99.94
+              "value": 99.95
             },
             "small_text": {
               "pass": true,
@@ -2260,7 +2260,7 @@
     "pass": true,
     "beats": {
       "hook": {
-        "ssim": 0.7880411383962379,
+        "ssim": 0.7880290959370123,
         "min": 0.75,
         "pass": true,
         "golden": "face-with-proof",
@@ -2327,7 +2327,7 @@
         "checks": {
           "fill_pct": {
             "pass": true,
-            "value": 99.94
+            "value": 99.95
           },
           "small_text": {
             "pass": true,
