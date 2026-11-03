@@ -153,6 +153,17 @@ def reference_lints(spec: dict) -> list[str]:
     return out
 
 
+def motion_style_problems(spec: dict) -> list[str]:
+    """style.motion: one module from the motion layer of config/style-references.json, with the point it lands. The
+    same rule and start date the creative direction uses (scripts/post-pack/creative_direction.py motion_problems), so
+    the ve route and the quick-edit direction can never hold different motion rules."""
+    import sys
+    from .common import ROOT
+    sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+    import creative_direction  # noqa: E402
+    return creative_direction.motion_problems(spec)
+
+
 def motion_lints(spec: dict) -> list[str]:
     """The premium motion standard (docs/ve/MOTION_STANDARD.md) where a spec alone can show it."""
     out = []
@@ -164,6 +175,7 @@ def motion_lints(spec: dict) -> list[str]:
     if spec['format'] == 'face-with-proof' and spec['brand'].get('captions') != 'word' and not (day and day < REFERENCE_FROM):
         out.append('captions.word_default brand.captions: face-with-proof uses the word caption build, one word at a time '
                    'off the face (signed by Krish, 3 Nov 2026, docs/ve/MOTION_STANDARD.md)')
+    out.extend(f'motion.required {problem}' for problem in motion_style_problems(spec))
     for cut_id, cut in spec['cuts'].items():
         for index, beat in enumerate(cut['beats']):
             used = [objects[name]['device'] for name in beat['uses'] if name in objects]
