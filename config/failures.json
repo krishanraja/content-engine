@@ -1625,7 +1625,7 @@
         },
         {
           "file": "scripts/velib/compile.py",
-          "contains": "if index == 0 and event['verb'] == 'enter' and event['at_w'] == beat['span']['from_w']:",
+          "contains": "if index == 0 and event['verb'] in ('enter', 'type') and event['at_w'] == beat['span']['from_w']:",
           "how": "an entrance on the first word lands on frame 0, so the hook is the first frame",
           "test": "python3 -m unittest tests/ve_compile_test.py"
         },
