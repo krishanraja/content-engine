@@ -17,6 +17,14 @@ describe('STAGE production spec', () => {
   })
 })
 
+describe('SPLIT production spec', () => {
+  it('accepts SPLIT', () => {
+    const spec = structuredClone(fixture)
+    Object.values(spec.cuts)[0]!.beats[0]!.layout = 'SPLIT'
+    expect(ProductionSpecV2Schema.safeParse(spec).success).toBe(true)
+  })
+})
+
 describe('spec verbs', () => {
   it('accepts every verb the renderer accepts, so a spec can name any library device verb', async () => {
     const { VeVerbSchema } = await import('../packages/contracts/src/production-spec')

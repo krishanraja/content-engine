@@ -1,4 +1,6 @@
-import type React from 'react'
+import React from 'react'
+import { HOUSE } from '../house/geometry'
+import { FWP_SPLIT_CAPTION_ZONE } from './mocks/face-with-proof'
 import { Grain } from '../house/components'
 import { CallCard } from './chrome/CallCard'
 import { EndingBand } from './chrome/EndingBand'
@@ -20,12 +22,24 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
   const ending = !!props.ending && frame >= props.ending.fromFrame
   return <>
     <Grain />
-    {beat.layout === 'STAGE' ? <StageHeader props={props} /> : <>
+    {(beat.layout === 'STAGE' || beat.layout === 'SPLIT') ? <StageHeader props={props} /> : <>
       <MarkTile props={props} />
       <ChannelPill props={props} beat={beat} />
     </>}
     {ending ? <EndingBand props={props} frame={frame} />
       : call ? <CallCard props={props} frame={frame} />
-        : <CaptionTrack props={props} frame={frame} />}
+        : beat.layout === 'SPLIT' ? <SplitCaptionTrack props={props} frame={frame} /> : <CaptionTrack props={props} frame={frame} />}
   </>
+}
+
+/** Reuse caption timing, word layout and swipe; apply the frozen split frame's compact padding. */
+export function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number }) {
+  const caption = CaptionTrack({ props, frame })
+  if (!caption) return null
+  const height = Number(caption.props.style.height) - HOUSE.caption.paddingTop - HOUSE.caption.paddingBottom + 20
+  if (height > FWP_SPLIT_CAPTION_ZONE.height) throw new Error('ve: SPLIT caption exceeds frozen zone; repaginate')
+  return React.cloneElement(caption, { style: {
+    ...caption.props.style, ...FWP_SPLIT_CAPTION_ZONE, height,
+    padding: `10px ${HOUSE.caption.paddingX}px`,
+  } })
 }
