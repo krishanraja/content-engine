@@ -8,6 +8,7 @@ import { CaptionTrack } from './chrome/CaptionTrack'
 import { ChannelPill } from './chrome/ChannelPill'
 import { MarkTile } from './chrome/MarkTile'
 import { StageHeader } from './chrome/StageHeader'
+import { lightStage } from './chrome/lightStage'
 import { HeldTitle, WordCaption } from './chrome/WordCaption'
 import type { EngineBeat, EngineRenderProps } from './props'
 
@@ -26,12 +27,13 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     {/* SPLIT keeps the mark tile and series pill of every face-with-proof beat: the horizontal logo is drawn for ink
         and cannot be read on the cream stage (Krish, 2026-11-03: "We fucking have standards for intro, background
         audio and outro"; the house mark sits at the start of every beat, Krish 2026-09-26). */}
-    {beat.layout === 'STAGE' ? <StageHeader props={props} /> : <>
+    {beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>
       <MarkTile props={props} />
       <ChannelPill props={props} beat={beat} />
     </>}
-    {/* The title holds over the face beats; graphics own the top of SPLIT and STAGE. */}
-    {props.captionStyle === 'word' && !call && beat.layout !== 'SPLIT' && beat.layout !== 'STAGE' && <HeldTitle props={props} frame={frame} />}
+    {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);
+        graphics own the top of SPLIT and of a STAGE beat with no plate. */}
+    {props.captionStyle === 'word' && !call && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={props} frame={frame} />
       : call ? <CallCard props={props} frame={frame} />
         : props.captionStyle === 'word' ? <WordCaption props={props} frame={frame} />

@@ -32,7 +32,7 @@ export function Device({ object, events, box, aspect, tokens, frame }: DevicePro
     s.dek.split(/\s+/).some(word => textWidth('fraunces', word, 44) > dekWidth)))
     throw new Error('Dek copy does not fit at 44px')
   return <>
-    <div data-overlay="headline" style={{ ...canvasRect(at.x, at.y, at.w, l.height), color: tokens.cream,
+    <div data-overlay="headline" style={{ ...canvasRect(at.x, at.y, at.w, l.height), color: s.ground === 'light' ? tokens.ink : tokens.cream,
       fontFamily: HOUSE_FONTS.display, fontSize: l.size, lineHeight: 0.88, opacity: 1 - s.exit }}>
       {s.lines.map((line, i) => {
         const p = progress(s.age - i * MOTION.staggerFrames, MOTION.enterFrames, ENTER)

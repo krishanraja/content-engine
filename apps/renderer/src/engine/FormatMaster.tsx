@@ -4,6 +4,7 @@ import { BrandFrame } from './BrandFrame'
 import { useEngineFrame } from './clock'
 import { stageBubbleBox } from './devices/typing_bubble'
 import { headlineLayout } from './devices/headline'
+import { lightStage } from './chrome/lightStage'
 import { headlineState } from './devices/headline/state'
 import { DEVICES } from './devices/registry'
 import { slotsFor, splitCameraBox, splitPlatePosition } from './layouts'
@@ -58,7 +59,7 @@ export function FormatMaster(props: EngineRenderProps) {
           <AbsoluteFill key={`devices-${beat.id}`} style={beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: props.tokens.cream, overflow: 'hidden' }
             // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
             // the ground StageHeader's logo is drawn for.
-            : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? { background: `radial-gradient(ellipse at center, ${props.tokens.inkSoft} 0%, ${props.tokens.inkDeep} 100%)` } : {}}>
+            : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? { background: lightStage(props) ? `radial-gradient(ellipse at 50% 40%, ${props.tokens.cream} 0%, color-mix(in srgb, ${props.tokens.cream} 86%, ${props.tokens.mint}) 100%)` : `radial-gradient(ellipse at center, ${props.tokens.inkSoft} 0%, ${props.tokens.inkDeep} 100%)` } : {}}>
             <AbsoluteFill>
             {beat.uses.map((id, index) => {
               const object = objects.get(id)

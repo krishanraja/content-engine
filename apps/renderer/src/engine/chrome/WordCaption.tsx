@@ -1,3 +1,4 @@
+import { lightStage } from './lightStage'
 import React from 'react'
 import { HOUSE_FONTS } from '../../house/geometry'
 import type { EngineRenderProps } from '../props'
@@ -37,7 +38,9 @@ export function WordCaption({ props, frame }: { props: EngineRenderProps; frame:
       // Fraunces to the kit"), as the reference reel sets its quoted word.
       fontFamily: loud ? HOUSE_FONTS.dek : HOUSE_FONTS.structure, fontWeight: loud ? 700 : 800,
       fontStyle: 'normal',
-      fontSize: g.size, lineHeight: 1, color: '#FFFFFF', textShadow: SHADOW, whiteSpace: 'nowrap',
+      // On the light graphics wash the word is ink; over a face plate it stays white with its shadow.
+      fontSize: g.size, lineHeight: 1, ...(lightStage(props) && beat?.layout === 'STAGE' && beat.plate?.source === 'none'
+        ? { color: props.tokens.ink, textShadow: 'none' } : { color: '#FFFFFF', textShadow: SHADOW }), whiteSpace: 'nowrap',
       letterSpacing: loud ? '-0.01em' : '-0.005em',
       transform: `scale(${0.9 + 0.1 * pop})`,
     }}>{word.text}</span>
