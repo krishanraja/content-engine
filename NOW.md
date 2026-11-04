@@ -59,6 +59,7 @@ Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everyt
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - 9 Nov week (2026-11-04): board 0e79df54. Wed and Fri scripts on their tabs (Fri in Teleprompter); Tue and Thu carousels signed off and in 3 Posts; cover rule in the carousel standard. Next: Wed's script press; Growth posts the off days; Sat chosen Sun 8 Nov.
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
+- Next after Friday 13 Nov (2026-11-04): give the five look-alike styles their own look in the renderer (swiss-kinetic-type, hud-terminal, paper-cutout, vertical-captions, line-boil all differ from the house by timing only: dark and paper grounds, bracket and scan-line overlays, type as hero, lead captions, line boil); each must score 1.5 against the house and the others before it reaches his picker. Plan: the session handover of 4 Nov.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - North Star check (2026-11-04): holds.
 
