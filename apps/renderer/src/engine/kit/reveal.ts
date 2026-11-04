@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { ENTER, MOTION, motionProfile, progress } from '../clock'
+import { ENTER, HERO, MOTION, motionProfile, progress } from '../clock'
 
 /** The one text reveal and the one entrance look, shared by headline, query_chip and the composition's beat layer.
  *  With no motion style both return exactly the house values (a line rises 24 px and fades in, text shows whole). */
@@ -54,4 +54,32 @@ export function revealChars(text: string, age: number): number {
   if (profile?.typeReveal.kind !== 'typewriter') return [...text].length
   if (age < 0) return 0
   return Math.min([...text].length, Math.floor(age * (profile.typeReveal.cps ?? 30) / 30))
+}
+
+export interface Typed { text: string; caret: boolean; done: boolean }
+
+/** What a typed device (typing_bubble, query_chip) shows `age` frames after its typing began, its lead already spent
+ *  (Infinity for opening text, which is already typed). `spanFrames` is how long the house spreads the text over and
+ *  `houseP` the house's own 0 to 1 progress, which the house and the line and word styles keep exactly.
+ *  - typewriter: one character after another at the profile's cps (living-ui 30, hud-terminal 32), with a caret while
+ *    it types; never so slow it is still typing when its span ends, so the words are always read whole.
+ *  - roll: the text lands whole and its figures roll up from 0 over the profile's count frames. */
+export function typedText(text: string, age: number, spanFrames: number, houseP: number): Typed {
+  const chars = Array.from(text)
+  const profile = motionProfile()
+  const kind = profile?.typeReveal.kind
+  if (kind === 'typewriter') {
+    if (age < 0) return { text: '', caret: false, done: false }
+    const rate = Math.max((profile!.typeReveal.cps ?? 30) / 30, chars.length / Math.max(1, spanFrames))
+    const shown = Math.min(chars.length, Math.floor(age * rate))
+    return { text: chars.slice(0, shown).join(''), caret: shown < chars.length, done: shown >= chars.length }
+  }
+  if (kind === 'roll') {
+    if (age < 0) return { text: '', caret: false, done: false }
+    const q = Number.isFinite(age) ? progress(age, MOTION.countFrames, HERO) : 1
+    const rolled = q >= 1 ? text : chars.map((c) => /[0-9]/.test(c) ? String(Math.floor(Number(c) * q)) : c).join('')
+    return { text: rolled, caret: false, done: q >= 1 }
+  }
+  const shown = Math.floor(chars.length * houseP)
+  return { text: chars.slice(0, shown).join(''), caret: false, done: houseP >= 1 }
 }

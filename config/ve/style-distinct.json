@@ -1,0 +1,22 @@
+{
+  "schema": "ve-style-distinct/1",
+  "_about": "Only distinct options reach Krish's Pick a style press (Krish, 2026-11-04: \"strengthen the weak styles before Friday\"). `ve styles` (scripts/velib/styles.py) renders the house look and each shortlisted style on the same window, takes `frames` frames evenly spaced across each clip with ffmpeg, scales them to `width` px wide in greyscale and scores every pair by the mean absolute difference of their pixels (0 to 255). An option is offered only when it differs from the house look and from every other option by at least `threshold`; a look-alike is replaced by the next ranked style the renderer can draw, and with fewer than three distinct options it offers two and says so. `effects` names the devices each style's own effect touches, so a style whose effects touch no device in the window is left out and named before anything renders (apps/renderer/src/engine/engine.test.ts holds these lists equal to the renderer's devices/focus.ts).",
+  "frames": 6,
+  "width": 270,
+  "threshold": 1.5,
+  "min_options": 2,
+  "tuned_on": {
+    "window": "Thursday 5 Nov (2026-11-05-thursday-no-spending, short cut, frames 140 to 320, scale 0.5, stand-in take)",
+    "renders": "PR #381 clips, before the strong styles",
+    "scores_against_house": {"dark-keynote": 2.82, "riso-halftone": 4.56, "living-ui": 0.17},
+    "why": "dark-keynote reads clearly different by eye and riso-halftone visibly but subtly; the old living-ui looked the same as the house. 1.5 sits well under the weakest style he could tell apart (2.82) and nine times over the look-alike (0.17)."
+  },
+  "effects": {
+    "typewriter": {"devices": ["typing_bubble", "query_chip", "headline"], "what": "types text a character at a time"},
+    "roll": {"devices": ["typing_bubble", "query_chip", "headline", "kinetic_stat", "stat_strip"], "what": "rolls figures up"},
+    "zoomToFocus": {"devices": ["typing_bubble", "query_chip"], "what": "zooms to the line a device reports"},
+    "followPen": {"devices": ["scribble"], "what": "follows a scribble's pen tip"},
+    "halftone": {"take": true, "what": "lays a halftone on his take"},
+    "inkDeep": {"stage": true, "what": "lays ink_deep under a graphics-only beat"}
+  }
+}
