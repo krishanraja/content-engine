@@ -2,6 +2,18 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
+## 4 November (later): Wednesday 11 Nov (36886e0b) article drafted; the 9 Nov board would not republish (Claude Code, make-piece run)
+
+The article is drafted from the signed lock: `docs/plans/2026-11-11-wednesday/article.md`, 1,121 words. It passes
+`voice_check.py` (4.0) and the copy lint, and has no three-things section, by his ruling. No source is filed on the
+piece, so the fact gate has not run; this run could not file any (python3 only, no web). `ai_scan.py` could not load
+torch. Everything missing, and the pages to file, are in `docs/plans/2026-11-11-wednesday/article-status.md`.
+**Board:** `publish-web` refused the rebuild with the article box and the prediction question, because the active
+9 Nov build (8d78f0f0..., revision 25) has an empty asset map while its page links Monday's six downloads to stored
+assets. Suspected: Monday's downloads on the live board are broken. Refresh `docs/plans/2026-11-09-week/board-assets.json`
+from a machine holding Monday's files before rebuilding this week. **Next:** that refresh and republish, then file the
+sources and run the fact gate.
+
 ## 4 November: Wednesday 11 Nov (36886e0b, the Reiki master's No. 2) scripts on its tab (Claude Code, make-piece run)
 
 From the signed lock, both scripts are written and recorded on the piece (Scripts: done; Workroom: done):
