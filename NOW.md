@@ -57,9 +57,9 @@ Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everyt
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); approving the three one-opening, one-close floor standards through the Rejections route; OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- 9 Nov week (2026-11-03): Wed, Fri locks signed (`docs/plans/2026-11-09-week/`), briefs agreed (board ea1c8653). Next: rerun make-piece.yml for both. Gaps: picks not in `scheduled_for`; Monday fact gate fails; mcpskin needs his Next week press.
+- 9 Nov week (2026-11-04): board 69b4543c, v3 format. Asks: Mon publish (fact gate fails, rerun needs his spend yes); Wed signs its rewritten lock, then the make reruns; Fri scripts approved, Teleprompter send waits his words (readers not all clear). Off days: Growth makes Tue and Thu; Sat chosen Sun 8 Nov.
 - Waiting on Krish (2026-11-03): allow retiring four engineering taste claims (ids in the audit handover); rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
-- North Star check (2026-11-03): holds.
+- North Star check (2026-11-04): holds.
 
 ## Read next
 
