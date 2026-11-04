@@ -11,21 +11,21 @@ Read them together: ideas here, evidence there.
 
 ## What 100x actually means here
 
-Not 100x more content. 100x better content, at the same one-piece-a-week
-cadence, measured four ways:
+100x better content at the same cadence of three pieces a week, with no more
+pieces, measured four ways:
 
 1. **True beyond doubt.** Every number checked twice, now against more
-   independent sources, so the fact gate is harder to fool, not just faster.
+   independent sources, so the fact gate is harder to fool as well as faster.
 2. **Impossible to fake.** Built from the operational exhaust and from live,
    sourced data nobody else bothers to pull: market odds, news velocity, the
    room's real words.
 3. **Lands faster than the words.** Every piece carries one visual or
    interactive that makes its hardest point obvious in a second, and a video
-   that is Krish reacting, not an article read aloud.
+   of Krish reacting to the facts.
 4. **Learns every week.** Each piece records what the tools added, so the next
    piece starts ahead of the last.
 
-The real multiplier is not any single tool. It is the **combinations** (last
+The real multiplier is the **combinations** (last
 section): odds plus a scoreboard, a scrape plus a judge, a transcript plus a
 story check. One tool is 2x. The right chain is 100x.
 
@@ -67,14 +67,14 @@ only a reader; connector means reached through an MCP connector in a session.
 ### Judge: harder to fool, and graded against the world
 
 - **Perplexity Sonar** (keyed, live). The fact gate's independent checker today.
-- **Brave + Exa + an LLM with search** (keyed, live). Two or three independent
-  checkers instead of one, so a single wrong source can no longer pass a claim.
+- **Brave + Exa + an LLM with search** (keyed; today Exa or Brave is judged only
+  when Perplexity has no key). Two or three independent checkers instead of one, so a single wrong source can no longer pass a claim.
 - **Reddit sentiment** (Apify). A reality check on the angle: does the room
   actually feel what we are about to claim it feels.
 - **Higgsfield virality predictor** (connector). Score the finished cut for
   hook and retention before it ships, logged against the real 7-day result, so
   after five videos we know if it predicts anything.
-- **Gemini video understanding** (keyed, to build, cheap). A judge that can
+- **Gemini video understanding** (keyed, built as `scripts/signals/video.py`, cheap). A judge that can
   watch our cut or a competitor's and describe every shot and where attention
   would drop.
 - **Market odds as a judge of our own Call.** If the market strongly disagrees
@@ -87,11 +87,11 @@ only a reader; connector means reached through an MCP connector in a session.
   say it out loud."
 - **Real quotes** (Apify, Firecrawl). Three real lines from the room, quoted
   word for word with a date, instead of our paraphrase of "people were upset."
-- **The personality pass** (`VOICE_ON_CAMERA`, proposed). The article states
+- **The personality pass** (`VOICE_ON_CAMERA`, a live house rule). The article states
   the facts; the script is Krish reacting to them: one dry self-deprecating
   line, one sarcastic line at the hype, one exaggeration obvious by its size,
   one analogy a child would get, one opinion said as opinion and kept apart
-  from the checked facts. The story check gains a sixth point for it.
+  from the checked facts. The story check carries it as its sixth point.
 - **ElevenLabs / an LLM voice** (connector, live). A scratch voiceover so the
   script gets an ear before Krish records, and the story check hears its
   rhythm.
@@ -226,5 +226,5 @@ skip the rest. The bank learns; this plan is the menu.
 - **Next, by value:** draw the news-wall picture from the sweep's rows; pin
   Friday's Call to a market and watch the scoreboard fill; wire Brave and Exa
   as a second independent verdict inside the fact gate (today they feed its
-  research); the Reddit chorus through Apify; the personality pass on Friday's
+  research and stand in as the checker only when Perplexity has no key); the Reddit chorus through Apify; the personality pass on Friday's
   script.

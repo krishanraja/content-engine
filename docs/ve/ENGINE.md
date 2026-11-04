@@ -41,7 +41,7 @@ Commands, outputs and 55-minute envelope: RUNBOOK.md. Batch questions; end sessi
 | S7 | QC --props, <=2 fix loops, fresh Critic, final packet; Gate 3: watch cuts/hear joins reel | scripts, Claude, Krish |
 | S8 | file READY cuts to the archive and the post's `3 Video` folder, bound to piece_id; stop clock | script/Claude |
 
-face-with-proof is proven; scoreboard-test and voice-led-pictures are trial. Registered devices: test_grid, record_card, query_chip, evidence_card, kinetic_stat; format lists also name future devices. Compile refuses device verbs absent from devices.json. test_grid draws carry with a dashed box and ANSWER DELETED outline text.
+In `config/ve/formats/*.json` face-with-proof is `proven`; hand-held-screen, two-passports, scoreboard-test and voice-led-pictures are `trial`. `config/ve/devices.json` registers 19 devices, the same 19 the renderer's `devices/registry.ts` draws; format lists also name future devices. Compile refuses device verbs absent from devices.json. test_grid draws carry with a dashed box and ANSWER DELETED outline text.
 
 ## CLI
 
@@ -62,11 +62,11 @@ lock spend
 verify-card <card> --cwd <worktree>
 status <piece>
 coverage
-compile <spec> --cut <cut> --words <words.json> --assets-dir <assets>
+compile <spec> --cut <cut> (--words <words.json> | --edl <edl.json>) --assets-dir <assets>
 render <props> <out> --spec <spec> --assets-dir <assets> [--scale <number>]
 expect <spec>
-styles <spec> [--cut <cut>] [--top 3] [--points <a,b>] [--props <props>]
-proof <spec> --cut <cut> [--beat <id>] [--props <props>] [--assets-dir <assets>] [--no-qc]
+styles <spec> [--cut <cut>] [--top 3] [--points <a,b>] [--props <props>] [--scale <number>]
+proof <spec> --cut <cut> [--beat <id>] [--props <props>] [--assets-dir <assets>] [--scale <number>] [--no-qc]
 ingest <piece> --take <id> --media <file> --aligner-a <name> --aligner-b <name> [--clock-a <json>] [--clock-b <json>]
 conform <piece> --cut <cut> [--script <words.json>] [--takes <id> ...] [--crossfade-ms 20..40] [--render --assets-dir <assets> [--joins-reel]]
 said <piece> --take <id> --teleprompter <script.txt>
@@ -86,7 +86,7 @@ time <piece> status
 file <piece> --subject <text> [--date <YYYY-MM-DD>] [--cut <cut> ...] [--dry-run]
 ```
 
-`stills` is a placeholder (exit 2); quick-edit is fallback. Never claim complete ve production from unavailable stages.
+Also: `comp`, `keyframes`, `lock check|show|freeze`, `fonts`, `lane`, `verdict write`, `packet`, `premix`, `receipt`, `faces` and `lab` (RUNBOOK.md, STATUS.md; `ve <command> -h`). `stills` is a placeholder (exit 2); quick-edit is fallback. Never claim complete ve production from unavailable stages.
 
 **One production round (plan 4 Nov 2026; F04, F13).** **expect** writes `<ve dir>/expect.md`, at most six plain lines of what the cut will and won't do, each only when it applies (`velib/expect.py`). **styles** renders the same 8 to 15 s window of his take once per shortlisted motion style (`creative_direction.pick_motion`, top 3; a style whose device is not built is left out and named) to `styles/<module>.mp4` and `styles.json`, each option's props carrying its own `motion` (the style id and its profile from the renderer's `kit/motion-profiles.json`, which the renderer draws; see STATUS.md for the ten styles drawn and the seven that need a device); with no take it uses his last take of the same format, labelled, never stock. Only distinct options are offered (`config/ve/style-distinct.json`): it renders the house look on the same window to `styles/house.mp4`, leaves out first a style whose own effect touches no device in the window (named, reason `no_device_in_window`), samples 6 frames of every clip at 270 px wide in greyscale with ffmpeg, scores every pair by mean absolute difference and offers a style only when it differs from the house and every option already offered by at least the threshold; a look-alike (`look_alike`, with its score and the clip it resembles) gives way to the next ranked drawable style, two distinct options are offered with a `note` saying so, and fewer than two refuse. `styles.json` carries `house`, `distinctness` {threshold, frames, width, pairs} and each option's `differs`. **proof** renders only the hardest beat (`velib/proof.py`: `style.proof.beat`, else most distinct devices, then a SPLIT beat with a card, then the longest) from the compiled props, cut to that window on the same clock and rendered by the same `render`, then runs qc on it; it writes `proof/<cut>.mp4` and `proof/<cut>.json` {beat, start, end, sha256, spec_sha256, style_module}. From `creative_direction.MOTION_FROM` (9 Nov 2026) `render` of a whole cut, `packet` and `status` refuse unless Krish approved that proof by its sha256 and `proof.structural_hash` (style.motion, the device set, each beat's id, uses and layout; never caption text) still matches, and the beat has not moved 0.5 s or more. His presses are read from the piece's making record, `gates.{storyboard,style,proof,final}` (`velib/gates.py`, GET `/api/content-ideas/<id>/making`, the uuid from the plan folder's `post.json`), and from the spec's own `approvals`; the record wins, and offline it says NOT CHECKED. A proof press that names its `cut` counts only for that cut; the final press binds each cut in `gates.final.cuts` ({long, short}: file sha256s), and `gates.storyboard.sha256` is `gates.storyboard_sha` (canonical JSON of expect.md and storyboard.md, LF, the board's `week_board.storyboard_sha`). `packet` opens with "In short" (at most ten lines), counts `rounds` in `packet.record.json` and writes it to the making record (the route refuses session writes to `gates`, never `rounds`).
 
@@ -105,7 +105,7 @@ folder used to compile it, so lint and asset hashes are checked before rendering
 
 Compile/render lint first: findings print, exit 1, no new output. Words need unique indexes, text, ordered onset_s and finite numeric end_s >= onset_s. The onset-only 19-second fixture needs real aligned ends; synthetic test ends are not alignment. Compile refuses unapplied source edits and includes only objects in the cut's beat `uses`. Phase 1 refuses asset plates and used generated-asset references, in compile.py's own words: "asset plates arrive in Phase 2". Media paths must be relative and contained under assets, never URLs/absolute paths.
 
-Captions use exact Archivo-heavy widths, aspect geometry/swipe padding. Pages: 2-5 words, <=2 lines, prefer punctuation; a single word only if it fills a line. Oversize words are refused by name. Dialogue: `round(last end_s * 30) + 12` frames. Whole cuts with a call add a 105-frame ending; captions stop at its start. Excerpts have no ending.
+Captions use exact Archivo-heavy widths, aspect geometry/swipe padding. Pages: 2-5 words, <=2 lines, prefer punctuation; a single word only if it fills a line. With `brand.captions: "word"` (face-with-proof's default) the renderer shows each page one word at a time. Oversize words are refused by name. Dialogue: `round(last end_s * 30) + 12` frames. Whole cuts with a call add a 105-frame ending; captions stop at its start. Excerpts have no ending.
 
 SFX kits: `config/ve/sfx-kits/<audio.sfx_kit>.json`, names mapped to `{ "path": "sfx/name.wav", "gain_db": -6 }` under assets. Kits are absent today; referenced sounds are omitted/reported, as are unknown names in present kits. Compile writes `props.<cut>.json` and `compile.<cut>.json` in the piece's ve folder; report: lint clean, sfx_missing event ids, props_sha256. Non-empty sfx_missing blocks status. Never mark intended sounds silent to hide gaps. Staged spec assets with declared SHA-256 must match; mismatches name the asset/refuse render.
 
@@ -137,7 +137,7 @@ Caps come from `config/ve/budget.json`:
 
 | Measure per piece | Ceiling / target |
 |---|---|
-| Engine time after recording | 1 h target; 60 min cap |
+| Engine time after recording | 1 h target; 300 min cap (`engine_minutes_cap`: Krish raised 60 to 120 on 28 Oct, a session then 300, not confirmed by him) |
 | Claude tokens | 3.3M |
 | Codex tokens | 2.1M |
 | Total tokens (Claude + Codex) | 12.6M |

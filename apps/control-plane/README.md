@@ -12,8 +12,9 @@ broken right now is in [`docs/STATE.md`](../../docs/STATE.md).
 Working here:
 
 - There is no local dev server. Use `npm run typecheck:control-plane`,
-  `npm run check:control-plane`, `npm test` and `scripts/run-endpoint.ts`
-  from the repository root.
+  `npm run check:control-plane` and `npm test` from the repository root. To run
+  one handler against the real environment, run
+  `npx tsx scripts/run-endpoint.ts api/<route>.ts` from this folder.
 - Imports use NodeNext `.js` specifiers.
 - New routes that write or spend use `guardEngine` (or a cron, runner or MCP
   guard), never `preamble`.

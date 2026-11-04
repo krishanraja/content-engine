@@ -8,7 +8,8 @@ A device is a persistent, state-driven object. It is never a scene.
 - `index.tsx`: the component;
 - `schema.ts`: zod schema for `object.params`;
 - `fixture.json`: a minimal EngineRenderProps slice;
-- `device.test.ts`.
+- `device.test.ts`;
+- often `state.ts`, the device's pure state reducer.
 
 ## Signature
 
@@ -38,10 +39,12 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
 7. **Both aspects are authored.**
    - `box` is the layout slot in frame pixels.
    - Design for 1080x1920 slots and 1920x1080 slots separately. Never scale one into the other.
-8. **Motion grammar is slide, drop, slap.** Timing comes from `MOTION`:
+8. **Motion grammar is slide, drop, slap.** Timing comes from `MOTION` in `../clock`, read at draw time; never hard-code it. With no motion style it is the house motion (`HOUSE_MOTION`):
    - enter 12 frames;
    - exit 6 frames;
    - stagger 3 frames;
    - slap 5 frames;
    - drop 8 frames.
+
+   A cut's motion style (`props.motion`, which FormatMaster sets with `setMotionProfile`) changes these inside the signed floor (`docs/ve/MOTION_STANDARD.md`: entrances settle in 4 to 7 frames).
 9. **The test renders stills at given frames from `fixture.json` and asserts state.** For example: no tick before its event frame, a tick 6 frames after it, and a denominator that never changes.

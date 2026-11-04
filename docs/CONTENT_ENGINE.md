@@ -3,7 +3,9 @@
 Status: Current
 Owner: Krish Raja
 Last verified: 2026-09-25 against `main` at `fd467e1`: every route file read,
-crons and run ledger read back from the database, guards run locally.
+crons and run ledger read back from the database, guards run locally. On
+2026-11-04 the route paths, crons, guards, checks, Studio handoff and library
+limits were checked again against `main`; the run ledger was not read.
 
 Scope: the editorial half of this repository, everything under
 `apps/control-plane/`. The Studio half is in `docs/STUDIO.md`. Why either
@@ -69,8 +71,7 @@ thirteen callers moved to `guardEngine`: shifts, content decisions, weekly
 briefs, creator settings and AEO settings. The auth test scans every handler so
 a new `preamble(req, ...)` call fails the suite, and it invokes each of the
 thirteen former openings with no credentials to prove it returns 401 before a
-database read, model call or factory push. This code is not live until it is
-merged and deployed. `discover-lens-radar` remains open when
+database read, model call or factory push. That fix is on `main`. `discover-lens-radar` remains open when
 `LENS_RADAR_SECRET` is unset, and the fail-open guards remain recorded in
 `docs/STATE.md`.
 
@@ -147,7 +148,7 @@ has passed. `POST /api/content-ideas/:id/judge` answers such a panel with 503
 | `POST /api/content-ideas/[id]/draft` | writes a 700 to 1000 word draft to the subchannel's mandate from everything curation left on the row (`api/_curation.ts`); refuses an unrouted idea (409 `no_subchannel`); moves `seeded` or `researching` to `drafting`; keeps the last 10 drafts. Self-checked before it is written (below) | Sonnet [`cleo-draft`; the self-check's retry `cleo-draft-retry`] |
 | `POST /api/content-ideas/[id]/revise` | streams a rewrite preview (tone, length, zoom, feedback, humour; in place when given a selection). Reads the mandate. Never writes `body`; the caller saves an accepted rewrite. Self-checked before `done` (below) | Sonnet, or Opus for humour [`cleo-revise`; the self-check's retry `cleo-revise-retry`], prompt caching on |
 | `POST /api/content-ideas/[id]/final-pass` | the ship-moment rubric: instant fails, autofixes, suggestions, a verify list; judged against the subchannel's mandate, or the investigation rubric when an evidence manifest is attached | Sonnet [`cleo-final-pass`] |
-| `POST /api/content-ideas/[id]/fact-check` (`GET` reads the last result) | the fact gate (`api/_factGate.ts`). Lists every checkable claim, sweeps the body so no sentence with a number or a quotation escapes, then checks each claim twice: against the sources on file (the model must quote up to three passages verbatim that carry the claim's numbers, and code confirms them) and independently on the web (Perplexity `sonar-pro`, else Exa or Brave judged), whose verdict counts only when a second model finds its quoted evidence bears it out. One source is enough only when it is a verbatim excerpt (a material filed with `verbatim: true` and its URL); a claim found only in a summary needs the web to agree. Stores `meta.fact_check`, pinned to a hash of the exact body. A sentence an earlier run passed or set aside keeps that result while its words and the sources are unchanged (`meta.fact_ledger`, walk log F52); a failed sentence is always checked again, and any change to the sources starts the ledger again. `GET` reports how many exact sentences the next run can reuse, and `precheck.numbers_not_on_file`: every stated number no filed source carries, read without a model (2026-10-15). `scripts/engine.py` reads that `GET` before every `POST` and refuses the paid run while the list is not empty, unless `--despite-precheck`. A paid rerun may send `max_fresh_sentences`; when the current body exceeds that hard scope, the route refuses before its first model or web call (`rerun_scope`, walk log F55). `{ action: 'sign_off', decided_by: 'Krish', lines: [{ sentence, said }] }` records Krish passing named blocking lines in his own words (`meta.fact_check.signed_off`, guard G9 in `docs/COST_GUARDS.md`); no model is called, and the gate opens when every blocking line is signed off and none is left unchecked . Every paid run's calls, Perplexity's included, are stamped with the piece and the run in `meter_events` (cost guard G12) once that migration is applied | Sonnet [`fact-gate-*`], Perplexity |
+| `POST /api/content-ideas/[id]/fact-check` (`GET` reads the last result) | the fact gate (`api/_factGate.ts`). Lists every checkable claim, sweeps the body so no sentence with a number or a quotation escapes, then checks each claim twice: against the sources on file (the model must quote up to three passages verbatim that carry the claim's numbers, and code confirms them) and independently on the web (Perplexity `sonar-pro`, else Exa or Brave judged), whose verdict counts only when a second model finds its quoted evidence bears it out. One source is enough only when it is a verbatim excerpt (a material filed with `verbatim: true` and its URL); a claim found only in a summary needs the web to agree. Stores `meta.fact_check`, pinned to a hash of the exact body. A sentence an earlier run passed or set aside keeps that result while its words and the sources are unchanged (`meta.fact_ledger`, walk log F52); a failed sentence is always checked again, and any change to the sources starts the ledger again. `GET` reports how many exact sentences the next run can reuse, and `precheck.numbers_not_on_file`: every stated number no filed source carries, read without a model (2026-10-15). `scripts/engine.py` reads that `GET` before every `POST` and refuses the paid run while the list is not empty, unless `--despite-precheck`. A paid rerun may send `max_fresh_sentences`; when the current body exceeds that hard scope, the route refuses before its first model or web call (`rerun_scope`, walk log F55). `{ action: 'sign_off', decided_by: 'Krish', lines: [{ sentence, said }] }` records Krish passing named blocking lines in his own words (`meta.fact_check.signed_off`, guard G9 in `docs/COST_GUARDS.md`); no model is called, and the gate opens when every blocking line is signed off and none is left unchecked. Every paid run's calls, Perplexity's included, are stamped with the piece and the run in `meter_events` (cost guard G12) once that migration is applied | Sonnet [`fact-gate-*`], Perplexity |
 | `POST /api/content-ideas/[id]/dive-deeper` | suggests research questions or runs one scoped dive and files it as a material | Perplexity `sonar-pro`, Sonnet [`cleo-dive-deeper`] |
 | `POST /api/content-ideas/[id]/challenge` | steelman, counter-case, sharper take | Perplexity, NewsAPI, Apify, Sonnet [`cleo-challenge`] |
 | `POST /api/content-ideas/[id]/deepen` | comparison research. Accepts only `paid` and `built` | Sonnet [`cleo-deepen`] |
@@ -504,10 +505,11 @@ here publishes, and which titles go up is Krish's choice.
 
 `POST /api/content-ideas/[id]/production-brief` needs state `approved`, a
 matching approval hash and `confirm_hard_gates: true`, and writes a
-`ProductionBriefV1` with status `ready_for_studio`. It accepts only
-`lane_slot` `money_of_ai` or `built_with_ai` (`api/_productionBrief.ts`), so a
-piece routed to a live subchannel fails with `canonical_series_required`
-(`docs/STUDIO.md`, "Series and subchannels"). The runner then leases and
+`ProductionBriefV1` with status `ready_for_studio`. It accepts a `publication` piece whose `lane_slot` is a
+live subchannel (`follow_the_money`, `under_the_hood`, `mind_the_gap`) or one
+of the retired pair (`money_of_ai`, `built_with_ai`), with an editorial
+format of that series (`api/_productionBrief.ts`); any other piece fails with
+`canonical_series_required` (`docs/STUDIO.md`, "Series and subchannels"). The runner then leases and
 completes briefs through `/api/video-studio/runner/production-brief-claim` and
 `-complete`. The other `/api/video-studio/*` routes serve the runner protocol
 (claim, heartbeat, complete, project, preview upload and retention, credential
@@ -568,15 +570,16 @@ The tools are `scripts/post-pack/` (its README has the folder layout) and
 `scripts/library-sync.ps1`.
 
 The pattern is the Studio's preview upload: a private bucket
-(`content-library`, 500 MiB a file, only the types a post, the brand kit and
+(`content-library`, 2 GiB a file since 2026-10-18, only the types a post, the brand kit and
 the channel art use), signed URLs so the bytes never pass through a function,
 the bucket's settings checked on every request, and the Studio's error shape
 (`{ ok: false, error: { code } }`). Every path is checked against one rule
 (`api/library/_library.ts`, tested with `scripts/post-pack/library.py` against
 `config/library-paths.cases.json`): relative, forward slashes, Windows-safe,
 and inside `1 Brand kit (permanent)/`, `2 Channel art (permanent)/` or one
-post's folder, `3 Posts/YYYY-MM-DD <Day> <subchannel> - <Subject>/`, in its
-four sections or as its `READ ME.txt`.
+post's folder, `3 Posts/YYYY-MM-DD <Day> <subchannel> - <Subject>/` (`off.day`
+in place of the subchannel on a Tuesday, Thursday or Saturday post), in its
+sections or as its `READ ME.txt`.
 
 | Route | Who | What it does |
 |---|---|---|
@@ -608,7 +611,7 @@ first one's bytes. `api/library/_recordings.ts` holds the rule.
 
 | Route | Who | What it does |
 |---|---|---|
-| `POST /api/library/recordings/upload-url` | the runner bearer | `{ name, sha256, md5?, bytes }`. `already_there` when these bytes are listed under this name; `upload: null` when they are stored (under another name, or a confirm did not finish); otherwise a signed PUT. A name with a folder, an unsafe character or a type that is no recording is 400 `invalid_recording_name` with the reason; over 500 MiB, 413; an `.mkv` before its migration, 415 `recording_type_not_enabled` |
+| `POST /api/library/recordings/upload-url` | the runner bearer | `{ name, sha256, md5?, bytes }`. `already_there` when these bytes are listed under this name; `upload: null` when they are stored (under another name, or a confirm did not finish); otherwise a signed PUT. A name with a folder, an unsafe character or a type that is no recording is 400 `invalid_recording_name` with the reason; over 2 GiB, 413; an `.mkv` before its migration, 415 `recording_type_not_enabled` |
 | `POST /api/library/recordings/confirm` | the runner bearer | The same body. Checks the stored object's size, type and (where both sides have one) MD5, then writes the manifest, adding the name. 409 `recording_object_missing` or `recording_object_conflict` otherwise |
 | `GET /api/library/recordings?limit=<1..200>` | the engine key (or the cookie) | The recordings, the newest first: `name`, `names`, `bytes`, `sha256`, `content_type`, `uploaded_at` and a download URL that lasts an hour. A manifest that cannot be read is counted in `skipped` |
 
@@ -619,7 +622,8 @@ with or without it, so it can be applied before or after the deploy.
 
 ## Crons (`apps/control-plane/vercel.json`, all UTC)
 
-All 20 have run-ledger rows in the last seven days (read back 2026-09-25).
+There are 24 (2026-11-04). On 2026-09-25 all 20 scheduled then had run-ledger
+rows in the last seven days.
 
 | Schedule | Job | Route |
 |---|---|---|
@@ -645,10 +649,12 @@ All 20 have run-ledger rows in the last seven days (read back 2026-09-25).
 | Sat 05:00 | `build_signals` | `/api/discover-build-signals` |
 | Sat 06:00 | `trend_metrics` | `/api/trends/metrics` |
 | Sun 16:00 | `learning_compile` | `/api/learning/compile` |
+| hourly at :17 | `publish_watch` | `/api/publish/watch` |
+| every 10 min | `recordings_drive_inbox` | `/api/library/recordings/drive-inbox` |
 
-The replay registry (`api/content-engine/_jobs.ts`) has 20 entries but not
-`judge_sweep` or `judge_ladder`, which is why `check-run-recovery` fails. The
-dashboard's copy of the schedule is `apps/control-plane/lib/contentEngineSchedule.ts`,
+The replay registry (`api/content-engine/_jobs.ts`) has 26 entries: the 24
+cron jobs, `judge_ladder` (manual only) and `aeo_ingest`. `check-run-recovery`
+passes (2026-11-04). The dashboard's copy of the schedule is `apps/control-plane/lib/contentEngineSchedule.ts`,
 checked against `vercel.json` by `check-content-engine-schedule`.
 
 ## Models and spend
@@ -755,9 +761,9 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 - `npm run check:control-plane` runs 28 guards in `apps/control-plane/scripts/`
   (supply, judging, content lifecycle, operations, security and the Studio
   bridge); it is part of `npm run verify` and skipped on Windows. All pass
-  since walk log H16.
+  (run again 2026-11-04).
 - `npm run typecheck:control-plane` typechecks the app and its scripts.
-- `tests/control-plane/` holds 56 vitest files, run by the root `npm test`.
+- `tests/control-plane/` holds the engine's vitest files, run by the root `npm test`.
   A test that imports engine code belongs here: the root typecheck covers
   only top-level `tests/*.ts`, under settings the engine was not written for.
   Tests that call a handler point Supabase at a dead local address, so a
@@ -857,7 +863,7 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
     names, real pages piled up when the piece is about volume, and a cover
     from the house drawer with Krish's face. Every launch set includes the publish page (`docs/AMPLIFICATION.md`,
     `scripts/post-pack/publish_kit.py`): one Substack Video post, then YouTube,
-    then Shorts, TikTok and Instagram, with LinkedIn, WhatsApp and Notes as
+    then Shorts, TikTok and Instagram, with LinkedIn and Spotify as
     optional steps, and Copy buttons on each. The same day a post's launch set is made, pack it with
    `python3 scripts/post-pack/build.py post.json` and send it with
    `python3 scripts/post-pack/send.py <pack folder>`; send a brand kit change
@@ -881,8 +887,12 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
     change within a second: no second table, no polling, no copy of the
     state anywhere else. Each step names its owner (`MAKING_OWNERS`):
     Claude Code makes the workroom, the draft, the pictures, the scripts
-    and the pack and builds the publish board; Krish records and posts;
-    Codex produces the video (`.agents/skills/produce-video/SKILL.md`).
+    and the pack and builds the publish board; Krish records and approves
+    each post, and Growth posts what he approved (`docs/GROWTH-HANDOFF.md`).
+    The video is made with ve on a home computer (`docs/ve/RUNBOOK.md`;
+    `.agents/skills/produce-video/SKILL.md` is the quick-edit fallback), and
+    Codex makes pictures for named slots, never a cut. `MAKING_OWNERS` still
+    names Codex as the video step's owner.
     A tool never writes a step it does not own (`docs/CADENCE.md`). The record's shape lives in
     `apps/control-plane/api/_making.ts` and is mirrored in
     `control-center/src/lib/making.ts`; change both together.

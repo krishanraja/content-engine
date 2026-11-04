@@ -7,7 +7,7 @@ Each week, one or two new library devices come from Production Inspo. Each one i
 ## The week
 
 1. **Pick (Claude, Monday).** Choose 1 or 2 references from the Production Inspo folder, the ones that show a move the engine cannot draw yet. The move has to carry a point faster (AGENTS.md rule 6), not just look busy. Check `config/ve/moves.json` and `config/ve/devices.json` so you never card a device the library already has.
-2. **Brief.** `ve sprint start <Monday> --ref <reference> [--ref <reference>]` makes one brief per reference through `ve brief` (one brief per plate, W2.7). It also writes a card-fields skeleton, `docs/ve/sprints/<Monday>/card-<n>.fields.json`. Until `ve brief` is on main, the adapter writes a brief marked `pending`, and the next step refuses to card from it.
+2. **Brief.** `ve sprint start <Monday> --ref <reference> [--ref <reference>]` makes one brief per reference through `ve brief` (one brief per plate, W2.7). It also writes a card-fields skeleton, `docs/ve/sprints/<Monday>/card-<n>.fields.json`. Today it stops at the first reference: `ve brief` is on main, but it briefs a piece's plates (`ve brief <piece>`, with no `--out`), while the adapter (`scripts/velib/sprint.py`, `brief`) still calls `ve brief <reference> --out <file>`, which ve refuses. The adapter must change before this step works. A brief marked `pending` (written only where `ve brief` is absent) is refused by the next step.
 3. **Card (Claude).** Fill each skeleton from its brief and the reference:
    - the device id;
    - the aim, one of `good motion`, `good animation` or `good visuals`;

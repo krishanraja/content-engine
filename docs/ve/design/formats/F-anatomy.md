@@ -1,8 +1,9 @@
-# FACE WITH PROOF: anatomy (draft lock, awaiting Krish's Gate 2)
+# FACE WITH PROOF: anatomy (9:16 lock frozen 3 Nov 2026; 16:9 draft awaiting Gate 2)
 
-Status: a draft written on 29 Oct 2026 for the W2.7 shadow run. Nothing here is approved until Krish approves one
-still per beat at Gate 2 and `ve lock freeze` hashes them. Until then `face-with-proof` stays a legacy format: lint,
-compile and render work as they did, and the packet asks for his proof approval of the exact file.
+Status: written as a draft on 29 Oct 2026 for the W2.7 shadow run. The 9:16 lock was frozen on 3 Nov 2026: Krish
+approved one still per beat (the round 3 stills: "Looks good to me.") and `ve lock freeze` hashed them
+(`config/ve/design-lock.json`, `formats.face-with-proof`). The 16:9 entry, `face-with-proof@16:9`, is still a draft
+awaiting its own Gate 2.
 
 Source: `config/ve/formats/face-with-proof.json` (proven on the Monday 19 Oct camera cuts he accepted) and
 `docs/ve/design/TEMPLATE.md`. He on camera carries the argument; the proof arrives beside or over him on the words
@@ -24,7 +25,7 @@ Extra beats (more hooks, stats, the dated call) are allowed between them and are
 - `hand-held-screen` (format H): its five beats may sit inside a face-with-proof cut, held to H's frozen stills.
 - `two-passports`: its five beats likewise, held to its frozen stills.
 
-At freeze both become `role: module` (they keep working as their own formats).
+Since the 3 Nov freeze both are `role: module` (they keep working as their own formats).
 
 ## Canvases
 

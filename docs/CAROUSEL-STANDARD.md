@@ -1,6 +1,6 @@
 # Carousel quality standard
 
-Owner: content-engine. Taste authority: Krish Raja. Updated 28 October 2026.
+Owner: content-engine. Taste authority: Krish Raja. Updated 4 November 2026.
 
 Who makes carousels (Ruling, Krish, 28 October 2026: "take over posting as
 well as creating new assets like carousels"): Growth-MakeYourMindUp now makes
@@ -178,13 +178,38 @@ completely for publishing next week" and "make sure all future carousels never n
   the one-line dek and the series pill sit over it with no box. A gradient from clear to the house ink carries the
   type; nothing is cropped across a face or the scene's subject.
 - Generate the scene as a still (no words, letters or logos in the picture; a single prop word such as "A+" is fine)
-  in the house tones: ink shadows with the series colour as the light. A real photo is used instead only when its
+  in the house tones: ink shadows with the day's colour as the light (below). A real photo is used instead only when its
   rights are clear. Record the generation's job id, model and prompt beside the deck.
 - Cards 2 onwards stay the house look: ink ground, Anton headlines, Archivo body, Plex Mono labels, real logos from
   Brandfetch, the house mark small in the bottom corner. A logo that is dark on the dark ground is shown in white
   (monochrome) or on a light tile; never invisible.
 - Before showing him a deck, look at card 1 at phone size beside the last approved covers (the week of 9 November's
   three, in `docs/plans/2026-11-09-week/offday-carousels.md`). If it would not stop a thumb, it is not ready.
+
+## Each day wears its own colour, Monday to Saturday (Ruling, Krish, 4 November 2026)
+
+His words: "lightly colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday? When they go
+on Facebook and Instagram they're slightly differently coloured based on the colour theme of each day. The off days are
+neutral colours or the colours we have planned, but not under the Monday, Wednesday, or Friday panels or colours. Just
+subtle brand recognition would be nice as a hard rule across Monday to Saturday assets."
+
+The publishing day decides the colour of every asset, carousels and covers included. The colours are the subchannels'
+own (`config/studio.json`):
+
+| Day | Colour |
+|---|---|
+| Monday | follow.the.money's yellow, `#FFD84D` (the kit's butter) |
+| Wednesday | under.the.hood's lilac, `#B7A6FF` |
+| Friday | mind.the.gap's coral, `#FF6A4D` |
+| Tuesday, Thursday and Saturday | the house mint, `#7EF0C0`, on neutral ink, sage or cream |
+
+- The day's colour is the accent: the highlighted words, the pill, the tag and the light in a cover scene. On a series
+  day the ground may lean lightly toward it; it never floods the card.
+- An off-day asset carries no subchannel colour anywhere: no yellow, lilac or coral, even when its story came from a
+  series piece.
+- A series day carries its own colour only, never another day's.
+- Content-engine's covers and thumbnails follow this in code (`scripts/pages/brand.py` `day_look`, `tests/day_colour_test.py`).
+  Growth's kit holds its templates to the same table.
 
 ## Seeing a finished carousel (Ruling, Krish, 3 November 2026)
 

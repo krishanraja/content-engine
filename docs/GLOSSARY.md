@@ -2,7 +2,7 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-09-25 against `main` at `fd467e1` and the live `venture_formats` and `format_aliases` tables
+Last verified: 2026-11-04 against `main` at `45161a5` for the names, ve, the board and the learning terms; the `venture_formats` and `format_aliases` rows were last read back on 2026-09-25
 
 Terms as this repository uses them. Where a word means different things in the
 two halves, both meanings are given. Read "Names" first: most misreadings of
@@ -12,22 +12,25 @@ this repository start with a retired name.
 
 | Name you may see | What it is now | Where it is still live |
 |---|---|---|
-| Mindmake | Krish's AI advisory, education and products business. The current name | everywhere |
+| Mindmake | Krish's AI advisory, education and products business. The current name. This engine and the publication belong to makeyourmindup (Ruling, Krish, 2026-10-28) | everywhere for the business; in this repository, only package, environment and credential names, which keep the `mindmake` spelling |
 | Mindmaker | the older name of the business | load-bearing only as a Drive folder path, the ASR vocabulary, the CLI description and some skill descriptions; renaming those breaks paths or tests |
 | Mindmaker Live | a retired channel name; its alias maps to `general` | old pilot and analytics labels |
 | follow.the.money (`follow_the_money`) | live subchannel: the money question | the publication |
 | mind.the.gap (`mind_the_gap`) | live subchannel: the pattern question; the hero subchannel | the publication |
 | under.the.hood (`under_the_hood`) | live subchannel: the build question | the publication |
-| The Money of AI (`money_of_ai`), `paid` | retired as a subchannel on 2026-09-17; an alias of follow.the.money | **live as a Studio series** |
-| Built with AI (`built_with_ai`), `built` | retired as a subchannel on 2026-09-17; an alias of under.the.hood | **live as a Studio series** |
+| The Money of AI (`money_of_ai`), `paid` | retired as a subchannel on 2026-09-17; an alias of follow.the.money | a retired Studio series id, valid only in records made under it |
+| Built with AI (`built_with_ai`), `built` | retired as a subchannel on 2026-09-17; an alias of under.the.hood | a retired Studio series id, valid only in records made under it |
 | `techonomic`, `builder_economy`, `mindmaker_live` | aliases of `general` | old rows |
 | split.the.bill (`split_the_bill`), lift.the.lid (`lift_the_lid`) | the names follow.the.money and under.the.hood carried until Krish renamed them on 2026-09-25 ("every single instance front and back end, with zero exceptions"). Aliases in `format_aliases`, so an old link or row still resolves. Nowhere else: a test fails if either name reappears in a tracked file | the ten append-only rows written before the rename (`content_edit_events`, `judge_verdicts`), which cannot be edited |
 | Signal & Noise (`signal_noise`) | an older channel still known to the final-pass rubrics and channel cuts | legacy rubric keys |
 | `general`, `either` | rows in `venture_formats` that are not subchannels: a holding lane, and "suits more than one" | routing |
 | makeyourmindup | **the publication's name** (Krish, 2026-09-25). Hosted on Substack; its cover page is makeyourmindup.ai. Also the `corpus_key` on every live subchannel row | makeyourmindup.ai used to be CTRL's lead-magnet door; where that door goes now is open (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8) |
-| Mindmake's publication | an older way of naming the publication | Control Center's architecture canon |
+| Mindmake's publication | an older way of naming the publication, superseded on 2026-10-28 | Control Center's architecture canon |
 | Content Engine | this repository's editorial half; Control Center's Content tab holds only its two approval queues (Ideas to approve; Ready to schedule and post) | both repos |
-| Studio, Video Engine, Video Studio, video-studio | the media half of this repository | `packages/`, `apps/runner`, `apps/renderer`, `/api/video-studio/*` |
+| ve | the video engine: one signed spec per piece, run with `python scripts/ve.py` | `scripts/ve.py`, `scripts/velib/`, `docs/ve/` |
+| quick-edit | the older video path, the fallback until ve passes Phase 3 | `scripts/quick-edit/`, the `produce-video` skill |
+| Studio, Video Studio, video-studio | the job-based Studio route of the media half (stations, runner, gates); not how videos are made today | `packages/`, `apps/runner`, `apps/renderer`, `/api/video-studio/*` |
+| Video engine, Video Engine Inbox | the exact phrase that launches the `video-engine` skill (AGENTS.md); the Drive folder Krish drops his takes in | `.agents/skills/video-engine`; Drive |
 | `mindmake-video-studio` | this repository's former name | older docs and a session alias |
 
 ## The publication
@@ -116,6 +119,17 @@ this repository start with a retired name.
   configuration. The walk's candidates are numbered R1, R2...
 - **Ruling.** A decision Krish makes that overrules the engine or an agent,
   recorded in a commit body as `Ruling (Krish, YYYY-MM-DD): ...`.
+- **Rejection floor.** Every rejection Krish gave, with his words, and the
+  standards read from them, by maker (`config/rejection-floor.json`, read with
+  `python3 scripts/floor.py --format <maker>`). Nothing ships beneath it.
+- **Failure register, failure loop.** `config/failures.json` (each failure he
+  raised and the guard that now stops it, `python3 scripts/check_failures.py`)
+  and `engine_incidents`, which the weekly learning run reads
+  (`docs/learning/README.md`).
+- **Narrative lock.** The one story for a piece, settled with Krish in the
+  Sunday room and signed by him once
+  (`docs/plans/<Monday>-week/narrative-lock-<day>.md`); the scripts are
+  written from it.
 
 ## The Studio
 
@@ -123,8 +137,9 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 
 - **ve.** The spec-driven video engine: schema 2 `creative-direction.json`, word-indexed beats and events, `FormatMaster`, and measured readiness from `python scripts/ve.py status <piece>`. The job and station terms below describe the separate job-based Studio protocol.
 
-- **Series.** The Studio's own classification, still `money_of_ai` and
-  `built_with_ai`. Not the same thing as a subchannel (see Names).
+- **Series.** The Studio's own classification: the three subchannel names
+  for new briefs, plus the retired `money_of_ai` and `built_with_ai` for
+  records made under them (`packages/contracts/src/series.ts`).
 - **Job.** One production run, a folder of content-addressed artifacts and an
   append-only ledger. **Stage**: one step of the V2 graph. **Gate**: one
   approval, bound to an exact artifact hash.
@@ -146,10 +161,21 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 
 ## Operations
 
+- **Publish board.** The week's page at content.krishraja.com/board/<Monday>:
+  an Ideas tab, a Queue and a tab for each publishing day, where Krish presses
+  (`docs/PUBLISH_BOARDS.md`). Built by `week_board.py` and fed, never shaped.
+- **Making record.** A piece's record of each making step (`meta.making`),
+  read and written with `scripts/post-pack/making.py`.
+- **Hero assets, off days.** The article, both cuts, thumbnails and covers this
+  engine makes for Monday, Wednesday and Friday; Tuesday, Thursday and
+  Saturday posts are Growth's.
+- **3 Posts.** The Drive folder that holds one folder per post, everything
+  ready for posting.
 - **Run ledger.** `content_engine_runs`, one row per cron run.
 - **`meter_daily`.** Spend per agent key per day.
-- **Docs steward.** A nightly job, defined in control-center, that keeps
-  `NOW.md` and `docs/history/LOG.md` current and moves superseded documents into
-  `docs/history/`.
+- **Docs steward.** A job defined in ai-harness and called by
+  `.github/workflows/docs-steward.yml` on every push to `main` and nightly at
+  20:30 UTC. It keeps `NOW.md` and `docs/history/LOG.md` current and moves
+  superseded documents into `docs/history/`.
 - **The walk.** The first end-to-end live run of pieces through the engine,
   logged in `docs/walks/2026-09-three-piece-walk.md`.

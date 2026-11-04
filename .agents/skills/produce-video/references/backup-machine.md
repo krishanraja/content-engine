@@ -10,8 +10,7 @@ database changes. On the backup:
 - Krish turns it on and signs in to Windows as himself, so Google Drive for
   desktop mounts H:.
 - The work copy is at the latest `main` and `scripts/engine-key.ps1` has been
-  run there once. `make.py --doctor` must say ready; an approved sting
-  renders itself once on a machine that has none.
+  run there once. `make.py --doctor` must say ready.
 - The recordings upload already runs on both machines, and places takes on
   both: nothing to move. Its `-Check` (`scripts/install-recordings-upload.ps1`
   runs it) proves that machine has the engine key and a pinned Python that
@@ -19,7 +18,7 @@ database changes. On the backup:
 - **Library Sync runs only on the machine it is installed on, and does not
   follow the runner role.** With the main machine off, the cuts sent in
   step 8 wait in the engine until Krish moves it: install and enable it on
-  the machine in use (`docs/OPERATIONS.md`, "Library sync",
+  the machine in use (`docs/OPERATIONS.md`, "The asset library sync",
   `scripts/install-library-sync.ps1` from `library-source`) and
   `Disable-ScheduledTask -TaskName "Mindmake Library Sync"` on the other.
   Tell him; he does it.

@@ -18,11 +18,11 @@ before he recorded (`docs/plans/2026-10-23-friday/creative-direction.md`). This 
 | Step | Who | What |
 |---|---|---|
 | Sunday morning | Claude, with Krish | The story for each day, one question at a time. The style for each piece, from the formats on its idea card (`config/style-references.json`, `formats`). |
-| Sunday, before he records | Claude | The scripts, checked (`story_check.py`, two fresh readers), sent to Teleprompter. The creative direction for every cut, every beat. The article copy and every article visual. |
+| Sunday, before he records | Claude | The scripts, checked (`story_check.py`, two fresh readers), put to his Approve scripts press, which sends them to Teleprompter once he approves their exact words. The creative direction for every cut, every beat. The article copy and every article visual. |
 | Sunday, recording | Krish | Both takes per piece, as the direction says (on camera or voiceover). |
 | After he records | Claude | Line the takes up (`narration_diff.py`), re-time the beats to what he said, build the storyboard from real captures, put it on the day's Brief step. The storyboard shows both lead pictures as stills, the series picture from the brand book and a story object, with Claude's pick marked (`creative_direction.py choices`; Krish picked: "Choose per piece", 29 Oct). What he says off-script is his natural speech, not slips (Krish, 2026-10-26: "That's just how I talk"): propose a cut only for a serious flaw, only where it cuts cleanly, and only after hearing it. |
 | His sign-off | Krish | He signs the storyboard in his own words. The words go into `signed` with the hash of each script (`creative_direction.py hash`). His signature accepts Claude's lead-picture pick unless he ticks the other (`production_choices.lead_picture.ticked`); no storyboard waits on a tick. Then `making.py <piece> choices creative-direction.json` records the choices under test on the piece; if he has a cut open another way, `--opening` records what it used, so the making record stays the one home for these choices. |
-| Production | Codex (or any session) | Renders exactly the signed direction through `produce-video`. It never invents a visual, a caption, a figure or a style. A gap goes back to Claude. |
+| Production | Claude, with Codex for named plates | On ve, Claude runs `python scripts/ve.py` from the signed spec (`docs/ve/RUNBOOK.md`), and Codex only builds the plates and library devices its cards name; it never edits a cut. On the quick-edit fallback, `produce-video` renders exactly the signed direction. Neither invents a visual, a caption, a figure or a style. A gap goes back to Claude. |
 | Review | A reviewer who did not make the cut | Watches every cut at full size and listens across every join, against `acceptance`. Reports fact, transport and editorial status separately. |
 | The board | Claude | The day's Publish step through `week_board.py`'s own inputs. |
 
@@ -68,15 +68,17 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
 
 - `creative_direction.py check` refuses a direction that leaves a spoken word without a beat, a picture without its
   source, a beat without its point, more than 12 words on screen, a module or format that is not in the bank, his face
-  in a voiceover take or in too many beats, or no brand reference.
+  in a voiceover take or in too many beats, or no brand reference. It also refuses a `style.motion` he marked not for
+  us, and, for a piece published from 9 November, a direction with no `style.motion`.
 - `scripts/quick-edit/kit.py` refuses to draw a kit for any piece dated from 26 October 2026 without a direction that
   passes `check --for-render` for that cut's exact words: signed by Krish, on a script that has not changed since.
 - `scripts/quick-edit/make.py` refuses to render a config whose direction is missing, or changed by even a byte since
   kit.py checked it.
 
-## Production's rules (Codex reads these first)
+## Production's rules (whoever renders reads these first)
 
-1. Read this file, the piece's `creative-direction.json`, then `.agents/skills/produce-video/SKILL.md`.
+1. Read this file, the piece's `creative-direction.json`, then `docs/ve/RUNBOOK.md` on ve or
+   `.agents/skills/produce-video/SKILL.md` on the quick-edit fallback.
 2. Render only what the direction says. When a beat cannot be made as written (a capture is missing, a source is
    wrong), stop and say which beat and why. Claude changes the direction and Krish signs again.
 3. Never publish, sign in to a publishing platform, or ask Krish for a login code. The board is fed; Krish publishes.

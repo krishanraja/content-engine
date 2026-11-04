@@ -2,7 +2,7 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-09-25 against `main` at `fd467e1` (code read, no live run)
+Last verified: 2026-11-04 against the code (paths, commands, symbols and config read; no live run)
 
 Scope: the Studio half of this repository: `packages/`, `apps/runner`,
 `apps/renderer`, `config/`, `scripts/`, `.agents/skills/`. The content engine
@@ -29,7 +29,7 @@ post.
 As of 2026-09-25 two Studio jobs exist in the database and no Short has a
 recorded final approval, package or upload. Since 2026-09-28 the runner is
 installed on a primary Windows machine with a cold standby on a second one,
-both pinned at `6bf7862`, and the Studio's Drive root is on H:
+both on `cc0657e` since 2026-10-02, and the Studio's Drive root is on H:
 (`docs/STATE.md`, "The Studio's runners"; `docs/OPERATIONS.md`, "Primary and
 cold standby").
 
@@ -105,8 +105,8 @@ You've got the logos as per the website for all of that"
 "placement approved" on the piece 2 storyboard: the mark alone on every
 beat, top left; the full logo and the channel once, at the end, and nothing
 at the opening. That placement still holds in the job-based Studio renderer. The quick-edit
-cuts changed on 2026-10-12: both of a piece's videos are made with
-`scripts/quick-edit` (the fallback path for both 16:9 and 9:16; ve also renders both), and
+cuts changed on 2026-10-12: both of a piece's videos were then made with
+`scripts/quick-edit` (now the fallback for both 16:9 and 9:16; ve renders both), and
 there Krish asked for an opening, "I also want the video to have a 1-2 sec
 animated make your mind up intro visual before my face comes in" (house rule
 INTRO_STING, retired on 2026-10-29: no design was ever approved, and he picked
@@ -294,7 +294,8 @@ short_native:   brief -> script -> candidates -> claims -> recording_brief
 ```
 
 Approval gates, in order: `angle`, `visual_plan`, `evidence`, `storyboard`,
-`animatic`, `treatment`, `final`, `package` (`config/studio.json`). Each takes
+`animatic`, `treatment`, `final`, `package` (`ApprovalGateV2Schema` in
+`packages/contracts/src/v2.ts`). Each takes
 a confirmation bound to the gate and the exact artifact hash, in the portable
 form `studio-user-confirmation:<client>:<gate>:<hash>:<receipt>`; the older
 `codex-user-confirmation:` and `control-center-confirmation:` forms remain
@@ -316,8 +317,10 @@ The V1 graph still exists only so V1 jobs can resume. New work is V2.
 | Art director | one governed registry of visual devices with fail-closed eligibility and scoring | `config/techniques.json`, `docs/ART_DIRECTOR_REPERTOIRE.md` |
 | Learning | local feedback lifecycle (`observed` to `active`); a rule is active only when it is in reviewed Git config; cloud session and learning tables | `packages/core/src/feedback.ts`, `config/studio.json`, `supabase/migrations/20260907091923_studio_session_learning_spine.sql` |
 
-The CLI groups: `doctor`, `status`, `resume`, `index rebuild`; `carousel
-method|validate|render|package`; and under `v2`: `production-brief
+The CLI groups: `doctor`, `status`, `resume`, `index rebuild`, `radar pull`,
+`benchmark transcription`, `calibration contact-sheet`; `carousel
+method|validate|render|package`; the V1 job commands, kept so V1 jobs can
+resume; and under `v2`: `production-brief
 import|materialize`, `identity`, `job create|status|resume`, the stage commands
 (`ingest`, `transcribe`, `candidates`, `recording-brief create`, `stage
 import`, `source analyze`), `repertoire`, `visual-plan`, `assets`, `call`,
@@ -361,8 +364,9 @@ in `docs/AMPLIFICATION.md`. The rule is
 
 - Nothing publishes itself. YouTube is private-only; other platforms get local
   packages.
-- Brand marks are the official files from a pinned `krishanraja/mindmake`
-  commit, SHA-256 verified. If no placement keeps the series lettering at 50
+- Brand marks are the official files from a pinned commit, SHA-256 verified:
+  `krishanraja/mindmake` for the Mindmake theme, control-center for the
+  makeyourmindup theme. If no placement keeps the series lettering at 50
   render pixels or more without covering Krish or the story, rendering and QA
   fail; the mark is never shrunk or retyped.
 - Rendering fails closed unless Remotion licence eligibility is recorded in
@@ -382,7 +386,7 @@ npm ci
 .\scripts\migrate-runner-runtime.ps1
 npm run bootstrap:python
 .\scripts\studio.ps1 doctor
-.\scripts\studio.ps1 v2 job create --series money_of_ai --mode extract --source-bundle "C:\media\episode.source-bundle.json"
+.\scripts\studio.ps1 v2 job create --series follow_the_money --mode extract --source-bundle "C:\media\episode.source-bundle.json"
 .\scripts\studio.ps1 v2 ingest --job <job-id>
 ```
 
@@ -394,15 +398,16 @@ chat, the complete first message `Video engine` launches the operator workflow
 ## The detailed Studio documents
 
 Each is current for the Studio except where the note says otherwise
-(audited 2026-09-25).
+(audited 2026-09-25; the first five rows rechecked against the code on
+2026-11-04).
 
 | Document | What it settles | Known stale |
 |---|---|---|
 | `docs/ENGINE_SESSION.md` | the tracked session contract and what may be captured | nothing |
-| `docs/ARCHITECTURE.md` | state model, media decisions, learning boundary, runner protocol | short-native now starts only from `ProductionBriefV1`; "Inter 800" is V1 only; the radar section predates import-only; says "Codex authors" where any client may |
-| `docs/OPERATIONS.md` | setup, typical runs, recovery, failure codes | examples use the legacy `codex-user-confirmation:` prefix; "never creates a job automatically" predates brief intake; "16 scheduled jobs" is now 20; "podcast" is not a mode |
-| `docs/DEPLOYMENT.md` | secrets, runner install, the standby machine, the shipped versus installed boundary | upstream review order and rollout checklists are historical, and they still say "Control Center API" for routes that deploy from `apps/control-plane` (ADR-019); the host, the credential table and the Drive paths were brought current on 2026-09-28 |
-| `docs/ENGINE_SECRETS_HANDOVER.md` | the Windows credential contract, per runner machine | nothing (checked 2026-09-28) |
+| `docs/ARCHITECTURE.md` | state model, media decisions, learning boundary, runner protocol | nothing |
+| `docs/OPERATIONS.md` | setup, typical runs, recovery, failure codes | nothing |
+| `docs/DEPLOYMENT.md` | secrets, runner install, the standby machine, the shipped versus installed boundary | the upstream review order, the cursor rollout and the radar checklist are historical procedures, kept for a rebuild |
+| `docs/ENGINE_SECRETS_HANDOVER.md` | the Windows credential contract, per runner machine | nothing |
 | `docs/CAROUSEL_ENGINE_STATE.md` | the carousel engine's gate and decision record | last verified 2026-09-07; calls the repo `mindmake-video-studio`; its test counts are old |
 | `docs/ART_DIRECTOR_REPERTOIRE.md` | the visual device registry and the sharp-alternative path | nothing |
 | `docs/OPENING_LOOP_CALIBRATION.md` | the opening contract (promise match, open question) | nothing |
