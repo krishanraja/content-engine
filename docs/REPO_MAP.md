@@ -3709,6 +3709,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function queryLayout(box: Box, text: string, aspect: DeviceProps['aspect'])`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `function chipFocus({ object, events, box, aspect, frame }: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | '…`
 
 ### `apps/renderer/src/engine/devices/query_chip/schema.ts`
 
@@ -3757,6 +3758,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/scribble/state.ts`
 
 - `function scribbleState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `function scribblePen(object: EngineObject, events: readonly EngineEvent[]): (frame: number) => Point | undefined`
 
 ### `apps/renderer/src/engine/devices/stamp/index.tsx`
 
@@ -3830,6 +3832,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/typing_bubble/index.tsx`
 
 - `function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+- `function bubbleFocus({ object, events, box, aspect, frame }: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' |…`
 - `function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight = 1920)`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
@@ -3865,7 +3868,10 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `interface Box`
 - `interface BeatMotion`
-- `function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number, focus: Box | un…`
+- `interface CameraView`
+- `function transitionFrames(profile: MotionProfile): number`
+- `function keepsOutgoing(profile: MotionProfile | undefined, beat: EngineBeat, next: EngineBeat | undefined): boolean`
+- `function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number, view: CameraVie…`
 - `function stageGround(profile: MotionProfile | undefined, tokens: EngineTokens): CSSProperties`
 - `function sweepStyle(profile: MotionProfile, tokens: EngineTokens, beat: EngineBeat, frame: number): CSSProperties | null`
 - `function halftoneTexture(tokens: EngineTokens): CSSProperties`
@@ -3992,6 +3998,8 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `interface LineReveal`
 - `function revealLines(lines: readonly string[], age: number): LineReveal[]`
 - `function revealChars(text: string, age: number): number`
+- `interface Typed`
+- `function typedText(text: string, age: number, spanFrames: number, houseP: number): Typed`
 
 ### `apps/renderer/src/engine/kit/scribblePath.ts`
 
