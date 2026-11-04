@@ -1154,6 +1154,9 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingSpokenExample`
 - `type MakingSpokenDelta`
 - `interface Making`
+- `interface MakingGate`
+- `type MakingStyleVerdict`
+- `interface MakingGates`
 - `type MakingPatch`
 - `const SCRIPT_SHA256`
 - `const TELEPROMPTER_ID`
@@ -1950,6 +1953,10 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const OFFDAY_ID`
 - `const DECISION_ID`
 - `const DECISION_KIND`
+- `const GATE_KINDS`
+- `type GateKind = keyof typeof GATE_KINDS`
+- `const STYLE_VERDICTS`
+- `const PROOF_VERDICTS`
 - `const MIX_ID`
 - `function mixBody(body: Record<string, unknown>): boolean`
 - `const FEEL_ID`
@@ -1985,8 +1992,13 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 - `interface LiveStep`
 - `interface LiveCut`
+- `type GateName = 'storyboard' | 'style' | 'proof' | 'final'`
+- `const GATE_NAMES: readonly GateName[]`
+- `type GateState`
+- `interface LiveGate`
 - `interface LiveDay`
 - `interface WeekLive`
+- `function liveGate(name: GateName, g: unknown): LiveGate`
 - `function liveDay(piece: Body, date: string): LiveDay`
 - `async function weekLive(db: SupabaseClient, week: string, builtAt: string | null): Promise<WeekLive>`
 
@@ -2028,6 +2040,9 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `class PressError`
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
+- `function gatePatch(kind: GateKind, body: Body, now: string): MakingGates`
+- `async function recordGate(db: SupabaseClient, pieceId: string, patch: MakingGates, now: string): Promise<string | null>`
+- `function gateReport(week: string, id: string, body: Body, now: string)`
 - `function feelReport(week: string, id: string, body: Body, now: string)`
 - `function offdayReports(week: string, id: string, body: Body, now: string)`
 - `function scoreRow(week: string, id: string, body: Body, now: string)`
