@@ -1,6 +1,6 @@
 {
   "file": "/tmp/claude-0/ve-out/short.mp4",
-  "sha256": "14d8445920e2ff14db43fbc2c376e26c60bcbffe6b53504fa958c3f6d3c6989d",
+  "sha256": "42d5d64a33b778b3f17a94825efbfc767a274f8b2196db9f9b6fd90401d362c7",
   "duration_s": 47.51,
   "format": "face-with-proof",
   "checks": {
@@ -20,7 +20,7 @@
       "pass": true
     },
     "motion.change_density": {
-      "value": 0.787,
+      "value": 0.766,
       "target": ">= 0.5",
       "pass": true
     },
@@ -43,6 +43,10 @@
         ],
         [
           18,
+          1
+        ],
+        [
+          29,
           1
         ]
       ]
@@ -849,7 +853,7 @@
           "frame": 882,
           "text": "my",
           "agreement": 1.0,
-          "variant": "normalised",
+          "variant": "raw",
           "pass": true
         },
         {
@@ -913,7 +917,7 @@
           "frame": 930,
           "text": "questions",
           "agreement": 1.0,
-          "variant": "raw",
+          "variant": "raw_2x",
           "pass": true
         },
         {
@@ -1343,7 +1347,7 @@
         {
           "beat": "b7-prompt",
           "frame": 924,
-          "score": 0.978184099711679,
+          "score": 0.9781784865969858,
           "pass": true
         },
         {
@@ -1568,8 +1572,8 @@
           "atFrame": 764,
           "peak_frame": 764,
           "lag_frames": 0,
-          "peak_difference": 94.82898712158203,
-          "event_difference": 94.82898712158203,
+          "peak_difference": 94.82911682128906,
+          "event_difference": 94.82911682128906,
           "threshold": 10.469581604003906,
           "gradual": false,
           "pass": true
@@ -1579,19 +1583,19 @@
           "atFrame": 861,
           "peak_frame": 861,
           "lag_frames": 0,
-          "peak_difference": 5.872403621673584,
-          "event_difference": 5.872403621673584,
-          "threshold": 0.21591436117887497,
+          "peak_difference": 5.863105297088623,
+          "event_difference": 5.863105297088623,
+          "threshold": 0.2362138330936432,
           "gradual": false,
           "pass": true
         },
         {
           "event": "b7-prompt-2",
-          "atFrame": 899,
-          "peak_frame": 899,
+          "atFrame": 764,
+          "peak_frame": 764,
           "lag_frames": 0,
-          "peak_difference": 2.4354488849639893,
-          "event_difference": 2.4354488849639893,
+          "peak_difference": 94.82911682128906,
+          "event_difference": 94.82911682128906,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -1601,8 +1605,8 @@
           "atFrame": 953,
           "peak_frame": 953,
           "lag_frames": 0,
-          "peak_difference": 1.8427276611328125,
-          "event_difference": 1.8427276611328125,
+          "peak_difference": 1.8428713083267212,
+          "event_difference": 1.8428713083267212,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -1612,8 +1616,8 @@
           "atFrame": 966,
           "peak_frame": 966,
           "lag_frames": 0,
-          "peak_difference": 2.680264711380005,
-          "event_difference": 2.680264711380005,
+          "peak_difference": 2.6800765991210938,
+          "event_difference": 2.6800765991210938,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -1623,8 +1627,8 @@
           "atFrame": 1014,
           "peak_frame": 1011,
           "lag_frames": -3,
-          "peak_difference": 3.0519771575927734,
-          "event_difference": 1.8395905494689941,
+          "peak_difference": 3.0527758598327637,
+          "event_difference": 1.836821436882019,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -4308,8 +4312,8 @@
             "page": 9,
             "fromFrame": 854,
             "text": "put",
-            "change_frame": 857,
-            "frame": 857,
+            "change_frame": 856,
+            "frame": 856,
             "read": "put",
             "score": 1.0,
             "exact": true,
