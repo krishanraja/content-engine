@@ -2051,7 +2051,19 @@
       "krish": "I think the session would need to listen to what I actually said on the script, as opposed to reading the teleprompter folders, because sometimes I paraphrase the teleprompter script and that only gets picked up in the live recording.",
       "why": "Thursday's session questioned his product name \"Muse\" instead of checking what he had said.",
       "means": "Before questioning a name or a line he used, the session reads what he actually said on the recorded take (its transcript), not the Teleprompter script, which he paraphrases on camera.",
-      "status": "open"
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/said.py",
+          "contains": "def proposed_words",
+          "how": "ve said: the take's heard words against the Teleprompter script, every difference listed, the cut's words proposed as he said them"
+        },
+        {
+          "file": "docs/ve/RUNBOOK.md",
+          "contains": "`ve said <piece> --take <id> --teleprompter <script.txt>`",
+          "how": "the runbook line that sends a session to the take's words first"
+        }
+      ]
     },
     {
       "id": "off-days-own-music-and-look",

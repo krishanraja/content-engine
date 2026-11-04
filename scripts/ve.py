@@ -21,6 +21,10 @@
 
   python scripts/ve.py ingest <piece> --take <id> --media <file> --aligner-a <name> --aligner-b <name> [--clock-a/-b <json>]
   python scripts/ve.py conform <piece> --cut <cut> [--render --assets-dir <dir> --joins-reel]
+  python scripts/ve.py said <piece> --take <id> --teleprompter <script.txt>   what he said vs the script; proposed words
+  python scripts/ve.py voice-ab <piece> --cut <cut> --assets-dir <dir> --at <s>  raw and repaired voice for his ear
+  python scripts/ve.py sfx audition <piece> --cut <cut> --assets-dir <dir> --candidates <ids>   big-moment sounds for his ear
+  python scripts/ve.py sfx approve --id <id> --words "<his words>" --on <date> --audition <ve>/sfx-audition.json | sfx stage --assets-dir <dir>
   python scripts/ve.py brief <piece> [--cut <cut>]   one brief per plate, with card fields; never dispatches
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
   python scripts/ve.py lock draft|check|show|freeze  design locks (only Krish's Gate 2 freezes one)
@@ -64,6 +68,14 @@ def cmd_doctor(_args) -> int:
     exe = shutil.which('ffmpeg')
     version = subprocess.run([exe, '-version'], capture_output=True, text=True).stdout.split('\n')[0] if exe else ''
     check('ffmpeg', bool(exe), version or 'not on PATH')
+    if exe:
+        from velib.common import FFMPEG_PIN, ffmpeg_version
+        found = ffmpeg_version()
+        pinned = found.startswith(FFMPEG_PIN)   # scripts/overnight/preflight.ps1 compares the same way
+        check('ffmpeg pin', pinned,
+              f'{found} is the pinned build' if pinned else
+              f'{found} is not the pinned {FFMPEG_PIN}: a cut made here is not comparable with CI or the home computers '
+              f'(on a home computer, `. scripts/ve-env.sh` first)', hard=False)
     if exe:
         fps_mode = subprocess.run([exe, '-v', 'error', '-f', 'lavfi', '-i', 'testsrc=d=0.1:s=32x32', '-fps_mode', 'passthrough',
                                    '-frames:v', '1', '-f', 'null', '-'], capture_output=True).returncode == 0
@@ -527,6 +539,14 @@ def cmd_refs(args) -> int:
         print(f've refs: board {status}')
         for path in refgate.sheets(spec, args.cut, directory, video):
             print(f've refs: {path}')
+        # The cut in motion for the Critic: strips per beat, per move and per cut, and QC's numbers (velib.critic_inputs).
+        from velib import critic_inputs
+        if not (directory / f'props.{args.cut}.json').is_file():
+            print(f've refs: no props.{args.cut}.json, so no motion strips for the Critic: run ve compile for this cut')
+            return 0
+        props, edl = critic_inputs.load_for(directory, args.cut)
+        for path in critic_inputs.write(args.cut, directory, video, props, qc, edl):
+            print(f've refs: {path}')
         return 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f've refs: {error}')
@@ -688,12 +708,94 @@ def cmd_conform(args) -> int:
             for key in ('picture', 'dialogue'):
                 if key in out:
                     print(f've conform: {out[key]} ({out[key + "_sha256"]})')
+            for name, laid in (out.get('laid') or {}).items():
+                print(f"ve conform: {name} {laid['laid']} at {laid['avg_rate']} fps"
+                      + (f", {laid['hdr']} tone-mapped to BT.709" if laid.get('hdr') else ''))
+            print(f"ve conform: ffmpeg {out.get('ffmpeg') or 'unknown'}")
+            spoken = out.get('voice') or {}
+            print(f"ve conform: voice pass: {spoken.get('sniffs', 0)} sniff(s) turned down 18 dB; repair chain "
+                  f"{'on (his approval)' if spoken.get('repair') else 'off until he approves it by ear (ve voice-ab)'}")
             if args.joins_reel:
                 reel = conform.joins_reel(edl, out['dialogue'], directory / f'joins.{args.cut}.wav')
                 print(f've conform: joins reel {reel["reel"] or "(no joins)"}')
         return 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f've conform: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_said(args) -> int:
+    """What he said on the take against the script he read (Krish, 4 Nov 2026: listen to the take, not the Teleprompter)."""
+    from velib import said, takes
+    try:
+        _spec_file, _spec, directory = _ve_dir(args.piece)
+        record = takes.load_take(directory, args.take)
+        report = said.make(args.teleprompter, record, directory)
+        rates = report['rates']
+        print(f"ve said: {rates['said_words']} words said against {rates['script_words']} in the script; "
+              f"{rates['own_words_pct']}% his own words; {rates['differences']} difference(s); "
+              f"{report['heard_only']} word(s) heard only")
+        rushed = [row for row in report['pace'] if row['rushed'] or row['pauses']]
+        for row in rushed[:8]:
+            notes = (['rushed'] if row['rushed'] else []) + [f"{p['pause_s']} s pause after \"{p['after']}\"" for p in row['pauses']]
+            print(f"  line {row['line']} ({row['words_per_s']} words a second): {'; '.join(notes)}")
+        for name in (f'said.{args.take}.md', f'said.{args.take}.json', 'script.words.proposed.json'):
+            print(f've said: {directory / name}')
+        print('ve said: read the proposal, then make it script.words.json; it is never applied by itself')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've said: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_voice_ab(args) -> int:
+    """The 10-second pair Krish judges the voice repair chain by: his raw voice and the repaired one, delay removed."""
+    from velib import voice
+    try:
+        _spec_file, _spec, directory = _ve_dir(args.piece)
+        raw = Path(args.assets_dir) / f'dialogue.{args.cut}.raw.wav'
+        if not raw.is_file():
+            raise ValueError(f'{raw} is missing: run ve conform --render for this cut first')
+        out = voice.ab(raw, directory / 'voice-ab', args.at, args.seconds)
+        print(f"ve voice-ab: {out['raw']}\nve voice-ab: {out['repaired']}\nve voice-ab: chain delay {out['chain_latency_ms']} ms removed")
+        print('ve voice-ab: play both to Krish; only his words in config/ve/voice-chain.json turn the chain on')
+        return 0
+    except (OSError, ValueError, subprocess.CalledProcessError) as error:
+        print(f've voice-ab: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_sfx(args) -> int:
+    """The one sound on the big moment: audition the shortlist on his cut, approve only from his words, stage the kit."""
+    from velib import sfx
+    try:
+        if args.action == 'approve':
+            if not (args.id and args.words and args.on and args.audition):
+                raise ValueError('approve needs --id, --words (his own), --on YYYY-MM-DD and --audition <sfx-audition.json>')
+            kit = sfx.approve(args.id, args.words, args.on, Path(args.audition))
+            print(f've sfx: {args.id} approved in his words; config/ve/sfx-kits/house-v1.json holds {len(kit)} sound(s)')
+            return 0
+        if args.action == 'stage':
+            if not args.assets_dir:
+                raise ValueError('stage needs --assets-dir')
+            for sid, row in sorted(sfx.approved().items()):
+                print(f've sfx: {sid} -> {sfx.stage(row, Path(args.assets_dir))}')
+            return 0
+        if not (args.piece and args.cut and args.assets_dir and args.candidates):
+            raise ValueError('audition needs <piece> --cut --assets-dir --candidates <ids>')
+        spec_file, spec, directory = _ve_dir(args.piece)
+        props = load_json(directory / f'props.{args.cut}.json')
+        from velib.render import render
+        record = sfx.audition(spec, args.cut, directory, props, Path(args.assets_dir), args.candidates,
+                              lambda p, o: render(p, o, args.scale), at_frame=args.at_frame, beat=args.beat)
+        print(f"ve sfx: beat {record['beat']}, the moment at {record['at_s']} s")
+        for row in record['candidates']:
+            print(f"  {row['id']}: {directory / 'sfx' / row['clip']} (hit {row['hit_vs_voice_db']} dB against his voice, "
+                  f"{row['level'] or 'not measured'})")
+        print('ve sfx: play these to Krish; only his words approve one (ve sfx approve)')
+        return 0
+    except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
+        print(f've sfx: {error}', file=sys.stderr)
         return 1
 
 
@@ -1367,6 +1469,22 @@ def main() -> int:
     p.add_argument('--render', action='store_true', help='render the conformed picture and dialogue in one graph')
     p.add_argument('--assets-dir'); p.add_argument('--joins-reel', action='store_true')
     p.set_defaults(fn=cmd_conform)
+    p = sub.add_parser('said', help='what he said on a take against the script he read, and the words the cut should carry')
+    p.add_argument('piece'); p.add_argument('--take', required=True)
+    p.add_argument('--teleprompter', required=True, help='the script text he read (the Teleprompter script, saved as text)')
+    p.set_defaults(fn=cmd_said)
+    p = sub.add_parser('voice-ab', help='10 s of his raw and repaired voice for his by-ear call on the repair chain')
+    p.add_argument('piece'); p.add_argument('--cut', required=True); p.add_argument('--assets-dir', required=True)
+    p.add_argument('--at', type=float, required=True, help='start, in seconds of the conformed dialogue')
+    p.add_argument('--seconds', type=float, default=10.0)
+    p.set_defaults(fn=cmd_voice_ab)
+    p = sub.add_parser('sfx', help='the one sound on the big moment: audition the shortlist, approve from his words, stage')
+    p.add_argument('action', choices=('audition', 'approve', 'stage')); p.add_argument('piece', nargs='?')
+    p.add_argument('--cut'); p.add_argument('--assets-dir'); p.add_argument('--candidates', nargs='+')
+    p.add_argument('--at-frame', type=int); p.add_argument('--beat'); p.add_argument('--scale', type=float, default=0.5)
+    p.add_argument('--id'); p.add_argument('--words'); p.add_argument('--on')
+    p.add_argument('--audition', help="the piece's sfx-audition.json he heard the sound in")
+    p.set_defaults(fn=cmd_sfx)
     p = sub.add_parser('file', help="file READY cuts in the archive and the post's 3 Video folder, bound to piece_id")
     p.add_argument('piece'); p.add_argument('--subject'); p.add_argument('--date')
     p.add_argument('--cut', action='append', help='a cut to file (default: every cut; one per shape)')

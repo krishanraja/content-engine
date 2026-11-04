@@ -537,7 +537,8 @@ class Expect(unittest.TestCase):
             found = expect.lines(spec, Path(tmp))
             self.assertLessEqual(len(found), expect.MAX_LINES)
             self.assertTrue(any('Channel buttons' in line for line in found), 'a tall cut gets the advisory line')
-            self.assertTrue(any('(15)' in line for line in found), 'a number in digits must be said as written')
+            self.assertFalse(any('(15)' in line for line in found),
+                             'conform reads a number said his own way (velib.words), so no line asks him to say it as written')
             self.assertFalse(any('wide cut' in line for line in found), 'no wide cut, no wide line')
             self.assertTrue(any('muted' in line for line in found), 'the DeepSeek recording plays muted in its card')
             spec['objects'][2]['params'] = {'kind': 'document', 'outlet': 'A PAGE'}

@@ -8,8 +8,7 @@
   ],
   "lints": [
     "creative.decision_engine",
-    "creative.no_repeat",
-    "creative.novelty"
+    "creative.no_repeat"
   ],
   "qc": [],
   "corpus": [

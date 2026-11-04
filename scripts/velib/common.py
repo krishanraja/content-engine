@@ -51,6 +51,23 @@ def ffmpeg() -> str:
     return exe
 
 
+# The one ffmpeg every cut is meant to come from: the build CI downloads (.github/workflows/ci.yml) and
+# scripts/ve-env.sh puts first on PATH on the home computers. A render from any other build is not comparable byte for
+# byte with one from this build (ghost-editor pins its renderer and encoder for the same reason).
+FFMPEG_PIN = 'n8.1.2-53-g1005b294ff'
+
+
+def ffmpeg_version() -> str:
+    """The version word of the ffmpeg on PATH (for example n8.1.2-53-g1005b294ff, or 6.1.1-3ubuntu5); '' when absent."""
+    exe = shutil.which('ffmpeg')
+    if not exe:
+        return ''
+    import subprocess  # noqa: PLC0415
+    line = subprocess.run([exe, '-version'], capture_output=True, text=True, errors='replace').stdout.split('\n')[0]
+    parts = line.split()
+    return parts[2] if len(parts) > 2 and parts[:2] == ['ffmpeg', 'version'] else line.strip()
+
+
 def piece_dir(piece: str) -> Path:
     """A piece is its plan folder under docs/plans, or a path to one."""
     candidate = Path(piece)

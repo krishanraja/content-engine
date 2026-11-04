@@ -131,5 +131,39 @@ def file(spec: dict, directory: Path, cuts: list[str], *, subject: str, when: st
                                                                             if f['shape'] == item['shape']))})
     write_json(sidecar, record)
     write_json(directory / 'filed.json', record)
+    try:
+        record_history(spec, record, history_path(directory))
+    except (OSError, ValueError, KeyError, TypeError) as error:   # the cuts are filed; the history row is a convenience
+        record['history_error'] = str(error)[:200]
     return record
+
+
+def history_path(directory: Path) -> Path:
+    """config/ve/history.json for a piece in this repository; beside the piece for one filed from anywhere else (a
+    test's temporary folder), so nothing but a real piece ever writes the repository's history."""
+    from .common import CONFIG, ROOT  # noqa: PLC0415
+    return CONFIG / 'history.json' if Path(directory).resolve().is_relative_to(ROOT.resolve()) else Path(directory) / 'history.json'
+
+
+def record_history(spec: dict, record: dict, path: Path | None = None) -> Path:
+    """One row per filed piece in config/ve/history.json: what it used, so the next piece's expectations sheet can say
+    when it repeats the last ones (velib.lint.novelty_note). Written only by a real filing, never by a dry run."""
+    from .common import CONFIG, load_json  # noqa: PLC0415
+    path = Path(path or CONFIG / 'history.json')
+    doc = load_json(path) if path.exists() else {'about': 'One row per piece ve filed (velib.filing.record_history).',
+                                                  'pieces': []}
+    motion = (spec.get('style') or {}).get('motion') or {}
+    idea = (spec.get('style') or {}).get('idea') or {}
+    beats = [b for cut in spec['cuts'].values() for b in cut.get('beats') or []]
+    row = {'piece_id': spec['piece_id'], 'date': record['date'], 'filed_on': record['filed_on'], 'route': 've',
+           'series': (spec.get('brand') or {}).get('series'), 'format': spec.get('format'),
+           'hero': (spec.get('signature') or {}).get('hero', {}).get('device'),
+           'idea': idea.get('object') if isinstance(idea, dict) else None,
+           'motion': motion.get('module') if isinstance(motion, dict) else None,
+           'devices': sorted({o.get('device') for o in spec.get('objects') or [] if o.get('device')}),
+           'transitions': sorted({b['transition_out'] for b in beats if isinstance(b.get('transition_out'), str)}),
+           'captions': (spec.get('brand') or {}).get('captions'),
+           'files': [{'cut': f['cut'], 'sha256': f['sha256']} for f in record['files']]}
+    doc['pieces'] = [p for p in doc['pieces'] if p.get('piece_id') != row['piece_id']] + [row]
+    return write_json(path, doc)
 
