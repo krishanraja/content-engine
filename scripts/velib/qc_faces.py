@@ -3,7 +3,8 @@
 Krish, 2026-11-03: "The subtitles just go straight over my face." For every caption page the renderer draws, the
 check reads the frame the OCR check reads, finds the face in it, and fails the page when the caption's box overlaps
 the face box. The caption box comes from the renderer's own geometry (WordCaption.tsx for the word build, the
-region QC already holds for house and SPLIT pages), never a copy. A beat with no face (a graphics beat) passes.
+region QC already holds for house and SPLIT pages), never a copy. When beats are supplied, only a take plate
+is checked for faces; graphics pages count as checked without invoking the detector.
 
 The detector is OpenCV's frontal face cascade, the one the quick-edit sync check uses, or mediapipe when that is
 the Python's detector; the check reports not_run (never pass) on a machine that has neither.
@@ -120,15 +121,18 @@ def default_detector():
 
 def off_face(video: str, pages: list, *, style: str = 'house', aspect: str = '9:16', region=None,
              fps: float = 30, detector=None, grab=None, beats=None) -> dict:
-    detector = detector or default_detector()
     target = 'no caption page overlaps the face box (+10%)'
-    if detector is None:
+    eligible = [p for p in pages if beats is None or any(
+        b['fromFrame'] <= sampled_frame(p) < b['toFrame'] and (b.get('plate') or {}).get('source') == 'take'
+        for b in beats)]
+    detector = (detector or default_detector()) if eligible else detector
+    if eligible and detector is None:
         return {'value': None, 'target': target, 'pass': None, 'status': 'not_run',
                 'reason': 'no face detector in this Python (opencv-python or mediapipe)'}
     size = (1080, 1920) if aspect == '9:16' else (1920, 1080)
     grab = grab or (lambda frame: frame_at(video, frame, fps, size))
     on_face = []
-    for page in pages:
+    for page in eligible:
         frame = sampled_frame(page)
         beat = next((b for b in (beats or []) if b['fromFrame'] <= frame < b['toFrame']), {})
         box = caption_box(page, style, aspect, region, layout=beat.get('layout'),
