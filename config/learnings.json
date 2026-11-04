@@ -1964,6 +1964,36 @@
           "how": "the carousel standard Growth and the engine make every carousel to"
         }
       ]
+    },
+    {
+      "id": "failures-feed-a-weekly-loop",
+      "on": "2026-11-04",
+      "krish": "all of this stuff should feed an intelligent system that automatically gets more intelligent every week, not just pile up loads of individual feedback for me to sift through",
+      "why": "Failures were kept one by one in the registers, so a repeat looked like a new failure and nobody traced why it kept happening (a brief that was too weak, a session that never read the standard first); he was left to sift the pile himself.",
+      "means": "Every failure is captured as it happens with what the session read first (its preflight receipt), and each week the engine finds the repeats, traces their cause from the record, makes the guard on each repeat one rung stronger and puts at most three proposals to him, never a pile.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/preflight.py",
+          "contains": "PREFLIGHT_FROM = '2026-11-09'",
+          "how": "ve brief and ve render refuse a piece with no current floor or failures receipt from 9 Nov"
+        },
+        {
+          "file": "apps/control-plane/api/board/_presses.ts",
+          "contains": "export function pressIncidents(",
+          "how": "his Reject presses and a second proof round each file an engine_incidents row with the receipt then held"
+        },
+        {
+          "file": ".github/workflows/engine-learning-weekly.yml",
+          "contains": "loop.py weekly deterministic",
+          "how": "the Sunday run clusters, traces, climbs the ladder and proposes at most three fixes"
+        },
+        {
+          "file": "scripts/learning/report.py",
+          "contains": "MAX_PROPOSALS = 3",
+          "how": "never more than three proposals a week"
+        }
+      ]
     }
   ]
 }

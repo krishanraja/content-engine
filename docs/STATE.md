@@ -238,6 +238,12 @@ Readback 2026-09-25 unless a date is given.
 
 ## Built but unproven
 
+- **The failure loop (4 Nov 2026).** `engine_incidents` is live (migration `20261123090000`, applied and read back
+  4 Nov); the board's Reject presses, a second round, the Critic's block, a lint override and a failing guard test
+  write it; every read of the floor and the failure register is a preflight receipt, and from 9 Nov `ve brief` and
+  `ve render` refuse without one. The weekly job (`engine-learning-weekly.yml`) has not run yet; the backfill over the
+  registers is `docs/learning/2026-11-04-backfill.md`. `docs/learning/README.md`.
+
 - **The Windows runner.** Installed, heartbeating and credential-probed on
   2026-09-28 (above), but it has not yet claimed, run and completed a real
   command or brief at `6bf7862`: the queue was empty. The first real piece of
