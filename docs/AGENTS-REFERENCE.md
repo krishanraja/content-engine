@@ -364,6 +364,14 @@ is written only by the Rejections engine (krishanraja/inspirationhouse,
 The records behind it, and what is kept of each asset (a still, a six-frame
 strip or a 4-second clip, never a master), live in `taste_rejections` and
 `taste_rejection_media`.
+He decides the standards at `/board/standards` (also `/standards`; Krish,
+2026-11-04: "group the 215 floor standards for my approval"): about 20 groups
+from `config/floor-groups.json`, each one proposal he approves, rewords in his
+own words or rejects, and every member standard takes that decision in
+`public.taste_floor` (`group_key`, `group_title`, `group_statement`). The
+session-process standards sit in its `operating` list and are never put to him
+as taste. `python3 scripts/floor_group.py --check` (in `npm run verify`) fails
+while any floor standard sits in no group or in two; group a new one there.
 
 ## Rules for every agent
 
