@@ -121,7 +121,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 600
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/title_check.py:*),Bash(python3 scripts/post-pack/narration_diff.py:*),Bash(python3 scripts/post-pack/voice_check.py:*),Bash(python3 scripts/post-pack/story_check.py:*),Bash(python3 scripts/post-pack/ai_scan.py:*),Bash(python3 scripts/post-pack/creative_direction.py:*),Bash(python3 scripts/post-pack/edit_sweep.py:*),Bash(python3 scripts/post-pack/teleprompter_send.py:*),Bash(python3 scripts/pages/build.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),Edit(WORKBENCH.md),Write(WORKBENCH.md),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/title_check.py:*),Bash(python3 scripts/post-pack/narration_diff.py:*),Bash(python3 scripts/post-pack/voice_check.py:*),Bash(python3 scripts/post-pack/story_check.py:*),Bash(python3 scripts/post-pack/ai_scan.py:*),Bash(python3 scripts/post-pack/creative_direction.py:*),Bash(python3 scripts/post-pack/edit_sweep.py:*),Bash(python3 scripts/post-pack/teleprompter_send.py:*),Bash(python3 scripts/pages/build.py:*),Bash(python3 scripts/voice/spoken_rules.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),Edit(WORKBENCH.md),Write(WORKBENCH.md),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             piece_id: ${{ steps.piece.outputs.id }}
@@ -141,6 +141,12 @@ jobs:
             not there, put that one question on the day's tab with your best guess, write a short note under docs/plans
             naming exactly what was missing, commit it, and stop. Never end a run without a commit: a run with no
             commit goes red.
+
+            How this run's tools work (two runs on 4 Nov 2026 lost their work to these): the allowed commands match
+            only the start of a command, so run each python3 command on its own, with the piece id written out, and no
+            variables, pipes, `;`, `&&` or `echo`. Never start a subagent or command in the background: when you end
+            your turn this run stops and anything still running is lost. Wait for every reader and subagent to answer,
+            in the foreground, then commit before you stop.
 
       # A run's chat is not printed, so two Wednesday runs on 3 Nov 2026 ended green with nothing made and no
       # way to see why. Keep the whole session record, and write what it was refused onto the run's page.
