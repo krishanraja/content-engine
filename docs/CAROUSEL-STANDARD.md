@@ -165,6 +165,27 @@ nature."
   the top.
 - Before delivery, check every slide at full size for both.
 
+## The cover card is a scene, not a slide (Ruling, Krish, 4 November 2026)
+
+His words, of the Tuesday and Thursday mocks for the week of 9 November: "The first card of each mock should have a much
+more engaging background image." Then, of the rebuilt set: "I approve these carousels. They look good. I sign them off
+completely for publishing next week" and "make sure all future carousels never need this feedback again".
+
+- Card 1 of every carousel is a full-bleed picture of one funny, specific scene that carries the story's idea at a
+  glance (a toy chatbot alone on an auction podium for a bankrupt AI app; a robot giving its own exam an A+; a filing
+  cabinet buried under printed code). A headline on a plain ground, a logo row or a chart is never the cover.
+- The picture fills the card. Its top half holds the scene and its lower half stays dark and quiet, so the headline,
+  the one-line dek and the series pill sit over it with no box. A gradient from clear to the house ink carries the
+  type; nothing is cropped across a face or the scene's subject.
+- Generate the scene as a still (no words, letters or logos in the picture; a single prop word such as "A+" is fine)
+  in the house tones: ink shadows with the series colour as the light. A real photo is used instead only when its
+  rights are clear. Record the generation's job id, model and prompt beside the deck.
+- Cards 2 onwards stay the house look: ink ground, Anton headlines, Archivo body, Plex Mono labels, real logos from
+  Brandfetch, the house mark small in the bottom corner. A logo that is dark on the dark ground is shown in white
+  (monochrome) or on a light tile; never invisible.
+- Before showing him a deck, look at card 1 at phone size beside the last approved covers (the week of 9 November's
+  three, in `docs/plans/2026-11-09-week/offday-carousels.md`). If it would not stop a thumb, it is not ready.
+
 ## Seeing a finished carousel (Ruling, Krish, 3 November 2026)
 
 His words: "I should be able to see the assets directly in the publish board or have a link to the Google Drive where
