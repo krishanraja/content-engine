@@ -51,13 +51,14 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   // Separate slot compositions: the wide buddy is broader and sits higher on its stage.
   const layout = aspect === '9:16' ? { size: Math.min(box.width * 0.55, box.height * 0.40), lift: 0 }
     : { size: Math.min(box.width * 0.36, box.height * 0.68), lift: -0.04 }
-  const size = layout.size
-  const x = box.width * s.x - (box.width + size) * (1 - s.arrival) ** 2 + (box.width + size) * s.out
-  const y = box.height * (s.y + layout.lift) - box.height * 0.2 * pulse(s.arrival)
+  const supporting = box.top >= 220 && box.height < 700
+  const size = supporting ? Math.min(180, box.height / 2) : layout.size
+  const x = box.width * (supporting ? Math.max(0.2, Math.min(0.8, s.x)) : s.x) - (box.width + size) * (1 - s.arrival) ** 2 + (box.width + size) * s.out
+  const y = supporting ? box.height / 2 : box.height * (s.y + layout.lift) - box.height * 0.2 * pulse(s.arrival)
     + size * (0.12 * s.slump - 0.6 * s.hop)
   return <svg width={box.width} height={box.height} viewBox={`0 0 ${box.width} ${box.height}`}
     style={{ position: 'absolute', left: box.left, top: box.top, overflow: 'hidden' }}>
-    <ellipse cx={x} cy={box.height * (s.y + layout.lift) + size * 0.6} rx={size * 0.35} ry={size * 0.055}
+    <ellipse cx={x} cy={(supporting ? box.height / 2 : box.height * (s.y + layout.lift)) + size * 0.6} rx={size * 0.35} ry={size * 0.055}
       fill={tokens.inkSoft} opacity={0.12 * s.arrival * (1 - s.out)} />
     <g transform={`translate(${x - size * 0.2 * s.recoil} ${y}) scale(${size / 100}) rotate(${s.wave * -18 + s.slump * 12})`}>
       {s.arrival < 1 && [0, 1, 2].map(i => <path key={i} d={`M ${-65 - i * 18} ${-10 + i * 18} l -22 4`}

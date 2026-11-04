@@ -1,4 +1,5 @@
 import React from 'react'
+import { wrapWords } from '../../../house/metrics'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import { EXIT, MOTION, drift, progress, stateAt, typingProgress } from '../../clock'
 import type { DeviceProps } from '../types'
@@ -21,7 +22,7 @@ export function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object
   for (const e of active.filter(e => e.verb === 'type')) index(e.toState, params.rows.length)
   const picked = pick ? index(pick.toState, params.kind === 'choice' ? params.options!.length : 0) : null
   const send = active.filter(e => e.verb === 'send').at(-1)
-  return { params, out, enter: progress(frame - enter.atFrame, MOTION.enterFrames), picked,
+  return { params, out, enter: progress(frame - enter.atFrame, MOTION.slapFrames), picked,
     pickProgress: pick ? progress(frame - pick.atFrame, MOTION.slapFrames) : 0,
     sent: !!send, sendProgress: send ? progress(frame - send.atFrame, MOTION.slapFrames) : 0,
     rows: params.rows.map((row, i) => {
@@ -38,6 +39,25 @@ export function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object
   }
 }
 
+/** Completed card bounds anchor the top while event-revealed rows grow downward. */
+export function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight = 1920) {
+  const p = ParamsSchema.parse(params)
+  const width = canvasWidth === 1080 ? 960 : 1280
+  const inner = width - 82
+  const lines = (text: string, room: number, font: 'archivo600' = 'archivo600') =>
+    Math.max(1, wrapWords(font, text, 44, room).length)
+  const rows = p.rows.reduce((height, row) => height + 28 + 2 +
+    (p.kind === 'chat' ? 48 : 40) + lines(row.text, p.kind === 'chat' ? inner * 0.86 - 58 : inner - 50) * 57.2 +
+    (row.who && p.kind !== 'chat' && p.kind !== 'email' ? 69.2 : 0), 0)
+  const header = p.kind === 'chat' ? 150 : p.kind === 'order' ? 120 : p.kind === 'email' ? 203 : 0
+  const footer = (p.kind === 'chat' ? 79 : 0) + (p.status ? 79 : 0)
+  const options = (p.options ?? []).reduce((h, text) => h + 24 + 55 + 12 + 50 + lines(text, inner - 120) * 57.2, 0)
+  const height = 82 + header + rows + footer + options
+  const bandTop = canvasHeight === 1920 ? 220 : 180
+  const bandBottom = canvasHeight === 1920 ? 1207 : 900
+  return { left: (canvasWidth - width) / 2, top: Math.max(bandTop, (bandTop + bandBottom - height) / 2), width, height }
+}
+
 // Existing copy slots: who supplies chat names, order product names and email
 // subject/recipient; text remains the event-revealed message or product detail.
 export function Device({ object, events, box, tokens, aspect, frame }: DeviceProps) {
@@ -46,7 +66,9 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const tall = aspect === '9:16'
   const layout = tall ? { width: 0.9, top: 0.12, padding: 40, gap: 28 }
     : { width: 0.64, top: 0.08, padding: 36, gap: 22 }
-  const width = Math.max(920, box.width * layout.width)
+  const stage = box.left === 0 && box.top === 0 && box.height === (tall ? 1920 : 1080)
+  const stageBox = stage ? stageBubbleBox(object.params, box.width, box.height) : undefined
+  const width = stageBox?.width ?? Math.max(920, box.width * layout.width)
   const { kind } = s.params
   const name = s.rows.find(row => row.visible && row.who)?.who
   const initials = name?.split(/\s+/).map(word => Array.from(word)[0]).slice(0, 2).join('')
@@ -55,12 +77,12 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const label: React.CSSProperties = { fontFamily: HOUSE_FONTS.data, fontSize: 44, lineHeight: 1.25 }
   const heading: React.CSSProperties = { fontFamily: HOUSE_FONTS.structure, fontSize: 56, fontWeight: 700, lineHeight: 1.15 }
   return <div data-kind={kind} style={{ position: 'absolute', left: box.left + (box.width - width) / 2,
-    top: box.top + box.height * layout.top, width, boxSizing: 'border-box', padding: layout.padding,
+    top: stageBox?.top ?? box.top + box.height * layout.top, width, boxSizing: 'border-box', padding: layout.padding,
     borderRadius: 36, background: ground, color: tokens.ink, border: `1px solid ${edge}`,
-    boxShadow: `0 28px 64px color-mix(in srgb, ${tokens.inkDeep} 14%, transparent), 0 4px 12px color-mix(in srgb, ${tokens.inkDeep} 6%, transparent)`,
+    boxShadow: `0 28px 64px color-mix(in srgb, ${tokens.inkDeep} 14%, transparent), 0 4px 12px color-mix(in srgb, ${tokens.inkDeep} 6%, transparent), 0 0 50px color-mix(in srgb, ${tokens.mint} 30%, transparent)`,
     fontFamily: HOUSE_FONTS.structure, fontSize: 44, lineHeight: 1.3,
     opacity: s.enter * (1 - s.out), transformOrigin: '50% 30%',
-    transform: `translateY(${(1 - s.enter) * 30 + s.out * 80}px) scale(${0.92 + 0.08 * s.enter})` }}>
+    transform: `translateY(${(1 - s.enter) * 50 + s.out * 80}px) scale(${0.92 + 0.08 * s.enter})` }}>
     {kind === 'chat' && <header data-chat-header style={{ display: 'flex', alignItems: 'center', gap: 24,
       paddingBottom: 28, marginBottom: 28, borderBottom: `2px solid ${edge}` }}>
       <div data-avatar style={{ width: 92, height: 92, borderRadius: '50%', background: tokens.mint,
