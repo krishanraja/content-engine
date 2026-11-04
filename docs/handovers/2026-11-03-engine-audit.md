@@ -108,3 +108,13 @@ Four `taste_claims` candidates for `publication` were engineering wishes, not ta
 history): `144d6e02` (deliver the exact file asked for), `6c4802b8` (say nothing twice), `ea3a57cd` (no duplicated
 copies), `47ac8417` (components stay in one system). Those belong to AGENTS.md and the house rules, which already hold
 them; the inspirationhouse distiller no longer drafts claims of this kind.
+
+### Decided (4 Nov 2026, Krish: "yes 1–4, retire 5 and 6 as long as they are actually reality now")
+
+Approved, the first four approved taste rules for Make Your Mind Up (`get_approved_taste` count 4, read back):
+titles signed off beside the finished cut (`b0b7764e`); no insider shorthand (`4b77c851`); every line makes sense read
+aloud (`03f25f8f`); titles hold back the twist (`944e12dc`). Rejected and retired, after checking each is already live:
+one synced publishing pipeline (`24929d9e`; the web board at content.krishraja.com, its live overlay and auto-merge)
+and the ideas system (`3176f1f1`; Sunday sourcing, cue-steered ranking and the queue exist, and his 28 Oct ruling
+replaced the Story, Angle, Cute and Curious buckets with the five presses). Still undecided: 20 candidate claims and
+the 215 rejection-floor standards (0 approved), the next proposal for his yes.
