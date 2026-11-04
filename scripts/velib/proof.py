@@ -279,11 +279,8 @@ def problems(spec: dict, cut: str, directory: Path, gates: dict, props: dict | N
         now = beat_seconds(props, record['beat'])
         if now is None or any(abs(a - b) >= NUDGE_S for a, b in zip(now, record['beat_s'])):
             out.append(f"beat {record['beat']} moved by {NUDGE_S} s or more since the proof: {run}")
-    press = None
-    for row in reversed([r for r in (gates.get('proof') or []) if isinstance(r, dict)]):
-        if row.get('sha256') == record.get('sha256') and row.get('by') == 'Krish':
-            press = row
-            break
+    from .gates import for_hash
+    press = for_hash(gates, 'proof', record.get('sha256'), cut)
     if press is None:
         out.append(f"Krish has not approved proof/{cut}.mp4 (sha256 {str(record.get('sha256'))[:12]}): he presses Approve proof "
                    f"on the board's day tab for {piece}")
