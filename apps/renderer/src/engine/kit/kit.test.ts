@@ -94,7 +94,9 @@ describe('motion style profiles', () => {
     expect(profile.entrance.distancePx).toBeLessThanOrEqual(60)
     expect(profile.entrance.overshootPct).toBeLessThanOrEqual(6)
     expect(profile.driftPct).toBeGreaterThan(0)
-    expect(['house', 'inkDeep']).toContain(profile.ground.kind) // brand roles only
+    expect(['house', 'inkDeep', 'dark']).toContain(profile.ground.kind) // brand roles only
+    if (profile.boil) expect(profile.boil.amplitudePx).toBeLessThanOrEqual(2) // line-boil's bank rule
+    if (profile.captions?.mode === 'lead') expect(profile.captions.wordsPerCard).toBeGreaterThanOrEqual(2)
     expect(resolveMotion({ style: id })).toEqual(profile)
   })
 
