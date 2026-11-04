@@ -99,7 +99,9 @@ does that with him and writes one narrative lock per piece,
    is (`python3 scripts/floor.py --format script`, `--format title`, `--format
    article`, `--format card` ...): what Krish rejected, in his words, and the
    standards nothing may fall beneath (AGENTS.md rule 20). Check the finished
-   words and pictures against it before they go to him.
+   words and pictures against it before they go to him. Add `--piece <piece>` to
+   each floor read and `check_failures.py`, then run `scripts/preflight.py`
+   (docs/learning/README.md).
 2. Read the piece: `python3 scripts/engine.py GET "/api/content-ideas?id=<uuid>"`
    and where it is: `python3 scripts/post-pack/making.py <uuid> show`.
 3. Record this session on the piece so the board shows it is being made:
