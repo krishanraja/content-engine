@@ -9,37 +9,37 @@ type Aspect = EngineRenderProps['aspect']
 // These are key-content regions. The segment plate itself remains full bleed.
 // Each aspect is authored in its own frame coordinates, never scaled.
 const TALL: Record<Layout, readonly Box[]> = {
-  SPLIT: [{ left: 60, top: 310, width: 960, height: FWP_SPLIT_SEAM_Y - 370 }],
+  SPLIT: [{ left: 60, top: 300, width: 960, height: FWP_SPLIT_SEAM_Y - 360 }],
   STAGE: [
-    { left: 0, top: 310, width: 1080, height: 1610 },
+    { left: 0, top: 0, width: 1080, height: 1920 },
   ],
   P1: [
-    { left: 120, top: 310, width: 768, height: 530 },
+    { left: 120, top: 288, width: 768, height: 552 },
     { left: 144, top: 312, width: 720, height: 160 },
   ],
   P3: [
-    { left: 120, top: 310, width: 768, height: 302 },
+    { left: 120, top: 288, width: 768, height: 324 },
     { left: 120, top: 624, width: 768, height: 216 },
     { left: 120, top: 852, width: 660, height: 290 },
   ],
   P6: [
-    { left: 120, top: 310, width: 768, height: 530 },
+    { left: 120, top: 288, width: 768, height: 552 },
     { left: 424, top: 576, width: 464, height: 264 },
   ],
   F1: [
     { left: 120, top: 852, width: 660, height: 290 },
-    { left: 120, top: 310, width: 768, height: 378 },
+    { left: 120, top: 288, width: 768, height: 400 },
     { left: 120, top: 700, width: 768, height: 140 },
   ],
   F3: [
     { left: 120, top: 376, width: 768, height: 464 },
-    { left: 120, top: 310, width: 768, height: 50 },
+    { left: 120, top: 288, width: 768, height: 72 },
   ],
 }
 
 const WIDE: Record<Exclude<Layout, 'SPLIT'>, readonly Box[]> = {
   STAGE: [
-    { left: 0, top: 202, width: 1920, height: 878 },
+    { left: 0, top: 0, width: 1920, height: 1080 },
   ],
   P1: [
     { left: 96, top: 208, width: 1728, height: 572 },

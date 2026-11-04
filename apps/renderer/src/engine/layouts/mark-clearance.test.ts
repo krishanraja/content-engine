@@ -3,11 +3,21 @@ import { markClearance, slotsFor } from './index'
 import { boxFor } from '../geometry'
 import { FWP_PLACEMENTS } from '../mocks/face-with-proof'
 
+// Original authored tops: clearance must never be achieved by moving content down.
+const tops = {
+  '9:16': { STAGE: [0, 0, 0], SPLIT: [300, 300, 300], P1: [288, 312],
+    P3: [288, 624, 852], P6: [288, 576], F1: [852, 288, 700], F3: [376, 288] },
+  '16:9': { STAGE: [0, 0, 0], P1: [208, 232], P3: [208, 54, 640],
+    P6: [208, 400], F1: [54, 208, 560], F3: [208, 70] },
+} as const
+
 describe('mark clearance', () => {
   for (const aspect of ['9:16', '16:9'] as const) {
     for (const layout of ['STAGE', 'SPLIT', 'P1', 'P3', 'P6', 'F1', 'F3'] as const) {
       if (layout === 'SPLIT' && aspect === '16:9') continue // no wide lock
       it(`${layout} ${aspect}`, () => {
+        expect(slotsFor(layout, aspect, 3).map((box) => box.top)).toEqual(
+          (tops[aspect] as Partial<Record<typeof layout, readonly number[]>>)[layout])
         for (const box of slotsFor(layout, aspect, 3)) expect(markClearance(box, aspect)).toBe(0)
       })
     }

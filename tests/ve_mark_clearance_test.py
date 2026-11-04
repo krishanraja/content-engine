@@ -35,7 +35,8 @@ class MarkClearanceTest(unittest.TestCase):
                  'objects': [dict(obj='card', device='test', params={'place':
                              dict(left=72, top=140, width=200, height=200)})]}
         self.assertFalse(comp.beat_mark_clearance(props, props['beats'][0])['pass'])
-        props['objects'][0]['params']['place']['top'] = 400
+        # QC resolves the frozen mock stage scale: y=400 becomes 304 and still overlaps.
+        props['objects'][0]['params']['place']['top'] = 420
         self.assertTrue(comp.beat_mark_clearance(props, props['beats'][0])['pass'])
 
 
