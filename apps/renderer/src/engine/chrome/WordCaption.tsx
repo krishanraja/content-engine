@@ -8,7 +8,7 @@ import { captionPageAt } from './CaptionTrack'
 /** The word build (Krish, 2026-11-03: "its the georgia subtitles build"; inspiration card instagram_DePHDr_jRed):
  *  one word at a time in white, on the split seam, at chest height on face beats, or at 66% on graphics, the emphasized word in the serif, and the piece's title held at the top. */
 export const WORD_CAPTION = {
-  tall: { centerY: 1440, splitCenterY: FWP_SPLIT_SEAM_Y, graphicsCenterY: 1920 * 0.66, size: 88, titleTop: 250, titleSize: 66, width: 1080 },
+  tall: { centerY: 1500, splitCenterY: FWP_SPLIT_SEAM_Y, graphicsCenterY: 1920 * 0.66, size: 88, titleTop: 250, titleSize: 66, width: 1080 },
   wide: { centerY: 830, splitCenterY: FWP_SPLIT_SEAM_Y, graphicsCenterY: 1080 * 0.66, size: 72, titleTop: 120, titleSize: 54, width: 1920 },
   /** The reference's pale title yellow; the one colour here that is not a house token. */
   titleColour: '#F4EC86',
