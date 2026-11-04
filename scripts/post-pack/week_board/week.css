@@ -3,6 +3,8 @@
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--tabh) + 56px)}
 .wk-top{max-width:820px;margin:0 auto;padding:20px 16px 8px}
 .wk-top h1.wk-title{font-size:clamp(28px,6vw,44px);margin:4px 0 0}
+.wk-kick{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.wk-std{font:600 12px/1.2 "IBM Plex Mono",ui-monospace,monospace;color:inherit;text-underline-offset:3px;white-space:nowrap}
 .wk{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
 .wk-in{max-width:820px;margin:0 auto;padding:8px 16px 0;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:6px}
 .wk button[role=tab]{min-width:0;min-height:48px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0 4px;padding:6px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 13.5px/1.25 Archivo,system-ui,sans-serif;text-align:center}
