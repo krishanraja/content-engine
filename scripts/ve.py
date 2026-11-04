@@ -24,7 +24,7 @@
   python scripts/ve.py said <piece> --take <id> --teleprompter <script.txt>   what he said vs the script; proposed words
   python scripts/ve.py voice-ab <piece> --cut <cut> --assets-dir <dir> --at <s>  raw and repaired voice for his ear
   python scripts/ve.py sfx audition <piece> --cut <cut> --assets-dir <dir> --candidates <ids>   big-moment sounds for his ear
-  python scripts/ve.py sfx approve --id <id> --words "<his words>" --on <date>   | sfx stage --assets-dir <dir>
+  python scripts/ve.py sfx approve --id <id> --words "<his words>" --on <date> --audition <ve>/sfx-audition.json | sfx stage --assets-dir <dir>
   python scripts/ve.py brief <piece> [--cut <cut>]   one brief per plate, with card fields; never dispatches
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
   python scripts/ve.py lock draft|check|show|freeze  design locks (only Krish's Gate 2 freezes one)
@@ -71,8 +71,9 @@ def cmd_doctor(_args) -> int:
     if exe:
         from velib.common import FFMPEG_PIN, ffmpeg_version
         found = ffmpeg_version()
-        check('ffmpeg pin', found == FFMPEG_PIN,
-              f'{found} is the pinned build' if found == FFMPEG_PIN else
+        pinned = found.startswith(FFMPEG_PIN)   # scripts/overnight/preflight.ps1 compares the same way
+        check('ffmpeg pin', pinned,
+              f'{found} is the pinned build' if pinned else
               f'{found} is not the pinned {FFMPEG_PIN}: a cut made here is not comparable with CI or the home computers '
               f'(on a home computer, `. scripts/ve-env.sh` first)', hard=False)
     if exe:
@@ -769,9 +770,9 @@ def cmd_sfx(args) -> int:
     from velib import sfx
     try:
         if args.action == 'approve':
-            if not (args.id and args.words and args.on):
-                raise ValueError('approve needs --id, --words (his own) and --on YYYY-MM-DD')
-            kit = sfx.approve(args.id, args.words, args.on)
+            if not (args.id and args.words and args.on and args.audition):
+                raise ValueError('approve needs --id, --words (his own), --on YYYY-MM-DD and --audition <sfx-audition.json>')
+            kit = sfx.approve(args.id, args.words, args.on, Path(args.audition))
             print(f've sfx: {args.id} approved in his words; config/ve/sfx-kits/house-v1.json holds {len(kit)} sound(s)')
             return 0
         if args.action == 'stage':
@@ -1482,6 +1483,7 @@ def main() -> int:
     p.add_argument('--cut'); p.add_argument('--assets-dir'); p.add_argument('--candidates', nargs='+')
     p.add_argument('--at-frame', type=int); p.add_argument('--beat'); p.add_argument('--scale', type=float, default=0.5)
     p.add_argument('--id'); p.add_argument('--words'); p.add_argument('--on')
+    p.add_argument('--audition', help="the piece's sfx-audition.json he heard the sound in")
     p.set_defaults(fn=cmd_sfx)
     p = sub.add_parser('file', help="file READY cuts in the archive and the post's 3 Video folder, bound to piece_id")
     p.add_argument('piece'); p.add_argument('--subject'); p.add_argument('--date')

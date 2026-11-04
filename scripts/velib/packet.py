@@ -131,7 +131,7 @@ def assemble(spec, directory, out, legacy_ok=()):
                 # Every cut and take join with frames either side (velib.critic_inputs): what a press on stills misses.
                 from . import critic_inputs  # noqa: PLC0415
                 props, edl = critic_inputs.load_for(directory, cut)
-                rows = critic_inputs.cut_rows(props, edl)
+                rows = critic_inputs.cut_rows(props, edl)[:critic_inputs.MAX_ROWS]
                 last = int(props.get('durationFrames') or 0) - 1
                 frames = critic_inputs.frames_at(video, [n for _, ns in rows for n in ns if 0 <= n <= last])
                 if rows and frames:

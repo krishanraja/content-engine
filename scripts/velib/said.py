@@ -43,10 +43,18 @@ def heard(record: dict) -> list[dict]:
     return [{'w': w['text'], 's': w['onset_s'], 'e': w['end_s']} for w in record['aligners']['a']['words']]
 
 
+def _last_word(tokens: list[dict]) -> str:
+    """The last real word among script tokens (an expanded "$40" adds a dollar token with no word of its own)."""
+    return next((t['w'] for t in reversed(tokens) if t['w'].strip()), '')
+
+
 def proposed_words(script_text: str, record: dict) -> list[dict]:
     """The words he said, spelled the way the script spells them where he said the script's words."""
     read = narration_diff.script_tokens(script_text)
-    said = narration_diff.join_split_names(narration_diff.spoken_tokens(heard(record)), read)
+    # One proposed word per heard word, so conform can match the proposal against the take's clock: the transcriber's
+    # split pieces are not joined here ("no spending" stays two words against the script's "No-Spending"; a number
+    # said in words is the one exception, which conform matches as a span, velib.words).
+    said = narration_diff.spoken_tokens(heard(record))
     out: list[dict] = []
 
     def extend(token):
@@ -64,7 +72,7 @@ def proposed_words(script_text: str, record: dict) -> list[dict]:
             continue
         if tag == 'delete':
             # Script words he did not say: nothing was heard, nothing is shown. A sentence still ends where it ended.
-            mark = LINE_END.search(read[i2 - 1]['w'])
+            mark = LINE_END.search(_last_word(read[i1:i2]))
             if mark and out and not PUNCT_END.search(out[-1]['word']):
                 out[-1]['word'] += mark.group(0)
             continue
@@ -75,7 +83,7 @@ def proposed_words(script_text: str, record: dict) -> list[dict]:
             else:
                 extend(s)
         # A sentence the script ends inside his own words still ends: carry the script's closing mark onto his last word.
-        mark = PUNCT_END.search(read[i2 - 1]['w']) if tag == 'replace' and i2 > i1 else None
+        mark = PUNCT_END.search(_last_word(read[i1:i2])) if tag == 'replace' and i2 > i1 else None
         if mark and len(out) > first and not PUNCT_END.search(out[-1]['word']):
             out[-1]['word'] += mark.group(0)
     return [{'w': i, **row} for i, row in enumerate(out)]

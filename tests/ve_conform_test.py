@@ -319,6 +319,23 @@ class ConformTest(unittest.TestCase):
                         '-c:a', 'aac', '-shortest', str(media)], input=frames.tobytes(), check=True)
         return media
 
+    @unittest.skipUnless(have_ffmpeg(), 'ffmpeg is not on PATH')
+    def test_a_take_whose_camera_stalled_keeps_its_stamps(self):
+        """A 24 fps take that lost four frames mid-way: laying it evenly would move frames two frames off his voice
+        around the stall, so it is resampled by its stamps instead (the reviewer's case, 4 Nov 2026)."""
+        import numpy as np  # noqa: PLC0415
+        frames = np.zeros((int(24 * self.MEDIA_S), 32, 32), np.uint8)
+        media = self.dir / 'stalled.mp4'
+        subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'gray', '-s', '32x32', '-r', '24',
+                        '-i', '-', '-vf', 'settb=1/90000,setpts=(N/24+if(gte(N\\,480)\\,4/24\\,0))/TB', '-fps_mode', 'passthrough',
+                        '-enc_time_base', '1/90000', '-c:v', 'libx264', '-qp', '0', '-pix_fmt', 'yuv420p',
+                        '-video_track_timescale', '90000', str(media)], input=frames.tobytes(), check=True)
+        picture = takes.video_probe(media)
+        self.assertEqual(picture['house_rate'], 24)
+        self.assertGreater(picture['max_offset_ms'], 1000 / 24)
+        self.assertEqual(picture['laid'], 'resampled')
+        self.assertEqual(conform.lay_filter(picture), '')
+
     def _indices(self, picture):
         import numpy as np  # noqa: PLC0415
         width = self.BITS * self.STRIPE

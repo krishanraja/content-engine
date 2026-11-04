@@ -32,17 +32,34 @@ def timed(text, start=0.5, step=0.3, pause_after=None):
 
 
 class SaidTest(unittest.TestCase):
-    def test_thursdays_take_gives_the_words_he_signed_with_the_hand_fixes_made_by_itself(self):
-        """Thursday's script.words.json was his heard words with "muse" and "Prompts" fixed by hand."""
+    def test_thursdays_take_read_against_the_script_he_read_gives_the_words_he_signed(self):
+        """The Teleprompter script he read on Thursday 5 Nov (A55B6A69, saved beside the take record), which he
+        paraphrased heavily: the proposal is his 148 words, "Muse" spelled from the script, one word per word he said
+        so conform takes it, and only "Prompts" differs from the words he signed (the script says "The prompt is";
+        the signed words carry a hand fix)."""
+        import re
         take = json.loads((THURSDAY / 'takes' / 'thursday-take-1.json').read_text())
-        signed = json.loads((THURSDAY / 'script.words.json').read_text())
-        heard = [w['text'] for w in take['aligners']['a']['words']]
-        self.assertIn('muse', heard)
-        self.assertIn('Prompts', heard)
-        words = said.proposed_words(signed['text'], take)
-        self.assertEqual([w['word'] for w in words], [w['word'] for w in signed['words']])
-        self.assertEqual([w['w'] for w in words], list(range(len(words))))
-        self.assertFalse(any(w.get('heard_only') for w in words))
+        signed = [w['word'] for w in json.loads((THURSDAY / 'script.words.json').read_text())['words']]
+        script = (THURSDAY / 'teleprompter.A55B6A69.txt').read_text(encoding='utf-8')
+        words = said.proposed_words(script, take)
+        self.assertEqual(len(words), len(take['aligners']['a']['words']), 'one proposed word per word he said')
+
+        def plain(word):
+            return re.sub(r"[^a-z0-9']", '', word.replace('’', "'").lower())
+        differ = [(a, b['word']) for a, b in zip(signed, words) if plain(a) != plain(b['word'])]
+        self.assertEqual(differ, [("Prompt's", 'Prompts')])
+        self.assertIn('Muse', [w['word'] for w in words])
+        self.assertGreater(sum(1 for w in words if w.get('heard_only')), 40, 'he paraphrased; his own words are marked')
+        from velib import conform
+        spec = json.loads((THURSDAY / 'spec.json').read_text())
+        edl = conform.conform(spec, 'short', conform.script_words({'words': [{'w': w['w'], 'word': w['word']} for w in words]}),
+                              THURSDAY)
+        self.assertEqual(len(edl['words']), len(words))
+
+    def test_a_sentence_end_on_a_skipped_number_still_ends_the_sentence(self):
+        heard = record(timed('it cost then we left'))
+        self.assertEqual([w['word'] for w in said.proposed_words('It cost $40. Then we left.', heard)],
+                         ['It', 'cost.', 'Then', 'we', 'left.'])
 
     def test_his_own_words_are_kept_as_heard_and_marked_and_skipped_script_words_are_not_shown(self):
         script = 'We tested three models today. The answer surprised us.'

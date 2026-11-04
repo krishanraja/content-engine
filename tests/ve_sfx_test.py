@@ -50,15 +50,30 @@ class SfxTest(unittest.TestCase):
         else:
             os.environ[sfx.MUSIC_ENV] = self.old_env
 
-    def approve(self, sid, words):
-        return sfx.approve(sid, words, '2026-11-05', candidates_path=self.candidates, approved_path=self.approved,
-                           kit_path=self.kit)
+    def audition_record(self, sid='low-thud', clip=b'clip'):
+        ve = self.dir / 've'
+        (ve / 'sfx').mkdir(parents=True, exist_ok=True)
+        (ve / 'sfx' / f'{sid}.mp4').write_bytes(clip)
+        path = ve / 'sfx-audition.json'
+        path.write_text(json.dumps({'piece': 'p1', 'cut': 'short', 'candidates': [
+            {'id': sid, 'clip': f'{sid}.mp4', 'sha256': sha256_file(ve / 'sfx' / f'{sid}.mp4')}]}))
+        return path
+
+    def approve(self, sid, words, audition=None):
+        return sfx.approve(sid, words, '2026-11-05', audition or self.audition_record(), candidates_path=self.candidates,
+                           approved_path=self.approved, kit_path=self.kit)
 
     def test_nothing_is_approved_without_his_words_or_before_he_could_hear_it(self):
         with self.assertRaises(ValueError):
             self.approve('low-thud', '  ')
         with self.assertRaises(ValueError):
             self.approve('ding', 'yes that one')   # never downloaded
+        with self.assertRaises(ValueError):          # never auditioned on his cut
+            self.approve('low-thud', 'yes', self.dir / 'no-such-audition.json')
+        changed = self.audition_record()
+        (self.dir / 've' / 'sfx' / 'low-thud.mp4').write_bytes(b'another clip')
+        with self.assertRaises(ValueError):          # the clip he heard has changed
+            self.approve('low-thud', 'yes', changed)
         self.assertEqual(sfx.approved(self.approved), {})
 
     def test_his_yes_writes_the_row_and_the_kit_holds_only_approved_sounds(self):

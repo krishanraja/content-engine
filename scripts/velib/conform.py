@@ -456,6 +456,20 @@ def _has_video(path: str) -> bool:
     return bool(re.search(r'Stream #\S+.*: Video:', text))
 
 
+def kept_words(edl: dict, records: dict[str, dict]) -> list[dict]:
+    """The unscripted words the cut keeps (no agreed gap let them go), on the cut's clock: audible speech, so the
+    voice pass never takes one for a sniff."""
+    out = []
+    for kept in edl.get('unscripted_kept') or []:
+        segment = next((s for s in edl['segments'] if s['take'] == kept['take']
+                        and s['src_in_s'] - 1e-6 <= kept['src_s'] <= s['src_out_s'] + 1e-6), None)
+        word = next((w for w in records[kept['take']]['aligners']['a']['words'] if abs(w['onset_s'] - kept['src_s']) < 1e-6), None)
+        if segment and word:
+            to_out = lambda t, s=segment: s['out_in_s'] + (t - s['src_in_s']) / edl['speed']  # noqa: E731
+            out.append({'onset_s': round(to_out(word['onset_s']), 4), 'end_s': round(to_out(word['end_s']), 4)})
+    return out
+
+
 def picture_of(record: dict) -> dict | None:
     """The take's picture as ingest measured it; a record written before ingest measured pictures is measured now."""
     return record['media'].get('video') or video_probe(record['media']['path'])
@@ -532,7 +546,7 @@ def render(edl: dict, records: dict[str, dict], assets_dir: Path) -> dict:
     subprocess.run(cmd, check=True, capture_output=True)
     # Sniffs between his words turned down, never cut (Krish, 17 Oct 2026); the repair chain only with his approval.
     from . import voice  # noqa: PLC0415
-    spoken = voice.prepare(raw, edl['words'], dialogue, assets_dir / f'voice.{edl["cut"]}.json')
+    spoken = voice.prepare(raw, edl['words'] + kept_words(edl, records), dialogue, assets_dir / f'voice.{edl["cut"]}.json')
     out = {'dialogue': str(dialogue), 'dialogue_sha256': sha256_file(dialogue), 'ffmpeg': ffmpeg_version(),
            'voice': {'sniffs': len(spoken['sniffs']), 'repair': spoken['repair'], 'raw': str(raw)}}
     if video:
