@@ -315,11 +315,12 @@ class Styles(unittest.TestCase):
             seen = []
 
             def render(props_path, out, trial):
-                seen.append(trial['style']['motion']['module'])
+                seen.append(((trial.get('style') or {}).get('motion') or {}).get('module', 'house'))
                 # The fake renderer writes only what it is handed: any difference between clips is in the props.
                 fake_render()(props_path, out)
             doc = styles.make(FIXTURE, CUT, Path(tmp), props_for(FIXTURE), render, modules=self.MODULES,
-                              devices={'kinetic_stat', 'headline'})
+                              devices={'kinetic_stat', 'headline'}, sample=looks({'data-story': 40, 'swiss-kinetic-type': 90}))
+            self.assertEqual(seen.pop(0), 'house', 'the house look renders first, on the same window')
             self.assertEqual(seen, ['data-story', 'swiss-kinetic-type'])
             self.assertEqual([o['file'] for o in doc['options']], ['styles/data-story.mp4', 'styles/swiss-kinetic-type.mp4'])
             self.assertEqual(doc['skipped'][0]['module'], 'toy-3d')
@@ -333,8 +334,135 @@ class Styles(unittest.TestCase):
             stripped = [{k: v for k, v in json.loads((Path(tmp) / 'styles' / f'props.{m}.json').read_text(encoding='utf-8')).items()
                          if k != 'motion'} for m in seen]
             self.assertEqual(stripped[0], stripped[1])
+            house = json.loads((Path(tmp) / 'styles' / 'props.house.json').read_text(encoding='utf-8'))
+            self.assertNotIn('motion', house)
+            self.assertEqual(house, stripped[0])
             self.assertTrue(doc['distinct'])
-            self.assertNotIn('note', doc)
+            # Two styles is all this bank can draw, so two are offered and the sheet says so.
+            self.assertIn('only 2 styles look different', doc['note'])
+
+
+def looks(levels: dict, house: int = 0):
+    """A stand-in for the ffmpeg sampler: each clip is six grey frames of 100 pixels averaging its style's level (house at
+    `house`; a fractional level lifts that share of pixels by one), so two clips differ by the gap between their levels."""
+    def sample(clip, seconds):
+        stem = Path(clip).stem
+        level = house if stem == 'house' else levels.get(stem, house)
+        whole, part = int(level), round((level - int(level)) * 100)
+        return [bytes([whole + 1] * part + [whole] * (100 - part))] * 6
+    return sample
+
+
+class DistinctOptions(unittest.TestCase):
+    """Only distinct options reach his press (config/ve/style-distinct.json)."""
+    def module(self, route):
+        return {'name': 'N', 'how': 'h', 'layer': 'motion', 'formats': ['short_video'], 'point_types': ['claim'], 'fits': 'often',
+                've_route': [route], 'krish_verdict': 'untested'}
+
+    def bank(self, *ids):
+        return {mid: self.module('kinetic_stat') for mid in ids}  # equal scores: the bank's order is the rank
+
+    def run_make(self, tmp, ids, levels, props=None, top=3, rules=None):
+        rendered = []
+
+        def render(props_path, out, trial):
+            rendered.append(((trial.get('style') or {}).get('motion') or {}).get('module', 'house'))
+            fake_render()(props_path, out)
+        doc = styles.make(FIXTURE, CUT, Path(tmp), props or props_for(FIXTURE), render, top=top, modules=self.bank(*ids),
+                          devices={'kinetic_stat'}, sample=looks(levels), rules=rules)
+        return doc, rendered
+
+    def test_rules_are_tuned_on_the_381_renders(self):
+        rules = styles.distinct_rules()
+        self.assertEqual((rules['frames'], rules['width']), (6, 270))
+        tuned = rules['tuned_on']['scores_against_house']
+        for style in ('dark-keynote', 'riso-halftone'):
+            self.assertGreaterEqual(tuned[style], rules['threshold'], f'{style} must pass against the house')
+        self.assertLess(tuned['living-ui'], rules['threshold'], 'the old living-ui must fail against the house')
+
+    def test_difference_is_the_mean_absolute_grey_gap(self):
+        self.assertEqual(styles.difference([bytes([10, 20])], [bytes([12, 26])]), 4.0)
+        self.assertEqual(styles.difference([b'\x05' * 9] * 6, [b'\x05' * 9] * 6), 0.0)
+        with self.assertRaises(ValueError):
+            styles.difference([], [])
+
+    def test_three_distinct_styles_are_offered_with_their_scores(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            doc, rendered = self.run_make(tmp, ['data-story', 'swiss-kinetic-type', 'paper-cutout'], {'data-story': 30, 'swiss-kinetic-type': 60, 'paper-cutout': 90})
+            self.assertEqual(rendered, ['house', 'data-story', 'swiss-kinetic-type', 'paper-cutout'])
+            self.assertEqual([o['module'] for o in doc['options']], ['data-story', 'swiss-kinetic-type', 'paper-cutout'])
+            self.assertEqual(doc['options'][2]['differs'], {'house': 90.0, 'data-story': 60.0, 'swiss-kinetic-type': 30.0})
+            written = json.loads((Path(tmp) / 'styles.json').read_text(encoding='utf-8'))
+            self.assertEqual(written['distinctness']['threshold'], styles.distinct_rules()['threshold'])
+            self.assertEqual(len(written['distinctness']['pairs']), 6, 'every pair is scored and recorded')
+            self.assertEqual(written['house']['file'], 'styles/house.mp4')
+            self.assertNotIn('note', written)
+
+    def test_a_look_alike_gives_way_to_the_next_ranked_style(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            # paper-cutout looks like the house; vertical-captions looks like data-story; line-boil is distinct.
+            doc, rendered = self.run_make(tmp, ['data-story', 'paper-cutout', 'vertical-captions', 'swiss-kinetic-type', 'line-boil', 'riso-halftone'],
+                                          {'data-story': 40, 'paper-cutout': 1, 'vertical-captions': 40.5, 'swiss-kinetic-type': 80, 'line-boil': 120, 'riso-halftone': 160})
+            self.assertEqual([o['module'] for o in doc['options']], ['data-story', 'swiss-kinetic-type', 'line-boil'])
+            self.assertNotIn('riso-halftone', rendered, 'nothing renders once three distinct options are found')
+            gone = {s['module']: s for s in doc['skipped']}
+            self.assertEqual((gone['paper-cutout']['reason'], gone['paper-cutout']['like'], gone['paper-cutout']['score']), ('look_alike', 'house', 1.0))
+            self.assertEqual((gone['vertical-captions']['like'], gone['vertical-captions']['score']), ('data-story', 0.5))
+            self.assertIn('next ranked style takes its place', gone['paper-cutout']['why'])
+
+    def test_with_two_distinct_it_offers_two_and_says_so(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            doc, _ = self.run_make(tmp, ['data-story', 'paper-cutout', 'swiss-kinetic-type'], {'data-story': 40, 'paper-cutout': 0.5, 'swiss-kinetic-type': 80})
+            self.assertEqual([o['module'] for o in doc['options']], ['data-story', 'swiss-kinetic-type'])
+            self.assertEqual(doc['note'], 'only 2 styles look different on this window, so 2 are offered instead of 3 (the rest are named under skipped)')
+
+    def test_fewer_than_two_distinct_refuses(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(ValueError, 'fewer than 2 styles look different'):
+                self.run_make(tmp, ['data-story', 'paper-cutout'], {'data-story': 40, 'paper-cutout': 0.2})
+
+    def test_a_style_whose_effects_touch_no_device_is_left_out_and_named(self):
+        props = props_for(FIXTURE)
+        # This window has no typed device: drop the query chip from every beat.
+        for beat in props['beats']:
+            beat['uses'] = [u for u in beat['uses'] if u != 'chip']
+        with tempfile.TemporaryDirectory() as tmp:
+            doc, rendered = self.run_make(tmp, ['hud-terminal', 'single-line-drawing', 'data-story', 'swiss-kinetic-type'],
+                                          {'data-story': 40, 'swiss-kinetic-type': 80}, props=props)
+            self.assertNotIn('hud-terminal', rendered, 'left out before it renders')
+            self.assertNotIn('single-line-drawing', rendered)
+            gone = {s['module']: s for s in doc['skipped']}
+            self.assertEqual(gone['hud-terminal']['reason'], 'no_device_in_window')
+            self.assertIn('typewriter needs typing_bubble or query_chip or headline', gone['hud-terminal']['why'])
+            self.assertIn('followPen needs scribble', gone['single-line-drawing']['why'])
+            self.assertEqual([o['module'] for o in doc['options']], ['data-story', 'swiss-kinetic-type'])
+
+    def test_effects_follow_the_profile(self):
+        table = json.loads((ROOT / 'apps/renderer/src/engine/kit/motion-profiles.json').read_text(encoding='utf-8'))['profiles']
+        self.assertEqual(styles.signature(table['hud-terminal']), ['typewriter'])
+        self.assertEqual(styles.signature(table['living-ui']), ['typewriter', 'zoomToFocus'])
+        self.assertEqual(styles.signature(table['single-line-drawing']), ['followPen'])
+        self.assertEqual(styles.signature(table['riso-halftone']), ['halftone'])
+        self.assertIn('any', styles.signature(table['dark-keynote']))
+        self.assertEqual(styles.signature(table['swiss-kinetic-type']), ['any'])
+        rules = styles.distinct_rules()
+        typed = {'objects': [{'obj': 'q', 'device': 'query_chip'}], 'beats': [{'uses': ['q']}]}
+        self.assertTrue(styles.touches(table['hud-terminal'], typed, rules)[0])
+        take = {'objects': [{'obj': 'g', 'device': 'test_grid'}], 'beats': [{'uses': ['g']}], 'segments': [{'src': 't.mp4'}]}
+        self.assertTrue(styles.touches(table['riso-halftone'], take, rules)[0])
+        self.assertFalse(styles.touches(table['riso-halftone'], {**take, 'segments': []}, rules)[0])
+
+    @unittest.skipUnless(__import__('shutil').which('ffmpeg'), 'needs ffmpeg')
+    def test_the_sampler_reads_real_frames(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            grey, white = Path(tmp) / 'grey.mp4', Path(tmp) / 'white.mp4'
+            for clip, colour in ((grey, 'gray'), (white, 'white')):
+                __import__('subprocess').run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i', f'color={colour}:s=540x960:d=2:r=30',
+                                              '-pix_fmt', 'yuv420p', str(clip)], check=True)
+            a, b = styles.sample_frames(grey, 2.0), styles.sample_frames(white, 2.0)
+            self.assertEqual((len(a), len(a[0])), (6, 270 * 480))
+            self.assertEqual(styles.difference(a, a), 0.0)
+            self.assertGreater(styles.difference(a, b), 100)
 
     def test_no_take_and_no_earlier_take_refuses(self):
         with tempfile.TemporaryDirectory() as tmp:
