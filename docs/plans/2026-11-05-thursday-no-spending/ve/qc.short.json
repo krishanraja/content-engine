@@ -1,6 +1,6 @@
 {
   "file": "/tmp/claude-0/ve-out/short.mp4",
-  "sha256": "72104426e3e559428d476cf5bf34734841c31086e6648e6991ead1ed072c6f5f",
+  "sha256": "14d8445920e2ff14db43fbc2c376e26c60bcbffe6b53504fa958c3f6d3c6989d",
   "duration_s": 47.51,
   "format": "face-with-proof",
   "checks": {
@@ -20,7 +20,7 @@
       "pass": true
     },
     "motion.change_density": {
-      "value": 0.766,
+      "value": 0.787,
       "target": ">= 0.5",
       "pass": true
     },
@@ -43,10 +43,6 @@
         ],
         [
           18,
-          1
-        ],
-        [
-          34,
           1
         ]
       ]
@@ -851,10 +847,10 @@
         {
           "page": 91,
           "frame": 882,
-          "text": "mv",
-          "agreement": 0.0,
-          "variant": "raw",
-          "pass": false
+          "text": "my",
+          "agreement": 1.0,
+          "variant": "normalised",
+          "pass": true
         },
         {
           "page": 92,
@@ -917,7 +913,7 @@
           "frame": 930,
           "text": "questions",
           "agreement": 1.0,
-          "variant": "raw_2x",
+          "variant": "raw",
           "pass": true
         },
         {
@@ -1027,7 +1023,7 @@
         {
           "page": 113,
           "frame": 1031,
-          "text": "down. |",
+          "text": "down.",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
@@ -1035,7 +1031,7 @@
         {
           "page": 114,
           "frame": 1045,
-          "text": "Promot's::",
+          "text": "Promot's",
           "agreement": 0.5,
           "variant": "raw",
           "pass": false
@@ -1050,7 +1046,7 @@
         {
           "page": 116,
           "frame": 1054,
-          "text": "the:",
+          "text": "the",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
@@ -1058,7 +1054,7 @@
         {
           "page": 117,
           "frame": 1070,
-          "text": "comments:",
+          "text": "comments,",
           "agreement": 1.0,
           "variant": "raw",
           "pass": true
@@ -1132,7 +1128,7 @@
           "frame": 1139,
           "text": "sending.",
           "agreement": 1.0,
-          "variant": "normalised_2x",
+          "variant": "raw_2x",
           "pass": true
         },
         {
@@ -1146,10 +1142,10 @@
         {
           "page": 128,
           "frame": 1154,
-          "text": "easy",
-          "agreement": 1.0,
-          "variant": "raw_2x",
-          "pass": true
+          "text": "easV",
+          "agreement": 0.0,
+          "variant": "raw",
+          "pass": false
         },
         {
           "page": 129,
@@ -1347,13 +1343,13 @@
         {
           "beat": "b7-prompt",
           "frame": 924,
-          "score": 0.9781520641900746,
+          "score": 0.978184099711679,
           "pass": true
         },
         {
           "beat": "close",
           "frame": 1168,
-          "score": 0.9781578079366905,
+          "score": 0.9781923434053428,
           "pass": true
         },
         {
@@ -1572,97 +1568,86 @@
           "atFrame": 764,
           "peak_frame": 764,
           "lag_frames": 0,
-          "peak_difference": 94.82998657226562,
-          "event_difference": 94.82998657226562,
+          "peak_difference": 94.82898712158203,
+          "event_difference": 94.82898712158203,
           "threshold": 10.469581604003906,
           "gradual": false,
           "pass": true
         },
         {
           "event": "b7-prompt-1",
-          "atFrame": 764,
-          "peak_frame": 764,
+          "atFrame": 861,
+          "peak_frame": 861,
           "lag_frames": 0,
-          "peak_difference": 94.82998657226562,
-          "event_difference": 94.82998657226562,
+          "peak_difference": 5.872403621673584,
+          "event_difference": 5.872403621673584,
+          "threshold": 0.21591436117887497,
+          "gradual": false,
+          "pass": true
+        },
+        {
+          "event": "b7-prompt-2",
+          "atFrame": 899,
+          "peak_frame": 899,
+          "lag_frames": 0,
+          "peak_difference": 2.4354488849639893,
+          "event_difference": 2.4354488849639893,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
         },
         {
-          "event": "b7-prompt-2",
-          "atFrame": 861,
-          "peak_frame": 861,
-          "lag_frames": 0,
-          "peak_difference": 5.846837520599365,
-          "event_difference": 5.846837520599365,
-          "threshold": 0.29316117614507675,
-          "gradual": false,
-          "pass": true
-        },
-        {
           "event": "b7-prompt-3",
-          "atFrame": 899,
-          "peak_frame": 899,
+          "atFrame": 953,
+          "peak_frame": 953,
           "lag_frames": 0,
-          "peak_difference": 2.228642463684082,
-          "event_difference": 2.228642463684082,
+          "peak_difference": 1.8427276611328125,
+          "event_difference": 1.8427276611328125,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
         },
         {
           "event": "b7-prompt-4",
-          "atFrame": 953,
-          "peak_frame": 953,
+          "atFrame": 966,
+          "peak_frame": 966,
           "lag_frames": 0,
-          "peak_difference": 1.8376967906951904,
-          "event_difference": 1.8376967906951904,
+          "peak_difference": 2.680264711380005,
+          "event_difference": 2.680264711380005,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
         },
         {
           "event": "b7-prompt-5",
-          "atFrame": 966,
-          "peak_frame": 966,
-          "lag_frames": 0,
-          "peak_difference": 2.682736396789551,
-          "event_difference": 2.682736396789551,
+          "atFrame": 1014,
+          "peak_frame": 1011,
+          "lag_frames": -3,
+          "peak_difference": 3.0519771575927734,
+          "event_difference": 1.8395905494689941,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
         },
         {
           "event": "b7-prompt-6",
-          "atFrame": 1014,
-          "peak_frame": 1011,
-          "lag_frames": -3,
-          "peak_difference": 3.0151751041412354,
-          "event_difference": 1.8379417657852173,
+          "atFrame": 1021,
+          "peak_frame": 1020,
+          "lag_frames": -1,
+          "peak_difference": 2.6985280513763428,
+          "event_difference": 2.6985280513763428,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
         },
         {
           "event": "b7-prompt-7",
-          "atFrame": 1021,
-          "peak_frame": 1020,
-          "lag_frames": -1,
-          "peak_difference": 2.6769280433654785,
-          "event_difference": 2.6769280433654785,
-          "threshold": 1e-06,
-          "gradual": true,
-          "pass": true
-        },
-        {
-          "event": "b7-prompt-8",
           "atFrame": 1040,
           "peak_frame": 1040,
           "lag_frames": 0,
-          "peak_difference": 0.964405357837677,
-          "event_difference": 0.964405357837677,
-          "threshold": 0.0010546875419095159,
+          "peak_difference": 0.9752854704856873,
+          "event_difference": 0.9752854704856873,
+          "threshold": 0.0009346064762212336,
           "gradual": false,
           "pass": true
         },
@@ -1671,9 +1656,9 @@
           "atFrame": 1085,
           "peak_frame": 1085,
           "lag_frames": 0,
-          "peak_difference": 16.78271484375,
-          "event_difference": 16.78271484375,
-          "threshold": 0.0004137731302762404,
+          "peak_difference": 15.14144515991211,
+          "event_difference": 15.14144515991211,
+          "threshold": 0.0008015046478249133,
           "gradual": false,
           "pass": true
         },
@@ -1682,8 +1667,8 @@
           "atFrame": 1085,
           "peak_frame": 1085,
           "lag_frames": 0,
-          "peak_difference": 16.78271484375,
-          "event_difference": 16.78271484375,
+          "peak_difference": 15.14144515991211,
+          "event_difference": 15.14144515991211,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -1693,8 +1678,8 @@
           "atFrame": 1128,
           "peak_frame": 1128,
           "lag_frames": 0,
-          "peak_difference": 2.0496222972869873,
-          "event_difference": 2.0496222972869873,
+          "peak_difference": 2.0518972873687744,
+          "event_difference": 2.0518972873687744,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -1704,9 +1689,9 @@
           "atFrame": 1144,
           "peak_frame": 1149,
           "lag_frames": 5,
-          "peak_difference": 1.149672508239746,
-          "event_difference": 0.8537697792053223,
-          "threshold": 0.11742042750120163,
+          "peak_difference": 1.1500341892242432,
+          "event_difference": 0.8537876009941101,
+          "threshold": 0.11926938593387604,
           "gradual": false,
           "pass": true
         },
@@ -1715,9 +1700,9 @@
           "atFrame": 1178,
           "peak_frame": 1178,
           "lag_frames": 0,
-          "peak_difference": 0.4687398672103882,
-          "event_difference": 0.4687398672103882,
-          "threshold": 0.22204428166151047,
+          "peak_difference": 0.4687471091747284,
+          "event_difference": 0.4687471091747284,
+          "threshold": 0.22213540971279144,
           "gradual": false,
           "pass": true
         },
@@ -1726,9 +1711,9 @@
           "atFrame": 1252,
           "peak_frame": 1252,
           "lag_frames": 0,
-          "peak_difference": 4.624195098876953,
-          "event_difference": 4.624195098876953,
-          "threshold": 0.0010836226574610919,
+          "peak_difference": 4.62579870223999,
+          "event_difference": 4.62579870223999,
+          "threshold": 0.0009939236333593726,
           "gradual": false,
           "pass": true
         },
@@ -1737,8 +1722,8 @@
           "atFrame": 1252,
           "peak_frame": 1252,
           "lag_frames": 0,
-          "peak_difference": 4.624195098876953,
-          "event_difference": 4.624195098876953,
+          "peak_difference": 4.62579870223999,
+          "event_difference": 4.62579870223999,
           "threshold": 1e-06,
           "gradual": true,
           "pass": true
@@ -3563,8 +3548,8 @@
             "fromFrame": 1055,
             "text": "comments,",
             "change_frame": 1055,
-            "frame": 1056,
-            "read": "comments:",
+            "frame": 1055,
+            "read": "comments,",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -3787,19 +3772,20 @@
             "page": 19,
             "fromFrame": 1018,
             "text": "it",
-            "change_frame": 1020,
-            "frame": 1020,
-            "read": "it",
-            "score": 1.0,
-            "exact": true,
-            "status": "pass"
+            "change_frame": 1021,
+            "frame": null,
+            "read": null,
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 19 reads \"\" near frame 1018, not \"it\" (score 0.0, needs an exact match and 0.98)"
           },
           {
             "page": 20,
             "fromFrame": 1050,
             "text": "in",
             "change_frame": 1050,
-            "frame": 1051,
+            "frame": 1050,
             "read": "in",
             "score": 1.0,
             "exact": true,
@@ -3840,7 +3826,7 @@
             "text": "so",
             "change_frame": 1167,
             "frame": 1167,
-            "read": "SO",
+            "read": "so",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -4371,7 +4357,7 @@
             "text": "the",
             "change_frame": 1052,
             "frame": 1052,
-            "read": "the:",
+            "read": "the",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -4879,7 +4865,7 @@
             "page": 6,
             "fromFrame": 1021,
             "text": "down.",
-            "change_frame": 1020,
+            "change_frame": 1021,
             "frame": 1021,
             "read": "down.",
             "score": 1.0,
@@ -5081,7 +5067,7 @@
             "text": "Prompt's",
             "change_frame": 1040,
             "frame": 1040,
-            "read": "Prompt's!:",
+            "read": "Prompt's",
             "score": 1.0,
             "exact": true,
             "status": "pass"
@@ -5158,6 +5144,18 @@
             "exact": false,
             "status": "fail",
             "message": "caption page 18 reads \"\" near frame 1011, not \"to\" (score 0.0, needs an exact match and 0.98)"
+          },
+          {
+            "page": 19,
+            "fromFrame": 1018,
+            "text": "it",
+            "change_frame": 1021,
+            "frame": null,
+            "read": null,
+            "score": 0.0,
+            "exact": false,
+            "status": "fail",
+            "message": "caption page 19 reads \"\" near frame 1018, not \"it\" (score 0.0, needs an exact match and 0.98)"
           },
           {
             "page": 21,
@@ -5484,7 +5482,7 @@
             "message": "caption page 0 reads \"\" near frame 742, not \"I\" (score 0.0, needs an exact match and 0.98)"
           }
         ],
-        "changes_found": 111,
+        "changes_found": 110,
         "status": "fail",
         "pass": false,
         "regions": [
@@ -5656,7 +5654,7 @@
       "pass": false,
       "status": "measured",
       "agreement": null,
-      "summary": "None: caption page 9 (\"no\"): no change in the caption zone within 3 frames of its start, frame 598; caption page 12 (\"my\"): no change in the caption zone within 3 frames of its start, frame 879; caption page 14 reads \"\" near frame 902, not \"it\" (score 0.0, needs an exact match and 0.98); caption page 18 reads \"\" near frame 1011, not \"to\" (score 0.0, needs an exact match and 0.98) (and 32 more)"
+      "summary": "None: caption page 9 (\"no\"): no change in the caption zone within 3 frames of its start, frame 598; caption page 12 (\"my\"): no change in the caption zone within 3 frames of its start, frame 879; caption page 14 reads \"\" near frame 902, not \"it\" (score 0.0, needs an exact match and 0.98); caption page 18 reads \"\" near frame 1011, not \"to\" (score 0.0, needs an exact match and 0.98) (and 33 more)"
     },
     "captions.off_face": {
       "value": {
@@ -5949,7 +5947,7 @@
           "note": "extra beat: no golden, composition-checked"
         },
         "close": {
-          "ssim": 0.695680867926478,
+          "ssim": 0.6956916166910576,
           "min": 0.75,
           "pass": false,
           "golden": "face-with-proof",
@@ -6291,7 +6289,7 @@
         "note": "extra beat: no golden, composition-checked"
       },
       "close": {
-        "ssim": 0.695680867926478,
+        "ssim": 0.6956916166910576,
         "min": 0.75,
         "pass": false,
         "golden": "face-with-proof",
@@ -6308,7 +6306,7 @@
     "findings": [
       "hook: ssim 0.7315109651386517 min 0.75",
       "face: ssim 0.672372151966908 min 0.75",
-      "close: ssim 0.695680867926478 min 0.75"
+      "close: ssim 0.6956916166910576 min 0.75"
     ]
   },
   "composition": {
