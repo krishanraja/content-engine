@@ -3644,6 +3644,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/logo_orbit/index.tsx`
 
 - `function orbitState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>, count: number, chips: …`
+- `function orbitLayout(width: number, height: number, aspect: DeviceProps['aspect'])`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/logo_orbit/mark.tsx`
