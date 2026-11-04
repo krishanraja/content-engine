@@ -3569,15 +3569,21 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/clock.ts`
 
 - `const FPS`
-- `const ENTER`
 - `const EXIT`
-- `const HERO`
-- `const MOTION`
+- `const HOUSE_MOTION`
+- `function overshootEase(pct: number): (t: number) => number`
+- `function setMotionProfile(profile: MotionProfile | undefined): void`
+- `function motionProfile(): MotionProfile | undefined`
+- `const ENTER = (t: number): number =>`
+- `const HERO = (t: number): number =>`
+- `const BACK = (t: number): number =>`
+- `const MOTION: Motion`
 - `function useEngineFrame(): number`
 - `interface DeviceState`
 - `function stateAt(events: readonly EngineEvent[], obj: string, frame: number): DeviceState`
 - `function progress(sinceFrames: number, durationFrames: number, easing: (t: number) => number = ENTER): number`
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
+- `function onTwos(frame: number, fromFrame: number): number`
 - `function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number`
 
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`

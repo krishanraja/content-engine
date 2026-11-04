@@ -22,5 +22,6 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
     transform: `scale(${l.scale * state.scale / 1.05})`,
     borderRadius: 999, border: `2px solid ${tokens.ink}`, background: tokens.cream, color: tokens.ink,
     padding: `${l.paddingY}px ${l.paddingX}px`, fontFamily: HOUSE_FONTS.data,
-    fontSize: l.fontSize, lineHeight: 1.25, whiteSpace: 'nowrap' }}>{state.text}</div>
+    fontSize: l.fontSize, lineHeight: 1.25, whiteSpace: 'nowrap' }}>{state.chars >= [...state.text].length ? state.text
+      : <>{[...state.text].slice(0, state.chars).join('')}<span style={{ opacity: 0 }}>{[...state.text].slice(state.chars).join('')}</span></>}</div>
 }

@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, expect, it } from 'vitest'
 // @ts-expect-error The render entry point is native JavaScript.
-import { stageRenderAssets } from '../../scripts/ve-render.mjs'
+import { browserExecutable, stageRenderAssets } from '../../scripts/ve-render.mjs'
 
 const temporary: string[] = []
 afterEach(async () => { await Promise.all(temporary.splice(0).map(dir => rm(dir, { recursive: true, force: true }))) })
@@ -51,4 +51,16 @@ it('refuses a registry symlink escaping assets/logos', async () => {
   await writeFile(path.join(root, 'outside.svg'), 'outside')
   await symlink(path.join(root, 'outside.svg'), path.join(root, 'assets/logos/link.svg'))
   await expect(stage()).rejects.toThrow(/escapes assets\/logos/)
+})
+
+it('drives REMOTION_BROWSER, else an installed headless shell, else lets Remotion choose', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 've-browser-test-'))
+  temporary.push(root)
+  expect(await browserExecutable({ REMOTION_BROWSER: '/x/chrome' }, root)).toBe('/x/chrome')
+  expect(await browserExecutable({}, path.join(root, 'missing'))).toBeNull()
+  expect(await browserExecutable({}, root)).toBeNull()
+  const shell = path.join(root, 'chromium_headless_shell-1243', 'chrome-headless-shell-linux64')
+  await mkdir(shell, { recursive: true })
+  await writeFile(path.join(shell, 'chrome-headless-shell'), '')
+  expect(await browserExecutable({}, root)).toBe(path.join(shell, 'chrome-headless-shell'))
 })
