@@ -3861,6 +3861,15 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function Scribble({ d, colour, tokens, sinceFrames, exiting = false }: { d: string; colour: 'cream' | 'mint'; tokens: E…`
 
+### `apps/renderer/src/engine/kit/beatMotion.ts`
+
+- `interface Box`
+- `interface BeatMotion`
+- `function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number, focus: Box | un…`
+- `function stageGround(profile: MotionProfile | undefined, tokens: EngineTokens): CSSProperties`
+- `function sweepStyle(profile: MotionProfile, tokens: EngineTokens, beat: EngineBeat, frame: number): CSSProperties | null`
+- `function halftoneTexture(tokens: EngineTokens): CSSProperties`
+
 ### `apps/renderer/src/engine/kit/camera.ts`
 
 - `interface Camera`
@@ -3934,6 +3943,19 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `const SCRIBBLE`
 - `const ZONES`
 
+### `apps/renderer/src/engine/kit/motionProfiles.ts`
+
+- `const MotionProfileSchema`
+- `type MotionProfile = z.infer<typeof MotionProfileSchema>`
+- `const EngineMotionSchema`
+- `type EngineMotion = z.infer<typeof EngineMotionSchema>`
+- `const MOTION_PROFILES: Readonly<Record<string, MotionProfile>>`
+- `const NEEDS_DEVICE: readonly string[]`
+- `const FLOOR`
+- `function floorProblems(profile: MotionProfile): string[]`
+- `function clampToFloor(profile: MotionProfile): MotionProfile`
+- `function resolveMotion(motion: EngineMotion | undefined): MotionProfile | undefined`
+
 ### `apps/renderer/src/engine/kit/overlay.ts`
 
 - `const houseTokens = (tokens: EngineTokens) =>`
@@ -3962,6 +3984,14 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `const QUAD: readonly Point[]`
 - `class Screen`
 - `function uiClipPath(expand=9,rad=36): string`
+
+### `apps/renderer/src/engine/kit/reveal.ts`
+
+- `function entranceStyle(p: number): CSSProperties`
+- `interface WordReveal`
+- `interface LineReveal`
+- `function revealLines(lines: readonly string[], age: number): LineReveal[]`
+- `function revealChars(text: string, age: number): number`
 
 ### `apps/renderer/src/engine/kit/scribblePath.ts`
 
