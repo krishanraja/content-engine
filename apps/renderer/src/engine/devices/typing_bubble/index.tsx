@@ -110,7 +110,8 @@ export function bubbleFocus({ object, events, box, aspect, frame }: Pick<DeviceP
 /** Completed card bounds anchor the top while event-revealed rows grow downward. */
 export function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight = 1920) {
   const p = ParamsSchema.parse(params)
-  const width = canvasWidth === 1080 ? 960 : 1280
+  // Tall: 900 px from x 60, clear of Instagram's like rail at x 960 (config/channel-safe-zones.json).
+  const width = canvasWidth === 1080 ? 900 : 1280
   const inner = width - 82
   const lines = (text: string, room: number, font: 'archivo600' = 'archivo600') =>
     Math.max(1, wrapWords(font, text, 44, room).length)
@@ -123,7 +124,7 @@ export function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight
   const height = 82 + header + rows + footer + options
   const bandTop = canvasHeight === 1920 ? 220 : 180
   const bandBottom = canvasHeight === 1920 ? 1207 : 900
-  return { left: (canvasWidth - width) / 2, top: Math.max(bandTop, (bandTop + bandBottom - height) / 2), width, height }
+  return { left: canvasWidth === 1080 ? 60 : (canvasWidth - width) / 2, top: Math.max(bandTop, (bandTop + bandBottom - height) / 2), width, height }
 }
 
 // Existing copy slots: who supplies chat names, order product names and email
@@ -144,7 +145,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const ground = tokens.cream
   const label: React.CSSProperties = { fontFamily: HOUSE_FONTS.data, fontSize: 44, lineHeight: 1.25 }
   const heading: React.CSSProperties = { fontFamily: HOUSE_FONTS.structure, fontSize: 56, fontWeight: 700, lineHeight: 1.15 }
-  return <div data-kind={kind} style={{ position: 'absolute', left: box.left + (box.width - width) / 2,
+  return <div data-kind={kind} style={{ position: 'absolute', left: stageBox?.left ?? box.left + (box.width - width) / 2,
     top: stageBox?.top ?? box.top + box.height * layout.top, width, boxSizing: 'border-box', padding: layout.padding,
     borderRadius: 36, background: ground, color: tokens.ink, border: `1px solid ${edge}`,
     boxShadow: `0 28px 64px color-mix(in srgb, ${tokens.inkDeep} 14%, transparent), 0 4px 12px color-mix(in srgb, ${tokens.inkDeep} 6%, transparent), 0 0 50px color-mix(in srgb, ${tokens.mint} 30%, transparent)`,

@@ -195,6 +195,20 @@ describe('the hook is the intro', () => {
   })
 })
 
+describe('face-with-proof wears one brand treatment', () => {
+  // Krish, 2026-11-03: "The branding is wrong". Its STAGE graphics sit on the light wash of its SPLIT stage, with the
+  // same mark tile and pill; the held title shows over a STAGE beat on the take, never over one with no plate.
+  it('draws the mark tile, never the ink header, on a face-with-proof STAGE beat', () => {
+    const props = { ...EngineRenderPropsSchema.parse(fixture), format: 'face-with-proof' as const }
+    const graphics = { ...props.beats[0]!, layout: 'STAGE' as const, plate: { source: 'none' as const } }
+    const nodes = elements(BrandFrame({ props, beat: graphics, frame: 0 }))
+    expect(nodes.filter((node) => node.type === MarkTile)).toHaveLength(1)
+    expect(nodes.filter((node) => node.type === StageHeader)).toHaveLength(0)
+    const other = { ...props, format: 'two-passports' as const }
+    expect(elements(BrandFrame({ props: other, beat: graphics, frame: 0 })).filter((node) => node.type === StageHeader)).toHaveLength(1)
+  })
+})
+
 describe('STAGE render props', () => {
   it('accepts STAGE, both approved formats and optional keyFrame', () => {
     for (const format of ['two-passports', 'hand-held-screen']) {
