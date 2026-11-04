@@ -2,6 +2,17 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
+## 4 November: Friday 13 Nov (f3fcd5e1, "counting rat tails") article first draft on its tab (Claude Code, make-piece run)
+
+Scripts are approved and in Teleprompter; Workroom now recorded. The article's first draft,
+`docs/plans/2026-11-13-draft-body.md` (about 1,270 words, "we"), passes the voice check and the copy lint;
+the AI scan, the kill list, source filing and the fact gate could not run in GitHub Actions. Friday's tab on
+the 9 Nov web board (build 8d78f0f0, Monday and Wednesday kept) holds it as a review box with two waiting
+lines: the call's confidence (our guess 65%) and the go for the paid fact gate. Detail:
+`docs/plans/2026-11-09-week/fri-article-check.md`. **Next:** his answers; AI scan and kill list on a home
+computer, file sources, fact gate; the creative direction before he records. The board publishes with no
+`--assets` now: Monday's downloads are already stored-asset links.
+
 ## 4 November: Wednesday 11 Nov (36886e0b, the Reiki master's No. 2) scripts on its tab (Claude Code, make-piece run)
 
 From the signed lock, both scripts are written and recorded on the piece (Scripts: done; Workroom: done):
