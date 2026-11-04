@@ -149,6 +149,11 @@ class DesignLockTest(unittest.TestCase):
         self.assertIn('## Motion style: Data story (data-story', text)
         self.assertIn('3D charts', text)
         self.assertLess(text.index('## Motion style'), text.index('## Acceptance'))
+        # data-story has a recipe saved from the cut he approved (Monday 2 Nov): the card builds the whole system
+        self.assertIn('## Recipe: The Ladder', text)
+        self.assertIn('mon02-wide', text)
+        self.assertLess(text.index('## Recipe'), text.index('## Acceptance'))
+        self.assertNotIn('## Recipe', cards.write_card(self.root / 'paper.md', motion_style='paper-cutout', **self.fields()).read_text())
         meta = cards.parse_card(path)
         self.assertEqual(meta['motion_style'], 'data-story')
         self.assertEqual(meta['acceptance'], ['python test.py'])

@@ -1,0 +1,219 @@
+{
+  "manifest": {
+    "schema": "ve-lab/1",
+    "engine": "6b3c98337450",
+    "take_sha256": "203d10c946954c5343ccec5b0e3a3626e9b2dfd7ef376485ff1bbbf4f35dddd5",
+    "cut": "short",
+    "window": [
+      315,
+      555
+    ],
+    "seconds": 8.0,
+    "scale": 0.5,
+    "looks": [
+      {
+        "id": "house",
+        "kind": "house",
+        "title": "House look (captions: word)",
+        "file": "house.mp4",
+        "sha256": "453ec31e1649bcdc7fa6d4521dadf5d750fe63feab83fd939943cacfe118b5aa"
+      },
+      {
+        "id": "captions-house",
+        "kind": "captions",
+        "caption": "house",
+        "title": "Captions: house",
+        "file": "captions-house.mp4",
+        "sha256": "e4bb762b9a310f3acb724a892fcda705a512490efbc7c37ba867d6ee782ee76c"
+      },
+      {
+        "id": "captions-word",
+        "kind": "captions",
+        "caption": "word",
+        "title": "Captions: word",
+        "file": "captions-word.mp4",
+        "sha256": "453ec31e1649bcdc7fa6d4521dadf5d750fe63feab83fd939943cacfe118b5aa",
+        "same_as": "house"
+      },
+      {
+        "id": "dark-keynote",
+        "kind": "style",
+        "module": "dark-keynote",
+        "title": "Dark tech keynote (untested)",
+        "file": "dark-keynote.mp4",
+        "sha256": "406eb3726fee943a8b4a26ec59983b63738ca440f133ec53e8330bc3535c52d8"
+      },
+      {
+        "id": "data-story",
+        "kind": "style",
+        "module": "data-story",
+        "title": "Data story (untested)",
+        "file": "data-story.mp4",
+        "sha256": "f0669d8556c682d26355f0e222f36820ba57d6f2cca07b993562eee4030d428d"
+      },
+      {
+        "id": "hud-terminal",
+        "kind": "style",
+        "module": "hud-terminal",
+        "title": "HUD and terminal (untested)",
+        "file": "hud-terminal.mp4",
+        "sha256": "17dc9f4718f1cb053cb65ede10967e18ac5ebf8654772d6d2faaafd20214ce6c"
+      },
+      {
+        "id": "line-boil",
+        "kind": "style",
+        "module": "line-boil",
+        "title": "Hand-drawn line boil (untested)",
+        "file": "line-boil.mp4",
+        "sha256": "32631d17e2ec7b5e9202bc190eccc73691501f746868dd27c4d92e28734bb5fc"
+      },
+      {
+        "id": "living-ui",
+        "kind": "style",
+        "module": "living-ui",
+        "title": "Living UI screencast (untested)",
+        "file": "living-ui.mp4",
+        "sha256": "483badcd3d1c00b5e1983e1ebb48c567120e80573d62eb616e718d3bbcdff520"
+      },
+      {
+        "id": "paper-cutout",
+        "kind": "style",
+        "module": "paper-cutout",
+        "title": "Paper cut-out and collage (untested)",
+        "file": "paper-cutout.mp4",
+        "sha256": "ec7d27d57e2104b6ef6eb419e6138d2e1918ba3c686976bcf3d7388122b0ff73"
+      },
+      {
+        "id": "riso-halftone",
+        "kind": "style",
+        "module": "riso-halftone",
+        "title": "Risograph and halftone print (untested)",
+        "file": "riso-halftone.mp4",
+        "sha256": "5bc4656ed298788d25194bad95c266436df0a19ef88a516b8a8d7d56e909e80a"
+      },
+      {
+        "id": "single-line-drawing",
+        "kind": "style",
+        "module": "single-line-drawing",
+        "title": "Single line drawing (untested)",
+        "file": "single-line-drawing.mp4",
+        "sha256": "a22896ecebe35d1769271dec7c8392ceccaaf5928a5213bcda631de87d9f4fd1"
+      },
+      {
+        "id": "swiss-kinetic-type",
+        "kind": "style",
+        "module": "swiss-kinetic-type",
+        "title": "Swiss grid and kinetic type (untested)",
+        "file": "swiss-kinetic-type.mp4",
+        "sha256": "98a6a254b2026f120ad0f9cfaf69e75157e853faaf5311cc304598cb9f87e33e"
+      },
+      {
+        "id": "vertical-captions",
+        "kind": "style",
+        "module": "vertical-captions",
+        "title": "Vertical social captions (untested)",
+        "file": "vertical-captions.mp4",
+        "sha256": "77f1617467a59f73f6403d1a64ca970d9810460aa47e9d28eddf01b06d8983e9"
+      }
+    ]
+  },
+  "diff": null,
+  "as_shot": {
+    "house": {
+      "worst": {
+        "L": 1.21,
+        "a": 0.38,
+        "b": 0.47
+      },
+      "moved": []
+    },
+    "captions-house": {
+      "worst": {
+        "L": 1.27,
+        "a": 0.4,
+        "b": 0.91
+      },
+      "moved": []
+    },
+    "dark-keynote": {
+      "worst": {
+        "L": 1.25,
+        "a": 0.36,
+        "b": 0.39
+      },
+      "moved": []
+    },
+    "data-story": {
+      "worst": {
+        "L": 1.23,
+        "a": 0.33,
+        "b": 0.41
+      },
+      "moved": []
+    },
+    "hud-terminal": {
+      "worst": {
+        "L": 1.21,
+        "a": 0.33,
+        "b": 0.64
+      },
+      "moved": []
+    },
+    "line-boil": {
+      "worst": {
+        "L": 1.24,
+        "a": 0.33,
+        "b": 0.78
+      },
+      "moved": []
+    },
+    "living-ui": {
+      "worst": {
+        "L": 1.21,
+        "a": 0.28,
+        "b": 0.51
+      },
+      "moved": []
+    },
+    "paper-cutout": {
+      "worst": {
+        "L": 1.24,
+        "a": 0.33,
+        "b": 0.55
+      },
+      "moved": []
+    },
+    "riso-halftone": {
+      "worst": {
+        "L": 3.01,
+        "a": 0.33,
+        "b": 0.85
+      },
+      "moved": []
+    },
+    "single-line-drawing": {
+      "worst": {
+        "L": 1.21,
+        "a": 0.29,
+        "b": 0.48
+      },
+      "moved": []
+    },
+    "swiss-kinetic-type": {
+      "worst": {
+        "L": 1.26,
+        "a": 0.26,
+        "b": 0.62
+      },
+      "moved": []
+    },
+    "vertical-captions": {
+      "worst": {
+        "L": 1.24,
+        "a": 0.38,
+        "b": 0.51
+      },
+      "moved": []
+    }
+  }
+}
