@@ -10,7 +10,7 @@
       {"id": "mon02-tall", "sha256": "2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a"}
     ],
     "motion_system": "docs/plans/2026-11-02-monday/motion-system.md",
-    "made_by": "per-piece code (docs/plans/2026-11-02-monday/rebuild/); ve cannot draw the through-line yet (docs/ve/cards/through-line/through_line.md)"
+    "made_by": "per-piece code (docs/plans/2026-11-02-monday/rebuild/); ve cannot draw the through-line yet (docs/ve/cards/through-line/ve-through-line-1.fields.json)"
   },
   "thesis": "One object carries the whole piece, and every number is drawn on, beside or instead of a part of it, so the viewer always knows what a number is about. Krish, on the chart: \"The chart makes a boring research report instantly understandable.\"",
   "invariants": [

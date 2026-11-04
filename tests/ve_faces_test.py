@@ -77,6 +77,11 @@ class FaceFlagsTest(unittest.TestCase):
             self.assertEqual([(w['kind'], w['from_s'], w['to_s'], w['from_frame'], w['to_frame']) for w in cover['windows']],
                              [('off_lens', 2.0, 2.6, 60, 78), ('head_turn', 3.8, 4.0, 114, 120)])
             self.assertEqual((cover['status'], cover['calibrated']), ('advisory', False))
+            # A take re-ingested under the same id is another file: its old flags never reach the cut.
+            edl['takes'] = {'t1': {'media': {'sha256': 'new'}}, 't2': {}}
+            (ve_dir / 'faces.t1.json').write_text(json.dumps({'media_sha256': 'old', 'windows': [
+                {'kind': 'off_lens', 'from_s': 12.0, 'to_s': 12.6, 'peak': 0.4}]}))
+            self.assertIsNone(faceflags.write_cover(edl, ve_dir))
 
     @unittest.skipUnless(faceflags.MODEL.is_file(), 'the pinned face landmarker is not on this machine')
     def test_the_landmarker_reads_a_frame_with_no_face_as_no_face(self):

@@ -104,7 +104,8 @@ def window_props(cfg: dict, assets: Path) -> dict:
     """The piece's compiled props, its media pointed at the staged assets, cut to the lab window."""
     from . import proof  # noqa: PLC0415
     text = (ROOT / cfg['piece_dir'] / f'props.{cfg["cut"]}.json').read_text(encoding='utf-8')
-    text = text.replace(cfg['assets_prefix'], str(Path(assets).resolve()))
+    # Forward slashes: a Windows path's backslashes would be JSON escapes inside the props text.
+    text = text.replace(cfg['assets_prefix'], Path(assets).resolve().as_posix())
     start, end = cfg['window']
     return proof.window_props(json.loads(text), start, end)
 

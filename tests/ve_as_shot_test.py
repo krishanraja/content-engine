@@ -83,6 +83,24 @@ class AsShotTest(unittest.TestCase):
         later = {**page, 'fromFrame': 30, 'toFrame': 60}
         self.assertEqual(qc_as_shot.as_shot(str(cut), str(take), self.beats, pages=[later])['moved'], ['b1'])
 
+    def test_what_it_cannot_read_is_said_never_counted(self):
+        cut = clip(self.dir / 'cut.mp4', ['0x8a7a66'])
+        row = qc_as_shot.as_shot(str(cut), str(self.dir / 'no-such-take.mp4'), self.beats)
+        self.assertEqual((row['pass'], row['status'], row['moved']), (None, 'advisory', []))
+        self.assertIn('not read', row['reason'])
+        wide = qc_as_shot.as_shot(str(cut), str(cut), self.beats, aspect='16:9')
+        self.assertEqual((wide['pass'], wide['value']), (None, {}))
+        self.assertIn('9:16', wide['reason'])
+
+    def test_a_crop_is_read_the_way_the_renderer_places_it(self):
+        def rows(crop):
+            return [round(v, 1) for v in qc_as_shot.shown_rows({'layout': 'SPLIT', 'plate': {'crop': crop}}, 1080, 1920)]
+        self.assertEqual(rows('nonsense here'), rows('50% 88%'), 'a crop splitPlatePosition refuses falls back as it does')
+        self.assertEqual(rows(None), rows('50% 88%'))
+        self.assertEqual(rows('top left'), [0.0, 680.0, 1080.0, 1160.0])
+        self.assertEqual(rows('10px 20px'), [-10.0, 660.0, 1070.0, 1140.0], 'a length moves the take, so the box starts before it')
+        self.assertEqual(rows('right 10px bottom 20px'), [10.0, 1460.0, 1090.0, 1940.0])
+
     def test_stage_and_generated_plates_are_not_his_take(self):
         take = clip(self.dir / 'take.mp4', ['0x8a7a66'])
         cut = clip(self.dir / 'cut.mp4', ['0x8a7a66'], darken=0.15)
