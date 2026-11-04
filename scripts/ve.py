@@ -1064,14 +1064,19 @@ def cmd_styles(args, render_fn=None) -> int:
         points = [p.strip() for p in args.points.split(',') if p.strip()] if args.points else None
         def render_style(props_path, out, trial):
             # The trial spec is the style being drawn: its props must carry that style, or the clips would match.
+            # The house clip, the look every option must differ from, carries no motion.
             drawn = (load_json(props_path).get('motion') or {}).get('style')
-            if drawn != trial['style']['motion']['module']:
-                raise ValueError(f'{props_path} carries motion {drawn}, not {trial["style"]["motion"]["module"]}')
+            wanted = ((trial.get('style') or {}).get('motion') or {}).get('module')
+            if drawn != wanted:
+                raise ValueError(f'{props_path} carries motion {drawn}, not {wanted or "the house motion"}')
             render(props_path, out, args.scale)
         render_fn = render_fn or render_style
         doc = styles.make(spec, cut, directory, load_json(own), render_fn, top=args.top, points=points, take_label=label)
+        threshold = doc['distinctness']['threshold']
         for option in doc['options']:
-            print(f"{option['module']}: {option['name']}  {option['file']}  ({option['why']})")
+            nearest = min(option['differs'].values())
+            print(f"{option['module']}: {option['name']}  {option['file']}  ({option['why']}; differs by {nearest:g}, "
+                  f"threshold {threshold:g})")
         for row in doc['skipped']:
             print(f"left out: {row['module']} ({row['why']})")
         if doc.get('note'):

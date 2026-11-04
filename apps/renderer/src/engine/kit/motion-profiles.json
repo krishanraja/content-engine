@@ -29,7 +29,7 @@
       "stagger": { "frames": 6, "unit": "line" },
       "exitFrames": 6, "onTwos": false,
       "camera": { "kind": "push", "scaleTo": 1.05, "dimOthers": false, "easing": "hero" },
-      "transition": "crossfade",
+      "transition": "crossfade", "transitionFrames": 8,
       "typeReveal": { "kind": "line" },
       "ground": { "kind": "inkDeep", "sweepFrames": 30, "texture": "none" },
       "driftPct": 2, "countFrames": 30,
@@ -44,7 +44,7 @@
       "typeReveal": { "kind": "typewriter", "cps": 30 },
       "ground": { "kind": "house", "sweepFrames": 0, "texture": "none" },
       "driftPct": 1, "countFrames": 18,
-      "note": "zoom to the one element that proves the words with the utility bezier (1.5x asked, held so the focus stays inside the frame); everything else dims to 40%; typing at 30 characters a second"
+      "note": "zoom to the line that proves the words (the typed line a device reports) with the utility bezier, up to 1.5x, the line kept inside the channel safe area and off his face while the card's edges may leave the frame; everything else dims to 40%; typing at 30 characters a second with a caret"
     },
     "hud-terminal": {
       "entrance": { "kind": "slap", "frames": 4, "easing": "enter", "distancePx": 40, "overshootPct": 4 },
@@ -94,12 +94,12 @@
       "entrance": { "kind": "draw", "frames": 7, "easing": "utility", "distancePx": 40, "overshootPct": 0 },
       "stagger": { "frames": 6, "unit": "line" },
       "exitFrames": 6, "onTwos": false,
-      "camera": { "kind": "followPen", "scaleTo": 1.04, "dimOthers": false, "easing": "utility" },
+      "camera": { "kind": "followPen", "scaleTo": 1.2, "dimOthers": false, "easing": "utility" },
       "transition": "cut_on_curve",
       "typeReveal": { "kind": "line" },
       "ground": { "kind": "house", "sweepFrames": 0, "texture": "none" },
       "driftPct": 1, "countFrames": 18,
-      "note": "graphics draw on left to right and the camera eases across with the drawing; labels appear after the line"
+      "note": "graphics draw on left to right; the camera closes in to 1.2x and follows the pen tip of the line with a damped follow, never showing past the canvas (1.04 left it no room to move); labels appear after the line"
     },
     "line-boil": {
       "entrance": { "kind": "draw", "frames": 6, "easing": "enter", "distancePx": 40, "overshootPct": 0 },
