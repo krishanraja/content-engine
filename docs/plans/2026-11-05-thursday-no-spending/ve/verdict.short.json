@@ -2,9 +2,9 @@
   "schema": "ve-verdict/2",
   "piece": "2026-11-05-thursday-no-spending",
   "cut": "short",
-  "sha256": "dea8951d0e078fcd9a678fa0fcc724c2394f2f0f12bcbeaa1737ffd5f343a7c4",
-  "reviewer": "ve-critic (separate reader)",
-  "reviewed_at": "2026-11-03T23:22:14.160298+00:00",
+  "sha256": "4167e2d75e84f2921856175a69f5181d47c7b395b62853c51871a26d58369d1c",
+  "reviewer": "ve-critic (separate reader, fresh)",
+  "reviewed_at": "2026-11-04T06:48:39.289566+00:00",
   "lens_sha256": "fa26b91a9d667bb637c79215ef804790e805febaf0a40d2545e4f89c24f622a3",
   "frames_viewed": [
     {
@@ -156,65 +156,65 @@
     {
       "severity": "block",
       "area": "composition",
-      "frame_s": 8.0,
-      "text": "SPLIT beats face, b4-8am, own-words, fails: the card is cut by the seam and the NOBODY ASKED stamp is hidden"
+      "frame_s": 18.0,
+      "text": "The 8am reply is clipped behind the face plate at 18-19 s."
     },
     {
       "severity": "block",
       "area": "composition",
-      "frame_s": 7.0,
-      "text": "split-screen captions sit on the seam over the card and his head; captions.ocr and captions.off_face fail at 16.9 s"
+      "frame_s": 42.0,
+      "text": "In fails the reply is clipped by the seam and covered by the BLOCKED stamp."
+    },
+    {
+      "severity": "block",
+      "area": "motion",
+      "frame_s": 0.0,
+      "text": "The opening is near-identical for 0-5 s: a small card, a small cursor and 60% empty dark."
+    },
+    {
+      "severity": "block",
+      "area": "copy",
+      "frame_s": 0.0,
+      "text": "No held title (brand.title) appears in any frame."
     },
     {
       "severity": "fix",
       "area": "brand",
       "frame_s": 0.0,
-      "text": "brand.title is never drawn as a held title"
-    },
-    {
-      "severity": "fix",
-      "area": "brand",
-      "frame_s": 12.0,
-      "text": "orbit small, off-centre and clipped; mark washed out on cream; brand.mark_tile fails"
+      "text": "Two brand treatments; brand.mark_tile fails on STAGE beats; spec series under.the.hood but frames read off.day."
     },
     {
       "severity": "fix",
       "area": "composition",
-      "frame_s": 25.0,
-      "text": "empty flat-black frames holding one centred word at 25 and 36 s; top card over 70% empty screen at 26-31 s"
+      "frame_s": 10.0,
+      "text": "Split-beat captions sit on the seam over the card and stamp."
     },
     {
       "severity": "fix",
       "area": "motion",
-      "frame_s": 0.0,
-      "text": "opening 0-5 s: the same card and a still character for 6 s"
+      "frame_s": 34.0,
+      "text": "The slab holds static 34-41 s after already showing at 20-21 s."
     },
     {
-      "severity": "note",
+      "severity": "fix",
       "area": "composition",
-      "frame_s": 44.0,
-      "text": "ending band static for 4 s"
-    },
-    {
-      "severity": "note",
-      "area": "composition",
-      "frame_s": 41.0,
-      "text": "the caption 'technologies' sits on the character"
+      "frame_s": 26.0,
+      "text": "The prompt chat fills only the top quarter for 26-30 s."
     }
   ],
   "blocking": true,
   "references": [
     {
       "card": "instagram_DePHDr_jRed",
-      "score": 5,
+      "score": 3,
       "matches": false,
-      "note": "One white heavy word is right on full-screen beats, but no held two-line title appears, and on split beats the word lands on the seam over his hair and the card; at 41 s it sits on the character."
+      "note": "No held title in any frame; on STAGE beats the word floats mid-frame on empty dark; on SPLIT beats it sits on the seam across card edges and the stamp; the font switches between serif and sans."
     },
     {
       "card": "instagram_DeZuQ7-lATg",
-      "score": 4,
+      "score": 3,
       "matches": false,
-      "note": "Flat black or cream with no glow instead of glowing full-width cards on a pale wash; empty black frames at 25 and 36 s; split cards cut by the seam; small off-centre orbit; the opening holds one card and a still character for 6 s."
+      "note": "One short card in the upper band of a mostly empty dark frame for the first 6 s; a thin orbit of small logos; the NO SPENDING slab holds at 20-21 s and again 34-41 s; nothing at the reference's scale."
     }
   ]
 }

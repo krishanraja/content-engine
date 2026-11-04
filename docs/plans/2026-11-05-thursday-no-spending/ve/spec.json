@@ -665,7 +665,7 @@
        "silent": true
       },
       {
-       "at_w": 85,
+       "at_w": 74,
        "obj": "ask",
        "verb": "type",
        "to_state": "0",
@@ -734,14 +734,14 @@
      ],
      "events": [
       {
-       "at_w": 123,
+       "at_w": 118,
        "obj": "rule_back",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 127,
+       "at_w": 123,
        "obj": "buddy_good",
        "verb": "enter",
        "to_state": "visible",
