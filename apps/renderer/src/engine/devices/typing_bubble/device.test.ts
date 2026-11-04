@@ -164,3 +164,20 @@ describe('typing_bubble', () => {
     expect(bubbleState({ object, frame: 35, events: [...events, { ...events[2]!, obj: 'other', atFrame: 30 }] })).toEqual(state(35))
   })
 })
+
+it('centres a full-width two-row STAGE card and grows from a fixed top with a mint glow', () => {
+  const p = props(80)
+  p.object = { ...object, params: { kind: 'chat', rows: [
+    { who: 'Mira Vale', text: 'Hello there!' }, { text: 'All set.', side: 'right' },
+  ] } }
+  p.events = [...events, { id: 'reply', obj: 'bubble', verb: 'type', toState: '1', atFrame: 50 }]
+  const html = render(p)
+  expect(html).toContain('left:60px')
+  expect(html).toContain('width:960px')
+  expect(html).toContain('0 0 50px color-mix(in srgb, aqua 30%, transparent)')
+  const top = Number(html.match(/top:([0-9.]+)px/)![1])
+  expect(top).toBeGreaterThanOrEqual(220)
+  expect(top).toBeLessThan(1207)
+  expect(render({ ...p, frame: 20 })).toContain(`top:${top}px`)
+  expect(html).not.toMatch(/#[0-9a-f]{3,8}\b/i)
+})
