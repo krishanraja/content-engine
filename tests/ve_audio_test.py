@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 
 from velib import audio, qc_audio  # noqa: E402
 from velib.common import ffmpeg  # noqa: E402
+import bed_shape  # noqa: E402
 
 
 def make(path: Path, graph: str, seconds: float) -> None:
@@ -61,21 +62,13 @@ class PremixTest(unittest.TestCase):
         self.assertTrue(out.with_suffix('.bed.json').is_file())
         return result
 
-    def test_ducked_bed_breathes_and_masters_clean(self):
-        result = self.run_mix('ducked')
-        bed = result['bed']
-        self.assertEqual(bed['mode'], 'ducked')
-        self.assertLessEqual(bed['bed_under_speech_db'], -16.5)
-        self.assertGreaterEqual(bed['bed_under_speech_db'], -21)
-        self.assertGreaterEqual(bed['bed_in_pauses_db'], -13)
-        self.assertLessEqual(bed['bed_in_pauses_db'], -6)
-        self.assertGreaterEqual(bed['duck_depth_db'], 4)
-        self.assertAlmostEqual(result['integrated_lufs'], -14, delta=0.6)
-        self.assertLessEqual(result['true_peak_dbtp'], -1.0)
-        # Krish rejected the ducked bed on both of Friday 23's cuts (Gate 2, 2026-10-30): QC refuses it now
-        row = qc_audio.bed(result['stem'])
-        self.assertFalse(row['pass'])
-        self.assertFalse({r['check']: r for r in row['value']}['a steady bed']['pass'])
+    def test_a_ducked_bed_is_refused(self):
+        # Krish rejected the ducked bed on both of Friday 23's cuts (Gate 2, 2026-10-30), and on 2026-11-04: "the
+        # volume of the backing music goes up and down about 30 or 40 times in 90 seconds". ve cannot make one.
+        with self.assertRaises(ValueError) as caught:
+            self.run_mix('ducked')
+        self.assertIn('ducked bed is refused', str(caught.exception))
+        self.assertFalse(hasattr(audio, '_ducked_bed'))
 
     def test_continuous_bed_still_works_and_is_flat(self):
         result = self.run_mix('continuous')
@@ -206,9 +199,22 @@ class EpisodeBedTest(unittest.TestCase):
         tmp_dialogue, tmp_bed, stem = (str(self.root / n) for n in ('d.wav', 'b.wav', 'ducked.music.wav'))
         shutil.copy(self.voice, tmp_dialogue)
         make(Path(tmp_bed), "anoisesrc=d=60:c=brown:a=0.4", 60)
-        audio._ducked_bed(tmp_dialogue, tmp_bed, stem, gain_db=-12, threshold=0.009, duration_s=60.0, last_word_end_s=57.0)
+        # the bed ve used to make, keyed by the voice (the filter is built here only to prove the meters catch it)
+        graph = ("[0:a]aformat=sample_rates=48000:channel_layouts=stereo[key];"
+                 "[1:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=-12dB[b];"
+                 "[b][key]sidechaincompress=threshold=0.009:ratio=8:attack=30:release=450:makeup=1[bed]")
+        subprocess.run([ffmpeg(), '-v', 'error', '-y', '-i', tmp_dialogue, '-i', tmp_bed, '-filter_complex', graph,
+                        '-map', '[bed]', stem], check=True)
         self.assertGreater(spread(stem, 1.5, 57.0), qc_audio.MAX_SPREAD_LU)
         self.assertLessEqual(spread(self.music, 1.5, 27.0), qc_audio.MAX_SPREAD_LU)
+        # and the one bed shape refuses it, where the episode bed passes it
+        meter = audio.ebur128(stem)
+        m = dict(meter['M'])
+        ducked = bed_shape.qc([(t, m.get(t, -120.0), v) for t, v in meter['S']], 0.6, 57.0, 60.0)
+        self.assertFalse(ducked['pass'], ducked)
+        self.assertGreater(ducked['direction_changes'], 2, ducked)
+        self.assertTrue(self.result['bed']['shape']['pass'], self.result['bed']['shape'])
+        self.assertLessEqual(self.result['bed']['shape']['direction_changes'], 2)
 
     def test_a_render_that_is_missing_or_short_fails(self):
         self.assertFalse(qc_audio.continuity(str(self.root / 'no-such.wav'), str(self.out))['pass'])

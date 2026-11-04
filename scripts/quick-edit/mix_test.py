@@ -249,7 +249,11 @@ def main():
             (f'{shape}: it opens on the hook, nothing in front, and the report records it',
              (r['shapes'][shape]['opening'], r['intro_seconds'], round(r['main_seconds'] + r['outro_seconds'], 3)),
              ({'kind': 'hook', 'rule': 'HOOK_IS_THE_INTRO'}, 0.0, round(r['total_seconds'], 3))),
-            (f'{shape}: no intro stretch to measure', L['intro_short_term'], None),
+            # The one bed shape (config/music-bed.json): with no sting the bed still opens loud for 1.5 s, then eases
+            # under his voice (Krish, 2026-11-04: "It should just start loudly and then get a little bit softer").
+            (f'{shape}: the bed opens loud, steadies under him and lifts at the end, with no sting',
+             (r['shapes'][shape]['music']['shape']['pass'], r['shapes'][shape]['music']['shape']['open_over_bed_lu'] >= 6,
+              r['shapes'][shape]['music']['shape']['direction_changes'] <= 2), (True, True, True)),
             (f'{shape}: the bed never drops out under the cut (Krish, 2026-10-28)',
              gaps(WORK / out / f'audio-{shape}' / 'bed.wav', r['total_seconds'] - 1.0), []),
             (f'{shape}: the previews start at the opening, none in a clip', ((WORK / out / f'preview-{shape}-intro.jpg').exists(),

@@ -1852,6 +1852,10 @@ def self_test():
                             'assessment':{'source_sha256':quality.digest(fixture),'evidence_sha256':quality.digest(fixture),'method':'Synthetic test fixture'},
                             'final_review':{'status':'pass','video_sha256':quality.digest(fixture),'evidence_sha256':quality.digest(fixture),
                                 **{k:'pass' for k in ('shake','warping','borders','framing')}}}}}))
+                # The bed-shape receipt an engine writes for these bytes (config/music-bed.json).
+                sys.path.insert(0,str(HERE.parent))
+                import bed_shape
+                bed_shape.write_receipt(fixture,'quick-edit',{'pass':True,'problems':[]},machine='making.py --self-test')
                 argv=[*argv,'--video-file',str(fixture)]
                 # Payload/thumbnail fixtures are not qualifying media. Isolate external
                 # reviewers only inside this self-test; production still uses both gates.

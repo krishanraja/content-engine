@@ -50,7 +50,12 @@ import shutil
 import subprocess
 import sys
 from datetime import date
+
 from pathlib import Path
+
+if str(Path(__file__).resolve().parents[1]) not in sys.path:
+    sys.path.insert(1, str(Path(__file__).resolve().parents[1]))
+import bed_shape  # noqa: E402  scripts/bed_shape.py: the one bed shape (config/music-bed.json)
 
 REPO = Path(__file__).resolve().parents[2]
 LEDGER = REPO / 'config' / 'music-library.json'
@@ -80,8 +85,8 @@ TRACK_FIELDS = (
 OPTIONAL_FIELDS = ('loopable', 'drive_file_id', 'for')
 LEVEL_KEYS = ('intro_lufs', 'bed_lufs', 'outro_lufs', 'ramp_down_s', 'ramp_up_s', 'final_integrated_lufs', 'tolerance_lu', 'max_true_peak_dbtp')
 RATE = 48000
-FADE_IN_S = 0.03   # no click where the track is cut in
-FADE_OUT_S = 1.0   # the bed fades over the last second of the video
+FADE_IN_S = bed_shape.shape()['fade_in_s']    # no click where the track is cut in (config/music-bed.json)
+FADE_OUT_S = bed_shape.shape()['fade_out_s']  # the bed fades over the last second of the video
 MIN_WINDOW_S = 0.4  # one ebur128 block: a shorter stretch has no loudness
 # The bed never runs out under a cut. Krish, 2026-10-28: "Yes I think music
 # should be audible throughout but just lower." A track shorter than the cut
@@ -356,26 +361,27 @@ def envelope(track, timeline, levels):
                       else the track's measured_lufs stands in for all three
     Returns the gain at each turning point (dB) and the stretches where each
     level holds, which is where the levels are measured."""
-    T, I = float(timeline['total_s']), float(timeline.get('intro_s') or 0)
+    T = float(timeline['total_s'])
     vs, ve = float(timeline['voice_start_s']), float(timeline['voice_end_s'])
     ref = float(track['measured_lufs'])
     w = timeline.get('window_lufs') or {}
     src = {k: (w.get(k) if isinstance(w.get(k), (int, float)) else ref) for k in ('intro', 'voice', 'outro')}
     g = {'intro': levels['intro_lufs'] - src['intro'], 'bed': levels['bed_lufs'] - src['voice'], 'outro': levels['outro_lufs'] - src['outro']}
-    # High over the sting, down over ramp_down_s so it sits at the bed level
-    # by his first word, up over ramp_up_s from his last word.
-    a = max(0.0, vs - levels['ramp_down_s']) if I > 0 else 0.0
-    b = vs if I > 0 else 0.0
-    c, d = ve, min(T, ve + levels['ramp_up_s'])
-    fade = min(FADE_OUT_S, max(0.0, T - d))
-    points = [(0.0, g['intro'] if I > 0 else g['bed']), (a, g['intro'] if I > 0 else g['bed']), (b, g['bed']), (c, g['bed']), (d, g['outro']), (T, g['outro'])]
+    # The one shape (config/music-bed.json, scripts/bed_shape.py), sting or none: loud for the open, eased down to
+    # the bed under his voice, held there, up from his last word, faded over the last second. Krish, 2026-11-04:
+    # "It should just start loudly and then get a little bit softer, so my voice is the main character, but with
+    # atmosphere in the background, and then get louder at the end."
+    turns = bed_shape.timings(vs, ve, T)
+    a, b, c, d = turns['open_end'], turns['bed_from'], turns['bed_to'], turns['close_full']
+    fade = round(T - turns['fade_from'], 4)
+    points = [(0.0, g['intro']), (a, g['intro']), (b, g['bed']), (c, g['bed']), (d, g['outro']), (T, g['outro'])]
     windows = {
-        'intro': [0.0, round(a, 4)] if I > 0 and a >= MIN_WINDOW_S else None,
-        'voice': [round(vs, 4), round(ve, 4)] if ve - vs >= MIN_WINDOW_S else None,
+        'intro': [0.0, round(a, 4)] if a >= MIN_WINDOW_S else None,
+        'voice': [round(b, 4), round(c, 4)] if c - b >= MIN_WINDOW_S else None,
         'outro': [round(d, 4), round(T - fade, 4)] if T - fade - d >= MIN_WINDOW_S else None,
     }
     return {'gains_db': {k: round(v, 2) for k, v in g.items()}, 'points': [(round(t, 4), round(v, 3)) for t, v in points],
-            'windows': windows, 'fade_out_s': round(fade, 3), 'source_lufs': src}
+            'windows': windows, 'fade_out_s': round(fade, 3), 'source_lufs': src, 'turns': turns}
 
 
 def gain_expr(points):
@@ -465,7 +471,7 @@ def bed_filter(track, timeline, levels, src='0:a', out='bed', unity=False):
     fade over the last second. A time envelope, not sidechain compression:
     the cut is already tight, so a sidechain would only pump. `unity` leaves
     the level alone, for measuring the placed track."""
-    chain, _ = placement(track, timeline, src, f'{out}_placed', levels['ramp_up_s'])
+    chain, _ = placement(track, timeline, src, f'{out}_placed', bed_shape.shape()['close_rise_s'])
     if unity:
         return chain.replace(f'[{out}_placed]', f'[{out}]')
     T = float(timeline['total_s'])
@@ -520,22 +526,9 @@ def continuous_episode_bed(track, timeline, levels, chapters, src='0:a', out='be
         label = f'{out}_join{i}'
         lines.append(f'[{current}][{out}_p{i}]acrossfade=d=2:c1=tri:c2=tri[{label}]')
         current = label
-    bed = float(levels['bed_lufs'])
     chapter = float(levels.get('chapter_lufs',-22))
-    def target(t):
-        value = bed
-        if t<vs:
-            value = levels['intro_lufs'] if t<=max(0,vs-.5) else levels['intro_lufs']+(bed-levels['intro_lufs'])*(t-max(0,vs-.5))/min(.5,vs)
-        if t>=ve:
-            value = bed+(levels['outro_lufs']-bed)*min(1,(t-ve)/.8)
-        for a,b in cards:
-            if a-.5<=t<=b+.8:
-                lift = max(0,min(1,(t-(a-.5))/.5,((b+.8)-t)/.8))
-                value = max(value,bed+(chapter-bed)*lift)
-        return value-track['measured_lufs']
-    points = sorted(set([0.,total,max(0,vs-.5),vs,ve,min(total,ve+.8)] +
-                        [max(0,min(total,t)) for a,b in cards for t in (a-.5,a,b,b+.8)]))
-    envelope = [(t,target(t)) for t in points]
+    # The one shape (scripts/bed_shape.py), with the chapter cards' lifts: never keyed by the voice.
+    envelope = [(t, v - track['measured_lufs']) for t, v in bed_shape.target_points(levels, vs, ve, total, cards)]
     lines.append(f"[{current}]volume='{gain_expr(envelope)}':eval=frame,atrim=end_sample={round(total*RATE)},asetpts=PTS-STARTPTS[{out}]")
     return ';'.join(lines), {'mode':'episode_bed','chapter_windows':cards,'restart_windows':pieces,
                             'accent_windows':[list(w) for w in timeline.get('accents') or ()],
@@ -771,8 +764,13 @@ def self_test():
         levels = levels_of(data)
         tl = {'intro_s': 1.5, 'voice_start_s': 1.6, 'voice_end_s': 20.0, 'total_s': 25.0}
         env = envelope(data['tracks'][0], tl, levels)
-        checks.append(('the ramp down ends at the first word', env['points'][2], (1.6, env['gains_db']['bed'])))
-        checks.append(('the ramp up ends ramp_up_s after the last word', env['points'][4][0], 20.8))
+        # The one shape (config/music-bed.json): loud for 1.5 s, eased down over 1.5 s, up over 1 s from his last word.
+        checks.append(('the open holds 1.5 s and eases down to the bed by 3 s', (env['points'][1], env['points'][2]),
+                       ((1.5, env['gains_db']['intro']), (3.0, env['gains_db']['bed']))))
+        checks.append(('the rise ends 1 s after the last word', env['points'][4][0], 21.0))
+        bare = envelope(data['tracks'][0], {'intro_s': 0, 'voice_start_s': 0.3, 'voice_end_s': 20.0, 'total_s': 25.0}, levels)
+        checks.append(('with no sting the bed still starts loud', bare['points'][:3],
+                       [(0.0, bare['gains_db']['intro']), (1.5, bare['gains_db']['intro']), (3.0, bare['gains_db']['bed'])]))
         with tempfile.TemporaryDirectory() as tmp:
             bed = Path(tmp) / 'bed.wav'
             graph = bed_filter(load(ledger)['tracks'][0], tl, levels, src='0:a', out='bed')
@@ -791,7 +789,7 @@ def self_test():
                             '-f', 'lavfi', '-i', f'sine=f=440:d=10:r={RATE}', '-filter_complex', '[0][1]concat=n=2:v=0:a=1,aformat=channel_layouts=stereo',
                             str(long)], check=True)
             ending = dict(data['tracks'][0], loopable=False, duration_s=40.0, outro_cue_s=30.0, measured_lufs=ebur128(long)['I'])
-            _, how = placement(ending, tl, xf=levels['ramp_up_s'])
+            _, how = placement(ending, tl, xf=bed_shape.shape()['close_rise_s'])
             checks.append(('a track with an outro cue ends on its ending', how, 'outro cue'))
             spliced = Path(tmp) / 'spliced.wav'
             subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(long), '-filter_complex',

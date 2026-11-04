@@ -46,8 +46,8 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-03 Krish ("this is ridiculous that we still cant produce a good video"): every cut is now watched whole at full size before review; frame-0 hook, forced-aligner caption clock, phrase-edge caption pages, zoned QC honesty and the ending band check are in the engine with tests.
-Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, and `docs/history/2026-11-02-NOW-moved-2.md` and `-5.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`, and one 2 November line in `docs/history/2026-11-03-NOW-moved-1.md`, two in `-moved-2.md`, two in `-moved-3.md` and two in `-moved-4.md`, and one 3 November line in `docs/history/2026-11-04-NOW-moved-2.md`.
+- 2026-11-04 Krish (the bed pumped on Wednesday): one bed shape for both engines (`config/music-bed.json`), nothing keyed to his voice, and no cut reaches 3 Posts without its bed-shape receipt (F40).
+Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, and `docs/history/2026-11-02-NOW-moved-2.md` and `-5.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`, and one 2 November line in `docs/history/2026-11-03-NOW-moved-1.md`, two in `-moved-2.md`, two in `-moved-3.md` and two in `-moved-4.md`, and one 3 November line in `docs/history/2026-11-04-NOW-moved-2.md` and one in `-moved-4.md`.
 
 
 ## What is next and what is waiting on Krish

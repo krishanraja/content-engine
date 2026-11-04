@@ -184,6 +184,13 @@ def delivery_problems(video, receipt, target=None):
             return ['video validation receipt names a different library destination']
         if report.get('kind') == 'social_clip':
             return social_clip_problems(report, target)
+        # The bed-shape receipt (config/music-bed.json): a cut whose bed ve or quick-edit did not make and check for
+        # these bytes is never delivered (Krish, 2026-11-04: "Just make sure it never happens again.").
+        import sys
+        if str(Path(__file__).resolve().parents[1]) not in sys.path:
+            sys.path.append(str(Path(__file__).resolve().parents[1]))
+        import bed_shape
+        bed_problems = bed_shape.receipt_problems(video)
         required = ('heard','sync','loudness','visuals','full_review')
         # A check either ran and wrote what it measured, or the receipt names it under `missing` with the reason
         # (plan W2.4): no receipt carries a placeholder status, and a missing check holds the cut.
@@ -210,7 +217,7 @@ def delivery_problems(video, receipt, target=None):
         problems += opening_gate.delivery_problems(report, opening_gate.required_for(target or report.get('library_path')))
         import visual_clarity
         import media_standard
-        return problems + motion_problems(report) + visual_clarity.delivery_problems(report, Path(receipt).parent, video) + (media_standard.check('delivery', video, report.get('piece_id')) if media_standard.enforced() else [])
+        return bed_problems + problems + motion_problems(report) + visual_clarity.delivery_problems(report, Path(receipt).parent, video) + (media_standard.check('delivery', video, report.get('piece_id')) if media_standard.enforced() else [])
     except (OSError, ValueError, TypeError, AttributeError):
         return ['video validation receipt cannot be read']
 
