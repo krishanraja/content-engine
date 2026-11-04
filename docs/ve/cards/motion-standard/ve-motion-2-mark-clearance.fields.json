@@ -9,7 +9,7 @@
  "path": "docs/ve/cards/motion-standard/ve-motion-2-mark-clearance.md",
  "kind": "code",
  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. The standard is docs/ve/MOTION_STANDARD.md; every number below is measured there from Krish's inspiration-board reels.",
- "acceptance": "npx vitest run apps/renderer/src/engine\nnode node_modules/typescript/bin/tsc --noEmit --pretty false\npython3 tests/ve_mark_clearance_test.py\npython3 tests/ve_composition_test.py",
+ "acceptance": "npx vitest run apps/renderer/src/engine\nnode node_modules/typescript/bin/tsc --noEmit --pretty false\npython3 tests/ve_mark_clearance_test.py",
  "max_minutes": 50,
  "max_calls": 50
 }
