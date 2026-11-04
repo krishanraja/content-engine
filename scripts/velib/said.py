@@ -10,9 +10,11 @@ From a take record (velib.takes: aligner A's words, the forced-alignment clock) 
                                by scripts/post-pack/narration_diff.py, the same report Monday 2 Nov's takes were read by;
   script.words.proposed.json   the words he said, in order, spelled the way the script spells them wherever he said the
                                script's words (a name, a number as digits, "Prompt's" for a heard "Prompts"), and as
-                               heard where he said his own (each marked heard_only). This replaces the hand step
-                               Thursday 5 Nov needed ("muse" set to "Muse", "Prompts" to "Prompt's"). It is a proposal:
-                               the session reads it and makes it the piece's script.words.json, never this module.
+                               heard where he said his own (each marked heard_only), one word per word he said so
+                               conform can match it. On Thursday 5 Nov's take, read against the script he read, it
+                               gives "Muse" as the session had to set by hand, and still the heard "Prompts" where the
+                               signed words carry "Prompt's". It is a proposal: the session reads it and makes it the
+                               piece's script.words.json, never this module.
   pace                         per line, words a second and every pause of 0.8 s or more inside it, for his proof
                                sheet; advisory, since no standard sets these numbers (Higgsfield's narration rule calls
                                a line over 2.9 words a second rushed).
@@ -51,9 +53,11 @@ def _last_word(tokens: list[dict]) -> str:
 def proposed_words(script_text: str, record: dict) -> list[dict]:
     """The words he said, spelled the way the script spells them where he said the script's words."""
     read = narration_diff.script_tokens(script_text)
-    # One proposed word per heard word, so conform can match the proposal against the take's clock: the transcriber's
-    # split pieces are not joined here ("no spending" stays two words against the script's "No-Spending"; a number
-    # said in words is the one exception, which conform matches as a span, velib.words).
+    # One proposed word per heard word, so conform can match the proposal against the take's clock: split names are
+    # not joined here ("no spending" stays two words against the script's "No-Spending"). Two joins remain: a number said
+    # in words (conform matches it as a span, velib.words), and a piece the transcriber split off with a dash or a
+    # decimal point ("well" "-known", "5" ".5"), which narration_diff.spoken_tokens joins and conform does not; a line
+    # holding one is left for the session to split by hand.
     said = narration_diff.spoken_tokens(heard(record))
     out: list[dict] = []
 

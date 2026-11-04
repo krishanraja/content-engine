@@ -131,7 +131,10 @@ def file(spec: dict, directory: Path, cuts: list[str], *, subject: str, when: st
                                                                             if f['shape'] == item['shape']))})
     write_json(sidecar, record)
     write_json(directory / 'filed.json', record)
-    record_history(spec, record)
+    try:
+        record_history(spec, record)
+    except (OSError, ValueError, KeyError, TypeError) as error:   # the cuts are filed; the history row is a convenience
+        record['history_error'] = str(error)[:200]
     return record
 
 
@@ -146,12 +149,12 @@ def record_history(spec: dict, record: dict, path: Path | None = None) -> Path:
     idea = (spec.get('style') or {}).get('idea') or {}
     beats = [b for cut in spec['cuts'].values() for b in cut.get('beats') or []]
     row = {'piece_id': spec['piece_id'], 'date': record['date'], 'filed_on': record['filed_on'], 'route': 've',
-           'series': spec.get('series'), 'format': spec.get('format'),
+           'series': (spec.get('brand') or {}).get('series'), 'format': spec.get('format'),
            'hero': (spec.get('signature') or {}).get('hero', {}).get('device'),
            'idea': idea.get('object') if isinstance(idea, dict) else None,
            'motion': motion.get('module') if isinstance(motion, dict) else None,
            'devices': sorted({o.get('device') for o in spec.get('objects') or [] if o.get('device')}),
-           'transitions': sorted({b['transitionOut'] for b in beats if isinstance(b.get('transitionOut'), str)}),
+           'transitions': sorted({b['transition_out'] for b in beats if isinstance(b.get('transition_out'), str)}),
            'captions': (spec.get('brand') or {}).get('captions'),
            'files': [{'cut': f['cut'], 'sha256': f['sha256']} for f in record['files']]}
     doc['pieces'] = [p for p in doc['pieces'] if p.get('piece_id') != row['piece_id']] + [row]

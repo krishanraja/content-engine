@@ -13,12 +13,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from velib import filing, lint  # noqa: E402
 
-SPEC = {'piece_id': 'p-9', 'series': 'follow.the.money', 'format': 'face-with-proof',
+SPEC = {'piece_id': 'p-9', 'format': 'face-with-proof',
         'signature': {'hero': {'device': 'kinetic_stat'}}, 'style': {'motion': {'module': 'data-story'},
                                                                     'idea': {'object': 'One career ladder'}},
         'objects': [{'obj': 'a', 'device': 'kinetic_stat'}, {'obj': 'b', 'device': 'logo_card'}],
-        'brand': {'captions': 'word'},
-        'cuts': {'short': {'beats': [{'transitionOut': 'cut_on_curve'}, {}]}}}
+        'brand': {'captions': 'word', 'series': 'follow.the.money'},
+        'cuts': {'short': {'beats': [{'transition_out': 'cut_on_curve'}, {}]}}}
 RECORD = {'date': '2026-11-16', 'filed_on': '2026-11-15', 'files': [{'cut': 'short', 'sha256': 'a' * 64}]}
 
 
@@ -35,6 +35,7 @@ class HistoryTest(unittest.TestCase):
             self.assertEqual(rows[0]['idea'], 'One career ladder')
             self.assertEqual(rows[0]['devices'], ['kinetic_stat', 'logo_card'])
             self.assertEqual(rows[0]['transitions'], ['cut_on_curve'])
+            self.assertEqual(rows[0]['series'], 'follow.the.money')
             note = lint.novelty_note({**SPEC, 'piece_id': 'p-10'}, rows)
             self.assertIn('kinetic_stat', note)
             self.assertIn('data-story', note)

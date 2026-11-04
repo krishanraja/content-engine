@@ -139,6 +139,7 @@ def audition(spec: dict, cut: str, directory: Path, props: dict, assets_dir: Pat
         hit = _peak_db(Path(assets_dir) / rel) + gain
         relative = round(hit - voice_db, 1) if voice_db is not None else None
         out.append({'id': sid, 'title': row.get('title'), 'clip': clip.name, 'sha256': sha256_file(clip), 'gain_db': gain,
+                    'sound_sha256': row['sha256'],
                     'hit_vs_voice_db': relative,
                     'level': (None if relative is None else 'too loud' if relative > LOUDEST_DB else
                               'too quiet' if relative < QUIETEST_DB else 'within')})
@@ -167,6 +168,8 @@ def approve(sid: str, words: str, on: str, audition_path: Path, *, candidates_pa
     heard = next((c for c in audition.get('candidates') or [] if c.get('id') == sid), None)
     if not heard or not heard.get('sha256'):
         raise ValueError(f'{sid} is not in the audition record {audition_path}: he approves a sound he heard on his cut')
+    if heard.get('sound_sha256') != row['sha256'] or float(heard.get('gain_db', DEFAULT_GAIN_DB)) != float(row.get('gain_db', DEFAULT_GAIN_DB)):
+        raise ValueError(f'{sid} on the shortlist is not the sound or level he heard in the audition')
     clip = Path(audition_path).parent / 'sfx' / heard['clip']
     if not clip.is_file() or sha256_file(clip) != heard['sha256']:
         raise ValueError(f'the audition clip for {sid} is missing or changed since it was played')
