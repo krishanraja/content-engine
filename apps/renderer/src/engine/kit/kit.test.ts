@@ -2,6 +2,9 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { CANVAS, SCRIBBLE, ZONES } from './lock'
 import { scribblePath, type ScribbleSpec } from './scribblePath'
+import { ENTER, progress, setMotionProfile } from '../clock'
+import { MOTION_PROFILES, MotionProfileSchema, NEEDS_DEVICE, clampToFloor, floorProblems, resolveMotion } from './motionProfiles'
+import { entranceStyle, revealChars, revealLines } from './reveal'
 
 const lock = JSON.parse(readFileSync('config/ve/design-lock.json', 'utf8'))
 const coords = (d: string) => (d.match(/-?\d+(?:\.\d+)?/g) ?? []).map(Number)
@@ -66,5 +69,69 @@ describe('approved scribble paths', () => {
       { shape: 'arrow', from: [1, 1], to: [1, 1] },
       { shape: 'underline', from: [1, 1], to: [1, 1] },
     ] as ScribbleSpec[]) expect(scribblePath(spec, 'one')).not.toMatch(/NaN|Infinity/)
+  })
+})
+
+describe('motion style profiles', () => {
+  const bank = (JSON.parse(readFileSync('config/style-references.json', 'utf8')).bank as Array<{ id: string; layer: string; ve_route: string[] }>)
+    .filter(style => style.layer === 'motion')
+
+  it('draws every motion style a profile can express, and names the seven that need their own device', () => {
+    const drawable = bank.filter(style => !style.ve_route.includes('needs_device')).map(style => style.id).sort()
+    expect(Object.keys(MOTION_PROFILES).sort()).toEqual(drawable)
+    expect(drawable).toHaveLength(10)
+    expect([...NEEDS_DEVICE].sort()).toEqual(bank.filter(style => style.ve_route.includes('needs_device')).map(style => style.id).sort())
+    expect(NEEDS_DEVICE).toHaveLength(7)
+  })
+
+  it.each(Object.entries(MOTION_PROFILES))('%s parses and sits inside the signed floor', (id, profile) => {
+    expect(MotionProfileSchema.parse(profile)).toEqual(profile)
+    expect(floorProblems(profile)).toEqual([])
+    expect(clampToFloor(profile)).toEqual(profile)
+    expect(profile.entrance.frames).toBeGreaterThanOrEqual(4)
+    expect(profile.entrance.frames).toBeLessThanOrEqual(7)
+    expect(profile.entrance.distancePx).toBeGreaterThanOrEqual(40)
+    expect(profile.entrance.distancePx).toBeLessThanOrEqual(60)
+    expect(profile.entrance.overshootPct).toBeLessThanOrEqual(6)
+    expect(profile.driftPct).toBeGreaterThan(0)
+    expect(['house', 'inkDeep']).toContain(profile.ground.kind) // brand roles only
+    expect(resolveMotion({ style: id })).toEqual(profile)
+  })
+
+  it('pulls an out-of-floor profile inside it and refuses an unknown style', () => {
+    const wild = { ...MOTION_PROFILES['swiss-kinetic-type']!,
+      entrance: { kind: 'rise' as const, frames: 20, easing: 'enter' as const, distancePx: 300, overshootPct: 40 }, driftPct: 0 }
+    expect(floorProblems(wild).length).toBeGreaterThanOrEqual(4)
+    const held = clampToFloor(wild)
+    expect(floorProblems(held)).toEqual([])
+    expect(resolveMotion({ style: 'swiss-kinetic-type', profile: wild })).toEqual(held)
+    expect(resolveMotion(undefined)).toBeUndefined()
+    expect(resolveMotion({ style: 'toy-3d' })).toBeUndefined()
+    expect(() => resolveMotion({ style: 'not-a-style' })).toThrow('unknown motion style')
+  })
+
+  it('makes no motion style reveal type exactly as before styles rendered', () => {
+    setMotionProfile(undefined)
+    for (const p of [0, 0.25, 0.5, 1]) expect(entranceStyle(p)).toEqual({ opacity: p, transform: `translateY(${24 * (1 - p)}px)` })
+    const lines = revealLines(['ONE TWO', 'THREE'], 4)
+    expect(lines.map(line => line.p)).toEqual([progress(4, 12, ENTER), progress(1, 12, ENTER)])
+    expect(lines.flatMap(line => line.words)).toEqual([{ p: 1, chars: 3 }, { p: 1, chars: 3 }, { p: 1, chars: 5 }])
+    expect(revealChars('find me', 0)).toBe(7)
+  })
+
+  it('reveals by word, types and rolls under a style', () => {
+    try {
+      setMotionProfile(MOTION_PROFILES['swiss-kinetic-type'])
+      expect(revealLines(['ONE TWO'], 3)[0]!.words.map(w => w.p)).toEqual([progress(3, 5, ENTER), 0])
+      expect(entranceStyle(0).transform).toBe('translateX(-48px)')
+      setMotionProfile(MOTION_PROFILES['hud-terminal'])
+      // 32 characters a second: 15 frames type 16 characters.
+      expect(revealChars('a query that is long enough', 15)).toBe(16)
+      expect(revealLines(['AB CD'], 2)[0]!.words).toEqual([{ p: 1, chars: 2 }, { p: 0, chars: 0 }])
+      setMotionProfile(MOTION_PROFILES['data-story'])
+      expect(revealLines(['A', 'B'], 1).every(line => line.roll)).toBe(true)
+    } finally {
+      setMotionProfile(undefined)
+    }
   })
 })

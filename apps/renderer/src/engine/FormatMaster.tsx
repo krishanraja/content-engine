@@ -1,13 +1,15 @@
 import { z } from 'zod'
 import { AbsoluteFill, OffthreadVideo, Sequence } from 'remotion'
 import { BrandFrame } from './BrandFrame'
-import { useEngineFrame } from './clock'
+import { onTwos, setMotionProfile, useEngineFrame } from './clock'
 import { stageBubbleBox } from './devices/typing_bubble'
 import { headlineLayout } from './devices/headline'
 import { headlineState } from './devices/headline/state'
 import { DEVICES } from './devices/registry'
 import { slotsFor, splitCameraBox, splitPlatePosition } from './layouts'
 import { setActiveCanvas } from './kit/lock'
+import { resolveMotion } from './kit/motionProfiles'
+import { beatMotion, halftoneTexture, stageGround, sweepStyle } from './kit/beatMotion'
 import { EngineAudio } from './audio'
 import type { EngineRenderProps } from './props'
 
@@ -28,6 +30,9 @@ export function FormatMaster(props: EngineRenderProps) {
   const split = activeBeat?.layout === 'SPLIT'
   const camera = split ? splitCameraBox(props.aspect) : undefined
   setActiveCanvas(width, height)
+  // The motion style he picked (props.motion), or the house motion when there is none: every device reads it.
+  const profile = resolveMotion(props.motion)
+  setMotionProfile(profile)
 
   return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
@@ -46,20 +51,31 @@ export function FormatMaster(props: EngineRenderProps) {
                 } : {}),
               }}
             />
+            {profile?.ground.texture === 'halftone' && <AbsoluteFill style={halftoneTexture(props.tokens)} />}
           </AbsoluteFill>
         </Sequence>
       ))}
-      {props.beats.map((beat) => {
+      {props.beats.map((beat, beatIndex) => {
         // Beats mount by frame range with no time offset, so media nested inside a device (a recording's own
         // Sequence) runs on the same global clock as everything else (INV-ONE-CLOCK).
         if (frame < beat.fromFrame || frame >= beat.toFrame) return null
         const slots = slotsFor(beat.layout, props.aspect, beat.uses.length)
+        // A style on twos steps its graphics; the take and captions stay on every frame.
+        const at = profile?.onTwos ? onTwos(frame, beat.fromFrame) : frame
+        const first = beat.uses.length ? objects.get(beat.uses[0]!) : undefined
+        const firstPlace = first && Object.hasOwn(first.params, 'place') ? PlaceSchema.safeParse(first.params.place) : undefined
+        const focus = firstPlace?.success ? { left: firstPlace.data.left, top: firstPlace.data.top,
+          width: firstPlace.data.width * firstPlace.data.scale, height: firstPlace.data.height * firstPlace.data.scale } : slots[0]
+        const motion = profile ? beatMotion(profile, props.beats, beatIndex, frame, focus, width,
+          beat.layout === 'SPLIT' ? splitCameraBox(props.aspect).top : height) : undefined
+        const sweep = profile && (beat.layout === 'STAGE' || beat.layout === 'SPLIT') ? sweepStyle(profile, props.tokens, beat, frame) : null
         return (
           <AbsoluteFill key={`devices-${beat.id}`} style={beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: props.tokens.cream, overflow: 'hidden' }
             // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
             // the ground StageHeader's logo is drawn for.
-            : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? { background: `radial-gradient(ellipse at center, ${props.tokens.inkSoft} 0%, ${props.tokens.inkDeep} 100%)` } : {}}>
-            <AbsoluteFill>
+            : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? stageGround(profile, props.tokens) : {}}>
+            {sweep && <AbsoluteFill style={sweep} />}
+            <AbsoluteFill style={motion?.layer}>
             {beat.uses.map((id, index) => {
               const object = objects.get(id)
               if (!object) throw new Error(`ve: no object ${id}`)
@@ -81,7 +97,7 @@ export function FormatMaster(props: EngineRenderProps) {
                     const card = stageBubbleBox(peer.params, width, height)
                     bottom = Math.max(bottom, card.top + card.height)
                   } else if (peer?.device === 'headline') {
-                    const h = headlineState(peer, props.events, frame)
+                    const h = headlineState(peer, props.events, at)
                     const area = h.at ?? { x: 60, y: height === 1920 ? 220 : 180, w: width - 120, h: height === 1920 ? 987 : 720 }
                     const text = headlineLayout(h.lines, area.w, h.swipe?.line, 'h' in area ? area.h : undefined)
                     const top = h.at ? area.y : area.y + ((height === 1920 ? 987 : 720) - text.height - (h.dek ? 134 : 0)) / 2
@@ -100,8 +116,10 @@ export function FormatMaster(props: EngineRenderProps) {
               // STAGE shares the whole canvas; other layouts retain their slot clips.
               const clipPath = `inset(${box.top}px ${width - box.left - box.width}px ${height - box.top - box.height}px ${box.left}px${beat.layout === 'P6' && index === 1 ? ' round 40px' : ''})`
               return (
-                <AbsoluteFill key={id} style={placement ? { left: placement.left, top: placement.top, width: placement.width, height: placement.height, transform: `scale(${placement.scale})`, transformOrigin: 'top left' } : beat.layout === 'SPLIT' ? {} : { clipPath }}>
-                  <Device object={deviceObject} events={props.events} box={box} tokens={props.tokens} aspect={props.aspect} frame={frame} />
+                <AbsoluteFill key={id} style={{ ...(placement ? { left: placement.left, top: placement.top, width: placement.width, height: placement.height, transform: `scale(${placement.scale})`, transformOrigin: 'top left' } : beat.layout === 'SPLIT' ? {} : { clipPath }),
+                  // Everything outside the proof dims (living-ui), once the camera is on it.
+                  ...(motion && index > 0 && motion.dim < 1 ? { opacity: motion.dim } : {}) }}>
+                  <Device object={deviceObject} events={props.events} box={box} tokens={props.tokens} aspect={props.aspect} frame={at} />
                 </AbsoluteFill>
               )
             })}

@@ -290,18 +290,18 @@ class BoardContract(unittest.TestCase):
 
 class Styles(unittest.TestCase):
     MODULES = {
-        'a': {'name': 'A', 'how': 'h', 'layer': 'motion', 'formats': ['short_video'], 'point_types': ['number'], 'fits': 'often',
+        'data-story': {'name': 'A', 'how': 'h', 'layer': 'motion', 'formats': ['short_video'], 'point_types': ['number'], 'fits': 'often',
               've_route': ['kinetic_stat'], 'krish_verdict': 'untested'},
-        'b': {'name': 'B', 'how': 'h', 'layer': 'motion', 'formats': ['short_video'], 'point_types': ['number'], 'fits': 'often',
+        'toy-3d': {'name': 'B', 'how': 'h', 'layer': 'motion', 'formats': ['short_video'], 'point_types': ['number'], 'fits': 'often',
               've_route': ['needs_device'], 'krish_verdict': 'liked'},
-        'c': {'name': 'C', 'how': 'h', 'layer': 'motion', 'formats': ['short_video'], 'point_types': ['claim'], 'fits': 'sometimes',
+        'swiss-kinetic-type': {'name': 'C', 'how': 'h', 'layer': 'motion', 'formats': ['short_video'], 'point_types': ['claim'], 'fits': 'sometimes',
               've_route': ['headline'], 'krish_verdict': 'untested'},
     }
 
     def test_needs_device_is_left_out_and_named(self):
         options, skipped = styles.shortlist(FIXTURE, CUT, 3, self.MODULES, {'kinetic_stat', 'headline'})
-        self.assertEqual([m for m, _ in options], ['a', 'c'])
-        self.assertEqual([m for m, _ in skipped], ['b'])
+        self.assertEqual([m for m, _ in options], ['data-story', 'swiss-kinetic-type'])
+        self.assertEqual([m for m, _ in skipped], ['toy-3d'])
 
     def test_the_real_bank_never_offers_an_undrawable_style(self):
         options, skipped = styles.shortlist(FIXTURE, CUT, 3)
@@ -316,15 +316,25 @@ class Styles(unittest.TestCase):
 
             def render(props_path, out, trial):
                 seen.append(trial['style']['motion']['module'])
-                fake_render(trial['style']['motion']['module'])(props_path, out)
+                # The fake renderer writes only what it is handed: any difference between clips is in the props.
+                fake_render()(props_path, out)
             doc = styles.make(FIXTURE, CUT, Path(tmp), props_for(FIXTURE), render, modules=self.MODULES,
                               devices={'kinetic_stat', 'headline'})
-            self.assertEqual(seen, ['a', 'c'])
-            self.assertEqual([o['file'] for o in doc['options']], ['styles/a.mp4', 'styles/c.mp4'])
-            self.assertEqual(doc['skipped'][0]['module'], 'b')
+            self.assertEqual(seen, ['data-story', 'swiss-kinetic-type'])
+            self.assertEqual([o['file'] for o in doc['options']], ['styles/data-story.mp4', 'styles/swiss-kinetic-type.mp4'])
+            self.assertEqual(doc['skipped'][0]['module'], 'toy-3d')
             written = json.loads((Path(tmp) / 'styles.json').read_text(encoding='utf-8'))
             self.assertEqual(written['window'], doc['window'])
+            motions = [json.loads((Path(tmp) / 'styles' / f'props.{m}.json').read_text(encoding='utf-8'))['motion']
+                       for m in seen]
+            self.assertEqual([m['style'] for m in motions], seen)
+            self.assertNotEqual(motions[0]['profile'], motions[1]['profile'])
+            # Apart from the style, each clip draws the same window of the same take.
+            stripped = [{k: v for k, v in json.loads((Path(tmp) / 'styles' / f'props.{m}.json').read_text(encoding='utf-8')).items()
+                         if k != 'motion'} for m in seen]
+            self.assertEqual(stripped[0], stripped[1])
             self.assertTrue(doc['distinct'])
+            self.assertNotIn('note', doc)
 
     def test_no_take_and_no_earlier_take_refuses(self):
         with tempfile.TemporaryDirectory() as tmp:

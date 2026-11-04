@@ -1,13 +1,13 @@
 import React from 'react'
 import { staticFile } from 'remotion'
 import { HOUSE_FONTS } from '../../../house/geometry'
-import { EXIT, MOTION, progress, stateAt } from '../../clock'
+import { BACK, EXIT, MOTION, progress, stateAt } from '../../clock'
 import type { DeviceProps } from '../types'
 import { Mark } from '../logo_orbit/mark'
 import { ParamsSchema, resolveLogo } from './schema'
 
-// Monday's E.back, with its 1.9 overshoot. The card pins the house duration.
-const back = (t: number) => 1 + 2.9 * Math.pow(t - 1, 3) + 1.9 * Math.pow(t - 1, 2)
+// Monday's E.back (1.9 overshoot) with no motion style; a style's own overshoot, never past 6%, with one (clock BACK).
+const back = BACK
 const linear = (t: number) => t
 export function logoCardState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>, count: number) {
   const s = stateAt(events, object.obj, frame)
