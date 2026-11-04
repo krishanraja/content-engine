@@ -2,219 +2,123 @@
   "schema": "ve-verdict/2",
   "piece": "2026-11-05-thursday-no-spending",
   "cut": "short",
-  "sha256": "4167e2d75e84f2921856175a69f5181d47c7b395b62853c51871a26d58369d1c",
-  "reviewer": "ve-critic (separate reader, fresh)",
-  "reviewed_at": "2026-11-04T06:48:39.289566+00:00",
+  "sha256": "42d5d64a33b778b3f17a94825efbfc767a274f8b2196db9f9b6fd90401d362c7",
+  "reviewer": "ve-critic",
+  "reviewed_at": "2026-11-04T11:17:10.430488+00:00",
   "lens_sha256": "fa26b91a9d667bb637c79215ef804790e805febaf0a40d2545e4f89c24f622a3",
   "frames_viewed": [
     {
       "at_s": 0.0
     },
     {
-      "at_s": 1.0
-    },
-    {
-      "at_s": 2.0
-    },
-    {
       "at_s": 3.0
-    },
-    {
-      "at_s": 4.0
-    },
-    {
-      "at_s": 5.0
     },
     {
       "at_s": 6.0
     },
     {
-      "at_s": 7.0
-    },
-    {
-      "at_s": 8.0
-    },
-    {
       "at_s": 9.0
-    },
-    {
-      "at_s": 10.0
-    },
-    {
-      "at_s": 11.0
     },
     {
       "at_s": 12.0
     },
     {
-      "at_s": 13.0
-    },
-    {
-      "at_s": 14.0
-    },
-    {
       "at_s": 15.0
-    },
-    {
-      "at_s": 16.0
-    },
-    {
-      "at_s": 17.0
     },
     {
       "at_s": 18.0
     },
     {
-      "at_s": 19.0
-    },
-    {
-      "at_s": 20.0
-    },
-    {
       "at_s": 21.0
-    },
-    {
-      "at_s": 22.0
-    },
-    {
-      "at_s": 23.0
     },
     {
       "at_s": 24.0
     },
     {
-      "at_s": 25.0
-    },
-    {
-      "at_s": 26.0
-    },
-    {
       "at_s": 27.0
-    },
-    {
-      "at_s": 28.0
-    },
-    {
-      "at_s": 29.0
     },
     {
       "at_s": 30.0
     },
     {
-      "at_s": 31.0
-    },
-    {
-      "at_s": 32.0
-    },
-    {
       "at_s": 33.0
-    },
-    {
-      "at_s": 34.0
-    },
-    {
-      "at_s": 35.0
     },
     {
       "at_s": 36.0
     },
     {
-      "at_s": 37.0
-    },
-    {
-      "at_s": 38.0
-    },
-    {
       "at_s": 39.0
-    },
-    {
-      "at_s": 40.0
-    },
-    {
-      "at_s": 41.0
     },
     {
       "at_s": 42.0
     },
     {
-      "at_s": 43.0
-    },
-    {
-      "at_s": 44.0
-    },
-    {
       "at_s": 45.0
-    },
-    {
-      "at_s": 46.0
-    },
-    {
-      "at_s": 47.0
     }
   ],
   "findings": [
     {
       "severity": "block",
-      "area": "composition",
-      "frame_s": 18.0,
-      "text": "The 8am reply is clipped behind the face plate at 18-19 s."
-    },
-    {
-      "severity": "block",
-      "area": "composition",
-      "frame_s": 42.0,
-      "text": "In fails the reply is clipped by the seam and covered by the BLOCKED stamp."
-    },
-    {
-      "severity": "block",
       "area": "motion",
-      "frame_s": 0.0,
-      "text": "The opening is near-identical for 0-5 s: a small card, a small cursor and 60% empty dark."
+      "frame_s": 27.0,
+      "text": "Prompt card question types at about 4 characters a second; 25 s is a near-empty frame."
     },
     {
       "severity": "block",
-      "area": "copy",
+      "area": "composition",
+      "frame_s": 27.0,
+      "text": "Chat card crowds the mark tile (standard rule 3)."
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 8.0,
+      "text": "'Shall I pay the deposit' types at about 5 characters a second."
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 45.0,
+      "text": "BLOCKED stamps before the reply finishes typing."
+    },
+    {
+      "severity": "fix",
+      "area": "composition",
+      "frame_s": 3.0,
+      "text": "Every STAGE beat leaves the lower 55 percent empty except one word."
+    },
+    {
+      "severity": "fix",
+      "area": "other",
       "frame_s": 0.0,
-      "text": "No held title (brand.title) appears in any frame."
+      "text": "style.motion is unset, so the cut falls back to house motion."
     },
     {
       "severity": "fix",
       "area": "brand",
-      "frame_s": 0.0,
-      "text": "Two brand treatments; brand.mark_tile fails on STAGE beats; spec series under.the.hood but frames read off.day."
+      "frame_s": 22.0,
+      "text": "brand title shows only on one face beat; the reference holds it throughout, and the serif switches mid-sentence on non-emphasis words."
     },
     {
-      "severity": "fix",
-      "area": "composition",
+      "severity": "note",
+      "area": "other",
       "frame_s": 10.0,
-      "text": "Split-beat captions sit on the seam over the card and stamp."
-    },
-    {
-      "severity": "fix",
-      "area": "motion",
-      "frame_s": 34.0,
-      "text": "The slab holds static 34-41 s after already showing at 20-21 s."
-    },
-    {
-      "severity": "fix",
-      "area": "composition",
-      "frame_s": 26.0,
-      "text": "The prompt chat fills only the top quarter for 26-30 s."
+      "text": "OCR misreads short words on face beats; cause unproven."
     }
   ],
   "blocking": true,
   "references": [
     {
       "card": "instagram_DePHDr_jRed",
-      "score": 3,
+      "score": 6,
       "matches": false,
-      "note": "No held title in any frame; on STAGE beats the word floats mid-frame on empty dark; on SPLIT beats it sits on the seam across card edges and the stamp; the font switches between serif and sans."
+      "note": "one white heavy word at chest height off the face under a yellow title on face shots. Misses: face only 11 of 47.5 s; title not held; serif switches mid-sentence"
     },
     {
       "card": "instagram_DeZuQ7-lATg",
-      "score": 3,
+      "score": 4,
       "matches": false,
-      "note": "One short card in the upper band of a mostly empty dark frame for the first 6 s; a thin orbit of small logos; the NO SPENDING slab holds at 20-21 s and again 34-41 s; nothing at the reference's scale."
+      "note": "rounded cards on a pale wash, logo orbit, face-below splits. Misses: cards off-centre, no glow, lower half empty, about 15 cuts a minute against 30, slow typing"
     }
   ]
 }
