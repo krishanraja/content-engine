@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 sys.path.insert(0, str(ROOT / 'scripts/post-pack'))
 import produce_day  # noqa: E402
+import bed_shape  # noqa: E402
 
 sys.path.insert(0, str(ROOT / 'scripts/quick-edit'))
 import quality  # noqa: E402
@@ -48,6 +49,8 @@ class FilingTests(unittest.TestCase):
                                      'lost': [] if words == 'pass' else [{'message': '"Disney" is lost: said at 0:00.30'}],
                                      'reason': None if words == 'pass' else '1 content word(s) ... missing'}
         Path(str(video) + '.validation.json').write_text(json.dumps(report))
+        # make.py's bed-shape receipt for these bytes (config/music-bed.json): without it nothing is filed.
+        bed_shape.write_receipt(video, 'quick-edit', {'pass': True, 'problems': []}, machine='test')
 
     def file(self, sent):
         def fake_run(args, env=None, ok=(0,), what=''):

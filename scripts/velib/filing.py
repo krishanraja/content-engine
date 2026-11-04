@@ -93,6 +93,11 @@ def file(spec: dict, directory: Path, cuts: list[str], *, subject: str, when: st
             blocked.append(f'{item["cut"]}: NOT READY (' + '; '.join(reasons) + ')')
             continue
         videos[item['cut']] = (Path(video), digest)
+    # The bed-shape receipt for these exact bytes (config/music-bed.json): ve qc writes it when the bed passed the one
+    # shape; without it nothing reaches 3 Posts.
+    for item in planned['files']:
+        if item['cut'] in videos:
+            blocked += library.video_refusal(videos[item['cut']][0], item['library'])
     if blocked:
         raise ValueError('filing refused: ' + ' | '.join(blocked))
     if dry_run:

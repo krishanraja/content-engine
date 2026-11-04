@@ -60,6 +60,14 @@ def bed(stem: str, mode: str | None = None, sidecar: str | None = None) -> dict:
         rows.append({'check': 'mode matches the spec', 'value': report.get('mode'), 'target': mode, 'pass': False})
     if report.get('mode') == 'episode_bed':
         rows += episode_rows(path, report)
+        # The one bed shape (config/music-bed.json), measured by the premix on the bed stem alone before the mix:
+        # loud open, steady under his voice, louder at the end, never keyed by the voice. Missing is a failure.
+        shape = report.get('shape') if isinstance(report.get('shape'), dict) else None
+        rows.append({'check': 'the one bed shape', 'value': None if shape is None else {
+                         k: shape.get(k) for k in ('open_over_bed_lu', 'bed_spread_lu', 'direction_changes', 'end_over_bed_lu')},
+                     'target': 'config/music-bed.json qc (re-run the premix when missing)',
+                     'pass': bool(shape) and shape.get('pass') is True,
+                     **({'problems': shape.get('problems')} if shape and shape.get('problems') else {})})
     if ducked:
         rows += [
             {'check': 'in pauses', 'value': pause, 'target': f'{PAUSE_RANGE[0]} to {PAUSE_RANGE[1]} dB re voice',

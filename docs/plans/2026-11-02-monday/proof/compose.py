@@ -1,3 +1,9 @@
+# RETIRED_COMPOSITOR: retired history, kept only as the record of what went out. It must not be run.
+# It mixed the music bed keyed to Krish's voice (sidechain compression), so the bed pumped on every phrase. Krish,
+# 2026-11-04: "the volume of the backing music goes up and down about 30 or 40 times in 90 seconds". Every video is
+# made by ve or quick-edit, in the one bed shape (config/music-bed.json); no filing route takes a cut from here.
+raise SystemExit('RETIRED_COMPOSITOR: this per-day compositor is retired history and must not be run; '
+                 'make the cut with ve or quick-edit (config/music-bed.json)')
 """Monday 2 Nov proof: composes scene.html's two layers around his take, frame by frame, with push-ins on his face, and
 mixes his voice over the licensed bed. Run from the repository root:
     python3 docs/plans/2026-11-02-monday/proof/compose.py

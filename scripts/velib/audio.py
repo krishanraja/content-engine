@@ -4,15 +4,15 @@ Two-pass loudnorm on the sum, true peak limited after it, then measured again; n
 
 Bed modes (spec audio.bed.mode):
 - continuous: one flat gain, under_vo_lu below the voice's integrated loudness, short fades.
-- ducked: the music breathes. In pauses it sits about 10 dB under the voice; under speech a sidechain
-  compressor keyed by the voice pulls it to about 18 dB under, with a slow release so it never pumps.
-  Fade in 1 s, a gentle lift after the last word, fade out over the last 1.5 s.
+- ducked: refused. A bed keyed by the voice pumps on every phrase (Krish, 2026-11-04: "the volume of the backing
+  music goes up and down about 30 or 40 times in 90 seconds"); nothing here keys music to the voice.
 - episode_bed: the long-cut bed (config/learnings.json deep-cut-music-always-under). One continuous low bed at the
-  ledger's bed_lufs (-31, approved by ear) in the finished master, never keyed by the voice. It lifts only in the
-  windows it is given (chapter cards, to chapter_lufs, 0.5 s rise and 0.8 s fall), before the first word (intro_lufs)
-  and after the last (outro_lufs). It plays around the track's own stops (a break where the music falls silent) and
+  ledger's bed_lufs (-31, approved by ear) in the finished master, never keyed by the voice, in the one bed shape
+  (config/music-bed.json, scripts/bed_shape.py): intro_lufs for the open, eased down to the bed, held under his
+  voice, up to outro_lufs from his last word, faded over the last second, lifting only at chapter cards (to
+  chapter_lufs). The bed stem is checked against the shape before the mix and the premix stops when it misses. It plays around the track's own stops (a break where the music falls silent) and
   restarts the track when the cut outlasts it (from where its body begins, never its quiet intro), each join under a 2 s equal-power crossfade, and a
-  slow gain ride keyed by the music itself (3 s, at most 8 dB either way) holds the track's own loud and quiet
+  slow gain ride keyed by the music itself (1.5 s, at most 8 dB either way) holds the track's own loud and quiet
   passages to one level. Krish, Gate 2, 2026-10-30, of the ducked bed on Friday 23's long cut: "Sometimes it just
   turns off randomly. Sometimes it's quiet. Sometimes it gets louder. It's not professional at all."
 All modes measure the bed against the voice from the stems and write `<stem>.bed.json` beside the stem, which
@@ -26,19 +26,20 @@ from pathlib import Path
 
 import numpy as np
 
-from .common import ffmpeg
+from .common import ROOT, ffmpeg
+
+if str(ROOT / 'scripts') not in __import__('sys').path:
+    __import__('sys').path.append(str(ROOT / 'scripts'))
+import bed_shape  # noqa: E402  the one bed shape, shared with quick-edit
 
 SR = 48000
 WINDOW_S = 0.5
-# Where the ducked bed is aimed, in dB relative to the voice's speech-window RMS.
-PAUSE_TARGET_DB = -8.5
-SPEECH_TARGET_DB = -18.5
-THRESHOLDS = (0.05, 0.035, 0.025, 0.018, 0.013, 0.009, 0.0065, 0.0045, 0.003)
-RATIO, ATTACK_MS, RELEASE_MS = 8, 30, 450
 # The episode bed (mode episode_bed).
 CROSSFADE_S = 2.0
-LIFT_RISE_S, LIFT_FALL_S = 0.5, 0.8
-LEVEL_WINDOW_S, LEVEL_SMOOTH_S, LEVEL_MAX_DB = 0.5, 3.0, 8.0
+LIFT_RISE_S, LIFT_FALL_S = bed_shape.shape()['chapter_rise_s'], bed_shape.shape()['chapter_fall_s']
+# The ride follows the track's own passages over 1.5 s (3 s left a swell at each passage change that the one bed
+# shape counts as the bed going up and down, config/music-bed.json).
+LEVEL_WINDOW_S, LEVEL_SMOOTH_S, LEVEL_MAX_DB = 0.5, 1.5, 8.0
 GAP_WINDOW_S, GAP_MEDIAN_S, GAP_BELOW_DB, GAP_MIN_S = 0.05, 3.0, 15.0, 0.25
 STOP_PAD_S, TAIL_BELOW_DB = 0.15, 12.0
 INTRO_SPAN_S, INTRO_STEP_S, INTRO_SPARSE_SHARE = 4.0, 0.25, 0.1
@@ -241,7 +242,7 @@ def tile(track: np.ndarray, total: int, crossfade_s: float = CROSSFADE_S,
 
 def level_ride(samples: np.ndarray, max_db: float = LEVEL_MAX_DB) -> np.ndarray:
     """Per-sample gain (linear) that holds the music's own short-term level near its median: RMS per 0.5 s, smoothed
-    over 3 s, the difference clamped to max_db either way. Keyed by the music, never by the voice."""
+    over 1.5 s, the difference clamped to max_db either way. Keyed by the music, never by the voice."""
     size = int(SR * LEVEL_WINDOW_S)
     count = max(1, len(samples) // size)
     mono = samples[:count * size].mean(axis=1).reshape(count, size)
@@ -258,24 +259,13 @@ def level_ride(samples: np.ndarray, max_db: float = LEVEL_MAX_DB) -> np.ndarray:
 
 def episode_envelope(n: int, levels: dict, *, voice_start_s: float, last_word_end_s: float,
                      lifts: list[tuple[float, float]], duration_s: float) -> np.ndarray:
-    """Per-sample offset in dB from bed_lufs: 0 under speech, up to chapter_lufs in each lift window (0.5 s rise
-    before it, 0.8 s fall after it), intro_lufs before the first word, outro_lufs after the last, a 1 s fade in and
-    a 1.5 s fade out at the cut's edges. Breakpoints every 10 ms, linear between."""
+    """Per-sample offset in dB from bed_lufs: the one bed shape (scripts/bed_shape.py) with its chapter lifts and
+    edge fades. Breakpoints every 10 ms, linear between."""
     bed = float(levels['bed_lufs'])
-    chapter = float(levels.get('chapter_lufs', -22))
+    points = bed_shape.target_points(levels, voice_start_s, last_word_end_s, duration_s, [tuple(w) for w in lifts])
     t = np.arange(0, duration_s + 0.01, 0.01)
-    off = np.zeros_like(t)
-    if voice_start_s > 0:
-        intro = float(levels['intro_lufs']) - bed
-        off = np.maximum(off, intro * np.clip((voice_start_s - t) / LIFT_RISE_S, 0, 1))
-    outro = float(levels['outro_lufs']) - bed
-    off = np.maximum(off, outro * np.clip((t - last_word_end_s) / LIFT_FALL_S, 0, 1))
-    for a, b in lifts:
-        rise = np.clip((t - (a - LIFT_RISE_S)) / LIFT_RISE_S, 0, 1)
-        fall = np.clip(((b + LIFT_FALL_S) - t) / LIFT_FALL_S, 0, 1)
-        off = np.maximum(off, (chapter - bed) * np.minimum(rise, fall))
-    fade = np.minimum(np.clip(t / 1.0, 1e-6, 1), np.clip((duration_s - t) / 1.5, 1e-6, 1))
-    off = off + 20 * np.log10(fade)
+    off = np.interp(t, [p[0] for p in points], [p[1] - bed for p in points])
+    off = off + np.array([bed_shape.fade_db(x, duration_s) for x in t])
     return np.interp(np.arange(n) / SR, t, off)
 
 
@@ -322,23 +312,10 @@ def _master(summed: str, out: str, lufs: float, tp: float) -> dict:
     return final
 
 
-def _ducked_bed(tmp_dialogue: str, tmp_bed: str, out: str, *, gain_db: float, threshold: float, duration_s: float,
-                last_word_end_s: float) -> None:
-    """The bed alone at its final relative level: flat gain, voice-keyed sidechain compression, fade in, a lift of
-    about 2 dB over the 3 s after the last word, fade out over the last 1.5 s."""
-    lift_from = last_word_end_s
-    lift = f"volume='1+0.26*min(1,max(0,(t-{lift_from:.3f})/3))':eval=frame"
-    fade_out = max(0.0, duration_s - 1.5)
-    graph = (f"[0:a]aformat=sample_rates=48000:channel_layouts=stereo[key];"
-             f"[1:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={gain_db:.2f}dB[b];"
-             f"[b][key]sidechaincompress=threshold={threshold}:ratio={RATIO}:attack={ATTACK_MS}:release={RELEASE_MS}:makeup=1[d];"
-             f"[d]{lift},afade=t=in:d=1.0,afade=t=out:st={fade_out:.3f}:d=1.5[bed]")
-    _sum([tmp_dialogue, tmp_bed], graph, out, '[bed]')
-
-
 def body_window(voice_start_s: float, last_word_end_s: float, duration_s: float) -> tuple[float, float]:
-    """The stretch where the bed sits at bed_lufs: from the intro's ramp down to the outro's ramp up."""
-    start = max(1.5, voice_start_s + LIFT_RISE_S)
+    """The stretch where the bed sits at bed_lufs: from where the open has eased down to his last word."""
+    turns = bed_shape.timings(voice_start_s, last_word_end_s, duration_s)
+    start = turns['bed_from']
     return start, max(start, min(last_word_end_s, duration_s - 1.5))
 
 
@@ -369,8 +346,11 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
     Mode episode_bed needs `levels` (the music ledger's approved levels), the first word's start and the last word's end
     on the cut's clock, and the chapter-card windows to lift in (`lifts`, seconds, [] for none); it keeps the bed
     alone at the master's gain beside the stem (`<out>.music.wav`) so QC can meter it."""
-    if mode not in ('continuous', 'ducked', 'episode_bed'):
-        raise ValueError('bed mode must be continuous, ducked or episode_bed')
+    if mode == 'ducked':
+        raise ValueError('a ducked bed is refused: it keys the music to the voice and pumps on every phrase; '
+                         'use episode_bed, the one bed shape (config/music-bed.json)')
+    if mode not in ('continuous', 'episode_bed'):
+        raise ValueError('bed mode must be continuous or episode_bed')
     if mode == 'episode_bed':
         missing = [k for k in EPISODE_LEVELS if not isinstance((levels or {}).get(k), (int, float))]
         if missing or lifts is None:
@@ -426,6 +406,13 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
                     break
                 gain += miss
             _run(['-i', bed_stem, '-af', f'volume={master_gain:.2f}dB', music])
+            # The one bed shape, on the bed stem alone, before it is called mixed: stop loudly when it misses.
+            meter = ebur128(music)
+            m_by_t = dict(meter['M'])
+            shape = bed_shape.qc([(t, m_by_t.get(t, -120.0), v) for t, v in meter['S']], voice_start_s, last_end,
+                                 duration_s, [tuple(w) for w in lifts])
+            report['shape'] = shape
+            bed_shape.require(shape, 've premix')
             report.update(gain_db=round(rendered, 2), level_miss_db=round(miss, 2), master_gain_db=round(master_gain, 2), bed_lufs_in_master=round(got, 2),
                           levels={k: levels[k] for k in (*EPISODE_LEVELS, 'chapter_lufs') if k in levels},
                           lifts=[list(w) for w in lifts], track_stops_s=[list(w) for w in stops], track_intro_s=intro, crossfades_s=centres, crossfade_s=CROSSFADE_S,
@@ -440,31 +427,6 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
             _sum([tmp_dialogue, tmp_bed], f'[1:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={bed_gain:.2f}dB,'
                  f'afade=t=in:d=0.4,afade=t=out:st={max(0.0, duration_s - 0.6):.3f}:d=0.6[b]', bed_stem, '[b]')
             report['gain_db'] = round(bed_gain, 2)
-        else:
-            # 1. flat gain that puts the bed in the pauses at PAUSE_TARGET_DB re the voice, measured not assumed
-            flat = str(Path(out).with_suffix('.flat.wav'))
-            _run(['-i', tmp_bed, '-af', 'aformat=sample_rates=48000:channel_layouts=stereo,volume=0dB', flat])
-            raw_bed = _decode(flat)
-            n = min(len(voice_samples), len(raw_bed))
-            pause_db = analyse(voice_samples[:n], raw_bed[:n], last_word_end_s=last_end)['bed_in_pauses_db']
-            if pause_db is None:  # no real pause to key on: fall back to the integrated loudness
-                gain = (voice + PAUSE_TARGET_DB) - float(_measure(tmp_bed)['input_i'])
-            else:
-                gain = PAUSE_TARGET_DB - pause_db
-            Path(flat).unlink(missing_ok=True)
-            # 2. the first threshold whose speech level lands at or under SPEECH_TARGET_DB + 1
-            chosen = THRESHOLDS[-1]
-            for threshold in THRESHOLDS:
-                _ducked_bed(tmp_dialogue, tmp_bed, bed_stem, gain_db=gain, threshold=threshold, duration_s=duration_s,
-                            last_word_end_s=last_end)
-                got = analyse(voice_samples, _decode(bed_stem), last_word_end_s=last_end)['bed_under_speech_db']
-                if got is not None and got <= SPEECH_TARGET_DB + 1:
-                    chosen = threshold
-                    break
-            report.update(gain_db=round(gain, 2), threshold=chosen, ratio=RATIO, attack_ms=ATTACK_MS, release_ms=RELEASE_MS)
-            graph = ('[0:a]aformat=sample_rates=48000:channel_layouts=stereo[v];[1:a]aformat=sample_rates=48000:channel_layouts=stereo[b];'
-                     '[v][b]amix=inputs=2:normalize=0:duration=first[m]')
-            _sum([tmp_dialogue, bed_stem], graph, summed, '[m]')
         report.update(analyse(voice_samples, _decode(bed_stem), last_word_end_s=last_end))
     else:
         _sum([tmp_dialogue], '[0:a]aformat=sample_rates=48000:channel_layouts=stereo[v]', summed, '[v]')

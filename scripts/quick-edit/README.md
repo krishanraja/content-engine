@@ -317,16 +317,34 @@ Krish's own words, makes it usable. `pick --both-cuts` is what make.py's
 `"auto"` does: the same piece gets the same track on both cuts, and
 different pieces rotate through the approved ones.
 
-**The levels** are in the ledger's `levels`, proposed until Krish approves
-them by ear: the music at about -16 LUFS over an opening clip (none, by
-default: the cut opens on his first words), about -31 LUFS under his voice
-(about 17 LU under his -14), and about -18 LUFS over the end card.
-It ramps down over 0.5 seconds as his face comes in, so it is at the bed
-level by his first word, and up over 0.8 seconds from his last word. A track
-with an outro cue has its ending crossfaded in there. It is a time envelope
-(`volume` with `eval=frame`), not sidechain compression: the cut is already
-tight, so a sidechain would only pump. Each stretch's gain comes from the
-track's own loudness where it sits, measured before the mix.
+**The levels** are in the ledger's `levels`, approved by Krish by ear: the
+music at about -16 LUFS for the open, about -31 LUFS under his voice (about
+17 LU under his -14), and about -18 LUFS over the end card.
+
+**The one bed shape** (`config/music-bed.json`, `scripts/bed_shape.py`, the
+same in ve). Krish, 2026-11-04: "It should just start loudly and then get a
+little bit softer, so my voice is the main character, but with atmosphere in
+the background, and then get louder at the end. It's pretty simple." The bed
+opens at the intro level for 1.5 seconds, sting or none (with a longer sting
+the open holds until 1.5 seconds before his first word), eases down over 1.5
+seconds to the bed level, holds it under his voice with nothing keyed to the
+voice, rises over 1 second from his last word to the outro level, and fades
+over the last second. A long cut also lifts to the chapter level at each card.
+A track with an outro cue has its ending crossfaded in over the rise. It is a
+time envelope (`volume` with `eval=frame`), never sidechain compression, a
+compander, a gate or a level chaser: `npm run check:music-bed` fails on any of
+them anywhere in the code. Each stretch's gain comes from the track's own
+loudness where it sits, measured before the mix.
+
+**The bed-shape check.** Before the mix, make.py meters the bed stem alone and
+stops unless it follows the shape: under his voice its short-term loudness
+stays within 2 LU of its own level (p10 to p90), the whole bed turns at most
+twice outside the chapter lifts (down after the open, up at the close, down in
+the fade), and both the first second and the ending sit at least 6 LU over the
+bed. A finished cut gets `<cut>.mp4.bed-shape.json`, bound to its sha256, and
+no filing route (send.py, produce_day.py, making.py, ve file) takes a video
+for 3 Posts without it. A cut made anywhere else, or changed after its bed was
+checked, is refused.
 
 **The mix.** His voice is set to -14 LUFS, the bed is laid under the whole
 video, the two are summed (`amix` with `normalize=0`), limited at -2 dBTP,

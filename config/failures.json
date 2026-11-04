@@ -2079,6 +2079,67 @@
         }
       ],
       "guard_level": "prose"
+    },
+    {
+      "id": "F40-bed-pumped-with-his-voice",
+      "on": "2026-11-04",
+      "krish": "can we make sure that sound treatment in all videos is done carefully in all future videos? Even in today's publish, the volume of the backing music goes up and down about 30 or 40 times in 90 seconds. It should just start loudly and then get a little bit softer, so my voice is the main character, but with atmosphere in the background, and then get louder at the end. It's pretty simple.",
+      "what": "Wednesday 4 Nov's cuts (Claude Duet, filed under 3 Posts/2026-11-04 Wed under.the.hood) were made by a per-day script, docs/plans/2026-11-04-wednesday/rebuild/compose.py, which ran sidechaincompress (threshold 0.02, ratio 12, attack 15 ms, release 450 ms) keyed on his voice. Rendered on a synthetic 90 s voice with pauses, that exact filter turns the bed round 36 times (tests/music_bed_test.py). docs/plans/2026-11-02-monday/rebuild/compose.py and proof/compose.py did the same. quick-edit's bed also had no opening when there was no sting, so it never started loud.",
+      "symptom": "The backing music swelled and dipped on every phrase, 30 to 40 times in 90 seconds, instead of one loud open, a steady bed under his voice and a louder end.",
+      "cause": "A per-day compositor bypassed both engines (AGENTS.md already said no per-piece compositions), nothing in the repository refused a voice-keyed filter on music outside ve's spec lint, and no filing route asked whether ve or quick-edit had made the bed. ve itself still carried a ducked mode in code that its lint refused.",
+      "status": "guarded",
+      "mode": "music-bed-keyed-to-voice",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No repository check refused sidechaincompress outside ve's spec lint; docs/plans/2026-11-04-wednesday/rebuild/compose.py ran it."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "send.py, ve file and produce_day.py filed a video without asking which engine made its bed; the delivery receipt can be written by hand."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "quick-edit's envelope started at the bed level when a cut had no sting (music.envelope before 2026-11-04), so the open was never loud."
+        }
+      ],
+      "related": [
+        "F20-long-cut-bed-swung-and-stopped",
+        "deep-cut-music-always-under"
+      ],
+      "surface": "Every bed is the one shape (config/music-bed.json): loud open, steady under his voice, louder end; nothing keys music to his voice, and nothing reaches 3 Posts without the bed-shape receipt ve or quick-edit wrote for those exact bytes.",
+      "guards": [
+        {
+          "file": "scripts/check_music_bed.py",
+          "contains": "def problems(",
+          "how": "npm run check:music-bed (in npm run verify): fails on any voice-keyed or level-chasing filter (config/music-bed.json forbidden_filters) in scripts/, apps/, packages/ or docs/plans/; a retired per-day compositor passes only while it stops itself before running",
+          "test": "python3 tests/music_bed_test.py"
+        },
+        {
+          "file": "scripts/bed_shape.py",
+          "contains": "def qc(",
+          "how": "the bed-shape QC on the bed stem alone, before the mix, in both engines (make.py build_audio, velib/audio.premix): steady within 2 LU under his voice, at most two turns, open and end at least 6 LU over the bed; a miss stops the engine",
+          "test": "python3 tests/music_bed_test.py"
+        },
+        {
+          "file": "scripts/post-pack/library.py",
+          "contains": "def video_refusal(",
+          "how": "the filing rule every writer asks (send.py, ve file, and quality.delivery_problems for produce_day.py and making.py): a video for 3 Posts needs the bed-shape receipt ve or quick-edit wrote for its sha256",
+          "test": "python3 tests/music_bed_test.py"
+        },
+        {
+          "file": "scripts/velib/audio.py",
+          "contains": "a ducked bed is refused",
+          "how": "ve can no longer make a ducked bed at all",
+          "test": "python3 tests/music_bed_test.py"
+        },
+        {
+          "file": "docs/plans/2026-11-04-wednesday/rebuild/compose.py",
+          "contains": "raise SystemExit('RETIRED_COMPOSITOR",
+          "how": "the Wednesday compositor (and Monday's two) stop before they run anything"
+        }
+      ]
     }
   ]
 }

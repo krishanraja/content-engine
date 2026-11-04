@@ -230,6 +230,19 @@ def content_type(path):
     return CONTENT_TYPES[path.rsplit('.', 1)[1].lower()]
 
 
+def video_refusal(local, target):
+    """[] when the local file may be filed at `target`, else why not. A video for a post (3 Posts, outside a working
+    folder) goes only with the bed-shape receipt ve or quick-edit wrote for those exact bytes (config/music-bed.json;
+    Krish, 2026-11-04: "Just make sure it never happens again."). Every writer asks this: send.py, ve file, and
+    produce_day.py and making.py through quality.delivery_problems."""
+    from pathlib import Path as _Path
+    scripts = str(_Path(__file__).resolve().parents[1])
+    if scripts not in sys.path:
+        sys.path.append(scripts)
+    import bed_shape
+    return bed_shape.filing_problems(local, target)
+
+
 def post_folder(when, subject, subchannel=None, launch=False, day=None):
     """The post's folder name: 'YYYY-MM-DD Mon follow.the.money - Who gets paid',
     or 'YYYY-MM-DD Launch - Hello' for a launch post. The day is the one the

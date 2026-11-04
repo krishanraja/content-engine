@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 import ve  # noqa: E402
 from velib import brief, cards, designlock, filing, golden, packet, qc_keyframes  # noqa: E402
 from velib.common import sha256_file  # noqa: E402
+import bed_shape  # noqa: E402
 
 BEATS = ['hook', 'face', 'proof', 'close']
 
@@ -161,6 +162,7 @@ class FileTest(unittest.TestCase):
             video = self.ve / f'{cut}.mp4'
             video.write_bytes(f'synthetic {cut}'.encode())
             self.videos[cut] = (str(video), sha256_file(video))
+            bed_shape.write_receipt(video, 've', {'pass': True, 'problems': []}, machine='test')
         self.spec = spec_for()
 
     def ready(self, spec, cut, directory):
@@ -222,7 +224,8 @@ class FileTest(unittest.TestCase):
             with self.assertRaises(ValueError) as caught:
                 filing.file(self.spec, self.ve, ['proof-tall'], subject='Two passports', when='2026-11-06',
                             archive_at=str(self.archive), library_at=str(self.library))
-            self.assertIn('changed after its approval', str(caught.exception))
+            # Refused either way: its bed-shape receipt names other bytes, and it changed after its approval.
+            self.assertRegex(str(caught.exception), 'changed after its approval|belongs to different bytes')
 
 
 class BriefTest(unittest.TestCase):
