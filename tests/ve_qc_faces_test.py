@@ -62,8 +62,8 @@ class OffFace(unittest.TestCase):
 
     def test_word_positions_follow_the_beat_at_the_sampled_frame(self):
         beats = [
-            {'fromFrame': 0, 'toFrame': 10, 'layout': 'F1'},
-            {'fromFrame': 10, 'toFrame': 30, 'layout': 'SPLIT'},
+            {'fromFrame': 0, 'toFrame': 10, 'layout': 'F1', 'plate': {'source': 'take'}},
+            {'fromFrame': 10, 'toFrame': 30, 'layout': 'SPLIT', 'plate': {'source': 'take'}},
         ]
         report = qc_faces.off_face('cut.mp4', [page('split', 0, 24)], style='word',
                                    beats=beats, detector=lambda _: [(390, 1190, 300, 389)],
