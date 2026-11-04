@@ -201,13 +201,14 @@ own (`config/studio.json`):
 | Monday | follow.the.money's yellow, `#FFD84D` (the kit's butter) |
 | Wednesday | under.the.hood's lilac, `#B7A6FF` |
 | Friday | mind.the.gap's coral, `#FF6A4D` |
-| Tuesday, Thursday and Saturday | the house mint, `#7EF0C0`, on neutral ink, sage or cream |
+| Tuesday, Thursday and Saturday | neutral: ink, cream, the house sage or green, or the house mint where a template needs a colour |
 
-- The day's colour is the accent: the highlighted words, the pill, the tag and the light in a cover scene. On a series
-  day the ground may lean lightly toward it; it never floods the card.
-- An off-day asset carries no subchannel colour anywhere: no yellow, lilac or coral, even when its story came from a
-  series piece.
-- A series day carries its own colour only, never another day's.
+- On a series day the ground is a pale wash of the day's colour, and the colour itself goes where the house look
+  puts colour: the highlighted words, the pill, the tag and the light in a cover scene. It stays light; it never
+  floods the card.
+- An off-day asset is neutral. It carries no subchannel colour (no yellow, lilac or coral) and no subchannel name
+  or pill anywhere, even when its story came from a series piece.
+- A series day carries its own colour and name only, never another day's.
 - Content-engine's covers and thumbnails follow this in code (`scripts/pages/brand.py` `day_look`, `tests/day_colour_test.py`).
   Growth's kit holds its templates to the same table.
 

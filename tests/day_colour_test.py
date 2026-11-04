@@ -28,46 +28,51 @@ class DayColourTest(unittest.TestCase):
         self.hs = brand.house()
         self.colour = {c['day']: c['accent'].upper() for c in self.hs['channels']}
 
-    def test_each_series_day_wears_its_subchannel_and_every_other_day_the_house_mint(self):
+    def test_each_series_day_wears_its_subchannel_and_every_off_day_is_neutral(self):
         self.assertEqual(sorted(self.colour), ['Friday', 'Monday', 'Wednesday'])
         for day, date in WEEK.items():
             look = brand.day_look(self.hs, date)
             self.assertEqual(look['day'], day)
             if day in self.colour:
                 self.assertEqual((look['colour'].upper(), look['series_day']), (self.colour[day], True))
-                self.assertGreater(look['tint'], 0)
-                self.assertLessEqual(look['tint'], 0.15, 'a light tint, never a flood')
+                self.assertEqual(len(look['wash']), 3)
+                for stop in look['wash']:
+                    self.assertGreater(sum(int(stop[i:i + 2], 16) for i in (1, 3, 5)), 600, 'a pale wash, never a flood')
             else:
-                self.assertEqual(look['colour'].upper(), self.hs['tokens']['mint'].upper())
-                self.assertNotIn(look['colour'].upper(), brand.series_colours(self.hs))
-                self.assertEqual((look['series_day'], look['tint']), (False, 0.0))
+                self.assertEqual(look['colour'].upper(), self.hs['tokens']['cream'].upper())
+                self.assertEqual((look['series_day'], look['owner'], look['wash']), (False, None, None))
 
     def test_the_day_decides_not_the_subchannel(self):
         # Thursday 5 Nov's off-day short wore under.the.hood's colour: an off day never takes its piece's series colour.
-        self.assertEqual(brand.day_look(self.hs, WEEK['Thursday'], 'under.the.hood')['colour'], self.hs['tokens']['mint'])
+        self.assertIsNone(brand.day_look(self.hs, WEEK['Thursday'], 'under.the.hood')['owner'])
         # With no date, the subchannel's own day.
         self.assertEqual(brand.day_look(self.hs, None, 'mind.the.gap')['day'], 'Friday')
 
-    def test_a_drawn_cover_carries_its_day_and_an_off_day_cover_no_series_colour(self):
+    def test_a_drawn_cover_carries_its_day_and_an_off_day_cover_no_series_colour_or_name(self):
+        names = {c['name'] for c in self.hs['channels']}
+        owner = {c['day']: c['name'] for c in self.hs['channels']}
         with tempfile.TemporaryDirectory(prefix='day-colour-') as folder:
             base = Path(folder)
             from PIL import Image
             Image.new('RGB', (600, 400), 'white').save(base / 'proof.png')
             Image.new('RGB', (200, 40), 'black').save(base / 'wordmark.png')
             for day, date in WEEK.items():
-                facts = {'subchannel': 'mind.the.gap', 'date': date, 'piece_id': None,
+                facts = {'subchannel': owner.get(day, 'mind.the.gap'), 'date': date, 'piece_id': None,
                          'sources': {'s1': ['A chart', 'https://example.com']},
                          'cover': {'headline': PICKED, 'proof': {'image': 'proof.png', 'source': 's1', 'tag': 'WHOSE IT IS'}}}
                 with patch.object(brand, 'fetch', return_value=base / 'wordmark.png'):
                     page = receipt.page(facts, facts['cover'], base, 'tall')
                 found = {h.upper() for h in re.findall(r'#[0-9A-Fa-f]{6}', page)}
+                shown = {n for n in names if n in page}
                 if day in self.colour:
                     self.assertIn(self.colour[day], found, f'{day} wears its colour')
                     others = brand.series_colours(self.hs) - {self.colour[day]}
                     self.assertFalse(found & others, f'{day} wears another day\'s colour: {found & others}')
+                    self.assertEqual(shown, {owner[day]}, f'{day} names its own subchannel only')
                 else:
                     self.assertFalse(found & brand.series_colours(self.hs), f'{day} is an off day and wears {found & brand.series_colours(self.hs)}')
-                    self.assertIn(self.hs['tokens']['mint'].upper(), found)
+                    self.assertFalse(shown, f'{day} is an off day and names {shown}')
+                    self.assertIn(receipt.GROUND_STOPS[1].upper(), found, 'an off day keeps the house sage')
                 self.assertNotIn('#FF6B57', found, 'the old coral tag and ring are gone from every day')
 
 
