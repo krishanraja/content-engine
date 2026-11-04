@@ -513,6 +513,8 @@ def cmd_packet(args) -> int:
                 print(f'{cut}: LEGACY: no design lock')
         out = packet.assemble(spec, directory, args.out or directory / 'packet', args.legacy_ok)
         print(f've packet: {out} (round {packet.rounds(directory)} of full cuts sent for this piece)')
+        from velib import gates
+        print(f've packet: {gates.write_rounds(directory, packet.rounds(directory))}')
         return 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f've packet: {error}')
