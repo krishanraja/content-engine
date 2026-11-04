@@ -25,6 +25,9 @@
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
   python scripts/ve.py lock draft|check|show|freeze  design locks (only Krish's Gate 2 freezes one)
   python scripts/ve.py golden show|check|fill        interim golden frames he names
+  python scripts/ve.py expect <spec>                 expect.md: at most six lines of what this cut will and won't do
+  python scripts/ve.py styles <spec> [--cut <cut>] [--top 3]   the shortlisted motion styles on his take, for his pick
+  python scripts/ve.py proof <spec> --cut <cut>      the hardest beat, moving, from his take; a whole cut waits for it
 
 stills arrives later; until then it says so. ve has no publish, send or schedule verb."""
 from __future__ import annotations
@@ -509,7 +512,9 @@ def cmd_packet(args) -> int:
             if spec['format'] not in packet.designlock.load()['formats']:
                 print(f'{cut}: LEGACY: no design lock')
         out = packet.assemble(spec, directory, args.out or directory / 'packet', args.legacy_ok)
-        print(f've packet: {out}')
+        print(f've packet: {out} (round {packet.rounds(directory)} of full cuts sent for this piece)')
+        from velib import gates
+        print(f've packet: {gates.write_rounds(directory, packet.rounds(directory))}')
         return 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f've packet: {error}')
@@ -945,6 +950,21 @@ def cmd_premix(args) -> int:
         return 1
 
 
+def render_refusal(spec, spec_file, props, call=None) -> list[str]:
+    """A whole cut of a piece published from MOTION_FROM renders only once Krish approved its moving proof (F04, F13):
+    the proof file, the spec's structure and his press must all still agree (velib/proof.py)."""
+    from velib import gates, proof, verdict
+    cut = props.get('cutId')
+    if cut not in (spec.get('cuts') or {}) or not proof.required(spec, cut):
+        return []
+    directory = verdict.ve_dir(Path(spec_file))
+    found = gates.load(directory, spec, call)
+    reasons = proof.problems(spec, cut, directory, found['gates'], props)
+    if reasons and found['source'] != 'record':
+        reasons.append(f"the piece's making record was {found['source']}; only the spec's approvals were read")
+    return reasons
+
+
 def cmd_render(args) -> int:
     from velib.lint import lint
     spec, problems = lint(Path(args.spec))
@@ -954,7 +974,119 @@ def cmd_render(args) -> int:
         return 1
     from velib.render import check_asset_hashes, render
     check_asset_hashes(spec, args.assets_dir)
+    refused = render_refusal(spec, args.spec, load_json(args.props))
+    if refused:
+        print('ve render: refused, a whole cut renders only after Krish approves its moving proof (F04, F13):')
+        print('\n'.join(f'  - {reason}' for reason in refused))
+        return 1
     render(args.props, args.out, args.scale)
+    return 0
+
+
+def _props_for(spec_file, cut, given):
+    from velib import verdict
+    path = Path(given) if given else verdict.ve_dir(Path(spec_file)) / f'props.{cut}.json'
+    if not path.is_file():
+        raise ValueError(f'no compiled props at {path}: run ve compile <spec> --cut {cut} first (the proof is cut from his take)')
+    return path
+
+
+def cmd_proof(args, render_fn=None) -> int:
+    """Render only the cut's hardest beat from his real take, through the one render path, and record its hash."""
+    from velib import proof, verdict
+    from velib.lint import lint
+    from velib.render import check_asset_hashes, render
+    try:
+        spec, problems = lint(Path(args.spec))
+        if problems or spec is None:
+            print('\n'.join(problems[:20]) or 'the spec does not pass its schema')
+            return 1
+        if args.cut not in spec['cuts']:
+            raise ValueError(f'{args.cut} is not a cut in the spec')
+        if args.assets_dir:
+            check_asset_hashes(spec, args.assets_dir)
+        chosen = json.loads(json.dumps(spec))
+        if args.beat:
+            chosen.setdefault('style', {})['proof'] = {'beat': args.beat}
+        directory = verdict.ve_dir(Path(args.spec))
+        props = load_json(_props_for(args.spec, args.cut, args.props))
+
+        def qc_fn(clip, props_path):
+            from velib.qc import inputs_from_props, run_qc
+            window = load_json(props_path)
+            inputs = inputs_from_props(window)
+            if window.get('aspect') == '9:16':
+                inputs['composition_props'] = window
+            report = run_qc(str(clip), spec['format'], **inputs)
+            write_json(Path(clip).with_suffix('.qc.json'), report)
+            return report
+
+        render_fn = render_fn or (lambda p, out: render(p, out, args.scale))
+        record = proof.make(chosen, args.cut, directory, props, render_fn, None if args.no_qc else qc_fn)
+        # --beat chooses what is proved, never what the proof stands for: the hash is over the spec as written.
+        record['spec_sha256'] = proof.structural_hash(spec, args.cut)
+        record['structure'] = proof.structure(spec, args.cut)
+        write_json(proof.record_path(directory, args.cut), record)
+        print(f"ve proof: beat {record['beat']} ({record['rule']}), {record['start']} to {record['end']} s")
+        if 'qc' in record:
+            print(f"ve proof: qc {'measured pass' if record['qc'].get('measured_pass') else 'FAILS or not run'}; "
+                  f"{'complete' if record['qc'].get('complete') else 'incomplete'}")
+        print(f"{record['sha256']}  {proof.clip_path(directory, args.cut)}")
+        print('next: Krish presses Approve proof (or Reject, with his words) on the board; ve render waits for it')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've proof: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_styles(args, render_fn=None) -> int:
+    """The shortlisted motion styles, each rendered on the same window of his take, for his Pick a style press."""
+    from velib import styles, verdict
+    from velib.lint import lint
+    from velib.render import render
+    try:
+        spec, problems = lint(Path(args.spec))
+        if spec is None:
+            print('\n'.join(problems[:20]) or 'the spec does not pass its schema')
+            return 1
+        cut = args.cut or next(iter(spec['cuts']))
+        if cut not in spec['cuts']:
+            raise ValueError(f'{cut} is not a cut in the spec')
+        directory = verdict.ve_dir(Path(args.spec))
+        own = Path(args.props) if args.props else directory / f'props.{cut}.json'
+        label = "this piece's take"
+        if not own.is_file():
+            own = styles.last_take(spec, cut)
+            if own is None:
+                raise ValueError(f'no take is ingested for {spec["piece_id"]} and no earlier {spec["format"]} take is on '
+                                 'record: ingest and compile his take first (never stock footage)')
+            label = f'his last {spec["format"]} take ({own.parent.parent.name}), until this piece is recorded'
+        points = [p.strip() for p in args.points.split(',') if p.strip()] if args.points else None
+        render_fn = render_fn or (lambda p, out, _trial: render(p, out, args.scale))
+        doc = styles.make(spec, cut, directory, load_json(own), render_fn, top=args.top, points=points, take_label=label)
+        for option in doc['options']:
+            print(f"{option['module']}: {option['name']}  {option['file']}  ({option['why']})")
+        for row in doc['skipped']:
+            print(f"left out: {row['module']} ({row['why']})")
+        if doc.get('note'):
+            print(f"note: {doc['note']}")
+        print(f've styles: {directory / "styles.json"} (on {label}); next: Krish presses Pick a style on the board')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've styles: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_expect(args) -> int:
+    from velib import expect, verdict
+    from velib.lint import lint
+    spec, problems = lint(Path(args.spec))
+    if spec is None:
+        print('\n'.join(problems[:20]) or 'the spec does not pass its schema')
+        return 1
+    path = expect.write(spec, verdict.ve_dir(Path(args.spec)))
+    print(path.read_text(encoding='utf-8').rstrip())
+    print(f've expect: {path}')
     return 0
 
 
@@ -1075,6 +1207,18 @@ def main() -> int:
     p.add_argument('props'); p.add_argument('out'); p.add_argument('--scale', type=float, default=1.0)
     p.add_argument('--spec', required=True); p.add_argument('--assets-dir', required=True)
     p.set_defaults(fn=cmd_render)
+    p = sub.add_parser('proof', help="render only the cut's hardest beat from his take; a whole cut waits for his approval of it")
+    p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--beat', help='prove this beat instead')
+    p.add_argument('--props', help='default <ve dir>/props.<cut>.json'); p.add_argument('--assets-dir')
+    p.add_argument('--scale', type=float, default=1.0); p.add_argument('--no-qc', action='store_true')
+    p.set_defaults(fn=cmd_proof)
+    p = sub.add_parser('styles', help='render the proof window once per shortlisted motion style, for his pick')
+    p.add_argument('spec'); p.add_argument('--cut'); p.add_argument('--top', type=int, default=3)
+    p.add_argument('--points', help='comma list of point types; default from the spec'); p.add_argument('--props')
+    p.add_argument('--scale', type=float, default=1.0)
+    p.set_defaults(fn=cmd_styles)
+    p = sub.add_parser('expect', help='write expect.md: at most six lines of what this cut will and will not do')
+    p.add_argument('spec'); p.set_defaults(fn=cmd_expect)
     p = sub.add_parser('ledger', help='report or append piece usage against budget caps',
                        description='Show piece usage and OK/WARN/OVER budget checks. Exit 1 when over a cap.')
     p.add_argument('piece', help='piece folder name or existing directory')

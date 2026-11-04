@@ -60,6 +60,7 @@ describe('ve', () => {
     ['no caption page sits on his face (F28)', 'tests/ve_qc_faces_test.py'],
     ['nothing to read under a channel button, zones measured on his phone (F30)', 'tests/channel_safe_test.py'],
     ['a finished off-day card is not ready until it links its 3 Posts folder (F27)', 'tests/board_posts_test.py'],
+    ['a whole cut renders only after Krish approves its hardest beat moving; styles on his take; expect and the packet summary (F04, F13)', 'tests/ve_proof_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])
