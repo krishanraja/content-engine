@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
 import type { DeviceProps } from '../types'
-import { Device, orbitState } from './index'
+import { Device, orbitLayout, orbitState } from './index'
 import { ParamsSchema, resolveLogo } from './schema'
 import fixture from './fixture.json'
 const object = EngineObjectSchema.parse(fixture.objects[0])
@@ -40,7 +40,7 @@ describe('logo_orbit', () => {
     expect(still(39)).not.toContain('Research')
   })
   it('highlights one mark, drifts positions, spins out and resets on reentry', () => {
-    expect(state(65)!.logos.map(l => l.opacity)).toEqual([0.4, 0.4, 1, 0.4, 0.4])
+    expect(state(65)!.logos.map(l => l.opacity)).toEqual([0.7, 0.7, 1, 0.7, 0.7])
     expect(state(65)!.logos[2]!.scale).toBe(1.15)
     expect(state(80)!.angle).toBeGreaterThan(state(65)!.angle)
     expect(state(103)!.out).toBeGreaterThan(0)
@@ -53,7 +53,8 @@ describe('logo_orbit', () => {
     for (const aspect of fixture.aspects as DeviceProps['aspect'][]) {
       const html = still(52, aspect)
       expect((html.match(/data-tile=/g) ?? []).length).toBe(5)
-      expect((html.match(/width="160" height="160" rx="28"/g) ?? []).length).toBe(5)
+      const size = aspect === '9:16' ? 160 : 120
+      expect((html.match(new RegExp(`width="${size}" height="${size}" rx="28"`, 'g')) ?? []).length).toBe(5)
       expect((html.match(/data-mark=/g) ?? []).length).toBe(5)
       expect((html.match(/stroke="gray" stroke-width="6" opacity="0.65"/g) ?? []).length).toBe(3)
       expect(html).toContain('stroke-dasharray="0.018 0.018"')
@@ -70,6 +71,30 @@ describe('logo_orbit', () => {
     expect((still(14).match(/data-trail=/g) ?? []).length).toBe(6)
     expect(still(14)).not.toContain('rotate(')
     expect(still(52)).not.toContain('data-trail=')
+  })
+  it('keeps five wide-slot tiles apart and inside throughout the orbit and highlight', () => {
+    const g = orbitLayout(960, 400, '9:16')
+    expect([g.rx, g.ry, g.size]).toEqual([403.2, 152, 120])
+    for (let step = 0; step < 720; step++) {
+      const positions = Array.from({ length: 5 }, (_, i) => {
+        const angle = i * Math.PI * 2 / 5 + step * Math.PI / 360
+        return { x: g.cx + Math.cos(angle) * g.tileRx, y: g.cy + Math.sin(angle) * g.tileRy }
+      })
+      for (const [i, a] of positions.entries()) {
+        const half = 120 * 1.15 / 2 + 10
+        expect(a.x - half).toBeGreaterThanOrEqual(0)
+        expect(a.x + half).toBeLessThanOrEqual(960)
+        expect(a.y - half).toBeGreaterThanOrEqual(0)
+        expect(a.y + half).toBeLessThanOrEqual(400)
+        for (const b of positions.slice(i + 1)) {
+          expect(Math.hypot(a.x - b.x, a.y - b.y)).toBeGreaterThanOrEqual(120 * 1.15)
+          expect(Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y))).toBeGreaterThanOrEqual(120 * 1.075)
+        }
+      }
+    }
+    const square = orbitLayout(1080, 1080, '9:16')
+    expect(square.wide).toBe(false)
+    expect([square.rx, square.ry, square.cy, square.size]).toEqual([388.8, 388.8, 518.4, 160])
   })
   it('refuses unregistered marks, bad counts and invalid event indices', () => {
     for (const params of [{ logos: [] }, { logos: Array(9).fill({ id: 'Meta' }) }, { logos: [{ id: 'invented' }] },
@@ -137,7 +162,7 @@ describe('logo_orbit pixel regressions', () => {
     for (const aspect of fixture.aspects as DeviceProps['aspect'][]) {
       const markup = renderToStaticMarkup(React.createElement(Device, { object, events, frame: 52, tokens: t, aspect,
         box: { left: 0, top: 0, width: aspect === '9:16' ? 1080 : 1920, height: aspect === '9:16' ? 1920 : 1080 } }))
-      const rings = [...markup.matchAll(/<circle[^>]*data-ring="(\d)"[^>]*>/g)]
+      const rings = [...markup.matchAll(/<ellipse[^>]*data-ring="(\d)"[^>]*>/g)]
       expect(rings.length, aspect).toBe(3)
       for (const [tag, n] of rings) {
         const stroke = /stroke="([^"]+)"/.exec(tag)![1]!, alpha = Number(/opacity="([^"]+)"/.exec(tag)?.[1] ?? 1)
