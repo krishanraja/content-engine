@@ -3611,6 +3611,12 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function evidenceState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/focus.ts`
+
+- `const FOCUS: Readonly<Record<string, (p: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | 'frame'>) => Focus …`
+- `const PEN: Readonly<Record<string, (object: EngineObject, events: readonly EngineEvent[]) => (frame: number) => Point |…`
+- `const TYPED: readonly string[]`
+
 ### `apps/renderer/src/engine/devices/hand_phone_stage/index.tsx`
 
 - `function Plate({name,style}:{name:string;style?:React.CSSProperties})`
@@ -3709,6 +3715,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function queryLayout(box: Box, text: string, aspect: DeviceProps['aspect'])`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `function chipFocus({ object, events, box, aspect, frame }: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | '…`
 
 ### `apps/renderer/src/engine/devices/query_chip/schema.ts`
 
@@ -3757,6 +3764,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/scribble/state.ts`
 
 - `function scribbleState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `function scribblePen(object: EngineObject, events: readonly EngineEvent[]): (frame: number) => Point | undefined`
 
 ### `apps/renderer/src/engine/devices/stamp/index.tsx`
 
@@ -3830,6 +3838,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/typing_bubble/index.tsx`
 
 - `function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+- `function bubbleFocus({ object, events, box, aspect, frame }: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' |…`
 - `function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight = 1920)`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
@@ -3865,7 +3874,10 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `interface Box`
 - `interface BeatMotion`
-- `function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number, focus: Box | un…`
+- `interface CameraView`
+- `function transitionFrames(profile: MotionProfile): number`
+- `function keepsOutgoing(profile: MotionProfile | undefined, beat: EngineBeat, next: EngineBeat | undefined): boolean`
+- `function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number, view: CameraVie…`
 - `function stageGround(profile: MotionProfile | undefined, tokens: EngineTokens): CSSProperties`
 - `function sweepStyle(profile: MotionProfile, tokens: EngineTokens, beat: EngineBeat, frame: number): CSSProperties | null`
 - `function halftoneTexture(tokens: EngineTokens): CSSProperties`
@@ -3879,6 +3891,22 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/kit/flags.tsx`
 
 - `function PrintedFlag({ kind, tokens, width = 214, height = 113 }: { kind: 'usa' | 'china' | 'unknown'; tokens: EngineTo…`
+
+### `apps/renderer/src/engine/kit/focus.ts`
+
+- `type Point = readonly [number, number]`
+- `interface Focus`
+- `const SAFE_TALL`
+- `const SAFE_WIDE`
+- `interface Room`
+- `function focusRoom(aspect: '9:16' | '16:9', layout: string, takeBehind: boolean, slots: readonly Box[]): Room`
+- `function zoomTarget(rect: Box, room: Room, scaleTo: number): { scale: number; centre: Point; mapped: Box }`
+- `function insideRoom(box: Box, room: Room, slack = 0.5): boolean`
+- `function pathTrack(d: string): Track`
+- `function pointAlong(d: string, fraction: number): Point`
+- `const PEN_FOLLOW`
+- `function followPen(pen: (frame: number) => Point | undefined, fromFrame: number, frame: number, centre: Point): { centr…`
+- `function placed(box: Box, place?: { left: number; top: number; scale: number }): Box`
 
 ### `apps/renderer/src/engine/kit/glass/bubble.tsx`
 
@@ -3992,6 +4020,8 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `interface LineReveal`
 - `function revealLines(lines: readonly string[], age: number): LineReveal[]`
 - `function revealChars(text: string, age: number): number`
+- `interface Typed`
+- `function typedText(text: string, age: number, spanFrames: number, houseP: number): Typed`
 
 ### `apps/renderer/src/engine/kit/scribblePath.ts`
 

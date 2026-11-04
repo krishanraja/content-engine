@@ -127,4 +127,11 @@ frames 600 and 990 of each reel.
   breaks it, and FormatMaster clamps a hand-edited profile inside it. Where a style asks for more than the floor allows
   (dark-keynote's long holds) the floor wins. A cut with no style keeps the house motion it had before, which is
   older than this standard (entrances 12 frames, a 24 px rise); a style is how a cut meets the entrance numbers.
+- **How the camera and typing keep to it (4 Nov 2026).** Typing runs at the style's readable rate (25 to 40 characters
+  a second, `kit/reveal.ts` `typedText`) and never so slowly that a line is still typing when its span ends. The
+  living-ui zoom (at most 1.5x, inside the 1 to 3 band) keeps the line it zooms to inside the channel safe area
+  (`config/channel-safe-zones.json`) and off his face (above the SPLIT seam, inside the layout's slots over a take);
+  the follow-the-pen camera never shows past the canvas; a crossfade lasts 6 to 10 frames. `kit/strongStyles.test.ts`
+  fails any that does not. `ve styles` offers only options that look different from the house and from each other
+  (`config/ve/style-distinct.json`).
 
