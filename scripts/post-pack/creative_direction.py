@@ -136,7 +136,7 @@ def pick_motion(point_types, fmt, top=3, modules=None, devices=None):
 STYLE_VERDICTS = ('picked', 'seen', 'not-for-us')
 
 
-def style_verdict(data, module, verdict, said, on):
+def style_verdict(data, module, verdict, said, on, context=None):
     """Krish's verdict on one motion style he was shown on his own take (`ve styles`, the board's Pick a style press),
     written onto the bank: a new dict, the input untouched. Every showing counts a trial. Picked once makes it liked,
     picked twice makes it tested; not-for-us makes it not for us, so the picker never offers it again; seen and not
@@ -153,12 +153,17 @@ def style_verdict(data, module, verdict, said, on):
     if m is None:
         raise DirectionError(f'{module!r} is not a motion module in config/style-references.json')
     m['trials'] = int(m.get('trials') or 0) + 1
-    if verdict == 'picked':
+    if verdict == 'picked' and context == 'lab':
+        # Seen in the lab (velib.lab), outside any piece: a pick makes the style liked, never tested; tested still
+        # needs his pick on a piece of his own.
+        if m.get('krish_verdict') != 'tested':
+            m['krish_verdict'] = 'liked'
+    elif verdict == 'picked':
         m['picks'] = int(m.get('picks') or 0) + 1
         m['krish_verdict'] = 'tested' if m['picks'] >= 2 else 'liked'
     elif verdict == 'not-for-us':
         m['krish_verdict'] = 'not for us'
-    row = {'on': on, 'verdict': verdict}
+    row = {'on': on, 'verdict': verdict, **({'context': context} if context else {})}
     if str(said or '').strip():
         row['said'] = str(said)
     m.setdefault('verdicts', []).append(row)

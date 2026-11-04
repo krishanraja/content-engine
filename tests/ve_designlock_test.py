@@ -143,12 +143,26 @@ class DesignLockTest(unittest.TestCase):
         return dict(card_id='test', kind='device', cwd=str(self.root), write_allow='[]', read='',
                     title='test', goal='test', contract='test', acceptance='python test.py')
 
+    def test_the_through_line_fields_write_a_card_codex_can_take(self):
+        fields = json.loads((ROOT / 'docs/ve/cards/through-line/ve-through-line-1.fields.json').read_text())
+        self.assertIsInstance(fields['goal'], str, 'the goal is the card text and the lane reads its verbs from it')
+        self.assertEqual(fields.pop('path'), 'docs/ve/cards/through-line/ve-through-line-1.md')
+        text = cards.write_card(self.root / 'through-line.md', cwd=str(self.root), **fields).read_text()
+        self.assertIn('## Recipe: The Ladder', text)
+        self.assertNotIn("['", text)
+        self.assertLessEqual(len(text.encode()), 6144)
+
     def test_a_card_carries_its_motion_style_for_codex(self):
         path = cards.write_card(self.root / 'styled.md', motion_style='data-story', **self.fields())
         text = path.read_text()
         self.assertIn('## Motion style: Data story (data-story', text)
         self.assertIn('3D charts', text)
         self.assertLess(text.index('## Motion style'), text.index('## Acceptance'))
+        # data-story has a recipe saved from the cut he approved (Monday 2 Nov): the card builds the whole system
+        self.assertIn('## Recipe: The Ladder', text)
+        self.assertIn('mon02-wide', text)
+        self.assertLess(text.index('## Recipe'), text.index('## Acceptance'))
+        self.assertNotIn('## Recipe', cards.write_card(self.root / 'paper.md', motion_style='paper-cutout', **self.fields()).read_text())
         meta = cards.parse_card(path)
         self.assertEqual(meta['motion_style'], 'data-story')
         self.assertEqual(meta['acceptance'], ['python test.py'])
