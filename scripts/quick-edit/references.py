@@ -390,8 +390,9 @@ def ledger_problems(data):
     for m in data.get('bank', []):
         if m.get('layer') not in layers:
             out.append(f'module {m.get("id")}: layer "{m.get("layer")}" is not one of {", ".join(sorted(layers))}')
-        if m.get('krish_verdict') not in ('untested', 'liked', 'not for us'):
-            out.append(f'module {m.get("id")}: krish_verdict must be untested, liked or not for us')
+        # tested: a motion style he picked twice on his own take (creative_direction.style_verdict, the only writer).
+        if m.get('krish_verdict') not in ('untested', 'liked', 'tested', 'not for us'):
+            out.append(f'module {m.get("id")}: krish_verdict must be untested, liked, tested or not for us')
         if not (m.get('how') and m.get('from')):
             out.append(f'module {m.get("id")} needs how and from')
     for i, r in enumerate(data.get('references', [])):

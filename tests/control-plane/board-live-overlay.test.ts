@@ -155,3 +155,70 @@ describe('the board page\'s live overlay', () => {
     expect(dom.bar.hidden).toBe(true)
   })
 })
+
+// The production gates on a day's tab (week_board.py gates_card): each section says what the making record holds.
+const SB = 'a'.repeat(64), ST = 'b'.repeat(64), PR = 'c'.repeat(64), CU = 'd'.repeat(64)
+function withGates(dom: ReturnType<typeof page>) {
+  const press = (gate: string, extra: Record<string, string> = {}) => h('button', { 'data-act': 'gate', 'data-gate': gate, 'data-day': 'mon', ...extra })
+  const section = (gate: string, sha: string, ...kids: El[]) => h('section', { class: 'gate', 'data-gate': gate, 'data-gate-sha': sha, 'data-live-gate': gate, 'data-live-gate-sha': sha },
+    h('p', { class: 'gate-live', 'data-live-gate-note': '' }), ...kids)
+  const fig = (m: string, name: string) => h('figure', { 'data-style-module': m, 'data-style-name': name }, press('style', { 'data-module': m }))
+  const sections = {
+    storyboard: section('storyboard', SB, press('storyboard')),
+    style: section('style', ST, fig('orbit-on-split', 'Orbit on split'), fig('paper-cut', 'Paper cut'), h('textarea', { 'data-gate-words': 'mon-style' }), press('style', { 'data-module': '' })),
+    proof: section('proof', PR, press('proof', { 'data-verdict': 'approve' }), press('proof', { 'data-verdict': 'reject' })),
+    cut: section('cut', CU, press('cut')),
+  }
+  const rounds = h('p', { class: 'gate-live', 'data-live-rounds': '' })
+  dom.mon.append(h('div', { class: 'rec gt', 'data-gates-day': 'mon' }, rounds, ...Object.values(sections)))
+  return { ...sections, rounds }
+}
+const live = (sec: El) => sec.querySelector('[data-live-gate-note]')!.textContent
+const waiting = { storyboard: { state: 'waiting', at: null }, style: { state: 'waiting', at: null }, proof: { state: 'waiting', at: null }, final: { state: 'waiting', at: null } }
+
+describe('the production gates in the live overlay', () => {
+  it('says each gate waits on him until the record holds his press', async () => {
+    const dom = page(LONG, SHORT), g = withGates(dom)
+    await run(dom, state({}, { mon: { ...state().live.mon, gates: waiting } }))
+    for (const sec of Object.values(g).filter(s => s !== g.rounds)) {
+      expect(live(sec)).toBe('Waiting on you')
+      expect(sec.dataset.liveState).toBe('waiting')
+      expect(sec.dataset.liveAnswered).toBe('')
+    }
+    expect(g.rounds.textContent).toBe('')
+  })
+  it('shows signed, the picked style by name, approved and rejected, and holds a press already answered at this hash', async () => {
+    const dom = page(LONG, SHORT), g = withGates(dom)
+    const at = '2026-11-08T10:00:05.000Z'
+    await run(dom, state({}, { mon: { ...state().live.mon, rounds: 1, gates: {
+      storyboard: { state: 'signed', at, sha256: SB }, style: { state: 'picked', at, sha256: ST, module: 'orbit-on-split' },
+      proof: { state: 'rejected', at, sha256: PR }, final: { state: 'approved', at, sha256: CU } } } }))
+    expect(live(g.storyboard)).toMatch(/^Signed /)
+    expect(live(g.style)).toMatch(/^Picked Orbit on split /)
+    expect(live(g.proof)).toMatch(/^Rejected /)
+    expect(live(g.cut)).toMatch(/^Approved /)
+    for (const sec of [g.storyboard, g.style, g.proof, g.cut]) {
+      expect(sec.dataset.liveAnswered).toBe('1')
+      for (const b of sec.querySelectorAll('[data-act="gate"]')) expect(b.disabled).toBe(true)
+    }
+    expect(g.style.querySelector('textarea')!.disabled).toBe(true)
+    expect(g.rounds.textContent).toBe('Full renders sent to you before you approved: 1')
+  })
+  it('says what was shown changed since he pressed, and leaves the press open', async () => {
+    const dom = page(LONG, SHORT), g = withGates(dom)
+    await run(dom, state({}, { mon: { ...state().live.mon, gates: { ...waiting,
+      storyboard: { state: 'signed', at: '2026-11-08T10:00:05.000Z', sha256: 'e'.repeat(64) },
+      style: { state: 'none_of_these', at: '2026-11-08T10:00:05.000Z', sha256: ST } } } }))
+    expect(live(g.storyboard)).toBe('This changed since you pressed; press again')
+    expect(g.storyboard.dataset.liveState).toBe('changed')
+    expect(g.storyboard.dataset.liveAnswered).toBe('')
+    expect(g.storyboard.querySelector('[data-act="gate"]')!.disabled).toBe(false)
+    expect(live(g.style)).toMatch(/^None of these /)
+  })
+  it('leaves a board without gates as it was', async () => {
+    const dom = page(LONG, SHORT)
+    await run(dom, state())
+    expect(dom.body.querySelectorAll('[data-live-gate]')).toHaveLength(0)
+    expect(dom.bar.hidden).toBe(true)
+  })
+})

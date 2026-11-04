@@ -1,12 +1,13 @@
 import React from 'react'
 import { HOUSE_FONTS } from '../../../house/geometry'
-import { drift, EXIT, MOTION, progress, stateAt } from '../../clock'
+import { BACK, drift, EXIT, MOTION, motionProfile, progress, stateAt } from '../../clock'
 import type { DeviceProps } from '../types'
 import { ParamsSchema } from './schema'
 import { Mark } from './mark'
 
 // Back-out peaks above 1.12 and returns exactly to 1 on the house enter duration.
-const back = (t: number) => 1 + 3 * (t - 1) ** 3 + 2 * (t - 1) ** 2
+// The orbit's own pop with no motion style; under a style, the style's overshoot (never past 6%).
+const back = (t: number) => motionProfile() ? BACK(t) : 1 + 3 * (t - 1) ** 3 + 2 * (t - 1) ** 2
 
 export function orbitState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>, count: number, chips: number) {
   const fired = stateAt(events, object.obj, frame).fired

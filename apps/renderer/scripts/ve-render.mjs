@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** Render compiled EngineRenderProps through the registered FormatMaster. */
-import { readFile, mkdtemp, copyFile, mkdir, rm, stat, realpath } from 'node:fs/promises'
+import { readFile, readdir, mkdtemp, copyFile, mkdir, rm, stat, realpath } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -44,6 +44,19 @@ async function correctAudio(raw, output, stem, trimSeconds, temporary, lagSample
   if (Math.abs(residual) > 48) throw new Error(`audio correction residual exceeds 1 ms: ${residual} samples`)
   // Only hand over a render after its final encoded audio passes the measurement.
   await copyFile(corrected, output)
+}
+
+/** The browser Remotion drives: REMOTION_BROWSER when set, else a Chromium headless shell already installed under
+ *  /opt/pw-browsers (cloud sessions and CI), else null so Remotion uses or fetches its own. Never downloads here. */
+export async function browserExecutable(env = process.env, root = '/opt/pw-browsers') {
+  if (env.REMOTION_BROWSER) return env.REMOTION_BROWSER
+  let names
+  try { names = await readdir(root) } catch { return null }
+  for (const name of names.filter(n => n.startsWith('chromium_headless_shell-')).sort().reverse()) {
+    const candidate = path.join(root, name, 'chrome-headless-shell-linux64', 'chrome-headless-shell')
+    try { if ((await stat(candidate)).isFile()) return candidate } catch { /* next */ }
+  }
+  return null
 }
 
 /** Stage only declared media and the format's plate manifest; safe to test without Chromium. */
@@ -141,7 +154,8 @@ async function main() {
     const serveUrl = await bundle({ entryPoint: path.join(root, 'apps/renderer/src/index.ts'),
       publicDir, outDir: path.join(temporary, 'bundle') })
     const transportProps = toAsciiProps(inputProps)
-    const composition = await selectComposition({ serveUrl, id, inputProps: transportProps })
+    const browser = await browserExecutable()
+    const composition = await selectComposition({ serveUrl, id, inputProps: transportProps, browserExecutable: browser })
     const tall = inputProps.aspect === '9:16'
     if (composition.fps !== 30 || composition.width !== (tall ? 1080 : 1920) || composition.height !== (tall ? 1920 : 1080)) {
       throw new Error(`${id} must use the 30 fps house canvas`)
@@ -149,7 +163,7 @@ async function main() {
     await mkdir(path.dirname(path.resolve(output)), { recursive: true })
     const raw = path.join(temporary, 'raw.mp4')
     await renderMedia({ serveUrl, composition: { ...composition, durationInFrames: inputProps.durationFrames },
-      inputProps: transportProps, outputLocation: raw, codec: 'h264', crf: 18, scale, sampleRate })
+      inputProps: transportProps, outputLocation: raw, codec: 'h264', crf: 18, scale, sampleRate, browserExecutable: browser })
     await correctAudio(raw, path.resolve(output), stemSrc, inputProps.audio.stem.trimBeforeFrames / inputProps.fps,
       temporary, lagSamples)
     if ((await stat(output)).size === 0) throw new Error('render produced an empty MP4')

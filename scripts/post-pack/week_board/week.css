@@ -157,6 +157,23 @@ label.qmark input:disabled + .box{opacity:.4}
 .tri-why.rj{flex-wrap:wrap}
 .dl-item.rejected .dl-name{text-decoration:line-through;color:var(--muted)}
 .rec.so.on{border-color:var(--ok)}
+.rec.gt .gate{border-top:1px solid var(--line);padding:12px 0 4px;display:grid;gap:8px;min-width:0}
+.rec.gt .gate h3{margin:0;font-size:17px}.rec.gt .gate-sub{margin:4px 0 0;font-size:15px}
+.rec.gt .gate.on h3::after{content:" \2713";color:var(--ok)}
+.rec.gt .gate-text{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--card)}
+.rec.gt .gate-expect{margin:0;padding-left:20px}
+.rec.gt .gate-styles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.rec.gt .gate-style{margin:0;display:grid;gap:6px;align-content:start;border:1px solid var(--line);border-radius:12px;padding:8px}
+.rec.gt .gate-style.on{border-color:var(--ok)}
+.rec.gt .gate-clip{width:100%;max-height:420px;border-radius:8px;background:#000}
+.rec.gt .gate-proof{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:12px}
+@media (max-width:640px){.rec.gt .gate-proof{grid-template-columns:1fr}}
+.rec.gt .gate-words{display:grid;gap:4px;font-size:14px}
+.rec.gt .gate-words textarea{width:100%;box-sizing:border-box;padding:8px;border:1px solid var(--line);border-radius:8px;font:16px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+.rec.gt .gate-cuts{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.rec.gt .gate-live{margin:0;font-size:14px;font-weight:700;color:var(--muted)}.rec.gt .gate-live:empty{display:none}
+.rec.gt .gate[data-live-state=changed] .gate-live{color:var(--bad)}.rec.gt .gate[data-live-state=waiting] .gate-live{color:#8a6a00}
+.rec.gt .gate-nfu{font-size:14px;display:flex;gap:6px;align-items:center}
 .qd{border:1px dashed var(--ink);border-radius:12px;padding:10px 14px;background:var(--card)}
 .qd h3{margin:0 0 4px;font-size:16px}.qd-how{margin:0 0 6px;color:var(--muted);font-size:14px}
 .qd ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}

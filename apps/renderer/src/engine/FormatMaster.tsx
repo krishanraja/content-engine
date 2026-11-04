@@ -1,16 +1,21 @@
 import { z } from 'zod'
 import { AbsoluteFill, OffthreadVideo, Sequence } from 'remotion'
 import { BrandFrame } from './BrandFrame'
-import { useEngineFrame } from './clock'
+import { onTwos, progress, setMotionProfile, useEngineFrame } from './clock'
 import { stageBubbleBox } from './devices/typing_bubble'
 import { headlineLayout } from './devices/headline'
 import { lightStage } from './chrome/lightStage'
 import { headlineState } from './devices/headline/state'
 import { DEVICES } from './devices/registry'
+import { FOCUS, PEN } from './devices/focus'
+import type { Box } from './devices/types'
 import { slotsFor, splitCameraBox, splitPlatePosition } from './layouts'
 import { setActiveCanvas } from './kit/lock'
+import { resolveMotion, type MotionProfile } from './kit/motionProfiles'
+import { beatMotion, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
+import { focusRoom, placed } from './kit/focus'
 import { EngineAudio } from './audio'
-import type { EngineRenderProps } from './props'
+import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
 
 // Placement belongs to the composition, never to a strict device schema.
 const PlaceSchema = z.object({
@@ -18,6 +23,52 @@ const PlaceSchema = z.object({
   width: z.number().finite().positive(), height: z.number().finite().positive(),
   scale: z.number().finite().positive(),
 }).strict()
+
+/** What the camera sees on a beat (kit/focus.ts): for zoomToFocus the first device that reports a focus line, mapped
+ *  through its SPLIT placement, and the room it must stay in; for followPen the first scribble's pen tip. Only read
+ *  under a motion style. */
+function cameraView(profile: MotionProfile, beat: EngineBeat, slots: readonly Box[], objects: ReadonlyMap<string, EngineObject>,
+  props: EngineRenderProps, at: number): CameraView & { focusIndex: number } {
+  const placeOf = (object: EngineObject) => {
+    const place = Object.hasOwn(object.params, 'place') ? PlaceSchema.safeParse(object.params.place) : undefined
+    return place?.success ? place.data : undefined
+  }
+  const first = beat.uses.length ? objects.get(beat.uses[0]!) : undefined
+  const firstPlace = first ? placeOf(first) : undefined
+  const fallback = firstPlace ? { left: firstPlace.left, top: firstPlace.top,
+    width: firstPlace.width * firstPlace.scale, height: firstPlace.height * firstPlace.scale } : slots[0]
+  if (profile.camera.kind === 'zoomToFocus') {
+    for (const [index, id] of beat.uses.entries()) {
+      const object = objects.get(id)
+      const report = object && Object.hasOwn(FOCUS, object.device) ? FOCUS[object.device] : undefined
+      if (!object || !report) continue
+      const place = placeOf(object)
+      const box = place ? { left: 0, top: 0, width: place.width, height: place.height } : slots[index]
+      if (!box) continue
+      const { place: _place, ...params } = object.params
+      const focus = report({ object: place ? { ...object, params } : object, events: props.events, box, aspect: props.aspect, frame: at })
+      if (!focus) continue
+      const room = focusRoom(props.aspect, beat.layout, beat.plate?.source !== 'none', slots)
+      return { focusIndex: index, room, fallback, focus: { ...focus, rect: placed(focus.rect, place),
+        ...(focus.from ? { from: placed(focus.from, place) } : {}) } }
+    }
+  }
+  if (profile.camera.kind === 'followPen') {
+    for (const id of beat.uses) {
+      const object = objects.get(id)
+      const track = object && Object.hasOwn(PEN, object.device) ? PEN[object.device] : undefined
+      if (!object || !track) continue
+      const place = placeOf(object)
+      const { place: _place, ...params } = object.params
+      const tip = track(place ? { ...object, params } : object, props.events)
+      return { focusIndex: 0, fallback, pen: (f) => {
+        const p = tip(f)
+        return p && place ? [place.left + p[0] * place.scale, place.top + p[1] * place.scale] : p
+      } }
+    }
+  }
+  return { focusIndex: 0, fallback }
+}
 
 /** The composition owns the clock; every device and chrome layer receives global frames. */
 export function FormatMaster(props: EngineRenderProps) {
@@ -29,6 +80,9 @@ export function FormatMaster(props: EngineRenderProps) {
   const split = activeBeat?.layout === 'SPLIT'
   const camera = split ? splitCameraBox(props.aspect) : undefined
   setActiveCanvas(width, height)
+  // The motion style he picked (props.motion), or the house motion when there is none: every device reads it.
+  const profile = resolveMotion(props.motion)
+  setMotionProfile(profile)
 
   return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
@@ -47,20 +101,39 @@ export function FormatMaster(props: EngineRenderProps) {
                 } : {}),
               }}
             />
+            {profile?.ground.texture === 'halftone' && <AbsoluteFill style={halftoneTexture(props.tokens)} />}
           </AbsoluteFill>
         </Sequence>
       ))}
-      {props.beats.map((beat) => {
+      {props.beats.map((beat, beatIndex) => {
         // Beats mount by frame range with no time offset, so media nested inside a device (a recording's own
         // Sequence) runs on the same global clock as everything else (INV-ONE-CLOCK).
-        if (frame < beat.fromFrame || frame >= beat.toFrame) return null
+        const next = props.beats[beatIndex + 1]
+        // A crossfade (or a carry) keeps the outgoing beat mounted, held on its last frame, fading out under the
+        // incoming one for the transition's frames. With no style every beat still cuts.
+        const overlap = profile && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
+        const outgoing = frame >= beat.toFrame && frame < beat.toFrame + overlap
+        if ((frame < beat.fromFrame || frame >= beat.toFrame) && !outgoing) return null
+        const now = outgoing ? beat.toFrame - 1 : frame
         const slots = slotsFor(beat.layout, props.aspect, beat.uses.length)
+        // A style on twos steps its graphics; the take and captions stay on every frame.
+        const at = profile?.onTwos ? onTwos(now, beat.fromFrame) : now
+        const layerHeight = beat.layout === 'SPLIT' ? splitCameraBox(props.aspect).top : height
+        const view = profile ? cameraView(profile, beat, slots, objects, props, at) : undefined
+        const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight) : undefined
+        const fade = (motion?.fade ?? 1) * (outgoing ? 1 - progress(frame - beat.toFrame, overlap, (t) => t) : 1)
+        const sweep = profile && (beat.layout === 'STAGE' || beat.layout === 'SPLIT') ? sweepStyle(profile, props.tokens, beat, now) : null
+        const ground = beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: props.tokens.cream, overflow: 'hidden' as const }
+          // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
+          // the ground StageHeader's logo is drawn for.
+          // face-with-proof with no motion profile sits on the light wash of its SPLIT stage (lightStage).
+          : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? (lightStage(props) && !profile
+            ? { background: `radial-gradient(ellipse at 50% 40%, ${props.tokens.cream} 0%, color-mix(in srgb, ${props.tokens.cream} 86%, ${props.tokens.mint}) 100%)` }
+            : stageGround(profile, props.tokens)) : {}
         return (
-          <AbsoluteFill key={`devices-${beat.id}`} style={beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: props.tokens.cream, overflow: 'hidden' }
-            // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
-            // the ground StageHeader's logo is drawn for.
-            : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? { background: lightStage(props) ? `radial-gradient(ellipse at 50% 40%, ${props.tokens.cream} 0%, color-mix(in srgb, ${props.tokens.cream} 86%, ${props.tokens.mint}) 100%)` : `radial-gradient(ellipse at center, ${props.tokens.inkSoft} 0%, ${props.tokens.inkDeep} 100%)` } : {}}>
-            <AbsoluteFill>
+          <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
+            {sweep && <AbsoluteFill style={sweep} />}
+            <AbsoluteFill style={motion?.layer}>
             {beat.uses.map((id, index) => {
               const object = objects.get(id)
               if (!object) throw new Error(`ve: no object ${id}`)
@@ -82,7 +155,7 @@ export function FormatMaster(props: EngineRenderProps) {
                     const card = stageBubbleBox(peer.params, width, height)
                     bottom = Math.max(bottom, card.top + card.height)
                   } else if (peer?.device === 'headline') {
-                    const h = headlineState(peer, props.events, frame)
+                    const h = headlineState(peer, props.events, at)
                     const area = h.at ?? { x: 60, y: height === 1920 ? 220 : 180, w: width - 120, h: height === 1920 ? 987 : 720 }
                     const text = headlineLayout(h.lines, area.w, h.swipe?.line, 'h' in area ? area.h : undefined)
                     const top = h.at ? area.y : area.y + ((height === 1920 ? 987 : 720) - text.height - (h.dek ? 134 : 0)) / 2
@@ -101,8 +174,10 @@ export function FormatMaster(props: EngineRenderProps) {
               // STAGE shares the whole canvas; other layouts retain their slot clips.
               const clipPath = `inset(${box.top}px ${width - box.left - box.width}px ${height - box.top - box.height}px ${box.left}px${beat.layout === 'P6' && index === 1 ? ' round 40px' : ''})`
               return (
-                <AbsoluteFill key={id} style={placement ? { left: placement.left, top: placement.top, width: placement.width, height: placement.height, transform: `scale(${placement.scale})`, transformOrigin: 'top left' } : beat.layout === 'SPLIT' ? {} : { clipPath }}>
-                  <Device object={deviceObject} events={props.events} box={box} tokens={props.tokens} aspect={props.aspect} frame={frame} />
+                <AbsoluteFill key={id} style={{ ...(placement ? { left: placement.left, top: placement.top, width: placement.width, height: placement.height, transform: `scale(${placement.scale})`, transformOrigin: 'top left' } : beat.layout === 'SPLIT' ? {} : { clipPath }),
+                  // Everything outside the proof dims (living-ui), once the camera is on it.
+                  ...(motion && index !== (view?.focusIndex ?? 0) && motion.dim < 1 ? { opacity: motion.dim } : {}) }}>
+                  <Device object={deviceObject} events={props.events} box={box} tokens={props.tokens} aspect={props.aspect} frame={at} />
                 </AbsoluteFill>
               )
             })}
