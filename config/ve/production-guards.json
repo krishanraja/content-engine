@@ -29,10 +29,8 @@
       "scripts/velib/words.py",
       "scripts/velib/voice.py",
       "scripts/velib/audio.py",
-      "scripts/velib/lint.py",
       "scripts/quick-edit/episode.py",
       "scripts/quick-edit/words_gate.py",
-      "config/ve/sfx-kits",
       "config/ve/voice-chain.json"
     ],
     "skip_suffixes": [

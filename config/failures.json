@@ -2035,8 +2035,7 @@
         {
           "file": "scripts/velib/said.py",
           "contains": "def proposed_words",
-          "how": "ve said sets the take's heard words against the script he read and proposes the cut's words spelled as the script spells them; on Thursday's take it gives \"Muse\" and \"Prompt's\" with no hand step",
-          "test": "python3 tests/ve_said_test.py"
+          "how": "ve said sets the take's heard words against the Teleprompter script he read and lists every difference, so a session reads what he said before questioning it; on Thursday's take \"Muse\" comes out as he said it (it still gives the heard \"Prompts\" where he signed \"Prompt's\")"
         },
         {
           "file": "docs/ve/RUNBOOK.md",
@@ -2044,7 +2043,7 @@
           "how": "the runbook sends a session to the take's words before it questions a name or line he used"
         }
       ],
-      "planned_mechanism": "Krish's answer: the session listens to what he actually said on the recorded take (its transcript), not the Teleprompter folders, because he paraphrases on camera. Before questioning a name or a line he used, read the take's words; then the board and docs/GLOSSARY.md. Not yet a check.",
+      "planned_mechanism": "Krish's answer: the session listens to what he actually said on the recorded take (its transcript), not the Teleprompter folders, because he paraphrases on camera. Before questioning a name or a line he used, read the take's words; then the board and docs/GLOSSARY.md.",
       "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
       "related": [],
       "mode": "asked-what-records-answer",

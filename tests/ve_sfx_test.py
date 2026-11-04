@@ -56,7 +56,8 @@ class SfxTest(unittest.TestCase):
         (ve / 'sfx' / f'{sid}.mp4').write_bytes(clip)
         path = ve / 'sfx-audition.json'
         path.write_text(json.dumps({'piece': 'p1', 'cut': 'short', 'candidates': [
-            {'id': sid, 'clip': f'{sid}.mp4', 'sha256': sha256_file(ve / 'sfx' / f'{sid}.mp4')}]}))
+            {'id': sid, 'clip': f'{sid}.mp4', 'sha256': sha256_file(ve / 'sfx' / f'{sid}.mp4'), 'gain_db': -8,
+             'sound_sha256': sha256_file(self.music / 'sfx' / 'thud.wav')}]}))
         return path
 
     def approve(self, sid, words, audition=None):

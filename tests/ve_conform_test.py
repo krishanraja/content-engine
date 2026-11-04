@@ -336,6 +336,20 @@ class ConformTest(unittest.TestCase):
         self.assertEqual(picture['laid'], 'resampled')
         self.assertEqual(conform.lay_filter(picture), '')
 
+    def test_unscripted_words_the_cut_keeps_are_protected_on_the_cut_clock(self):
+        edl = {'speed': 1.2, 'unscripted_kept': [{'take': 't', 'src_s': 2.0}],
+               'segments': [{'take': 't', 'src_in_s': 1.0, 'src_out_s': 3.0, 'out_in_s': 0.5}]}
+        records = {'t': {'aligners': {'a': {'words': [{'onset_s': 2.0, 'end_s': 2.3}]}}}}
+        self.assertEqual(conform.kept_words(edl, records), [{'onset_s': round(0.5 + 1.0 / 1.2, 4),
+                                                              'end_s': round(0.5 + 1.3 / 1.2, 4)}])
+
+    def test_ingest_records_no_picture_when_ffmpeg_is_missing(self):
+        import os  # noqa: PLC0415
+        old = os.environ.get('PATH', '')
+        os.environ['PATH'] = str(self.dir)
+        self.addCleanup(os.environ.__setitem__, 'PATH', old)
+        self.assertIsNone(takes.video_probe(self.dir / 'anything.mp4'))
+
     def _indices(self, picture):
         import numpy as np  # noqa: PLC0415
         width = self.BITS * self.STRIPE

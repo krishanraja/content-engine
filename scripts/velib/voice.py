@@ -9,6 +9,8 @@ The repair chain (quick-edit's VOICE_REPAIR: rumble cut, light noise reduction, 
 2.5:1 levelling) runs only when config/ve/voice-chain.json carries Krish's approval in his words: no approval of it
 was found on 4 Nov 2026, so it waits on his ear. `ab` makes the 10-second raw and repaired pair he judges it by. The
 chain delays the voice (afftdn, about 25 ms), so the delay is measured and taken out before anything else.
+config/ve/voice-chain.json is part of the engine freeze (config/ve/production-guards.json): approved during a piece,
+it needs his exception press before that piece's proof or cut renders, because it changes his voice in every cut.
 """
 from __future__ import annotations
 

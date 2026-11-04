@@ -5,7 +5,7 @@
     "audio"
   ],
   "lints": [
-    "sound.event_sfx",
+    "sound.one_moment",
     "sound.silence_beat"
   ],
   "qc": [

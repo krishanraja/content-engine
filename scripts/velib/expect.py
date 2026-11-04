@@ -60,10 +60,6 @@ def _outside_clip(spec: dict) -> bool:
 def lines(spec: dict, directory: Path | None = None) -> list[str]:
     from . import qc_channel
     out = []
-    from .lint import novelty_note
-    repeat = novelty_note(spec)
-    if repeat:
-        out.append(repeat)
     if _sfx_missing(spec, directory):
         out.append('No sound effects: the sfx kit is not built, so every marked hit is silent and ve status holds the cut.')
     if any(c['aspect'] == '9:16' for c in spec['cuts'].values()) and qc_channel.ADVISORY:
@@ -87,6 +83,10 @@ def lines(spec: dict, directory: Path | None = None) -> list[str]:
         if module and 'needs_device' in (module.get('ve_route') or []):
             out.append(f"The {module.get('name', motion['module'])} style has no ve device yet: the nearest house devices "
                        'draw it until Codex builds one.')
+    from .lint import novelty_note
+    repeat = novelty_note(spec)
+    if repeat and len(out) < MAX_LINES:
+        out.append(repeat)
     return out[:MAX_LINES]
 
 
