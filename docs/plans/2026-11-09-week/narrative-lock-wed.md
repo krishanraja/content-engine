@@ -54,3 +54,5 @@ Answer: AI got her in the door and people carried it the rest of the way, so it 
 
 ## Music bed
 NO CURVES (Instrumental Version) (no-curves-instrumental, approved in config/music-library.json), under the talking sections, out under the song clips so they do not clash.
+
+Signed by Krish: "I've signed the story already for Wednesday, so get on with it.", 2026-11-04, lock sha256 d151291b0a85afc590e80e0e0ca991d4ac5e2253af7b6406eb64b40c39c1601d
