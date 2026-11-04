@@ -150,9 +150,10 @@ def audition(spec: dict, cut: str, directory: Path, props: dict, assets_dir: Pat
     return record
 
 
-def approve(sid: str, words: str, on: str, *, candidates_path: Path = CANDIDATES, approved_path: Path = APPROVED,
-            kit_path: Path = KIT) -> dict:
-    """Write his yes, in his words, then rebuild the kit from approved rows only."""
+def approve(sid: str, words: str, on: str, audition_path: Path, *, candidates_path: Path = CANDIDATES,
+            approved_path: Path = APPROVED, kit_path: Path = KIT) -> dict:
+    """Write his yes, in his words, for a sound he heard on his own cut (its audition record), then rebuild the kit
+    from approved rows only."""
     if not str(words or '').strip():
         raise ValueError("a sound is approved only with Krish's own words")
     rows = candidates(candidates_path)
@@ -161,11 +162,20 @@ def approve(sid: str, words: str, on: str, *, candidates_path: Path = CANDIDATES
     row = rows[sid]
     if not row.get('sha256') or not row.get('file'):
         raise ValueError(f'{sid} was never downloaded, so he cannot have heard it')
+    local_file(row)   # the file on this machine is the one shortlisted and auditioned
+    audition = load_json(audition_path) if Path(audition_path).is_file() else {}
+    heard = next((c for c in audition.get('candidates') or [] if c.get('id') == sid), None)
+    if not heard or not heard.get('sha256'):
+        raise ValueError(f'{sid} is not in the audition record {audition_path}: he approves a sound he heard on his cut')
+    clip = Path(audition_path).parent / 'sfx' / heard['clip']
+    if not clip.is_file() or sha256_file(clip) != heard['sha256']:
+        raise ValueError(f'the audition clip for {sid} is missing or changed since it was played')
     doc = load_json(approved_path)
     kept = [r for r in doc.get('approved') or [] if r.get('id') != sid]
     entry = {'id': sid, 'title': row.get('title'), 'provider': row.get('provider', 'Epidemic Sound'),
              'provider_id': row.get('provider_id'), 'file': row['file'], 'sha256': row['sha256'],
              'gain_db': float(row.get('gain_db', DEFAULT_GAIN_DB)),
+             'auditioned_on': {'piece': audition.get('piece'), 'cut': audition.get('cut'), 'clip_sha256': heard['sha256']},
              'approved_by': 'Krish', 'approved_on': on, 'approval_words': words.strip()}
     doc['approved'] = kept + [entry]
     write_json(approved_path, doc)

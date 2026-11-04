@@ -33,8 +33,8 @@ HDR_TRANSFERS = {'smpte2084': 'pq', 'arib-std-b67': 'hlg'}   # PQ, and HLG (an i
 
 def _ffprobe() -> str | None:
     import shutil  # noqa: PLC0415
-    from .common import ffmpeg  # noqa: PLC0415
-    beside = shutil.which('ffprobe', path=str(Path(ffmpeg()).parent))
+    exe = shutil.which('ffmpeg')
+    beside = shutil.which('ffprobe', path=str(Path(exe).parent)) if exe else None
     return beside or shutil.which('ffprobe')
 
 
@@ -67,7 +67,7 @@ def video_probe(media: str | Path) -> dict | None:
     stamps = subprocess.run([exe, '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'packet=pts_time',
                              '-of', 'csv=p=0', str(media)], capture_output=True, text=True, errors='replace')
     times = sorted(float(t) for t in re.findall(r'^-?[\d.]+', stamps.stdout, re.M)) if stamps.returncode == 0 else []
-    rate, offset, jitter = _rate(stream.get('avg_frame_rate')) or _rate(stream.get('r_frame_rate')), 0.0, None
+    rate, offset, jitter, worst = _rate(stream.get('avg_frame_rate')) or _rate(stream.get('r_frame_rate')), 0.0, None, None
     if len(times) > 2:
         # Every frame's stamp against its index, fitted by least squares: the rate the camera ran at, and where an even
         # grid at that rate sits, so laying frames on it moves each one as little as its own jitter.
@@ -79,8 +79,11 @@ def video_probe(media: str | Path) -> dict | None:
             offset = base - times[0]
             off = sorted(abs(t - (base + i * slope)) * 1000 for i, t in enumerate(times))
             jitter = round(off[min(n - 1, int(0.95 * n))], 2)
+            worst = off[-1]
     house = min(HOUSE_RATES, key=lambda r: abs(r - rate)) if rate else None
-    even = bool(rate and abs(rate / house - 1) <= CONFORM_TOLERANCE)
+    # Laid evenly only when no frame moves more than one frame period from its own stamp: a camera that stalled or
+    # dropped frames keeps its stamps, so his lips never run off his voice (the audio is never moved).
+    even = bool(rate and abs(rate / house - 1) <= CONFORM_TOLERANCE and (worst is None or worst <= 1000 / rate))
     rotation = 0
     for side in stream.get('side_data_list') or []:
         if isinstance(side.get('rotation'), (int, float)):
@@ -93,7 +96,8 @@ def video_probe(media: str | Path) -> dict | None:
         depth = 10 if re.search(r'p10|p12', pix) else (8 if pix else None)
     transfer = stream.get('color_transfer') or None
     return {'avg_rate': round(rate, 6) if rate else None, 'house_rate': house, 'laid': 'even' if even else 'resampled',
-            'lay_offset_s': round(offset, 6), 'jitter_p95_ms': jitter, 'rotation': rotation, 'transfer': transfer, 'hdr': HDR_TRANSFERS.get(transfer or ''),
+            'lay_offset_s': round(offset, 6), 'jitter_p95_ms': jitter,
+            'max_offset_ms': round(worst, 2) if worst is not None else None, 'rotation': rotation, 'transfer': transfer, 'hdr': HDR_TRANSFERS.get(transfer or ''),
             'primaries': stream.get('color_primaries') or None, 'pix_fmt': pix or None,
             'bit_depth': int(depth) if str(depth or '').isdigit() else None}
 
