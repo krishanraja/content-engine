@@ -1964,18 +1964,13 @@
     {
       "obj": "ask",
       "device": "typing_bubble",
-      "meaning": "his one prompt, the AI asking back, and his three answers becoming its rules",
+      "meaning": "the AI asking back after his one prompt, and his three answers becoming its rules",
       "fromFrame": 764,
       "toFrame": 1085,
       "variants": {},
       "params": {
         "kind": "chat",
         "rows": [
-          {
-            "who": "You",
-            "text": "Never spend or send without me",
-            "side": "right"
-          },
           {
             "who": "Your AI",
             "text": "Which should need your yes?",
