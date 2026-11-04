@@ -60,6 +60,7 @@ Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everyt
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
 - Next after Fri 13 Nov (2026-11-04): give the five look-alike styles (swiss-kinetic-type, hud-terminal, paper-cutout, vertical-captions, line-boil) their own look in the renderer; each must score 1.5 before his picker shows it.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
+- Waiting on Krish (2026-11-04): six yes/no calls in `docs/learning/2026-11-04-thursday-killed.md`. From 9 Nov ve refuses no named idea, a re-typed real artifact, a changed engine, a 3rd render per press, over 4 type treatments.
 - North Star check (2026-11-04): holds.
 
 ## Read next
