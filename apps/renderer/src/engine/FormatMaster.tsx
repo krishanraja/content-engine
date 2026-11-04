@@ -14,6 +14,8 @@ import { setActiveCanvas } from './kit/lock'
 import { resolveMotion, type MotionProfile } from './kit/motionProfiles'
 import { beatMotion, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
 import { focusRoom, placed } from './kit/focus'
+import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
+import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
 import { EngineAudio } from './audio'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
 
@@ -37,7 +39,7 @@ function cameraView(profile: MotionProfile, beat: EngineBeat, slots: readonly Bo
   const firstPlace = first ? placeOf(first) : undefined
   const fallback = firstPlace ? { left: firstPlace.left, top: firstPlace.top,
     width: firstPlace.width * firstPlace.scale, height: firstPlace.height * firstPlace.scale } : slots[0]
-  if (profile.camera.kind === 'zoomToFocus') {
+  if (profile.camera.kind === 'zoomToFocus' || profile.overlays?.includes('brackets')) {
     for (const [index, id] of beat.uses.entries()) {
       const object = objects.get(id)
       const report = object && Object.hasOwn(FOCUS, object.device) ? FOCUS[object.device] : undefined
@@ -123,20 +125,39 @@ export function FormatMaster(props: EngineRenderProps) {
         const motion = profile ? beatMotion(profile, props.beats, beatIndex, now, view!, width, layerHeight) : undefined
         const fade = (motion?.fade ?? 1) * (outgoing ? 1 - progress(frame - beat.toFrame, overlap, (t) => t) : 1)
         const sweep = profile && (beat.layout === 'STAGE' || beat.layout === 'SPLIT') ? sweepStyle(profile, props.tokens, beat, now) : null
-        const ground = beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: props.tokens.cream, overflow: 'hidden' as const }
+        const ground = beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: profile ? splitGroundColour(profile, props.tokens) : props.tokens.cream, overflow: 'hidden' as const }
           // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
           // the ground StageHeader's logo is drawn for.
           // face-with-proof with no motion profile sits on the light wash of its SPLIT stage (lightStage).
           : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? (lightStage(props) && !profile
             ? { background: `radial-gradient(ellipse at 50% 40%, ${props.tokens.cream} 0%, color-mix(in srgb, ${props.tokens.cream} 86%, ${props.tokens.mint}) 100%)` }
             : stageGround(profile, props.tokens)) : {}
+        // What the style lays on a graphic ground (kit/overlays.tsx): only a SPLIT stage or a graphics-only STAGE beat
+        // has one; over his take full frame nothing is laid.
+        const grounded = beat.layout === 'SPLIT' || (beat.layout === 'STAGE' && beat.plate?.source === 'none')
+        const overlays = profile?.overlays ?? []
+        const sinceBeat = at - beat.fromFrame
+        const hero = profile?.type?.hero && grounded ? heroPhrase(beat, objects, props.events, props.captions, at) : undefined
+        const heroDraw = hero ? heroLayout(hero, heroArea(props.aspect, layerHeight, beat.uses.some(id => !hero.replaces.includes(id)))) : undefined
+        const torn = overlays.includes('torn')
         return (
           <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
-            {sweep && <AbsoluteFill style={sweep} />}
+            {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts). */}
+            {profile ? <>
+              {sweep && <AbsoluteFill style={sweep} />}
+              {grounded && profile.ground.texture === 'paper' && <PaperTexture id={beat.id} width={width} height={layerHeight} tokens={props.tokens} />}
+              {grounded && overlays.includes('scanLines') && <AbsoluteFill data-scan-lines style={scanLines(props.tokens)} />}
+              {grounded && overlays.includes('sketchFrame') && profile.boil && <SketchFrame id={beat.id} width={width} height={layerHeight}
+                tokens={props.tokens} sinceFrames={sinceBeat} boil={profile.boil} />}
+              {torn && <TornFilter id={beat.id} step={Math.floor(sinceBeat / 2)} tokens={props.tokens} />}
+            </> : sweep && <AbsoluteFill style={sweep} />}
             <AbsoluteFill style={motion?.layer}>
-            {beat.uses.map((id, index) => {
+            {[heroDraw ? <HeroType key="hero-type" layout={heroDraw} frame={at} tokens={props.tokens} width={width} height={layerHeight} onDark={darkGround(profile)} /> : null,
+              ...beat.uses.map((id, index) => {
               const object = objects.get(id)
               if (!object) throw new Error(`ve: no object ${id}`)
+              // Type as hero stands in for the text devices whose words it sets.
+              if (hero?.replaces.includes(id)) return null
               const Device = Object.hasOwn(DEVICES, object.device) ? DEVICES[object.device] : undefined
               if (!Device) throw new Error(`ve: no device ${object.device}`)
               const { place, ...params } = object.params
@@ -176,11 +197,15 @@ export function FormatMaster(props: EngineRenderProps) {
               return (
                 <AbsoluteFill key={id} style={{ ...(placement ? { left: placement.left, top: placement.top, width: placement.width, height: placement.height, transform: `scale(${placement.scale})`, transformOrigin: 'top left' } : beat.layout === 'SPLIT' ? {} : { clipPath }),
                   // Everything outside the proof dims (living-ui), once the camera is on it.
-                  ...(motion && index !== (view?.focusIndex ?? 0) && motion.dim < 1 ? { opacity: motion.dim } : {}) }}>
-                  <Device object={deviceObject} events={props.events} box={box} tokens={props.tokens} aspect={props.aspect} frame={at} />
+                  ...(motion && index !== (view?.focusIndex ?? 0) && motion.dim < 1 ? { opacity: motion.dim } : {}),
+                  // paper-cutout: a card or logo tile is cut out with a torn edge and a soft shadow.
+                  ...(torn && TORN_DEVICES.includes(object.device) ? { filter: `url(#torn-${beat.id})` } : {}) }}>
+                  <Device object={deviceObject} events={props.events} box={box} tokens={tokensFor(object.device, props.tokens, profile)} aspect={props.aspect} frame={at} />
                 </AbsoluteFill>
               )
-            })}
+            }),
+              overlays.includes('brackets') && view?.focus ? <Brackets key="brackets" focus={view.focus} width={width} height={layerHeight} tokens={props.tokens} /> : null,
+            ].filter((node, i, all) => profile ? true : i > 0 && i < all.length - 1)}
             </AbsoluteFill>
           </AbsoluteFill>
         )

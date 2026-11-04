@@ -109,9 +109,10 @@ export function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[],
   return { layer, dim, fade }
 }
 
-/** The ground a style lays behind a STAGE beat with no plate: the house radial wash, or ink_deep. */
+/** The ground a style lays behind a STAGE beat with no plate: the house radial wash, or ink_deep (dark-keynote, and the
+ *  dark ground of hud-terminal and line-boil). */
 export function stageGround(profile: MotionProfile | undefined, tokens: EngineTokens): CSSProperties {
-  return profile?.ground.kind === 'inkDeep' ? { background: tokens.inkDeep }
+  return profile?.ground.kind === 'inkDeep' || profile?.ground.kind === 'dark' ? { background: tokens.inkDeep }
     : { background: `radial-gradient(ellipse at center, ${tokens.inkSoft} 0%, ${tokens.inkDeep} 100%)` }
 }
 

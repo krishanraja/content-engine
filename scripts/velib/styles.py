@@ -143,6 +143,19 @@ def signature(profile: dict) -> list[str]:
         own.append('halftone')
     if ground.get('kind') == 'inkDeep':
         own.append('inkDeep')
+    # The five given looks of their own on 4 Nov 2026 (kit/overlays.tsx, kit/heroType.tsx, chrome/LeadCaption.tsx).
+    if ground.get('kind') == 'dark':
+        own.append('dark')
+    if ground.get('texture') == 'paper':
+        own.append('paper')
+    overlays = profile.get('overlays') or []
+    own += [o for o in ('brackets', 'torn') if o in overlays]
+    if (profile.get('type') or {}).get('hero'):
+        own.append('hero')
+    if (profile.get('captions') or {}).get('mode') == 'lead':
+        own.append('lead')
+    if profile.get('boil'):
+        own.append('boil')
     if camera == 'push' or not own:
         own.append('any')
     return own
@@ -163,9 +176,15 @@ def touches(profile: dict, window: dict, rules: dict) -> tuple[bool, str]:
         if rule.get('stage') and any(b.get('layout') == 'STAGE' and (b.get('plate') or {}).get('source') == 'none'
                                      for b in window.get('beats') or []):
             return True, ''
+        if rule.get('ground') and any(b.get('layout') == 'SPLIT' or (b.get('layout') == 'STAGE' and (b.get('plate') or {}).get('source') == 'none')
+                                      for b in window.get('beats') or []):
+            return True, ''
+        if rule.get('captions') and window.get('captions'):
+            return True, ''
         if set(rule.get('devices') or []) & present:
             return True, ''
-        need = rule.get('devices') or (['his take'] if rule.get('take') else ['a graphics-only STAGE beat'] if rule.get('stage') else ['a device'])
+        need = rule.get('devices') or (['his take'] if rule.get('take') else ['a graphics-only STAGE beat'] if rule.get('stage')
+                                       else ['a SPLIT or graphics-only beat'] if rule.get('ground') else ['his captions'] if rule.get('captions') else ['a device'])
         missed.append(f'{effect} needs {" or ".join(need)}')
     return False, ('its effects touch no device in this window (' + '; '.join(missed) + '; the window has '
                    + (', '.join(sorted(present)) or 'no device') + ')')
