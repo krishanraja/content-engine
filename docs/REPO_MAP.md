@@ -1163,6 +1163,9 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingSpokenExample`
 - `type MakingSpokenDelta`
 - `interface Making`
+- `const PREFLIGHT_CHECKS`
+- `interface MakingPreflight`
+- `function preflightKey(p: Pick<MakingPreflight, 'check' | 'format' | 'name'>): string`
 - `interface MakingGate`
 - `type MakingStyleVerdict`
 - `interface MakingGates`
@@ -2051,6 +2054,7 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
 - `function gatePatch(kind: GateKind, body: Body, now: string): MakingGates`
 - `async function recordGate(db: SupabaseClient, pieceId: string, patch: MakingGates, now: string): Promise<string | null>`
+- `function pressIncidents(week: string, id: string, body: Body, prior: MakingGates | null | undefined): Incident[]`
 - `function gateReport(week: string, id: string, body: Body, now: string)`
 - `function feelReport(week: string, id: string, body: Body, now: string)`
 - `function offdayReports(week: string, id: string, body: Body, now: string)`

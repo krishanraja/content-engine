@@ -155,4 +155,31 @@ def write(spec, cut, directory, reviewer, findings, viewed, references=None):
     errors = validate(value)
     if errors:
         raise ValueError('; '.join(errors))
-    return write_json(directory / f'verdict.{cut}.json', value)
+    path = write_json(directory / f'verdict.{cut}.json', value)
+    if value['blocking']:
+        critic_block_incident(spec, cut, directory, value)
+    return path
+
+
+def critic_block_incident(spec, cut, directory, value) -> str:
+    """A Critic block is one engine_incidents row (the failure loop), filed once per file and finding. Never raises."""
+    try:
+        import sys
+        from .common import ROOT
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        import incidents  # noqa: PLC0415
+        from . import preflight
+        blocks = [f for f in value['findings'] if f.get('severity') == 'block']
+        folder = Path(directory).parent
+        if not preflight.real_piece(folder):
+            return 'not filed: not a piece under docs/plans'
+        receipts = list(preflight._preflight().latest(preflight._preflight().from_ledger(folder)).values())
+        return incidents.record({
+            'stage': 'cut', 'kind': 'critic_block', 'maker': 've', 'skill': 've',
+            'piece_path': str(folder.relative_to(ROOT) if folder.is_relative_to(ROOT) else folder)[:300],
+            'artifact_ref': f'verdict.{cut}.json', 'artifact_sha256': value['sha256'], 'session_ref': str(value['reviewer'])[:300],
+            'preflight': receipts or None,
+            'meta': {'piece': spec.get('piece_id'), 'cut': cut, 'findings': [{'area': f['area'], 'text': f['text'][:300]} for f in blocks][:10]},
+            'client_ref': incidents.client_ref('critic', value['sha256'], [f['text'] for f in blocks])})
+    except Exception as error:  # noqa: BLE001 - a record never stops the verdict
+        return f'not filed ({type(error).__name__})'
