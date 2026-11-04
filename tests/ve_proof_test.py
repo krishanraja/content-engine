@@ -20,7 +20,7 @@ os.environ['VE_GATES_OFFLINE'] = '1'  # never reach the engine from a test; the 
 
 import creative_direction  # noqa: E402
 import ve  # noqa: E402
-from velib import expect, gates, packet, proof, refgate, styles  # noqa: E402
+from velib import expect, gates, guards, packet, proof, refgate, styles  # noqa: E402
 from velib.common import sha256_file  # noqa: E402
 
 FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
@@ -158,6 +158,7 @@ class RenderRefusal(unittest.TestCase):
         self.spec = whole()
         self.props = props_for(self.spec)
         self.spec_file = self.dir / 'spec.json'
+        guards.freeze(self.dir)  # the engine his storyboard signature stands for (ve expect writes it)
 
     def tearDown(self):
         self.tmp.cleanup()
