@@ -75,6 +75,7 @@ Put each new moment beside a reference moment, in motion, at full size, with sou
 - **Friday tall: confirmed.** Week 2026-10-19, the Friday 23 October tab, asset `fri-short-video`. It first reached Drive at 21:28:54 UTC on 28 October and the board at 21:35:59 UTC that day, so whether he had watched this file when he first named the floor is not established.
 - **Monday wide: confirmed.** Week 2026-10-26, the Monday 26 October tab, asset `mon-video-long`, the same file as the 16:9 master in `docs/plans/2026-10-26-monday/video/REVIEW.md`.
 - **Monday tall: confirmed.** Week 2026-10-26, the Monday 26 October tab, asset `mon-video-short`, the archive master, not the smaller share copy.
+- **Monday 2 Nov wide and Monday 2 Nov tall: confirmed, and the Critic's first comparison.** Krish, 4 November 2026, asked whether "Who trains your 2030 seniors" joins as the Critic's first reference: "Yeah, sure." Week 2026-11-02, the Monday tab, assets `mon-video-long` and `mon-video-short` (board read 4 November, read only). What it sets is its single visual idea, one object carrying every number ("The Ladder", `docs/plans/2026-11-02-monday/motion-system.md`); the tall cut's layout under Instagram's buttons is not the bar (he called the posted Reel cramped, F30).
 
 ### Where it sits beside what is already here
 
