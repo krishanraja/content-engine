@@ -3611,6 +3611,12 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function evidenceState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/focus.ts`
+
+- `const FOCUS: Readonly<Record<string, (p: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | 'frame'>) => Focus …`
+- `const PEN: Readonly<Record<string, (object: EngineObject, events: readonly EngineEvent[]) => (frame: number) => Point |…`
+- `const TYPED: readonly string[]`
+
 ### `apps/renderer/src/engine/devices/hand_phone_stage/index.tsx`
 
 - `function Plate({name,style}:{name:string;style?:React.CSSProperties})`
@@ -3885,6 +3891,22 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/kit/flags.tsx`
 
 - `function PrintedFlag({ kind, tokens, width = 214, height = 113 }: { kind: 'usa' | 'china' | 'unknown'; tokens: EngineTo…`
+
+### `apps/renderer/src/engine/kit/focus.ts`
+
+- `type Point = readonly [number, number]`
+- `interface Focus`
+- `const SAFE_TALL`
+- `const SAFE_WIDE`
+- `interface Room`
+- `function focusRoom(aspect: '9:16' | '16:9', layout: string, takeBehind: boolean, slots: readonly Box[]): Room`
+- `function zoomTarget(rect: Box, room: Room, scaleTo: number): { scale: number; centre: Point; mapped: Box }`
+- `function insideRoom(box: Box, room: Room, slack = 0.5): boolean`
+- `function pathTrack(d: string): Track`
+- `function pointAlong(d: string, fraction: number): Point`
+- `const PEN_FOLLOW`
+- `function followPen(pen: (frame: number) => Point | undefined, fromFrame: number, frame: number, centre: Point): { centr…`
+- `function placed(box: Box, place?: { left: number; top: number; scale: number }): Box`
 
 ### `apps/renderer/src/engine/kit/glass/bubble.tsx`
 
