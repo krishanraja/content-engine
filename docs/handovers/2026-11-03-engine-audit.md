@@ -101,3 +101,20 @@ Proposal: one `provenance` column (his_words, his_press, engine_note) on the led
 press, never as a sentence for him; learnings, failures, cues and the floor read as views of it; the 215 floor
 standards grouped into about 20 on one page for his yes through the existing Rejections route. taste-guard puts each
 of these to him in person.
+
+### Retired (4 Nov 2026, Krish's yes)
+
+Four `taste_claims` candidates for `publication` were engineering wishes, not taste, and are now `retired` (rows kept as
+history): `144d6e02` (deliver the exact file asked for), `6c4802b8` (say nothing twice), `ea3a57cd` (no duplicated
+copies), `47ac8417` (components stay in one system). Those belong to AGENTS.md and the house rules, which already hold
+them; the inspirationhouse distiller no longer drafts claims of this kind.
+
+### Decided (4 Nov 2026, Krish: "yes 1–4, retire 5 and 6 as long as they are actually reality now")
+
+Approved, the first four approved taste rules for Make Your Mind Up (`get_approved_taste` count 4, read back):
+titles signed off beside the finished cut (`b0b7764e`); no insider shorthand (`4b77c851`); every line makes sense read
+aloud (`03f25f8f`); titles hold back the twist (`944e12dc`). Rejected and retired, after checking each is already live:
+one synced publishing pipeline (`24929d9e`; the web board at content.krishraja.com, its live overlay and auto-merge)
+and the ideas system (`3176f1f1`; Sunday sourcing, cue-steered ranking and the queue exist, and his 28 Oct ruling
+replaced the Story, Angle, Cute and Curious buckets with the five presses). Still undecided: 20 candidate claims and
+the 215 rejection-floor standards (0 approved), the next proposal for his yes.
