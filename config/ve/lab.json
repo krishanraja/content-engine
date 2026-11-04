@@ -1,0 +1,18 @@
+{
+  "about": [
+    "The style and caption lab (scripts/velib/lab.py, ve lab): every drawable motion style and every caption look rendered on one window of one archived take of his, outside any piece, for one rating sitting (Krish, 4 Nov 2026: \"we need to experiment carefully, as opposed to just producing videos experimentally and then seeing that they're shit\").",
+    "The same reel, rendered again on every engine change and compared with the last, is the engine's regression check: the house look must not move.",
+    "The take is pinned by sha256 and fetched with scripts/post-pack/recording.py; media is never committed. Renders land in .cache/ve/lab/<engine>/; hashes and scores go to docs/ve/lab/<date>.json."
+  ],
+  "take": {
+    "name": "thurs5Novrecording-nospendingnosending.mp4",
+    "sha256": "203d10c946954c5343ccec5b0e3a3626e9b2dfd7ef376485ff1bbbf4f35dddd5"
+  },
+  "piece_dir": "docs/plans/2026-11-05-thursday-no-spending/ve",
+  "cut": "short",
+  "window": [315, 555],
+  "assets_prefix": "/home/user/content-engine/.cache/produce/2026-11-05-no-spending/assets",
+  "scale": 0.5,
+  "caption_looks": ["house", "word"],
+  "house_moves_at": 1.0
+}

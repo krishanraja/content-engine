@@ -1,0 +1,56 @@
+{
+  "style": "data-story",
+  "name": "The Ladder: one object, every number on it",
+  "saved_from": {
+    "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+    "title": "Who trains your 2030 seniors (Monday 2 Nov 2026)",
+    "approval": "Krish's favourite cut; he agreed on 4 Nov 2026 that it is the Critic's first comparison (config/reference-cuts.json mon02-wide and mon02-tall, critic_first)",
+    "cuts": [
+      {"id": "mon02-wide", "sha256": "a7eb0a498d6f5ec0dc9d2c6342c72f01151bb10710760731d2325b6a0c4ec48b"},
+      {"id": "mon02-tall", "sha256": "2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a"}
+    ],
+    "motion_system": "docs/plans/2026-11-02-monday/motion-system.md",
+    "made_by": "per-piece code (docs/plans/2026-11-02-monday/rebuild/); ve cannot draw the through-line yet (docs/ve/cards/through-line/ve-through-line-1.fields.json)"
+  },
+  "thesis": "One object carries the whole piece, and every number is drawn on, beside or instead of a part of it, so the viewer always knows what a number is about. Krish, on the chart: \"The chart makes a boring research report instantly understandable.\"",
+  "invariants": [
+    "One through-line object for the whole piece, decided before the storyboard (spec style.idea.object); it never morphs into a different object.",
+    "One number per frame, on the object; the number that matters most takes the series colour as its underline only.",
+    "Every number carries its producer at the foot of the frame, in the mono face: PRODUCER · DATE.",
+    "Real logos appear once, at the size of a part of the object, never redrawn; a real page is shown as itself, its one line highlighted, with a slow push.",
+    "Every move means something: the object changes state to say what the voice says (a count, a thinning, a growth, marks lost or copied, a light, a line, the camera resting on a gap).",
+    "Scenes that step away from the object end by turning back into it, changed."
+  ],
+  "accent": "Brand roles only, never hex: the series colour marks the most important number (underline only); mint marks only the answer (the questions and the actions). Nothing else is coloured.",
+  "layers": {
+    "stage": "The ink desk with the brand's grain; it does not change within a beat.",
+    "subject": "The through-line object (Monday: the ladder, rungs as the stages of a working life).",
+    "devices": "Numbers in Anton, producer credits in IBM Plex Mono, real logos and pages, the question and action cards."
+  },
+  "signature_devices": [
+    "the count on a part: a number counts down or up in one second while its part thins or grows (Monday's 27% to 9% on the junior rung)",
+    "two bars side by side, one growing to its multiple (Monday's agent hours against staff hours)",
+    "unit marks: a field of marks loses or gains some, or copies itself (Monday's 20 tellers to 13, then 43% more branches)",
+    "the missing part: the object returns with a part gone and the camera rests on the gap (the frame the cover echoes)",
+    "the line: one part lights and a line runs to another (2030's top rung to the missing junior rung)"
+  ],
+  "rotate": "Use one or two signature devices a beat; never every device in one beat.",
+  "shot_grammar": {
+    "source": "docs/ve/MOTION_STANDARD.md (signed by Krish, 3 Nov 2026)",
+    "cuts_per_minute_graphics_led": 30,
+    "longest_hold_without_change_s": 3.5,
+    "entrance_settle_frames": [4, 7],
+    "change_density": 1.0,
+    "longest_still_s": 1,
+    "kinds_of_beat_in_any_15s": 3
+  },
+  "captions": "Word captions, one word at a time, off his face (face-with-proof default, MOTION_STANDARD); on-screen words never repeat the sentence he is saying.",
+  "sound": "One sound, on the big moment only (THE_BAR ruling 11): Monday's is the drop, the count down the junior rung.",
+  "opening_and_close": "The hook on his face first; one calm close, held long enough to read.",
+  "never": [
+    "No figures or icons acting out a sentence; the object only ever shows a number or the gap.",
+    "No on-screen words that repeat what he is saying: a card adds the number, the producer, the date or the changed word.",
+    "No eyebrow labels, asterisks, \"our read\" tags or AI notes.",
+    "Never his name."
+  ]
+}

@@ -24,6 +24,7 @@
   python scripts/ve.py said <piece> --take <id> --teleprompter <script.txt>   what he said vs the script; proposed words
   python scripts/ve.py voice-ab <piece> --cut <cut> --assets-dir <dir> --at <s>  raw and repaired voice for his ear
   python scripts/ve.py sfx audition <piece> --cut <cut> --assets-dir <dir> --candidates <ids>   big-moment sounds for his ear
+  python scripts/ve.py lab render --take <pinned take> --brand-dir <dir> | diff --against <dir> | verdict --module <id> --verdict <v> --said "<his words>" --on <date>
   python scripts/ve.py sfx approve --id <id> --words "<his words>" --on <date> --audition <ve>/sfx-audition.json | sfx stage --assets-dir <dir>
   python scripts/ve.py brief <piece> [--cut <cut>]   one brief per plate, with card fields; never dispatches
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
@@ -384,19 +385,14 @@ def cmd_keyframes(args) -> int:
 
 
 def cmd_study(args) -> int:
-    from velib.qc import duration_s, frame_diffs, motion
-    from velib.common import ffmpeg
-    text = subprocess.run([ffmpeg(), '-hide_banner', '-nostats', '-i', args.ref, '-vf', 'scdet=threshold=5,metadata=print', '-f', 'null', '-'],
-                          capture_output=True, text=True, errors='replace').stderr
-    cuts = [round(float(t), 2) for t in re.findall(r'lavfi\.scd\.time: ([\d.]+)', text)]
-    move = motion(frame_diffs(args.ref))
-    length = duration_s(args.ref)
-    card = {'reference': args.ref, 'duration_s': round(length, 2), 'cuts': cuts,
-            'cuts_per_minute': round(len(cuts) / (length / 60), 1) if length else 0, **move}
-    out = Path(args.out) if args.out else Path(args.ref).with_suffix('.grammar.json')
-    write_json(out, card)
-    print(f"ve study: {card['cuts_per_minute']} cuts/min, picture changes in {move['change_density'] * 100:.0f}% of seconds, "
-          f"longest still {move['longest_still_s']} s, loop {move['loop_period_s']} -> {out}")
+    """A reference's grammar card: cuts, motion, shots and pace, zooms, loudness and words a minute (velib.study)."""
+    from velib import study
+    card = study.study(args.ref, args.out)
+    pace = card.get('pace') or {}
+    print(f"ve study: {card['cuts_per_minute']} cuts/min, median shot {pace.get('median_shot_s')} s, picture changes in "
+          f"{card['change_density'] * 100:.0f}% of seconds, longest still {card['longest_still_s']} s, "
+          f"{card.get('loudness_lufs')} LUFS, {len(card.get('zooms') or [])} zoom(s) -> {args.out or Path(args.ref).with_suffix('.grammar.json')}")
+    print(f"ve study: {study.NOTE}")
     return 0
 
 
@@ -545,7 +541,7 @@ def cmd_refs(args) -> int:
             print(f've refs: no props.{args.cut}.json, so no motion strips for the Critic: run ve compile for this cut')
             return 0
         props, edl = critic_inputs.load_for(directory, args.cut)
-        for path in critic_inputs.write(args.cut, directory, video, props, qc, edl):
+        for path in critic_inputs.write(args.cut, directory, video, props, qc, edl, spec):
             print(f've refs: {path}')
         return 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
@@ -701,6 +697,12 @@ def cmd_conform(args) -> int:
         for kept in edl['unscripted_kept']:
             print(f"  kept: \"{kept['word']}\" in line {kept['line']} ({kept['take']} at {kept['src_s']} s): no agreed gap lets it go")
         print(f've conform: {edl_path}\nve conform: {words_path}')
+        from velib import faceflags
+        cover = faceflags.write_cover(edl, directory)
+        if cover:
+            windows = load_json(cover)['windows']
+            print(f've conform: {len(windows)} moment(s) in the cut a graphic could cover (ve faces; advisory, never '
+                  f'changes the take): {cover}')
         if args.render:
             if not args.assets_dir:
                 raise ValueError('--render needs --assets-dir')
@@ -721,6 +723,33 @@ def cmd_conform(args) -> int:
         return 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f've conform: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_faces(args) -> int:
+    """Where on a take he looks off the lens, closes his eyes or turns his head (advisory; F14)."""
+    from velib import faceflags, takes
+    try:
+        _spec_file, _spec, directory = _ve_dir(args.piece)
+        record = takes.load_take(directory, args.take)
+        problem = takes.check_media(record)
+        if problem:
+            raise ValueError(problem)
+        try:
+            scanned = faceflags.scan(record['media']['path'])
+        except ImportError:
+            print('ve faces: mediapipe is not installed here (pip install mediapipe); nothing read', file=sys.stderr)
+            return 1
+        found = faceflags.flags(scanned)
+        out = write_json(faceflags.faces_path(directory, args.take), {'take': args.take, 'media_sha256': record['media']['sha256'],
+                                                                      **found})
+        counts = {kind: sum(1 for w in found['windows'] if w['kind'] == kind) for kind in faceflags.KINDS}
+        print(f"ve faces: {found['with_face']} of {found['samples']} samples see his face; "
+              + ', '.join(f'{n} {kind.replace("_", " ")}' for kind, n in counts.items()) + ' window(s); advisory, uncalibrated')
+        print(f've faces: {out}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've faces: {error}', file=sys.stderr)
         return 1
 
 
@@ -796,6 +825,47 @@ def cmd_sfx(args) -> int:
         return 0
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
         print(f've sfx: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_lab(args) -> int:
+    """The style and caption lab: every drawable style and caption look on one window of his pinned take, outside
+    any piece (Krish, 4 Nov 2026: "experiment carefully"); the same reel is the engine's regression check."""
+    from velib import lab
+    try:
+        cfg = lab.config()
+        out = Path(args.out) if args.out else lab.CACHE / lab.engine_id()
+        if args.action == 'render':
+            if not (args.take and args.brand_dir):
+                raise ValueError('render needs --take <the pinned recording> and --brand-dir <the brand marks>')
+            assets = lab.stage(cfg, Path(args.take), Path(args.brand_dir), out)
+            from velib.render import render
+            manifest = lab.render(cfg, assets, lambda p, o: render(p, o, args.scale or cfg['scale']), out, args.only)
+            print(f"ve lab: {len(manifest['looks'])} look(s) on engine {manifest['engine']} in {out}")
+            reel = lab.reel(out)
+            print(f've lab: {reel}\nve lab: {lab.sheet(out)}')
+            return 0
+        if args.action == 'diff':
+            if not args.against:
+                raise ValueError('diff needs --against <an earlier lab folder>')
+            report = lab.diff(out, Path(args.against))
+            print(json.dumps(report, indent=1))
+            print(f've lab: {lab.record(load_json(out / "manifest.json"), report, shot=lab.as_shot(out))}')
+            return 1 if report['house_moved'] else 0
+        if args.action == 'record':
+            shot = lab.as_shot(out)
+            moved = sorted(look for look, row in shot.items() if row['moved'])
+            print(f've lab: as shot: {len(shot)} look(s) read; ' + (f"his room moved in {', '.join(moved)}" if moved
+                  else 'none moved his room off the take'))
+            print(f've lab: {lab.record(load_json(out / "manifest.json"), shot=shot)}')
+            return 0
+        if not (args.module and args.verdict and args.on):
+            raise ValueError('verdict needs --module, --verdict picked|seen|not-for-us, --said "<his words>" and --on <date>')
+        m = lab.verdict(args.module, args.said, args.on, args.verdict)
+        print(f"ve lab: {args.module} is {m.get('krish_verdict')} after {m.get('trials')} showing(s)")
+        return 0
+    except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
+        print(f've lab: {error}', file=sys.stderr)
         return 1
 
 
@@ -1469,6 +1539,9 @@ def main() -> int:
     p.add_argument('--render', action='store_true', help='render the conformed picture and dialogue in one graph')
     p.add_argument('--assets-dir'); p.add_argument('--joins-reel', action='store_true')
     p.set_defaults(fn=cmd_conform)
+    p = sub.add_parser('faces', help='where on a take he looks off the lens, closes his eyes or turns his head (advisory)')
+    p.add_argument('piece'); p.add_argument('--take', required=True)
+    p.set_defaults(fn=cmd_faces)
     p = sub.add_parser('said', help='what he said on a take against the script he read, and the words the cut should carry')
     p.add_argument('piece'); p.add_argument('--take', required=True)
     p.add_argument('--teleprompter', required=True, help='the script text he read (the Teleprompter script, saved as text)')
@@ -1485,6 +1558,13 @@ def main() -> int:
     p.add_argument('--id'); p.add_argument('--words'); p.add_argument('--on')
     p.add_argument('--audition', help="the piece's sfx-audition.json he heard the sound in")
     p.set_defaults(fn=cmd_sfx)
+    p = sub.add_parser('lab', help='every drawable style and caption look on one window of his pinned take, outside any piece')
+    p.add_argument('action', choices=('render', 'diff', 'record', 'verdict'))
+    p.add_argument('--take'); p.add_argument('--brand-dir'); p.add_argument('--out'); p.add_argument('--against')
+    p.add_argument('--scale', type=float); p.add_argument('--only', nargs='+')
+    p.add_argument('--module'); p.add_argument('--verdict', choices=('picked', 'seen', 'not-for-us'))
+    p.add_argument('--said', default=''); p.add_argument('--on')
+    p.set_defaults(fn=cmd_lab)
     p = sub.add_parser('file', help="file READY cuts in the archive and the post's 3 Video folder, bound to piece_id")
     p.add_argument('piece'); p.add_argument('--subject'); p.add_argument('--date')
     p.add_argument('--cut', action='append', help='a cut to file (default: every cut; one per shape)')

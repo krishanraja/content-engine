@@ -67,6 +67,11 @@ describe('ve', () => {
     ['one sound on the big moment: auditioned on his cut, approved only from his words, the kit from approved rows (ruling 11)', 'tests/ve_sfx_test.py'],
     ['the Critic sees the cut in motion: strips per beat, per move and per cut, and QC numbers marked not heard (F16, F38)', 'tests/ve_critic_inputs_test.py'],
     ['each filed piece records what it used; the next one is told when it repeats them, never refused (F14)', 'tests/ve_history_test.py'],
+    ['the lab: every look on one window of his pinned take, outside any piece; a lab pick is liked, never tested', 'tests/ve_lab_test.py'],
+    ['his room as shot: the lower quarter of his take compared with the conformed take, advisory and never counted (F14)', 'tests/ve_as_shot_test.py'],
+    ['face flags: off the lens, eyes closed, head turned against his own median; moments to cover in the cut, never a change of take (F14)', 'tests/ve_faces_test.py'],
+    ['ve study: a reference in numbers beside a contact sheet, handed to the Critic as a description, never a target (F03)', 'tests/ve_study_test.py'],
+    ['every measurement the props supply reaches QC, each caption page with where it is drawn', 'tests/ve_qc_modules_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])

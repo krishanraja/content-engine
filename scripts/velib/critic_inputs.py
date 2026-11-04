@@ -112,6 +112,23 @@ def cut_rows(props: dict, edl: dict | None) -> list[tuple[str, list[int]]]:
     return [(f'cut at f{at}: {what}', [at + k for k in CUT_OFFSETS]) for at, what in cut_frames(props, edl)]
 
 
+def reference_numbers(spec: dict) -> dict:
+    """Each board reference's grammar card (ve study, velib.study) when one sits beside its video: what the reference
+    does in numbers, for the Critic to compare with the cut. Never a target."""
+    from . import refgate, study  # noqa: PLC0415
+    out = {}
+    for ref in (spec.get('brand') or {}).get('references') or []:
+        try:
+            card = refgate.resolve(ref, fetch=lambda *_: None).with_suffix('.grammar.json')
+        except (ValueError, KeyError):
+            continue
+        if card.is_file():
+            data = load_json(card)
+            out[ref.get('card') or card.stem] = {'note': study.NOTE, **{k: data.get(k) for k in (
+                'duration_s', 'cuts_per_minute', 'change_density', 'longest_still_s', 'pace', 'zooms', 'loudness_lufs', 'speech')}}
+    return out
+
+
 def numbers(props: dict, qc: dict) -> dict:
     """QC's measures for the Critic, copied, with motion's still runs placed in their beats."""
     checks = qc.get('checks') or {}
@@ -129,7 +146,8 @@ def numbers(props: dict, qc: dict) -> dict:
             'note': 'Numbers QC took on this file. They describe the cut; they are not the Critic hearing it.'}
 
 
-def write(cut: str, directory: Path, video: Path, props: dict, qc: dict, edl: dict | None = None) -> list[Path]:
+def write(cut: str, directory: Path, video: Path, props: dict, qc: dict, edl: dict | None = None,
+          spec: dict | None = None) -> list[Path]:
     """Write the three strips and numbers.<cut>.json beside the cut's QC record; return their paths."""
     directory, video = Path(directory), Path(video)
     if qc.get('sha256') and qc['sha256'] != sha256_file(video):
@@ -142,7 +160,10 @@ def write(cut: str, directory: Path, video: Path, props: dict, qc: dict, edl: di
     for kind, rows in kinds:
         if rows and frames:
             out.append(sheet(rows, frames, directory / f'{kind}.{cut}.jpg', last))
-    out.append(write_json(directory / f'numbers.{cut}.json', numbers(props, qc)))
+    figures = numbers(props, qc)
+    if spec:
+        figures['references'] = reference_numbers(spec)
+    out.append(write_json(directory / f'numbers.{cut}.json', figures))
     return out
 
 

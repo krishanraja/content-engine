@@ -2042,6 +2042,16 @@
           "file": "scripts/velib/guards.py",
           "contains": "def type_note(",
           "how": "ve proof lists the cut's type treatments for his Approve proof press"
+        },
+        {
+          "file": "scripts/velib/lab.py",
+          "contains": "def render(cfg",
+          "how": "ve lab: every drawable style and caption look on one window of his pinned take, outside any piece, rated in one sitting; a lab pick makes a style liked, never tested"
+        },
+        {
+          "file": "docs/ve/RUNBOOK.md",
+          "contains": "first in the lab (`ve lab render`",
+          "how": "the runbook sends a new look to the lab before any piece"
         }
       ]
     },

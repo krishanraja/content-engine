@@ -351,11 +351,16 @@ class QCContracts(unittest.TestCase):
             self.assertEqual(ve.main(), 0)
         self.assertEqual(set(run_qc.call_args.kwargs),
                          {'pages', 'beats', 'aspect', 'events', 'slots', 'region', 'mark_png', 'dialogue_master', 'edl', 'joins',
-                          'heard', 'script', 'take_words', 'caption_style'})
+                          'heard', 'script', 'take_words', 'caption_style', 'plate_video', 'plate_offset'})
         report = write.call_args.args[1]
         self.assertTrue(report['complete'], report)
         self.assertTrue(report['measured_pass'], report)
-        mocks['ocr'].assert_called_once_with('cut.mp4', props['captions'], (260, 773, 1400, 187))
+        # Each page carries where it is drawn (ve-qc-2-captions-where-drawn): the caption box plus 12 px.
+        mocks['ocr'].assert_called_once()
+        path, pages, region = mocks['ocr'].call_args.args
+        self.assertEqual((path, region), ('cut.mp4', (260, 773, 1400, 187)))
+        self.assertEqual([{k: v for k, v in page.items() if k != 'region'} for page in pages], props['captions'])
+        self.assertEqual(pages[0]['region'], (248, 761, 1424, 211))
         mocks['mark_tile'].assert_called_once_with('cut.mp4', 'mark.png', props['beats'], '16:9')
         mocks['decoder'].assert_called_once_with('cut.mp4', [2.0])
         mocks['av_xcorr'].assert_called_once_with('cut.mp4', 'master.wav', [
