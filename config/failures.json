@@ -2008,8 +2008,7 @@
       "what": "The off-day post wore under.the.hood series chrome and the series music bed (no-curves-instrumental); a \"light stage\" brand treatment (#380) was invented from his note \"The branding is wrong\" and never checked with him.",
       "symptom": "An off-day post looked and sounded like a Wednesday episode.",
       "cause": "The written rules still allow it: docs/GROWTH-HANDOFF.md and scripts/velib/compile.py let an off-day post wear a series' house dress. Neutral off days are the report's lesson 8, a proposal.",
-      "status": "open",
-      "planned_mechanism": "scripts/velib/guards.py offday_problems is built and tested (series bed and sting refused on an off day); it binds when Krish says yes and config/ve/production-guards.json off_day.status becomes approved. Neutral chrome in compile follows that yes.",
+      "status": "guarded",
       "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
       "related": [
         "F07-brand-tokens-not-brand"
@@ -2021,7 +2020,27 @@
           "evidence": "GROWTH-HANDOFF.md: an off-day folder is named off.day \"even when it wears a series' house dress\""
         }
       ],
-      "guard_level": "prose"
+      "guard_level": "lint_refuse",
+      "surface": "Off days have their own music and look: ve lint refuses an off-day spec whose bed is not an off-day track from config/music-library.json (\"for\": \"off-day\", in rotation) or that carries a series sting, and compile draws an off-day cut in the house mint without the series promise.",
+      "guards": [
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def off_day_beds(",
+          "how": "off-day bed and sting refused by ve lint from 9 Nov",
+          "test": "python3 tests/ve_thursday_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "'channel': tokens['mint'] if off else",
+          "how": "an off-day cut never wears the series colour or promise",
+          "test": "python3 tests/ve_thursday_guards_test.py"
+        }
+      ],
+      "decided": {
+        "by": "Krish",
+        "on": "2026-11-04",
+        "said": "Yes, give off days their own music and look - Rotate."
+      }
     },
     {
       "id": "F37-his-words-questioned-unchecked",

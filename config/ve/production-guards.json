@@ -17,7 +17,7 @@
     "overlap": 0.6
   },
   "engine": {
-    "why": "The engine a storyboard was signed on is the engine that draws its proof and its cut: Thursday's key-frame checks failed by construction while the background, chrome, caption height and colour, chat card width and headline ground changed mid-piece. A change needs Krish's exception approval bound to the new engine hash.",
+    "why": "The engine a storyboard was signed on is the engine that draws its proof and its cut: Thursday's key-frame checks failed by construction while the background, chrome, caption height and colour, chat card width and headline ground changed mid-piece. A change needs Krish's exception approval bound to the new engine hash. The cut's picture and sound paths (conform, takes, words, voice, audio, the quick-edit episode and words gate ve reads, and the voice chain) are in it too, so a mid-piece change to how his take is cut or heard is seen (asked by the predictability session, 4 Nov). The sfx kits and lint.py are left out on purpose: approving a sound during a piece writes the kit and would refuse that piece's own proof and cut, and a cut naming no sound cannot be changed by it; lint cannot change a cut's picture or sound. A path that does not exist yet is simply empty.",
     "paths": [
       "apps/renderer/src",
       "scripts/velib/compile.py",
@@ -49,10 +49,8 @@
     "mode": "advisory"
   },
   "off_day": {
-    "status": "proposed",
-    "why": "Lesson 8 of the Thursday report: off days look neutral and sound different. Not yet his rule: docs/GROWTH-HANDOFF.md and scripts/velib/compile.py still let an off-day post wear a series' house dress. Built and tested; binds once Krish says yes (set status to approved).",
-    "series_beds": [
-      "no-curves-instrumental"
-    ]
+    "status": "approved",
+    "why": "Krish, 2026-11-04: \"Yes, give off days their own music and look - Rotate.\" An off-day piece (published on a day that is not its series' day) beds on a track the music ledger marks for off days (config/music-library.json \"for\": \"off-day\", rotated across pieces), wears no series sting, and compile draws it in the house mint, never the series colour or promise.",
+    "off_day_for": "off-day"
   }
 }
