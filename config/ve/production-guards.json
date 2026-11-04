@@ -1,0 +1,32 @@
+{
+  "_about": "The guards built from the Thursday 5 Nov failure report (docs/learning/2026-11-04-thursday-killed.md), read by scripts/velib/guards.py. Each binds a whole cut of a piece published from creative_direction.MOTION_FROM (9 Nov 2026), like the proof gate. Values here enforce what Krish already approved; an entry with status 'proposed' is built and tested but binds nothing until he says yes.",
+  "idea": {
+    "why": "No idea, no production. The signed storyboard names one visual idea, as Monday 2 Nov's motion-system.md did: the one object or system, what each move means, a never-list, and the real artifact where proof exists. Enforces the approved floor groups motion_explains, words_add and real_evidence, and learning visuals-add-not-repeat ('one named motion system per piece, decided before the storyboard').",
+    "object_min_chars": 12,
+    "means_min_chars": 8,
+    "real_kinds": ["screenshot", "document", "recording", "photo"]
+  },
+  "retype": {
+    "why": "Show the real thing, never re-type it (approved floor group real_evidence: 'Show the real thing: dated screenshots, real products, real interactions'). A device whose on-screen words copy a named real artifact's words is refused; the artifact itself is shown.",
+    "min_words": 4,
+    "overlap": 0.6
+  },
+  "engine": {
+    "why": "The engine a storyboard was signed on is the engine that draws its proof and its cut: Thursday's key-frame checks failed by construction while the background, chrome, caption height and colour, chat card width and headline ground changed mid-piece. A change needs Krish's exception approval bound to the new engine hash.",
+    "paths": ["apps/renderer/src", "scripts/velib/compile.py", "config/ve/brand-tokens.json", "config/ve/devices.json", "config/ve/fonts.json"],
+    "skip_suffixes": [".test.ts", ".test.tsx", ".md"]
+  },
+  "loops": {
+    "why": "docs/ve/RUNBOOK.md: 'Maximum 2 fix loops total'. Thursday rendered at least seven full cuts on 4 Nov. After two full renders of a cut since Krish's last press, the next one waits for a new press: bring him the cut or a question.",
+    "full_renders_per_press": 2
+  },
+  "type": {
+    "why": "Approved floor group house_brand: 'the brand book's fonts' (config/ve/brand-tokens.json type_roles: display, structure, dek, data). Thursday put at least five treatments on screen. A treatment is a type role on a surface (the caption, its loud word, the held title, a card); a cut carries at most as many as the brand book has roles.",
+    "max_treatments": 4
+  },
+  "off_day": {
+    "status": "proposed",
+    "why": "Lesson 8 of the Thursday report: off days look neutral and sound different. Not yet his rule: docs/GROWTH-HANDOFF.md and scripts/velib/compile.py still let an off-day post wear a series' house dress. Built and tested; binds once Krish says yes (set status to approved).",
+    "series_beds": ["no-curves-instrumental"]
+  }
+}

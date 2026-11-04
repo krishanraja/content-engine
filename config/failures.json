@@ -1069,7 +1069,13 @@
         "ref": "ve render --all refuses without approvals.proof while anything in the spec is trial; the Phase 1 proof is one 19.5 s sequence",
         "test": "render --all on a spec with a trial element and no approvals.proof exits non-zero",
         "status": "built 4 Nov 2026 as ve proof and the ve render refusal (guards above)"
-      }
+      },
+      "recurrences": [
+        {
+          "on": "2026-11-04",
+          "what": "Thursday 5 Nov: Krish was asked to judge stills (\"the stills gave me no clue as to what you're going to produce\"); stills mode came only at the end of a render-first workflow. Its guard (ve proof, from 9 Nov) did not yet bind this piece."
+        }
+      ]
     },
     {
       "id": "F05-motion-decorated",
@@ -1824,7 +1830,255 @@
           "contains": "receipt['channel_safe']",
           "how": "every quick-edit tall cut measures and lists what sits under a channel's buttons; it holds once card ve-motion-4-channel-safe-tall moves the layout"
         }
+      ],
+      "recurrences": [
+        {
+          "on": "2026-11-04",
+          "what": "Thursday 5 Nov: face captions moved to y 1500, into Instagram's caption zone (from y 1373), approved from stills; channel.safe_zones is still advisory."
+        }
       ]
+    },
+    {
+      "id": "F31-no-single-visual-idea",
+      "on": "2026-11-04",
+      "krish": "Okay, this is shit. I'm going to kill this completely. The visuals are tacky. The subtitles are all over the place typographically.",
+      "what": "Thursday 5 Nov's off-day short had no single visual idea: each beat got a device acting out its own sentence (a notification card and a cursor mascot with moods, a rubber stamp restating \"nobody asked\", a logo orbit listing the nouns, a fake boss chat, a condensed-caps headline, a settings card). Monday 2 Nov, his favourite, was built on one object (\"The Ladder\", docs/plans/2026-11-02-monday/motion-system.md).",
+      "symptom": "Tacky visuals: many unrelated devices, none carrying the argument.",
+      "cause": "Nothing asked for the idea before the storyboard. The signed storyboard listed devices per beat, never one object, what its moves mean or what the piece never does, and it was never reopened during production.",
+      "status": "guarded",
+      "surface": "No idea, no production: from 9 Nov ve lint refuses a spec without style.idea (the one object, what each move means, a never-list and the real artifact shown as itself).",
+      "guards": [
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def idea_problems(",
+          "how": "ve lint (and so ve proof and ve render) refuses a whole cut from 9 Nov whose spec names no visual idea",
+          "test": "python3 tests/ve_thursday_guards_test.py"
+        }
+      ],
+      "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
+      "related": [
+        "F05-motion-decorated",
+        "F19-mechanically-valid-design-rejected"
+      ],
+      "mode": "production-without-an-idea",
+      "causes": [
+        {
+          "cause": "brief_gap",
+          "evidence": "the Thursday spec style block holds a storyboard path and a signed line, no object, moves or never-list (docs/plans/2026-11-05-thursday-no-spending/ve/spec.json)"
+        }
+      ],
+      "guard_level": "lint_refuse"
+    },
+    {
+      "id": "F32-real-artifact-retyped",
+      "on": "2026-11-04",
+      "krish": "Okay, this is shit. I'm going to kill this completely. The visuals are tacky. The subtitles are all over the place typographically.",
+      "what": "His real ChatGPT screenshot was re-typed into a fake chat; the prompt line was cut to satisfy a layout check; an AI line he never saw was invented (\"Which should need your yes?\").",
+      "symptom": "A made-up chat stood where the real interaction should have been.",
+      "cause": "The spec carried no assets at all, so nothing tied the chat device to the real screenshot, and no check compared a device's words with the artifact's.",
+      "status": "guarded",
+      "surface": "Show the real thing: a spec names its real artifact (style.idea.real_artifacts) and shows it; a device that re-types its words is refused.",
+      "guards": [
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def retype_problems(",
+          "how": "ve lint refuses any device text of four words or more that is 60% or more the named artifact's own words, and a named artifact that never reaches the screen",
+          "test": "python3 tests/ve_thursday_guards_test.py"
+        }
+      ],
+      "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
+      "related": [
+        "F31-no-single-visual-idea"
+      ],
+      "mode": "real-thing-retyped",
+      "causes": [
+        {
+          "cause": "standard_not_read",
+          "evidence": "approved floor group real_evidence: \"Show the real thing: dated screenshots, real products, real interactions\"; the spec's assets list is empty"
+        }
+      ],
+      "guard_level": "lint_refuse"
+    },
+    {
+      "id": "F33-engine-changed-mid-piece",
+      "on": "2026-11-04",
+      "krish": "Okay, this is shit. I'm going to kill this completely. The visuals are tacky. The subtitles are all over the place typographically.",
+      "what": "Engine PRs #374 to #377 and #380 merged during production: the STAGE background, chrome, caption height and colour, chat card width, headline ground, a light-stage rule and a stills mode all changed while the piece was being made, so key-frame checks failed by construction and the signed storyboard no longer described what rendered.",
+      "symptom": "Every render was on a different engine; nothing approved earlier still held.",
+      "cause": "Nothing recorded which engine a storyboard was signed on, so nothing could notice it moving.",
+      "status": "guarded",
+      "surface": "Freeze the engine during a piece: ve expect records the engine at storyboard; ve proof and ve render refuse a whole cut drawn on a changed one unless Krish approves the change.",
+      "guards": [
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def engine_problems(",
+          "how": "sha256 of the renderer source, compile.py and the ve brand, device and font configs, recorded at ve expect; a mismatch refuses ve proof and ve render from 9 Nov unless an exception approval binds the new hash",
+          "test": "python3 tests/ve_thursday_guards_test.py"
+        }
+      ],
+      "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
+      "related": [
+        "F13-scaled-unproven-approach"
+      ],
+      "mode": "engine-moved-under-a-piece",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "33 commits on claude/thursday-no-spending-recut and engine PRs #374-#377, #380 merged mid-production"
+        }
+      ],
+      "guard_level": "gate"
+    },
+    {
+      "id": "F34-render-loops-past-two",
+      "on": "2026-11-04",
+      "krish": "Okay, this is shit. I'm going to kill this completely. The visuals are tacky. The subtitles are all over the place typographically.",
+      "what": "At least seven full renders on 4 Nov and four Critic rounds, all NOT READY, against the runbook's \"Maximum 2 fix loops total\"; about 20 minutes a render, three days in all.",
+      "symptom": "Days of rendering with no cut or question reaching Krish.",
+      "cause": "The two-loop rule was prose in docs/ve/RUNBOOK.md; nothing counted full renders.",
+      "status": "guarded",
+      "surface": "Two loops, then Krish: ve render records each full render of a cut and refuses a third since his last press.",
+      "guards": [
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def loop_problems(",
+          "how": "ve render writes renders.<cut>.json and refuses once two full renders follow his latest press of any gate",
+          "test": "python3 tests/ve_thursday_guards_test.py"
+        }
+      ],
+      "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
+      "related": [
+        "F15-progress-overstated"
+      ],
+      "mode": "unbounded-fix-loops",
+      "causes": [
+        {
+          "cause": "standard_not_read",
+          "evidence": "docs/ve/RUNBOOK.md: \"Maximum 2 fix loops total\"; at least seven renders on 4 Nov"
+        }
+      ],
+      "guard_level": "gate"
+    },
+    {
+      "id": "F35-type-treatments-multiplied",
+      "on": "2026-11-04",
+      "krish": "Okay, this is shit. I'm going to kill this completely. The visuals are tacky. The subtitles are all over the place typographically.",
+      "what": "At least five type treatments on screen: white heavy outlined captions over the face, dark sans captions on cream, a serif on some caption words, condensed caps headline, small mono labels, and a yellow held title colliding with the mark tile. Measured on its props: 6 (scripts/velib/guards.py type_treatments). Face captions were also moved to y 1500, outside the signed band and into Instagram's caption zone, approved from stills.",
+      "symptom": "\"The subtitles are all over the place typographically.\"",
+      "cause": "Each treatment arrived with its own fix; no check counted treatments across a cut.",
+      "status": "guarded",
+      "surface": "One type system: ve proof and ve render count the type role on each surface a cut shows and refuse more than the brand book's four roles, unless Krish approves that set.",
+      "guards": [
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def type_problems(",
+          "how": "treatments read from the compiled props and each device's HOUSE_FONTS roles in the renderer source; over config/ve/production-guards.json type.max_treatments refuses",
+          "test": "python3 tests/ve_thursday_guards_test.py"
+        }
+      ],
+      "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
+      "related": [
+        "F08-captions-mishandled",
+        "F28-captions-on-his-face",
+        "F30-designed-blind-to-the-channel"
+      ],
+      "mode": "type-system-sprawl",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "the Thursday props.short.json counts 6 treatments"
+        }
+      ],
+      "guard_level": "gate"
+    },
+    {
+      "id": "F36-off-day-wore-series-dress",
+      "on": "2026-11-04",
+      "krish": "Okay, this is shit. I'm going to kill this completely. The visuals are tacky. The subtitles are all over the place typographically.",
+      "what": "The off-day post wore under.the.hood series chrome and the series music bed (no-curves-instrumental); a \"light stage\" brand treatment (#380) was invented from his note \"The branding is wrong\" and never checked with him.",
+      "symptom": "An off-day post looked and sounded like a Wednesday episode.",
+      "cause": "The written rules still allow it: docs/GROWTH-HANDOFF.md and scripts/velib/compile.py let an off-day post wear a series' house dress. Neutral off days are the report's lesson 8, a proposal.",
+      "status": "open",
+      "planned_mechanism": "scripts/velib/guards.py offday_problems is built and tested (series bed and sting refused on an off day); it binds when Krish says yes and config/ve/production-guards.json off_day.status becomes approved. Neutral chrome in compile follows that yes.",
+      "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
+      "related": [
+        "F07-brand-tokens-not-brand"
+      ],
+      "mode": "off-day-in-series-dress",
+      "causes": [
+        {
+          "cause": "taste_new",
+          "evidence": "GROWTH-HANDOFF.md: an off-day folder is named off.day \"even when it wears a series' house dress\""
+        }
+      ],
+      "guard_level": "prose"
+    },
+    {
+      "id": "F37-his-words-questioned-unchecked",
+      "on": "2026-11-04",
+      "krish": "Okay, this is shit. I'm going to kill this completely. The visuals are tacky. The subtitles are all over the place typographically.",
+      "what": "His product name \"Muse\" was questioned instead of checked against his Teleprompter records, the board and the glossary.",
+      "symptom": "Krish asked about his own words.",
+      "cause": "No step says to read his own records before questioning his words; AGENTS.md says \"Check before you ask\" in general.",
+      "status": "open",
+      "planned_mechanism": "Proposal (lesson 9): the make-piece and ve skills check Teleprompter folder names, the board and docs/GLOSSARY.md before any question about a name he used.",
+      "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
+      "related": [],
+      "mode": "asked-what-records-answer",
+      "causes": [
+        {
+          "cause": "standard_not_read",
+          "evidence": "AGENTS.md \"Check before you ask.\""
+        }
+      ],
+      "guard_level": "prose"
+    },
+    {
+      "id": "F38-critic-held-to-rulers-on-stills",
+      "on": "2026-11-04",
+      "krish": "Okay, this is shit. I'm going to kill this completely. The visuals are tacky. The subtitles are all over the place typographically.",
+      "what": "Two Instagram creators' reels were used as rulers and the Critic scored against them, on stills only, and suggested a wrong factual fix; captions.render failed 33 to 45 of 148 pages every render and was waved off as \"suspected misread\"; Krish was asked to judge stills (\"the stills gave me no clue as to what you're going to produce\").",
+      "symptom": "Every check reported something; none said the piece was tacky.",
+      "cause": "The Critic's first comparison is the inspiration cards, not his favourite finished cut, and it reads stills. Monday 2 Nov is not in config/reference-cuts.json.",
+      "status": "open",
+      "planned_mechanism": "Proposal (lesson 10): add Monday 2 Nov to config/reference-cuts.json as the Critic's first reference, scored in motion with sound on the approved proof. The stills part is already held by F04 (ve proof from 9 Nov).",
+      "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
+      "related": [
+        "F04-stills-stood-in-for-motion-proof",
+        "F26-designed-without-its-references",
+        "F11-no-qualified-reviewer"
+      ],
+      "mode": "critic-without-the-bar",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "config/reference-cuts.json holds fri23-tall, mon26-wide, mon26-tall only"
+        }
+      ],
+      "guard_level": "prose"
+    },
+    {
+      "id": "F39-codex-on-the-engine-backlog-mid-piece",
+      "on": "2026-11-04",
+      "krish": "Okay, this is shit. I'm going to kill this completely. The visuals are tacky. The subtitles are all over the place typographically.",
+      "what": "Codex was spent on engine cards (ve-qc-2, ve-motion-5, ve-motion-6, ve-motion-2 failed twice) and library devices (cursor_buddy, logo_orbit, typing_bubble, three passes each) during production, not on the piece's picture.",
+      "symptom": "Three days of Codex work and no plate the piece needed.",
+      "cause": "Nothing ties a Codex card dispatched during a piece to that piece's named slots.",
+      "status": "open",
+      "planned_mechanism": "Proposal (lesson 5): during production ve dispatch sends only cards for the piece's named plates; engine and library cards wait until the piece is filed or Krish says otherwise.",
+      "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
+      "related": [
+        "F22-codex-lane-left-unwatched",
+        "F33-engine-changed-mid-piece"
+      ],
+      "mode": "codex-off-the-piece",
+      "causes": [
+        {
+          "cause": "brief_gap",
+          "evidence": "cards ve-qc-2, ve-motion-2, ve-motion-5, ve-motion-6 dispatched during the Thursday piece"
+        }
+      ],
+      "guard_level": "prose"
     }
   ]
 }
