@@ -198,6 +198,14 @@
       "destination": "/api/board?week=:week"
     },
     {
+      "source": "/board/standards",
+      "destination": "/api/board?op=standards"
+    },
+    {
+      "source": "/standards",
+      "destination": "/api/board?op=standards"
+    },
+    {
       "source": "/board/:week",
       "destination": "/api/board?week=:week&op=html"
     },
