@@ -48,7 +48,7 @@ class LabTest(unittest.TestCase):
         house = seen[0]
         self.assertNotIn('motion', house)
         self.assertEqual(house['durationFrames'], 240)
-        self.assertTrue(all(str((self.dir / 'assets').resolve()) in s['src'] for s in house['segments']),
+        self.assertTrue(all((self.dir / 'assets').resolve().as_posix() in s['src'] for s in house['segments']),
                         'media points at the staged assets, never the old session cache')
         word = next(p for p, l in zip(seen, manifest['looks']) if l['id'] == 'captions-word')
         self.assertEqual(word['captionStyle'], 'word')
