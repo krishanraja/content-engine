@@ -252,7 +252,9 @@ class TheBar(unittest.TestCase):
             self.assertTrue(INTRO in said or OUTRO in said, ref)
             self.assertIn(f'`{ref}`', numbered[6])
             self.assertIn(ref, ruling_line(12))
-        self.assertIn('now match this never and wait on the Rejections route to record his approval', numbered[6])
+        self.assertIn('match this never; he approved all three through the Rejections route on 4 November 2026', numbered[6])
+        for ref in OPENING_DRAFTS:
+            self.assertEqual(rejection['standards'][ref]['standing'], 'approved', ref)
         # His name: his words and his four answers.
         name = nevers[0]
         self.assertEqual([w['said'] for w in name['words']], [NAME])

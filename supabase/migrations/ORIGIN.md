@@ -13,5 +13,5 @@ change. The files below dated on or before 2026-09-08 are verbatim copies of alr
 applied Control Center migrations, kept so the `control-plane-sql` CI job can replay
 the studio control plane and its race fixtures on a clean Postgres. Do not reapply
 them. Migrations are applied to the live project through the Supabase MCP
-`apply_migration` (the applied ledger names them by application time, not by the
-file stamp), never with `supabase db push`.
+`apply_migration` (the applied ledger names them by application time, which differs
+from the file stamp), never with `supabase db push`.

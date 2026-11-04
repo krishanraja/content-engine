@@ -2,7 +2,7 @@
 
 A reusable five-frame module for any piece that talks about where an AI lives. Every AI holds two passports: where its company was BORN and where it LIVES (the law and servers it answers to). The module is the same five frames every time; the producer swaps the slots marked `SLOT` below.
 
-Files: `index.html` (five frames, `#f1` to `#f5` show one frame), `f1.png` to `f5.png` (renders), `assets/` (paper, guilloche, rosette, flags, all derived or generated here), `tools/` (scripts that rebuild `index.html` and the assets; `tools/index.template.html` is the editable source). Brand files are read from `../brand/`, the hardware plate from `../plates/`.
+Files: `index.html` (five frames, `#f1` to `#f5` show one frame), `f1.png` to `f5.png` (renders), `assets/` (paper, guilloche, rosette, flags, all derived or generated here), `tools/` (scripts that rebuild `index.html` and the assets; `tools/index.template.html` is the editable source). Brand files are read from `../brand/`, the hardware plate from `../plates/`. Only `tools/` is kept in this repository, at `docs/ve/design/formats/ref/P/tools/` (without `render.sh`); the mock's renders, `index.html` and `assets/` are not, and the derived assets the renderer uses are in `assets/plates/two-passports/`.
 
 Sample data used in the mock is for illustration only. Nothing in it says where any assistant's data physically lives; the LIVES page carries `???` placeholders. The mock's SAMPLE sticker is no longer drawn (Krish, 28 Oct 2026: "It's just the ones that say "Krish's read" or "illustrative" that are stupid because they add no value to the content.").
 

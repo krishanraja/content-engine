@@ -105,7 +105,7 @@ and a quote that reads as what not to say is held for him (Krish, 2026-11-02:
 verbatim in the posts"; Growth `offday.note_parts`). They are saved in
 `queue/off-<day>-<option>`, each side `{verdict, words, sha256}`, bound to
 what that side showed him. His Improve and Reject words go to his taste ledger
-by themselves (`api/board/_presses.ts`, `offdayReports`) and come back next
+by themselves (`apps/control-plane/api/board/_presses.ts`, `offdayReports`) and come back next
 Sunday in `offday_verdicts`. An Improve on the idea or the direction also
 starts a revision run (`.github/workflows/offday-revise.yml`, below), whose
 revised card goes live at the board's next build. Growth reads each option whose

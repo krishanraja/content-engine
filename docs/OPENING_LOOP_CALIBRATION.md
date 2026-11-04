@@ -1,6 +1,8 @@
 # Opening loop calibration
 
 > Scope: the Studio's opening contract for Shorts. For the whole system start at `README.md`.
+>
+> Today video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`), with quick-edit as the fallback until ve passes Phase 3; the Studio's Shorts route makes none of it. On ve and quick-edit the opening under test is the hook as the intro (`docs/production/THE_BAR.md`, ruling 8).
 
 ## Decision
 

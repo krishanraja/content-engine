@@ -34,7 +34,7 @@ Repair routine failures internally and preserve existing user approvals.
 
 Then read the rejection floor for every cut you make (`python3 scripts/floor.py
 --format short_video`, `--format long_video`, and `captions`, `audio`, `motion`,
-`card`, `intro_outro`): every rejection Krish gave, in his words, and the
+`card`, `intro_outro`, `thumbnail`): every rejection Krish gave, in his words, and the
 standards no finished cut may fall beneath (AGENTS.md rule 20). Before a cut
 reaches him, check the finished file against each one, by eye and by ear.
 Preflight first: add `--piece <plan folder or uuid>` to each floor read and to
@@ -151,9 +151,11 @@ Write the card (`ve card`), push its `.fields.json` to main, book it with
 Control Center's `reserve_credit_spend` (engine growth-makeyourmindup, pool
 codex), then `python scripts/ve.py dispatch <card.md> --spend-id <id>`: here it dispatches if Codex is on
 this machine, and otherwise queues it on the work board for his PC's
-recordings pass to build in WSL (`scripts/velib/codex_lane.py`). Read
-`python scripts/ve.py lane status`, check a built card yourself (acceptance,
-golden stills) and close its item.
+recordings pass to build in WSL (`scripts/velib/codex_lane.py`). Start
+`python scripts/ve.py lane wait <id>` in the background at once and act on its
+first built or failed line (`lane status` lists every item); check a built
+card yourself (acceptance, golden stills), then close its work board item
+(lane `done`).
 
 Both cuts render through `scripts/quick-edit/make.py`, the only path that
 makes 16:9 as well as 9:16 and the only one that carries music (the
@@ -188,13 +190,14 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
    `makeyourmindup > Video Engine > Inbox`
    (`H:\My Drive\Ventures\Active Ventures\makeyourmindup\Video Engine\Inbox`). Never
    in a subfolder: the upload lane reads only the top level. Any name will
-   do. A file over 500 MiB is skipped by the lane, so that one is produced
+   do. A file over 2 GiB is skipped by the lane, so that one is produced
    on a home computer, straight from H:. This is the one way a take comes
    back.
-4. From 1 November, his Titles press on the day's tab starts the night's
-   cuts (the Sunday-night run, below). For a re-cut, a take outside that
-   run, or while the press cannot start it yet, he tells Claude Code "I've
-   recorded" or "I've dropped the video".
+4. From 1 November, his Titles press on the day's tab is to start the
+   night's cuts (the Sunday-night run, below). The press does not start it
+   yet (today it records his titles only), so until it does, and for a
+   re-cut or a take outside that run, he tells Claude Code "I've recorded"
+   or "I've dropped the video".
 
 A take reaches the engine within about ten minutes, from whichever home
 computer is on, and the same lane then places it on its piece and cut by
@@ -246,9 +249,9 @@ on the record.
 ## The Sunday-night run (from 1 November)
 
 His Titles press on the recording Sunday (about 15:30; Krish, 2026-10-28:
-"Sunday evening press") starts this skill for the week in a fresh session;
-until the board's press can fire it, he starts it by telling Claude Code
-"I've recorded". Nothing starts it at a fixed time, and 21:30 is only the
+"Sunday evening press") is to start this skill for the week in a fresh
+session. The press cannot fire it yet (it records his titles only), so he
+starts it by telling Claude Code "I've recorded". Nothing starts it at a fixed time, and 21:30 is only the
 deadline for a surface he has not picked, which then takes its top-ranked
 option, never recorded as his pick. Read
 `.agents/skills/produce-video/references/sunday-night.md` before the first
@@ -282,7 +285,8 @@ No one is in its chat.
   post's `3 Video` folder through `send.py` (Library Sync writes Drive).
   Never send Krish to a home computer, never relay a runner's status light
   as his blocker, and never ask him for a music licence number (Epidemic
-  Sound has none; `config/music-licences/` is the record). From 1 November
+  Sound has none: each track's licence is in the ledger,
+  `config/music-library.json`, with its certificate in the music folder). From 1 November
   the cuts are made on the recording Sunday night (Krish, 2026-10-28:
   "record the entire week on a Sunday, but it does not go live until the
   Monday after (8 days later)"). The production run
@@ -298,7 +302,8 @@ No one is in its chat.
   artifacts).
 - **A home computer** (Windows): work in the content-engine folder that
   config/studio.json `local_roots.repos` names (the one place that says where
-  the repositories live; `python scripts/velib/common.py repos` prints it),
+  the repositories live; `python scripts/velib/common.py local-root repos`
+  prints it),
   never in `Documents\MindmakeVideoStudio\runner-source`, at the latest
   `main` (`git pull --ff-only`). Codex runs every step outside its sandbox
   (ask for escalated permissions; Krish approves): inside it, the engine
@@ -321,8 +326,8 @@ No one is in its chat.
   takes with it. Install the pinned set, never an unpinned `pip install
   faster-whisper` (its newest pair cannot decode): `python -m pip install
   --require-hashes -r requirements.lock.txt`, or on a runner machine `npm run
-  bootstrap:python`. "No approved track" is expected until Krish approves
-  one: the cuts then go without music and the report says so. The archive folder is
+  bootstrap:python`. "No approved track yet" is only a warning: the cuts
+  then go with voice only and the report says so. The archive folder is
   `MINDMAKE_ARCHIVE_ROOT`, else on Windows `runtime.archive_root` in
   `config/studio.json`.
 
@@ -436,7 +441,7 @@ python scripts/post-pack/recording.py get "recordings/SHA256.EXT"
 ```
 
 `--sha256 SHA256` does the same, and `get "FILE NAME"` still fetches a take
-by the name the matcher printed. A take over 500 MiB is never in the
+by the name the matcher printed. A take over 2 GiB is never in the
 engine: copy it from the Inbox to a local work folder (`Copy-Item`, never a
 move). quick-edit never works on the Inbox itself.
 
@@ -514,7 +519,8 @@ carries a `"strap"`.
 - **The pictures** need `--files` only until the pack is sent: the post's
   working folder (in a cloud session that holds it). Once `send.py` has
   sent the pack, a home computer finds the post's library folder by itself
-  (`runtime.library_root`, the `3 Posts` folder on H:), with no `--files`.
+  (under `runtime.library_root` on H:, in its `3 Posts` folder), with no
+  `--files`.
 - **Exit 2: stop and fix the input** it names (a script that is nowhere, a
   bad `--files` folder, another piece's `--out`).
 - **Exit 1: a `CHECK` line for each problem**, and each one means the cut
@@ -650,13 +656,16 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
   `.agents/skills/produce-video/references/opening.md` and
   `.agents/skills/produce-video/references/music.md` before this step.
   Neither ever blocks a render.
-- **No hit sounds yet.** There is no sound-effect system. When one is built
-  it follows Krish's pick of 2026-10-29, "Only the big moment": one sound
-  under a piece's biggest moment (a low thud as BANKRUPT slams in, say) and
-  nothing anywhere else, chosen from a small set played to him first, and
-  nothing used before he approves it by ear. Whether the Epidemic Sound
-  subscription covers sound effects is to be checked, never assumed, and
-  nothing is spent without his yes. Add no sound to a cut today.
+- **No hit sounds yet.** No sound is approved, so add none to a cut
+  today. The route follows Krish's pick of 2026-10-29, "Only the big
+  moment": one sound under a piece's biggest moment (a low thud as BANKRUPT
+  slams in, say) and nothing anywhere else, chosen from a small set played
+  to him first (`ve sfx audition`, from `config/sfx-candidates.json`), and
+  used only once he approves it by ear (`config/sfx-approved.json`, empty
+  today). make.py refuses any `sfx` row in a config that is not in that
+  approved set. His Epidemic Sound plan covers sound effects (Krish,
+  2026-10-29); downloading a candidate still waits on his yes, and nothing
+  is spent without it.
 
 **A long episode** (a 15-minute feature Krish called, house rule FEATURE, or a deep cut already recorded under the retired DEEP_CUT) is made to
 `docs/production/one-shot-episode-corpus.md`, the standard Krish gave on 16
@@ -690,8 +699,8 @@ make a feature for any other piece). What changes for it:
   feature's script and keep it in the ledger with `--cut feature`, so the
   next feature's script is warned against his own pace on features.
 - **Its own wide thumbnail and record.** Draw a 1280 x 720 thumbnail for it
-  and record it as `making.py PIECE video feature NAME PATH --thumb ...
-  --thumb-file ...`, then `drive-link feature`. The record's Record and
+  and record it as `making.py PIECE video feature NAME PATH --video-file ...
+  --thumb ... --thumb-file ...`, then `drive-link feature`. The record's Record and
   Video assets steps wait for the feature on such a piece.
 - **Its own publish steps.** The publish page adds a YouTube long-form step
   and a Spotify episode step for it, beside the 5-minute ones
@@ -707,7 +716,7 @@ from one of the piece's checked sources ("proof" in the cover facts), the
 wordmark and the real logos, and never his face or a frame from a take.
 
 ```
-$env:MYMU_BROWSER = "msedge"     # Windows; in the cloud container: MYMU_BROWSER=/opt/pw-browsers/chromium-1194/chrome-linux/chrome
+$env:MYMU_BROWSER = "msedge"     # Windows; in the cloud container: MYMU_BROWSER=/opt/pw-browsers/chromium
 python scripts/pages/build.py docs/plans/PLAN/cover-facts.json --thumbs --out WORK/thumbs
 ```
 
@@ -741,7 +750,8 @@ report these numbers back in plain words:
   `loudness.true_peak` at most -1.0 dBTP. With music, `bed_to_voice_lu`
   about 17 and the voice and outro short-term about -14 and -18 (no intro
   stretch: the cut opens on his first words). `normalisation` should be
-  `linear`; `limited` comes with a warning.
+  `linear` (an episode's continuous bed reads `separately levelled stems;
+  peak limiter only`); anything else comes with a warning.
 - `opening` (`{"kind": "hook"}`), `intro_seconds` (0), `main_seconds`,
   `outro_seconds`, `total_seconds`, and `music` (the track id, its sha256,
   the levels used, and where a short track was started again).
@@ -841,7 +851,10 @@ Then send the archive folder into the post's video section, dry run first:
 python scripts/post-pack/send.py "ARCHIVE FOLDER" --as "3 Posts/POST FOLDER/3 Video" --purpose "The finished videos and their thumbnails: wide 16:9 for YouTube and Substack, tall 9:16 for Shorts, Reels, TikTok and LinkedIn" --dry-run
 ```
 
-then without `--dry-run`. `POST FOLDER` is the pack folder `making.py show`
+then without `--dry-run`. `send.py` refuses any video whose hash-bound
+`.validation.json` (naming that `3 Posts/...` path) and `.bed-shape.json`
+are not beside it and passing; `archive.py` copies neither, while
+`produce_day.py` stages both with each cut. `POST FOLDER` is the pack folder `making.py show`
 names; on a Tuesday, Thursday or Saturday it is `YYYY-MM-DD Ddd off.day - Subject`
 whatever series dress the piece wears (`library.post_folder` names it so), never 4 Growth. An archive folder is not a pack, so `send.py` records nothing on the
 piece.
@@ -851,13 +864,17 @@ piece.
 With a thumbnail drawn and filed for that cut:
 
 ```
-python scripts/post-pack/making.py PIECE_ID video long "Long cut, 16:9" "3 Video/SUBJECT - wide 16x9 - YouTube, Substack.mp4" --seconds N --thumb "3 Video/SUBJECT - wide 16x9 - thumbnail.jpg" --thumb-file WORK/thumbs/thumb-wide-1280x720.jpg --music TRACK_ID
-python scripts/post-pack/making.py PIECE_ID video short "Short cut, 9:16" "3 Video/SUBJECT - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4" --seconds N --thumb "3 Video/SUBJECT - tall 9x16 - thumbnail.jpg" --thumb-file WORK/thumbs/thumb-tall-1080x1920.jpg --music TRACK_ID
+python scripts/post-pack/making.py PIECE_ID video long "Long cut, 16:9" "3 Video/SUBJECT - wide 16x9 - YouTube, Substack.mp4" --video-file WORK/long/NAME-16x9.mp4 --seconds N --thumb "3 Video/SUBJECT - wide 16x9 - thumbnail.jpg" --thumb-file WORK/thumbs/thumb-wide-1280x720.jpg --music TRACK_ID
+python scripts/post-pack/making.py PIECE_ID video short "Short cut, 9:16" "3 Video/SUBJECT - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4" --video-file WORK/short/NAME-9x16.mp4 --seconds N --thumb "3 Video/SUBJECT - tall 9x16 - thumbnail.jpg" --thumb-file WORK/thumbs/thumb-tall-1080x1920.jpg --music TRACK_ID
 python scripts/post-pack/making.py PIECE_ID show
 ```
 
-`video` also reads the clips linked to the piece (step 4) and prints a
-WARNING for each `show_with_sound` clip the cut does not play: carry it into
+`--video-file` is the exact cut on this machine. `video` is refused
+unless the hash-bound `.validation.json` beside it passes the delivery gates
+(`quality.delivery_problems`: the review evidence, the words gate and the
+bed-shape receipt) and names this video's library path, so a cut whose receipt still lists checks under
+`missing` is not recorded yet. `video` also reads the clips linked to the
+piece (step 4) and prints a WARNING for each `show_with_sound` clip the cut does not play: carry it into
 the report and to Krish.
 
 With no thumbnail drawn for that cut, leave out `--thumb` and

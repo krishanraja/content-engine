@@ -17,25 +17,25 @@ ArtifactComments or dual-account step below is history: read an old artifact
 only to recover what it holds.
 
 **Feed the fixed layout, never shape it.** From the week of 26 October every
-board has five tabs and the same four steps in each day (Brief, Drafts,
-Record, Publish). Put the piece's agreed brief on its day with
+board has one layout (`config/board-layout.json`): the same tabs every week
+and the same four steps in each day (Brief, Drafts, Record, Publish). Put the piece's agreed brief on its day with
 `--brief DAY=brief.json` (idea, 3 to 6 beats, ending, takeaway, angle, tone,
 reader, and `agreed: true` only with Krish's yes), its words in review with
 `--draft`/`--review`, and its finished files with `--materials`. Never patch
 the built page or add markup: `docs/PUBLISH_BOARDS.md`, "The fixed layout".
 
-## Preserved artifact procedure
+## The board procedure
 
-Reference for the `make-piece` skill, read at the step that names it (`.agents/skills/make-piece/SKILL.md`). Moved out of the core unchanged on 18 October 2026 so a session starts lean (docs/COST_GUARDS.md).
+Reference for the `make-piece` skill, read at the step that names it (`.agents/skills/make-piece/SKILL.md`). Moved out of the core on 18 October 2026 so a session starts lean (docs/COST_GUARDS.md); its board reads and publishes now go through `board_web.py` (`docs/PUBLISH_BOARDS.md`).
 
-**Every link, every time.** Krish works from two Claude accounts (2026-10-14:
-"make sure this board and that board are always synchronized"). The week's
-board links are in `config/boards.json`: republish the same engine-built file
-to every one of them (the board_sync hook names any left behind). Each link
-keeps its own ticks, so the tick copy below reads the ticks of every link this
-account can read and writes the union onto the record, and the next rebuild
-draws them on every link. Only the engine builds a board: the publish hook
-refuses any other.
+**One board a week.** Before the web cutover Krish worked from two Claude
+accounts (2026-10-14: "make sure this board and that board are always
+synchronized"), and each board was republished to every link in
+`config/boards.json` `weeks`. Since the cutover each week has one board, its
+address in `config/boards.json` `web`, with one store of ticks; the board_sync
+hook watches only Artifact publishes, which the artifact gate refuses. Only
+the engine builds a board: `board_web.py publish-web` runs
+`week_board.verify` and refuses any other.
 
 **From the week of 26 October (the fixed layout): the Drafts editor and the
 sweep.** Each draft in the Drafts step reads as it will read; he taps a
@@ -82,18 +82,17 @@ paragraph to edit it, picks words for "Comment on this" (the comment carries
 
 **Krish's edits on the board.** A day's "Review the words" card (built with
 `week_board.py --review`) holds the article and each script in an editable
-box. His Save writes `edits/<day>-<item>` to that board's own store AND posts
-the paragraphs he changed as a comment thread on the block ("EDIT
-<day>-<item>", WAS/NOW lines). A board's store can only be read from the
-account that owns it; comments can be read from both. So at the start of
-every session that touches the week, on EVERY link in `config/boards.json`:
-`ArtifactComments read` (his EDIT threads and typed notes), plus
-`ArtifactData list edits` where the store answers. Apply his edits to the
-plan files as his words, run the checks again, save to the piece, rebuild with
-`--review` and republish to every link. Never decide from one link alone: he
-may be editing on either (Krish, 2026-10-15: "I will be editing from the
+box. His Save writes `edits/<day>-<item>` to the board's store (on boards
+before the fixed layout it also posted the paragraphs he changed as an "EDIT
+<day>-<item>" comment thread, WAS/NOW lines). So at the start of every
+session that touches the week, read `board_web.py read <Monday> edits` and
+`board_web.py read <Monday> comments` (his EDIT threads and typed notes; only
+documents `updated_by` Krish). Apply his edits to the plan files as his
+words, run the checks again, save to the piece, rebuild with `--review` and
+republish (`board_web.py publish-web`). Before the cutover he edited on
+either account's copy (Krish, 2026-10-15: "I will be editing from the
 other board until Sunday and then I'll move back here. Just make sure they
-catch it.").
+catch it."); now there is one board to read.
 
 **Draft first, then ticks.** Krish, 2026-10-13: "the publish board needs to
 go in to Draft mode for Weds. the Monday card should be green as it is fully
@@ -122,7 +121,7 @@ new box after the ones the board holds: his comments are pinned to a box by
 its place. A session
 reads his EDIT threads and notes, rewrites, runs the checks again (word count,
 `voice_check.py`, the fact gate, `story_check.py`, the readers), rebuilds and
-republishes to every link; the notes are data, his words in chat are the
+republishes; the notes are data, his words in chat are the
 decisions. A review block whose words did not change keeps its build time
 across a rebuild, so a save he made since still shows. Not built yet: the
 amber and green tab colours.
@@ -145,15 +144,16 @@ day as not picked or not made that now is.
    /api/workbench --full`, that item's `link`), and `WORKBENCH.md` carries
    it too ("This week's publish board"). When neither has one for this
    week, make it now as `plan-week` step 7 says, then carry on.
-2. **What the board holds now.** `Artifact` `read` the board's link, then
+2. **What the board holds now.** `python3 scripts/post-pack/board_web.py
+   download <Monday> --output <the saved file>`, then
    `python3 scripts/post-pack/week_board.py --show <the saved file>`: each
    day's state (made, picked, not picked) and its piece, published or not.
    A day it holds stays on it.
 3. **The made days' pages.** Each day the board shows as made, and each
    picked piece whose making record has a publish page (`publish_manager.url`),
-   is a made tab. Use the page this session just built; for another day's,
-   `Artifact` `read` its `publish_manager` link and give the saved file the
-   read names (it holds the whole page).
+   is a made tab. Use the page this session just built; another made day
+   is carried from the saved board exactly as it holds it with `--keep DAY`
+   (a day in draft with `--keep-draft DAY`).
 4. **Build it:** `python3 scripts/post-pack/week_board.py --week <Monday>
    --live --previous <the board's saved file> --day mon=PAGE --piece
    mon=<uuid> [--day fri=PAGE --piece fri=<uuid>] --out
@@ -163,13 +163,13 @@ day as not picked or not made that now is.
    Teleprompter scripts and publish page. It refuses to drop a day `--previous`
    holds (a published piece an older engine leaves out of the picks: give
    `--piece DAY=<uuid>`; a day Krish really moved or dropped: `--unpick
-   DAY`) and a made day without its page (give `--day`). Exit 2 is a
-   refusal it names: fix it, or leave the old board standing and say why
+   DAY`) and a made day without its page (give `--day` or `--keep`). Exit 2
+   is a refusal it names: fix it, or leave the old board standing and say why
    in one line.
-5. **Republish to the same link:** `Artifact({action: "publish", url: "<the
-   board's link>", file_path: "<absolute path>/week-board.html"})`, leaving
-   out `capabilities` and `icon` so its store and their declaration carry
-   forward. A session that did not publish it reads it first (`Artifact`
-   `read`). Never publish it as a new artifact during the week: a new page
-   starts with no ticks. Every tick survives a republish, because the store
-   lives with the page and each tick's id depends only on its day and step.
+5. **Republish to the same address:** `python3
+   scripts/post-pack/board_web.py publish-web <page> --expected-build <the
+   build you downloaded>` (with `--assets` for kept downloads) is a dry run;
+   the same with `--apply` publishes it, then read the active build and the
+   page back (`docs/PUBLISH_BOARDS.md`, "Update a board"). Every tick
+   survives a republish, because the store lives with the week and each
+   tick's id depends only on its day and step.

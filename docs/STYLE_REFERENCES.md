@@ -75,7 +75,8 @@ When asked to study the style references, or when one is listed as
    - one module per technique, each with:
      - `id`;
      - `layer`: one of opening, structure, breakdown, proof, tone, close,
-       editing, camerawork, graphics or production;
+       editing, camerawork, graphics, production or motion (the layer a
+       piece's one motion system, `style.motion`, is picked from);
      - `name`;
      - `how`: concrete enough to apply;
      - `from`: the reference;
@@ -160,8 +161,10 @@ alchemist."
   Fry opening, a villa number reveal, and his own tone. A recipe needs his
   words. A module he has marked `not for us` can never be mixed in again.
 - **After the piece**, he gives each module he saw a verdict: `liked`
-  (draw on it more), `untested`, or `not for us`. The bank learns. The base
-  changes only when he changes a house rule.
+  (draw on it more), `untested`, or `not for us`. A motion style gets its
+  verdict on his own take, from the board's style pick (`ve styles`):
+  picked once makes it `liked`, picked twice `tested`. The bank learns. The
+  base changes only when he changes a house rule.
 
 ## Formats: whole-piece styles he chooses from
 

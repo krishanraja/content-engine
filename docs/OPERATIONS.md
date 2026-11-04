@@ -1,10 +1,10 @@
 # Operations
 
-> Scope: the Video and Carousel Studio, plus the recovery of the content engine's crons. For the whole system start at `README.md`. Its known stale passages are listed in `docs/STUDIO.md`, "The detailed Studio documents".
+> Scope: the Video and Carousel Studio, plus the recovery of the content engine's crons. For the whole system start at `README.md`. `docs/STUDIO.md`, "The detailed Studio documents", records any passage here known to be stale.
 
 Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
 
-The `studio` commands, job state and exit codes below describe the job-based Studio. For ve, use `python scripts/ve.py <command> -h`; `ingest`, `stills` and `file` currently return exit 2 as placeholders. `compile`, `render`, `qc`, `ledger` and `time` are implemented; a successful QC command alone does not establish readiness (`ve status <piece>`).
+The `studio` commands, job state and exit codes below describe the job-based Studio. For ve, use `python scripts/ve.py <command> -h`; only `stills` still returns exit 2 as a placeholder. A successful QC command alone does not establish readiness (`ve status <piece>`).
 
 ## Source and state
 
@@ -24,7 +24,7 @@ CLI success is exit code `0`. Stable failure categories are `10` validation, `20
 2. Run `npm ci`.
 3. Run `.\scripts\migrate-runner-runtime.ps1`. It copies durable state from the legacy LocalAppData root without overwriting or deleting either root.
 4. Run `npm run bootstrap:python`. It creates the reusable `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime\python` runtime and installs only hash-locked wheels from `requirements.lock.txt`. New disposable GitHub checkouts reuse this runtime. The first renderer run similarly seeds its versioned Chrome Headless Shell under the same runtime root; later checkouts reuse it.
-5. Confirm Remotion licence eligibility and record the approved basis in `config/studio.json`. `MINDMAKE_REMOTION_LICENSE_CONFIRMED=true` remains an emergency runtime override, not the durable authority.
+5. Confirm Remotion licence eligibility and record the approved basis in `config/studio.json`. `MINDMAKE_REMOTION_LICENSE_CONFIRMED=true` remains only an emergency runtime override; `config/studio.json` is the durable authority.
 6. Keep the Windows runtime at `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime`. The media base and archive defaults are versioned in `config/studio.json` and mirrored in `.env.example`.
 7. Store provider tokens as Windows Generic Credentials:
    - `MindmakeVideoStudio/mm-ctrl-radar-token`
@@ -36,7 +36,7 @@ CLI success is exit code `0`. Stable failure categories are `10` validation, `20
 
 ## Windows background runner
 
-The v1 runner executes already-projected Control Center commands and performs bounded discovery in the dedicated Google Drive `Inbox`. It never creates a job automatically. Bootstrap each approved local treatment or QA-passing final explicitly:
+The v1 runner executes already-projected Control Center commands, claims approved production briefs ("Control Center production intake", below) and performs bounded discovery in the dedicated Google Drive `Inbox`. The only job it creates by itself is the one a short-native production brief defines; it never makes a job from a Drive recording, and it never projects one. Bootstrap each approved local treatment or QA-passing final explicitly:
 
 ```powershell
 .\scripts\studio.ps1 v2 runner project --job <job-id> --platform youtube_shorts --gate treatment --safe-title "<non-sensitive title>" --safe-summary "<non-sensitive summary>"
@@ -64,11 +64,11 @@ session transition, the recovery trigger starts it again without Codex. The
 task is also configured to continue across battery and idle-state changes. The
 Drive mount still requires the user's interactive Google Drive session.
 
-`Stop-ScheduledTask` is complete only when the registered task is no longer `Running` and `runner.ps1 -Mode stop-preflight` reports `active: false`. This preflight reads only the singleton lock; it must run before full status during a legacy upgrade because full status can initialize or migrate authority state. Stop only while the already-established cloud and local status are idle with zero pending or conflicted receipt and project journals. The installed action is the actual Node daemon with tsx imported in-process, not a PowerShell, npm, cmd, or tsx-CLI wrapper, and the task must read back `AllowHardTerminate: true`. If a stopped legacy task still reports an active or unknown singleton, do not run full status, install, or start another runner. Confirm the exact process is the old daemon and use an explicit audited remediation. Never kill a PID based only on its number or delete `runner.lock` by hand. Protocol v1 does not claim to terminate an FFmpeg, Python, or Remotion child in the middle of media work; cooperative drain and a Windows Job Object remain a follow-up after activation.
+`Stop-ScheduledTask` is complete only when the registered task is no longer `Running` and `runner.ps1 -Mode stop-preflight` reports `active: false`. This preflight reads only the singleton lock; it must run before full status during a legacy upgrade because full status can initialize or migrate authority state. Stop only while the already-established cloud and local status are idle with zero pending or conflicted receipt and project journals. The installed action is the actual Node daemon with tsx imported in-process, with no PowerShell, npm, cmd, or tsx-CLI wrapper, and the task must read back `AllowHardTerminate: true`. If a stopped legacy task still reports an active or unknown singleton, do not run full status, install, or start another runner. Confirm the exact process is the old daemon and use an explicit audited remediation. Never kill a PID based only on its number or delete `runner.lock` by hand. Protocol v1 does not claim to terminate an FFmpeg, Python, or Remotion child in the middle of media work; cooperative drain and a Windows Job Object remain a follow-up after activation.
 
 The task installer accepts only the clean, exact Git checkout at `%USERPROFILE%\Documents\MindmakeVideoStudio\runner-source`. It rejects LocalAppData and other application-managed source locations before changing the Scheduled Task. Runtime state, reusable Python, browser binaries, receipts, and caches use `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime`. Keeping both roots explicit prevents an application-virtualized shell and the outside Scheduled Task from seeing different files. Before the first install, the copy-only migration preserves durable legacy LocalAppData state without deleting or overwriting either root. The preflight then proves every still-visible legacy file has an identical canonical copy.
 
-The status output reports runner identity, source commit, Drive state, singleton activity, unacknowledged receipt count, path-free discovery counts, `receipt_journals` counts, and `project_journals` counts. A project conflict remains in a signed quarantine journal and produces a safe attention code, with idempotency conflicts taking priority. A deterministic terminal receipt conflict is also moved to signed receipt quarantine; `recovery_exists` reports `runner_receipt_recovery_conflict`, while other exact authority conflicts report `runner_receipt_authority_conflict`. The evidence is never deleted or retried forever. Either receipt conflict means authoritative histories diverged, so the whole runner stops before project replay, Drive discovery, cloud claim, or preview retention and consumes no more leases. Receipt-conflict recovery is a bespoke audited reconciliation in v1, not a generic delete or clear action. Paths and projection contents are never emitted in status. The daemon heartbeats the live mount before scanning, scans the dedicated Inbox before every claim, continues heartbeats during a long first hash, and checks Drive during active command heartbeats. When Drive is unavailable, inaccessible, scan-limited, or permission-blocked it reports `degraded`, leaves cloud commands queued, and resumes only after a complete healthy scan. It never turns mount loss into an avoidable terminal command failure. Cloud heartbeats carry only the safe Drive state; local runner status and cycle output carry path-free safe codes and counts.
+The status output reports runner identity, source commit, Drive state, singleton activity, unacknowledged receipt count, path-free discovery counts, `receipt_journals` counts, and `project_journals` counts. A project conflict remains in a signed quarantine journal and produces a safe attention code, with idempotency conflicts taking priority. A deterministic terminal receipt conflict is also moved to signed receipt quarantine; `recovery_exists` reports `runner_receipt_recovery_conflict`, while other exact authority conflicts report `runner_receipt_authority_conflict`. The evidence is never deleted or retried forever. Either receipt conflict means authoritative histories diverged, so the whole runner stops before project replay, Drive discovery, cloud claim, or preview retention and consumes no more leases. Receipt-conflict recovery is a bespoke audited reconciliation in v1; there is no generic delete or clear action. Paths and projection contents are never emitted in status. The daemon heartbeats the live mount before scanning, scans the dedicated Inbox before every claim, continues heartbeats during a long first hash, and checks Drive during active command heartbeats. When Drive is unavailable, inaccessible, scan-limited, or permission-blocked it reports `degraded`, leaves cloud commands queued, and resumes only after a complete healthy scan. It never turns mount loss into an avoidable terminal command failure. Cloud heartbeats carry only the safe Drive state; local runner status and cycle output carry path-free safe codes and counts.
 
 ## Primary and cold standby
 
@@ -142,7 +142,7 @@ Initialize the Inbox only after confirming the Drive mount points at the intende
 
 Scan, review, source-bundle, and confirmed rebind commands resolve the exact 40-character commit from the configured repository and fail closed if the checkout is dirty, redirected, or does not match an optional commit override. Discovery proofs therefore never record `unknown` during the normal CLI workflow.
 
-The first healthy scan binds the resolved Inbox identity. A transient mount outage preserves the last trusted inventory and dedupe history while making every candidate unavailable. If another folder or Drive account later resolves at the configured path, scans remain blocked with `inbox_identity_changed_requires_rebind`. Inspect the exact old/new hash proposal, verify the mounted account and folder outside the engine, then record Krish's explicit confirmation:
+The first healthy scan binds the resolved Inbox identity. A transient mount outage preserves the last trusted inventory and dedupe history while making every candidate unavailable. If another folder or Drive account later resolves at the configured path, scans remain blocked with `inbox_identity_changed_requires_rebind`. Inspect the exact old/new hash proposal, verify the mounted account and folder outside the engine, then record Krish's explicit confirmation. The proposal still prints the legacy `codex-user-confirmation:` prefix; both forms are accepted, and a new client uses the portable one:
 
 `inbox init` creates a small, non-secret identity marker inside the dedicated
 Inbox. Google Drive syncs that marker with the folder, so a normal virtual-drive
@@ -155,12 +155,12 @@ identity change requires the same exact rebind flow below.
 
 ```powershell
 .\scripts\studio.ps1 v2 inbox rebind
-.\scripts\studio.ps1 v2 inbox rebind --confirmation-ref "codex-user-confirmation:inbox-rebind:<old-fingerprint>:<new-fingerprint>:<exact Krish confirmation>"
+.\scripts\studio.ps1 v2 inbox rebind --confirmation-ref "studio-user-confirmation:<client>:inbox-rebind:<old-fingerprint>:<new-fingerprint>:<exact Krish confirmation>"
 ```
 
 Rebinding is append-only, does not accept any recording, and restarts the normal stability scans against an empty trusted observation set.
 
-The first scan marks new supported files `partial`. A later scan can mark them stable only after size and modification time remain unchanged for `MINDMAKE_DISCOVERY_STABILITY_SECONDS`, with two safe access checks around hashing. The defaults cap scanning at 500 files, 2,000 directory entries, four directory levels, 64 GiB of new or expired content hashing per scan, and 16 MiB per sidecar. The 64 GiB budget accommodates a 30–45 minute high-bitrate DJI recording while remaining a deliberate bounded scan. Completed hashes are reused so a backlog advances deterministically across scans without stopping unrelated runner commands. `hash_byte_budget_deferred` means the next unchanged scan can continue the queue. `file_exceeds_hash_budget` requires an intentional increase to `MINDMAKE_DISCOVERY_MAX_HASH_BYTES_PER_SCAN` after checking the source; it is not retried as though progress were possible. `sidecar_size_limit_exceeded` prevents oversized text or edit files from reaching an in-memory parser.
+The first scan marks new supported files `partial`. A later scan can mark them stable only after size and modification time remain unchanged for `MINDMAKE_DISCOVERY_STABILITY_SECONDS`, with two safe access checks around hashing. The defaults cap scanning at 500 files, 2,000 directory entries, four directory levels, 64 GiB of new or expired content hashing per scan, and 16 MiB per sidecar. The 64 GiB budget accommodates a 30 to 45 minute high-bitrate DJI recording while remaining a deliberate bounded scan. Completed hashes are reused so a backlog advances deterministically across scans without stopping unrelated runner commands. `hash_byte_budget_deferred` means the next unchanged scan can continue the queue. `file_exceeds_hash_budget` requires an intentional increase to `MINDMAKE_DISCOVERY_MAX_HASH_BYTES_PER_SCAN` after checking the source; it is not retried as though progress were possible. `sidecar_size_limit_exceeded` prevents oversized text or edit files from reaching an in-memory parser.
 
 `inbox scan` prints candidate IDs, exact candidate hashes, classifications, and safe codes without absolute paths. Inspect one candidate locally with:
 
@@ -171,7 +171,7 @@ The first scan marks new supported files `partial`. A later scan can mark them s
 Record an exact-hash decision with the artifact-bound confirmation receipt shown at the review surface:
 
 ```powershell
-.\scripts\studio.ps1 v2 inbox review --candidate <candidate-id> --hash <candidate-hash> --decision accepted --note "<Krish's exact note>" --confirmation-ref "codex-user-confirmation:intake:<candidate-hash>:<exact Krish confirmation>"
+.\scripts\studio.ps1 v2 inbox review --candidate <candidate-id> --hash <candidate-hash> --decision accepted --note "<Krish's exact note>" --confirmation-ref "studio-user-confirmation:<client>:intake:<candidate-hash>:<exact Krish confirmation>"
 ```
 
 Acceptance is intake approval only. It triggers a fresh bounded scan and a full component hash check, and records the Inbox fingerprint, scan event, candidate hash, and verification hash. It never creates a job. For an accepted recording with one video, optional exact-stem audio, and unambiguous exact-stem sidecars, create a provenance-bound local draft:
@@ -208,7 +208,7 @@ Bearer rotation and signing-key handling are different operations. A bearer rota
 
 Protocol v1 has one stable installed Windows runner identity for each runtime root. Exact receipt reclaim is same-runner only: a different runner identity fails closed even when it can see the files. Moving the runtime to another runner requires an explicit audited handoff or retirement after pending receipts are acknowledged and platform state is reconciled; copying the directory and regenerating `identity.json` is not a supported handoff.
 
-The first authenticated start upgrades a valid legacy schema-1 identity into a schema-2 authority layout and writes `runner-authority.json` outside the renameable `runner` directory. Its HMAC binds the runner identity, identity hash, layout version, initialization state, and initialization time. An authenticated `initializing` marker can finish an interrupted first start; only the atomically replaced `finalized` marker permits work. After that upgrade, the marker, identity, claims, receipts, project-state roots, and the external `runner-staging` root are mandatory physical files or directories; missing, renamed, linked, or unexpected authority entries stop the runner before projection, discovery, or claim. This is an integrity stop, not a clean-install signal. Never delete or regenerate the authority marker to recover from it. Atomic authority JSON is written through exact UUID-named temporary files in `runner-staging` on the same volume. Those files are non-authoritative. A provably fresh retry with no marker and no current identity validates and removes exact staging residue while holding the authority lock, so a crash before the first marker rename cannot brick initialization. An authenticated `initializing` or `finalized` retry does the same. A legacy identity with retained evidence is cleaned only after that evidence authenticates the supplied key. Any unexpected file, directory, link, or junction still fails closed and requires audited inspection.
+The first authenticated start upgrades a valid legacy schema-1 identity into a schema-2 authority layout and writes `runner-authority.json` outside the renameable `runner` directory. Its HMAC binds the runner identity, identity hash, layout version, initialization state, and initialization time. An authenticated `initializing` marker can finish an interrupted first start; only the atomically replaced `finalized` marker permits work. After that upgrade, the marker, identity, claims, receipts, project-state roots, and the external `runner-staging` root are mandatory physical files or directories; missing, renamed, linked, or unexpected authority entries stop the runner before projection, discovery, or claim. This is an integrity stop, and it never signals a clean install. Never delete or regenerate the authority marker to recover from it. Atomic authority JSON is written through exact UUID-named temporary files in `runner-staging` on the same volume. Those files are non-authoritative. A provably fresh retry with no marker and no current identity validates and removes exact staging residue while holding the authority lock, so a crash before the first marker rename cannot brick initialization. An authenticated `initializing` or `finalized` retry does the same. A legacy identity with retained evidence is cleaned only after that evidence authenticates the supplied key. Any unexpected file, directory, link, or junction still fails closed and requires audited inspection.
 
 Historical pre-cursor schema-1 success receipts remain HMAC-authenticated, immutable acknowledged evidence. The runner may count and inspect them for authority integrity, but it never sends them to Control Center, treats them as an idempotent command result, or uses them to drive review recovery. A pre-cursor non-failed receipt found in the pending area is quarantined as an authority conflict and stops all work after one best-effort path-free degraded heartbeat. The retained claims and acknowledged receipts are scanned with exact names, physical file types, signatures, and matching command identities before any network or discovery work.
 
@@ -227,8 +227,8 @@ bearer boundary it uses for edit commands. It verifies the semantic hash,
 stores the immutable brief locally, and acknowledges the result back onto the
 originating `content_ideas` row. Short-native video briefs materialize their
 deterministic job immediately, including the exact brief-stage artifact.
-Carousel-only briefs are imported without inventing a video job. Solo and
-podcast briefs stop at `awaiting_source_bundle` until Krish has accepted the
+Carousel-only briefs are imported without inventing a video job. Extract and
+solo briefs stop at `awaiting_source_bundle` until Krish has accepted the
 exact Drive candidate and produced a reviewed `SourceBundleV1`. This polling
 and import path runs in the Windows Scheduled Task and does not require Codex,
 Claude, ChatGPT or another live chat session.
@@ -260,27 +260,27 @@ relax the approved argument.
 .\scripts\studio.ps1 v2 source analyze --job <job-id>
 .\scripts\studio.ps1 v2 candidates --job <job-id>
 .\scripts\studio.ps1 v2 candidates --job <job-id> --input <codex-authored-candidate.json>
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate angle --artifact <candidate-json-path> --confirmation-ref "codex-user-confirmation:angle:<candidate-semantic-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate angle --artifact <candidate-json-path> --confirmation-ref "studio-user-confirmation:<client>:angle:<candidate-semantic-hash>:<exact-Krish-approval-message>"
 .\scripts\studio.ps1 v2 visual-plan context --job <job-id> --candidate <candidate-json-path>
 .\scripts\studio.ps1 v2 visual-plan import --job <job-id> --candidate <candidate-json-path> --input <visual-plan.json>
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate visual_plan --artifact <visual-plan-artifact-hash> --confirmation-ref "codex-user-confirmation:visual_plan:<visual-plan-artifact-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate visual_plan --artifact <visual-plan-artifact-hash> --confirmation-ref "studio-user-confirmation:<client>:visual_plan:<visual-plan-artifact-hash>:<exact-Krish-approval-message>"
 .\scripts\studio.ps1 v2 assets prepare --job <job-id> --assets <assets.json> --evidence-overlays <evidence-overlays.json>
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate evidence --artifact <evidence-packet-path> --confirmation-ref "codex-user-confirmation:evidence:<evidence-packet-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate evidence --artifact <evidence-packet-path> --confirmation-ref "studio-user-confirmation:<client>:evidence:<evidence-packet-hash>:<exact-Krish-approval-message>"
 .\scripts\studio.ps1 v2 assets verify --job <job-id> --packet <evidence-packet-path>
 .\scripts\studio.ps1 v2 styleframes create --job <job-id> --manifest <review-manifest.json> --at 0 2500 5000
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate storyboard --artifact <styleframes-artifact-hash> --confirmation-ref "codex-user-confirmation:storyboard:<styleframes-artifact-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate storyboard --artifact <styleframes-artifact-hash> --confirmation-ref "studio-user-confirmation:<client>:storyboard:<styleframes-artifact-hash>:<exact-Krish-approval-message>"
 .\scripts\studio.ps1 v2 animatic create --job <job-id> --manifest <storyboard-bound-manifest.json>
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate animatic --artifact <animatic-artifact-hash> --confirmation-ref "codex-user-confirmation:animatic:<animatic-artifact-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate animatic --artifact <animatic-artifact-hash> --confirmation-ref "studio-user-confirmation:<client>:animatic:<animatic-artifact-hash>:<exact-Krish-approval-message>"
 .\scripts\studio.ps1 v2 treatment register --job <job-id> --manifest youtube_shorts=<manifest.json> linkedin=<manifest.json> tiktok=<manifest.json> instagram_reels=<manifest.json>
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate treatment --artifact <treatment-artifact-hash> --confirmation-ref "codex-user-confirmation:treatment:<treatment-artifact-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate treatment --artifact <treatment-artifact-hash> --confirmation-ref "studio-user-confirmation:<client>:treatment:<treatment-artifact-hash>:<exact-Krish-approval-message>"
 .\scripts\studio.ps1 v2 render --job <job-id>
 .\scripts\studio.ps1 v2 qa --job <job-id>
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate final --artifact <youtube-shorts-master-path> --confirmation-ref "codex-user-confirmation:final:<youtube-shorts-master-hash>:<exact-Krish-approval-message>"
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate final --artifact <linkedin-master-path> --confirmation-ref "codex-user-confirmation:final:<linkedin-master-hash>:<exact-Krish-approval-message>"
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate final --artifact <tiktok-master-path> --confirmation-ref "codex-user-confirmation:final:<tiktok-master-hash>:<exact-Krish-approval-message>"
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate final --artifact <instagram-reels-master-path> --confirmation-ref "codex-user-confirmation:final:<instagram-reels-master-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate final --artifact <youtube-shorts-master-path> --confirmation-ref "studio-user-confirmation:<client>:final:<youtube-shorts-master-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate final --artifact <linkedin-master-path> --confirmation-ref "studio-user-confirmation:<client>:final:<linkedin-master-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate final --artifact <tiktok-master-path> --confirmation-ref "studio-user-confirmation:<client>:final:<tiktok-master-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate final --artifact <instagram-reels-master-path> --confirmation-ref "studio-user-confirmation:<client>:final:<instagram-reels-master-hash>:<exact-Krish-approval-message>"
 .\scripts\studio.ps1 v2 package create --job <job-id> --candidate <candidate-json-path>
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate package --artifact <package-artifact-hash> --confirmation-ref "codex-user-confirmation:package:<package-artifact-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate package --artifact <package-artifact-hash> --confirmation-ref "studio-user-confirmation:<client>:package:<package-artifact-hash>:<exact-Krish-approval-message>"
 .\scripts\studio.ps1 v2 package archive --job <job-id>
 .\scripts\studio.ps1 v2 publish youtube --job <job-id> --privacy private
 ```
@@ -292,7 +292,7 @@ The first candidates call creates discovery material only. Inspect the verified 
 ```powershell
 .\scripts\studio.ps1 v2 production-brief import --input <production-brief.json>
 .\scripts\studio.ps1 v2 candidates --job <job-id> --brief <brief.json> --input <codex-authored-candidate.json>
-.\scripts\studio.ps1 v2 approve --job <job-id> --gate angle --artifact <candidate-json-path> --confirmation-ref "codex-user-confirmation:angle:<candidate-semantic-hash>:<exact-Krish-approval-message>"
+.\scripts\studio.ps1 v2 approve --job <job-id> --gate angle --artifact <candidate-json-path> --confirmation-ref "studio-user-confirmation:<client>:angle:<candidate-semantic-hash>:<exact-Krish-approval-message>"
 .\scripts\studio.ps1 v2 recording-brief create --job <job-id> --candidate <candidate-json-path>
 .\scripts\studio.ps1 v2 ingest --job <job-id> --source-bundle <recorded-source-bundle.json>
 .\scripts\studio.ps1 v2 transcribe --job <job-id>
@@ -317,7 +317,7 @@ For source or visual calibration, create the V2 job with `--purpose calibration`
 
 ## Cloud engine recovery
 
-The control plane runs 16 scheduled jobs from `apps/control-plane/vercel.json`.
+The control plane runs 24 scheduled jobs from `apps/control-plane/vercel.json`.
 Everything here works with the Windows machine off. Only the job-based Studio runner's rendering, packaging
 and upload need it, and those wait rather than fail; ve rendering is a separate CLI path.
 
@@ -335,11 +335,12 @@ backfill a window. The replayed job records its own ledger row under the
 someone pressed a button is a broken schedule wearing a working one's clothes,
 and the `trigger` column is what tells the two apart.
 
-Two jobs refuse to replay and say why. `purge` hard-deletes, so its recovery is
-`POST /api/purge/restore` with the archive key, never a second run. `aeo_ingest`
-spends roughly $0.70 of probe budget per run and has no schedule at all.
+Three jobs refuse to replay and say why (`apps/control-plane/api/content-engine/_jobs.ts`, `manual_only`).
+`purge` hard-deletes, so its recovery is `POST /api/purge/restore` with the archive key, never a second run.
+`aeo_ingest` spends roughly $0.70 of probe budget per run and has no schedule at all. `judge_ladder` spends on
+the nine-judge panel and can rewrite a thesis while repairing it, so re-run one idea by id, never the whole ladder.
 
-A replay that outlives 60 seconds returns `202 still_running`, not an error.
+A replay that outlives 60 seconds returns `202 still_running` while the job carries on.
 `briefs/assemble` and `investigations/run` both routinely take longer; their
 ledger row appears when they finish.
 
@@ -393,7 +394,7 @@ start.
 
 **A cron ran but the ledger says `manual`.**
 
-That is the honest answer, not a bug: someone invoked it. Vercel's scheduler is
+That is the honest answer: someone invoked it. Vercel's scheduler is
 identified by `x-vercel-cron` or a `vercel-cron` user agent, either of which is
 enough (`isScheduled` in `api/_runs.ts`). A person holding `CRON_SECRET` is
 still recorded as `manual` on purpose.

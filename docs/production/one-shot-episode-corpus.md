@@ -2,7 +2,7 @@
 
 Krish supplied this corpus on 16 October 2026 with Friday's takes: "I'm very keen to see how you produce this in the slickest, most professional way possible. We now have a 15-minute episode and a 90-second video to produce, and I'm incredibly intrigued to see how the 15-minute one turns out and what you're going to do to 10x the production quality."
 
-It is the reference for every long episode (the deep cut, house rule DEEP_CUT). Where it and a house rule differ, the house rule holds until Krish says otherwise; each difference is named in `WORKBENCH.md`. The corpus follows, as he gave it.
+It is the reference for every long episode: today the 15-minute feature, made only when Krish calls one (house rule FEATURE, `config/features.json`), which replaced the weekly deep cut (house rule DEEP_CUT, retired on 21 October 2026). Where it and a house rule differ, the house rule holds until Krish says otherwise. Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); on the quick-edit fallback, `scripts/quick-edit/episode.py` applies the corpus to a long cut. The corpus follows, as he gave it.
 
 ---
 

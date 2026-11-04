@@ -43,7 +43,9 @@ as its SPLIT stage, with the mark tile and pill everywhere. Never put a face-wit
 
 ## 4. Prove each step on the real cut, not on proxies
 
-- Render the whole cut after every change and look at a contact sheet and at the worst frames full size.
+- Try each change on his own footage before a whole cut: in the lab (`ve lab render`) or on the proof of the hardest
+  beat (`ve proof`), then look at a contact sheet and at the worst frames full size. A whole cut renders at most twice
+  between his presses (`ve render` refuses a third for a piece published from 9 Nov, F34).
 - QC is heard by the two forced aligners (MMS draws the captions, wav2vec2 hears them); never by whisper, which runs
   3 to 19 frames off.
 - The cloud container needs the pinned ffmpeg (release `toolchain-ffmpeg-n8.1.2-53-g1005b294ff`), tesseract, torch

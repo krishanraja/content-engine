@@ -77,7 +77,8 @@ What it checks, and it stops with an error if any check fails:
 Where it comes from:
 
 - **The days, colours and names**, as for the banner, from the house style in
-  `config/studio.json`; the highlight labels are each channel's `short`. A
+  `config/studio.json`; each day's highlight label is the first three
+  letters of its day (MON, WED, FRI). A
   schedule change reaches the cover, the header and the highlights on the
   next build.
 - **The line under the logo** is `channel.json`'s `tagline`, so the cover,
@@ -101,8 +102,8 @@ saying which file goes where; keep that file in step.
 ## Where the words come from
 
 - **The days, their colours and the subchannel names** come from the house
-  style in `config/studio.json` (`publication.house_style.channels`, and each
-  series' `accent`), the same values the Studio and `scripts/pages/` use. A
+  style in `config/studio.json` (`publication.house_style.channels` inside
+  `brand_themes`, and each entry's `accent` under `series`), the same values the Studio and `scripts/pages/` use. A
   schedule change is one edit there: change each subchannel's `day`, and the
   pills, the colour strip, the description and every page follow on the next
   build.

@@ -6,15 +6,18 @@ dress, stumbles and dead air cut, graphics on the right lines, captions timed
 to the words, the licensed music bed under all of it, even loudness, the one
 outro card on the end.
 
-It is the only path that makes both shapes, and the only one that carries
-music (the Studio renders 9:16 only and refuses it).
+Video is now made with ve (`python scripts/ve.py`, `docs/ve/ENGINE.md`), and
+quick-edit stays the fallback until ve passes Phase 3 (`AGENTS.md`, "Video
+production"; `docs/ve/STATUS.md` says what ve can do today). Both make the
+tall and the wide shape with the music bed; the Studio renders 9:16 only and
+carries no music.
 By house rule TWO_CUTS each cut is its own recording: the long cut renders
 with `--only 16x9`, the short cut with `--only 9x16`, each from its own config.
+From 26 October 2026 a piece's cut renders only from the creative direction
+Krish signed (`kit.py`, below; `docs/CREATIVE_DIRECTION.md`).
 
-It is for videos that do not go through the Studio: a launch hello, a quick
-take, or a piece whose Studio job is not set up yet. It made both launch
-videos on 2026-10-05 (`editions/2026-10-launch/video-kit/`). A Studio piece
-still goes through the Studio.
+It made both launch videos on 2026-10-05
+(`editions/2026-10-launch/video-kit/`).
 
 It never reads or writes the Studio's Inbox or job folders. Work on a copy
 of the recording in a local folder. It writes into Drive only when you ask it
@@ -198,7 +201,14 @@ subchannel's look, the tall cut's dress, a panel per picture, the cut's script,
 `<cut>.json` (music on auto, the same `piece_id` on both cuts, a
 cue per picture the script brings in) and `kit.json`, which also keeps each
 cut's `recording_seconds` (ffprobe) for the music. A config edited by hand is
-never overwritten.
+never overwritten unless you give `--force`.
+
+From 26 October 2026 kit.py draws no kit without the piece's signed creative
+direction for those exact words (`creative-direction.json` beside `post.json`,
+checked by `scripts/post-pack/creative_direction.py`). It records the file's
+hash in the cut's config, and make.py refuses to render a piece's cut whose
+config has no direction, or whose direction file changed since kit.py checked
+it.
 
 ## The graphics
 
@@ -286,7 +296,9 @@ whilst I am talking, higher during the outro)."
   licence is in date and covers every place either cut of the piece goes
   (the wide cut: YouTube and Substack; the tall cut: Shorts, Reels, TikTok
   and LinkedIn), cleared for YouTube Content ID, and whose file matches its
-  sha256. Nothing browses Drive for audio.
+  sha256. Nothing browses Drive for audio. A series piece (Monday, Wednesday,
+  Friday) only ever gets a series track; a track marked `"for": "off-day"`
+  (Goodie Bags since 2026-11-04) is kept for off-day posts.
 - **One track for both cuts.** make.py renders one cut at a time and cannot
   know the other's length, so each cut asks for what the pair needs: a
   licence for all six places, and the long cut's length (else
@@ -310,6 +322,8 @@ python music.py approve TRACK_ID --words "his exact words"
 python music.py approve-levels --words "his exact words"
 python music.py pick --piece PIECE_ID --both-cuts [--seconds LONG_CUT]   # the one track both cuts get, and why the others were passed over
 python music.py pick --seconds 190 --piece PIECE_ID --shape 16x9    # one cut alone
+python music.py publish                                  # a home computer: send every ledger file to the engine's library
+python music.py fetch [--out DIR]                        # any machine: get them back
 ```
 
 `add` measures the file and writes it as `proposed`; only `approve`, with
@@ -385,8 +399,9 @@ assumed, and no spend is made without his yes.
   pictures, loudness out of range.
 
 **The 90 second check.** House rule TWO_CUTS gives the short cut at most 90
-seconds, and story_check holds its script to 225 words, 90 seconds at 150
-words a minute. Krish has not yet ruled whether the 90 seconds include the
+seconds, and story_check holds its script to 195 words, so the finished cut
+stays under 89 seconds (Reels over 90 seconds were cut off, 2026-10-14).
+Krish has not yet ruled whether the 90 seconds include the
 4 second end card, so the check reads one named figure,
 `TALL_CAP` in `make.py`: today `main_seconds`, his speech alone. The warning
 gives `total_seconds` beside it. If he rules that the 90 seconds is the whole

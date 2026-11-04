@@ -35,7 +35,7 @@ every one of them as exposed and rotate it:
 
 ## The secret store
 
-Engine runtime secrets live where the engine runs, not in the repository:
+Engine runtime secrets live where the engine runs, and never in the repository:
 
 - **Supabase Edge Function secrets** for anything the Supabase functions call.
 - **Vercel project environment variables** (`content-engine` project) for
@@ -57,7 +57,7 @@ below are the contract; the values are his to place.
 
 Krish explicitly commanded the keys be placed. The Vercel and Supabase MCP
 connectors in this session turned out to be authorized only for other projects,
-not the content-engine's production project, so neither could write to it: the
+so neither could write to the content-engine's production project: the
 Vercel connector lists `content-engine` but `get_project` and the env endpoint
 404, and the Supabase connector sees a different set of projects. On his
 explicit, repeated command, the four engine keys were written to the

@@ -68,17 +68,18 @@ unticked.
    `config/failures.json`, checked by `check_failures.py`) is written by the loop; the concrete check or skill line is
    a work order the Claude step makes on the branch. A mode already at the gate is put to Krish.
 4. **Report** (`scripts/learning/report.py`): the repeat rate (incidents on already-guarded modes over all incidents),
-   rounds per piece, week on week (`docs/learning/metrics.json`), and at most three proposals of class
-   `engine_quality` or `taste` into `mindmake_studio_learning_proposals` through `POST /api/learning/incidents`, each
-   with its evidence count, incident ids and cause. It writes `docs/learning/<date>.md` and one NOW.md line, and the
-   whole lands as a pull request that merges itself on green CI.
+   rounds per piece, week on week (`docs/learning/metrics.json`, which the first weekly run writes), and at most three
+   proposals of class `engine_quality` or `taste` into `mindmake_studio_learning_proposals` through
+   `POST /api/learning/incidents`, each with its evidence count, incident ids and cause. It writes
+   `docs/learning/<date>.md` and one NOW.md line, and the whole lands as a pull request that merges itself on green CI.
 
 Run any stage by hand: `python3 scripts/learning/loop.py weekly deterministic`, then `weekly finish` (add `--apply` to
 post proposals). The backfill over the registers' whole history is `python3 scripts/learning/loop.py backfill --out
 docs/learning/<date>-backfill.md`; it proposes nothing to his list. The first is `2026-11-04-backfill.md`.
 
-A single failure Krish names is traced by hand into the same registers: `2026-11-04-thursday-killed.md` (the killed
-Thursday 5 Nov short: F31 to F39, five guards in `scripts/velib/guards.py`, six yes/no questions for him).
+A single failure Krish names is traced by hand into the same registers: `docs/learning/2026-11-04-thursday-killed.md`
+(the killed Thursday 5 Nov short: F31 to F39, the guards in `scripts/velib/guards.py`, and his answers of 4 Nov to the
+six questions it put to him).
 
 ## What it cannot do yet
 
