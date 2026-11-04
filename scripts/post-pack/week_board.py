@@ -750,6 +750,312 @@ def signoff_card(day, p, piece, manifest_sha=None):
             f'<p class="tri-state" data-signoffstate="{day}" aria-live="polite"></p></div>')
 
 
+# ------------------------------------------------------------------ the production gates (docs/PUBLISH_BOARDS.md)
+# Krish, 2026-11-04: "Can I select a visual style now that we have different style skills? Do I get shown mocks at the
+# right moment?" One press per gate on a series day's tab, each bound to the sha256 of what the tab shows him: Sign
+# storyboard (the storyboard and its expectations sheet), Pick a style (the style mocks on his own take), Approve or
+# Reject the moving proof, and Approve cut. Each press is picks/<day>-<gate>; the server writes it onto the piece's
+# making record as meta.making.gates (apps/control-plane/api/board/_presses.ts), and ve reads it there.
+
+GATE_ORDER = ('storyboard', 'style', 'proof', 'cut')
+EXPECT_MAX_LINES = 6
+STYLE_MAX = 6
+MODULE_ID = re.compile(r'^[a-z0-9][a-z0-9_.-]{0,79}$')
+SHA_HEX = re.compile(r'^[a-f0-9]{64}$')
+
+
+def canonical_json(value):
+    """The same canonical JSON as canonical() in apps/control-plane/api/board/_contracts.ts: keys sorted, no spaces."""
+    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+
+
+def gate_text(text):
+    """A text file as the tab shows it: line ends as LF, nothing else changed."""
+    return str(text).replace('\r\n', '\n').replace('\r', '\n')
+
+
+def storyboard_sha(storyboard, expect):
+    """What Sign storyboard binds: the sha256 of canonical {"expect": <expect.md>, "storyboard": <storyboard.md>}, each
+    text with LF line ends, exactly as the tab shows them. ve works it out the same way to read his signature."""
+    return hashlib.sha256(canonical_json({'expect': gate_text(expect), 'storyboard': gate_text(storyboard)}).encode('utf-8')).hexdigest()
+
+
+def cut_gate_sha(cuts):
+    """What Approve cut binds: the one cut's file sha256 when the tab shows one cut, else the sha256 of canonical
+    {cut: file sha256} for every cut it shows (the server checks the same rule, _contracts.ts gateBody)."""
+    if len(cuts) == 1:
+        return next(iter(cuts.values()))
+    return hashlib.sha256(canonical_json(cuts).encode('utf-8')).hexdigest()
+
+
+def read_text_file(path, what):
+    try:
+        return gate_text(Path(path).read_text(encoding='utf-8-sig'))
+    except OSError as error:
+        raise BoardError(f'{what}: cannot read {path}: {error.strerror}')
+    except UnicodeDecodeError:
+        raise BoardError(f'{what}: {path} is not UTF-8 text')
+
+
+def read_storyboard(path, expect=None, where='--storyboard'):
+    """{'text', 'expect', 'sha256'} for Sign storyboard: the storyboard and its expectations sheet (expect.md, at most six
+    lines, from `ve expect`), beside it unless named."""
+    text = read_text_file(path, where)
+    exp_path = Path(expect) if expect else Path(path).with_name('expect.md')
+    if not exp_path.is_file():
+        raise BoardError(f'{where}: no expectations sheet at {exp_path}; write it with ve expect, or give --expect DAY=PATH')
+    exp = read_text_file(exp_path, where.replace('--storyboard', '--expect'))
+    lines = [ln for ln in exp.split('\n') if ln.strip()]
+    if not text.strip() or len(text) > 40000:
+        raise BoardError(f'{where}: the storyboard is empty or over 40,000 characters')
+    if not lines or len(lines) > EXPECT_MAX_LINES:
+        raise BoardError(f'{where}: the expectations sheet holds {len(lines)} lines; it is one to {EXPECT_MAX_LINES}')
+    return {'text': text, 'expect': exp, 'sha256': storyboard_sha(text, exp)}
+
+
+def read_asset_map(path):
+    """The asset mapping board_web.py publish-web takes (--assets): [{id, path, source_url, ...}]."""
+    if not path:
+        return []
+    data = read_json(path, '--assets')
+    if not isinstance(data, list) or not all(isinstance(m, dict) and m.get('source_url') for m in data):
+        raise BoardError('--assets: give the publish mapping, a list of {"id", "path", "source_url"}')
+    return data
+
+
+def clip_src(file, sha, base, mapping, what):
+    """Where the tab plays a clip from: the --assets mapping entry for its file (by path, or by the bytes' sha256), whose
+    source_url board_web.py publish-web swaps for the board's own copy of those bytes; or the file itself when it is an
+    https link already. Never a path on this machine."""
+    file = str(file or '')
+    want = (Path(base) / file).resolve() if file and not re.match(r'^https?://', file) else None
+    for m in mapping:
+        same_path = want is not None and m.get('path') and (Path(base) / str(m['path'])).resolve() == want or (
+            want is not None and m.get('path') and Path(str(m['path'])).resolve() == want)
+        if same_path or (sha and m.get('existing_sha256') == sha):
+            src = str(m['source_url'])
+            if not re.match(r'^(https://|/api/board/)', src):
+                raise BoardError(f'{what}: the --assets source_url for {file} is not an https link or a board asset')
+            return src
+    if file.startswith('https://'):
+        return file
+    raise BoardError(f'{what}: {file or "the clip"} has no board asset; map it in --assets (as Downloads are) so the tab can play it')
+
+
+def _one_line(v, most):
+    s = ' '.join(str(v or '').split())
+    return s if 0 < len(s) <= most else None
+
+
+def read_styles(path, mapping, where='--styles'):
+    """{'sha256', 'beat', 'window', 'options': [{module, name, how, sha256, src}], 'skipped': [line]} from styles.json
+    (`ve styles`): the shortlisted motion styles, each a mock of the same beat on his own take. sha256 is the file's."""
+    try:
+        raw = Path(path).read_bytes()
+    except OSError as error:
+        raise BoardError(f'{where}: cannot read {path}: {error.strerror}')
+    try:
+        data = json.loads(raw.decode('utf-8-sig'))
+    except ValueError:
+        raise BoardError(f'{where}: {path} is not JSON')
+    if not isinstance(data, dict) or not isinstance(data.get('options'), list):
+        raise BoardError(f'{where}: give {{"beat", "window", "options": [{{"module", "name", "how", "file", "sha256"}}], "skipped"}}')
+    problems, options, seen = [], [], set()
+    for i, o in enumerate(data['options']):
+        if not isinstance(o, dict):
+            problems.append(f'option {i + 1} is not an object')
+            continue
+        module, name, how, sha = str(o.get('module') or ''), _one_line(o.get('name'), 80), _one_line(o.get('how'), 240), str(o.get('sha256') or '')
+        if not MODULE_ID.match(module) or module in seen:
+            problems.append(f'option {i + 1}: module is a motion style id, once')
+            continue
+        if not name or not how or not SHA_HEX.match(sha):
+            problems.append(f'{module}: give its name and one-line how, and the clip\'s sha256')
+            continue
+        seen.add(module)
+        options.append({'module': module, 'name': name, 'how': how, 'sha256': sha,
+                        'src': clip_src(o.get('file'), sha, Path(path).parent, mapping, f'{where} {module}')})
+    if not problems and not 1 <= len(options) <= STYLE_MAX:
+        problems.append(f'give one to {STYLE_MAX} styles to choose from')
+    if problems:
+        raise BoardError(f'{where} is not ready to show:\n  ' + '\n  '.join(problems))
+    skipped = []
+    for s in data.get('skipped') or []:
+        if isinstance(s, dict):
+            label = _one_line(s.get('name') or s.get('module'), 80)
+            why = _one_line(s.get('why') or s.get('reason'), 240)
+            line = f'{label}: {why}' if label and why else label
+        else:
+            line = _one_line(s, 240)
+        if line:
+            skipped.append(line)
+    return {'sha256': hashlib.sha256(raw).hexdigest(), 'beat': data.get('beat'), 'window': data.get('window'),
+            'options': options, 'skipped': skipped}
+
+
+def _seconds(v):
+    return f'{float(v):g}' if isinstance(v, (int, float)) and not isinstance(v, bool) else None
+
+
+def window_line(beat, window=None, start=None, end=None):
+    """'Beat 4, 12 to 21 s' from what the engine wrote."""
+    if isinstance(window, (list, tuple)) and len(window) == 2:
+        start, end = window
+    elif isinstance(window, dict):
+        start, end = window.get('start'), window.get('end')
+    parts = [f'Beat {beat}' if isinstance(beat, (int, str)) and str(beat).strip() else '']
+    a, b = _seconds(start), _seconds(end)
+    if a and b:
+        parts.append(f'{a} to {b} s')
+    return ', '.join(p for p in parts if p)
+
+
+def direction_refs(directory):
+    """The board cards the piece's signed spec names (creative-direction.json, brand.references), by their card names."""
+    for d in (Path(directory), Path(directory).parent):
+        spec = d / 'creative-direction.json'
+        if spec.is_file():
+            try:
+                refs = (json.loads(spec.read_text(encoding='utf-8')).get('brand') or {}).get('references') or []
+            except (ValueError, OSError, AttributeError):
+                return []
+            return [r for r in refs if isinstance(r, dict) and r.get('card')]
+    return []
+
+
+def read_proof(path, mapping, where='--proof'):
+    """{'sha256', 'beat', 'start', 'end', 'spec_sha256', 'style_module', 'cut', 'src', 'references'} from proof/<cut>.json
+    (`ve proof`): the hardest beat, moving, in the picked style. The clip is its `file`, or <cut>.mp4 beside it."""
+    data = read_json(path, where)
+    if not isinstance(data, dict) or not SHA_HEX.match(str(data.get('sha256') or '')):
+        raise BoardError(f'{where}: give {{"beat", "start", "end", "sha256", "spec_sha256", "style_module"}}, sha256 the clip\'s')
+    stem = Path(path).stem
+    cut = data.get('cut') or (stem if stem in ('long', 'short') else None)
+    file = data.get('file') or Path(path).with_suffix('.mp4').name
+    refs = data.get('references')
+    if not isinstance(refs, list):
+        refs = direction_refs(Path(path).parent)
+    names = []
+    for r in refs:
+        card = _one_line(r.get('card') if isinstance(r, dict) else r, 160)
+        roles = [str(x) for x in (r.get('for') or [])] if isinstance(r, dict) and isinstance(r.get('for'), list) else []
+        if card:
+            names.append(f'{card} ({", ".join(roles)})' if roles else card)
+    module = data.get('style_module')
+    return {'sha256': data['sha256'], 'beat': data.get('beat'), 'start': data.get('start'), 'end': data.get('end'),
+            'spec_sha256': data.get('spec_sha256'), 'style_module': module if isinstance(module, str) else None,
+            'cut': cut if cut in ('long', 'short') else None, 'references': names,
+            'src': clip_src(file, data['sha256'], Path(path).parent, mapping, where)}
+
+
+def gate_note(day, gate):
+    """His press's own answer (week.js): saving, saved, or why it was not."""
+    return f'<p class="tri-state" data-gatestate="{day}-{gate}" aria-live="polite"></p>'
+
+
+# Where the live overlay (web.js drawGates) says what the piece's making record holds for this gate now.
+LIVE_GATE_NOTE = '<p class="gate-live" data-live-gate-note role="status"></p>'
+
+
+def gate_section(p, day, gate, title, sha, inner):
+    return (f'<section class="gate" id="{p}gate-{gate}" data-gate="{gate}" data-gate-sha="{sha}" data-live-gate="{gate}" '
+            f'data-live-gate-sha="{sha}" aria-labelledby="{p}gate-{gate}-h"><h3 id="{p}gate-{gate}-h">{E(title)}</h3>'
+            + LIVE_GATE_NOTE + inner + gate_note(day, gate) + '</section>')
+
+
+def press_button(day, gate, label, extra=''):
+    return f'<button type="button" class="btn-s" data-act="gate" data-gate="{gate}" data-day="{day}"{extra} disabled>{E(label)}</button>'
+
+
+def clip(src, label):
+    return f'<video class="gate-clip" src="{E(src)}" controls playsinline preload="metadata" aria-label="{E(label)}"></video>'
+
+
+def storyboard_gate(p, day, sb):
+    exp = ''.join(f'<li>{md_inline(ln.strip().lstrip("-*").strip())}</li>' for ln in sb['expect'].split('\n') if ln.strip())
+    inner = (f'<div class="gate-text">{md_block(sb["text"])}</div>'
+             f'<h4 class="gate-sub">What this cut will and will not do</h4><ul class="gate-expect">{exp}</ul>'
+             '<p class="rec-how">Signing says you are happy to record to this. Nothing is made past it until you do.</p>'
+             + press_button(day, 'storyboard', 'Sign storyboard'))
+    return gate_section(p, day, 'storyboard', 'Storyboard', sb['sha256'], inner)
+
+
+def style_gate(p, day, st):
+    where = window_line(st.get('beat'), st.get('window'))
+    figs = ''.join(
+        f'<figure class="gate-style" data-style-module="{E(o["module"])}" data-style-name="{E(o["name"])}" data-style-sha="{o["sha256"]}">'
+        + clip(o['src'], o['name']) + f'<figcaption><b>{E(o["name"])}</b> {E(o["how"])}</figcaption>'
+        + press_button(day, 'style', 'Pick', f' data-module="{E(o["module"])}"')
+        + f'<label class="gate-nfu"><input type="checkbox" data-style-nfu="{E(o["module"])}" data-day="{day}" disabled> Not for us</label></figure>'
+        for o in st['options'])
+    left = (f'<p class="rec-how">Left out: {E("; ".join(st["skipped"]))}.</p>' if st['skipped'] else '')
+    inner = ((f'<p class="rec-how">The same moment of your take in each style{": " + E(where) if where else ""}.</p>')
+             + f'<div class="gate-styles">{figs}</div>' + left
+             + f'<label class="gate-words">None of these? Say why (required): <textarea data-gate-words="{day}-style" rows="2" disabled></textarea></label>'
+             + press_button(day, 'style', 'None of these', ' data-module=""'))
+    return gate_section(p, day, 'style', 'Style', st['sha256'], inner)
+
+
+def proof_gate(p, day, pr, styles=None):
+    names = {o['module']: o['name'] for o in (styles or {}).get('options') or []}
+    where = window_line(pr.get('beat'), None, pr.get('start'), pr.get('end'))
+    style = names.get(pr.get('style_module')) or pr.get('style_module')
+    what = ', '.join(x for x in (where, f'in {style}' if style else '') if x)
+    refs = (f'<div class="gate-refs"><h4 class="gate-sub">Held to your cards</h4><ul>'
+            + ''.join(f'<li>{E(r)}</li>' for r in pr['references']) + '</ul></div>') if pr['references'] else (
+        '<p class="rec-how">The piece names no reference cards yet.</p>')
+    inner = ((f'<p class="rec-how">The hardest moment, moving{": " + E(what) if what else ""}. Approve it before the full cut is made.</p>')
+             + f'<div class="gate-proof">{clip(pr["src"], "The moving proof")}{refs}</div>'
+             + press_button(day, 'proof', 'Approve proof', ' data-verdict="approve"' + (f' data-cut="{pr["cut"]}"' if pr.get('cut') else ''))
+             + f'<label class="gate-words">To reject it, say what is wrong (required): <textarea data-gate-words="{day}-proof" rows="2" disabled></textarea></label>'
+             + press_button(day, 'proof', 'Reject', ' data-verdict="reject"' + (f' data-cut="{pr["cut"]}"' if pr.get('cut') else '')))
+    return gate_section(p, day, 'proof', 'Proof', pr['sha256'], inner)
+
+
+def cut_gate(p, day, videos):
+    """Approve cut: each finished cut the record holds with its file's sha256, with its download, and the one press."""
+    by_cut = {v['cut']: v for v in videos or [] if isinstance(v, dict) and v.get('cut') in ('long', 'short')
+              and SHA_HEX.match(str(v.get('sha256') or ''))}
+    cuts = {c: by_cut[c]['sha256'] for c in ('long', 'short') if c in by_cut}
+    if not cuts:
+        return ('<section class="gate" id="' + p + 'gate-cut" data-gate="cut" data-live-gate="cut" aria-labelledby="' + p + 'gate-cut-h">'
+                f'<h3 id="{p}gate-cut-h">Cut</h3>' + LIVE_GATE_NOTE
+                + '<p class="rec-how">The cuts are not made yet. They come once the proof is approved.</p>'
+                + gate_note(day, 'cut') + '</section>')
+    rows = []
+    for c, v in ((c, by_cut[c]) for c in cuts):
+        name = LAYOUT['cuts'][c]['name']
+        action = immutable_video_download(v) or (drive_actions(v['url']) if drive_links(v.get('url')) else
+                                                 f'<span class="rec-none">{E(v.get("name") or "")} is in the post\'s folder</span>')
+        rows.append(f'<li class="gate-cut" data-cut="{c}" data-cut-sha="{v["sha256"]}"><b>The {E(name)}</b> {action}</li>')
+    attrs = ''.join(f' data-cut-{c}="{s}"' for c, s in cuts.items())
+    inner = (f'<ul class="gate-cuts">{"".join(rows)}</ul>'
+             '<p class="rec-how">Watch each cut at full size and hear it against its script first.</p>'
+             + press_button(day, 'cut', 'Approve cut', attrs))
+    return gate_section(p, day, 'cut', 'Cut', cut_gate_sha(cuts), inner)
+
+
+def gates_card(day, p, piece, prod, videos):
+    """The production gates on a series day's tab, in order: Storyboard, Style, Proof, Cut. Drawn only for a day given at
+    least one of --storyboard, --styles or --proof; a day without them is drawn exactly as before."""
+    if not prod:
+        return ''
+    parts = []
+    if prod.get('storyboard'):
+        parts.append(storyboard_gate(p, day, prod['storyboard']))
+    if prod.get('styles'):
+        parts.append(style_gate(p, day, prod['styles']))
+    if prod.get('proof'):
+        parts.append(proof_gate(p, day, prod['proof'], prod.get('styles')))
+    parts.append(cut_gate(p, day, videos))
+    return (f'<div class="rec gt" id="{p}gates" role="region" aria-labelledby="{p}gates-h" data-gates-day="{day}" data-piece="{E(piece)}">'
+            f'<div class="rec-head"><h2 id="{p}gates-h">Production gates</h2></div>'
+            '<p class="rec-how">One press for each: the storyboard, the style, the moving proof, then the cut.</p>'
+            # How many full renders went to him before he approved the cut, once the engine records it (web.js).
+            '<p class="gate-live" data-live-rounds role="status"></p>'
+            + ''.join(parts) + '</div>')
+
+
 SCORE_BASES = (('at_publish', 'At publish'), ('hindsight', 'Looking back'))
 
 
@@ -3614,7 +3920,7 @@ def previous_conf(text, field):
 
 def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review, materials,
               briefs, teleprompter, videos, ideas, hidden, panels, warnings, built_at, kept_at, sweeps=None, lessons=None,
-              folders=None, titles=None, manifests=None, moved=None):
+              folders=None, titles=None, manifests=None, moved=None, production=None):
     """A day in the fixed layout, appended to panels; its state. Each step is filled from data, in the same place every
     week: Brief (the agreed brief), Drafts (the words to review), Record (Teleprompter, the scripts), Publish (the
     files first, then each place to post, each with its tick)."""
@@ -3651,6 +3957,17 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
     approve = approve_card(key, p, weekday, rv, piece, tp, when, series_label, title or (brief or {}).get('idea') or plain,
                            feature, warnings) if rv else ''
     after = approve + (sweep_card(p, sweep) if sweep else '') + (lessons_card(p, lessons) if lessons and rv else '')
+    prod = (production or {}).get(key)
+    if prod and prod.get('piece_id') and prod['piece_id'] != piece:
+        # Gates carried from the board being replaced were for another piece: never shown under a new pick.
+        warnings.append(f'{weekday}: the production gates on the board were for piece {prod["piece_id"]}, not {piece or "no piece"}; they are dropped')
+        production.pop(key)
+        prod = None
+    if prod and piece:
+        prod['piece_id'] = piece
+    if prod and not piece:
+        raise BoardError(f'--storyboard, --styles and --proof {key}: {weekday} has no piece; its gates are pressed on its piece')
+    gates = gates_card(key, p, piece, prod, (videos or {}).get(key)) if prod else ''
     held_titles = (titles or {}).get(key)
     if held_titles and held_titles.get('piece_id') and piece and held_titles['piece_id'] != piece:
         raise BoardError(f'--titles {key}: the options are for piece {held_titles["piece_id"]}, and {weekday} holds {piece}')
@@ -3665,7 +3982,7 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
             'brief': brief_card(p, brief) if brief else slot_empty('This piece was made before its brief was kept on the board.'),
             'drafts': (review_card(key, rv, built_at, kept_at) + after if rv else
                        slot_empty('The words are signed off. The article is under Publish, in its first step; the scripts are under Record.')),
-            'record': parts['record'] + parts['scripts'] + (titles_card(key, p, piece, held_titles) if held_titles else ''),
+            'record': parts['record'] + parts['scripts'] + (titles_card(key, p, piece, held_titles) if held_titles else '') + gates,
             # One ordered run-sheet, drawn from the page's data: never the page's own sections, ticks or contents.
             'publish': run_sheet(key, p, page, dict(publish_data(page, weekday, warnings), piece=piece,
                                                     manifest_sha256=(manifests or {}).get(key)),
@@ -3689,7 +4006,7 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
         record = (record_card(key, p, tp, feature) if tp.get('cuts') else
                   slot_empty('The scripts go to Teleprompter once you approve them. How to record and send each take back is here then.'))
         if state != 'not_picked':
-            record += titles_card(key, p, piece, held_titles)
+            record += titles_card(key, p, piece, held_titles) + gates
         if state == 'not_picked' and key in (moved or {}):
             to, href = moved_link(moved[key])
             head = fixed_head(f'{series_label} · {when_s} · moved to {to}', weekday)
@@ -3901,8 +4218,9 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
           draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None, briefs=None, combine=None,
           sweeps=None, lessons=None, folders=None, kept_draft=None, titles=None, offdays=None, manifests=None, archive=None,
-          gates=None, moved=None):
-    """(page, manifest, warnings). titles: {day: read_titles()}; offdays: read_offdays(); manifests: {day: the sha256
+          gates=None, moved=None, production=None):
+    """(page, manifest, warnings). production: {day: {'storyboard': read_storyboard(), 'styles': read_styles(),
+    'proof': read_proof()}}, the production gates on that day's tab (gates_card). titles: {day: read_titles()}; offdays: read_offdays(); manifests: {day: the sha256
     of the piece's manifest}, for Approve for publish. folders: {day: the post's library folder, from its making record's pack}. ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
@@ -3924,6 +4242,10 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     if archive is not None and VERSION < 3:
         raise BoardError(f'--archive: the week of {monday.isoformat()} is in layout {VERSION}; the Archive is on boards from '
                          f'{V3_FROM.isoformat() if V3_FROM else "layout v3"}')
+    production = {k: v for k, v in (production or {}).items() if v}
+    if production and not FIXED:
+        raise BoardError(f'--storyboard, --styles and --proof: the week of {monday.isoformat()} is in the layout it was published '
+                         f'in; the production gates are on boards from {LAYOUT_FROM.isoformat()}')
     if (titles or offdays or manifests) and not FIXED:
         raise BoardError(f'--titles, off days and --publish-manifest: the week of {monday.isoformat()} is in the layout it was '
                          f'published in; his presses on them are on boards from {LAYOUT_FROM.isoformat()}')
@@ -4020,7 +4342,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         elif FIXED:
             state = fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, pending, draft, calls, review,
                               materials, briefs, teleprompter, videos, ideas, key != opened, panels, warnings, built_at, kept_at,
-                              sweeps, lessons, folders, titles, manifests, moved=moved)
+                              sweeps, lessons, folders, titles, manifests, moved=moved, production=production)
         elif page:
             if not piece:
                 raise BoardError(f'{weekday} is made but has no piece id: give --piece {key}=<uuid>, or --options or --live '
@@ -4134,6 +4456,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         conf['titles'] = titles
         conf['offdays'] = offdays
         conf['manifests'] = manifests
+        if production:
+            conf['production'] = production
         if lessons and not any((review or {}).get(k) for k in order):
             warnings.append('--lessons: no day has drafts on the board, so What I learned from your edits shows nowhere')
     # The fixed layout has one stylesheet: publish_manager's, never a day page's own copy of it.
@@ -4229,6 +4553,15 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         manifest['titles'] = titles
         manifest['offdays'] = offdays
         manifest['manifests'] = manifests
+        if production:
+            manifest['db']['picks']['decisions'].update({
+                '<day>-storyboard': {'kind': 'sign_storyboard', 'fields': ['kind', 'day', 'piece_id', 'approved', 'sha256', 'at']},
+                '<day>-style': {'kind': 'pick_style', 'fields': ['kind', 'day', 'piece_id', 'sha256', 'module', 'reason', 'verdicts', 'at']},
+                '<day>-proof': {'kind': 'approve_proof', 'fields': ['kind', 'day', 'piece_id', 'sha256', 'verdict', 'words', 'cut', 'at']},
+                '<day>-cut': {'kind': 'approve_cut', 'fields': ['kind', 'day', 'piece_id', 'approved', 'sha256', 'cuts', 'at']},
+                'gates': 'the server writes each onto the piece\'s making record as meta.making.gates.<storyboard|style|proof|final>'})
+            manifest['db']['picks']['decisions']['views'].update({'storyboard': 'sign_storyboard', 'style': 'pick_style', 'proof': 'approve_proof', 'cut': 'approve_cut'})
+            manifest['production'] = {k: {g: v[g]['sha256'] for g in ('storyboard', 'styles', 'proof') if v.get(g)} for k, v in production.items()}
         manifest['db']['comments'] = {
             'doc_id': '<uuid>', 'fields': ['thread_id', 'anchor', 'text', 'at', 'box', 'paragraph', 'quote', 'act', 'ref'],
             'acts': {'undo': 'put the also-changed ref back (edit_sweep.py --undo)', 'apply': 'make the suggested ref too',
@@ -4441,6 +4774,23 @@ def write(page, manifest, out):
     with open(side, 'w', encoding='utf-8', newline='\n') as f:
         f.write(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')
     return out, side
+
+
+def read_production(args):
+    """{day: {'storyboard', 'styles', 'proof'}} from --storyboard, --expect, --styles, --proof and --assets."""
+    mapping = read_asset_map(getattr(args, 'assets', None))
+    expects = by_day(getattr(args, 'expect', None), '--expect')
+    out = {}
+    for k, v in by_day(getattr(args, 'storyboard', None), '--storyboard').items():
+        out.setdefault(k, {})['storyboard'] = read_storyboard(v, expects.get(k), f'--storyboard {k}')
+    for k in expects:
+        if k not in out:
+            raise BoardError(f'--expect {k}: give the storyboard it sits beside with --storyboard {k}=PATH')
+    for k, v in by_day(getattr(args, 'styles', None), '--styles').items():
+        out.setdefault(k, {})['styles'] = read_styles(v, mapping, f'--styles {k}')
+    for k, v in by_day(getattr(args, 'proof', None), '--proof').items():
+        out.setdefault(k, {})['proof'] = read_proof(v, mapping, f'--proof {k}')
+    return out
 
 
 def build(args, get=None):
@@ -4727,9 +5077,14 @@ def build(args, get=None):
             manifests[k] = hashlib.sha256(Path(v).read_bytes()).hexdigest()
         except OSError as error:
             raise BoardError(f'--publish-manifest {k}: cannot read {v}: {error.strerror}')
+    production = read_production(args)
     if args.previous and fixed_layout(monday):
-        # What he is pressing on stays on the board until new options are given: the titles, the off days, the manifests.
+        # What he is pressing on stays on the board until new options are given: the titles, the off days, the manifests,
+        # and the production gates of a day still holding the same piece.
         before = Path(args.previous).read_text(encoding='utf-8-sig')
+        for k, v in (previous_conf(before, 'production') or {}).items():
+            if k in DAY_KEYS.values() and k not in production and k not in unpick and isinstance(v, dict):
+                production[k] = v
         for k, t in (previous_conf(before, 'titles') or {}).items():
             if k in DAY_KEYS.values() and k not in titles and k not in unpick:
                 try:
@@ -4749,7 +5104,7 @@ def build(args, get=None):
                                  ideas, queue, materials, briefs, combine, sweeps, lessons, folders, retained_drafts,
                                  titles, offdays, manifests,
                                  read_archive(read_json(args.archive, '--archive')) if getattr(args, 'archive', None) else None,
-                                 gates=gates_of(getattr(args, 'gate', None)), moved=moved)
+                                 gates=gates_of(getattr(args, 'gate', None)), moved=moved, production=production)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -6396,6 +6751,15 @@ def parser():
                     '2 to 6 options a day, each an idea and a direction he approves, improves or rejects; ideas.json offdays wins for a day it gives')
     ap.add_argument('--archive', metavar='JSON', help='the Archive (boards from layout v3 on): GET /api/board/<Monday>/archive as '
                     'board_feed.py archive writes it, every piece since the Launch with his scores')
+    ap.add_argument('--storyboard', action='append', metavar='DAY=PATH', help='the piece\'s storyboard, for his Sign storyboard press '
+                    'on the day\'s Record step, with expect.md beside it (or --expect); docs/PUBLISH_BOARDS.md, "The production gates on a day\'s tab"')
+    ap.add_argument('--expect', action='append', metavar='DAY=PATH', help='with --storyboard: the expectations sheet (ve expect), when not beside it')
+    ap.add_argument('--styles', action='append', metavar='DAY=PATH', help='styles.json from ve styles: the style mocks on his take, side by '
+                    'side, for his Pick a style press; each clip mapped to a board asset with --assets')
+    ap.add_argument('--proof', action='append', metavar='DAY=PATH', help='proof/<cut>.json from ve proof: the moving proof beside the '
+                    'piece\'s reference cards, for his Approve or Reject; its clip mapped with --assets')
+    ap.add_argument('--assets', metavar='PATH', help='the asset mapping board_web.py publish-web takes: each style or proof clip\'s '
+                    'source_url, which publishing swaps for the board\'s own copy of its bytes')
     ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')
     ap.add_argument('--show', metavar='BOARD', help='print the days a board holds: its week-board.json, or its page as Artifact read saved it')
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')
