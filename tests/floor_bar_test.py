@@ -235,12 +235,13 @@ class TheBar(unittest.TestCase):
         self.assertEqual([w['said'] for w in nevers[6]['words']], [INTRO, OUTRO])
         self.assertIn(f'(Krish, 21 Oct: "{INTRO}")', numbered[6])
         self.assertIn(f'(Krish, 28 Oct: "{OUTRO}")', numbered[6])
-        # The rejection floor's draft standards for one opening and one close match never 7 and wait on the
-        # Rejections route for his approval; this work never edits that file.
+        # The rejection floor's standards for one opening and one close match never 7: a draft until Krish decides
+        # them at /board/standards, then his decision (he approved their group on 4 Nov 2026); this work never edits
+        # that file.
         rejection = floor.load()
         self.assertEqual(tuple(nevers[6]['rejection_floor_drafts']), OPENING_DRAFTS)
         for ref in OPENING_DRAFTS:
-            self.assertEqual(rejection['standards'][ref]['standing'], 'draft', ref)
+            self.assertIn(rejection['standards'][ref]['standing'], ('draft', 'approved', 'reworded'), ref)
             said = ' '.join(w['said'] for w in rejection['standards'][ref]['his_words'])
             self.assertTrue(INTRO in said or OUTRO in said, ref)
             self.assertIn(f'`{ref}`', numbered[6])
