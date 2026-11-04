@@ -22,6 +22,81 @@ from .common import load_json, sha256_file, write_json
 SCHEMA = 've-take/1'
 TAKE_ID = re.compile(r'^[a-z0-9][a-z0-9_-]{0,63}$')
 
+# The same rule quick-edit has used since 16 October (scripts/quick-edit/make.py conform_filter): a teleprompter.com
+# take is 24 fps on average (24.0005) but its frames are stamped unevenly, 30 to 60 ms apart, so resampling it by its
+# stamps dropped one frame and showed the next twice about 40 times in 30 s. Its camera captured evenly, so a take
+# whose average rate is a house rate to within CONFORM_TOLERANCE is laid evenly at that average before anything else.
+HOUSE_RATES = (24, 25, 30, 50, 60)
+CONFORM_TOLERANCE = 0.001
+HDR_TRANSFERS = {'smpte2084': 'pq', 'arib-std-b67': 'hlg'}   # PQ, and HLG (an iPhone's Dolby Vision 8.4 base layer)
+
+
+def _ffprobe() -> str | None:
+    import shutil  # noqa: PLC0415
+    from .common import ffmpeg  # noqa: PLC0415
+    beside = shutil.which('ffprobe', path=str(Path(ffmpeg()).parent))
+    return beside or shutil.which('ffprobe')
+
+
+def _rate(text) -> float | None:
+    num, _, den = str(text or '').partition('/')
+    try:
+        value = float(num) / float(den or 1)
+    except (ValueError, ZeroDivisionError):
+        return None
+    return value if math.isfinite(value) and value > 0 else None
+
+
+def video_probe(media: str | Path) -> dict | None:
+    """What the picture of a take is, measured once at ingest: its average rate and nearest house rate, whether conform
+    lays it evenly, how unevenly its first frames are stamped, its rotation, colour transfer (HDR or not) and bit depth.
+    None when the media has no video stream (a stub take, or a voice-only recording)."""
+    import json  # noqa: PLC0415
+    import subprocess  # noqa: PLC0415
+    exe = _ffprobe()
+    if not exe:
+        return None
+    info = subprocess.run([exe, '-v', 'error', '-select_streams', 'v:0', '-show_entries',
+                           'stream=avg_frame_rate,r_frame_rate,pix_fmt,color_transfer,color_primaries,bits_per_raw_sample:'
+                           'stream_tags=rotate:stream_side_data=rotation', '-of', 'json', str(media)],
+                          capture_output=True, text=True, errors='replace')
+    streams = (json.loads(info.stdout or '{}').get('streams') or []) if info.returncode == 0 else []
+    if not streams:
+        return None
+    stream = streams[0]
+    stamps = subprocess.run([exe, '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'packet=pts_time',
+                             '-of', 'csv=p=0', str(media)], capture_output=True, text=True, errors='replace')
+    times = sorted(float(t) for t in re.findall(r'^-?[\d.]+', stamps.stdout, re.M)) if stamps.returncode == 0 else []
+    rate, offset, jitter = _rate(stream.get('avg_frame_rate')) or _rate(stream.get('r_frame_rate')), 0.0, None
+    if len(times) > 2:
+        # Every frame's stamp against its index, fitted by least squares: the rate the camera ran at, and where an even
+        # grid at that rate sits, so laying frames on it moves each one as little as its own jitter.
+        n = len(times)
+        mean_i, mean_t = (n - 1) / 2, sum(times) / n
+        slope = sum((i - mean_i) * (t - mean_t) for i, t in enumerate(times)) / sum((i - mean_i) ** 2 for i in range(n))
+        if slope > 0:
+            rate, base = 1 / slope, mean_t - slope * mean_i
+            offset = base - times[0]
+            off = sorted(abs(t - (base + i * slope)) * 1000 for i, t in enumerate(times))
+            jitter = round(off[min(n - 1, int(0.95 * n))], 2)
+    house = min(HOUSE_RATES, key=lambda r: abs(r - rate)) if rate else None
+    even = bool(rate and abs(rate / house - 1) <= CONFORM_TOLERANCE)
+    rotation = 0
+    for side in stream.get('side_data_list') or []:
+        if isinstance(side.get('rotation'), (int, float)):
+            rotation = int(side['rotation'])
+    if not rotation and str((stream.get('tags') or {}).get('rotate', '')).lstrip('-').isdigit():
+        rotation = int(stream['tags']['rotate'])
+    depth = stream.get('bits_per_raw_sample')
+    pix = stream.get('pix_fmt') or ''
+    if not str(depth or '').isdigit():
+        depth = 10 if re.search(r'p10|p12', pix) else (8 if pix else None)
+    transfer = stream.get('color_transfer') or None
+    return {'avg_rate': round(rate, 6) if rate else None, 'house_rate': house, 'laid': 'even' if even else 'resampled',
+            'lay_offset_s': round(offset, 6), 'jitter_p95_ms': jitter, 'rotation': rotation, 'transfer': transfer, 'hdr': HDR_TRANSFERS.get(transfer or ''),
+            'primaries': stream.get('color_primaries') or None, 'pix_fmt': pix or None,
+            'bit_depth': int(depth) if str(depth or '').isdigit() else None}
+
 
 def normalise(raw) -> list[dict]:
     """Words as [{i, text, onset_s, end_s}] in time order; refuses anything it cannot read as a clock."""
@@ -149,9 +224,11 @@ def ingest(ve_dir: Path, piece: str, take: str, media: str | Path, *, clock_a=No
     for key, clock in clocks.items():
         if clock['words'][-1]['end_s'] > duration_s + 0.05:
             raise ValueError(f'aligner {key} ({clock["name"]}) hears words after the end of the media')
+    picture = video_probe(media)
     record = {
         'schema': SCHEMA, 'piece': piece, 'take': take,
-        'media': {'path': str(media.resolve()), 'sha256': sha256_file(media), 'duration_s': round(float(duration_s), 4)},
+        'media': {'path': str(media.resolve()), 'sha256': sha256_file(media), 'duration_s': round(float(duration_s), 4),
+                  **({'video': picture} if picture else {})},
         'aligners': clocks,
         'ingested_on': today or date.today().isoformat(),
     }

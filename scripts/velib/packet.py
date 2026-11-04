@@ -127,6 +127,16 @@ def assemble(spec, directory, out, legacy_ok=()):
             for kind in ('qc', 'verdict'):
                 shutil.copyfile(directory / f'{kind}.{cut}.json', stage / f'{kind}.{cut}.json')
             contact_sheet(video, qc.get('duration_s'), stage / f'contact.{cut}.jpg')
+            if (directory / f'props.{cut}.json').is_file():
+                # Every cut and take join with frames either side (velib.critic_inputs): what a press on stills misses.
+                from . import critic_inputs  # noqa: PLC0415
+                props, edl = critic_inputs.load_for(directory, cut)
+                rows = critic_inputs.cut_rows(props, edl)
+                last = int(props.get('durationFrames') or 0) - 1
+                frames = critic_inputs.frames_at(video, [n for _, ns in rows for n in ns if 0 <= n <= last])
+                if rows and frames:
+                    critic_inputs.sheet(rows, frames, stage / f'cuts.{cut}.jpg', last)
+                    lines += [f'Every cut and join, frames -3, -1, 0, +1 and +4 around each: cuts.{cut}.jpg', '']
             lines += reference_lines(spec, cut, directory, stage)
             lines += ['### Measurements', *measurement_lines(qc.get('checks', {})),
                       *measurement_lines(qc.get('composition', {}), 'composition'),
