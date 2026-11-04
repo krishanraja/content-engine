@@ -3608,7 +3608,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/headline/index.tsx`
 
 - `function headlineLayout(lines: string[], width: number, swipedLine = -1, room: number = ZONES.headline.h)`
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device({ object, events, box, aspect, tokens, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/headline/schema.ts`
 
@@ -3809,6 +3809,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/typing_bubble/index.tsx`
 
 - `function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+- `function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight = 1920)`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/typing_bubble/schema.ts`

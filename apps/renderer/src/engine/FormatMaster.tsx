@@ -2,6 +2,9 @@ import { z } from 'zod'
 import { AbsoluteFill, OffthreadVideo, Sequence } from 'remotion'
 import { BrandFrame } from './BrandFrame'
 import { useEngineFrame } from './clock'
+import { stageBubbleBox } from './devices/typing_bubble'
+import { headlineLayout } from './devices/headline'
+import { headlineState } from './devices/headline/state'
 import { DEVICES } from './devices/registry'
 import { slotsFor, splitCameraBox, splitPlatePosition } from './layouts'
 import { setActiveCanvas } from './kit/lock'
@@ -55,7 +58,7 @@ export function FormatMaster(props: EngineRenderProps) {
           <AbsoluteFill key={`devices-${beat.id}`} style={beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: props.tokens.cream, overflow: 'hidden' }
             // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
             // the ground StageHeader's logo is drawn for.
-            : beat.plate?.source === 'none' ? { backgroundColor: props.tokens.ink } : {}}>
+            : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? { background: `radial-gradient(ellipse at center, ${props.tokens.inkSoft} 0%, ${props.tokens.inkDeep} 100%)` } : {}}>
             <AbsoluteFill>
             {beat.uses.map((id, index) => {
               const object = objects.get(id)
@@ -68,8 +71,31 @@ export function FormatMaster(props: EngineRenderProps) {
               const placement = Object.hasOwn(object.params, 'place')
                 ? PlaceSchema.parse(place) : undefined
               const deviceObject = placement ? { ...object, params } : object
-              const box = placement ? { left: 0, top: 0, width: placement.width, height: placement.height } : slots[index]
+              let box = placement ? { left: 0, top: 0, width: placement.width, height: placement.height } : slots[index]
               if (!box) throw new Error(`ve: no slot ${index} in ${beat.layout}`)
+              if (beat.layout === 'STAGE' && object.device === 'cursor_buddy') {
+                let bottom = 0
+                for (const peerId of beat.uses) {
+                  const peer = objects.get(peerId)
+                  if (peer?.device === 'typing_bubble') {
+                    const card = stageBubbleBox(peer.params, width, height)
+                    bottom = Math.max(bottom, card.top + card.height)
+                  } else if (peer?.device === 'headline') {
+                    const h = headlineState(peer, props.events, frame)
+                    const area = h.at ?? { x: 60, y: height === 1920 ? 220 : 180, w: width - 120, h: height === 1920 ? 987 : 720 }
+                    const text = headlineLayout(h.lines, area.w, h.swipe?.line, 'h' in area ? area.h : undefined)
+                    const top = h.at ? area.y : area.y + ((height === 1920 ? 987 : 720) - text.height - (h.dek ? 134 : 0)) / 2
+                    bottom = Math.max(bottom, top + text.height + (h.dek ? 134 : 0))
+                  }
+                }
+                if (bottom) {
+                  const top = bottom + 24
+                  const room = (height === 1920 ? 1207 : 900) - top
+                  // No text-free space means the supporting character cannot be shown safely.
+                  if (room < 60) return null
+                  box = { left: 60, top, width: width - 120, height: room }
+                }
+              }
               // Clip in frame coordinates so the device receives the original slot box.
               // STAGE shares the whole canvas; other layouts retain their slot clips.
               const clipPath = `inset(${box.top}px ${width - box.left - box.width}px ${height - box.top - box.height}px ${box.left}px${beat.layout === 'P6' && index === 1 ? ' round 40px' : ''})`
