@@ -101,3 +101,10 @@ Proposal: one `provenance` column (his_words, his_press, engine_note) on the led
 press, never as a sentence for him; learnings, failures, cues and the floor read as views of it; the 215 floor
 standards grouped into about 20 on one page for his yes through the existing Rejections route. taste-guard puts each
 of these to him in person.
+
+### Retired (4 Nov 2026, Krish's yes)
+
+Four `taste_claims` candidates for `publication` were engineering wishes, not taste, and are now `retired` (rows kept as
+history): `144d6e02` (deliver the exact file asked for), `6c4802b8` (say nothing twice), `ea3a57cd` (no duplicated
+copies), `47ac8417` (components stay in one system). Those belong to AGENTS.md and the house rules, which already hold
+them; the inspirationhouse distiller no longer drafts claims of this kind.
