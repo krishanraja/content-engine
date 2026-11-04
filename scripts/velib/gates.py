@@ -110,9 +110,55 @@ def load(directory: Path, spec: dict, call=None) -> dict:
     return {'gates': merged, 'source': 'record'}
 
 
-def for_hash(gates: dict, kind: str, sha256: str | None) -> dict | None:
-    """The latest press of this gate bound to this exact file, or None."""
+def for_hash(gates: dict, kind: str, sha256: str | None, cut: str | None = None) -> dict | None:
+    """The latest press of this gate bound to this exact file, or None. A press that names its cut (the board's
+    proof press may) counts only for that cut. The board's final press binds both cuts at once in `cuts`
+    ({long, short}: each file's sha256), so a final press counts when `cuts[cut]` is this file."""
     if not sha256:
         return None
-    rows = [row for row in _rows(gates.get(kind)) if row.get('sha256') == sha256 and row.get('by') == 'Krish']
+    rows = []
+    for row in _rows(gates.get(kind)):
+        if row.get('by') != 'Krish' or (cut and row.get('cut') not in (None, cut)):
+            continue
+        cuts = row.get('cuts') if isinstance(row.get('cuts'), dict) else {}
+        if row.get('sha256') == sha256 or (cut and cuts.get(cut) == sha256):
+            rows.append(row)
     return rows[-1] if rows else None
+
+
+def canonical_sha(value) -> str:
+    """sha256 of canonical JSON: sorted keys, no spaces (the board's own rule)."""
+    import hashlib  # noqa: PLC0415
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+                          .encode('utf-8')).hexdigest()
+
+
+def storyboard_sha(storyboard: str, expect: str) -> str:
+    """What the Sign storyboard press binds: canonical JSON {"expect", "storyboard"} of the two files' text, LF line
+    endings, exactly as the files hold it. Mirrors week_board.storyboard_sha (board commit ad90078)."""
+    lf = lambda text: str(text).replace('\r\n', '\n').replace('\r', '\n')  # noqa: E731
+    return canonical_sha({'expect': lf(expect), 'storyboard': lf(storyboard)})
+
+
+def final_sha(cuts: dict) -> str:
+    """The board's final press hash: the file's own sha256 when one cut was shown, else canonical JSON of {cut: sha}."""
+    return next(iter(cuts.values())) if len(cuts) == 1 else canonical_sha(cuts)
+
+
+def write_rounds(directory: Path, rounds: int, call=None) -> str:
+    """Put `rounds` on the piece's making record through the normal making write (the route refuses session writes
+    to gates, never to rounds). One line for the operator; never an exception."""
+    uuid = piece_uuid(directory)
+    if os.environ.get('VE_GATES_OFFLINE') == '1':
+        return 'rounds NOT RECORDED on the making record: VE_GATES_OFFLINE=1'
+    if uuid is None:
+        return 'rounds NOT RECORDED on the making record: no post.json piece_id beside the spec'
+    if not isinstance(rounds, int) or not 0 <= rounds <= 99:
+        return f'rounds NOT RECORDED: {rounds!r} is not a whole number from 0 to 99'
+    sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+    try:
+        import making  # noqa: PLC0415
+        making.post(uuid, {'rounds': rounds}, call=call)
+    except Exception as error:  # noqa: BLE001 - no key, no network, a refusal: say so, the local record stands
+        return f"rounds NOT RECORDED on the making record: {str(error).splitlines()[0] if str(error) else type(error).__name__}"
+    return f'rounds {rounds} recorded on the making record'

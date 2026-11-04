@@ -238,9 +238,11 @@ def readiness(spec, cut, directory) -> dict:
         if compile_file.exists() and verdict.read(compile_file).get('sfx_missing') and 'sfx kit missing' not in reasons:
             reasons.append('sfx kit missing')
         design_reasons = design(spec, cut, directory, digest)
-        final = [] if digest and any(a.get('gate') == 'final' and a.get('by') == 'Krish'
-                                     and a.get('artifact_hash') == digest for a in spec.get('approvals', [])) else [
-                                         'no final approval from Krish for this file']
+        # His Approve cut press on the making record (gates.final, cuts[cut] = this file's sha256), or the spec's own
+        # final approval of this exact file; the record wins (velib/gates.py).
+        from . import gates
+        final = [] if gates.for_hash(gates.load(directory, spec)['gates'], 'final', digest, cut) else [
+            'no final approval from Krish for this file']
     except (OSError, ValueError, KeyError, TypeError) as error:
         return {'mechanical': [str(error)], 'design': ['design could not be checked'], 'final': [],
                 'video': None, 'digest': None}

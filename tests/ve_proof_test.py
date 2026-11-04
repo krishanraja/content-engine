@@ -240,6 +240,54 @@ class RenderRefusal(unittest.TestCase):
         self.assertLessEqual(window['durationFrames'], 450)
 
 
+class BoardContract(unittest.TestCase):
+    """The board's presses (commit ad90078): the same hashes, the per-cut final, a proof bound to its cut, rounds."""
+
+    def test_storyboard_sha_mirrors_week_board(self):
+        import hashlib
+        story, exp = 'Beat 1\r\nBeat 2\n', '- No sound effects.\r'
+        want = hashlib.sha256('{"expect":"- No sound effects.\\n","storyboard":"Beat 1\\nBeat 2\\n"}'.encode()).hexdigest()
+        self.assertEqual(gates.storyboard_sha(story, exp), want)
+        try:
+            sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+            import week_board  # noqa: PLC0415
+        except Exception:  # noqa: BLE001
+            week_board = None
+        if week_board is not None and hasattr(week_board, 'storyboard_sha'):
+            self.assertEqual(week_board.storyboard_sha(story, exp), gates.storyboard_sha(story, exp))
+
+    def test_final_press_binds_each_cut(self):
+        cuts = {'long': 'a' * 64, 'short': 'b' * 64}
+        self.assertEqual(gates.final_sha({'short': 'b' * 64}), 'b' * 64)
+        self.assertEqual(gates.final_sha(cuts), gates.canonical_sha(cuts))
+        found = {'final': [{'by': 'Krish', 'at': 't', 'sha256': gates.final_sha(cuts), 'cuts': cuts}]}
+        self.assertIsNotNone(gates.for_hash(found, 'final', 'b' * 64, 'short'))
+        self.assertIsNone(gates.for_hash(found, 'final', 'c' * 64, 'short'))
+        self.assertIsNone(gates.for_hash(found, 'final', 'a' * 64, 'short'), 'the long file is not the short cut')
+
+    def test_a_proof_press_for_another_cut_does_not_count(self):
+        found = {'proof': [{'by': 'Krish', 'sha256': 'd' * 64, 'verdict': 'approve', 'cut': 'long'}]}
+        self.assertIsNone(gates.for_hash(found, 'proof', 'd' * 64, 'short'))
+        self.assertIsNotNone(gates.for_hash(found, 'proof', 'd' * 64, 'long'))
+
+    def test_rounds_go_to_the_making_record(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            uuid = '0b2a1c3d-1111-4222-8333-444455556666'
+            (Path(tmp) / 'post.json').write_text(json.dumps({'piece_id': uuid}))
+            directory = Path(tmp) / 've'
+            directory.mkdir()
+            self.assertIn('NOT RECORDED', gates.write_rounds(directory, 2))  # offline in tests
+            sent = []
+            old = os.environ.pop('VE_GATES_OFFLINE')
+            try:
+                line = gates.write_rounds(directory, 2, call=lambda m, p, b: (sent.append((m, p, b)), (200, '{}'))[1])
+            finally:
+                os.environ['VE_GATES_OFFLINE'] = '1'
+            self.assertEqual(line, 'rounds 2 recorded on the making record')
+            self.assertEqual((sent[0][0], sent[0][1], sent[0][2]['rounds']), ('POST', f'/api/content-ideas/{uuid}/making', 2))
+            self.assertNotIn('gates', sent[0][2], 'a session never writes gates')
+
+
 class Styles(unittest.TestCase):
     MODULES = {
         'a': {'name': 'A', 'how': 'h', 'layer': 'motion', 'formats': ['short_video'], 'point_types': ['number'], 'fits': 'often',
