@@ -25,8 +25,9 @@ import subprocess
 from pathlib import Path
 
 from . import gaps as rule
-from .common import ffmpeg, load_json, sha256_file, write_json
-from .takes import check_media, list_takes, load_take, silences, voiced_onset
+from . import words as wordrule
+from .common import ffmpeg, ffmpeg_version, load_json, sha256_file, write_json
+from .takes import check_media, list_takes, load_take, silences, video_probe, voiced_onset
 
 SCHEMA = 've-edl/1'
 FPS = 30
@@ -88,7 +89,17 @@ class TakeClock:
         self.positions: dict[str, list[int]] = {}
         for index, tok in enumerate(self.tokens):
             self.positions.setdefault(tok, []).append(index)
+        self.numbers = wordrule.number_spans([w['text'] for w in self.a])
         self.confirmed = [self._confirmed(w) for w in self.a]
+
+    def spans_for(self, word: str) -> list[tuple[int, int]]:
+        """Where this take says a script word, as (first, last) A words: the word itself, and for a number also the
+        same number said another way ("15" heard as "fifteen", "206" as "two hundred and six")."""
+        out = [(j, j) for j in self.positions.get(token(word), [])]
+        key = wordrule.number_key(word)
+        if key:
+            out += [span for span in self.numbers.get(key, []) if span not in out]
+        return sorted(out)
 
     def _confirmed(self, word) -> bool:
         tok = token(word['text'])
@@ -129,50 +140,54 @@ class TakeClock:
 
 
 def _readings(clock: TakeClock, line: list[dict]) -> list[dict]:
-    """Every way this take reads the line, best first. A reading is pieces of consecutive A words."""
-    want = [token(w['word']) for w in line]
-    # layers[i][j][start]: the best way to read line words 0..i ending on A word j, for each first A word.
+    """Every way this take reads the line, best first. A reading is pieces of consecutive A words; each script word is
+    one A word, or for a number the run of A words that says it (velib.words)."""
+    # layers[i][e][start]: the best way to read line words 0..i ending on A word e, for each first A word.
     layers = []
-    for i, tok in enumerate(want):
+    for i, word in enumerate(line):
         layer = {}
-        for j in clock.positions.get(tok, []):
+        for s, e in clock.spans_for(word['word']):
             if i == 0:
-                layer[j] = {j: ((0, 0), [j], [])}
+                layer.setdefault(e, {}).setdefault(s, ((0, 0), [(s, e)], []))
                 continue
             options = {}
             for k, starts in layers[i - 1].items():
-                if k >= j:
+                if k >= s:
                     continue
-                between = j - k - 1
+                between = s - k - 1
                 for start, ((extras, cuts), path, kept) in starts.items():
                     if between == 0:
-                        option = ((extras, cuts), path + [j], kept)
-                    elif clock.a[j]['onset_s'] - clock.a[k]['end_s'] > 15:
+                        option = ((extras, cuts), path + [(s, e)], kept)
+                    elif clock.a[s]['onset_s'] - clock.a[k]['end_s'] > 15:
                         continue
-                    elif clock.out_point(k) is not None and clock.in_point(j) is not None:
-                        option = ((extras, cuts + 1), path + [j], kept)
+                    elif clock.out_point(k) is not None and clock.in_point(s) is not None:
+                        option = ((extras, cuts + 1), path + [(s, e)], kept)
                     elif between <= MAX_KEEP_THROUGH:
-                        option = ((extras + between, cuts), path + [j], kept + list(range(k + 1, j)))
+                        option = ((extras + between, cuts), path + [(s, e)], kept + list(range(k + 1, s)))
                     else:
                         continue
                     if start not in options or option[0] < options[start][0]:
                         options[start] = option
             if options:
-                layer[j] = options
+                held = layer.setdefault(e, {})
+                for start, option in options.items():
+                    if start not in held or option[0] < held[start][0]:
+                        held[start] = option
         layers.append(layer)
         if not layer:
             return []
     out = []
     for starts in layers[-1].values():
         for (extras, cuts), path, kept in starts.values():
-            pieces, start = [], path[0]
-            for a, b in zip(path, path[1:]):
+            pieces, start = [], path[0][0]
+            for (_, a), (b, _) in zip(path, path[1:]):
                 if b != a + 1 and not all(x in kept for x in range(a + 1, b)):
                     pieces.append((start, a))
                     start = b
-            pieces.append((start, path[-1]))
-            unconfirmed = sum(not clock.confirmed[x] for x in path)
-            out.append({'take': clock.id, 'rank': clock.rank, 'pieces': pieces, 'words': path, 'kept': kept,
+            pieces.append((start, path[-1][1]))
+            unconfirmed = sum(not clock.confirmed[x] for s, e in path for x in range(s, e + 1))
+            out.append({'take': clock.id, 'rank': clock.rank, 'pieces': pieces, 'words': [s for s, _ in path],
+                        'ends': [e for _, e in path], 'kept': kept,
                         'extras': extras, 'cuts': cuts, 'unconfirmed': unconfirmed})
     out.sort(key=lambda r: (r['extras'], r['cuts'], r['unconfirmed'], -r['rank'], -r['words'][0]))
     return out[:READINGS_PER_TAKE]
@@ -261,8 +276,8 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
                 pieces.append({'take': reading['take'], 'first': start, 'last': end})
     by_line_word = {}
     for line, reading in zip(lines, chosen):
-        for word, j in zip(line, reading['words']):
-            by_line_word[word['w']] = (reading['take'], j)
+        for word, j, last in zip(line, reading['words'], reading['ends']):
+            by_line_word[word['w']] = (reading['take'], j, last)
 
     segments, cursor = [], 0.0
     for number, piece in enumerate(pieces):
@@ -295,9 +310,11 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
     for word in script:
         if word['w'] in removed:
             continue
-        take, j = by_line_word[word['w']]
+        take, j, last = by_line_word[word['w']]
         segment = next(s for s in segments if s['take'] == take and s['first_word'] <= j <= s['last_word'])
         a = clocks[take].a[j]
+        if last != j:   # a number said in several words: the script's one word runs from the first to the last
+            a = {**a, 'end_s': clocks[take].a[last]['end_s']}
 
         def out(t, s=segment):
             return round(s['out_in_s'] + (t - s['src_in_s']) / speed, 4)
@@ -439,6 +456,45 @@ def _has_video(path: str) -> bool:
     return bool(re.search(r'Stream #\S+.*: Video:', text))
 
 
+def kept_words(edl: dict, records: dict[str, dict]) -> list[dict]:
+    """The unscripted words the cut keeps (no agreed gap let them go), on the cut's clock: audible speech, so the
+    voice pass never takes one for a sniff."""
+    out = []
+    for kept in edl.get('unscripted_kept') or []:
+        segment = next((s for s in edl['segments'] if s['take'] == kept['take']
+                        and s['src_in_s'] - 1e-6 <= kept['src_s'] <= s['src_out_s'] + 1e-6), None)
+        word = next((w for w in records[kept['take']]['aligners']['a']['words'] if abs(w['onset_s'] - kept['src_s']) < 1e-6), None)
+        if segment and word:
+            to_out = lambda t, s=segment: s['out_in_s'] + (t - s['src_in_s']) / edl['speed']  # noqa: E731
+            out.append({'onset_s': round(to_out(word['onset_s']), 4), 'end_s': round(to_out(word['end_s']), 4)})
+    return out
+
+
+def picture_of(record: dict) -> dict | None:
+    """The take's picture as ingest measured it; a record written before ingest measured pictures is measured now."""
+    return record['media'].get('video') or video_probe(record['media']['path'])
+
+
+def lay_filter(picture: dict | None) -> str:
+    """How a take's frames reach the cut's clock. A take whose average rate is a house rate (velib.takes) is laid one
+    frame every 1/average from its first stamp, so a stamp's jitter can never drop a frame or show one twice; the 30 fps
+    clock then holds one frame in every four of a 24 fps take, the same one each time. Anything else keeps its stamps."""
+    if picture and picture.get('laid') == 'even' and picture.get('avg_rate'):
+        offset = float(picture.get('lay_offset_s') or 0)
+        return f'setpts=STARTPTS+({offset:.6f}+N/{picture["avg_rate"]:.6f})/TB,'
+    return ''
+
+
+def tone_filter(picture: dict | None) -> str:
+    """An HDR take (PQ, or HLG as an iPhone records) mapped to the cut's SDR BT.709, so it never comes out flat or
+    washed: linearise, convert primaries, hable tone map, back to BT.709 limited range. SDR takes pass untouched."""
+    if not picture or not picture.get('hdr'):
+        return ''
+    tin = picture['transfer']
+    return (f',zscale=tin={tin}:pin=bt2020:min=bt2020nc:t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,'
+            'tonemap=tonemap=hable:desat=0,zscale=t=bt709:m=bt709:r=tv,format=yuv420p')
+
+
 def render(edl: dict, records: dict[str, dict], assets_dir: Path) -> dict:
     """Render the conformed picture and dialogue from ONE ffmpeg graph: one speed factor, the same cut points."""
     findings = lint_edl(edl, records)
@@ -453,6 +509,7 @@ def render(edl: dict, records: dict[str, dict], assets_dir: Path) -> dict:
     order = list(dict.fromkeys(s['take'] for s in edl['segments']))
     media = [records[name]['media']['path'] for name in order]
     video = all(_has_video(path) for path in media)
+    pictures = {name: picture_of(records[name]) for name in order} if video else {}
     speed, half = edl['speed'], edl['crossfade_ms'] / 2000
     graph, last = [], len(edl['segments']) - 1
     for k, segment in enumerate(edl['segments']):
@@ -464,9 +521,10 @@ def render(edl: dict, records: dict[str, dict], assets_dir: Path) -> dict:
                      f'aresample=48000,aformat=channel_layouts=mono[a{k}]')
         if video:
             span = (segment['frames'] + 1) / FPS * speed
-            graph.append(f'[{m}:v]trim=start={segment["src_in_s"]:.6f}:end={segment["src_in_s"] + span:.6f},'
+            picture = pictures[segment['take']]
+            graph.append(f'[{m}:v]{lay_filter(picture)}trim=start={segment["src_in_s"]:.6f}:end={segment["src_in_s"] + span:.6f},'
                          f'setpts=(PTS-STARTPTS)/{speed:.6f},fps={FPS},trim=end_frame={segment["frames"]},'
-                         f'setpts=PTS-STARTPTS[v{k}]')
+                         f'setpts=PTS-STARTPTS{tone_filter(picture)}[v{k}]')
     current = 'a0'
     for k in range(1, last + 1):
         graph.append(f'[{current}][a{k}]acrossfade=d={edl["crossfade_ms"] / 1000:.4f}:c1=tri:c2=tri[x{k}]')
@@ -476,6 +534,7 @@ def render(edl: dict, records: dict[str, dict], assets_dir: Path) -> dict:
         graph.append(''.join(f'[v{k}]' for k in range(last + 1)) + f'concat=n={last + 1}:v=1:a=0[vout]')
     picture = assets_dir / edl['conformed']['picture']
     dialogue = assets_dir / edl['conformed']['dialogue']
+    raw = dialogue.with_name(dialogue.stem + '.raw.wav')   # the graph's own voice; the voice pass writes the dialogue
     cmd = [ffmpeg(), '-nostdin', '-v', 'error', '-y']
     for path in media:
         cmd += ['-i', path]
@@ -483,11 +542,17 @@ def render(edl: dict, records: dict[str, dict], assets_dir: Path) -> dict:
     if video:
         cmd += ['-map', '[vout]', '-map', '[amux]', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-r', str(FPS),
                 '-c:a', 'aac', '-b:a', '192k', str(picture)]
-    cmd += ['-map', '[awav]', '-c:a', 'pcm_s16le', '-ar', '48000', str(dialogue)]
+    cmd += ['-map', '[awav]', '-c:a', 'pcm_s16le', '-ar', '48000', str(raw)]
     subprocess.run(cmd, check=True, capture_output=True)
-    out = {'dialogue': str(dialogue), 'dialogue_sha256': sha256_file(dialogue)}
+    # Sniffs between his words turned down, never cut (Krish, 17 Oct 2026); the repair chain only with his approval.
+    from . import voice  # noqa: PLC0415
+    spoken = voice.prepare(raw, edl['words'] + kept_words(edl, records), dialogue, assets_dir / f'voice.{edl["cut"]}.json')
+    out = {'dialogue': str(dialogue), 'dialogue_sha256': sha256_file(dialogue), 'ffmpeg': ffmpeg_version(),
+           'voice': {'sniffs': len(spoken['sniffs']), 'repair': spoken['repair'], 'raw': str(raw)}}
     if video:
-        out.update(picture=str(picture), picture_sha256=sha256_file(picture))
+        out.update(picture=str(picture), picture_sha256=sha256_file(picture),
+                   laid={name: {'laid': (p or {}).get('laid', 'resampled'), 'avg_rate': (p or {}).get('avg_rate'),
+                                'hdr': (p or {}).get('hdr')} for name, p in pictures.items()})
     return out
 
 

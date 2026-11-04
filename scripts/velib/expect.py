@@ -57,19 +57,6 @@ def _outside_clip(spec: dict) -> bool:
                for a in spec.get('assets') or [] if a.get('id') not in {c.get('take') for c in spec['cuts'].values()})
 
 
-def _digits(directory: Path | None, spec: dict) -> list[str]:
-    words = []
-    script = Path(directory) / 'script.words.json' if directory else None
-    if script is not None and script.is_file():
-        try:
-            doc = load_json(script)
-            rows = doc.get('words') if isinstance(doc, dict) else doc
-            words = [str(r.get('word') or r.get('text') or '') for r in rows or [] if isinstance(r, dict)]
-        except (OSError, ValueError):
-            words = []
-    return [w for w in words if re.search(r'\d', w)][:3]
-
-
 def lines(spec: dict, directory: Path | None = None) -> list[str]:
     from . import qc_channel
     out = []
@@ -82,10 +69,6 @@ def lines(spec: dict, directory: Path | None = None) -> list[str]:
         out.append('The wide cut has no locked key frames yet: its design is judged by the Critic and by you, not measured.')
     if _outside_clip(spec):
         out.append('Outside clips play muted: only your voice and the music bed are heard.')
-    digits = _digits(directory, spec)
-    if digits:
-        out.append(f"Say each number as the script writes it ({', '.join(digits)}): the cut matches your words to the script "
-                   'by spelling, so a number said another way loses its line.')
     from . import designlock
     if spec['format'] not in designlock.load().get('formats', {}):
         out.append(f"{spec['format']} has no frozen design lock yet: composition is checked at packet time only, and the "
@@ -100,6 +83,10 @@ def lines(spec: dict, directory: Path | None = None) -> list[str]:
         if module and 'needs_device' in (module.get('ve_route') or []):
             out.append(f"The {module.get('name', motion['module'])} style has no ve device yet: the nearest house devices "
                        'draw it until Codex builds one.')
+    from .lint import novelty_note
+    repeat = novelty_note(spec)
+    if repeat and len(out) < MAX_LINES:
+        out.append(repeat)
     return out[:MAX_LINES]
 
 

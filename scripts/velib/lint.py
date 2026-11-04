@@ -12,7 +12,8 @@ from .common import CONFIG, load_json, run
 HEX = re.compile(r'#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b')
 DIGIT = re.compile(r'\d')
 DATA_DEVICES = {'kinetic_stat', 'bar_compare', 'test_grid', 'record_card', 'bar_race'}
-SOUNDED_VERBS = {'enter', 'stamp', 'mark'}
+SOUNDED_VERBS = {'enter', 'stamp', 'mark'}   # the moves a sound can sit on; none needs one (ruling 11)
+SOUND_FROM = '2026-11-09'                      # the date the 9 Nov guards bind from (creative_direction.MOTION_FROM)
 WORDS_PER_SECOND = 2.6  # Krish's measured read rate, used only before ingest gives real times
 LONG_CUT_S = 90  # a cut allowed past this is a long cut: its bed is episode_bed
 # His name, a spelling or handle of it, or a possessive of it ("KRISH'S TEST", "@TheRealKrisho", "krishraja.com").
@@ -252,6 +253,12 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
                 out.append(f'{where}: {problem}')
             if not beats:
                 continue
+        # sound: one, on the big moment only (Krish, 29 Oct 2026, THE_BAR ruling 11: "Only the big moment"); every
+        # other move is silent by default, so a move with no sound is no longer a finding. Binds pieces from 9 Nov.
+        sounded = [e for b in beats for e in b['events'] if e.get('sfx')]
+        if len(sounded) > 1 and (spec.get('publish_day') or '') >= SOUND_FROM:
+            out.append(f'sound.one_moment {where}: {len(sounded)} moves carry a sound; one sound, on the big moment only '
+                       '(THE_BAR ruling 11)')
         # dialogue
         if cut['aspect'] == '9:16' and cut['max_s'] > 89:
             out.append(f'dialogue.short_max {where}.max_s: a 9:16 short is 89 s or less')
@@ -293,8 +300,6 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
                 obj = objects.get(event['obj'])
                 if obj and event['obj'] not in beat['uses'] and f"{obj['device']}@" not in ' '.join(beat['uses']):
                     out.append(f"motion.carry {at}.events.{j}: event on {event['obj']}, which this beat does not use")
-                if event['verb'] in SOUNDED_VERBS and not event.get('sfx') and not event.get('silent'):
-                    out.append(f'sound.event_sfx {at}.events.{j}: a {event["verb"]} carries an sfx from the house kit or is marked silent')
             for used_obj in beat['uses']:
                 if used_obj in objects:
                     persist = objects[used_obj]['persist']
@@ -338,18 +343,36 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     elif bed_mode == 'ducked':
         out.append('sound.bed_steady audio.bed.mode: a ducked bed swings with the voice; use episode_bed (or continuous)')
 
-    if history:
-        hero = spec['signature']['hero']['device']
-        recent = history[-3:]
-        if any(h.get('hero') == hero for h in recent):
-            out.append(f'creative.novelty signature.hero: {hero} was the hero in one of the last three pieces')
     return out
+
+
+NOVELTY_LAST = 3
+HISTORY = 'history.json'   # config/ve/history.json, one row per filed piece (velib.filing.record_history)
+
+
+def novelty_note(spec: dict, history: list[dict] | None = None) -> str | None:
+    """A line for the expectations sheet when the hero device or motion style repeats one of the last three filed
+    pieces (ghost-editor's rule: a reel uses parts the last reels did not). Advisory, never a refusal: no repeat rule
+    has his approval, and every earlier ve spec used the same hero (F14: no gate on an unproven method)."""
+    if history is None:
+        path = CONFIG / HISTORY
+        history = load_json(path)['pieces'] if path.exists() else []
+    recent = history[-NOVELTY_LAST:]
+    hero = (spec.get('signature') or {}).get('hero', {}).get('device')
+    motion = ((spec.get('style') or {}).get('motion') or {})
+    module = motion.get('module') if isinstance(motion, dict) else None
+    repeats = []
+    if hero and any(h.get('hero') == hero for h in recent):
+        repeats.append(f'the hero device {hero}')
+    if module and any(h.get('motion') == module for h in recent):
+        repeats.append(f'the motion style {module}')
+    if not repeats:
+        return None
+    return f"Repeats {' and '.join(repeats)} from one of the last {NOVELTY_LAST} pieces filed; say why, or change it."
 
 
 def lint(spec_path: Path) -> tuple[dict | None, list[str]]:
     spec, problems = schema(spec_path)
     if spec is None:
         return None, problems
-    history_path = CONFIG / 'history.json'
-    history = load_json(history_path)['pieces'] if history_path.exists() else []
-    return spec, crew_lints(spec, history)
+    return spec, crew_lints(spec)

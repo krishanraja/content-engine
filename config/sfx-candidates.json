@@ -1,0 +1,88 @@
+{
+  "about": [
+    "The shortlist for the one sound on the big moment (THE_BAR ruling 11, \"Only the big moment\"; scripts/velib/sfx.py).",
+    "A row is a candidate, never an approval: config/sfx-approved.json holds only what Krish approved by ear, in his words.",
+    "provider_id comes from Epidemic Sound's search. file (a path under MINDMAKE_MUSIC_ROOT) and sha256 are filled only after Krish says yes to downloading it; his plan covers sound effects (29 Oct 2026).",
+    "gain_db is the level the sound is auditioned at, relative to full scale; ve sfx audition measures each hit against his voice."
+  ],
+  "candidates": [
+    {
+      "id": "low-thud-deep",
+      "title": "Designed, Boom, Impact, Thud, Deep, Heavy, Realistic, Distant",
+      "provider": "Epidemic Sound",
+      "provider_id": "4969f8ba-0853-49d3-8d5f-9787371deb54",
+      "duration_ms": 2126,
+      "gain_db": -8,
+      "why": "the low thud THE_BAR names (\"a low thud as BANKRUPT slams in\")",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KHY21QFRTF80TN73V99ENPZW.mp3",
+      "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "low-thud-wood",
+      "title": "Wood, Impact, Thud, Deep, Dark, Reverb",
+      "provider": "Epidemic Sound",
+      "provider_id": "c282f83a-3a3f-4cd1-acf8-59de56b6b59e",
+      "duration_ms": 2067,
+      "gain_db": -8,
+      "why": "a drier, woodier thud for a rung or a card landing",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KHY152J1C4ZM6JV977V4E6YW.mp3",
+      "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "stamp-rubber",
+      "title": "Office Supplies, Rubber Stamp, Document 01",
+      "provider": "Epidemic Sound",
+      "provider_id": "d530c5b9-3047-42fe-a06a-7c479d637b60",
+      "duration_ms": 215,
+      "gain_db": -10,
+      "why": "a real rubber stamp for the stamp device",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01HY1C21MBT83VFRQ7RCYV50YK.mp3",
+      "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "ding-desk-bell",
+      "title": "User Interface, Misc, Pings, Tings, Bell, Desk, Tings",
+      "provider": "Epidemic Sound",
+      "provider_id": "235cdcbd-b5f2-42b2-bd99-1c3a9827fc3b",
+      "duration_ms": 2116,
+      "gain_db": -12,
+      "why": "his ask: a scoreboard that ticks up \"with a ding sound effect, for enjoyment\"",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KK1V6T0YFMYNFRK81JRSBEEM.mp3",
+      "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "ding-notification",
+      "title": "User Interface, Misc, Pings, Tings, Generic, Notification, Tings",
+      "provider": "Epidemic Sound",
+      "provider_id": "75a73c70-d0bd-43e3-bdf4-2eb525b511f6",
+      "duration_ms": 1169,
+      "gain_db": -12,
+      "why": "a shorter, softer ding",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KK1V6T1W2H8B6MRXHVBWHPZH.mp3",
+      "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    },
+    {
+      "id": "paper-rip-stub",
+      "title": "Paper, Rip, Cheque, Rip From Book Stub 03",
+      "provider": "Epidemic Sound",
+      "provider_id": "1b808b71-b0fb-4350-8728-fb7a9bd8e59e",
+      "duration_ms": 866,
+      "gain_db": -12,
+      "why": "a receipt or cheque torn off, for the paper-cutout style or the receipt cover",
+      "preview_url": "https://audiocdn.epidemicsound.com/lqmp3/01KHQY8562Q3RRWWJQCCGY1G9P.mp3",
+      "found_by": "Epidemic Sound search, 4 Nov 2026 (no download)",
+      "file": null,
+      "sha256": null
+    }
+  ]
+}

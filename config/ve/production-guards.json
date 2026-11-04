@@ -17,7 +17,7 @@
     "overlap": 0.6
   },
   "engine": {
-    "why": "The engine a storyboard was signed on is the engine that draws its proof and its cut: Thursday's key-frame checks failed by construction while the background, chrome, caption height and colour, chat card width and headline ground changed mid-piece. A change needs Krish's exception approval bound to the new engine hash. The cut's picture and sound paths (conform, audio, takes, lint, the sfx kits and the voice chain) are in it too, so a mid-piece change to how his take is cut or heard is seen (asked by the predictability session, 4 Nov). A path that does not exist yet is simply empty.",
+    "why": "The engine a storyboard was signed on is the engine that draws its proof and its cut: Thursday's key-frame checks failed by construction while the background, chrome, caption height and colour, chat card width and headline ground changed mid-piece. A change needs Krish's exception approval bound to the new engine hash. The cut's picture and sound paths (conform, takes, words, voice, audio, the quick-edit episode and words gate ve reads, and the voice chain) are in it too, so a mid-piece change to how his take is cut or heard is seen (asked by the predictability session, 4 Nov). The sfx kits and lint.py are left out on purpose: approving a sound during a piece writes the kit and would refuse that piece's own proof and cut, and a cut naming no sound cannot be changed by it; lint cannot change a cut's picture or sound. A path that does not exist yet is simply empty.",
     "paths": [
       "apps/renderer/src",
       "scripts/velib/compile.py",
@@ -25,10 +25,12 @@
       "config/ve/devices.json",
       "config/ve/fonts.json",
       "scripts/velib/conform.py",
-      "scripts/velib/audio.py",
       "scripts/velib/takes.py",
-      "scripts/velib/lint.py",
-      "config/ve/sfx-kits",
+      "scripts/velib/words.py",
+      "scripts/velib/voice.py",
+      "scripts/velib/audio.py",
+      "scripts/quick-edit/episode.py",
+      "scripts/quick-edit/words_gate.py",
       "config/ve/voice-chain.json"
     ],
     "skip_suffixes": [
