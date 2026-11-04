@@ -14,7 +14,7 @@ import { WORD_CAPTION, WordCaption } from '../chrome/WordCaption'
 import { MOTION_PROFILES, clampToFloor, floorProblems, resolveMotion, type MotionProfile } from './motionProfiles'
 import { SAFE_TALL, insideRoom } from './focus'
 import { HeroType, heroArea, heroLayout } from './heroType'
-import { Brackets, PaperTexture, SketchFrame, TornFilter, boilSeed, tokensFor } from './overlays'
+import { Brackets, CARD_DEVICES, CUTOUT_TILT, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, boilSeed, cutoutPose, deepen, paperStock, tileLean, tokensFor } from './overlays'
 import { font } from './typeRole'
 import { HOUSE_FONTS } from '../../house/geometry'
 
@@ -47,7 +47,7 @@ const deviceMarkup = (nodes: ReturnType<typeof elements>) => nodes.filter(n => D
   .map(n => renderToStaticMarkup(React.createElement(n.type as React.FC, n.props)))
 const FIVE = ['swiss-kinetic-type', 'hud-terminal', 'paper-cutout', 'vertical-captions', 'line-boil'] as const
 const beatAt = (props: EngineRenderProps, frame: number) => props.beats.find(b => b.fromFrame <= frame && frame < b.toFrame)!
-const OVERLAYS = [PaperTexture, Brackets, SketchFrame, TornFilter, HeroType] as const
+const OVERLAYS = [PaperTexture, Brackets, SketchFrame, TornFilter, TornSeam, HeroType] as const
 
 describe('each mode draws only from its own profile', () => {
   it('the five profiles name their own looks, inside the signed floor', () => {
@@ -128,10 +128,85 @@ describe('each mode draws only from its own profile', () => {
     const paper = renderToStaticMarkup(React.createElement(PaperTexture, ofType(nodes, PaperTexture)[0]!.props as never))
     expect(paper).toContain('feTurbulence')
     expect(paper).not.toContain('<image')
-    // The shadow steps on twos: the same on both frames of a step, from the seed, never a loop.
-    const at = (step: number) => renderToStaticMarkup(React.createElement(TornFilter, { id: 'proof', step, tokens: props.tokens }))
-    expect(at(3)).toBe(at(3))
-    expect(new Set([0, 1, 2, 3, 4, 5].map(at)).size).toBeGreaterThan(3)
+    // A thick torn rim (two seeded tears) and a hard shadow 4 px off with almost no blur, the same on every render.
+    const filter1 = renderToStaticMarkup(React.createElement(TornFilter, { id: 'proof', tokens: props.tokens }))
+    expect(filter1).toBe(renderToStaticMarkup(React.createElement(TornFilter, { id: 'proof', tokens: props.tokens })))
+    expect(Number(/operator="dilate" radius="(\d+)"/.exec(filter1)![1])).toBeGreaterThanOrEqual(10)
+    expect(filter1.match(/<feTurbulence/g)).toHaveLength(2)
+    expect(filter1).toMatch(/stdDeviation="1"[^>]*><\/feGaussianBlur><feOffset[^>]*dx="4" dy="4"/)
+  })
+
+  it('paper-cutout: a warm stock from the cream alone, visibly textured at half size', () => {
+    const tokens = thursday().tokens
+    const rgb = (hex: string) => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)) as [number, number, number]
+    const [cr, , cb] = rgb(tokens.cream), [pr, pg, pb] = rgb(paperStock(tokens))
+    // Deeper than the cream and warmer (red over blue grows), in the cream's own hue order.
+    expect(pr).toBeLessThan(cr)
+    expect(pr - pb).toBeGreaterThan(cr - cb)
+    expect(pr > pg && pg > pb).toBe(true)
+    expect(deepen('not-a-hex', 2, 90, '#16221D')).toBe('color-mix(in srgb, not-a-hex 90%, #16221D)')
+    const paper = renderToStaticMarkup(React.createElement(PaperTexture, { id: 'proof', width: 1080, height: 960, tokens }))
+    // Grain no finer than 0.5 a canvas px, so it survives a 540 px frame; fibres and flecks too.
+    const freqs = [...paper.matchAll(/baseFrequency="([\d. ]+)"/g)].map(m => Math.max(...m[1]!.split(' ').map(Number)))
+    expect(freqs.length).toBeGreaterThanOrEqual(5)
+    expect(Math.max(...freqs)).toBeLessThanOrEqual(0.5)
+  })
+
+  it('paper-cutout: only cards and logo tiles lean and are nudged, within 2 degrees and 1 px, never a caption', () => {
+    const props = thursday('paper-cutout')
+    const seen = new Map<string, number>()
+    for (const frame of [30, 200, 300, 420, 470, 520, 600, 700, 900, 1200]) {
+      const nodes = draw(props, frame)
+      const cutouts = nodes.filter(n => typeof n.props['data-cutout'] === 'string')
+      for (const c of cutouts) {
+        const id = c.props['data-cutout'] as string
+        const device = props.objects.find(o => o.obj === id)!.device
+        expect(TORN_DEVICES).toContain(device)
+        const transform = String((c.props.style as { transform: string }).transform)
+        const [, dx, dy, deg] = /translate\((-?[\d.]+)px, (-?[\d.]+)px\) rotate\((-?[\d.]+)deg\)/.exec(transform)!.map(Number)
+        expect(Math.abs(dx!)).toBeLessThanOrEqual(1)
+        expect(Math.abs(dy!)).toBeLessThanOrEqual(1)
+        expect(Math.abs(deg!)).toBeLessThanOrEqual(CARD_DEVICES.includes(device) ? CUTOUT_TILT.card : CUTOUT_TILT.tile)
+        // Logo tiles lean one by one inside the device; every other cut-out leans as one piece.
+        if (id === 'logos') expect(deg).toBe(0)
+        else expect(Math.abs(deg!)).toBeGreaterThan(0.4)
+        // The lean is the object's own and fixed; only the nudge steps.
+        if (seen.has(id)) expect(deg).toBe(seen.get(id))
+        seen.set(id, deg!)
+      }
+      // The scribble is a drawn line, never a cut-out; the captions and the mark tile sit in BrandFrame, untouched.
+      expect(cutouts.some(c => c.props['data-cutout'] === 'amazon_loop')).toBe(false)
+      expect(ofType(nodes, BrandFrame).length).toBeGreaterThan(0)
+      for (const c of cutouts) expect(ofType(elements(c.props.children as ReactNode), BrandFrame)).toHaveLength(0)
+      const brandLayers = nodes.filter(n => String(n.key ?? '').startsWith('brand-'))
+      expect(brandLayers.length).toBeGreaterThan(0)
+      for (const layer of brandLayers) expect(layer.props.style).toBeUndefined()
+    }
+    // Every card and the logo tiles of the cut were seen as cut-outs.
+    expect(seen.has('logos') && seen.has('verdict') && seen.has('chat')).toBe(true)
+    expect(seen.size).toBeGreaterThanOrEqual(6)
+    // Each logo tile leans on its own seed under paper-cutout, within 2 degrees, and under no other style.
+    const leans = [0, 1, 2].map(i => tileLean('logos', i, MOTION_PROFILES['paper-cutout']))
+    for (const l of leans) expect(Math.abs(l) > 0.4 && Math.abs(l) <= CUTOUT_TILT.tile).toBe(true)
+    expect(new Set(leans).size).toBe(3)
+    setMotionProfile(undefined)
+    expect(tileLean('logos', 0)).toBe(0)
+    for (const style of FIVE.filter(s => s !== 'paper-cutout')) expect(tileLean('logos', 0, MOTION_PROFILES[style])).toBe(0)
+    // The nudge steps on twos: both frames of a step agree, and it moves from step to step.
+    expect(cutoutPose('logos', 'logo_card', 7)).toEqual(cutoutPose('logos', 'logo_card', 7))
+    expect(new Set([0, 1, 2, 3, 4, 5].map(s => JSON.stringify(cutoutPose('logos', 'logo_card', s)))).size).toBeGreaterThan(3)
+  })
+
+  it('paper-cutout: the stock tears white along the SPLIT seam, nowhere else and under no other style', () => {
+    const props = thursday('paper-cutout')
+    expect(ofType(draw(props, 420), TornSeam)).toHaveLength(1)
+    expect(ofType(draw(props, 30), TornSeam)).toHaveLength(0)
+    const seam = renderToStaticMarkup(React.createElement(TornSeam, ofType(draw(props, 420), TornSeam)[0]!.props as never))
+    expect(seam).toBe(renderToStaticMarkup(React.createElement(TornSeam, ofType(draw(props, 421), TornSeam)[0]!.props as never)))
+    for (const style of [undefined, ...FIVE.filter(s => s !== 'paper-cutout')]) {
+      expect(ofType(draw(thursday(style), 420), TornSeam)).toHaveLength(0)
+      expect(draw(thursday(style), 420).some(n => n.props['data-cutout'] !== undefined)).toBe(false)
+    }
   })
 
   it('swiss-kinetic-type: the key phrase as hero type, standing in for the text card, clear of the mark tile and safe', () => {

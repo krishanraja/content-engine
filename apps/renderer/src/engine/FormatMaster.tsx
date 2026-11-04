@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import { z } from 'zod'
 import { AbsoluteFill, OffthreadVideo, Sequence } from 'remotion'
 import { BrandFrame } from './BrandFrame'
@@ -14,7 +15,7 @@ import { setActiveCanvas } from './kit/lock'
 import { resolveMotion, type MotionProfile } from './kit/motionProfiles'
 import { beatMotion, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
 import { focusRoom, placed } from './kit/focus'
-import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
+import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
 import { EngineAudio } from './audio'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
@@ -140,7 +141,7 @@ export function FormatMaster(props: EngineRenderProps) {
         const hero = profile?.type?.hero && grounded ? heroPhrase(beat, objects, props.events, props.captions, at) : undefined
         const heroDraw = hero ? heroLayout(hero, heroArea(props.aspect, layerHeight, beat.uses.some(id => !hero.replaces.includes(id)))) : undefined
         const torn = overlays.includes('torn')
-        return (
+        const layer = (
           <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
             {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts). */}
             {profile ? <>
@@ -149,7 +150,7 @@ export function FormatMaster(props: EngineRenderProps) {
               {grounded && overlays.includes('scanLines') && <AbsoluteFill data-scan-lines style={scanLines(props.tokens)} />}
               {grounded && overlays.includes('sketchFrame') && profile.boil && <SketchFrame id={beat.id} width={width} height={layerHeight}
                 tokens={props.tokens} sinceFrames={sinceBeat} boil={profile.boil} />}
-              {torn && <TornFilter id={beat.id} step={Math.floor(sinceBeat / 2)} tokens={props.tokens} />}
+              {torn && <TornFilter id={beat.id} tokens={props.tokens} />}
             </> : sweep && <AbsoluteFill style={sweep} />}
             <AbsoluteFill style={motion?.layer}>
             {[heroDraw ? <HeroType key="hero-type" layout={heroDraw} frame={at} tokens={props.tokens} width={width} height={layerHeight} onDark={darkGround(profile)} /> : null,
@@ -194,13 +195,21 @@ export function FormatMaster(props: EngineRenderProps) {
               // Clip in frame coordinates so the device receives the original slot box.
               // STAGE shares the whole canvas; other layouts retain their slot clips.
               const clipPath = `inset(${box.top}px ${width - box.left - box.width}px ${height - box.top - box.height}px ${box.left}px${beat.layout === 'P6' && index === 1 ? ' round 40px' : ''})`
+              const cutout = torn && TORN_DEVICES.includes(object.device)
+              const device = <Device object={deviceObject} events={props.events} box={box} tokens={tokensFor(object.device, props.tokens, profile)} aspect={props.aspect} frame={at} />
+              // paper-cutout: the piece leans a little on its own centre and is nudged by hand each step (on twos);
+              // the torn edge and shadow are drawn round it afterwards, so the shadow falls straight down.
+              // Logo tiles lean one by one inside the device (tileLean), so the device itself does not.
+              const pose = cutout ? cutoutPose(id, object.device, Math.floor(sinceBeat / 2), !(object.device === 'logo_card' && object.params.tiles === true)) : undefined
               return (
                 <AbsoluteFill key={id} style={{ ...(placement ? { left: placement.left, top: placement.top, width: placement.width, height: placement.height, transform: `scale(${placement.scale})`, transformOrigin: 'top left' } : beat.layout === 'SPLIT' ? {} : { clipPath }),
                   // Everything outside the proof dims (living-ui), once the camera is on it.
                   ...(motion && index !== (view?.focusIndex ?? 0) && motion.dim < 1 ? { opacity: motion.dim } : {}),
-                  // paper-cutout: a card or logo tile is cut out with a torn edge and a soft shadow.
-                  ...(torn && TORN_DEVICES.includes(object.device) ? { filter: `url(#torn-${beat.id})` } : {}) }}>
-                  <Device object={deviceObject} events={props.events} box={box} tokens={tokensFor(object.device, props.tokens, profile)} aspect={props.aspect} frame={at} />
+                  // paper-cutout: a card or logo tile is cut out with a torn edge and a hard shadow.
+                  ...(cutout ? { filter: `url(#torn-${beat.id})` } : {}) }}>
+                  {pose ? <div data-cutout={id} style={{ position: 'absolute', inset: 0,
+                    transform: `translate(${pose.dx}px, ${pose.dy}px) rotate(${pose.tiltDeg}deg)`,
+                    transformOrigin: `${box.left + box.width / 2}px ${box.top + box.height / 2}px` }}>{device}</div> : device}
                 </AbsoluteFill>
               )
             }),
@@ -209,6 +218,11 @@ export function FormatMaster(props: EngineRenderProps) {
             </AbsoluteFill>
           </AbsoluteFill>
         )
+        // paper-cutout: the stock is torn where it meets his take, under the captions and the mark tile.
+        return torn && beat.layout === 'SPLIT' ? <Fragment key={`devices-${beat.id}`}>{layer}
+          <AbsoluteFill style={fade < 1 ? { opacity: fade } : undefined}>
+            <TornSeam id={beat.id} width={width} seam={layerHeight} tokens={props.tokens} />
+          </AbsoluteFill></Fragment> : layer
       })}
       {props.beats.map((beat) => (frame < beat.fromFrame || frame >= beat.toFrame ? null : (
         <AbsoluteFill key={`brand-${beat.id}`}>
