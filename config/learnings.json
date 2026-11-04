@@ -2009,6 +2009,49 @@
           "how": "never more than three proposals a week"
         }
       ]
+    },
+    {
+      "id": "one-piece-one-session",
+      "on": "2026-11-04",
+      "krish": "Yes, I would assume one piece and one session would be good, with Claude orchestrating and Codex doing asset production.",
+      "why": "Thursday 5 Nov ran three days across sessions; Codex was spent on engine cards and library devices, not the piece's picture.",
+      "means": "A piece is made start to finish in one session: Claude orchestrates (story, idea, spec, proof, review) and Codex makes that piece's assets from its cards. After two fix loops the session brings Krish the cut or one question.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def loop_problems(",
+          "how": "ve render refuses a third full render of a cut since his last press"
+        },
+        {
+          "file": "docs/ve/RUNBOOK.md",
+          "contains": "One piece, one session",
+          "how": "the procedure: Codex only for the piece's named plates during production"
+        }
+      ]
+    },
+    {
+      "id": "experiment-carefully",
+      "on": "2026-11-04",
+      "krish": "No, I just don't think that is true at all. I just think that it needs to look good, and it didn't that time. We still need to experiment and make videos that are impactful, which, in my eyes, isn't just going to be in the future where every video has boring captions. Sometimes the words will be taking up most of the screen, but we need to figure out what looks good. When we're experimenting, instead of using proven, approved templates, we need to experiment carefully, as opposed to just producing videos experimentally and then seeing that they're shit.",
+      "why": "Asked whether captions should be one typeface, weight and colour after the Thursday short's typography failed.",
+      "means": "No fixed caption or type template: a new look is tried carefully, on the proof of his own take, before a whole cut is made, instead of producing whole videos experimentally and finding they fail. Sometimes words fill most of the screen. Type treatments are listed on the proof, never refused by count.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def type_note(",
+          "how": "ve proof lists the cut's type treatments for his Approve proof press"
+        }
+      ]
+    },
+    {
+      "id": "listen-to-the-take",
+      "on": "2026-11-04",
+      "krish": "I think the session would need to listen to what I actually said on the script, as opposed to reading the teleprompter folders, because sometimes I paraphrase the teleprompter script and that only gets picked up in the live recording.",
+      "why": "Thursday's session questioned his product name \"Muse\" instead of checking what he had said.",
+      "means": "Before questioning a name or a line he used, the session reads what he actually said on the recorded take (its transcript), not the Teleprompter script, which he paraphrases on camera.",
+      "status": "open"
     }
   ]
 }

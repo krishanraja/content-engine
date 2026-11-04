@@ -1109,11 +1109,13 @@ def cmd_proof(args, render_fn=None) -> int:
         # --beat chooses what is proved, never what the proof stands for: the hash is over the spec as written.
         record['spec_sha256'] = proof.structural_hash(spec, args.cut)
         record['structure'] = proof.structure(spec, args.cut)
+        record['type'] = guards.type_treatments(props)  # listed for his Approve proof press, never refused by count
         write_json(proof.record_path(directory, args.cut), record)
         print(f"ve proof: beat {record['beat']} ({record['rule']}), {record['start']} to {record['end']} s")
         if 'qc' in record:
             print(f"ve proof: qc {'measured pass' if record['qc'].get('measured_pass') else 'FAILS or not run'}; "
                   f"{'complete' if record['qc'].get('complete') else 'incomplete'}")
+        print(f've proof: {guards.type_note(props)}')
         print(f"{record['sha256']}  {proof.clip_path(directory, args.cut)}")
         print('next: Krish presses Approve proof (or Reject, with his words) on the board; ve render waits for it')
         return 0
