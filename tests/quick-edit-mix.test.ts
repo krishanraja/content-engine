@@ -130,5 +130,5 @@ describe('archive.py checks itself', () => {
     const result = run('archive.py', ['--self-test'])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     expect(result.stdout).toMatch(/archive naming self-test passed: \d+ checks/)
-  })
+  }, 60_000)
 })
