@@ -648,7 +648,7 @@
        "silent": true
       },
       {
-       "at_w": 94,
+       "at_w": 74,
        "obj": "ask",
        "verb": "type",
        "to_state": "0",
