@@ -2052,6 +2052,26 @@
       "why": "Thursday's session questioned his product name \"Muse\" instead of checking what he had said.",
       "means": "Before questioning a name or a line he used, the session reads what he actually said on the recorded take (its transcript), not the Teleprompter script, which he paraphrases on camera.",
       "status": "open"
+    },
+    {
+      "id": "off-days-own-music-and-look",
+      "on": "2026-11-04",
+      "krish": "Yes, give off days their own music and look - Rotate.",
+      "why": "Thursday 5 Nov's off-day short wore under.the.hood's colour, promise and bed (no-curves-instrumental).",
+      "means": "A piece published on a day that is not its series' day beds on one of the off-day tracks in config/music-library.json, rotated across pieces, carries no series sting, and is drawn in the house mint, never the series colour or promise.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def off_day_beds(",
+          "how": "ve lint refuses an off-day spec on the series bed or with a series sting"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "'channel': tokens['mint'] if off else",
+          "how": "compile draws an off day in the house mint"
+        }
+      ]
     }
   ]
 }
