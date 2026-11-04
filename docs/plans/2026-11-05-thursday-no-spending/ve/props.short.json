@@ -1918,14 +1918,7 @@
             "id": "Anthropic"
           }
         ],
-        "rings": 2,
-        "place": {
-          "left": 173,
-          "top": 20,
-          "width": 1080,
-          "height": 1080,
-          "scale": 0.68
-        }
+        "rings": 2
       }
     },
     {
@@ -1962,13 +1955,7 @@
         "lines": [
           "NO SPENDING.",
           "NO SENDING."
-        ],
-        "at": {
-          "x": 60,
-          "y": 250,
-          "w": 960,
-          "h": 380
-        }
+        ]
       }
     },
     {
@@ -2039,13 +2026,7 @@
         "lines": [
           "NO SPENDING.",
           "NO SENDING."
-        ],
-        "at": {
-          "x": 60,
-          "y": 250,
-          "w": 960,
-          "h": 380
-        }
+        ]
       }
     },
     {
@@ -2265,13 +2246,6 @@
     {
       "id": "b5-rule-2",
       "obj": "buddy_sulk",
-      "verb": "move",
-      "toState": "{\"x\":0.5,\"y\":0.66}",
-      "atFrame": 598
-    },
-    {
-      "id": "b5-rule-3",
-      "obj": "buddy_sulk",
       "verb": "sulk",
       "toState": "sulk",
       "atFrame": 631
@@ -2309,7 +2283,7 @@
       "obj": "ask",
       "verb": "type",
       "toState": "0",
-      "atFrame": 848
+      "atFrame": 764
     },
     {
       "id": "b7-prompt-2",
@@ -2358,24 +2332,17 @@
       "obj": "rule_back",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 1112
+      "atFrame": 1085
     },
     {
       "id": "close-1",
       "obj": "buddy_good",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 1144
+      "atFrame": 1112
     },
     {
       "id": "close-2",
-      "obj": "buddy_good",
-      "verb": "move",
-      "toState": "{\"x\":0.5,\"y\":0.66}",
-      "atFrame": 1144
-    },
-    {
-      "id": "close-3",
       "obj": "buddy_good",
       "verb": "wave",
       "toState": "wave",
