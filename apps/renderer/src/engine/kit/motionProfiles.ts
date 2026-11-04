@@ -27,7 +27,26 @@ export const MotionProfileSchema = z.object({
   /** How long a crossfade overlaps the two beats, 6 to 10 frames (kit/beatMotion.ts transitionFrames). */
   transitionFrames: z.number().int().min(6).max(10).optional(),
   typeReveal: z.object({ kind: z.enum(['line', 'word', 'typewriter', 'roll']), cps: z.number().positive().optional() }).strict(),
-  ground: z.object({ kind: z.enum(['house', 'inkDeep']), sweepFrames: z.number().int().nonnegative(), texture: z.enum(['none', 'halftone']) }).strict(),
+  /** house: the cream stage; inkDeep: ink_deep under a graphics-only beat (dark-keynote); dark: ink_deep under every
+   *  graphic ground, SPLIT included, with text cards inverted for contrast (hud-terminal, line-boil). paper: a seeded,
+   *  generated grain and fibre over the ground (paper-cutout), no image asset. */
+  ground: z.object({ kind: z.enum(['house', 'inkDeep', 'dark']), sweepFrames: z.number().int().nonnegative(), texture: z.enum(['none', 'halftone', 'paper']),
+    /** On a dark ground, text cards invert (the default) or keep their house cream; type drawn straight on the ground
+     *  always inverts so it reads. */
+    cards: z.enum(['invert', 'keep']).optional() }).strict(),
+  /** What a style lays over its graphics (kit/overlays.tsx). brackets: corners locking onto the focus line; scanLines:
+   *  faint static lines on the ground, never over the proof; torn: a torn paper edge and a soft shadow on cards and
+   *  logo tiles; sketchFrame: a hand-drawn panel line round the graphic ground. Absent means none. */
+  overlays: z.array(z.enum(['brackets', 'scanLines', 'torn', 'sketchFrame'])).optional(),
+  /** Type. font data: device text in the mono data face (hud-terminal). hero: the beat's key phrase set as the
+   *  picture, at the largest size the channel safe area takes, words sliding in on the grid (swiss-kinetic-type). */
+  type: z.object({ font: z.enum(['house', 'data']), hero: z.boolean() }).strict().optional(),
+  /** lead: large centred captions of 2 to 4 words as the main graphic, the spoken word highlighted (vertical-captions);
+   *  replaces the house captions for that style only. */
+  captions: z.object({ mode: z.enum(['house', 'lead']), wordsPerCard: z.number().int().positive() }).strict().optional(),
+  /** A seeded SVG displacement on stroked shapes only (scribbles, drawn lines), its seed changing every `everyFrames`
+   *  frames; never on type or numbers (line-boil). */
+  boil: z.object({ amplitudePx: z.number().nonnegative(), everyFrames: z.number().int().positive() }).strict().optional(),
   driftPct: z.number(),
   countFrames: z.number().int().positive().default(18),
   note: z.string().optional(),
@@ -50,6 +69,8 @@ export const FLOOR = {
   /** No graphic held more than 3.5 s without a change: nothing a profile times may run longer. */
   maxHoldFrames: 105,
   zoom: [1, 3], cps: [25, 40],
+  /** line-boil's bank rule: amplitude under 2 px, boiled on twos or slower. Lead captions carry 2 to 4 words a card. */
+  boilPx: [0.5, 2], boilEvery: [2, 4], leadWords: [2, 4],
 } as const
 
 const clamp = (value: number, low: number, high: number) => Math.min(high, Math.max(low, value))
@@ -67,6 +88,10 @@ export function floorProblems(profile: MotionProfile): string[] {
   if (profile.camera.scaleTo < FLOOR.zoom[0] || profile.camera.scaleTo > FLOOR.zoom[1]) problems.push(`camera scale ${profile.camera.scaleTo} is outside 1 to 3`)
   if (profile.typeReveal.kind === 'typewriter' && (profile.typeReveal.cps === undefined || profile.typeReveal.cps < FLOOR.cps[0] || profile.typeReveal.cps > FLOOR.cps[1]))
     problems.push('typing must run at a readable 25 to 40 characters a second')
+  if (profile.boil && (profile.boil.amplitudePx > FLOOR.boilPx[1] || profile.boil.everyFrames < FLOOR.boilEvery[0]))
+    problems.push('a line boils under 2 px, on twos or slower')
+  if (profile.captions?.mode === 'lead' && (profile.captions.wordsPerCard < FLOOR.leadWords[0] || profile.captions.wordsPerCard > FLOOR.leadWords[1]))
+    problems.push('a lead caption card carries 2 to 4 words')
   return problems
 }
 
@@ -85,6 +110,10 @@ export function clampToFloor(profile: MotionProfile): MotionProfile {
     ground: { ...profile.ground, sweepFrames: clamp(profile.ground.sweepFrames, 0, FLOOR.maxHoldFrames) },
     driftPct: profile.driftPct > 0 ? profile.driftPct : 0.5,
     countFrames: clamp(profile.countFrames, 1, FLOOR.maxHoldFrames),
+    ...(profile.boil ? { boil: { amplitudePx: clamp(profile.boil.amplitudePx, FLOOR.boilPx[0], FLOOR.boilPx[1]),
+      everyFrames: clamp(Math.round(profile.boil.everyFrames), FLOOR.boilEvery[0], FLOOR.boilEvery[1]) } } : {}),
+    ...(profile.captions ? { captions: { ...profile.captions,
+      wordsPerCard: clamp(Math.round(profile.captions.wordsPerCard), FLOOR.leadWords[0], FLOOR.leadWords[1]) } } : {}),
   }
 }
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import { textWidth, wrapWords } from '../../../house/metrics'
-import { HOUSE_FONTS } from '../../../house/geometry'
+import { font } from '../../kit/typeRole'
+import { cardsInvert } from '../../kit/overlays'
 import { EXIT, MOTION, drift, progress, stateAt, typingProgress } from '../../clock'
 import type { Focus } from '../../kit/focus'
 import { typedText } from '../../kit/reveal'
@@ -143,19 +144,21 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const initials = name?.split(/\s+/).map(word => Array.from(word)[0]).slice(0, 2).join('')
   const edge = `color-mix(in srgb, ${tokens.inkSoft} 20%, ${tokens.cream})`
   const ground = tokens.cream
-  const label: React.CSSProperties = { fontFamily: HOUSE_FONTS.data, fontSize: 44, lineHeight: 1.25 }
-  const heading: React.CSSProperties = { fontFamily: HOUSE_FONTS.structure, fontSize: 56, fontWeight: 700, lineHeight: 1.15 }
+  // On an inverted card (a dark-ground style) type on a mint fill stays dark so it reads; the house sets no colour here.
+  const onMint: React.CSSProperties = cardsInvert() ? { color: tokens.inkDeep } : {}
+  const label: React.CSSProperties = { fontFamily: font('data'), fontSize: 44, lineHeight: 1.25 }
+  const heading: React.CSSProperties = { fontFamily: font('structure'), fontSize: 56, fontWeight: 700, lineHeight: 1.15 }
   return <div data-kind={kind} style={{ position: 'absolute', left: stageBox?.left ?? box.left + (box.width - width) / 2,
     top: stageBox?.top ?? box.top + box.height * layout.top, width, boxSizing: 'border-box', padding: layout.padding,
     borderRadius: 36, background: ground, color: tokens.ink, border: `1px solid ${edge}`,
     boxShadow: `0 28px 64px color-mix(in srgb, ${tokens.inkDeep} 14%, transparent), 0 4px 12px color-mix(in srgb, ${tokens.inkDeep} 6%, transparent), 0 0 50px color-mix(in srgb, ${tokens.mint} 30%, transparent)`,
-    fontFamily: HOUSE_FONTS.structure, fontSize: 44, lineHeight: 1.3,
+    fontFamily: font('structure'), fontSize: 44, lineHeight: 1.3,
     opacity: s.enter * (1 - s.out), transformOrigin: '50% 30%',
     transform: `translateY(${(1 - s.enter) * 50 + s.out * 80}px) scale(${0.92 + 0.08 * s.enter})` }}>
     {kind === 'chat' && <header data-chat-header style={{ display: 'flex', alignItems: 'center', gap: 24,
       paddingBottom: 28, marginBottom: 28, borderBottom: `2px solid ${edge}` }}>
       <div data-avatar style={{ width: 92, height: 92, borderRadius: '50%', background: tokens.mint,
-        display: 'grid', placeItems: 'center', fontWeight: 700 }}>{initials}</div>
+        display: 'grid', placeItems: 'center', fontWeight: 700, ...onMint }}>{initials}</div>
       <div style={{ flex: 1 }}><div style={heading}>{name}</div>
         <div style={{ ...label, display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{ width: 12, height: 12, borderRadius: '50%', background: tokens.mint, border: `1px solid ${tokens.ink}` }} />online
@@ -164,7 +167,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
       <span aria-hidden style={{ fontSize: 52 }}>‹</span>
     </header>}
     {kind === 'order' && <header data-order-header style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 32 }}>
-      <span style={{ width: 88, height: 88, borderRadius: '50%', display: 'grid', placeItems: 'center', background: tokens.mint }}>✓</span>
+      <span style={{ width: 88, height: 88, borderRadius: '50%', display: 'grid', placeItems: 'center', background: tokens.mint, ...onMint }}>✓</span>
       <div style={heading}>Order placed</div>
     </header>}
     {kind === 'email' && <header data-email-header style={{ paddingBottom: 28, marginBottom: 28, borderBottom: `2px solid ${edge}` }}>
@@ -178,6 +181,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
         maxWidth: kind === 'chat' ? '86%' : '100%', width: kind === 'chat' ? undefined : '100%',
         padding: kind === 'chat' ? '24px 28px' : '20px 24px', borderRadius: 24,
         background: kind === 'chat' && row.side === 'right' ? tokens.mint : tokens.cream,
+        ...(kind === 'chat' && row.side === 'right' ? onMint : {}),
         border: `1px solid ${edge}`, overflowWrap: 'anywhere' }}>
         {row.who && kind !== 'chat' && kind !== 'email' && <div style={{ fontWeight: 700, marginBottom: 12 }}>{row.who}</div>}
         {row.dots ? <span data-typing-dots="true" style={{ display: 'flex', gap: 12, padding: '16px 4px' }}>

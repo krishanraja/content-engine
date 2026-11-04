@@ -318,7 +318,7 @@ class Styles(unittest.TestCase):
                 seen.append(((trial.get('style') or {}).get('motion') or {}).get('module', 'house'))
                 # The fake renderer writes only what it is handed: any difference between clips is in the props.
                 fake_render()(props_path, out)
-            doc = styles.make(FIXTURE, CUT, Path(tmp), props_for(FIXTURE), render, modules=self.MODULES,
+            doc = styles.make(FIXTURE, CUT, Path(tmp), grounded(props_for(FIXTURE)), render, modules=self.MODULES,
                               devices={'kinetic_stat', 'headline'}, sample=looks({'data-story': 40, 'swiss-kinetic-type': 90}))
             self.assertEqual(seen.pop(0), 'house', 'the house look renders first, on the same window')
             self.assertEqual(seen, ['data-story', 'swiss-kinetic-type'])
@@ -340,6 +340,14 @@ class Styles(unittest.TestCase):
             self.assertTrue(doc['distinct'])
             # Two styles is all this bank can draw, so two are offered and the sheet says so.
             self.assertIn('only 2 styles look different', doc['note'])
+
+
+def grounded(props: dict) -> dict:
+    """The props with every beat on a SPLIT stage: a graphic ground, which the dark, paper and hero-type effects need
+    (style-distinct.json effects with "ground")."""
+    for beat in props['beats']:
+        beat['layout'] = 'SPLIT'
+    return props
 
 
 def looks(levels: dict, house: int = 0):
@@ -368,7 +376,7 @@ class DistinctOptions(unittest.TestCase):
         def render(props_path, out, trial):
             rendered.append(((trial.get('style') or {}).get('motion') or {}).get('module', 'house'))
             fake_render()(props_path, out)
-        doc = styles.make(FIXTURE, CUT, Path(tmp), props or props_for(FIXTURE), render, top=top, modules=self.bank(*ids),
+        doc = styles.make(FIXTURE, CUT, Path(tmp), props or grounded(props_for(FIXTURE)), render, top=top, modules=self.bank(*ids),
                           devices={'kinetic_stat'}, sample=looks(levels), rules=rules)
         return doc, rendered
 
@@ -427,24 +435,29 @@ class DistinctOptions(unittest.TestCase):
         for beat in props['beats']:
             beat['uses'] = [u for u in beat['uses'] if u != 'chip']
         with tempfile.TemporaryDirectory() as tmp:
-            doc, rendered = self.run_make(tmp, ['hud-terminal', 'single-line-drawing', 'data-story', 'swiss-kinetic-type'],
-                                          {'data-story': 40, 'swiss-kinetic-type': 80}, props=props)
+            doc, rendered = self.run_make(tmp, ['hud-terminal', 'single-line-drawing', 'swiss-kinetic-type', 'data-story', 'riso-halftone'],
+                                          {'data-story': 40, 'riso-halftone': 80}, props=props)
             self.assertNotIn('hud-terminal', rendered, 'left out before it renders')
             self.assertNotIn('single-line-drawing', rendered)
             gone = {s['module']: s for s in doc['skipped']}
             self.assertEqual(gone['hud-terminal']['reason'], 'no_device_in_window')
             self.assertIn('typewriter needs typing_bubble or query_chip or headline', gone['hud-terminal']['why'])
             self.assertIn('followPen needs scribble', gone['single-line-drawing']['why'])
-            self.assertEqual([o['module'] for o in doc['options']], ['data-story', 'swiss-kinetic-type'])
+            # Type as hero draws only on a graphic ground; this window shows his take behind every beat.
+            self.assertIn('hero needs a SPLIT or graphics-only beat', gone['swiss-kinetic-type']['why'])
+            self.assertEqual([o['module'] for o in doc['options']], ['data-story', 'riso-halftone'])
 
     def test_effects_follow_the_profile(self):
         table = json.loads((ROOT / 'apps/renderer/src/engine/kit/motion-profiles.json').read_text(encoding='utf-8'))['profiles']
-        self.assertEqual(styles.signature(table['hud-terminal']), ['typewriter'])
+        self.assertEqual(styles.signature(table['hud-terminal']), ['typewriter', 'dark', 'brackets'])
+        self.assertEqual(styles.signature(table['paper-cutout']), ['paper', 'torn'])
+        self.assertEqual(styles.signature(table['vertical-captions']), ['lead'])
+        self.assertEqual(styles.signature(table['line-boil']), ['dark', 'boil'])
         self.assertEqual(styles.signature(table['living-ui']), ['typewriter', 'zoomToFocus'])
         self.assertEqual(styles.signature(table['single-line-drawing']), ['followPen'])
         self.assertEqual(styles.signature(table['riso-halftone']), ['halftone'])
         self.assertIn('any', styles.signature(table['dark-keynote']))
-        self.assertEqual(styles.signature(table['swiss-kinetic-type']), ['any'])
+        self.assertEqual(styles.signature(table['swiss-kinetic-type']), ['hero'])
         rules = styles.distinct_rules()
         typed = {'objects': [{'obj': 'q', 'device': 'query_chip'}], 'beats': [{'uses': ['q']}]}
         self.assertTrue(styles.touches(table['hud-terminal'], typed, rules)[0])

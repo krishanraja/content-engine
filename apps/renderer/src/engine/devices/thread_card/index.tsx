@@ -1,5 +1,5 @@
 import React from 'react'
-import { HOUSE_FONTS } from '../../../house/geometry'
+import { font } from '../../kit/typeRole'
 import { textWidth } from '../../../house/metrics'
 import { MOTION, progress, stateAt } from '../../clock'
 import { parted, pennant, twisted, weave } from '../../kit/threadPath'
@@ -49,7 +49,7 @@ export function Device({ object, events, tokens, aspect, frame }: DeviceProps) {
       else lines[lines.length - 1] += char
     }
     const top = Math.max(150 + size, Math.min(y, bottom - (lines.length - 1) * size * 1.25 - 8))
-    return <text x={left} y={top} fill={tokens.cream} fontFamily={role === 'name' ? HOUSE_FONTS.structure : role === 'tally' ? HOUSE_FONTS.display : HOUSE_FONTS.data}
+    return <text x={left} y={top} fill={tokens.cream} fontFamily={role === 'name' ? font('structure') : role === 'tally' ? font('display') : font('data')}
       fontSize={size} fontWeight={role === 'name' ? 900 : 400} fontStretch={role === 'name' ? '112%' : undefined} letterSpacing={`${tracking}em`}>
       {lines.map((line, i) => <tspan key={i} x={left} dy={i ? size * 1.25 : 0}>{line}</tspan>)}
     </text>

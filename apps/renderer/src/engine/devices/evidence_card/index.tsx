@@ -1,6 +1,6 @@
 import React from 'react'
 import { Img, OffthreadVideo, Sequence } from 'remotion'
-import { HOUSE_FONTS } from '../../../house/geometry'
+import { font } from '../../kit/typeRole'
 import { textWidth } from '../../../house/metrics'
 import { fitBox, fitScale } from '../../fit'
 import type { Box, DeviceProps } from '../types'
@@ -77,11 +77,11 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
           ? <Sequence key={state.playbackFrom} from={state.playbackFrom} layout="none"><OffthreadVideo muted src={params.src} trimBefore={params.trimBefore} style={evidenceMediaStyle(params.crop)} /></Sequence>
           : <Img src={params.src} style={evidenceMediaStyle(params.crop)} />}
       </div> : null}
-      {state.fullText ? <div style={{ fontFamily: HOUSE_FONTS.structure, fontWeight: 700, fontSize: l.fontSize,
+      {state.fullText ? <div style={{ fontFamily: font('structure'), fontWeight: 700, fontSize: l.fontSize,
         lineHeight: 1.2, overflowWrap: 'anywhere', whiteSpace: 'pre-wrap',
         textDecoration: state.struck && !state.replacement ? 'line-through' : 'none', textDecorationThickness: 3 }}>{state.text}</div> : null}
     </div>
-    <div style={{ flexShrink: 0, fontFamily: HOUSE_FONTS.data, fontSize: l.footerSize, lineHeight: 1.3,
+    <div style={{ flexShrink: 0, fontFamily: font('data'), fontSize: l.footerSize, lineHeight: 1.3,
       whiteSpace: 'nowrap', borderTop: `1px solid ${tokens.inkSoft}`, paddingTop: 14 }}>{params.outlet} · {params.date}</div>
   </div>
 }
