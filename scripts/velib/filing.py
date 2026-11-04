@@ -132,10 +132,17 @@ def file(spec: dict, directory: Path, cuts: list[str], *, subject: str, when: st
     write_json(sidecar, record)
     write_json(directory / 'filed.json', record)
     try:
-        record_history(spec, record)
+        record_history(spec, record, history_path(directory))
     except (OSError, ValueError, KeyError, TypeError) as error:   # the cuts are filed; the history row is a convenience
         record['history_error'] = str(error)[:200]
     return record
+
+
+def history_path(directory: Path) -> Path:
+    """config/ve/history.json for a piece in this repository; beside the piece for one filed from anywhere else (a
+    test's temporary folder), so nothing but a real piece ever writes the repository's history."""
+    from .common import CONFIG, ROOT  # noqa: PLC0415
+    return CONFIG / 'history.json' if Path(directory).resolve().is_relative_to(ROOT.resolve()) else Path(directory) / 'history.json'
 
 
 def record_history(spec: dict, record: dict, path: Path | None = None) -> Path:

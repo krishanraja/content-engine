@@ -43,6 +43,12 @@ class HistoryTest(unittest.TestCase):
             self.assertIsNone(lint.novelty_note(fresh, rows))
             self.assertIsNone(lint.novelty_note(SPEC, []))
 
+    def test_only_a_piece_in_this_repository_writes_the_repositorys_history(self):
+        from velib.common import CONFIG
+        self.assertEqual(filing.history_path(ROOT / 'docs' / 'plans' / 'x' / 've'), CONFIG / 'history.json')
+        with tempfile.TemporaryDirectory() as temp:
+            self.assertEqual(filing.history_path(Path(temp)), Path(temp) / 'history.json')
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=1)
