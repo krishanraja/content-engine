@@ -309,12 +309,15 @@ class ConformTest(unittest.TestCase):
                 if n >> bit & 1:
                     frames[n, :, bit * self.STRIPE:(bit + 1) * self.STRIPE] = 255
         media = self.dir / ('take-hdr.mp4' if hdr else 'take-1.mp4')
+        # The HLG tags go on the frames (setparams): ffmpeg 8's output flags alone leave the stream's transfer "unknown"
+        # (reproduced on CI's pinned n8.1.2, 4 Nov 2026), while 6.x wrote them either way.
+        tag = ',setparams=color_trc=arib-std-b67:color_primaries=bt2020:colorspace=bt2020nc' if hdr else ''
         colour = (['-pix_fmt', 'yuv420p10le', '-color_trc', 'arib-std-b67', '-color_primaries', 'bt2020', '-colorspace', 'bt2020nc']
                   if hdr else ['-pix_fmt', 'yuv420p'])
         subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'gray',
                         '-s', f'{self.BITS * self.STRIPE}x{self.HEIGHT}', '-r', rate, '-i', '-',
                         '-f', 'lavfi', '-i', f'sine=f=220:r=48000:d={duration}',
-                        '-vf', f'settb=1/90000,setpts=(N/{rate}+0.012*sin(2.1*N))/TB', '-fps_mode', 'passthrough', '-enc_time_base', '1/90000',
+                        '-vf', f'settb=1/90000,setpts=(N/{rate}+0.012*sin(2.1*N))/TB{tag}', '-fps_mode', 'passthrough', '-enc_time_base', '1/90000',
                         '-c:v', 'libx264', '-qp', '0', *colour, '-video_track_timescale', '90000',
                         '-c:a', 'aac', '-shortest', str(media)], input=frames.tobytes(), check=True)
         return media
