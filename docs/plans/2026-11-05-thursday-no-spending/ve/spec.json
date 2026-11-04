@@ -88,10 +88,10 @@
     "main": "NOBODY ASKED",
     "tiltDeg": -4,
     "at": {
-     "x": 560,
-     "y": 700,
-     "w": 420,
-     "h": 120
+     "x": 600,
+     "y": 560,
+     "w": 380,
+     "h": 110
     }
    }
   },
@@ -160,7 +160,14 @@
     "lines": [
      "NO SPENDING.",
      "NO SENDING."
-    ]
+    ],
+    "ground": "light",
+    "at": {
+     "x": 60,
+     "y": 500,
+     "w": 900,
+     "h": 420
+    }
    }
   },
   {
@@ -176,7 +183,7 @@
     "rows": [
      {
       "who": "You",
-      "text": "Set rules so you never spend or send without me",
+      "text": "Never spend or send without me",
       "side": "right"
      },
      {
@@ -223,21 +230,6 @@
    }
   },
   {
-   "obj": "rule_back",
-   "device": "headline",
-   "meaning": "the rule returns as the one step",
-   "persist": {
-    "from_beat": "close",
-    "to_beat": "close"
-   },
-   "params": {
-    "lines": [
-     "NO SPENDING.",
-     "NO SENDING."
-    ]
-   }
-  },
-  {
    "obj": "buddy_good",
    "device": "cursor_buddy",
    "meaning": "the assistant, behaving now",
@@ -271,14 +263,7 @@
       "text": "Absolutely not, it's my lie-in day",
       "side": "right"
      }
-    ],
-    "place": {
-     "left": 100,
-     "top": 240,
-     "width": 1100,
-     "height": 640,
-     "scale": 0.8
-    }
+    ]
    }
   },
   {
@@ -294,32 +279,11 @@
     "main": "BLOCKED",
     "tiltDeg": -5,
     "at": {
-     "x": 560,
-     "y": 560,
+     "x": 580,
+     "y": 930,
      "w": 380,
      "h": 120
     }
-   }
-  },
-  {
-   "obj": "waiting",
-   "device": "typing_bubble",
-   "meaning": "the assistant now holds its send and waits for his yes",
-   "persist": {
-    "from_beat": "own-words",
-    "to_beat": "own-words"
-   },
-   "params": {
-    "kind": "notification",
-    "rows": [
-     {
-      "who": "Your AI",
-      "text": "Reply drafted to your boss"
-     },
-     {
-      "text": "Waiting for your yes"
-     }
-    ]
    }
   },
   {
@@ -333,6 +297,47 @@
    "params": {
     "mood": "eager",
     "prop": "none"
+   }
+  },
+  {
+   "obj": "ask_tag",
+   "device": "stamp",
+   "meaning": "tags the prompt: he wrote one line, the AI did the rest",
+   "persist": {
+    "from_beat": "b7-prompt",
+    "to_beat": "b7-prompt"
+   },
+   "params": {
+    "kind": "outline",
+    "main": "ONE PROMPT",
+    "tiltDeg": -3,
+    "at": {
+     "x": 600,
+     "y": 330,
+     "w": 380,
+     "h": 100
+    }
+   }
+  },
+  {
+   "obj": "settings",
+   "device": "typing_bubble",
+   "meaning": "the AI's rules, set: it asks him before it spends or sends",
+   "persist": {
+    "from_beat": "close",
+    "to_beat": "close"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Your AI · rules",
+      "text": "Spend money: ask me first"
+     },
+     {
+      "text": "Send anything: ask me first"
+     }
+    ]
    }
   }
  ],
@@ -517,11 +522,10 @@
       "to_w": 53
      },
      "viewer_task": "inspect_artifact",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "It can get dangerous: left alone, the assistant answers your boss for you",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
      "uses": [
       "chat"
@@ -606,38 +610,14 @@
       "to_w": 73
      },
      "viewer_task": "connect_with_speaker",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "In his own words: it never spends his money or sends anything unless he says so",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "take"
      },
-     "uses": [
-      "waiting"
-     ],
-     "events": [
-      {
-       "at_w": 59,
-       "obj": "waiting",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 60,
-       "obj": "waiting",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 64,
-       "obj": "waiting",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
-      }
-     ]
+     "uses": [],
+     "events": [],
+     "override_reason": "Face alone, the georgia_la caption build: the speaker and the word-by-word captions under the held title are the motion (MOTION_STANDARD.md lists face alone as a beat kind)."
     },
     {
      "id": "b7-prompt",
@@ -654,6 +634,7 @@
      },
      "uses": [
       "ask",
+      "ask_tag",
       "comments_arrow"
      ],
      "events": [
@@ -669,6 +650,13 @@
        "obj": "ask",
        "verb": "type",
        "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 88,
+       "obj": "ask_tag",
+       "verb": "stamp",
+       "to_state": "visible",
        "silent": true
       },
       {
@@ -729,19 +717,33 @@
       "source": "none"
      },
      "uses": [
-      "rule_back",
+      "settings",
       "buddy_good"
      ],
      "events": [
       {
        "at_w": 118,
-       "obj": "rule_back",
+       "obj": "settings",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 123,
+       "at_w": 118,
+       "obj": "settings",
+       "verb": "type",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 125,
+       "obj": "settings",
+       "verb": "type",
+       "to_state": "1",
+       "silent": true
+      },
+      {
+       "at_w": 127,
        "obj": "buddy_good",
        "verb": "enter",
        "to_state": "visible",
@@ -764,11 +766,10 @@
       "to_w": 147
      },
      "viewer_task": "land_payoff",
-     "layout": "SPLIT",
+     "layout": "STAGE",
      "point": "Enjoy the new tools without the weird moments or fails",
      "plate": {
-      "source": "take",
-      "crop": "50% 88%"
+      "source": "none"
      },
      "uses": [
       "chat_again",
