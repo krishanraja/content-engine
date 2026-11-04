@@ -93,6 +93,7 @@ def make(spec: dict, cut: str, directory: Path, props: dict, render_fn, top: int
          points=None, take_label: str = 'this piece\'s take') -> dict:
     """Render the proof window once per shortlisted style into <ve dir>/styles/<module>.mp4 and write styles.json."""
     from . import proof
+    from .compile import motion_props
     cd = _cd()
     modules = cd.motion_modules() if modules is None else modules
     options, skipped = shortlist(spec, cut, top, modules, devices, points)
@@ -113,7 +114,9 @@ def make(spec: dict, cut: str, directory: Path, props: dict, render_fn, top: int
         trial = json.loads(json.dumps(spec))
         trial.setdefault('style', {})['motion'] = {'module': mid, 'reason': 'a style mock for Krish to pick from'}
         write_json(folder / f'spec.{mid}.json', trial)
-        props_out = write_json(folder / f'props.{mid}.json', window)
+        # The same window, drawn in this style: the renderer reads props.motion (compile.motion_props).
+        styled = dict(window, motion=motion_props(trial))
+        props_out = write_json(folder / f'props.{mid}.json', styled)
         clip = folder / f'{mid}.mp4'
         render_fn(props_out, clip, trial)
         out_options.append({'module': mid, 'name': modules[mid].get('name'), 'how': modules[mid].get('how'),
@@ -123,8 +126,7 @@ def make(spec: dict, cut: str, directory: Path, props: dict, render_fn, top: int
            'window': {'start': round(start / fps, 3), 'end': round(end / fps, 3)}, 'take': take_label,
            'options': out_options, 'skipped': [{'module': m, 'why': why} for m, why in skipped], 'distinct': distinct}
     if not distinct:
-        doc['note'] = ('the renderer does not yet draw style.motion itself, so these clips show the same picture; each '
-                       "style's look comes from its devices and plates (brief.py _motion). Show the options as named "
-                       'styles with their rules, not as different clips')
+        doc['note'] = ('two or more clips came out identical: the window may hold nothing a style moves (no graphic '
+                       'beat). Pick a window with a graphic beat, or show the options as named styles with their rules')
     write_json(Path(directory) / 'styles.json', doc)
     return doc

@@ -417,4 +417,27 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     if spec.get('call'):
         call = spec['call']
         props['call'] = {'statement': call['statement'], 'due': call['due'], 'confidencePercent': call['confidence_percent']}
+    motion = motion_props(spec)
+    if motion is not None:
+        props['motion'] = motion
     return props
+
+
+MOTION_PROFILES = ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'kit' / 'motion-profiles.json'
+
+
+def motion_props(spec: dict) -> dict | None:
+    """props.motion from the spec's style.motion: the style id and, when the renderer can draw it, its profile.
+
+    The profiles live once, in the renderer's kit/motion-profiles.json; a style that needs its own device carries only
+    its id and renders with the house motion. No style.motion means no props.motion, so the cut renders exactly as before.
+    """
+    module = ((spec.get('style') or {}).get('motion') or {}).get('module')
+    if not module:
+        return None
+    table = load_json(MOTION_PROFILES)
+    if module in table['profiles']:
+        return {'style': module, 'profile': json.loads(json.dumps(table['profiles'][module]))}
+    if module in table['needs_device']:
+        return {'style': module}
+    raise ValueError(f'style.motion.module {module} is not a motion style the renderer knows')

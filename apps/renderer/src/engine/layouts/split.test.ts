@@ -12,7 +12,7 @@ import { CaptionTrack } from '../chrome/CaptionTrack'
 import { StageHeader } from '../chrome/StageHeader'
 import { boxFor } from '../geometry'
 
-vi.mock('../clock', () => ({ useEngineFrame: () => 75 }))
+vi.mock('../clock', async (importOriginal) => ({ ...await importOriginal<typeof import('../clock')>(), useEngineFrame: () => 75 }))
 function elements(node: ReactNode): ReactElement<Record<string, unknown>>[] {
   if (Array.isArray(node)) return node.flatMap(elements)
   if (!isValidElement<Record<string, unknown>>(node)) return []
