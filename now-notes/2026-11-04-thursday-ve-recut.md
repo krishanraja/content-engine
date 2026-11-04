@@ -1,3 +1,3 @@
-Status: Thursday 5 Nov re-cut rebuilt on ve after a frame-by-frame study of both board references (docs/ve/WORLD_CLASS.md); the light-STAGE engine change is #380; official render, QC and a fresh Critic next.
-Next: if the Critic scores 8/10 against both references, Gate 2 key frames and Gate 3 cut to Krish; after his yes, the publish board ready to schedule.
+Status: Krish killed the Thursday 5 Nov ve cut on 4 Nov ("Okay, this is shit"); failure report and restart brief in docs/plans/2026-11-05-thursday-no-spending/; a punchier script "AI will ask you now" is in Teleprompter (A4C660B2-DDE0-4ECA-8570-9967C2AB3EBB), not yet recorded.
+Next: Krish records the new script; a fresh session runs RESTART_BRIEF.md section 2 with his ChatGPT screenshot attached.
 North Star check (2026-11-04): holds.
