@@ -1740,7 +1740,7 @@
     {
       "id": "b4-8am",
       "role": "anchor",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 504,
       "toFrame": 598,
       "uses": [
@@ -1749,8 +1749,7 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "none"
       },
       "keyFrame": 579
     },
@@ -1774,17 +1773,14 @@
     {
       "id": "own-words",
       "role": "bridge",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 646,
       "toFrame": 764,
-      "uses": [
-        "waiting"
-      ],
+      "uses": [],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "take"
       },
       "keyFrame": 740
     },
@@ -1796,6 +1792,7 @@
       "toFrame": 1085,
       "uses": [
         "ask",
+        "ask_tag",
         "comments_arrow"
       ],
       "transitionOut": "cut",
@@ -1812,7 +1809,7 @@
       "fromFrame": 1085,
       "toFrame": 1252,
       "uses": [
-        "rule_back",
+        "settings",
         "buddy_good"
       ],
       "transitionOut": "cut",
@@ -1825,7 +1822,7 @@
     {
       "id": "fails",
       "role": "anchor",
-      "layout": "SPLIT",
+      "layout": "STAGE",
       "fromFrame": 1252,
       "toFrame": 1425,
       "uses": [
@@ -1835,8 +1832,7 @@
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take",
-        "crop": "50% 88%"
+        "source": "none"
       },
       "keyFrame": 1306
     }
@@ -1886,10 +1882,10 @@
         "main": "NOBODY ASKED",
         "tiltDeg": -4,
         "at": {
-          "x": 560,
-          "y": 700,
-          "w": 420,
-          "h": 120
+          "x": 600,
+          "y": 560,
+          "w": 380,
+          "h": 110
         }
       }
     },
@@ -1955,7 +1951,14 @@
         "lines": [
           "NO SPENDING.",
           "NO SENDING."
-        ]
+        ],
+        "ground": "light",
+        "at": {
+          "x": 60,
+          "y": 500,
+          "w": 900,
+          "h": 420
+        }
       }
     },
     {
@@ -1970,7 +1973,7 @@
         "rows": [
           {
             "who": "You",
-            "text": "Set rules so you never spend or send without me",
+            "text": "Never spend or send without me",
             "side": "right"
           },
           {
@@ -2016,20 +2019,6 @@
       }
     },
     {
-      "obj": "rule_back",
-      "device": "headline",
-      "meaning": "the rule returns as the one step",
-      "fromFrame": 1085,
-      "toFrame": 1252,
-      "variants": {},
-      "params": {
-        "lines": [
-          "NO SPENDING.",
-          "NO SENDING."
-        ]
-      }
-    },
-    {
       "obj": "buddy_good",
       "device": "cursor_buddy",
       "meaning": "the assistant, behaving now",
@@ -2061,14 +2050,7 @@
             "text": "Absolutely not, it's my lie-in day",
             "side": "right"
           }
-        ],
-        "place": {
-          "left": 100,
-          "top": 240,
-          "width": 1100,
-          "height": 640,
-          "scale": 0.8
-        }
+        ]
       }
     },
     {
@@ -2083,31 +2065,11 @@
         "main": "BLOCKED",
         "tiltDeg": -5,
         "at": {
-          "x": 560,
-          "y": 560,
+          "x": 580,
+          "y": 930,
           "w": 380,
           "h": 120
         }
-      }
-    },
-    {
-      "obj": "waiting",
-      "device": "typing_bubble",
-      "meaning": "the assistant now holds its send and waits for his yes",
-      "fromFrame": 646,
-      "toFrame": 764,
-      "variants": {},
-      "params": {
-        "kind": "notification",
-        "rows": [
-          {
-            "who": "Your AI",
-            "text": "Reply drafted to your boss"
-          },
-          {
-            "text": "Waiting for your yes"
-          }
-        ]
       }
     },
     {
@@ -2120,6 +2082,45 @@
       "params": {
         "mood": "eager",
         "prop": "none"
+      }
+    },
+    {
+      "obj": "ask_tag",
+      "device": "stamp",
+      "meaning": "tags the prompt: he wrote one line, the AI did the rest",
+      "fromFrame": 764,
+      "toFrame": 1085,
+      "variants": {},
+      "params": {
+        "kind": "outline",
+        "main": "ONE PROMPT",
+        "tiltDeg": -3,
+        "at": {
+          "x": 600,
+          "y": 330,
+          "w": 380,
+          "h": 100
+        }
+      }
+    },
+    {
+      "obj": "settings",
+      "device": "typing_bubble",
+      "meaning": "the AI's rules, set: it asks him before it spends or sends",
+      "fromFrame": 1085,
+      "toFrame": 1252,
+      "variants": {},
+      "params": {
+        "kind": "notification",
+        "rows": [
+          {
+            "who": "Your AI · rules",
+            "text": "Spend money: ask me first"
+          },
+          {
+            "text": "Send anything: ask me first"
+          }
+        ]
       }
     }
   ],
@@ -2251,27 +2252,6 @@
       "atFrame": 631
     },
     {
-      "id": "own-words-0",
-      "obj": "waiting",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 646
-    },
-    {
-      "id": "own-words-1",
-      "obj": "waiting",
-      "verb": "type",
-      "toState": "0",
-      "atFrame": 648
-    },
-    {
-      "id": "own-words-2",
-      "obj": "waiting",
-      "verb": "type",
-      "toState": "1",
-      "atFrame": 692
-    },
-    {
       "id": "b7-prompt-0",
       "obj": "ask",
       "verb": "enter",
@@ -2287,41 +2267,48 @@
     },
     {
       "id": "b7-prompt-2",
+      "obj": "ask_tag",
+      "verb": "stamp",
+      "toState": "visible",
+      "atFrame": 861
+    },
+    {
+      "id": "b7-prompt-3",
       "obj": "ask",
       "verb": "type",
       "toState": "1",
       "atFrame": 899
     },
     {
-      "id": "b7-prompt-3",
+      "id": "b7-prompt-4",
       "obj": "ask",
       "verb": "type",
       "toState": "2",
       "atFrame": 953
     },
     {
-      "id": "b7-prompt-4",
+      "id": "b7-prompt-5",
       "obj": "ask",
       "verb": "type",
       "toState": "3",
       "atFrame": 966
     },
     {
-      "id": "b7-prompt-5",
+      "id": "b7-prompt-6",
       "obj": "ask",
       "verb": "type",
       "toState": "4",
       "atFrame": 1014
     },
     {
-      "id": "b7-prompt-6",
+      "id": "b7-prompt-7",
       "obj": "ask",
       "verb": "send",
       "toState": "4",
       "atFrame": 1021
     },
     {
-      "id": "b7-prompt-7",
+      "id": "b7-prompt-8",
       "obj": "comments_arrow",
       "verb": "draw",
       "toState": "visible",
@@ -2329,20 +2316,34 @@
     },
     {
       "id": "close-0",
-      "obj": "rule_back",
+      "obj": "settings",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 1085
     },
     {
       "id": "close-1",
-      "obj": "buddy_good",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 1112
+      "obj": "settings",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 1085
     },
     {
       "id": "close-2",
+      "obj": "settings",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 1128
+    },
+    {
+      "id": "close-3",
+      "obj": "buddy_good",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 1144
+    },
+    {
+      "id": "close-4",
       "obj": "buddy_good",
       "verb": "wave",
       "toState": "wave",
