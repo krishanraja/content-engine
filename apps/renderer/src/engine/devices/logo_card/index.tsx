@@ -5,6 +5,7 @@ import { BACK, EXIT, MOTION, progress, stateAt } from '../../clock'
 import type { DeviceProps } from '../types'
 import { Mark } from '../logo_orbit/mark'
 import { ParamsSchema, resolveLogo } from './schema'
+import { tileLean } from '../../kit/overlays'
 
 // Monday's E.back (1.9 overshoot) with no motion style; a style's own overshoot, never past 6%, with one (clock BACK).
 const back = BACK
@@ -58,8 +59,10 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
           const columns = Math.min(3, params.logos.length - row * 3)
           const x = (box.width - (columns * side + (columns - 1) * gap)) / 2 + (i - row * 3) * (side + gap) + side / 2
           const y = (box.height - height) / 2 + row * (side + gap) + side / 2
+          // paper-cutout: each tile is its own cut-out and leans on its own seed (kit/overlays.tsx tileLean).
+          const lean = tileLean(object.obj, i)
           return <g key={i} data-tile-side={side} data-row={row} opacity={l.opacity}
-            transform={`translate(${x} ${y}) scale(${l.scale})`}>
+            transform={`translate(${x} ${y}) scale(${l.scale})${lean ? ` rotate(${lean})` : ''}`}>
             <rect x={-side / 2} y={-side / 2} width={side} height={side} rx={24 * unit} fill="white" />
             <Mark id={logo.id} size={140 * unit} />
           </g>

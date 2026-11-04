@@ -85,7 +85,7 @@
       "note": "only images take the halftone (his take); type stays crisp"
     },
     "paper-cutout": {
-      "entrance": {"kind": "drop", "frames": 6, "easing": "enter", "distancePx": 50, "overshootPct": 0},
+      "entrance": {"kind": "drop", "frames": 6, "easing": "enter", "distancePx": 50, "overshootPct": 5},
       "stagger": {"frames": 4, "unit": "line"},
       "exitFrames": 6,
       "onTwos": true,
@@ -96,7 +96,7 @@
       "driftPct": 1,
       "countFrames": 18,
       "overlays": ["torn"],
-      "note": "a seeded paper stock under the graphics (generated grain and fibre, no image); cards and logo tiles cut out with a torn cream edge and a soft 2 to 4 px shadow that steps on twos; graphics move on twos (15 fps steps inside the 30 fps cut); his take and the captions stay on ones"
+      "note": "a warm, seeded paper stock under the graphics (the cream laid on itself; generated mottle, grain, flecks and fibres, no image), torn white where it meets his take; cards and logo tiles cut out with a thick torn white rim, a sliver of cut side and a hard 4 px shadow, each leaning 1 to 2 degrees on its own seed and nudged by at most 1 px a step; pieces drop in with a 5% overshoot and settle, on twos (15 fps steps inside the 30 fps cut); his take, the captions and the mark tile stay level, clean and on ones"
     },
     "vertical-captions": {
       "entrance": {"kind": "slap", "frames": 4, "easing": "enter", "distancePx": 40, "overshootPct": 3},
