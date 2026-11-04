@@ -1957,7 +1957,12 @@
           "evidence": "docs/ve/RUNBOOK.md: \"Maximum 2 fix loops total\"; at least seven renders on 4 Nov"
         }
       ],
-      "guard_level": "gate"
+      "guard_level": "gate",
+      "decided": {
+        "by": "Krish",
+        "on": "2026-11-04",
+        "said": "Yes, I would assume one piece and one session would be good, with Claude orchestrating and Codex doing asset production."
+      }
     },
     {
       "id": "F35-type-treatments-multiplied",
@@ -1967,12 +1972,12 @@
       "symptom": "\"The subtitles are all over the place typographically.\"",
       "cause": "Each treatment arrived with its own fix; no check counted treatments across a cut.",
       "status": "guarded",
-      "surface": "One type system: ve proof and ve render count the type role on each surface a cut shows and refuse more than the brand book's four roles, unless Krish approves that set.",
+      "surface": "Type treatments are listed, never refused by count: ve proof prints and records every type role on every surface the cut shows, so the experiment is judged moving on his take (Krish, 2026-11-04: \"it needs to look good, and it didn't that time\").",
       "guards": [
         {
           "file": "scripts/velib/guards.py",
-          "contains": "def type_problems(",
-          "how": "treatments read from the compiled props and each device's HOUSE_FONTS roles in the renderer source; over config/ve/production-guards.json type.max_treatments refuses",
+          "contains": "def type_note(",
+          "how": "ve proof prints the treatments and writes them to proof/<cut>.json; config/ve/production-guards.json type.mode advisory means no refusal",
           "test": "python3 tests/ve_thursday_guards_test.py"
         }
       ],
@@ -1989,7 +1994,12 @@
           "evidence": "the Thursday props.short.json counts 6 treatments"
         }
       ],
-      "guard_level": "gate"
+      "guard_level": "lint_warn",
+      "decided": {
+        "by": "Krish",
+        "on": "2026-11-04",
+        "said": "No, I just don't think that is true at all. I just think that it needs to look good, and it didn't that time. We still need to experiment and make videos that are impactful, which, in my eyes, isn't just going to be in the future where every video has boring captions. Sometimes the words will be taking up most of the screen, but we need to figure out what looks good. When we're experimenting, instead of using proven, approved templates, we need to experiment carefully, as opposed to just producing videos experimentally and then seeing that they're shit."
+      }
     },
     {
       "id": "F36-off-day-wore-series-dress",
@@ -2021,7 +2031,7 @@
       "symptom": "Krish asked about his own words.",
       "cause": "No step says to read his own records before questioning his words; AGENTS.md says \"Check before you ask\" in general.",
       "status": "open",
-      "planned_mechanism": "Proposal (lesson 9): the make-piece and ve skills check Teleprompter folder names, the board and docs/GLOSSARY.md before any question about a name he used.",
+      "planned_mechanism": "Krish's answer: the session listens to what he actually said on the recorded take (its transcript), not the Teleprompter folders, because he paraphrases on camera. Before questioning a name or a line he used, read the take's words; then the board and docs/GLOSSARY.md. Not yet a check.",
       "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
       "related": [],
       "mode": "asked-what-records-answer",
@@ -2031,7 +2041,12 @@
           "evidence": "AGENTS.md \"Check before you ask.\""
         }
       ],
-      "guard_level": "prose"
+      "guard_level": "prose",
+      "decided": {
+        "by": "Krish",
+        "on": "2026-11-04",
+        "said": "I think the session would need to listen to what I actually said on the script, as opposed to reading the teleprompter folders, because sometimes I paraphrase the teleprompter script and that only gets picked up in the live recording."
+      }
     },
     {
       "id": "F38-critic-held-to-rulers-on-stills",
@@ -2040,8 +2055,7 @@
       "what": "Two Instagram creators' reels were used as rulers and the Critic scored against them, on stills only, and suggested a wrong factual fix; captions.render failed 33 to 45 of 148 pages every render and was waved off as \"suspected misread\"; Krish was asked to judge stills (\"the stills gave me no clue as to what you're going to produce\").",
       "symptom": "Every check reported something; none said the piece was tacky.",
       "cause": "The Critic's first comparison is the inspiration cards, not his favourite finished cut, and it reads stills. Monday 2 Nov is not in config/reference-cuts.json.",
-      "status": "open",
-      "planned_mechanism": "Proposal (lesson 10): add Monday 2 Nov to config/reference-cuts.json as the Critic's first reference, scored in motion with sound on the approved proof. The stills part is already held by F04 (ve proof from 9 Nov).",
+      "status": "guarded",
       "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
       "related": [
         "F04-stills-stood-in-for-motion-proof",
@@ -2055,7 +2069,26 @@
           "evidence": "config/reference-cuts.json holds fri23-tall, mon26-wide, mon26-tall only"
         }
       ],
-      "guard_level": "prose"
+      "guard_level": "checklist",
+      "surface": "Monday 2 Nov \"Who trains your 2030 seniors\" is in config/reference-cuts.json (mon02-wide, mon02-tall), and the Critic compares a cut with it first: one idea as clear as The Ladder.",
+      "guards": [
+        {
+          "file": "config/reference-cuts.json",
+          "contains": "\"id\": \"mon02-wide\"",
+          "how": "Monday 2 Nov joins the bar; floor.py --check holds the entry and its page line",
+          "test": "python3 scripts/floor.py --check"
+        },
+        {
+          "file": ".claude/agents/ve-critic.md",
+          "contains": "## First, beside his favourite",
+          "how": "the Critic opens on Monday 2 Nov and the piece's style.idea before any card"
+        }
+      ],
+      "decided": {
+        "by": "Krish",
+        "on": "2026-11-04",
+        "said": "Yeah, sure."
+      }
     },
     {
       "id": "F39-codex-on-the-engine-backlog-mid-piece",
@@ -2065,7 +2098,7 @@
       "symptom": "Three days of Codex work and no plate the piece needed.",
       "cause": "Nothing ties a Codex card dispatched during a piece to that piece's named slots.",
       "status": "open",
-      "planned_mechanism": "Proposal (lesson 5): during production ve dispatch sends only cards for the piece's named plates; engine and library cards wait until the piece is filed or Krish says otherwise.",
+      "planned_mechanism": "Krish left it to the session (\"Whatever you think is the best coherent outcome\"), and ruled one piece per session with Claude orchestrating and Codex doing asset production: during a piece Codex is dispatched only for that piece's named plates; engine and library cards wait until the piece is filed (docs/ve/RUNBOOK.md). Not yet a check in ve dispatch.",
       "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
       "related": [
         "F22-codex-lane-left-unwatched",
@@ -2078,7 +2111,12 @@
           "evidence": "cards ve-qc-2, ve-motion-2, ve-motion-5, ve-motion-6 dispatched during the Thursday piece"
         }
       ],
-      "guard_level": "prose"
+      "guard_level": "prose",
+      "decided": {
+        "by": "Krish",
+        "on": "2026-11-04",
+        "said": "Whatever you think is the best coherent outcome. I don't really care. / Yes, I would assume one piece and one session would be good, with Claude orchestrating and Codex doing asset production."
+      }
     },
     {
       "id": "F40-bed-pumped-with-his-voice",

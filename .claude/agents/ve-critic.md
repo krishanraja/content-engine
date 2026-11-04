@@ -12,6 +12,10 @@ Answer each question on the card in one line, citing the frame. Then return JSON
 
 Block only on findings you can cite by frame. Never claim to have heard audio. Never propose code; propose spec changes by field path.
 
+## First, beside his favourite
+
+Krish, 4 Nov 2026, agreed that Monday 2 Nov "Who trains your 2030 seniors" is the Critic's first comparison (`config/reference-cuts.json`, `mon02-wide` and `mon02-tall`, `critic_first`). Before any card, read its motion system, `docs/plans/2026-11-02-monday/motion-system.md`, and the spec's `style.idea`. Answer in one line: does this cut carry one idea as clearly as The Ladder (one object, every move meaning something, nothing acting out a sentence)? If not, that is a blocking finding, however well it matches the cards. The Critic is a check, never the brief: never propose a new device or a factual change you cannot trace to the spec's sources.
+
 ## Against its references (required from 6 Nov 2026)
 
 The house floor for motion and captions is the signed standard, `docs/ve/MOTION_STANDARD.md`; the piece's own style is `style.motion` in the spec. Score against both as well as the cards.

@@ -221,6 +221,46 @@
   ],
   "references": [
     {
+     "id": "mon02-wide",
+     "label": "Monday 2 Nov wide",
+     "piece": "Who trains your 2030 seniors",
+     "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+     "published_on": "2026-11-02",
+     "series": "follow.the.money",
+     "format_family": "split_screen",
+     "which_file": "the wide (16:9) cut",
+     "served_from": {
+      "board_week": "2026-11-02",
+      "asset": "mon-video-long",
+      "build": "74d70c6c8f543827640a01fb8c0a382dd44e66592791d42a832808e1279c6aa1",
+      "checked_at": "2026-11-04"
+     },
+     "sha256": "a7eb0a498d6f5ec0dc9d2c6342c72f01151bb10710760731d2325b6a0c4ec48b",
+     "identity": "confirmed",
+     "critic_first": true,
+     "identity_evidence": "Krish, 4 November 2026, asked whether Monday 2 Nov \"Who trains your 2030 seniors\" joins the reference cuts as the Critic's first comparison: \"Yeah, sure.\" On 2026-11-04 the board was read (GET /api/board/2026-11-02, read only): week 2026-11-02, build 74d70c6c, the Monday tab serves asset mon-video-long, mon-long-16x9.mp4, sha256 a7eb0a498d6f5ec0dc9d2c6342c72f01151bb10710760731d2325b6a0c4ec48b. Which of the two cuts he meant was not asked; both are listed. Of the tall cut as posted on Instagram he said on 3 Nov \"It looks cramped\" (F30), so its layout under Instagram's buttons is not the bar; its motion system is (docs/plans/2026-11-02-monday/motion-system.md)."
+    },
+    {
+     "id": "mon02-tall",
+     "label": "Monday 2 Nov tall",
+     "piece": "Who trains your 2030 seniors",
+     "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+     "published_on": "2026-11-02",
+     "series": "follow.the.money",
+     "format_family": "split_screen",
+     "which_file": "the tall (9:16) cut",
+     "served_from": {
+      "board_week": "2026-11-02",
+      "asset": "mon-video-short",
+      "build": "74d70c6c8f543827640a01fb8c0a382dd44e66592791d42a832808e1279c6aa1",
+      "checked_at": "2026-11-04"
+     },
+     "sha256": "2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a",
+     "identity": "confirmed",
+     "critic_first": true,
+     "identity_evidence": "Krish, 4 November 2026, asked whether Monday 2 Nov \"Who trains your 2030 seniors\" joins the reference cuts as the Critic's first comparison: \"Yeah, sure.\" On 2026-11-04 the board was read (GET /api/board/2026-11-02, read only): week 2026-11-02, build 74d70c6c, the Monday tab serves asset mon-video-short, mon-short-9x16.mp4, sha256 2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a. Which of the two cuts he meant was not asked; both are listed. Of the tall cut as posted on Instagram he said on 3 Nov \"It looks cramped\" (F30), so its layout under Instagram's buttons is not the bar; its motion system is (docs/plans/2026-11-02-monday/motion-system.md)."
+    },
+    {
       "id": "fri23-tall",
       "label": "Friday tall",
       "piece": "Two passports (AI Passports)",

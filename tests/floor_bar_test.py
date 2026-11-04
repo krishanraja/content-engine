@@ -35,6 +35,12 @@ STUDIED = {
 }
 BOARD = {'fri23-tall': ('2026-10-19', 'fri-short-video'), 'mon26-wide': ('2026-10-26', 'mon-video-long'),
          'mon26-tall': ('2026-10-26', 'mon-video-short')}
+# Monday 2 Nov joins as the Critic's first comparison (Krish, 2026-11-04: "Yeah, sure."), read from the board that day.
+ADDED = {
+    'mon02-wide': ('split_screen', 'a7eb0a498d6f5ec0dc9d2c6342c72f01151bb10710760731d2325b6a0c4ec48b', 'confirmed'),
+    'mon02-tall': ('split_screen', '2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a', 'confirmed'),
+}
+ADDED_BOARD = {'mon02-wide': ('2026-11-02', 'mon-video-long'), 'mon02-tall': ('2026-11-02', 'mon-video-short')}
 # His exact typed words, character for character.
 TASTE = ("I hope you understand that I would much rather the engine know what kind of thing doesn't fly with me, rather "
          "than implement incredibly specific rules everywhere which came from feedback on one piece of content for one "
@@ -594,8 +600,14 @@ class TheBar(unittest.TestCase):
 
     def test_the_reference_files_are_the_ones_the_study_hashed_and_say_whether_they_are_the_latest(self):
         got = {r['id']: (r['format_family'], r['sha256'], r['identity']) for r in BAR['references']}
-        self.assertEqual(got, STUDIED)
+        self.assertEqual(got, {**STUDIED, **ADDED})
         for r in BAR['references']:
+            if r['id'] in ADDED:
+                self.assertIn('"Yeah, sure."', r['identity_evidence'], r['id'])
+                self.assertEqual((r['served_from']['board_week'], r['served_from']['asset']), ADDED_BOARD[r['id']])
+                self.assertIn(r['sha256'], r['identity_evidence'], r['id'])
+                self.assertTrue(r.get('critic_first'), r['id'])
+                continue
             evidence = r['identity_evidence']
             self.assertIn(f'"{ANSWERS[7]}"', evidence, r['id'])
             self.assertEqual((r['served_from']['board_week'], r['served_from']['asset']), BOARD[r['id']])
@@ -686,7 +698,8 @@ class TheBar(unittest.TestCase):
         section = printed()
         self.assertIsNone(re.search(r'\b[0-9a-f]{64}\b', section))
         for ref in BAR['references']:
-            self.assertNotIn(ref['drive_file_id'], section)
+            if ref.get('drive_file_id'):
+                self.assertNotIn(ref['drive_file_id'], section)
             self.assertNotIn(ref['piece_id'], section)
         self.assertIsNone(re.search(r'\b\d+(\.\d+)?\s?(s|seconds|BPM|LUFS|fps|px)\b', section))
 
