@@ -17,7 +17,7 @@
     "overlap": 0.6
   },
   "engine": {
-    "why": "The engine a storyboard was signed on is the engine that draws its proof and its cut: Thursday's key-frame checks failed by construction while the background, chrome, caption height and colour, chat card width and headline ground changed mid-piece. A change needs Krish's exception approval bound to the new engine hash. The cut's picture and sound paths (conform, takes, words, voice, audio, the quick-edit episode and words gate ve reads, and the voice chain) are in it too, so a mid-piece change to how his take is cut or heard is seen (asked by the predictability session, 4 Nov). The sfx kits and lint.py are left out on purpose: approving a sound during a piece writes the kit and would refuse that piece's own proof and cut, and a cut naming no sound cannot be changed by it; lint cannot change a cut's picture or sound. A path that does not exist yet is simply empty.",
+    "why": "The engine a storyboard was signed on is the engine that draws its proof and its cut: Thursday's key-frame checks failed by construction while the background, chrome, caption height and colour, chat card width and headline ground changed mid-piece. A change needs Krish's exception approval bound to the new engine hash. The cut's picture and sound paths (conform, takes, words, voice, audio, the quick-edit episode and words gate ve reads, and the voice chain) are in it too, so a mid-piece change to how his take is cut or heard is seen (asked by the predictability session, 4 Nov). The sfx kits and lint.py are left out on purpose: approving a sound during a piece writes the kit and would refuse that piece's own proof and cut, and a cut naming no sound cannot be changed by it; lint cannot change a cut's picture or sound. A path that does not exist yet is simply empty. The render script (apps/renderer/scripts/ve-render.mjs) sets the encoder and colour range every cut is written with, so it is frozen too (the predictability session measured about 0.7 L* between BT.601 full range and BT.709 on his take).",
     "paths": [
       "apps/renderer/src",
       "scripts/velib/compile.py",
@@ -31,7 +31,8 @@
       "scripts/velib/audio.py",
       "scripts/quick-edit/episode.py",
       "scripts/quick-edit/words_gate.py",
-      "config/ve/voice-chain.json"
+      "config/ve/voice-chain.json",
+      "apps/renderer/scripts/ve-render.mjs"
     ],
     "skip_suffixes": [
       ".test.ts",
