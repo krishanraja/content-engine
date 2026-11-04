@@ -86,7 +86,7 @@ describe('typing_bubble', () => {
       ] } }
       p.events = [...events, { id: 'reply', obj: 'bubble', verb: 'type', toState: '1', atFrame: 50 }]
       const html = render(p)
-      expect(Number(html.match(/width:([0-9.]+)px/)![1])).toBeGreaterThanOrEqual(920)
+      expect(Number(html.match(/width:([0-9.]+)px/)![1])).toBeGreaterThanOrEqual(900)
       expect(html).toContain('data-chat-header')
       expect(html).toContain('data-avatar')
       expect(html).toContain('MV')
@@ -165,7 +165,7 @@ describe('typing_bubble', () => {
   })
 })
 
-it('centres a full-width two-row STAGE card and grows from a fixed top with a mint glow', () => {
+it('places a 900 px two-row STAGE card clear of the like rail and grows from a fixed top with a mint glow', () => {
   const p = props(80)
   p.object = { ...object, params: { kind: 'chat', rows: [
     { who: 'Mira Vale', text: 'Hello there!' }, { text: 'All set.', side: 'right' },
@@ -173,7 +173,7 @@ it('centres a full-width two-row STAGE card and grows from a fixed top with a mi
   p.events = [...events, { id: 'reply', obj: 'bubble', verb: 'type', toState: '1', atFrame: 50 }]
   const html = render(p)
   expect(html).toContain('left:60px')
-  expect(html).toContain('width:960px')
+  expect(html).toContain('width:900px')
   expect(html).toContain('0 0 50px color-mix(in srgb, aqua 30%, transparent)')
   const top = Number(html.match(/top:([0-9.]+)px/)![1])
   expect(top).toBeGreaterThanOrEqual(220)
