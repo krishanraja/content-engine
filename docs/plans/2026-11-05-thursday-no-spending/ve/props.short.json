@@ -1785,10 +1785,24 @@
       "keyFrame": 740
     },
     {
+      "id": "b7-face",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 764,
+      "toFrame": 899,
+      "uses": [],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "keyFrame": 872
+    },
+    {
       "id": "b7-prompt",
       "role": "anchor",
       "layout": "STAGE",
-      "fromFrame": 764,
+      "fromFrame": 899,
       "toFrame": 1085,
       "uses": [
         "ask",
@@ -1800,14 +1814,14 @@
       "plate": {
         "source": "none"
       },
-      "keyFrame": 1021
+      "keyFrame": 1048
     },
     {
       "id": "close",
       "role": "payoff",
       "layout": "STAGE",
       "fromFrame": 1085,
-      "toFrame": 1252,
+      "toFrame": 1144,
       "uses": [
         "settings",
         "buddy_good"
@@ -1817,7 +1831,21 @@
       "plate": {
         "source": "none"
       },
-      "keyFrame": 1219
+      "keyFrame": 1132
+    },
+    {
+      "id": "close-face",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 1144,
+      "toFrame": 1252,
+      "uses": [],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "keyFrame": 1230
     },
     {
       "id": "fails",
@@ -1883,7 +1911,7 @@
         "tiltDeg": -4,
         "at": {
           "x": 600,
-          "y": 560,
+          "y": 650,
           "w": 380,
           "h": 110
         }
@@ -1965,7 +1993,7 @@
       "obj": "ask",
       "device": "typing_bubble",
       "meaning": "the AI asking back after his one prompt, and his three answers becoming its rules",
-      "fromFrame": 764,
+      "fromFrame": 899,
       "toFrame": 1085,
       "variants": {},
       "params": {
@@ -1995,7 +2023,7 @@
       "obj": "comments_arrow",
       "device": "scribble",
       "meaning": "points down to the comments where the prompt is",
-      "fromFrame": 764,
+      "fromFrame": 899,
       "toFrame": 1085,
       "variants": {},
       "params": {
@@ -2018,7 +2046,7 @@
       "device": "cursor_buddy",
       "meaning": "the assistant, behaving now",
       "fromFrame": 1085,
-      "toFrame": 1252,
+      "toFrame": 1144,
       "variants": {},
       "params": {
         "mood": "cool",
@@ -2083,7 +2111,7 @@
       "obj": "ask_tag",
       "device": "stamp",
       "meaning": "tags the prompt: he wrote one line, the AI did the rest",
-      "fromFrame": 764,
+      "fromFrame": 899,
       "toFrame": 1085,
       "variants": {},
       "params": {
@@ -2103,7 +2131,7 @@
       "device": "typing_bubble",
       "meaning": "the AI's rules, set: it asks him before it spends or sends",
       "fromFrame": 1085,
-      "toFrame": 1252,
+      "toFrame": 1144,
       "variants": {},
       "params": {
         "kind": "notification",
@@ -2251,21 +2279,21 @@
       "obj": "ask",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 764
+      "atFrame": 899
     },
     {
       "id": "b7-prompt-1",
-      "obj": "ask_tag",
-      "verb": "stamp",
-      "toState": "visible",
-      "atFrame": 861
-    },
-    {
-      "id": "b7-prompt-2",
       "obj": "ask",
       "verb": "type",
       "toState": "0",
-      "atFrame": 764
+      "atFrame": 899
+    },
+    {
+      "id": "b7-prompt-2",
+      "obj": "ask_tag",
+      "verb": "stamp",
+      "toState": "visible",
+      "atFrame": 899
     },
     {
       "id": "b7-prompt-3",
@@ -2286,14 +2314,14 @@
       "obj": "ask",
       "verb": "type",
       "toState": "3",
-      "atFrame": 1014
+      "atFrame": 1002
     },
     {
       "id": "b7-prompt-6",
       "obj": "ask",
       "verb": "send",
       "toState": "3",
-      "atFrame": 1021
+      "atFrame": 1018
     },
     {
       "id": "b7-prompt-7",
@@ -2318,24 +2346,24 @@
     },
     {
       "id": "close-2",
-      "obj": "settings",
-      "verb": "type",
-      "toState": "1",
-      "atFrame": 1128
-    },
-    {
-      "id": "close-3",
       "obj": "buddy_good",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 1144
+      "atFrame": 1096
+    },
+    {
+      "id": "close-3",
+      "obj": "settings",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 1112
     },
     {
       "id": "close-4",
       "obj": "buddy_good",
       "verb": "wave",
       "toState": "wave",
-      "atFrame": 1178
+      "atFrame": 1128
     },
     {
       "id": "fails-0",
@@ -2370,5 +2398,42 @@
     "fromFrame": 1320,
     "url": "makeyourmindup.ai",
     "ticker": false
+  },
+  "motion": {
+    "style": "hud-terminal",
+    "profile": {
+      "entrance": {
+        "kind": "slap",
+        "frames": 4,
+        "easing": "enter",
+        "distancePx": 40,
+        "overshootPct": 4
+      },
+      "stagger": {
+        "frames": 2,
+        "unit": "char"
+      },
+      "exitFrames": 4,
+      "onTwos": false,
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
+      "transition": "cut",
+      "typeReveal": {
+        "kind": "typewriter",
+        "cps": 32
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
+      "driftPct": 0.5,
+      "countFrames": 24,
+      "note": "text types at a readable 32 characters a second; brackets lock on with the slap token; rolling numbers settle on the real figure and hold"
+    }
   }
 }
