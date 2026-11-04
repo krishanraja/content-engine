@@ -10,6 +10,9 @@ from .common import CONFIG, load_json, piece_dir
 
 KINDS = ('claude_tokens', 'codex_tokens', 'allowance_points', 'credits',
          'engine_seconds', 'krish_wait_seconds')
+# Not usage: the preflight receipt (scripts/preflight.py) shares the piece's ledger so a sandbox with no engine still
+# keeps it; totals passes over it.
+RECEIPT_KINDS = ('preflight',)
 MEASURES = (
     ('claude_tokens', 'claude tokens', 'claude_tokens_cap'),
     ('codex_tokens', 'codex tokens', 'codex_tokens_cap'),
@@ -48,6 +51,8 @@ def totals(piece) -> dict:
         with path.open(encoding='utf-8') as handle:
             for line in handle:
                 row = json.loads(line)
+                if row.get('kind') in RECEIPT_KINDS:
+                    continue
                 _validate(row['kind'], row['amount'])
                 result[row['kind']] += row['amount']
     result['total_tokens'] = result['claude_tokens'] + result['codex_tokens']

@@ -207,7 +207,39 @@ def cmd_lint(args) -> int:
         print(f'... and {len(problems) - 20} more')
     if not problems:
         print(f've lint: clean ({spec["format"]}, {len(spec["cuts"])} cut(s))')
+    if spec is not None:
+        for line in _override_incidents(spec, Path(args.spec)):
+            print(line)
     return 1 if problems else 0
+
+
+def _override_incidents(spec, spec_file) -> list[str]:
+    """Each lint the spec silences (a beat's override_reason) is one engine_incidents row, filed once (the failure loop:
+    an override that recurs is a standard the engine keeps arguing with). Never stops the lint."""
+    try:
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        import incidents  # noqa: PLC0415
+        from velib import preflight as gate, verdict
+        directory = verdict.ve_dir(spec_file)
+        found = []
+        if not gate.real_piece(directory.parent):
+            return found
+        for cut_id, cut in (spec.get('cuts') or {}).items():
+            for beat in cut.get('beats') or []:
+                reason = str(beat.get('override_reason') or '').strip()
+                if not reason:
+                    continue
+                result = incidents.record({
+                    'stage': 'storyboard', 'kind': 'override', 'maker': incidents.maker_here(), 'skill': 've',
+                    'piece_path': str(directory.parent.relative_to(ROOT) if directory.parent.is_relative_to(ROOT) else directory.parent)[:300],
+                    'artifact_ref': f'{spec_file.name}#{cut_id}.{beat.get("id")}'[:500],
+                    'preflight': list(gate._preflight().latest(gate._preflight().from_ledger(directory.parent)).values()) or None,
+                    'meta': {'piece': spec.get('piece_id'), 'cut': cut_id, 'beat': beat.get('id'), 'override_reason': reason[:600]},
+                    'client_ref': incidents.client_ref('override', spec.get('piece_id'), cut_id, beat.get('id'), reason)})
+                found.append(f've lint: override on {cut_id}.{beat.get("id")} recorded for the failure loop ({result})')
+        return found
+    except Exception as error:  # noqa: BLE001
+        return [f've lint: override not recorded for the failure loop ({type(error).__name__})']
 
 
 def cmd_start(args) -> int:
@@ -670,8 +702,14 @@ def cmd_file(args) -> int:
 
 def cmd_brief(args) -> int:
     from velib import brief
+    from velib import preflight as preflight_gate
     try:
         _spec_file, spec, directory = _ve_dir(args.piece)
+        refused = [] if args.check else preflight_gate.problems(spec, directory, [args.cut] if args.cut else list(spec.get('cuts') or {}))
+        if refused:
+            print('ve brief: refused, read the standards first (the failure loop, from 9 Nov 2026):', file=sys.stderr)
+            print('\n'.join(f'  - {reason}' for reason in refused), file=sys.stderr)
+            return 1
         script = None
         if (directory / 'script.words.json').is_file() or args.script:
             script, _sha = _script(directory, args.script)
@@ -973,8 +1011,15 @@ def cmd_render(args) -> int:
             print(problem)
         return 1
     from velib.render import check_asset_hashes, render
+    from velib import preflight as preflight_gate, verdict
     check_asset_hashes(spec, args.assets_dir)
-    refused = render_refusal(spec, args.spec, load_json(args.props))
+    props = load_json(args.props)
+    unread = preflight_gate.problems(spec, verdict.ve_dir(Path(args.spec)), [props.get('cutId') or next(iter(spec['cuts']))])
+    if unread:
+        print('ve render: refused, read the standards first (the failure loop, from 9 Nov 2026):')
+        print('\n'.join(f'  - {reason}' for reason in unread))
+        return 1
+    refused = render_refusal(spec, args.spec, props)
     if refused:
         print('ve render: refused, a whole cut renders only after Krish approves its moving proof (F04, F13):')
         print('\n'.join(f'  - {reason}' for reason in refused))

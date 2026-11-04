@@ -1,0 +1,190 @@
+name: Engine learning weekly
+
+# The engine's self-improving failure loop, part 2 (Krish, 2026-11-04: "all of this stuff should feed an intelligent
+# system that automatically gets more intelligent every week, not just pile up loads of individual feedback for me to
+# sift through"; then "yes, build part 1 and the weekly loop"). docs/learning/README.md.
+#
+# Once a week: the deterministic stages first (scripts/learning/loop.py weekly deterministic: the week's
+# engine_incidents rows through GET /api/learning/incidents, clustered with the registers into failure modes, the
+# causes the fields prove, the ladder each repeat climbs), then Claude Code, on Krish's subscription, only for what the
+# fields could not explain (it must quote an incident field, or its cause is thrown away) and for the ladder's work
+# orders (the concrete check or skill line each climbing failure needs), then the finish (the register changes, the
+# report docs/learning/<date>.md, its numbers and one NOW.md line, and at most three proposals of class engine_quality
+# or taste on his list through POST /api/learning/incidents). Everything lands as a pull request that merges itself on
+# green CI, like every other (Ruling, Krish, 2026-11-03: "Change everything to auto-merge all the time. No manual
+# merging"). It decides nothing for Krish: a proposal is a proposal.
+#
+# Ruling (Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture",
+# and "Could you not get Github to trigger Claude subscription to do something". So GitHub is the scheduler and Claude
+# Code runs inside this job on CLAUDE_CODE_OAUTH_TOKEN, never an API key, and writes only through the engine API. It
+# builds no publish board.
+#
+# When: Sunday 19:37 UTC (11:37 or 12:37 Pacific, clear of the 06:00 to 09:00 Pacific rush). Run by hand from Actions:
+# a hand run is a dry run unless dry_run is unticked (no proposal posted, no pull request; the report is kept as the
+# run's artifact).
+#
+# This repository is public: Claude's full output stays out of the log, and nothing here prints an incident's words.
+# The run reads his typed words from the incidents, so it is fenced by permissions, not by its prompt: Bash only for
+# the named engine scripts and tests (no curl, no git push, no shell), writes only where the ladder's changes go, no
+# read of /proc (where the step's secrets live), and the checkout keeps no GitHub credential. Only the keep step,
+# after Claude has stopped, pushes, with the token passed for that one command.
+
+on:
+  schedule:
+    - cron: '37 19 * * 0'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run: write the report as an artifact, post no proposal, open no pull request'
+        type: boolean
+        default: true
+      since:
+        description: 'Read incidents from this ISO time (empty: the last 7 days)'
+        required: false
+
+concurrency:
+  group: engine-learning-weekly
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+  id-token: write
+
+jobs:
+  learn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Claude Code runs on Krish's subscription, never an API key
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        run: |
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "::error::No CLAUDE_CODE_OAUTH_TOKEN. One setup step for Krish: run 'claude setup-token' on your computer and add what it prints as the repository secret CLAUDE_CODE_OAUTH_TOKEN (Settings > Secrets and variables > Actions). This job never uses an API key instead."
+            exit 1
+          fi
+          if [ -z "$ENGINE_OPERATOR_TOKEN" ]; then
+            echo "::error::No ENGINE_OPERATOR_TOKEN, so the run cannot read the week's incidents or post its proposals."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Dry run or the real week
+        id: mode
+        env:
+          EVENT: ${{ github.event_name }}
+          DRY: ${{ inputs.dry_run }}
+        run: |
+          # The schedule is the real week; a hand run is a dry run unless he unticks it.
+          if [ "$EVENT" = "schedule" ] || [ "$DRY" = "false" ]; then echo "apply=true" >> "$GITHUB_OUTPUT"; else echo "apply=false" >> "$GITHUB_OUTPUT"; fi
+          echo "today=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: The deterministic stages (gather, cluster, trace, plan the ladder)
+        id: det
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          SINCE: ${{ inputs.since }}
+        run: |
+          if [ -n "$SINCE" ]; then python3 scripts/learning/loop.py weekly deterministic --since "$SINCE"; else python3 scripts/learning/loop.py weekly deterministic; fi
+          asked=$(python3 -c "import json;print(len(json.load(open('.cache/learning/unresolved.json'))))")
+          orders=$(grep -c '^## ' .cache/learning/work-orders.md || true)
+          echo "asked=$asked" >> "$GITHUB_OUTPUT"
+          echo "orders=$orders" >> "$GITHUB_OUTPUT"
+          if [ "$asked" != "0" ] || [ "$orders" != "0" ]; then echo "model=true" >> "$GITHUB_OUTPUT"; else echo "model=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Install what the ladder's checks run
+        if: steps.det.outputs.model == 'true'
+        run: |
+          python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+          # The Claude Code installer needs its launcher directory to exist (the docs steward's fix, 2026-09-08).
+          mkdir -p "$HOME/.local/bin"
+
+      - name: The model-only causes and the ladder's work orders, in Claude Code on his subscription
+        if: steps.det.outputs.model == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          claude_args: >-
+            --max-turns 120
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/validate-skills.py:*),Bash(python3 scripts/check_skill_core.py:*),Bash(python3 -m unittest:*),Bash(python3 tests/:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Write(.cache/learning/**),Edit(scripts/**),Write(scripts/**),Edit(tests/**),Write(tests/**),Edit(config/failures.json),Edit(.agents/skills/**),Edit(docs/**),TodoWrite"
+            --disallowedTools "Read(//proc/**)"
+          prompt: |
+            The weekly run of the engine's failure loop (.github/workflows/engine-learning-weekly.yml). No one reads
+            this run's chat. Read docs/learning/README.md first, then CLAUDE.md and AGENTS.md, and obey them (no em
+            dashes in anything a person reads, British English, plain words).
+
+            Two jobs, in order, and nothing else.
+
+            1. Causes. .cache/learning/unresolved.json holds the failure modes that came back this week and that no
+            field explained. For each, decide why it kept happening, as one of: standard_not_read, check_missing,
+            brief_gap, standard_missing, handoff_loss, tool_limit, taste_new. Write .cache/learning/model-causes.json
+            as a JSON list of {"mode": <the mode key>, "cause": <one of those>, "quote": <words copied exactly from one
+            of that mode's incident fields>}. A cause whose quote is not in an incident field is thrown away. When
+            nothing supports a cause, leave that mode out. Never invent his words.
+
+            2. The ladder. .cache/learning/work-orders.md lists each failure that came back after its guard, the rung
+            it climbs to and what that rung needs. Make exactly that change for each: the check, refusal or skill line,
+            with a behavioural test when the rung is lint_refuse or gate, and add a guard to the failure's entry in
+            config/failures.json naming the file, a marker it holds, and the test. Keep every skill under its byte cap
+            (python3 scripts/check_skill_core.py) and run python3 scripts/validate-skills.py --sync-claude after a
+            skill edit. Run python3 scripts/check_failures.py and the tests you touched until they pass. Do not edit
+            the rejection floor, docs/NORTH_STAR.md, the house rules or anything about taste; a mode at the gate is
+            for Krish, so leave it. Do not commit or push: the workflow does that after you stop.
+
+      - name: Finish (register changes, report, NOW line, proposals)
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          APPLY: ${{ steps.mode.outputs.apply }}
+          TODAY: ${{ steps.mode.outputs.today }}
+        run: |
+          flags="--date $TODAY"
+          [ -f .cache/learning/model-causes.json ] && flags="$flags --model-causes .cache/learning/model-causes.json"
+          if [ "$APPLY" = "true" ]; then flags="$flags --apply"; fi
+          python3 scripts/learning/loop.py weekly finish $flags
+          python3 scripts/check_failures.py
+
+      - name: Keep the dry run's report
+        if: steps.mode.outputs.apply != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: learning-report
+          path: |
+            docs/learning/
+            .cache/learning/work-orders.md
+
+      - name: Open the week's pull request (it merges itself on green CI)
+        if: steps.mode.outputs.apply == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TODAY: ${{ steps.mode.outputs.today }}
+          RUN_ID: ${{ github.run_id }}
+          REPO: ${{ github.repository }}
+        run: |
+          branch="learning/$TODAY-$RUN_ID"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -A -- docs/learning config/failures.json NOW.md scripts tests .agents/skills .claude/skills docs
+          git diff --cached --quiet && { echo "Nothing changed this week."; exit 0; }
+          git commit -q -m "The failure loop's week to $TODAY (run $RUN_ID)" \
+            -m "Written by .github/workflows/engine-learning-weekly.yml on Krish's subscription: the week's report, the register changes and the ladder's checks. Proposals are on his list; nothing is decided here." \
+            -m 'Ruling (Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture"'
+          # The checkout kept no credential, so the token is passed to this one push only.
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$branch"
+          gh pr create -R "$REPO" --head "$branch" --base main --title "The failure loop: week to $TODAY" \
+            --body "The weekly run of the engine's failure loop: docs/learning/$TODAY.md, the ladder's changes and the register. It merges itself on green CI (auto-merge.yml)."
+          # A push and a pull request made with GitHub's own token start no CI; start it on the branch.
+          gh workflow run ci.yml -R "$REPO" --ref "$branch"

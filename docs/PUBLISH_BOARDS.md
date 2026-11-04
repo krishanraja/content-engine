@@ -167,6 +167,21 @@ Videos: every piece is a 90-second and a 5-minute video. A 15-minute feature
 appears as a third cut only on a piece Krish called one for
 (`config/features.json`, house rule FEATURE).
 
+### The standards page
+
+The board's header links to `/board/standards` (also served at `/standards`),
+where Krish decides the rejection floor in about 20 grouped decisions instead of
+215 (Krish, 2026-11-04: "group the 215 floor standards for my approval"). Each
+card is one `taste_floor_groups` row (seeded once by `scripts/floor_group.py
+--seed` from `config/floor-groups.json`) with its never-beneath line, its check,
+how many standards and productions it covers, his own words from the members
+verbatim, and the member standards behind a fold. Approve, Reword (his words,
+required) and Reject go to `/api/board?op=standards` on the board's own login
+and through the same decision write as POST /api/video-studio/learning-proposals
+(`api/_learningDecision.ts`); the operator's key may read the page and is refused
+a press. A decided group shows his decision, and every member standard takes it
+in `public.taste_floor`. Nothing is decided for him.
+
 ### The production gates on a day's tab
 
 Krish, 2026-11-04: "Can I select a visual style now that we have different
