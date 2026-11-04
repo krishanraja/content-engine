@@ -141,6 +141,24 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     expect(text).toContain('Stop\n            after step 7.')
   })
 
+  it('the weekly failure loop runs on Sunday off the hour, outside the morning rush, deterministic first, and a hand run is a dry run', () => {
+    // Krish, 2026-11-04: "yes, build part 1 and the weekly loop". GitHub is the scheduler; it builds no board.
+    const text = read('.github/workflows/engine-learning-weekly.yml')
+    const crons = [...text.matchAll(/cron:\s*'([^']+)'/g)].map((m) => m[1]!)
+    expect(crons).toHaveLength(1)
+    const [minute, hour, , , weekday] = crons[0]!.split(/\s+/)
+    expect(weekday).toBe('0')
+    expect(Number(minute)).not.toBe(0)
+    // 06:00 to 09:00 Pacific is 13:00 to 17:00 UTC across both clock changes.
+    expect(Number(hour) < 13 || Number(hour) >= 17).toBe(true)
+    expect(text).toMatch(/dry_run:[\s\S]*?default: true/)
+    expect(text).toContain(`if [ "$EVENT" = "schedule" ] || [ "$DRY" = "false" ]; then echo "apply=true"`)
+    expect(text.indexOf('loop.py weekly deterministic')).toBeLessThan(text.indexOf('anthropics/claude-code-action'))
+    expect(text).toMatch(/if: steps\.det\.outputs\.model == 'true'\n\s+uses: anthropics\/claude-code-action/)
+    expect(text).toContain('gh workflow run ci.yml -R "$REPO" --ref "$branch"')
+    expect(text).not.toMatch(/week_board\.py|board_web\.py|gh pr merge/)
+  })
+
   it('a make runs once per piece, only when started, never on a schedule', () => {
     const text = read('.github/workflows/make-piece.yml')
     expect(text).not.toMatch(/^\s*schedule:/m)

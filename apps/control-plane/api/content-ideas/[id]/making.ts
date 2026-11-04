@@ -7,6 +7,7 @@ import { MediaQualityError, qualifyMedia, readMediaRef } from '../../_mediaQuali
 
 import { verifiedMaking } from '../../_verifiedMaking.js'
 import { markPublished } from '../../inspiration/_cards.js'
+import { recordIncident } from '../../_incidents.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../../packages/core/src/media-rollout.js'
 
 // GET  /api/content-ideas/:id/making           where this piece is: the record and its steps
@@ -50,6 +51,9 @@ import { mediaQualityEnforced, mediaQualityRollout } from '../../../../../packag
 // lists as I go but the rest should be automatically done." The answer's
 // `closed` stays empty for one release, for callers that still read it, and
 // `looked` names the items the sweep was asked to look at.
+//
+// A second round (the failure loop; Krish, 2026-11-04): when `rounds` rises to 2 or more, one engine_incidents row
+// (kind second_round, stage cut) records it with the piece's preflight receipt as it stood. Never blocking.
 //
 // A posted channel (channels: {<name>: {...}}) also marks every Inspiration card use on this piece published
 // (card_uses, api/inspiration/_cards.ts markPublished), so each card knows the cuts it shaped went out. A failed
@@ -107,6 +111,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // The sweep looks at the items waiting on this piece now. The write waits up
   // to 3 s for the ask (_controlCenter.ts, ASK_MS); a failed ask changes nothing.
   const look = await askChecksForPiece(ideaId)
+  if (patch.rounds !== undefined && patch.rounds >= 2 && patch.rounds > (Number(prev?.rounds) || 0)) {
+    await recordIncident(supabase, {
+      kind: 'second_round', stage: 'cut', maker: 've', piece_id: ideaId, session_ref: `making:${who}`.slice(0, 300),
+      preflight: Array.isArray(next.preflight) ? next.preflight : null,
+      meta: { rounds: patch.rounds, previous_rounds: Number(prev?.rounds) || 0 }, client_ref: `rounds-${ideaId}-${patch.rounds}`,
+    }, now)
+  }
   const posted = Object.values(patch.channels || {}).some(Boolean)
   const usesProblem = posted ? await markPublished(supabase, ideaId, now) : null
   return res.status(200).json({ ok: true, idea_id: ideaId, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps(after), closed: [], looked: look.keys, ...(usesProblem ? { card_uses_problem: usesProblem } : {}) })
