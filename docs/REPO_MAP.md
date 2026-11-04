@@ -4083,13 +4083,19 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `function cardsInvert(profile: MotionProfile | undefined = motionProfile()): boolean`
 - `function tokensFor(device: string, tokens: EngineTokens, profile: MotionProfile | undefined): EngineTokens`
 - `function splitGroundColour(profile: MotionProfile | undefined, tokens: EngineTokens): string`
+- `function deepen(hex: string, times: number, fallbackPct = 88, toward = '#000'): string`
 - `function paperStock(tokens: EngineTokens): string`
+- `function paperCore(tokens: EngineTokens): string`
 - `function PaperTexture({ id, width, height, tokens }: { id: string; width: number; height: number; tokens: EngineTokens …`
 - `function scanLines(tokens: EngineTokens): CSSProperties`
 - `function bracketRect(focus: Focus): { rect: Box; lock: number }`
 - `function Brackets({ focus, width, height, tokens }: { focus: Focus; width: number; height: number; tokens: EngineTokens…`
 - `const TORN_DEVICES: readonly string[]`
-- `function TornFilter({ id, step, tokens }: { id: string; step: number; tokens: EngineTokens })`
+- `const CUTOUT_TILT`
+- `function cutoutPose(objectId: string, device: string, step: number, ownLean = true): { tiltDeg: number; dx: number; dy:…`
+- `function tileLean(objectId: string, index: number, profile: MotionProfile | undefined = motionProfile()): number`
+- `function TornFilter({ id, tokens }: { id: string; tokens: EngineTokens })`
+- `function TornSeam({ id, width, seam, tokens }: { id: string; width: number; seam: number; tokens: EngineTokens })`
 - `function boilSeed(base: number, sinceFrames: number, everyFrames: number): number`
 - `function BoilFilter({ id, seed, amplitudePx }: { id: string; seed: number; amplitudePx: number })`
 - `function SketchFrame({ id, width, height, tokens, sinceFrames, boil }: { id: string; width: number; height: number; tok…`
