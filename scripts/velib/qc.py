@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import re
 import subprocess
+from pathlib import Path
 
 import numpy as np
 
@@ -254,7 +255,9 @@ def inputs_from_props(props: dict) -> dict:
         pages.append(page)
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
-                edl=edl, joins=joins, caption_style=props.get('captionStyle') or 'house')
+                edl=edl, joins=joins, caption_style=props.get('captionStyle') or 'house',
+                plate_video=(props.get('segments') or [{}])[0].get('src') if len(props.get('segments') or []) == 1 else None,
+                plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)))
 
 
 def run_qc(path: str, format_id: str, targets: dict | None = None, *,
@@ -262,7 +265,8 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            mark_png: str | None = None, beats=None, aspect=None, events=None, slots=None,
            composition_props=None, script: str | None = None, take_words=None, heard: dict | None = None,
            captions_drawn_by: str = 'faster-whisper', caption_ocr=None, fps: float = 30,
-           caption_style: str = 'house', face_detector=None) -> dict:
+           caption_style: str = 'house', face_detector=None, plate_video: str | None = None,
+           plate_offset: int = 0) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
@@ -290,8 +294,11 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                    if pages is not None and not pages else
                                    {'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not_run'})
     checks['channel.safe_zones'] = {'value': None, 'target': 'nothing under a channel button', 'pass': None, 'status': 'advisory'}
-    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel
+    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_as_shot
     optional = [
+        # Advisory: his take as shot (the floor's untested-treatment rule); shown, never counted.
+        ('picture.as_shot', bool(plate_video) and bool(beats) and Path(str(plate_video)).is_file(),
+         lambda: qc_as_shot.as_shot(path, plate_video, beats, int(fps), plate_offset, pages)),
         ('sync.av_xcorr', dialogue_master is not None and edl is not None,
          lambda: qc_sync.av_xcorr(path, dialogue_master, edl)),
         ('joins.decoder', joins is not None, lambda: qc_joins.decoder(path, joins)),

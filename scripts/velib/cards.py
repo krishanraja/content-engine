@@ -78,6 +78,26 @@ def motion_section(style_id: str) -> str:
             f'{rules}\nNever:\n{avoid}\n')
 
 
+RECIPES = ROOT / 'config' / 've' / 'recipes'
+
+
+def recipe_section(style_id: str) -> str:
+    """The style's recipe, when one was saved from a cut Krish approved (config/ve/recipes/<style>.json; ghost-editor's
+    rule: a look is saved only from a reel the user loved): the thesis, the invariants and the signature devices, so a
+    card builds the whole system, not one effect. No recipe, no section."""
+    path = RECIPES / f'{style_id}.json'
+    if not path.is_file():
+        return ''
+    r = load_json(path)
+    saved = r.get('saved_from') or {}
+    lines = [f'\n## Recipe: {r["name"]}', r['thesis'], 'Invariants:']
+    lines += [f'- {x}' for x in r.get('invariants') or []]
+    lines += ['Signature devices (one or two a beat):'] + [f'- {x}' for x in r.get('signature_devices') or []]
+    lines.append(f"Worked example: {saved.get('title', '')}, cuts {', '.join(c['id'] for c in saved.get('cuts') or [])} "
+                 f"(config/ve/recipes/{style_id}.json).")
+    return '\n'.join(lines) + '\n'
+
+
 def _piece_motion(fields: dict) -> None:
     """A card for one piece (fields['spec'], the piece's ve spec) carries that piece's motion style, so no route can
     send Codex a piece card without it. A library device card names no spec and stays style-free: it serves every
@@ -108,7 +128,8 @@ def write_card(path: Path, **fields) -> Path:
         text = text.replace('\nkind:', f'\nformat: {fields["format"]}\nkind:', 1)
     if fields.get('motion_style'):
         text = text.replace('\nkind:', f'\nmotion_style: {fields["motion_style"]}\nkind:', 1)
-        text = text.replace('\n## Acceptance', motion_section(fields['motion_style']) + '\n## Acceptance', 1)
+        text = text.replace('\n## Acceptance', motion_section(fields['motion_style']) + recipe_section(fields['motion_style'])
+                            + '\n## Acceptance', 1)
     if len(text.encode('utf-8')) > 6144:
         sys.exit(f've card: {path.name} is {len(text.encode())} bytes; a card is 6 KB or less')
     path.parent.mkdir(parents=True, exist_ok=True)
