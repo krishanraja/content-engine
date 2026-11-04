@@ -52,12 +52,13 @@ The new session may replace this idea with a better one, but must have one idea,
 **Type.** One caption treatment: one typeface, one weight, one colour, one position, off the face, inside the platform
 safe zone. Cards carry only what the voice cannot: the real screen, the real assistant marks, the one changed word.
 
-**Music.** Off days use **Goodie Bags** (Dylan Sitts, Epidemic Sound), ledger id `goodie-bags`, `for: off-day` in
-`config/music-library.json`. Krish approved it in words on 4 Nov. Never use the series bed `no-curves-instrumental`; Monday,
-Wednesday and Friday music does not change. The file sits in `00_Brand-Assets > 07_Music` beside NO CURVES, but nobody has
-measured it yet. First, on a machine that can read the music folder, run `music.py add` on "ES_Goodie Bags - Dylan
-Sitts.mp3" with its licence, then `music.py approve` with Krish's recorded words, then `music.py publish`. Set the spec's
-`audio.bed.ledger_id` to `goodie-bags`.
+**Music.** Off days rotate through the four tracks marked `for: off-day` in `config/music-library.json`: Goodie Bags,
+Aspire, Illusions and Be Alone, all approved by Krish on 4 Nov. Never ask him about music licences or approval (Ruling,
+Krish, 2026-11-04, `docs/DRIVE.md`). Never use the series bed `no-curves-instrumental`; Monday, Wednesday and Friday music
+does not change. The files sit in `00_Brand-Assets > 07_Music`, but none has been measured yet. On a machine that can
+read the music folder, run `music.py add` on each with its licence, `music.py approve` with Krish's recorded words, then
+`music.py publish`. Pick with `music.pick_for_piece(piece, use='off-day')` and set the spec's `audio.bed.ledger_id` to the
+pick.
 
 **Route.** Build the way the Monday favourite was built. Pick the route at the start and do not change the engine during
 the piece: engine work goes to a separate session and pull request. Codex only for a named plate this piece needs, booked
@@ -90,8 +91,8 @@ Rules for this session:
 - One visual idea, written down with a never-list, before any device, card or render.
 - No engine changes in this session. If the engine blocks you, stop and tell me; do not fix the engine here.
 - Off day: neutral look, no series chrome, one caption treatment.
-- Off-day music is Goodie Bags (ledger id goodie-bags, already approved in my words); measure it
-  with music.py add first. Never no-curves-instrumental.
+- Off-day music rotates through the four off-day tracks in config/music-library.json (approved;
+  never ask me about music again); measure them with music.py add first. Never no-curves-instrumental.
 - My first look is a 10-second motion preview with sound, sent to me as a file. Then at most two
   render loops before you send me the cut.
 - Never post. After I approve, file to the post's 3 Posts folder and put it on the publish board
