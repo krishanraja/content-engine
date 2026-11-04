@@ -88,21 +88,44 @@ class ShowTheRealThing(unittest.TestCase):
 
 
 class OffDays(unittest.TestCase):
+    """Krish, 2026-11-04: "Yes, give off days their own music and look - Rotate." """
+
     def thursday(self):
-        spec = whole(day='2026-11-12')  # a Thursday, the fixture's series is mind.the.gap (Fridays)
+        spec = whole(day='2026-11-12')  # a Thursday; the fixture's series is mind.the.gap (Fridays)
         spec['brand']['intro_sting'] = 'mind-the-gap-sting'
-        return spec
+        return spec  # its bed is no-curves-instrumental, the series bed
 
-    def test_proposed_rule_binds_nothing_until_krish_says_yes(self):
+    def test_an_off_day_on_the_series_bed_and_sting_is_refused(self):
         self.assertTrue(guards.off_day(self.thursday()))
-        self.assertEqual(guards.offday_problems(self.thursday()), [])
+        self.assertEqual(guards.config()['off_day']['status'], 'approved')
+        found = guards.offday_problems(self.thursday())
+        self.assertEqual(codes(found), ['offday.bed', 'offday.chrome'])
+        self.assertIn('aspire', found[0])
 
-    def test_once_approved_the_series_bed_and_sting_are_refused_and_a_series_day_is_not(self):
-        rules = dict(guards.config()['off_day'], status='approved')
-        self.assertEqual(codes(guards.offday_problems(self.thursday(), rules)), ['offday.bed', 'offday.chrome'])
+    def test_an_off_day_on_a_rotation_track_passes_and_a_series_day_is_not_held(self):
+        beds = guards.off_day_beds()
+        self.assertGreaterEqual(len(beds), 2, 'the off-day rotation is the ledger\'s "for": "off-day" tracks')
+        self.assertNotIn('no-curves-instrumental', beds)
+        for bed in beds:
+            spec = whole(day='2026-11-12')
+            spec['audio']['bed']['ledger_id'] = bed
+            self.assertEqual(guards.offday_problems(spec), [], bed)
         friday = whole(day='2026-11-13')
         self.assertFalse(guards.off_day(friday))
-        self.assertEqual(guards.offday_problems(friday, rules), [])
+        self.assertEqual(guards.offday_problems(friday), [])
+
+    def test_compile_draws_an_off_day_in_the_house_mint_without_the_series_promise(self):
+        from velib.compile import compile_cut  # noqa: PLC0415
+        from velib.common import load_json  # noqa: PLC0415
+        folder = ROOT / 'fixtures/ve/my-test-19s'
+        words = [dict(w, end_s=w['onset_s'] + 0.2) for w in load_json(folder / 'words.frames.json')]
+        friday = compile_cut(whole(day='2026-11-13'), CUT, words, folder)
+        thursday = compile_cut(whole(day='2026-11-12'), CUT, words, folder)
+        self.assertNotEqual(friday['tokens']['channel'], friday['tokens']['mint'])
+        self.assertEqual(thursday['tokens']['channel'], thursday['tokens']['mint'])
+        self.assertEqual(thursday['series']['label'], 'off.day')
+        self.assertEqual(thursday['series']['promise'], thursday['series']['site'])
+        self.assertNotEqual(friday['series']['promise'], friday['series']['site'])
 
 
 class Held(unittest.TestCase):
