@@ -24,6 +24,7 @@ from .common import ROOT, ffmpeg
 CACHE = ROOT / '.cache' / 've' / 'refs'
 FRACTIONS = (0.12, 0.37, 0.62, 0.87)
 PASS_SCORE = 8  # out of 10; below this the cut does not match its reference and is not ready
+PROOF_CARD = 'proof'  # the verdict's reference row for the moving proof Krish approved (velib/proof.py)
 TILE = (270, 480)
 
 
@@ -119,6 +120,50 @@ def sheets(spec: dict, cut: str, directory: Path, video: Path, fetch=None) -> li
         from .common import sha256_file, write_json  # noqa: PLC0415
         write_json(stamp_path(directory, cut, ref['card']), {'video_sha256': sha256_file(video), 'reference': str(source)})
         out.append(target)
+    proof_clip = Path(directory) / 'proof' / f'{cut}.mp4'
+    if proof_clip.is_file():
+        out.append(proof_sheet(cut, directory, video, proof_clip))
+    return out
+
+
+def proof_sheet(cut: str, directory: Path, video: Path, proof_clip: Path) -> Path:
+    """The cut's frames above the approved proof clip's: the Critic scores the cut against the beat Krish approved
+    moving, as against a board card (card name PROOF_CARD in the verdict's references)."""
+    from .common import sha256_file, write_json  # noqa: PLC0415
+    top, bottom = Path(directory) / f'.top.{cut}.jpg', Path(directory) / f'.bottom.{cut}.jpg'
+    _row(video, duration(video), top)
+    _row(proof_clip, duration(proof_clip), bottom)
+    target = sheet_path(directory, cut, PROOF_CARD)
+    subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-y', '-i', str(top), '-i', str(bottom),
+                    '-filter_complex', 'vstack=inputs=2', str(target)], check=True, capture_output=True)
+    top.unlink(missing_ok=True)
+    bottom.unlink(missing_ok=True)
+    if not target.is_file():
+        raise ValueError('the proof sheet was not created')
+    write_json(stamp_path(directory, cut, PROOF_CARD), {'video_sha256': sha256_file(video), 'reference': str(proof_clip),
+                                                        'proof_sha256': sha256_file(proof_clip)})
+    return target
+
+
+def proof_problems(spec: dict, cut: str, directory: Path, by_card: dict, digest: str | None) -> list[str]:
+    """From MOTION_FROM a whole cut is also scored against the proof clip Krish approved; no approved proof is a hold."""
+    from . import gates, proof  # noqa: PLC0415
+    try:
+        if not proof.required(spec, cut):
+            return []
+    except (KeyError, TypeError):
+        return []
+    held = proof.problems(spec, cut, directory, gates.load(directory, spec)['gates'])
+    if held:
+        return [f'the Critic has no approved moving proof to score {cut} against ({held[0]})']
+    out = []
+    if not sheet_is_for(directory, cut, PROOF_CARD, digest):
+        out.append(f"no proof sheet for {cut} made from this file: run ve refs {spec['piece_id']} {cut}")
+    row = by_card.get(PROOF_CARD)
+    if row is None:
+        out.append(f'Critic did not score the cut against the approved proof ({PROOF_CARD})')
+    elif not row['matches'] or row['score'] < PASS_SCORE:
+        out.append(f"Critic: the cut falls below the proof Krish approved ({row['score']}/10, pass {PASS_SCORE}): {row['note']}")
     return out
 
 
@@ -152,4 +197,4 @@ def scores_problems(spec: dict, cut: str, directory: Path, scores, digest: str |
             out.append(f"Critic did not score the cut against {ref['card']}")
         elif not row['matches'] or row['score'] < PASS_SCORE:
             out.append(f"Critic: does not match {ref['card']} ({row['score']}/10, pass {PASS_SCORE}): {row['note']}")
-    return out
+    return out + proof_problems(spec, cut, directory, by_card, digest)

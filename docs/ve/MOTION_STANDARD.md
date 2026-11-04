@@ -116,4 +116,9 @@ frames 600 and 990 of each reel.
   shows a box under a channel's buttons but does not fail the cut until card `ve-motion-4-channel-safe-tall` moves the
   tall layouts out of the zones. Until then a session reads the `channel.safe_zones` row itself before calling a tall
   cut ready.
+- **Proved moving before scaled (4 Nov 2026, F04, F13).** From 9 Nov a whole cut renders only after Krish approves its
+  hardest beat moving on his own take (`ve proof`, `scripts/velib/proof.py`), in the style he picked from mocks on that
+  take (`ve styles`). The Critic scores the cut against that approved proof clip as well as the board cards, with the
+  same 8/10 bar (`scripts/velib/refgate.py`, card `proof`). The standard above is what the proof is judged by; the
+  proof is what the whole cut is judged against.
 
