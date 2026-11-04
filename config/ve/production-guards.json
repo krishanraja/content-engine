@@ -23,7 +23,17 @@
       "scripts/velib/compile.py",
       "config/ve/brand-tokens.json",
       "config/ve/devices.json",
-      "config/ve/fonts.json"
+      "config/ve/fonts.json",
+      "scripts/velib/conform.py",
+      "scripts/velib/takes.py",
+      "scripts/velib/words.py",
+      "scripts/velib/voice.py",
+      "scripts/velib/audio.py",
+      "scripts/velib/lint.py",
+      "scripts/quick-edit/episode.py",
+      "scripts/quick-edit/words_gate.py",
+      "config/ve/sfx-kits",
+      "config/ve/voice-chain.json"
     ],
     "skip_suffixes": [
       ".test.ts",

@@ -87,8 +87,13 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_F06_data_device_without_a_named_producer(self):
         self.assertRefused(mutate(lambda s: s['objects'][3].pop('dataset')), 'brand.digit_producer')
 
-    def test_IR135_visible_pop_with_no_sound(self):
-        self.assertRefused(mutate(lambda s: s['cuts']['proof-tall']['beats'][2]['events'][0].pop('sfx')), 'sound.event_sfx')
+    def test_a_move_with_no_sound_is_fine_and_a_second_sound_is_refused_from_9_nov(self):
+        # THE_BAR ruling 11 (Krish, 29 Oct 2026): "Only the big moment" gets a sound; every other move is silent.
+        found = codes_for(mutate(lambda s: s['cuts']['proof-tall']['beats'][2]['events'][0].pop('sfx')))
+        self.assertFalse(any(code.startswith('sound.event_sfx') for code in found))
+        self.assertFalse(any(code.startswith('sound.one_moment') for code in codes_for(copy.deepcopy(FIXTURE))),
+                         'a spec with no publish day from 9 Nov is not bound')
+        self.assertRefused(mutate(lambda s: s.update(publish_day='2026-11-11')), 'sound.one_moment')
 
     def test_IR102_episode_bed_under_a_voiceover(self):
         self.assertRefused(mutate(lambda s: s['audio']['bed'].update(mode='episode')), 'sound.bed_continuous')

@@ -66,6 +66,7 @@ describe('ve', () => {
     ['the voice pass: sniffs turned down, never cut; the repair chain only with his words (Krish, 17 Oct)', 'tests/ve_voice_test.py'],
     ['one sound on the big moment: auditioned on his cut, approved only from his words, the kit from approved rows (ruling 11)', 'tests/ve_sfx_test.py'],
     ['the Critic sees the cut in motion: strips per beat, per move and per cut, and QC numbers marked not heard (F16, F38)', 'tests/ve_critic_inputs_test.py'],
+    ['each filed piece records what it used; the next one is told when it repeats them, never refused (F14)', 'tests/ve_history_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])
