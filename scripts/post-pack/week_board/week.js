@@ -1397,6 +1397,101 @@ function offdayNoteParts(note){
   });
 })();
 
+// The production gates on a day's tab (week_board.py gates_card; docs/PUBLISH_BOARDS.md, "The production gates on a
+// day's tab"; Krish, 2026-11-04: "Can I select a visual style now that we have different style skills? Do I get shown
+// mocks at the right moment?"): Sign storyboard, Pick a style (or None of these, with his words), Approve or Reject the
+// moving proof (a Reject with his words), and Approve cut. Each is saved at once in picks/<day>-<gate>, bound to the
+// sha256 of what the section shows (data-gate-sha), by his press alone; the server writes it onto the piece's making
+// record. A press already answered at the same hash is done; the live overlay (web.js drawGates) says what the record
+// holds and marks a section data-live-answered when the record holds his press at this hash.
+(() => {
+  const cards = [...document.querySelectorAll(".rec.gt[data-gates-day]")];
+  if (!cards.length) return;
+  const KIND = { storyboard: "sign_storyboard", style: "pick_style", proof: "approve_proof", cut: "approve_cut" };
+  const saved = {}, busy = {};
+  let ddb = null, mode = "loading";
+  const hm = at => { try { return new Date(at).toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" }) } catch { return "" } };
+  const say = (day, gate, msg, bad) => { const s = document.querySelector(`[data-gatestate="${day}-${gate}"]`); if (s) { s.textContent = msg; s.classList.toggle("bad", !!bad) } };
+  const off = "Your presses are not saving in this view.";
+  const nameOf = (sec, m) => sec.querySelector(`[data-style-module="${m}"]`)?.dataset.styleName || m;
+  function told(sec, v) {
+    const when = hm(v.at);
+    if (v.kind === "sign_storyboard") return `Signed ${when}.`;
+    if (v.kind === "approve_cut") return `Cut approved ${when}.`;
+    if (v.kind === "approve_proof") return v.verdict === "reject" ? `Rejected ${when}: ${v.words}` : `Proof approved ${when}.`;
+    return v.module ? `Picked ${nameOf(sec, v.module)} ${when}.` : `None of these ${when}: ${v.reason}`;
+  }
+  function render(){
+    for (const c of cards) {
+      const day = c.dataset.gatesDay;
+      for (const sec of c.querySelectorAll("section.gate[data-gate]")) {
+        const gate = sec.dataset.gate, id = `${day}-${gate}`, v = saved[id], sha = sec.dataset.gateSha || "";
+        const same = !!v && v.kind === KIND[gate] && v.sha256 === sha;
+        const shut = mode !== "live" || !!busy[id] || same || sec.dataset.liveAnswered === "1" || !sha;
+        for (const el of sec.querySelectorAll('[data-act="gate"], textarea[data-gate-words], input[data-style-nfu]')) el.disabled = shut;
+        sec.classList.toggle("on", same);
+        if (gate === "style") for (const f of sec.querySelectorAll("figure[data-style-module]")) f.classList.toggle("on", same && v.module === f.dataset.styleModule);
+        if (busy[id]) continue;
+        if (mode === "off") { say(day, gate, off, true); continue }
+        say(day, gate, !v ? "" : same ? told(sec, v) : "This changed since you pressed; press again.", !!v && !same);
+      }
+    }
+  }
+  render();
+  (async () => {
+    try { ddb = window.claude?.use ? await window.claude.use("db") : null } catch { ddb = null }
+    if (!ddb) { mode = "off"; render(); return }
+    try {
+      ddb.collection("picks").onSnapshot(snap => {
+        for (const k of Object.keys(saved)) delete saved[k];
+        for (const d of snap.docs) if (d.exists && /^(mon|wed|fri)-(storyboard|style|proof|cut)$/.test(d.id)) saved[d.id] = d.data() || {};
+        mode = "live"; render();
+      }, () => { mode = "broken"; render() });
+    } catch { mode = "broken"; render() }
+  })();
+  document.addEventListener("click", async e => {
+    const b = e.target.closest && e.target.closest('[data-act="gate"]');
+    if (!b) return;
+    const c = b.closest(".rec.gt"), sec = b.closest("section.gate"), day = c.dataset.gatesDay, gate = b.dataset.gate, id = `${day}-${gate}`;
+    if (mode !== "live" || !ddb || busy[id]) { render(); return }
+    const body = { kind: KIND[gate], day, piece_id: c.dataset.piece, sha256: sec.dataset.gateSha, at: new Date().toISOString() };
+    const words = (sec.querySelector(`textarea[data-gate-words="${id}"]`)?.value || "").trim();
+    if (gate === "storyboard" || gate === "cut") body.approved = true;
+    if (gate === "cut") {
+      const cuts = {};
+      if (b.dataset.cutLong) cuts.long = b.dataset.cutLong;
+      if (b.dataset.cutShort) cuts.short = b.dataset.cutShort;
+      body.cuts = cuts;
+    }
+    if (gate === "proof") {
+      body.verdict = b.dataset.verdict === "reject" ? "reject" : "approve";
+      if (b.dataset.cut) body.cut = b.dataset.cut;
+      if (body.verdict === "reject") {
+        if (!words) { say(day, gate, "Say what is wrong first: your words are what the next proof is made from.", true); return }
+        body.words = words;
+      }
+    }
+    if (gate === "style") {
+      const pick = b.dataset.module || null;
+      body.module = pick;
+      body.verdicts = [...sec.querySelectorAll("figure[data-style-module]")].map(f => {
+        const m = f.dataset.styleModule, nfu = f.querySelector("input[data-style-nfu]")?.checked;
+        return { module: m, verdict: m === pick ? "picked" : nfu ? "not_for_us" : "seen", sha256: f.dataset.styleSha };
+      });
+      if (!pick) {
+        if (!words) { say(day, gate, "Say why none of these first: your words are what the next styles are picked from.", true); return }
+        body.reason = words;
+      }
+    }
+    busy[id] = true; say(day, gate, "Saving…"); render();
+    let result = null, error = null;
+    try { result = (await ddb.doc("picks/" + id).set(body)) || {}; saved[id] = result.body || body } catch (err) { error = err }
+    delete busy[id]; render();
+    if (error) { say(day, gate, error.message || "Not saved. Press it again.", true); return }
+    if (result.gate === "failed") say(day, gate, told(sec, saved[id]) + " It is not on the piece's record yet; a session records it from here.", true);
+  });
+})();
+
 // His Scores press (layout v3, W2.1; Krish, 2026-10-29: "allow me to add a score out of 10 for narrative quality and
 // production quality"): on each made day's Publish step and on each Archive row. Narrative and production out of 10,
 // when he scored it (at publish or looking back) and his note, saved as picks/score-<piece>; the server files each save

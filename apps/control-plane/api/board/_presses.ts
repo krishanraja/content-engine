@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { DECISION_ID, canonical, digest } from './_contracts.js'
+import { DECISION_ID, GATE_KINDS, canonical, digest, type GateKind } from './_contracts.js'
 import type { SendApprovedInput, SendResult } from '../_teleprompter.js'
-import type { Making } from '../_making.js'
+import type { Making, MakingGates } from '../_making.js'
 import { dispatchOffdayRevise, type ReviseDispatch } from './_offdayRevise.js'
 
 const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -30,6 +30,12 @@ const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 //     recorded; nothing in Teleprompter is touched.
 //   - Scores (picks/score-<piece>, on a day tab or in the Archive): one piece_scores row, his narrative and production
 //     marks out of 10, at publish or in hindsight, and his note; history kept, a save again files nothing twice.
+//   - The production gates (picks/<day>-storyboard, -style, -proof, -cut; docs/PUBLISH_BOARDS.md, "The production gates
+//     on a day's tab"): his press is written onto the piece's making record as meta.making.gates.<gate> (storyboard,
+//     style, proof, final), bound to the sha256 of what the tab showed him, with the same guarded write Approve scripts
+//     records its send with (recordGate). A style pick carries his verdict on every style shown (verdicts), which the
+//     engine's verdict writer folds into config/style-references.json; the server never edits that file. His words on a
+//     Reject of the proof, or on "None of these" styles, go to his taste ledger as krish_words (gateReport).
 //   - Reject asset (picks/<day>-reject-<asset>): one row in the rejection inbox (taste_rejection_inbox), his reason as
 //     he typed it, where and when, the piece, the formats and the asset's Drive id and moment when the board knows
 //     them. Masters are never copied anywhere: a Drive id is a pointer.
@@ -142,6 +148,62 @@ async function recordSend(db: SupabaseClient, input: SendApprovedInput, result: 
     if (written.data?.length) return null
   }
   return 'the piece changed twice while the send was being recorded'
+}
+
+/** The gate object his press writes on the piece's making record (meta.making.gates), from his saved document. Only
+ *  what the gate needs: who, when, the hash of what the tab showed, and the gate's own answer. */
+export function gatePatch(kind: GateKind, body: Body, now: string): MakingGates {
+  const base = { by: 'Krish' as const, at: now, sha256: String(body.sha256) }
+  const said = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 2000) : undefined)
+  if (kind === 'sign_storyboard') return { storyboard: base }
+  if (kind === 'approve_cut') return { final: { ...base, ...(isObj(body.cuts) ? { cuts: body.cuts as Record<string, string> } : {}) } }
+  if (kind === 'approve_proof') {
+    const words = said(body.words)
+    return { proof: { ...base, verdict: body.verdict === 'reject' ? 'reject' : 'approve', ...(words ? { words } : {}),
+      ...(typeof body.cut === 'string' ? { cut: body.cut as 'long' | 'short' | 'feature' } : {}) } }
+  }
+  const reason = said(body.reason)
+  const verdicts = (Array.isArray(body.verdicts) ? body.verdicts : []).filter(isObj).map(v => ({
+    module: String(v.module), verdict: v.verdict as 'picked' | 'seen' | 'not_for_us', ...(typeof v.sha256 === 'string' ? { sha256: v.sha256 } : {}) }))
+  return { style: { ...base, module: typeof body.module === 'string' ? body.module : null, ...(reason ? { reason } : {}), verdicts } }
+}
+
+/** His press on a production gate onto the piece's making record, merged gate by gate (mergeMaking) and guarded on the
+ *  row's updated_at, read again once on a stale row: the same write recordSend makes. Why it was not written, or null. */
+export async function recordGate(db: SupabaseClient, pieceId: string, patch: MakingGates, now: string): Promise<string | null> {
+  const { mergeMaking } = await import('../_making.js')
+  for (let tries = 0; tries < 2; tries++) {
+    const row = await makingOf(db, pieceId)
+    if (!row) return 'the piece\'s making record could not be read'
+    const written = await db.from('content_ideas').update({ meta: { ...row.meta, making: mergeMaking(row.making, { gates: patch }, SERVER, now) }, updated_at: now })
+      .eq('id', pieceId).eq('updated_at', row.updated_at).select('id')
+    if (written.error) return 'the piece\'s making record could not be written'
+    if (written.data?.length) return null
+  }
+  return 'the piece changed twice while his press was being recorded'
+}
+
+/** His words on a gate he turned down (a Reject of the proof, or "None of these" styles), as one taste_reports row:
+ *  his typed words with where and when, never a sentence the engine wrote. Null when the press carries no such words. */
+export function gateReport(week: string, id: string, body: Body, now: string) {
+  const reject = body.kind === 'approve_proof' && body.verdict === 'reject'
+  const none = body.kind === 'pick_style' && body.module === null
+  const words = typeof (reject ? body.words : body.reason) === 'string' ? String(reject ? body.words : body.reason).trim().slice(0, 2000) : ''
+  if (!(reject || none) || !words) return null
+  const piece = typeof body.piece_id === 'string' && PIECE_UUID.test(body.piece_id) ? body.piece_id : null
+  const what = reject ? 'moving proof' : 'motion styles shown'
+  return {
+    kind: 'krish_words', body: words, said_where: `publish board, ${week} picks/${id}`, said_at: now,
+    lane: 'production', polarity: 'dislikes',
+    subject_ref: piece ? `piece:${piece}` : null,
+    subject: `the ${what} for the ${String(body.day)} piece of the week of ${week}`,
+    session_ref: 'content.krishraja.com publish board', repository: REPOSITORY, surface: 'publish_board',
+    emitter_id: 'content-engine-board',
+    // The same words on the same thing shown file nothing twice; new words, or a new clip, file once more.
+    client_report_id: `gate-${digest(canonical({ week, id, words, sha: body.sha256 }))}`.slice(0, 96),
+    reported_at: now,
+    meta: { press: reject ? 'reject_proof' : 'none_of_these', week, day: body.day, gate: GATE_KINDS[body.kind as GateKind] },
+  }
 }
 
 /** The piece_scores row for his Scores press (supabase/migrations/20261118090000_piece_scores.sql). The board's
@@ -410,6 +472,24 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
     } catch {
       return { ...saved, taste: 'failed' }
     }
+  }
+  if (collection === 'picks' && typeof body.kind === 'string' && Object.hasOwn(GATE_KINDS, body.kind)) {
+    // Only his own press reaches here (hisOnlyRefusal); the gate is written as his, never as a session's.
+    if (who !== 'Krish') return null
+    const kind = body.kind as GateKind
+    const unrecorded = await recordGate(db, String(body.piece_id), gatePatch(kind, body, now), now).catch(() => 'the piece\'s making record could not be written')
+    const out: Saved = { ...saved, gate: unrecorded ? 'failed' : 'recorded', ...(unrecorded ? { gate_error: unrecorded } : {}) }
+    const report = gateReport(week, id, body, now)
+    if (report) {
+      try {
+        const filed = await db.from('taste_reports').upsert(report, { onConflict: 'emitter_id,client_report_id', ignoreDuplicates: true })
+        const code = String((filed.error as { code?: string } | null)?.code || '')
+        out.taste = !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed'
+      } catch {
+        out.taste = 'failed'
+      }
+    }
+    return out
   }
   if (collection === 'picks' && body.kind === 'titles') {
     const title = await recordTitle(db, body)

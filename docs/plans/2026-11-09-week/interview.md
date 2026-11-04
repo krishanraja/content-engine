@@ -28,6 +28,8 @@ Each line: the question, the best guess offered, then his exact answer. His word
 
 - Friday lock put to him whole. Krish: "Approved." (signed, lock sha256 4110d446)
 
+- Wednesday lock rewritten (outsider as the way in, not AI versus human as the heart; Imael Angel corrected). Krish: "Sounds good but I think there's still a lot of power in helping the user realise that it's not AI versus human." Signed: "I've signed the story already for Wednesday, so get on with it." (2026-11-04, sha256 d151291b)
+
 ## Still open
 
 - Nothing in the room. Both makes wait on his Run workflow press (make-piece.yml).

@@ -209,6 +209,30 @@ class CompileTest(unittest.TestCase):
         del spec['call']
         self.assertEqual(compile_cut(spec, 'proof-tall', words, FIXTURE)['ending'], {'fromFrame': base, 'url': whole['series']['site']})
 
+    def test_motion_style_passes_through(self):
+        spec = load_json(FIXTURE / 'spec.json')
+        words = timed_words()
+        house = compile_cut(spec, 'proof-tall', words, FIXTURE)
+        self.assertNotIn('motion', house, 'no style.motion: the cut renders with the house motion, unchanged')
+        table = load_json(ROOT / 'apps/renderer/src/engine/kit/motion-profiles.json')
+        spec.setdefault('style', {})['motion'] = {'module': 'dark-keynote', 'reason': 'test'}
+        styled = compile_cut(spec, 'proof-tall', words, FIXTURE)
+        self.assertEqual(styled['motion'], {'style': 'dark-keynote', 'profile': table['profiles']['dark-keynote']})
+        self.assertEqual({k: v for k, v in styled.items() if k != 'motion'}, house, 'the style changes nothing else')
+        spec['style']['motion']['module'] = 'toy-3d'
+        self.assertEqual(compile_cut(spec, 'proof-tall', words, FIXTURE)['motion'], {'style': 'toy-3d'})
+        spec['style']['motion']['module'] = 'no-such-style'
+        with self.assertRaisesRegex(ValueError, 'not a motion style'):
+            compile_cut(spec, 'proof-tall', words, FIXTURE)
+        # The renderer accepts what compile emits, with and without a style.
+        spec['style']['motion']['module'] = 'living-ui'
+        for props in (house, compile_cut(spec, 'proof-tall', words, FIXTURE)):
+            code = (NODE_TYPESCRIPT +
+                    "const { EngineRenderPropsSchema } = require('./apps/renderer/src/engine/props.ts'); "
+                    "EngineRenderPropsSchema.parse(JSON.parse(fs.readFileSync(0, 'utf8')))")
+            result = run(['node', '-e', code], input=json.dumps(props), env={**os.environ, 'npm_config_offline': 'true'})
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_first_word_entrances_land_on_frame_zero(self):
         # Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro". An entrance on the
         # cut's first word is on screen from frame 0; later events keep their word's frame.

@@ -1,0 +1,114 @@
+{
+ "week_start": "2026-11-09",
+ "scores": "live",
+ "rows": [
+  {
+   "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+   "date": "2026-11-02",
+   "series": "follow_the_money",
+   "title": "Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+   "links": [
+    {
+     "label": "Substack",
+     "url": "https://home.makeyourmindup.ai/p/claudes-ai-is-eating-the-jobs-of"
+    },
+    {
+     "label": "Instagram Reels",
+     "url": "https://www.instagram.com/reel/DfP2RFFjbOC/"
+    }
+   ],
+   "scores": {}
+  },
+  {
+   "piece_id": "d7a20885-7001-4661-b444-9d7ca1043416",
+   "date": "2026-10-24",
+   "series": "under_the_hood",
+   "title": "Can Meta\u2019s Muse or Grok Bot run my life? I tested both",
+   "links": [
+    {
+     "label": "Substack",
+     "url": "https://home.makeyourmindup.ai/p/can-metas-muse-or-grok-bot-run-my"
+    }
+   ],
+   "scores": {}
+  },
+  {
+   "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+   "date": "2026-10-20",
+   "series": "follow_the_money",
+   "title": "Why Google, OpenAI and Anthropic keep changing AI prices",
+   "links": [
+    {
+     "label": "Substack",
+     "url": "https://home.makeyourmindup.ai/p/why-google-openai-and-anthropic-keep"
+    }
+   ],
+   "scores": {}
+  },
+  {
+   "piece_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+   "date": "2026-10-19",
+   "series": "mind_the_gap",
+   "title": "Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks",
+   "links": [
+    {
+     "label": "Substack",
+     "url": "https://home.makeyourmindup.ai/p/why-claude-and-chatgpt-model-launches"
+    }
+   ],
+   "scores": {}
+  },
+  {
+   "piece_id": "7554ed4a-560b-4365-b266-ea72abeed7ef",
+   "date": "2026-10-14",
+   "series": "under_the_hood",
+   "title": "Amazon locked Meta's new AI out. Walmart let it in.",
+   "links": [
+    {
+     "label": "Substack",
+     "url": "https://home.makeyourmindup.ai/p/amazon-locked-metas-new-ai-out-walmart"
+    }
+   ],
+   "scores": {}
+  },
+  {
+   "piece_id": "f328382d-71b3-41a7-a221-d8615826f12e",
+   "date": "2026-10-12",
+   "series": "follow_the_money",
+   "title": "Warner sued Suno. Now it takes a cut. Who else gets paid?",
+   "links": [
+    {
+     "label": "Substack",
+     "url": "https://home.makeyourmindup.ai/p/warner-sued-suno-now-it-takes-a-cut"
+    }
+   ],
+   "scores": {}
+  },
+  {
+   "piece_id": "9ae1a768-f32a-4533-b253-67a506bf5600",
+   "date": "2026-10-07",
+   "series": "under_the_hood",
+   "title": "Higgsfield, taken apart: the $1bn AI video machine",
+   "links": [
+    {
+     "label": "Substack",
+     "url": "https://home.makeyourmindup.ai/p/higgsfield-taken-apart-the-1bn-ai"
+    }
+   ],
+   "scores": {}
+  },
+  {
+   "piece_id": "6cb0d213-1aa6-44d3-8dc2-0b91d8dde4df",
+   "date": "2026-10-05",
+   "series": "follow_the_money",
+   "title": "Same agent, opposite answers",
+   "links": [
+    {
+     "label": "Substack",
+     "url": "https://home.makeyourmindup.ai/p/muse-dot-and-the-next-wave-of-agents"
+    }
+   ],
+   "scores": {}
+  }
+ ]
+}
