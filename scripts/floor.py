@@ -10,6 +10,11 @@ delivery.
     python3 scripts/floor.py --check                  # the file is whole and well formed (exit 1 if not)
     python3 scripts/floor.py --blocking               # the only taste standards a check may block on: his eight nevers (JSON)
     python3 scripts/floor.py --self-test              # the reader, on a synthetic floor (CI: tests/engine-gates.test.ts)
+    python3 scripts/floor.py --format long_video --piece <plan folder or uuid>   # and record the read (preflight.py)
+
+With --piece (or PREFLIGHT_PIECE), a --format read is recorded as the piece's preflight receipt: the maker and the
+floor's hash, on its making record and in its ve/ledger.jsonl (scripts/preflight.py). ve brief and ve render refuse a
+piece published from 9 Nov 2026 whose receipt for its maker is missing or older than the floor (the failure loop).
 
 The file, config/rejection-floor.json, is written only by the Rejections engine (krishanraja/inspirationhouse,
 src/rejection/) and changes only by a pull request Krish merges. Never edit it by hand. Krish, 2026-10-28: "It then
@@ -971,6 +976,8 @@ def main(argv=None):
     p.add_argument('--all', action='store_true', help='every rejection for the maker, not the newest 40')
     p.add_argument('--check', action='store_true', help='check the file is whole; exit 1 if not')
     p.add_argument('--blocking', action='store_true', help='the only taste standards a check may block on, as JSON: his eight nevers')
+    p.add_argument('--piece', help='with --format: record this read as the piece\'s preflight receipt (plan folder or uuid; '
+                   'default $PREFLIGHT_PIECE)')
     p.add_argument('--self-test', action='store_true', help=argparse.SUPPRESS)
     p.add_argument('--file', type=Path, default=FLOOR, help=argparse.SUPPRESS)
     p.add_argument('--bar-file', type=Path, default=BAR, help=argparse.SUPPRESS)
@@ -1012,8 +1019,21 @@ def main(argv=None):
             print(f'{fmt}: {entry["maker"]}')
         return 0
     if a.format:
-        return show_format(doc, a.format, a.approved_only, None if a.all else 40, bar=bar)
+        code = show_format(doc, a.format, a.approved_only, None if a.all else 40, bar=bar)
+        record_read(a.format, a.piece, a.file)
+        return code
     return summary(doc)
+
+
+def record_read(fmt, piece=None, path=FLOOR):
+    """The read as the piece's preflight receipt (scripts/preflight.py), when a piece is named; never fails the read."""
+    try:
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        import preflight  # noqa: PLC0415
+        for line in preflight.write(piece, [preflight.receipt('floor', preflight.floor_version(path), fmt)]):
+            print(line, file=sys.stderr)
+    except Exception as error:  # noqa: BLE001 - a receipt never stops the floor being read
+        print(f'preflight: NOT RECORDED: {error}', file=sys.stderr)
 
 
 if __name__ == '__main__':

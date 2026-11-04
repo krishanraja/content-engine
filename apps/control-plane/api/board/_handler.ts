@@ -10,6 +10,7 @@ import { readArchive } from './_archive.js'
 import { readPieces, recordPosted } from './_posted.js'
 import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
+import { StandardsError, decideStandard, readStandards, renderStandards } from './_standards.js'
 import { operatorBearerAllowed } from '../_auth.js'
 import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
@@ -142,6 +143,29 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         const result = await recordPosted(await getDb(), week, req.body, (deps.now ?? (() => new Date().toISOString()))())
         return res.status(result.status).json(result.body)
       } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
+    }
+    if (op === 'standards') {
+      // The standards page (_standards.ts): the rejection floor in about 20 decisions, on the board's own login. It reads
+      // for the board's login or the operator's key; only his login presses (never a session answering for him).
+      const who = actor(req)
+      if (!who) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      try {
+        const db = await getDb()
+        if (method === 'GET') {
+          const page = renderStandards(await readStandards(db))
+          res.setHeader('Content-Type', 'text/html; charset=utf-8')
+          res.setHeader('X-Frame-Options', 'DENY')
+          res.setHeader('Content-Security-Policy', boardPolicy(process.env.SUPABASE_URL))
+          return res.status(200).send(page)
+        }
+        if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+        if (who !== 'Krish') return res.status(403).json({ ok: false, error: 'his_decision' })
+        const result = await decideStandard(db, req.body)
+        return res.status(result.status).json(result.body)
+      } catch (error) {
+        const status = error instanceof StandardsError ? error.status : 503
+        return res.status(status).json({ ok: false, error: error instanceof StandardsError ? error.message : 'standards_unavailable' })
+      }
     }
     const operatorOnly = ['uploads', 'imports', 'sources'].includes(op) || (!op && !collection && method === 'PUT')
     const who = actor(req, operatorOnly)

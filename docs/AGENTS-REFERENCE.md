@@ -321,6 +321,16 @@ in every session, fails when a marker is gone and lists what is still open.
 Before writing or proposing anything, read the learnings that bear on it, so
 he never has to say it again.
 
+The registers now feed a loop that learns by itself (Krish, 2026-11-04: "all of
+this stuff should feed an intelligent system that automatically gets more
+intelligent every week, not just pile up loads of individual feedback for me to
+sift through"). Every failure is captured as it happens in `engine_incidents`
+with what the session had read first (its preflight receipt), and once a week
+`.github/workflows/engine-learning-weekly.yml` finds the repeats, traces why
+each kept happening, climbs its guard one rung and puts at most three proposals
+on his list. A failure entry may carry the loop's `mode`, `recurrences`,
+`causes` and `guard_level`. `docs/learning/README.md` says how.
+
 <a id="rule-19"></a>
 
 **His feedback on ideas is kept as cues, permanently** (Krish, 2026-10-26: "all
@@ -364,6 +374,21 @@ is written only by the Rejections engine (krishanraja/inspirationhouse,
 The records behind it, and what is kept of each asset (a still, a six-frame
 strip or a 4-second clip, never a master), live in `taste_rejections` and
 `taste_rejection_media`.
+He decides the standards at `/board/standards` (also `/standards`; Krish,
+2026-11-04: "group the 215 floor standards for my approval"): about 20 groups
+from `config/floor-groups.json`, each one proposal he approves, rewords in his
+own words or rejects, and every member standard takes that decision in
+`public.taste_floor` (`group_key`, `group_title`, `group_statement`). The
+session-process standards sit in its `operating` list and are never put to him
+as taste. `python3 scripts/floor_group.py --check` (in `npm run verify`) fails
+while any floor standard sits in no group or in two; group a new one there.
+
+Name the piece when you read it (`--format <maker> --piece <plan folder or
+uuid>`, and `python3 scripts/check_failures.py --piece <piece>`): each read is
+recorded as the piece's preflight receipt, the failure loop's evidence of what
+was read before the work (`docs/learning/README.md`). From 9 Nov 2026 `ve brief`
+and `ve render` refuse a piece whose floor or failures receipt for its maker is
+missing or older than the file now.
 
 ## Rules for every agent
 

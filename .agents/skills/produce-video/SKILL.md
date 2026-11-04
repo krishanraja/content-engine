@@ -37,6 +37,9 @@ Then read the rejection floor for every cut you make (`python3 scripts/floor.py
 `card`, `intro_outro`): every rejection Krish gave, in his words, and the
 standards no finished cut may fall beneath (AGENTS.md rule 20). Before a cut
 reaches him, check the finished file against each one, by eye and by ear.
+Preflight first: add `--piece <plan folder or uuid>` to each floor read and to
+`python3 scripts/check_failures.py`, then `python3 scripts/preflight.py <piece>
+--skill produce-video`; from 9 Nov ve refuses without them (docs/learning/README.md).
 
 ## Publish-board routing
 

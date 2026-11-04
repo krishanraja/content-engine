@@ -8,6 +8,7 @@ import {
 import { VIDEO_STUDIO_CONTROL_SCHEMA_VERSION, sendVideoStudioError } from './_contracts.js'
 import { enforceVideoStudioRateLimit } from './_data.js'
 import { withVenture } from '../_taste.js'
+import { decideLearningProposal, parseLearningDecision } from '../_learningDecision.js'
 
 // GET  /api/video-studio/learning-proposals            the open proposals
 // POST /api/video-studio/learning-proposals            { id, decision, krish? }
@@ -24,10 +25,6 @@ import { withVenture } from '../_taste.js'
 // the only place Krish rewords a rule, so it shows them all, labelled, and
 // filters none.
 
-// corrected: right idea, his wording. It needs his words, which replace the
-// engine's on every reader (taste_profile_current reads decision_note first).
-const DECISIONS = new Set(['approved', 'rejected', 'corrected'])
-const MAX_NOTE = 600
 const PROPOSAL_FIELDS = 'id, weekly_batch_id, proposal_class, assertion, scope, independent_session_count, independent_job_count, counterexamples, regression_cases, proposed_change, status, created_at'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -38,6 +35,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .from('mindmake_studio_learning_proposals')
       .select(PROPOSAL_FIELDS)
       .eq('status', 'proposed')
+      // The rejection floor's groups are decided on their own page (/standards), so twenty of them never crowd the
+      // board's lessons out of this list.
+      .or('scope->>source.is.null,scope->>source.neq.rejections_group')
       .order('created_at', { ascending: false })
       .limit(20)
     if (error) return sendVideoStudioError(res, 503, 'learning_store_unavailable')
@@ -51,33 +51,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (guardVideoStudioOperatorMutation(req, res, ['POST'])) return
   if (await enforceVideoStudioRateLimit(res, 'operator:learning:decide', videoStudioOperatorIdentity(req), 60, 60)) return
-  const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
-  const id = typeof body.id === 'string' ? body.id : ''
-  const decision = typeof body.decision === 'string' ? body.decision : ''
-  if (!/^[0-9a-f-]{36}$/.test(id)) return sendVideoStudioError(res, 400, 'invalid_id')
-  if (!DECISIONS.has(decision)) return sendVideoStudioError(res, 400, 'invalid_decision')
-  const note = typeof body.krish === 'string' ? body.krish.trim() : ''
-  if (decision === 'corrected' && (!note || note.length > MAX_NOTE)) return sendVideoStudioError(res, 400, 'corrected_needs_his_words')
-
-  // Only an open proposal can be decided, and only once. The filter on status
-  // makes a replayed tap a no-op instead of a second decision.
-  const { data, error } = await supabase
-    .from('mindmake_studio_learning_proposals')
-    .update({
-      status: decision,
-      decided_at: new Date().toISOString(),
-      decided_by: 'Krish',
-      ...(decision === 'corrected' ? { decision_note: note } : {}),
-    })
-    .eq('id', id)
-    .eq('status', 'proposed')
-    .select('id, status')
-  if (error) return sendVideoStudioError(res, 503, 'learning_store_unavailable')
-  if (!data?.length) return sendVideoStudioError(res, 409, 'already_decided')
+  // His ruling, through the one decision write (_learningDecision.ts) the standards page shares.
+  const parsed = parseLearningDecision(req.body)
+  if ('code' in parsed) return sendVideoStudioError(res, parsed.status, parsed.code)
+  const decided = await decideLearningProposal(supabase, parsed)
+  if ('code' in decided) return sendVideoStudioError(res, decided.status, decided.code)
   return res.status(200).json({
     ok: true,
     schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
-    proposal: data[0],
+    proposal: decided.proposal,
     server_time: new Date().toISOString(),
   })
 }
