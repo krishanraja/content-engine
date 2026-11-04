@@ -77,6 +77,9 @@ Run any stage by hand: `python3 scripts/learning/loop.py weekly deterministic`, 
 post proposals). The backfill over the registers' whole history is `python3 scripts/learning/loop.py backfill --out
 docs/learning/<date>-backfill.md`; it proposes nothing to his list. The first is `2026-11-04-backfill.md`.
 
+A single failure Krish names is traced by hand into the same registers: `2026-11-04-thursday-killed.md` (the killed
+Thursday 5 Nov short: F31 to F39, five guards in `scripts/velib/guards.py`, six yes/no questions for him).
+
 ## What it cannot do yet
 
 - Modes are matched by shared words, not meaning: two failures worded differently can sit in two modes, and the report
