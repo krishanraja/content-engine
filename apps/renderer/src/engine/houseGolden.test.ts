@@ -11,7 +11,8 @@ import { EngineEventSchema, EngineObjectSchema, EngineRenderPropsSchema, type En
 /** The house motion never moves. With no motion style every device and the whole composition must draw exactly what
  *  they drew before motion styles were strengthened (Krish's frozen locks and approved key frames stay valid). The
  *  digests in houseGolden.json were recorded from a86c3f0 (the renderer before the strong styles); a change that
- *  alters a no-style frame fails here. Regenerate only for a deliberate house change Krish approved:
+ *  alters a no-style frame fails here. Numbers are rounded to 0.001 before hashing: V8's sin and cos differ in the last
+ *  bit between Node 22 and Node 24, which no pixel shows but a raw digest does. Regenerate only for a deliberate house change Krish approved:
  *  VE_WRITE_HOUSE_GOLDEN=1 npx vitest run apps/renderer/src/engine/houseGolden.test.ts */
 
 const clockFrame = vi.hoisted(() => ({ value: 0 }))
@@ -38,7 +39,11 @@ function flatten(node: ReactNode): string {
   return `<${name} ${JSON.stringify(rest, (_k, v) => typeof v === 'function' ? `fn:${v.name}` : v)}>${flatten(children as ReactNode)}</>`
 }
 
-const digest = (parts: string[]) => createHash('sha256').update(parts.join('\n')).digest('hex')
+const normalise = (text: string) => text.replace(/-?\d+\.\d+(?:e-?\d+)?/g, n => {
+  const r = Math.round(Number(n) * 1000) / 1000
+  return String(Object.is(r, -0) ? 0 : r)
+})
+const digest = (parts: string[]) => createHash('sha256').update(parts.map(normalise).join('\n')).digest('hex')
 
 function deviceDigests(): Record<string, string> {
   const out: Record<string, string> = {}
