@@ -2030,7 +2030,20 @@
       "what": "His product name \"Muse\" was questioned instead of checked against his Teleprompter records, the board and the glossary.",
       "symptom": "Krish asked about his own words.",
       "cause": "No step says to read his own records before questioning his words; AGENTS.md says \"Check before you ask\" in general.",
-      "status": "open",
+      "status": "guarded",
+      "guards": [
+        {
+          "file": "scripts/velib/said.py",
+          "contains": "def proposed_words",
+          "how": "ve said sets the take's heard words against the script he read and proposes the cut's words spelled as the script spells them; on Thursday's take it gives \"Muse\" and \"Prompt's\" with no hand step",
+          "test": "python3 tests/ve_said_test.py"
+        },
+        {
+          "file": "docs/ve/RUNBOOK.md",
+          "contains": "read what he said on the take, not the Teleprompter script (he paraphrases on camera): `ve said",
+          "how": "the runbook sends a session to the take's words before it questions a name or line he used"
+        }
+      ],
       "planned_mechanism": "Krish's answer: the session listens to what he actually said on the recorded take (its transcript), not the Teleprompter folders, because he paraphrases on camera. Before questioning a name or a line he used, read the take's words; then the board and docs/GLOSSARY.md. Not yet a check.",
       "source": "Thursday 5 Nov failure report (Krish shared it, 4 Nov 2026); docs/learning/2026-11-04-thursday-killed.md",
       "related": [],
@@ -2041,7 +2054,7 @@
           "evidence": "AGENTS.md \"Check before you ask.\""
         }
       ],
-      "guard_level": "prose",
+      "guard_level": "checklist",
       "decided": {
         "by": "Krish",
         "on": "2026-11-04",
