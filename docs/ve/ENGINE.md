@@ -64,6 +64,9 @@ status <piece>
 coverage
 compile <spec> --cut <cut> --words <words.json> --assets-dir <assets>
 render <props> <out> --spec <spec> --assets-dir <assets> [--scale <number>]
+expect <spec>
+styles <spec> [--cut <cut>] [--top 3] [--points <a,b>] [--props <props>]
+proof <spec> --cut <cut> [--beat <id>] [--props <props>] [--assets-dir <assets>] [--no-qc]
 ingest <piece> --take <id> --media <file> --aligner-a <name> --aligner-b <name> [--clock-a <json>] [--clock-b <json>]
 conform <piece> --cut <cut> [--script <words.json>] [--takes <id> ...] [--crossfade-ms 20..40] [--render --assets-dir <assets> [--joins-reel]]
 brief <piece> [--cut <cut>] [--beat <id> ...] [--move <beat>=<move> ...] [--check <dir> --plate <id>]
@@ -81,6 +84,8 @@ file <piece> --subject <text> [--date <YYYY-MM-DD>] [--cut <cut> ...] [--dry-run
 ```
 
 `stills` is a placeholder (exit 2); quick-edit is fallback. Never claim complete ve production from unavailable stages.
+
+**One production round (plan 4 Nov 2026; F04, F13).** **expect** writes `<ve dir>/expect.md`, at most six plain lines of what the cut will and won't do, each only when it applies (`velib/expect.py`). **styles** renders the same 8 to 15 s window of his take once per shortlisted motion style (`creative_direction.pick_motion`, top 3; a style whose device is not built is left out and named) to `styles/<module>.mp4` and `styles.json`; with no take it uses his last take of the same format, labelled, never stock. **proof** renders only the hardest beat (`velib/proof.py`: `style.proof.beat`, else most distinct devices, then a SPLIT beat with a card, then the longest) from the compiled props, cut to that window on the same clock and rendered by the same `render`, then runs qc on it; it writes `proof/<cut>.mp4` and `proof/<cut>.json` {beat, start, end, sha256, spec_sha256, style_module}. From `creative_direction.MOTION_FROM` (9 Nov 2026) `render` of a whole cut, `packet` and `status` refuse unless Krish approved that proof by its sha256 and `proof.structural_hash` (style.motion, the device set, each beat's id, uses and layout; never caption text) still matches, and the beat has not moved 0.5 s or more. His presses are read from the piece's making record, `gates.{storyboard,style,proof,final}` (`velib/gates.py`, GET `/api/content-ideas/<id>/making`, the uuid from the plan folder's `post.json`), and from the spec's own `approvals`; the record wins, and offline it says NOT CHECKED. A proof press that names its `cut` counts only for that cut; the final press binds each cut in `gates.final.cuts` ({long, short}: file sha256s), and `gates.storyboard.sha256` is `gates.storyboard_sha` (canonical JSON of expect.md and storyboard.md, LF, the board's `week_board.storyboard_sha`). `packet` opens with "In short" (at most ten lines), counts `rounds` in `packet.record.json` and writes it to the making record (the route refuses session writes to `gates`, never `rounds`).
 
 **ingest** writes `<piece>/ve/takes/<take>.json`: the media's path, SHA-256 and duration (the media is never copied) and both aligners' words. Two different aligners are required. Clocks arrive as files (ve or faster-whisper shapes); only a free local `faster-whisper:<model>` is ever run by ingest. There is no paid aligner (Krish, 2026-10-29: "do not use eleven labs for this"); two local models count as two aligners.
 

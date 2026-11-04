@@ -11,6 +11,11 @@ import { MAKING_CHANNELS, SCRIPT_SHA256, makingSteps, pieceVerdict, teleprompter
 // the hashes with the ones it was built with; it never replaces a word or a file it shows (his presses bind the hash
 // of the words he saw, _presses.ts). Nothing here carries an address, a link, a path, a secret or a transcript.
 //
+// Each day also carries its production gates (gates: storyboard, style, proof, final; docs/PUBLISH_BOARDS.md, "The
+// production gates on a day's tab"): for each, only its state, when he pressed and the hash his press is bound to (and
+// the style module he picked), so the page can say which press waits on him and whether what it shows is what he
+// pressed on. And rounds, how many full renders went to him before he approved the cut, when the engine records it.
+//
 // rebuild_needed is true when any piece of the week was written (its row or its making record) after the live build
 // was made, so the page can say a rebuild would show more than the overlay can.
 
@@ -22,6 +27,10 @@ const NO_NOTE = new Set(['pack'])
 
 export interface LiveStep { key: string; state: MakingStepState; note?: string }
 export interface LiveCut { cut: MakingCut; thumbnail: boolean }
+export type GateName = 'storyboard' | 'style' | 'proof' | 'final'
+export const GATE_NAMES: readonly GateName[] = ['storyboard', 'style', 'proof', 'final']
+export type GateState = 'waiting' | 'signed' | 'picked' | 'none_of_these' | 'approved' | 'rejected'
+export interface LiveGate { state: GateState; at: string | null; sha256?: string; module?: string }
 export interface LiveDay {
   piece_id: string
   date: string
@@ -32,11 +41,28 @@ export interface LiveDay {
   posted: string[]
   script_hashes: Partial<Record<MakingCut, string>>
   written_at: string | null
+  gates: Record<GateName, LiveGate>
+  rounds?: number
 }
 export interface WeekLive { live: Partial<Record<PostedDay, LiveDay>>; rebuild_needed: boolean }
 
 const time = (v: unknown) => (typeof v === 'string' && Number.isFinite(Date.parse(v)) ? v : null)
 const later = (a: string | null, b: string | null) => (!a ? b : !b ? a : Date.parse(a) >= Date.parse(b) ? a : b)
+
+const SHA = /^[a-f0-9]{64}$/
+const MODULE = /^[a-z0-9][a-z0-9_.-]{0,79}$/
+/** One gate's state from the record: waiting until he pressed it, then his answer, when, and the hash it is bound to.
+ *  Nothing else (no words, no path) leaves the record here. */
+export function liveGate(name: GateName, g: unknown): LiveGate {
+  if (!isObj(g) || g.by !== 'Krish' || !SHA.test(String(g.sha256))) return { state: 'waiting', at: null }
+  const at = time(g.at), sha256 = String(g.sha256)
+  if (name === 'style') {
+    if (typeof g.module === 'string' && MODULE.test(g.module)) return { state: 'picked', at, sha256, module: g.module }
+    return { state: 'none_of_these', at, sha256 }
+  }
+  if (name === 'proof') return { state: g.verdict === 'reject' ? 'rejected' : 'approved', at, sha256 }
+  return { state: name === 'storyboard' ? 'signed' : 'approved', at, sha256 }
+}
 
 /** One day's live block from its piece's row. */
 export function liveDay(piece: Body, date: string): LiveDay {
@@ -62,6 +88,8 @@ export function liveDay(piece: Body, date: string): LiveDay {
     posted: MAKING_CHANNELS.filter(c => isObj(m.channels) && m.channels[c]),
     script_hashes: hashes,
     written_at: later(time(piece.updated_at), time(m.updated_at)),
+    gates: Object.fromEntries(GATE_NAMES.map(n => [n, liveGate(n, isObj(m.gates) ? m.gates[n] : undefined)])) as Record<GateName, LiveGate>,
+    ...(Number.isInteger(m.rounds) && Number(m.rounds) >= 0 ? { rounds: Number(m.rounds) } : {}),
   }
 }
 

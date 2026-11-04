@@ -7,7 +7,9 @@ export type Collection = typeof collections[number]
 // Read-only views of his day decisions, which are stored in picks (board_documents takes no other collection without a
 // migration): approvals lists his Approve scripts presses (config/teleprompter.json approval.collection, read by
 // teleprompter_send.py), titles his Titles presses. Each is the picks documents of that kind; nothing writes to a view.
-export const views = { approvals: 'approve_scripts', titles: 'titles' } as const
+// The production gates (GATE_KINDS) are views too, so GET /api/board/<Monday>/storyboard (style, proof, cut) lists his
+// presses on each gate, one per day: storyboard/<day> is the picks document <day>-storyboard.
+export const views = { approvals: 'approve_scripts', titles: 'titles', storyboard: 'sign_storyboard', style: 'pick_style', proof: 'approve_proof', cut: 'approve_cut' } as const
 export type View = keyof typeof views
 export const MAX_HTML = 16 * 1024 * 1024
 export const digest = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex')
@@ -58,8 +60,61 @@ export const OFFDAY_ID = /^off-(mon|tue|wed|thu|fri|sat|sun)-[a-zA-Z0-9][a-zA-Z0
 const RECORDED_DAYS = ['tue', 'thu', 'sat']
 // His decisions on a day's tab, stored in picks beside the day's pick: <day>-scripts (Approve scripts), <day>-titles
 // (Titles), <day>-publish (Approve for publish) and <day>-reject-<asset> (Reject asset).
-export const DECISION_ID = /^(mon|wed|fri)-(scripts|titles|publish|reject-([a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}))$/
-export const DECISION_KIND = { scripts: 'approve_scripts', titles: 'titles', publish: 'approve_publish', reject: 'reject_asset' } as const
+// The production gates on a day's tab (docs/PUBLISH_BOARDS.md, "The production gates on a day's tab"; Krish,
+// 2026-11-04: "Can I select a visual style now that we have different style skills? Do I get shown mocks at the right
+// moment?"): <day>-storyboard (Sign storyboard), <day>-style (Pick a style), <day>-proof (Approve or Reject the moving
+// proof) and <day>-cut (Approve cut). Each is bound to the sha256 of what the tab showed him (GATE_KINDS, gateBody).
+export const DECISION_ID = /^(mon|wed|fri)-(scripts|titles|publish|storyboard|style|proof|cut|reject-([a-zA-Z0-9][a-zA-Z0-9_.-]{0,99}))$/
+export const DECISION_KIND = { scripts: 'approve_scripts', titles: 'titles', publish: 'approve_publish', reject: 'reject_asset',
+  storyboard: 'sign_storyboard', style: 'pick_style', proof: 'approve_proof', cut: 'approve_cut' } as const
+/** Each production gate's press kind, and the key it is written under on the piece's making record (meta.making.gates). */
+export const GATE_KINDS = { sign_storyboard: 'storyboard', pick_style: 'style', approve_proof: 'proof', approve_cut: 'final' } as const
+export type GateKind = keyof typeof GATE_KINDS
+export const STYLE_VERDICTS = ['picked', 'seen', 'not_for_us'] as const
+export const PROOF_VERDICTS = ['approve', 'reject'] as const
+const MODULE_ID = /^[a-z0-9][a-z0-9_.-]{0,79}$/
+const words = (v: unknown) => typeof v === 'string' && v.trim().length > 0 && v.length <= 2000
+/** A press on a production gate: the day's piece, the sha256 of what the tab showed, and what each gate needs.
+ *  - sign_storyboard: approved true, the hash of the storyboard and expectations text shown.
+ *  - pick_style: the hash of the styles.json shown; module (the picked motion style id) or null for "None of these",
+ *    which needs his words (reason); his verdict on every style shown (verdicts), exactly one picked when he picked one.
+ *  - approve_proof: the proof clip's file hash; verdict approve, or reject with his words.
+ *  - approve_cut: approved true, the hash of the cut file shown (or of the cuts map, when both are), and cuts. */
+function gateBody(kind: GateKind, body: Record<string, unknown>): boolean {
+  if (!SHA256.test(String(body.sha256))) return false
+  if (kind === 'sign_storyboard') return body.approved === true
+  if (kind === 'approve_proof') {
+    if (!(PROOF_VERDICTS as readonly unknown[]).includes(body.verdict)) return false
+    if ('cut' in body && !(SCRIPT_CUTS as readonly unknown[]).includes(body.cut)) return false
+    if (body.verdict === 'reject') return words(body.words)
+    return !('words' in body) || body.words === null || words(body.words)
+  }
+  if (kind === 'approve_cut') {
+    if (body.approved !== true) return false
+    if (!('cuts' in body)) return true
+    if (!keyed(body.cuts, SCRIPT_CUTS, x => SHA256.test(String(x)))) return false
+    const cuts = body.cuts as Record<string, string>, shas = Object.values(cuts)
+    // One cut shown: its own file hash. Both: the hash of the cuts map (canonical), so the press binds both files.
+    return shas.length === 1 ? body.sha256 === shas[0] : body.sha256 === digest(canonical(cuts))
+  }
+  // pick_style
+  const list = body.verdicts
+  if (!Array.isArray(list) || list.length < 1 || list.length > 6) return false
+  const seen = new Set<string>()
+  for (const v of list) {
+    if (!object(v) || Object.keys(v).some(k => !['module', 'verdict', 'sha256'].includes(k))) return false
+    if (typeof v.module !== 'string' || !MODULE_ID.test(v.module) || seen.has(v.module)) return false
+    if (!(STYLE_VERDICTS as readonly unknown[]).includes(v.verdict)) return false
+    if ('sha256' in v && !SHA256.test(String(v.sha256))) return false
+    seen.add(v.module)
+  }
+  const picked = list.filter(v => (v as Record<string, unknown>).verdict === 'picked')
+  if (!('module' in body)) return false
+  if (body.module === null) return picked.length === 0 && words(body.reason)
+  return typeof body.module === 'string' && MODULE_ID.test(body.module) && picked.length === 1
+    && (picked[0] as Record<string, unknown>).module === body.module
+    && (!('reason' in body) || body.reason === null || words(body.reason))
+}
 // His retrospective thoughts on a day's post (the Today view, layout A; Krish, 2026-10-29: "yes, go with A and your
 // recommendations and my feedback"; 2026-10-30: "the two feedback buttons need to just be an open text box for my
 // retrospective thoughts and feedback rather than Y/N buttons"): picks/<day>-feel, any day of the week, his words, with
@@ -130,11 +185,12 @@ function keyed(v: unknown, keys: readonly string[], ok: (x: unknown) => boolean)
 function decisionBody(id: string, body: Record<string, unknown>): boolean {
   const m = DECISION_ID.exec(id)
   if (!m || body.day !== m[1] || 'send' in body) return false
-  const kind = m[2].startsWith('reject-') ? DECISION_KIND.reject : DECISION_KIND[m[2] as 'scripts' | 'titles' | 'publish']
+  const kind = m[2].startsWith('reject-') ? DECISION_KIND.reject : DECISION_KIND[m[2] as Exclude<keyof typeof DECISION_KIND, 'reject'>]
   if (body.kind !== kind) return false
   const piece = typeof body.piece_id === 'string' && UUID.test(body.piece_id)
   if (kind === 'titles') return (!('piece_id' in body) || piece) && keyed(body.picks, TITLE_SURFACES, x => oneLine(x, 300))
   if (!piece) return false
+  if (Object.hasOwn(GATE_KINDS, kind)) return gateBody(kind as GateKind, body)
   if (kind === 'approve_publish') return typeof body.approved === 'boolean' && (!('manifest_sha256' in body) || SHA256.test(String(body.manifest_sha256)))
   if (kind === 'reject_asset') {
     return body.asset === m[3] && oneLine(body.label, 300) && typeof body.reason === 'string' && body.reason.trim().length > 0 && body.reason.length <= 4000
