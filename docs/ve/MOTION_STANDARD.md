@@ -121,4 +121,10 @@ frames 600 and 990 of each reel.
   take (`ve styles`). The Critic scores the cut against that approved proof clip as well as the board cards, with the
   same 8/10 bar (`scripts/velib/refgate.py`, card `proof`). The standard above is what the proof is judged by; the
   proof is what the whole cut is judged against.
+- **How the renderer holds a style to this floor (4 Nov 2026).** Each drawable style is a profile in
+  `apps/renderer/src/engine/kit/motion-profiles.json` (entrance 4 to 7 frames, rise 40 to 60 px, overshoot at most 6%,
+  drift above 0, timed moves under 3.5 s, grounds from brand roles); `kit.test.ts` and `clock.test.ts` fail any that
+  breaks it, and FormatMaster clamps a hand-edited profile inside it. Where a style asks for more than the floor allows
+  (dark-keynote's long holds) the floor wins. A cut with no style keeps the house motion it had before, which is
+  older than this standard (entrances 12 frames, a 24 px rise); a style is how a cut meets the entrance numbers.
 

@@ -1062,7 +1062,13 @@ def cmd_styles(args, render_fn=None) -> int:
                                  'record: ingest and compile his take first (never stock footage)')
             label = f'his last {spec["format"]} take ({own.parent.parent.name}), until this piece is recorded'
         points = [p.strip() for p in args.points.split(',') if p.strip()] if args.points else None
-        render_fn = render_fn or (lambda p, out, _trial: render(p, out, args.scale))
+        def render_style(props_path, out, trial):
+            # The trial spec is the style being drawn: its props must carry that style, or the clips would match.
+            drawn = (load_json(props_path).get('motion') or {}).get('style')
+            if drawn != trial['style']['motion']['module']:
+                raise ValueError(f'{props_path} carries motion {drawn}, not {trial["style"]["motion"]["module"]}')
+            render(props_path, out, args.scale)
+        render_fn = render_fn or render_style
         doc = styles.make(spec, cut, directory, load_json(own), render_fn, top=args.top, points=points, take_label=label)
         for option in doc['options']:
             print(f"{option['module']}: {option['name']}  {option['file']}  ({option['why']})")
