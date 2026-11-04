@@ -1341,13 +1341,18 @@ def build_audio(work, edited, voice_gain, intro, end, tl, bed):
         accents=tl.get('accents') or ()
         correction=audio_quality.level_bed(raw,stem,tl,levels,cards,accents,music.ACCENT_LIFT_DB)
         measured=audio_quality.measure(stem)
-        continuity=audio_quality.continuity_report(measured,tl['voice_start_s'],tl['voice_end_s'],list(cards)+list(accents))
+        # The open eases down to the bed by bed_from (config/music-bed.json): the speech-bed windows start there.
+        turns=music.bed_shape.timings(tl['voice_start_s'],tl['voice_end_s'],tl['total_s'])
+        continuity=audio_quality.continuity_report(measured,max(tl['voice_start_s'],turns['bed_from']),tl['voice_end_s'],list(cards)+list(accents))
         (work/'music-continuity.json').write_text(json.dumps(continuity,indent=2))
         if continuity['status']!='pass':
             raise ValueError('Music continuity gate: '+'; '.join(continuity['problems']))
+        # The one bed shape, on the bed stem alone, before the mix: loud open, steady under his voice, louder end.
+        shape=music.bed_shape.require(audio_quality.shape_qc(measured,tl,cards,accents),'make.py bed')
+        (work/'music-shape.json').write_text(json.dumps(shape,indent=2))
         result.update(bed=stem, music={**placed, 'track_id':track['id'], 'sha256':track['sha256'],
                                      'levels':levels, 'file':track['file'], 'ledger':bed['ledger'],
-                                     'local_level_correction':correction,'continuity':continuity})
+                                     'local_level_correction':correction,'continuity':continuity,'shape':shape})
         mix_in += ['-i', str(stem)]
         mix = '[0:a][1:a]amix=inputs=2:duration=first:normalize=0[m]'
     elif bed:
@@ -1365,12 +1370,16 @@ def build_audio(work, edited, voice_gain, intro, end, tl, bed):
                '-map', '[bed]', '-c:a', 'pcm_f32le', str(stem))
         raw.unlink()
         env = music.envelope(track, tl_bed, levels)
-        _, how = music.placement(track, tl, xf=levels['ramp_up_s'])
+        # The one bed shape, on the bed stem alone, before the mix (config/music-bed.json).
+        import audio_quality
+        shape = music.bed_shape.require(audio_quality.shape_qc(audio_quality.measure(stem), tl), 'make.py bed')
+        (work / 'music-shape.json').write_text(json.dumps(shape, indent=2))
+        _, how = music.placement(track, tl, xf=music.bed_shape.shape()['close_rise_s'])
         result.update(bed=stem, music={
             'track_id': track['id'], 'title': track.get('title'), 'artist': track.get('artist'), 'sha256': track['sha256'], 'file': track['file'],
             'ledger': bed['ledger'], 'levels': levels, 'gains_db': env['gains_db'], 'placed_lufs': placed, 'windows': env['windows'],
             'placement': how, 'start_s': float(track.get('intro_cue_s') or 0), 'chosen_for': bed.get('needs'),
-            'chosen_for_from': bed.get('needs_from')})
+            'chosen_for_from': bed.get('needs_from'), 'shape': shape})
         mix_in += ['-i', str(stem)]
         mix = '[0:a][1:a]amix=inputs=2:duration=first:normalize=0[m]'
     target = (bed['levels'] if bed else default_levels())['final_integrated_lufs']
@@ -2681,6 +2690,10 @@ def main():
             fixed.replace(final)
             loudness = {**measure_cut(final, tl, cut_audio), 'level_corrected_db': round(off, 2)}
         warnings += loudness_warnings(loudness, levels)
+        # The bed-shape receipt for these exact bytes: every filing route refuses a cut without it (config/music-bed.json).
+        if cut_audio.get('music') and cut_audio['music'].get('shape'):
+            music.bed_shape.write_receipt(final, 'quick-edit', cut_audio['music']['shape'], machine='scripts/quick-edit/make.py',
+                                          extra={'track_id': cut_audio['music'].get('track_id')})
         if cfg.get('quality_required'):
             final_identity = quality.transcript_identity(final, 1, transcript_model)
             heard = transcribe(final, out/f'{final.stem}.heard.json', transcript_model, provenance=final_identity)

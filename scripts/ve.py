@@ -303,11 +303,31 @@ def cmd_qc(args) -> int:
     report = run_qc(args.cut, args.format, **inputs)
     out = Path(args.out) if args.out else Path(args.cut).with_suffix('.qc.json')
     write_json(out, report)
+    _bed_receipt(args.cut, inputs.get('dialogue_master'), report)
     for name, check in report['checks'].items():
         state = check.get('status') or ('pass' if check['pass'] else 'FAIL')
         print(f"{state:8} {name:24} {json.dumps(check['value'])[:80]}  target {check['target']}")
     print(f"ve qc: {'measured checks pass' if report['measured_pass'] else 'FAILS'}; {'complete' if report['complete'] else 'incomplete (not_run checks)'} -> {out}")
     return 0 if report['measured_pass'] else 1
+
+
+def _bed_receipt(cut: str, stem: str | None, report: dict) -> None:
+    """<cut>.bed-shape.json for these bytes when the bed the premix made passed the one shape and ve qc's bed rows
+    passed on this render (config/music-bed.json); a stale receipt is removed, so filing refuses the cut."""
+    import bed_shape
+    from velib import qc_audio
+    receipt = bed_shape.receipt_path(cut)
+    row = report.get('checks', {}).get('audio.bed', {})
+    sidecar = qc_audio.sidecar_for(stem) if stem else None
+    shape = None
+    if sidecar is not None and sidecar.is_file():
+        shape = json.loads(sidecar.read_text(encoding='utf-8')).get('bed', {}).get('shape')
+    if row.get('pass') is True and isinstance(shape, dict) and shape.get('pass') is True:
+        bed_shape.write_receipt(cut, 've', shape, machine='scripts/ve.py qc', extra={'premix': sidecar.name})
+        print(f've qc: bed-shape receipt -> {receipt}')
+    elif receipt.is_file():
+        receipt.unlink()
+        print(f've qc: the bed misses the one shape; {receipt.name} removed, so the cut cannot be filed')
 
 
 def cmd_comp(args) -> int:
