@@ -1109,6 +1109,15 @@ _ladder: prompts and parsing for the why-ladder. Pure module: builds strings
 - `function buildPublisherBeatPrompt(triples: { domain: string; headline: string; claim: string }[]): { system: string; us…`
 - `function buildAssertionPrompt(body: string, evidence: { ref: string; headline: string; url: string }[]): { system: stri…`
 
+### `apps/control-plane/api/_learningDecision.ts`
+
+- `const LEARNING_DECISIONS`
+- `const MAX_DECISION_NOTE`
+- `type LearningDecision`
+- `type DecisionRefusal = { status: number; code: string }`
+- `function parseLearningDecision(raw: unknown): LearningDecision | DecisionRefusal`
+- `async function decideLearningProposal(db: SupabaseClient, d: LearningDecision, now = new Date().toISOString()): Promise…`
+
 ### `apps/control-plane/api/_lenses.ts`
 
 The six lenses, and the two channels.
@@ -2050,6 +2059,17 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
+
+### `apps/control-plane/api/board/_standards.ts`
+
+- `const STANDARDS_VENTURE`
+- `type StandardsQuote = { said: string; on?: string | null }`
+- `type StandardsMember`
+- `type StandardsGroup`
+- `class StandardsError`
+- `async function readStandards(db: SupabaseClient): Promise<StandardsGroup[]>`
+- `async function decideStandard(db: SupabaseClient, raw: unknown)`
+- `function renderStandards(groups: StandardsGroup[])`
 
 ### `apps/control-plane/api/board/_yes.ts`
 
