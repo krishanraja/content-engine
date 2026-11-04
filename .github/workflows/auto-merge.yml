@@ -24,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Merge the pull request whose CI is green
+        id: merge
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
@@ -39,5 +40,39 @@ jobs:
           if [ "$waiting" != "0" ]; then echo "$waiting other CI run(s) on $SHA are not green yet; the last green one merges."; exit 0; fi
           gh pr merge "$pr" -R "$REPO" --merge
           echo "Merged #$pr ($SHA) on green CI."
+          echo "merged=true" >> "$GITHUB_OUTPUT"
           # A merge made with GitHub's own token starts no push workflow on main; start the docs steward by hand.
           gh workflow run docs-steward.yml -R "$REPO" --ref main || echo "::warning::docs-steward was not started; its nightly run picks the merge up."
+      # The same token starts no push workflow, so harness-repository-context.yml's fold job never sees this merge and
+      # closeout notes pile up unfolded (twelve by 4 Nov). Fold them here with the harness's own script, pinned by the
+      # sha256 that workflow checks, so NOW.md is current the moment the work lands (Ruling, Krish, 2026-11-04: docs are
+      # current before work merges).
+      - if: steps.merge.outputs.merged == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: main
+      - if: steps.merge.outputs.merged == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: "22"
+          package-manager-cache: false
+      - name: Fold closeout notes into NOW.md
+        if: steps.merge.outputs.merged == 'true'
+        run: |
+          set -uo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          pin=$(grep -o -m1 '[0-9a-f]\{64\}  \.claude/hooks/harness-closeout\.mjs' .github/workflows/harness-repository-context.yml)
+          for attempt in 1 2 3; do
+            git fetch --quiet origin main && git reset --quiet --hard origin/main || exit 1
+            if ! ls now-notes/*.md >/dev/null 2>&1; then echo "No closeout notes to fold."; exit 0; fi
+            echo "$pin" | sha256sum --check --status || { echo "::error::.claude/hooks/harness-closeout.mjs is not the harness copy"; exit 1; }
+            status=0; node .claude/hooks/harness-closeout.mjs --fold || status=$?
+            if [ -z "$(git status --porcelain -- NOW.md now-notes)" ]; then exit "$status"; fi
+            git add -A -- NOW.md now-notes
+            git commit --quiet -m "docs(closeout): fold closeout notes into NOW.md" -m "Folded by auto-merge after the merge, with .claude/hooks/harness-closeout.mjs --fold from krishanraja/ai-harness."
+            if git push --quiet origin HEAD:main; then exit "$status"; fi
+            sleep $((attempt * 5))
+          done
+          echo "::error::Main kept moving; the notes stay in now-notes/ for the next merge or the nightly steward."
+          exit 1
