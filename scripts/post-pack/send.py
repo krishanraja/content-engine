@@ -279,6 +279,10 @@ def send(planned, engine_api, out=print, lib=library.MAKEYOURMINDUP):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'quick-edit'))
     import quality
     planned = list(planned)
+    # The bed-shape receipt: no video reaches a post's folder unless ve or quick-edit made its bed (config/music-bed.json).
+    refused = [line for target, path, why in planned for line in library.video_refusal(path, target)]
+    if refused:
+        raise SendError('Video delivery blocked: ' + '; '.join(refused))
     for target, path, why in planned:
         if quality.is_delivery_video(target):
             problems = quality.delivery_problems(path, str(path)+'.validation.json', target)

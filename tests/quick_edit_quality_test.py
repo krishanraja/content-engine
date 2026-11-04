@@ -202,6 +202,9 @@ class QualityTests(unittest.TestCase):
                     **{k:'pass' for k in ('shake','warping','borders','framing')}}}
             receipt.write_text(json.dumps(report))
             binding_missing='independent media quality binding missing; create a working candidate and submit it for review'
+            # No bed-shape receipt from ve or quick-edit: never delivered (config/music-bed.json, Krish 2026-11-04).
+            self.assertIn('no bed-shape receipt',quality.delivery_problems(video,receipt,'target')[0])
+            music.bed_shape.write_receipt(video,'quick-edit',{'pass':True,'problems':[]},machine='test')
             self.assertEqual(quality.delivery_problems(video,receipt,'target'),['visual clarity gate is not passed',binding_missing])
             # Each gate remains independently necessary; these scoped mocks do not
             # create a signed receipt or change production verification behavior.

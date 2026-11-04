@@ -465,7 +465,7 @@ def review_sheet(src, out):
 
 
 # The longest name filed beside a cut (stage_cut): its media-quality binding, 3 characters longer than its receipt.
-BESIDE = ('.mp4', '.jpg', '.mp4.validation.json', '.mp4.media-quality.json')
+BESIDE = ('.mp4', '.jpg', '.mp4.validation.json', '.mp4.media-quality.json', '.mp4.bed-shape.json')
 
 
 def delivery_names(folder, subject):
@@ -495,6 +495,11 @@ def stage_cut(src, staged, target):
     binding = Path(str(src) + '.media-quality.json')
     if binding.is_file():
         Path(str(staged) + '.media-quality.json').write_bytes(binding.read_bytes())
+    # The bed-shape receipt make.py wrote for these bytes travels with them (config/music-bed.json); without it
+    # every filing route refuses the cut.
+    bed = Path(str(src) + '.bed-shape.json')
+    if bed.is_file():
+        Path(str(staged) + '.bed-shape.json').write_bytes(bed.read_bytes())
 
 
 def held_for_delivery(staged_cuts):

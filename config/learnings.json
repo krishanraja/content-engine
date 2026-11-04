@@ -739,18 +739,33 @@
       "on": "2026-10-19",
       "krish": "on the deeper cut, the audio needs to be able to be heard the entire time, but just really low unless its intro, outro or or chapter card",
       "why": "Long stretches of bare voice felt empty; music should hold the whole piece together without competing with him.",
-      "means": "Deep cuts can use music_mode episode_bed: continuous low music under speech, lifts at actual chapter-card windows, 0.5-second rise, 0.8-second fall and two-second track crossfades. Krish approved the audition at -31 LUFS under speech and -22 LUFS lifts. Measured music continuity and loudness are delivery gates.",
+      "means": "Every cut, long or short, carries the one bed shape (config/music-bed.json, scripts/bed_shape.py, read by quick-edit and ve): open at intro_lufs for 1.5 s, ease down over 1.5 s to bed_lufs (-31 LUFS, about 17 LU under his -14 LUFS voice) and hold it under his voice with nothing keyed to the voice, rise over 1 s from his last word to outro_lufs, fade over the last second. Long cuts also lift to chapter_lufs (-22) at chapter cards (0.5 s rise, 0.8 s fall) with two-second track crossfades. The bed stem is checked against the shape before the mix, and nothing is filed to 3 Posts without the bed-shape receipt (Krish, 2026-11-04, F40-bed-pumped-with-his-voice).",
       "status": "encoded",
       "encoded": [
         {
+          "file": "config/music-bed.json",
+          "contains": "\"open_hold_s\": 1.5",
+          "how": "The one bed shape's times and its QC, read by both engines."
+        },
+        {
+          "file": "scripts/bed_shape.py",
+          "contains": "def target_points(",
+          "how": "The bed's target level over the cut, with chapter lifts, for quick-edit's envelope and episode beds and ve's episode bed."
+        },
+        {
           "file": "scripts/quick-edit/music.py",
           "contains": "def continuous_episode_bed",
-          "how": "Builds continuous speech bed with chapter lifts and track crossfades."
+          "how": "Builds continuous speech bed with chapter lifts and track crossfades, on the one shape."
         },
         {
           "file": "scripts/quick-edit/make.py",
-          "contains": "if loud.get('music_mode')=='episode_bed':",
-          "how": "Measures and checks the speech bed before receipt approval."
+          "contains": "music.bed_shape.require(",
+          "how": "Checks the bed stem against the one shape before the mix and writes the bed-shape receipt for the finished cut."
+        },
+        {
+          "file": "scripts/velib/audio.py",
+          "contains": "bed_shape.require(shape, 've premix')",
+          "how": "ve's premix checks its bed stem against the one shape and stops when it misses."
         }
       ]
     },

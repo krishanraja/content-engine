@@ -3,8 +3,12 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 import wave
 from pathlib import Path
+
+if str(Path(__file__).resolve().parents[1]) not in sys.path:
+    sys.path.insert(1,str(Path(__file__).resolve().parents[1]))
 
 
 def measure(path):
@@ -28,29 +32,23 @@ def measure(path):
 
 
 def target_points(timeline,levels,chapters,accents=(),lift_db=0.):
-    """The bed's level over the cut: up for the open and the close, lifted to
-    the chapter level at each card, and lifted `lift_db` over the bed in each
-    accent window (a spoken chapter turn with no card), easing in over a
-    second and out over one and a half."""
-    total=timeline['total_s'];vs=timeline['voice_start_s'];ve=timeline['voice_end_s']
-    baseline=levels['bed_lufs'];cards=list(chapters);lifts=[(a,b) for a,b in accents if b-a>2.5] if lift_db else []
-    times=sorted(set([0.,total,max(0,vs-.5),vs,ve,min(total,ve+.8)] +
-                     [max(0,min(total,t)) for a,b in cards for t in (a-.5,a,b,b+.8)] +
-                     [max(0,min(total,t)) for a,b in lifts for t in (a,a+1.,b-1.5,b)]))
-    def target(t):
-        value=baseline
-        if t<vs:
-            fade=min(.5,vs)
-            value=levels['intro_lufs']+(baseline-levels['intro_lufs'])*max(0,(t-vs+fade)/fade)
-        if t>=ve:value=baseline+(levels['outro_lufs']-baseline)*min(1,(t-ve)/.8)
-        for a,b in cards:
-            if a-.5<=t<=b+.8:
-                value=max(value,baseline+(levels.get('chapter_lufs',-22)-baseline)*max(0,min(1,(t-a+.5)/.5,(b+.8-t)/.8)))
-        for a,b in lifts:
-            if a<=t<=b:
-                value=max(value,baseline+lift_db*max(0,min(1,(t-a)/1.,(b-t)/1.5)))
-        return value
-    return [(t,target(t)) for t in times]
+    """The bed's level over the cut: the one shape (config/music-bed.json,
+    scripts/bed_shape.py), loud for the open, eased down to the bed under his
+    voice, up from his last word, lifted to the chapter level at each card,
+    and lifted `lift_db` over the bed in each accent window (a spoken chapter
+    turn with no card). Never keyed by the voice."""
+    import bed_shape
+    return bed_shape.target_points(levels,timeline['voice_start_s'],timeline['voice_end_s'],timeline['total_s'],
+                                   list(chapters),list(accents),lift_db)
+
+
+def shape_qc(measurements,timeline,chapters=(),accents=()):
+    """The bed-shape QC on the bed stem alone (bed_shape.qc), from measure()'s
+    EBU R128 points."""
+    import bed_shape
+    meter=[(p['t'],p.get('M',-120.),p.get('S',-120.)) for p in measurements['points']]
+    return bed_shape.qc(meter,timeline['voice_start_s'],timeline['voice_end_s'],timeline['total_s'],
+                        list(chapters),list(accents))
 
 
 def level_bed(source,destination,timeline,levels,chapters,accents=(),lift_db=0.):

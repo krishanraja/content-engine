@@ -1,0 +1,40 @@
+{
+  "schema": "music-bed/1",
+  "_about": "The one shape of the music bed under every video, read by both engines (scripts/bed_shape.py: quick-edit's music.py and audio_quality.py, ve's velib/audio.py). Krish, 2026-11-04: \"It should just start loudly and then get a little bit softer, so my voice is the main character, but with atmosphere in the background, and then get louder at the end. It's pretty simple.\" The levels are not here: they are the approved ledger levels in config/music-library.json (intro_lufs, bed_lufs, outro_lufs, chapter_lufs), unchanged. This file holds only the times of the shape, the bed-shape QC and the filters nothing may run on music.",
+  "shape": {
+    "open_hold_s": 1.5,
+    "open_ease_s": 1.5,
+    "close_rise_s": 1.0,
+    "fade_in_s": 0.05,
+    "fade_out_s": 1.0,
+    "chapter_rise_s": 0.5,
+    "chapter_fall_s": 0.8,
+    "_about": "Open at intro_lufs for open_hold_s (or until open_ease_s before his first word, whichever is later, so a sting keeps its open), ease down over open_ease_s to bed_lufs, hold bed_lufs with no movement keyed to his voice, rise over close_rise_s from his last word to outro_lufs, fade over the last fade_out_s. A long cut lifts to chapter_lufs at each chapter card (Krish, 2026-10-16 and 2026-10-28), chapter_rise_s before it and chapter_fall_s after it."
+  },
+  "qc": {
+    "meter": "EBU R128 on the bed stem alone, before the mix: momentary (400 ms) and short-term (3 s) at 100 ms steps",
+    "steady_tolerance_lu": 2.0,
+    "steady_percentiles": [10, 90],
+    "max_direction_changes": 2,
+    "direction_smooth_s": 2.0,
+    "direction_swing_lu": 4.0,
+    "open_window_s": [0.4, 1.0],
+    "open_over_bed_lu": 6.0,
+    "end_over_bed_lu": 6.0,
+    "lift_margin_s": 3.0,
+    "_about": "Under his voice the bed's short-term loudness stays within steady_tolerance_lu of its own median (p10 to p90 of the 3 s meter, so a passage change in the track itself, which the music-keyed level ride leaves at about 1.8 LU on a hard 10 dB step, is not a swing; ve held 4 LU p95-p5 before). Over the whole cut, outside the chapter lifts, the bed changes direction (a move of direction_swing_lu or more on the momentary meter smoothed over direction_smooth_s) at most max_direction_changes times: down after the open, up at the close, down in the final fade. In the first second it is at least open_over_bed_lu over the bed, and over the ending at least end_over_bed_lu over it. Any miss stops the engine."
+  },
+  "forbidden_filters": ["sidechaincompress", "sidechaingate", "compand", "mcompand", "dynaudnorm", "agate", "speechnorm"],
+  "forbidden_scope": {
+    "roots": ["scripts", "apps", "packages", "docs/plans"],
+    "code_suffixes": [".py", ".ts", ".tsx", ".js", ".mjs", ".cjs", ".sh", ".ps1"],
+    "retired_marker": "RETIRED_COMPOSITOR",
+    "_about": "No code here runs a voice-keyed or level-chasing filter on music (scripts/check_music_bed.py, npm run check:music-bed). A per-day compositor under docs/plans that already holds one is retired history: it must start with the retired marker, which stops it before it runs anything."
+  },
+  "receipt": {
+    "suffix": ".bed-shape.json",
+    "schema": "bed-shape-receipt/1",
+    "engines": ["ve", "quick-edit"],
+    "_about": "Each engine writes <video>.bed-shape.json beside the finished video it made, bound to that file's sha256 and carrying the bed-shape QC. Every filing route (ve file, send.py, produce_day.py's send, quality.delivery_problems) refuses a video for 3 Posts without a passing receipt for those exact bytes."
+  }
+}
