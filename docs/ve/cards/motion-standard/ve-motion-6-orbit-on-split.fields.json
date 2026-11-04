@@ -1,0 +1,15 @@
+{
+ "card_id": "ve-motion-6-orbit-on-split",
+ "title": "logo_orbit draws full width on a SPLIT beat, logos at least 120 px",
+ "goal": [
+  "On Thursday 5 Nov's SPLIT proof beat the orbit took its radius from min(width, height) of the 960x400 slot, so the five marks piled on each other in a ring 200 px across (Critic: \"a small, off-centre, clipped dashed ring with tiny logos\"). The jackroberts reel shows logos with animated rings large across the graphic half.\n\n1. On a short wide box (width > 1.6 x height) lay the marks on an ellipse: horizontal radius 42% of the box width, vertical radius 38% of the height, centred; each mark tile at least 120 px and never overlapping another (minimum centre spacing 1.15 x tile).\n2. The rings stay visible and keep turning (no restarting loop); highlight lifts the chosen mark 15% and dims the others to no less than 0.7 opacity (today 0.4 makes xAI disappear).\n3. Nothing draws outside the box (no clip at the left edge).\n\nTests: for a 960x400 box with 5 logos every pair of tiles is apart and every tile is inside the box; for a square box the layout is unchanged; dimmed opacity >= 0.7."
+ ],
+ "write_allow": "[apps/renderer/src/engine/devices/logo_orbit/**]",
+ "read": "apps/renderer/src/engine/**, docs/ve/MOTION_STANDARD.md",
+ "path": "docs/ve/cards/motion-standard/ve-motion-6-orbit-on-split.md",
+ "kind": "code",
+ "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. The standard is docs/ve/MOTION_STANDARD.md; every number below is measured there from Krish's inspiration-board reels.",
+ "acceptance": "npx vitest run apps/renderer/src/engine/devices/logo_orbit\nnode node_modules/typescript/bin/tsc --noEmit --pretty false",
+ "max_minutes": 50,
+ "max_calls": 50
+}

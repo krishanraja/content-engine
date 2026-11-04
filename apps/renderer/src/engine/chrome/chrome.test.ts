@@ -121,3 +121,25 @@ describe('word caption build', () => {
     expect(renderToStaticMarkup(createElement(HeldTitle, { props: word, frame: 12 }))).toContain('Give your AI two rules')
   })
 })
+
+describe('word caption layout positions', () => {
+  it.each(['9:16', '16:9'] as const)('places words by the active beat in %s', async (aspect) => {
+    const { WordCaption, WORD_CAPTION } = await import('./WordCaption')
+    const { FWP_SPLIT_SEAM_Y } = await import('../mocks/face-with-proof')
+    const g = aspect === '9:16' ? WORD_CAPTION.tall : WORD_CAPTION.wide
+    const beats: EngineRenderProps['beats'] = [
+      { id: 'split', role: 'anchor', layout: 'SPLIT', fromFrame: 0, toFrame: 15,
+        uses: [], transitionOut: 'cut', sectionBeat: false },
+      { id: 'face', role: 'anchor', layout: 'F1', fromFrame: 15, toFrame: 25,
+        uses: [], transitionOut: 'cut', sectionBeat: false },
+      { id: 'graphic', role: 'anchor', layout: 'STAGE', plate: { source: 'none' },
+        fromFrame: 25, toFrame: 40, uses: [], transitionOut: 'cut', sectionBeat: false },
+    ]
+    const input = { ...props, aspect, beats }
+    for (const [frame, center] of [[14, FWP_SPLIT_SEAM_Y], [15, g.centerY], [30, g.graphicsCenterY]] as const) {
+      const html = renderToStaticMarkup(createElement(WordCaption, { props: input, frame }))
+      expect(html).toContain('top:' + (center - g.size * 0.6) + 'px')
+    }
+    expect(g.graphicsCenterY).toBe((aspect === '9:16' ? 1920 : 1080) * 0.66)
+  })
+})

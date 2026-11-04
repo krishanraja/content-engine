@@ -1,5 +1,7 @@
 # TWO PASSPORTS · motion notes (mind.the.gap module, 1080x1920, 30 fps, about 20 s)
 
+> Motion for every cut in this format is held to [the signed motion standard](../../MOTION_STANDARD.md); each piece's own style comes from the bank (`config/style-references.json`, `motion` layer, `style.motion` in the spec) and works inside the frame these notes set.
+
 ## Governing idea
 
 One table, one camera, two passports. Every AI holds two: where its company was born and where it lives. The module treats them as two real paper passports dealt onto the same ink table. The camera dives into passport 1 (BORN), turns to passport 2 (LIVES), then lets both pages fold down into two paper tabs while the mint stitching and ribbon become mind.the.gap's own device: two threads on a time axis that bend and meet at the test and end in a dated call. Stamps are the only verdicts and always slap; the mint scribble is the human hand pointing at the one thing that matters in that beat; everything else slides, wipes or draws on. The ribbon that ties the two passports in frame 1 is the same mint thread that becomes the gap in frame 4, so the viewer has already seen the metaphor before it is named.

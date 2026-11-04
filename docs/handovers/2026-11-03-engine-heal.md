@@ -14,6 +14,6 @@ Codex cards in docs/ve/cards/motion-standard/). Do not make the Thursday video.
 Seen in a render of Thursday's props (upright Fraunces proof, 3 Nov): on the SPLIT beat at frame 313 the card's top-left
 runs under the mark tile; card ve-motion-2-mark-clearance covers it.
 
-Waiting on Krish: sign docs/ve/MOTION_STANDARD.md and the 4 Growth rule in docs/DRIVE.md; config/studio.json's
+Waiting on Krish: sign docs/ve/MOTION_STANDARD.md (signed since); the 4 Growth rule is superseded by 3 Posts as the one home (Ruling, Krish, 2026-11-03, #366); config/studio.json's
 Instagram zones (bound into the signed media-standard hash) to the measured ones; spend for the four Codex cards; the
 Sat 7 Nov good-news carousel is still only in 3 Posts.

@@ -1,15 +1,15 @@
 {
-  "card_id": "ve-motion-2-mark-clearance",
-  "title": "No card overlaps the mark tile: a layout rule and a QC check",
-  "goal": [
-    "On the 3 Nov cut cards ran into the mark tile. The tile's box is boxFor('mark', aspect) (apps/renderer/src/engine/geometry.ts, HOUSE.mark.size 136 plus its 10 px shadow).\n\n1. In layouts/index.ts, every slot box for every layout and aspect stays clear of the mark box plus its shadow plus 24 px; export a function markClearance(box, aspect) returning the overlap in px (0 when clear).\n2. A unit test walks every layout's slots in both aspects and every FWP_PLACEMENTS entry and asserts markClearance is 0.\n3. In scripts/velib/qc_composition.py add a row `mark_clearance` per beat: the beat's slot boxes (qc.inputs_from_props already resolves them) against the mark box read from the renderer geometry file (parse, never copy); fail on any overlap.\n\nTests: the layout walk; a synthetic beat whose slot overlaps the tile fails `mark_clearance`; the existing composition tests pass."
-  ],
-  "write_allow": "[apps/renderer/src/engine/layouts/index.ts, apps/renderer/src/engine/layouts/mark-clearance.test.ts, scripts/velib/qc_composition.py, tests/ve_mark_clearance_test.py]",
-  "read": "apps/renderer/src/engine/**, apps/renderer/src/house/geometry.ts, scripts/velib/qc.py, docs/ve/MOTION_STANDARD.md",
-  "path": "docs/ve/cards/motion-standard/ve-motion-2-mark-clearance.md",
-  "kind": "code",
-  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. The standard is docs/ve/MOTION_STANDARD.md; every number below is measured there from Krish's inspiration-board reels.",
-  "acceptance": "npx vitest run apps/renderer/src/engine\nnode node_modules/typescript/bin/tsc --noEmit --pretty false\npython3 tests/ve_mark_clearance_test.py\npython3 tests/ve_composition_test.py",
-  "max_minutes": 50,
-  "max_calls": 50
+ "card_id": "ve-motion-2-mark-clearance",
+ "title": "No card overlaps the mark tile: a layout rule and a QC check",
+ "goal": [
+  "On the 3 Nov cut cards ran into the mark tile. The tile's box is boxFor('mark', aspect) (apps/renderer/src/engine/geometry.ts, HOUSE.mark.size 136 plus its 10 px shadow).\n\n1. In layouts/index.ts, every slot box for every layout and aspect stays clear of the mark box plus its shadow plus 24 px; export a function markClearance(box, aspect) returning the overlap in px (0 when clear).\n2. A unit test walks every layout's slots in both aspects and every FWP_PLACEMENTS entry and asserts markClearance is 0.\n3. In scripts/velib/qc_composition.py add a row `mark_clearance` per beat: the beat's slot boxes (qc.inputs_from_props already resolves them) against the mark box read from the renderer geometry file (parse, never copy); fail on any overlap.\n\nTests: the layout walk; a synthetic beat whose slot overlaps the tile fails `mark_clearance`; the existing composition tests pass.\n\nSecond attempt, 4 Nov 2026: the first build (unmerged branch ve-card/ve-motion-2-mark-clearance) moved every layout down. Do not move the SPLIT seam (FWP_SPLIT_SEAM_Y), the top of any slot or any frozen face-with-proof key frame. Clear the tile only by insetting the left edge of the slots or placements that actually overlap it (row band y < 240), and leave every other box byte-identical; the layout walk test also asserts that no slot's top changed."
+ ],
+ "write_allow": "[apps/renderer/src/engine/layouts/index.ts, apps/renderer/src/engine/layouts/mark-clearance.test.ts, scripts/velib/qc_composition.py, tests/ve_mark_clearance_test.py]",
+ "read": "apps/renderer/src/engine/**, apps/renderer/src/house/geometry.ts, scripts/velib/qc.py, docs/ve/MOTION_STANDARD.md",
+ "path": "docs/ve/cards/motion-standard/ve-motion-2-mark-clearance.md",
+ "kind": "code",
+ "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. The standard is docs/ve/MOTION_STANDARD.md; every number below is measured there from Krish's inspiration-board reels.",
+ "acceptance": "npx vitest run apps/renderer/src/engine\nnode node_modules/typescript/bin/tsc --noEmit --pretty false\npython3 tests/ve_mark_clearance_test.py",
+ "max_minutes": 50,
+ "max_calls": 50
 }

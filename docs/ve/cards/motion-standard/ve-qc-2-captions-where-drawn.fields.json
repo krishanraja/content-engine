@@ -1,0 +1,15 @@
+{
+ "card_id": "ve-qc-2-captions-where-drawn",
+ "title": "QC reads each caption where it is drawn, and looks for his face only where his face is",
+ "goal": [
+  "On Thursday 5 Nov's QC (docs/plans/2026-11-05-thursday-no-spending/ve/qc.short.json) captions.render failed 106 pages and captions.ocr was incomplete: the check reads one region (72, 1180, 900, 217) while WordCaption draws on the seam on SPLIT beats (#368) and at 66% height on graphics-only beats. captions.off_face also flagged the cursor_buddy's eyes on STAGE beats with plate none, where no take is shown.\n\n1. captions.render and captions.ocr take each page's own box: compute it with qc_faces.caption_box (layout and plate of the beat the page starts in, read from props), padded 12 px, and OCR that box. Never copy the renderer numbers; keep reading them from the renderer files as qc_faces does.\n2. captions.off_face runs only on pages whose beat shows the take (plate source take); other pages count as checked, not hits.\n\nTests: a synthetic props with a SPLIT, a face and a graphics-only beat gives three different OCR boxes; a page on a plate-none beat is never an off_face hit; tests/ve_qc_faces_test.py and tests/ve_qc_test.py still pass."
+ ],
+ "write_allow": "[scripts/velib/qc.py, scripts/velib/qc_faces.py, scripts/cutgates/captions.py, tests/ve_qc_faces_test.py, tests/ve_qc_captions_where_test.py]",
+ "read": "scripts/velib/**, scripts/cutgates/**, apps/renderer/src/engine/chrome/WordCaption.tsx, apps/renderer/src/engine/mocks/face-with-proof.tsx, tests/ve_qc_test.py",
+ "path": "docs/ve/cards/motion-standard/ve-qc-2-captions-where-drawn.md",
+ "kind": "code",
+ "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. The standard is docs/ve/MOTION_STANDARD.md; every number below is measured there from Krish's inspiration-board reels.",
+ "acceptance": "python3 tests/ve_qc_faces_test.py\npython3 tests/ve_qc_captions_where_test.py\npython3 tests/ve_qc_test.py",
+ "max_minutes": 50,
+ "max_calls": 50
+}

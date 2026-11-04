@@ -146,12 +146,17 @@ export const VeCallSchema = z.object({
 // A card on Krish's inspiration board that this piece is held to (Krish, 2026-11-03: "I even gave literal inspiration in
 // the inspiration board on the quality I expect, and also the subtitle builds we could have"). `card` is the board's
 // own name for the clip (its file stem, instagram_DePHDr_jRed); `drive_id` is where its video lives, read at packet
-// time and never copied into the repository; `takeaway` says in words what the cut must match.
+// time and never copied into the repository; `takeaway` says in words what the cut must match. `id` is the card's
+// inspiration_items.id, what the board, the making record's clip_uses and card_uses all key on; ve lint requires it
+// from 6 Nov 2026 and `ve refs` checks it against GET /api/inspiration/cards. `offered: true` marks a card `ve init`
+// pre-filled from GET /api/inspiration/candidates: the session confirms it by deleting the flag, or replaces the card.
 export const VeReferenceSchema = z.object({
+  id: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, 'the Inspiration card id (inspiration_items.id, a uuid)').optional(),
   card: z.string().regex(/^[a-z]+_[A-Za-z0-9_-]{4,}$/, 'the board card name, the clip file stem (instagram_DePHDr_jRed)'),
   for: z.array(z.enum(['look', 'motion', 'captions'])).min(1),
   drive_id: z.string().regex(/^[A-Za-z0-9_-]{20,}$/, 'the Drive file id of the reference video'),
   takeaway: z.string().min(12),
+  offered: z.boolean().optional(),
 }).strict()
 
 export const ProductionSpecV2Schema = z.object({
@@ -185,7 +190,11 @@ export const ProductionSpecV2Schema = z.object({
     credits: z.object({ higgsfield: z.number().nonnegative().default(0), runway: z.number().nonnegative().default(0) }).strict().default({ higgsfield: 0, runway: 0 }),
   }).strict().default({ tokens_cap: 12_600_000, credits: { higgsfield: 0, runway: 0 } }),
   signed: z.object({ by: z.literal('Krish'), said: z.string().min(2), on: DateSchema, script_sha256: Sha256V1Schema }).strict().optional(),
-  style: z.record(z.string(), z.unknown()).optional(),
+  // style.motion is one module from the motion layer of config/style-references.json and the point it lands; ve lint
+  // (motion.required) checks the module against the bank and requires it from creative_direction.MOTION_FROM.
+  style: z.object({
+    motion: z.object({ module: z.string().min(1), reason: z.string().min(1) }).strict().optional(),
+  }).catchall(z.unknown()).optional(),
   max_face_share: z.number().min(0).max(1).optional(),
 }).strict().superRefine((spec, c) => {
   if (spec.brand.series === 'mind.the.gap' && !spec.call) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })

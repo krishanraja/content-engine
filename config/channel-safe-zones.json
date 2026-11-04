@@ -1,6 +1,6 @@
 {
   "schema": "channel-safe-zones/1",
-  "_about": "Where each channel draws its own buttons and text over a vertical video, on the 1080x1920 canvas. Nothing that must be read (a word, a headline, a number, a logo, the point of a graphic) may sit in a zone of any channel the cut is filed for (scripts/channel_safe.py). Krish, 2026-11-03, on Monday's Instagram post: \"It looks cramped. It looks like you almost didn't design this thoughtfully for the format or the channel.\" This table is never looser than config/studio.json's platform safe_zones (tests/channel_safe_test.py); studio.json is bound into the signed media standard's hash, so bringing its Instagram numbers up to these measurements waits on Krish.",
+  "_about": "Where each channel draws its own buttons and text over a vertical video, on the 1080x1920 canvas. Nothing that must be read (a word, a headline, a number, a logo, the point of a graphic) may sit in a zone of any channel the cut is filed for (scripts/channel_safe.py). Krish, 2026-11-03, on Monday's Instagram post: \"It looks cramped. It looks like you almost didn't design this thoughtfully for the format or the channel.\" This table is never looser than config/studio.json's platform safe_zones (tests/channel_safe_test.py); studio.json carries these Instagram numbers since 3 Nov 2026 (Krish: \"I approve updating the Instagram button zones\").",
   "canvas": [1080, 1920],
   "channels": {
     "instagram_reels": {

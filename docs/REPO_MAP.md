@@ -123,7 +123,10 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/discover-lens-radar`
 - `/api/feed/ingest`
 - `/api/idea-queue`
+- `/api/inspiration/candidates`
+- `/api/inspiration/cards`
 - `/api/inspiration/drive-scan`
+- `/api/inspiration/uses`
 - `/api/investigations/[run_id]/draft-check`
 - `/api/investigations/[run_id]/trace`
 - `/api/investigations/anchor`
@@ -1978,6 +1981,15 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function boardPolicy(storeUrl?: string)`
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
 
+### `apps/control-plane/api/board/_live.ts`
+
+- `interface LiveStep`
+- `interface LiveCut`
+- `interface LiveDay`
+- `interface WeekLive`
+- `function liveDay(piece: Body, date: string): LiveDay`
+- `async function weekLive(db: SupabaseClient, week: string, builtAt: string | null): Promise<WeekLive>`
+
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
 A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, locking the off-day mock: Improve
@@ -2006,6 +2018,7 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `function dayDate(week: string, day: PostedDay): string`
 - `async function recordPosted(db: SupabaseClient, week: string, raw: unknown, now: string): Promise<PostedResult>`
 - `interface PieceDay`
+- `function piecesByDay(week: string, raw: Body[]): Array<{ day: PostedDay; date: string; piece: Body; series: boolean }>`
 - `async function readPieces(db: SupabaseClient, week: string): Promise<{ status: number; body: Body }>`
 
 ### `apps/control-plane/api/board/_presses.ts`
@@ -2286,6 +2299,34 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/inspiration/_cards.ts`
+
+The inspiration board as ve reads it: a card by its id, the cards to offer for a role, and every cut a card shaped.
+
+- `const ROLES`
+- `type Role = typeof ROLES[number]`
+- `const CARD_ID`
+- `const MAX_IDS`
+- `const MAX_USES`
+- `const CUT_KINDS`
+- `const BASE_COLS`
+- `const CARD_COLS`
+- `interface CardUse`
+- `function label(name: unknown): string`
+- `function refusal(row: Row): 'not_production_lane' | 'dismissed' | 'not_a_clip' | null`
+- `function kept(row: Row): number`
+- `function teaches(row: Row): string[]`
+- `function cardView(row: Row, uses: CardUse[])`
+- `function parseIds(raw: unknown): { ids: string[]; bad: string[] }`
+- `function usesByCard(rows: Row[]): Map<string, CardUse[]>`
+- `function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: { role: Role; format?: string; limit: number })`
+- `interface UseInput`
+- `function parseUses(body: unknown): { uses: UseInput[]; problems: string[] }`
+- `function migrationPending(error: { message?: string } | null | undefined): boolean`
+- `async function readCards(db: any, build: (q: any) => any): Promise<{ rows: Row[]; pending: boolean; error?: string }>`
+- `async function readUses(db: any, ids: string[]): Promise<{ uses: Map<string, CardUse[]>; pending: boolean; error?: stri…`
+- `async function markPublished(db: any, pieceId: string, now: string): Promise<string | null>`
+
 ### `apps/control-plane/api/inspiration/_prompt.ts`
 
 The reading brief for a folder full of screenshots.
@@ -2340,9 +2381,21 @@ What the Drive scan decides, with no Drive, no model and no database.
 - `function handleKey(value: unknown): string`
 - `function creatorMatches( creator: { slug?: string | null; linkedin_slug?: string | null; name?: string | null }, seen: …`
 
+### `apps/control-plane/api/inspiration/candidates.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/inspiration/cards.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
 ### `apps/control-plane/api/inspiration/drive-scan.ts`
 
 - `export default withContentRun('inspiration_scan', handler)`
+
+### `apps/control-plane/api/inspiration/uses.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/investigations/[run_id]/draft-check.ts`
 
@@ -3555,7 +3608,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/headline/index.tsx`
 
 - `function headlineLayout(lines: string[], width: number, swipedLine = -1, room: number = ZONES.headline.h)`
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device({ object, events, box, aspect, tokens, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/headline/schema.ts`
 
@@ -3755,6 +3808,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/typing_bubble/index.tsx`
 
 - `function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+- `function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight = 1920)`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/typing_bubble/schema.ts`
@@ -3912,7 +3966,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 
 - `interface FWPMockProps`
 - `const FWP_SPLIT_SEAM_Y`
-- `const FWP_STAGE_SCALE`
+- `const FWP_MOCK_STAGE_SCALE`
 - `const FWP_SPLIT_CAPTION_ZONE`
 - `const FWP_POSTER_POSITIONS`
 - `const FWP_PLACEMENTS`

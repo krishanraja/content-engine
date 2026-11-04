@@ -1,7 +1,7 @@
 # The premium motion standard
 
-Status: Proposed for Krish's sign-off, 3 Nov 2026. The checks named below already run; the numbers become the
-house standard when he signs it.
+Status: Signed by Krish, 3 Nov 2026 ("I signed the motion standards"), with the word caption build as the default for
+face-with-proof (ve lint `captions.word_default`). The house standard from that day.
 
 Krish, 3 Nov 2026: "This video is a literal 1/10", "No, its the georgia subtitles build, and the motion and graphics of
 the other one", "The graphics in your previous car are honestly fucking embarrassing. I'm not publishing that."
@@ -90,10 +90,12 @@ other fashionable free display serifs, purple-to-blue gradients, glowing neural 
 icons). For the loud word that meant the house serif's own upright cut, now in the kit (`Fraunces-Upright-Variable`, from the
 brand kit in Drive; Krish, 2026-11-03: "add the upright Fraunces to the kit"), not a borrowed face.
 
-## Waiting on Krish
+## Signed and approved (Krish, 3 Nov 2026)
 
-- Sign this standard, and word mode as the default caption build for face-with-proof.
-- Spend for the four Codex cards above (each is written, none dispatched).
+- The standard, and word captions as the default for face-with-proof: "I signed the motion standards".
+- Spend for the four Codex cards above: "I approved the spend". They are queued to the home computer's Codex lane.
+- The Instagram zones in `config/studio.json` brought up to the measured ones: "I approve updating the Instagram
+  button zones".
 
 ## How it was measured
 
@@ -101,3 +103,17 @@ Shot lengths and cuts: `python scripts/ve.py study <reel>` (ffmpeg scene detecti
 cut until the mean frame-to-frame change falls under 1.2 grey levels, at 30 fps on a 90x160 grey copy. Sizes and
 positions: full frames at 3, 12, 13, 17 and 33 s read on a 128 px grid. Face boxes: OpenCV 4's frontal face cascade on
 frames 600 and 990 of each reel.
+
+## Engine notes (not part of the signed text; audit, 3 Nov 2026)
+
+- **Where the per-piece style comes from.** This standard is the floor every cut holds. Each piece also names one
+  motion style from the bank, the `motion` layer of `config/style-references.json` (17 styles), as `style.motion`
+  `{module, reason}` in its spec. ve lint refuses a spec without it from `creative_direction.MOTION_FROM` (9 Nov 2026,
+  `motion.required`), and a Codex card written for that piece carries the style as its own `## Motion style` section
+  (`scripts/velib/cards.py`). The format's own motion notes (`docs/ve/design/formats/*-motion.md`) hold its frame;
+  the style works inside them, and this standard wins where they differ.
+- **Channel safe zones are listed, not counted, today.** `scripts/velib/qc_channel.py` has `ADVISORY = True`: `ve qc`
+  shows a box under a channel's buttons but does not fail the cut until card `ve-motion-4-channel-safe-tall` moves the
+  tall layouts out of the zones. Until then a session reads the `channel.safe_zones` row itself before calling a tall
+  cut ready.
+

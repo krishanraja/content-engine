@@ -10,6 +10,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts' / 'post-pack'))
 from velib.lint import lint, no_name_pattern  # noqa: E402
 
 FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
@@ -175,9 +176,9 @@ class NoNameOnScreen(unittest.TestCase):
         self.assertFalse(pattern.search('Krish'))
 
 
-GEORGIA = {'card': 'instagram_DePHDr_jRed', 'for': ['captions'], 'drive_id': '1Fs7Mq2kiYyAMWgPkLApeMWcfSCBmGNH9',
+GEORGIA = {'id': '6f1c0a52-3b7e-4c1d-9a8e-0d2f4b6a8c10', 'card': 'instagram_DePHDr_jRed', 'for': ['captions'], 'drive_id': '1Fs7Mq2kiYyAMWgPkLApeMWcfSCBmGNH9',
            'takeaway': 'one word at a time, white, at chest height, never over the face, held yellow title'}
-JACK = {'card': 'instagram_DeZuQ7-lATg', 'for': ['look', 'motion'], 'drive_id': '1RgI6ypWidvR_0KbP0LM0igbUEbU-qkWe',
+JACK = {'id': '0b9e7d24-5a61-4f3c-8e2d-1c4a6b8d0e21', 'card': 'instagram_DeZuQ7-lATg', 'for': ['look', 'motion'], 'drive_id': '1RgI6ypWidvR_0KbP0LM0igbUEbU-qkWe',
         'takeaway': 'product-UI cards at 80 to 90 percent width with glow, settling in four frames'}
 
 
@@ -197,6 +198,8 @@ class ReferencesAreRequired(unittest.TestCase):
     def test_look_motion_and_captions_cards_pass(self):
         found = codes_for(mutate(lambda s: dated(s, [GEORGIA, JACK])))
         self.assertNotIn('reference.required', found)
+        self.assertNotIn('reference.id', found)
+        self.assertNotIn('reference.offered', found)
 
     def test_a_caption_card_alone_is_refused_for_look_and_motion(self):
         found = [p for p in lint_lines(mutate(lambda s: dated(s, [GEORGIA]))) if p.startswith('reference.required')]
@@ -208,9 +211,50 @@ class ReferencesAreRequired(unittest.TestCase):
         found = lint_lines(mutate(lambda s: dated(s, [GEORGIA, bad])))
         self.assertTrue(any('drive_id' in line for line in found), found)
 
+    def test_a_new_piece_names_one_motion_style_from_the_bank(self):
+        # The same rule the creative direction holds (creative_direction.motion_problems), on the ve route too.
+        self.assertIn('motion.required', codes_for(mutate(lambda s: dated(s, [GEORGIA, JACK]))))
+        module = next(iter(__import__('creative_direction').motion_modules()))
+        good = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(style={'motion': {
+            'module': module, 'reason': 'the money moves on screen as he names it'}})))
+        self.assertNotIn('motion.required', codes_for(good))
+        bad = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(style={'motion': {'module': 'not-a-style', 'reason': 'x y z w'}})))
+        self.assertIn('motion.required', codes_for(bad))
+    def test_a_reference_without_its_board_id_is_refused(self):
+        bare = {k: v for k, v in JACK.items() if k != 'id'}
+        found = [p for p in lint_lines(mutate(lambda s: dated(s, [GEORGIA, bare]))) if p.startswith('reference.id')]
+        self.assertEqual(len(found), 1, found)
+        self.assertIn('instagram_DeZuQ7-lATg', found[0])
+
+    def test_a_card_offered_by_ve_init_must_be_confirmed(self):
+        offered = dict(JACK, offered=True)
+        self.assertIn('reference.offered', codes_for(mutate(lambda s: dated(s, [GEORGIA, offered]))))
+        confirmed = dict(JACK, offered=False)
+        self.assertNotIn('reference.offered', codes_for(mutate(lambda s: dated(s, [GEORGIA, confirmed]))))
+
+    def test_one_card_id_twice_is_refused(self):
+        twin = dict(GEORGIA, card='instagram_Twin1234', **{'for': ['look']})
+        found = codes_for(mutate(lambda s: dated(s, [GEORGIA, twin, JACK])))
+        self.assertIn('reference.duplicate', found)
+
+    def test_an_id_that_is_no_uuid_fails_the_schema(self):
+        bad = dict(JACK, id='instagram_DeZuQ7-lATg')
+        found = lint_lines(mutate(lambda s: dated(s, [GEORGIA, bad])))
+        self.assertTrue(any('Inspiration card id' in line for line in found), found)
+
     def test_pieces_in_flight_on_5_nov_are_exempt(self):
         spec = mutate(lambda s: s.update(publish_day='2026-11-05'))
         self.assertNotIn('reference.required', codes_for(spec))
+
+
+class WordCaptionsByDefault(unittest.TestCase):
+    """Signed by Krish, 3 Nov 2026: word captions are the face-with-proof default."""
+
+    def test_face_with_proof_in_house_captions_is_refused_and_word_passes(self):
+        house = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(format='face-with-proof'), s['brand'].update(captions='house')))
+        word = mutate(lambda s: (dated(s, [GEORGIA, JACK]), s.update(format='face-with-proof'), s['brand'].update(captions='word')))
+        self.assertIn('captions.word_default', codes_for(house))
+        self.assertNotIn('captions.word_default', codes_for(word))
 
 
 class StampsNeverCarryTheHero(unittest.TestCase):

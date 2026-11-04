@@ -1,0 +1,15 @@
+{
+ "card_id": "ve-motion-5-stage-depth-and-cards",
+ "title": "STAGE beats: an ink ground with depth, full-width glowing cards, no empty frame",
+ "goal": [
+  "Krish, 3 Nov 2026: \"The graphics in your previous car are honestly fucking embarrassing.\" The Critic scored Thursday 5 Nov 4/10 against instagram_DeZuQ7-lATg: on STAGE beats (plate none) a typing_bubble or headline draws at the top over a flat ink frame that is 50 to 70% empty (qc composition fill 41 to 70%, the lock needs 80%).\n\n1. STAGE ground (FormatMaster, plate none): replace the flat ink fill with a radial depth gradient built only from tokens (ink_soft at the centre to ink_deep at the edges) under the house grain; never a new colour, never purple-to-blue, no meshes.\n2. typing_bubble on a STAGE beat: the card is 960 px wide (60 px margins), centred vertically in the band between the stage header (y 220) and the caption line (y 1267 on graphics-only beats), and grows downward as rows type; type at least 44 px for message text and 34 px for names. Add a soft outer glow in the mint role (blur 40 to 60 px, opacity 0.25 to 0.35) on STAGE and SPLIT cards; entrance rises 40 to 60 px and settles in 4 to 7 frames ease-out (MOTION_STANDARD.md).\n3. headline on STAGE with no `at`: centred in the same band, at least 160 px cap height for two short lines.\n4. cursor_buddy on a STAGE beat that also uses a card or headline sits below it, clear of the caption line by 60 px, never overlapping text.\n\nTests: the card box on a STAGE beat with a 2-row typing_bubble spans 960 px and sits between y 220 and 1207 (Claude re-runs the composition fill check after the build; tesseract is not on the building computer); the card's box is 960 wide; the glow uses the mint token; no raw hex added; existing device tests pass."
+ ],
+ "write_allow": "[apps/renderer/src/engine/FormatMaster.tsx, apps/renderer/src/engine/devices/typing_bubble/**, apps/renderer/src/engine/devices/headline/**, apps/renderer/src/engine/devices/cursor_buddy/**, apps/renderer/src/engine/layouts/stage.test.ts]",
+ "read": "apps/renderer/src/engine/**, apps/renderer/src/house/**, config/ve/brand-tokens.json, config/ve/design-lock.json, scripts/velib/qc_composition.py, docs/ve/MOTION_STANDARD.md",
+ "path": "docs/ve/cards/motion-standard/ve-motion-5-stage-depth-and-cards.md",
+ "kind": "code",
+ "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. The standard is docs/ve/MOTION_STANDARD.md; every number below is measured there from Krish's inspiration-board reels.",
+ "acceptance": "npx vitest run apps/renderer/src/engine\nnode node_modules/typescript/bin/tsc --noEmit --pretty false",
+ "max_minutes": 50,
+ "max_calls": 50
+}

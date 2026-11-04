@@ -623,6 +623,33 @@ def script_cuts(items, feature):
     return found, twice
 
 
+def live_sha_attrs(items, cuts, order):
+    """The live overlay's hooks on Approve scripts (docs/PUBLISH_BOARDS.md, "Always current: the live overlay"): for each
+    cut, data-live-sha-<cut> holds the hashes of the words this page shows for it, as the scripts' check hashes them
+    (making.script_hash of the draft, and of its spoken words, the two a check may hold). When the piece's record holds
+    another hash for a cut, its words changed after this page was built, and the page says so and holds the press."""
+    import making  # noqa: E402  the scripts' check's own hash
+    import teleprompter_send as tps  # noqa: E402  the spoken words, never a second copy of how they are made
+    text = {slug: t for slug, _, t in items or []}
+    out = ''
+    for c in order:
+        words = text.get(cuts[c])
+        if not isinstance(words, str):
+            continue
+        shas = dict.fromkeys([making.script_hash(words), making.script_hash(tps.spoken_text(words))])
+        out += f' data-live-sha-{c}="{" ".join(shas)}"'
+    return out
+
+
+def live_attrs(piece, videos):
+    """The live overlay's hooks on a day (docs/PUBLISH_BOARDS.md): the piece the page was built for, and the cuts and
+    thumbnails it shows, so the page can say precisely what a rebuild would add."""
+    vids = [v for v in videos or [] if isinstance(v, dict) and v.get('cut')]
+    cuts = sorted({str(v['cut']) for v in vids})
+    thumbs = sorted({str(v['cut']) for v in vids if isinstance(v.get('thumbnail'), dict) and v['thumbnail'].get('path')})
+    return f' data-live-piece="{E(piece or "")}" data-live-cuts="{E(" ".join(cuts))}" data-live-thumbs="{E(" ".join(thumbs))}"'
+
+
 def approve_card(day, p, weekday, items, piece, tp, when, series_label, subject, feature, warnings):
     """Approve scripts, under the drafts: his press records the exact words of each script as the Drafts step shows
     them (his saved edits included), and the server sends them to Teleprompter once the scripts' check passed on those
@@ -647,6 +674,7 @@ def approve_card(day, p, weekday, items, piece, tp, when, series_label, subject,
         f' data-box-{c}="{E(f"{day}-{cuts[c]}")}" data-title-{c}="{E((held.get(c) or {}).get("title") or titles[c])}"'
         + (f' data-script-id-{c}="{E(held[c]["script_id"])}"' if (held.get(c) or {}).get('script_id') else '') for c in order)
     names = ' and the '.join(tp_cut_name(c) for c in order)
+    attrs += live_sha_attrs(items, cuts, order)
     return (f'<div class="rec ap" id="{p}approve" role="region" aria-labelledby="{p}approve-h" data-approve-day="{day}" '
             f'data-piece="{E(piece)}" data-cuts="{" ".join(order)}" data-folder-title="{E(folder)}"'
             + (f' data-folder-id="{E(tp["folder_id"])}"' if (tp or {}).get('folder_id') else '') + attrs + '>'
@@ -1650,12 +1678,6 @@ def off_rich(o, problems, label):
             problems.append(f'{label}: download is {{"url" (https, the finished file), "label"}}')
         else:
             row['download'] = {'url': download['url'], 'label': _line(download['label'], 120)}
-    growth = o.get('growth_drive')
-    if growth is not None:
-        if growth_drive_problem(growth):
-            problems.append(f'{label}: {growth_drive_problem(growth)}')
-        else:
-            row['growth_drive'] = {'file_id': growth['file_id'], 'folder_id': growth['folder_id']}
     # The finished asset shown on the board itself (Ruling, Krish, 2026-11-03: "I should be able to see the assets directly
     # in the publish board or have a link to the Google Drive where the assets are. I shouldn't have to download a fucking
     # zip and then look at it that way"): every slide as its own picture, or the video to play, and the Drive folder.
@@ -1683,24 +1705,43 @@ def off_rich(o, problems, label):
     return {k: v for k, v in row.items() if v is not None}
 
 
-# A finished asset is done only when it is in the 4 Growth folder Krish opens (Krish, 2026-11-03: "The translator video
-# isn't in the drive... Why is it not in there?"): the file's Drive id and its 4 Growth folder id, read back by the
-# session that filed it. Until then the card says so instead of offering the file as ready.
-NOT_IN_GROWTH = 'Not in 4 Growth yet: file it in its dated 4 Growth folder and record growth_drive before it counts as ready'
-DRIVE_ID_RE = re.compile(r'^[A-Za-z0-9_-]{20,}$')
+# A finished asset is done only when it is in its post's 3 Posts folder (Ruling, Krish, 2026-11-03: "everything ready
+# for post goes in the posts folder, not the growth folder"): the card links that folder (`drive`). Until then the card
+# says so instead of offering the file as ready.
+NOT_IN_POSTS = 'Not in its 3 Posts folder yet: file it there and link the folder (drive) before it counts as ready'
 
 
-def growth_drive_problem(growth):
-    if not isinstance(growth, dict) or set(growth) != {'file_id', 'folder_id'} or not all(
-            isinstance(growth.get(k), str) and DRIVE_ID_RE.match(growth[k]) for k in ('file_id', 'folder_id')):
-        return 'growth_drive is {"file_id", "folder_id"}: the Drive ids of the finished file and its 4 Growth folder'
-    return None
+IN_GROWTH = ('Filed in 4 Growth, which is not where Krish looks: move it to its post\'s 3 Posts folder and link that '
+             'folder (drive) before it counts as ready')
+NOT_NAMED = ('Its 3 Posts folder is not named: say "3 Posts › YYYY-MM-DD Ddd off.day - Subject" (or posts_folder) so '
+             'the link can be checked against the post it belongs to')
+NAMED_FOLDER = re.compile(r'3 Posts\s*›\s*([^;›]+?)\s*(?:;|$)')
 
 
-def growth_needs(o):
-    """The needs line a finished off-day option carries until its 4 Growth file is recorded."""
-    finished = bool(o.get('download')) or bool(o.get('ready'))
-    return [NOT_IN_GROWTH] if finished and (o.get('growth_drive') is None or growth_drive_problem(o['growth_drive'])) else []
+def posts_needs(o, day=None):
+    """The needs line a finished option carries until it is in its own post's 3 Posts folder: it links a Drive
+    folder (drive), names that folder (posts_folder, or "3 Posts › <folder>" in its needs) as a post folder the
+    library takes, and never points at 4 Growth. A bare Drive link is not enough: any folder would pass."""
+    finished = bool(o.get('download')) or bool(o.get('video')) or bool(o.get('slides')) or bool(o.get('ready'))
+    needs = [str(x) for x in (o.get('needs') or []) if isinstance(x, str)] if isinstance(o.get('needs'), list) else []
+    if any('4 Growth' in line for line in needs):
+        return [IN_GROWTH]
+    if not finished:
+        return []
+    drive = o.get('drive')
+    if not (isinstance(drive, str) and DRIVE_FOLDER.match(drive)):
+        return [NOT_IN_POSTS]
+    named = o.get('posts_folder') or next((m[1] for line in needs for m in [NAMED_FOLDER.search(line)] if m), None)
+    if not (isinstance(named, str) and _library().is_post_folder(named.strip())):
+        return [NOT_NAMED]
+    if day and not named.strip().startswith(str(day)):
+        return [f'Its 3 Posts folder ({named.strip()}) is another day\'s post, not {day}\'s: link this post\'s own folder']
+    return []
+
+
+def _library():
+    import library  # scripts/post-pack/library.py, the one folder rule
+    return library
 
 
 def side_sha(o, side):
@@ -1793,6 +1834,9 @@ def read_offdays(data, where='ideas.json offdays', whole=False):
                                         ('pitch.lands', (row.get('pitch') or {}).get('lands')), ('direction', row.get('direction'))) if not ok]
                 if gaps:
                     problems.append(f'{weekday} option {n}: no {", ".join(gaps)}; he judges an option by these')
+            extra = [line for line in posts_needs({**o, **row}) if line not in row.get('needs', [])]
+            if extra:
+                row['needs'] = row.get('needs', []) + extra
             if (row.get('slides') or row.get('video')) and not row.get('drive'):
                 problems.append(f'{weekday} option {n}: a finished asset on the board carries its Drive folder (drive), '
                                 'so he can open it there too (Ruling, Krish, 2026-11-03)')
@@ -1902,9 +1946,9 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
                      'source': {'label': 'Source', 'url': o['source_url']} if str(o.get('source_url') or '').startswith('https://') else (o.get('lane') or 'Growth'),
                      'copy': o.get('draft'), 'share_line': o.get('share_line'),
                      'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else [])
-                     + growth_needs(o),
+                     + posts_needs(o, day),
                      # The rich fields ride through as Growth wrote them (Ruling, Krish, 2026-11-01), never flattened into the copy.
-                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'download', 'closed', 'growth_drive')
+                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'posts_folder', 'download', 'closed')
                         if o.get(k) is not None}}
                     for o in opts]
     return out, warnings
@@ -1915,7 +1959,7 @@ def previous_option(o):
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
     for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards',
               'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'download',
-              'stories', 'weekly', 'stories_due', 'closed', 'growth_drive'):
+              'stories', 'weekly', 'stories_due', 'closed'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -2060,11 +2104,6 @@ def off_option_card(monday, key, when, o):
                 f'<div><p class="row"><span class="id-why-k">Mock back</span> {E(m.get("note") or "Made in the brand kit from the direction you approved.")}</p>'
                 + off_press_row(did, 'mock', 'The mock') + '</div></div>')
     mock += asset_links(o)
-    if o.get('growth_drive') and not growth_drive_problem(o['growth_drive']):
-        g = o['growth_drive']
-        mock += (f'<p class="row"><a class="btn-s" href="{E("https://drive.google.com/drive/folders/" + g["folder_id"])}" '
-                 f'target="_blank" rel="noopener">In Drive: 4 Growth</a> '
-                 f'<a class="btnlink" href="{E("https://drive.google.com/file/d/" + g["file_id"] + "/view")}" target="_blank" rel="noopener">Open the file</a></p>')
     # What his Approve on the idea hands Growth: exactly the object its hash is taken over (side_sha), the copy and the
     # cards included, so the words he approved are the words that get made.
     shown = {'copy': o.get('copy'), 'hook': o.get('hook'), 'pitch': o.get('pitch'), 'cards': o.get('cards')}
@@ -2567,7 +2606,7 @@ def step_nav(p, weekday, opened, notes):
         k = step['key']
         on = k == opened
         buttons.append(
-            f'<button type="button" role="tab" class="st" id="{p}st-{k}" aria-controls="{p}sub-{k}" data-sub="{k}" '
+            f'<button type="button" role="tab" class="st" id="{p}st-{k}" aria-controls="{p}sub-{k}" data-sub="{k}" data-live-step="{k}" '
             f'aria-selected="{"true" if on else "false"}" tabindex="{"0" if on else "-1"}">'
             f'<span class="st-n">{n}</span><span class="st-label">{E(step["label"])}</span>'
             f'<span class="st-note">{E(notes.get(k) or "")}</span></button>')
@@ -2588,7 +2627,7 @@ def fixed_day_panel(day, name, weekday, when, series_label, state, hidden, head,
     p = f'{day}-'
     opened = {'not_picked': 'brief', 'picked': 'brief', 'draft': 'drafts', 'made': 'publish'}[state]
     return (f'<div class="pm fixed" id="panel-{name}" role="tabpanel" aria-labelledby="tab-{name}" data-prefix="{p}" '
-            f'data-day="{day}" data-state="{state}"{attrs} tabindex="-1"{" hidden" if hidden else ""}>'
+            f'data-day="{day}" data-live-day="{day}" data-state="{state}"{attrs} tabindex="-1"{" hidden" if hidden else ""}>'
             f'<div class="day-head">{head}</div>' + step_nav(p, weekday, opened, notes)
             + ''.join(step_panel(p, k, opened, slots.get(k) or '') for k in DAY_STEPS) + '</div>')
 
@@ -3599,7 +3638,7 @@ def fixed_day(key, name, weekday, when, series_label, page, piece, pick, title, 
             raise BoardError(str(error)) from error
     brief_due, drafts_due = due(when, RHYTHM['brief']), due(when, RHYTHM['drafts'])
     files = board_materials.render(key, delivery) if delivery else ''
-    attrs = ' data-feature="true"' if feature else ''
+    attrs = (' data-feature="true"' if feature else '') + live_attrs(piece, (videos or {}).get(key))
     sweep = (sweeps or {}).get(key)
     if sweep and not (rv and (page or key in draft)):
         raise BoardError(f'--sweep {key}: {weekday} has no drafts in review, so where the change was carried would not show; '

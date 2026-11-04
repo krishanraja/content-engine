@@ -5,7 +5,8 @@
 
 The engine behind Krish Raja's media business: makeyourmindup, his
 publication (hosted on Substack, with its cover page at makeyourmindup.ai), and
-the Shorts and carousels made from it. It finds what is worth saying, judges
+the hero assets made from it (the article, both cuts, thumbnails and covers;
+Growth makes the derived carousels, Notes and off-day posts). It finds what is worth saying, judges
 it, routes it to the right subchannel, drafts it in Krish's voice to that
 subchannel's mandate, cuts it for each channel and produces the media, and it
 learns from every decision Krish makes along the way. Krish makes every
@@ -29,7 +30,8 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | do anything at all in this repository | `docs/NORTH_STAR.md`, then `AGENTS.md` |
 | pick up the work where the last session left it, in any tool (Claude Code, Codex) | `WORKBENCH.md` |
 | work on ideas, judging, drafting, rewriting, channel copy or the ledger | `docs/CONTENT_ENGINE.md` |
-| work on video, carousels, the runner or the renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
+| work on video | `docs/ve/ENGINE.md`, then `docs/ve/RUNBOOK.md` (quick-edit is the fallback until ve passes Phase 3) |
+| work on the Studio runner or renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
 | understand how the pieces fit, or who owns what | `docs/SYSTEM_MAP.md` |
 | design how a piece looks, sounds or moves, on any surface | `docs/CREATIVE_IDENTITY_UPGRADE.md` |
 | make a piece's web page, the copy that pastes into Substack and its cover image, or check that its artwork can be read on a phone | `scripts/pages/README.md` |
@@ -75,7 +77,7 @@ it means for every stage and the rules that keep the learning honest are in
 | Half | Where | What it does |
 |---|---|---|
 | **The content engine** | `apps/control-plane/`, deployed as the Vercel project `content-engine` | collects and researches ideas, judges them with a blind panel, routes them to a subchannel, drafts and rewrites to the mandate, runs the final checks, cuts channel copy, builds production briefs, and keeps the ledger the engine learns from |
-| **The Studio** | `packages/`, `apps/runner/`, `apps/renderer/` | turns an approved brief into a Short or a carousel through hash-gated stations, on Krish's Windows machine, and packages it for posting by a person |
+| **The Studio** | `packages/`, `apps/runner/`, `apps/renderer/` | turns an approved brief into the cuts through hash-gated stations (carousels are Growth's, to `docs/CAROUSEL-STANDARD.md`), on Krish's Windows machine, and packages it for posting by a person |
 
 Control Center (`krishanraja/control-center`) is where Krish works; it reaches
 the engine through rewrites and reads the shared Supabase database directly.

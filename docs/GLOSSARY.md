@@ -26,7 +26,7 @@ this repository start with a retired name.
 | `general`, `either` | rows in `venture_formats` that are not subchannels: a holding lane, and "suits more than one" | routing |
 | makeyourmindup | **the publication's name** (Krish, 2026-09-25). Hosted on Substack; its cover page is makeyourmindup.ai. Also the `corpus_key` on every live subchannel row | makeyourmindup.ai used to be CTRL's lead-magnet door; where that door goes now is open (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8) |
 | Mindmake's publication | an older way of naming the publication | Control Center's architecture canon |
-| Content Engine | this repository's editorial half, and the Content tab in Control Center that is its desk | both repos |
+| Content Engine | this repository's editorial half; Control Center's Content tab holds only its two approval queues (Ideas to approve; Ready to schedule and post) | both repos |
 | Studio, Video Engine, Video Studio, video-studio | the media half of this repository | `packages/`, `apps/runner`, `apps/renderer`, `/api/video-studio/*` |
 | `mindmake-video-studio` | this repository's former name | older docs and a session alias |
 

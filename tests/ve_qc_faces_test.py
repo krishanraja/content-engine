@@ -48,6 +48,33 @@ class OffFace(unittest.TestCase):
         split = {**page('split'), 'region': {'left': 0, 'top': 1700, 'width': 1080, 'height': 120}}
         self.assertTrue(run([split], (390, 1250, 300, 380), style='house', region=(72, 1180, 900, 217))['pass'])
 
+    def test_word_split_region_uses_the_seam_and_clears_the_lower_face(self):
+        split = {**page('split'), 'region': (72, 1460, 900, 180)}
+        g = qc_faces.word_geometry('9:16', 'SPLIT')
+        self.assertEqual(g['centerY'], 760)
+        self.assertEqual(qc_faces.caption_box(split, 'word', '9:16', None)[1],
+                         int(g['centerY'] - g['size'] * 0.6))
+        self.assertTrue(run([split], (390, 1190, 300, 389))['pass'])
+
+    def test_custom_word_region_does_not_imply_split(self):
+        custom = {**page('mouth'), 'region': (72, 1180, 900, 217)}
+        self.assertFalse(run([custom], (390, 1250, 300, 380))['pass'])
+
+    def test_word_positions_follow_the_beat_at_the_sampled_frame(self):
+        beats = [
+            {'fromFrame': 0, 'toFrame': 10, 'layout': 'F1', 'plate': {'source': 'take'}},
+            {'fromFrame': 10, 'toFrame': 30, 'layout': 'SPLIT', 'plate': {'source': 'take'}},
+        ]
+        report = qc_faces.off_face('cut.mp4', [page('split', 0, 24)], style='word',
+                                   beats=beats, detector=lambda _: [(390, 1190, 300, 389)],
+                                   grab=lambda _: BLANK)
+        self.assertTrue(report['pass'], report)
+
+    def test_graphics_and_wide_face_geometry(self):
+        for aspect, height, face in [('9:16', 1920, 1440), ('16:9', 1080, 830)]:
+            self.assertEqual(qc_faces.word_geometry(aspect)['centerY'], face)
+            self.assertAlmostEqual(qc_faces.word_geometry(aspect, 'STAGE', 'none')['centerY'], height * 0.66)
+
     def test_no_face_passes(self):
         self.assertTrue(run([page('graphics')], None)['pass'])
 
