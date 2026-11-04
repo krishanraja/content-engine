@@ -154,7 +154,15 @@ def faces_path(ve_dir: Path, take: str) -> Path:
 def cover_windows(edl: dict, ve_dir: Path) -> list[dict] | None:
     """The flagged windows inside the cut, in cut time: where a graphic could cover him. None when no take was read."""
     fps = edl.get('fps', 30)
-    read = {name: load_json(faces_path(ve_dir, name)) for name in edl['takes'] if faces_path(ve_dir, name).is_file()}
+    read = {}
+    for name, take in edl['takes'].items():
+        if not faces_path(ve_dir, name).is_file():
+            continue
+        found = load_json(faces_path(ve_dir, name))
+        ingested = ((take or {}).get('media') or {}).get('sha256')
+        if ingested and found.get('media_sha256') != ingested:
+            continue   # read from another file under this take id (re-ingested since): run ve faces again
+        read[name] = found
     if not read:
         return None
     out = []

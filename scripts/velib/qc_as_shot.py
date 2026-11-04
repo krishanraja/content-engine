@@ -12,6 +12,7 @@ Advisory: listed in QC, never counted (no rule makes it a gate; F14). It names t
 """
 from __future__ import annotations
 
+import re
 import subprocess
 
 from .common import ffmpeg
@@ -52,21 +53,47 @@ def lower_quarter(frame):
     return frame[int(frame.shape[0] * 0.75):, :, :]
 
 
-def _offset(token: str, free: float) -> float:
-    if token.endswith('%'):
-        return float(token[:-1]) / 100 * free
-    if token.endswith('px'):
-        return float(token[:-2])
-    return KEYWORDS.get(token, 0.0 if token == '0' else 0.5) * free
+TOKEN = re.compile(r'^(?:left|right|top|bottom|center|0|-?\d+(?:\.\d+)?(?:%|px))$')   # splitPlatePosition's test
 
 
-def _position(crop: str | None) -> tuple[str, str]:
-    tokens = (crop or DEFAULT_CROP).split()
-    if not 1 <= len(tokens) <= 2:
+def _axes(crop: str | None) -> tuple[tuple[str, str | None], tuple[str, str | None]]:
+    """CSS object-position as the renderer passes it: (anchor, offset) for x and for y. A crop splitPlatePosition
+    would refuse falls back to its default, as the renderer does."""
+    tokens = (crop or '').split()
+    if not (1 <= len(tokens) <= 4 and all(TOKEN.match(t) for t in tokens)):
         tokens = DEFAULT_CROP.split()
-    if len(tokens) == 1:
-        return (tokens[0], 'center') if tokens[0] not in ('top', 'bottom') else ('center', tokens[0])
-    return (tokens[1], tokens[0]) if tokens[0] in ('top', 'bottom') else (tokens[0], tokens[1])
+    if len(tokens) <= 2:
+        if len(tokens) == 1:
+            a, b = ('center', tokens[0]) if tokens[0] in ('top', 'bottom') else (tokens[0], 'center')
+        else:
+            a, b = tokens
+        if a in ('top', 'bottom') or b in ('left', 'right'):
+            a, b = b, a
+        return (a, None), (b, None)
+    groups, k = [], 0
+    while k < len(tokens):
+        offset = tokens[k + 1] if k + 1 < len(tokens) and tokens[k + 1] not in KEYWORDS else None
+        groups.append((tokens[k], offset))
+        k += 2 if offset else 1
+    x = next((g for g in groups if g[0] in ('left', 'right')), ('center', None))
+    y = next((g for g in groups if g[0] in ('top', 'bottom')), ('center', None))
+    return x, y
+
+
+def _start(axis: tuple[str, str | None], free: float) -> float:
+    """Where the box starts inside the drawn take on one axis (free = drawn size minus box size)."""
+    def placed(token: str) -> float:   # a length or percentage places the take's edge from the box's edge
+        return -float(token[:-1]) / 100 * free if token.endswith('%') else float(token[:-2]) if token.endswith('px') else 0.0
+    anchor, offset = axis
+    if anchor not in KEYWORDS:
+        edge = placed(anchor)
+    elif offset is None:
+        edge = -KEYWORDS[anchor] * free
+    elif anchor in ('left', 'top'):
+        edge = placed(offset)
+    else:
+        edge = -free - placed(offset)
+    return -edge
 
 
 def shown_rows(beat: dict, take_w: float, take_h: float) -> tuple[float, float, float, float]:
@@ -76,8 +103,8 @@ def shown_rows(beat: dict, take_w: float, take_h: float) -> tuple[float, float, 
         return 0.0, take_h * 0.75, take_w, take_h
     box_w, box_h = width, height - SEAM_Y
     scale = max(box_w / take_w, box_h / take_h)
-    x_token, y_token = _position((beat.get('plate') or {}).get('crop'))
-    x0, y0 = _offset(x_token, take_w * scale - box_w), _offset(y_token, take_h * scale - box_h)
+    x_axis, y_axis = _axes((beat.get('plate') or {}).get('crop'))
+    x0, y0 = _start(x_axis, take_w * scale - box_w), _start(y_axis, take_h * scale - box_h)
     top_in_box = height * 0.75 - SEAM_Y
     return x0 / scale, (top_in_box + y0) / scale, (x0 + box_w) / scale, (box_h + y0) / scale
 
@@ -109,9 +136,22 @@ def uncaptioned(part, frame_h: int, frame: int, pages: list[dict] | None):
 
 
 def as_shot(cut: str, plate: str, beats: list[dict], fps: int = 30, plate_offset_frames: int = 0,
-            pages: list[dict] | None = None) -> dict:
+            pages: list[dict] | None = None, aspect: str = '9:16') -> dict:
     """The advisory row: per take beat, the largest L*, a*, b* shift of the lower quarter against the conformed take,
-    leaving out what a caption page covers."""
+    leaving out what a caption page covers. It never fails QC: anything it cannot read is said, not counted."""
+    target = (f'his take as shot: the lower quarter within L {TOLERANCE["L"]}, a {TOLERANCE["a"]}, b {TOLERANCE["b"]} '
+              'of the rows of the conformed take it shows (median L*a*b*)')
+    row = {'value': {}, 'moved': [], 'target': target, 'pass': None, 'status': 'advisory'}
+    if aspect != '9:16':
+        return {**row, 'reason': f'read on 9:16 cuts only (the frame geometry and caption boxes are 9:16); this is {aspect}'}
+    try:
+        row['value'], row['moved'] = _read(cut, plate, beats, fps, plate_offset_frames, pages)
+    except Exception as error:  # noqa: BLE001 - an advisory row must never fail or stop QC
+        row['reason'] = f'not read: {type(error).__name__}: {error}'
+    return row
+
+
+def _read(cut, plate, beats, fps, plate_offset_frames, pages):
     rows, moved = {}, []
     for beat in beats:
         if ((beat.get('plate') or {}).get('source') or 'take') != 'take' or beat.get('layout') == 'STAGE':
@@ -137,6 +177,4 @@ def as_shot(cut: str, plate: str, beats: list[dict], fps: int = 30, plate_offset
         rows[beat['id']] = worst
         if any(worst[axis] > TOLERANCE[axis] for axis in worst):
             moved.append(beat['id'])
-    return {'value': rows, 'moved': moved, 'target': f'his take as shot: the lower quarter within L {TOLERANCE["L"]}, '
-            f'a {TOLERANCE["a"]}, b {TOLERANCE["b"]} of the rows of the conformed take it shows (median L*a*b*)',
-            'pass': None, 'status': 'advisory'}
+    return rows, moved

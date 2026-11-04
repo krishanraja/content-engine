@@ -297,8 +297,8 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_as_shot
     optional = [
         # Advisory: his take as shot (the floor's untested-treatment rule); shown, never counted.
-        ('picture.as_shot', bool(plate_video) and bool(beats) and Path(str(plate_video)).is_file(),
-         lambda: qc_as_shot.as_shot(path, plate_video, beats, int(fps), plate_offset, pages)),
+        ('picture.as_shot', bool(plate_video) and bool(beats) and aspect == '9:16' and Path(str(plate_video)).is_file(),
+         lambda: qc_as_shot.as_shot(path, plate_video, beats, int(fps), plate_offset, pages, aspect)),
         ('sync.av_xcorr', dialogue_master is not None and edl is not None,
          lambda: qc_sync.av_xcorr(path, dialogue_master, edl)),
         ('joins.decoder', joins is not None, lambda: qc_joins.decoder(path, joins)),
