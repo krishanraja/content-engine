@@ -4,6 +4,7 @@ import { BrandFrame } from './BrandFrame'
 import { onTwos, progress, setMotionProfile, useEngineFrame } from './clock'
 import { stageBubbleBox } from './devices/typing_bubble'
 import { headlineLayout } from './devices/headline'
+import { lightStage } from './chrome/lightStage'
 import { headlineState } from './devices/headline/state'
 import { DEVICES } from './devices/registry'
 import { FOCUS, PEN } from './devices/focus'
@@ -125,7 +126,10 @@ export function FormatMaster(props: EngineRenderProps) {
         const ground = beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: props.tokens.cream, overflow: 'hidden' as const }
           // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
           // the ground StageHeader's logo is drawn for.
-          : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? stageGround(profile, props.tokens) : {}
+          // face-with-proof with no motion profile sits on the light wash of its SPLIT stage (lightStage).
+          : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? (lightStage(props) && !profile
+            ? { background: `radial-gradient(ellipse at 50% 40%, ${props.tokens.cream} 0%, color-mix(in srgb, ${props.tokens.cream} 86%, ${props.tokens.mint}) 100%)` }
+            : stageGround(profile, props.tokens)) : {}
         return (
           <AbsoluteFill key={`devices-${beat.id}`} style={fade < 1 ? { ...ground, opacity: fade } : ground}>
             {sweep && <AbsoluteFill style={sweep} />}

@@ -33,7 +33,7 @@ export function Device({ object, events, box, aspect, tokens, frame }: DevicePro
     throw new Error('Dek copy does not fit at 44px')
   const reveal = revealLines(s.lines.map(line => line.toUpperCase()), s.age)
   return <>
-    <div data-overlay="headline" style={{ ...canvasRect(at.x, at.y, at.w, l.height), color: tokens.cream,
+    <div data-overlay="headline" style={{ ...canvasRect(at.x, at.y, at.w, l.height), color: s.ground === 'light' ? tokens.ink : tokens.cream,
       fontFamily: HOUSE_FONTS.display, fontSize: l.size, lineHeight: 0.88, opacity: 1 - s.exit }}>
       {s.lines.map((line, i) => {
         // The shared reveal (kit/reveal.ts): by line with no style, as before; by word, typed or rolled in a style.

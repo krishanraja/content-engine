@@ -24,7 +24,7 @@ def run(pages, face, style='word', region=None):
 class OffFace(unittest.TestCase):
     def test_word_geometry_is_read_from_the_renderer(self):
         g = qc_faces.word_geometry('9:16')
-        self.assertEqual((g['centerY'], g['size'], g['width']), (1440, 88, 1080))
+        self.assertEqual((g['centerY'], g['size'], g['width']), (1500, 88, 1080))
 
     def test_a_word_at_chest_height_under_the_face_passes(self):
         report = run([page('training')], (390, 500, 300, 380))
@@ -36,8 +36,8 @@ class OffFace(unittest.TestCase):
         self.assertEqual(report['value']['on_face'][0]['text'], 'mouth')
 
     def test_the_margin_catches_a_caption_grazing_the_chin(self):
-        # Face ends at y=1380; the word box starts at 1440 - 52.8 = 1387; 10% of 380 px reaches 1418.
-        self.assertFalse(run([page('chin')], (390, 1000, 300, 380))['pass'])
+        # Face ends at y=1440; the word box starts at 1500 - 52.8 = 1447; 10% of 380 px reaches 1478.
+        self.assertFalse(run([page('chin')], (390, 1060, 300, 380))['pass'])
 
     def test_house_pages_use_their_region(self):
         region = (72, 1180, 900, 217)
@@ -71,7 +71,7 @@ class OffFace(unittest.TestCase):
         self.assertTrue(report['pass'], report)
 
     def test_graphics_and_wide_face_geometry(self):
-        for aspect, height, face in [('9:16', 1920, 1440), ('16:9', 1080, 830)]:
+        for aspect, height, face in [('9:16', 1920, 1500), ('16:9', 1080, 830)]:
             self.assertEqual(qc_faces.word_geometry(aspect)['centerY'], face)
             self.assertAlmostEqual(qc_faces.word_geometry(aspect, 'STAGE', 'none')['centerY'], height * 0.66)
 
