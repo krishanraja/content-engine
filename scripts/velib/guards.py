@@ -11,7 +11,8 @@ gate they bind a whole cut of a piece published from creative_direction.MOTION_F
   - `offday_problems(spec)`: an off-day piece wears no series bed or sting. Proposed: binds only once Krish approves.
   - `freeze(directory)` / `engine_problems(...)`: the engine the storyboard was signed on draws its proof and cut.
   - `record_render(...)` / `loop_problems(...)`: two full renders of a cut per press from Krish, then he sees it.
-  - `type_treatments(props)` / `type_problems(...)`: at most as many type treatments as the brand book has roles.
+  - `type_treatments(props)` / `type_note(...)`: the type treatments a cut shows, listed on its proof for Krish to
+    judge moving (advisory since his answer of 4 Nov; `type_problems` refuses only if config sets a limit mode).
 """
 from __future__ import annotations
 
@@ -351,10 +352,20 @@ def type_problems(spec: dict, props: dict) -> list[str]:
     cut = props.get('cutId')
     if cut not in (spec.get('cuts') or {}) or not required(spec, cut):
         return []
-    limit = config()['type']['max_treatments']
+    rules = config()['type']
+    if rules.get('mode') == 'advisory':
+        return []  # Krish, 2026-11-04: judged moving on the proof, never refused by count (type_note)
+    limit = rules['max_treatments']
     found = type_treatments(props)
     if len(found) <= limit or _exception(spec, canonical_sha(found)):
         return []
     listed = '; '.join(f'{role} as {surface}' for role, surface in found)
     return [f'{len(found)} type treatments in {cut} ({listed}); the brand book has {limit} roles: drop a device or a caption '
             f'treatment, or Krish approves this set (an exception approval bound to sha256 {canonical_sha(found)})']
+
+
+def type_note(props: dict) -> str:
+    """One line for the proof: every type treatment the cut shows, so Krish judges them moving on his take."""
+    found = type_treatments(props)
+    listed = '; '.join(f'{role} as {surface}' for role, surface in found) or 'none'
+    return f'{len(found)} type treatment(s): {listed}'

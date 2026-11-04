@@ -182,22 +182,34 @@ class OneTypeSystem(Held):
         props['beats'][1]['uses'] = list(props['beats'][1]['uses']) + ['headline']
         return props
 
-    def test_thursdays_treatments_are_counted_and_refused(self):
+    def test_thursdays_treatments_are_listed_and_never_refused_by_count(self):
+        # Krish, 4 Nov 2026: "it needs to look good, and it didn't that time": judged moving, not counted.
         found = guards.type_treatments(self.thursday_props())
         self.assertGreater(len(found), 4, found)
         self.assertIn(['dek', 'loud caption word'], found)
         self.assertIn(['structure', 'held title'], found)
-        reasons = self.refused(props=self.thursday_props())
-        self.assertTrue(any('type treatments' in r for r in reasons), reasons)
+        self.assertEqual(guards.config()['type']['mode'], 'advisory')
+        self.assertFalse(any('type treatments' in r for r in self.refused(props=self.thursday_props())))
+        self.assertIn('dek as loud caption word', guards.type_note(self.thursday_props()))
 
-    def test_the_house_set_passes_and_his_yes_admits_a_wider_one(self):
-        self.assertLessEqual(len(guards.type_treatments(self.props)), 4)
-        self.assertEqual(guards.type_problems(self.approved, self.props), [])
+    def test_a_limit_mode_would_still_refuse_and_his_yes_admit(self):
         props = self.thursday_props()
-        yes = copy.deepcopy(self.approved)
-        yes['approvals'].append({'gate': 'exception', 'by': 'Krish', 'said': 'keep the serif loud word', 'on': '2026-11-12',
-                                 'artifact_hash': guards.canonical_sha(guards.type_treatments(props))})
-        self.assertEqual(guards.type_problems(yes, props), [])
+        limited = dict(guards.config(), type={'mode': 'limit', 'max_treatments': 4})
+        with mock.patch.object(guards, 'config', return_value=limited):
+            self.assertTrue(guards.type_problems(self.approved, props))
+            yes = copy.deepcopy(self.approved)
+            yes['approvals'].append({'gate': 'exception', 'by': 'Krish', 'said': 'keep the serif loud word', 'on': '2026-11-12',
+                                     'artifact_hash': guards.canonical_sha(guards.type_treatments(props))})
+            self.assertEqual(guards.type_problems(yes, props), [])
+
+    def test_ve_proof_records_the_treatments(self):
+        (self.dir / f'props.{CUT}.json').write_text(json.dumps(self.props), encoding='utf-8')
+        args = types.SimpleNamespace(spec=str(self.spec_file), cut=CUT, beat=None, props=None, assets_dir=None,
+                                     scale=1.0, no_qc=True)
+        with mock.patch.object(ve_lint, 'lint', return_value=(self.spec, [])), mock.patch('sys.stdout'):
+            self.assertEqual(ve.cmd_proof(args, render_fn=fake_render()), 0)
+        record = json.loads((self.dir / 'proof' / f'{CUT}.json').read_text(encoding='utf-8'))
+        self.assertEqual(record['type'], guards.type_treatments(self.props))
 
     def test_device_roles_are_read_from_the_renderer(self):
         self.assertEqual(guards.device_roles('kinetic_stat'), ['data', 'display'])
