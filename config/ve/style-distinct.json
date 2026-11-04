@@ -9,7 +9,8 @@
     "window": "Thursday 5 Nov (2026-11-05-thursday-no-spending, short cut, frames 140 to 320, scale 0.5, stand-in take)",
     "renders": "PR #381 clips, before the strong styles",
     "scores_against_house": {"dark-keynote": 2.82, "riso-halftone": 4.56, "living-ui": 0.17},
-    "why": "dark-keynote reads clearly different by eye and riso-halftone visibly but subtly; the old living-ui looked the same as the house. 1.5 sits well under the weakest style he could tell apart (2.82) and nine times over the look-alike (0.17)."
+    "why": "dark-keynote reads clearly different by eye and riso-halftone visibly but subtly; the old living-ui looked the same as the house. 1.5 sits well under the weakest style he could tell apart (2.82) and nine times over the look-alike (0.17).",
+    "five_styles": "4 Nov 2026, frames 315 to 555 of the same short cut, scale 0.5, stand-in take: once given looks of their own, swiss-kinetic-type scored 7.2 against the house, vertical-captions 8.0, paper-cutout 10.7, line-boil 55.1 and hud-terminal 68.9, each 7 or more from every other style (they had scored 0.39 to 0.62 against the house when they differed only by timing)"
   },
   "effects": {
     "typewriter": {"devices": ["typing_bubble", "query_chip", "headline"], "what": "types text a character at a time"},
@@ -17,6 +18,13 @@
     "zoomToFocus": {"devices": ["typing_bubble", "query_chip"], "what": "zooms to the line a device reports"},
     "followPen": {"devices": ["scribble"], "what": "follows a scribble's pen tip"},
     "halftone": {"take": true, "what": "lays a halftone on his take"},
-    "inkDeep": {"stage": true, "what": "lays ink_deep under a graphics-only beat"}
+    "inkDeep": {"stage": true, "what": "lays ink_deep under a graphics-only beat"},
+    "dark": {"ground": true, "what": "lays ink_deep under every graphic ground, a SPLIT stage included, and inverts text cards"},
+    "paper": {"ground": true, "what": "lays a seeded paper stock under the graphics"},
+    "hero": {"ground": true, "what": "sets the beat's key phrase as hero type on its graphic ground"},
+    "lead": {"captions": true, "what": "makes his captions the main graphic"},
+    "brackets": {"devices": ["typing_bubble", "query_chip"], "what": "locks bracket corners onto the line a device reports"},
+    "torn": {"devices": ["typing_bubble", "query_chip", "evidence_card", "quote_card", "record_card", "thread_card", "logo_card", "sticker", "stamp", "passport_page"], "what": "cuts cards and logo tiles out with a torn edge and a soft shadow"},
+    "boil": {"devices": ["scribble"], "what": "boils a drawn line"}
   }
 }

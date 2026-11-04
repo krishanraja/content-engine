@@ -10,6 +10,8 @@ import { MarkTile } from './chrome/MarkTile'
 import { StageHeader } from './chrome/StageHeader'
 import { lightStage } from './chrome/lightStage'
 import { HeldTitle, WordCaption } from './chrome/WordCaption'
+import { LeadCaption } from './chrome/LeadCaption'
+import { resolveMotion } from './kit/motionProfiles'
 import type { EngineBeat, EngineRenderProps } from './props'
 
 /** The mandatory chrome on every beat (INV-BRANDFRAME, INV-CAPTIONS): mark tile top-left with the channel
@@ -22,6 +24,8 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
   const call = beat.role === 'call'
   if (call && !props.call) throw new Error('ve: call beat without props.call')
   const ending = !!props.ending && frame >= props.ending.fromFrame
+  // vertical-captions: lead captions replace the house captions for that style only.
+  const lead = resolveMotion(props.motion)?.captions
   return <>
     <Grain />
     {/* SPLIT keeps the mark tile and series pill of every face-with-proof beat: the horizontal logo is drawn for ink
@@ -36,6 +40,7 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     {props.captionStyle === 'word' && !call && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={props} frame={frame} />
       : call ? <CallCard props={props} frame={frame} />
+        : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />
         : props.captionStyle === 'word' ? <WordCaption props={props} frame={frame} />
         : beat.layout === 'SPLIT' ? <SplitCaptionTrack props={props} frame={frame} /> : <CaptionTrack props={props} frame={frame} />}
   </>
