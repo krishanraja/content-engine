@@ -1,7 +1,9 @@
 import React from 'react'
-import { wrapWords } from '../../../house/metrics'
+import { textWidth, wrapWords } from '../../../house/metrics'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import { EXIT, MOTION, drift, progress, stateAt, typingProgress } from '../../clock'
+import type { Focus } from '../../kit/focus'
+import { typedText } from '../../kit/reveal'
 import type { DeviceProps } from '../types'
 import { ParamsSchema } from './schema'
 
@@ -27,16 +29,82 @@ export function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object
     sent: !!send, sendProgress: send ? progress(frame - send.atFrame, MOTION.slapFrames) : 0,
     rows: params.rows.map((row, i) => {
       const cue = active.filter(e => e.verb === 'type' && Number(e.toState) === i).at(-1)
-      if (!cue) return { ...row, text: '', visible: false, dots: false }
+      if (!cue) return { ...row, text: '', caret: false, cueFrame: -1, visible: false, dots: false }
       // The next cue bounds the span; unrelated objects cannot alter typing speed.
       const end = Math.min(object.toFrame, ...events.filter(e => e.obj === object.obj && e.atFrame > cue.atFrame).map(e => e.atFrame))
       const span = Math.max(1, end - cue.atFrame)
       const lead = params.kind === 'chat' ? Math.min(MOTION.staggerFrames, span / 4) : 0
       const p = typingProgress(frame, cue, Math.max(1, span - lead), lead)
-      return { ...row, text: Array.from(row.text).slice(0, Math.floor(Array.from(row.text).length * p)).join(''),
-        visible: true, dots: p < 1 && frame < cue.atFrame + lead }
+      // The house spreads the text over its span; a typing style types it at its own rate (kit/reveal.ts).
+      const opening = cue.atFrame === 0 && frame >= 0
+      const typed = typedText(row.text, opening ? Number.POSITIVE_INFINITY : frame - cue.atFrame - lead, Math.max(1, span - lead), p)
+      return { ...row, text: typed.text, caret: typed.caret, cueFrame: cue.atFrame,
+        visible: true, dots: !typed.done && frame < cue.atFrame + lead }
     }),
   }
+}
+
+const LINE = 57.2 // 44 px at a 1.3 line height
+
+/** The card's frame box and the geometry its rows are laid out on, as Device draws it. */
+function cardGeometry(params: ReturnType<typeof ParamsSchema.parse>, objectParams: unknown, box: DeviceProps['box'], aspect: DeviceProps['aspect']) {
+  const tall = aspect === '9:16'
+  const layout = tall ? { width: 0.9, top: 0.12, padding: 40 } : { width: 0.64, top: 0.08, padding: 36 }
+  const stage = box.left === 0 && box.top === 0 && box.height === (tall ? 1920 : 1080)
+  const stageBox = stage ? stageBubbleBox(objectParams, box.width, box.height) : undefined
+  const width = stageBox?.width ?? Math.max(920, box.width * layout.width)
+  const left = box.left + (box.width - width) / 2
+  const top = stageBox?.top ?? box.top + box.height * layout.top
+  const header = params.kind === 'chat' ? 150 : params.kind === 'order' ? 120 : params.kind === 'email' ? 203 : 0
+  return { left, top, width, padding: layout.padding + 1, inner: width - 2 * layout.padding - 2, header }
+}
+
+/** The line being typed (or the last line typed), in the device's own box pixels, and which row and line it is. */
+function typedLine(s: NonNullable<ReturnType<typeof bubbleState>>, objectParams: unknown, box: DeviceProps['box'], aspect: DeviceProps['aspect']) {
+  const g = cardGeometry(s.params, objectParams, box, aspect)
+  const chat = s.params.kind === 'chat'
+  const active = s.rows.reduce<number>((best, row, i) => row.visible && (best < 0 || (row.cueFrame ?? -1) >= (s.rows[best]!.cueFrame ?? -1)) ? i : best, -1)
+  if (active < 0) return undefined
+  let top = g.top + g.padding + g.header
+  for (let i = 0; i < active; i++) {
+    const row = s.rows[i]!
+    if (!row.visible) continue
+    top += 28 + 2 + (chat ? 48 : 40) + wrapWords('archivo600', row.text || ' ', 44, chat ? g.inner * 0.86 - 58 : g.inner - 50).length * LINE +
+      (row.who && !chat && s.params.kind !== 'email' ? 69.2 : 0)
+  }
+  const row = s.rows[active]!
+  const full = s.params.rows[active]!.text
+  const lines = wrapWords('archivo600', full, 44, chat ? g.inner * 0.86 - 58 : g.inner - 50)
+  // The line holding the last typed character.
+  let typed = Array.from(row.text).length, line = 0
+  for (; line < lines.length - 1; line++) {
+    const length = Array.from(lines[line]!.join(' ')).length + 1
+    if (typed <= length) break
+    typed -= length
+  }
+  const width = textWidth('archivo600', lines[line]!.join(' '), 44)
+  const textTop = top + 1 + (chat ? 24 : 20) + (row.who && !chat && s.params.kind !== 'email' ? 69.2 : 0) + line * LINE
+  const pad = chat ? 28 : 24
+  const right = chat && row.side === 'right'
+  const left = right ? g.left + g.padding + g.inner - 1 - pad - width : g.left + g.padding + 1 + pad
+  return { key: `${active}:${line}`, rect: { left, top: textTop, width, height: LINE } }
+}
+
+/** living-ui's camera target (kit/focus.ts): the line being typed, in the device's own box pixels. It moves from
+ *  line to line as typing goes on, and reports how long it has been on this line. */
+export function bubbleFocus({ object, events, box, aspect, frame }: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | 'frame'>): Focus | undefined {
+  const at = (f: number) => {
+    const s = bubbleState({ object, events, frame: f })
+    return s && s.out === 0 ? typedLine(s, object.params, box, aspect) : undefined
+  }
+  const now = at(frame)
+  if (!now) return undefined
+  let since = 0
+  for (; since < 60; since++) {
+    const before = at(frame - since - 1)
+    if (before?.key !== now.key) return { rect: now.rect, since, ...(before ? { from: before.rect } : {}) }
+  }
+  return { rect: now.rect, since }
 }
 
 /** Completed card bounds anchor the top while event-revealed rows grow downward. */
@@ -118,7 +186,8 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
             return <span key={dot} data-dot style={{ width: 16, height: 16, borderRadius: '50%', background: tokens.inkSoft,
               transform: `translateY(${-push * 280}px) scale(${0.8 + push * 8})` }} />
           })}
-        </span> : <span data-body style={{ whiteSpace: 'pre-wrap' }}>{row.text}</span>}
+        </span> : <span data-body style={{ whiteSpace: 'pre-wrap' }}>{row.text}{row.caret && <span data-caret style={{ display: 'inline-block',
+          width: 0, height: '1.05em', verticalAlign: '-0.18em', boxShadow: `0 0 0 2px ${tokens.ink}` }} />}</span>}
       </div>
     </div>)}
     {kind === 'choice' && s.params.options!.map((option, i) => <section key={i} data-section style={{ marginTop: 24 }}>

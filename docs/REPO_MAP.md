@@ -1154,6 +1154,9 @@ The making record: where one piece is on its way from the workroom to
 - `interface MakingSpokenExample`
 - `type MakingSpokenDelta`
 - `interface Making`
+- `interface MakingGate`
+- `type MakingStyleVerdict`
+- `interface MakingGates`
 - `type MakingPatch`
 - `const SCRIPT_SHA256`
 - `const TELEPROMPTER_ID`
@@ -1950,6 +1953,10 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `const OFFDAY_ID`
 - `const DECISION_ID`
 - `const DECISION_KIND`
+- `const GATE_KINDS`
+- `type GateKind = keyof typeof GATE_KINDS`
+- `const STYLE_VERDICTS`
+- `const PROOF_VERDICTS`
 - `const MIX_ID`
 - `function mixBody(body: Record<string, unknown>): boolean`
 - `const FEEL_ID`
@@ -1985,8 +1992,13 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 - `interface LiveStep`
 - `interface LiveCut`
+- `type GateName = 'storyboard' | 'style' | 'proof' | 'final'`
+- `const GATE_NAMES: readonly GateName[]`
+- `type GateState`
+- `interface LiveGate`
 - `interface LiveDay`
 - `interface WeekLive`
+- `function liveGate(name: GateName, g: unknown): LiveGate`
 - `function liveDay(piece: Body, date: string): LiveDay`
 - `async function weekLive(db: SupabaseClient, week: string, builtAt: string | null): Promise<WeekLive>`
 
@@ -2028,6 +2040,9 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `class PressError`
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
+- `function gatePatch(kind: GateKind, body: Body, now: string): MakingGates`
+- `async function recordGate(db: SupabaseClient, pieceId: string, patch: MakingGates, now: string): Promise<string | null>`
+- `function gateReport(week: string, id: string, body: Body, now: string)`
 - `function feelReport(week: string, id: string, body: Body, now: string)`
 - `function offdayReports(week: string, id: string, body: Body, now: string)`
 - `function scoreRow(week: string, id: string, body: Body, now: string)`
@@ -3502,6 +3517,14 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function FormatMaster(props: EngineRenderProps)`
 
+### `apps/renderer/src/engine/FormatMaster.tsx`
+
+- `function FormatMaster(props: EngineRenderProps)`
+
+### `apps/renderer/src/engine/FormatMaster.tsx`
+
+- `function FormatMaster(props: EngineRenderProps)`
+
 ### `apps/renderer/src/engine/audio.tsx`
 
 - `function EngineAudio({ audio }: { audio: EngineRenderProps['audio'] })`
@@ -3558,15 +3581,21 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/clock.ts`
 
 - `const FPS`
-- `const ENTER`
 - `const EXIT`
-- `const HERO`
-- `const MOTION`
+- `const HOUSE_MOTION`
+- `function overshootEase(pct: number): (t: number) => number`
+- `function setMotionProfile(profile: MotionProfile | undefined): void`
+- `function motionProfile(): MotionProfile | undefined`
+- `const ENTER = (t: number): number =>`
+- `const HERO = (t: number): number =>`
+- `const BACK = (t: number): number =>`
+- `const MOTION: Motion`
 - `function useEngineFrame(): number`
 - `interface DeviceState`
 - `function stateAt(events: readonly EngineEvent[], obj: string, frame: number): DeviceState`
 - `function progress(sinceFrames: number, durationFrames: number, easing: (t: number) => number = ENTER): number`
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
+- `function onTwos(frame: number, fromFrame: number): number`
 - `function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number`
 
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
@@ -3593,6 +3622,12 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/evidence_card/state.ts`
 
 - `function evidenceState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/focus.ts`
+
+- `const FOCUS: Readonly<Record<string, (p: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | 'frame'>) => Focus …`
+- `const PEN: Readonly<Record<string, (object: EngineObject, events: readonly EngineEvent[]) => (frame: number) => Point |…`
+- `const TYPED: readonly string[]`
 
 ### `apps/renderer/src/engine/devices/hand_phone_stage/index.tsx`
 
@@ -3692,6 +3727,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function queryLayout(box: Box, text: string, aspect: DeviceProps['aspect'])`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `function chipFocus({ object, events, box, aspect, frame }: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' | '…`
 
 ### `apps/renderer/src/engine/devices/query_chip/schema.ts`
 
@@ -3740,6 +3776,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/scribble/state.ts`
 
 - `function scribbleState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `function scribblePen(object: EngineObject, events: readonly EngineEvent[]): (frame: number) => Point | undefined`
 
 ### `apps/renderer/src/engine/devices/stamp/index.tsx`
 
@@ -3813,6 +3850,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/typing_bubble/index.tsx`
 
 - `function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+- `function bubbleFocus({ object, events, box, aspect, frame }: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' |…`
 - `function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight = 1920)`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
@@ -3844,6 +3882,18 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function Scribble({ d, colour, tokens, sinceFrames, exiting = false }: { d: string; colour: 'cream' | 'mint'; tokens: E…`
 
+### `apps/renderer/src/engine/kit/beatMotion.ts`
+
+- `interface Box`
+- `interface BeatMotion`
+- `interface CameraView`
+- `function transitionFrames(profile: MotionProfile): number`
+- `function keepsOutgoing(profile: MotionProfile | undefined, beat: EngineBeat, next: EngineBeat | undefined): boolean`
+- `function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number, view: CameraVie…`
+- `function stageGround(profile: MotionProfile | undefined, tokens: EngineTokens): CSSProperties`
+- `function sweepStyle(profile: MotionProfile, tokens: EngineTokens, beat: EngineBeat, frame: number): CSSProperties | null`
+- `function halftoneTexture(tokens: EngineTokens): CSSProperties`
+
 ### `apps/renderer/src/engine/kit/camera.ts`
 
 - `interface Camera`
@@ -3853,6 +3903,22 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/kit/flags.tsx`
 
 - `function PrintedFlag({ kind, tokens, width = 214, height = 113 }: { kind: 'usa' | 'china' | 'unknown'; tokens: EngineTo…`
+
+### `apps/renderer/src/engine/kit/focus.ts`
+
+- `type Point = readonly [number, number]`
+- `interface Focus`
+- `const SAFE_TALL`
+- `const SAFE_WIDE`
+- `interface Room`
+- `function focusRoom(aspect: '9:16' | '16:9', layout: string, takeBehind: boolean, slots: readonly Box[]): Room`
+- `function zoomTarget(rect: Box, room: Room, scaleTo: number): { scale: number; centre: Point; mapped: Box }`
+- `function insideRoom(box: Box, room: Room, slack = 0.5): boolean`
+- `function pathTrack(d: string): Track`
+- `function pointAlong(d: string, fraction: number): Point`
+- `const PEN_FOLLOW`
+- `function followPen(pen: (frame: number) => Point | undefined, fromFrame: number, frame: number, centre: Point): { centr…`
+- `function placed(box: Box, place?: { left: number; top: number; scale: number }): Box`
 
 ### `apps/renderer/src/engine/kit/glass/bubble.tsx`
 
@@ -3917,6 +3983,19 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `const SCRIBBLE`
 - `const ZONES`
 
+### `apps/renderer/src/engine/kit/motionProfiles.ts`
+
+- `const MotionProfileSchema`
+- `type MotionProfile = z.infer<typeof MotionProfileSchema>`
+- `const EngineMotionSchema`
+- `type EngineMotion = z.infer<typeof EngineMotionSchema>`
+- `const MOTION_PROFILES: Readonly<Record<string, MotionProfile>>`
+- `const NEEDS_DEVICE: readonly string[]`
+- `const FLOOR`
+- `function floorProblems(profile: MotionProfile): string[]`
+- `function clampToFloor(profile: MotionProfile): MotionProfile`
+- `function resolveMotion(motion: EngineMotion | undefined): MotionProfile | undefined`
+
 ### `apps/renderer/src/engine/kit/overlay.ts`
 
 - `const houseTokens = (tokens: EngineTokens) =>`
@@ -3945,6 +4024,16 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `const QUAD: readonly Point[]`
 - `class Screen`
 - `function uiClipPath(expand=9,rad=36): string`
+
+### `apps/renderer/src/engine/kit/reveal.ts`
+
+- `function entranceStyle(p: number): CSSProperties`
+- `interface WordReveal`
+- `interface LineReveal`
+- `function revealLines(lines: readonly string[], age: number): LineReveal[]`
+- `function revealChars(text: string, age: number): number`
+- `interface Typed`
+- `function typedText(text: string, age: number, spanFrames: number, houseP: number): Typed`
 
 ### `apps/renderer/src/engine/kit/scribblePath.ts`
 

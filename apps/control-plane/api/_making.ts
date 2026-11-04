@@ -165,12 +165,27 @@ export interface Making {
   /** Krish's own words on how a linked card is used (show_with_sound or reference), keyed by card id; merged card by
    *  card. Never inferred: a card with no entry is a reference. */
   clip_uses?: Record<string, ClipUseRecord>
+  /** Krish's presses on the production gates of the piece's day tab (docs/PUBLISH_BOARDS.md, "The production gates on
+   *  a day's tab"), each bound to the sha256 of what the tab showed him. Written only by the server after his press
+   *  (board/_presses.ts recordGate), gate by gate; the making route refuses a patch that brings one. ve reads them. */
+  gates?: MakingGates
+  /** How many full renders went to him before he approved the cut (the "one round" measure), written by the engine. */
+  rounds?: number
   /** Retired on 2026-10-12, when Descript was (Krish: "Descript is
    *  permanently gone"). Records written before then still hold it; it is
    *  kept as it is, so they still parse, and nothing reads it. */
   descript?: unknown
   updated_at: string
   by: string
+}
+
+export interface MakingGate { by: 'Krish'; at: string; sha256: string }
+export type MakingStyleVerdict = { module: string; verdict: 'picked' | 'seen' | 'not_for_us'; sha256?: string }
+export interface MakingGates {
+  storyboard?: MakingGate
+  style?: MakingGate & { module: string | null; reason?: string; verdicts: MakingStyleVerdict[] }
+  proof?: MakingGate & { verdict: 'approve' | 'reject'; words?: string; cut?: MakingCut }
+  final?: MakingGate & { cuts?: Partial<Record<MakingCut, string>> }
 }
 
 export type MakingPatch = Partial<Omit<Making, 'updated_at' | 'by' | 'started_at' | 'descript'>>
@@ -516,6 +531,12 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
   }
   // Descript was retired on 2026-10-12; a record of a send there is not taken.
   if (body.descript !== undefined) problems.push('descript was retired on 2026-10-12 (Krish: "Descript is permanently gone, teleprompter.com is permanently in"): record the Teleprompter send in teleprompter')
+  if (body.gates !== undefined) problems.push('gates are written only by Krish\'s presses on the publish board')
+  if (body.rounds !== undefined) {
+    const n = count(body.rounds)
+    if (n === null || n > 99) problems.push('rounds is how many full renders went to Krish before he approved the cut: a whole number, 0 to 99')
+    else patch.rounds = n
+  }
   return { patch, problems }
 }
 
@@ -577,6 +598,11 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
     // Cut by cut: the short's delta never drops the long's.
     const held = isObj(base.spoken_delta) ? base.spoken_delta : {}
     next.spoken_delta = { ...held, ...patch.spoken_delta }
+  }
+  if (patch.rounds !== undefined) next.rounds = patch.rounds
+  if (patch.gates) {
+    // Gate by gate: his press on the proof keeps his signed storyboard and his style pick.
+    next.gates = { ...(isObj(base.gates) ? base.gates : {}), ...patch.gates }
   }
   if (patch.clip_uses) {
     // Card by card: his words on one clip keep the others.

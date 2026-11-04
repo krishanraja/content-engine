@@ -2,6 +2,18 @@
 
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
+## 4 November: Wednesday 11 Nov (36886e0b, the Reiki master's No. 2) scripts on its tab (Claude Code, make-piece run)
+
+From the signed lock, both scripts are written and recorded on the piece (Scripts: done; Workroom: done):
+`docs/plans/2026-11-11-draft-script.md` and `-90s.md`. Checks, facts and two read-back rounds:
+`docs/plans/2026-11-09-week/wed-scripts-check.md`. Every retelling matched; no round came back all
+"nothing", so the words went to Krish. Wednesday's tab on the 9 Nov web board (build 9f6ce78a, Monday and
+Friday kept) is in draft with both scripts as review boxes and one waiting line. The node kill list could not
+run in the Actions run (only python3 allowed); its vetoes were checked by reading. **Next:** his Approve scripts
+press (or edits); then `making.py read-back --krish-words` per cut, the creative direction, and the article.
+Republishing this board: `docs/plans/2026-11-09-week/board-assets.json` maps Monday's six downloads to their
+stored assets (a kept made day's Drive links need it).
+
 ## 3 November: Friday 13 Nov (f3fcd5e1, "counting rat tails") scripts on its tab (Claude Code, make-piece run)
 
 From the signed lock, both scripts are written and recorded on the piece (`making.py scripts`; Scripts: done):

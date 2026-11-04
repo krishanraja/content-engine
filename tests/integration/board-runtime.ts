@@ -42,13 +42,20 @@ await pg.exec(rejections.slice(rejections.indexOf('create table public.taste_rej
 await pg.exec(`create table public.content_ideas (id uuid primary key, meta jsonb not null default '{}'::jsonb, updated_at timestamptz not null default now(),
   state text not null default 'drafting', idea text, lane_slot text, scheduled_for date, published_at timestamptz, published_url text, transformed_outputs jsonb, buried_at timestamptz);
   grant select, insert, update on public.taste_rejection_inbox, public.content_ideas to service_role;`)
+// His taste ledger's reports table as its migration makes it (the table and its checks), for his words on a gate.
+const reports=await readFile(new URL('../../supabase/migrations/20261113090000_taste_reports.sql', import.meta.url), 'utf8')
+await pg.exec(reports.slice(reports.indexOf('create table public.taste_reports ('), reports.indexOf('create index taste_reports_uncollected'))
+  + 'grant select, insert, update on public.taste_reports to service_role;')
 // His scores exactly as their migration makes them (W2.1), loaded after content_ideas, which they reference.
 await pg.exec((await readFile(new URL('../../supabase/migrations/20261118090000_piece_scores.sql', import.meta.url), 'utf8')).replace(/^begin;$|^commit;$/gm, ''))
 await pg.exec('set role service_role')
 type Row = Record<string, unknown>
 class Query {
   filters: [string, unknown][] = []; sorting = ''; offset = 0; count = 10000; single = false; payload: Row[] | null = null; jsonFilter: [string,unknown] | null = null
-  constructor(readonly table: string) { assert.match(table,/^(board_[a-z]+|content_ideas|taste_rejection_inbox|piece_scores|piece_scores_current)$/) }
+  changes: Row | null = null
+  constructor(readonly table: string) { assert.match(table,/^(board_[a-z]+|content_ideas|taste_rejection_inbox|taste_reports|piece_scores|piece_scores_current)$/) }
+  // The guarded write the making record takes (update ... eq id, eq updated_at, select id): the rows it changed.
+  update(values: Row) { this.changes=values; return this }
   select(_fields: string) { return this }
   eq(key: string, value: unknown) { this.filters.push([key,value]); return this }
   contains(key: string,value: unknown) { this.jsonFilter=[key,value]; return this }
@@ -81,7 +88,15 @@ class Query {
       for(const k of this.nulls)where.push(`${k} is null`)
       for(const [k,v] of this.gtes){params.push(v);where.push(`${k}>=$${params.length}`)}
       for(const [k,v] of this.ltes){params.push(v);where.push(`${k}<=$${params.length}`)}
+      if(this.changes){
+        const keys=Object.keys(this.changes); keys.forEach(k=>assert.match(k,/^[a-z_][a-z0-9_]*$/))
+        const sets=keys.map((k,i)=>`${k}=$${params.length+i+1}`)
+        const changed=await pg.query(`update ${this.table} set ${sets.join(',')}${where.length?' where '+where.join(' and '):''} returning id`,[...params,...Object.values(this.changes)])
+        return {data:changed.rows,error:null}
+      }
       const result=await pg.query(`select * from ${this.table}${where.length?' where '+where.join(' and '):''}${this.sorting} limit ${this.count} offset ${this.offset}`,params)
+      // PostgREST answers a timestamp as ISO text, which the guarded write then compares against.
+      if(this.table==='content_ideas')for(const row of result.rows as Row[])for(const [k,v] of Object.entries(row))if(v instanceof Date)row[k]=v.toISOString()
       return {data:this.single?result.rows[0]||null:result.rows,error:null}
     } catch(error) {return {data:null,error}}
   }
@@ -209,6 +224,22 @@ try{
     // Words the check did not pass (his edit since) are held for a session, and nothing is sent.
     const edited=await put(presses+'/picks/wed-scripts',{body:{...approval,day:'wed',texts:{long:'Said long, then changed.',short:'Said short.'}},revision:0},200,krish)
     assert.equal(edited.send.status,'held');assert.match(edited.send.error,/not the words the scripts' check passed/)
+    // The production gates (docs/PUBLISH_BOARDS.md, "The production gates on a day's tab"): his press, bound to the hash
+    // of what the tab showed, lands on the piece's making record through the real SQL, gate by gate; his words on a
+    // rejected proof go to his taste ledger once.
+    const storyboard={kind:'sign_storyboard',day:'mon',piece_id:piece,approved:true,sha256:'a'.repeat(64)}
+    await put(presses+'/picks/mon-storyboard',{body:storyboard,revision:0},403)
+    const signed=await put(presses+'/picks/mon-storyboard',{body:storyboard,revision:0},200,krish);assert.equal(signed.gate,'recorded',signed.gate_error)
+    await put(presses+'/picks/mon-proof',{body:{kind:'approve_proof',day:'mon',piece_id:piece,sha256:'c'.repeat(64),verdict:'reject'},revision:0},400,krish)
+    const rejected=await put(presses+'/picks/mon-proof',{body:{kind:'approve_proof',day:'mon',piece_id:piece,sha256:'c'.repeat(64),verdict:'reject',words:'The captions sit on my face.'},revision:0},200,krish)
+    assert.equal(rejected.gate,'recorded');assert.equal(rejected.taste,'filed')
+    const said=(await pg.query('select kind, body, said_where, polarity, subject_ref from taste_reports')).rows as Row[]
+    assert.deepEqual(said,[{kind:'krish_words',body:'The captions sit on my face.',said_where:'publish board, 2026-11-09 picks/mon-proof',polarity:'dislikes',subject_ref:`piece:${piece}`}])
+    const gates=((await pg.query('select meta from content_ideas where id=$1',[piece])).rows[0] as Row).meta.making
+    assert.deepEqual(Object.keys(gates.gates).sort(),['proof','storyboard'])
+    assert.equal(gates.gates.storyboard.sha256,'a'.repeat(64));assert.equal(gates.gates.proof.words,'The captions sit on my face.')
+    assert.ok(gates.script_check.passed,'the rest of the making record stays')
+    assert.deepEqual((await get(presses+'/storyboard')).documents.map((d:Row)=>d.id),['mon-storyboard'])
     // A rejected asset files his reason in the inbox once, against the table's own checks; a rejected idea files nothing.
     const reject={kind:'reject_asset',day:'mon',piece_id:piece,asset:'video-short',label:'90-second video',reason:'The captions drift.',
       drive_id:'a'.repeat(33),at_ms:83000,formats:['short_video'],at:'2026-11-09T07:40:00Z'}

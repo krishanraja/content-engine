@@ -167,6 +167,37 @@ Videos: every piece is a 90-second and a 5-minute video. A 15-minute feature
 appears as a third cut only on a piece Krish called one for
 (`config/features.json`, house rule FEATURE).
 
+### The production gates on a day's tab
+
+Krish, 2026-11-04: "Can I select a visual style now that we have different
+style skills? Do I get shown mocks at the right moment?" Each visual decision
+on a ve piece is one press on its series day's Record step, in this order,
+under "Production gates". Each press is his alone (`hisOnlyRefusal`), bound to
+the sha256 of what the section shows, and saved as `picks/<day>-<gate>`
+(`board_documents` takes no new collection without a migration, so each gate
+is also a read-only view: `GET /api/board/<Monday>/storyboard`, `style`,
+`proof`, `cut`). After the save the server writes it onto the piece's making
+record as `meta.making.gates.<gate>`, gate by gate, with the guarded write
+Approve scripts uses (`_presses.ts` `recordGate`). The making route refuses a
+patch that brings `gates`. ve reads them there.
+
+| Press | What it shows | What it writes | What it unlocks |
+|---|---|---|---|
+| Sign storyboard (`--storyboard DAY=storyboard.md`, `expect.md` beside it or `--expect`) | The storyboard and the expectations sheet (at most 6 lines, `ve expect`) | `gates.storyboard {by, at, sha256}`; sha256 of canonical `{"expect", "storyboard"}`, LF line ends (`storyboard_sha`) | Recording |
+| Pick a style (`--styles DAY=styles.json`) | The style mocks side by side on his take, each with its name, one-line how, Pick and "Not for us"; "None of these" needs his words | `gates.style {by, at, sha256, module, reason?, verdicts}`; sha256 of the styles.json bytes; `module` null for None of these; `verdicts` `[{module, verdict: picked, seen or not_for_us, sha256}]`, which the engine's verdict writer folds into `config/style-references.json` (the server never edits that file) | `style.motion` |
+| Approve or Reject proof (`--proof DAY=proof/<cut>.json`) | The moving proof beside the reference cards its spec names (`brand.references`) | `gates.proof {by, at, sha256, verdict, words?, cut?}`; sha256 the clip's; Reject needs his words | The full render |
+| Approve cut (from the making record's cuts with their `sha256`) | Both cuts, each with its download | `gates.final {by, at, sha256, cuts}`; one cut: its file hash; both: sha256 of canonical `cuts` | Filing |
+
+Each clip plays from the board's own copy of its bytes: map it in `--assets`
+(the mapping `board_web.py publish-web` takes); a clip with no mapping is
+refused, never shown empty. His words on a Rejected proof or on None of these
+go to his taste ledger as `krish_words` with where and when. The live overlay
+carries each gate's state, time and hash, and `rounds` (full renders sent before
+he approved) when the engine records it; the page says signed, picked <style>,
+approved, rejected or waiting on you, holds a press the record holds at the hash
+shown, and says "this changed since you pressed; press again" when the hash
+differs. A day given none of these inputs is drawn exactly as before.
+
 ### The Publish run-sheet
 
 Krish, 2026-10-21: "have a think about where I publish, how I publish, what I

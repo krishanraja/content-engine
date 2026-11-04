@@ -1949,6 +1949,21 @@
           "how": "the opening thresholds, calibrated on the four rejected openings"
         }
       ]
+    },
+    {
+      "id": "carousel-cover-is-a-scene",
+      "on": "2026-11-04",
+      "krish": "The first card of each mock should have a much more engaging background image.",
+      "why": "Three off-day carousel mocks for the week of 9 November opened on a headline over a plain ground; he asked for an engaging background image on every cover and for no future carousel to need the note again.",
+      "means": "Card 1 of every carousel is a full-bleed generated (or rights-clear) scene that carries the idea, dark in its lower half under the headline; logos on dark grounds are shown in white or on a light tile.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "docs/CAROUSEL-STANDARD.md",
+          "contains": "The cover card is a scene, not a slide",
+          "how": "the carousel standard Growth and the engine make every carousel to"
+        }
+      ]
     }
   ]
 }

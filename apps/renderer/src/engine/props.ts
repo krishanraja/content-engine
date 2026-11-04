@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { EngineMotionSchema } from './kit/motionProfiles'
 
 /** What `ve compile` hands the renderer for one cut: everything already resolved to frames on ONE clock.
  *  The spec (packages/contracts/src/production-spec.ts) speaks in word indexes; this speaks in frames.
@@ -92,6 +93,8 @@ export const EngineRenderPropsSchema = z.object({
   events: z.array(EngineEventSchema),
   call: z.object({ statement: z.string(), due: z.string(), confidencePercent: z.number().int() }).strict().optional(),
   ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true) }).strict().optional(),
+  /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
+  motion: EngineMotionSchema.optional(),
 }).strict()
 
 export type EngineRenderProps = z.infer<typeof EngineRenderPropsSchema>

@@ -1035,8 +1035,27 @@
       "what": "Accepted still frames were treated as enough confidence to scale, with no representative moving sequence proven.",
       "symptom": "The v6 styleframe was approved (approval.json scope: 'Not final video'); three cuts were then exported on 26 Oct 22:49-23:13 UTC with no moving proof of narration, captions, brand, transitions and camera sync together.",
       "cause": "Still-image confidence was carried over to motion. The rule that a representative proof precedes full production was written but not enforced.",
-      "status": "open",
-      "guards": [],
+      "status": "guarded",
+      "surface": "Every piece from 9 Nov proves its hardest beat moving on his own take (ve proof) and Krish approves that clip before any whole cut renders.",
+      "guards": [
+        {
+          "file": "scripts/velib/proof.py",
+          "contains": "def hardest_beat(",
+          "how": "ve proof renders only the cut's hardest beat (most devices, then a SPLIT beat with a card, then the longest) from his real take through the one render path and records its sha256 and the spec's structural hash",
+          "test": "python3 tests/ve_proof_test.py"
+        },
+        {
+          "file": "scripts/ve.py",
+          "contains": "def render_refusal(",
+          "how": "from MOTION_FROM ve render refuses a whole cut unless Krish approved the proof clip by its sha256 and the spec's style, devices and beat plan are unchanged since (a caption edit keeps it, a style change breaks it)",
+          "test": "python3 tests/ve_proof_test.py"
+        },
+        {
+          "file": "scripts/velib/packet.py",
+          "contains": "proof.required(spec, cut)",
+          "how": "ve packet and ve status hold a whole cut from MOTION_FROM whose approved proof is missing or stale, in every format, not legacy formats only"
+        }
+      ],
       "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F04)",
       "registry": [
         "R11"
@@ -1049,7 +1068,7 @@
         "qc_row": "Scaled before proof (R11, F04, F13)",
         "ref": "ve render --all refuses without approvals.proof while anything in the spec is trial; the Phase 1 proof is one 19.5 s sequence",
         "test": "render --all on a spec with a trial element and no approvals.proof exits non-zero",
-        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+        "status": "built 4 Nov 2026 as ve proof and the ve render refusal (guards above)"
       }
     },
     {
@@ -1274,8 +1293,22 @@
       "what": "The approach was carried across four cuts before the hardest combined sequence was proven; renderer, cache and audio repairs ate the time.",
       "symptom": "Three of the four cuts were first exported 22:49-23:13 UTC on 26 Oct and delivered at 23:23, every receipt saying full_visual_playback false.",
       "cause": "The chosen pipeline was optimised instead of reassessed; the first integrated prototype never decided whether to scale.",
-      "status": "open",
-      "guards": [],
+      "status": "guarded",
+      "surface": "The hardest combined sequence is proven first: ve proof renders it, Krish approves or rejects it with his words, and nothing scales to a whole cut until he approves it.",
+      "guards": [
+        {
+          "file": "scripts/ve.py",
+          "contains": "def render_refusal(",
+          "how": "a whole cut of a piece from MOTION_FROM is refused by ve render until an approved proof of its hardest beat stands for the spec as it is now; his reject on the making record wins over a local approval",
+          "test": "python3 tests/ve_proof_test.py"
+        },
+        {
+          "file": "scripts/velib/refgate.py",
+          "contains": "def proof_problems(",
+          "how": "the Critic scores the whole cut against the proof clip Krish approved, 8/10 or the cut is not ready; no approved proof is itself a hold",
+          "test": "python3 tests/ve_proof_test.py"
+        }
+      ],
       "source": "docs/plans/2026-10-23-friday/audit-2026-10-27/FULL-SESSION-FAILURE-REPORT.md (F13)",
       "registry": [
         "R11"
@@ -1288,7 +1321,7 @@
         "qc_row": "Scaled before proof (R11, F04, F13)",
         "ref": "ve render --all refuses without approvals.proof while anything in the spec is trial; the Phase 1 proof is one 19.5 s sequence",
         "test": "render --all on a spec with a trial element and no approvals.proof exits non-zero",
-        "status": "planned in the ve plan (27 Oct); not built on main, so no guard yet"
+        "status": "built 4 Nov 2026 as ve proof and the ve render refusal (guards above)"
       }
     },
     {

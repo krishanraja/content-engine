@@ -2,10 +2,10 @@ import React from 'react'
 import { Swipe } from '../../../house/components'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import { textWidth, wrapWords } from '../../../house/metrics'
-import { ENTER, MOTION, progress } from '../../clock'
 import { fitScale } from '../../fit'
 import { ZONES } from '../../kit/lock'
 import { canvasRect, halftone, houseTokens } from '../../kit/overlay'
+import { entranceStyle, revealLines } from '../../kit/reveal'
 import type { DeviceProps } from '../types'
 import { headlineState } from './state'
 
@@ -31,21 +31,32 @@ export function Device({ object, events, box, aspect, tokens, frame }: DevicePro
   if (s.dek && (wrapWords('fraunces', s.dek, 44, dekWidth).length * 44 * 1.16 > 110 ||
     s.dek.split(/\s+/).some(word => textWidth('fraunces', word, 44) > dekWidth)))
     throw new Error('Dek copy does not fit at 44px')
+  const reveal = revealLines(s.lines.map(line => line.toUpperCase()), s.age)
   return <>
     <div data-overlay="headline" style={{ ...canvasRect(at.x, at.y, at.w, l.height), color: s.ground === 'light' ? tokens.ink : tokens.cream,
       fontFamily: HOUSE_FONTS.display, fontSize: l.size, lineHeight: 0.88, opacity: 1 - s.exit }}>
       {s.lines.map((line, i) => {
-        const p = progress(s.age - i * MOTION.staggerFrames, MOTION.enterFrames, ENTER)
-        return <div key={i} style={{ opacity: p, transform: `translateY(${24 * (1 - p)}px)`, whiteSpace: 'nowrap' }}>
-          {line.toUpperCase().split(/\s+/).map((word, j) => {
-            if (s.swipe?.line !== i || s.swipe.word !== j) return <React.Fragment key={j}>{j > 0 ? ' ' : ''}{word}</React.Fragment>
+        // The shared reveal (kit/reveal.ts): by line with no style, as before; by word, typed or rolled in a style.
+        const r = reveal[i]!
+        const words = line.toUpperCase().split(/\s+/).map((word, j) => {
+          const w = r.words[j]!
+          const shown = w.chars >= word.length ? word : <>{word.slice(0, w.chars)}<span style={{ opacity: 0 }}>{word.slice(w.chars)}</span></>
+          const swiped = s.swipe?.line === i && s.swipe.word === j
+          let body: React.ReactNode = shown
+          if (swiped) {
             const swipe = Swipe({ children: word, tokens: { ...houseTokens(tokens), mint: tokens.channel }, display: true })
             const children = React.Children.toArray(swipe.props.children)
             const block = children[0] as React.ReactElement<{ style: React.CSSProperties }>
-            return <React.Fragment key={j}>{j > 0 ? ' ' : ''}{React.cloneElement(swipe, {},
-              React.cloneElement(block, { style: { ...block.props.style, ...halftone(tokens) } }), word)}</React.Fragment>
-          })}
-        </div>
+            body = React.cloneElement(swipe, {}, React.cloneElement(block, { style: { ...block.props.style, ...halftone(tokens) } }), word)
+          }
+          // A word typing in shows its typed part; the swiped word waits until it is whole.
+          const unit = w.chars < word.length ? (swiped ? <span style={{ opacity: 0 }}>{body}</span> : shown)
+            : w.p === 1 ? body : <span style={{ display: 'inline-block', ...entranceStyle(w.p) }}>{body}</span>
+          return <React.Fragment key={j}>{j > 0 ? ' ' : ''}{unit}</React.Fragment>
+        })
+        if (r.roll) return <div key={i} style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
+          <div style={{ transform: `translateY(${(100 * (1 - r.p)).toFixed(3)}%)`, opacity: Math.min(1, r.p * 2) }}>{words}</div></div>
+        return <div key={i} style={{ ...entranceStyle(r.p), whiteSpace: 'nowrap' }}>{words}</div>
       })}
     </div>
     {s.dek && <div style={{ ...canvasRect(s.dekAt?.x ?? (beside ? at.x + wordWidth + 32 : at.x),
