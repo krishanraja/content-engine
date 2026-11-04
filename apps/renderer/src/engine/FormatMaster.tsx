@@ -128,8 +128,8 @@ export function FormatMaster(props: EngineRenderProps) {
         const ground = beat.layout === 'SPLIT' ? { height: splitCameraBox(props.aspect).top, backgroundColor: profile ? splitGroundColour(profile, props.tokens) : props.tokens.cream, overflow: 'hidden' as const }
           // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
           // the ground StageHeader's logo is drawn for.
-          // face-with-proof with no motion profile sits on the light wash of its SPLIT stage (lightStage).
-          : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? (lightStage(props) && !profile
+          // face-with-proof (lightStage) sits on the light wash of its SPLIT stage.
+          : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? (lightStage(props)
             ? { background: `radial-gradient(ellipse at 50% 40%, ${props.tokens.cream} 0%, color-mix(in srgb, ${props.tokens.cream} 86%, ${props.tokens.mint}) 100%)` }
             : stageGround(profile, props.tokens)) : {}
         // What the style lays on a graphic ground (kit/overlays.tsx): only a SPLIT stage or a graphics-only STAGE beat

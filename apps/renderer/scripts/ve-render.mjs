@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { bundle } from '@remotion/bundler'
-import { selectComposition, renderMedia } from '@remotion/renderer'
+import { selectComposition, renderMedia, renderStill } from '@remotion/renderer'
 import { tsImport } from 'tsx/esm/api'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
@@ -134,10 +134,15 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
 
 async function main() {
   const [propsPath, output, ...flags] = process.argv.slice(2)
-  if (!propsPath || !output || (flags.length && (flags.length !== 2 || flags[0] !== '--scale'))) {
-    throw new Error('usage: ve-render.mjs <props.json> <out.mp4> [--scale <positive number>]')
+  // --stills <f1,f2,...>: write one PNG per frame into <out> (a directory) and no MP4,
+  // so a design is judged in minutes before a full render (Gate 2 stills).
+  const stills = flags[0] === '--stills' && flags.length === 2
+    ? flags[1].split(',').map(Number) : undefined
+  if (!propsPath || !output || (flags.length && (flags.length !== 2 || !['--scale', '--stills'].includes(flags[0]))) ||
+      (stills && !stills.every(f => Number.isInteger(f) && f >= 0))) {
+    throw new Error('usage: ve-render.mjs <props.json> <out.mp4> [--scale <positive number>] | <out-dir> --stills <frame,...>')
   }
-  const scale = flags.length ? Number(flags[1]) : 1
+  const scale = flags[0] === '--scale' ? Number(flags[1]) : 1
   if (!Number.isFinite(scale) || scale <= 0) throw new Error('scale must be finite and positive')
   const { EngineRenderPropsSchema } = await tsImport('../src/engine/props.ts', import.meta.url)
   const { toAsciiProps, lagSamples } = await tsImport('../src/engine/transport.ts', import.meta.url)
@@ -159,6 +164,17 @@ async function main() {
     const tall = inputProps.aspect === '9:16'
     if (composition.fps !== 30 || composition.width !== (tall ? 1080 : 1920) || composition.height !== (tall ? 1920 : 1080)) {
       throw new Error(`${id} must use the 30 fps house canvas`)
+    }
+    if (stills) {
+      await mkdir(path.resolve(output), { recursive: true })
+      for (const frame of stills) {
+        if (frame >= inputProps.durationFrames) throw new Error(`still frame ${frame} is past the cut`)
+        const file = path.resolve(output, `still-${String(frame).padStart(5, '0')}.png`)
+        await renderStill({ serveUrl, composition: { ...composition, durationInFrames: inputProps.durationFrames },
+          inputProps: transportProps, output: file, frame, browserExecutable: browser })
+        console.log(`ve still: ${file}`)
+      }
+      return
     }
     await mkdir(path.dirname(path.resolve(output)), { recursive: true })
     const raw = path.join(temporary, 'raw.mp4')
