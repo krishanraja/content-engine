@@ -62,6 +62,10 @@ describe('ve', () => {
     ['a finished off-day card is not ready until it links its 3 Posts folder (F27)', 'tests/board_posts_test.py'],
     ['a whole cut renders only after Krish approves its hardest beat moving; styles on his take; expect and the packet summary (F04, F13)', 'tests/ve_proof_test.py'],
     ['the Thursday guards: no idea no production, the real thing shown, the engine frozen, two loops, one type system (F31 to F36)', 'tests/ve_thursday_guards_test.py'],
+    ['ve said: what he said on the take against the script, his words spelled as the script spells them (Krish, 4 Nov)', 'tests/ve_said_test.py'],
+    ['the voice pass: sniffs turned down, never cut; the repair chain only with his words (Krish, 17 Oct)', 'tests/ve_voice_test.py'],
+    ['one sound on the big moment: auditioned on his cut, approved only from his words, the kit from approved rows (ruling 11)', 'tests/ve_sfx_test.py'],
+    ['the Critic sees the cut in motion: strips per beat, per move and per cut, and QC numbers marked not heard (F16, F38)', 'tests/ve_critic_inputs_test.py'],
   ] as const) {
     it(name, () => {
       const r = py([file])

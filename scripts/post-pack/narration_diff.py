@@ -96,9 +96,12 @@ def number_words(tokens):
         t = tokens[i]
         if t['c'] in UNITS or t['c'] in TENS:
             n, j = 0, i
-            while j < len(tokens) and (tokens[j]['c'] in UNITS or tokens[j]['c'] in TENS or tokens[j]['c'] == 'hundred'):
-                c = tokens[j]['c']
-                n = n * 100 if c == 'hundred' else n + (UNITS.get(c) if c in UNITS else TENS[c])
+            while j < len(tokens) and (tokens[j]['c'] in UNITS or tokens[j]['c'] in TENS or tokens[j]['c'] == 'hundred'
+                                       or (tokens[j]['c'] == 'and' and tokens[j - 1]['c'] == 'hundred' and j + 1 < len(tokens)
+                                           and (tokens[j + 1]['c'] in UNITS or tokens[j + 1]['c'] in TENS))):
+                c = tokens[j]['c']   # "two hundred and six" is 206, as words_gate reads it
+                if c != 'and':
+                    n = n * 100 if c == 'hundred' else n + (UNITS.get(c) if c in UNITS else TENS[c])
                 j += 1
             out.append({**t, 'c': str(n), 'w': ' '.join(x['w'] for x in tokens[i:j]), 'e': tokens[j - 1].get('e', t.get('e'))})
             i = j

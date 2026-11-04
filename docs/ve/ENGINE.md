@@ -69,6 +69,9 @@ styles <spec> [--cut <cut>] [--top 3] [--points <a,b>] [--props <props>]
 proof <spec> --cut <cut> [--beat <id>] [--props <props>] [--assets-dir <assets>] [--no-qc]
 ingest <piece> --take <id> --media <file> --aligner-a <name> --aligner-b <name> [--clock-a <json>] [--clock-b <json>]
 conform <piece> --cut <cut> [--script <words.json>] [--takes <id> ...] [--crossfade-ms 20..40] [--render --assets-dir <assets> [--joins-reel]]
+said <piece> --take <id> --teleprompter <script.txt>
+voice-ab <piece> --cut <cut> --assets-dir <assets> --at <s> [--seconds 10]
+sfx audition <piece> --cut <cut> --assets-dir <assets> --candidates <id> ... [--at-frame <n>] [--beat <id>] | approve --id <id> --words <his words> --on <date> | stage --assets-dir <assets>
 brief <piece> [--cut <cut>] [--beat <id> ...] [--move <beat>=<move> ...] [--check <dir> --plate <id>]
 golden show|check|fill <slot> --reference <file> --at <mm:ss.s> --said <his words>
 init <piece> [--format <clip format>]

@@ -264,5 +264,134 @@ class ConformTest(unittest.TestCase):
         self.assertTrue(Path(reel['reel']).is_file())
 
 
+    # numbers said his own way (D1, velib.words) ------------------------------------------------------------
+    def test_a_number_said_as_words_reads_the_script_digits(self):
+        script_text = 'We tested 15 models. Then 206 more ran at 2.7 times the cost.'.split()
+        heard = ('We tested fifteen models. Then two hundred and six more ran at two point seven times the cost.').split()
+        self.script = [{'w': i, 'word': w} for i, w in enumerate(script_text)]
+        words, duration = clock(heard)
+        self.ingest('take-1', words, duration)
+        edl = conform.conform(spec(), 'short', self.script, self.ve)
+        self.assertEqual(len(edl['segments']), 1)
+        self.assertEqual(edl['unscripted_kept'], [])
+        by_word = {w['word']: w for w in edl['words']}
+        fifteen = next(w for w in words if w['word'] == 'fifteen')
+        self.assertAlmostEqual(by_word['15']['onset_s'] - edl['segments'][0]['out_in_s'],
+                               fifteen['onset_s'] - edl['segments'][0]['src_in_s'], places=3)
+        two, six = words[heard.index('two')], words[heard.index('six')]
+        span = by_word['206']['end_s'] - by_word['206']['onset_s']
+        self.assertAlmostEqual(span, six['end_s'] - two['onset_s'], places=3)
+        self.assertEqual([w['w'] for w in edl['words']], list(range(len(script_text))))
+
+    def test_number_keys_follow_the_words_gate(self):
+        from velib import words as wordrule
+        self.assertEqual(wordrule.number_key('15'), '15')
+        self.assertEqual(wordrule.number_key('2.7'), '2 7')
+        self.assertEqual(wordrule.number_key('$40'), '40 dollars')
+        self.assertIsNone(wordrule.number_key('models'))
+        spans = wordrule.number_spans('we tested two hundred and six of them for forty dollars'.split())
+        self.assertIn((2, 5), spans['206'])
+        self.assertIn((9, 10), spans['40 dollars'])
+        self.assertNotIn('of', spans)
+
+    # a teleprompter take's uneven stamps (A1, quick-edit's conform_filter) --------------------------------------
+    BITS, STRIPE, HEIGHT = 10, 16, 96
+    MEDIA_S = 40.0   # long enough that the fitted rate is the camera's, as on a real take
+
+    def _jittered_take(self, duration, *, rate='24.0005', hdr=False):
+        """A 24.0005 fps take whose frames are stamped unevenly (17 to 66 ms apart, as teleprompter.com stamps them),
+        each frame carrying its own index as ten black or white stripes, with a tone for the voice."""
+        import numpy as np  # noqa: PLC0415
+        count = int(float(rate) * duration)
+        frames = np.zeros((count, self.HEIGHT, self.BITS * self.STRIPE), np.uint8)
+        for n in range(count):
+            for bit in range(self.BITS):
+                if n >> bit & 1:
+                    frames[n, :, bit * self.STRIPE:(bit + 1) * self.STRIPE] = 255
+        media = self.dir / ('take-hdr.mp4' if hdr else 'take-1.mp4')
+        colour = (['-pix_fmt', 'yuv420p10le', '-color_trc', 'arib-std-b67', '-color_primaries', 'bt2020', '-colorspace', 'bt2020nc']
+                  if hdr else ['-pix_fmt', 'yuv420p'])
+        subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'gray',
+                        '-s', f'{self.BITS * self.STRIPE}x{self.HEIGHT}', '-r', rate, '-i', '-',
+                        '-f', 'lavfi', '-i', f'sine=f=220:r=48000:d={duration}',
+                        '-vf', f'settb=1/90000,setpts=(N/{rate}+0.012*sin(2.1*N))/TB', '-fps_mode', 'passthrough', '-enc_time_base', '1/90000',
+                        '-c:v', 'libx264', '-qp', '0', *colour, '-video_track_timescale', '90000',
+                        '-c:a', 'aac', '-shortest', str(media)], input=frames.tobytes(), check=True)
+        return media
+
+    def _indices(self, picture):
+        import numpy as np  # noqa: PLC0415
+        width = self.BITS * self.STRIPE
+        raw = subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-i', str(picture), '-f', 'rawvideo', '-pix_fmt', 'gray', '-'],
+                             capture_output=True, check=True).stdout
+        frames = np.frombuffer(raw, np.uint8).reshape(-1, self.HEIGHT, width)
+        middle = frames[:, self.HEIGHT // 4: 3 * self.HEIGHT // 4, :].reshape(len(frames), -1, self.BITS, self.STRIPE)
+        bright = middle[:, :, :, 4:-4].mean(axis=(1, 3)) > 128
+        return [int(sum(1 << bit for bit in range(self.BITS) if row[bit])) for row in bright]
+
+    def _conform_jittered(self, media, words, duration):
+        self.ingest('take-1', words, self.MEDIA_S, media=media)
+        edl = conform.conform(spec(), 'short', self.script, self.ve)
+        return edl, conform.render(edl, conform.records_for(edl, self.ve), self.dir / 'assets')
+
+    @unittest.skipUnless(have_ffmpeg(), 'ffmpeg is not on PATH')
+    def test_ingest_measures_the_picture_and_marks_a_jittered_24_fps_take_to_be_laid_evenly(self):
+        words, duration = clock(SCRIPT)
+        media = self._jittered_take(self.MEDIA_S)
+        picture = takes.video_probe(media)
+        self.assertEqual(picture['house_rate'], 24)
+        self.assertAlmostEqual(picture['avg_rate'], 24.0005, delta=0.05)
+        self.assertEqual(picture['laid'], 'even')
+        self.assertGreater(picture['jitter_p95_ms'], 5)
+        self.assertIsNone(picture['hdr'])
+        self.ingest('take-1', words, self.MEDIA_S, media=media)
+        self.assertEqual(takes.load_take(self.ve, 'take-1')['media']['video']['laid'], 'even')
+        stub = self.dir / 'voice-only.bin'
+        stub.write_bytes(b'not a video')
+        self.assertIsNone(takes.video_probe(stub))
+
+    @unittest.skipUnless(have_ffmpeg(), 'ffmpeg is not on PATH')
+    def test_a_jittered_24_fps_take_loses_no_frame_and_repeats_one_in_every_five_at_30(self):
+        words, duration = clock(SCRIPT)
+        edl, out = self._conform_jittered(self._jittered_take(self.MEDIA_S), words, duration)
+        self.assertEqual(out['laid']['take-1']['laid'], 'even')
+        self.assertEqual(edl['takes']['take-1']['media']['video']['laid'], 'even')
+        seen = self._indices(out['picture'])
+        steps = [b - a for a, b in zip(seen, seen[1:])]
+        self.assertEqual([s for s in steps if s > 1], [], 'a source frame was dropped')
+        self.assertEqual([s for s in steps if s < 0], [], 'frames came out of order')
+        repeats = [i for i, s in enumerate(steps) if s == 0]
+        self.assertGreaterEqual(len(repeats), len(seen) // 5 - 1)
+        spacing = [b - a for a, b in zip(repeats, repeats[1:])]
+        # one in every five, the same frame each time; the segment's first hold may fall one frame late (its start phase)
+        self.assertLessEqual(sum(1 for gap in spacing if gap != 5), 1, f'the held frame is not one in every five: {spacing}')
+
+    @unittest.skipUnless(have_ffmpeg(), 'ffmpeg is not on PATH')
+    def test_resampling_the_same_take_by_its_stamps_drops_frames(self):
+        """The fixture really holds the defect: the old graph, which resamples by stamps, loses frames on it."""
+        words, duration = clock(SCRIPT)
+        media = self._jittered_take(self.MEDIA_S)
+        original = conform.lay_filter
+        conform.lay_filter = lambda picture: ''
+        self.addCleanup(setattr, conform, 'lay_filter', original)
+        _, out = self._conform_jittered(media, words, duration)
+        seen = self._indices(out['picture'])
+        self.assertGreater(sum(1 for a, b in zip(seen, seen[1:]) if b - a > 1), 0)
+
+    @unittest.skipUnless(have_ffmpeg(), 'ffmpeg is not on PATH')
+    def test_an_hlg_take_is_tone_mapped_to_bt709(self):
+        words, duration = clock(SCRIPT)
+        media = self._jittered_take(self.MEDIA_S, hdr=True)
+        picture = takes.video_probe(media)
+        self.assertEqual(picture['hdr'], 'hlg')
+        self.assertEqual(picture['bit_depth'], 10)
+        self.assertIn('tonemap=tonemap=hable', conform.tone_filter(picture))
+        _, out = self._conform_jittered(media, words, duration)
+        self.assertEqual(out['laid']['take-1']['hdr'], 'hlg')
+        tags = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=pix_fmt',
+                               '-of', 'csv=p=0', out['picture']], capture_output=True, text=True).stdout.strip()
+        self.assertEqual(tags, 'yuv420p')
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=1)
