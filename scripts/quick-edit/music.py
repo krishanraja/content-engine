@@ -77,7 +77,7 @@ TRACK_FIELDS = (
     'licence_file', 'acquired_on', 'expires_on', 'platforms', 'monetisation_ok', 'content_id_cleared', 'attribution',
     'restrictions', 'file', 'sha256', 'bytes', 'duration_s', 'sample_rate', 'measured_lufs', 'measured_true_peak',
     'intro_cue_s', 'outro_cue_s', 'mood', 'status', 'approved_by', 'approved_on', 'approval_words')
-OPTIONAL_FIELDS = ('loopable', 'drive_file_id')
+OPTIONAL_FIELDS = ('loopable', 'drive_file_id', 'for')
 LEVEL_KEYS = ('intro_lufs', 'bed_lufs', 'outro_lufs', 'ramp_down_s', 'ramp_up_s', 'final_integrated_lufs', 'tolerance_lu', 'max_true_peak_dbtp')
 RATE = 48000
 FADE_IN_S = 0.03   # no click where the track is cut in
@@ -251,19 +251,27 @@ def covers(track, seconds):
     return track['duration_s'] - float(track.get('intro_cue_s') or 0) >= seconds
 
 
-def rotation(piece, data):
-    """Every approved track, in the order this piece tries them: by id,
+def track_use(track):
+    """What a track is for: 'series' (Monday, Wednesday and Friday, the default) or 'off-day' (off-day carousels and
+    explainers). Ruling (Krish, 2026-11-04): Goodie Bags is the off-day track; "Do not change Monday, Wednesday, or
+    Friday music"."""
+    return str(track.get('for') or 'series')
+
+
+def rotation(piece, data, use='series'):
+    """Every approved track for `use`, in the order this piece tries them: by id,
     starting at a stable index from the piece. The index is taken over all
     approved tracks, before any is checked against a cut, so the order is
     the piece's alone and never depends on which cut is asking."""
-    approved = sorted((t for t in data.get('tracks', []) if t.get('status') == 'approved'), key=lambda t: str(t.get('id')))
+    approved = sorted((t for t in data.get('tracks', []) if t.get('status') == 'approved' and track_use(t) == use),
+                      key=lambda t: str(t.get('id')))
     if not approved:
         return []
     at = int(hashlib.sha256(str(piece).encode()).hexdigest()[:8], 16) % len(approved) if piece else 0
     return approved[at:] + approved[:at]
 
 
-def pick(seconds, piece=None, platforms=(), data=None, today=None):
+def pick(seconds, piece=None, platforms=(), data=None, today=None, use='series'):
     """The track for `seconds` of music posted to `platforms`, or None, and
     why each track was passed over: every track not approved, and each
     approved one tried before the pick. It goes round the piece's rotation
@@ -278,7 +286,7 @@ def pick(seconds, piece=None, platforms=(), data=None, today=None):
             skipped[track.get('id', '?')] = problems(track, platforms, today, seconds)
     # A track that plays the whole length straight first; else one that starts
     # again under a crossfade, so the bed never drops out for want of length.
-    turn = rotation(piece, data)
+    turn = rotation(piece, data, use)
     for track in turn:
         if not problems(track, platforms, today, seconds) and covers(track, seconds):
             return track, skipped
@@ -300,13 +308,13 @@ def piece_needs(*seconds, longest=None):
     return {'seconds': round(max([floor, *given]), 3), 'platforms': list(PIECE_PLATFORMS)}
 
 
-def pick_for_piece(piece, seconds=None, data=None, today=None, longest=None):
+def pick_for_piece(piece, seconds=None, data=None, today=None, longest=None, use='series'):
     """The one track both cuts of a piece carry: (track or None, skipped,
     needs). `longest` is the piece's longer cut, the same for both cuts
     (make.py reads it from kit.json); `seconds` is the asking cut's own
     length, which only counts if it is longer still (make.py says so)."""
     needs = piece_needs(seconds, longest=longest)
-    track, skipped = pick(needs['seconds'], piece, needs['platforms'], data, today)
+    track, skipped = pick(needs['seconds'], piece, needs['platforms'], data, today, use)
     return track, skipped, needs
 
 
