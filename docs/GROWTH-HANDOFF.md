@@ -19,8 +19,11 @@ posts only.
   makeyourmindup library, through `scripts/post-pack/send.py`, never in
   `4 Growth` (Ruling, Krish, 2026-11-03: "everything ready for post goes in
   the posts folder, not the growth folder"). An off-day post's folder is
-  `YYYY-MM-DD Ddd off.day - Subject`, even when it wears a series' house
-  dress (`scripts/post-pack/library.py` `post_folder` names it so). Its board
+  `YYYY-MM-DD Ddd off.day - Subject` (`scripts/post-pack/library.py`
+  `post_folder` names it so). An off-day post has its own music and look,
+  never a series' dress (Ruling, Krish, 2026-11-04: "Yes, give off days
+  their own music and look - Rotate."): an off-day track from
+  `config/music-library.json` in rotation, the house mint, no series sting. Its board
   card links that folder (`drive`) and names it (`posts_folder`, or
   "3 Posts › <folder>" in its needs); the board calls it not ready until
   both are there and the folder is that day's post.

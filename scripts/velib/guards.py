@@ -8,7 +8,8 @@ gate they bind a whole cut of a piece published from creative_direction.MOTION_F
   - `idea_problems(spec)`: no idea, no production. `style.idea` names the one object or system, what each move means,
     a never-list, and the real artifact where proof exists (or why none exists). Model: Monday 2 Nov, "The Ladder".
   - `retype_problems(spec)`: a named real artifact is shown as itself; a device whose words copy it is refused.
-  - `offday_problems(spec)`: an off-day piece wears no series bed or sting. Proposed: binds only once Krish approves.
+  - `offday_problems(spec)`: an off-day piece beds on an off-day track and wears no series sting (Krish, 4 Nov:
+    "Yes, give off days their own music and look - Rotate."); compile draws it in the house mint.
   - `freeze(directory)` / `engine_problems(...)`: the engine the storyboard was signed on draws its proof and cut.
   - `record_render(...)` / `loop_problems(...)`: two full renders of a cut per press from Krish, then he sees it.
   - `type_treatments(props)` / `type_note(...)`: the type treatments a cut shows, listed on its proof for Krish to
@@ -178,12 +179,20 @@ def offday_problems(spec: dict, rules: dict | None = None) -> list[str]:
         return []
     out = []
     bed = spec['audio']['bed']['ledger_id']
-    if bed in rules['series_beds']:
-        out.append(f'offday.bed audio.bed.ledger_id: {bed} is the series bed; an off-day piece has its own bed, licensed '
-                   'and logged in config/music-library.json')
+    offday_beds = off_day_beds(rules)
+    if bed not in offday_beds:
+        out.append(f'offday.bed audio.bed.ledger_id: {bed} is not an off-day track; an off-day piece beds on one of '
+                   f'{", ".join(offday_beds) or "the off-day tracks"} (config/music-library.json "for": "off-day"), in rotation')
     if spec['brand'].get('intro_sting'):
         out.append('offday.chrome brand.intro_sting: an off-day piece wears no series sting')
     return out
+
+
+def off_day_beds(rules: dict | None = None) -> list[str]:
+    """The tracks the music ledger marks for off days, in ledger order (the rotation)."""
+    want = (rules or config()['off_day']).get('off_day_for', 'off-day')
+    tracks = load_json(ROOT / 'config' / 'music-library.json').get('tracks') or []
+    return [t['id'] for t in tracks if t.get('for') == want]
 
 
 def spec_lints(spec: dict) -> list[str]:

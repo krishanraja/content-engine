@@ -27,7 +27,7 @@ Run on Thursday's real files, the idea guard refuses its spec and the type guard
 | 5 | Codex makes the piece's named plate, never the engine backlog, during production | he left it to the session; written into `docs/ve/RUNBOOK.md` with the one-session ruling. No check in `ve dispatch` yet | ruled, F39 open until checked |
 | 6 | Judge in motion with sound | already answered: from 9 Nov `ve proof` renders the hardest beat moving, with sound, on his own take (8 to 15 s, `--scale` for low resolution), and `ve render` refuses a full cut until his Approve proof press (`scripts/velib/proof.py`, `tests/ve_proof_test.py`, F04 and F13). Stills are no longer the design gate | guarded before this page, F04 |
 | 7 | One type system | He said no (4 Nov): "it needs to look good, and it didn't that time"; experiment carefully, sometimes words fill most of the screen. So nothing is refused by count: `type_note` lists every type role on every surface on the proof (`ve proof`, `proof/<cut>.json` `type`) for his Approve proof press. Learning `experiment-carefully` | listed, never refused, F35 |
-| 8 | Off days look neutral and sound different | `offday_problems` is built and tested (an off-day piece refusing the series bed and sting) but binds nothing: `docs/GROWTH-HANDOFF.md` and `compile.py` still let an off day wear a series' house dress, so this is new taste | waits on Krish, F36 |
+| 8 | Off days look neutral and sound different | His yes (4 Nov): "Yes, give off days their own music and look - Rotate." `offday_problems` and `off_day_beds`: `ve lint` refuses an off-day spec not bedded on an off-day track from `config/music-library.json` (Goodie Bags, Aspire, Illusions, Be Alone, in rotation) or carrying a series sting; `compile.py` draws an off day in the house mint without the series promise | guarded, F36 |
 | 9 | Check his own records before questioning his words | his answer: listen to what he said on the recorded take, not the Teleprompter script, which he paraphrases. In `docs/ve/RUNBOOK.md` and learning `listen-to-the-take`; no check yet | ruled, F37 open until checked |
 | 10 | The Critic is a check, not the brief; compare against his favourite first | Monday 2 Nov is in `config/reference-cuts.json` (`mon02-wide`, `mon02-tall`, `critic_first`) and on `docs/production/THE_BAR.md`; the Critic opens on it and the piece's `style.idea` (`.claude/agents/ve-critic.md`) | guarded, F38 |
 
@@ -49,7 +49,7 @@ Run on Thursday's real files, the idea guard refuses its spec and the type guard
 
 ## His answers (4 Nov 2026)
 
-1. Off days: "I don't understand." Asked again in plain words below.
+1. Off days: "I don't understand." Asked again in plain words, then: "Yes, give off days their own music and look - Rotate." Guarded.
 2. Monday 2 Nov as the Critic's first reference: "Yeah, sure." Done.
 3. Codex only on the piece's own plates: "Whatever you think is the best coherent outcome. I don't really care." Written into the runbook with answer 4.
 4. One piece, one session: "Yes, I would assume one piece and one session would be good, with Claude orchestrating and Codex doing asset production." Ruled.
@@ -58,4 +58,4 @@ Run on Thursday's real files, the idea guard refuses its spec and the type guard
 
 ## Still open for Krish
 
-1. Tuesday, Thursday and Saturday posts: should they stop using a weekday show's music and look (Thursday's used Wednesday's under.the.hood tag colour and its theme music), and get their own track and a plain house look?
+Nothing from this report.
