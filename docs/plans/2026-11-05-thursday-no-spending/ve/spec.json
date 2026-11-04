@@ -641,13 +641,6 @@
        "silent": true
       },
       {
-       "at_w": 74,
-       "obj": "ask",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
-      },
-      {
        "at_w": 88,
        "obj": "ask_tag",
        "verb": "stamp",
@@ -658,35 +651,35 @@
        "at_w": 94,
        "obj": "ask",
        "verb": "type",
-       "to_state": "1",
+       "to_state": "0",
        "silent": true
       },
       {
        "at_w": 101,
        "obj": "ask",
        "verb": "type",
-       "to_state": "2",
+       "to_state": "1",
        "silent": true
       },
       {
        "at_w": 103,
        "obj": "ask",
        "verb": "type",
-       "to_state": "3",
+       "to_state": "2",
        "silent": true
       },
       {
        "at_w": 111,
        "obj": "ask",
        "verb": "type",
-       "to_state": "4",
+       "to_state": "3",
        "silent": true
       },
       {
        "at_w": 113,
        "obj": "ask",
        "verb": "send",
-       "to_state": "4",
+       "to_state": "3",
        "silent": true
       },
       {
