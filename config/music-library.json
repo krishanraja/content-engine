@@ -58,6 +58,48 @@
       "approved_on": "2026-10-12",
       "approval_words": "Yes I approve that licence track.",
       "drive_file_id": "1dWXsVYqgRnNDk5UFppA70kkVcDB-xRNs"
+    },
+    {
+      "id": "goodie-bags",
+      "title": "Goodie Bags",
+      "artist": "Dylan Sitts",
+      "provider": "Epidemic Sound",
+      "provider_track_id": null,
+      "provider_url": null,
+      "licence_type": "Epidemic Sound subscription; channels safelisted",
+      "licence_id": "epidemic-sound-safelist-2026-10-12",
+      "licensee": "makeyourmindup (Krish Raja)",
+      "licence_file": "config/music-licences/epidemic-sound-safelist-2026-10-12.jpg",
+      "acquired_on": "2026-11-04",
+      "expires_on": null,
+      "platforms": [
+        "youtube",
+        "shorts",
+        "substack",
+        "reels",
+        "tiktok",
+        "linkedin"
+      ],
+      "monetisation_ok": null,
+      "content_id_cleared": true,
+      "attribution": null,
+      "restrictions": "Safelisted on Epidemic Sound (Krish's screenshot, 12 October): YouTube makeyourmindup, Instagram makeyourmind.up, TikTok therealkrisho, Facebook, website makeyourmindup.ai. Every other online platform, LinkedIn included, needs no safelisting: Epidemic's own words on the platform screen, 'All other online platforms are safe to publish on. No safelisting required.' (config/music-licences/epidemic-sound-other-platforms-2026-10-12.jpg). Epidemic Sound issues no per-track licence number; the screenshots are the record. Krish, 2026-11-04: \"I have the full license.\"",
+      "file": "ES_Goodie Bags - Dylan Sitts.mp3",
+      "sha256": null,
+      "bytes": 4242212,
+      "duration_s": null,
+      "sample_rate": null,
+      "measured_lufs": null,
+      "measured_true_peak": null,
+      "intro_cue_s": 0.0,
+      "outro_cue_s": null,
+      "mood": null,
+      "for": "off-day",
+      "status": "proposed",
+      "approved_by": "Krish",
+      "approved_on": "2026-11-04",
+      "approval_words": "Okay, goodie bags should be the track for off-day content that is maybe a carousel or a video explainer. It's usable. I have the full license. I approve it in words. Do not change Monday, Wednesday, or Friday music.",
+      "drive_file_id": "1s6245EBWBB2O06OtHfPyksEadC1ZRsEL"
     }
   ]
 }

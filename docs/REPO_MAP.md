@@ -3564,7 +3564,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/engine/chrome/lightStage.ts`
 
-- `function lightStage(props: Pick<EngineRenderProps, 'format'>): boolean`
+- `function lightStage(props: Pick<EngineRenderProps, 'format'> & Partial<Pick<EngineRenderProps, 'motion'>>): boolean`
 
 ### `apps/renderer/src/engine/chrome/tokens.ts`
 
