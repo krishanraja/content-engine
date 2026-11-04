@@ -24,6 +24,8 @@ export const MotionProfileSchema = z.object({
     easing: z.enum(['enter', 'hero', 'utility']).default('hero'),
   }).strict(),
   transition: z.enum(['cut', 'cut_on_curve', 'crossfade']),
+  /** How long a crossfade overlaps the two beats, 6 to 10 frames (kit/beatMotion.ts transitionFrames). */
+  transitionFrames: z.number().int().min(6).max(10).optional(),
   typeReveal: z.object({ kind: z.enum(['line', 'word', 'typewriter', 'roll']), cps: z.number().positive().optional() }).strict(),
   ground: z.object({ kind: z.enum(['house', 'inkDeep']), sweepFrames: z.number().int().nonnegative(), texture: z.enum(['none', 'halftone']) }).strict(),
   driftPct: z.number(),
