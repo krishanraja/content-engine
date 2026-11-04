@@ -3,6 +3,7 @@ import { DECISION_ID, GATE_KINDS, canonical, digest, type GateKind } from './_co
 import type { SendApprovedInput, SendResult } from '../_teleprompter.js'
 import type { Making, MakingGates } from '../_making.js'
 import { dispatchOffdayRevise, type ReviseDispatch } from './_offdayRevise.js'
+import { recordIncident, stageOfAsset, type Incident } from '../_incidents.js'
 
 const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -46,6 +47,12 @@ const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 //
 // The inbox row's client_report_id is the hash of the week, the document and his words, so a press saved again files
 // nothing twice, and new words file once more.
+//
+// The failure loop (Krish, 2026-11-04: "how can your system autonomously understand the difference between a repeated
+// failure, why it happened, what was being done when the failure occurred and how it was being done"): a Reject asset,
+// a Reject of the proof, "None of these" styles and a second proof round each also write one engine_incidents row
+// (pressIncidents, _incidents.ts) with his words and the piece's preflight receipt as it stood. Never blocking: a
+// failed write is logged, and the press answers as it would have.
 
 export type Sender = (input: SendApprovedInput) => Promise<SendResult>
 export interface PressDeps { send?: Sender; now?: () => string; revise?: typeof import('./_offdayRevise.js').dispatchOffdayRevise }
@@ -181,6 +188,53 @@ export async function recordGate(db: SupabaseClient, pieceId: string, patch: Mak
     if (written.data?.length) return null
   }
   return 'the piece changed twice while his press was being recorded'
+}
+
+/** The engine_incidents rows a press means (the failure loop): his Reject asset, his Reject of the proof, "None of
+ *  these" styles with his words, and a proof press after a rejected proof (a second round). `prior` is the piece's
+ *  gates before this press. Empty when the press is none of these. */
+export function pressIncidents(week: string, id: string, body: Body, prior: MakingGates | null | undefined): Incident[] {
+  const piece = typeof body.piece_id === 'string' && PIECE_UUID.test(body.piece_id) ? body.piece_id : null
+  const words = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 2000) : null)
+  const sha = typeof body.sha256 === 'string' && SHA256.test(body.sha256) ? body.sha256 : null
+  const base = { piece_id: piece, session_ref: `publish-board:${week}:picks/${id}`, maker: 'unknown' as const, meta: { week, day: body.day, doc: `picks/${id}` } }
+  const out: Incident[] = []
+  if (body.kind === 'reject_asset' && words(body.reason)) {
+    const drive = typeof body.drive_id === 'string' ? body.drive_id : null
+    out.push({ ...base, kind: 'krish_reject', stage: stageOfAsset(body.asset, body.label), his_words: words(body.reason),
+      artifact_ref: drive ? `drive:${drive}` : typeof body.asset === 'string' ? `board-asset:${body.asset}`.slice(0, 500) : null,
+      meta: { ...base.meta, press: 'reject_asset', asset: body.asset ?? null, label: body.label ?? null, formats: Array.isArray(body.formats) ? body.formats.slice(0, 16) : [] },
+      client_ref: `press-${digest(canonical({ week, id, kind: body.kind, reason: words(body.reason) }))}`.slice(0, 120) })
+  }
+  if (body.kind === 'approve_proof') {
+    const priorProof = prior && isObj(prior.proof) ? prior.proof : null
+    if (body.verdict === 'reject' && words(body.words)) {
+      out.push({ ...base, kind: 'krish_reject', stage: 'proof', maker: 've', his_words: words(body.words), artifact_sha256: sha,
+        artifact_ref: typeof body.cut === 'string' ? `proof:${body.cut}` : 'proof', meta: { ...base.meta, press: 'reject_proof' },
+        client_ref: `press-${digest(canonical({ week, id, kind: body.kind, verdict: 'reject', sha, words: words(body.words) }))}`.slice(0, 120) })
+    }
+    if (priorProof && priorProof.verdict === 'reject' && priorProof.sha256 !== sha) {
+      out.push({ ...base, kind: 'second_round', stage: 'proof', maker: 've', artifact_sha256: sha, meta: { ...base.meta, press: 'proof_after_reject', prior_sha256: priorProof.sha256 },
+        client_ref: `round-${digest(canonical({ week, id, prior: priorProof.sha256, sha }))}`.slice(0, 120) })
+    }
+  }
+  if (body.kind === 'pick_style' && body.module === null && words(body.reason)) {
+    out.push({ ...base, kind: 'krish_reject', stage: 'style', maker: 've', his_words: words(body.reason), artifact_sha256: sha,
+      artifact_ref: 'styles', meta: { ...base.meta, press: 'none_of_these' },
+      client_ref: `press-${digest(canonical({ week, id, kind: body.kind, sha, reason: words(body.reason) }))}`.slice(0, 120) })
+  }
+  return out
+}
+
+/** Files the incidents a press means, never blocking it: 'filed', 'failed' or null when there are none. */
+async function fileIncidentsFor(db: SupabaseClient, incidents: Incident[], now: string): Promise<'filed' | 'failed' | null> {
+  if (!incidents.length) return null
+  let ok = true
+  for (const incident of incidents) {
+    const result = await recordIncident(db, incident, now).catch(() => 'failed' as const)
+    ok = ok && result === 'filed'
+  }
+  return ok ? 'filed' : 'failed'
 }
 
 /** His words on a gate he turned down (a Reject of the proof, or "None of these" styles), as one taste_reports row:
@@ -448,11 +502,12 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
   if (collection === 'picks' && body.kind === 'reject_asset') {
     const row = inboxRow(week, id, saved.revision, body, now)
     if (!row) return null
+    const incident = await fileIncidentsFor(db, pressIncidents(week, id, body, null), now)
     try {
       const filed = await db.from('taste_rejection_inbox').upsert(row, { onConflict: 'emitter_id,client_report_id', ignoreDuplicates: true })
-      return { ...saved, inbox: filed.error ? 'failed' : 'filed' }
+      return { ...saved, inbox: filed.error ? 'failed' : 'filed', ...(incident ? { incident } : {}) }
     } catch {
-      return { ...saved, inbox: 'failed' }
+      return { ...saved, inbox: 'failed', ...(incident ? { incident } : {}) }
     }
   }
   if (collection === 'picks' && body.kind === 'scores') {
@@ -477,8 +532,11 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
     // Only his own press reaches here (hisOnlyRefusal); the gate is written as his, never as a session's.
     if (who !== 'Krish') return null
     const kind = body.kind as GateKind
+    // The gates before this press, for the failure loop's second-round row; a failed read only loses that row.
+    const prior = kind === 'approve_proof' ? await makingOf(db, String(body.piece_id)).catch(() => null) : null
     const unrecorded = await recordGate(db, String(body.piece_id), gatePatch(kind, body, now), now).catch(() => 'the piece\'s making record could not be written')
-    const out: Saved = { ...saved, gate: unrecorded ? 'failed' : 'recorded', ...(unrecorded ? { gate_error: unrecorded } : {}) }
+    const incident = await fileIncidentsFor(db, pressIncidents(week, id, body, prior?.making?.gates), now)
+    const out: Saved = { ...saved, gate: unrecorded ? 'failed' : 'recorded', ...(unrecorded ? { gate_error: unrecorded } : {}), ...(incident ? { incident } : {}) }
     const report = gateReport(week, id, body, now)
     if (report) {
       try {

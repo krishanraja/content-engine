@@ -171,6 +171,11 @@ export interface Making {
   gates?: MakingGates
   /** How many full renders went to him before he approved the cut (the "one round" measure), written by the engine. */
   rounds?: number
+  /** What the session read before it made anything (the failure loop's receipt; Krish, 2026-11-04): the rejection
+   *  floor for each maker, the failure register, the skill it loaded and his approved taste, each with the version it
+   *  read. Written by scripts/floor.py, check_failures.py and preflight.py; merged by check, format and name. ve brief
+   *  and ve render read it (scripts/velib/preflight.py), and every engine_incidents row carries it as it stood. */
+  preflight?: MakingPreflight[]
   /** Retired on 2026-10-12, when Descript was (Krish: "Descript is
    *  permanently gone"). Records written before then still hold it; it is
    *  kept as it is, so they still parse, and nothing reads it. */
@@ -178,6 +183,14 @@ export interface Making {
   updated_at: string
   by: string
 }
+
+export const PREFLIGHT_CHECKS = ['floor', 'failures', 'skill', 'taste'] as const
+export interface MakingPreflight { check: (typeof PREFLIGHT_CHECKS)[number]; format?: string; name?: string; version_or_hash: string; at: string; by: string }
+const PREFLIGHT_KEY = /^[a-z0-9][a-z0-9_.-]{0,59}$/
+const PREFLIGHT_VERSION = /^[A-Za-z0-9_.:-]{1,80}$/
+const MAX_PREFLIGHT = 40
+/** One receipt's key: a newer read of the same check, format and skill replaces the older. */
+export function preflightKey(p: Pick<MakingPreflight, 'check' | 'format' | 'name'>): string { return `${p.check}:${p.format || ''}:${p.name || ''}` }
 
 export interface MakingGate { by: 'Krish'; at: string; sha256: string }
 export type MakingStyleVerdict = { module: string; verdict: 'picked' | 'seen' | 'not_for_us'; sha256?: string }
@@ -532,6 +545,25 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
   // Descript was retired on 2026-10-12; a record of a send there is not taken.
   if (body.descript !== undefined) problems.push('descript was retired on 2026-10-12 (Krish: "Descript is permanently gone, teleprompter.com is permanently in"): record the Teleprompter send in teleprompter')
   if (body.gates !== undefined) problems.push('gates are written only by Krish\'s presses on the publish board')
+  if (body.preflight !== undefined) {
+    const v = body.preflight
+    const list = Array.isArray(v) ? v : [v]
+    const by = str(body.by, 60) || 'Claude Code'
+    const out: MakingPreflight[] = []
+    if (!list.length || list.length > 10) problems.push('preflight is 1 to 10 receipts: {check, format?, name?, version_or_hash, at?}')
+    for (const [i, r] of list.entries()) {
+      const at = `preflight.${i}`
+      if (!isObj(r) || !(PREFLIGHT_CHECKS as readonly string[]).includes(String(r.check))) { problems.push(`${at}.check is one of ${PREFLIGHT_CHECKS.join(', ')}`); continue }
+      if (typeof r.version_or_hash !== 'string' || !PREFLIGHT_VERSION.test(r.version_or_hash)) { problems.push(`${at}.version_or_hash is the version or hash read (letters, digits, . _ : -)`); continue }
+      const fmt = r.format === undefined || r.format === null ? undefined : String(r.format)
+      const name = r.name === undefined || r.name === null ? undefined : String(r.name)
+      if (fmt !== undefined && !PREFLIGHT_KEY.test(fmt)) { problems.push(`${at}.format is a maker such as long_video`); continue }
+      if (name !== undefined && !PREFLIGHT_KEY.test(name)) { problems.push(`${at}.name is a skill name such as make-piece`); continue }
+      if (r.check === 'skill' && !name) { problems.push(`${at}: a skill receipt names the skill`); continue }
+      out.push({ check: r.check as MakingPreflight['check'], ...(fmt ? { format: fmt } : {}), ...(name ? { name } : {}), version_or_hash: r.version_or_hash, at: when(r.at, now), by })
+    }
+    if (out.length === list.length && out.length) patch.preflight = out
+  }
   if (body.rounds !== undefined) {
     const n = count(body.rounds)
     if (n === null || n > 99) problems.push('rounds is how many full renders went to Krish before he approved the cut: a whole number, 0 to 99')
@@ -600,6 +632,12 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
     next.spoken_delta = { ...held, ...patch.spoken_delta }
   }
   if (patch.rounds !== undefined) next.rounds = patch.rounds
+  if (patch.preflight) {
+    // Receipt by receipt: a newer read of the same check replaces the older, the others stay.
+    const held = new Map<string, MakingPreflight>((Array.isArray(base.preflight) ? base.preflight : []).filter(isObj).map(p => [preflightKey(p), p]))
+    for (const p of patch.preflight) { held.delete(preflightKey(p)); held.set(preflightKey(p), p) }
+    next.preflight = [...held.values()].slice(-MAX_PREFLIGHT)
+  }
   if (patch.gates) {
     // Gate by gate: his press on the proof keeps his signed storyboard and his style pick.
     next.gates = { ...(isObj(base.gates) ? base.gates : {}), ...patch.gates }
