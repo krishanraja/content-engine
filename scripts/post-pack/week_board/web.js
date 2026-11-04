@@ -234,6 +234,34 @@
     if (note) { note.hidden = !stale; note.textContent = stale ? "The words changed since this page was built: this tab needs a rebuild" : ""; }
     if (b && stale) b.disabled = true;
   }
+  // The production gates (week_board.py gates_card): each section says what the piece's making record holds for its
+  // gate now (signed, picked <style>, approved, rejected, or waiting on you). A press the record holds at the hash the
+  // section shows is done, so its buttons stay off; one it holds at another hash means what is shown changed since he
+  // pressed, and he presses again.
+  const GATE_OF = { storyboard: "storyboard", style: "style", proof: "proof", cut: "final" };
+  const GATE_WORD = { signed: "Signed", approved: "Approved", rejected: "Rejected", none_of_these: "None of these" };
+  const when = at => { try { return at ? " " + new Date(at).toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" }) : "" } catch { return "" } };
+  function drawGates(panel, entry) {
+    const rounds = panel.querySelector("[data-live-rounds]");
+    if (rounds) rounds.textContent = Number.isInteger(entry.rounds) ? `Full renders sent to you before you approved: ${entry.rounds}` : "";
+    for (const sec of panel.querySelectorAll("[data-live-gate]")) {
+      const g = entry.gates?.[GATE_OF[sec.dataset.liveGate]];
+      const note = sec.querySelector("[data-live-gate-note]");
+      if (!g || !note) continue;
+      const shown = sec.dataset.liveGateSha || "", answered = g.state !== "waiting", same = answered && !!shown && g.sha256 === shown;
+      let text, tone;
+      if (!answered) [text, tone] = [shown ? "Waiting on you" : "", "waiting"];
+      else if (shown && !same) [text, tone] = ["This changed since you pressed; press again", "changed"];
+      else if (g.state === "picked") {
+        const name = sec.querySelector(`[data-style-module="${g.module}"]`)?.dataset.styleName || g.module;
+        [text, tone] = ["Picked " + name + when(g.at), g.state];
+      } else [text, tone] = [(GATE_WORD[g.state] || g.state) + when(g.at), g.state];
+      note.textContent = text;
+      sec.dataset.liveState = tone;
+      sec.dataset.liveAnswered = same ? "1" : "";
+      if (same) for (const el of sec.querySelectorAll('[data-act="gate"], textarea[data-gate-words], input[data-style-nfu]')) el.disabled = true;
+    }
+  }
   async function drawLive() {
     const days = liveState?.live;
     if (!days) return [];
@@ -257,6 +285,7 @@
         if (!cuts.has(c.cut)) lines.push(`${nice(day)}'s ${c.cut} cut is on the record; rebuild to show it`);
         else if (c.thumbnail && !thumbs.has(c.cut)) lines.push(`${nice(day)}'s ${c.cut} cut thumbnail is on the record; rebuild to show it`);
       }
+      drawGates(panel, entry);
       const card = panel.querySelector(".rec.ap[data-approve-day]");
       if (card) {
         const changed = await changedWords(card, entry);

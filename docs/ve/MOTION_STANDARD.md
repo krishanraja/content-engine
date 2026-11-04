@@ -116,4 +116,22 @@ frames 600 and 990 of each reel.
   shows a box under a channel's buttons but does not fail the cut until card `ve-motion-4-channel-safe-tall` moves the
   tall layouts out of the zones. Until then a session reads the `channel.safe_zones` row itself before calling a tall
   cut ready.
+- **Proved moving before scaled (4 Nov 2026, F04, F13).** From 9 Nov a whole cut renders only after Krish approves its
+  hardest beat moving on his own take (`ve proof`, `scripts/velib/proof.py`), in the style he picked from mocks on that
+  take (`ve styles`). The Critic scores the cut against that approved proof clip as well as the board cards, with the
+  same 8/10 bar (`scripts/velib/refgate.py`, card `proof`). The standard above is what the proof is judged by; the
+  proof is what the whole cut is judged against.
+- **How the renderer holds a style to this floor (4 Nov 2026).** Each drawable style is a profile in
+  `apps/renderer/src/engine/kit/motion-profiles.json` (entrance 4 to 7 frames, rise 40 to 60 px, overshoot at most 6%,
+  drift above 0, timed moves under 3.5 s, grounds from brand roles); `kit.test.ts` and `clock.test.ts` fail any that
+  breaks it, and FormatMaster clamps a hand-edited profile inside it. Where a style asks for more than the floor allows
+  (dark-keynote's long holds) the floor wins. A cut with no style keeps the house motion it had before, which is
+  older than this standard (entrances 12 frames, a 24 px rise); a style is how a cut meets the entrance numbers.
+- **How the camera and typing keep to it (4 Nov 2026).** Typing runs at the style's readable rate (25 to 40 characters
+  a second, `kit/reveal.ts` `typedText`) and never so slowly that a line is still typing when its span ends. The
+  living-ui zoom (at most 1.5x, inside the 1 to 3 band) keeps the line it zooms to inside the channel safe area
+  (`config/channel-safe-zones.json`) and off his face (above the SPLIT seam, inside the layout's slots over a take);
+  the follow-the-pen camera never shows past the canvas; a crossfade lasts 6 to 10 frames. `kit/strongStyles.test.ts`
+  fails any that does not. `ve styles` offers only options that look different from the house and from each other
+  (`config/ve/style-distinct.json`).
 

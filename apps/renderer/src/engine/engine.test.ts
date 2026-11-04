@@ -6,7 +6,7 @@ import fixture from '../../../../fixtures/ve/engine-core/props.json'
 import { FormatMaster } from './FormatMaster'
 import { BrandFrame } from './BrandFrame'
 import { EngineAudio } from './audio'
-import { useEngineFrame } from './clock'
+import { HOUSE_MOTION, MOTION, useEngineFrame } from './clock'
 import { DEVICES } from './devices/registry'
 import { chromeZone } from './geometry'
 import { CallCard } from './chrome/CallCard'
@@ -16,9 +16,10 @@ import { ChannelPill } from './chrome/ChannelPill'
 import { MarkTile } from './chrome/MarkTile'
 import { StageHeader } from './chrome/StageHeader'
 import { slotsFor } from './layouts'
+import { MOTION_PROFILES } from './kit/motionProfiles'
 import { EngineRenderPropsSchema, type EngineBeat, type EngineRenderProps } from './props'
 
-vi.mock('./clock', () => ({ useEngineFrame: vi.fn(() => 75) }))
+vi.mock('./clock', async (importOriginal) => ({ ...await importOriginal<typeof import('./clock')>(), useEngineFrame: vi.fn(() => 75) }))
 vi.mock('./devices/registry', () => ({ DEVICES: { 'fixture-device': () => null } }))
 
 // Inspect element descriptions only: no React renderer or media decoding.
@@ -254,5 +255,58 @@ describe('SPLIT object placement', () => {
   })
   it('refuses placement on P1 naming the object', () => {
     expect(() => FormatMaster(placedProps('P1'))).toThrow('ve: place on non-SPLIT object slab')
+  })
+})
+
+describe('motion styles in the composition', () => {
+  // The mocked clock reads frame 75: fifteen frames into the second beat (60 to 120).
+  function staged(motion?: EngineRenderProps['motion']) {
+    const props = EngineRenderPropsSchema.parse(fixture)
+    props.objects = ['first', 'second'].map((obj) => ({ obj, device: 'fixture-device', meaning: obj, variants: {}, params: {}, fromFrame: 0, toFrame: 120 }))
+    props.beats[1]!.layout = 'STAGE'
+    props.beats[1]!.plate = { source: 'none' }
+    props.beats[1]!.uses = ['first', 'second']
+    if (motion) props.motion = motion
+    return props
+  }
+  // What the composition draws, as data: element type, style and the frame each device was given.
+  const drawn = (props: EngineRenderProps) => elements(FormatMaster(props)).map((node) => [
+    typeof node.type === 'string' ? node.type : (node.type as { name?: string }).name,
+    JSON.stringify(node.props.style ?? null), node.props.frame ?? null])
+
+  it('parses props with and without a motion style', () => {
+    expect(EngineRenderPropsSchema.safeParse(fixture).success).toBe(true)
+    expect(EngineRenderPropsSchema.safeParse({ ...fixture, motion: { style: 'dark-keynote' } }).success).toBe(true)
+    expect(EngineRenderPropsSchema.safeParse({ ...fixture, motion: { style: 'toy-3d' } }).success).toBe(true)
+    const withProfile = { ...fixture, motion: { style: 'x', profile: { ...MOTION_PROFILES['riso-halftone'] } } }
+    expect(EngineRenderPropsSchema.safeParse(withProfile).success).toBe(true)
+    expect(EngineRenderPropsSchema.safeParse({ ...fixture, motion: { style: 'x', extra: 1 } }).success).toBe(false)
+  })
+
+  it('draws a cut with no style, or a style that needs a device, exactly as before', () => {
+    const house = drawn(staged())
+    expect(drawn(staged({ style: 'toy-3d' }))).toEqual(house)
+    expect(house.flatMap(([, style]) => String(style).includes('scale(') ? [style] : [])).toEqual([])
+    expect(house.some(([, style]) => String(style).includes('radial-gradient(ellipse at center'))).toBe(true)
+    expect({ ...MOTION }).toEqual(HOUSE_MOTION)
+  })
+
+  it('draws a picked style differently, then restores the house motion for the next cut', () => {
+    const keynote = drawn(staged({ style: 'dark-keynote' }))
+    expect(keynote).not.toEqual(drawn(staged()))
+    // ink_deep ground and a slow push over the beat.
+    expect(keynote.some(([, style]) => String(style).includes(`"background":"${fixture.tokens.inkDeep}"`))).toBe(true)
+    expect(keynote.some(([, style]) => /"transform":"scale\(1\.0\d+\)"/.test(String(style)))).toBe(true)
+    // A style on twos steps its graphics: frame 75 is the fifteenth of the beat, so devices hold frame 74.
+    expect(elements(FormatMaster(staged({ style: 'paper-cutout' }))).filter(n => n.type === DEVICES['fixture-device']).map(n => n.props.frame)).toEqual([74, 74])
+    // living-ui dims everything but the proof (towards 40%) once the camera is on it; the proof stays whole.
+    const living = elements(FormatMaster(staged({ style: 'living-ui' })))
+    const wrappers = living.filter(n => isValidElement(n.props.children) && (n.props.children as ReactElement).type === DEVICES['fixture-device'])
+    const dims = wrappers.map(n => (n.props.style as { opacity?: number }).opacity)
+    expect(dims[0]).toBeUndefined()
+    expect(dims[1]).toBeLessThan(1)
+    expect(dims[1]).toBeGreaterThanOrEqual(0.4)
+    FormatMaster(staged())
+    expect({ ...MOTION }).toEqual(HOUSE_MOTION)
   })
 })
