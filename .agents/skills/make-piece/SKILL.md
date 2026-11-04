@@ -455,14 +455,13 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    style he picked on the Ideas tab (`config/style-references.json`
    `formats`), with the brand reference and the article's visuals. Name
    the piece's one motion system before any beat (`style.motion`, required
-   from 9 November): run `creative_direction.py motion --points <the
-   piece's point types> --format <long_video|short_video|...>`, pick one of
-   the shortlist from the bank's motion layer, and say in its `reason` which
-   point it makes land faster; its rules and avoid list then reach every
-   plate brief. Its `brand.references` come from the inspiration board by
+   from 9 November): propose one from `creative_direction.py motion
+   --points <types> --format <long_video|short_video>` with its `reason`;
+   after he records he picks from `ve styles` mocks on his take, then
+   approves the hardest beat moving (`ve proof`) before a whole cut
+   renders. Its `brand.references` come from the inspiration board by
    card id, never a typed name (`ve init`, `ve refs`: the `ve` skill, step
-   6). A style he has not rated yet is untested: say so on the
-   storyboard. Every
+   6). Put `ve expect`'s lines beside the storyboard. Every
    picture adds meaning beyond the words (Krish, 2026-10-29: "They have to
    be additive in meaning. I'm all up for visually clear ideas."): a
    visually clear idea with the real facts on it is welcome, a comparison
