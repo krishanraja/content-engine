@@ -1689,7 +1689,7 @@
       "role": "hook",
       "layout": "STAGE",
       "fromFrame": 0,
-      "toFrame": 176,
+      "toFrame": 97,
       "uses": [
         "buddy",
         "note"
@@ -1699,7 +1699,21 @@
       "plate": {
         "source": "none"
       },
-      "keyFrame": 141
+      "keyFrame": 78
+    },
+    {
+      "id": "hook-face",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 97,
+      "toFrame": 176,
+      "uses": [],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "take"
+      },
+      "keyFrame": 160
     },
     {
       "id": "face",
@@ -2171,17 +2185,10 @@
     },
     {
       "id": "hook-3",
-      "obj": "buddy",
-      "verb": "bounce",
-      "toState": "proud",
-      "atFrame": 88
-    },
-    {
-      "id": "hook-4",
       "obj": "note",
       "verb": "type",
       "toState": "1",
-      "atFrame": 128
+      "atFrame": 59
     },
     {
       "id": "face-0",
