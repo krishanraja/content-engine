@@ -35,7 +35,14 @@ import brand
 import card
 
 SAGE = '#B9D3C3'
-GROUND = 'radial-gradient(circle at 30% 38%, #D6E6DB 0, #B9D3C3 55%, #8FB3A0 100%)'
+GROUND_STOPS = ('#D6E6DB', '#B9D3C3', '#8FB3A0')
+GROUND = 'radial-gradient(circle at 30% 38%, {0} 0, {1} 55%, {2} 100%)'
+
+
+def ground(look):
+    """The sage ground, leaned lightly toward a series day's colour (brand.day_look); plain on an off day."""
+    stops = [brand.lean(s, look['colour'], look['tint']) for s in GROUND_STOPS]
+    return GROUND.format(*stops), stops[1]
 TEMPLATE = 'receipt'
 # A line holding one word this short reads as a mistake ("the word "of" is on its own line").
 LONE_WORD_MAX = 3
@@ -71,9 +78,9 @@ body { background: @SAGE@; }
 .pin { position: relative; transform: rotate(-2.5deg); display: flex; flex-direction: column; align-items: flex-start; gap: calc(var(--edge) * 1.2); }
 .frame { position: relative; border: var(--edge) solid #fff; box-shadow: calc(var(--edge) * 1.8) calc(var(--edge) * 2.2) 0 rgba(12, 21, 18, .35); background: #fff; }
 .frame img { display: block; }
-.ring { position: absolute; border: calc(var(--edge) * .6) solid var(--coral); border-radius: 50%; }
+.ring { position: absolute; border: calc(var(--edge) * .6) solid var(--ink); border-radius: 50%; }
 .tag { align-self: flex-start; font-family: "IBM Plex Mono", monospace; font-weight: 700;
-       font-size: var(--fine); line-height: 1.15; letter-spacing: .03em; text-transform: uppercase; background: var(--coral); color: #fff; padding: .28em .5em; max-width: 100%; }
+       font-size: var(--fine); line-height: 1.15; letter-spacing: .03em; text-transform: uppercase; background: var(--accent); color: var(--ink); padding: .28em .5em; max-width: 100%; }
 .col { display: flex; flex-direction: column; gap: calc(var(--gap) * .7); min-width: 0; }
 .side .col { flex: 1 1 auto; align-self: stretch; justify-content: flex-start; padding-top: calc(var(--gap) * .5); }
 .stack .col { order: 1; flex: none; }
@@ -284,6 +291,8 @@ def page(facts, c, base, shape):
     hs = brand.house()
     t = hs['tokens']
     ch = brand.channel(hs, facts['subchannel'])
+    look = brand.day_look(hs, facts.get('date'), facts['subchannel'])
+    card_ground, body_ground = ground(look)
     lead, last = words_of(c, facts)
     sys.path.insert(0, str(brand.ROOT / "scripts" / "post-pack"))
     import title_check
@@ -304,7 +313,7 @@ def page(facts, c, base, shape):
     logos = ''.join(f'<img src="{brand.data_uri(Path(base) / row["logo"] if not Path(row["logo"]).is_absolute() else row["logo"], 600)}" alt="{esc(row.get("name", ""))}">'
                     for row in [*c.get('rows', []), *c.get('strip', [])] if row.get('logo'))
     vars_ = {
-        '--ink': t['ink'], '--accent': ch['accent'], '--coral': '#FF6B57',
+        '--ink': t['ink'], '--accent': look['colour'],
         '--head': f'{spec["heads"][0]}px', '--fine': f'{fine_px + 2}px', '--wm': f'{round(min(W / 30, (r - l) / 26))}px',
         '--logo': f'{round(max(fine_px + 2, (r - l) / 24) * (1 if n_logos <= 3 else .78))}px', '--gap': f'{round(W / 40)}px', '--edge': f'{edge}px',
         '--proofw': spec.get('proofw', '58%') if side else '100%',
@@ -314,7 +323,7 @@ def page(facts, c, base, shape):
     foot = f'<div class="foot"><div class="logos">{logos}</div></div>' if logos else ''
     tag = f'<div class="tag" data-fine-print>{esc(p["tag"])}</div>'
     return f"""<!doctype html><html style="{root}"><head><meta charset="utf-8"><style>{brand.font_css()}
-{CSS.replace('@SAGE@', SAGE).replace('@GROUND@', GROUND)}</style></head><body>
+{CSS.replace('@SAGE@', body_ground).replace('@GROUND@', card_ground)}</style></head><body>
 <div id="card" class="{spec['layout']}" style="width:{W}px;height:{H}px">
  <div id="safe" style="left:{l}px;top:{tp}px;width:{r - l}px;height:{b - tp}px">
   <div class="top"><div class="wmp"><img src="{brand.data_uri(brand.fetch('wordmark'), 1400)}" alt="Make Your Mind Up"></div><div class="pill" data-fine-print>{esc(ch["name"])}</div></div>
@@ -369,6 +378,7 @@ def receipt_record(facts, c, shape, name, data, fit):
         'drawer': 'scripts/pages/build.py (receipt)', 'template': TEMPLATE, 'shape': shape, 'file': name,
         'width': SHAPES[shape]['w'], 'height': SHAPES[shape]['h'], 'sha256': hashlib.sha256(data).hexdigest(),
         'portrait': False, 'proof': {k: p.get(k) for k in ('image', 'pdf', 'page', 'html', 'source', 'tag', 'ring')},
+        'day': {k: v for k, v in brand.day_look(brand.house(), facts.get('date'), facts['subchannel']).items() if k != 'tint'},
         'rows': [r.get('name', '') for r in c.get('rows', [])], 'strip': [x.get('name', '') for x in c.get('strip', [])],
         'headline': list(words_of(c, facts)), 'headline_px': fit['head'], 'lines': fit['lines'],
         'safe': list(SHAPES[shape]['safe']), 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),

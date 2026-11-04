@@ -74,6 +74,46 @@ def portrait_for(date):
 REFRESH_DAYS = 7
 
 WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+# The day an asset is published decides its colour, Monday to Saturday (Ruling, Krish, 2026-11-04: "lightly
+# colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday ... The off days are neutral
+# colours or the colours we have planned, but not under the Monday, Wednesday, or Friday panels or colours. Just
+# subtle brand recognition would be nice as a hard rule across Monday to Saturday assets."). A subchannel's own day
+# (config/studio.json) wears its colour; every other day wears the house mint, the off-day look he approved on
+# 4 Nov ("give off days their own music and look"), and no subchannel's colour anywhere.
+DAY_TINT = 0.11   # how far a series day's ground leans to its colour: a light tint, never a flood
+
+
+def day_look(house_style, date=None, series=None):
+    """What a dated asset wears: {'day', 'series_day', 'colour', 'owner', 'tint'}. A subchannel's day wears its
+    colour and leans the ground DAY_TINT toward it; any other day wears the house mint on the plain ground. With
+    no date, the subchannel's own day."""
+    import datetime as dt
+    if date:
+        try:
+            day = WEEK[dt.date.fromisoformat(str(date)[:10]).weekday()]
+        except ValueError:
+            fail(f'the publishing date {date!r} is not YYYY-MM-DD, so the day and its colour cannot be told')
+    elif series:
+        day = channel(house_style, series)['day']
+    else:
+        fail('a dated asset needs its publishing "date" (or its subchannel) to know which day\'s colour it wears')
+    owner = next((c for c in house_style['channels'] if c['day'] == day), None)
+    if owner:
+        return {'day': day, 'series_day': True, 'colour': owner['accent'], 'owner': owner['name'], 'tint': DAY_TINT}
+    return {'day': day, 'series_day': False, 'colour': house_style['tokens']['mint'], 'owner': None, 'tint': 0.0}
+
+
+def series_colours(house_style):
+    """Every subchannel's colour, upper case: what an off-day asset must never wear."""
+    return {c['accent'].upper() for c in house_style['channels']}
+
+
+def lean(base, colour, amount):
+    """`base` (#RRGGBB) leaned toward `colour` by `amount` (0 to 1), as #RRGGBB."""
+    a, b = base.lstrip('#'), colour.lstrip('#')
+    mixed = (round(int(a[i:i + 2], 16) * (1 - amount) + int(b[i:i + 2], 16) * amount) for i in (0, 2, 4))
+    return '#' + ''.join(f'{v:02X}' for v in mixed)
 MIME = {'.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp',
         '.gif': 'image/gif', '.svg': 'image/svg+xml'}
 

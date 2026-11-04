@@ -2094,6 +2094,31 @@
           "how": "compile draws an off day in the house mint"
         }
       ]
+    },
+    {
+      "id": "day-colours-on-covers",
+      "on": "2026-11-04",
+      "krish": "One more thing: can you just lightly colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday? When they go on Facebook and Instagram they're slightly differently coloured based on the colour theme of each day. The off days are neutral colours or the colours we have planned, but not under the Monday, Wednesday, or Friday panels or colours. Just subtle brand recognition would be nice as a hard rule across Monday to Saturday assets.",
+      "why": "Every cover and thumbnail sat on the same sage ground whatever the day, wore the piece's series colour even when it published on an off day, and carried a coral tag and ring (mind.the.gap's colour) on every day.",
+      "means": "The publishing day decides an asset's colour, Monday to Saturday. Monday wears follow.the.money's yellow, Wednesday under.the.hood's lilac, Friday mind.the.gap's coral, each with its ground leaned lightly toward it; Tuesday, Thursday and Saturday wear the house mint on the plain ground and no subchannel's colour anywhere. Growth's assets keep the same rule through docs/CAROUSEL-STANDARD.md.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/pages/brand.py",
+          "contains": "def day_look(",
+          "how": "one rule from config/studio.json: a subchannel's day wears its colour, every other day the house mint"
+        },
+        {
+          "file": "scripts/pages/receipt.py",
+          "contains": "look = brand.day_look(",
+          "how": "every cover and thumbnail (the Receipt) takes its accent, tag and ground from the publishing day"
+        },
+        {
+          "file": "tests/day_colour_test.py",
+          "contains": "an off day and wears",
+          "how": "CI refuses an off-day cover carrying a subchannel's colour, or a series day carrying another day's"
+        }
+      ]
     }
   ]
 }
