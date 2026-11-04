@@ -79,15 +79,16 @@ WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sun
 # colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday ... The off days are neutral
 # colours or the colours we have planned, but not under the Monday, Wednesday, or Friday panels or colours. Just
 # subtle brand recognition would be nice as a hard rule across Monday to Saturday assets."). A subchannel's own day
-# (config/studio.json) wears its colour; every other day wears the house mint, the off-day look he approved on
-# 4 Nov ("give off days their own music and look"), and no subchannel's colour anywhere.
-DAY_TINT = 0.11   # how far a series day's ground leans to its colour: a light tint, never a flood
+# (config/studio.json) wears its colour: a pale wash of it as the ground and the colour itself where the house look
+# puts colour. Every other day is neutral: the house ground, cream and ink, no subchannel's colour and no
+# subchannel's name.
+DAY_WASH = (0.10, 0.18, 0.30)   # how far the ground's light, middle and edge lean from white to the day's colour
 
 
 def day_look(house_style, date=None, series=None):
-    """What a dated asset wears: {'day', 'series_day', 'colour', 'owner', 'tint'}. A subchannel's day wears its
-    colour and leans the ground DAY_TINT toward it; any other day wears the house mint on the plain ground. With
-    no date, the subchannel's own day."""
+    """What a dated asset wears: {'day', 'series_day', 'owner', 'colour', 'wash'}. On a subchannel's day, `colour`
+    is its colour and `wash` the ground's three stops; on any other day `colour` is the house cream, `wash` is None
+    (the house ground stays) and `owner` is None, so no subchannel is named. With no date, the subchannel's own day."""
     import datetime as dt
     if date:
         try:
@@ -100,8 +101,9 @@ def day_look(house_style, date=None, series=None):
         fail('a dated asset needs its publishing "date" (or its subchannel) to know which day\'s colour it wears')
     owner = next((c for c in house_style['channels'] if c['day'] == day), None)
     if owner:
-        return {'day': day, 'series_day': True, 'colour': owner['accent'], 'owner': owner['name'], 'tint': DAY_TINT}
-    return {'day': day, 'series_day': False, 'colour': house_style['tokens']['mint'], 'owner': None, 'tint': 0.0}
+        return {'day': day, 'series_day': True, 'owner': owner['name'], 'colour': owner['accent'],
+                'wash': [lean('#FFFFFF', owner['accent'], a) for a in DAY_WASH]}
+    return {'day': day, 'series_day': False, 'owner': None, 'colour': house_style['tokens']['cream'], 'wash': None}
 
 
 def series_colours(house_style):

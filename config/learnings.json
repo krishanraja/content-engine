@@ -2100,7 +2100,7 @@
       "on": "2026-11-04",
       "krish": "One more thing: can you just lightly colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday? When they go on Facebook and Instagram they're slightly differently coloured based on the colour theme of each day. The off days are neutral colours or the colours we have planned, but not under the Monday, Wednesday, or Friday panels or colours. Just subtle brand recognition would be nice as a hard rule across Monday to Saturday assets.",
       "why": "Every cover and thumbnail sat on the same sage ground whatever the day, wore the piece's series colour even when it published on an off day, and carried a coral tag and ring (mind.the.gap's colour) on every day.",
-      "means": "The publishing day decides an asset's colour, Monday to Saturday. Monday wears follow.the.money's yellow, Wednesday under.the.hood's lilac, Friday mind.the.gap's coral, each with its ground leaned lightly toward it; Tuesday, Thursday and Saturday wear the house mint on the plain ground and no subchannel's colour anywhere. Growth's assets keep the same rule through docs/CAROUSEL-STANDARD.md.",
+      "means": "The publishing day decides an asset's colour, Monday to Saturday. On Monday, Wednesday and Friday the ground is a pale wash of the day's subchannel colour (follow.the.money's yellow, under.the.hood's lilac, mind.the.gap's coral) and the colour itself marks the highlighted words, the pill and the tag. Tuesday, Thursday and Saturday are neutral: the house sage, cream and ink, with no subchannel colour or name. His first look at a version that leaned the sage toward each colour and put the house mint and series pills on the off days: \"This is supposed to be your solution to the colour question because everything's wrong in here.\" Growth's assets keep the same rule through docs/CAROUSEL-STANDARD.md.",
       "status": "encoded",
       "encoded": [
         {
@@ -2111,12 +2111,12 @@
         {
           "file": "scripts/pages/receipt.py",
           "contains": "look = brand.day_look(",
-          "how": "every cover and thumbnail (the Receipt) takes its accent, tag and ground from the publishing day"
+          "how": "every cover and thumbnail (the Receipt) takes its ground, highlight, pill and tag from the publishing day"
         },
         {
           "file": "tests/day_colour_test.py",
           "contains": "an off day and wears",
-          "how": "CI refuses an off-day cover carrying a subchannel's colour, or a series day carrying another day's"
+          "how": "CI refuses an off-day cover carrying a subchannel colour or name, or a series day carrying another day's"
         }
       ]
     }

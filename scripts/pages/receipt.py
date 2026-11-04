@@ -40,8 +40,8 @@ GROUND = 'radial-gradient(circle at 30% 38%, {0} 0, {1} 55%, {2} 100%)'
 
 
 def ground(look):
-    """The sage ground, leaned lightly toward a series day's colour (brand.day_look); plain on an off day."""
-    stops = [brand.lean(s, look['colour'], look['tint']) for s in GROUND_STOPS]
+    """A series day's ground is a pale wash of its own colour (brand.day_look); an off day keeps the house sage."""
+    stops = look['wash'] or list(GROUND_STOPS)
     return GROUND.format(*stops), stops[1]
 TEMPLATE = 'receipt'
 # A line holding one word this short reads as a mistake ("the word "of" is on its own line").
@@ -80,7 +80,7 @@ body { background: @SAGE@; }
 .frame img { display: block; }
 .ring { position: absolute; border: calc(var(--edge) * .6) solid var(--ink); border-radius: 50%; }
 .tag { align-self: flex-start; font-family: "IBM Plex Mono", monospace; font-weight: 700;
-       font-size: var(--fine); line-height: 1.15; letter-spacing: .03em; text-transform: uppercase; background: var(--accent); color: var(--ink); padding: .28em .5em; max-width: 100%; }
+       font-size: var(--fine); line-height: 1.15; letter-spacing: .03em; text-transform: uppercase; background: var(--tag-bg); color: var(--tag-fg); padding: .28em .5em; max-width: 100%; }
 .col { display: flex; flex-direction: column; gap: calc(var(--gap) * .7); min-width: 0; }
 .side .col { flex: 1 1 auto; align-self: stretch; justify-content: flex-start; padding-top: calc(var(--gap) * .5); }
 .stack .col { order: 1; flex: none; }
@@ -313,20 +313,23 @@ def page(facts, c, base, shape):
     logos = ''.join(f'<img src="{brand.data_uri(Path(base) / row["logo"] if not Path(row["logo"]).is_absolute() else row["logo"], 600)}" alt="{esc(row.get("name", ""))}">'
                     for row in [*c.get('rows', []), *c.get('strip', [])] if row.get('logo'))
     vars_ = {
-        '--ink': t['ink'], '--accent': look['colour'],
+        '--ink': t['ink'], '--accent': look['colour'], '--cream': t['cream'],
+        '--tag-bg': look['colour'] if look['series_day'] else t['ink'], '--tag-fg': t['ink'] if look['series_day'] else t['cream'],
         '--head': f'{spec["heads"][0]}px', '--fine': f'{fine_px + 2}px', '--wm': f'{round(min(W / 30, (r - l) / 26))}px',
         '--logo': f'{round(max(fine_px + 2, (r - l) / 24) * (1 if n_logos <= 3 else .78))}px', '--gap': f'{round(W / 40)}px', '--edge': f'{edge}px',
         '--proofw': spec.get('proofw', '58%') if side else '100%',
     }
     root = ';'.join(f'{k}:{v}' for k, v in vars_.items())
     head = (f'{esc(lead)} ' if lead else '') + f'<mark>{esc(last)}</mark>'
+    # Only a subchannel's own day names it: an off day sits under no Monday, Wednesday or Friday panel.
+    pill = f'<div class="pill" data-fine-print>{esc(ch["name"])}</div>' if look['owner'] == ch['name'] else ''
     foot = f'<div class="foot"><div class="logos">{logos}</div></div>' if logos else ''
     tag = f'<div class="tag" data-fine-print>{esc(p["tag"])}</div>'
     return f"""<!doctype html><html style="{root}"><head><meta charset="utf-8"><style>{brand.font_css()}
 {CSS.replace('@SAGE@', body_ground).replace('@GROUND@', card_ground)}</style></head><body>
 <div id="card" class="{spec['layout']}" style="width:{W}px;height:{H}px">
  <div id="safe" style="left:{l}px;top:{tp}px;width:{r - l}px;height:{b - tp}px">
-  <div class="top"><div class="wmp"><img src="{brand.data_uri(brand.fetch('wordmark'), 1400)}" alt="Make Your Mind Up"></div><div class="pill" data-fine-print>{esc(ch["name"])}</div></div>
+  <div class="top"><div class="wmp"><img src="{brand.data_uri(brand.fetch('wordmark'), 1400)}" alt="Make Your Mind Up"></div>{pill}</div>
   <div class="main">
    <div class="proof"><div class="pin">{tag if pin_tag else ''}<div class="frame"><img src="{brand.data_uri(p['path'], 2400)}" alt="{esc(p.get('alt') or p['tag'])}">{ring}</div></div></div>
    <div class="col">{('' if pin_tag else tag) + foot if side else ''}<h1>{head}</h1></div>
@@ -378,7 +381,7 @@ def receipt_record(facts, c, shape, name, data, fit):
         'drawer': 'scripts/pages/build.py (receipt)', 'template': TEMPLATE, 'shape': shape, 'file': name,
         'width': SHAPES[shape]['w'], 'height': SHAPES[shape]['h'], 'sha256': hashlib.sha256(data).hexdigest(),
         'portrait': False, 'proof': {k: p.get(k) for k in ('image', 'pdf', 'page', 'html', 'source', 'tag', 'ring')},
-        'day': {k: v for k, v in brand.day_look(brand.house(), facts.get('date'), facts['subchannel']).items() if k != 'tint'},
+        'day': {k: v for k, v in brand.day_look(brand.house(), facts.get('date'), facts['subchannel']).items() if k != 'wash'},
         'rows': [r.get('name', '') for r in c.get('rows', [])], 'strip': [x.get('name', '') for x in c.get('strip', [])],
         'headline': list(words_of(c, facts)), 'headline_px': fit['head'], 'lines': fit['lines'],
         'safe': list(SHAPES[shape]['safe']), 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
