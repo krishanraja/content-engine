@@ -146,11 +146,36 @@ def reference_lints(spec: dict) -> list[str]:
     for role in REFERENCE_ROLES:
         if not any(role in r.get('for', []) for r in refs):
             out.append(f'reference.required brand.references: name an inspiration-board card for {role} '
-                       f'(card, for, drive_id, takeaway); read the board before designing')
+                       f'(id, card, for, drive_id, takeaway); take it from the board: GET /api/inspiration/candidates, '
+                       f'or ve init')
+    # A card is named by its board id, so the board, the making record and card_uses join on it (Wave 3,
+    # docs/handovers/2026-11-03-engine-audit.md). Whether the id is a live production card is checked online by ve refs;
+    # lint stays offline and deterministic.
+    for index, ref in enumerate(refs):
+        if not ref.get('id'):
+            out.append(f'reference.id brand.references.{index}: {ref["card"]} needs its Inspiration card id '
+                       '(inspiration_items.id); read it from GET /api/inspiration/cards or the candidates route')
+        if ref.get('offered'):
+            out.append(f'reference.offered brand.references.{index}: {ref["card"]} was offered by ve init, not chosen; '
+                       'open the card, confirm it serves this piece and delete "offered", or replace it')
+    ids = [r['id'] for r in refs if r.get('id')]
+    for card_id in sorted({i for i in ids if ids.count(i) > 1}):
+        out.append(f'reference.duplicate brand.references: card id {card_id} is listed twice; give it one entry with every role it serves')
     cards = [r['card'] for r in refs]
     for card in sorted({c for c in cards if cards.count(c) > 1}):
         out.append(f'reference.duplicate brand.references: {card} is listed twice; give it one entry with every role it serves')
     return out
+
+
+def motion_style_problems(spec: dict) -> list[str]:
+    """style.motion: one module from the motion layer of config/style-references.json, with the point it lands. The
+    same rule and start date the creative direction uses (scripts/post-pack/creative_direction.py motion_problems), so
+    the ve route and the quick-edit direction can never hold different motion rules."""
+    import sys
+    from .common import ROOT
+    sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
+    import creative_direction  # noqa: E402
+    return creative_direction.motion_problems(spec)
 
 
 def motion_lints(spec: dict) -> list[str]:
@@ -160,6 +185,11 @@ def motion_lints(spec: dict) -> list[str]:
     if spec['signature']['hero']['device'] == 'stamp':
         out.append('motion.stamp_not_hero signature.hero.device: the stamp draws fixed 30 px mono text; it labels, it is '
                    'never the hero (docs/ve/MOTION_STANDARD.md)')
+    day = spec.get('publish_day')
+    if spec['format'] == 'face-with-proof' and spec['brand'].get('captions') != 'word' and not (day and day < REFERENCE_FROM):
+        out.append('captions.word_default brand.captions: face-with-proof uses the word caption build, one word at a time '
+                   'off the face (signed by Krish, 3 Nov 2026, docs/ve/MOTION_STANDARD.md)')
+    out.extend(f'motion.required {problem}' for problem in motion_style_problems(spec))
     for cut_id, cut in spec['cuts'].items():
         for index, beat in enumerate(cut['beats']):
             used = [objects[name]['device'] for name in beat['uses'] if name in objects]

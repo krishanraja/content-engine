@@ -440,6 +440,9 @@ def cmd_verdict(args) -> int:
         references = load_json(args.references) if getattr(args, 'references', None) else None
         path = verdict.write(spec, args.cut, verdict.ve_dir(spec_file), args.reviewer, findings, viewed, references)
         print(f've verdict: {path}')
+        if (spec.get('brand') or {}).get('references'):
+            from velib import board
+            print(f've verdict: {board.record_uses(spec, spec_file, args.cut, references)}')
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(f've verdict: {error}')
@@ -459,12 +462,41 @@ def cmd_refs(args) -> int:
             raise ValueError(f'no QC-bound video for {args.cut}: run ve qc first')
         if not spec['brand'].get('references'):
             raise ValueError('the spec names no inspiration-board references (brand.references); read the board and add them')
+        from velib import board
+        problems, status = board.check(spec['brand']['references'])
+        for problem in problems:
+            print(f've refs: {problem}')
+        if problems:
+            print(f've refs: {len(problems)} reference problem(s) on the inspiration board; no sheet was made')
+            return 1
+        print(f've refs: board {status}')
         for path in refgate.sheets(spec, args.cut, directory, video):
             print(f've refs: {path}')
         return 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f've refs: {error}')
         return 1
+
+
+def cmd_init(args) -> int:
+    """Pre-fill brand.references on a piece's spec from the board's candidates, one card per role still unnamed,
+    each marked offered: true for the session to confirm (ve lint refuses the flag). The spec is Claude's to write:
+    this adds offers and changes nothing else."""
+    from velib import board
+    spec_file = spec_path_for(args.piece)
+    spec = load_json(spec_file)
+    added, status = board.offer(spec, args.format)
+    if status != 'checked':
+        print(f've init: board {status}; brand.references left as it was, take the cards from the board by hand')
+        return 1
+    if not added:
+        print('ve init: every role already names a card, or the board offered none; nothing changed')
+        return 0
+    write_json(spec_file, spec)
+    for ref in added:
+        print(f"ve init: offered {ref['card']} ({ref['id']}) for {', '.join(ref['for'])}")
+    print('ve init: open each offered card, confirm it serves this piece and delete "offered", or replace it')
+    return 0
 
 
 def cmd_packet(args) -> int:
@@ -509,8 +541,8 @@ def cmd_status(args) -> int:
         print('  design: ' + ('NOT APPROVED (' + '; '.join(design) + ')' if design else 'APPROVED'))
         reasons = mechanical + design + final
         print(f"{cut}: {'READY' if not reasons else 'NOT READY (' + '; '.join(reasons) + ')'}")
-        # Done means in the 4 Growth folder Krish opens, read back from the library, never from the receipt alone
-        # (Krish, 2026-11-03: "The translator video isn't in the drive... Why is it not in there?").
+        # Done means in the post's 3 Posts folder, read back from the library, never from the receipt alone
+        # (Ruling, Krish, 2026-11-03: "everything ready for post goes in the posts folder, not the growth folder").
         if not reasons:
             there, where = filing.delivered(record, root, cut)
             print(f"  delivered: {'DONE ' + where if there else 'NO (' + where + ')'}")
@@ -612,13 +644,8 @@ def cmd_file(args) -> int:
     from velib import filing
     try:
         _spec_file, spec, directory = _ve_dir(args.piece)
-        if getattr(args, 'growth_only', False):
-            record = filing.file_growth_only(directory, library_at=args.library)
-            for item in record['files']:
-                print(f"  {item['cut']} ({item['shape']}) -> {item['growth']}")
-            return 0
         if not args.subject:
-            raise ValueError('--subject is required: the topic both the 3 Posts and the 4 Growth folders are named by')
+            raise ValueError('--subject is required: the topic the post folder is named by')
         cuts = args.cut or list(spec['cuts'])
         result = filing.file(spec, directory, cuts, subject=args.subject, when=args.date, archive_at=args.archive,
                              library_at=args.library, dry_run=args.dry_run)
@@ -630,7 +657,6 @@ def cmd_file(args) -> int:
         print(f"ve file: archive {result['archive']}")
         for item in result['files']:
             print(f"  {item['cut']} ({item['shape']}, {item['sha256'][:12]}) -> {item['library']}")
-            print(f"  {item['cut']} for Growth -> {item['growth']}")
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(f've file: {error}', file=sys.stderr)
@@ -1025,6 +1051,9 @@ def main() -> int:
     a.add_argument('--viewed', default='', help='comma-separated viewed frame times in seconds')
     a.add_argument('--references', help="JSON list of the Critic's scores against each board card (refgate)")
     a.set_defaults(fn=cmd_verdict)
+    p = sub.add_parser('init', help="offer the board's top card per role into brand.references, marked offered")
+    p.add_argument('piece'); p.add_argument('--format', help='prefer cards of this clip format (facets.format)')
+    p.set_defaults(fn=cmd_init)
     p = sub.add_parser('refs', help="put the cut's frames beside each inspiration-board reference for the Critic")
     p.add_argument('piece'); p.add_argument('cut'); p.set_defaults(fn=cmd_refs)
     p = sub.add_parser('packet', help='assemble measured and judged cuts for approval')
@@ -1093,9 +1122,8 @@ def main() -> int:
     p.add_argument('--render', action='store_true', help='render the conformed picture and dialogue in one graph')
     p.add_argument('--assets-dir'); p.add_argument('--joins-reel', action='store_true')
     p.set_defaults(fn=cmd_conform)
-    p = sub.add_parser('file', help="file READY cuts in the archive, the post's 3 Video folder and its 4 Growth folder")
+    p = sub.add_parser('file', help="file READY cuts in the archive and the post's 3 Video folder, bound to piece_id")
     p.add_argument('piece'); p.add_argument('--subject'); p.add_argument('--date')
-    p.add_argument('--growth-only', action='store_true', help='add the 4 Growth copy to a cut filed before that rule')
     p.add_argument('--cut', action='append', help='a cut to file (default: every cut; one per shape)')
     p.add_argument('--archive', help='the archive folder (default MINDMAKE_ARCHIVE_ROOT)')
     p.add_argument('--library', help='the makeyourmindup library folder (default MINDMAKE_LIBRARY_ROOT)')

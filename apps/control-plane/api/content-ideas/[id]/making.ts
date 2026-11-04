@@ -6,6 +6,7 @@ import { askChecksForPiece } from '../../_controlCenter.js'
 import { MediaQualityError, qualifyMedia, readMediaRef } from '../../_mediaQuality.js'
 
 import { verifiedMaking } from '../../_verifiedMaking.js'
+import { markPublished } from '../../inspiration/_cards.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../../packages/core/src/media-rollout.js'
 
 // GET  /api/content-ideas/:id/making           where this piece is: the record and its steps
@@ -49,6 +50,10 @@ import { mediaQualityEnforced, mediaQualityRollout } from '../../../../../packag
 // lists as I go but the rest should be automatically done." The answer's
 // `closed` stays empty for one release, for callers that still read it, and
 // `looked` names the items the sweep was asked to look at.
+//
+// A posted channel (channels: {<name>: {...}}) also marks every Inspiration card use on this piece published
+// (card_uses, api/inspiration/_cards.ts markPublished), so each card knows the cuts it shaped went out. A failed
+// mark changes nothing written here and is said in `card_uses_problem`.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['GET', 'POST'])) return
@@ -102,5 +107,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // The sweep looks at the items waiting on this piece now. The write waits up
   // to 3 s for the ask (_controlCenter.ts, ASK_MS); a failed ask changes nothing.
   const look = await askChecksForPiece(ideaId)
-  return res.status(200).json({ ok: true, idea_id: ideaId, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps(after), closed: [], looked: look.keys })
+  const posted = Object.values(patch.channels || {}).some(Boolean)
+  const usesProblem = posted ? await markPublished(supabase, ideaId, now) : null
+  return res.status(200).json({ ok: true, idea_id: ideaId, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps(after), closed: [], looked: look.keys, ...(usesProblem ? { card_uses_problem: usesProblem } : {}) })
 }

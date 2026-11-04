@@ -476,10 +476,9 @@ draft or fact check, a merge or deploy, and anything that sends, posts,
 spends, deletes or changes a permission needs his words immediately
 before it.
 
-Rebuild the board with every made day's current page (each saved with an
-`Artifact` read), the board as last read as `--previous`, then republish it
-to its own link, never as a new artifact (the store, with every tick, stays
-with the page). In a cloud session `CLAUDE_CODE_REMOTE=1` lets the engine
+The board keeps itself current (the live overlay, `docs/PUBLISH_BOARDS.md`); rebuild it
+only for new words, assets or a new day, with `board_web.py read` for the board as last
+published as `--previous`, then `board_web.py publish-web` (every tick stays with the week). In a cloud session `CLAUDE_CODE_REMOTE=1` lets the engine
 reads through with the environment's key (`scripts/engine.py`); on a home
 computer leave it off:
 

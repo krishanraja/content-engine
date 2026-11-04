@@ -234,18 +234,24 @@ def inputs_from_props(props: dict) -> dict:
     # never be applied to it; compare each beat at its position in this master.
     # The ending band carries no speech, so lip sync is measured up to its start, never across it.
     stop = (props.get('ending') or {}).get('fromFrame', props.get('durationFrames'))
-    edl = [{'fromFrame': b['fromFrame'], 'toFrame': min(b['toFrame'], stop),
+    edl = [{'fromFrame': b['fromFrame'], 'toFrame': b['toFrame'] if stop is None else min(b['toFrame'], stop),
             'trimBeforeFrames': b['fromFrame'] + stem.get('trimBeforeFrames', 0)} for b in beats
            if stop is None or b['fromFrame'] < stop]
     joins = sorted({s['fromFrame'] / props.get('fps', 30) for s in props.get('segments', []) if s['fromFrame'] > 0})
-    pages = caption_pages_shown(props)
-    for page in pages:
-        # A caption on a SPLIT beat sits in the frozen split zone, under his chin, not in the house zone.
-        # Judged at the frame OCR samples (the page can start in one beat and be read in the next).
-        revealed = max(page['fromFrame'], max((int(w['atFrame']) for w in page['words']), default=page['fromFrame']) + 2)
-        sampled = (revealed + page['toFrame'] - 1) // 2
-        if any(b['layout'] == 'SPLIT' and b['fromFrame'] <= sampled < b['toFrame'] for b in beats):
+    from . import qc_faces
+    pages = []
+    style = props.get('captionStyle') or 'house'
+    for original in caption_pages_shown(props):
+        page = dict(original)
+        beat = next((b for b in beats if b['fromFrame'] <= page['fromFrame'] < b['toFrame']), {})
+        if beat.get('layout') == 'SPLIT' and style != 'word':
             page['region'] = split_caption
+        x, y, w, h = qc_faces.caption_box(page, style, aspect, region, layout=beat.get('layout'),
+                                         plate=(beat.get('plate') or {}).get('source'))
+        width, height = (1080, 1920) if aspect == '9:16' else (1920, 1080)
+        left, top = max(0, x - 12), max(0, y - 12)
+        page['region'] = (left, top, min(width, x + w + 12) - left, min(height, y + h + 12) - top)
+        pages.append(page)
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
                 edl=edl, joins=joins, caption_style=props.get('captionStyle') or 'house')
@@ -279,8 +285,11 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     # The calibrated cut gates quick-edit runs too (plan W2.4, scripts/cutgates, config/gates.json).
     for name in ('words.lost', 'joins.in_gaps', 'captions.clock', 'captions.render'):
         checks[name] = {'value': None, 'target': 'see config/gates.json', 'pass': None, 'status': 'not_run'}
-    checks['captions.off_face'] = {'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not_run'}
-    checks['channel.safe_zones'] = {'value': None, 'target': 'nothing under a channel button', 'pass': None, 'status': 'not_run'}
+    # No caption pages means nothing can sit on the face; the channel row is advisory (qc_channel.ADVISORY).
+    checks['captions.off_face'] = ({'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not applicable'}
+                                   if pages is not None and not pages else
+                                   {'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not_run'})
+    checks['channel.safe_zones'] = {'value': None, 'target': 'nothing under a channel button', 'pass': None, 'status': 'advisory'}
     from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel
     optional = [
         ('sync.av_xcorr', dialogue_master is not None and edl is not None,
@@ -301,7 +310,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
          lambda: qc_gates.captions_render(path, pages, region, caption_ocr)),
         ('captions.off_face', bool(pages) and aspect is not None,
          lambda: qc_faces.off_face(path, pages, style=caption_style, aspect=aspect, region=region, fps=fps,
-                                   detector=face_detector)),
+                                   detector=face_detector, beats=beats)),
         ('channel.safe_zones', aspect is not None and (bool(pages) or bool(beats)),
          lambda: qc_channel.safe_zones(pages, beats, aspect, region, caption_style)),
     ]

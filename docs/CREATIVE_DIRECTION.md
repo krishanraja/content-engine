@@ -36,7 +36,7 @@ python3 scripts/post-pack/creative_direction.py check docs/plans/PLAN/creative-d
 python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his signature binds to
 ```
 
-- `style`: the script and production format he picked, from the bank, and from 9 November `style.motion`
+- `style`: the script and production format he picked, from the bank, and from 9 November `style.motion` (held on the ve route by `ve lint` `motion.required`, under the signed [motion standard](ve/MOTION_STANDARD.md))
   (`{"module", "reason"}`): the piece's one motion system from the bank's `motion` layer, 17 styles studied from
   awesomeclaude.ai/claude-motion-graphics and rewritten on the house base (brand tokens and the design lock always win).
   `creative_direction.py motion --points number,comparison --format long_video` gives a ranked shortlist: only styles

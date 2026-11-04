@@ -92,7 +92,8 @@ easily, which can be saved, or I can: mark an idea as being useful in a future
 wider piece OR mark it as being an idea that should be stored for a future trend
 OR queue it for next week OR reject it", and of the off days, "I'm happy to plan
 the Tuesday, Thursday, Saturday, and Sunday content within the Sunday ideas
-session if you give me a few options to approve as you do the Mon/wed/fri". On
+session if you give me a few options to approve as you do the Mon/wed/fri" (Sunday
+is now a rest day and nothing is published: Ruling, Krish, 2026-11-02). On
 the day tabs: "Once I approve, the two scripts will go to teleprompter" and
 "Server sends directly"; titles are a "Sunday evening press"; go-live is
 "Approve each day Monday".
@@ -274,6 +275,45 @@ credential; do not paste it into a prompt, file, generated HTML or command line.
 - Comments include roots and replies with stable anchors. Read the whole thread,
   retain original metadata and distinguish notes from authorization to publish.
 
+## Always current: the live overlay
+
+Ruling (Krish, 2026-11-03): "The Publish Board should just be makeyourmindup
+weekly content calendar, always up to date." A built board is an immutable
+snapshot, so the page reads the week's live state every 5 seconds (and when the
+tab regains focus) from `GET /api/board?week=<Monday>&op=state`
+(`apps/control-plane/api/board/_live.ts`) and redraws what the records say now.
+No session is needed to keep it current.
+
+What refreshes by itself:
+
+- His ticks, his presses and his yes for each day, and Growth's posted boxes (as before).
+- Each day's step notes (Drafts, Record, Publish) from the piece's making record:
+  done ("signed off", "recorded", "published"), what is still to do ("short cut
+  still to record", "2 of 5 channels"), "blocked: ..." when a gate failed, where
+  the scripts are in Teleprompter, and the channels it was posted to. Brief keeps
+  the word it was built with. The day's piece is chosen as Growth's read chooses
+  it (`piecesByDay`, `_posted.ts`).
+- Approve scripts is held when the record's checked words for a cut are neither
+  the words the page was built with (`data-live-sha-<cut>`) nor the words now in
+  the box (his saved edit): the card says "The words changed since this page was
+  built: this tab needs a rebuild". The overlay never replaces a word or a file
+  the page shows, since his presses bind the hash of the words he saw.
+
+What still needs a rebuild, and how the page says so: the yellow bar names it,
+line by line, when the record holds something the page has no place for ("Monday's
+piece is on the record", "Monday's short cut is on the record", "Monday's short
+script changed on the record"; each ends "rebuild to show it"). The state's
+`rebuild_needed` (a piece of the week was written after the live build was made,
+`board_builds.created_at`) never raises the bar on its own: a write the overlay
+already draws (a step, a post, Growth's tick) needs no rebuild, so the bar speaks
+only when it can name what is missing. A newer build than the open tab still says "A newer
+version of this board is live" with Reload. The hooks are `data-live-day`,
+`data-live-piece`, `data-live-cuts`, `data-live-thumbs` on a day's tab,
+`data-live-step` on its step chips and `data-live-sha-<cut>` on Approve scripts;
+they are attributes only and change nothing a reader sees
+(`tests/board_live_hooks_test.py`). The state carries no address, link, path,
+secret or transcript.
+
 ## Update a board
 
 Fetch the authenticated `/board/WEEK` HTML into a local file for `--previous`;
@@ -325,8 +365,8 @@ selected build, never newer interaction data.
 ## Compatibility and cutover
 
 `config/boards.json.weeks` retains the original artifact addresses for source
-provenance and explicit legacy builds. Artifact mode remains the generator's
-default for compatibility, so live board workflows must pass `--target web`.
+provenance and explicit legacy builds. `--target web` is the generator's default
+and the only target that is published; artifact mode builds a legacy copy for comparison only.
 After active cutover, do not create a new Claude weekly board or synchronize old
 copies. The artifact synchronization hook reports the web destination instead.
 

@@ -5,6 +5,10 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-04
+
+- reconciled at `ec8d63b`: `docs/history/2026-10-31-NOW-moved-4.md` arrived without the Historical banner the schema requires; the banner was added and the body left verbatim. `NOW.md` re-stamped (head `ec8d63b`, as_of 2026-11-04) after the sessions of 1 to 3 November closed out their own work there; a doubled date on its one "What changed recently" bullet was removed. The NOW.md audit passed and no closeout notes were waiting.
+
 ## 2026-10-29
 
 - folded the eight closeout notes in `now-notes/` (2026-10-28-overnight-preflight and seven of 2026-10-29: copy, engine, floor, story, ve, vendor, video) into NOW.md with `foldRepository` from `.claude/hooks/harness-closeout.mjs`, which deleted them. The folded file (26,581 characters, 15 "Where it is right now" and 19 "What changed recently" bullets) is kept whole in `docs/history/2026-10-29-NOW-closeout-fold.md`; NOW.md was then rewritten to the audit's limits and checked against the code.

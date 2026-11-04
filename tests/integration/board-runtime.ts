@@ -55,6 +55,8 @@ class Query {
   nulls: string[] = []; gtes: [string,unknown][] = []
   is(key: string,value: null) { assert.equal(value,null); assert.match(key,/^[a-z_][a-z0-9_]*$/); this.nulls.push(key); return this }
   gte(key: string,value: unknown) { assert.match(key,/^[a-z_][a-z0-9_]*$/); this.gtes.push([key,value]); return this }
+  ltes: [string,unknown][] = []
+  lte(key: string,value: unknown) { assert.match(key,/^[a-z_][a-z0-9_]*$/); this.ltes.push([key,value]); return this }
   order(key: string, options?: {ascending?:boolean}) { assert.match(key,/^[a-z_][a-z0-9_]*$/); this.sorting=` order by ${key} ${options?.ascending===false?'desc':'asc'}`; return this }
   range(start: number,end: number) { this.offset=start; this.count=end-start+1; return this }
   limit(n: number) { this.count=n; return this }
@@ -78,6 +80,7 @@ class Query {
       if(this.jsonFilter){params.push(JSON.stringify(this.jsonFilter[1]));where.push(`${this.jsonFilter[0]} @> $${params.length}::jsonb`)}
       for(const k of this.nulls)where.push(`${k} is null`)
       for(const [k,v] of this.gtes){params.push(v);where.push(`${k}>=$${params.length}`)}
+      for(const [k,v] of this.ltes){params.push(v);where.push(`${k}<=$${params.length}`)}
       const result=await pg.query(`select * from ${this.table}${where.length?' where '+where.join(' and '):''}${this.sorting} limit ${this.count} offset ${this.offset}`,params)
       return {data:this.single?result.rows[0]||null:result.rows,error:null}
     } catch(error) {return {data:null,error}}

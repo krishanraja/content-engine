@@ -14,7 +14,7 @@ media half). Purpose lives in `docs/NORTH_STAR.md`.
 | Half | Folder | Runs on | Does |
 |---|---|---|---|
 | The content engine | `apps/control-plane/` | Vercel project `content-engine`, serverless, with 20 crons | ideation, curation, drafting, iteration, channel copy, production briefs, the learning ledger |
-| The Studio | `packages/`, `apps/runner/`, `apps/renderer/` | Krish's Windows machine: a CLI and a Scheduled Task runner; Remotion renders | Shorts and carousels from approved briefs, through hash-gated stations to local platform packages |
+| The Studio | `packages/`, `apps/runner/`, `apps/renderer/` | Krish's Windows machine: a CLI and a Scheduled Task runner; Remotion renders | the cuts from approved briefs, through hash-gated stations to local platform packages (carousels are Growth's) |
 
 They share one database and one purpose. The content engine decides what is
 worth making and writes it; the Studio makes the media from it.
@@ -26,7 +26,7 @@ worth making and writes it; the Studio makes the media from it.
 | GitHub `main` of this repository | code, schemas, migrations since 2026-09-08, configuration, skills, these documents | `krishanraja/content-engine` |
 | Supabase (the shared mind/make OS database) | ideas, pieces, verdicts, the ledger, runs, Studio projections, subchannel mandates (`venture_formats`), the voice block and corpus (`system_config`) | one project shared with Control Center |
 | Vercel project `content-engine` | the running control plane and its crons | deployed from `main` |
-| Control Center | the desk Krish works at: the Content tab, composer, mobile deck, Studio reviewer; reaches the engine by rewrite | `krishanraja/control-center`, `controlcenter.krishraja.com` |
+| Control Center | the desk Krish works at: its Content tab holds only two approval queues, Ideas to approve and Ready to schedule and post; the publish board is the weekly calendar; reaches the engine by rewrite | `krishanraja/control-center`, `controlcenter.krishraja.com` |
 | The Windows runner and job folders | exact media, the append-only local job ledger, signed approvals | Krish's machine |
 | Google Drive | recording intake (the Inbox) and approved archives; and Krish's makeyourmindup asset library (the brand kit, the channel art, a folder for every post), which his always-on Windows machine writes from the engine's library (`api/library/`, `scripts/post-pack/`, `scripts/library-sync.ps1`) | fixed Drive folders named in `config/studio.json` |
 | n8n (Cleo) | sourcing and distribution arms, including the content factory that turns a draft into a Google Doc | n8n Cloud, called by `save-draft` and `briefs/[week]/push` |
