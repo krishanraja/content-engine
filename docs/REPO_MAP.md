@@ -3598,6 +3598,16 @@ Run a Vercel serverless handler locally against the real environment.
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
 - `function EndingBand({ props, frame }: EndingBandProps): React.ReactElement | null`
 
+### `apps/renderer/src/engine/chrome/LeadCaption.tsx`
+
+- `interface LeadWord`
+- `interface LeadCard`
+- `interface LeadBox`
+- `const LEAD`
+- `function leadCards(pages: readonly Page[], beats: readonly EngineBeat[], perCard: number): LeadCard[]`
+- `function leadBox(card: LeadCard, beat: EngineBeat | undefined, aspect: '9:16' | '16:9'): LeadBox`
+- `function LeadCaption({ props, frame, perCard }: { props: EngineRenderProps; frame: number; perCard: number })`
+
 ### `apps/renderer/src/engine/chrome/MarkTile.tsx`
 
 - `function MarkTile({ props }: { props: EngineRenderProps })`
@@ -4006,6 +4016,17 @@ Run a Vercel serverless handler locally against the real environment.
 - `const GLASS_KINDS: Record<string, GlassKind>`
 - `function glassKind(id: string): GlassKind`
 
+### `apps/renderer/src/engine/kit/heroType.tsx`
+
+- `interface HeroWord`
+- `interface HeroPhrase`
+- `interface HeroLayout`
+- `const HERO_TEXT_DEVICES: readonly string[]`
+- `function heroPhrase(beat: EngineBeat, objects: ReadonlyMap<string, EngineObject>, events: readonly EngineEvent[], capti…`
+- `function heroArea(aspect: '9:16' | '16:9', groundHeight: number, keepsDevices: boolean): Box`
+- `function heroLayout(phrase: HeroPhrase, area: Box): HeroLayout`
+- `function HeroType({ layout, frame, tokens, width, height, onDark }: { layout: HeroLayout; frame: number; tokens: Engine…`
+
 ### `apps/renderer/src/engine/kit/homography.ts`
 
 Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
@@ -4052,6 +4073,27 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `function assertOverlayMarkup(markup: string, id: string)`
 - `function assertOverlayInvariants(Device: DeviceComponent, object: EngineObject, events: readonly EngineEvent[], id: str…`
 
+### `apps/renderer/src/engine/kit/overlays.tsx`
+
+- `function seedOf(text: string): number`
+- `function jitter(seed: number, n: number): number`
+- `const CARD_DEVICES: readonly string[]`
+- `const GROUND_TEXT_DEVICES: readonly string[]`
+- `function darkGround(profile: MotionProfile | undefined): boolean`
+- `function cardsInvert(profile: MotionProfile | undefined = motionProfile()): boolean`
+- `function tokensFor(device: string, tokens: EngineTokens, profile: MotionProfile | undefined): EngineTokens`
+- `function splitGroundColour(profile: MotionProfile | undefined, tokens: EngineTokens): string`
+- `function paperStock(tokens: EngineTokens): string`
+- `function PaperTexture({ id, width, height, tokens }: { id: string; width: number; height: number; tokens: EngineTokens …`
+- `function scanLines(tokens: EngineTokens): CSSProperties`
+- `function bracketRect(focus: Focus): { rect: Box; lock: number }`
+- `function Brackets({ focus, width, height, tokens }: { focus: Focus; width: number; height: number; tokens: EngineTokens…`
+- `const TORN_DEVICES: readonly string[]`
+- `function TornFilter({ id, step, tokens }: { id: string; step: number; tokens: EngineTokens })`
+- `function boilSeed(base: number, sinceFrames: number, everyFrames: number): number`
+- `function BoilFilter({ id, seed, amplitudePx }: { id: string; seed: number; amplitudePx: number })`
+- `function SketchFrame({ id, width, height, tokens, sinceFrames, boil }: { id: string; width: number; height: number; tok…`
+
 ### `apps/renderer/src/engine/kit/passport.tsx`
 
 - `const PASSPORT`
@@ -4091,6 +4133,11 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `function twisted(x: number, y0: number, y1: number, phase = 0, amp = 9, period = 96): [string, string]`
 - `function parted(from: Point, to: Point, gap: { center: Point; radius: number; clearance?: number })`
 - `function pennant(planted: boolean, h = 84)`
+
+### `apps/renderer/src/engine/kit/typeRole.ts`
+
+- `type FontRole = keyof typeof HOUSE_FONTS`
+- `function font(role: FontRole): string`
 
 ### `apps/renderer/src/engine/layouts/index.ts`
 
