@@ -17,11 +17,13 @@ export function headlineLayout(lines: string[], width: number, swipedLine = -1, 
   return { size, height: lines.length * size * 0.88 }
 }
 
-export function Device({ object, events, tokens, frame }: DeviceProps) {
+export function Device({ object, events, box, aspect, tokens, frame }: DeviceProps) {
   const s = headlineState(object, events, frame)
   if (!s.visible) return null
-  const at = s.at ?? ZONES.headline
+  const stage = !s.at && box.top === 0 && box.height === (aspect === '9:16' ? 1920 : 1080)
+  const at = { ...(s.at ?? (stage ? { x: 60, y: aspect === '9:16' ? 220 : 180, w: box.width - 120, h: aspect === '9:16' ? 987 : 720 } : ZONES.headline)) }
   const l = headlineLayout(s.lines, at.w, s.swipe?.line, 'h' in at ? at.h : undefined)
+  if (stage) at.y += (at.h! - l.height - (s.dek ? 134 : 0)) / 2
   const singleWord = s.lines.length === 1 && s.lines[0]!.split(/\s+/).length === 1
   const wordWidth = textWidth('anton', s.lines[0]!.toUpperCase(), l.size) + (s.swipe ? l.size * 0.24 : 0)
   const beside = singleWord && at.w - wordWidth - 32 >= 260
