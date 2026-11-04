@@ -23,6 +23,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `docs/brandbooknew/`
 - `docs/handovers/`
 - `docs/history/`
+- `docs/learning/`
 - `docs/narration/`
 - `docs/one-offs/`
 - `docs/plans/`
@@ -43,6 +44,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/channel-kit/`
 - `scripts/cutgates/`
 - `scripts/hooks/`
+- `scripts/learning/`
 - `scripts/overnight/`
 - `scripts/pages/`
 - `scripts/post-pack/`
@@ -134,6 +136,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/judge/ladder`
 - `/api/judge/sweep`
 - `/api/learning/compile`
+- `/api/learning/incidents`
 - `/api/learning/spoken-rules`
 - `/api/library/confirm`
 - `/api/library/file`
@@ -948,6 +951,24 @@ The one idea queue (Krish, 2026-10-19: "mark ideas for a queue instead of select
 - `interface CombineGroup`
 - `function combineCandidates(rows: Array<Record<string, any>>, threshold = COMBINE_COSINE): CombineGroup[]`
 - `function absorbedQueuePatch(row: Record<string, any>, parentId: string, by: 'Krish', said: string | null, at: string)`
+
+### `apps/control-plane/api/_incidents.ts`
+
+The failure loop's capture (Krish, 2026-11-04: "how can your system autonomously understand the difference between a
+
+- `const INCIDENT_STAGES`
+- `const INCIDENT_MAKERS`
+- `const INCIDENT_KINDS`
+- `type IncidentStage = (typeof INCIDENT_STAGES)[number]`
+- `type IncidentMaker = (typeof INCIDENT_MAKERS)[number]`
+- `type IncidentKind = (typeof INCIDENT_KINDS)[number]`
+- `interface Incident`
+- `function parseIncident(v: unknown, now: string): { row?: Record<string, unknown>; problems: string[] }`
+- `function parseIncidents(body: unknown, now: string): { rows: Record<string, unknown>[]; problems: string[] }`
+- `async function preflightOf(db: SupabaseClient, pieceId: string | null | undefined): Promise<unknown>`
+- `async function fileIncidents(db: SupabaseClient, rows: Record<string, unknown>[]): Promise<'filed' | 'failed' | 'waits_…`
+- `async function recordIncident(db: SupabaseClient, incident: Incident, now: string): Promise<'filed' | 'failed' | 'waits…`
+- `function stageOfAsset(asset: unknown, label: unknown): IncidentStage`
 
 ### `apps/control-plane/api/_inspirationSources.ts`
 
@@ -2508,6 +2529,11 @@ What the compiler looks for, as pure functions.
 ### `apps/control-plane/api/learning/compile.ts`
 
 - `export default withContentRun('learning_compile', handler)`
+
+### `apps/control-plane/api/learning/incidents.ts`
+
+- `const MAX_PROPOSALS`
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/learning/spoken-rules.ts`
 
