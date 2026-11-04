@@ -3,6 +3,8 @@ export const ParamsSchema = z.object({
   lines: z.array(z.string().trim().min(1)).min(1).max(2),
   swipe: z.object({ line: z.number().int().min(0).max(1), word: z.number().int().nonnegative() }).strict().optional(),
   dek: z.string().min(1).optional(),
+  // The ground it sits on: ink by default; 'light' draws the lines in ink on face-with-proof's light STAGE wash.
+  ground: z.enum(['ink', 'light']).default('ink'),
   // An ink panel behind the dek, for a dek that sits over a light plate (a wide cut over the cotton photograph).
   dekBack: z.boolean().default(false),
   dekAt: z.object({ x: z.number().nonnegative(), y: z.number().nonnegative(), w: z.number().positive() }).strict().optional(),

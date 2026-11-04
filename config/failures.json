@@ -1664,8 +1664,8 @@
         },
         {
           "file": "apps/renderer/src/engine/BrandFrame.tsx",
-          "contains": "{beat.layout === 'STAGE' ? <StageHeader props={props} /> : <>",
-          "how": "SPLIT beats keep the legible mark tile and series pill",
+          "contains": "{beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>",
+          "how": "SPLIT beats, and face-with-proof's light STAGE beats, keep the legible mark tile and series pill",
           "test": "npx vitest run apps/renderer/src/engine/layouts/split.test.ts"
         }
       ]

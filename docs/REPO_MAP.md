@@ -3562,6 +3562,10 @@ Run a Vercel serverless handler locally against the real environment.
 - `function WordCaption({ props, frame }: { props: EngineRenderProps; frame: number })`
 - `function HeldTitle({ props, frame }: { props: EngineRenderProps; frame: number })`
 
+### `apps/renderer/src/engine/chrome/lightStage.ts`
+
+- `function lightStage(props: Pick<EngineRenderProps, 'format'>): boolean`
+
 ### `apps/renderer/src/engine/chrome/tokens.ts`
 
 - `function houseTokens(tokens: EngineTokens): HouseTokens`
