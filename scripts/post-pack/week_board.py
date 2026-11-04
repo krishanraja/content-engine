@@ -1978,6 +1978,14 @@ def off_rich(o, problems, label):
             problems.append(f'{label}: closed is one line saying why it is settled')
         else:
             row['closed'] = _line(closed, 300)
+    # An option Krish has already judged and that will run (Krish, 2026-11-04: the board said "12 options to judge" after
+    # he had judged every one). It stays on the calendar as a post being made and leaves the judge count.
+    decided = o.get('decided')
+    if decided is not None:
+        if not _line(decided, 300):
+            problems.append(f'{label}: decided is one line saying what he decided and who makes it')
+        else:
+            row['decided'] = _line(decided, 300)
     download = o.get('download')
     if download is not None:
         if not isinstance(download, dict) or not str(download.get('url') or '').startswith('https://') or not _line(download.get('label'), 120):
@@ -2254,7 +2262,7 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
                      'needs': list(o.get('needs') or []) + ([] if o.get('ready') else ['not ready yet'] if not o.get('needs') else [])
                      + posts_needs(o, day),
                      # The rich fields ride through as Growth wrote them (Ruling, Krish, 2026-11-01), never flattened into the copy.
-                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'posts_folder', 'download', 'closed')
+                     **{k: o[k] for k in ('hook', 'pitch', 'cards', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'posts_folder', 'download', 'closed', 'decided')
                         if o.get(k) is not None}}
                     for o in opts]
     return out, warnings
@@ -2265,7 +2273,7 @@ def previous_option(o):
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
     for k in ('covers', 'kind', 'style', 'piece_id', 'series', 'title', 'script', 'share_line', 'needs', 'cards',
               'hook', 'pitch', 'inspiration', 'learned_from', 'direction', 'ties_to', 'recommended', 'revised', 'mock', 'slides', 'video', 'drive', 'download',
-              'stories', 'weekly', 'stories_due', 'closed'):
+              'stories', 'weekly', 'stories_due', 'closed', 'decided'):
         if o.get(k) is not None:
             row[k] = o[k]
     if o.get('kind') == 'recorded':
@@ -3385,8 +3393,8 @@ def run_sheet_problems(name, panel, tag):
 
 
 def open_offday_count(offdays):
-    """How many off-day options still wait on him: every option not closed."""
-    return sum(1 for v in (offdays or {}).values() for o in v or [] if not o.get('closed'))
+    """How many off-day options still wait on his verdict: every option neither closed nor decided."""
+    return sum(1 for v in (offdays or {}).values() for o in v or [] if not o.get('closed') and not o.get('decided'))
 
 
 def ideas_waiting_panel(monday, hidden, offdays=None):
@@ -4186,6 +4194,9 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
                 n = len(d['waiting'])
                 out['asks'].append({'what': f'Words, {short(when)}', 'detail': f'{n} call{"s" if n != 1 else ""} wait on you',
                                     'cta': 'Open', 'href': f'#{name}/drafts', 'day': key})
+            elif d.get('brief_waiting') and state not in ('made', 'draft'):
+                out['asks'].append({'what': f'Story, {short(when)}', 'detail': 'Sign the story',
+                                    'cta': 'Open', 'href': f'#{name}/brief', 'day': key})
             elif state == 'made' and not live:
                 out['asks'].append({'what': f'Publish, {short(when)}', 'detail': 'Approve, then post it',
                                     'cta': 'Approve', 'href': f'#{name}/publish', 'day': key})
@@ -4205,7 +4216,8 @@ def today_model(monday, days, videos, posted, offdays, parsed, now=None, gates=N
         # to click through to Monday from that board if it is to act as my calendar board").
         out['days'].append({'key': key, 'date': f'{when.day} {when.strftime("%b")}', 'posts': posts,
                             **({'open': f'#{names[key]}'} if key in names else {})})
-    n = sum(1 for opts in (offdays or {}).values() for o in opts or [] if o.get('kind') != 'recorded')
+    n = sum(1 for opts in (offdays or {}).values() for o in opts or []
+            if o.get('kind') != 'recorded' and not o.get('closed') and not o.get('decided'))
     if n:
         # Each off-day option is approved, improved or rejected on its own (Ruling, Krish, 2026-11-01), so the ask
         # opens the Off days part of the Ideas tab, where the slate shows what is still open.
@@ -4265,12 +4277,15 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         # The fixed layout's first two tabs are always there: Ideas (waiting until Sunday's ideas come) and Queue.
         panels.append(ideas_panel(monday, ideas, opened != 'ideas', queue, offdays) if ideas else
                       ideas_waiting_panel(monday, opened != 'ideas', offdays))
-        n = len([k for k in order if (ideas or {}).get(k)])
+        # A day already picked waits on no pick (Krish, 2026-11-04: the tab still said "pick 2" after both picks).
+        n = len([k for k in order if (ideas or {}).get(k) and k not in pieces and k not in picks and k not in pending
+                 and k not in parsed and k not in kept])
+        offered = any((ideas or {}).get(k) for k in order)
         tabs.append(
             f'<button type="button" role="tab" id="tab-ideas" aria-controls="panel-ideas" '
             f'aria-selected="{"true" if opened == "ideas" else "false"}" tabindex="{"0" if opened == "ideas" else "-1"}" data-day="ideas">'
             f'<span class="t-day">Ideas</span><span class="t-dot"> · </span>'
-            f'<span class="t-prog" data-tabprog="ideas">{f"pick {n}" if n else (f"{m} off-day" if (m := open_offday_count(offdays)) else "not yet")}</span>'
+            f'<span class="t-prog" data-tabprog="ideas">{f"pick {n}" if n else (f"{m} off-day" if (m := open_offday_count(offdays)) else ("picked" if offered else "not yet"))}</span>'
             f'<span class="t-ch">{"Sunday" if n or not m else "options"}</span></button>')
         panels.append(queue_panel(monday, queue, True, combine))
         tabs.append(
@@ -4415,6 +4430,9 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'state': state, 'piece_id': piece or None, 'title': title or None,
             'teleprompter': teleprompter.get(key) or None,
             'waiting': list(calls.get(key) or []) or None,
+            # A brief that waits on his yes (a narrative lock to sign) is an ask on Today (Krish, 2026-11-04: the board
+            # must be actionable, and Wednesday's lock waited on him with nothing on Today saying so).
+            'brief_waiting': bool(picked and (briefs.get(key) or {}).get('idea') and not (briefs.get(key) or {}).get('agreed')),
             'tick_ids': [f'{key}-{k}' for k, *_ in STEPS] if picked else [],
         })
     add_off_tabs(7)
@@ -5786,6 +5804,20 @@ def _growth_offday_checks(check, week, ideas):
     model = today_model(week, {}, {}, {}, six, {})
     check('off-day ask: one Needs you row opens the Off days, counting the options to judge',
           any(a['href'] == '#ideas-offdays' and a['detail'] == '6 options to judge' for a in model['asks']))
+    settled = {k: [dict(o, **({'closed': 'Rejected'} if i == 0 else {'decided': 'Runs; Growth makes it'} if i == 1 else {}))
+                   for i, o in enumerate(v)] for k, v in six.items()}
+    left = sum(len(v) for v in six.values()) - 2 * sum(1 for v in six.values() if len(v) > 1) - sum(1 for v in six.values() if len(v) == 1)
+    smodel = today_model(week, {}, {}, {}, settled, {})
+    check('off-day ask: closed and decided options leave the judge count (4 Nov: "12 options to judge" after he judged them)',
+          open_offday_count(settled) == left
+          and all(a['detail'] == f'{left} option{"s" if left != 1 else ""} to judge' for a in smodel['asks'] if a['href'] == '#ideas-offdays')
+          and (left > 0 or not any(a['href'] == '#ideas-offdays' for a in smodel['asks'])))
+    bmodel = today_model(week, [{'day': 'wed', 'name': 'Wednesday', 'date': '2026-11-11', 'series': 'under_the_hood', 'series_label': 'under.the.hood',
+                                 'state': 'picked', 'piece_id': None, 'title': None, 'teleprompter': None, 'waiting': None,
+                                 'brief_waiting': True, 'tick_ids': []}], {}, {}, {}, {})
+    check('Today: a picked day whose brief waits on his yes asks him to sign the story',
+          any(a['href'].endswith('/brief') and a['day'] == 'wed' for a in bmodel['asks']))
+    check('off-day option: decided rides through a rebuild', previous_option(dict(read_offdays({'tue': [dict(plain, decided='Runs Tue; Growth makes it'), dict(plain, id='two')]})['tue'][0])).get('decided') == 'Runs Tue; Growth makes it')
     check('off-day card: the kind is read from the format phrase, the shape first',
           off_kind({'format': 'Meme video, made fresh in the brand kit'}) == 'meme'
           and off_kind({'format': 'Meme carousel, made fresh in the brand kit'}) == 'carousel'
