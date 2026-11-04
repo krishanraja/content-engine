@@ -121,14 +121,7 @@
       "id": "Anthropic"
      }
     ],
-    "rings": 2,
-    "place": {
-     "left": 173,
-     "top": 20,
-     "width": 1080,
-     "height": 1080,
-     "scale": 0.68
-    }
+    "rings": 2
    }
   },
   {
@@ -167,13 +160,7 @@
     "lines": [
      "NO SPENDING.",
      "NO SENDING."
-    ],
-    "at": {
-     "x": 60,
-     "y": 250,
-     "w": 960,
-     "h": 380
-    }
+    ]
    }
   },
   {
@@ -247,13 +234,7 @@
     "lines": [
      "NO SPENDING.",
      "NO SENDING."
-    ],
-    "at": {
-     "x": 60,
-     "y": 250,
-     "w": 960,
-     "h": 380
-    }
+    ]
    }
   },
   {
@@ -609,13 +590,6 @@
        "silent": true
       },
       {
-       "at_w": 54,
-       "obj": "buddy_sulk",
-       "verb": "move",
-       "to_state": "{\"x\":0.5,\"y\":0.66}",
-       "silent": true
-      },
-      {
        "at_w": 57,
        "obj": "buddy_sulk",
        "verb": "sulk",
@@ -771,13 +745,6 @@
        "obj": "buddy_good",
        "verb": "enter",
        "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 127,
-       "obj": "buddy_good",
-       "verb": "move",
-       "to_state": "{\"x\":0.5,\"y\":0.66}",
        "silent": true
       },
       {
