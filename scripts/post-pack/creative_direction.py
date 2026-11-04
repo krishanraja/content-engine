@@ -125,12 +125,80 @@ def pick_motion(point_types, fmt, top=3, modules=None, devices=None):
             continue
         hit = sorted(wanted & set(m.get('point_types') or []))
         ready = [d for d in m.get('ve_route') or [] if d in devices]
-        score = (10 if verdict == 'liked' else 0) + 3 * len(hit) + FITS.get(m.get('fits'), 0) + (1 if ready else 0)
+        score = (10 if verdict in ('liked', 'tested') else 0) + 3 * len(hit) + FITS.get(m.get('fits'), 0) + (1 if ready else 0)
         why = (f"{verdict}; matches {', '.join(hit) or 'no point type'}; suits the channel {m.get('fits')}; "
                + (f"drawn by {', '.join(ready)}" if ready else 'needs a ve device card first'))
         out.append((mid, score, why))
     out.sort(key=lambda x: -x[1])  # stable: ties keep the bank's order
     return out[:top]
+
+
+STYLE_VERDICTS = ('picked', 'seen', 'not-for-us')
+
+
+def style_verdict(data, module, verdict, said, on):
+    """Krish's verdict on one motion style he was shown on his own take (`ve styles`, the board's Pick a style press),
+    written onto the bank: a new dict, the input untouched. Every showing counts a trial. Picked once makes it liked,
+    picked twice makes it tested; not-for-us makes it not for us, so the picker never offers it again; seen and not
+    picked changes only the count. His words and the day go on the module's `verdicts`, exactly as he typed them.
+    The board press calls this same rule server-side; it is the only writer of style verdicts."""
+    if verdict not in STYLE_VERDICTS:
+        raise DirectionError(f'verdict is one of {", ".join(STYLE_VERDICTS)}')
+    if not re.match(r'^\d{4}-\d{2}-\d{2}$', str(on or '')):
+        raise DirectionError('--on is the day he said it, YYYY-MM-DD')
+    if verdict != 'seen' and not str(said or '').strip():
+        raise DirectionError('a pick or a not-for-us carries his own words (--said)')
+    out = json.loads(json.dumps(data))
+    m = next((x for x in out.get('bank') or [] if x.get('id') == module and x.get('layer') == 'motion'), None)
+    if m is None:
+        raise DirectionError(f'{module!r} is not a motion module in config/style-references.json')
+    m['trials'] = int(m.get('trials') or 0) + 1
+    if verdict == 'picked':
+        m['picks'] = int(m.get('picks') or 0) + 1
+        m['krish_verdict'] = 'tested' if m['picks'] >= 2 else 'liked'
+    elif verdict == 'not-for-us':
+        m['krish_verdict'] = 'not for us'
+    row = {'on': on, 'verdict': verdict}
+    if str(said or '').strip():
+        row['said'] = str(said)
+    m.setdefault('verdicts', []).append(row)
+    return out
+
+
+def replace_module_text(text, data, module):
+    """The bank file with only this module's block rewritten, in the file's own hand layout (one key a line, short
+    values inline), so a verdict is a small diff. Falls back to a whole rewrite if the block cannot be found."""
+    m = next(x for x in data['bank'] if x.get('id') == module)
+    hit = re.search(r'\n([ \t]*)\{\s*\n\s*"id": ' + re.escape(json.dumps(module)) + r',', text)
+    if hit:
+        start = hit.start() + 1 + len(hit.group(1))
+        depth, i, in_str = 0, start, False
+        while i < len(text):
+            ch = text[i]
+            if in_str:
+                if ch == '\\':
+                    i += 1
+                elif ch == '"':
+                    in_str = False
+            elif ch == '"':
+                in_str = True
+            elif ch in '{[':
+                depth += 1
+            elif ch in '}]':
+                depth -= 1
+                if depth == 0:
+                    break
+            i += 1
+        pad = hit.group(1) + '  '
+        block = '{\n' + ',\n'.join(f'{pad}{json.dumps(k)}: {json.dumps(v, ensure_ascii=False)}' for k, v in m.items()) \
+            + '\n' + hit.group(1) + '}'
+        new = text[:start] + block + text[i + 1:]
+        try:
+            if json.loads(new) == data:
+                return new
+        except ValueError:
+            pass
+    return json.dumps(data, indent=2, ensure_ascii=False) + '\n'
 
 
 def motion_problems(doc, modules=None):
@@ -512,6 +580,12 @@ def main(argv=None):
     mo.add_argument('--points', required=True, help='comma list of point types (config/style-references.json motion_point_types)')
     mo.add_argument('--format', required=True, help='long_video, short_video, carousel, cover, thumbnail or article')
     mo.add_argument('--top', type=int, default=3)
+    v = sub.add_parser('verdict', help='write his verdict on a motion style he was shown onto the bank (style_verdict)')
+    v.add_argument('--module', required=True)
+    v.add_argument('--verdict', required=True, choices=STYLE_VERDICTS)
+    v.add_argument('--said', default='', help="his exact words")
+    v.add_argument('--on', required=True, help='YYYY-MM-DD, the day he said it')
+    v.add_argument('--bank', default=str(STYLES), help=argparse.SUPPRESS)
     sub.add_parser('self-test')
     args = ap.parse_args(argv)
     if args.cmd == 'hash':
@@ -530,6 +604,18 @@ def main(argv=None):
             return 2
         for mid, score, why in pick_motion(points, args.format, args.top):
             print(f'{mid}  ({score})  {why}')
+        return 0
+    if args.cmd == 'verdict':
+        path = Path(args.bank)
+        text = path.read_text(encoding='utf-8')
+        try:
+            data = style_verdict(json.loads(text), args.module, args.verdict, args.said, args.on)
+        except DirectionError as e:
+            print(f'verdict: {e}')
+            return 1
+        path.write_text(replace_module_text(text, data, args.module), encoding='utf-8')
+        m = next(x for x in data['bank'] if x.get('id') == args.module)
+        print(f"{args.module}: {m['krish_verdict']} ({m['trials']} trial(s), {m.get('picks', 0)} pick(s))")
         return 0
     if args.cmd == 'self-test':
         probs = _self_test()
