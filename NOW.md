@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-03
-head: de5b942
+as_of: 2026-11-04
+head: ec8d63b
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,7 +30,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-03)
+## Where it is right now (as of 2026-11-04)
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":1,"current_as_of":"2026-11-03","current_source":"Control Center content_ideas in the publication's series (1 published in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (25% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 4 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
@@ -47,7 +47,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-03 2026-11-03 Krish ("this is ridiculous that we still cant produce a good video"): every cut is now watched whole at full size before review; frame-0 hook, forced-aligner caption clock, phrase-edge caption pages, zoned QC honesty and the ending band check are in the engine with tests.
+- 2026-11-03 Krish ("this is ridiculous that we still cant produce a good video"): every cut is now watched whole at full size before review; frame-0 hook, forced-aligner caption clock, phrase-edge caption pages, zoned QC honesty and the ending band check are in the engine with tests.
 Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, and `docs/history/2026-11-02-NOW-moved-2.md` and `-5.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`, and one 2 November line in `docs/history/2026-11-03-NOW-moved-1.md`, two in `-moved-2.md`, two in `-moved-3.md` and two in `-moved-4.md`.
 
 
