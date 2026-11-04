@@ -1689,9 +1689,8 @@
       "role": "hook",
       "layout": "STAGE",
       "fromFrame": 0,
-      "toFrame": 97,
+      "toFrame": 176,
       "uses": [
-        "buddy",
         "note"
       ],
       "transitionOut": "cut",
@@ -1699,21 +1698,7 @@
       "plate": {
         "source": "none"
       },
-      "keyFrame": 78
-    },
-    {
-      "id": "hook-face",
-      "role": "bridge",
-      "layout": "STAGE",
-      "fromFrame": 97,
-      "toFrame": 176,
-      "uses": [],
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "take"
-      },
-      "keyFrame": 160
+      "keyFrame": 141
     },
     {
       "id": "face",
@@ -1722,9 +1707,7 @@
       "fromFrame": 176,
       "toFrame": 366,
       "uses": [
-        "buddy",
-        "note",
-        "unasked"
+        "verdict"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -1741,7 +1724,8 @@
       "fromFrame": 366,
       "toFrame": 504,
       "uses": [
-        "orbit"
+        "logos",
+        "amazon_loop"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
@@ -1754,191 +1738,116 @@
     {
       "id": "b4-8am",
       "role": "anchor",
-      "layout": "STAGE",
+      "layout": "SPLIT",
       "fromFrame": 504,
-      "toFrame": 598,
+      "toFrame": 553,
       "uses": [
         "chat"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "none"
+        "source": "take",
+        "crop": "50% 88%"
       },
-      "keyFrame": 579
+      "keyFrame": 543
     },
     {
       "id": "b5-rule",
       "role": "pivot",
-      "layout": "STAGE",
-      "fromFrame": 598,
+      "layout": "SPLIT",
+      "fromFrame": 553,
       "toFrame": 646,
       "uses": [
-        "rule",
-        "buddy_sulk"
+        "chat",
+        "rules"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "none"
+        "source": "take",
+        "crop": "50% 88%"
       },
-      "keyFrame": 636
+      "keyFrame": 627
     },
     {
       "id": "own-words",
-      "role": "bridge",
-      "layout": "STAGE",
+      "role": "anchor",
+      "layout": "SPLIT",
       "fromFrame": 646,
       "toFrame": 764,
-      "uses": [],
+      "uses": [
+        "rule_card"
+      ],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "take"
+        "source": "take",
+        "crop": "50% 88%"
       },
       "keyFrame": 740
-    },
-    {
-      "id": "b7-face",
-      "role": "bridge",
-      "layout": "STAGE",
-      "fromFrame": 764,
-      "toFrame": 899,
-      "uses": [],
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "take"
-      },
-      "keyFrame": 872
     },
     {
       "id": "b7-prompt",
       "role": "anchor",
       "layout": "STAGE",
-      "fromFrame": 899,
+      "fromFrame": 764,
       "toFrame": 1085,
       "uses": [
-        "ask",
-        "ask_tag",
-        "comments_arrow"
+        "rules_held",
+        "ask"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
         "source": "none"
       },
-      "keyFrame": 1048
+      "keyFrame": 1021
     },
     {
       "id": "close",
       "role": "payoff",
-      "layout": "STAGE",
+      "layout": "SPLIT",
       "fromFrame": 1085,
-      "toFrame": 1144,
-      "uses": [
-        "settings",
-        "buddy_good"
-      ],
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "none"
-      },
-      "keyFrame": 1132
-    },
-    {
-      "id": "close-face",
-      "role": "bridge",
-      "layout": "STAGE",
-      "fromFrame": 1144,
-      "toFrame": 1252,
-      "uses": [],
-      "transitionOut": "cut",
-      "sectionBeat": false,
-      "plate": {
-        "source": "take"
-      },
-      "keyFrame": 1230
-    },
-    {
-      "id": "fails",
-      "role": "anchor",
-      "layout": "STAGE",
-      "fromFrame": 1252,
       "toFrame": 1425,
       "uses": [
-        "chat_again",
-        "blocked"
+        "rule_close"
       ],
       "transitionOut": "cut",
       "sectionBeat": false,
       "plate": {
-        "source": "none"
+        "source": "take",
+        "crop": "50% 88%"
       },
-      "keyFrame": 1306
+      "keyFrame": 1273
     }
   ],
   "objects": [
     {
-      "obj": "buddy",
-      "device": "cursor_buddy",
-      "meaning": "the eager assistant that acts before you ask",
-      "fromFrame": 0,
-      "toFrame": 366,
-      "variants": {},
-      "params": {
-        "mood": "eager",
-        "prop": "none"
-      }
-    },
-    {
       "obj": "note",
       "device": "typing_bubble",
-      "meaning": "the assistant reports a booking it made, then offers to pay, before anyone asked",
+      "meaning": "the assistant reports a booking it made before anyone asked",
       "fromFrame": 0,
-      "toFrame": 366,
+      "toFrame": 176,
       "variants": {},
       "params": {
         "kind": "notification",
         "rows": [
           {
-            "who": "Your AI",
             "text": "Done! Booked the team offsite in Ibiza"
-          },
-          {
-            "text": "Shall I pay the deposit too?"
           }
         ]
       }
     },
     {
-      "obj": "unasked",
-      "device": "stamp",
-      "meaning": "tags the booking: nobody said yes",
-      "fromFrame": 176,
-      "toFrame": 366,
-      "variants": {},
-      "params": {
-        "kind": "outline",
-        "main": "NOBODY ASKED",
-        "tiltDeg": -4,
-        "at": {
-          "x": 600,
-          "y": 650,
-          "w": 380,
-          "h": 110
-        }
-      }
-    },
-    {
-      "obj": "orbit",
-      "device": "logo_orbit",
-      "meaning": "the assistants already live inside the apps he names, then the rest arrive",
+      "obj": "logos",
+      "device": "logo_card",
+      "meaning": "the apps he names the assistants live inside, on equal tiles",
       "fromFrame": 366,
       "toFrame": 504,
       "variants": {},
       "params": {
+        "tiles": true,
         "logos": [
           {
             "id": "Meta"
@@ -1948,15 +1857,34 @@
           },
           {
             "id": "Google"
-          },
-          {
-            "id": "xAI"
-          },
-          {
-            "id": "Anthropic"
           }
         ],
-        "rings": 2
+        "place": {
+          "left": -120,
+          "top": 260,
+          "width": 960,
+          "height": 520,
+          "scale": 1.45
+        }
+      }
+    },
+    {
+      "obj": "amazon_loop",
+      "device": "scribble",
+      "meaning": "circles Amazon as he says it",
+      "fromFrame": 366,
+      "toFrame": 504,
+      "variants": {},
+      "params": {
+        "colour": "mint",
+        "seed": "fwp",
+        "shape": "loop",
+        "target": {
+          "x": 400,
+          "y": 460,
+          "w": 350,
+          "h": 350
+        }
       }
     },
     {
@@ -1964,7 +1892,7 @@
       "device": "typing_bubble",
       "meaning": "the 8am reply the assistant sends for him",
       "fromFrame": 504,
-      "toFrame": 598,
+      "toFrame": 646,
       "variants": {},
       "params": {
         "kind": "chat",
@@ -1979,35 +1907,21 @@
             "text": "Absolutely not, it's my lie-in day",
             "side": "right"
           }
-        ]
-      }
-    },
-    {
-      "obj": "rule",
-      "device": "headline",
-      "meaning": "the rule as two slabs",
-      "fromFrame": 598,
-      "toFrame": 646,
-      "variants": {},
-      "params": {
-        "lines": [
-          "NO SPENDING.",
-          "NO SENDING."
         ],
-        "ground": "light",
-        "at": {
-          "x": 60,
-          "y": 500,
-          "w": 900,
-          "h": 420
+        "place": {
+          "left": -135,
+          "top": 210,
+          "width": 1080,
+          "height": 640,
+          "scale": 1.25
         }
       }
     },
     {
       "obj": "ask",
       "device": "typing_bubble",
-      "meaning": "the AI asking back after his one prompt, and his three answers becoming its rules",
-      "fromFrame": 899,
+      "meaning": "his AI tool asking him its question back, and his three answers staying on screen as its rules",
+      "fromFrame": 764,
       "toFrame": 1085,
       "variants": {},
       "params": {
@@ -2034,130 +1948,131 @@
       }
     },
     {
-      "obj": "comments_arrow",
-      "device": "scribble",
-      "meaning": "points down to the comments where the prompt is",
-      "fromFrame": 899,
-      "toFrame": 1085,
-      "variants": {},
-      "params": {
-        "shape": "arrow",
-        "colour": "mint",
-        "seed": "thu-comments",
-        "from": [
-          700,
-          1380
-        ],
-        "to": [
-          880,
-          1640
-        ],
-        "bend": 0.3
-      }
-    },
-    {
-      "obj": "buddy_good",
-      "device": "cursor_buddy",
-      "meaning": "the assistant, behaving now",
-      "fromFrame": 1085,
-      "toFrame": 1144,
-      "variants": {},
-      "params": {
-        "mood": "cool",
-        "prop": "none"
-      }
-    },
-    {
-      "obj": "chat_again",
+      "obj": "rule_card",
       "device": "typing_bubble",
-      "meaning": "the 8am reply comes back and is stopped",
-      "fromFrame": 1252,
-      "toFrame": 1425,
-      "variants": {},
-      "params": {
-        "kind": "chat",
-        "rows": [
-          {
-            "who": "Boss",
-            "text": "Can you join the 8am?",
-            "side": "left"
-          },
-          {
-            "who": "You",
-            "text": "Absolutely not, it's my lie-in day",
-            "side": "right"
-          }
-        ]
-      }
-    },
-    {
-      "obj": "blocked",
-      "device": "stamp",
-      "meaning": "the reply is held for his yes",
-      "fromFrame": 1252,
-      "toFrame": 1425,
-      "variants": {},
-      "params": {
-        "kind": "block",
-        "main": "BLOCKED",
-        "tiltDeg": -5,
-        "at": {
-          "x": 580,
-          "y": 930,
-          "w": 380,
-          "h": 120
-        }
-      }
-    },
-    {
-      "obj": "buddy_sulk",
-      "device": "cursor_buddy",
-      "meaning": "the assistant meets the rule and sulks",
-      "fromFrame": 598,
-      "toFrame": 646,
-      "variants": {},
-      "params": {
-        "mood": "eager",
-        "prop": "none"
-      }
-    },
-    {
-      "obj": "ask_tag",
-      "device": "stamp",
-      "meaning": "tags the prompt: he wrote one line, the AI did the rest",
-      "fromFrame": 899,
-      "toFrame": 1085,
-      "variants": {},
-      "params": {
-        "kind": "outline",
-        "main": "ONE PROMPT",
-        "tiltDeg": -3,
-        "at": {
-          "x": 600,
-          "y": 330,
-          "w": 380,
-          "h": 100
-        }
-      }
-    },
-    {
-      "obj": "settings",
-      "device": "typing_bubble",
-      "meaning": "the AI's rules, set: it asks him before it spends or sends",
-      "fromFrame": 1085,
-      "toFrame": 1144,
+      "meaning": "his rule in his own words: no spending, no sending without his say-so",
+      "fromFrame": 646,
+      "toFrame": 764,
       "variants": {},
       "params": {
         "kind": "notification",
         "rows": [
           {
-            "who": "Your AI · rules",
-            "text": "Spend money: ask me first"
+            "who": "Your AI",
+            "text": "Doesn't spend your money."
           },
           {
-            "text": "Send anything: ask me first"
+            "text": "Doesn't send anything unless you say so."
+          }
+        ],
+        "place": {
+          "left": -135,
+          "top": 210,
+          "width": 1080,
+          "height": 640,
+          "scale": 1.25
+        }
+      }
+    },
+    {
+      "obj": "rule_close",
+      "device": "typing_bubble",
+      "meaning": "his rule in his own words: no spending, no sending without his say-so",
+      "fromFrame": 1085,
+      "toFrame": 1425,
+      "variants": {},
+      "params": {
+        "kind": "notification",
+        "rows": [
+          {
+            "who": "Your AI",
+            "text": "Doesn't spend your money."
+          },
+          {
+            "text": "Doesn't send anything unless you say so."
+          }
+        ],
+        "place": {
+          "left": -135,
+          "top": 210,
+          "width": 1080,
+          "height": 640,
+          "scale": 1.25
+        }
+      }
+    },
+    {
+      "obj": "rules",
+      "device": "typing_bubble",
+      "meaning": "the two rules, as his AI would read them",
+      "fromFrame": 553,
+      "toFrame": 646,
+      "variants": {},
+      "params": {
+        "kind": "notification",
+        "rows": [
+          {
+            "who": "Your AI",
+            "text": "No spending."
+          },
+          {
+            "text": "No sending."
+          }
+        ],
+        "place": {
+          "left": -135,
+          "top": 210,
+          "width": 1080,
+          "height": 640,
+          "scale": 1.25
+        }
+      }
+    },
+    {
+      "obj": "rules_held",
+      "device": "typing_bubble",
+      "meaning": "the two rules held while he explains the prompt",
+      "fromFrame": 764,
+      "toFrame": 1085,
+      "variants": {},
+      "params": {
+        "kind": "notification",
+        "rows": [
+          {
+            "who": "Your AI",
+            "text": "No spending."
+          },
+          {
+            "text": "No sending."
           }
         ]
+      }
+    },
+    {
+      "obj": "verdict",
+      "device": "typing_bubble",
+      "meaning": "AI that acts first: really helpful, a bit dangerous",
+      "fromFrame": 176,
+      "toFrame": 366,
+      "variants": {},
+      "params": {
+        "kind": "notification",
+        "rows": [
+          {
+            "who": "AI that acts first",
+            "text": "Really helpful."
+          },
+          {
+            "text": "A bit dangerous."
+          }
+        ],
+        "place": {
+          "left": -135,
+          "top": 210,
+          "width": 1080,
+          "height": 640,
+          "scale": 1.25
+        }
       }
     }
   ],
@@ -2177,59 +2092,59 @@
       "atFrame": 0
     },
     {
-      "id": "hook-2",
-      "obj": "buddy",
+      "id": "face-0",
+      "obj": "verdict",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 0
-    },
-    {
-      "id": "hook-3",
-      "obj": "note",
-      "verb": "type",
-      "toState": "1",
-      "atFrame": 59
-    },
-    {
-      "id": "face-0",
-      "obj": "buddy",
-      "verb": "wave",
-      "toState": "wave",
       "atFrame": 176
     },
     {
       "id": "face-1",
-      "obj": "buddy",
-      "verb": "sulk",
-      "toState": "sulk",
-      "atFrame": 307
+      "obj": "verdict",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 268
     },
     {
       "id": "face-2",
-      "obj": "unasked",
-      "verb": "stamp",
-      "toState": "visible",
+      "obj": "verdict",
+      "verb": "type",
+      "toState": "1",
       "atFrame": 307
     },
     {
       "id": "proof-0",
-      "obj": "orbit",
+      "obj": "logos",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 366
     },
     {
       "id": "proof-1",
-      "obj": "orbit",
+      "obj": "logos",
       "verb": "highlight",
       "toState": "1",
       "atFrame": 402
     },
     {
       "id": "proof-2",
-      "obj": "orbit",
+      "obj": "amazon_loop",
+      "verb": "draw",
+      "toState": "Amazon",
+      "atFrame": 412
+    },
+    {
+      "id": "proof-3",
+      "obj": "logos",
       "verb": "highlight",
       "toState": "2",
+      "atFrame": 458
+    },
+    {
+      "id": "proof-4",
+      "obj": "amazon_loop",
+      "verb": "exit",
+      "toState": "gone",
       "atFrame": 458
     },
     {
@@ -2262,185 +2177,155 @@
     },
     {
       "id": "b5-rule-0",
-      "obj": "rule",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 598
+      "obj": "chat",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 594
     },
     {
       "id": "b5-rule-1",
-      "obj": "buddy_sulk",
+      "obj": "rules",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 598
     },
     {
       "id": "b5-rule-2",
-      "obj": "buddy_sulk",
-      "verb": "sulk",
-      "toState": "sulk",
-      "atFrame": 631
+      "obj": "rules",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 598
+    },
+    {
+      "id": "b5-rule-3",
+      "obj": "rules",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 625
+    },
+    {
+      "id": "own-words-0",
+      "obj": "rule_card",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 646
+    },
+    {
+      "id": "own-words-1",
+      "obj": "rule_card",
+      "verb": "type",
+      "toState": "0",
+      "atFrame": 648
+    },
+    {
+      "id": "own-words-2",
+      "obj": "rule_card",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 692
+    },
+    {
+      "id": "own-words-3",
+      "obj": "rule_card",
+      "verb": "send",
+      "toState": "0",
+      "atFrame": 732
     },
     {
       "id": "b7-prompt-0",
-      "obj": "ask",
+      "obj": "rules_held",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 899
+      "atFrame": 764
     },
     {
       "id": "b7-prompt-1",
+      "obj": "rules_held",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 764
+    },
+    {
+      "id": "b7-prompt-2",
+      "obj": "ask",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 885
+    },
+    {
+      "id": "b7-prompt-3",
+      "obj": "rules_held",
+      "verb": "exit",
+      "toState": "gone",
+      "atFrame": 885
+    },
+    {
+      "id": "b7-prompt-4",
       "obj": "ask",
       "verb": "type",
       "toState": "0",
       "atFrame": 899
     },
     {
-      "id": "b7-prompt-2",
-      "obj": "ask_tag",
-      "verb": "stamp",
-      "toState": "visible",
-      "atFrame": 899
-    },
-    {
-      "id": "b7-prompt-3",
+      "id": "b7-prompt-5",
       "obj": "ask",
       "verb": "type",
       "toState": "1",
       "atFrame": 953
     },
     {
-      "id": "b7-prompt-4",
+      "id": "b7-prompt-6",
       "obj": "ask",
       "verb": "type",
       "toState": "2",
       "atFrame": 966
     },
     {
-      "id": "b7-prompt-5",
+      "id": "b7-prompt-7",
       "obj": "ask",
       "verb": "type",
       "toState": "3",
-      "atFrame": 1002
+      "atFrame": 1014
     },
     {
-      "id": "b7-prompt-6",
+      "id": "b7-prompt-8",
       "obj": "ask",
       "verb": "send",
-      "toState": "3",
-      "atFrame": 1018
-    },
-    {
-      "id": "b7-prompt-7",
-      "obj": "comments_arrow",
-      "verb": "draw",
-      "toState": "visible",
-      "atFrame": 1040
+      "toState": "0",
+      "atFrame": 1021
     },
     {
       "id": "close-0",
-      "obj": "settings",
+      "obj": "rule_close",
       "verb": "enter",
       "toState": "visible",
-      "atFrame": 1085
+      "atFrame": 1149
     },
     {
       "id": "close-1",
-      "obj": "settings",
+      "obj": "rule_close",
       "verb": "type",
       "toState": "0",
-      "atFrame": 1085
+      "atFrame": 1149
     },
     {
       "id": "close-2",
-      "obj": "buddy_good",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 1096
+      "obj": "rule_close",
+      "verb": "type",
+      "toState": "1",
+      "atFrame": 1171
     },
     {
       "id": "close-3",
-      "obj": "settings",
-      "verb": "type",
-      "toState": "1",
-      "atFrame": 1112
-    },
-    {
-      "id": "close-4",
-      "obj": "buddy_good",
-      "verb": "wave",
-      "toState": "wave",
-      "atFrame": 1128
-    },
-    {
-      "id": "fails-0",
-      "obj": "chat_again",
-      "verb": "enter",
-      "toState": "visible",
-      "atFrame": 1252
-    },
-    {
-      "id": "fails-1",
-      "obj": "chat_again",
-      "verb": "type",
+      "obj": "rule_close",
+      "verb": "send",
       "toState": "0",
       "atFrame": 1252
-    },
-    {
-      "id": "fails-2",
-      "obj": "chat_again",
-      "verb": "type",
-      "toState": "1",
-      "atFrame": 1262
-    },
-    {
-      "id": "fails-3",
-      "obj": "blocked",
-      "verb": "stamp",
-      "toState": "visible",
-      "atFrame": 1279
     }
   ],
   "ending": {
     "fromFrame": 1320,
     "url": "makeyourmindup.ai",
     "ticker": false
-  },
-  "motion": {
-    "style": "hud-terminal",
-    "profile": {
-      "entrance": {
-        "kind": "slap",
-        "frames": 4,
-        "easing": "enter",
-        "distancePx": 40,
-        "overshootPct": 4
-      },
-      "stagger": {
-        "frames": 2,
-        "unit": "char"
-      },
-      "exitFrames": 4,
-      "onTwos": false,
-      "camera": {
-        "kind": "none",
-        "scaleTo": 1,
-        "dimOthers": false,
-        "easing": "hero"
-      },
-      "transition": "cut",
-      "typeReveal": {
-        "kind": "typewriter",
-        "cps": 32
-      },
-      "ground": {
-        "kind": "house",
-        "sweepFrames": 0,
-        "texture": "none"
-      },
-      "driftPct": 0.5,
-      "countFrames": 24,
-      "note": "text types at a readable 32 characters a second; brackets lock on with the slap token; rolling numbers settle on the real figure and hold"
-    }
   }
 }

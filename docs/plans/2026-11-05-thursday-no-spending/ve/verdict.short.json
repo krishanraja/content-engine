@@ -1,41 +1,89 @@
 {
-  "schema": "ve-verdict/2",
+  "schema": "ve-verdict/1",
   "piece": "2026-11-05-thursday-no-spending",
   "cut": "short",
-  "sha256": "42d5d64a33b778b3f17a94825efbfc767a274f8b2196db9f9b6fd90401d362c7",
-  "reviewer": "ve-critic",
-  "reviewed_at": "2026-11-04T11:17:10.430488+00:00",
+  "sha256": "517cdd9472636c3a5aad20df0725e7c59d1369bf045ffb103228207b2c41d90d",
+  "reviewer": "ve-critic (independent subagent, rounds 4-5)",
+  "reviewed_at": "2026-11-03T16:49:20.646175+00:00",
   "lens_sha256": "fa26b91a9d667bb637c79215ef804790e805febaf0a40d2545e4f89c24f622a3",
   "frames_viewed": [
     {
       "at_s": 0.0
     },
     {
-      "at_s": 3.0
+      "at_s": 2.0
     },
     {
-      "at_s": 6.0
+      "at_s": 4.17
     },
     {
-      "at_s": 9.0
+      "at_s": 4.37
+    },
+    {
+      "at_s": 4.67
+    },
+    {
+      "at_s": 5.5
+    },
+    {
+      "at_s": 7.0
+    },
+    {
+      "at_s": 9.5
+    },
+    {
+      "at_s": 11.5
     },
     {
       "at_s": 12.0
     },
     {
-      "at_s": 15.0
+      "at_s": 13.4
     },
     {
-      "at_s": 18.0
+      "at_s": 14.47
     },
     {
-      "at_s": 21.0
+      "at_s": 15.3
     },
     {
-      "at_s": 24.0
+      "at_s": 16.0
     },
     {
-      "at_s": 27.0
+      "at_s": 17.0
+    },
+    {
+      "at_s": 17.8
+    },
+    {
+      "at_s": 18.2
+    },
+    {
+      "at_s": 19.0
+    },
+    {
+      "at_s": 20.0
+    },
+    {
+      "at_s": 20.83
+    },
+    {
+      "at_s": 21.4
+    },
+    {
+      "at_s": 22.0
+    },
+    {
+      "at_s": 23.5
+    },
+    {
+      "at_s": 25.0
+    },
+    {
+      "at_s": 26.67
+    },
+    {
+      "at_s": 29.5
     },
     {
       "at_s": 30.0
@@ -44,81 +92,76 @@
       "at_s": 33.0
     },
     {
-      "at_s": 36.0
+      "at_s": 34.0
     },
     {
-      "at_s": 39.0
+      "at_s": 34.67
     },
     {
-      "at_s": 42.0
+      "at_s": 35.5
+    },
+    {
+      "at_s": 36.5
+    },
+    {
+      "at_s": 37.08
+    },
+    {
+      "at_s": 37.8
+    },
+    {
+      "at_s": 39.93
+    },
+    {
+      "at_s": 40.13
+    },
+    {
+      "at_s": 40.43
+    },
+    {
+      "at_s": 43.0
+    },
+    {
+      "at_s": 44.0
     },
     {
       "at_s": 45.0
+    },
+    {
+      "at_s": 47.0
     }
   ],
   "findings": [
     {
-      "severity": "block",
-      "area": "motion",
-      "frame_s": 27.0,
-      "text": "Prompt card question types at about 4 characters a second; 25 s is a near-empty frame."
-    },
-    {
-      "severity": "block",
+      "severity": "note",
       "area": "composition",
-      "frame_s": 27.0,
-      "text": "Chat card crowds the mark tile (standard rule 3)."
-    },
-    {
-      "severity": "fix",
-      "area": "motion",
-      "frame_s": 8.0,
-      "text": "'Shall I pay the deposit' types at about 5 characters a second."
-    },
-    {
-      "severity": "fix",
-      "area": "motion",
-      "frame_s": 45.0,
-      "text": "BLOCKED stamps before the reply finishes typing."
-    },
-    {
-      "severity": "fix",
-      "area": "composition",
-      "frame_s": 3.0,
-      "text": "Every STAGE beat leaves the lower 55 percent empty except one word."
-    },
-    {
-      "severity": "fix",
-      "area": "other",
-      "frame_s": 0.0,
-      "text": "style.motion is unset, so the cut falls back to house motion."
-    },
-    {
-      "severity": "fix",
-      "area": "brand",
-      "frame_s": 22.0,
-      "text": "brand title shows only on one face beat; the reference holds it throughout, and the serif switches mid-sentence on non-emphasis words."
+      "frame_s": 4.37,
+      "text": "CLOSED. Hook wave in place; clear of the note card at 125-140."
     },
     {
       "severity": "note",
-      "area": "other",
-      "frame_s": 10.0,
-      "text": "OCR misreads short words on face beats; cause unproven."
-    }
-  ],
-  "blocking": true,
-  "references": [
-    {
-      "card": "instagram_DePHDr_jRed",
-      "score": 6,
-      "matches": false,
-      "note": "one white heavy word at chest height off the face under a yellow title on face shots. Misses: face only 11 of 47.5 s; title not held; serif switches mid-sentence"
+      "area": "composition",
+      "frame_s": 40.13,
+      "text": "CLOSED. Close wave in place; NO SENDING reads whole at 1198-1213."
     },
     {
-      "card": "instagram_DeZuQ7-lATg",
-      "score": 4,
-      "matches": false,
-      "note": "rounded cards on a pale wash, logo orbit, face-below splits. Misses: cards off-centre, no glow, lower half empty, about 15 cuts a minute against 30, slow typing"
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 12.0,
+      "text": "The split opens about 6 frames before the logos land."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 14.47,
+      "text": "The logo row fills about half the top panel's height."
+    },
+    {
+      "severity": "note",
+      "area": "composition",
+      "frame_s": 34.67,
+      "text": "Advisory: card body text looks near the 30 px floor; QC small_text passes."
     }
-  ]
+  ],
+  "blocking": false
 }

@@ -7,103 +7,46 @@
  "brand": {
   "series": "under.the.hood",
   "captions": "word",
-  "title": "Give your AI two rules",
-  "references": [
-   {
-    "id": "7f43c6b5-a468-40f3-ad66-c988cdc16072",
-    "card": "instagram_DePHDr_jRed",
-    "for": [
-     "captions"
-    ],
-    "drive_id": "1ja79vioVN5L44RLg3ceD2kMiRLWTa_ko",
-    "takeaway": "One white heavy word at a time at chest height, never on the face, under a held two-line title at the top."
-   },
-   {
-    "id": "e829fbfb-278d-45e2-9607-73af4c04310d",
-    "card": "instagram_DeZuQ7-lATg",
-    "for": [
-     "look",
-     "motion"
-    ],
-    "drive_id": "1RgI6ypWidvR_0KbP0LM0igbUEbU-qkWe",
-    "takeaway": "Full-width product UI cards and logos with animated rings, full-screen graphic beats and splits with the face below; something changes at least every 2 to 3 s."
-   }
-  ]
+  "title": "Give your AI two rules"
  },
  "signature": {
   "hero": {
    "device": "cursor_buddy",
    "status": "proven"
   },
-  "opening_break": "the cursor buddy and the Ibiza notification are on screen from frame 0",
+  "opening_break": "the cursor buddy lands with a notification it should not have sent, on the first word",
   "finish_pack": "house_grain",
   "sound_palette": "house-v1 (no kit exists yet: the effects named in the storyboard are left out, the music bed carries the cut; docs/ve/STATUS.md, \"No sound effects kit\")",
   "variants": {}
  },
  "objects": [
   {
-   "obj": "buddy",
-   "device": "cursor_buddy",
-   "meaning": "the eager assistant that acts before you ask",
-   "persist": {
-    "from_beat": "hook",
-    "to_beat": "face"
-   },
-   "params": {
-    "mood": "eager",
-    "prop": "none"
-   }
-  },
-  {
    "obj": "note",
    "device": "typing_bubble",
-   "meaning": "the assistant reports a booking it made, then offers to pay, before anyone asked",
+   "meaning": "the assistant reports a booking it made before anyone asked",
    "persist": {
     "from_beat": "hook",
-    "to_beat": "face"
+    "to_beat": "hook"
    },
    "params": {
     "kind": "notification",
     "rows": [
      {
-      "who": "Your AI",
       "text": "Done! Booked the team offsite in Ibiza"
-     },
-     {
-      "text": "Shall I pay the deposit too?"
      }
     ]
    }
   },
   {
-   "obj": "unasked",
-   "device": "stamp",
-   "meaning": "tags the booking: nobody said yes",
-   "persist": {
-    "from_beat": "face",
-    "to_beat": "face"
-   },
-   "params": {
-    "kind": "outline",
-    "main": "NOBODY ASKED",
-    "tiltDeg": -4,
-    "at": {
-     "x": 600,
-     "y": 650,
-     "w": 380,
-     "h": 110
-    }
-   }
-  },
-  {
-   "obj": "orbit",
-   "device": "logo_orbit",
-   "meaning": "the assistants already live inside the apps he names, then the rest arrive",
+   "obj": "logos",
+   "device": "logo_card",
+   "meaning": "the apps he names the assistants live inside, on equal tiles",
    "persist": {
     "from_beat": "proof",
     "to_beat": "proof"
    },
    "params": {
+    "tiles": true,
     "logos": [
      {
       "id": "Meta"
@@ -113,15 +56,35 @@
      },
      {
       "id": "Google"
-     },
-     {
-      "id": "xAI"
-     },
-     {
-      "id": "Anthropic"
      }
     ],
-    "rings": 2
+    "place": {
+     "left": -120,
+     "top": 260,
+     "width": 960,
+     "height": 520,
+     "scale": 1.45
+    }
+   }
+  },
+  {
+   "obj": "amazon_loop",
+   "device": "scribble",
+   "meaning": "circles Amazon as he says it",
+   "persist": {
+    "from_beat": "proof",
+    "to_beat": "proof"
+   },
+   "params": {
+    "colour": "mint",
+    "seed": "fwp",
+    "shape": "loop",
+    "target": {
+     "x": 400,
+     "y": 460,
+     "w": 350,
+     "h": 350
+    }
    }
   },
   {
@@ -130,7 +93,7 @@
    "meaning": "the 8am reply the assistant sends for him",
    "persist": {
     "from_beat": "b4-8am",
-    "to_beat": "b4-8am"
+    "to_beat": "b5-rule"
    },
    "params": {
     "kind": "chat",
@@ -145,35 +108,20 @@
       "text": "Absolutely not, it's my lie-in day",
       "side": "right"
      }
-    ]
-   }
-  },
-  {
-   "obj": "rule",
-   "device": "headline",
-   "meaning": "the rule as two slabs",
-   "persist": {
-    "from_beat": "b5-rule",
-    "to_beat": "b5-rule"
-   },
-   "params": {
-    "lines": [
-     "NO SPENDING.",
-     "NO SENDING."
     ],
-    "ground": "light",
-    "at": {
-     "x": 60,
-     "y": 500,
-     "w": 900,
-     "h": 420
+    "place": {
+     "left": -135,
+     "top": 210,
+     "width": 1080,
+     "height": 640,
+     "scale": 1.25
     }
    }
   },
   {
    "obj": "ask",
    "device": "typing_bubble",
-   "meaning": "the AI asking back after his one prompt, and his three answers becoming its rules",
+   "meaning": "his AI tool asking him its question back, and his three answers staying on screen as its rules",
    "persist": {
     "from_beat": "b7-prompt",
     "to_beat": "b7-prompt"
@@ -202,137 +150,136 @@
    }
   },
   {
-   "obj": "comments_arrow",
-   "device": "scribble",
-   "meaning": "points down to the comments where the prompt is",
-   "persist": {
-    "from_beat": "b7-prompt",
-    "to_beat": "b7-prompt"
-   },
-   "params": {
-    "shape": "arrow",
-    "colour": "mint",
-    "seed": "thu-comments",
-    "from": [
-     700,
-     1380
-    ],
-    "to": [
-     880,
-     1640
-    ],
-    "bend": 0.3
-   }
-  },
-  {
-   "obj": "buddy_good",
-   "device": "cursor_buddy",
-   "meaning": "the assistant, behaving now",
-   "persist": {
-    "from_beat": "close",
-    "to_beat": "close"
-   },
-   "params": {
-    "mood": "cool",
-    "prop": "none"
-   }
-  },
-  {
-   "obj": "chat_again",
+   "obj": "rule_card",
    "device": "typing_bubble",
-   "meaning": "the 8am reply comes back and is stopped",
+   "meaning": "his rule in his own words: no spending, no sending without his say-so",
    "persist": {
-    "from_beat": "fails",
-    "to_beat": "fails"
-   },
-   "params": {
-    "kind": "chat",
-    "rows": [
-     {
-      "who": "Boss",
-      "text": "Can you join the 8am?",
-      "side": "left"
-     },
-     {
-      "who": "You",
-      "text": "Absolutely not, it's my lie-in day",
-      "side": "right"
-     }
-    ]
-   }
-  },
-  {
-   "obj": "blocked",
-   "device": "stamp",
-   "meaning": "the reply is held for his yes",
-   "persist": {
-    "from_beat": "fails",
-    "to_beat": "fails"
-   },
-   "params": {
-    "kind": "block",
-    "main": "BLOCKED",
-    "tiltDeg": -5,
-    "at": {
-     "x": 580,
-     "y": 930,
-     "w": 380,
-     "h": 120
-    }
-   }
-  },
-  {
-   "obj": "buddy_sulk",
-   "device": "cursor_buddy",
-   "meaning": "the assistant meets the rule and sulks",
-   "persist": {
-    "from_beat": "b5-rule",
-    "to_beat": "b5-rule"
-   },
-   "params": {
-    "mood": "eager",
-    "prop": "none"
-   }
-  },
-  {
-   "obj": "ask_tag",
-   "device": "stamp",
-   "meaning": "tags the prompt: he wrote one line, the AI did the rest",
-   "persist": {
-    "from_beat": "b7-prompt",
-    "to_beat": "b7-prompt"
-   },
-   "params": {
-    "kind": "outline",
-    "main": "ONE PROMPT",
-    "tiltDeg": -3,
-    "at": {
-     "x": 600,
-     "y": 330,
-     "w": 380,
-     "h": 100
-    }
-   }
-  },
-  {
-   "obj": "settings",
-   "device": "typing_bubble",
-   "meaning": "the AI's rules, set: it asks him before it spends or sends",
-   "persist": {
-    "from_beat": "close",
-    "to_beat": "close"
+    "from_beat": "own-words",
+    "to_beat": "own-words"
    },
    "params": {
     "kind": "notification",
     "rows": [
      {
-      "who": "Your AI · rules",
-      "text": "Spend money: ask me first"
+      "who": "Your AI",
+      "text": "Doesn't spend your money."
      },
      {
-      "text": "Send anything: ask me first"
+      "text": "Doesn't send anything unless you say so."
+     }
+    ],
+    "place": {
+     "left": -135,
+     "top": 210,
+     "width": 1080,
+     "height": 640,
+     "scale": 1.25
+    }
+   }
+  },
+  {
+   "obj": "rule_close",
+   "device": "typing_bubble",
+   "meaning": "his rule in his own words: no spending, no sending without his say-so",
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Your AI",
+      "text": "Doesn't spend your money."
+     },
+     {
+      "text": "Doesn't send anything unless you say so."
+     }
+    ],
+    "place": {
+     "left": -135,
+     "top": 210,
+     "width": 1080,
+     "height": 640,
+     "scale": 1.25
+    }
+   },
+   "persist": {
+    "from_beat": "close",
+    "to_beat": "close"
+   }
+  },
+  {
+   "obj": "rules",
+   "device": "typing_bubble",
+   "meaning": "the two rules, as his AI would read them",
+   "persist": {
+    "from_beat": "b5-rule",
+    "to_beat": "b5-rule"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Your AI",
+      "text": "No spending."
+     },
+     {
+      "text": "No sending."
+     }
+    ],
+    "place": {
+     "left": -135,
+     "top": 210,
+     "width": 1080,
+     "height": 640,
+     "scale": 1.25
+    }
+   }
+  },
+  {
+   "obj": "rules_held",
+   "device": "typing_bubble",
+   "meaning": "the two rules held while he explains the prompt",
+   "persist": {
+    "from_beat": "b7-prompt",
+    "to_beat": "b7-prompt"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "Your AI",
+      "text": "No spending."
+     },
+     {
+      "text": "No sending."
      }
     ]
+   }
+  },
+  {
+   "obj": "verdict",
+   "device": "typing_bubble",
+   "meaning": "AI that acts first: really helpful, a bit dangerous",
+   "persist": {
+    "from_beat": "face",
+    "to_beat": "face"
+   },
+   "params": {
+    "kind": "notification",
+    "rows": [
+     {
+      "who": "AI that acts first",
+      "text": "Really helpful."
+     },
+     {
+      "text": "A bit dangerous."
+     }
+    ],
+    "place": {
+     "left": -135,
+     "top": 210,
+     "width": 1080,
+     "height": 640,
+     "scale": 1.25
+    }
    }
   }
  ],
@@ -375,16 +322,15 @@
      "role": "hook",
      "span": {
       "from_w": 0,
-      "to_w": 6
+      "to_w": 14
      },
      "viewer_task": "locate_story",
      "layout": "STAGE",
-     "point": "Proactive AI already acts before you ask: it booked the offsite in Ibiza and offers to pay",
+     "point": "Proactive AI already acts before you ask: it booked the offsite in Ibiza without checking",
      "plate": {
       "source": "none"
      },
      "uses": [
-      "buddy",
       "note"
      ],
      "events": [
@@ -401,39 +347,8 @@
        "verb": "type",
        "to_state": "0",
        "silent": true
-      },
-      {
-       "at_w": 0,
-       "obj": "buddy",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 3,
-       "obj": "note",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
       }
      ]
-    },
-    {
-     "id": "hook-face",
-     "role": "bridge",
-     "span": {
-      "from_w": 7,
-      "to_w": 14
-     },
-     "viewer_task": "connect_with_speaker",
-     "layout": "STAGE",
-     "point": "AI that does things before you ask, offers to do things",
-     "plate": {
-      "source": "take"
-     },
-     "uses": [],
-     "events": [],
-     "override_reason": "Face alone, the georgia_la caption build: the speaker and the word-by-word captions under the held title are the motion (MOTION_STANDARD.md lists face alone as a beat kind)."
     },
     {
      "id": "face",
@@ -444,36 +359,34 @@
      },
      "viewer_task": "connect_with_speaker",
      "layout": "SPLIT",
-     "point": "Really helpful, but a bit dangerous once they are connected to your apps",
+     "point": "Awesome, really helpful features, but a bit dangerous once they are connected to your apps",
      "plate": {
       "source": "take",
       "crop": "50% 88%"
      },
      "uses": [
-      "buddy",
-      "note",
-      "unasked"
+      "verdict"
      ],
      "events": [
       {
        "at_w": 15,
-       "obj": "buddy",
-       "verb": "wave",
-       "to_state": "wave",
-       "silent": true
-      },
-      {
-       "at_w": 25,
-       "obj": "buddy",
-       "verb": "sulk",
-       "to_state": "sulk",
-       "silent": true
-      },
-      {
-       "at_w": 25,
-       "obj": "unasked",
-       "verb": "stamp",
+       "obj": "verdict",
+       "verb": "enter",
        "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 21,
+       "obj": "verdict",
+       "verb": "type",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 25,
+       "obj": "verdict",
+       "verb": "type",
+       "to_state": "1",
        "silent": true
       }
      ]
@@ -487,34 +400,49 @@
      },
      "viewer_task": "verify_evidence",
      "layout": "SPLIT",
-     "point": "Meta in WhatsApp, Amazon for groceries, Google for email: the assistants are already inside the apps",
+     "point": "Meta Muse in WhatsApp, Amazon for groceries, Google for email: the assistants are already inside the apps",
      "plate": {
       "source": "take",
       "crop": "50% 88%"
      },
      "uses": [
-      "orbit"
+      "logos",
+      "amazon_loop"
      ],
      "events": [
       {
        "at_w": 30,
-       "obj": "orbit",
+       "obj": "logos",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
        "at_w": 34,
-       "obj": "orbit",
+       "obj": "logos",
        "verb": "highlight",
        "to_state": "1",
        "silent": true
       },
       {
+       "at_w": 35,
+       "obj": "amazon_loop",
+       "verb": "draw",
+       "to_state": "Amazon",
+       "silent": true
+      },
+      {
        "at_w": 38,
-       "obj": "orbit",
+       "obj": "logos",
        "verb": "highlight",
        "to_state": "2",
+       "silent": true
+      },
+      {
+       "at_w": 38,
+       "obj": "amazon_loop",
+       "verb": "exit",
+       "to_state": "gone",
        "silent": true
       }
      ]
@@ -524,13 +452,14 @@
      "role": "anchor",
      "span": {
       "from_w": 42,
-      "to_w": 53
+      "to_w": 47
      },
      "viewer_task": "inspect_artifact",
-     "layout": "STAGE",
+     "layout": "SPLIT",
      "point": "It can get dangerous: left alone, the assistant answers your boss for you",
      "plate": {
-      "source": "none"
+      "source": "take",
+      "crop": "50% 88%"
      },
      "uses": [
       "chat"
@@ -570,82 +499,104 @@
      "id": "b5-rule",
      "role": "pivot",
      "span": {
-      "from_w": 54,
+      "from_w": 48,
       "to_w": 58
      },
      "viewer_task": "understand_mechanism",
-     "layout": "STAGE",
+     "layout": "SPLIT",
      "point": "His first step is one rule: no spending and no sending without him",
      "plate": {
-      "source": "none"
+      "source": "take",
+      "crop": "50% 88%"
      },
      "uses": [
-      "rule",
-      "buddy_sulk"
+      "chat",
+      "rules"
      ],
      "events": [
       {
+       "at_w": 53,
+       "obj": "chat",
+       "verb": "exit",
+       "to_state": "gone",
+       "silent": true
+      },
+      {
        "at_w": 54,
-       "obj": "rule",
+       "obj": "rules",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
        "at_w": 54,
-       "obj": "buddy_sulk",
-       "verb": "enter",
-       "to_state": "visible",
+       "obj": "rules",
+       "verb": "type",
+       "to_state": "0",
        "silent": true
       },
       {
-       "at_w": 57,
-       "obj": "buddy_sulk",
-       "verb": "sulk",
-       "to_state": "sulk",
+       "at_w": 56,
+       "obj": "rules",
+       "verb": "type",
+       "to_state": "1",
        "silent": true
       }
      ]
     },
     {
      "id": "own-words",
-     "role": "bridge",
+     "role": "anchor",
      "span": {
       "from_w": 59,
       "to_w": 73
      },
      "viewer_task": "connect_with_speaker",
-     "layout": "STAGE",
+     "layout": "SPLIT",
      "point": "In his own words: it never spends his money or sends anything unless he says so",
      "plate": {
-      "source": "take"
+      "source": "take",
+      "crop": "50% 88%"
      },
-     "uses": [],
-     "events": [],
-     "override_reason": "Face alone, the georgia_la caption build: the speaker and the word-by-word captions under the held title are the motion (MOTION_STANDARD.md lists face alone as a beat kind)."
-    },
-    {
-     "id": "b7-face",
-     "role": "bridge",
-     "span": {
-      "from_w": 74,
-      "to_w": 93
-     },
-     "viewer_task": "connect_with_speaker",
-     "layout": "STAGE",
-     "point": "He did not write the rule himself: he put one prompt into his AI tool",
-     "plate": {
-      "source": "take"
-     },
-     "uses": [],
-     "events": [],
-     "override_reason": "Face alone, the georgia_la caption build: the speaker and the word-by-word captions under the held title are the motion (MOTION_STANDARD.md lists face alone as a beat kind)."
+     "uses": [
+      "rule_card"
+     ],
+     "events": [
+      {
+       "at_w": 59,
+       "obj": "rule_card",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 60,
+       "obj": "rule_card",
+       "verb": "type",
+       "to_state": "0",
+       "silent": true
+      },
+      {
+       "at_w": 64,
+       "obj": "rule_card",
+       "verb": "type",
+       "to_state": "1",
+       "silent": true
+      },
+      {
+       "at_w": 70,
+       "obj": "rule_card",
+       "verb": "send",
+       "to_state": "0",
+       "silent": true
+      }
+     ]
     },
     {
      "id": "b7-prompt",
      "role": "anchor",
      "span": {
-      "from_w": 94,
+      "from_w": 74,
       "to_w": 117
      },
      "viewer_task": "inspect_artifact",
@@ -655,16 +606,36 @@
       "source": "none"
      },
      "uses": [
-      "ask",
-      "ask_tag",
-      "comments_arrow"
+      "rules_held",
+      "ask"
      ],
      "events": [
       {
-       "at_w": 94,
+       "at_w": 74,
+       "obj": "rules_held",
+       "verb": "enter",
+       "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 74,
+       "obj": "rules_held",
+       "verb": "type",
+       "to_state": "1",
+       "silent": true
+      },
+      {
+       "at_w": 92,
        "obj": "ask",
        "verb": "enter",
        "to_state": "visible",
+       "silent": true
+      },
+      {
+       "at_w": 92,
+       "obj": "rules_held",
+       "verb": "exit",
+       "to_state": "gone",
        "silent": true
       },
       {
@@ -672,13 +643,6 @@
        "obj": "ask",
        "verb": "type",
        "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 94,
-       "obj": "ask_tag",
-       "verb": "stamp",
-       "to_state": "visible",
        "silent": true
       },
       {
@@ -696,24 +660,17 @@
        "silent": true
       },
       {
-       "at_w": 108,
+       "at_w": 111,
        "obj": "ask",
        "verb": "type",
        "to_state": "3",
        "silent": true
       },
       {
-       "at_w": 112,
+       "at_w": 113,
        "obj": "ask",
        "verb": "send",
-       "to_state": "3",
-       "silent": true
-      },
-      {
-       "at_w": 114,
-       "obj": "comments_arrow",
-       "verb": "draw",
-       "to_state": "visible",
+       "to_state": "0",
        "silent": true
       }
      ]
@@ -723,117 +680,45 @@
      "role": "payoff",
      "span": {
       "from_w": 118,
-      "to_w": 126
-     },
-     "viewer_task": "land_payoff",
-     "layout": "STAGE",
-     "point": "Do this one easy step today: no spending, no sending",
-     "plate": {
-      "source": "none"
-     },
-     "uses": [
-      "settings",
-      "buddy_good"
-     ],
-     "events": [
-      {
-       "at_w": 118,
-       "obj": "settings",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 118,
-       "obj": "settings",
-       "verb": "type",
-       "to_state": "0",
-       "silent": true
-      },
-      {
-       "at_w": 120,
-       "obj": "buddy_good",
-       "verb": "enter",
-       "to_state": "visible",
-       "silent": true
-      },
-      {
-       "at_w": 123,
-       "obj": "settings",
-       "verb": "type",
-       "to_state": "1",
-       "silent": true
-      },
-      {
-       "at_w": 125,
-       "obj": "buddy_good",
-       "verb": "wave",
-       "to_state": "wave",
-       "silent": true
-      }
-     ]
-    },
-    {
-     "id": "close-face",
-     "role": "bridge",
-     "span": {
-      "from_w": 127,
-      "to_w": 139
-     },
-     "viewer_task": "connect_with_speaker",
-     "layout": "STAGE",
-     "point": "One easy step, so you can enjoy the new technology safely",
-     "plate": {
-      "source": "take"
-     },
-     "uses": [],
-     "events": [],
-     "override_reason": "Face alone, the georgia_la caption build: the speaker and the word-by-word captions under the held title are the motion (MOTION_STANDARD.md lists face alone as a beat kind)."
-    },
-    {
-     "id": "fails",
-     "role": "anchor",
-     "span": {
-      "from_w": 140,
       "to_w": 147
      },
      "viewer_task": "land_payoff",
-     "layout": "STAGE",
-     "point": "Enjoy the new tools without the weird moments or fails",
+     "layout": "SPLIT",
+     "point": "Do this one easy step today: no spending, no sending, and enjoy the new tools without the fails",
      "plate": {
-      "source": "none"
+      "source": "take",
+      "crop": "50% 88%"
      },
      "uses": [
-      "chat_again",
-      "blocked"
+      "rule_close"
      ],
      "events": [
       {
-       "at_w": 140,
-       "obj": "chat_again",
+       "at_w": 128,
+       "obj": "rule_close",
        "verb": "enter",
        "to_state": "visible",
        "silent": true
       },
       {
-       "at_w": 140,
-       "obj": "chat_again",
+       "at_w": 128,
+       "obj": "rule_close",
        "verb": "type",
        "to_state": "0",
        "silent": true
       },
       {
-       "at_w": 142,
-       "obj": "chat_again",
+       "at_w": 131,
+       "obj": "rule_close",
        "verb": "type",
        "to_state": "1",
        "silent": true
       },
       {
-       "at_w": 145,
-       "obj": "blocked",
-       "verb": "stamp",
-       "to_state": "visible",
+       "at_w": 140,
+       "obj": "rule_close",
+       "verb": "send",
+       "to_state": "0",
        "silent": true
       }
      ]
@@ -860,11 +745,7 @@
  "style": {
   "storyboard": "docs/plans/2026-11-02-week/thu-storyboard.md",
   "signed_storyboard": "Krish, 2026-11-02: \"Approved, add those 3 too\"",
-  "keyframes": "face-with-proof lock frozen 2026-11-03: \"Looks good to me.\" Face-led re-cut 2026-11-04 awaiting Gate 2 stills.",
-  "ending_ticker": false,
-  "motion": {
-   "module": "hud-terminal",
-   "reason": "Cards type at a readable 32 characters a second and slap in, with no camera zoom, so every card stays whole, on the light house ground and clear of the mark tile (living-ui's 1.5x zoom pushed the cards off frame in the Gate 2 stills)."
-  }
+  "keyframes": "face-with-proof lock frozen 2026-11-03: \"Looks good to me.\"",
+  "ending_ticker": false
  }
 }
