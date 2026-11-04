@@ -2265,7 +2265,7 @@
       "obj": "ask",
       "verb": "type",
       "toState": "0",
-      "atFrame": 899
+      "atFrame": 764
     },
     {
       "id": "b7-prompt-3",
