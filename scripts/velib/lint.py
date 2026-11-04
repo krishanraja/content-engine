@@ -200,7 +200,8 @@ def motion_lints(spec: dict) -> list[str]:
 
 
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
-    out: list[str] = reference_lints(spec) + motion_lints(spec)
+    from . import guards
+    out: list[str] = reference_lints(spec) + motion_lints(spec) + guards.spec_lints(spec)
     from . import designlock
     lock = designlock.load()
     if spec['format'] in lock['formats'] and not designlock.frozen(lock, spec['format'])[0]:

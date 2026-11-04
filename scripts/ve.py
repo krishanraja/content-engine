@@ -995,9 +995,14 @@ def render_refusal(spec, spec_file, props, call=None) -> list[str]:
     cut = props.get('cutId')
     if cut not in (spec.get('cuts') or {}) or not proof.required(spec, cut):
         return []
+    from velib import guards
     directory = verdict.ve_dir(Path(spec_file))
     found = gates.load(directory, spec, call)
     reasons = proof.problems(spec, cut, directory, found['gates'], props)
+    # The Thursday 5 Nov guards (docs/learning/2026-11-04-thursday-killed.md): the engine he signed for, two full
+    # renders per press, one type system.
+    reasons += guards.engine_problems(spec, cut, directory) + guards.loop_problems(spec, cut, directory, found['gates'])
+    reasons += guards.type_problems(spec, props)
     if reasons and found['source'] != 'record':
         reasons.append(f"the piece's making record was {found['source']}; only the spec's approvals were read")
     return reasons
@@ -1021,10 +1026,17 @@ def cmd_render(args) -> int:
         return 1
     refused = render_refusal(spec, args.spec, props)
     if refused:
-        print('ve render: refused, a whole cut renders only after Krish approves its moving proof (F04, F13):')
+        print('ve render: refused, a whole cut renders only after Krish approves its moving proof (F04, F13) and holds '
+              'to the Thursday guards (F33 to F36):')
         print('\n'.join(f'  - {reason}' for reason in refused))
         return 1
     render(args.props, args.out, args.scale)
+    from velib import guards
+    from velib.common import sha256_file
+    cut = props.get('cutId')
+    if cut in spec['cuts'] and not spec['cuts'][cut].get('excerpt') and Path(args.out).is_file():
+        rows = guards.record_render(verdict.ve_dir(Path(args.spec)), cut, Path(args.out), sha256_file(args.out))
+        print(f've render: full render {len(rows)} of {cut} recorded (two per press from Krish, then he sees it)')
     return 0
 
 
@@ -1055,6 +1067,12 @@ def cmd_proof(args, render_fn=None) -> int:
             chosen.setdefault('style', {})['proof'] = {'beat': args.beat}
         directory = verdict.ve_dir(Path(args.spec))
         props = load_json(_props_for(args.spec, args.cut, args.props))
+        from velib import guards
+        held = guards.engine_problems(spec, args.cut, directory) + guards.type_problems(spec, props)
+        if held:
+            print('ve proof: refused (the Thursday guards, docs/learning/2026-11-04-thursday-killed.md):')
+            print('\n'.join(f'  - {reason}' for reason in held))
+            return 1
 
         def qc_fn(clip, props_path):
             from velib.qc import inputs_from_props, run_qc
@@ -1140,9 +1158,14 @@ def cmd_expect(args) -> int:
     if spec is None:
         print('\n'.join(problems[:20]) or 'the spec does not pass its schema')
         return 1
-    path = expect.write(spec, verdict.ve_dir(Path(args.spec)))
+    from velib import guards
+    directory = verdict.ve_dir(Path(args.spec))
+    path = expect.write(spec, directory)
     print(path.read_text(encoding='utf-8').rstrip())
     print(f've expect: {path}')
+    # The storyboard sheet freezes the engine: ve proof and ve render refuse a whole cut drawn on a different one.
+    lock = guards.freeze(directory)
+    print(f"ve expect: engine {lock['sha256'][:12]} recorded ({len(lock['files'])} files); a change needs Krish's yes")
     return 0
 
 

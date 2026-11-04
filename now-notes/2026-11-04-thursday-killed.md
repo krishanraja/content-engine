@@ -1,0 +1,3 @@
+Status: the killed Thursday 5 Nov short is recorded (config/failures.json F31 to F39, recurrences on F04 and F30) and five of its lessons are guards in scripts/velib/guards.py, binding from 9 Nov: no named visual idea, a re-typed real artifact, an engine changed since the storyboard, a third full render per press and more than four type treatments are refused (tests/ve_thursday_guards_test.py). The off-day guard is built but dormant until Krish says yes; the rest are proposals in docs/learning/2026-11-04-thursday-killed.md.
+Next: Krish answers the six yes/no lines in docs/learning/2026-11-04-thursday-killed.md.
+North Star check (2026-11-04): holds.
