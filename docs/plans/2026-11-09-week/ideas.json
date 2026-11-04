@@ -281,9 +281,33 @@
      "against": 13
     },
     "needs": [
-     "Runs Tue 10 Nov (Krish, 3 Nov: run the Character.AI carousel). Growth makes it from your approval and direction, to the carousel standard; it lands on this card to check before it posts. Nothing is needed from you until then."
+     "Finished: five cards and the post description in 3 Posts › 2026-11-10 Tue off.day - Character.AI, who got what; Growth posts it on its day."
     ],
-    "decided": "Runs Tue 10 Nov (Krish, 3 Nov). Growth makes the carousel."
+    "decided": "Signed off for publishing next week (Krish, 4 Nov: \"I sign them off completely for publishing next week\"). Growth posts it.",
+    "slides": [
+     {
+      "url": "https://board.asset/characterai-card-1.png",
+      "label": "Cover"
+     },
+     {
+      "url": "https://board.asset/characterai-card-2.png",
+      "label": "Card 2"
+     },
+     {
+      "url": "https://board.asset/characterai-card-3.png",
+      "label": "Card 3"
+     },
+     {
+      "url": "https://board.asset/characterai-card-4.png",
+      "label": "Card 4"
+     },
+     {
+      "url": "https://board.asset/characterai-card-5.png",
+      "label": "Card 5"
+     }
+    ],
+    "drive": "https://drive.google.com/drive/folders/1tdv7U4a3ZMd_ina0bW7qJmBgpTRXCfdN",
+    "posts_folder": "2026-11-10 Tue off.day - Character.AI, who got what"
    },
    {
     "id": "mcpskin",
@@ -391,10 +415,33 @@
      "against": 13
     },
     "needs": [
-     "Runs Tue 10 Nov (Krish, 3 Nov: run the Home Depot one), slightly educational on why firms have one AI mark another's answers, with more businesses that do it. Growth makes it from your approval and direction, to the carousel standard; it lands on this card to check before it posts. Nothing is needed from you until then.",
-     "Optional, yours: drop the relatable memes you mentioned into Content Inspo; Growth uses them if they are there by Sunday 8 Nov."
+     "Finished: five cards and the post description in 3 Posts › 2026-11-10 Tue off.day - AI marking its own homework; Growth posts it on its day."
     ],
-    "decided": "Runs Tue 10 Nov (Krish, 3 Nov). Growth makes the meme."
+    "decided": "Signed off for publishing next week (Krish, 4 Nov: \"I sign them off completely for publishing next week\"). Growth posts it.",
+    "slides": [
+     {
+      "url": "https://board.asset/homework-card-1.png",
+      "label": "Cover"
+     },
+     {
+      "url": "https://board.asset/homework-card-2.png",
+      "label": "Card 2"
+     },
+     {
+      "url": "https://board.asset/homework-card-3.png",
+      "label": "Card 3"
+     },
+     {
+      "url": "https://board.asset/homework-card-4.png",
+      "label": "Card 4"
+     },
+     {
+      "url": "https://board.asset/homework-card-5.png",
+      "label": "Card 5"
+     }
+    ],
+    "drive": "https://drive.google.com/drive/folders/19scEHJzdSkA0I1cLHiw0_U6Hl6NhzroZ",
+    "posts_folder": "2026-11-10 Tue off.day - AI marking its own homework"
    },
    {
     "id": "quoteline",
@@ -506,9 +553,33 @@
      "against": 13
     },
     "needs": [
-     "Runs Thu 12 Nov, widened to the other Git replacements and why they are appearing (Krish, 3 Nov). Growth makes it from your approval and direction, to the carousel standard; it lands on this card to check before it posts. Nothing is needed from you until then."
+     "Finished: five cards and the post description in 3 Posts › 2026-11-12 Thu off.day - AI broke Git; Growth posts it on its day."
     ],
-    "decided": "Runs Thu 12 Nov, widened to the other Git replacements (Krish, 3 Nov). Growth makes the carousel."
+    "decided": "Signed off for publishing next week (Krish, 4 Nov: \"I sign them off completely for publishing next week\"). Growth posts it.",
+    "slides": [
+     {
+      "url": "https://board.asset/git-card-1.png",
+      "label": "Cover"
+     },
+     {
+      "url": "https://board.asset/git-card-2.png",
+      "label": "Card 2"
+     },
+     {
+      "url": "https://board.asset/git-card-3.png",
+      "label": "Card 3"
+     },
+     {
+      "url": "https://board.asset/git-card-4.png",
+      "label": "Card 4"
+     },
+     {
+      "url": "https://board.asset/git-card-5.png",
+      "label": "Card 5"
+     }
+    ],
+    "drive": "https://drive.google.com/drive/folders/1h04Vm_T4lw-91u-lWvDocCAk_pwS5jyO",
+    "posts_folder": "2026-11-12 Thu off.day - AI broke Git"
    },
    {
     "id": "phonehome",
