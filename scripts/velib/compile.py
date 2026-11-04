@@ -360,15 +360,20 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         take = resolve_source(edl['conformed']['picture'])
     else:
         take = resolve_source(assets[cut['take']]['path'] if cut['take'] in assets else cut['take'])
+    # An off day (published on a day that is not its series' day) has its own look: the house mint, never the series
+    # colour or its promise (Krish, 2026-11-04: "Yes, give off days their own music and look - Rotate.").
+    off = _series_day(identity['day'], spec.get('publish_day')) != identity['day']
     props = {
         'pieceId': spec['piece_id'], 'cutId': cut_id, 'format': spec['format'], 'aspect': cut['aspect'],
         'fps': FPS, 'durationFrames': duration,
         'tokens': {'ink': tokens['ink'], 'inkDeep': tokens['ink_deep'], 'inkSoft': tokens['ink_soft'],
-                   'cream': tokens['cream'], 'mint': tokens['mint'], 'channel': publication['channel_colors'][channel]},
+                   'cream': tokens['cream'], 'mint': tokens['mint'],
+                   'channel': tokens['mint'] if off else publication['channel_colors'][channel]},
         # An off-day piece wears the house dress of a series but never another day's name (Krish, 2026-11-03, of
         # Thursday's under.the.hood tag: "The branding is wrong").
         'series': {'label': spec['brand']['series'] if _series_day(identity['day'], spec.get('publish_day')) == identity['day']
-                   else 'off.day', 'day': _series_day(identity['day'], spec.get('publish_day')), 'promise': identity['promise'], 'site': house['copy']['site']},
+                   else 'off.day', 'day': _series_day(identity['day'], spec.get('publish_day')),
+                   'promise': house['copy']['site'] if off else identity['promise'], 'site': house['copy']['site']},
         'brand': {key: {'src': resolve_source(publication[key]['source_path']), 'pixelWidth': publication[key]['pixel_width'],
                         'pixelHeight': publication[key]['pixel_height']} for key in ('mark', 'logo', 'stacked')},
         'segments': [] if spec['audio']['master'] == 'vo' else [
