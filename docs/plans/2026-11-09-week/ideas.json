@@ -279,7 +279,11 @@
       "It is three cards showing who got what when the chatbot company Character.AI went bust, with Google, Disney and the users."
      ],
      "against": 13
-    }
+    },
+    "needs": [
+     "Runs Tue 10 Nov (Krish, 3 Nov: run the Character.AI carousel). Growth makes it from your approval and direction, to the carousel standard; it lands on this card to check before it posts. Nothing is needed from you until then."
+    ],
+    "decided": "Runs Tue 10 Nov (Krish, 3 Nov). Growth makes the carousel."
    },
    {
     "id": "mcpskin",
@@ -343,9 +347,7 @@
      "against": 13,
      "versus": "Ours adds a sourced fact (150,000 to 2,000 tokens, from Anthropic's engineering post) and a plain picture (the phone book), which the cut-off original does not show; a reskin with a new angle rather than a copy. (Fresh reader C, Sonnet, saw both)"
     },
-    "needs": [
-     "One of two fresh readers said it is close to the 19 Oct piece (cutting what an AI reads cuts its cost). It is kept because you asked for this reskin on 2 Nov; your call."
-    ]
+    "closed": "Moved to next week (Krish, 3 Nov: cue it up for next week), built from the best existing visual explanation for a non-technical viewer."
    },
    {
     "id": "homework",
@@ -387,7 +389,12 @@
       "It is two panels showing that Home Depot has one company's AI write answers and another company's AI check them, like swapping homework."
      ],
      "against": 13
-    }
+    },
+    "needs": [
+     "Runs Tue 10 Nov (Krish, 3 Nov: run the Home Depot one), slightly educational on why firms have one AI mark another's answers, with more businesses that do it. Growth makes it from your approval and direction, to the carousel standard; it lands on this card to check before it posts. Nothing is needed from you until then.",
+     "Optional, yours: drop the relatable memes you mentioned into Content Inspo; Growth uses them if they are there by Sunday 8 Nov."
+    ],
+    "decided": "Runs Tue 10 Nov (Krish, 3 Nov). Growth makes the meme."
    },
    {
     "id": "quoteline",
@@ -434,7 +441,8 @@
       "It is four cards teaching a trick where you ask the AI to quote the exact line it used, then check that line yourself."
      ],
      "against": 13
-    }
+    },
+    "closed": "Rejected (Krish, 3 Nov): boring, no clear takeaway."
    }
   ],
   "thu": [
@@ -496,7 +504,11 @@
       "It is five cards about Anthropic's AI making so many code changes that Git broke, so seven people built a new tool."
      ],
      "against": 13
-    }
+    },
+    "needs": [
+     "Runs Thu 12 Nov, widened to the other Git replacements and why they are appearing (Krish, 3 Nov). Growth makes it from your approval and direction, to the carousel standard; it lands on this card to check before it posts. Nothing is needed from you until then."
+    ],
+    "decided": "Runs Thu 12 Nov, widened to the other Git replacements (Krish, 3 Nov). Growth makes the carousel."
    },
    {
     "id": "phonehome",
@@ -539,7 +551,8 @@
       "It is two panels showing an AI getting blocked by a website, then asking its maker's servers to fetch the page for it."
      ],
      "against": 13
-    }
+    },
+    "closed": "Rejected (Krish, 3 Nov): no clear point."
    },
    {
     "id": "burntokens",
@@ -586,7 +599,8 @@
       "It is a joke in two panels where staff waste AI on silly stuff to hit a usage target, and Amazon says stop treating that as a goal."
      ],
      "against": 13
-    }
+    },
+    "closed": "Moved to next week (Krish, 3 Nov); it follows Friday's rat-tails piece."
    },
    {
     "id": "otherside",
@@ -634,7 +648,8 @@
       "It is four cards teaching you to ask your AI for the strongest case against its own advice before you decide."
      ],
      "against": 13
-    }
+    },
+    "closed": "Not chosen: Thursday runs the Git carousel."
    }
   ],
   "sat": [
@@ -690,9 +705,6 @@
      "saved": "Saved 28 Oct"
     },
     "adds": "Real, dated news from this week with each story's own picture or clip, where the saved post is a one-off with no sources.",
-    "needs": [
-     "the four stories are found by the Sunday run on 8 Nov: dated in the 7 days to that Sunday, each checked against its primary source, each with its own photo or clip"
-    ],
     "weekly": "good_news",
     "stories_due": "2026-11-08",
     "read_back": {
@@ -706,7 +718,11 @@
      ],
      "against": 13,
      "versus": "Ours turns the saver's unsourced wish for a positive week of AI into dated, sourced real stories with photos, the sourced substance the original lacks. (Fresh reader C, Sonnet, saw both)"
-    }
+    },
+    "needs": [
+     "Decided at the weekend from fresh news (Krish, 4 Nov). The Sunday ideas run on Sat 7 Nov finds the week's four good-news stories (each dated, checked against its primary source, with its own photo or clip) and puts them here; you pick on Sun 8 Nov, then Growth makes it."
+    ],
+    "decided": "Chosen at the weekend from fresh news (Krish, 4 Nov): the run on Sat 7 Nov brings the week's good news, and you pick on Sun 8 Nov."
    },
    {
     "id": "spotai",
@@ -759,9 +775,6 @@
      "f6327ce0-a414-4365-98df-635c1780523c"
     ],
     "adds": "A quiz with an answer from the charts, where your two saved videos only play the songs.",
-    "needs": [
-     "runs only if Wednesday is the AI-in-music piece; the two decoy songs are picked and checked before it is made"
-    ],
     "ties_to": "Wed: under.the.hood, if you pick the AI-in-music piece",
     "read_back": {
      "readers": [
@@ -774,7 +787,11 @@
      ],
      "against": 13,
      "versus": "Ours turns the saved videos' vague claim into a quiz with one sourced fact (Movin' To The Sun, Suno demo, UK number 2) and a guessing hook. (Fresh reader C, Sonnet, saw both)"
-    }
+    },
+    "needs": [
+     "A candidate for the weekend decision (Wednesday is the AI-in-music piece, so it can run). The two decoy songs are picked and checked only if you choose it."
+    ],
+    "decided": "Chosen at the weekend from fresh news (Krish, 4 Nov): the run on Sat 7 Nov brings the week's good news, and you pick on Sun 8 Nov."
    },
    {
     "id": "infosys",
@@ -825,7 +842,8 @@
       "It is four cards explaining that Infosys expects less growth because clients want cheaper prices now that AI does the work."
      ],
      "against": 13
-    }
+    },
+    "closed": "Moved to next week (Krish, 3 Nov), and queued as a future trend: who is clipping the margin."
    },
    {
     "id": "oldproof",
@@ -877,7 +895,11 @@
       "It is four cards saying Axiom's AI rewrote 15,000 pages of maths so a computer could check them and spotted a mistake from 1986."
      ],
      "against": 13
-    }
+    },
+    "needs": [
+     "A candidate for the weekend decision beside the fresh good news (Krish, 4 Nov). If chosen: real stories only, with a funny generated cover (Krish, 3 Nov)."
+    ],
+    "decided": "Chosen at the weekend from fresh news (Krish, 4 Nov): the run on Sat 7 Nov brings the week's good news, and you pick on Sun 8 Nov."
    }
   ]
  },
