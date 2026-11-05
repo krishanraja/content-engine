@@ -1,16 +1,47 @@
 {
-  "schema_version": 1,
-  "status": "retired",
-  "seconds": 1.5,
-  "compositions": {
-    "9x16": "MakeyourmindupStingTall",
-    "16x9": "MakeyourmindupStingWide"
-  },
+  "schema_version": 2,
+  "status": "candidate",
+  "about": "The makeyourmindup intro sting: 56 frames at 30 fps in front of every 16:9 long cut of a weekly series piece, and nowhere else (Krish, 2026-11-05). The 9:16 short cut opens straight on the hook (house rule HOOK_IS_THE_INTRO). The sting is the clips Krish saw on the Intro Sting page, byte for byte: its Remotion source was never committed and is lost, so the clips are the design. They live in the library at clips.<shape>.<series>.library, and every machine that renders gets them with python scripts/quick-edit/intro.py fetch, checked by size and sha256. Off-day pieces wear no sting.",
+  "frames": 56,
+  "fps": 30,
+  "seconds": 1.8667,
+  "shapes": ["16x9"],
   "series": [
     "follow_the_money",
     "mind_the_gap",
     "under_the_hood"
   ],
+  "clips": {
+    "16x9": {
+      "follow_the_money": {"library": "1 Brand kit (permanent)/Intro sting/makeyourmindup-sting-16x9-follow_the_money.mp4", "sha256": "9f18f57b4e7b95ebbe6e5f6817605b2897f95a388759db779132ad03d61e6498", "bytes": 737616},
+      "mind_the_gap": {"library": "1 Brand kit (permanent)/Intro sting/makeyourmindup-sting-16x9-mind_the_gap.mp4", "sha256": "1bb135faba51c47c38f2d5e7c5a51a86712053f7fb86791e769424894525dc84", "bytes": 735967},
+      "under_the_hood": {"library": "1 Brand kit (permanent)/Intro sting/makeyourmindup-sting-16x9-under_the_hood.mp4", "sha256": "0b0a5b9df80a7f904b07223b47bc9b81270eae5de12500008d526e56f9a93476", "bytes": 722621}
+    },
+    "9x16": {
+      "follow_the_money": {"library": "1 Brand kit (permanent)/Intro sting/makeyourmindup-sting-9x16-follow_the_money.mp4", "sha256": "09da1e77bcd128b1bf53e022ace6056588448bde9bc6711716b8ce01ede57ed8", "bytes": 479967},
+      "mind_the_gap": {"library": "1 Brand kit (permanent)/Intro sting/makeyourmindup-sting-9x16-mind_the_gap.mp4", "sha256": "72e31337406d500d5f59801c6e34de43373c0b488b3fca50aae98d2cadc7d04a", "bytes": 468851},
+      "under_the_hood": {"library": "1 Brand kit (permanent)/Intro sting/makeyourmindup-sting-9x16-under_the_hood.mp4", "sha256": "1613a721fb1f5986815ad9fb62a289da5c9a37ca0976b3f8b96d4378e4f40c99", "bytes": 460230}
+    }
+  },
+  "seen": {
+    "page": "https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH",
+    "version": "1791810665-c08a",
+    "label": "Second direction",
+    "published_on": "2026-10-12",
+    "how": "Each clip was taken byte for byte from the page Krish looked at; its sha256 here is the clip he saw. The 9:16 clips are kept for the record and used nowhere: shapes says where the sting goes."
+  },
+  "placement": {
+    "on": "2026-11-05",
+    "by": "Krish",
+    "words": "I think it should go at the start of the longer wide videos 100%,",
+    "means": "The 16:9 long cut opens on the sting, then the hook, with his face on the very next frame after the sting's last; the 9:16 short cut opens straight on the hook."
+  },
+  "colours": {
+    "on": "2026-11-05",
+    "by": "Krish",
+    "picked": "Keep it as I saw it",
+    "means": "Asked whether each series' sting may flash the other series' colours on its way to its own colour and the wordmark, he picked the option to keep it as he saw it. This is the one written exception to the series-colour rule (scripts/pages/brand.py series_look): the brand intro on a weekly series piece's wide cut."
+  },
   "approved_by": null,
   "approved_on": null,
   "approval_words": null,
@@ -19,15 +50,25 @@
     "on": "2026-10-12",
     "by": "Krish",
     "decision": "rejected",
-    "design": "the first sting design shown to him",
+    "design": "the first direction shown to him (45 frames: a block mark building, words dropping in, a mint slash, the masthead held on ink), not the clips above",
     "words": "it's ok, it's a bit boring and colourless and vanilla - and just what Powerpoint would do in 2008"
   },
-  "retired": {
-    "on": "2026-10-29",
-    "by": "Krish",
-    "rule": "HOOK_IS_THE_INTRO",
-    "words": "I'd pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let's go with number one for now.",
-    "picked": "The hook is the intro",
-    "means": "No cut opens on a sting: the first frame is the hook in the brand's dress (house rule HOOK_IS_THE_INTRO). No sting design was ever approved; last_decision keeps his last word on the one shown to him. His choice is a default under test, revisited on real engagement."
-  }
+  "history": [
+    {
+      "on": "2026-10-12",
+      "by": "Krish",
+      "decision": "rejected",
+      "design": "the first direction",
+      "words": "it's ok, it's a bit boring and colourless and vanilla - and just what Powerpoint would do in 2008"
+    },
+    {
+      "on": "2026-10-29",
+      "by": "Krish",
+      "decision": "retired",
+      "rule": "HOOK_IS_THE_INTRO",
+      "words": "I'd pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let's go with number one for now.",
+      "picked": "The hook is the intro",
+      "means": "No cut opened on a sting from 29 October to 5 November."
+    }
+  ]
 }
