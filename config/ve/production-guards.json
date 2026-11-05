@@ -40,7 +40,8 @@
       "scripts/velib/gaps.py",
       "scripts/cutgates/gaps.py",
       "scripts/velib/forced_align.py",
-      "scripts/quick-edit/spelling.py"
+      "scripts/quick-edit/spelling.py",
+      "scripts/velib/eyeline.py"
     ],
     "skip_suffixes": [
       ".test.ts",
