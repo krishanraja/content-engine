@@ -38,13 +38,15 @@ class FakeRunPod:
         if url.endswith('/status'):
             self.status_reads += 1
             if self.status_reads == 1:
-                return {'state': 'waiting'}
+                return b'<html>the proxy, while the pod boots</html>'
+            if self.status_reads == 2:
+                return {'state': 'waiting', 'server': 'eyeline'}
             if self.job == 'done':
-                return {'state': 'done', 'size': len(COPY), 'sha256': hashlib.sha256(COPY + (b'x' if self.damaged else b'')).hexdigest()}
+                return {'state': 'done', 'server': 'eyeline', 'size': len(COPY), 'sha256': hashlib.sha256(COPY + (b'x' if self.damaged else b'')).hexdigest()}
             if self.job == 'failed':
-                return {'state': 'failed', 'code': 3, 'log': 'no GazeRedirect sample binary'}
-            return {'state': 'running'}
-        if url.endswith('/out.mp4'):
+                return {'state': 'failed', 'server': 'eyeline', 'code': 3, 'log': 'no GazeRedirect sample binary'}
+            return {'state': 'running', 'server': 'eyeline'}
+        if '/out.mp4' in url:
             return COPY
         raise AssertionError(url)
 
