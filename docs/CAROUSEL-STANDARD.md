@@ -1,6 +1,6 @@
 # Carousel quality standard
 
-Owner: content-engine. Taste authority: Krish Raja. Updated 4 November 2026.
+Owner: content-engine. Taste authority: Krish Raja. Updated 5 November 2026.
 
 Who makes carousels (Ruling, Krish, 28 October 2026: "take over posting as
 well as creating new assets like carousels"): Growth-MakeYourMindUp now makes
@@ -175,42 +175,67 @@ completely for publishing next week" and "make sure all future carousels never n
   glance (a toy chatbot alone on an auction podium for a bankrupt AI app; a robot giving its own exam an A+; a filing
   cabinet buried under printed code). A headline on a plain ground, a logo row or a chart is never the cover.
 - The picture fills the card. Its top half holds the scene and its lower half stays dark and quiet, so the headline,
-  the one-line dek and the series pill sit over it with no box. A gradient from clear to the house ink carries the
-  type; nothing is cropped across a face or the scene's subject.
+  the one-line dek (and the series pill, only on a carousel that carries a series piece) sit over it with no box. A
+  gradient from clear to the house ink carries the type; nothing is cropped across a face or the scene's subject.
 - Generate the scene as a still (no words, letters or logos in the picture; a single prop word such as "A+" is fine)
-  in the house tones: ink shadows with the day's colour as the light (below). A real photo is used instead only when its
-  rights are clear. Record the generation's job id, model and prompt beside the deck.
+  in the house tones: ink shadows and house light. Only a carousel that carries a series piece takes that piece's
+  colour as the light (below). A real photo is used instead only when its rights are clear. Record the generation's
+  job id, model and prompt beside the deck.
 - Cards 2 onwards stay the house look: ink ground, Anton headlines, Archivo body, Plex Mono labels, real logos from
   Brandfetch, the house mark small in the bottom corner. A logo that is dark on the dark ground is shown in white
   (monochrome) or on a light tile; never invisible.
 - Before showing him a deck, look at card 1 at phone size beside the last approved covers (the week of 9 November's
   three, in `docs/plans/2026-11-09-week/offday-carousels.md`). If it would not stop a thumb, it is not ready.
 
-## Each day wears its own colour, Monday to Saturday (Ruling, Krish, 4 November 2026)
+## Series colours belong to the weekly piece, never to the day (Ruling, Krish, 4 November 2026)
 
-His words: "lightly colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday? When they go
-on Facebook and Instagram they're slightly differently coloured based on the colour theme of each day. The off days are
-neutral colours or the colours we have planned, but not under the Monday, Wednesday, or Friday panels or colours. Just
-subtle brand recognition would be nice as a hard rule across Monday to Saturday assets."
+His words: "Post random memes on a Monday but that doesn't mean it's Monday's colour and brand. Then follow the money.
+There is only one "follow the money" piece, one "mind the gap" piece, and one "mind the gap" piece every week. Other
+stuff can be fluid, maybe changeable." and "I should be allowed to post random stuff on any day but it doesn't take on
+the brand colours of Follow the Money, Mind the Gap, or Under the Hood. Which are only once a week, omni-channel, and a
+completely different distribution format". This replaces his first ask the same day ("lightly colour-code the
+thumbnail and cover asset templates for Monday, Wednesday, and Friday"), which had keyed the colour to the day.
 
-The publishing day decides the colour of every asset, carousels and covers included. The colours are the subchannels'
-own (`config/studio.json`):
-
-| Day | Colour |
+| What | Look |
 |---|---|
-| Monday | follow.the.money's yellow, `#FFD84D` (the kit's butter) |
-| Wednesday | under.the.hood's lilac, `#B7A6FF` |
-| Friday | mind.the.gap's coral, `#FF6A4D` |
-| Tuesday, Thursday and Saturday | neutral: ink, cream, the house sage or green, or the house mint where a template needs a colour |
+| The week's one follow.the.money (Monday), under.the.hood (Wednesday) and mind.the.gap (Friday) piece: its article, both cuts, its thumbnails and covers | Its own subchannel's colour and name (`config/studio.json`: follow.the.money `#FFD84D`, under.the.hood `#B7A6FF`, mind.the.gap `#FF6A4D`), never another's. |
+| An asset made from that piece whose record says it `carries` the piece (Krish, 4 November 2026: "the character.ai carousel is going to be under Monday's "Follow the Money" banner") | The piece's colour and name, on whatever day it goes out. |
+| Everything else, on any day: memes, off-day carousels and shorts, Notes, random posts, and Growth's derived posts that do not carry the piece | No subchannel colour (no yellow `#FFD84D`, lilac `#B7A6FF` or coral `#FF6A4D`) and no subchannel name or pill, anywhere. Otherwise fluid: its own style, the house tones and mint allowed. |
 
-- On a series day the ground is a pale wash of the day's colour, and the colour itself goes where the house look
-  puts colour: the highlighted words, the pill, the tag and the light in a cover scene. It stays light; it never
-  floods the card.
-- An off-day asset is neutral. It carries no subchannel colour (no yellow, lilac or coral) and no subchannel name
-  or pill anywhere, even when its story came from a series piece.
-- A series day carries its own colour and name only, never another day's.
-- Content-engine's covers and thumbnails follow this in code (`scripts/pages/brand.py` `day_look`, `tests/day_colour_test.py`).
-  Growth's kit holds its templates to the same table.
+- The series pieces are skinned more heavily and artistically in their colour than anything else, and bring the fun
+  back while keeping the Receipt's classy layout. His words: "Monday, Wednesday, and Friday are supposed to be slightly
+  more heavily and artistically skinned than that in their colours. We've lost some sense of fun that we used to have
+  in our branding. I like the new classy look but I miss the fun." The skin is his pick (two concepts sent 4 November
+  2026; until he picks, a series cover wears its colour on the highlighted words and the pill on the house sage).
+- The fun is colour and light, never jokey copy: no stickers, badges or slogans on a cover. His words of the first
+  concepts: "Stuff can't just randomly overlap on titles like that and I think these "screwdriver included" and
+  "bring a calculator included" badges are really obnoxious."
+- Nothing sits on the words. No decoration may touch a headline, the tag, the pill, the wordmark or the logos.
+- Content-engine's covers and thumbnails follow this in code: `scripts/pages/brand.py` `series_look`, the Receipt's fit
+  (`receipt.py`, refusing any `.deco` that touches the words), `tests/series_colour_test.py` and
+  `tests/receipt_overlap_test.py`. Growth holds its kit to the same rule (its R125).
+
+## The Tuesday meme (Ruling, Krish, 4 November 2026)
+
+His words: "the Saturday carousel and the Tuesday meme are likely to follow their own random visual style ... The
+Tuesday meme is likely to be more random but needs to be lightly subtly skinned in the bottom right corner."
+
+- The meme's look is free. It wears no subchannel colour or name (above).
+- The house mark sits small and subtle in the bottom-right corner, inside the platform's safe margin, taken only from
+  the house brand files (`publication.mark` in `config/studio.json`), never set as type or redrawn. Nothing else
+  brands it: no masthead, no series label, no URL footer.
+
+## The Saturday carousel (Ruling, Krish, 4 November 2026)
+
+His words: "Saturday's carousel should have the standards of the first one that's coming up this Saturday." The first
+is the good-news carousel for Saturday 7 November 2026 (`docs/plans/2026-11-02-week/sat-revised.md`; Growth's kit
+`render/pieces/off-sat-goodnews/`).
+
+- Its style is its own: a photo-led cover, one card per story, a closing card.
+- It carries exactly five stories about real people who benefited from AI, each checked against its primary source
+  and dated, each with its own real photo or clip (the good-news rules above and `week_board.py` `STORY_COUNT`).
+- The house mark sits small and subtle in a bottom corner of every card (the brand-mark rule above).
+- It wears no subchannel colour or name.
 
 ## Seeing a finished carousel (Ruling, Krish, 3 November 2026)
 

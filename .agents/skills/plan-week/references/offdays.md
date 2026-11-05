@@ -205,7 +205,7 @@ He approves the format on the board; the stories are found by the Sunday run.
    `week_board.py --week <Monday> --live --ideas docs/plans/<Monday>-week/ideas.json --previous live.html --keep <each
    made day> --target web`, then `--verify`. Publish with `board_web.py publish-web PAGE --assets MAP
    --expected-build <the live build id> --apply`, mapping each kept download to the live manifest's asset by
-   `existing_sha256` (`docs/PUBLISH_BOARDS.md`). Read the live page back: the good-news card shows four stories.
+   `existing_sha256` (`docs/PUBLISH_BOARDS.md`). Read the live page back: the good-news card shows five stories.
 
 Growth makes the carousel from the stories as shown, and its mock comes back for his final yes as with any off day.
 

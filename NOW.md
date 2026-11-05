@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-04
+as_of: 2026-11-05
 head: 45161a5
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -37,7 +37,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - **Video: ve is the engine on main, quick-edit the fallback until ve passes Phase 3** (`docs/ve/STATUS.md`). From 9 Nov every ve piece runs one production round on the board (Sign storyboard with `ve expect`, Pick a style, Approve proof, Approve cut), and five guards from the killed Thursday 5 Nov cut bind (F31 to F39). Built and tested with the renderer mocked; no ve piece has yet run the round end to end on a real take.
 - **The look is in the lab, waiting on his eye.** The renderer draws ten motion styles (`apps/renderer/src/engine/kit/motion-profiles.json`), the five look-alikes now have their own looks, and `ve lab` rendered every style and caption look on his Thursday take (reel sent 4 Nov; `docs/ve/lab/2026-11-04.json`). It shows the word caption across the SPLIT seam. Monday's Ladder is the data-story recipe; its `through_line` device waits until Friday 13 Nov is filed (F33, F39).
 - **Craft measured on his real takes:** 24 fps teleprompter takes laid evenly (0 dropped frames against 1), `ve said` reads what he said on the take, sniffs turned down, the Critic sees motion strips. `picture.as_shot` (his room as shot) and `ve faces` (off-lens moments) are advisory and uncalibrated (F14).
-- **Covers and thumbnails** are the Receipt (2 Nov: a real proof picture, no face) and wear the publishing day's colour: a pale wash of yellow, lilac or coral with the full colour on the highlight, pill and tag on Monday, Wednesday and Friday; neutral sage, cream and ink with no series colour or name on Tuesday, Thursday and Saturday (`scripts/pages/brand.py`, `tests/day_colour_test.py`; `docs/CAROUSEL-STANDARD.md` holds Growth to the same rule). The second version, after Krish rejected the first; it waits on his yes.
+- **Covers and thumbnails** are the Receipt (2 Nov: a real proof picture, no face). Only the subchannel's one weekly piece, or an asset that `carries` it, wears its colour and name; everything else, any day, wears none (`scripts/pages/brand.py` `series_look`, `tests/series_colour_test.py`; `docs/CAROUSEL-STANDARD.md` holds Growth to the same rule). Nothing may sit on the words (`tests/receipt_overlap_test.py`). The heavier series skin waits on his pick of two concepts sent 4 Nov; nothing of it merges before.
 - **One music bed shape** in both engines (`config/music-bed.json`), nothing keyed to his voice, and no cut reaches 3 Posts without its bed receipt (F40).
 - **The failure loop is built:** every failure lands in `engine_incidents` with what the session read first, and `engine-learning-weekly.yml` finds repeats each Sunday from 8 Nov and puts at most three proposals on his list.
 - **Docs were checked against the code on 4 Nov**, every living document in this repository, growth-makeyourmindup and content-watcher. The docs steward has not run since 31 Oct (it refuses a run the auto-merge bot starts), so `auto-merge.yml` now folds closeout notes itself after each merge.
@@ -45,7 +45,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-04 Krish asked for "subtle brand recognition ... as a hard rule across Monday to Saturday assets": covers and thumbnails take their colour from the publishing day. Before, a Thursday off-day post wore its series colour and every cover carried mind.the.gap's coral on its tag and ring. His verdict on the first version (sage tinted toward each colour, mint and series pills on off days): "everything's wrong in here".
+- 2026-11-04 Series colours belong to the weekly piece, never the day (Krish: "Post random memes on a Monday but that doesn't mean it's Monday's colour and brand"). His verdicts: on the day-keyed first version, "everything's wrong in here"; on sticker concepts, "Stuff can't just randomly overlap on titles". The Saturday good news is five stories (`week_board.py` `STORY_COUNT`), as the standard and the 7 Nov carousel have it.
 - 2026-11-04 Krish: "every single word inside the project documentation of all the repositories is 100% clear and up to date before you merge". The pass found NOW.md 39 closeout notes behind across the three repositories, because bot merges start no fold and the steward refuses them; auto-merge now folds, and the steward fix waits in ai-harness.
 - 2026-11-04 The style and caption lab, his room as shot, face flags and `ve study` (#395): experiments move outside any piece (Krish: "experiment carefully"), on his own footage.
 - 2026-11-04 ve took the craft quick-edit had and ve dropped (#394): his Monday 26 Oct take ran at 24.0019 fps with 9.2 ms jitter; the old filter dropped a frame and held 92 of 178 frames evenly, the new one none and 168.
@@ -62,7 +62,7 @@ Older lines are in `docs/history/LOG.md` (rolled verbatim on 4 Nov) and the `doc
 - Next (2026-11-04): the 9 Nov week (board 0e79df54): his Wednesday script press, Growth posts the off days, and Saturday's pick on Sunday 8 Nov.
 - Waiting on Krish (2026-11-04): his numbers and words on the lab reel (`ve lab verdict`); download yes for the six shortlisted sounds, then his pick by ear; his words on the voice A/B; rating the motion styles on his own footage.
 - Waiting on Krish (2026-11-04): a pull request in ai-harness so docs stay current by themselves: let the steward run when the merge bot starts it, fold on dispatch, add content-watcher to the fleet list, and give growth-makeyourmindup and content-watcher the fold workflow.
-- Decisions the docs pass found (2026-11-04): the short cut's house rule says 160 to 225 words, the code 195; Saturday good news is five stories in the standard, four in the code; the ve engine cap is 300 minutes, set by a session, not him; house rule NO_NAME keeps his face on covers, THE_RECEIPT has none; rule 20 says the floor changes only by a pull request he merges, which auto-merge now does without him.
+- Decisions the docs pass found (2026-11-04): the short cut's house rule says 160 to 225 words, the code 195; the ve engine cap is 300 minutes, set by a session, not him; house rule NO_NAME keeps his face on covers, THE_RECEIPT has none; rule 20 says the floor changes only by a pull request he merges, which auto-merge now does without him.
 - Found, not fixed (2026-11-04): the hand-run quick-edit filing route cannot pass the receipt gates (only `produce_day.py` stages receipts); `ve sprint start` calls `ve brief` with arguments it refuses; `make-piece.yml`'s allowlist lacks commands the skill runs; `config/ve/crew/critic.lens.md` says seven questions where the card has eight (it is hashed into every verdict, so it is unchanged).
 - Older open questions (2026-10-29): OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I"; Gate 2 on the 16:9 face-with-proof lock (9:16 froze on 3 Nov).
 - North Star check (2026-11-04): holds.
