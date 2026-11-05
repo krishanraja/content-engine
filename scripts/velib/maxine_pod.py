@@ -116,14 +116,25 @@ apt-get update -qq && apt-get install -y -qq wget unzip ffmpeg >/dev/null
 step ngc-cli
 wget -q -O ngc.zip https://api.ngc.nvidia.com/v2/resources/nvidia/ngc-apps/ngc_cli/versions/3.41.4/files/ngccli_linux.zip
 unzip -q ngc.zip && export PATH="$PWD/ngc-cli:$PATH"
-ngc config set <<< "$NGC_API_KEY
-json
-nvidia
-no-team
-no-ace
-" >/dev/null || true
+# No interactive config: it loops forever on "Enter org" (run 42083307224 sat there 20 min). Env only, stdin closed.
+export NGC_CLI_API_KEY="$NGC_API_KEY" NGC_CLI_FORMAT_TYPE=json NGC_CLI_TEAM=no-team NGC_CLI_ACE=no-ace
+step "ngc org"
+NGC_CLI_ORG=$(timeout 120 ngc org list --format_type json </dev/null 2>/dev/null | python3 -c '
+import json, sys
+try:
+    rows = json.load(sys.stdin)
+except Exception:
+    rows = []
+rows = rows if isinstance(rows, list) else [rows]
+flat = [r for x in rows for r in (x if isinstance(x, list) else [x]) if isinstance(r, dict)]
+print(next((str(r.get("name") or r.get("orgName") or r.get("id")) for r in flat if (r.get("name") or r.get("orgName") or r.get("id"))), ""))' || true)
+if [ -z "$NGC_CLI_ORG" ]; then
+  NGC_CLI_ORG=$(printf '\n' | timeout 30 ngc config set 2>&1 | grep -o "Choices: \['[0-9A-Za-z_-]*'" | head -1 | grep -o "'.*'" | tr -d "'" || true)
+fi
+echo "ngc org: ${NGC_CLI_ORG:-none found}"
+export NGC_CLI_ORG
 step "sdk download $AR_SDK"
-timeout 900 ngc registry resource download-version "$AR_SDK" --dest /workspace/sdk
+timeout 900 ngc registry resource download-version "$AR_SDK" --dest /workspace/sdk </dev/null
 du -sh /workspace/sdk; find /workspace/sdk -maxdepth 3 | head -40
 SDK=$(find /workspace/sdk -maxdepth 3 -type d -name "*AR*SDK*" | head -1)
 [ -n "$SDK" ] || SDK=/workspace/sdk
