@@ -145,6 +145,16 @@ volume throughput, runtime feedback import and audience results are not
 proved by this document. Private accepted assets and evidence remain in the
 existing review package until imported through the tracked Studio route.
 
+## No card is numbered (Ruling, Krish, 5 November 2026)
+
+His words: "If we can avoid having numbered cards in the top left corner in the future, that would be helpful as well,
+because then we can just slice out cards at will a lot more easily without it looking weird. That goes for all
+carousels."
+
+- No carousel card carries a card number, a count such as "01 / 05" or a page such as "2 of 4", anywhere on the card.
+  Any card can then be removed without the others looking wrong.
+- Numbered steps inside a card, such as a card's three click steps, are content, not card numbers, and stay.
+
 ## Saturday good-news carousel (Ruling, Krish, 2 November 2026)
 
 His words: "we need 5 stories", then "take the five stories" and "encode that 2nd request as a standard for the Saturday posts".
