@@ -21,6 +21,22 @@ on:
         description: 'Refuse a run that could cost more than this (US dollars)'
         required: true
         default: '1.00'
+      route:
+        description: 'nim (the Eye Contact NIM, which this NGC key can pull) or sdk (needs a Maxine SDK subscription)'
+        required: false
+        default: 'nim'
+      variants:
+        description: 'nim route: JSON {name: [client args]} of settings to try on one pod (empty = default)'
+        required: false
+        default: ''
+      clip_seconds:
+        description: 'Send only the first N seconds (0 = the whole take); the clip is kept in the artifact'
+        required: false
+        default: '10'
+      max_minutes:
+        description: 'Stop the pod after this many minutes'
+        required: false
+        default: '30'
       confirm:
         description: 'Type exactly: spend approved by Krish'
         required: true
@@ -48,18 +64,71 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: What can this NGC key reach (take=entitlement-check; free, no GPU)
+        if: ${{ inputs.take == 'entitlement-check' }}
+        env:
+          NGC_API_KEY: ${{ secrets.NGC_API_KEY }}
+        run: |
+          set +e
+          echo "$NGC_API_KEY" | docker login nvcr.io -u '$oauthtoken' --password-stdin >/dev/null 2>&1 && echo "nvcr.io login: ok" || echo "nvcr.io login: refused"
+          for image in nim/nvidia/maxine-eye-contact:latest nvidia/maxine/maxine-eye-contact:latest; do
+            if docker manifest inspect "nvcr.io/$image" >/dev/null 2>&1; then echo "pull allowed: $image"; else echo "pull refused: $image"; fi
+          done
+          docker logout nvcr.io >/dev/null 2>&1
       - name: Fetch the take from the recordings store
+        if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' }}
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           TAKE: ${{ inputs.take }}
         run: python scripts/post-pack/recording.py get "$TAKE" --out "$RUNNER_TEMP/take"
+      - name: Make the take what the NIM accepts (and cut a short clip for a fast trial)
+        if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' }}
+        env:
+          TAKE: ${{ inputs.take }}
+          CLIP: ${{ inputs.clip_seconds }}
+        run: |
+          # The NIM takes "Only H.264 8-bit videos with Constant Frame Rate" and refused the take as recorded (run
+          # 42120949518: audio is its first stream, video Baseline). Video first, H.264 High 8-bit 4:2:0, constant
+          # frame rate, index at the end (transactional: with the index first the NIM takes its streaming path and
+          # refused it, run 42122101025); the same file is kept in the artifact so ve eyeline works on the frames the NIM saw.
+          pip install -q imageio-ffmpeg
+          FF=$(python -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())")
+          RATE=$(python - "$RUNNER_TEMP/take/$TAKE" <<'PY'
+          import json, subprocess, sys, imageio_ffmpeg
+          out = subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), '-i', sys.argv[1]], capture_output=True, text=True).stderr
+          import re
+          m = re.search(r'Video:.*?(\d+(?:\.\d+)?) fps', out)
+          print(m.group(1) if m else '30')
+          PY
+          )
+          LIMIT=""
+          if [ "${CLIP:-0}" != "0" ]; then LIMIT="-t $CLIP"; fi
+          mkdir -p "$RUNNER_TEMP/maxine"
+          "$FF" -v error -y -i "$RUNNER_TEMP/take/$TAKE" $LIMIT -map 0:v:0 -map 0:a? -c:v libx264 -preset veryfast -crf 12 \
+            -profile:v high -pix_fmt yuv420p -r "$RATE" -fps_mode cfr -c:a aac -b:a 192k \
+            "$RUNNER_TEMP/maxine/clip.$TAKE"
+          cp "$RUNNER_TEMP/maxine/clip.$TAKE" "$RUNNER_TEMP/take/$TAKE"
+          # Inputs a variant can name with --input, for diagnosing what the NIM accepts: a 10 s cut and NVIDIA's sample.
+          "$FF" -v error -y -i "$RUNNER_TEMP/take/$TAKE" -t 10 -c copy "$RUNNER_TEMP/take/c10.mp4" || true
+          curl -sSL -o "$RUNNER_TEMP/take/nv.mp4" https://media.githubusercontent.com/media/NVIDIA-Maxine/nim-clients/main/eye-contact/assets/sample_transactional.mp4 || true
+          ls -la "$RUNNER_TEMP/take/$TAKE"
+      - name: NVIDIA's Eye Contact client (nim route)
+        if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' && inputs.route != 'sdk' }}
+        run: |
+          git clone -q --depth 1 --filter=blob:none --sparse https://github.com/NVIDIA-Maxine/nim-clients.git "$RUNNER_TEMP/nim-clients"
+          git -C "$RUNNER_TEMP/nim-clients" sparse-checkout set eye-contact utils
+          pip install -q -r "$RUNNER_TEMP/nim-clients/eye-contact/requirements.txt"
       - name: Run Maxine on one rented pod
+        if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' }}
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           NGC_API_KEY: ${{ secrets.NGC_API_KEY }}
           TAKE: ${{ inputs.take }}
           MAX_USD: ${{ inputs.max_usd }}
-        run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD"
+          MAX_MINUTES: ${{ inputs.max_minutes }}
+          NIM: ${{ inputs.route != 'sdk' && 'yes' || '' }}
+          VARIANTS: ${{ inputs.variants }}
+        run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD" --max-minutes "${MAX_MINUTES:-30}" ${NIM:+--nim-client "$RUNNER_TEMP/nim-clients/eye-contact"} ${VARIANTS:+--variants "$VARIANTS"}
       - name: Keep the redirected copy and the receipt (3 days)
         if: always()
         uses: actions/upload-artifact@v4
@@ -68,3 +137,8 @@ jobs:
           path: ${{ runner.temp }}/maxine/
           retention-days: 3
           if-no-files-found: warn
+      - name: Terminate any eyeline pod still running (also on cancel; take=cleanup runs only this)
+        if: always()
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+        run: python scripts/velib/maxine_pod.py cleanup -
