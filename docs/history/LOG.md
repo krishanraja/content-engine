@@ -5,6 +5,11 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-05
+
+- folded the twelve closeout notes of 2026-11-04 in `now-notes/` (failure-loop, light-stage, one-music-bed, one-production-round-engine, renderer-styles, strong-styles, thursday-killed, thursday-orbit-split, thursday-stage-look, thursday-ve-recut, ve-quality-wave1, ve-quality-wave2) with `node .claude/hooks/harness-closeout.mjs --fold`, which removed them. The fold left NOW.md at 20,958 bytes with 21 "Where it is right now" bullets, against the repository's 14,000-byte cap (`scripts/check_workbench.py`) and the audit's 8. The folded file is kept whole in `docs/history/2026-11-05-NOW-closeout-fold.md`.
+- reconciled at `8ddf532`: NOW.md takes the 133 non-steward commits since `ec8d63b`. "Where it is right now" is cut to 8 bullets: ve's one production round and the Thursday guards, the motion style bank, the style and caption lab with the craft ported from quick-edit, the one music bed shape, the failure loop, and the three standing bullets kept as they were (no public name, the Heartside library, the known red check). Four dated "What changed recently" bullets added from the notes' own numbers and Krish's words. Rolled from NOW.md, all in the fold file: the notes' detail bullets, the 3 November captions bullet (now one clause), and the waiting line "Done (2026-11-04): the five look-alike styles" (now a "What changed recently" bullet). The Next line is the one the fold wrote from the last session's note. The North Star check line is carried forward unchanged. No other document was checked against the code in this run.
+
 ## 2026-11-04
 
 - reconciled at `ec8d63b`: `docs/history/2026-10-31-NOW-moved-4.md` arrived without the Historical banner the schema requires; the banner was added and the body left verbatim. `NOW.md` re-stamped (head `ec8d63b`, as_of 2026-11-04) after the sessions of 1 to 3 November closed out their own work there; a doubled date on its one "What changed recently" bullet was removed. The NOW.md audit passed and no closeout notes were waiting.
