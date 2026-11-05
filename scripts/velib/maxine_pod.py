@@ -120,21 +120,13 @@ unzip -q ngc.zip && export PATH="$PWD/ngc-cli:$PATH"
 # No interactive config: it loops forever on "Enter org" (run 42083307224 sat there 20 min). Env only, stdin closed.
 export NGC_CLI_API_KEY="$NGC_API_KEY" NGC_CLI_FORMAT_TYPE=json NGC_CLI_TEAM=no-team NGC_CLI_ACE=no-ace
 step "ngc org"
-NGC_CLI_ORG=$(timeout 120 ngc org list --format_type json </dev/null 2>/dev/null | python3 -c '
-import json, sys
-try:
-    rows = json.load(sys.stdin)
-except Exception:
-    rows = []
-rows = rows if isinstance(rows, list) else [rows]
-flat = [r for x in rows for r in (x if isinstance(x, list) else [x]) if isinstance(r, dict)]
-print(next((str(r.get("name") or r.get("orgName") or r.get("id")) for r in flat if (r.get("name") or r.get("orgName") or r.get("id"))), ""))' || true)
-if [ -z "$NGC_CLI_ORG" ]; then
-  NGC_CLI_ORG=$(printf '\n' | timeout 30 ngc config set 2>&1 | grep -o "Choices: \['[0-9A-Za-z_-]*'" | head -1 | grep -o "'.*'" | tr -d "'" || true)
-fi
-echo "ngc org: ${NGC_CLI_ORG:-none found}"
+# The org is the one the prompt offers (run 42083307224 showed "Choices: ['<id>']"); org list gave "ascii".
+NGC_CLI_ORG=$(printf '%s\njson\n\n\n\n\n' "$NGC_API_KEY" | timeout 60 ngc config set 2>&1 | grep -o "Choices: \['[0-9A-Za-z_-]*'" | head -1 | grep -o "'.*'" | tr -d "'" || true)
+[ -n "$NGC_CLI_ORG" ] || { echo "no NGC org found"; printf '%s\njson\n\n\n\n\n' "$NGC_API_KEY" | timeout 60 ngc config set 2>&1 | grep -iE "choices|error|invalid" | head -10; exit 5; }
+echo "ngc org: found"
 export NGC_CLI_ORG
 step "sdk download $AR_SDK"
+mkdir -p /workspace/sdk
 timeout 900 ngc registry resource download-version "$AR_SDK" --dest /workspace/sdk </dev/null
 du -sh /workspace/sdk; find /workspace/sdk -maxdepth 3 | head -40
 SDK=$(find /workspace/sdk -maxdepth 3 -type d -name "*AR*SDK*" | head -1)
