@@ -230,7 +230,7 @@ class PodTest(unittest.TestCase):
             if method == 'GET' and url.endswith('/pods/pod9'):
                 polls['n'] += 1
                 return {'publicIp': '1.2.3.4', 'portMappings': {'8001': 40123}} if polls['n'] > 1 else {}
-            if url.endswith('/v1/health/ready'):
+            if url.endswith('/v1/metadata'):
                 if polls['n'] < 3:
                     raise urllib.error.HTTPError(url, 503, 'x', {}, io.BytesIO(b''))
                 return {}
@@ -244,7 +244,8 @@ class PodTest(unittest.TestCase):
             return types.SimpleNamespace(returncode=0, stdout='ok', stderr='')
 
         receipt = maxine_pod.run_nim(self.take, self.dir / 'out', '/nim-clients/eye-contact', yes=True, call=api,
-                                     sleep=lambda s: None, clock=Clock(), run_client=client, **self.keys)
+                                     sleep=lambda s: None, clock=Clock(), run_client=client,
+                                     tcp_open=lambda t: t == '1.2.3.4:40123', **self.keys)
         self.assertEqual(receipt['state'], 'done')
         self.assertIn(('DELETE', f'{maxine_pod.API}/pods/pod9'), calls)
         self.assertNotIn('test-ngc', json.dumps(receipt))

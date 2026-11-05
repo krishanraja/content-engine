@@ -336,6 +336,16 @@ def registry_auth(api_key: str, ngc_key: str, call=http) -> str:
     return made['id']
 
 
+def tcp_open(target: str, timeout: float = 5.0) -> bool:
+    import socket  # noqa: PLC0415
+    host, _, port = target.rpartition(':')
+    try:
+        with socket.create_connection((host, int(port)), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
 def _grpc_target(pod: dict) -> str | None:
     ip = pod.get('publicIp')
     ports = pod.get('portMappings') or {}
@@ -345,7 +355,7 @@ def _grpc_target(pod: dict) -> str | None:
 
 def run_nim(media, out_dir, client, *, yes: bool = False, max_usd: float = MAX_USD, max_minutes: int = MAX_MINUTES,
             api_key: str | None = None, ngc_key: str | None = None, call=http, sleep=time.sleep, clock=time.monotonic,
-            run_client=None, poll_s: float = 15.0) -> dict:
+            run_client=None, poll_s: float = 15.0, tcp_open=tcp_open) -> dict:
     """Rent one pod running the Eye Contact NIM, send the take through NVIDIA's client, terminate. Returns the receipt."""
     import subprocess  # noqa: PLC0415
     media, out_dir = Path(media), Path(out_dir)
@@ -372,7 +382,8 @@ def run_nim(media, out_dir, client, *, yes: bool = False, max_usd: float = MAX_U
             'gpuTypeIds': GPUS, 'gpuTypePriority': 'availability', 'cloudType': cloud, 'gpuCount': 1,
             'containerDiskInGb': 80, 'volumeInGb': 0, 'supportPublicIp': True,
             'ports': [f'{NIM_HTTP}/http', f'{NIM_GRPC}/tcp'],
-            'env': {'NGC_API_KEY': ngc_key, 'MAXINE_MAX_CONCURRENCY_PER_GPU': '1', 'NIM_HTTP_API_PORT': str(NIM_HTTP)}}
+            'allowedCudaVersions': ['12.8', '12.9', '13.0'],      # NIM needs driver 571.21+ (CUDA 12.8)
+            'env': {'NGC_API_KEY': ngc_key, 'NV_AI4M_MAX_CONCURRENCY_PER_GPU': '1', 'NIM_HTTP_API_PORT': str(NIM_HTTP)}}
         pod, tries = None, 0
         while pod is None:
             for cloud in CLOUDS:
@@ -401,7 +412,9 @@ def run_nim(media, out_dir, client, *, yes: bool = False, max_usd: float = MAX_U
         save()
         if estimate(rate, max_minutes) > max_usd:
             raise Refused(f'the pod costs ${rate}/h, over the ${max_usd} cap for {max_minutes} min')
-        ready = f'https://{pod_id}-{NIM_HTTP}.proxy.runpod.net/v1/health/ready'
+        # The NIM has no health route (docs: /v1/license, /v1/metadata, /v1/metrics on HTTP; gRPC on 8001).
+        ready = f'https://{pod_id}-{NIM_HTTP}.proxy.runpod.net/v1/metadata'
+        listening = 0
         target, last = None, ''
         while True:                                   # image pull, then the NIM loads its models
             if clock() - started > max_minutes * 60:
@@ -411,16 +424,17 @@ def run_nim(media, out_dir, client, *, yes: bool = False, max_usd: float = MAX_U
             state = f"pod {info.get('desiredStatus', '?')}, runtime {'up' if info.get('runtime') else 'none'}" if isinstance(info, dict) else '?'
             try:
                 call('GET', ready, timeout=20)
-                health = 'ready'
+                health = 'metadata answers'
             except (urllib.error.URLError, OSError) as error:
-                health = f'not ready ({getattr(error, "code", type(error).__name__)})'
-            now = f'{state}; grpc {target or "no public port yet"}; health {health}'
+                health = f'metadata {getattr(error, "code", type(error).__name__)}'
+            listening = listening + 1 if target and tcp_open(target) else 0
+            now = f'{state}; grpc {target or "no public port yet"} {"listening" if listening else "closed"}; {health}'
             if now != last:
                 print(f'maxine_pod: {int(clock() - started)} s: {now}', flush=True)
                 last = now
             receipt['progress'] = now
             save()
-            if target and health == 'ready':
+            if listening and (health == 'metadata answers' or listening >= 3):
                 break
             sleep(poll_s)
         receipt['grpc'] = 'public tcp'
