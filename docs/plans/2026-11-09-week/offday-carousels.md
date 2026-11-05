@@ -10,6 +10,9 @@ next week." Filed by send.py to `3 Posts` (each with `4 Social/post-description.
 
 ## Tue 10 Nov: Character.AI, who got what (follow.the.money)
 - 3 Posts folder: `2026-11-10 Tue off.day - Character.AI, who got what`
+- Carries Monday 9 Nov's follow.the.money piece (`carries`: b358e788-209f-427b-a84d-1f79a8ebb430), so it keeps
+  follow.the.money's name and colour under the 4 Nov series rule (Krish, 2026-11-04: "the character.ai carousel is going to
+  be under Monday's "Follow the Money" banner"). Card 1 reads "follow.the.money" (read back from Drive, 5 Nov).
 - Cover scene: Higgsfield gpt_image_2_5, job 948c203f-7de1-44fd-be91-f9efcb7ff6fb: a toy chatbot robot alone under a
   spotlight on an auction podium, lot tag on its arm, gold coins swept away.
 - Sources: TechCrunch 13 Oct 2026; Chapter 11 petition 12 Oct 2026; Disney's $20M stalking-horse bid; Wired on the bid's exclusions.
@@ -21,6 +24,9 @@ next week." Filed by send.py to `3 Posts` (each with `4 Social/post-description.
 
 ## Tue 10 Nov: AI marking its own homework (under.the.hood)
 - 3 Posts folder: `2026-11-10 Tue off.day - AI marking its own homework`
+- Breaks the 4 Nov series rule: an off-day post names no series, and cards 1, 2 and 5 read "under.the.hood" (read back
+  from Drive, 5 Nov). Waiting on Krish: rebuild the five cards without the series name or colour (same scene, same words),
+  shown to him before they replace the filed ones.
 - Cover scene: Higgsfield gpt_image_2_5, job 6f86eecd-6365-46bd-afbf-56705d2c6509: a robot at a desk giving its own exam a red A+.
 - Source: VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (quote verified on the page 4 Nov 2026). No other
   named business doing cross-vendor grading could be sourced, so none is named.
@@ -32,6 +38,8 @@ next week." Filed by send.py to `3 Posts` (each with `4 Social/post-description.
 
 ## Thu 12 Nov: AI broke Git (under.the.hood)
 - 3 Posts folder: `2026-11-12 Thu off.day - AI broke Git`
+- Breaks the 4 Nov series rule: cards 1, 2 and 5 read "under.the.hood", and Drive tags card 2 purple (read back 5 Nov).
+  Waiting on Krish, as above.
 - Cover scene: Higgsfield gpt_image_2_5, job 39650b5c-b586-420c-96a2-161ac7bf6756: a filing cabinet buried under an
   avalanche of printed code, a robot arm feeding in more.
 - Sources: Anthropic engineering 13 Oct 2026 (2,500 to 30,000+ merges a day; seven engineers, five months, Scion);
