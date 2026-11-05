@@ -45,6 +45,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-05 Every house carousel's last card ends on "Follow for more" centred above a larger wordmark, set by its place in the deck (`HouseCarouselCard.tsx`, `tests/carousel.test.ts`; Krish: "in its own skin of choice").
 - 2026-11-05 Scripts and captions follow his Instagram checklist, adapted to his rules: the hook is the first sentence with the keyword in it, his personal line second or third, no greeting in front (refused by `story_check.py`), a line naming who it is for, the save line in the caption, one specific question pinned (`make-piece/references/hook-and-share.md`).
 - 2026-11-05 A generated carousel cover shows the house felt robot, from its reference photos, or no robot and a more creative idea (Krish: "either use the branded toy robot or are more creative than just a robot doing something"; `scripts/post-pack/cover_scene.py`, `config/brand-robot.json`).
 - 2026-11-04 Series colours belong to the weekly piece, never the day (Krish: "Post random memes on a Monday but that doesn't mean it's Monday's colour and brand"). His verdicts: on the day-keyed first version, "everything's wrong in here"; on sticker concepts, "Stuff can't just randomly overlap on titles". The Saturday good news is five stories (`week_board.py` `STORY_COUNT`), as the standard and the 7 Nov carousel have it.
@@ -52,7 +53,6 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - 2026-11-04 The style and caption lab, his room as shot, face flags and `ve study` (#395): experiments move outside any piece (Krish: "experiment carefully"), on his own footage.
 - 2026-11-04 ve took the craft quick-edit had and ve dropped (#394): his Monday 26 Oct take ran at 24.0019 fps with 9.2 ms jitter; the old filter dropped a frame and held 92 of 178 frames evenly, the new one none and 168.
 - 2026-11-04 Krish killed the Thursday 5 Nov ve cut ("Okay, this is shit"); ten failures went into the register (F31 to F40) and five became guards binding from 9 Nov.
-- 2026-11-04 Krish approved all 20 production standard groups: 159 floor standards are now approved and read first by `floor.py`.
 
 Older lines are in `docs/history/LOG.md` (rolled verbatim on 4 Nov) and the `docs/history/*-NOW-*.md` files.
 
