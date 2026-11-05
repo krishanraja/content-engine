@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from faster_whisper import WhisperModel
@@ -16,8 +17,13 @@ def main() -> None:
     args = parser.parse_args()
 
     model = WhisperModel(args.model, device="cpu", compute_type="int8")
-    prompt = f"Names and terms that may occur: {args.vocabulary}." if args.vocabulary.strip() else None
-    segments, info = model.transcribe(args.input, word_timestamps=True, vad_filter=True, initial_prompt=prompt)
+    # His lexicon (scripts/velib/lexicon.py): the names ve has learned he says, as the prompt and as hotwords.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from velib import lexicon
+    doc = lexicon.load()
+    prompt = lexicon.prompt(doc) + (f" Names and terms that may occur: {args.vocabulary}." if args.vocabulary.strip() else "")
+    segments, info = model.transcribe(args.input, word_timestamps=True, vad_filter=True, initial_prompt=prompt,
+                                      beam_size=5, hotwords=lexicon.hotwords(doc) or None)
     result = {"language": info.language, "source": "faster_whisper", "model": args.model, "verified": False, "segments": []}
     for segment in segments:
         result["segments"].append({
