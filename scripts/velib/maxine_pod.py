@@ -238,3 +238,24 @@ def sha256(path) -> str:
         for block in iter(lambda: handle.read(1 << 20), b''):
             digest.update(block)
     return digest.hexdigest()
+
+
+def main(argv=None) -> int:
+    """python scripts/velib/maxine_pod.py <take> <out_dir> --yes [--max-usd 1.00]: the GitHub Actions job's entry."""
+    import argparse  # noqa: PLC0415
+    parser = argparse.ArgumentParser(prog='maxine_pod')
+    parser.add_argument('take'); parser.add_argument('out_dir')
+    parser.add_argument('--yes', action='store_true'); parser.add_argument('--max-usd', type=float, default=MAX_USD)
+    args = parser.parse_args(argv)
+    try:
+        receipt = run(args.take, args.out_dir, yes=args.yes, max_usd=args.max_usd)
+    except Refused as error:
+        print(f'maxine_pod: refused: {error}')
+        return 1
+    print(f"maxine_pod: {receipt['copy']} ({receipt['seconds']} s on pod {receipt['pod']}, about ${receipt['cost_usd']}, "
+          f"terminated {receipt.get('terminated')})")
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
