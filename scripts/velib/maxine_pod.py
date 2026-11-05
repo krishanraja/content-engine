@@ -41,6 +41,7 @@ RATE_USD = 0.27                       # Secure Cloud, as listed on 5 Nov 2026; t
 IMAGE = 'nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04'
 PORT = 8000
 USER_AGENT = 'content-engine-maxine/1'
+CHUNK = 32 << 20                       # bytes per request through the pod proxy
 MAX_MINUTES = 60
 MAX_USD = 1.00
 AR_SDK = os.environ.get('MAXINE_AR_SDK', 'nvidia/maxine/maxine_linux_ar_sdk')
@@ -66,25 +67,31 @@ class H(http.server.BaseHTTPRequestHandler):
         return True
     def do_PUT(self):
         if not self.ok(): return
-        n = int(self.headers["Content-Length"]); left = n
-        with open(WORK + "/in.mp4", "wb") as f:
+        n = int(self.headers["Content-Length"]); left = n; at = int(self.headers.get("X-Offset", "0"))
+        path = WORK + "/in.mp4"
+        with open(path, "r+b" if at and os.path.exists(path) else "wb") as f:
+            f.seek(at); f.truncate()
             while left:
                 b = self.rfile.read(min(left, 1 << 20)); f.write(b); left -= len(b)
-        self.send_response(200); self.end_headers(); self.wfile.write(hashlib.sha256(open(WORK + "/in.mp4", "rb").read()).hexdigest().encode())
+        self.send_response(200); self.end_headers(); self.wfile.write(hashlib.sha256(open(path, "rb").read()).hexdigest().encode())
     def do_POST(self):
         if not self.ok(): return
         threading.Thread(target=job, daemon=True).start(); self.send_response(202); self.end_headers()
     def do_GET(self):
         if not self.ok(): return
-        if self.path == "/out.mp4" and state.get("state") == "done":
-            self.send_response(200); self.send_header("Content-Length", str(state["size"])); self.end_headers()
+        if self.path.startswith("/out.mp4") and state.get("state") == "done":
+            q = dict(kv.split("=", 1) for kv in self.path.partition("?")[2].split("&") if "=" in kv)
+            at = int(q.get("offset", 0)); size = min(int(q.get("length", state["size"])), state["size"] - at)
+            self.send_response(200); self.send_header("Content-Length", str(size)); self.end_headers()
             with open(WORK + "/out.mp4", "rb") as f:
-                while True:
-                    b = f.read(1 << 20)
+                f.seek(at); left = size
+                while left:
+                    b = f.read(min(left, 1 << 20))
                     if not b: break
-                    self.wfile.write(b)
+                    self.wfile.write(b); left -= len(b)
             return
-        body = json.dumps(state).encode(); self.send_response(200); self.end_headers(); self.wfile.write(body)
+        body = json.dumps(dict(state, server="eyeline")).encode(); self.send_response(200)
+        self.send_header("Content-Type", "application/json"); self.end_headers(); self.wfile.write(body)
     def log_message(self, *a): pass
 http.server.ThreadingHTTPServer(("0.0.0.0", int(os.environ.get("EYE_PORT", "8000"))), H).serve_forever()
 '''
@@ -123,10 +130,10 @@ class Refused(RuntimeError):
 
 
 def http(method: str, url: str, *, key: str | None = None, token: str | None = None, body=None, data: bytes | None = None,
-         timeout: float = 60):
+         timeout: float = 60, headers: dict | None = None):
     # RunPod's API and pod proxy sit behind Cloudflare, which refuses urllib's default "Python-urllib" agent with a
     # 403 (error code 1010) before the key is read: the 5 Nov trial run 42067342305 died there. Name ourselves.
-    headers = {'User-Agent': USER_AGENT}
+    headers = {'User-Agent': USER_AGENT, **(headers or {})}
     if key:
         headers['Authorization'] = f'Bearer {key}'
     if token:
@@ -186,14 +193,20 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
             if clock() - started > max_minutes * 60:
                 raise Refused(f'time cap of {max_minutes} min reached')
 
-        while True:                                   # the pod's server answers once it is up
-            deadline()
+        while True:                                   # the pod's own server answers once it is up
+            deadline()                                # (RunPod's proxy answers for it until then, not in JSON)
             try:
-                call('GET', f'{base}/status', token=token, timeout=20)
-                break
+                up = call('GET', f'{base}/status', token=token, timeout=20)
+                if isinstance(up, dict) and up.get('server') == 'eyeline':
+                    break
             except (urllib.error.URLError, OSError):
-                sleep(poll_s)
-        sent = call('PUT', f'{base}/in.mp4', token=token, data=media.read_bytes(), timeout=1800)
+                pass
+            sleep(poll_s)
+        data, sent = media.read_bytes(), ''
+        for at in range(0, len(data), CHUNK):        # Cloudflare in front of the proxy caps a request at 100 MB
+            deadline()
+            sent = call('PUT', f'{base}/in.mp4', token=token, data=data[at:at + CHUNK], timeout=600,
+                        headers={'X-Offset': str(at)})
         if isinstance(sent, bytes):
             sent = sent.decode()
         if str(sent).strip() != sha256(media):
@@ -210,8 +223,11 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
             sleep(poll_s)
         out_dir.mkdir(parents=True, exist_ok=True)
         copy = out_dir / f'{media.stem}.maxine.mp4'
-        raw = call('GET', f'{base}/out.mp4', token=token, timeout=1800)
-        copy.write_bytes(raw if isinstance(raw, bytes) else json.dumps(raw).encode())
+        with open(copy, 'wb') as handle:
+            for at in range(0, int(status.get('size') or 0), CHUNK):
+                deadline()
+                raw = call('GET', f'{base}/out.mp4?offset={at}&length={CHUNK}', token=token, timeout=600)
+                handle.write(raw if isinstance(raw, bytes) else json.dumps(raw).encode())
         if copy.stat().st_size != status.get('size') or sha256(copy) != status.get('sha256'):
             copy.unlink(missing_ok=True)
             raise Refused('the redirected copy arrived damaged (size or sha256 differs)')
