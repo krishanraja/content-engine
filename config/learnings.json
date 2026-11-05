@@ -2149,6 +2149,36 @@
           "how": "the carousel standard every carousel maker follows, Growth included"
         }
       ]
+    },
+    {
+      "id": "scripts-first-second-and-send",
+      "on": "2026-11-05",
+      "krish": "After you're done with this Can you ensure my teleprompter scripts and captions follow rules like this every time? Adapt the existing protocol towards this instead of making broad sweeping random changes.",
+      "why": "His Instagram checklist (hook in the first second, keyword spoken and on screen, no \"Hey guys\" or long intros, built for shares and saves, a comment strategy) met four of his own rules that pulled the other way: PERSONAL_INTRO opened on his personal line, LISTENING said never the twist first, SCRIPT_CLOSE and Growth's share_cta ban spoken asks.",
+      "means": "He chose: the hook is the first sentence and his personal line second or third; any of the four openings (biggest mistake, the result, an unexpected fact, the middle of the story) as long as it leaves the question the video answers; the script names a specific person the viewer will think of, with no ask, while the save line goes in the caption and one specific question in the pinned comment.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "would someone stop scrolling in under one second?",
+          "how": "HOOK_AND_CTA, PERSONAL_INTRO, LISTENING and YOUTUBE_PACKAGE carry his three choices"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "GREETING_OPENER = re.compile(",
+          "how": "refuses a greeting or an intro in front of the hook, warns when his personal line comes first"
+        },
+        {
+          "file": ".agents/skills/make-piece/references/hook-and-share.md",
+          "contains": "Would the first sentence alone stop you scrolling",
+          "how": "the read-back asks Reader A the first-second and send tests; the caption and pinned-comment rules"
+        },
+        {
+          "file": "apps/control-plane/api/_video.ts",
+          "contains": "nothing in front of the hook",
+          "how": "the engine's own script writer opens the same way"
+        }
+      ]
     }
   ]
 }

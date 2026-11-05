@@ -596,6 +596,11 @@ def problems(text, cut=None, series=None):
     hook = words[len(opened.split()):] if opened else words
     if '?' not in ' '.join(hook[:OPENING_WORDS]):
         found.append('it does not open on a question: say, in the first beat, the one question the script answers')
+    first = (sentences([' '.join(hook)]) or [''])[0]
+    if GREETING_OPENER.search(first):
+        found.append(f'it opens on a greeting or an intro ("{first[:60]}"): open straight on the hook, in the first sentence, '
+                     'with no "Hey guys", welcome or "in this video" in front of it (house rule HOOK_AND_CTA; Krish, '
+                     '2026-11-05: "Stop opening with: Hey guys... Long intros")')
     extra = [name for rx, name in NOT_SPOKEN if rx.search(text)]
     if extra:
         found.append(f'it carries more than the words Krish says ({", ".join(extra)}): a script is only the spoken '
@@ -633,6 +638,12 @@ AI_LINE = re.compile(
 
 
 PERSONAL_INTRO = re.compile(r"\bI've been\b|\bI have been\b|\bbreak (?:it|this) down\b", re.I)
+# A greeting or an intro in front of the hook (house rule HOOK_AND_CTA; Krish, 2026-11-05, sharing an Instagram
+# checklist: "Stop opening with: Hey guys... Long intros. Logo animations"). Refused in the first sentence.
+GREETING_OPENER = re.compile(
+    r"^\W*(?:(?:hey|hi|hello|hiya|yo|good (?:morning|afternoon|evening))\b(?:,?\s*(?:guys|everyone|everybody|folks|all|there|team|friends))?"
+    r"|welcome (?:back|to)\b|in (?:this|today'?s|the) (?:video|episode|short)\b|today,? (?:we're|we are|i'm|i am) (?:going to|gonna)\b"
+    r"|before we (?:start|begin|get (?:into|started))\b|let me (?:start|begin) by\b)", re.I)
 # Since 2026-10-21 the opening beat is the first thing said, with no series line before it: what he did
 # with the thing ("I put GrokBot and Muse head to head"). The editor (scripts/quick-edit/kit.py) keeps
 # reading PERSONAL_INTRO alone, so this wider net is for the warning only.
@@ -667,10 +678,15 @@ def warnings(text):
     # PERSONAL_INTRO (Krish, 2026-10-13): the script opens on what he's been doing with
     # the thing and why it matters. Since 2026-10-21 there is no series line before it,
     # so the opening beat is the first one; a script recorded on the old lines has it second.
-    if len(words) >= SHORT_WORDS and not (PERSONAL_INTRO.search(' '.join(beats[:2])) or OPENING_DID.search(beats[0])):
-        found.append('the opening beat does not open the way Krish would: straight on what you did with the thing '
-                     '("I put GrokBot and Muse head to head"), why it matters, and that you wanted to break it down '
-                     '(house rule PERSONAL_INTRO; his line is in config/golden-examples.json; a warning, not a refusal)')
+    first = (sentences(beats[:1]) or [''])[0]
+    if len(words) >= SHORT_WORDS and PERSONAL_INTRO.search(first) and not OPENING_DID.search(first):
+        # Krish, 2026-11-05, asked how his personal line meets "no long intros": "Hook first, then you".
+        found.append('the script opens on your personal line ("' + first[:60] + '"): put the hook first, in the first '
+                     'sentence, and your line second or third (house rules HOOK_AND_CTA and PERSONAL_INTRO; a warning, not a refusal)')
+    elif len(words) >= SHORT_WORDS and not (PERSONAL_INTRO.search(' '.join(beats[:2])) or OPENING_DID.search(beats[0])):
+        found.append('the opening beat does not open the way Krish would: the hook first ("I put GrokBot and Muse head to head"), '
+                     'then, second or third, what you have been doing with the thing, why it matters, and that you wanted to break '
+                     'it down (house rule PERSONAL_INTRO; his line is in config/golden-examples.json; a warning, not a refusal)')
     # How he says it, measured from his takes (SCRIPT_AS_HE_TALKS).
     found += spoken_habit_warnings(beats)
     # The share of long words: a rough figure (names left out), told, never refused.
@@ -982,8 +998,17 @@ def self_test():
           any('PERSONAL_INTRO' in w for w in warnings(GOOD)), True)
     check('"I put GrokBot and Muse head to head" is the opening he asked for (2026-10-21): no warning',
           any('PERSONAL_INTRO' in w for w in warnings(GOOD.replace('Higgsfield says it crossed a billion dollars a year.', 'I put GrokBot and Muse head to head.'))), False)
-    check("his intro, \"I've been having a little play around with...\", clears it",
-          any('PERSONAL_INTRO' in w for w in warnings(open(Path(__file__).resolve().parents[2] / 'docs/plans/2026-10-14-draft-script.md', encoding='utf-8').read())), False)
+    old_draft = open(Path(__file__).resolve().parents[2] / 'docs/plans/2026-10-14-draft-script.md', encoding='utf-8').read()
+    check("his intro, \"I've been having a little play around with...\", as the first sentence is now told to come after the hook (2026-11-05)",
+          any('put the hook first' in w for w in warnings(old_draft)), True)
+    check('the hook first and his personal line second clears it',
+          any('PERSONAL_INTRO' in w for w in warnings(GOOD.replace('Higgsfield says it crossed a billion dollars a year.',
+              "Higgsfield says it crossed a billion dollars a year. I've been playing with it, and I wanted to break it down for you."))), False)
+    for opener in ('Hey guys, Higgsfield says', 'Welcome back. Higgsfield says', 'In this video, Higgsfield says', 'Hi everyone. Higgsfield says'):
+        check(f'"{opener[:16]}..." in front of the hook is refused (HOOK_AND_CTA, 2026-11-05)',
+              any('greeting or an intro' in x for x in problems(GOOD.replace('Higgsfield says', opener, 1))), True)
+    check('a hook that starts with a plain claim is not taken for a greeting',
+          any('greeting or an intro' in x for x in problems(GOOD)), False)
     talky = ' '.join(['So it costs more. And nobody checks. Now, is that fair? The app starts low.'] * 4)
     flat = ' '.join(['It costs more. People never check. Is that fair? The app starts low.'] * 4)
     check('a script that opens few sentences with a joiner is warned; one written his way is not',
