@@ -34,6 +34,11 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":2,"current_as_of":"2026-11-05","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 4 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
+- `ve eyeline --backend maxine --pod` can run NVIDIA Maxine Eye Contact on one rented RunPod RTX A5000 (velib/maxine_pod.py: priced first, capped at 60 min and $1.00, the pod always terminated) and lay its eyes onto the take only where the plan says. Tested on synthetic media and a fake RunPod only; nothing rented yet. Krish, 2026-11-05, chose Maxine AR SDK on a RunPod Secure Cloud RTX A5000. (2026-11-05)
+- ve now has a listen pass, built and tested on synthetic sound and clocks, not yet run on his take. `ve hear` picks up the hesitations, broken words and stutters the transcript leaves out, and conform cuts them like any other flub. Every join must now sit where the sound is quiet, so no cut lands on a sound nobody wrote down. Conform also prefers the reading that sounded right. His lexicon (`config/voice/lexicon.json`, seeded from quick-edit's fixes) learns names, mishearings, hesitations and the words he adds. `ve voice profile` measures his voice for a later clone check. Krish, 2026-11-05: "Yes, build it - kind of like Wispr Flow, it should also learn me as well as the common words that I say" and "Just make this engine as high quality as possible." (2026-11-05)
+- every good-news carousel now ends on one fixed close (Krish, 5 Nov 2026): that week's five people in mint rings, then "If this inspires you to / MAKE THE WORLD BETTER / by combining your ideas + AI," and "follow for more" above the mark. It is recorded in docs/CAROUSEL-STANDARD.md; Growth's kit holds it under a test. Saturday 7 Nov's final deck carries it. (2026-11-05)
+- ve has an eye gaze correction pass before ingest (`ve eyeline`, velib/eyeline.py), built safe and tested. On ai-music-short.mp4 it kept every frame, frame time, blink and the sound exactly, but WangWilly's model barely moved his eyes (1 to 4 px, sideways only), so no model is cleared for published video yet. Krish, 2026-11-05: "For all post-processing of my makeyourmindup videos." (2026-11-05)
+- docs/CAROUSEL-STANDARD.md has an "AI-tips carousel" section (Krish's ruling, 5 Nov 2026): jobs with two to four tools; ink theming without a series colour or pill; Anton capitals headlines; images that are real but not literal and agree with the prompt; the cover, close and caption. Growth's kit and builder check the checkable lines. The first edition was filed to 3 Posts on 5 Nov for Buffer scheduling. (2026-11-05)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 - **Motion styles are a bank, picked per piece** (Krish, 2026-11-03): 17 in the `motion` layer of `config/style-references.json`, named in `style.motion`. The renderer draws ten from `apps/renderer/src/engine/kit/motion-profiles.json`; seven still need their own device. `ve styles` offers only styles that differ by eye (`config/ve/style-distinct.json`, threshold 1.5). Proved on stand-in media, not yet on his take. (2026-11-04)
 - **The style and caption lab** ran 12 looks on one pinned 8 s window of his Thursday take; reel and sheet are with him (`docs/ve/lab/2026-11-04.json`). ve also gained quick-edit's craft: even 24 fps laying, HDR tone mapping, `ve said`, `ve faces`, `ve study`, motion strips for the Critic and `ve sfx audition` (six sounds shortlisted, none downloaded). Captions sit off his face; STAGE beats, logo_orbit and face-with-proof carry the brand treatment (Codex cards ve-motion-3, -5, -6). (2026-11-04)
@@ -45,6 +50,11 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-05 the engine can use a rented GPU for Maxine Eye Contact once Krish adds the keys and approves the spend.
+- 2026-11-05 ve hears fumbles the transcript leaves out and learns his words (Krish, 5 Nov 2026).
+- 2026-11-05 no carousel card carries a card number or page count, so cards can be cut at will (Krish, 5 Nov 2026).
+- 2026-11-05 the engine can correct eye gaze once a model passes; WangWilly/gaze-correction-cam failed its trial.
+- 2026-11-05 every carousel's last card now ends with "Follow for more" directly above a larger, centred house mark (Krish, 5 Nov 2026).
 - 2026-11-04 Krish killed the Thursday 5 Nov ve cut ("Okay, this is shit"). F31 to F39 record it; five became refusing guards (no named visual idea, a re-typed real artifact, an engine changed since the storyboard, a third full render per press, more than four type treatments). Report and restart brief: `docs/plans/2026-11-05-thursday-no-spending/`.
 - 2026-11-04 Five motion styles looked like the house: they measured 0.39 to 0.62 against it on Thursday's window. Each now has its own look and measures 7.2 to 68.9 (PR #387).
 - 2026-11-04 Wave 1 measured on his real takes: the Mon 26 Oct take runs at 24.0019 fps with 9.2 ms p95 stamp jitter, and the old graph dropped a frame and held 92 of 178 evenly; laid evenly it drops none and holds 168 of 178.
@@ -55,7 +65,7 @@ Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everyt
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-04): his numbers and words on the lab reel (`ve lab verdict`), then the one sitting already waiting (download yes for the six sounds, the voice A/B); dispatch through_line after Friday 13 Nov is filed.
+- Next (2026-11-05): Krish adds RUNPOD_API_KEY and NGC_API_KEY as environment variables and says yes to about $0.28; a new session then runs the trial on ai-music-short.mp4.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
@@ -63,7 +73,7 @@ Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everyt
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
-- North Star check (2026-11-04): holds.
+- North Star check (2026-11-05): holds.
 
 ## Read next
 
