@@ -95,7 +95,7 @@ jobs:
         if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' && inputs.route != 'sdk' }}
         run: |
           git clone -q --depth 1 --filter=blob:none --sparse https://github.com/NVIDIA-Maxine/nim-clients.git "$RUNNER_TEMP/nim-clients"
-          git -C "$RUNNER_TEMP/nim-clients" sparse-checkout set eye-contact
+          git -C "$RUNNER_TEMP/nim-clients" sparse-checkout set eye-contact utils
           pip install -q -r "$RUNNER_TEMP/nim-clients/eye-contact/requirements.txt"
       - name: Run Maxine on one rented pod
         if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' }}
