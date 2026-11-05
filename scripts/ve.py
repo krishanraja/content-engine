@@ -867,7 +867,17 @@ def cmd_eyeline(args) -> int:
             out = directory / 'eyeline'
         else:
             out = eyeline.EVAL_DIR / media.stem
-        backend = eyeline.BACKENDS[args.backend]()
+        if args.backend == 'maxine':
+            copy = args.maxine_copy
+            if args.pod:
+                from velib import maxine_pod
+                pod = maxine_pod.run(media, out, yes=args.yes, max_usd=args.max_usd)
+                print(f"ve eyeline: pod {pod['pod']} ran {pod['seconds']} s, about ${pod['cost_usd']}; "
+                      f"terminated {pod.get('terminated')}")
+                copy = pod['copy']
+            backend = eyeline.Maxine(copy)
+        else:
+            backend = eyeline.BACKENDS[args.backend]()
         receipt = eyeline.run(media, out, backend, qc=None if args.no_qc else qc_eyeline.QC(), crf=args.crf)
         reasons = ', '.join(f'{k} {v}' for k, v in sorted(receipt['reasons'].items()))
         print(f"ve eyeline: {receipt['decision']}: {receipt['corrected_frames']} of {receipt['frames']} frames corrected "
@@ -1707,7 +1717,11 @@ def main() -> int:
     p.add_argument('piece', nargs='?', help='the piece, for its ve folder (otherwise .cache/eyeline-eval/<take>)')
     p.add_argument('--media', required=True); p.add_argument('--out')
     p.add_argument('--backend', choices=('flx', 'maxine', 'identity'), default='flx',
-                   help='flx: WangWilly/Hsu model, private evaluation only; maxine: needs an NVIDIA RTX GPU')
+                   help='flx: WangWilly/Hsu model, private evaluation only; maxine: NVIDIA Maxine Eye Contact on a rented RTX pod')
+    p.add_argument('--maxine-copy', help="Maxine's redirected copy of the take, when it has already been made")
+    p.add_argument('--pod', action='store_true', help='make the Maxine copy on one rented RunPod RTX A5000 (spend)')
+    p.add_argument('--yes', action='store_true', help="Krish approved this run's spend")
+    p.add_argument('--max-usd', type=float, default=1.0, help='refuse a pod run that could cost more than this')
     p.add_argument('--crf', type=int, default=12); p.add_argument('--no-qc', action='store_true')
     p.set_defaults(fn=cmd_eyeline)
     p = sub.add_parser('said', help='what he said on a take against the script he read, and the words the cut should carry')
