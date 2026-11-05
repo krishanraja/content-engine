@@ -26,7 +26,7 @@ class FakeRunPod:
         self.calls.append((method, url))
         if method == 'POST' and url.endswith('/pods'):
             body = kw['body']
-            assert body['cloudType'] == 'SECURE' and body['gpuTypeIds'] == maxine_pod.GPUS and 'NVIDIA GeForce RTX 4090' not in body['gpuTypeIds']
+            assert body['cloudType'] == 'SECURE' and body['gpuTypeIds'] == maxine_pod.GPUS and body['gpuTypeIds'][0] == 'NVIDIA RTX A4000'
             assert 'EYE_TOKEN' in body['env']
             return {'id': 'pod123', 'costPerHr': self.rate}
         if method == 'DELETE':
@@ -152,10 +152,10 @@ class PodTest(unittest.TestCase):
         def refuse(method, url, **kw):
             raise urllib.error.HTTPError(url, 403, 'Forbidden', {}, io.BytesIO(b'error code: 1010'))
 
-        with self.assertRaises(urllib.error.HTTPError):
+        with self.assertRaises(maxine_pod.Refused):
             self.go(refuse)
         saved = json.loads((self.dir / 'out' / 'maxine-pod.take.json').read_text())
-        self.assertEqual(saved['state'], 'failed')
+        self.assertEqual(saved['state'], 'refused')
         self.assertIn('HTTP 403', saved['reason'])
         self.assertIn('error code: 1010', saved['reason'])
         self.assertNotIn('terminated', saved)                 # no pod was ever created
@@ -177,6 +177,23 @@ class PodTest(unittest.TestCase):
         receipt = self.go(proxy)
         self.assertEqual(receipt['state'], 'done')
         self.assertTrue(fake.deleted())
+
+    def test_no_free_card_on_secure_falls_back_to_community(self):
+        import io
+        import urllib.error
+        fake, clouds = FakeRunPod(), []
+
+        def busy(method, url, **kw):
+            if method == 'POST' and url.endswith('/pods'):
+                clouds.append(kw['body']['cloudType'])
+                if kw['body']['cloudType'] == 'SECURE':
+                    raise urllib.error.HTTPError(url, 500, 'x', {}, io.BytesIO(b'{"error":"create pod: There are no instances currently available"}'))
+                kw['body'] = dict(kw['body'], cloudType='SECURE')      # the fake only knows SECURE
+            return fake(method, url, **kw)
+
+        receipt = self.go(busy)
+        self.assertEqual(clouds, ['SECURE', 'COMMUNITY'])
+        self.assertEqual((receipt['state'], receipt['cloud']), ('done', 'COMMUNITY'))
 
 
 if __name__ == '__main__':
