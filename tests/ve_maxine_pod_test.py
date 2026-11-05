@@ -258,6 +258,40 @@ class PodTest(unittest.TestCase):
         self.assertTrue((self.dir / 'out2' / 'take.maxine.ess4.mp4').is_file())
         self.assertNotIn('test-ngc', json.dumps(receipt))
 
+    def test_a_pod_whose_nim_never_comes_up_is_replaced_and_charged(self):
+        import types
+        made, deleted = [], []
+
+        def api(method, url, **kw):
+            if url.endswith('/containerregistryauth'):
+                return [{'name': maxine_pod.REGISTRY_AUTH, 'id': 'auth1'}] if method == 'GET' else {'id': 'auth1'}
+            if method == 'POST' and url.endswith('/pods'):
+                made.append(f'pod{len(made)}')
+                return {'id': made[-1], 'costPerHr': 0.3}
+            if method == 'GET' and '/pods/' in url:
+                return {'publicIp': '1.2.3.4', 'portMappings': {'8001': 40123}}
+            if url.endswith('/v1/metadata'):
+                if len(made) < 2:
+                    raise OSError('down')
+                return {}
+            if method == 'DELETE':
+                deleted.append(url.rsplit('/', 1)[1])
+                return {}
+            raise AssertionError(url)
+
+        def client(cmd):
+            Path(cmd[cmd.index('--output') + 1]).write_bytes(b'x')
+            return types.SimpleNamespace(returncode=0, stdout='', stderr='')
+
+        receipt = maxine_pod.run_nim(self.take, self.dir / 'out', '/c', yes=True, call=api, sleep=lambda s: None,
+                                     clock=Clock(step=30.0), run_client=client,
+                                     tcp_open=lambda t: len(made) >= 2, max_usd=5, **self.keys)
+        self.assertEqual(receipt['state'], 'done')
+        self.assertEqual(made, ['pod0', 'pod1'])
+        self.assertEqual(deleted, ['pod0', 'pod1'])
+        self.assertEqual(len(receipt['attempts']), 1)
+        self.assertGreater(receipt['cost_usd'], receipt['attempts'][0]['cost_usd'])
+
 
 if __name__ == '__main__':
     unittest.main()
