@@ -41,6 +41,7 @@ GPU = 'NVIDIA RTX A5000'
 # 42072590168 (5 Nov) found no A5000 at all. The cap is re-checked against the pod's own costPerHr either way.
 GPUS = ['NVIDIA RTX A4000', 'NVIDIA RTX A4500', GPU, 'NVIDIA L4', 'NVIDIA RTX 4000 Ada Generation',
         'NVIDIA GeForce RTX 3090', 'NVIDIA GeForce RTX 4090', 'NVIDIA RTX A6000']   # cheapest first, then any RTX
+GPU_TRIES, GPU_WAIT_S = 20, 30   # up to 10 min of asking for a card
 CLOUDS = ['SECURE', 'COMMUNITY']   # run 42081806896 (5 Nov): Secure had none of the cheap cards; Community is the fallback
 RATE_USD = 0.27                       # Secure Cloud, as listed on 5 Nov 2026; the pod's own costPerHr is re-checked
 IMAGE = 'nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04'
@@ -213,15 +214,23 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
                                    'echo "$EYE_JOB" | base64 -d > /workspace/job.sh; echo "$EYE_SERVER" | base64 -d > /workspace/server.py; '
                                    'exec python3 /workspace/server.py']}
 
-        pod = None
-        for cloud in CLOUDS:                          # the first cloud with a free card wins
-            try:
-                pod = call('POST', f'{API}/pods', key=api_key, body=pod_body(cloud))
-                break
-            except urllib.error.HTTPError as error:
-                said = error.read().decode('utf-8', 'replace')[:500]
-                if 'no instances' not in said.lower() or cloud == CLOUDS[-1]:
-                    raise Refused(f'HTTP {error.code} from {API}/pods ({cloud}): {said}') from error
+        pod, tries = None, 0
+        while pod is None:                            # no card free anywhere: ask again, waiting costs nothing
+            for cloud in CLOUDS:                      # the first cloud with a free card wins
+                try:
+                    pod = call('POST', f'{API}/pods', key=api_key, body=pod_body(cloud))
+                    break
+                except urllib.error.HTTPError as error:
+                    said = error.read().decode('utf-8', 'replace')[:500]
+                    if 'no instances' not in said.lower():
+                        raise Refused(f'HTTP {error.code} from {API}/pods ({cloud}): {said}') from error
+            if pod is None:
+                tries += 1
+                if tries >= GPU_TRIES:
+                    raise Refused(f'no RTX card free on RunPod after {tries} tries {GPU_WAIT_S} s apart')
+                print(f'maxine_pod: no card free (try {tries}); asking again in {GPU_WAIT_S} s', flush=True)
+                sleep(GPU_WAIT_S)
+        started = clock()                             # billing, and the time cap, start with the pod
         receipt['cloud'] = cloud
         pod_id = pod['id']
         receipt['pod'] = pod_id
