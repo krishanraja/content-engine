@@ -908,6 +908,9 @@ def series_accent(cfg, base='.'):
     """The piece's series colour from config/studio.json, for the house captions' shadow."""
     series, _ = series_of(cfg, base)
     studio = json.loads((Path(__file__).resolve().parents[2] / 'config' / 'studio.json').read_text(encoding='utf-8'))
+    if not series:
+        # An off-day piece wears the house mint, never a series' colour, as ve compile draws it (Krish, 2026-11-04).
+        return studio['tokens']['mint']
     return studio['series'][series]['accent']
 
 
@@ -1041,28 +1044,42 @@ def read_post(cfg, base):
         return path, e
 
 
-def off_weekday(when):
-    """The weekday's name when `when` (a date, or text starting with one) falls
-    on a day with no weekly series (Tuesday, Thursday or Saturday: library.py
-    OFF_WEEKDAYS, the off.day post folder's rule), else None."""
+def series_weekday(series):
+    """The weekday a weekly series runs on ('Friday' for mind_the_gap), from the house channels in config/studio.json,
+    as scripts/post-pack/creative_direction.py series_day reads it; None when it is not known."""
+    studio = json.loads((Path(__file__).resolve().parents[2] / 'config' / 'studio.json').read_text(encoding='utf-8'))
+    for theme in studio.get('brand_themes') or []:
+        day = ((((theme.get('publication') or {}).get('house_style') or {}).get('channels') or {}).get(series) or {}).get('day')
+        if day:
+            return day.rstrip('s')
+    return None
+
+
+def off_weekday(when, series=None):
+    """The weekday's name when `when` (a date, or text starting with one) is not the series' own day, so the piece is
+    an off-day piece, else None. The same test as ve compile, scripts/velib/guards.py off_day and the creative
+    direction: a piece published on its series' day is the weekly series piece, any other day is an off day."""
     try:
         day = date.fromisoformat(str(when or '')[:10])
     except ValueError:
         return None
+    name = day.strftime('%A')
+    own = series_weekday(series) if series else None
+    if own:
+        return None if name.lower() == own.lower() else name
     post_pack = str(Path(__file__).resolve().parents[1] / 'post-pack')
     if post_pack not in sys.path:
         sys.path.append(post_pack)
-    import library  # noqa: PLC0415  scripts/post-pack/library.py: the days with no series
-    names = ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
-    return names[day.weekday()] if library.WEEKDAYS[day.weekday()] in library.OFF_WEEKDAYS else None
+    import library  # noqa: PLC0415  scripts/post-pack/library.py: the days with no series, when the series' day is unknown
+    return name if library.WEEKDAYS[day.weekday()] in library.OFF_WEEKDAYS else None
 
 
 def series_of(cfg, base='.'):
     """The piece's weekly series, for the sting: (series, note). From the
     config's "series" (or "subchannel"), else the subchannel of the post it was
-    made from. None, and why, for an off-day piece: one dated on a day with no
-    weekly series (off_weekday), one naming no series, or one naming none of
-    the three. It wears no sting, and never another series' colour (Krish,
+    made from. None, and why, for an off-day piece: one dated on a day that is
+    not its series' own day (off_weekday), one naming no series, or one naming
+    none of the three. It wears no sting, and never another series' colour (Krish,
     2026-11-05; F36-off-day-wore-series-dress)."""
     given = cfg.get('series') or cfg.get('subchannel')
     when = cfg.get('date')
@@ -1076,9 +1093,9 @@ def series_of(cfg, base='.'):
             return None, (f'the piece\'s series {given!r} is none of the weekly series ({", ".join(sting.SERIES)}), so it is an '
                           'off-day piece and wears no series sting')
         return None, 'the config names no "series" (nor a post with a subchannel), so it is an off-day piece and wears no series sting'
-    day = off_weekday(when)
+    day = off_weekday(when, found)
     if day:
-        return None, (f'the piece is dated {str(when)[:10]}, a {day}, a day with no weekly series, so it is an off-day piece and wears '
+        return None, (f'the piece is dated {str(when)[:10]}, a {day}, not its series\' own day, so it is an off-day piece and wears '
                       f'no series sting, whatever its tag ({given})')
     return found, None
 

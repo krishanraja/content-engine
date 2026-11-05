@@ -121,7 +121,8 @@ def audition(spec: dict, cut: str, directory: Path, props: dict, assets_dir: Pat
     frame = moment(props, start, end, at_frame)
     fps = props.get('fps', 30)
     stem = (props.get('audio') or {}).get('stem', {}).get('src')
-    voice_db = _peak_db(stem, start / fps, (end - start) / fps, pct=95) if stem and Path(stem).is_file() else None
+    lead = int((props.get('sting') or {}).get('frames') or 0)  # the stem carries the sting's frames in front of the cut
+    voice_db = _peak_db(stem, (start + lead) / fps, (end - start) / fps, pct=95) if stem and Path(stem).is_file() else None
     folder = Path(directory) / 'sfx'
     folder.mkdir(parents=True, exist_ok=True)
     out = []

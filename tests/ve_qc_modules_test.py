@@ -515,7 +515,7 @@ class OpeningRowTest(unittest.TestCase):
 
 @unittest.skipUnless(shutil.which('ffmpeg'), 'ffmpeg is not on PATH')
 class StingContinuityTest(unittest.TestCase):
-    """The bed under the sting ("the music sits under it in the edit", config/intro-sting.json): on a cut whose premix
+    """The bed under the sting (house rule HOOK_IS_THE_INTRO: "with no sound of its own and the music bed under it"): on a cut whose premix
     laid a lead (lead_frames), the render's floor holds from its first window, not from his first word."""
 
     def test_a_bare_sting_is_a_drop_out_and_a_hook_cut_is_measured_from_his_first_word(self):
