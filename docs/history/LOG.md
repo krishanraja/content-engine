@@ -8,6 +8,7 @@ Files moved here keep their body verbatim under a Historical banner.
 ## 2026-11-05
 
 - rolled from NOW.md, verbatim:
+  - 2026-11-04 Krish approved all 20 production standard groups: 159 floor standards are now approved and read first by `floor.py`.
   - 2026-11-04 The bed pumped on Wednesday: one bed shape for both engines, and no cut filed without its receipt (#392, F40).
   - 2026-11-03 Word captions sit on the split seam on SPLIT beats, at chest height on face beats, so they never land on his face (ve-motion-3).
   - 2026-11-03 A second library lane, Heartside's (`send.py --library heartside`), and motion styles became a bank picked per piece.
