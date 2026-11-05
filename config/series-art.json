@@ -1,0 +1,39 @@
+{
+ "_about": "The generated stills the painted_scene series skin grades into its ground (scripts/pages/skins/painted_scene.py), one per series day and shape. They are media, so they never live in the repository: scripts/pages/skins/_kit.py fetches each by its url into .cache/series-art/ and refuses any copy whose sha256 is not the one here. Made on Higgsfield on 5 November 2026; no words in any of them.",
+ "scene-mon-tall": {
+  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EHoG5PVkilXbvUobkwyA3pk0A2/hf_20261105_050108_971c03db-88e3-4e49-a87c-ee04f081742b.png",
+  "sha256": "14df569ff461fc66d4e9165f158c0d2e0210b015e4edbd4e1f9a94ed391dda10",
+  "job_id": "971c03db-88e3-4e49-a87c-ee04f081742b",
+  "model": "gpt_image_2_5 (Flare, quality high)"
+ },
+ "scene-mon-wide": {
+  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EHoG5PVkilXbvUobkwyA3pk0A2/hf_20261105_050108_9796e5eb-b75e-4ef7-996d-2a28d1d58e93.png",
+  "sha256": "4615dd7d8fa3179ff81ae737d857c22a24afa80afdb8f8c500112c985cbf1ee1",
+  "job_id": "9796e5eb-b75e-4ef7-996d-2a28d1d58e93",
+  "model": "gpt_image_2_5 (Flare, quality high)"
+ },
+ "scene-wed-tall": {
+  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EHoG5PVkilXbvUobkwyA3pk0A2/hf_20261105_050110_08e613ae-f819-49e0-9816-a196991dde89.png",
+  "sha256": "47dfb7dbe4ac9dd96c155092b9bce0ae8c9c19a49ae1b4a0f3d169caa3666c28",
+  "job_id": "08e613ae-f819-49e0-9816-a196991dde89",
+  "model": "gpt_image_2_5 (Flare, quality high)"
+ },
+ "scene-wed-wide": {
+  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EHoG5PVkilXbvUobkwyA3pk0A2/hf_20261105_050110_74371fad-4ff0-42a4-b49b-9d30eaa503ec.png",
+  "sha256": "3dfa643c49f4eb662f2eeeeff4a1a78c5ec67a68d8b060749965a22e355aea21",
+  "job_id": "74371fad-4ff0-42a4-b49b-9d30eaa503ec",
+  "model": "gpt_image_2_5 (Flare, quality high)"
+ },
+ "scene-fri-tall": {
+  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EHoG5PVkilXbvUobkwyA3pk0A2/hf_20261105_050110_f50708a2-f828-4b04-bd53-54033f5e2bd1.png",
+  "sha256": "e10328261e1fd7c21eefa37c6b32fec0224b8abc40bcb146508037f5f289ff93",
+  "job_id": "f50708a2-f828-4b04-bd53-54033f5e2bd1",
+  "model": "gpt_image_2_5 (Flare, quality high)"
+ },
+ "scene-fri-wide": {
+  "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EHoG5PVkilXbvUobkwyA3pk0A2/hf_20261105_050107_25716b67-850e-4c72-a7b0-1b15732466cd.png",
+  "sha256": "53c8ce21dcc504fe33e62fcecb43acee72d5bf53c518b3e3f526b209e792cb4f",
+  "job_id": "25716b67-850e-4c72-a7b0-1b15732466cd",
+  "model": "gpt_image_2_5 (Flare, quality high)"
+ }
+}

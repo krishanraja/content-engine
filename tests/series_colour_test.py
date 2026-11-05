@@ -85,5 +85,144 @@ class SeriesColourTest(unittest.TestCase):
         self.assertIn('!over.length', receipt.FIT_JS)
 
 
+class SeriesSkinRotationTest(unittest.TestCase):
+    """One series skin per week, moving on by itself through all nine, the week's three series pieces sharing it, and
+    any piece naming another (Krish, 2026-11-05: "keep all of them and rotate them all at will over the coming weeks").
+    tests/series_skins_test.py draws every skin in a browser."""
+
+    def setUp(self):
+        import skins
+        self.skins = skins
+        self.hs = brand.house()
+
+    def look(self, subchannel, date):
+        return brand.series_look(self.hs, subchannel, date)
+
+    def test_nine_weeks_in_a_row_wear_all_nine_skins_once_in_order(self):
+        import datetime as dt
+        first = dt.date(2026, 11, 9)
+        worn = [self.skins.pick({'date': str(first + dt.timedelta(weeks=k))}, self.look('follow.the.money', str(first + dt.timedelta(weeks=k))))
+                for k in range(9)]
+        self.assertEqual(worn, list(self.skins.ORDER))
+        self.assertEqual(sorted(worn), sorted(set(worn)), 'each skin once')
+        self.assertEqual(len(self.skins.ORDER), 9)
+        self.assertEqual(worn[:2], ['neon', 'sunburst'], 'the week of 9 November wears neon, the week of 16 November sunburst')
+        tenth = str(first + dt.timedelta(weeks=9))
+        self.assertEqual(self.skins.pick({'date': tenth}, self.look('follow.the.money', tenth)), 'neon', 'the tenth week starts again')
+
+    def test_the_weeks_monday_wednesday_and_friday_pieces_share_one_skin(self):
+        import datetime as dt
+        for monday, want in (('2026-11-09', 'neon'), ('2026-11-16', 'sunburst'), ('2026-12-28', 'brandbook'), ('2027-01-04', 'memphis')):
+            m = dt.date.fromisoformat(monday)
+            days = {'follow.the.money': m, 'under.the.hood': m + dt.timedelta(days=2), 'mind.the.gap': m + dt.timedelta(days=4)}
+            worn = {name: self.skins.pick({'date': str(d)}, self.look(name, str(d))) for name, d in days.items()}
+            self.assertEqual(set(worn.values()), {want}, worn)
+
+    def test_the_weeks_before_9_november_wear_none_unless_a_piece_names_one(self):
+        # The rotation starts in the week of 9 November. Before it the modulo would hand out a skin nobody chose
+        # (Mon 2, Wed 4 and Fri 6 Nov all memphis, Mon 26 Oct brandbook): they wear none unless their facts name one.
+        for name, date in (('follow.the.money', '2026-11-02'), ('under.the.hood', '2026-11-04'), ('mind.the.gap', '2026-11-06'),
+                           ('follow.the.money', '2026-10-26')):
+            look = self.look(name, date)
+            self.assertTrue(look['series'], date)
+            self.assertIsNone(self.skins.pick({'date': date}, look), date)
+            self.assertIsNone(self.skins.for_shape({'date': date}, look, 'tall'), date)
+            self.assertEqual(self.skins.pick({'date': date, 'skin': 'papercut'}, look), 'papercut', 'a skin a piece names is worn')
+        self.assertEqual(self.skins.pick({'date': '2026-11-09'}, self.look('follow.the.money', '2026-11-09')), 'neon')
+
+    def test_an_undated_series_piece_is_refused_never_given_the_days_skin(self):
+        # brand.series_look counts an undated piece as the series piece; its week cannot be told, so the drawer
+        # stops rather than reading the skin off the day it happens to be drawn.
+        look = self.look('mind.the.gap', None)
+        self.assertTrue(look['series'])
+        with self.assertRaises(SystemExit) as stop:
+            self.skins.pick({}, look)
+        self.assertIn('needs its "date"', str(stop.exception))
+        with self.assertRaises(SystemExit):
+            self.skins.for_shape({'date': ''}, look, 'wide')
+        self.assertIsNone(self.skins.for_shape({}, look, 'cover'), 'a cover shape wears none, so it needs no date')
+        self.assertEqual(self.skins.pick({'skin': 'bauhaus'}, look), 'bauhaus', 'one it names needs no date')
+
+    def test_a_piece_may_name_another_skin_and_an_unknown_one_is_refused(self):
+        look = self.look('under.the.hood', WEEK['Wednesday'])
+        self.assertEqual(self.skins.pick({'date': WEEK['Wednesday'], 'skin': 'memphis'}, look), 'memphis')
+        with self.assertRaises(SystemExit):
+            self.skins.pick({'date': WEEK['Wednesday'], 'skin': 'glitter'}, look)
+
+    def test_an_off_day_and_anything_that_is_not_the_piece_wear_no_skin(self):
+        for name, (own_day, _) in {c['name']: (c['day'], c['accent']) for c in self.hs['channels']}.items():
+            for day, date in WEEK.items():
+                facts = {'date': date, 'skin': 'neon'}
+                worn = self.skins.pick(facts, self.look(name, date))
+                self.assertEqual(worn is not None, day == own_day, f'{name} on {day}')
+
+    def test_the_skins_are_made_for_the_two_thumbnails_and_the_cover_shapes_wear_none(self):
+        self.assertEqual(self.skins.SHAPES, ('tall', 'wide'))
+        look = self.look('follow.the.money', WEEK['Monday'])
+        for shape in receipt.SHAPES:
+            want = 'neon' if shape in ('tall', 'wide') else None
+            self.assertEqual(self.skins.for_shape({'date': WEEK['Monday']}, look, shape), want, shape)
+        html = '<html><style></style><div id="card"></div></html>'
+        off = self.look('follow.the.money', WEEK['Tuesday'])
+        self.assertEqual(self.skins.apply(html, {'date': WEEK['Tuesday']}, 'tall', (1080, 1920), off), (html, None),
+                         'an off-day page is left exactly as it is')
+
+    def test_every_skin_is_a_module_with_the_contract(self):
+        for skin_id in self.skins.ORDER:
+            module = self.skins.load(skin_id)
+            self.assertTrue(callable(getattr(module, 'skin', None)), skin_id)
+            self.assertIsInstance(getattr(module, 'PLACE_JS', ''), str, skin_id)
+        from skins import _kit
+        t = self.hs['tokens']
+        self.assertEqual((_kit.INK, _kit.CREAM, _kit.MINT, _kit.SAGE), (t['ink'], t['cream'], t['mint'], receipt.SAGE), 'the kit is the house')
+
+    def test_the_painted_scene_stills_are_named_by_url_and_sha256_and_checked_closed(self):
+        import hashlib
+        import json
+        from skins import _kit
+        table = json.loads(_kit.ART.read_text(encoding='utf-8'))
+        for day in ('mon', 'wed', 'fri'):
+            for shape in ('tall', 'wide'):
+                row = table[f'scene-{day}-{shape}']
+                self.assertTrue(row['url'].startswith('https://') and row['job_id'] in row['url'], row)
+                self.assertRegex(row['sha256'], r'^[0-9a-f]{64}$')
+        body = b'\x89PNG a still'
+        fake = {'scene-mon-tall': {'url': 'https://example.invalid/a.png', 'sha256': hashlib.sha256(body).hexdigest()}}
+
+        class Reply:
+            def __init__(self, data):
+                self.data = data
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+            def read(self):
+                return self.data
+
+        def offline(*a, **k):
+            raise OSError('no network')
+        with tempfile.TemporaryDirectory(prefix='series-art-') as folder:
+            cache = Path(folder)
+            with patch.object(_kit, 'ART_CACHE', cache):
+                with patch('urllib.request.urlopen', offline), self.assertRaises(SystemExit):
+                    _kit.fetch_art('scene-mon-tall', fake)                  # no network and no copy: refused
+                with patch('urllib.request.urlopen', return_value=Reply(b'other bytes')), self.assertRaises(SystemExit):
+                    _kit.fetch_art('scene-mon-tall', fake)                  # bytes that are not the recorded ones: refused
+                self.assertFalse(list(cache.iterdir()), 'nothing unchecked is kept')
+                with patch('urllib.request.urlopen', return_value=Reply(body)):
+                    got = _kit.fetch_art('scene-mon-tall', fake)            # the recorded bytes: kept
+                self.assertEqual(got.read_bytes(), body)
+                with patch('urllib.request.urlopen', offline):
+                    self.assertEqual(_kit.fetch_art('scene-mon-tall', fake), got)   # a checked copy needs no network
+                got.write_bytes(b'tampered')
+                with patch('urllib.request.urlopen', offline), self.assertRaises(SystemExit):
+                    _kit.fetch_art('scene-mon-tall', fake)                  # a copy changed since: refused
+                with self.assertRaises(SystemExit):
+                    _kit.fetch_art('scene-sat-tall', fake)                  # a still nobody recorded: refused
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -215,15 +215,43 @@ thumbnail and cover asset templates for Monday, Wednesday, and Friday"), which h
 - The series pieces are skinned more heavily and artistically in their colour than anything else, and bring the fun
   back while keeping the Receipt's classy layout. His words: "Monday, Wednesday, and Friday are supposed to be slightly
   more heavily and artistically skinned than that in their colours. We've lost some sense of fun that we used to have
-  in our branding. I like the new classy look but I miss the fun." The skin is his pick (two concepts sent 4 November
-  2026; until he picks, a series cover wears its colour on the highlighted words and the pill on the house sage).
+  in our branding. I like the new classy look but I miss the fun."
+- There are nine skins, one per week in rotation (Krish, 5 November 2026, of the finished skins: "keep all of them and
+  rotate them all at will over the coming weeks"; asked how, he chose one skin per week, moving on by itself). In
+  order: neon, sunburst, painted scene, series worlds, Bauhaus blocks, paper cut-out, extruded, brand book and
+  Memphis, starting with neon in the week of Monday 9 November 2026, then round again. The week's Monday, Wednesday
+  and Friday pieces all wear that week's skin, each in its own series colour. A piece can wear a different one by
+  naming it with `"skin"` in the cover facts (`"skin": "memphis"`; the ids are in `scripts/pages/skins/__init__.py`).
+  A series piece dated before the week of 9 November wears none unless it names one (whether those weeks wear a skin
+  is his call), and a series piece with no date is refused: its week, and so its skin, is told from its date alone.
+- Every skin keeps clear of the logo plate as it keeps clear of the words: on the tall thumbnail the plate sits under
+  the proof on the column's left edge, so neon's tube stops short of it, extruded's toy stands beside it on the same
+  floor (or over it, or is left out when there is no room), Bauhaus blocks turns the band under the proof round (its
+  quarter disc from the bottom-right corner), and brand book's block steps down beside it. On the wide thumbnail the
+  plates sit over the headline and push it down; a low headline leaves Bauhaus blocks no room for its figure and
+  extruded none for its toy, and they then show their ground alone (measured on 5 November with the 2 November logo
+  rows: both lose their device on all three days' wide thumbnails). A skin
+  that still touches the words or the logos, or cannot place its drawing, refuses the shape, and the drawer says so;
+  what should happen then (the next skin, the plain Receipt, or a `"skin"` override, as the code does now) is his call.
+- The skins are drawn on the two video thumbnails (tall 1080 x 1920 and wide 1280 x 720), the shapes they were made
+  and checked on. The other cover shapes (the 3:2 cover, Substack's 1200 x 630, the 1200 x 675 share card, the square
+  and the vertical cover) wear the series colour on the highlighted words and the pill on the house sage: tried on
+  them on 5 November, two skins put a decoration on the headline and the rest lost their device. This is not settled:
+  house rule THE_RECEIPT says every series cover and video thumbnail wears a skin, and the code skins the thumbnails
+  only. Krish decides between skins made for the five cover shapes and THE_RECEIPT narrowed to the two thumbnails
+  (only he edits house rules).
 - The fun is colour and light, never jokey copy: no stickers, badges or slogans on a cover. His words of the first
   concepts: "Stuff can't just randomly overlap on titles like that and I think these "screwdriver included" and
   "bring a calculator included" badges are really obnoxious."
 - Nothing sits on the words. No decoration may touch a headline, the tag, the pill, the wordmark or the logos.
 - Content-engine's covers and thumbnails follow this in code: `scripts/pages/brand.py` `series_look`, the Receipt's fit
-  (`receipt.py`, refusing any `.deco` that touches the words), `tests/series_colour_test.py` and
-  `tests/receipt_overlap_test.py`. Growth holds its kit to the same rule (its R125).
+  (`receipt.py`, refusing any `.deco` that touches the words), the skins and their rotation (`scripts/pages/skins/`,
+  each drawing checked again after the skin places its decorations: nothing on the words or the logos, no words in a
+  decoration, everything inside the safe box and the proof at its floor), the visual gate (from the week of 9 November
+  a series piece's thumbnail must wear a skin, telling a record drawn before the skins from its piece; nothing else
+  may), `tests/series_colour_test.py`, `tests/receipt_overlap_test.py` and `tests/series_skins_test.py` (all nine
+  skins drawn on Monday, Wednesday and Friday, tall and wide, alone, with logo rows and a strip, and under a long
+  title). Growth holds its kit to the same rule (its R125).
 
 ## The Tuesday meme (Ruling, Krish, 4 November 2026)
 

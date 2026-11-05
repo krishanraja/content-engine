@@ -23,6 +23,11 @@ Facts ("cover", and "thumbs" over it field by field):
 
 Each shape lays everything inside its safe box (the part every place it is shown keeps), finds the largest
 headline that fits in its lines with no lone short word, and holds every word to the phone floors in card.py.
+
+A weekly series piece's video thumbnails wear the week's series skin over this (skins/__init__.py: one of nine, one
+per week in rotation, or the one its facts name in "skin"; Krish, 2026-11-05: "keep all of them and rotate them all
+at will over the coming weeks"). Anything else, and the cover shapes no skin is made for yet (skins.SHAPES), wears
+none and is drawn exactly as above.
 """
 import datetime as dt
 import hashlib
@@ -33,6 +38,7 @@ from pathlib import Path
 
 import brand
 import card
+import skins
 
 SAGE = '#B9D3C3'
 GROUND_STOPS = ('#D6E6DB', '#B9D3C3', '#8FB3A0')
@@ -93,12 +99,25 @@ h1 mark { background: var(--accent); color: var(--ink); padding: 0 .12em; -webki
         padding: .3em .6em; border-radius: 999px; white-space: nowrap; }
 """
 
+# Where everything stands, held to the shape: every part inside the safe box (cut), none in a zone the platform
+# covers (hit), and the proof at its floor (small_proof). The fit runs it at every size it tries, and a series
+# skin's placement runs it again after it has moved things (RECHECK_JS).
+PLACED_JS = r"""
+  const inBox = (r, b) => r.left >= b[0] - .5 && r.top >= b[1] - .5 && r.right <= b[2] + .5 && r.bottom <= b[3] + .5;
+  const hits = (r, b) => r.left < b[2] && r.right > b[0] && r.top < b[3] && r.bottom > b[1];
+  const placed = (safe, clear, proofMin) => {
+    const parts = ['.wmp', 'h1', '.logos', '.pill', '.tag', '.ring'].flatMap(q => [...document.querySelectorAll(q)]);
+    const cut = parts.filter(e => !inBox(e.getBoundingClientRect(), safe)).map(e => e.className || e.tagName);
+    const hit = parts.filter(e => clear.some(c => hits(e.getBoundingClientRect(), c[1]))).map(e => e.className || e.tagName);
+    const img = document.querySelector('.frame img').getBoundingClientRect();
+    return {cut, hit, proof: [Math.round(img.width), Math.round(img.height)], small_proof: img.width < proofMin * (safe[2] - safe[0])};
+  };
+"""
+
 # The largest headline that fits: its lines, no lone short word, everything inside the safe box and out of
 # any clear zone, and the column not spilling. Returns what it settled on.
 FIT_JS = r"""([heads, maxLines, loneMax, safe, clear, proofMin, proofWs]) => {
-  const s = document.documentElement.style, h1 = document.querySelector('h1');
-  const inBox = (r, b) => r.left >= b[0] - .5 && r.top >= b[1] - .5 && r.right <= b[2] + .5 && r.bottom <= b[3] + .5;
-  const hits = (r, b) => r.left < b[2] && r.right > b[0] && r.top < b[3] && r.bottom > b[1];
+  const s = document.documentElement.style, h1 = document.querySelector('h1');""" + PLACED_JS + r"""
   const words = () => {
     const out = [];
     const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT);
@@ -125,24 +144,27 @@ FIT_JS = r"""([heads, maxLines, loneMax, safe, clear, proofMin, proofWs]) => {
     fitImage();
     const ws = words(), lines = [...new Set(ws.map(w => w.top))].sort((a, b) => a - b);
     const lone = lines.map(t => ws.filter(w => w.top === t)).filter(l => l.length === 1 && l[0].w.replace(/[^A-Za-z0-9%]/g, '').length <= loneMax).map(l => l[0].w);
-    const parts = ['.wmp', 'h1', '.logos', '.pill', '.tag', '.ring'].flatMap(q => [...document.querySelectorAll(q)]);
-    const cut = parts.filter(e => !inBox(e.getBoundingClientRect(), safe)).map(e => e.className || e.tagName);
-    const hit = parts.filter(e => clear.some(c => hits(e.getBoundingClientRect(), c[1]))).map(e => e.className || e.tagName);
+    const {cut, hit, proof, small_proof} = placed(safe, clear, proofMin);
     // Nothing sits on the words (Krish, 2026-11-04: "Stuff can't just randomly overlap on titles like that"): any
     // decoration (.deco) that touches the headline, the wordmark, the logos, the pill or the tag refuses the shape.
     const kept = ['.wmp', 'h1', '.logos', '.pill', '.tag'].flatMap(q => [...document.querySelectorAll(q)]).map(e => e.getBoundingClientRect());
     const over = [...document.querySelectorAll('.deco')].filter(d => kept.some(w => hits(d.getBoundingClientRect(), [w.left, w.top, w.right, w.bottom]))).map(e => e.className);
     const main = document.querySelector('.main').getBoundingClientRect(), hb = h1.getBoundingClientRect(), fb = document.querySelector('.foot')?.getBoundingClientRect();
     const spill = hb.bottom > main.bottom + 1 || (fb && fb.bottom > main.bottom + 1) || h1.scrollWidth > h1.clientWidth + 1;
-    const img = document.querySelector('.frame img').getBoundingClientRect();
-    last = {head, lines: lines.length, lone, cut, hit, over, spill, proof: [Math.round(img.width), Math.round(img.height)]};
-    last.small_proof = img.width < proofMin * (safe[2] - safe[0]);
+    last = {head, lines: lines.length, lone, cut, hit, over, spill, proof};
+    last.small_proof = small_proof;
     last.ok = lines.length <= maxLines && !lone.length && !cut.length && !hit.length && !over.length && !spill && !last.small_proof;
     last.proofw = pw;
     if (last.ok) return last;
   }
   }
   return last;
+}"""
+
+# After a series skin has placed its decorations: the same safe box, clear zones and proof floor, measured again,
+# since a placement may move the pin, the tag or the ring, or resize the proof.
+RECHECK_JS = r"""([safe, clear, proofMin]) => {""" + PLACED_JS + r"""
+  return placed(safe, clear, proofMin);
 }"""
 
 
@@ -328,7 +350,7 @@ def page(facts, c, base, shape):
     pill = f'<div class="pill" data-fine-print>{esc(ch["name"])}</div>' if look['series'] else ''
     foot = f'<div class="foot"><div class="logos">{logos}</div></div>' if logos else ''
     tag = f'<div class="tag" data-fine-print>{esc(p["tag"])}</div>'
-    return f"""<!doctype html><html style="{root}"><head><meta charset="utf-8"><style>{brand.font_css()}
+    doc = f"""<!doctype html><html style="{root}"><head><meta charset="utf-8"><style>{brand.font_css()}
 {CSS.replace('@SAGE@', body_ground).replace('@GROUND@', card_ground)}</style></head><body>
 <div id="card" class="{spec['layout']}" style="width:{W}px;height:{H}px">
  <div id="safe" style="left:{l}px;top:{tp}px;width:{r - l}px;height:{b - tp}px">
@@ -340,17 +362,56 @@ def page(facts, c, base, shape):
   </div>
  </div>
 </div></body></html>"""
+    # The week's series skin, on a weekly series piece's thumbnails (skins.for_shape); anything else is the page as it is.
+    return skins.apply(doc, facts, shape, (W, H), look)[0]
+
+
+def skin_of(facts, shape):
+    """The series skin this shape wears (skins.for_shape): the week's on a weekly series piece's thumbnails, None
+    on anything that is not a weekly series piece, on the shapes no skin is made for yet, and on a piece dated
+    before the rotation starts (skins.FIRST_WEEK) unless its facts name one."""
+    look = brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries'))
+    return skins.for_shape(facts, look, shape)
+
+
+def place_skin(pg, skin_id, shape, fit):
+    """After the house fit: the skin places its decorations against the laid-out page (its PLACE_JS), then the
+    shape is refused if any decoration touches the words or carries words (skins.CHECK_JS), if anything now falls
+    outside the safe box or in a zone the platform covers, or the proof is under its floor (RECHECK_JS). A
+    placement that fails outright refuses the shape too, in plain words (explain), never with a traceback."""
+    from playwright.sync_api import Error as PlaywrightError
+    module = skins.load(skin_id)
+    fit = {**fit, 'skin': skin_id, 'fitted': fit['ok']}
+    if getattr(module, 'PLACE_JS', None):
+        try:
+            pg.evaluate(module.PLACE_JS, [shape])
+        except PlaywrightError as e:
+            return {**fit, 'ok': False, 'skin_error': str(e).strip().splitlines()[0]}
+        card.settle(pg)
+    found = pg.evaluate(skins.CHECK_JS)
+    fit.update(skin_over=found['over'], worded=found['worded'])
+    spec = SHAPES[shape]
+    again = pg.evaluate(RECHECK_JS, [list(spec['safe']), spec.get('clear', []), PROOF_MIN.get(shape, PROOF_MIN[spec['layout']])])
+    fit.update(cut=[*fit.get('cut', []), *(x for x in again['cut'] if x not in fit.get('cut', []))],
+               hit=[*fit.get('hit', []), *(x for x in again['hit'] if x not in fit.get('hit', []))],
+               small_proof=bool(fit.get('small_proof') or again['small_proof']), proof=again['proof'])
+    if found['over'] or found['worded'] or again['cut'] or again['hit'] or again['small_proof']:
+        fit['ok'] = False
+    return fit
 
 
 def render(b, facts, c, base, shape, jpeg=None):
     """Draw one shape in an open browser. Returns (bytes or None, fit, small words)."""
     spec = SHAPES[shape]
     W, H = spec['w'], spec['h']
+    skin_id = skin_of(facts, shape)
     pg = b.new_page(viewport={'width': W, 'height': H})
     pg.set_content(page(facts, c, base, shape))
     card.settle(pg)
     fit = pg.evaluate(FIT_JS, [list(spec['heads']), spec['lines'], LONE_WORD_MAX, list(spec['safe']), spec.get('clear', []), PROOF_MIN.get(shape, PROOF_MIN[spec['layout']]),
                                   [spec.get('proofw', '58%'), '50%', '44%'] if spec['layout'] == 'side' else ['100%']])
+    if skin_id:
+        fit = place_skin(pg, skin_id, shape, fit)
     small = card.too_small(card.texts(pg, (0, 0, W, H)), W)
     shot = None
     if fit['ok'] and not small:
@@ -362,7 +423,7 @@ def render(b, facts, c, base, shape, jpeg=None):
 
 def explain(name, fit, small):
     print(f'{name}: not drawn.')
-    if fit['lines']:
+    if fit['lines'] and not fit.get('fitted'):  # the headline's own fit; when only the skin refused, its lines are fine
         print(f'  at the smallest headline tried ({fit["head"]} px) it takes {fit["lines"]} line(s)')
     if fit['lone']:
         print(f'  a short word sits alone on a line: {", ".join(fit["lone"])}. Reword or rebalance the "headline"')
@@ -372,6 +433,13 @@ def explain(name, fit, small):
         print(f'  {what} reaches into a zone the platform covers')
     for what in fit.get('over', []):
         print(f'  a decoration ({what}) touches the words: nothing may sit on a title, the tag, the pill or a mark')
+    for what in fit.get('skin_over', []):
+        print(f'  the {fit["skin"]} series skin puts a decoration on the words ({what}): nothing may sit on a title, the tag, the pill or a mark')
+    for what in fit.get('worded', []):
+        print(f'  the {fit["skin"]} series skin puts words in a decoration ({what}): no stickers, badges or slogans')
+    if fit.get('skin_error'):
+        print(f'  the {fit["skin"]} series skin could not place its drawing on this piece ({fit["skin_error"]}): '
+              'name another with "skin" in the cover facts')
     if fit['spill']:
         print('  the words do not fit their column: shorten the "headline"')
     if fit.get('small_proof'):
@@ -387,6 +455,7 @@ def receipt_record(facts, c, shape, name, data, fit):
         'width': SHAPES[shape]['w'], 'height': SHAPES[shape]['h'], 'sha256': hashlib.sha256(data).hexdigest(),
         'portrait': False, 'proof': {k: p.get(k) for k in ('image', 'pdf', 'page', 'html', 'source', 'tag', 'ring')},
         'series_look': brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries')),
+        'skin': skin_of(facts, shape),
         'rows': [r.get('name', '') for r in c.get('rows', [])], 'strip': [x.get('name', '') for x in c.get('strip', [])],
         'headline': list(words_of(c, facts)), 'headline_px': fit['head'], 'lines': fit['lines'],
         'safe': list(SHAPES[shape]['safe']), 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
@@ -433,6 +502,7 @@ def draw_thumbs(facts, base, out, thumb_facts, companies_of):
     """Both video thumbnails in the Receipt, under 2 MB, and thumbs.json. Both or neither."""
     out = Path(out)
     c = thumb_facts(facts)
+    skin_of(facts, 'tall')  # an unknown "skin", or a series piece with no date, stops here, before anything is removed
     for n in list(THUMB_FILES.values()) + ['thumbs.json', 'thumbs-check.png']:
         (out / n).unlink(missing_ok=True)
     proof_of(c, facts, base)  # fetch and cut the proof before the drawing browser opens
@@ -463,6 +533,7 @@ def draw_thumbs(facts, base, out, thumb_facts, companies_of):
     logos = [r.get('name', '') for r in [*c.get('rows', []), *c.get('strip', [])]]
     (out / 'thumbs.json').write_text(json.dumps({
         'schema_version': 1, 'drawer': 'scripts/pages/build.py --thumbs (receipt)', 'template': TEMPLATE, 'subchannel': facts['subchannel'],
+        'series_look': brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries')), 'skin': skin_of(facts, 'tall'),
         'headline': list(words_of(c, facts)), 'portrait': False, 'proof': {k: (c.get('proof') or {}).get(k) for k in ('image', 'pdf', 'page', 'html', 'source', 'tag', 'ring')},
         'logos': [n for n in logos if n], 'companies': companies_of([n for n in logos if n]), 'background': False,
         'files': files, 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
