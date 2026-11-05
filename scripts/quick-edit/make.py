@@ -203,7 +203,7 @@ def script_prompt(path):
         if word not in names and word.split()[0] not in {'The', 'This', 'That', 'And', 'But', 'So', 'Now', 'Our', 'If', 'One', 'First', 'Then', 'When', 'What', 'How', 'Why', 'Think', 'People', 'Every', 'Most', 'Nobody', 'Instead', 'Expensive', 'Choose', 'Line', 'Before', 'Square', 'Written', 'On', 'In', 'It', 'They', 'You', 'We', 'He', 'She', 'Let', 'Back'}:
             names.append(word)
     if _LEX_DOC:
-        names += [t for t in _LEX.terms(_LEX_DOC, limit=60) if t not in names]
+        names += [t for t in _LEX.terms(_LEX_DOC, limit=20) if t not in names]   # the script's own names first
     return 'makeyourmindup. ' + ', '.join(names[:60]) + '.'
 
 

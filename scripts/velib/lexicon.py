@@ -36,7 +36,8 @@ PROMPT_HEAD = 'makeyourmindup.'
 APPLY_AFTER = 2           # a learned fix is applied to captions once this many takes heard it
 TERM_SKIP = {'The', 'This', 'That', 'And', 'But', 'So', 'Now', 'Our', 'If', 'One', 'First', 'Then', 'When', 'What',
              'How', 'Why', 'It', 'They', 'You', 'We', 'He', 'She', 'Let', 'Back', 'In', 'On', 'I', 'A', 'An', 'Here',
-             'There', 'Every', 'Most', 'Nobody', 'Instead', 'Before', 'After', 'Think', 'People', 'Yes', 'No', 'Not'}
+             'There', 'Every', 'Most', 'Nobody', 'Instead', 'Before', 'After', 'Think', 'People', 'Yes', 'No', 'Not',
+             'Visit', 'See', 'Look', 'Today', 'Tomorrow', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'}
 TERM = re.compile(r"\b(?:[A-Z][a-z]*[A-Z][A-Za-z]*|[A-Z]{2,}[a-z]*|[A-Z][a-z]{2,}(?:\s+[A-Z][a-z]{2,})*)"
                   r"(?:[ -](?:\d+(?:\.\d+)?|[IVX]+))?\b|\b[A-Za-z]+-\d+(?:\.\d+)?\b")
 
@@ -72,7 +73,9 @@ def _bare(text: str) -> str:
 
 
 def names_him(text: str) -> bool:
-    return any(re.search(rf'\b{n}\b', text.lower()) for n in NEVER)
+    """His name anywhere in it, run together or not ("KrishRaja", "content.krishraja.com")."""
+    bare = _bare(text)
+    return any(n in bare for n in NEVER)
 
 
 def is_hesitation(text: str) -> bool:
@@ -111,11 +114,15 @@ def hotwords(doc: dict | None = None, script_text: str | None = None, limit: int
     return ' '.join(terms(doc, script_text, limit)) or ''
 
 
-def fixes(doc: dict | None = None) -> list[list[str]]:
-    """[[heard, fixed], ...] to apply to captions: every seeded fix, and a learned one once APPLY_AFTER takes heard it."""
+def fixes(doc: dict | None = None, script_text: str | None = None) -> list[list[str]]:
+    """[[heard, fixed], ...] to apply to captions: every seeded fix; a learned one only for a piece whose script
+    spells the fixed term, and once APPLY_AFTER takes heard it. A learned fix is never applied blind: "cloud" heard
+    for Claude would otherwise turn every cloud into Claude in a piece about the weather."""
     doc = doc if doc is not None else load()
+    script = _bare(script_text or '')
     return [[f['heard'], f['fixed']] for f in doc['fixes']
-            if f.get('status') == 'seeded' or f.get('count', 0) >= APPLY_AFTER]
+            if f.get('status') == 'seeded'
+            or (f.get('count', 0) >= APPLY_AFTER and script and _bare(f['fixed']) and _bare(f['fixed']) in script)]
 
 
 def _add_term(doc: dict, text: str, source: str) -> bool:

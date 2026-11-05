@@ -127,6 +127,22 @@ class EventTest(unittest.TestCase):
                                        {'ctc': [{'text': 'so', 's': 1.0, 'e': 1.5}]}), [])
 
 
+class TrimTest(unittest.TestCase):
+    def test_a_sound_in_the_middle_of_a_word_is_never_trimmed_out_of_it(self):
+        record = {'take': 't', 'media': {'sha256': 'x', 'duration_s': 3.0},
+                  'aligners': {'a': {'words': [{'i': 0, 'text': 'clearly', 'onset_s': 1.0, 'end_s': 1.6}]},
+                               'b': {'words': [{'i': 0, 'text': 'clearly', 'onset_s': 1.0, 'end_s': 1.6}]}}}
+        record['listen'] = {'schema': hear.SCHEMA, 'media_sha256': 'x', 'quiet': [[0, 3.0]], 'words': [],
+                            'events': [{'kind': 'hesitation', 's': 1.30, 'e': 1.40, 'text': 'uh', 'use': 'trim',
+                                        'sources': ['ctc', 'whisper']}]}
+        heard = fumbles.clocks(record)
+        self.assertEqual([(w['text'], w['onset_s'], w['end_s']) for w in heard['a']], [('clearly', 1.0, 1.6)])
+        self.assertEqual((heard['b'][0]['onset_s'], heard['b'][0]['end_s']), (1.0, 1.6))
+        record['listen']['events'][0].update(s=1.45, e=1.6)       # at the word's end: trimmed, then cut like a flub
+        heard = fumbles.clocks(record)
+        self.assertEqual([(w['text'], w['end_s']) for w in heard['a']], [('clearly', 1.45), ('<uh>', 1.6)])
+
+
 class ConformTest(Fixture):
     def _with_uh(self, record, words, ears_hear_it=True):
         """An "uh" in the pause after "models.": voice at the time, and the letter-by-letter ear wrote it down."""
@@ -172,6 +188,10 @@ class ConformTest(Fixture):
         record = self.ingest('take-1', words, duration)
         record['listen'] = {'schema': hear.SCHEMA, 'media_sha256': record['media']['sha256'], 'ears': ['voicing'],
                             'quiet': [], 'events': [], 'words': []}
+        self.save(record)
+        with self.assertRaisesRegex(ValueError, 'found no quiet anywhere'):
+            conform.conform(spec(), 'short', self.script, self.ve)
+        record['listen']['quiet'] = [[0.0, 0.1]]       # quiet, but nowhere a line could start
         self.save(record)
         with self.assertRaisesRegex(ValueError, 'agreed gap'):
             conform.conform(spec(), 'short', self.script, self.ve)
@@ -237,8 +257,15 @@ class LexiconTest(unittest.TestCase):
         self.assertEqual(lexicon.fixes(doc), [])                                       # one take: not yet applied
         self.assertEqual(lexicon.learn(doc, script, self.report('take-1', 'aaa', devs))['skipped'], 'already learned from this take')
         lexicon.learn(doc, script, self.report('take-2', 'bbb', devs[:1]))
-        self.assertEqual(lexicon.fixes(doc), [['Bike Dance', 'ByteDance']])            # two takes heard it
+        self.assertEqual(lexicon.fixes(doc), [])                                       # never applied blind
+        self.assertEqual(lexicon.fixes(doc, 'ByteDance trains.'), [['Bike Dance', 'ByteDance']])   # two takes, in the script
+        self.assertEqual(lexicon.fixes(doc, 'The weather in the cloud.'), [])
         self.assertEqual(doc['proposals'], [])                                         # nothing about taste by itself
+
+    def test_his_name_run_together_is_still_his_name(self):
+        for text in ('KrishRaja', 'content.krishraja.com', 'Chris'):
+            self.assertTrue(lexicon.names_him(text), text)
+        self.assertEqual(lexicon.script_terms('Visit KrishRaja and Anthropic.'), ['Anthropic'])
 
     def test_the_prompt_names_the_publication_and_terms_never_him(self):
         doc = lexicon._empty()
