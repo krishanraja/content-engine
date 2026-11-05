@@ -21,6 +21,10 @@ on:
         description: 'Refuse a run that could cost more than this (US dollars)'
         required: true
         default: '1.00'
+      clip_seconds:
+        description: 'Send only the first N seconds (0 = the whole take); the clip is kept in the artifact'
+        required: false
+        default: '10'
       max_minutes:
         description: 'Stop the pod after this many minutes'
         required: false
@@ -58,6 +62,20 @@ jobs:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           TAKE: ${{ inputs.take }}
         run: python scripts/post-pack/recording.py get "$TAKE" --out "$RUNNER_TEMP/take"
+      - name: Cut a short clip for a fast trial
+        if: ${{ inputs.take != 'cleanup' && inputs.clip_seconds != '0' }}
+        env:
+          TAKE: ${{ inputs.take }}
+          CLIP: ${{ inputs.clip_seconds }}
+        run: |
+          pip install -q imageio-ffmpeg
+          FF=$(python -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())")
+          mkdir -p "$RUNNER_TEMP/maxine"
+          "$FF" -v error -y -i "$RUNNER_TEMP/take/$TAKE" -t "$CLIP" -map 0:v:0 -map 0:a? -c:v libx264 -preset veryfast -crf 12 \
+            -pix_fmt yuv420p -c:a aac -b:a 192k "$RUNNER_TEMP/maxine/$TAKE"
+          mv "$RUNNER_TEMP/maxine/$TAKE" "$RUNNER_TEMP/take/$TAKE"
+          cp "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine/clip.$TAKE"
+          ls -la "$RUNNER_TEMP/take/$TAKE"
       - name: Run Maxine on one rented pod
         if: ${{ inputs.take != 'cleanup' }}
         env:
