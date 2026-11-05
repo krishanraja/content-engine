@@ -49,11 +49,13 @@ jobs:
         with:
           python-version: '3.12'
       - name: Fetch the take from the recordings store
+        if: ${{ inputs.take != 'cleanup' }}
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           TAKE: ${{ inputs.take }}
         run: python scripts/post-pack/recording.py get "$TAKE" --out "$RUNNER_TEMP/take"
       - name: Run Maxine on one rented pod
+        if: ${{ inputs.take != 'cleanup' }}
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           NGC_API_KEY: ${{ secrets.NGC_API_KEY }}
@@ -68,3 +70,8 @@ jobs:
           path: ${{ runner.temp }}/maxine/
           retention-days: 3
           if-no-files-found: warn
+      - name: Terminate any eyeline pod still running (also on cancel; take=cleanup runs only this)
+        if: always()
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+        run: python scripts/velib/maxine_pod.py cleanup -
