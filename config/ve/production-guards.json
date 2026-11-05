@@ -32,7 +32,15 @@
       "scripts/quick-edit/episode.py",
       "scripts/quick-edit/words_gate.py",
       "config/ve/voice-chain.json",
-      "apps/renderer/scripts/ve-render.mjs"
+      "apps/renderer/scripts/ve-render.mjs",
+      "scripts/velib/hear.py",
+      "scripts/velib/fumbles.py",
+      "scripts/velib/delivery.py",
+      "scripts/velib/lexicon.py",
+      "scripts/velib/gaps.py",
+      "scripts/cutgates/gaps.py",
+      "scripts/velib/forced_align.py",
+      "scripts/quick-edit/spelling.py"
     ],
     "skip_suffixes": [
       ".test.ts",
