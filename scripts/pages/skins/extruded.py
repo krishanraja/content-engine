@@ -130,10 +130,13 @@ h1 mark {{ background: {col}; color: {ink}; filter: {drops(px['mark'])}; }}
     return html.replace('</style>', css + '</style>', 1)
 
 
-PLACE_JS = r"""([shape]) => {
+PLACE_JS = r"""([shape, geo]) => {
   const NS = 'http://www.w3.org/2000/svg';
   const card = document.querySelector('#card'), safe = document.querySelector('#safe');
   const W = card.clientWidth, H = card.clientHeight, tall = shape !== 'wide';
+  // A cover in the wide design (not one of the two thumbnails, skins.GEO) has its words in a column down to the foot:
+  // when there is no room for the toy under them, it stands in the band under the proof, left of that column.
+  const GEO = geo || {thumb: true};
   const css = getComputedStyle(document.documentElement);
   const v = k => css.getPropertyValue(k).trim();
   const day = v('--motif');
@@ -253,6 +256,15 @@ PLACE_JS = r"""([shape]) => {
     const h1 = R('h1'), marks = [...document.querySelector('h1 mark').getClientRects()];
     const top = Math.max(h1.bottom, ...marks.map(r => r.bottom)) + DM.mark + 24, bot = H - 50, bh = Math.min(140, bot - top);
     const xs = h1.left, xe = 940;
+    if ((bh < 100 || xe - xs < 200) && !GEO.thumb) {
+      const fr = R('.frame'), lg = document.querySelector('.logos'), tg = document.querySelector('.tag');
+      const colL = Math.min(h1.left, ...[lg, tg].filter(Boolean).map(e => e.getBoundingClientRect().left));
+      const t2 = fr.bottom + DM.frame + 24, b2 = H - 40, h2 = Math.min(140, b2 - t2), x0 = Math.max(40, fr.left), x1 = colL - 40;
+      if (h2 < 100 || x1 - x0 < 200) return;
+      const L = Math.min(x1 - x0, 2.4 * h2), c2 = t2 + (b2 - t2) / 2;
+      add(x0 - 4, c2 - h2 / 2 - 4, x0 + L + 4, c2 + h2 / 2 + 4, toy(x0, x0 + L, c2 - h2 / 2, c2 + h2 / 2));
+      return;
+    }
     if (bh < 100 || xe - xs < 200) return;
     const c = Math.min(Math.max(H * 600 / 720, top + bh / 2), bot - bh / 2);
     add(xs - 4, c - bh / 2 - 4, xe + 4, c + bh / 2 + 4, toy(xs, xe, c - bh / 2, c + bh / 2));

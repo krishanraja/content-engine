@@ -98,9 +98,12 @@ h1 mark {{ background: {PAPER}; color: {ink}; box-shadow: var(--u) var(--u) 0 {i
     return html
 
 
-PLACE_JS = r"""([shape]) => {
+PLACE_JS = r"""([shape, geo]) => {
   const card = document.querySelector('#card'), cr = card.getBoundingClientRect();
   const W = card.clientWidth, H = card.clientHeight, tall = shape !== 'wide';
+  // A cover (not one of the two thumbnails, skins.GEO) whose wordmark row sits near the top edge (the square) has no top
+  // strip: the world is drawn under the proof alone, never cut into scraps round the wordmark and the pill.
+  const GEO = geo || {thumb: true};
   const world = card.dataset.world, full = card.dataset.full === '1';
   const css = getComputedStyle(document.documentElement);
   const v = n => css.getPropertyValue(n).trim();
@@ -121,6 +124,7 @@ PLACE_JS = r"""([shape]) => {
     ...lines.map(k => pad(k, P)), ...marks.map(k => pad(k, P, P + U))];
   card.dataset.keep = JSON.stringify(keep);
   const WM = R('.wmp'), PL = R('.pill'), HD = R('h1'), TG = R('.tag');
+  const strip = GEO.thumb || Math.min(WM.t, ...(PL ? [PL.t] : [])) - PT >= 140;
   // The headline's drawn bottom: its box, or its marks and their hard shadow, whichever is lower.
   const HB = Math.max(HD.b, ...marks.map(m => m.b + U));
   // The proof frame as it is drawn, turned -2.5deg about its centre: onF(u, v) is a point on it (0..1 each way).
@@ -211,7 +215,7 @@ PLACE_JS = r"""([shape]) => {
     if (tall) {
       // Top strip: the trunk sweeps in off the top right and off the left edge on a falling diagonal, 60 px and more
       // above the wordmark and pill.
-      lay(() => bundle(route([[[W + 150, -160], [-1, .6]], [[W * .62, 34], [-1, .15], .5], [[W * .25, 66], [-1, .1], .5], [[-90, 108], [-1, .38], .5]])));
+      if (strip) lay(() => bundle(route([[[W + 150, -160], [-1, .6]], [[W * .62, 34], [-1, .15], .5], [[W * .25, 66], [-1, .1], .5], [[-90, 108], [-1, .38], .5]])));
       // Open ground: the trunk comes out from behind the receipt's bottom edge on a steep diagonal (45 deg off it),
       // well clear of its corners, into the split point. There the shares part: the paper, the biggest, turns level
       // and runs through the field under the proof and off the right edge; the amber falls away under it and off the
@@ -293,9 +297,11 @@ PLACE_JS = r"""([shape]) => {
       // off the left edge and leave off the right.
       const BH = W1, PH = W1 * 1.2, SD = W2 * 1.4;
       const P0 = wp([150, 124], W * .7 - 150);                          // the plate, on the top centre line
-      cline(along(P0, -P0[0] - 60), along(P0, W - P0[0] + 60));
-      bolt(along(P0, 110 - P0[0]), 560, W2 * 1.4, BH);
-      plate(P0, W3 * 1.6, PH);
+      if (strip) {
+        cline(along(P0, -P0[0] - 60), along(P0, W - P0[0] + 60));
+        bolt(along(P0, 110 - P0[0]), 560, W2 * 1.4, BH);
+        plate(P0, W3 * 1.6, PH);
+      }
       const B0 = wp(onF(.5, 1), 0, SH + 80 + LW + SD / 2);              // the shaft's centre line: its contour 80 px under the proof's shadow
       const G = along(B0, W * .39 - B0[0]);
       cline(along(B0, -B0[0] - 60), along(B0, W - B0[0] + 60));
@@ -325,7 +331,7 @@ PLACE_JS = r"""([shape]) => {
       // other two come in on the right: the ink off the right edge below the proof, the paper up off the bottom edge;
       // the future leaves between them, dashed, off the bottom right.
       lay(() => {
-        line(cubic(route([[[W + 100, -150], [-1, .75]], [[W * .7, 92], [-1, .14], .5], [[W * .2, 110], [-1, .05], .5], [[-50, 130], [-1, .42], .5]])), W1, C.deep);
+        if (strip) line(cubic(route([[[W + 100, -150], [-1, .75]], [[W * .7, 92], [-1, .14], .5], [[W * .2, 110], [-1, .05], .5], [[-50, 130], [-1, .42], .5]])), W1, C.deep);
         line(cubic(route([[[-90, T[1] + 60], [1, -.08]], [T, [1, 0], .5]])), W1, C.deep);
         line(spoke(T, -10, [W + 60, T[1] - 64], [1, -.04]), W3, C.ink);
         line(spoke(T, 58, [T[0] + 200, H + 60], [.5, 1]), W2, C.paper);

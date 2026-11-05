@@ -10,13 +10,16 @@ A skin is a module here defining
     skin(html, facts, shape, look, kit) -> html
 over the Receipt page as receipt.page draws it (the house sage ground, the series colour on the highlight and the
 pill). Every element it adds that is decoration carries the class "deco", and it may define PLACE_JS, a JS arrow
-function the drawer runs with [shape] after the house fit, to place its decorations against the laid-out page.
-receipt.render then refuses the shape if any decoration touches the headline, the tag, the pill, the wordmark plate
-or the logos, or carries words (CHECK_JS: Krish, 2026-11-04, "Stuff can't just randomly overlap on titles like
-that", and no stickers, badges or slogans), if anything has left the safe box or a platform's clear zone or the proof
-is under its floor (receipt.RECHECK_JS), or if the placement fails (in plain words, never a traceback). A placement
-measures the logo plate as it measures the headline and the tag, and keeps its drawing off it: a real series piece
-carries logo rows whenever it names a company. The kit is _kit.Kit.
+function the drawer runs with [design, geo] after the house fit, to place its decorations against the laid-out page:
+design is 'tall' or 'wide', the thumbnail design the shape borrows (DESIGN), and geo the shape's own name, whether it
+is one of the two thumbnails, and its grid window and badge corner (GEO, geo()). receipt.render then refuses the shape
+if any decoration touches the headline, the tag, the pill, the wordmark plate or the logos, or carries words
+(CHECK_JS: Krish, 2026-11-04, "Stuff can't just randomly overlap on titles like that", and no stickers, badges or
+slogans), if anything has left the safe box or a platform's clear zone or the proof is under its floor
+(receipt.RECHECK_JS), or if the placement fails (in plain words, never a traceback); receipt.settle then moves the
+whole piece on to the next skin (Krish, 2026-11-05: "Yeah just move on automatically"). A placement measures the logo
+plate as it measures the headline and the tag, and keeps its drawing off it: a real series piece carries logo rows
+whenever it names a company. The kit is _kit.Kit.
 """
 from __future__ import annotations
 
@@ -26,12 +29,32 @@ import importlib
 # The rotation: the week of Monday 9 November 2026 wears neon, the week of 16 November sunburst, and so on.
 ORDER = ('neon', 'sunburst', 'painted_scene', 'series_worlds', 'bauhaus', 'papercut', 'extruded', 'brandbook', 'memphis')
 FIRST_WEEK = dt.date(2026, 11, 9)
-# The shapes the skins were made, reviewed and checked on: the two video thumbnails. On the five cover shapes
-# (receipt.COVER_FILES) they were tried on 5 November 2026 and do not hold: bauhaus and brandbook put a decoration on
-# the headline, a placement fails outright when handed the wide design, and the rest lose their device on the side
-# layouts. Those covers keep the series colour on the house sage, and their records say "skin": null, until a skin is
-# drawn for them.
-SHAPES = ('tall', 'wide')
+# Every shape a series piece is drawn in wears the skin, so a series piece looks the same everywhere (Krish,
+# 2026-11-05: "Skin the covers too"): the two video thumbnails the skins were made on, and the five cover shapes
+# (receipt.COVER_FILES), each drawn on the closer of the two designs. The side layouts (the 3:2 cover, Substack's
+# 1200 x 630 and the 1200 x 675 share card) take the wide thumbnail's design; the stacked ones (the square and the
+# vertical cover) the tall's.
+DESIGN = {'tall': 'tall', 'wide': 'wide', 'cover': 'wide', 'upload': 'wide', 'share': 'wide', 'square': 'tall', 'vertical': 'tall'}
+SHAPES = tuple(DESIGN)
+# What each shape's platforms do to it, for a skin's placement (handed to PLACE_JS beside the design): "grid" is the
+# profile grid's middle 3:4 on the 9:16 shapes (y 240 to 1680), the part a grid tile shows, or None; "badge" a corner
+# a platform lays its own mark over (YouTube's video length on the wide thumbnail), kept clean, or None. The
+# thumbnails' own values are the numbers their skins were drawn to, so a thumbnail is drawn exactly as before.
+GEO = {
+    'tall': {'grid': [0, 240, 1080, 1680], 'badge': None},
+    'wide': {'grid': None, 'badge': [968, 548, 1280, 720]},
+    'vertical': {'grid': [0, 240, 1080, 1680], 'badge': None},
+    'square': {'grid': None, 'badge': None},
+    'cover': {'grid': None, 'badge': None},
+    'upload': {'grid': None, 'badge': None},
+    'share': {'grid': None, 'badge': None},
+}
+
+
+def geo(shape):
+    """What a skin's placement is handed for this shape: its design ('tall' or 'wide'), the shape's own name, whether
+    it is one of the two thumbnails the skins were drawn on ('thumb'), and its grid and badge (GEO)."""
+    return {'shape': shape, 'design': DESIGN[shape], 'thumb': shape in ('tall', 'wide'), **GEO[shape]}
 
 # After the skin has placed its decorations: any .deco on the words, and any .deco that carries words.
 CHECK_JS = r"""() => {
@@ -91,10 +114,13 @@ def load(skin_id):
 
 
 def kit_for(skin_id, shape, size, look):
-    """The kit for one drawing: the house helpers, and this shape's size, whether it is tall, and the series day."""
+    """The kit for one drawing: the house helpers, and this shape's size, its design (DESIGN) and whether that is the
+    tall one, and the series day."""
     from ._kit import DAY_OF, Kit
     kit = Kit()
-    kit.tall = shape != 'wide'
+    kit.design = DESIGN.get(shape, 'tall' if shape != 'wide' else 'wide')
+    kit.tall = kit.design == 'tall'
+    kit.shape = shape
     kit.W, kit.H = size
     kit.day = DAY_OF.get(look.get('owner') or '', 'off')
     kit.concept = skin_id
@@ -102,13 +128,16 @@ def kit_for(skin_id, shape, size, look):
 
 
 def for_shape(facts, look, shape):
-    """The skin this shape wears: the week's (pick) on a shape the skins are made for (SHAPES), else None."""
+    """The skin this shape wears before any is tried (receipt.settle moves a piece on when its skin cannot be drawn):
+    the week's or the named one (pick) on a shape the skins are drawn on (SHAPES), else None."""
     return pick(facts, look) if shape in SHAPES else None
 
 
-def apply(html, facts, shape, size, look):
-    """(the page with the week's skin on it, the skin's id), or (the page unchanged, None) when it wears none."""
-    skin_id = for_shape(facts, look, shape)
-    if not skin_id:
+def apply(html, facts, shape, size, look, skin_id=...):
+    """(the page with the skin on it, the skin's id), or (the page unchanged, None) when it wears none. The skin is
+    the week's (for_shape) unless one is given (receipt.settle's, after moving on): None draws the plain Receipt."""
+    if skin_id is ...:
+        skin_id = for_shape(facts, look, shape)
+    if not skin_id or not look.get('series') or shape not in SHAPES:
         return html, None
     return load(skin_id).skin(html, facts, shape, look, kit_for(skin_id, shape, size, look)), skin_id

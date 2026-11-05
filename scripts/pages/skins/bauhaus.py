@@ -80,9 +80,12 @@ h1 mark {{ background: {col}; color: {ink}; }}
     return html.replace('</style>', css + '</style>', 1)
 
 
-PLACE_JS = r"""([shape]) => {
+PLACE_JS = r"""([shape, geo]) => {
   const card = document.querySelector('#card');
   const W = card.clientWidth, H = card.clientHeight, tall = shape !== 'wide';
+  // The shape's platforms (skins.GEO): the profile grid's window on the 9:16 shapes, YouTube's length badge on the wide
+  // thumbnail. A cover (not a thumbnail) keeps every form clear of the words it was not drawn round.
+  const GEO = geo || {thumb: true, grid: tall ? [0, 240, 1080, 1680] : null, badge: tall ? null : [968, 548, 1280, 720]};
   const css = getComputedStyle(document.documentElement);
   const v = k => css.getPropertyValue(k).trim();
   const col = v('--col'), ink = v('--inkc'), cream = v('--creamc'), day = v('--motif');
@@ -124,7 +127,16 @@ PLACE_JS = r"""([shape]) => {
   // The wide's shoulder: a disc rising from under the bottom edge, its crown at the proof's shadow and 60 px under
   // the words, its right foot out of YouTube's length badge.
   const sh = (() => { if (tall) return null;
-    const top = wordsBottom + CLEAR, a = H - top, cx = shadowX(top) + 8, F = 968 - 6 - cx;
+    if (!GEO.thumb) {
+      // A cover: its words run down a column to the foot, so the shoulder rises under the proof instead, its crown 12 px
+      // under the proof's shadow over the proof's middle, its right foot 60 px short of the words' column.
+      const LG = R('.logos'), colL = Math.min(h1.left, ...[tag, pill, LG].filter(Boolean).map(b => b.left));
+      const top = lowest + 12, a = H - top, cx = (C.bl[0] + S.br[0]) / 2, F = colL - CLEAR - cx;
+      if (a < 24 || F < 40) return {cx, cy: H + 1e4, R: 1, top: H};
+      const Rs = (a + F * F / a) / 2, k = (F * F / a - a) / 2;
+      return {cx, cy: H + k, R: Rs, top};
+    }
+    const top = wordsBottom + CLEAR, a = H - top, cx = shadowX(top) + 8, F = (GEO.badge ? GEO.badge[0] : W - 40) - 6 - cx;
     const Rs = (a + F * F / a) / 2, k = (F * F / a - a) / 2;
     return {cx, cy: H + k, R: Rs, top}; })();
   const planes = tall ? `<rect x="0" y="${seam}" width="${W}" height="${H - seam}" fill="${col}"/>`
@@ -189,14 +201,26 @@ PLACE_JS = r"""([shape]) => {
     // mind.the.gap's lines keep running left to right into today, over the turned disc.
     const LG = R('.logos'), RQMIN = 240;
     let Rq = Math.round(mid), mode = 'plain';
-    if (LG) { const Rm = Math.min(Rq, Math.floor(W - LG.right - INSIDE)); if (Rm >= RQMIN) { Rq = Rm; mode = 'mirror'; } else mode = 'bare'; }
+    if (!GEO.thumb) {
+      // On a cover the words may sit low beside the corner (the square's tag reaches down beside the proof): the quarter
+      // disc, drawn in a box of its own, is made smaller so that box stays 40 px or more off every word, and is left out
+      // under 240 px.
+      const off = b => Math.max(b.left, H - b.bottom) - INSIDE;
+      Rq = Math.min(Rq, Math.floor(Math.min(...[h1, tag, pill, wmp].filter(Boolean).map(off))));
+      if (Rq < RQMIN) mode = 'bare';
+    }
+    if (LG && mode === 'plain') { const Rm = Math.min(Rq, Math.floor(W - LG.right - INSIDE)); if (Rm >= RQMIN) { Rq = Rm; mode = 'mirror'; } else mode = 'bare'; }
     const disc0 = `<path d="M0,${H}V${f(H - Rq)}A${f(Rq)},${f(Rq)} 0 0 1 ${f(Rq)},${H}Z" fill="${ink}"/>`;
-    let body = mode === 'plain' ? disc0 : '', defs = '', y0 = H - Rq;
+    let body = mode === 'plain' && GEO.thumb ? disc0 : '', defs = '', y0 = H - Rq;
     const xc = (Rq + W) / 2;                                          // the middle of the colour on the bottom edge
     // Under the proof, the figure starts below the 3:4 grid window and 40 px or more off the shadow, so the grid
     // crop shows the planes alone and no part of a figure.
-    const under = Math.ceil(Math.max(lowest + INSIDE, H / 2 + W * 2 / 3)) + 4, MON_AIM = .35;
-    if (day === 'mon') {
+    const under = Math.ceil(Math.max(lowest + INSIDE, GEO.grid ? GEO.grid[3] : 0)) + 4, MON_AIM = .35;
+    // A cover with too little ground under the proof for a figure shows its planes and forms alone.
+    const figure = GEO.thumb || H - INSIDE - under >= 150;
+    if (!figure) {
+      // no figure: the planes and the quarter disc alone
+    } else if (day === 'mon') {
       // Three flows of three gauges (the width is the amount, widest on top, one even gap) come in from the card's
       // right edge, turn down together through 45 degrees and pour into the pool, a cream half disc on the bottom
       // edge in the middle of the colour, laid over their ends.
@@ -227,7 +251,12 @@ PLACE_JS = r"""([shape]) => {
       body += lines.replaceAll('@', ink) + (mode === 'bare' ? '' : `<g clip-path="url(#${id})">${lines.replaceAll('@', col)}</g>`);
       body += disc(W, ym, rt, cream);
     }
-    if (mode === 'plain') add(-20, Math.floor(y0) - 2, W + 20, H, body, defs);
+    if (mode === 'plain' && GEO.thumb) add(-20, Math.floor(y0) - 2, W + 20, H, body, defs);
+    else if (mode === 'plain') {
+      // A cover: the figure (under the proof) and the quarter disc in boxes of their own, the disc behind the figure.
+      if (figure) add(-20, under - 2, W + 20, H, body, defs);
+      add(0, Math.floor(y0) - 2, Rq + 2, H, disc0);
+    } else if (!figure) { if (mode === 'mirror') add(W - Rq - 2, Math.floor(y0) - 2, W, H, `<g transform="matrix(-1 0 0 1 ${W} 0)">${disc0}</g>`); }
     else {
       // Two boxes, so neither reaches the plate: the figures (all under it) and the quarter disc (beside it).
       const turn = s => `<g transform="matrix(-1 0 0 1 ${W} 0)">${s}</g>`;
@@ -237,7 +266,8 @@ PLACE_JS = r"""([shape]) => {
     // The counter-form: one disc of the colour cut by the card's right edge and the top, with the house hard ink
     // shadow, its foot 80 px over the top row.
     const rt = 270, foot = Math.min(pill.top, wmp.top) - 80, cy = foot - rt, sx = edge * 1.4, sy = edge * 1.6;
-    add(Math.floor(W - Math.sqrt(rt * rt - cy * cy)) - 2, 0, W, Math.ceil(foot + sy) + 2, disc(W + sx, cy + sy, rt, ink) + disc(W, cy, rt, col));
+    // (a cover whose wordmark row sits near the top edge has no room over it for the counter-form)
+    if (GEO.thumb || foot >= 60) add(Math.floor(W - Math.sqrt(rt * rt - cy * cy)) - 2, 0, W, Math.ceil(foot + sy) + 2, disc(W + sx, cy + sy, rt, ink) + disc(W, cy, rt, col));
   } else {
     // The wide: every figure lies in the shoulder, right of the proof. Whole forms keep 20 px inside its arc, 40 px
     // off the proof and 40 px over the bottom edge; lines start under the frame and come out from behind it.

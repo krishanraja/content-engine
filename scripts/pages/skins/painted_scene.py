@@ -115,6 +115,29 @@ TONE_SHAPE = {
                                (-60, 90, 100, 250, 0, 20), (115, 604, 676, 760, 0, 12)]},
 }
 DEEP = {'wed': '#25186A'}  # Wednesday's fog: a deep violet ink, never charcoal
+# The size each design's placements (CROP's 'to', TONE_SHAPE's boxes) were drawn on: the two video thumbnails. A cover
+# drawn in that design (skins.DESIGN) has them scaled to its own size, across and down (scaled()).
+REF = {'tall': (1080, 1920), 'wide': (1280, 720)}
+
+
+def scaled(c, tn, shape, W, H):
+    """CROP's placement and TONE_SHAPE's boxes, in card px of the thumbnail they were drawn on, moved to a W x H card
+    of the same design; unchanged on the thumbnail itself."""
+    rw, rh = REF[shape]
+    if (W, H) == (rw, rh):
+        return c, tn
+    sx, sy = W / rw, H / rh
+    box = lambda b: (b[0] * sx, b[1] * sy, b[2] * sx, b[3] * sy, *b[4:])
+    c = dict(c)
+    if c.get('to'):
+        c['to'] = (c['to'][0] * sx, c['to'][1] * sy)
+    tn = dict(tn)
+    for k in ('hush', 'calm', 'keep'):
+        if tn.get(k):
+            tn[k] = [box(b) for b in tn[k]]
+    if tn.get('core_box'):
+        tn['core_box'] = box(tn['core_box'])
+    return c, tn
 
 # The page colour behind everything (only seen if the still fails to load).
 BASE = {'mon': '#0C1512', 'wed': '#0C1512', 'fri': '#0C1512'}
@@ -189,6 +212,7 @@ def ground_image(day, shape, W, H, col, ink, kit):
     tn = {**TONE[day], **TONE_SHAPE.get((day, shape), {})}
     if 'core' in TONE[day]:
         tn['core'] = {**TONE[day]['core'], **TONE_SHAPE.get((day, shape), {}).get('core', {})}
+    c, tn = scaled(c, tn, shape, W, H)
     import hashlib
     stills = [kit.art('scene', day, c.get('still', shape))] + ([kit.art('scene', day, c['base'].get('still', shape))] if c.get('base') else [])
     digests = [hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in stills]

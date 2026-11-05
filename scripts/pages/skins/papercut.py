@@ -110,13 +110,16 @@ h1 mark {{ background: {col}; color: {ink};
     return html.replace('</style>', css + '</style>', 1)
 
 
-PLACE_JS = r"""([shape]) => {
+PLACE_JS = r"""([shape, geo]) => {
   const NS = 'http://www.w3.org/2000/svg';
   const card = document.querySelector('#card'), safe = document.querySelector('#safe');
   const raw = getComputedStyle(document.documentElement).getPropertyValue('--pc').trim();
   if (!raw) return;
   const P = JSON.parse(raw.slice(1, -1));
   const W = card.clientWidth, H = card.clientHeight, tall = shape !== 'wide';
+  // The shape's platforms (skins.GEO): YouTube's length badge on the wide thumbnail. On a cover (not a thumbnail) the
+  // object's slot may be too small for it: then it is left out, never drawn as a speck.
+  const GEO = geo || {thumb: true, badge: tall ? null : [968, 548, 1280, 720]};
   const T = P.tones, day = P.day;
   const R = q => { const e = document.querySelector(q); return e ? e.getBoundingClientRect() : null; };
   const fr = R('.frame'), tg = R('.tag'), hb = R('h1'), lg = R('.logos');
@@ -226,8 +229,14 @@ PLACE_JS = r"""([shape]) => {
       const room = (lx, w) => { const px = A[0] - (w - lx) * ca, py = A[1] - (w - lx) * sa; return (py - roof(px)) / ca; };
       slot = {a, ca, sa, wMax, hMax, room, at: w => [A[0] - w * ca, A[1] - w * sa]};
     } else {
-      const x0 = hb.left, floor = H - 18, xr = 950;                           // the length badge starts at x 968; the shadow needs 12 px
-      const top = Math.max(h1B + 88, ...kb.filter(k => k[0] < xr && k[2] > x0 && k[1] < floor).map(k => k[3] + 60));
+      let x0 = hb.left, floor = H - 18, xr = GEO.badge ? GEO.badge[0] - 18 : W - 40;   // the length badge starts at x 968; the shadow needs 12 px
+      let top = Math.max(h1B + 88, ...kb.filter(k => k[0] < xr && k[2] > x0 && k[1] < floor).map(k => k[3] + 60));
+      if (!GEO.thumb) {
+        // A cover's words run down a column to the foot: the band under the proof, left of the column, when it is the
+        // larger room.
+        const colL = Math.min(...kb.map(k => k[0]).filter(x => x > FL)), u0 = Math.max(40, FL), ur = colL - 40, ut = FBs + 40;
+        if (floor - ut > floor - top && ur - u0 > 200) { x0 = u0; xr = ur; top = ut; }
+      }
       slot = {a: 0, ca: 1, sa: 0, wMax: xr - x0, hMax: floor - top, room: () => floor - top, at: () => [x0, floor]};
     }
   }
@@ -294,8 +303,8 @@ PLACE_JS = r"""([shape]) => {
   // the slot and whose profile stays under the room everywhere is drawn, so the tallest part stands where there is room.
   const fit = dev => {
     for (let k = 3; k > .15; k *= .99) { const d = dev(k);
-      if (d.w <= slot.wMax && d.prof.every(([x, ht]) => ht <= slot.room(x, d.w))) return d; }
-    return dev(.15);
+      if (d.w <= slot.wMax && d.prof.every(([x, ht]) => ht <= slot.room(x, d.w))) return GEO.thumb || d.h >= 64 ? d : null; }
+    return GEO.thumb ? dev(.15) : null;
   };
   const arc = (x0, x1, fn, st = 4) => { const v = []; for (let x = x0; x <= x1 + .01; x += st) v.push([x, fn(x)]); return v; };
 
@@ -407,7 +416,8 @@ PLACE_JS = r"""([shape]) => {
     return {w, h: rest + pt, svg, prof};
   };
 
-  put(fit({mon: coinStacks, wed: cogRow, fri: gapPiece}[day]));
+  const obj = fit({mon: coinStacks, wed: cogRow, fri: gapPiece}[day]);
+  if (obj) put(obj);
   parts.sort((a, b) => a.z - b.z);
 
   // ---- tiles: the scene seen through rectangles that keep clear of every kept part ----
