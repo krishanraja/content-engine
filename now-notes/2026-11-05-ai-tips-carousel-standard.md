@@ -2,3 +2,4 @@ Status: docs/CAROUSEL-STANDARD.md has an "AI-tips carousel" section (Krish's rul
 Next: Growth reads that edition's sends and saves per reach at 24 hours, 72 hours and 7 days.
 North Star check (2026-11-05): holds.
 Changed: the AI-tips carousel has its own standard, so future editions keep the look Krish approved without a new brief.
+Changed: every carousel's last card now ends with "Follow for more" directly above a larger, centred house mark (Krish, 5 Nov 2026).
