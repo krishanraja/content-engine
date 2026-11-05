@@ -157,6 +157,24 @@ class PodTest(unittest.TestCase):
         self.assertIn('HTTP 403', saved['reason'])
         self.assertIn('error code: 1010', saved['reason'])
         self.assertNotIn('terminated', saved)                 # no pod was ever created
+        self.assertEqual(saved['cost_usd'], 0.0)
+
+    def test_the_pod_proxy_answering_404_while_booting_is_waited_out(self):
+        # RunPod's proxy answers 404/502 until the pod's server is up: that must be retried, not end the run.
+        import io
+        import urllib.error
+        fake = FakeRunPod()
+        booting = {'left': 2}
+
+        def proxy(method, url, **kw):
+            if url.endswith('/status') and booting['left']:
+                booting['left'] -= 1
+                raise urllib.error.HTTPError(url, 404, 'Not Found', {}, io.BytesIO(b'pod not ready'))
+            return fake(method, url, **kw)
+
+        receipt = self.go(proxy)
+        self.assertEqual(receipt['state'], 'done')
+        self.assertTrue(fake.deleted())
 
 
 if __name__ == '__main__':

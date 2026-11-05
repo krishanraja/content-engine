@@ -237,7 +237,8 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
                 receipt['terminate_error'] = f'{type(error).__name__}: terminate pod {pod_id} in the RunPod console now'
         seconds = round(clock() - started, 1)
         receipt['seconds'] = seconds
-        receipt['cost_usd'] = round(seconds / 3600 * receipt.get('rate_usd_per_h', RATE_USD), 4)
+        # Billing starts with a pod: no pod, no cost.
+        receipt['cost_usd'] = round(seconds / 3600 * receipt.get('rate_usd_per_h', RATE_USD), 4) if pod_id else 0.0
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / f'maxine-pod.{media.stem}.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
 
