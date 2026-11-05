@@ -32,5 +32,12 @@
     "enabled": false,
     "ruling": "Krish, 2026-10-29: \"do not use eleven labs for this\"",
     "note": "No paid second aligner. ElevenLabs Scribe was removed on his ruling; the gates run on faster-whisper and say \"single aligner\". A second local aligner (another faster-whisper model) can be passed in by name; nothing here calls a paid service."
+  },
+  "listen": {
+    "probability_min": 0.35,
+    "score_min": 0.35,
+    "dur_ratio_max": 2.4,
+    "min_word_s": 0.05,
+    "note": "The fumble pass (velib/fumbles.py): a clock-A word sounded wrong when both clocks are under probability_min (whisper) or score_min (forced aligner), or it runs over dur_ratio_max times his usual length for its letters. A word that sounded wrong is never cut; its reading loses to a cleaner one. Starting values, to be calibrated on his own takes against his marks (docs/ve/RUNBOOK.md, the listen pass)."
   }
 }

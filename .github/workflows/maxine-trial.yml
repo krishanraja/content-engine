@@ -1,0 +1,70 @@
+name: Maxine eye contact trial
+
+# Runs NVIDIA Maxine Eye Contact (AR SDK, "available for commercial/non-commercial use" per NGC) on one take, on one
+# rented RunPod Secure Cloud RTX A5000 (scripts/velib/maxine_pod.py), and keeps only Maxine's redirected copy and the
+# pod's receipt as a short-lived artifact. `ve eyeline --backend maxine --maxine-copy <copy>` then lays Maxine's eyes
+# onto the take only where the plan says.
+#
+# Spend, so: run by hand only, never on a schedule (Ruling, Krish, 2026-10-29: "I want zero Claude routines"), and only
+# with the confirmation typed exactly. Krish approved the first run on 5 Nov 2026: "merge the job and spend up to $1".
+# The runner refuses over the cap, terminates the pod on every path and keeps RUNPOD_API_KEY and NGC_API_KEY out of
+# every file. No Claude runs here.
+
+on:
+  workflow_dispatch:
+    inputs:
+      take:
+        description: 'The recording, by its name in the store (python scripts/post-pack/recording.py list)'
+        required: true
+        default: 'ai-music-short.mp4'
+      max_usd:
+        description: 'Refuse a run that could cost more than this (US dollars)'
+        required: true
+        default: '1.00'
+      confirm:
+        description: 'Type exactly: spend approved by Krish'
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: maxine-trial
+  cancel-in-progress: false
+
+jobs:
+  maxine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Refuse without the typed confirmation
+        if: ${{ inputs.confirm != 'spend approved by Krish' }}
+        run: |
+          echo "The confirmation was not typed exactly; nothing was rented."
+          exit 1
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch the take from the recordings store
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          TAKE: ${{ inputs.take }}
+        run: python scripts/post-pack/recording.py get "$TAKE" --out "$RUNNER_TEMP/take"
+      - name: Run Maxine on one rented pod
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+          NGC_API_KEY: ${{ secrets.NGC_API_KEY }}
+          TAKE: ${{ inputs.take }}
+          MAX_USD: ${{ inputs.max_usd }}
+        run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD"
+      - name: Keep the redirected copy and the receipt (3 days)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maxine-${{ github.run_id }}
+          path: ${{ runner.temp }}/maxine/
+          retention-days: 3
+          if-no-files-found: warn

@@ -1,0 +1,426 @@
+{
+  "schema": "voice-lexicon/1",
+  "terms": [
+    {
+      "text": "Amodei",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "Anthropic",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "ByteDance",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "ChatGPT",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "Claude",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "DeepSeek",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "ElevenLabs",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "Fable 5",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "GPT-5",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "GPT-6",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "Higgsfield",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "Hugging Face",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "Kalshi",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "Midjourney",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "OpenAI",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "Polymarket",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "SemiAnalysis",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "Sora",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "Sora 2",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    },
+    {
+      "text": "xAI",
+      "count": 0,
+      "sources": [
+        "seeded from quick-edit DEFAULT_FIXES"
+      ]
+    }
+  ],
+  "fixes": [
+    {
+      "heard": "Amoday",
+      "fixed": "Amodei",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Entropic",
+      "fixed": "Anthropic",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Anthropics",
+      "fixed": "Anthropic's",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Bike Dance",
+      "fixed": "ByteDance",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Bite Dance",
+      "fixed": "ByteDance",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Byte Dance",
+      "fixed": "ByteDance",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Bytedance",
+      "fixed": "ByteDance",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Chat GPT",
+      "fixed": "ChatGPT",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Clawed",
+      "fixed": "Claude",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Deep Seek",
+      "fixed": "DeepSeek",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Eleven Labs",
+      "fixed": "ElevenLabs",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Fable five",
+      "fixed": "Fable 5",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "GPT five",
+      "fixed": "GPT-5",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "GPT 6",
+      "fixed": "GPT-6",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "GPT six",
+      "fixed": "GPT-6",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Higgs field",
+      "fixed": "Higgsfield",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Higsfield",
+      "fixed": "Higgsfield",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Hugging face",
+      "fixed": "Hugging Face",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Kal shi",
+      "fixed": "Kalshi",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "MakeYourMindUp .ai",
+      "fixed": "makeyourmindup.ai",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Mid Journey",
+      "fixed": "Midjourney",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Open AI",
+      "fixed": "OpenAI",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Poly market",
+      "fixed": "Polymarket",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Semi Analysis",
+      "fixed": "SemiAnalysis",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Semi analysis",
+      "fixed": "SemiAnalysis",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Semianalysis",
+      "fixed": "SemiAnalysis",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Sorah",
+      "fixed": "Sora",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "Sora two",
+      "fixed": "Sora 2",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "theater",
+      "fixed": "theatre",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    },
+    {
+      "heard": "XAI",
+      "fixed": "xAI",
+      "status": "seeded",
+      "count": 0,
+      "sources": [
+        "quick-edit DEFAULT_FIXES (2026-10-07 to 2026-10-09)"
+      ]
+    }
+  ],
+  "hesitations": {
+    "counts": {}
+  },
+  "habits": {
+    "added": {}
+  },
+  "proposals": [],
+  "learned_from": [],
+  "about": "His lexicon (velib/lexicon.py): names and terms he says, the transcriber's mishearings of them, his hesitations and the words he adds. Learned from facts by `ve lexicon learn`; taste goes to proposals for Krish. Never his name."
+}

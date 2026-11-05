@@ -120,17 +120,27 @@ def normalise(raw) -> list[dict]:
             raise ValueError(f'word "{text.strip()}" needs finite start and end times')
         if end < onset:
             raise ValueError(f'word "{text.strip()}" ends before it starts')
-        out.append({'text': text.strip(), 'onset_s': round(float(onset), 4), 'end_s': round(float(end), 4)})
+        row = {'text': text.strip(), 'onset_s': round(float(onset), 4), 'end_s': round(float(end), 4)}
+        for key in ('probability', 'score'):   # a clock's own confidence in the word, kept for the fumble pass
+            value = item.get(key)
+            if isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value):
+                row[key] = round(float(value), 3)
+        out.append(row)
     out.sort(key=lambda w: (w['onset_s'], w['end_s']))
     if not out:
         raise ValueError('the word clock holds no words')
     for index, word in enumerate(out):
         word['i'] = index
-    return [{'i': w['i'], 'text': w['text'], 'onset_s': w['onset_s'], 'end_s': w['end_s']} for w in out]
+    return [{'i': w['i'], 'text': w['text'], 'onset_s': w['onset_s'], 'end_s': w['end_s'],
+             **{k: w[k] for k in ('probability', 'score') if k in w}} for w in out]
 
 
-def align_local(media: str | Path, aligner: str) -> list[dict]:
-    """Run a free local aligner. Only faster-whisper:<model> is known; anything else arrives as a file."""
+def align_local(media: str | Path, aligner: str, script_text: str | None = None) -> list[dict]:
+    """Run a free local aligner. Only faster-whisper:<model> is known; anything else arrives as a file.
+
+    It hears with his lexicon (velib/lexicon.py): the script's and the lexicon's names as the prompt and as hotwords,
+    so "ByteDance" is heard as ByteDance. Beam search, the voice-activity filter and each word's probability are
+    kept; large-v3 is the most accurate model where the machine can run it."""
     name, _, model = aligner.partition(':')
     if name != 'faster-whisper' or not model:
         raise ValueError(f'{aligner}: ingest runs only faster-whisper:<model> itself; give other aligners as a clock file')
@@ -138,8 +148,13 @@ def align_local(media: str | Path, aligner: str) -> list[dict]:
         from faster_whisper import WhisperModel  # noqa: PLC0415
     except ImportError as error:
         raise ValueError('faster-whisper is not installed on this machine (ve doctor); give the clock as a file') from error
-    segments, _info = WhisperModel(model).transcribe(str(media), word_timestamps=True, language='en')
-    return normalise([{'word': w.word, 'start': w.start, 'end': w.end} for s in segments for w in (s.words or [])])
+    from . import lexicon  # noqa: PLC0415
+    doc = lexicon.load()
+    segments, _info = WhisperModel(model, device='cpu', compute_type='int8').transcribe(
+        str(media), word_timestamps=True, language='en', beam_size=5, vad_filter=True,
+        initial_prompt=lexicon.prompt(doc, script_text), hotwords=lexicon.hotwords(doc, script_text) or None)
+    return normalise([{'word': w.word, 'start': w.start, 'end': w.end, 'probability': w.probability}
+                      for s in segments for w in (s.words or [])])
 
 
 SILENCE_BELOW_DB = 25    # quieter than the take's loud speech (90th percentile) by this much is a pause
@@ -207,18 +222,18 @@ def take_path(ve_dir: Path, take: str) -> Path:
 
 
 def ingest(ve_dir: Path, piece: str, take: str, media: str | Path, *, clock_a=None, clock_b=None,
-           aligner_a: str, aligner_b: str, duration_s=None, today: str | None = None) -> Path:
+           aligner_a: str, aligner_b: str, duration_s=None, today: str | None = None, script_text: str | None = None) -> Path:
     """Write the take record. Media is hashed, never copied. Refuses one aligner, or the same aligner twice."""
     media = Path(media)
     if not media.is_file():
         raise ValueError(f'{media} is not a file')
     if not aligner_a or not aligner_b or aligner_a == aligner_b:
-        raise ValueError('a take needs two different aligners (for example faster-whisper:small.en and faster-whisper:medium.en)')
+        raise ValueError('a take needs two different aligners (for example faster-whisper:large-v3 and faster-whisper:medium.en)')
     if any(str(n).lower().startswith('elevenlabs') for n in (aligner_a, aligner_b)):
         raise ValueError('no paid aligner (Krish, 2026-10-29: "do not use eleven labs for this"): use two local faster-whisper models')
     clocks = {}
     for key, given, name in (('a', clock_a, aligner_a), ('b', clock_b, aligner_b)):
-        words = normalise(load_json(given)) if given else align_local(media, name)
+        words = normalise(load_json(given)) if given else align_local(media, name, script_text)
         clocks[key] = {'name': name, 'words': words, **({'file_sha256': sha256_file(given)} if given else {})}
     if duration_s is None:
         from .qc import duration_s as probe  # noqa: PLC0415
