@@ -36,7 +36,9 @@ FPS = 30
 PAD_S = 0.12            # room kept before a line's first word and after its last, inside the gap
 TAIL_S = 0.5            # after the cut's last word: compile holds the picture 12 frames past it
 CROSSFADE_S = 0.030
-QUIET_HALF_S = 0.020    # a join sits where the sound is quiet for the whole of its longest crossfade (40 ms)
+# A join sits where the sound is quiet for the whole of its longest crossfade (40 ms), at the fastest approved speed
+# (1.35: a crossfade covers more of the source when the cut is sped up).
+QUIET_HALF_S = 0.020 * 1.35
 MAX_KEEP_THROUGH = 3    # unscripted words a reading may keep inside it when no agreed gap lets them go
 READINGS_PER_TAKE = 8
 CONFIRM_S = 0.15        # aligner B confirms a word it heard with the same text, starting within this of A's onset
@@ -290,6 +292,11 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
         raise ValueError('no takes ingested for this piece: run ve ingest first')
     records = [load_take(ve_dir, name) for name in names]
     clocks = {r['take']: TakeClock(r, rank) for rank, r in enumerate(records)}
+    for name, clock in clocks.items():
+        if clock.quiet == []:
+            raise ValueError(f'take {name}: the listen pass found no quiet anywhere (its quiet line is '
+                             f'{clock.listen.get("quiet_line_db")} dBFS, {hear.QUIET_BELOW_SPEECH_DB} dB under his speech): the room is too loud '
+                             f'to join in safely; nothing is cut')
     removed = {w for r in edit.get('remove', []) for w in range(r['from_w'], r['to_w'] + 1)}
     lines = lines_of(script, removed)
     chosen = choose(clocks, lines)

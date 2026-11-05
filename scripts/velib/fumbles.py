@@ -42,15 +42,29 @@ def is_pseudo(word: dict) -> bool:
     return bool(word.get('heard_by'))
 
 
-def _trim(words: list[dict], event: dict, min_word_s: float) -> None:
-    """Move the edge of any word that overlaps the event off it, keeping the word at least min_word_s long."""
+def _trimmable(words: list[dict], event: dict, min_word_s: float) -> bool:
+    """An event may be trimmed off a word only where it reaches the word's edge: a sound in the middle of a word
+    ("clea-uh-rly") is never trimmed, or the rest of the word would become a gap a join could land in."""
+    if event['e'] - event['s'] < min_word_s:
+        return False
     for w in words:
         if hear._overlap(w['onset_s'], w['end_s'], event['s'], event['e']) <= 0:
             continue
-        middle = (w['onset_s'] + w['end_s']) / 2
-        if event['s'] >= middle and event['s'] - w['onset_s'] >= min_word_s:
+        tail = event['e'] >= w['end_s'] - 1e-6 and event['s'] - w['onset_s'] >= min_word_s
+        head = event['s'] <= w['onset_s'] + 1e-6 and w['end_s'] - event['e'] >= min_word_s
+        if not (tail or head):
+            return False
+    return True
+
+
+def _trim(words: list[dict], event: dict) -> None:
+    """Move the edge of any word the event reaches off it (_trimmable has checked each one)."""
+    for w in words:
+        if hear._overlap(w['onset_s'], w['end_s'], event['s'], event['e']) <= 0:
+            continue
+        if event['e'] >= w['end_s'] - 1e-6:
             w['end_s'] = round(event['s'], 4)
-        elif event['e'] <= middle and w['end_s'] - event['e'] >= min_word_s:
+        else:
             w['onset_s'] = round(event['e'], 4)
 
 
@@ -95,8 +109,10 @@ def clocks(record: dict) -> dict:
         if event['use'] not in ('word', 'trim'):
             continue
         if event['use'] == 'trim':
-            _trim(a, event, limits['min_word_s'])
-            _trim(b, event, limits['min_word_s'])
+            if not (_trimmable(a, event, limits['min_word_s']) and _trimmable(b, event, limits['min_word_s'])):
+                continue                     # left as it was heard: the word keeps its sound, nothing is cut
+            _trim(a, event)
+            _trim(b, event)
         pseudo.append({'i': None, 'text': label(event), 'onset_s': round(event['s'], 4), 'end_s': round(event['e'], 4),
                        'heard_by': event['sources'], 'kind': event['kind']})
     # A pseudo word never overlaps a clock word: it is clipped to the time no word covers, or dropped when little is left.

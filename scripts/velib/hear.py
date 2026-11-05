@@ -191,7 +191,7 @@ def whisper_words(media: str | Path, model: str, *, lexicon_doc: dict | None = N
     names = lexicon.terms(doc, limit=30)
     prompt = DISFLUENT_PROMPT + (' ' + ', '.join(names) + '.' if names else '')
     segments, _info = WhisperModel(model, device='cpu', compute_type='int8').transcribe(
-        str(media), word_timestamps=True, vad_filter=False, beam_size=5, language='en', initial_prompt=prompt,
+        str(media), word_timestamps=True, vad_filter=True, beam_size=5, language='en', initial_prompt=prompt,
         hotwords=lexicon.hotwords(doc) or None, condition_on_previous_text=False)
     return [{'text': w.word.strip(), 's': round(w.start, 3), 'e': round(w.end, 3),
              **({'p': round(float(w.probability), 3)} if getattr(w, 'probability', None) is not None else {})}

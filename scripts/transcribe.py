@@ -18,12 +18,16 @@ def main() -> None:
 
     model = WhisperModel(args.model, device="cpu", compute_type="int8")
     # His lexicon (scripts/velib/lexicon.py): the names ve has learned he says, as the prompt and as hotwords.
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from velib import lexicon
-    doc = lexicon.load()
-    prompt = lexicon.prompt(doc) + (f" Names and terms that may occur: {args.vocabulary}." if args.vocabulary.strip() else "")
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from velib import lexicon
+        doc = lexicon.load()
+        prompt, hot = lexicon.prompt(doc), lexicon.hotwords(doc) or None
+    except Exception:  # noqa: BLE001 - a bad lexicon file never stops a transcript
+        prompt, hot = "", None
+    prompt = (prompt + (f" Names and terms that may occur: {args.vocabulary}." if args.vocabulary.strip() else "")).strip() or None
     segments, info = model.transcribe(args.input, word_timestamps=True, vad_filter=True, initial_prompt=prompt,
-                                      beam_size=5, hotwords=lexicon.hotwords(doc) or None)
+                                      beam_size=5, hotwords=hot)
     result = {"language": info.language, "source": "faster_whisper", "model": args.model, "verified": False, "segments": []}
     for segment in segments:
         result["segments"].append({
