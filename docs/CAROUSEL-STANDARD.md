@@ -207,3 +207,56 @@ convention and contents."
   like the series days: `YYYY-MM-DD Tue off.day - Subject` (Thu, Sat likewise), with the same sections (`3 Video` for
   a cut, `4 Social` for carousel cards and the post description).
 - The board's `drive` link for an off-day option is that `3 Posts` folder, never a separate Growth folder.
+
+## AI-tips carousel (Ruling, Krish, 5 November 2026)
+
+His words, approving the first edition (posted Thursday 5 November in place of an off-day video): "Looks great. I
+intend to schedule this today", then "Can you encode to an engine that future AI tip carousels can follow without being
+too literal with imagery and screenshots? More so, the visual standard, theming, expectations, and standards".
+
+The format: five to ten jobs AI does well now, one per card. Each card shows the tools that do the job, a real image of
+it being done, one prompt to paste and three steps. The reader leaves with an action, where to click; the Saturday good
+news leaves a feeling. Growth makes it (28 October ruling) with the kit `render/pieces/ai-tips-screen` and the builder
+`scripts/ai_tips_deck.py` in growth-makeyourmindup, whose brief is `docs/briefs/ai-tips-carousel.md` there; the builder
+refuses a deck that breaks the checkable lines below.
+
+- **Jobs, not launches.** Each card is a job a worker has ("Catch up on a long thread"), with two to four tools that do
+  it. His words: "there are loads of other tools that can do the same thing and we should acknowledge those". Every
+  tool has its own vendor help page read within seven days; the caption carries the links and that date, never the
+  cards. No job or lead tool repeats within four weeks.
+- **Theming.** An off-day carousel has no palette of its own (his words: "There is no colour palette for off-day
+  carousels"). Every card is ink. Cream carries the words; mint marks the second headline line, the quote mark, the
+  step numbers and the image frame; green draws the rules. No series colour and no series name or pill, on the cover
+  too: this replaces the cover section's series pill and series-colour light for this format.
+- **Type.** Headlines are Anton capitals in two centred lines, the job then the payoff in mint (his words: "I prefer
+  Anton capitals"). The prompt is Archivo; numbers and labels are IBM Plex Mono.
+- **Card anatomy.** Top to bottom: the count and the tool logos on cream tiles; the headline; one image in a mint frame
+  with a soft green glow; a large mint quote mark and the prompt; three steps in columns split by thin green rules; the
+  house mark small in the bottom corner. No filled boxes under the prompt or steps (his words: "make sure the text and
+  the boxes beneath feel premium, which they don't right now").
+- **Images, real but not literal.** The image shows the job being done or its result, cropped to the moment that proves
+  it; it may show any of the job's tools, and the caption then leads with that tool. Best first: his own screenshots,
+  then product shots from the vendor's own help page, then a crop of a real result. Never a title card, a logo slide or
+  a wall of text. Blur names, addresses, money and anything private (his words: "blur whats necessary").
+- **Image and prompt agree.** His words: "Make sure there is synchronicity between the image and the quote at all
+  times." The prompt asks for what the image shows; change one, change the other. The prompt is the reader's own
+  sentence to paste, so its "me" and "my" are the reader's, not the creator's.
+- **Cover.** A scene, per the cover section, with the house robot or no robot. It may lay real crops of one job across
+  the scene, from first click to result, each with a short label (on 5 November: a search, 22 sources, an AI podcast).
+- **Close.** Two lines and one note that the links are in the caption.
+- **Caption.** One line per job with its lead tool's vendor page and the other tools by name, the check date, the plan
+  or licence note and which cards use vendor images; within Instagram's 2,200 characters and content-engine's channel
+  copy lint.
+
+## The last card says "Follow for more" (Ruling, Krish, 5 November 2026)
+
+His words: "Every single makeyourmindup carousel should have a "Follow for more" call to action on the last card, just
+above the "Make Your Mind Up" word mark. Which should be a bit larger and centered on the last card always".
+
+- The last card of every carousel, series and off-day alike, ends with the words "Follow for more" set directly above
+  the house mark.
+- On that card the mark is centred at the foot and a bit larger than the corner mark on the other cards. In Growth's
+  renderer it is 360px wide, against 200 to 220px in the corner. It is the official file, per the brand mark section.
+- This replaces the bottom-corner placement for the last card only. The other cards keep the mark small in a bottom
+  corner.
+- Nothing else sits between the words and the mark, and neither overlaps the card's own words.
