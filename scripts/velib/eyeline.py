@@ -72,6 +72,8 @@ EYE_CONTOUR = {'R': [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 15
 APERTURE_SHRINK = 0.97      # the blend stops just inside his lid line ...
 APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's width
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
+AIM_KEEP = 0.15             # share of his own eye movement kept on top of the lens aim, so the eyes stay alive
+AIM_MAX = 0.6               # never move an iris further than this share of the eye's width
 DETAIL_MAX = 1.6            # never sharpen a redirected eye's detail by more than this
 FP_SEQ = {'L': [3, 2, 1, 0, 5, 4], 'R': [0, 1, 2, 3, 4, 5]}   # WangWilly's anchor-map order
 
@@ -393,6 +395,54 @@ def blend(frame, source, geo, strength: float):
     return out
 
 
+def _eye_axes(eye):
+    import numpy as np  # noqa: PLC0415
+    p = np.asarray(eye, dtype=np.float64)
+    a, b = (p[0], p[3]) if p[0][0] <= p[3][0] else (p[3], p[0])
+    width = float(np.hypot(*(b - a))) or 1e-6
+    u = (b - a) / width
+    v = np.array([-u[1], u[0]])
+    centre = (p[0] + p[3]) / 2
+    return centre, u, v, width
+
+
+def aims(readings: list[dict], there: list[dict], decided: list[dict]) -> list[dict]:
+    """Where each iris should be, per frame: Maxine's lock point, calibrated once per eye in that eye's own geometry
+    (the median over the take of where Maxine put the iris, along and across the eye, in eye widths), laid on his eye
+    in each frame, plus AIM_KEEP of his own movement about his own median, at most AIM_MAX of the eye's width away.
+    Maxine on its own corrects a hard glance only partway (it fades out past 20 deg) and the two eyes can disagree
+    (blind review, 5 Nov, 5.50 s); the calibrated aim corrects it fully and keeps both eyes on one point."""
+    import numpy as np  # noqa: PLC0415
+    out = [dict() for _ in readings]
+    for side in IRIS:
+        mine, maxi = [], []
+        for i, (r, t) in enumerate(zip(readings, there)):
+            if r.get('face') and t.get('face') and decided[i]['strength'] > 0:
+                c, u, v, w = _eye_axes(r['eyes'][side])
+                for rows, keep in ((r, mine), (t, maxi)):
+                    d = np.asarray(rows['iris'][side]) - c
+                    keep.append((d @ u / w, d @ v / w))
+        if len(maxi) < 5:
+            continue
+        lens, own = np.median(np.array(maxi), 0), np.median(np.array(mine), 0)
+        for i, r in enumerate(readings):
+            if not r.get('face') or 'iris_r' not in r:
+                continue
+            if r.get('blink', 0) >= BLINK * 0.8 or decided[i]['eyes'].get(side, {}).get('open', 1) < OPEN_MIN:
+                continue                                  # a closing eye keeps its own iris: moving it split a blink
+            c, u, v, w = _eye_axes(r['eyes'][side])
+            d = np.asarray(r['iris'][side]) - c
+            here = np.array((d @ u / w, d @ v / w))
+            want = lens + AIM_KEEP * (here - own)
+            step = want - here
+            size = float(np.hypot(*step))
+            if size > AIM_MAX:
+                step *= AIM_MAX / size
+            target = np.asarray(r['iris'][side]) + w * (step[0] * u + step[1] * v)
+            out[i][side] = (float(target[0]), float(target[1]), r['iris_r'][side])
+    return out
+
+
 def iris_mask(light, inside, d_here, r):
     """His iris as it really is in this frame: inside his opening, near the landmarker's iris, the pixels darker than
     the sclera around them (Otsu on lightness), the one blob at the iris, its holes (the catchlight) filled. A circle
@@ -686,8 +736,10 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
         source = backend.frames_for(info)
         if getattr(backend, 'aperture', False):
             there = read(backend.copy, info)          # where the redirected copy put each iris
+            aimed = aims(readings, there, decided)
         else:
             there = None
+            aimed = None
     proc = writer(media, target, info, crf)
     counts = {'frames': 0, 'corrected': 0, 'unmoved': 0}
     try:
@@ -698,11 +750,11 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
             if other is not None and d['strength'] > 0 and d['eyes']:
                 for side, eye in d['eyes'].items():
                     if eye.get('contour') and getattr(backend, 'aperture', False):
-                        src = there[index] if there and index < len(there) and there[index].get('face') else None
+                        aim = aimed[index].get(side) if aimed and index < len(aimed) else None
                         mine = readings[index] if readings[index].get('face') and 'iris_r' in readings[index] else None
                         new = blend_aperture(new, other, eye['contour'], d['strength'],
                                              (*mine['iris'][side], mine['iris_r'][side]) if mine else None,
-                                             (*src['iris'][side], src['iris_r'][side]) if src and 'iris_r' in src else None)
+                                             aim)
                     else:
                         new = blend(new, other, eye_frame(eye['points']), d['strength'])
                 moved = float(np.abs(new.astype(np.int16) - frame.astype(np.int16)).mean())
