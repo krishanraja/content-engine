@@ -196,6 +196,21 @@ class PodTest(unittest.TestCase):
         self.assertEqual(clouds, ['SECURE', 'COMMUNITY'])
         self.assertEqual((receipt['state'], receipt['cloud']), ('done', 'COMMUNITY'))
 
+    def test_no_card_anywhere_is_asked_again_then_refused_without_a_pod(self):
+        import io
+        import urllib.error
+        asks = []
+
+        def none(method, url, **kw):
+            asks.append(kw['body']['cloudType'])
+            raise urllib.error.HTTPError(url, 500, 'x', {}, io.BytesIO(b'{"error":"There are no instances currently available"}'))
+
+        with self.assertRaisesRegex(maxine_pod.Refused, 'no RTX card free'):
+            self.go(none)
+        self.assertEqual(len(asks), maxine_pod.GPU_TRIES * len(maxine_pod.CLOUDS))
+        saved = json.loads((self.dir / 'out' / 'maxine-pod.take.json').read_text())
+        self.assertEqual(saved['cost_usd'], 0.0)
+
 
 if __name__ == '__main__':
     unittest.main()
