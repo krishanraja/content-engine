@@ -8,6 +8,7 @@ Files moved here keep their body verbatim under a Historical banner.
 ## 2026-11-05
 
 - rolled from NOW.md, verbatim:
+  - 2026-11-04 Krish killed the Thursday 5 Nov ve cut ("Okay, this is shit"); ten failures went into the register (F31 to F40) and five became guards binding from 9 Nov.
   - 2026-11-04 Krish approved all 20 production standard groups: 159 floor standards are now approved and read first by `floor.py`.
   - 2026-11-04 The bed pumped on Wednesday: one bed shape for both engines, and no cut filed without its receipt (#392, F40).
   - 2026-11-03 Word captions sit on the split seam on SPLIT beats, at chest height on face beats, so they never land on his face (ve-motion-3).

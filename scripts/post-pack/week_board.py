@@ -1896,7 +1896,7 @@ OFF_FRAMES = (1, 12)
 OFF_PITCH = ('see', 'lands', 'why_now', 'share')
 OFF_DIRECTION = ('look', 'format', 'tone', 'kit', 'inspo_url')
 OFF_SIDES = ('idea', 'direction', 'mock')
-OFF_SLIDES = (1, 20)
+OFF_SLIDES = (1, 10)  # Buffer posts at most ten images (Krish, 2026-11-05: "carousels can only have 10 cards maximum")
 DRIVE_FOLDER = re.compile(r'^https://drive\.google\.com/drive/(?:u/\d/)?folders/[A-Za-z0-9_-]{10,}(?:\?[^\s"<>]*)?$')
 # The finished-asset fields an off-day option may carry (off_rich), shown inline on its card and on its day's tab.
 OFF_ASSET_KEYS = ('mock', 'slides', 'video', 'drive', 'download')
@@ -2201,7 +2201,8 @@ def story_problems(stories):
     return out
 
 
-OFF_CARDS = (2, 12)  # a carousel or a meme set, card by card (Krish, 2026-10-31: "carousels card by card")
+OFF_CARDS = (2, 10)  # a carousel or a meme set, card by card (Krish, 2026-10-31: "carousels card by card"); at most ten, cover
+#                     and close included (Krish, 2026-11-05: "carousels can only have 10 cards maximum")
 
 
 def card_problems(cards):
@@ -5879,7 +5880,8 @@ def _oct31_checks(check, week, ideas, opt):
     check('off days: a carousel is shown card by card, words and picture',
           page.count('class="off-c"') == 3 and 'Card words 2.' in page and 'A chart of 3.' in page and verify(page) == [])
     check('off days: a rebuild keeps the cards', read_offdays({k: [previous_option(o) for o in v] for k, v in offdays.items()}) == offdays)
-    for bad, want in (([{'words': 'One.', 'picture': 'Pic.'}], '2 to 12 cards'), ([{'words': 'x', 'picture': ''}] * 2, 'needs its words'),
+    for bad, want in (([{'words': 'One.', 'picture': 'Pic.'}], '2 to 10 cards'), ([{'words': 'x', 'picture': 'y'}] * 11, '2 to 10 cards'),
+                      ([{'words': 'x', 'picture': ''}] * 2, 'needs its words'),
                       ([{'words': 'x', 'picture': 'y', 'alt': 'z'}] * 2, 'nothing else')):
         try:
             read_offdays({'tue': [opt(1, cards=bad), opt(2)]})

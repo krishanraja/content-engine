@@ -247,6 +247,17 @@ is the good-news carousel for Saturday 7 November 2026 (`docs/plans/2026-11-02-w
 - The house mark sits small and subtle in a bottom corner of every card (the brand-mark rule above).
 - It wears no subchannel colour or name.
 
+## At most ten cards (Ruling, Krish, 5 November 2026)
+
+His words: "There's an interesting quirk in Buffer: carousels can only have 10 cards maximum. Can you ensure all future
+carousels do not exceed 10 cards in total, including cover and call to action?"
+
+- Every carousel is ten cards or fewer, counting the cover and the last card. A format that wants more items (ten
+  tips, say) puts two on a card or drops to the strongest eight; it never runs past ten.
+- The checks hold it: the carousel story schema (`packages/contracts/src/carousel.ts`, at most ten slides), the board
+  (`week_board.py` `OFF_CARDS` and `OFF_SLIDES`, at most ten) and Growth's carousel format (`social/formats/carousel.json`
+  `max_assets`, which its packaging and release checks read before anything reaches Buffer).
+
 ## Seeing a finished carousel (Ruling, Krish, 3 November 2026)
 
 His words: "I should be able to see the assets directly in the publish board or have a link to the Google Drive where

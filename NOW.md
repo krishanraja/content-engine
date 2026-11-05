@@ -45,6 +45,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-05 A carousel is at most ten cards, cover and last card included, because Buffer posts no more (`docs/CAROUSEL-STANDARD.md`; the board's `OFF_CARDS` and `OFF_SLIDES`; the story schema).
 - 2026-11-05 Every house carousel's last card ends on "Follow for more" centred above a larger wordmark, set by its place in the deck (`HouseCarouselCard.tsx`, `tests/carousel.test.ts`; Krish: "in its own skin of choice").
 - 2026-11-05 Scripts and captions follow his Instagram checklist, adapted to his rules: the hook is the first sentence with the keyword in it, his personal line second or third, no greeting in front (refused by `story_check.py`), a line naming who it is for, the save line in the caption, one specific question pinned (`make-piece/references/hook-and-share.md`).
 - 2026-11-05 A generated carousel cover shows the house felt robot, from its reference photos, or no robot and a more creative idea (Krish: "either use the branded toy robot or are more creative than just a robot doing something"; `scripts/post-pack/cover_scene.py`, `config/brand-robot.json`).
@@ -52,7 +53,6 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - 2026-11-04 Krish: "every single word inside the project documentation of all the repositories is 100% clear and up to date before you merge". The pass found NOW.md 39 closeout notes behind across the three repositories, because bot merges start no fold and the steward refuses them; auto-merge now folds, and the steward fix waits in ai-harness.
 - 2026-11-04 The style and caption lab, his room as shot, face flags and `ve study` (#395): experiments move outside any piece (Krish: "experiment carefully"), on his own footage.
 - 2026-11-04 ve took the craft quick-edit had and ve dropped (#394): his Monday 26 Oct take ran at 24.0019 fps with 9.2 ms jitter; the old filter dropped a frame and held 92 of 178 frames evenly, the new one none and 168.
-- 2026-11-04 Krish killed the Thursday 5 Nov ve cut ("Okay, this is shit"); ten failures went into the register (F31 to F40) and five became guards binding from 9 Nov.
 
 Older lines are in `docs/history/LOG.md` (rolled verbatim on 4 Nov) and the `docs/history/*-NOW-*.md` files.
 
