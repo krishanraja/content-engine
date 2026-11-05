@@ -90,12 +90,24 @@ class Identity(Backend):
 
 
 class Maxine(Backend):
+    """NVIDIA Maxine Eye Contact (AR SDK, licensed for commercial use) as a frame source. Maxine redirects whole frames
+    itself on an NVIDIA RTX GPU, which neither home computer has: it runs on a rented pod (velib/maxine_pod.py) and
+    returns a redirected copy of the take. This pass then takes Maxine's eyes only, only where the plan says to, so
+    blinks, turned heads, frames on the lens, the sound and every frame time stay his."""
     name = 'maxine'
+    frame_source = True
 
-    def __init__(self, *_args, **_kwargs):
-        raise RuntimeError('maxine: NVIDIA Maxine Eye Contact needs an NVIDIA RTX GPU (Turing or later). Neither home '
-                           'computer has one (LORIMER: Qualcomm Adreno; SURFACE: Intel Iris Xe), and the cloud container '
-                           'has none. Renting one is spend for Krish to approve.')
+    def __init__(self, copy: Path | str | None = None):
+        if copy is None:
+            raise RuntimeError('maxine: give the redirected copy (--maxine-copy), or run it on a pod (--pod). Maxine needs an '
+                               'NVIDIA RTX GPU: neither home computer has one (LORIMER: Qualcomm Adreno; SURFACE: Intel Iris '
+                               'Xe) and the cloud container has none, so a pod is rented, at Krish\'s approval.')
+        self.copy = Path(copy)
+        if not self.copy.is_file():
+            raise RuntimeError(f'maxine: {self.copy} is not a file')
+
+    def frames_for(self, info: dict):
+        return frames(self.copy, info['width'], info['height'])
 
 
 class Flx(Backend):
@@ -337,6 +349,24 @@ def mask_of(pu, pv):
     return t * t * (3 - 2 * t)
 
 
+def blend(frame, source, geo, strength: float):
+    """His eye from `source` (a frame another model redirected) laid onto `frame` inside the feathered ellipse, at
+    `strength`. Pixels outside the mask are untouched; strength 0 returns the frame itself."""
+    import numpy as np  # noqa: PLC0415
+    box = bbox(geo, frame.shape)
+    if box is None or strength <= 0:
+        return frame
+    x0, y0, x1, y1 = box
+    ys, xs = np.mgrid[y0:y1, x0:x1].astype(np.float32) + 0.5
+    pu, pv = _to_patch(geo, xs, ys)
+    alpha = (mask_of(pu, pv) * float(strength))[..., None]
+    region = frame[y0:y1, x0:x1].astype(np.float32)
+    other = source[y0:y1, x0:x1].astype(np.float32)
+    out = frame.copy()
+    out[y0:y1, x0:x1] = np.clip(np.rint(region * (1 - alpha) + other * alpha), 0, 255).astype(np.uint8)
+    return out
+
+
 def apply(frame, geo, flow, light):
     """Warp his eye at full resolution with the patch's flow and light, inside the feathered ellipse. One bicubic
     resample of the original frame; pixels outside the mask are untouched. Returns the changed frame."""
@@ -506,13 +536,27 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
     target = out_dir / f'{media.stem}.eyeline.mp4'
     if qc is not None:
         qc.start(decided, info, out_dir / f'loop.{media.stem}.mp4')
+    source = None
+    if getattr(backend, 'frame_source', False):
+        theirs, ours = len(packet_times(backend.copy)), len(packet_times(media))
+        if theirs != ours:
+            raise ValueError(f'{backend.name}: its copy has {theirs} frames and the take {ours}: frames cannot be matched')
+        source = backend.frames_for(info)
     proc = writer(media, target, info, crf)
     counts = {'frames': 0, 'corrected': 0, 'unmoved': 0}
     try:
         for index, frame in enumerate(frames(media, info['width'], info['height'])):
             d = decided[index] if index < len(decided) else {'strength': 0.0, 'eyes': {}}
             new = frame
-            if d['strength'] > 0 and d['eyes']:
+            other = next(source) if source is not None else None
+            if other is not None and d['strength'] > 0 and d['eyes']:
+                for side, eye in d['eyes'].items():
+                    new = blend(new, other, eye_frame(eye['points']), d['strength'])
+                moved = float(np.abs(new.astype(np.int16) - frame.astype(np.int16)).mean())
+                counts['corrected'] += 1
+                if moved == 0.0 and d['strength'] >= 0.5:
+                    counts['unmoved'] += 1
+            elif d['strength'] > 0 and d['eyes']:
                 items, geos = [], []
                 for side, eye in d['eyes'].items():
                     geo = eye_frame(eye['points'])

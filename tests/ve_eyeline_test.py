@@ -91,6 +91,17 @@ class Decide(unittest.TestCase):
         turned = eyeline.check_stream({**sdr, 'width': 1920, 'height': 1080, 'side_data_list': [{'rotation': -90}]})
         self.assertEqual((turned['width'], turned['height'], turned['rotation']), (1080, 1920, -90))
 
+    def test_a_blend_takes_the_other_eye_inside_the_mask_only_and_none_at_strength_0(self):
+        frame = np.zeros((300, 300, 3), np.uint8)
+        other = np.full((300, 300, 3), 200, np.uint8)
+        geo = eyeline.eye_frame(eye(150, 150, width=60)[0])
+        self.assertIs(eyeline.blend(frame, other, geo, 0.0), frame)
+        out = eyeline.blend(frame, other, geo, 1.0)
+        self.assertEqual(int(out[150, 150, 0]), 200)          # the eye's centre is the other frame
+        self.assertEqual(int(out[10, 10, 0]), 0)              # far outside is untouched
+        half = eyeline.blend(frame, other, geo, 0.5)
+        self.assertAlmostEqual(int(half[150, 150, 0]), 100, delta=1)
+
     def test_maxine_names_the_gpu_it_needs(self):
         with self.assertRaisesRegex(RuntimeError, 'RTX'):
             eyeline.Maxine()
@@ -157,6 +168,35 @@ class Media(unittest.TestCase):
             name, restricted = 'private', True
         with self.assertRaisesRegex(ValueError, 'private test only'):
             eyeline.run(self.take, self.dir / 'out', Private(), readings=[{'face': False}] * 60)
+
+    def scaled(self, readings):
+        for r in readings:
+            if r.get('face'):
+                for side in ('L', 'R'):
+                    r['eyes'][side] = [[x * 0.4, y * 0.4] for x, y in r['eyes'][side]]
+                    r['iris'][side] = [r['iris'][side][0] * 0.4, r['iris'][side][1] * 0.4]
+        return readings
+
+    def test_a_maxine_copy_must_match_the_take_frame_for_frame_and_must_change_it(self):
+        short = self.dir / 'short.mp4'
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(self.take), '-t', '1', '-c', 'copy', str(short)], check=True)
+        with self.assertRaisesRegex(ValueError, 'frames cannot be matched'):
+            eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(short), readings=[{'face': False}] * 60)
+        readings = self.scaled([reading(iris_dx=9) if 10 <= i < 30 else reading() for i in range(60)])
+        receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(self.take), readings=readings)
+        self.assertEqual(receipt['decision'], 'rejected')       # its "redirected" copy is the take itself
+        self.assertTrue(any('changed nothing' in p for p in receipt['problems']), receipt['problems'])
+
+    def test_a_maxine_copy_is_taken_only_where_the_plan_says(self):
+        other = self.dir / 'other.mp4'
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(self.take), '-vf', 'negate', '-c:v', 'libx264',
+                        '-pix_fmt', 'yuv420p', '-an', str(other)], check=True)
+        readings = self.scaled([reading(iris_dx=9) if 10 <= i < 30 else reading() for i in range(60)])
+        receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(other), readings=readings)
+        self.assertEqual(receipt['problems'], [])
+        self.assertEqual(receipt['decision'], 'corrected')
+        self.assertLess(receipt['corrected_frames'], 30)
+        self.assertEqual(eyeline.same_media(self.take, Path(receipt['output']['path'])), [])
 
     @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
     def test_a_model_that_changes_nothing_is_refused_and_its_file_deleted(self):
