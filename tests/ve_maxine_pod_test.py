@@ -248,6 +248,14 @@ class PodTest(unittest.TestCase):
                                      tcp_open=lambda t: t == '1.2.3.4:40123', **self.keys)
         self.assertEqual(receipt['state'], 'done')
         self.assertIn(('DELETE', f'{maxine_pod.API}/pods/pod9'), calls)
+        polls['n'] = 5
+        again = maxine_pod.run_nim(self.take, self.dir / 'out2', '/nim-clients/eye-contact', yes=True, call=api,
+                                   sleep=lambda s: None, clock=Clock(), run_client=client,
+                                   tcp_open=lambda t: t == '1.2.3.4:40123',
+                                   variants={'ess2': ['--eye-size-sensitivity', 2], 'ess4': ['--eye-size-sensitivity', 4]},
+                                   **self.keys)
+        self.assertEqual(sorted(again['variants']), ['ess2', 'ess4'])
+        self.assertTrue((self.dir / 'out2' / 'take.maxine.ess4.mp4').is_file())
         self.assertNotIn('test-ngc', json.dumps(receipt))
 
 
