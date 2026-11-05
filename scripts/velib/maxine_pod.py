@@ -71,6 +71,8 @@ class H(http.server.BaseHTTPRequestHandler):
             self.send_response(403); self.end_headers(); return False
         return True
     def do_PUT(self):
+        self.upload()
+    def upload(self):
         if not self.ok(): return
         n = int(self.headers["Content-Length"]); left = n; at = int(self.headers.get("X-Offset", "0"))
         path = WORK + "/in.mp4"
@@ -80,6 +82,7 @@ class H(http.server.BaseHTTPRequestHandler):
                 b = self.rfile.read(min(left, 1 << 20)); f.write(b); left -= len(b)
         self.send_response(200); self.end_headers(); self.wfile.write(hashlib.sha256(open(path, "rb").read()).hexdigest().encode())
     def do_POST(self):
+        if self.path.startswith("/in.mp4"): return self.upload()   # RunPod's proxy answers PUT with 404 (run 42082234268)
         if not self.ok(): return
         threading.Thread(target=job, daemon=True).start(); self.send_response(202); self.end_headers()
     def do_GET(self):
@@ -236,7 +239,7 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
         data, sent = media.read_bytes(), ''
         for at in range(0, len(data), CHUNK):        # Cloudflare in front of the proxy caps a request at 100 MB
             deadline()
-            sent = call('PUT', f'{base}/in.mp4', token=token, data=data[at:at + CHUNK], timeout=600,
+            sent = call('POST', f'{base}/in.mp4', token=token, data=data[at:at + CHUNK], timeout=600,
                         headers={'X-Offset': str(at)})
         if isinstance(sent, bytes):
             sent = sent.decode()

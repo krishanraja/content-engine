@@ -31,7 +31,8 @@ class FakeRunPod:
             return {'id': 'pod123', 'costPerHr': self.rate}
         if method == 'DELETE':
             return {}
-        if method == 'PUT':
+        if method == 'POST' and url.endswith('/in.mp4'):
+            assert 'X-Offset' in kw.get('headers', {})
             return hashlib.sha256(kw['data']).hexdigest().encode()
         if method == 'POST':
             return {}
