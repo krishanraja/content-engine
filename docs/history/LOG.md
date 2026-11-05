@@ -5,6 +5,13 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-05
+
+- rolled from NOW.md, verbatim:
+  - 2026-11-04 The bed pumped on Wednesday: one bed shape for both engines, and no cut filed without its receipt (#392, F40).
+  - 2026-11-03 Word captions sit on the split seam on SPLIT beats, at chest height on face beats, so they never land on his face (ve-motion-3).
+  - 2026-11-03 A second library lane, Heartside's (`send.py --library heartside`), and motion styles became a bank picked per piece.
+
 ## 2026-11-04 (docs pass)
 
 - reconciled at `45161a5` by hand: the docs steward has not run since 31 October (a merge by the auto-merge bot starts no push workflow, and the steward refuses a bot-started run), so twelve closeout notes had sat unfolded. They were folded with `.claude/hooks/harness-closeout.mjs --fold`, every living document was checked against the code by section, and NOW.md was rewritten under its 14,000-byte cap.

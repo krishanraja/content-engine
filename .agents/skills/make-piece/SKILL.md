@@ -293,16 +293,12 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    SCRIPT_CLOSE). The tone is observational, witty and positive (house rule
    TONE_OBSERVANT_WITTY, Krish, 2026-10-21: "Generally yes - observational
    and witty and positive are my general go tos").
-   The opening, the way he talks (house rule PERSONAL_INTRO, Krish,
-   2026-10-13): what he's been doing with the thing, why it matters, and that
-   he wants to break it down for you, before any fact or anecdote. His own
-   line is golden example #1 in `config/golden-examples.json`: "I've been
-   having a little play around with Muse Meta's new personal assistant. It's
-   an important evolution in how AI is going to come into our personal
-   lives, and so I wanted to break it down for you." Read that file before
-   you write; `story_check.py` warns when the opening beat skips it.
-   Spoken words only, the provocative hook in the first two sentences,
-   the deep dive line at the very end (HOOK_AND_CTA). A script never says
+   The hook is the first sentence, with the topic's keyword in it; his personal line (house rule PERSONAL_INTRO:
+   what he's been doing with the thing, why it matters, that he wants to break it down; golden example #1 in
+   `config/golden-examples.json`) comes second or third. Spoken words only, the deep dive line at the very end
+   (HOOK_AND_CTA). The 2026-11-05 checklist (the first second, the keyword, the four openings, the person it is
+   for, captions and the pinned comment under YOUTUBE_PACKAGE) is `.agents/skills/make-piece/references/hook-and-share.md`: read it
+   before you write. `story_check.py` refuses a greeting in front of the hook and warns when his line comes first. A script never says
    it was made with AI or with Claude (house rule NO_AI_DISCLOSURE_LINE;
    Krish, 2026-10-12: "Eliminate the "I made this with AI" entirely").
 1b. **Write it the way he says it** (house rule SCRIPT_AS_HE_TALKS; Krish, 2026-10-17: "Thats how script should be written in the future"). Measured from his takes (`docs/narration/week-of-12-oct`, the rules in `habits-and-rules.json`): about one sentence in three opens with So, And, But, Now or See; the prediction runs straight into the claim ("So my prediction is that...") with its deadline as a period; "no one" and "I reckon"; every fact in one short fixed line; and about 200 script words for the 90-second cut, 400 for the 3-minute cut. The `spoken-line` entries in `config/golden-examples.json` are his own lines from the takes. Never choppy: he talks in sentences of 10 to 15 words joined with so, and or but, and a script cut into strings of five-word sentences reads robotic on the teleprompter (Krish, 2026-10-23: "the choppy rhythm, sounds robotic"), so join short ones and keep a lone short line for a punchline. `story_check.py` warns on each of these, and on a script that will run long as he says it, from his ledger.
@@ -389,8 +385,9 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    You are the presenter. You will read this video script aloud to camera, to leaders of medium-sized companies, and a viewer may stop you after any sentence and ask "what does that mean, and why does it matter to me?" Go through it sentence by sentence. List every sentence you could not answer that for in one plain sentence of your own, exactly as it is written, with what is missing: the thing it refers to, the step it skips, or why it matters to the viewer. Say "nothing" if you could explain every sentence. Then retell the whole video in three sentences.
    ```
 
-   Give each the script's spoken words after its prompt. The script passes
-   only when all three say "nothing" (A and B lost nothing; C could explain every sentence), and every retelling matches the
+   Give each the script's spoken words after its prompt; then ask Reader A the two
+   questions in `references/hook-and-share.md`. The script passes
+   only when all three say "nothing", Reader A says yes and names a person, (A and B lost nothing; C could explain every sentence), and every retelling matches the
    script's point: its one question and the answer it gives. Anything
    a reader lists is rewritten in plainer words, then steps 3 and 4 again with
    three new readers. A script the engine wrote carries its own readers'
