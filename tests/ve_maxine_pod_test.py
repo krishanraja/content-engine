@@ -26,7 +26,7 @@ class FakeRunPod:
         self.calls.append((method, url))
         if method == 'POST' and url.endswith('/pods'):
             body = kw['body']
-            assert body['cloudType'] == 'SECURE' and body['gpuTypeIds'] == [maxine_pod.GPU]
+            assert body['cloudType'] == 'SECURE' and body['gpuTypeIds'][0] == maxine_pod.GPU and len(body['gpuTypeIds']) > 1
             assert 'EYE_TOKEN' in body['env']
             return {'id': 'pod123', 'costPerHr': self.rate}
         if method == 'DELETE':

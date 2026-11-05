@@ -37,6 +37,10 @@ from pathlib import Path
 
 API = 'https://rest.runpod.io/v1'
 GPU = 'NVIDIA RTX A5000'
+# Any of these will do (RTX with Tensor cores, which Maxine needs); RunPod gives the first with free stock. Run
+# 42072590168 (5 Nov) found no A5000 at all. The cap is re-checked against the pod's own costPerHr either way.
+GPUS = [GPU, 'NVIDIA RTX A4000', 'NVIDIA RTX A4500', 'NVIDIA RTX A6000', 'NVIDIA GeForce RTX 4090',
+        'NVIDIA GeForce RTX 3090', 'NVIDIA L4', 'NVIDIA RTX 4000 Ada Generation']
 RATE_USD = 0.27                       # Secure Cloud, as listed on 5 Nov 2026; the pod's own costPerHr is re-checked
 IMAGE = 'nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04'
 PORT = 8000
@@ -163,17 +167,17 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
     if cost > max_usd:
         raise Refused(f'{max_minutes} min at ${RATE_USD}/h is ${cost}, over the ${max_usd} cap')
     if not yes:
-        raise Refused(f'spend needs Krish\'s yes: one {GPU} pod, up to {max_minutes} min, at most ${cost} '
+        raise Refused(f'spend needs Krish\'s yes: one RTX pod, up to {max_minutes} min, at most ${cost} '
                       f'(RunPod Secure Cloud, ${RATE_USD}/h); run again with --yes once he has approved it')
     api_key = api_key or os.environ.get('RUNPOD_API_KEY')
     ngc_key = ngc_key or os.environ.get('NGC_API_KEY')
     if not api_key or not ngc_key:
         raise Refused('RUNPOD_API_KEY and NGC_API_KEY must be set as environment secrets (never in the repository)')
     token = secrets.token_urlsafe(24)
-    started, pod_id, receipt = clock(), None, {'schema': 'maxine-pod/1', 'gpu': GPU, 'take': str(media)}
+    started, pod_id, receipt = clock(), None, {'schema': 'maxine-pod/1', 'gpu': GPUS, 'take': str(media)}
     try:
         pod = call('POST', f'{API}/pods', key=api_key, body={
-            'name': f'eyeline-{media.stem}'[:60], 'imageName': IMAGE, 'gpuTypeIds': [GPU], 'cloudType': 'SECURE',
+            'name': f'eyeline-{media.stem}'[:60], 'imageName': IMAGE, 'gpuTypeIds': GPUS, 'gpuTypePriority': 'availability', 'cloudType': 'SECURE',
             'gpuCount': 1, 'containerDiskInGb': 40, 'volumeInGb': 0, 'ports': [f'{PORT}/http'],
             'env': {'EYE_TOKEN': token, 'EYE_PORT': str(PORT), 'NGC_API_KEY': ngc_key, 'AR_SDK': AR_SDK,
                     'EYE_SERVER': base64.b64encode(SERVER.encode()).decode(),
@@ -183,6 +187,9 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
                                'exec python3 /workspace/server.py']})
         pod_id = pod['id']
         receipt['pod'] = pod_id
+        got = (pod.get('machine') or {}).get('gpuTypeId') or pod.get('gpuTypeId')
+        if got:
+            receipt['gpu'] = got
         rate = float(pod.get('costPerHr') or RATE_USD)
         if estimate(rate, max_minutes) > max_usd:
             raise Refused(f'the pod costs ${rate}/h, over the ${max_usd} cap for {max_minutes} min')
