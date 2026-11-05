@@ -25,6 +25,10 @@ on:
         description: 'nim (the Eye Contact NIM, which this NGC key can pull) or sdk (needs a Maxine SDK subscription)'
         required: false
         default: 'nim'
+      variants:
+        description: 'nim route: JSON {name: [client args]} of settings to try on one pod (empty = default)'
+        required: false
+        default: ''
       clip_seconds:
         description: 'Send only the first N seconds (0 = the whole take); the clip is kept in the artifact'
         required: false
@@ -106,7 +110,8 @@ jobs:
           MAX_USD: ${{ inputs.max_usd }}
           MAX_MINUTES: ${{ inputs.max_minutes }}
           NIM: ${{ inputs.route != 'sdk' && 'yes' || '' }}
-        run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD" --max-minutes "${MAX_MINUTES:-30}" ${NIM:+--nim-client "$RUNNER_TEMP/nim-clients/eye-contact"}
+          VARIANTS: ${{ inputs.variants }}
+        run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD" --max-minutes "${MAX_MINUTES:-30}" ${NIM:+--nim-client "$RUNNER_TEMP/nim-clients/eye-contact"} ${VARIANTS:+--variants "$VARIANTS"}
       - name: Keep the redirected copy and the receipt (3 days)
         if: always()
         uses: actions/upload-artifact@v4

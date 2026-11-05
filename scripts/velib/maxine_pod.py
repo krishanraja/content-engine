@@ -355,7 +355,7 @@ def _grpc_target(pod: dict) -> str | None:
 
 def run_nim(media, out_dir, client, *, yes: bool = False, max_usd: float = MAX_USD, max_minutes: int = MAX_MINUTES,
             api_key: str | None = None, ngc_key: str | None = None, call=http, sleep=time.sleep, clock=time.monotonic,
-            run_client=None, poll_s: float = 15.0, tcp_open=tcp_open) -> dict:
+            run_client=None, poll_s: float = 15.0, tcp_open=tcp_open, variants: dict | None = None) -> dict:
     """Rent one pod running the Eye Contact NIM, send the take through NVIDIA's client, terminate. Returns the receipt."""
     import subprocess  # noqa: PLC0415
     media, out_dir = Path(media), Path(out_dir)
@@ -438,15 +438,31 @@ def run_nim(media, out_dir, client, *, yes: bool = False, max_usd: float = MAX_U
                 break
             sleep(poll_s)
         receipt['grpc'] = 'public tcp'
-        copy = out_dir / f'{media.stem}.maxine.mp4'
-        cmd = [sys.executable, str(Path(client) / 'scripts' / 'eye-contact.py'), '--target', target,
-               '--input', str(media), '--output', str(copy), '--bitrate', '20000000']
-        print(f'maxine_pod: {int(clock() - started)} s: sending the take to the NIM', flush=True)
-        done = (run_client or (lambda c: subprocess.run(c, capture_output=True, text=True,
-                                                       timeout=max(60, max_minutes * 60 - (clock() - started)))))(cmd)
-        receipt['client_log'] = ((done.stdout or '') + (done.stderr or ''))[-4000:]
-        if done.returncode != 0 or not copy.is_file() or copy.stat().st_size == 0:
-            raise Refused(f'the NIM client failed (exit {done.returncode}); its log is in the receipt')
+        runner = run_client or (lambda c: subprocess.run(c, capture_output=True, text=True,
+                                                         timeout=max(60, max_minutes * 60 - (clock() - started))))
+        sets = variants or {'': ['--bitrate', '20000000']}      # one pod, every setting tried back to back
+        receipt['variants'] = {}
+        for name, extra in sets.items():
+            if clock() - started > max_minutes * 60:
+                raise Refused(f'time cap of {max_minutes} min reached before variant {name or "default"}')
+            copy = out_dir / (f'{media.stem}.maxine.{name}.mp4' if name else f'{media.stem}.maxine.mp4')
+            cmd = [sys.executable, str(Path(client) / 'scripts' / 'eye-contact.py'), '--target', target,
+                   '--input', str(media), '--output', str(copy), *[str(x) for x in extra]]
+            print(f'maxine_pod: {int(clock() - started)} s: variant {name or "default"}: {" ".join(map(str, extra))}', flush=True)
+            done = runner(cmd)
+            log = ((done.stdout or '') + (done.stderr or ''))
+            ok = done.returncode == 0 and copy.is_file() and copy.stat().st_size > 0
+            receipt['variants'][name or 'default'] = {'args': [str(x) for x in extra], 'ok': ok,
+                                                      'log': log[-1500:] if not ok else log[-300:]}
+            if ok:
+                receipt['variants'][name or 'default']['sha256'] = sha256(copy)
+            save()
+        good = [v for v in receipt['variants'].values() if v['ok']]
+        receipt['client_log'] = next(iter(receipt['variants'].values()))['log']
+        if not good:
+            raise Refused('the NIM client failed on every variant; the logs are in the receipt')
+        copy = out_dir / (f'{media.stem}.maxine.{next(k for k, v in receipt["variants"].items() if v["ok"])}.mp4'
+                          if variants else f'{media.stem}.maxine.mp4')
         receipt.update(copy=str(copy), copy_sha256=sha256(copy), state='done')
         return receipt
     except Refused as error:
@@ -507,6 +523,7 @@ def main(argv=None) -> int:
     parser.add_argument('take'); parser.add_argument('out_dir')
     parser.add_argument('--yes', action='store_true'); parser.add_argument('--max-usd', type=float, default=MAX_USD)
     parser.add_argument('--max-minutes', type=int, default=MAX_MINUTES)
+    parser.add_argument('--variants', default='', help='JSON {name: [client args]}: settings to try on one pod')
     parser.add_argument('--nim-client', help="NVIDIA's nim-clients/eye-contact folder: run the Eye Contact NIM, not the SDK")
     args = parser.parse_args(argv)
     import signal  # noqa: PLC0415
@@ -518,7 +535,7 @@ def main(argv=None) -> int:
     try:
         if args.nim_client:
             receipt = run_nim(args.take, args.out_dir, args.nim_client, yes=args.yes, max_usd=args.max_usd,
-                              max_minutes=args.max_minutes)
+                              max_minutes=args.max_minutes, variants=json.loads(args.variants) if args.variants else None)
         else:
             receipt = run(args.take, args.out_dir, yes=args.yes, max_usd=args.max_usd, max_minutes=args.max_minutes)
     except Refused as error:
