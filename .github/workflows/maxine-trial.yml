@@ -81,19 +81,32 @@ jobs:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           TAKE: ${{ inputs.take }}
         run: python scripts/post-pack/recording.py get "$TAKE" --out "$RUNNER_TEMP/take"
-      - name: Cut a short clip for a fast trial
-        if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' && inputs.clip_seconds != '0' }}
+      - name: Make the take what the NIM accepts (and cut a short clip for a fast trial)
+        if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' }}
         env:
           TAKE: ${{ inputs.take }}
           CLIP: ${{ inputs.clip_seconds }}
         run: |
+          # The NIM takes "Only H.264 8-bit videos with Constant Frame Rate" and refused the take as recorded (run
+          # 42120949518: audio is its first stream, video Baseline). Video first, H.264 High 8-bit 4:2:0, constant
+          # frame rate, moov first; the same file is kept in the artifact so ve eyeline works on the frames the NIM saw.
           pip install -q imageio-ffmpeg
           FF=$(python -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())")
+          RATE=$(python - "$RUNNER_TEMP/take/$TAKE" <<'PY'
+          import json, subprocess, sys, imageio_ffmpeg
+          out = subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), '-i', sys.argv[1]], capture_output=True, text=True).stderr
+          import re
+          m = re.search(r'Video:.*?(\d+(?:\.\d+)?) fps', out)
+          print(m.group(1) if m else '30')
+          PY
+          )
+          LIMIT=""
+          if [ "${CLIP:-0}" != "0" ]; then LIMIT="-t $CLIP"; fi
           mkdir -p "$RUNNER_TEMP/maxine"
-          "$FF" -v error -y -i "$RUNNER_TEMP/take/$TAKE" -t "$CLIP" -map 0:v:0 -map 0:a? -c:v libx264 -preset veryfast -crf 12 \
-            -pix_fmt yuv420p -c:a aac -b:a 192k "$RUNNER_TEMP/maxine/$TAKE"
-          mv "$RUNNER_TEMP/maxine/$TAKE" "$RUNNER_TEMP/take/$TAKE"
-          cp "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine/clip.$TAKE"
+          "$FF" -v error -y -i "$RUNNER_TEMP/take/$TAKE" $LIMIT -map 0:v:0 -map 0:a? -c:v libx264 -preset veryfast -crf 12 \
+            -profile:v high -pix_fmt yuv420p -r "$RATE" -fps_mode cfr -c:a aac -b:a 192k -movflags +faststart \
+            "$RUNNER_TEMP/maxine/clip.$TAKE"
+          cp "$RUNNER_TEMP/maxine/clip.$TAKE" "$RUNNER_TEMP/take/$TAKE"
           ls -la "$RUNNER_TEMP/take/$TAKE"
       - name: NVIDIA's Eye Contact client (nim route)
         if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' && inputs.route != 'sdk' }}
