@@ -143,6 +143,93 @@ class FilingTests(unittest.TestCase):
             produce_day.made_cuts(self.work)
 
 
+class StingTests(unittest.TestCase):
+    """The long cut opens on the intro sting once Krish approves it (Krish, 2026-11-05: "I think it should go at the
+    start of the longer wide videos 100%,"): its clips are fetched first, the music runs under it, and a long cut that
+    cannot have it stops the run. The short cut opens on the hook."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.work = Path(tmp.name)
+        self.post = self.work / 'plan' / 'post.json'
+        self.post.parent.mkdir()
+        self.post.write_text('{}')
+
+    def make(self, long_shape=None, sting_s=1.8667):
+        calls = []
+
+        class Done:
+            def __init__(self, stdout=''):
+                self.returncode, self.stdout = 0, stdout
+
+        def fake_run(args, env=None, ok=(0,), what=''):
+            args = [str(a) for a in args]
+            calls.append(args)
+            if args[1].endswith('kit.py'):
+                kit = Path(args[args.index('--out') + 1])
+                kit.mkdir(parents=True, exist_ok=True)
+                (kit / f'{args[args.index("--cut") + 1]}.json').write_text(json.dumps({'cues': []}))
+                return Done()
+            shape = args[args.index('--only') + 1]
+            if 'measuring' in what:
+                return Done(json.dumps({'cut_seconds': 300.0, 'shapes': {'16x9': {'intro_seconds': sting_s}}}))
+            said = {'music': 'track', 'opening_stop': None}
+            if shape == '16x9' and long_shape:
+                said.update(long_shape)
+            return Done(json.dumps({'missing_cues': [], 'shapes': {shape: said}}))
+
+        clips = {'16x9': {'outro': self.work / 'o16.mp4'}, '9x16': {'outro': self.work / 'o9.mp4'}}
+        with patch.object(produce_day, 'run', side_effect=fake_run):
+            produce_day.make_cuts(self.post, 'p1', {'long': 'l.mp4', 'short': 's.mp4'}, '/music', clips, self.work, True)
+        return calls
+
+    def test_the_music_runs_under_the_sting_as_well(self):
+        self.make()
+        for cut in produce_day.SHAPE:
+            cfg = json.loads((self.work / 'kit' / f'{cut}.json').read_text())
+            self.assertEqual(cfg['music_seconds'], round(300.0 + 1.8667 + 4.0 + 2.0, 1), cut)
+
+    def test_with_no_sting_the_music_is_the_cut_and_the_outro(self):
+        self.make(sting_s=0.0)
+        self.assertEqual(json.loads((self.work / 'kit' / 'long.json').read_text())['music_seconds'], 306.0)
+
+    def test_a_long_cut_that_cannot_have_the_approved_sting_stops_the_run(self):
+        why = 'the 16x9 cut of this follow_the_money piece opens on the approved intro sting ... and it could not be had: not fetched'
+        with self.assertRaises(produce_day.Stop) as stop:
+            self.make(long_shape={'opening_stop': why})
+        self.assertIn('the long cut: ' + why, str(stop.exception))
+
+    def config(self, status):
+        cfg = produce_day_intro().load()
+        return dict(cfg, status=status)
+
+    def test_a_candidate_sting_fetches_nothing(self):
+        intro = produce_day_intro()
+        with patch.object(intro, 'load', return_value=self.config('candidate')), patch.object(produce_day, 'run') as ran:
+            self.assertFalse(produce_day.fetch_sting())
+        ran.assert_not_called()
+
+    def test_an_approved_sting_is_fetched_and_one_not_in_the_library_stops_the_run(self):
+        intro = produce_day_intro()
+
+        class Done:
+            def __init__(self, code):
+                self.returncode, self.stdout = code, ''
+        with patch.object(intro, 'load', return_value=self.config('approved')), patch.object(produce_day, 'run', return_value=Done(0)) as ran:
+            self.assertTrue(produce_day.fetch_sting())
+        self.assertEqual([str(a) for a in ran.call_args.args[0][1:]], ['scripts/quick-edit/intro.py', 'fetch'])
+        with patch.object(intro, 'load', return_value=self.config('approved')), patch.object(produce_day, 'run', return_value=Done(2)):
+            with self.assertRaises(produce_day.Stop) as stop:
+                produce_day.fetch_sting()
+        self.assertIn('intro.py publish', str(stop.exception))
+
+
+def produce_day_intro():
+    import intro  # noqa: PLC0415  scripts/quick-edit/intro.py, as produce_day imports it
+    return intro
+
+
 class ScheduleTests(unittest.TestCase):
     def test_the_noon_schedule_is_gone_and_the_button_stays(self):
         flow = (ROOT / '.github/workflows/produce-day.yml').read_text(encoding='utf-8')

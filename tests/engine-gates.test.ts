@@ -43,6 +43,7 @@ describe('the engine gates', () => {
     ['the chat backstop keeps only his flagged, scrubbed lines, locally, once each (W3.3)', ['tests/taste_backstop_test.py']],
     ['the Codex token ledger: calls, tokens, child agents and the weekly limit, never words', ['tests/session_token_audit_codex_test.py']],
     ['one music bed shape in both engines, nothing keyed to his voice, and no cut filed without its bed receipt (F40, Krish 2026-11-04)', ['tests/music_bed_test.py']],
+    ['ve opens only the wide whole cut of a series piece on the intro sting, only on the clip Krish approved and never skipped, his voice laid 56 frames later in the stem (Krish, 2026-11-05)', ['-m', 'unittest', 'tests.ve_compile_test.StingTest', 'tests.ve_audio_test.StingLeadTest']],
   ] as const) {
     it(name, () => {
       const r = py([...args])

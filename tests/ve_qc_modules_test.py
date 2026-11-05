@@ -17,7 +17,7 @@ from unittest.mock import patch
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
-from velib import qc, qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel  # noqa: E402
+from velib import qc, qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_opening  # noqa: E402
 import ve  # noqa: E402
 import numpy as np  # noqa: E402
 
@@ -331,7 +331,8 @@ class QCContracts(unittest.TestCase):
                 for module, name in ((qc_sync, 'av_xcorr'), (qc_joins, 'decoder'), (qc_captions, 'ocr'),
                                      (qc_brand, 'mark_tile'), (qc_cues, 'cue_sync'), (qc_audio, 'bed'), (qc_audio, 'continuity'),
                                      (qc_gates, 'words_lost'), (qc_gates, 'joins_in_gaps'), (qc_gates, 'captions_clock'),
-                                     (qc_gates, 'captions_render'), (qc_faces, 'off_face'), (qc_channel, 'safe_zones')):
+                                     (qc_gates, 'captions_render'), (qc_faces, 'off_face'), (qc_channel, 'safe_zones'),
+                                     (qc_opening, 'opening')):
                     mocks[name] = stack.enter_context(patch.object(module, name, return_value=passed))
                 stack.enter_context(patch.object(qc, 'loudness', return_value={'integrated_lufs': -14, 'true_peak_dbtp': -1}))
                 stack.enter_context(patch.object(qc, 'frame_diffs', return_value=np.full(150, 2.)))
@@ -351,7 +352,8 @@ class QCContracts(unittest.TestCase):
             self.assertEqual(ve.main(), 0)
         self.assertEqual(set(run_qc.call_args.kwargs),
                          {'pages', 'beats', 'aspect', 'events', 'slots', 'region', 'mark_png', 'dialogue_master', 'edl', 'joins',
-                          'heard', 'script', 'take_words', 'caption_style', 'plate_video', 'plate_offset'})
+                          'heard', 'script', 'take_words', 'caption_style', 'plate_video', 'plate_offset', 'opening'})
+        mocks['opening'].assert_called_once_with('cut.mp4', qc.opening_view(props))
         report = write.call_args.args[1]
         self.assertTrue(report['complete'], report)
         self.assertTrue(report['measured_pass'], report)
@@ -373,6 +375,163 @@ class QCContracts(unittest.TestCase):
         with self.measurements(), patch.object(ve, 'write_json') as write, redirect_stdout(io.StringIO()):
             self.assertEqual(ve.cmd_qc(Namespace(cut='cut.mp4', format='scoreboard-test', out=None)), 0)
         self.assertFalse(write.call_args.args[1]['complete'])
+
+
+    def test_a_stinged_cut_is_measured_on_the_files_clock(self):
+        """The intro sting in front of a wide whole cut (Krish, 2026-11-05: "I think it should go at the start of the
+        longer wide videos 100%,"): the props stay on the cut's own clock, and every frame QC reads in the file is the
+        sting's 56 frames later. The stem starts on the file's frame 0, so the lip-sync EDL reads it at the moved frames."""
+        plain = self.props()
+        stinged = dict(plain, sting={'src': 'sting.mp4', 'series': 'mind_the_gap', 'frames': 56, 'sha256': 'a' * 64},
+                       audio={'stem': {'src': 'master.wav', 'trimBeforeFrames': 0}})
+        before, after = qc.inputs_from_props(dict(plain, audio=stinged['audio'])), qc.inputs_from_props(stinged)
+        self.assertEqual(qc.lead_frames(stinged), 56)
+        self.assertEqual([(b['fromFrame'], b['toFrame']) for b in after['beats']], [(56, 116), (116, 176)])
+        self.assertEqual([e['atFrame'] for e in after['events']], [86, 146])
+        self.assertEqual(after['slots'], before['slots'], 'a box is where it is drawn, whenever it is drawn')
+        page = after['pages'][0]
+        self.assertEqual((page['fromFrame'], page['toFrame'], page['words'][0]['atFrame']), (56, 176, 76))
+        self.assertEqual(page['region'], before['pages'][0]['region'])
+        self.assertEqual(after['edl'], [{'fromFrame': 56, 'toFrame': 116, 'trimBeforeFrames': 56},
+                                        {'fromFrame': 116, 'toFrame': 176, 'trimBeforeFrames': 116}])
+        # The sting to his face is not a take join; the join between takes is the sting's frames later.
+        self.assertEqual(after['joins'], [(60 + 56) / 30])
+        self.assertEqual(after['plate_offset'], 900 - 56)
+        self.assertEqual(after['opening'], qc.opening_view(stinged))
+        self.assertEqual(stinged['beats'][0]['fromFrame'], 0, 'the props are never changed')
+        # ve qc --edl: the EDL's joins are on the cut's own clock, so they move by the sting too.
+        edl = {'joins': [{'at_s': 2.5}]}
+        with self.measurements(), patch.object(qc, 'run_qc', wraps=qc.run_qc) as run_qc, \
+                patch.object(ve, 'load_json', side_effect=lambda path: edl if str(path) == 'edl.json' else stinged), \
+                patch.object(ve, '_gate_inputs', return_value={}), patch.object(ve, 'write_json'), redirect_stdout(io.StringIO()), \
+                patch.object(sys, 'argv', ['ve', 'qc', 'cut.mp4', '--format', 'scoreboard-test', '--props', 'props.json',
+                                           '--edl', 'edl.json']):
+            ve.main()
+        self.assertAlmostEqual(run_qc.call_args.kwargs['joins'][0], 2.5 + 56 / 30)
+
+
+@unittest.skipUnless(shutil.which('ffmpeg') and shutil.which('ffprobe'), 'ffmpeg is not on PATH')
+class OpeningRowTest(unittest.TestCase):
+    """ve qc's opening row (velib.qc_opening) on synthetic media: stand-in sting clips (intro.stand_in, under .cache,
+    where the stand-in config is honoured), never Krish's. Krish, 2026-11-05: "I think it should go at the start of the
+    longer wide videos 100%,"."""
+
+    @classmethod
+    def setUpClass(cls):
+        from velib import compile as ve_compile  # noqa: PLC0415
+        cls.intro = ve_compile._intro()
+        (ROOT / '.cache').mkdir(exist_ok=True)
+        cls.temp = tempfile.TemporaryDirectory(dir=ROOT / '.cache', prefix='ve-opening-test-')
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.work = Path(cls.temp.name)
+        cls.approved, cls.clips = cls.intro.stand_in(cls.work / 'approved', shapes=('16x9', '9x16'))
+        cls.candidate, _ = cls.intro.stand_in(cls.work / 'candidate', status='candidate', shapes=('16x9',))
+        cls.cfg = cls.intro.load(cls.approved)
+        cls.clip = {(shape, series): cls.clips / Path(entry['library']).name
+                    for shape, per in cls.cfg['clips'].items() for series, entry in per.items()}
+        cls.wide_cut = cls.work / 'cut-16x9.mp4'
+        cls.tall_cut = cls.work / 'cut-9x16.mp4'
+        for path, size in ((cls.wide_cut, '1920x1080'), (cls.tall_cut, '1080x1920')):
+            ffmpeg('-f', 'lavfi', '-i', f'testsrc2=s={size}:r=30', '-frames:v', 120, '-c:v', 'libx264', '-preset', 'ultrafast',
+                   '-pix_fmt', 'yuv420p', path)
+        cls.stem = cls.work / 'stem.wav'
+        cls.stem.with_suffix('.bed.json').write_text(json.dumps({'lead_frames': 56}), encoding='utf-8')
+
+    def joined(self, name, first, cut, hold=0):
+        """first's frames, its last held `hold` more frames, then the cut, keeping the cut's frame count."""
+        out = self.work / name
+        ffmpeg('-i', first, '-i', cut, '-filter_complex',
+               f'[0:v]tpad=stop={hold}:stop_mode=clone,setpts=PTS-STARTPTS[s];[1:v]trim=end_frame={120 - hold},'
+               'setpts=PTS-STARTPTS[c];[s][c]concat=n=2:v=1:a=0[v]', '-map', '[v]', '-c:v', 'libx264', '-preset',
+               'ultrafast', '-pix_fmt', 'yuv420p', out)
+        return str(out)
+
+    def view(self, aspect='16:9', sting=True, label='mind.the.gap', trim=0):
+        entry = self.cfg['clips']['16x9']['mind_the_gap']
+        return {'aspect': aspect, 'fps': 30, 'durationFrames': 120, 'ending': {'fromFrame': 90, 'url': 'makeyourmindup.ai'},
+                'series': {'label': label}, 'audio': {'stem': {'src': str(self.stem), 'trimBeforeFrames': trim}},
+                'sting': {'src': str(self.clip['16x9', 'mind_the_gap']), 'series': 'mind_the_gap', 'frames': 56,
+                          'sha256': entry['sha256']} if sting else None}
+
+    def row(self, path, view, config=None):
+        env = {self.intro.CONFIG_ENV: str(config or self.approved), self.intro.CLIPS_ENV: str(self.clips)}
+        with patch.dict('os.environ', env):
+            return qc_opening.opening(path, view)
+
+    def test_the_approved_sting_then_his_cut_on_the_very_next_frame_passes(self):
+        path = self.joined('stinged.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut)
+        row = self.row(path, self.view())
+        self.assertTrue(row['pass'], row)
+        value = row['value']
+        self.assertEqual((value['opening'], value['lead_frames'], value['file_frames']), ('sting', 56, 176))
+        self.assertTrue(value['sting_frames']['all_same'])
+        self.assertLessEqual(value['sting_frames']['worst_mad'], qc_opening.MATCH_MAD_MAX)
+        self.assertFalse(value['first_cut_frame_vs_sting_last']['same'])
+        # Through run_qc, as ve qc runs it.
+        with patch.object(qc_opening, 'opening', wraps=qc_opening.opening) as measured, \
+                patch.dict('os.environ', {self.intro.CONFIG_ENV: str(self.approved), self.intro.CLIPS_ENV: str(self.clips)}):
+            report = qc.run_qc(path, 'scoreboard-test', opening=self.view())
+        measured.assert_called_once()
+        self.assertTrue(report['checks']['opening']['pass'], report['checks']['opening'])
+
+    def test_another_series_sting_a_held_frame_or_a_short_file_fails(self):
+        other = self.joined('other.mp4', self.clip['16x9', 'follow_the_money'], self.wide_cut)
+        self.assertIn('frame for frame', ' '.join(self.row(other, self.view())['problems']))
+        held = self.joined('held.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut, hold=1)
+        self.assertIn('still the sting\'s last frame', ' '.join(self.row(held, self.view())['problems']))
+        self.assertIn('the cut does not run on', ' '.join(self.row(str(self.wide_cut), self.view())['problems']))
+
+    def test_a_sting_the_props_should_not_carry_fails(self):
+        path = self.joined('stinged-tall-props.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut)
+        for why, view in (('a tall cut', self.view(aspect='9:16')), ('an off day', self.view(label='off.day')),
+                          ('another series', self.view(label='under.the.hood'))):
+            with self.subTest(why):
+                self.assertIn('only the 16:9 whole cut', ' '.join(self.row(path, view)['problems']))
+        # A candidate sting opens no cut: props carrying one were not compiled from the approved clip.
+        self.assertIn('does not open this cut on one', ' '.join(self.row(path, self.view(), self.candidate)['problems']))
+
+    def test_a_cut_that_opens_on_its_hook_shows_no_sting(self):
+        for name, path, aspect in (('tall', self.tall_cut, '9:16'), ('wide, candidate', self.wide_cut, '16:9')):
+            with self.subTest(name):
+                row = self.row(str(path), self.view(aspect=aspect, sting=False), self.candidate if aspect == '16:9' else None)
+                self.assertTrue(row['pass'], row)
+                self.assertEqual((row['value']['opening'], row['value']['file_frames']), ('hook', 120))
+        tall = self.row(str(self.tall_cut), self.view(aspect='9:16', sting=False))
+        self.assertEqual(len(tall['value']['clips_compared']), 3, 'each series\' 9x16 stand-in clip was compared')
+
+    def test_a_sting_in_front_of_a_hook_cut_or_missing_from_a_wide_series_cut_fails(self):
+        tall = self.joined('tall-stinged.mp4', self.clip['9x16', 'under_the_hood'], self.tall_cut)
+        found = ' '.join(self.row(tall, self.view(aspect='9:16', sting=False))['problems'])
+        self.assertIn('opens on the under_the_hood 9x16 sting', found)
+        self.assertIn('something is in front of it', found)
+        # Once the sting is approved, a wide whole series cut left on its hook was compiled before the approval.
+        self.assertIn('the approved sting should open it',
+                      ' '.join(self.row(str(self.wide_cut), self.view(sting=False))['problems']))
+        # A proof window keeps its ending and trims the stem: it is not a whole cut, and opens on no sting.
+        self.assertTrue(self.row(str(self.wide_cut), self.view(sting=False, trim=200))['pass'])
+        # An off-day wide cut opens on its hook.
+        self.assertTrue(self.row(str(self.wide_cut), self.view(sting=False, label='off.day'))['pass'])
+
+
+@unittest.skipUnless(shutil.which('ffmpeg'), 'ffmpeg is not on PATH')
+class StingContinuityTest(unittest.TestCase):
+    """The bed under the sting ("the music sits under it in the edit", config/intro-sting.json): on a cut whose premix
+    laid a lead (lead_frames), the render's floor holds from its first window, not from his first word."""
+
+    def test_a_bare_sting_is_a_drop_out_and_a_hook_cut_is_measured_from_his_first_word(self):
+        with tempfile.TemporaryDirectory(prefix='ve-sting-bed-') as tmp:
+            render = Path(tmp) / 'render.wav'
+            # 1 s with no music under the sting, then the bed: what a stem with the bed starting late would sound like.
+            ffmpeg('-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=mono:d=1', '-f', 'lavfi', '-i', 'sine=f=220:r=48000:d=5',
+                   '-filter_complex', '[1:a]volume=0.3[t];[0:a][t]concat=n=2:v=0:a=1[a]', '-map', '[a]', render)
+            bed = {'bed_present': True, 'levels': {'bed_lufs': -31}, 'body_s': [2.0, 5.0]}
+            sidecar = Path(tmp) / 'render.bed.json'
+            for lead, holds in ((56, False), (0, True)):
+                with self.subTest(lead=lead):
+                    sidecar.write_text(json.dumps({'duration_s': 6.0, 'lead_frames': lead, 'bed': bed}), encoding='utf-8')
+                    row = qc_audio.continuity(str(render), str(render), str(sidecar))
+                    self.assertEqual(row['pass'], holds, row)
+            self.assertTrue(row['target'].endswith('from 2.0 to 4.5 s'))
 
 
 class RendererLayoutMirrorTest(unittest.TestCase):

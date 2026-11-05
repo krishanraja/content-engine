@@ -168,11 +168,13 @@
     "choices": [
       {
         "id": "opening",
-        "title": "The hook is the intro",
-        "ruling": 8,
-        "default": "hook_is_intro",
-        "options": ["hook_is_intro", "story_card", "logo_intro"],
-        "what": "Friday 23's way: the first frame is the hook in the brand's dress, logo and series tag in the corners from the start; no story card or logo intro; one calm close, held long enough to read."
+        "title": "The sting on the wide cut, the hook on the tall",
+        "ruling": 13,
+        "default": "sting_wide_hook_tall",
+        "off_day": "hook_is_intro",
+        "options": ["sting_wide_hook_tall", "hook_is_intro", "story_card", "logo_intro"],
+        "what": "The wide long cut of a weekly series piece opens on the house sting (config/intro-sting.json), then the hook; the tall short cut and an off-day piece open on the hook in the brand's dress. One calm close.",
+        "changed": {"on": "2026-11-05", "by": "Krish", "from": "hook_is_intro", "words": "I think it should go at the start of the longer wide videos 100%,", "where": "the Intro Sting page; config/intro-sting.json placement"}
       },
       {
         "id": "lead_picture",
@@ -335,7 +337,7 @@
   ],
   "rulings": {
     "on": "2026-10-29",
-    "section": "Krish's rulings, 28 and 29 October 2026",
+    "section": "Krish's rulings, 28 October to 5 November 2026",
     "items": [
       {
         "n": 1,
@@ -415,12 +417,10 @@
         "on": "2026-10-29",
         "topic": "Opening",
         "status": "ruled",
-        "layer": "under_test",
         "answer": "I'd pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let's go with number one for now.",
         "question": "Two of his 12 October rules each open a video: a short animated make your mind up intro before his face comes in (house rule INTRO_STING; no design was ever approved) and an animated intro made for the story (house rule STORY_INTRO_OUTRO; Monday 26 opens on its story card). Friday 23 has neither: the hook itself builds from its first frames. Which one opening should every video have? Option one was \"The hook is the intro\", Friday 23's way.",
         "quote": "We need to figure out what the right tone is over time based on real engagement. Let's go with number one for now.",
-      "production": "the hook is the intro (option one, Friday 23's way): the first frame is the hook in the brand's dress, with the logo and the series tag in the corners from the start; no story card and no logo intro; one calm close, held long enough to read",
-        "changed": "Under test, the opening: the current default, recorded per piece as production_choices.opening and judged on real engagement. It replaces both 12 October opening rules, house rule INTRO_STING and the intro half of STORY_INTRO_OUTRO; those house rules change in place only with his yes in person. Quality 5's first picture is now the one after the opening, and no sting is read into any piece."
+        "changed": "Under test, the opening: the current default, recorded per piece as production_choices.opening and judged on real engagement. It replaces both 12 October opening rules, house rule INTRO_STING and the intro half of STORY_INTRO_OUTRO; those house rules change in place only with his yes in person. Quality 5's first picture is now the one after the opening, and no sting is read into any piece. On 2026-11-05 ruling 13 put the house sting back in front of the wide long cut of a weekly series piece; the tall short cut and an off-day piece keep this opening, and the opening under test now cites ruling 13, which carries this one's production with it."
       },
       {
         "n": 9,
@@ -470,6 +470,18 @@
         "listed_aims": "Fri 23 + Mon 26 cuts, brand book, minimal random components, good motion, animation and visuals, simple, classy, on brand",
         "listed_under_test": "hook as intro, lead picture per piece, one sound on the big moment",
         "changed": "The floor is his eight nevers, in his order, in place of the five the engine drafted, each with his earlier words or the rule it rests on and the gate that already holds it, or held at review. The aims and what is under test agree with the list's aims and under test lines. The rejection floor's draft standards for one opening and one close (s9d6db813a0, sad5604ad3b and se67ed0142d in config/rejection-floor.json) now match never 7 and wait on the Rejections route to record his approval."
+      },
+      {
+        "n": 13,
+        "on": "2026-11-05",
+        "topic": "The wide opening",
+        "status": "ruled",
+        "layer": "under_test",
+        "answer": "I think it should go at the start of the longer wide videos 100%,",
+        "question": "Of the Intro Sting page (the makeyourmindup intro sting, the second direction he saw on 12 October, one clip per series), he asked: \"where is this additive?\" The engine answered that no cut used it, since every video had opened on the hook from 29 October (ruling 8), and proposed the full wordmark on screen from the hook's first frame instead of a separate intro before his face. Where does the sting go?",
+        "quote": "I think it should go at the start of the longer wide videos 100%,",
+        "production": "the wide long cut of a weekly series piece opens on that series' house sting, the clip he saw, with no sound of its own and the bed under it, and his face and the hook come in on the very next frame; the tall short cut opens on the hook in the brand's dress (ruling 8); an off-day piece wears no sting; nothing else goes in front of the hook; one calm close, held long enough to read",
+        "changed": "Under test, the opening: the default is now sting_wide_hook_tall, with hook_is_intro for an off-day piece, recorded per piece as production_choices.opening, and the opening choice cites this ruling. House rule HOOK_IS_THE_INTRO and config/intro-sting.json carry it; his approval of the clips is recorded there in his words, and until it is the wide cut opens on its hook and its report says why. Asked the same day whether each series' sting may keep flashing the other series' colours, he picked \"Keep it as I saw it\": the one written exception to the series-colour rule. The sting followed straight by his face is one opening (never 7); a story card or a title card between them would be two."
       }
     ]
   },

@@ -160,8 +160,10 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   hard gates for this?" (house rule `R7`, now a hard gate: `story_check.py`,
   then two fresh readers; `make-piece`, "The Scripts step").
 - Every video, in every format, gets its audio treatment and an animated
-  outro card made for its own story; the animated intro was retired on
-  2026-10-29 (house rule `HOOK_IS_THE_INTRO`: every cut opens on its hook).
+  outro card made for its own story; the animated story intro was retired on
+  2026-10-29 (house rule `HOOK_IS_THE_INTRO`). Since 2026-11-05 the 16:9 long
+  cut of a series piece opens on the house sting (`config/intro-sting.json`),
+  then the hook; the 9:16 cut opens on its hook.
   His earlier words, 2026-10-12: "when the videos come back bear in mind that I want a proper
   animated branded intro to this specific story visually, the audio
   treatment, and then a proper animated outro card. Across all formats, and

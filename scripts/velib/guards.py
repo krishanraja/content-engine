@@ -10,6 +10,8 @@ gate they bind a whole cut of a piece published from creative_direction.MOTION_F
   - `retype_problems(spec)`: a named real artifact is shown as itself; a device whose words copy it is refused.
   - `offday_problems(spec)`: an off-day piece beds on an off-day track and wears no series sting (Krish, 4 Nov:
     "Yes, give off days their own music and look - Rotate."); compile draws it in the house mint.
+  - `opening_problems(spec)`: a piece names the intro sting only where ve compile puts it, on the 16:9 whole cut of a
+    weekly series piece (Krish, 5 Nov: "I think it should go at the start of the longer wide videos 100%,").
   - `freeze(directory)` / `engine_problems(...)`: the engine the storyboard was signed on draws its proof and cut.
   - `record_render(...)` / `loop_problems(...)`: two full renders of a cut per press from Krish, then he sees it.
   - `type_treatments(props)` / `type_note(...)`: the type treatments a cut shows, listed on its proof for Krish to
@@ -183,8 +185,39 @@ def offday_problems(spec: dict, rules: dict | None = None) -> list[str]:
     if bed not in offday_beds:
         out.append(f'offday.bed audio.bed.ledger_id: {bed} is not an off-day track; an off-day piece beds on one of '
                    f'{", ".join(offday_beds) or "the off-day tracks"} (config/music-library.json "for": "off-day"), in rotation')
-    if spec['brand'].get('intro_sting'):
+    if sting_named(spec):
         out.append('offday.chrome brand.intro_sting: an off-day piece wears no series sting')
+    return out
+
+
+STINGS = ('follow_the_money', 'mind_the_gap', 'under_the_hood')  # the series' intro stings (config/intro-sting.json)
+
+
+def sting_named(spec: dict) -> str | None:
+    """The series sting brand.intro_sting names, or None: unset, or the sentence a piece with no sting carries
+    (creative_direction.NO_STING), is no sting."""
+    value = (spec.get('brand') or {}).get('intro_sting')
+    return value if value in STINGS else None
+
+
+def opening_problems(spec: dict) -> list[str]:
+    """A sting named where no cut opens on one. ve compile puts the sting only in front of the 16:9 whole cut of a weekly
+    series piece published on its series' day (Krish, 2026-11-05: "I think it should go at the start of the longer wide
+    videos 100%,"); the 9:16 cut opens on its hook (house rule HOOK_IS_THE_INTRO). So a spec naming a sting with no 16:9
+    whole cut, or on an off day, says what its cuts will not do. Binds every date: an opening that disagrees with its
+    own cuts is never a matter of when."""
+    sting = sting_named(spec)
+    if not sting:
+        return []
+    out = []
+    wide = [cut for cut, c in (spec.get('cuts') or {}).items() if c.get('aspect') == '16:9' and not c.get('excerpt', False)]
+    if not wide:
+        out.append(f'opening.sting_no_wide brand.intro_sting: {sting} opens only the 16:9 whole cut, and this piece has none; '
+                   'its 9:16 cut opens straight on its hook: say none')
+    # On a piece offday_problems binds, it refuses this already (offday.chrome); on any other, it is refused here.
+    if off_day(spec) and not (config()['off_day'].get('status') == 'approved' and bound(spec)):
+        out.append(f'opening.sting_off_day brand.intro_sting: {sting} on {spec.get("publish_day")}, which is not the series\' '
+                   f'own day ({series_day(spec)}): an off-day piece opens on its hook, with no sting')
     return out
 
 
@@ -197,7 +230,7 @@ def off_day_beds(rules: dict | None = None) -> list[str]:
 
 def spec_lints(spec: dict) -> list[str]:
     """The spec-level guards, for ve lint."""
-    return idea_problems(spec) + retype_problems(spec) + offday_problems(spec)
+    return idea_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
 
 
 # ---------------------------------------------------------------- 3. freeze the engine during a piece

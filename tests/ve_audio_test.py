@@ -268,6 +268,78 @@ class EpisodeBedTest(unittest.TestCase):
                 self.assertFalse(row['pass'], row)
 
 
+class StingLeadTest(unittest.TestCase):
+    """A wide whole cut that opens on the 56-frame intro sting (Krish, 2026-11-05: "I think it should go at the start of
+    the longer wide videos 100%,"). The stem starts on the sting's first frame: the dialogue is laid from sample
+    56 x 48000 / 30 = 89600, counted in samples and silent under the sting, and the bed runs from sample 0 under it
+    (the sting has no sound of its own). His voice, his last word and the chapter lift all move by the same 56 frames.
+    The voice and track are EpisodeBedTest's."""
+
+    LEAD = 56
+    LEAD_S = 56 / 30
+
+    @classmethod
+    def setUpClass(cls):
+        cls.temp = tempfile.TemporaryDirectory(dir=ROOT / 'tests', prefix='ve-sting-')
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.root = Path(cls.temp.name)
+        cls.voice, cls.track = cls.root / 'voice.wav', cls.root / 'track.wav'
+        make(cls.voice, "anoisesrc=d=60:c=pink:a=0.5,volume='if(between(t,0.6,57)*lt(mod(t-0.6,6),4),1,0)':eval=frame", 60)
+        make(cls.track, "anoisesrc=d=22:c=brown:a=0.4,volume='if(lt(mod(t,14),7),1,0.316)':eval=frame", 22)
+        cls.out = cls.root / 'audio.long.wav'
+        lead = cls.LEAD_S
+        cls.result = audio.premix(str(cls.voice), str(cls.track), str(cls.out), 0.0, 60.0 + lead, mode='episode_bed',
+                                  last_word_end_s=57.0 + lead, voice_start_s=0.6 + lead, levels=LEVELS,
+                                  lifts=[[30.0 + lead, 33.0 + lead]], lead_frames=cls.LEAD)
+        cls.music = str(cls.out.with_suffix('.music.wav'))
+
+    def test_the_sidecar_records_the_lead_in_samples(self):
+        sidecar = json.loads(self.out.with_suffix('.bed.json').read_text(encoding='utf-8'))
+        self.assertEqual((sidecar['lead_frames'], sidecar['dialogue_from_sample'], sidecar['lead_s']), (56, 89600, 1.8667))
+        self.assertLessEqual(sidecar['dialogue_under_lead_dbfs'], -90.0, 'no take audio sounds under the sting')
+        self.assertAlmostEqual(sidecar['duration_s'], (56 + 1800) / 30, places=9)
+        self.assertAlmostEqual(sidecar['bed']['voice_start_s'], 0.6 + self.LEAD_S, places=9)
+        self.assertAlmostEqual(sidecar['bed']['last_word_end_s'], 57.0 + self.LEAD_S, places=9)
+        self.assertEqual(sidecar['bed']['lifts'], [[30.0 + self.LEAD_S, 33.0 + self.LEAD_S]])
+
+    def test_the_bed_plays_loud_under_the_sting_and_keeps_its_shape(self):
+        shape = self.result['bed']['shape']
+        self.assertTrue(shape['pass'], shape)
+        self.assertLessEqual(shape['direction_changes'], 2)
+        meter = dict(audio.ebur128(self.music)['M'])
+        body = np.median([v for t, v in meter.items() if 10 <= t <= 25])
+        under = [v for t, v in meter.items() if 0.4 <= t <= self.LEAD_S]
+        self.assertTrue(under)
+        self.assertGreaterEqual(min(under) - body, 6.0, 'the open is loud over the bed for the whole sting')
+        self.assertAlmostEqual(self.result['bed']['bed_lufs_in_master'], -31, delta=0.6)
+
+    def test_the_render_length_and_the_bed_checks_hold(self):
+        self.assertTrue(qc_audio.continuity(str(self.out), str(self.out))['pass'])
+        row = qc_audio.bed(str(self.out))
+        self.assertTrue(row['pass'], row)
+        self.assertAlmostEqual(len(audio._decode(self.result['stem'])) / audio.SR, 60.0 + self.LEAD_S, delta=0.02)
+
+    def test_his_voice_comes_in_exactly_56_frames_later(self):
+        # A tone from sample 0 of the dialogue, mixed with no bed, with and without the sting: the first loud sample of
+        # the finished stem moves by exactly 89600 samples. Measured on the stems themselves, not on the delay asked for.
+        tone = self.root / 'tone.wav'
+        make(tone, 'sine=f=440:r=48000', 4.0)
+        first = []
+        for lead in (0, self.LEAD):
+            out = self.root / f'tone-{lead}.wav'
+            audio.premix(str(tone), None, str(out), 0.0, 5.0 + lead / 30, voice_start_s=lead / 30, lead_frames=lead)
+            samples = np.abs(audio._decode(str(out)))
+            first.append(int(np.argmax(samples > 0.1 * samples.max())))
+            self.assertEqual(json.loads(out.with_suffix('.bed.json').read_text(encoding='utf-8'))['lead_frames'], lead)
+        self.assertLessEqual(abs(first[1] - first[0] - 89600), 1, first)
+
+    def test_a_voice_before_the_sting_ends_or_a_broken_lead_is_refused(self):
+        for lead, voice_start, said in ((56, 1.0, 'must come after the sting'), (-3, 2.0, 'whole number'), (1, 2.0, 'whole number')):
+            with self.subTest(lead=lead), self.assertRaisesRegex(ValueError, said):
+                audio.premix(str(self.voice), None, str(self.root / 'refused.wav'), 0.0, 10.0, voice_start_s=voice_start,
+                             lead_frames=lead, fps=7 if lead == 1 else 30)
+
+
 class TileTest(unittest.TestCase):
     def test_tiling_covers_the_cut_with_no_run_longer_than_the_track(self):
         track = np.ones((audio.SR * 10, 2)) * 0.1

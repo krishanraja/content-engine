@@ -1,8 +1,9 @@
 # quick-edit
 
 Turns one to-camera recording into a finished tall (9:16) and wide (16:9)
-video in the makeyourmindup look: opening straight on the hook in the brand's
-dress, stumbles and dead air cut, graphics on the right lines, captions timed
+video in the makeyourmindup look: the wide cut of a weekly series piece opening
+on its series' intro sting and then the hook, the tall cut straight on the hook
+in the brand's dress, stumbles and dead air cut, graphics on the right lines, captions timed
 to the words, the licensed music bed under all of it, even loudness, the one
 outro card on the end.
 
@@ -49,7 +50,9 @@ faster-whisper, Pillow, Playwright, node (for the story outro), the music folder
 (`MINDMAKE_MUSIC_ROOT`, else `runtime.music_root`) and the archive folder
 (`MINDMAKE_ARCHIVE_ROOT`, else on Windows `runtime.archive_root` in
 `config/studio.json`), the music ledger, every approved track's file against
-its sha256, and the opening (the sting is retired: every cut opens on the hook). It exits 1 when
+its sha256, and the opening (the 9:16 cut opens on the hook; the 16:9 cut of a weekly series piece opens on its
+intro sting once `config/intro-sting.json` records Krish's approval, and the `intro sting` row says whether it does and
+which clips are here). It exits 1 when
 anything a render needs is missing, and a faster-whisper that is missing or
 cannot decode a second of sound is one of those (`transcriber.py` decodes a
 tone, as the matcher's `--check-transcriber` does): the matcher and the
@@ -68,7 +71,9 @@ python make.py short.json --out OUTDIR-short --only 9x16 --share-mib 29
 1. **Plan first.** `--plan` transcribes (the first run takes a minute or two
    on a laptop), then prints every cut with its words, every graphic's start
    and end in the edited video, and the caption count. Under `shapes` it says
-   what each cut will get: its opening (the hook, house rule HOOK_IS_THE_INTRO),
+   what each cut will get: its opening (house rule HOOK_IS_THE_INTRO: on a series
+   piece's 16x9 cut the sting, or the hook and why; on 9x16 the hook; and
+   `opening_stop` when the cut may not render),
    the music track or why not, the main and end card lengths, and any warning (the short cut's
    speech over 90 seconds, for one, or a config with no cues whose post has
    pictures). It renders nothing. It exits with an error if a
@@ -121,8 +126,8 @@ One JSON file per video. Paths are relative to the config file.
 | `replacements` | `[["theater", "theatre"], ["computing power group", "computing power grows"]]`: fixes what the transcriber mishears, and keeps British spelling. A phrase of several words is matched as a run and replaced as one caption word group. Every video also gets the fixes in `DEFAULT_FIXES` in `make.py` first, the names the transcriber has got wrong before ("Bike Dance" for ByteDance, Krish, 2026-10-07): when a video misspells a name, add it there so the next one cannot. Captions only; the audio is untouched. His own name is never a fix and never a caption (Krish, 2026-10-28: "Remember, no content refers to Krish, ever. I still see that popping up from time to time. Even articles written are not authored by Krish. My face only, for assets and the video format."): a caption that says "Krish", or a self-introduction under any hearing of it ("I'm Chris", "my name is Krish"), stops the run before anything renders, naming where it is in the cut and in the take, so it can be cut with `remove`. The transcriber's hint names the publication, never him. |
 | `dress` | `{"9x16": "dress-9x16.png"}`, written by kit.py: the tall cut's dress, the brand's wordmark in the top left corner and the series tag in the top right, as the Friday 23 October tall cut has them, laid over the whole main from its first frame, over the pictures and under the captions, and off the end card (house rule HOOK_IS_THE_INTRO). The wide cut needs none: its frame carries the wordmark and the series beside him from the first frame. |
 | `logo` | Only for a config kit.py did not dress: the makeyourmindup logo in the opening seconds of the tall video (Krish, 2026-10-07: "put the Make Your Mind Up logo in the first few seconds of the video somewhere on vertical video"). The masthead sits on an ink pill above the captions for 3 seconds and fades out. `{"png": ..., "seconds": 3}` uses another full-frame transparent image; `false` leaves it out. A cut with a clip in front leaves it out. |
-| `intro` | Anything in front of the hook. Every cut opens straight on the hook by default (house rule HOOK_IS_THE_INTRO, Krish, 2026-10-29: "Let's go with number one for now"), so `"auto"` (the default) gives nothing and says nothing: the sting is retired (`config/intro-sting.json`). `{"9x16": file, "16x9": file}` names a clip that goes in front only on Krish's own words for that piece in `intro_override`, so a different opening can be tried on his say; otherwise it is left out and the report says why. A clip's own sound is never used: silence is laid under it. An opening problem never stops a render. |
-| `intro_override` | Krish's own words for this piece, starting "Krish", letting a clip open the cut. The report quotes them and records the clip as the cut's `opening`. Never written for him. |
+| `intro` | Anything in front of the hook (house rule HOOK_IS_THE_INTRO). `"auto"` (the default) puts the series' house sting (`config/intro-sting.json`, `intro.py`) in front of the 16x9 cut of a weekly series piece, once Krish's approval is recorded there (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"); the 9x16 cut and an off-day piece (no weekly series, or dated on a Tuesday, Thursday or Saturday) get nothing and say nothing. While the sting is a `candidate` the 16x9 cut opens on the hook and the report says why; once it is approved, a 16x9 series cut that cannot have it (a clip missing from the library, or not the one he approved) stops before it renders. `false` is no intro, which on an approved 16x9 series cut also stops. `{"9x16": file, "16x9": file}` names a clip that goes in front only if it is the house sting or on Krish's own words for that piece in `intro_override`, so a different opening can be tried on his say; otherwise it is left out and the report says why. A clip's own sound is never used: silence is laid under it, in exact samples counted from its frames, with the bed over it. |
+| `intro_override` | Krish's own words for this piece, starting "Krish", letting a clip open the cut, or letting an approved 16x9 series cut render without its sting. The report quotes them and records the clip as the cut's `opening`. Never written for him. |
 | `series` | The piece's series (or `subchannel`), for the series colour: `follow_the_money`, `mind_the_gap` or `under_the_hood`, in any spelling. Without it, make.py reads the subchannel from the post the kit was made from, else uses follow.the.money's colour and says so. |
 | `music` | The bed under the whole video, never dropping out (Krish, 2026-10-28: "Yes I think music should be audible throughout but just lower."). `"auto"` (the default) is `music.py`'s pick for this piece among the approved, licensed tracks; with none, the cut has voice only and the report says why. `false` is voice only. A track id uses that track, if it can be used. Both cuts of a piece ask for the same length: the long cut's recording as kit.py measured it (`kit.json`, `recording_seconds`) plus the most an opening clip and the end card add; only when the long cut's kit is not made yet do they ask for `PIECE_SECONDS` (400). A track that covers that plays straight; else one that runs a minute or more starts again from its intro cue under a two-second crossfade, on a picture turn where one is near (`music.restarts`), so the bed runs under the whole cut. |
 | `music_seconds` | Optional. The length of music the piece needs, in place of the one read from `kit.json`. |
@@ -228,44 +233,71 @@ Captions are Archivo Black, cream on an ink box, with numbers in mint: 70
 pixels in the tall shape (top third, or under a panel), 48 in the wide shape
 (bottom of the speaker's column).
 
-## The opening: the hook is the intro
+## The opening: the sting on the wide cut, the hook on the tall
 
-Krish, 2026-10-29, picking option one, "The hook is the intro", for the one
-opening every video has: "I'd pick number one here but I think that we need
-to test and learn. We need to figure out what the right tone is over time
-based on real engagement. Let's go with number one for now." (house rule
-HOOK_IS_THE_INTRO). So every cut opens straight on his hook, in the brand's
-dress from the first frame: in the tall cut the wordmark and the series tag in
-the top corners (`dress`, above), in the wide cut its existing branded frame
-for now (which look the wide cut should have is not yet put to Krish).
-Nothing goes in front: no story card and no logo intro. The close is the
-one calm outro card (`endcard`; the story outro, house rule
-STORY_INTRO_OUTRO), so a video has one opening and one close (Krish,
-2026-10-21: "why are there two separate intro sequences? that should NEVER
-happen."; 2026-10-28: "we also don't need three separate outro transitions
-and screens. Ever.").
+Krish, 2026-11-05, of the makeyourmindup intro sting: "I think it should go at
+the start of the longer wide videos 100%," (house rule HOOK_IS_THE_INTRO).
+So the wide (16x9) cut of a weekly series piece opens on that series' house
+sting, the clip he saw on the Intro Sting page, byte for byte: 56 frames at
+30 fps, about 1.9 seconds (45 frames at 24 fps, when the cut runs at the
+take's rate), with the full MAKE YOUR MIND/UP wordmark plate near its end. It
+has no sound of its own: make.py lays silence under it, in exact samples
+counted from its frames, and the music bed over it at its loud open. His face
+and the hook come in on the very next frame, in the wide cut's existing
+branded frame for now (which look the wide cut should have is not yet put to
+Krish). Asked whether each series' clip may keep flashing the other series'
+colours on its way to its own, he picked "Keep it as I saw it": the one
+written exception to the series-colour rule.
 
-It is his choice to test, not a fixed rule, and it refuses nothing: each
-report records the opening the cut used (`opening`: `{"kind": "hook"}`, or
-`"clip"` when one went in front on his words), so real engagement can settle
-it, and a different opening is tried only on his own words for that piece
-(`intro`, `intro_override`).
+The tall (9x16) cut opens straight on his hook, in the brand's dress from the
+first frame: the wordmark and the series tag in the top corners (`dress`,
+above). That is his pick of 2026-10-29, option one, "The hook is the intro":
+"I'd pick number one here but I think that we need to test and learn. We need
+to figure out what the right tone is over time based on real engagement.
+Let's go with number one for now." An off-day piece (no weekly series, or
+dated on a Tuesday, Thursday or Saturday) wears no sting, and never another
+series' colour, so both its cuts open on the hook.
 
-It replaced two 12 October rules. The 1 to 2 second animated sting before his
-face (INTRO_STING): no design was ever approved (on 2026-10-12 he turned the
-first one down: "it's ok, it's a bit boring and colourless and vanilla - and
-just what Powerpoint would do in 2008"), and `config/intro-sting.json` now
-says `retired`, with his words. And the animated story card in front of each
-cut (the intro half of STORY_INTRO_OUTRO), retired in
+Nothing else goes in front of the hook: no story card, no title card and no
+second intro. The close is the one calm outro card (`endcard`; the story
+outro, house rule STORY_INTRO_OUTRO), so a video has one opening and one close
+(Krish, 2026-10-21: "why are there two separate intro sequences? that should
+NEVER happen."; 2026-10-28: "we also don't need three separate outro
+transitions and screens. Ever."). The sting followed straight by his face is
+one opening.
+
+The openings stay his choice to test: each report records the opening the cut
+used (`opening`: `{"kind": "sting", ...}` with the clip's sha256, `{"kind":
+"hook"}` with a `why` on a wide cut that opened on its hook, or `"clip"` when
+one went in front on his words), so real engagement can settle it, and a
+different opening is tried only on his own words for that piece (`intro`,
+`intro_override`).
+
+The design is six fixed clips, not source code: the Remotion source of the
+clips he saw on 12 October was never committed and is lost.
+`config/intro-sting.json` names each clip (its library path under "1 Brand kit
+(permanent)/Intro sting", its sha256 and size) and says where the sting goes
+(`shapes`: 16x9 only; the 9x16 clips are kept for the record). make.py fetches
+a clip this machine lacks from the library, checked by size and sha256, and
+`intro.py finish` makes the cut-ready sting from it, its picture copied as it
+is. While the config says `candidate` the wide cut opens on its hook and the
+report says why; `approve` records his approval in his own words, bound to
+the clips' sha256 (`source_sha256`), and never for him.
+
+What came before: the sting first ran from 2026-10-12 (INTRO_STING) with no
+design approved (on 2026-10-12 he turned the first direction down: "it's ok,
+it's a bit boring and colourless and vanilla - and just what Powerpoint would
+do in 2008"), and his pick of 29 October retired it, so no cut opened on a
+sting from 29 October to 5 November. The animated story card in front of each
+cut (the intro half of STORY_INTRO_OUTRO) stays retired, in
 `config/story-intro-outro.json`; its outro half stays.
 
-`intro.py` keeps the sting's machinery (a source hash that binds an approval
-to the previews he saw, a render per shape and series), so the choice is easy
-to change if engagement says so; while the config says `retired`, `intro.py
-render` refuses and make.py gets no sting and no note.
-
 ```
-python intro.py status [--json]                   # retired, his last word on a design, what is rendered here
+python intro.py status [--json]                   # the approval, the source hash and which clips are here and verified
+python intro.py fetch                             # any machine: every clip from the library, checked by size and sha256
+python intro.py publish                           # a machine that has the clips: send them to the library (send.py)
+python intro.py approve --words "Krish's exact words"
+python intro.py finish [--shape 16x9] [--series SERIES] [--force]
 ```
 
 ## The music
@@ -381,10 +413,12 @@ assumed, and no spend is made without his yes.
 `<name>.report.json` keeps what it always had and adds, per shape under
 `shapes`, and at the top level when one shape was rendered (the house way):
 
-- `opening`: what the cut opened on (`{"kind": "hook", "rule":
-  "HOOK_IS_THE_INTRO"}`, or the clip his words put in front), so real
-  engagement can settle the choice;
-- `intro_seconds` (0 on the hook), `main_seconds`, `outro_seconds` (the end
+- `opening`: what the cut opened on (`{"kind": "sting", "rule":
+  "HOOK_IS_THE_INTRO", "series": ..., "clip_sha256": ...}` on a wide series
+  cut with its sting, `{"kind": "hook", "rule": "HOOK_IS_THE_INTRO"}` with a
+  `why` on a wide cut that opened on its hook, or the clip his words put in
+  front), so real engagement can settle the choice;
+- `intro_seconds` (0 on the hook, the sting's length with it), `main_seconds`, `outro_seconds` (the end
   card) and `total_seconds`, and `intro` (a clip in front, its sha256);
 - `music`: the track id, title, sha256, the levels used, the gain on each
   stretch and how the track was laid (straight, looped, or to its outro
@@ -420,18 +454,21 @@ python spelling.py --self-test   # British and US spellings of the same word, ne
 python transcriber.py            # does faster-whisper decode a second of sound here (exit 1 and the pinned fix when not)
 python music.py --self-test      # the ledger, the pick (one track for both cuts), a real bed measured against the levels,
                                  # and a track shorter than the cut started again with no gap
-python intro.py --self-test      # a synthetic sting through the finishing path, the source hash, the approval gate, and the sting retired
+python intro.py --self-test      # synthetic clips through the finishing path, the source hash, where the sting goes for every shape,
+                                 # status and series, fetch and publish on a fake engine, and the approval lane
 python kit.py --self-test        # the kit, where it finds a piece's files, and a missing, uncued or unreadable picture as a CHECK
 python mix_test.py               # real renders from synthetic media, measured (about 4 minutes)
 ```
 
 `mix_test.py` builds a 20 second voice-like recording, a looping chord with
-a stand-in licence and ledger, a stand-in dress, a synthetic opening clip and
-the graphics under `.cache/quick-edit/mix-test/`, renders a tall and a wide
-cut opening on the hook with the bed, a tall and a wide cut with a clip in
-front on stand-in words, and a tall cut with no approved track, and checks
-the opening, the dress, the bed under the whole cut and the measured numbers
-against the levels. It
+a stand-in licence and ledger, a stand-in dress, a synthetic opening clip, a
+stand-in approved intro sting (synthetic clips, never Krish's) and the
+graphics under `.cache/quick-edit/mix-test/`, renders a tall and a wide cut
+of a piece with no series opening on the hook with the bed, a wide cut of a
+series piece opening on the stand-in sting with his frame on the very next
+frame, a tall and a wide cut with a clip in front on stand-in words, and a
+tall cut with no approved track, and checks the opening, the dress, the bed
+under the whole cut and the measured numbers against the levels. It
 points make.py at its stand-in ledger with `MINDMAKE_MUSIC_LEDGER`; a real
 render never sets it, and a report made with any ledger but
 `config/music-library.json` says so in its warnings.
@@ -498,7 +535,7 @@ Change a case there first, then both programs.
 
 Recordings, graphics, music and finished videos are media, and media are
 never committed (`scripts/check-no-secrets.ts`). The configs, the music
-ledger, the retired sting's settings and this tool are committed; the files they
+ledger, the intro sting's settings (its clips live in the library) and this tool are committed; the files they
 point at live in a local working folder, the music folder in Drive, or
 `.cache/`.
 

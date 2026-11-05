@@ -265,7 +265,8 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         # story
         first = beats[0]
         if not any(e['at_w'] <= first['span']['from_w'] + 4 for e in first['events']):
-            out.append(f'story.hook_event {where}.beats.0: the first visual event must land within the first 4 words (about 1.5 s)')
+            out.append(f'story.hook_event {where}.beats.0: the first visual event must land within the first 4 words of the hook '
+                       '(about 1.5 s after his first word, which follows the intro sting on a wide series cut)')
         roles = [b['role'] for b in beats]
         whole = not cut.get('excerpt')
         if whole and roles.count('payoff') != 1:
