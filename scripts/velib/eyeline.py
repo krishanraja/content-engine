@@ -393,6 +393,36 @@ def blend(frame, source, geo, strength: float):
     return out
 
 
+def iris_mask(light, inside, d_here, r):
+    """His iris as it really is in this frame: inside his opening, near the landmarker's iris, the pixels darker than
+    the sclera around them (Otsu on lightness), the one blob at the iris, its holes (the catchlight) filled. A circle
+    from the landmarker's centre and radius is a few pixels off: it carried a pale sclera rim and dropped the dark
+    outer iris (blind review, 5 Nov). Falls back to that circle when the segment is not iris-shaped."""
+    import cv2  # noqa: PLC0415
+    import numpy as np  # noqa: PLC0415
+    near = inside & (d_here < 1.5)
+    circle = inside & (d_here < 1.0)
+    vals = light[near]
+    if vals.size < 20:
+        return circle
+    t = cv2.threshold(np.clip(vals, 0, 255).astype(np.uint8).reshape(-1, 1), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[0]
+    dark = (near & (light < t)).astype(np.uint8)
+    dark = cv2.morphologyEx(dark, cv2.MORPH_OPEN, np.ones((2, 2), np.uint8))
+    n, labels = cv2.connectedComponents(dark)
+    if n < 2:
+        return circle
+    centre = np.unravel_index(np.argmin(np.where(near, d_here, 9)), d_here.shape)
+    pick = labels[centre] or (1 + int(np.argmax([(labels == k).sum() for k in range(1, n)])))
+    blob = (labels == pick).astype(np.uint8)
+    filled = blob.copy()
+    contours, _ = cv2.findContours(blob, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(filled, contours, -1, 1, -1)              # the catchlight is part of the iris
+    area, disc = filled.sum(), math.pi * r * r
+    if not (0.25 * disc <= area <= 1.8 * disc):
+        return circle
+    return (filled > 0) & inside & (d_here < 1.35)
+
+
 def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris_there=None):
     """His eye from `source` laid onto `frame` only inside his own lid line (`contour`, 16 points, full-frame pixels),
     shrunk a little and feathered, so his lids, lashes and skin stay his. Inside, the source's colour is matched to
@@ -427,6 +457,7 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
     # The iris itself, matched to his: Maxine re-draws a dark brown iris green-grey (5 Nov, 5.50 s). His iris (where
     # it was) and Maxine's (where it put it) come from the landmarker with their own radii; Maxine's iris pixels take
     # his iris's distribution channel by channel (histogram matching), inside a soft disk and his opening only.
+    relocated = False
     if iris_here is not None and iris_there is not None:
         (hx, hy, hr), (tx, ty, tr) = iris_here, iris_there
         ys, xs = np.mgrid[0:y1 - y0, 0:x1 - x0].astype(np.float32)
@@ -444,11 +475,29 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
                 ranks = np.clip(np.searchsorted(np.sort(vals), lab_s[..., ch], side='left') / max(1, vals.size - 1), 0, 1)
                 fixed[..., ch] = np.interp(ranks, np.linspace(0, 1, q.size), q)
             lab_s = lab_s * (1 - w_there[..., None]) + fixed * w_there[..., None]
+            # Then his own eye, with only the iris moved to where Maxine aimed it. Maxine's own pixels (its iris drawn
+            # dark brown where his reads grey, its sclera, its lower lids) are not used at all: the base is his eye
+            # with the iris filled in from his own sclera, and his visible iris is laid at Maxine's position inside his
+            # opening, so his lids still cover it (blind review, 5 Nov: halo and wrong-colour iris gave it away).
+            ox, oy = tx - hx, ty - hy
+            region_u8 = np.clip(region, 0, 255).astype(np.uint8)
+            iris = iris_mask(lab_o[..., 0], inside, d_here, hr)
+            hole = cv2.dilate(iris.astype(np.uint8) * 255, np.ones((3, 3), np.uint8), iterations=1)
+            base = cv2.inpaint(region_u8, hole, max(2.0, 0.35 * hr), cv2.INPAINT_TELEA)
+            shift = np.float32([[1, 0, ox], [0, 1, oy]])
+            moved = cv2.warpAffine(region_u8, shift, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+            seen = cv2.GaussianBlur(iris.astype(np.float32), (0, 0), 0.6)
+            seen = cv2.warpAffine(seen, shift, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR)
+            own = np.clip(seen, 0, 1) * inside
+            own = cv2.GaussianBlur(own, (0, 0), 0.5)
+            eye = base.astype(np.float32) * (1 - own[..., None]) + moved.astype(np.float32) * own[..., None]
+            lab_s = cv2.cvtColor(np.clip(eye, 0, 255).astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
+            relocated = True
     other = cv2.cvtColor(np.clip(lab_s, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32)
     k = max(0.8, 0.04 * width)
     hp_o = region - cv2.GaussianBlur(region, (0, 0), k)
     hp_s = other - cv2.GaussianBlur(other, (0, 0), k)
-    gain = float(np.clip(np.sqrt((hp_o[inside] ** 2).mean() / max(1e-6, (hp_s[inside] ** 2).mean())), 1.0, DETAIL_MAX))
+    gain = 1.0 if relocated else float(np.clip(np.sqrt((hp_o[inside] ** 2).mean() / max(1e-6, (hp_s[inside] ** 2).mean())), 1.0, DETAIL_MAX))
     other = other + (gain - 1.0) * hp_s
     a = alpha[..., None]
     out = frame.copy()
