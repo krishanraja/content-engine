@@ -94,7 +94,8 @@ class H(http.server.BaseHTTPRequestHandler):
                     if not b: break
                     self.wfile.write(b); left -= len(b)
             return
-        body = json.dumps(dict(state, server="eyeline")).encode(); self.send_response(200)
+        tail = open(WORK + "/job.log", "rb").read()[-4000:].decode("utf-8", "replace") if os.path.isfile(WORK + "/job.log") else ""
+        body = json.dumps(dict(state, server="eyeline", log=state.get("log") or tail)).encode(); self.send_response(200)
         self.send_header("Content-Type", "application/json"); self.end_headers(); self.wfile.write(body)
     def log_message(self, *a): pass
 http.server.ThreadingHTTPServer(("0.0.0.0", int(os.environ.get("EYE_PORT", "8000"))), H).serve_forever()
@@ -104,8 +105,11 @@ http.server.ThreadingHTTPServer(("0.0.0.0", int(os.environ.get("EYE_PORT", "8000
 REMOTE_JOB = r'''
 set -euo pipefail
 cd /workspace
+step() { echo "STEP $(date -u +%H:%M:%S) $*"; }
+step packages
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq && apt-get install -y -qq wget unzip ffmpeg >/dev/null
+step ngc-cli
 wget -q -O ngc.zip https://api.ngc.nvidia.com/v2/resources/nvidia/ngc-apps/ngc_cli/versions/3.41.4/files/ngccli_linux.zip
 unzip -q ngc.zip && export PATH="$PWD/ngc-cli:$PATH"
 ngc config set <<< "$NGC_API_KEY
@@ -114,18 +118,24 @@ nvidia
 no-team
 no-ace
 " >/dev/null || true
-ngc registry resource download-version "$AR_SDK" --dest /workspace/sdk
+step "sdk download $AR_SDK"
+timeout 900 ngc registry resource download-version "$AR_SDK" --dest /workspace/sdk
+du -sh /workspace/sdk; find /workspace/sdk -maxdepth 3 | head -40
 SDK=$(find /workspace/sdk -maxdepth 3 -type d -name "*AR*SDK*" | head -1)
 [ -n "$SDK" ] || SDK=/workspace/sdk
+step unpack
 find "$SDK" -name "*.tar.gz" -exec tar -xzf {} -C "$SDK" \;
 APP=$(find "$SDK" -type f -iname "GazeRedirect*App*" -perm -u+x | head -1)
 if [ -z "$APP" ]; then echo "no GazeRedirect sample binary in the SDK:"; find "$SDK" -maxdepth 4 | head -80; exit 3; fi
 export LD_LIBRARY_PATH="$(dirname "$APP"):$(find "$SDK" -type d -name lib | tr '\n' ':')${LD_LIBRARY_PATH:-}"
 MODELS=$(find "$SDK" -type d -name models | head -1)
-"$APP" --help 2>&1 | head -60 || true
-"$APP" --offline_mode=true --in_file=/workspace/in.mp4 --out_file=/workspace/out.mp4 --redirect_gaze=true \
+step "sample $APP"
+timeout 60 "$APP" --help 2>&1 | head -60 || true
+step redirect
+timeout 1500 "$APP" --offline_mode=true --in_file=/workspace/in.mp4 --out_file=/workspace/out.mp4 --redirect_gaze=true \
     ${MODELS:+--model_path=$MODELS} --capture_outputs=true
 [ -s /workspace/out.mp4 ] || { echo "the sample wrote no out.mp4"; ls -la /workspace; exit 4; }
+step done
 '''
 
 
@@ -219,9 +229,17 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
         if str(sent).strip() != sha256(media):
             raise Refused('the take arrived damaged on the pod (sha256 differs)')
         call('POST', f'{base}/start', token=token)
+        seen = {}
         while True:
             deadline()
             status = call('GET', f'{base}/status', token=token, timeout=30)
+            receipt['remote_log'] = status.get('log', '')      # kept on every exit: cap, cancel or failure
+            out_dir.mkdir(parents=True, exist_ok=True)         # and on disk now, in case the runner is killed
+            (out_dir / f'maxine-pod.{media.stem}.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
+            steps = [line for line in receipt['remote_log'].splitlines() if line.startswith('STEP ')]
+            if steps and steps[-1] != seen.get('step'):
+                seen['step'] = steps[-1]
+                print(f'maxine_pod: {steps[-1]}', flush=True)
             if status.get('state') == 'done':
                 break
             if status.get('state') == 'failed':
@@ -274,6 +292,25 @@ def sha256(path) -> str:
     return digest.hexdigest()
 
 
+def cleanup(api_key: str | None = None, call=http) -> list[str]:
+    """Terminate every pod this runner made (named eyeline-*): the safety net after a cancelled run."""
+    api_key = api_key or os.environ.get('RUNPOD_API_KEY')
+    if not api_key:
+        raise Refused('RUNPOD_API_KEY must be set')
+    pods = call('GET', f'{API}/pods', key=api_key)
+    pods = pods.get('pods', pods) if isinstance(pods, dict) else pods
+    gone = []
+    for pod in pods or []:
+        if str(pod.get('name', '')).startswith('eyeline-'):
+            call('DELETE', f'{API}/pods/{pod["id"]}', key=api_key)
+            gone.append(pod['id'])
+    return gone
+
+
+def _stop(signum, frame):  # noqa: ARG001 - GitHub cancels with SIGINT then SIGTERM: run the finally, end the pod
+    raise KeyboardInterrupt
+
+
 def main(argv=None) -> int:
     """python scripts/velib/maxine_pod.py <take> <out_dir> --yes [--max-usd 1.00]: the GitHub Actions job's entry."""
     import argparse  # noqa: PLC0415
@@ -281,6 +318,12 @@ def main(argv=None) -> int:
     parser.add_argument('take'); parser.add_argument('out_dir')
     parser.add_argument('--yes', action='store_true'); parser.add_argument('--max-usd', type=float, default=MAX_USD)
     args = parser.parse_args(argv)
+    import signal  # noqa: PLC0415
+    signal.signal(signal.SIGTERM, _stop)
+    if args.take == 'cleanup':
+        gone = cleanup()
+        print(f'maxine_pod: terminated {len(gone)} eyeline pod(s): {", ".join(gone) or "none running"}')
+        return 0
     try:
         receipt = run(args.take, args.out_dir, yes=args.yes, max_usd=args.max_usd)
     except Refused as error:
