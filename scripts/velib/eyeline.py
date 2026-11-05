@@ -73,6 +73,7 @@ APERTURE_SHRINK = 0.97      # the blend stops just inside his lid line ...
 APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's width
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
 AIM_KEEP = 0.15             # share of his own eye movement kept on top of the lens aim, so the eyes stay alive
+AIM_GAIN = 1.0             # tried 1.4: a hard glance read more frontal but the far iris smeared (5 Nov, 5.50 s)
 AIM_MAX = 0.6               # never move an iris further than this share of the eye's width
 DETAIL_MAX = 1.6            # never sharpen a redirected eye's detail by more than this
 FP_SEQ = {'L': [3, 2, 1, 0, 5, 4], 'R': [0, 1, 2, 3, 4, 5]}   # WangWilly's anchor-map order
@@ -434,7 +435,7 @@ def aims(readings: list[dict], there: list[dict], decided: list[dict]) -> list[d
             d = np.asarray(r['iris'][side]) - c
             here = np.array((d @ u / w, d @ v / w))
             want = lens + AIM_KEEP * (here - own)
-            step = want - here
+            step = (want - here) * np.array([AIM_GAIN, 1.0])
             size = float(np.hypot(*step))
             if size > AIM_MAX:
                 step *= AIM_MAX / size
