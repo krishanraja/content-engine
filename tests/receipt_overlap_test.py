@@ -36,8 +36,8 @@ def with_deco(style):
     """The Receipt page with one decoration added, placed by `style` (absolute, in the card)."""
     original = receipt.page
 
-    def page(facts, c, base, shape):
-        html = original(facts, c, base, shape)
+    def page(facts, c, base, shape, skin=...):
+        html = original(facts, c, base, shape, skin)
         return html.replace('</div></body></html>', f'<div class="deco" style="position:absolute;{style}"></div></div></body></html>', 1)
     return page
 

@@ -24,10 +24,13 @@ Facts ("cover", and "thumbs" over it field by field):
 Each shape lays everything inside its safe box (the part every place it is shown keeps), finds the largest
 headline that fits in its lines with no lone short word, and holds every word to the phone floors in card.py.
 
-A weekly series piece's video thumbnails wear the week's series skin over this (skins/__init__.py: one of nine, one
-per week in rotation, or the one its facts name in "skin"; Krish, 2026-11-05: "keep all of them and rotate them all
-at will over the coming weeks"). Anything else, and the cover shapes no skin is made for yet (skins.SHAPES), wears
-none and is drawn exactly as above.
+A weekly series piece wears the week's series skin over this in every shape, its covers as its video thumbnails
+(skins/__init__.py: one of nine, one per week in rotation, or the one its facts name in "skin"; Krish, 2026-11-05:
+"keep all of them and rotate them all at will over the coming weeks", and of the covers the same day, "Skin the
+covers too"), so a series piece looks the same everywhere. When its skin cannot be drawn on one of its shapes without
+touching the words or the logos, the whole piece moves on to the next skin in the rotation that draws on every shape,
+and says why (settle; Krish, 2026-11-05: "Yeah just move on automatically"); when none of the nine can, it wears the
+plain series Receipt and says so. Anything else wears none and is drawn exactly as above.
 """
 import datetime as dt
 import hashlib
@@ -309,8 +312,9 @@ def proof_of(c, facts, base):
     return dict(p, path=path)
 
 
-def page(facts, c, base, shape):
-    """One shape of the Receipt as a page, before fitting."""
+def page(facts, c, base, shape, skin=...):
+    """One shape of the Receipt as a page, before fitting, in the week's series skin (skins.for_shape) or the one
+    given (None for the plain Receipt)."""
     spec = SHAPES[shape]
     W, H = spec['w'], spec['h']
     hs = brand.house()
@@ -362,29 +366,31 @@ def page(facts, c, base, shape):
   </div>
  </div>
 </div></body></html>"""
-    # The week's series skin, on a weekly series piece's thumbnails (skins.for_shape); anything else is the page as it is.
-    return skins.apply(doc, facts, shape, (W, H), look)[0]
+    # The series skin on a weekly series piece (skins.apply); anything else is the page as it is.
+    return skins.apply(doc, facts, shape, (W, H), look, skin)[0]
 
 
 def skin_of(facts, shape):
-    """The series skin this shape wears (skins.for_shape): the week's on a weekly series piece's thumbnails, None
-    on anything that is not a weekly series piece, on the shapes no skin is made for yet, and on a piece dated
-    before the rotation starts (skins.FIRST_WEEK) unless its facts name one."""
+    """The series skin this shape wears before any is tried (skins.for_shape): the week's, or the one the facts name,
+    on a weekly series piece; None on anything that is not a weekly series piece and on a piece dated before the
+    rotation starts (skins.FIRST_WEEK) unless its facts name one. settle() moves the piece on from it when it cannot
+    be drawn."""
     look = brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries'))
     return skins.for_shape(facts, look, shape)
 
 
 def place_skin(pg, skin_id, shape, fit):
-    """After the house fit: the skin places its decorations against the laid-out page (its PLACE_JS), then the
-    shape is refused if any decoration touches the words or carries words (skins.CHECK_JS), if anything now falls
-    outside the safe box or in a zone the platform covers, or the proof is under its floor (RECHECK_JS). A
-    placement that fails outright refuses the shape too, in plain words (explain), never with a traceback."""
+    """After the house fit: the skin places its decorations against the laid-out page (its PLACE_JS, run with the
+    shape's design and geometry, skins.geo), then the shape is refused if any decoration touches the words or carries
+    words (skins.CHECK_JS), if anything now falls outside the safe box or in a zone the platform covers, or the proof
+    is under its floor (RECHECK_JS). A placement that fails outright refuses the shape too, in plain words (explain),
+    never with a traceback."""
     from playwright.sync_api import Error as PlaywrightError
     module = skins.load(skin_id)
     fit = {**fit, 'skin': skin_id, 'fitted': fit['ok']}
     if getattr(module, 'PLACE_JS', None):
         try:
-            pg.evaluate(module.PLACE_JS, [shape])
+            pg.evaluate(module.PLACE_JS, [skins.DESIGN[shape], skins.geo(shape)])
         except PlaywrightError as e:
             return {**fit, 'ok': False, 'skin_error': str(e).strip().splitlines()[0]}
         card.settle(pg)
@@ -400,13 +406,16 @@ def place_skin(pg, skin_id, shape, fit):
     return fit
 
 
-def render(b, facts, c, base, shape, jpeg=None):
-    """Draw one shape in an open browser. Returns (bytes or None, fit, small words)."""
+def render(b, facts, c, base, shape, jpeg=None, skin=...):
+    """Draw one shape in an open browser, in the week's series skin (skin_of) or the one given (None for the plain
+    Receipt). Returns (bytes or None, fit, small words)."""
     spec = SHAPES[shape]
     W, H = spec['w'], spec['h']
-    skin_id = skin_of(facts, shape)
+    skin_id = skin_of(facts, shape) if skin is ... else skin
+    if skin_id and not (shape in skins.SHAPES and brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries'))['series']):
+        skin_id = None
     pg = b.new_page(viewport={'width': W, 'height': H})
-    pg.set_content(page(facts, c, base, shape))
+    pg.set_content(page(facts, c, base, shape, skin_id))
     card.settle(pg)
     fit = pg.evaluate(FIT_JS, [list(spec['heads']), spec['lines'], LONE_WORD_MAX, list(spec['safe']), spec.get('clear', []), PROOF_MIN.get(shape, PROOF_MIN[spec['layout']]),
                                   [spec.get('proofw', '58%'), '50%', '44%'] if spec['layout'] == 'side' else ['100%']])
@@ -448,44 +457,177 @@ def explain(name, fit, small):
         print(f'  too small to read on a phone: {w["phone"]:.1f} px  "{card.short(w["text"])}"')
 
 
-def receipt_record(facts, c, shape, name, data, fit):
+COVER_FILES = {'cover': 'cover.png', 'upload': 'cover-1200x630.png', 'share': 'cover-1200x675.png',
+               'square': 'cover-1080x1080.png', 'vertical': 'cover-1080x1920.png'}
+THUMB_FILES = {'wide': 'thumb-wide-1280x720.jpg', 'tall': 'thumb-tall-1080x1920.jpg'}
+# Each shape by the name a person knows it by, for what the drawer says.
+SHAPE_NAMES = {'cover': 'the 3:2 cover', 'upload': "Substack's 1200 x 630 cover", 'share': 'the 1200 x 675 share card',
+               'square': 'the square cover', 'vertical': 'the vertical cover', 'wide': 'the wide thumbnail', 'tall': 'the tall thumbnail'}
+# What a skin's decoration touched, by the class the check names it by (skins.CHECK_JS).
+TOUCHED = {'h1': 'the words', 'logos': 'the logos', 'tag': 'the tag', 'pill': 'the pill', 'wmp': 'the wordmark'}
+STEPS = {1: 'next', 2: 'two on', 3: 'three on', 4: 'four on', 5: 'five on', 6: 'six on', 7: 'seven on', 8: 'eight on'}
+
+
+def refusal(fit, small):
+    """Why a skin was refused on a shape, as what it could not be drawn without: "touching the logos"."""
+    if fit.get('skin_error'):
+        return f'its drawing failing to place ({fit["skin_error"]})'
+    on = []
+    for o in fit.get('skin_over') or []:
+        what = TOUCHED.get(o.rsplit(' on ', 1)[-1].split()[0], 'the words')
+        if what not in on:
+            on.append(what)
+    if fit.get('over') and 'the words' not in on:
+        on.append('the words')
+    if on:
+        return 'touching ' + ' and '.join(on)
+    if fit.get('worded'):
+        return 'words in a decoration'
+    if fit.get('cut'):
+        return 'pushing ' + ', '.join(sorted(set(fit['cut']))) + ' out of the safe box'
+    if fit.get('hit'):
+        return 'pushing ' + ', '.join(sorted(set(fit['hit']))) + ' into a corner the platform covers'
+    if fit.get('small_proof'):
+        return 'shrinking the proof under its floor'
+    if not fit.get('fitted', fit.get('ok')):
+        return 'crowding the headline out of its lines'
+    if small:
+        return 'a word too small to read on a phone'
+    return 'breaking the layout'
+
+
+def settle(b, facts, base, cs, need):
+    """The one skin a weekly series piece wears on every shape (cs: {shape: the facts it is drawn from}, every shape
+    the piece is drawn in), tried in an open browser. The week's skin (or the one the facts name) first; when it cannot
+    be drawn on any one shape without touching the words or the logos (or otherwise refused there), the whole piece
+    moves on to the next skin in the rotation, wrapping round, until one draws on every shape (Krish, 2026-11-05:
+    "Yeah just move on automatically"), so all its shapes wear the same skin. When none of the nine draws, it wears
+    the plain series Receipt. Never stops: a shape the plain Receipt cannot draw either is the facts' own problem,
+    left out of the trial for the drawer to explain.
+
+    need: the shapes the caller writes; a piece that wears no skin is drawn in those alone.
+
+    Returns {'skin', 'week' (the skin it was due to wear), 'named', 'tried' ([{'skin', 'shape', 'why'}] for each skin
+    it moved on from), 'note' (what moved it on, in words, or None), 'shots' ({shape: (bytes, fit, small)} drawn in
+    the skin it wears, or the plain Receipt's), 'unfit' ({shape: (fit, small)} the plain Receipt cannot draw)}."""
+    look = brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries'))
+    first = skins.pick(facts, look)   # an unknown "skin", or a series piece with no date, stops here
+    named = facts.get('skin') is not None and first is not None
+    plain, unfit = {}, {}
+
+    def draw_plain(shape):
+        if shape not in plain:
+            plain[shape] = render(b, facts, cs[shape], base, shape, skin=None)
+            if not plain[shape][0]:
+                unfit[shape] = plain[shape][1:]
+        return plain[shape]
+
+    if not first:
+        shots = {s: draw_plain(s) for s in need}
+        return {'skin': None, 'week': None, 'named': False, 'tried': [], 'note': None,
+                'shots': {s: v for s, v in shots.items() if v[0]}, 'unfit': unfit}
+    i = skins.ORDER.index(first)
+    tried = []
+    for skin_id in skins.ORDER[i:] + skins.ORDER[:i]:
+        shots, refused = {}, None
+        for shape in cs:
+            if shape in unfit:
+                continue
+            got = render(b, facts, cs[shape], base, shape, skin=skin_id)
+            if got[0]:
+                shots[shape] = got
+                continue
+            if not draw_plain(shape)[0]:
+                continue   # the plain Receipt cannot draw it either: not the skin's doing
+            refused = (shape, got)
+            break
+        if refused is None:
+            return {'skin': skin_id, 'week': first, 'named': named, 'tried': tried, 'note': skin_note(first, named, tried, skin_id),
+                    'shots': shots, 'unfit': unfit}
+        shape, (_, fit, small) = refused
+        tried.append({'skin': skin_id, 'shape': shape, 'why': refusal(fit, small)})
+    shots = {s: draw_plain(s) for s in cs}
+    return {'skin': None, 'week': first, 'named': named, 'tried': tried, 'note': skin_note(first, named, tried, None),
+            'shots': {s: v for s, v in shots.items() if v[0]}, 'unfit': unfit}
+
+
+def skin_note(first, named, tried, worn):
+    """What moved a piece on from the skin it was due to wear, in words, or None when it wears that one:
+    "neon could not be drawn on the square cover without touching the logos; wore sunburst, next in the rotation"."""
+    if not tried:
+        return None
+    said = []
+    for k, t in enumerate(tried):
+        lead = f'the facts name {t["skin"]}, which' if named and k == 0 else t['skin']
+        said.append(f'{lead} could not be drawn on {SHAPE_NAMES.get(t["shape"], t["shape"])} without {t["why"]}')
+    if worn:
+        return '; '.join(said) + f'; wore {worn}, {STEPS.get(len(tried), f"{len(tried)} on")} in the rotation'
+    return ('none of the nine series skins could be drawn on every shape (' + '; '.join(said) +
+            '); wore the plain series Receipt')
+
+
+def skin_record(settled):
+    """The skin fields of a cover's or the thumbnails' record."""
+    return {'skin': settled['skin'], 'skin_week': settled['week'], 'skin_named': settled['named'],
+            'skin_tried': settled['tried'], 'skin_note': settled['note']}
+
+
+def every_shape(facts, thumb_facts):
+    """{shape: the facts it is drawn from} for every shape of the piece: the covers from "cover", the thumbnails
+    from thumb_facts (build.thumb_facts: "thumbs" over "cover")."""
+    c = dict(facts.get('cover') or {})
+    t = thumb_facts(facts)
+    return {**{s: c for s in COVER_FILES}, **{s: t for s in THUMB_FILES}}
+
+
+def receipt_record(facts, c, shape, name, data, fit, settled=None):
     p = c.get('proof') or {}
     return {
         'drawer': 'scripts/pages/build.py (receipt)', 'template': TEMPLATE, 'shape': shape, 'file': name,
         'width': SHAPES[shape]['w'], 'height': SHAPES[shape]['h'], 'sha256': hashlib.sha256(data).hexdigest(),
         'portrait': False, 'proof': {k: p.get(k) for k in ('image', 'pdf', 'page', 'html', 'source', 'tag', 'ring')},
         'series_look': brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries')),
-        'skin': skin_of(facts, shape),
+        **(skin_record(settled) if settled else {'skin': skin_of(facts, shape)}),
         'rows': [r.get('name', '') for r in c.get('rows', [])], 'strip': [x.get('name', '') for x in c.get('strip', [])],
         'headline': list(words_of(c, facts)), 'headline_px': fit['head'], 'lines': fit['lines'],
         'safe': list(SHAPES[shape]['safe']), 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
     }
 
 
-COVER_FILES = {'cover': 'cover.png', 'upload': 'cover-1200x630.png', 'share': 'cover-1200x675.png',
-               'square': 'cover-1080x1080.png', 'vertical': 'cover-1080x1920.png'}
-THUMB_FILES = {'wide': 'thumb-wide-1280x720.jpg', 'tall': 'thumb-tall-1080x1920.jpg'}
+def say_skin(settled):
+    """Print which skin the piece wears and, when it moved on, why."""
+    if settled['note']:
+        print(f'series skin: {settled["note"]}')
+    elif settled['skin']:
+        print(f'series skin: {settled["skin"]}')
 
 
-def draw_covers(facts, base, out):
-    """Every cover shape in the Receipt. Writes all of them or none, each with its receipt json."""
+def draw_covers(facts, base, out, thumb_facts):
+    """Every cover shape in the Receipt. Writes all of them or none, each with its receipt json. A weekly series
+    piece's covers wear the skin settle() finds for every shape of the piece, its thumbnails' included."""
     out = Path(out)
-    c = dict(facts.get('cover') or {})
+    cs = every_shape(facts, thumb_facts)
+    c = cs['cover']
+    skin_of(facts, 'cover')  # an unknown "skin", or a series piece with no date, stops here, before anything is removed
     stems = {s: f.rsplit('.', 1)[0] for s, f in COVER_FILES.items()}
     for s, f in COVER_FILES.items():
         for n in (f, stems[s] + '.json', stems[s] + '-crops.png'):
             (out / n).unlink(missing_ok=True)
     proof_of(c, facts, base)  # fetch and cut the proof before the drawing browser opens
-    shots = {}
+    if skin_of(facts, 'cover'):
+        proof_of(cs['tall'], facts, base)   # and the thumbnails', which the skin is tried on too
     with brand.playwright() as pw:
         b = brand.browser(pw)
-        for s, f in COVER_FILES.items():
-            shot, fit, small = render(b, facts, c, base, s)
-            if not shot:
-                explain(f, fit, small)
-            else:
-                shots[s] = (shot, fit)
+        settled = settle(b, facts, base, cs, tuple(COVER_FILES))
         b.close()
+    say_skin(settled)
+    shots = {}
+    for s, f in COVER_FILES.items():
+        if s in settled['unfit']:
+            explain(f, *settled['unfit'][s])
+        else:
+            shot, fit, _ = settled['shots'][s]
+            shots[s] = (shot, fit)
     if len(shots) != len(COVER_FILES):
         print('covers: none written. Every post needs every shape, so fix the facts and draw them again.')
         return False
@@ -493,25 +635,34 @@ def draw_covers(facts, base, out):
     for s, f in COVER_FILES.items():
         shot, fit = shots[s]
         (out / f).write_bytes(shot)
-        (out / (stems[s] + '.json')).write_text(json.dumps(receipt_record(facts, c, s, f, shot, fit), indent=1) + '\n', encoding='utf-8')
+        (out / (stems[s] + '.json')).write_text(json.dumps(receipt_record(facts, c, s, f, shot, fit, settled), indent=1) + '\n', encoding='utf-8')
         print(f'{out / f}  {SHAPES[s]["w"]} x {SHAPES[s]["h"]}: headline {fit["head"]} px in {fit["lines"]} line(s), proof {fit["proof"][0]} x {fit["proof"][1]}')
     return True
 
 
 def draw_thumbs(facts, base, out, thumb_facts, companies_of):
-    """Both video thumbnails in the Receipt, under 2 MB, and thumbs.json. Both or neither."""
+    """Both video thumbnails in the Receipt, under 2 MB, and thumbs.json. Both or neither. A weekly series piece's
+    thumbnails wear the skin settle() finds for every shape of the piece, its covers' included."""
     out = Path(out)
-    c = thumb_facts(facts)
+    cs = every_shape(facts, thumb_facts)
+    c = cs['tall']
     skin_of(facts, 'tall')  # an unknown "skin", or a series piece with no date, stops here, before anything is removed
     for n in list(THUMB_FILES.values()) + ['thumbs.json', 'thumbs-check.png']:
         (out / n).unlink(missing_ok=True)
     proof_of(c, facts, base)  # fetch and cut the proof before the drawing browser opens
+    if skin_of(facts, 'tall'):
+        proof_of(cs['cover'], facts, base)   # and the covers', which the skin is tried on too
     shots = {}
     with brand.playwright() as pw:
         b = brand.browser(pw)
+        settled = settle(b, facts, base, cs, tuple(THUMB_FILES))
+        say_skin(settled)
         for s, f in THUMB_FILES.items():
+            if s in settled['unfit']:
+                explain(f, *settled['unfit'][s])
+                continue
             for q in (92, 88, 84, 80):
-                shot, fit, small = render(b, facts, c, base, s, jpeg=q)
+                shot, fit, small = render(b, facts, c, base, s, jpeg=q, skin=settled['skin'])
                 if not shot or len(shot) <= 2 * 1024 * 1024:
                     break
             if not shot:
@@ -533,7 +684,7 @@ def draw_thumbs(facts, base, out, thumb_facts, companies_of):
     logos = [r.get('name', '') for r in [*c.get('rows', []), *c.get('strip', [])]]
     (out / 'thumbs.json').write_text(json.dumps({
         'schema_version': 1, 'drawer': 'scripts/pages/build.py --thumbs (receipt)', 'template': TEMPLATE, 'subchannel': facts['subchannel'],
-        'series_look': brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries')), 'skin': skin_of(facts, 'tall'),
+        'series_look': brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries')), **skin_record(settled),
         'headline': list(words_of(c, facts)), 'portrait': False, 'proof': {k: (c.get('proof') or {}).get(k) for k in ('image', 'pdf', 'page', 'html', 'source', 'tag', 'ring')},
         'logos': [n for n in logos if n], 'companies': companies_of([n for n in logos if n]), 'background': False,
         'files': files, 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),

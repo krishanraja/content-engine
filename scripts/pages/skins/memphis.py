@@ -87,8 +87,11 @@ h1 mark {{ background: {col}; color: {ink}; box-shadow: none; filter: drop-shado
     if kit.tall:
         # The signature's own band at the foot of the safe box, under the proof: the house fit lays the headline and
         # the proof out in what is left (the proof stays at or over the house floor, PROOF_MIN). The pin sits on the
-        # left margin with the headline, inset by what its -2.5 degree turn swings out.
-        css += f".stack .proof {{ justify-content: flex-start; padding-left: 16px; margin-bottom: {BAND}px; }}\n"
+        # left margin with the headline, inset by what its -2.5 degree turn swings out. The square cover is too short
+        # to give up the band (a long headline would push the proof under its floor): it keeps the house layout, and
+        # its signature is left out for want of room.
+        band = 0 if kit.shape == 'square' else BAND
+        css += f".stack .proof {{ justify-content: flex-start; padding-left: 16px; margin-bottom: {band}px; }}\n"
     return html.replace('</style>', css + '</style>', 1)
 
 

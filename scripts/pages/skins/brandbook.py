@@ -76,9 +76,12 @@ h1 mark {{ background: {col}; color: {ink}; box-shadow: none;
 # Placed after the house fit, against the laid-out proof, tag and headline, so nothing ever touches the words.
 # Every piece is a polygon in card pixels drawn in an unturned box exactly its own size, so the overlap check
 # measures the shape itself. All shades sit under all slabs, so pieces of one colour read as one block.
-PLACE_JS = r"""([shape]) => {
+PLACE_JS = r"""([shape, geo]) => {
   const card = document.querySelector('#card');
   const W = card.clientWidth, H = card.clientHeight, day = card.dataset.day, tall = shape !== 'wide';
+  // The shape's platforms (skins.GEO): YouTube's length badge on the wide thumbnail. A cover in the wide design
+  // (COVER) has its words in a column down the right, so the block's slant reaches the foot short of that column.
+  const GEO = geo || {thumb: true, badge: tall ? null : [968, 548, 1280, 720]}, COVER = !tall && !GEO.thumb;
   const C = card.getBoundingClientRect();
   const R = q => { const e = document.querySelector(q); if (!e) return null; const r = e.getBoundingClientRect();
                    return {left: r.left - C.left, right: r.right - C.left, top: r.top - C.top, bottom: r.bottom - C.top}; };
@@ -139,18 +142,26 @@ PLACE_JS = r"""([shape]) => {
     }
   } else {
     // One polygon behind the proof, off the left and the foot. Its right end is one slant from behind the proof
-    // to the foot, well clear under the headline and short of YouTube's length badge (x 968).
-    const foot = 968 - u * 3;
+    // to the foot, well clear under the headline and short of YouTube's length badge (x 968). On a cover the words'
+    // column runs down to the foot, so the slant comes down from behind the proof and reaches the foot short of the
+    // column, its shadow 3u clear of it.
+    const foot = (GEO.badge ? GEO.badge[0] : W) - u * 3;
     const yC = Math.min(headBottom + u * CLEAR, H - u * 10);
-    const D0 = [h1.left, yC];
-    let D1 = [foot, H];
+    let D0 = [h1.left, yC], D1 = [foot, H];
+    if (COVER) {
+      const LG = R('.logos'), colL = Math.min(T.left, h1.left, ...(LG ? [LG.left] : [])), Pm = FTL[0] + (FTR[0] - FTL[0]) * .55;
+      D0 = [Pm, top(Pm)]; D1 = [colL - u * 3 - SH, H];
+    }
     // The slant meets the block's top edge behind the proof, at least a quarter of the way across it. A low headline
     // (logo plates over it in the column) would lay it so flat that the two edges met off the card; then the slant
     // stays clear under the headline and is stood up to meet the top edge there, reaching the foot sooner.
     const Pmin = FTL[0] + (FTR[0] - FTL[0]) * .25;
     if (meet([-E, top(-E)], [W, top(W)], D0, D1)[0] < Pmin) D1 = atY(D0, [Pmin, top(Pmin)], H);
     const TLb = [-E, top(-E)], Phi = meet(TLb, [W, top(W)], D0, D1), Dft = atY(D0, D1, H + E), BLb = [-E, H + E];
-    const FS = add(FBR, [SH, SH]);                    // the corner of the proof's own hard shadow
+    // The corner of the proof's own hard shadow, where the cuts start. On a cover the slant cuts the block off behind
+    // the proof, so the cuts start under the proof's foot instead, KC of the way across it, and open toward the foot.
+    const KC = .14, FB = COVER ? lerp(FBL, FBR, KC) : FBR, FTc = COVER ? lerp(FTL, FTR, KC) : FTR;
+    const FS = add(FB, [SH, SH]);
     let pieces;
     if (day === 'mon') {
       // follow.the.money: narrow (6u) at the left edge beside the proof's lower half, widening under the proof
@@ -171,7 +182,7 @@ PLACE_JS = r"""([shape]) => {
         // part's edge, at an even depth all the way down. The slid-out part is bounded behind the proof (WED_B in from
         // its right edge), so the cut never shows beside the proof; it meets the frame along a clear edge.
         const f = side(FS, deg(WED_A)), d = mul(ax, u * WED_S), D0w = sub(D0, d), D1w = sub(D1, d);
-        const g = side(add(FTR, [-u * WED_B, 0]), ed);
+        const g = side(add(FTc, [-u * WED_B, 0]), ed);
         const bw = [TLb, meet(TLb, [W, top(W)], D0w, D1w), atY(D0w, D1w, H + E), BLb], far = clip(bw, p => -f(p));
         // The part that stays is drawn in two pieces, either side of the cut's line; the one above it reaches 1 px past
         // the line, so where that line runs on beside the proof no seam shows between them.

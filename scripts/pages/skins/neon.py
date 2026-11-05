@@ -92,10 +92,15 @@ h1 mark {{ background: {col}; color: {ink}; }}
     return html.replace('</style>', css + '</style>', 1)
 
 
-PLACE_JS = r"""([shape]) => {
+PLACE_JS = r"""([shape, geo]) => {
   const NS = 'http://www.w3.org/2000/svg';
   const card = document.querySelector('#card'), safe = document.querySelector('#safe');
   const W = card.clientWidth, H = card.clientHeight, tall = shape !== 'wide';
+  // The shape's platforms (skins.GEO): the profile grid's window on the 9:16 shapes, YouTube's length badge on the wide
+  // thumbnail. A cover in the wide design (COVER) has its words in a column down the right, so the drawing lives left
+  // of that column and under the proof.
+  const GEO = geo || {thumb: true, grid: tall ? [0, 240, 1080, 1680] : null, badge: tall ? null : [968, 548, 1280, 720]};
+  const COVER = !tall && !GEO.thumb, gridB = GEO.grid ? GEO.grid[3] : H;
   const css = getComputedStyle(document.documentElement);
   const v = k => css.getPropertyValue(k).trim();
   const col = v('--col'), core = v('--core'), hot = v('--hot'), wall = v('--wall'), day = v('--motif');
@@ -108,7 +113,7 @@ PLACE_JS = r"""([shape]) => {
   const hits = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
   const isClear = el => { const r = el.getBoundingClientRect(); return !KEPT.some(k => hits(r, k.getBoundingClientRect())); };
   // The YouTube length badge corner on wide: no glass ever goes there.
-  const BADGE = tall ? null : [968, 548, W - 968, H - 548];
+  const BADGE = tall || !GEO.badge ? null : [GEO.badge[0], GEO.badge[1], W - GEO.badge[0], H - GEO.badge[1]];
 
   // The ground's light, in card coordinates, under everything.
   let light = '', lfid = 0;
@@ -201,6 +206,10 @@ PLACE_JS = r"""([shape]) => {
   if (!tall) { const sx = Math.floor(Math.min(tagR.left, h1.left) - 2), sy = Math.ceil(wmp.bottom + m); if (sx > 0 && top > sy) tiles.push([0, sy, sx, top - sy]); }
   // On tall, the left margin beside the tag (under the highlight) is free ground too.
   else { const sx = Math.floor(tagR.left - 4), sy = Math.ceil(markBot + m); if (sx > 0 && top > sy) tiles.push([0, sy, sx, top - sy]); }
+  // On tall, the logo plate sits on the column's left edge: the ground right of it, down to the foot, is free too, so
+  // a line running down the right margin is not cut off at the plate's top (leaving its light on the wall without its
+  // glass, and today's tick unseen).
+  if (tall && logos && logos.top > top && bot < H) { const lx = Math.ceil(logos.right + m); if (lx < W) tiles.push([lx, bot, W - lx, H - bot]); }
   const rrect = (x0, y0, x1, y1, r) => `M${f(x0 + r)},${f(y0)}H${f(x1 - r)}A${r},${r} 0 0 1 ${f(x1)},${f(y0 + r)}V${f(y1 - r)}A${r},${r} 0 0 1 ${f(x1 - r)},${f(y1)}H${f(x0 + r)}A${r},${r} 0 0 1 ${f(x0)},${f(y1 - r)}V${f(y0 + r)}A${r},${r} 0 0 1 ${f(x0 + r)},${f(y0)}Z`;
   // Where the frame's tube crosses the drawing, the drawing ducks under it; on wide, the badge corner is kept clear.
   const under = (extra) => `<rect x="${-W}" y="${-H}" width="${3 * W}" height="${3 * H}" fill="#fff"/>` +
@@ -226,7 +235,9 @@ PLACE_JS = r"""([shape]) => {
   // A Sankey bend: level at both ends, one smooth S between (x0, y0) and (x1, y1).
   const sk = (x0, y0, x1, y1) => { const xm = (x0 + x1) / 2; return `C${f(xm)},${f(y0)} ${f(xm)},${f(y1)} ${f(x1)},${f(y1)}`; };
 
-  if (tiles[0][3] >= 90) {
+  // The words' column on a cover: everything is drawn left of it.
+  const colL = Math.min(tagR.left, h1.left, ...(logos ? [logos.left] : []));
+  if (tiles[0][3] >= 90 || COVER) {
     if (day === 'mon') {
       // The money map: three flows whose width is the amount (48/16/5 tall, 30/10/4 wide). They run through the
       // evidence: in from one side, behind the proof, out the other, each bending like a Sankey ribbon.
@@ -236,12 +247,25 @@ PLACE_JS = r"""([shape]) => {
         // In from the left card edge at three heights, levelling as they slip behind the proof, and out through the
         // right margin, where each sweeps down and away as it leaves: one pour of money through the evidence, like a
         // Sankey ribbon. The widths show twice beside the proof, all inside the grid crop.
-        const y0 = Math.max(top + 66, fr.top + 84), y1 = Math.min(fr.bottom - 80, 1550), sp = (y1 - y0) / 2;
+        const y0 = Math.max(top + 66, fr.top + 84), y1 = Math.min(fr.bottom - 80, gridB - 130), sp = (y1 - y0) / 2;
         const ins = [y0, y0 + sp, y1], fall = 200, rx0 = fr.right - 130;
-        const outs = [fr.top + fr.height * .42, fr.top + fr.height * .68, fr.bottom - 50].map(y => Math.min(y, 1600));
+        const outs = [fr.top + fr.height * .42, fr.top + fr.height * .68, fr.bottom - 50].map(y => Math.min(y, gridB - 80));
         for (let i = 0; i < 3; i++) {
-          const a = ins[i], c = outs[i] - fall;
-          flow(`M-300,${f(a - 70)}${sk(-240, a - 70, fr.left + 70, a)}L${f(rx0)},${f(c)}${sk(rx0, c, W + 70, c + fall)}L${f(W + 100)},${f(c + fall)}`, i);
+          // (on a shorter cover the drop is cut down, so no flow rises past the band's top edge, out of its window)
+          const fl = GEO.thumb ? fall : Math.max(40, Math.min(fall, outs[i] - top - G[i] - 24));
+          const a = ins[i], c = outs[i] - fl;
+          flow(`M-300,${f(a - 70)}${sk(-240, a - 70, fr.left + 70, a)}L${f(rx0)},${f(c)}${sk(rx0, c, W + 70, c + fl)}L${f(W + 100)},${f(c + fl)}`, i);
+        }
+      } else if (COVER) {
+        // A cover: in level from the left card edge beside the proof, behind it, and out of its foot at three points
+        // spread along its bottom edge (the widest furthest right), each sweeping down and right off the card's foot,
+        // short of the words' column, so the widths show twice.
+        const ins = [fr.top + fr.height * .2, fr.top + fr.height * .5, fr.top + fr.height * .8];
+        const xs = [.8, .56, .32].map(k => fr.left + fr.width * k), lim = colL - m - 24;
+        for (let i = 0; i < 3; i++) {
+          const bx = xs[i], by = fr.bottom - 30, e = Math.max(bx + 20, Math.min(lim - G[i] / 2, bx + 110 - i * 15));
+          flow(`M-60,${f(ins[i])}L-20,${f(ins[i])}${sk(-20, ins[i], fr.left + 160, ins[i] + (1 - i) * 24)}L${f(bx)},${f(by - 60)}L${f(bx)},${f(by)}` +
+               `C${f(bx)},${f(H - 20)} ${f(e)},${f(H - 50)} ${f(e)},${f(H + 40)}`, i);
         }
       } else {
         // In level from the left card edge beside the proof, behind it, and out of its right edge and its foot at
@@ -267,7 +291,7 @@ PLACE_JS = r"""([shape]) => {
       // tube's weight with no wash, and nothing in front lights the band between an outline and the one in front of
       // it: that band is the wall, so each gap reads as a gap at phone size.
       const w = tall ? 7 : 6, lw = 4, dx = tall ? -60 : -34;
-      const lim = tall ? 1676 : H - 24, ys = tubePts.map(p => p[1]), xs = tubePts.map(p => p[0]);
+      const lim = tall ? gridB - 4 : H - 24, ys = tubePts.map(p => p[1]), xs = tubePts.map(p => p[0]);
       const dy = Math.floor(Math.min(tall ? 36 : 30, (lim - w / 2 - Math.max(...ys) - sa * dx) / ca));
       // [step x, step y, opacity]
       const steps = [[dx, dy, 1]];
@@ -335,11 +359,26 @@ PLACE_JS = r"""([shape]) => {
              `L${f(rx)},${f(ym - 110)}C${f(rx)},${f(ym - 60)} ${f(xm)},${f(ym - 56)} ${f(xm)},${f(ym)}`, w, 5);
         tube(`M-60,${f(yb)}L${f(fr.left + 140)},${f(yb)}L${f(fr.right - 200)},${f(ye)}L${f(edge - 10)},${f(ye)}` +
              `C${f(xm - 6)},${f(ye)} ${f(xm)},${f(ym - 64)} ${f(xm)},${f(ym)}`, w, 5);
-        const yt = Math.min(1652, Math.round(brc[1] + 44));   // today's tick, past the frame's corner
-        const yo = Math.max(yt + 60, 1690);   // the merged run carries on down, then bends off the right edge below the crop
+        const yt = Math.min(gridB - 28, Math.round(brc[1] + 44));   // today's tick, past the frame's corner
+        const yo = Math.max(yt + 60, gridB + 10);   // the merged run carries on down, then bends off the right edge below the crop
         tail = `M${f(xm)},${f(ym)}L${f(xm)},${f(yo)}C${f(xm)},${f(yo + 70)} ${f(W - 6)},${f(yo + 110)} ${f(W + 60)},${f(yo + 150)}`;
         tick = `M${f(xm - tk / 2)},${f(yt)}L${f(xm + tk / 2)},${f(yt)}`;
         meas.knot = {fork: [xm, ym], frameEdge: +f(edge), tick: [xm, yt], corner: brc.map(v => +f(v))};
+      } else if (COVER) {
+        // A cover: the lower timeline comes in level from the left card edge in the band under the proof, open all the
+        // way; the upper comes in level beside the proof, a proof's height above it, passes behind the proof and comes
+        // out of its foot, falling to close on the lower. The merged line runs on level, today's upright tick across
+        // it, and turns down off the card's foot, short of the words' column.
+        const fb = Math.max(...tubePts.map(p => p[1])) + tw / 2, room = H - fb;
+        const yb = Math.round(fb + room * .5), ua = fr.top + fr.height * .3;
+        const xa = fr.left + fr.width * .34, xm = Math.round(fr.left + fr.width * .62), xd = Math.max(xm + 90, Math.min(colL - m - 30, xm + 170));
+        tube(`M-60,${f(ua)}L-20,${f(ua)}${sk(-20, ua, fr.left + 120, ua + 30)}L${f(xa)},${f(fr.bottom - 60)}` +
+             `C${f(xa)},${f(yb)} ${f(xa + (xm - xa) * .45)},${f(yb)} ${f(xm)},${f(yb)}`, w, 12);
+        tube(`M-60,${f(yb)}L${f(xm)},${f(yb)}`, w, 12);
+        const kx = Math.round(xm + (xd - 26 - xm) * .5);
+        tail = `M${f(xm)},${f(yb)}L${f(xd - 26)},${f(yb)}C${f(xd - 6)},${f(yb)} ${f(xd)},${f(yb + 10)} ${f(xd)},${f(yb + 30)}L${f(xd)},${f(H + 40)}`;
+        tick = `M${f(kx)},${f(yb - tk / 2)}L${f(kx)},${f(yb + tk / 2)}`;
+        meas.cover = {fb: +f(fb), yb, xa: +f(xa), xm, xd};
       } else {
         // Both come in level from the left card edge, far apart, and pass behind the proof. The upper comes out of its
         // right edge just under the highlight's foot; the lower comes out past its bottom-right corner, low, clear of

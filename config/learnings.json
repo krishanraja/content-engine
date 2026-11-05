@@ -2100,7 +2100,7 @@
       "on": "2026-11-04",
       "krish": "The off days are not supposed to share the same colours as Monday, Wednesday, and Friday. Monday, Wednesday, and Friday are supposed to be slightly more heavily and artistically skinned than that in their colours. \nWe've lost some sense of fun that we used to have in our branding. I like the new classy look but I miss the fun. \nPost random memes on a Monday but that doesn't mean it's Monday's colour and brand. Then follow the money. There is only one \"follow the money\" piece, one \"mind the gap\" piece, and one \"mind the gap\" piece every week. Other stuff can be fluid, maybe changeable. \nI should be allowed to post random stuff on any day but it doesn't take on the brand colours of Follow the Money, Mind the Gap, or Under the Hood. Which are only once a week, omni-channel, and a completely different distribution format",
       "why": "The first version keyed the colour to the publishing day, so a random Monday meme would have worn follow.the.money's yellow, and the series covers wore only a pale wash. Before that every cover sat on the same sage ground whatever its series and carried a coral tag and ring (mind.the.gap's colour) on every day.",
-      "means": "A subchannel's colour and name belong to its one weekly piece (its article, both cuts, thumbnails and covers) and to an asset whose facts say it carries that piece; everything else, on any day, wears no subchannel colour or name. His first ask the same day (\"lightly colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday ... a hard rule across Monday to Saturday assets\") is replaced. Of the first concepts: \"This is supposed to be your solution to the colour question because everything's wrong in here.\" Of the sticker concepts: \"Stuff can't just randomly overlap on titles like that and I think these \"screwdriver included\" and \"bring a calculator included\" badges are really obnoxious.\" The heavier, more artistic series skins are the nine he kept on 5 November (\"keep all of them and rotate them all at will over the coming weeks\"; asked how, one skin per week, moving on by itself), from neon in the week of 9 November; a piece may name another, and nothing may sit on the words or the logos. Growth keeps the same rule (its R125) through docs/CAROUSEL-STANDARD.md.",
+      "means": "A subchannel's colour and name belong to its one weekly piece (its article, both cuts, thumbnails and covers) and to an asset whose facts say it carries that piece; everything else, on any day, wears no subchannel colour or name. His first ask the same day (\"lightly colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday ... a hard rule across Monday to Saturday assets\") is replaced. Of the first concepts: \"This is supposed to be your solution to the colour question because everything's wrong in here.\" Of the sticker concepts: \"Stuff can't just randomly overlap on titles like that and I think these \"screwdriver included\" and \"bring a calculator included\" badges are really obnoxious.\" The heavier, more artistic series skins are the nine he kept on 5 November (\"keep all of them and rotate them all at will over the coming weeks\"; asked how, one skin per week, moving on by itself), from neon in the week of 9 November; a piece may name another, and nothing may sit on the words or the logos. They reach every shape of the piece, its covers as its thumbnails (Krish, 2026-11-05: \"Skin the covers too\"), so a series piece looks the same everywhere; and asked what happens when a week's skin cannot be drawn on a piece without touching its words or logos: \"Yeah just move on automatically\" (2026-11-05): the whole piece moves on to the next skin that draws on every shape, its records say which and why, and the plain series Receipt when none of the nine can; it never stops. Growth keeps the same rule (its R125) through docs/CAROUSEL-STANDARD.md.",
       "status": "encoded",
       "encoded": [
         {
@@ -2126,12 +2126,27 @@
         {
           "file": "scripts/pages/skins/__init__.py",
           "contains": "def pick(facts, look):",
-          "how": "the nine series skins (Krish, 2026-11-05: \"keep all of them and rotate them all at will over the coming weeks\"): one per week in rotation from neon in the week of 9 Nov, shared by the week's Monday, Wednesday and Friday pieces, another by \"skin\" in the facts, none on anything that is not a weekly series piece; nothing before that week unless a piece names one, and an undated series piece is refused; receipt.py puts it on the video thumbnails and checks the words, the logos, the safe box and the proof again after it, and the visual gate refuses a series thumbnail with no skin from the week of 9 Nov, telling an old record's series piece from the piece itself"
+          "how": "the nine series skins (Krish, 2026-11-05: \"keep all of them and rotate them all at will over the coming weeks\"): one per week in rotation from neon in the week of 9 Nov, shared by the week's Monday, Wednesday and Friday pieces, another by \"skin\" in the facts, none on anything that is not a weekly series piece; nothing before that week unless a piece names one, and an undated series piece is refused; receipt.py puts it on every cover and video thumbnail (Krish, 2026-11-05: \"Skin the covers too\"), each cover in the closer thumbnail's design (DESIGN), and checks the words, the logos, the safe box and the proof again after it, and the visual gate refuses a series cover or thumbnail with no skin from the week of 9 Nov, telling an old record's series piece from the piece itself, and covers and thumbnails that wear different skins"
         },
         {
           "file": "tests/series_skins_test.py",
           "contains": "test_every_skin_is_drawn_on_every_series_day_tall_and_wide_with_nothing_on_the_words",
           "how": "CI's browser job draws all nine skins on Monday, Wednesday and Friday, tall and wide, alone, with logo rows and a strip, and under a long title (162), and proves none touches the words or the logos or carries words"
+        },
+        {
+          "file": "tests/series_skins_test.py",
+          "contains": "test_every_skin_is_drawn_on_every_series_day_on_every_cover_shape_with_nothing_on_the_words",
+          "how": "the same on the five cover shapes (405), the long title the plain Receipt cannot fit on the 3:2 and 1200 x 630 covers held to the house, never the skin"
+        },
+        {
+          "file": "scripts/pages/receipt.py",
+          "contains": "def settle(b, facts, base, cs, need):",
+          "how": "Krish, 2026-11-05: \"Yeah just move on automatically\": a skin refused on any one of the piece's seven shapes moves the whole piece on to the next in the rotation, wrapping round, a named one first; the drawer prints and records which and why (skin_week, skin_tried, skin_note); none of the nine, the plain series Receipt; never a stop"
+        },
+        {
+          "file": "tests/series_skins_test.py",
+          "contains": "test_when_none_of_the_nine_can_be_drawn_the_piece_wears_the_plain_series_receipt",
+          "how": "a placement forced to fail on one shape moves every shape on to the next skin, with the reason recorded; a named skin wraps round; all nine forced to fail give the plain series Receipt, which the visual gate accepts"
         }
       ]
     },

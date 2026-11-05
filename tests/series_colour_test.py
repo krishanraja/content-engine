@@ -140,7 +140,8 @@ class SeriesSkinRotationTest(unittest.TestCase):
         self.assertIn('needs its "date"', str(stop.exception))
         with self.assertRaises(SystemExit):
             self.skins.for_shape({'date': ''}, look, 'wide')
-        self.assertIsNone(self.skins.for_shape({}, look, 'cover'), 'a cover shape wears none, so it needs no date')
+        with self.assertRaises(SystemExit):
+            self.skins.for_shape({}, look, 'cover')   # a cover wears the skin too (Krish, 2026-11-05: "Skin the covers too"), so it needs its date
         self.assertEqual(self.skins.pick({'skin': 'bauhaus'}, look), 'bauhaus', 'one it names needs no date')
 
     def test_a_piece_may_name_another_skin_and_an_unknown_one_is_refused(self):
@@ -156,16 +157,40 @@ class SeriesSkinRotationTest(unittest.TestCase):
                 worn = self.skins.pick(facts, self.look(name, date))
                 self.assertEqual(worn is not None, day == own_day, f'{name} on {day}')
 
-    def test_the_skins_are_made_for_the_two_thumbnails_and_the_cover_shapes_wear_none(self):
-        self.assertEqual(self.skins.SHAPES, ('tall', 'wide'))
+    def test_every_shape_wears_the_skin_each_in_the_closer_thumbnails_design(self):
+        # Krish, 2026-11-05: "Skin the covers too", so a series piece looks the same everywhere.
+        self.assertEqual(sorted(self.skins.SHAPES), sorted(receipt.SHAPES))
+        for shape, spec in receipt.SHAPES.items():
+            self.assertEqual(self.skins.DESIGN[shape], 'wide' if spec['layout'] == 'side' else 'tall', shape)
+            g = self.skins.geo(shape)
+            self.assertEqual((g['shape'], g['design'], g['thumb']), (shape, self.skins.DESIGN[shape], shape in ('tall', 'wide')))
+        # The thumbnails are handed the very numbers their skins were drawn to: the 3:4 grid window, YouTube's badge.
+        self.assertEqual((self.skins.GEO['tall']['grid'], self.skins.GEO['wide']['badge']), ([0, 240, 1080, 1680], [968, 548, 1280, 720]))
         look = self.look('follow.the.money', WEEK['Monday'])
         for shape in receipt.SHAPES:
-            want = 'neon' if shape in ('tall', 'wide') else None
-            self.assertEqual(self.skins.for_shape({'date': WEEK['Monday']}, look, shape), want, shape)
+            self.assertEqual(self.skins.for_shape({'date': WEEK['Monday']}, look, shape), 'neon', shape)
         html = '<html><style></style><div id="card"></div></html>'
         off = self.look('follow.the.money', WEEK['Tuesday'])
         self.assertEqual(self.skins.apply(html, {'date': WEEK['Tuesday']}, 'tall', (1080, 1920), off), (html, None),
                          'an off-day page is left exactly as it is')
+
+    def test_what_moved_a_piece_on_is_said_in_plain_words(self):
+        # Krish, 2026-11-05: "Yeah just move on automatically"; the record and the drawer say which skin and why.
+        self.assertEqual(receipt.refusal({'skin_over': ['deco on logos'], 'fitted': True}, []), 'touching the logos')
+        self.assertEqual(receipt.refusal({'skin_over': ['deco bh on h1', 'deco bh on tag'], 'fitted': True}, []), 'touching the words and the tag')
+        self.assertEqual(receipt.refusal({'skin_error': 'TypeError: x', 'fitted': True}, []), 'its drawing failing to place (TypeError: x)')
+        self.assertEqual(receipt.refusal({'worded': ['deco: BADGE'], 'fitted': True}, []), 'words in a decoration')
+        self.assertEqual(receipt.refusal({'fitted': False, 'ok': False}, []), 'crowding the headline out of its lines')
+        one = [{'skin': 'neon', 'shape': 'square', 'why': 'touching the logos'}]
+        self.assertEqual(receipt.skin_note('neon', False, one, 'sunburst'),
+                         'neon could not be drawn on the square cover without touching the logos; wore sunburst, next in the rotation')
+        two = one + [{'skin': 'sunburst', 'shape': 'tall', 'why': 'touching the words'}]
+        self.assertEqual(receipt.skin_note('neon', True, two, 'painted_scene'),
+                         'the facts name neon, which could not be drawn on the square cover without touching the logos; sunburst could not be '
+                         'drawn on the tall thumbnail without touching the words; wore painted_scene, two on in the rotation')
+        self.assertTrue(receipt.skin_note('neon', False, two, None).startswith('none of the nine series skins could be drawn on every shape (neon could'))
+        self.assertTrue(receipt.skin_note('neon', False, two, None).endswith('); wore the plain series Receipt'))
+        self.assertIsNone(receipt.skin_note('neon', False, [], 'neon'), 'nothing moved it on')
 
     def test_every_skin_is_a_module_with_the_contract(self):
         for skin_id in self.skins.ORDER:
