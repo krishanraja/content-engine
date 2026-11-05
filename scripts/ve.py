@@ -304,12 +304,14 @@ def _gate_inputs(args) -> dict:
 
 
 def cmd_qc(args) -> int:
-    from velib.qc import inputs_from_props, run_qc
+    from velib.qc import inputs_from_props, lead_frames, run_qc
     props = load_json(args.props) if getattr(args, 'props', None) else None
     inputs = inputs_from_props(props) if props is not None else {}
     if getattr(args, 'edl', None):
-        # The conformed take is one picture segment: its joins come from the EDL ve conform wrote.
-        inputs['joins'] = [join['at_s'] for join in load_json(args.edl).get('joins', [])]
+        # The conformed take is one picture segment: its joins come from the EDL ve conform wrote, on the cut's own
+        # clock. In the file they fall the intro sting's frames later on a cut that opens on it (velib.qc.lead_frames).
+        lead_s = lead_frames(props) / float((props or {}).get('fps') or 30)
+        inputs['joins'] = [join['at_s'] + lead_s for join in load_json(args.edl).get('joins', [])]
     if props is not None and props.get('aspect') == '9:16':
         inputs['composition_props'] = props
     inputs.update(_gate_inputs(args))
@@ -1164,14 +1166,20 @@ def cmd_premix(args) -> int:
         words = load_json(args.words)
         words = words['words'] if isinstance(words, dict) else words
         start_s = 0.0  # dialogue.<cut>.wav is already conformed to the cut's clock
-        lifts = [[float(a), float(b)] for a, b in (w.split('-', 1) for w in args.lift or [])]
-        result = audio.premix(args.dialogue, str(music), args.out, start_s, props['durationFrames'] / fps,
+        # A cut that opens on the intro sting (props.sting, set by ve compile) carries its frames in front of the cut's
+        # own clock: the stem starts on the sting's first frame, so his voice, his first and last word and every lift
+        # move by exactly those frames, and the stem runs the sting plus the cut. The sting's length comes from the
+        # props only, never a flag.
+        lead = int((props.get('sting') or {}).get('frames') or 0)
+        lead_s = lead / fps
+        lifts = [[float(a) + lead_s, float(b) + lead_s] for a, b in (w.split('-', 1) for w in args.lift or [])]
+        result = audio.premix(args.dialogue, str(music), args.out, start_s, (lead + props['durationFrames']) / fps,
                               bed_start_s=float(track.get('intro_cue_s') or 0), under_vo_lu=bed['under_vo_lu'],
                               lufs=spec['audio'].get('targets', {}).get('lufs', -14), tp=spec['audio'].get('targets', {}).get('tp', -1),
-                              mode=bed['mode'], last_word_end_s=float(words[-1]['end_s']) - start_s,
+                              mode=bed['mode'], last_word_end_s=lead_s + float(words[-1]['end_s']) - start_s,
                               levels=ledger['levels'] | {'chapter_lufs': ledger['levels'].get('chapter_lufs', -22)},
-                              voice_start_s=float(words[0]['onset_s']) - start_s, lifts=lifts)
-        print(json.dumps({k: result[k] for k in ('stem', 'integrated_lufs', 'true_peak_dbtp')} | {'bed': {
+                              voice_start_s=lead_s + float(words[0]['onset_s']) - start_s, lifts=lifts, lead_frames=lead, fps=fps)
+        print(json.dumps({k: result[k] for k in ('stem', 'integrated_lufs', 'true_peak_dbtp', 'lead_frames')} | {'bed': {
             k: result['bed'].get(k) for k in ('mode', 'bed_lufs_in_master', 'crossfades_s', 'lifts', 'bed_under_speech_db', 'duck_depth_db')}}, indent=1))
         print(f've premix: {sha256_file(Path(args.out))}  {args.out}')
         return 0
@@ -1221,6 +1229,14 @@ def cmd_render(args) -> int:
         print('ve render: refused, a whole cut renders only after Krish approves its moving proof (F04, F13) and holds '
               'to the Thursday guards (F33 to F36):')
         print('\n'.join(f'  - {reason}' for reason in refused))
+        return 1
+    from velib.compile import sting_problems
+    opening = sting_problems(props)
+    if opening:
+        # Only the clip Krish approved opens a cut, and an approved sting is never skipped (Krish, 2026-11-05: "I think
+        # it should go at the start of the longer wide videos 100%,"; config/intro-sting.json).
+        print('ve render: refused, the cut\'s opening is not the one Krish approved:')
+        print('\n'.join(f'  - {reason}' for reason in opening))
         return 1
     render(args.props, args.out, args.scale)
     from velib import guards
@@ -1474,7 +1490,7 @@ def main() -> int:
     p = sub.add_parser('premix', help="premix the cut's dialogue with the spec's bed into audio.<cut>.wav")
     p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--dialogue', required=True)
     p.add_argument('--words', required=True); p.add_argument('--props', required=True); p.add_argument('--out', required=True)
-    p.add_argument('--lift', action='append', metavar='FROM-TO', help='a chapter-card window in seconds on the cut clock')
+    p.add_argument('--lift', action='append', metavar='FROM-TO', help='a chapter-card window in seconds on the cut\'s own clock (a sting in front is added by premix)')
     p.set_defaults(fn=cmd_premix)
     p = sub.add_parser('render', help='render compiled props through FormatMaster')
     p.add_argument('props'); p.add_argument('out'); p.add_argument('--scale', type=float, default=1.0)

@@ -3545,6 +3545,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/carousel/HouseCarouselCard.tsx`
 
+- `const FOLLOW_SIGN`
 - `function houseCardModel(props: CarouselRenderProps)`
 - `function HouseCarouselCard(props: CarouselRenderProps)`
 
@@ -3565,11 +3566,15 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
-- `function FormatMaster(props: EngineRenderProps)`
+- `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
+
+### `apps/renderer/src/engine/VeCut.tsx`
+
+- `function VeCut(props: EngineRenderProps)`
 
 ### `apps/renderer/src/engine/audio.tsx`
 
-- `function EngineAudio({ audio }: { audio: EngineRenderProps['audio'] })`
+- `function EngineAudio({ audio, stem = true }: { audio: EngineRenderProps['audio']; stem?: boolean })`
 
 ### `apps/renderer/src/engine/chrome/CallCard.tsx`
 
@@ -3927,6 +3932,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/index.ts`
 
 - `export { FormatMaster } from './FormatMaster'`
+- `export { VeCut } from './VeCut'`
 - `export { slotsFor } from './layouts'`
 - `export { EngineAudio } from './audio'`
 
@@ -4173,12 +4179,14 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `const EngineCaptionPageSchema`
 - `const EngineSegmentSchema`
 - `const EngineAudioSchema`
+- `const EngineStingSchema`
 - `const EngineRenderPropsSchema`
 - `type EngineRenderProps = z.infer<typeof EngineRenderPropsSchema>`
 - `type EngineObject = z.infer<typeof EngineObjectSchema>`
 - `type EngineEvent = z.infer<typeof EngineEventSchema>`
 - `type EngineBeat = z.infer<typeof EngineBeatSchema>`
 - `type EngineTokens = z.infer<typeof EngineTokensSchema>`
+- `type EngineSting = z.infer<typeof EngineStingSchema>`
 
 ### `apps/renderer/src/engine/transport.ts`
 
@@ -4737,6 +4745,8 @@ Artifact-bound user confirmation references.
 - `const VE_FORMATS`
 - `const VeFormatSchema`
 - `const VeSeriesSchema`
+- `const VeStingSchema`
+- `const VE_NO_STING`
 - `const VeAspectSchema`
 - `const VeLayoutSchema`
 - `const VeRoleSchema`

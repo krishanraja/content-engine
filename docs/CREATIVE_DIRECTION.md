@@ -43,7 +43,12 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
   made for that format, never one he marked not for us, his liked ones first. Each style enters `untested` and becomes
   a default only once he rates a trial on his own footage.
 - `brand`: the series, a `reference` (an approved earlier frame or board, a path or a link), the captions module and
-  the intro sting.
+  the intro sting (`intro_sting`): the piece's own series id (`follow_the_money`, `under_the_hood` or `mind_the_gap`)
+  on a weekly series piece published on its series' day, whose 16:9 long cut opens on that series' house sting
+  (`config/intro-sting.json`; Krish, 2026-11-05: "I think it should go at the start of the longer wide videos
+  100%,"), or the no-sting sentence `none: this piece opens on its hook (an off day, or no wide long cut)` for any
+  other piece. The template fills it from the series and the publish day; the 9:16 short cut never carries a sting,
+  and `ve lint` refuses a sting where no cut opens on one.
 - `cuts.<long|short|feature>`: the `take` (on_camera or voiceover) and its `beats`. Each beat has:
   - `words`: the exact words it sits under. All the beats together are the script, word for word, in order.
   - `point`: what the beat makes the viewer understand. A picture with no point is a gimmick (house rule
@@ -57,7 +62,8 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
 - `article.visuals`: each article figure's point, the reader's question it answers, and its source.
 - `production_choices`: the choices Krish put under test, to be judged on real engagement (`docs/production/THE_BAR.md`,
   "Under test"; the defaults and options live in `config/reference-cuts.json` `under_test`, and the template starts from
-  them). `opening` (`hook_is_intro`: the hook is the intro); `lead_picture`, with a `series_picture` and a
+  them). `opening` (`sting_wide_hook_tall`: the house sting then the hook on the wide cut, the hook on the tall;
+  `hook_is_intro`, the hook in both cuts, for an off-day piece); `lead_picture`, with a `series_picture` and a
   `story_object`, each `what` and a `still` path, Claude's `proposed` pick and his `ticked` one when he ticks the other;
   `big_moment_sound` (`none` until he approves a small set by ear, then `big_moment_only`). Never a refusal: `check`
   passes a direction whatever these hold, a missing tick included.

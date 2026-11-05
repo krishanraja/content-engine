@@ -77,5 +77,30 @@ class HeardRowTests(unittest.TestCase):
             receipt.heard_check(words('Grok'), words('rock'), {'heard_as': [{'said': 'Grok', 'heard': 'rock', 'krish': 'agreed'}]})
 
 
+class OpeningRowTests(unittest.TestCase):
+    """The opening check (opening_gate.py) on a ve cut, from the frame his cut starts on: the frame after the intro
+    sting on a cut that opens on it (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos
+    100%,"), else frame 0. Delivery holds a result measured from any other frame."""
+
+    def test_the_gate_reads_from_the_frame_after_the_sting(self):
+        import opening_gate  # noqa: PLC0415
+        from unittest.mock import patch  # noqa: PLC0415
+        with patch.object(opening_gate, 'check', return_value={'status': 'pass'}) as check:
+            receipt.opening_check(Path('cut.mp4'), 56)
+            receipt.opening_check(Path('tall.mp4'), 0)
+        self.assertEqual([c.args + (c.kwargs,) for c in check.call_args_list],
+                         [('cut.mp4', {'lead_frames': 56, 'fps': 30}), ('tall.mp4', {'lead_frames': 0, 'fps': 30})])
+
+    def test_delivery_holds_an_opening_read_from_the_wrong_frame(self):
+        import opening_gate  # noqa: PLC0415
+        row = {'machine': opening_gate.MACHINE, 'video_sha256': 'a' * 64, 'status': 'pass', 'lead_frames': 56}
+        stinged = {'video_sha256': 'a' * 64, 'opening': {'kind': 'sting', 'lead_frames': 56}, 'checks': {'opening': row}}
+        self.assertEqual(opening_gate.delivery_problems(stinged, True), [])
+        from_zero = dict(stinged, checks={'opening': dict(row, lead_frames=0)})
+        self.assertIn('--lead-frames 56', opening_gate.delivery_problems(from_zero, True)[0])
+        hook = dict(stinged, opening={'kind': 'hook', 'lead_frames': 0})
+        self.assertIn('starts on frame 0', opening_gate.delivery_problems(hook, True)[0])
+
+
 if __name__ == '__main__':
     unittest.main()

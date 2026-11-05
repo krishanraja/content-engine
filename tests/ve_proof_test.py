@@ -122,6 +122,23 @@ class HardestBeat(unittest.TestCase):
         self.assertFalse(out['audio']['sfx'], 'a hit outside the window is not in it')
         self.assertTrue(out['captions'])
 
+    def test_a_window_of_a_stinged_cut_has_no_sting_and_its_stem_skips_it(self):
+        # The wide whole cut opens on the 56-frame intro sting (Krish, 2026-11-05: "I think it should go at the start
+        # of the longer wide videos 100%,"), and ve premix lays his voice after it. A window is never a whole cut: it
+        # opens on no sting, and its stem is trimmed past the sting's frames to the window's start.
+        plain = dict(props_for(FIXTURE), aspect='16:9')
+        props = dict(plain, sting={'src': 'sting.mp4', 'series': 'mind_the_gap', 'frames': 56, 'sha256': 'a' * 64})
+        start, end = proof.window(props, 'b5-every')
+        out = proof.window_props(props, start, end)
+        self.assertNotIn('sting', out)
+        self.assertEqual(out['audio']['stem']['trimBeforeFrames'], start + 56, 'cut frame f is stem frame f + 56')
+        self.assertEqual(out['segments'][0]['trimBeforeFrames'], start, 'the take stays on the cut\'s own clock')
+        unstinged = proof.window_props(plain, start, end)
+        self.assertEqual(unstinged['audio']['stem']['trimBeforeFrames'], start)
+        self.assertEqual({k: v for k, v in out.items() if k != 'audio'}, {k: v for k, v in unstinged.items() if k != 'audio'},
+                         'the sting moves no frame in the window')
+        self.assertIn('sting', props, 'the cut\'s own props are not changed')
+
 
 class StructuralHash(unittest.TestCase):
     def test_caption_and_reason_edits_keep_the_proof(self):

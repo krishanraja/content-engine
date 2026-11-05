@@ -132,7 +132,7 @@ def assemble(spec, directory, out, legacy_ok=()):
                 from . import critic_inputs  # noqa: PLC0415
                 props, edl = critic_inputs.load_for(directory, cut)
                 rows = critic_inputs.cut_rows(props, edl)[:critic_inputs.MAX_ROWS]
-                last = int(props.get('durationFrames') or 0) - 1
+                last = critic_inputs.last_frame(props)  # the file's last frame, the intro sting's in front included
                 frames = critic_inputs.frames_at(video, [n for _, ns in rows for n in ns if 0 <= n <= last])
                 if rows and frames:
                     critic_inputs.sheet(rows, frames, stage / f'cuts.{cut}.jpg', last)

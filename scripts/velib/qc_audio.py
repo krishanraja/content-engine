@@ -123,7 +123,8 @@ def episode_rows(sidecar: Path, report: dict) -> list:
 
 
 def continuity(render: str, stem: str, sidecar: str | None = None) -> dict:
-    """Drop-outs on the render itself, on 50 ms windows: from the first word to the start of the final fade the mix
+    """Drop-outs on the render itself, on 50 ms windows: from the first word (from the first frame on a cut that opens on
+    the intro sting) to the start of the final fade the mix
     never falls under the bed's floor (bed_lufs - RENDER_FLOOR_BELOW_DB, in dBFS RMS) for 0.25 s. Speech only adds to
     the bed, so a quiet run is a stretch with no music under a pause, or after the dialogue ends. The render must
     run as long as the premixed cut. Reads the bed level, the body and the length from the premix's sidecar."""
@@ -147,7 +148,10 @@ def continuity(render: str, stem: str, sidecar: str | None = None) -> dict:
     if not len(mono) or (duration and abs(length - duration) > 1 / 30 + 0.05):
         return {'value': {'render_s': round(length, 3), 'cut_s': duration}, 'target': 'a render as long as the cut',
                 'pass': False, 'status': 'measured', 'reason': reason or 'the render has no audio or the wrong length'}
-    start = (report.get('body_s') or [1.5])[0]
+    # A cut that opens on the intro sting (the premix's lead_frames) has the bed alone under the sting ("the music sits
+    # under it in the edit"), so the floor holds from the file's first window, the sting included, not from his first word.
+    lead = int(data.get('lead_frames') or 0)
+    start = 0.0 if lead else (report.get('body_s') or [1.5])[0]
     end = max(start, (duration or length) - 1.5)
     holes = gaps(mono, start_s=start, end_s=end, floor_dbfs=floor)
     return {'value': holes, 'target': f'no 0.25 s under {floor} dBFS (50 ms RMS) from {start:.1f} to {end:.1f} s',

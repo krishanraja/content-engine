@@ -71,6 +71,55 @@ class NoIdeaNoProduction(unittest.TestCase):
         self.assertTrue(any(line.startswith('idea.required') for line in found), found[:5])
 
 
+class TheOpening(unittest.TestCase):
+    """Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,". A piece names the intro
+    sting only where ve compile puts it: the 16:9 whole cut of a weekly series piece on its series' day."""
+
+    def wide(self, day='2026-11-13', sting='mind_the_gap'):
+        spec = whole(day=day)
+        spec['cuts']['proof-wide']['excerpt'] = False
+        spec['brand']['intro_sting'] = sting
+        return spec
+
+    def test_a_series_piece_with_a_wide_whole_cut_names_its_sting(self):
+        self.assertEqual(guards.opening_problems(self.wide()), [])
+        self.assertEqual(guards.sting_named(self.wide()), 'mind_the_gap')
+        self.assertFalse([line for line in guards.spec_lints(self.wide()) if line.startswith(('opening.', 'offday.'))])
+
+    def test_a_sting_on_a_piece_with_no_wide_whole_cut_is_refused(self):
+        tall_only = whole()  # proof-tall is whole; proof-wide stays an excerpt
+        tall_only['brand']['intro_sting'] = 'mind_the_gap'
+        self.assertEqual(codes(guards.opening_problems(tall_only)), ['opening.sting_no_wide'])
+        self.assertIn('opening.sting_no_wide', codes(guards.spec_lints(tall_only)))
+
+    def test_a_sting_on_an_off_day_is_refused_on_any_date_and_once(self):
+        # Before MOTION_FROM the off-day guard does not bind, so the opening guard refuses it.
+        early = self.wide(day='2026-11-05')  # a Thursday
+        self.assertFalse(guards.bound(early))
+        self.assertEqual(codes(guards.opening_problems(early)), ['opening.sting_off_day'])
+        # From it, offday.chrome refuses it and the opening guard does not say it twice.
+        late = self.wide(day='2026-11-12')
+        self.assertEqual(guards.opening_problems(late), [])
+        self.assertIn('offday.chrome', codes(guards.spec_lints(late)))
+
+    def test_no_sting_named_is_never_refused(self):
+        from creative_direction import NO_STING  # noqa: PLC0415
+        for value in (None, NO_STING):
+            spec = whole(day='2026-11-12')
+            spec['brand'].pop('intro_sting', None)
+            if value:
+                spec['brand']['intro_sting'] = value
+            self.assertEqual(guards.opening_problems(spec), [], value)
+
+    def test_the_contract_and_the_direction_say_no_sting_in_the_same_words(self):
+        import re  # noqa: PLC0415
+        from creative_direction import NO_STING  # noqa: PLC0415
+        source = (ROOT / 'packages/contracts/src/production-spec.ts').read_text(encoding='utf-8')
+        self.assertEqual(re.search(r"export const VE_NO_STING = '([^']*)'", source).group(1), NO_STING)
+        enum = re.search(r"export const VeStingSchema = z\.enum\(\[([^\]]*)\]\)", source).group(1)
+        self.assertEqual(sorted(re.findall(r"'([a-z_]+)'", enum)), sorted(guards.STINGS))
+
+
 class ShowTheRealThing(unittest.TestCase):
     def spec(self, typed):
         spec = with_idea(whole(), dict(LADDER, real_artifacts=[{'asset': 'deepseek-xinjiang-recording', 'text': CHAT}]))
@@ -92,7 +141,7 @@ class OffDays(unittest.TestCase):
 
     def thursday(self):
         spec = whole(day='2026-11-12')  # a Thursday; the fixture's series is mind.the.gap (Fridays)
-        spec['brand']['intro_sting'] = 'mind-the-gap-sting'
+        spec['brand']['intro_sting'] = 'mind_the_gap'
         return spec  # its bed is no-curves-instrumental, the series bed
 
     def test_an_off_day_on_the_series_bed_and_sting_is_refused(self):
@@ -113,6 +162,15 @@ class OffDays(unittest.TestCase):
         friday = whole(day='2026-11-13')
         self.assertFalse(guards.off_day(friday))
         self.assertEqual(guards.offday_problems(friday), [])
+
+    def test_the_no_sting_sentence_is_no_sting(self):
+        # creative_direction's NO_STING says a piece wears none; only a named series sting is chrome (Krish, 2026-11-05).
+        from creative_direction import NO_STING  # noqa: PLC0415
+        spec = self.thursday()
+        spec['brand']['intro_sting'] = NO_STING
+        self.assertEqual(codes(guards.offday_problems(spec)), ['offday.bed'])
+        self.assertIsNone(guards.sting_named(spec))
+        self.assertEqual(guards.opening_problems(spec), [])
 
     def test_compile_draws_an_off_day_in_the_house_mint_without_the_series_promise(self):
         from velib.compile import compile_cut  # noqa: PLC0415

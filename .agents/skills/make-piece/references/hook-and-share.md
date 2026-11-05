@@ -12,8 +12,11 @@ His three choices that day are the house rules HOOK_AND_CTA, PERSONAL_INTRO, LIS
   the biggest mistake, the result, an unexpected fact, or the middle of the story.
 - The topic's keyword, the words people would search for it, is spoken in that first sentence and shown on screen in
   the first beat. The on-screen words add to the line (a number, a name, a date), never repeat it.
-- Nothing goes in front of it: no "Hey guys", no welcome, no "in this video", no long intro, no logo animation.
-  `story_check.py` refuses a greeting or an intro in the first sentence.
+- Nothing is said in front of it: no "Hey guys", no welcome, no "in this video", no long intro.
+  `story_check.py` refuses a greeting or an intro in the first sentence. On screen, the 9:16 short cut has no logo
+  animation in front of the hook; the 16:9 long cut of a weekly series piece opens on its house sting and his face
+  comes in on the hook the frame after it (house rule HOOK_IS_THE_INTRO), so the long script's first sentence is still
+  the first thing he says.
 - His personal line (PERSONAL_INTRO: what he has been doing with the thing, why it matters, that he wants to break it
   down) comes second or third, one short sentence. `story_check.py` warns when it comes first.
 

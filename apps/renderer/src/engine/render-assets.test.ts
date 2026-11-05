@@ -1,9 +1,10 @@
+import { createHash } from 'node:crypto'
 import { mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { afterEach, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 // @ts-expect-error The render entry point is native JavaScript.
-import { browserExecutable, stageRenderAssets } from '../../scripts/ve-render.mjs'
+import { browserExecutable, renderClock, stageRenderAssets } from '../../scripts/ve-render.mjs'
 
 const temporary: string[] = []
 afterEach(async () => { await Promise.all(temporary.splice(0).map(dir => rm(dir, { recursive: true, force: true }))) })
@@ -63,4 +64,33 @@ it('drives REMOTION_BROWSER, else an installed headless shell, else lets Remotio
   await mkdir(shell, { recursive: true })
   await writeFile(path.join(shell, 'chrome-headless-shell'), '')
   expect(await browserExecutable({}, root)).toBe(path.join(shell, 'chrome-headless-shell'))
+})
+
+describe('the sting', () => {
+  // Small stand-in bytes: the check is on the bytes, not on decoding them.
+  async function stingProps(change: (sting: { src: string; sha256: string }) => void = () => {}) {
+    const root = await mkdtemp(path.join(tmpdir(), 've-sting-test-'))
+    temporary.push(root)
+    await mkdir(path.join(root, 'public'))
+    const bytes = Buffer.from('fifty-six frames of the sting')
+    await writeFile(path.join(root, 'sting.mp4'), bytes)
+    const sting = { src: 'sting.mp4', series: 'mind_the_gap', frames: 56, sha256: createHash('sha256').update(bytes).digest('hex') }
+    change(sting)
+    const props = { brand: {}, audio: { stem: { src: 'https://example.test/stem.wav' }, sfx: [] }, segments: [], objects: [], sting }
+    return { root, props, bytes, stage: () => stageRenderAssets(props, path.join(root, 'props.json'), path.join(root, 'public'), root) }
+  }
+  it('stages the clip its props name, the way the take is staged', async () => {
+    const { root, props, bytes, stage } = await stingProps()
+    await stage()
+    expect(props.sting.src).toMatch(/^\/public\/asset-\d+\.mp4$/)
+    expect(await readFile(path.join(root, props.sting.src))).toEqual(bytes)
+  })
+  it('refuses a clip whose bytes are not the ones its props name, and a remote clip', async () => {
+    await expect((await stingProps((sting) => { sting.sha256 = 'b'.repeat(64) })).stage()).rejects.toThrow(/not the clip its props name/)
+    await expect((await stingProps((sting) => { sting.src = 'https://example.test/sting.mp4' })).stage()).rejects.toThrow(/local clip/)
+  })
+  it('runs the sting, then the cut on its own clock', () => {
+    expect(renderClock({ durationFrames: 120 })).toEqual({ lead: 0, frames: 120 })
+    expect(renderClock({ durationFrames: 120, sting: { frames: 56 } })).toEqual({ lead: 56, frames: 176 })
+  })
 })

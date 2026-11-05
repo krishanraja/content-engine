@@ -12,7 +12,7 @@ import { StoryIntroStandoff, STORY_INTRO_FRAMES } from './story/StoryIntroStando
 import { StoryOutroStandoff, STORY_OUTRO_FRAMES } from './story/StoryOutroStandoff'
 import { StoryStandoffPropsSchema } from './story/props'
 import { mondayStandoffProps } from './story/monday'
-import { FormatMaster } from './engine'
+import { FormatMaster, VeCut } from './engine'
 import { EngineRenderPropsSchema, type EngineRenderProps } from './engine/props'
 import { fromAsciiProps } from './engine/transport'
 import veDefaultProps from '../../../fixtures/ve/engine-core/props.json'
@@ -102,6 +102,11 @@ function TransportFormatMaster(props: EngineRenderProps) {
   return <FormatMaster {...EngineRenderPropsSchema.parse(fromAsciiProps(props))} />
 }
 
+/** The wide cut: FormatMaster, behind the series sting when the props carry one (engine/VeCut.tsx). */
+function TransportVeCut(props: EngineRenderProps) {
+  return <VeCut {...EngineRenderPropsSchema.parse(fromAsciiProps(props))} />
+}
+
 export function RemotionRoot() {
   return (
     <>
@@ -122,7 +127,7 @@ export function RemotionRoot() {
       />
       <Composition
         id="VeFormatMasterWide"
-        component={TransportFormatMaster}
+        component={TransportVeCut}
         width={1920}
         height={1080}
         fps={30}
@@ -131,7 +136,8 @@ export function RemotionRoot() {
         defaultProps={EngineRenderPropsSchema.parse({ ...veDefaultProps, aspect: '16:9' })}
         calculateMetadata={({ props }) => {
           const parsed = EngineRenderPropsSchema.parse(fromAsciiProps(props))
-          return { durationInFrames: parsed.durationFrames }
+          // The sting's frames come first, then the cut on its own clock (apps/renderer/scripts/ve-render.mjs renderClock).
+          return { durationInFrames: (parsed.sting?.frames ?? 0) + parsed.durationFrames }
         }}
       />
       <Composition

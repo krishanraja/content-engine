@@ -14,16 +14,21 @@ What it does, in order:
   3. Finds each graphic's moment from the words themselves (an anchor phrase
      where it starts and one where it ends), so a re-recording needs no new
      timings unless the words change.
-  4. Renders both shapes, each opening straight on the hook (house rule
-     HOOK_IS_THE_INTRO, Krish 2026-10-29: no story card and no logo intro in
-     front of it): the tall cut in the brand's dress from its first frame
-     (the wordmark and the series tag in the top corners, kit.py's
-     dress-9x16.png), the wide cut on its existing branded frame for now
-     (its look is not yet put to Krish); graphics in,
-     captions timed to the words, the one outro card on the end. Each
-     report records the opening it used ("opening"), so real engagement can
-     settle the choice. A clip goes in front only on Krish's own words for
-     that piece ("intro_override"); its own sound is never mixed.
+  4. Renders both shapes (house rule HOOK_IS_THE_INTRO): the tall cut opens
+     straight on the hook in the brand's dress from its first frame (the
+     wordmark and the series tag in the top corners, kit.py's
+     dress-9x16.png); the wide cut of a weekly series piece opens on the
+     house intro sting, 56 frames at 30 fps in the series' colour, once Krish
+     approves it (intro.py, config/intro-sting.json; Krish, 2026-11-05: "I
+     think it should go at the start of the longer wide videos 100%,"), with
+     the music bed under it and his face on the very next frame, then its
+     existing branded frame (its look is not yet put to Krish); an off-day piece opens on the hook in both
+     shapes. Graphics in, captions timed to the words, the one outro card on
+     the end. Each report records the opening it used ("opening"), so real
+     engagement can settle the choice. Once the sting is approved, a wide cut
+     of a series piece that cannot have it stops before anything renders. A
+     clip goes in front only on Krish's own words for that piece
+     ("intro_override"); its own sound is never mixed.
   5. Mixes the sound: his voice, the licensed music bed under the whole
      video and never dropping out (low under his voice, higher over the end
      card; Krish, 2026-10-28: "Yes I think music should be audible
@@ -85,10 +90,11 @@ import re
 import shutil
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 
 import episode
-import intro as sting  # the three series names; the sting itself is retired (HOOK_IS_THE_INTRO)
+import intro as sting  # the series intro sting in front of the wide cut of a series piece (HOOK_IS_THE_INTRO)
 import music
 import spelling
 import transcriber
@@ -1007,7 +1013,9 @@ SILENT_DB = -90.0  # quieter than this is silence: a kit end card, or a house st
 
 
 def clip_info(path):
-    """A clip's length in whole frames at 30 fps, and whether it has sound."""
+    """A clip's length in whole frames at the cut's rate (FPS), and whether it
+    has sound. The 56-frame sting at 30 fps is 45 frames at 24 and 47 at 25,
+    which is what the fps filter in video_graph makes of it."""
     data = json.loads(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'stream=codec_type,duration,width,height:format=duration',
                                       '-of', 'json', str(path)], capture_output=True, text=True, check=True).stdout)
     video = next((s for s in data.get('streams', []) if s.get('codec_type') == 'video'), None)
@@ -1033,21 +1041,54 @@ def read_post(cfg, base):
         return path, e
 
 
+def off_weekday(when):
+    """The weekday's name when `when` (a date, or text starting with one) falls
+    on a day with no weekly series (Tuesday, Thursday or Saturday: library.py
+    OFF_WEEKDAYS, the off.day post folder's rule), else None."""
+    try:
+        day = date.fromisoformat(str(when or '')[:10])
+    except ValueError:
+        return None
+    post_pack = str(Path(__file__).resolve().parents[1] / 'post-pack')
+    if post_pack not in sys.path:
+        sys.path.append(post_pack)
+    import library  # noqa: PLC0415  scripts/post-pack/library.py: the days with no series
+    names = ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
+    return names[day.weekday()] if library.WEEKDAYS[day.weekday()] in library.OFF_WEEKDAYS else None
+
+
 def series_of(cfg, base='.'):
-    """The piece's series, for the sting's colour: (series, note). From the
-    config's "series" (or "subchannel"), else the subchannel of the post it
-    was made from; an unknown or missing one gets follow_the_money's."""
+    """The piece's weekly series, for the sting: (series, note). From the
+    config's "series" (or "subchannel"), else the subchannel of the post it was
+    made from. None, and why, for an off-day piece: one dated on a day with no
+    weekly series (off_weekday), one naming no series, or one naming none of
+    the three. It wears no sting, and never another series' colour (Krish,
+    2026-11-05; F36-off-day-wore-series-dress)."""
     given = cfg.get('series') or cfg.get('subchannel')
-    if not given:
+    when = cfg.get('date')
+    if not given or not when:
         _, post = read_post(cfg, base)
-        given = post.get('subchannel') if isinstance(post, dict) else None
+        post = post if isinstance(post, dict) else {}
+        given, when = given or post.get('subchannel'), when or post.get('date')
     found = sting.series_name(given)
-    if found:
-        return found, None
-    if given:
-        return sting.DEFAULT_SERIES, (f'the piece\'s series {given!r} is none of {", ".join(sting.SERIES)}, '
-                                      f'so the sting is in {sting.DEFAULT_SERIES}\'s colour')
-    return sting.DEFAULT_SERIES, f'the config names no "series" (nor a post with a subchannel), so the sting is in {sting.DEFAULT_SERIES}\'s colour'
+    if not found:
+        if given:
+            return None, (f'the piece\'s series {given!r} is none of the weekly series ({", ".join(sting.SERIES)}), so it is an '
+                          'off-day piece and wears no series sting')
+        return None, 'the config names no "series" (nor a post with a subchannel), so it is an off-day piece and wears no series sting'
+    day = off_weekday(when)
+    if day:
+        return None, (f'the piece is dated {str(when)[:10]}, a {day}, a day with no weekly series, so it is an off-day piece and wears '
+                      f'no series sting, whatever its tag ({given})')
+    return found, None
+
+
+def sting_shapes():
+    """The shapes the house sting goes on (config/intro-sting.json "shapes"); every shape when it cannot be read."""
+    try:
+        return sting.load()['shapes']
+    except sting.IntroError:
+        return list(sting.SHAPES)
 
 
 def intro_override(cfg):
@@ -1057,25 +1098,30 @@ def intro_override(cfg):
     return words.strip() if isinstance(words, str) and words.strip().lower().startswith('krish') else None
 
 
-def resolve_intro(cfg, asp, P, base='.'):
+def resolve_intro(cfg, asp, P, base='.', fetch=True):
     """Anything in front of the hook in this cut: (intro, note). intro is
-    None when the cut opens straight on the hook, which every cut does by
-    default (house rule HOOK_IS_THE_INTRO, Krish, 2026-10-29: "Let's go with
-    number one for now"; the sting is retired, config/intro-sting.json, so
-    "auto" gives none and says nothing). The config's "intro" is "auto",
-    false, or {"9x16": file, "16x9": file}: a file named there goes in front
-    only on Krish's own words for this piece in "intro_override" (or if a
-    house sting is ever approved again, as that render), so a different
-    opening can be tried on his say and the report records it ("opening").
-    Its own sound is never used: make.py lays silence under it. An opening
-    problem never stops a render."""
+    None when the cut opens straight on the hook. The config's "intro" is
+    "auto" (kit.py's cuts), false, or {"9x16": file, "16x9": file}.
+      - "auto": the house sting (intro.sting_for) on a shape it goes on, for a
+        weekly series piece, once Krish has approved it: the wide cut (Krish,
+        2026-11-05: "I think it should go at the start of the longer wide
+        videos 100%,"). The tall cut and an off-day piece open on the hook
+        (house rule HOOK_IS_THE_INTRO); a clip not on this machine is fetched
+        from the library unless `fetch` is false (--plan fetches nothing).
+      - a file: it goes in front only if it is that house sting, or on
+        Krish's own words for this piece in "intro_override", so a different
+        opening can be tried on his say and the report records it ("opening").
+    Its own sound is never used: make.py lays silence under it, with the music
+    bed over it. Whether a cut with no intro may render is sting_stop's to say."""
     want = cfg.get('intro', 'auto')
     if want is False or want is None:
         return None, None
     series, series_note = series_of(cfg, base)
     notes = []
     if want == 'auto':
-        path, why = sting.sting_for(asp, series=series)
+        if not series:
+            return None, (series_note if asp in sting_shapes() else None)
+        path, why = sting.sting_for(asp, series, fetch_missing=fetch)
         if not path:
             return None, why
         source = 'house'
@@ -1085,7 +1131,7 @@ def resolve_intro(cfg, asp, P, base='.'):
         path = P(want[asp])
         if not path.is_file():
             return None, f'the intro file {path} is missing, so this cut has no intro'
-        house, why = sting.sting_for(asp, render_missing=False, series=series)
+        house, why = sting.sting_for(asp, series, fetch_missing=False) if series else (None, series_note)
         override = intro_override(cfg)
         if house and sha256_file(house) == sha256_file(path):
             source = 'house'
@@ -1093,8 +1139,8 @@ def resolve_intro(cfg, asp, P, base='.'):
             source = 'override'
             notes.append(f'the intro is a file named in the config, not the approved house sting, used on Krish\'s words in "intro_override": "{override}"')
         else:
-            return None, (f'the intro file {path.name} named in the config is not the approved house sting for {asp} {series}, so this cut has no intro. '
-                          'Only the approved sting, or Krish\'s own words in "intro_override", puts a clip there'
+            return None, (f'the intro file {path.name} named in the config is not the approved house sting for {asp} {series or "an off-day piece"}, '
+                          'so this cut has no intro. Only the approved sting, or Krish\'s own words in "intro_override", puts a clip there'
                           + (f' (the house sting: {why.replace(", so this cut has no intro", "")})' if why else ''))
     else:
         return None, '"intro" in the config is "auto", false or {"9x16": file, "16x9": file}; this cut has no intro'
@@ -1104,29 +1150,74 @@ def resolve_intro(cfg, asp, P, base='.'):
         return None, f'the intro {path} could not be read ({e}), so this cut has no intro'
     lo, hi = sting.SECONDS
     if source == 'override':
-        # A clip on Krish's words may run longer than the retired 1 to 2 s
+        # A clip on Krish's words may run longer than the 1 to 2 s house
         # sting: up to STORY_INTRO_MAX_S.
         lo, hi = sting.SECONDS[0], STORY_INTRO_MAX_S
     if not lo - 0.5 / FPS <= info['seconds'] <= hi + 0.5 / FPS:
         return None, f'the intro {path.name} runs {info["seconds"]} s, outside {lo} to {hi} s, so this cut has no intro'
-    if source == 'house' and series_note:
-        notes.append(series_note)
+    if source == 'house' and sting.config_path() != sting.CONFIG:
+        notes.append(f'the intro sting came from {sting.config_path()}, not config/intro-sting.json')
     if info['audio'] and source != 'house':
         # The house sting's track is silent by construction (intro.finish);
         # any other clip's sound is named, since it is dropped.
         notes.append(f'the intro {path.name} has a sound track of its own; it is replaced with silence, under the music bed')
     return ({'file': path, 'source': source, 'series': series if source == 'house' else None, 'sha256': sha256_file(path),
+             'clip_sha256': sting.clip_sha256(asp, series) if source == 'house' else None,
              'own_sound_replaced': info['audio'], **info}, '; '.join(notes) or None)
 
 
-def opening_of(intro):
-    """What the cut opened on, for its report. The hook as the intro is
-    Krish's choice to test (house rule HOOK_IS_THE_INTRO, 2026-10-29: "we
-    need to figure out what the right tone is over time based on real
-    engagement"), so every cut records it and engagement can settle it."""
+def sting_stop(cfg, asp, intro, why, base='.'):
+    """Why this cut must not render: the house sting is approved, it goes on
+    this shape, the piece is a weekly series piece, and the cut would open
+    without it (Krish, 2026-11-05: "I think it should go at the start of the
+    longer wide videos 100%,"). None otherwise: a cut with its sting, a
+    candidate sting, the tall cut, an off-day piece, or Krish's own words for
+    this piece in "intro_override". A sting config that cannot be read stops a
+    series piece's render too, since it cannot say the cut may go without."""
+    if intro is not None or intro_override(cfg):
+        return None
+    series, _ = series_of(cfg, base)
+    if not series:
+        return None
+    try:
+        if not sting.wanted(asp, series):
+            return None
+    except sting.IntroError as e:
+        return f'the intro sting\'s config cannot be read, so this {series} piece\'s {asp} cut cannot be shown to open as it should: {e}'
+    return (f'the {asp} cut of this {series} piece opens on the approved intro sting (house rule HOOK_IS_THE_INTRO; Krish, 2026-11-05: '
+            f'"I think it should go at the start of the longer wide videos 100%,"), and it could not be had: {why or "no reason given"}')
+
+
+def opening_of(intro, why=None):
+    """What the cut opened on, for its report: "sting" (the house sting, with
+    the sha256 of the clip Krish saw), "clip" (on his words) or "hook", with
+    why when a cut the sting goes on opened on the hook. The opening is
+    Krish's choice to test (house rule HOOK_IS_THE_INTRO: "we need to figure
+    out what the right tone is over time based on real engagement"), so every
+    cut records it and engagement can settle it."""
     if intro is None:
-        return {'kind': 'hook', 'rule': 'HOOK_IS_THE_INTRO'}
+        return {'kind': 'hook', 'rule': 'HOOK_IS_THE_INTRO', **({'why': why} if why else {})}
+    if intro['source'] == 'house':
+        return {'kind': 'sting', 'rule': 'HOOK_IS_THE_INTRO', 'series': intro['series'], 'clip_sha256': intro['clip_sha256'],
+                'file': str(intro['file']), 'frames': intro['frames'], 'seconds': intro['seconds']}
     return {'kind': 'clip', 'source': intro['source'], 'file': str(intro['file']), 'seconds': intro['seconds']}
+
+
+def opening_receipt(final, opening, fps, **measure):
+    """(the receipt's "opening", its checks.opening) for one finished cut, as
+    velib/receipt.py writes them for ve: the opening check (opening_gate.py)
+    on these bytes from the frame his cut starts on. On a cut that opens on
+    the house sting that is the frame after it (Krish, 2026-11-05: "I think
+    it should go at the start of the longer wide videos 100%,"), so the lead
+    is the sting's frames at this cut's own rate (56 at 30 fps, 45 at 24);
+    on any other cut it is frame 0. Delivery (quality.delivery_problems)
+    holds a result measured from any other frame. `measure` is a stand-in
+    OCR or transcriber for the tests; a measure that cannot run here is
+    not_measured, and the gate fails closed."""
+    import opening_gate  # noqa: PLC0415  numpy, only once a cut is checked
+    lead = int(opening.get('frames') or 0) if opening.get('kind') == 'sting' else 0
+    return ({**opening, 'lead_frames': lead, 'fps': fps},
+            opening_gate.check(str(final), lead_frames=lead, fps=fps, **measure))
 
 
 def piece_key(cfg):
@@ -1234,12 +1325,18 @@ def resolve_music(cfg, asp, seconds, base='.'):
 
 def timeline(intro_frames, main_frames, end_frames, ws):
     """The cut's clock: any opening clip, the captioned main and the end card, in
-    whole frames, and when Krish's first and last words fall on it."""
+    whole frames, and when Krish's first and last words fall on it. "samples"
+    is each stretch in whole 48 kHz samples from its frames (every house rate
+    divides 48000), so the sound matches the picture exactly: the 56-frame
+    sting at 30 fps is 89600 samples, where its rounded 1.8667 s would be 89602."""
     I, M, E = intro_frames / FPS, main_frames / FPS, end_frames / FPS
     vs = I + (ws[0]['s'] if ws else 0.0)
     ve = I + min(M, ws[-1]['e'] if ws else M)
+    per = (lambda n: n * RATE // FPS) if RATE % FPS == 0 else (lambda n: round(n * RATE / FPS))
     return {'intro_s': round(I, 4), 'main_s': round(M, 4), 'outro_s': round(E, 4), 'total_s': round(I + M + E, 4),
-            'voice_start_s': round(vs, 4), 'voice_end_s': round(max(vs, ve), 4)}
+            'voice_start_s': round(vs, 4), 'voice_end_s': round(max(vs, ve), 4),
+            'samples': {'intro_s': per(intro_frames), 'main_s': per(main_frames), 'outro_s': per(end_frames),
+                        'total_s': per(intro_frames + main_frames + end_frames)}}
 
 
 def preview_shots(tl, wins):
@@ -1308,7 +1405,7 @@ def build_audio(work, edited, voice_gain, intro, end, tl, bed):
     and mix.wav, the final mix. Neither an opening clip's nor the end card's
     own sound is ever mixed. Returns what the report needs."""
     work.mkdir(parents=True, exist_ok=True)
-    smp = {k: round(tl[k] * RATE) for k in ('intro_s', 'main_s', 'outro_s', 'total_s')}
+    smp = tl.get('samples') or {k: round(tl[k] * RATE) for k in ('intro_s', 'main_s', 'outro_s', 'total_s')}
     inputs, g, labels = ['-i', str(edited)], [], []
     if intro:
         # An opening clip's own sound, if it has any, is never mixed: its stretch
@@ -1643,12 +1740,17 @@ def default_levels():
         return {'final_integrated_lufs': -14, 'tolerance_lu': 1, 'max_true_peak_dbtp': -1.0, 'bed_lufs': -31}
 
 
-def cut_plan(cfg, asp, P, main_frames, ws, base='.'):
-    """What one shape's cut will be, before anything is rendered: its opening,
-    its end card, its clock, its music and anything to say about them."""
+def cut_plan(cfg, asp, P, main_frames, ws, base='.', fetch=True):
+    """What one shape's cut will be, before anything is rendered: its opening
+    (and, in "opening_stop", why it may not render), its end card, its clock,
+    its music and anything to say about them. `fetch` false fetches no sting
+    clip (--plan)."""
     notes = []
-    intro, note = resolve_intro(cfg, asp, P, base)
+    intro, note = resolve_intro(cfg, asp, P, base, fetch)
     notes += [note] if note else []
+    opening = opening_of(intro, note if intro is None and asp in sting_shapes() else None)
+    stop = sting_stop(cfg, asp, intro, note, base)
+    notes += [f'the render will stop: {stop}'] if stop else []
     end_file = P(cfg['endcard'][asp])
     end = {'file': end_file, **clip_info(end_file)}
     hold = cfg.get('end_hold_s')
@@ -1667,7 +1769,7 @@ def cut_plan(cfg, asp, P, main_frames, ws, base='.'):
     if bed and bed['levels'].get('status') != 'approved':
         notes.append('the mix levels are still proposed until Krish approves them by ear (music.py approve-levels)')
     notes += length_warnings(asp, tl)
-    return {'intro': intro, 'end': end, 'timeline': tl, 'bed': bed, 'warnings': notes}
+    return {'intro': intro, 'opening': opening, 'opening_stop': stop, 'end': end, 'timeline': tl, 'bed': bed, 'warnings': notes}
 
 
 def episode_extras(cfg, P, ws, wins, toks, tl):
@@ -1797,8 +1899,21 @@ def self_test():
     tl = timeline(45, 600, 120, ws)
     checks.append(('a raw words file goes onto the sped clock (Krish, 19 Oct: subtitles lagging)',
                    sped_words([{'w': 'a', 's': 11.0, 'e': 22.0}], 1.1), [{'w': 'a', 's': 10.0, 'e': 20.0}]))
-    checks.append(('the clock: sting, main, end card, first and last word',
+    checks.append(('the clock: an opening clip, main, end card, first and last word',
                    (tl['intro_s'], tl['main_s'], tl['outro_s'], tl['total_s'], tl['voice_start_s'], tl['voice_end_s']), (1.5, 20.0, 4.0, 25.5, 1.6, 21.34)))
+    stung = timeline(56, 600, 120, ws)
+    checks.append(('the 56-frame sting at 30 fps: his first word 1.8667 s on, and its sound exactly 89600 samples, never 89602',
+                   (stung['intro_s'], stung['total_s'], stung['voice_start_s'], stung['samples']), (1.8667, 25.8667, 1.9667,
+                    {'intro_s': 89600, 'main_s': 960000, 'outro_s': 192000, 'total_s': 1241600})))
+    keep_fps = FPS
+    try:
+        globals()['FPS'] = 24
+        at24 = timeline(45, 480, 96, ws)
+    finally:
+        globals()['FPS'] = keep_fps
+    checks.append(('at 24 fps it is 45 frames, 1.875 s, 90000 samples, and the whole clock adds up in samples',
+                   (at24['intro_s'], at24['samples']['intro_s'], at24['samples']['total_s'], sum(at24['samples'][k] for k in ('intro_s', 'main_s', 'outro_s'))),
+                   (1.875, 90000, 1242000, 1242000)))
     wins = [{'id': 'a', 's': 4.0, 'e': 6.0}]
     checks.append(('previews move on by the sting and add one in it', preview_shots(tl, wins),
                    [('intro', 1.05), ('00', 2.5), ('01', 6.5), ('02', 23.5)]))
@@ -1842,16 +1957,23 @@ def self_test():
                           {'file': 'end.mp4', 'frames': 510, 'held_s': 13.0}, Path('mix.wav'))
     checks.append(('a long episode\'s end card holds its last frame for the end-screen tiles',
                    any('tpad=stop_mode=clone:stop_duration=13.000,trim=end_frame=510' in line for line in g), True))
-    # The hook is the intro (house rule HOOK_IS_THE_INTRO, Krish, 2026-10-29): "auto" puts no clip in front. The retired
-    # sting says nothing; until its retirement is approved in the taste-guarded config, the unapproved candidate says why.
-    status_now = sting.load()['status']
-    clip, why = resolve_intro({'name': 't'}, '9x16', same)
-    checks.append(('"intro": "auto" opens on the hook with no clip, and says nothing once the sting is retired',
-                   (clip, status_now in ('candidate', 'retired'), why is None if status_now == 'retired' else 'candidate' in (why or '')),
-                   (None, True, True)))
+    # The opening (house rule HOOK_IS_THE_INTRO): the tall cut on the hook, the wide cut of a series piece on the sting once
+    # Krish approves it (2026-11-05), an off-day piece on the hook. The committed config, whatever its status:
+    series_day = {'name': 't', 'series': 'follow.the.money', 'date': '2026-11-02'}
+    checks.append(('"intro": "auto" opens the tall cut on the hook with no clip and no note, at any status',
+                   resolve_intro(series_day, '9x16', same, fetch=False), (None, None)))
+    clip, why = resolve_intro({'name': 't'}, '16x9', same, fetch=False)
+    checks.append(('a wide cut of a piece with no series opens on the hook, saying it is an off-day piece', (clip, 'off-day piece' in (why or '')), (None, True)))
+    if sting.load()['status'] == 'candidate':
+        clip, why = resolve_intro(series_day, '16x9', same, fetch=False)
+        checks.append(('while the sting is a candidate, the wide cut of a series piece opens on the hook and says why',
+                       (clip, 'candidate' in (why or ''), sting_stop(series_day, '16x9', clip, why)), (None, True, None)))
     checks.append(('each cut records what it opened on, so engagement can settle the choice',
-                   (opening_of(None), opening_of({'source': 'override', 'file': Path('clip.mp4'), 'seconds': 3.0})['kind']),
-                   ({'kind': 'hook', 'rule': 'HOOK_IS_THE_INTRO'}, 'clip')))
+                   (opening_of(None), opening_of(None, 'an off-day piece'), opening_of({'source': 'override', 'file': Path('clip.mp4'), 'seconds': 3.0})['kind'],
+                    opening_of({'source': 'house', 'series': 'mind_the_gap', 'clip_sha256': 'ab' * 32, 'file': Path('s.mp4'), 'frames': 56, 'seconds': 1.8667})),
+                   ({'kind': 'hook', 'rule': 'HOOK_IS_THE_INTRO'}, {'kind': 'hook', 'rule': 'HOOK_IS_THE_INTRO', 'why': 'an off-day piece'}, 'clip',
+                    {'kind': 'sting', 'rule': 'HOOK_IS_THE_INTRO', 'series': 'mind_the_gap', 'clip_sha256': 'ab' * 32, 'file': 's.mp4', 'frames': 56,
+                     'seconds': 1.8667})))
     dressed = dict(fake, dress={'9x16': 'dress-9x16.png'})
     _, g, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
                           {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
@@ -2036,8 +2158,15 @@ def gate_self_test():
     post.write_text(json.dumps({'subchannel': 'mind.the.gap', 'files': [{'kind': 'image', 'file': 'pileup.png'}, {'kind': 'video-script', 'file': 'script.md'}]}))
     checks.append(('else from the post the kit was made from', series_of({'kit': {'post': str(post)}})[0], 'mind_the_gap'))
     plain, why = series_of({})
-    checks.append(('no series at all is follow_the_money, and says so', (plain, 'no "series"' in (why or '')), ('follow_the_money', True)))
-    checks.append(('an unknown series falls back to follow_the_money too', series_of({'series': 'built_with_ai'})[0], 'follow_the_money'))
+    checks.append(('no series at all is no series, an off-day piece, and says so', (plain, 'no "series"' in (why or '')), (None, True)))
+    plain, why = series_of({'series': 'built_with_ai'})
+    checks.append(('an unknown series is none either, never follow_the_money\'s', (plain, 'off-day piece' in (why or '')), (None, True)))
+    plain, why = series_of({'series': 'under.the.hood', 'date': '2026-11-05'})
+    checks.append(('a piece dated on an off day (Thursday 5 November) has no series, whatever its tag', (plain, 'Thursday' in (why or '')), (None, True)))
+    checks.append(('a series piece on a series day keeps its series', series_of({'series': 'follow_the_money', 'date': '2026-11-02'}), ('follow_the_money', None)))
+    dated = work / 'dated-post.json'
+    dated.write_text(json.dumps({'subchannel': 'mind.the.gap', 'date': '2026-11-07'}))
+    checks.append(('and the post\'s own date counts when the config has none (Saturday)', series_of({'kit': {'post': str(dated)}})[0], None))
     said = picture_warnings({'cues': [], 'kit': {'post': str(post)}})
     checks.append(('no cues while the post has pictures is a warning that names them', (len(said), 'pileup.png' in ' '.join(said)), (1, True)))
     checks.append(('cues, or a post with no pictures, is no warning',
@@ -2161,13 +2290,17 @@ def gate_self_test():
     real = sting.sting_for
     try:
         sting.sting_for = lambda shape, *a, **k: (loud, None)
+        series_named = dict(named, series='follow_the_money', date='2026-11-02')
+        got, why = resolve_intro(series_named, '9x16', here)
+        checks.append(('a config-named file that is the approved house sting is used', got and (got['source'], got['series']), ('house', 'follow_the_money')))
         got, why = resolve_intro(named, '9x16', here)
-        checks.append(('a config-named file that is the approved house render is used', got and (got['source'], got['series']), ('house', 'follow_the_money')))
+        checks.append(('but never for a piece with no series', (got, 'off-day piece' in (why or '')), (None, True)))
         sting.sting_for = lambda shape, *a, **k: (other, None)
-        got, why = resolve_intro(named, '9x16', here)
+        got, why = resolve_intro(series_named, '9x16', here)
         checks.append(('one that is not, is not', (got, 'not the approved house sting' in (why or '')), (None, True)))
     finally:
         sting.sting_for = real
+    checks += sting_self_test(work)
     # The sting's own tone is never mixed: its stretch is silence.
     intro = {'file': loud, **clip_info(loud)}
     words_at = [{'w': 'one', 's': 0.1, 'e': 0.6}, {'w': 'two', 's': 2.2, 'e': 2.8}]
@@ -2193,6 +2326,74 @@ def gate_self_test():
     checks.append(('max_volume tells a sounding end card from a silent one', (max_volume(loud_end) > SILENT_DB, max_volume(end) > SILENT_DB), (True, False)))
     plan = cut_plan({'name': 't', 'intro': False, 'music': False, 'endcard': {'9x16': loud_end.name}}, '9x16', here, 90, words_at, work)
     checks.append(('the plan says the end card\'s own sound is replaced', any('end card' in w and 'replaced with silence' in w for w in plan['warnings']), True))
+    return checks
+
+
+def sting_self_test(work):
+    """The house sting on a stand-in approved config (intro.stand_in: synthetic
+    clips, never Krish's): the wide cut of a series piece opens on it, the tall
+    cut and an off-day piece on the hook, a wide cut that cannot have it stops,
+    and at 24 fps the 56 frames become 45 with no drift."""
+    checks = []
+    keep = {k: os.environ.get(k) for k in (sting.CONFIG_ENV, sting.CLIPS_ENV)}
+    config, clips = sting.stand_in(work / 'sting')
+    os.environ[sting.CONFIG_ENV], os.environ[sting.CLIPS_ENV] = str(config), str(clips)
+    same = lambda p: Path(p)
+    try:
+        piece = {'name': 't', 'series': 'mind.the.gap', 'date': '2026-11-06'}
+        got, why = resolve_intro(piece, '16x9', same, fetch=False)
+        want_sha = sting.load()['clips']['16x9']['mind_the_gap']['sha256']
+        checks.append(('the wide cut of a series piece opens on its own series\' sting, 56 frames, the clip Krish saw named by its sha256',
+                       got and (got['source'], got['series'], got['frames'], got['seconds'], got['clip_sha256']),
+                       ('house', 'mind_the_gap', 56, 1.8667, want_sha)))
+        checks.append(('the report says so', opening_of(got)['kind'], 'sting'))
+        checks.append(('and a stand-in config is named in its notes, never taken quietly', 'not config/intro-sting.json' in (why or ''), True))
+        checks.append(('it may render', sting_stop(piece, '16x9', got, why), None))
+        checks.append(('the tall cut of the same piece opens on the hook, saying nothing', resolve_intro(piece, '9x16', same, fetch=False), (None, None)))
+        checks.append(('and may render', sting_stop(piece, '9x16', None, None), None))
+        off = dict(piece, date='2026-11-05')
+        got, why = resolve_intro(off, '16x9', same, fetch=False)
+        checks.append(('an off-day piece\'s wide cut opens on the hook, and may render', (got, sting_stop(off, '16x9', got, why)), (None, None)))
+        (clips / 'stand-in-sting-16x9-mind_the_gap.mp4').rename(clips / 'away.mp4')
+        got, why = resolve_intro(piece, '16x9', same, fetch=False)
+        stop = sting_stop(piece, '16x9', got, why)
+        checks.append(('a wide series cut that cannot have the approved sting stops before it renders, quoting Krish and saying why',
+                       (got, bool(stop) and '100%,' in stop and 'intro.py fetch' in stop), (None, True)))
+        checks.append(('unless Krish\'s own words for the piece are in "intro_override"',
+                       sting_stop(dict(piece, intro_override='Krish (a self-test stand-in, not his words): no sting on this one'), '16x9', got, why), None))
+        checks.append(('"intro": false is no way round it', bool(sting_stop(dict(piece, intro=False), '16x9', None, None)), True))
+        (clips / 'away.mp4').rename(clips / 'stand-in-sting-16x9-mind_the_gap.mp4')
+        os.environ[sting.CONFIG_ENV] = str(work / 'missing-sting.json')
+        checks.append(('a sting config that cannot be read stops a series piece\'s render', bool(sting_stop(piece, '16x9', None, None)), True))
+        os.environ[sting.CONFIG_ENV] = str(config)
+        # A take at 24 fps: the cut runs at 24, and the 56 frames at 30 become 45 (1.875 s) in the fps filter video_graph
+        # uses, ending on the clip's last frame (the wordmark plate); the sound under it is 45 frames' worth, so nothing drifts.
+        finished = sting.finish('16x9', 'follow_the_money')
+        keep_fps = FPS
+        try:
+            globals()['FPS'] = 24
+            info = clip_info(finished)
+            _, g, _ = video_graph({'name': 't', 'face': [100, 450], 'frame16': 'frame16.png'}, '16x9', same, Path('.'), Path('edited.mkv'), 20.0,
+                                  [], [], [720, 1280, 0, 0],
+                                  {'file': finished, **info}, {'file': 'end.mp4', 'frames': 96}, Path('mix.wav'))
+            line = next(x for x in g if x.endswith('[iv]'))
+            tl = timeline(info['frames'], 480, 96, [])
+        finally:
+            globals()['FPS'] = keep_fps
+        frames = lambda p, vf: [x.split(',')[-1].strip() for x in subprocess.run(
+            ['ffmpeg', '-v', 'error', '-i', str(p), '-filter_complex', vf, '-map', '[o]', '-f', 'framemd5', '-'],
+            capture_output=True, text=True, check=True).stdout.splitlines() if x and not x.startswith('#')]
+        made = frames(finished, '[0:v]' + line.split(']', 1)[1].replace('[iv]', '[o]'))
+        source = frames(finished, '[0:v]setsar=1,format=yuv420p[o]')
+        checks.append(('at 24 fps the sting is 45 frames, 1.875 s, and its sound 90000 samples, the same 1.875 s',
+                       (info['frames'], info['seconds'], len(made), tl['samples']['intro_s'], tl['samples']['intro_s'] / RATE), (45, 1.875, 45, 90000, 1.875)))
+        checks.append(('and it ends on the clip\'s last frame, so the wordmark plate lands before his face', made[-1] == source[-1], True))
+    finally:
+        for k, v in keep.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
     return checks
 
 
@@ -2277,15 +2478,20 @@ def doctor(as_json=False):
         add('music ledger', 'fail', str(e))
     try:
         s = sting.status()
+        on, off = '/'.join(s['shapes']), '/'.join(sh for sh in sting.SHAPES if sh not in s['shapes'])
         if s['status'] == 'retired':
-            add('opening', 'ok', f'every cut opens on the hook (house rule {s["retired"]["rule"]}, Krish, {s["retired"]["on"]}); the sting is retired')
+            d = s['last_decision'] or {}
+            add('opening', 'ok', f'every cut opens on the hook (house rule HOOK_IS_THE_INTRO); the sting is retired (Krish, {d.get("on")})')
         else:
-            every = [f'{shape} {series}' for shape, per in s['renders'].items() for series in per]
-            ready = [f'{shape} {series}' for shape, per in s['renders'].items() for series, r in per.items() if r['approved']]
-            add('intro sting', 'ok' if s['status'] == 'approved' and len(ready) == len(every) and not s['source_problem'] else 'warn',
-                f'{s["status"]}; rendered here for {", ".join(ready) or "no shape and series"}'
-                + (f'; its source cannot be used: {s["source_problem"]}' if s['source_problem'] else '')
-                + ('' if s['status'] == 'approved' else '; cuts render without it until Krish approves it'))
+            add('opening', 'ok', f'the {off} cut opens on the hook (house rule HOOK_IS_THE_INTRO); the {on} cut of a weekly series piece '
+                                 'opens on the intro sting once Krish approves it; an off-day piece opens on the hook')
+            every = [f'{shape} {series}' for shape in s['shapes'] for series in s['series']]
+            ready = [f'{shape} {series}' for shape in s['shapes'] for series in s['series'] if s['clips'][shape][series]['verified']]
+            add('intro sting', 'ok' if s['status'] == 'approved' and s['matches'] and len(ready) == len(every) else 'warn',
+                f'{s["status"]}; clips here and verified for {", ".join(ready) or "no shape and series"}'
+                + ('' if len(ready) == len(every) else '; a render fetches the rest from the library (python scripts/quick-edit/intro.py fetch)')
+                + ('' if s['status'] != 'approved' or s['matches'] else '; the clips named are not the ones Krish approved, so no cut opens on them')
+                + ('' if s['status'] == 'approved' else f'; {on} cuts render without it until Krish approves it'))
     except (OSError, ValueError) as e:
         add('intro sting', 'warn', str(e))
     failed = [r for r in rows if r['state'] == 'fail']
@@ -2474,13 +2680,13 @@ def main():
         shapes = {}
         for asp in aspects:
             try:
-                plan = cut_plan(cfg, asp, P, main_frames, ws, base)
+                plan = cut_plan(cfg, asp, P, main_frames, ws, base, fetch=False)
             except (KeyError, ValueError, OSError, subprocess.CalledProcessError) as e:
                 shapes[asp] = {'error': f'cannot plan the {asp} cut: {e}'}
                 continue
             tl = plan['timeline']
             said, warns, _ = episode_extras(cfg, P, ws, wins, toks, tl)
-            shapes[asp] = {'opening': opening_of(plan['intro']),
+            shapes[asp] = {'opening': plan['opening'], 'opening_stop': plan['opening_stop'],
                            'intro': plan['intro'] and str(plan['intro']['file']), 'intro_source': plan['intro'] and plan['intro']['source'],
                            'intro_series': plan['intro'] and plan['intro']['series'], 'music': plan['bed'] and plan['bed']['track']['id'],
                            'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],
@@ -2493,6 +2699,14 @@ def main():
         for w in early + [f'{asp}: {w}' for asp, cut in shapes.items() for w in cut.get('warnings', [])]:
             print(f'note: {w}', file=sys.stderr)
         sys.exit(1 if missing else 0)
+
+    # The opening, before anything renders: once Krish approves the sting, the wide cut of a
+    # series piece opens on it or does not render (getting a missing clip from the library first).
+    for asp in aspects:
+        intro, note = resolve_intro(cfg, asp, P, base)
+        stop = sting_stop(cfg, asp, intro, note, base)
+        if stop:
+            sys.exit(f'Opening: {stop}')
 
     # Stage 1: the edited talking head, cropped to the real picture.
     edited = out / f"{cfg['name']}.edited.mkv"
@@ -2735,6 +2949,9 @@ def main():
                                           final_provenance=final_identity)
             words_check['second_aligner'] = heard_by['second']
             receipt['checks']['words'] = words_check
+            # The opening (opening_gate.py): measured on these bytes from the frame after the sting on a cut that opens
+            # on it, and the receipt says which frame that is; it holds a cut for a post dated from its required_from.
+            receipt['opening'], receipt['checks']['opening'] = opening_receipt(final, plan['opening'], FPS)
             # A measured sync replaces its missing entry; with no scorer here it stays missing (no placeholder statuses).
             sync_result = receipt['checks']['sync']
             if sync_result['status'] == 'not_run':
@@ -2789,10 +3006,10 @@ def main():
                                     f"(first: '{words['value']['in_zones'][0]['word']}' at {words['value']['in_zones'][0]['at_s']} s)")
             Path(str(final)+'.validation.json').write_text(json.dumps(receipt,indent=2),encoding='utf-8')
         shapes[asp] = {
-            'file': final.name, 'opening': opening_of(intro), 'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],
+            'file': final.name, 'opening': plan['opening'], 'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],
             'total_seconds': tl['total_s'], 'voice_start_seconds': tl['voice_start_s'], 'voice_end_seconds': tl['voice_end_s'],
             'intro': intro and {'source': intro['source'], 'series': intro['series'], 'file': str(intro['file']), 'sha256': intro['sha256'],
-                                'seconds': intro['seconds'], 'own_sound_replaced': intro['own_sound_replaced']},
+                                'clip_sha256': intro['clip_sha256'], 'seconds': intro['seconds'], 'own_sound_replaced': intro['own_sound_replaced']},
             'music': cut_audio['music'], 'voice_gain_db': round(voice_gain, 2), 'loudness': loudness, 'episode': said,
             'srt': f"{cfg['name']}-{asp}.srt", 'warnings': warnings,
             **({'words': {'status': words_check['status'], 'summary': words_gate.summary(words_check)}}

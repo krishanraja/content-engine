@@ -90,6 +90,15 @@ class TheShape(Fixture):
         # a sting keeps its open: the ease lands as his first word starts
         sting = bed_shape.timings(5.0, VE, T)
         self.assertEqual((sting['open_end'], sting['bed_from']), (3.5, 5.0))
+        # Behind the 56-frame intro sting on the wide cut (Krish, 2026-11-05: "I think it should go at the start of the
+        # longer wide videos 100%,") his first word lands about 0.12 s after the sting's last frame. The shape is
+        # unchanged: the open holds its 1.5 s and the ease lands at 3.0 s, so it starts in the sting's last 11 frames;
+        # a first word later than 3.0 s moves the ease with it.
+        lead = 56 / 30
+        behind = bed_shape.timings(lead + 0.12, VE + lead, T + lead)
+        self.assertEqual((behind['open_end'], behind['bed_from'], behind['bed_to']), (1.5, 3.0, round(VE + lead, 4)))
+        late = bed_shape.timings(lead + 2.0, VE + lead, T + lead)
+        self.assertEqual((late['open_end'], late['bed_from']), (round(lead + 0.5, 4), round(lead + 2.0, 4)))
 
     def test_quick_edit_envelope_bed_is_three_phases(self):
         bed = self.root / 'qe-bed.wav'
@@ -126,6 +135,24 @@ class TheShape(Fixture):
         self.assertTrue(shape['pass'], shape)
         self.assertLessEqual(shape['direction_changes'], 2)
         self.assertEqual(phases(meter(out.with_suffix('.music.wav')), T), ['loud', 'bed', 'loud'])
+
+    def test_ve_premix_behind_a_56_frame_sting_is_three_phases(self):
+        # The wide cut's stem starts on the sting's first frame: the bed from sample 0, his voice 56 frames in.
+        lead = 56 / 30
+        out = self.root / 've-sting' / 'audio.wav'
+        result = audio.premix(str(self.voice), str(self.track), str(out), 0.0, T + lead, mode='episode_bed',
+                              last_word_end_s=VE + lead, voice_start_s=VS + lead, levels={**LEVELS, 'chapter_lufs': -22},
+                              lifts=[], lead_frames=56)
+        shape = result['bed']['shape']
+        self.assertTrue(shape['pass'], shape)
+        self.assertLessEqual(shape['direction_changes'], 2)
+        self.assertGreaterEqual(shape['open_over_bed_lu'], 6)
+        self.assertEqual(result['lead_frames'], 56)
+        rows = meter(out.with_suffix('.music.wav'))
+        self.assertEqual(phases(rows, T + lead), ['loud', 'bed', 'loud'])
+        body = sorted(m for t, m, _ in rows if 10 <= t <= 80)
+        self.assertGreaterEqual(min(m for t, m, _ in rows if 0.4 <= t <= lead) - body[len(body) // 2], 6,
+                                'loud under the whole sting')
 
     def test_ve_cannot_make_a_ducked_bed(self):
         with self.assertRaises(ValueError) as caught:
