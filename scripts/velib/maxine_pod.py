@@ -39,8 +39,7 @@ API = 'https://rest.runpod.io/v1'
 GPU = 'NVIDIA RTX A5000'
 # Any of these will do (RTX with Tensor cores, which Maxine needs); RunPod gives the first with free stock. Run
 # 42072590168 (5 Nov) found no A5000 at all. The cap is re-checked against the pod's own costPerHr either way.
-GPUS = [GPU, 'NVIDIA RTX A4000', 'NVIDIA RTX A4500', 'NVIDIA RTX A6000', 'NVIDIA GeForce RTX 4090',
-        'NVIDIA GeForce RTX 3090', 'NVIDIA L4', 'NVIDIA RTX 4000 Ada Generation']
+GPUS = ['NVIDIA RTX A4000', 'NVIDIA RTX A4500', GPU, 'NVIDIA L4', 'NVIDIA RTX 4000 Ada Generation']   # cheapest first; run 42081572246 was handed a $0.89/h 4090
 RATE_USD = 0.27                       # Secure Cloud, as listed on 5 Nov 2026; the pod's own costPerHr is re-checked
 IMAGE = 'nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04'
 PORT = 8000
@@ -317,6 +316,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog='maxine_pod')
     parser.add_argument('take'); parser.add_argument('out_dir')
     parser.add_argument('--yes', action='store_true'); parser.add_argument('--max-usd', type=float, default=MAX_USD)
+    parser.add_argument('--max-minutes', type=int, default=MAX_MINUTES)
     args = parser.parse_args(argv)
     import signal  # noqa: PLC0415
     signal.signal(signal.SIGTERM, _stop)
@@ -325,7 +325,7 @@ def main(argv=None) -> int:
         print(f'maxine_pod: terminated {len(gone)} eyeline pod(s): {", ".join(gone) or "none running"}')
         return 0
     try:
-        receipt = run(args.take, args.out_dir, yes=args.yes, max_usd=args.max_usd)
+        receipt = run(args.take, args.out_dir, yes=args.yes, max_usd=args.max_usd, max_minutes=args.max_minutes)
     except Refused as error:
         print(f'maxine_pod: refused: {error}')
         return 1

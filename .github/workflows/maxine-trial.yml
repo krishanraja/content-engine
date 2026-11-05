@@ -21,6 +21,10 @@ on:
         description: 'Refuse a run that could cost more than this (US dollars)'
         required: true
         default: '1.00'
+      max_minutes:
+        description: 'Stop the pod after this many minutes'
+        required: false
+        default: '30'
       confirm:
         description: 'Type exactly: spend approved by Krish'
         required: true
@@ -61,7 +65,8 @@ jobs:
           NGC_API_KEY: ${{ secrets.NGC_API_KEY }}
           TAKE: ${{ inputs.take }}
           MAX_USD: ${{ inputs.max_usd }}
-        run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD"
+          MAX_MINUTES: ${{ inputs.max_minutes }}
+        run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD" --max-minutes "${MAX_MINUTES:-30}"
       - name: Keep the redirected copy and the receipt (3 days)
         if: always()
         uses: actions/upload-artifact@v4
