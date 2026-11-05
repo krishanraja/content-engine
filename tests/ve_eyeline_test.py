@@ -40,12 +40,13 @@ def reading(iris_dx=0.0, iris_dy=0.0, blink=0.0, yaw=0.0, open_=0.3, face=True):
 
 
 class Decide(unittest.TestCase):
-    def test_lock_takes_every_open_frame_and_never_a_blink_or_a_turn(self):
+    def test_lock_leaves_blinks_to_maxine_and_never_takes_a_turn(self):
         readings = [reading(blink=0.9) if 20 <= i < 24 else reading(yaw=40) if 40 <= i < 44 else reading()
                     for i in range(60)]
         locked = eyeline.plan(readings, lock=True)
         free = eyeline.plan(readings)
-        self.assertTrue(all(locked[i]['strength'] == 0 for i in list(range(20, 24)) + list(range(40, 44))))
+        self.assertTrue(all(locked[i]['strength'] == 0 for i in range(40, 44)))           # head turned: his own eyes
+        self.assertTrue(all(locked[i]['strength'] == 1 for i in range(20, 24)))           # blink: Maxine's (detect_closure)
         self.assertTrue(all(locked[i]['strength'] == 1 for i in range(0, 10)))
         self.assertTrue(all(free[i]['strength'] == 0 for i in range(0, 10)))   # unlocked: on the lens, untouched
 
@@ -200,8 +201,8 @@ class Media(unittest.TestCase):
         other = self.dir / 'other.mp4'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(self.take), '-vf', 'negate', '-c:v', 'libx264',
                         '-pix_fmt', 'yuv420p', '-an', str(other)], check=True)
-        # Maxine locks gaze itself, so its eyes are taken on every open, frontal frame and never at a blink.
-        readings = self.scaled([reading(blink=0.9) if 40 <= i < 46 else reading(iris_dx=9) if 10 <= i < 30 else reading()
+        # Maxine locks gaze (and handles blinks) itself, so its eyes are taken on every frontal frame, never a turn.
+        readings = self.scaled([reading(yaw=40) if 40 <= i < 46 else reading(iris_dx=9) if 10 <= i < 30 else reading()
                                 for i in range(60)])
         receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(other), readings=readings)
         self.assertEqual(receipt['problems'], [])
