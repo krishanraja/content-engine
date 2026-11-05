@@ -56,14 +56,25 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: What can this NGC key reach (take=entitlement-check; free, no GPU)
+        if: ${{ inputs.take == 'entitlement-check' }}
+        env:
+          NGC_API_KEY: ${{ secrets.NGC_API_KEY }}
+        run: |
+          set +e
+          echo "$NGC_API_KEY" | docker login nvcr.io -u '$oauthtoken' --password-stdin >/dev/null 2>&1 && echo "nvcr.io login: ok" || echo "nvcr.io login: refused"
+          for image in nim/nvidia/maxine-eye-contact:latest nvidia/maxine/maxine-eye-contact:latest; do
+            if docker manifest inspect "nvcr.io/$image" >/dev/null 2>&1; then echo "pull allowed: $image"; else echo "pull refused: $image"; fi
+          done
+          docker logout nvcr.io >/dev/null 2>&1
       - name: Fetch the take from the recordings store
-        if: ${{ inputs.take != 'cleanup' }}
+        if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' }}
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           TAKE: ${{ inputs.take }}
         run: python scripts/post-pack/recording.py get "$TAKE" --out "$RUNNER_TEMP/take"
       - name: Cut a short clip for a fast trial
-        if: ${{ inputs.take != 'cleanup' && inputs.clip_seconds != '0' }}
+        if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' && inputs.clip_seconds != '0' }}
         env:
           TAKE: ${{ inputs.take }}
           CLIP: ${{ inputs.clip_seconds }}
@@ -77,7 +88,7 @@ jobs:
           cp "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine/clip.$TAKE"
           ls -la "$RUNNER_TEMP/take/$TAKE"
       - name: Run Maxine on one rented pod
-        if: ${{ inputs.take != 'cleanup' }}
+        if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' }}
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           NGC_API_KEY: ${{ secrets.NGC_API_KEY }}
