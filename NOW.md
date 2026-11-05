@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":2,"current_as_of":"2026-11-05","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 4 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
+- the Maxine pod runner (scripts/velib/maxine_pod.py) now gets past RunPod: it names its client (Cloudflare refused Python's default agent, error 1010), waits for the pod's own server rather than the proxy's boot page, and moves the take in 32 MB pieces under Cloudflare's 100 MB cap. Two trial runs so far cost $0.0032 in all; run 42072590168 is the third, within the $1.00 cap. (2026-11-05)
 - `ve eyeline --backend maxine --pod` can run NVIDIA Maxine Eye Contact on one rented RunPod RTX A5000 (velib/maxine_pod.py: priced first, capped at 60 min and $1.00, the pod always terminated) and lay its eyes onto the take only where the plan says. Tested on synthetic media and a fake RunPod only; nothing rented yet. Krish, 2026-11-05, chose Maxine AR SDK on a RunPod Secure Cloud RTX A5000. (2026-11-05)
 - ve now has a listen pass, built and tested on synthetic sound and clocks, not yet run on his take. `ve hear` picks up the hesitations, broken words and stutters the transcript leaves out, and conform cuts them like any other flub. Every join must now sit where the sound is quiet, so no cut lands on a sound nobody wrote down. Conform also prefers the reading that sounded right. His lexicon (`config/voice/lexicon.json`, seeded from quick-edit's fixes) learns names, mishearings, hesitations and the words he adds. `ve voice profile` measures his voice for a later clone check. Krish, 2026-11-05: "Yes, build it - kind of like Wispr Flow, it should also learn me as well as the common words that I say" and "Just make this engine as high quality as possible." (2026-11-05)
 - every good-news carousel now ends on one fixed close (Krish, 5 Nov 2026): that week's five people in mint rings, then "If this inspires you to / MAKE THE WORLD BETTER / by combining your ideas + AI," and "follow for more" above the mark. It is recorded in docs/CAROUSEL-STANDARD.md; Growth's kit holds it under a test. Saturday 7 Nov's final deck carries it. (2026-11-05)
@@ -50,6 +51,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-05 a refused or failed Maxine pod now names RunPod's own error in its receipt, and costs nothing when no pod was made.
 - 2026-11-05 the engine can use a rented GPU for Maxine Eye Contact once Krish adds the keys and approves the spend.
 - 2026-11-05 ve hears fumbles the transcript leaves out and learns his words (Krish, 5 Nov 2026).
 - 2026-11-05 no carousel card carries a card number or page count, so cards can be cut at will (Krish, 5 Nov 2026).
@@ -65,7 +67,7 @@ Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everyt
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-05): Krish adds RUNPOD_API_KEY and NGC_API_KEY as environment variables and says yes to about $0.28; a new session then runs the trial on ai-music-short.mp4.
+- Next (2026-11-05): read run 42072590168's receipt; on success run ve eyeline --backend maxine --maxine-copy, measure the iris shift, and get a blind review of the strips.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
