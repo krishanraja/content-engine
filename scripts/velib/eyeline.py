@@ -95,6 +95,7 @@ class Maxine(Backend):
     returns a redirected copy of the take. This pass then takes Maxine's eyes only, only where the plan says to, so
     blinks, turned heads, frames on the lens, the sound and every frame time stay his."""
     name = 'maxine'
+    lock = True              # Maxine aims the eyes at the lens on every frame; eyeline only guards blinks and turns
     frame_source = True
 
     def __init__(self, copy: Path | str | None = None):
@@ -220,8 +221,12 @@ def eye_angles(eye: list, iris: tuple) -> tuple[float, float]:
     return v, h
 
 
-def plan(readings: list[dict]) -> list[dict]:
-    """Per frame and eye: the correction angle and strength, from pass 1's readings. Pure."""
+def plan(readings: list[dict], lock: bool = False) -> list[dict]:
+    """Per frame and eye: the correction angle and strength, from pass 1's readings. Pure.
+
+    lock: the backend locks gaze to the lens itself (Maxine), so every open, frontal frame takes it at full strength.
+    His median is not the lens on a teleprompter take: his eyes sweep about 7 deg as he reads (5 Nov 2026, run
+    42093095843: Maxine cut that spread from 7.0 to 2.9 deg), so "near his median" must not mean "leave alone"."""
     import numpy as np  # noqa: PLC0415
     n = len(readings)
     face = np.array([bool(r.get('face')) for r in readings])
@@ -260,6 +265,9 @@ def plan(readings: list[dict]) -> list[dict]:
             out[i]['why'] = 'head turned'
         elif r.get('edge'):
             out[i]['why'] = 'eye at the frame edge'
+        elif lock:
+            target[i] = 1.0
+            out[i]['why'] = 'locked to the lens'
         elif size <= ON_LENS_DEG:
             out[i]['why'] = 'on the lens'
         else:
@@ -531,7 +539,7 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                          f'only), so it writes only inside {EVAL_DIR}')
     info = probe(media)
     readings = read(media, info) if readings is None else readings
-    decided = plan(readings)
+    decided = plan(readings, lock=getattr(backend, 'lock', False))
     out_dir.mkdir(parents=True, exist_ok=True)
     target = out_dir / f'{media.stem}.eyeline.mp4'
     if qc is not None:
