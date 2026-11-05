@@ -79,6 +79,18 @@ class Decide(unittest.TestCase):
         self.assertGreater(plan[23]['strength'], 0)
         self.assertLess(plan[23]['strength'], 1)            # easing back in after the blink
 
+    def test_hdr_variable_rate_and_rotation_are_read_from_the_stream(self):
+        sdr = {'width': 1080, 'height': 1920, 'r_frame_rate': '30/1', 'avg_frame_rate': '30/1', 'pix_fmt': 'yuv420p',
+               'color_transfer': 'bt709', 'color_primaries': 'bt709', 'color_space': 'bt709'}
+        self.assertEqual(eyeline.check_stream(sdr)['width'], 1080)
+        for transfer in ('smpte2084', 'arib-std-b67'):
+            with self.assertRaisesRegex(ValueError, 'HDR'):
+                eyeline.check_stream({**sdr, 'color_transfer': transfer})
+        with self.assertRaisesRegex(ValueError, 'constant-rate master'):
+            eyeline.check_stream({**sdr, 'avg_frame_rate': '2997/100'})
+        turned = eyeline.check_stream({**sdr, 'width': 1920, 'height': 1080, 'side_data_list': [{'rotation': -90}]})
+        self.assertEqual((turned['width'], turned['height'], turned['rotation']), (1080, 1920, -90))
+
     def test_maxine_names_the_gpu_it_needs(self):
         with self.assertRaisesRegex(RuntimeError, 'RTX'):
             eyeline.Maxine()
@@ -145,13 +157,6 @@ class Media(unittest.TestCase):
             name, restricted = 'private', True
         with self.assertRaisesRegex(ValueError, 'private test only'):
             eyeline.run(self.take, self.dir / 'out', Private(), readings=[{'face': False}] * 60)
-
-    def test_hdr_is_refused_before_anything_is_written(self):
-        hdr = self.dir / 'hdr.mp4'
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(self.take), '-c:v', 'libx264', '-color_trc', 'smpte2084',
-                        '-c:a', 'copy', str(hdr)], check=True)
-        with self.assertRaisesRegex(ValueError, 'HDR'):
-            eyeline.probe(hdr)
 
     @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
     def test_a_model_that_changes_nothing_is_refused_and_its_file_deleted(self):
