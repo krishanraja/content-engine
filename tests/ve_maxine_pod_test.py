@@ -26,12 +26,13 @@ class FakeRunPod:
         self.calls.append((method, url))
         if method == 'POST' and url.endswith('/pods'):
             body = kw['body']
-            assert body['cloudType'] == 'SECURE' and body['gpuTypeIds'][0] == maxine_pod.GPU and len(body['gpuTypeIds']) > 1
+            assert body['cloudType'] == 'SECURE' and body['gpuTypeIds'] == maxine_pod.GPUS and body['gpuTypeIds'][0] == 'NVIDIA RTX A4000'
             assert 'EYE_TOKEN' in body['env']
             return {'id': 'pod123', 'costPerHr': self.rate}
         if method == 'DELETE':
             return {}
-        if method == 'PUT':
+        if method == 'POST' and url.endswith('/in.mp4'):
+            assert 'X-Offset' in kw.get('headers', {})
             return hashlib.sha256(kw['data']).hexdigest().encode()
         if method == 'POST':
             return {}
@@ -152,10 +153,10 @@ class PodTest(unittest.TestCase):
         def refuse(method, url, **kw):
             raise urllib.error.HTTPError(url, 403, 'Forbidden', {}, io.BytesIO(b'error code: 1010'))
 
-        with self.assertRaises(urllib.error.HTTPError):
+        with self.assertRaises(maxine_pod.Refused):
             self.go(refuse)
         saved = json.loads((self.dir / 'out' / 'maxine-pod.take.json').read_text())
-        self.assertEqual(saved['state'], 'failed')
+        self.assertEqual(saved['state'], 'refused')
         self.assertIn('HTTP 403', saved['reason'])
         self.assertIn('error code: 1010', saved['reason'])
         self.assertNotIn('terminated', saved)                 # no pod was ever created
@@ -177,6 +178,119 @@ class PodTest(unittest.TestCase):
         receipt = self.go(proxy)
         self.assertEqual(receipt['state'], 'done')
         self.assertTrue(fake.deleted())
+
+    def test_no_free_card_on_secure_falls_back_to_community(self):
+        import io
+        import urllib.error
+        fake, clouds = FakeRunPod(), []
+
+        def busy(method, url, **kw):
+            if method == 'POST' and url.endswith('/pods'):
+                clouds.append(kw['body']['cloudType'])
+                if kw['body']['cloudType'] == 'SECURE':
+                    raise urllib.error.HTTPError(url, 500, 'x', {}, io.BytesIO(b'{"error":"create pod: There are no instances currently available"}'))
+                kw['body'] = dict(kw['body'], cloudType='SECURE')      # the fake only knows SECURE
+            return fake(method, url, **kw)
+
+        receipt = self.go(busy)
+        self.assertEqual(clouds, ['SECURE', 'COMMUNITY'])
+        self.assertEqual((receipt['state'], receipt['cloud']), ('done', 'COMMUNITY'))
+
+    def test_no_card_anywhere_is_asked_again_then_refused_without_a_pod(self):
+        import io
+        import urllib.error
+        asks = []
+
+        def none(method, url, **kw):
+            asks.append(kw['body']['cloudType'])
+            raise urllib.error.HTTPError(url, 500, 'x', {}, io.BytesIO(b'{"error":"There are no instances currently available"}'))
+
+        with self.assertRaisesRegex(maxine_pod.Refused, 'no RTX card free'):
+            self.go(none)
+        self.assertEqual(len(asks), maxine_pod.GPU_TRIES * len(maxine_pod.CLOUDS))
+        saved = json.loads((self.dir / 'out' / 'maxine-pod.take.json').read_text())
+        self.assertEqual(saved['cost_usd'], 0.0)
+
+    def test_the_nim_route_waits_for_ready_runs_the_client_and_terminates(self):
+        import io
+        import types
+        import urllib.error
+        calls, polls = [], {'n': 0}
+
+        def api(method, url, **kw):
+            calls.append((method, url))
+            if url.endswith('/containerregistryauth') and method == 'GET':
+                return []
+            if url.endswith('/containerregistryauth'):
+                assert kw['body']['username'] == '$oauthtoken'
+                return {'id': 'auth1'}
+            if method == 'POST' and url.endswith('/pods'):
+                assert kw['body']['imageName'] == maxine_pod.NIM_IMAGE and kw['body']['containerRegistryAuthId'] == 'auth1'
+                return {'id': 'pod9', 'costPerHr': 0.27}
+            if method == 'GET' and url.endswith('/pods/pod9'):
+                polls['n'] += 1
+                return {'publicIp': '1.2.3.4', 'portMappings': {'8001': 40123}} if polls['n'] > 1 else {}
+            if url.endswith('/v1/metadata'):
+                if polls['n'] < 3:
+                    raise urllib.error.HTTPError(url, 503, 'x', {}, io.BytesIO(b''))
+                return {}
+            if method == 'DELETE':
+                return {}
+            raise AssertionError(url)
+
+        def client(cmd):
+            assert cmd[cmd.index('--target') + 1] == '1.2.3.4:40123'
+            Path(cmd[cmd.index('--output') + 1]).write_bytes(b'redirected')
+            return types.SimpleNamespace(returncode=0, stdout='ok', stderr='')
+
+        receipt = maxine_pod.run_nim(self.take, self.dir / 'out', '/nim-clients/eye-contact', yes=True, call=api,
+                                     sleep=lambda s: None, clock=Clock(), run_client=client,
+                                     tcp_open=lambda t: t == '1.2.3.4:40123', **self.keys)
+        self.assertEqual(receipt['state'], 'done')
+        self.assertIn(('DELETE', f'{maxine_pod.API}/pods/pod9'), calls)
+        polls['n'] = 5
+        again = maxine_pod.run_nim(self.take, self.dir / 'out2', '/nim-clients/eye-contact', yes=True, call=api,
+                                   sleep=lambda s: None, clock=Clock(), run_client=client,
+                                   tcp_open=lambda t: t == '1.2.3.4:40123',
+                                   variants={'ess2': ['--eye-size-sensitivity', 2], 'ess4': ['--eye-size-sensitivity', 4]},
+                                   **self.keys)
+        self.assertEqual(sorted(again['variants']), ['ess2', 'ess4'])
+        self.assertTrue((self.dir / 'out2' / 'take.maxine.ess4.mp4').is_file())
+        self.assertNotIn('test-ngc', json.dumps(receipt))
+
+    def test_a_pod_whose_nim_never_comes_up_is_replaced_and_charged(self):
+        import types
+        made, deleted = [], []
+
+        def api(method, url, **kw):
+            if url.endswith('/containerregistryauth'):
+                return [{'name': maxine_pod.REGISTRY_AUTH, 'id': 'auth1'}] if method == 'GET' else {'id': 'auth1'}
+            if method == 'POST' and url.endswith('/pods'):
+                made.append(f'pod{len(made)}')
+                return {'id': made[-1], 'costPerHr': 0.3}
+            if method == 'GET' and '/pods/' in url:
+                return {'publicIp': '1.2.3.4', 'portMappings': {'8001': 40123}}
+            if url.endswith('/v1/metadata'):
+                if len(made) < 2:
+                    raise OSError('down')
+                return {}
+            if method == 'DELETE':
+                deleted.append(url.rsplit('/', 1)[1])
+                return {}
+            raise AssertionError(url)
+
+        def client(cmd):
+            Path(cmd[cmd.index('--output') + 1]).write_bytes(b'x')
+            return types.SimpleNamespace(returncode=0, stdout='', stderr='')
+
+        receipt = maxine_pod.run_nim(self.take, self.dir / 'out', '/c', yes=True, call=api, sleep=lambda s: None,
+                                     clock=Clock(step=30.0), run_client=client,
+                                     tcp_open=lambda t: len(made) >= 2, max_usd=5, **self.keys)
+        self.assertEqual(receipt['state'], 'done')
+        self.assertEqual(made, ['pod0', 'pod1'])
+        self.assertEqual(deleted, ['pod0', 'pod1'])
+        self.assertEqual(len(receipt['attempts']), 1)
+        self.assertGreater(receipt['cost_usd'], receipt['attempts'][0]['cost_usd'])
 
 
 if __name__ == '__main__':

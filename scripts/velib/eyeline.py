@@ -65,6 +65,17 @@ MOVED_MIN = 0.5             # mean change in grey levels inside the mask that co
 # the subject's right eye (image left) 36..41 and left eye (image right) 42..47.
 EYE_POINTS = {'R': [33, 160, 158, 133, 153, 144], 'L': [362, 385, 387, 263, 373, 380]}
 IRIS = {'R': 468, 'L': 473}
+# The 16-point lid contour of each eye (MediaPipe face mesh), in order around the opening: the aperture blend keeps
+# his own lids and lashes and takes only what is inside them from a redirected copy.
+EYE_CONTOUR = {'R': [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246],
+               'L': [362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385, 384, 398]}
+APERTURE_SHRINK = 0.97      # the blend stops just inside his lid line ...
+APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's width
+IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
+AIM_KEEP = 0.15             # share of his own eye movement kept on top of the lens aim, so the eyes stay alive
+AIM_GAIN = 1.0             # tried 1.4: a hard glance read more frontal but the far iris smeared (5 Nov, 5.50 s)
+AIM_MAX = 0.6               # never move an iris further than this share of the eye's width
+DETAIL_MAX = 1.6            # never sharpen a redirected eye's detail by more than this
 FP_SEQ = {'L': [3, 2, 1, 0, 5, 4], 'R': [0, 1, 2, 3, 4, 5]}   # WangWilly's anchor-map order
 
 
@@ -95,6 +106,8 @@ class Maxine(Backend):
     returns a redirected copy of the take. This pass then takes Maxine's eyes only, only where the plan says to, so
     blinks, turned heads, frames on the lens, the sound and every frame time stay his."""
     name = 'maxine'
+    aperture = True          # take only what is inside his own lids: Maxine re-draws lids a little lower and softer
+    lock = True              # Maxine aims the eyes at the lens on every frame; eyeline only guards blinks and turns
     frame_source = True
 
     def __init__(self, copy: Path | str | None = None):
@@ -220,8 +233,12 @@ def eye_angles(eye: list, iris: tuple) -> tuple[float, float]:
     return v, h
 
 
-def plan(readings: list[dict]) -> list[dict]:
-    """Per frame and eye: the correction angle and strength, from pass 1's readings. Pure."""
+def plan(readings: list[dict], lock: bool = False) -> list[dict]:
+    """Per frame and eye: the correction angle and strength, from pass 1's readings. Pure.
+
+    lock: the backend locks gaze to the lens itself (Maxine), so every open, frontal frame takes it at full strength.
+    His median is not the lens on a teleprompter take: his eyes sweep about 7 deg as he reads (5 Nov 2026, run
+    42093095843: Maxine cut that spread from 7.0 to 2.9 deg), so "near his median" must not mean "leave alone"."""
     import numpy as np  # noqa: PLC0415
     n = len(readings)
     face = np.array([bool(r.get('face')) for r in readings])
@@ -235,6 +252,10 @@ def plan(readings: list[dict]) -> list[dict]:
         pts = np.array([r['eyes'][side] if r.get('face') else [[0, 0]] * 6 for r in readings], dtype=np.float64)
         iris = np.array([r['iris'][side] if r.get('face') else [0, 0] for r in readings], dtype=np.float64)
         sm_pts = smooth(pts, SMOOTH_SIGMA / 2, face)
+        has_contour = all('contour' in r for r in readings if r.get('face'))
+        if has_contour:
+            con = np.array([r['contour'][side] if r.get('face') else [[0, 0]] * 16 for r in readings], dtype=np.float64)
+            sm_con = smooth(con, SMOOTH_SIGMA / 2, face)
         raw = np.array([eye_angles(pts[i].tolist(), iris[i].tolist()) if face[i] else (np.nan, np.nan) for i in range(n)])
         med = np.nanmedian(raw, axis=0)
         off = smooth(np.where(face[:, None], raw - med, 0.0), SMOOTH_SIGMA, face)
@@ -245,6 +266,8 @@ def plan(readings: list[dict]) -> list[dict]:
             if face[i]:
                 out[i]['eyes'][side] = {'points': sm_pts[i].tolist(), 'off': [round(float(off[i, 0]), 2), round(float(off[i, 1]), 2)],
                                         'open': round(float(openness[i]), 3)}
+                if has_contour:
+                    out[i]['eyes'][side]['contour'] = sm_con[i].tolist()
     opens = [min(e['open'] for e in out[i]['eyes'].values()) for i in range(n) if out[i]['eyes']]
     closing = max(OPEN_MIN, OPEN_REL * float(np.median(opens))) if opens else OPEN_MIN
     target = np.zeros(n)
@@ -254,12 +277,18 @@ def plan(readings: list[dict]) -> list[dict]:
         r = readings[i]
         eyes = out[i]['eyes']
         size = max(max(abs(a) for a in e['off']) for e in eyes.values())
-        if r.get('blink', 0) >= BLINK or min(e['open'] for e in eyes.values()) < closing:
+        if lock and not turned[i] and not r.get('edge'):
+            target[i] = 1.0                           # Maxine handles blinks itself (detect_closure); a gap here splits one
+            out[i]['why'] = 'locked to the lens'      # blink into two (run 42103122907: 3 blinks became 4)
+        elif r.get('blink', 0) >= BLINK or min(e['open'] for e in eyes.values()) < closing:
             out[i]['why'] = 'blink'
         elif turned[i]:
             out[i]['why'] = 'head turned'
         elif r.get('edge'):
             out[i]['why'] = 'eye at the frame edge'
+        elif lock:
+            target[i] = 1.0
+            out[i]['why'] = 'locked to the lens'
         elif size <= ON_LENS_DEG:
             out[i]['why'] = 'on the lens'
         else:
@@ -364,6 +393,166 @@ def blend(frame, source, geo, strength: float):
     other = source[y0:y1, x0:x1].astype(np.float32)
     out = frame.copy()
     out[y0:y1, x0:x1] = np.clip(np.rint(region * (1 - alpha) + other * alpha), 0, 255).astype(np.uint8)
+    return out
+
+
+def _eye_axes(eye):
+    import numpy as np  # noqa: PLC0415
+    p = np.asarray(eye, dtype=np.float64)
+    a, b = (p[0], p[3]) if p[0][0] <= p[3][0] else (p[3], p[0])
+    width = float(np.hypot(*(b - a))) or 1e-6
+    u = (b - a) / width
+    v = np.array([-u[1], u[0]])
+    centre = (p[0] + p[3]) / 2
+    return centre, u, v, width
+
+
+def aims(readings: list[dict], there: list[dict], decided: list[dict]) -> list[dict]:
+    """Where each iris should be, per frame: Maxine's lock point, calibrated once per eye in that eye's own geometry
+    (the median over the take of where Maxine put the iris, along and across the eye, in eye widths), laid on his eye
+    in each frame, plus AIM_KEEP of his own movement about his own median, at most AIM_MAX of the eye's width away.
+    Maxine on its own corrects a hard glance only partway (it fades out past 20 deg) and the two eyes can disagree
+    (blind review, 5 Nov, 5.50 s); the calibrated aim corrects it fully and keeps both eyes on one point."""
+    import numpy as np  # noqa: PLC0415
+    out = [dict() for _ in readings]
+    for side in IRIS:
+        mine, maxi = [], []
+        for i, (r, t) in enumerate(zip(readings, there)):
+            if r.get('face') and t.get('face') and decided[i]['strength'] > 0:
+                c, u, v, w = _eye_axes(r['eyes'][side])
+                for rows, keep in ((r, mine), (t, maxi)):
+                    d = np.asarray(rows['iris'][side]) - c
+                    keep.append((d @ u / w, d @ v / w))
+        if len(maxi) < 5:
+            continue
+        lens, own = np.median(np.array(maxi), 0), np.median(np.array(mine), 0)
+        for i, r in enumerate(readings):
+            if not r.get('face') or 'iris_r' not in r:
+                continue
+            if r.get('blink', 0) >= BLINK * 0.8 or decided[i]['eyes'].get(side, {}).get('open', 1) < OPEN_MIN:
+                continue                                  # a closing eye keeps its own iris: moving it split a blink
+            c, u, v, w = _eye_axes(r['eyes'][side])
+            d = np.asarray(r['iris'][side]) - c
+            here = np.array((d @ u / w, d @ v / w))
+            want = lens + AIM_KEEP * (here - own)
+            step = (want - here) * np.array([AIM_GAIN, 1.0])
+            size = float(np.hypot(*step))
+            if size > AIM_MAX:
+                step *= AIM_MAX / size
+            target = np.asarray(r['iris'][side]) + w * (step[0] * u + step[1] * v)
+            out[i][side] = (float(target[0]), float(target[1]), r['iris_r'][side])
+    return out
+
+
+def iris_mask(light, inside, d_here, r):
+    """His iris as it really is in this frame: inside his opening, near the landmarker's iris, the pixels darker than
+    the sclera around them (Otsu on lightness), the one blob at the iris, its holes (the catchlight) filled. A circle
+    from the landmarker's centre and radius is a few pixels off: it carried a pale sclera rim and dropped the dark
+    outer iris (blind review, 5 Nov). Falls back to that circle when the segment is not iris-shaped."""
+    import cv2  # noqa: PLC0415
+    import numpy as np  # noqa: PLC0415
+    near = inside & (d_here < 1.5)
+    circle = inside & (d_here < 1.0)
+    vals = light[near]
+    if vals.size < 20:
+        return circle
+    t = cv2.threshold(np.clip(vals, 0, 255).astype(np.uint8).reshape(-1, 1), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[0]
+    dark = (near & (light < t)).astype(np.uint8)
+    dark = cv2.morphologyEx(dark, cv2.MORPH_OPEN, np.ones((2, 2), np.uint8))
+    n, labels = cv2.connectedComponents(dark)
+    if n < 2:
+        return circle
+    centre = np.unravel_index(np.argmin(np.where(near, d_here, 9)), d_here.shape)
+    pick = labels[centre] or (1 + int(np.argmax([(labels == k).sum() for k in range(1, n)])))
+    blob = (labels == pick).astype(np.uint8)
+    filled = blob.copy()
+    contours, _ = cv2.findContours(blob, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(filled, contours, -1, 1, -1)              # the catchlight is part of the iris
+    area, disc = filled.sum(), math.pi * r * r
+    if not (0.25 * disc <= area <= 1.8 * disc):
+        return circle
+    return (filled > 0) & inside & (d_here < 1.35)
+
+
+def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris_there=None):
+    """His eye from `source` laid onto `frame` only inside his own lid line (`contour`, 16 points, full-frame pixels),
+    shrunk a little and feathered, so his lids, lashes and skin stay his. Inside, the source's colour is matched to
+    the original eye's and the detail it lost to re-rendering is put back (at most DETAIL_MAX). Strength 0 returns
+    the frame itself."""
+    import cv2  # noqa: PLC0415
+    import numpy as np  # noqa: PLC0415
+    if strength <= 0:
+        return frame
+    c = np.asarray(contour, dtype=np.float64)
+    width = float(np.hypot(*(c.max(0) - c.min(0)))) or 1.0
+    pad = int(math.ceil(0.3 * width)) + 2
+    x0, y0 = int(math.floor(c[:, 0].min())) - pad, int(math.floor(c[:, 1].min())) - pad
+    x1, y1 = int(math.ceil(c[:, 0].max())) + pad, int(math.ceil(c[:, 1].max())) + pad
+    if x0 < 0 or y0 < 0 or x1 > frame.shape[1] or y1 > frame.shape[0]:
+        return frame
+    centre = c.mean(0)
+    poly = centre + (c - centre) * APERTURE_SHRINK - [x0, y0]
+    hard = np.zeros((y1 - y0, x1 - x0), np.uint8)
+    cv2.fillPoly(hard, [np.round(poly * 16).astype(np.int32)], 1, lineType=cv2.LINE_AA, shift=4)
+    if hard.sum() < 6:
+        return frame
+    sigma = max(0.6, APERTURE_FEATHER * width)
+    alpha = cv2.GaussianBlur(hard.astype(np.float32), (0, 0), sigma)
+    alpha = np.clip(alpha, 0, 1) * float(strength)
+    region = frame[y0:y1, x0:x1].astype(np.float32)
+    other = source[y0:y1, x0:x1].astype(np.float32)
+    inside = hard > 0
+    lab_o = cv2.cvtColor(region.astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
+    lab_s = cv2.cvtColor(other.astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
+    lab_s += lab_o[inside].mean(0) - lab_s[inside].mean(0)            # same colour as his eye, iris moved or not
+    # The iris itself, matched to his: Maxine re-draws a dark brown iris green-grey (5 Nov, 5.50 s). His iris (where
+    # it was) and Maxine's (where it put it) come from the landmarker with their own radii; Maxine's iris pixels take
+    # his iris's distribution channel by channel (histogram matching), inside a soft disk and his opening only.
+    relocated = False
+    if iris_here is not None and iris_there is not None:
+        (hx, hy, hr), (tx, ty, tr) = iris_here, iris_there
+        ys, xs = np.mgrid[0:y1 - y0, 0:x1 - x0].astype(np.float32)
+        d_here = np.hypot(xs - (hx - x0), ys - (hy - y0)) / max(1.0, hr)
+        d_there = np.hypot(xs - (tx - x0), ys - (ty - y0)) / max(1.0, tr)
+        src = inside & (d_here < 0.85)
+        dst = inside & (d_there < 0.85)
+        if src.sum() > 12 and dst.sum() > 12:
+            w_there = np.clip((1.05 - d_there) / 0.2, 0, 1) * inside
+            fixed = lab_s.copy()
+            for ch in range(3):
+                ref = np.sort(lab_o[..., ch][src])
+                vals = lab_s[..., ch][dst]
+                q = np.interp(np.linspace(0, 1, vals.size), np.linspace(0, 1, ref.size), ref)
+                ranks = np.clip(np.searchsorted(np.sort(vals), lab_s[..., ch], side='left') / max(1, vals.size - 1), 0, 1)
+                fixed[..., ch] = np.interp(ranks, np.linspace(0, 1, q.size), q)
+            lab_s = lab_s * (1 - w_there[..., None]) + fixed * w_there[..., None]
+            # Then his own eye, with only the iris moved to where Maxine aimed it. Maxine's own pixels (its iris drawn
+            # dark brown where his reads grey, its sclera, its lower lids) are not used at all: the base is his eye
+            # with the iris filled in from his own sclera, and his visible iris is laid at Maxine's position inside his
+            # opening, so his lids still cover it (blind review, 5 Nov: halo and wrong-colour iris gave it away).
+            ox, oy = tx - hx, ty - hy
+            region_u8 = np.clip(region, 0, 255).astype(np.uint8)
+            iris = iris_mask(lab_o[..., 0], inside, d_here, hr)
+            hole = cv2.dilate(iris.astype(np.uint8) * 255, np.ones((3, 3), np.uint8), iterations=1)
+            base = cv2.inpaint(region_u8, hole, max(2.0, 0.35 * hr), cv2.INPAINT_TELEA)
+            shift = np.float32([[1, 0, ox], [0, 1, oy]])
+            moved = cv2.warpAffine(region_u8, shift, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+            seen = cv2.GaussianBlur(iris.astype(np.float32), (0, 0), 0.6)
+            seen = cv2.warpAffine(seen, shift, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR)
+            own = np.clip(seen, 0, 1) * inside
+            own = cv2.GaussianBlur(own, (0, 0), 0.5)
+            eye = base.astype(np.float32) * (1 - own[..., None]) + moved.astype(np.float32) * own[..., None]
+            lab_s = cv2.cvtColor(np.clip(eye, 0, 255).astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
+            relocated = True
+    other = cv2.cvtColor(np.clip(lab_s, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32)
+    k = max(0.8, 0.04 * width)
+    hp_o = region - cv2.GaussianBlur(region, (0, 0), k)
+    hp_s = other - cv2.GaussianBlur(other, (0, 0), k)
+    gain = 1.0 if relocated else float(np.clip(np.sqrt((hp_o[inside] ** 2).mean() / max(1e-6, (hp_s[inside] ** 2).mean())), 1.0, DETAIL_MAX))
+    other = other + (gain - 1.0) * hp_s
+    a = alpha[..., None]
+    out = frame.copy()
+    out[y0:y1, x0:x1] = np.clip(np.rint(region * (1 - a) + other * a), 0, 255).astype(np.uint8)
     return out
 
 
@@ -491,6 +680,7 @@ def read(media, info: dict, every: int = 1) -> list[dict]:
     import mediapipe as mp  # noqa: PLC0415
     from mediapipe.tasks.python import BaseOptions, vision  # noqa: PLC0415
     from . import faceflags  # noqa: PLC0415
+    import numpy as np  # noqa: PLC0415
     w, h = info['width'], info['height']
     rw = min(READ_WIDTH, w)
     rh = int(round(h * rw / w / 2)) * 2
@@ -513,6 +703,9 @@ def read(media, info: dict, every: int = 1) -> list[dict]:
             yaw, pitch = faceflags._angles(found.facial_transformation_matrixes[0])  # noqa: SLF001
             row = {'face': True, 'eyes': {s: [px(k) for k in EYE_POINTS[s]] for s in EYE_POINTS},
                    'iris': {s: px(IRIS[s]) for s in IRIS},
+                   'contour': {s: [px(k) for k in EYE_CONTOUR[s]] for s in EYE_CONTOUR},
+                   'iris_r': {s: float(np.mean([math.hypot(px(k)[0] - px(IRIS[s])[0], px(k)[1] - px(IRIS[s])[1])
+                                                for k in range(IRIS[s] + 1, IRIS[s] + 5)])) for s in IRIS},
                    'blink': round(max(shapes.get('eyeBlinkLeft', 0.0), shapes.get('eyeBlinkRight', 0.0)), 3),
                    'yaw': yaw, 'pitch': pitch}
             row['edge'] = any(bbox(eye_frame(row['eyes'][s]), (h, w)) is None for s in EYE_POINTS)
@@ -531,7 +724,7 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                          f'only), so it writes only inside {EVAL_DIR}')
     info = probe(media)
     readings = read(media, info) if readings is None else readings
-    decided = plan(readings)
+    decided = plan(readings, lock=getattr(backend, 'lock', False))
     out_dir.mkdir(parents=True, exist_ok=True)
     target = out_dir / f'{media.stem}.eyeline.mp4'
     if qc is not None:
@@ -542,6 +735,12 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
         if theirs != ours:
             raise ValueError(f'{backend.name}: its copy has {theirs} frames and the take {ours}: frames cannot be matched')
         source = backend.frames_for(info)
+        if getattr(backend, 'aperture', False):
+            there = read(backend.copy, info)          # where the redirected copy put each iris
+            aimed = aims(readings, there, decided)
+        else:
+            there = None
+            aimed = None
     proc = writer(media, target, info, crf)
     counts = {'frames': 0, 'corrected': 0, 'unmoved': 0}
     try:
@@ -551,7 +750,14 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
             other = next(source) if source is not None else None
             if other is not None and d['strength'] > 0 and d['eyes']:
                 for side, eye in d['eyes'].items():
-                    new = blend(new, other, eye_frame(eye['points']), d['strength'])
+                    if eye.get('contour') and getattr(backend, 'aperture', False):
+                        aim = aimed[index].get(side) if aimed and index < len(aimed) else None
+                        mine = readings[index] if readings[index].get('face') and 'iris_r' in readings[index] else None
+                        new = blend_aperture(new, other, eye['contour'], d['strength'],
+                                             (*mine['iris'][side], mine['iris_r'][side]) if mine else None,
+                                             aim)
+                    else:
+                        new = blend(new, other, eye_frame(eye['points']), d['strength'])
                 moved = float(np.abs(new.astype(np.int16) - frame.astype(np.int16)).mean())
                 counts['corrected'] += 1
                 if moved == 0.0 and d['strength'] >= 0.5:
