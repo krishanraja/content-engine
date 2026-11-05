@@ -41,8 +41,11 @@ GPU = 'NVIDIA RTX A5000'
 # Any of these will do (RTX with Tensor cores, which Maxine needs); RunPod gives the first with free stock. Run
 # 42072590168 (5 Nov) found no A5000 at all. The cap is re-checked against the pod's own costPerHr either way.
 GPUS = ['NVIDIA RTX A4000', 'NVIDIA RTX A4500', GPU, 'NVIDIA L4', 'NVIDIA RTX 4000 Ada Generation',
-        'NVIDIA GeForce RTX 3090', 'NVIDIA GeForce RTX 4090', 'NVIDIA RTX A6000']   # cheapest first, then any RTX
-GPU_TRIES, GPU_WAIT_S = 20, 30   # up to 10 min of asking for a card
+        'NVIDIA GeForce RTX 3090', 'NVIDIA GeForce RTX 4090', 'NVIDIA RTX A6000', 'NVIDIA A40', 'NVIDIA L40',
+        'NVIDIA L40S', 'NVIDIA RTX 6000 Ada Generation', 'NVIDIA GeForce RTX 5090', 'NVIDIA GeForce RTX 4080']
+# cheapest first, then any card NVIDIA's Eye Contact NIM support matrix covers (Tensor cores and NVENC/NVDEC);
+# twice in one evening (5 Nov) none of the first eight was free for ten minutes
+GPU_TRIES, GPU_WAIT_S = 40, 30   # up to 20 min of asking for a card; waiting costs nothing
 CLOUDS = ['SECURE', 'COMMUNITY']   # run 42081806896 (5 Nov): Secure had none of the cheap cards; Community is the fallback
 RATE_USD = 0.27                       # Secure Cloud, as listed on 5 Nov 2026; the pod's own costPerHr is re-checked
 IMAGE = 'nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04'
