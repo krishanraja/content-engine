@@ -38,7 +38,8 @@ CORE_CAPS = {'make-piece': 63_000, 'plan-week': 49_000, 'produce-video': 60_000,
 def cap_problems(skills=SKILLS, caps=CORE_CAPS) -> list[str]:
     out = []
     for core in sorted(Path(skills).glob('*/SKILL.md')):
-        name, size = core.parent.name, len(core.read_bytes())
+        # Counted with LF line endings, so a Windows checkout (CRLF) measures the same file as Linux does.
+        name, size = core.parent.name, len(core.read_bytes().replace(b'\r\n', b'\n'))
         cap = caps.get(name)
         if cap is None:
             out.append(f'{name}: SKILL.md has no byte cap; add it to CORE_CAPS in scripts/check_skill_core.py')
