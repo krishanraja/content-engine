@@ -112,6 +112,30 @@ class PodTest(unittest.TestCase):
             self.go(fake, clock=Clock(step=120.0))
         self.assertTrue(fake.deleted())
 
+    def test_a_refused_create_says_what_the_service_said_and_spends_nothing(self):
+        def refused(method, url, **kw):
+            raise maxine_pod.Refused(f'{method} {url} answered HTTP 403: key lacks pod write permission')
+        with self.assertRaisesRegex(maxine_pod.Refused, 'HTTP 403: key lacks'):
+            self.go(refused)
+        saved = json.loads((self.dir / 'out' / 'maxine-pod.take.json').read_text())
+        self.assertIn('HTTP 403', saved['reason'])
+        self.assertNotIn('pod', saved)
+        self.assertEqual(saved['cost_usd'], 0.0)
+
+    def test_http_sends_an_agent_and_turns_an_http_error_into_its_reason(self):
+        import io
+        import urllib.error
+        from unittest import mock
+        seen = {}
+
+        def fake_urlopen(request, timeout):
+            seen.update(dict(request.header_items()))
+            raise urllib.error.HTTPError(request.full_url, 403, 'Forbidden', {}, io.BytesIO(b'{"error":"forbidden: read-only key"}'))
+        with mock.patch('urllib.request.urlopen', fake_urlopen):
+            with self.assertRaisesRegex(maxine_pod.Refused, 'HTTP 403: .*read-only key'):
+                maxine_pod.http('POST', f'{maxine_pod.API}/pods', key='test-runpod', body={})
+        self.assertIn('content-engine-eyeline', seen.get('User-agent', ''))
+
     def test_keys_come_from_the_environment_only(self):
         with self.assertRaisesRegex(maxine_pod.Refused, 'environment secrets'):
             maxine_pod.run(self.take, self.dir / 'out', yes=True, call=FakeRunPod(), api_key=None, ngc_key=None)

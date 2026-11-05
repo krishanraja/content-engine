@@ -123,7 +123,9 @@ class Refused(RuntimeError):
 
 def http(method: str, url: str, *, key: str | None = None, token: str | None = None, body=None, data: bytes | None = None,
          timeout: float = 60):
-    headers = {}
+    # RunPod's API sits behind Cloudflare, which can refuse Python's default agent with a bare 403.
+    headers = {'User-Agent': 'content-engine-eyeline/1 (+https://github.com/krishanraja/content-engine)',
+               'Accept': 'application/json'}
     if key:
         headers['Authorization'] = f'Bearer {key}'
     if token:
@@ -132,8 +134,13 @@ def http(method: str, url: str, *, key: str | None = None, token: str | None = N
         data = json.dumps(body).encode()
         headers['Content-Type'] = 'application/json'
     request = urllib.request.Request(url, data=data, method=method, headers=headers)
-    with urllib.request.urlopen(request, timeout=timeout) as response:  # noqa: S310 - fixed https endpoints
-        raw = response.read()
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:  # noqa: S310 - fixed https endpoints
+            raw = response.read()
+    except urllib.error.HTTPError as error:
+        # Keep what the service said (a 403 names its cause), never the request's headers or the key.
+        body = error.read()[:500].decode('utf-8', 'replace') if error.fp else ''
+        raise Refused(f'{method} {url.split("?")[0]} answered HTTP {error.code}: {body.strip() or error.reason}') from error
     try:
         return json.loads(raw) if raw else {}
     except ValueError:
@@ -227,7 +234,8 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
                 receipt['terminate_error'] = f'{type(error).__name__}: terminate pod {pod_id} in the RunPod console now'
         seconds = round(clock() - started, 1)
         receipt['seconds'] = seconds
-        receipt['cost_usd'] = round(seconds / 3600 * receipt.get('rate_usd_per_h', RATE_USD), 4)
+        # Billing starts with a pod: no pod, no cost.
+        receipt['cost_usd'] = round(seconds / 3600 * receipt.get('rate_usd_per_h', RATE_USD), 4) if pod_id else 0.0
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / f'maxine-pod.{media.stem}.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
 
