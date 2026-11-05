@@ -40,6 +40,7 @@ GPU = 'NVIDIA RTX A5000'
 RATE_USD = 0.27                       # Secure Cloud, as listed on 5 Nov 2026; the pod's own costPerHr is re-checked
 IMAGE = 'nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04'
 PORT = 8000
+USER_AGENT = 'content-engine-maxine/1'
 MAX_MINUTES = 60
 MAX_USD = 1.00
 AR_SDK = os.environ.get('MAXINE_AR_SDK', 'nvidia/maxine/maxine_linux_ar_sdk')
@@ -123,7 +124,9 @@ class Refused(RuntimeError):
 
 def http(method: str, url: str, *, key: str | None = None, token: str | None = None, body=None, data: bytes | None = None,
          timeout: float = 60):
-    headers = {}
+    # RunPod's API and pod proxy sit behind Cloudflare, which refuses urllib's default "Python-urllib" agent with a
+    # 403 (error code 1010) before the key is read: the 5 Nov trial run 42067342305 died there. Name ourselves.
+    headers = {'User-Agent': USER_AGENT}
     if key:
         headers['Authorization'] = f'Bearer {key}'
     if token:
@@ -217,6 +220,13 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
     except Refused as error:
         receipt.update(state='refused', reason=str(error))
         raise
+    except urllib.error.HTTPError as error:              # keep the provider's own words: they name the cause
+        try:
+            detail = error.read().decode('utf-8', 'replace')[:500]
+        except Exception:  # noqa: BLE001
+            detail = ''
+        receipt.update(state='failed', reason=f'HTTP {error.code} from {error.url.split("?")[0]}: {detail}'.strip())
+        raise
     finally:
         if pod_id:
             try:
@@ -227,7 +237,8 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
                 receipt['terminate_error'] = f'{type(error).__name__}: terminate pod {pod_id} in the RunPod console now'
         seconds = round(clock() - started, 1)
         receipt['seconds'] = seconds
-        receipt['cost_usd'] = round(seconds / 3600 * receipt.get('rate_usd_per_h', RATE_USD), 4)
+        # Billing starts with a pod: no pod, no cost.
+        receipt['cost_usd'] = round(seconds / 3600 * receipt.get('rate_usd_per_h', RATE_USD), 4) if pod_id else 0.0
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / f'maxine-pod.{media.stem}.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
 

@@ -116,6 +116,66 @@ class PodTest(unittest.TestCase):
         with self.assertRaisesRegex(maxine_pod.Refused, 'environment secrets'):
             maxine_pod.run(self.take, self.dir / 'out', yes=True, call=FakeRunPod(), api_key=None, ngc_key=None)
 
+    def test_every_request_names_itself_past_cloudflare(self):
+        # Run 42067342305 (5 Nov 2026): Cloudflare refused urllib's default agent with 403 error 1010.
+        seen = {}
+
+        class Answer:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+            def read(self):
+                return b'{}'
+
+        def opener(request, timeout=None):
+            seen.update(request.header_items())
+            return Answer()
+
+        real = maxine_pod.urllib.request.urlopen
+        maxine_pod.urllib.request.urlopen = opener
+        try:
+            maxine_pod.http('GET', f'{maxine_pod.API}/pods', key='test-runpod')
+        finally:
+            maxine_pod.urllib.request.urlopen = real
+        self.assertEqual(seen.get('User-agent'), maxine_pod.USER_AGENT)
+        self.assertNotIn('urllib', maxine_pod.USER_AGENT.lower())
+
+    def test_a_refused_request_keeps_the_providers_words_in_the_receipt(self):
+        import io
+        import urllib.error
+
+        def refuse(method, url, **kw):
+            raise urllib.error.HTTPError(url, 403, 'Forbidden', {}, io.BytesIO(b'error code: 1010'))
+
+        with self.assertRaises(urllib.error.HTTPError):
+            self.go(refuse)
+        saved = json.loads((self.dir / 'out' / 'maxine-pod.take.json').read_text())
+        self.assertEqual(saved['state'], 'failed')
+        self.assertIn('HTTP 403', saved['reason'])
+        self.assertIn('error code: 1010', saved['reason'])
+        self.assertNotIn('terminated', saved)                 # no pod was ever created
+        self.assertEqual(saved['cost_usd'], 0.0)
+
+    def test_the_pod_proxy_answering_404_while_booting_is_waited_out(self):
+        # RunPod's proxy answers 404/502 until the pod's server is up: that must be retried, not end the run.
+        import io
+        import urllib.error
+        fake = FakeRunPod()
+        booting = {'left': 2}
+
+        def proxy(method, url, **kw):
+            if url.endswith('/status') and booting['left']:
+                booting['left'] -= 1
+                raise urllib.error.HTTPError(url, 404, 'Not Found', {}, io.BytesIO(b'pod not ready'))
+            return fake(method, url, **kw)
+
+        receipt = self.go(proxy)
+        self.assertEqual(receipt['state'], 'done')
+        self.assertTrue(fake.deleted())
+
 
 if __name__ == '__main__':
     unittest.main()
