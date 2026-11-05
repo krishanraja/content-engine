@@ -851,6 +851,52 @@ def cmd_voice(args) -> int:
         return 1
 
 
+def cmd_eyeline(args) -> int:
+    """Eye gaze correction on a take, before ingest (velib/eyeline.py): his eyes toward the lens where they are off it,
+    and nothing else changed. Krish, 2026-11-05: "For all post-processing of my makeyourmindup videos."
+    """
+    from velib import eyeline, qc_eyeline
+    try:
+        media = Path(args.media)
+        if not media.is_file():
+            raise ValueError(f'{media} is not a file')
+        if args.out:
+            out = Path(args.out)
+        elif args.piece:
+            _spec_file, _spec, directory = _ve_dir(args.piece)
+            out = directory / 'eyeline'
+        else:
+            out = eyeline.EVAL_DIR / media.stem
+        backend = eyeline.BACKENDS[args.backend]()
+        receipt = eyeline.run(media, out, backend, qc=None if args.no_qc else qc_eyeline.QC(), crf=args.crf)
+        reasons = ', '.join(f'{k} {v}' for k, v in sorted(receipt['reasons'].items()))
+        print(f"ve eyeline: {receipt['decision']}: {receipt['corrected_frames']} of {receipt['frames']} frames corrected "
+              f"by {receipt['backend']} ({reasons})")
+        for problem in receipt['problems']:
+            print(f've eyeline: refused: {problem}')
+        qc = receipt.get('qc') or {}
+        for key in ('eye_flicker_ratio', 'seam_ratio'):
+            if key in qc:
+                print(f"ve eyeline: {key} {qc[key]} (proposed limit {qc['limits'][key]}, uncalibrated)")
+        faces = qc.get('faces')
+        if faces:
+            print(f"ve eyeline: blinks {faces['before']['blinks']} before, {faces['after']['blinks']} after; off the lens "
+                  f"{faces['before']['off_lens_s']} s before, {faces['after']['off_lens_s']} s after")
+        for key in ('strips', 'loop'):
+            if key in qc:
+                print(f've eyeline: {qc[key]}')
+        if receipt['decision'] != 'rejected':
+            print(f"ve eyeline: {receipt['output']['path']}")
+            if not backend.restricted:
+                print(f"ve eyeline: next, ingest the corrected take: ve ingest <piece> --take <id> --media {receipt['output']['path']} ...")
+            else:
+                print(f've eyeline: {backend.name} is private evaluation only; its output is never ingested')
+        return 0 if receipt['decision'] != 'rejected' else 1
+    except (OSError, ValueError, KeyError, RuntimeError, ImportError, subprocess.CalledProcessError) as error:
+        print(f've eyeline: {error}', file=sys.stderr)
+        return 1
+
+
 def cmd_said(args) -> int:
     """What he said on the take against the script he read (Krish, 4 Nov 2026: listen to the take, not the Teleprompter)."""
     from velib import said, takes
@@ -1657,6 +1703,13 @@ def main() -> int:
     p = sub.add_parser('faces', help='where on a take he looks off the lens, closes his eyes or turns his head (advisory)')
     p.add_argument('piece'); p.add_argument('--take', required=True)
     p.set_defaults(fn=cmd_faces)
+    p = sub.add_parser('eyeline', help='eye gaze correction on a take before ingest: eyes toward the lens, sound and timing unchanged')
+    p.add_argument('piece', nargs='?', help='the piece, for its ve folder (otherwise .cache/eyeline-eval/<take>)')
+    p.add_argument('--media', required=True); p.add_argument('--out')
+    p.add_argument('--backend', choices=('flx', 'maxine', 'identity'), default='flx',
+                   help='flx: WangWilly/Hsu model, private evaluation only; maxine: needs an NVIDIA RTX GPU')
+    p.add_argument('--crf', type=int, default=12); p.add_argument('--no-qc', action='store_true')
+    p.set_defaults(fn=cmd_eyeline)
     p = sub.add_parser('said', help='what he said on a take against the script he read, and the words the cut should carry')
     p.add_argument('piece'); p.add_argument('--take', required=True)
     p.add_argument('--teleprompter', required=True, help='the script text he read (the Teleprompter script, saved as text)')
