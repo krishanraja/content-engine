@@ -91,6 +91,8 @@ jobs:
         run: python scripts/post-pack/buttons_in_browser.py
       - name: Nothing sits on a cover's words (Krish, 2026-11-04)
         run: python tests/receipt_overlap_test.py
+      - name: All nine series skins drawn, Mon, Wed and Fri, tall and wide, with and without logo rows, nothing on the words or logos (Krish, 2026-11-05)
+        run: python tests/series_skins_test.py
       - name: The board keeps its fixed layout and fits a phone (390px, 44px targets)
         run: python scripts/check_board_layout.py --browser
 

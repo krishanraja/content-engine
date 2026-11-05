@@ -139,10 +139,53 @@ COVER_RECEIPTS = {
 }
 
 
-def not_receipt(r):
+def series_skins():
+    """(ORDER, SHAPES, FIRST_WEEK) of the series skins, read from scripts/pages/skins itself (loaded by its path, so
+    nothing in scripts/pages shadows a module here)."""
+    global _SKINS
+    if _SKINS is None:
+        module = _by_path('series_skins', ROOT / 'scripts' / 'pages' / 'skins' / '__init__.py', package=True)
+        _SKINS = (tuple(module.ORDER), tuple(module.SHAPES), module.FIRST_WEEK)
+    return _SKINS
+
+
+def _by_path(name, path, package=False):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(name, path, submodule_search_locations=[str(path.parent)] if package else None)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+_SKINS = None
+_BRAND = None
+
+
+def look_of(r, post):
+    """What the record's asset wears (brand.series_look): its own "series_look", or, on a record drawn before the
+    drawer wrote one, worked out from the piece the way the drawer does (its subchannel, date and "carries"), so an
+    old record cannot pass a weekly series piece off as anything else. None when it cannot be told."""
+    if isinstance(r.get('series_look'), dict):
+        return r['series_look']
+    post = post or {}
+    subchannel = r.get('subchannel') or post.get('subchannel')
+    if not subchannel:
+        return None
+    global _BRAND
+    if _BRAND is None:
+        _BRAND = _by_path('pages_brand', ROOT / 'scripts' / 'pages' / 'brand.py')
+    try:
+        return _BRAND.series_look(_BRAND.house(), subchannel, post.get('date'), post.get('carries'))
+    except SystemExit:  # an unknown subchannel or a date that is not YYYY-MM-DD: the other checks say so
+        return None
+
+
+def not_receipt(r, post=None):
     """Why a drawer's receipt is not the Receipt, or None. The Receipt is the floor for every cover and
     thumbnail (Ruling, Krish, 2026-11-02: "make this the floor level standard moving forward, inviolable"):
-    a real proof from one of the piece's sources, the wordmark and the logos, and never his face."""
+    a real proof from one of the piece's sources, the wordmark and the logos, and never his face. A weekly
+    series piece's thumbnails wear the week's series skin, and nothing else wears one (Krish, 2026-11-05: "keep
+    all of them and rotate them all at will over the coming weeks"; scripts/pages/skins)."""
     if r.get('template') != 'receipt':
         return 'is not in the Receipt (scripts/pages/receipt.py): draw it again with "proof" in the cover facts'
     proof = r.get('proof') or {}
@@ -150,7 +193,44 @@ def not_receipt(r):
         return 'carries no proof: give the cover facts a "proof" from one of the piece\'s checked sources'
     if r.get('portrait'):
         return 'carries a face: the Receipt never does'
-    return None
+    return not_skinned(r, post)
+
+
+def not_skinned(r, post=None):
+    """Why a drawer's record wears the wrong series skin, or None. A weekly series piece's thumbnail (skins.SHAPES)
+    wears one of the skins (skins.ORDER) from the week of 9 November 2026, when the rotation starts; before it, it
+    may wear none. A cover shape no skin is made for wears none, and a record of one drawn before the skins (no
+    "skin" key) counts as none. Anything that is not a weekly series piece wears none."""
+    look = look_of(r, post)
+    series = bool(look and look.get('series') is True)
+    order, skinned, first_week = series_skins()
+    shapes = {r.get('shape')} | {f.get('shape') for f in r.get('files') or [] if isinstance(f, dict)}
+    made_for = bool(shapes & set(skinned))
+    skin = r.get('skin')
+    if not series:
+        return None if skin is None else f'wears the "{skin}" series skin but is not a weekly series piece: only the week\'s series pieces wear one'
+    if not made_for:
+        if skin is not None:
+            return f'says it wears the "{skin}" series skin on a shape no skin is made for ({", ".join(sorted(map(str, shapes - {None})))})'
+        return None
+    if skin in order:
+        return None
+    if skin is None and before_rotation((post or {}).get('date'), first_week):
+        return None
+    if 'skin' not in r:
+        return ('is a weekly series piece\'s thumbnail drawn before the series skins (its record names no "skin"): '
+                f'redraw it with scripts/pages/build.py --thumbs, which puts on the week\'s skin (one of {", ".join(order)})')
+    return (f'is a weekly series piece\'s thumbnail but wears no series skin ({skin!r}): redraw it with scripts/pages/build.py, '
+            f'which puts on the week\'s skin (one of {", ".join(order)})')
+
+
+def before_rotation(date, first_week):
+    """True when the piece's date falls before the series skins' first week (an undated piece never does)."""
+    import datetime as dt
+    try:
+        return dt.date.fromisoformat(str(date)[:10]) < first_week
+    except (TypeError, ValueError):
+        return False
 
 
 def problems(post, planned, body, base, reg=None):
@@ -221,7 +301,7 @@ def problems(post, planned, body, base, reg=None):
             r = {}
         if r.get('sha256') != hashlib.sha256(src.read_bytes()).hexdigest():
             found.append(f'{receipt.name} does not match {src.name}: {what} was changed after the drawer made it. Draw it again')
-        why = not_receipt(r)
+        why = not_receipt(r, post)
         if why:
             found.append(f'{what} {why} (house rule THE_RECEIPT)')
         if names and not r.get('rows'):
@@ -246,7 +326,7 @@ def problems(post, planned, body, base, reg=None):
             continue
         if made.get('shape') != shape:
             found.append(f'{src.name} is the drawer\'s {made.get("shape")} thumbnail, packed as the {shape} one')
-        why = not_receipt(r)
+        why = not_receipt(r, post)
         if why:
             found.append(f'the {shape} thumbnail {why} (house rule THE_RECEIPT)')
         shown = [l for l in (t.get('logos') or []) if not declared_drawn(l, r.get('logos'), reg)]
@@ -441,6 +521,36 @@ def self_test():
         (t / 'thumbs' / 'thumb-wide-1280x720.jpg').write_bytes(wide_jpg)
         check('the tall picture packed as the wide thumbnail fails',
               any('is the drawer\'s tall thumbnail, packed as the wide one' in x for x in problems({}, full + [thumbs[1] | {'shape': 'wide'}], body, t, reg)), True)
+        # The series skins (Krish, 2026-11-05: "keep all of them and rotate them all at will over the coming weeks").
+        order, _, _ = series_skins()
+        series = {'series_look': {'series': True, 'owner': 'follow.the.money'}}
+        monday, early, tuesday = ({'subchannel': 'follow.the.money', 'date': d} for d in ('2026-11-09', '2026-11-02', '2026-11-10'))
+        for label, post_, record, want in [
+                ('a weekly series piece\'s thumbnails in the week\'s skin pass', {}, series | {'skin': order[0]}, None),
+                ('a weekly series piece\'s thumbnails in no skin fail', {}, series | {'skin': None}, 'wears no series skin'),
+                ('a weekly series piece\'s thumbnails in an unknown skin fail', {}, series | {'skin': 'glitter'}, 'wears no series skin'),
+                ('a weekly series piece\'s thumbnails drawn before the skins fail, asking for a redraw', {}, series, 'redraw it with scripts/pages/build.py'),
+                ('anything that is not a weekly series piece in a skin fails', {}, {'series_look': {'series': False}, 'skin': order[1]}, 'is not a weekly series piece'),
+                ('anything that is not a weekly series piece, in no skin, passes', {}, {'series_look': {'series': False}, 'skin': None}, None),
+                # Records from before the drawer wrote series_look: the piece itself says whether they are a series piece's.
+                ('an old thumbs.json (no series_look) of a series piece in the week of 9 Nov fails, asking for a redraw', monday, {}, 'drawn before the series skins'),
+                ('an old thumbs.json (no series_look) of a Tuesday asset passes', tuesday, {}, None),
+                ('an old thumbs.json of a series piece dated before 9 Nov passes: the rotation starts that week', early, {}, None),
+                ('a series piece dated before 9 Nov passes in no skin', early, series | {'skin': None}, None),
+                ('a series piece dated before 9 Nov passes in a skin it names', early, series | {'skin': order[3]}, None),
+        ]:
+            (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | record))
+            found = [x for x in problems(post_, full + thumbs, body, t, reg) if 'thumbnail' in x]
+            check(label, (not found) if want is None else any(want in x for x in found), True)
+        for label, record, want in [
+                ('a weekly series piece\'s 3:2 cover, a shape no skin is made for, passes in none', series | {'shape': 'cover', 'skin': None}, None),
+                ('a weekly series piece\'s 3:2 cover that claims a skin fails', series | {'shape': 'cover', 'skin': order[0]}, 'on a shape no skin is made for'),
+                ('a weekly series piece\'s cover drawn before the skins (no "skin") passes: covers wear none', series | {'shape': 'cover'}, None),
+        ]:
+            (t / 'cover.json').write_text(json.dumps(good_receipt | record))
+            found = [x for x in problems({}, full, body, t, reg) if 'the cover' in x]
+            check(label, (not found) if want is None else any(want in x for x in found), True)
+        (t / 'cover.json').write_text(json.dumps(good_receipt))
         (t / 'thumbs' / 'thumbs.json').unlink()
         check('a hand-made thumbnail fails', any('was not drawn by the house drawer (no thumbs.json' in x for x in problems({}, full + thumbs, body, t, reg)), True)
         # 5. REAL THINGS (Krish, 2026-10-16)
