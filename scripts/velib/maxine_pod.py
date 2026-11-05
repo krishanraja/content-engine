@@ -30,6 +30,7 @@ import hashlib
 import json
 import os
 import secrets
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -313,6 +314,151 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
         (out_dir / f'maxine-pod.{media.stem}.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
 
 
+# ------------------------------------------------------------------ the NIM route
+# Run 42088825373 (5 Nov): NGC refused the Linux AR SDK with 402 (no subscription). The same key CAN pull the Eye
+# Contact NIM (entitlement check, run 42089984680). NVIDIA's terms allow that for development and test; published
+# work needs NVIDIA AI Enterprise, which is Krish's call. The pod runs the NIM image as it is; GitHub's runner sends
+# the clip over the NIM's gRPC port with NVIDIA's own client (github.com/NVIDIA-Maxine/nim-clients, eye-contact).
+NIM_IMAGE = 'nvcr.io/nim/nvidia/maxine-eye-contact:latest'
+NIM_GRPC, NIM_HTTP = 8001, 8000
+REGISTRY_AUTH = 'ngc-eyeline'
+
+
+def registry_auth(api_key: str, ngc_key: str, call=http) -> str:
+    """The RunPod registry login for nvcr.io, made once and reused by name. The NGC key goes only to RunPod."""
+    found = call('GET', f'{API}/containerregistryauth', key=api_key)
+    rows = found.get('containerRegistryAuths', found) if isinstance(found, dict) else found
+    for row in rows or []:
+        if row.get('name') == REGISTRY_AUTH:
+            return row['id']
+    made = call('POST', f'{API}/containerregistryauth', key=api_key,
+                body={'name': REGISTRY_AUTH, 'username': '$oauthtoken', 'password': ngc_key})
+    return made['id']
+
+
+def _grpc_target(pod: dict) -> str | None:
+    ip = pod.get('publicIp')
+    ports = pod.get('portMappings') or {}
+    port = ports.get(str(NIM_GRPC)) or ports.get(NIM_GRPC)
+    return f'{ip}:{port}' if ip and port else None
+
+
+def run_nim(media, out_dir, client, *, yes: bool = False, max_usd: float = MAX_USD, max_minutes: int = MAX_MINUTES,
+            api_key: str | None = None, ngc_key: str | None = None, call=http, sleep=time.sleep, clock=time.monotonic,
+            run_client=None, poll_s: float = 15.0) -> dict:
+    """Rent one pod running the Eye Contact NIM, send the take through NVIDIA's client, terminate. Returns the receipt."""
+    import subprocess  # noqa: PLC0415
+    media, out_dir = Path(media), Path(out_dir)
+    if estimate(RATE_USD, max_minutes) > max_usd:
+        raise Refused(f'{max_minutes} min at ${RATE_USD}/h is over the ${max_usd} cap')
+    if not yes:
+        raise Refused("spend needs Krish's yes")
+    api_key = api_key or os.environ.get('RUNPOD_API_KEY')
+    ngc_key = ngc_key or os.environ.get('NGC_API_KEY')
+    if not api_key or not ngc_key:
+        raise Refused('RUNPOD_API_KEY and NGC_API_KEY must be set as environment secrets (never in the repository)')
+    out_dir.mkdir(parents=True, exist_ok=True)
+    receipt_path = out_dir / f'maxine-pod.{media.stem}.json'
+    started, pod_id = clock(), None
+    receipt = {'schema': 'maxine-pod/1', 'route': 'nim', 'image': NIM_IMAGE, 'gpu': GPUS, 'take': str(media)}
+
+    def save():
+        receipt_path.write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
+
+    try:
+        auth = registry_auth(api_key, ngc_key, call)
+        body = lambda cloud: {  # noqa: E731
+            'name': f'eyeline-{media.stem}'[:60], 'imageName': NIM_IMAGE, 'containerRegistryAuthId': auth,
+            'gpuTypeIds': GPUS, 'gpuTypePriority': 'availability', 'cloudType': cloud, 'gpuCount': 1,
+            'containerDiskInGb': 80, 'volumeInGb': 0, 'supportPublicIp': True,
+            'ports': [f'{NIM_HTTP}/http', f'{NIM_GRPC}/tcp'],
+            'env': {'NGC_API_KEY': ngc_key, 'MAXINE_MAX_CONCURRENCY_PER_GPU': '1', 'NIM_HTTP_API_PORT': str(NIM_HTTP)}}
+        pod, tries = None, 0
+        while pod is None:
+            for cloud in CLOUDS:
+                try:
+                    pod = call('POST', f'{API}/pods', key=api_key, body=body(cloud))
+                    receipt['cloud'] = cloud
+                    break
+                except urllib.error.HTTPError as error:
+                    said = error.read().decode('utf-8', 'replace')[:500]
+                    if 'no instances' not in said.lower():
+                        raise Refused(f'HTTP {error.code} from {API}/pods ({cloud}): {said}') from error
+            if pod is None:
+                tries += 1
+                if tries >= GPU_TRIES:
+                    raise Refused(f'no RTX card free on RunPod after {tries} tries {GPU_WAIT_S} s apart')
+                print(f'maxine_pod: no card free (try {tries}); asking again in {GPU_WAIT_S} s', flush=True)
+                sleep(GPU_WAIT_S)
+        started = clock()
+        pod_id = pod['id']
+        receipt['pod'] = pod_id
+        rate = float(pod.get('costPerHr') or RATE_USD)
+        receipt['rate_usd_per_h'] = rate
+        got = (pod.get('machine') or {}).get('gpuTypeId') or pod.get('gpuTypeId')
+        if got:
+            receipt['gpu'] = got
+        save()
+        if estimate(rate, max_minutes) > max_usd:
+            raise Refused(f'the pod costs ${rate}/h, over the ${max_usd} cap for {max_minutes} min')
+        ready = f'https://{pod_id}-{NIM_HTTP}.proxy.runpod.net/v1/health/ready'
+        target, last = None, ''
+        while True:                                   # image pull, then the NIM loads its models
+            if clock() - started > max_minutes * 60:
+                raise Refused(f'time cap of {max_minutes} min reached ({last or "the NIM never answered"})')
+            info = call('GET', f'{API}/pods/{pod_id}', key=api_key)
+            target = _grpc_target(info if isinstance(info, dict) else {})
+            state = f"pod {info.get('desiredStatus', '?')}, runtime {'up' if info.get('runtime') else 'none'}" if isinstance(info, dict) else '?'
+            try:
+                call('GET', ready, timeout=20)
+                health = 'ready'
+            except (urllib.error.URLError, OSError) as error:
+                health = f'not ready ({getattr(error, "code", type(error).__name__)})'
+            now = f'{state}; grpc {target or "no public port yet"}; health {health}'
+            if now != last:
+                print(f'maxine_pod: {int(clock() - started)} s: {now}', flush=True)
+                last = now
+            receipt['progress'] = now
+            save()
+            if target and health == 'ready':
+                break
+            sleep(poll_s)
+        receipt['grpc'] = 'public tcp'
+        copy = out_dir / f'{media.stem}.maxine.mp4'
+        cmd = [sys.executable, str(Path(client) / 'scripts' / 'eye-contact.py'), '--target', target,
+               '--input', str(media), '--output', str(copy), '--bitrate', '20000000']
+        print(f'maxine_pod: {int(clock() - started)} s: sending the take to the NIM', flush=True)
+        done = (run_client or (lambda c: subprocess.run(c, capture_output=True, text=True,
+                                                       timeout=max(60, max_minutes * 60 - (clock() - started)))))(cmd)
+        receipt['client_log'] = ((done.stdout or '') + (done.stderr or ''))[-4000:]
+        if done.returncode != 0 or not copy.is_file() or copy.stat().st_size == 0:
+            raise Refused(f'the NIM client failed (exit {done.returncode}); its log is in the receipt')
+        receipt.update(copy=str(copy), copy_sha256=sha256(copy), state='done')
+        return receipt
+    except Refused as error:
+        receipt.update(state='refused', reason=str(error))
+        raise
+    except urllib.error.HTTPError as error:
+        try:
+            detail = error.read().decode('utf-8', 'replace')[:500]
+        except Exception:  # noqa: BLE001
+            detail = ''
+        receipt.update(state='failed', reason=f'HTTP {error.code} from {error.url.split("?")[0]}: {detail}'.strip())
+        raise
+    finally:
+        if pod_id:
+            try:
+                call('DELETE', f'{API}/pods/{pod_id}', key=api_key)
+                receipt['terminated'] = True
+            except Exception as error:  # noqa: BLE001
+                receipt['terminated'] = False
+                receipt['terminate_error'] = f'{type(error).__name__}: terminate pod {pod_id} in the RunPod console now'
+        seconds = round(clock() - started, 1)
+        receipt['seconds'] = seconds
+        receipt['cost_usd'] = round(seconds / 3600 * receipt.get('rate_usd_per_h', RATE_USD), 4) if pod_id else 0.0
+        save()
+
+
 def sha256(path) -> str:
     digest = hashlib.sha256()
     with open(path, 'rb') as handle:
@@ -347,6 +493,7 @@ def main(argv=None) -> int:
     parser.add_argument('take'); parser.add_argument('out_dir')
     parser.add_argument('--yes', action='store_true'); parser.add_argument('--max-usd', type=float, default=MAX_USD)
     parser.add_argument('--max-minutes', type=int, default=MAX_MINUTES)
+    parser.add_argument('--nim-client', help="NVIDIA's nim-clients/eye-contact folder: run the Eye Contact NIM, not the SDK")
     args = parser.parse_args(argv)
     import signal  # noqa: PLC0415
     signal.signal(signal.SIGTERM, _stop)
@@ -355,7 +502,11 @@ def main(argv=None) -> int:
         print(f'maxine_pod: terminated {len(gone)} eyeline pod(s): {", ".join(gone) or "none running"}')
         return 0
     try:
-        receipt = run(args.take, args.out_dir, yes=args.yes, max_usd=args.max_usd, max_minutes=args.max_minutes)
+        if args.nim_client:
+            receipt = run_nim(args.take, args.out_dir, args.nim_client, yes=args.yes, max_usd=args.max_usd,
+                              max_minutes=args.max_minutes)
+        else:
+            receipt = run(args.take, args.out_dir, yes=args.yes, max_usd=args.max_usd, max_minutes=args.max_minutes)
     except Refused as error:
         print(f'maxine_pod: refused: {error}')
         return 1
