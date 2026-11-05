@@ -247,3 +247,16 @@ refuses a deck that breaks the checkable lines below.
 - **Caption.** One line per job with its lead tool's vendor page and the other tools by name, the check date, the plan
   or licence note and which cards use vendor images; within Instagram's 2,200 characters and content-engine's channel
   copy lint.
+
+## The last card says "Follow for more" (Ruling, Krish, 5 November 2026)
+
+His words: "Every single makeyourmindup carousel should have a "Follow for more" call to action on the last card, just
+above the "Make Your Mind Up" word mark. Which should be a bit larger and centered on the last card always".
+
+- The last card of every carousel, series and off-day alike, ends with the words "Follow for more" set directly above
+  the house mark.
+- On that card the mark is centred at the foot and a bit larger than the corner mark on the other cards. In Growth's
+  renderer it is 360px wide, against 200 to 220px in the corner. It is the official file, per the brand mark section.
+- This replaces the bottom-corner placement for the last card only. The other cards keep the mark small in a bottom
+  corner.
+- Nothing else sits between the words and the mark, and neither overlaps the card's own words.
