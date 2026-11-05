@@ -211,6 +211,44 @@ class PodTest(unittest.TestCase):
         saved = json.loads((self.dir / 'out' / 'maxine-pod.take.json').read_text())
         self.assertEqual(saved['cost_usd'], 0.0)
 
+    def test_the_nim_route_waits_for_ready_runs_the_client_and_terminates(self):
+        import io
+        import types
+        import urllib.error
+        calls, polls = [], {'n': 0}
+
+        def api(method, url, **kw):
+            calls.append((method, url))
+            if url.endswith('/containerregistryauth') and method == 'GET':
+                return []
+            if url.endswith('/containerregistryauth'):
+                assert kw['body']['username'] == '$oauthtoken'
+                return {'id': 'auth1'}
+            if method == 'POST' and url.endswith('/pods'):
+                assert kw['body']['imageName'] == maxine_pod.NIM_IMAGE and kw['body']['containerRegistryAuthId'] == 'auth1'
+                return {'id': 'pod9', 'costPerHr': 0.27}
+            if method == 'GET' and url.endswith('/pods/pod9'):
+                polls['n'] += 1
+                return {'publicIp': '1.2.3.4', 'portMappings': {'8001': 40123}} if polls['n'] > 1 else {}
+            if url.endswith('/v1/health/ready'):
+                if polls['n'] < 3:
+                    raise urllib.error.HTTPError(url, 503, 'x', {}, io.BytesIO(b''))
+                return {}
+            if method == 'DELETE':
+                return {}
+            raise AssertionError(url)
+
+        def client(cmd):
+            assert cmd[cmd.index('--target') + 1] == '1.2.3.4:40123'
+            Path(cmd[cmd.index('--output') + 1]).write_bytes(b'redirected')
+            return types.SimpleNamespace(returncode=0, stdout='ok', stderr='')
+
+        receipt = maxine_pod.run_nim(self.take, self.dir / 'out', '/nim-clients/eye-contact', yes=True, call=api,
+                                     sleep=lambda s: None, clock=Clock(), run_client=client, **self.keys)
+        self.assertEqual(receipt['state'], 'done')
+        self.assertIn(('DELETE', f'{maxine_pod.API}/pods/pod9'), calls)
+        self.assertNotIn('test-ngc', json.dumps(receipt))
+
 
 if __name__ == '__main__':
     unittest.main()

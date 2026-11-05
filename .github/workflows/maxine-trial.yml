@@ -21,6 +21,10 @@ on:
         description: 'Refuse a run that could cost more than this (US dollars)'
         required: true
         default: '1.00'
+      route:
+        description: 'nim (the Eye Contact NIM, which this NGC key can pull) or sdk (needs a Maxine SDK subscription)'
+        required: false
+        default: 'nim'
       clip_seconds:
         description: 'Send only the first N seconds (0 = the whole take); the clip is kept in the artifact'
         required: false
@@ -87,6 +91,12 @@ jobs:
           mv "$RUNNER_TEMP/maxine/$TAKE" "$RUNNER_TEMP/take/$TAKE"
           cp "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine/clip.$TAKE"
           ls -la "$RUNNER_TEMP/take/$TAKE"
+      - name: NVIDIA's Eye Contact client (nim route)
+        if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' && inputs.route != 'sdk' }}
+        run: |
+          git clone -q --depth 1 --filter=blob:none --sparse https://github.com/NVIDIA-Maxine/nim-clients.git "$RUNNER_TEMP/nim-clients"
+          git -C "$RUNNER_TEMP/nim-clients" sparse-checkout set eye-contact
+          pip install -q -r "$RUNNER_TEMP/nim-clients/eye-contact/requirements.txt"
       - name: Run Maxine on one rented pod
         if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' }}
         env:
@@ -95,7 +105,8 @@ jobs:
           TAKE: ${{ inputs.take }}
           MAX_USD: ${{ inputs.max_usd }}
           MAX_MINUTES: ${{ inputs.max_minutes }}
-        run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD" --max-minutes "${MAX_MINUTES:-30}"
+          NIM: ${{ inputs.route != 'sdk' && 'yes' || '' }}
+        run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD" --max-minutes "${MAX_MINUTES:-30}" ${NIM:+--nim-client "$RUNNER_TEMP/nim-clients/eye-contact"}
       - name: Keep the redirected copy and the receipt (3 days)
         if: always()
         uses: actions/upload-artifact@v4
