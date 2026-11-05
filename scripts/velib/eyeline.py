@@ -368,11 +368,16 @@ def apply(frame, geo, flow, light):
 # ------------------------------------------------------------------ media
 
 def probe(media) -> dict:
-    """The take's video stream as the pass needs it; refuses what it cannot keep exactly."""
+    """The take's video stream as the pass needs it; refuses what it cannot keep exactly (check_stream)."""
     out = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries',
                           'stream=width,height,r_frame_rate,avg_frame_rate,pix_fmt,color_transfer,color_primaries,color_space:'
                           'stream_side_data=rotation', '-of', 'json', str(media)], capture_output=True, text=True, check=True)
-    s = json.loads(out.stdout)['streams'][0]
+    return check_stream(json.loads(out.stdout)['streams'][0], media)
+
+
+def check_stream(s: dict, media='the take') -> dict:
+    """The rules on a probed video stream: a constant frame rate (frames are decoded by index), SDR (the pass works
+    on 8-bit frames), and the picture's size as shown, after any rotation."""
     rate = s['r_frame_rate']
     if rate != s.get('avg_frame_rate'):
         raise ValueError(f'{media}: variable frame rate ({rate} against {s.get("avg_frame_rate")}): make the constant-rate '
