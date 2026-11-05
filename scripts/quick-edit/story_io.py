@@ -51,7 +51,23 @@ import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from intro import browser  # noqa: E402  (the same browser lookup as the sting)
+import glob  # noqa: E402
+
+# Where Remotion's browser is in this cloud container; on the runner machines the Studio's own copy is used, else
+# Remotion fetches one. (It lived in intro.py until the sting became fixed clips on 2026-11-05.)
+CONTAINER_BROWSER = '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell'
+
+
+def browser(given=None):
+    if given:
+        return given
+    if os.environ.get('REMOTION_BROWSER_EXECUTABLE'):
+        return os.environ['REMOTION_BROWSER_EXECUTABLE']
+    runtime = os.environ.get('MINDMAKE_RUNTIME_ROOT') or str(Path.home() / 'Documents' / 'MindmakeVideoStudio' / 'runtime')
+    found = sorted(glob.glob(os.path.join(runtime, 'browser', 'remotion-*', 'headless-shell', 'chrome-headless-shell*')))
+    if found:
+        return found[-1]
+    return CONTAINER_BROWSER if Path(CONTAINER_BROWSER).exists() else None
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'pages'))
 import brand as house_brand  # noqa: E402  (the brand's own image files, from makeyourmindup.ai/brand/)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "post-pack"))

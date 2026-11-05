@@ -148,8 +148,8 @@ def continuity(render: str, stem: str, sidecar: str | None = None) -> dict:
     if not len(mono) or (duration and abs(length - duration) > 1 / 30 + 0.05):
         return {'value': {'render_s': round(length, 3), 'cut_s': duration}, 'target': 'a render as long as the cut',
                 'pass': False, 'status': 'measured', 'reason': reason or 'the render has no audio or the wrong length'}
-    # A cut that opens on the intro sting (the premix's lead_frames) has the bed alone under the sting ("the music sits
-    # under it in the edit"), so the floor holds from the file's first window, the sting included, not from his first word.
+    # A cut that opens on the intro sting (the premix's lead_frames) has the bed alone under the sting (HOOK_IS_THE_INTRO:
+    # "with no sound of its own and the music bed under it"), so the floor holds from the file's first window, the sting included, not from his first word.
     lead = int(data.get('lead_frames') or 0)
     start = 0.0 if lead else (report.get('body_s') or [1.5])[0]
     end = max(start, (duration or length) - 1.5)

@@ -32,8 +32,8 @@ is over time based on real engagement. Let's go with number one for now."
   the series tag in the top right, as the Friday 23 October tall cut has them
   (kit.py draws `dress-9x16.png`; make.py lays it over the whole main, over
   the pictures and under the captions). No sting.
-- **An off-day piece** (one with no weekly series, or dated on a Tuesday,
-  Thursday or Saturday) wears no sting, and never another series' colour, so
+- **An off-day piece** (one with no weekly series, or dated on a day that
+  is not its series' own day) wears no sting, and never another series' colour, so
   both its cuts open on the hook.
 - **Nothing else goes in front of the hook:** no story card, no title card
   and no second intro, in either cut.
