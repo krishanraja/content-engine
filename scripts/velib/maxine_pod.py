@@ -325,6 +325,7 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
 NIM_IMAGE = 'nvcr.io/nim/nvidia/maxine-eye-contact:latest'
 NIM_GRPC, NIM_HTTP = 8001, 8000
 REGISTRY_AUTH = 'ngc-eyeline'
+BOOT_MAX_S, BOOT_TRIES = 12 * 60, 3   # a NIM up in 1-2 min on a good host; past 12 min, try another pod
 
 
 def registry_auth(api_key: str, ngc_key: str, call=http) -> str:
@@ -387,59 +388,84 @@ def run_nim(media, out_dir, client, *, yes: bool = False, max_usd: float = MAX_U
             'ports': [f'{NIM_HTTP}/http', f'{NIM_GRPC}/tcp'],
             'allowedCudaVersions': ['12.8', '12.9', '13.0'],      # NIM needs driver 571.21+ (CUDA 12.8)
             'env': {'NGC_API_KEY': ngc_key, 'NV_AI4M_MAX_CONCURRENCY_PER_GPU': '1', 'NIM_HTTP_API_PORT': str(NIM_HTTP)}}
-        pod, tries = None, 0
-        while pod is None:
-            for cloud in CLOUDS:
-                try:
-                    pod = call('POST', f'{API}/pods', key=api_key, body=body(cloud))
-                    receipt['cloud'] = cloud
-                    break
-                except urllib.error.HTTPError as error:
-                    said = error.read().decode('utf-8', 'replace')[:500]
-                    if 'no instances' not in said.lower():
-                        raise Refused(f'HTTP {error.code} from {API}/pods ({cloud}): {said}') from error
-            if pod is None:
-                tries += 1
-                if tries >= GPU_TRIES:
-                    raise Refused(f'no RTX card free on RunPod after {tries} tries {GPU_WAIT_S} s apart')
-                print(f'maxine_pod: no card free (try {tries}); asking again in {GPU_WAIT_S} s', flush=True)
-                sleep(GPU_WAIT_S)
-        started = clock()
-        pod_id = pod['id']
-        receipt['pod'] = pod_id
-        rate = float(pod.get('costPerHr') or RATE_USD)
-        receipt['rate_usd_per_h'] = rate
-        got = (pod.get('machine') or {}).get('gpuTypeId') or pod.get('gpuTypeId')
-        if got:
-            receipt['gpu'] = got
-        save()
-        if estimate(rate, max_minutes) > max_usd:
-            raise Refused(f'the pod costs ${rate}/h, over the ${max_usd} cap for {max_minutes} min')
-        # The NIM has no health route (docs: /v1/license, /v1/metadata, /v1/metrics on HTTP; gRPC on 8001).
-        ready = f'https://{pod_id}-{NIM_HTTP}.proxy.runpod.net/v1/metadata'
-        listening = 0
-        target, last = None, ''
-        while True:                                   # image pull, then the NIM loads its models
-            if clock() - started > max_minutes * 60:
-                raise Refused(f'time cap of {max_minutes} min reached ({last or "the NIM never answered"})')
-            info = call('GET', f'{API}/pods/{pod_id}', key=api_key)
-            target = _grpc_target(info if isinstance(info, dict) else {})
-            state = f"pod {info.get('desiredStatus', '?')}, runtime {'up' if info.get('runtime') else 'none'}" if isinstance(info, dict) else '?'
-            try:
-                call('GET', ready, timeout=20)
-                health = 'metadata answers'
-            except (urllib.error.URLError, OSError) as error:
-                health = f'metadata {getattr(error, "code", type(error).__name__)}'
-            listening = listening + 1 if target and tcp_open(target) else 0
-            now = f'{state}; grpc {target or "no public port yet"} {"listening" if listening else "closed"}; {health}'
-            if now != last:
-                print(f'maxine_pod: {int(clock() - started)} s: {now}', flush=True)
-                last = now
-            receipt['progress'] = now
+        attempts, first = [], None
+        receipt['attempts'] = attempts
+        while True:                                   # a pod whose NIM does not come up is replaced, not waited on
+            pod, tries = None, 0
+            while pod is None:
+                for cloud in CLOUDS:
+                    try:
+                        pod = call('POST', f'{API}/pods', key=api_key, body=body(cloud))
+                        receipt['cloud'] = cloud
+                        break
+                    except urllib.error.HTTPError as error:
+                        said = error.read().decode('utf-8', 'replace')[:500]
+                        if 'no instances' not in said.lower():
+                            raise Refused(f'HTTP {error.code} from {API}/pods ({cloud}): {said}') from error
+                if pod is None:
+                    tries += 1
+                    if tries >= GPU_TRIES:
+                        raise Refused(f'no RTX card free on RunPod after {tries} tries {GPU_WAIT_S} s apart')
+                    print(f'maxine_pod: no card free (try {tries}); asking again in {GPU_WAIT_S} s', flush=True)
+                    sleep(GPU_WAIT_S)
+            started = clock()
+            first = first if first is not None else started
+            pod_id = pod['id']
+            receipt['pod'] = pod_id
+            rate = float(pod.get('costPerHr') or RATE_USD)
+            receipt['rate_usd_per_h'] = rate
+            got = (pod.get('machine') or {}).get('gpuTypeId') or pod.get('gpuTypeId')
+            if got:
+                receipt['gpu'] = got
             save()
-            if listening and (health == 'metadata answers' or listening >= 3):
+            if estimate(rate, max_minutes) > max_usd:
+                raise Refused(f'the pod costs ${rate}/h, over the ${max_usd} cap for {max_minutes} min')
+            # The NIM has no health route (docs: /v1/license, /v1/metadata, /v1/metrics on HTTP; gRPC on 8001).
+            ready = f'https://{pod_id}-{NIM_HTTP}.proxy.runpod.net/v1/metadata'
+            listening = 0
+            target, last, up = None, '', False
+            while True:                               # image pull, then the NIM loads its models
+                if clock() - first > max_minutes * 60:
+                    raise Refused(f'time cap of {max_minutes} min reached ({last or "the NIM never answered"})')
+                if clock() - started > BOOT_MAX_S:
+                    break
+                info = call('GET', f'{API}/pods/{pod_id}', key=api_key)
+                target = _grpc_target(info if isinstance(info, dict) else {})
+                state = f"pod {info.get('desiredStatus', '?')}, runtime {'up' if info.get('runtime') else 'none'}" if isinstance(info, dict) else '?'
+                try:
+                    call('GET', ready, timeout=20)
+                    health = 'metadata answers'
+                except (urllib.error.URLError, OSError) as error:
+                    health = f'metadata {getattr(error, "code", type(error).__name__)}'
+                listening = listening + 1 if target and tcp_open(target) else 0
+                now = f'{state}; grpc {target or "no public port yet"} {"listening" if listening else "closed"}; {health}'
+                if now != last:
+                    print(f'maxine_pod: {int(clock() - started)} s: {now}', flush=True)
+                    last = now
+                receipt['progress'] = now
+                save()
+                if listening and (health == 'metadata answers' or listening >= 3):
+                    up = True
+                    break
+                sleep(poll_s)
+            if up:
                 break
-            sleep(poll_s)
+            # Run 42113675837 (5 Nov): a Community 3090 sat 45 min with the NIM never started ($0.17). Replace it.
+            seconds = round(clock() - started, 1)
+            try:
+                call('DELETE', f'{API}/pods/{pod_id}', key=api_key)
+                gone = True
+            except Exception:  # noqa: BLE001
+                gone = False
+            attempts.append({'pod': pod_id, 'gpu': receipt.get('gpu'), 'rate_usd_per_h': rate, 'seconds': seconds,
+                             'cost_usd': round(seconds / 3600 * rate, 4), 'terminated': gone, 'why': last})
+            print(f'maxine_pod: the NIM did not come up in {BOOT_MAX_S // 60} min on pod {pod_id}; replaced', flush=True)
+            pod_id = None
+            save()
+            if not gone:
+                raise Refused(f'pod {attempts[-1]["pod"]} did not come up and could not be terminated: terminate it in the RunPod console now')
+            if len(attempts) >= BOOT_TRIES:
+                raise Refused(f'the NIM did not come up on {len(attempts)} pods in a row')
         receipt['grpc'] = 'public tcp'
         runner = run_client or (lambda c: subprocess.run(c, capture_output=True, text=True,
                                                          timeout=max(60, max_minutes * 60 - (clock() - started))))
@@ -488,7 +514,8 @@ def run_nim(media, out_dir, client, *, yes: bool = False, max_usd: float = MAX_U
                 receipt['terminate_error'] = f'{type(error).__name__}: terminate pod {pod_id} in the RunPod console now'
         seconds = round(clock() - started, 1)
         receipt['seconds'] = seconds
-        receipt['cost_usd'] = round(seconds / 3600 * receipt.get('rate_usd_per_h', RATE_USD), 4) if pod_id else 0.0
+        here = round(seconds / 3600 * receipt.get('rate_usd_per_h', RATE_USD), 4) if pod_id else 0.0
+        receipt['cost_usd'] = round(here + sum(a['cost_usd'] for a in receipt.get('attempts', [])), 4)
         save()
 
 
