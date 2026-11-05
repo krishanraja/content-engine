@@ -153,6 +153,23 @@ His words: "we need 5 stories", then "take the five stories" and "encode that 2n
 - Each story is about real people who benefited from AI in a way a reader feels at once: a named person or group, what changed for them. His words: "Frontier models lowering prices isn't really fitting with how humans are benefitting from AI". Price cuts, model launches, funding rounds and lab or pharma deals are not stories.
 - Each story is checked against its primary source and dated as close to the week as the stories allow. Every card carries its source and its date.
 
+### The good-news close (Ruling, Krish, 5 November 2026)
+
+His words, of the plain close: "The final card is so dull. It needs to be visually uplifting and happy." He set its
+message, "If this inspires you to think about how you can make the world better with your ideas and AI, follow for
+more", then edited the mockup: "follow more more should be lower case, 'make the world better' should be on one line,
+and should be "by combining your ideas + AI". I prefer A. The opening sentence should just be "If this inspires you
+to"". He asked for it to be "the final card for all good news carousels permanently".
+
+- The last card of every good-news carousel is the same card. It shows that week's five story photos in mint rings
+  on a soft green glow, in story order.
+- Under them is one sentence, always these words: "If this inspires you to", then "MAKE THE WORLD BETTER" on one
+  Anton line in mint, then "by combining your ideas + AI,".
+- The house sign finishes the sentence: "follow for more" in lower case, directly above the centred house mark. This
+  is the one card where the sign is lower case.
+- Growth's kit `render/pieces/off-sat-goodnews` holds the words in its close template, and a test refuses any other
+  close.
+
 ## Brand mark on news, roundup and text-led carousels (Ruling, Krish, 3 November 2026)
 
 His words, of the Saturday 7 November good-news carousel: "You've fabricated my brand logo. The brand word mark and
