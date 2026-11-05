@@ -24,7 +24,9 @@ import re
 import subprocess
 from pathlib import Path
 
+from . import fumbles
 from . import gaps as rule
+from . import hear
 from . import words as wordrule
 from .common import ffmpeg, ffmpeg_version, load_json, sha256_file, write_json
 from .takes import check_media, list_takes, load_take, silences, video_probe, voiced_onset
@@ -34,6 +36,9 @@ FPS = 30
 PAD_S = 0.12            # room kept before a line's first word and after its last, inside the gap
 TAIL_S = 0.5            # after the cut's last word: compile holds the picture 12 frames past it
 CROSSFADE_S = 0.030
+# A join sits where the sound is quiet for the whole of its longest crossfade (40 ms), at the fastest approved speed
+# (1.35: a crossfade covers more of the source when the cut is sped up).
+QUIET_HALF_S = 0.020 * 1.35
 MAX_KEEP_THROUGH = 3    # unscripted words a reading may keep inside it when no agreed gap lets them go
 READINGS_PER_TAKE = 8
 CONFIRM_S = 0.15        # aligner B confirms a word it heard with the same text, starting within this of A's onset
@@ -80,10 +85,13 @@ class TakeClock:
 
     def __init__(self, record: dict, rank: int):
         self.record, self.id, self.rank = record, record['take'], rank
-        self.a = record['aligners']['a']['words']
-        self.b = record['aligners']['b']['words']
+        # The clocks with the listen pass folded in (velib.fumbles): unheard hesitations as unscripted words, the
+        # quiet spans every join must sit in, and the words that sounded wrong.
+        heard = fumbles.clocks(record)
+        self.a, self.b = heard['a'], heard['b']
+        self.quiet, self.suspect, self.listen = heard['quiet'], heard['suspect'], heard['listen']
         self.duration = record['media']['duration_s']
-        self.tokens = [token(w['text']) for w in self.a]
+        self.tokens = ['\x00' if fumbles.is_pseudo(w) else token(w['text']) for w in self.a]
         self.gaps = rule.agreed_gaps(self.a, self.b, start_s=0.0, end_s=self.duration)
         self.spans = rule.speech(self.a, self.b)
         self.positions: dict[str, list[int]] = {}
@@ -128,7 +136,7 @@ class TakeClock:
             return None
         room = gap[1] - gap[0]
         pad = max(rule.CLEARANCE_S, min(pad_s, room - rule.CLEARANCE_S if pad_s > PAD_S else room / 2))
-        return round(gap[0] + pad, 4) if room - pad + 1e-9 >= rule.CLEARANCE_S else None
+        return self._quiet(gap, round(gap[0] + pad, 4)) if room - pad + 1e-9 >= rule.CLEARANCE_S else None
 
     def in_point(self, j):
         gap = self.gap_before(j)
@@ -136,7 +144,25 @@ class TakeClock:
             return None
         room = gap[1] - gap[0]
         pad = max(rule.CLEARANCE_S, min(PAD_S, room / 2))
-        return round(gap[1] - pad, 4) if room - pad + 1e-9 >= rule.CLEARANCE_S else None
+        return self._quiet(gap, round(gap[1] - pad, 4)) if room - pad + 1e-9 >= rule.CLEARANCE_S else None
+
+    def _quiet(self, gap, point):
+        """The cut point, moved inside the gap to the nearest place the sound is quiet for the whole crossfade, or None.
+        Without a listen pass the point stands as the gap rule gives it."""
+        if self.quiet is None:
+            return point
+        if hear.is_quiet(self.quiet, point, QUIET_HALF_S):
+            return point
+        lo, hi = gap[0] + rule.CLEARANCE_S, gap[1] - rule.CLEARANCE_S
+        best = None
+        for s, e in self.quiet:
+            a, b = max(lo, s + QUIET_HALF_S), min(hi, e - QUIET_HALF_S)
+            if a > b + 1e-9:
+                continue
+            candidate = min(max(point, a), b)
+            if best is None or abs(candidate - point) < abs(best - point):
+                best = candidate
+        return round(best, 4) if best is not None else None
 
 
 def _readings(clock: TakeClock, line: list[dict]) -> list[dict]:
@@ -186,15 +212,19 @@ def _readings(clock: TakeClock, line: list[dict]) -> list[dict]:
                     start = b
             pieces.append((start, path[-1][1]))
             unconfirmed = sum(not clock.confirmed[x] for s, e in path for x in range(s, e + 1))
+            suspect = sum(x in clock.suspect for s, e in path for x in range(s, e + 1))
             out.append({'take': clock.id, 'rank': clock.rank, 'pieces': pieces, 'words': [s for s, _ in path],
                         'ends': [e for _, e in path], 'kept': kept,
-                        'extras': extras, 'cuts': cuts, 'unconfirmed': unconfirmed})
-    out.sort(key=lambda r: (r['extras'], r['cuts'], r['unconfirmed'], -r['rank'], -r['words'][0]))
+                        'extras': extras, 'cuts': cuts, 'unconfirmed': unconfirmed, 'suspect': suspect})
+    out.sort(key=_cost)
     return out[:READINGS_PER_TAKE]
 
 
 def _cost(reading):
-    return (reading['extras'], reading['cuts'], reading['unconfirmed'], -reading['rank'], -reading['words'][0])
+    """Fewer unscripted sounds kept (a hesitation the gaps would not let go counts), fewer joins, more words both
+    clocks heard, fewer words that sounded wrong (velib.fumbles), then the later take and the later reading."""
+    return (reading['extras'], reading['cuts'], reading['unconfirmed'], reading.get('suspect', 0), -reading['rank'],
+            -reading['words'][0])
 
 
 def _plus(a, b):
@@ -225,7 +255,7 @@ def choose(clocks: dict[str, TakeClock], lines: list[list[dict]]) -> list[dict]:
                 if not through:
                     if clocks[previous['take']].out_point(last) is None or clocks[reading['take']].in_point(first) is None:
                         continue
-                total = _plus(_plus(cost, _cost(reading)), (0, 0 if through else 1, 0, 0, 0))
+                total = _plus(_plus(cost, _cost(reading)), (0, 0 if through else 1, 0, 0, 0, 0))
                 if i not in layer or total < layer[i][0]:
                     layer[i] = (total, p)
         if not layer:
@@ -262,6 +292,11 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
         raise ValueError('no takes ingested for this piece: run ve ingest first')
     records = [load_take(ve_dir, name) for name in names]
     clocks = {r['take']: TakeClock(r, rank) for rank, r in enumerate(records)}
+    for name, clock in clocks.items():
+        if clock.quiet == []:
+            raise ValueError(f'take {name}: the listen pass found no quiet anywhere (its quiet line is '
+                             f'{clock.listen.get("quiet_line_db")} dBFS, {hear.QUIET_BELOW_SPEECH_DB} dB under his speech): the room is too loud '
+                             f'to join in safely; nothing is cut')
     removed = {w for r in edit.get('remove', []) for w in range(r['from_w'], r['to_w'] + 1)}
     lines = lines_of(script, removed)
     chosen = choose(clocks, lines)
@@ -335,12 +370,26 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
         if previous['take'] == segment['take'] and segment['first_word'] > previous['last_word'] + 1:
             clock = clocks[segment['take']]
             skipped = clock.a[previous['last_word'] + 1:segment['first_word']]
-            flubs.append({'take': segment['take'], 'words': ' '.join(w['text'] for w in skipped),
-                          'from_s': skipped[0]['onset_s'], 'to_s': skipped[-1]['end_s']})
+            row = {'take': segment['take'], 'words': ' '.join(w['text'] for w in skipped),
+                   'from_s': skipped[0]['onset_s'], 'to_s': skipped[-1]['end_s']}
+            unheard = [{'kind': w['kind'], 'heard_by': w['heard_by']} for w in skipped if fumbles.is_pseudo(w)]
+            if unheard:
+                row['unwritten'] = unheard   # fumbles the transcript left out, heard by the listen pass
+            flubs.append(row)
+    suspects = []
     for number, reading in enumerate(chosen, 1):
         clock = clocks[reading['take']]
         for j in reading['kept']:
-            kept.append({'line': number, 'take': reading['take'], 'word': clock.a[j]['text'], 'src_s': clock.a[j]['onset_s']})
+            row = {'line': number, 'take': reading['take'], 'word': clock.a[j]['text'], 'src_s': clock.a[j]['onset_s'],
+                   'src_end_s': clock.a[j]['end_s']}
+            if fumbles.is_pseudo(clock.a[j]):
+                row.update(kind=clock.a[j]['kind'], heard_by=clock.a[j]['heard_by'])
+            kept.append(row)
+        for s, e in reading['pieces']:
+            for j in range(s, e + 1):
+                if j in clock.suspect:
+                    suspects.append({'line': number, 'take': reading['take'], 'word': clock.a[j]['text'],
+                                     'src_s': clock.a[j]['onset_s'], 'why': clock.suspect[j]})
 
     return {
         'schema': SCHEMA, 'piece': spec['piece_id'], 'cut': cut_id, 'aspect': cut['aspect'], 'fps': FPS,
@@ -355,6 +404,9 @@ def conform(spec: dict, cut_id: str, script: list[dict], ve_dir: Path, *, takes:
                    'from_w': line[0]['w'], 'to_w': line[-1]['w'], 'unconfirmed_words': r['unconfirmed']}
                   for n, (line, r) in enumerate(zip(lines, chosen), 1)],
         'segments': segments, 'joins': joins, 'words': words, 'flubs_removed': flubs, 'unscripted_kept': kept,
+        'sounded_wrong': suspects,
+        'listen': {name: ({'ears': clocks[name].listen['ears'], 'events': hear.counts(clocks[name].listen)}
+                          if clocks[name].listen else None) for name in names},
         'duration_s': round(cursor, 4), 'duration_frames': frames,
         'conformed': {'picture': f'conformed.{cut_id}.mp4', 'dialogue': f'dialogue.{cut_id}.wav'},
     }
@@ -397,10 +449,16 @@ def lint_edl(edl: dict, records: dict[str, dict], spec: dict | None = None) -> l
         if record['media']['sha256'] != edl['takes'].get(segment['take'], {}).get('media', {}).get('sha256'):
             out.append(f'segment {index}: take {segment["take"]} changed since conform')
         clock = clocks.setdefault(segment['take'], TakeClock(record, 0))
+        if (edl.get('listen') or {}).get(segment['take']) and clock.listen is None:
+            out.append(f'segment {index}: take {segment["take"]} was conformed with a listen pass it no longer has: '
+                       f've hear again, then conform')
         for label in ('src_in_s', 'src_out_s'):
             problem = rule.join_problem(segment[label], clock.gaps)
             if problem:
                 out.append(f'dialogue.join segment {index} {label}: {problem}')
+            elif clock.quiet is not None and not hear.is_quiet(clock.quiet, segment[label], QUIET_HALF_S):
+                out.append(f'dialogue.join segment {index} {label}: lands on sound the listen pass heard '
+                           f'(not quiet for {round(2 * QUIET_HALF_S * 1000)} ms)')
         half = (edl.get('crossfade_ms') or 0) / 2000 * speed
         if index > 0 and segment['src_in_s'] - half < -1e-9:
             out.append(f'segment {index}: crossfade starts before the media')
@@ -464,6 +522,8 @@ def kept_words(edl: dict, records: dict[str, dict]) -> list[dict]:
         segment = next((s for s in edl['segments'] if s['take'] == kept['take']
                         and s['src_in_s'] - 1e-6 <= kept['src_s'] <= s['src_out_s'] + 1e-6), None)
         word = next((w for w in records[kept['take']]['aligners']['a']['words'] if abs(w['onset_s'] - kept['src_s']) < 1e-6), None)
+        if word is None and 'src_end_s' in kept:   # a sound the listen pass heard: it is in no clock as ingested
+            word = {'onset_s': kept['src_s'], 'end_s': kept['src_end_s']}
         if segment and word:
             to_out = lambda t, s=segment: s['out_in_s'] + (t - s['src_in_s']) / edl['speed']  # noqa: E731
             out.append({'onset_s': round(to_out(word['onset_s']), 4), 'end_s': round(to_out(word['end_s']), 4)})

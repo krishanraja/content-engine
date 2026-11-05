@@ -19,6 +19,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `config/`
 - `config/schema/`
 - `config/ve/`
+- `config/voice/`
 - `docs/`
 - `docs/brandbooknew/`
 - `docs/handovers/`
