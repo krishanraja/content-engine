@@ -89,7 +89,8 @@ jobs:
         run: |
           # The NIM takes "Only H.264 8-bit videos with Constant Frame Rate" and refused the take as recorded (run
           # 42120949518: audio is its first stream, video Baseline). Video first, H.264 High 8-bit 4:2:0, constant
-          # frame rate, moov first; the same file is kept in the artifact so ve eyeline works on the frames the NIM saw.
+          # frame rate, index at the end (transactional: with the index first the NIM takes its streaming path and
+          # refused it, run 42122101025); the same file is kept in the artifact so ve eyeline works on the frames the NIM saw.
           pip install -q imageio-ffmpeg
           FF=$(python -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())")
           RATE=$(python - "$RUNNER_TEMP/take/$TAKE" <<'PY'
@@ -104,9 +105,12 @@ jobs:
           if [ "${CLIP:-0}" != "0" ]; then LIMIT="-t $CLIP"; fi
           mkdir -p "$RUNNER_TEMP/maxine"
           "$FF" -v error -y -i "$RUNNER_TEMP/take/$TAKE" $LIMIT -map 0:v:0 -map 0:a? -c:v libx264 -preset veryfast -crf 12 \
-            -profile:v high -pix_fmt yuv420p -r "$RATE" -fps_mode cfr -c:a aac -b:a 192k -movflags +faststart \
+            -profile:v high -pix_fmt yuv420p -r "$RATE" -fps_mode cfr -c:a aac -b:a 192k \
             "$RUNNER_TEMP/maxine/clip.$TAKE"
           cp "$RUNNER_TEMP/maxine/clip.$TAKE" "$RUNNER_TEMP/take/$TAKE"
+          # Inputs a variant can name with --input, for diagnosing what the NIM accepts: a 10 s cut and NVIDIA's sample.
+          "$FF" -v error -y -i "$RUNNER_TEMP/take/$TAKE" -t 10 -c copy "$RUNNER_TEMP/take/c10.mp4" || true
+          curl -sSL -o "$RUNNER_TEMP/take/nv.mp4" https://media.githubusercontent.com/media/NVIDIA-Maxine/nim-clients/main/eye-contact/assets/sample_transactional.mp4 || true
           ls -la "$RUNNER_TEMP/take/$TAKE"
       - name: NVIDIA's Eye Contact client (nim route)
         if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' && inputs.route != 'sdk' }}
