@@ -75,39 +75,39 @@ REFRESH_DAYS = 7
 
 WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-# The day an asset is published decides its colour, Monday to Saturday (Ruling, Krish, 2026-11-04: "lightly
-# colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday ... The off days are neutral
-# colours or the colours we have planned, but not under the Monday, Wednesday, or Friday panels or colours. Just
-# subtle brand recognition would be nice as a hard rule across Monday to Saturday assets."). A subchannel's own day
-# (config/studio.json) wears its colour: a pale wash of it as the ground and the colour itself where the house look
-# puts colour. Every other day is neutral: the house ground, cream and ink, no subchannel's colour and no
-# subchannel's name.
-DAY_WASH = (0.10, 0.18, 0.30)   # how far the ground's light, middle and edge lean from white to the day's colour
+# A subchannel's colour belongs to its one weekly piece, never to a day (Ruling, Krish, 2026-11-04: "Post random
+# memes on a Monday but that doesn't mean it's Monday's colour and brand ... There is only one "follow the money"
+# piece, one "mind the gap" piece, and one "mind the gap" piece every week. Other stuff can be fluid, maybe
+# changeable." and "I should be allowed to post random stuff on any day but it doesn't take on the brand colours of
+# Follow the Money, Mind the Gap, or Under the Hood. Which are only once a week, omni-channel, and a completely
+# different distribution format"). The weekly piece is the one published on its subchannel's own day
+# (config/studio.json). An asset made from that piece on another day wears it too only when its facts say so
+# ("carries": the series piece's id), as the Character.AI carousel carries Monday's piece (Krish, 2026-11-04: "the
+# character.ai carousel is going to be under Monday's "Follow the Money" banner"). Anything else, on any day, wears no
+# subchannel's colour or name.
 
 
-def day_look(house_style, date=None, series=None):
-    """What a dated asset wears: {'day', 'series_day', 'owner', 'colour', 'wash'}. On a subchannel's day, `colour`
-    is its colour and `wash` the ground's three stops; on any other day `colour` is the house cream, `wash` is None
-    (the house ground stays) and `owner` is None, so no subchannel is named. With no date, the subchannel's own day."""
+def series_look(house_style, subchannel, date=None, carries=None):
+    """What an asset wears: {'series', 'owner', 'colour', 'day', 'carries'}. The subchannel's weekly piece
+    (published on its own day, or undated), or an asset that carries it, wears its colour and name; anything else
+    is neutral: the house cream and no owner."""
     import datetime as dt
+    ch = channel(house_style, subchannel)
+    day = ch['day']
     if date:
         try:
             day = WEEK[dt.date.fromisoformat(str(date)[:10]).weekday()]
         except ValueError:
-            fail(f'the publishing date {date!r} is not YYYY-MM-DD, so the day and its colour cannot be told')
-    elif series:
-        day = channel(house_style, series)['day']
-    else:
-        fail('a dated asset needs its publishing "date" (or its subchannel) to know which day\'s colour it wears')
-    owner = next((c for c in house_style['channels'] if c['day'] == day), None)
-    if owner:
-        return {'day': day, 'series_day': True, 'owner': owner['name'], 'colour': owner['accent'],
-                'wash': [lean('#FFFFFF', owner['accent'], a) for a in DAY_WASH]}
-    return {'day': day, 'series_day': False, 'owner': None, 'colour': house_style['tokens']['cream'], 'wash': None}
+            fail(f'the publishing date {date!r} is not YYYY-MM-DD, so the asset cannot be told from its series piece')
+    if carries is not None and not (isinstance(carries, str) and carries.strip()):
+        fail('"carries" names the weekly series piece this asset is made from, by its piece id')
+    if day == ch['day'] or carries:
+        return {'series': True, 'owner': ch['name'], 'colour': ch['accent'], 'day': day, 'carries': carries or None}
+    return {'series': False, 'owner': None, 'colour': house_style['tokens']['cream'], 'day': day, 'carries': None}
 
 
 def series_colours(house_style):
-    """Every subchannel's colour, upper case: what an off-day asset must never wear."""
+    """Every subchannel's colour, upper case: what an asset outside a weekly series piece must never wear."""
     return {c['accent'].upper() for c in house_style['channels']}
 
 

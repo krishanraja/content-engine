@@ -1636,7 +1636,7 @@
         {
           "file": "scripts/post-pack/board_feed.py",
           "contains": "def goodnews_problems(",
-          "how": "the weekly Saturday good news holds four stories from the seven days before its Sunday, each with its source and its own photo or clip, none a recent off day ran; the Sunday run fills them (sunday_ideas.py goodnews)",
+          "how": "the weekly Saturday good news holds five stories from the seven days before its Sunday, each with its source and its own photo or clip, none a recent off day ran; the Sunday run fills them (sunday_ideas.py goodnews)",
           "test": "python3 scripts/post-pack/board_feed.py self-test"
         }
       ]

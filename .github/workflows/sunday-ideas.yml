@@ -173,7 +173,7 @@ jobs:
             GitHub Actions (.github/workflows/sunday-ideas.yml). No one reads this run's chat.
 
             Follow the section "The Saturday good news" in .agents/skills/plan-week/references/offdays.md exactly:
-            find the four stories, check each against its primary source, write them into that week's
+            find the five stories, check each against its primary source, write them into that week's
             docs/plans/<Monday>-week/ideas.json, run board_feed.py cover, rebuild that week's board from its live
             build keeping every made day, and publish it with board_web.py publish-web --apply. Research with the
             built-in web search and web fetch. Change nothing but that option's stories; never patch the built page;

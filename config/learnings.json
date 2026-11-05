@@ -2098,25 +2098,30 @@
     {
       "id": "day-colours-on-covers",
       "on": "2026-11-04",
-      "krish": "One more thing: can you just lightly colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday? When they go on Facebook and Instagram they're slightly differently coloured based on the colour theme of each day. The off days are neutral colours or the colours we have planned, but not under the Monday, Wednesday, or Friday panels or colours. Just subtle brand recognition would be nice as a hard rule across Monday to Saturday assets.",
-      "why": "Every cover and thumbnail sat on the same sage ground whatever the day, wore the piece's series colour even when it published on an off day, and carried a coral tag and ring (mind.the.gap's colour) on every day.",
-      "means": "The publishing day decides an asset's colour, Monday to Saturday. On Monday, Wednesday and Friday the ground is a pale wash of the day's subchannel colour (follow.the.money's yellow, under.the.hood's lilac, mind.the.gap's coral) and the colour itself marks the highlighted words, the pill and the tag. Tuesday, Thursday and Saturday are neutral: the house sage, cream and ink, with no subchannel colour or name. His first look at a version that leaned the sage toward each colour and put the house mint and series pills on the off days: \"This is supposed to be your solution to the colour question because everything's wrong in here.\" Growth's assets keep the same rule through docs/CAROUSEL-STANDARD.md.",
+      "krish": "The off days are not supposed to share the same colours as Monday, Wednesday, and Friday. Monday, Wednesday, and Friday are supposed to be slightly more heavily and artistically skinned than that in their colours. \nWe've lost some sense of fun that we used to have in our branding. I like the new classy look but I miss the fun. \nPost random memes on a Monday but that doesn't mean it's Monday's colour and brand. Then follow the money. There is only one \"follow the money\" piece, one \"mind the gap\" piece, and one \"mind the gap\" piece every week. Other stuff can be fluid, maybe changeable. \nI should be allowed to post random stuff on any day but it doesn't take on the brand colours of Follow the Money, Mind the Gap, or Under the Hood. Which are only once a week, omni-channel, and a completely different distribution format",
+      "why": "The first version keyed the colour to the publishing day, so a random Monday meme would have worn follow.the.money's yellow, and the series covers wore only a pale wash. Before that every cover sat on the same sage ground whatever its series and carried a coral tag and ring (mind.the.gap's colour) on every day.",
+      "means": "A subchannel's colour and name belong to its one weekly piece (its article, both cuts, thumbnails and covers) and to an asset whose facts say it carries that piece; everything else, on any day, wears no subchannel colour or name. His first ask the same day (\"lightly colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday ... a hard rule across Monday to Saturday assets\") is replaced. Of the first concepts: \"This is supposed to be your solution to the colour question because everything's wrong in here.\" Of the sticker concepts: \"Stuff can't just randomly overlap on titles like that and I think these \"screwdriver included\" and \"bring a calculator included\" badges are really obnoxious.\" The heavier, more artistic series skin is his pick; nothing may sit on the words. Growth keeps the same rule (its R125) through docs/CAROUSEL-STANDARD.md.",
       "status": "encoded",
       "encoded": [
         {
           "file": "scripts/pages/brand.py",
-          "contains": "def day_look(",
-          "how": "one rule from config/studio.json: a subchannel's day wears its colour, every other day the house mint"
+          "contains": "def series_look(",
+          "how": "one rule from config/studio.json: the subchannel's weekly piece, or an asset that carries it, wears its colour and name; anything else none"
         },
         {
           "file": "scripts/pages/receipt.py",
-          "contains": "look = brand.day_look(",
-          "how": "every cover and thumbnail (the Receipt) takes its ground, highlight, pill and tag from the publishing day"
+          "contains": "look = brand.series_look(",
+          "how": "every cover and thumbnail (the Receipt) takes its highlight, pill and tag from the series rule, and its fit refuses any decoration on the words"
         },
         {
-          "file": "tests/day_colour_test.py",
-          "contains": "an off day and wears",
-          "how": "CI refuses an off-day cover carrying a subchannel colour or name, or a series day carrying another day's"
+          "file": "tests/series_colour_test.py",
+          "contains": "is not the piece and wears a series colour",
+          "how": "CI refuses a cover that is not the weekly piece carrying a subchannel colour or name, and the piece carrying another series'"
+        },
+        {
+          "file": "tests/receipt_overlap_test.py",
+          "contains": "test_a_decoration_on_the_headline_is_refused",
+          "how": "CI's browser job draws a decoration on a headline and proves the Receipt refuses it"
         }
       ]
     }

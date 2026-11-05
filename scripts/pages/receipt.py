@@ -40,9 +40,8 @@ GROUND = 'radial-gradient(circle at 30% 38%, {0} 0, {1} 55%, {2} 100%)'
 
 
 def ground(look):
-    """A series day's ground is a pale wash of its own colour (brand.day_look); an off day keeps the house sage."""
-    stops = look['wash'] or list(GROUND_STOPS)
-    return GROUND.format(*stops), stops[1]
+    """The house sage ground (brand.series_look decides the colours on it)."""
+    return GROUND.format(*GROUND_STOPS), GROUND_STOPS[1]
 TEMPLATE = 'receipt'
 # A line holding one word this short reads as a mistake ("the word "of" is on its own line").
 LONE_WORD_MAX = 3
@@ -129,12 +128,16 @@ FIT_JS = r"""([heads, maxLines, loneMax, safe, clear, proofMin, proofWs]) => {
     const parts = ['.wmp', 'h1', '.logos', '.pill', '.tag', '.ring'].flatMap(q => [...document.querySelectorAll(q)]);
     const cut = parts.filter(e => !inBox(e.getBoundingClientRect(), safe)).map(e => e.className || e.tagName);
     const hit = parts.filter(e => clear.some(c => hits(e.getBoundingClientRect(), c[1]))).map(e => e.className || e.tagName);
+    // Nothing sits on the words (Krish, 2026-11-04: "Stuff can't just randomly overlap on titles like that"): any
+    // decoration (.deco) that touches the headline, the wordmark, the logos, the pill or the tag refuses the shape.
+    const kept = ['.wmp', 'h1', '.logos', '.pill', '.tag'].flatMap(q => [...document.querySelectorAll(q)]).map(e => e.getBoundingClientRect());
+    const over = [...document.querySelectorAll('.deco')].filter(d => kept.some(w => hits(d.getBoundingClientRect(), [w.left, w.top, w.right, w.bottom]))).map(e => e.className);
     const main = document.querySelector('.main').getBoundingClientRect(), hb = h1.getBoundingClientRect(), fb = document.querySelector('.foot')?.getBoundingClientRect();
     const spill = hb.bottom > main.bottom + 1 || (fb && fb.bottom > main.bottom + 1) || h1.scrollWidth > h1.clientWidth + 1;
     const img = document.querySelector('.frame img').getBoundingClientRect();
-    last = {head, lines: lines.length, lone, cut, hit, spill, proof: [Math.round(img.width), Math.round(img.height)]};
+    last = {head, lines: lines.length, lone, cut, hit, over, spill, proof: [Math.round(img.width), Math.round(img.height)]};
     last.small_proof = img.width < proofMin * (safe[2] - safe[0]);
-    last.ok = lines.length <= maxLines && !lone.length && !cut.length && !hit.length && !spill && !last.small_proof;
+    last.ok = lines.length <= maxLines && !lone.length && !cut.length && !hit.length && !over.length && !spill && !last.small_proof;
     last.proofw = pw;
     if (last.ok) return last;
   }
@@ -291,7 +294,7 @@ def page(facts, c, base, shape):
     hs = brand.house()
     t = hs['tokens']
     ch = brand.channel(hs, facts['subchannel'])
-    look = brand.day_look(hs, facts.get('date'), facts['subchannel'])
+    look = brand.series_look(hs, facts['subchannel'], facts.get('date'), facts.get('carries'))
     card_ground, body_ground = ground(look)
     lead, last = words_of(c, facts)
     sys.path.insert(0, str(brand.ROOT / "scripts" / "post-pack"))
@@ -314,15 +317,15 @@ def page(facts, c, base, shape):
                     for row in [*c.get('rows', []), *c.get('strip', [])] if row.get('logo'))
     vars_ = {
         '--ink': t['ink'], '--accent': look['colour'], '--cream': t['cream'],
-        '--tag-bg': look['colour'] if look['series_day'] else t['ink'], '--tag-fg': t['ink'] if look['series_day'] else t['cream'],
+        '--tag-bg': look['colour'] if look['series'] else t['ink'], '--tag-fg': t['ink'] if look['series'] else t['cream'],
         '--head': f'{spec["heads"][0]}px', '--fine': f'{fine_px + 2}px', '--wm': f'{round(min(W / 30, (r - l) / 26))}px',
         '--logo': f'{round(max(fine_px + 2, (r - l) / 24) * (1 if n_logos <= 3 else .78))}px', '--gap': f'{round(W / 40)}px', '--edge': f'{edge}px',
         '--proofw': spec.get('proofw', '58%') if side else '100%',
     }
     root = ';'.join(f'{k}:{v}' for k, v in vars_.items())
     head = (f'{esc(lead)} ' if lead else '') + f'<mark>{esc(last)}</mark>'
-    # Only a subchannel's own day names it: an off day sits under no Monday, Wednesday or Friday panel.
-    pill = f'<div class="pill" data-fine-print>{esc(ch["name"])}</div>' if look['owner'] == ch['name'] else ''
+    # Only the subchannel's weekly piece names it: anything else sits under no series panel.
+    pill = f'<div class="pill" data-fine-print>{esc(ch["name"])}</div>' if look['series'] else ''
     foot = f'<div class="foot"><div class="logos">{logos}</div></div>' if logos else ''
     tag = f'<div class="tag" data-fine-print>{esc(p["tag"])}</div>'
     return f"""<!doctype html><html style="{root}"><head><meta charset="utf-8"><style>{brand.font_css()}
@@ -367,6 +370,8 @@ def explain(name, fit, small):
         print(f'  {what} falls outside the safe box')
     for what in fit['hit']:
         print(f'  {what} reaches into a zone the platform covers')
+    for what in fit.get('over', []):
+        print(f'  a decoration ({what}) touches the words: nothing may sit on a title, the tag, the pill or a mark')
     if fit['spill']:
         print('  the words do not fit their column: shorten the "headline"')
     if fit.get('small_proof'):
@@ -381,7 +386,7 @@ def receipt_record(facts, c, shape, name, data, fit):
         'drawer': 'scripts/pages/build.py (receipt)', 'template': TEMPLATE, 'shape': shape, 'file': name,
         'width': SHAPES[shape]['w'], 'height': SHAPES[shape]['h'], 'sha256': hashlib.sha256(data).hexdigest(),
         'portrait': False, 'proof': {k: p.get(k) for k in ('image', 'pdf', 'page', 'html', 'source', 'tag', 'ring')},
-        'day': {k: v for k, v in brand.day_look(brand.house(), facts.get('date'), facts['subchannel']).items() if k != 'wash'},
+        'series_look': brand.series_look(brand.house(), facts['subchannel'], facts.get('date'), facts.get('carries')),
         'rows': [r.get('name', '') for r in c.get('rows', [])], 'strip': [x.get('name', '') for x in c.get('strip', [])],
         'headline': list(words_of(c, facts)), 'headline_px': fit['head'], 'lines': fit['lines'],
         'safe': list(SHAPES[shape]['safe']), 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),

@@ -2173,11 +2173,12 @@ def read_offdays(data, where='ideas.json offdays', whole=False):
     return out
 
 
-STORY_COUNT = 4  # the weekly good news (Krish, 2026-11-02: "find the actual good news on Sunday ... so that the news items are fresh")
+STORY_COUNT = 5  # the weekly good news (Krish, 2026-11-02: "find the actual good news on Sunday ... so that the news items are fresh";
+#                 "we need 5 stories"; 2026-11-04: "Saturday's carousel should have the standards of the first one", which has five)
 
 
 def story_problems(stories):
-    """Why a weekly good-news option's stories are not ready to show, or []: four real stories, each with its headline,
+    """Why a weekly good-news option's stories are not ready to show, or []: five real stories, each with its headline,
     what happened, why it matters, its date, its source and its own photo or clip (Krish, 2026-11-02, Improve on the
     7 Nov good news: "I want actual news items and the content we are going to use here - embedded real world images or
     videos")."""
@@ -5730,19 +5731,19 @@ def _growth_offday_checks(check, week, ideas):
         check('off days: from 9 Nov an option with no hook, pitch or direction is refused', False)
     except BoardError as error:
         check('off days: from 9 Nov an option with no hook, pitch or direction is refused', 'option 2: no hook, pitch.see' in str(error))
-    # Krish, 2026-11-02: the weekly good news, its four real stories found on Sunday, each with its source and its own picture.
+    # Krish, 2026-11-02: the weekly good news, its five real stories found on Sunday, each with its source and its own picture.
     st = lambda n, **kw: dict({'headline': f'Story {n}', 'what': 'What happened.', 'why': 'Why it matters.', 'date': '2026-11-05',
                                'source': {'label': 'Src', 'url': 'https://example.com/s'}, 'media': {'kind': 'photo', 'url': 'https://example.com/p.jpg'}}, **kw)
     weekly = dict(rich, id='goodnews', weekly='good_news', stories_due='2026-11-08')
     got = read_offdays({'sat': [weekly, plain]})
     check('off days: a weekly option before Sunday says its stories are found then',
           'found fresh on Sunday 2026-11-08' in stories_block(got['sat'][0]) and 'data-stories="0"' in stories_block(got['sat'][0]))
-    got = read_offdays({'sat': [dict(weekly, stories=[st(n) for n in range(1, 5)]), plain]})
-    check('off days: its four stories show with their source and their own photo or clip',
-          stories_block(got['sat'][0]).count('<li class="story">') == 4 and 'its photo' in stories_block(got['sat'][0])
+    got = read_offdays({'sat': [dict(weekly, stories=[st(n) for n in range(1, 6)]), plain]})
+    check('off days: its five stories show with their source and their own photo or clip',
+          stories_block(got['sat'][0]).count('<li class="story">') == 5 and 'its photo' in stories_block(got['sat'][0])
           and previous_option(got['sat'][0])['stories'] == got['sat'][0]['stories'])
     try:
-        read_offdays({'sat': [dict(weekly, stories=[st(1), st(2), st(3), st(4, media={'kind': 'photo', 'url': ''})]), plain]})
+        read_offdays({'sat': [dict(weekly, stories=[st(1), st(2), st(3), st(4), st(5, media={'kind': 'photo', 'url': ''})]), plain]})
         check('off days: a story with no photo or clip is refused', False)
     except BoardError as error:
         check('off days: a story with no photo or clip is refused', 'its own photo or clip' in str(error))
