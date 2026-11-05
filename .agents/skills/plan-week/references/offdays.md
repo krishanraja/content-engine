@@ -58,6 +58,10 @@ standing rule only when he approves one); make more of what he approved.
  "covers": ["<must_cover id>"]}
 ```
 
+A carousel's first `picture` (its cover) names a scene that is the story's object, place or moment, or the house robot
+doing something (`config/brand-robot.json`), never a made-up robot (Ruling, Krish, 2026-11-05: "either use the branded
+toy robot or are more creative than just a robot doing something"; `docs/CAROUSEL-STANDARD.md`).
+
 **Read back before the tab, from the 9 Nov week** (Krish, 2026-11-02, of the 9 Nov off days: a Tuesday option
 "already being used this week", a meme "just a copy of a post from my inspo board but way worse", and of a Thursday
 pitch, "I have zero idea what this even means"). Before an option reaches the tab:

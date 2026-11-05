@@ -45,6 +45,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-05 A generated carousel cover shows the house felt robot, from its reference photos, or no robot and a more creative idea (Krish: "either use the branded toy robot or are more creative than just a robot doing something"; `scripts/post-pack/cover_scene.py`, `config/brand-robot.json`).
 - 2026-11-04 Series colours belong to the weekly piece, never the day (Krish: "Post random memes on a Monday but that doesn't mean it's Monday's colour and brand"). His verdicts: on the day-keyed first version, "everything's wrong in here"; on sticker concepts, "Stuff can't just randomly overlap on titles". The Saturday good news is five stories (`week_board.py` `STORY_COUNT`), as the standard and the 7 Nov carousel have it.
 - 2026-11-04 Krish: "every single word inside the project documentation of all the repositories is 100% clear and up to date before you merge". The pass found NOW.md 39 closeout notes behind across the three repositories, because bot merges start no fold and the steward refuses them; auto-merge now folds, and the steward fix waits in ai-harness.
 - 2026-11-04 The style and caption lab, his room as shot, face flags and `ve study` (#395): experiments move outside any piece (Krish: "experiment carefully"), on his own footage.
