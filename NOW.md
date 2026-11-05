@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
 as_of: 2026-11-05
-head: 45161a5
+head: 8ddf532
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,39 +30,35 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-04)
+## Where it is right now (as of 2026-11-05)
 
-<!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":1,"current_as_of":"2026-11-03","current_source":"Control Center content_ideas in the publication's series (1 published in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (25% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 4 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
+<!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":2,"current_as_of":"2026-11-05","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 4 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
-- **Video: ve is the engine on main, quick-edit the fallback until ve passes Phase 3** (`docs/ve/STATUS.md`). From 9 Nov every ve piece runs one production round on the board (Sign storyboard with `ve expect`, Pick a style, Approve proof, Approve cut), and five guards from the killed Thursday 5 Nov cut bind (F31 to F39). Built and tested with the renderer mocked; no ve piece has yet run the round end to end on a real take.
-- **The look is in the lab, waiting on his eye.** The renderer draws ten motion styles (`apps/renderer/src/engine/kit/motion-profiles.json`), the five look-alikes now have their own looks, and `ve lab` rendered every style and caption look on his Thursday take (reel sent 4 Nov; `docs/ve/lab/2026-11-04.json`). It shows the word caption across the SPLIT seam. Monday's Ladder is the data-story recipe; its `through_line` device waits until Friday 13 Nov is filed (F33, F39).
-- **Craft measured on his real takes:** 24 fps teleprompter takes laid evenly (0 dropped frames against 1), `ve said` reads what he said on the take, sniffs turned down, the Critic sees motion strips. `picture.as_shot` (his room as shot) and `ve faces` (off-lens moments) are advisory and uncalibrated (F14).
-- **Covers and thumbnails** are the Receipt (2 Nov: a real proof picture, no face). Only the subchannel's one weekly piece, or an asset that `carries` it, wears its colour and name; everything else, any day, wears none (`scripts/pages/brand.py` `series_look`, `tests/series_colour_test.py`; `docs/CAROUSEL-STANDARD.md` holds Growth to the same rule). Nothing may sit on the words (`tests/receipt_overlap_test.py`). Series skins (5 Nov: "keep all of them and rotate them"): nine, one a week from neon on 9 Nov, on the series thumbnails, `"skin"` overrides (`scripts/pages/skins/`, `tests/series_skins_test.py`); cover shapes wear none yet.
-- **One music bed shape** in both engines (`config/music-bed.json`), nothing keyed to his voice, and no cut reaches 3 Posts without its bed receipt (F40).
-- **The failure loop is built:** every failure lands in `engine_incidents` with what the session read first, and `engine-learning-weekly.yml` finds repeats each Sunday from 8 Nov and puts at most three proposals on his list.
-- **Docs were checked against the code on 4 Nov**, every living document in this repository, growth-makeyourmindup and content-watcher. The docs steward has not run since 31 Oct (it refuses a run the auto-merge bot starts), so `auto-merge.yml` now folds closeout notes itself after each merge.
-- **Known red check:** `tests/quick-edit-mix.test.ts` fails in a container with ffmpeg 6.1.1 (CI pins n8.1.2 and passes). Migrations `20261116090000`, `20261116100000` and `20261117090000` are not recorded as applied as of 28 Oct.
+- **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
+- **The style and caption lab** ran 12 looks on one pinned 8 s window of his Thursday take; reel and sheet are with him (`docs/ve/lab/2026-11-04.json`). ve also gained quick-edit's craft: even 24 fps laying, HDR tone mapping, `ve said`, `ve faces`, `ve study`, motion strips for the Critic and `ve sfx audition` (six sounds shortlisted, none downloaded). Captions sit off his face; STAGE beats, logo_orbit and face-with-proof carry the brand treatment (Codex cards ve-motion-3, -5, -6). (2026-11-04)
+- **One music bed shape for both engines** (`config/music-bed.json`, `scripts/bed_shape.py`): no video reaches 3 Posts without its bed-shape receipt (F40). Off days bed on their own rotation in the house mint. (2026-11-04)
+- **The failure loop is built:** `engine_incidents` (migration `20261123090000`, applied) records each failure with the piece's preflight receipt; from 9 Nov `ve brief` and `ve render` refuse without one. `engine-learning-weekly.yml` runs Sundays on his subscription; first live run Sunday 15 Nov. (2026-11-04)
+- **Known red check:** `npm run verify` passes on the session branch except `tests/quick-edit-mix.test.ts` (`mix_test`, this container's ffmpeg 6.1.1; the repository pins 8.1.2). Migrations `20261116090000_rejections.sql`, `20261116100000_ux_feedback_recordings.sql` and `20261117090000_taste_ventures.sql` are not recorded as applied as of 2026-10-28.
 
 ## What changed recently
 
+- 2026-11-05 Series thumbnails wear nine skins, one a week from 9 Nov, in the series' own colour (Krish: "keep all of them and rotate them all at will over the coming weeks"); nothing sits on the words or the logos (`scripts/pages/skins/`, `tests/series_skins_test.py`).
 - 2026-11-05 The intro sting is back in front of every 16:9 long cut of a weekly series piece, and only there (Krish: "I think it should go at the start of the longer wide videos 100%,"): the six clips he saw on 12 October, byte for byte, pinned by sha256 in `config/intro-sting.json` and filed in the library's brand kit. The tall cut opens on the hook and off days wear none, in both engines (`intro.py`, `make.py`, ve's `VeCut` wrapper, compile, premix, the qc `opening` row); it moves the ve engine hash.
-- 2026-11-05 A carousel is at most ten cards, cover and last card included, because Buffer posts no more (`docs/CAROUSEL-STANDARD.md`; the board's `OFF_CARDS` and `OFF_SLIDES`; the story schema).
-- 2026-11-05 Every house carousel's last card ends on "Follow for more" centred above a larger wordmark, set by its place in the deck (`HouseCarouselCard.tsx`, `tests/carousel.test.ts`; Krish: "in its own skin of choice").
-- 2026-11-05 Scripts and captions follow his Instagram checklist, adapted to his rules: the hook is the first sentence with the keyword in it, his personal line second or third, no greeting in front (refused by `story_check.py`), a line naming who it is for, the save line in the caption, one specific question pinned (`make-piece/references/hook-and-share.md`).
-- 2026-11-05 A generated carousel cover shows the house felt robot, from its reference photos, or no robot and a more creative idea (Krish: "either use the branded toy robot or are more creative than just a robot doing something"; `scripts/post-pack/cover_scene.py`, `config/brand-robot.json`).
-- 2026-11-04 Series colours belong to the weekly piece, never the day (Krish: "Post random memes on a Monday but that doesn't mean it's Monday's colour and brand"). His verdicts: on the day-keyed first version, "everything's wrong in here"; on sticker concepts, "Stuff can't just randomly overlap on titles". The Saturday good news is five stories (`week_board.py` `STORY_COUNT`), as the standard and the 7 Nov carousel have it.
+Lines moved on 5 November are in `docs/history/2026-11-05-NOW-moved-1.md`. Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everything to 29 October 2026 is in `docs/history/2026-10-29-NOW-changed-recently.md`, 30 October lines in `docs/history/2026-10-30-NOW-moved-3.md` and `-4.md`, `-5.md` and `-6.md`, and `docs/history/2026-10-31-NOW-moved-1.md`, and `docs/history/2026-11-02-NOW-moved-2.md` and `-5.md`, all verbatim (W2.12); `npm run check:workbench` holds the byte cap. The 28 October waiting line is in `docs/history/2026-10-31-NOW-moved-4.md`, and one 2 November line in `docs/history/2026-11-03-NOW-moved-1.md`, two in `-moved-2.md`, two in `-moved-3.md` and two in `-moved-4.md`, and one 3 November line in `docs/history/2026-11-04-NOW-moved-2.md` and one in `-moved-4.md`. The twelve 4 November closeout notes, as folded, are in `docs/history/2026-11-05-NOW-closeout-fold.md`.
 
-Older lines are in `docs/history/LOG.md` (rolled verbatim on 4 Nov) and the `docs/history/*-NOW-*.md` files.
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-05): merge the skins' logo fix, then redraw the 9 Nov series thumbnails (`build.py --thumbs`). The 9 Nov week (board 0e79df54): his Wednesday script press, Growth posts the off days, Saturday's pick on Sunday 8 Nov.
+- Next, covers (2026-11-05): merge the skins' logo fix, then redraw the 9 Nov series thumbnails (`build.py --thumbs`). The 9 Nov week (board 0e79df54): his Wednesday script press, Growth posts the off days, Saturday's pick on Sunday 8 Nov.
 - Waiting on Krish (2026-11-05): THE_RECEIPT skins every series cover, the code only thumbnails (cover skins, or he narrows it); a skin a piece cannot wear (next one, plain Receipt, or `"skin"` as now); skins before 9 Nov; filing the scene stills, their Higgsfield URLs. The 10 and 12 Nov off-day decks were rebuilt without under.the.hood and filed again on his yes (`docs/plans/2026-11-09-week/offday-carousels.md`); they reach the board at its next build.
-- Waiting on Krish (2026-11-04): his numbers and words on the lab reel (`ve lab verdict`); download yes for the six shortlisted sounds, then his pick by ear; his words on the voice A/B; rating the motion styles on his own footage.
-- Waiting on Krish (2026-11-04): a pull request in ai-harness so docs stay current by themselves: let the steward run when the merge bot starts it, fold on dispatch, add content-watcher to the fleet list, and give growth-makeyourmindup and content-watcher the fold workflow.
-- Decisions the docs pass found (2026-11-04): the short cut's house rule says 160 to 225 words, the code 195; the ve engine cap is 300 minutes, set by a session, not him; house rule NO_NAME keeps his face on covers, THE_RECEIPT has none; rule 20 says the floor changes only by a pull request he merges, which auto-merge now does without him.
-- Found, not fixed (2026-11-04): the hand-run quick-edit filing route cannot pass the receipt gates (only `produce_day.py` stages receipts); `ve sprint start` calls `ve brief` with arguments it refuses; `make-piece.yml`'s allowlist lacks commands the skill runs; `config/ve/crew/critic.lens.md` says seven questions where the card has eight (it is hashed into every verdict, so it is unchanged).
-- Older open questions (2026-10-29): OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I"; Gate 2 on the 16:9 face-with-proof lock (9:16 froze on 3 Nov).
+- Next (2026-11-05): read run 42072590168's receipt; on success run ve eyeline --backend maxine --maxine-copy, measure the iris shift, and get a blind review of the strips.
+- Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
+- Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
+- Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
+- 9 Nov week (2026-11-04): board 0e79df54. Wed and Fri scripts on their tabs (Fri in Teleprompter); Tue and Thu carousels signed off and in 3 Posts; cover rule in the carousel standard. Next: Wed's script press; Growth posts the off days; Sat chosen Sun 8 Nov.
+- Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
+- Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
+- Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
 - North Star check (2026-11-05): holds.
 
 ## Read next
@@ -71,17 +67,18 @@ Older lines are in `docs/history/LOG.md` (rolled verbatim on 4 Nov) and the `doc
 2. `WORKBENCH.md`: where the last session stopped.
 3. `docs/NORTH_STAR.md`: what the whole system is for, in Krish's words.
 4. `docs/production/THE_BAR.md` and `scripts/floor.py`: the eight nevers, the aims, what is under test, and his rejections.
-5. `docs/STATE.md`, `docs/SYSTEM_MAP.md` and `docs/CONTENT_ENGINE.md`: what is live, who owns what, and the engine route by route.
-6. `docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md` and `docs/ve/STATUS.md`: the video engine and what it can do today.
-7. `docs/CREATIVE_DIRECTION.md`, `docs/CAROUSEL-STANDARD.md`, `docs/PUBLISH_BOARDS.md` and `docs/CADENCE.md`: the signed direction, carousels and day colours, the board and the week.
-8. `docs/GROWTH-HANDOFF.md`, `docs/DRIVE.md`, `docs/INTEGRATIONS.md` and `docs/COST_GUARDS.md`: Growth's side, Drive, outside services and spend.
-9. `docs/GLOSSARY.md` and `config/failures.json` (`python3 scripts/check_failures.py`): every name, and every failure with its guard.
+5. `docs/plans/2026-11-07-wave-2.md` and `docs/plans/2026-11-14-wave-3.md`: the work after the first Sunday loop.
+6. `docs/STATE.md`, `docs/SYSTEM_MAP.md` and `docs/CONTENT_ENGINE.md`: what is live, who owns what, and the engine route by route.
+7. `docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md` and `docs/ve/STATUS.md`: the video engine and what it can do today.
+8. `docs/CREATIVE_DIRECTION.md`, `docs/CAROUSEL-STANDARD.md`, `docs/PUBLISH_BOARDS.md` and `docs/CADENCE.md`: the signed direction, carousels, the board and the week.
+9. `docs/GROWTH-HANDOFF.md`, `docs/DRIVE.md`, `docs/INTEGRATIONS.md` and `docs/COST_GUARDS.md`: Growth's side, Drive, outside services and spend.
+10. `docs/GLOSSARY.md` and `config/failures.json` (`python3 scripts/check_failures.py`): every name, and every failure with its guard.
 
 ## Do not trust
 
-- `docs/HARNESS_CONTEXT.md`: generated from ai-harness (`brain/repositories/content-engine.json`); it still names the 14 Oct handoff as orientation and does not name `docs/ve/`.
-- `docs/AGENTS-REFERENCE.md` "What this repository is": a rule paragraph kept verbatim, which still describes the Studio making Shorts and carousels and a repository with no interface.
-- `docs/CREATIVE_IDENTITY_UPGRADE.md`: a plan of September; the look lives in THE_BAR, the brand tokens, `docs/ve/MOTION_STANDARD.md` and the style bank.
-- `docs/prompts/*.md` and anything in `docs/plans/` older than the current week: dated records, kept as written.
-- Any document that names Descript as the script reader (teleprompter.com since 2026-10-12), a 3-minute long cut (5 minutes since 2026-10-19), a weekly deep cut (retired 2026-10-21), a Claude routine as a scheduler (2026-10-29) or a publish board built as a Claude artifact (the web board since 2026-10-19).
+- `docs/ARCHITECTURE.md`, `docs/OPERATIONS.md`, `docs/DEPLOYMENT.md`, `docs/ENGINE_SECRETS_HANDOVER.md` and `docs/CAROUSEL_ENGINE_STATE.md` in the passages `docs/STUDIO.md` lists as stale (audited 2026-09-25).
+- `docs/STATE.md` below its 29 October section, and `docs/SYSTEM_MAP.md`, `docs/GLOSSARY.md` and `docs/STUDIO.md`, where they predate the code: none was checked against the commits from 2026-10-22 on (ve, the floor, taste by venture, the Sunday loop, zero routines).
+- `.agents/skills/mindmake-video` where it routes work into The Money of AI or Built With AI: correct for the Studio's series, wrong as a description of the publication.
+- Any document that names Descript as the script reader (teleprompter.com since 2026-10-12), a 3-minute long cut (5 minutes since 2026-10-19), a series line or a weekly deep cut (retired 2026-10-21), or a publish board built as a Claude artifact (the web board since 2026-10-19).
+- Any document that calls the publication or this engine Mindmake's (superseded 2026-10-28), gives it two channels (2026-09-25), or names a Claude routine as a scheduler (2026-10-29).
 - Everything in `docs/history/`.
