@@ -42,6 +42,13 @@ def _audio(media, rate):
     return torch.from_numpy(np.frombuffer(raw, np.float32).copy()).unsqueeze(0)
 
 
+def _score(spans) -> float:
+    """How sure the model is of the word: the mean probability of its letters, 0 to 1. A garbled or mispronounced
+    word scores low on both aligners (velib.fumbles reads it)."""
+    values = [float(getattr(s, 'score', 0.0)) for s in spans]
+    return round(sum(values) / len(values), 3) if values else 0.0
+
+
 def align(media, words: list[str], model: str) -> list[dict]:
     if model not in MODELS:  # before loading torch: an unknown aligner is refused on any machine
         raise ValueError(f'{model}: the forced aligners are {", ".join(MODELS)}')
@@ -55,7 +62,8 @@ def align(media, words: list[str], model: str) -> list[dict]:
             emission, _ = bundle.get_model()(wave)
             spans = bundle.get_aligner()(emission[0], bundle.get_tokenizer()(norm))
         ratio = wave.shape[1] / emission.shape[1] / bundle.sample_rate
-        return [{'w': w, 's': round(s[0].start * ratio, 3), 'e': round(s[-1].end * ratio, 3)} for w, s in zip(words, spans)]
+        return [{'w': w, 's': round(s[0].start * ratio, 3), 'e': round(s[-1].end * ratio, 3), 'score': _score(s)}
+                for w, s in zip(words, spans)]
     if model == 'wav2vec2-960h':
         from torchaudio.pipelines import WAV2VEC2_ASR_BASE_960H as bundle  # noqa: PLC0415
         wave = _audio(media, bundle.sample_rate)
@@ -65,14 +73,14 @@ def align(media, words: list[str], model: str) -> list[dict]:
             emission, _ = bundle.get_model()(wave)
             emission = torch.log_softmax(emission, dim=-1)
         tokens = torch.tensor([[index[c] for c in '|'.join(norm)]], dtype=torch.int32)
-        path, _ = torchaudio.functional.forced_align(emission, tokens, blank=0)
-        spans = torchaudio.functional.merge_tokens(path[0], torch.ones(path.shape[1]))
+        path, scores = torchaudio.functional.forced_align(emission, tokens, blank=0)
+        spans = torchaudio.functional.merge_tokens(path[0], scores[0].exp())
         ratio = wave.shape[1] / emission.shape[1] / bundle.sample_rate
         out, k = [], 0
         for w, n in zip(words, norm):
             chars = spans[k:k + len(n)]
             k += len(n) + 1  # the word separator
-            out.append({'w': w, 's': round(chars[0].start * ratio, 3), 'e': round(chars[-1].end * ratio, 3)})
+            out.append({'w': w, 's': round(chars[0].start * ratio, 3), 'e': round(chars[-1].end * ratio, 3), 'score': _score(chars)})
         return out
 
 

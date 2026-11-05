@@ -159,6 +159,23 @@ DEFAULT_FIXES = [
 ]
 
 
+def _lexicon():
+    """His lexicon (config/voice/lexicon.json, velib/lexicon.py): the names and mishearings ve learns from every take.
+    quick-edit reads the same file, so both routes hear and spell the same names. Missing or unreadable, quick-edit
+    runs on DEFAULT_FIXES alone."""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+        from velib import lexicon
+        return lexicon, lexicon.load()
+    except Exception:  # noqa: BLE001 - the fallback route must run without it
+        return None, None
+
+
+_LEX, _LEX_DOC = _lexicon()
+if _LEX_DOC:
+    DEFAULT_FIXES = DEFAULT_FIXES + [pair for pair in _LEX.fixes(_LEX_DOC) if pair not in DEFAULT_FIXES]
+
+
 def default_logo(out):
     """The makeyourmindup masthead on an ink pill, centred above the tall
     captions (they start 250 pixels down), on a transparent 1080x1920 frame.
@@ -191,6 +208,8 @@ def script_prompt(path):
         word = m.group(0)
         if word not in names and word.split()[0] not in {'The', 'This', 'That', 'And', 'But', 'So', 'Now', 'Our', 'If', 'One', 'First', 'Then', 'When', 'What', 'How', 'Why', 'Think', 'People', 'Every', 'Most', 'Nobody', 'Instead', 'Expensive', 'Choose', 'Line', 'Before', 'Square', 'Written', 'On', 'In', 'It', 'They', 'You', 'We', 'He', 'She', 'Let', 'Back'}:
             names.append(word)
+    if _LEX_DOC:
+        names += [t for t in _LEX.terms(_LEX_DOC, limit=20) if t not in names]   # the script's own names first
     return 'makeyourmindup. ' + ', '.join(names[:60]) + '.'
 
 

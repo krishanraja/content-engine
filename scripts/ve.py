@@ -657,7 +657,8 @@ def cmd_ingest(args) -> int:
     try:
         spec_file, spec, directory = _ve_dir(args.piece)
         path = takes.ingest(directory, spec['piece_id'], args.take, args.media, clock_a=args.clock_a, clock_b=args.clock_b,
-                            aligner_a=args.aligner_a, aligner_b=args.aligner_b)
+                            aligner_a=args.aligner_a, aligner_b=args.aligner_b,
+                            script_text=Path(args.teleprompter).read_text(encoding='utf-8-sig') if args.teleprompter else None)
         record = takes.load_take(directory, args.take)
         print(f"ve ingest: {args.take} ({record['media']['duration_s']} s; {len(record['aligners']['a']['words'])} words from "
               f"{record['aligners']['a']['name']}, {len(record['aligners']['b']['words'])} from {record['aligners']['b']['name']}) -> {path}")
@@ -685,6 +686,12 @@ def cmd_conform(args) -> int:
             print('\n'.join(problems[:20]) or 'the spec does not pass its schema')
             return 1
         script, script_sha = _script(directory, args.script)
+        from velib import hear, takes as take_records
+        unheard = [name for name in (args.takes or take_records.list_takes(directory))
+                   if hear.valid(take_records.load_take(directory, name)) is None]
+        if unheard and not args.without_listen:
+            raise ValueError(f"no listen pass for {', '.join(unheard)}: run ve hear {args.piece} --take <id> --ctc on the "
+                             f"machine that holds the media (or --without-listen: fumbles only from the transcript)")
         edl = conform.conform(linted, args.cut, script, directory, takes=args.takes or None,
                               crossfade_s=args.crossfade_ms / 1000, script_sha256=script_sha)
         records = conform.records_for(edl, directory)
@@ -696,8 +703,13 @@ def cmd_conform(args) -> int:
         edl_path, words_path = conform.write(edl, directory)
         print(f"ve conform: {len(edl['segments'])} segment(s), {len(edl['joins'])} join(s), {len(edl['flubs_removed'])} flub(s) removed, "
               f"{len(edl['unscripted_kept'])} unscripted word(s) kept for his ear; {edl['duration_s']} s at speed {edl['speed']}")
+        unwritten = sum(len(f.get('unwritten', [])) for f in edl['flubs_removed'])
+        if unwritten:
+            print(f've conform: {unwritten} of the removed sounds were fumbles the transcript left out (ve hear)')
         for kept in edl['unscripted_kept']:
             print(f"  kept: \"{kept['word']}\" in line {kept['line']} ({kept['take']} at {kept['src_s']} s): no agreed gap lets it go")
+        for row in edl.get('sounded_wrong', []):
+            print(f"  for his ear: \"{row['word']}\" in line {row['line']} ({row['take']} at {row['src_s']} s): {'; '.join(row['why'])}")
         print(f've conform: {edl_path}\nve conform: {words_path}')
         from velib import faceflags
         cover = faceflags.write_cover(edl, directory)
@@ -752,6 +764,148 @@ def cmd_faces(args) -> int:
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(f've faces: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_hear(args) -> int:
+    """The listen pass: what is in the take's sound beyond the words the transcriber wrote (velib/hear.py)."""
+    from velib import hear, lexicon, takes
+    from velib.common import write_json as save
+    try:
+        _spec_file, _spec, directory = _ve_dir(args.piece)
+        record = takes.load_take(directory, args.take)
+        problem = takes.check_media(record)
+        if problem:
+            raise ValueError(problem)
+        media = record['media']['path']
+        doc = lexicon.load()
+        ears = {}
+        if args.ctc:
+            ears['ctc:wav2vec2-960h'] = hear.ctc_words(media)
+        if args.whisper:
+            ears[f'whisper-verbatim:{args.whisper}'] = hear.whisper_words(media, args.whisper, lexicon_doc=doc)
+        if not ears:
+            print('ve hear: voice only; add --ctc (and --whisper large-v3) so hesitations the transcript left out are heard')
+        record['listen'] = hear.listen(record, hear.decode(media), ears=ears, lexicon_doc=doc)
+        save(takes.take_path(directory, args.take), record)
+        block = record['listen']
+        counted = hear.counts(block)
+        print(f"ve hear: {args.take}: ears {', '.join(block['ears'])}; {len(block['quiet'])} quiet span(s); "
+              f"{len(block['events'])} event(s): " + (', '.join(f'{k} {v}' for k, v in sorted(counted.items())) or 'none'))
+        for ev in block['events'][:args.show]:
+            print(f"  {ev['s']:7.2f}-{ev['e']:.2f} s  {ev['kind']:<10} {ev['use']:<5} {ev['text'] or '·':<10} {', '.join(ev['sources'])}")
+        print(f've hear: {takes.take_path(directory, args.take)}')
+        return 0
+    except ImportError as error:
+        print(f've hear: {error}: --ctc needs torch and torchaudio (CPU build), --whisper needs faster-whisper', file=sys.stderr)
+        return 1
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've hear: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_lexicon(args) -> int:
+    """His lexicon: what the engine has learned of the words he says (velib/lexicon.py)."""
+    from velib import lexicon
+    try:
+        doc = lexicon.load()
+        if args.action == 'learn':
+            if not args.piece or not args.take or not args.teleprompter:
+                raise ValueError('ve lexicon learn <piece> --take <id> --teleprompter <script.txt> (after ve said)')
+            _spec_file, _spec, directory = _ve_dir(args.piece)
+            report = load_json(directory / f'said.{args.take}.json')
+            changed = lexicon.learn(doc, Path(args.teleprompter).read_text(encoding='utf-8-sig'), report)
+            if changed.get('skipped'):
+                print(f"ve lexicon: {changed['source']}: {changed['skipped']}")
+                return 0
+            path = lexicon.save(doc)
+            print(f"ve lexicon: learned from {changed['source']}: {len(changed['terms'])} new term(s), "
+                  f"{len(changed['fixes'])} mishearing(s), hesitations {changed['hesitations'] or 'none'}, "
+                  f"added words {changed['added'] or 'none'} -> {path}")
+        for line in lexicon.summary(doc):
+            print(f've lexicon: {line}')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've lexicon: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_voice(args) -> int:
+    """His voice profile in numbers, over every take a listen pass measured (velib/delivery.py)."""
+    from velib import delivery, hear, takes
+    try:
+        records = []
+        for piece in args.pieces:
+            _spec_file, _spec, directory = _ve_dir(piece)
+            records += [takes.load_take(directory, name) for name in takes.list_takes(directory)]
+        measured = [r for r in records if hear.valid(r)]
+        if not measured:
+            raise ValueError('no take with a listen pass: run ve hear first')
+        doc = delivery.profile(measured)
+        path = delivery.write_profile(doc, args.out)
+        pitch, pace, tone = doc['pitch'], doc['pace'], doc['intonation']
+        print(f"ve voice profile: {len(doc['takes'])} take(s); pitch median {pitch['median_hz']} Hz, range {pitch['range_st']} "
+              f"semitones; phrase ends slope {tone['phrase_end_slope_st_s']} st/s; {pace['words_per_s_median']} words a "
+              f"second; pause median {pace['pause_median_s']} s -> {path}")
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f've voice profile: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_eyeline(args) -> int:
+    """Eye gaze correction on a take, before ingest (velib/eyeline.py): his eyes toward the lens where they are off it,
+    and nothing else changed. Krish, 2026-11-05: "For all post-processing of my makeyourmindup videos."
+    """
+    from velib import eyeline, qc_eyeline
+    try:
+        media = Path(args.media)
+        if not media.is_file():
+            raise ValueError(f'{media} is not a file')
+        if args.out:
+            out = Path(args.out)
+        elif args.piece:
+            _spec_file, _spec, directory = _ve_dir(args.piece)
+            out = directory / 'eyeline'
+        else:
+            out = eyeline.EVAL_DIR / media.stem
+        if args.backend == 'maxine':
+            copy = args.maxine_copy
+            if args.pod:
+                from velib import maxine_pod
+                pod = maxine_pod.run(media, out, yes=args.yes, max_usd=args.max_usd)
+                print(f"ve eyeline: pod {pod['pod']} ran {pod['seconds']} s, about ${pod['cost_usd']}; "
+                      f"terminated {pod.get('terminated')}")
+                copy = pod['copy']
+            backend = eyeline.Maxine(copy)
+        else:
+            backend = eyeline.BACKENDS[args.backend]()
+        receipt = eyeline.run(media, out, backend, qc=None if args.no_qc else qc_eyeline.QC(), crf=args.crf)
+        reasons = ', '.join(f'{k} {v}' for k, v in sorted(receipt['reasons'].items()))
+        print(f"ve eyeline: {receipt['decision']}: {receipt['corrected_frames']} of {receipt['frames']} frames corrected "
+              f"by {receipt['backend']} ({reasons})")
+        for problem in receipt['problems']:
+            print(f've eyeline: refused: {problem}')
+        qc = receipt.get('qc') or {}
+        for key in ('eye_flicker_ratio', 'seam_ratio'):
+            if key in qc:
+                print(f"ve eyeline: {key} {qc[key]} (proposed limit {qc['limits'][key]}, uncalibrated)")
+        faces = qc.get('faces')
+        if faces:
+            print(f"ve eyeline: blinks {faces['before']['blinks']} before, {faces['after']['blinks']} after; off the lens "
+                  f"{faces['before']['off_lens_s']} s before, {faces['after']['off_lens_s']} s after")
+        for key in ('strips', 'loop'):
+            if key in qc:
+                print(f've eyeline: {qc[key]}')
+        if receipt['decision'] != 'rejected':
+            print(f"ve eyeline: {receipt['output']['path']}")
+            if not backend.restricted:
+                print(f"ve eyeline: next, ingest the corrected take: ve ingest <piece> --take <id> --media {receipt['output']['path']} ...")
+            else:
+                print(f've eyeline: {backend.name} is private evaluation only; its output is never ingested')
+        return 0 if receipt['decision'] != 'rejected' else 1
+    except (OSError, ValueError, KeyError, RuntimeError, ImportError, subprocess.CalledProcessError) as error:
+        print(f've eyeline: {error}', file=sys.stderr)
         return 1
 
 
@@ -1545,8 +1699,9 @@ def main() -> int:
     p.add_argument('piece'); p.add_argument('--take', required=True); p.add_argument('--media', required=True)
     p.add_argument('--clock-a', help='aligner A word clock JSON; without it a local faster-whisper:<model> runs')
     p.add_argument('--clock-b', help='aligner B word clock JSON (a second local model)')
-    p.add_argument('--aligner-a', required=True, help='for example faster-whisper:small.en')
+    p.add_argument('--aligner-a', required=True, help='for example faster-whisper:large-v3 (the most accurate local model)')
     p.add_argument('--aligner-b', required=True, help='for example faster-whisper:medium.en (no paid aligner)')
+    p.add_argument('--teleprompter', help='the script he read: its names prompt the local transcriber (with his lexicon)')
     p.set_defaults(fn=cmd_ingest)
     p = sub.add_parser('conform', help='choose takes line by line, remove flubs, cut only in agreed gaps, write the EDL')
     p.add_argument('piece'); p.add_argument('--cut', required=True); p.add_argument('--script')
@@ -1554,10 +1709,37 @@ def main() -> int:
     p.add_argument('--crossfade-ms', type=float, default=30.0, help='20 to 40 ms')
     p.add_argument('--render', action='store_true', help='render the conformed picture and dialogue in one graph')
     p.add_argument('--assets-dir'); p.add_argument('--joins-reel', action='store_true')
+    p.add_argument('--without-listen', action='store_true',
+                   help='conform a take with no listen pass (fumbles only from the transcript; no quiet check on joins)')
     p.set_defaults(fn=cmd_conform)
+    p = sub.add_parser('hear', help='the listen pass: hesitations, broken words and unworded voice the transcript left out')
+    p.add_argument('piece'); p.add_argument('--take', required=True)
+    p.add_argument('--ctc', action='store_true', help='also hear with wav2vec2-960h letter by letter (needs torch)')
+    p.add_argument('--whisper', help='also hear with a disfluent faster-whisper pass, for example large-v3')
+    p.add_argument('--show', type=int, default=40, help='events to print')
+    p.set_defaults(fn=cmd_hear)
+    p = sub.add_parser('lexicon', help='his lexicon: names, mishearings, hesitations and the words he adds')
+    p.add_argument('action', choices=('show', 'learn')); p.add_argument('piece', nargs='?')
+    p.add_argument('--take'); p.add_argument('--teleprompter', help='the script text he read (as for ve said)')
+    p.set_defaults(fn=cmd_lexicon)
+    p = sub.add_parser('voice', help='his voice profile in numbers, from the listen pass over his takes')
+    p.add_argument('action', choices=('profile',)); p.add_argument('pieces', nargs='+')
+    p.add_argument('--out', help='default config/voice/profile.json')
+    p.set_defaults(fn=cmd_voice)
     p = sub.add_parser('faces', help='where on a take he looks off the lens, closes his eyes or turns his head (advisory)')
     p.add_argument('piece'); p.add_argument('--take', required=True)
     p.set_defaults(fn=cmd_faces)
+    p = sub.add_parser('eyeline', help='eye gaze correction on a take before ingest: eyes toward the lens, sound and timing unchanged')
+    p.add_argument('piece', nargs='?', help='the piece, for its ve folder (otherwise .cache/eyeline-eval/<take>)')
+    p.add_argument('--media', required=True); p.add_argument('--out')
+    p.add_argument('--backend', choices=('flx', 'maxine', 'identity'), default='flx',
+                   help='flx: WangWilly/Hsu model, private evaluation only; maxine: NVIDIA Maxine Eye Contact on a rented RTX pod')
+    p.add_argument('--maxine-copy', help="Maxine's redirected copy of the take, when it has already been made")
+    p.add_argument('--pod', action='store_true', help='make the Maxine copy on one rented RunPod RTX A5000 (spend)')
+    p.add_argument('--yes', action='store_true', help="Krish approved this run's spend")
+    p.add_argument('--max-usd', type=float, default=1.0, help='refuse a pod run that could cost more than this')
+    p.add_argument('--crf', type=int, default=12); p.add_argument('--no-qc', action='store_true')
+    p.set_defaults(fn=cmd_eyeline)
     p = sub.add_parser('said', help='what he said on a take against the script he read, and the words the cut should carry')
     p.add_argument('piece'); p.add_argument('--take', required=True)
     p.add_argument('--teleprompter', required=True, help='the script text he read (the Teleprompter script, saved as text)')
