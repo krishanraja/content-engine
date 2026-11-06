@@ -75,7 +75,7 @@ LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening th
 TEMPLATE_HI, TEMPLATE_SHARP = 90, 0.9    # the stack percentile the catchlight is taken from; how much texture is put back
 GATE_FROM, GATE_SPAN = 0.3, 0.2     # no correction under 0.3 iris radii of move (about 8 deg), the whole move from 0.5 (about 14 deg)
 TEMPLATE_VISIBLE, TEMPLATE_MOVE = 0.9, 0.8   # use the clean iris when under this share of his is visible, or he moves it this many radii
-LOOK_UP, LOOK_DOWN, LOOK_PAD, LOOK_MIN = -0.035, 0.28, 2, 15  # white under the iris, or this share of it under the upper lid: a look up or down, left alone (and a few frames either side)
+LOOK_UP, LOOK_DOWN, LOOK_PAD, LOOK_MIN = -0.035, 0.28, 1, 15  # white under the iris, or this share of it under the upper lid: a look up or down, left alone (and a few frames either side)
 IRIS_SCALE = 1.14          # the clean iris is drawn this much larger than the landmarker's circle: its circle runs wide of the dark iris, so a plain copy leaves white above and below it (a stare)
 IRIS_GROW = 1.02          # his iris circle, in landmarker radii, for the clean cut-out
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
@@ -598,7 +598,7 @@ def look_flags(readings: list[dict], decided: list[dict]) -> list[float]:
     # of the frames around it flagged too.
     flag = (np.convolve(flag, np.ones(LOOK_MIN) / LOOK_MIN, 'same') >= 0.4).astype(float)
     wide = np.convolve(flag, np.ones(2 * LOOK_PAD + 1), 'same') > 0          # a couple of frames either side, so it never flickers
-    return [float(x) for x in np.convolve(wide.astype(float), np.ones(5) / 5, 'same')]
+    return [float(x) for x in np.convolve(wide.astype(float), np.ones(3) / 3, "same")]
 
 
 def lids(readings: list[dict], decided: list[dict], aimed: list[dict] | None = None) -> list[dict]:
@@ -1036,7 +1036,8 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
             aimed = aims(readings, there, decided)
             lowered = lids(readings, decided, aimed)
             for d_, w_ in zip(decided, look_flags(readings, decided)):
-                d_['strength'] = d_['strength'] * (1.0 - w_)
+                # All or nothing: a half-faded iris is a ghost (blind review 5, 51.67 s, grey washed-out irises at 40% strength).
+                d_['strength'] = 0.0 if w_ >= 0.5 else d_['strength']
             templates = iris_templates(media, readings, info)
         else:
             there = None
