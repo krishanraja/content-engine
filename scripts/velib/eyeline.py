@@ -669,6 +669,11 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
     poly = centre + (c - centre) * APERTURE_SHRINK - [x0, y0]
     hard = np.zeros((y1 - y0, x1 - x0), np.uint8)
     cv2.fillPoly(hard, [np.round(poly * 16).astype(np.int32)], 1, lineType=cv2.LINE_AA, shift=4)
+    if iris_here is not None:
+        # The landmarker's lid line is the weak one in a look up or down (a thin sliver with the iris above it, or a line
+        # through the iris: blind review, 6 Nov, 60.30 and 72.8 s); its iris circle fits. The iris where it is now is
+        # inside his eye by definition, so the area edited includes it, and a half-iris is never cut at the lid line.
+        cv2.circle(hard, (int(round(iris_here[0] - x0)), int(round(iris_here[1] - y0))), max(1, int(round(0.95 * iris_here[2]))), 1, -1)
     if hard.sum() < 6:
         return frame
     sigma = max(0.6, APERTURE_FEATHER * width)
