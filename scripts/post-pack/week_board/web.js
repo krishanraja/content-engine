@@ -235,7 +235,7 @@
     if (b && stale) b.disabled = true;
   }
   // The production gates (week_board.py gates_card): each section says what the piece's making record holds for its
-  // gate now (signed, picked <style>, approved, rejected, or waiting on you). A press the record holds at the hash the
+  // gate now (signed, picked a style, approved, rejected, or waiting on you). A press the record holds at the hash the
   // section shows is done, so its buttons stay off; one it holds at another hash means what is shown changed since he
   // pressed, and he presses again.
   const GATE_OF = { storyboard: "storyboard", style: "style", proof: "proof", cut: "final" };
