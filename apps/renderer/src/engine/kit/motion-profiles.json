@@ -1,6 +1,6 @@
 {
   "about": "How the renderer draws each motion style of config/style-references.json (layer motion). One home: motionProfiles.ts parses this file and compile.py copies the chosen profile into props.motion. Every value sits inside the signed floor in docs/ve/MOTION_STANDARD.md (entrances settle in 4 to 7 frames, rise 40 to 60 px, overshoot at most 6%, drift above 0); motionProfiles.test.ts fails any that does not. Grounds (dark, paper), overlays (brackets, scan lines, torn edges, a sketched frame), type (the mono data face, type as hero), lead captions and a line boil are drawn by kit/overlays.tsx, kit/heroType.tsx and chrome/LeadCaption.tsx, each only for the style whose profile names it. A style needing its own device or drawing pipeline is listed under needs_device and renders with the house motion.",
-  "needs_device": ["flat-vector-explainer", "isometric-world", "toy-3d", "shape-morph", "watercolour-ink", "pixel-retro", "film-crt", "full-visual"],
+  "needs_device": ["flat-vector-explainer", "isometric-world", "toy-3d", "shape-morph", "watercolour-ink", "pixel-retro", "film-crt"],
   "profiles": {
     "swiss-kinetic-type": {
       "entrance": {"kind": "slide", "frames": 5, "easing": "enter", "distancePx": 48, "overshootPct": 3},
@@ -139,6 +139,19 @@
       "overlays": ["sketchFrame"],
       "boil": {"amplitudePx": 2, "everyFrames": 2},
       "note": "cream line on ink: a hand-drawn panel line round the ground and every scribble boil, a new seed every 2 frames, at most 2 px; cards keep their cream so the lines read; graphics on twos; never boil on type or numbers"
+    },
+    "full-visual": {
+      "entrance": {"kind": "rise", "frames": 4, "easing": "enter", "distancePx": 48, "overshootPct": 4},
+      "stagger": {"frames": 3, "unit": "word"},
+      "exitFrames": 4,
+      "onTwos": false,
+      "camera": {"kind": "push", "scaleTo": 1.04, "dimOthers": false, "easing": "hero"},
+      "transition": "cut_on_curve",
+      "typeReveal": {"kind": "word"},
+      "ground": {"kind": "house", "sweepFrames": 0, "texture": "none"},
+      "driftPct": 1.5,
+      "countFrames": 18,
+      "note": "keyframes@0.2.13 full-visual (docs/ve/sources/keyframes.md), inside the signed floor: the real thing each sentence names arrives fast (their 7-frame blur-in at 60 fps is 4 frames here) with a small pop, words stagger 3 frames, a held picture keeps living on a slow push to 104% and 1.5% drift, every number counts to its word; the pack's 260 px travel is over the 60 px floor and is not used"
     }
   }
 }
