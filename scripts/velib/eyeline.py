@@ -837,8 +837,11 @@ def read(media, info: dict, every: int = 1) -> list[dict]:
 
 # ------------------------------------------------------------------ pass 2: correct and write
 
-def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None = None, qc=None, crf: int = 12) -> dict:
-    """Correct one take; return the receipt. The corrected file is out_dir/<stem>.eyeline.mp4."""
+def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None = None, copy_readings: list[dict] | None = None,
+        qc=None, crf: int = 12) -> dict:
+    """Correct one take; return the receipt. The corrected file is out_dir/<stem>.eyeline.mp4. `readings` and
+    `copy_readings` are what read() would find on the take and on the backend's copy; given, they are used as they are
+    (the tests give both, so they need no face model)."""
     import numpy as np  # noqa: PLC0415
     media, out_dir = Path(media), Path(out_dir)
     if backend.restricted and EVAL_DIR.resolve() not in out_dir.resolve().parents and out_dir.resolve() != EVAL_DIR.resolve():
@@ -858,7 +861,7 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
             raise ValueError(f'{backend.name}: its copy has {theirs} frames and the take {ours}: frames cannot be matched')
         source = backend.frames_for(info)
         if getattr(backend, 'aperture', False):
-            there = read(backend.copy, info)          # where the redirected copy put each iris
+            there = read(backend.copy, info) if copy_readings is None else copy_readings   # where the copy put each iris
             aimed = aims(readings, there, decided)
             templates = iris_templates(media, readings, info)
         else:
