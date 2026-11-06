@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import math
 import unittest
 from pathlib import Path
 
@@ -37,6 +38,46 @@ def reading(iris_dx=0.0, iris_dy=0.0, blink=0.0, yaw=0.0, open_=0.3, face=True):
     l_pts, l_iris = eye(560, 600, iris_dx=iris_dx, iris_dy=iris_dy, open_=open_)
     return {'face': True, 'eyes': {'R': r_pts, 'L': l_pts}, 'iris': {'R': r_iris, 'L': l_iris}, 'blink': blink,
             'yaw': yaw, 'pitch': 0.0, 'edge': False}
+
+
+@unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+class Colour(unittest.TestCase):
+    def test_a_frame_the_pass_does_not_touch_keeps_its_colour(self):
+        # 6 Nov 2026: with ffmpeg's default converters the round trip YUV to BGR to YUV darkened and warmed every frame.
+        import numpy as np
+        with tempfile.TemporaryDirectory(prefix='ve-colour-') as tmp:
+            src, out = Path(tmp) / 'src.mp4', Path(tmp) / 'out.mp4'
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'lavfi', '-i', 'testsrc2=size=640x360:rate=30:duration=1',
+                            '-vf', 'format=yuv420p', '-c:v', 'libx264', '-crf', '8', '-pix_fmt', 'yuv420p', '-colorspace', 'bt709',
+                            '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv', str(src)], check=True)
+            info = eyeline.probe(src)
+            proc = eyeline.writer(src, out, info)
+            for frame in eyeline.frames(src, info['width'], info['height']):
+                proc.stdin.write(np.ascontiguousarray(frame).tobytes())
+            proc.stdin.close()
+            self.assertEqual(proc.wait(), 0)
+
+            def planes(path):
+                raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(path), '-pix_fmt', 'yuv420p', '-f', 'rawvideo', '-'],
+                                     capture_output=True, check=True).stdout
+                d = np.frombuffer(raw, np.uint8).astype(float)
+                n, fs = len(d) // (640 * 360 * 3 // 2), 640 * 360 * 3 // 2
+                d = d[:n * fs].reshape(n, fs)
+                return d[:, :640 * 360].mean(), d[:, 640 * 360:640 * 360 * 5 // 4].mean(), d[:, 640 * 360 * 5 // 4:].mean()
+            for a, b in zip(planes(src), planes(out)):
+                self.assertLess(abs(a - b), 0.5)
+
+
+class Gated(unittest.TestCase):
+    def test_a_small_move_is_left_exactly_as_it_was(self):
+        import numpy as np
+        frame = np.full((120, 160, 3), 90, np.uint8)
+        other = np.full((120, 160, 3), 200, np.uint8)
+        contour = [[60 + 20 * math.cos(a), 60 + 8 * math.sin(a)] for a in np.linspace(0, 2 * math.pi, 16, endpoint=False)]
+        near = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (61, 60, 6))      # 1 px, 0.17 radii
+        self.assertIs(near, frame)
+        far = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (70, 60, 6))       # 10 px, 1.7 radii
+        self.assertIsNot(far, frame)
 
 
 class Decide(unittest.TestCase):
