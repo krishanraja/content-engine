@@ -36,6 +36,7 @@ installed. Its repertoire was.
 | The craft: picture, motion, caption, hook, never-list, builder method | `_corpus/keyframes-full-visual.md` | reference |
 | Full-visual motion style | `config/style-references.json`, bank id `full-visual` (motion layer) | untested; drawable today through its motion profile (`apps/renderer/src/engine/kit/motion-profiles.json`, inside the signed floor) and four built devices (kinetic_stat, evidence_card, hand_phone_stage, headline); the picker offers it, and Krish's verdict decides |
 | A picture hands over only in a pause of 0.15 s or more | `scripts/velib/qc_gates.py` `handover_in_gaps`; ve qc row `beats.handover_in_gaps` | advisory on every format; counted where a format's `qc` names `handover_gap_ms` |
+| No bare ground at a beat edge: the stage band (without header and caption) carries a picture within 3 frames of every edge | `scripts/velib/qc_ground.py`; ve qc row `ground.not_bare` | a shadow row on every format; counted where a format's `qc` sets `bare_ground: true` |
 | Build caption: the page grows word by word, with the key word boxed | card `docs/ve/cards/keyframes/ve-kf-1-caption-build.md` | card written; not dispatched |
 
 ## Next, one card or change at a time
@@ -50,7 +51,6 @@ installed. Its repertoire was.
    - `status: trial` until a Gate 2 press on a real piece.
 4. Devices from the real-thing doctrine, each from a card: `cutaway_section` (cut inside), `count_roll`,
    `cursor_path`.
-5. A bare-ground check: no frame of empty ground in a handover.
 
 ## Deliberately left out, and why
 
