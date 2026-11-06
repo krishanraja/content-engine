@@ -205,6 +205,16 @@ patch that brings `gates`. ve reads them there.
 | Approve or Reject proof (`--proof DAY=proof/<cut>.json`) | The moving proof beside the reference cards its spec names (`brand.references`) | `gates.proof {by, at, sha256, verdict, words?, cut?}`; sha256 the clip's; Reject needs his words | The full render |
 | Approve cut (from the making record's cuts with their `sha256`) | Both cuts, each with its download | `gates.final {by, at, sha256, cuts}`; one cut: its file hash; both: sha256 of canonical `cuts` | Filing |
 
+Every picture in a made day's article is stored as a board file when the board
+is published (`board_web.lift_article_pictures`) and named on its `<img>` as
+`data-asset`; the page keeps the picture's own bytes, so it shows, downloads and
+copies as before. Copy article reads each one's signed link
+(`GET /api/board/<Monday>/assets/<id>?sha=<sha256>&link=1`, his login, pictures
+only) and hands Substack the article with those links in place, because Substack
+keeps a pasted picture only when it can fetch it (Krish, 2026-11-06: "Every
+Substack article embeds the images inline"). A picture whose link cannot be had
+is copied with its own bytes, as before.
+
 Each clip plays from the board's own copy of its bytes: map it in `--assets`
 (the mapping `board_web.py publish-web` takes); a clip with no mapping is
 refused, never shown empty. His words on a Rejected proof or on None of these
