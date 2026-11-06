@@ -510,25 +510,36 @@ def iris_templates(media, readings: list[dict], info: dict, size: int = 48, ever
                         patch = cv2.warpAffine(patch, np.float32([[1, 0, dx], [0, 1, dy]]), (size, size), flags=cv2.INTER_CUBIC,
                                                borderMode=cv2.BORDER_REPLICATE)
                 stacks[side].append(patch)
-    out = {}
+    out, med, glint, ratio = {}, {}, {}, {}
     for side in IRIS:
         if len(stacks[side]) < 8:
-            out[side] = None
             continue
-        ratio = float(np.median([readings[i]['iris_r'][side] / max(1e-6, math.hypot(readings[i]['eyes'][side][3][0] - readings[i]['eyes'][side][0][0],
-                                                                                    readings[i]['eyes'][side][3][1] - readings[i]['eyes'][side][0][1]))
-                                 for i in sorted(ok[side])]))
+        ratio[side] = float(np.median([readings[i]['iris_r'][side] / max(1e-6, math.hypot(readings[i]['eyes'][side][3][0] - readings[i]['eyes'][side][0][0],
+                                                                                          readings[i]['eyes'][side][3][1] - readings[i]['eyes'][side][0][1]))
+                                       for i in sorted(ok[side])]))
         stack = np.array(stacks[side], dtype=np.float32)
-        med, hi = np.percentile(stack, 50, axis=0), np.percentile(stack, TEMPLATE_HI, axis=0)
+        med[side], hi = np.percentile(stack, 50, axis=0), np.percentile(stack, TEMPLATE_HI, axis=0)
         # A median of many frames averages his catchlights away and softens the texture: an iris with no light in it
         # reads as dead (blind review, 6 Nov: "flat", "a fixed glare"). Take the bright reflection back from the upper
         # part of the stack where it is clearly brighter than the median, and sharpen what the averaging softened.
-        spec = np.clip((cv2.cvtColor(np.clip(hi, 0, 255).astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32) -
-                        cv2.cvtColor(np.clip(med, 0, 255).astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32) - 25) / 40, 0, 1)
-        spec = cv2.GaussianBlur(spec, (0, 0), 0.8)[..., None]
-        patch = med * (1 - spec) + hi * spec
+        grey = lambda im: cv2.cvtColor(np.clip(im, 0, 255).astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32)  # noqa: E731
+        spec = np.clip((grey(hi) - grey(med[side]) - 25) / 40, 0, 1)
+        glint[side] = (cv2.GaussianBlur(spec, (0, 0), 0.8)[..., None], hi - med[side])
+    if not med:
+        return {'R': None, 'L': None}
+    # One light, two eyes (his own crop, 6 Nov: a bright catchlight in one eye, none in the other, and irises of two
+    # sizes read as bug-eyed). Both eyes take the stronger eye's catchlight, and both the same iris size, never above
+    # the mean of his two (0.223 and 0.212 of the eye width on this take): his own size, not one eye bigger.
+    lead = max(glint, key=lambda s: float(glint[s][0].sum()))
+    size_share = float(np.mean(list(ratio.values())))
+    for side in IRIS:
+        if side not in med:
+            out[side] = None
+            continue
+        spec, delta = glint[lead]
+        patch = med[side] + delta * spec
         patch = np.clip(patch + TEMPLATE_SHARP * (patch - cv2.GaussianBlur(patch, (0, 0), 1.6)), 0, 255)
-        out[side] = (patch, ratio)
+        out[side] = (patch, size_share)
     return out
 
 
