@@ -10,6 +10,9 @@ next week." Filed by send.py to `3 Posts` (each with `4 Social/post-description.
 
 ## Tue 10 Nov: Character.AI, who got what (follow.the.money)
 - 3 Posts folder: `2026-11-10 Tue off.day - Character.AI, who got what`
+- Carries Monday 9 Nov's follow.the.money piece (`carries`: b358e788-209f-427b-a84d-1f79a8ebb430), so it keeps
+  follow.the.money's name and colour under the 4 Nov series rule (Krish, 2026-11-04: "the character.ai carousel is going to
+  be under Monday's "Follow the Money" banner"). Card 1 reads "follow.the.money" (read back from Drive, 5 Nov).
 - Cover scene: Higgsfield gpt_image_2_5, job 948c203f-7de1-44fd-be91-f9efcb7ff6fb: a toy chatbot robot alone under a
   spotlight on an auction podium, lot tag on its arm, gold coins swept away.
 - Sources: TechCrunch 13 Oct 2026; Chapter 11 petition 12 Oct 2026; Disney's $20M stalking-horse bid; Wired on the bid's exclusions.
@@ -21,23 +24,31 @@ next week." Filed by send.py to `3 Posts` (each with `4 Social/post-description.
 
 ## Tue 10 Nov: AI marking its own homework (under.the.hood)
 - 3 Posts folder: `2026-11-10 Tue off.day - AI marking its own homework`
+- Rebuilt 5 Nov without the under.the.hood pill (it was on all five cards) and with the cover scene's lilac graded to
+  neutral; the source was recovered from the 4 Nov session and proved faithful first. Card 1's headline is his, 5 Nov:
+  "The smartest businesses make their AIs mark each other's homework." with "mark each other's homework." in mint, a
+  blank line, then "Here's why."; its dek starts "Of course your AI gave itself top marks" (his: "The main headline also
+  isn't very catchy"). Filed again by send.py on his yes ("yes replace them", 5 Nov); the sha256 below are the new cards.
 - Cover scene: Higgsfield gpt_image_2_5, job 6f86eecd-6365-46bd-afbf-56705d2c6509: a robot at a desk giving its own exam a red A+.
 - Source: VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (quote verified on the page 4 Nov 2026). No other
   named business doing cross-vendor grading could be sourced, so none is named.
-  - card 1: sha256 08f3527cb991f7ba97ee5f673e3516649c5d4fde42631bf91085bded4d0ce891
-  - card 2: sha256 a3e4541eb8af0408f39aeb594e39a44bdb1c833b487458ce6a5f7300afab2f55
-  - card 3: sha256 47bd08887940153dbac0c2a69d7f61573d8f06dcd49a76196e76f7772ce65358
-  - card 4: sha256 5720ad23e455230df3f4a90f8def5a634b6a6b745dc4b259141d2b536902207f
-  - card 5: sha256 f7866094b7d62b16121e2833dcc71555e1e0dacb5499a015c478a45de71fde3a
+  - card 1: sha256 afcc64976bca86f5185927a0235a35236f87a69a312630b53a7d9802c0f8841e
+  - card 2: sha256 821d3ec7bbd89ca5f05baac8955d743d8a510bd29984f94aa8c432a9a0ced838
+  - card 3: sha256 288d6f815be72e2fc28b4f7cac61d8afd79c80d5a349ee9b81ae6d4448ccb6b6
+  - card 4: sha256 dbb2c6c7b582f292a2e9506081b53c86b0ce2d4c41e5d4b05d93cfc9fc98d884
+  - card 5: sha256 ae560b616d69910abdd61e30eb82d8e35ea84b1aa3a25e1ac59edfac5c5e8676
 
 ## Thu 12 Nov: AI broke Git (under.the.hood)
 - 3 Posts folder: `2026-11-12 Thu off.day - AI broke Git`
+- Rebuilt 5 Nov without the under.the.hood pill; every lilac (GIT, the September bar and 30,000+, the 7, ROBOTS TO
+  USE) is now mint, "AND PEOPLE TO CHECK." cream, and the cover scene's lilac graded to neutral. Filed again by send.py
+  on his yes ("yes replace them", 5 Nov); the sha256 below are the new cards.
 - Cover scene: Higgsfield gpt_image_2_5, job 39650b5c-b586-420c-96a2-161ac7bf6756: a filing cabinet buried under an
   avalanche of printed code, a robot arm feeding in more.
 - Sources: Anthropic engineering 13 Oct 2026 (2,500 to 30,000+ merges a day; seven engineers, five months, Scion);
   GeekWire / The Verge on Entire (26 Oct 2026); DEV Community on GitButler and GitHub.
-  - card 1: sha256 c8d2e6c91387d477b26df0f600091284b16887aaea8f958ba2b2c116fac975d1
-  - card 2: sha256 6576bcdd6304a2e27e0427375dc54cbf448792d560b396b895dca494dbbefb4e
-  - card 3: sha256 23381a23080d2cf058d658ffc41ee9db72eb6f6e5bae2584096270b7459f8c2a
-  - card 4: sha256 cf719bf7fad46e7646151048785d9cb8b4f7deaabf591a80a0f809af321a1423
-  - card 5: sha256 1a0800e69f95b106833c7e43c3b139389451d7e2b93310b0c22fa217e6815e4e
+  - card 1: sha256 3971eb2786ce2cf98778fddbdd5b97c9ea620b697fb2c82e5e3d360684d7473b
+  - card 2: sha256 e27d4d23b6eb9be7f9d50f72b522113e431d42bc9e1c8c1222908ac14f95aa2a
+  - card 3: sha256 a862f694876e2a037d2449e1e782b7a6c78bff0d621791541f446ce51da5efcc
+  - card 4: sha256 2585cf45d1026cffab8e9682c0c956fe62e4d63c15fbe3023ed7449046bb23a3
+  - card 5: sha256 ce5066f720ac4763651fd02fb728556435d5ac52369257f998c13a958494a5c0

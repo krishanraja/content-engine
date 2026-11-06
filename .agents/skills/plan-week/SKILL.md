@@ -1,6 +1,6 @@
 ---
 name: plan-week
-description: Plan the publishing week and run the Sunday room. Research three or four options for each publishing day (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap) and the off-day options, stress-test them, write them onto the pieces through /api/week/options and onto the Ideas tab of the week's publish board by 06:00 Sunday, read back Krish's five presses from the board, interview him one question at a time on all three picks to find the deeper story, write one narrative lock per piece for him to sign, start each signed piece's make in its own fresh session, and send approved scripts to Teleprompter when the server could not. Use when the Sunday ideas run fires in GitHub Actions, or when Krish asks to plan or re-plan the week.
+description: Plan the publishing week and run the Sunday room. Research at least four options for each publishing day (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap) and the off-day options, stress-test them, write them onto the pieces through /api/week/options and onto the Ideas tab of the week's publish board by 06:00 Sunday, read back Krish's five presses from the board, interview him one question at a time on all three picks to find the deeper story, write one narrative lock per piece for him to sign, start each signed piece's make in its own fresh session, and send approved scripts to Teleprompter when the server could not. Use when the Sunday ideas run fires in GitHub Actions, or when Krish asks to plan or re-plan the week.
 ---
 
 # Plan the week
@@ -75,7 +75,7 @@ names the checkpoint Control Center watches for it:
 | Sun 10:00 to 11:45 | The triage readback (step 8), then the interview (step 9), about 105 minutes | `narratives_locked` |
 | As each lock is signed | That piece's make starts in its own fresh session (step 11) | `scripts_ready` |
 | About 12:30 | His Approve scripts press per day: the server sends both scripts to Teleprompter and reads them back (step 12) | `scripts_sent` |
-| About 15:30 | His Titles press: three options per surface. It starts the Sunday-night run (`produce-video`); a surface he has not picked by 21:30 takes its top-ranked option | `titles_picked` |
+| About 15:30 | His Titles press: three options per surface. It records his picks; "I've recorded", said to Claude Code, starts the Sunday-night run (`produce-video`); a surface he has not picked by 21:30 takes its top-ranked option | `titles_picked` |
 
 Once the Ideas tab is live, the Sunday room does three things only: the
 triage readback, the interview and one signed narrative lock per piece. Then
@@ -205,7 +205,7 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    next week. Never relay Wider piece, Future trend, Reject or an off-day
    press to the idea queue: queuing those would offer again an idea he
    rejected or set aside. The Inspiration House cue run reads every press
-   from the board itself (`src/collect/feedbackCues.ts`, documents Krish
+   from the board itself (inspirationhouse's `src/collect/feedbackCues.ts`, documents Krish
    wrote) and files it as a cue; Growth reads the off-day ones.
    Copy his Combine taps the same way: `python3 scripts/post-pack/board_feed.py taps <last Monday>`
    prints a synthesize body for every `queue/combine-<n>` doc Krish wrote
@@ -273,7 +273,7 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    Drive connector is attached (see "Without the connectors" below).
 2. Flesh out what Krish dropped in first: an idea of his is never ranked below
    an equal one of the engine's.
-3. For each publishing day, find three or four real options. Prefer existing
+3. For each publishing day, find at least four real options. Prefer existing
    rows. Check each against the series mandate; Krish's ruling of 6 October
    (fascinating and aspirational, never dull enterprise subjects); freshness
    (the dated event is inside two weeks); overlap with what was published and
@@ -416,8 +416,9 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    Approve scripts press by about 12:30, with the creative direction for
    every cut (`docs/CREATIVE_DIRECTION.md`) before he records. He records
    from 13:00, presses Titles at about 15:30 and signs each storyboard on
-   its day's tab. His Titles press starts the Sunday-night run
-   (`.agents/skills/produce-video/SKILL.md`), which renders only from the
+   its day's tab. He starts the Sunday-night run (`produce-video`) by
+   telling Claude Code "I've recorded" (his Titles press records titles
+   only), and it renders only from the
    signed direction; 21:30 is only the deadline for a surface he has not
    picked.
 6b. **No weekly deep cut: a 15-minute feature only when Krish calls one**
@@ -449,9 +450,10 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
      --combine docs/plans/<Monday>-week/combine.json --out
      .cache/week-board/<Monday>/week-board.html`. Its title names the week,
      "This Week's Publish Board (wC 19 Oct)". A day whose piece already
-     has a publish page (a pick carried over) is a made tab: `Artifact`
-     `read` its `publish_manager` link (in its making record) and add
-     `--day DAY=<the saved file> --piece DAY=<uuid>`. A picked day not made
+     has a publish page (a piece moved from another week) is a made tab:
+     carry it as `docs/PUBLISH_BOARDS.md` says ("Update a board": the
+     `carry` POST, then `board_web.py download <its Monday> --output <file>`
+     and `--carry DAY=<file>:FROMDAY`). A picked day not made
      yet gets its "not made yet" tab with a working checklist; a day not
      picked yet says so. It writes `week-board.json` beside the page: the
      week, each day's state and piece, every tick id, and the publish call.
@@ -461,7 +463,7 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
      `config/boards.json.web`, and read it back as `docs/PUBLISH_BOARDS.md`
      requires. Continue at "Record its link" below. No new Claude board or
      cross-account copy is created after active cutover.
-   - **Legacy artifact mode only:** publish as a new private artifact, a new one every Sunday, never
+   - **Legacy artifact mode only (retired):** publish as a new private artifact, a new one every Sunday, never
      last week's link: `Artifact({action: "publish", file_path: "<absolute
      path>/week-board.html", title: <the manifest's publish.title>, icon:
      "calendar", capabilities: <the manifest's publish.capabilities>, description:
@@ -500,7 +502,7 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
      goes first, and the ending week's line moves under "Last week's
      publish board" (replacing the one there), where it stays until that
      week's item is done.
-   - **When the picks come in.** This run is early on Sunday, before Krish
+   - **When the picks come in.** This run is on Saturday, before Krish
      picks, so most tabs start as not picked. The room rebuilds the board
      with the picks after the triage readback (step 8) and republishes it to
      this same link, with `--previous` so no day it holds is lost, and no
@@ -545,9 +547,7 @@ after his presses, by 10:00.
    its pick is the first question of step 9, with your best guess.
    **Check the day tabs' presses now, not at 12:30.** `python3
    scripts/post-pack/board_web.py read <Monday> approvals`, then the same
-   with `titles`. If either is refused (the command's "invalid choice", or
-   the board answering `invalid_collection`), that press is not on the board
-   yet; it lands with the board's own change. Say so at the top of the
+   with `titles`. If either read fails, say so at the top of the
    readback, in one line, and on the week's board item: with no Approve
    scripts press no script reaches Teleprompter (neither the server nor
    `teleprompter_send.py plan` sends without his press, and nothing stands
@@ -625,8 +625,8 @@ after his presses, by 10:00.
    (Claude Code in GitHub Actions on his subscription) at the room's pushed
    branch, exactly as `.agents/skills/plan-week/references/sunday-room.md`
    ("Starting each make") gives; never a routine (Krish, 2026-10-29: "I
-   want zero Claude routines"). It cannot be dispatched from here: say so
-   to him in one line, with the Run workflow page and the piece id to paste.
+   want zero Claude routines"). The room dispatches it itself; only when no
+   route here can does he get the Run workflow page, the branch and the piece id.
    The run records itself on the piece (`make-piece`, "Before anything");
    the room records nothing for it.
 12. **Approve scripts, and Teleprompter** (about 12:30; Krish, 2026-10-28:
@@ -637,11 +637,11 @@ after his presses, by 10:00.
    itself (`sendApprovedScripts` in `apps/control-plane/api/_teleprompter.ts`:
    `create_folder`, `create_script`, and `update_script` with text and
    duration only, then a readback), answering `sent`, `no_key`, `refused` or
-   `error`. Read each press and its answer on the board: `python3
+   `error` (or `held`, unsent, when the record does not show those words
+   checked and read back). Read each press and its answer on the board: `python3
    scripts/post-pack/board_web.py read <Monday> approvals` (the collection
    `config/teleprompter.json` `approval.collection` names; only documents
-   whose `updated_by` is Krish are his press). No such collection on the
-   board yet: step 8 said so, and nothing is sent.
+   whose `updated_by` is Krish are his press).
    - `sent`: nothing to do; `making.py <uuid> show` says, per cut,
      "Teleprompter, 5-minute cut: holds the current words".
    - `no_key` (the Teleprompter key is not set yet): the room sends exactly
@@ -652,6 +652,8 @@ after his presses, by 10:00.
      his press are not sent: the cut goes back on its tab for a new press.
      Never `move_script` or `update_folder`, never a second folder or
      script, never his `fontSize`, `speed`, `alignment` or `timedSpeed`.
+   - `held`: once the make session records the check and read-back of
+     those words (`make-piece`, Scripts step 5), they go as for `no_key`.
    - `refused`: the approval did not hold for these words; send nothing,
      and say why on the day's tab for a new press.
    - `error`: one line on the day's tab with what Teleprompter said; his

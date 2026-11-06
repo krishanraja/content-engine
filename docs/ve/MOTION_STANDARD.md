@@ -93,7 +93,8 @@ brand kit in Drive; Krish, 2026-11-03: "add the upright Fraunces to the kit"), n
 ## Signed and approved (Krish, 3 Nov 2026)
 
 - The standard, and word captions as the default for face-with-proof: "I signed the motion standards".
-- Spend for the four Codex cards above: "I approved the spend". They are queued to the home computer's Codex lane.
+- Spend for the four Codex cards above: "I approved the spend". They were queued to the home computer's Codex lane;
+  card 1 (`ve-motion-1-split-full-width`) was built and merged on 3 Nov (#367), and cards 2 to 4 are not merged yet.
 - The Instagram zones in `config/studio.json` brought up to the measured ones: "I approve updating the Instagram
   button zones".
 

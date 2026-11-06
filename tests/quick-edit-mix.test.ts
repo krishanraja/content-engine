@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -6,9 +7,12 @@ import { describe, expect, it } from 'vitest'
 // scripts/quick-edit: the opening, the licensed music bed and the final
 // loudness pass. Krish, 2026-10-12: "use it correctly (high volume during the
 // intro, low whilst I am talking, higher during the outro)"; 2026-10-28: "Yes
-// I think music should be audible throughout but just lower."; and 2026-10-29,
-// picking "The hook is the intro" over the 12 October sting: "Let's go with
-// number one for now." (house rule HOOK_IS_THE_INTRO).
+// I think music should be audible throughout but just lower."; 2026-10-29,
+// picking "The hook is the intro": "Let's go with number one for now."; and
+// 2026-11-05, of the Intro Sting page: "I think it should go at the start of
+// the longer wide videos 100%," (house rule HOOK_IS_THE_INTRO: the sting in
+// front of the 16:9 long cut of a weekly series piece, the 9:16 short cut on
+// the hook).
 
 const ROOT = join(__dirname, '..')
 const QUICK_EDIT = join(ROOT, 'scripts', 'quick-edit')
@@ -36,7 +40,7 @@ describe('quick-edit checks itself', () => {
     expect(result.stdout).toMatch(/music self-test passed: \d+ checks/)
   }, 120_000)
 
-  it('intro.py --self-test: a synthetic sting through the finishing path, the approval gate, and the sting retired', () => {
+  it('intro.py --self-test: stand-in clips through the finishing path, sting_for per shape and series, fetch, publish and the approval lane', () => {
     const result = run('intro.py', ['--self-test'])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     expect(result.stdout).toMatch(/intro self-test passed: \d+ checks/)
@@ -81,22 +85,33 @@ describe('the music and the opening wait for Krish', () => {
     expect(ledger.root_default_windows.startsWith(`${studio.runtime.drive_root}\\`)).toBe(false)
   })
 
-  it('the sting is 1 to 2 seconds, one composition per shape, rendered per series, only used once approved, and retired only on his words', () => {
+  it('the sting is the 56-frame clips he saw, on the wide cut only, one clip per series, only used once approved, in his words', () => {
     const sting = JSON.parse(readFileSync(join(ROOT, 'config', 'intro-sting.json'), 'utf8'))
-    expect(sting.schema_version).toBe(1)
+    expect(sting.schema_version).toBe(2)
     expect(['candidate', 'approved', 'retired']).toContain(sting.status)
-    // Krish, 2026-10-29: "The hook is the intro" (house rule HOOK_IS_THE_INTRO); no cut opens on a sting.
-    if (sting.status === 'retired') {
-      expect(sting.retired.by).toBe('Krish')
-      expect(sting.retired.rule).toBe('HOOK_IS_THE_INTRO')
-      expect(String(sting.retired.words)).toMatch(/^I'd pick number one here/)
-    }
+    // 56 frames at 30 fps: his face comes in on frame 56 of the finished wide file.
+    expect([sting.frames, sting.fps]).toEqual([56, 30])
+    expect(Math.round(sting.seconds * sting.fps)).toBe(sting.frames)
     expect(sting.seconds).toBeGreaterThanOrEqual(1)
     expect(sting.seconds).toBeLessThanOrEqual(2)
-    expect(Object.keys(sting.compositions).sort()).toEqual(['16x9', '9x16'])
-    // Each series renders the sting in its own colour; a piece with none
-    // gets follow_the_money's.
+    // Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,". The tall cut opens on the hook.
+    expect(sting.shapes).toEqual(['16x9'])
+    expect(sting.placement.by).toBe('Krish')
+    expect(sting.placement.words).toBe('I think it should go at the start of the longer wide videos 100%,')
+    expect(sting.colours.picked).toBe('Keep it as I saw it')
+    // One clip per series in its own colour (the other series flashing on its way, as he saw it); an off-day piece
+    // has none and wears none. The 9:16 clips are kept for the record.
     expect([...sting.series].sort()).toEqual(['follow_the_money', 'mind_the_gap', 'under_the_hood'])
+    for (const shape of ['16x9', '9x16']) {
+      expect(Object.keys(sting.clips[shape]).sort()).toEqual([...sting.series].sort())
+      for (const clip of Object.values(sting.clips[shape]) as { library: string, sha256: string, bytes: number }[]) {
+        expect(clip.library).toMatch(/^1 Brand kit \(permanent\)\/Intro sting\/[^/]+\.mp4$/)
+        expect(clip.sha256).toMatch(/^[0-9a-f]{64}$/)
+        expect(clip.bytes).toBeGreaterThan(0)
+      }
+    }
+    // The design is the clips, never committed source: the old compositions are gone.
+    expect(sting.compositions).toBeUndefined()
     // His latest word on a design is kept, a rejection included, in his words.
     if (sting.last_decision) {
       expect(String(sting.last_decision.by)).toMatch(/^Krish/)
@@ -104,17 +119,23 @@ describe('the music and the opening wait for Krish', () => {
       expect(String(sting.last_decision.words).trim()).not.toBe('')
     }
     if (sting.status === 'approved') {
-      // An approval is bound to the exact source of the previews he saw:
-      // no 64-hex hash, no approval.
+      // An approval is bound to the clips the cuts use: the sha256 of the canonical JSON {shape: {series: clip sha256}}.
+      // No 64-hex hash, no approval.
       expect(String(sting.approved_by)).toMatch(/^Krish/)
-      expect(sting.source_sha256).toMatch(/^[0-9a-f]{64}$/)
+      expect(String(sting.approval_words).trim()).not.toBe('')
+      const used: Record<string, Record<string, string>> = {}
+      for (const shape of [...sting.shapes].sort()) {
+        used[shape] = {}
+        for (const series of [...sting.series].sort()) used[shape][series] = sting.clips[shape][series].sha256
+      }
+      expect(sting.source_sha256).toBe(createHash('sha256').update(JSON.stringify(used)).digest('hex'))
       if (sting.last_decision) expect(sting.last_decision.decision).toBe('approved')
     } else {
       expect(sting.source_sha256).toBeNull()
     }
   })
 
-  it('the renderer\'s source is LF on every checkout, so the sting\'s approval hash is the same on Windows', () => {
+  it('the renderer\'s source is LF on every checkout, so a hash of it (ve\'s engine hash) is the same on Windows', () => {
     const attributes = readFileSync(join(ROOT, '.gitattributes'), 'utf8')
     // text=auto: git's own check leaves a binary of a type not listed alone (a .lottie, a .riv).
     expect(attributes).toMatch(/^apps\/renderer\/\*\* text=auto eol=lf$/m)

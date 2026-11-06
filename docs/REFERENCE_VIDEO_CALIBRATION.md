@@ -1,6 +1,8 @@
 # Reference video calibration and publication-wide expansion
 
 > Scope: the Studio's calibration record. For the whole system start at `README.md`.
+>
+> Today video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`), with quick-edit as the fallback until ve passes Phase 3; the Studio's Shorts route makes none of it. The two series named below, The Money of AI and Built With AI, are the Studio's retired names for follow.the.money and under.the.hood; a rule scoped to a retired name also serves its successor (`sameSeriesLine`, `packages/contracts/src/series.ts`).
 
 ## Decision
 

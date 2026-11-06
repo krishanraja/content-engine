@@ -58,6 +58,10 @@ standing rule only when he approves one); make more of what he approved.
  "covers": ["<must_cover id>"]}
 ```
 
+A carousel's first `picture` (its cover) names a scene that is the story's object, place or moment, or the house robot
+doing something (`config/brand-robot.json`), never a made-up robot (Ruling, Krish, 2026-11-05: "either use the branded
+toy robot or are more creative than just a robot doing something"; `docs/CAROUSEL-STANDARD.md`).
+
 **Read back before the tab, from the 9 Nov week** (Krish, 2026-11-02, of the 9 Nov off days: a Tuesday option
 "already being used this week", a meme "just a copy of a post from my inspo board but way worse", and of a Thursday
 pitch, "I have zero idea what this even means"). Before an option reaches the tab:
@@ -105,7 +109,7 @@ and a quote that reads as what not to say is held for him (Krish, 2026-11-02:
 verbatim in the posts"; Growth `offday.note_parts`). They are saved in
 `queue/off-<day>-<option>`, each side `{verdict, words, sha256}`, bound to
 what that side showed him. His Improve and Reject words go to his taste ledger
-by themselves (`api/board/_presses.ts`, `offdayReports`) and come back next
+by themselves (`apps/control-plane/api/board/_presses.ts`, `offdayReports`) and come back next
 Sunday in `offday_verdicts`. An Improve on the idea or the direction also
 starts a revision run (`.github/workflows/offday-revise.yml`, below), whose
 revised card goes live at the board's next build. Growth reads each option whose
@@ -205,7 +209,7 @@ He approves the format on the board; the stories are found by the Sunday run.
    `week_board.py --week <Monday> --live --ideas docs/plans/<Monday>-week/ideas.json --previous live.html --keep <each
    made day> --target web`, then `--verify`. Publish with `board_web.py publish-web PAGE --assets MAP
    --expected-build <the live build id> --apply`, mapping each kept download to the live manifest's asset by
-   `existing_sha256` (`docs/PUBLISH_BOARDS.md`). Read the live page back: the good-news card shows four stories.
+   `existing_sha256` (`docs/PUBLISH_BOARDS.md`). Read the live page back: the good-news card shows five stories.
 
 Growth makes the carousel from the stories as shown, and its mock comes back for his final yes as with any off day.
 

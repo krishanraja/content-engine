@@ -12,7 +12,7 @@ this guard makes every firing after the first one that built the Ideas tab do no
     python3 scripts/sunday_ideas.py built MONDAY                 # built=true once the Ideas tab is live
     python3 scripts/sunday_ideas.py goodnews [--today YYYY-MM-DD]  # gn_monday=<the week starting tomorrow> gn_due=true|false
 
-The good news: the Saturday good news is a weekly series whose four stories are found fresh by this run for the
+The good news: the Saturday good news is a weekly series whose five stories are found fresh by this run for the
 week that starts the next day (Krish, 2026-11-02: "You will need to find the actual good news on Sunday as per the
 usual system so that the news items are fresh"). `goodnews` names that week and says due=true while its ideas.json
 holds a weekly option whose stories_due has come (this run fires the Saturday before) and that has no stories yet.
@@ -77,7 +77,7 @@ def goodnews_due(monday: dt.date, today: dt.date, plans: Path | None = None) -> 
 
 
 def live_has_stories(monday: str) -> bool:
-    """True once the week's live board shows the weekly good news with its four stories, so a second Saturday firing
+    """True once the week's live board shows the weekly good news with its five stories, so a second Saturday firing
     (the stories sit on the run's branch until the Sunday room merges it) does not look for them again."""
     import board_web
     key = board_web.os.environ.get('ENGINE_OPERATOR_TOKEN') or ''
@@ -86,7 +86,8 @@ def live_has_stories(monday: str) -> bool:
     base = board_web.os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
     request = urllib.request.Request(base + f'/board/{monday}', headers={'Authorization': 'Bearer ' + key})
     with urllib.request.urlopen(request, timeout=120) as response:
-        return 'data-stories="4"' in response.read().decode('utf-8', errors='replace')
+        import week_board
+        return f'data-stories="{week_board.STORY_COUNT}"' in response.read().decode('utf-8', errors='replace')
 
 
 def monday_arg(text: str) -> dt.date:

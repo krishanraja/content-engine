@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-/** Render compiled EngineRenderProps through the registered FormatMaster. */
+/** Render compiled EngineRenderProps through the registered FormatMaster (the wide cut through VeCut, behind its
+ *  sting when the props carry one). */
+import { createHash } from 'node:crypto'
 import { readFile, readdir, mkdtemp, copyFile, mkdir, rm, stat, realpath } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -25,8 +27,19 @@ async function decodeAudio(src, trimSeconds = 0) {
   return samples
 }
 
-async function correctAudio(raw, output, stem, trimSeconds, temporary, lagSamples) {
-  const [rendered, reference] = await Promise.all([decodeAudio(raw), decodeAudio(stem, trimSeconds)])
+/** The render's own clock: the sting's frames (props.sting.frames, none without a sting), then the cut's
+ *  durationFrames. Every frame in the props, and every --stills frame asked for, is on the cut's own clock, which
+ *  starts `lead` frames into the render, so a beat's keyFrame names the same picture with or without a sting. */
+export function renderClock(inputProps) {
+  const lead = inputProps.sting?.frames ?? 0
+  return { lead, frames: lead + inputProps.durationFrames }
+}
+
+/** The lag between the encoded audio and the stem, measured from `leadSeconds` into both (the cut's first frame, so
+ *  the probe hears his voice, not only the bed under the sting). The stem plays from the render's frame 0, so render
+ *  time t is stem time trimSeconds + t; a constant lag is the same from any start. */
+async function correctAudio(raw, output, stem, trimSeconds, temporary, lagSamples, leadSeconds = 0) {
+  const [rendered, reference] = await Promise.all([decodeAudio(raw, leadSeconds), decodeAudio(stem, trimSeconds + leadSeconds)])
   const lag = lagSamples(rendered, reference, maxLag)
   console.log(`ve audio: lag ${lag} samples (${(lag / sampleRate * 1000).toFixed(3)} ms)`)
   let corrected = raw
@@ -39,7 +52,7 @@ async function correctAudio(raw, output, stem, trimSeconds, temporary, lagSample
       '-c:v', 'copy', '-af', filter, '-c:a', 'aac', '-b:a', '320k', corrected],
     { timeout: 120000, windowsHide: true })
   }
-  const residual = lagSamples(await decodeAudio(corrected), reference, maxLag)
+  const residual = lagSamples(await decodeAudio(corrected, leadSeconds), reference, maxLag)
   console.log(`ve audio: residual ${residual} samples (${(residual / sampleRate * 1000).toFixed(3)} ms)`)
   if (Math.abs(residual) > 48) throw new Error(`audio correction residual exceeds 1 ms: ${residual} samples`)
   // Only hand over a render after its final encoded audio passes the measurement.
@@ -76,6 +89,17 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
   inputProps.audio.stem.src = await stage(inputProps.audio.stem.src)
   for (const sfx of inputProps.audio.sfx) sfx.src = await stage(sfx.src)
   for (const segment of inputProps.segments) segment.src = await stage(segment.src)
+  if (inputProps.sting) {
+    // The sting is the clip Krish saw, byte for byte (config/intro-sting.json): a clip whose bytes are not the ones
+    // its props name is refused before anything renders, and it reaches the page the way the take does.
+    if (/^https?:\/\//.test(inputProps.sting.src)) throw new Error('the sting must be a local clip, so its sha256 can be checked')
+    const local = path.resolve(path.dirname(path.resolve(propsPath)), inputProps.sting.src)
+    const sha256 = createHash('sha256').update(await readFile(local)).digest('hex')
+    if (sha256 !== inputProps.sting.sha256) {
+      throw new Error(`the ${inputProps.sting.series} sting at ${local} is not the clip its props name (sha256 ${sha256}, not ${inputProps.sting.sha256})`)
+    }
+    inputProps.sting.src = await stage(inputProps.sting.src)
+  }
   async function stageParams(value) {
     if (Array.isArray(value)) { for (const item of value) await stageParams(item); return }
     if (!value || typeof value !== 'object') return
@@ -135,7 +159,8 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
 async function main() {
   const [propsPath, output, ...flags] = process.argv.slice(2)
   // --stills <f1,f2,...>: write one PNG per frame into <out> (a directory) and no MP4,
-  // so a design is judged in minutes before a full render (Gate 2 stills).
+  // so a design is judged in minutes before a full render (Gate 2 stills). The frames are on the cut's own clock
+  // (renderClock): behind a sting, still 0 is his first frame, not the sting's.
   const stills = flags[0] === '--stills' && flags.length === 2
     ? flags[1].split(',').map(Number) : undefined
   if (!propsPath || !output || (flags.length && (flags.length !== 2 || !['--scale', '--stills'].includes(flags[0]))) ||
@@ -165,23 +190,27 @@ async function main() {
     if (composition.fps !== 30 || composition.width !== (tall ? 1080 : 1920) || composition.height !== (tall ? 1920 : 1080)) {
       throw new Error(`${id} must use the 30 fps house canvas`)
     }
+    const clock = renderClock(inputProps)
+    if (composition.durationInFrames !== clock.frames) {
+      throw new Error(`${id} is ${composition.durationInFrames} frames; the sting and the cut are ${clock.frames}`)
+    }
     if (stills) {
       await mkdir(path.resolve(output), { recursive: true })
       for (const frame of stills) {
         if (frame >= inputProps.durationFrames) throw new Error(`still frame ${frame} is past the cut`)
         const file = path.resolve(output, `still-${String(frame).padStart(5, '0')}.png`)
-        await renderStill({ serveUrl, composition: { ...composition, durationInFrames: inputProps.durationFrames },
-          inputProps: transportProps, output: file, frame, browserExecutable: browser })
+        await renderStill({ serveUrl, composition: { ...composition, durationInFrames: clock.frames },
+          inputProps: transportProps, output: file, frame: clock.lead + frame, browserExecutable: browser })
         console.log(`ve still: ${file}`)
       }
       return
     }
     await mkdir(path.dirname(path.resolve(output)), { recursive: true })
     const raw = path.join(temporary, 'raw.mp4')
-    await renderMedia({ serveUrl, composition: { ...composition, durationInFrames: inputProps.durationFrames },
+    await renderMedia({ serveUrl, composition: { ...composition, durationInFrames: clock.frames },
       inputProps: transportProps, outputLocation: raw, codec: 'h264', crf: 18, scale, sampleRate, browserExecutable: browser })
     await correctAudio(raw, path.resolve(output), stemSrc, inputProps.audio.stem.trimBeforeFrames / inputProps.fps,
-      temporary, lagSamples)
+      temporary, lagSamples, clock.lead / inputProps.fps)
     if ((await stat(output)).size === 0) throw new Error('render produced an empty MP4')
     console.log(`ve render: ${path.resolve(output)}`)
   } finally {

@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { ProductionSpecV2Schema } from '../packages/contracts/src/production-spec'
+import { ProductionSpecV2Schema, VE_NO_STING } from '../packages/contracts/src/production-spec'
 
 // ve, the spec-driven video engine (docs/ve/ENGINE.md). Friday 23 Oct's failures are fixtures here:
 // a spec that carries one is refused, and media that shows one fails QC.
@@ -31,6 +31,19 @@ describe('ve', () => {
     const spec = fixture()
     spec.assets.push({ id: 'fake', kind: 'screenshot', origin: 'generated', path: 'x.png', sha256: '0'.repeat(64), licence: 'generated', tool: 'imagegen' })
     expect(ProductionSpecV2Schema.safeParse(spec).success).toBe(false)
+  })
+
+  it('a piece names only its own series sting, or the no-sting sentence (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,")', () => {
+    const named = (value: unknown) => { const spec = fixture(); spec.brand.intro_sting = value; return ProductionSpecV2Schema.safeParse(spec) }
+    expect(named('mind_the_gap').success).toBe(true)
+    expect(named(VE_NO_STING).success).toBe(true)
+    // Another series' sting, a free string or the retired sentence is refused.
+    const wrong = named('follow_the_money')
+    expect(wrong.success).toBe(false)
+    expect(JSON.stringify(wrong.error?.issues)).toContain("a piece wears its own series' sting: mind_the_gap")
+    for (const value of ['mind-the-gap-sting', 'none: the hook is the intro (under test, ruling 8)', '']) expect(named(value).success, value).toBe(false)
+    const unset = fixture(); delete unset.brand.intro_sting
+    expect(ProductionSpecV2Schema.safeParse(unset).success).toBe(true)
   })
 
   it('a generated picture needs no on-screen ILLUSTRATION label (Krish, 28 Oct 2026: "Yes remove those.")', () => {

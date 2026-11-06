@@ -72,6 +72,7 @@ ANSWERS = {
          "in meaning. I'm all up for visually clear ideas."),
     11: "Only the big moment",
     12: "Yes, that's the floor",
+    13: "I think it should go at the start of the longer wide videos 100%,",
 }
 PICKED = (9, 11, 12)  # options he picked, recorded as Krish picked: "<option>"
 # The floor he confirmed on 29 October, word for word and in his order: the list's words, then the question's own wording.
@@ -103,7 +104,7 @@ OPENING_DRAFTS = ('s9d6db813a0', 'sad5604ad3b', 'se67ed0142d')
 # His four answers on the no-name ruling (29 October), each the option he picked.
 NAME_PICKS = ('Krish picked: "We"', 'Krish picked: "No, personal stays personal"', 'Krish picked: "Drop it"',
               'Krish picked: "Yes, block it"')
-RULINGS = "## Krish's rulings, 28 and 29 October 2026"
+RULINGS = "## Krish's rulings, 28 October to 5 November 2026"
 FLOOR = '## The floor: what never ships'
 AIMS = '## The aims: what great looks like'
 UNDER_TEST = '## Under test: the current defaults'
@@ -252,7 +253,9 @@ class TheBar(unittest.TestCase):
             self.assertTrue(INTRO in said or OUTRO in said, ref)
             self.assertIn(f'`{ref}`', numbered[6])
             self.assertIn(ref, ruling_line(12))
-        self.assertIn('now match this never and wait on the Rejections route to record his approval', numbered[6])
+        self.assertIn('match this never; he approved all three through the Rejections route on 4 November 2026', numbered[6])
+        for ref in OPENING_DRAFTS:
+            self.assertEqual(rejection['standards'][ref]['standing'], 'approved', ref)
         # His name: his words and his four answers.
         name = nevers[0]
         self.assertEqual([w['said'] for w in name['words']], [NAME])
@@ -321,7 +324,9 @@ class TheBar(unittest.TestCase):
         self.assertIn('Monday 26 October', part(AIMS))
         # The three it lists under test are the three choices recorded per piece, in its order.
         self.assertEqual([c['id'] for c in BAR['under_test']['choices']], ['opening', 'lead_picture', 'big_moment_sound'])
-        self.assertEqual(BAR['under_test']['choices'][0]['default'], 'hook_is_intro')
+        # The opening's default moved on 2026-11-05 (Krish: "I think it should go at the start of the longer wide videos
+        # 100%,"): the sting on the wide cut, the hook on the tall cut; an off-day piece keeps the hook.
+        self.assertEqual(BAR['under_test']['choices'][0]['default'], 'sting_wide_hook_tall')
 
     def test_the_bar_is_a_draft_reading_until_he_approves_it(self):
         self.assertEqual(BAR['standing'], 'draft')
@@ -366,6 +371,7 @@ class TheBar(unittest.TestCase):
         self.assertEqual({n for n, item in items.items() if item['status'] == 'answered'}, {5, 7})
         for n in (8, 9, 10, 11, 12):
             self.assertEqual(items[n]['on'], '2026-10-29', n)
+        self.assertEqual(items[13]['on'], '2026-11-05')
         # Each ruling that bites prints in its layer, with his words verbatim: the aims, then what is under test.
         text = flat(printed())
         aims, under_test = text[text.index('Aims: '): text.index('Under test: ')], text[text.index('Under test: '):]
@@ -374,7 +380,12 @@ class TheBar(unittest.TestCase):
             words = items[n].get('quote') or items[n]['answer']
             self.assertIn(words, items[n]['answer'])
             self.assertIn(f'- {items[n]["topic"]} ({items[n]["on"]}): In his words: "{words}"', aims, n)
-        for n in (8, 9, 11):
+        # The opening under test cites ruling 13 since 5 November; ruling 8 stays his answer and its history, with
+        # no layer of its own, and its line names the ruling that took its place.
+        self.assertEqual(BAR['under_test']['choices'][0]['ruling'], 13)
+        self.assertEqual(('layer' in items[8], 'production' in items[8]), (False, False))
+        self.assertIn('ruling 13', ruling_line(8))
+        for n in (9, 11, 13):
             self.assertEqual((items[n]['status'], items[n]['layer']), ('ruled', 'under_test'), n)
             said = f'Krish picked: "{items[n]["answer"]}"' if n in PICKED else f'In his words: "{items[n]["quote"]}"'
             self.assertIn(said, under_test, n)
@@ -429,8 +440,13 @@ class TheBar(unittest.TestCase):
         counter = next(m for m in BAR['reference_moments'] if m['ref'] == 'mon26-wide' and m['at'] == '03:29.2')
         self.assertNotIn('sound', counter['shows'])
         self.assertNotIn('hit', counter['what'])
-        # No sting exists: nothing reads one into a piece, and the music under Monday's opening card is what it was.
-        self.assertIsNone(re.search(r'\bsting\b', rest.replace('`config/intro-sting.json`', '')), 'no sting in the bar')
+        # The sting is named only where the page states the opening, each time with the ruling that put it there
+        # (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"): nothing reads one
+        # into a reference moment or a quality, and the music under Monday's opening card is what it was.
+        for line in rest.replace('`config/intro-sting.json`', '').splitlines():
+            if re.search(r'\bsting\b', line):
+                self.assertTrue(line.startswith('13. **') or 'ruling 13' in line, line[:80])
+        self.assertIn('sting', ruling_line(13))
         self.assertIsNone(re.search(r'\bsting\b', json.dumps(BAR['reference_moments'] + BAR['qualities'])))
         self.assertIn('the first picture after it is a motion-designed statement that grabs', quality(5))
 
@@ -445,8 +461,12 @@ class TheBar(unittest.TestCase):
             self.assertNotIn('never', c['what'].lower(), c['id'])
             self.assertTrue(c['options'], c['id'])
         opening = choices[0]
-        self.assertEqual(opening['default'], 'hook_is_intro')
+        self.assertEqual((opening['default'], opening['off_day']), ('sting_wide_hook_tall', 'hook_is_intro'))
         self.assertIn(opening['default'], opening['options'])
+        self.assertIn(opening['off_day'], opening['options'])
+        self.assertEqual(opening['changed'], {'on': '2026-11-05', 'by': 'Krish', 'from': 'hook_is_intro',
+                                              'words': 'I think it should go at the start of the longer wide videos 100%,',
+                                              'where': 'the Intro Sting page; config/intro-sting.json placement'})
         self.assertEqual(choices[1]['options'], ['series_picture', 'story_object'])
         sound = choices[2]
         self.assertEqual((sound['default'], sound['until_approved'], sound['approved_set']), ('big_moment_only', 'none', None))
@@ -766,7 +786,7 @@ class TheBar(unittest.TestCase):
             layered_twelve = next(item for item in drifted['rulings']['items'] if item['n'] == 12)
             layered_twelve['listed_aims'] = CONFIRMED_AIMS.replace('simple, ', '')
             layered = {item['n']: item for item in drifted['rulings']['items']}
-            layered[8]['layer'] = 'floor'
+            layered[13]['layer'] = 'floor'
             layered[10]['layer'] = 'aspiration'
             path = Path(tmp) / 'reference-cuts.json'
             path.write_text(json.dumps(drifted), encoding='utf-8')
@@ -788,8 +808,8 @@ class TheBar(unittest.TestCase):
             self.assertIn("'8. no em dashes.'", text)
             self.assertIn("ruling 12: the list's line he confirmed is not under '## The aims: what great looks like'", text)
             # Each ruling's layer agrees with where it bites.
-            self.assertIn('ruling 8: its layer is floor, but no never of the floor cites it', text)
-            self.assertIn('ruling 8: cited by the choices under test, so its layer is under_test, not floor', text)
+            self.assertIn('ruling 13: its layer is floor, but no never of the floor cites it', text)
+            self.assertIn('ruling 13: cited by the choices under test, so its layer is under_test, not floor', text)
             self.assertIn('ruling 10: layer must be one of floor, aim, under_test', text)
 
     def test_every_moment_and_comparison_points_inside_a_named_cut(self):

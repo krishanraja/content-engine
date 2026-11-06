@@ -25,10 +25,10 @@ How to use this file:
   phone checks, a number still comes from a passed sentence, a script still
   passes the story check, and a published video still carries Krish's own
   face and voice unless he decides otherwise in words.
-- Two tools Krish named are not connected to a session yet: **ElevenLabs**
-  (no connector; usable through n8n or its API with a key in `tools-access`)
-  and **the news APIs and browser tools** (which ones is not written down
-  anywhere; see "Not yet mapped").
+- One set of tools Krish named is not connected to a session yet: **the news
+  APIs and browser tools** (which ones is not written down anywhere; see "Not
+  yet mapped"). **ElevenLabs** now has a connector, restricted to speech and
+  transcription (`docs/INTEGRATIONS.md`).
 
 The stages a tool can touch, in the engine's own order: **find** (ideas,
 sources), **judge** (is it worth it, what does the world think), **write**
@@ -64,8 +64,8 @@ tool, and a predictor that scores a video for attention and retention.
 
 | # | Stage | Idea | Status | First test |
 |---|---|---|---|---|
-| H1 | judge | **Score Krish's cut before it ships.** (A second judge that can watch is built: `scripts/signals/video.py` on Gemini.) Run the finished tall video through the virality predictor and video analysis. It is one more judge, not a decision: its "hook strength" and "retention risk" notes go into the walk log beside what actually happened on YouTube, and after five videos we know whether it predicts anything. This was the one use Krish allowed in September ("Higgsfield may be one evidence-checked judge"). | theorised | Friday's video, before upload. Log its score; compare at 7 days. |
-| H2 | cut | **B-roll that shows a mechanism, not a mood.** Generate 3 to 5 second clips for the one beat a talking head cannot carry: the ice cream counter, the guy behind it changing the scoop. Only where the brand book's VISUAL_EXPLAINS rule is met (it makes one point land faster). Never as wallpaper. | theorised | One clip for Friday's "guy behind the counter" beat; Krish sees it before it is cut in. |
+| H1 | judge | **Score Krish's cut before it ships.** (A second judge that can watch is built: `scripts/signals/video.py` on Gemini.) Run the finished tall video through the virality predictor and video analysis. It is one more judge and decides nothing: its "hook strength" and "retention risk" notes go into the walk log beside what actually happened on YouTube, and after five videos we know whether it predicts anything. This was the one use Krish allowed in September ("Higgsfield may be one evidence-checked judge"). | theorised | Friday's video, before upload. Log its score; compare at 7 days. |
+| H2 | cut | **B-roll that shows a mechanism.** Generate 3 to 5 second clips for the one beat a talking head cannot carry: the ice cream counter, the guy behind it changing the scoop. Only where the brand book's VISUAL_EXPLAINS rule is met (it makes one point land faster). Never as wallpaper. | theorised | One clip for Friday's "guy behind the counter" beat; Krish sees it before it is cut in. |
 | H3 | picture | **Cover and explainer backgrounds**, generated from a text brief in the house palette, with the real logos and Krish's photo composited over by `scripts/pages`. | theorised | Only if the receipt device needs a texture the page tool cannot draw. |
 | H4 | cut | **Upscale and reframe** a phone recording to 4K, or a wide recording to tall without cropping his face out (`reframe`). Replaces the fixed face band in quick-edit when the framing drifts. | theorised | A recording that fails the face-band check. |
 | H5 | ship | **TikTok publish** straight from the tool. TikTok is a standing channel since 2026-10-11 (Krish: "I always want to repost to YouTube and then Shorts, TikTok, and Instagram"); he posts the 90-second short cut there by hand (`docs/AMPLIFICATION.md`). | theorised | Only if posting by hand becomes the slow step, and never without his yes: the engine never posts. |
@@ -78,7 +78,7 @@ needs a yes; nothing generated goes near the fact gate as a source.
 
 | # | Stage | Idea | Status | First test |
 |---|---|---|---|---|
-| R1 | cut | **Sound design in one pass.** A sound effect for the receipt tearing, the till, the scoop; a 20-second music bed under the cold open and outro, at low volume, in the house's tone. The launch videos had no sound but Krish's voice. | theorised | Friday: two effects and one bed, in `quick-edit`'s mix. |
+| R1 | cut | **Sound design in one pass.** A sound effect for the receipt tearing, the till, the scoop; a 20-second music bed under the cold open and outro, at low volume, in the house's tone. The launch videos had no sound but Krish's voice; every video now carries a licensed bed from `config/music-library.json` (house rule MUSIC_BED), so this row is about effects and a Runway bed. | theorised | Friday: two effects and one bed, in `quick-edit`'s mix. |
 | R2 | cut | **Remove the background** from a recording so the house ink and mint can sit behind him for the call card. | theorised | The call beat on one video. |
 | R3 | cut | **The same clip in another market.** `localize_ad` and dubbing for an eventual Spanish or Hindi edition. | theorised | Not before an audience asks. |
 | R4 | cut | **Multi-shot explainer** from a storyboard the Studio already writes, for the one-off main-channel scripts that have no recording. | theorised | One one-off script as a test. |
@@ -94,7 +94,7 @@ cannot be mistaken for evidence.
 |---|---|---|---|---|
 | G1 | ship | **Translate a finished video** into other languages with his own lip movement and voice. The one HeyGen use that keeps "my name on it" true. | theorised | After the first video has a reason to travel. |
 | G2 | cut | **Fix one flubbed line** by lip-syncing a re-recorded sentence over the original take, so a 3-minute recording is not redone for one word. | theorised | The next recording with one bad line. |
-| G3 | film | **An avatar of Krish for pieces he has no time to film.** Possible, and a credibility risk that is blocking, not additive: the publication's promise is him analysing it. If ever used, it is labelled on screen. Krish decides, in words, once. | theorised, not recommended | None until he rules. |
+| G3 | film | **An avatar of Krish for pieces he has no time to film.** Possible, and a blocking credibility risk: the publication's promise is him analysing it. If ever used, it is labelled on screen. Krish decides, in words, once. | theorised (advised against) | None until he rules. |
 | G4 | picture | **Animate the cover portrait** for a 3-second Substack preview or LinkedIn video post. | theorised | One cover. |
 
 ## 21st Dev (interface components, generation, video blocks)
@@ -139,13 +139,13 @@ allowed for code execution, otherwise the page references the URL directly.
 | N3 | cut | **ElevenLabs through n8n**: a scratch voiceover of the script in a stock voice so Krish hears the script's rhythm before he records, and the story check gets an ear. Never published. | theorised | Friday's script. |
 | N4 | learn | **The 7-day results pull** (A6) on a timer. | theorised | After three posts. |
 
-## ElevenLabs (voices; no connector yet)
+## ElevenLabs (voices; connector for speech and transcription)
 
 | # | Stage | Idea | Status | First test |
 |---|---|---|---|---|
 | E1 | write | **Hear the script before filming** (N3). The single most useful thing for FOR_THE_EAR. | theorised | Friday. |
 | E2 | cut | **Sound effects from text** where Runway's are not right. | theorised | As needed. |
-| E3 | film | **A clone of Krish's voice** for a fix of one word, or for a video he cannot record. As G3: a credibility call that is his alone, labelled if ever used. | theorised, not recommended | None until he rules. |
+| E3 | film | **A clone of Krish's voice** for a fix of one word, or for a video he cannot record. As G3: a credibility call that is his alone, labelled if ever used. | theorised (advised against) | None until he rules. |
 
 ## Riverside (recording, editing, captions, hosting; connected)
 
@@ -157,8 +157,9 @@ allowed for code execution, otherwise the page references the URL directly.
 
 ## Already in the engine, and how the bank reaches it
 
-- `scripts/quick-edit` takes a graphic by anchor word, so anything H2, R1,
-  D3 or C1 makes drops in by naming the word it sits on.
+- ve compiles word-indexed events to frames, and `scripts/quick-edit`, the
+  fallback, places a graphic by its spoken anchor words, so anything H2, R1,
+  D3 or C1 makes drops in by naming the words it sits on.
 - `scripts/pages` takes an interactive block and a cover brief, so D1, B1 and
   C1 feed it.
 - The judges and the fact gate are untouched: scraped and generated material
@@ -252,7 +253,7 @@ Cost bands: **free**, **pennies** (under $10 a month for us), **tens**
 
 | API | What it adds | Rough cost |
 |---|---|---|
-| Captions.ai, Submagic, Opus Clip | Automatic cuts, captions, zooms and clip selection from a long recording; a rival to `quick-edit` and Riverside, judged on the same recording. Not Descript: Krish retired it on 2026-10-12 ("Descript is permanently gone") | tens a month each |
+| Captions.ai, Submagic, Opus Clip | Automatic cuts, captions, zooms and clip selection from a long recording; a rival to `quick-edit` and Riverside, judged on the same recording. Descript is out: Krish retired it on 2026-10-12 ("Descript is permanently gone") | tens a month each |
 | Mux, Cloudflare Stream | Host the videos ourselves with view analytics, for the cover site's newsstand | tens a month |
 | Suno, Udio | A music bed in the house's tone when Runway's is wrong; check the licence for commercial use first | tens a month |
 
@@ -292,4 +293,5 @@ Veo direct. Apify and the free doors cover the same ground for pennies.
 Chosen for this post (see `docs/plans/2026-10-09-who-picks-your-ai.md`,
 "Tools for this post"): A1, A2, A3, A5, B1, D1, C1, N3/E1, H1, R1, W2.
 
-Results: to be filled in after the post ships.
+Results: not recorded. No plan in `docs/plans/` has a "What the tools added"
+section yet (checked 2026-11-04).

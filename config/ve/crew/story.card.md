@@ -4,7 +4,7 @@ Owns each beat's `role`, `span`, `viewer_task` and `point`, and the dated `call`
 
 | Situation | Choose |
 |---|---|
-| Opening | The hook is the intro (under test since 29 Oct 2026; compile records `opening: hook` per cut): the first frame is the hook in the brand's dress, logo and series tag in its corners, with no story card or logo sting ahead of it. The first visual event lands within 45 frames (1.5 s). The claim is anchored by 5 s with a visual you can point at. |
+| Opening | One opening per cut (house rule HOOK_IS_THE_INTRO, under test; compile records `opening: hook` or `opening: sting` per cut): the 9:16 cut's first frame is the hook in the brand's dress, logo and series tag in its corners; the 16:9 whole cut of a weekly series piece opens on its series' house sting and the hook beat starts on the frame after it (Krish, 5 Nov 2026); an off-day piece opens on the hook in both. No story card or other intro ahead of the hook. The first visual event lands within 45 frames (1.5 s). The claim is anchored by 5 s with a visual you can point at. |
 | Middle | Alternate anchor (evidence you can point at) and bridge (context) every 4 to 12 s. Every bridge ends on a cue into the next anchor. |
 | Turn | One `pivot` per cut: a zoom-out or a chapter beat. |
 | Ending | One `payoff`, then the `call`. On mind.the.gap the call is dated: statement, due date, confidence. |

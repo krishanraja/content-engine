@@ -43,16 +43,20 @@ his voice, and never drops out.
   ```
 
   It measures the file and writes it as `proposed`; a track already listed
-  by its file name (NO CURVES, today) is completed in place. Let him hear
+  by its file name is completed in place. Let him hear
   it under a cut; only when he approves it in words, `music.py approve
   TRACK_ID --words "his exact words"`. Commit and push the ledger (pull
   first), so both machines and every session read the same one.
-- **The levels**, in the ledger's `levels`, proposed until Krish approves
-  them by ear: about -16 LUFS over an opening clip (none by default: the
-  cut opens on his first words), about -31 under his voice
-  (about 17 LU below his -14) and about -18 over the end card; down over
-  0.5 seconds as his face comes in, up over 0.8 seconds after his last word;
-  a set rise and fall over time, never a compressor keyed to his voice.
-  The finished mix is -14 LUFS integrated, plus or minus 1, with true peak
-  at most -1 dBTP, measured after the encode. When he approves them,
-  `music.py approve-levels --words "his exact words"`, then commit and push.
+- **The levels**, in the ledger's `levels`, approved by Krish on
+  2026-10-12: about -16 LUFS for the open, about -31 under his voice
+  (about 17 LU below his -14) and about -18 over the end card. Their
+  timing is the one bed shape (`config/music-bed.json`; Krish, 2026-11-04):
+  the open level for 1.5 seconds or more, eased down over 1.5 seconds to
+  the bed, held there under his voice with nothing keyed to it, up over
+  1 second from his last word, and faded over the last second. Never a
+  compressor keyed to his voice. make.py writes the bed-shape receipt for
+  the finished bytes, and nothing reaches a post's `3 Posts` folder
+  without it. The finished mix is -14 LUFS integrated, plus or minus 1,
+  with true peak at most -1 dBTP, measured after the encode. New levels
+  need his approval by ear: `music.py approve-levels --words "his exact
+  words"`, then commit and push.

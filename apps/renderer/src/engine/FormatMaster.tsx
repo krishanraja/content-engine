@@ -73,8 +73,10 @@ function cameraView(profile: MotionProfile, beat: EngineBeat, slots: readonly Bo
   return { focusIndex: 0, fallback }
 }
 
-/** The composition owns the clock; every device and chrome layer receives global frames. */
-export function FormatMaster(props: EngineRenderProps) {
+/** The composition owns the clock; every device and chrome layer receives global frames. `stem={false}` leaves the
+ *  stem to the wrapper that plays it from the render's frame 0, under the sting (VeCut); with no flag the tree is the
+ *  one it always was (houseGolden.test.ts). */
+export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean }) {
   const frame = useEngineFrame()
   const objects = new Map(props.objects.map((object) => [object.obj, object]))
   const width = props.aspect === '9:16' ? 1080 : 1920
@@ -229,7 +231,7 @@ export function FormatMaster(props: EngineRenderProps) {
           <BrandFrame props={props} beat={beat} frame={frame} />
         </AbsoluteFill>
       )))}
-      <EngineAudio audio={props.audio} />
+      <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )
 }

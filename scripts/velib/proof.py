@@ -160,8 +160,12 @@ def window_props(props: dict, start: int, end: int) -> dict:
                             fromFrame=shift(s['fromFrame']),
                             durationFrames=min(int(s['fromFrame']) + int(s['durationFrames']), end) - max(int(s['fromFrame']), start))
                        for s in props.get('segments') or [] if overlaps(s['fromFrame'], int(s['fromFrame']) + int(s['durationFrames']))]
+    # A window is never a whole cut, so it opens on no sting; but the stem was premixed with the sting's frames in
+    # front of his voice (ve premix), so cut frame f is stem frame f + the sting's frames.
+    lead = int((props.get('sting') or {}).get('frames') or 0)
+    out.pop('sting', None)
     out['audio'] = dict(props['audio'], stem=dict(props['audio']['stem'],
-                        trimBeforeFrames=int(props['audio']['stem'].get('trimBeforeFrames', 0)) + start),
+                        trimBeforeFrames=int(props['audio']['stem'].get('trimBeforeFrames', 0)) + start + lead),
                         sfx=[dict(s, atFrame=shift(s['atFrame'])) for s in props['audio'].get('sfx') or []
                              if start <= int(s['atFrame']) < end])
     ending = props.get('ending')

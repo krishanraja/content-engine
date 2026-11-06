@@ -29,7 +29,7 @@ repository's `docs/CAROUSEL-STANDARD.md`, the rejection floor and the copy
 lint. Content-engine keeps the standard and makes the hero assets: the
 article, both cuts, thumbnails and covers.
 
-**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, every week's board lives at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are kept as compatibility and history; never use them to synchronize artifacts.
 
 
 <!-- north-star:start -->

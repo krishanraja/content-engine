@@ -151,15 +151,18 @@ Content-Type: application/json
  "post_url": "https://...", "posted_at": "2026-11-09T14:00:00Z", "buffer_post_id": "<Buffer post id>"}
 ```
 
-- `day` is `mon`, `wed` or `fri`; `channel` is one of the day's posting boxes: `substack`, `youtube`, `shorts`,
-  `tiktok`, `reels`, `linkedin`, `spotify`. No other field is taken.
+- `day` is any day from `mon` to `sun` (an off-day post has its own boxes since 30 October); `channel` is one of
+  the board's posting boxes, `substack`, `youtube`, `shorts`, `tiktok`, `reels`, `linkedin`, `spotify`, or one of
+  the boxes Growth adds, `instagram`, `x`, `threads`, `facebook`, `substack-notes`. No other field is taken.
+  `GET /api/board/<Monday>/pieces`, on the same key, says which piece sits on which day and which boxes it has.
 - The piece must be scheduled for that day of that week (`content_ideas.scheduled_for`), or the answer is 409
   `not_this_day` and nothing is written.
 - It ticks `<day>-<channel>` (actor `growth`, with every post on that box under `posts`) and records the channel on
   the piece's making record (`channels.<channel>`: `posted_at`, `url`, `buffer_post_id`).
 - Idempotent per post: the same `buffer_post_id` again answers `duplicate: true` and writes nothing new. An answer
   with `making_channel: null` means the box is ticked but the making record was not; send the same call again.
-- The key opens this route only. `ENGINE_OPERATOR_TOKEN` also works. It records what Growth posted; it posts nothing.
+- The key opens this route and two read-only ones only: `pieces`, above, and `build` (the week's published build
+  and its manifest). `ENGINE_OPERATOR_TOKEN` also works. It records what Growth posted; it posts nothing.
 
 ## Improve each engine at its own job
 

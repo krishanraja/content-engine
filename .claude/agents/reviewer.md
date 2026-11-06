@@ -8,7 +8,7 @@ model: opus
 You review one change or one decision in the Make Your Mind Up content engine with fresh eyes.
 
 Read first, every time:
-1. `docs/NORTH_STAR.md` and `AGENTS.md`, especially "Rules for every agent" and the content engine and Studio invariants.
+1. `docs/NORTH_STAR.md` and `AGENTS.md`, especially "Rules for every agent", then the content engine and Studio invariants in `docs/AGENTS-REFERENCE.md`.
 2. `docs/CONTENT_ENGINE.md` for anything in `apps/control-plane`, `docs/STUDIO.md` and `docs/ENGINE_SESSION.md` for the Studio, and `docs/COST_GUARDS.md` for anything that changes what a model reads or what it costs.
 3. The entries in `config/learnings.json` and `config/failures.json` that bear on the change.
 

@@ -10,6 +10,24 @@ same day, which Krish supplied; this version folds in his answers of
 claims tables. Version 2 is kept verbatim at
 `docs/history/2026-09-25-CREATIVE_IDENTITY_UPGRADE_v2.md`.
 
+**Where it stands (checked 4 November 2026).** This is the plan of 25
+September, and the pack itself was never built: no `SignaturePackV1` or
+`SignatureInputsV1` exists in the code. What shipped took other shapes. The
+Call (P6) is the piece's dated prediction, read by
+`packages/contracts/src/call.ts` and held by the publish checks; its
+scoreboard feed is `GET /api/calls` (`apps/control-plane/api/calls.ts`), a
+JSON feed for makeyourmindup.ai with Krish's ruling in `meta.call_verdict`,
+in place of the CSV over `investigation_claims` that P6 planned. Video is
+made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`), with
+quick-edit as the fallback until ve passes Phase 3, and licensed music comes
+from the ledger in `config/music-library.json`. Growth has made the derived
+carousels (P7) since 28 October, to `docs/CAROUSEL-STANDARD.md`. How a video
+looks, sounds and moves today is held by `docs/production/THE_BAR.md`, the
+brand book (through `config/ve/brand-tokens.json`), the signed motion
+standard (`docs/ve/MOTION_STANDARD.md`) and the style bank
+(`config/style-references.json`). Read this document for Krish's decisions
+in section 0 and the direction they set.
+
 This is the instruction manual for the engine's creative output: how the
 publication and the Shorts and carousels cut from it look, sound and move. It
 is written for an agent with no context. Read section 0 and the whole of
@@ -334,11 +352,12 @@ type moves:
 - under.the.hood: type labels parts. Words attach to components, and each label
   lands with its mark: real or theatre.
 
-This also clears a production blocker: the Studio's series rename waits on
-wordmarks for the subchannels (`docs/STUDIO.md`), mind.the.gap has no
-wordmark or series, and the production-brief bridge
-(`apps/control-plane/api/_productionBrief.ts`) accepts only `money_of_ai` and
-`built_with_ai`.
+When this was written it also cleared a production blocker: the Studio spoke
+only `money_of_ai` and `built_with_ai`. That blocker has gone: the Studio's
+series (`packages/contracts/src/series.ts`) and the production-brief bridge
+(`apps/control-plane/api/_productionBrief.ts`) take the three subchannel
+names, mind.the.gap included, and keep the retired two only for records made
+under them.
 
 **Build.** The makeyourmindup masthead and three subchannel wordmarks as
 official files from a pinned `krishanraja/mindmake` commit, SHA-256 verified in
@@ -688,12 +707,14 @@ shipped, what Krish approved and what waits on him.
 ## 8. Decisions still waiting on Krish
 
 Settled since: the Call is in all three mandates (Krish, 2026-10-02: "yes";
-`supabase/migrations/20261002090000_mandates_dated_prediction.sql`).
+`supabase/migrations/20261002090000_mandates_dated_prediction.sql`). The
+Studio's series took the subchannel names after Krish gave the go on
+2026-09-26 (`packages/contracts/src/series.ts`).
 
 | Decision | Recommendation | Why |
 |---|---|---|
-| The makeyourmindup masthead, subchannel wordmarks and type system | Approve from three rendered territories | Unblocks the series rename and the brief bridge |
-| Rename the Studio series to the subchannels | Yes, once wordmarks are approved | The Studio still speaks the retired two |
+| The makeyourmindup masthead, subchannel wordmarks and type system | Approve from three rendered territories | It was to unblock the series rename and the brief bridge, which no longer wait on it (above) |
+| Rename the Studio series to the subchannels | Yes, once wordmarks are approved | Settled: done (above) |
 | Where CTRL's lead-magnet door goes, now that makeyourmindup.ai is the publication's cover page | A clearly labelled route from the cover page, or its own address | makeyourmindup.ai was CTRL's door; readers and CTRL leads need different first screens |
 | Whether the Substack uses the makeyourmindup.ai domain or links to it | Link from the cover page first; move the domain later if it helps | The cover page stays owned whatever Substack does |
 | Extraction minimums per subchannel | Start with 5.2, adjust after the corpus test | They decide which drafts are sent back |

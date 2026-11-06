@@ -1945,7 +1945,7 @@
       "on": "2026-11-01",
       "krish": "figure out how this can never happen again durably",
       "why": "Four cuts made by per-piece compositors went around make.py's checks and reached the board as ready with no receipt, and their openings were weak: frame 0 nearly empty, the headline wiped after a second, his voice first at 3 s.",
-      "means": "However a cut is made, it reaches Krish's board as ready only with a passing delivery receipt for its exact bytes, and that receipt includes the opening check: his voice from the first half second, a finished first frame, a headline that holds, no flat frame. A cut that fails says review on the board with the reason; only his own words override it.",
+      "means": "However a cut is made, it reaches Krish's board as ready only with a passing delivery receipt for its exact bytes, and that receipt includes the opening check: his voice from the first half second, a finished first frame, a headline that holds, no flat frame, each measured from the cut's first frame (on a wide cut that opens on the house sting, the frame after it). A cut that fails says review on the board with the reason; only his own words override it.",
       "status": "encoded",
       "encoded": [
         {
@@ -2092,6 +2092,156 @@
           "file": "scripts/velib/compile.py",
           "contains": "'channel': tokens['mint'] if off else",
           "how": "compile draws an off day in the house mint"
+        }
+      ]
+    },
+    {
+      "id": "day-colours-on-covers",
+      "on": "2026-11-04",
+      "krish": "The off days are not supposed to share the same colours as Monday, Wednesday, and Friday. Monday, Wednesday, and Friday are supposed to be slightly more heavily and artistically skinned than that in their colours. \nWe've lost some sense of fun that we used to have in our branding. I like the new classy look but I miss the fun. \nPost random memes on a Monday but that doesn't mean it's Monday's colour and brand. Then follow the money. There is only one \"follow the money\" piece, one \"mind the gap\" piece, and one \"mind the gap\" piece every week. Other stuff can be fluid, maybe changeable. \nI should be allowed to post random stuff on any day but it doesn't take on the brand colours of Follow the Money, Mind the Gap, or Under the Hood. Which are only once a week, omni-channel, and a completely different distribution format",
+      "why": "The first version keyed the colour to the publishing day, so a random Monday meme would have worn follow.the.money's yellow, and the series covers wore only a pale wash. Before that every cover sat on the same sage ground whatever its series and carried a coral tag and ring (mind.the.gap's colour) on every day.",
+      "means": "A subchannel's colour and name belong to its one weekly piece (its article, both cuts, thumbnails and covers) and to an asset whose facts say it carries that piece; everything else, on any day, wears no subchannel colour or name. His first ask the same day (\"lightly colour-code the thumbnail and cover asset templates for Monday, Wednesday, and Friday ... a hard rule across Monday to Saturday assets\") is replaced. Of the first concepts: \"This is supposed to be your solution to the colour question because everything's wrong in here.\" Of the sticker concepts: \"Stuff can't just randomly overlap on titles like that and I think these \"screwdriver included\" and \"bring a calculator included\" badges are really obnoxious.\" The heavier, more artistic series skins are the nine he kept on 5 November (\"keep all of them and rotate them all at will over the coming weeks\"; asked how, one skin per week, moving on by itself), from neon in the week of 9 November; a piece may name another, and nothing may sit on the words or the logos. They reach every shape of the piece, its covers as its thumbnails (Krish, 2026-11-05: \"Skin the covers too\"), so a series piece looks the same everywhere; and asked what happens when a week's skin cannot be drawn on a piece without touching its words or logos: \"Yeah just move on automatically\" (2026-11-05): the whole piece moves on to the next skin that draws on every shape, its records say which and why, and the plain series Receipt when none of the nine can; it never stops. Growth keeps the same rule (its R125) through docs/CAROUSEL-STANDARD.md.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/pages/brand.py",
+          "contains": "def series_look(",
+          "how": "one rule from config/studio.json: the subchannel's weekly piece, or an asset that carries it, wears its colour and name; anything else none"
+        },
+        {
+          "file": "scripts/pages/receipt.py",
+          "contains": "look = brand.series_look(",
+          "how": "every cover and thumbnail (the Receipt) takes its highlight, pill and tag from the series rule, and its fit refuses any decoration on the words"
+        },
+        {
+          "file": "tests/series_colour_test.py",
+          "contains": "is not the piece and wears a series colour",
+          "how": "CI refuses a cover that is not the weekly piece carrying a subchannel colour or name, and the piece carrying another series'"
+        },
+        {
+          "file": "tests/receipt_overlap_test.py",
+          "contains": "test_a_decoration_on_the_headline_is_refused",
+          "how": "CI's browser job draws a decoration on a headline and proves the Receipt refuses it"
+        },
+        {
+          "file": "scripts/pages/skins/__init__.py",
+          "contains": "def pick(facts, look):",
+          "how": "the nine series skins (Krish, 2026-11-05: \"keep all of them and rotate them all at will over the coming weeks\"): one per week in rotation from neon in the week of 9 Nov, shared by the week's Monday, Wednesday and Friday pieces, another by \"skin\" in the facts, none on anything that is not a weekly series piece; nothing before that week unless a piece names one, and an undated series piece is refused; receipt.py puts it on every cover and video thumbnail (Krish, 2026-11-05: \"Skin the covers too\"), each cover in the closer thumbnail's design (DESIGN), and checks the words, the logos, the safe box and the proof again after it, and the visual gate refuses a series cover or thumbnail with no skin from the week of 9 Nov, telling an old record's series piece from the piece itself, and covers and thumbnails that wear different skins"
+        },
+        {
+          "file": "tests/series_skins_test.py",
+          "contains": "test_every_skin_is_drawn_on_every_series_day_tall_and_wide_with_nothing_on_the_words",
+          "how": "CI's browser job draws all nine skins on Monday, Wednesday and Friday, tall and wide, alone, with logo rows and a strip, and under a long title (162), and proves none touches the words or the logos or carries words"
+        },
+        {
+          "file": "tests/series_skins_test.py",
+          "contains": "test_every_skin_is_drawn_on_every_series_day_on_every_cover_shape_with_nothing_on_the_words",
+          "how": "the same on the five cover shapes (405), the long title the plain Receipt cannot fit on the 3:2 and 1200 x 630 covers held to the house, never the skin"
+        },
+        {
+          "file": "scripts/pages/receipt.py",
+          "contains": "def settle(b, facts, base, cs, need):",
+          "how": "Krish, 2026-11-05: \"Yeah just move on automatically\": a skin refused on any one of the piece's seven shapes moves the whole piece on to the next in the rotation, wrapping round, a named one first; the drawer prints and records which and why (skin_week, skin_tried, skin_note); none of the nine, the plain series Receipt; never a stop"
+        },
+        {
+          "file": "tests/series_skins_test.py",
+          "contains": "test_when_none_of_the_nine_can_be_drawn_the_piece_wears_the_plain_series_receipt",
+          "how": "a placement forced to fail on one shape moves every shape on to the next skin, with the reason recorded; a named skin wraps round; all nine forced to fail give the plain series Receipt, which the visual gate accepts"
+        }
+      ]
+    },
+    {
+      "id": "house-robot-or-no-robot",
+      "on": "2026-11-05",
+      "krish": "Make sure all future carousel covers that are generated by Higgsfield either use the branded toy robot or are more creative than just a robot doing something. I just added it in the taste ledger but I want this to be used in future carousels.",
+      "why": "The approved off-day covers for the week of 9 November each showed a made-up robot (a toy chatbot on an auction podium, a robot marking its own exam, a robot arm feeding a filing cabinet), and the ten-things carousel concept started down the same road; he had said: \"Either we keep to brand and have my brand robot doing these things if you insist on a robot every single time, or you're welcome to be more creative in your Higgs field generations too.\"",
+      "means": "A generated carousel cover shows the house robot, the hand-sewn felt robot of the brand book, made from its two reference photos (config/brand-robot.json), or no robot at all and a more creative idea: the object, place or moment the story is about. Never a generic robot.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/brand-robot.json",
+          "contains": "robot-standing-source.webp",
+          "how": "the house robot's reference photos, by sha256"
+        },
+        {
+          "file": "scripts/post-pack/cover_scene.py",
+          "contains": "def problems(",
+          "how": "refuses a cover generation record whose prompt asks for a robot without the house robot's photos as references"
+        },
+        {
+          "file": "docs/CAROUSEL-STANDARD.md",
+          "contains": "A generated cover shows the house robot or no robot at all",
+          "how": "the carousel standard every carousel maker follows, Growth included"
+        }
+      ]
+    },
+    {
+      "id": "scripts-first-second-and-send",
+      "on": "2026-11-05",
+      "krish": "After you're done with this Can you ensure my teleprompter scripts and captions follow rules like this every time? Adapt the existing protocol towards this instead of making broad sweeping random changes.",
+      "why": "His Instagram checklist (hook in the first second, keyword spoken and on screen, no \"Hey guys\" or long intros, built for shares and saves, a comment strategy) met four of his own rules that pulled the other way: PERSONAL_INTRO opened on his personal line, LISTENING said never the twist first, SCRIPT_CLOSE and Growth's share_cta ban spoken asks.",
+      "means": "He chose: the hook is the first sentence and his personal line second or third; any of the four openings (biggest mistake, the result, an unexpected fact, the middle of the story) as long as it leaves the question the video answers; the script names a specific person the viewer will think of, with no ask, while the save line goes in the caption and one specific question in the pinned comment.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "would someone stop scrolling in under one second?",
+          "how": "HOOK_AND_CTA, PERSONAL_INTRO, LISTENING and YOUTUBE_PACKAGE carry his three choices"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "GREETING_OPENER = re.compile(",
+          "how": "refuses a greeting or an intro in front of the hook, warns when his personal line comes first"
+        },
+        {
+          "file": ".agents/skills/make-piece/references/hook-and-share.md",
+          "contains": "Would the first sentence alone stop you scrolling",
+          "how": "the read-back asks Reader A the first-second and send tests; the caption and pinned-comment rules"
+        },
+        {
+          "file": "apps/control-plane/api/_video.ts",
+          "contains": "nothing in front of the hook",
+          "how": "the engine's own script writer opens the same way"
+        }
+      ]
+    },
+    {
+      "id": "sting-on-the-wide-cut",
+      "on": "2026-11-05",
+      "krish": "I think it should go at the start of the longer wide videos 100%,",
+      "why": "Of the Intro Sting page he asked \"where is this additive?\". The engine said no cut used it, since every video had opened on the hook from 29 October, and proposed the wordmark on the hook's first frame instead of a separate intro before his face. His answer put the sting back, on the wide long cut only.",
+      "means": "The 16:9 long cut of a weekly series piece opens on that series' house sting, the clip he saw (config/intro-sting.json: fixed clips pinned by sha256 in the library, no sound of their own, the bed under them), and his face and the hook come in on the very next frame; the 9:16 short cut opens straight on the hook; an off-day piece wears no sting. Nothing else goes in front of the hook. Asked about the colours, he picked \"Keep it as I saw it\": each series' clip flashes the other series' colours, the one written exception to the series-colour rule. Every check that reads a finished wide file counts the sting's frames first, and the opening gate measures from the frame after it with its thresholds unchanged. His approval of the clips is recorded in his own words (intro.py approve); until it is, the wide cut opens on its hook and its report says why.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "The 16:9 long cut of a weekly series piece opens on the house intro sting",
+          "how": "HOOK_IS_THE_INTRO: the sting on the wide cut of a series piece, the hook on the tall cut and on off days"
+        },
+        {
+          "file": "config/intro-sting.json",
+          "contains": "\"words\": \"I think it should go at the start of the longer wide videos 100%,\"",
+          "how": "the clips by library path and sha256, the shapes the sting goes on, and his placement and colour words"
+        },
+        {
+          "file": "scripts/quick-edit/make.py",
+          "contains": "def sting_stop(",
+          "how": "quick-edit lays the sting on a series piece's wide cut and stops a wide series cut that cannot have the approved one"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "def sting_props(",
+          "how": "ve compile puts the approved sting in front of the 16:9 whole cut of a series piece only"
+        },
+        {
+          "file": "scripts/velib/qc_opening.py",
+          "contains": "def opening(",
+          "how": "ve qc's opening row checks the file's first frames are the approved clip and his cut starts on the next frame"
+        },
+        {
+          "file": "scripts/quick-edit/opening_gate.py",
+          "contains": "lead_frames",
+          "how": "the opening gate measures a stinged cut from the frame after the sting"
         }
       ]
     }

@@ -2,7 +2,7 @@
 
 Format: mind.the.gap, tall 1080x1920, five beats in about 20 s. One real phone in one real hand is the stage. The camera pushes, rolls and re-frames it. A hand-drawn scribble points at the key thing in every beat. Real-world plates sit behind. The brand kit does the annotation.
 
-Everything below is reproducible from `build_plates.py` (derives the plates once) and `build.py` (computes every alignment and writes `index.html`). The producer swaps copy and numbers in the frame functions; geometry follows.
+Everything below is reproducible from `build_plates.py` (derives the plates once) and `build.py` (computes every alignment and writes `index.html`). The producer swaps copy and numbers in the frame functions; geometry follows. In this repository both scripts and the mock's `index.html` are in `docs/ve/design/formats/ref/H/`; the plates the renderer uses are in `assets/plates/hand-held-screen/`.
 
 ## 1. Canvas and grid
 

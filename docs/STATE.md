@@ -1,10 +1,10 @@
 # Current state
 
-## 29 October: read NOW.md first; what below is now wrong
+## 4 November: read NOW.md first; what below is now wrong
 
-`NOW.md` holds the current state, checked against the code on 2026-10-29. The
-rest of this file was last verified on 2026-09-25 and is history where it
-disagrees. Known to be wrong below:
+`NOW.md` holds the current state. This list was checked against the code, the
+workflows and git on 2026-11-04. The rest of this file was last verified on
+2026-09-25 and is history where it disagrees. Known to be wrong below:
 
 - **Owner and product.** The engine is a Make Your Mind Up product, not a
   Mindmake one (Ruling, Krish, 2026-10-28); its `plan-week` is the one ideation
@@ -13,18 +13,29 @@ disagrees. Known to be wrong below:
 - **"No piece has ever been published."** Wednesday 21 October's long cut was
   published by Krish and carries a reported audible defect
   (`docs/plans/2026-10-21-wednesday/FAILURE_REPORT_2026-10-24.md`); Monday 26
-  October is approved and ready to publish. The North Star count of published
+  October's cuts were approved on 28 October to go live on Monday 2 November
+  (`docs/CADENCE.md`, "The change-over"). The North Star count of published
   assets per week is in `NOW.md`.
 - **Scheduling.** No Claude routine or claude.ai schedule runs any part of the
   engine (Ruling, Krish, 2026-10-29). GitHub Actions runs Claude Code on his
-  subscription: `.github/workflows/sunday-ideas.yml` and `make-piece.yml`, both
-  waiting on the secret `CLAUDE_CODE_OAUTH_TOKEN`; the Vercel crons below are
+  subscription (`CLAUDE_CODE_OAUTH_TOKEN`, set by 30 October):
+  `make-piece.yml` has written pieces' scripts since 3 November;
+  `sunday-ideas.yml` fired on 30 and 31 October and found the week of 9
+  November's Ideas tab already live, so it has not yet built a tab itself;
+  `engine-learning-weekly.yml` first runs on Sunday 8 November. The Vercel
+  crons (24 in `apps/control-plane/vercel.json`; the 20 below were the count of 25 September) are
   separate and unchanged by that ruling.
 - **Video.** `scripts/ve.py` is the video engine and quick-edit the fallback
   until ve passes Phase 3 (`docs/ve/STATUS.md`); the Studio's Shorts route
   below is not how videos are made today.
-- **Taste.** Only the eight nevers in `docs/production/THE_BAR.md` may block a
-  piece on taste; no public word names Krish (house rule `NO_NAME`).
+- **Taste.** The eight nevers in `docs/production/THE_BAR.md` are the only
+  refusals that bar adds; the existing gates and the rejection floor's
+  approved standards (`python3 scripts/floor.py`) refuse as before. No public
+  word names Krish (house rule `NO_NAME`). `apps/control-plane/api/_houseRules.ts`
+  holds 59 rules (57 live, 2 on trial); the thirteen below were the count of 25 September.
+- **Boards.** Every week's board is at content.krishraja.com/board/<Monday>
+  (`config/boards.json`, `web`: 12 October to 9 November); the two links in
+  the 19 October section were the first.
 
 ## 19 October: both publish boards live, web cutover verified
 
@@ -241,7 +252,8 @@ Readback 2026-09-25 unless a date is given.
 - **The failure loop (4 Nov 2026).** `engine_incidents` is live (migration `20261123090000`, applied and read back
   4 Nov); the board's Reject presses, a second round, the Critic's block, a lint override and a failing guard test
   write it; every read of the floor and the failure register is a preflight receipt, and from 9 Nov `ve brief` and
-  `ve render` refuse without one. The weekly job (`engine-learning-weekly.yml`) has not run yet; the backfill over the
+  `ve render` refuse without one. The weekly job (`engine-learning-weekly.yml`) has not run yet (its first scheduled
+  run is Sunday 8 November, 19:37 UTC); the backfill over the
   registers is `docs/learning/2026-11-04-backfill.md`. `docs/learning/README.md`.
 
 - **The Windows runner.** Installed, heartbeating and credential-probed on
@@ -252,8 +264,9 @@ Readback 2026-09-25 unless a date is given.
   package or upload. The carousel's brand placement still waits on Krish's
   review of the rendered set (`docs/CAROUSEL_ENGINE_STATE.md`).
 - **From a routed piece to the Studio.** The production-brief bridge accepts
-  only `money_of_ai` and `built_with_ai` (`apps/control-plane/api/_productionBrief.ts`),
-  so no piece routed to a live subchannel can become a Studio job
+  the three subchannels as well as `money_of_ai` and `built_with_ai`
+  (`PRODUCTION_SERIES_VALUES` in `apps/control-plane/api/_productionBrief.ts`,
+  walk log H26), but no live-subchannel piece has yet become a Studio job
   (`docs/STUDIO.md`, "Series and subchannels").
 - **The weekly compiler.** Runs Sundays. Its last run (2026-09-20) was
   skipped: "only 1 edit events in 28 days: too thin to propose anything". The
@@ -282,8 +295,9 @@ Engine:
   admit everyone when `ACCESS_CODE` is unset; `discover-lens-radar` admits
   everyone when `LENS_RADAR_SECRET` is unset.
 - **`npm run verify`** passes its 28 control-plane guards again (fixed
-  2026-09-25, H16). Two media tests fail where FFmpeg is absent; CI installs
-  it.
+  2026-09-25, H16). One media test, `tests/quick-edit-mix.test.ts`, fails in
+  the cloud container (FFmpeg 6.1.1) and passes in CI, which installs the
+  pinned FFmpeg 8.1.2 (rechecked 2026-11-04).
 - **Retired names still drive whole paths.** The editorial radar and
   `editorial-route` know only `money_of_ai` and `built_with_ai`; `save-draft`
   and brief push map only the old factory channels; `deepen` accepts only
@@ -334,8 +348,10 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
 - **The cover page fix** for makeyourmindup.ai (logo clear space, the mint
   highlight, the line under it), shown to him as before and after on
   2026-09-25; that repository is not reachable from this session.
-- **The Studio's series.** Whether and when to rename `money_of_ai` and
-  `built_with_ai`, which needs wordmarks for the subchannels first.
+- **The Studio's series.** Renamed since: new briefs carry the three
+  subchannel names, and `money_of_ai` and `built_with_ai` stay valid only for
+  records made under them (`packages/contracts/src/series.ts`; Krish,
+  2026-09-26).
 - **The creative identity** (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8):
   the makeyourmindup masthead, subchannel wordmarks and type system (to approve
   from rendered territories); where

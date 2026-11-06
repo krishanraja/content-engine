@@ -65,9 +65,12 @@ SERIES_PICTURE = {
     'mind.the.gap': 'Threads on a time axis that bend and meet, ending in a dated call.',
 }
 LEAD_PICTURES = ('series_picture', 'story_object')
-# With the hook as the intro there is no sting, and a new direction says so rather than leaving brand.intro_sting for a
-# session to fill with a sting its opening does not use (ruling 8, under test).
-NO_STING = 'none: the hook is the intro (under test, ruling 8)'
+# brand.intro_sting: the piece's own series sting, which opens its 16:9 long cut (Krish, 2026-11-05: "I think it should
+# go at the start of the longer wide videos 100%,"; config/intro-sting.json), or this sentence for a piece that wears
+# none, so a session never fills it with a sting no cut opens on. The same sentence as the ve contract's VE_NO_STING
+# (packages/contracts/src/production-spec.ts), which tests/ve_thursday_guards_test.py pins.
+NO_STING = 'none: this piece opens on its hook (an off day, or no wide long cut)'
+STUDIO = ROOT / 'config' / 'studio.json'  # the house channels: the day each weekly series runs on
 
 
 class DirectionError(Exception):
@@ -326,13 +329,41 @@ def under_test(path=BAR):
     return {c['id']: c for c in (data.get('under_test') or {}).get('choices') or []}
 
 
-def choices_block(series='', path=BAR):
-    """A direction's starting production_choices: each default from the bar, the sound only once he has approved a set
-    by ear, and both lead pictures to draw as stills for the storyboard, the pick left for Claude to propose."""
+def series_day(series):
+    """The weekday a weekly series runs on ('Friday' for mind.the.gap), from the house channels in config/studio.json;
+    None for anything else."""
+    key = str(series or '').replace('.', '_')
+    for theme in json.loads(STUDIO.read_text(encoding='utf-8')).get('brand_themes') or []:
+        day = ((((theme.get('publication') or {}).get('house_style') or {}).get('channels') or {}).get(key) or {}).get('day')
+        if day:
+            return day.rstrip('s')
+    return None
+
+
+def intro_sting_for(series, publish_day):
+    """brand.intro_sting for a piece: its series' sting ('mind_the_gap') when it is published on its series' own day,
+    NO_STING on an off day (the day ve compile puts no sting on its wide cut), '' while the series or the day is not
+    known yet, for Claude to fill."""
+    day = series_day(series)
+    try:
+        weekday = date.fromisoformat(str(publish_day or '')[:10]).strftime('%A')
+    except ValueError:
+        return ''
+    if not day:
+        return ''
+    return str(series).replace('.', '_') if weekday == day else NO_STING
+
+
+def choices_block(series='', path=BAR, publish_day=''):
+    """A direction's starting production_choices: each default from the bar (an off-day piece's opening is the bar's
+    off_day one: it wears no sting), the sound only once he has approved a set by ear, and both lead pictures to draw as
+    stills for the storyboard, the pick left for Claude to propose."""
     tested = under_test(path)
     sound = tested.get('big_moment_sound') or {}
+    opening = tested.get('opening') or {}
+    off = intro_sting_for(series, publish_day) == NO_STING
     return {
-        'opening': (tested.get('opening') or {}).get('default', ''),
+        'opening': opening.get('off_day', opening.get('default', '')) if off else opening.get('default', ''),
         'lead_picture': {
             'series_picture': {'what': SERIES_PICTURE.get(series, ''), 'still': ''},
             'story_object': {'what': '', 'still': ''},
@@ -408,10 +439,11 @@ def template(plan, cut, script_text, take='on_camera'):
         'max_face_share': DEFAULT_MAX_FACE_SHARE, 'cuts': {}, 'article': {'visuals': []}, 'do_not': [],
         'acceptance': ACCEPTANCE, 'signed': {'by': '', 'said': '', 'on': '', 'script_sha256': {}}}
     doc['cuts'][cut] = {'take': take, 'beats': beats}
-    doc.setdefault('production_choices', choices_block(str((doc.get('brand') or {}).get('series') or '')))
+    series = str((doc.get('brand') or {}).get('series') or '')
+    doc.setdefault('production_choices', choices_block(series, publish_day=doc.get('publish_day') or ''))
     brand = doc.setdefault('brand', {})
-    if not brand.get('intro_sting') and (doc['production_choices'] or {}).get('opening') == 'hook_is_intro':
-        brand['intro_sting'] = NO_STING
+    if not brand.get('intro_sting'):
+        brand['intro_sting'] = intro_sting_for(series, doc.get('publish_day'))
     return path, doc
 
 
@@ -496,13 +528,28 @@ def _self_test():
         fresh = Path(tmp) / 'fresh'
         fresh.mkdir()
         _, new = template(fresh, 'long', script)
-        if new['brand'].get('intro_sting') != NO_STING or any('brand.intro_sting' in p for p in check(new)):
-            probs.append('a new direction that opens on the hook says it has no sting, and is not held for one')
-        # The choices under test: each default from the bar, both lead pictures to draw, the pick left to Claude.
-        seeded = doc.get('production_choices') or {}
+        if new['brand'].get('intro_sting') != '':
+            probs.append('a new direction with no series or day leaves brand.intro_sting for Claude to fill')
+        # The opening (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"): a series
+        # piece on its series' day names its own sting and opens its wide cut on it; an off day names none.
         tested = under_test()
-        if seeded.get('opening') != tested['opening']['default'] or seeded.get('opening') != 'hook_is_intro':
-            probs.append('the template opens on the bar\'s default opening, the hook as the intro')
+        for day, sting, opening in (('2026-11-13', 'mind_the_gap', 'sting_wide_hook_tall'),
+                                    ('2026-11-12', NO_STING, 'hook_is_intro')):
+            dated = Path(tmp) / f'dated-{day}'
+            dated.mkdir()
+            (dated / FILE).write_text(json.dumps({'publish_day': day, 'brand': {'series': 'mind.the.gap'}, 'cuts': {}}))
+            _, piece = template(dated, 'long', script)
+            if (piece['brand'].get('intro_sting'), piece['production_choices'].get('opening')) != (sting, opening) \
+                    or any('brand.intro_sting' in p for p in check(piece)):
+                probs.append(f'a mind.the.gap piece on {day} names {sting!r} and opens {opening}: '
+                             f'{piece["brand"].get("intro_sting")!r}, {piece["production_choices"].get("opening")}')
+        if tested['opening']['default'] != 'sting_wide_hook_tall' or tested['opening']['off_day'] != 'hook_is_intro':
+            probs.append('the bar\'s opening: the sting on the wide cut by default, the hook on an off day')
+        # The choices under test: each default from the bar, both lead pictures to draw, the pick left to Claude.
+        # The good direction is a mind.the.gap piece on a Monday: an off day, so it opens on its hook.
+        seeded = doc.get('production_choices') or {}
+        if seeded.get('opening') != tested['opening']['off_day']:
+            probs.append('the template opens an off-day piece on the bar\'s off-day opening, the hook')
         if seeded.get('big_moment_sound') != 'none':
             probs.append('no sound on the big moment until he approves a set by ear')
         if sorted(k for k in seeded.get('lead_picture', {}) if k in LEAD_PICTURES) != sorted(LEAD_PICTURES) \
@@ -526,7 +573,7 @@ def _self_test():
     picked = json.loads(json.dumps(good))
     picked['production_choices'] = choices_block('mind.the.gap')
     picked['production_choices']['lead_picture']['proposed'] = 'story_object'
-    if production_choices(picked) != {'opening': 'hook_is_intro', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}:
+    if production_choices(picked) != {'opening': 'sting_wide_hook_tall', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}:
         probs.append(f'his signature accepts Claude\'s pick: {production_choices(picked)}')
     if not any(line.endswith('<- Claude proposes') and 'story object' in line for line in choice_lines(picked)):
         probs.append('the storyboard marks the proposal')
