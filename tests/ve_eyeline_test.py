@@ -68,6 +68,24 @@ class Colour(unittest.TestCase):
                 self.assertLess(abs(a - b), 0.5)
 
 
+@unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+class Lids(unittest.TestCase):
+    def test_the_upper_lid_comes_down_and_what_is_under_it_stays(self):
+        import numpy as np
+        region = np.full((120, 160, 3), (120, 150, 200), np.uint8)             # skin
+        region[60:62, 40:121] = 30                                             # the lash band at the upper lid line
+        region[64:100, 40:121] = (250, 250, 250)                               # the eye, white
+        up = [[120 - 10 * k, 60] for k in range(1, 8)]                         # upper lid points, right to left
+        low = [[40 + 10 * k, 90] for k in range(1, 8)]                         # lower lid points
+        contour = [[40, 75], *low, [120, 75], *up]
+        out = eyeline.lower_lid(region, contour, (0, 0), 4.0)
+        self.assertLess(float(out[64:66, 80].mean()), 120)                      # the lash band is now four rows lower
+        self.assertGreater(float(out[60:62, 80].mean()), 150)                  # and skin where it was
+        self.assertTrue(np.array_equal(out[80:100, 80], region[80:100, 80]))   # the eye below is untouched
+        self.assertTrue(np.array_equal(out[:, :30], region[:, :30]))           # nothing outside the corners moved
+        self.assertIs(eyeline.lower_lid(region, contour, (0, 0), 0.1), region)  # a sub-pixel drop does nothing
+
+
 class Gated(unittest.TestCase):
     def test_a_small_move_is_left_exactly_as_it_was(self):
         import numpy as np
