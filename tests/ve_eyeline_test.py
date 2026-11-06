@@ -69,6 +69,7 @@ class Colour(unittest.TestCase):
 
 
 class Gated(unittest.TestCase):
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
     def test_a_small_move_is_left_exactly_as_it_was(self):
         import numpy as np
         frame = np.full((120, 160, 3), 90, np.uint8)
@@ -228,16 +229,21 @@ class Media(unittest.TestCase):
                     r['iris'][side] = [r['iris'][side][0] * 0.4, r['iris'][side][1] * 0.4]
         return readings
 
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
     def test_a_maxine_copy_must_match_the_take_frame_for_frame_and_must_change_it(self):
         short = self.dir / 'short.mp4'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(self.take), '-t', '1', '-c', 'copy', str(short)], check=True)
         with self.assertRaisesRegex(ValueError, 'frames cannot be matched'):
             eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(short), readings=[{'face': False}] * 60)
         readings = self.scaled([reading(iris_dx=9) if 10 <= i < 30 else reading() for i in range(60)])
-        receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(self.take), readings=readings)
+        # The copy's readings are given as read() finds them on this synthetic clip (no face on any frame), so the test
+        # needs no face model: CI installs none.
+        receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(self.take), readings=readings,
+                              copy_readings=[{'face': False}] * 60)
         self.assertEqual(receipt['decision'], 'rejected')       # its "redirected" copy is the take itself
         self.assertTrue(any('changed nothing' in p for p in receipt['problems']), receipt['problems'])
 
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
     def test_a_maxine_copy_is_taken_only_where_the_plan_says(self):
         other = self.dir / 'other.mp4'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(self.take), '-vf', 'negate', '-c:v', 'libx264',
@@ -245,7 +251,8 @@ class Media(unittest.TestCase):
         # Maxine locks gaze (and handles blinks) itself, so its eyes are taken on every frontal frame, never a turn.
         readings = self.scaled([reading(yaw=40) if 40 <= i < 46 else reading(iris_dx=9) if 10 <= i < 30 else reading()
                                 for i in range(60)])
-        receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(other), readings=readings)
+        receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(other), readings=readings,
+                              copy_readings=[{'face': False}] * 60)   # as read() finds it: no face on any frame
         self.assertEqual(receipt['problems'], [])
         self.assertEqual(receipt['decision'], 'corrected')
         self.assertLessEqual(receipt['corrected_frames'], 60 - 6)
