@@ -73,7 +73,7 @@ APERTURE_SHRINK = 0.97      # the blend stops just inside his lid line ...
 APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's width
 LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening the upper lid takes back, its cap (eye widths), time smoothing
 TEMPLATE_HI, TEMPLATE_SHARP = 90, 0.9    # the stack percentile the catchlight is taken from; how much texture is put back
-GATE_FROM, GATE_SPAN = 0.3, 0.5      # no correction under 0.3 iris radii of move, full from 0.8
+GATE_FROM, GATE_SPAN = 0.15, 0.25    # no correction under 0.15 iris radii of move (about 4 deg), the whole move from 0.4 (about 11 deg)
 TEMPLATE_VISIBLE, TEMPLATE_MOVE = 0.9, 0.8   # use the clean iris when under this share of his is visible, or he moves it this many radii
 IRIS_GROW = 1.02            # his iris circle, in landmarker radii, for the clean cut-out
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
@@ -700,6 +700,9 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             gate = float(np.clip((math.hypot(ox, oy) / max(1.0, hr) - GATE_FROM) / GATE_SPAN, 0.0, 1.0))
             if gate <= 0.0:
                 return frame
+            # The fade is a share of the move, not a cross-fade: an iris half-way between two pictures of itself is a
+            # ghost, grey and doubled (blind review, 6 Nov, 60.30 s). The iris travels gate x the move, fully opaque.
+            ox, oy, tx, ty, gate = ox * gate, oy * gate, hx + ox * gate, hy + oy * gate, 1.0
             region_u8 = np.clip(region, 0, 255).astype(np.uint8)
             # A clean iris, not a segmented one: the landmarker's circle (grown a hair), clipped by his own lid
             # contour. The segmented blob took ragged edges at a hard glance, where the iris sits in the lid's shadow

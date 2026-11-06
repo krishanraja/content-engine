@@ -92,7 +92,7 @@ class Gated(unittest.TestCase):
         frame = np.full((120, 160, 3), 90, np.uint8)
         other = np.full((120, 160, 3), 200, np.uint8)
         contour = [[60 + 20 * math.cos(a), 60 + 8 * math.sin(a)] for a in np.linspace(0, 2 * math.pi, 16, endpoint=False)]
-        near = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (61, 60, 6))      # 1 px, 0.17 radii
+        near = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (60.5, 60, 6))    # half a pixel, 0.08 radii
         self.assertIs(near, frame)
         far = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (70, 60, 6))       # 10 px, 1.7 radii
         self.assertIsNot(far, frame)
