@@ -37,7 +37,8 @@ class LabTest(unittest.TestCase):
         self.assertEqual(ids[0], 'house')
         self.assertIn('captions-word', ids)
         self.assertIn('paper-cutout', ids)
-        self.assertEqual(len([l for l in looks if l['kind'] == 'style']), 10)
+        self.assertIn('full-visual', ids)  # keyframes@0.2.13, drawable from 6 Nov 2026
+        self.assertEqual(len([l for l in looks if l['kind'] == 'style']), 11)
 
     def test_render_draws_each_look_on_the_pinned_window_and_writes_a_manifest(self):
         seen = []

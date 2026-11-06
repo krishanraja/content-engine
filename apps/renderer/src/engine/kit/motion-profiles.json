@@ -139,6 +139,19 @@
       "overlays": ["sketchFrame"],
       "boil": {"amplitudePx": 2, "everyFrames": 2},
       "note": "cream line on ink: a hand-drawn panel line round the ground and every scribble boil, a new seed every 2 frames, at most 2 px; cards keep their cream so the lines read; graphics on twos; never boil on type or numbers"
+    },
+    "full-visual": {
+      "entrance": {"kind": "rise", "frames": 4, "easing": "enter", "distancePx": 48, "overshootPct": 4},
+      "stagger": {"frames": 3, "unit": "word"},
+      "exitFrames": 4,
+      "onTwos": false,
+      "camera": {"kind": "push", "scaleTo": 1.04, "dimOthers": false, "easing": "hero"},
+      "transition": "cut_on_curve",
+      "typeReveal": {"kind": "word"},
+      "ground": {"kind": "house", "sweepFrames": 0, "texture": "none"},
+      "driftPct": 1.5,
+      "countFrames": 18,
+      "note": "keyframes@0.2.13 full-visual (docs/ve/sources/keyframes.md), inside the signed floor: the real thing each sentence names arrives fast (their 7-frame blur-in at 60 fps is 4 frames here) with a small pop, words stagger 3 frames, a held picture keeps living on a slow push to 104% and 1.5% drift, every number counts to its word; the pack's 260 px travel is over the 60 px floor and is not used"
     }
   }
 }
