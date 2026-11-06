@@ -707,12 +707,36 @@ def check_stream(s: dict, media='the take') -> dict:
             'colour': {k: s.get(k) for k in ('color_transfer', 'color_primaries', 'color_space')}}
 
 
+# The colour round trip. Left to itself, ffmpeg's converter was used with its default matrix and rounding both ways
+# (YUV to BGR to YUV), and a frame the pass never touched came back about a level darker and a touch warmer than it
+# went in (6 Nov: luma -0.8 to -1.6 and chroma up to -1.0 on the raw planes; the blind review saw "warmer" on near-lens
+# frames our code returns as decoded). The file's own matrix and range, named on both converters, with accurate
+# rounding, bring that to 0.05 of a level, which is codec noise.
+SWS = 'accurate_rnd+full_chroma_int'
+
+
+def _matrix(space, height) -> str:
+    return {'bt709': 'bt709', 'bt470bg': 'bt601', 'smpte170m': 'bt601', 'bt2020nc': 'bt2020', 'bt2020c': 'bt2020'}.get(
+        space or '') or ('bt709' if int(height) >= 720 else 'bt601')
+
+
+def source_colour(media) -> tuple[str, str]:
+    """(matrix, range) of a file's video, from its own tags: bt709/bt601/bt2020 and tv/pc; HD untagged is bt709."""
+    out = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries',
+                          'stream=height,color_space,color_range', '-of', 'json', str(media)],
+                         capture_output=True, text=True, check=True)
+    st = json.loads(out.stdout)['streams'][0]
+    return _matrix(st.get('color_space'), st.get('height') or 0), ('pc' if st.get('color_range') == 'pc' else 'tv')
+
+
 def frames(media, width: int, height: int):
-    """Decoded BGR frames, in order (ffmpeg applies any rotation)."""
+    """Decoded BGR frames, in order (ffmpeg applies any rotation), converted with the file's own matrix and range."""
     import numpy as np  # noqa: PLC0415
     size = width * height * 3
-    proc = subprocess.Popen([ffmpeg(), '-v', 'error', '-i', str(media), '-map', '0:v:0', '-f', 'rawvideo', '-pix_fmt', 'bgr24',
-                             '-s', f'{width}x{height}', '-'], stdout=subprocess.PIPE)
+    matrix, rng = source_colour(media)
+    proc = subprocess.Popen([ffmpeg(), '-v', 'error', '-i', str(media), '-map', '0:v:0', '-vf',
+                             f'scale={width}:{height}:in_color_matrix={matrix}:in_range={rng}:flags={SWS}',
+                             '-f', 'rawvideo', '-pix_fmt', 'bgr24', '-'], stdout=subprocess.PIPE)
     try:
         while True:
             raw = proc.stdout.read(size)
@@ -725,12 +749,14 @@ def frames(media, width: int, height: int):
 
 
 def writer(media, out: Path, info: dict, crf: int = 12):
+    matrix, rng = source_colour(media)
     colour = [arg for key, flag in (('color_primaries', '-color_primaries'), ('color_transfer', '-color_trc'),
                                     ('color_space', '-colorspace')) if info['colour'].get(key)
               for arg in (flag, info['colour'][key])]
     cmd = [ffmpeg(), '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'bgr24', '-s', f'{info["width"]}x{info["height"]}',
            '-framerate', info['rate'], '-i', '-', '-i', str(media), '-map', '0:v', '-map', '1:a?', '-c:a', 'copy',
-           '-c:v', 'libx264', '-preset', 'medium', '-crf', str(crf), '-pix_fmt', 'yuv420p', *colour,
+           '-vf', f'scale=out_color_matrix={matrix}:out_range={rng}:flags={SWS}',
+           '-c:v', 'libx264', '-preset', 'medium', '-crf', str(crf), '-pix_fmt', 'yuv420p', '-color_range', rng, *colour,
            '-movflags', '+faststart', str(out)]
     return subprocess.Popen(cmd, stdin=subprocess.PIPE)
 
