@@ -334,6 +334,16 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                    'reason': str(exc)}
         # Uncounted, it is a shadow row: in qc.json and the Critic's rows, kept out of Krish's packet (packet.py).
         checks['beats.handover_in_gaps'] = row if counted else {**row, 'status': 'advisory', 'shadow': True}
+    # No bare ground around a handover (keyframes@0.2.13). Counted only for a format whose qc sets bare_ground: true;
+    # a shadow row everywhere else, like beats.handover_in_gaps.
+    if beats and aspect:
+        from . import qc_ground
+        try:
+            row = qc_ground.bare_ground(path, beats, aspect, total_frames=int(round(duration_s(path) * fps)))
+        except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
+            row = {'value': None, 'target': 'no bare ground at a beat edge', 'pass': False, 'status': 'error',
+                   'reason': str(exc)}
+        checks['ground.not_bare'] = row if fmt.get('bare_ground') else {**row, 'status': 'advisory', 'shadow': True}
     # STAGE beats compose the whole screen under a moving camera. The square mark tile is replaced by the logo in
     # the stage header, and an object's slot is the full canvas, so "change near the event inside its slot" cannot
     # separate an event from the camera. Both checks apply to the other layouts only; events on STAGE devices are
