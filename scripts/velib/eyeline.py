@@ -523,7 +523,9 @@ def iris_templates(media, readings: list[dict], info: dict, size: int = 48, ever
         # reads as dead (blind review, 6 Nov: "flat", "a fixed glare"). Take the bright reflection back from the upper
         # part of the stack where it is clearly brighter than the median, and sharpen what the averaging softened.
         grey = lambda im: cv2.cvtColor(np.clip(im, 0, 255).astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32)  # noqa: E731
-        spec = np.clip((grey(hi) - grey(med[side]) - 25) / 40, 0, 1)
+        # Only a compact, genuinely bright highlight: the broad pale wash of a window across the iris is not a
+        # catchlight, it greys the iris out (blind review, 6 Nov, cells 4, 6, 8, 9).
+        spec = np.clip((grey(hi) - grey(med[side]) - 60) / 40, 0, 1) * np.clip((grey(hi) - 170) / 40, 0, 1)
         glint[side] = (cv2.GaussianBlur(spec, (0, 0), 0.8)[..., None], hi - med[side])
     if not med:
         return {'R': None, 'L': None}
