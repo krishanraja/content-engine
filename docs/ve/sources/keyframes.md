@@ -41,16 +41,23 @@ installed. Its repertoire was.
 
 ## Next, one card or change at a time
 
-1. `ve qc` caption geometry for `captionStyle: 'build'`, once the card's chrome lands.
-2. Verbs from the pack's kit, as pure functions on `progress()` and `drift()`, under `apps/renderer/src/engine/kit/`:
-   `countTo` with jitter, `typeOn`, `draw`, `mix`, `Cursor`.
-3. A trial format, `full-visual`:
-   - no presenter, 9:16;
-   - his own voice-over, the build caption and the house bed;
-   - `qc.longest_still_s` 1.2 and `qc.handover_gap_ms` 150;
-   - `status: trial` until a Gate 2 press on a real piece.
-4. Devices from the real-thing doctrine, each from a card: `cutaway_section` (cut inside), `count_roll`,
-   `cursor_path`.
+Cards written in `docs/ve/cards/keyframes/`, none dispatched yet (dispatch spends Codex allowance and waits for Krish):
+
+| Card | Builds | After it lands |
+|---|---|---|
+| `ve-kf-1-caption-build` | `captionStyle: 'build'` in the renderer | compile emits `build` for `style.motion: full-visual`; `ve qc` learns its caption region |
+| `ve-kf-2-kit-verbs` | `countTo`, `typeOn`, `drawPath`, `mix`, `cursorPath` in `kit/verbs.ts` | cards 4 and 5 use them |
+| `ve-kf-3-cutaway-section` | device: a real object opens to show its layers | routed into the `full-visual` style |
+| `ve-kf-4-count-roll` | device: a number rolls to its word on the real thing | routed into the style |
+| `ve-kf-5-cursor-path` | device: a real interface clicked through | routed into the style |
+
+Then a trial format, `full-visual`:
+- no presenter, 9:16;
+- his own voice-over, the build caption and the house bed;
+- `qc.longest_still_s` 1.2, `qc.handover_gap_ms` 150 and `qc.bare_ground: true`, so both shadow rows count;
+- `status: trial` until a Gate 2 press on a real piece.
+
+Then the first real how-it-works Short in it.
 
 ## Deliberately left out, and why
 
