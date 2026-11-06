@@ -77,6 +77,7 @@ Five lines of 3 November are in `docs/history/2026-11-03-NOW-moved-1.md`. Everyt
 
 ## What is next and what is waiting on Krish
 
+- Keyframes (2026-11-06): the full-visual pack is adopted as repertoire, not installed (`docs/ve/sources/keyframes.md`). Next: put the original zip in Production Inspo from a home computer (the cloud session could not move 34 MB through the Drive connector), then dispatch card `ve-kf-1-caption-build` between pieces.
 - Next (2026-11-06): on the 5.57 s and 51.67 s frames, work out where the smear comes from (the iris laid at the aim point overlapping the filled-in hole, or the segmentation taking a ragged blob; render the base, the moved iris and the mask for each of those frames), fix it, then the catchlight blobs, then whether squints and half-lids should be corrected; re-run the review. Krish tries a live video; his notes on what he sees decide what matters most.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.

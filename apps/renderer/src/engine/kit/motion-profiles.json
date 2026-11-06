@@ -1,6 +1,6 @@
 {
   "about": "How the renderer draws each motion style of config/style-references.json (layer motion). One home: motionProfiles.ts parses this file and compile.py copies the chosen profile into props.motion. Every value sits inside the signed floor in docs/ve/MOTION_STANDARD.md (entrances settle in 4 to 7 frames, rise 40 to 60 px, overshoot at most 6%, drift above 0); motionProfiles.test.ts fails any that does not. Grounds (dark, paper), overlays (brackets, scan lines, torn edges, a sketched frame), type (the mono data face, type as hero), lead captions and a line boil are drawn by kit/overlays.tsx, kit/heroType.tsx and chrome/LeadCaption.tsx, each only for the style whose profile names it. A style needing its own device or drawing pipeline is listed under needs_device and renders with the house motion.",
-  "needs_device": ["flat-vector-explainer", "isometric-world", "toy-3d", "shape-morph", "watercolour-ink", "pixel-retro", "film-crt"],
+  "needs_device": ["flat-vector-explainer", "isometric-world", "toy-3d", "shape-morph", "watercolour-ink", "pixel-retro", "film-crt", "full-visual"],
   "profiles": {
     "swiss-kinetic-type": {
       "entrance": {"kind": "slide", "frames": 5, "easing": "enter", "distancePx": 48, "overshootPct": 3},

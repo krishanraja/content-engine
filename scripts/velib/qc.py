@@ -321,6 +321,18 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         ('channel.safe_zones', aspect is not None and (bool(pages) or bool(beats)),
          lambda: qc_channel.safe_zones(pages, beats, aspect, region, caption_style)),
     ]
+    # A beat handover inside a word (keyframes@0.2.13, docs/ve/sources/keyframes.md). Counted only for a format whose
+    # qc names handover_gap_ms; every other format sees it measured and advisory, so no proven format changes.
+    if heard and beats:
+        counted = 'handover_gap_ms' in fmt
+        stop_frame = ((composition_props or {}).get('ending') or {}).get('fromFrame')  # the ending band carries no speech
+        try:
+            row = qc_gates.handover_in_gaps(beats, heard, fps=fps, stop_frame=stop_frame,
+                                            min_gap_ms=fmt.get('handover_gap_ms', qc_gates.HANDOVER_GAP_MS))
+        except (ValueError, KeyError, TypeError, OSError) as exc:
+            row = {'value': None, 'target': 'beat handovers in agreed gaps', 'pass': False, 'status': 'error',
+                   'reason': str(exc)}
+        checks['beats.handover_in_gaps'] = row if counted else {**row, 'status': 'advisory'}
     # STAGE beats compose the whole screen under a moving camera. The square mark tile is replaced by the logo in
     # the stage header, and an object's slot is the full canvas, so "change near the event inside its slot" cannot
     # separate an event from the camera. Both checks apply to the other layouts only; events on STAGE devices are
