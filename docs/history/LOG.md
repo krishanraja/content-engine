@@ -5,6 +5,10 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-06
+
+- reconciled at `b489944`: NOW.md takes the 58 non-steward commits since `8ddf532`, all already closed out by their sessions through the closeout fold (the Maxine eye contact trial, ve eyeline and the listen pass, and three carousel standard rulings). No closeout notes were waiting. The NOW.md audit failed line 40 as too long (1966 characters, limit 1500): rolled from NOW.md, seven "Where it is right now" bullets on Maxine of 5 and 6 November, kept verbatim in `docs/history/2026-11-06-NOW-moved-1.md`, replaced by one bullet carrying the current state from the newest of them. The Next line and the North Star check line are carried forward unchanged. No other document was checked against the code in this run.
+
 ## 2026-11-05
 
 - folded the twelve closeout notes of 2026-11-04 in `now-notes/` (failure-loop, light-stage, one-music-bed, one-production-round-engine, renderer-styles, strong-styles, thursday-killed, thursday-orbit-split, thursday-stage-look, thursday-ve-recut, ve-quality-wave1, ve-quality-wave2) with `node .claude/hooks/harness-closeout.mjs --fold`, which removed them. The fold left NOW.md at 20,958 bytes with 21 "Where it is right now" bullets, against the repository's 14,000-byte cap (`scripts/check_workbench.py`) and the audit's 8. The folded file is kept whole in `docs/history/2026-11-05-NOW-closeout-fold.md`.
