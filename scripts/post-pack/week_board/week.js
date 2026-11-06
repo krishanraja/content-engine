@@ -43,6 +43,22 @@ async function copyImage(src){
   try { await navigator.clipboard.write([new ClipboardItem({ "image/png": pngBlob(src) })]); return "clipboard" } catch {}
   return viaCommand(`<img src="${src}">`, "") ? "command" : "failed";
 }
+// The article as Substack takes it. Substack keeps a pasted picture only when it can fetch it from a link, so each
+// picture the board stored (its data-asset) goes in as its signed link, which Substack copies at once; the page itself
+// keeps the picture's own bytes. A picture whose link cannot be had stays as it was (Krish, 2026-11-06: "Every Substack
+// article embeds the images inline").
+async function hosted(el){
+  const copy = el.cloneNode(true);
+  await Promise.all([...copy.querySelectorAll("img[data-asset]")].map(async img => {
+    try {
+      const r = await fetch(img.dataset.asset + "&link=1", { credentials: "same-origin" });
+      const j = r.ok ? await r.json() : null;
+      if (j && typeof j.url === "string" && j.url.startsWith("https://")) img.src = j.url;
+    } catch {}
+    img.removeAttribute("data-asset");
+  }));
+  return copy.innerHTML;
+}
 let downloads = null;
 const downloadsReady = (async () => { try { downloads = window.claude?.use ? await window.claude.use("downloads") : null } catch { downloads = null } return downloads })();
 async function download(src, name){
@@ -93,7 +109,7 @@ document.querySelectorAll(".pm[data-prefix]").forEach(root => {
     const act = b.dataset.act, ref = b.dataset.ref, el = byId(ref);
     if (!el) return;
     if (act === "text") report(b, await copyText(fill(el.textContent)));
-    if (act === "article") report(b, await copyRich(fill(el.innerHTML), fill((byId(ref + "-text") || el).textContent)));
+    if (act === "article") report(b, await copyRich(fill(await hosted(el)), fill((byId(ref + "-text") || el).textContent)));
     if (act === "image") report(b, await copyImage(el.src));
     if (act === "download") await fileOf(el, b);
     if (act === "download-all") {
