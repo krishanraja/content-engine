@@ -14,6 +14,30 @@ import board_web
 import week_board
 
 class BoardWebTests(unittest.TestCase):
+    def test_article_pictures_are_stored_and_named_for_copy_article(self):
+        # Krish, 2026-11-06: "Every Substack article embeds the images inline". Each article picture is stored once as a
+        # board file and named on its <img>, and its bytes stay in the page; a picture outside the article is left alone.
+        import base64
+        png = base64.b64encode(b'\x89PNG synthetic figure').decode()
+        page = ('<div class="pic"><img id="fri-img-a" src="data:image/png;base64,' + png + '" alt="card"></div>'
+                '<div class="article" id="fri-art"><p>One</p><figure><img src="data:image/png;base64,' + png + '" alt="Figure"></figure>'
+                '<figure><img src="data:image/png;base64,' + png + '" alt="Again"></figure></div>\n<pre id="fri-art-text" hidden>One</pre>')
+        assets, payloads = {}, []
+        out = board_web.lift_article_pictures('2026-11-02', page, assets, payloads, {})
+        digest = board_web.sha(base64.b64decode(png))
+        aid = 'article-' + digest[:16]
+        self.assertEqual(list(assets), [aid])
+        self.assertEqual(assets[aid], {'sha256': digest, 'bytes': len(base64.b64decode(png)), 'type': 'image/png',
+                                       'name': aid + '.png', 'key': f'boards/2026-11-02/{digest}'})
+        self.assertEqual(len(payloads), 1, 'the same bytes are uploaded once')
+        self.assertEqual(out.count(f'data-asset="/api/board/2026-11-02/assets/{aid}?sha={digest}"'), 2)
+        self.assertNotIn('data-asset', out.split('<div class="article"')[0], 'a picture outside the article is untouched')
+        self.assertEqual(out.count('src="data:image/png;base64,' + png + '"'), 3, 'every picture keeps its own bytes')
+        self.assertEqual(board_web.lift_article_pictures('2026-11-02', out, {}, [], {}), out, 'running it again changes nothing')
+        reused, sent = {}, []
+        board_web.lift_article_pictures('2026-11-02', page, reused, sent, {'old': assets[aid]})
+        self.assertEqual(sent, [], 'a file the current build holds is reused, never sent again')
+
     def test_replacement_reuses_only_exact_existing_asset_and_keeps_revision(self):
         page, meta, _ = week_board.board(week_board.monday_of('2026-10-12'))
         page, meta = board_web.web_page(page, meta)

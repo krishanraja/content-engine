@@ -93,10 +93,31 @@ function setup() {
     await handler({ method, headers: { authorization: `Bearer ${token}` }, query: { week, ...query }, body } as unknown as VercelRequest, res)
     return { status, out, headers, location }
   }
-  return { media, signedManifest, builds, rpc, fetch, call }
+  return { media, signedManifest, builds, rpc, fetch, call, boardFile }
 }
 
 describe('signed board activation and current-read revocation', () => {
+  it('hands Copy article the signed link of a picture as JSON, and never of a video', async () => {
+    // Krish, 2026-11-06: "Every Substack article embeds the images inline". The board page may only connect to its own
+    // site, so it reads the signed link with ?link=1 and puts it in the article Substack is given.
+    const f = setup()
+    rollout.active = false
+    delete process.env.MEDIA_REVIEW_PUBLIC_KEYS
+    const { delivery_review: _unused, ...signed } = f.signedManifest
+    const picture = f.boardFile('article-figure.png', Buffer.from('synthetic picture bytes'), 'image/png')
+    const manifest = { ...signed, assets: { ...signed.assets, 'article-figure': picture } }
+    expect((await f.call('PUT', {}, { manifest, revision: 0 })).status).toBe(200)
+    const link = await f.call('GET', { op: 'assets', id: 'article-figure', sha: picture.sha256, link: '1' })
+    expect(link.status).toBe(200)
+    expect(link.out).toMatchObject({ ok: true })
+    expect(String((link.out as { url: string }).url)).toMatch(/^https:\/\//)
+    expect(link.headers['Cache-Control']).toBe('private, no-store')
+    const video = await f.call('GET', { op: 'assets', id: 'video', link: '1' })
+    expect(video.status).toBe(404)
+    const redirect = await f.call('GET', { op: 'assets', id: 'article-figure' })
+    expect(redirect.status).toBe(303)
+  })
+
   it('preserves draft board writes/reads while pending and never labels them qualified', async () => {
     const f = setup()
     rollout.active = false

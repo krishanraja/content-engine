@@ -351,6 +351,13 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           file = old.data[0]?.manifest?.assets?.[id]
         }
         if (!file || !fileSpec(week, file)) throw new BoardError(404, 'asset_not_found')
+        // ?link=1: the same signed link the redirect gives, as JSON, for Copy article to hand Substack. The board page may
+        // only connect to its own site, so it cannot follow the redirect to read it. A picture only, never a download.
+        if (scalar(req.query.link) === '1') {
+          if (!file.type.startsWith('image/')) throw new BoardError(404, 'asset_not_found')
+          res.setHeader('Cache-Control', 'private, no-store')
+          return res.status(200).json({ ok: true, url: await signed(db, file) })
+        }
         return res.redirect(303, await signed(db, file, true))
       }
       if (op === 'html') {
