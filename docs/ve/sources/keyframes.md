@@ -34,7 +34,7 @@ installed. Its repertoire was.
 | Capability | ve home | Status |
 |---|---|---|
 | The craft: picture, motion, caption, hook, never-list, builder method | `_corpus/keyframes-full-visual.md` | reference |
-| Full-visual motion style | `config/style-references.json`, bank id `full-visual` (motion layer) | untested; Claude may pick it per piece, and Krish's verdict decides |
+| Full-visual motion style | `config/style-references.json`, bank id `full-visual` (motion layer) | untested; needs_device, so the shortlist skips it until its caption and devices exist, then Krish's verdict decides |
 | A picture hands over only in a pause of 0.15 s or more | `scripts/velib/qc_gates.py` `handover_in_gaps`; ve qc row `beats.handover_in_gaps` | advisory on every format; counted where a format's `qc` names `handover_gap_ms` |
 | Build caption: the page grows word by word, with the key word boxed | card `docs/ve/cards/keyframes/ve-kf-1-caption-build.md` | card written; not dispatched |
 

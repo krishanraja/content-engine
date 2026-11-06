@@ -136,6 +136,7 @@ class HandoverInGapsTests(unittest.TestCase):
             report = qc.run_qc('unused', 'scoreboard-test', beats=self.beats(0, 60), heard=self.HEARD)
         row = report['checks']['beats.handover_in_gaps']
         self.assertEqual(row['status'], 'advisory')
+        self.assertIs(row['shadow'], True)
         self.assertIs(row['pass'], False)
 
 
