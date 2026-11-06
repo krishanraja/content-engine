@@ -1,4 +1,0 @@
-Status: Eye contact (Maxine + ve eyeline) is merged to main through #445. #445 adds a catchlight and sharpened texture to the clean iris and a soft lid clip for the iris edge, after blind reviewers kept calling the big corrections a flat, dead stare. Checked on three frames only. The whole-take re-run with it (full-pass6), its scores and a fresh blind review had not finished when this note was written. Publishing to his own channels is cleared by NVIDIA (Krish, 2026-11-06).
-Changed: the reviewers' remaining complaint was matte irises with no catchlight and a jagged iris/lid edge, not lid opening (which matches his natural range).
-Next: read full-pass6 (score.py, then a 9-moment sheet, then a "Separate reader:" blind review). If it still reads as a stare, look next at iris size agreement between the eyes (51.67 s) and the up/down/side glances (60.30, 62.17, 72.00 s). Krish tries a live video and reports timestamps.
-North Star check (2026-11-06): holds.
