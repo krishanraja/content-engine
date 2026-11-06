@@ -847,8 +847,14 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
             new = frame
             other = next(source) if source is not None else None
             if other is not None and d['strength'] > 0 and d['eyes']:
+                same, aperture_used = True, False             # is the backend's copy the take itself around his eyes?
                 for side, eye in d['eyes'].items():
                     if eye.get('contour') and getattr(backend, 'aperture', False):
+                        c = np.asarray(eye['contour'])
+                        xa, ya = max(0, int(c[:, 0].min()) - 6), max(0, int(c[:, 1].min()) - 6)
+                        xb, yb = int(c[:, 0].max()) + 6, int(c[:, 1].max()) + 6
+                        aperture_used = True
+                        same = same and bool(np.array_equal(frame[ya:yb, xa:xb], other[ya:yb, xa:xb]))
                         aim = aimed[index].get(side) if aimed and index < len(aimed) else None
                         mine = readings[index] if readings[index].get('face') and 'iris_r' in readings[index] else None
                         new = blend_aperture(new, other, eye['contour'], d['strength'],
@@ -858,7 +864,9 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                         new = blend(new, other, eye_frame(eye['points']), d['strength'])
                 moved = float(np.abs(new.astype(np.int16) - frame.astype(np.int16)).mean())
                 counts['corrected'] += 1
-                if moved == 0.0 and d['strength'] >= 0.5:
+                # Aperture mode leaves small corrections as they were on purpose (the gate), so our output not moving
+                # proves nothing there: what a backend that "did nothing" shows is a copy equal to the take.
+                if d['strength'] >= 0.5 and (same if aperture_used else moved == 0.0):
                     counts['unmoved'] += 1
             elif d['strength'] > 0 and d['eyes']:
                 items, geos = [], []
