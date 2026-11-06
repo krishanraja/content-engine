@@ -75,7 +75,7 @@ LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening th
 TEMPLATE_HI, TEMPLATE_SHARP = 90, 0.9    # the stack percentile the catchlight is taken from; how much texture is put back
 GATE_FROM, GATE_SPAN = 0.3, 0.2     # no correction under 0.3 iris radii of move (about 8 deg), the whole move from 0.5 (about 14 deg)
 TEMPLATE_VISIBLE, TEMPLATE_MOVE = 0.9, 0.8   # use the clean iris when under this share of his is visible, or he moves it this many radii
-IRIS_GROW = 1.02            # his iris circle, in landmarker radii, for the clean cut-out
+IRIS_GROW = 1.02          # his iris circle, in landmarker radii, for the clean cut-out
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
 AIM_KEEP = 0.15             # share of his own eye movement kept on top of the lens aim, so the eyes stay alive
 AIM_GAIN = 1.0             # tried 1.4: a hard glance read more frontal but the far iris smeared (5 Nov, 5.50 s)
@@ -534,6 +534,17 @@ def iris_templates(media, readings: list[dict], info: dict, size: int = 48, ever
     # the mean of his two (0.223 and 0.212 of the eye width on this take): his own size, not one eye bigger.
     lead = max(glint, key=lambda s: float(glint[s][0].sum()))
     size_share = float(np.mean(list(ratio.values())))
+    # And one iris colour: the viewer's-right template came out pale grey-blue beside the other (blind review, 6 Nov,
+    # cells 4, 8, 9: "a different eye"). Both take the darker one's colour, as a shift in Lab over the iris disc.
+    yy, xx = np.mgrid[0:size, 0:size].astype(np.float32)
+    disc = np.hypot(xx - size / 2, yy - size / 2) < size * 0.2
+    lab = {s: cv2.cvtColor(np.clip(med[s], 0, 255).astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32) for s in med}
+    mean = {s: lab[s][disc].mean(0) for s in med}
+    dark = min(mean, key=lambda s: float(mean[s][0]))
+    for s in med:
+        if s != dark:
+            shifted = lab[s] + (mean[dark] - mean[s])
+            med[s] = cv2.cvtColor(np.clip(shifted, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32)
     for side in IRIS:
         if side not in med:
             out[side] = None
