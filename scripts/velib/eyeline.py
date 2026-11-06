@@ -75,7 +75,8 @@ LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening th
 TEMPLATE_HI, TEMPLATE_SHARP = 90, 0.9    # the stack percentile the catchlight is taken from; how much texture is put back
 GATE_FROM, GATE_SPAN = 0.3, 0.2     # no correction under 0.3 iris radii of move (about 8 deg), the whole move from 0.5 (about 14 deg)
 TEMPLATE_VISIBLE, TEMPLATE_MOVE = 0.9, 0.8   # use the clean iris when under this share of his is visible, or he moves it this many radii
-IRIS_SCALE = 1.14           # the clean iris is drawn this much larger than the landmarker's circle: its circle runs wide of the dark iris, so a plain copy leaves white above and below it (a stare)
+LOOK_UP, LOOK_DOWN, LOOK_PAD, LOOK_MIN = -0.035, 0.28, 2, 15  # white under the iris, or this share of it under the upper lid: a look up or down, left alone (and a few frames either side)
+IRIS_SCALE = 1.14          # the clean iris is drawn this much larger than the landmarker's circle: its circle runs wide of the dark iris, so a plain copy leaves white above and below it (a stare)
 IRIS_GROW = 1.02          # his iris circle, in landmarker radii, for the clean cut-out
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
 AIM_KEEP = 0.15             # share of his own eye movement kept on top of the lens aim, so the eyes stay alive
@@ -567,6 +568,39 @@ def lid_cover(contour, iris_xy, rad: float) -> float:
     return float((np.interp(iris_xy[0], up[:, 0], up[:, 1]) - (iris_xy[1] - rad)) / (2 * rad))
 
 
+def look_flags(readings: list[dict], decided: list[dict]) -> list[float]:
+    """1.0 on frames where he is looking up or down (left alone), 0.0 elsewhere, eased over a few frames. Looking up
+    shows white under the iris (the lower lid covers none of it, where at the lens it covers a little); looking down or
+    squinting has the upper lid over a third of it (at the lens, about 15%). The landmarker's iris and lid line are
+    unreliable there, and every blind review (6 Nov, passes 9 to 13) found those frames corrected badly: a flat black
+    iris against the lid, a pale grey one beside it, eyes that disagree. A look up while thinking is natural."""
+    import numpy as np  # noqa: PLC0415
+    n = len(readings)
+    flag = np.zeros(n)
+    for i, r in enumerate(readings):
+        if not r.get('face') or 'iris_r' not in r or r.get('blink', 0) >= BLINK:
+            continue
+        up, low = [], []
+        for side in IRIS:
+            con = decided[i]['eyes'].get(side, {}).get('contour') if i < len(decided) else None
+            if con is None:
+                break
+            c = np.asarray(con)
+            lo = np.array([c[0], *c[1:8], c[8]])
+            lo = lo[np.argsort(lo[:, 0])]
+            (ix, iy), rad = r['iris'][side], r['iris_r'][side]
+            up.append(lid_cover(c, (ix, iy), rad))
+            low.append(((iy + rad) - float(np.interp(ix, lo[:, 0], lo[:, 1]))) / (2 * rad))
+        else:
+            # Both eyes, not either: a sideways glance can show white under one iris as it crosses the lid's curve.
+            flag[i] = float(max(low) < LOOK_UP or min(up) > LOOK_DOWN)
+    # A look up or down lasts and is noisy frame to frame; a blip in a sideways glance is neither: it needs a good share
+    # of the frames around it flagged too.
+    flag = (np.convolve(flag, np.ones(LOOK_MIN) / LOOK_MIN, 'same') >= 0.4).astype(float)
+    wide = np.convolve(flag, np.ones(2 * LOOK_PAD + 1), 'same') > 0          # a couple of frames either side, so it never flickers
+    return [float(x) for x in np.convolve(wide.astype(float), np.ones(5) / 5, 'same')]
+
+
 def lids(readings: list[dict], decided: list[dict], aimed: list[dict] | None = None) -> list[dict]:
     """How far to lower each upper lid, in pixels, per frame and eye. A hard sideways glance leaves his lids wider
     than when he looks at the lens (5.57 s: 1.18 to 1.23 of his usual opening), so a centred iris sits in a startled
@@ -998,6 +1032,8 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
             there = read(backend.copy, info)          # where the redirected copy put each iris
             aimed = aims(readings, there, decided)
             lowered = lids(readings, decided, aimed)
+            for d_, w_ in zip(decided, look_flags(readings, decided)):
+                d_['strength'] = d_['strength'] * (1.0 - w_)
             templates = iris_templates(media, readings, info)
         else:
             there = None
