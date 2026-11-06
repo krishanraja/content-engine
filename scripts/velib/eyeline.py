@@ -72,6 +72,7 @@ EYE_CONTOUR = {'R': [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 15
 APERTURE_SHRINK = 0.97      # the blend stops just inside his lid line ...
 APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's width
 LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening the upper lid takes back, its cap (eye widths), time smoothing
+TEMPLATE_HI, TEMPLATE_SHARP = 90, 0.9    # the stack percentile the catchlight is taken from; how much texture is put back
 GATE_FROM, GATE_SPAN = 0.3, 0.5      # no correction under 0.3 iris radii of move, full from 0.8
 TEMPLATE_VISIBLE, TEMPLATE_MOVE = 0.9, 0.8   # use the clean iris when under this share of his is visible, or he moves it this many radii
 IRIS_GROW = 1.02            # his iris circle, in landmarker radii, for the clean cut-out
@@ -517,7 +518,17 @@ def iris_templates(media, readings: list[dict], info: dict, size: int = 48, ever
         ratio = float(np.median([readings[i]['iris_r'][side] / max(1e-6, math.hypot(readings[i]['eyes'][side][3][0] - readings[i]['eyes'][side][0][0],
                                                                                     readings[i]['eyes'][side][3][1] - readings[i]['eyes'][side][0][1]))
                                  for i in sorted(ok[side])]))
-        out[side] = (np.percentile(np.array(stacks[side], dtype=np.float32), 50, axis=0), ratio)    # aligned median: his iris, not too dark or flat
+        stack = np.array(stacks[side], dtype=np.float32)
+        med, hi = np.percentile(stack, 50, axis=0), np.percentile(stack, TEMPLATE_HI, axis=0)
+        # A median of many frames averages his catchlights away and softens the texture: an iris with no light in it
+        # reads as dead (blind review, 6 Nov: "flat", "a fixed glare"). Take the bright reflection back from the upper
+        # part of the stack where it is clearly brighter than the median, and sharpen what the averaging softened.
+        spec = np.clip((cv2.cvtColor(np.clip(hi, 0, 255).astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32) -
+                        cv2.cvtColor(np.clip(med, 0, 255).astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32) - 25) / 40, 0, 1)
+        spec = cv2.GaussianBlur(spec, (0, 0), 0.8)[..., None]
+        patch = med * (1 - spec) + hi * spec
+        patch = np.clip(patch + TEMPLATE_SHARP * (patch - cv2.GaussianBlur(patch, (0, 0), 1.6)), 0, 255)
+        out[side] = (patch, ratio)
     return out
 
 
@@ -642,6 +653,7 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
     region = frame[y0:y1, x0:x1].astype(np.float32)
     other = source[y0:y1, x0:x1].astype(np.float32)
     inside = hard > 0
+    inside_soft = np.clip(cv2.GaussianBlur(hard.astype(np.float32), (0, 0), 0.7) * 1.25, 0, 1)   # for clipping the iris to his lid
     lab_o = cv2.cvtColor(region.astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
     lab_s = cv2.cvtColor(other.astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
     lab_s += lab_o[inside].mean(0) - lab_s[inside].mean(0)            # same colour as his eye, iris moved or not
@@ -695,7 +707,7 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             shift = np.float32([[1, 0, ox], [0, 1, oy]])
             moved = cv2.warpAffine(region_u8, shift, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
             seen = cv2.warpAffine(iris_f.astype(np.float32), shift, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR)
-            own = np.clip(seen, 0, 1) * inside
+            own = np.clip(seen, 0, 1) * inside_soft
             visible = float(((d_here < 1.0) & inside).sum()) / max(1.0, float((d_here < 1.0).sum()))
             if template is not None and (visible < TEMPLATE_VISIBLE or math.hypot(ox, oy) > TEMPLATE_MOVE * hr):
                 # His iris is cut by the lid, or travels far: use the clean one, at his radius in this frame.
@@ -706,7 +718,7 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
                 m = np.float32([[sc, 0, (tx - x0) - sc * patch.shape[1] / 2], [0, sc, (ty - y0) - sc * patch.shape[0] / 2]])
                 moved = cv2.warpAffine(patch, m, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
                 d_new = np.hypot(xs - (tx - x0), ys - (ty - y0)) / rad
-                own = np.clip((IRIS_GROW + 0.08 - d_new) / 0.16, 0, 1) * inside
+                own = np.clip((IRIS_GROW + 0.08 - d_new) / 0.16, 0, 1) * inside_soft
             eye = base * (1 - own[..., None]) + moved.astype(np.float32) * own[..., None]
             lab_s = cv2.cvtColor(np.clip(eye, 0, 255).astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
             relocated = True
