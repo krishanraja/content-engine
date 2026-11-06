@@ -71,6 +71,7 @@ EYE_CONTOUR = {'R': [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 15
                'L': [362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385, 384, 398]}
 APERTURE_SHRINK = 0.97      # the blend stops just inside his lid line ...
 APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's width
+GATE_FROM, GATE_SPAN = 0.3, 0.5      # no correction under 0.3 iris radii of move, full from 0.8
 TEMPLATE_VISIBLE, TEMPLATE_MOVE = 0.9, 0.8   # use the clean iris when under this share of his is visible, or he moves it this many radii
 IRIS_GROW = 1.02            # his iris circle, in landmarker radii, for the clean cut-out
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
@@ -488,7 +489,19 @@ def iris_templates(media, readings: list[dict], info: dict, size: int = 48, ever
                 (cx, cy), rad = r['iris'][side], max(2.0, r['iris_r'][side])
                 sc = size / (2.5 * rad)
                 m = np.float32([[sc, 0, size / 2 - sc * cx], [0, sc, size / 2 - sc * cy]])
-                stacks[side].append(cv2.warpAffine(frame, m, (size, size), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE))
+                patch = cv2.warpAffine(frame, m, (size, size), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+                # Align on the iris's own dark centroid: the landmarker's centre jitters a pixel or two, and a median of
+                # misaligned irises is a soft, pale one.
+                grey = cv2.cvtColor(patch, cv2.COLOR_BGR2GRAY).astype(np.float32)
+                yy, xx = np.mgrid[0:size, 0:size].astype(np.float32)
+                disc = np.hypot(xx - size / 2, yy - size / 2) < size * 0.32
+                dark = disc & (grey <= np.percentile(grey[disc], 40))
+                if dark.sum() > 20:
+                    dx, dy = size / 2 - float(xx[dark].mean()), size / 2 - float(yy[dark].mean())
+                    if math.hypot(dx, dy) <= 4:
+                        patch = cv2.warpAffine(patch, np.float32([[1, 0, dx], [0, 1, dy]]), (size, size), flags=cv2.INTER_CUBIC,
+                                               borderMode=cv2.BORDER_REPLICATE)
+                stacks[side].append(patch)
     out = {}
     for side in IRIS:
         if len(stacks[side]) < 8:
@@ -497,7 +510,7 @@ def iris_templates(media, readings: list[dict], info: dict, size: int = 48, ever
         ratio = float(np.median([readings[i]['iris_r'][side] / max(1e-6, math.hypot(readings[i]['eyes'][side][3][0] - readings[i]['eyes'][side][0][0],
                                                                                     readings[i]['eyes'][side][3][1] - readings[i]['eyes'][side][0][1]))
                                  for i in sorted(ok[side])]))
-        out[side] = (np.median(np.array(stacks[side], dtype=np.float32), axis=0), ratio)
+        out[side] = (np.percentile(np.array(stacks[side], dtype=np.float32), 40, axis=0), ratio)    # his dark iris, not its average
     return out
 
 
@@ -566,6 +579,7 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
     # it was) and Maxine's (where it put it) come from the landmarker with their own radii; Maxine's iris pixels take
     # his iris's distribution channel by channel (histogram matching), inside a soft disk and his opening only.
     relocated = False
+    gate = 1.0
     if iris_here is not None and iris_there is not None:
         (hx, hy, hr), (tx, ty, tr) = iris_here, iris_there
         ys, xs = np.mgrid[0:y1 - y0, 0:x1 - x0].astype(np.float32)
@@ -588,6 +602,11 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             # with the iris filled in from his own sclera, and his visible iris is laid at Maxine's position inside his
             # opening, so his lids still cover it (blind review, 5 Nov: halo and wrong-colour iris gave it away).
             ox, oy = tx - hx, ty - hy
+            # A small move leaves his eye as it was: re-laying an iris that barely needed to move only greyed and softened
+            # it and dulled the catchlight (blind review, 6 Nov, every near-lens frame). The correction fades in with the move.
+            gate = float(np.clip((math.hypot(ox, oy) / max(1.0, hr) - GATE_FROM) / GATE_SPAN, 0.0, 1.0))
+            if gate <= 0.0:
+                return frame
             region_u8 = np.clip(region, 0, 255).astype(np.uint8)
             # A clean iris, not a segmented one: the landmarker's circle (grown a hair), clipped by his own lid
             # contour. The segmented blob took ragged edges at a hard glance, where the iris sits in the lid's shadow
@@ -627,7 +646,7 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
     hp_s = other - cv2.GaussianBlur(other, (0, 0), k)
     gain = 1.0 if relocated else float(np.clip(np.sqrt((hp_o[inside] ** 2).mean() / max(1e-6, (hp_s[inside] ** 2).mean())), 1.0, DETAIL_MAX))
     other = other + (gain - 1.0) * hp_s
-    a = alpha[..., None]
+    a = (alpha * gate)[..., None]
     out = frame.copy()
     out[y0:y1, x0:x1] = np.clip(np.rint(region * (1 - a) + other * a), 0, 255).astype(np.uint8)
     return out
