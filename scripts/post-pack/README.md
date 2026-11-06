@@ -1,6 +1,6 @@
 # post-pack
 
-**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, every week's board lives at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
 
 
 Puts every asset of the publication into Krish's makeyourmindup asset library
@@ -15,8 +15,9 @@ article HTML I can copy paste, video scripts, etc etc".
 
 **This is Krish's instruction for one folder.** The architecture doc's rule
 0a.5 says agents never write into his Drive. His words above override it for
-the makeyourmindup library folder only, and the writing is done by his own
-always-on Windows machine. Every other Drive folder keeps rule 0a.5, and the
+the makeyourmindup library folder, and his words of 2026-11-03 for Heartside's
+social library ("The Heartside library", below); the writing is done by his
+own always-on Windows machine. Every other Drive folder keeps rule 0a.5, and the
 Studio's Video Engine Inbox and Archive are never written. The recordings
 upload (below) reads the Inbox and nothing more.
 
@@ -54,8 +55,9 @@ makeyourmindup\
       4 Social\                 the LinkedIn post and its card
 ```
 
-Its place on Drive is `runtime.library_root` in `config/studio.json`, beside
-the Studio's Video Engine folder (`MINDMAKE_LIBRARY_ROOT` overrides it on a
+Its place on Drive is `runtime.library_root` in `config/studio.json`, the
+makeyourmindup folder, which also holds the Studio's Video Engine folder
+beside the three top folders (`MINDMAKE_LIBRARY_ROOT` overrides it on a
 machine). `READ ME FIRST.txt` is Krish's; nothing here writes it.
 
 A post's folder is `YYYY-MM-DD <Day> <subchannel> - <Subject>`, with the day
@@ -67,7 +69,7 @@ characters.
 
 The engine takes a file only inside `1 Brand kit (permanent)/`,
 `2 Channel art (permanent)/` or one post's folder, and inside a post folder
-only in its four sections or as its `READ ME.txt`. A name with a character
+only in its five sections or as its `READ ME.txt`. A name with a character
 Windows refuses, a `.` or `..` folder, a hidden name, a type the library does
 not hold or a path over 180 characters is refused with the reason. The rule
 is written once as cases in `config/library-paths.cases.json`; the engine
@@ -81,7 +83,7 @@ python scripts/post-pack/build.py WORKDIR/post.json [--out DIR] [--replace]
 ```
 
 It copies the files into `DIR/<post folder>/` (by default
-`.cache/post-pack/`, which git ignores), sorted into the four sections, and
+`.cache/post-pack/`, which git ignores), sorted into the five sections, and
 writes `READ ME.txt`: the post, where it is published, then every file with
 what it is for, in plain words. It also writes `.pack.json`, the list
 `send.py` reads. It stops before copying anything if a file is missing, two
@@ -175,6 +177,9 @@ and is really easy for me to take from Drive to Publish." The plan is
 `docs/AMPLIFICATION.md`: one Substack Video post (the 5-minute long cut on
 top, the article under it), then YouTube, then Shorts, TikTok and Instagram
 with the 90-second short cut; LinkedIn, WhatsApp and Notes are optional.
+Since 26 October 2026 Growth-MakeYourMindUp owns posting strategy and
+distribution (`docs/GROWTH-HANDOFF.md`). The package it posts from is the
+piece manifest, `0 Publish/manifest.json`, written by `piece_manifest.py`.
 `publish_kit.py publish.json --out DIR`
 writes `publish.html` for one post; pack it as `publish-kit`.
 
@@ -189,6 +194,9 @@ Give me a tick box next to each one so I can tick as I go and you can
 durably record that completion where it needs to be recorded. That Publish
 Manager is what you create every Sunday and let me iterate inside until
 we're done, and then I check off the list what I have done as I do it."
+
+`docs/PUBLISH_BOARDS.md` is the current workflow (the fixed layout, Today,
+his presses); this section covers the builder's own inputs.
 
 `week_board.py` builds that one page (its template is `week_board/`). Each
 tab is a made piece's whole publish page (`publish_manager.py`'s, given with
@@ -213,7 +221,8 @@ and Krish still posts the rest from its tab.
     npx vitest run tests/control-plane/week-board.test.ts
 
 A rebuild never loses a day. `--previous` is the board being replaced (its
-`week-board.json`, or its page as `Artifact read` saved it): a day it holds
+`week-board.json`, or its web page as `board_web.py download <Monday> --output
+FILE` saves it): a day it holds
 as made or picked that the rebuild would show as not picked is refused, and
 so is a made day with no publish page in the rebuild; `--unpick DAY` says a
 day really has no piece now. With `--live`, a picked piece whose making
@@ -221,18 +230,20 @@ record has a publish page must come with it (`--day`). `--show` prints the
 days a board holds, each day's state and piece: the piece a tick on that
 day belongs to.
 
-Every tick saves at once in the page's own store: `ticks/<day>-<step>`
-(`done, at, day, piece_id, step, channel, label`) and `links/<day>`
-(`article, youtube, at`). Publish it as an artifact with title "This Week's
-Publish Board", icon `calendar` and capabilities `{"db": {}, "downloads":
-true}`; the call is in `week-board.json`, written beside the page with the
-week, each day's state and piece, and every tick id. A rebuilt board
-republished to the same page keeps every tick, because the store stays with
-the page and the ids depend only on the day and the step
-(`fixtures/week-board/published-2026-10-12.json` holds the published
-board's tick ids and steps, and the test runs the page's own script against
-a stand-in store); make a new page each Sunday, with its own board item,
-`week-publish-board-<Monday>`. A session copies each channel tick onto the
+Every tick saves at once through the board's authenticated web API at
+content.krishraja.com: `ticks/<day>-<step>` (`done, at, day, piece_id, step,
+channel, label`) and `links/<day>` (`article, youtube, at`), read back with
+`board_web.py read <Monday> ticks` (or `links`). `week-board.json`, written
+beside the page, holds the week, each day's state and piece, and every tick
+id. Build with `--target web` (the default; `artifact` builds a legacy copy
+for comparison only, since Claude artifacts were retired on 19 Oct 2026), run
+`--verify`, then `board_web.py publish-web PAGE.html` for the dry-run
+manifest and `--apply` once publishing is authorised (`docs/PUBLISH_BOARDS.md`,
+"Update a board"). A rebuilt board keeps every tick, because the ids depend
+only on the day and the step (`fixtures/week-board/published-2026-10-12.json`
+holds a published board's tick ids and steps, and the test runs the page's
+own script against a stand-in store); register each new Monday under
+`config/boards.json` `web`. A session copies each channel tick onto the
 piece with `making.py <piece> posted <channel> [url]`; Record is done from
 the takes on the record, never from a tick.
 
@@ -256,9 +267,16 @@ static asset form or video."
   releases) and no picture is built from real pages: an `image` entry with
   `"evidence": {"pages": [{"url", "date", "shot"}, ...]}` of at least six
   real, dated pages, screenshotted and piled up;
-- the cover did not come from `scripts/pages/build.py --cover` (its
-  `cover.json` receipt must match the PNG), has no portrait, or has no logo
-  rows when the piece names companies.
+- a cover did not come from `scripts/pages/build.py --cover` (its receipt,
+  such as `cover.json`, must match the PNG), is not the Receipt (a real proof
+  and no face, house rule THE_RECEIPT since 2 November 2026), or has no logo
+  rows when the piece names companies;
+- a video thumbnail did not come from `scripts/pages/build.py --thumbs` (its
+  `thumbs.json` must match it), is not the Receipt, or declares a logo the
+  drawer did not draw;
+- from posts dated 16 October 2026, an `image` entry does not say what real
+  thing it `shows` (screenshot, chart, photo, evidence, quote or logos), or a
+  chart does not name its `data_source` and what it `measures`.
 
 Only Krish's own words in the post file's `"visual_gate_override"` let a pack
 through without. `python scripts/post-pack/visual_gate.py post.json` explains
@@ -270,10 +288,14 @@ A `video-script` is packed only if it passes `story_check.py` (Krish,
 2026-10-06, walk log F75: "they need to actually make sense to humans", then
 "happy with that idea" of the five-point story check). It refuses a script
 that holds anything but the words Krish says (stage directions, labels,
-timings, headings, joke options: house rule SCRIPT_ONLY), one whose outro
-never sends people to the article (HOOK_AND_CTA), one that does not open on a question, one of a minute or more with no spoken
-outro after the call (so it never ends on the number), one that speaks an
-article heading or a REAL or THEATRE stamp aloud, and one with lines still
+timings, headings, joke options: house rule SCRIPT_ONLY), one that does not
+open on a question, one of a minute or more that does not close the way Krish
+ruled on 2026-10-31 (house rule SCRIPT_CLOSE: one short beat saying the one
+thing he would do, then, last and alone, "The full deep dive is at
+makeyourmindup.ai."), one that says his name (NO_NAME), one a 12-year-old
+could not follow heard once (R7, the numbers in SCRIPT_READING), one with
+more figures or names than a listener can hold (LISTENING), one that speaks
+an article heading or a REAL or THEATRE stamp aloud, and one with lines still
 marked NOT YET FACT-CHECKED. Run it on any script before sending it to Krish:
 
 ```
@@ -283,9 +305,11 @@ python scripts/post-pack/story_check.py --cut long SCRIPT    # or --cut short
 Every piece has two scripts, one per cut, each with its own hook and outro
 (house rule TWO_CUTS, Krish, 2026-10-11): the 5-minute long cut (3 minutes until Krish, 2026-10-19: "let's make the
 3-minute scripts into 5-minute scripts and videos"), 675 to 825
-spoken words, and the 90-second short cut, 160 to 225. Give each
+spoken words, and the 90-second short cut, 160 to 195, so the finished cut
+stays under 89 seconds. Give each
 `video-script` entry its `"cut": "long"` or `"cut": "short"` so the length is
-checked; a file name that says `long`, `5min`, `short` or `90` does the same.
+checked; a file name that says `long`, `3min`, `5min`, `wide`, `short`,
+`90` or `vertical` does the same.
 An entry that says neither is packed with a warning that its length was
 checked against neither cut. `making.py <piece id> scripts long.md short.md`
 checks both and records them on the piece, the long cut first; one script
@@ -325,7 +349,7 @@ files the library already has, and prints what it sent. It authenticates as
 as `codex` inside Codex and `claude_code` elsewhere (`--client` changes it).
 
 Sending a file again after a newer version makes it the newest again, and the
-sync writes it back. A file is at most 500 MiB.
+sync writes it back. A file is at most 2 GiB (raised from 500 MiB on 2026-10-18).
 
 ## The rule that keeps it complete
 
@@ -385,6 +409,19 @@ machine by itself: the recordings upload pulls `library-source` each pass
 (fast-forward only), and the sync then pulls its own copy too. The three lines
 are needed only to install it on a new machine.
 
+The installer first runs the sync with `-Check`, which writes nothing: the library folder
+must be reachable, the runner key must be on the machine and the engine must
+answer. If any of that fails it says why and installs nothing. Then it
+registers the task and starts it. To look without writing at any time:
+`scripts\library-sync.ps1 -Check`. To stop it:
+`Disable-ScheduledTask -TaskName "Mindmake Library Sync"`. Install it on one
+machine only; after a failover to the standby, install it there and disable it
+on the old primary.
+
+Before the first install, the engine's migration
+(`supabase/migrations/20261006120000_content_library.sql`) must be applied and
+the engine deployed: the check asks the engine for its library.
+
 ### The Heartside library
 
 Krish, 2026-11-03: "Why don't you duplicate that Python script for Heartside then? We're going to need to do a lot more of this type of stuff moving forward". The same lane files Heartside's social library: the
@@ -399,19 +436,6 @@ and the sync writes it into `Heartside\05_Social-Library\Posts\F01\`
 from it. A Heartside path is `Posts/<post id>/<file>`, the id like `F01` or
 `F06-frenchie`, nothing deeper (`config/library-paths.cases.json`,
 `libraries.heartside`).
-
-It first runs the sync with `-Check`, which writes nothing: the library folder
-must be reachable, the runner key must be on the machine and the engine must
-answer. If any of that fails it says why and installs nothing. Then it
-registers the task and starts it. To look without writing at any time:
-`scripts\library-sync.ps1 -Check`. To stop it:
-`Disable-ScheduledTask -TaskName "Mindmake Library Sync"`. Install it on one
-machine only; after a failover to the standby, install it there and disable it
-on the old primary.
-
-Before the first install, the engine's migration
-(`supabase/migrations/20261006120000_content_library.sql`) must be applied and
-the engine deployed: the check asks the engine for its library.
 
 ## Where a piece's files are
 
@@ -460,7 +484,7 @@ key by sha256, so they never make two copies.
 
 **Why.** On 2026-10-06 a session told Krish it could not reach his file. His
 answer: "figure out how to never make that error again". The Google Drive
-connector caps a download at 10 MB, and a recording runs 100 to 500 MB, so a
+connector caps a download at 10 MB, and a recording runs 100 MB to about 1.1 GB, so a
 session never takes a recording from Drive, and Krish never moves a file by
 hand. Then: "How can you do this automatically in the future, and just use
 whichever machine is online at the time? the runner exists on both".
@@ -468,14 +492,14 @@ whichever machine is online at the time? the runner exists on both".
 **How it gets there.** `scripts/recordings-upload.ps1` runs as the scheduled
 task "Mindmake Recordings Upload" on both runner machines, the primary and the
 standby, every five minutes. Whichever is online does the work. For each
-mp4, mov, m4a, wav, mp3, mkv or webm file up to 500 MiB that has stopped
+mp4, mov, m4a, wav, mp3, mkv or webm file up to 2 GiB that has stopped
 changing (the same size and time on two passes, or untouched for two
 minutes), it works out the sha256 and MD5, asks the engine for a signed upload
 URL, puts the bytes and confirms. The engine keys a recording by its sha256,
 so when both machines send the same file one finds it already there, or its
 upload is refused as a duplicate and its confirm finds the other's bytes:
 storage ends with one copy and nothing fails twice. A failure on one file
-never stops the rest; a file over 500 MiB is logged once and skipped. It reads
+never stops the rest; a file over 2 GiB is logged once and skipped. It reads
 the Inbox and never writes, moves, renames or deletes anything there.
 
 It runs on both machines and the library sync on one because they differ:
@@ -515,8 +539,7 @@ neither runner machine has sent it (each machine's `recordings-upload.log`
 says why), or the download failed (`recording.py` says how). Never tell Krish
 a recording cannot be reached.
 
-**What Krish does, once.** Approve the merge of `claude/recordings-lane` to
-`main` (the engine deploys from it). Then paste this block into PowerShell on
+**What Krish does, once per machine.** Paste this block into PowerShell on
 each runner machine, the primary and the standby:
 
 ```
@@ -545,7 +568,7 @@ An `.mkv` recording also needs the migration
 `supabase/migrations/20261006180000_content_library_recordings.sql`, which
 lets the bucket hold Matroska. Until it is applied an `.mkv` is refused with
 `recording_type_not_enabled` and the log says so; every other type works
-without it. The project's storage upload limit must be at least 500 MiB, as
+without it. The project's storage upload limit must be at least 2 GiB, as
 for the library.
 
 ## The content watcher, kept by the recordings pass
@@ -671,9 +694,11 @@ with the pinned transcriber and the faster-whisper model cached by its name,
 it runs
 
 ```
-python scripts/post-pack/recording_match.py --record --board --clock --by "Place takes" --json
+python scripts/post-pack/recording_match.py --record --board --clock --spoken --by "Place takes" --json
 ```
 
+`--spoken` compares each recorded take with the exact script it was read
+from and records `spoken_delta` on its piece (`scripts/voice/spoken_delta.py`).
 `--clock` builds each placed take's word clock before the take is recorded:
 the whole take heard as quick-edit hears it (`make.transcribe`, small.en, the
 script's names as the hint), stamped with its provenance
@@ -765,8 +790,8 @@ one script per cut and reads each back. A send that read back is written to
 the piece's making record (its `teleprompter` field), so `pending` sees it;
 when that write fails, `send.recorded` is false and a session runs `record`
 with the ids in `send`. Until Krish places his key
-(`TELEPROMPTER_API_KEY`) it makes no request and answers `no_key`. Until
-both are in place, a session sends instead, as below. The board names the
+(`TELEPROMPTER_API_KEY`) it makes no request and answers `no_key`, and a
+session sends instead, as below. The board names the
 folder and the scripts with this file's `folder_name` and `script_title`, on
 the piece's post.json when there is one, so both routes find the same folder.
 
@@ -813,8 +838,10 @@ only they used.
 ## Size and storage
 
 The library's bucket is private, holds only the file types a post, the brand
-kit and the channel art use, and takes files up to 500 MiB (a two-minute 1080p
-master runs 35 to 75 MB). The migration sets that limit on the bucket; the
+kit and the channel art use, and takes files up to 2 GiB (a two-minute 1080p
+master runs 35 to 75 MB; a long take runs about 1.1 GB).
+`supabase/migrations/20261018160000_library_files_up_to_2gib.sql` sets that
+limit on the bucket; the
 project's own storage upload limit must be at least as large, or a large video
 is refused by storage with "too large". The bytes go straight to storage on
 signed URLs and never pass through the engine's functions.
@@ -847,5 +874,5 @@ working folder or to `.cache/`.
 A session's drawn work (screenshots, cards, panels, charts, story clips) lives in its own container until it is
 saved. Save it into the post's folder on Drive as `<part>/working <date>/` (for example
 `3 Video/working 17 Oct/`). Every pass of `recordings-upload.ps1` runs `working.py publish`, which sends those
-folders to the library at the same path, with a `.working.json` list. A cloud session gets them back with
+folders to the library at the same path, with a `working-files.json` list. A cloud session gets them back with
 `python3 scripts/post-pack/working.py fetch "<post folder>"`, sha256 checked, without the Drive connector.

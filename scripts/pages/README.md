@@ -1,9 +1,14 @@
 # pages
 
 Turns a piece into two files: its web page in the makeyourmindup look, and a
-copy that pastes into Substack whole. With `--cover` it also draws the post's
-cover image, and `card.py` checks that artwork made from HTML can be read on a
-phone.
+copy that pastes into Substack whole. With `--cover` and `--thumbs` it also
+draws the post's covers and video thumbnails in the Receipt (`receipt.py`),
+and `card.py` checks that artwork made from HTML can be read on a phone.
+
+The folder also holds `broadcast.py` (emails, below), `video_card.py` (the
+pictures that cut in while Krish talks; its docstring has the rules) and
+`render_figure.mjs` with `figure.css` (an article figure drawn from its HTML;
+the file's header says how).
 
 Krish, 2026-10-05: "I would rather work in here and have the pieces and their
 artwork produced in html and assets like we are doing now". The first piece,
@@ -26,16 +31,15 @@ or it writes neither (the rule in `editions/README.md`).
 | `cover-1200x675.png` | With `--cover`: the 16:9 share card, for LinkedIn and link previews. |
 | `cover-1080x1080.png` | With `--cover`: the square cover, for Substack's archive list and the Instagram feed. |
 | `cover-1080x1920.png` | With `--cover`: the vertical cover for YouTube Shorts, TikTok and Instagram Reels. |
-| `cover-WxH.json`, `cover-WxH-crops.png` | Beside each of those four: its receipt and its check image ("A cover for every place it is shown", below). None is written if a word or a logo would fall outside the part its places keep, or a word would be too small to read on a phone. |
-| `cover.png` | With `--cover`: the same cover at 3:2, 1200 x 800, kept beside it. Do not upload it to Substack, whose upload box crops it. It is not written if a word or a logo would be cut off, or a word would be too small to read in a phone's feed ("What Substack does to your artwork", below). |
-| `cover-crops.png` | With `--cover`: what Substack's feed, share card and archive each show of the cover. |
-| `thumb-wide-1280x720.jpg`, `thumb-tall-1080x1920.jpg` | With `--thumbs`: a thumbnail for each video size, with `thumbs.json` (each file's sha256 and shape, the portrait, the rows and strip drawn as `logos`, and `companies`, one name per company those show, as config/logo-registry.json names it, for a post.json thumbnail entry's `logos`) and `thumbs-check.png` ("Thumbnails for the videos", below). |
+| `cover.png` | With `--cover`: the same cover at 3:2, 1200 x 800, kept beside them. Do not upload it to Substack, whose upload box crops it ("What Substack does to your artwork", below). |
+| `cover.json`, `cover-WxH.json` | Beside each cover: its receipt (the template, the proof, the logos, the headline size, the series look and the series skin it wears, `skin`, null when none, with `skin_week` (the skin it was due to wear), `skin_tried` and `skin_note`, what moved it on, null when nothing did). The five covers are written all or none: if any shape would put a word or a logo outside the part its places keep, or a word would be too small to read on a phone, none is written and the drawer says why. |
+| `thumb-wide-1280x720.jpg`, `thumb-tall-1080x1920.jpg` | With `--thumbs`: a thumbnail for each video size, with `thumbs.json` (each file's sha256 and shape, the series look and the series skin both wear, `skin`, null when none, and the same `skin_week`, `skin_tried` and `skin_note` as the covers', the proof, the rows and strip drawn as `logos`, and `companies`, one name per company those show, as config/logo-registry.json names it, for a post.json thumbnail entry's `logos`) ("Thumbnails for the videos", below). |
 | `shots/` | With `--shots`: both files at a computer's width (1440) and a phone's (390). |
 
 ## Setup
 
 - Python 3.10 or later. Building needs nothing beyond it.
-- `npm ci` in the repository, once. The four faces come from the repository's
+- `npm ci` in the repository, once. The five faces come from the repository's
   own font packages (below).
 - For `--check`, `--shots`, `--cover` and `card.py`: `pip install playwright`,
   then `python -m playwright install chromium`. On Windows you can skip the
@@ -79,7 +83,7 @@ python scripts/pages/build.py WORKDIR/page.json --out WORKDIR/out --check --shot
    ```
 
    Anything less, and it says so and exits with an error. Then look at
-   `phone-images.png` and, with `--cover`, every `cover-*-crops.png` and `cover-crops.png`.
+   `phone-images.png` and, with `--cover`, every cover.
 6. **Paste.** On a computer, open `substack.html`, press Copy title, Copy
    subtitle and Copy post in turn, and paste each into the Substack editor. A
    phone may paste the words without the images. Upload `cover-1200x630.png`
@@ -94,11 +98,13 @@ One JSON file. Paths are relative to the file (or to `--assets DIR`).
 | `subchannel` | `follow.the.money`, `under.the.hood` or `mind.the.gap` (or the ids with underscores). Sets the colour, the day and the sticker. |
 | `headline`, `deck` | The headline and the line under it. Also the Substack title and subtitle, unless `substack_title` or `substack_subtitle` say otherwise. |
 | `date` | The publishing day, `2026-10-05`. Shown as "Monday 5 October 2026". |
+| `carries` | The weekly series piece this asset is made from, by its piece id, when it goes out on another day and wears that piece's colour and name (the Character.AI carousel carries Monday's piece). Leave it out on anything else. |
+| `skin` | Optional, on a weekly series piece: the series skin its covers and thumbnails wear in place of the week's own, by its id: `neon`, `sunburst`, `painted_scene`, `series_worlds`, `bauhaus`, `papercut`, `extruded`, `brandbook` or `memphis` (`skins/__init__.py`). Any other name stops the drawer. Without it the week's skin is worn: one per week in that order, neon in the week of Monday 9 November 2026, the same for the week's Monday, Wednesday and Friday pieces (Krish, 2026-11-05: "keep all of them and rotate them all at will over the coming weeks"). A series piece dated before that week wears none unless it names one here, and a series piece with no `date` stops the drawer. When the skin (named here or the week's) cannot be drawn on one of the piece's seven shapes without touching the words or the logos, the whole piece moves on to the next skin in that order, wrapping round, until one draws on every shape, and the drawer prints which and why (`series skin: neon could not be drawn on the square cover without touching the logos; wore sunburst, next in the rotation`), as the records do; when none of the nine draws, it wears the plain series Receipt and says so (Krish, 2026-11-05: "Yeah just move on automatically"). It never stops for a skin. Anything that is not a weekly series piece wears none, whatever this says. |
 | `issue` | The strip at the top, such as `"Vol. 01 · Issue 01"`. Without it, the date. |
 | `title` | The browser tab. Defaults to the headline. |
 | `body` | The body file. Defaults to `body.md`; `--body FILE` overrides it. |
 | `hero` | The art beside the headline, or nothing. `{"image": "img/x.png", "alt": "..."}`, or a receipt: `{"receipt": {"title", "alt", "customer": {"logo", "text"}, "rows": [{"logo", "name", "when", "verdict", "colour"}], "total": [left, right]}}`. A row's `colour` is `mint`, `butter`, `lilac` or `coral`. |
-| `cover` | The post's cover image, drawn by `--cover`. All of it is optional: `{"headline": ["the words in cream", "the last line in the subchannel's colour"], "rows": [{"logo", "name", "tag", "colour"}], "label": "words after the subchannel at the foot", "subline": "one bold line", "background": "img/photo.jpg", "portrait": true}`. Without `headline`, the page's headline is split after its last comma, full stop, colon or question mark; it is drawn at the largest of 104, 100, 96, 92 or 88 pixels at which it fits in three lines. A row's `logo` must read on dark ink (a light logo) and is drawn 64 pixels tall; its `tag` is the words beside it, drawn at 47 pixels; its `colour` is `mint`, `butter`, `lilac` or `coral`. Keep to two rows. `label` defaults to `issue`, then the date, and is fine print at 37 pixels; it is left out when the cover only fits without it. Leave `subline` out unless it says something the rows do not: it is drawn at 47 pixels, like the tags, and there is rarely room for it. The `background` photo sits at 30% under a dark fade. With `portrait`, Krish's face sits in a 236-pixel circle under the headline, with the subline and rows beside it: `true` draws the cover site's "closer look" photo, a path draws that picture instead. Use it on every cover; Krish, 2026-10-06: "even one of the funny headshots on the cover pictures or social share pictures like this that make it even more personal that it's me analysing it" (house rule `LOGOS_AND_FACE`). Beside the face there is room for a tag of about 11 characters; the cover refuses a longer one. The cover doubles as the LinkedIn picture. |
+| `cover` | The covers and thumbnails, drawn by `--cover` and `--thumbs` in the Receipt (`receipt.py`; house rule `THE_RECEIPT`, Krish, 2026-11-02: "Go with the number one ... make this the floor level standard moving forward, inviolable"). `{"headline": ["the lead, in ink", "the last part, on the subchannel's colour"], "proof": {"image": "img/chart.png", "source": "a key of sources", "tag": "WHOSE IT IS", "ring": [x0, y0, x1, y1]}, "rows": [{"logo", "name"}], "strip": [{"logo", "name"}]}`. `proof` is required: a real picture from one of the piece's checked sources, named by its key in `sources`, with a `tag` saying whose it is. In place of `image` it can be `"pdf": {"url", "page", "crop"}`, `"page": {"url", "crop"}` or `"html": {"path", "crop"}`, which the drawer cuts itself. `ring` (fractions of the picture) circles the one number it is about. Without `headline`, the page's headline is split after its last comma, full stop, colon or question mark (else its last three words go on the colour), and the words must pass the title check (house rule `TITLE_EARNS_THE_CLICK`). A row's `logo` must read on dark ink; a row's `tag` is not drawn. Each shape takes the largest headline that fits its lines with no short word alone on a line. There is no face and no background photo: `portrait`, `background`, `label` and `subline` belonged to the older look, which the Receipt replaced on 2 November 2026 with its house rule `LOGOS_AND_FACE` (Krish, 2026-10-06: "even one of the funny headshots on the cover pictures or social share pictures like this that make it even more personal that it's me analysing it"). The cover doubles as the LinkedIn picture. Only the subchannel's one weekly piece wears its colour and name (Ruling, Krish, 2026-11-04: "I should be allowed to post random stuff on any day but it doesn't take on the brand colours of Follow the Money, Mind the Gap, or Under the Hood"; `brand.series_look`): published on its subchannel's own day, or carrying it (`carries`), its colour marks the highlighted words and the pill. Any other cover, on any day, is neutral: the house sage, a cream highlight, an ink tag, and no subchannel's colour or pill. Nothing may sit on the words: the fit refuses any decoration (`.deco`) that touches the headline, the tag, the pill, the wordmark or the logos. The ring around the number is ink. A weekly series piece wears the week's series skin on every shape, its five covers as its two video thumbnails (`skin`, above; `skins/`; Krish, 2026-11-05: "Skin the covers too"), so it looks the same everywhere: the 3:2 cover, Substack's 1200 x 630 and the share card in the wide thumbnail's design, the square and the vertical cover in the tall's. The skin draws its ground and its decorations round the Receipt, clear of the words and the logo plate, then the drawing is checked again; a shape where a decoration touches the words or the logos, carries words, leaves the safe box or shrinks the proof under its floor, or whose placement fails, is refused, and the piece moves on to the next skin (above). Where a cover leaves its device no room (the side covers' words run down to the foot), the skin shows its ground and blocks alone, as on a low-headline thumbnail. `--cover` and `--thumbs` each try the skin on all seven shapes, so the two always agree. |
 | `figures` | The piece's images: `{"after": "words in the body", "image": "img/1.png", "alt": "what it shows", "caption": "optional"}`. Each goes after the paragraph that holds its `after` words. `alt` is required. |
 | `pull_quotes` | `{"after": "...", "quote": "...", "cite": "who said it"}`. The quote must be words from the body, exactly. |
 | `sources` | `{"id": ["Title, date", "https://..."]}` (or `{"title", "url"}`). Listed at the end in the order they are first linked; any never linked come last, and the build mentions them. |
@@ -153,18 +159,17 @@ half. Then, the same day: "the cover crops need to be all individual images, a
 vertical cover thumbnail for the shorts/tiktok etc as well, every post moving
 forward". So every `--cover` draws, beside the 3:2 `cover.png`, one image per
 place, each laid out for its own shape from the same cover facts (the real
-wordmark, the headline, Krish's face and the real logos), never cropped from
-another: `cover-1200x630.png`, the one to upload in Substack's settings (face
+wordmark, the headline, the proof and the real logos), never cropped from
+another: `cover-1200x630.png`, the one to upload in Substack's settings (proof
 left, words right, everything inside x 152 to 1048 so the 16:9 share card and
 the phone feed's 3:2 keep it); `cover-1200x675.png`, the 16:9 share card for
 LinkedIn and link previews (LinkedIn's 1.91:1 keeps it); `cover-1080x1080.png`,
 the square for the archive list and the Instagram feed (Instagram's 3:4
 profile grid keeps it); and `cover-1080x1920.png`, the vertical cover for
-Shorts, TikTok and Reels, with every word, the face and every logo inside x 60
-to 1020, y 250 to 1480, which those apps lay nothing over. Each picks the
-biggest headline and face that fit, is held to the phone word floors, and has
-its receipt and check image; if one does not fit, it is not written and the
-drawer says why. post-pack puts all of them in every pack under plain names
+Shorts, TikTok and Reels, with every word, the proof and every logo inside
+x 96 to 984, y 286 to 1444, which those apps lay nothing over. Each picks the
+biggest headline that fits, is held to the phone word floors, and has its
+receipt; if one does not fit, none is written and the drawer says why. post-pack puts all of them in every pack under plain names
 (`substack-cover-1200x630.png`, `substack-feed-1200x800.png`,
 `share-card-1200x675.png`, `square-1080x1080.png`,
 `vertical-cover-1080x1920-shorts-tiktok-reels.png`) and refuses a pack that
@@ -183,17 +188,14 @@ What the tools do about it:
   out at about 6 to 9 pixels there. The cover is held
   to the same floors as any artwork (`card.py`, below): words at 47 pixels or
   more on the cover and fine print at 37 or more, and the template draws at
-  those sizes. That leaves room for the wordmark, a headline of up to three
-  lines, two rows and the label line; the subline is left out unless the
-  facts give one.
+  those sizes. That leaves room for the wordmark, the proof, a headline of up
+  to four lines and the logos.
 - After drawing, `--cover` measures every element, every line of words and
-  every word's size. If the headline needs more than three lines, if anything
-  falls outside the box, or if a word would be too small in the feed, it
-  writes no `cover.png`, removes an older one, and lists each problem: what
-  would be cut and where, or each small word with its size on a phone and the
-  size it needs on the cover. If the cover only fits without the label line,
-  it leaves the label out and says so. `cover-crops.png` shows the three crops
-  side by side, and the archive tile at 150 pixels.
+  every word's size. If the headline needs more lines than its shape allows,
+  if a short word sits alone on a line, if anything falls outside the box, or
+  if a word would be too small in the feed, it writes no cover in any shape,
+  removes the older ones, and lists each problem: what would be cut and where,
+  or each small word with its size on a phone and the size it needs.
 - **`card.py` checks artwork made from HTML before it becomes a PNG:**
 
   ```
@@ -306,19 +308,20 @@ from it:
 - **Colours, days and stickers** come from the house style in
   `config/studio.json`, the values the Studio renders with. When the schedule
   changes there, the pill, the strip and the subscribe line follow.
-- **Fonts**: Anton, Archivo, Fraunces italic and IBM Plex Mono are read from
-  `node_modules/@fontsource*`, packages the repository already pins for the
-  Studio, and inlined. They are byte for byte the files the first pages used,
+- **Fonts**: Anton, Archivo, Fraunces italic, IBM Plex Mono and, for the
+  page's and the email's body text, Source Serif 4 are read from
+  `node_modules/@fontsource*`, packages the repository already pins, and
+  inlined. They are byte for byte the files the first pages used,
   which came from Google Fonts. That beats committing font files (a second copy to keep
   in step) and fetching them from Google Fonts at build time (a network call
   and a cache for files the repository already has). IBM Plex Mono's 600 is
   left out on purpose: the approved pages had none, so their labels drew at
   700.
 - **Logos** (the wordmark, the masthead, the mark, from
-  `https://www.makeyourmindup.ai/brand/`) and Krish's photo for covers and
-  thumbnails (the one on the cover site; the article byline has no face since
-  29 Oct) are fetched from the live site and cached in
-  `.cache/makeyourmindup/`, which git ignores. A fresh copy is
+  `https://www.makeyourmindup.ai/brand/`) are fetched from the live site and
+  cached in `.cache/makeyourmindup/`, which git ignores. No face is drawn: the
+  article byline has none since 29 Oct, and covers and thumbnails none since
+  2 Nov (the Receipt). A fresh copy is
   fetched once a week, or now with `--refresh-brand`. If the site cannot be
   reached, the cached copy is used.
 
@@ -336,13 +339,14 @@ python scripts/pages/build.py docs/plans/PLAN/cover-facts.json --thumbs --out WO
 It draws `thumb-wide-1280x720.jpg` for the 16:9 long cut (YouTube and the
 Substack video post) and `thumb-tall-1080x1920.jpg` for the 9:16 short cut
 (the cover on Reels and TikTok) from the same cover facts and in the same
-look as the cover: the wordmark, the headline, Krish's face and a row per
-real logo. `"thumbs"` beside `"cover"` in the facts changes any of those
+look as the cover (the Receipt): the wordmark, the headline, the proof and
+the real logos. `"thumbs"` beside `"cover"` in the facts changes any of those
 fields for the thumbnails alone, and its `"strip": [{"logo", "name"}]` adds
-more real logos in a line under the rows, so a thumbnail can carry every
+more real logos, drawn in one line with the rows' logos, so a thumbnail can carry every
 company the piece names (the visual gate holds each one to that). Both or
-neither: it refuses if a word, the face or a logo would sit where a
-platform covers or crops it, or a word would be too small to read. The cover takes the same `"strip": [{"logo", "name"}]` in its own `"cover"` facts (Krish, 2026-10-28: "Add a logo strip"): a small line of real logos under the rows, in the 3:2 cover and in every other shape, so the cover can carry every company the piece names; its receipts list the names as `strip`.
+neither: it refuses if a word, the proof or a logo would sit where a
+platform covers or crops it (on the wide one, YouTube's video length in the
+bottom-right corner), or a word would be too small to read. The cover takes the same `"strip": [{"logo", "name"}]` in its own `"cover"` facts (Krish, 2026-10-28: "Add a logo strip"): more real logos, in the same line as the rows' logos, in the 3:2 cover and in every other shape, so the cover can carry every company the piece names; its receipts list the names as `strip`.
 
 **The video's story intro reads two more fields** (`scripts/quick-edit/story_io.py`):
 `"video_title"`, the title card's words (short, at most 60 characters; else
@@ -358,12 +362,12 @@ facts as `docs/plans/PLAN/cover-facts.json` and every logo they draw as SVG
 in `docs/plans/PLAN/logos/`, with paths relative to the facts
 (`"logos/suno-logo-cream.svg"`), so no `--assets` folder is needed (and
 passing one would point the logos at the wrong folder). A missing logo
-always stops the drawer. The `"background"` picture is optional, because git
-keeps no PNG or JPEG: on a machine without it the artwork is drawn on plain
-ink, the drawer prints a note, and the receipts record `"background": false`.
-To draw the background again, copy the picture beside the facts on the
-machine that has it; git ignores the copy. It needs the internet for Krish's
-portrait and the wordmark, and a browser (`MYMU_BROWSER`, as in Setup).
+always stops the drawer, and so does a missing proof. Git keeps no PNG or
+JPEG, so give the proof as `"pdf"`, `"page"` or `"html"` and any checkout cuts
+it from the source itself (kept in `.cache/proofs/`); an `"image"` proof must
+be copied beside the facts on the machine that draws, and git ignores the
+copy. It needs the internet for the wordmark and for a proof cut from a live
+page or PDF, and a browser (`MYMU_BROWSER`, as in Setup).
 
 ## Making it a web edition
 
@@ -374,7 +378,7 @@ page.
 
 ## What stays out of the repository
 
-The body, the images, the cover's photo, the finished pages, the cover, the
+The body, the images, an `"image"` proof, the finished pages, the cover, the
 thumbnails and the shots. The tool, this README and the example facts are
 committed, and so are a plan's cover facts and its logos as SVG
 (`docs/plans/PLAN/logos/`), so any checkout can draw its cover and

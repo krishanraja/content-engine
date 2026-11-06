@@ -662,6 +662,11 @@ describe('the choices under test on the making record', () => {
     expect(two.body.making.production_choices).toEqual({ opening: 'hook_is_intro', lead_picture: 'story_object', big_moment_sound: 'none', at: '2026-11-02T03:00:00Z' })
     const three = await call('POST', { production_choices: { lead_picture: 'series_picture' } })
     expect(three.body.making.production_choices).toMatchObject({ opening: 'hook_is_intro', lead_picture: 'series_picture', big_moment_sound: 'none' })
+    // The opening's default from 2026-11-05 (Krish: "I think it should go at the start of the longer wide videos
+    // 100%,"): the sting on the wide cut, the hook on the tall cut, recorded in the same field; the others are kept.
+    const four = await call('POST', { production_choices: { opening: 'sting_wide_hook_tall' } })
+    expect(four.status).toBe(200)
+    expect(four.body.making.production_choices).toMatchObject({ opening: 'sting_wide_hook_tall', lead_picture: 'series_picture', big_moment_sound: 'none' })
   })
 
   it('an unknown choice, a value that is not an option name, or no choice at all is refused by name, and nothing is written', async () => {

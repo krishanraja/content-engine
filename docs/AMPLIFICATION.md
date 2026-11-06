@@ -16,7 +16,9 @@ to take from Drive to Publish."
 This is the standing plan for every piece. `scripts/post-pack/publish_kit.py`
 writes it out for one post as `0 Publish/publish.html`, the first folder in
 the post's Drive folder: every step in order, the file to upload, and a Copy
-button for every word. The engine posts nothing; Krish publishes each step.
+button for every word. The engine posts nothing: Krish, or Growth's approved
+route once he presses Approve for publish, publishes each step
+(`docs/GROWTH-HANDOFF.md`).
 
 ## The idea
 
@@ -33,32 +35,33 @@ video and a 90-second version. I always want to repost to YouTube and then
 Shorts, TikTok, and Instagram."
 - The long cut (wide, 16:9, about 5 minutes: 675 to 825 spoken words; 3 minutes until Krish, 2026-10-19: "let's make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format.") lives on
   Substack and YouTube.
-- The short cut (tall, 9:16, at most 90 seconds: 160 to 225 spoken words) goes
-  to YouTube Shorts, TikTok and Instagram Reels, every time; and to LinkedIn,
-  WhatsApp and Substack Notes when Krish wants them. It keeps the hook and the
-  call to action (house rule HOOK_AND_CTA).
+- The short cut (tall, 9:16, finished under 89 seconds: 160 to 195 spoken
+  words) goes to YouTube Shorts, TikTok and Instagram Reels, every time; and
+  to LinkedIn when Krish wants it. WhatsApp and Substack Notes were dropped on
+  14 October (Krish: "I don't think I need Substack notes or WhatsApp to be
+  honest, right now"). It keeps the hook and the call to action (house rule
+  HOOK_AND_CTA).
 - `scripts/post-pack/story_check.py` refuses a cut of the wrong length.
 
 **Same face everywhere.** Same title idea, same cover frame, same opening
-line, same closing line ("the full article is free at makeyourmindup.ai"),
-said out loud so it works even where links do not.
+line, same closing line ("The full deep dive is at makeyourmindup.ai.", house
+rule SCRIPT_CLOSE), said out loud so it works even where links do not.
 
 ## The order
 
 The first five are the standing set for every piece; the publish step on the
-piece's making record is done when they are ticked. The last three are
+piece's making record is done when they are ticked. The last two are
 optional and never hold a piece back.
 
 | # | Channel | What goes up | Where the link goes |
 |---|---|---|---|
-| 1 | Substack | Video post: the 5-minute cut on top with the wide thumbnail, the article under it, the 3:2 cover as the post's cover image. Settings: YouTube upload on with the watermark off; Shorts and LinkedIn clips off | It is the link |
+| 1 | Substack | Video post: the 5-minute cut on top with the wide thumbnail, the article under it, the 1200 x 630 cover as the post's cover image. Settings: YouTube upload on with the watermark off; Shorts and LinkedIn clips off | It is the link |
 | 2 | YouTube | Substack uploads the 5-minute cut as private. Swap in the engine's title and description, upload the wide thumbnail, make it public, pin a comment | The description's read line and the pinned comment |
 | 3 | YouTube Shorts | The 90-second cut, with Related video set to the long one | Related video (links in Shorts are not clickable) |
 | 4 | TikTok | The 90-second cut, with the caption and the tall thumbnail as its cover | Said out loud in the video; makeyourmindup.ai in the profile |
 | 5 | Instagram Reels | The 90-second cut, with the caption and the tall thumbnail as its cover | Link in bio (makeyourmindup.ai) |
 | 6 | LinkedIn (optional) | The 90-second cut as a native video, with the LinkedIn post | First comment |
-| 7 | WhatsApp (optional) | Channel: the 90-second cut and the link. Status: the same cut | In the message |
-| 8 | Substack Notes (optional) | The 90-second cut, with the post attached | The attached post |
+| 7 | Spotify (optional) | In Spotify for Creators, never the Substack feed: the 5-minute cut as a video episode with the wide thumbnail and its chapters, and the 90-second cut as its clip | The episode's description |
 
 Steps 1 and 2 come first because every later step needs their links. The
 page has a box for each link; paste it once and every Copy button carries it.
@@ -69,8 +72,9 @@ video thumbnail for all video sizes produced as an asset every time".
 cover facts, with his face and the real logos: the wide one (1280 x 720,
 `<Subject> - wide 16x9 - thumbnail.jpg` in `3 Video`) goes on YouTube and
 the Substack video post, and the tall one (1080 x 1920, `<Subject> - tall
-9x16 - thumbnail.jpg`) is the cover on Reels and TikTok. The 3:2 cover stays
-the Substack post's cover image and the LinkedIn picture. A pack with a video
+9x16 - thumbnail.jpg`) is the cover on Reels and TikTok. The 1200 x 630
+cover is the Substack post's cover image, and the 1200 x 675 share card the
+LinkedIn picture (`--cover`). A pack with a video
 and no thumbnail of its shape is refused. Still to confirm in the apps:
 whether TikTok takes an uploaded cover picture or only a frame of the video,
 and whether YouTube lets a Short take a thumbnail at all; until then Shorts
@@ -123,7 +127,8 @@ and a 30-second Scored cut when a call falls due) and five template jobs the
 engine does not do yet: a 1080 x 1350 carousel per piece, an X card, a
 1080 x 1920 poll frame and a Scored frame, a captions file, and a short-cut
 ending that says the call. None of these is a ruling; the standing five above
-are what the engine enforces. Ask Krish before building any of them.
+are what the engine enforces. Ask Krish before building any of them. Since
+28 October the derived carousels are Growth's to make (`docs/GROWTH-HANDOFF.md`).
 
 ## What the platforms do (checked 2026-10-09)
 
@@ -167,7 +172,7 @@ upload names the video before step 2 renames it.
   both cuts: `story_check.py` refuses anything else.
 - Substack title and subtitle, YouTube title and description: the engine's
   `package` step (`docs/CONTENT_ENGINE.md`, step 14), linted by `_packaging.ts`.
-- Shorts title, TikTok and Reels captions, LinkedIn post, WhatsApp message, Note: written
+- Shorts title, TikTok and Reels captions, LinkedIn post, Spotify title, description and chapters: written
   with the piece, held to the same house rules, and passed through the
   publish checks before they go in `publish.json`.
 

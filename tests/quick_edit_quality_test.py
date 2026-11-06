@@ -236,6 +236,50 @@ class QualityTests(unittest.TestCase):
             video.write_bytes(b'changed')
             self.assertIn('different bytes',quality.delivery_problems(video,receipt)[0])
 
+    def test_a_wide_cut_on_the_sting_carries_its_opening_and_delivers(self):
+        # make.py's receipt carries the opening and checks.opening (opening_gate.py) the way velib/receipt.py does for
+        # ve: from the frame after the house sting on the wide cut of a weekly series piece (56 frames at 30 fps, 45 at
+        # 24), from frame 0 on the tall cut. Without them a wide cut on the sting was held at delivery from 2 Nov.
+        import wave
+        import numpy as np
+        def busy(img):  # a stand-in OCR: one large line on a busy frame
+            grey=img.astype(float)@np.array([0.299,0.587,0.114])
+            return [([[0,0],[10,0],[10,200],[0,200]],'THE HOOK',0.9)] if grey.std()>20 else []
+        def heard(wav):  # a stand-in transcriber: the first loud sample is the first word
+            with wave.open(wav) as w: data=np.frombuffer(w.readframes(w.getnframes()),np.int16)
+            loud=np.nonzero(np.abs(data)>1000)[0]
+            return [loud[0]/16000] if len(loud) else []
+        folder='3 Posts/2026-11-09 Mon follow.the.money - Who pays/3 Video/'
+        with tempfile.TemporaryDirectory() as temp, patch('visual_clarity.delivery_problems',return_value=[]), \
+                patch('media_standard.check',return_value=[]), patch('quality.motion_problems',return_value=[]), \
+                patch('quality.cut_gate_problems',return_value=[]), patch('words_gate.delivery_problems',return_value=[]):
+            for shape,fps,lead,size in (('16x9',30,56,'320x180'),('16x9',24,45,'320x180'),('9x16',30,0,'360x640')):
+                video=Path(temp)/f'piece-{shape}-{fps}.mp4'
+                # The sting's stand-in (one flat colour, its bare last frame) for `lead` frames, then a busy picture
+                # and a tone from 0.1 s after it: read from frame 0, a stinged cut fails every measure by construction.
+                picture=(f'[0:v]trim=end_frame={lead},setpts=PTS-STARTPTS[s];[s][1:v]concat=n=2:v=1:a=0[v];' if lead
+                         else '[1:v]null[v];')
+                subprocess.run(['ffmpeg','-nostdin','-v','error','-y','-f','lavfi','-i',f'color=c=0xFF6A4D:s={size}:r={fps}:d=3',
+                                '-f','lavfi','-i',f'testsrc2=s={size}:r={fps}:d=4','-f','lavfi','-i','sine=f=440:r=16000:d=6',
+                                '-filter_complex',picture+f'[2:a]adelay={round((lead/fps+0.1)*1000)}:all=1,atrim=duration=6[a]',
+                                '-map','[v]','-map','[a]','-c:v','libx264','-pix_fmt','yuv420p','-c:a','aac',str(video)],check=True)
+                intro={'source':'house','series':'follow_the_money','clip_sha256':'c'*64,'file':'sting.mp4','frames':lead,
+                       'seconds':round(lead/fps,4)} if lead else None
+                opening,check=make.opening_receipt(video,make.opening_of(intro),fps,ocr=busy,transcribe=heard)
+                self.assertEqual((opening['kind'],opening['lead_frames'],check['lead_frames'],check['status']),
+                                 ('sting' if lead else 'hook',lead,lead,'pass'),check)
+                receipt=Path(str(video)+'.validation.json')
+                report={'video_sha256':quality.digest(video),'library_path':folder+video.name,'opening':opening,
+                        'checks':{**{key:{'status':'pass'} for key in ('heard','sync','loudness','visuals','full_review')},
+                                  'opening':check}}
+                receipt.write_text(json.dumps(report))
+                music.bed_shape.write_receipt(video,'quick-edit',{'pass':True,'problems':[]},machine='test')
+                self.assertEqual(quality.delivery_problems(video,receipt,folder+video.name),[],(shape,fps))
+                # As make.py wrote it before: no opening on the receipt, so the cut is held for a post from 2 Nov.
+                receipt.write_text(json.dumps({**report,'opening':None,'checks':{k:v for k,v in report['checks'].items()
+                                                                                    if k!='opening'}}))
+                self.assertIn('opening gate did not run',quality.delivery_problems(video,receipt,folder+video.name)[0])
+
     def test_guarded_video_cannot_be_recorded_or_sent_without_receipt(self):
         sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts/post-pack'))
         import making

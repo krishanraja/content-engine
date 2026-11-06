@@ -1,6 +1,6 @@
 # The weekly rhythm
 
-**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, every week's board lives at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
 
 
 ## The rhythm from 1 November 2026
@@ -11,7 +11,8 @@ until the Monday after (8 days later)". That replaces the same-day rhythm of
 picked, Wednesday and Friday when he starts them, and the midday run of
 `produce-day.yml` on each publishing day. Code that still follows the old
 rhythm moves over in the plan's later waves; the board's new layout (rule
-`recording_sunday`) starts with the week of 9 November.
+`recording_sunday`, `config/board-layout.json` `v3`) starts with the week of
+2 November.
 
 **The shape of a week.** Call the recording Sunday S.
 
@@ -27,7 +28,8 @@ rhythm moves over in the plan's later waves; the board's new layout (rule
   to approve as you do the Mon/wed/fri"). Sunday is a rest day and nothing is
   published on it (Ruling, Krish, 2026-11-02: "Let's eliminate Sunday from
   Publishing anythign permanently. Sunday is rest and planning and ideation
-  day."). The first off-day posts go out on Tuesday 10 November.
+  day."). The first off-day posts were made for the week of 2 November
+  (Tuesday 3, Thursday 5 and Saturday 7 November).
 
 **The clock.** Times are his, in New York.
 
@@ -40,8 +42,8 @@ rhythm moves over in the plan's later waves; the board's new layout (rule
 | As each lock is signed | One fresh make run per piece (`.github/workflows/make-piece.yml`, Claude Code in GitHub Actions on his subscription). The two scripts come first (reading age, kill list, copy lint, two fresh readers, a fact check of what they claim); the article follows | Claude Code |
 | About 12:30 | **Approve scripts**, one press per day. The engine's server sends both scripts to Teleprompter and reads them back (Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"; "Server sends directly"). Until the Teleprompter key is stored, the Sunday room sends them through the connector | Krish, then the engine |
 | 13:00 to 15:00 | He records all six cuts and drops each take in the Video Engine Inbox; each take is placed on its piece and cut | Krish, then the recordings lane |
-| About 15:30 | **Titles**: three options for each surface, chosen with one Sunday evening press (Krish, 2026-10-28: "Sunday evening press"). The plan, not Krish, set the time and the fallback: if he picks none by 21:30, the top-ranked ones are used | Krish |
-| Sunday night | Every final asset is made: both cuts of each piece, thumbnails and covers, each through the gates. On 1 November this runs on quick-edit in a session the titles press starts; the unattended run on the home computers is planned from 8 November | the engine |
+| About 15:30 | **Titles**: three options for each surface, chosen with one Sunday evening press (Krish, 2026-10-28: "Sunday evening press"). The plan, not Krish, set the time and the fallback: if he picks none by 21:30, the top-ranked ones are used (that fallback is not built yet) | Krish |
+| Sunday night | Every final asset is made: both cuts of each piece, thumbnails and covers, each through the gates. The Titles press itself only records the titles (the long title becomes the piece's title). On 1 November a session made the assets on quick-edit. From 8 November the home computers are to make them unattended: once every picked day of the week has its Titles press, each computer's recordings pass (every five minutes, Saturday to Monday noon) starts the overnight run (`scripts/overnight/overnight.py`) on a computer given its role (`MINDMAKE_OVERNIGHT_ROLE`) | the engine |
 | Monday, 06:30 | The final publish board, built from the records, with each held item and its reason (Krish, 2026-10-28: "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning") | code (`week_board.py`), from the overnight runner (Wave 2; until then the first session on Monday) |
 | Monday, about 45 minutes | He watches each cut at full size, signs off the article's facts, then presses **Approve for publish** or **Reject asset** (with a reason) for each day | Krish |
 | After his approval | Growth schedules each approved post and reads it back (Krish, 2026-10-28: "Approve each day Monday") | Growth |
@@ -54,8 +56,8 @@ subscription to do something and then update the content.krishraja.com
 board?"): the Sunday ideas run and each piece's make run Claude Code inside a
 GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`, never an
 API key) and write to the board only through the engine API. GitHub's cron
-fires hours late, so the Sunday ideas run fires twice early on Saturday (UTC)
-and does nothing once the week's Ideas tab is live. The timed API calls (the
+fires hours late, so the Sunday ideas run fires twice on Saturday (12:17 and
+20:47 UTC) and does nothing once the week's Ideas tab is live. The timed API calls (the
 engine's Vercel crons, inspirationhouse's daily runs, the fact gate) stay, and
 this chain's metered API spend stays under $15 a week (Krish, 2026-10-29:
 "happy with $15 a week"; about $13.80 measured, 15 to 28 October). Nothing
@@ -66,8 +68,9 @@ The Sunday ideas board and the Monday final board are the only two boards a
 scheduled job may build (`AGENTS.md`, "Commit and closeout"); the Monday one
 is built by code (`week_board.py`) from the overnight runner (Wave 2; until
 then the first session on Monday), never by Claude on a timer. Until Krish
-says otherwise, the plan's other scheduled jobs (the Monday 07:30 repair round
-on held cuts, the 21:30 titles fallback) write records only, and the board
+says otherwise, the plan's other scheduled jobs (the repair round on held
+cuts, which the overnight run starts after it builds the Monday board, and
+the 21:30 titles fallback, not built yet) write records only, and the board
 shows what they did at its next build. Codex no
 longer cuts video: it makes pictures for named slots and never edits a cut
 (`docs/ve/ENGINE.md`, "Codex"). The engine assembles every cut.
@@ -111,8 +114,9 @@ The render and filing steps below describe the fallback workflow. A schema 2 dir
   90-second version, each recorded from its own script with its own hook
   and outro. `story_check.py` holds the lengths.
 - **Every piece goes to** Substack and YouTube, then YouTube Shorts, TikTok
-  and Instagram (`docs/AMPLIFICATION.md`). LinkedIn, WhatsApp and Substack
-  Notes stay available as optional steps.
+  and Instagram (`docs/AMPLIFICATION.md`). LinkedIn and Spotify stay
+  available as optional steps; WhatsApp and Substack Notes left the board
+  on 14 October (Growth makes Notes since 28 October).
 
 ## The week (before 1 November)
 
@@ -127,7 +131,7 @@ Times are Krish's, in New York (`system_config.operator_timezone`).
 | Monday morning | teleprompter.com on his phone or laptop, and his camera | He records Monday's two cuts, each read from its own script in Teleprompter, then drops each take as its own file at the top of the Video Engine Inbox (any name), the one way a take comes back. Then he tells Codex or Claude Code "I've recorded" | Krish |
 | Within about 15 minutes of an Inbox drop | Whichever home computer is on (the recordings upload, every five minutes) | Each take reaches the engine, and the same lane places it on its piece and cut by itself (`recording_match.py --record --board --by "Recordings lane"`), stamped with the script it was read from; a take it is unsure of becomes one board item held for a session, never on his list (the session asks him in its reply) | the home computers |
 | By hand only: the noon schedule is retired (Ruling, Krish, 2026-10-28: "record the entire week on a Sunday, but it does not go live until the Monday after (8 days later)"); the overnight runner replaces it in Wave 2 | GitHub's machine, from its Run workflow button (`.github/workflows/produce-day.yml`, `scripts/produce_day.py`; Krish, 2026-10-12: "GitHub always renders"), or `produce_day.py` on a home computer. A cut the words gate holds, or one whose receipt does not pass the delivery gates, stops the run red and sends nothing; `--file-only` files cuts already made there once their receipts pass | Waits for both takes on the day's piece, fetches them, the licensed music and the pictures from the engine, renders the story outro for the piece (each cut opens on the hook, house rule HOOK_IS_THE_INTRO), makes both cuts and their thumbnails, sends them to the post's `3 Video` folder (Library Sync puts them in Drive) and records them on the piece; a stop is one board item saying exactly what stopped. In Wave 1 no machine records a cut's review evidence, so a fresh run stops there; the session that watches both cuts records it and files them with `--file-only` | GitHub or a home computer, then a session |
-| Monday (before the midday run existed) | Codex on a home computer, or Claude Code there when he asks it (`.agents/skills/produce-video`) | Places any take still unplaced; both cuts produced opening on the hook in the brand's dress (house rule HOOK_IS_THE_INTRO, 2026-10-29; the sting and the story intro are retired), with the licensed music bed under the whole cut and a thumbnail for each size, and with the audio treatment and the one animated outro card once he approves their design (house rule STORY_INTRO_OUTRO: until then production stops before the final render, saying "story outro not designed yet"); filed in the archive and the post's library folder (`3 Video`) and onto the record | Codex |
+| Monday (before the midday run existed) | Codex on a home computer, or Claude Code there when he asks it (`.agents/skills/produce-video`) | Places any take still unplaced; both cuts produced, the 16:9 long cut of a weekly series piece opening on its series' house sting and then the hook, the 9:16 short cut on the hook in the brand's dress (house rule HOOK_IS_THE_INTRO: the hook on 2026-10-29, the wide cut's sting back on 2026-11-05; the story intro stays retired), with the licensed music bed under the whole cut and a thumbnail for each size, and with the audio treatment and the one animated outro card once he approves their design (house rule STORY_INTRO_OUTRO: until then production stops before the final render, saying "story outro not designed yet"); filed in the archive and the post's library folder (`3 Video`) and onto the record | Codex |
 | Monday | The week's publish board, Monday's tab | He posts in the standing order and ticks each step as he goes; each tick is saved at once on the board, and the next making session copies each channel tick onto the piece (`making.py <piece> posted <channel>`) | Krish, then the next session |
 | When he is ready | The week page, Wednesday's and Friday's cards | Each one's making is one `make-piece.yml` run, dispatched by the Sunday room or a press (Control Center's "Make it in Claude Code" button still fires a routine until the Control Center item changes it to dispatch that run); it then follows Monday's path, on its own tab of the same week's board | Krish starts, Claude Code makes |
 
@@ -247,7 +251,7 @@ What could be misread, and what stops it:
    on, within about ten minutes, and then places it (Record) by itself;
    a session fetches with `recording.py get --wait`, and a take already on
    a piece by the path its record holds (`recording.py get
-   "recordings/<sha256>.<ext>"`). A take over 500 MiB never reaches the
+   "recordings/<sha256>.<ext>"`). A take over 2 GiB never reaches the
    engine: `recording_match.py --inbox` on a home computer reads it from
    H:. A runner with no engine key or no pinned Python fails
    `install-recordings-upload.ps1`'s check, naming which; the other runner
@@ -321,11 +325,14 @@ What could be misread, and what stops it:
     not passed (`script_check.read_back`).
 17. **A script that does not close the way Krish ruled (2026-10-21).**
     The series line and "I'm Krish" are retired: a script opens straight on
-    the hook. `story_check.py` refuses a script of a minute or more with no
-    "Here's what I'd do with this info if I were you" beat in its last beats,
-    or that does not end on exactly "The full deep dive is at
-    makeyourmindup.ai." (house rule SCRIPT_CLOSE). `--series` is still
-    taken, from `making.py scripts` and `build.py`, and no longer checked.
+    the hook. `story_check.py` refuses a script of a minute or more (160
+    words or more) whose close is not one short beat saying the one thing
+    Krish would do, in his own first person and with no list of orders, or
+    that does not end on exactly "The full deep dive is at
+    makeyourmindup.ai." (house rule SCRIPT_CLOSE). The old lead-in "Here's
+    what I'd do with this info if I were you" was retired on 31 October and
+    is refused. `--series` is still taken, from `making.py scripts` and
+    `build.py`, and no longer checked.
 18. **A tick that never reaches the record.** A tick lives only on the
     week's board until a Claude Code session copies it, at the start and
     end of every making session; Codex cannot read the board. Each tick is

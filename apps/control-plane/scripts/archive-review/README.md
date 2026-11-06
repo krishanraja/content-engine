@@ -1,8 +1,8 @@
-# Archive review — the one-off that feeds the learning loop
+# Archive review: the one-off that feeds the learning loop
 
 On 2026-08-25 the Content queue was found to be serving the thirty oldest of 74
 pending cards, so 64 of them aged out between 10 July and 14 August without ever
-reaching Krish. They are archived, not deleted. This is the round trip that turns
+reaching Krish. They are archived, so the rows still exist. This is the round trip that turns
 them into signal.
 
     build_workbook.py                 -> content-archive-decisions.xlsx  (64 rows, dropdowns per card type)
@@ -12,8 +12,8 @@ them into signal.
 ## Why a script and not the API
 
 `api/content-decisions/[id].ts` refuses anything that is not `pending` with a 409,
-and every one of these rows is `archived`. The endpoint is right to refuse — that
-guard is what stops a card being ruled on twice — so this path writes the same
+and every one of these rows is `archived`. The endpoint is right to refuse: that
+guard is what stops a card being ruled on twice. So this path writes the same
 effects directly instead of weakening it.
 
 Each call maps onto what the live endpoints do, so the outcome is identical to
@@ -29,7 +29,7 @@ having ruled on the card at the time:
 | No, still live | `shifts.status='active'` | `api/shifts/[id].ts` keep_watching |
 | Keep for good | `content_ideas` gets `library_at`, `horizon='evergreen'`, no expiry | `api/content-decisions/[id].ts` graduation |
 | Got it | decision `done`, no signal | acknowledge |
-| Leave it / blank | untouched | — |
+| Leave it / blank | untouched | nothing |
 
 ## The refusals are the point
 
@@ -45,6 +45,8 @@ Embeddings are left to the existing Saturday backfill
 needed to run this.
 
 ## Running it
+
+From `apps/control-plane`:
 
     pip install openpyxl
     python3 scripts/archive-review/build_workbook.py          # regenerate the sheet

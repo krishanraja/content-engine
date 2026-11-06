@@ -16,14 +16,17 @@ this file.
 Read the one document for the task, then the files it names. Never scan the repository, never
 open a whole directory, and never read a file to find out what is in it: find it in
 `docs/REPO_MAP.md` first, by searching it (`grep -n -A12 "### \`path"` or a name), never by
-reading it whole. It is about 50k tokens.
+reading it whole. It is about 270 KB (some 65k tokens).
 
 | Task | Read |
 |---|---|
 | Pick up where the last session stopped | `WORKBENCH.md` |
 | Find a file, a function, a route or a station | `docs/REPO_MAP.md` (search it) |
 | Ideas, judging, drafting, rewriting, channel copy, the ledger | `docs/CONTENT_ENGINE.md` |
-| Video, carousels, the runner, the renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
+| Video | `docs/ve/ENGINE.md`, then `docs/ve/RUNBOOK.md` (`docs/ve/STATUS.md` says what ve can do today) |
+| The week's publish board | `docs/PUBLISH_BOARDS.md` |
+| The carousel standard (Growth makes the carousels) | `docs/CAROUSEL-STANDARD.md` |
+| The Studio runner or the renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
 | What works, what is broken, what waits on Krish | `NOW.md`, `docs/STATE.md` |
 | How the pieces fit, who owns what | `docs/SYSTEM_MAP.md` |
 | Any name (a subchannel, a series, a state) | `docs/GLOSSARY.md` |
@@ -41,10 +44,11 @@ reading it whole. It is about 50k tokens.
 | A session that starts `piece_id:`, or a piece Krish picked | `/make-piece` |
 | The Sunday plan, or a re-plan of the week | `/plan-week` |
 | Krish has recorded; cut and file the videos | `/produce-video` |
+| A piece on ve (its spec is `schema_version: 2`), or a ve Codex task card | `/ve` |
 | A Studio station (brief, script, render, qa...) | the `mindmake-studio` MCP tools, inside a tracked session (`docs/ENGINE_SESSION.md`) |
 | Krish's voice or a channel decision | his account-wide `krish-voice` and `content-corpus` |
 
-The skills live once in `.agents/skills/`; `.claude/skills/` holds exact copies of the three
+The skills live once in `.agents/skills/`; `.claude/skills/` holds exact copies of the four
 above (AGENTS.md, Verification). `mindmake-video` and `video-engine` are not loaded here on
 purpose; `scripts/validate-skills.py` (`NOT_FOR_CLAUDE`) says why and fails on any new skill that
 is neither copied nor listed.
@@ -61,6 +65,7 @@ separate reader (cost rule 6, guard G6), and pick by the job:
 | `repo-scout` | Haiku | lookups and log reading; returns `file:line` and a few lines |
 | `executor` | Sonnet | a scoped edit already decided, test runs, renders, packs, filing, board rebuilds |
 | `reviewer` | Opus | architecture, the final check before a push, anything touching judging, drafting, the fact gate, mandates or the ledger |
+| `ve-critic` | Opus | the non-producer review of a ve cut, after `ve qc` and `ve refs`; it writes the verdict and never edits the spec |
 
 `produce-video` runs on Sonnet by its own frontmatter (guard G8).
 
@@ -69,6 +74,8 @@ separate reader (cost rule 6, guard G6), and pick by the job:
 `.claude/settings.json` registers these; they are not optional and not to be worked around.
 
 - `scripts/hooks/cost_gate.py`: the cost guards G5 and G6 (G1, the context nudge, removed by Krish on 2026-11-03).
+- `scripts/hooks/artifact_gate.py`: refuses every Artifact publish and every ArtifactData write (Claude
+  artifacts are retired; AGENTS.md rule 3).
 - `.claude/hooks/secret-guard.mjs`: refuses a secret-shaped string in a command or a file, and any
   `.env` write. Its patterns are read from `scripts/secret-patterns.ts`, the list `check:no-secrets` uses.
 - `.claude/hooks/publish-guard.mjs`: puts every send, post, publish, schedule, deploy or push to
@@ -78,8 +85,13 @@ separate reader (cost rule 6, guard G6), and pick by the job:
   configs and any migration that writes a mandate to Krish in person.
 - `.claude/hooks/stop-check.mjs`: at the end of a turn that changed code, runs the typecheck and the
   related tests and sends the session back once if they fail.
-- `permissions.deny`: no force push, push to main, hard reset, clean, branch delete, deploy or
-  `db push`, and no reading of `node_modules`, build output, renders, lockfiles or fonts.
+- `.claude/hooks/harness-closeout.mjs`: at the end of a turn that committed work and left `NOW.md`
+  untouched, sends the session back once with the closeout steps.
+- `scripts/taste_backstop.py`: at session end, keeps Krish's own typed corrections in the ignored
+  `.scratch/taste/backstop.jsonl` for the runner to send to his taste ledger.
+- `permissions.deny`: no force push, push to main, hard reset, clean, branch delete, `git checkout --`,
+  `git restore`, deploy or `db push`, and no reading of `node_modules`, build output, caches, job
+  data, archives, renders, lockfiles or fonts.
 
 ## Checks
 
@@ -104,6 +116,6 @@ like you're just off doing more random shit. I asked you to heal the engine, not
 
 ## Keep the session cheap
 
-The six cost rules are in AGENTS.md. In Claude Code they come down to: search the map, never open
+The six cost rules are AGENTS.md rule 4 (in full in `docs/AGENTS-REFERENCE.md`). In Claude Code they come down to: search the map, never open
 files to browse; cap command output (`| tail -20`, logs to `.cache/logs/`); and finish the job in the session he
 asked for it (no context nudge since 2026-11-03).

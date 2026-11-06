@@ -82,6 +82,30 @@ class CriticInputsTest(unittest.TestCase):
         self.assertNotIn('something.else', numbers['checks'])
         self.assertEqual(numbers['beats'][1]['longest_still_s'], 2)
 
+    def test_a_cut_that_opens_on_the_sting_is_shown_on_the_files_clock(self):
+        # Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,". The props stay on the
+        # cut's own clock; the Critic sees the file, so every frame is the sting's 56 later, and the sting has its rows.
+        stung = dict(PROPS, sting={'src': 'sting.mp4', 'series': 'mind_the_gap', 'frames': 56, 'sha256': 'a' * 64})
+        beats = critic_inputs.beat_rows(stung)
+        self.assertEqual(beats[0], ('intro sting (mind_the_gap) f0-f55', [0, 15, 30, 45, 55]))
+        self.assertEqual([r[1][:3] for r in beats[1:]], [[56, 71, 86], [116, 131, 146]])
+        self.assertEqual(critic_inputs.event_rows(stung)[0][1], [64, 68, 71, 74, 78])
+        edl = {'joins': [{'at_frame': 90, 'from': {'take': 'a'}, 'to': {'take': 'b'}}]}
+        cuts = critic_inputs.cut_rows(stung, edl)
+        self.assertEqual(cuts[0], ('cut at f56: intro sting > his face', [53, 55, 56, 57, 60]))
+        self.assertEqual([r[1] for r in cuts[1:]], [[113, 115, 116, 117, 120], [143, 145, 146, 147, 150]])
+        self.assertEqual(critic_inputs.last_frame(stung), 175)
+        video = self.dir / 'stung.mp4'
+        make_cut(video, 176)
+        qc = {'sha256': sha256_file(video), 'checks': {'motion.longest_still': {'value': 2, 'pass': True, 'runs': [[2.2, 2]]},
+                                                       'opening': {'value': {'opening': 'sting'}, 'pass': True}}}
+        critic_inputs.write('long', self.dir, video, stung, qc, edl)
+        numbers = json.loads((self.dir / 'numbers.long.json').read_text())
+        self.assertEqual([(b['from_s'], b['to_s']) for b in numbers['beats']], [(1.87, 3.87), (3.87, 5.87)])
+        self.assertEqual(numbers['beats'][0]['longest_still_s'], 2, 'a still run QC found at 2.2 s in the file is in the first beat')
+        self.assertIn('opening', numbers['checks'])
+        self.assertEqual(critic_inputs.frames_at(video, [56])[56].shape[0], HEIGHT)
+
     def test_a_qc_record_for_another_file_is_refused(self):
         with self.assertRaises(ValueError):
             critic_inputs.write('short', self.dir, self.video, PROPS, {'sha256': '0' * 64, 'checks': {}})

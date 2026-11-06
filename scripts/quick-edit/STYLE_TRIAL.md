@@ -32,6 +32,9 @@ simply not applied. Naming a module he marked "not for us" stops the trial.
 
 ### How the background is treated (trial B: the clean plate)
 
+Krish marked `treated-background` not for us on 28 Oct 2026, so no trial
+runs it now. This section records how trials A and B did it.
+
 The phone does not move during a take, so the room behind him can be known
 exactly. Trial A guessed the room's colour from the pixels around his edge;
 trial B builds a clean plate of the room and works against it.

@@ -12,9 +12,9 @@ is in its chat: whatever it cannot decide is held, with its reason, for the Mond
 
 ## What starts it, and what 21:30 means
 
-- **His Titles press starts it** (about 15:30; Krish, 2026-10-28: "Sunday evening press"): the press fires this
-  skill for the week in a fresh session. Until the board's press can fire it (that lands with the board's own
-  change), he starts it as he always has, by telling Claude Code "I've recorded".
+- **His Titles press is to start it** (about 15:30; Krish, 2026-10-28: "Sunday evening press"): the press is to
+  fire this skill for the week in a fresh session. It cannot yet (today the press records his titles only), so
+  he starts it as he always has, by telling Claude Code "I've recorded".
 - **Nothing starts it at a fixed time.** No scheduled job is approved for it (`AGENTS.md`, "Commit and
   closeout"); a fixed 21:30 start would be a new scheduled job, which is his call.
 - **21:30 is only the deadline for his picks.** A surface he has not picked when the run draws its words (the
@@ -33,15 +33,15 @@ is in its chat: whatever it cannot decide is held, with its reason, for the Mond
    "/api/week/options?week_start=<Monday>" --full`), each with its takes (step 2). A cut with no take of its
    current words is held: "no take of the current script".
 3. **The titles:** his Titles presses, `python3 scripts/post-pack/board_web.py read <Monday> titles`; only
-   documents whose `updated_by` is Krish are his. If the board refuses the collection (it is not built yet;
-   `plan-week` step 8 said so), every surface takes its top-ranked option, said as that.
+   documents whose `updated_by` is Krish are his. If the board cannot be read, every surface takes its top-ranked
+   option, said as that.
 4. **Cut on quick-edit**, steps 3 to 5, from his signed creative direction only. A cut whose storyboard he has not
    signed for its exact words is held: "storyboard not signed" (`kit.py` refuses it anyway).
 5. **The words gate, blocking**, on every cut before it is filed: `python3 scripts/quick-edit/words_gate.py
    --script <the cut's signed script> --take-words WORK/<cut>/<NAME>.words.json --final
    WORK/<cut>/<NAME>-<shape>.mp4`, with `--edl <its edl json>` when the cut has one. It prints a JSON report; exit
    1 names each content word the cut lost, and the cut is held with those words as its reason: not filed, not
-   recorded, never shown as ready. A checkout without `words_gate.py` (it lands with its own pull request) files no
+   recorded, never shown as ready. A checkout without `words_gate.py` (one older than the gate) files no
    cut: each is held, "words gate not in this checkout". No repair loop tonight: a held cut gets one bounded
    repair round on Monday morning, or waits for his call.
 6. **Every other check is an advisory row** until it is calibrated: the report's numbers (step 6), caption

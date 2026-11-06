@@ -6,7 +6,7 @@ Owns `captions` and on-screen labels. Captions are always on (house style, Krish
 |---|---|
 | Source | Aligned script words plus a name dictionary; never raw ASR text. |
 | Look | Cream Archivo 900 w112 on an ink block, 12 px channel shadow, sentence case, one mint-swiped word per page. |
-| Size | 9:16: at most 2 lines of 24 characters; the block bottom sits at or above Y 1500. |
+| Size | 9:16: at most 2 lines of 24 characters, inside the channel safe zone (y 200 to 1320; `channel.safe_zones`). Where word captions sit on each kind of beat is in `docs/ve/MOTION_STANDARD.md`. |
 | Labels | Labels name entities and evidence; they never repeat 3 or more words of the narration. |
 | Mute test | Captions are exempt; any other graphic that only repeats the audio is cut. |
 

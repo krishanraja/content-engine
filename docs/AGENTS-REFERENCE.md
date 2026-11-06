@@ -514,7 +514,7 @@ refuses. Every other retired name is in `docs/GLOSSARY.md`.
   `README.md`. `docs/history/` holds superseded documents and the dated log;
   nothing there is current.
 - `NOW.md` and `docs/history/LOG.md` follow the docs steward's schema
-  (control-center, `docs/steward/SCHEMA.md`); the steward reconciles them
+  (ai-harness, `docs/steward/SCHEMA.md`); the steward reconciles them
   nightly. A superseded document moves to `docs/history/YYYY-MM-DD-<name>`
   under a Historical banner; nothing is deleted.
 - When behaviour changes, update the document that describes it in the same
@@ -587,7 +587,7 @@ authoritative for reading; the repository is authoritative for what is correct.
 Run `npm run verify` before pushing. Validate all repo-scoped skills with
 `npm run skills:validate`. Codex reads `.agents/skills`; Claude Code reads
 `.claude/skills`, which holds a real copy of the `SKILL.md` of each skill it
-loads (make-piece, plan-week, produce-video), never a link, because git on
+loads (make-piece, plan-week, produce-video, ve), never a link, because git on
 Windows checks a link out as a text file. After editing one of those skills,
 run `python scripts/validate-skills.py --sync-claude`; the validator fails
 while a copy differs from its source. For the content engine, `npm run
