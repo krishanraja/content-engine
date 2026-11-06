@@ -75,6 +75,7 @@ LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening th
 TEMPLATE_HI, TEMPLATE_SHARP = 90, 0.9    # the stack percentile the catchlight is taken from; how much texture is put back
 GATE_FROM, GATE_SPAN = 0.3, 0.2     # no correction under 0.3 iris radii of move (about 8 deg), the whole move from 0.5 (about 14 deg)
 TEMPLATE_VISIBLE, TEMPLATE_MOVE = 0.9, 0.8   # use the clean iris when under this share of his is visible, or he moves it this many radii
+IRIS_SCALE = 1.14           # the clean iris is drawn this much larger than the landmarker's circle: its circle runs wide of the dark iris, so a plain copy leaves white above and below it (a stare)
 IRIS_GROW = 1.02          # his iris circle, in landmarker radii, for the clean cut-out
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
 AIM_KEEP = 0.15             # share of his own eye movement kept on top of the lens aim, so the eyes stay alive
@@ -556,7 +557,17 @@ def iris_templates(media, readings: list[dict], info: dict, size: int = 48, ever
     return out
 
 
-def lids(readings: list[dict], decided: list[dict]) -> list[dict]:
+def lid_cover(contour, iris_xy, rad: float) -> float:
+    """How much of the iris's height his upper lid covers, at the iris's x: 0 when the lid just touches its top, 0.15
+    when it hides the top 15%, negative when white shows above it."""
+    import numpy as np  # noqa: PLC0415
+    c = np.asarray(contour, dtype=np.float64)
+    up = np.array([c[0], *c[9:16], c[8]])
+    up = up[np.argsort(up[:, 0])]
+    return float((np.interp(iris_xy[0], up[:, 0], up[:, 1]) - (iris_xy[1] - rad)) / (2 * rad))
+
+
+def lids(readings: list[dict], decided: list[dict], aimed: list[dict] | None = None) -> list[dict]:
     """How far to lower each upper lid, in pixels, per frame and eye. A hard sideways glance leaves his lids wider
     than when he looks at the lens (5.57 s: 1.18 to 1.23 of his usual opening), so a centred iris sits in a startled
     stare (every blind review, 6 Nov). His usual opening is the median over his open, frontal frames at his median
@@ -583,6 +594,16 @@ def lids(readings: list[dict], decided: list[dict]) -> list[dict]:
             continue
         usual = float(np.median(rel[base]))
         d = np.where(ok, np.clip((rel - usual) * ew * LID_SHARE, 0, LID_MAX * ew), 0.0)
+        if aimed is not None:
+            # Where the iris is put, his upper lid should cover as much of it as it does when he looks at the lens (about
+            # 15% of its height): a full round iris with white above it is a stare even when the opening is his own
+            # (blind review, 6 Nov, cells 1, 3, 4; his lens frames against a corrected 5.57 s).
+            natural = float(np.median([lid_cover(decided[i]['eyes'][side]['contour'], readings[i]['iris'][side], readings[i]['iris_r'][side])
+                                       for i in base]))
+            for i in range(n):
+                if ok[i] and side in aimed[i]:
+                    need = (natural - lid_cover(decided[i]['eyes'][side]['contour'], aimed[i][side][:2], readings[i]['iris_r'][side])) * 2 * readings[i]['iris_r'][side]
+                    d[i] = max(d[i], float(np.clip(need, 0, LID_MAX * ew[i])))
         d = smooth(d, LID_BLUR, ok)
         for i in range(n):
             if ok[i]:
@@ -745,7 +766,7 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
                 # His iris is cut by the lid, or travels far: use the clean one, at his radius in this frame.
                 patch, ratio = template
                 ew = float(np.hypot(*(c[8] - c[0])))               # his eye's width in this frame
-                rad = max(2.0, ratio * ew)                         # his iris radius from his normal frames, not this glance
+                rad = max(2.0, ratio * ew * IRIS_SCALE)                         # his iris radius from his normal frames, not this glance
                 sc = 2.5 * rad / patch.shape[0]
                 m = np.float32([[sc, 0, (tx - x0) - sc * patch.shape[1] / 2], [0, sc, (ty - y0) - sc * patch.shape[0] / 2]])
                 moved = cv2.warpAffine(patch, m, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
@@ -976,7 +997,7 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
         if getattr(backend, 'aperture', False):
             there = read(backend.copy, info)          # where the redirected copy put each iris
             aimed = aims(readings, there, decided)
-            lowered = lids(readings, decided)
+            lowered = lids(readings, decided, aimed)
             templates = iris_templates(media, readings, info)
         else:
             there = None
