@@ -60,6 +60,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
 - Post-mortem of the 2 Nov week (2026-11-07): `docs/learning/2026-11-07-week-of-2-nov-postmortem.md` (his scores 6/8, 7/5, 8/8; the hand-held phone, off-target underlines, mid-phrase captions and uncropped covers are the causes; Friday 6 Nov is live but has no `published_at`, so the number under-counts). Outstanding for 9 Nov: `docs/plans/2026-11-09-week/OUTSTANDING.md` (three recordings in the Inbox: Wed 11, Fri 13, the proactive-AI off-day short).
+- Draft ideas for 16 Nov (2026-11-07): `docs/plans/2026-11-16-week/ideas-draft.md`, not on the board, facts unchecked.
 - Waiting on Krish (2026-11-07): yes or no to board v4 and the pre-production sheet (`docs/proposals/2026-11-07-board-v4/PROPOSAL.md`, `mockup.html`); marking Fri 6 Nov published; running Sunday ideas for 16 Nov.
 - North Star check (2026-11-07): holds.
 
