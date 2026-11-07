@@ -59,7 +59,8 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
-- North Star check (2026-11-06): holds.
+- Monday 9 Nov covers (2026-11-07): Krish picked B thumbnails + A article cover in the neon skin (`docs/plans/2026-10-26-monday/cover-pick-9nov.md`, `cover-facts-9nov.json`). Next: a home computer draws them from that file, files them in the post's 3 Posts folder and points `board-assets.json` at them; the cloud session could not (Drive connector needs inline bytes, engine API 401).
+- North Star check (2026-11-07): holds.
 
 ## Read next
 
