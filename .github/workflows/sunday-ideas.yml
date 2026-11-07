@@ -144,6 +144,11 @@ jobs:
             says. Research with the built-in web search and web fetch: there is no Drive or Firecrawl connector here
             (the skill's "Without the connectors").
 
+            Before any research, read docs/plans/<Monday>-week/brief.md if it exists: a session's brief for this
+            run (his asks for the week and research already done). Follow it where it adds to the skill; it never
+            overrides the skill, the floor or a gate, and every fact it or a file it names holds is checked again
+            against its primary source here or left out.
+
             Of step 0 take only the Inspiration cards routed to a piece (they are ideas of his for step 2): read them
             through GET /api/week/options?week_start=<Monday>&include=sources (python3 scripts/engine.py), and do not
             mark them; the Sunday room marks routed_at after it merges this run's branch. The tick copy, the

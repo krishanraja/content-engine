@@ -2543,7 +2543,15 @@ def stories_block(o):
             for st in o['stories'])
         return f'<ol class="off-stories" data-stories="{len(o["stories"])}" aria-label="This week\'s stories">{items}</ol>'
     if o.get('weekly'):
-        return f'<p class="id-how" data-stories="0">A weekly series: this week\'s stories are found fresh on Sunday {E(o.get("stories_due") or "")}.</p>'
+        due = str(o.get('stories_due') or '')
+        try:
+            weekday = date.fromisoformat(due).strftime('%A')
+        except ValueError:
+            weekday = 'Sunday'
+        later = '' if weekday == 'Sunday' else ', later in the week so the news is fresh'
+        # The day comes from stories_due: a week whose good news is found later in the week (Krish, 2026-11-07: "Saturday's
+        # good news run should be done later in the week so the good news is fresh") says that day, never Sunday.
+        return f'<p class="id-how" data-stories="0">A weekly series: this week\'s stories are found fresh on {weekday} {E(due)}{later}.</p>'
     return ''
 
 
