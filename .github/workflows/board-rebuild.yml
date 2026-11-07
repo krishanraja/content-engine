@@ -1,0 +1,111 @@
+# Rebuild a week's publish board from a committed recipe, on the engine's own code, by hand only.
+#
+# Krish, 2026-11-07, on board v4: "I think we should redesign the 9th of November board as well." A cloud session
+# cannot reach content.krishraja.com (no engine key), so this is the route: the run downloads the live board, rebuilds
+# it with week_board.py from the recipe (docs/plans/<Monday>-week/board-build.json: week_board.py's own flags, never a
+# script), checks it (--verify), takes phone screenshots of it for Krish to see, and checks the publish (board_web.py
+# publish-web without --apply). Only when the publish input says exactly "publish approved by Krish" does it put the new
+# build live, and then it reads the board back. Every earlier build stays in history (board_web.py rollback).
+#
+# No schedule, no Claude: it builds a board only when someone presses Run workflow (AGENTS.md, "Commit and closeout":
+# exactly two scheduled jobs may build a board, and this is not one of them).
+
+name: Board rebuild
+
+on:
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'The Monday of the board (YYYY-MM-DD)'
+        required: true
+      recipe:
+        description: 'The committed recipe, docs/plans/<Monday>-week/board-build.json'
+        required: true
+      publish:
+        description: 'Type exactly "publish approved by Krish" to put it live; anything else builds, checks and screenshots only'
+        required: false
+        default: 'dry run'
+
+concurrency:
+  group: board-rebuild-${{ github.event.inputs.week }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+      WEEK: ${{ github.event.inputs.week }}
+      RECIPE: ${{ github.event.inputs.recipe }}
+      PUBLISH: ${{ github.event.inputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check the inputs and the engine key
+        run: |
+          if [ -z "$ENGINE_OPERATOR_TOKEN" ]; then
+            echo "::error::No ENGINE_OPERATOR_TOKEN, so the run cannot read or write the board."
+            exit 1
+          fi
+          if ! echo "$WEEK" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then echo "::error::week is YYYY-MM-DD"; exit 1; fi
+          if ! echo "$RECIPE" | grep -Eq '^docs/plans/[0-9]{4}-[0-9]{2}-[0-9]{2}-week/board-build\.json$'; then
+            echo "::error::recipe is docs/plans/<Monday>-week/board-build.json"; exit 1
+          fi
+          test -f "$RECIPE" || { echo "::error::no recipe at $RECIPE"; exit 1; }
+          python3 - <<'PY'
+          import json, os, sys
+          r = json.load(open(os.environ['RECIPE']))
+          if r.get('week') != os.environ['WEEK']:
+              sys.exit(f"::error::the recipe is for {r.get('week')}, not {os.environ['WEEK']}")
+          PY
+
+      - name: Download the live board
+        run: |
+          mkdir -p .cache/board
+          python3 scripts/post-pack/board_web.py download "$WEEK" --output .cache/board/live.html
+
+      - name: Gather the week's sources again (read-only), when the recipe shows its Ideas
+        run: |
+          if python3 -c "import json,os,sys; sys.exit(0 if json.load(open(os.environ['RECIPE'])).get('gather') else 1)"; then
+            python3 scripts/post-pack/board_feed.py gather "$WEEK"
+          fi
+
+      - name: Rebuild it from the recipe
+        run: |
+          python3 scripts/post-pack/week_board.py --recipe "$RECIPE" --previous .cache/board/live.html --out .cache/board/week-board.html
+          python3 scripts/post-pack/week_board.py --verify .cache/board/week-board.html
+
+      - name: Phone screenshots for Krish
+        run: |
+          pip install -q playwright==1.55.0
+          python3 -m playwright install --with-deps chromium > /dev/null
+          python3 scripts/post-pack/board_shots.py .cache/board/week-board.html --out .cache/board/screenshots
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: board-${{ github.event.inputs.week }}
+          path: |
+            .cache/board/week-board.html
+            .cache/board/week-board.json
+            .cache/board/screenshots/
+          retention-days: 14
+
+      - name: Check the publish (no change to the live board)
+        run: |
+          ASSETS=$(python3 -c "import json,os; print(json.load(open(os.environ['RECIPE'])).get('assets') or '')")
+          python3 scripts/post-pack/board_web.py publish-web .cache/board/week-board.html ${ASSETS:+--assets "$ASSETS"}
+
+      - name: Put it live, only on his words
+        if: ${{ github.event.inputs.publish == 'publish approved by Krish' }}
+        run: |
+          ASSETS=$(python3 -c "import json,os; print(json.load(open(os.environ['RECIPE'])).get('assets') or '')")
+          # publish-web reads the board back itself and fails unless the live build is this one.
+          python3 scripts/post-pack/board_web.py publish-web .cache/board/week-board.html ${ASSETS:+--assets "$ASSETS"} --apply

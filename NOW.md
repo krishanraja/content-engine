@@ -39,12 +39,9 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-05 Series covers and thumbnails wear nine skins, one a week from 9 Nov, in the series' own colour (Krish: "keep all of them and rotate them all at will over the coming weeks"; "Skin the covers too"); a skin that cannot be drawn on any shape moves the whole piece on to the next, said in its records, and the plain series Receipt if none can ("Yeah just move on automatically"); nothing sits on the words or the logos (`scripts/pages/skins/`, `receipt.settle`, `tests/series_skins_test.py`).
-- 2026-11-05 The intro sting is back in front of every 16:9 long cut of a weekly series piece, and only there (Krish: "I think it should go at the start of the longer wide videos 100%,"): the six clips he saw on 12 October, byte for byte, pinned by sha256 in `config/intro-sting.json` and filed in the library's brand kit. The tall cut opens on the hook and off days wear none, in both engines (`intro.py`, `make.py`, ve's `VeCut` wrapper, compile, premix, the qc `opening` row); it moves the ve engine hash.
+- 2026-11-07 Publish board v4 from the week of 9 Nov (Krish: "I think we should redesign the 9th of November board as well"): the Desk first, seven stages and six steps on every day Mon to Sat, a Creative step with one press (Sign creative, `creative.json`), Scores for every post, Last week, bugs on their post (`board_v4.py`; `docs/PUBLISH_BOARDS.md`). The live board is rebuilt by `board-rebuild.yml`, live only on "publish approved by Krish".
 - 2026-11-06 Copy article hands Substack every picture as a link it can fetch (Krish: "Every Substack article embeds the images inline"; Friday 6 Nov's six figures did not come through the paste): publishing a board stores each article picture as a board file, and Copy article swaps in its signed link (`board_web.lift_article_pictures`, `?link=1` on the asset route, `hosted()` in `week.js`). The page keeps each picture's own bytes.
-- 2026-11-06 matched eyes, travel-by-share instead of cross-fade, gate floor 0.3 radii, compact catchlight (#445, #447 to #450).
-- 2026-11-06 the reviewers' remaining complaint was matte irises with no catchlight and a jagged iris/lid edge, not lid opening (which matches his natural range).
-Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-06-NOW-moved-3.md`, keeps the full list of earlier ones) and `LOG.md`.
+Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-07-NOW-moved-board-v4.md`, then `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
@@ -62,6 +59,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Post-mortem of the 2 Nov week (2026-11-07): `docs/learning/2026-11-07-week-of-2-nov-postmortem.md` (his scores 6/8, 7/5, 8/8; the hand-held phone, off-target underlines, mid-phrase captions and uncropped covers are the causes; Friday 6 Nov is live but has no `published_at`, so the number under-counts). Outstanding for 9 Nov: `docs/plans/2026-11-09-week/OUTSTANDING.md` (three recordings in the Inbox: Wed 11, Fri 13, the proactive-AI off-day short).
 - Draft ideas for 16 Nov (2026-11-07): `docs/plans/2026-11-16-week/ideas-draft.md`, not on the board, facts unchecked.
 - Waiting on Krish (2026-11-07): yes or no to board v4 and the pre-production sheet (`docs/proposals/2026-11-07-board-v4/PROPOSAL.md`, `mockup.html`); marking Fri 6 Nov published; running Sunday ideas for 16 Nov.
+- Next (2026-11-07): once the v4 pull request is merged, run Board rebuild for 2026-11-09 as a dry run, check its screenshots, and on Krish's yes run it again with "publish approved by Krish".
 - North Star check (2026-11-07): holds.
 
 ## Read next

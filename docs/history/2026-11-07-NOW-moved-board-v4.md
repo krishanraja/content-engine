@@ -1,0 +1,8 @@
+> **Historical.** Lines moved verbatim from `NOW.md`'s "What changed recently" on 2026-11-07 to keep it under 14,000 bytes; the earlier moves are listed in `2026-11-06-NOW-moved-3.md`.
+
+# NOW.md lines moved on 2026-11-07
+
+- 2026-11-05 Series covers and thumbnails wear nine skins, one a week from 9 Nov, in the series' own colour (Krish: "keep all of them and rotate them all at will over the coming weeks"; "Skin the covers too"); a skin that cannot be drawn on any shape moves the whole piece on to the next, said in its records, and the plain series Receipt if none can ("Yeah just move on automatically"); nothing sits on the words or the logos (`scripts/pages/skins/`, `receipt.settle`, `tests/series_skins_test.py`).
+- 2026-11-05 The intro sting is back in front of every 16:9 long cut of a weekly series piece, and only there (Krish: "I think it should go at the start of the longer wide videos 100%,"): the six clips he saw on 12 October, byte for byte, pinned by sha256 in `config/intro-sting.json` and filed in the library's brand kit. The tall cut opens on the hook and off days wear none, in both engines (`intro.py`, `make.py`, ve's `VeCut` wrapper, compile, premix, the qc `opening` row); it moves the ve engine hash.
+- 2026-11-06 matched eyes, travel-by-share instead of cross-fade, gate floor 0.3 radii, compact catchlight (#445, #447 to #450).
+- 2026-11-06 the reviewers' remaining complaint was matte irises with no catchlight and a jagged iris/lid edge, not lid opening (which matches his natural range).

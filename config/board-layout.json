@@ -1,6 +1,6 @@
 {
   "_about": "The publish board's one fixed layout (content.krishraja.com). Krish, 2026-10-21: \"how do you recommend we standardise and lock in this publish board so the content engine can just feed it? ... For each publish session things move around\", and \"the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex.\" scripts/post-pack/week_board.py draws every week from this file from layout_from onwards, and its verify() refuses a board whose tabs, steps or slots differ. Changing this file changes the board Krish works in, so it changes only with his recorded words: npm run check:board-layout (CI) holds this file's sha256 and the board's structure in fixtures/week-board/fixed-layout.json and fails until check_board_layout.py --update --approved \"Krish, YYYY-MM-DD: <his words>\" writes the change with them (Ruling, Krish, 2026-10-21). Docs: docs/PUBLISH_BOARDS.md, 'The fixed layout'.",
-  "version": 3,
+  "version": 4,
   "layout_from": "2026-10-26",
   "today": {
     "_about": "Layout A, from the board of the week of 2 November 2026. Krish, 2026-10-29: \"yes, go with A and your recommendations and my feedback\". It adds a first tab, Today, opened first: the Needs you queue (one row and one button per thing he approves, each a link to it), the stage counts (Idea, Words, Cuts, Publish, Amplify), the Monday to Sunday strip and every post of the week as one equal-height card, off days included, with Liked and Not it in each card's footer and the day opened with its large preview. Drawn by scripts/post-pack/board_today.py; his feedback on the mocks governs it (docs/handovers/2026-10-29-board-phase2.md).",
@@ -12,6 +12,35 @@
     "version": 3,
     "from": "2026-11-02",
     "add_tabs": [{"key": "archive", "label": "Archive", "sub": "Every piece"}],
+    "rhythm": {
+      "rule": "recording_sunday",
+      "brief": {"on": "recording_sunday", "when": "morning"},
+      "drafts": {"on": "recording_sunday", "when": "midday"}
+    }
+  },
+  "v4": {
+    "_about": "Layout v4, from the board of the week of 9 November 2026. Krish, 2026-11-07: \"I still have to keep looking for things, and I have to keep trying to figure out where stuff is, which isn't ideal. It also doesn't allow me to give feedback for every day of publishing stuff last week, say, for example, the off days.\" Then: \"I think we should redesign the 9th of November board as well.\" The board opens on the Desk (everything waiting on him in the order it is due, one button each to the exact place, what waits on the engine or Growth folded underneath, then the week's six days with their seven stages), replacing Today. Every day Monday to Saturday is a tab, off days included, each with the same seven stages (Idea, Script, Recorded, Creative, Cut, Published, Scored) and the same six steps; the Creative step holds the pre-production sheet (--creative DAY=creative.json) and its one press, Sign creative, with Approve proof and Approve cut; the Scored step holds a Scores press for every post (picks/score-<piece>, or picks/score-<date> for a post with no piece). A Last week tab, before the Archive, lists every post of the week before with its Scores press, and bugs sit on the post they were found on. Proposal: docs/proposals/2026-11-07-board-v4/PROPOSAL.md; drawn by scripts/post-pack/board_v4.py.",
+    "version": 4,
+    "from": "2026-11-09",
+    "tabs": ["desk", "ideas", "queue", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "lastweek", "archive"],
+    "replaces_tab": {"today": "desk"},
+    "stages": [
+      {"key": "idea", "label": "Idea"},
+      {"key": "script", "label": "Script"},
+      {"key": "recorded", "label": "Recorded"},
+      {"key": "creative", "label": "Creative"},
+      {"key": "cut", "label": "Cut"},
+      {"key": "published", "label": "Published"},
+      {"key": "scored", "label": "Scored"}
+    ],
+    "day_steps": [
+      {"key": "brief", "label": "Idea", "what": "The idea and the story's flow, the ending, the takeaway, the angle and the tone, agreed before the scripts are written. On an off day, its options."},
+      {"key": "drafts", "label": "Script", "what": "The scripts and the article in review: edit any paragraph or comment on any passage, then Approve scripts. On a carousel, its copy."},
+      {"key": "record", "label": "Recorded", "what": "The scripts in Teleprompter, the takes that came back, and the titles."},
+      {"key": "creative", "label": "Creative", "what": "One pre-production sheet, every option on a frame of your own take, and one press: Sign creative. Then the moving proof and the cut."},
+      {"key": "publish", "label": "Publish", "what": "Everything to download first, Approve for publish, then each place it goes."},
+      {"key": "scored", "label": "Scored", "what": "Narrative and production out of 10, once it is live, with its views and any bugs found on it."}
+    ],
     "rhythm": {
       "rule": "recording_sunday",
       "brief": {"on": "recording_sunday", "when": "morning"},
