@@ -225,6 +225,67 @@ approved, rejected or waiting on you, holds a press the record holds at the hash
 shown, and says "this changed since you pressed; press again" when the hash
 differs. A day given none of these inputs is drawn exactly as before.
 
+### Layout v4: the Creative step and its sheet (`creative.json`)
+
+From the week of 9 November 2026 (`config/board-layout.json` `v4`) every day has a **Creative** step between
+Recorded and Cut: one pre-production sheet and one press, after the script and the takes and before Codex or ve
+builds anything (Krish, 2026-11-07: "I want to be able to answer all the questions up front on what we should do in
+terms of creative production... It's important we have mockups and really clear ideas before full production"). A
+session feeds it with `--creative DAY=creative.json` (with `--assets`, the mapping `board_web.py publish-web` takes,
+for every frame and clip); `week_board.py` refuses a sheet that breaks the schema below, and a day given no sheet says
+when it fills. Every option is drawn on a frame of his own take, never described in words alone.
+
+```json
+{
+  "schema": "creative/1",
+  "day": "wed",
+  "piece_id": "<the content_ideas uuid the day holds>",
+  "cut": "long",
+  "take": {"file": "ai-music-long.mp4", "sha256": "<64 hex>"},
+  "opener": {
+    "open":  {"words": "the first 7 seconds, as said", "frame": FRAME},
+    "close": {"words": "the last 8 seconds, as said",  "frame": FRAME},
+    "hook_test": {"passed": true, "note": "one line: what the hook test found"},
+    "alternatives": [{"id": "alt-1", "words": "another hook"}, {"id": "alt-2", "words": "a third hook"}]
+  },
+  "captions": [{"id": "cap-a", "name": "Bold block", "how": "one line", "frame": FRAME}],
+  "motion": [{"module": "<a motion id in config/style-references.json>", "name": "Swiss grid", "how": "one line",
+              "status": "liked", "clip": CLIP}],
+  "idea": {"object": "the one object", "moves": [{"move": "a layer peels", "means": "who took it further"}],
+           "real_artifacts": [{"name": "the chart page", "frame": FRAME}], "never": ["No phone held in a hand as the evidence."]},
+  "storyboard": {"text": "storyboard.md, exactly as ve wrote it", "expect": "expect.md, exactly (at most 6 lines)",
+                 "frames": [{"id": "f1", "t": "0:00", "beat": "the hook", "frame": FRAME}]},
+  "thumbnails": [{"id": "th-a", "name": "Her name, the chart climb", "grid": FRAME, "results": FRAME}],
+  "after": {"builds": ["the layer peel, moving on your take"], "loops": 2}
+}
+```
+
+`FRAME` and `CLIP` are `{"file": "<path the --assets mapping names>", "sha256": "<64 hex>"}`: a still (`png`,
+`jpg` or `webp`) and a moving clip (`mp4`). The sections are the proposal's A to G
+(`docs/proposals/2026-11-07-board-v4/PROPOSAL.md`):
+
+| Key | Section | Rules the build holds |
+|---|---|---|
+| `opener` | A. Opener and close | `open` and `close` each words and a frame; `hook_test` says passed or not; exactly 2 `alternatives` |
+| `captions` | B. Subtitles | 2 or 3, each on his frame with Instagram's and YouTube's safe zones drawn into the frame itself (`config/channel-safe-zones.json`) |
+| `motion` | C. Motion style | 2 or 3 modules from the bank's `motion` layer, each `status` `liked`, `untested` or `experiment`, each a short loop on his footage |
+| `idea` | D. The one idea | `object`, 1 to 6 `moves`, at least one `real_artifacts` frame, 1 to 8 `never` lines (F31, F32) |
+| `storyboard` | E. Storyboard | 6 to 10 frames, each `t` (m:ss), `beat` and frame; `text` and `expect` are the files `ve expect` binds |
+| `thumbnails` | F. Thumbnails | 2 or 3, each drawn into a mock Instagram grid (3:4 crop beside the last five posts) and a YouTube results row |
+| `after` | G. After you sign | what is built next, and `loops` (at most 2: F34) |
+
+His one press, **Sign creative**, saves `picks/<day>-creative` (any day Monday to Saturday):
+`{kind: "sign_creative", day, piece_id, approved, sha256, picks: {opener, captions, motion, thumbnail},
+storyboard_sha256, shown: [motion modules], words?}`. `sha256` is canonical JSON of the whole sheet (sorted keys, no
+spaces); `opener` is `as_written` or an alternative's id; `motion` is the module he picked;
+`storyboard_sha256` is `storyboard_sha(text, expect)`, the hash `ve` already binds. **Change it** saves the same
+document with `approved: false` and his words (required). It replaces the separate Sign storyboard and Pick a style
+presses on a day with a sheet; Approve proof and Approve cut stay as they are, on the same step. After his save the
+server writes onto the piece's making record `gates.creative {by, at, sha256, picks, words?}` and, when he signed,
+`gates.storyboard {by, at, sha256: storyboard_sha256}` and `gates.style {by, at, sha256, module, verdicts}` (his pick
+`picked`, the other modules shown `seen`), so `ve` reads them where it always has. Codex receives a card only from a
+signed sheet, so it never invents a look.
+
 ### The Publish run-sheet
 
 Krish, 2026-10-21: "have a think about where I publish, how I publish, what I
