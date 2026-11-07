@@ -34,6 +34,8 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":2,"current_as_of":"2026-11-05","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 4 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
+- post-mortem of the 2 Nov week written; board v4 and pre-production sheet proposed with a mockup; 9 Nov outstanding listed. (2026-11-07)
+- Publish board v4 is built and checked (PR #465): the Desk, seven stages on every day Mon to Sat, the Creative step with Sign creative, Scores for every post, Last week and bugs on their post; the live 9 Nov board is not rebuilt yet (the engine API is 401 from a cloud session). (2026-11-07)
 - Saturday's good news is found on Thursday by its own run, .github/workflows/saturday-goodnews.yml (Claude Code in GitHub Actions on his subscription, 10:41 and 19:23 UTC Thursday, idempotent, startable by hand), the one exception to zero Claude schedules beside the Sunday ideas run; the Sunday run no longer finds the stories. (2026-11-07)
 - Monday 9 Nov (Disney / Character.AI) covers and thumbnails drawn in the neon skin, three options per surface shown to Krish in a mock Instagram grid and YouTube results row; he picked B thumbnails + A article cover (`docs/plans/2026-10-26-monday/cover-pick-9nov.md`). Not filed in Drive or on the board: the Drive connector needs inline bytes and the engine API answers 401 in the cloud. (2026-11-07)
 - The 6 Nov reel's three visual bugs and Wed 4 Nov's unreadable phone are checks (F41 to F44): ve lint and ve qc refuse a mark that names no words, sits over the hand-held phone or misses its words; a caption page that repeats the headline or ends mid-phrase; evidence words under 40 px on 9:16; channel_safe --shape cover_tall adds Instagram's 3:4 grid crop and account row (listed by produce-day). They bind pieces published from 14 Nov, advisory before, outside the engine hash (Wed 11 and Fri 13 unchanged). (2026-11-07)
@@ -42,6 +44,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-07 Krish, 2026-11-07: "I think we should redesign the 9th of November board as well."
 - 2026-11-07 Ruling (Krish, 2026-11-07): "Saturday's good news run should be done later in the week so the good news is fresh"; guards now allow exactly this exception.
 - 2026-11-07 Monday 9 Nov's covers and thumbnails are the first drawn in a weekly series skin (neon), and the first offered as options shown in a mock Instagram grid and YouTube results row before Krish picked (post-mortem 2.D).
 - 2026-11-07 Krish's 7 Nov bug screenshots and Wed 4 Nov's production score of 5 had no mechanical check behind them; each now refuses the real case in the reel's own props (tests/ve_onscreen_test.py).
@@ -53,7 +56,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-07): Thursday 19 Nov, read back the first scheduled run (five stories on the 16 Nov board's Saturday card) and merge its saturday-goodnews/2026-11-16-<run> branch.
+- Next (2026-11-07): Krish's yes or no on board v4 (docs/proposals/2026-11-07-board-v4/PROPOSAL.md), then build the Creative sheet for Wed 11 and Fri 13.
 - Done, Copy article (2026-11-06): the 2 Nov week's board was published again with Friday's six article figures as board files, and on the live engine each one's link (`?link=1`) returns the exact approved bytes. Not yet seen: a real paste into Substack.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
