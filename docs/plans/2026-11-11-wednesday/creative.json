@@ -1,0 +1,298 @@
+{
+ "schema": "creative-sheet/0 (proposal; reconcile with the creative.json input the board v4 session documents in docs/PUBLISH_BOARDS.md)",
+ "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+ "day": "2026-11-11",
+ "series": "under.the.hood",
+ "lock": "docs/plans/2026-11-09-week/narrative-lock-wed.md (sha256 d151291b0a85afc590e80e0e0ca991d4ac5e2253af7b6406eb64b40c39c1601d)",
+ "takes": {
+  "long": {
+   "file": "ai-music-long.mp4",
+   "seconds": 315,
+   "shape": "1080x1920"
+  },
+  "short": {
+   "file": "ai-music-short.mp4",
+   "seconds": 96,
+   "shape": "1080x1920"
+  }
+ },
+ "status": "waiting on Krish: Sign creative. Nothing is built until he signs.",
+ "sections": {
+  "A_opener_close": {
+   "recommended": "as_recorded",
+   "options": [
+    {
+     "id": "as_recorded",
+     "words_short": "You've probably danced to this song, or at least you've danced to it on TikTok.",
+     "words_long": "Okay, so you've probably danced to this song that's playing right now.",
+     "picture": "0 to 1.8 s the song alone, full frame, its own sound; then he talks over it, clip on top, his face below (tall); clip panel left, him right (wide, after the sting)",
+     "stills": [
+      "A1-open-0s-song-alone-tall.jpg",
+      "A2-open-2s-he-talks-over-tall.jpg",
+      "A3-open-6s-the-question-tall.jpg",
+      "A7-open-wide-long-cut.jpg"
+     ]
+    },
+    {
+     "id": "alt_hook_1",
+     "words": "...and the woman who wrote both of these tracks had never made music in her life.",
+     "from_take": "long 27.98 to 35.0 s, moved to the top; no new recording",
+     "still": "A4-alt-hook-1-never-made-music-tall.jpg"
+    },
+    {
+     "id": "alt_hook_2",
+     "words": "So is it AI music or is it human music?",
+     "from_take": "long 20.44 s, as the first line over the song; no new recording",
+     "still": "A5-alt-hook-2-question-first-tall.jpg"
+    }
+   ],
+   "close": {
+    "words": "Because the song you can't stop dancing to is already both, and that's how music gets made now.",
+    "picture": "back on the song clip, its sound rising under his last line; one close, no second outro",
+    "stills": [
+     "A6-close-back-on-the-song-tall.jpg",
+     "A8-close-wide-long-cut.jpg"
+    ]
+   }
+  },
+  "B_subtitles": {
+   "recommended": "B1_house",
+   "rules": [
+    "2 to 4 words a card, breaking on phrases, never ending on that, the, a, of",
+    "never repeat a title or a card on screen at the same moment",
+    "key text inside x 120 to 880, y 288 to 1300 on 9:16: clear of Instagram's rail and caption zone, YouTube Shorts' title, and inside the 3:4 grid crop",
+    "one treatment for the whole cut"
+   ],
+   "options": [
+    {
+     "id": "B1_house",
+     "what": "Archivo 900 caps, cream, ink shadow, the one key word in mint",
+     "verdict": "liked (Krish 2026-10-28: 'The captions are nice')",
+     "stills": [
+      "B1-house-captions-clean.jpg",
+      "B1-house-captions-zones.jpg"
+     ]
+    },
+    {
+     "id": "B2_lyric_line",
+     "what": "one line of Fraunces italic, lit word by word like a lyric video, a mint tick under the spoken word",
+     "verdict": "experiment",
+     "stills": [
+      "B2-lyric-line-clean.jpg",
+      "B2-lyric-line-zones.jpg"
+     ]
+    },
+    {
+     "id": "B3_pill",
+     "what": "Archivo 800 ink on a cream pill with a lilac offset block",
+     "verdict": "untested",
+     "stills": [
+      "B3-pill-clean.jpg",
+      "B3-pill-zones.jpg"
+     ]
+    }
+   ]
+  },
+  "C_motion_style": {
+   "recommended": "paper-cutout",
+   "rule": "one motion system for the whole piece (style.motion.module); every Codex card carries its rules and never-list",
+   "options": [
+    {
+     "module": "paper-cutout",
+     "verdict": "untested",
+     "loop": "C1-paper-cutout-credit-stack.mp4",
+     "why": "the piece is layers peeled off one song: cream paper cards drop on twos, one at a time, as he names each layer"
+    },
+    {
+     "module": "swiss-kinetic-type",
+     "verdict": "untested",
+     "loop": "C2-swiss-kinetic-type-no2.mp4",
+     "why": "safest: one big number on the grid, the answer in mint"
+    },
+    {
+     "module": "riso-halftone",
+     "verdict": "experiment",
+     "loop": "C3-riso-halftone-sleeve-EXPERIMENT.mp4",
+     "why": "the song printed like a record sleeve in two inks; a real experiment for a music story"
+    }
+   ]
+  },
+  "D_one_idea": {
+   "object": "the credit stack: one song's credits as four paper cards, Written by a Reiki healer / First voice an AI app / Rebuilt by HUGEL, by hand / Sung by Ultra Nate",
+   "moves": {
+    "a card drops": "he names a layer",
+    "the stack splits": "the Grammys rule writing out, singing in",
+    "the stack falls back into the song": "the close, it is already both"
+   },
+   "real_artifacts": [
+    "the two song clips with their own sound (inspiration cards 90b654ca and f6327ce0; Drive 1Dd2TMonugi1BWSj-i7zoa5ThRIpJwXtx and 19Yhb_Juvqtgai4yZZJor-b478fF1-hme)",
+    "the Official Charts entry for Movin' To The Sun (to capture full frame)",
+    "the app's own page (to capture full frame)",
+    "the top comments under the singer's video (to capture)",
+    "The Australian's Grammys report, 17 Oct 2026 (headline, to capture)"
+   ],
+   "stills": [
+    "D1-the-one-idea-credit-stack.jpg",
+    "D2-credit-stack-splits-at-the-grammys.jpg",
+    "D3-real-artifact-song-on-a-cat-clip.jpg",
+    "D4-real-artifact-song-on-a-wedding-clip.jpg"
+   ],
+   "never": [
+    "no hand-held phone for evidence: every capture full frame, its readable line at least 60% of frame height on 9:16, with a slow push and one mark",
+    "every underline or ring sits on what it marks, through every move",
+    "captions break on phrases and never repeat a title on screen",
+    "covers and thumbnails checked in Instagram's 3:4 grid crop and under its account row",
+    "the song clips never muted or buried under the bed; the bed drops out under them",
+    "no robots, glowing brains, waveforms-as-AI or other AI clip art",
+    "no redrawn logos; no faces altered in the cut-outs",
+    "no third layer of words on top of his voice and captions",
+    "no second intro or outro; the sting only before the 16:9 cut"
+   ]
+  },
+  "E_storyboard": {
+   "short": [
+    {
+     "t": "0:00",
+     "beat": "The song alone, its own sound, full frame",
+     "still": "E-short-01.jpg"
+    },
+    {
+     "t": "0:02",
+     "beat": "He talks over it: \"You've probably danced to this song\"",
+     "still": "E-short-02.jpg"
+    },
+    {
+     "t": "0:16",
+     "beat": "\"So is it AI or is it human?\" on the wedding clip",
+     "still": "E-short-03.jpg"
+    },
+    {
+     "t": "0:18",
+     "beat": "Credit stack, card 1 and 2: a healer, an AI app",
+     "still": "E-short-04.jpg"
+    },
+    {
+     "t": "0:33",
+     "beat": "Card 3 and 4: rebuilt by hand, sung by Ultra Naté; then the chart, full frame",
+     "still": "E-short-05.jpg"
+    },
+    {
+     "t": "0:45",
+     "beat": "The Grammys split the stack: writing out, singing in",
+     "still": "E-short-06.jpg"
+    },
+    {
+     "t": "1:03",
+     "beat": "\"AI got the artist in the door\" on his face, nothing else",
+     "still": "E-short-07.jpg"
+    },
+    {
+     "t": "1:20",
+     "beat": "Close: back on the song, \"already both\"",
+     "still": "E-short-08.jpg"
+    }
+   ],
+   "long": [
+    {
+     "t": "0:00",
+     "beat": "Sting, then the song alone with its sound (1.8 s)",
+     "still": "E-long-01.jpg"
+    },
+    {
+     "t": "0:02",
+     "beat": "He talks over the song: \"You've probably danced to this song that's playing right now\"",
+     "still": "E-long-02.jpg"
+    },
+    {
+     "t": "0:17",
+     "beat": "\"It started on an AI app. So is it AI music or human music?\"",
+     "still": "E-long-03.jpg"
+    },
+    {
+     "t": "0:56",
+     "beat": "Part one: Imael Angel, a Reiki master; card 1 drops",
+     "still": "E-long-04.jpg"
+    },
+    {
+     "t": "1:08",
+     "beat": "She typed her words into the app: the app’s own page, full frame",
+     "still": "E-long-05.jpg"
+    },
+    {
+     "t": "1:33",
+     "beat": "\"Clips of cats and family weddings\": the two real clips side by side",
+     "still": "E-long-06.jpg"
+    },
+    {
+     "t": "2:09",
+     "beat": "Part two: HUGEL rebuilt it, Ultra Naté sang it: cards 3 and 4",
+     "still": "E-long-07.jpg"
+    },
+    {
+     "t": "2:28",
+     "beat": "No. 2 in the UK: the chart entry, full frame",
+     "still": "E-long-08.jpg"
+    },
+    {
+     "t": "3:27",
+     "beat": "Part three: the Grammys split the stack, writing out, singing in",
+     "still": "E-long-09.jpg"
+    },
+    {
+     "t": "4:00",
+     "beat": "\"It makes them feel young again\": the real comments",
+     "still": "E-long-10.jpg"
+    },
+    {
+     "t": "4:59",
+     "beat": "Close: back on the song, \"already both\"",
+     "still": "E-long-11.jpg"
+    }
+   ]
+  },
+  "F_thumbnails": {
+   "recommended": "T1",
+   "note": "mockups for the words and the proof; the final pair is drawn by scripts/pages/build.py --thumbs in this week's neon skin",
+   "options": [
+    {
+     "id": "T1",
+     "headline": [
+      "A HEALER WROTE",
+      "A UK NO. 2"
+     ],
+     "proof": "the song on the cat clip"
+    },
+    {
+     "id": "T2",
+     "headline": [
+      "AI OR HUMAN?",
+      "THE GRAMMYS SAID BOTH"
+     ],
+     "proof": "the song on the wedding clip"
+    },
+    {
+     "id": "T3",
+     "headline": [
+      "YOU DANCED TO IT.",
+      "AN AI APP STARTED IT."
+     ],
+     "proof": "the song on the cat clip"
+    }
+   ],
+   "grid_neighbours": [
+    "Fri 6 Nov Two passports",
+    "Thu 5 Nov AI tips carousel",
+    "Wed 4 Nov Claude Duet",
+    "Tue 3 Nov AI agents translator",
+    "Mon 2 Nov Who trains your 2030 seniors"
+   ]
+  },
+  "G_after_sign": [
+   "ve expect on the signed storyboard",
+   "ve proof of the hardest beat on his take: the credit stack splitting at the Grammys (long 3:27, short 0:45)",
+   "his Approve proof",
+   "both cuts (two render loops, then him)",
+   "the article and the cover"
+  ]
+ }
+}
