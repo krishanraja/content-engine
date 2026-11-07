@@ -61,7 +61,9 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
 - Post-mortem of the 2 Nov week (2026-11-07): `docs/learning/2026-11-07-week-of-2-nov-postmortem.md` (his scores 6/8, 7/5, 8/8; the hand-held phone, off-target underlines, mid-phrase captions and uncropped covers are the causes; Friday 6 Nov is live but has no `published_at`, so the number under-counts). Outstanding for 9 Nov: `docs/plans/2026-11-09-week/OUTSTANDING.md` (three recordings in the Inbox: Wed 11, Fri 13, the proactive-AI off-day short).
 - Draft ideas for 16 Nov (2026-11-07): `docs/plans/2026-11-16-week/ideas-draft.md`, not on the board, facts unchecked.
-- Waiting on Krish (2026-11-07): yes or no to board v4 and the pre-production sheet (`docs/proposals/2026-11-07-board-v4/PROPOSAL.md`, `mockup.html`); marking Fri 6 Nov published; running Sunday ideas for 16 Nov.
+- Done (2026-11-07): Fri 6 Nov marked published (`published_at` 2026-11-06 17:31 UTC, its Substack URL), read back, so the number counts it.
+- In flight (2026-11-07), six child sessions of session_01JRhKyq1kUJyqabfb61b5FH: board v4 and the 9 Nov board rebuilt on it (Krish: "I think we should redesign the 9th of November board as well."); Wed 11 creative sheet then production; Fri 13 creative sheet then production; ideas for 16 Nov on the board for his presses Sunday 8 Nov, Saturday 21 good news researched later in the week; guards for the 6 Nov reel's bugs; Mon 9 covers and thumbnails.
+- Ruling (Krish, 2026-11-07): the proactive-AI off-day short goes to Codex directly as his experiment, outside the engine's plan; he publishes it on a day he chooses.
 - North Star check (2026-11-07): holds.
 
 ## Read next

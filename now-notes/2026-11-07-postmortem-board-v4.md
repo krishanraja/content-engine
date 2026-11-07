@@ -1,3 +1,3 @@
-Status: post-mortem of the 2 Nov week written; board v4 and pre-production sheet proposed with a mockup; 9 Nov outstanding listed.
-Next: Krish's yes or no on board v4 (docs/proposals/2026-11-07-board-v4/PROPOSAL.md), then build the Creative sheet for Wed 11 and Fri 13.
+Status: post-mortem written; Fri 6 Nov marked published; board v4, Wed 11, Fri 13, 16 Nov ideas, bug guards and Mon 9 covers each running in their own child session.
+Next: Krish signs the Wed 11 and Fri 13 creative sheets and presses the 16 Nov ideas on Sunday 8 Nov.
 North Star check (2026-11-07): holds.
