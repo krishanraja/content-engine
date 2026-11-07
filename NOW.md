@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-07
+as_of: 2026-11-06
 head: 8ddf532
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -39,7 +39,8 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-07 The 6 Nov reel's three visual bugs and Wed 4 Nov's unreadable phone are now checks (F41 to F44, `scripts/velib/qc_onscreen.py`, `config/ve/onscreen-checks.json`): `ve lint` refuses a mark that names no words or is drawn over the hand-held phone; `ve qc` and `ve proof` refuse a mark off its words on the rendered frame, a caption page that repeats the headline or ends mid-phrase, and evidence words under 40 px on 9:16; `channel_safe.py --shape cover_tall` adds Instagram's 3:4 grid crop and account row, and produce-day lists them for the tall cover. They bind pieces published from 14 Nov and are advisory before, outside the engine hash, so Wed 11 and Fri 13 are unchanged (F33). Each refuses the real case in the reel's own props (`tests/ve_onscreen_test.py`).
+- 2026-11-05 Series covers and thumbnails wear nine skins, one a week from 9 Nov, in the series' own colour (Krish: "keep all of them and rotate them all at will over the coming weeks"; "Skin the covers too"); a skin that cannot be drawn on any shape moves the whole piece on to the next, said in its records, and the plain series Receipt if none can ("Yeah just move on automatically"); nothing sits on the words or the logos (`scripts/pages/skins/`, `receipt.settle`, `tests/series_skins_test.py`).
+- 2026-11-05 The intro sting is back in front of every 16:9 long cut of a weekly series piece, and only there (Krish: "I think it should go at the start of the longer wide videos 100%,"): the six clips he saw on 12 October, byte for byte, pinned by sha256 in `config/intro-sting.json` and filed in the library's brand kit. The tall cut opens on the hook and off days wear none, in both engines (`intro.py`, `make.py`, ve's `VeCut` wrapper, compile, premix, the qc `opening` row); it moves the ve engine hash.
 - 2026-11-06 Copy article hands Substack every picture as a link it can fetch (Krish: "Every Substack article embeds the images inline"; Friday 6 Nov's six figures did not come through the paste): publishing a board stores each article picture as a board file, and Copy article swaps in its signed link (`board_web.lift_article_pictures`, `?link=1` on the asset route, `hosted()` in `week.js`). The page keeps each picture's own bytes.
 - 2026-11-06 matched eyes, travel-by-share instead of cross-fade, gate floor 0.3 radii, compact catchlight (#445, #447 to #450).
 - 2026-11-06 the reviewers' remaining complaint was matte irises with no catchlight and a jagged iris/lid edge, not lid opening (which matches his natural range).
@@ -58,8 +59,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
-- Next, captions (2026-11-07): after Fri 13 Nov is cut, the pager in `compile.py` stops making the pages `captions.phrase_breaks` and `captions.repeat_title` now refuse (12 of 50 on the 6 Nov reel); it moves the engine hash, so not before unless Krish approves. Measure Instagram's account row on his phone (assumed 270 px; quick-edit's top caption band at y 230 sits under it).
-- North Star check (2026-11-07): holds.
+- North Star check (2026-11-06): holds.
 
 ## Read next
 
