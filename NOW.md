@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-07
+as_of: 2026-11-06
 head: 8ddf532
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -59,8 +59,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
-- Thursday good news (2026-11-07): `saturday-goodnews.yml` finds Saturday's stories on Thursday (10:41 and 19:23 UTC), Claude Code on his subscription; first scheduled run Thu 19 Nov for Sat 21 Nov. The Sunday run no longer finds them.
-- North Star check (2026-11-07): holds.
+- North Star check (2026-11-06): holds.
 
 ## Read next
 
