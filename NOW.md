@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-06
+as_of: 2026-11-07
 head: 8ddf532
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -59,7 +59,9 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
-- North Star check (2026-11-06): holds.
+- Post-mortem of the 2 Nov week (2026-11-07): `docs/learning/2026-11-07-week-of-2-nov-postmortem.md` (his scores 6/8, 7/5, 8/8; the hand-held phone, off-target underlines, mid-phrase captions and uncropped covers are the causes; Friday 6 Nov is live but has no `published_at`, so the number under-counts). Outstanding for 9 Nov: `docs/plans/2026-11-09-week/OUTSTANDING.md` (three recordings in the Inbox: Wed 11, Fri 13, the proactive-AI off-day short).
+- Waiting on Krish (2026-11-07): yes or no to board v4 and the pre-production sheet (`docs/proposals/2026-11-07-board-v4/PROPOSAL.md`, `mockup.html`); marking Fri 6 Nov published; running Sunday ideas for 16 Nov.
+- North Star check (2026-11-07): holds.
 
 ## Read next
 
