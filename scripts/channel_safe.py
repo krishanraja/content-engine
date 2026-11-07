@@ -16,6 +16,8 @@ channel a shape is filed for (a tall cut goes to Instagram, TikTok and YouTube S
                                     and the reviewer.
 
     python3 scripts/channel_safe.py FILE [--shape tall] [--every 1.0]     exit 1 when anything is in a zone
+    python3 scripts/channel_safe.py COVER.png --shape cover_tall              a tall cut's cover: also the 3:4 profile
+                                                                              grid crop and the account row (7 Nov)
 """
 from __future__ import annotations
 
@@ -42,7 +44,7 @@ def zones(shape: str = 'tall', table: dict | None = None) -> list[dict]:
     out = []
     for channel in table['shapes'][shape]:
         for zone in table['channels'][channel]['zones']:
-            out.append({'channel': channel, 'name': zone['name'], 'box': tuple(zone['box'])})
+            out.append({'channel': channel, 'name': zone['name'], 'box': tuple(zone['box']), 'cut': bool(zone.get('cut'))})
     return out
 
 
@@ -105,7 +107,10 @@ def frame_violations(path, shape: str = 'tall', every: float = 1.0, read=None, w
                     if conf < MIN_CONF or len(text) < MIN_CHARS:
                         continue
                     for zone in zones(shape, table):
-                        if overlap(box, zone['box']) > 0.5 * box[2] * box[3]:
+                        # Under a button, a word counts when most of it is covered; at a crop line (the profile
+                        # grid), a word that crosses the line at all is cut.
+                        share = 0 if zone['cut'] else 0.5 * box[2] * box[3]
+                        if overlap(box, zone['box']) > share:
                             hits.append({'at_s': round(at, 2), 'word': text, 'box': list(box),
                                          'channel': zone['channel'], 'zone': zone['name']})
     except (OSError, ValueError, subprocess.CalledProcessError) as error:
@@ -117,7 +122,7 @@ def frame_violations(path, shape: str = 'tall', every: float = 1.0, read=None, w
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
     parser.add_argument('file')
-    parser.add_argument('--shape', default='tall')
+    parser.add_argument('--shape', default='tall', choices=sorted(load()['shapes']))
     parser.add_argument('--every', type=float, default=1.0)
     args = parser.parse_args(argv)
     result = frame_violations(args.file, args.shape, args.every)

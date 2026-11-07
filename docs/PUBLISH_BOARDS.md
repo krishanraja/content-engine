@@ -47,7 +47,16 @@ then update the content.krishraja.com board?"). No Claude routine builds a
 board. The Sunday ideas board is `.github/workflows/sunday-ideas.yml`: Claude
 Code inside a GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`,
 never an API key), fired twice on Saturday (12:17 and 20:47 UTC, the second
-only a retry), idempotent for the week, and startable by hand. The Monday final board is built by code (`week_board.py`)
+only a retry), idempotent for the week, and startable by hand. The Saturday good
+news is the one other Claude schedule (Ruling, Krish, 2026-11-07: "Happy to
+break the "no Claude schedules" rule for Saturday's good news"):
+`.github/workflows/saturday-goodnews.yml`, built the same way, fires twice on
+Thursday (10:41 and 19:23 UTC, the second only a retry; first live run Thursday
+19 November), finds that week's five stories, writes them onto the week's
+good-news option through the offdays feed (`ideas.json` `offdays.sat`) and
+rebuilds the live board keeping every made day, so his presses work as on any
+off-day option. Its guard (`scripts/saturday_goodnews.py check`) makes it do
+nothing once the live board shows the stories. The Monday final board is built by code (`week_board.py`)
 from the overnight runner (Wave 2; until then the first session on Monday),
 never by Claude on a timer. Every
 other build is a session he started or a `make-piece.yml` run for a piece he

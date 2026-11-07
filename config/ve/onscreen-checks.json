@@ -1,0 +1,33 @@
+{
+  "_about": "The on-screen checks built from the post-mortem of the week of 2 Nov (docs/learning/2026-11-07-week-of-2-nov-postmortem.md, causes B, C and A), read by scripts/velib/qc_onscreen.py and the lint in scripts/velib/guards.py. Each enforces something Krish already approved (named in its 'enforces'). They bind a piece published on or after binds_from; before it every row is measured and shown as advisory, never counted, so the pieces already in production (Wed 11 and Fri 13 Nov) are not changed mid-piece (config/failures.json F33). None of these files is in the engine hash (config/ve/production-guards.json engine.paths), so landing them changes no piece's engine.",
+  "binds_from": "2026-11-14",
+  "annotation": {
+    "why": "The 6 Nov reel's white underline was drawn across the bottom border of the AT STAKE card, not under its words, and stayed flat while the card sat on a tilted phone (Bugs & Issues, 7 Nov; Krish: \"some issues with how some of the underlining animations work where text is being drawn on or underlined\"). The scribble device places a mark in frame pixels; the phone places its card in perspective. A mark must name the words it marks, must land on them on the rendered frame, and may not be drawn in frame pixels over a surface that a camera tilts or scales.",
+    "enforces": "floor group words_add (approved 2026-11-04: every mark points at the one thing that matters) and the approved preference \"lots of motion and hand-drawn scribbles pointing to the most important thing on the screen\" (Krish, 2026-10-28)",
+    "devices": ["scribble"],
+    "shapes": ["underline", "loop"],
+    "surfaces": ["hand_phone_stage"],
+    "settle_frames": 2,
+    "underline_overlap": 0.5,
+    "loop_overlap": 0.6,
+    "found_share": 0.6
+  },
+  "captions": {
+    "why": "The 6 Nov reel showed the title DOES THAT MATTER? and, at the same moment, a caption bar reading \"Does that\": the caption repeated the title, and its page broke \"You may already be using | a Chinese AI.\" mid-phrase. ve compile scores weak page endings but refuses none, and nothing compares a caption page with the headline on screen.",
+    "enforces": "learning visuals-add-not-repeat (\"On-screen words never repeat the sentence being said\") and the approved captions standard \"Never let on-screen words duplicate what the voiceover or captions already say\" (approved 2026-11-04)",
+    "title_devices": ["headline"],
+    "repeat_share": 0.6,
+    "repeat_min_words": 2,
+    "page_overlap": 0.5,
+    "weak_ends": ["a", "an", "the", "of", "to", "in", "on", "for", "and", "or", "but", "so", "from", "my", "your", "our", "their", "his", "her", "its", "is", "are", "was", "were", "be", "that", "this", "with", "at", "by", "as", "if", "into", "than", "using", "about", "very", "more", "most", "just", "can", "will", "would", "could", "should", "not", "no"],
+    "opens_phrase": ["a", "an", "the", "of", "to", "my", "your", "our", "their", "his", "her", "its"]
+  },
+  "evidence": {
+    "why": "Wed 4 Nov scored 5 for production: \"The animations get cut off. They're not full screen, specifically when there's the hand holding the phone. The screenshots are just not really clear enough in terms of being able to make a clear point.\" On a phone, a screenshot on a phone held in a hand is about a third of the frame and its words are too small to read.",
+    "enforces": "floor group real_evidence (approved: \"Show the real thing: dated screenshots, real products, real interactions\"): shown means read",
+    "devices": ["hand_phone_stage", "evidence_card", "quote_card", "thread_card", "record_card"],
+    "min_word_px": 40,
+    "min_word_px_why": "Instagram's own caption text is about 14 pt on a 390 pt wide phone, 39 px on the 1080 px wide frame: evidence smaller than the platform's own body text cannot be read in the feed.",
+    "min_token_chars": 3
+  }
+}

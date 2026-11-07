@@ -315,6 +315,8 @@ def cmd_qc(args) -> int:
     if props is not None and props.get('aspect') == '9:16':
         inputs['composition_props'] = props
     inputs.update(_gate_inputs(args))
+    if getattr(args, 'publish_day', None):
+        inputs['publish_day'] = args.publish_day
     report = run_qc(args.cut, args.format, **inputs)
     out = Path(args.out) if args.out else Path(args.cut).with_suffix('.qc.json')
     write_json(out, report)
@@ -1442,7 +1444,7 @@ def cmd_proof(args, render_fn=None) -> int:
             inputs = inputs_from_props(window)
             if window.get('aspect') == '9:16':
                 inputs['composition_props'] = window
-            report = run_qc(str(clip), spec['format'], **inputs)
+            report = run_qc(str(clip), spec['format'], publish_day=spec.get('publish_day'), **inputs)
             write_json(Path(clip).with_suffix('.qc.json'), report)
             return report
 
@@ -1565,6 +1567,7 @@ def main() -> int:
     p = sub.add_parser('start'); p.add_argument('piece'); p.set_defaults(fn=cmd_start)
     p = sub.add_parser('lint'); p.add_argument('spec'); p.set_defaults(fn=cmd_lint)
     p = sub.add_parser('qc'); p.add_argument('cut'); p.add_argument('--format', required=True); p.add_argument('--out'); p.add_argument('--props')
+    p.add_argument('--publish-day', help="the piece's publish day (YYYY-MM-DD): the on-screen checks bind from config/ve/onscreen-checks.json binds_from")
     p.add_argument('--script', help='the signed script, for words.lost')
     p.add_argument('--take-words', help="the take's words json, for words.lost")
     p.add_argument('--heard', action='append', metavar='ALIGNER=WORDS.json', help="an aligner's words for this render (repeatable)")
