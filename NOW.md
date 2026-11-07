@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-06
+as_of: 2026-11-07
 head: 8ddf532
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,15 +30,17 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-06)
+## Where it is right now (as of 2026-11-07)
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":2,"current_as_of":"2026-11-05","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 4 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
+- The 6 Nov reel's three visual bugs and Wed 4 Nov's unreadable phone are checks (F41 to F44): ve lint and ve qc refuse a mark that names no words, sits over the hand-held phone or misses its words; a caption page that repeats the headline or ends mid-phrase; evidence words under 40 px on 9:16; channel_safe --shape cover_tall adds Instagram's 3:4 grid crop and account row (listed by produce-day). They bind pieces published from 14 Nov, advisory before, outside the engine hash (Wed 11 and Fri 13 unchanged). (2026-11-07)
 - Eye contact (ve eyeline with NVIDIA Maxine) is merged to main through #455 and documented in docs/ve/STATUS.md and RUNBOOK.md. It is a working, repeatable tool, not yet cleared for published video. Run: dispatch maxine-trial.yml (take, confirm "spend approved by Krish", max_usd, max_minutes; about $0.04 and 5.5 min for a 96 s take), then ve eyeline --media <take> --backend maxine --maxine-copy <copy>. Pass 15 on ai-music-short: 21% of off-lens gaze corrected, on-lens frames unchanged (1.36 to 1.37 deg), lids unchanged, iris colour change median 0.44 / p90 1.05, sharpness 0.99, jitter 0.99, blinks 10 to 8 (half blinks across the 0.5 line, not checked by eye). Built this session: gated move of his own iris to Maxine's lens point (none of Maxine's pixels), a clean shared-catchlight iris from his own lens frames, the edited area including the iris disc, the upper lid lowered to cover the iris as it does at the lens (removes the stare), and looks up, looks down and half-closed eyes left as filmed. Publishing to his own channels cleared with NVIDIA by Krish (2026-11-06). (2026-11-06)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
+- 2026-11-07 Krish's 7 Nov bug screenshots and Wed 4 Nov's production score of 5 had no mechanical check behind them; each now refuses the real case in the reel's own props (tests/ve_onscreen_test.py).
 - 2026-11-05 Series covers and thumbnails wear nine skins, one a week from 9 Nov, in the series' own colour (Krish: "keep all of them and rotate them all at will over the coming weeks"; "Skin the covers too"); a skin that cannot be drawn on any shape moves the whole piece on to the next, said in its records, and the plain series Receipt if none can ("Yeah just move on automatically"); nothing sits on the words or the logos (`scripts/pages/skins/`, `receipt.settle`, `tests/series_skins_test.py`).
 - 2026-11-05 The intro sting is back in front of every 16:9 long cut of a weekly series piece, and only there (Krish: "I think it should go at the start of the longer wide videos 100%,"): the six clips he saw on 12 October, byte for byte, pinned by sha256 in `config/intro-sting.json` and filed in the library's brand kit. The tall cut opens on the hook and off days wear none, in both engines (`intro.py`, `make.py`, ve's `VeCut` wrapper, compile, premix, the qc `opening` row); it moves the ve engine hash.
 - 2026-11-06 Copy article hands Substack every picture as a link it can fetch (Krish: "Every Substack article embeds the images inline"; Friday 6 Nov's six figures did not come through the paste): publishing a board stores each article picture as a board file, and Copy article swaps in its signed link (`board_web.lift_article_pictures`, `?link=1` on the asset route, `hosted()` in `week.js`). The page keeps each picture's own bytes.
@@ -49,9 +51,8 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 
 ## What is next and what is waiting on Krish
 
+- Next (2026-11-07): After Fri 13 Nov is cut, change the caption pager in scripts/velib/compile.py so it stops making the pages captions.phrase_breaks and captions.repeat_title refuse (12 and 6 on the 6 Nov reel).
 - Done, Copy article (2026-11-06): the 2 Nov week's board was published again with Friday's six article figures as board files, and on the live engine each one's link (`?link=1`) returns the exact approved bytes. Not yet seen: a real paste into Substack.
-- Next, covers (2026-11-05): merge, then draw the 9 Nov series pieces' covers and thumbnails together (`build.py --cover --thumbs`) once their cover facts exist. The 9 Nov week (board 0e79df54): his Wednesday script press, Growth posts the off days, Saturday's pick on Sunday 8 Nov.
-- Next (2026-11-06): Krish runs it on a live video and reports timestamps that look wrong. Open: the look-up and head-down moments are uncorrected by design (about 7% of frames, some of the biggest misses), the 51.67 s glance is partly eased by the look-up rule, and the sixth and last blind review (pass 15) said do not publish: eight of nine moments unchanged (safe), but the 5.57 s sideways glance came out with a flat grey right eye, a smeared catchlight and a wider opening. Earlier reviews of that moment were milder, so it is marginal. Next code step if wanted: a partial move (AIM_GAIN near 0.7), or leaving glances to Krish's own judgement per timestamp.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
@@ -59,7 +60,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
-- North Star check (2026-11-06): holds.
+- North Star check (2026-11-07): holds.
 
 ## Read next
 

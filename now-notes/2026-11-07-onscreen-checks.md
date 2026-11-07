@@ -1,4 +1,0 @@
-Status: The 6 Nov reel's three visual bugs and Wed 4 Nov's unreadable phone are checks (F41 to F44): ve lint and ve qc refuse a mark that names no words, sits over the hand-held phone or misses its words; a caption page that repeats the headline or ends mid-phrase; evidence words under 40 px on 9:16; channel_safe --shape cover_tall adds Instagram's 3:4 grid crop and account row (listed by produce-day). They bind pieces published from 14 Nov, advisory before, outside the engine hash (Wed 11 and Fri 13 unchanged).
-Changed: Krish's 7 Nov bug screenshots and Wed 4 Nov's production score of 5 had no mechanical check behind them; each now refuses the real case in the reel's own props (tests/ve_onscreen_test.py).
-Next: After Fri 13 Nov is cut, change the caption pager in scripts/velib/compile.py so it stops making the pages captions.phrase_breaks and captions.repeat_title refuse (12 and 6 on the 6 Nov reel).
-North Star check (2026-11-07): holds.
