@@ -778,6 +778,48 @@
     "adds": "Real, dated news from this week with each story's own picture or clip, where the saved post is a one-off with no sources.",
     "weekly": "good_news",
     "stories_due": "2026-11-08",
+    "stories": [
+     {
+      "headline": "England is testing a blood test that uses AI to spot cancer early",
+      "what": "More than 20,000 NHS patients at 200 or more family doctor surgeries in England will try blood tests that look for many kinds of cancer in one sample. The tests use AI and measure proteins in the blood.",
+      "why": "Cancer found early is easier to treat. The trial checks whether the tests help family doctors before anyone uses them across the country.",
+      "date": "2026-11-04",
+      "source": {"label": "GOV.UK: New NHS blood test trial to help spot cancers earlier", "url": "https://www.gov.uk/government/news/new-nhs-blood-test-trial-to-help-spot-cancers-earlier"},
+      "media": {"kind": "photo", "url": "https://assets.publishing.service.gov.uk/media/6aeb017ae87b2eb305b3ef76/s300_blood-samples-in-lab-blood-test.png"}
+     },
+     {
+      "headline": "AI helped design a bird flu vaccine that fully protected animals",
+      "what": "Scientists at the University of Cambridge used AI to design a new bird flu vaccine. In animal tests it gave complete protection against many kinds of bird flu. The vaccines stored today protected only about half the animals.",
+      "why": "Bird flu is spreading in animals around the world. One vaccine that covers many kinds would help us be ready. Tests in people come next.",
+      "date": "2026-11-05",
+      "source": {"label": "University of Cambridge: Scientists are using AI to develop superior vaccines", "url": "https://www.cam.ac.uk/stories/ai-developed-vaccines-against-viruses"},
+      "media": {"kind": "photo", "url": "https://mediasvc.eurekalert.org/Api/v1/Multimedia/625ff730-cdcf-4e2c-935b-c3454f7db205/Rendition/low-res/Content/Public"}
+     },
+     {
+      "headline": "AI used wearable sensors to spot signs of high blood pressure",
+      "what": "Google researchers taught AI to read the light and motion sensors in a wearable. In a study of 196 people it spotted signs of high blood pressure with no arm cuff.",
+      "why": "More than half of adults with high blood pressure do not know they have it. A device people already wear could nudge them to get checked. It is early research and does not replace a doctor's test.",
+      "date": "2026-11-05",
+      "source": {"label": "Google Research: Detecting signs of hypertension using wearable sensors", "url": "https://research.google/blog/detecting-signs-of-hypertension-using-wearable-sensors/"},
+      "media": {"kind": "photo", "url": "https://storage.googleapis.com/gweb-research2023-media/original_images/Hypertension1_Overview.png"}
+     },
+     {
+      "headline": "AI helped scientists see a tiny cell shell from bacteria for the first time",
+      "what": "Scientists at Anthropic used their AI, Claude, to search about 15 billion predicted proteins for vaults, tiny hollow shells found in cells. They made the first 3D picture of a vault from bacteria, and a lab step that usually takes about three days took about 90 minutes.",
+      "why": "Nobody knows yet what vaults do. Faster lab work means scientists can test more ideas about them, sooner.",
+      "date": "2026-11-04",
+      "source": {"label": "Anthropic: Investigating vault particles with Claude", "url": "https://www.anthropic.com/research/investigating-vault-particles-with-claude"},
+      "media": {"kind": "photo", "url": "https://www-cdn.anthropic.com/images/4zrzovbb/website/c3a048744e70ec9ee9cf398065f94c565ceb5181-4251x2314.png"}
+     },
+     {
+      "headline": "AI found 92 possible new sugar substitutes",
+      "what": "Scientists at the Hebrew University of Jerusalem used AI to search more than 50 million chemicals. It picked out 92 that might taste sweet like sugar, many unlike any sweetener we have.",
+      "why": "New sweeteners could help people eat less sugar. Each one still needs lab tests for taste and safety first.",
+      "date": "2026-11-05",
+      "source": {"label": "Hebrew University of Jerusalem: AI helps scientists discover new sugar substitutes", "url": "https://www.eurekalert.org/news-releases/1150706"},
+      "media": {"kind": "photo", "url": "https://mediasvc.eurekalert.org/Api/v1/Multimedia/4e242792-79be-4b7c-bbf6-37d0db66e723/Rendition/low-res/Content/Public"}
+     }
+    ],
     "read_back": {
      "readers": [
       "Fresh reader A (Haiku, a 12-year-old reading once)",
