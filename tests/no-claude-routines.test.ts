@@ -168,31 +168,66 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     expect(text).toContain('every question for Krish goes on the day\'s tab')
   })
 
-  it('the same Saturday run fills the weekly good news of the week that starts the next day', () => {
-    // Krish, 2026-11-02: "You will need to find the actual good news on Sunday as per the usual system so that the news
-    // items are fresh".
+  it('exactly three scheduled jobs may touch a publish board, and only two of them are Claude: Sunday ideas and Thursday good news', () => {
+    // Exactly two scheduled Claude jobs may build a board (Ruling, Krish, 2026-11-07: "Happy to break the "no Claude
+    // schedules" rule for Saturday's good news. We might as well just keep that on an automatic schedule."). The third,
+    // the Monday final board, is built by code from the overnight runner, never by a workflow on a timer.
+    const scheduled = WORKFLOWS.filter((path) => /^\s*schedule:/m.test(read(path)))
+    const boards = scheduled.filter((path) => /week_board\.py|board_web\.py/.test(read(path)))
+    expect(boards).toEqual(['.github/workflows/saturday-goodnews.yml', '.github/workflows/sunday-ideas.yml'])
+    // Every other scheduled job that runs Claude Code builds no board.
+    for (const path of scheduled.filter((p) => runsClaude(read(p)) && !boards.includes(p))) {
+      expect(read(path), path).not.toMatch(/week_board\.py|board_web\.py/)
+    }
+    const agents = read('AGENTS.md')
+    expect(agents).toContain('Exactly three scheduled jobs may touch a publish board')
+    expect(agents).toContain('.github/workflows/saturday-goodnews.yml')
+  })
+
+  it('the Sunday run no longer finds the good news; the Thursday run does, off the hour, outside the morning rush, idempotent, by hand too', () => {
+    const sunday = read('.github/workflows/sunday-ideas.yml')
+    expect(sunday).not.toMatch(/gn_due|sunday_ideas\.py goodnews|"The Saturday good news"/)
+    const text = read('.github/workflows/saturday-goodnews.yml')
+    const crons = [...text.matchAll(/cron:\s*'([^']+)'/g)].map((m) => m[1]!)
+    expect(crons).toHaveLength(2)  // the second is only a retry
+    for (const cron of crons) {
+      const [minute, hour, , , weekday] = cron.split(/\s+/)
+      expect(weekday, cron).toBe('4')  // Thursday, UTC
+      expect([0, 30], cron).not.toContain(Number(minute))
+      // 06:00 to 09:00 Pacific is 13:00 to 17:00 UTC across both clock changes.
+      expect(Number(hour) < 13 || Number(hour) >= 17, cron).toBe(true)
+    }
+    expect(text).toMatch(/workflow_dispatch:\n\s+inputs:\n\s+week:/)
+    expect(text).toContain('python3 scripts/saturday_goodnews.py "$@" >> "$GITHUB_OUTPUT"')
+    expect(text).toContain('EVENT: ${{ github.event_name }}')
+    expect(text).toMatch(/if: steps\.guard\.outputs\.go == 'true'\n\s+uses: anthropics\/claude-code-action/)
+    expect(text).toContain('"The Saturday good news"')
+    expect(text).not.toMatch(/gh pr merge/)
+
     const py = (code: string) => spawnSync('python3', ['-c', code], { cwd: ROOT, encoding: 'utf8' })
     const run = py(`
 import sys, json, tempfile, datetime as dt
 from pathlib import Path
 sys.path.insert(0, 'scripts'); sys.path.insert(0, 'scripts/post-pack')
-import sunday_ideas as s
-print(s.goodnews_monday(dt.date.fromisoformat('2026-11-07')).isoformat())
-with tempfile.TemporaryDirectory() as d:
-    folder = Path(d) / '2026-11-09-week'; folder.mkdir()
-    opt = {'id': 'goodnews', 'weekly': 'good_news', 'stories_due': '2026-11-08'}
+import saturday_goodnews as g
+d = dt.date.fromisoformat
+print(g.goodnews_monday(d('2026-11-19')), g.goodnews_monday(d('2026-11-21')), g.goodnews_monday(d('2026-11-15')))
+with tempfile.TemporaryDirectory() as t:
+    folder = Path(t) / '2026-11-16-week'; folder.mkdir()
+    opt = {'id': 'goodnews', 'weekly': 'good_news', 'stories_due': '2026-11-19'}
     (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [opt]}}))
-    m = dt.date(2026, 11, 9)
-    print(s.goodnews_due(m, dt.date(2026, 11, 3), Path(d)), s.goodnews_due(m, dt.date(2026, 11, 7), Path(d)))
+    m = d('2026-11-16')
+    live = lambda monday: False
+    print(g.decide(m, d('2026-11-17'), 'schedule', False, Path(t), live)[0], g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), live)[0])
+    print(g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), lambda monday: True)[0])
+    print(g.decide(d('2026-11-09'), d('2026-11-12'), 'schedule', False, Path(t), live)[0])
     (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [dict(opt, stories=[{}])]}}))
-    print(s.goodnews_due(m, dt.date(2026, 11, 7), Path(d)))
+    print(g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), live)[0], g.decide(m, d('2026-11-19'), 'workflow_dispatch', True, Path(t), live)[0])
 `)
     expect(run.stderr).toBe('')
-    expect(run.stdout.trim().split(/\r?\n/)).toEqual(['2026-11-09', 'False True', 'False'])
-    const text = read('.github/workflows/sunday-ideas.yml')
-    expect(text).toContain('python3 scripts/sunday_ideas.py goodnews >> "$GITHUB_OUTPUT"')
-    expect(text).toMatch(/if: always\(\) && steps\.goodnews\.outputs\.gn_due == 'true'\n\s+uses: anthropics\/claude-code-action/)
-    expect(text).toContain('"The Saturday good news"')
+    // Thursday 19 Nov serves the week of 16 Nov; Saturday too; Sunday serves the week that starts the next day.
+    // Not due on the Tuesday, due on the Thursday; not again once live; never on a schedule before 19 Nov; force reruns.
+    expect(run.stdout.trim().split(/\r?\n/)).toEqual(['2026-11-16 2026-11-16 2026-11-16', 'False True', 'False', 'False', 'False True'])
   })
 
   it('the guard plans the week eight days after the recording Sunday and reads only a live Ideas tab as built', () => {

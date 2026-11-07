@@ -460,7 +460,19 @@ def loud_gate(cut, stdout, shape):
 def thumbs(post_path, work):
     out = work / 'thumbs'
     run([PY, 'scripts/pages/build.py', post_path.parent / 'cover-facts.json', '--thumbs', '--out', out], what='the thumbnails')
-    return {'long': out / 'thumb-wide-1280x720.jpg', 'short': out / 'thumb-tall-1080x1920.jpg'}
+    made = {'long': out / 'thumb-wide-1280x720.jpg', 'short': out / 'thumb-tall-1080x1920.jpg'}
+    # The tall cover is seen on Instagram's profile grid (the middle 3:4) and under its account row: the 6 Nov reel's
+    # cover lost "USING A" there (config/failures.json F43). Listed here, as quick-edit lists channel_safe.
+    if made['short'].is_file():
+        import channel_safe  # noqa: PLC0415
+        seen = channel_safe.frame_violations(made['short'], 'cover_tall')
+        if seen.get('pass') is False:
+            first = seen['value']['in_zones'][0]
+            log(f"the tall cover: {seen['value']['count']} word(s) cut or covered where it is seen "
+                f"(first: '{first['word']}' in {first['channel']}'s {first['zone']})")
+        elif seen.get('pass') is None:
+            log(f"the tall cover was not checked against the profile grid ({seen.get('reason')})")
+    return made
 
 
 def review_sheet(src, out):

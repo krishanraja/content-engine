@@ -1,0 +1,130 @@
+{
+ "subchannel": "follow.the.money",
+ "date": "2026-11-09",
+ "headline": "Why is Disney eating the scraps of bankrupt Character.AI?",
+ "deck": "Google paid $2.7 billion for the tech and the founders in 2024. Now Disney is hiring the rest of the team through the bankruptcy court, and leaving the legal fights behind.",
+ "video_title": "Why is Disney eating the scraps of bankrupt Character.AI?",
+ "video_title_emphasis": "bankrupt Character.AI",
+ "comment_question": "WHO MAKES THE AI YOUR BUSINESS RUNS ON?",
+ "cover": {
+  "headline": [
+   "GOOGLE PAID",
+   "$2.7B FIRST"
+  ],
+  "rows": [
+   {
+    "name": "Google",
+    "logo": "logos/google-g.svg",
+    "tag": "2024: $2.7B",
+    "colour": "butter"
+   },
+   {
+    "name": "Disney",
+    "logo": "logos/disney-script-cream.svg",
+    "tag": "$20M",
+    "colour": "mint"
+   },
+   {
+    "name": "Character.AI",
+    "logo": "logos/characterai-cream.svg",
+    "tag": "BUST",
+    "colour": "coral"
+   }
+  ],
+  "strip": [
+   {
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "OpenAI"
+   },
+   {
+    "logo": "logos/warner-music-group-cream.svg",
+    "name": "Warner Music Group"
+   },
+   {
+    "logo": "logos/universal-music-group-cream.svg",
+    "name": "Universal Music Group"
+   }
+  ],
+  "proof": {
+   "html": {
+    "path": "pack/figure-timeline.html",
+    "crop": [
+     0,
+     0,
+     1,
+     1
+    ]
+   },
+   "source": "figure-timeline",
+   "tag": "THE PAPER TRAIL",
+   "ring": [
+    0.44,
+    0.275,
+    0.6,
+    0.355
+   ],
+   "alt": "Two years, two buyers: Google reportedly paid $2.7 billion in August 2024"
+  }
+ },
+ "thumbs": {
+  "headline": [
+   "GOOGLE PAID",
+   "$2.7B FIRST"
+  ],
+  "rows": [
+   {
+    "name": "Google",
+    "logo": "logos/google-g.svg",
+    "tag": "2024: $2.7B",
+    "colour": "butter"
+   },
+   {
+    "name": "Disney",
+    "logo": "logos/disney-script-cream.svg",
+    "tag": "$20M",
+    "colour": "mint"
+   },
+   {
+    "name": "Character.AI",
+    "logo": "logos/characterai-cream.svg",
+    "tag": "BUST",
+    "colour": "coral"
+   }
+  ],
+  "strip": [
+   {
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "OpenAI"
+   },
+   {
+    "logo": "logos/warner-music-group-cream.svg",
+    "name": "Warner Music Group"
+   },
+   {
+    "logo": "logos/universal-music-group-cream.svg",
+    "name": "Universal Music Group"
+   }
+  ],
+  "proof": {
+   "html": {
+    "path": "pack/figure-timeline.html",
+    "crop": [
+     0,
+     0,
+     1,
+     1
+    ]
+   },
+   "source": "figure-timeline",
+   "tag": "THE PAPER TRAIL",
+   "ring": [
+    0.44,
+    0.275,
+    0.6,
+    0.355
+   ],
+   "alt": "Two years, two buyers: Google reportedly paid $2.7 billion in August 2024"
+  }
+ },
+ "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430"
+}
