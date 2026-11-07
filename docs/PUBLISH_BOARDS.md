@@ -225,6 +225,42 @@ approved, rejected or waiting on you, holds a press the record holds at the hash
 shown, and says "this changed since you pressed; press again" when the hash
 differs. A day given none of these inputs is drawn exactly as before.
 
+### Layout v4: the Desk, seven stages on every day, Last week
+
+From the week of 9 November 2026 (`config/board-layout.json` `v4`; Krish, 2026-11-07: "I still have to keep looking
+for things, and I have to keep trying to figure out where stuff is, which isn't ideal. It also doesn't allow me to give
+feedback for every day of publishing stuff last week, say, for example, the off days." and "I think we should redesign
+the 9th of November board as well."). Drawn by `week_board.py` with `scripts/post-pack/board_v4.py`:
+
+- **Tabs, always, in this order:** Desk, Ideas, Queue, Monday to Saturday, Last week, Archive. The Desk replaces Today
+  and the board opens on it. On a phone the bar scrolls sideways inside itself; the page never does.
+- **The Desk:** everything waiting on him in the order it is due, one sentence and one button each to the exact place
+  (`#wednesday/creative`, `#mon-signoff`, an off-day option), then what waits on the engine or Growth, folded, then the
+  six days as cards with their stages. Built from what the board holds; nothing is typed by hand. An ask a press settles
+  carries `data-settled-by="<picks document>"` and leaves the Desk once he has made it (`week.js`).
+- **Every day, off days included,** has the same heading with a seven-stage bar (Idea, Script, Recorded, Creative, Cut,
+  Published, Scored: done, with the engine or Growth, waiting on him, not yet, not for this post) and the same six steps:
+  Idea (`brief`), Script (`drafts`), Recorded (`record`), Creative, Publish, Scored. An off day's options and his presses
+  on them move from the Ideas tab to its own Idea step (the Ideas tab links there); its finished assets are its Publish
+  step. The production gates (proof, cut) sit on the Creative step under the sheet.
+- **Scored:** his Scores press for every post. A post with its piece saves `picks/score-<piece>` as before; a post with
+  no piece (most off days) saves `picks/score-<date>[-<slot>]` `{kind: "scores", date, title, narrative, production,
+  basis, note?, day?}`, kept on the board (the server answers `scores: "on_board"`) until it has a piece.
+- **Last week** lists every post of the week before, Monday to Saturday, with what went out, its views, the bugs found on
+  it and his Scores press; a day with no post says why. Fed by `--last-week lastweek.json` (`{"week", "posts": [{"date",
+  "slot"?, "kind", "title", "series"?, "piece_id"?, "live"?, "views"?, "views_from"?, "scores"?, "why"?, "lessons"?}]}`).
+- **Bugs on their post:** `--bugs bugs.json` (`[{"id", "piece_id" or "date", "title", "cause", "guard"?, "state": open,
+  guarded or fixed, "file"?: {label, url}}]`), shown on the post's Scored step and its Last week row.
+- `--takes DAY=NAME[,NAME]` names the takes on the piece's record, for the Recorded stage.
+- A day carried over as the board held it (`--keep`, `--keep-draft`, `--carry`) takes v4's steps on the rebuild, its
+  gates moved to Creative and its Scores press to Scored, nothing else changed (`upgrade_kept_v4`).
+
+**Rebuilding a live board from a cloud session.** The engine API answers 401 without the operator key, so a board is
+rebuilt by `.github/workflows/board-rebuild.yml` (by hand only, no schedule, no Claude): it downloads the live board,
+rebuilds it from a committed recipe (`docs/plans/<Monday>-week/board-build.json`: `week_board.py`'s own flags through
+`--recipe`, never a script), verifies it, saves phone screenshots as the run's artifact (`board_shots.py`) and checks the
+publish; it puts the build live only when its `publish` input is exactly `publish approved by Krish`.
+
 ### Layout v4: the Creative step and its sheet (`creative.json`)
 
 From the week of 9 November 2026 (`config/board-layout.json` `v4`) every day has a **Creative** step between

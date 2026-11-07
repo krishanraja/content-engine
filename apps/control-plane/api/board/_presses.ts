@@ -175,6 +175,39 @@ export function gatePatch(kind: GateKind, body: Body, now: string): MakingGates 
   return { style: { ...base, module: typeof body.module === 'string' ? body.module : null, ...(reason ? { reason } : {}), verdicts } }
 }
 
+/** Layout v4's Sign creative onto the piece's making record: gates.creative always (his picks, or his words sending the
+ *  sheet back), and when he signed, gates.storyboard bound to the hash ve's storyboard gate reads and gates.style with
+ *  his motion pick and the other styles the sheet showed as seen, so ve reads both where it always has. */
+export function creativePatch(body: Body, now: string): MakingGates {
+  const base = { by: 'Krish' as const, at: now }
+  const words = typeof body.words === 'string' && body.words.trim() ? body.words.trim().slice(0, 2000) : undefined
+  const picks = (isObj(body.picks) ? body.picks : {}) as Record<string, string>
+  const out: MakingGates = { creative: { ...base, sha256: String(body.sha256), approved: body.approved === true, picks: { ...picks }, ...(words ? { words } : {}) } }
+  if (body.approved === true) {
+    if (typeof body.storyboard_sha256 === 'string') out.storyboard = { ...base, sha256: body.storyboard_sha256 }
+    const shown = Array.isArray(body.shown) ? (body.shown as string[]) : [picks.motion]
+    out.style = { ...base, sha256: String(body.sha256), module: picks.motion ?? null,
+      verdicts: [...new Set([picks.motion, ...shown])].filter(Boolean).map(m => ({ module: m, verdict: m === picks.motion ? 'picked' as const : 'seen' as const })) }
+  }
+  return out
+}
+
+/** His words sending a creative sheet back, as one taste_reports row, verbatim with where and when; null otherwise. */
+export function creativeReport(week: string, id: string, body: Body, now: string) {
+  const words = typeof body.words === 'string' ? body.words.trim().slice(0, 2000) : ''
+  if (body.approved !== false || !words) return null
+  const piece = typeof body.piece_id === 'string' && PIECE_UUID.test(body.piece_id) ? body.piece_id : null
+  return {
+    kind: 'krish_words', body: words, said_where: `publish board, ${week} picks/${id}`, said_at: now,
+    lane: 'production', polarity: 'dislikes', subject_ref: piece ? `piece:${piece}` : null,
+    subject: `the pre-production sheet for the ${String(body.day)} piece of the week of ${week}`,
+    session_ref: 'content.krishraja.com publish board', repository: REPOSITORY, surface: 'publish_board',
+    emitter_id: 'content-engine-board',
+    client_report_id: `creative-${digest(canonical({ week, id, words, sha: body.sha256 }))}`.slice(0, 96),
+    reported_at: now, meta: { press: 'change_creative', week, day: body.day, gate: 'creative' },
+  }
+}
+
 /** His press on a production gate onto the piece's making record, merged gate by gate (mergeMaking) and guarded on the
  *  row's updated_at, read again once on a stale row: the same write recordSend makes. Why it was not written, or null. */
 export async function recordGate(db: SupabaseClient, pieceId: string, patch: MakingGates, now: string): Promise<string | null> {
@@ -509,6 +542,26 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
     } catch {
       return { ...saved, inbox: 'failed', ...(incident ? { incident } : {}) }
     }
+  }
+  if (collection === 'picks' && body.kind === 'scores' && !(typeof body.piece_id === 'string' && PIECE_UUID.test(body.piece_id))) {
+    // A post with no piece yet (layout v4, picks/score-<date>): kept on the board until it has one.
+    return { ...saved, scores: 'on_board' }
+  }
+  if (collection === 'picks' && body.kind === 'sign_creative') {
+    if (who !== 'Krish') return null
+    const unrecorded = await recordGate(db, String(body.piece_id), creativePatch(body, now), now).catch(() => 'the piece\'s making record could not be written')
+    const out: Saved = { ...saved, gate: unrecorded ? 'failed' : 'recorded', ...(unrecorded ? { gate_error: unrecorded } : {}) }
+    const report = creativeReport(week, id, body, now)
+    if (report) {
+      try {
+        const filed = await db.from('taste_reports').upsert(report, { onConflict: 'emitter_id,client_report_id', ignoreDuplicates: true })
+        const code = String((filed.error as { code?: string } | null)?.code || '')
+        out.taste = !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed'
+      } catch {
+        out.taste = 'failed'
+      }
+    }
+    return out
   }
   if (collection === 'picks' && body.kind === 'scores') {
     try {
