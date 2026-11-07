@@ -5,6 +5,10 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-07
+
+- reconciled at `f32cc42`: the NOW.md audit failed `next_step` (two "Next" lines under "What is next and what is waiting on Krish"). The eye contact line asks Krish to run the tool on a live video, so it became a "Waiting on Krish" line with its text unchanged; the covers line stays the single next action, without its "merge" step, because the series skins merged in `d538181e`. No closeout notes were waiting. The 116 non-steward commits since `8ddf532` (eyeline and Maxine, series skins, the intro sting, Copy article's picture links, the listen pass, the carousel standard) were closed out in NOW.md by their own sessions and folds; nothing in the record contradicts them, so `head` and `as_of` moved and nothing else did.
+
 ## 2026-11-05
 
 - rolled from NOW.md, verbatim:
