@@ -49,7 +49,6 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - 2026-11-07 Ruling (Krish, 2026-11-07): "Saturday's good news run should be done later in the week so the good news is fresh"; guards now allow exactly this exception.
 - 2026-11-07 Monday 9 Nov's covers and thumbnails are the first drawn in a weekly series skin (neon), and the first offered as options shown in a mock Instagram grid and YouTube results row before Krish picked (post-mortem 2.D).
 - 2026-11-07 Krish's 7 Nov bug screenshots and Wed 4 Nov's production score of 5 had no mechanical check behind them; each now refuses the real case in the reel's own props (tests/ve_onscreen_test.py).
-- 2026-11-06 Copy article hands Substack every picture as a link it can fetch (Krish: "Every Substack article embeds the images inline"; Friday 6 Nov's six figures did not come through the paste): publishing a board stores each article picture as a board file, and Copy article swaps in its signed link (`board_web.lift_article_pictures`, `?link=1` on the asset route, `hosted()` in `week.js`). The page keeps each picture's own bytes.
 Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-07-NOW-moved-4.md`, then `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
 
 
