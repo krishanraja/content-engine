@@ -228,9 +228,22 @@ def off_day_beds(rules: dict | None = None) -> list[str]:
     return [t['id'] for t in tracks if t.get('for') == want]
 
 
+def annotation_lints(spec: dict) -> list[str]:
+    """A mark names the words it marks and is not drawn in frame pixels over a surface a camera moves (the 6 Nov reel's
+    AT STAKE underline; velib/qc_onscreen.py, config/ve/onscreen-checks.json). Binds pieces from its binds_from, so a
+    piece already in production is not refused mid-piece (F33)."""
+    from . import qc_onscreen  # noqa: PLC0415
+    if not qc_onscreen.bound(spec.get('publish_day')):
+        return []
+    beats = [b for cut in (spec.get('cuts') or {}).values() for b in cut.get('beats') or []]
+    return [f"annotation.target {p['obj']}{' (beat ' + p['beat'] + ')' if p.get('beat') else ''}: {p['why']}"
+            for p in qc_onscreen.annotation_problems(spec.get('objects') or [], beats)]
+
+
 def spec_lints(spec: dict) -> list[str]:
     """The spec-level guards, for ve lint."""
-    return idea_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
+    return (idea_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
+            + annotation_lints(spec))
 
 
 # ---------------------------------------------------------------- 3. freeze the engine during a piece
