@@ -261,6 +261,8 @@ function select(day, opts = {}){
     document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
   }
   if (opts.focus) tab.focus();
+  // Layout v4's bar scrolls sideways on a phone: keep the open tab in view.
+  try { tab.scrollIntoView({ block: "nearest", inline: "nearest" }) } catch {}
   if (opts.hash) { try { history.replaceState(null, "", "#" + day) } catch {} remember(day) }
   if (changed && opts.top) window.scrollTo(0, 0);
 }
@@ -1513,7 +1515,9 @@ function offdayNoteParts(note){
 // when he scored it (at publish or looking back) and his note, saved as picks/score-<piece>; the server files each save
 // as one piece_scores row, history kept. Only his scores count.
 (() => {
-  const cards = [...document.querySelectorAll(".rec.sc[data-scores-piece]")];
+  // Layout v4: a post with no piece is scored too, saved as picks/score-<date> (data-scores-doc), with its date and title.
+  const cards = [...document.querySelectorAll(".rec.sc[data-scores-doc], .rec.sc[data-scores-piece]")];
+  const docOf = c => c.dataset.scoresDoc || ("score-" + c.dataset.scoresPiece);
   if (!cards.length) return;
   const saved = {}, busy = {};
   let ddb = null, mode = "loading";
@@ -1522,7 +1526,7 @@ function offdayNoteParts(note){
   const field = (c, k) => c.querySelector(`[data-score="${k}"]`);
   function render(){
     for (const c of cards) {
-      const id = "score-" + c.dataset.scoresPiece, v = saved[id];
+      const id = docOf(c), v = saved[id];
       for (const el of c.querySelectorAll("[data-score]")) el.disabled = mode !== "live" || !!busy[id];
       c.querySelector('[data-act="save-scores"]').disabled = mode !== "live" || !!busy[id];
       c.classList.toggle("on", !!v);
@@ -1549,12 +1553,15 @@ function offdayNoteParts(note){
   document.addEventListener("change", e => { const c = e.target.closest && e.target.closest(".rec.sc"); if (c) c.dataset.touched = "1" });
   document.addEventListener("click", async e => {
     const b = e.target.closest && e.target.closest('[data-act="save-scores"]'); if (!b) return;
-    const c = document.getElementById(b.dataset.for), piece = c.dataset.scoresPiece, id = "score-" + piece;
+    const c = document.getElementById(b.dataset.for), piece = c.dataset.scoresPiece, id = docOf(c);
     const narrative = Number(field(c, "narrative").value), production = Number(field(c, "production").value);
     if (!narrative || !production) { say(c, "Pick both scores first.", true); return }
     if (mode !== "live" || !ddb || busy[id]) { render(); return }
     const note = field(c, "note").value.trim();
-    const body = { kind: "scores", piece_id: piece, narrative, production, basis: field(c, "basis").value, at: new Date().toISOString() };
+    const body = { kind: "scores", narrative, production, basis: field(c, "basis").value, at: new Date().toISOString() };
+    if (piece) body.piece_id = piece;
+    else { body.date = c.dataset.scoresDate; if (c.dataset.scoresTitle) body.title = c.dataset.scoresTitle }
+    if (c.dataset.scoresDay) body.day = c.dataset.scoresDay;
     if (note) body.note = note;
     busy[id] = true; say(c, "Saving…"); render();
     let result = null, error = null;
@@ -1563,6 +1570,106 @@ function offdayNoteParts(note){
     if (error) say(c, error.message || "Not saved. Press it again.", true);
     else if (result.scores === "waits_on_migration") say(c, "Saved on the board. Your score joins the record once the score table is switched on.", false);
     else if (result.scores === "failed") say(c, "Saved on the board, but the record did not take it yet; a session files it from here.", true);
+  });
+})();
+
+// Layout v4 (board_v4.py): his presses settle the board where it waits on them. An ask on the Desk leaves once the
+// press it waits on is saved (data-settled-by="<picks document>"), and a stage takes the state it names
+// (data-settled-state): Creative done once signed, Published with Growth once approved, Scored done once scored.
+(() => {
+  const marks = [...document.querySelectorAll("[data-settled-by]")];
+  if (!marks.length) return;
+  const answered = v => !!v && v.approved !== false && v.use !== null;
+  (async () => {
+    let sdb = null;
+    try { sdb = window.claude?.use ? await window.claude.use("db") : null } catch { sdb = null }
+    if (!sdb) return;
+    try {
+      sdb.collection("picks").onSnapshot(snap => {
+        const held = {};
+        for (const d of snap.docs) if (d.exists) held[d.id] = d.data() || {};
+        let left = 0;
+        for (const el of marks) {
+          const done = answered(held[el.dataset.settledBy]);
+          if (el.classList.contains("dk-ask")) { el.hidden = done; if (!done) left++ }
+          else if (done && el.dataset.settledState) { el.className = "v4-s " + el.dataset.settledState; el.dataset.stageState = el.dataset.settledState }
+        }
+        const prog = document.querySelector('[data-tabprog="desk"]');
+        if (prog && document.querySelector(".dk-ask")) prog.textContent = left + " for you";
+      }, () => {});
+    } catch {}
+  })();
+})();
+
+// Layout v4's Creative step (board_v4.creative_card; docs/PUBLISH_BOARDS.md, "Layout v4"; Krish, 2026-11-07: "I want
+// to be able to answer all the questions up front on what we should do in terms of creative production"): one pick in
+// each of opener, subtitles, motion style and thumbnail, then Sign creative, or Change it with his words. Saved at once
+// in picks/<day>-creative, bound to the sheet's sha256, by his press alone; the server writes it onto the piece's
+// making record as gates.creative, with gates.storyboard and gates.style when he signs.
+(() => {
+  const cards = [...document.querySelectorAll(".rec.cr[data-creative-day]")];
+  if (!cards.length) return;
+  const NEED = { opener: "the opener", captions: "the subtitles", motion: "a motion style", thumbnail: "a thumbnail" };
+  const saved = {}, busy = {}, picks = {}, touched = {};
+  let ddb = null, mode = "loading";
+  const hm = at => { try { return new Date(at).toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" }) } catch { return "" } };
+  const say = (day, msg, bad) => { const s = document.querySelector(`[data-crstate="${day}"]`); if (s) { s.textContent = msg; s.classList.toggle("bad", !!bad) } };
+  function render(){
+    for (const c of cards) {
+      const day = c.dataset.creativeDay, id = day + "-creative", v = saved[id], sha = c.dataset.creativeSha;
+      const same = !!v && v.sha256 === sha, signed = same && v.approved === true;
+      if (same && v.picks && !touched[day]) picks[day] = { ...v.picks };
+      const p = picks[day] || (picks[day] = {});
+      const shut = mode !== "live" || !!busy[id] || signed;
+      for (const b of c.querySelectorAll(".cr-pick")) {
+        const on = p[b.dataset.crPick] === b.dataset.value;
+        b.disabled = shut; b.setAttribute("aria-pressed", on ? "true" : "false");
+        const opt = b.closest("[data-cr-opt]"); if (opt) opt.classList.toggle("on", on);
+      }
+      for (const el of c.querySelectorAll('[data-act="creative"], textarea[data-cr-words]')) el.disabled = shut;
+      c.classList.toggle("on", signed);
+      if (busy[id]) continue;
+      if (mode === "off") { say(day, "Your presses are not saving in this view.", true); continue }
+      say(day, !v ? "" : !same ? "The sheet changed since you pressed; press again." : v.approved ? `Signed ${hm(v.at)}.` : `Sent back ${hm(v.at)}: ${v.words}`, !!v && !same);
+    }
+  }
+  render();
+  (async () => {
+    try { ddb = window.claude?.use ? await window.claude.use("db") : null } catch { ddb = null }
+    if (!ddb) { mode = "off"; render(); return }
+    try {
+      ddb.collection("picks").onSnapshot(snap => {
+        for (const k of Object.keys(saved)) delete saved[k];
+        for (const d of snap.docs) if (d.exists && /^(mon|tue|wed|thu|fri|sat)-creative$/.test(d.id)) saved[d.id] = d.data() || {};
+        mode = "live"; render();
+      }, () => { mode = "broken"; render() });
+    } catch { mode = "broken"; render() }
+  })();
+  document.addEventListener("click", async e => {
+    const pick = e.target.closest && e.target.closest(".rec.cr .cr-pick");
+    if (pick) {
+      const day = pick.closest(".rec.cr").dataset.creativeDay;
+      touched[day] = true; (picks[day] || (picks[day] = {}))[pick.dataset.crPick] = pick.dataset.value; render(); return;
+    }
+    const b = e.target.closest && e.target.closest('.rec.cr [data-act="creative"]');
+    if (!b) return;
+    const c = b.closest(".rec.cr"), day = c.dataset.creativeDay, id = day + "-creative";
+    if (mode !== "live" || !ddb || busy[id]) { render(); return }
+    const words = (c.querySelector("textarea[data-cr-words]")?.value || "").trim(), sign = b.dataset.value === "sign";
+    const chosen = { ...(picks[day] || {}) };
+    if (sign) {
+      const missing = Object.keys(NEED).filter(k => !chosen[k]);
+      if (missing.length) { say(day, "Pick " + missing.map(k => NEED[k]).join(", ") + " first.", true); return }
+    } else if (!words) { say(day, "Say what to change first: your words are what the next sheet is made from.", true); return }
+    const body = { kind: "sign_creative", day, piece_id: c.dataset.piece, sha256: c.dataset.creativeSha, approved: sign, picks: chosen,
+      storyboard_sha256: c.dataset.storyboardSha, shown: (c.dataset.shown || "").split(" ").filter(Boolean), at: new Date().toISOString() };
+    if (words) body.words = words;
+    busy[id] = true; say(day, "Saving…"); render();
+    let result = null, error = null;
+    try { result = (await ddb.doc("picks/" + id).set(body)) || {}; saved[id] = result.body || body; touched[day] = false } catch (err) { error = err }
+    delete busy[id]; render();
+    if (error) { say(day, error.message || "Not saved. Press it again.", true); return }
+    if (result.gate === "failed") say(day, (sign ? "Signed" : "Sent back") + ". It is not on the piece's record yet; a session records it from here.", true);
   });
 })();
 

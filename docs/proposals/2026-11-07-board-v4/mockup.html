@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Board v4 mockup</title>
+<style>
+/* A proposal mockup, not a board: nothing here saves. Colours are the board's own tokens (scripts/post-pack/tokens.css). */
+:root{--bg:#F4EFE4;--ink:#0C1512;--card:#fffdf8;--line:#d9d2c3;--muted:#5b625e;--mint:#7EF0C0;--ok:#1f7a52;--bad:#b0412e;--warn:#b7791f;
+--ftm:#f2c84b;--uth:#b9a3ff;--mtg:#ff7a59}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1512;--ink:#F4EFE4;--card:#15201b;--line:#2b3832;--muted:#a9b4ae;--ok:#7EF0C0;--bad:#ff9b85;--warn:#f0c060;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0C1512;--ink:#F4EFE4;--card:#15201b;--line:#2b3832;--muted:#a9b4ae;--ok:#7EF0C0;--bad:#ff9b85;--warn:#f0c060;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1040px;margin:0 auto;padding:16px 16px 96px}
+h1{font-size:22px;margin:0}
+h2{font-size:18px;margin:28px 0 10px}
+h3{font-size:15px;margin:0 0 6px}
+.sub{color:var(--muted);font-size:14px}
+.note{background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--muted);margin:12px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{min-height:44px;padding:10px 14px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);font-weight:600;font-size:14px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.sel{outline:3px solid var(--mint);outline-offset:1px}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;border:1px solid var(--line)}
+.ftm{background:var(--ftm);color:#0C1512;border-color:transparent}.uth{background:var(--uth);color:#0C1512;border-color:transparent}.mtg{background:var(--mtg);color:#0C1512;border-color:transparent}.off{background:var(--mint);color:#0C1512;border-color:transparent}
+/* Needs you */
+.need{display:grid;gap:8px}
+.need .card{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.due{font-size:12px;font-weight:700;color:var(--bad);white-space:nowrap}
+.due.soon{color:var(--warn)}
+/* week strip */
+.week{display:grid;grid-template-columns:repeat(6,minmax(150px,1fr));gap:8px;overflow-x:auto;padding-bottom:4px}
+.day{cursor:pointer}
+.day.on{outline:3px solid var(--ink)}
+.stages{display:flex;gap:3px;margin-top:8px}
+.stages i{flex:1;height:8px;border-radius:3px;background:var(--line)}
+.stages i.d{background:var(--ok)}.stages i.w{background:var(--warn)}.stages i.b{background:var(--bad)}
+.legend{font-size:12px;color:var(--muted);margin-top:6px}
+/* steps */
+.steps{display:grid;gap:10px}
+details.step{background:var(--card);border:1px solid var(--line);border-radius:12px}
+details.step>summary{list-style:none;cursor:pointer;padding:14px;display:flex;justify-content:space-between;gap:10px;align-items:center;min-height:44px}
+details.step>summary::-webkit-details-marker{display:none}
+details.step .in{padding:0 14px 14px}
+.st{font-size:12px;font-weight:700}
+.st.d{color:var(--ok)}.st.w{color:var(--warn)}.st.n{color:var(--muted)}
+/* creative */
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.frame{aspect-ratio:9/16;max-width:220px;border-radius:10px;overflow:hidden;position:relative;background:#1d2a24;color:#F4EFE4;display:flex;flex-direction:column;justify-content:flex-end;padding:10px}
+.frame .face{position:absolute;inset:18% 22% 30%;border-radius:50% 50% 45% 45%;background:linear-gradient(#6b5446,#3b2d25);opacity:.85}
+.frame .cap{position:relative;z-index:1;margin-bottom:28%}
+.capA{font:800 15px/1.1 system-ui;text-transform:uppercase;text-align:center}
+.capA b{background:var(--mint);color:#0C1512;padding:0 3px}
+.capB{font:600 13px/1.25 Georgia,serif;font-style:italic;text-align:center;background:rgba(12,21,18,.75);padding:6px;border-radius:6px}
+.capC{font:700 14px/1.2 system-ui;text-align:left;border-left:4px solid var(--mint);padding-left:8px}
+.safe{position:absolute;left:0;right:0;border:0;background:rgba(255,80,60,.18);font-size:9px;color:#ffd;padding:2px 4px;z-index:2}
+.opt-label{font-size:13px;margin-top:6px}
+.opt-label small{display:block;color:var(--muted)}
+.loop{aspect-ratio:16/9;border-radius:10px;position:relative;overflow:hidden;background:#0C1512}
+.loop span{position:absolute;display:block}
+@keyframes slide{0%{transform:translateX(-30%)}50%{transform:translateX(30%)}100%{transform:translateX(-30%)}}
+@keyframes grow{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+.l1 span{height:14px;left:10%;right:10%;background:var(--mint);top:40%;animation:slide 3s ease-in-out infinite}
+.l1 span+span{top:58%;background:#F4EFE4;animation-delay:.4s}
+.l2 span{bottom:15%;width:12%;height:60%;background:var(--ftm);transform-origin:bottom;animation:grow 2.4s ease-in-out infinite}
+.l2 span:nth-child(1){left:12%}.l2 span:nth-child(2){left:32%;animation-delay:.3s}.l2 span:nth-child(3){left:52%;animation-delay:.6s}.l2 span:nth-child(4){left:72%;animation-delay:.9s;background:var(--mint)}
+.l3{background:#e9dcc6}.l3 span{width:34%;height:46%;background:#ff7a59;top:22%;left:12%;transform:rotate(-6deg);box-shadow:4px 4px 0 #0C1512;animation:blink 2.6s infinite}
+.l3 span+span{left:52%;background:#b9a3ff;transform:rotate(5deg);animation-delay:1.3s}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.sb{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px}
+.sb .pic{aspect-ratio:16/9;border-radius:5px;background:#1d2a24;color:#F4EFE4;font-size:11px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px}
+.sb p{font-size:12px;margin:6px 0 0}
+.sb .t{font-size:11px;color:var(--muted)}
+.arc{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:640px){.arc{grid-template-columns:1fr}.need .card{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;max-width:330px}
+.tile{aspect-ratio:3/4;background:#333;position:relative;overflow:hidden;font:800 13px/1 system-ui;color:#fff;display:flex;align-items:flex-end;padding:6px}
+.tile.mine{outline:3px solid var(--mint);z-index:1}
+.tile.t1{background:#e9f5ee;color:#0C1512}.tile.t2{background:#0C1512}.tile.t3{background:#7EF0C0;color:#0C1512}
+.never{font-size:13px;margin:6px 0 0;padding-left:18px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.score{display:flex;gap:4px;flex-wrap:wrap}
+.score button{min-width:32px;min-height:32px;border-radius:6px;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:12px}
+.tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;padding:10px 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs a{white-space:nowrap;text-decoration:none;color:var(--ink);font-weight:600;font-size:14px;padding:8px 12px;border-radius:99px;border:1px solid var(--line);min-height:40px;display:flex;align-items:center}
+.tabs a.on{background:var(--ink);color:var(--bg)}
+</style>
+</head>
+<body>
+<main>
+<div class="note"><b>Proposal mockup, 7 Nov 2026.</b> Nothing here saves or sends. It shows the week of 9 Nov the way the proposed board v4 would lay it out. The layout changes only with your recorded words (docs/PUBLISH_BOARDS.md).</div>
+
+<nav class="tabs" aria-label="Board">
+  <a href="#desk" class="on">Desk</a><a href="#week">This week</a><a href="#creative">Wed 11: Creative</a><a href="#review">Last week</a><a href="#ideas">Ideas for 16 Nov</a>
+</nav>
+
+<section id="desk">
+  <h1>Week of 9 November</h1>
+  <p class="sub">Illustrative timings. 4 things need you.</p>
+  <h2>Needs you, in the order it is due</h2>
+  <div class="need">
+    <div class="card"><span class="pill uth">Wed 11</span><div><b>Sign the creative for the Reiki master piece</b><div class="sub">Pick subtitles, motion style, thumbnail; check the storyboard, opener and close. Nothing builds before this.</div></div><div><div class="due">due Sun 8, 18:00</div><a class="btn" href="#creative">Open</a></div></div>
+    <div class="card"><span class="pill mtg">Fri 13</span><div><b>Sign the creative for counting rat tails</b><div class="sub">Same sheet. Your takes are in; the scripts you recorded are marked as approved.</div></div><div><div class="due">due Sun 8, 18:00</div><button class="btn">Open</button></div></div>
+    <div class="card"><span class="pill off">Sat 14</span><div><b>Pick Saturday's good-news post</b><div class="sub">2 options, each with the real photo or clip it will embed.</div></div><div><div class="due soon">due Sun 8</div><button class="btn">Open</button></div></div>
+    <div class="card"><span class="pill off">Off day</span><div><b>Which day is the proactive-AI short for?</b><div class="sub">Recorded 5 Nov, in the Inbox, not placed. Best guess: Thu 12, after the Git carousel moves to Sat.</div></div><div><div class="due soon">due Mon 9</div><button class="btn">Answer</button></div></div>
+  </div>
+  <details class="card" style="margin-top:10px"><summary><b>Waiting on the engine or Growth (6)</b> <span class="sub">nothing for you</span></summary>
+    <ul class="sub"><li>Mon 9 cover and thumbnails in this week's skin, then Growth posts</li><li>Tue 10 two carousels: Growth posts</li><li>Thu 12 Git carousel: Growth posts</li><li>Wed 11 and Fri 13 proofs: after your creative press</li><li>Fri 6 Nov marked published so it counts</li><li>Three visual bugs from 7 Nov: guards being built</li></ul>
+  </details>
+</section>
+
+<section id="week">
+  <h2>This week, every day the same way</h2>
+  <div class="week">
+    <div class="card day"><span class="pill ftm">Mon 9</span><h3>Disney eats Character.AI's scraps</h3><div class="stages"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="w"></i><i></i></div><div class="sub">cover, then post</div></div>
+    <div class="card day"><span class="pill off">Tue 10</span><h3>Two carousels</h3><div class="stages"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="w"></i><i></i></div><div class="sub">Growth posts</div></div>
+    <div class="card day on"><span class="pill uth">Wed 11</span><h3>The Reiki master's No. 2</h3><div class="stages"><i class="d"></i><i class="d"></i><i class="d"></i><i class="b"></i><i></i><i></i><i></i></div><div class="sub"><b>your creative press</b></div></div>
+    <div class="card day"><span class="pill off">Thu 12</span><h3>AI broke Git</h3><div class="stages"><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="w"></i><i></i></div><div class="sub">Growth posts</div></div>
+    <div class="card day"><span class="pill mtg">Fri 13</span><h3>Counting rat tails</h3><div class="stages"><i class="d"></i><i class="d"></i><i class="d"></i><i class="b"></i><i></i><i></i><i></i></div><div class="sub"><b>your creative press</b></div></div>
+    <div class="card day"><span class="pill off">Sat 14</span><h3>Good news</h3><div class="stages"><i class="b"></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="sub"><b>your pick</b></div></div>
+  </div>
+  <div class="legend">Seven stages, same on every day: Idea, Script, Recorded, Creative, Cut, Published, Scored. Green done, amber with someone else, red waiting on you.</div>
+</section>
+
+<section id="creative">
+  <h2>Wed 11 Nov, under.the.hood: Creative (pre-production)</h2>
+  <p class="sub">One sheet, one press. Every option below is drawn on a frame of your own take. Codex and ve build only what you sign here; anything not on this sheet is not built.</p>
+  <div class="steps">
+    <details class="step"><summary><span>1. Brief</span><span class="st d">done 4 Nov</span></summary><div class="in sub">Narrative lock signed 3 Nov.</div></details>
+    <details class="step"><summary><span>2. Script</span><span class="st d">recorded 5 Nov</span></summary><div class="in sub">Both takes in. Your recorded words are read back against the script; differences shown here.</div></details>
+    <details class="step"><summary><span>3. Recorded</span><span class="st d">2 takes</span></summary><div class="in sub">ai-music-long.mp4, ai-music-short.mp4</div></details>
+    <details class="step" open><summary><span><b>4. Creative</b></span><span class="st w">needs you</span></summary><div class="in">
+
+      <h3>A. Opener and close, in words and in picture</h3>
+      <div class="arc">
+        <div class="card"><b>Opener, 0:00 to 0:07</b><p>Picture: the two songs' real clips, sound up, you over them half-screen. Line (illustrative): the first sentence of your recorded take.</p><p class="sub">Illustrative line. Here: the hook test result from fresh readers, and two alternative hooks to swap in.</p></div>
+        <div class="card"><b>Close, last 8 seconds</b><p>Picture: back to the song, the layers (her, the AI voice, the DJ, the singer, the label) stacked as one bar. Line: "The song you can't stop dancing to is already both, and that's how music gets made now."</p><p class="sub">Your adopted close, 3 Nov.</p></div>
+      </div>
+
+      <h3 style="margin-top:16px">B. Subtitles: pick one</h3>
+      <div class="opts">
+        <div><div class="frame"><div class="safe" style="top:0;height:9%">Instagram account row</div><div class="face"></div><div class="cap capA">It reached <b>number two</b></div><div class="safe" style="bottom:0;height:22%">caption and buttons</div></div><div class="opt-label"><b>Bold block</b><small>Two to four words, one key word in mint. Highest energy.</small></div><button class="btn ghost">Pick</button></div>
+        <div><div class="frame"><div class="safe" style="top:0;height:9%">Instagram account row</div><div class="face"></div><div class="cap capB">and it reached number two in the UK</div><div class="safe" style="bottom:0;height:22%">caption and buttons</div></div><div class="opt-label"><b>Quiet serif</b><small>Full phrases, calm. Suits a story told like gossip.</small></div><button class="btn ghost">Pick</button></div>
+        <div><div class="frame"><div class="safe" style="top:0;height:9%">Instagram account row</div><div class="face"></div><div class="cap capC">No. 2, UK singles chart<br><span style="font-weight:400;font-size:11px">source and date, checked</span></div><div class="safe" style="bottom:0;height:22%">caption and buttons</div></div><div class="opt-label"><b>Fact tag, no captions</b><small>Only what adds: source, number, name. Burned-in captions off.</small></div><button class="btn ghost">Pick</button></div>
+      </div>
+      <p class="sub">Rules every option keeps: breaks only on a phrase, never repeats a title on screen, stays out of the red zones.</p>
+
+      <h3 style="margin-top:16px">C. Motion style: pick one (from the bank, each on your footage)</h3>
+      <div class="opts">
+        <div><div class="loop l1"><span></span><span></span></div><div class="opt-label"><b>Swiss grid and kinetic type</b><small>Clean, the song titles and chart moves as type. Tested: liked (Mon 2 Nov badges).</small></div><button class="btn ghost">Pick</button></div>
+        <div><div class="loop l2"><span></span><span></span><span></span><span></span></div><div class="opt-label"><b>Data story</b><small>The chart climb is the one object. Untested on your footage.</small></div><button class="btn ghost">Pick</button></div>
+        <div><div class="loop l3"><span></span><span></span></div><div class="opt-label"><b>Paper cut-out and collage</b><small>The layers peel like paper. Experiment, untested.</small></div><button class="btn ghost">Pick</button></div>
+      </div>
+
+      <h3 style="margin-top:16px">D. The one idea and its never-list</h3>
+      <div class="card"><p><b>One object:</b> the song as a stack of layers. Each reveal peels one layer: her idea, the AI voice, the DJ, the singer, the label.</p>
+      <p><b>Real things shown as themselves:</b> the two clips, the chart page, the Grammy rule page, full frame.</p>
+      <ul class="never"><li>No phone held in a hand as the evidence.</li><li>No underline or circle that is not pinned to the words it marks.</li><li>No caption that repeats the title on screen.</li><li>No stock faces.</li></ul></div>
+
+      <h3 style="margin-top:16px">E. Storyboard, long cut (tap a frame to comment)</h3>
+      <div class="board">
+        <div class="sb"><div class="pic">two viral clips, you over them</div><p>Hook: you've danced to this</p><div class="t">0:00</div></div>
+        <div class="sb"><div class="pic">sting</div><p>Series sting</p><div class="t">0:07</div></div>
+        <div class="sb"><div class="pic">layer 1: her name card</div><p>A Reiki master, no music background</p><div class="t">0:15</div></div>
+        <div class="sb"><div class="pic">layer 2: Suno, the AI voice</div><p>How AI got her in the door</p><div class="t">0:50</div></div>
+        <div class="sb"><div class="pic">layers 3 to 5: DJ, singer, label</div><p>The people who took it further</p><div class="t">1:40</div></div>
+        <div class="sb"><div class="pic">Grammy rule page, full frame</div><p>The turn: AI or human?</p><div class="t">3:10</div></div>
+        <div class="sb"><div class="pic">the whole stack as one bar</div><p>It is both, at every layer</p><div class="t">4:05</div></div>
+        <div class="sb"><div class="pic">back on the song</div><p>Close: your line</p><div class="t">4:40</div></div>
+      </div>
+
+      <h3 style="margin-top:16px">F. Thumbnail: pick one, seen where it will sit</h3>
+      <div class="arc">
+        <div><p class="sub">Instagram grid (3:4 crop of the tall cover)</p>
+          <div class="grid3"><div class="tile mine t3">REIKI MASTER. NO. 2 HIT.</div><div class="tile t2">Rat tails</div><div class="tile t1">Disney's scraps</div><div class="tile t1">Five good things</div><div class="tile t2">Chinese AI?</div><div class="tile t3">Hand to AI</div></div></div>
+        <div class="row" style="align-items:flex-start">
+          <button class="btn ghost">A: her name, the chart climb</button><button class="btn ghost">B: "Who wrote this?" on the waveform</button><button class="btn ghost">C: the five layers as a stack</button>
+        </div>
+      </div>
+
+      <h3 style="margin-top:16px">G. What happens after you sign</h3>
+      <p class="sub">The engine freezes, builds the hardest beat (the layer peel) moving on your take, and puts it here for Approve proof. No whole cut renders before that. Two render loops, then you.</p>
+      <div class="row"><button class="btn">Sign creative</button><button class="btn ghost">Comment</button></div>
+    </div></details>
+    <details class="step"><summary><span>5. Cut</span><span class="st n">after proof</span></summary><div class="in sub">Proof, then both cuts, then Approve cut.</div></details>
+    <details class="step"><summary><span>6. Publish</span><span class="st n">Wed 11</span></summary><div class="in sub">Download first, Approve for publish, then Growth posts.</div></details>
+    <details class="step"><summary><span>7. Score</span><span class="st n">after it is live</span></summary><div class="in sub">Narrative and production out of 10, with views.</div></details>
+  </div>
+</section>
+
+<section id="review">
+  <h2>Last week: score every post (off days included)</h2>
+  <div class="card" style="overflow-x:auto">
+  <table>
+    <tr><th>Day</th><th>Post</th><th>Views</th><th>Narrative</th><th>Production</th></tr>
+    <tr><td>Mon 2</td><td>Claude is eating its own humans' jobs</td><td class="sub">from Growth</td><td>6</td><td>8</td></tr>
+    <tr><td>Tue 3</td><td>Off day carousel and translator meme</td><td class="sub">from Growth</td><td><div class="score"><button>1</button><button>…</button><button>10</button></div></td><td><div class="score"><button>1</button><button>…</button><button>10</button></div></td></tr>
+    <tr><td>Wed 4</td><td>AI now acts first</td><td class="sub">from Growth</td><td>7</td><td>5</td></tr>
+    <tr><td>Thu 5</td><td>Killed: no post</td><td class="sub">none</td><td colspan="2" class="sub">Lessons in docs/learning/2026-11-04-thursday-killed.md</td></tr>
+    <tr><td>Fri 6</td><td>Why every country wants its own AI</td><td>35</td><td>8</td><td>8 <span class="pill" style="border-color:var(--bad)">3 bugs</span></td></tr>
+    <tr><td>Sat 7</td><td>Five good things AI did this week</td><td>10</td><td><div class="score"><button>1</button><button>…</button><button>10</button></div></td><td><div class="score"><button>1</button><button>…</button><button>10</button></div></td></tr>
+  </table></div>
+</section>
+
+<section id="ideas">
+  <h2>Ideas for 16 Nov</h2>
+  <p class="sub">Same five presses as today (pick with a note, wider piece, future trend, next week, reject), one card per idea, four per series day, two to six per off day. Unchanged from layout v3 apart from living on its own week tab.</p>
+</section>
+</main>
+</body>
+</html>
