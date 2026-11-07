@@ -40,7 +40,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 ## What changed recently
 
 - 2026-11-07 The Sunday ideas run reads a session's brief (`docs/plans/<Monday>-week/brief.md`) when one exists, and a weekly good-news option says the day its stories are found from `stories_due` (Krish: "Saturday's good news run should be done later in the week so the good news is fresh").
-Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-07-NOW-moved-1.md`; `2026-11-06-NOW-moved-3.md` keeps the full list of earlier ones) and `LOG.md`.
+Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-07-NOW-moved-5.md`; `2026-11-06-NOW-moved-3.md` keeps the full list of earlier ones) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
