@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-06
-head: 8ddf532
+as_of: 2026-11-07
+head: f32cc42
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,7 +30,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-06)
+## Where it is right now (as of 2026-11-07)
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":2,"current_as_of":"2026-11-05","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 4 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
 
@@ -50,8 +50,8 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 ## What is next and what is waiting on Krish
 
 - Done, Copy article (2026-11-06): the 2 Nov week's board was published again with Friday's six article figures as board files, and on the live engine each one's link (`?link=1`) returns the exact approved bytes. Not yet seen: a real paste into Substack.
-- Next, covers (2026-11-05): merge, then draw the 9 Nov series pieces' covers and thumbnails together (`build.py --cover --thumbs`) once their cover facts exist. The 9 Nov week (board 0e79df54): his Wednesday script press, Growth posts the off days, Saturday's pick on Sunday 8 Nov.
-- Next (2026-11-06): Krish runs it on a live video and reports timestamps that look wrong. Open: the look-up and head-down moments are uncorrected by design (about 7% of frames, some of the biggest misses), the 51.67 s glance is partly eased by the look-up rule, and the sixth and last blind review (pass 15) said do not publish: eight of nine moments unchanged (safe), but the 5.57 s sideways glance came out with a flat grey right eye, a smeared catchlight and a wider opening. Earlier reviews of that moment were milder, so it is marginal. Next code step if wanted: a partial move (AIM_GAIN near 0.7), or leaving glances to Krish's own judgement per timestamp.
+- Next, covers (2026-11-05): draw the 9 Nov series pieces' covers and thumbnails together (`build.py --cover --thumbs`) once their cover facts exist (the skins are merged, `d538181e`). The 9 Nov week (board 0e79df54): his Wednesday script press, Growth posts the off days, Saturday's pick on Sunday 8 Nov.
+- Waiting on Krish, eye contact (2026-11-06): Krish runs it on a live video and reports timestamps that look wrong. Open: the look-up and head-down moments are uncorrected by design (about 7% of frames, some of the biggest misses), the 51.67 s glance is partly eased by the look-up rule, and the sixth and last blind review (pass 15) said do not publish: eight of nine moments unchanged (safe), but the 5.57 s sideways glance came out with a flat grey right eye, a smeared catchlight and a wider opening. Earlier reviews of that moment were milder, so it is marginal. Next code step if wanted: a partial move (AIM_GAIN near 0.7), or leaving glances to Krish's own judgement per timestamp.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
