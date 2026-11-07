@@ -3751,13 +3751,16 @@ def open_offday_count(offdays):
     return sum(1 for v in (offdays or {}).values() for o in v or [] if not o.get('closed') and not o.get('decided'))
 
 
-def ideas_waiting_panel(monday, hidden, offdays=None):
+def ideas_waiting_panel(monday, hidden, offdays=None, all_picked=False):
+    """The Ideas tab with no ideas given. all_picked: every series day already holds its piece, so nothing is waiting on
+    this week's ideas (a rebuild of a picked week gives none: Krish's newer inspiration cards belong to next Sunday's)."""
     sunday = monday - timedelta(days=1)
     return (f'<div class="pm fixed" id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" '
             f'data-state="ideas-waiting" tabindex="-1"{" hidden" if hidden else ""}>'
             f'<div class="day-head"><div class="kick">{E(week_span(monday))}</div><h1>Ideas</h1></div>'
             # Once the week is under way the waiting note is out of date; only an empty week before its Sunday shows it.
-            + ('' if open_offday_count(offdays) else
+            + (slot_empty('Every series day this week is picked. Ideas for next week come with next Sunday\'s board.')
+               if all_picked else '' if open_offday_count(offdays) else
                slot_empty(f'This week\'s ideas arrive by {short_date(sunday)}: fresh ones from the ideas you drop in Control Center, '
                           'Content Inspo (once Cold Ideas and Inspo) and the engine\'s own research, with what you queued earlier first.'))
             + offdays_section(monday, offdays) + '</div>')
@@ -4662,7 +4665,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     if FIXED:
         # The fixed layout's first two tabs are always there: Ideas (waiting until Sunday's ideas come) and Queue.
         panels.append(ideas_panel(monday, ideas, opened != 'ideas', queue, offdays) if ideas else
-                      ideas_waiting_panel(monday, opened != 'ideas', offdays))
+                      ideas_waiting_panel(monday, opened != 'ideas', offdays,
+                                          all(k in pieces or k in picks or k in pending or k in kept or k in kept_draft for k in order)))
         # A day already picked waits on no pick (Krish, 2026-11-04: the tab still said "pick 2" after both picks).
         n = len([k for k in order if (ideas or {}).get(k) and k not in pieces and k not in picks and k not in pending
                  and k not in parsed and k not in kept])
@@ -6434,7 +6438,8 @@ def _growth_offday_checks(check, week, ideas):
           shut_sec.count('class="off-card opt"') == 1 and 'data-day-count="tue">1 option<' in shut_sec)
     check('the Ideas tab drops its waiting note and says what waits once off-day options are in',
           'arrive by' not in ideas_waiting_panel(week, False, read_offdays({'tue': [plain, rich]}))
-          and 'arrive by' in ideas_waiting_panel(week, False, {}))
+          and 'arrive by' in ideas_waiting_panel(week, False, {})
+          and 'arrive by' not in ideas_waiting_panel(week, False, {}, all_picked=True))
     dl_page = board(week, ideas=ideas, offdays=read_offdays({'tue': [dict(rich, download={'url': 'https://board.asset/v.mp4', 'label': 'the video'}), plain]}))[0]
     check('off-day option: a finished file is a Download link on its card',
           '<a class="lnk-s" href="https://board.asset/v.mp4" download>Download: the video</a>' in dl_page and verify(dl_page) == [])
