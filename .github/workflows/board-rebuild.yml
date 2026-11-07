@@ -35,7 +35,8 @@ permissions:
 
 jobs:
   rebuild:
-    runs-on: ubuntu-latest
+    # Playwright 1.55 cannot install Chromium's packages on ubuntu-latest (26.04); ci.yml's browser jobs pin 24.04 too.
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
       ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
