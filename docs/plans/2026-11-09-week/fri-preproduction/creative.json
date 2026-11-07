@@ -9,47 +9,212 @@
   "status": "waiting_on_krish",
   "signed": null,
   "takes": {
-    "long": {"recording": "recordings/561fbde2d3f10279c481f53d06910392a4eea9d9acb9add5569195494aebdd81.mp4", "seconds": 405, "frame": "1080x1920 vertical"},
-    "short": {"recording": "recordings/7e0383edb7b206c0558fd88602d46c18a27f42978731e74de64310c7ed4405e7.mp4", "seconds": 109, "frame": "1080x1920 vertical"},
+    "long": {
+      "recording": "recordings/561fbde2d3f10279c481f53d06910392a4eea9d9acb9add5569195494aebdd81.mp4",
+      "seconds": 405,
+      "frame": "1080x1920 vertical"
+    },
+    "short": {
+      "recording": "recordings/7e0383edb7b206c0558fd88602d46c18a27f42978731e74de64310c7ed4405e7.mp4",
+      "seconds": 109,
+      "frame": "1080x1920 vertical"
+    },
     "against_script": "docs/plans/2026-11-09-week/fri-takes-vs-script.md"
   },
   "edit_decisions": [
-    {"cut": "short", "at_take_s": 76.3, "do": "cut", "words": "and AI costs obviously halved", "why": "unsupported: the study says query volume fell 30%"},
-    {"cut": "short", "at_take_s": 92.9, "do": "ask", "words": "I would delegate any target for AI use", "why": "both transcribers hear 'delegate', the opposite of the action", "best_guess": "a 4-second pickup: 'If I ran a team, I'd delete any target for AI use.'"},
-    {"cut": "long", "at_take_s": 41.4, "do": "cut", "words": "it's an exaggerated story", "why": "contradicts the twist that the Hanoi rats are in the records"},
-    {"cut": "long", "at_take_s": 229.0, "do": "cut", "words": "And this autumn AI taught", "why": "false start"},
-    {"cut": "long", "at_take_s": 243.9, "do": "cut", "words": "first 'Here's the bit I like the most.'", "why": "said twice"},
-    {"cut": "long", "at_take_s": 296.0, "do": "cut", "words": "the first attempt at the cobra line", "why": "false start"}
+    {
+      "cut": "short",
+      "at_take_s": 76.3,
+      "do": "cut",
+      "words": "and AI costs obviously halved",
+      "why": "unsupported: the study says query volume fell 30%"
+    },
+    {
+      "cut": "short",
+      "at_take_s": 92.9,
+      "do": "ask",
+      "words": "I would delegate any target for AI use",
+      "why": "both transcribers hear 'delegate', the opposite of the action",
+      "best_guess": "a 4-second pickup: 'If I ran a team, I'd delete any target for AI use.'"
+    },
+    {
+      "cut": "long",
+      "at_take_s": 41.4,
+      "do": "cut",
+      "words": "it's an exaggerated story",
+      "why": "contradicts the twist that the Hanoi rats are in the records"
+    },
+    {
+      "cut": "long",
+      "at_take_s": 229.0,
+      "do": "cut",
+      "words": "And this autumn AI taught",
+      "why": "false start"
+    },
+    {
+      "cut": "long",
+      "at_take_s": 243.9,
+      "do": "cut",
+      "words": "first 'Here's the bit I like the most.'",
+      "why": "said twice"
+    },
+    {
+      "cut": "long",
+      "at_take_s": 296.0,
+      "do": "cut",
+      "words": "the first attempt at the cobra line",
+      "why": "false start"
+    }
   ],
   "A_opener_close": {
     "options": [
-      {"id": "A1", "kind": "recorded", "cut": "both", "take_s": [2.5, 9.7], "words": "In 1902, Hanoi paid people for every rat tail...", "still": "A1_opener_recorded.jpg"},
-      {"id": "A2", "kind": "alt_hook", "cut": "long", "take_s": [153.8, 160.6], "words": "The top users at Meta were called things like token legend. Amazon... Kero rank.", "still": "A2_hook_token_legend.jpg"},
-      {"id": "A3", "kind": "alt_hook", "cut": "short", "take_s": [82.2, 86.1], "words": "Whatever you're going to count in your business, people learn to make more of it.", "still": "A3_hook_rule_first.jpg"}
+      {
+        "id": "A1",
+        "kind": "recorded",
+        "cut": "both",
+        "take_s": [
+          2.5,
+          9.7
+        ],
+        "words": "In 1902, Hanoi paid people for every rat tail...",
+        "still": "A1_opener_recorded.jpg"
+      },
+      {
+        "id": "A2",
+        "kind": "alt_hook",
+        "cut": "long",
+        "take_s": [
+          153.8,
+          160.6
+        ],
+        "words": "The top users at Meta were called things like token legend. Amazon... Kero rank.",
+        "still": "A2_hook_token_legend.jpg"
+      },
+      {
+        "id": "A3",
+        "kind": "alt_hook",
+        "cut": "short",
+        "take_s": [
+          82.2,
+          86.1
+        ],
+        "words": "Whatever you're going to count in your business, people learn to make more of it.",
+        "still": "A3_hook_rule_first.jpg"
+      }
     ],
-    "hook_test": {"readers": 1, "reader": "reader A prompt, fresh Claude Code subagent, 7 Nov 2026", "keep_watching": {"A1": true, "A2": false, "A3": true}, "rank": ["A3", "A1", "A2"], "note": "one reader; not a passed test"},
-    "pick": {"short": "A3 then A1", "long": "A1 after the series sting (the signed random-headline experiment)"},
+    "hook_test": {
+      "readers": 1,
+      "reader": "reader A prompt, fresh Claude Code subagent, 7 Nov 2026",
+      "keep_watching": {
+        "A1": true,
+        "A2": false,
+        "A3": true
+      },
+      "rank": [
+        "A3",
+        "A1",
+        "A2"
+      ],
+      "note": "one reader; not a passed test"
+    },
+    "pick": {
+      "short": "A3 then A1",
+      "long": "A1 after the series sting (the signed random-headline experiment)"
+    },
     "close": {
-      "short": {"take_s": [86.1, 90.7], "words": "If you're counting how much AI your people use, you're basically counting rat tails in Hanoi.", "still": "A4_close_short.jpg"},
-      "long": {"take_s": [360.9, 381.3], "words": "Whatever you count... you're essentially like the Vietnamese rat tail counters.", "still": "A5_close_long.jpg", "note": "the locked close line is not said as written; pickup offered with the short's pickup"}
+      "short": {
+        "take_s": [
+          86.1,
+          90.7
+        ],
+        "words": "If you're counting how much AI your people use, you're basically counting rat tails in Hanoi.",
+        "still": "A4_close_short.jpg"
+      },
+      "long": {
+        "take_s": [
+          360.9,
+          381.3
+        ],
+        "words": "Whatever you count... you're essentially like the Vietnamese rat tail counters.",
+        "still": "A5_close_long.jpg",
+        "note": "the locked close line is not said as written; pickup offered with the short's pickup"
+      }
     }
   },
   "B_subtitles": {
     "options": [
-      {"id": "B1", "name": "house phrase", "type": "Archivo 900, 2 to 4 words, cream, key word mint", "box": "x 70..860, y 1060..1200 on 1080x1920", "still": "B1_captions_house.jpg"},
-      {"id": "B2", "name": "mono band", "type": "IBM Plex Mono on an ink band no wider than its words", "still": "B2_captions_band.jpg"},
-      {"id": "B3", "name": "wall card", "type": "Anton caps on the wall top-left, key word coral", "still": "B3_captions_wall.jpg", "experiment": true}
+      {
+        "id": "B1",
+        "name": "house phrase",
+        "type": "Archivo 900, 2 to 4 words, cream, key word mint",
+        "box": "x 70..860, y 1060..1200 on 1080x1920",
+        "still": "B1_captions_house.jpg"
+      },
+      {
+        "id": "B2",
+        "name": "mono band",
+        "type": "IBM Plex Mono on an ink band no wider than its words",
+        "still": "B2_captions_band.jpg"
+      },
+      {
+        "id": "B3",
+        "name": "wall card",
+        "type": "Anton caps on the wall top-left, key word coral",
+        "still": "B3_captions_wall.jpg",
+        "experiment": true
+      }
     ],
-    "rules": ["break on phrases, never end a chunk on the/that/a/of", "never repeat on-screen title words at the same moment", "nothing in any channel zone (config/channel-safe-zones.json)"],
+    "rules": [
+      "break on phrases, never end a chunk on the/that/a/of",
+      "never repeat on-screen title words at the same moment",
+      "nothing in any channel zone (config/channel-safe-zones.json)"
+    ],
     "pick": "B1"
   },
   "C_motion": {
     "options": [
-      {"id": "C1", "module": "data-story", "verdict": "untested", "loop": "C1_data_story.mp4", "take": "short", "take_s": [61.4, 64.4]},
-      {"id": "C2", "module": "swiss-kinetic-type", "verdict": "untested", "loop": "C2_swiss_kinetic_type.mp4", "take": "short", "take_s": [34.0, 37.0]},
-      {"id": "C3", "module": "single-line-drawing", "verdict": "untested", "experiment": true, "loop": "C3_single_line_experiment.mp4", "take": "short", "take_s": [2.5, 5.5], "breaks": "ink line on a light wall where the module says cream on ink"}
+      {
+        "id": "C1",
+        "module": "data-story",
+        "verdict": "untested",
+        "loop": "C1_data_story.mp4",
+        "take": "short",
+        "take_s": [
+          64.6,
+          67.6
+        ],
+        "what": "cutaway: the paper's chart at target 200 wipes to its chart at 100, then mint SALES +7%; his face in a small inset"
+      },
+      {
+        "id": "C2",
+        "module": "swiss-kinetic-type",
+        "verdict": "untested",
+        "loop": "C2_swiss_kinetic_type.mp4",
+        "take": "short",
+        "take_s": [
+          34.0,
+          37.0
+        ]
+      },
+      {
+        "id": "C3",
+        "module": "single-line-drawing",
+        "verdict": "untested",
+        "experiment": true,
+        "loop": "C3_single_line_experiment.mp4",
+        "take": "short",
+        "take_s": [
+          2.5,
+          5.5
+        ],
+        "breaks": "ink line on a light wall where the module says cream on ink"
+      }
     ],
-    "pick": {"style.motion.module": "data-story", "inside_it": "C2's leaderboard titles as type", "optional": "C3 on the Hanoi open"}
+    "pick": {
+      "style.motion.module": "data-story",
+      "inside_it": "C2's leaderboard titles as type",
+      "optional": "C3 on the Hanoi open"
+    }
   },
   "D_idea": {
     "object": "a tally counter on the wall beside him that shows what is being paid for",
@@ -62,12 +227,44 @@
       "rolls back to TAILS": "the close"
     },
     "real_artifacts": [
-      {"what": "Fortune, 9 Apr 2026: 'Claudeonomics', titles 'Token Legend' and 'Cache Wizard'", "url": "https://fortune.com/2026/04/09/meta-killed-employee-ai-token-dashboard/", "still": "D1_artifact_fortune.jpg"},
-      {"what": "CIO, 29 May 2026: Kirorank, agents on 'unnecessary tasks', taken offline", "url": "https://www.cio.com/article/4178825/amazon-deletes-devs-tokenmaxxing-leaderboard-to-minimize-costs-2.html", "still": "D2_artifact_cio.jpg"},
-      {"what": "Gong et al., arXiv 2609.32859: 31 percent repeated or off-task, target lowered to 100, monthly sales up 7 percent", "url": "https://arxiv.org/abs/2609.32859", "still": "D3_artifact_arxiv.jpg"},
-      {"what": "Shopify memo line", "url": "https://x.com/tobi/status/1909251946235437514", "still": null, "todo": "capture"},
-      {"what": "CNBC, 27 Oct 2026: 'deeply flawed', 'a finding, not a failing'", "url": "https://www.cnbc.com/2026/10/27/amazon-ai-coding-tokenmaxxing.html", "still": null, "todo": "capture; refused this cloud machine"},
-      {"what": "the study's own figure of query counts bunching at the threshold", "still": null, "todo": "capture from the paper, never redraw"}
+      {
+        "what": "Fortune, 9 Apr 2026: 'Claudeonomics', titles 'Token Legend' and 'Cache Wizard'",
+        "url": "https://fortune.com/2026/04/09/meta-killed-employee-ai-token-dashboard/",
+        "still": "D1_artifact_fortune.jpg"
+      },
+      {
+        "what": "CIO, 29 May 2026: Kirorank, agents on 'unnecessary tasks', taken offline",
+        "url": "https://www.cio.com/article/4178825/amazon-deletes-devs-tokenmaxxing-leaderboard-to-minimize-costs-2.html",
+        "still": "D2_artifact_cio.jpg",
+        "capture": "2x, marks set in the page text"
+      },
+      {
+        "what": "Gong et al., arXiv 2609.32859: 31 percent repeated or off-task, target lowered to 100, monthly sales up 7 percent",
+        "url": "https://arxiv.org/abs/2609.32859",
+        "still": "D5_artifact_abstract.jpg",
+        "capture": "2x, marks set in the page text"
+      },
+      {
+        "what": "Shopify memo line",
+        "url": "https://x.com/tobi/status/1909251946235437514",
+        "still": null,
+        "todo": "capture"
+      },
+      {
+        "what": "CNBC, 27 Oct 2026: 'deeply flawed', 'a finding, not a failing'",
+        "url": "https://www.cnbc.com/2026/10/27/amazon-ai-coding-tokenmaxxing.html",
+        "still": null,
+        "todo": "capture; refused this cloud machine"
+      },
+      {
+        "what": "the paper's own charts of query counts: Figure 2a (target 200) and Figure 3a (target 100)",
+        "url": "https://arxiv.org/html/2609.32859v1",
+        "still": [
+          "D3_artifact_fig_200.jpg",
+          "D4_artifact_fig_100.jpg"
+        ],
+        "capture": "2x"
+      }
     ],
     "never": [
       "a phone held in a hand as the evidence; a phone mockup only as a 1-second establishing shot",
@@ -82,39 +279,151 @@
   },
   "E_storyboard": {
     "short": [
-      {"t": "0:00", "take_s": 82.2, "beat": "A3: the rule first"},
-      {"t": "0:04", "take_s": 2.5, "beat": "Hanoi 1902; counter in: TAILS"},
-      {"t": "0:13", "take_s": 12.0, "beat": "tails snipped, rats let go; counter ticks"},
-      {"t": "0:24", "take_s": 35.0, "beat": "TOKEN LEGEND / CACHE WIZARD on the wall (C2)"},
-      {"t": "0:32", "take_s": 44.0, "beat": "pointless jobs; counter rolls TAILS > TOKENS"},
-      {"t": "0:41", "take_s": 53.0, "beat": "Fortune and CIO full frame, one mark each"},
-      {"t": "0:56", "take_s": 66.0, "beat": "the study: 200 > 100, 31%, +7% (C1, D3)"},
-      {"t": "1:12", "take_s": 89.4, "beat": "close line; counter back to TAILS; deep-dive line"}
+      {
+        "t": "0:00",
+        "take_s": 82.2,
+        "beat": "A3: the rule first"
+      },
+      {
+        "t": "0:04",
+        "take_s": 2.5,
+        "beat": "Hanoi 1902; counter in: TAILS"
+      },
+      {
+        "t": "0:13",
+        "take_s": 12.0,
+        "beat": "tails snipped, rats let go; counter ticks"
+      },
+      {
+        "t": "0:24",
+        "take_s": 35.0,
+        "beat": "TOKEN LEGEND / CACHE WIZARD on the wall (C2)"
+      },
+      {
+        "t": "0:32",
+        "take_s": 44.0,
+        "beat": "pointless jobs; counter rolls TAILS > TOKENS"
+      },
+      {
+        "t": "0:41",
+        "take_s": 53.0,
+        "beat": "Fortune and CIO full frame, one mark each"
+      },
+      {
+        "t": "0:56",
+        "take_s": 66.0,
+        "beat": "the study: the paper's chart, the pile at 200 moves to 100, then sales +7% (C1, D3, D4)"
+      },
+      {
+        "t": "1:12",
+        "take_s": 89.4,
+        "beat": "close line; counter back to TAILS; deep-dive line"
+      }
     ],
     "long": [
-      {"t": "0:00", "beat": "series sting"},
-      {"t": "0:0x", "take_s": 3.0, "beat": "Hanoi cold open; counter TAILS beside his pillar"},
-      {"t": "0:52", "take_s": 60.0, "beat": "map: the rules, the leaderboards, the U-turns"},
-      {"t": "1:14", "take_s": 86.0, "beat": "part one: Shopify memo line full frame"},
-      {"t": "2:12", "take_s": 150.0, "beat": "part two: Token Legend, KiroRank (D1, D2)"},
-      {"t": "2:36", "take_s": 175.0, "beat": "agents on pointless jobs; counter TOKENS spins"},
-      {"t": "3:10", "take_s": 212.0, "beat": "part three: boards come down; strike through"},
-      {"t": "3:45", "take_s": 255.0, "beat": "the study from its own numbers (C1)"},
-      {"t": "4:28", "take_s": 315.0, "beat": "the cobra twist, source on screen"},
-      {"t": "5:10", "take_s": 362.0, "beat": "the rule card"},
-      {"t": "5:25", "take_s": 380.0, "beat": "his close; counter back to TAILS"}
+      {
+        "t": "0:00",
+        "beat": "series sting"
+      },
+      {
+        "t": "0:0x",
+        "take_s": 3.0,
+        "beat": "Hanoi cold open; counter TAILS beside his pillar"
+      },
+      {
+        "t": "0:52",
+        "take_s": 60.0,
+        "beat": "map: the rules, the leaderboards, the U-turns"
+      },
+      {
+        "t": "1:14",
+        "take_s": 86.0,
+        "beat": "part one: Shopify memo line full frame"
+      },
+      {
+        "t": "2:12",
+        "take_s": 150.0,
+        "beat": "part two: Token Legend, KiroRank (D1, D2)"
+      },
+      {
+        "t": "2:36",
+        "take_s": 175.0,
+        "beat": "agents on pointless jobs; counter TOKENS spins"
+      },
+      {
+        "t": "3:10",
+        "take_s": 212.0,
+        "beat": "part three: boards come down; strike through"
+      },
+      {
+        "t": "3:45",
+        "take_s": 255.0,
+        "beat": "the study from its own numbers (C1)"
+      },
+      {
+        "t": "4:28",
+        "take_s": 315.0,
+        "beat": "the cobra twist, source on screen"
+      },
+      {
+        "t": "5:10",
+        "take_s": 362.0,
+        "beat": "the rule card"
+      },
+      {
+        "t": "5:25",
+        "take_s": 380.0,
+        "beat": "his close; counter back to TAILS"
+      }
     ],
     "layout_long": "his vertical take as a right-hand pillar (608x1080), the left two-thirds for the counter and the evidence",
-    "hardest_beat": {"cut": "long", "take_s": [150.0, 185.0], "what": "leaderboard titles, Fortune and CIO pages and the counter rolling TAILS > TOKENS in one move"}
+    "hardest_beat": {
+      "cut": "long",
+      "take_s": [
+        150.0,
+        185.0
+      ],
+      "what": "leaderboard titles, Fortune and CIO pages and the counter rolling TAILS > TOKENS in one move"
+    }
   },
   "F_thumbnails": {
     "options": [
-      {"id": "F1", "what": "his face + COUNTING RAT TAILS", "stills": ["F1_cover_zones.jpg", "F1_ig_grid.jpg", "F1_yt_row.jpg"]},
-      {"id": "F2", "what": "1902: RATS. 2026: AI. + the counter", "stills": ["F2_cover_zones.jpg", "F2_ig_grid.jpg", "F2_yt_row.jpg"]},
-      {"id": "F3", "what": "mint: AI TARGET 200 > 100, SALES +7%", "stills": ["F3_cover_zones.jpg", "F3_ig_grid.jpg", "F3_yt_row.jpg"]}
+      {
+        "id": "F1",
+        "what": "his face + COUNTING RAT TAILS",
+        "stills": [
+          "F1_cover_zones.jpg",
+          "F1_ig_grid.jpg",
+          "F1_yt_row.jpg"
+        ]
+      },
+      {
+        "id": "F2",
+        "what": "1902: RATS. 2026: AI. + the counter",
+        "stills": [
+          "F2_cover_zones.jpg",
+          "F2_ig_grid.jpg",
+          "F2_yt_row.jpg"
+        ]
+      },
+      {
+        "id": "F3",
+        "what": "mint: AI TARGET 200 > 100, SALES +7%",
+        "stills": [
+          "F3_cover_zones.jpg",
+          "F3_ig_grid.jpg",
+          "F3_yt_row.jpg"
+        ]
+      }
     ],
     "grid_note": "the five neighbouring tiles are labelled stand-ins; the real covers were not fetched in this session",
     "pick": "F1"
   },
-  "G_after_sign": ["ve expect binds the storyboard", "ve proof of the hardest beat on his take, then his Approve proof", "both cuts, the article and the cover", "Codex card only for the counter device, under style.motion data-story", "two full renders per cut, then Krish"]
+  "G_after_sign": [
+    "ve expect binds the storyboard",
+    "ve proof of the hardest beat on his take, then his Approve proof",
+    "both cuts, the article and the cover",
+    "Codex card only for the counter device, under style.motion data-story",
+    "two full renders per cut, then Krish"
+  ]
 }
