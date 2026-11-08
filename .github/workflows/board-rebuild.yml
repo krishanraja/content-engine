@@ -104,6 +104,21 @@ jobs:
           ASSETS=$(python3 -c "import json,os; print(json.load(open(os.environ['RECIPE'])).get('assets') or '')")
           python3 scripts/post-pack/board_web.py publish-web .cache/board/week-board.html ${ASSETS:+--assets "$ASSETS"}
 
+      - name: When the publish check fails, list the live board's stored files (read-only)
+        if: failure()
+        run: |
+          # A mapping in board-assets.json names a stored file by its sha256. When a later publish replaced that file,
+          # the check above stops; this prints what the live build holds (id, sha256, bytes) so the mapping can be
+          # refreshed from fact. It reads only; it writes nothing.
+          python3 - <<'PY'
+          import sys
+          sys.path.insert(0, 'scripts/post-pack')
+          import os, board_web
+          state = board_web.call('GET', f"/api/board/{os.environ['WEEK']}")
+          for asset_id, f in sorted(((state.get('manifest') or {}).get('assets') or {}).items()):
+              print(asset_id, f.get('sha256'), f.get('bytes'), f.get('name'))
+          PY
+
       - name: Put it live, only on his words
         if: ${{ github.event.inputs.publish == 'publish approved by Krish' }}
         run: |
