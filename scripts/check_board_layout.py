@@ -668,6 +668,10 @@ def v4_in_browser(page, web):
         if page.evaluate('() => { const a = document.querySelector(\'[data-settled-by="wed-creative"]\'); return !a || !a.hidden }'):
             problems.append('v4: the Desk still asks for the creative after he signed it')
         page.goto('https://board.test/v4.html#lastweek')
+        # On a phone each post of last week is folded to its title row (Krish, 2026-11-08): tap it open as he would.
+        row = page.locator('.lw-row:has(#lw2-scores)')
+        if row.evaluate('e => e.classList.contains("fold") && !e.classList.contains("open")'):
+            row.locator(':scope > .fold-h').click()
         page.wait_for_selector('[data-act="save-scores"][data-for="lw2-scores"]:not([disabled])', timeout=5000)
         page.select_option('#lw2-scores [data-score="narrative"]', '9')
         page.select_option('#lw2-scores [data-score="production"]', '8')
