@@ -2585,6 +2585,11 @@ def with_stage_bar(panel, bar):
     """The day's seven stages, last in its heading."""
     at = panel.find('<div class="day-head">')
     head = div_at(panel, at)
+    old = head.find('<ol class="v4-stages"')
+    if old >= 0:
+        # A day kept from a board already in v4 carries last build's bar: replace it, never add a second.
+        end = head.index('</ol>', old) + len('</ol>')
+        return panel.replace(head, head[:old] + bar + head[end:], 1)
     return panel.replace(head, head[:-len('</div>')] + bar + '</div>', 1)
 
 
@@ -6122,6 +6127,11 @@ def _v4_checks(check, mon):
     """Layout v4 (from the week of 9 November 2026; Krish, 2026-11-07: "I still have to keep looking for things"): the Desk
     first, every day Monday to Saturday with the seven stages and six steps, the Creative sheet and its press, Scores for
     every post, Last week, and bugs on their post."""
+    panel = '<div class="pm"><div class="day-head"><h1>x</h1></div><p>body</p></div>'
+    bar = '<ol class="v4-stages" data-stages-day="mon"><li>a</li></ol>'
+    once = with_stage_bar(panel, bar)
+    check(with_stage_bar(once, bar.replace('>a<', '>b<')).count('class="v4-stages"') == 1,
+          'a day kept from a v4 board gets its stage bar replaced, never a second one')
     week = V4_FROM
     with tempfile.TemporaryDirectory() as tmp:
         raw, mapping = example_creative(tmp)
