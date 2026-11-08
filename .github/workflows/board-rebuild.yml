@@ -119,6 +119,17 @@ jobs:
               print(asset_id, f.get('sha256'), f.get('bytes'), f.get('name'))
           PY
 
+      # The live publish reads the media-standard rollout through node + tsx (board_web.py -> media_standard.enforced);
+      # without the packages it stops with "Media quality rollout unavailable" after his yes.
+      - uses: actions/setup-node@v4
+        if: ${{ github.event.inputs.publish == 'publish approved by Krish' }}
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install the packages the live publish reads
+        if: ${{ github.event.inputs.publish == 'publish approved by Krish' }}
+        run: npm ci
+
       - name: Put it live, only on his words
         if: ${{ github.event.inputs.publish == 'publish approved by Krish' }}
         run: |
