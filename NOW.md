@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-07
+as_of: 2026-11-08
 head: 8ddf532
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,10 +30,11 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-07)
+## Where it is right now (as of 2026-11-08)
 
 <!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":3,"current_as_of":"2026-11-08","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":2,"urgency_reason":"at 75% of this week's target"} --> **North Star number: U2, behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 4 this week, on the way to 30 by 30 November 2026. The number leads every session.
 
+- The 9 Nov board is live on layout v4 (build 2c5c124b, revision 26, 9 stored files, read back), published by Board rebuild run 42475151020 on Krish's yes; on a phone its long blocks fold to their titles, nothing is cut off, and its fonts are the brand fonts. (2026-11-08)
 - The 9 Nov board's rebuild recipe no longer gives this week's Ideas list: every series day is picked, and the 7 Nov gather found inspiration cards saved after 2 Nov that belong to next Sunday's ideas; the Ideas tab says the week is picked. (2026-11-07)
 - post-mortem of the 2 Nov week written; board v4 and pre-production sheet proposed with a mockup; 9 Nov outstanding listed. (2026-11-07)
 - Publish board v4 is built and checked (PR #465): the Desk, seven stages on every day Mon to Sat, the Creative step with Sign creative, Scores for every post, Last week and bugs on their post; the live 9 Nov board is not rebuilt yet (the engine API is 401 from a cloud session). (2026-11-07)
@@ -54,7 +55,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-07): Run Board rebuild (week 2026-11-09) as a dry run again and send Krish its screenshots.
+- Next (2026-11-08): Krish scores last week's 3 posts and approves Monday 9 Nov for publish on the Desk.
 - Done, Copy article (2026-11-06): the 2 Nov week's board was published again with Friday's six article figures as board files, and on the live engine each one's link (`?link=1`) returns the exact approved bytes. Not yet seen: a real paste into Substack.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
@@ -63,7 +64,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
-- North Star check (2026-11-07): holds.
+- North Star check (2026-11-08): holds.
 
 ## Read next
 
