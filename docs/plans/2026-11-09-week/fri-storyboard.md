@@ -8,8 +8,8 @@ how staff game an AI-use leaderboard. One idea runs through it: what gets counte
 | World | Look | Source |
 |---|---|---|
 | 1902 Hanoi | Photoreal period film: warm faded autochrome colour, grain, soft vignette, slight gate weave | 9 generated clips + 9 stills (`fri-1902-generated.json`) |
-| 2026 office | Isometric miniature world (house motion style `isometric-world`): tiny staff, desks, a leaderboard tower in the middle; coral = what is counted, mint = real work | Codex device `office_floor` (card `ve-fri-2-office-floor`) |
-| Krish | His take: right-hand pillar on the wide cut, lower half on the tall cut, never covered | `measuring-ai-long`, `measuring-ai-short` |
+| 2026 office | Isometric miniature diorama (house motion style `isometric-world`): tiny staff, desks, one glass leaderboard tower with crowned rank bars; coral = what is counted, mint = real work | 7 generated clips (`fri-office-generated` in `fri-1902-generated.json`); Codex device `office_floor` stays in the library |
+| Krish | Full frame for the hook, the turn to "your company" and the close; everywhere else a small rounded window (about a fifth of frame height), bottom right on the wide cut, bottom left on the tall cut (clear of Instagram's right rail and above captions); off for one or two seconds on the tailless rat and the Token Legend slam (Krish, 9 Nov: face in the bottom corner) | `measuring-ai-long`, `measuring-ai-short` |
 
 Evidence (the Shopify and Duolingo lines, the Fortune and CIO pages, the study's own two charts) appears as a screen on the
 office wall that zooms to full frame, marked on its own words (`living-ui` rules), then zooms back into the office.
@@ -38,15 +38,15 @@ office wall that zooms to full frame, marked on its own words (`living-ui` rules
 | 5 | "rats with no tails… very much alive" | Tailless rat clip (0 to 3.8 s only), cut hard on the laugh | Cut on "alive" |
 | 6 | "Some even opened rat farms…" | Rat farm clip | Film dissolve |
 | 7 | "In the end, the city gave up…" | Ledger clip, slow push | Film dissolve |
-| 8 | "Sounds daft, right? But if your company…" | **Match cut**: crates become desks, the office floor builds | The match cut |
+| 8 | "Sounds daft, right? But if your company…" | **Match cut**: rat farm clip into `office_1_match` (same layout), then `office_2_floor` | The match cut |
 | 9 | "In 2025, bosses started telling staff…" | Office wall screen: the Shopify line, then Duolingo, marked | Office to evidence |
 | 10 | "someone builds a leaderboard" | The tower rises in the middle of the floor; figures arrive at desks | Back into the office |
-| 11 | "At Meta… tokens… Token Legend" | Coins pour from desks into the tower; TOKEN LEGEND stamps on the top | In the office |
+| 11 | "At Meta… tokens… Token Legend" | `office_3_coins`, then `office_5_legend` with TOKEN LEGEND set on the badge space above the tower | In the office |
 | 12 | "Amazon had a leaderboard too… KiroRank" | A second, smaller tower beside it | In the office |
-| 13 | "No one wants to be bottom of a chart…" | One figure starts a treadmill of agents; coins stream; it climbs | In the office |
+| 13 | "No one wants to be bottom of a chart…" | `office_4_treadmill` | In the office |
 | 14 | "ten agents loose on it" | A manager's speech bubble; ten agents swarm it | In the office |
-| 15 | "would really climb those leaderboards" | Mint figure at the bottom ships a box, a bell rings, it does not move | In the office |
-| 16 | "Then the leaderboards came down…" | Both towers topple; Fortune then CIO on the wall screen | Office to evidence |
+| 15 | "would really climb those leaderboards" | `office_6_realwork` (mint, the bell) | In the office |
+| 16 | "Then the leaderboards came down…" | `office_7_fall`, then Fortune and CIO on the wall screen | Office to evidence |
 | 17 | "a firm that kept counting, and simply asked for less" | The study's two charts on the wall screen, circles on the spikes | Office to evidence |
 | 18 | "So the firm cut the target in half…" | The target line on the tower lowers, junk coins stop, mint bell, SALES +7% | Back into the office |
 | 19 | "Hanoi counted tails and got tails…" | Split frame: rat farm clip left, office right, both stamped COUNTED | Film gate (half frame) |
@@ -60,8 +60,8 @@ The tall cut runs the 1902 clips cropped to 9:16 above his face; the tall rat cl
 
 ## What makes what
 
-- Codex: `office_floor` (card `ve-fri-2-office-floor`), which also carries the tower; it replaces the flat leaderboard as
-  the ranking, which stays in the library for other pieces.
+- Generated (Higgsfield, Kling 3.0): the 9 1902 clips and the 7 office clips. Codex's `office_floor` and `leaderboard`
+  stay in the library; on this piece Codex adds only the exact overlays (TOKEN LEGEND badge, rank labels, target line).
 - ve: the cut, the film gate, the dissolves, the match cut, the evidence zooms, captions (B1) and the grade.
 - Before any full render: `ve proof` of beats 6 to 11 (rat farm, match cut, tower, Token Legend) on his take, for his
   Approve proof.
