@@ -9,7 +9,7 @@ export type Collection = typeof collections[number]
 // teleprompter_send.py), titles his Titles presses. Each is the picks documents of that kind; nothing writes to a view.
 // The production gates (GATE_KINDS) are views too, so GET /api/board/<Monday>/storyboard (style, proof, cut) lists his
 // presses on each gate, one per day: storyboard/<day> is the picks document <day>-storyboard.
-export const views = { approvals: 'approve_scripts', titles: 'titles', storyboard: 'sign_storyboard', style: 'pick_style', proof: 'approve_proof', cut: 'approve_cut' } as const
+export const views = { approvals: 'approve_scripts', titles: 'titles', storyboard: 'sign_storyboard', style: 'pick_style', proof: 'approve_proof', cut: 'approve_cut', creative: 'sign_creative' } as const
 export type View = keyof typeof views
 export const MAX_HTML = 16 * 1024 * 1024
 export const digest = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex')
@@ -148,12 +148,49 @@ export function feelBody(id: string, body: Record<string, unknown>): boolean {
 // piece_scores row (afterPress); the document keeps his latest press for the board to show.
 export const SCORE_ID = /^score-([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/
 export const SCORE_BASES = ['at_publish', 'hindsight'] as const
+// Layout v4 (Krish, 2026-11-07: "It also doesn't allow me to give feedback for every day of publishing stuff last week,
+// say, for example, the off days"): a post with no piece yet (an off day Growth made) is scored on the board as
+// picks/score-<date>[-<slot>], with its date and title; it files no piece_scores row until it has a piece.
+export const SCORE_DATE_ID = /^score-(\d{4}-\d{2}-\d{2})(?:-([a-z0-9][a-z0-9_-]{0,39}))?$/
+const SCORE_DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 export function scoreBody(id: string, body: Record<string, unknown>): boolean {
   const m = SCORE_ID.exec(id)
+  const dated = SCORE_DATE_ID.exec(id)
   const mark = (v: unknown) => Number.isSafeInteger(v) && Number(v) >= 1 && Number(v) <= 10
-  return !!m && body.kind === 'scores' && body.piece_id === m[1] && mark(body.narrative) && mark(body.production)
+  const common = body.kind === 'scores' && mark(body.narrative) && mark(body.production)
     && (SCORE_BASES as readonly unknown[]).includes(body.basis) && !('send' in body)
     && (!('note' in body) || body.note === null || typeof body.note === 'string' && body.note.length <= 4000)
+    && (!('day' in body) || SCORE_DAYS.includes(String(body.day)))
+  if (m) return common && body.piece_id === m[1]
+  if (!dated || !common) return false
+  const day = new Date(`${dated[1]}T00:00:00Z`)
+  return !isNaN(+day) && day.toISOString().slice(0, 10) === dated[1] && body.date === dated[1]
+    && typeof body.title === 'string' && body.title.trim().length > 0 && body.title.length <= 300 && !/[\x00-\x1f\x7f]/.test(body.title)
+    && (!('piece_id' in body) || typeof body.piece_id === 'string' && UUID.test(body.piece_id))
+}
+// Layout v4's Creative step (docs/PUBLISH_BOARDS.md, "Layout v4"; Krish, 2026-11-07: "I want to be able to answer all
+// the questions up front on what we should do in terms of creative production... It's important we have mockups and
+// really clear ideas before full production"): picks/<day>-creative, any day Monday to Saturday. Sign creative carries
+// his pick in each of the four sections, bound to the sha256 of the sheet shown; Change it carries his words.
+export const CREATIVE_ID = /^(mon|tue|wed|thu|fri|sat)-creative$/
+export const CREATIVE_PICKS = ['opener', 'captions', 'motion', 'thumbnail'] as const
+const PICK_VALUE = /^[a-z0-9][a-z0-9_.-]{0,79}$/
+export function creativeBody(id: string, body: Record<string, unknown>): boolean {
+  const m = CREATIVE_ID.exec(id)
+  if (!m || body.kind !== 'sign_creative' || body.day !== m[1] || 'send' in body) return false
+  if (!(typeof body.piece_id === 'string' && UUID.test(body.piece_id)) || !SHA256.test(String(body.sha256))) return false
+  if (typeof body.approved !== 'boolean') return false
+  const picks = body.picks
+  if (!object(picks) || Object.keys(picks).some(k => !(CREATIVE_PICKS as readonly string[]).includes(k))
+    || Object.values(picks).some(v => typeof v !== 'string' || !PICK_VALUE.test(v))) return false
+  if ('storyboard_sha256' in body && !SHA256.test(String(body.storyboard_sha256))) return false
+  if ('shown' in body && !(Array.isArray(body.shown) && body.shown.length <= 6 && body.shown.every(x => typeof x === 'string' && MODULE_ID.test(x)))) return false
+  const said = 'words' in body && body.words !== null
+  if (said && !words(body.words)) return false
+  if (body.approved === false) return said
+  // Signed: one pick in every section, the motion pick a style the sheet showed, and the storyboard hash ve binds.
+  return CREATIVE_PICKS.every(k => k in picks) && MODULE_ID.test(String(picks.motion)) && SHA256.test(String(body.storyboard_sha256))
+    && (!('shown' in body) || (body.shown as string[]).includes(String(picks.motion)))
 }
 // One yes anywhere (Ruling, Krish, 2026-11-02: "yes, start with one yes anywhere"; "the reason I dont press approve is
 // cos this board is crap and outdated all the time, and yet you refuse to do work until i press approve"). His yes to
@@ -224,8 +261,9 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'picks' && (YES_ID.test(id) || body.kind === 'yes')) return yesBody(id, body)
   if (collection === 'picks' && FEEL_ID.test(id)) return feelBody(id, body)
   if (collection === 'picks' && (id === MIX_ID || body.kind === 'mix')) return id === MIX_ID && mixBody(body)
+  if (collection === 'picks' && (CREATIVE_ID.test(id) || body.kind === 'sign_creative')) return creativeBody(id, body)
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
-  if (collection === 'picks' && (SCORE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)
+  if (collection === 'picks' && (SCORE_ID.test(id) || SCORE_DATE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)
   if (collection === 'picks') return day(id) && day(body.day) && text('pick', 160) && text('story') && !('kind' in body)
     && (!('note' in body) || body.note === null || text('note', 2000))
   // A Combine tap on the Queue tab's "Could combine" card: his choice only, recorded as queue/combine-<n>; the next
