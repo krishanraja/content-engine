@@ -260,6 +260,15 @@ def publish(args):
         if source not in page:
             raise ValueError(f'Asset {asset_id} has no matching link in the board')
         page = page.replace(source, f'/api/board/{week}/assets/{asset_id}?sha={file["sha256"]}')
+        if item.get('drive_id'):
+            # The file that replaced the source's Drive file (Krish binned the 9 Nov Monday thumbnails the record still
+            # names and filed the v2 set): its Open in Drive link and drive id follow the new file, never the binned one.
+            old = re.search(r'[?&]id=([A-Za-z0-9_-]{20,})', source)
+            new = str(item['drive_id'])
+            if not old or not re.fullmatch(r'[A-Za-z0-9_-]{20,}', new):
+                raise ValueError(f'Asset {asset_id}: drive_id needs a Drive download source_url and a Drive file id')
+            page = (page.replace(f'https://drive.google.com/file/d/{old.group(1)}/', f'https://drive.google.com/file/d/{new}/')
+                    .replace(f'data-drive-id="{old.group(1)}"', f'data-drive-id="{new}"'))
     page = lift_article_pictures(week, page, assets, payloads, (state.get('manifest') or {}).get('assets') or {})
     if re.search(r'https://(?:drive\.google\.com/(?:uc\?|download\?)|drive\.usercontent\.google\.com/download\?)', page):
         raise ValueError('Map every Drive download to an immutable library asset with --assets')
