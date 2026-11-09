@@ -69,7 +69,7 @@ The same lane carries a second library, by his word: Heartside's social
 library (Krish, 2026-11-03: "Why don't you duplicate that Python script for Heartside then? We're going to need to do a lot more of this type of stuff moving forward", after "You also can queue stuff for the home computer to upload in the
 right place"). krishanraja/growth-heartside sends each post's media with
 `send.py --library heartside --as "Posts/<post id>"`; the sync writes it into
-`Heartside > 05_Social-Library` (`config/heartside-library.json`), under
+`Heartside > 03b_Social-Schedule` (found by its Drive ID, so a rename or move needs nothing; `config/heartside-library.json` root is the fallback; `05_Social-Library` until 2026-11-09), under
 `Posts` only, by the same rules. It covers that folder only.
 
 <a id="rule-08"></a>

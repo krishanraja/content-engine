@@ -87,6 +87,26 @@ class BoardWebTests(unittest.TestCase):
                 board_web.publish(args)
             self.assertEqual(sent[0]['manifest']['assets']['drive-renamed'],asset)
             self.assertEqual(len(uploads),1)
+            # A live build that holds no stored files (the 9 Nov board's 4 Nov 07:13 build): the mapping names the
+            # earlier build that holds the bytes, and its record of the file is reused, never uploaded again.
+            sent.clear();uploads.clear();reads=[]
+            empty = dict(revision=9, manifest=dict(assets={}))
+            older = 'c'*64
+            def api_empty(method, path, body=None):
+                if method == 'PUT':
+                    sent.append(body); return {'build_id':'new'}
+                if sent: return dict(build_id='new',manifest=sent[-1]['manifest'])
+                if path.endswith(f'?build={older}'):
+                    reads.append(path); return dict(build_id=older, manifest=dict(assets={'drive-example':asset}))
+                return empty
+            mapping.write_text(json.dumps([dict(id='drive-example',source_url=source,existing_sha256='a'*64)]))
+            with patch.object(board_web,'call',api_empty), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                with self.assertRaisesRegex(ValueError,'changed or is missing'): board_web.publish(args)
+                mapping.write_text(json.dumps([dict(id='drive-example',source_url=source,existing_sha256='a'*64,from_build=older)]))
+                board_web.publish(args)
+            self.assertEqual(sent[0]['manifest']['assets']['drive-example'],asset)
+            self.assertEqual(len(reads),1)
+            self.assertEqual(len(uploads),1)  # the HTML only
 
     def test_a_ready_video_needs_a_passing_receipt_for_its_bytes(self):
         import html as html_mod
