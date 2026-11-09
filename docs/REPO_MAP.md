@@ -2021,6 +2021,12 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function fileSpec(week: string, v: unknown, html = false): v is BoardFile`
 - `function validManifest(week: string, v: unknown): v is Manifest`
 
+### `apps/control-plane/api/board/_deskPage.ts`
+
+Built by scripts/build-desk-page.mjs from apps/control-plane/board-next/desk.html. Do not edit by hand.
+
+- `const DESK_PAGE: string`
+
 ### `apps/control-plane/api/board/_handler.ts`
 
 - `function boardPolicy(storeUrl?: string)`
@@ -2048,6 +2054,13 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `const OFFDAY_REVISE_REPO`
 - `type ReviseDispatch`
 - `async function dispatchOffdayRevise( payload: { week: string; option: string }, env: Record<string, string | undefined>…`
+
+### `apps/control-plane/api/board/_offdaySides.ts`
+
+- `function line(v: unknown, cap: number): string | null`
+- `function pyJson(v: unknown): string`
+- `interface OffdaySides`
+- `function offdaySides(o: Body): OffdaySides`
 
 ### `apps/control-plane/api/board/_posted.ts`
 
@@ -2092,6 +2105,20 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
 
+### `apps/control-plane/api/board/_run.ts`
+
+Every board button starts the machine that does the work (Krish, 2026-11-09: "Absolutely everything that isn't 100%
+
+- `type JobName`
+- `const JOBS: Record<JobName, Job>`
+- `const isJob = (v: unknown): v is JobName =>`
+- `const ENGINE_REPO`
+- `type Dispatched`
+- `async function dispatchJob(job: JobName, input: Record<string, unknown>, env: Record<string, string | undefined> = proc…`
+- `type RunState = 'queued' | 'running' | 'done' | 'failed' | 'cancelled'`
+- `interface RunInfo`
+- `async function readRuns(env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as F…`
+
 ### `apps/control-plane/api/board/_standards.ts`
 
 - `const STANDARDS_VENTURE`
@@ -2102,6 +2129,21 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `async function readStandards(db: SupabaseClient): Promise<StandardsGroup[]>`
 - `async function decideStandard(db: SupabaseClient, raw: unknown)`
 - `function renderStandards(groups: StandardsGroup[])`
+
+### `apps/control-plane/api/board/_view.ts`
+
+- `const VIEW_DAYS: readonly PostedDay[]`
+- `const STOPS`
+- `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
+- `type Action`
+- `interface DayView`
+- `interface WeekView`
+- `interface ViewInputs`
+- `function lockSigned(text: string | null | undefined): boolean`
+- `function backupPrompt(week: string, d: DayView): string`
+- `function buildView(i: ViewInputs): WeekView`
+- `function viewProblems(v: WeekView): string[]`
+- `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
 
 ### `apps/control-plane/api/board/_yes.ts`
 
