@@ -110,8 +110,12 @@ class BoardWebTests(unittest.TestCase):
             # A picture filed to the library after the week's builds: fetched by path, checked by sha256, stored with the build.
             sent.clear();uploads.clear()
             pic=b'library picture bytes';psha=board_web.sha(pic)
-            def api_lib(method, path, body=None):
-                if path.startswith('/api/library/file?'): return {'download':{'url':'https://store.test/x'}}
+            def api_lib(method, path, body=None, base=None):
+                if path.startswith('/api/library/file?'):
+                    # The library is on the engine's host, never the board's (content.krishraja.com 404s it).
+                    assert base == board_web.ENGINE_BASE_URL, base
+                    return {'download':{'url':'https://store.test/x'}}
+                assert base is None, base
                 return api_empty(method, path, body)
             class R:
                 def __init__(s,b): s.b=b
