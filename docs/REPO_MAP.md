@@ -4786,6 +4786,8 @@ Artifact-bound user confirmation references.
 - `const VeApprovalSchema`
 - `const VeCallSchema`
 - `const VeReferenceSchema`
+- `const VeCharacterCueSchema`
+- `const VeCharacterSchema`
 - `const ProductionSpecV2Schema`
 - `type ProductionSpecV2 = z.infer<typeof ProductionSpecV2Schema>`
 - `type VeBeat = z.infer<typeof VeBeatSchema>`
