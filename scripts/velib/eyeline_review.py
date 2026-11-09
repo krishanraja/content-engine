@@ -255,18 +255,17 @@ def sheets(take: Path, corrected: Path, info: dict, before: list[dict], moments:
 
 
 def lens_offsets(before: list[dict], after: list[dict], there: list[dict] | None, fps: float, lens: dict | None = None) -> dict:
-    """How far his eyes sit from the lens, before and after, in degrees: the lens point per eye is where Maxine puts
-    the iris (its median over the take, along and across the eye, in eye widths: the same calibration eyeline.aims
-    uses), and each frame's distance from it is read on the take and on the corrected file. Frames with a blink or no
-    face are left out."""
+    """How far his eyes sit from the lens, before and after, in degrees: the lens point per eye is eyeline.lens_point
+    (where Maxine puts the iris, in his own eye's geometry, over the frames corrected) or a receipt's, and each
+    frame's distance from it is read on the take and on the corrected file. Frames with a blink or no face are left
+    out."""
     import numpy as np  # noqa: PLC0415
     if lens is not None:
         lens = {s: np.asarray(lens[s]) for s in eyeline.IRIS}
     else:
-        lens = {}
-        for s in eyeline.IRIS:
-            pos = [_eye_pos(t, s) for t in there if t.get('face')]
-            lens[s] = np.median(np.array(pos), 0) if pos else None
+        # The same calibration the pass makes: Maxine's iris in his own eye's geometry, over the frames it corrects.
+        found = eyeline.lens_point(before, there, eyeline.plan(before, lock=True))
+        lens = {s: (np.asarray(found[s]) if s in found else None) for s in eyeline.IRIS}
     out = {}
     for name, rows in (('before', before), ('after', after)):
         deg = []
