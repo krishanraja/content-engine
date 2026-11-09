@@ -53,7 +53,7 @@ describe('the one voice check (Krish, 2026-11-09)', () => {
     const gate = src('apps/control-plane/api/content-ideas.ts')
     assert.match(gate, /askVoiceCheck\(effective, channel\)/)
     assert.match(gate, /reason: 'voice_gate'/)
-    assert.match(gate, /updates\.state === 'approved' \|\| updates\.state === 'published'\)\) \{\n\s+const effective/)
+    assert.match(gate, /updates\.state === 'approved' \|\| updates\.state === 'published'\)\) \{\s+const effective/)
   })
 
   test('the writers read the voice live from Control Center before any hand-kept copy', () => {
