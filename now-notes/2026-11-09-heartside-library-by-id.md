@@ -1,0 +1,4 @@
+Status: The library sync finds Heartside's social library by its Drive ID: the engine walks the folder's parents to My Drive as its owner and hands the path to the home computers on the Heartside pending answer, so a rename or move needs no config change. A deleted or binned folder stops the Heartside pass with heartside_library_gone or heartside_library_trashed; no folder is ever made; config/heartside-library.json root is only the fallback.
+Changed: Krish renamed 05_Social-Library to 03b_Social-Schedule on 9 Nov and every Heartside send would have stopped until the path was edited by hand (Krish, 2026-11-09: "ideally ID so if folders move it doesnt matter").
+Next: After merge and the home computers' next pull, read one Heartside library pass log for "found by its Drive ID" or the fallback line; if it falls back with unauthorized_client, delegate drive.readonly for the service account to krish@mindmake.co.
+North Star check (2026-11-09): holds.

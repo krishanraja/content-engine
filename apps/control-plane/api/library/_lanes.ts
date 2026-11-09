@@ -35,6 +35,8 @@ export const LANE_PROBLEMS: Readonly<Record<string, string>> = Object.freeze({
   library_env_stale: 'has a MINDMAKE_LIBRARY_ROOT setting that points at a folder that is not there; it used config/studio.json instead. Delete the setting',
   library_sync_failed: 'could not file the asset library into Drive on its last pass (library-sync.log on that machine says why)',
   heartside_library_root_missing: 'cannot find the Heartside social library (Heartside/03b_Social-Schedule) folder on its H: drive',
+  heartside_library_gone: 'stopped filing Heartside posts: the Heartside social library folder (found by its Drive ID) was deleted. Nothing was filed and no folder was made; give the engine the new folder\'s ID',
+  heartside_library_trashed: 'stopped filing Heartside posts: the Heartside social library folder (found by its Drive ID) is in the Drive bin. Nothing was filed and no folder was made; restore it from the bin',
   // The content watcher on the same machine (krishanraja/content-watcher), kept running and up to date by this pass.
   // Krish, 2026-10-28: "i should never really need to copy and paste log files to you like this, ever, this is
   // ridiculous". Its health travels in the report's `watch` block; GET /api/library/recordings/lane reads it back.

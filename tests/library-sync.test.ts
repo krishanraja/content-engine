@@ -1,4 +1,6 @@
-import { readFileSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
+import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { CONTROL_CENTER_RUNNER_CREDENTIAL } from '@mindmake/core'
@@ -22,6 +24,18 @@ const sync = read('scripts/library-sync.ps1')
 const installer = read('scripts/install-library-sync.ps1')
 const code = (source: string) => source.slice(source.indexOf('#>') + 2)
 const cases = JSON.parse(read('config/library-paths.cases.json')) as { top_folders: string[] }
+/** One function of the sync, from its `function` line to the closing brace at
+ *  the start of a line. */
+const fn = (name: string) => {
+  const start = sync.indexOf(`function ${name}(`)
+  if (start < 0) throw new Error(`no function ${name}`)
+  return sync.slice(start, sync.indexOf('\n}\n', start) + 2)
+}
+/** A PowerShell to run the sync's own functions with: Windows PowerShell on
+ *  Windows, pwsh where it is installed (GitHub's runners), else none and the
+ *  run-it tests are skipped. */
+const POWERSHELL = process.platform === 'win32' ? 'powershell.exe'
+  : spawnSync('pwsh', ['-NoProfile', '-Command', '1'], { encoding: 'utf8' }).status === 0 ? 'pwsh' : null
 
 describe('the library sync on Krish\'s machine', () => {
   it('is plain ASCII, as every PowerShell script here is, so Windows PowerShell reads it as written', () => {
@@ -142,6 +156,119 @@ describe('the Heartside library in the same sync', () => {
     expect(read('config/studio.json')).not.toContain('heartside')
     expect(sync).toContain("Get-Setting 'MINDMAKE_HEARTSIDE_LIBRARY_ROOT'")
     expect(sync).toContain("'heartside_library_root_missing'")
+  })
+
+  // Krish, 2026-11-09: "ideally ID so if folders move it doesnt matter".
+  it('asks the engine where the folder is by its Drive ID before it uses the configured path', () => {
+    expect(sync).toContain('$heartside = Resolve-HeartsideRoot $config (Get-HeartsideFolder $client $base $token $machine)')
+    expect(sync).toContain("'/api/library/pending?machine={0}&limit=1&library=heartside'")
+    const resolver = fn('Resolve-HeartsideRoot')
+    // Gone or in the bin stops the pass before any fallback to an old path.
+    expect(resolver.indexOf("-eq 'gone'")).toBeLessThan(resolver.indexOf('$root = if ($configured)'))
+    // Nothing on the way makes a folder.
+    for (const name of ['Get-HeartsideFolder', 'Get-DriveForDesktopRoot', 'ConvertTo-HeartsidePath', 'Resolve-HeartsideRoot']) {
+      expect(fn(name)).not.toMatch(/New-Item|CreateDirectory|mkdir/i)
+    }
+  })
+
+  // Each test starts a real PowerShell; a cold pwsh on a CI runner takes longer than the 5 s default.
+  describe.runIf(POWERSHELL !== null)('run in PowerShell against a folder fixture', { timeout: 60_000 }, () => {
+    const run = (folder: unknown, configuredRoot: string, setup: (base: string) => void, setting = '') => {
+      // The long form: Windows hands out a short 8.3 temp path (RUNNER~1), and PowerShell gives back the long one.
+      const base = realpathSync.native(mkdtempSync(join(tmpdir(), 'heartside-folder-')))
+      try {
+        mkdirSync(join(base, 'repo', 'config'), { recursive: true })
+        writeFileSync(join(base, 'repo', 'config', 'heartside-library.json'), JSON.stringify({ root: configuredRoot.replace('{base}', base), drive_id: config.drive_id }))
+        setup(base)
+        const script = [
+          'Set-StrictMode -Version Latest',
+          "$ErrorActionPreference = 'Stop'",
+          `$RepoRoot = '${join(base, 'repo').replace(/'/g, "''")}'`,
+          '$HeartsideTopFolders = @(\'Posts\')',
+          '$script:Problems = New-Object System.Collections.Generic.List[string]',
+          '$script:Log = New-Object System.Collections.Generic.List[string]',
+          'function Write-Log([string]$Message) { $script:Log.Add($Message) }',
+          `function Get-Setting([string]$Name) { return '${setting.replace('{base}', base)}' }`,
+          ...['Read-JsonFile', 'Get-Field', 'Test-Inside', 'Test-SamePath', 'Assert-NoStudioOverlap', 'Get-DriveForDesktopRoot', 'ConvertTo-HeartsidePath', 'Resolve-HeartsideRoot'].map(fn),
+          `$folder = '${JSON.stringify(folder).replace(/'/g, "''")}' | ConvertFrom-Json`,
+          '$out = [ordered]@{ root = $null; error = $null; problems = $null; log = $null }',
+          'try { $out.root = Resolve-HeartsideRoot ([pscustomobject]@{ runtime = [pscustomobject]@{} }) $folder } catch { $out.error = $_.Exception.Message }',
+          '$out.problems = @($script:Problems); $out.log = @($script:Log)',
+          '$out | ConvertTo-Json -Compress',
+        ].join('\n')
+        const file = join(base, 'resolve.ps1')
+        writeFileSync(file, script)
+        const ran = spawnSync(POWERSHELL!, ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', file], { encoding: 'utf8', env: { ...process.env, TERM: 'dumb' } })
+        expect(ran.stderr).toBe('')
+        const out = JSON.parse(ran.stdout.trim().split('\n').pop()!) as { root: string | null; error: string | null; problems: string[]; log: string[] }
+        return { ...out, base }
+      } finally {
+        cleanup.push(base)
+      }
+    }
+    const cleanup: string[] = []
+    const sep = process.platform === 'win32' ? '\\' : '/'
+    const at = (base: string, ...names: string[]) => [base, 'drive', 'My Drive', ...names].join(sep)
+    const found = (...names: string[]) => ({ state: 'found', drive_id: config.drive_id, path: ['My Drive', ...names].join('/'), segments: ['My Drive', ...names] })
+    const OLD = ['Ventures', 'Active Ventures', 'Heartside', '05_Social-Library']
+    const NEW = ['Ventures', 'Active Ventures', 'Heartside', '03b_Social-Schedule']
+    const old = `{base}${sep}drive${sep}My Drive${sep}${OLD.join(sep)}`
+
+    it('follows a renamed folder that the configured path no longer names', () => {
+      const out = run(found(...NEW), old, (base) => mkdirSync(at(base, ...NEW), { recursive: true }))
+      try {
+        expect(out.error).toBeNull()
+        expect(out.root).toBe(at(out.base, ...NEW))
+        expect(out.problems).toEqual([])
+        expect(out.log.join(' ')).toContain('found by its Drive ID')
+      } finally { for (const dir of cleanup.splice(0)) rmSync(dir, { recursive: true, force: true }) }
+    })
+
+    it('follows a folder moved to another parent', () => {
+      const moved = ['Archive', 'Heartside library']
+      const out = run(found(...moved), old, (base) => mkdirSync(at(base, ...moved), { recursive: true }))
+      try {
+        expect(out.root).toBe(at(out.base, ...moved))
+      } finally { for (const dir of cleanup.splice(0)) rmSync(dir, { recursive: true, force: true }) }
+    })
+
+    it('stops on a folder in the bin or deleted, names the problem, and makes nothing, even where the old path is still there', () => {
+      for (const [problem, state] of [['heartside_library_trashed', 'gone'], ['heartside_library_gone', 'gone']] as const) {
+        const out = run({ state, problem, drive_id: config.drive_id, reason: 'it was thrown away' }, old, (base) => mkdirSync(at(base, ...OLD), { recursive: true }))
+        try {
+          expect(out.root).toBeNull()
+          expect(out.error).toContain('gone from Drive')
+          expect(out.problems).toEqual([problem])
+        } finally { for (const dir of cleanup.splice(0)) rmSync(dir, { recursive: true, force: true }) }
+      }
+    })
+
+    it('stops with heartside_library_root_missing, and creates nothing, when the found folder is not on this drive', () => {
+      const out = run(found(...NEW), old, () => {})
+      try {
+        expect(out.root).toBeNull()
+        expect(out.problems).toEqual(['heartside_library_root_missing'])
+        expect(spawnSync(process.execPath, ['-e', `process.exit(require('fs').existsSync(${JSON.stringify(at(out.base, ...NEW))}) ? 1 : 0)`]).status).toBe(0)
+      } finally { for (const dir of cleanup.splice(0)) rmSync(dir, { recursive: true, force: true }) }
+    })
+
+    it('falls back to the configured folder when the engine cannot say, or names a path it cannot map', () => {
+      for (const folder of [null, { state: 'unknown', drive_id: config.drive_id, reason: 'no delegation' }, found('..', 'Elsewhere'), { state: 'found', segments: ['Shared drives', 'X'] }]) {
+        const out = run(folder, old, (base) => mkdirSync(at(base, ...OLD), { recursive: true }))
+        try {
+          expect(out.error).toBeNull()
+          expect(out.root).toBe(at(out.base, ...OLD))
+        } finally { for (const dir of cleanup.splice(0)) rmSync(dir, { recursive: true, force: true }) }
+      }
+    })
+
+    it('keeps a per-machine setting that names a folder that is there ahead of everything', () => {
+      const own = ['Own', 'Heartside']
+      const out = run(found(...NEW), old, (base) => { mkdirSync(at(base, ...own), { recursive: true }); mkdirSync(at(base, ...NEW), { recursive: true }) }, at('{base}', ...own))
+      try {
+        expect(out.root).toBe(at(out.base, ...own))
+      } finally { for (const dir of cleanup.splice(0)) rmSync(dir, { recursive: true, force: true }) }
+    })
   })
 
   it('asks for and reports Heartside files by name, and never treats them as the brand kit', () => {
