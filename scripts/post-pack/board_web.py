@@ -256,6 +256,17 @@ def publish(args):
             file, data = spec(week, item['path'], item.get('type'))
             payloads.append((file, data))
         assets[asset_id] = file
+        if item.get('img_id'):
+            # A picture the page holds inside itself (the made day's covers and share card, drawn into the page as it
+            # was made): the named picture shows the mapped file instead (Krish, 2026-11-09: "The Monday thumbnails and
+            # covers are all the old ones").
+            img = str(item['img_id'])
+            found = re.search(r'<img\b[^>]*\bid="' + re.escape(img) + r'"[^>]*>', page)
+            if not re.fullmatch(r'[A-Za-z0-9_-]{1,80}', img) or not found:
+                raise ValueError(f'Asset {asset_id}: the board has no picture with id {img}')
+            tag = re.sub(r'\ssrc="[^"]*"', f' src="/api/board/{week}/assets/{asset_id}?sha={file["sha256"]}"', found.group(0), count=1)
+            page = page.replace(found.group(0), tag, 1)
+            continue
         source = item['source_url']
         if source not in page:
             raise ValueError(f'Asset {asset_id} has no matching link in the board')
