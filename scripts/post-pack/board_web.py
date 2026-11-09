@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Web board build adapter and explicit operator commands. No write runs by default."""
 import argparse
+import base64
 import hashlib
 import json
 import mimetypes
@@ -264,7 +265,13 @@ def publish(args):
             found = re.search(r'<img\b[^>]*\bid="' + re.escape(img) + r'"[^>]*>', page)
             if not re.fullmatch(r'[A-Za-z0-9_-]{1,80}', img) or not found:
                 raise ValueError(f'Asset {asset_id}: the board has no picture with id {img}')
-            tag = re.sub(r'\ssrc="[^"]*"', f' src="/api/board/{week}/assets/{asset_id}?sha={file["sha256"]}"', found.group(0), count=1)
+            # The page holds its pictures' own bytes (week_board.verify: a made day's pictures are data: or https:), so
+            # the mapped file's bytes go in, with the stored asset named beside them for Download and Copy.
+            if not item.get('library'):
+                raise ValueError(f'Asset {asset_id}: img_id needs a library file')
+            uri = 'data:' + (item.get('type') or file.get('type') or 'image/png') + ';base64,' + base64.b64encode(data).decode('ascii')
+            tag = re.sub(r'\ssrc="[^"]*"', f' src="{uri}"', found.group(0), count=1)
+            tag = tag[:4] + f' data-asset="/api/board/{week}/assets/{asset_id}?sha={file["sha256"]}"' + tag[4:]
             page = page.replace(found.group(0), tag, 1)
             continue
         source = item['source_url']

@@ -154,7 +154,9 @@ class BoardWebTests(unittest.TestCase):
             with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
                 board_web.publish(args)
             html_out=b''.join(x for a in uploads for x in a if isinstance(x,bytes)).decode('utf-8','replace')
-            self.assertIn(f'id="mon-img-share" src="/api/board/2026-10-12/assets/mon-share?sha={psha}"',html_out)
+            # The page carries the mapped file's own bytes (verify needs data: or https:), with the stored asset beside them.
+            self.assertIn(f'<img data-asset="/api/board/2026-10-12/assets/mon-share?sha={psha}" class="dl-pic" id="mon-img-share" src="data:image/png;base64,',html_out)
+            self.assertIn(board_web.base64.b64encode(pic).decode('ascii'),html_out)
             self.assertNotIn('base64,T0xE',html_out)
             self.assertEqual(sent[0]['manifest']['assets']['mon-share']['sha256'],psha)
             mapping.write_text(json.dumps([dict(id='mon-share',img_id='no-such',source_url='inline:x',library={'path':'3 Posts/x/4 Social/share.png','sha256':psha})]))
