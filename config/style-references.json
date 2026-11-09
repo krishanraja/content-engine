@@ -323,6 +323,38 @@
         "on": "2026-11-02",
         "words": "yes to both, build it"
       }
+    },
+    {
+      "file": "instagram_DfVpRJEmVAI.mp4",
+      "drive_id": null,
+      "sha256": "c5b97cb6abe404611b4f3a5b2f269e1068d332c06ba42f0a4a731c3f2fde8681",
+      "added": "2026-11-08",
+      "krish_likes": "",
+      "status": "studied",
+      "creator": "jesserurka",
+      "study": {
+        "studied": "2026-11-08",
+        "shots": 3,
+        "pace": {
+          "shots": 3,
+          "cuts_per_minute": 2.2,
+          "median_shot_s": 14.07,
+          "shortest_shot_s": 4.46,
+          "longest_shot_s": 36.15,
+          "words_a_minute": 226.1,
+          "longest_pause_s": 0.5
+        },
+        "loudness": {
+          "integrated_lufs": -14.1,
+          "range_lu": 2.0,
+          "voice_mid_lufs": -17.1,
+          "bed_side_lufs": -38.4
+        },
+        "watched": "one frame a second, by Claude, 2026-11-08",
+        "doc": "docs/REFERENCE_VOICEOVER_JESSERURKA.md"
+      },
+      "what_it_does": "One lime commit timeline on near-black carries the whole 55 s: every git term is a new state of it, the camera travels along it with 3 hard cuts, real GitHub, Claude Code and app screens pinned to their nodes; 226 words a minute, no pause over 0.5 s, a quiet steady stereo bed.",
+      "modules": ["named-metaphor-spine", "question-turns", "tight-air", "one-diagram-world", "quiet-stereo-bed", "vertical-captions", "living-ui", "mechanism-image"]
     }
   ],
   "bank": [
@@ -836,6 +868,68 @@
       "ve_route": ["headline"],
       "rules": ["house captions (Archivo 900 w112), 2 to 4 words per card, inside the 9:16 safe zone", "the key word in mint; never more than one per card", "cards change on his words from the aligned transcript"],
       "avoid": ["a third layer of words on top of captions and voice", "emoji spam", "words bouncing on every syllable"],
+      "krish_verdict": "untested"
+    },
+    {
+      "id": "full-visual",
+      "layer": "motion",
+      "name": "Full visual: the real thing, opened up",
+      "how": "For how-it-works and who-pays-whom pieces. No presenter on screen: his voice explains and the screen is the explanation. Under a word-by-word caption, the real thing each sentence is about is redrawn from real photos and screens, and changes on the word that changes it.",
+      "from": "keyframes@0.2.13 full-visual pack (Krish's own, 2026-11-06), rewritten for the house base; docs/ve/sources/keyframes.md, _corpus/keyframes-full-visual.md",
+      "source": "keyframes@0.2.13",
+      "fits": "sometimes",
+      "point_types": ["mechanism", "product", "system", "number", "transformation"],
+      "formats": ["short_video"],
+      "ve_route": ["kinetic_stat", "evidence_card", "hand_phone_stage", "headline"],
+      "rules": ["a new real thing for every sentence group, redrawn from real photos and screens at their real geometry and copy", "a change of state happens to the object already on screen: it recolours, opens, breaks or grows, and is not replaced", "a picture hands over only in a pause he left (ve qc beats.handover_in_gaps), as one move, and the ground is never bare", "a number is never static: it counts, rolls or fills and lands on its word", "the invisible part (a charge, a cost, a flow) gets one shape and one colour, the mint, for the whole cut; everything else keeps its real colours", "fill the stage: foreground, subject, depth behind, one secondary motion; never one small object on an empty ground", "cut inside when the mechanism is inside: a side-on section, a shell turning see-through, layers lifting out"],
+      "avoid": ["a metaphor or stock icon where a real thing exists", "flat boxes and generic shapes that read as coded", "blur, frost or a vague panel standing in for the mechanism", "a still stretch over 1.2 s", "a synthetic voice in place of his"],
+      "krish_verdict": "untested"
+    },
+    {
+      "id": "named-metaphor-spine",
+      "layer": "breakdown",
+      "name": "Named metaphor spine",
+      "how": "Name one everyday object in the first 20 seconds (\"that's your app's timeline\") and explain every later idea as a change to that same object, in words and on screen.",
+      "from": "jesserurka reel DfVpRJEmVAI, studied 2026-11-08 (docs/REFERENCE_VOICEOVER_JESSERURKA.md)",
+      "fits": "explainers with several linked terms",
+      "krish_verdict": "untested"
+    },
+    {
+      "id": "question-turns",
+      "layer": "structure",
+      "name": "Questions as the turns",
+      "how": "Move to each next idea with the question the viewer would ask (\"So how do you keep it safe?\"), three or four a minute, in place of signposts.",
+      "from": "jesserurka reel DfVpRJEmVAI, studied 2026-11-08 (docs/REFERENCE_VOICEOVER_JESSERURKA.md)",
+      "fits": "often",
+      "krish_verdict": "untested"
+    },
+    {
+      "id": "tight-air",
+      "layer": "editing",
+      "name": "Tight air",
+      "how": "Cap every pause at 0.25 to 0.35 s in conform, joining only in gaps both aligners agree on; keep one speed at or under 1.12x. The reel runs 226 words a minute with no pause over 0.5 s.",
+      "from": "jesserurka reel DfVpRJEmVAI, studied 2026-11-08 (docs/REFERENCE_VOICEOVER_JESSERURKA.md)",
+      "fits": "voiceover cuts",
+      "krish_verdict": "untested"
+    },
+    {
+      "id": "one-diagram-world",
+      "layer": "graphics",
+      "name": "One diagram, one camera",
+      "how": "One persistent diagram on an infinite near-black canvas that grows with the script; the camera travels along it with almost no hard cuts (3 in 55 s), something new arriving every 1.5 to 3 s; real screens pinned to the node they explain. Proposed for the motion layer once Krish rules on it; it needs its own device.",
+      "from": "jesserurka reel DfVpRJEmVAI, studied 2026-11-08 (docs/REFERENCE_VOICEOVER_JESSERURKA.md)",
+      "fits": "voiceover explainers of a process or system",
+      "rules": ["one accent colour (the house mint) on near-black; red only for the broken state", "every card is a real screen pinned to its place on the diagram", "the camera never jumps back to a blank canvas"],
+      "avoid": ["a new background per beat", "decorative motion with no cue in the voice"],
+      "krish_verdict": "untested"
+    },
+    {
+      "id": "quiet-stereo-bed",
+      "layer": "production",
+      "name": "Quiet stereo bed with UI sound",
+      "how": "A steady stereo bed about 21 LU under the voice that never drops out, with soft whooshes and clicks on each card arrival.",
+      "from": "jesserurka reel DfVpRJEmVAI, studied 2026-11-08 (docs/REFERENCE_VOICEOVER_JESSERURKA.md)",
+      "fits": "voiceover cuts",
       "krish_verdict": "untested"
     }
   ],

@@ -24,6 +24,8 @@ class Zones(unittest.TestCase):
         studio = json.loads((ROOT / 'config/studio.json').read_text(encoding='utf-8'))
         platforms = next(v['platforms'] for v in studio.values() if isinstance(v, dict) and 'platforms' in v)
         for channel, spec in table['channels'].items():
+            if channel not in platforms:
+                continue   # instagram_profile and instagram_grid add to Instagram's row; studio.json has no such rows
             safe = platforms[channel]['safe_zones']
             boxes = [z['box'] for z in spec['zones']]
             top = max(b[3] for b in boxes if b[1] == 0)
@@ -44,12 +46,15 @@ class Zones(unittest.TestCase):
         self.assertNotIn(('caption', 'instagram_reels'), what)
 
     def test_a_reference_style_card_in_the_upper_half_is_clear(self):
-        self.assertEqual(channel_safe.box_violations([('card', (60, 260, 800, 240))]), [])
+        # Below Instagram's account row (270 px, 7 Nov) and above the rails.
+        self.assertEqual(channel_safe.box_violations([('card', (60, 300, 800, 240))]), [])
 
     def test_quick_edit_caption_bands_are_measured(self):
         import advisory_qc
         hits = channel_safe.box_violations([(b, tuple(v)) for b, v in advisory_qc.CAPTION_BANDS['9x16'].items()])
-        self.assertTrue(all(h['zone'].startswith('action rail') for h in hits), hits)
+        # The top band (y 230) sits under the assumed account row until that row is measured on his phone (7 Nov).
+        self.assertTrue(all(h['zone'].startswith('action rail') or
+                            (h['what'] == 'normal' and h['zone'].startswith('account row')) for h in hits), hits)
 
 
 class VeRow(unittest.TestCase):
@@ -101,3 +106,39 @@ class Frames(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class InstagramProfile(unittest.TestCase):
+    """Post-mortem of 2 Nov, cause D (Bugs & Issues, 7 Nov): the 6 Nov reel's cover lost its top line "USING A" to the
+    profile grid's 3:4 crop, and its title sat under Instagram's account row. Krish, 7 Nov: "the thumbnails need to be
+    managed better... the Chinese AI thumbnail is not really at the top of its game." """
+
+    # The stage headline draws from y 220 on a 9:16 frame (apps/renderer/src/engine/devices/headline/index.tsx), two
+    # lines of the house display face; the 6 Nov hook headline read USING A / CHINESE AI?.
+    USING_A = ('USING', 95.0, (60, 222, 420, 150))
+
+    def test_the_6_nov_cover_line_is_cut_by_the_grid_and_the_account_row(self):
+        hits = channel_safe.box_violations([('USING A', self.USING_A[2])], 'cover_tall')
+        zones = {h['zone'] for h in hits}
+        self.assertIn('profile grid crop (top)', zones)
+        self.assertIn('account row (reel opened from the profile)', zones)
+
+    def test_a_word_crossing_the_grid_line_counts_even_when_mostly_inside(self):
+        with tempfile.TemporaryDirectory() as temp:
+            png = Frames().frame(temp)
+            read = lambda _p: [self.USING_A]
+            result = channel_safe.frame_violations(png, 'cover_tall', read=read)
+            self.assertFalse(result['pass'])
+            self.assertIn('profile grid crop (top)', {h['zone'] for h in result['value']['in_zones']})
+
+    def test_a_cover_inside_the_grid_tile_and_below_the_row_is_clear(self):
+        with tempfile.TemporaryDirectory() as temp:
+            png = Frames().frame(temp)
+            read = lambda _p: [('USING', 95.0, (60, 300, 420, 150)), ('CHINESE', 95.0, (60, 460, 600, 150))]
+            self.assertTrue(channel_safe.frame_violations(png, 'cover_tall', read=read)['pass'])
+
+    def test_the_grid_crop_is_the_middle_three_by_four(self):
+        crop = [z for z in channel_safe.zones('cover_tall') if z['cut']]
+        kept = 1920 - sum(z['box'][3] for z in crop)
+        self.assertEqual(kept * 3, 1080 * 4)
+        self.assertNotIn('instagram_grid', channel_safe.load()['shapes']['tall'])

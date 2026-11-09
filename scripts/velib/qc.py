@@ -295,7 +295,8 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            composition_props=None, script: str | None = None, take_words=None, heard: dict | None = None,
            captions_drawn_by: str = 'faster-whisper', caption_ocr=None, fps: float = 30,
            caption_style: str = 'house', face_detector=None, plate_video: str | None = None,
-           plate_offset: int = 0, opening: dict | None = None) -> dict:
+           plate_offset: int = 0, opening: dict | None = None, publish_day: str | None = None,
+           onscreen_reader=None) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
@@ -354,6 +355,29 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         ('channel.safe_zones', aspect is not None and (bool(pages) or bool(beats)),
          lambda: qc_channel.safe_zones(pages, beats, aspect, region, caption_style)),
     ]
+    # A beat handover inside a word (keyframes@0.2.13, docs/ve/sources/keyframes.md). Counted only for a format whose
+    # qc names handover_gap_ms; every other format sees it measured and advisory, so no proven format changes.
+    if heard and beats:
+        counted = 'handover_gap_ms' in fmt
+        stop_frame = ((composition_props or {}).get('ending') or {}).get('fromFrame')  # the ending band carries no speech
+        try:
+            row = qc_gates.handover_in_gaps(beats, heard, fps=fps, stop_frame=stop_frame,
+                                            min_gap_ms=fmt.get('handover_gap_ms', qc_gates.HANDOVER_GAP_MS))
+        except (ValueError, KeyError, TypeError, OSError) as exc:
+            row = {'value': None, 'target': 'beat handovers in agreed gaps', 'pass': False, 'status': 'error',
+                   'reason': str(exc)}
+        # Uncounted, it is a shadow row: in qc.json and the Critic's rows, kept out of Krish's packet (packet.py).
+        checks['beats.handover_in_gaps'] = row if counted else {**row, 'status': 'advisory', 'shadow': True}
+    # No bare ground around a handover (keyframes@0.2.13). Counted only for a format whose qc sets bare_ground: true;
+    # a shadow row everywhere else, like beats.handover_in_gaps.
+    if beats and aspect:
+        from . import qc_ground
+        try:
+            row = qc_ground.bare_ground(path, beats, aspect, total_frames=int(round(duration_s(path) * fps)))
+        except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as exc:
+            row = {'value': None, 'target': 'no bare ground at a beat edge', 'pass': False, 'status': 'error',
+                   'reason': str(exc)}
+        checks['ground.not_bare'] = row if fmt.get('bare_ground') else {**row, 'status': 'advisory', 'shadow': True}
     # STAGE beats compose the whole screen under a moving camera. The square mark tile is replaced by the logo in
     # the stage header, and an object's slot is the full canvas, so "change near the event inside its slot" cannot
     # separate an event from the camera. Both checks apply to the other layouts only; events on STAGE devices are
@@ -401,6 +425,12 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         'pass': composition.get('pass'),
         'status': composition.get('status', 'measured') if composition['applies'] else 'not applicable',
     }
+    # The post-mortem of the week of 2 Nov (velib/qc_onscreen.py): marks on their words, captions that neither break
+    # mid-phrase nor repeat the headline, evidence read at a readable height. Advisory before its binds_from (F33).
+    if composition_props and composition_props.get('beats'):
+        from . import qc_onscreen
+        checks.update(qc_onscreen.rows(path, composition_props, publish_day, read=onscreen_reader,
+                                       lead=lead_frames(composition_props)))
     # An advisory row is measured and shown, never counted (scripts/velib/qc_channel.py until its layout card lands).
     applicable = [c for c in checks.values() if c.get('status') not in ('not applicable', 'advisory')]
     built = [c['pass'] for c in applicable if c['pass'] is not None]

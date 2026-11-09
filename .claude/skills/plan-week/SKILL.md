@@ -56,6 +56,12 @@ through the engine API:
   Ideas tab is live. It runs steps 1 to 7 only (of step 0, only the
   Inspiration cards routed to a piece), and keeps `ideas.json` and
   `combine.json` on the branch `sunday-ideas/<Monday>-<run>`.
+- **The Thursday good-news run**, `.github/workflows/saturday-goodnews.yml`:
+  the one other scheduled Claude run (Ruling, Krish, 2026-11-07). It fires
+  twice on Thursday, finds that week's Saturday good news ("The Saturday good
+  news" in `references/offdays.md`), publishes it on the live board, and keeps
+  the week folder on `saturday-goodnews/<Monday>-<run>`; the next session
+  merges that branch.
 - **The Sunday room** is a session Krish opens himself. It merges that branch
   into its own, writes the `WORKBENCH.md` lines the run could not keep (step
   7 and "Without the connectors"), does step 0's close-out, then steps 8 to
@@ -379,7 +385,8 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    the tab only through `week_board.py --ideas`, never by patching the page,
    and until the board has its Off days part the room says so in step 8.
    Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week,
-   its four fresh stories found by the Sunday run before that week.
+   its stories due on the Thursday of its week and none yet (the card says they come Thursday); the Thursday run
+   (`.github/workflows/saturday-goodnews.yml`) finds its five fresh stories. Never research them on Sunday.
    Growth makes what he approved. **His own
    ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
    idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day
