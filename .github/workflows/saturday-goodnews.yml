@@ -14,7 +14,7 @@ name: Saturday good news
 # When: Thursday, twice (10:41 and 19:23 UTC; 05:41 and 14:23 in New York in winter), because GitHub's cron fires hours
 # late; the second firing is only a retry. Both are outside 06:00 to 09:00 Pacific. The guard
 # (scripts/saturday_goodnews.py check) makes a firing do nothing once the week's live board shows the stories, and a
-# scheduled firing before 19 November do nothing at all (the first is for Saturday 21 November). Run workflow by hand
+# scheduled firing before 12 November do nothing at all (the first is for Saturday 14 November). Run workflow by hand
 # any time with a week; "force" finds the stories again even when they are live.
 #
 # This repository is public: Claude's full output stays out of the log (claude-code-action's default), and nothing

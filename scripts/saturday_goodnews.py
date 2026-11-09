@@ -34,8 +34,9 @@ sys.path.insert(0, str(HERE / 'post-pack'))
 from sunday_ideas import monday_arg  # noqa: E402  the one check of a typed Monday
 
 NEW_YORK = ZoneInfo('America/New_York')
-# The first scheduled Thursday (Saturday 21 November). Saturday 14 November's stories were found by the Sunday run.
-FIRST_RUN = dt.date(2026, 11, 19)
+# The first scheduled Thursday: 12 November, for Saturday 14 November (Krish, 2026-11-09: "Yes, go ahead with the
+# restore and the Thursday run").
+FIRST_RUN = dt.date(2026, 11, 12)
 
 
 def goodnews_monday(today: dt.date) -> dt.date:
