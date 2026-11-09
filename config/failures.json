@@ -2352,6 +2352,51 @@
       "related": [
         "F32-real-artifact-retyped"
       ]
+    },
+    {
+      "id": "F45-scripts-sent-unread",
+      "on": "2026-11-09",
+      "krish": "Can you ensure all of this is understandable by anyone? I shouldn't have to keep asking you to make sense. We've been working together for months now.",
+      "what": "Fri 13 Nov scripts were rewritten several times in one morning and sent to his Teleprompter on his word (\"yes do both, send to teleprompter\") before any fresh reader heard them. He then caught a stray cobra passage and an unclear engineer line himself; when readers did run they found a dozen more (an opening that only teased, a comparison that made AI the pest, Kiro and Shopify unexplained, a branch comparison from nowhere, advice that went past the evidence).",
+      "symptom": "Krish has to point out confusing lines himself, after the words are already on his teleprompter.",
+      "cause": "His sign-off was accepted in place of the readers: making.py read-back --krish-words recorded it with no readers, read_back_of counted it as read back, and the session sent through the Teleprompter connector directly, which the publish guard did not check.",
+      "status": "guarded",
+      "mode": "unread_words_sent",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "standard_not_read",
+          "evidence": "the make-piece readers were skipped because Krish's sign-off was taken in their place; read_back_of counted it with no readers, and the Teleprompter connector's update_script ran with no check"
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "the reader prompts did not ask for unexplained names, an opening that only teases, wrong-way comparisons or advice past the evidence"
+        }
+      ],
+      "surface": "Every script is heard by fresh readers before it reaches his teleprompter; his sign-off adds to them and never replaces them unless he says in his own words to skip them.",
+      "guards": [
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "fresh readers must also have heard",
+          "how": "read-back with --krish-words refuses fewer than two readers unless --skip-readers; read_back_of no longer counts a sign-off no reader heard",
+          "test": "python3 scripts/post-pack/making.py --self-test"
+        },
+        {
+          "file": ".claude/hooks/publish-guard.mjs",
+          "contains": "teleprompter-cleared.json",
+          "how": "Teleprompter create_script and update_script pass only for words teleprompter_send.py plan cleared; any other words go to Krish in person",
+          "test": "npx vitest run tests/claude-hooks.test.ts"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "every company, product, title or term you heard named but not explained",
+          "how": "readers A, B and C now check unexplained names, a teasing opening, wrong-way comparisons and advice past the evidence",
+          "test": "python3 scripts/validate-skills.py"
+        }
+      ],
+      "related": [
+        "F44-evidence-too-small-to-read"
+      ]
     }
   ]
 }
