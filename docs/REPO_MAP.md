@@ -2023,7 +2023,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 ### `apps/control-plane/api/board/_deskPage.ts`
 
-Built by scripts/build-desk-page.mjs from apps/control-plane/board-next/desk.html. Do not edit by hand.
+Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not edit by hand.
 
 - `const DESK_PAGE: string`
 
@@ -2105,6 +2105,30 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
 
+### `apps/control-plane/api/board/_prompts.ts`
+
+Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md, "The prompts, one shape for all").
+
+- `interface PieceBrief`
+- `const ARC`
+- `const FREEDOM`
+- `function researchPrompt(p: PieceBrief): string`
+- `function storyPrompt(p: PieceBrief): string`
+- `function storyboardPrompt(p: PieceBrief): string`
+- `function mockPrompt(p: PieceBrief): string`
+- `function stepPrompt(p: PieceBrief, step: string): string`
+
+### `apps/control-plane/api/board/_research.ts`
+
+- `const MAX_MATERIAL`
+- `async function runResearch(prompt: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
+- `class MaterialError`
+- `async function fileMaterial(db: SupabaseClient, pieceId: string, m: { kind: 'file' | 'research'; title: string; content…`
+- `interface LookPick`
+- `async function saveLook(db: SupabaseClient, pieceId: string, pick: { production: string; experiment?: string | null; in…`
+- `async function recentResearch(db: SupabaseClient, pieceId: string, now = Date.now()): Promise<boolean>`
+- `function researchForPiece(pieceId: string, prompt: string)`
+
 ### `apps/control-plane/api/board/_run.ts`
 
 Every board button starts the machine that does the work (Krish, 2026-11-09: "Absolutely everything that isn't 100%
@@ -2137,6 +2161,10 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
 - `type Action`
 - `interface DayView`
+- `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
+- `const PATH: Array<{ key: PathKey; label: string }>`
+- `interface LookOption`
+- `interface DayPath`
 - `interface WeekView`
 - `interface ViewInputs`
 - `function lockSigned(text: string | null | undefined): boolean`
@@ -3309,6 +3337,77 @@ His verdicts on past off-day options, for Sunday's gather (GET /api/week/options
 - `interface SaidNote`
 - `function groupSaid(rows: SaidRow[], ids: string[]): Map<string, SaidNote[]>`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/board-next/src/App.tsx`
+
+- `function App()`
+
+### `apps/control-plane/board-next/src/api.ts`
+
+The live board's one door to the server. Every call carries his login cookie; a 401 is said plainly, never swallowed.
+
+- `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
+- `type Action`
+- `interface Run`
+- `interface LookOption`
+- `interface OffdaySides`
+- `interface Review`
+- `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
+- `interface DayPath`
+- `interface Day`
+- `interface View`
+- `class BoardError`
+- `const week`
+- `const api`
+- `function sayError(e: unknown): string`
+
+### `apps/control-plane/board-next/src/components/path.tsx`
+
+One day's guided path (PLAN.md, "Each day as a guided path"): six steps, only the current one open.
+
+- `function Stepper({ path, open, onOpen }: { path: DayPath; open: PathKey | null; onOpen: (k: PathKey) => void })`
+- `function Dropzone({ day, onFiled }: { day: Day; onFiled: () => void })`
+- `function StepPanel({ day, step, reload }: { day: Day; step: PathKey; reload: () => void })`
+- `function RunButton({ day, reload }: { day: Day; reload: () => void })`
+- `function DayActions({ day, reload, only, onReview }: { day: Day; reload: () => void; only?: 'first' | 'prompt'; onRevie…`
+
+### `apps/control-plane/board-next/src/components/review.tsx`
+
+A revised off-day option, judged where it shows (21st.dev Approval Card, syeddhasnainn, restyled). The press writes
+
+- `function ReviewCard({ review, day, label, reload }: { review: Review; day: string; label: string; reload: () => void })`
+
+### `apps/control-plane/board-next/src/components/sheets.tsx`
+
+Sheets for what he does not need to see until he asks: the full prompt before copying, and his long-form thoughts.
+
+- `function PromptButton({ label, prompt, target = 'claude' }: { label: string; prompt: string; target?: 'claude' | 'perpl…`
+- `function ThoughtsLink({ day, step, label = 'Add your thoughts' }: { day: string; step: string; label?: string })`
+
+### `apps/control-plane/board-next/src/components/ui.tsx`
+
+The board's small parts. Every control keeps its text inside it (nowrap, ellipsis, the full text as its title) and is
+
+- `const cx = (...xs: Array<string | false | null | undefined>) =>`
+- `const Button`
+- `function Spinner()`
+- `function StatusDot({ tone, pulse, label }: { tone: 'ok' | 'amber' | 'bad' | 'muted'; pulse?: boolean; label: string })`
+- `function Chip({ tone = 'muted', children }: { tone?: 'ok' | 'amber' | 'bad' | 'muted' | 'ink'; children: React.ReactNod…`
+- `function CountUp({ to }: { to: number })`
+- `function Panel({ title, chip, why, children, actions, after }: { title: React.ReactNode; chip?: React.ReactNode; why?: …`
+- `function ActionBar({ primary, secondary, prompt }: { primary?: React.ReactNode; secondary?: React.ReactNode; prompt?: R…`
+
+### `apps/control-plane/board-next/src/undo.tsx`
+
+Every press is sent after a five-second Undo (sonner, the toast under 21st.dev's Sonner Toast), so a wrong tap costs no…
+
+- `function useUndo()`
+
+### `apps/control-plane/board-next/vite.config.ts`
+
+The live board's client (docs/plans/2026-11-09-board-desk/PLAN.md, build round 3). One self-contained HTML file:
+
+- `export default defineConfig({ root: import.meta.dirname, plugins: [react(),`
 
 ### `apps/control-plane/lib/contentEngine.ts`
 

@@ -58,30 +58,51 @@ describe('the live board view', () => {
   it('gives every next action a Claude prompt as a backup, after the machine that runs it', () => {
     const v = buildView(inputs({ queue: [verdict('tue', 'povteach', { idea: { verdict: 'improve', words: 'x', sha256: 'a'.repeat(64) } })] }))
     for (const d of v.days.filter(x => x.who !== 'done')) {
-      const prompt = d.actions.find(a => a.kind === 'prompt')
+      const prompt = d.actions.find(a => a.kind === 'prompt' && /Claude/.test(a.label))
       expect(prompt, d.day).toBeTruthy()
-      if (!/conversation/.test(d.runs_on)) expect(prompt && prompt.kind === 'prompt' && prompt.prompt, d.day).toContain(d.next)
+      expect(prompt && prompt.kind === 'prompt' && prompt.prompt, d.day).toMatch(/no prior context|You are/)
     }
-    const fri = day(v, 'fri')
-    expect(fri.actions.map(a => a.kind)).toEqual(['run', 'prompt'])
-    expect(fri.actions[1].kind === 'prompt' && fri.actions[1].prompt).toContain(`making.py ${FRI} show`)
   })
 
-  it('starts the make for a signed lock with a run, not a prompt, and shows the run while it goes', () => {
-    const fri = day(buildView(inputs()), 'fri')
-    expect(fri.who).toBe('you')
-    expect(fri.actions[0]).toMatchObject({ kind: 'run', job: 'make-piece', input: { piece_id: FRI } })
-    // The latest make-piece run may be another piece's: it is shown, and the start button stays.
-    const running = day(buildView(inputs({ runs: { 'make-piece': run('make-piece', 'running') } })), 'fri')
-    expect(running.run?.state).toBe('running')
-    expect(running.actions[0]).toMatchObject({ kind: 'run', job: 'make-piece' })
-  })
-
-  it('keeps the prompt only for a conversation with him: a lock not yet written or signed', () => {
+  it('walks a series day through research, story, look, then storyboard and script before recording', () => {
+    // Monday: no research, no lock -> Research, with the engine's run first and the Perplexity prompt beside it.
     const mon = day(buildView(inputs()), 'mon')
-    expect(mon.actions[0].kind).toBe('prompt')
-    expect(mon.runs_on).toMatch(/conversation/)
-    expect(mon.actions[0].kind === 'prompt' && mon.actions[0].prompt).toContain(`piece_id: ${MON}`)
+    expect(mon.path?.current).toBe('research')
+    expect(mon.actions.map(a => a.kind)).toEqual(['research', 'prompt', 'prompt'])
+    // Research on the piece -> Story, a conversation.
+    const withResearch = inputs({ pieces: [piece(MON, '2026-11-16', 'follow_the_money', {}, { meta: { materials: [{ id: 'm1', kind: 'file', title: 'mon-research.md', content: 'x', bytes: 1 }] } })] })
+    const mon2 = day(buildView(withResearch), 'mon')
+    expect(mon2.path?.current).toBe('story')
+    expect(mon2.actions[0].kind).toBe('prompt')
+    expect(mon2.runs_on).toMatch(/conversation/)
+    // Friday: signed lock, no look -> Look.
+    const fri = day(buildView(inputs()), 'fri')
+    expect(fri.path?.current).toBe('look')
+    expect(fri.actions[0]).toMatchObject({ kind: 'look', piece_id: FRI })
+    // A look picked -> Storyboard and script together, a session first and the make on GitHub beside it.
+    const looked = inputs({ pieces: [piece(FRI, '2026-11-20', 'mind_the_gap', {}, { meta: { look: { production: 'data-story', experiment: null, inspiration: [], by: 'Krish', at: 'x' } } })] })
+    const fri2 = day(buildView(looked), 'fri')
+    expect(fri2.path?.current).toBe('board')
+    expect(fri2.actions.map(a => a.kind)).toEqual(['prompt', 'run'])
+    expect(fri2.actions[1]).toMatchObject({ kind: 'run', job: 'make-piece', input: { piece_id: FRI } })
+    const sb = fri2.actions[0].kind === 'prompt' ? fri2.actions[0].prompt : ''
+    expect(sb).toContain('before he records')
+    expect(sb).toContain(`piece_id ${FRI}`)
+    expect(fri2.path?.steps.map(s => s.state)).toEqual(['done', 'done', 'done', 'current', 'todo', 'todo'])
+  })
+
+  it('writes every prompt to the one shape: nothing assumed, where things live, the arc, freedom, one thing to show', () => {
+    const v = buildView(inputs())
+    for (const d of v.days.filter(x => x.path)) {
+      for (const [name, text] of Object.entries(d.path!.prompts)) {
+        if (name === 'research') { expect(text).toMatch(/primary sources/); continue }
+        expect(text, `${d.day} ${name}`).toMatch(/no prior context/)
+        expect(text, `${d.day} ${name}`).toContain('making.py')
+        expect(text, `${d.day} ${name}`).toMatch(/Work freely/)
+        expect(text, `${d.day} ${name}`).not.toMatch(/ask (me|Krish) (for approval|before each|after each)|wait for approval|one question at a time/i)
+        if (name !== 'mock') expect(text, `${d.day} ${name}`).toMatch(/Open straight on the hook/)
+      }
+    }
   })
 
   it('runs his Improve when no revision has come back, and asks him to review once it has', () => {
@@ -152,9 +173,12 @@ describe('every board button starts a real machine', () => {
   })
 
   it('serves the page built from its one source, with no data baked in', () => {
-    expect(DESK_PAGE).toBe(readFileSync('apps/control-plane/board-next/desk.html', 'utf8'))
-    expect(DESK_PAGE).toContain('/api/board/${week}/view')
-    expect(DESK_PAGE).not.toMatch(/piece_id: [0-9a-f]{8}-/)
+    // The source is the React client in apps/control-plane/board-next; `node scripts/build-desk-page.mjs --check` rebuilds it
+    // and fails when the committed module differs (CI runs it through npm run verify).
+    expect(DESK_PAGE).toMatch(/^<!doctype html>/i)
+    expect(DESK_PAGE).toContain('<div id="root">')
+    expect(DESK_PAGE).toContain('/view')
+    expect(DESK_PAGE).not.toMatch(/8287846b-6618|b019dbf8-8051/)
   })
 })
 
@@ -191,5 +215,23 @@ describe('a review press on the live board is a record the server takes', () => 
       expect(hisOnlyRefusal('queue', body, 'Krish')).toBeNull()
       expect(hisOnlyRefusal('queue', body, 'engine_operator')).not.toBeNull()
     }
+  })
+})
+
+describe('research it now', () => {
+  it('runs the brief through sonar-pro, meters the call, and returns Markdown with its sources', async () => {
+    const { runResearch } = await import('../../apps/control-plane/api/board/_research')
+    const metered: Array<Record<string, unknown>> = []
+    let sentBody: Record<string, unknown> = {}
+    const fetcher = async (_url: string, init: { body: string }) => {
+      sentBody = JSON.parse(init.body)
+      return { ok: true, json: async () => ({ usage: { prompt_tokens: 10 }, citations: ['https://example.com/a'], choices: [{ message: { content: '# Answer\n\nA finding.' } }] }) }
+    }
+    const r = await runResearch('Research Oracle.', { PERPLEXITY_API_KEY: 'k' }, fetcher, async e => { metered.push(e) })
+    expect(sentBody.model).toBe('sonar-pro')
+    expect(metered).toEqual([{ agent: 'board_research', model: 'sonar-pro', usage: { prompt_tokens: 10 }, failed: false }])
+    expect(r.text).toContain('A finding.')
+    expect(r.text).toContain('1. https://example.com/a')
+    expect(await runResearch('x', {}, fetcher, async () => {})).toEqual({ text: '', sources: [] })
   })
 })

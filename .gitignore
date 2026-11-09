@@ -64,3 +64,6 @@ supabase/.temp/
 
 # The chat backstop outbox (W3.3): his flagged lines stay local until the runner posts them
 .scratch/
+
+# The live board client build output (built into api/board/_deskPage.ts)
+apps/control-plane/board-next/dist/
