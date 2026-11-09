@@ -34,7 +34,7 @@ export const LANE_PROBLEMS: Readonly<Record<string, string>> = Object.freeze({
   library_root_missing: 'cannot find the asset library (makeyourmindup) folder on its H: drive',
   library_env_stale: 'has a MINDMAKE_LIBRARY_ROOT setting that points at a folder that is not there; it used config/studio.json instead. Delete the setting',
   library_sync_failed: 'could not file the asset library into Drive on its last pass (library-sync.log on that machine says why)',
-  heartside_library_root_missing: 'cannot find the Heartside social library (Heartside/05_Social-Library) folder on its H: drive',
+  heartside_library_root_missing: 'cannot find the Heartside social library (Heartside/03b_Social-Schedule) folder on its H: drive',
   // The content watcher on the same machine (krishanraja/content-watcher), kept running and up to date by this pass.
   // Krish, 2026-10-28: "i should never really need to copy and paste log files to you like this, ever, this is
   // ridiculous". Its health travels in the report's `watch` block; GET /api/library/recordings/lane reads it back.
