@@ -43,3 +43,18 @@ The two Perplexity prompts he asked for: `perplexity-prompts.md` (sent to him as
 His cue on the 9 Nov board said: "Infosys is boring as hell but \"Who's stealing your money and where's the extra margin going?\" is a really interesting topic." The 7 Nov brief carried the cue as "who's clipping the margin" without his Infosys words, and the run built Monday and Tuesday options on Infosys. Both were rejected.
 
 His words went to his taste ledger (report_to_taste_engine, 9 Nov): mon-1, Tue infosys, Tue burntokens and wed-3.
+
+## Correction, 9 Nov 13:30 UTC: Friday, and his lost comments
+Krish, Sunday room chat, 9 Nov: "No, I actually picked the U.S. midterms one for Friday. Somehow, you've also managed to lose a bunch of my comments for that article."
+
+`board_history` for the week (Supabase, every save the board server received) shows, for Friday:
+- picks/fri rev 1, 13:12:58: fri-4 (voters and data centres), no note.
+- picks/fri rev 2, 13:13:05: fri-3, 7 seconds later. queue/fri-3 Next week followed at 13:13:08.
+- picks/fri rev 3, 13:22:46: fri-4 again, no note (after the readback above was read).
+- No queue/fri-4 document was ever saved, and no comment with his words on fri-4.
+
+So the server never received his comments on fri-4: they were lost in the page before any save, and the page keeps
+no unsent text. Suspected, not proven: the comment box's text was not sent with the pick, or the fri-3 pick seven
+seconds later replaced the page state before it saved. Every other word of his in `board_history` is in the current
+documents; one save blanked off-tue-infosys's words (rev 2, 13:16:09) and his next press restored them (rev 3).
+Board code is frozen this week; this goes to the parent session and the board v4 work.
