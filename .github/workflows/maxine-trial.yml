@@ -37,6 +37,10 @@ on:
         description: 'Stop the pod after this many minutes'
         required: false
         default: '30'
+      split_seconds:
+        description: 'Cut the take into chunks of this many seconds, run each on the one pod and join them (0 = whole take; the NIM refused the 315 s ai-music-long whole and took the 96 s short take)'
+        required: false
+        default: '0'
       image:
         description: 'nim route: the NIM image tag to run (empty = latest); take=entitlement-check lists the tags'
         required: false
@@ -94,6 +98,8 @@ jobs:
         env:
           TAKE: ${{ inputs.take }}
           CLIP: ${{ inputs.clip_seconds }}
+          SPLIT: ${{ inputs.split_seconds }}
+          VARIANTS_IN: ${{ inputs.variants }}
         run: |
           # The NIM takes "Only H.264 8-bit videos with Constant Frame Rate" and refused the take as recorded (run
           # 42120949518: audio is its first stream, video Baseline). Video first, H.264 High 8-bit 4:2:0, constant
@@ -112,10 +118,29 @@ jobs:
           LIMIT=""
           if [ "${CLIP:-0}" != "0" ]; then LIMIT="-t $CLIP"; fi
           mkdir -p "$RUNNER_TEMP/maxine"
+          KEYS=""
+          if [ "${SPLIT:-0}" != "0" ]; then KEYS="-force_key_frames expr:gte(t,n_forced*$SPLIT)"; fi
           "$FF" -v error -y -i "$RUNNER_TEMP/take/$TAKE" $LIMIT -map 0:v:0 -map 0:a? -c:v libx264 -preset veryfast -crf 12 \
-            -profile:v high -pix_fmt yuv420p -r "$RATE" -fps_mode cfr -c:a aac -b:a 192k \
+            -profile:v high -pix_fmt yuv420p -r "$RATE" -fps_mode cfr $KEYS -c:a aac -b:a 192k \
             "$RUNNER_TEMP/maxine/clip.$TAKE"
           cp "$RUNNER_TEMP/maxine/clip.$TAKE" "$RUNNER_TEMP/take/$TAKE"
+          if [ "${SPLIT:-0}" != "0" ]; then
+            # Chunks cut on the forced keyframes, so they hold every frame exactly once and join back frame for frame; each
+            # is a variant with its own --input, run back to back on the one pod with the settings given in `variants`.
+            mkdir -p "$RUNNER_TEMP/take/parts"
+            "$FF" -v error -y -i "$RUNNER_TEMP/take/$TAKE" -map 0 -c copy -f segment -segment_time "$SPLIT" -reset_timestamps 1 \
+              "$RUNNER_TEMP/take/parts/p%03d.mp4"
+            python - "$RUNNER_TEMP/take/parts" "$VARIANTS_IN" >> "$GITHUB_ENV" <<'PY'
+          import json, pathlib, sys
+          parts = sorted(pathlib.Path(sys.argv[1]).glob('p*.mp4'))
+          given = json.loads(sys.argv[2]) if sys.argv[2] else {'': ['--bitrate', '20000000']}
+          if len(given) != 1:
+              raise SystemExit('split_seconds takes one variant: the settings every chunk runs with')
+          args = list(given.values())[0]
+          print('SPLIT_VARIANTS=' + json.dumps({p.stem: args + ['--input', str(p)] for p in parts}))
+          PY
+            ls -la "$RUNNER_TEMP/take/parts"
+          fi
           # Inputs a variant can name with --input, for diagnosing what the NIM accepts: a 10 s cut and NVIDIA's sample.
           "$FF" -v error -y -i "$RUNNER_TEMP/take/$TAKE" -t 10 -c copy "$RUNNER_TEMP/take/c10.mp4" || true
           curl -sSL -o "$RUNNER_TEMP/take/nv.mp4" https://media.githubusercontent.com/media/NVIDIA-Maxine/nim-clients/main/eye-contact/assets/sample_transactional.mp4 || true
@@ -137,7 +162,24 @@ jobs:
           NIM: ${{ inputs.route != 'sdk' && 'yes' || '' }}
           VARIANTS: ${{ inputs.variants }}
           MAXINE_NIM_IMAGE: ${{ inputs.image && format('nvcr.io/nim/nvidia/maxine-eye-contact:{0}', inputs.image) || '' }}
-        run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD" --max-minutes "${MAX_MINUTES:-30}" ${NIM:+--nim-client "$RUNNER_TEMP/nim-clients/eye-contact"} ${VARIANTS:+--variants "$VARIANTS"}
+        run: |
+          RUN_VARIANTS="${SPLIT_VARIANTS:-$VARIANTS}"
+          python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD" \
+            --max-minutes "${MAX_MINUTES:-30}" ${NIM:+--nim-client "$RUNNER_TEMP/nim-clients/eye-contact"} \
+            ${RUN_VARIANTS:+--variants "$RUN_VARIANTS"}
+      - name: Join the chunks back into one copy of the take (split_seconds only)
+        if: ${{ inputs.split_seconds != '' && inputs.split_seconds != '0' && inputs.take != 'cleanup' && inputs.take != 'entitlement-check' }}
+        env:
+          TAKE: ${{ inputs.take }}
+        run: |
+          FF=$(python -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())")
+          STEM="${TAKE%.*}"
+          cd "$RUNNER_TEMP/maxine"
+          ls "$STEM".maxine.p*.mp4 | sort | sed "s/^/file '/; s/$/'/" > parts.txt
+          cat parts.txt
+          "$FF" -v error -y -f concat -safe 0 -i parts.txt -c copy "$STEM.maxine.joined.mp4"
+          rm -f "$STEM".maxine.p*.mp4
+          ls -la
       - name: Keep the redirected copy and the receipt (3 days)
         if: always()
         uses: actions/upload-artifact@v4

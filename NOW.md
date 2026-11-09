@@ -34,7 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-09","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
-- **Eye contact (2026-11-09):** `ve eyeline` brings eyes back toward the lens, glances part way; blind-reviewed on both 11 Nov takes, faint in stills (docs/ve/STATUS.md).
+- **Eye contact (2026-11-09):** `ve eyeline` passes blind review on both 11 Nov takes; Maxine's eye is opt-in, failed review twice (docs/ve/EYE_CONTACT.md).
 - 9 Nov board live (build f62502ec, 15:15 UTC) with Monday's v2 covers and thumbnails, the off-day carousels restored and Monday's re-made manifest (29eb66da...); Krish approved Monday in session ("I approve here", 2026-11-09). Fri 6 Nov counted as published. Post-mortem, board v4, cover-standard proposal and 16 Nov ideas are in; Growth is scheduling the week's posts. (2026-11-09)
 - Wed 11 Nov (36886e0b) storyboard v2 is with Krish as files for approval: 34 long beats and 14 short, each mocked on his takes and the real pages, plus three motion mocks in his own sound; record in docs/plans/2026-11-11-wednesday/storyboard.md. Before render the fact gate settles Imael Angel (healer, or "Hungarian producer" per WeRaveYou), the Grammys ruling and the Bad Times label. (2026-11-09)
 - 16 Nov board published with Krish's picks (Mon 8287846b, Wed db9f9f6a, Fri b019dbf8); Friday's narrative lock signed; his Monday and Wednesday research saved; his Friday comments were lost by the board before any save (board session fixing). (2026-11-09)
@@ -55,7 +55,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 
 ## What is next and what is waiting on Krish
 
-- Eye contact (2026-11-09): Wednesday's session runs `ve eyeline` on both takes before ingest (`docs/ve/RUNBOOK.md`); Krish judges its strength at full size.
+- Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
 - Next (2026-11-09): Krish's yes or edits on docs/proposals/2026-11-09-cover-standard.md; Wed 11 and Fri 13 continue in their own sessions.
 - Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
 - 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms, lock signed). Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.

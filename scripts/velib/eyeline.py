@@ -76,6 +76,8 @@ GATE_FROM, GATE_SPAN = 0.1, 0.08   # no correction under 0.1 iris radii of move 
 HARD_FROM, HARD_SPAN = 1.6, 0.4    # ...up to 1.6 radii (about 45 deg), each move only as far as the white either side allows (see the push); a glance past 2.0 is left as filmed (Krish, 9 Nov: "make it stronger, the eye contact needs to be visible")
 PUSH_HOLD, PUSH_FADE = 1.15, 1.3   # the push carries everything within 1.15 iris radii of the iris whole, fading to nothing 1.3 radii further out
 ACROSS_MAX = 0.0                   # no move up or down: it stretched the iris against the lid it moved away from (a catchlight streak, 9 Nov, long take 148.4 s) and no blind reader saw it gain anything; the lowered lid takes out the stare
+MAXINE_FROM = 0.6                  # iris radii: a glance this far off the lens takes Maxine's own eye (the push cannot bring it all the way)
+MAXINE_HOLD, MAXINE_MIN, MAXINE_FADE = 4, 4, 2   # frames: gaps closed, runs too short dropped, the hand-over cross-fade
 SEEN_MIN = 0.55                    # no move unless this share of both irises is inside his lid line (fully from 0.65): his upper lid covers about 15% at the lens, and the push moves only his own pixels
 SHARE_SIGMA = 2.0                  # frames: the share of the move is smoothed over time, one share for both eyes
 LOOK_UP, LOOK_DOWN, LOOK_PAD, LOOK_MIN = -0.035, 0.28, 1, 15  # white under the iris, or this share of it under the upper lid: a look up or down, left alone (and a few frames either side)
@@ -118,7 +120,11 @@ class Maxine(Backend):
     lock = True              # Maxine aims the eyes at the lens on every frame; eyeline only guards blinks and turns
     frame_source = True
 
-    def __init__(self, copy: Path | str | None = None):
+    def __init__(self, copy: Path | str | None = None, eye: bool = False):
+        # eye: Maxine's own eye on the big glances (glances, maxine_eye). Off by default: two fresh blind readers on
+        # 9 Nov blocked 7 of 66 moments each, every one a Maxine eye (an iris grey in the window light at a glance
+        # turned to the lens beside his brown one, a soft iris edge, a moved iris cut by a closing lid).
+        self.eye = bool(eye)
         if copy is None:
             raise RuntimeError('maxine: give the redirected copy (--maxine-copy), or run it on a pod (--pod). Maxine needs an '
                                'NVIDIA RTX GPU: neither home computer has one (LORIMER: Qualcomm Adreno; SURFACE: Intel Iris '
@@ -705,6 +711,114 @@ def shares(readings: list[dict], aimed: list[dict], looks: list[float] | None = 
     return [round(float(x), 3) for x in np.clip(out, 0, 1)]
 
 
+def glances(readings: list[dict], aimed: list[dict], there: list[dict] | None, decided: list[dict],
+             looks: list[float] | None = None) -> list[float]:
+    """Per frame, how much of Maxine's own eye to show (0 to 1): on a glance the push can only bring part of the way
+    (the longer eye's move past MAXINE_FROM), where Maxine found both eyes open, his head is frontal and he is not
+    looking up or down. Gaps up to MAXINE_HOLD frames are closed, runs under MAXINE_MIN dropped, and the hand-over
+    eases over MAXINE_FADE frames: both the push and Maxine aim at the lens, so the hand-over does not travel. Pure.
+    Krish, 9 Nov 2026: "make it stronger, the eye contact needs to be visible", then "Do both"."""
+    import numpy as np  # noqa: PLC0415
+    n = len(readings)
+    on = np.zeros(n, bool)
+    if there is None:
+        return [0.0] * n
+    for i, r in enumerate(readings):
+        t = there[i] if i < len(there) else {}
+        if (not r.get('face') or not t.get('face') or 'iris_r' not in r or set(aimed[i]) != set(IRIS)
+                or decided[i]['strength'] <= 0 or r.get('blink', 0) >= BLINK * 0.7 or t.get('blink', 0) >= BLINK * 0.7
+                or (looks and looks[i] >= 0.5)):
+            continue
+        span = max(math.hypot(aimed[i][s][0] - r['iris'][s][0], aimed[i][s][1] - r['iris'][s][1]) / max(1.0, r['iris_r'][s])
+                   for s in IRIS)
+        on[i] = span >= MAXINE_FROM
+    idx = np.flatnonzero(on)                                   # close short gaps
+    for a, b in zip(idx[:-1], idx[1:]):
+        if 1 < b - a <= MAXINE_HOLD + 1:
+            on[a:b] = True
+    runs, start = [], None                                     # drop short runs
+    for i, v in enumerate(list(on) + [False]):
+        if v and start is None:
+            start = i
+        elif not v and start is not None:
+            runs.append((start, i))
+            start = None
+    out = np.zeros(n)
+    for a, b in runs:
+        if b - a >= MAXINE_MIN:
+            out[a:b] = 1.0
+    return [round(float(x), 3) for x in ramp(out, MAXINE_FADE)]
+
+
+def maxine_eye(frame, source, contour, their_contour, iris_here, iris_there):
+    """Maxine's own eye, lids and lashes included, laid over his in a feathered ellipse around his lid line: Maxine
+    draws the lids to where the eye now looks, so there is no stare. Only its iris is changed: his own iris from this
+    frame, catchlight included, is set where Maxine drew the iris and sized to it, inside Maxine's lid line and only
+    where his own lids left it in view (Maxine's iris read flat and grey with no catchlight; blind review, 9 Nov). Its
+    rim and any part his lids hid stay Maxine's, hue-matched to his iris's dark core (never per-pixel ranks, which
+    speckled it). Nothing else is corrected: a whites shift spread onto the skin as a pale halo (9 Nov)."""
+    import cv2  # noqa: PLC0415
+    import numpy as np  # noqa: PLC0415
+    c = np.asarray(contour, np.float64)
+    tc = np.asarray(their_contour, np.float64)
+    width = float(np.hypot(*(c.max(0) - c.min(0)))) or 1.0
+    pad = int(math.ceil(0.6 * width)) + 2
+    x0, y0 = int(math.floor(c[:, 0].min())) - pad, int(math.floor(c[:, 1].min())) - pad
+    x1, y1 = int(math.ceil(c[:, 0].max())) + pad, int(math.ceil(c[:, 1].max())) + pad
+    if x0 < 0 or y0 < 0 or x1 > frame.shape[1] or y1 > frame.shape[0]:
+        return frame
+    region = frame[y0:y1, x0:x1].astype(np.float32)
+    src = source[y0:y1, x0:x1].astype(np.float32)
+    yy, xx = np.mgrid[0:y1 - y0, 0:x1 - x0].astype(np.float32)
+    cx, cy = c.mean(0) - [x0, y0]
+    ax = max(1.0, 0.5 * float(np.ptp(c[:, 0])) * 1.3)
+    ay = max(1.0, 0.5 * float(np.ptp(c[:, 1])) * 2.2)
+    rr = np.hypot((xx - cx) / ax, (yy - cy) / ay)
+    alpha = np.clip((1.25 - rr) / 0.45, 0, 1)
+    alpha = alpha * alpha * (3 - 2 * alpha)
+    mine_in = np.zeros(region.shape[:2], np.uint8)
+    cv2.fillPoly(mine_in, [np.round((c - [x0, y0]) * 16).astype(np.int32)], 1, lineType=cv2.LINE_AA, shift=4)
+    theirs_in = np.zeros(region.shape[:2], np.uint8)
+    cv2.fillPoly(theirs_in, [np.round((tc - [x0, y0]) * 16).astype(np.int32)], 1, lineType=cv2.LINE_AA, shift=4)
+    (hx, hy, hr), (tx, ty, tr) = iris_here, iris_there
+    d_h = np.hypot(xx - (hx - x0), yy - (hy - y0)) / max(1.0, hr)
+    d_t = np.hypot(xx - (tx - x0), yy - (ty - y0)) / max(1.0, tr)
+    lab_o = cv2.cvtColor(region.astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
+    lab_s = cv2.cvtColor(src.astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
+    # His hue only, from the dark core of each iris: on a big glance his iris sits against the corner and a wider
+    # sample takes in white and catchlight, which turned Maxine's brown iris pale grey-blue (blind review, 9 Nov:
+    # 7 of 67 moments, every one a Maxine eye). Maxine's own lightness and contrast are kept.
+    his, its = (mine_in > 0) & (d_h < 0.7), (theirs_in > 0) & (d_t < 0.7)
+    if his.sum() > 12 and its.sum() > 12:
+        his &= lab_o[..., 0] <= np.percentile(lab_o[..., 0][his], 70)
+        its &= lab_s[..., 0] <= np.percentile(lab_s[..., 0][its], 70)
+    if his.sum() > 8 and its.sum() > 8:
+        fixed = lab_s.copy()
+        fixed[..., 1:] += lab_o[his][:, 1:].mean(0) - lab_s[its][:, 1:].mean(0)
+        w = np.clip((1.05 - d_t) / 0.2, 0, 1) * cv2.GaussianBlur(theirs_in.astype(np.float32), (0, 0), 0.8)
+        lab_s = lab_s * (1 - w[..., None]) + fixed * w[..., None]
+    eye = cv2.cvtColor(np.clip(lab_s, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32)
+    # His own iris, catchlight and all, set where Maxine drew its iris and sized to it: Maxine's iris had no
+    # catchlight and read flat and lighter than his (blind review, 9 Nov). Only the part of his iris his own lids left
+    # in view is used, and only inside Maxine's lid line; elsewhere Maxine's (hue-matched) iris stays.
+    k = max(1.0, hr) / max(1.0, tr)
+    mx = ((hx - x0) + (xx - (tx - x0)) * k).astype(np.float32)
+    my = ((hy - y0) + (yy - (ty - y0)) * k).astype(np.float32)
+    his_iris = cv2.remap(region, mx, my, cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REFLECT)
+    seen = cv2.remap(cv2.GaussianBlur(mine_in.astype(np.float32), (0, 0), 0.8), mx, my, cv2.INTER_LINEAR,
+                     borderMode=cv2.BORDER_CONSTANT, borderValue=0)
+    disc = np.clip((0.95 - d_t) / 0.15, 0, 1)    # Maxine's dark rim kept: his iris edge brought a pale ring of white
+    put = (disc * np.clip(seen, 0, 1) * cv2.GaussianBlur(theirs_in.astype(np.float32), (0, 0), 0.8))[..., None]
+    eye = eye * (1 - put) + np.clip(his_iris, 0, 255) * put
+    # Maxine draws its lid edge a little stair-stepped (9 Nov, 60.07 s): softened slightly everywhere but the iris.
+    keep = np.clip((1.15 - d_t) / 0.15, 0, 1)[..., None]
+    eye = eye * keep + cv2.GaussianBlur(eye, (0, 0), 0.7) * (1 - keep)
+    out = frame.copy()
+    a = alpha[..., None]
+    out[y0:y1, x0:x1] = np.clip(np.rint(region * (1 - a) + eye * a), 0, 255).astype(np.uint8)
+    return out
+
+
 def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris_there=None, lid: float = 0.0,
                    share: float | None = None):
     """His eye from `source` laid onto `frame` only inside his own lid line (`contour`, 16 points, full-frame pixels),
@@ -1050,7 +1164,7 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
     target = out_dir / f'{media.stem}.eyeline.mp4'
     if qc is not None:
         qc.start(decided, info, out_dir / f'loop.{media.stem}.mp4')
-    source, moves, lens = None, None, None
+    source, moves, lens, maxi, there = None, None, None, None, None
     calibrated = getattr(backend, 'calibrated', False)
     if getattr(backend, 'frame_source', False):
         if calibrated:
@@ -1077,13 +1191,14 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                 # All or nothing: a half-faded iris is a ghost (blind review 5, 51.67 s, grey washed-out irises at 40% strength).
                 d_['strength'] = 0.0 if w_ >= 0.5 else d_['strength']
             moves = shares(readings, aimed, looks)
+            maxi = glances(readings, aimed, there, decided, looks) if getattr(backend, 'eye', False) and not calibrated else None
         else:
             there = None
             aimed = None
             lowered = None
             moves = None
     proc = writer(media, target, info, crf)
-    counts = {'frames': 0, 'corrected': 0, 'unmoved': 0}
+    counts = {'frames': 0, 'corrected': 0, 'unmoved': 0, 'maxine_eye': 0}
     try:
         for index, frame in enumerate(frames(media, info['width'], info['height'])):
             d = decided[index] if index < len(decided) else {'strength': 0.0, 'eyes': {}}
@@ -1107,6 +1222,18 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                                              moves[index] if moves and index < len(moves) else None)
                     else:
                         new = blend(new, other, eye_frame(eye['points']), d['strength'])
+                m = maxi[index] if maxi and index < len(maxi) else 0.0
+                t_ = there[index] if there is not None and index < len(there) else {}
+                if m > 0 and t_.get('face') and 'iris_r' in t_:
+                    # A glance the push cannot bring all the way: Maxine's own eye, handed over across MAXINE_FADE frames.
+                    whole = frame
+                    for side, eye in d['eyes'].items():
+                        r_ = readings[index]
+                        whole = maxine_eye(whole, other, eye['contour'], t_['contour'][side],
+                                           (*r_['iris'][side], r_['iris_r'][side]), (*t_['iris'][side], t_['iris_r'][side]))
+                    new = whole if m >= 1 else np.clip(np.rint(new.astype(np.float32) * (1 - m) + whole.astype(np.float32) * m),
+                                                       0, 255).astype(np.uint8)
+                    counts['maxine_eye'] += 1
                 moved = float(np.abs(new.astype(np.int16) - frame.astype(np.int16)).mean())
                 counts['corrected'] += 1
                 # Aperture mode leaves small corrections as they were on purpose (the gate), so our output not moving
@@ -1149,7 +1276,7 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                'frames': counts['frames'], 'corrected_frames': counts['corrected'], 'reasons': why,
                'settings': {'on_lens_deg': ON_LENS_DEG, 'full_deg': FULL_DEG, 'max_deg': MAX_DEG, 'blink': BLINK,
                             'head_turn_deg': HEAD_TURN_DEG, 'ramp_frames': RAMP_FRAMES},
-               'problems': problems}
+               'maxine_eye_frames': counts['maxine_eye'], 'problems': problems}
     if lens:
         receipt['lens'] = {side: [round(float(x), 5) for x in lens[side]] for side in lens}
         receipt['head'] = head_pose(readings)
