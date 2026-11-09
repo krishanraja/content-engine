@@ -145,6 +145,21 @@ class BoardWebTests(unittest.TestCase):
             self.assertIn(f'https://drive.google.com/file/d/{new_id}/view',html_out)
             self.assertIn(f'data-drive-id="{new_id}"',html_out)
             self.assertNotIn(old_id,html_out)
+            # A picture held inside the page (a made day's cover): img_id makes it show the mapped file.
+            sent.clear();uploads.clear()
+            path.write_text(week_board.engine_stamp.stamp(page.replace(source,src2).replace('</main>',
+                '<img class="dl-pic" id="mon-img-share" src="data:image/png;base64,T0xE" alt="Share card"></main>'),'week_board'),encoding='utf-8')
+            mapping.write_text(json.dumps([dict(id='mon-thumb',source_url=src2,library={'path':'3 Posts/x/3 Video/thumb.jpg','sha256':psha}),
+                dict(id='mon-share',img_id='mon-img-share',source_url='inline:mon-img-share',library={'path':'3 Posts/x/4 Social/share.png','sha256':psha})]))
+            with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                board_web.publish(args)
+            html_out=b''.join(x for a in uploads for x in a if isinstance(x,bytes)).decode('utf-8','replace')
+            self.assertIn(f'id="mon-img-share" src="/api/board/2026-10-12/assets/mon-share?sha={psha}"',html_out)
+            self.assertNotIn('base64,T0xE',html_out)
+            self.assertEqual(sent[0]['manifest']['assets']['mon-share']['sha256'],psha)
+            mapping.write_text(json.dumps([dict(id='mon-share',img_id='no-such',source_url='inline:x',library={'path':'3 Posts/x/4 Social/share.png','sha256':psha})]))
+            with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: None), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                with self.assertRaisesRegex(ValueError,'no picture with id'): board_web.publish(args)
 
     def test_a_ready_video_needs_a_passing_receipt_for_its_bytes(self):
         import html as html_mod
