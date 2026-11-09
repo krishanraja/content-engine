@@ -167,6 +167,23 @@ export const VeReferenceSchema = z.object({
   offered: z.boolean().optional(),
 }).strict()
 
+// Krish's cartoon character, placed at the bottom of a cut from his drawn pose library (config/ve/character.json,
+// _corpus/keyframes-character.md). Optional and off unless named: ve lint (scripts/velib/character.py) refuses it until
+// he has approved the base, the library is built and the character_layer device is registered. Each cue is the pose
+// for the word that carries an idea; never inside a cut's hook beat.
+export const VeCharacterCueSchema = z.object({
+  at_w: WordSchema,
+  pose: SlugSchema,
+  spot: z.enum(['centre', 'left', 'right']).optional(),
+  sink_px: z.number().int().min(0).max(190).optional(),
+}).strict()
+
+export const VeCharacterSchema = z.object({
+  id: SlugSchema,
+  cuts: z.array(SlugSchema).min(1),
+  cues: z.array(VeCharacterCueSchema).min(1),
+}).strict()
+
 export const ProductionSpecV2Schema = z.object({
   schema_version: z.literal(2),
   piece_id: IdentifierV1Schema,
@@ -204,6 +221,7 @@ export const ProductionSpecV2Schema = z.object({
     motion: z.object({ module: z.string().min(1), reason: z.string().min(1) }).strict().optional(),
   }).catchall(z.unknown()).optional(),
   max_face_share: z.number().min(0).max(1).optional(),
+  character: VeCharacterSchema.optional(),
 }).strict().superRefine((spec, c) => {
   if (spec.brand.series === 'mind.the.gap' && !spec.call) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })
   const ownSting = spec.brand.series.replace(/\./g, '_')

@@ -1,13 +1,11 @@
-In 1902, Hanoi paid people for every rat tail, to get rid of rats. So what did people do? They snipped off tails, let the rats go and bred more rats.
+Your company might be running a rat farm. Let me explain.
 
-Big companies made the same mistake with AI. Bosses judged staff on how much AI they used. Meta and Amazon both had leaderboards ranking staff by AI use, with silly titles for the top users.
+In 1902, Hanoi was terrified of plague, and the city was crawling with rats. So the officials came up with what sounded like a brilliant plan. They'd pay a reward for every dead rat. But counting piles of dead rats was grim, so they said, just bring us the tail. What could possibly go wrong?
 
-So some people gave AI pointless jobs to climb the leaderboard. Both leaderboards got scrapped. Amazon now says counting AI use was deeply flawed.
+Well, people started spotting rats in the streets with no tails. Very much alive. People were catching rats, snipping off the tails, and letting them go to breed more. Some even started rat farms. The city was paying for tails, when what it wanted was dead rats.
 
-Then there's a big medical equipment firm. It found a third of its staff's AI use was junk, just to hit a monthly target. So the firm cut the target in half. The junk dropped away, the real use stayed, and sales went up.
+Swap the rat tails for AI. Meta and Amazon had leaderboards ranking staff by how much AI they used. The top spot at Meta was called Token Legend. So some people set AI running on pointless jobs to climb the chart. That's rat farming with a laptop.
 
-So here's what I reckon. Whatever you count, people learn to make more of it.
-
-If you're counting how much AI your people use, you're counting rat tails. If I ran a team, I'd delete any target for AI use. And I'd check if the AI moves a number I already track, like sales.
+Whatever you count, people learn to make more of it. If I ran a team, I'd scrap that number and watch sales instead. Those are your dead rats.
 
 The full deep dive is at makeyourmindup.ai.

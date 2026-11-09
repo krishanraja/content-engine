@@ -38,6 +38,9 @@ installed. Its repertoire was.
 | A picture hands over only in a pause of 0.15 s or more | `scripts/velib/qc_gates.py` `handover_in_gaps`; ve qc row `beats.handover_in_gaps` | advisory on every format; counted where a format's `qc` names `handover_gap_ms` |
 | No bare ground at a beat edge: the stage band (without header and caption) carries a picture within 3 frames of every edge | `scripts/velib/qc_ground.py`; ve qc row `ground.not_bare` | a shadow row on every format; counted where a format's `qc` sets `bare_ground: true` |
 | Build caption: the page grows word by word, with the key word boxed | card `docs/ve/cards/keyframes/ve-kf-1-caption-build.md` | card written; not dispatched |
+| The character: his own cartoon, about 60 poses that talk and blink, acting at the bottom of a cut (adopted 2026-11-09; Krish: "I will put a character in to it as well later this week, so ensure that is ready too.") | craft `_corpus/keyframes-character.md`; manifest `config/ve/character.json`; poses `config/ve/character-poses.json`; gate `scripts/velib/character.py` (ve lint `character.*`) and the optional `spec.character` | ready to take: awaiting his photo; the base is not drawn and not approved; a spec naming it is refused until it is |
+| Drawing the character library with GPT Image 2 through Codex on his ChatGPT sign-in | card `docs/ve/cards/keyframes/ve-kf-6-character-library.md` | card written; not dispatched |
+| The character layer: pose per idea, his voice moving the mouth, blinks, clear of every channel's buttons | card `docs/ve/cards/keyframes/ve-kf-7-character-layer.md` | card written; not dispatched |
 
 ## Next, one card or change at a time
 
@@ -59,6 +62,18 @@ Then a trial format, `full-visual`:
 
 Then the first real how-it-works Short in it.
 
+The character, in order (each step waits on the one before):
+1. Krish drops one clear photo at `makeyourmindup > 1 Brand kit (permanent) > character > krish > input > photo.jpg`
+   (`H:\My Drive\Ventures\Active Ventures\makeyourmindup\1 Brand kit (permanent)\character\krish\input\photo.jpg`),
+   with optional notes in `notes.txt` beside it. A session copies the pack's `assets/character/style.png` and
+   `example-sheet.png` from the original zip to `character/krish/house/` (sha256 in `config/ve/character.json`).
+2. A session sets `status: drawing_base`, stages the inputs in the card worktree's `.cache/character/krish/` and
+   dispatches `ve-kf-6-character-library` (spends Codex allowance: Krish says yes first). It draws only the base.
+3. Krish looks at the base beside his photo and says what to fix. His yes, in his words, sets `approved` and `approval`.
+4. The same card again with `status: drawing_library` draws the poses; a session reads the contact sheet and every pose
+   at full size, then files the library to `character/krish/`.
+5. `ve-kf-7-character-layer`, then a Gate 2 look on a real 9:16 cut.
+
 ## Deliberately left out, and why
 
 | Left out | Why |
@@ -69,4 +84,4 @@ Then the first real how-it-works Short in it.
 | `@composio/core` | No new dependency without a need. |
 | Example stills, reels, fonts and the whisper model | We never commit media. They stay in the original zip. |
 | Bespoke per-reel scenes, and five hooks rendered as five videos | One signed spec. Alternate hooks wait for a format change. |
-| The `character` pack | Parked. It needs his photo, paid image generation and a taste call. It waits until he asks. |
+| The `character` pack's own scripts, rig, workspace page, OpenAI-key route and drawing in code | ve rewrites the craft as its own config, gate and two cards. The image route is Codex on his ChatGPT subscription only; drawing in code looks much worse. The style image and example sheet stay in the original zip and his library, never in git. |
