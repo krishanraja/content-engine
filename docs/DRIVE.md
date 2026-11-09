@@ -137,6 +137,18 @@ there, reads it back and replies "Done" with the link (`config/failures.json` F2
 - A cloud session reaches Drive through the Google Drive connector, which can
   create files and folders, rename and move them. It cannot see the H: mount;
   only the home computers can.
+- The connector takes a file's bytes only inline, so it cannot file a picture or
+  a video. For those, a cloud session uses the n8n workflow "Drive file uploader
+  (cloud sessions)" (Krish, 2026-11-09: "make sure this N8N uploader is the
+  backup for whenever this problem occurs again in the future"): POST the raw
+  bytes to its webhook with `?parent=<folder id>&name=<file name>` and the
+  file's content type; the reply is Drive's own record of the file, so compare
+  its `sha256Checksum` with the local file before calling it filed, then read it
+  back with the connector. The webhook's address is its only lock, so it is never
+  written in this repository: read it from the workflow through the n8n
+  connector (`search_workflows`, then `get_workflow_details`). It uploads with
+  the n8n "Google Drive account" login and only adds files; it never deletes or
+  overwrites.
 - Public copy never carries a Drive path (`NOW.md`, `never_publish`).
 - Two automatic writers are allowed, each by Krish's word. The library sync
   (AGENTS.md), which writes the makeyourmindup library and, since
