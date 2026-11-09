@@ -120,6 +120,17 @@ details.p>summary::-webkit-details-marker{display:none}
 .toast a{color:var(--mint)}
 .vid{position:relative;aspect-ratio:9/16;max-width:220px;border-radius:14px;background:linear-gradient(170deg,#2b3832,#0C1512);color:#F4EFE4;display:flex;align-items:flex-start;padding:16px;font:700 15px/1.3 Archivo,sans-serif;margin-bottom:10px}
 .vid::after{content:"\25B6";position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);font-size:34px;opacity:.8}
+.runs{display:block;margin-top:8px;font:600 11px "IBM Plex Mono",monospace;color:var(--muted)}
+.pre{display:block;margin-top:6px;font-size:13px;color:var(--amber)}
+.pre a,.runline a{color:inherit}
+.runline{display:flex;align-items:center;gap:8px;margin-top:8px;font:600 12px "IBM Plex Mono",monospace}
+.runline .spin{width:12px;height:12px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--ink);animation:spin 1s linear infinite;flex:none}
+.runline.done{color:var(--ok)}.runline.fail{color:var(--bad)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip.pick{min-height:44px;padding:0 16px;border:1px solid var(--line);background:var(--card);font:700 14px Archivo,sans-serif;cursor:pointer}
+.chip.pick[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.guess{font:600 12px "IBM Plex Mono",monospace;color:var(--muted)}
 .chev{transition:transform .2s;color:var(--muted)}
 details[open] .chev{transform:rotate(90deg)}
 .body{padding:0 18px 18px 130px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -205,8 +216,9 @@ dialog.k::backdrop{background:rgba(12,21,18,.45)}
   </section>
 
   <div class="mockbar" aria-label="Mock controls (not on the real board)">
-    Mock only. The days, pieces, runs and your quoted words are real (9 Nov handover); the due times are placeholders the live view will work out.
-    <button class="b" type="button" id="m-new">Show your Improve coming back</button>
+    Mock only. The days, pieces, runs and your quoted words are real (9 Nov handover), and the interview questions come from your research. Run progress and results are acted out here; the due times are placeholders.
+    <button class="b" type="button" id="m-new">Show your home computer offline</button>
+    <button class="b" type="button" id="m-token">Show it with the GitHub token</button>
     <button class="b" type="button" id="m-stale">Show the connection dropping</button>
     <button class="b" type="button" id="m-done">Show a finished week</button>
     <button class="b" type="button" id="m-theme">Light or dark</button>
@@ -224,37 +236,50 @@ dialog.k::backdrop{background:rgba(12,21,18,.45)}
 // items open on the week of 9 Nov (NOW.md). On the real board this comes from GET /api/board/:week/view.
 const STOPS = ["Idea", "Story", "Make", "Approve", "Live"];
 const MON = "8287846b-6618-4a19-9fb8-23ad4eca2718", WED = "db9f9f6a-1092-49be-8024-f335e060305a", FRI = "b019dbf8-8051-4cab-9b5e-2ad77b3f5118";
+// Every action names the machine that does the work (PLAN.md, "Every button starts the real machine").
+const RUN = {
+  make:    { where:"GitHub · make-piece.yml", trigger:"repository_dispatch make-piece", steps:["Fact check","Scripts","Read-back by fresh readers","Article","Publish page"], result:"Scripts ready to approve" },
+  revise:  { where:"GitHub · offday-revise.yml", trigger:"repository_dispatch offday-revise", steps:["Reading your Improve","Revising","Copy lint and kill list"], result:"Revised version ready" },
+  goodnews:{ where:"GitHub · saturday-goodnews.yml", trigger:"workflow_dispatch", needsToken:true, steps:["Searching","Checking each story"], result:"Stories ready to approve" },
+};
 const DAYS = [
   { key:"mon", d:"Mon 16", kind:"Essay and two cuts", series:"follow.the.money", title:"Where the money for AI comes from",
-    at:1, state:"now", next:{who:"you", text:"Start Monday's session: one question at a time, then the narrative lock to sign", due:"Wed 11"},
-    actions:[{label:"Copy prompt", kind:"prompt", primary:true, prompt:`piece_id: ${MON}\nMake Monday 16 Nov (follow.the.money). Start from my brief and docs/plans/2026-11-16-week/mon-research.md. Interview me one question at a time on the deeper story, then write the narrative lock for me to sign.`},
-             {label:"Read the research", kind:"open", body:"Perplexity Deep Research, saved 9 Nov: docs/plans/2026-11-16-week/mon-research.md"}],
-    panels:{"His brief":"\u201cThis becomes a broader piece about where, in general, money comes from that tech companies get to build AI.\u201d","Research":"Perplexity Deep Research saved (mon-research.md)","Checks":"Fact gate not started"} },
+    at:1, state:"now", next:{who:"you", text:"Answer 5 questions on the story, one at a time, then sign the narrative lock", due:"Wed 11"},
+    runs:"A conversation with you, on this page",
+    actions:[{label:"Answer 1 of 5", kind:"interview", primary:true},
+             {label:"Copy prompt", kind:"prompt", prompt:`piece_id: ${MON}\nMake Monday 16 Nov (follow.the.money). Start from my brief and docs/plans/2026-11-16-week/mon-research.md. Interview me one question at a time on the deeper story, then write the narrative lock for me to sign.`}],
+    q:{ ask:"Which thread leads Monday: the big four now borrowing to build (about 35 to 45% of 2026's AI spending is outside money, against under 10% in 2024), or who is left holding the bill if demand comes late (Oracle and CoreWeave lenders, then your power bill)?",
+        guess:"Who holds the bill. It ends on something a leader can act on.", chips:["Who holds the bill","The borrowing","Both, borrowing first"] },
+    panels:{"His brief":"“This becomes a broader piece about where, in general, money comes from that tech companies get to build AI.”","Research":"Perplexity Deep Research saved (mon-research.md)","Checks":"Fact gate not started"} },
   { key:"tue", d:"Tue 17", kind:"Off day: meme video", series:"povteach", title:"POV: your AI agent using your computer without being set up properly by you",
-    at:2, state:"stuck", next:{who:"bad", text:"Your Improve never reached a revision: the run failed (fixed today). Run it again to get the revised video to review", due:"today"},
-    actions:[{label:"Run my Improve again", kind:"run", primary:true, revise:"tue"},
-             {label:"Copy prompt", kind:"prompt", prompt:"Revise the Tue 17 Nov off-day option povteach (week of 2026-11-16) from my Improve: use the exact existing video and change only the caption to \u201cPOV: your AI agent using your computer without being set up properly by you\u201d. Make the mock for me to approve on the board."}],
-    panels:{"Your call":"Improve: use the exact existing video, change only the caption","Caption":"\u201cPOV: your AI agent using your computer without being set up properly by you\u201d","Checks":"Revision run 42622372777 failed: it read an empty Sunday branch. Fixed in the workflow."} },
+    at:2, state:"stuck", next:{who:"bad", text:"Your Improve never reached a revision: the run failed (fixed today). Run it again and the revised video comes back here", due:"today"},
+    runs:RUN.revise.where,
+    actions:[{label:"Run my Improve again", kind:"run", job:"revise", primary:true}],
+    panels:{"Your call":"Improve: use the exact existing video, change only the caption","Caption":"“POV: your AI agent using your computer without being set up properly by you”","Checks":"Run 42622372777 failed: it read an empty Sunday branch. Fixed in the workflow."} },
   { key:"wed", d:"Wed 18", kind:"Essay and two cuts", series:"under.the.hood", title:"Build or buy your AI",
-    at:1, state:"now", next:{who:"you", text:"Start Wednesday's session: one question at a time, then the narrative lock to sign", due:"Wed 11"},
-    actions:[{label:"Copy prompt", kind:"prompt", primary:true, prompt:`piece_id: ${WED}\nMake Wednesday 18 Nov (under.the.hood). Start from my note and docs/plans/2026-11-16-week/wed-research.md. Interview me one question at a time on the deeper story, then write the narrative lock for me to sign.`},
-             {label:"Read the research", kind:"open", body:"Your Deep Research, saved 9 Nov: docs/plans/2026-11-16-week/wed-research.md"}],
-    panels:{"His note":"\u201cYes give me a Perplexity prompt. I can go and bring a lot of evidence.\u201d","Research":"Saved (wed-research.md)","Checks":"Fact gate not started"} },
+    at:1, state:"now", next:{who:"you", text:"Answer 5 questions on the story, one at a time, then sign the narrative lock", due:"Wed 11"},
+    runs:"A conversation with you, on this page",
+    actions:[{label:"Answer 1 of 5", kind:"interview", primary:true},
+             {label:"Copy prompt", kind:"prompt", prompt:`piece_id: ${WED}\nMake Wednesday 18 Nov (under.the.hood). Start from my note and docs/plans/2026-11-16-week/wed-research.md. Interview me one question at a time on the deeper story, then write the narrative lock for me to sign.`}],
+    q:{ ask:"What does Wednesday turn on: the headlines oversell it (no company has published audited savings from replacing a major system with AI-written code), or the rule underneath (AI makes the first version cheap, and does little for the 50 to 90% of the cost that comes after)?",
+        guess:"The rule. It tells a leader what to do on Monday.", chips:["The rule","The overselling","Both, overselling first"] },
+    panels:{"His note":"“Yes give me a Perplexity prompt. I can go and bring a lot of evidence.”","Research":"Saved (wed-research.md)","Checks":"Fact gate not started"} },
   { key:"thu", d:"Thu 19", kind:"Off day: voiceover short", series:"lookalikes", title:"Which AI assistant to use for what, for anyone",
-    at:2, state:"stuck", next:{who:"bad", text:"Your Improve never reached a revision: the run failed (fixed today). Run it again to get the revised explainer to review", due:"today"},
-    actions:[{label:"Run my Improve again", kind:"run", primary:true, revise:"thu"},
-             {label:"Copy prompt", kind:"prompt", prompt:"Revise the Thu 19 Nov off-day option lookalikes (week of 2026-11-16) from my Improve: \u201cWe need this to work as a standalone explainer for the personalities and use cases for each of the assistants and be really helpful to the layperson to understand what they can use when.\u201d Make the mock for me to approve on the board."}],
-    panels:{"Your call":"Improve: \u201ca standalone explainer for the personalities and use cases for each of the assistants\u201d","Status":"Revision run 42624284763 failed the same way","Checks":"Not yet"} },
+    at:2, state:"stuck", next:{who:"bad", text:"Your Improve never reached a revision: the run failed (fixed today). Run it again and the revised explainer comes back here", due:"today"},
+    runs:RUN.revise.where,
+    actions:[{label:"Run my Improve again", kind:"run", job:"revise", primary:true}],
+    panels:{"Your call":"Improve: “a standalone explainer for the personalities and use cases for each of the assistants”","Status":"Run 42624284763 failed the same way","Checks":"Not yet"} },
   { key:"fri", d:"Fri 20", kind:"Essay, two cuts and a carousel", series:"mind.the.gap", title:"The future of AI after the midterms",
-    at:2, state:"now", next:{who:"you", text:"Your lock is signed. Start the make: every fact checked first, then the scripts", due:"Tue 10"},
-    actions:[{label:"Copy prompt", kind:"prompt", primary:true, prompt:`piece_id: ${FRI}\nMake Friday 20 Nov (mind.the.gap) from my signed narrative lock, docs/plans/2026-11-16-week/narrative-lock-fri.md. Check every fact in it first, then write both scripts and the midterms carousel.`},
+    at:2, state:"now", next:{who:"you", text:"Your lock is signed. Start the make: every fact checked first, then both scripts and the carousel", due:"Tue 10"},
+    runs:RUN.make.where,
+    actions:[{label:"Start the make", kind:"run", job:"make", primary:true},
              {label:"Read the signed lock", kind:"open", body:"Hook: towns across America held 41 votes on new AI data centres, and 40 of them said no. The use: ask your AI supplier where its new computing is being built."}],
-    panels:{"The story":"41 votes on new data centres in 10 states; 40 said limit or no.","Your close":"\u201cAsk your AI supplier where its new computing is being built.\u201d","Checks":"Every fact in the lock still to check"} },
+    panels:{"The story":"41 votes on new data centres in 10 states; 40 said limit or no.","Your close":"“Ask your AI supplier where its new computing is being built.”","Checks":"Every fact in the lock still to check"} },
   { key:"sat", d:"Sat 21", kind:"Off day: good news carousel", series:"good news", title:"This week's good news",
     at:0, state:"eng", next:{who:"eng", text:"The Thursday run finds the stories, then they come here for you to approve", due:"Thu 19"},
-    actions:[{label:"Find the stories now", kind:"run", primary:true},
-             {label:"Copy prompt", kind:"prompt", prompt:"Find this week's Saturday good news for 21 Nov (carousel, my call on 9 Nov) and put the stories on the board for me to approve."}],
-    panels:{"Your call":"\u201ccarousel\u201d","Source":"saturday-goodnews.yml, Thursday 19 Nov","Checks":"Not yet"} },
+    runs:RUN.goodnews.where + ", runs itself Thu 10:41",
+    actions:[{label:"Find the stories now", kind:"run", job:"goodnews", primary:true}],
+    panels:{"Your call":"“carousel”","Source":"saturday-goodnews.yml, Thursday 19 Nov","Checks":"Not yet"} },
 ];
 const MOVES = [
   { id:"m1", week:"Week of 9 Nov", due:"Due now", what:"Approve the Wed 11 Nov storyboard",
@@ -299,9 +324,9 @@ function stack() {
       <h3>${m.what}</h3><p class="why">${m.why}</p>
       <div class="thing">${m.thing}</div>
       <div class="acts">
-        <button class="b go" type="button" data-a="approve">Approve<kbd>A</kbd></button>
+        ${m.kind === "question" ? `<button class="b go" type="button" data-a="approve">Save my answer</button><button class="b" type="button" data-a="improve">Say it in my words</button>` : `<button class="b go" type="button" data-a="approve">Approve<kbd>A</kbd></button>
         <button class="b" type="button" data-a="improve">Improve<kbd>I</kbd></button>
-        <button class="b no" type="button" data-a="reject">Reject<kbd>R</kbd></button>
+        <button class="b no" type="button" data-a="reject">Reject<kbd>R</kbd></button>`}
       </div>
       <div class="words"><label class="mono" style="font-size:12px;color:var(--muted)" for="w-${m.id}">Your words (kept on this device until saved)</label><textarea id="w-${m.id}"></textarea>
         <div class="acts" style="margin-top:10px"><button class="b go" type="button" data-a="send">Save my words</button></div></div>
@@ -316,7 +341,9 @@ function pieces() {
         <span class="what"><b>${d.title}</b><span>${d.series}</span></span>
         <span class="track" aria-label="Stage ${d.at + 1} of 5: ${STOPS[d.at]}">${STOPS.map((s, i) => `<span class="stop ${i < d.at ? "done" : i === d.at ? (d.state === "stuck" ? "stuck" : "cur") : ""}"><i></i>${s}</span>`).join("")}</span>
         <span class="next ${d.next.who}"><em>${{ you:"Next, you", eng:"Next, the engine", bad:"Stuck" }[d.next.who]} · ${d.next.due}</em>${d.next.text}
-          ${d.actions && d.actions.length ? `<span class="rowacts">${d.actions.map((a, i) => `<button type="button" class="rb ${a.primary ? "go" : ""}" data-day="${d.key}" data-i="${i}">${a.label}</button>`).join("")}</span>` : ""}</span>
+          ${d.actions && d.actions.length ? `<span class="rowacts">${d.actions.map((a, i) => `<button type="button" class="rb ${a.primary ? "go" : ""}" data-day="${d.key}" data-i="${i}">${a.label}</button>`).join("")}</span>` : ""}
+          ${d.runs ? `<span class="runs">Runs on: ${d.runs}</span>` : ""}
+          ${d.run ? runLine(d) : ""}${d.actions && d.actions.some(a => a.job && RUN[a.job].needsToken) && !d.run ? `<span class="pre">Needs the one GitHub token you create once. Until then: <a href="https://github.com/krishanraja/content-engine/actions/workflows/saturday-goodnews.yml" target="_blank" rel="noopener">start it on GitHub</a></span>` : ""}</span>
         <span class="chev" aria-hidden="true">›</span>
       </summary>
       <div class="body">${Object.entries(d.panels).map(([h, p]) => `<div class="panel"><h5>${h}</h5><p>${p}</p></div>`).join("")}</div>
@@ -336,7 +363,10 @@ function act(a) {
   const what = MOVES.find(m => m.id === id).what;
   setTimeout(() => {
     card.classList.add("gone");
-    setTimeout(() => { cleared.add(id); stack(); moved({ t:"Just now", s:`You: ${a === "send" ? (w.dataset.mode === "reject" ? "rejected" : "improved") : "approved"}, ${what.toLowerCase()}.`, fresh:true }) }, 330);
+    setTimeout(() => { cleared.add(id);
+      if (id.startsWith("q-")) { const d = DAYS.find(x => "q-" + x.key === id); d.next = { who:"you", text:"Question 2 of 5 on the story, then the narrative lock to sign", due:"Wed 11" }; d.actions[0].label = "Answer 2 of 5"; pieces();
+        stack(); moved({ t:"Just now", s:`You answered question 1 of 5 for ${d.d}. Saved on the piece; question 2 is next.`, fresh:true }); return }
+      stack(); moved({ t:"Just now", s:`You: ${a === "send" ? (w.dataset.mode === "reject" ? "rejected" : "improved") : "approved"}, ${what.toLowerCase()}.`, fresh:true }) }, 330);
   }, 380);
 }
 document.addEventListener("click", e => {
@@ -350,37 +380,68 @@ document.addEventListener("keydown", e => {
 });
 
 function toast(html) { const t = $("#toast"); t.innerHTML = html; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 4200) }
-// Every row's buttons: copy the right prompt for a new Claude session, open what to read, or start the run.
+// Every row's buttons start the real machine: a run on GitHub, the interview on this page, or (for a conversation only) a prompt.
+function runLine(d) {
+  const r = d.run, job = RUN[r.job];
+  if (r.state === "starting") return `<span class="runline"><i class="spin"></i>Starting on ${job.where}</span>`;
+  if (r.state === "running") return `<span class="runline"><i class="spin"></i>${job.steps[r.step]} · ${r.min} min · <a href="#" onclick="return false">open run</a></span>`;
+  if (r.state === "done") return `<span class="runline done">Done · ${job.result}, at the top of Your move</span>`;
+  if (r.state === "fail") return `<span class="runline fail">Failed: ${r.why} · press again to retry</span>`;
+  return "";
+}
+function startRun(d, a) {
+  d.run = { job:a.job, state:"starting", step:0, min:0 }; pieces();
+  moved({ t:"Just now", s:`You started ${d.d}: ${RUN[a.job].trigger} sent to ${RUN[a.job].where}.`, fresh:true });
+  const steps = RUN[a.job].steps;
+  let n = 0;
+  const tick = () => {
+    if (n < steps.length) { d.run = { job:a.job, state:"running", step:n, min:n * 4 + 1 }; n++; pieces(); return setTimeout(tick, 900) }
+    d.run = { job:a.job, state:"done" }; pieces(); resultCard(d, a.job);
+  };
+  setTimeout(tick, 900);
+}
+function resultCard(d, job) {
+  const tue = d.key === "tue";
+  const cards = {
+    revise: { what:`Review the revised ${tue ? "meme video" : "explainer"} for ${d.d}`,
+      why: tue ? "Your exact caption over the existing video, nothing else changed." : "Rebuilt as a standalone explainer: each assistant's personality and what to use it for.",
+      thing: tue ? `<div class="vid">POV: your AI agent using your computer without being set up properly by you</div><p class="q">The existing video, unchanged. Your caption, word for word.</p>`
+                 : `<ol><li>Three assistants that look alike</li><li>What each one is like, and the job it is best at</li><li>Which to open for what, in one line each</li></ol><div class="frames"><i></i><i></i><i></i><i></i></div>` },
+    make: { what:`Approve Friday's scripts`, why:"Every fact in your lock checked first; both scripts read back by fresh readers. Approving sends them to your Teleprompter.",
+      thing:`<ol><li>Towns across America held 41 votes on new AI data centres, and 40 said no</li><li>Why: the power bill</li><li>Three ways round, and the catch in each</li><li>Ask your AI supplier where its new computing is being built</li></ol><p class="q">Fact gate: all checked · Read-back: passed</p>` },
+    goodnews: { what:`Approve Saturday's good news`, why:"Four real stories from this week, each with its real picture.", thing:`<div class="frames"><i></i><i></i><i></i><i></i></div>` },
+  }[job];
+  MOVES.unshift(Object.assign({ id:"res-" + d.key, week:"Week of 16 Nov", due:"New" }, cards));
+  d.state = "now"; d.at = Math.max(d.at, 3); d.next = { who:"you", text:"Ready for you at the top of Your move", due:"now" };
+  d.actions = [{ label:"Review it", kind:"open", primary:true }];
+  last = Date.now(); strip(); pieces(); stack();
+  moved({ t:"Just now", s:`${RUN[job].where}: ${RUN[job].result.toLowerCase()} for ${d.d}.`, fresh:true });
+}
+function interview(d) {
+  if (MOVES.some(m => m.id === "q-" + d.key && !cleared.has(m.id))) return document.getElementById("move-h").scrollIntoView({ behavior:"smooth" });
+  if (cleared.has("q-" + d.key)) { toast("In the live board, question 2 of 5 comes next here."); return }
+  MOVES.unshift({ id:"q-" + d.key, week:"Week of 16 Nov", due:"Question 1 of 5", what:`${d.d}: the story`, why:d.q.ask, kind:"question",
+    thing:`<div class="chips">${d.q.chips.map(c => `<button type="button" class="chip pick" aria-pressed="false">${c}</button>`).join("")}</div><p class="guess">Best guess: ${d.q.guess}</p>` });
+  stack(); document.getElementById("move-h").scrollIntoView({ behavior:"smooth" });
+}
 document.addEventListener("click", async e => {
+  const c = e.target.closest(".chip.pick");
+  if (c) { c.parentElement.querySelectorAll(".chip.pick").forEach(x => x.setAttribute("aria-pressed", String(x === c))); return }
   const b = e.target.closest(".rb"); if (!b) return;
   e.preventDefault(); e.stopPropagation();
   const d = DAYS.find(x => x.key === b.dataset.day), a = d.actions[+b.dataset.i];
   if (a.kind === "prompt") {
     try { await navigator.clipboard.writeText(a.prompt); toast(`Prompt copied. Paste it into a new session: <a href="https://claude.ai/code" target="_blank" rel="noopener">open Claude</a>`) }
     catch { toast("Copy is blocked here. On the real board this copies the prompt.") }
-  } else if (a.kind === "open") {
+  } else if (a.kind === "interview") interview(d);
+  else if (a.kind === "open") {
     if (a.label === "Review it") document.getElementById("move-h").scrollIntoView({ behavior:"smooth" }); else { const p = $("#p-" + d.key); p.open = true; toast(a.body) }
   } else if (a.kind === "run") {
-    b.classList.add("wait"); b.textContent = "Running…";
-    if (a.revise) {
-      moved({ t:"Just now", s:`You: ran your ${d.d} Improve again. The revised version comes back to Your move.`, fresh:true });
-      setTimeout(() => revised(d), 3200);
-    } else moved({ t:"Just now", s:`You: started the ${d.d} run.`, fresh:true });
+    if (d.run && (d.run.state === "starting" || d.run.state === "running")) return;
+    if (RUN[a.job].needsToken && !window.__token) { toast("This one needs the GitHub token you create once. Until then, it starts from GitHub."); return }
+    startRun(d, a);
   }
 }, true);
-// What his Improve brings back: a revised version on top of Your move, to approve, improve again or reject.
-function revised(d) {
-  const tue = d.key === "tue";
-  MOVES.unshift({ id:"rev-" + d.key, week:"Week of 16 Nov", due:"New", what:`Review the revised ${tue ? "meme video" : "explainer"} for ${d.d}`,
-    why: tue ? "Your exact caption over the existing video, nothing else changed." : "Rebuilt as a standalone explainer: each assistant's personality and what to use it for.",
-    thing: tue ? `<div class="vid">POV: your AI agent using your computer without being set up properly by you</div><p class="q">The existing video, unchanged. Your caption, word for word.</p>`
-               : `<ol><li>Three assistants that look alike</li><li>ChatGPT: the all-rounder. Claude: the careful writer and coder. Gemini: lives in your Google files</li><li>Which to open for what, in one line each</li></ol><div class="frames"><i></i><i></i><i></i><i></i></div>` });
-  d.state = "now"; d.at = 3; d.next = { who:"you", text:"Review the revised version in Your move", due:"Mon 16" };
-  d.actions = [{ label:"Review it", kind:"open", primary:true, body:"It is at the top of Your move." }];
-  last = Date.now(); strip(); pieces(); stack();
-  moved({ t:"Just now", s:`Engine: the revised ${d.d} version is ready for you.`, fresh:true });
-  document.getElementById("move-h").scrollIntoView({ behavior:"smooth" });
-}
 // Command palette
 const ITEMS = () => [
   ...MOVES.filter(m => !cleared.has(m.id)).map(m => ({ label:m.what, hint:"Your move", go:() => document.getElementById("move-h").scrollIntoView({ behavior:"smooth" }) })),
@@ -407,9 +468,10 @@ $("#cmdk").onclick = palette;
 setInterval(() => { const s = Math.round((Date.now() - last) / 1000); if (!$("#live").classList.contains("stale")) $("#ago").textContent = innerWidth < 500 ? (s < 5 ? "Live" : `Live, ${s}s ago`) : s < 5 ? "Live, updated just now" : `Live, updated ${s}s ago` }, 1000);
 setInterval(() => { if (!$("#live").classList.contains("stale")) last = Date.now() }, 5000);
 // Mock controls
-$("#m-new").onclick = () => { const d = DAYS[1]; if (!MOVES.some(m => m.id === "rev-tue")) revised(d) };
+$("#m-new").onclick = () => { const m = MOVES.find(x => x.id === "m1"); if (m) { m.why = "34 long beats and 14 short. After you sign, the overnight run on your home computer cuts it. <b style=\"color:var(--bad)\">Primary home computer offline since 18:02: the cut starts when it is back on.</b>"; stack(); document.getElementById("move-h").scrollIntoView({ behavior:"smooth" }) } };
+$("#m-token").onclick = () => { window.__token = true; const d = DAYS[5]; pieces(); toast("With the token, Find the stories now starts saturday-goodnews.yml from here.") };
 $("#m-stale").onclick = () => { $("#live").classList.add("stale"); $("#ago").textContent = "Reconnecting. Showing what was true at " + new Date(last).toTimeString().slice(0, 5) };
-$("#m-done").onclick = () => { MOVES.forEach(m => cleared.add(m.id)); DAYS.forEach(d => { d.at = 4; d.state = "done"; d.next = { who:"eng", text:"Published", due:"done" }; d.actions = [] });
+$("#m-done").onclick = () => { MOVES.forEach(m => cleared.add(m.id)); DAYS.forEach(d => { d.at = 4; d.state = "done"; d.next = { who:"eng", text:"Published", due:"done" }; d.actions = []; d.run = null; d.runs = "" });
   strip(); pieces(); stack(); $("#hello").textContent = "Week done"; $("#stack").innerHTML = `<div class="card clear"><h3>Week done</h3><p class="why">6 pieces live, 8 of 8 assets published. Next week's ideas arrive Sunday 06:00.</p></div>`; count(8); scrollTo({ top:0, behavior:"smooth" }) };
 $("#m-theme").onclick = () => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === "dark" ? "light" : "dark" };
 strip(); stack(); pieces(); moved(); count(3);
