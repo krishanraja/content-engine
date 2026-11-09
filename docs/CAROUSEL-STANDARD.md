@@ -194,6 +194,9 @@ nature."
 
 ## The cover card is a scene, not a slide (Ruling, Krish, 4 November 2026)
 
+Series covers and thumbnails, and points 1, 5 and 6 of card 1 here, follow `docs/production/COVER-STANDARD.md`
+(approved by Krish, 2026-11-09: "approve the cover standard as written").
+
 His words, of the Tuesday and Thursday mocks for the week of 9 November: "The first card of each mock should have a much
 more engaging background image." Then, of the rebuilt set: "I approve these carousels. They look good. I sign them off
 completely for publishing next week" and "make sure all future carousels never need this feedback again".
