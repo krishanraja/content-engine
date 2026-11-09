@@ -15,7 +15,7 @@ from pathlib import Path
 DEFAULT_VIEWS = ('desk', 'monday', 'tuesday', 'wednesday/creative', 'friday/creative', 'saturday/brief', 'lastweek')
 
 
-def shoot(page, out, views, scale=2):
+def shoot(page, out, views, scale=2, assets=None):
     from playwright.sync_api import sync_playwright
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -29,6 +29,11 @@ def shoot(page, out, views, scale=2):
         # live board's CSP allows) must load, or the shots show system fonts the live board never shows (Krish,
         # 2026-11-08: "I preferred my brand fonts being there").
         tab.route(re.compile(r'^https?://(?!fonts\.(?:googleapis|gstatic)\.com/)'), lambda r: r.abort())
+        if assets:
+            # The board's stored pictures, as the live board serves them (/api/board/<week>/assets/<id>?sha=<sha>): a file
+            # the publish would store is read from assets/<sha> (board_web.py publish-web --save); one already stored by an
+            # earlier build is fetched from the board with the engine key. Anything else stays offline.
+            tab.route(re.compile(r'^file:///api/board/\d{4}-\d{2}-\d{2}/assets/'), lambda r: _asset(r, Path(assets)))
         uri = Path(page).resolve().as_uri()
         for view in views:
             tab.goto(f'{uri}#{view}')
@@ -53,15 +58,37 @@ def shoot(page, out, views, scale=2):
     return lines
 
 
+def _asset(route, folder):
+    import os
+    import urllib.request
+    m = re.search(r'/api/board/(\d{4}-\d{2}-\d{2})/assets/([^?]+)\?sha=([a-f0-9]{64})', route.request.url)
+    if not m:
+        return route.abort()
+    local = folder / m.group(3)
+    if local.exists():
+        return route.fulfill(body=local.read_bytes())
+    key, base = os.environ.get('ENGINE_OPERATOR_TOKEN'), os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
+    if not key:
+        return route.abort()
+    try:
+        req = urllib.request.Request(f'{base}/api/board/{m.group(1)}/assets/{m.group(2)}?sha={m.group(3)}',
+                                     headers={'Authorization': 'Bearer ' + key})
+        with urllib.request.urlopen(req, timeout=120) as r:
+            return route.fulfill(body=r.read())
+    except Exception:  # noqa: BLE001 - a picture that cannot be fetched shows as missing, as it would live
+        return route.abort()
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('page')
     ap.add_argument('--out', required=True)
     ap.add_argument('--views', default=','.join(DEFAULT_VIEWS))
     ap.add_argument('--scale', type=int, default=2)
+    ap.add_argument('--assets', help='the folder board_web.py publish-web --save wrote (its assets/ folder)')
     a = ap.parse_args(argv)
     views = [v.strip() for v in a.views.split(',') if re.fullmatch(r'[a-z]+(/[a-z]+)?', v.strip())]
-    lines = shoot(a.page, a.out, views, a.scale)
+    lines = shoot(a.page, a.out, views, a.scale, a.assets)
     print('\n'.join(lines))
     return 1 if any('SIDEWAYS' in x for x in lines) else 0
 

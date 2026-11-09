@@ -107,6 +107,26 @@ class BoardWebTests(unittest.TestCase):
             self.assertEqual(sent[0]['manifest']['assets']['drive-example'],asset)
             self.assertEqual(len(reads),1)
             self.assertEqual(len(uploads),1)  # the HTML only
+            # A picture filed to the library after the week's builds: fetched by path, checked by sha256, stored with the build.
+            sent.clear();uploads.clear()
+            pic=b'library picture bytes';psha=board_web.sha(pic)
+            def api_lib(method, path, body=None):
+                if path.startswith('/api/library/file?'): return {'download':{'url':'https://store.test/x'}}
+                return api_empty(method, path, body)
+            class R:
+                def __init__(s,b): s.b=b
+                def read(s): return s.b
+                def __enter__(s): return s
+                def __exit__(s,*a): return False
+            mapping.write_text(json.dumps([dict(id='off-card',source_url=source,library={'path':'3 Posts/x/4 Social/card-1.png','sha256':psha})]))
+            with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                board_web.publish(args)
+            self.assertEqual(sent[0]['manifest']['assets']['off-card']['sha256'],psha)
+            self.assertEqual(sent[0]['manifest']['assets']['off-card']['type'],'image/png')
+            self.assertEqual(len(uploads),2)  # the picture and the HTML
+            mapping.write_text(json.dumps([dict(id='off-card',source_url=source,library={'path':'3 Posts/x/4 Social/card-1.png','sha256':'f'*64})]))
+            with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: None), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                with self.assertRaisesRegex(ValueError,'not the bytes'): board_web.publish(args)
 
     def test_a_ready_video_needs_a_passing_receipt_for_its_bytes(self):
         import html as html_mod
