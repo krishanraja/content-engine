@@ -188,6 +188,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/video-studio/runner/project`
 - `/api/video-studio/runner/watch`
 - `/api/video-studio/session`
+- `/api/voice/check`
 - `/api/watch/apify`
 - `/api/watch/claim`
 - `/api/watch/read`
@@ -3121,6 +3122,10 @@ Which Windows runner may take work, and how each one looks from the cloud.
 - `export default withContentRun('runner_watch', handler)`
 
 ### `apps/control-plane/api/video-studio/session.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/voice/check.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
