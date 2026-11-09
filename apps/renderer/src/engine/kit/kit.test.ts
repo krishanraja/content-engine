@@ -79,7 +79,7 @@ describe('motion style profiles', () => {
   it('draws every motion style a profile can express, and names the seven that need their own device', () => {
     const drawable = bank.filter(style => !style.ve_route.includes('needs_device')).map(style => style.id).sort()
     expect(Object.keys(MOTION_PROFILES).sort()).toEqual(drawable)
-    expect(drawable).toHaveLength(10)
+    expect(drawable).toHaveLength(11)
     expect([...NEEDS_DEVICE].sort()).toEqual(bank.filter(style => style.ve_route.includes('needs_device')).map(style => style.id).sort())
     expect(NEEDS_DEVICE).toHaveLength(7)
   })

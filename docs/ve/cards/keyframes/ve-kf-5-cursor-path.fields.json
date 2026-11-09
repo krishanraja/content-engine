@@ -1,0 +1,14 @@
+{
+  "path": "docs/ve/cards/keyframes/ve-kf-5-cursor-path.md",
+  "card_id": "ve-kf-5-cursor-path",
+  "kind": "device",
+  "motion_style": "full-visual",
+  "title": "A real interface, clicked through on eased arcs",
+  "goal": "A device for a real interface being used (_corpus/keyframes-full-visual.md 2.1, 3.7). params: `screen` (a real screenshot path, drawn at its real geometry), `targets` ({id, x, y, w, h} in screenshot pixels).\n\nVerbs: enter (the screen rises in), move (the cursor travels on an eased arc to the event's target, via cursorPath in kit/verbs.ts), press (a 4-frame press ring and the target highlights in mint), type (text appears in the target via typeOn, 25 to 40 characters a second), exit.\n\n## Tests\n- the cursor is on its target by move + 10 and pressed only during press\n- the highlight is mint and only on the pressed target\n- typed text is empty before its event and whole by its end\n- tall and wide fixtures render",
+  "contract": "Rules for every device (apps/renderer/src/engine/devices/CONTRACT.md): Device({object, events, box, tokens, aspect, frame}), a pure function of its props; state only from stateAt(events, object.obj, frame); animation only from progress() and drift() with MOTION timing, and the helpers in kit/verbs.ts once they exist; colours only from tokens (raw hex refused); type roles from HOUSE_FONTS; no Math.random, no f % N, no wall clock; author 1080x1920 and 1920x1080 slots separately. Register the device in devices/registry.ts (one line) and in config/ve/devices.json with exactly the verbs below, and update verbs.test.ts. Follow the builder method in _corpus/keyframes-full-visual.md section 8: the picture comes from object.params (an image path for the real thing, its labels), never a generic shape standing in for it. Verbs, exactly: enter, move, press, type, exit.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/cursor_path\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+  "write_allow": "[apps/renderer/src/engine/devices/cursor_path/*, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/devices/verbs.test.ts, config/ve/devices.json]",
+  "read": "_corpus/keyframes-full-visual.md, apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/kinetic_stat/**, apps/renderer/src/engine/devices/evidence_card/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/kit/verbs.ts, apps/renderer/src/engine/props.ts, config/ve/devices.json, config/ve/brand-tokens.json",
+  "max_minutes": 60,
+  "max_calls": 60
+}

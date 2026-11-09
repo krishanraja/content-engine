@@ -1,0 +1,14 @@
+{
+  "path": "docs/ve/cards/keyframes/ve-kf-3-cutaway-section.md",
+  "card_id": "ve-kf-3-cutaway-section",
+  "kind": "device",
+  "motion_style": "full-visual",
+  "title": "Cut inside: a real object opens to show its layers",
+  "goal": "A device that shows the inside of a real thing (_corpus/keyframes-full-visual.md 2.4). params: `image` (the real object's photo or render, a staged asset path), `layers` (2 to 6 items: {label, image?} from outside in), `axis` ('x' or 'y').\n\nVerbs: enter (the whole object rises in), open (the object splits along `axis` and the layers lift apart in order, staggered 3 frames, each labelled small with a hairline, per 2.8), focus (one layer index scales to 1.15 while the others dim to 40%), close, exit.\n\n## Tests\n- before open no layer is offset; 12 frames after open every layer is apart and labelled\n- focus dims every other layer and never the focused one\n- close returns to the closed geometry\n- tall and wide fixtures render",
+  "contract": "Rules for every device (apps/renderer/src/engine/devices/CONTRACT.md): Device({object, events, box, tokens, aspect, frame}), a pure function of its props; state only from stateAt(events, object.obj, frame); animation only from progress() and drift() with MOTION timing, and the helpers in kit/verbs.ts once they exist; colours only from tokens (raw hex refused); type roles from HOUSE_FONTS; no Math.random, no f % N, no wall clock; author 1080x1920 and 1920x1080 slots separately. Register the device in devices/registry.ts (one line) and in config/ve/devices.json with exactly the verbs below, and update verbs.test.ts. Follow the builder method in _corpus/keyframes-full-visual.md section 8: the picture comes from object.params (an image path for the real thing, its labels), never a generic shape standing in for it. Verbs, exactly: enter, open, focus, close, exit.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/cutaway_section\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+  "write_allow": "[apps/renderer/src/engine/devices/cutaway_section/*, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/devices/verbs.test.ts, config/ve/devices.json]",
+  "read": "_corpus/keyframes-full-visual.md, apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/kinetic_stat/**, apps/renderer/src/engine/devices/evidence_card/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/kit/verbs.ts, apps/renderer/src/engine/props.ts, config/ve/devices.json, config/ve/brand-tokens.json",
+  "max_minutes": 60,
+  "max_calls": 60
+}
