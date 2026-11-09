@@ -7,7 +7,7 @@ cleared for published video only when a fresh blind reviewer (never the producer
     python -m velib.eyeline_review TAKE CORRECTED --out DIR [--readings DIR]
 
 Writes into DIR:
-  sheet.<stem>.<n>.jpg   moments, each as two panels X and Y in a random order (one the take as filmed, one corrected),
+  sheet.<stem>.<n>.jpg   moments, at most MAX_SHEET_H tall so a reader sees them at full size, each as two panels X and Y in a random order (one the take as filmed, one corrected),
                          both eyes at 3x and the face at 1x, labelled only with its time and a moment number
   key.<stem>.json        which panel is which, per moment: for whoever scores the review, never for the reviewer
   numbers.<stem>.json    per corrected frame and eye, read back from CORRECTED: iris colour change (CIE76, the iris
@@ -34,7 +34,7 @@ if __package__ in (None, ''):
 
 from . import eyeline  # noqa: E402
 
-PER_SHEET = 8
+MAX_SHEET_H = 1990   # a reviewer's image reader scales anything taller: a sheet must be seen at full size (9 Nov)
 ZOOM = 3
 MIN_GAP_S = 0.8
 
@@ -235,12 +235,19 @@ def sheets(take: Path, corrected: Path, info: dict, before: list[dict], moments:
         w = max(px.shape[1], py.shape[1])
         pad = lambda p: np.pad(p, ((0, 0), (0, w - p.shape[1]), (0, 0)), constant_values=255)  # noqa: E731
         blocks.append(np.concatenate([pad(px), np.full((4, w, 3), 255, np.uint8), pad(py), np.full((18, w, 3), 255, np.uint8)], 0))
+    groups, cur = [], []
+    for b in blocks:
+        if cur and sum(x.shape[0] for x in cur) + b.shape[0] > MAX_SHEET_H:
+            groups.append(cur)
+            cur = []
+        cur.append(b)
+    if cur:
+        groups.append(cur)
     paths = []
-    for s in range(0, len(blocks), PER_SHEET):
-        part = blocks[s:s + PER_SHEET]
+    for g, part in enumerate(groups, 1):
         w = max(p.shape[1] for p in part)
         sheet = np.concatenate([np.pad(p, ((0, 0), (0, w - p.shape[1]), (0, 0)), constant_values=255) for p in part], 0)
-        path = out / f'sheet.{take.stem}.{s // PER_SHEET + 1}.jpg'
+        path = out / f'sheet.{take.stem}.{g:03d}.jpg'
         cv2.imwrite(str(path), sheet, [cv2.IMWRITE_JPEG_QUALITY, 95])
         paths.append(path)
     return paths, key
