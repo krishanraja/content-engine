@@ -51,13 +51,18 @@ def web_page(page, manifest):
     manifest['sha256'] = sha(page.encode('utf-8'))
     return page, manifest
 
-def call(method, path, body=None):
+# The library lives on the engine's own host, not the board's (content.krishraja.com answers 404 for /api/library/,
+# the 9 Nov restore's first dry run): the same engine key, the address scripts/engine.py uses.
+ENGINE_BASE_URL = 'https://content-engine-flame-nu.vercel.app'
+
+
+def call(method, path, body=None, base=None):
     key = os.environ.get('ENGINE_OPERATOR_TOKEN')
     if not key:
         key, _ = engine.windows_key()
     if not key:
         raise ValueError('Engine operator credential unavailable; use the approved environment or Credential Manager entry.')
-    base = os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
+    base = (base or os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com')).rstrip('/')
     if not base.startswith('https://'):
         raise ValueError('BOARD_BASE_URL must use HTTPS')
     try:
@@ -186,7 +191,8 @@ def library_file(week, ref, kind=None):
     import urllib.parse
     if not (isinstance(ref, dict) and isinstance(ref.get('path'), str) and re.fullmatch(r'[a-f0-9]{64}', str(ref.get('sha256')))):
         raise ValueError('A library asset is {"path": "<library path>", "sha256": "<64 hex>"}')
-    got = call('GET', '/api/library/file?path=' + urllib.parse.quote(ref['path']) + '&sha256=' + ref['sha256'])
+    got = call('GET', '/api/library/file?path=' + urllib.parse.quote(ref['path']) + '&sha256=' + ref['sha256'],
+               base=os.environ.get('ENGINE_BASE_URL', ENGINE_BASE_URL))
     url = ((got or {}).get('download') or {}).get('url')
     if not url:
         raise ValueError(f'The library has no ready file {ref["path"]} with sha256 {ref["sha256"][:12]}')
