@@ -1,23 +1,161 @@
 {
   "devices": {
-    "logo_orbit": { "verbs": ["enter", "add", "chip", "highlight", "exit"] },
-    "typing_bubble": { "verbs": ["enter", "type", "send", "pick", "exit"] },
-    "cursor_buddy": { "verbs": ["enter", "bounce", "sulk", "wave", "move", "exit"] },
-    "logo_card": { "verbs": ["enter", "highlight", "exit"] },
-    "headline": { "verbs": ["enter", "exit"] },
-    "sticker": { "verbs": ["enter", "exit"] },
-    "stamp": { "verbs": ["stamp", "exit"] },
-    "stat_strip": { "verbs": ["enter", "count_to", "exit"] },
-    "quote_card": { "verbs": ["enter", "exit"] },
-    "marquee": { "verbs": ["enter", "exit"] },
-    "test_grid": { "verbs": ["enter", "mark", "stamp", "highlight", "carry", "exit"] },
-    "record_card": { "verbs": ["enter", "stamp", "exit"] },
-    "query_chip": { "verbs": ["enter", "highlight", "exit"] },
-    "evidence_card": { "verbs": ["enter", "fill", "mark", "stamp", "exit"] },
-    "kinetic_stat": { "verbs": ["enter", "count_to", "exit"] },
-    "scribble": { "verbs": ["draw", "exit"] },
-    "passport_page": { "verbs": ["enter", "stamp", "mark", "exit"] },
-    "hand_phone_stage": { "verbs": ["enter", "move", "fill", "exit"] },
-    "thread_card": { "verbs": ["enter", "mark", "stamp", "exit"] }
+    "logo_orbit": {
+      "verbs": [
+        "enter",
+        "add",
+        "chip",
+        "highlight",
+        "exit"
+      ]
+    },
+    "typing_bubble": {
+      "verbs": [
+        "enter",
+        "type",
+        "send",
+        "pick",
+        "exit"
+      ]
+    },
+    "cursor_buddy": {
+      "verbs": [
+        "enter",
+        "bounce",
+        "sulk",
+        "wave",
+        "move",
+        "exit"
+      ]
+    },
+    "logo_card": {
+      "verbs": [
+        "enter",
+        "highlight",
+        "exit"
+      ]
+    },
+    "headline": {
+      "verbs": [
+        "enter",
+        "exit"
+      ]
+    },
+    "sticker": {
+      "verbs": [
+        "enter",
+        "exit"
+      ]
+    },
+    "stamp": {
+      "verbs": [
+        "stamp",
+        "exit"
+      ]
+    },
+    "stat_strip": {
+      "verbs": [
+        "enter",
+        "count_to",
+        "exit"
+      ]
+    },
+    "quote_card": {
+      "verbs": [
+        "enter",
+        "exit"
+      ]
+    },
+    "marquee": {
+      "verbs": [
+        "enter",
+        "exit"
+      ]
+    },
+    "test_grid": {
+      "verbs": [
+        "enter",
+        "mark",
+        "stamp",
+        "highlight",
+        "carry",
+        "exit"
+      ]
+    },
+    "record_card": {
+      "verbs": [
+        "enter",
+        "stamp",
+        "exit"
+      ]
+    },
+    "query_chip": {
+      "verbs": [
+        "enter",
+        "highlight",
+        "exit"
+      ]
+    },
+    "evidence_card": {
+      "verbs": [
+        "enter",
+        "fill",
+        "mark",
+        "stamp",
+        "exit"
+      ]
+    },
+    "kinetic_stat": {
+      "verbs": [
+        "enter",
+        "count_to",
+        "exit"
+      ]
+    },
+    "scribble": {
+      "verbs": [
+        "draw",
+        "exit"
+      ]
+    },
+    "passport_page": {
+      "verbs": [
+        "enter",
+        "stamp",
+        "mark",
+        "exit"
+      ]
+    },
+    "hand_phone_stage": {
+      "verbs": [
+        "enter",
+        "move",
+        "fill",
+        "exit"
+      ]
+    },
+    "thread_card": {
+      "verbs": [
+        "enter",
+        "mark",
+        "stamp",
+        "exit"
+      ]
+    },
+    "office_floor": {
+      "verbs": [
+        "enter",
+        "add",
+        "fill",
+        "move",
+        "send",
+        "stamp",
+        "carry",
+        "highlight",
+        "draw",
+        "mark",
+        "exit"
+      ]
+    }
   }
 }
