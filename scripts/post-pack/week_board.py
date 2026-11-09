@@ -2651,6 +2651,24 @@ def upgrade_kept_v4(panel, key, weekday, creative_html, scored_html):
     return panel.replace(pub, pub + step_panel(p, 'scored', opened, scored_html), 1)
 
 
+def drop_settled_script_ask(panel):
+    """A kept draft day whose scripts the record shows in Teleprompter: its heading's "Waiting on you" no longer asks
+    him to approve them (Krish, 2026-11-09, on the 9 Nov Wednesday tab still asking for scripts sent on 4 Nov: "I'm
+    pretty sure the Wednesday, the 11th, session has built most of the assets"). Every other ask stays; an empty box
+    goes."""
+    head = panel.find('<div class="day-head">')
+    at = panel.find('<div class="notice" role="note">', head) if head >= 0 else -1
+    if at < 0:
+        return panel
+    box = div_at(panel, at)
+    kept = [li for li in re.findall(r'<li>.*?</li>', box, re.S)
+            if not re.match(r'<li>\s*Approve (?:both )?(?:\w+ )?scripts?\b', li, re.I)]
+    if len(kept) == len(re.findall(r'<li>', box)):
+        return panel
+    new = re.sub(r'<ol class="do">.*?</ol>', lambda m: '<ol class="do">' + ''.join(kept) + '</ol>', box, count=1, flags=re.S) if kept else ''
+    return panel.replace(box, new, 1)
+
+
 def series_stages(key, state, piece, brief, rv, tp, takes, sheet, prod, videos, posted):
     """{stage: state}, {stage: note} for a series day from what the board holds; week.js settles the rest from his
     presses (data-settled-by)."""
@@ -4862,6 +4880,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                                       takes.get(key), creative.get(key), (production or {}).get(key), (videos or {}).get(key), posted)
             if state == 'draft' and not (review or {}).get(key) and key in kept_draft and not (teleprompter.get(key) or {}).get('cuts'):
                 st['script'] = 'you'
+            elif key in kept_draft and {'long', 'short'} <= set(((teleprompter.get(key) or {}).get('cuts') or {})):
+                panels[-1] = drop_settled_script_ask(panels[-1])
             doc = board_v4.score_doc(piece, when) if piece else f'score-{when.isoformat()}'
             panels[-1] = with_stage_bar(panels[-1], stage_bar_settled(key, st, notes, doc, piece, f'{key}-publish', f'{key}-scripts'))
             v4_days.append({'key': key, 'tab': name, 'when': when, 'label': short_day(when), 'series': series_label,
@@ -6158,6 +6178,14 @@ def _v4_checks(check, mon):
     once = with_stage_bar(panel, bar)
     check(with_stage_bar(once, bar.replace('>a<', '>b<')).count('class="v4-stages"') == 1,
           'a day kept from a v4 board gets its stage bar replaced, never a second one')
+    asks = ('<div class="pm"><div class="day-head"><h1>x</h1><div class="notice" role="note"><h2>Waiting on you</h2>'
+            '<ol class="do">{}</ol></div></div><p>body</p></div>')
+    only = drop_settled_script_ask(asks.format('<li>Approve both Wednesday scripts, or edit them.</li>'))
+    other = drop_settled_script_ask(asks.format('<li>Approve both Friday scripts.</li><li>Check the article call.</li>'))
+    check('Waiting on you' not in only and '<p>body</p>' in only and 'Check the article call' in other
+          and 'Approve both Friday' not in other
+          and drop_settled_script_ask(asks.format('<li>Pick a title.</li>')) == asks.format('<li>Pick a title.</li>'),
+          'a kept draft whose scripts are in Teleprompter no longer asks him to approve them; its other asks stay')
     week = V4_FROM
     with tempfile.TemporaryDirectory() as tmp:
         raw, mapping = example_creative(tmp)
