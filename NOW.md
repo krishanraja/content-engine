@@ -64,7 +64,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
-- North Star check (2026-11-06): holds.
+- North Star check (2026-11-09): holds.
 
 ## Read next
 
