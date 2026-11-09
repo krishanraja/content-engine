@@ -60,6 +60,27 @@ def joins_in_gaps(joins, heard: dict) -> dict:
                      f"every join in an agreed gap >= {rule['min_gap_ms']} ms, {rule['clearance_ms']} ms clear each side", gaps.summary)
 
 
+HANDOVER_GAP_MS = 150  # keyframes@0.2.13 check.py plan: a scene starts only after >= 0.15 s of silence.
+
+
+def beat_handovers(beats, fps: float = 30, stop_frame=None) -> list[float]:
+    """The seconds at which one beat hands over to the next: every beat start after the first, before the ending."""
+    starts = sorted({int(b['fromFrame']) for b in beats or [] if int(b['fromFrame']) > 0})
+    return [f / fps for f in starts if stop_frame is None or f < stop_frame]
+
+
+def handover_in_gaps(beats, heard: dict, *, fps: float = 30, min_gap_ms: float = HANDOVER_GAP_MS,
+                     stop_frame=None) -> dict:
+    """Every beat handover in a pause he left, never across a word (docs/ve/sources/keyframes.md).
+
+    The same agreed-gap measure as joins.in_gaps (scripts/cutgates/gaps.py), held to the full-visual rule: a gap of
+    at least min_gap_ms, with no clearance required on either side. A picture that changes mid-word reads as the
+    voice and the screen disagreeing."""
+    _, _, gaps, _, _ = _cutgates()
+    result = gaps.joins_in_gaps(beat_handovers(beats, fps, stop_frame), heard, min_gap_ms=min_gap_ms, clearance_ms=0)
+    return _gate_row(result, f'every beat handover in an agreed gap >= {min_gap_ms:g} ms', gaps.summary)
+
+
 def captions_clock(pages, heard: dict, drawn_by: str, fps: float = 30) -> dict:
     """Each caption page's first frame on the clock of the aligner that did not draw the captions."""
     aligners, captions, _, settings, _ = _cutgates()

@@ -1,0 +1,14 @@
+{
+  "path": "docs/ve/cards/keyframes/ve-kf-4-count-roll.md",
+  "card_id": "ve-kf-4-count-roll",
+  "kind": "device",
+  "motion_style": "full-visual",
+  "title": "A number that rolls to its word, on the real thing it measures",
+  "goal": "A device for a number that is never static (_corpus/keyframes-full-visual.md 3.6), shown on or beside the real thing it measures. params: `image` (optional, the real object), `unit`, `denominator?`; the value comes from object.dataset with dataset.producerLabel shown legibly (CONTRACT rule 5).\n\nVerbs: enter, roll (digits roll like an odometer from the previous value to the event's value, via countTo in kit/verbs.ts, landing on the event frame + 18), fill (a bar or ring on the object fills to the value as a share of denominator), exit. unit and denominator never change during the object's life.\n\n## Tests\n- the shown value equals the target from roll + 18 and never overshoots it\n- producerLabel is drawn\n- fill is 0 before its event and the share after\n- tall and wide fixtures render",
+  "contract": "Rules for every device (apps/renderer/src/engine/devices/CONTRACT.md): Device({object, events, box, tokens, aspect, frame}), a pure function of its props; state only from stateAt(events, object.obj, frame); animation only from progress() and drift() with MOTION timing, and the helpers in kit/verbs.ts once they exist; colours only from tokens (raw hex refused); type roles from HOUSE_FONTS; no Math.random, no f % N, no wall clock; author 1080x1920 and 1920x1080 slots separately. Register the device in devices/registry.ts (one line) and in config/ve/devices.json with exactly the verbs below, and update verbs.test.ts. Follow the builder method in _corpus/keyframes-full-visual.md section 8: the picture comes from object.params (an image path for the real thing, its labels), never a generic shape standing in for it. Verbs, exactly: enter, roll, fill, exit.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/count_roll\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+  "write_allow": "[apps/renderer/src/engine/devices/count_roll/*, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/devices/verbs.test.ts, config/ve/devices.json]",
+  "read": "_corpus/keyframes-full-visual.md, apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/kinetic_stat/**, apps/renderer/src/engine/devices/evidence_card/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/kit/verbs.ts, apps/renderer/src/engine/props.ts, config/ve/devices.json, config/ve/brand-tokens.json",
+  "max_minutes": 60,
+  "max_calls": 60
+}
