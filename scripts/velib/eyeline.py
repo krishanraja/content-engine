@@ -73,7 +73,7 @@ APERTURE_SHRINK = 0.97      # the blend stops just inside his lid line ...
 APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's width
 LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening the upper lid takes back, its cap (eye widths), time smoothing
 GATE_FROM, GATE_SPAN = 0.1, 0.08   # no correction under 0.1 iris radii of move (about 3 deg), the whole move from 0.18 (about 5 deg)
-HARD_FROM, HARD_SPAN = 0.6, 0.25   # ...up to 0.6 radii (about 16 deg); past it the move eases off, and a glance past 0.85 is left as filmed (Krish, 9 Nov: "make it stronger, the eye contact needs to be visible")
+HARD_FROM, HARD_SPAN = 1.6, 0.4    # ...up to 1.6 radii (about 45 deg), each move only as far as the white either side allows (see the push); a glance past 2.0 is left as filmed (Krish, 9 Nov: "make it stronger, the eye contact needs to be visible")
 PUSH_HOLD, PUSH_FADE = 1.15, 1.3   # the push carries everything within 1.15 iris radii of the iris whole, fading to nothing 1.3 radii further out
 ACROSS_MAX = 0.45                  # iris radii: the most the push moves across the eye (up or down), inside his opening only; the lens sits 3 to 4 degrees under his own iris line
 SEEN_MIN = 0.55                    # no move unless this share of both irises is inside his lid line (fully from 0.65): his upper lid covers about 15% at the lens, and the push moves only his own pixels
@@ -796,9 +796,22 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             v = np.array([-u[1], u[0]])
             along, across = ox * u[0] + oy * u[1], ox * v[0] + oy * v[1]
             across = float(np.clip(across, -ACROSS_MAX * hr, ACROSS_MAX * hr))
-            fade = max(PUSH_FADE, 3.0 * math.hypot(along, across) / max(1.0, hr))   # a longer move stretches the white over more of it
-            reach = np.clip((PUSH_HOLD + fade - d_here) / fade, 0, 1)
-            reach = reach * reach * (3 - 2 * reach)
+            # Along the eye the push is an elastic band pinned at his two corners: the iris and a rim of white around it
+            # travel whole, and the white either side stretches or presses evenly down to nothing at the corner, so a long
+            # move never drags the corner or its lash line (9 Nov: a reach that ran into the corners smeared and doubled
+            # the lid line at the outer corner on every big glance).
+            ta = (xs - cl[0][0]) * u[0] + (ys - cl[0][1]) * u[1]                    # along the eye, from one corner
+            ew_ = float(np.hypot(*(cl[8] - cl[0]))) or 1.0
+            ti = (hx - x0 - cl[0][0]) * u[0] + (hy - y0 - cl[0][1]) * u[1]
+            lo, hi = max(1.0, ti - PUSH_HOLD * hr), min(ew_ - 1.0, ti + PUSH_HOLD * hr)
+            pressed, stretched = (lo, ew_ - hi) if along < 0 else (ew_ - hi, lo)   # the white ahead of the iris and behind it
+            # Neither side changes width by more than half: a glance jammed against a corner has a few pixels of white
+            # behind it, and stretching them several times over smeared the corner (9 Nov, 60.07 s). Such a glance is
+            # brought part of the way, cleanly.
+            limit = 0.5 * max(0.0, min(pressed, stretched))
+            along = float(np.clip(along, -limit, limit))
+            reach = np.where(ta < lo, ta / max(1.0, lo), np.where(ta > hi, (ew_ - ta) / max(1.0, ew_ - hi), 1.0))
+            reach = np.clip(reach, 0, 1)
             soft = max(1.0, 0.3 * hr)
             band_h = np.clip(cv2.GaussianBlur(cv2.dilate(hard, np.ones((3, 3), np.uint8), iterations=max(1, int(round(0.4 * hr)))).astype(np.float32),
                                               (0, 0), soft), 0, 1)
