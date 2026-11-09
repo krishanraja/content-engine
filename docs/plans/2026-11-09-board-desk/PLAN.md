@@ -142,3 +142,30 @@ Each of these needs Krish's own words at the time:
 - switching `/board` over.
 
 Nothing is published or sent on his behalf.
+
+## Each day as a guided path (Krish, 9 Nov, after the build)
+
+Krish asked for: research he can drop onto a day's idea, or a one-click research run; a choice of every look the engine can
+make, with one recommended and showcased, then "do you want a mock?"; the storyboard and the script made together
+**before** he records ("I would like to do the storyboard mocks before I record the script so that I can record correctly
+and the scripts can be in the right voice"); suggestions from his inspiration board; one simple choice at a time with
+room for long-form feedback; and copied prompts that assume a new session knows nothing and give it creative freedom
+with "a laser focus on an incredibly strong visual and scripted narrative arc".
+
+Mock: `docs/plans/2026-11-09-board-desk/day-mock.html` (Monday, real data). Opening a day shows the step it is on:
+
+| Step | One-click choices | What runs | Built from |
+|---|---|---|---|
+| 1 Research | Research it now · Copy Perplexity prompt · drop a .md | The engine's Perplexity research (sonar-pro) as a new allow-listed job; the drop goes onto the piece | `meta.materials` via `POST /api/content-ideas/:id/materials` (his login, 400k chars); corpus cards `inspiration_items kind=corpus` |
+| 2 Story | Copy Claude prompt (the lock session) · sign | A Claude session; the signed lock lands on the day | narrative-lock-<day>.md |
+| 3 Look | Use the recommended look · see the other 6 · fold in an inspiration card · Yes, mock it | `ve styles` on his last take of the format (home computer, about 7 minutes) | ideas.json `style`, `config/style-references.json` formats, `/api/inspiration/candidates` |
+| 4 Storyboard + script | Copy Claude prompt · upload the session's storyboard · Approve both | A Claude session; approval sends the scripts to Teleprompter | the existing Approve scripts press |
+| 5 Record | Open Teleprompter | his takes file themselves | home computers |
+| 6 Cut and publish | Cut the videos now | produce-day / overnight | existing |
+
+Every step keeps a long-form feedback box and a Claude prompt. Prompts follow one shape: who and what (no assumed
+context), where everything lives, the goal and the arc, freedom to make craft calls, and one moment to show Krish.
+
+Gaps to build: a showcase clip per look (the style bank has no previews; one `ve styles` render per format on his past
+take); the look press (a `picks/<day>-look` document); the research job; reading `meta.materials` into the view; and
+moving the storyboard ahead of recording in `make-piece` (a skill change, by his ruling of 9 Nov).
