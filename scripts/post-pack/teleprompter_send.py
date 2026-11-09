@@ -95,6 +95,10 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
+# The exact words plan cleared for his teleprompter (read back by fresh readers, approved by him). The publish guard
+# (.claude/hooks/publish-guard.mjs) lets a Teleprompter create_script or update_script through only for words listed
+# here, and puts any other words to Krish in person (failure F45: words sent unread on 9 Nov). Local, never committed.
+CLEARED = Path(os.environ.get('TELEPROMPTER_CLEARED') or REPO / '.scratch' / 'teleprompter-cleared.json')
 for _path in (HERE, HERE.parent):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
@@ -510,6 +514,32 @@ def plan(piece_id, script_paths, call=None, cfg=None, post_path=None, plans=PLAN
         out['cuts'].append(item)
     out['new_folder'] = not folder_id and any(c['action'] == 'create' for c in out['cuts'])
     return out
+
+
+def text_sha(text):
+    """The sha256 the publish guard computes for a call's text: the exact string sent, UTF-8."""
+    import hashlib
+    return hashlib.sha256(str(text).encode('utf-8')).hexdigest()
+
+
+def clear(p, path=None, now=None):
+    """Lists the words plan cleared (each send or update call's text) where the publish guard reads them. Keeps the
+    last 50; returns the hashes written."""
+    path = Path(path or CLEARED)
+    shas = [text_sha(c['call']['args']['text']) for c in p.get('cuts') or [] if (c.get('call') or {}).get('args', {}).get('text')]
+    if not shas:
+        return []
+    try:
+        old = json.loads(path.read_text(encoding='utf-8'))
+        old = old if isinstance(old, list) else []
+    except (OSError, ValueError):
+        old = []
+    when = now or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    fresh = [{'sha256': s, 'piece_id': p.get('piece_id'), 'at': when} for s in shas]
+    keep = [e for e in old if isinstance(e, dict) and e.get('sha256') not in shas] + fresh
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(keep[-50:], indent=1), encoding='utf-8')
+    return shas
 
 
 def record_line(piece_id, item, folder_id=None, folder_name_=None):
@@ -1091,6 +1121,12 @@ def self_test():
         feature_engine = with_board(lambda method, path, body: (200, json.dumps({'ok': True, 'making': feature_record, 'steps': []})), [his(pid, shas)])
         three = [plans_dir / f'{c}.md' for c in words]
         p = plan(pid, three, feature_engine, cfg, post_path=plans_dir / 'post.json', workbench=bench, features=features)
+        ledger = Path(tmp) / 'cleared.json'
+        written = clear(p, ledger, now='2026-11-09T12:00:00Z')
+        check('clear: plan\'s exact texts are listed for the publish guard (F45)',
+              (len(written), [e['sha256'] for e in json.loads(ledger.read_text())] == written,
+               written == [text_sha(c['call']['args']['text']) for c in p['cuts'] if c.get('call')]),
+              (len([c for c in p['cuts'] if c.get('call')]), True, True))
         made = [c for c in p['cuts'] if c['cut'] == 'feature'][0]
         check('feature: a third script in the piece\'s own folder, made with create_script and the 15-minute feature title',
               ([c['action'] for c in p['cuts']], p['new_folder'], made['call']['tool'], made['call']['args']['folderId'], made['call']['args']['title'],
@@ -1201,6 +1237,8 @@ def main(argv=None, call=None):
                 ap.error('plan PIECE long.md short.md (and feature.md third, for a 15-minute feature piece)')
             cfg = load_config()
             p = plan(a.args[0], a.args[1:], call, cfg, post_path=a.post, week=a.week)
+            if not p.get('hand_made'):
+                clear(p)
             print(json.dumps(p, indent=1, ensure_ascii=False) if a.json else show_plan(p, cfg))
         elif a.what == 'record':
             if len(a.args) != 2:

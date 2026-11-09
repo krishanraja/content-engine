@@ -1002,12 +1002,17 @@ def read_back_of(record, cut):
     current = current_hashes(record).get(cut)
     if not (isinstance(entry, dict) and current and entry.get('script_sha256') == current):
         return None
-    if entry.get('found') == READ_BACK_FOUND or (entry.get('found') == READ_BACK_KRISH and krish_words(entry.get('krish_words'))):
+    if entry.get('found') == READ_BACK_FOUND:
+        return entry
+    # Krish's sign-off holds only for words fresh readers also heard, or when he said in his own words to skip them
+    # (Krish, 2026-11-09: "I shouldn't have to keep asking you to make sense"; failure F45).
+    if entry.get('found') == READ_BACK_KRISH and krish_words(entry.get('krish_words')) and (
+            len(entry.get('readers') or []) >= 2 or entry.get('readers_skipped') is True):
         return entry
     return None
 
 
-def read_back_patch(record, cut, readers, at=None, by=None, krish=None):
+def read_back_patch(record, cut, readers, at=None, by=None, krish=None, skip_readers=False):
     """The script check with one cut's read-back added: the readers (two or
     more, one line each), when, "nothing lost", and the hash of the words
     they heard, which must be the cut's current, passed words. With `krish`,
@@ -1027,10 +1032,18 @@ def read_back_patch(record, cut, readers, at=None, by=None, krish=None):
                               '(for example "Krish, 2026-10-14: all looks good"), at most 600 characters')
         if len(names) > 6 or any(len(n) > 200 for n in names):
             raise MakingError('--readers beside Krish\'s words: at most six, one line of at most 200 characters each')
+        if len(names) < 2 and not skip_readers:
+            raise MakingError('Krish\'s words record his approval, but fresh readers must also have heard these exact words before '
+                              'they go to his teleprompter: name the two or more who did (--readers A B ...). Only when his own words '
+                              'say to skip the readers, add --skip-readers (Krish, 2026-11-09; failure F45)')
         read = dict(check.get('read_back') or {}) if isinstance(check.get('read_back'), dict) else {}
         read[cut] = {'script_sha256': current, 'at': _time(at, '--at') if at else now(), 'by': who(by), 'readers': names,
                      'found': READ_BACK_KRISH, 'krish_words': ' '.join(krish.split())}
+        if skip_readers:
+            read[cut]['readers_skipped'] = True
         return {'script_check': {**check, 'read_back': read}}
+    if skip_readers:
+        raise MakingError('--skip-readers needs Krish\'s own words saying to skip the readers (--krish-words "Krish, DATE: ...")')
     if len(names) < 2 or any(len(n) > 200 for n in names):
         raise MakingError('--readers names the two fresh readers who heard it (or more), one line of at most 200 characters each')
     read = dict(check.get('read_back') or {}) if isinstance(check.get('read_back'), dict) else {}
@@ -1048,7 +1061,8 @@ def read_back_lines(record):
         entry = read_back_of(record, cut)
         if entry:
             if entry.get('found') == READ_BACK_KRISH:
-                lines.append(f"Read back, {CUT_NAME[cut]} cut: approved by Krish ({entry.get('krish_words')}, {entry.get('at')})")
+                skipped = '; readers skipped on his word' if entry.get('readers_skipped') else ''
+                lines.append(f"Read back, {CUT_NAME[cut]} cut: approved by Krish ({entry.get('krish_words')}, {entry.get('at')}){skipped}")
             else:
                 lines.append(f"Read back, {CUT_NAME[cut]} cut: nothing lost ({len(entry.get('readers') or [])} readers, {entry.get('at')})")
         else:
@@ -2185,11 +2199,31 @@ def self_test():
         except MakingError:
             check(f'drive-link: {label} is refused', True, True)
     # Krish's own sign-off: recorded as his approval, with his words, never as the readers' "nothing lost".
-    signed = read_back_patch(passed, 'short', ['reader A, round 10: nothing lost'], '2026-10-14T12:00:00Z', 'Claude Code',
+    two = ['reader A, round 10: nothing lost', 'reader C, round 10: one small point, fixed']
+    signed = read_back_patch(passed, 'short', two, '2026-10-14T12:00:00Z', 'Claude Code',
                              krish='Krish, 2026-10-14: all looks good')['script_check']['read_back']['short']
     check('read-back: Krish\'s words record his approval, with his words and the readers who heard it',
-          signed, {'script_sha256': 'b' * 64, 'at': '2026-10-14T12:00:00Z', 'by': 'Claude Code', 'readers': ['reader A, round 10: nothing lost'],
+          signed, {'script_sha256': 'b' * 64, 'at': '2026-10-14T12:00:00Z', 'by': 'Claude Code', 'readers': two,
                    'found': 'approved by Krish', 'krish_words': 'Krish, 2026-10-14: all looks good'})
+    # F45: his sign-off never stands in for the readers unless he said to skip them.
+    try:
+        read_back_patch(passed, 'short', ['reader A'], krish='Krish, 2026-11-09: send to teleprompter')
+        check('read-back: his words with fewer than two readers are refused (F45)', 'no error', 'error')
+    except MakingError as e:
+        check('read-back: his words with fewer than two readers are refused (F45)', 'fresh readers must also have heard' in str(e), True)
+    unread_old = {**signed, 'readers': []}
+    check('read-back: an old sign-off no reader heard does not hold (F45)',
+          read_back_of({'script_check': {**passed['script_check'], 'read_back': {'short': unread_old}}}, 'short'), None)
+    skipped = read_back_patch(passed, 'short', [], krish='Krish, 2026-11-09: skip the readers, send it', skip_readers=True)['script_check']['read_back']['short']
+    skipped_held = {'script_check': {**passed['script_check'], 'read_back': {'short': skipped}}}
+    check('read-back: skipping the readers on his own word holds, and says so (F45)',
+          (skipped.get('readers_skipped'), bool(read_back_of(skipped_held, 'short')), read_back_lines(skipped_held)[1].endswith('readers skipped on his word')),
+          (True, True, True))
+    try:
+        read_back_patch(passed, 'short', ['a', 'b'], skip_readers=True)
+        check('read-back: --skip-readers without his words is refused', 'no error', 'error')
+    except MakingError:
+        check('read-back: --skip-readers without his words is refused', True, True)
     signed_held = {'script_check': {**passed['script_check'], 'read_back': {'short': signed}}}
     check('read-back: his approval holds for the words he read, and shows as his', (bool(read_back_of(signed_held, 'short')), read_back_lines(signed_held)[1]),
           (True, 'Read back, 90-second cut: approved by Krish (Krish, 2026-10-14: all looks good, 2026-10-14T12:00:00Z)'))
@@ -2546,6 +2580,8 @@ def main(argv=None, call=None):
     ap.add_argument('--krish-words', metavar='WORDS', help='with read-back: Krish\'s own words signing the cut off. With recorded: Krish\'s own words, starting "Krish" and the date, letting a take '
                     'of older words count as a take of the current script; recorded on the take. With scripts: his words putting scripts he '
                     'wrote himself through although the story check fails; every finding is kept on the record')
+    ap.add_argument('--skip-readers', action='store_true', help='with read-back and --krish-words: Krish said in his own words to '
+                    'skip the fresh readers for these words; recorded as skipped (failure F45)')
     ap.add_argument('--readers', nargs='+', metavar='READER', help='with read-back: the two fresh readers who heard the cut, one line each')
     ap.add_argument('--at', metavar='TIME', help='with read-back: when they read it (default now)')
     ap.add_argument('--series', metavar='LANE_SLOT', help='with scripts: the piece\'s series, when the engine does not say '
@@ -2687,7 +2723,8 @@ def main(argv=None, call=None):
         elif a.what == 'read-back':
             if len(a.args) != 1:
                 ap.error('give the cut: read-back long --readers "reader A, ..." "reader B, ..."')
-            patch = read_back_patch(record_of(a.piece_id, call), a.args[0], a.readers, a.at, by, krish=a.krish_words)
+            patch = read_back_patch(record_of(a.piece_id, call), a.args[0], a.readers, a.at, by, krish=a.krish_words,
+                                    skip_readers=a.skip_readers)
         elif a.what == 'teleprompter':
             if len(a.args) != 1:
                 ap.error('give the cut: teleprompter long --folder ID --script ID --sha SHA256, or --error TEXT')
