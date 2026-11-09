@@ -36,3 +36,22 @@ stupid, right?", "people learnt how to game the system". Gaps between sentences 
 
 To decide: at 55 s he says "Meta and Amazon **have** leaderboards". Both were taken down. No clean cut fixes the
 tense; best guess is an on-screen line, "Both since scrapped", under the Token Legend shot.
+
+## Cut as made (9 Nov, Krish: "yes, cut both as the list says")
+
+Every join snapped to the quietest 10 ms within a few hundredths of a second of the word gap, 12 ms fades, then re-heard by transcription a few seconds either side.
+
+5-minute, 321.8 s:
+- L1 "in both seconds" slip: cut 148.26 to 153.47
+- "Amazon" (source names no employer): cut 180.82 to 181.44
+- L2 false start "this research company": cut 271.32 to 275.89
+- "medical research": cut 276.60 to 277.52
+- L3 second "the lesson here": cut 309.65 to 320.84
+- L4 first two goes at the close: cut 328.18 to 352.79
+
+90-second, 84.1 s:
+- S1 "in Vietnam": cut 15.31 to 15.97
+- S2 "a few weeks later": cut 35.65 to 36.47
+- end at 85.6 s ("Thank you." gone)
+
+"Amazon" in "one Amazon engineer" is cut: the source (one engineer's post) names no employer.
