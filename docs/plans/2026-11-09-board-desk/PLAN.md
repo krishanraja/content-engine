@@ -46,6 +46,48 @@ If every piece and the week are complete, the page opens on a "Week done" state 
 - 44px tap targets and no sideways scroll at 390px. Both already have checks in `check_board_layout.py --browser`.
 - The 21st components are adapted into the house style, not pasted in. Code is retrieved only for the ones adopted, since each retrieval is paid (about 12).
 
+## Every button starts the real machine (Krish, 9 Nov: "Are you sure that all the buttons are as actionable as possible, given what is actually running the machinery?")
+
+**The honest answer for mock v2 is no.**
+- 4 of its 6 primary buttons were "Copy prompt", but a real runner exists for most of them.
+- Only "Run my Improve again" can be started from the board today (`api/board/_offdayRevise.ts`).
+- "Find the stories now" pointed at nothing the server can start.
+
+**The rule.** Every action names the machine that does the work, how it is started, how its progress is read back, and what it falls back to. Copy prompt is used only for work that truly needs a conversation with Krish.
+
+| Board action | Machine | How the press starts it | Can it today? | Progress shown on the button |
+|---|---|---|---|---|
+| Start Friday's make (signed lock) | `make-piece.yml` (Claude Code on his subscription) | repository_dispatch `make-piece` `{piece_id}` | No: the type exists, but nothing sends it. Add `_makePiece.ts`, copied from `_offdayRevise.ts` | GitHub run status, then the making record (`/api/content-ideas/:id/making`) |
+| Run my Improve again (off days) | `offday-revise.yml` | repository_dispatch `offday-revise` | Yes (fixed today) | Run status. The revised card then lands in Your move straight from the store, not at the next build |
+| Find the Saturday stories now | `saturday-goodnews.yml` | workflow_dispatch `{week, force}` | No. Needs a token that can start workflows | Run status, then the stories as cards |
+| Make Monday's or Wednesday's narrative lock | A conversation with Krish | The interview happens **on the board**, one question at a time (plan-week asks there already). Copy prompt stays as the fallback | Partly | Each answer saves. Then a "Sign the lock" card |
+| Sign storyboard, Pick a style, Approve proof, Approve cut | Overnight run on the home computers, or a ve session | The press writes `meta.making.gates` (existing) | Yes, but the button says nothing about what runs next | The home computer's lane report (`/api/library/recordings/lane`): "picked up by the primary at 23:10", or "home computer offline since 18:02" |
+| Titles | Home computers: `overnight.py` through the 5-minute poll | Existing press | Yes | Overnight status from the lane report |
+| Approve scripts | The server sends them to Teleprompter (`_teleprompter.ts`) | Existing press | Yes. Shows `no_key` if the key is missing | `making.teleprompter` |
+| Cut a day's videos again | `produce-day.yml` | workflow_dispatch `{date, piece}` | No. Needs the workflow-starting token | Run status, then the cut as a Watch card |
+| Repair held cuts | `repair-round.yml` | repository_dispatch `repair-round` | No server caller. Only the home computer starts it with `gh` | Run status |
+| Build a device from a card | Codex lane on the home computer (`codex_lane.py`) | POST `upsert_items` to `/api/workbench` | Yes, through the API, but no button | Workbench item `close_ref.state` |
+| Rebuild the old board | `board-rebuild.yml` | workflow_dispatch | No | Not needed once the live board replaces it |
+
+**What this adds to Phase 2:**
+- **One server route,** `POST /api/board/:week/run`, with an allow-list of the jobs above. Each job maps to its trigger (repository_dispatch, workflow_dispatch, or a workbench item). The route records the run in `board_documents` (`runs/<id>`) and is guarded as his press (`hisOnlyRefusal`).
+- **A run reader.** The server reads GitHub run status (`GET /repos/{repo}/actions/runs`) and the home computers' lane report. Every action button then has five honest states: ready, starting, running (with the step and the minutes so far), done (its result becomes a card), and failed (the reason, plus Run again).
+- **Preconditions shown before the press:**
+  - "Your home computer is offline since 18:02, so the overnight cut won't start until it's on."
+  - "Teleprompter key missing, so the scripts go through a session."
+  - A press is never accepted for something that can't run.
+- **A test with no dead buttons.** Every action the view returns must map to an allow-listed job, or be a gate press or a Copy prompt marked as a conversation. Any other action fails the build.
+
+**One thing only Krish can do.** Starting `saturday-goodnews`, `produce-day` and `sunday-ideas` from the board needs a GitHub token with Actions write on `krishanraja/content-engine`, saved as a Vercel secret on the control-plane project. That is a permission change, so he creates it. Until then, those three buttons honestly say "Start from GitHub" and link to the workflow's Run page. repository_dispatch for `make-piece` uses the token the board already has for `offday-revise`.
+
+**Mock v3** shows the real button per row:
+- Fri: **Start the make**.
+- Tue and Thu: **Run my Improve again**.
+- Mon and Wed: **Answer 1 of 5**, the interview on the board.
+- Sat: **Find the stories now**, marked as needing the token.
+
+Each runs through the five states with a "picked up by" line, and a "home computer offline" example is shown.
+
 ## Phases
 
 ### Phase 0: stop the breaks (this week, no layout change)
