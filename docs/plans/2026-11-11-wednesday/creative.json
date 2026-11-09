@@ -16,7 +16,7 @@
    "shape": "1080x1920"
   }
  },
- "status": "waiting on Krish: Sign creative. Nothing is built until he signs.",
+ "status": "signed by Krish 2026-11-09; next: ve expect, ve proof of the Grammys split, his Approve proof",
  "sections": {
   "A_opener_close": {
    "recommended": "as_recorded",
@@ -53,7 +53,8 @@
      "A6-close-back-on-the-song-tall.jpg",
      "A8-close-wide-long-cut.jpg"
     ]
-   }
+   },
+   "picked": "as_recorded"
   },
   "B_subtitles": {
    "recommended": "B1_house",
@@ -91,7 +92,8 @@
       "B3-pill-zones.jpg"
      ]
     }
-   ]
+   ],
+   "picked": "B1_house"
   },
   "C_motion_style": {
    "recommended": "paper-cutout",
@@ -115,7 +117,9 @@
      "loop": "C3-riso-halftone-sleeve-EXPERIMENT.mp4",
      "why": "the song printed like a record sleeve in two inks; a real experiment for a music story"
     }
-   ]
+   ],
+   "picked": "paper-cutout",
+   "his_rule": "experimental but visually clear (Krish, 2026-11-09)"
   },
   "D_one_idea": {
    "object": "the credit stack: one song's credits as four paper cards, Written by a Reiki healer / First voice an AI app / Rebuilt by HUGEL, by hand / Sung by Ultra Nate",
@@ -147,7 +151,8 @@
     "no redrawn logos; no faces altered in the cut-outs",
     "no third layer of words on top of his voice and captions",
     "no second intro or outro; the sting only before the 16:9 cut"
-   ]
+   ],
+   "picked": "the credit stack"
   },
   "E_storyboard": {
    "short": [
@@ -251,9 +256,18 @@
    ]
   },
   "F_thumbnails": {
-   "recommended": "T1",
+   "recommended": "T0",
    "note": "mockups for the words and the proof; the final pair is drawn by scripts/pages/build.py --thumbs in this week's neon skin",
    "options": [
+    {
+     "id": "T0",
+     "headline": [
+      "IS YOUR FAVOURITE TUNE",
+      "MADE BY A HUMAN OR AN AI?"
+     ],
+     "proof": "the song on the cat clip",
+     "from": "Krish, 2026-11-09"
+    },
     {
      "id": "T1",
      "headline": [
@@ -285,7 +299,9 @@
     "Wed 4 Nov Claude Duet",
     "Tue 3 Nov AI agents translator",
     "Mon 2 Nov Who trains your 2030 seniors"
-   ]
+   ],
+   "picked": "T0",
+   "title": "Is your favourite tune made by a human or an AI?"
   },
   "G_after_sign": [
    "ve expect on the signed storyboard",
@@ -294,5 +310,11 @@
    "both cuts (two render loops, then him)",
    "the article and the cover"
   ]
+ },
+ "signed": {
+  "by": "Krish",
+  "at": "2026-11-09",
+  "words": "I'm happy with your recommendations. With regard to motion treatment, I endorse being experimental but visually clear. I think the headline should be much clearer and more intriguing, something like \"Is your favourite tune made by a human or an AI?\"",
+  "channel": "Claude Code session (the board has no Sign creative press yet)"
  }
 }
