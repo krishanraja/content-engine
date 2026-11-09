@@ -1,0 +1,20 @@
+{
+  "_about": "Bugs found on posts, each attached to its post (layout v4, week_board.py --bugs): the files Krish put in Bugs & Issues on 7 Nov and his scored words on Wed 4 Nov, with the cause from the post-mortem (docs/learning/2026-11-07-week-of-2-nov-postmortem.md, section 2). None is guarded yet: the post-mortem lists them as causes, not guards. Change state to guarded or fixed, with the guard that catches it, when one lands.",
+  "bugs": [
+    {"id": "fri06-caption", "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23", "state": "open",
+     "title": "The caption repeats the title and breaks mid-phrase",
+     "cause": "The frame shows the title \"DOES THAT MATTER?\" while the caption bar reads \"Does that\": the caption repeats the title and is cut mid-phrase, and the bar is wider than its words (post-mortem 2.C).",
+     "file": {"label": "Screenshot 1 (Bugs & Issues)", "url": "https://drive.google.com/file/d/1B1NAk7-L5L2Gd3wWZ_TEbQ-ryKrtkaOV/view"}},
+    {"id": "fri06-cover-crop", "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23", "state": "open",
+     "title": "The cover loses its top line in the Instagram grid, and the title sits under the account row",
+     "cause": "Instagram's 3:4 grid crop cuts \"USING A\", and the reel's title sits under the account row; channel_safe.py checks the buttons and the caption zone, not the grid crop or the top row (post-mortem 2.D).",
+     "file": {"label": "Screenshot 2 (Bugs & Issues)", "url": "https://drive.google.com/file/d/1Krgz9deG13z6Jlku8gCMxKszYEojzXfQ/view"}},
+    {"id": "fri06-underline", "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23", "state": "open",
+     "title": "The underline is drawn on the card's border, not under its words",
+     "cause": "The hand-drawn underline is placed in frame coordinates while the card sits in perspective on a tilted phone screen, so it lands on the card's bottom border; nothing checks that an annotation lands on its target (post-mortem 2.B).",
+     "file": {"label": "Screenshot 3 (Bugs & Issues)", "url": "https://drive.google.com/file/d/1fzr7vtL5ZABgJZrYov90foD5uGAtU_w_/view"}},
+    {"id": "wed04-phone", "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad", "state": "open",
+     "title": "The evidence sat on a hand-held phone, too small to read",
+     "cause": "A stock hand holding a phone, with the screenshot composited onto its tilted screen: a phone inside a phone, the evidence about a third of the frame and the animation cut off at its edges. His words: \"They're not full screen, specifically when there's the hand holding the phone\" (post-mortem 2.A)."}
+  ]
+}

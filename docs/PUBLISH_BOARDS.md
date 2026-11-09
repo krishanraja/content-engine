@@ -47,7 +47,16 @@ then update the content.krishraja.com board?"). No Claude routine builds a
 board. The Sunday ideas board is `.github/workflows/sunday-ideas.yml`: Claude
 Code inside a GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`,
 never an API key), fired twice on Saturday (12:17 and 20:47 UTC, the second
-only a retry), idempotent for the week, and startable by hand. The Monday final board is built by code (`week_board.py`)
+only a retry), idempotent for the week, and startable by hand. The Saturday good
+news is the one other Claude schedule (Ruling, Krish, 2026-11-07: "Happy to
+break the "no Claude schedules" rule for Saturday's good news"):
+`.github/workflows/saturday-goodnews.yml`, built the same way, fires twice on
+Thursday (10:41 and 19:23 UTC, the second only a retry; first live run Thursday
+19 November), finds that week's five stories, writes them onto the week's
+good-news option through the offdays feed (`ideas.json` `offdays.sat`) and
+rebuilds the live board keeping every made day, so his presses work as on any
+off-day option. Its guard (`scripts/saturday_goodnews.py check`) makes it do
+nothing once the live board shows the stories. The Monday final board is built by code (`week_board.py`)
 from the overnight runner (Wave 2; until then the first session on Monday),
 never by Claude on a timer. Every
 other build is a session he started or a `make-piece.yml` run for a piece he
@@ -224,6 +233,103 @@ he approved) when the engine records it; the page says signed, picked <style>,
 approved, rejected or waiting on you, holds a press the record holds at the hash
 shown, and says "this changed since you pressed; press again" when the hash
 differs. A day given none of these inputs is drawn exactly as before.
+
+### Layout v4: the Desk, seven stages on every day, Last week
+
+From the week of 9 November 2026 (`config/board-layout.json` `v4`; Krish, 2026-11-07: "I still have to keep looking
+for things, and I have to keep trying to figure out where stuff is, which isn't ideal. It also doesn't allow me to give
+feedback for every day of publishing stuff last week, say, for example, the off days." and "I think we should redesign
+the 9th of November board as well."). Drawn by `week_board.py` with `scripts/post-pack/board_v4.py`:
+
+- **Tabs, always, in this order:** Desk, Ideas, Queue, Monday to Saturday, Last week, Archive. The Desk replaces Today
+  and the board opens on it. On a phone the bar scrolls sideways inside itself; the page never does.
+- **The Desk:** everything waiting on him in the order it is due, one sentence and one button each to the exact place
+  (`#wednesday/creative`, `#mon-signoff`, an off-day option), then what waits on the engine or Growth, folded, then the
+  six days as cards with their stages. Built from what the board holds; nothing is typed by hand. An ask a press settles
+  carries `data-settled-by="<picks document>"` and leaves the Desk once he has made it (`week.js`).
+- **Every day, off days included,** has the same heading with a seven-stage bar (Idea, Script, Recorded, Creative, Cut,
+  Published, Scored: done, with the engine or Growth, waiting on him, not yet, not for this post) and the same six steps:
+  Idea (`brief`), Script (`drafts`), Recorded (`record`), Creative, Publish, Scored. An off day's options and his presses
+  on them move from the Ideas tab to its own Idea step (the Ideas tab links there); its finished assets are its Publish
+  step. The production gates (proof, cut) sit on the Creative step under the sheet.
+- **Scored:** his Scores press for every post. A post with its piece saves `picks/score-<piece>` as before; a post with
+  no piece (most off days) saves `picks/score-<date>[-<slot>]` `{kind: "scores", date, title, narrative, production,
+  basis, note?, day?}`, kept on the board (the server answers `scores: "on_board"`) until it has a piece.
+- **Last week** lists every post of the week before, Monday to Saturday, with what went out, its views, the bugs found on
+  it and his Scores press; a day with no post says why. Fed by `--last-week lastweek.json` (`{"week", "posts": [{"date",
+  "slot"?, "kind", "title", "series"?, "piece_id"?, "live"?, "views"?, "views_from"?, "scores"?, "why"?, "lessons"?}]}`).
+- **Bugs on their post:** `--bugs bugs.json` (`[{"id", "piece_id" or "date", "title", "cause", "guard"?, "state": open,
+  guarded or fixed, "file"?: {label, url}}]`), shown on the post's Scored step and its Last week row.
+- `--takes DAY=NAME[,NAME]` names the takes on the piece's record, for the Recorded stage.
+- A day carried over as the board held it (`--keep`, `--keep-draft`, `--carry`) takes v4's steps on the rebuild, its
+  gates moved to Creative and its Scores press to Scored, nothing else changed (`upgrade_kept_v4`).
+
+**Rebuilding a live board from a cloud session.** The engine API answers 401 without the operator key, so a board is
+rebuilt by `.github/workflows/board-rebuild.yml` (by hand only, no schedule, no Claude): it downloads the live board,
+rebuilds it from a committed recipe (`docs/plans/<Monday>-week/board-build.json`: `week_board.py`'s own flags through
+`--recipe`, never a script), verifies it, saves phone screenshots as the run's artifact (`board_shots.py`) and checks the
+publish; it puts the build live only when its `publish` input is exactly `publish approved by Krish`.
+
+### Layout v4: the Creative step and its sheet (`creative.json`)
+
+From the week of 9 November 2026 (`config/board-layout.json` `v4`) every day has a **Creative** step between
+Recorded and Cut: one pre-production sheet and one press, after the script and the takes and before Codex or ve
+builds anything (Krish, 2026-11-07: "I want to be able to answer all the questions up front on what we should do in
+terms of creative production... It's important we have mockups and really clear ideas before full production"). A
+session feeds it with `--creative DAY=creative.json` (with `--assets`, the mapping `board_web.py publish-web` takes,
+for every frame and clip); `week_board.py` refuses a sheet that breaks the schema below, and a day given no sheet says
+when it fills. Every option is drawn on a frame of his own take, never described in words alone.
+
+```json
+{
+  "schema": "creative/1",
+  "day": "wed",
+  "piece_id": "<the content_ideas uuid the day holds>",
+  "cut": "long",
+  "take": {"file": "ai-music-long.mp4", "sha256": "<64 hex>"},
+  "opener": {
+    "open":  {"words": "the first 7 seconds, as said", "frame": FRAME},
+    "close": {"words": "the last 8 seconds, as said",  "frame": FRAME},
+    "hook_test": {"passed": true, "note": "one line: what the hook test found"},
+    "alternatives": [{"id": "alt-1", "words": "another hook"}, {"id": "alt-2", "words": "a third hook"}]
+  },
+  "captions": [{"id": "cap-a", "name": "Bold block", "how": "one line", "frame": FRAME}],
+  "motion": [{"module": "<a motion id in config/style-references.json>", "name": "Swiss grid", "how": "one line",
+              "status": "liked", "clip": CLIP}],
+  "idea": {"object": "the one object", "moves": [{"move": "a layer peels", "means": "who took it further"}],
+           "real_artifacts": [{"name": "the chart page", "frame": FRAME}], "never": ["No phone held in a hand as the evidence."]},
+  "storyboard": {"text": "storyboard.md, exactly as ve wrote it", "expect": "expect.md, exactly (at most 6 lines)",
+                 "frames": [{"id": "f1", "t": "0:00", "beat": "the hook", "frame": FRAME}]},
+  "thumbnails": [{"id": "th-a", "name": "Her name, the chart climb", "grid": FRAME, "results": FRAME}],
+  "after": {"builds": ["the layer peel, moving on your take"], "loops": 2}
+}
+```
+
+`FRAME` and `CLIP` are `{"file": "<path the --assets mapping names>", "sha256": "<64 hex>"}`: a still (`png`,
+`jpg` or `webp`) and a moving clip (`mp4`). The sections are the proposal's A to G
+(`docs/proposals/2026-11-07-board-v4/PROPOSAL.md`):
+
+| Key | Section | Rules the build holds |
+|---|---|---|
+| `opener` | A. Opener and close | `open` and `close` each words and a frame; `hook_test` says passed or not; exactly 2 `alternatives` |
+| `captions` | B. Subtitles | 2 or 3, each on his frame with Instagram's and YouTube's safe zones drawn into the frame itself (`config/channel-safe-zones.json`) |
+| `motion` | C. Motion style | 2 or 3 modules from the bank's `motion` layer, each `status` `liked`, `untested` or `experiment`, each a short loop on his footage |
+| `idea` | D. The one idea | `object`, 1 to 6 `moves`, at least one `real_artifacts` frame, 1 to 8 `never` lines (F31, F32) |
+| `storyboard` | E. Storyboard | 6 to 10 frames, each `t` (m:ss), `beat` and frame; `text` and `expect` are the files `ve expect` binds |
+| `thumbnails` | F. Thumbnails | 2 or 3, each drawn into a mock Instagram grid (3:4 crop beside the last five posts) and a YouTube results row |
+| `after` | G. After you sign | what is built next, and `loops` (at most 2: F34) |
+
+His one press, **Sign creative**, saves `picks/<day>-creative` (any day Monday to Saturday):
+`{kind: "sign_creative", day, piece_id, approved, sha256, picks: {opener, captions, motion, thumbnail},
+storyboard_sha256, shown: [motion modules], words?}`. `sha256` is canonical JSON of the whole sheet (sorted keys, no
+spaces); `opener` is `as_written` or an alternative's id; `motion` is the module he picked;
+`storyboard_sha256` is `storyboard_sha(text, expect)`, the hash `ve` already binds. **Change it** saves the same
+document with `approved: false` and his words (required). It replaces the separate Sign storyboard and Pick a style
+presses on a day with a sheet; Approve proof and Approve cut stay as they are, on the same step. After his save the
+server writes onto the piece's making record `gates.creative {by, at, sha256, picks, words?}` and, when he signed,
+`gates.storyboard {by, at, sha256: storyboard_sha256}` and `gates.style {by, at, sha256, module, verdicts}` (his pick
+`picked`, the other modules shown `seen`), so `ve` reads them where it always has. Codex receives a card only from a
+signed sheet, so it never invents a look.
 
 ### The Publish run-sheet
 

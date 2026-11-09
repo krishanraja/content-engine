@@ -99,5 +99,46 @@ class VeGateTests(unittest.TestCase):
         self.assertIs(report['checks']['words.lost']['pass'], False)
 
 
+class HandoverInGapsTests(unittest.TestCase):
+    """A beat hands over only in a pause he left (keyframes@0.2.13, docs/ve/sources/keyframes.md)."""
+    HEARD = {FW: [{'w': 'phones', 's': 0.0, 'e': 0.9}, {'w': 'feel', 's': 1.1, 'e': 1.5},
+                  {'w': 'charge', 's': 1.55, 'e': 2.4}]}
+
+    def beats(self, *starts):
+        edges = list(starts) + [90]
+        return [{'fromFrame': a, 'toFrame': b} for a, b in zip(edges, edges[1:])]
+
+    def test_handover_in_a_pause_passes(self):
+        row = qc_gates.handover_in_gaps(self.beats(0, 30), self.HEARD)  # 1.0 s, in the 200 ms pause
+        self.assertIs(row['pass'], True)
+
+    def test_handover_inside_a_word_fails_and_names_it(self):
+        row = qc_gates.handover_in_gaps(self.beats(0, 60), self.HEARD)  # 2.0 s, inside "charge"
+        self.assertIs(row['pass'], False)
+        self.assertIn('charge', row['summary'])
+
+    def test_a_pause_under_150_ms_fails(self):
+        row = qc_gates.handover_in_gaps(self.beats(0, 46), self.HEARD)  # 1.533 s, in a 50 ms pause
+        self.assertIs(row['pass'], False)
+
+    def test_handovers_at_or_after_the_ending_are_not_measured(self):
+        self.assertEqual(qc_gates.beat_handovers(self.beats(0, 30, 60), stop_frame=60), [1.0])
+
+    def test_advisory_for_formats_that_do_not_name_it(self):
+        from unittest.mock import patch
+        import numpy as np
+        with patch.object(qc, 'loudness', return_value={'integrated_lufs': -14, 'true_peak_dbtp': -1}), \
+                patch.object(qc, 'frame_diffs', return_value=np.full(150, 2.)), \
+                patch.object(qc, 'long_silences', return_value=[]), patch.object(qc, 'sha256_file', return_value='x'), \
+                patch.object(qc, 'duration_s', return_value=3.), \
+                patch('velib.qc_composition.composition_checks', return_value={'applies': False}), \
+                patch('velib.qc_keyframes.keyframe_checks', return_value={'applies': False}):
+            report = qc.run_qc('unused', 'scoreboard-test', beats=self.beats(0, 60), heard=self.HEARD)
+        row = report['checks']['beats.handover_in_gaps']
+        self.assertEqual(row['status'], 'advisory')
+        self.assertIs(row['shadow'], True)
+        self.assertIs(row['pass'], False)
+
+
 if __name__ == '__main__':
     unittest.main()

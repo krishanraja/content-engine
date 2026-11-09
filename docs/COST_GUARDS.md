@@ -56,6 +56,17 @@ meter showed $0.40 of spend in 60 days and no retries, so it would only have add
 | G13 | Timer judges at half price | `api/judge/sweep.ts`, `_judges/batch.ts` | Would make the nightly judge sweep batch-only. | Dropped (Krish, 2026-10-18: "keep the judge sweep"): the nightly sweep stays live under his 2026-09-24 ruling in `api/judge/sweep.ts` ("fast turnaround and cost efficiency both, and six to eighteen hours of latency does not buy either"). Batch-only would have made judging take 4 to 8 days for about $95 a year. Batch stays the explicit catch-up mode |
 | G14 | Lean skill start | `.agents/skills/make-piece`, `.agents/skills/produce-video`, `scripts/check_skill_core.py` in `npm run verify` | Steps and gates in `SKILL.md`, long reference sections in `references/*.md`, each named by the step that needs it. A house rule a reference carries must be named in the core, and every skill core has a byte cap (`CORE_CAPS`, W2.12). On 18 October make-piece went from 39.9 to 33.4 KB and produce-video from 47.2 to 40.2 KB. | Built |
 
+## Scheduled Claude runs and the $15 a week
+
+Two scheduled Claude runs exist, both Claude Code in GitHub Actions on Krish's subscription (`CLAUDE_CODE_OAUTH_TOKEN`),
+never an API key, so neither adds API spend: the Sunday ideas run (`sunday-ideas.yml`, Saturday) and, from 19 November,
+the Thursday good-news run (`saturday-goodnews.yml`; Ruling, Krish, 2026-11-07: "Happy to break the "no Claude
+schedules" rule for Saturday's good news"). The Thursday run is capped at 150 turns and 120 minutes, does one week's
+five stories, and its guard skips the retry firing once the stories are live, so it costs one subscription run a week
+and GitHub's free minutes on this public repository. It makes no paid API call (no fact-check POST, no Perplexity, no
+generation), so the chain stays inside his $15 a week (Krish, 2026-10-29: "happy with $15 a week"); a run that would
+need one stops and says so.
+
 ## The environment is the floor: a setting only Krish can change
 
 A fresh session in this cloud environment read **110k tokens on its first call** before any work (18 October;
