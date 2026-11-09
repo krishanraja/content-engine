@@ -50,3 +50,18 @@ moves a number I already track, like sales", which loses the delete action; (3) 
 
 Nothing here changes the script files: they stay the words he approved. These are edit decisions for the cut, put to
 him on the pre-production sheet (`docs/plans/2026-11-09-week/fri-preproduction/`).
+
+## The pickup (9 Nov 2026)
+
+Krish, 9 Nov: "You just use this audio with the existing video." and "just normalize it". His phone pickup
+`Voice_261109_103424.m4a` (sha256 fe6c8978...401e, 4.46 s, 48 kHz mono AAC) says "If I ran a team, I'd ditch any
+target for AI usage." ("ditch" is his choice of word over "delete"). It replaces the 90-second take's 91.78 to 95.40 s
+("If I ran a team, I would delegate any target for AI use"); the take resumes at 95.40 s on "and I check if the AI
+moves a number I already track, like sales."
+
+Normalized to the take's own voice level around that line (take 80 to 100 s: -24.1 LUFS integrated, -5.2 dBTP):
+two-pass `loudnorm=I=-24.1:TP=-5.2:LRA=7` with the measured values and `linear=true`, resampled to 48 kHz stereo,
+then +0.8 dB; result -24.1 LUFS, -7.4 dBTP. The pickup trims to 0.00 to 4.05 s with an 80 ms fade out, joined with
+15 ms crossfades. The picture cuts away from his face for the length of the pickup (his lips would not match).
+Heard back with faster-whisper: the join reads as one sentence. The original upload had two samples at -0.05 dBFS,
+no sustained clipping. He keeps the original file; the session sent him the normalized WAV and a 15 s preview.
