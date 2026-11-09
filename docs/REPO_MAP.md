@@ -2546,6 +2546,20 @@ What the compiler looks for, as pure functions.
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/library/_heartsideFolder.ts`
+
+- `const HEARTSIDE_LIBRARY_FOLDER_ID`
+- `const FOLDER_WALK_MAX_DEPTH`
+- `const FOLDER_CACHE_MS`
+- `const MY_DRIVE`
+- `interface DriveFolderMeta`
+- `type DriveLookup`
+- `type HeartsideFolder`
+- `function isPathSafeName(name: unknown): name is string`
+- `async function walkFolderPath(folderId: string, rootId: string, lookup: DriveLookup): Promise<HeartsideFolder>`
+- `function resetHeartsideFolderCache(): void`
+- `async function resolveHeartsideFolder(now = Date.now()): Promise<HeartsideFolder>`
+
 ### `apps/control-plane/api/library/_inboxDrive.ts`
 
 - `const INBOX_FOLDER_ID`
@@ -4772,6 +4786,8 @@ Artifact-bound user confirmation references.
 - `const VeApprovalSchema`
 - `const VeCallSchema`
 - `const VeReferenceSchema`
+- `const VeCharacterCueSchema`
+- `const VeCharacterSchema`
 - `const ProductionSpecV2Schema`
 - `type ProductionSpecV2 = z.infer<typeof ProductionSpecV2Schema>`
 - `type VeBeat = z.infer<typeof VeBeatSchema>`
