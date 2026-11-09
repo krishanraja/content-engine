@@ -220,6 +220,21 @@ class MaxineEye(unittest.TestCase):
         iris = out[105:116, 155:166].reshape(-1, 3).mean(0)
         self.assertLess(abs(float(iris[2]) - 110), 25)               # red channel near his iris, not Maxine's 70
 
+    def test_his_own_iris_and_catchlight_sit_where_maxine_drew_the_iris(self):
+        # Blind review, 9 Nov: Maxine's iris read flat and grey with no catchlight; his own iris is carried in.
+        import cv2
+        frame = np.full((220, 320, 3), 160, np.uint8)
+        cv2.ellipse(frame, (160, 110), (30, 12), 0, 0, 360, (235, 235, 235), -1)
+        cv2.circle(frame, (178, 110), 9, (40, 60, 110), -1)
+        cv2.circle(frame, (180, 108), 2, (255, 255, 255), -1)        # his catchlight, up and right of centre
+        source = np.full_like(frame, 160)
+        cv2.ellipse(source, (160, 110), (30, 12), 0, 0, 360, (235, 235, 235), -1)
+        cv2.circle(source, (160, 110), 9, (110, 120, 70), -1)        # Maxine's iris: centred, no catchlight
+        lid = contour_ellipse(160, 110, 30, 12)
+        out = eyeline.maxine_eye(frame, source, lid, lid, (178, 110, 9), (160, 110, 9))
+        self.assertGreater(int(out[106:111, 160:165].max()), 220)     # the catchlight came with it, as far up and right
+        self.assertLess(int(out[110, 157:159].max()), 140)            # the iris there is his dark iris, not white
+
 
 class Decide(unittest.TestCase):
     def test_lock_leaves_blinks_to_maxine_and_never_takes_a_turn(self):
