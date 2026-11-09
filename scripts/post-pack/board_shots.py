@@ -12,7 +12,7 @@ import re
 import sys
 from pathlib import Path
 
-DEFAULT_VIEWS = ('desk', 'monday', 'tuesday', 'wednesday/creative', 'friday/creative', 'saturday/brief', 'lastweek')
+DEFAULT_VIEWS = ('desk', 'monday', 'tuesday', 'wednesday/creative', 'thursday', 'friday/creative', 'saturday/brief', 'lastweek')
 
 
 def shoot(page, out, views, scale=2, assets=None):
