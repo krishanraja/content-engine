@@ -72,11 +72,11 @@ EYE_CONTOUR = {'R': [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 15
 APERTURE_SHRINK = 0.97      # the blend stops just inside his lid line ...
 APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's width
 LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening the upper lid takes back, its cap (eye widths), time smoothing
-TEMPLATE_HI, TEMPLATE_SHARP = 90, 0.9    # the stack percentile the catchlight is taken from; how much texture is put back
-GATE_FROM, GATE_SPAN = 0.3, 0.2     # no correction under 0.3 iris radii of move (about 8 deg), the whole move from 0.5 (about 14 deg)
-TEMPLATE_VISIBLE, TEMPLATE_MOVE = 0.9, 0.8   # use the clean iris when under this share of his is visible, or he moves it this many radii
+GATE_FROM, GATE_SPAN = 0.1, 0.08   # no correction under 0.1 iris radii of move (about 3 deg), the whole move from 0.18 (about 5 deg)
+HARD_FROM, HARD_SPAN = 0.35, 0.2   # ...up to 0.35 radii (about 10 deg); past it the move eases off, and a glance past 0.55 is left as filmed
+SEEN_MIN = 0.55                    # no move unless this share of both irises is inside his lid line (fully from 0.7)
+SHARE_SIGMA = 2.0                  # frames: the share of the move is smoothed over time, one share for both eyes
 LOOK_UP, LOOK_DOWN, LOOK_PAD, LOOK_MIN = -0.035, 0.28, 1, 15  # white under the iris, or this share of it under the upper lid: a look up or down, left alone (and a few frames either side)
-IRIS_SCALE = 1.14          # the clean iris is drawn this much larger than the landmarker's circle: its circle runs wide of the dark iris, so a plain copy leaves white above and below it (a stare)
 IRIS_GROW = 1.02          # his iris circle, in landmarker radii, for the clean cut-out
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
 AIM_KEEP = 0.15             # share of his own eye movement kept on top of the lens aim, so the eyes stay alive
@@ -457,107 +457,6 @@ def aims(readings: list[dict], there: list[dict], decided: list[dict]) -> list[d
     return out
 
 
-def iris_templates(media, readings: list[dict], info: dict, size: int = 48, every: int = 3, cap: int = 160) -> dict:
-    """One clean iris per eye, from his own frames where he looks at the lens: the median, over up to `cap` open,
-    frontal frames whose eye sits at his median gaze, of the iris disc (1.25 landmarker radii each way) resampled to
-    size x size, with his iris radius as a share of his eye width there. A hard glance puts the real iris in the corner under the lid, where the landmarker's circle is
-    unreliable and any cut-out of it is ragged (blind review, 6 Nov: smeared irises at 5.57 s and 51.67 s); this one
-    is clean and his own. {side: (float32 BGR size x size patch, iris radius / eye width) or None}."""
-    import cv2  # noqa: PLC0415
-    import numpy as np  # noqa: PLC0415
-    face = [bool(r.get('face')) for r in readings]
-    if not any(face):
-        return {'R': None, 'L': None}
-    ang, opn = {}, {}
-    for side in IRIS:
-        a = np.array([eye_angles(r['eyes'][side], r['iris'][side]) if f else (np.nan, np.nan) for r, f in zip(readings, face)])
-        o = np.array([(math.hypot(r['eyes'][side][1][0] - r['eyes'][side][5][0], r['eyes'][side][1][1] - r['eyes'][side][5][1]) +
-                       math.hypot(r['eyes'][side][2][0] - r['eyes'][side][4][0], r['eyes'][side][2][1] - r['eyes'][side][4][1])) / 2 /
-                      max(1e-6, math.hypot(r['eyes'][side][3][0] - r['eyes'][side][0][0], r['eyes'][side][3][1] - r['eyes'][side][0][1]))
-                      if f else np.nan for r, f in zip(readings, face)])
-        ang[side], opn[side] = a - np.nanmedian(a, axis=0), o
-    yaw = np.array([r.get('yaw', np.nan) if f else np.nan for r, f in zip(readings, face)])
-    ok = {}
-    for side in IRIS:
-        good = [i for i in range(0, len(readings), every)
-                if face[i] and readings[i].get('blink', 1) < 0.15 and not readings[i].get('edge')
-                and abs(yaw[i] - np.nanmedian(yaw)) < 6 and np.hypot(*ang[side][i]) < 2.5
-                and opn[side][i] >= 0.9 * np.nanmedian(opn[side]) and 'iris_r' in readings[i]]
-        if len(good) > cap:
-            good = [good[int(k)] for k in np.linspace(0, len(good) - 1, cap)]
-        ok[side] = set(good)
-    stacks = {side: [] for side in IRIS}
-    wanted = set().union(*ok.values())
-    if not wanted:
-        return {'R': None, 'L': None}
-    for index, frame in enumerate(frames(media, info['width'], info['height'])):
-        if index not in wanted:
-            continue
-        for side in IRIS:
-            if index in ok[side]:
-                r = readings[index]
-                (cx, cy), rad = r['iris'][side], max(2.0, r['iris_r'][side])
-                sc = size / (2.5 * rad)
-                m = np.float32([[sc, 0, size / 2 - sc * cx], [0, sc, size / 2 - sc * cy]])
-                patch = cv2.warpAffine(frame, m, (size, size), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
-                # Align on the iris's own dark centroid: the landmarker's centre jitters a pixel or two, and a median of
-                # misaligned irises is a soft, pale one.
-                grey = cv2.cvtColor(patch, cv2.COLOR_BGR2GRAY).astype(np.float32)
-                yy, xx = np.mgrid[0:size, 0:size].astype(np.float32)
-                disc = np.hypot(xx - size / 2, yy - size / 2) < size * 0.32
-                dark = disc & (grey <= np.percentile(grey[disc], 40))
-                if dark.sum() > 20:
-                    dx, dy = size / 2 - float(xx[dark].mean()), size / 2 - float(yy[dark].mean())
-                    if math.hypot(dx, dy) <= 4:
-                        patch = cv2.warpAffine(patch, np.float32([[1, 0, dx], [0, 1, dy]]), (size, size), flags=cv2.INTER_CUBIC,
-                                               borderMode=cv2.BORDER_REPLICATE)
-                stacks[side].append(patch)
-    out, med, glint, ratio = {}, {}, {}, {}
-    for side in IRIS:
-        if len(stacks[side]) < 8:
-            continue
-        ratio[side] = float(np.median([readings[i]['iris_r'][side] / max(1e-6, math.hypot(readings[i]['eyes'][side][3][0] - readings[i]['eyes'][side][0][0],
-                                                                                          readings[i]['eyes'][side][3][1] - readings[i]['eyes'][side][0][1]))
-                                       for i in sorted(ok[side])]))
-        stack = np.array(stacks[side], dtype=np.float32)
-        med[side], hi = np.percentile(stack, 50, axis=0), np.percentile(stack, TEMPLATE_HI, axis=0)
-        # A median of many frames averages his catchlights away and softens the texture: an iris with no light in it
-        # reads as dead (blind review, 6 Nov: "flat", "a fixed glare"). Take the bright reflection back from the upper
-        # part of the stack where it is clearly brighter than the median, and sharpen what the averaging softened.
-        grey = lambda im: cv2.cvtColor(np.clip(im, 0, 255).astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32)  # noqa: E731
-        # Only a compact, genuinely bright highlight: the broad pale wash of a window across the iris is not a
-        # catchlight, it greys the iris out (blind review, 6 Nov, cells 4, 6, 8, 9).
-        spec = np.clip((grey(hi) - grey(med[side]) - 60) / 40, 0, 1) * np.clip((grey(hi) - 170) / 40, 0, 1)
-        glint[side] = (cv2.GaussianBlur(spec, (0, 0), 0.8)[..., None], hi - med[side])
-    if not med:
-        return {'R': None, 'L': None}
-    # One light, two eyes (his own crop, 6 Nov: a bright catchlight in one eye, none in the other, and irises of two
-    # sizes read as bug-eyed). Both eyes take the stronger eye's catchlight, and both the same iris size, never above
-    # the mean of his two (0.223 and 0.212 of the eye width on this take): his own size, not one eye bigger.
-    lead = max(glint, key=lambda s: float(glint[s][0].sum()))
-    size_share = float(np.mean(list(ratio.values())))
-    # And one iris colour: the viewer's-right template came out pale grey-blue beside the other (blind review, 6 Nov,
-    # cells 4, 8, 9: "a different eye"). Both take the darker one's colour, as a shift in Lab over the iris disc.
-    yy, xx = np.mgrid[0:size, 0:size].astype(np.float32)
-    disc = np.hypot(xx - size / 2, yy - size / 2) < size * 0.2
-    lab = {s: cv2.cvtColor(np.clip(med[s], 0, 255).astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32) for s in med}
-    mean = {s: lab[s][disc].mean(0) for s in med}
-    dark = min(mean, key=lambda s: float(mean[s][0]))
-    for s in med:
-        if s != dark:
-            shifted = lab[s] + (mean[dark] - mean[s])
-            med[s] = cv2.cvtColor(np.clip(shifted, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32)
-    for side in IRIS:
-        if side not in med:
-            out[side] = None
-            continue
-        spec, delta = glint[lead]
-        patch = med[side] + delta * spec
-        patch = np.clip(patch + TEMPLATE_SHARP * (patch - cv2.GaussianBlur(patch, (0, 0), 1.6)), 0, 255)
-        out[side] = (patch, size_share)
-    return out
-
-
 def lid_cover(contour, iris_xy, rad: float) -> float:
     """How much of the iris's height his upper lid covers, at the iris's x: 0 when the lid just touches its top, 0.15
     when it hides the top 15%, negative when white shows above it."""
@@ -705,7 +604,7 @@ def iris_mask(light, inside, d_here, r):
 
 
 def whole_iris(region, inside_soft, hx: float, hy: float, hr: float, grow: float = IRIS_GROW):
-    """His iris from this frame, whole: (BGR float32 patch, alpha, share seen). The patch is square, centred on the iris
+    """His iris from this frame, whole: (BGR float32 patch, alpha, share seen, iris centre in the patch). The patch is square, around the iris
     at (hx, hy) in `region`'s pixels, radius hr. Where his lid or the eye's corner hides part of it (inside_soft under
     0.9), the hidden part is filled from the same iris mirrored across its own horizontal axis, then its vertical axis,
     then both (an iris is near enough round, and a lid hides top or bottom); what no mirror reaches takes the ring's
@@ -713,14 +612,16 @@ def whole_iris(region, inside_soft, hx: float, hy: float, hr: float, grow: float
     Seen and filled pixels are mixed by how well each is seen, so there is no cut between them."""
     import cv2  # noqa: PLC0415
     import numpy as np  # noqa: PLC0415
-    s = int(math.ceil(2 * (grow + 0.15) * max(1.0, hr))) + 2
-    c = s / 2.0
-    m = np.float32([[1, 0, hx - c], [0, 1, hy - c]])                          # patch pixel to region pixel
-    patch = cv2.warpAffine(np.asarray(region, np.float32), m, (s, s), flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP,
+    s = int(math.ceil(2 * (grow + 0.15) * max(1.0, hr))) + 3
+    ox, oy = int(math.floor(hx)) - s // 2, int(math.floor(hy)) - s // 2      # whole pixels: his iris is copied, not resampled
+    m = np.float32([[1, 0, ox], [0, 1, oy]])
+    patch = cv2.warpAffine(np.asarray(region, np.float32), m, (s, s), flags=cv2.INTER_NEAREST | cv2.WARP_INVERSE_MAP,
                            borderMode=cv2.BORDER_REPLICATE)
-    vis = cv2.warpAffine(np.asarray(inside_soft, np.float32), m, (s, s), flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP,
+    vis = cv2.warpAffine(np.asarray(inside_soft, np.float32), m, (s, s), flags=cv2.INTER_NEAREST | cv2.WARP_INVERSE_MAP,
                          borderMode=cv2.BORDER_CONSTANT, borderValue=0)
-    yy, xx = np.mgrid[0:s, 0:s].astype(np.float32) + 0.5 - c                   # the iris centre is the patch's centre
+    cx, cy = hx - ox, hy - oy                                                  # the iris centre in the patch
+    yy, xx = np.mgrid[0:s, 0:s].astype(np.float32) + 0.5
+    xx, yy = xx - cx, yy - cy
     d = np.hypot(xx, yy) / max(1.0, hr)
     disc = d < grow + 0.1
     seen_w = np.clip((vis - 0.6) / 0.3, 0, 1) * disc
@@ -750,10 +651,58 @@ def whole_iris(region, inside_soft, hx: float, hy: float, hr: float, grow: float
     fill = fill / np.maximum(wsum, 1e-4)[..., None]
     whole = patch * seen_w[..., None] + fill * (1 - seen_w[..., None])
     alpha = np.clip((grow + 0.08 - d) / 0.16, 0, 1).astype(np.float32)
-    return whole.astype(np.float32), alpha, share
+    return whole.astype(np.float32), alpha, share, (float(cx), float(cy))
 
 
-def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris_there=None, template=None, lid: float = 0.0):
+def iris_seen(contour, iris, rad: float) -> float:
+    """The share of his iris disc inside his lid line (16 points), sampled on a grid. Pure."""
+    import numpy as np  # noqa: PLC0415
+    c = np.asarray(contour, dtype=np.float64)
+    g = np.linspace(-1, 1, 15)
+    xs, ys = np.meshgrid(g, g)
+    keep = xs ** 2 + ys ** 2 <= 1
+    px, py = iris[0] + rad * xs[keep], iris[1] + rad * ys[keep]
+    inside = np.zeros(px.shape, bool)
+    j = len(c) - 1
+    for k in range(len(c)):                     # even-odd rule
+        xk, yk, xj, yj = c[k][0], c[k][1], c[j][0], c[j][1]
+        cross = ((yk > py) != (yj > py)) & (px < (xj - xk) * (py - yk) / ((yj - yk) or 1e-9) + xk)
+        inside ^= cross
+        j = k
+    return float(inside.mean())
+
+
+def band(span: float) -> float:
+    """The share of a move, in iris radii, that is made: none under GATE_FROM, all of it from GATE_FROM + GATE_SPAN to
+    HARD_FROM, easing to none by HARD_FROM + HARD_SPAN. A longer move lifts his iris off the place it was, and the old
+    iris shows under his lid's soft edge as a dark or grey arc (9 Nov, 15.80 and 72.13 s), and his lids keep the
+    glance's shape, a stare (5.57 s). The correction is for the drift of reading the prompter."""
+    import numpy as np  # noqa: PLC0415
+    return float(np.clip((span - GATE_FROM) / GATE_SPAN, 0.0, 1.0) * np.clip(1 - (span - HARD_FROM) / HARD_SPAN, 0.0, 1.0))
+
+
+def shares(readings: list[dict], aimed: list[dict], looks: list[float] | None = None) -> list[float]:
+    """Per frame, the share of the move to the aim that is made: band() of the longer of the two eyes' moves, so both
+    eyes move together or neither does, none on a look up or down, smoothed over SHARE_SIGMA frames so it never jumps.
+    Pure."""
+    import numpy as np  # noqa: PLC0415
+    n = len(readings)
+    raw, ok = np.zeros(n), np.zeros(n)
+    for i, r in enumerate(readings):
+        if not r.get('face') or 'iris_r' not in r or set(aimed[i]) != set(IRIS):
+            continue
+        span = max(math.hypot(aimed[i][s][0] - r['iris'][s][0], aimed[i][s][1] - r['iris'][s][1]) / max(1.0, r['iris_r'][s])
+                   for s in IRIS)
+        # Only where enough of both irises is in view to move: not a squint, not a closing eye (9 Nov, 4.10 s).
+        seen = min(iris_seen(r['contour'][s], r['iris'][s], r['iris_r'][s]) for s in IRIS) if 'contour' in r else 0.0
+        ok[i] = float(np.clip((seen - SEEN_MIN) / 0.15, 0, 1)) * float(r.get('blink', 0) < BLINK * 0.7)
+        raw[i] = band(span) * (1.0 - (looks[i] if looks else 0.0)) * ok[i]
+    out = smooth(raw, SHARE_SIGMA) * ok        # smoothing never carries a move onto a closing eye or a squint
+    return [round(float(x), 3) for x in np.clip(out, 0, 1)]
+
+
+def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris_there=None, lid: float = 0.0,
+                   share: float | None = None):
     """His eye from `source` laid onto `frame` only inside his own lid line (`contour`, 16 points, full-frame pixels),
     shrunk a little and feathered, so his lids, lashes and skin stay his. Inside, the source's colour is matched to
     the original eye's and the detail it lost to re-rendering is put back (at most DETAIL_MAX). Strength 0 returns
@@ -773,11 +722,9 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
     poly = centre + (c - centre) * APERTURE_SHRINK - [x0, y0]
     hard = np.zeros((y1 - y0, x1 - x0), np.uint8)
     cv2.fillPoly(hard, [np.round(poly * 16).astype(np.int32)], 1, lineType=cv2.LINE_AA, shift=4)
-    if iris_here is not None:
-        # The landmarker's lid line is the weak one in a look up or down (a thin sliver with the iris above it, or a line
-        # through the iris: blind review, 6 Nov, 60.30 and 72.8 s); its iris circle fits. The iris where it is now is
-        # inside his eye by definition, so the area edited includes it, and a half-iris is never cut at the lid line.
-        cv2.circle(hard, (int(round(iris_here[0] - x0)), int(round(iris_here[1] - y0))), max(1, int(round(0.95 * iris_here[2]))), 1, -1)
+    # The area edited is his own lid line and nothing else. It once took in the iris circle too, for the looks up and down
+    # whose lid line the landmarker reads badly (6 Nov, 60.30 and 72.8 s); those are left as filmed now (look_flags), and
+    # the circle let a moved iris land on a closing lid and below the lower lid (9 Nov, 4.10 and 34.90 s).
     if hard.sum() < 6:
         return frame
     sigma = max(0.6, APERTURE_FEATHER * width)
@@ -795,6 +742,10 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
     # his iris's distribution channel by channel (histogram matching), inside a soft disk and his opening only.
     relocated = False
     gate = 1.0
+    if share is not None and (iris_here is None or iris_there is None):
+        # The move is decided per frame (shares) and has no aim here: his eye stays exactly as filmed. Maxine's own
+        # re-drawn eye is never laid in instead (its iris and lids are not his).
+        return frame
     if iris_here is not None and iris_there is not None:
         (hx, hy, hr), (tx, ty, tr) = iris_here, iris_there
         ys, xs = np.mgrid[0:y1 - y0, 0:x1 - x0].astype(np.float32)
@@ -819,18 +770,18 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             ox, oy = tx - hx, ty - hy
             # A small move leaves his eye as it was: re-laying an iris that barely needed to move only greyed and softened
             # it and dulled the catchlight (blind review, 6 Nov, every near-lens frame). The correction fades in with the move.
-            gate = float(np.clip((math.hypot(ox, oy) / max(1.0, hr) - GATE_FROM) / GATE_SPAN, 0.0, 1.0))
+            # A hard glance is left as filmed: his lids take the shape of where he looks, so an iris brought from the corner
+            # to the middle sits in a glance-shaped opening, a stare however clean the iris (blind reviews, 6 Nov; 5.57 s
+            # read again 9 Nov). The correction is for the drift of reading the prompter, which is most of his off-lens time.
+            span = math.hypot(ox, oy) / max(1.0, hr)
+            gate = band(span) if share is None else float(share)
+            if gate * span > HARD_FROM:            # a share smoothed in from a neighbouring frame never makes a long move
+                gate = HARD_FROM / span
             if gate <= 0.0:
                 return frame
             # The fade is a share of the move, not a cross-fade: an iris half-way between two pictures of itself is a
             # ghost, grey and doubled (blind review, 6 Nov, 60.30 s). The iris travels gate x the move, fully opaque.
             ox, oy, tx, ty, gate = ox * gate, oy * gate, hx + ox * gate, hy + oy * gate, 1.0
-            region_u8 = np.clip(region, 0, 255).astype(np.uint8)
-            # A clean iris, not a segmented one: the landmarker's circle (grown a hair), clipped by his own lid
-            # contour. The segmented blob took ragged edges at a hard glance, where the iris sits in the lid's shadow
-            # (blind review, 6 Nov: smeared, doubled iris at 5.57 s and 51.67 s). Its soft edge is the circle's.
-            iris = (d_here < IRIS_GROW) & inside
-            iris_f = np.clip((IRIS_GROW + 0.08 - d_here) / 0.16, 0, 1) * inside      # feathered, for the cut-out
             # What the old iris position becomes: his sclera, smoothly continued (normalised convolution over the
             # opening outside the iris), not an inpainted dark smear.
             keep = (inside & (d_here > IRIS_GROW + 0.12)).astype(np.float32)
@@ -841,20 +792,19 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             base = region * (1 - hole_f[..., None]) + sclera * hole_f[..., None]
             # His own iris from this very frame, with its own colour and catchlight, made whole where his lid hides it
             # (whole_iris), then laid at the aim and clipped by his lid there. The clean iris built from other frames
-            # (iris_templates) is gone from this path: at 5.57 s his whole iris was in view and the template stood in
+            # (the template, now removed) is gone: at 5.57 s his whole iris was in view and the template stood in
             # only because it travelled far, and that is the flat grey eye with a smeared catchlight the sixth blind
             # review failed (6 Nov). Moving a part-hidden iris as it was carried its lid cut with it (a jagged edge, a
             # pale ghost); the whole one does not.
-            patch, palpha, _share = whole_iris(region, inside_soft, hx - x0, hy - y0, hr)
-            half = patch.shape[0] / 2.0
-            put = np.float32([[1, 0, (tx - x0) - half], [0, 1, (ty - y0) - half]])
-            moved = cv2.warpAffine(patch, put, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+            patch, palpha, _share, (pcx, pcy) = whole_iris(region, inside_soft, hx - x0, hy - y0, hr)
+            put = np.float32([[1, 0, (tx - x0) - pcx], [0, 1, (ty - y0) - pcy]])
+            moved = cv2.warpAffine(patch, put, (x1 - x0, y1 - y0), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
             own = cv2.warpAffine(palpha, put, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT,
                                  borderValue=0) * inside_soft
             eye = base * (1 - own[..., None]) + moved.astype(np.float32) * own[..., None]
-            lab_s = cv2.cvtColor(np.clip(eye, 0, 255).astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
             relocated = True
-    other = cv2.cvtColor(np.clip(lab_s, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32)
+    # His moved eye goes out as it was built: an 8-bit Lab round trip shifted its colour by about a level (9 Nov).
+    other = eye if relocated else cv2.cvtColor(np.clip(lab_s, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32)
     k = max(0.8, 0.04 * width)
     hp_o = region - cv2.GaussianBlur(region, (0, 0), k)
     hp_s = other - cv2.GaussianBlur(other, (0, 0), k)
@@ -1070,7 +1020,7 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
     target = out_dir / f'{media.stem}.eyeline.mp4'
     if qc is not None:
         qc.start(decided, info, out_dir / f'loop.{media.stem}.mp4')
-    source = None
+    source, moves = None, None
     if getattr(backend, 'frame_source', False):
         theirs, ours = len(packet_times(backend.copy)), len(packet_times(media))
         if theirs != ours:
@@ -1080,15 +1030,16 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
             there = read(backend.copy, info) if copy_readings is None else copy_readings   # where the copy put each iris
             aimed = aims(readings, there, decided)
             lowered = lids(readings, decided, aimed)
-            for d_, w_ in zip(decided, look_flags(readings, decided)):
+            looks = look_flags(readings, decided)
+            for d_, w_ in zip(decided, looks):
                 # All or nothing: a half-faded iris is a ghost (blind review 5, 51.67 s, grey washed-out irises at 40% strength).
                 d_['strength'] = 0.0 if w_ >= 0.5 else d_['strength']
-            templates = iris_templates(media, readings, info)
+            moves = shares(readings, aimed, looks)
         else:
             there = None
             aimed = None
             lowered = None
-            templates = {}
+            moves = None
     proc = writer(media, target, info, crf)
     counts = {'frames': 0, 'corrected': 0, 'unmoved': 0}
     try:
@@ -1109,8 +1060,9 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                         mine = readings[index] if readings[index].get('face') and 'iris_r' in readings[index] else None
                         new = blend_aperture(new, other, eye['contour'], d['strength'],
                                              (*mine['iris'][side], mine['iris_r'][side]) if mine else None,
-                                             aim, templates.get(side),
-                                             lowered[index].get(side, 0.0) if lowered and index < len(lowered) else 0.0)
+                                             aim,
+                                             lowered[index].get(side, 0.0) if lowered and index < len(lowered) else 0.0,
+                                             moves[index] if moves and index < len(moves) else None)
                     else:
                         new = blend(new, other, eye_frame(eye['points']), d['strength'])
                 moved = float(np.abs(new.astype(np.int16) - frame.astype(np.int16)).mean())

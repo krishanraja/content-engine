@@ -95,8 +95,10 @@ class Gated(unittest.TestCase):
         contour = [[60 + 20 * math.cos(a), 60 + 8 * math.sin(a)] for a in np.linspace(0, 2 * math.pi, 16, endpoint=False)]
         near = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (60.5, 60, 6))    # half a pixel, 0.08 radii
         self.assertIs(near, frame)
-        far = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (70, 60, 6))       # 10 px, 1.7 radii
-        self.assertIsNot(far, frame)
+        drift = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (62.4, 60, 6))   # 0.4 radii: the prompter drift
+        self.assertIsNot(drift, frame)
+        hard = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (70, 60, 6))      # 1.7 radii: a hard glance, as filmed
+        self.assertIs(hard, frame)
 
 
 class Decide(unittest.TestCase):
