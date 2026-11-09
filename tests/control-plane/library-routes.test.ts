@@ -116,6 +116,18 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
   }
 })
 
+// Where Heartside's folder is in Drive, by its ID: stubbed here, walked in
+// library-heartside-folder.test.ts.
+const folder = vi.hoisted(() => ({ answer: null as unknown, asked: 0, throws: false }))
+vi.mock('../../apps/control-plane/api/library/_heartsideFolder.js', () => ({
+  HEARTSIDE_LIBRARY_FOLDER_ID: '1AHZLgwj1nHemNJeP56fQU6iTpgIEALzZ',
+  resolveHeartsideFolder: async () => {
+    folder.asked += 1
+    if (folder.throws) throw new Error('down')
+    return folder.answer
+  },
+}))
+
 import uploadUrl from '../../apps/control-plane/api/library/upload-url.js'
 import confirm from '../../apps/control-plane/api/library/confirm.js'
 import pending from '../../apps/control-plane/api/library/pending.js'
@@ -539,6 +551,29 @@ describe('the Heartside library on the same routes', () => {
     const res = await call(confirm, asEngine({ path: PATH, sha256: SHA }))
     expect(res.statusCode).toBe(404)
     expect(res.body).toEqual({ ok: false, error: { code: 'library_file_not_found' } })
+  })
+
+  // Krish, 2026-11-09: "ideally ID so if folders move it doesnt matter".
+  it('says where the Heartside folder is now, found by its Drive ID, and never for makeyourmindup', async () => {
+    const found = { state: 'found', drive_id: '1AHZLgwj1nHemNJeP56fQU6iTpgIEALzZ', path: 'My Drive/Ventures/Active Ventures/Heartside/03b_Social-Schedule', segments: ['My Drive', 'Ventures', 'Active Ventures', 'Heartside', '03b_Social-Schedule'] }
+    folder.answer = found
+    folder.asked = 0
+    const res = await call(pending, asRunner('GET', { query: { machine, library: 'heartside', limit: '1' } }))
+    expect(res.statusCode).toBe(200)
+    expect(res.body.folder).toEqual(found)
+    const mym = await call(pending, asRunner('GET', { query: { machine } }))
+    expect(mym.body).not.toHaveProperty('folder')
+    expect(folder.asked).toBe(1)
+
+    folder.answer = { state: 'gone', drive_id: found.drive_id, problem: 'heartside_library_trashed', reason: 'in the bin' }
+    expect((await call(pending, asRunner('GET', { query: { machine, library: 'heartside' } }))).body.folder).toMatchObject({ state: 'gone', problem: 'heartside_library_trashed' })
+
+    // A Drive failure never fails the list: the answer is unknown and the sync uses its configured folder.
+    folder.throws = true
+    const down = await call(pending, asRunner('GET', { query: { machine, library: 'heartside' } }))
+    folder.throws = false
+    expect(down.statusCode).toBe(200)
+    expect(down.body.folder).toMatchObject({ state: 'unknown', drive_id: found.drive_id })
   })
 
   it('asks the database for one library at a time', async () => {
