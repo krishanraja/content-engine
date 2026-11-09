@@ -124,7 +124,7 @@ def is_post_folder(name):
 # A second library (Krish, 2026-11-03: "Why don't you duplicate that Python
 # script for Heartside then? We're going to need to do a lot more of this type
 # of stuff moving forward"): Heartside's social library on Drive,
-# Heartside/05_Social-Library, where the growth engine files each post's media
+# Heartside/03b_Social-Schedule (05_Social-Library until 2026-11-09), where the growth engine files each post's media
 # as Posts/<post id>/<file> for Codex to post. Same lane, same checks, its own
 # folder rule; makeyourmindup stays the default.
 MAKEYOURMINDUP, HEARTSIDE = LIBRARIES = ('makeyourmindup', 'heartside')
