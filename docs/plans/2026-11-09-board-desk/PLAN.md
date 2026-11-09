@@ -59,12 +59,12 @@ If every piece and the week are complete, the page opens on a "Week done" state 
 |---|---|---|---|---|
 | Start Friday's make (signed lock) | `make-piece.yml` (Claude Code on his subscription) | repository_dispatch `make-piece` `{piece_id}` | No: the type exists, but nothing sends it. Add `_makePiece.ts`, copied from `_offdayRevise.ts` | GitHub run status, then the making record (`/api/content-ideas/:id/making`) |
 | Run my Improve again (off days) | `offday-revise.yml` | repository_dispatch `offday-revise` | Yes (fixed today) | Run status. The revised card then lands in Your move straight from the store, not at the next build |
-| Find the Saturday stories now | `saturday-goodnews.yml` | workflow_dispatch `{week, force}` | No. Needs a token that can start workflows | Run status, then the stories as cards |
+| Find the Saturday stories now | `saturday-goodnews.yml` | workflow_dispatch `{week, force}` | No. Add a `repository_dispatch` type to the workflow; the existing token then starts it | Run status, then the stories as cards |
 | Make Monday's or Wednesday's narrative lock | A conversation with Krish | The interview happens **on the board**, one question at a time (plan-week asks there already). Copy prompt stays as the fallback | Partly | Each answer saves. Then a "Sign the lock" card |
 | Sign storyboard, Pick a style, Approve proof, Approve cut | Overnight run on the home computers, or a ve session | The press writes `meta.making.gates` (existing) | Yes, but the button says nothing about what runs next | The home computer's lane report (`/api/library/recordings/lane`): "picked up by the primary at 23:10", or "home computer offline since 18:02" |
 | Titles | Home computers: `overnight.py` through the 5-minute poll | Existing press | Yes | Overnight status from the lane report |
 | Approve scripts | The server sends them to Teleprompter (`_teleprompter.ts`) | Existing press | Yes. Shows `no_key` if the key is missing | `making.teleprompter` |
-| Cut a day's videos again | `produce-day.yml` | workflow_dispatch `{date, piece}` | No. Needs the workflow-starting token | Run status, then the cut as a Watch card |
+| Cut a day's videos again | `produce-day.yml` | workflow_dispatch `{date, piece}` | No. Add a `repository_dispatch` type; the existing token then starts it | Run status, then the cut as a Watch card |
 | Repair held cuts | `repair-round.yml` | repository_dispatch `repair-round` | No server caller. Only the home computer starts it with `gh` | Run status |
 | Build a device from a card | Codex lane on the home computer (`codex_lane.py`) | POST `upsert_items` to `/api/workbench` | Yes, through the API, but no button | Workbench item `close_ref.state` |
 | Rebuild the old board | `board-rebuild.yml` | workflow_dispatch | No | Not needed once the live board replaces it |
@@ -78,13 +78,13 @@ If every piece and the week are complete, the page opens on a "Week done" state 
   - A press is never accepted for something that can't run.
 - **A test with no dead buttons.** Every action the view returns must map to an allow-listed job, or be a gate press or a Copy prompt marked as a conversation. Any other action fails the build.
 
-**One thing only Krish can do.** Starting `saturday-goodnews`, `produce-day` and `sunday-ideas` from the board needs a GitHub token with Actions write on `krishanraja/content-engine`, saved as an environment variable on the Vercel project `content-engine` (root folder `apps/control-plane`; that project already holds `OFFDAY_REVISE_DISPATCH_TOKEN` and `PLACE_TAKES_DISPATCH_TOKEN`). The domain content.krishraja.com is attached to the Vercel project `control-center`, not to `content-engine`. That is a permission change, so he creates it. Until then, those three buttons honestly say "Start from GitHub" and link to the workflow's Run page. repository_dispatch for `make-piece` uses the token the board already has for `offday-revise`.
+**No new token is needed** (checked 9 Nov against the Vercel project `content-engine`, the docs and the runs). The board already starts GitHub jobs with `OFFDAY_REVISE_DISPATCH_TOKEN` and `PLACE_TAKES_DISPATCH_TOKEN`, both on `content-engine`. `docs/INTEGRATIONS.md` records them as fine-grained tokens on this repository with Contents: read and write, which is what repository_dispatch needs. Krish's 9 Nov Improve presses arrived as repository_dispatch runs, so the token works. That scope cannot start a workflow_dispatch, so the build gives `saturday-goodnews.yml`, `sunday-ideas.yml` and `produce-day.yml` a `repository_dispatch` type each, as `make-piece.yml` and `repair-round.yml` already have. The existing token then starts every job. `GITHUB_TOKEN` on the same project is the read-only token for build signals and is not used here.
 
 **Mock v3** shows the real button per row:
 - Fri: **Start the make**.
 - Tue and Thu: **Run my Improve again**.
 - Mon and Wed: **Answer 1 of 5**, the interview on the board.
-- Sat: **Find the stories now**, marked as needing the token.
+- Sat: **Find the stories now**.
 
 Each runs through the five states with a "picked up by" line, and a "home computer offline" example is shown.
 

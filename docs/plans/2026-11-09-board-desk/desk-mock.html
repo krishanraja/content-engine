@@ -218,7 +218,6 @@ dialog.k::backdrop{background:rgba(12,21,18,.45)}
   <div class="mockbar" aria-label="Mock controls (not on the real board)">
     Mock only. The days, pieces, runs and your quoted words are real (9 Nov handover), and the interview questions come from your research. Run progress and results are acted out here; the due times are placeholders.
     <button class="b" type="button" id="m-new">Show your home computer offline</button>
-    <button class="b" type="button" id="m-token">Show it with the GitHub token</button>
     <button class="b" type="button" id="m-stale">Show the connection dropping</button>
     <button class="b" type="button" id="m-done">Show a finished week</button>
     <button class="b" type="button" id="m-theme">Light or dark</button>
@@ -240,7 +239,7 @@ const MON = "8287846b-6618-4a19-9fb8-23ad4eca2718", WED = "db9f9f6a-1092-49be-80
 const RUN = {
   make:    { where:"GitHub · make-piece.yml", trigger:"repository_dispatch make-piece", steps:["Fact check","Scripts","Read-back by fresh readers","Article","Publish page"], result:"Scripts ready to approve" },
   revise:  { where:"GitHub · offday-revise.yml", trigger:"repository_dispatch offday-revise", steps:["Reading your Improve","Revising","Copy lint and kill list"], result:"Revised version ready" },
-  goodnews:{ where:"GitHub · saturday-goodnews.yml", trigger:"workflow_dispatch", needsToken:true, steps:["Searching","Checking each story"], result:"Stories ready to approve" },
+  goodnews:{ where:"GitHub · saturday-goodnews.yml", trigger:"repository_dispatch goodnews", steps:["Searching","Checking each story"], result:"Stories ready to approve" },
 };
 const DAYS = [
   { key:"mon", d:"Mon 16", kind:"Essay and two cuts", series:"follow.the.money", title:"Where the money for AI comes from",
@@ -469,7 +468,6 @@ setInterval(() => { const s = Math.round((Date.now() - last) / 1000); if (!$("#l
 setInterval(() => { if (!$("#live").classList.contains("stale")) last = Date.now() }, 5000);
 // Mock controls
 $("#m-new").onclick = () => { const m = MOVES.find(x => x.id === "m1"); if (m) { m.why = "34 long beats and 14 short. After you sign, the overnight run on your home computer cuts it. <b style=\"color:var(--bad)\">Primary home computer offline since 18:02: the cut starts when it is back on.</b>"; stack(); document.getElementById("move-h").scrollIntoView({ behavior:"smooth" }) } };
-$("#m-token").onclick = () => { window.__token = true; const d = DAYS[5]; pieces(); toast("With the token, Find the stories now starts saturday-goodnews.yml from here.") };
 $("#m-stale").onclick = () => { $("#live").classList.add("stale"); $("#ago").textContent = "Reconnecting. Showing what was true at " + new Date(last).toTimeString().slice(0, 5) };
 $("#m-done").onclick = () => { MOVES.forEach(m => cleared.add(m.id)); DAYS.forEach(d => { d.at = 4; d.state = "done"; d.next = { who:"eng", text:"Published", due:"done" }; d.actions = []; d.run = null; d.runs = "" });
   strip(); pieces(); stack(); $("#hello").textContent = "Week done"; $("#stack").innerHTML = `<div class="card clear"><h3>Week done</h3><p class="why">6 pieces live, 8 of 8 assets published. Next week's ideas arrive Sunday 06:00.</p></div>`; count(8); scrollTo({ top:0, behavior:"smooth" }) };
