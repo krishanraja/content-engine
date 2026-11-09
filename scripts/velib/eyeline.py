@@ -74,7 +74,7 @@ APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's wid
 LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening the upper lid takes back, its cap (eye widths), time smoothing
 GATE_FROM, GATE_SPAN = 0.1, 0.08   # no correction under 0.1 iris radii of move (about 3 deg), the whole move from 0.18 (about 5 deg)
 HARD_FROM, HARD_SPAN = 0.35, 0.2   # ...up to 0.35 radii (about 10 deg); past it the move eases off, and a glance past 0.55 is left as filmed
-SEEN_MIN = 0.55                    # no move unless this share of both irises is inside his lid line (fully from 0.7)
+SEEN_MIN = 0.78                    # no move unless this share of both irises is inside his lid line (fully from 0.88): a part-hidden iris made whole read paler (9 Nov blind review, 16.13 s and 65.77 s)
 SHARE_SIGMA = 2.0                  # frames: the share of the move is smoothed over time, one share for both eyes
 LOOK_UP, LOOK_DOWN, LOOK_PAD, LOOK_MIN = -0.035, 0.28, 1, 15  # white under the iris, or this share of it under the upper lid: a look up or down, left alone (and a few frames either side)
 IRIS_GROW = 1.02          # his iris circle, in landmarker radii, for the clean cut-out
@@ -612,7 +612,7 @@ def whole_iris(region, inside_soft, hx: float, hy: float, hr: float, grow: float
     Seen and filled pixels are mixed by how well each is seen, so there is no cut between them."""
     import cv2  # noqa: PLC0415
     import numpy as np  # noqa: PLC0415
-    s = int(math.ceil(2 * (grow + 0.15) * max(1.0, hr))) + 3
+    s = int(math.ceil(2 * (grow + 0.3) * max(1.0, hr))) + 3
     ox, oy = int(math.floor(hx)) - s // 2, int(math.floor(hy)) - s // 2      # whole pixels: his iris is copied, not resampled
     m = np.float32([[1, 0, ox], [0, 1, oy]])
     patch = cv2.warpAffine(np.asarray(region, np.float32), m, (s, s), flags=cv2.INTER_NEAREST | cv2.WARP_INVERSE_MAP,
@@ -623,7 +623,7 @@ def whole_iris(region, inside_soft, hx: float, hy: float, hr: float, grow: float
     yy, xx = np.mgrid[0:s, 0:s].astype(np.float32) + 0.5
     xx, yy = xx - cx, yy - cy
     d = np.hypot(xx, yy) / max(1.0, hr)
-    disc = d < grow + 0.1
+    disc = d < grow + 0.25
     seen_w = np.clip((vis - 0.6) / 0.3, 0, 1) * disc
     share = float((seen_w > 0.5).sum()) / max(1.0, float((d < grow).sum()))
     grey = patch.mean(2)
@@ -650,7 +650,9 @@ def whole_iris(region, inside_soft, hx: float, hy: float, hr: float, grow: float
         wsum += left
     fill = fill / np.maximum(wsum, 1e-4)[..., None]
     whole = patch * seen_w[..., None] + fill * (1 - seen_w[..., None])
-    alpha = np.clip((grow + 0.08 - d) / 0.16, 0, 1).astype(np.float32)
+    # The iris carries a thin ring of his own white with it, and its soft edge runs white into white: an edge that ran
+    # iris into the filled-in white left a pale rim where the iris had been (9 Nov blind review, 253.4 and 304.6 s).
+    alpha = np.clip((grow + 0.22 - d) / 0.12, 0, 1).astype(np.float32)
     return whole.astype(np.float32), alpha, share, (float(cx), float(cy))
 
 
@@ -695,7 +697,7 @@ def shares(readings: list[dict], aimed: list[dict], looks: list[float] | None = 
                    for s in IRIS)
         # Only where enough of both irises is in view to move: not a squint, not a closing eye (9 Nov, 4.10 s).
         seen = min(iris_seen(r['contour'][s], r['iris'][s], r['iris_r'][s]) for s in IRIS) if 'contour' in r else 0.0
-        ok[i] = float(np.clip((seen - SEEN_MIN) / 0.15, 0, 1)) * float(r.get('blink', 0) < BLINK * 0.7)
+        ok[i] = float(np.clip((seen - SEEN_MIN) / 0.1, 0, 1)) * float(r.get('blink', 0) < BLINK * 0.7)
         raw[i] = band(span) * (1.0 - (looks[i] if looks else 0.0)) * ok[i]
     out = smooth(raw, SHARE_SIGMA) * ok        # smoothing never carries a move onto a closing eye or a squint
     return [round(float(x), 3) for x in np.clip(out, 0, 1)]
@@ -798,7 +800,9 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             # pale ghost); the whole one does not.
             patch, palpha, _share, (pcx, pcy) = whole_iris(region, inside_soft, hx - x0, hy - y0, hr)
             put = np.float32([[1, 0, (tx - x0) - pcx], [0, 1, (ty - y0) - pcy]])
-            moved = cv2.warpAffine(patch, put, (x1 - x0, y1 - y0), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+            # Lanczos keeps his iris's texture and catchlight through a sub-pixel move; cubic softened them a little
+            # (9 Nov blind review: a flatter iris and a weaker catchlight, seen at 2x).
+            moved = cv2.warpAffine(patch, put, (x1 - x0, y1 - y0), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REPLICATE)
             own = cv2.warpAffine(palpha, put, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT,
                                  borderValue=0) * inside_soft
             eye = base * (1 - own[..., None]) + moved.astype(np.float32) * own[..., None]
