@@ -146,8 +146,12 @@ class Calibrated(Backend):
 
     def __init__(self, receipt: Path | str):
         data = json.loads(Path(receipt).read_text())
-        if data.get('backend') != 'maxine' or not data.get('lens') or not data.get('head') or data.get('decision') == 'rejected':
-            raise RuntimeError(f'{receipt}: not the receipt of a Maxine eyeline run that recorded its lens point and head pose')
+        def finite(*xs):
+            return all(isinstance(x, (int, float)) and math.isfinite(x) for x in xs)
+        lens, head = data.get('lens') or {}, data.get('head') or {}
+        if (data.get('backend') != 'maxine' or data.get('decision') == 'rejected' or set(lens) != set(IRIS)
+                or not all(len(lens[s]) == 2 and finite(*lens[s]) for s in IRIS) or not finite(head.get('yaw'), head.get('pitch'))):
+            raise RuntimeError(f'{receipt}: not the receipt of a Maxine eyeline run that recorded both eyes\' lens points and his head pose')
         self.lens = {side: tuple(map(float, data['lens'][side])) for side in IRIS}
         self.head = data['head']
         self.source = data.get('input', {}).get('path', str(receipt))
@@ -458,6 +462,8 @@ def lens_point(readings: list[dict], there: list[dict], decided: list[dict]) -> 
 def head_pose(readings: list[dict]) -> dict:
     import numpy as np  # noqa: PLC0415
     rows = [r for r in readings if r.get('face')]
+    if not rows:
+        raise ValueError('no face on any frame: no head pose to check a lens point against')
     return {'yaw': round(float(np.median([r['yaw'] for r in rows])), 2), 'pitch': round(float(np.median([r['pitch'] for r in rows])), 2)}
 
 
@@ -803,6 +809,10 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             mapy = (ys - (along * u[1] * wa + across * v[1] * wc)).astype(np.float32)
             eye = cv2.remap(region, mapx, mapy, cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REPLICATE)
             relocated = True
+    if share is not None and not relocated:
+        # A move decided per frame that could not be made here (too little of either iris inside his lid line) leaves
+        # his eye exactly as filmed: never the copy's eye, never a colour match (review, 9 Nov).
+        return frame
     # His moved eye goes out as it was built: an 8-bit Lab round trip shifted its colour by about a level (9 Nov).
     other = eye if relocated else cv2.cvtColor(np.clip(lab_s, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32)
     k = max(0.8, 0.04 * width)

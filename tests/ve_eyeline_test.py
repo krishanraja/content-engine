@@ -162,6 +162,9 @@ class Moves(unittest.TestCase):
         self.assertTrue(np.array_equal(out[:, :60], frame[:, :60]))
         none = eyeline.blend_aperture(frame, frame, lid, 1.0, (150, 100, 10), None, share=1.0)
         self.assertIs(none, frame)                                      # no aim: as filmed, never the copy's eye
+        other = np.zeros_like(frame)
+        tiny = eyeline.blend_aperture(frame, other, lid, 1.0, (150, 100, 1.5), (153, 100, 1.5), share=0.0)
+        self.assertIs(tiny, frame)                                      # too little iris to move: as filmed, never the copy
 
 
 class Decide(unittest.TestCase):
@@ -332,6 +335,10 @@ class Media(unittest.TestCase):
         receipt = self.dir / 'eyeline.short.json'
         receipt.write_text(json.dumps({'backend': 'flx', 'lens': {'L': [0.08, -0.07], 'R': [-0.07, -0.07]}}))
         with self.assertRaisesRegex(RuntimeError, 'not the receipt of a Maxine'):
+            eyeline.Calibrated(receipt)
+        receipt.write_text(json.dumps({'backend': 'maxine', 'decision': 'corrected', 'lens': {'L': [0.08, -0.07]},
+                                       'head': {'yaw': 0.0, 'pitch': 0.0}}))
+        with self.assertRaisesRegex(RuntimeError, 'both eyes'):           # one eye's lens point is not a calibration
             eyeline.Calibrated(receipt)
         receipt.write_text(json.dumps({'backend': 'maxine', 'decision': 'corrected', 'input': {'path': 'short.mp4'},
                                        'lens': {'L': [0.08, -0.07], 'R': [-0.07, -0.07]}, 'head': {'yaw': 30.0, 'pitch': 0.0}}))
