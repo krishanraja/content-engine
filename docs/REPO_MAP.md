@@ -1998,7 +1998,11 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function feelBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCORE_ID`
 - `const SCORE_BASES`
+- `const SCORE_DATE_ID`
 - `function scoreBody(id: string, body: Record<string, unknown>): boolean`
+- `const CREATIVE_ID`
+- `const CREATIVE_PICKS`
+- `function creativeBody(id: string, body: Record<string, unknown>): boolean`
 - `const YES_ID`
 - `function yesBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
@@ -2075,6 +2079,8 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
 - `function gatePatch(kind: GateKind, body: Body, now: string): MakingGates`
+- `function creativePatch(body: Body, now: string): MakingGates`
+- `function creativeReport(week: string, id: string, body: Body, now: string)`
 - `async function recordGate(db: SupabaseClient, pieceId: string, patch: MakingGates, now: string): Promise<string | null>`
 - `function pressIncidents(week: string, id: string, body: Body, prior: MakingGates | null | undefined): Incident[]`
 - `function gateReport(week: string, id: string, body: Body, now: string)`
@@ -3546,6 +3552,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/carousel/HouseCarouselCard.tsx`
 
+- `const FOLLOW_SIGN`
 - `function houseCardModel(props: CarouselRenderProps)`
 - `function HouseCarouselCard(props: CarouselRenderProps)`
 
@@ -3566,11 +3573,15 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
-- `function FormatMaster(props: EngineRenderProps)`
+- `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
+
+### `apps/renderer/src/engine/VeCut.tsx`
+
+- `function VeCut(props: EngineRenderProps)`
 
 ### `apps/renderer/src/engine/audio.tsx`
 
-- `function EngineAudio({ audio }: { audio: EngineRenderProps['audio'] })`
+- `function EngineAudio({ audio, stem = true }: { audio: EngineRenderProps['audio']; stem?: boolean })`
 
 ### `apps/renderer/src/engine/chrome/CallCard.tsx`
 
@@ -3928,6 +3939,7 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/index.ts`
 
 - `export { FormatMaster } from './FormatMaster'`
+- `export { VeCut } from './VeCut'`
 - `export { slotsFor } from './layouts'`
 - `export { EngineAudio } from './audio'`
 
@@ -4174,12 +4186,14 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `const EngineCaptionPageSchema`
 - `const EngineSegmentSchema`
 - `const EngineAudioSchema`
+- `const EngineStingSchema`
 - `const EngineRenderPropsSchema`
 - `type EngineRenderProps = z.infer<typeof EngineRenderPropsSchema>`
 - `type EngineObject = z.infer<typeof EngineObjectSchema>`
 - `type EngineEvent = z.infer<typeof EngineEventSchema>`
 - `type EngineBeat = z.infer<typeof EngineBeatSchema>`
 - `type EngineTokens = z.infer<typeof EngineTokensSchema>`
+- `type EngineSting = z.infer<typeof EngineStingSchema>`
 
 ### `apps/renderer/src/engine/transport.ts`
 
@@ -4738,6 +4752,8 @@ Artifact-bound user confirmation references.
 - `const VE_FORMATS`
 - `const VeFormatSchema`
 - `const VeSeriesSchema`
+- `const VeStingSchema`
+- `const VE_NO_STING`
 - `const VeAspectSchema`
 - `const VeLayoutSchema`
 - `const VeRoleSchema`

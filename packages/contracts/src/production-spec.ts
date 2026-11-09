@@ -10,6 +10,14 @@ import { IdentifierV1Schema, NarrativeBeatV1Schema, Sha256V1Schema } from './v2.
 export const VE_FORMATS = ['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports'] as const
 export const VeFormatSchema = z.enum(VE_FORMATS)
 export const VeSeriesSchema = z.enum(['mind.the.gap', 'follow.the.money', 'under.the.hood'])
+/** The makeyourmindup intro sting a piece names (brand.intro_sting): its own series' clip in config/intro-sting.json,
+ *  which opens the 16:9 whole cut of a weekly series piece (Krish, 2026-11-05: "I think it should go at the start of
+ *  the longer wide videos 100%,"), or VE_NO_STING for a piece that wears none. ve compile decides the opening from the
+ *  cut itself; this field only has to agree with it. Whether the publish day is the series' own day lives in
+ *  config/studio.json, so ve lint checks that half (scripts/velib/guards.py, opening_problems). */
+export const VeStingSchema = z.enum(['follow_the_money', 'mind_the_gap', 'under_the_hood'])
+/** The sentence scripts/post-pack/creative_direction.py writes as NO_STING (tests/ve_thursday_guards_test.py pins them equal). */
+export const VE_NO_STING = 'none: this piece opens on its hook (an off day, or no wide long cut)'
 export const VeAspectSchema = z.enum(['9:16', '16:9'])
 export const VeLayoutSchema = z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT'])
 export const VeRoleSchema = z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call'])
@@ -175,7 +183,7 @@ export const ProductionSpecV2Schema = z.object({
     // Required by ve lint for every piece publishing after 5 Nov 2026: at least one card for look, one for motion
     // and one for the caption build (scripts/velib/lint.py, reference_lints).
     references: z.array(VeReferenceSchema).optional(),
-    intro_sting: z.string().min(1).optional(),
+    intro_sting: z.union([VeStingSchema, z.literal(VE_NO_STING)]).optional(),
   }).strict(),
   call: VeCallSchema.optional(),
   signature: VeSignatureSchema,
@@ -198,6 +206,10 @@ export const ProductionSpecV2Schema = z.object({
   max_face_share: z.number().min(0).max(1).optional(),
 }).strict().superRefine((spec, c) => {
   if (spec.brand.series === 'mind.the.gap' && !spec.call) c.addIssue({ code: 'custom', path: ['call'], message: 'mind.the.gap ends in a dated call: add call.statement, call.due and call.confidence_percent' })
+  const ownSting = spec.brand.series.replace(/\./g, '_')
+  if (spec.brand.intro_sting && spec.brand.intro_sting !== VE_NO_STING && spec.brand.intro_sting !== ownSting) {
+    c.addIssue({ code: 'custom', path: ['brand', 'intro_sting'], message: `a piece wears its own series' sting: ${ownSting}, or "${VE_NO_STING}"` })
+  }
   const datasets = new Set(spec.datasets.map((d) => d.id))
   const objects = new Set(spec.objects.map((o) => o.obj))
   const assets = new Set(spec.assets.map((a) => a.id))

@@ -1,9 +1,11 @@
 import { z } from 'zod'
-import { isValidElement, type ReactElement, type ReactNode } from 'react'
-import { Audio, OffthreadVideo, Sequence } from 'remotion'
+import { createElement, isValidElement, type ReactElement, type ReactNode } from 'react'
+import { Audio, Composition, OffthreadVideo, Sequence } from 'remotion'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import fixture from '../../../../fixtures/ve/engine-core/props.json'
 import { FormatMaster } from './FormatMaster'
+import { VeCut } from './VeCut'
+import { RemotionRoot } from '../Root'
 import { BrandFrame } from './BrandFrame'
 import { EngineAudio } from './audio'
 import { HOUSE_MOTION, MOTION, useEngineFrame } from './clock'
@@ -147,6 +149,13 @@ describe('ve composition', () => {
     expect(nodes.find((node) => node.type === Sequence)?.props.from).toBe(48)
     expect(tracks[1]!.props.src).toBe('hit.wav')
     expect(tracks[1]!.props.volume).toBeCloseTo(10 ** (-6 / 20))
+    // stem={false}: the stem is the wrapper's (VeCut, under the sting); the sfx stay, on their own frames.
+    const quiet = elements(EngineAudio({ audio, stem: false }))
+    expect(quiet.filter((node) => node.type === Audio).map((node) => node.props.src)).toEqual(['hit.wav'])
+    expect(quiet.find((node) => node.type === Sequence)?.props.from).toBe(48)
+    const master = EngineRenderPropsSchema.parse(fixture)
+    expect(elements(FormatMaster(master)).at(-1)?.props.stem).toBe(true)
+    expect(elements(FormatMaster({ ...master, stem: false })).at(-1)?.props.stem).toBe(false)
   })
 })
 
@@ -322,5 +331,115 @@ describe('motion styles in the composition', () => {
     expect(dims[1]).toBeGreaterThanOrEqual(0.4)
     FormatMaster(staged())
     expect({ ...MOTION }).toEqual(HOUSE_MOTION)
+  })
+})
+
+describe('the sting opens the wide long cut', () => {
+  // Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,". The 16:9 whole cut of a
+  // weekly series piece opens on its series' sting clip, and his face comes in on the very next frame after its last.
+  const STING = { src: 'makeyourmindup-sting-16x9-mind_the_gap.mp4', series: 'mind_the_gap' as const, frames: 56, sha256: 'a'.repeat(64) }
+  function wide(sting: Record<string, unknown> | null = STING) {
+    return EngineRenderPropsSchema.parse({ ...structuredClone(fixture), aspect: '16:9',
+      segments: [{ src: 'take.mp4', trimBeforeFrames: 0, fromFrame: 0, durationFrames: 120 }],
+      audio: { stem: { src: 'stem.wav', trimBeforeFrames: 0 }, sfx: [{ src: 'hit.wav', atFrame: 10, gainDb: -6 }] },
+      ending: { fromFrame: 90, url: 'makeyourmindup.ai' }, ...(sting ? { sting } : {}) })
+  }
+  /** What one render frame draws, read with Remotion's Sequence rule: a child mounts on [from, from + durationInFrames)
+   *  and counts its own frames from `from`. VeCut, FormatMaster and EngineAudio are called, FormatMaster with the clock
+   *  at its own frame (it reads it once); everything else is kept with its children. */
+  const CALLED = new Set<unknown>([VeCut, FormatMaster, EngineAudio])
+  function at(node: ReactNode, frame: number): ReactElement<Record<string, unknown>>[] {
+    if (Array.isArray(node)) return node.flatMap((child) => at(child, frame))
+    if (!isValidElement<Record<string, unknown>>(node)) return []
+    if (node.type === Sequence) {
+      const from = (node.props.from as number | undefined) ?? 0
+      const length = (node.props.durationInFrames as number | undefined) ?? Number.POSITIVE_INFINITY
+      return frame < from || frame >= from + length ? [] : [node, ...at(node.props.children as ReactNode, frame - from)]
+    }
+    if (CALLED.has(node.type)) {
+      if (node.type === FormatMaster) vi.mocked(useEngineFrame).mockReturnValueOnce(frame)
+      return [node, ...at((node.type as (props: unknown) => ReactNode)(node.props), frame)]
+    }
+    return [node, ...at(node.props.children as ReactNode, frame)]
+  }
+  const pictures = (nodes: ReactElement<Record<string, unknown>>[]) => nodes.filter((node) => node.type === OffthreadVideo)
+    .map((node) => [node.props.src, node.props.trimBefore ?? null, node.props.muted])
+  const brands = (nodes: ReactElement<Record<string, unknown>>[]) => nodes.filter((node) => node.type === BrandFrame)
+    .map((node) => [(node.props.beat as EngineBeat).id, node.props.frame])
+
+  it('draws the sting clip, muted and full frame, on frames 0 to 55 and nothing of the cut', () => {
+    const props = wide()
+    for (let frame = 0; frame < 56; frame++) {
+      const nodes = at(createElement(VeCut, props), frame)
+      expect(pictures(nodes)).toEqual([[STING.src, null, true]])
+      expect(nodes.find((node) => node.type === OffthreadVideo)!.props.style).toMatchObject({ width: '100%', height: '100%' })
+      expect(nodes.some((node) => node.type === FormatMaster || node.type === BrandFrame)).toBe(false)
+    }
+  })
+
+  it("draws beat 0's BrandFrame and his take's first frame on frame 56, on the cut's own clock", () => {
+    const props = wide()
+    const nodes = at(createElement(VeCut, props), 56)
+    expect(pictures(nodes)).toEqual([['take.mp4', 0, true]])
+    expect(brands(nodes)).toEqual([[props.beats[0]!.id, 0]])
+    expect(nodes.find((node) => node.type === BrandFrame)!.props.beat).toMatchObject({ fromFrame: 0, sectionBeat: true })
+    // FormatMaster never sees the sting and leaves the stem to the wrapper.
+    const master = nodes.find((node) => node.type === FormatMaster)!
+    expect(master.props).not.toHaveProperty('sting')
+    expect(master.props.stem).toBe(false)
+    // Every later render frame is the cut's frame 56 earlier, to its last; after it nothing of the cut is drawn.
+    for (const [render, beat, frame] of [[115, 'hook', 59], [116, 'call', 60], [175, 'call', 119]] as const) {
+      expect(brands(at(createElement(VeCut, props), render))).toEqual([[beat, frame]])
+    }
+    expect(at(createElement(VeCut, props), 176).some((node) => node.type === FormatMaster)).toBe(false)
+  })
+
+  it("plays the one stem from the render's frame 0 and keeps each sfx on the cut's clock", () => {
+    const props = wide()
+    for (const frame of [0, 55, 56, 175]) {
+      const stems = at(createElement(VeCut, props), frame).filter((node) => node.type === Audio && node.props.src === 'stem.wav')
+      expect(stems.map((node) => node.props.trimBefore)).toEqual([0])
+    }
+    const sfx = (frame: number) => at(createElement(VeCut, props), frame).some((node) => node.type === Audio && node.props.src === 'hit.wav')
+    expect([sfx(10), sfx(65), sfx(66)]).toEqual([false, false, true])
+  })
+
+  it('changes nothing with no sting', () => {
+    const props = wide(null)
+    const tree = VeCut(props)
+    expect(tree.type).toBe(FormatMaster)
+    expect(tree.props).toEqual(props)
+    expect(tree.props).not.toHaveProperty('stem')
+    expect(pictures(at(tree, 0))).toEqual([['take.mp4', 0, true]])
+    expect(brands(at(tree, 0))).toEqual([[props.beats[0]!.id, 0]])
+    expect(at(tree, 0).filter((node) => node.type === Audio).map((node) => node.props.src)).toEqual(['stem.wav'])
+  })
+
+  it('takes a sting only on a whole 16:9 cut of its own series', () => {
+    expect(EngineRenderPropsSchema.safeParse(wide()).success).toBe(true)
+    const refused = (change: Record<string, unknown>) => {
+      const result = EngineRenderPropsSchema.safeParse({ ...wide(), ...change })
+      return result.success ? '' : result.error.issues.map((issue) => issue.message).join('; ')
+    }
+    expect(refused({ aspect: '9:16' })).toContain('the 9:16 short opens on its hook')
+    expect(refused({ ending: undefined })).toContain('never an excerpt')
+    expect(refused({ sting: { ...STING, series: 'follow_the_money' } })).toContain('cannot open the mind.the.gap cut')
+    expect(refused({ series: { ...wide().series, label: 'off.day' } })).toContain('cannot open the off.day cut')
+    for (const sting of [{ ...STING, extra: 1 }, { ...STING, sha256: 'A'.repeat(64) }, { ...STING, frames: 0 }, { ...STING, series: 'off_day' }]) {
+      expect(refused({ sting })).not.toBe('')
+    }
+  })
+
+  it('runs the wide composition through VeCut, the sting then the cut, and leaves the tall one alone', () => {
+    const compositions = elements(RemotionRoot()).filter((node) => node.type === Composition)
+    const composition = (id: string) => compositions.find((node) => node.props.id === id)!
+    const length = (id: string, props: unknown) =>
+      (composition(id).props.calculateMetadata as (input: { props: unknown }) => { durationInFrames: number })({ props }).durationInFrames
+    const render = (id: string, props: unknown) => (composition(id).props.component as (p: unknown) => ReactElement)(props)
+    expect(length('VeFormatMasterWide', wide())).toBe(56 + 120)
+    expect(length('VeFormatMasterWide', wide(null))).toBe(120)
+    expect(length('VeFormatMasterTall', fixture)).toBe(120)
+    expect(render('VeFormatMasterWide', wide()).type).toBe(VeCut)
+    expect(render('VeFormatMasterTall', fixture).type).toBe(FormatMaster)
   })
 })

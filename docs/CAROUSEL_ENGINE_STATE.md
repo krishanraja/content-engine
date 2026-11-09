@@ -6,22 +6,24 @@ brief and returning finished assets. CAROUSEL-STANDARD.md holds the current
 publication pilot's production requirements. Growth owns social strategy
 and authorised posting; older manual-delivery wording below does not make
 this Studio a publishing owner or settle Growth's current delivery policy.
+Since 28 October 2026 Growth makes the derived carousels itself, to
+CAROUSEL-STANDARD.md; content-engine keeps that standard and this engine.
 
 > Scope: the carousel half of the Studio. For the whole system start at `README.md`. Its known stale passages are listed in `docs/STUDIO.md`, "The detailed Studio documents".
 
-This is the single current-state artifact for the Mindmake Carousel Engine. GitHub `main` remains authoritative. This document does not approve a visual direction or authorise publication.
+This is the current-state record of the Mindmake Carousel Engine (the `studio carousel` commands). The publication's current carousel requirements are in CAROUSEL-STANDARD.md, which comes first where the two differ. GitHub `main` remains authoritative. This document does not approve a visual direction or authorise publication.
 
 The decision record, the feedback proposals and the visual reset trace live in the appendices at the end of this document: Appendix A (Decisions), Appendix B (Feedback proposals) and Appendix C (Reset trace).
 
-Last verified: 2026-09-07 against main at c90397b
+Last verified: 2026-09-07 against main at c90397b. On 2026-11-04 the commands, contracts and series below were checked again against main; the test counts were not.
 
 ## Product boundary
 
-The Carousel Director is a sibling of the Video Director inside `mindmake-video-studio`. It shares radar inputs, evidence handling, canonical series, approvals, feedback memory, analytics discipline and public-action limits. It has separate story, slide and render contracts because a swipe document is not a cut-down video.
+The Carousel Director is a sibling of the Video Director inside this repository (named `mindmake-video-studio` when this was written). It shares radar inputs, evidence handling, canonical series, approvals, feedback memory, analytics discipline and public-action limits. It has separate story, slide and render contracts because a swipe document is not a cut-down video.
 
 The director is a visual-production system for completed content ideas. The argument, claims, sequence, audience payoff and ending arrive from the content owner. It may challenge visualizability, request evidence or flag ambiguity, but it does not invent topics, recording ideas, claims or arguments. An incomplete idea returns to its content owner.
 
-It serves The Money of AI and Built With AI only. Source formats remain the publication's existing canonical formats. No third editorial channel or new named public format is introduced.
+It serves the publication's three subchannels: follow.the.money, under.the.hood and mind.the.gap. The Money of AI and Built With AI, its first two series, became follow.the.money and under.the.hood on 25 September 2026; their ids stay valid only so older signed records still parse (`packages/contracts/src/series.ts`). Source formats remain the publication's existing canonical formats. No new editorial channel or named public format is introduced.
 
 ## V1 journey
 
@@ -36,7 +38,7 @@ It serves The Money of AI and Built With AI only. Source formats remain the publ
 
 ## Editorial standard
 
-Every story must be unique, researched, thoughtful, kind and helpful. The Money of AI follows the money or operating mechanism behind an event. Built With AI starts from the human reason for building and shows a usable beginning. A topic without a claim, proof or audience consequence does not reach rendering.
+Every story must be unique, researched, thoughtful, kind and helpful. Each subchannel's mandate is read live (`venture_formats.mandate`), never copied here. A topic without a claim, proof or audience consequence does not reach rendering.
 
 Each slide answers one audience question. The design carries information that the copy does not need to repeat. Headlines state the point plainly. Evidence stays humourless. Wit may point at hype or the machine, never the reader or a named person's competence.
 
@@ -44,7 +46,7 @@ Each slide answers one audience question. The design carries information that th
 
 The first generic editorial-gates treatment was rejected. The current candidate uses a mechanical approval interlock to show one exact mechanism: an approval stops fitting when the story it checked changes. Every card uses a distinct narrative scene while the moving key, fixed alignment grid and material palette preserve coherence. Deep ink is the operating environment, cream changes the reading mode, mint means a current match and amber means changed or held. Archivo carries structure, Newsreader carries the final claim, Source Serif 4 carries short explanation and IBM Plex Mono carries source or object labels.
 
-The mechanical interlock is approved as an infographic treatment lane, not as a universal house style. Future stories can use documentary evidence, physical analogy, cultural restage, handmade, cinematic or surreal visual grammar when the meaning earns it. The official series lettering appears once at top-left as the channel signpost. The official Mindmake wordmark appears once at bottom-left as the publisher signature, with a reserved clear zone above it. Both assets crop to configured visible bounds and align their visible letters to the same content edge. Neither mark may be recreated as live text or repeated elsewhere. The revised placement remains provisional until Krish approves the rendered review set.
+The mechanical interlock is approved as an infographic treatment lane, not as a universal house style. Future stories can use documentary evidence, physical analogy, cultural restage, handmade, cinematic or surreal visual grammar when the meaning earns it. The official series lettering appears once at top-left as the channel signpost. The official Mindmake wordmark appears once at bottom-left as the publisher signature, with a reserved clear zone above it. Both assets crop to configured visible bounds and align their visible letters to the same content edge. Neither mark may be recreated as live text or repeated elsewhere. The revised placement remains provisional until Krish approves the rendered review set. For the publication's carousels today, CAROUSEL-STANDARD.md sets the look: the cover card is a scene, and the house mark sits small in a bottom corner (Krish's rulings of 3 and 4 November 2026).
 
 ## Determinism and safety
 
@@ -68,6 +70,8 @@ Production rendering needs exact story and visual-direction approvals. Packaging
 The first review fixture is `examples/carousels/built-editorial-gates.review.json`.
 
 ## Current gate
+
+The gate as it stood on 7 September 2026, kept as history. The production reference since 26 October 2026 is the Grok Bot vs Muse revision 03 pilot Krish approved (CAROUSEL-STANDARD.md).
 
 - Product method: locked by Krish on 2026-09-07 and encoded in `config/carousel-visual-direction.json`.
 - Infographic treatment: approved as one available lane, not as a universal carousel style.

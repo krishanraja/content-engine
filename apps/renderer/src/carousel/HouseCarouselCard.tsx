@@ -15,6 +15,13 @@ type House = NonNullable<NonNullable<CarouselRenderProps['branding']['publicatio
 type Wordmark = NonNullable<CarouselRenderProps['branding']['publication']>['mark']
 
 const card = HOUSE.card
+/** The last card's call (Ruling, Krish, 2026-11-05: "Every single makeyourmindup carousel should have a "Follow for
+ *  more" call to action on the last card, just above the "Make Your Mind Up" word mark. Which should be a bit larger and
+ *  centered on the last card always"). Set by the card's place in the deck, never by its copy. */
+export const FOLLOW_SIGN = 'Follow for more'
+// The last card's foot top, from the bottom edge up: the mark (at its own aspect), the gap, the sign, the rule's padding.
+const lastFootTop = (logo: Wordmark) => HOUSE.cardHeight - card.foot.bottom - card.foot.lastLogoWidth * logo.pixelHeight / logo.pixelWidth
+  - card.foot.signGap - card.foot.signSize * 1.2 - card.foot.paddingTop - card.foot.rule
 const INNER_WIDTH = HOUSE.width - card.edge * 2
 const SAFETY = 1.03
 
@@ -38,14 +45,14 @@ export function houseCardModel(props: CarouselRenderProps) {
     // The headline and dek end clear of the sticker at 880.
     const maxHeight = card.coverSticker.top - 40 - card.head.top - dek
     const fit = fitDisplaySize(slide.headline, { maxSizePx: card.head.size, minSizePx: 88, maxWidthPx: INNER_WIDTH, maxHeightPx: Math.max(maxHeight, 88 * 0.88) })
-    return { kind, counter, headlineSize: fit.sizePx, headlineLines: fit.lines, swipeIndex: -1, sticker: house.coverSticker, question: house.question, footnote: null }
+    return { kind, counter, headlineSize: fit.sizePx, headlineLines: fit.lines, swipeIndex: -1, sticker: house.coverSticker, question: house.question, footnote: null, sign: null }
   }
   // One swiped word where the slide carries an accent, always on the call.
   const swipeIndex = slide.call || slide.accent !== 'none' ? houseLastWordIndex(slide.headline) : -1
   const swipeWord = swipeIndex < 0 ? undefined : slide.headline.split(/(\s+)/).filter((part) => !/^\s*$/.test(part)).length - 1
   const footnote = kind === 'last' && slide.call ? house.callFootnote : null
-  // The last card keeps clear of its footer rule; a middle card of its counter.
-  const limit = kind === 'last' ? 1140 : 1200
+  // The last card keeps clear of its foot (the sign and the mark); a middle card of its counter.
+  const limit = kind === 'last' ? Math.floor(lastFootTop(props.branding.publication!.logo) - 40) : 1200
   const blocks = [
     slide.body ? bodyLines(slide.body) * card.inner.bodySize * card.inner.bodyLineHeight : 0,
     slide.dataLabel ? HOUSE.mono.size * 1.3 : 0,
@@ -53,7 +60,7 @@ export function houseCardModel(props: CarouselRenderProps) {
   ].filter((height) => height > 0)
   const maxHeight = limit - card.inner.top - blocks.reduce((sum, height) => sum + height + card.inner.gap, 0)
   const fit = fitDisplaySize(slide.headline, { maxSizePx: card.inner.size, minSizePx: 72, maxWidthPx: INNER_WIDTH, maxHeightPx: Math.max(maxHeight, 72 * 0.88), ...(swipeWord === undefined ? {} : { swipeWordIndex: swipeWord }) })
-  return { kind, counter, headlineSize: fit.sizePx, headlineLines: fit.lines, swipeIndex, sticker: null, question: null, footnote }
+  return { kind, counter, headlineSize: fit.sizePx, headlineLines: fit.lines, swipeIndex, sticker: null, question: null, footnote, sign: kind === 'last' ? FOLLOW_SIGN : null }
 }
 
 function TopRow({ house, label, onColour, right, top = card.edge, daySize, pillSize }: { house: House; label: string; onColour: boolean; right: React.ReactNode; top?: number; daySize?: number; pillSize?: number }) {
@@ -112,9 +119,9 @@ export function HouseCarouselCard(props: CarouselRenderProps) {
         {model.footnote ? <p style={{ margin: 0, fontFamily: HOUSE_FONTS.dek, fontStyle: 'italic', fontWeight: 400, fontSize: card.inner.dekSize, lineHeight: card.dek.lineHeight, color: HOUSE_DEK_ON_INK }}>{model.footnote}</p> : null}
       </div>
       {model.kind === 'last' ? (
-        <div style={{ position: 'absolute', left: card.edge, right: card.edge, bottom: card.foot.bottom, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderTop: `${card.foot.rule}px solid ${HOUSE_RULE_ON_INK}`, paddingTop: card.foot.paddingTop }}>
-          <HouseLogo image={imageOf(publication.logo)} width={card.foot.logoWidth} />
-          <MonoLabel style={{ letterSpacing: `${HOUSE.mono.siteLetterSpacingEm}em`, textTransform: 'none' }}>{house.site}</MonoLabel>
+        <div data-close-sign style={{ position: 'absolute', left: card.edge, right: card.edge, bottom: card.foot.bottom, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: card.foot.signGap, borderTop: `${card.foot.rule}px solid ${HOUSE_RULE_ON_INK}`, paddingTop: card.foot.paddingTop }}>
+          <span style={{ fontFamily: HOUSE_FONTS.structure, fontWeight: 600, fontSize: card.foot.signSize, lineHeight: 1.2, color: tokens.cream }}>{model.sign}</span>
+          <HouseLogo image={imageOf(publication.logo)} width={card.foot.lastLogoWidth} />
         </div>
       ) : (
         <div style={{ position: 'absolute', right: card.edge, bottom: card.foot.bottom }}><MonoLabel>{model.counter}</MonoLabel></div>

@@ -10,12 +10,10 @@ this guard makes every firing after the first one that built the Ideas tab do no
     python3 scripts/sunday_ideas.py week [--today YYYY-MM-DD]   # the Monday the run plans
     python3 scripts/sunday_ideas.py week --date YYYY-MM-DD      # a typed Monday, checked and printed as YYYY-MM-DD
     python3 scripts/sunday_ideas.py built MONDAY                 # built=true once the Ideas tab is live
-    python3 scripts/sunday_ideas.py goodnews [--today YYYY-MM-DD]  # gn_monday=<the week starting tomorrow> gn_due=true|false
 
-The good news: the Saturday good news is a weekly series whose four stories are found fresh by this run for the
-week that starts the next day (Krish, 2026-11-02: "You will need to find the actual good news on Sunday as per the
-usual system so that the news items are fresh"). `goodnews` names that week and says due=true while its ideas.json
-holds a weekly option whose stories_due has come (this run fires the Saturday before) and that has no stories yet.
+The Saturday good news is no longer found here: the Thursday run finds it (scripts/saturday_goodnews.py,
+.github/workflows/saturday-goodnews.yml; Krish, 2026-11-07: "Saturday's good news run should be done later in the
+week so the good news is fresh"). This run leaves that option with its stories due on the Thursday.
 
 The week: Krish records the whole week on the Sunday and it goes live eight days later (plan-week, "The Sunday
 loop"), so the run on Saturday 31 October (or a run by hand on Sunday 1 November) plans the week of 9 November.
@@ -47,46 +45,6 @@ def target_monday(today: dt.date) -> dt.date:
     otherwise the coming Sunday."""
     sunday = today + dt.timedelta(days=(6 - today.weekday()) % 7)
     return sunday + dt.timedelta(days=8)
-
-
-ROOT = HERE.parent
-
-
-def goodnews_monday(today: dt.date) -> dt.date:
-    """The week whose Saturday good news this run fills: the one that starts the day after the recording Sunday."""
-    return target_monday(today) - dt.timedelta(days=7)
-
-
-def goodnews_due(monday: dt.date, today: dt.date, plans: Path | None = None) -> bool:
-    """True while the week's ideas.json holds a weekly series option whose stories_due is today or tomorrow or past
-    and that has no stories yet."""
-    import json
-    path = (plans or ROOT / 'docs' / 'plans') / f'{monday.isoformat()}-week' / 'ideas.json'
-    if not path.exists():
-        return False
-    data = json.loads(path.read_text(encoding='utf-8'))
-    for opts in (data.get('offdays') or {}).values():
-        for o in opts if isinstance(opts, list) else []:
-            if isinstance(o, dict) and o.get('weekly') and not o.get('stories'):
-                try:
-                    if dt.date.fromisoformat(str(o.get('stories_due'))) <= today + dt.timedelta(days=1):
-                        return True
-                except ValueError:
-                    return True
-    return False
-
-
-def live_has_stories(monday: str) -> bool:
-    """True once the week's live board shows the weekly good news with its four stories, so a second Saturday firing
-    (the stories sit on the run's branch until the Sunday room merges it) does not look for them again."""
-    import board_web
-    key = board_web.os.environ.get('ENGINE_OPERATOR_TOKEN') or ''
-    if not key:
-        raise ValueError('ENGINE_OPERATOR_TOKEN is not set')
-    base = board_web.os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
-    request = urllib.request.Request(base + f'/board/{monday}', headers={'Authorization': 'Bearer ' + key})
-    with urllib.request.urlopen(request, timeout=120) as response:
-        return 'data-stories="4"' in response.read().decode('utf-8', errors='replace')
 
 
 def monday_arg(text: str) -> dt.date:
@@ -126,22 +84,7 @@ def main() -> int:
     week.add_argument('--date', help='a typed Monday, YYYY-MM-DD: checked and printed in that form')
     done = sub.add_parser('built')
     done.add_argument('monday')
-    news = sub.add_parser('goodnews')
-    news.add_argument('--today', help='YYYY-MM-DD; default: today in New York')
     args = parser.parse_args()
-    if args.command == 'goodnews':
-        today = dt.date.fromisoformat(args.today) if args.today else dt.datetime.now(NEW_YORK).date()
-        monday = goodnews_monday(today)
-        due = goodnews_due(monday, today)
-        if due:
-            try:
-                due = not live_has_stories(monday.isoformat())
-            except Exception as error:  # an unreadable board is never read as filled or as empty
-                print(f'sunday ideas: could not read the week board for {monday}: {error}', file=sys.stderr)
-                return 1
-        print(f'gn_monday={monday.isoformat()}')
-        print(f'gn_due={"true" if due else "false"}')
-        return 0
     try:
         if args.command == 'week' and args.date:
             print(monday_arg(args.date).isoformat())

@@ -1,8 +1,9 @@
-# FACE WITH PROOF: anatomy (draft lock, awaiting Krish's Gate 2)
+# FACE WITH PROOF: anatomy (9:16 lock frozen 3 Nov 2026; 16:9 draft awaiting Gate 2)
 
-Status: a draft written on 29 Oct 2026 for the W2.7 shadow run. Nothing here is approved until Krish approves one
-still per beat at Gate 2 and `ve lock freeze` hashes them. Until then `face-with-proof` stays a legacy format: lint,
-compile and render work as they did, and the packet asks for his proof approval of the exact file.
+Status: written as a draft on 29 Oct 2026 for the W2.7 shadow run. The 9:16 lock was frozen on 3 Nov 2026: Krish
+approved one still per beat (the round 3 stills: "Looks good to me.") and `ve lock freeze` hashed them
+(`config/ve/design-lock.json`, `formats.face-with-proof`). The 16:9 entry, `face-with-proof@16:9`, is still a draft
+awaiting its own Gate 2.
 
 Source: `config/ve/formats/face-with-proof.json` (proven on the Monday 19 Oct camera cuts he accepted) and
 `docs/ve/design/TEMPLATE.md`. He on camera carries the argument; the proof arrives beside or over him on the words
@@ -12,7 +13,7 @@ that name it.
 
 | Beat | Holds | Layouts |
 |---|---|---|
-| `hook` | frame 0 is the hook in the brand's dress, logo and series tag in its corners (the hook is the intro, under test) | F3, P1 |
+| `hook` | the cut's frame 0 is the hook in the brand's dress, logo and series tag in its corners; in the file that is frame 0 of a 9:16 cut, and the frame after the series' house sting on the 16:9 whole cut of a weekly series piece (house rule HOOK_IS_THE_INTRO, under test) | F3, P1 |
 | `face` | his face carries the line; a kinetic label adds the number, name or date the voice does not say | P1, F1 |
 | `proof` | the evidence the line names (a real record, document, quote or screen) beside or over him | P3, P6 |
 | `close` | one calm close: the ending band, held long enough to read | F1 |
@@ -24,7 +25,7 @@ Extra beats (more hooks, stats, the dated call) are allowed between them and are
 - `hand-held-screen` (format H): its five beats may sit inside a face-with-proof cut, held to H's frozen stills.
 - `two-passports`: its five beats likewise, held to its frozen stills.
 
-At freeze both become `role: module` (they keep working as their own formats).
+Since the 3 Nov freeze both are `role: module` (they keep working as their own formats).
 
 ## Canvases
 

@@ -16,6 +16,11 @@ and fully built) and its cut sheet (three frames either side of every cut) are t
   numbers.<cut>.json the measures QC already took, copied, never measured again, per beat where QC gives times, and
                      labelled "measured; not heard": the Critic cites them and never claims to have heard the cut.
 
+Every frame number is the finished file's. On a cut that opens on the intro sting (Krish, 2026-11-05: "I think it
+should go at the start of the longer wide videos 100%,") the props' frames are moved by the sting's frames
+(velib.qc.lead_frames), the sting gets its own row in beats.<cut>.jpg, and the cut from its last frame to his face is
+the first row of cuts.<cut>.jpg.
+
 It makes no judgement and blocks nothing.
 """
 from __future__ import annotations
@@ -24,6 +29,7 @@ import subprocess
 from pathlib import Path
 
 from .common import ffmpeg, load_json, sha256_file, write_json
+from .qc import lead_frames
 
 STRIP_EVERY_S = 0.5
 PER_BEAT = 8
@@ -35,7 +41,7 @@ LABEL_H = 18
 HEARD = 'measured; not heard'
 QC_ROWS = ('motion.change_density', 'motion.longest_still', 'motion.periodicity', 'loudness.integrated', 'loudness.true_peak',
            'loudness.long_silence', 'audio.bed', 'audio.bed_continuity', 'sync.av_xcorr', 'joins.in_gaps', 'joins.decoder',
-           'captions.clock', 'captions.render', 'captions.ocr', 'words.lost', 'channel.safe_zones', 'audio.voice',
+           'captions.clock', 'captions.render', 'captions.ocr', 'words.lost', 'channel.safe_zones', 'audio.voice', 'opening',
            'beats.handover_in_gaps', 'ground.not_bare')
 
 
@@ -83,12 +89,22 @@ def sheet(rows: list[tuple[str, list[int]]], frames: dict, target: Path, last_fr
     return target
 
 
+def last_frame(props: dict) -> int:
+    """The finished file's last frame: the sting's frames in front of the cut, then the cut."""
+    return lead_frames(props) + int(props.get('durationFrames') or 0) - 1
+
+
 def beat_rows(props: dict) -> list[tuple[str, list[int]]]:
     fps = props.get('fps', 30)
     step = max(1, round(STRIP_EVERY_S * fps))
+    lead = lead_frames(props)
     out = []
+    if lead:
+        sting = props.get('sting') or {}
+        picks = list(range(0, lead, step))[:PER_BEAT - 1] + [lead - 1]
+        out.append((f"intro sting ({sting.get('series', '?')}) f0-f{lead - 1}", sorted(set(picks))))
     for beat in props.get('beats') or []:
-        first, last = int(beat['fromFrame']), int(beat['toFrame']) - 1
+        first, last = int(beat['fromFrame']) + lead, int(beat['toFrame']) - 1 + lead
         picks = list(range(first, last + 1, step))[:PER_BEAT] or [first]
         out.append((f"beat {beat['id']} ({beat.get('layout', '')}) f{first}-f{last}", picks))
     return out
@@ -96,15 +112,21 @@ def beat_rows(props: dict) -> list[tuple[str, list[int]]]:
 
 def event_rows(props: dict) -> list[tuple[str, list[int]]]:
     by_frame: dict[int, list[str]] = {}
+    lead = lead_frames(props)
     for event in props.get('events') or []:
-        by_frame.setdefault(int(event['atFrame']), []).append(f"{event.get('obj', '?')} {event.get('verb', '?')}")
+        by_frame.setdefault(int(event['atFrame']) + lead, []).append(f"{event.get('obj', '?')} {event.get('verb', '?')}")
     return [(f'f{at}: ' + ', '.join(names), [at + k for k in EVENT_OFFSETS]) for at, names in sorted(by_frame.items())]
 
 
 def cut_frames(props: dict, edl: dict | None) -> list[tuple[int, str]]:
-    cuts = {int(b['fromFrame']): f"beat {b['id']}" for b in (props.get('beats') or [])[1:]}
+    """Each cut on the file's clock: the sting to his face first on a cut that opens on it, then each beat boundary and
+    each join between takes (the EDL's at_frame is on the cut's own clock, like the props)."""
+    lead = lead_frames(props)
+    cuts = {int(b['fromFrame']) + lead: f"beat {b['id']}" for b in (props.get('beats') or [])[1:]}
+    if lead:
+        cuts[lead] = 'intro sting > his face'
     for join in (edl or {}).get('joins') or []:
-        at = int(join['at_frame'])
+        at = int(join['at_frame']) + lead
         cuts[at] = (cuts[at] + ' + take join') if at in cuts else f"take join {join['from']['take']} > {join['to']['take']}"
     return sorted(cuts.items())
 
@@ -135,10 +157,12 @@ def numbers(props: dict, qc: dict) -> dict:
     checks = qc.get('checks') or {}
     rows = {name: checks[name] for name in QC_ROWS if name in checks}
     fps = props.get('fps', 30)
+    lead = lead_frames(props)
     beats = []
     runs = (checks.get('motion.longest_still') or {}).get('runs') or []
+    # QC measured the still runs on the file, so each beat is placed on the file's clock, after the sting.
     for beat in props.get('beats') or []:
-        start, end = beat['fromFrame'] / fps, beat['toFrame'] / fps
+        start, end = (beat['fromFrame'] + lead) / fps, (beat['toFrame'] + lead) / fps
         still = [run for run in runs if start <= run[0] < end]
         beats.append({'beat': beat['id'], 'from_s': round(start, 2), 'to_s': round(end, 2),
                       'still_runs_s': still, 'longest_still_s': max([run[1] for run in still], default=0)})
@@ -153,7 +177,7 @@ def write(cut: str, directory: Path, video: Path, props: dict, qc: dict, edl: di
     directory, video = Path(directory), Path(video)
     if qc.get('sha256') and qc['sha256'] != sha256_file(video):
         raise ValueError(f'the QC record for {cut} is for another file: run ve qc on this cut first')
-    last = int(props.get('durationFrames') or 0) - 1
+    last = last_frame(props)
     kinds = (('beats', beat_rows(props)), ('events', event_rows(props)), ('cuts', cut_rows(props, edl)))
     wanted = [n for _, rows in kinds for _, numbers_ in rows[:MAX_ROWS] for n in numbers_ if 0 <= n <= last]
     frames = frames_at(video, wanted)

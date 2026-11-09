@@ -26,6 +26,8 @@ describe('the engine gates', () => {
     ['one spine per piece', ['scripts/post-pack/spine_check.py', '--self-test']],
     ['the style references: cuts, zooms and the ledger', ['scripts/quick-edit/references.py', '--self-test']],
     ['the cover drawer and thumbnails', ['scripts/pages/build.py', '--self-test']],
+    ['series colours belong to the weekly piece and what carries it; every other cover, any day, wears none, and nothing sits on the words (Krish, 2026-11-04); one series skin a week, rotating through all nine (Krish, 2026-11-05)', ['tests/series_colour_test.py']],
+    ['a generated carousel cover shows the house robot or no robot (Krish, 2026-11-05)', ['scripts/post-pack/cover_scene.py', 'self-test']],
     ['skill cores keep under their byte caps (W2.12)', ['scripts/check_skill_core.py', '--self-test']],
     ['a post folder is bound to its piece, frozen at the first send, and a spread piece is reported (W3.5)', ['scripts/post-pack/post_binding.py', 'self-test']],
     ['the rejection floor reader (AGENTS.md rule 20)', ['scripts/floor.py', '--self-test']],
@@ -41,6 +43,7 @@ describe('the engine gates', () => {
     ['the chat backstop keeps only his flagged, scrubbed lines, locally, once each (W3.3)', ['tests/taste_backstop_test.py']],
     ['the Codex token ledger: calls, tokens, child agents and the weekly limit, never words', ['tests/session_token_audit_codex_test.py']],
     ['one music bed shape in both engines, nothing keyed to his voice, and no cut filed without its bed receipt (F40, Krish 2026-11-04)', ['tests/music_bed_test.py']],
+    ['ve opens only the wide whole cut of a series piece on the intro sting, only on the clip Krish approved and never skipped, his voice laid 56 frames later in the stem (Krish, 2026-11-05)', ['-m', 'unittest', 'tests.ve_compile_test.StingTest', 'tests.ve_audio_test.StingLeadTest']],
   ] as const) {
     it(name, () => {
       const r = py([...args])

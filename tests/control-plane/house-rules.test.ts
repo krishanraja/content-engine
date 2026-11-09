@@ -504,7 +504,7 @@ describe('real logos, real pages, and a cover with personality (VISUAL_EVIDENCE,
   })
 })
 
-describe('the opening, the music bed and a thumbnail for every size (Krish, 2026-10-12 and 2026-10-29)', () => {
+describe('the opening, the music bed and a thumbnail for every size (Krish, 2026-10-12, 2026-10-29 and 2026-11-05)', () => {
   const rule = (id: string) => {
     const r = HOUSE_RULES.find(x => x.id === id)
     assert.ok(r, id)
@@ -520,7 +520,8 @@ describe('the opening, the music bed and a thumbnail for every size (Krish, 2026
       assert.deepEqual(r.stages, ['production'], id)
       assert.ok(rulesFor('production').includes(r), id)
     }
-    assert.ok(rule('HOOK_IS_THE_INTRO').said.startsWith('I\'d pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let\'s go with number one for now.'))
+    assert.ok(rule('HOOK_IS_THE_INTRO').said.startsWith('I think it should go at the start of the longer wide videos 100%,'))
+    assert.ok(rule('HOOK_IS_THE_INTRO').said.includes('"I\'d pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let\'s go with number one for now."'))
     assert.ok(rule('MUSIC_BED').said.includes('(high volume during the intro, low whilst I am talking, higher during the outro)'))
     assert.ok(rule('MUSIC_BED').said.includes('"Yes I think music should be audible throughout but just lower."'))
     assert.ok(rule('THUMBNAIL_EVERY_SIZE').said.includes('I always want a video thumbnail for all video sizes produced as an asset every time'))
@@ -543,24 +544,40 @@ describe('the opening, the music bed and a thumbnail for every size (Krish, 2026
     assert.doesNotMatch(houseRulesBlock('visual'), /LUFS|intro-sting|thumbnail_override/)
     assert.doesNotMatch(houseRulesBlock('write'), /LUFS|intro-sting|thumbnail_override/)
   })
-  test('the opening rule says what is true today: the sting and the story card are retired into it, and it is a choice under test', () => {
+  test('the opening rule says what is true today: the sting on the wide cut of a series piece, the hook on the tall cut, the story card retired, a choice under test', () => {
     const r = rule('HOOK_IS_THE_INTRO')
-    // Krish, 2026-10-29: option one, "The hook is the intro". It replaced both 12 October opening rules.
-    assert.equal(HOUSE_RULES.find(x => x.id === 'INTRO_STING'), undefined, 'INTRO_STING is retired, recorded in HOOK_IS_THE_INTRO')
-    assert.match(r.text, /INTRO_STING, 2026-10-12 to 2026-10-29/)
-    assert.match(r.text, /intro half of STORY_INTRO_OUTRO \(the animated story card, 2026-10-12 to 2026-10-29\)/)
-    assert.match(r.text, /no story card and no logo intro/)
-    assert.match(r.text, /wordmark and the series tag are on screen from the very first frame/)
-    // His "test and learn": a default under test, recorded per cut, refusing nothing.
-    assert.match(r.text, /current choice to test, not a fixed rule, and it refuses nothing/)
+    // Krish, 2026-10-29: option one, "The hook is the intro", which replaced both 12 October opening rules; then
+    // 2026-11-05: "I think it should go at the start of the longer wide videos 100%," (the sting, back on the wide cut only).
+    assert.equal(HOUSE_RULES.find(x => x.id === 'INTRO_STING'), undefined, 'INTRO_STING stays folded into HOOK_IS_THE_INTRO')
+    assert.match(r.text, /The 9:16 short cut opens straight on its hook/)
+    assert.match(r.text, /wordmark and the series tag small in the top corners from the very first frame/)
+    assert.match(r.text, /The 16:9 long cut of a weekly series piece opens on the house intro sting \(config\/intro-sting\.json: 56 frames at 30 fps/)
+    assert.match(r.text, /with no sound of its own and the music bed under it, and his face and the hook come in on the very next frame/)
+    assert.match(r.text, /no story card, no second intro, and no sting on the tall cut or on an off-day piece/)
+    assert.match(r.text, /The sting first ran from 2026-10-12 to 2026-10-29 with no design approved \(INTRO_STING\)/)
+    assert.match(r.text, /The intro half of STORY_INTRO_OUTRO \(the animated story card\) stays retired/)
+    // His "test and learn": a choice under test, recorded per cut.
+    assert.match(r.text, /stays Krish's choice to test/)
     assert.match(r.text, /records the opening it used \("opening"\)/)
     assert.match(r.text, /intro_override/)
     const said = 'I\'d pick number one here but I think that we need to test and learn. We need to figure out what the right tone is over time based on real engagement. Let\'s go with number one for now.'
     const sting = JSON.parse(readFileSync('config/intro-sting.json', 'utf8'))
-    assert.equal(sting.status, 'retired')
-    assert.deepEqual([sting.retired.on, sting.retired.by, sting.retired.rule, sting.retired.words], ['2026-10-29', 'Krish', 'HOOK_IS_THE_INTRO', said])
-    assert.equal(sting.source_sha256, null, 'no sting design was ever approved')
-    assert.equal(sting.last_decision.decision, 'rejected')
+    assert.equal(sting.schema_version, 2)
+    assert.ok(['candidate', 'approved'].includes(sting.status), sting.status)
+    assert.deepEqual(sting.shapes, ['16x9'])
+    assert.equal(sting.frames, 56)
+    assert.deepEqual([sting.placement.on, sting.placement.by, sting.placement.words], ['2026-11-05', 'Krish', 'I think it should go at the start of the longer wide videos 100%,'])
+    assert.equal(sting.colours.picked, 'Keep it as I saw it')
+    // The 29 October retirement and the 12 October rejection are kept, in his words.
+    const retired = sting.history.find((h: any) => h.decision === 'retired')
+    assert.deepEqual([retired.on, retired.by, retired.rule, retired.words], ['2026-10-29', 'Krish', 'HOOK_IS_THE_INTRO', said])
+    assert.ok(sting.history.some((h: any) => h.decision === 'rejected' && h.on === '2026-10-12'))
+    if (sting.status === 'approved') {
+      assert.match(sting.source_sha256, /^[0-9a-f]{64}$/, 'an approval is bound to the clips')
+      assert.equal(sting.last_decision.decision, 'approved')
+    } else {
+      assert.equal(sting.source_sha256, null, 'no approval yet, so no hash')
+    }
     const story = JSON.parse(readFileSync('config/story-intro-outro.json', 'utf8'))
     assert.deepEqual([story.retired.story_intro.on, story.retired.story_intro.rule, story.retired.story_intro.words], ['2026-10-29', 'HOOK_IS_THE_INTRO', said])
     assert.deepEqual(Object.keys(story.required).sort(), ['audio_treatment', 'outro_card'])
@@ -618,6 +635,8 @@ describe('every script opens straight on the hook: the series line is retired (S
     assert.match(r.text, /closes as SCRIPT_CLOSE says/)
     assert.match(r.text, /The full deep dive is at makeyourmindup\.ai\./)
     assert.match(r.text, /No question for the comments and no sign-off/)
+    // The script opens on the hook; the only logo animation in front of it is the house sting on the 16:9 long cut.
+    assert.match(r.text, /no logo animation goes in front of the hook, except the house sting on the 16:9 long cut \(HOOK_IS_THE_INTRO\)/)
     assert.match(r.said, /launch straight in to "I put GrokBot and Muse head to head"/)
   })
   test('the script writer opens on the hook with no series line, whatever the series', async () => {

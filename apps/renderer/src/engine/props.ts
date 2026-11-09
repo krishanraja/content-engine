@@ -67,9 +67,19 @@ export const EngineSegmentSchema = z.object({
 }).strict()
 
 export const EngineAudioSchema = z.object({
-  /** The premixed dialogue + bed stem from ve's audio step (make.py loudness), placed at frame 0. */
+  /** The premixed dialogue + bed stem from ve's audio step (make.py loudness), placed at the render's frame 0: the
+   *  sting's first frame when the cut has one (props.sting), else the cut's own frame 0. */
   stem: z.object({ src: z.string().min(1), trimBeforeFrames: Frame }).strict(),
   sfx: z.array(z.object({ src: z.string().min(1), atFrame: Frame, gainDb: z.number().max(0) }).strict()).default([]),
+}).strict()
+
+/** A sting clip, byte for byte the one Krish saw (config/intro-sting.json clips.16x9.<series>): ve-render refuses a
+ *  file whose sha256 is not this one. */
+export const EngineStingSchema = z.object({
+  src: z.string().min(1),
+  series: z.enum(['follow_the_money', 'mind_the_gap', 'under_the_hood']),
+  frames: z.number().int().positive(),
+  sha256: z.string().regex(/^[0-9a-f]{64}$/),
 }).strict()
 
 export const EngineRenderPropsSchema = z.object({
@@ -95,10 +105,26 @@ export const EngineRenderPropsSchema = z.object({
   ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true) }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
-}).strict()
+  /** The makeyourmindup intro sting in front of the cut (Krish, 2026-11-05: "I think it should go at the start of the
+   *  longer wide videos 100%,"): one of the fixed clips in config/intro-sting.json, played as it is for its `frames`,
+   *  silent, with the stem under it. Every other frame in these props stays on the cut's own clock, which starts
+   *  `frames` into the render, so his face lands on the very next frame after the sting's last. Absent, the cut
+   *  opens on its hook exactly as before. */
+  sting: EngineStingSchema.optional(),
+}).strict().superRefine((props, context) => {
+  if (!props.sting) return
+  // Only the 16:9 long cut of a weekly series piece wears it: the 9:16 short opens straight on its hook
+  // (HOOK_IS_THE_INTRO), a proof excerpt (no ending band) is never a whole cut, and an off day wears no sting.
+  if (props.aspect !== '16:9') context.addIssue({ code: 'custom', path: ['sting'], message: 'the sting opens only the 16:9 long cut; the 9:16 short opens on its hook' })
+  if (!props.ending) context.addIssue({ code: 'custom', path: ['sting'], message: 'the sting opens only a whole cut, never an excerpt' })
+  if (props.sting.series !== props.series.label.replaceAll('.', '_')) {
+    context.addIssue({ code: 'custom', path: ['sting', 'series'], message: `the ${props.sting.series} sting cannot open the ${props.series.label} cut` })
+  }
+})
 
 export type EngineRenderProps = z.infer<typeof EngineRenderPropsSchema>
 export type EngineObject = z.infer<typeof EngineObjectSchema>
 export type EngineEvent = z.infer<typeof EngineEventSchema>
 export type EngineBeat = z.infer<typeof EngineBeatSchema>
 export type EngineTokens = z.infer<typeof EngineTokensSchema>
+export type EngineSting = z.infer<typeof EngineStingSchema>

@@ -199,6 +199,9 @@ export interface MakingGates {
   style?: MakingGate & { module: string | null; reason?: string; verdicts: MakingStyleVerdict[] }
   proof?: MakingGate & { verdict: 'approve' | 'reject'; words?: string; cut?: MakingCut }
   final?: MakingGate & { cuts?: Partial<Record<MakingCut, string>> }
+  /** Layout v4's Sign creative (picks/<day>-creative): his pick in each section of the pre-production sheet, or his
+   *  words sending it back (approved false). */
+  creative?: MakingGate & { approved: boolean; picks: Partial<Record<'opener' | 'captions' | 'motion' | 'thumbnail', string>>; words?: string }
 }
 
 export type MakingPatch = Partial<Omit<Making, 'updated_at' | 'by' | 'started_at' | 'descript'>>

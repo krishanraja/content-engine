@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import math
 import unittest
 from pathlib import Path
 
@@ -37,6 +38,65 @@ def reading(iris_dx=0.0, iris_dy=0.0, blink=0.0, yaw=0.0, open_=0.3, face=True):
     l_pts, l_iris = eye(560, 600, iris_dx=iris_dx, iris_dy=iris_dy, open_=open_)
     return {'face': True, 'eyes': {'R': r_pts, 'L': l_pts}, 'iris': {'R': r_iris, 'L': l_iris}, 'blink': blink,
             'yaw': yaw, 'pitch': 0.0, 'edge': False}
+
+
+@unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+class Colour(unittest.TestCase):
+    def test_a_frame_the_pass_does_not_touch_keeps_its_colour(self):
+        # 6 Nov 2026: with ffmpeg's default converters the round trip YUV to BGR to YUV darkened and warmed every frame.
+        import numpy as np
+        with tempfile.TemporaryDirectory(prefix='ve-colour-') as tmp:
+            src, out = Path(tmp) / 'src.mp4', Path(tmp) / 'out.mp4'
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'lavfi', '-i', 'testsrc2=size=640x360:rate=30:duration=1',
+                            '-vf', 'format=yuv420p', '-c:v', 'libx264', '-crf', '8', '-pix_fmt', 'yuv420p', '-colorspace', 'bt709',
+                            '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv', str(src)], check=True)
+            info = eyeline.probe(src)
+            proc = eyeline.writer(src, out, info)
+            for frame in eyeline.frames(src, info['width'], info['height']):
+                proc.stdin.write(np.ascontiguousarray(frame).tobytes())
+            proc.stdin.close()
+            self.assertEqual(proc.wait(), 0)
+
+            def planes(path):
+                raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(path), '-pix_fmt', 'yuv420p', '-f', 'rawvideo', '-'],
+                                     capture_output=True, check=True).stdout
+                d = np.frombuffer(raw, np.uint8).astype(float)
+                n, fs = len(d) // (640 * 360 * 3 // 2), 640 * 360 * 3 // 2
+                d = d[:n * fs].reshape(n, fs)
+                return d[:, :640 * 360].mean(), d[:, 640 * 360:640 * 360 * 5 // 4].mean(), d[:, 640 * 360 * 5 // 4:].mean()
+            for a, b in zip(planes(src), planes(out)):
+                self.assertLess(abs(a - b), 0.5)
+
+
+@unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+class Lids(unittest.TestCase):
+    def test_the_upper_lid_comes_down_and_what_is_under_it_stays(self):
+        import numpy as np
+        region = np.full((120, 160, 3), (120, 150, 200), np.uint8)             # skin
+        region[60:62, 40:121] = 30                                             # the lash band at the upper lid line
+        region[64:100, 40:121] = (250, 250, 250)                               # the eye, white
+        up = [[120 - 10 * k, 60] for k in range(1, 8)]                         # upper lid points, right to left
+        low = [[40 + 10 * k, 90] for k in range(1, 8)]                         # lower lid points
+        contour = [[40, 75], *low, [120, 75], *up]
+        out = eyeline.lower_lid(region, contour, (0, 0), 4.0)
+        self.assertLess(float(out[64:66, 80].mean()), 120)                      # the lash band is now four rows lower
+        self.assertGreater(float(out[60:62, 80].mean()), 150)                  # and skin where it was
+        self.assertTrue(np.array_equal(out[80:100, 80], region[80:100, 80]))   # the eye below is untouched
+        self.assertTrue(np.array_equal(out[:, :30], region[:, :30]))           # nothing outside the corners moved
+        self.assertIs(eyeline.lower_lid(region, contour, (0, 0), 0.1), region)  # a sub-pixel drop does nothing
+
+
+class Gated(unittest.TestCase):
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+    def test_a_small_move_is_left_exactly_as_it_was(self):
+        import numpy as np
+        frame = np.full((120, 160, 3), 90, np.uint8)
+        other = np.full((120, 160, 3), 200, np.uint8)
+        contour = [[60 + 20 * math.cos(a), 60 + 8 * math.sin(a)] for a in np.linspace(0, 2 * math.pi, 16, endpoint=False)]
+        near = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (60.5, 60, 6))    # half a pixel, 0.08 radii
+        self.assertIs(near, frame)
+        far = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (70, 60, 6))       # 10 px, 1.7 radii
+        self.assertIsNot(far, frame)
 
 
 class Decide(unittest.TestCase):
@@ -187,16 +247,21 @@ class Media(unittest.TestCase):
                     r['iris'][side] = [r['iris'][side][0] * 0.4, r['iris'][side][1] * 0.4]
         return readings
 
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
     def test_a_maxine_copy_must_match_the_take_frame_for_frame_and_must_change_it(self):
         short = self.dir / 'short.mp4'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(self.take), '-t', '1', '-c', 'copy', str(short)], check=True)
         with self.assertRaisesRegex(ValueError, 'frames cannot be matched'):
             eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(short), readings=[{'face': False}] * 60)
         readings = self.scaled([reading(iris_dx=9) if 10 <= i < 30 else reading() for i in range(60)])
-        receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(self.take), readings=readings)
+        # The copy's readings are given as read() finds them on this synthetic clip (no face on any frame), so the test
+        # needs no face model: CI installs none.
+        receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(self.take), readings=readings,
+                              copy_readings=[{'face': False}] * 60)
         self.assertEqual(receipt['decision'], 'rejected')       # its "redirected" copy is the take itself
         self.assertTrue(any('changed nothing' in p for p in receipt['problems']), receipt['problems'])
 
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
     def test_a_maxine_copy_is_taken_only_where_the_plan_says(self):
         other = self.dir / 'other.mp4'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(self.take), '-vf', 'negate', '-c:v', 'libx264',
@@ -204,7 +269,8 @@ class Media(unittest.TestCase):
         # Maxine locks gaze (and handles blinks) itself, so its eyes are taken on every frontal frame, never a turn.
         readings = self.scaled([reading(yaw=40) if 40 <= i < 46 else reading(iris_dx=9) if 10 <= i < 30 else reading()
                                 for i in range(60)])
-        receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(other), readings=readings)
+        receipt = eyeline.run(self.take, self.dir / 'out', eyeline.Maxine(other), readings=readings,
+                              copy_readings=[{'face': False}] * 60)   # as read() finds it: no face on any frame
         self.assertEqual(receipt['problems'], [])
         self.assertEqual(receipt['decision'], 'corrected')
         self.assertLessEqual(receipt['corrected_frames'], 60 - 6)

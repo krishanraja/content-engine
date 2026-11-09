@@ -28,11 +28,11 @@ this run's own Actions link (the session line points at the workflow page).
 
 ## 29 October: the Sunday loop, no name, the bar, zero routines (Claude Code)
 
-On session branch `claude/fervent-brown-d8e55b`, going to main by pull request (the ve part by hand after green CI). `NOW.md` has the detail; the plan for what follows is `docs/plans/2026-11-07-wave-2.md`, then `docs/plans/2026-11-14-wave-3.md`.
+On session branch `claude/fervent-brown-d8e55b`, going to main by pull request (the ve part by hand after green CI; since 3 November every pull request merges itself, ve included, `AGENTS.md`). `NOW.md` has the detail; the plan for what follows is `docs/plans/2026-11-07-wave-2.md`, then `docs/plans/2026-11-14-wave-3.md`.
 
 - **Rulings (Krish):** "Remember, no content refers to Krish, ever." (28 Oct); "I would much rather the engine know what kind of thing doesn't fly with me, rather than implement incredibly specific rules everywhere"; "Yes, that's the floor"; "The hook is the intro"; "FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture"; "happy with $15 a week".
 - **Built:** the board's five presses, script approval with the server Teleprompter send, titles and Reject with reason; the Sunday room in plan-week and the narrative lock in `making.py`; `no_name` in the copy lint, the kill list (`personal_name`), ve's lint and quick-edit's captions, with articles in "we"; `docs/production/THE_BAR.md` (eight nevers, aims, choices under test, `making.py <piece> choices`); every cut opens on its hook with the music bed under all of it; house rules `NO_NAME` and `HOOK_IS_THE_INTRO`, approved in person (`60b87ff`); `.github/workflows/sunday-ideas.yml` and `make-piece.yml` on `CLAUDE_CODE_OAUTH_TOKEN`, guarded by `tests/no-claude-routines.test.ts`; the Saturday preflight with no Claude turn.
-- **Never run yet:** both workflows fail at their first step until the secret exists.
+- **Never run yet:** both workflows fail at their first step until the secret exists. (Since then: the secret was set by 30 October, and make-piece runs wrote Friday's and Wednesday's scripts on 3 and 4 November.)
 - **Only Krish can:** add `CLAUDE_CODE_OAUTH_TOKEN` (`claude setup-token`) and run Actions > Sunday ideas once before Saturday 31 October; delete the two claude.ai routines; give Control Center's `GITHUB_TOKEN` Contents: write and Actions: read here; decide auto-merge for make runs and a reader for the $15 cap.
 - **Dates:** the dry run, Saturday 31 October 18:00 New York; the first Sunday loop, 1 November.
 
@@ -135,8 +135,9 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   creation. Leave out the dull enterprise ones. His words, 2026-10-06, turning
   down the Salesforce piece: "We need to permanently shift focus away from
   things as boring as this towards things that are more fasincating and
-  aspirational, like AI content creation for example". The engine's judges and
-  channel briefs do not know this yet (see Latest handoff).
+  aspirational, like AI content creation for example". The Sunday ideas run
+  checks every option against it (`plan-week`, step 3); the engine's judges and
+  channel briefs do not know it yet.
 - **Always the big picture, never the small headline.** His words,
   2026-10-09, on the Friday workroom: "We need to always focus on the bigger
   picture, never the one small picture temporary news headline - make sure you
@@ -151,16 +152,19 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   companies it names. Every cover and thumbnail is the Receipt: a real proof
   from a checked source, the wordmark and the logos, never his face (`THE_RECEIPT`, 2026-11-02;
   `scripts/pages` cover facts, `"proof"`).
-- Every video script opens with its series line, then the hook, and says
-  "I'm Krish" only there (house rule `SERIES_OPENER`, Krish, 2026-10-12). And
-  an ordinary 12-year-old must follow every script heard once. His words:
+- Every video script opens straight on its hook, with no series line and no
+  "I'm Krish" anywhere (house rule `SERIES_OPENER`, as changed on 2026-10-21).
+  And an ordinary 12-year-old must follow every script heard once. His words:
   "Every single script should be understandable by a 12-year-old. I can't
   even understand what I'm reading off the teleprompter. I thought we had
   hard gates for this?" (house rule `R7`, now a hard gate: `story_check.py`,
   then two fresh readers; `make-piece`, "The Scripts step").
-- Every video, in every format, gets an animated intro made for its own
-  story, its audio treatment and an animated outro card. His words,
-  2026-10-12: "when the videos come back bear in mind that I want a proper
+- Every video, in every format, gets its audio treatment and an animated
+  outro card made for its own story; the animated story intro was retired on
+  2026-10-29 (house rule `HOOK_IS_THE_INTRO`). Since 2026-11-05 the 16:9 long
+  cut of a series piece opens on the house sting (`config/intro-sting.json`),
+  then the hook; the 9:16 cut opens on its hook.
+  His earlier words, 2026-10-12: "when the videos come back bear in mind that I want a proper
   animated branded intro to this specific story visually, the audio
   treatment, and then a proper animated outro card. Across all formats, and
   this should be part of the system moving forward." Design comes first and
@@ -197,7 +201,7 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   - a post's pictures: `GET /api/library/file?path=3 Posts/<post>/2 Covers and
     images/<name>` (or the board's own copies);
   - the tools: `pip install faster-whisper==1.2.0 ctranslate2==4.8.1 av==18.1.0
-    playwright`, `npm ci`, `MYMU_BROWSER=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`;
+    playwright`, `npm ci`, `MYMU_BROWSER=/opt/pw-browsers/chromium` (a link to the container's Chromium);
   - the story intro and outro: `scripts/quick-edit/story_io.py props --plan
     <plan>` then `render`.
   Then kit.py, make.py, the thumbnails, send.py and making.py as
@@ -215,6 +219,10 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   screenshot there).
 
 ## This week's publish board
+
+The current boards are listed under "One page a week" below. The 12 to 18 October notes in this section,
+including the "Resume this week's publish board" steps, are a dated record kept as written: how a board is built
+and updated now is `docs/PUBLISH_BOARDS.md`.
 
 **18 Oct, evening (same session): Friday's deep cut is being rendered in the cloud.** Krish raised the library cap to
 2 GiB, so the 14-minute take (`recordings/ee91ab41...0fd9f.mp4`, 1.1 GB) reached the engine. The 17 and 18 Oct
@@ -264,9 +272,11 @@ run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
-- Week of 26 to 30 October: https://content.krishraja.com/board/2026-10-26. Ideas tab first; nothing picked yet (25 Oct).
+- Week of 2 to 6 November: https://content.krishraja.com/board/2026-11-02.
+- Week of 9 to 13 November (recorded from Sunday 1 November): https://content.krishraja.com/board/2026-11-09.
+- Earlier weeks: https://content.krishraja.com/board/2026-10-26 and the two below.
 
-Last week's publish board (19 to 23 October):
+Earlier publish board (19 to 23 October):
 
 - https://content.krishraja.com/board/2026-10-19.
   The newer source's Ideas and draft day tabs are preserved. Its three picks,
@@ -274,7 +284,7 @@ Last week's publish board (19 to 23 October):
   workflow. Monday is in review. Its editorial/video handover owns the next
   production steps; this migration does not approve those steps.
 
-Last week's publish board (12 to 16 October):
+Earlier publish board (12 to 16 October):
 
 - https://content.krishraja.com/board/2026-10-12 remains open alongside this week.
   Monday and Wednesday show 7 of 7; Friday remains unfinished. Eighteen stored
@@ -704,7 +714,7 @@ the top item that is not waiting on Krish. Before you stop, update this file.
 
 Claude Code works from the same rules and skills as Codex. `CLAUDE.md` imports `AGENTS.md`
 and adds only what is particular to Claude Code: which doc to read for which task, the
-models (Opus, with `repo-scout`, `executor` and `reviewer` subagents in `.claude/agents/`), the
+models (Opus, with `repo-scout`, `executor`, `reviewer` and `ve-critic` subagents in `.claude/agents/`), the
 hooks that refuse secrets and North Star edits and put every publish, send or taste-rule edit to
 Krish in person (`.claude/hooks/`), and the checks. To find code, search `docs/REPO_MAP.md`
 (`npm run repo-map` keeps it current) rather than opening files. `docs/ENGINE_SESSION.md`,
@@ -767,7 +777,7 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-29: **The Sunday loop is built and waits on one secret.** Everything in the 29 October section above is on `claude/fervent-brown-d8e55b`; `npm run verify` passes except `tests/quick-edit-mix.test.ts` (this container's ffmpeg 6.1.1, the repository pins 8.1.2). **Next:** Krish adds `CLAUDE_CODE_OAUTH_TOKEN` and runs Sunday ideas by hand once before Saturday 31 October; then the dry run, the first Sunday loop on 1 November, and Wave 2.
+- 2026-10-29 (the secret has been set since; see the top two entries): **The Sunday loop is built and waits on one secret.** Everything in the 29 October section above is on `claude/fervent-brown-d8e55b`; `npm run verify` passes except `tests/quick-edit-mix.test.ts` (this container's ffmpeg 6.1.1, the repository pins 8.1.2). **Next:** Krish adds `CLAUDE_CODE_OAUTH_TOKEN` and runs Sunday ideas by hand once before Saturday 31 October; then the dry run, the first Sunday loop on 1 November, and Wave 2.
 
 - Older handoffs (12 to 23 October): `docs/history/2026-10-18-WORKBENCH-handoffs.md`. This section holds only the newest one: when you write a new handoff, move the one it replaces to the top of that file (G11, `scripts/check_workbench.py`).
 

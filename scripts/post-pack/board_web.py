@@ -149,6 +149,38 @@ def ready_video_problems(page, mappings, check=None):
     return problems
 
 
+ARTICLE_BLOCK = re.compile(r'(<div class="article" id="[A-Za-z0-9_-]*art">)(.*?)(</div>\s*<pre id="[A-Za-z0-9_-]*art-text")', re.S)
+ARTICLE_IMG = re.compile(r'<img\b[^>]*?\ssrc="data:(image/(?:png|jpeg|webp|gif));base64,([A-Za-z0-9+/=]+)"[^>]*>')
+
+
+def lift_article_pictures(week, page, assets, payloads, current):
+    """Stores every picture in a made day's article as a board file and names it on its <img> as data-asset, so Copy
+    article can hand Substack a link it can fetch. The picture itself stays in the page as its own bytes, so the board
+    shows, downloads and copies it exactly as before. Krish, 2026-11-06, of Friday's article: "Every Substack article
+    embeds the images inline"; its six figures did not come through the paste, and the browser blocked the downloads.
+    The same bytes are stored once, and a file the current build already holds is reused, never sent again."""
+    import base64
+    by_sha = {f.get('sha256'): f for f in list(current.values()) + list(assets.values()) if isinstance(f, dict)}
+
+    def tag(m):
+        img, mime, b64 = m.group(0), m.group(1), m.group(2)
+        if 'data-asset=' in img:
+            return img
+        data = base64.b64decode(b64)
+        digest = sha(data)
+        asset_id = f'article-{digest[:16]}'
+        file = by_sha.get(digest)
+        if not file:
+            ext = {'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif'}[mime]
+            file = {'sha256': digest, 'bytes': len(data), 'type': mime, 'name': f'{asset_id}.{ext}', 'key': f'boards/{week}/{digest}'}
+            payloads.append((file, data))
+            by_sha[digest] = file
+        assets.setdefault(asset_id, file)
+        return img[:4] + f' data-asset="/api/board/{week}/assets/{asset_id}?sha={digest}"' + img[4:]
+
+    return ARTICLE_BLOCK.sub(lambda b: b.group(1) + ARTICLE_IMG.sub(tag, b.group(2)) + b.group(3), page)
+
+
 def publish(args):
     import week_board
     path = Path(args.page)
@@ -180,6 +212,14 @@ def publish(args):
             if not file:
                 # The same stored bytes under another name in this build: reuse that file, never re-upload it.
                 file = next((f for f in current.values() if f.get('sha256') == item['existing_sha256']), None)
+            if not file and item.get('from_build'):
+                # A publish that carried no stored files (the 9 Nov board's 4 Nov 07:13 build held none) leaves the
+                # bytes in the week's earlier build. Read that build's record of the file; the server serves it by
+                # its sha from any build of the week and checks the stored object again on publish.
+                if not re.fullmatch(r'[a-f0-9]{64}', item['from_build']):
+                    raise ValueError(f'Asset {asset_id}: from_build is a 64-hex build id')
+                older = call('GET', f"/api/board/{week}?build={item['from_build']}")
+                file = (((older.get('manifest') or {}).get('assets') or {}).get(asset_id))
             if not file or file.get('sha256') != item['existing_sha256']:
                 raise ValueError(f'Existing asset {asset_id} changed or is missing; refresh the mapping')
         else:
@@ -190,6 +230,7 @@ def publish(args):
         if source not in page:
             raise ValueError(f'Asset {asset_id} has no matching link in the board')
         page = page.replace(source, f'/api/board/{week}/assets/{asset_id}?sha={file["sha256"]}')
+    page = lift_article_pictures(week, page, assets, payloads, (state.get('manifest') or {}).get('assets') or {})
     if re.search(r'https://(?:drive\.google\.com/(?:uc\?|download\?)|drive\.usercontent\.google\.com/download\?)', page):
         raise ValueError('Map every Drive download to an immutable library asset with --assets')
     page = week_board.engine_stamp.stamp(page, 'week_board')

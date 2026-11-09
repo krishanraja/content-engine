@@ -277,9 +277,9 @@ READ_FROM = '2026-11-09'  # Krish, 2026-11-02, of the 9 Nov off days; older week
 
 def goodnews_problems(ideas, sources, today=None):
     """A weekly series option (the Saturday good news) names when its stories are found (stories_due, the Sunday before
-    its week). Once that day has come it holds its four stories, each dated in the seven days up to it, none a story a
-    recent off day already ran. Krish, 2026-11-02: "You will need to find the actual good news on Sunday as per the usual
-    system so that the news items are fresh"."""
+    its week until 7 November, the Thursday of its week since: Krish, 2026-11-07, "Saturday's good news run should be done
+    later in the week so the good news is fresh"). Once that day has come it holds its five stories, each dated in the
+    seven days up to it, none a story a recent off day already ran."""
     import week_board
     today = today or date.today()
     used = {u for o in (sources or {}).get('recent_offdays') or [] if isinstance(o, dict) for u in o.get('urls') or []}
@@ -293,7 +293,7 @@ def goodnews_problems(ideas, sources, today=None):
             try:
                 due = date.fromisoformat(str(o.get('stories_due')))
             except ValueError:
-                out.append(f'{label}: a weekly series names stories_due, the Sunday its stories are found (YYYY-MM-DD)')
+                out.append(f'{label}: a weekly series names stories_due, the day its stories are found (YYYY-MM-DD)')
                 continue
             stories = o.get('stories') or []
             if today < due and not stories:
@@ -612,12 +612,12 @@ def cover_self_test():
     gsrc = {'recent_offdays': [{'urls': ['https://e.com/used']}]}
     if goodnews_problems(wk([]), gsrc, date(2026, 11, 3)):
         problems.append('a weekly option before its Sunday may wait for its stories')
-    if not any('stories is a list of 4' in x for x in goodnews_problems(wk([]), gsrc, date(2026, 11, 8))):
+    if not any('stories is a list of 5' in x for x in goodnews_problems(wk([]), gsrc, date(2026, 11, 8))):
         problems.append('a weekly option on its Sunday with no stories is refused')
-    if goodnews_problems(wk([stry(n) for n in range(1, 5)]), gsrc, date(2026, 11, 8)):
-        problems.append('four fresh stories with sources and pictures pass')
-    old_one = goodnews_problems(wk([stry(1, date='2026-10-20')] + [stry(n) for n in range(2, 5)]), gsrc, date(2026, 11, 8))
-    rerun = goodnews_problems(wk([stry(1, source={'label': 'L', 'url': 'https://e.com/used'})] + [stry(n) for n in range(2, 5)]), gsrc, date(2026, 11, 8))
+    if goodnews_problems(wk([stry(n) for n in range(1, 6)]), gsrc, date(2026, 11, 8)):
+        problems.append('five fresh stories with sources and pictures pass')
+    old_one = goodnews_problems(wk([stry(1, date='2026-10-20')] + [stry(n) for n in range(2, 6)]), gsrc, date(2026, 11, 8))
+    rerun = goodnews_problems(wk([stry(1, source={'label': 'L', 'url': 'https://e.com/used'})] + [stry(n) for n in range(2, 6)]), gsrc, date(2026, 11, 8))
     if not any('dated 2026-10-20' in x for x in old_one) or not any('ran on a recent off day' in x for x in rerun):
         problems.append('a stale story and a story a recent off day ran are refused')
     # (b) half and half on each publishing day.

@@ -69,7 +69,9 @@ export const HOUSE = {
     coverSticker: { left: 72, top: 880, rotateDegrees: -4, size: 28, paddingY: 12, paddingX: 26 },
     question: { left: 72, right: 88, bottom: 96, border: 4, shadow: 14, paddingTop: 32, paddingX: 40, paddingBottom: 36, gap: 14, kickerSize: 24, size: 40, lineHeight: 1.2 },
     inner: { top: 300, gap: 34, size: 160, bodySize: 44, bodyLineHeight: 1.2, bodyWeight: 600, dekSize: 40 },
-    foot: { bottom: 72, rule: 2, paddingTop: 40, logoWidth: 470 },
+    // The last card's foot: "Follow for more" directly above the wordmark, both centred, the mark a bit larger
+    // (Ruling, Krish, 2026-11-05, docs/CAROUSEL-STANDARD.md "The last card says \"Follow for more\"").
+    foot: { bottom: 72, rule: 2, paddingTop: 40, logoWidth: 470, signSize: 46, signGap: 22, lastLogoWidth: 540 },
   },
   // Thumbnail, 1080 x 1920; Instagram's grid shows the middle 1080 x 1440.
   thumbnail: {
