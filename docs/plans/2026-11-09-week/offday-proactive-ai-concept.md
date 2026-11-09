@@ -3,7 +3,9 @@
 Krish, 2026-11-08: "Can you load this as a test concept for one of this week's off-day videos? Figure out where CODEX
 needs to be involved and Higgsfield or Runway too". "This" is the study in `docs/REFERENCE_VOICEOVER_JESSERURKA.md`.
 
-Status: a proposal, not started. Nothing is built, dispatched, generated or spent. The piece's own brief
+Decided (Krish, 2026-11-09): "Pure voiceover, Thursday 12th". The Codex card is written (`docs/ve/cards/w3-thu12-chat-world/ve-t12-1-chat-world.md`, device `chat_world`, style `living-ui`) and not dispatched: the spend waits on his yes.
+
+Status before that: a proposal, not started. Nothing is built, dispatched, generated or spent. The piece's own brief
 (`docs/plans/2026-11-05-thursday-no-spending/RESTART_BRIEF.md`) and failure report still bind; this file only fills
 in the visual idea the brief asked for, in the reference's grammar.
 
@@ -90,7 +92,7 @@ Every generation is quoted before it runs, logged with `ve ledger <piece> add`, 
 
 ## Order of work, gates as the brief sets them
 
-1. Krish: the day, and pure voiceover or his face for the hook and close (proposed: pure voiceover, it is the test).
+1. Krish: the day and the route. Answered 9 Nov: Thursday 12 Nov, pure voiceover.
 2. Claude: card for the thread-world device; Krish approves the spend; Codex builds it in its own session; merged.
 3. Piece session: `ve init`, spec with this idea, `brand.references` naming the jesserurka card (once it is on his
    board) for look and motion; measure the take's gaps.
