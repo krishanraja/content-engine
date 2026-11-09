@@ -871,6 +871,21 @@
       "krish_verdict": "untested"
     },
     {
+      "id": "full-visual",
+      "layer": "motion",
+      "name": "Full visual: the real thing, opened up",
+      "how": "For how-it-works and who-pays-whom pieces. No presenter on screen: his voice explains and the screen is the explanation. Under a word-by-word caption, the real thing each sentence is about is redrawn from real photos and screens, and changes on the word that changes it.",
+      "from": "keyframes@0.2.13 full-visual pack (Krish's own, 2026-11-06), rewritten for the house base; docs/ve/sources/keyframes.md, _corpus/keyframes-full-visual.md",
+      "source": "keyframes@0.2.13",
+      "fits": "sometimes",
+      "point_types": ["mechanism", "product", "system", "number", "transformation"],
+      "formats": ["short_video"],
+      "ve_route": ["kinetic_stat", "evidence_card", "hand_phone_stage", "headline"],
+      "rules": ["a new real thing for every sentence group, redrawn from real photos and screens at their real geometry and copy", "a change of state happens to the object already on screen: it recolours, opens, breaks or grows, and is not replaced", "a picture hands over only in a pause he left (ve qc beats.handover_in_gaps), as one move, and the ground is never bare", "a number is never static: it counts, rolls or fills and lands on its word", "the invisible part (a charge, a cost, a flow) gets one shape and one colour, the mint, for the whole cut; everything else keeps its real colours", "fill the stage: foreground, subject, depth behind, one secondary motion; never one small object on an empty ground", "cut inside when the mechanism is inside: a side-on section, a shell turning see-through, layers lifting out"],
+      "avoid": ["a metaphor or stock icon where a real thing exists", "flat boxes and generic shapes that read as coded", "blur, frost or a vague panel standing in for the mechanism", "a still stretch over 1.2 s", "a synthetic voice in place of his"],
+      "krish_verdict": "untested"
+    },
+    {
       "id": "named-metaphor-spine",
       "layer": "breakdown",
       "name": "Named metaphor spine",
