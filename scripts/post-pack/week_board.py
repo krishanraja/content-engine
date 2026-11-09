@@ -98,6 +98,7 @@ import hashlib
 import html
 import io
 import json
+import os
 import re
 import sys
 import tempfile
@@ -2308,6 +2309,27 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
                         if o.get(k) is not None}}
                     for o in opts]
     return out, warnings
+
+
+def offdays_from_page(text, where='the earlier page'):
+    """The off days a published board page carries, each option as that build kept it, for a build that carries them
+    without the Sunday Ideas check (--offdays-from; Krish, 2026-11-09: "Yes, go ahead with the restore"). A published
+    page names its stored slides by the board's own path (/api/board/<week>/assets/<id>?sha=); they are read as the
+    board's https address, which the --assets mapping turns back into this build's stored files."""
+    held = previous_conf(text, 'offdays')
+    if not held:
+        raise BoardError(f'{where} carries no off days')
+    base = os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
+    full = lambda v: base + v if isinstance(v, str) and v.startswith('/api/board/') else v  # noqa: E731
+    def absolute(o):
+        o = previous_option(o)
+        if isinstance(o.get('slides'), list):
+            o['slides'] = [dict(x, url=full(x.get('url'))) if isinstance(x, dict) else x for x in o['slides']]
+        for k in ('video', 'download', 'mock'):
+            if isinstance(o.get(k), dict):
+                o[k] = {kk: full(vv) for kk, vv in o[k].items()}
+        return o
+    return read_offdays({k: [absolute(o) for o in v] for k, v in held.items()}, where)
 
 
 def previous_option(o):
@@ -5598,6 +5620,10 @@ def build(args, get=None):
                 owed = coverage_problems(raw, sources) + style_problems(raw)
             if owed:
                 raise BoardError('--ideas is not ready to show (board_feed.py cover):\n  ' + '\n  '.join(owed))
+    if getattr(args, 'offdays_from', None):
+        if getattr(args, 'ideas', None):
+            raise BoardError('--offdays-from: give the off days from --ideas or from an earlier page, not both')
+        offdays = offdays_from_page(Path(args.offdays_from).read_text(encoding='utf-8-sig'), f'--offdays-from {args.offdays_from}')
     if getattr(args, 'offdays_plan', None):
         # Growth's Sunday Off-days section (growth-offdays/1): the days ideas.json did not give.
         if not fixed_layout(monday):
@@ -6462,6 +6488,12 @@ def _growth_offday_checks(check, week, ideas):
     tue = dict(rich, id='translator', video={'url': 'https://board.asset/t.mp4', 'poster': 'https://board.asset/t.jpg'}, drive=drive)
     fin = read_offdays({'tue': [tue, plain], 'sat': [sat, plain]})
     fin_page = board(week, ideas=ideas, offdays=fin)[0]
+    stored = fin_page.replace('https://board.asset/s1.jpg', f'/api/board/{week.isoformat()}/assets/off-s1?sha=' + 'a' * 64)
+    again = offdays_from_page(stored)
+    check('--offdays-from: an earlier page\'s off days come back, a stored slide as the board\'s https address',
+          [o['id'] for o in again['sat']] == [o['id'] for o in fin['sat']]
+          and again['sat'][0]['slides'][0]['url'] == f'https://content.krishraja.com/api/board/{week.isoformat()}/assets/off-s1?sha=' + 'a' * 64
+          and again['tue'][0].get('video') == fin['tue'][0].get('video'))
     fin_tabs = re.findall(r'role="tab" id="tab-([a-z]+)"', fin_page)
     check('off-day asset: every slide shows as its own picture, in order, with Open in Drive before the zip',
           all(f'<img src="https://board.asset/s{i}.jpg" alt="Card {i}"' in fin_page for i in range(1, 8))
@@ -7444,6 +7476,10 @@ def parser():
                     'listed in that day\'s tab')
     ap.add_argument('--drop-review', action='append', metavar='DAY=ID', help='with --draft: a review box the board being '
                     'replaced holds that this build leaves out on purpose (Krish is done with it)')
+    ap.add_argument('--offdays-from', metavar='PAGE', help='a published board page of the same week whose off days (each '
+                    'option as that build carried it, slides and decisions included) this build carries, without the Sunday '
+                    'Ideas check: a picked week whose off days a later build dropped (Krish, 2026-11-09: "Yes, go ahead with '
+                    'the restore"). Not with --ideas.')
     ap.add_argument('--ideas', metavar='PATH', help='the week\'s checked ideas (docs/plans/<week>/ideas.json): a first tab, Ideas, '
                     'with at least three per day and a pick box for each')
     ap.add_argument('--queue', metavar='PATH', help='the saved answer of GET /api/idea-queue: the Ideas tab shows "From your queue" '

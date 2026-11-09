@@ -1,5 +1,5 @@
 {
-  "_about": "The recipe .github/workflows/board-rebuild.yml rebuilds the 9 Nov board from (layout v4; Krish, 2026-11-07: \"I think we should redesign the 9th of November board as well.\"). The run gives --previous (the live board it downloads) and --out; this file gives the rest, as week_board.py's own flags. Monday is kept exactly as the live board holds it (made; its six downloads mapped in board-assets.json), Wednesday and Friday keep their words in review as they stand, and each takes v4's steps. Everything else the live board carries (briefs, titles, off days, manifests, production gates) is kept by --previous. assets is what board_web.py publish-web takes. Every series day is picked, so the Ideas list is not given: the gather of 7 Nov found inspiration cards saved after 2 Nov that belong to next Sunday's ideas, not to this week.",
+  "_about": "The recipe .github/workflows/board-rebuild.yml rebuilds the 9 Nov board from (layout v4; Krish, 2026-11-07: \"I think we should redesign the 9th of November board as well.\"). The run gives --previous (the live board it downloads) and --out; this file gives the rest, as week_board.py's own flags. Monday is kept exactly as the live board holds it (made; its six downloads mapped in board-assets.json), Wednesday and Friday keep their words in review as they stand, and each takes v4's steps. Everything else the live board carries (briefs, titles, off days, manifests, production gates) is kept by --previous. assets is what board_web.py publish-web takes. Every series day is picked, so the Ideas list is not given: the gather of 7 Nov found inspiration cards saved after 2 Nov that belong to next Sunday's ideas, not to this week. Restore, 9 Nov (Krish: \"Yes, go ahead with the restore and the Thursday run\"): the off days come from build 0e79df54 (offdays_build; --offdays-from), the last that held them, without the Sunday Ideas check; their slides map to this build's stored files, the Character.AI cards as stored then, the Git and homework cards as he approved them again on 5 Nov (read from the library by path and sha256; docs/plans/2026-11-09-week/offday-carousels.md).",
   "week": "2026-11-09",
   "gather": false,
   "assets": "docs/plans/2026-11-09-week/board-assets.json",
@@ -21,7 +21,10 @@
     "wed=ai-music-long.mp4,ai-music-short.mp4",
     "--takes",
     "fri=measuring-ai-long.mp4,measuring-ai-short.mp4",
+    "--offdays-from",
+    ".cache/board/offdays.html",
     "--assets",
     "docs/plans/2026-11-09-week/board-assets.json"
-  ]
+  ],
+  "offdays_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"
 }
