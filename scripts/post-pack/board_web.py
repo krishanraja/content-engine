@@ -212,6 +212,14 @@ def publish(args):
             if not file:
                 # The same stored bytes under another name in this build: reuse that file, never re-upload it.
                 file = next((f for f in current.values() if f.get('sha256') == item['existing_sha256']), None)
+            if not file and item.get('from_build'):
+                # A publish that carried no stored files (the 9 Nov board's 4 Nov 07:13 build held none) leaves the
+                # bytes in the week's earlier build. Read that build's record of the file; the server serves it by
+                # its sha from any build of the week and checks the stored object again on publish.
+                if not re.fullmatch(r'[a-f0-9]{64}', item['from_build']):
+                    raise ValueError(f'Asset {asset_id}: from_build is a 64-hex build id')
+                older = call('GET', f"/api/board/{week}?build={item['from_build']}")
+                file = (((older.get('manifest') or {}).get('assets') or {}).get(asset_id))
             if not file or file.get('sha256') != item['existing_sha256']:
                 raise ValueError(f'Existing asset {asset_id} changed or is missing; refresh the mapping')
         else:

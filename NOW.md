@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-07
-head: 8ddf532
+as_of: 2026-11-09
+head: a07ea4e
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,24 +30,32 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-06)
+## Where it is right now (as of 2026-11-09)
 
-<!-- north-star-state {"week_of":"2026-11-02","week_target":4,"current":2,"current_as_of":"2026-11-05","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":3,"urgency_reason":"at 50% of this week's target"} --> **North Star number: U3, well behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 4 this week, on the way to 30 by 30 November 2026. Two experiments a week, growth output doubled.
+<!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-09","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Claude sessions in this repo load the Codex plugin (codex@openai-codex), and .claude/settings.json no longer denies git pushes to main or force pushes. (2026-11-09)
+- The 9 Nov board is live on layout v4 (build 2c5c124b, revision 26, 9 stored files, read back), published by Board rebuild run 42475151020 on Krish's yes; on a phone its long blocks fold to their titles, nothing is cut off, and its fonts are the brand fonts. (2026-11-08)
+- The 9 Nov board's rebuild recipe no longer gives this week's Ideas list: every series day is picked, and the 7 Nov gather found inspiration cards saved after 2 Nov that belong to next Sunday's ideas; the Ideas tab says the week is picked. (2026-11-07)
+- post-mortem of the 2 Nov week written; board v4 and pre-production sheet proposed with a mockup; 9 Nov outstanding listed. (2026-11-07)
+- Publish board v4 is built and checked (PR #465): the Desk, seven stages on every day Mon to Sat, the Creative step with Sign creative, Scores for every post, Last week and bugs on their post; the live 9 Nov board is not rebuilt yet (the engine API is 401 from a cloud session). (2026-11-07)
+- Saturday's good news is found on Thursday by its own run, .github/workflows/saturday-goodnews.yml (Claude Code in GitHub Actions on his subscription, 10:41 and 19:23 UTC Thursday, idempotent, startable by hand), the one exception to zero Claude schedules beside the Sunday ideas run; the Sunday run no longer finds the stories. (2026-11-07)
+- Monday 9 Nov (Disney / Character.AI) covers and thumbnails drawn in the neon skin, three options per surface shown to Krish in a mock Instagram grid and YouTube results row; he picked B thumbnails + A article cover (`docs/plans/2026-10-26-monday/cover-pick-9nov.md`). Not filed in Drive or on the board: the Drive connector needs inline bytes and the engine API answers 401 in the cloud. (2026-11-07)
+- The 6 Nov reel's three visual bugs and Wed 4 Nov's unreadable phone are checks (F41 to F44): ve lint and ve qc refuse a mark that names no words, sits over the hand-held phone or misses its words; a caption page that repeats the headline or ends mid-phrase; evidence words under 40 px on 9:16; channel_safe --shape cover_tall adds Instagram's 3:4 grid crop and account row (listed by produce-day). They bind pieces published from 14 Nov, advisory before, outside the engine hash (Wed 11 and Fri 13 unchanged). (2026-11-07)
 - Eye contact (ve eyeline with NVIDIA Maxine) is merged to main through #455 and documented in docs/ve/STATUS.md and RUNBOOK.md. It is a working, repeatable tool, not yet cleared for published video. Run: dispatch maxine-trial.yml (take, confirm "spend approved by Krish", max_usd, max_minutes; about $0.04 and 5.5 min for a 96 s take), then ve eyeline --media <take> --backend maxine --maxine-copy <copy>. Pass 15 on ai-music-short: 21% of off-lens gaze corrected, on-lens frames unchanged (1.36 to 1.37 deg), lids unchanged, iris colour change median 0.44 / p90 1.05, sharpness 0.99, jitter 0.99, blinks 10 to 8 (half blinks across the 0.5 line, not checked by eye). Built this session: gated move of his own iris to Maxine's lens point (none of Maxine's pixels), a clean shared-catchlight iris from his own lens frames, the edited area including the iris disc, the upper lid lowered to cover the iris as it does at the lens (removes the stare), and looks up, looks down and half-closed eyes left as filmed. Publishing to his own channels cleared with NVIDIA by Krish (2026-11-06). (2026-11-06)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
-- 2026-11-07 The Sunday ideas run reads a session's brief (`docs/plans/<Monday>-week/brief.md`) when one exists, and a weekly good-news option says the day its stories are found from `stories_due` (Krish: "Saturday's good news run should be done later in the week so the good news is fresh").
-Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-07-NOW-moved-5.md`; `2026-11-06-NOW-moved-3.md` keeps the full list of earlier ones) and `LOG.md`.
+- 2026-11-09 Codex plugin enabled for cloud sessions; push-to-main and force-push denies removed at Krish's request.
+- 2026-11-07 Ruling (Krish, 2026-11-07): "Saturday's good news run should be done later in the week so the good news is fresh"; guards now allow exactly this exception.
+Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-07-NOW-moved-5.md`, then `2026-11-07-NOW-moved-4.md`, then `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
+- Next (2026-11-09): Add `npm install -g @openai/codex` and OPENAI_API_KEY to the claude.ai/code cloud environment, then run /codex:setup in a cloud session.
 - Done, Copy article (2026-11-06): the 2 Nov week's board was published again with Friday's six article figures as board files, and on the live engine each one's link (`?link=1`) returns the exact approved bytes. Not yet seen: a real paste into Substack.
-- Next, covers (2026-11-05): merge, then draw the 9 Nov series pieces' covers and thumbnails together (`build.py --cover --thumbs`) once their cover facts exist. The 9 Nov week (board 0e79df54): his Wednesday script press, Growth posts the off days, Saturday's pick on Sunday 8 Nov.
-- Next (2026-11-06): Krish runs it on a live video and reports timestamps that look wrong. Open: the look-up and head-down moments are uncorrected by design (about 7% of frames, some of the biggest misses), the 51.67 s glance is partly eased by the look-up rule, and the sixth and last blind review (pass 15) said do not publish: eight of nine moments unchanged (safe), but the 5.57 s sideways glance came out with a flat grey right eye, a smeared catchlight and a wider opening. Earlier reviews of that moment were milder, so it is marginal. Next code step if wanted: a partial move (AIM_GAIN near 0.7), or leaving glances to Krish's own judgement per timestamp.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
@@ -55,10 +63,8 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Krish approved all 20 production standard groups (2026-11-04): 159 floor standards now approved, read first by `floor.py`; the 56 session-process standards stay with the failure loop, whose first live weekly run is Sunday 15 Nov.
 - Waiting on Krish (2026-11-04): rate the motion styles. A trial of each on his own footage turns `untested` into liked or not for us; only liked styles lead the picker.
 - Thursday lessons done (2026-11-04): all six answers in (`docs/learning/2026-11-04-thursday-killed.md`); off days now bed on the off-day rotation in the house mint.
-- Post-mortem of the 2 Nov week (2026-11-07): `docs/learning/2026-11-07-week-of-2-nov-postmortem.md` (his scores 6/8, 7/5, 8/8; the hand-held phone, off-target underlines, mid-phrase captions and uncropped covers are the causes; Friday 6 Nov is live but has no `published_at`, so the number under-counts). Outstanding for 9 Nov: `docs/plans/2026-11-09-week/OUTSTANDING.md` (three recordings in the Inbox: Wed 11, Fri 13, the proactive-AI off-day short).
-- 16 Nov week (2026-11-07): the Ideas tab is live at content.krishraja.com/board/2026-11-16 (Sunday ideas run 42392494486, dispatched on Krish's ask, fed by `docs/plans/2026-11-16-week/brief.md`): four options for each of Mon, Wed and Fri, four each for Tue and Thu, and Saturday's two good-news formats with stories due Thu 19 Nov. Next: his five presses on Sunday 8 Nov, then the Sunday room; the good-news stories on Thu 19 Nov in a session he or the parent starts.
-- Waiting on Krish (2026-11-07): yes or no to board v4 and the pre-production sheet (`docs/proposals/2026-11-07-board-v4/PROPOSAL.md`, `mockup.html`); marking Fri 6 Nov published; his presses on the 16 Nov Ideas tab on Sunday 8 Nov.
-- North Star check (2026-11-07): holds.
+- 16 Nov week (2026-11-07): Ideas tab live (run 42392494486). Next: the Sunday room on his presses; good-news stories Thu 19 Nov.
+- North Star check (2026-11-09): holds.
 
 ## Read next
 

@@ -277,9 +277,9 @@ READ_FROM = '2026-11-09'  # Krish, 2026-11-02, of the 9 Nov off days; older week
 
 def goodnews_problems(ideas, sources, today=None):
     """A weekly series option (the Saturday good news) names when its stories are found (stories_due, the Sunday before
-    its week). Once that day has come it holds its five stories, each dated in the seven days up to it, none a story a
-    recent off day already ran. Krish, 2026-11-02: "You will need to find the actual good news on Sunday as per the usual
-    system so that the news items are fresh"."""
+    its week until 7 November, the Thursday of its week since: Krish, 2026-11-07, "Saturday's good news run should be done
+    later in the week so the good news is fresh"). Once that day has come it holds its five stories, each dated in the
+    seven days up to it, none a story a recent off day already ran."""
     import week_board
     today = today or date.today()
     used = {u for o in (sources or {}).get('recent_offdays') or [] if isinstance(o, dict) for u in o.get('urls') or []}
@@ -293,7 +293,7 @@ def goodnews_problems(ideas, sources, today=None):
             try:
                 due = date.fromisoformat(str(o.get('stories_due')))
             except ValueError:
-                out.append(f'{label}: a weekly series names stories_due, the Sunday its stories are found (YYYY-MM-DD)')
+                out.append(f'{label}: a weekly series names stories_due, the day its stories are found (YYYY-MM-DD)')
                 continue
             stories = o.get('stories') or []
             if today < due and not stories:
