@@ -2,7 +2,15 @@ import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { describe, test } from 'vitest'
+import { describe, test, vi } from 'vitest'
+
+// The client module reaches the database module at load; CI holds no credentials, so a dead
+// local address stands in and nothing here can reach a real database.
+vi.hoisted(() => {
+  process.env.SUPABASE_URL ??= 'http://127.0.0.1:9'
+  process.env.SUPABASE_SERVICE_ROLE_KEY ??= 'not-a-key'
+})
+
 import { askVoiceCheck } from '../../apps/control-plane/api/_controlCenter.js'
 
 // Ruling (Krish, 2026-11-09): every word written for Krish, Jonny or the
