@@ -8,7 +8,7 @@ cleared for published video only when a fresh blind reviewer (never the producer
 
 Writes into DIR:
   sheet.<stem>.<n>.jpg   moments, at most MAX_SHEET_H tall so a reader sees them at full size, each as two panels X and Y in a random order (one the take as filmed, one corrected),
-                         both eyes at 3x and the face at 1x, labelled only with its time and a moment number
+                         both eyes at 2x and the face at 1x, labelled only with its time and a moment number
   key.<stem>.json        which panel is which, per moment: for whoever scores the review, never for the reviewer
   numbers.<stem>.json    per corrected frame and eye, read back from CORRECTED: iris colour change (CIE76, the iris
                          where it is now against the iris where it was), catchlight (the brightest spot in the iris
@@ -35,7 +35,7 @@ if __package__ in (None, ''):
 from . import eyeline  # noqa: E402
 
 MAX_SHEET_H = 1990   # a reviewer's image reader scales anything taller: a sheet must be seen at full size (9 Nov)
-ZOOM = 3
+ZOOM = 2
 MIN_GAP_S = 0.8
 
 
@@ -260,7 +260,7 @@ def review(take, corrected, out, cache=None, seed: int = 11) -> dict:
     num, den = (int(x) for x in info['rate'].split('/'))
     fps = num / den
     before = cached_read(take, info, Path(cache) if cache else None)
-    after = eyeline.read(corrected, info)
+    after = cached_read(corrected, info, Path(cache) if cache else None)
     moved, rows = measure(take, corrected, info, before, after)
     moments = flagged(before, fps, moved)
     paths, key = sheets(take, corrected, info, before, moments, out, seed)
