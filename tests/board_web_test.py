@@ -131,6 +131,20 @@ class BoardWebTests(unittest.TestCase):
             mapping.write_text(json.dumps([dict(id='off-card',source_url=source,library={'path':'3 Posts/x/4 Social/card-1.png','sha256':'f'*64})]))
             with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: None), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
                 with self.assertRaisesRegex(ValueError,'not the bytes'): board_web.publish(args)
+            # Krish binned the file the record names and filed a new one: drive_id moves its Open in Drive link and its
+            # drive id to the new file, so the board never sends him to a binned file.
+            sent.clear();uploads.clear()
+            old_id,new_id='O'*25,'N'*25
+            src2=f'https://drive.usercontent.google.com/download?id={old_id}&amp;export=download'
+            path.write_text(week_board.engine_stamp.stamp(page.replace(source,src2).replace('</main>',
+                f'<li data-drive-id="{old_id}"><a href="https://drive.google.com/file/d/{old_id}/view">Open in Drive</a></li></main>'),'week_board'),encoding='utf-8')
+            mapping.write_text(json.dumps([dict(id='mon-thumb',source_url=src2,drive_id=new_id,library={'path':'3 Posts/x/3 Video/thumb.jpg','sha256':psha})]))
+            with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                board_web.publish(args)
+            html_out=b''.join(x for a in uploads for x in a if isinstance(x,bytes)).decode('utf-8','replace')
+            self.assertIn(f'https://drive.google.com/file/d/{new_id}/view',html_out)
+            self.assertIn(f'data-drive-id="{new_id}"',html_out)
+            self.assertNotIn(old_id,html_out)
 
     def test_a_ready_video_needs_a_passing_receipt_for_its_bytes(self):
         import html as html_mod
