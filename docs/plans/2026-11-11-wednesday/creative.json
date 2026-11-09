@@ -134,6 +134,20 @@
      ],
      "bed": "Seize It, Tape Machines, epidemic f34727ee-04df-4d4e-8a1d-6f202af0d3e8 (Krish: \"Happy to go ahead with your pick\")",
      "mock": "wed11-opener-mock-v4.mp4"
+    },
+    "revision_5": {
+     "his_words": "The fade out of the cat video is glitchy in terms of the video and audio. We need to be really clever about this. (Krish, 2026-11-09)",
+     "causes": [
+      "video: as the cat panel slid away, the full-frame take underneath showed a second copy of him at another size, then the picture jumped to a third framing",
+      "audio: the cat clip's song (about 108 bpm) and Seize It (126 bpm) overlapped in a 2 s crossfade, so the two beats clashed"
+     ],
+     "fix": [
+      "one continuous matched move in and out: the cat panel and his full-frame picture move together on the same smooth ease (not stepped on twos), so there is only ever one of him",
+      "a DJ-style cut, never a blend: the cat song closes on its own strong beat (12.65 s into the clip) with a quick low-pass sweep over that last beat; Seize It starts on one of its own kick hits (29.9 s into the track) at that same instant; the picture move ends on the same beat",
+      "checked: at the cut the level falls to about -48 dBFS with no sample jump above 0.003, inside a pause in his speech"
+     ],
+     "rule_for_the_engine": "two songs at different tempos never overlap; hand over on a beat of the outgoing song; frame moves that swap layouts are one matched move",
+     "mock": "wed11-opener-mock-v5.mp4"
     }
    }
   },
