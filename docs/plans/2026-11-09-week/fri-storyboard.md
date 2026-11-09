@@ -8,7 +8,7 @@ how staff game an AI-use leaderboard. One idea runs through it: what gets counte
 | World | Look | Source |
 |---|---|---|
 | 1902 Hanoi | Photoreal period film: warm faded autochrome colour, grain, soft vignette, slight gate weave | 9 generated clips + 9 stills (`fri-1902-generated.json`) |
-| 2026 office | Isometric miniature diorama (house motion style `isometric-world`): tiny staff, desks, one glass leaderboard tower with crowned rank bars; coral = what is counted, mint = real work | 7 generated clips (`fri-office-generated` in `fri-1902-generated.json`); Codex device `office_floor` stays in the library |
+| 2026 office | Photographic scale-model miniature, the same compound as the 1902 rat farm, tilt-shift (house motion style `isometric-world`): tiny staff, desks, one glass leaderboard tower with crowned rank bars; coral = what is counted, mint = real work | 7 generated clips (`fri-office-generated` in `fri-1902-generated.json`); Codex device `office_floor` stays in the library |
 | Krish | Full frame for the hook, the turn to "your company" and the close; everywhere else a small rounded window (about a fifth of frame height), bottom right on the wide cut, bottom left on the tall cut (clear of Instagram's right rail and above captions); off for one or two seconds on the tailless rat and the Token Legend slam (Krish, 9 Nov: face in the bottom corner) | `measuring-ai-long`, `measuring-ai-short` |
 
 Evidence (the Shopify and Duolingo lines, the Fortune and CIO pages, the study's own two charts) appears as a screen on the
