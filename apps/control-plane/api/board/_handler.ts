@@ -12,6 +12,8 @@ import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
 import { readView } from './_view.js'
 import { dispatchJob, isJob } from './_run.js'
+import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
+import { researchPrompt } from './_prompts.js'
 import { DESK_PAGE } from './_deskPage.js'
 import { StandardsError, decideStandard, readStandards, renderStandards } from './_standards.js'
 import { operatorBearerAllowed } from '../_auth.js'
@@ -210,6 +212,51 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
         res.setHeader('Cache-Control', 'no-store')
         return res.status(200).json({ ok: true, ...(await readView(db, week)) })
+      }
+      if (op === 'research' || op === 'material' || op === 'look') {
+        // The day path's presses on a piece of this week (_research.ts): research it now (sonar-pro), file research he
+        // dropped, and his pick of the look. His press only; the piece must be scheduled inside this week.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'his_press')
+        const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
+        const pieceId = String(body.piece_id || '').toLowerCase()
+        if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(pieceId)) throw new BoardError(400, 'invalid_piece')
+        const row = await db.from('content_ideas').select('id,idea,scheduled_for,lane_slot').eq('id', pieceId).single()
+        const end = new Date(`${week}T00:00:00Z`); end.setUTCDate(end.getUTCDate() + 6)
+        if (row.error || !row.data || !row.data.scheduled_for || row.data.scheduled_for < week || row.data.scheduled_for > end.toISOString().slice(0, 10))
+          throw new BoardError(404, 'piece_not_in_week')
+        try {
+          if (op === 'material') {
+            const title = String(body.title || 'Research').slice(0, 200)
+            const filed = await fileMaterial(db, pieceId, { kind: 'file', title, content: String(body.content || ''), by: 'Krish' })
+            return res.status(201).json({ ok: true, material: filed })
+          }
+          if (op === 'research') {
+            if (await recentResearch(db, pieceId)) throw new MaterialError(409, 'research_just_ran')
+            const view = await readView(db, week)
+            const day = view.days.find(d => d.piece_id === pieceId)
+            const prompt = day?.path?.prompts.research || researchPrompt({ week, day: '', dayName: '', date: String(row.data.scheduled_for), series: String(row.data.lane_slot || ''),
+              pieceId, idea: String(row.data.idea || ''), materials: [], lock: null })
+            const found = await researchForPiece(pieceId, prompt)
+            if (!found.text) throw new MaterialError(502, 'research_failed')
+            const filed = await fileMaterial(db, pieceId, { kind: 'research', title: `Engine research (sonar-pro), ${new Date().toISOString().slice(0, 10)}`, content: found.text, by: 'Krish' })
+            return res.status(201).json({ ok: true, material: filed, sources: found.sources.length })
+          }
+          // The looks the engine can make, read once from the style bank: a production format, and any format as the experiment.
+          const bank = await fetch(`https://raw.githubusercontent.com/krishanraja/content-engine/main/config/style-references.json`, { signal: AbortSignal.timeout(15_000) })
+            .then(r => (r.ok ? r.json() : null)).catch(() => null) as { formats?: { production?: Array<{ id: string }>; script?: Array<{ id: string }> } } | null
+          const production = new Set((bank?.formats?.production || []).map(f => f.id))
+          if (!production.size) throw new MaterialError(503, 'styles_unavailable')
+          const any = new Set([...production, ...(bank?.formats?.script || []).map(f => f.id)])
+          const experiment = body.experiment ? String(body.experiment) : null
+          if (experiment && !any.has(experiment)) throw new MaterialError(400, 'unknown_format')
+          const look = await saveLook(db, pieceId, { production: String(body.production || ''), experiment,
+            inspiration: Array.isArray(body.inspiration) ? body.inspiration.map(String) : [] }, new Set([...production, ...(experiment ? [experiment] : [])]))
+          return res.status(200).json({ ok: true, look })
+        } catch (e) {
+          if (e instanceof MaterialError) throw new BoardError(e.status, e.message)
+          throw e
+        }
       }
       if (op === 'run') {
         // A press that starts the machine that does the work (_run.ts): his press only, an allow-listed job only.

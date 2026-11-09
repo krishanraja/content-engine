@@ -23,6 +23,18 @@ record the full board writes, bound to the same hashes (`_offdaySides.ts`, held 
 `tests/control-plane/board-desk.test.ts`). The page's one source is `apps/control-plane/board-next/desk.html`, built
 into `_deskPage.ts` by `node scripts/build-desk-page.mjs`. `/board` stays the old board until Krish switches it.
 
+Each series day is a guided path (Krish, 2026-11-09): Research, Story, Look, Storyboard and script, Record, Cut. Only
+the current step is open, each in the same five regions (title and chip, why, the thing, the action bar with the
+Claude prompt pinned right, "Add your thoughts"), and every press waits five seconds for Undo. Research it now runs
+sonar-pro (`_research.ts`, metered) and files the answer on the piece (`meta.materials`); a Markdown file dropped on
+the day is filed the same way (`POST /api/board/<Monday>/material`). The look is his pick from
+`config/style-references.json` formats, the Sunday room's recommendation first, with his own words on his production
+inspiration beside it (`meta.look`, `POST /api/board/<Monday>/look`). The storyboard and script are made together
+before he records (`make-piece`). Long-form thoughts are board comments anchored `desk:<day>:<step>`. The client is
+React on Tailwind, adapted from 21st.dev components (stepper, comparing radio cards, approval card, status dot, file
+dropzone, drawer, toast, command palette) with the libraries they use (vaul, sonner, cmdk); `node
+scripts/check-desk-devices.mjs VIEW.json` tests it on eight devices in both themes.
+
 ## The fixed layout: feed it, never shape it
 
 Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it

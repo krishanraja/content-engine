@@ -170,6 +170,18 @@
       "destination": "/api/board?week=:week&op=view"
     },
     {
+      "source": "/api/board/:week/look",
+      "destination": "/api/board?week=:week&op=look"
+    },
+    {
+      "source": "/api/board/:week/material",
+      "destination": "/api/board?week=:week&op=material"
+    },
+    {
+      "source": "/api/board/:week/research",
+      "destination": "/api/board?week=:week&op=research"
+    },
+    {
       "source": "/api/board/:week/run",
       "destination": "/api/board?week=:week&op=run"
     },
