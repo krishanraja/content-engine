@@ -97,7 +97,7 @@ class Gated(unittest.TestCase):
         self.assertIs(near, frame)
         drift = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (62.4, 60, 6))   # 0.4 radii: the prompter drift
         self.assertIsNot(drift, frame)
-        hard = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (70, 60, 6))      # 1.7 radii: a hard glance, as filmed
+        hard = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (78, 60, 6))      # 3 radii: past 2, as filmed
         self.assertIs(hard, frame)
 
 
@@ -113,9 +113,10 @@ class Moves(unittest.TestCase):
     def test_the_share_of_a_move_by_its_length(self):
         self.assertEqual(eyeline.band(0.05), 0.0)                       # under 0.1 radii: left as filmed
         self.assertEqual(eyeline.band(0.3), 1.0)                        # the prompter drift: all of it
-        self.assertEqual(eyeline.band(1.0), 0.0)                        # a hard glance: left as filmed
-        self.assertGreater(eyeline.band(0.7), 0.0)
-        self.assertLess(eyeline.band(0.7), 1.0)
+        self.assertEqual(eyeline.band(1.0), 1.0)                        # a big glance: brought back as far as the white allows
+        self.assertEqual(eyeline.band(2.5), 0.0)                        # past 2 radii: left as filmed
+        self.assertGreater(eyeline.band(1.8), 0.0)
+        self.assertLess(eyeline.band(1.8), 1.0)
 
     def test_how_much_of_an_iris_is_inside_the_lid_line(self):
         lid = contour_ellipse(100, 100, 30, 12)
@@ -142,7 +143,7 @@ class Moves(unittest.TestCase):
         self.assertTrue(all(m == 0.0 for m in eyeline.shares(rows, aimed)))
         rows, aimed = self._rows()
         for i in range(8, 23):
-            aimed[i]['L'] = (215.0, 100.0, 8.0)                         # one eye in a hard glance: neither moves
+            aimed[i]['L'] = (225.0, 100.0, 8.0)                         # one eye far past 2 radii: neither moves
         self.assertEqual(eyeline.shares(rows, aimed)[15], 0.0)
 
     @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
@@ -160,6 +161,12 @@ class Moves(unittest.TestCase):
         self.assertGreater(int(out[60:140, 100:200].max()), 250)         # its catchlight came with it
         self.assertTrue(np.array_equal(out[:40], frame[:40]))           # nothing above the eye changed
         self.assertTrue(np.array_equal(out[:, :60], frame[:, :60]))
+        big = eyeline.blend_aperture(frame, frame, lid, 1.0, (150, 100, 10), (165, 100, 10), share=1.0)
+        self.assertTrue(np.array_equal(big[:, :111], frame[:, :111]))  # a long move never drags the eye's corners
+        self.assertTrue(np.array_equal(big[:, 190:], frame[:, 190:]))
+        moved = dark(big)[:, 1].mean() - dark(frame)[:, 1].mean()
+        self.assertGreater(moved, 4.0)                                  # brought part of the way: no side over half
+        self.assertLess(moved, 15.0)
         none = eyeline.blend_aperture(frame, frame, lid, 1.0, (150, 100, 10), None, share=1.0)
         self.assertIs(none, frame)                                      # no aim: as filmed, never the copy's eye
         other = np.zeros_like(frame)
