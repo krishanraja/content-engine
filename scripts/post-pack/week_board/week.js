@@ -749,6 +749,7 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     const day = b.dataset.day, v = saved[day], i = document.querySelector(`[data-pick-note-for="${b.dataset.for}"] input`);
     if (mode !== "live" || !pdb || busy[day] || !v || v.pick !== b.dataset.for || !i) { render(mode); return }
     const text = i.value.trim(), body = Object.assign({}, v, { note: text || null, at: new Date().toISOString() });
+    if (text) body.notes = Object.assign({}, v.notes || {}, { [v.pick]: text });
     busy[day] = v.pick; say(day, "Saving your note…"); render(mode);
     let stored = false;
     try { await pdb.doc("picks/" + day).set(body); saved[day] = body; stored = true; if (i.value.trim() === text) i.dataset.unsaved = "false" } catch {}
@@ -773,10 +774,27 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     const r = e.target.closest && e.target.closest("input[data-pick]"); if (!r) return;
     const day = r.dataset.pick;
     if (mode !== "live" || !pdb || busy[day]) { render(mode); return }
+    // Nothing he types is dropped (Krish, 2026-11-09: "Somehow, you've also managed to lose a bunch of my comments for
+    // that article"): every day's words stay in notes, by the idea he wrote them under, typed or saved, and the new
+    // pick takes the words already under it.
+    const prev = saved[day] || {}, notes = Object.assign({}, prev.notes || {});
+    if (prev.pick && typeof prev.note === "string" && prev.note) notes[prev.pick] = prev.note;
+    for (const x of radios) if (x.dataset.pick === day) {
+      const i = document.querySelector(`[data-pick-note-for="${x.value}"] input`), t = i && i.value.trim();
+      if (t) notes[x.value] = t;
+    }
     const body = { pick: r.value, idea_id: r.dataset.ideaId || null, series: r.dataset.series, story: storyOf(r), day, at: new Date().toISOString() };
+    if (notes[r.value]) body.note = notes[r.value];
+    if (Object.keys(notes).length) body.notes = notes;
     busy[day] = r.value; say(day, "Saving your pick…"); render(mode);
     let stored = false;
-    try { await pdb.doc("picks/" + day).set(body); saved[day] = body; stored = true } catch {}
+    try {
+      await pdb.doc("picks/" + day).set(body); saved[day] = body; stored = true;
+      for (const x of radios) if (x.dataset.pick === day) {
+        const i = document.querySelector(`[data-pick-note-for="${x.value}"] input`);
+        if (i && (!i.value.trim() || (body.notes || {})[x.value] === i.value.trim())) i.dataset.unsaved = "false";
+      }
+    } catch {}
     if (stored && comments) try {
       const anchor = await comments.anchorFor(r.closest(".id-card"));
       await comments.create({ anchor, text: `PICK ${day} · ${body.pick}${body.idea_id ? " · " + body.idea_id : ""} · ${body.at}\n\n${body.story}` });
@@ -1031,17 +1049,23 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
   document.addEventListener("click", e => {
     const b = e.target.closest && e.target.closest("[data-press]");
     if (b) {
-      const pid = b.dataset.for, use = b.dataset.press, again = (saved[pid] || {}).use === use;
-      const i = document.querySelector(`[data-press-note-for="${pid}"] input`); if (i) i.dataset.unsaved = "false";
+      const pid = b.dataset.for, use = b.dataset.press, prev = saved[pid] || {}, again = prev.use === use;
+      const i = document.querySelector(`[data-press-note-for="${pid}"] input`);
+      // His words go with every press, typed or saved (Krish, 2026-11-09: "Somehow, you've also managed to lose a
+      // bunch of my comments"): a second press keeps what he typed for the first, and a press taken back keeps them.
+      const typed = i && i.dataset.unsaved === "true" ? i.value.trim() : "";
+      const words = typed || (prev.use ? prev[field(prev.use)] || "" : prev.note || "");
       // Reject saves only with his reason: the press opens the box, and Save sends it (a second tap closes it).
       if (use === "not_for_us" && !again) {
         asking[pid] = !asking[pid]; render();
-        if (asking[pid] && i) { i.value = ""; i.focus() }
+        if (asking[pid] && i) { if (!typed) i.value = ""; i.focus() }
         return;
       }
       delete asking[pid];
-      save(pid, ideaBody(pid, again ? { use: null, note: null, reason: null, theme: null, target_week: null }
-        : { use, note: null, reason: null, theme: null, target_week: use === "next_week" ? b.dataset.targetWeek : null }), `[data-pressstate="${pid}"]`);
+      const keep = { note: words || null, reason: again && use === "not_for_us" ? prev.reason ?? null : null, theme: prev.theme ?? null };
+      save(pid, ideaBody(pid, again ? Object.assign({ use: null, target_week: null }, keep)
+        : Object.assign({ use, target_week: use === "next_week" ? b.dataset.targetWeek : null }, keep)), `[data-pressstate="${pid}"]`)
+        .then(ok => { if (ok && i && i.value.trim() === typed) i.dataset.unsaved = "false" });
       return;
     }
     const n = e.target.closest && e.target.closest('[data-act="save-press-note"]');
@@ -1245,7 +1269,8 @@ function offdayNoteParts(note){
     if (p) {
       const c = document.getElementById(p.dataset.for); if (!c) return;
       const id = c.dataset.offday, k = p.dataset.side, val = p.dataset.value, cur = side(id, c, k);
-      if (cur && cur.verdict === val) { delete asking[id + ":" + k]; save(c, body(c, k, null, null)); return }
+      // A second tap takes the press back and keeps his words (9 Nov: off-tue-infosys's reason was blanked so).
+      if (cur && cur.verdict === val) { delete asking[id + ":" + k]; save(c, body(c, k, null, cur.words || null)); return }
       if (val === "improve" || val === "reject") {
         asking[id + ":" + k] = val; render();
         // From a day's tab his words go in the card's box on the Ideas tab, where every reason is kept.
@@ -1732,4 +1757,29 @@ function offdayNoteParts(note){
     catch { say(id, "Not saved. Try again", true) }
     sync(box);
   });
+})();
+
+// Nothing he types is lost before the server has it (Krish, 2026-11-09: "Somehow, you've also managed to lose a bunch
+// of my comments for that article"). Every word box on the Ideas and off-day cards keeps its unsent text in this
+// browser, puts it back after a reload, and lets it go only once the press that sends it has saved (data-unsaved
+// turns "false"). The record on the server stays the only copy anyone else reads.
+(() => {
+  const SEL = "input[data-pick-note], input[data-press-note], input[data-say-side], textarea[data-off-free], input[data-off-note]";
+  let store = null;
+  try { store = window.localStorage; store.getItem("board-draft-probe") } catch { store = null }
+  if (!store) return;
+  const keyOf = el => "board-draft:" + location.pathname + ":" + (el.closest("[data-pick-note-for]")?.dataset.pickNoteFor
+    || el.dataset.pressNote || (el.closest("[id]")?.id || "") + ":" + (el.dataset.saySide || el.tagName.toLowerCase()));
+  const put = el => { try { el.value.trim() ? store.setItem(keyOf(el), el.value) : store.removeItem(keyOf(el)) } catch {} };
+  document.addEventListener("input", e => { const el = e.target.closest && e.target.closest(SEL); if (el) put(el) });
+  for (const el of document.querySelectorAll(SEL)) {
+    let v = null; try { v = store.getItem(keyOf(el)) } catch {}
+    if (v && v.trim() && el.value.trim() !== v.trim()) { el.value = v; el.dataset.unsaved = "true" }
+  }
+  new MutationObserver(list => {
+    for (const m of list) {
+      const el = m.target;
+      if (el.matches && el.matches(SEL) && el.dataset.unsaved === "false") try { store.removeItem(keyOf(el)) } catch {}
+    }
+  }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ["data-unsaved"] });
 })();
