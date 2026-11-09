@@ -433,6 +433,10 @@ class Media(unittest.TestCase):
                               copy_readings=[{'face': False}] * 60)   # as read() finds it: no face on any frame
         self.assertEqual(receipt['problems'], [])
         self.assertEqual(receipt['decision'], 'corrected')
+        self.assertEqual(receipt['maxine_eye_frames'], 0)
+        # Maxine's own eye is opt-in (--maxine-eye): two blind reviews on 9 Nov blocked it.
+        self.assertFalse(eyeline.Maxine(other).eye)
+        self.assertTrue(eyeline.Maxine(other, eye=True).eye)
         self.assertLessEqual(receipt['corrected_frames'], 60 - 6)
         self.assertGreater(receipt['corrected_frames'], 40)
         self.assertEqual(eyeline.same_media(self.take, Path(receipt['output']['path'])), [])

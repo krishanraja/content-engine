@@ -2,7 +2,8 @@
 
 Krish, 5 Nov 2026: eye gaze correction "for all post-processing of my makeyourmindup videos". 9 Nov: "Highest of high
 standards we're going to need some significant work on the eye gaze", "make it stronger, the eye contact needs to be
-visible", then "Do both" (Maxine's own eye on the big glances, and fix it at recording).
+visible", then "Do both" (Maxine's own eye on the big glances, and fix it at recording). The Maxine eye was built and
+failed two blind reviews, so it is opt-in; what makes eye contact visible is the recording (section 1).
 
 This is the one how-to. What it measured and what is still open is in `STATUS.md` (the eye gaze lines). The code is
 `scripts/velib/eyeline.py` (the pass), `scripts/velib/eyeline_review.py` (the blind sheets and numbers),
@@ -17,7 +18,7 @@ is copied untouched and every frame time is kept (checked before the file is kep
 | What the take shows | What the pass does |
 |---|---|
 | Reading drift, up to about 16 degrees off the lens | Pushes his own eye sideways toward the lens: one resample, the iris travels whole with its own colour and catchlight, pinned at both eye corners. |
-| A held glance past about 16 degrees (0.6 iris radii), both eyes open, head frontal | Lays in Maxine's own eye, lids included, and sets his own iris, catchlight and all, where Maxine drew the iris. Maxine draws the lids where the eye now looks, so there is no stare; Maxine's own iris read flat and grey with no catchlight, so it is not used. The hand-over takes 2 frames; both aim at the lens, so it does not travel. Only when the take has its own Maxine copy. |
+| A held glance past about 16 degrees (0.6 iris radii), both eyes open, head frontal | The push brings it part of the way (about 45 degrees of iris travel at most). **Off by default, `--maxine-eye` to try:** lays in Maxine's own eye, lids included, with his own iris and catchlight set where Maxine drew the iris. It makes the big glances visibly come back, but two fresh blind readers on 9 Nov blocked it (7 of 66 moments each, every one a Maxine eye): in the window light his right iris reads grey at a glance, and turned to the lens beside his brown left iris the eyes look two colours; a big move also softens the iris edge, and a closing lid cuts a moved iris flat. Never publish a take made with it without a blind review that passes. |
 | Under 3 degrees off | Nothing. |
 | A blink or closing eye, a squint (under 55% of the iris in view), a look well up or down (white under both irises, or the upper lid over a third of each), a head turned past 15 degrees, no face | Nothing: left exactly as filmed. A glance up and to one side that shows neither is a glance, and is corrected. |
 
@@ -48,7 +49,7 @@ removes that as cleanly as the camera can:
 ## 2. Make the Maxine copy (spend: Krish approves each run)
 
 Maxine (NVIDIA Eye Contact NIM, licensed for his own channels, Krish confirmed with NVIDIA on 6 Nov) runs on a rented
-GPU from GitHub Actions. It gives the pass two things: where the lens is, and its own eye for the big glances.
+GPU from GitHub Actions. It gives the pass where the lens is, per eye; with `--maxine-eye`, also its own eye for the big glances.
 
 Dispatch **Maxine eye contact trial** (`.github/workflows/maxine-trial.yml`), from the Actions tab or with the GitHub
 API, with:
@@ -72,7 +73,7 @@ re-encoded `clip.<take>` the NIM saw, and the pod's receipt. Fetch it with
 `take=entitlement-check` (free, no GPU) says whether the NGC key can pull the image and lists its tags.
 
 A take without its own Maxine copy can still be corrected for the reading drift: give it `--lens` with the receipt of
-another take of the same recording session (section 4). It then gets no Maxine eye on its big glances.
+another take of the same recording session (section 4). It cannot use `--maxine-eye`.
 
 ## 3. Set up the machine (once)
 
@@ -86,11 +87,14 @@ another take of the same recording session (section 4). It then gets no Maxine e
 
 ## 4. Correct the takes
 
-With the take's own Maxine copy (best: drift and big glances):
+With the take's own Maxine copy (best):
 
 ```
 python scripts/ve.py eyeline <piece> --media <take> --backend maxine --maxine-copy <take>.maxine.b40.mp4
 ```
+
+Add `--maxine-eye` only to try Maxine's own eye on the big glances (the table above): it failed two blind reviews,
+so its file is published only after a blind review of that take passes.
 
 Without one, on a take from the same session as a take that has one (drift only):
 
