@@ -2269,6 +2269,31 @@
           "how": "only words plan cleared reach his teleprompter without asking him"
         }
       ]
+    },
+    {
+      "id": "said-not-written",
+      "on": "2026-11-09",
+      "krish": "The 90-second script is fucking getting so much worse. It's getting worse and worse and worse and worse and worse.",
+      "why": "On 9 Nov the Fri 13 Nov 90-second was squeezed sentence by sentence to fit its word count until it read like clipped notes he could not narrate; the readers checked meaning, not whether a line can be said. He then cut a whole beat (the medical firm) and the script worked. Approved as a standing fix: \"yes, write the card, and add those two fixes\" (Krish, 2026-11-09).",
+      "means": "Every line is one he can say aloud naturally, as he talks; Reader C lists any sentence that sounds written, clipped or tongue-tripping. A script over length loses a whole beat, never words from every sentence.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "could not say aloud naturally to camera",
+          "how": "Reader C lists every sentence that sounds written rather than spoken"
+        },
+        {
+          "file": ".agents/skills/make-piece/SKILL.md",
+          "contains": "loses a whole beat, never words from every sentence",
+          "how": "over-length scripts drop a beat"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "by dropping a whole beat",
+          "how": "the length refusal says how to cut"
+        }
+      ]
     }
   ]
 }
