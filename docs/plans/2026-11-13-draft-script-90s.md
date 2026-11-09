@@ -1,11 +1,11 @@
 Your company might be running a rat farm. Let me explain.
 
-In 1902, Hanoi had a rat problem. So it paid people for every rat tail. But people were cutting the tails off, letting the rats go, and breeding more. The city was paying for tails, when what it wanted was dead rats.
+In 1902, Hanoi was terrified of plague, and the city was crawling with rats. So the officials came up with what sounded like a brilliant plan. They'd pay a reward for every dead rat. But counting piles of dead rats was grim, so they said, just bring us the tail. What could possibly go wrong?
 
-Big companies made the same mistake with AI. They started judging staff on how much AI they used. Meta and Amazon had leaderboards ranking people by it. So some people set AI off on pointless jobs to climb the chart. Both leaderboards got scrapped.
+Well, people started spotting rats in the streets with no tails. Very much alive. People were catching rats, snipping off the tails, and letting them go to breed more. Some even started rat farms. The city was paying for tails, when what it wanted was dead rats.
 
-My favourite bit is a medical equipment firm. It told staff to ask its AI a set number of questions a month. A third of them were junk, just to hit the number. So in some offices, it halved the target. Most of the junk went away, and those offices sold more.
+Swap the rat tails for AI. Meta and Amazon had leaderboards ranking staff by how much AI they used. The top spot at Meta was called Token Legend. So some people set AI running on pointless jobs to climb the chart. That's rat farming with a laptop.
 
-Whatever you count, people learn to make more of it. I reckon if you're counting how much AI your people use, you're counting rat tails. If I ran a team, I'd scrap that number and watch sales instead.
+Whatever you count, people learn to make more of it. If I ran a team, I'd scrap that number and watch sales instead. Those are your dead rats.
 
 The full deep dive is at makeyourmindup.ai.
