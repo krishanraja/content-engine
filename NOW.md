@@ -49,10 +49,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 - 2026-11-09 Codex plugin enabled for cloud sessions; push-to-main and force-push denies removed at Krish's request.
 - 2026-11-07 Krish, 2026-11-07: "I think we should redesign the 9th of November board as well."
-- 2026-11-07 Ruling (Krish, 2026-11-07): "Saturday's good news run should be done later in the week so the good news is fresh"; guards now allow exactly this exception.
-- 2026-11-07 Monday 9 Nov's covers and thumbnails are the first drawn in a weekly series skin (neon), and the first offered as options shown in a mock Instagram grid and YouTube results row before Krish picked (post-mortem 2.D).
-- 2026-11-07 Krish's 7 Nov bug screenshots and Wed 4 Nov's production score of 5 had no mechanical check behind them; each now refuses the real case in the reel's own props (tests/ve_onscreen_test.py).
-Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-07-NOW-moved-4.md`, then `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
+Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-09-NOW-moved-5.md`, then `2026-11-07-NOW-moved-4.md` and `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
