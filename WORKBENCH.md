@@ -274,6 +274,10 @@ day on it is at 100% (Friday's reposts go out at the weekend).
 
 - Week of 2 to 6 November: https://content.krishraja.com/board/2026-11-02.
 - Week of 9 to 13 November (recorded from Sunday 1 November): https://content.krishraja.com/board/2026-11-09.
+- Week of 16 to 21 November (recorded from Sunday 8 November): https://content.krishraja.com/board/2026-11-16. Ideas tab
+  live from 7 Nov (Sunday ideas run 42392494486, dispatched on Krish's ask). Researched with web search only: Drive and
+  Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read. Saturday's good-news stories are found
+  on Thursday 19 Nov by the Thursday GitHub Actions run (`saturday-goodnews.yml`), so the news is fresh.
 - Earlier weeks: https://content.krishraja.com/board/2026-10-26 and the two below.
 
 Earlier publish board (19 to 23 October):
