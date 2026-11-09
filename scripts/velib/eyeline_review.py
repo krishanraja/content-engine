@@ -254,16 +254,19 @@ def sheets(take: Path, corrected: Path, info: dict, before: list[dict], moments:
     return paths, key
 
 
-def lens_offsets(before: list[dict], after: list[dict], there: list[dict], fps: float) -> dict:
+def lens_offsets(before: list[dict], after: list[dict], there: list[dict] | None, fps: float, lens: dict | None = None) -> dict:
     """How far his eyes sit from the lens, before and after, in degrees: the lens point per eye is where Maxine puts
     the iris (its median over the take, along and across the eye, in eye widths: the same calibration eyeline.aims
     uses), and each frame's distance from it is read on the take and on the corrected file. Frames with a blink or no
     face are left out."""
     import numpy as np  # noqa: PLC0415
-    lens = {}
-    for s in eyeline.IRIS:
-        pos = [_eye_pos(t, s) for t in there if t.get('face')]
-        lens[s] = np.median(np.array(pos), 0) if pos else None
+    if lens is not None:
+        lens = {s: np.asarray(lens[s]) for s in eyeline.IRIS}
+    else:
+        lens = {}
+        for s in eyeline.IRIS:
+            pos = [_eye_pos(t, s) for t in there if t.get('face')]
+            lens[s] = np.median(np.array(pos), 0) if pos else None
     out = {}
     for name, rows in (('before', before), ('after', after)):
         deg = []
@@ -278,6 +281,22 @@ def lens_offsets(before: list[dict], after: list[dict], there: list[dict], fps: 
     return out
 
 
+def blinks_lost(before: list[dict], after: list[dict], fps: float) -> list[dict]:
+    """Every blink the take shows that the corrected file does not, by time, with the blink scores both sides of it."""
+    out = []
+    starts = [i for i in range(len(before)) if before[i].get('face') and before[i].get('blink', 0) >= eyeline.BLINK
+              and not (i and before[i - 1].get('face') and before[i - 1].get('blink', 0) >= eyeline.BLINK)]
+    for i in starts:
+        j = i
+        while j < len(before) and before[j].get('face') and before[j].get('blink', 0) >= eyeline.BLINK:
+            j += 1
+        if not any(after[k].get('face') and after[k].get('blink', 0) >= eyeline.BLINK for k in range(max(0, i - 2), min(len(after), j + 2))):
+            peak = max(range(i, j), key=lambda k: before[k]['blink'])
+            out.append({'time_s': round(i / fps, 2), 'frames': j - i, 'before_peak': before[peak]['blink'],
+                        'after_peak': round(max(after[k].get('blink', 0) for k in range(i, j)), 3)})
+    return out
+
+
 def _eye_pos(r: dict, side: str):
     import numpy as np  # noqa: PLC0415
     c, u, v, w = eyeline._eye_axes(r['eyes'][side])  # noqa: SLF001
@@ -285,7 +304,7 @@ def _eye_pos(r: dict, side: str):
     return np.array((d @ u / w, d @ v / w))
 
 
-def review(take, corrected, out, cache=None, seed: int = 11, copy=None) -> dict:
+def review(take, corrected, out, cache=None, seed: int = 11, copy=None, lens=None) -> dict:
     take, corrected, out = Path(take), Path(corrected), Path(out)
     out.mkdir(parents=True, exist_ok=True)
     info = eyeline.probe(take)
@@ -299,6 +318,9 @@ def review(take, corrected, out, cache=None, seed: int = 11, copy=None) -> dict:
     numbers = {'take': take.name, 'corrected': corrected.name, 'summary': summary(rows, before, after, fps), 'frames': rows}
     if copy is not None:
         numbers['summary']['lens'] = lens_offsets(before, after, cached_read(Path(copy), info, Path(cache) if cache else None), fps)
+    elif lens is not None:
+        numbers['summary']['lens'] = lens_offsets(before, after, None, fps, json.loads(Path(lens).read_text())['lens'])
+    numbers['summary']['blinks_lost'] = blinks_lost(before, after, fps)
     (out / f'key.{take.stem}.json').write_text(json.dumps(key, indent=1))
     (out / f'numbers.{take.stem}.json').write_text(json.dumps(numbers, indent=1))
     return {'sheets': [str(p) for p in paths], 'moments': len(moments), 'summary': numbers['summary']}
@@ -311,9 +333,10 @@ def main(argv=None) -> int:
     p.add_argument('--out', required=True)
     p.add_argument('--readings', help='folder to keep the take\'s landmarker readings in')
     p.add_argument('--seed', type=int, default=11)
+    p.add_argument('--lens', help='an eyeline receipt that carries the lens point (ve eyeline --lens runs): report distance from it')
     p.add_argument('--copy', help='the Maxine copy: also report each eye\'s distance from its lens point, before and after')
     a = p.parse_args(argv)
-    print(json.dumps(review(a.take, a.corrected, a.out, a.readings, a.seed, a.copy), indent=1))
+    print(json.dumps(review(a.take, a.corrected, a.out, a.readings, a.seed, a.copy, a.lens), indent=1))
     return 0
 
 
