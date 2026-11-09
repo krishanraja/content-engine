@@ -9,6 +9,23 @@ Status before that: a proposal, not started. Nothing is built, dispatched, gener
 (`docs/plans/2026-11-05-thursday-no-spending/RESTART_BRIEF.md`) and failure report still bind; this file only fills
 in the visual idea the brief asked for, in the reference's grammar.
 
+## What Codex's own attempt taught (archive read 9 Nov)
+
+Krish's archive of the closed Codex session, Drive folder `14EAexp7dixoF-5MptzPC8FBbbP6FuKmm` ("2026-11-09 Proactive AI -
+session archive - NOT FOR POSTING"), read 9 Nov:
+- Rejected: the UI proof (pale ground, typed input fields, boxed word captions, the screenshot small), "terrible and
+  tacky"; then the plane and breakfast opening, "super weak" and "nothing about it looks like it's come from my media
+  channel brand engine". His standing ask: "I want to be as wacky and creative as we possibly can to get the
+  storytelling and delight of the viewer."
+- The take is 63 s, 1080x1920, 30 fps (sha256 3a3aa626...), not the 30 to 38 s estimated below. The screenshot is
+  sha256 376dad6d...; Krish also sent it in chat on 9 Nov.
+- He says "into its own system" in the take, an overclaim against the screenshot's own words; correct it before a
+  final cut (trim it, or Krish re-records the line).
+- "Paid" is illustration: no real assistant's mark sits beside it or any illustrative bubble. Marks appear only in a
+  row when the voice names Muse and Duet.
+- The rules are quiet approval stops, never toy gates or machinery.
+- The `chat_world` card carries all of these (`docs/ve/cards/w3-thu12-chat-world/`).
+
 ## Why this piece
 
 It is the one off-day video this week (`OUTSTANDING.md`): recorded 5 Nov as `proactive-ai-offday.mp4` in the Video
