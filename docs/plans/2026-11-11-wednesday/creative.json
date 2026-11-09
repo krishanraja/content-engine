@@ -123,6 +123,17 @@
       "wed11-opener-mock-v3-jupiters-atmosphere.mp4",
       "wed11-opener-mock-v3-make-you-mine.mp4"
      ]
+    },
+    "revision_4": {
+     "his_words": "Happy to go ahead with your pick, but the cat video needs to stay there for a lot longer than it currently does, and I don't want the overall brand intro to come in. I want the episode card to come in. \"The human music or AI music card\". I also don't think that we should have Seize It come in until after the cat video fades out and this fades in over the top of it. I think we go straight from the first video track to the second video track and then move into Seize It. (Krish, 2026-11-09)",
+     "plan": [
+      "no brand sting on either cut: an episode card, HUMAN MUSIC / OR AI MUSIC? (cream paper card, Anton, lilac highlight, under.the.hood pill), drops in on twos in the pause after his question and flies out (short 17.75 to 19.6 s; long about 25.8 to 27.9 s)",
+      "the wedding song stays under him from the open, through the episode card, until the cat clip enters; then the cat clip's own song; no bed in between",
+      "the cat clip holds about 12 s, from 'People used it on their short videos' into the producer line (short 29.3 to 41.7 s)",
+      "Seize It (Tape Machines, licensed Epidemic, his pick) fades in over 2 s on top of the cat clip's song as it fades out, and is the bed from there"
+     ],
+     "bed": "Seize It, Tape Machines, epidemic f34727ee-04df-4d4e-8a1d-6f202af0d3e8 (Krish: \"Happy to go ahead with your pick\")",
+     "mock": "wed11-opener-mock-v4.mp4"
     }
    }
   },
