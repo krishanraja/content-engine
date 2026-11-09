@@ -35,4 +35,6 @@ Decided, Sunday room chat, 9 Nov 2026, after 14:15 UTC, his words: "Yes, assista
 - Thu 19 posts the assistants explainer (lookalikes) to his direction Improve above.
 - The midterms carousel (fortytoone, his Improve above) moves to Fri 20 as the Friday piece's own carousel, told from the signed Friday lock.
 
-Still open: which good-news format Saturday uses.
+Sat 21 good news: the carousel (option goodnews), his words in the Sunday room chat, 9 Nov 2026, after 14:15 UTC: "carousel". Its stories come from the Thursday 19 Nov run.
+
+Nothing is open on the off days.

@@ -17,3 +17,4 @@ His answers, verbatim, with where and when he typed them (chat times are bounded
   - Consequence: the running image is the working idea, held open until he sees it moving (ve proof); not locked as final.
 - Q (the style recipe). Best guess: script fry-explainer; production face-with-proof (5-minute cut) and voice-led-pictures (90-second cut); experiment data-story (the 41 town votes as a map, each town flipping to no). Sunday room chat, 9 Nov 2026, after 13:35 UTC: "Yes, that style works"
 - Q (Thursday 19 Nov). Best guess: the assistants explainer on Thursday, the midterms carousel to Friday as that piece's own carousel. Sunday room chat, 9 Nov 2026, after 14:15 UTC: "Yes, assistants explainer Thursday, midterms carousel Friday"
+- Q (Saturday 21 Nov format). Best guess: the carousel. Sunday room chat, 9 Nov 2026, after 14:15 UTC: "carousel"
