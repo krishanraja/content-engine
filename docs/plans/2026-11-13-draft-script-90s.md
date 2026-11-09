@@ -1,15 +1,15 @@
-Is your company running a rat farm with AI? Probably, so let me explain.
+Is your company running a rat farm? If it counts how much AI your staff use, it probably is.
 
-In 1902, Hanoi paid people for every rat tail, as proof of a dead rat. So people caught rats, cut off the tails and let them go. Some even opened rat farms. More rats, more tails, more money.
+In 1902, Hanoi paid people for every rat tail, as proof of a dead rat. People cut off the tails, let the rats go, and some farmed them. More rats, more tails, more money.
 
-Now swap the rats for AI. Bosses started ranking staff by how much AI they use. AI use is counted in tokens, so at Meta the top spot was called Token Legend. That's a real title. And Amazon had a chart just like it.
+Swap the rat tails for AI use. Meta and Amazon ranked staff by AI use on leaderboards. AI use is counted in tokens, chunks of text, so Meta's top spot was Token Legend.
 
-So what did people do? They gave the AI pointless jobs, just to climb the chart. That's rat farming with a laptop. And both charts got scrapped.
+People gave the AI pointless jobs to climb, and Meta and Amazon paid for every one. That's rat farming with a laptop. Both leaderboards got scrapped.
 
-Now, my favourite bit. A big medical equipment firm cut its AI target in half. Most of the junk vanished, the useful stuff stayed, and sales went up.
+A medical equipment firm made staff ask its AI a set number of questions a month. A third were junk, to hit the number. So it halved the number in some branches. Those branches lost most of the junk, and sold more.
 
-So I reckon it's simple. If you're counting how much AI your people use, you're counting rat tails.
+I reckon it's simple: if you're counting how much AI your people use, you're counting rat tails.
 
-If I ran a team, I'd scrap that number and watch the ones that pay the bills, like sales.
+If I ran a team, I'd scrap that number and watch what brings money in, like sales.
 
 The full deep dive is at makeyourmindup.ai.
