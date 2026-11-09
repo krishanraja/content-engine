@@ -431,6 +431,7 @@ _content — shared helpers for the Content Engine API routes
 - `function parseVal(v: unknown): any`
 - `async function loadConfig(keys: string[]): Promise<Record<string, any>>`
 - `async function loadVoiceBlock(): Promise<string>`
+- `async function loadLiveVoice(kind: 'article' | 'social' | 'script' | 'email', env: Record<string, string | undefined> =…`
 - `async function loadCorpus(): Promise<string>`
 - `function laneToCorpusChannel(lane?: string | null, slot?: string | null): string | null`
 - `const NO_CORPUS_PLAYBOOK: Record<string, string>`
@@ -463,6 +464,10 @@ _content — shared helpers for the Content Engine API routes
 - `interface Look`
 - `async function askChecksToLook(itemIds: string[], deps: { env?: Record<string, string | undefined>; fetchImpl?: FetchLi…`
 - `async function askChecksForPiece(ideaId: string, deps: Parameters<typeof askChecksToLook>[1] = {}): Promise<Look>`
+- `type VoiceChannel`
+- `interface VoiceHard`
+- `interface VoiceAnswer`
+- `async function askVoiceCheck(text: string, channel: VoiceChannel, deps: { env?: Record<string, string | undefined>; fet…`
 
 ### `apps/control-plane/api/_copyLint.ts`
 

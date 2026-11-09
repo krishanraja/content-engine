@@ -362,6 +362,11 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    that have not passed. A checkout without `copy_lint.py` or the vendored
    kill list (each lands with its own pull request) does not skip them: the
    step holds, named on the day's tab.
+   Then the one voice check (Ruling, Krish, 2026-11-09): `python3
+   scripts/post-pack/voice_gate.py --channel script long.md short.md`, then
+   `--channel article` and `--channel carousel` on those words
+   (`piece_manifest.py draft` checks channel copy itself). Exit 1: fix and
+   rerun. Exit 2: not checked, so the step holds, named on the day's tab.
 4. **The read-back, required.** Three fresh readers hear each script, every
    time its words change. In Claude Code, start three subagents (the Agent
    tool, description "Separate reader: read-back A", "B" or "C", which the cost
