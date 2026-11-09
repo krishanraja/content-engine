@@ -56,3 +56,5 @@ Answer: Voters are turning big data centres away, so AI is moving to its own pow
 
 ## Music bed
 NO CURVES (Instrumental Version), Superintendent McCupcakes (Epidemic Sound), `no-curves-instrumental` in `config/music-library.json`, the one series bed in the ledger, in the one bed shape (`config/music-bed.json`).
+
+Signed by Krish: "Signed.", 2026-11-09, lock sha256 38cb03b732006123329fbca2e9a17c5e90cfb2817373f8c8b907229cf45e0bde
