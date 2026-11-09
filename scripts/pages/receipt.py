@@ -360,12 +360,13 @@ def page(facts, c, base, shape, skin=...):
              'color:var(--accent)!important;opacity:.9}</style>') if c.get('quiet_pill', True) else ''
     # With its tag off, a pinned proof keeps the room the tag gave it, so a skin's light round the frame clears the
     # headline above and the logos below.
-    if pin_tag and not p.get('show_tag', False):
-        quiet += f'<style>:root{{--pin-reserve:{edge * 10}px}}</style>'
+    # (The tag stays in the page when it is not shown, hidden but keeping its room, so every skin's placement still
+    # measures it and its light clears the headline and the logos.)
     foot = f'<div class="foot"><div class="logos">{logos}</div></div>' if logos else ''
     # "show_tag" (default false, the cover standard: no badges on a cover) leaves the tag off the picture (it stays the picture's alt text and its record). Krish,
     # 2026-11-09: "We don't need the badge that says \"the court filing.\""
-    tag = f'<div class="tag" data-fine-print>{esc(p["tag"])}</div>' if p.get('show_tag', False) else ''
+    tag = (f'<div class="tag" data-fine-print>{esc(p["tag"])}</div>' if p.get('show_tag', False)
+           else f'<div class="tag" data-fine-print style="visibility:hidden" aria-hidden="true">{esc(p["tag"])}</div>')
     doc = f"""<!doctype html><html style="{root}"><head><meta charset="utf-8"><style>{brand.font_css()}
 {CSS.replace('@SAGE@', body_ground).replace('@GROUND@', card_ground)}</style></head><body>
 {quiet}<div id="card" class="{spec['layout']}" style="width:{W}px;height:{H}px">
