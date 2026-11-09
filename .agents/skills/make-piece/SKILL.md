@@ -417,7 +417,10 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    while he records ("The Teleprompter send", above). Before the press, the
    storyboard for both cuts is drawn and shown beside the scripts (step 7;
    Ruling, Krish, 2026-11-09: storyboard mocks before he records), so what he
-   approves is the words and their pictures together. Put both scripts on
+   approves is the words and their pictures together. File the storyboard on
+   the day (the live board's drop, filed as "Storyboard: <file>"); with none on
+   file the board reminds him and never refuses (Krish, 2026-11-09: "Remind").
+   Put both scripts on
    the day's tab for his Approve scripts press and republish it; the press
    binds to their sha256, and the server sends them and reads them back.
    His press and its answer are in the board's `approvals` collection

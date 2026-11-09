@@ -69,6 +69,8 @@ export interface DayPath {
   }
   inspiration: { cards: Array<{ id: string; name: string; words: string; saved: string | null }>; unread: number }
   prompts: { research: string; story: string; storyboard: string; mock: string }
+  /** The session's storyboard filed on the piece (a material titled "Storyboard: ..."), or null. */
+  storyboard: { title: string; at: string | null } | null
 }
 export interface WeekView {
   week: string
@@ -175,6 +177,7 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayV
     },
     inspiration: i.inspiration || { cards: [], unread: 0 },
     prompts: { research: researchPrompt(brief), story: storyPrompt(brief), storyboard: storyboardPrompt(brief), mock: mockPrompt(brief) },
+    storyboard: (m => (m ? { title: m.title, at: m.at } : null))(materials.find(m => /^Storyboard:/.test(m.title))),
   }
   const detail: DayView['detail'] = [
     { h: 'Research', p: materials.length ? materials.map(m => m.title).join(' · ') : researchFile ? `${day}-research.md in the week's folder` : 'None yet' },
@@ -204,7 +207,9 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayV
     const failed = live.steps.find(s => s.state === 'failed')
     if (made) {
       return { ...v, stop: 3, who: 'you', runs_on: 'Your press on the board, then the server sends them to your Teleprompter',
-        next: 'Read the storyboard and both scripts, and approve them as one', actions: [{ kind: 'open', label: 'Read and approve', href: boardTab(week, day) }, { kind: 'prompt', label: 'Copy Claude prompt', prompt: path.prompts.storyboard }] }
+        // Remind, never refuse (Krish, 2026-11-09: "Remind"): no storyboard on file is said where he approves.
+        next: path.storyboard ? 'Read the storyboard and both scripts, and approve them as one'
+          : 'Approve the scripts. Reminder: no storyboard is on file yet; drop the session\'s storyboard here first, or approve anyway', actions: [{ kind: 'open', label: 'Read and approve', href: boardTab(week, day) }, { kind: 'prompt', label: 'Copy Claude prompt', prompt: path.prompts.storyboard }] }
     }
     return { ...v, stop: 2, who: failed ? 'stuck' : 'you', runs_on: `${conversation}, or ${GH('make-piece')}`, ...(make ? { run: make } : {}),
       next: failed ? `${failed.key} failed${failed.note ? `: ${failed.note}` : ''}. Make it again` : 'Make the storyboard and the script together, before you record',

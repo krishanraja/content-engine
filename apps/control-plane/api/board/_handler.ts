@@ -227,7 +227,9 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           throw new BoardError(404, 'piece_not_in_week')
         try {
           if (op === 'material') {
-            const title = String(body.title || 'Research').slice(0, 200)
+            const name = String(body.title || 'Research').slice(0, 180)
+            // A storyboard the session made is filed with its role in the title, so the day knows one is on file.
+            const title = body.role === 'storyboard' && !/^Storyboard:/.test(name) ? `Storyboard: ${name}` : name
             const filed = await fileMaterial(db, pieceId, { kind: 'file', title, content: String(body.content || ''), by: 'Krish' })
             return res.status(201).json({ ok: true, material: filed })
           }

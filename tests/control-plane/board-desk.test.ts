@@ -235,3 +235,21 @@ describe('research it now', () => {
     expect(await runResearch('x', {}, fetcher, async () => {})).toEqual({ text: '', sources: [] })
   })
 })
+
+describe('no storyboard on file: remind, never refuse (Krish, 2026-11-09: "Remind")', () => {
+  const made = { workroom: { at: 'x', url: 'https://example.com' }, script_check: { passed: true, cuts: ['long', 'short'], checked_at: 'x' } }
+  const at = (materials: unknown[]) => inputs({ pieces: [piece(FRI, '2026-11-20', 'mind_the_gap', made,
+    { meta: { making: made, fact_check: { passed: true }, look: { production: 'data-story', by: 'Krish', at: 'x' }, materials } })] })
+  it('says so where he approves, and still lets him approve', () => {
+    const fri = day(buildView(at([])), 'fri')
+    expect(fri.path?.current).toBe('board')
+    expect(fri.path?.storyboard).toBeNull()
+    expect(fri.next).toMatch(/Reminder: no storyboard is on file yet/)
+    expect(fri.actions[0]).toMatchObject({ kind: 'open', label: 'Read and approve' })
+  })
+  it('drops the reminder once the session\'s storyboard is filed', () => {
+    const fri = day(buildView(at([{ id: 's1', kind: 'file', title: 'Storyboard: fri-storyboard.html', content: '<p>x</p>', bytes: 8, at: '2026-11-10T09:00:00Z' }])), 'fri')
+    expect(fri.path?.storyboard).toEqual({ title: 'Storyboard: fri-storyboard.html', at: '2026-11-10T09:00:00Z' })
+    expect(fri.next).not.toMatch(/Reminder/)
+  })
+})
