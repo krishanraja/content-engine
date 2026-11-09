@@ -1,0 +1,14 @@
+{
+  "path": "docs/ve/cards/keyframes/ve-kf-1-caption-build.md",
+  "card_id": "ve-kf-1-caption-build",
+  "kind": "chrome",
+  "motion_style": "full-visual",
+  "title": "A third caption style, build: the page grows word by word",
+  "goal": "Add captionStyle 'build' beside 'house' and 'word' (_corpus/keyframes-full-visual.md section 4). Additive only: 'house' and 'word' render byte-identical to today.\n\n1. props.ts: captionStyle z.enum(['house', 'word', 'build']).\n2. New chrome/CaptionBuild.tsx, chosen in BrandFrame where 'word' is. It shows the current page (captionPageAt) in the house caption box (same geometry as CaptionTrack), but a word appears only from its atFrame: a word not yet said is not drawn and takes no space.\n3. Each word arrives with a 4-frame rise and fade from progress() in ../clock.\n4. The page's swipeIndex word (the one key word) gets a tokens.mint box behind it that grows from the left over 3 frames, starting 2 frames after the word's atFrame. Never more than one box a page.\n5. At most two lines; type size never below 32 px in either aspect.\n6. Hidden during a call beat and from ending.fromFrame, as WordCaption is.\n\n## Tests (in chrome/captionBuild.test.ts)\n- before a word's atFrame it is absent; at atFrame+4 it is fully shown\n- the box is absent before atFrame+2 of the key word and full at atFrame+5\n- a page with swipeIndex null draws no box\n- 'house' and 'word' output unchanged (existing chrome.test.ts still passes)\n- tall and wide render",
+  "contract": "Chrome follows the device rules (apps/renderer/src/engine/devices/CONTRACT.md): a pure function of props and the frame passed in; animation only from progress() and drift() in ../clock; colours only from tokens (raw hex refused); type from HOUSE_FONTS (structure for the words); no Math.random, no wall clock; author 1080x1920 and 1920x1080 separately. Do not change CaptionTrack, WordCaption or their geometry. ve qc reads caption regions from scripts/velib/qc.py; leave QC alone (a later card adds 'build' there).",
+  "acceptance": "npx vitest run apps/renderer/src/engine/chrome\nnpx vitest run apps/renderer/src/engine/engine.test.ts\nnpx tsc --noEmit -p apps/renderer",
+  "write_allow": "[apps/renderer/src/engine/chrome/CaptionBuild.tsx, apps/renderer/src/engine/chrome/captionBuild.test.ts, apps/renderer/src/engine/BrandFrame.tsx, apps/renderer/src/engine/props.ts]",
+  "read": "_corpus/keyframes-full-visual.md, apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/chrome/CaptionTrack.tsx, apps/renderer/src/engine/chrome/WordCaption.tsx, apps/renderer/src/engine/chrome/chrome.test.ts, apps/renderer/src/engine/BrandFrame.tsx, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/chrome/tokens.ts",
+  "max_minutes": 40,
+  "max_calls": 40
+}
