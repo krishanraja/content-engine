@@ -41,7 +41,8 @@ LABEL_H = 18
 HEARD = 'measured; not heard'
 QC_ROWS = ('motion.change_density', 'motion.longest_still', 'motion.periodicity', 'loudness.integrated', 'loudness.true_peak',
            'loudness.long_silence', 'audio.bed', 'audio.bed_continuity', 'sync.av_xcorr', 'joins.in_gaps', 'joins.decoder',
-           'captions.clock', 'captions.render', 'captions.ocr', 'words.lost', 'channel.safe_zones', 'audio.voice', 'opening')
+           'captions.clock', 'captions.render', 'captions.ocr', 'words.lost', 'channel.safe_zones', 'audio.voice', 'opening',
+           'beats.handover_in_gaps', 'ground.not_bare')
 
 
 def frames_at(video: Path, numbers: list[int], width: int = TILE_W):
