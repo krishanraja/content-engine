@@ -60,10 +60,11 @@ $RepoRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $TopFolders = @('1 Brand kit (permanent)', '2 Channel art (permanent)', '3 Posts')
 # A second library (Krish, 2026-11-03: "Why don't you duplicate that Python
 # script for Heartside then? We're going to need to do a lot more of this type
-# of stuff moving forward"): Heartside's social library, Heartside\05_Social-Library,
-# where each post's media goes in Posts\<post id>\. Its root is "root" in
-# config\heartside-library.json (or the setting MINDMAKE_HEARTSIDE_LIBRARY_ROOT);
-# with neither, it is skipped. It is written
+# of stuff moving forward"): Heartside's social library, Heartside\03b_Social-Schedule (named 05_Social-Library until 2026-11-09),
+# where each post's media goes in Posts\<post id>\. It is found by its Drive ID
+# through the engine, so a rename or a move needs nothing; "root" in
+# config\heartside-library.json (or the setting MINDMAKE_HEARTSIDE_LIBRARY_ROOT)
+# is the fallback; with neither, it is skipped (Resolve-HeartsideRoot). It is written
 # only under Posts, by the same rules: never deleted, never renamed, every file
 # checked against its sha256 first.
 $HeartsideTopFolders = @('Posts')
@@ -198,15 +199,81 @@ function Assert-NoStudioOverlap([string]$root, [string[]]$Tops, $runtime) {
   }
 }
 
-function Resolve-HeartsideRoot($Config) {
-  # MINDMAKE_HEARTSIDE_LIBRARY_ROOT when it names a folder that is there, else
-  # "root" in config\heartside-library.json (kept out of studio.json, whose
-  # contents are bound into the media standard). Neither set: no Heartside
-  # library on this machine, and nothing is written for it.
+function Get-HeartsideFolder($Client, [string]$Base, [string]$Token, [string]$Machine) {
+  # Where the engine says Heartside's library is now, found in Drive by its
+  # folder ID (api/library/_heartsideFolder.ts; Krish, 2026-11-09: "ideally ID
+  # so if folders move it doesnt matter"). The answer rides on the Heartside
+  # pending list. $null when the engine cannot be asked; the configured folder
+  # is used then.
+  try {
+    $query = '/api/library/pending?machine={0}&limit=1&library=heartside' -f [uri]::EscapeDataString($Machine)
+    return Get-Field (Invoke-Engine $Client $Base $Token 'GET' $query $null) 'folder'
+  } catch {
+    Write-Log "the engine could not say where the Heartside library is ($($_.Exception.Message)); using config\heartside-library.json"
+    return $null
+  }
+}
+
+function Get-DriveForDesktopRoot([string]$Known) {
+  # The folder that holds "My Drive" on this machine, read off a path known to
+  # be in it ("H:\My Drive\Ventures\..." gives "H:\"); the path's own drive
+  # when it names no "My Drive".
+  $full = [System.IO.Path]::GetFullPath($Known)
+  $parts = $full.Split([char[]]@('\', '/'))
+  for ($i = 0; $i -lt $parts.Count; $i++) {
+    if ($parts[$i] -ceq 'My Drive') {
+      $head = ($parts[0..$i] -join [System.IO.Path]::DirectorySeparatorChar)
+      return [System.IO.Path]::GetDirectoryName($head)
+    }
+  }
+  return [System.IO.Path]::GetPathRoot($full)
+}
+
+function ConvertTo-HeartsidePath([string]$DriveRoot, $Segments) {
+  # "My Drive/Ventures/.../03b_Social-Schedule" onto this machine's Google
+  # Drive for desktop drive ("H:\" + "My Drive\Ventures\..."). $null for
+  # anything that is not a plain path under My Drive.
+  $names = @($Segments | ForEach-Object { [string]$_ })
+  if ($names.Count -lt 2 -or $names[0] -cne 'My Drive' -or -not $DriveRoot) { return $null }
+  foreach ($name in $names) {
+    if (-not $name -or $name -ne $name.Trim() -or $name -match '[\\/:*?"<>|\x00-\x1f]' -or $name -match '^\.+$' -or $name.EndsWith('.')) { return $null }
+  }
+  return [System.IO.Path]::Combine([string[]](@($DriveRoot) + $names))
+}
+
+function Resolve-HeartsideRoot($Config, $Folder) {
+  # In order: MINDMAKE_HEARTSIDE_LIBRARY_ROOT when it names a folder that is
+  # there; else the folder the engine found by its Drive ID ($Folder, from
+  # Get-HeartsideFolder), mapped onto the drive that "root" in
+  # config\heartside-library.json is on, so a rename or a move needs nothing;
+  # else that "root" itself (kept out of studio.json, whose contents are bound
+  # into the media standard). None of them: no Heartside library on this
+  # machine, and nothing is written for it. A folder the engine says is
+  # deleted or in the Drive bin stops the pass, with no fallback to an old
+  # path. A folder that is not there is never made.
   $runtime = Get-Field $Config 'runtime'
-  $root = [string](Get-Field (Read-JsonFile (Join-Path $RepoRoot 'config\heartside-library.json')) 'root')
+  $configured = [string](Get-Field (Read-JsonFile (Join-Path $RepoRoot 'config\heartside-library.json')) 'root')
   $setting = Get-Setting 'MINDMAKE_HEARTSIDE_LIBRARY_ROOT'
-  if ($setting -and ((Test-Path -LiteralPath $setting -PathType Container) -or -not $root)) { $root = $setting }
+  $root = $null
+  if ($setting -and (Test-Path -LiteralPath $setting -PathType Container)) { $root = $setting }
+  elseif ((Get-Field $Folder 'state') -eq 'gone') {
+    $problem = [string](Get-Field $Folder 'problem')
+    if ($problem -notin @('heartside_library_gone', 'heartside_library_trashed')) { $problem = 'heartside_library_gone' }
+    $script:Problems.Add($problem)
+    throw "The Heartside library folder is gone from Drive: $(Get-Field $Folder 'reason'). Nothing is written and no folder is made; restore it from the bin, or put the new folder's ID in config\heartside-library.json drive_id and api/library/_heartsideFolder.ts."
+  } elseif ((Get-Field $Folder 'state') -eq 'found') {
+    $driveRoot = $null
+    foreach ($known in @($configured, $setting)) {
+      if ($known -and [System.IO.Path]::IsPathRooted($known)) { $driveRoot = Get-DriveForDesktopRoot $known; break }
+    }
+    $root = ConvertTo-HeartsidePath $driveRoot (Get-Field $Folder 'segments')
+    if ($root -and $configured -and -not (Test-SamePath $root $configured)) {
+      Write-Log "the Heartside library was found by its Drive ID at $root; config\heartside-library.json still names $configured"
+    }
+  } elseif ($null -ne $Folder) {
+    Write-Log "the engine could not find the Heartside library by its ID ($(Get-Field $Folder 'reason')); using config\heartside-library.json"
+  }
+  if (-not $root) { $root = if ($configured) { $configured } else { $setting } }
   if (-not $root) { return $null }
   if (-not [System.IO.Path]::IsPathRooted($root)) { throw "The Heartside library folder must be a full path: $root" }
   $root = [System.IO.Path]::GetFullPath($root).TrimEnd('\')
@@ -550,7 +617,7 @@ function Invoke-Pass {
     # here is logged and reported, and never stops the makeyourmindup pass.
     $heartsideOk = $true
     try {
-      $heartside = Resolve-HeartsideRoot $config
+      $heartside = Resolve-HeartsideRoot $config (Get-HeartsideFolder $client $base $token $machine)
       if ($heartside) {
         if ($Check) { Write-Log "Checking only: nothing is written. Heartside library: $heartside" }
         $hs = Sync-Pending $client $base $token $heartside $machine $workDir 'heartside'

@@ -12,6 +12,7 @@ import {
   parseLibraryPendingQuery,
   type LibraryName,
 } from './_library.js'
+import { HEARTSIDE_LIBRARY_FOLDER_ID, resolveHeartsideFolder, type HeartsideFolder } from './_heartsideFolder.js'
 
 // GET /api/library/pending?machine=<id>&limit=<1..100>[&library=heartside], on the runner bearer.
 // Each library is asked for on its own; without one it is makeyourmindup.
@@ -23,6 +24,12 @@ import {
 // from a file Krish changed, which it never overwrites. Each file comes with a
 // signed download URL that lasts half an hour; the sync asks again for the
 // rest.
+//
+// Heartside's answer also says where its folder is now (`folder`), found from
+// its Drive ID (_heartsideFolder.ts), so a rename or a move of the folder never
+// stops the sync (Krish, 2026-11-09: "ideally ID so if folders move it doesnt
+// matter"). A Drive problem never fails the request: the answer says unknown
+// and the sync uses its configured folder.
 
 const SIGNED_DOWNLOAD_TTL_SECONDS = 30 * 60
 
@@ -76,6 +83,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!query) return sendVideoStudioError(res, 400, 'invalid_library_pending_request')
   const machineHash = videoStudioRunnerIdentity(query.machine)
   if (await enforceVideoStudioRateLimit(res, 'library:pending', machineHash, 120, 60)) return
+
+  let folder: HeartsideFolder | undefined
+  if (query.library === 'heartside') {
+    folder = await resolveHeartsideFolder().catch(() => ({ state: 'unknown' as const, drive_id: HEARTSIDE_LIBRARY_FOLDER_ID, reason: 'the folder lookup failed' }))
+  }
 
   const store = await configuredLibraryStore()
   if (!store.config) return sendVideoStudioError(res, 503, store.error || 'library_store_unavailable')
@@ -133,6 +145,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
     machine: machineHash.slice(0, 8),
     library: query.library,
+    ...(folder ? { folder } : {}),
     files,
     skipped,
     more,

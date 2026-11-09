@@ -1998,7 +1998,11 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function feelBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCORE_ID`
 - `const SCORE_BASES`
+- `const SCORE_DATE_ID`
 - `function scoreBody(id: string, body: Record<string, unknown>): boolean`
+- `const CREATIVE_ID`
+- `const CREATIVE_PICKS`
+- `function creativeBody(id: string, body: Record<string, unknown>): boolean`
 - `const YES_ID`
 - `function yesBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
@@ -2075,6 +2079,8 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `async function preparePress(collection: string, id: string, body: Body): Promise<Body>`
 - `async function heldBecause(making: unknown, texts: Record<string, string>): Promise<string | null>`
 - `function gatePatch(kind: GateKind, body: Body, now: string): MakingGates`
+- `function creativePatch(body: Body, now: string): MakingGates`
+- `function creativeReport(week: string, id: string, body: Body, now: string)`
 - `async function recordGate(db: SupabaseClient, pieceId: string, patch: MakingGates, now: string): Promise<string | null>`
 - `function pressIncidents(week: string, id: string, body: Body, prior: MakingGates | null | undefined): Incident[]`
 - `function gateReport(week: string, id: string, body: Body, now: string)`
@@ -2539,6 +2545,20 @@ What the compiler looks for, as pure functions.
 ### `apps/control-plane/api/learning/spoken-rules.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/library/_heartsideFolder.ts`
+
+- `const HEARTSIDE_LIBRARY_FOLDER_ID`
+- `const FOLDER_WALK_MAX_DEPTH`
+- `const FOLDER_CACHE_MS`
+- `const MY_DRIVE`
+- `interface DriveFolderMeta`
+- `type DriveLookup`
+- `type HeartsideFolder`
+- `function isPathSafeName(name: unknown): name is string`
+- `async function walkFolderPath(folderId: string, rootId: string, lookup: DriveLookup): Promise<HeartsideFolder>`
+- `function resetHeartsideFolderCache(): void`
+- `async function resolveHeartsideFolder(now = Date.now()): Promise<HeartsideFolder>`
 
 ### `apps/control-plane/api/library/_inboxDrive.ts`
 
@@ -4766,6 +4786,8 @@ Artifact-bound user confirmation references.
 - `const VeApprovalSchema`
 - `const VeCallSchema`
 - `const VeReferenceSchema`
+- `const VeCharacterCueSchema`
+- `const VeCharacterSchema`
 - `const ProductionSpecV2Schema`
 - `type ProductionSpecV2 = z.infer<typeof ProductionSpecV2Schema>`
 - `type VeBeat = z.infer<typeof VeBeatSchema>`

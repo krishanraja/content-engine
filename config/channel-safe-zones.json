@@ -1,34 +1,160 @@
 {
   "schema": "channel-safe-zones/1",
-  "_about": "Where each channel draws its own buttons and text over a vertical video, on the 1080x1920 canvas. Nothing that must be read (a word, a headline, a number, a logo, the point of a graphic) may sit in a zone of any channel the cut is filed for (scripts/channel_safe.py). Krish, 2026-11-03, on Monday's Instagram post: \"It looks cramped. It looks like you almost didn't design this thoughtfully for the format or the channel.\" This table is never looser than config/studio.json's platform safe_zones (tests/channel_safe_test.py); studio.json carries these Instagram numbers since 3 Nov 2026 (Krish: \"I approve updating the Instagram button zones\").",
-  "canvas": [1080, 1920],
+  "_about": "Where each channel draws its own buttons and text over a vertical video, on the 1080x1920 canvas. Nothing that must be read (a word, a headline, a number, a logo, the point of a graphic) may sit in a zone of any channel the cut is filed for (scripts/channel_safe.py). Krish, 2026-11-03, on Monday's Instagram post: \"It looks cramped. It looks like you almost didn't design this thoughtfully for the format or the channel.\" This table is never looser than config/studio.json's platform safe_zones (tests/channel_safe_test.py); studio.json carries these Instagram numbers since 3 Nov 2026 (Krish: \"I approve updating the Instagram button zones\"). Shapes: 'tall' for every frame of a tall cut; 'cover_tall' for the cover or thumbnail a tall cut posts with, which also must survive Instagram's 3:4 profile grid crop (post-mortem of 2 Nov, cause D).",
+  "canvas": [
+    1080,
+    1920
+  ],
   "channels": {
     "instagram_reels": {
       "measured": "2026-11-03, from Krish's phone screenshot of Monday 2 Nov's Reel (923x2000 screen, video 1080x1920 at 0.855 scale from y 72): back arrow and camera to y 126; action rail x 895 to 1080, y 548 to 1671; avatar, handle, caption and 'Liked by' from y 1373; the comment bar hides everything below y 1747.",
       "zones": [
-        {"name": "top bar (back, camera)", "box": [0, 0, 1080, 200]},
-        {"name": "action rail (like, comment, share, save)", "box": [880, 520, 200, 1180]},
-        {"name": "handle, caption and likes", "box": [0, 1320, 1080, 600]}
+        {
+          "name": "top bar (back, camera)",
+          "box": [
+            0,
+            0,
+            1080,
+            200
+          ]
+        },
+        {
+          "name": "action rail (like, comment, share, save)",
+          "box": [
+            880,
+            520,
+            200,
+            1180
+          ]
+        },
+        {
+          "name": "handle, caption and likes",
+          "box": [
+            0,
+            1320,
+            1080,
+            600
+          ]
+        }
       ]
     },
     "tiktok": {
       "measured": "config/studio.json platform safe zones (TikTok's published guidance); rail height assumed as Instagram's until measured on his phone.",
       "zones": [
-        {"name": "top bar", "box": [0, 0, 1080, 160]},
-        {"name": "action rail", "box": [900, 520, 180, 1180]},
-        {"name": "handle and caption", "box": [0, 1500, 1080, 420]}
+        {
+          "name": "top bar",
+          "box": [
+            0,
+            0,
+            1080,
+            160
+          ]
+        },
+        {
+          "name": "action rail",
+          "box": [
+            900,
+            520,
+            180,
+            1180
+          ]
+        },
+        {
+          "name": "handle and caption",
+          "box": [
+            0,
+            1500,
+            1080,
+            420
+          ]
+        }
       ]
     },
     "youtube_shorts": {
       "measured": "config/studio.json platform safe zones; rail height assumed as Instagram's until measured on his phone.",
       "zones": [
-        {"name": "top bar", "box": [0, 0, 1080, 140]},
-        {"name": "action rail", "box": [960, 520, 120, 1180]},
-        {"name": "title and channel", "box": [0, 1560, 1080, 360]}
+        {
+          "name": "top bar",
+          "box": [
+            0,
+            0,
+            1080,
+            140
+          ]
+        },
+        {
+          "name": "action rail",
+          "box": [
+            960,
+            520,
+            120,
+            1180
+          ]
+        },
+        {
+          "name": "title and channel",
+          "box": [
+            0,
+            1560,
+            1080,
+            360
+          ]
+        }
+      ]
+    },
+    "instagram_profile": {
+      "measured": "Not yet measured on his phone. 270 px is the top 14% that size guides give for Instagram's Reels overlay (reap.video; Instagram documents no number). Krish's 7 Nov screenshot (Bugs & Issues) shows the 6 Nov reel's title, whose first line the stage headline draws from y 220, under Instagram's account row when the reel is opened from the profile. Measure it on his phone and replace this line.",
+      "zones": [
+        {
+          "name": "account row (reel opened from the profile)",
+          "box": [
+            0,
+            0,
+            1080,
+            270
+          ]
+        }
+      ]
+    },
+    "instagram_grid": {
+      "measured": "Geometry, not a guess: since January 2025 the profile grid shows a 9:16 reel's cover as a 3:4 tile, the middle 1080x1440 of the 1080x1920 frame, cutting 240 px at the top and the bottom (size guides; Instagram's Edit cover > Profile grid preview shows it). Krish, 7 Nov: the 6 Nov reel's cover lost its top line \"USING A\" on the grid (\"the thumbnails need to be managed better\"). A word that crosses the line is cut, so any overlap counts.",
+      "zones": [
+        {
+          "name": "profile grid crop (top)",
+          "box": [
+            0,
+            0,
+            1080,
+            240
+          ],
+          "cut": true
+        },
+        {
+          "name": "profile grid crop (bottom)",
+          "box": [
+            0,
+            1680,
+            1080,
+            240
+          ],
+          "cut": true
+        }
       ]
     }
   },
   "shapes": {
-    "tall": ["instagram_reels", "tiktok", "youtube_shorts"]
+    "tall": [
+      "instagram_reels",
+      "instagram_profile",
+      "tiktok",
+      "youtube_shorts"
+    ],
+    "cover_tall": [
+      "instagram_reels",
+      "instagram_profile",
+      "instagram_grid",
+      "tiktok",
+      "youtube_shorts"
+    ]
   }
 }

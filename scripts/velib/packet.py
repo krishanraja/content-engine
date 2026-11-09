@@ -201,7 +201,8 @@ def in_short(spec, directory, prepared, rounds=None) -> list[str]:
     for cut, qc, _video, _digest in prepared:
         out.append('Proof: ' + proof.summary(spec, cut, directory, found))
         for name, row in ((qc or {}).get('checks') or {}).items():
-            if row.get('status') == 'advisory':
+            # A shadow row (qc.py: a check no format counts yet) stays out of his short list.
+            if row.get('status') == 'advisory' and not row.get('shadow'):
                 value = row.get('value')
                 count = value.get('count') if isinstance(value, dict) else None
                 out.append(f'{cut}: advisory {name}' + (f' ({count} found; listed, not held)' if count is not None
