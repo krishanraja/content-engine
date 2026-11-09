@@ -345,9 +345,9 @@ def page(facts, c, base, shape, skin=...):
         '--ink': t['ink'], '--accent': look['colour'], '--cream': t['cream'],
         '--tag-bg': look['colour'] if look['series'] else t['ink'], '--tag-fg': t['ink'] if look['series'] else t['cream'],
         '--head': f'{spec["heads"][0]}px', '--fine': f'{fine_px + 2}px', '--wm': f'{round(min(W / 30, (r - l) / 26))}px',
-        # "headline_first" (default true, docs/production/COVER-STANDARD.md) puts the logos under the headline, smaller, so the headline leads (Krish, 2026-11-09:
+        # "headline_first": true (opt-in until the extruded, bauhaus and brandbook skins keep their light off logos under the words) puts the logos under the headline, smaller, so the headline leads (Krish, 2026-11-09:
         # "The headline should take precedence").
-        '--logo': f'{round(max(fine_px + 2, (r - l) / 24 * (.7 if c.get("headline_first", True) else 1)) * (1 if n_logos <= 3 else .78))}px', '--gap': f'{round(W / 40)}px', '--edge': f'{edge}px',
+        '--logo': f'{round(max(fine_px + 2, (r - l) / 24 * (.7 if c.get("headline_first") else 1)) * (1 if n_logos <= 3 else .78))}px', '--gap': f'{round(W / 40)}px', '--edge': f'{edge}px',
         '--proofw': spec.get('proofw', '58%') if side else '100%',
     }
     root = ';'.join(f'{k}:{v}' for k, v in vars_.items())
@@ -374,7 +374,7 @@ def page(facts, c, base, shape, skin=...):
   <div class="top"><div class="wmp"><img src="{brand.data_uri(brand.fetch('wordmark'), 1400)}" alt="Make Your Mind Up"></div>{pill}</div>
   <div class="main">
    <div class="proof"><div class="pin">{tag if pin_tag else ''}<div class="frame"><img src="{brand.data_uri(p['path'], 2400)}" alt="{esc(p.get('alt') or p['tag'])}">{ring}</div></div></div>
-   <div class="col">{('' if pin_tag else tag) + ('' if c.get('headline_first', True) else foot) if side else ''}<h1>{head}</h1>{foot if side and c.get('headline_first', True) else ''}</div>
+   <div class="col">{('' if pin_tag else tag) + ('' if c.get('headline_first') else foot) if side else ''}<h1>{head}</h1>{foot if side and c.get('headline_first') else ''}</div>
    {'' if side else foot}
   </div>
  </div>
