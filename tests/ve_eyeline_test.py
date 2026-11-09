@@ -174,6 +174,69 @@ class Moves(unittest.TestCase):
         self.assertIs(tiny, frame)                                      # too little iris to move: as filmed, never the copy
 
 
+class MaxineEye(unittest.TestCase):
+    """The big glances: Maxine's own eye on a glance the push cannot bring all the way (Krish, 9 Nov: "Do both")."""
+
+    def _rows(self, spans, blink_at=()):
+        rows, aimed, there, decided = [], [], [], []
+        for i, sp in enumerate(spans):
+            r = {'face': True, 'iris_r': {'L': 10.0, 'R': 10.0}, 'blink': 0.6 if i in blink_at else 0.0,
+                 'iris': {'R': [100.0, 100.0], 'L': [200.0, 100.0]},
+                 'contour': {'R': contour_ellipse(100, 100, 30, 12), 'L': contour_ellipse(200, 100, 30, 12)}}
+            rows.append(r)
+            there.append(dict(r))
+            aimed.append({'R': (100.0 + sp * 10, 100.0, 10.0), 'L': (200.0 + sp * 10, 100.0, 10.0)})
+            decided.append({'strength': 1.0, 'eyes': {}})
+        return rows, aimed, there, decided
+
+    def test_only_a_held_glance_past_the_push_takes_maxines_eye(self):
+        spans = [0.2] * 10 + [1.0] * 12 + [0.2] * 10 + [1.0] * 2 + [0.2] * 10
+        m = eyeline.glances(*self._rows(spans))
+        self.assertEqual(m[5], 0.0)                                   # the prompter drift: the push alone
+        self.assertEqual(m[16], 1.0)                                  # a held glance: Maxine's eye
+        self.assertEqual(max(m[32:35]), 0.0)                          # a two-frame flick: never
+        self.assertTrue(all(abs(a - b) <= 0.5 + 1e-9 for a, b in zip(m, m[1:])))   # eased in and out
+        self.assertEqual(eyeline.glances(*self._rows(spans)[:2], None, self._rows(spans)[3]), [0.0] * len(spans))
+
+    def test_no_maxine_eye_on_a_blink(self):
+        spans = [1.0] * 20
+        m = eyeline.glances(*self._rows(spans, blink_at=range(8, 14)))
+        self.assertEqual(m[0], 1.0)
+        self.assertLess(m[10], 1.0)
+
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+    def test_maxines_eye_is_laid_in_around_his_eye_only_and_its_iris_takes_his_colour(self):
+        import cv2
+        frame = np.full((220, 320, 3), 160, np.uint8)
+        cv2.ellipse(frame, (160, 110), (30, 12), 0, 0, 360, (235, 235, 235), -1)
+        cv2.circle(frame, (175, 110), 9, (40, 60, 110), -1)          # his brown iris, glancing
+        source = np.full_like(frame, 160)
+        cv2.ellipse(source, (160, 110), (30, 12), 0, 0, 360, (235, 235, 235), -1)
+        cv2.circle(source, (160, 110), 9, (110, 120, 70), -1)        # Maxine's iris, centred and green-grey
+        lid = contour_ellipse(160, 110, 30, 12)
+        out = eyeline.maxine_eye(frame, source, lid, lid, (175, 110, 9), (160, 110, 9))
+        self.assertTrue(np.array_equal(out[:40], frame[:40]))         # nothing far from the eye changes
+        self.assertTrue(np.array_equal(out[:, :90], frame[:, :90]))
+        iris = out[105:116, 155:166].reshape(-1, 3).mean(0)
+        self.assertLess(abs(float(iris[2]) - 110), 25)               # red channel near his iris, not Maxine's 70
+
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+    def test_his_own_iris_and_catchlight_sit_where_maxine_drew_the_iris(self):
+        # Blind review, 9 Nov: Maxine's iris read flat and grey with no catchlight; his own iris is carried in.
+        import cv2
+        frame = np.full((220, 320, 3), 160, np.uint8)
+        cv2.ellipse(frame, (160, 110), (30, 12), 0, 0, 360, (235, 235, 235), -1)
+        cv2.circle(frame, (178, 110), 9, (40, 60, 110), -1)
+        cv2.circle(frame, (180, 108), 2, (255, 255, 255), -1)        # his catchlight, up and right of centre
+        source = np.full_like(frame, 160)
+        cv2.ellipse(source, (160, 110), (30, 12), 0, 0, 360, (235, 235, 235), -1)
+        cv2.circle(source, (160, 110), 9, (110, 120, 70), -1)        # Maxine's iris: centred, no catchlight
+        lid = contour_ellipse(160, 110, 30, 12)
+        out = eyeline.maxine_eye(frame, source, lid, lid, (178, 110, 9), (160, 110, 9))
+        self.assertGreater(int(out[106:111, 160:165].max()), 220)     # the catchlight came with it, as far up and right
+        self.assertLess(int(out[110, 157:159].max()), 140)            # the iris there is his dark iris, not white
+
+
 class Decide(unittest.TestCase):
     def test_lock_leaves_blinks_to_maxine_and_never_takes_a_turn(self):
         readings = [reading(blink=0.9) if 20 <= i < 24 else reading(yaw=40) if 40 <= i < 44 else reading()
@@ -371,6 +434,10 @@ class Media(unittest.TestCase):
                               copy_readings=[{'face': False}] * 60)   # as read() finds it: no face on any frame
         self.assertEqual(receipt['problems'], [])
         self.assertEqual(receipt['decision'], 'corrected')
+        self.assertEqual(receipt['maxine_eye_frames'], 0)
+        # Maxine's own eye is opt-in (--maxine-eye): two blind reviews on 9 Nov blocked it.
+        self.assertFalse(eyeline.Maxine(other).eye)
+        self.assertTrue(eyeline.Maxine(other, eye=True).eye)
         self.assertLessEqual(receipt['corrected_frames'], 60 - 6)
         self.assertGreater(receipt['corrected_frames'], 40)
         self.assertEqual(eyeline.same_media(self.take, Path(receipt['output']['path'])), [])
