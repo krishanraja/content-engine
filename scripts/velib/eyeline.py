@@ -120,7 +120,11 @@ class Maxine(Backend):
     lock = True              # Maxine aims the eyes at the lens on every frame; eyeline only guards blinks and turns
     frame_source = True
 
-    def __init__(self, copy: Path | str | None = None):
+    def __init__(self, copy: Path | str | None = None, eye: bool = False):
+        # eye: Maxine's own eye on the big glances (glances, maxine_eye). Off by default: two fresh blind readers on
+        # 9 Nov blocked 7 of 66 moments each, every one a Maxine eye (an iris grey in the window light at a glance
+        # turned to the lens beside his brown one, a soft iris edge, a moved iris cut by a closing lid).
+        self.eye = bool(eye)
         if copy is None:
             raise RuntimeError('maxine: give the redirected copy (--maxine-copy), or run it on a pod (--pod). Maxine needs an '
                                'NVIDIA RTX GPU: neither home computer has one (LORIMER: Qualcomm Adreno; SURFACE: Intel Iris '
@@ -1187,7 +1191,7 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                 # All or nothing: a half-faded iris is a ghost (blind review 5, 51.67 s, grey washed-out irises at 40% strength).
                 d_['strength'] = 0.0 if w_ >= 0.5 else d_['strength']
             moves = shares(readings, aimed, looks)
-            maxi = glances(readings, aimed, there, decided, looks) if not calibrated else None
+            maxi = glances(readings, aimed, there, decided, looks) if getattr(backend, 'eye', False) and not calibrated else None
         else:
             there = None
             aimed = None
