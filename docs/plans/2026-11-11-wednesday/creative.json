@@ -54,7 +54,22 @@
      "A8-close-wide-long-cut.jpg"
     ]
    },
-   "picked": "as_recorded"
+   "picked": "as_recorded",
+   "opener_sound": {
+    "his_words": "Remember that I want the audio and the video to play at the start of this track of this video to draw people in and make it clear what I'm talking about. Then the audio fades into the background as the rest of the video kicks in. (Krish, 2026-11-09)",
+    "plan": [
+     "0.0 to 2.0 s (after the sting on the wide cut): the song clip full frame with its own sound at full level, no words on screen",
+     "2.0 s: he starts talking over it; the picture splits (clip and his face); the song's own sound eases down over 1.5 s to a steady background level under his voice, never keyed to his voice",
+     "about 0:16: the second clip (the wedding toast) carries the same song, still in the background",
+     "about 0:20, after the question: the song fades out over 2 s as the licensed bed (NO CURVES, instrumental) takes over at its bed level, so two pieces of music never play at once",
+     "the close: the song's own sound comes back under his last line and plays out the end"
+    ],
+    "source_clips": [
+     "inspiration card 90b654ca, Drive 1Dd2TMonugi1BWSj-i7zoa5ThRIpJwXtx",
+     "inspiration card f6327ce0, Drive 19Yhb_Juvqtgai4yZZJor-b478fF1-hme"
+    ],
+    "rule": "the clips' sound is never muted or replaced by the bed while they are on screen at the open (card note, Krish 2026-10-31)"
+   }
   },
   "B_subtitles": {
    "recommended": "B1_house",
