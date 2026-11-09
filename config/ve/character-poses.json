@@ -1,0 +1,622 @@
+{
+  "schema": "ve-character-poses/1",
+  "source": "keyframes@0.2.13",
+  "_about": "The pose library the character is drawn to: every pose with its family, whether it faces a side, its use-when line and the literal drawing text, plus the prompt templates and the draw order. Ported from the Keyframes character pack (scripts/character/poses.json, Krish's own, licence-free, Krish 2026-11-06). Adapt each text to Krish (his hair, his top, his glasses) in identity.md and keep the gesture words exactly. The library only grows: a new pose is appended with its use_when line, never rewritten. Craft: _corpus/keyframes-character.md section 4.",
+  "families": [
+    "talking",
+    "pointing",
+    "counting and size",
+    "holding",
+    "reacting",
+    "thinking",
+    "endings"
+  ],
+  "order": [
+    "neutral",
+    "point-up-left",
+    "point-up-right",
+    "point-up-both",
+    "look-up-point",
+    "point-left",
+    "point-right",
+    "point-down",
+    "index-up",
+    "two-fingers",
+    "three-fingers",
+    "thumbs-up",
+    "shock-cheeks",
+    "shrug",
+    "stop-palm",
+    "thinking-chin",
+    "hands-wide",
+    "pinch-tiny",
+    "hand-on-chest",
+    "point-viewer",
+    "wave",
+    "present-palm",
+    "arms-crossed",
+    "calm-palms",
+    "tap-wrist",
+    "four-fingers",
+    "five-fingers",
+    "level-hand",
+    "squeeze-palms",
+    "stack-palms",
+    "hold-chest",
+    "hold-up-show",
+    "typing",
+    "grip-plug",
+    "loupe-peer",
+    "sand-pour",
+    "tweezers-steady",
+    "blow-dust",
+    "saw-chop",
+    "switch-flip",
+    "worried-mouth",
+    "facepalm",
+    "cover-eyes",
+    "hands-up-caught",
+    "collar-tug",
+    "grimace-teeth",
+    "hands-on-head",
+    "fan-face",
+    "wipe-brow",
+    "unplug-guilty",
+    "shield-eyes",
+    "mind-blown",
+    "scratch-head",
+    "temple-tap",
+    "head-tilt",
+    "look-up",
+    "celebrate-fist",
+    "arms-up",
+    "fist-palm",
+    "wink-thumbs",
+    "finger-guns",
+    "peace-sign",
+    "nod-smirk",
+    "dust-off-hands",
+    "hood-mask"
+  ],
+  "templates": {
+    "sheet": "This is our cartoon character, the one drawn in this chat. Draw THE SAME character {count} times on one sheet: a grid of {rows} rows and 3 columns, evenly spaced, every figure the same size, nothing touching, on one solid flat pure {key_name} {key_hex} background with no lines between the cells.\n\nKeep IDENTICAL in all {count}: the face shape, {identity}, the flat cartoon style (flat fills, one soft shade step, no outline, no texture), the colours and the proportions. Keep every colour of their clothes exactly as in the character drawn in this chat. Each figure is a bust facing the viewer, cut flat by the bottom edge of its cell, the head at the same size and the same height in every cell. Hands are simple cartoon hands with four fingers and a thumb, skin coloured, no outline, every hand fully inside its cell. They have exactly TWO arms in every figure. Nothing rises above the top of the head. No text, no labels, no props.\n\nEach ROW is one pose. The three columns of a row are the SAME drawing, identical in every line, except the face: column 1 mouth CLOSED; column 2 mouth open mid-word as when talking, a simple open cartoon mouth showing a dark red inside; column 3 {blink_face}, mouth closed.\n\n{rows_text}",
+    "sheet_row": "Row {n}, {title}: {pose} Column 1 mouth CLOSED, even in shock or surprise; column 2 mouth open, talking; column 3 {blink_face}.",
+    "sheet_blink_eyes": "both eyes fully CLOSED in a blink",
+    "sheet_blink_dark_glasses": "both eyebrows dipped down and relaxed, as in a blink behind the dark glasses",
+    "base": "IMAGE 1 is a photo of a real person. IMAGE 2 is a cartoon character. Draw the person in IMAGE 1 as a flat 2D cartoon character, in exactly the drawing style and the framing of IMAGE 2.\n\nWho they are comes only from IMAGE 1: face shape, skin tone, hair (shape, length, colour, parting side), eyebrows, eye colour, facial hair, glasses, jewellery, and the top they wear with its colour.{hidden} Take nothing of who IMAGE 2 is: not his green sunglasses, not his red t-shirt, not his swept brown hair, not his mustache.\n\nStyle, copied from IMAGE 2: very simple, clean, rounded vector shapes; flat fills with one soft darker shade step; thin dark lines only on the brows, nose and mouth; no outer outline, no gradients, no texture, no hair strands, no realism. Cute cartoon proportions: a big rounded head (wider cheeks, soft rounded jaw), a small neck, the head about as wide as 55% of the shoulders. Simple C-shaped ears, the nose one small curve, the mouth a simple shape. No logos, no text, no brand marks anywhere.\n\nFraming (important), exactly like IMAGE 2: the character is SMALL in the canvas. A bust seen from the front, cut flat by the bottom edge of the image. The top of the hair is at 35% of the canvas height; the chin is at about 62%; the head is only about 36% of the canvas width; the shoulders fill the bottom. Large empty space above the head. Arms down at the sides, hands not visible. Friendly neutral expression, mouth closed, soft smile.\n\nKeep every colour of their clothes exactly as in IMAGE 1, never change a colour to suit the background.\nBackground: one solid flat colour filling the whole canvas, pure {key_name} {key_hex}. No shadow, no text, no border. A tall portrait image, 2:3.",
+    "pose": "IMAGE 1 is our cartoon character, the reference. Redraw THE SAME character in a new pose. Keep IDENTICAL: the face shape, {identity}, the flat cartoon style (flat fills, one soft shade step, no outline, no texture), the colours and the proportions. Keep every colour of their clothes exactly as in IMAGE 1. Keep the head the SAME SIZE and at the SAME POSITION in the canvas as in IMAGE 1, facing the viewer; the torso stays cut flat by the bottom edge of the canvas exactly like IMAGE 1. Hands are simple cartoon hands with four fingers and a thumb, skin coloured, no outline. Every hand and finger stays fully inside the canvas. Solid flat pure {key_name} ({key_hex}) background filling the whole canvas, no shadow, no text, no props, no extra effects, no border.\n\nNEW POSE: {pose}",
+    "open": "IMAGE 1 is our cartoon character. Output the EXACT same image, pixel for pixel the same pose, hands, head position, size, {worn}hair, clothes and colours. Change ONLY the mouth: it is now open mid-word while talking, a simple open cartoon mouth showing a dark red interior, a hint of upper teeth and tongue, same expression otherwise. Solid flat pure {key_name} ({key_hex}) background filling the whole canvas, no shadow, no text.",
+    "blink": "IMAGE 1 is our cartoon character. Output the EXACT same image, pixel for pixel the same pose, hands, head position, size, {worn}hair, clothes and colours. Change ONLY the eyes: both eyes are closed in a blink, each eye drawn as a closed eyelid in the skin colour with one soft curved lash line where the eye was; the eyebrows, the mouth and the rest of the face stay the same; mouth stays closed. Solid flat pure {key_name} ({key_hex}) background filling the whole canvas, no shadow, no text.",
+    "blink_dark_glasses": "IMAGE 1 is our cartoon character. Output the EXACT same image, pixel for pixel the same pose, hands, head position, size, {worn}hair, clothes and colours. Change ONLY the eyebrows: both eyebrows dip down slightly and relax, as they do in a blink behind the dark glasses; mouth stays closed. Solid flat pure {key_name} ({key_hex}) background filling the whole canvas, no shadow, no text."
+  },
+  "poses": [
+    {
+      "id": "neutral",
+      "family": "talking",
+      "sided": false,
+      "use_when": "default talking pose, arms down, friendly",
+      "text": "arms relaxed down at the sides exactly like IMAGE 1, friendly neutral expression, mouth closed with a soft smile."
+    },
+    {
+      "id": "present-palm",
+      "family": "talking",
+      "sided": true,
+      "side": "right",
+      "use_when": "open palm up at chest, \"here it is\"",
+      "text": "one forearm raised in front of the chest on the right side of the image with the open hand palm up, presenting something, like a presenter saying 'here it is'; other arm relaxed down. Friendly confident expression, mouth closed smile."
+    },
+    {
+      "id": "wave",
+      "family": "talking",
+      "sided": true,
+      "side": "right",
+      "use_when": "hello: the first word of the reel, a new scene, the CTA \"comment\"",
+      "text": "waving hello at the viewer: the arm on the right side of the image raised with the elbow bent and down, the open hand beside the head at ear height (never above the top of the head), palm facing the viewer, fingers spread, mid-wave; other arm relaxed down. Warm friendly expression, eyebrows up, big closed-mouth smile."
+    },
+    {
+      "id": "point-viewer",
+      "family": "talking",
+      "sided": true,
+      "side": "right",
+      "use_when": "\"you\", \"your\", a direct address: the viewer is the subject of the sentence",
+      "text": "pointing straight AT THE VIEWER: the arm on the right side of the image reaching forward toward the camera, the hand in front of the chest with the index finger aimed directly at the viewer (foreshortened: we look at the fingertip, the hand a little bigger from perspective), other fingers folded; other arm relaxed down. Confident 'you' expression, one eyebrow raised, closed-mouth smirk."
+    },
+    {
+      "id": "hand-on-chest",
+      "family": "talking",
+      "sided": false,
+      "use_when": "\"I\", \"me\", \"my\", \"we built\": they talk about themselves or own the claim",
+      "text": "one open hand pressed flat on the centre of their own chest, fingers together (meaning 'me', 'I did this'); other arm relaxed down. Sincere expression, soft eyebrows, gentle closed-mouth smile."
+    },
+    {
+      "id": "arms-crossed",
+      "family": "talking",
+      "sided": false,
+      "use_when": "arms crossed, confident, a firm claim",
+      "text": "arms crossed firmly over the chest, confident expression, one eyebrow slightly raised, confident closed-mouth smirk."
+    },
+    {
+      "id": "calm-palms",
+      "family": "talking",
+      "sided": false,
+      "use_when": "calm down: \"no stress\", \"relax\", \"it is fine\", \"not on recent ones\", both palms patting the air down",
+      "text": "calming gesture, 'relax, no stress': BOTH forearms raised in front of the UPPER chest, elbows bent, both hands held HIGH at the height of the collarbones just under the chin, open with the palms facing DOWN toward the floor and the fingers spread a little, patting the air down gently, the hands a shoulder-width apart, one on each side; the hands are in the upper half of the torso, far above the waist; shoulders relaxed and low. Serene reassuring expression, eyebrows relaxed, soft wide closed-mouth smile."
+    },
+    {
+      "id": "tap-wrist",
+      "family": "talking",
+      "sided": true,
+      "side": "left",
+      "use_when": "time passing: \"over time\", \"all day\", \"for years\", \"every time\", a finger tapping the bare wrist",
+      "text": "'time is passing': the forearm on the left side of the image held horizontally in front of the chest with the wrist turned up, and the index finger of the other hand tapping the top of that wrist where a watch would be (NO watch drawn, bare wrist); the head tipped slightly down toward the wrist. Knowing expression, one eyebrow raised, closed-mouth smile."
+    },
+    {
+      "id": "hood-mask",
+      "family": "talking",
+      "sided": false,
+      "mouth_hidden": true,
+      "use_when": "in a cleanroom or a lab: white hood and mask on, the eyes still showing (mouth hidden, the open mouth is the closed page)",
+      "text": "EXCEPTION for this pose only, a costume IS drawn: they wear a plain WHITE cleanroom bunny-suit HOOD that covers all of the hair, the ears and the neck and frames the face in an oval, and a WHITE face mask that covers the nose tip, mouth and chin; the eyes stay fully visible between the hood and the mask, and the eyebrows show above them; the hood is flat white with one soft grey shade step, no logo, no text. Their top is unchanged below the hood. Both arms relaxed down at the sides exactly like IMAGE 1. Eyebrows raised, alert.",
+      "variants": {
+        "glasses": "EXCEPTION for this pose only, a costume IS drawn: they wear a plain WHITE cleanroom bunny-suit HOOD that covers all of the hair, the ears and the neck and frames the face in an oval, and a WHITE face mask that covers the nose tip, mouth and chin; their glasses stay ON, fully visible between the hood and the mask, and the eyebrows show above them; the hood is flat white with one soft grey shade step, no logo, no text. Their top is unchanged below the hood. Both arms relaxed down at the sides exactly like IMAGE 1. Eyebrows raised, alert."
+      }
+    },
+    {
+      "id": "point-up-left",
+      "family": "pointing",
+      "sided": true,
+      "side": "left",
+      "tip": "up-left",
+      "use_when": "points at a card above-left of the head",
+      "text": "the arm on the left side of the image is raised and the index finger points diagonally toward the TOP-LEFT corner of the image (as if pointing at a card floating above and to the left of the head), the hand beside the head at about eyebrow height, away from the face; other arm relaxed down. Engaged expression, one eyebrow slightly raised, mouth closed smile."
+    },
+    {
+      "id": "point-up-right",
+      "family": "pointing",
+      "sided": true,
+      "side": "right",
+      "tip": "up-right",
+      "use_when": "points at a card above-right of the head",
+      "text": "the arm on the right side of the image is raised and the index finger points diagonally toward the TOP-RIGHT corner of the image (as if pointing at a card floating above and to the right of the head), the hand beside the head at about eyebrow height, away from the face; other arm relaxed down. Engaged expression, mouth closed smile."
+    },
+    {
+      "id": "point-up-both",
+      "family": "pointing",
+      "sided": false,
+      "tip": "up-both",
+      "use_when": "\"up there\", \"look\", a big headline or number landing above the head",
+      "text": "BOTH hands raised beside the head, one on each side, each index finger pointing straight UP, other fingers folded, elbows bent down; the fingertips at the height of the top of the head, never higher. Excited 'look up there' expression, eyebrows raised, closed-mouth smile."
+    },
+    {
+      "id": "look-up-point",
+      "family": "pointing",
+      "sided": true,
+      "side": "left",
+      "tip": "up-left",
+      "use_when": "points up-left and looks at it: a card they read or discover above them (\"this line here\")",
+      "text": "the arm on the left side of the image raised, the index finger pointing toward the TOP-LEFT corner of the image, the hand beside the head at eyebrow height (never above the top of the head); the head tilted back and turned toward the top-left, chin up, looking up at what they point at; other arm relaxed down. Impressed expression, eyebrows raised, mouth closed."
+    },
+    {
+      "id": "point-left",
+      "family": "pointing",
+      "sided": true,
+      "side": "left",
+      "tip": "left",
+      "use_when": "names an object on the left of the screen (image-left), at shoulder height",
+      "text": "the arm on the left side of the image stretched out horizontally to the side at shoulder height, the index finger pointing flat toward the LEFT edge of the image, the fingertip inside the canvas; the head turned a little toward the same side; other arm relaxed down. Engaged expression, closed-mouth smile."
+    },
+    {
+      "id": "point-right",
+      "family": "pointing",
+      "sided": true,
+      "side": "right",
+      "tip": "right",
+      "use_when": "names an object on the right of the screen (image-right), at shoulder height",
+      "text": "the arm on the right side of the image stretched out horizontally to the side at shoulder height, the index finger pointing flat toward the RIGHT edge of the image, the fingertip inside the canvas; the head turned a little toward the same side; other arm relaxed down. Engaged expression, closed-mouth smile."
+    },
+    {
+      "id": "point-down",
+      "family": "pointing",
+      "sided": false,
+      "use_when": "\"here\", \"right here\", \"below\", \"this one\": the object or comment sheet under them",
+      "text": "BOTH hands in front of the lower chest with both index fingers pointing straight DOWN toward the bottom edge of the image (at something below them), other fingers folded; the head tipped slightly down. Emphatic 'right here' expression, eyebrows down, mouth closed firm."
+    },
+    {
+      "id": "index-up",
+      "family": "counting and size",
+      "sided": true,
+      "side": "right",
+      "tip": "up",
+      "use_when": "index finger up, \"one rule\", a number, a key point",
+      "text": "one hand raised beside the head on the right side of the image with only the index finger pointing straight up ('one rule'), other fingers folded, the fingertip never above the top of the head; other arm relaxed down. Serious, knowing expression, eyebrows slightly raised, mouth closed."
+    },
+    {
+      "id": "two-fingers",
+      "family": "counting and size",
+      "sided": true,
+      "side": "right",
+      "use_when": "\"two\", \"second\", \"a couple\", the second item of a list",
+      "text": "one hand held up in front of the chest on the right side of the image showing exactly TWO fingers (index and middle finger up and apart, ring and pinky folded under the thumb), palm facing the viewer, counting 'two'; other arm relaxed down. Explaining expression, eyebrows slightly raised, closed-mouth smile."
+    },
+    {
+      "id": "three-fingers",
+      "family": "counting and size",
+      "sided": true,
+      "side": "right",
+      "use_when": "\"three\", \"third\", the third item of a list",
+      "text": "one hand held up in front of the chest on the right side of the image showing exactly THREE fingers (index, middle and ring finger up and apart, the thumb holding the pinky down), palm facing the viewer, counting 'three'; other arm relaxed down. Explaining expression, eyebrows slightly raised, closed-mouth smile."
+    },
+    {
+      "id": "four-fingers",
+      "family": "counting and size",
+      "sided": true,
+      "side": "right",
+      "use_when": "\"four\", \"fourth\", \"step four\", the fourth item of a list",
+      "text": "one hand held up in front of the chest on the right side of the image showing exactly FOUR fingers (index, middle, ring and little finger up and apart, the thumb folded flat across the palm), palm facing the viewer, counting 'four'; other arm relaxed down. Explaining expression, eyebrows slightly raised, closed-mouth smile."
+    },
+    {
+      "id": "five-fingers",
+      "family": "counting and size",
+      "sided": true,
+      "side": "right",
+      "use_when": "\"five\", \"fifth\", \"five steps\", an open hand counting five",
+      "text": "one hand held up in front of the chest on the right side of the image showing all FIVE fingers (four fingers and the thumb spread wide apart, a clear open hand), palm facing the viewer, counting 'five', the hand at chest height and not waving; other arm relaxed down. Explaining expression, eyebrows slightly raised, closed-mouth smile."
+    },
+    {
+      "id": "hands-wide",
+      "family": "counting and size",
+      "sided": false,
+      "use_when": "something huge: \"massive\", \"every\", \"all of\", \"a million\", the biggest scale",
+      "text": "both arms spread WIDE apart out to the sides at chest height, elbows almost straight, palms facing each other as if showing something HUGE between them; both hands inside the canvas near the left and right edges. Amazed expression, eyebrows very high, mouth closed in a small round 'whoa'."
+    },
+    {
+      "id": "pinch-tiny",
+      "family": "counting and size",
+      "sided": true,
+      "side": "right",
+      "use_when": "something tiny: \"a tiny\", \"one line\", \"a few cents\", \"0.1 %\", \"barely\"",
+      "text": "one hand raised in front of the shoulder on the right side of the image, the thumb and index finger pinched almost together with a TINY gap between them (showing something tiny), the other fingers curled; other arm relaxed down. They squint at the gap, eyebrows scrunched together, mouth closed pursed."
+    },
+    {
+      "id": "level-hand",
+      "family": "counting and size",
+      "sided": true,
+      "side": "right",
+      "use_when": "a level, a limit, a threshold: \"up to 80%\", \"stops at\", \"no higher than\", flat hand palm down at chest",
+      "text": "marking a LEVEL: the forearm on the right side of the image held horizontally in front of the upper chest, the hand flat and open with the palm facing DOWN and the fingers together pointing toward the left side of the image, like showing 'up to here' on an invisible gauge; other arm relaxed down. Precise explaining expression, one eyebrow raised, closed-mouth smile."
+    },
+    {
+      "id": "squeeze-palms",
+      "family": "counting and size",
+      "sided": false,
+      "use_when": "crammed, squeezed, compressed, \"packed on one side\", \"no room left\": two palms closing like a vice",
+      "text": "squeezing something small between the hands: BOTH hands in front of the chest, one on the left and one on the right, fingers pointing FORWARD toward the viewer (not up), the two flat palms facing each other with a clear empty GAP of about a hand's width between them, pushing toward each other like the two jaws of a vice, as if crushing an invisible box (NOTHING is drawn between the hands; the hands do NOT touch; this is NOT a praying gesture); elbows out wide to the sides, shoulders tense. Strained expression, eyebrows down and scrunched, mouth closed tight."
+    },
+    {
+      "id": "stack-palms",
+      "family": "counting and size",
+      "sided": false,
+      "use_when": "layers, floors, levels on top of each other: \"a tower\", \"100 layers\", \"stacked\", two flat palms one above the other",
+      "text": "showing LAYERS stacked: BOTH forearms horizontal in front of the chest, both hands flat with the palms facing DOWN, one hand held directly ABOVE the other with a gap of about a hand's width between them, fingers together pointing toward opposite sides, like two floors of a building; the upper hand at collarbone height, the lower at mid chest. Explaining expression, eyebrows raised, closed-mouth smile."
+    },
+    {
+      "id": "hold-chest",
+      "family": "holding",
+      "sided": false,
+      "use_when": "an object that becomes theirs (\"is on you\", \"this one\", the end card in their hands)",
+      "text": "both hands in front of the chest holding an INVISIBLE object between them: the palms face each other about a shoulder-width apart, fingers slightly curled as if gripping the left and right sides of a box or a card; NOTHING is drawn between the hands, just empty space. Proud expression, closed-mouth smile."
+    },
+    {
+      "id": "hold-up-show",
+      "family": "holding",
+      "sided": true,
+      "side": "right",
+      "use_when": "holding a phone (or a card) up beside the head, screen to the viewer, pointing at it: \"your answer\", \"send this\", \"look at this\"",
+      "text": "showing the viewer a small flat thing: the arm on the right side of the image raised with the elbow bent, the hand beside the head at ear height (never above the top of the head) holding an INVISIBLE phone upright by its lower edge between the thumb in front and the fingers behind, as if turning its screen toward the viewer (NOTHING is drawn in the hand); the other hand in front of the chest with the index finger pointing up toward that hand. Proud 'see?' expression, one eyebrow raised, closed-mouth grin."
+    },
+    {
+      "id": "typing",
+      "family": "holding",
+      "sided": false,
+      "use_when": "\"type\", \"write\", \"prompt\", \"code\", \"send\": they are the one doing the work at a keyboard",
+      "text": "both forearms forward in front of the lower chest, both hands palms down with the fingers curled as if typing fast on an INVISIBLE keyboard in front of them (no keyboard drawn); the head tipped slightly down, focused. Concentrated expression, eyebrows down, mouth closed."
+    },
+    {
+      "id": "grip-plug",
+      "family": "holding",
+      "sided": true,
+      "side": "right",
+      "use_when": "holding a plug, a handle or a cable end at the side: \"plug it in\", \"keep it plugged in\", \"connect\"",
+      "text": "they have exactly TWO arms. The arm on the right side of the image is bent at the elbow: the upper arm hangs down along the body from the shoulder inside the sleeve, and the forearm comes up and out to the side, so the hand is beside the body at chest height near the right edge of the image, clearly connected to that elbow. The hand is closed in a loose FIST with the thumb on top, knuckles toward the right edge, as if holding a small INVISIBLE plug and pushing it sideways into a socket (NOTHING is drawn in the hand). The other arm (left side of the image) is relaxed down. Focused, pleased expression, closed-mouth smile."
+    },
+    {
+      "id": "loupe-peer",
+      "family": "holding",
+      "sided": true,
+      "side": "right",
+      "use_when": "inspecting something tiny through a loupe held to the eye: \"microscopic\", \"the tiniest details\", \"tested\", \"look closely\"",
+      "text": "inspecting something tiny: the hand on the right side of the image raised in front of the face, the thumb and index finger making a small RING right in front of the eye on that side, as if holding an INVISIBLE jeweller's loupe to the eye (NOTHING is drawn in the hand), the other fingers fanned up; the head pushed a little forward and tipped down, peering through it; other arm relaxed down. Intensely focused expression, eyebrows scrunched, mouth closed and pursed.",
+      "variants": {
+        "glasses": "inspecting something tiny: the hand on the right side of the image raised in front of the face, the thumb and index finger making a small RING right in front of the glasses lens on that side, as if holding an INVISIBLE jeweller's loupe to the eye (NOTHING is drawn in the hand), the other fingers fanned up; the head pushed a little forward and tipped down, peering through it; other arm relaxed down. Intensely focused expression, eyebrows scrunched, mouth closed and pursed."
+      }
+    },
+    {
+      "id": "sand-pour",
+      "family": "holding",
+      "sided": true,
+      "side": "right",
+      "use_when": "a pinch of sand, salt or powder running out of bunched fingers: \"sand\", \"a pinch of\", \"grain by grain\"",
+      "text": "letting sand run out of the fingers: the arm on the right side of the image raised with the elbow bent, the hand at shoulder height beside the body, all five fingertips bunched together and pointing straight DOWN (like sprinkling a pinch of salt or sand), wrist above the fingertips (NOTHING is drawn falling from the hand); they look down at the hand, head tipped a little toward it; other arm relaxed down. Calm fascinated expression, eyebrows raised, small closed-mouth smile."
+    },
+    {
+      "id": "tweezers-steady",
+      "family": "holding",
+      "sided": true,
+      "side": "right",
+      "use_when": "delicate precision work, one hand steadying the other, tongue out: \"one at a time\", \"by hand\", \"place it exactly\"",
+      "text": "doing delicate precision work: the hand on the right side of the image in front of the chest with the thumb and index finger pinched together pointing DOWN as if holding INVISIBLE fine tweezers (NOTHING is drawn in the hand), and the OTHER hand gripping that wrist from below to hold it steady; shoulders hunched forward, head tipped down toward the hands. Extreme concentration: eyebrows scrunched, the tip of the tongue poking out of the corner of the closed mouth, a small cartoon sweat drop on the temple."
+    },
+    {
+      "id": "blow-dust",
+      "family": "holding",
+      "sided": true,
+      "side": "right",
+      "use_when": "blowing something off an open palm: \"a speck of dust\", \"blow it away\", \"gone in a breath\"",
+      "text": "blowing a speck of dust off the palm: the hand on the right side of the image held flat, palm UP, raised to chin height just in front and to the side of the mouth (NOTHING is drawn on the palm); the head turned a little toward the palm, cheeks slightly puffed and lips pushed forward in a small closed 'o' as they blow gently across it; other arm relaxed down. Careful expression, eyebrows raised."
+    },
+    {
+      "id": "saw-chop",
+      "family": "holding",
+      "sided": true,
+      "side": "right",
+      "use_when": "cutting: \"sliced\", \"cut apart\", \"a saw\", a flat hand about to chop down onto the other palm",
+      "text": "a cutting gesture: the arm on the right side of the image raised, the hand flat and rigid like a blade, held edge-on beside the head at ear height (never above the top of the head) with the little-finger edge pointing down and forward, about to karate-chop straight down; the other hand held flat, palm UP, at chest height underneath as the thing being cut. Determined expression, eyebrows down, mouth closed firm."
+    },
+    {
+      "id": "switch-flip",
+      "family": "holding",
+      "sided": true,
+      "side": "right",
+      "use_when": "one finger flipping a switch up beside them: \"a switch\", \"on and off\", \"turn it on\"",
+      "text": "flipping a light switch: the arm on the right side of the image raised to shoulder height out to the side, the hand in a loose fist with only the index finger extended, the fingertip pushing UP on a small INVISIBLE wall switch beside them (NOTHING is drawn), wrist a little below the fingertip; they glance toward it; other arm relaxed down. Playful expression, one eyebrow raised, closed-mouth smile."
+    },
+    {
+      "id": "thumbs-up",
+      "family": "reacting",
+      "sided": true,
+      "side": "right",
+      "use_when": "approval, \"it works\", \"fixed\"",
+      "text": "one hand in front of the chest on the right side of the image giving a clear thumbs up; other arm relaxed down. Happy expression, big closed-mouth smile."
+    },
+    {
+      "id": "shock-cheeks",
+      "family": "reacting",
+      "sided": false,
+      "use_when": "hands on cheeks, big shock at a number or a reveal",
+      "text": "both hands pressed flat on the cheeks below the eyes, elbows out, shocked. Eyebrows raised very high, mouth closed in a small tight line of surprise.",
+      "variants": {
+        "glasses": "both hands pressed flat on the cheeks below the glasses, elbows out, shocked. Eyebrows raised very high, mouth closed in a small tight line of surprise."
+      }
+    },
+    {
+      "id": "worried-mouth",
+      "family": "reacting",
+      "sided": false,
+      "use_when": "hand over the mouth with a sweat drop, \"oops\", a risk",
+      "text": "one hand covering the mouth (fingers over the lips), worried 'oops' expression, eyebrows angled up in the middle, other arm relaxed down. A small cartoon sweat drop on the temple."
+    },
+    {
+      "id": "facepalm",
+      "family": "reacting",
+      "sided": false,
+      "eyes_hidden": true,
+      "use_when": "facepalm, a dumb mistake or a painful fact",
+      "text": "facepalm: one palm pressed on the forehead and over the eyes, head tilted down slightly, eyebrows frustrated, mouth closed in a grimace; other arm relaxed down.",
+      "variants": {
+        "glasses": "facepalm: one palm pressed on the forehead and the upper part of the glasses, head tilted down slightly, eyebrows frustrated, mouth closed in a grimace; other arm relaxed down."
+      }
+    },
+    {
+      "id": "shrug",
+      "family": "reacting",
+      "sided": false,
+      "use_when": "open-hands shrug, \"who knows\", \"nobody tells you\"",
+      "text": "shrug: both shoulders raised, both forearms out to the sides with open palms up at waist-to-chest height, eyebrows raised, mouth closed in a crooked 'who knows' smile."
+    },
+    {
+      "id": "stop-palm",
+      "family": "reacting",
+      "sided": true,
+      "side": "right",
+      "use_when": "\"stop\", \"don't\", \"never\", \"wait\": a warning or a hard rule",
+      "text": "STOP: the arm on the right side of the image pushed forward, the open palm facing the viewer at chest height, fingers up and together, a firm stop gesture; other arm relaxed down. Stern expression, eyebrows down, mouth closed in a flat line."
+    },
+    {
+      "id": "cover-eyes",
+      "family": "reacting",
+      "sided": false,
+      "eyes_hidden": true,
+      "use_when": "can't watch: the disaster, \"it deleted everything\", the leak gets worse",
+      "text": "both hands covering the eyes, fingers slightly spread (can't watch), elbows in, shoulders a little raised. Cringing expression, mouth closed in a tight grimace.",
+      "variants": {
+        "glasses": "both hands covering the eyes over the glasses, fingers slightly spread (can't watch), elbows in, shoulders a little raised. Cringing expression, mouth closed in a tight grimace."
+      }
+    },
+    {
+      "id": "hands-up-caught",
+      "family": "reacting",
+      "sided": false,
+      "use_when": "caught: \"busted\", \"that's illegal\", \"they found out\", the fine arrives",
+      "text": "caught: both hands raised beside the head in surrender, palms open facing the viewer, elbows bent down, the hands at ear height (never above the top of the head). Nervous expression, eyebrows raised high, awkward tight closed-mouth smile, a small cartoon sweat drop on the temple."
+    },
+    {
+      "id": "collar-tug",
+      "family": "reacting",
+      "sided": false,
+      "use_when": "nervous: \"and then the bill came\", an awkward fact, a risk they are exposed to",
+      "text": "nervous: one hand pulling the collar of their top away from the neck with one finger hooked in the collar; other arm relaxed down. Eyebrows angled up in the middle, awkward nervous closed-mouth smile, a small cartoon sweat drop on the temple."
+    },
+    {
+      "id": "grimace-teeth",
+      "family": "reacting",
+      "sided": false,
+      "use_when": "\"yikes\", a painful number or a bad outcome, head only (arms down)",
+      "text": "arms relaxed down at the sides, shoulders raised and hunched, a big wide 'yikes' grimace showing clenched teeth (top and bottom teeth together, lips pulled wide), eyebrows angled up in the middle, a small cartoon sweat drop on the temple."
+    },
+    {
+      "id": "hands-on-head",
+      "family": "reacting",
+      "sided": false,
+      "use_when": "overwhelmed: \"oh no\", everything breaks at once, the worst case",
+      "text": "both hands clutching the sides of the head above the ears, fingers in the hair, elbows out wide to the sides, the hands never above the top of the head: overwhelmed 'oh no'. Eyebrows high and worried, mouth closed tight.",
+      "variants": {
+        "covered": "both hands clutching the sides of the head above the ears, fingers spread on the head covering, elbows out wide to the sides, the hands never above the top of the head: overwhelmed 'oh no'. Eyebrows high and worried, mouth closed tight."
+      }
+    },
+    {
+      "id": "fan-face",
+      "family": "reacting",
+      "sided": true,
+      "side": "right",
+      "use_when": "too hot: \"hot\", \"baking\", \"in the sun\", \"overheating\"; fanning the face, flushed, sweat drops",
+      "text": "overheating: the hand on the right side of the image raised beside the cheek, open and flat with the fingers together, fanning air at their own face (the hand at cheek height, never above the top of the head); other arm relaxed down. They are too hot: eyebrows angled up in the middle, cheeks a little flushed, mouth closed in a tired exhale, two small cartoon sweat drops on the temple and forehead."
+    },
+    {
+      "id": "wipe-brow",
+      "family": "reacting",
+      "sided": true,
+      "side": "right",
+      "use_when": "worn out by heat or effort: \"all summer\", \"phew\", \"under a duvet\", the back of the hand across the brow",
+      "text": "wiping sweat off the forehead with the BACK of the hand: the forearm on the right side of the image raised across the forehead just above the eyes, the back of the wrist touching the brow, elbow out to the side (nothing above the top of the head); other arm relaxed down. Exhausted from heat: eyebrows drooping, mouth closed in a weary 'phew', a small cartoon sweat drop on the cheek.",
+      "variants": {
+        "glasses": "wiping sweat off the forehead with the BACK of the hand: the forearm on the right side of the image raised across the forehead just above the glasses, the back of the wrist touching the brow, elbow out to the side (nothing above the top of the head); other arm relaxed down. Exhausted from heat: eyebrows drooping, mouth closed in a weary 'phew', a small cartoon sweat drop on the cheek."
+      }
+    },
+    {
+      "id": "unplug-guilty",
+      "family": "reacting",
+      "sided": true,
+      "side": "right",
+      "use_when": "caught with the thing just pulled out, held up beside the face: \"unplugs\", \"guilty\", \"that friend who...\"",
+      "text": "caught red-handed: the hand on the right side of the image raised beside the head at ear height (never above the top of the head), closed in a loose FIST with the thumb on top as if holding up a small INVISIBLE thing they just pulled out (NOTHING is drawn in the hand); shoulders hunched up; other arm relaxed down. Guilty sheepish expression: eyebrows angled up in the middle, an awkward crooked closed-mouth smile, a small cartoon sweat drop on the temple."
+    },
+    {
+      "id": "shield-eyes",
+      "family": "reacting",
+      "sided": true,
+      "side": "left",
+      "use_when": "blinded by a flash from above-left, forearm thrown up: \"blasts\", \"a flash\", \"too bright\", an explosion",
+      "text": "blinded by a flash coming from the upper LEFT of the image: the forearm on the left side of the image thrown up diagonally in front of the forehead and eyes with the open palm facing outward toward the top-left corner, fingers spread, shielding the eyes (the hand never above the top of the head); the head turned away and down toward the right side, shoulders hunched; other arm relaxed down. Wincing expression, eyebrows clenched, mouth closed in a tight grimace.",
+      "variants": {
+        "glasses": "blinded by a flash coming from the upper LEFT of the image: the forearm on the left side of the image thrown up diagonally in front of the forehead and glasses with the open palm facing outward toward the top-left corner, fingers spread, shielding the eyes (the hand never above the top of the head); the head turned away and down toward the right side, shoulders hunched; other arm relaxed down. Wincing expression, eyebrows clenched, mouth closed in a tight grimace."
+      }
+    },
+    {
+      "id": "mind-blown",
+      "family": "reacting",
+      "sided": false,
+      "use_when": "a number too big to hold: \"billions\", \"208 billion\", fingers bursting open beside the temples",
+      "text": "mind blown: BOTH hands beside the temples, a little away from the head, fingers spread wide open like a small explosion going off on each side of the head (the hands never above the top of the head), elbows out; the head tipped slightly back. Astonished expression: eyebrows raised as high as they go, the mouth closed in a tiny tight 'o' of disbelief."
+    },
+    {
+      "id": "thinking-chin",
+      "family": "thinking",
+      "sided": false,
+      "use_when": "hand on chin, pondering a question",
+      "text": "thinking: one hand under the chin with the index finger and thumb on the chin, elbow resting on the other arm folded across the chest; eyebrows one up one down, mouth closed, pondering."
+    },
+    {
+      "id": "scratch-head",
+      "family": "thinking",
+      "sided": true,
+      "use_when": "confused: \"wait, what?\", \"makes no sense\", a puzzling behaviour",
+      "text": "one hand scratching the side of the head above the ear, elbow raised out to the side (the hand never above the top of the head); other arm relaxed down. Puzzled expression, one eyebrow up, mouth closed and pushed to one side."
+    },
+    {
+      "id": "temple-tap",
+      "family": "thinking",
+      "sided": true,
+      "use_when": "\"smart\", \"think about it\", the clever trick or the insight",
+      "text": "one index finger touching the temple just beside the eye ('think about it', a smart idea), other fingers folded, elbow down; other arm relaxed down. Knowing expression, one eyebrow raised, clever closed-mouth smirk.",
+      "variants": {
+        "glasses": "one index finger touching the temple just beside the glasses ('think about it', a smart idea), other fingers folded, elbow down; other arm relaxed down. Knowing expression, one eyebrow raised, clever closed-mouth smirk."
+      }
+    },
+    {
+      "id": "head-tilt",
+      "family": "thinking",
+      "sided": true,
+      "use_when": "curious: \"here's the weird part\", a question to the viewer, head only (arms down)",
+      "text": "arms relaxed down at the sides exactly like IMAGE 1, the head tilted clearly to one side (about 15 degrees) like a curious dog. Intrigued expression, one eyebrow raised, small closed-mouth smile."
+    },
+    {
+      "id": "look-up",
+      "family": "thinking",
+      "sided": false,
+      "use_when": "wonder: \"imagine\", \"what if\", the future, something huge above them, head only",
+      "text": "arms relaxed down at the sides exactly like IMAGE 1, the head tilted back with the face turned up, looking up at something above them, chin raised. Wondering expression, eyebrows up, mouth closed."
+    },
+    {
+      "id": "celebrate-fist",
+      "family": "endings",
+      "sided": true,
+      "side": "right",
+      "use_when": "fist pump, a win",
+      "text": "celebrating: one fist raised high beside the head on the right side of the image (a victory fist pump), fist fully inside the canvas and never above the top of the head; other arm relaxed down. Big happy expression, eyebrows up, mouth closed wide grin."
+    },
+    {
+      "id": "arms-up",
+      "family": "endings",
+      "sided": false,
+      "use_when": "the big win: \"it worked\", \"100 %\", the biggest payoff (bigger than celebrate-fist)",
+      "text": "celebrating with BOTH arms raised, elbows bent, both fists beside the head at the height of the top of the head (never above it), victory. Huge happy expression, eyebrows up, wide closed-mouth grin."
+    },
+    {
+      "id": "fist-palm",
+      "family": "endings",
+      "sided": false,
+      "use_when": "determination: \"let's go\", \"do this\", \"the fix\", committing to the plan",
+      "text": "determination: one fist punching into the open palm of the other hand in front of the chest, both forearms up at chest height. Determined expression, eyebrows down, firm closed-mouth smile."
+    },
+    {
+      "id": "wink-thumbs",
+      "family": "endings",
+      "sided": true,
+      "side": "right",
+      "use_when": "a wink and a thumbs up (glasses slid down when they wear them), the payoff or the CTA",
+      "text": "thumbs up in front of the chest on the right side of the image, one eye winking closed, the other open, cheeky grin with mouth closed.",
+      "variants": {
+        "glasses": "thumbs up in front of the chest on the right side of the image, and the glasses slid down to the tip of the nose so the eyes show above the frame: one eye winking closed, the other open, cheeky grin with mouth closed."
+      }
+    },
+    {
+      "id": "finger-guns",
+      "family": "endings",
+      "sided": false,
+      "use_when": "a light ending or a cheeky punchline: \"you're welcome\", the last frame",
+      "text": "both hands in front of the chest making finger guns aimed at the viewer (index fingers pointing forward, thumbs up, other fingers folded). Playful cheeky expression, one eyebrow raised, closed-mouth grin."
+    },
+    {
+      "id": "peace-sign",
+      "family": "endings",
+      "sided": true,
+      "side": "right",
+      "use_when": "the sign-off: last frame, \"see you\", a light beat after the CTA",
+      "text": "one hand raised beside the face on the right side of the image making a peace sign (a V with the index and middle fingers), palm facing the viewer, at cheek height; other arm relaxed down; the head tilted a little toward the hand. Playful expression, closed-mouth smile."
+    },
+    {
+      "id": "nod-smirk",
+      "family": "endings",
+      "sided": false,
+      "use_when": "quiet confidence: \"exactly\", \"of course\", \"that's the point\", head only (arms down)",
+      "text": "arms relaxed down at the sides exactly like IMAGE 1, the head tipped forward and down a little (chin lowered, mid confident nod). Cool expression, eyebrows lowered, a confident smirk with one corner of the mouth up."
+    },
+    {
+      "id": "dust-off-hands",
+      "family": "endings",
+      "sided": false,
+      "use_when": "job done, brushing the palms clean: the last word, \"that is all it is\", \"just sand\", \"done\"",
+      "text": "job done, brushing sand off the hands: BOTH hands in front of the chest, flat and vertical, palms facing each other and offset, one sliding UP past the other as they brush together (a 'dusting off' clap), fingers together, elbows relaxed. Satisfied expression, eyebrows relaxed, a confident closed-mouth smirk."
+    }
+  ]
+}

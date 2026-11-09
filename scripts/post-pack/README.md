@@ -431,7 +431,7 @@ growth engine sends a post's media with
 python scripts/post-pack/send.py FOLDER --library heartside --as "Posts/F01" --purpose "Heartside post F01, for Codex to post"
 ```
 
-and the sync writes it into `Heartside\05_Social-Library\Posts\F01\`
+and the sync writes it into `Heartside\03b_Social-Schedule\Posts\F01\` (the folder was `05_Social-Library` until 2026-11-09)
 (`config/heartside-library.json`), after the makeyourmindup pass and apart
 from it. A Heartside path is `Posts/<post id>/<file>`, the id like `F01` or
 `F06-frenchie`, nothing deeper (`config/library-paths.cases.json`,

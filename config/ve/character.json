@@ -1,0 +1,175 @@
+{
+  "schema": "ve-character/1",
+  "source": "keyframes@0.2.13",
+  "_about": "Krish's cartoon character: where its inputs and its drawn library live, whether he has approved the base, and the numbers ve places it by. Only this manifest is in git; every image (his photo, the house style image, the base, the poses) lives in his asset library and is never committed (AGENTS.md). Asked for by Krish, 2026-11-09: \"I will put a character in to it as well later this week, so ensure that is ready too.\" Craft: _corpus/keyframes-character.md. Cards: docs/ve/cards/keyframes/ve-kf-6-character-library.md (draws the library) and ve-kf-7-character-layer.md (places it in a cut). A spec may name a character (spec.character) only once approved is true, the library is built and the character_layer device is registered; until then ve lint refuses it (character.* lines, scripts/velib/character.py).",
+  "id": "krish",
+  "status": "ready",
+  "approved": true,
+  "approval": {
+    "by": "Krish",
+    "said": "yes",
+    "on": "2026-11-09",
+    "of": "base.png (version 2: longer sleeves and no earbud, his notes on version 1: \"longer sleeves, get rid of the ear bud in my right ear\")",
+    "base_sha256": "b5e083703c09736232622241223a4e81ab6d1fa693a23b310cd1809b5b508cea"
+  },
+  "home": {
+    "root": "library_root",
+    "_root": "runtime.library_root in config/studio.json (MINDMAKE_LIBRARY_ROOT): makeyourmindup, Drive 1HHI0u24N3o3-yeprQzHdXVZtA7cNcKxh. The brand kit is permanent, beside photography/editor, which already holds his two editor photos.",
+    "folder": "1 Brand kit (permanent)/character/krish",
+    "drop_photo": "1 Brand kit (permanent)/character/krish/input/photo.jpg",
+    "drop_notes": "1 Brand kit (permanent)/character/krish/input/notes.txt"
+  },
+  "inputs": {
+    "photo": {
+      "path": "input/photo.jpg",
+      "rule": "One clear photo of Krish facing the camera, head and shoulders, in the top he wants the character to wear; JPG or PNG (an iPhone HEIC is turned into JPG first: the image tool and the library path rule do not take HEIC). A small, blurry or side-on photo is asked for again once."
+    },
+    "notes": {
+      "path": "input/notes.txt",
+      "rule": "Optional, in his words: anything the photo cannot show (eye colour, hair under a cap), and his taste (\"keep my glasses on\", \"never arms crossed\"). Copied verbatim into identity.md and preferences.md; never paraphrased into his voice."
+    },
+    "style_image": {
+      "path": "house/style.png",
+      "sha256": "473e7f72a80ca588adb8058ae90a86644e2c1bc0e3a1671296aff1dcca19108e",
+      "size": [
+        1024,
+        1536
+      ],
+      "from": "the original zip, assets/character/style.png (docs/ve/sources/keyframes.md). It gives the drawing style and the framing only, never who the character is."
+    },
+    "example_sheet": {
+      "path": "house/example-sheet.png",
+      "sha256": "5c746a462fbb2296fc9db9dc39d37abf39016cf49fc71db5bb8dc9d733725b80",
+      "from": "the original zip, assets/character/example-sheet.png: the house character's poses, the bar for the library."
+    }
+  },
+  "outputs": {
+    "identity": "identity.md",
+    "preferences": "preferences.md",
+    "raw": "raw/",
+    "base": "base.png",
+    "poses": "poses/<pose>-closed.png, poses/<pose>-open.png, poses/<pose>-blink.png",
+    "library_manifest": "library.json",
+    "contact_sheet": "contact-sheet.png",
+    "check": "check.json",
+    "usage": "usage.jsonl"
+  },
+  "drawing": {
+    "route": "codex-chatgpt",
+    "_route": "GPT Image 2 through Codex signed in with ChatGPT (Krish's subscription; no API key, no other paid service). When Codex says its image tool is unavailable, stop and say so; the fallback is ChatGPT by hand with the sheet prompts, never another provider. Drawing in code is not offered: it looks much worse.",
+    "poses_file": "config/ve/character-poses.json",
+    "canvas": [
+      1024,
+      1036
+    ],
+    "open_mouth_height": 0.6,
+    "key_colours": [
+      "magenta",
+      "green",
+      "blue"
+    ]
+  },
+  "acting": {
+    "canvas": [
+      1080,
+      1920
+    ],
+    "bust_height_px": 570,
+    "bust_bottom_y": 1985,
+    "spots_x": {
+      "centre": 540,
+      "left": 350,
+      "right": 715
+    },
+    "default_spot": "centre",
+    "_spots": "The pack's spots. Here the bust's opaque pixels never enter a channel's action rail or top bar (config/channel-safe-zones.json), the caption region or the key part of the beat's picture: the layer moves the bust inward or sinks it until they clear, and refuses a cue it cannot clear. The right spot will mostly clamp inward, since Instagram's rail starts at x 880. Its head sits inside the handle and caption band (from y 1320), where nothing that must be read may go; the bust is not text, and Krish judges that at his first look.",
+    "sink_px": [
+      40,
+      190
+    ],
+    "lead_frames": 4,
+    "max_poses_per_second": 0.8,
+    "min_pose_gap_s": 0.5,
+    "max_props": 5,
+    "max_walks": 6,
+    "blink_every_s": [
+      3.0,
+      4.5
+    ],
+    "not_in_hook": true,
+    "aspects": [
+      "9:16"
+    ],
+    "_aspects": "The pack placed it on 1080x1920 only. A 16:9 placement waits for its own measured spot and Krish's look."
+  },
+  "library": {
+    "built": true,
+    "poses": [
+      "neutral",
+      "point-up-left",
+      "point-up-right",
+      "point-up-both",
+      "look-up-point",
+      "point-left",
+      "point-right",
+      "point-down",
+      "index-up",
+      "two-fingers",
+      "three-fingers",
+      "thumbs-up",
+      "shock-cheeks",
+      "shrug",
+      "stop-palm",
+      "thinking-chin",
+      "hands-wide",
+      "pinch-tiny",
+      "hand-on-chest",
+      "point-viewer",
+      "wave",
+      "present-palm",
+      "arms-crossed",
+      "calm-palms",
+      "tap-wrist",
+      "four-fingers",
+      "five-fingers",
+      "level-hand",
+      "squeeze-palms",
+      "stack-palms",
+      "hold-chest",
+      "hold-up-show",
+      "typing",
+      "grip-plug",
+      "loupe-peer",
+      "sand-pour",
+      "tweezers-steady",
+      "blow-dust",
+      "saw-chop",
+      "switch-flip",
+      "worried-mouth",
+      "facepalm",
+      "cover-eyes",
+      "hands-up-caught",
+      "collar-tug",
+      "grimace-teeth",
+      "hands-on-head",
+      "fan-face",
+      "wipe-brow",
+      "unplug-guilty",
+      "shield-eyes",
+      "mind-blown",
+      "scratch-head",
+      "temple-tap",
+      "head-tilt",
+      "look-up",
+      "celebrate-fist",
+      "arms-up",
+      "fist-palm",
+      "wink-thumbs",
+      "finger-guns",
+      "peace-sign",
+      "nod-smirk",
+      "dust-off-hands",
+      "hood-mask"
+    ]
+  }
+}
