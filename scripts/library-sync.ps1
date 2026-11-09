@@ -60,7 +60,7 @@ $RepoRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $TopFolders = @('1 Brand kit (permanent)', '2 Channel art (permanent)', '3 Posts')
 # A second library (Krish, 2026-11-03: "Why don't you duplicate that Python
 # script for Heartside then? We're going to need to do a lot more of this type
-# of stuff moving forward"): Heartside's social library, Heartside\05_Social-Library,
+# of stuff moving forward"): Heartside's social library, Heartside\03b_Social-Schedule (named 05_Social-Library until 2026-11-09),
 # where each post's media goes in Posts\<post id>\. Its root is "root" in
 # config\heartside-library.json (or the setting MINDMAKE_HEARTSIDE_LIBRARY_ROOT);
 # with neither, it is skipped. It is written
