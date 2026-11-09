@@ -74,10 +74,11 @@ APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's wid
 LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening the upper lid takes back, its cap (eye widths), time smoothing
 GATE_FROM, GATE_SPAN = 0.1, 0.08   # no correction under 0.1 iris radii of move (about 3 deg), the whole move from 0.18 (about 5 deg)
 HARD_FROM, HARD_SPAN = 0.35, 0.2   # ...up to 0.35 radii (about 10 deg); past it the move eases off, and a glance past 0.55 is left as filmed
+PUSH_HOLD, PUSH_FADE = 1.15, 1.3   # the push carries everything within 1.15 iris radii of the iris whole, fading to nothing 1.3 radii further out
+ACROSS_MAX = 0.15                  # iris radii: the most the push moves across the eye (up or down), inside his opening only
 SEEN_MIN = 0.78                    # no move unless this share of both irises is inside his lid line (fully from 0.88): a part-hidden iris made whole read paler (9 Nov blind review, 16.13 s and 65.77 s)
 SHARE_SIGMA = 2.0                  # frames: the share of the move is smoothed over time, one share for both eyes
 LOOK_UP, LOOK_DOWN, LOOK_PAD, LOOK_MIN = -0.035, 0.28, 1, 15  # white under the iris, or this share of it under the upper lid: a look up or down, left alone (and a few frames either side)
-IRIS_GROW = 1.02          # his iris circle, in landmarker radii, for the clean cut-out
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
 AIM_KEEP = 0.15             # share of his own eye movement kept on top of the lens aim, so the eyes stay alive
 AIM_GAIN = 1.0             # tried 1.4: a hard glance read more frontal but the far iris smeared (5 Nov, 5.50 s)
@@ -603,59 +604,6 @@ def iris_mask(light, inside, d_here, r):
     return (filled > 0) & inside & (d_here < 1.35)
 
 
-def whole_iris(region, inside_soft, hx: float, hy: float, hr: float, grow: float = IRIS_GROW):
-    """His iris from this frame, whole: (BGR float32 patch, alpha, share seen, iris centre in the patch). The patch is square, around the iris
-    at (hx, hy) in `region`'s pixels, radius hr. Where his lid or the eye's corner hides part of it (inside_soft under
-    0.9), the hidden part is filled from the same iris mirrored across its own horizontal axis, then its vertical axis,
-    then both (an iris is near enough round, and a lid hides top or bottom); what no mirror reaches takes the ring's
-    median colour at that radius. A catchlight is kept where it is and never mirrored, so there is never a second one.
-    Seen and filled pixels are mixed by how well each is seen, so there is no cut between them."""
-    import cv2  # noqa: PLC0415
-    import numpy as np  # noqa: PLC0415
-    s = int(math.ceil(2 * (grow + 0.3) * max(1.0, hr))) + 3
-    ox, oy = int(math.floor(hx)) - s // 2, int(math.floor(hy)) - s // 2      # whole pixels: his iris is copied, not resampled
-    m = np.float32([[1, 0, ox], [0, 1, oy]])
-    patch = cv2.warpAffine(np.asarray(region, np.float32), m, (s, s), flags=cv2.INTER_NEAREST | cv2.WARP_INVERSE_MAP,
-                           borderMode=cv2.BORDER_REPLICATE)
-    vis = cv2.warpAffine(np.asarray(inside_soft, np.float32), m, (s, s), flags=cv2.INTER_NEAREST | cv2.WARP_INVERSE_MAP,
-                         borderMode=cv2.BORDER_CONSTANT, borderValue=0)
-    cx, cy = hx - ox, hy - oy                                                  # the iris centre in the patch
-    yy, xx = np.mgrid[0:s, 0:s].astype(np.float32) + 0.5
-    xx, yy = xx - cx, yy - cy
-    d = np.hypot(xx, yy) / max(1.0, hr)
-    disc = d < grow + 0.25
-    seen_w = np.clip((vis - 0.6) / 0.3, 0, 1) * disc
-    share = float((seen_w > 0.5).sum()) / max(1.0, float((d < grow).sum()))
-    grey = patch.mean(2)
-    solid = seen_w > 0.5
-    cap = float(np.percentile(grey[solid], 85)) if solid.sum() >= 8 else 255.0
-    src_w = seen_w * (grey <= cap + 25)                                        # a catchlight is not copied
-    fill, wsum = np.zeros_like(patch), np.zeros(grey.shape, np.float32)
-    left = np.ones(grey.shape, np.float32)
-    for flip in ((slice(None, None, -1), slice(None)), (slice(None), slice(None, None, -1)),
-                 (slice(None, None, -1), slice(None, None, -1))):
-        w = src_w[flip] * left
-        fill += patch[flip] * w[..., None]
-        wsum += w
-        left = np.clip(left - src_w[flip], 0, 1)
-    if src_w.sum() > 3:
-        ring = np.clip((d * 8).astype(int), 0, 9)
-        median = np.zeros_like(patch)
-        for b in np.unique(ring):
-            pool = (src_w > 0.5) & (ring == b)
-            if pool.sum() < 3:
-                pool = src_w > 0.5
-            median[ring == b] = np.median(patch[pool], axis=0)
-        fill += median * left[..., None]
-        wsum += left
-    fill = fill / np.maximum(wsum, 1e-4)[..., None]
-    whole = patch * seen_w[..., None] + fill * (1 - seen_w[..., None])
-    # The iris carries a thin ring of his own white with it, and its soft edge runs white into white: an edge that ran
-    # iris into the filled-in white left a pale rim where the iris had been (9 Nov blind review, 253.4 and 304.6 s).
-    alpha = np.clip((grow + 0.22 - d) / 0.12, 0, 1).astype(np.float32)
-    return whole.astype(np.float32), alpha, share, (float(cx), float(cy))
-
-
 def iris_seen(contour, iris, rad: float) -> float:
     """The share of his iris disc inside his lid line (16 points), sampled on a grid. Pure."""
     import numpy as np  # noqa: PLC0415
@@ -735,7 +683,6 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
     region = frame[y0:y1, x0:x1].astype(np.float32)
     other = source[y0:y1, x0:x1].astype(np.float32)
     inside = hard > 0
-    inside_soft = np.clip(cv2.GaussianBlur(hard.astype(np.float32), (0, 0), 0.7) * 1.25, 0, 1)   # for clipping the iris to his lid
     lab_o = cv2.cvtColor(region.astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
     lab_s = cv2.cvtColor(other.astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
     lab_s += lab_o[inside].mean(0) - lab_s[inside].mean(0)            # same colour as his eye, iris moved or not
@@ -784,28 +731,29 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             # The fade is a share of the move, not a cross-fade: an iris half-way between two pictures of itself is a
             # ghost, grey and doubled (blind review, 6 Nov, 60.30 s). The iris travels gate x the move, fully opaque.
             ox, oy, tx, ty, gate = ox * gate, oy * gate, hx + ox * gate, hy + oy * gate, 1.0
-            # What the old iris position becomes: his sclera, smoothly continued (normalised convolution over the
-            # opening outside the iris), not an inpainted dark smear.
-            keep = (inside & (d_here > IRIS_GROW + 0.12)).astype(np.float32)
-            sig = max(1.5, 1.4 * hr)
-            wsum = cv2.GaussianBlur(keep, (0, 0), sig) + 1e-4
-            sclera = np.stack([cv2.GaussianBlur(region[..., c] * keep, (0, 0), sig) / wsum for c in range(3)], axis=2)
-            hole_f = np.clip((IRIS_GROW + 0.30 - d_here) / 0.30, 0, 1)
-            base = region * (1 - hole_f[..., None]) + sclera * hole_f[..., None]
-            # His own iris from this very frame, with its own colour and catchlight, made whole where his lid hides it
-            # (whole_iris), then laid at the aim and clipped by his lid there. The clean iris built from other frames
-            # (the template, now removed) is gone: at 5.57 s his whole iris was in view and the template stood in
-            # only because it travelled far, and that is the flat grey eye with a smeared catchlight the sixth blind
-            # review failed (6 Nov). Moving a part-hidden iris as it was carried its lid cut with it (a jagged edge, a
-            # pale ghost); the whole one does not.
-            patch, palpha, _share, (pcx, pcy) = whole_iris(region, inside_soft, hx - x0, hy - y0, hr)
-            put = np.float32([[1, 0, (tx - x0) - pcx], [0, 1, (ty - y0) - pcy]])
-            # Lanczos keeps his iris's texture and catchlight through a sub-pixel move; cubic softened them a little
-            # (9 Nov blind review: a flatter iris and a weaker catchlight, seen at 2x).
-            moved = cv2.warpAffine(patch, put, (x1 - x0, y1 - y0), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REPLICATE)
-            own = cv2.warpAffine(palpha, put, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT,
-                                 borderValue=0) * inside_soft
-            eye = base * (1 - own[..., None]) + moved.astype(np.float32) * own[..., None]
+            # The move is a smooth push of his own eye, not a cut-out and paste: one resample of this frame, the iris
+            # carried whole and the white either side stretched or pressed a little, fading to nothing toward the
+            # corners. Nothing is filled in or blended, so there is no rim, no grey ring and no second outline, and his
+            # catchlight and colour are his (9 Nov: a cut-out iris left a pale ring at 2x, 253.4, 300.1 and 304.6 s on
+            # the long take). Along the eye the push also carries the lash line along itself, which leaves its shape;
+            # across it the push stays inside the opening and is capped, so the lids never bend.
+            cl = c - np.array([x0, y0], dtype=np.float64)
+            u = (cl[8] - cl[0]) / (float(np.hypot(*(cl[8] - cl[0]))) or 1.0)
+            v = np.array([-u[1], u[0]])
+            along, across = ox * u[0] + oy * u[1], ox * v[0] + oy * v[1]
+            across = float(np.clip(across, -ACROSS_MAX * hr, ACROSS_MAX * hr))
+            reach = np.clip((PUSH_HOLD + PUSH_FADE - d_here) / PUSH_FADE, 0, 1)
+            reach = reach * reach * (3 - 2 * reach)
+            soft = max(1.0, 0.3 * hr)
+            band_h = np.clip(cv2.GaussianBlur(cv2.dilate(hard, np.ones((3, 3), np.uint8), iterations=max(1, int(round(0.4 * hr)))).astype(np.float32),
+                                              (0, 0), soft), 0, 1)
+            band_v = np.clip(cv2.GaussianBlur(hard.astype(np.float32), (0, 0), soft), 0, 1)
+            edge = np.minimum.reduce([xs, ys, (x1 - x0 - 1) - xs, (y1 - y0 - 1) - ys])
+            taper = np.clip(edge / 3.0, 0, 1)                                       # never moves the crop's own border
+            wa, wc = reach * band_h * taper, reach * band_v * taper
+            mapx = (xs - (along * u[0] * wa + across * v[0] * wc)).astype(np.float32)
+            mapy = (ys - (along * u[1] * wa + across * v[1] * wc)).astype(np.float32)
+            eye = cv2.remap(region, mapx, mapy, cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REPLICATE)
             relocated = True
     # His moved eye goes out as it was built: an 8-bit Lab round trip shifted its colour by about a level (9 Nov).
     other = eye if relocated else cv2.cvtColor(np.clip(lab_s, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32)
@@ -814,7 +762,7 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
     hp_s = other - cv2.GaussianBlur(other, (0, 0), k)
     gain = 1.0 if relocated else float(np.clip(np.sqrt((hp_o[inside] ** 2).mean() / max(1e-6, (hp_s[inside] ** 2).mean())), 1.0, DETAIL_MAX))
     other = other + (gain - 1.0) * hp_s
-    a = (alpha * gate)[..., None]
+    a = (np.ones_like(alpha) if relocated else alpha * gate)[..., None]   # the push is the identity wherever it does not reach
     out = frame.copy()
     out[y0:y1, x0:x1] = np.clip(np.rint(region * (1 - a) + other * a), 0, 255).astype(np.uint8)
     if lid > 0 and gate > 0:
