@@ -81,7 +81,19 @@ def bed(stem: str, mode: str | None = None, sidecar: str | None = None) -> dict:
 
 def _lift_skip(report: dict) -> list:
     from .audio import LIFT_FALL_S, LIFT_RISE_S
-    return [(a - LIFT_RISE_S - 3.0, b + LIFT_FALL_S + 3.0) for a, b in report.get('lifts') or []]
+    return ([(a - LIFT_RISE_S - 3.0, b + LIFT_FALL_S + 3.0) for a, b in report.get('lifts') or []]
+            + _handover_skip(report, 3.0))
+
+
+def _handover_skip(report: dict, margin: float) -> list:
+    """A cut's own declared handovers (a clip handing to the next, a late bed rising; the premix's spec music plan),
+    left out like chapter lifts, `margin` either side."""
+    return [(float(a) - margin, float(b) + margin) for a, b in report.get('handovers') or []]
+
+
+def _outside(holes, skip: list) -> list:
+    """The drop-outs ((from_s, length_s), velib.audio.gaps) that do not lie inside a declared handover."""
+    return [h for h in holes or [] if not any(a <= float(h[0]) and float(h[0]) + float(h[1]) <= b for a, b in skip)]
 
 
 def episode_rows(sidecar: Path, report: dict) -> list:
@@ -107,7 +119,7 @@ def episode_rows(sidecar: Path, report: dict) -> list:
     if len(short) >= hold:
         dev = np.abs(short - median)
         swing = float(np.lib.stride_tricks.sliding_window_view(dev, hold).min(axis=1).max())
-    holes = gaps(_decode(str(music)), start_s=start, end_s=end)
+    holes = _outside(gaps(_decode(str(music)), start_s=start, end_s=end), _handover_skip(report, 0.5))
     return [
         {'check': 'bed level in the master', 'value': None if median is None else round(median, 1),
          'target': f'{target} ±{LEVEL_TOLERANCE_LU} LUFS short-term median',
@@ -153,6 +165,6 @@ def continuity(render: str, stem: str, sidecar: str | None = None) -> dict:
     lead = int(data.get('lead_frames') or 0)
     start = 0.0 if lead else (report.get('body_s') or [1.5])[0]
     end = max(start, (duration or length) - 1.5)
-    holes = gaps(mono, start_s=start, end_s=end, floor_dbfs=floor)
+    holes = _outside(gaps(mono, start_s=start, end_s=end, floor_dbfs=floor), _handover_skip(report, 0.5))
     return {'value': holes, 'target': f'no 0.25 s under {floor} dBFS (50 ms RMS) from {start:.1f} to {end:.1f} s',
             'pass': not holes, 'status': 'measured'}
