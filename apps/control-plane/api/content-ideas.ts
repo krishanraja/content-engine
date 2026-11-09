@@ -14,6 +14,7 @@ import { randomUUID } from 'node:crypto'
 import { contentRevisionHash, createProductionApproval, jsonRecord, readProductionApproval } from './_productionBrief.js'
 import { operatorAttribution, sha256 } from './_editEvents.js'
 import { guardEngine } from './_auth.js'
+import { askVoiceCheck } from './_controlCenter.js'
 
 // Content ideas inbox endpoint.
 //
@@ -475,6 +476,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const checks = publishChecks(effective, gate, new Date(), id)
         const status = publishStatus(checks)
         if (!status.ok) return res.status(409).json({ ok: false, reason: 'publish_gate', error: status.reason, checks: status.failing })
+      }
+    }
+
+    // The one voice check (Ruling, Krish, 2026-11-09: every word written for Krish, Jonny or the
+    // publication passes it). Every lane, not only the live subchannels: a publication piece is
+    // checked as the publication's article, any other lane's as his own post. A hard fail blocks
+    // approval and publication; a check Control Center cannot answer blocks nothing (its own gates
+    // above still stand) and says so.
+    if (current && (updates.state === 'approved' || updates.state === 'published')) {
+      const effective = typeof updates.body === 'string' ? updates.body : (current.body || '')
+      const channel = (LIVE_SUBCHANNELS as readonly string[]).includes(String(current.lane_slot)) ? 'article' : 'linkedin'
+      const voice = effective.trim() ? await askVoiceCheck(effective, channel) : null
+      if (voice && voice.hard.length) {
+        return res.status(409).json({ ok: false, reason: 'voice_gate', error: `The words break the voice rules: ${[...new Set(voice.hard.map(h => h.message))].slice(0, 3).join(' ')}`, voice: voice.hard })
       }
     }
 
