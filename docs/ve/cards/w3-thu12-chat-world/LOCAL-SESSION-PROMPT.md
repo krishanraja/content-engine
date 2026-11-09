@@ -40,3 +40,4 @@ Caps from the card: 45 minutes, 45 calls. Do not raise them.
 - Settle the Control Center reservation with the real allowance used.
 - Update `docs/plans/2026-11-09-week/OUTSTANDING.md` (Thu 12 row) and `NOW.md` per AGENTS.md closeout.
 - Do not start the piece itself (`ve init`, proof, cut) in this session: that is the next session, with the 5 Nov take and the ChatGPT screenshot.
+- Write this into the OUTSTANDING row for the piece session: run `ve eyeline` on the 5 Nov take before `ve ingest`, as for every makeyourmindup video (Krish, 5 Nov: "for all post-processing of my makeyourmindup videos"; `docs/ve/STATUS.md`). The cut is pure voiceover, so no frame of his face is on screen, but the corrected take is the one filed and the one any later cut or cover reuses. It runs on this computer (the Maxine Eye Contact route), never in a cloud session.
