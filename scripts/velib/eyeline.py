@@ -131,6 +131,28 @@ class Maxine(Backend):
         return frames(self.copy, info['width'], info['height'])
 
 
+class Calibrated(Backend):
+    """Maxine's lens point from another take of the same recording session, with no pod and no copy (9 Nov 2026: the
+    NIM refused the long take outright, 'Only H.264 8-bit videos with Constant Frame Rate are supported', on images
+    1.5.0 and 1.5.1, and took the short one recorded minutes before it). Maxine is only ever used for where the lens
+    is, one point per eye in that eye's own geometry; on ai-music-short its two halves agreed to 0.004 eye widths,
+    and his own gaze on the two takes to 0.006, head pose to 0.6 degrees. It is refused unless this take's head pose
+    is within HEAD_MATCH_DEG of the calibrated take's."""
+    name = 'maxine-lens'
+    aperture = True
+    lock = True
+    frame_source = True
+    calibrated = True
+
+    def __init__(self, receipt: Path | str):
+        data = json.loads(Path(receipt).read_text())
+        if data.get('backend') != 'maxine' or not data.get('lens') or not data.get('head') or data.get('decision') == 'rejected':
+            raise RuntimeError(f'{receipt}: not the receipt of a Maxine eyeline run that recorded its lens point and head pose')
+        self.lens = {side: tuple(map(float, data['lens'][side])) for side in IRIS}
+        self.head = data['head']
+        self.source = data.get('input', {}).get('path', str(receipt))
+
+
 class Flx(Backend):
     """WangWilly/gaze-correction-cam's warping model (Hsu et al., ACM TOMM 2019), run from its own source and the v0.1.1
     weights, both kept in .cache/eyeline-eval/ and never committed. Private evaluation only."""
@@ -183,6 +205,7 @@ class Flx(Backend):
 
 
 BACKENDS = {'identity': Identity, 'flx': Flx, 'maxine': Maxine}
+HEAD_MATCH_DEG = 4.0       # a lens point from another take holds only where his head sits as it did there
 
 
 # ------------------------------------------------------------------ decide (pure numpy)
@@ -415,7 +438,30 @@ def _eye_axes(eye):
     return centre, u, v, width
 
 
-def aims(readings: list[dict], there: list[dict], decided: list[dict]) -> list[dict]:
+def lens_point(readings: list[dict], there: list[dict], decided: list[dict]) -> dict:
+    """Maxine's lens point per eye: the median, over the frames corrected, of where Maxine put the iris, along and
+    across the eye, in eye widths. {side: (along, across)}; a side with under five readings is left out."""
+    import numpy as np  # noqa: PLC0415
+    out = {}
+    for side in IRIS:
+        maxi = []
+        for i, (r, t) in enumerate(zip(readings, there)):
+            if r.get('face') and t.get('face') and decided[i]['strength'] > 0:
+                c, u, v, w = _eye_axes(r['eyes'][side])
+                d = np.asarray(t['iris'][side]) - c
+                maxi.append((d @ u / w, d @ v / w))
+        if len(maxi) >= 5:
+            out[side] = tuple(float(x) for x in np.median(np.array(maxi), 0))
+    return out
+
+
+def head_pose(readings: list[dict]) -> dict:
+    import numpy as np  # noqa: PLC0415
+    rows = [r for r in readings if r.get('face')]
+    return {'yaw': round(float(np.median([r['yaw'] for r in rows])), 2), 'pitch': round(float(np.median([r['pitch'] for r in rows])), 2)}
+
+
+def aims(readings: list[dict], there: list[dict] | None, decided: list[dict], lens: dict | None = None) -> list[dict]:
     """Where each iris should be, per frame: Maxine's lock point, calibrated once per eye in that eye's own geometry
     (the median over the take of where Maxine put the iris, along and across the eye, in eye widths), laid on his eye
     in each frame, plus AIM_KEEP of his own movement about his own median, at most AIM_MAX of the eye's width away.
@@ -423,17 +469,19 @@ def aims(readings: list[dict], there: list[dict], decided: list[dict]) -> list[d
     (blind review, 5 Nov, 5.50 s); the calibrated aim corrects it fully and keeps both eyes on one point."""
     import numpy as np  # noqa: PLC0415
     out = [dict() for _ in readings]
+    lens_all = lens if lens is not None else lens_point(readings, there, decided)
     for side in IRIS:
-        mine, maxi = [], []
-        for i, (r, t) in enumerate(zip(readings, there)):
-            if r.get('face') and t.get('face') and decided[i]['strength'] > 0:
-                c, u, v, w = _eye_axes(r['eyes'][side])
-                for rows, keep in ((r, mine), (t, maxi)):
-                    d = np.asarray(rows['iris'][side]) - c
-                    keep.append((d @ u / w, d @ v / w))
-        if len(maxi) < 5:
+        if side not in lens_all:
             continue
-        lens, own = np.median(np.array(maxi), 0), np.median(np.array(mine), 0)
+        mine = []
+        for i, r in enumerate(readings):
+            if r.get('face') and decided[i]['strength'] > 0:
+                c, u, v, w = _eye_axes(r['eyes'][side])
+                d = np.asarray(r['iris'][side]) - c
+                mine.append((d @ u / w, d @ v / w))
+        if len(mine) < 5:
+            continue
+        lens, own = np.asarray(lens_all[side]), np.median(np.array(mine), 0)
         for i, r in enumerate(readings):
             if not r.get('face') or 'iris_r' not in r:
                 continue
@@ -972,15 +1020,27 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
     target = out_dir / f'{media.stem}.eyeline.mp4'
     if qc is not None:
         qc.start(decided, info, out_dir / f'loop.{media.stem}.mp4')
-    source, moves = None, None
+    source, moves, lens = None, None, None
+    calibrated = getattr(backend, 'calibrated', False)
     if getattr(backend, 'frame_source', False):
-        theirs, ours = len(packet_times(backend.copy)), len(packet_times(media))
-        if theirs != ours:
-            raise ValueError(f'{backend.name}: its copy has {theirs} frames and the take {ours}: frames cannot be matched')
-        source = backend.frames_for(info)
+        if calibrated:
+            here, there_head = head_pose(readings), backend.head
+            if max(abs(here['yaw'] - there_head['yaw']), abs(here['pitch'] - there_head['pitch'])) > HEAD_MATCH_DEG:
+                raise ValueError(f'{backend.name}: his head sits at yaw {here["yaw"]}, pitch {here["pitch"]} here and at '
+                                 f'yaw {there_head["yaw"]}, pitch {there_head["pitch"]} on {backend.source}: not one setup')
+            source = frames(media, info['width'], info['height'])          # no copy: his own frames, moved by the push
+            lens = backend.lens
+        else:
+            theirs, ours = len(packet_times(backend.copy)), len(packet_times(media))
+            if theirs != ours:
+                raise ValueError(f'{backend.name}: its copy has {theirs} frames and the take {ours}: frames cannot be matched')
+            source = backend.frames_for(info)
         if getattr(backend, 'aperture', False):
-            there = read(backend.copy, info) if copy_readings is None else copy_readings   # where the copy put each iris
-            aimed = aims(readings, there, decided)
+            there = None
+            if not calibrated:
+                there = read(backend.copy, info) if copy_readings is None else copy_readings   # where the copy put each iris
+                lens = lens_point(readings, there, decided)
+            aimed = aims(readings, there, decided, lens=lens)
             lowered = lids(readings, decided, aimed)
             looks = look_flags(readings, decided)
             for d_, w_ in zip(decided, looks):
@@ -1007,7 +1067,7 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                         xa, ya = max(0, int(c[:, 0].min()) - 6), max(0, int(c[:, 1].min()) - 6)
                         xb, yb = int(c[:, 0].max()) + 6, int(c[:, 1].max()) + 6
                         aperture_used = True
-                        same = same and bool(np.array_equal(frame[ya:yb, xa:xb], other[ya:yb, xa:xb]))
+                        same = same and not calibrated and bool(np.array_equal(frame[ya:yb, xa:xb], other[ya:yb, xa:xb]))
                         aim = aimed[index].get(side) if aimed and index < len(aimed) else None
                         mine = readings[index] if readings[index].get('face') and 'iris_r' in readings[index] else None
                         new = blend_aperture(new, other, eye['contour'], d['strength'],
@@ -1021,7 +1081,7 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                 counts['corrected'] += 1
                 # Aperture mode leaves small corrections as they were on purpose (the gate), so our output not moving
                 # proves nothing there: what a backend that "did nothing" shows is a copy equal to the take.
-                if d['strength'] >= 0.5 and (same if aperture_used else moved == 0.0):
+                if d['strength'] >= 0.5 and not calibrated and (same if aperture_used else moved == 0.0):
                     counts['unmoved'] += 1
             elif d['strength'] > 0 and d['eyes']:
                 items, geos = [], []
@@ -1060,6 +1120,11 @@ def run(media, out_dir: Path, backend: Backend, *, readings: list[dict] | None =
                'settings': {'on_lens_deg': ON_LENS_DEG, 'full_deg': FULL_DEG, 'max_deg': MAX_DEG, 'blink': BLINK,
                             'head_turn_deg': HEAD_TURN_DEG, 'ramp_frames': RAMP_FRAMES},
                'problems': problems}
+    if lens:
+        receipt['lens'] = {side: [round(float(x), 5) for x in lens[side]] for side in lens}
+        receipt['head'] = head_pose(readings)
+        if calibrated:
+            receipt['lens_from'] = backend.source
     if problems:
         target.unlink(missing_ok=True)
         receipt['decision'] = 'rejected'

@@ -327,6 +327,25 @@ class Media(unittest.TestCase):
         self.assertTrue(any('changed nothing' in p for p in receipt['problems']), receipt['problems'])
 
     @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+    def test_a_lens_point_from_another_take_holds_only_in_the_same_setup(self):
+        import json
+        receipt = self.dir / 'eyeline.short.json'
+        receipt.write_text(json.dumps({'backend': 'flx', 'lens': {'L': [0.08, -0.07], 'R': [-0.07, -0.07]}}))
+        with self.assertRaisesRegex(RuntimeError, 'not the receipt of a Maxine'):
+            eyeline.Calibrated(receipt)
+        receipt.write_text(json.dumps({'backend': 'maxine', 'decision': 'corrected', 'input': {'path': 'short.mp4'},
+                                       'lens': {'L': [0.08, -0.07], 'R': [-0.07, -0.07]}, 'head': {'yaw': 30.0, 'pitch': 0.0}}))
+        readings = self.scaled([reading(iris_dx=9) if 10 <= i < 30 else reading() for i in range(60)])
+        with self.assertRaisesRegex(ValueError, 'not one setup'):         # his head sits 30 degrees from where it did
+            eyeline.run(self.take, self.dir / 'out', eyeline.Calibrated(receipt), readings=readings)
+        receipt.write_text(json.dumps({'backend': 'maxine', 'decision': 'corrected', 'input': {'path': 'short.mp4'},
+                                       'lens': {'L': [0.08, -0.07], 'R': [-0.07, -0.07]}, 'head': {'yaw': 0.0, 'pitch': 0.0}}))
+        done = eyeline.run(self.take, self.dir / 'out', eyeline.Calibrated(receipt), readings=readings)
+        self.assertEqual(done['problems'], [])
+        self.assertEqual(done['lens_from'], 'short.mp4')
+        self.assertEqual(eyeline.same_media(self.take, Path(done['output']['path'])), [])
+
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
     def test_a_maxine_copy_is_taken_only_where_the_plan_says(self):
         other = self.dir / 'other.mp4'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(self.take), '-vf', 'negate', '-c:v', 'libx264',
