@@ -93,7 +93,7 @@ h2{font-size:28px;line-height:1.05;margin:44px 0 6px}
 /* Pieces: every day the same shape */
 .pieces{display:flex;flex-direction:column;gap:10px}
 details.p{background:var(--card);border:1px solid var(--line);border-radius:18px}
-details.p>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:96px minmax(0,1fr) 210px minmax(0,260px) 24px;gap:16px;align-items:center;padding:16px 18px;min-height:72px}
+details.p>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:96px minmax(0,1fr) 200px minmax(0,360px) 24px;gap:16px;align-items:center;padding:16px 18px;min-height:72px}
 details.p>summary::-webkit-details-marker{display:none}
 .when{font:600 13px "IBM Plex Mono",monospace}
 .when small{display:block;color:var(--muted);font-weight:400}
@@ -103,13 +103,23 @@ details.p>summary::-webkit-details-marker{display:none}
 .stop{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;font:600 10px "IBM Plex Mono",monospace;color:var(--muted);position:relative}
 .stop i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);background:var(--card);z-index:1}
 .stop.done i{background:var(--ok);border-color:var(--ok)}
-.stop.now i{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 4px color-mix(in srgb,var(--amber) 25%,transparent)}
+.stop.cur i{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 4px color-mix(in srgb,var(--amber) 25%,transparent)}
 .stop.stuck i{background:var(--bad);border-color:var(--bad)}
 .stop:not(:last-child)::after{content:"";position:absolute;top:6px;left:50%;width:100%;height:2px;background:var(--line)}
 .stop.done:not(:last-child)::after{background:var(--ok)}
 .next{font-size:14px;line-height:1.35}
 .next em{font-style:normal;font:600 11px "IBM Plex Mono",monospace;display:block;margin-bottom:2px}
 .next.you em{color:var(--amber)}.next.eng em{color:var(--muted)}.next.bad em{color:var(--bad)}
+.rowacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.rowacts .rb{white-space:nowrap}
+.rb{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:700;font-size:14px;cursor:pointer}
+.rb.go{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rb.wait{opacity:.6;cursor:progress}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(140%);background:var(--ink);color:var(--bg);padding:14px 18px;border-radius:14px;font-weight:600;max-width:calc(100vw - 32px);transition:transform .3s;z-index:60}
+.toast.on{transform:translateX(-50%) translateY(0)}
+.toast a{color:var(--mint)}
+.vid{position:relative;aspect-ratio:9/16;max-width:220px;border-radius:14px;background:linear-gradient(170deg,#2b3832,#0C1512);color:#F4EFE4;display:flex;align-items:flex-start;padding:16px;font:700 15px/1.3 Archivo,sans-serif;margin-bottom:10px}
+.vid::after{content:"\25B6";position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);font-size:34px;opacity:.8}
 .chev{transition:transform .2s;color:var(--muted)}
 details[open] .chev{transform:rotate(90deg)}
 .body{padding:0 18px 18px 130px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -140,6 +150,7 @@ dialog.k::backdrop{background:rgba(12,21,18,.45)}
 @media (max-width:860px){
   .move{grid-template-columns:1fr}
   .strip{grid-template-columns:repeat(3,1fr)}
+  .rowacts .rb{flex:1 1 auto}
   details.p>summary{grid-template-columns:64px minmax(0,1fr) 24px;grid-template-areas:"when what chev" "track track track" "next next next";row-gap:12px}
   .when{grid-area:when}.what{grid-area:what}.track{grid-area:track}.next{grid-area:next}.chev{grid-area:chev}
   .body{padding:0 16px 16px;grid-template-columns:1fr}
@@ -195,13 +206,14 @@ dialog.k::backdrop{background:rgba(12,21,18,.45)}
 
   <div class="mockbar" aria-label="Mock controls (not on the real board)">
     Mock only. The days, pieces, runs and your quoted words are real (9 Nov handover); the due times are placeholders the live view will work out.
-    <button class="b" type="button" id="m-new">Show a live update arriving</button>
+    <button class="b" type="button" id="m-new">Show your Improve coming back</button>
     <button class="b" type="button" id="m-stale">Show the connection dropping</button>
     <button class="b" type="button" id="m-done">Show a finished week</button>
     <button class="b" type="button" id="m-theme">Light or dark</button>
   </div>
 </main>
 
+<div class="toast" id="toast" role="status"></div>
 <dialog class="k" id="k" aria-label="Jump to anything">
   <input id="kq" placeholder="Type a piece, a day or an action" autocomplete="off">
   <ul id="kl" role="listbox"></ul>
@@ -211,25 +223,38 @@ dialog.k::backdrop{background:rgba(12,21,18,.45)}
 // Data: the week of 16 Nov as the 9 Nov handover records it (docs/plans/2026-11-16-week/HANDOVER.md), and the two
 // items open on the week of 9 Nov (NOW.md). On the real board this comes from GET /api/board/:week/view.
 const STOPS = ["Idea", "Story", "Make", "Approve", "Live"];
+const MON = "8287846b-6618-4a19-9fb8-23ad4eca2718", WED = "db9f9f6a-1092-49be-8024-f335e060305a", FRI = "b019dbf8-8051-4cab-9b5e-2ad77b3f5118";
 const DAYS = [
   { key:"mon", d:"Mon 16", kind:"Essay and two cuts", series:"follow.the.money", title:"Where the money for AI comes from",
-    at:1, state:"now", next:{who:"you", text:"Sign the narrative lock once it is drafted from your research", due:"Wed 11"},
-    panels:{"His brief":"“This becomes a broader piece about where, in general, money comes from that tech companies get to build AI.”","Research":"Perplexity Deep Research saved (mon-research.md)","Checks":"Fact gate not started"} },
+    at:1, state:"now", next:{who:"you", text:"Start Monday's session: one question at a time, then the narrative lock to sign", due:"Wed 11"},
+    actions:[{label:"Copy prompt", kind:"prompt", primary:true, prompt:`piece_id: ${MON}\nMake Monday 16 Nov (follow.the.money). Start from my brief and docs/plans/2026-11-16-week/mon-research.md. Interview me one question at a time on the deeper story, then write the narrative lock for me to sign.`},
+             {label:"Read the research", kind:"open", body:"Perplexity Deep Research, saved 9 Nov: docs/plans/2026-11-16-week/mon-research.md"}],
+    panels:{"His brief":"\u201cThis becomes a broader piece about where, in general, money comes from that tech companies get to build AI.\u201d","Research":"Perplexity Deep Research saved (mon-research.md)","Checks":"Fact gate not started"} },
   { key:"tue", d:"Tue 17", kind:"Off day: meme video", series:"povteach", title:"POV: your AI agent using your computer without being set up properly by you",
-    at:2, state:"stuck", next:{who:"bad", text:"Re-caption run failed at 13:05. Engine retries it", due:"today"},
-    panels:{"Your call":"Improve: use the exact existing video, change only the caption","Caption":"“POV: your AI agent using your computer without being set up properly by you”","Checks":"Revision run 42622372777 failed"} },
+    at:2, state:"stuck", next:{who:"bad", text:"Your Improve never reached a revision: the run failed (fixed today). Run it again to get the revised video to review", due:"today"},
+    actions:[{label:"Run my Improve again", kind:"run", primary:true, revise:"tue"},
+             {label:"Copy prompt", kind:"prompt", prompt:"Revise the Tue 17 Nov off-day option povteach (week of 2026-11-16) from my Improve: use the exact existing video and change only the caption to \u201cPOV: your AI agent using your computer without being set up properly by you\u201d. Make the mock for me to approve on the board."}],
+    panels:{"Your call":"Improve: use the exact existing video, change only the caption","Caption":"\u201cPOV: your AI agent using your computer without being set up properly by you\u201d","Checks":"Revision run 42622372777 failed: it read an empty Sunday branch. Fixed in the workflow."} },
   { key:"wed", d:"Wed 18", kind:"Essay and two cuts", series:"under.the.hood", title:"Build or buy your AI",
-    at:1, state:"now", next:{who:"you", text:"Sign the narrative lock once it is drafted from your research", due:"Wed 11"},
-    panels:{"His note":"“Yes give me a Perplexity prompt. I can go and bring a lot of evidence.”","Research":"Saved (wed-research.md)","Checks":"Fact gate not started"} },
+    at:1, state:"now", next:{who:"you", text:"Start Wednesday's session: one question at a time, then the narrative lock to sign", due:"Wed 11"},
+    actions:[{label:"Copy prompt", kind:"prompt", primary:true, prompt:`piece_id: ${WED}\nMake Wednesday 18 Nov (under.the.hood). Start from my note and docs/plans/2026-11-16-week/wed-research.md. Interview me one question at a time on the deeper story, then write the narrative lock for me to sign.`},
+             {label:"Read the research", kind:"open", body:"Your Deep Research, saved 9 Nov: docs/plans/2026-11-16-week/wed-research.md"}],
+    panels:{"His note":"\u201cYes give me a Perplexity prompt. I can go and bring a lot of evidence.\u201d","Research":"Saved (wed-research.md)","Checks":"Fact gate not started"} },
   { key:"thu", d:"Thu 19", kind:"Off day: voiceover short", series:"lookalikes", title:"Which AI assistant to use for what, for anyone",
-    at:2, state:"eng", next:{who:"eng", text:"Growth revises the explainer to your direction", due:"Tue 17"},
-    panels:{"Your call":"Improve: “a standalone explainer for the personalities and use cases for each of the assistants”","Status":"Revision run 42624284763 pending","Checks":"Not yet"} },
+    at:2, state:"stuck", next:{who:"bad", text:"Your Improve never reached a revision: the run failed (fixed today). Run it again to get the revised explainer to review", due:"today"},
+    actions:[{label:"Run my Improve again", kind:"run", primary:true, revise:"thu"},
+             {label:"Copy prompt", kind:"prompt", prompt:"Revise the Thu 19 Nov off-day option lookalikes (week of 2026-11-16) from my Improve: \u201cWe need this to work as a standalone explainer for the personalities and use cases for each of the assistants and be really helpful to the layperson to understand what they can use when.\u201d Make the mock for me to approve on the board."}],
+    panels:{"Your call":"Improve: \u201ca standalone explainer for the personalities and use cases for each of the assistants\u201d","Status":"Revision run 42624284763 failed the same way","Checks":"Not yet"} },
   { key:"fri", d:"Fri 20", kind:"Essay, two cuts and a carousel", series:"mind.the.gap", title:"The future of AI after the midterms",
-    at:2, state:"eng", next:{who:"eng", text:"Engine starts the make from your signed lock and checks every fact", due:"Tue 10"},
-    panels:{"The story":"41 votes on new data centres in 10 states; 40 said limit or no.","Your close":"“Ask your AI supplier where its new computing is being built.”","Checks":"Every fact in the lock still to check"} },
+    at:2, state:"now", next:{who:"you", text:"Your lock is signed. Start the make: every fact checked first, then the scripts", due:"Tue 10"},
+    actions:[{label:"Copy prompt", kind:"prompt", primary:true, prompt:`piece_id: ${FRI}\nMake Friday 20 Nov (mind.the.gap) from my signed narrative lock, docs/plans/2026-11-16-week/narrative-lock-fri.md. Check every fact in it first, then write both scripts and the midterms carousel.`},
+             {label:"Read the signed lock", kind:"open", body:"Hook: towns across America held 41 votes on new AI data centres, and 40 of them said no. The use: ask your AI supplier where its new computing is being built."}],
+    panels:{"The story":"41 votes on new data centres in 10 states; 40 said limit or no.","Your close":"\u201cAsk your AI supplier where its new computing is being built.\u201d","Checks":"Every fact in the lock still to check"} },
   { key:"sat", d:"Sat 21", kind:"Off day: good news carousel", series:"good news", title:"This week's good news",
-    at:0, state:"eng", next:{who:"eng", text:"Stories found by the Thursday run", due:"Thu 19"},
-    panels:{"Your call":"“carousel”","Source":"saturday-goodnews.yml, Thursday 19 Nov","Checks":"Not yet"} },
+    at:0, state:"eng", next:{who:"eng", text:"The Thursday run finds the stories, then they come here for you to approve", due:"Thu 19"},
+    actions:[{label:"Find the stories now", kind:"run", primary:true},
+             {label:"Copy prompt", kind:"prompt", prompt:"Find this week's Saturday good news for 21 Nov (carousel, my call on 9 Nov) and put the stories on the board for me to approve."}],
+    panels:{"Your call":"\u201ccarousel\u201d","Source":"saturday-goodnews.yml, Thursday 19 Nov","Checks":"Not yet"} },
 ];
 const MOVES = [
   { id:"m1", week:"Week of 9 Nov", due:"Due now", what:"Approve the Wed 11 Nov storyboard",
@@ -261,7 +286,8 @@ function strip() {
 }
 function stack() {
   const left = MOVES.filter(m => !cleared.has(m.id));
-  $("#hello").textContent = left.length ? `${left.length} thing${left.length === 1 ? "" : "s"} need${left.length === 1 ? "s" : ""} you` : "Nothing needs you";
+  const n = left.length + DAYS.filter(d => d.next.who !== "eng" && !MOVES.some(m => m.id === "rev-" + d.key && !cleared.has(m.id))).length;
+  $("#hello").textContent = n ? `${n} thing${n === 1 ? "" : "s"} need${n === 1 ? "s" : ""} you` : "Nothing needs you";
   $("#queue").innerHTML = MOVES.map((m, i) => `<li class="${cleared.has(m.id) ? "cleared" : m.id === left[0]?.id ? "cur" : ""}"><span class="n">${i + 1}</span><span>${m.what}<br><span class="mono" style="font-size:12px;color:var(--muted)">${m.due}</span></span></li>`).join("");
   if (!left.length) {
     $("#stack").innerHTML = `<div class="card clear"><h3>Nothing needs you</h3><p class="why">Next from you: sign Monday's narrative lock, when the engine has drafted it (Wed 11). Everything else is in hand.</p></div>`;
@@ -288,8 +314,9 @@ function pieces() {
       <summary>
         <span class="when">${d.d}<small>${d.kind}</small></span>
         <span class="what"><b>${d.title}</b><span>${d.series}</span></span>
-        <span class="track" aria-label="Stage ${d.at + 1} of 5: ${STOPS[d.at]}">${STOPS.map((s, i) => `<span class="stop ${i < d.at ? "done" : i === d.at ? (d.state === "stuck" ? "stuck" : "now") : ""}"><i></i>${s}</span>`).join("")}</span>
-        <span class="next ${d.next.who}"><em>${{ you:"Next, you", eng:"Next, the engine", bad:"Stuck" }[d.next.who]} · ${d.next.due}</em>${d.next.text}</span>
+        <span class="track" aria-label="Stage ${d.at + 1} of 5: ${STOPS[d.at]}">${STOPS.map((s, i) => `<span class="stop ${i < d.at ? "done" : i === d.at ? (d.state === "stuck" ? "stuck" : "cur") : ""}"><i></i>${s}</span>`).join("")}</span>
+        <span class="next ${d.next.who}"><em>${{ you:"Next, you", eng:"Next, the engine", bad:"Stuck" }[d.next.who]} · ${d.next.due}</em>${d.next.text}
+          ${d.actions && d.actions.length ? `<span class="rowacts">${d.actions.map((a, i) => `<button type="button" class="rb ${a.primary ? "go" : ""}" data-day="${d.key}" data-i="${i}">${a.label}</button>`).join("")}</span>` : ""}</span>
         <span class="chev" aria-hidden="true">›</span>
       </summary>
       <div class="body">${Object.entries(d.panels).map(([h, p]) => `<div class="panel"><h5>${h}</h5><p>${p}</p></div>`).join("")}</div>
@@ -305,7 +332,7 @@ function act(a) {
   const id = card.dataset.id, w = card.querySelector(".words"), say = card.querySelector(".saved");
   if (a === "improve" || a === "reject") { w.classList.add("on"); w.dataset.mode = a; card.querySelector("textarea").focus(); say.textContent = a === "reject" ? "Say why, then save." : ""; return }
   if (a === "send" && !card.querySelector("textarea").value.trim()) { say.textContent = "Write your words first."; return }
-  say.textContent = "Saved " + new Date().toTimeString().slice(0, 5) + ".";
+  say.textContent = a === "send" && w.dataset.mode === "improve" ? "Saved. A revised version comes back here for you to review." : "Saved " + new Date().toTimeString().slice(0, 5) + ".";
   const what = MOVES.find(m => m.id === id).what;
   setTimeout(() => {
     card.classList.add("gone");
@@ -321,6 +348,39 @@ document.addEventListener("keydown", e => {
   if (e.target.matches("input,textarea")) return;
   const k = { a:"approve", i:"improve", r:"reject" }[e.key.toLowerCase()]; if (k) act(k);
 });
+
+function toast(html) { const t = $("#toast"); t.innerHTML = html; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 4200) }
+// Every row's buttons: copy the right prompt for a new Claude session, open what to read, or start the run.
+document.addEventListener("click", async e => {
+  const b = e.target.closest(".rb"); if (!b) return;
+  e.preventDefault(); e.stopPropagation();
+  const d = DAYS.find(x => x.key === b.dataset.day), a = d.actions[+b.dataset.i];
+  if (a.kind === "prompt") {
+    try { await navigator.clipboard.writeText(a.prompt); toast(`Prompt copied. Paste it into a new session: <a href="https://claude.ai/code" target="_blank" rel="noopener">open Claude</a>`) }
+    catch { toast("Copy is blocked here. On the real board this copies the prompt.") }
+  } else if (a.kind === "open") {
+    if (a.label === "Review it") document.getElementById("move-h").scrollIntoView({ behavior:"smooth" }); else { const p = $("#p-" + d.key); p.open = true; toast(a.body) }
+  } else if (a.kind === "run") {
+    b.classList.add("wait"); b.textContent = "Running…";
+    if (a.revise) {
+      moved({ t:"Just now", s:`You: ran your ${d.d} Improve again. The revised version comes back to Your move.`, fresh:true });
+      setTimeout(() => revised(d), 3200);
+    } else moved({ t:"Just now", s:`You: started the ${d.d} run.`, fresh:true });
+  }
+}, true);
+// What his Improve brings back: a revised version on top of Your move, to approve, improve again or reject.
+function revised(d) {
+  const tue = d.key === "tue";
+  MOVES.unshift({ id:"rev-" + d.key, week:"Week of 16 Nov", due:"New", what:`Review the revised ${tue ? "meme video" : "explainer"} for ${d.d}`,
+    why: tue ? "Your exact caption over the existing video, nothing else changed." : "Rebuilt as a standalone explainer: each assistant's personality and what to use it for.",
+    thing: tue ? `<div class="vid">POV: your AI agent using your computer without being set up properly by you</div><p class="q">The existing video, unchanged. Your caption, word for word.</p>`
+               : `<ol><li>Three assistants that look alike</li><li>ChatGPT: the all-rounder. Claude: the careful writer and coder. Gemini: lives in your Google files</li><li>Which to open for what, in one line each</li></ol><div class="frames"><i></i><i></i><i></i><i></i></div>` });
+  d.state = "now"; d.at = 3; d.next = { who:"you", text:"Review the revised version in Your move", due:"Mon 16" };
+  d.actions = [{ label:"Review it", kind:"open", primary:true, body:"It is at the top of Your move." }];
+  last = Date.now(); strip(); pieces(); stack();
+  moved({ t:"Just now", s:`Engine: the revised ${d.d} version is ready for you.`, fresh:true });
+  document.getElementById("move-h").scrollIntoView({ behavior:"smooth" });
+}
 // Command palette
 const ITEMS = () => [
   ...MOVES.filter(m => !cleared.has(m.id)).map(m => ({ label:m.what, hint:"Your move", go:() => document.getElementById("move-h").scrollIntoView({ behavior:"smooth" }) })),
@@ -347,10 +407,9 @@ $("#cmdk").onclick = palette;
 setInterval(() => { const s = Math.round((Date.now() - last) / 1000); if (!$("#live").classList.contains("stale")) $("#ago").textContent = innerWidth < 500 ? (s < 5 ? "Live" : `Live, ${s}s ago`) : s < 5 ? "Live, updated just now" : `Live, updated ${s}s ago` }, 1000);
 setInterval(() => { if (!$("#live").classList.contains("stale")) last = Date.now() }, 5000);
 // Mock controls
-$("#m-new").onclick = () => { last = Date.now(); moved({ t:"Just now", s:"Engine: Tuesday re-caption run passed. Growth has the new caption.", fresh:true });
-  DAYS[1].state = "eng"; DAYS[1].at = 3; DAYS[1].next = { who:"you", text:"Approve the re-captioned video", due:"Mon 16" }; strip(); pieces() };
+$("#m-new").onclick = () => { const d = DAYS[1]; if (!MOVES.some(m => m.id === "rev-tue")) revised(d) };
 $("#m-stale").onclick = () => { $("#live").classList.add("stale"); $("#ago").textContent = "Reconnecting. Showing what was true at " + new Date(last).toTimeString().slice(0, 5) };
-$("#m-done").onclick = () => { MOVES.forEach(m => cleared.add(m.id)); DAYS.forEach(d => { d.at = 4; d.state = "done"; d.next = { who:"eng", text:"Published", due:"done" } });
+$("#m-done").onclick = () => { MOVES.forEach(m => cleared.add(m.id)); DAYS.forEach(d => { d.at = 4; d.state = "done"; d.next = { who:"eng", text:"Published", due:"done" }; d.actions = [] });
   strip(); pieces(); stack(); $("#hello").textContent = "Week done"; $("#stack").innerHTML = `<div class="card clear"><h3>Week done</h3><p class="why">6 pieces live, 8 of 8 assets published. Next week's ideas arrive Sunday 06:00.</p></div>`; count(8); scrollTo({ top:0, behavior:"smooth" }) };
 $("#m-theme").onclick = () => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === "dark" ? "light" : "dark" };
 strip(); stack(); pieces(); moved(); count(3);
