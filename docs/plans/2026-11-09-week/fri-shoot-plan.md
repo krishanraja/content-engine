@@ -1,5 +1,7 @@
 # Fri 13 Nov "Counting rat tails": shoot plan (9 Nov 2026)
 
+> **Superseded the same day.** Krish, 9 Nov: "Do you know what? My original scripts are fine. Just use those." The 3 Nov scripts are restored (sha256 7e2c3d6d... long, 85829f64... short, the words his press bound and Teleprompter holds), his 5 Nov takes count again, and nothing is re-recorded. The leaderboard format still stands, built on those takes: the wide cut uses a chest-up crop of the vertical take on the right third; the tall cut never covers his face. There is no clicker on camera; a click sound would need his approval by ear first (`ve sfx audition`). The rewritten scripts are in git history (commit 7bb59ad6).
+
 Format, Krish's go (9 Nov): the leaderboard as host. One scoreboard on screen that changes through the piece
 (1902 ledger page, 2025/2026 company dashboard with the real titles, boards struck off, the paper's own chart,
 then re-sorted by work done), and a real hand tally clicker in his hand. The board is what you see; the script
