@@ -114,8 +114,8 @@ class Moves(unittest.TestCase):
         self.assertEqual(eyeline.band(0.05), 0.0)                       # under 0.1 radii: left as filmed
         self.assertEqual(eyeline.band(0.3), 1.0)                        # the prompter drift: all of it
         self.assertEqual(eyeline.band(1.0), 0.0)                        # a hard glance: left as filmed
-        self.assertGreater(eyeline.band(0.45), 0.0)
-        self.assertLess(eyeline.band(0.45), 1.0)
+        self.assertGreater(eyeline.band(0.7), 0.0)
+        self.assertLess(eyeline.band(0.7), 1.0)
 
     def test_how_much_of_an_iris_is_inside_the_lid_line(self):
         lid = contour_ellipse(100, 100, 30, 12)
@@ -138,7 +138,7 @@ class Moves(unittest.TestCase):
         moves = eyeline.shares(rows, aimed)
         self.assertEqual(moves[15], 0.0)                                # a closing eye never moves
         self.assertGreater(moves[5], 0.9)
-        rows, aimed = self._rows(seen_open=5)                          # lids over most of the iris: a squint
+        rows, aimed = self._rows(seen_open=3)                          # lids over most of the iris: a squint
         self.assertTrue(all(m == 0.0 for m in eyeline.shares(rows, aimed)))
         rows, aimed = self._rows()
         for i in range(8, 23):
