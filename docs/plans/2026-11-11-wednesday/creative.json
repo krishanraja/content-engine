@@ -434,5 +434,30 @@
    "captions break on phrases and never repeat what is on screen",
    "the hardest beats are proved moving on his take before any whole cut, and the Critic scores the cut against the 2 Nov 'Ladder' reference (config/reference-cuts.json)"
   ]
+ },
+ "storyboard_v2": {
+  "status": "sent for approval 2026-11-09",
+  "his_ask": "Yes I want the full creative production and storyboard to approve with mocks along the way. (Krish, 2026-11-09)",
+  "record": "docs/plans/2026-11-11-wednesday/storyboard.md",
+  "beats": {
+   "long": 34,
+   "short": 14
+  },
+  "motion_mocks": [
+   "M1-credit-stack-builds.mp4 (short 0:20-0:42)",
+   "M2-grammys-split.mp4 (short 0:46-0:58, the proof beat)",
+   "M3-chart-then-app-wide.mp4 (long 0:15-0:22)"
+  ],
+  "caption_rule_applied": "no caption while a card on screen says the same words (the split beat)",
+  "fact_flags": [
+   "Imael Angel: a healer who never made music, against WeRaveYou \"Hungarian producer\"",
+   "Grammys ruling conflict (The Australian against EDM.com)",
+   "Bad Times label needs a source",
+   "chart months: holds, 21 weeks"
+  ],
+  "to_capture": [
+   "TikTok comments asking what the song is",
+   "The Australian Grammys headline"
+  ]
  }
 }
