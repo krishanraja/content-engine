@@ -82,11 +82,15 @@ for (const [name, device] of DEVICES) for (const scheme of ['light', 'dark']) {
   if (shots && scheme === 'light') await p.locator('#day-fri').screenshot({ path: `${shots}/${name}-friday.png` })
   if (scheme === 'light' && name === 'desktop-1440') {
     // Pick a look: choose the second option, save; the press waits for its Undo window, then is sent.
-    const radios = p.locator('#day-fri [role=radiogroup] label')
-    if (await radios.count() > 1) await radios.nth(1).click()
-    await p.getByRole('button', { name: 'Use this look' }).click()
-    await p.waitForTimeout(5600)
-    if (!sent.some(x => x.path.endsWith('/look'))) say(where, 'the look press was not sent')
+    const atLook = view.days.find(d => d.path?.current === 'look')
+    if (atLook) {
+      if (await p.getAttribute(`#day-${atLook.day} > button`, 'aria-expanded') !== 'true') await p.click(`#day-${atLook.day} > button`)
+      const radios = p.locator(`#day-${atLook.day} [role=radiogroup] label`)
+      if (await radios.count() > 1) await radios.nth(1).click()
+      await p.locator(`#day-${atLook.day}`).getByRole('button', { name: 'Use this look' }).click()
+      await p.waitForTimeout(5600)
+      if (!sent.some(x => x.path.endsWith('/look'))) say(where, 'the look press was not sent')
+    }
     // Research Monday now, then Undo it: nothing is sent.
     await p.click('#day-mon > button')
     await p.locator('#day-mon [role=tab]').first().click()
@@ -114,6 +118,16 @@ for (const [name, device] of DEVICES) for (const scheme of ['light', 'dark']) {
     await p.getByRole('button', { name: 'Save my thoughts' }).click()
     await p.waitForTimeout(400)
     if (!sent.some(x => x.path.includes('/comments/') && x.body.body.text === 'Lead with who holds the bill.')) say(where, 'his thoughts were not saved')
+    // A day at Storyboard and script with none on file: the reminder shows, and a dropped storyboard is filed with its role.
+    const atBoard = view.days.find(d => d.path?.current === 'board' && !d.path.storyboard)
+    if (atBoard) {
+      if (await p.getAttribute(`#day-${atBoard.day} > button`, 'aria-expanded') !== 'true') await p.click(`#day-${atBoard.day} > button`)
+      const box = p.locator(`#day-${atBoard.day}`)
+      if (!(await box.getByText('No storyboard yet').count())) say(where, 'no storyboard reminder on a day at the storyboard step')
+      await box.locator('input[type=file]').setInputFiles({ name: 'storyboard.html', mimeType: 'text/html', buffer: Buffer.from('<h1>Frames</h1>') })
+      await p.waitForTimeout(400)
+      if (!sent.some(x => x.path.endsWith('/material') && x.body.role === 'storyboard')) say(where, 'the dropped storyboard was not filed as one')
+    }
     // Review a revised option on its day: Approve sends the full board's record after the Undo window.
     await p.click('#day-tue > button')
     const approve = p.locator('#day-tue').getByRole('button', { name: 'Approve', exact: true })

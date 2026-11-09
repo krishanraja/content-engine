@@ -24,6 +24,7 @@ export interface DayPath {
     options: LookOption[]; picked: { production: string; experiment: string | null; inspiration: string[]; at: string } | null }
   inspiration: { cards: Array<{ id: string; name: string; words: string; saved: string | null }>; unread: number }
   prompts: { research: string; story: string; storyboard: string; mock: string }
+  storyboard: { title: string; at: string | null } | null
 }
 export interface Day {
   day: string; date: string; label: string; kind: string; series: string; title: string; piece_id: string | null
@@ -54,7 +55,7 @@ export const api = {
   weeks: () => call<{ weeks: string[] }>('/api/board/weeks'),
   run: (job: string, input: Record<string, unknown>) => post<{ sent: boolean; workflow: string }>('run', { job, input }),
   research: (piece_id: string) => post<{ material: { title: string; bytes: number }; sources: number }>('research', { piece_id }),
-  material: (piece_id: string, title: string, content: string) => post<{ material: { title: string; bytes: number } }>('material', { piece_id, title, content }),
+  material: (piece_id: string, title: string, content: string, role?: 'storyboard') => post<{ material: { title: string; bytes: number } }>('material', { piece_id, title, content, ...(role ? { role } : {}) }),
   look: (piece_id: string, production: string, experiment: string | null, inspiration: string[]) => post<{ look: unknown }>('look', { piece_id, production, experiment, inspiration }),
   put: (collection: string, id: string, body: unknown, revision: number) =>
     call<{ revision: number }>(`/api/board/${week}/${collection}/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify({ body, revision }) }),

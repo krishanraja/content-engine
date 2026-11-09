@@ -42,16 +42,17 @@ const kb = (n: number) => (n > 1024 ? `${Math.round(n / 1024)} KB` : `${n} B`)
 const when = (iso: string | null) => (iso ? new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '')
 
 /** A Markdown file dropped on the day (21st.dev File Dropzone, joyco, restyled): read in the browser, filed on the piece. */
-export function Dropzone({ day, onFiled }: { day: Day; onFiled: () => void }) {
+export function Dropzone({ day, onFiled, role }: { day: Day; onFiled: () => void; role?: 'storyboard' }) {
   const [over, setOver] = React.useState(false)
   const [busy, setBusy] = React.useState(false)
   const input = React.useRef<HTMLInputElement>(null)
   const file = async (f: File | undefined) => {
     if (!f || !day.piece_id) return
-    if (!/\.(md|markdown|txt)$/i.test(f.name) && !/markdown|text\/plain/.test(f.type)) { toast.error('Drop a Markdown file (.md).'); return }
+    const ok = role === 'storyboard' ? /\.(html?|md|markdown|txt)$/i.test(f.name) : /\.(md|markdown|txt)$/i.test(f.name) || /markdown|text\/plain/.test(f.type)
+    if (!ok) { toast.error(role === 'storyboard' ? 'Drop the storyboard file (.html or .md).' : 'Drop a Markdown file (.md).'); return }
     if (f.size > 400_000) { toast.error('That file is over 400 KB. Split it, or keep the main findings.'); return }
     setBusy(true)
-    try { const text = await f.text(); await api.material(day.piece_id, f.name, text); toast.success(`${f.name} is on this piece. Every later step reads it.`); onFiled() }
+    try { const text = await f.text(); await api.material(day.piece_id, f.name, text, role); toast.success(role === 'storyboard' ? `The storyboard is on file: ${f.name}.` : `${f.name} is on this piece. Every later step reads it.`); onFiled() }
     catch (e) { toast.error(sayError(e)) }
     setBusy(false)
   }
@@ -60,9 +61,9 @@ export function Dropzone({ day, onFiled }: { day: Day; onFiled: () => void }) {
       onDrop={e => { e.preventDefault(); setOver(false); void file(e.dataTransfer.files[0]) }}
       className={cx('flex min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-4 text-center transition-colors',
         over ? 'border-ok bg-[color-mix(in_srgb,var(--ok)_8%,transparent)]' : 'border-line bg-bg')}>
-      <p className="text-[15px] text-muted">{busy ? 'Filing it on the piece…' : 'Drop your research Markdown here'}</p>
+      <p className="text-[15px] text-muted">{busy ? 'Filing it on the piece…' : role === 'storyboard' ? 'Drop the session\'s storyboard here' : 'Drop your research Markdown here'}</p>
       <Button tone="ghost" busy={busy} onClick={() => input.current?.click()}>Choose a file</Button>
-      <input ref={input} type="file" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden onChange={e => void file(e.target.files?.[0])} />
+      <input ref={input} type="file" accept={role === 'storyboard' ? '.html,.htm,.md,.markdown,.txt,text/html,text/markdown' : '.md,.markdown,.txt,text/markdown,text/plain'} hidden onChange={e => void file(e.target.files?.[0])} />
     </div>
   )
 }
@@ -119,11 +120,18 @@ export function StepPanel({ day, step, reload }: { day: Day; step: PathKey; relo
   if (step === 'look') return <LookStep day={day} reload={reload} chip={chip} thoughts={thoughts} claude={claude} />
   if (step === 'board') {
     return (
-      <Panel title="Storyboard and script, made together before you record" chip={chip}
-        why="One session writes both cuts with a frame for every line, in the look you picked. You approve them as one; the scripts then go to your Teleprompter and you record exactly what is drawn."
-        actions={<ActionBar primary={claude(p.prompts.storyboard)}
-          secondary={day.actions.find(a => a.kind === 'run') ? <RunButton day={day} reload={reload} /> : undefined} />}
-        after={thoughts} />
+      <Panel title="Storyboard and script, made together before you record"
+        chip={p.storyboard ? chip : <Chip tone="amber">No storyboard yet</Chip>}
+        why={p.storyboard ? 'One session writes both cuts with a frame for every line, in the look you picked. You approve them as one; the scripts then go to your Teleprompter and you record exactly what is drawn.'
+          : 'Reminder: no storyboard is on file yet. Drop the session\'s storyboard here before you approve the scripts, or approve anyway.'}
+        actions={<ActionBar primary={day.actions[0]?.kind === 'open' ? <DayActions day={day} reload={reload} only="first" /> : claude(p.prompts.storyboard)}
+          secondary={day.actions.find(a => a.kind === 'run') ? <RunButton day={day} reload={reload} /> : undefined}
+          prompt={day.actions[0]?.kind === 'open' ? claude(p.prompts.storyboard) : undefined} />}
+        after={thoughts}>
+        {p.storyboard
+          ? <div className="flex min-w-0 items-center gap-3 rounded-xl border border-line bg-bg px-3 py-2.5"><span className="min-w-0 flex-1 truncate font-semibold" title={p.storyboard.title}>{p.storyboard.title}</span><span className="shrink-0 font-mono text-xs text-muted">{when(p.storyboard.at)}</span></div>
+          : <Dropzone day={day} onFiled={reload} role="storyboard" />}
+      </Panel>
     )
   }
 

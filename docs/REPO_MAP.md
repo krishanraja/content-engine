@@ -3366,7 +3366,7 @@ The live board's one door to the server. Every call carries his login cookie; a 
 One day's guided path (PLAN.md, "Each day as a guided path"): six steps, only the current one open.
 
 - `function Stepper({ path, open, onOpen }: { path: DayPath; open: PathKey | null; onOpen: (k: PathKey) => void })`
-- `function Dropzone({ day, onFiled }: { day: Day; onFiled: () => void })`
+- `function Dropzone({ day, onFiled, role }: { day: Day; onFiled: () => void; role?: 'storyboard' })`
 - `function StepPanel({ day, step, reload }: { day: Day; step: PathKey; reload: () => void })`
 - `function RunButton({ day, reload }: { day: Day; reload: () => void })`
 - `function DayActions({ day, reload, only, onReview }: { day: Day; reload: () => void; only?: 'first' | 'prompt'; onRevie…`
