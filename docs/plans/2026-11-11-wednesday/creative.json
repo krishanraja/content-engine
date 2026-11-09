@@ -148,6 +148,11 @@
      ],
      "rule_for_the_engine": "two songs at different tempos never overlap; hand over on a beat of the outgoing song; frame moves that swap layouts are one matched move",
      "mock": "wed11-opener-mock-v5.mp4"
+    },
+    "revision_6": {
+     "his_words": "Sees it needs to fade in much more slowly. (Krish, 2026-11-09)",
+     "plan": "Seize It starts from silence on the beat where the cat song ends and rises over about 6 s, never overlapping the cat song",
+     "mock": "wed11-opener-mock-v6.mp4"
     }
    }
   },
@@ -416,6 +421,18 @@
   "his_words": "Make sure that these videos do eye gaze correction as well when you do the full rendering on the local machine. (Krish, 2026-11-09)",
   "route": "ve eyeline on both takes before ingest (docs/ve/RUNBOOK.md S3), --backend maxine with the copy from one maxine-trial.yml run per take; about $0.04 per 96 s of take, so about $0.17 for both",
   "open_caveat": "the last blind review (pass 15) flagged the short take's 5.57 s sideways glance; the look-up and head-down moments are left as filmed by design",
-  "spend": "approved by Krish, 2026-11-09: \"Yes, approve the eye contact spend\" (about $0.17, both takes, maxine-trial.yml)"
+  "spend": "approved by Krish, 2026-11-09: \"Yes, approve the eye contact spend\" (about $0.17, both takes, maxine-trial.yml)",
+  "his_words_2": "we're going to need some significant work on the eye gaze. (Krish, 2026-11-09)",
+  "work": "offered as its own task (ve eyeline to a blind-review pass on both of these takes), so this session stays on the piece"
+ },
+ "body_standard": {
+  "his_words": "And then, from there, we need to go all out on visual design and motion design effects that make the rest of the video easy to understand and really clear. Highest of high standards (Krish, 2026-11-09)",
+  "means": [
+   "every beat after the opener has one designed picture that shows the mechanism the line names, never words alone",
+   "the credit stack is the hero: a Codex-built paper-cutout device, each layer landing on the word that names it, and splitting at the Grammys",
+   "every outside fact is shown as its real page, full frame and readable on a phone: the chart entry, the app, the Grammys report, the comments",
+   "captions break on phrases and never repeat what is on screen",
+   "the hardest beats are proved moving on his take before any whole cut, and the Critic scores the cut against the 2 Nov 'Ladder' reference (config/reference-cuts.json)"
+  ]
  }
 }
