@@ -748,10 +748,11 @@ def glances(readings: list[dict], aimed: list[dict], there: list[dict] | None, d
 
 def maxine_eye(frame, source, contour, their_contour, iris_here, iris_there):
     """Maxine's own eye, lids and lashes included, laid over his in a feathered ellipse around his lid line: Maxine
-    draws the lids to where the eye now looks, so there is no stare. Only its iris is touched: matched in colour and
-    contrast to his iris in this frame (a shift and a scale in Lab, never per-pixel ranks, which speckled it), inside
-    Maxine's own lid line only (Maxine drew his brown iris green-grey; 6 Nov). Nothing else is corrected: a whites
-    shift spread onto the skin as a pale halo (9 Nov)."""
+    draws the lids to where the eye now looks, so there is no stare. Only its iris is changed: his own iris from this
+    frame, catchlight included, is set where Maxine drew the iris and sized to it, inside Maxine's lid line and only
+    where his own lids left it in view (Maxine's iris read flat and grey with no catchlight; blind review, 9 Nov). Its
+    rim and any part his lids hid stay Maxine's, hue-matched to his iris's dark core (never per-pixel ranks, which
+    speckled it). Nothing else is corrected: a whites shift spread onto the skin as a pale halo (9 Nov)."""
     import cv2  # noqa: PLC0415
     import numpy as np  # noqa: PLC0415
     c = np.asarray(contour, np.float64)
@@ -780,14 +781,31 @@ def maxine_eye(frame, source, contour, their_contour, iris_here, iris_there):
     d_t = np.hypot(xx - (tx - x0), yy - (ty - y0)) / max(1.0, tr)
     lab_o = cv2.cvtColor(region.astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
     lab_s = cv2.cvtColor(src.astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
-    his, its = (mine_in > 0) & (d_h < 0.9), (theirs_in > 0) & (d_t < 0.9)
+    # His hue only, from the dark core of each iris: on a big glance his iris sits against the corner and a wider
+    # sample takes in white and catchlight, which turned Maxine's brown iris pale grey-blue (blind review, 9 Nov:
+    # 7 of 67 moments, every one a Maxine eye). Maxine's own lightness and contrast are kept.
+    his, its = (mine_in > 0) & (d_h < 0.7), (theirs_in > 0) & (d_t < 0.7)
     if his.sum() > 12 and its.sum() > 12:
-        mo, so = lab_o[his].mean(0), lab_o[his].std(0) + 1e-3
-        ms, ss = lab_s[its].mean(0), lab_s[its].std(0) + 1e-3
-        fixed = (lab_s - ms) * np.clip(so / ss, 0.7, 1.4) + mo
+        his &= lab_o[..., 0] <= np.percentile(lab_o[..., 0][his], 70)
+        its &= lab_s[..., 0] <= np.percentile(lab_s[..., 0][its], 70)
+    if his.sum() > 8 and its.sum() > 8:
+        fixed = lab_s.copy()
+        fixed[..., 1:] += lab_o[his][:, 1:].mean(0) - lab_s[its][:, 1:].mean(0)
         w = np.clip((1.05 - d_t) / 0.2, 0, 1) * cv2.GaussianBlur(theirs_in.astype(np.float32), (0, 0), 0.8)
         lab_s = lab_s * (1 - w[..., None]) + fixed * w[..., None]
     eye = cv2.cvtColor(np.clip(lab_s, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR).astype(np.float32)
+    # His own iris, catchlight and all, set where Maxine drew its iris and sized to it: Maxine's iris had no
+    # catchlight and read flat and lighter than his (blind review, 9 Nov). Only the part of his iris his own lids left
+    # in view is used, and only inside Maxine's lid line; elsewhere Maxine's (hue-matched) iris stays.
+    k = max(1.0, hr) / max(1.0, tr)
+    mx = ((hx - x0) + (xx - (tx - x0)) * k).astype(np.float32)
+    my = ((hy - y0) + (yy - (ty - y0)) * k).astype(np.float32)
+    his_iris = cv2.remap(region, mx, my, cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REFLECT)
+    seen = cv2.remap(cv2.GaussianBlur(mine_in.astype(np.float32), (0, 0), 0.8), mx, my, cv2.INTER_LINEAR,
+                     borderMode=cv2.BORDER_CONSTANT, borderValue=0)
+    disc = np.clip((0.95 - d_t) / 0.15, 0, 1)    # Maxine's dark rim kept: his iris edge brought a pale ring of white
+    put = (disc * np.clip(seen, 0, 1) * cv2.GaussianBlur(theirs_in.astype(np.float32), (0, 0), 0.8))[..., None]
+    eye = eye * (1 - put) + np.clip(his_iris, 0, 255) * put
     # Maxine draws its lid edge a little stair-stepped (9 Nov, 60.07 s): softened slightly everywhere but the iris.
     keep = np.clip((1.15 - d_t) / 0.15, 0, 1)[..., None]
     eye = eye * keep + cv2.GaussianBlur(eye, (0, 0), 0.7) * (1 - keep)

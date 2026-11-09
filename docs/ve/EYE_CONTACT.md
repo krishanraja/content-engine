@@ -17,9 +17,9 @@ is copied untouched and every frame time is kept (checked before the file is kep
 | What the take shows | What the pass does |
 |---|---|
 | Reading drift, up to about 16 degrees off the lens | Pushes his own eye sideways toward the lens: one resample, the iris travels whole with its own colour and catchlight, pinned at both eye corners. |
-| A held glance past about 16 degrees (0.6 iris radii), both eyes open, head frontal | Lays in Maxine's own eye, lids included, with its iris recoloured to his. Maxine draws the lids where the eye now looks, so there is no stare. The hand-over takes 2 frames; both aim at the lens, so it does not travel. Only when the take has its own Maxine copy. |
+| A held glance past about 16 degrees (0.6 iris radii), both eyes open, head frontal | Lays in Maxine's own eye, lids included, and sets his own iris, catchlight and all, where Maxine drew the iris. Maxine draws the lids where the eye now looks, so there is no stare; Maxine's own iris read flat and grey with no catchlight, so it is not used. The hand-over takes 2 frames; both aim at the lens, so it does not travel. Only when the take has its own Maxine copy. |
 | Under 3 degrees off | Nothing. |
-| A blink or closing eye, a squint (under 55% of the iris in view), a look up or down, a head turned past 15 degrees, no face | Nothing: left exactly as filmed. |
+| A blink or closing eye, a squint (under 55% of the iris in view), a look well up or down (white under both irises, or the upper lid over a third of each), a head turned past 15 degrees, no face | Nothing: left exactly as filmed. A glance up and to one side that shows neither is a glance, and is corrected. |
 
 His upper lid is lowered a little where the iris is moved, to cover it as it does when he looks at the lens (that
 takes out the stare). Nothing moves up or down: a vertical push stretched the catchlight against the lid.
