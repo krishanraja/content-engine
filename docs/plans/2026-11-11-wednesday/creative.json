@@ -68,7 +68,12 @@
      "inspiration card 90b654ca, Drive 1Dd2TMonugi1BWSj-i7zoa5ThRIpJwXtx",
      "inspiration card f6327ce0, Drive 19Yhb_Juvqtgai4yZZJor-b478fF1-hme"
     ],
-    "rule": "the clips' sound is never muted or replaced by the bed while they are on screen at the open (card note, Krish 2026-10-31)"
+    "rule": "the clips' sound is never muted or replaced by the bed while they are on screen at the open (card note, Krish 2026-10-31)",
+    "clip_order": {
+     "first": "the wedding-toast clip (youtube_wSsJbXzp3DY, 30 s), the one the research brief says is set to Movin' To The Sun, so 'It's called Movin' To The Sun' is said over the song itself",
+     "second": "the dancing-cat clip (youtube_oEODyXtV49M, 55 s); an audio fingerprint against the toast clip was inconclusive (0.92 against a random baseline of 0.91), so which song it carries is for his ear at the proof",
+     "resolution": "both clips are 360x640: full frame on 9:16 is a 3x enlargement and reads soft"
+    }
    }
   },
   "B_subtitles": {
@@ -331,5 +336,10 @@
   "at": "2026-11-09",
   "words": "I'm happy with your recommendations. With regard to motion treatment, I endorse being experimental but visually clear. I think the headline should be much clearer and more intriguing, something like \"Is your favourite tune made by a human or an AI?\"",
   "channel": "Claude Code session (the board has no Sign creative press yet)"
+ },
+ "eye_contact": {
+  "his_words": "Make sure that these videos do eye gaze correction as well when you do the full rendering on the local machine. (Krish, 2026-11-09)",
+  "route": "ve eyeline on both takes before ingest (docs/ve/RUNBOOK.md S3), --backend maxine with the copy from one maxine-trial.yml run per take; about $0.04 per 96 s of take, so about $0.17 for both",
+  "open_caveat": "the last blind review (pass 15) flagged the short take's 5.57 s sideways glance; the look-up and head-down moments are left as filmed by design"
  }
 }
