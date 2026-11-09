@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Mock of the live board ("The Desk"), 9 Nov 2026. Tokens are scripts/post-pack/tokens.css, unchanged. */
+:root{--bg:#F4EFE4;--ink:#0C1512;--card:#fffdf8;--line:#d9d2c3;--muted:#5b625e;--mint:#7EF0C0;--ok:#1f7a52;--bad:#b0412e;--amber:#c27a12;--soft:#ece5d6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1512;--ink:#F4EFE4;--card:#15201b;--line:#2b3832;--muted:#a9b4ae;--ok:#7EF0C0;--bad:#ff9b85;--amber:#f0b45a;--soft:#1b2822;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0C1512;--ink:#F4EFE4;--card:#15201b;--line:#2b3832;--muted:#a9b4ae;--ok:#7EF0C0;--bad:#ff9b85;--amber:#f0b45a;--soft:#1b2822;color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Archivo,system-ui,sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px 96px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--mint);outline-offset:2px}
+
+/* Now strip */
+.now{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.now .wrap{display:flex;align-items:center;gap:16px;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
+.live{display:inline-flex;align-items:center;gap:8px;font:600 12px "IBM Plex Mono",monospace;color:var(--muted)}
+.dot{position:relative;width:10px;height:10px;border-radius:50%;background:var(--ok);flex:none}
+.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--ok);animation:pulse 2s ease-out infinite}
+.live.stale .dot,.live.stale .dot::after{background:var(--amber)}
+@keyframes pulse{from{transform:scale(1);opacity:.6}to{transform:scale(2.6);opacity:0}}
+.ns{display:flex;align-items:baseline;gap:6px;margin-left:auto}
+.ns b{font:400 28px/1 Anton,Impact,sans-serif;letter-spacing:.5px}
+.ns span{font:600 12px "IBM Plex Mono",monospace;color:var(--muted)}
+.cmdk{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);font:600 13px "IBM Plex Mono",monospace;cursor:pointer}
+
+/* Week strip */
+.weeks{display:flex;gap:8px;margin:20px 0 6px;flex-wrap:wrap}
+.wk{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}
+.wk[aria-current="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.strip{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:14px 0 28px}
+.day{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:64px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);text-align:left;cursor:pointer}
+.day .d{font:600 12px "IBM Plex Mono",monospace;color:var(--muted)}
+.day .s{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px}
+.pip{width:9px;height:9px;border-radius:50%;flex:none}
+.pip.you{background:var(--amber)}.pip.eng{background:var(--muted)}.pip.done{background:var(--ok)}.pip.late{background:var(--bad)}
+
+h1,h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.5px;margin:0}
+h1{font-size:clamp(40px,7vw,72px);line-height:.95}
+h2{font-size:28px;line-height:1.05;margin:44px 0 6px}
+.kick{font:600 13px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:24px 0 8px}
+.sub{color:var(--muted);margin:6px 0 18px;max-width:60ch}
+
+/* Your move: one card at a time */
+.move{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:24px;align-items:start}
+.stack{display:grid;padding-bottom:26px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 1px 0 var(--line),0 18px 40px -24px rgba(12,21,18,.35);transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .35s}
+.stack .card{grid-area:1/1;position:relative;z-index:3}
+.stack .card.behind1,.stack .card.behind2{align-self:stretch;box-shadow:none}
+.stack .card.behind1>*,.stack .card.behind2>*,.stack .card.hidden>*{display:none}
+.stack .card.behind1{z-index:2;transform:translateY(13px) scale(.97);background:var(--soft);pointer-events:none}
+.stack .card.behind2{z-index:1;transform:translateY(26px) scale(.94);opacity:.7;pointer-events:none}
+.stack .card.gone{transform:translateX(120%) rotate(6deg);opacity:0;pointer-events:none}
+.stack .card.hidden{display:none}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font:600 12px "IBM Plex Mono",monospace;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;min-height:26px;padding:0 10px;border-radius:999px;background:var(--soft);color:var(--ink)}
+.chip.due{background:transparent;border:1px solid var(--amber);color:var(--amber)}
+.card h3{font:700 24px/1.2 Archivo,sans-serif;margin:12px 0 6px}
+.card p.why{color:var(--muted);margin:0 0 14px}
+.thing{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--bg);margin:0 0 16px;font-size:15px}
+.thing ol{margin:0;padding-left:20px}.thing li{margin:2px 0}
+.thing .q{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted);margin-top:8px}
+.frames{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.frames i{aspect-ratio:9/16;border-radius:8px;background:linear-gradient(160deg,var(--soft),var(--line));display:block}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.b{min-height:48px;padding:0 20px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}
+.b.go{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.b.no{color:var(--bad)}
+.b kbd{font:600 11px "IBM Plex Mono",monospace;opacity:.6;margin-left:6px}
+.words{display:none;margin-top:12px}
+.words.on{display:block}
+.words textarea{width:100%;min-height:84px;border-radius:12px;border:1px solid var(--line);background:var(--bg);padding:12px;font:inherit;color:inherit;resize:vertical}
+.saved{font:600 12px "IBM Plex Mono",monospace;color:var(--ok);margin-top:8px;min-height:18px}
+.queue{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+.queue h4{margin:0 0 8px;font:600 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.queue ol{list-style:none;margin:0;padding:0}
+.queue li{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.queue li:first-child{border-top:0}
+.queue li.cur{font-weight:700}
+.queue li.cleared{color:var(--muted);text-decoration:line-through}
+.queue .n{font:600 12px "IBM Plex Mono",monospace;color:var(--muted);min-width:18px}
+.clear{text-align:left;padding:32px 24px}
+.clear h3{font:400 34px/1 Anton,sans-serif;text-transform:uppercase;margin:0 0 10px}
+
+/* Pieces: every day the same shape */
+.pieces{display:flex;flex-direction:column;gap:10px}
+details.p{background:var(--card);border:1px solid var(--line);border-radius:18px}
+details.p>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:96px minmax(0,1fr) 210px minmax(0,260px) 24px;gap:16px;align-items:center;padding:16px 18px;min-height:72px}
+details.p>summary::-webkit-details-marker{display:none}
+.when{font:600 13px "IBM Plex Mono",monospace}
+.when small{display:block;color:var(--muted);font-weight:400}
+.what b{display:block;font-size:16px;line-height:1.3}
+.what span{font:600 12px "IBM Plex Mono",monospace;color:var(--muted)}
+.track{display:flex;align-items:center;gap:0}
+.stop{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;font:600 10px "IBM Plex Mono",monospace;color:var(--muted);position:relative}
+.stop i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);background:var(--card);z-index:1}
+.stop.done i{background:var(--ok);border-color:var(--ok)}
+.stop.now i{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 4px color-mix(in srgb,var(--amber) 25%,transparent)}
+.stop.stuck i{background:var(--bad);border-color:var(--bad)}
+.stop:not(:last-child)::after{content:"";position:absolute;top:6px;left:50%;width:100%;height:2px;background:var(--line)}
+.stop.done:not(:last-child)::after{background:var(--ok)}
+.next{font-size:14px;line-height:1.35}
+.next em{font-style:normal;font:600 11px "IBM Plex Mono",monospace;display:block;margin-bottom:2px}
+.next.you em{color:var(--amber)}.next.eng em{color:var(--muted)}.next.bad em{color:var(--bad)}
+.chev{transition:transform .2s;color:var(--muted)}
+details[open] .chev{transform:rotate(90deg)}
+.body{padding:0 18px 18px 130px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.panel{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg);font-size:14px}
+.panel h5{margin:0 0 6px;font:600 11px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.panel p{margin:0}
+
+/* What moved */
+.moved{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);margin-left:6px}
+.moved li{position:relative;padding:0 0 16px 20px;font-size:15px}
+.moved li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--card);border:2px solid var(--muted)}
+.moved li.new::before{border-color:var(--ok);background:var(--ok)}
+.moved time{display:block;font:600 12px "IBM Plex Mono",monospace;color:var(--muted)}
+.moved li.in{animation:slide .5s ease}
+@keyframes slide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+/* Command palette */
+dialog.k{border:0;padding:0;border-radius:18px;width:min(560px,calc(100vw - 32px));background:var(--card);color:var(--ink);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+dialog.k::backdrop{background:rgba(12,21,18,.45)}
+.k input{width:100%;border:0;border-bottom:1px solid var(--line);padding:18px;font:inherit;font-size:17px;background:transparent;color:inherit;outline:none}
+.k ul{list-style:none;margin:0;padding:8px;max-height:50vh;overflow:auto}
+.k li{padding:12px;border-radius:10px;cursor:pointer;display:flex;justify-content:space-between;gap:12px}
+.k li[aria-selected="true"]{background:var(--soft)}
+.k li span{font:600 12px "IBM Plex Mono",monospace;color:var(--muted)}
+
+.mockbar{margin:56px 0 0;padding:14px 16px;border:1px dashed var(--line);border-radius:14px;font:600 12px "IBM Plex Mono",monospace;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+@media (max-width:860px){
+  .move{grid-template-columns:1fr}
+  .strip{grid-template-columns:repeat(3,1fr)}
+  details.p>summary{grid-template-columns:64px minmax(0,1fr) 24px;grid-template-areas:"when what chev" "track track track" "next next next";row-gap:12px}
+  .when{grid-area:when}.what{grid-area:what}.track{grid-area:track}.next{grid-area:next}.chev{grid-area:chev}
+  .body{padding:0 16px 16px;grid-template-columns:1fr}
+  .ns b{font-size:22px}
+  .ns .long,.cmdk .long{display:none}
+  .live{white-space:nowrap}
+  .now .wrap{gap:10px;flex-wrap:nowrap}
+  .live{font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="now" aria-label="Live status">
+  <div class="wrap">
+    <span class="live" id="live" role="status"><span class="dot" aria-hidden="true"></span><span id="ago">Live, updated just now</span></span>
+    <div class="ns" title="Finished assets published this week, each passing the 10/10 judges"><b id="count">0</b><span>of 8 <span class="long">published </span>this week</span></div>
+    <button class="cmdk" id="cmdk" type="button" aria-label="Jump to anything"><span class="long">⌘K </span>Jump</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="weeks" aria-label="Publishing weeks">
+    <button class="wk" type="button">Week of 9 Nov</button>
+    <button class="wk" type="button" aria-current="true">Week of 16 Nov</button>
+  </nav>
+
+  <p class="kick">Monday 16 to Saturday 21 November 2026</p>
+  <h1 id="hello">3 things need you</h1>
+
+  <div class="strip" role="list" aria-label="The week at a glance" id="strip"></div>
+
+  <section aria-labelledby="move-h">
+    <h2 id="move-h">Your move</h2>
+    <p class="sub">Most urgent first. Approve, improve with your words, or reject. Each answer saves as you press it.</p>
+    <div class="move">
+      <div class="stack" id="stack" aria-live="polite"></div>
+      <aside class="queue" aria-label="Everything waiting on you"><h4>Waiting on you</h4><ol id="queue"></ol></aside>
+    </div>
+  </section>
+
+  <section aria-labelledby="week-h">
+    <h2 id="week-h">This week, piece by piece</h2>
+    <p class="sub">Every day has the same five stops. Open a row for its words, its assets and its checks.</p>
+    <div class="pieces" id="pieces"></div>
+  </section>
+
+  <section aria-labelledby="moved-h">
+    <h2 id="moved-h">What moved since you last looked</h2>
+    <p class="sub">Newest first. New items arrive here while the page is open.</p>
+    <ol class="moved" id="moved"></ol>
+  </section>
+
+  <div class="mockbar" aria-label="Mock controls (not on the real board)">
+    Mock only. The days, pieces, runs and your quoted words are real (9 Nov handover); the due times are placeholders the live view will work out.
+    <button class="b" type="button" id="m-new">Show a live update arriving</button>
+    <button class="b" type="button" id="m-stale">Show the connection dropping</button>
+    <button class="b" type="button" id="m-done">Show a finished week</button>
+    <button class="b" type="button" id="m-theme">Light or dark</button>
+  </div>
+</main>
+
+<dialog class="k" id="k" aria-label="Jump to anything">
+  <input id="kq" placeholder="Type a piece, a day or an action" autocomplete="off">
+  <ul id="kl" role="listbox"></ul>
+</dialog>
+
+<script>
+// Data: the week of 16 Nov as the 9 Nov handover records it (docs/plans/2026-11-16-week/HANDOVER.md), and the two
+// items open on the week of 9 Nov (NOW.md). On the real board this comes from GET /api/board/:week/view.
+const STOPS = ["Idea", "Story", "Make", "Approve", "Live"];
+const DAYS = [
+  { key:"mon", d:"Mon 16", kind:"Essay and two cuts", series:"follow.the.money", title:"Where the money for AI comes from",
+    at:1, state:"now", next:{who:"you", text:"Sign the narrative lock once it is drafted from your research", due:"Wed 11"},
+    panels:{"His brief":"“This becomes a broader piece about where, in general, money comes from that tech companies get to build AI.”","Research":"Perplexity Deep Research saved (mon-research.md)","Checks":"Fact gate not started"} },
+  { key:"tue", d:"Tue 17", kind:"Off day: meme video", series:"povteach", title:"POV: your AI agent using your computer without being set up properly by you",
+    at:2, state:"stuck", next:{who:"bad", text:"Re-caption run failed at 13:05. Engine retries it", due:"today"},
+    panels:{"Your call":"Improve: use the exact existing video, change only the caption","Caption":"“POV: your AI agent using your computer without being set up properly by you”","Checks":"Revision run 42622372777 failed"} },
+  { key:"wed", d:"Wed 18", kind:"Essay and two cuts", series:"under.the.hood", title:"Build or buy your AI",
+    at:1, state:"now", next:{who:"you", text:"Sign the narrative lock once it is drafted from your research", due:"Wed 11"},
+    panels:{"His note":"“Yes give me a Perplexity prompt. I can go and bring a lot of evidence.”","Research":"Saved (wed-research.md)","Checks":"Fact gate not started"} },
+  { key:"thu", d:"Thu 19", kind:"Off day: voiceover short", series:"lookalikes", title:"Which AI assistant to use for what, for anyone",
+    at:2, state:"eng", next:{who:"eng", text:"Growth revises the explainer to your direction", due:"Tue 17"},
+    panels:{"Your call":"Improve: “a standalone explainer for the personalities and use cases for each of the assistants”","Status":"Revision run 42624284763 pending","Checks":"Not yet"} },
+  { key:"fri", d:"Fri 20", kind:"Essay, two cuts and a carousel", series:"mind.the.gap", title:"The future of AI after the midterms",
+    at:2, state:"eng", next:{who:"eng", text:"Engine starts the make from your signed lock and checks every fact", due:"Tue 10"},
+    panels:{"The story":"41 votes on new data centres in 10 states; 40 said limit or no.","Your close":"“Ask your AI supplier where its new computing is being built.”","Checks":"Every fact in the lock still to check"} },
+  { key:"sat", d:"Sat 21", kind:"Off day: good news carousel", series:"good news", title:"This week's good news",
+    at:0, state:"eng", next:{who:"eng", text:"Stories found by the Thursday run", due:"Thu 19"},
+    panels:{"Your call":"“carousel”","Source":"saturday-goodnews.yml, Thursday 19 Nov","Checks":"Not yet"} },
+];
+const MOVES = [
+  { id:"m1", week:"Week of 9 Nov", due:"Due now", what:"Approve the Wed 11 Nov storyboard",
+    why:"34 long beats and 14 short, each mocked on your takes and the real pages, plus three motion mocks.",
+    thing:`<ol><li>Open on the question: is your favourite tune made by a human or an AI?</li><li>The chart, the label and the vote</li><li>What changes for anyone who makes music</li></ol><div class="frames" aria-label="Beat frames"><i></i><i></i><i></i><i></i></div><p class="q">Fact gate before render: Imael Angel, the Grammys ruling, the Bad Times label</p>` },
+  { id:"m2", week:"Week of 9 Nov", due:"Due Tue 10", what:"Sign the Fri 13 Nov creative sheet",
+    why:"Sheet A to G, plus a 4-second pickup: the short take says “delegate” where the script says “delete”.",
+    thing:`<ol><li>Leaderboard as host, your face never covered</li><li>Rat farm hook, tails mapped to AI use</li><li>Pickup line: “delete”, 4 seconds</li></ol>` },
+  { id:"m3", week:"Week of 16 Nov", due:"Due Wed 11", what:"Settle Thursday and Friday's overlap",
+    why:"You said: “Yes, assistants explainer Thursday, midterms carousel Friday”. Confirm the midterms carousel is told from Friday's signed lock.",
+    thing:`<ol><li>Thu 19: assistants explainer (lookalikes)</li><li>Fri 20: midterms carousel inside Friday's piece</li></ol>` },
+];
+const MOVED = [
+  { t:"Sun 9 Nov, 14:15", s:"Off days settled from your words in the Sunday room. Nothing open on them." },
+  { t:"Sun 9 Nov, 13:22", s:"Friday picked: the future of AI after the midterms. Narrative lock signed." },
+  { t:"Sun 9 Nov, 13:05", s:"Tuesday re-caption run failed. Engine retry queued." },
+  { t:"Sun 9 Nov, 12:40", s:"Monday and Wednesday research saved." },
+];
+
+const $ = s => document.querySelector(s);
+let cleared = new Set(), cur = 0, last = Date.now();
+
+function strip() {
+  $("#strip").innerHTML = DAYS.map(d => {
+    const tone = d.state === "stuck" ? "late" : d.next.who === "you" ? "you" : d.at >= 4 ? "done" : "eng";
+    const word = { late:"Stuck", you:"Needs you", eng:"In hand", done:"Live" }[tone];
+    return `<button class="day" role="listitem" type="button" data-go="${d.key}"><span class="d">${d.d}</span><span class="s"><i class="pip ${tone}"></i>${word}</span></button>`;
+  }).join("");
+}
+function stack() {
+  const left = MOVES.filter(m => !cleared.has(m.id));
+  $("#hello").textContent = left.length ? `${left.length} thing${left.length === 1 ? "" : "s"} need${left.length === 1 ? "s" : ""} you` : "Nothing needs you";
+  $("#queue").innerHTML = MOVES.map((m, i) => `<li class="${cleared.has(m.id) ? "cleared" : m.id === left[0]?.id ? "cur" : ""}"><span class="n">${i + 1}</span><span>${m.what}<br><span class="mono" style="font-size:12px;color:var(--muted)">${m.due}</span></span></li>`).join("");
+  if (!left.length) {
+    $("#stack").innerHTML = `<div class="card clear"><h3>Nothing needs you</h3><p class="why">Next from you: sign Monday's narrative lock, when the engine has drafted it (Wed 11). Everything else is in hand.</p></div>`;
+    return;
+  }
+  $("#stack").innerHTML = left.map((m, i) => `
+    <article class="card ${i === 1 ? "behind1" : i === 2 ? "behind2" : i > 2 ? "hidden" : ""}" data-id="${m.id}" ${i ? 'aria-hidden="true"' : ""}>
+      <div class="meta"><span class="chip">${m.week}</span><span class="chip due">${m.due}</span><span>${i + 1} of ${left.length}</span></div>
+      <h3>${m.what}</h3><p class="why">${m.why}</p>
+      <div class="thing">${m.thing}</div>
+      <div class="acts">
+        <button class="b go" type="button" data-a="approve">Approve<kbd>A</kbd></button>
+        <button class="b" type="button" data-a="improve">Improve<kbd>I</kbd></button>
+        <button class="b no" type="button" data-a="reject">Reject<kbd>R</kbd></button>
+      </div>
+      <div class="words"><label class="mono" style="font-size:12px;color:var(--muted)" for="w-${m.id}">Your words (kept on this device until saved)</label><textarea id="w-${m.id}"></textarea>
+        <div class="acts" style="margin-top:10px"><button class="b go" type="button" data-a="send">Save my words</button></div></div>
+      <div class="saved" role="status"></div>
+    </article>`).join("");
+}
+function pieces() {
+  $("#pieces").innerHTML = DAYS.map(d => `
+    <details class="p" id="p-${d.key}">
+      <summary>
+        <span class="when">${d.d}<small>${d.kind}</small></span>
+        <span class="what"><b>${d.title}</b><span>${d.series}</span></span>
+        <span class="track" aria-label="Stage ${d.at + 1} of 5: ${STOPS[d.at]}">${STOPS.map((s, i) => `<span class="stop ${i < d.at ? "done" : i === d.at ? (d.state === "stuck" ? "stuck" : "now") : ""}"><i></i>${s}</span>`).join("")}</span>
+        <span class="next ${d.next.who}"><em>${{ you:"Next, you", eng:"Next, the engine", bad:"Stuck" }[d.next.who]} · ${d.next.due}</em>${d.next.text}</span>
+        <span class="chev" aria-hidden="true">›</span>
+      </summary>
+      <div class="body">${Object.entries(d.panels).map(([h, p]) => `<div class="panel"><h5>${h}</h5><p>${p}</p></div>`).join("")}</div>
+    </details>`).join("");
+}
+function moved(extra) {
+  if (extra) MOVED.unshift(extra);
+  $("#moved").innerHTML = MOVED.slice(0, 5).map((m, i) => `<li class="${m.fresh ? "new in" : ""}"><time>${m.t}</time>${m.s}</li>`).join("");
+}
+function count(to) { let n = 0; const el = $("#count"); const step = () => { el.textContent = n; if (n++ < to) setTimeout(step, 120) }; step() }
+function act(a) {
+  const card = $("#stack .card:not(.behind1):not(.behind2):not(.hidden)"); if (!card) return;
+  const id = card.dataset.id, w = card.querySelector(".words"), say = card.querySelector(".saved");
+  if (a === "improve" || a === "reject") { w.classList.add("on"); w.dataset.mode = a; card.querySelector("textarea").focus(); say.textContent = a === "reject" ? "Say why, then save." : ""; return }
+  if (a === "send" && !card.querySelector("textarea").value.trim()) { say.textContent = "Write your words first."; return }
+  say.textContent = "Saved " + new Date().toTimeString().slice(0, 5) + ".";
+  const what = MOVES.find(m => m.id === id).what;
+  setTimeout(() => {
+    card.classList.add("gone");
+    setTimeout(() => { cleared.add(id); stack(); moved({ t:"Just now", s:`You: ${a === "send" ? (w.dataset.mode === "reject" ? "rejected" : "improved") : "approved"}, ${what.toLowerCase()}.`, fresh:true }) }, 330);
+  }, 380);
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-a]"); if (b) return act(b.dataset.a);
+  const g = e.target.closest("[data-go]"); if (g) { const p = $("#p-" + g.dataset.go); p.open = true; p.scrollIntoView({ behavior:"smooth", block:"center" }) }
+});
+document.addEventListener("keydown", e => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); return palette() }
+  if (e.target.matches("input,textarea")) return;
+  const k = { a:"approve", i:"improve", r:"reject" }[e.key.toLowerCase()]; if (k) act(k);
+});
+// Command palette
+const ITEMS = () => [
+  ...MOVES.filter(m => !cleared.has(m.id)).map(m => ({ label:m.what, hint:"Your move", go:() => document.getElementById("move-h").scrollIntoView({ behavior:"smooth" }) })),
+  ...DAYS.map(d => ({ label:`${d.d}: ${d.title}`, hint:d.series, go:() => { const p = $("#p-" + d.key); p.open = true; p.scrollIntoView({ behavior:"smooth", block:"center" }) } })),
+  { label:"Open the week of 9 Nov", hint:"Week", go:() => {} },
+  { label:"Production standards", hint:"Link", go:() => {} },
+];
+let sel = 0;
+function palette() { const k = $("#k"); k.showModal(); $("#kq").value = ""; list(); $("#kq").focus() }
+function list() {
+  const q = $("#kq").value.toLowerCase(), items = ITEMS().filter(i => i.label.toLowerCase().includes(q) || i.hint.toLowerCase().includes(q));
+  sel = Math.min(sel, Math.max(items.length - 1, 0));
+  $("#kl").innerHTML = items.map((i, n) => `<li role="option" aria-selected="${n === sel}" data-n="${n}">${i.label}<span>${i.hint}</span></li>`).join("") || `<li>Nothing matches</li>`;
+  $("#kl").onclick = e => { const li = e.target.closest("[data-n]"); if (li) { $("#k").close(); items[+li.dataset.n].go() } };
+  $("#kq").onkeydown = e => {
+    if (e.key === "ArrowDown") { sel = Math.min(sel + 1, items.length - 1); list(); e.preventDefault() }
+    if (e.key === "ArrowUp") { sel = Math.max(sel - 1, 0); list(); e.preventDefault() }
+    if (e.key === "Enter" && items[sel]) { $("#k").close(); items[sel].go() }
+  };
+}
+$("#kq").addEventListener("input", () => { sel = 0; list() });
+$("#cmdk").onclick = palette;
+// Freshness
+setInterval(() => { const s = Math.round((Date.now() - last) / 1000); if (!$("#live").classList.contains("stale")) $("#ago").textContent = innerWidth < 500 ? (s < 5 ? "Live" : `Live, ${s}s ago`) : s < 5 ? "Live, updated just now" : `Live, updated ${s}s ago` }, 1000);
+setInterval(() => { if (!$("#live").classList.contains("stale")) last = Date.now() }, 5000);
+// Mock controls
+$("#m-new").onclick = () => { last = Date.now(); moved({ t:"Just now", s:"Engine: Tuesday re-caption run passed. Growth has the new caption.", fresh:true });
+  DAYS[1].state = "eng"; DAYS[1].at = 3; DAYS[1].next = { who:"you", text:"Approve the re-captioned video", due:"Mon 16" }; strip(); pieces() };
+$("#m-stale").onclick = () => { $("#live").classList.add("stale"); $("#ago").textContent = "Reconnecting. Showing what was true at " + new Date(last).toTimeString().slice(0, 5) };
+$("#m-done").onclick = () => { MOVES.forEach(m => cleared.add(m.id)); DAYS.forEach(d => { d.at = 4; d.state = "done"; d.next = { who:"eng", text:"Published", due:"done" } });
+  strip(); pieces(); stack(); $("#hello").textContent = "Week done"; $("#stack").innerHTML = `<div class="card clear"><h3>Week done</h3><p class="why">6 pieces live, 8 of 8 assets published. Next week's ideas arrive Sunday 06:00.</p></div>`; count(8); scrollTo({ top:0, behavior:"smooth" }) };
+$("#m-theme").onclick = () => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === "dark" ? "light" : "dark" };
+strip(); stack(); pieces(); moved(); count(3);
+</script>
+</body>
+</html>

@@ -517,6 +517,27 @@ def presses_in_browser(page, web):
         until(page, lambda: (last('picks/fri') or {}).get('note'))
         if (last('picks/fri') or {}).get('note') != 'Lead with the deal.' or (last('picks/fri') or {}).get('pick') != 'fri-3':
             problems.append(f'sunday: his note on a pick is not saved with it ({last("picks/fri")})')
+        # 9 Nov, his fri-4 words (docs/plans/2026-11-16-week/triage-readback.md): he typed on his pick, tapped another
+        # idea, came back, and never pressed Save; the words never reached the server. Now they ride with the pick.
+        page.click('label.pick:has(input[value="fri-4"])')
+        until(page, lambda: (last('picks/fri') or {}).get('pick') == 'fri-4')
+        page.wait_for_selector('[data-pick-note-for="fri-4"]:not([hidden])', timeout=5000)
+        page.fill('[data-pick-note-for="fri-4"] input', 'Voters versus data centres, lead with the bills.')
+        page.click('label.pick:has(input[value="fri-2"])')
+        until(page, lambda: (last('picks/fri') or {}).get('pick') == 'fri-2')
+        page.click('label.pick:has(input[value="fri-4"])')
+        until(page, lambda: (last('picks/fri') or {}).get('pick') == 'fri-4')
+        if (last('picks/fri') or {}).get('note') != 'Voters versus data centres, lead with the bills.':
+            problems.append(f'sunday: words typed on a pick are lost when he picks again without Save ({last("picks/fri")})')
+        # Words he typed and never sent come back after a reload, in the same box, with a line saying so.
+        page.click('[data-press="not_for_us"][data-for="wed-3"]')
+        page.wait_for_selector('[data-press-note-for="wed-3"]:not([hidden])', timeout=5000)
+        page.fill('[data-press-note="wed-3"]', 'Too close to last week.')
+        page.reload()
+        page.wait_for_selector('.wb-restored', timeout=6000)
+        kept = page.eval_on_selector('[data-press-note="wed-3"]', 'e => e.value')
+        if kept != 'Too close to last week.':
+            problems.append(f'sunday: unsent words are not brought back after a reload ({kept!r})')
         # Each off-day option is judged on its own (Ruling, Krish, 2026-11-01: "Mock looks right, lock it and build it"):
         # Reject asks for his reason and saves nothing until he gives it; Approve saves the side bound to what it showed.
         cards = page.eval_on_selector_all('.off-card.opt[data-offday]', 'els => els.map(e => [e.id, e.dataset.ideaSha256])')
