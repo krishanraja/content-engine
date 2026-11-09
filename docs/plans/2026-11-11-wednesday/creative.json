@@ -83,6 +83,46 @@
       "the cat clip enters, with its own sound low and the bed out under it, when he says people used the song on their short videos (short cut about 0:29; long cut at 'clips of cats and family weddings', about 1:33), for about 5 s"
      ],
      "mock": "wed11-opener-sound-mock-v2.mp4, sent 2026-11-09"
+    },
+    "revision_3": {
+     "his_words": "After I say \"Is it AI or is it human?\" that's when my normal intro card should fly in, marking the opening of the episode. I think that we should forego our usual backing music for this episode and just keep either Movin to the Sun or the other track in the background at all times (Krish, 2026-11-09)",
+     "his_pick_on_rights": "Licensed sound-alike (asked: the real song under the whole video risks a YouTube Content ID claim and an Instagram mute)",
+     "plan": [
+      "the series sting moves from frame 0 to the pause after 'Is it AI or is it human?' (short about 0:17.75, inside a 1.9 s pause; long about 0:25.8, inside a 2.5 s pause); the short wears the approved 9:16 under_the_hood clip, the wide the 16:9",
+      "no NO CURVES: after the sting a licensed Epidemic house track in the song's feel is the bed for the whole body",
+      "the real song stays at the open, on the cat clip and at the close"
+     ],
+     "bed_candidates": [
+      {
+       "title": "Seize It",
+       "artist": "Tape Machines",
+       "epidemic_id": "f34727ee-04df-4d4e-8a1d-6f202af0d3e8",
+       "bpm": 126
+      },
+      {
+       "title": "Jupiter's Atmosphere",
+       "artist": "Basixx",
+       "epidemic_id": "c2dc7440-6af3-4eef-81b0-36dc827e5637",
+       "bpm": 128
+      },
+      {
+       "title": "Make You Mine",
+       "artist": "NIGHTCAP",
+       "epidemic_id": "e420756b-0bb0-48b4-b603-fa2c8c6ab6a3",
+       "bpm": 122
+      }
+     ],
+     "bed_found_by": "Epidemic Sound similarity search against Spotify 25DgjoTlKK8KjstM4cZ8L2 (HUGEL, Ultra Nate, Movin' To The Sun), instrumental filter",
+     "engine_gaps": [
+      "ve plays outside clips muted (scripts/velib/expect.py)",
+      "ve and quick-edit place the sting at frame 0 of the wide cut only; this piece needs it after the cold open, on both cuts",
+      "the chosen bed must be licensed into config/music-library.json (full-quality download on a home computer) with his yes by ear"
+     ],
+     "mocks": [
+      "wed11-opener-mock-v3-seize-it.mp4",
+      "wed11-opener-mock-v3-jupiters-atmosphere.mp4",
+      "wed11-opener-mock-v3-make-you-mine.mp4"
+     ]
     }
    }
   },
