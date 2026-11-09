@@ -517,6 +517,41 @@ def presses_in_browser(page, web):
         until(page, lambda: (last('picks/fri') or {}).get('note'))
         if (last('picks/fri') or {}).get('note') != 'Lead with the deal.' or (last('picks/fri') or {}).get('pick') != 'fri-3':
             problems.append(f'sunday: his note on a pick is not saved with it ({last("picks/fri")})')
+        # Nothing he types is dropped (Krish, 2026-11-09: "Somehow, you've also managed to lose a bunch of my comments for
+        # that article"): words typed under a pick and never Saved go with the next pick of the day, and the words he had
+        # saved on the pick he left stay on the record.
+        page.click('label.pick:has(input[value="fri-4"])')
+        until(page, lambda: (last('picks/fri') or {}).get('pick') == 'fri-4')
+        page.wait_for_selector('[data-pick-note-for="fri-4"]:not([hidden])', timeout=5000)
+        page.fill('[data-pick-note-for="fri-4"] input', 'Midterms: the voters are the story.')
+        page.click('label.pick:has(input[value="fri-3"])')
+        until(page, lambda: (last('picks/fri') or {}).get('pick') == 'fri-3')
+        notes = (last('picks/fri') or {}).get('notes') or {}
+        if notes.get('fri-4') != 'Midterms: the voters are the story.' or notes.get('fri-3') != 'Lead with the deal.':
+            problems.append(f'sunday: words typed under a pick are lost when he picks another ({last("picks/fri")})')
+        # Words typed and not yet sent are kept in his browser: a reload puts them back in their box.
+        page.fill('[data-pick-note-for="fri-3"] input', 'Typed, not sent yet.')
+        page.reload()
+        page.wait_for_selector('[data-pick-note-for="fri-3"]:not([hidden])', timeout=5000)
+        kept = page.input_value('[data-pick-note-for="fri-3"] input')
+        if kept != 'Typed, not sent yet.':
+            problems.append(f'sunday: words typed and not yet sent are gone after a reload ({kept!r})')
+        page.click('[data-act="save-pick-note"][data-for="fri-3"]')
+        until(page, lambda: (last('picks/fri') or {}).get('note') == 'Typed, not sent yet.')
+        page.wait_for_selector('[data-press="wider_piece_context"][data-for="wed-3"]:not([disabled])', timeout=5000)
+        # A press taken back keeps the words he gave it; a second press keeps the words he typed for the first.
+        page.click('[data-press="wider_piece_context"][data-for="wed-3"]')
+        until(page, lambda: (last('queue/wed-3') or {}).get('use') == 'wider_piece_context')
+        page.wait_for_selector('[data-press-note-for="wed-3"]:not([hidden])', timeout=5000)
+        page.fill('[data-press-note="wed-3"]', 'Ask the five whys.')
+        page.click('[data-press="track_over_time"][data-for="wed-3"]')
+        until(page, lambda: (last('queue/wed-3') or {}).get('use') == 'track_over_time')
+        if (last('queue/wed-3') or {}).get('note') != 'Ask the five whys.':
+            problems.append(f'sunday: a second press drops the words he typed for the first ({last("queue/wed-3")})')
+        page.click('[data-press="track_over_time"][data-for="wed-3"]')
+        until(page, lambda: (last('queue/wed-3') or {}).get('use', 'x') is None)
+        if (last('queue/wed-3') or {}).get('note') != 'Ask the five whys.':
+            problems.append(f'sunday: taking a press back drops his words ({last("queue/wed-3")})')
         # Each off-day option is judged on its own (Ruling, Krish, 2026-11-01: "Mock looks right, lock it and build it"):
         # Reject asks for his reason and saves nothing until he gives it; Approve saves the side bound to what it showed.
         cards = page.eval_on_selector_all('.off-card.opt[data-offday]', 'els => els.map(e => [e.id, e.dataset.ideaSha256])')
@@ -537,6 +572,15 @@ def presses_in_browser(page, web):
             idea = (last(f'queue/{one}') or {}).get('idea') or {}
             if idea.get('verdict') != 'reject' or idea.get('words') != 'Every account does this joke.' or idea.get('sha256') != one_sha:
                 problems.append(f'sunday: an off-day Reject did not save its reason bound to the idea it showed ({last(f"queue/{one}")})')
+            # A second tap takes the Reject back and keeps his reason (9 Nov: off-tue-infosys's words were blanked so).
+            page.click(f'#{one} [data-act="offpress"][data-side="idea"][data-value="reject"]')
+            until(page, lambda: ((last(f'queue/{one}') or {}).get('idea') or {}).get('verdict', 'x') is None)
+            if ((last(f'queue/{one}') or {}).get('idea') or {}).get('words') != 'Every account does this joke.':
+                problems.append(f'sunday: taking an off-day Reject back blanks his reason ({last(f"queue/{one}")})')
+            page.click(f'#{one} [data-act="offpress"][data-side="idea"][data-value="reject"]')
+            page.wait_for_selector(f'#{one} [data-say-side="idea"]:not([hidden])', timeout=5000)
+            page.click(f'#{one} [data-act="offsay"][data-side="idea"]')
+            until(page, lambda: ((last(f'queue/{one}') or {}).get('idea') or {}).get('verdict') == 'reject')
             page.click(f'#{two} [data-act="offpress"][data-side="idea"][data-value="approve"]')
             until(page, lambda: last(f'queue/{two}'))
             body = last(f'queue/{two}') or {}
