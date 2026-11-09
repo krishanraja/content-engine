@@ -220,6 +220,7 @@ class MaxineEye(unittest.TestCase):
         iris = out[105:116, 155:166].reshape(-1, 3).mean(0)
         self.assertLess(abs(float(iris[2]) - 110), 25)               # red channel near his iris, not Maxine's 70
 
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
     def test_his_own_iris_and_catchlight_sit_where_maxine_drew_the_iris(self):
         # Blind review, 9 Nov: Maxine's iris read flat and grey with no catchlight; his own iris is carried in.
         import cv2
