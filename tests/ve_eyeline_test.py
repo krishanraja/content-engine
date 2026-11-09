@@ -101,6 +101,69 @@ class Gated(unittest.TestCase):
         self.assertIs(hard, frame)
 
 
+def contour_ellipse(cx, cy, a, b):
+    """16 lid points around an ellipse, in the order eyeline's EYE_CONTOUR uses (0 and 8 are the corners)."""
+    return [[cx - a * math.cos(math.pi * k / 8), cy + b * math.sin(math.pi * k / 8)] for k in range(16)]
+
+
+class Moves(unittest.TestCase):
+    """The 9 Nov rules: the prompter drift is corrected, a hard glance, a squint and a closing eye are left alone, both
+    eyes move together, and the move is a push of his own pixels that leaves everything outside its reach exact."""
+
+    def test_the_share_of_a_move_by_its_length(self):
+        self.assertEqual(eyeline.band(0.05), 0.0)                       # under 0.1 radii: left as filmed
+        self.assertEqual(eyeline.band(0.3), 1.0)                        # the prompter drift: all of it
+        self.assertEqual(eyeline.band(1.0), 0.0)                        # a hard glance: left as filmed
+        self.assertGreater(eyeline.band(0.45), 0.0)
+        self.assertLess(eyeline.band(0.45), 1.0)
+
+    def test_how_much_of_an_iris_is_inside_the_lid_line(self):
+        lid = contour_ellipse(100, 100, 30, 12)
+        self.assertEqual(eyeline.iris_seen(lid, (100, 100), 8), 1.0)
+        self.assertLess(eyeline.iris_seen(lid, (100, 100), 16), 0.9)   # a big iris cut top and bottom
+        self.assertEqual(eyeline.iris_seen(lid, (200, 100), 8), 0.0)
+
+    def _rows(self, n=30, seen_open=12, blink_at=None):
+        rows, aimed = [], []
+        for i in range(n):
+            r = {'face': True, 'iris_r': {'L': 8.0, 'R': 8.0}, 'blink': 0.6 if i == blink_at else 0.0,
+                 'iris': {'R': [100.0, 100.0], 'L': [200.0, 100.0]},
+                 'contour': {'R': contour_ellipse(100, 100, 30, seen_open), 'L': contour_ellipse(200, 100, 30, seen_open)}}
+            rows.append(r)
+            aimed.append({'R': (102.4, 100.0, 8.0), 'L': (202.0, 100.0, 8.0)})    # 0.3 and 0.25 radii
+        return rows, aimed
+
+    def test_one_share_for_both_eyes_and_none_on_a_blink_or_a_squint(self):
+        rows, aimed = self._rows(blink_at=15)
+        moves = eyeline.shares(rows, aimed)
+        self.assertEqual(moves[15], 0.0)                                # a closing eye never moves
+        self.assertGreater(moves[5], 0.9)
+        rows, aimed = self._rows(seen_open=5)                          # lids over most of the iris: a squint
+        self.assertTrue(all(m == 0.0 for m in eyeline.shares(rows, aimed)))
+        rows, aimed = self._rows()
+        for i in range(8, 23):
+            aimed[i]['L'] = (215.0, 100.0, 8.0)                         # one eye in a hard glance: neither moves
+        self.assertEqual(eyeline.shares(rows, aimed)[15], 0.0)
+
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+    def test_the_push_moves_his_iris_and_leaves_the_rest_exactly(self):
+        import cv2
+        frame = np.full((200, 300, 3), 170, np.uint8)
+        cv2.ellipse(frame, (150, 100), (40, 16), 0, 0, 360, (235, 235, 235), -1)      # the white of the eye
+        cv2.circle(frame, (150, 100), 10, (40, 50, 70), -1)                            # his iris
+        cv2.circle(frame, (147, 97), 2, (255, 255, 255), -1)                           # its catchlight
+        lid = contour_ellipse(150, 100, 40, 16)
+        out = eyeline.blend_aperture(frame, frame, lid, 1.0, (150, 100, 10), (153, 100, 10), share=1.0)
+        dark = lambda im: np.argwhere(im[60:140, 100:200].sum(2) < 300)  # noqa: E731
+        shift = dark(out)[:, 1].mean() - dark(frame)[:, 1].mean()
+        self.assertAlmostEqual(shift, 3.0, delta=0.6)                   # the iris travelled the move
+        self.assertGreater(int(out[60:140, 100:200].max()), 250)         # its catchlight came with it
+        self.assertTrue(np.array_equal(out[:40], frame[:40]))           # nothing above the eye changed
+        self.assertTrue(np.array_equal(out[:, :60], frame[:, :60]))
+        none = eyeline.blend_aperture(frame, frame, lid, 1.0, (150, 100, 10), None, share=1.0)
+        self.assertIs(none, frame)                                      # no aim: as filmed, never the copy's eye
+
+
 class Decide(unittest.TestCase):
     def test_lock_leaves_blinks_to_maxine_and_never_takes_a_turn(self):
         readings = [reading(blink=0.9) if 20 <= i < 24 else reading(yaw=40) if 40 <= i < 44 else reading()
