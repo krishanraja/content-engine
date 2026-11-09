@@ -10,7 +10,7 @@ Writes into DIR:
   sheet.<stem>.<n>.jpg   moments, at most MAX_SHEET_H tall so a reader sees them at full size, each as two panels X and Y in a random order (one the take as filmed, one corrected),
                          both eyes at 2x and the face at 1x, labelled only with its time and a moment number
   key.<stem>.json        which panel is which, per moment: for whoever scores the review, never for the reviewer
-  numbers.<stem>.json    per corrected frame and eye, read back from CORRECTED: iris colour change (CIE76, the iris
+  numbers.<stem>.json    (with --copy, how far each eye sits from Maxine's lens point, before and after) per corrected frame and eye, read back from CORRECTED: iris colour change (CIE76, the iris
                          where it is now against the iris where it was), catchlight (the brightest spot in the iris
                          over the iris's median, after against before), lid opening (after over before, and the two
                          eyes' ratio after against before), and over the take: blinks, off-lens time and moves
@@ -42,13 +42,14 @@ MIN_GAP_S = 0.8
 def cached_read(media: Path, info: dict, cache: Path | None) -> list[dict]:
     """eyeline.read, kept beside the review so a second look costs nothing."""
     if cache is not None:
-        path = cache / f'readings.{media.stem}.pkl'
+        st = Path(media).stat()                     # keyed by the file itself: two corrected files share a name
+        path = cache / f'readings.{media.stem}.{st.st_size}.{int(st.st_mtime)}.pkl'
         if path.is_file():
             return pickle.loads(path.read_bytes())
     rows = eyeline.read(media, info)
     if cache is not None:
         cache.mkdir(parents=True, exist_ok=True)
-        (cache / f'readings.{media.stem}.pkl').write_bytes(pickle.dumps(rows))
+        path.write_bytes(pickle.dumps(rows))
     return rows
 
 
@@ -253,7 +254,38 @@ def sheets(take: Path, corrected: Path, info: dict, before: list[dict], moments:
     return paths, key
 
 
-def review(take, corrected, out, cache=None, seed: int = 11) -> dict:
+def lens_offsets(before: list[dict], after: list[dict], there: list[dict], fps: float) -> dict:
+    """How far his eyes sit from the lens, before and after, in degrees: the lens point per eye is where Maxine puts
+    the iris (its median over the take, along and across the eye, in eye widths: the same calibration eyeline.aims
+    uses), and each frame's distance from it is read on the take and on the corrected file. Frames with a blink or no
+    face are left out."""
+    import numpy as np  # noqa: PLC0415
+    lens = {}
+    for s in eyeline.IRIS:
+        pos = [_eye_pos(t, s) for t in there if t.get('face')]
+        lens[s] = np.median(np.array(pos), 0) if pos else None
+    out = {}
+    for name, rows in (('before', before), ('after', after)):
+        deg = []
+        for r in rows:
+            if not r.get('face') or r.get('blink', 0) >= eyeline.BLINK or any(lens[s] is None for s in lens):
+                continue
+            far = max(float(np.hypot(*(_eye_pos(r, s) - lens[s]))) for s in eyeline.IRIS)
+            deg.append(math.degrees(math.asin(min(1.0, far / eyeline.EYEBALL))))
+        deg = np.array(deg)
+        out[name] = {'median_deg': round(float(np.median(deg)), 2), 'p90_deg': round(float(np.percentile(deg, 90)), 2),
+                     'within_3deg': round(float((deg <= 3).mean()), 3), 'within_5deg': round(float((deg <= 5).mean()), 3)}
+    return out
+
+
+def _eye_pos(r: dict, side: str):
+    import numpy as np  # noqa: PLC0415
+    c, u, v, w = eyeline._eye_axes(r['eyes'][side])  # noqa: SLF001
+    d = np.asarray(r['iris'][side]) - c
+    return np.array((d @ u / w, d @ v / w))
+
+
+def review(take, corrected, out, cache=None, seed: int = 11, copy=None) -> dict:
     take, corrected, out = Path(take), Path(corrected), Path(out)
     out.mkdir(parents=True, exist_ok=True)
     info = eyeline.probe(take)
@@ -265,6 +297,8 @@ def review(take, corrected, out, cache=None, seed: int = 11) -> dict:
     moments = flagged(before, fps, moved)
     paths, key = sheets(take, corrected, info, before, moments, out, seed)
     numbers = {'take': take.name, 'corrected': corrected.name, 'summary': summary(rows, before, after, fps), 'frames': rows}
+    if copy is not None:
+        numbers['summary']['lens'] = lens_offsets(before, after, cached_read(Path(copy), info, Path(cache) if cache else None), fps)
     (out / f'key.{take.stem}.json').write_text(json.dumps(key, indent=1))
     (out / f'numbers.{take.stem}.json').write_text(json.dumps(numbers, indent=1))
     return {'sheets': [str(p) for p in paths], 'moments': len(moments), 'summary': numbers['summary']}
@@ -277,8 +311,9 @@ def main(argv=None) -> int:
     p.add_argument('--out', required=True)
     p.add_argument('--readings', help='folder to keep the take\'s landmarker readings in')
     p.add_argument('--seed', type=int, default=11)
+    p.add_argument('--copy', help='the Maxine copy: also report each eye\'s distance from its lens point, before and after')
     a = p.parse_args(argv)
-    print(json.dumps(review(a.take, a.corrected, a.out, a.readings, a.seed), indent=1))
+    print(json.dumps(review(a.take, a.corrected, a.out, a.readings, a.seed, a.copy), indent=1))
     return 0
 
 
