@@ -1,0 +1,15 @@
+{
+  "path": "docs/ve/cards/fri-13-nov/ve-fri-1-leaderboard.md",
+  "card_id": "ve-fri-1-leaderboard",
+  "kind": "device",
+  "format": "face-with-proof",
+  "motion_style": "data-story",
+  "title": "The leaderboard: ranks, takes titles, re-sorts, comes down",
+  "goal": "Fri 13 Nov 'Counting rat tails' (format signed: leaderboard as host). One company leaderboard beside his face ranks staff by AI use, stamps titles on top rows (the real one: TOKEN LEGEND), comes down, and at the payoff re-sorts by work done so the order flips.\n\n1. `params`: `rows` (3-7 of {label, value 0..1, alt 0..1?}), `header`, `altHeader?`, `note?` (small footer).\n2. `enter`: card rises in with its header, no rows.\n3. `add`: rows arrive top to bottom, staggered.\n4. `fill`: bars grow to value; no numbers drawn.\n5. `stamp` with `toState` = {row, text}: a pill badge stamps onto that row.\n6. `move` with `toState` = 'alt': rows travel smoothly to alt order, bars re-grow, header swaps to altHeader.\n7. `highlight` with `toState` = {row}: that row lifts and takes the accent.\n8. `mark`: one strike line across the board, then it greys.\n9. `exit`: the card drops out.\n\n## Tests (`device.test.ts`, stills at frames from `fixture.json`)\n- nothing before `enter`; no row before `add`\n- after `fill` bar order = value order; after `move` row order = alt order, header = altHeader\n- `stamp` badges the named row only; `mark` strikes and greys\n- no colour outside tokens; tall (board upper half, face clear below) and wide (board left two thirds, his pillar clear) render",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Register in `devices/registry.ts` and `config/ve/devices.json` with exactly enter, add, fill, stamp, move, highlight, mark, exit; update `verbs.test.ts`. Never draw outside the box (his face stays clear). Text only from params/events. Look: house tokens on dark ground, an internal dashboard card, display-face rank numbers, coral for the AI-use ranking and badges, mint for work done.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/leaderboard\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+  "write_allow": "[apps/renderer/src/engine/devices/leaderboard/*, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/devices/verbs.test.ts, config/ve/devices.json]",
+  "read": "apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/stat_strip/**, apps/renderer/src/engine/devices/stamp/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/kit/**, config/ve/design-lock.json, config/ve/devices.json",
+  "max_minutes": 60,
+  "max_calls": 60
+}
