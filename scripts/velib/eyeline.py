@@ -704,6 +704,55 @@ def iris_mask(light, inside, d_here, r):
     return (filled > 0) & inside & (d_here < 1.35)
 
 
+def whole_iris(region, inside_soft, hx: float, hy: float, hr: float, grow: float = IRIS_GROW):
+    """His iris from this frame, whole: (BGR float32 patch, alpha, share seen). The patch is square, centred on the iris
+    at (hx, hy) in `region`'s pixels, radius hr. Where his lid or the eye's corner hides part of it (inside_soft under
+    0.9), the hidden part is filled from the same iris mirrored across its own horizontal axis, then its vertical axis,
+    then both (an iris is near enough round, and a lid hides top or bottom); what no mirror reaches takes the ring's
+    median colour at that radius. A catchlight is kept where it is and never mirrored, so there is never a second one.
+    Seen and filled pixels are mixed by how well each is seen, so there is no cut between them."""
+    import cv2  # noqa: PLC0415
+    import numpy as np  # noqa: PLC0415
+    s = int(math.ceil(2 * (grow + 0.15) * max(1.0, hr))) + 2
+    c = s / 2.0
+    m = np.float32([[1, 0, hx - c], [0, 1, hy - c]])                          # patch pixel to region pixel
+    patch = cv2.warpAffine(np.asarray(region, np.float32), m, (s, s), flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP,
+                           borderMode=cv2.BORDER_REPLICATE)
+    vis = cv2.warpAffine(np.asarray(inside_soft, np.float32), m, (s, s), flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP,
+                         borderMode=cv2.BORDER_CONSTANT, borderValue=0)
+    yy, xx = np.mgrid[0:s, 0:s].astype(np.float32) + 0.5 - c                   # the iris centre is the patch's centre
+    d = np.hypot(xx, yy) / max(1.0, hr)
+    disc = d < grow + 0.1
+    seen_w = np.clip((vis - 0.6) / 0.3, 0, 1) * disc
+    share = float((seen_w > 0.5).sum()) / max(1.0, float((d < grow).sum()))
+    grey = patch.mean(2)
+    solid = seen_w > 0.5
+    cap = float(np.percentile(grey[solid], 85)) if solid.sum() >= 8 else 255.0
+    src_w = seen_w * (grey <= cap + 25)                                        # a catchlight is not copied
+    fill, wsum = np.zeros_like(patch), np.zeros(grey.shape, np.float32)
+    left = np.ones(grey.shape, np.float32)
+    for flip in ((slice(None, None, -1), slice(None)), (slice(None), slice(None, None, -1)),
+                 (slice(None, None, -1), slice(None, None, -1))):
+        w = src_w[flip] * left
+        fill += patch[flip] * w[..., None]
+        wsum += w
+        left = np.clip(left - src_w[flip], 0, 1)
+    if src_w.sum() > 3:
+        ring = np.clip((d * 8).astype(int), 0, 9)
+        median = np.zeros_like(patch)
+        for b in np.unique(ring):
+            pool = (src_w > 0.5) & (ring == b)
+            if pool.sum() < 3:
+                pool = src_w > 0.5
+            median[ring == b] = np.median(patch[pool], axis=0)
+        fill += median * left[..., None]
+        wsum += left
+    fill = fill / np.maximum(wsum, 1e-4)[..., None]
+    whole = patch * seen_w[..., None] + fill * (1 - seen_w[..., None])
+    alpha = np.clip((grow + 0.08 - d) / 0.16, 0, 1).astype(np.float32)
+    return whole.astype(np.float32), alpha, share
+
+
 def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris_there=None, template=None, lid: float = 0.0):
     """His eye from `source` laid onto `frame` only inside his own lid line (`contour`, 16 points, full-frame pixels),
     shrunk a little and feathered, so his lids, lashes and skin stay his. Inside, the source's colour is matched to
@@ -790,22 +839,18 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             sclera = np.stack([cv2.GaussianBlur(region[..., c] * keep, (0, 0), sig) / wsum for c in range(3)], axis=2)
             hole_f = np.clip((IRIS_GROW + 0.30 - d_here) / 0.30, 0, 1)
             base = region * (1 - hole_f[..., None]) + sclera * hole_f[..., None]
-            region_u8 = np.clip(region, 0, 255).astype(np.uint8)
-            shift = np.float32([[1, 0, ox], [0, 1, oy]])
-            moved = cv2.warpAffine(region_u8, shift, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-            seen = cv2.warpAffine(iris_f.astype(np.float32), shift, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR)
-            own = np.clip(seen, 0, 1) * inside_soft
-            visible = float(((d_here < 1.0) & inside).sum()) / max(1.0, float((d_here < 1.0).sum()))
-            if template is not None and (visible < TEMPLATE_VISIBLE or math.hypot(ox, oy) > TEMPLATE_MOVE * hr):
-                # His iris is cut by the lid, or travels far: use the clean one, at his radius in this frame.
-                patch, ratio = template
-                ew = float(np.hypot(*(c[8] - c[0])))               # his eye's width in this frame
-                rad = max(2.0, ratio * ew * IRIS_SCALE)                         # his iris radius from his normal frames, not this glance
-                sc = 2.5 * rad / patch.shape[0]
-                m = np.float32([[sc, 0, (tx - x0) - sc * patch.shape[1] / 2], [0, sc, (ty - y0) - sc * patch.shape[0] / 2]])
-                moved = cv2.warpAffine(patch, m, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-                d_new = np.hypot(xs - (tx - x0), ys - (ty - y0)) / rad
-                own = np.clip((IRIS_GROW + 0.08 - d_new) / 0.16, 0, 1) * inside_soft
+            # His own iris from this very frame, with its own colour and catchlight, made whole where his lid hides it
+            # (whole_iris), then laid at the aim and clipped by his lid there. The clean iris built from other frames
+            # (iris_templates) is gone from this path: at 5.57 s his whole iris was in view and the template stood in
+            # only because it travelled far, and that is the flat grey eye with a smeared catchlight the sixth blind
+            # review failed (6 Nov). Moving a part-hidden iris as it was carried its lid cut with it (a jagged edge, a
+            # pale ghost); the whole one does not.
+            patch, palpha, _share = whole_iris(region, inside_soft, hx - x0, hy - y0, hr)
+            half = patch.shape[0] / 2.0
+            put = np.float32([[1, 0, (tx - x0) - half], [0, 1, (ty - y0) - half]])
+            moved = cv2.warpAffine(patch, put, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+            own = cv2.warpAffine(palpha, put, (x1 - x0, y1 - y0), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT,
+                                 borderValue=0) * inside_soft
             eye = base * (1 - own[..., None]) + moved.astype(np.float32) * own[..., None]
             lab_s = cv2.cvtColor(np.clip(eye, 0, 255).astype(np.uint8), cv2.COLOR_BGR2LAB).astype(np.float32)
             relocated = True
