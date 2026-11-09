@@ -49,7 +49,6 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 ## What changed recently
 
 - 2026-11-09 Codex plugin enabled for cloud sessions; push-to-main and force-push denies removed at Krish's request.
-- 2026-11-07 Krish, 2026-11-07: "I think we should redesign the 9th of November board as well."
 Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-09-NOW-moved-5.md`, then `2026-11-07-NOW-moved-4.md` and `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
 
 

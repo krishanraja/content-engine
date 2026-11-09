@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -173,7 +173,8 @@ describe('the Heartside library in the same sync', () => {
 
   describe.runIf(POWERSHELL !== null)('run in PowerShell against a folder fixture', () => {
     const run = (folder: unknown, configuredRoot: string, setup: (base: string) => void, setting = '') => {
-      const base = mkdtempSync(join(tmpdir(), 'heartside-folder-'))
+      // The long form: Windows hands out a short 8.3 temp path (RUNNER~1), and PowerShell gives back the long one.
+      const base = realpathSync.native(mkdtempSync(join(tmpdir(), 'heartside-folder-')))
       try {
         mkdirSync(join(base, 'repo', 'config'), { recursive: true })
         writeFileSync(join(base, 'repo', 'config', 'heartside-library.json'), JSON.stringify({ root: configuredRoot.replace('{base}', base), drive_id: config.drive_id }))
