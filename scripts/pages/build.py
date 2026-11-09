@@ -1474,7 +1474,7 @@ def draw_covers(facts, base, out, refresh=False):
     From RECEIPT_FROM every shape is the Receipt (receipt.py)."""
     if receipt_required(facts):
         import receipt
-        return receipt.draw_covers(facts, base, out)
+        return receipt.draw_covers(facts, base, out, thumb_facts)
     done = [draw_cover(facts, base, out, refresh)]
     for shape in COVER_SHAPE_ORDER:
         done.append(draw_cover_shape(facts, base, out, shape, refresh))

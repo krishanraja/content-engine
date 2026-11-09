@@ -24,7 +24,7 @@ A flag solves country recognition; it does not explain how an AI works. An icon 
 
 `scripts/quick-edit/visual_clarity.py` checks a frame-range inventory against the actual narration. It fails on excess words, shared phrases of three or more words, missing label purpose, missing visual cues and incomplete frame coverage. A role label alone does not prove that the text adds information: semantic repetition, including paraphrases, needs independent review.
 
-`quality.delivery_problems` invokes the gate for delivery. `make.py` starts its receipt as not run. Final approval requires the exact video hash, actual frame count, hashed narration, complete rendered-text inventory and independent review evidence. A bare `status: pass`, a changed export, or a missing evidence file cannot pass. Working previews remain available for critique and are never called final.
+`quality.delivery_problems` (`scripts/quick-edit/quality.py`) invokes the gate for delivery on both routes: on quick-edit, `make.py` starts its receipt as not run; on ve, `ve receipt` writes the same `visual_clarity` row into the cut's validation receipt (`scripts/velib/receipt.py`). Final approval requires the exact video hash, actual frame count, hashed narration, complete rendered-text inventory and independent review evidence. A bare `status: pass`, a changed export, or a missing evidence file cannot pass. Working previews remain available for critique and are never called final.
 
 ## His ruling
 
@@ -38,4 +38,4 @@ The author's own review, automated word counts and contact sheets are prechecks.
 
 ## Friday status
 
-The latest production revision is `plans/2026-10-23-friday/revisions/clarity-v3/visual-copy.json`. Its three-beat study passes automated word/phrase checks; independent semantic review and timed layperson comprehension are pending. The remaining beats must be inventoried and revised before final delivery. The four final videos and final Publish Board remain incomplete.
+This section is a record of Friday 23 October's clarity revision, `docs/plans/2026-10-23-friday/revisions/clarity-v3/visual-copy.json`, as its `verification.json` left it: the three-beat study passed the automated word and phrase checks, and the independent semantic review and timed layperson test were never recorded there. The piece's tall cut was published on 23 October, and its short and long cuts were later made whole in ve; `NOW.md` says where they stand.

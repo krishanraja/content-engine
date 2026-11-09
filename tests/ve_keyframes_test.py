@@ -32,6 +32,28 @@ def layout(seed, size=(540, 960)):
     return Image.fromarray(rng.integers(0, 256, (96, 54), dtype=np.uint8)).resize(size, Image.Resampling.NEAREST)
 
 
+class StingLeadTest(unittest.TestCase):
+    def test_a_key_frame_is_read_at_its_frame_in_the_file(self):
+        # A cut that opens on the intro sting (Krish, 2026-11-05: "I think it should go at the start of the longer wide
+        # videos 100%,"): the props stay on the cut's own clock and the file has the sting's frames in front of them.
+        png = io.BytesIO()
+        Image.new('RGB', (8, 8)).save(png, format='PNG')
+        calls = []
+
+        def run(cmd, **_):
+            calls.append(cmd)
+            return subprocess.CompletedProcess(cmd, 0, png.getvalue(), b'')
+
+        beat = {'id': 'hook', 'fromFrame': 0, 'toFrame': 60, 'keyFrame': 48}
+        with patch.object(kf.subprocess, 'run', side_effect=run):
+            self.assertEqual(kf._frame('cut.mp4', beat, 56)[1], 48, 'the frame it reports is the props\' frame')
+            kf._frame('cut.mp4', beat)
+        self.assertIn('select=eq(n\\,104)', calls[0])
+        self.assertIn('select=eq(n\\,48)', calls[1])
+        self.assertEqual(qc.lead_frames({'sting': {'frames': 56}}), 56)
+        self.assertEqual(qc.lead_frames({'beats': []}), 0)
+
+
 class SimilarityTest(unittest.TestCase):
     def test_ssim(self):
         a = np.asarray(layout(1))
@@ -219,11 +241,11 @@ class FrozenTest(unittest.TestCase):
             for module, name in [('qc_sync', 'av_xcorr'), ('qc_joins', 'decoder'), ('qc_captions', 'ocr'),
                                  ('qc_brand', 'mark_tile'), ('qc_cues', 'cue_sync'), ('qc_audio', 'bed'), ('qc_audio', 'continuity'),
                                  ('qc_gates', 'words_lost'), ('qc_gates', 'joins_in_gaps'), ('qc_gates', 'captions_clock'),
-                                 ('qc_gates', 'captions_render')]:
+                                 ('qc_gates', 'captions_render'), ('qc_opening', 'opening')]:
                 stack.enter_context(patch(f'velib.{module}.{name}', return_value={'pass': True, 'status': 'measured'}))
             inputs = dict(dialogue_master='master', edl=[], joins=[], pages=[], region=[], mark_png='mark',
                           beats=self.props['beats'], aspect='9:16', events=[], slots={},
-                          heard={'faster-whisper': []}, script='', take_words=[])
+                          heard={'faster-whisper': []}, script='', take_words=[], opening={'aspect': '9:16'})
             with patch.object(kf, 'keyframe_checks', return_value={'applies': False, 'note': 'legacy format'}):
                 report = qc.run_qc('unused', 'scoreboard-test', **inputs)
                 self.assertTrue(report['complete'])

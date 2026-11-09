@@ -1,6 +1,6 @@
 # Deployment
 
-> Scope: the Video and Carousel Studio. For the whole system start at `README.md`. Its known stale passages are listed in `docs/STUDIO.md`, "The detailed Studio documents".
+> Scope: the Video and Carousel Studio. For the whole system start at `README.md`. `docs/STUDIO.md`, "The detailed Studio documents", records any passage here known to be stale.
 
 ## Upstream review order
 
@@ -10,7 +10,7 @@ The adapter implementation is split into independently reviewable pull requests:
 2. Control Center existing-route security follow-up: `krishanraja/control-center#246` (merged). PR #245 was superseded to keep the security review independent after #244 merged.
 3. mm-ctrl cached radar export: `krishanraja/mm-ctrl#371` (merged).
 
-The verified upstream main commits are pinned in `config/studio.json`. Recheck main before merging if either pull request becomes stale.
+All three are merged, so this section is the record. The verified mm-ctrl main commit is pinned in `config/studio.json` (`upstream_contracts.mm_ctrl`).
 
 ## Secrets
 
@@ -27,7 +27,7 @@ The MCP token's value is `vst_mcp_` followed by at least 64 lowercase hex charac
 
 `MindmakeVideoStudio/approval-signing-key` has no cloud half. Each machine generates its own locally and never shares or copies it (`docs/ENGINE_SECRETS_HANDOVER.md`). The retired `-v2` bearer, signing-key and radar targets and the three quarantined unversioned names may still sit in a machine's store; nothing reads them. (`studio-mcp-token-v2` is the active MCP target and is not retired.)
 
-Create two separate strong random provider-token values. Configure the mm-ctrl value as `VIDEO_STUDIO_EXPORT_TOKEN` only in its Supabase project, and configure the different Control Center value under that same provider-local key only in its Vercel project. Store each matching value locally in its own Windows Generic Credential:
+Create two separate strong random provider-token values. Configure the mm-ctrl value as `VIDEO_STUDIO_EXPORT_TOKEN` only in its Supabase project, and configure the different Control Center value under that same provider-local key only in the `content-engine` Vercel project, which serves the Control Center export (`/api/video-studio/candidates`, deployed from `apps/control-plane`). Store each matching value locally in its own Windows Generic Credential:
 
 ```text
 MindmakeVideoStudio/mm-ctrl-radar-token
@@ -115,7 +115,7 @@ powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStud
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/approval-signing-key
 ```
 
-After the matching Control Center API and server-side credentials are live, verify the local prerequisites from that dedicated checkout and install the task:
+After the runner routes (deployed from `apps/control-plane` in the `content-engine` Vercel project) and the server-side credentials are live, verify the local prerequisites from that dedicated checkout and install the task:
 
 ```powershell
 $env:MINDMAKE_RUNTIME_ROOT = "$env:USERPROFILE\Documents\MindmakeVideoStudio\runtime"
@@ -156,7 +156,7 @@ After installation, prove the lifecycle before activation: start the task, requi
 
 The runner also requires an exact clean checkout: its configured repository root must equal Git's actual top-level path, `HEAD` must be a real 40-character commit, `MINDMAKE_SOFTWARE_COMMIT` must be absent or equal to that commit, and no tracked or untracked source file may differ. Project publication and command claiming fail closed when provenance is unknown. Install from a clean committed revision, never from this implementation working tree.
 
-The implementation in this repository does not itself install the Scheduled Task, deploy Control Center, or configure any credential. Those remain explicit operator actions. A merged code change is not an installed runner. After any credential change, `npm run probe:runner-credentials` proves the bearer and signing key against production without leasing or writing work. An installed runner is not a verified live control-plane integration until that probe, `doctor`, task status, project bootstrap, claim, proxy upload, completion, and cloud readback all succeed.
+The implementation in this repository does not itself install the Scheduled Task, deploy the control plane, or configure any credential. Those remain explicit operator actions. A merged code change is not an installed runner. After any credential change, `npm run probe:runner-credentials` proves the bearer and signing key against production without leasing or writing work. An installed runner is not a verified live control-plane integration until that probe, `doctor`, task status, project bootstrap, claim, proxy upload, completion, and cloud readback all succeed.
 
 To rotate the bearer, stop and disable the task, create a fresh versioned LocalMachine credential target, replace the matching Vercel Secret, update the active constant, then reinstall the exact clean commit and verify runner status. Never reuse the three quarantined unversioned names. Do the standby in the same window. A runner's cloud hash covers the bearer, so after a rotation every runner reports under a new hash with no role: once the runner roles are live, the primary takes no work until the active role is switched to its new hash (`docs/OPERATIONS.md`, "Runner roles"). A signing-key rotation leaves the hashes unchanged.
 
@@ -178,7 +178,7 @@ Once the runner-role fence is live (`docs/OPERATIONS.md`, "Primary and cold stan
 
 ## Projection cursor protocol rollout
 
-Deploy the matching Control Center migration and API first. Stop the old Scheduled Task before enabling the new Studio runner. Confirm every existing platform row is at a root state with no active candidate or parent lineage, and confirm there is no queued or leased command. Then update the clean runner checkout, run `npm ci`, run the full repository verification, and start the new task.
+Deploy the matching Supabase migration and the control plane (`apps/control-plane`) first. Stop the old Scheduled Task before enabling the new Studio runner. Confirm every existing platform row is at a root state with no active candidate or parent lineage, and confirm there is no queued or leased command. Then update the clean runner checkout, run `npm ci`, run the full repository verification, and start the new task.
 
 The first projection from a new runner release sends the authenticated local source event count, event-chain hash, and semantic source revision. A pre-existing root platform row may adopt that tuple only when its complete protected state already equals the requested base state. Further pre-existing platforms may adopt the same exact source tuple under the same exact-state rule. Active, mismatched, partial, or in-flight states fail closed. After adoption, every projection uses the exact signed acknowledged platform cursor as its compare-and-swap predecessor.
 
@@ -186,7 +186,7 @@ The temporary omitted-expectation compatibility branch exists only for the contr
 
 ## Deployment checks
 
-Before enabling Control Center editorial radar refresh:
+Before enabling the editorial radar refresh (the control plane's `editorial_radar` job, `/api/content-opportunities/refresh`):
 
 1. Merge the adapter PRs after CI and review.
 2. Configure the dedicated secret in Vercel and Supabase.
@@ -194,15 +194,15 @@ Before enabling Control Center editorial radar refresh:
 4. Confirm missing, empty, and incorrect bearer values return 401.
 5. Confirm authenticated responses set `Cache-Control: no-store`, do not set wildcard CORS, and contain no raw database IDs or private canaries.
 6. Run `studio radar pull` against both providers and against the committed offline fixtures.
-7. Confirm the Control Center refresh schedule writes prepared opportunities to Content without chat delivery.
+7. Confirm the scheduled refresh writes prepared opportunities to Content without chat delivery.
 
-If either radar provider is unavailable, `studio radar pull` records the failure and imports any available feed. The Studio holds no schedule of its own; the refresh cadence belongs to the Control Center schedule. Neither side starts a replacement scraping path.
+If either radar provider is unavailable, `studio radar pull` records the failure and imports any available feed. The Studio holds no schedule of its own; the refresh cadence is the control plane's cron in `apps/control-plane/vercel.json` (daily at 12:00 UTC). Neither side starts a replacement scraping path.
 
 ## Proactive delivery
 
 There is no chat pulse. `config/video-engine-pulse-heartbeat.json` records the retired automation and its pull-only replacement. Scheduled discovery and editorial preparation write rows into the Control Center Content surface. Krish sees new opportunities and runner attention when he opens Control Center. No scheduled job initiates a conversation or posts into an LLM thread.
 
-The Control Center refresh remains preparation-only. It never creates a Studio job, inspects editorial media, moves a file, uploads, publishes, or changes an approval. `studio radar pull` remains available for authenticated evidence diagnostics and offline fixture recovery, not as a second editorial ranking system.
+The control plane's refresh remains preparation-only. It never creates a Studio job, inspects editorial media, moves a file, uploads, publishes, or changes an approval. `studio radar pull` remains available for authenticated evidence diagnostics and offline fixture recovery only. It is never a second editorial ranking system.
 
 ## Publishing
 

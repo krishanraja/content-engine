@@ -14,6 +14,30 @@ import board_web
 import week_board
 
 class BoardWebTests(unittest.TestCase):
+    def test_article_pictures_are_stored_and_named_for_copy_article(self):
+        # Krish, 2026-11-06: "Every Substack article embeds the images inline". Each article picture is stored once as a
+        # board file and named on its <img>, and its bytes stay in the page; a picture outside the article is left alone.
+        import base64
+        png = base64.b64encode(b'\x89PNG synthetic figure').decode()
+        page = ('<div class="pic"><img id="fri-img-a" src="data:image/png;base64,' + png + '" alt="card"></div>'
+                '<div class="article" id="fri-art"><p>One</p><figure><img src="data:image/png;base64,' + png + '" alt="Figure"></figure>'
+                '<figure><img src="data:image/png;base64,' + png + '" alt="Again"></figure></div>\n<pre id="fri-art-text" hidden>One</pre>')
+        assets, payloads = {}, []
+        out = board_web.lift_article_pictures('2026-11-02', page, assets, payloads, {})
+        digest = board_web.sha(base64.b64decode(png))
+        aid = 'article-' + digest[:16]
+        self.assertEqual(list(assets), [aid])
+        self.assertEqual(assets[aid], {'sha256': digest, 'bytes': len(base64.b64decode(png)), 'type': 'image/png',
+                                       'name': aid + '.png', 'key': f'boards/2026-11-02/{digest}'})
+        self.assertEqual(len(payloads), 1, 'the same bytes are uploaded once')
+        self.assertEqual(out.count(f'data-asset="/api/board/2026-11-02/assets/{aid}?sha={digest}"'), 2)
+        self.assertNotIn('data-asset', out.split('<div class="article"')[0], 'a picture outside the article is untouched')
+        self.assertEqual(out.count('src="data:image/png;base64,' + png + '"'), 3, 'every picture keeps its own bytes')
+        self.assertEqual(board_web.lift_article_pictures('2026-11-02', out, {}, [], {}), out, 'running it again changes nothing')
+        reused, sent = {}, []
+        board_web.lift_article_pictures('2026-11-02', page, reused, sent, {'old': assets[aid]})
+        self.assertEqual(sent, [], 'a file the current build holds is reused, never sent again')
+
     def test_replacement_reuses_only_exact_existing_asset_and_keeps_revision(self):
         page, meta, _ = week_board.board(week_board.monday_of('2026-10-12'))
         page, meta = board_web.web_page(page, meta)
@@ -63,6 +87,26 @@ class BoardWebTests(unittest.TestCase):
                 board_web.publish(args)
             self.assertEqual(sent[0]['manifest']['assets']['drive-renamed'],asset)
             self.assertEqual(len(uploads),1)
+            # A live build that holds no stored files (the 9 Nov board's 4 Nov 07:13 build): the mapping names the
+            # earlier build that holds the bytes, and its record of the file is reused, never uploaded again.
+            sent.clear();uploads.clear();reads=[]
+            empty = dict(revision=9, manifest=dict(assets={}))
+            older = 'c'*64
+            def api_empty(method, path, body=None):
+                if method == 'PUT':
+                    sent.append(body); return {'build_id':'new'}
+                if sent: return dict(build_id='new',manifest=sent[-1]['manifest'])
+                if path.endswith(f'?build={older}'):
+                    reads.append(path); return dict(build_id=older, manifest=dict(assets={'drive-example':asset}))
+                return empty
+            mapping.write_text(json.dumps([dict(id='drive-example',source_url=source,existing_sha256='a'*64)]))
+            with patch.object(board_web,'call',api_empty), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                with self.assertRaisesRegex(ValueError,'changed or is missing'): board_web.publish(args)
+                mapping.write_text(json.dumps([dict(id='drive-example',source_url=source,existing_sha256='a'*64,from_build=older)]))
+                board_web.publish(args)
+            self.assertEqual(sent[0]['manifest']['assets']['drive-example'],asset)
+            self.assertEqual(len(reads),1)
+            self.assertEqual(len(uploads),1)  # the HTML only
 
     def test_a_ready_video_needs_a_passing_receipt_for_its_bytes(self):
         import html as html_mod

@@ -99,8 +99,10 @@ with at most one loud word, and the close on the dated prediction.
   gains a proof-panel beat fed from receipts, and a rule that the one
   highlight may only mark words inside a receipt. Not built yet.
 
-The Studio still speaks only the two retired series names
-(`apps/control-plane/api/_productionBrief.ts`), so a piece routed to
-follow.the.money, mind.the.gap or under.the.hood cannot get a production
-brief yet. Krish gave the go to teach it the three names on 2026-09-26 (walk
-log F21).
+The Studio's production brief now takes the three subchannel names beside the
+two retired series names (`apps/control-plane/api/_productionBrief.ts`):
+follow.the.money takes The Money of AI's formats, under.the.hood Built With
+AI's, and mind.the.gap has The Fork. Krish gave the go to teach it the three
+names on 2026-09-26 (walk log F21). Today video is made with the ve engine
+(`docs/ve/ENGINE.md`), with quick-edit as the fallback until ve passes Phase
+3; the Studio's Shorts route makes none of it.

@@ -2456,7 +2456,7 @@ def self_test():
         code, _ = run([pid, 'choices', str(direction)])
         check('choices: read from the direction, his signature accepting the proposal',
               (code, seen[-1][2].get('production_choices') if len(seen) > before else None),
-              (0, {'opening': 'hook_is_intro', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}))
+              (0, {'opening': 'sting_wide_hook_tall', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}))
         code, _ = run([pid, 'choices', str(direction), '--big-moment-sound', 'big_moment_only'])
         check('choices: a flag records what was actually used', seen[-1][2]['production_choices']['big_moment_sound'],
               'big_moment_only')
@@ -2557,7 +2557,7 @@ def main(argv=None, call=None):
     ap.add_argument('--title', metavar='TITLE', help='with teleprompter: the script\'s title')
     ap.add_argument('--sent-at', metavar='TIME', help='with teleprompter: when it was sent (default now)')
     ap.add_argument('--error', metavar='TEXT', help='with teleprompter: what Teleprompter said when the send failed')
-    ap.add_argument('--opening', metavar='OPTION', help='with choices: the opening the piece used (hook_is_intro ...)')
+    ap.add_argument('--opening', metavar='OPTION', help='with choices: the opening the piece used (sting_wide_hook_tall, hook_is_intro ...)')
     ap.add_argument('--lead-picture', metavar='OPTION', help='with choices: series_picture or story_object')
     ap.add_argument('--big-moment-sound', metavar='OPTION', help='with choices: big_moment_only or none')
     ap.add_argument('--at-s', type=float, metavar='SECONDS', help='with clips: where the routed clip starts in the cut')

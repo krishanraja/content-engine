@@ -46,7 +46,7 @@ What each is for:
 
 ## video.py: a judge that can watch
 
-    python scripts/signals/video.py FILE.mp4 [--model gemini-2.5-flash]
+    python scripts/signals/video.py FILE.mp4 [--model gemini-2.5-flash] [--question "..."]
     python scripts/signals/video.py --self-test
 
 Sends a finished cut (ours, or a competitor's public one) to Gemini once and

@@ -5,6 +5,11 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterAll, describe, expect, it, vi } from 'vitest'
 
+// Every test here runs a Python self-test as a child process. On a loaded Windows runner (CI runs 238 files at once)
+// Python's start alone can pass vitest's 5 s default, as build.py --self-test did on 6 Nov 2026 (it takes under a
+// second here), so these get the minute the repository's other subprocess tests are given.
+vi.setConfig({ testTimeout: 60_000 })
+
 vi.hoisted(() => {
   // The voice checks load the engine's content module. A dead local address,
   // so nothing here can reach a real database whatever the shell holds.

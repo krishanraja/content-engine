@@ -1,6 +1,6 @@
 # Make Your Mind Up content engine
 
-**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, every week's board lives at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are kept as compatibility and history; never use them to synchronize artifacts.
 
 
 The engine behind Krish Raja's media business: makeyourmindup, his
@@ -19,9 +19,9 @@ hosted at makeyourmindup repo"). Package, environment and credential names keep
 their `mindmake` spelling, because renaming them would break the machines that
 read them.
 
-As of 2026-09-25 it is building: the choosing half runs around the clock, the
-first pieces were walked through drafting on 2026-09-24, and nothing has been
-published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
+It is building: the choosing half runs around the clock, each week's pieces
+are picked on the Sunday ideas board and made from there, and Krish publishes
+them by hand. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 
 ## Read this first
 
@@ -33,7 +33,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | work on video | `docs/ve/ENGINE.md`, then `docs/ve/RUNBOOK.md` (quick-edit is the fallback until ve passes Phase 3) |
 | work on the Studio runner or renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
 | understand how the pieces fit, or who owns what | `docs/SYSTEM_MAP.md` |
-| design how a piece looks, sounds or moves, on any surface | `docs/CREATIVE_IDENTITY_UPGRADE.md` |
+| design how a piece looks, sounds or moves, on any surface | `docs/production/THE_BAR.md`, the brand tokens (`config/ve/brand-tokens.json`), the signed motion standard (`docs/ve/MOTION_STANDARD.md`) and the style bank (the `motion` layer of `config/style-references.json`); each piece renders from the direction Krish signs (`docs/CREATIVE_DIRECTION.md`). `docs/CREATIVE_IDENTITY_UPGRADE.md` is the plan of 25 September and his decisions on it |
 | make a piece's web page, the copy that pastes into Substack and its cover image, or check that its artwork can be read on a phone | `scripts/pages/README.md` |
 | make the YouTube banner, watermark and channel description, the profile pictures, the Facebook cover, the X header or the Instagram highlight covers | `scripts/channel-kit/README.md` |
 | see what each social profile carries (YouTube, Instagram, Facebook, Krish's TikTok and X) and what is left on them | `docs/AMPLIFICATION.md`, "The profiles every link lands on" |
@@ -45,7 +45,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | reach a service (which are live, their secret names, what to rotate) | `docs/INTEGRATIONS.md` |
 | see every plausible way a tool could make the content far better | `docs/ENGINE_100X.md` |
 | run the week: record the whole week on Sunday and go live the Monday after; the Sunday ideas board, the interview, the Monday final board; the standing answers (two cuts, the channels) | `docs/CADENCE.md` |
-| publish a finished post to every channel, from Drive (one Substack video post, then the rest) | `docs/AMPLIFICATION.md` |
+| see what a finished post needs on each channel (Growth-MakeYourMindUp posts it; read `docs/GROWTH-HANDOFF.md` first) | `docs/AMPLIFICATION.md` |
 | read a free public signal: prediction-market odds, news velocity, Hacker News, SEC filings | `scripts/signals/README.md` |
 | pin a Call to a prediction market, or read the scoreboard feed | `docs/CONTENT_ENGINE.md`, `/api/content-ideas/[id]/call-market` and `/api/calls` |
 | treat Spotify as a channel: the show, the audio editions, the sizes | `docs/SPOTIFY.md` |
@@ -77,11 +77,13 @@ it means for every stage and the rules that keep the learning honest are in
 | Half | Where | What it does |
 |---|---|---|
 | **The content engine** | `apps/control-plane/`, deployed as the Vercel project `content-engine` | collects and researches ideas, judges them with a blind panel, routes them to a subchannel, drafts and rewrites to the mandate, runs the final checks, cuts channel copy, builds production briefs, and keeps the ledger the engine learns from |
-| **The Studio** | `packages/`, `apps/runner/`, `apps/renderer/` | turns an approved brief into the cuts through hash-gated stations (carousels are Growth's, to `docs/CAROUSEL-STANDARD.md`), on Krish's Windows machine, and packages it for posting by a person |
+| **Production** | `scripts/ve.py` (ve, the video engine), `scripts/quick-edit/` (the fallback), `apps/renderer/`; the Studio in `packages/` and `apps/runner/` | makes both cuts of each piece from Krish's takes, with their thumbnails and covers, and files them for posting by a person (carousels are Growth's, to `docs/CAROUSEL-STANDARD.md`); the Studio's hash-gated stations on his Windows machine are a separate route that is not how videos are made today |
 
 Control Center (`krishanraja/control-center`) is where Krish works; it reaches
 the engine through rewrites and reads the shared Supabase database directly.
-This repository has no user interface of its own.
+This repository's one user interface is the weekly publish board it serves at
+content.krishraja.com (`/board/<Monday>`, with the standards page at
+`/board/standards`), where Krish presses.
 
 ## The publication
 
@@ -93,8 +95,9 @@ Three subchannels, each with a mandate stored in the database
 - **under.the.hood**: what actually goes together in a shipped thing, and why it worked.
 
 The Money of AI and Built with AI are retired as subchannels (2026-09-17) and
-survive as aliases, **and as the Studio's two series identifiers, which are
-still live**. Read `docs/GLOSSARY.md` before renaming anything.
+survive as aliases, and as two retired Studio series ids that stay valid only
+for records made under them (`packages/contracts/src/series.ts`). Read
+`docs/GLOSSARY.md` before renaming anything.
 
 ## Rules that are never negotiable
 
@@ -111,16 +114,17 @@ The full rules for agents are in `AGENTS.md`.
 
 ```bash
 npm ci
-npm run verify                  # everything below, plus skills, stations, renderer, copy and secret checks
+npm run verify                  # everything below, plus the skill, station, renderer, copy, secret, board, music-bed and repo-map checks
 npm run typecheck               # the packages
 npm run typecheck:control-plane # the content engine
 npm test                        # vitest across tests/, including tests/control-plane/
 npm run check:control-plane     # 28 structural guards for the content engine (skipped on Windows)
 ```
 
-Two content-engine guards and two FFmpeg-dependent media tests fail on `main`
-for known reasons (`docs/STATE.md`, "Broken or risky"). Anything else failing
-is yours.
+All 28 content-engine guards pass on `main`. One media test,
+`tests/quick-edit-mix.test.ts`, fails in the cloud container (FFmpeg 6.1.1)
+and passes in CI, which installs the pinned FFmpeg 8.1.2 (`docs/STATE.md`,
+"Broken or risky"). Anything else failing is yours.
 
 Studio setup on Windows starts in `docs/STUDIO.md`, "Quick start".
 
@@ -134,8 +138,10 @@ document; code outranks prose about what the code does.
 3. `docs/STATE.md` and `NOW.md`: where it is right now.
 4. `docs/SYSTEM_MAP.md`: how the parts fit and who owns what.
 5. `docs/CONTENT_ENGINE.md`: the content engine, route by route.
-6. `docs/CREATIVE_IDENTITY_UPGRADE.md`: how every piece looks, sounds and
-   moves (the Signature Pack), with the decisions Krish has made on it.
+6. `docs/CREATIVE_IDENTITY_UPGRADE.md`: the plan of 25 September for how
+   every piece looks, sounds and moves (the Signature Pack, never built as
+   such), with the decisions Krish made on it. Today `docs/production/THE_BAR.md`,
+   the brand tokens, `docs/ve/MOTION_STANDARD.md` and the style bank hold that.
 7. `docs/STUDIO.md`: the Studio, and the index of its detailed documents
    (`docs/ENGINE_SESSION.md`, `docs/ARCHITECTURE.md`, `docs/OPERATIONS.md`,
    `docs/DEPLOYMENT.md`, `docs/CAROUSEL_ENGINE_STATE.md` and the calibration

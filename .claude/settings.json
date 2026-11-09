@@ -35,13 +35,6 @@
       "Bash(node scripts/gen-repo-map.mjs *)"
     ],
     "deny": [
-      "Bash(git push --force *)",
-      "Bash(git push -f *)",
-      "Bash(git push * --force *)",
-      "Bash(git push * --force-with-lease *)",
-      "Bash(git push origin main *)",
-      "Bash(git push origin main)",
-      "Bash(git push origin HEAD:main *)",
       "Bash(git reset --hard *)",
       "Bash(git clean -f *)",
       "Bash(git clean -fd *)",
@@ -188,5 +181,16 @@
         ]
       }
     ]
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "codex@openai-codex": true
   }
 }

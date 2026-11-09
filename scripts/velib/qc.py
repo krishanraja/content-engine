@@ -183,12 +183,35 @@ def caption_pages_shown(props: dict) -> list:
             if not any(start <= sampled(page) < end for start, end in calls)]
 
 
+def lead_frames(props: dict | None) -> int:
+    """The frames in front of the cut in its finished file: the intro sting's (props.sting.frames) on the 16:9 whole
+    cut of a weekly series piece, else 0. The props stay on the cut's own clock (compile moves no frame for the sting),
+    so cut frame f is frame f + lead of the file (apps/renderer/src/engine/VeCut.tsx)."""
+    return int(((props or {}).get('sting') or {}).get('frames') or 0)
+
+
+def _moved(item: dict, lead: int, *keys: str) -> dict:
+    """A copy of item with each frame key present moved onto the file's clock."""
+    return {k: (int(v) + lead if k in keys and v is not None else v) for k, v in item.items()}
+
+
+def opening_view(props: dict) -> dict:
+    """What the opening row (velib.qc_opening) reads of the props: the cut's shape, length, series and sting."""
+    return {k: props.get(k) for k in ('aspect', 'fps', 'durationFrames', 'ending', 'series', 'sting', 'audio')}
+
+
 def inputs_from_props(props: dict) -> dict:
-    """Resolve QC inputs on the renderer's global 30 fps clock."""
+    """Resolve QC inputs on the finished file's 30 fps clock: the renderer's global clock, plus the intro sting's frames
+    in front of the cut when it opens on one (lead_frames). Every frame a check reads in the file (beats, events,
+    caption pages, the lip-sync EDL, joins and the plate offset) is moved by the lead; the stem already starts on the
+    file's frame 0, so the EDL's stem positions are the moved frames."""
     # Mirrors apps/renderer/src/engine/layouts/index.ts, slotsFor():
     # boxes are x, y, width, height in beat.uses order, authored per aspect.
     layouts = _renderer_layouts()
-    aspect, beats, events = props['aspect'], props['beats'], props['events']
+    lead = lead_frames(props)
+    aspect = props['aspect']
+    beats = [_moved(b, lead, 'fromFrame', 'toFrame', 'keyFrame') for b in props['beats']]
+    events = [_moved(e, lead, 'atFrame') for e in props['events']]
     objects = {o['obj']: o for o in props.get('objects', [])}
     split_scale, split_caption = _split_geometry()
     split_seam = int(re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks'
@@ -235,15 +258,19 @@ def inputs_from_props(props: dict) -> dict:
     # never be applied to it; compare each beat at its position in this master.
     # The ending band carries no speech, so lip sync is measured up to its start, never across it.
     stop = (props.get('ending') or {}).get('fromFrame', props.get('durationFrames'))
+    stop = None if stop is None else int(stop) + lead
     edl = [{'fromFrame': b['fromFrame'], 'toFrame': b['toFrame'] if stop is None else min(b['toFrame'], stop),
             'trimBeforeFrames': b['fromFrame'] + stem.get('trimBeforeFrames', 0)} for b in beats
            if stop is None or b['fromFrame'] < stop]
-    joins = sorted({s['fromFrame'] / props.get('fps', 30) for s in props.get('segments', []) if s['fromFrame'] > 0})
+    # A take join is where a later picture segment starts. The sting's last frame to his face is not one: the stem
+    # runs on unbroken under it, and the one take segment starts on the cut's own frame 0.
+    joins = sorted({(s['fromFrame'] + lead) / props.get('fps', 30) for s in props.get('segments', []) if s['fromFrame'] > 0})
     from . import qc_faces
     pages = []
     style = props.get('captionStyle') or 'house'
     for original in caption_pages_shown(props):
-        page = dict(original)
+        page = dict(_moved(original, lead, 'fromFrame', 'toFrame'),
+                    words=[_moved(w, lead, 'atFrame') for w in original.get('words') or []])
         beat = next((b for b in beats if b['fromFrame'] <= page['fromFrame'] < b['toFrame']), {})
         if beat.get('layout') == 'SPLIT' and style != 'word':
             page['region'] = split_caption
@@ -253,11 +280,13 @@ def inputs_from_props(props: dict) -> dict:
         left, top = max(0, x - 12), max(0, y - 12)
         page['region'] = (left, top, min(width, x + w + 12) - left, min(height, y + h + 12) - top)
         pages.append(page)
+    # The plate's frame under file frame F is F - lead + the segment's trim.
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
                 edl=edl, joins=joins, caption_style=props.get('captionStyle') or 'house',
                 plate_video=(props.get('segments') or [{}])[0].get('src') if len(props.get('segments') or []) == 1 else None,
-                plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)))
+                plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)) - lead,
+                opening=opening_view(props))
 
 
 def run_qc(path: str, format_id: str, targets: dict | None = None, *,
@@ -266,7 +295,8 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            composition_props=None, script: str | None = None, take_words=None, heard: dict | None = None,
            captions_drawn_by: str = 'faster-whisper', caption_ocr=None, fps: float = 30,
            caption_style: str = 'house', face_detector=None, plate_video: str | None = None,
-           plate_offset: int = 0) -> dict:
+           plate_offset: int = 0, opening: dict | None = None, publish_day: str | None = None,
+           onscreen_reader=None) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
@@ -284,7 +314,8 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                  'pass': move['longest_still_s'] <= fmt.get('longest_still_s', 99), 'runs': move['still_runs']},
         'motion.periodicity': {'value': move['loop_period_s'], 'target': 'no repeating loop 2-10 s', 'pass': move['loop_period_s'] is None},
     }
-    for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', 'brand.mark_tile', 'motion.cue_sync', 'audio.bed', 'audio.bed_continuity'):
+    for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', 'brand.mark_tile', 'motion.cue_sync', 'audio.bed', 'audio.bed_continuity',
+                 'opening'):
         checks[name] = {'value': None, 'target': 'see config/ve/crew', 'pass': None, 'status': 'not_run'}
     # The calibrated cut gates quick-edit runs too (plan W2.4, scripts/cutgates, config/gates.json).
     for name in ('words.lost', 'joins.in_gaps', 'captions.clock', 'captions.render'):
@@ -294,8 +325,11 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                    if pages is not None and not pages else
                                    {'value': None, 'target': 'no caption page on the face', 'pass': None, 'status': 'not_run'})
     checks['channel.safe_zones'] = {'value': None, 'target': 'nothing under a channel button', 'pass': None, 'status': 'advisory'}
-    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_as_shot
+    from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_as_shot, qc_opening
     optional = [
+        # The opening (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"): the
+        # approved sting on the file's first frames and his cut on the very next frame, or no sting at all.
+        ('opening', opening is not None, lambda: qc_opening.opening(path, opening)),
         # Advisory: his take as shot (the floor's untested-treatment rule); shown, never counted.
         ('picture.as_shot', bool(plate_video) and bool(beats) and aspect == '9:16' and Path(str(plate_video)).is_file(),
          lambda: qc_as_shot.as_shot(path, plate_video, beats, int(fps), plate_offset, pages, aspect)),
@@ -391,6 +425,12 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         'pass': composition.get('pass'),
         'status': composition.get('status', 'measured') if composition['applies'] else 'not applicable',
     }
+    # The post-mortem of the week of 2 Nov (velib/qc_onscreen.py): marks on their words, captions that neither break
+    # mid-phrase nor repeat the headline, evidence read at a readable height. Advisory before its binds_from (F33).
+    if composition_props and composition_props.get('beats'):
+        from . import qc_onscreen
+        checks.update(qc_onscreen.rows(path, composition_props, publish_day, read=onscreen_reader,
+                                       lead=lead_frames(composition_props)))
     # An advisory row is measured and shown, never counted (scripts/velib/qc_channel.py until its layout card lands).
     applicable = [c for c in checks.values() if c.get('status') not in ('not applicable', 'advisory')]
     built = [c['pass'] for c in applicable if c['pass'] is not None]

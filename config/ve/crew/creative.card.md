@@ -6,11 +6,11 @@ Decision engine (corpus 14.4; departing from it needs an `override_reason`):
 
 | Beat content | Device |
 |---|---|
-| Spoken number or statistic | `kinetic_stat`, with a pop SFX on the number word |
-| Comparison across several subjects | `test_grid` or `bar_compare`, persistent, one unit |
+| Spoken number or statistic | `kinetic_stat`, silent: a cut's one sound goes on its big moment only (`sound.one_moment`) |
+| Comparison across several subjects | `test_grid`, persistent, one unit (no bar-chart device exists yet: card one with `ve card`) |
 | Claim that needs proof | `evidence_card`: outlet, date and the quoted line, never a cropped screenshot |
 | Record that changes over the story | `record_card` (the ledger: fields fixed, one field restamped per case) |
-| Named place | `map_move` (v1.1), or a labelled still |
+| Named place | A labelled still (no map device exists yet) |
 | Abstract idea | An illustration plate, with no tag. Never literal stock. |
 | List of 3 or more | Progressive build; earlier items stay at 40% |
 | Topic pivot | Zoom out, or a chapter beat |

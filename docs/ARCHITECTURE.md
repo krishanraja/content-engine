@@ -1,6 +1,6 @@
 # Architecture
 
-> Scope: the Video and Carousel Studio. For the whole system start at `README.md`. Its known stale passages are listed in `docs/STUDIO.md`, "The detailed Studio documents".
+> Scope: the Video and Carousel Studio. For the whole system start at `README.md`. `docs/STUDIO.md`, "The detailed Studio documents", records any passage here known to be stale.
 
 ## State model
 
@@ -17,14 +17,16 @@ ingest -> normalize -> transcript + source_analysis
 Short-native work adds the pre-recording path:
 
 ```text
-radar/brief -> script -> candidates -> claims -> recording brief -> recorded ingest
+brief -> script -> candidates -> claims -> recording brief -> recorded ingest
 ```
+
+The brief is either an approved Control Center production brief (`studio v2 production-brief import` makes the job and moves it to `script`) or an evidence and audience brief given to the first `studio v2 candidates` pass. The radar never writes one.
 
 An approved short-native script stays upstream when a recording is replaced. Re-ingest invalidates transcript, visual analysis, and visual descendants without discarding the editorial decision that caused the recording.
 
 ## Station machinery
 
-The production graph is a mechanical assembly of independently governed stations, not one procedural prompt. `mindmake-video/SKILL.md` is a thin router. Shared editorial, visual, safety and learning policies remain focused cross-cutting references. Every executable V2 stage has its own station directory under `.agents/skills/mindmake-video/stations/` containing:
+The production graph is a mechanical assembly of independently governed stations, with no single procedural prompt. `mindmake-video/SKILL.md` is a thin router. Shared editorial, visual, safety and learning policies remain focused cross-cutting references. Every executable V2 stage has its own station directory under `.agents/skills/mindmake-video/stations/` containing:
 
 - `station.json`: the typed machine boundary, version, owners, prerequisites by source mode, inputs, outputs, approval gate, invalidation map, fallback, learning permissions and regression cases.
 - `STATION.md`: the judgment needed at that station, including its responsibility, quality gates, failure behavior, handoff and change-control rule.
@@ -51,7 +53,7 @@ New formats reuse the shared upstream editorial workpiece and add only genuinely
 
 New visual treatments must pass exact-asset review, phone-size styleframes, and an audio animatic. The renderer consumes only the resulting immutable `RenderManifestV2`. Four platform manifests share the approved edit but have platform-specific safe zones, copy, covers, and delivery records. After all target masters pass QA and receive exact final approval, the complete package artifact receives a separate Krish approval before archive or private upload.
 
-Discovery candidates are mechanical search windows and cannot be approved. Codex authors the publishable `CandidateV1` with an `EditPlanV1` and `EditorialAssessmentV1`. The edit may contain one continuous segment or a bounded set of stitched source segments; every cut, final order, source-order change, cold-open decision, throughline, and ending is explicit.
+Discovery candidates are mechanical search windows and cannot be approved. An agent (Codex or another client) authors the publishable `CandidateV1` with an `EditPlanV1` and `EditorialAssessmentV1`. The edit may contain one continuous segment or a bounded set of stitched source segments; every cut, final order, source-order change, cold-open decision, throughline, and ending is explicit.
 
 Caption treatment is deletion-only: captions may omit filler, false starts, accidental duplicates, and redundant setup, but every remaining token must occur in the verified selected transcript and original spoken order. Punctuation, capitalisation, and identity corrections backed by known speaker metadata are the only transformations. The approved caption script reuses the matched word timings. A changed caption treatment invalidates render, QA, and package; it does not invalidate transcription or source discovery. Short-native re-ingest does not invalidate the approved script.
 
@@ -71,12 +73,12 @@ The system stores facts, inferences, and judgments separately. Proper nouns, pro
 
 - Input timing is normalized to constant 30 fps and 48 kHz audio.
 - The manifest records every source segment and final order, exact trim, crop, caption cues and personality, timed evidence beats, their viewer intent and presentation mode, asset rights and attribution, series colour, and fixed seed.
-- Inter 800 is pinned through npm rather than relying on a host font.
+- Fonts are pinned through npm (the `@fontsource` packages) rather than relying on a host font. V1 Shorts use Inter 800.
 - Source audio is transcribed once with faster-whisper INT8 and word confidence. Project vocabulary is passed as transcription context. Approved wording reuses those timings across treatments.
 - Final audio uses measured two-pass normalization toward -14 LUFS with pre-codec headroom for a true peak at or below -1 dBTP.
 - QA checks dimensions, frame rate, sample rate, loudness, true peak, duration, caption limits, caption provenance and semantic alignment, canonical copy, frame perceptual hashes, audio characteristics, and responsive official-wordmark legibility.
 
-Brand placement is a deterministic cue timeline. The theme freezes the complete real letter region inside each hash-pinned series asset, including antialiased edge pixels, and requires at least 50 region pixels at 1080 output, equivalent to at least 17 CSS pixels in a 375-pixel preview. This is calibrated to keep at least 16 CSS pixels of high-contrast letter ink. Each video selects one collision-free 1.2 second series identity cue in opening, ending, then safe-beat priority. The expanded official stack is preferred; the official series-only identity is allowed only when it clears the same letter and full-width-containment floor. All remaining dense story time uses the compact official Mindmake-only anchor. The compositor uses an explicit `branding` layer corner when present; otherwise authored camera lead room provides the face-safe preference. It tries the other approved top corner and later safe windows before blocking. A protected visual occupying every permitted placement is a render block, not permission to cover the visual, cover Krish, or shrink a mark below its floor.
+Brand placement is a deterministic cue timeline. The theme freezes the complete real letter region inside each hash-pinned series asset, including antialiased edge pixels, and requires at least 50 region pixels at 1080 output, equivalent to at least 17 CSS pixels in a 375-pixel preview. This is calibrated to keep at least 16 CSS pixels of high-contrast letter ink. Each video selects one collision-free 1.2 second series identity cue in opening, ending, then safe-beat priority. The expanded official stack is preferred; the official series-only identity is allowed only when it clears the same letter and full-width-containment floor. All remaining dense story time uses the compact official Mindmake-only anchor. The compositor uses an explicit `branding` layer corner when present; otherwise authored camera lead room provides the face-safe preference. It tries the other approved top corner and later safe windows before blocking. A protected visual occupying every permitted placement blocks the render; it never permits covering the visual, covering Krish, or shrinking a mark below its floor.
 
 MP4 bytes are not expected to match across different hardware. Functional equivalence is assessed from the edit manifest, cue timing/text, perceptual frame hashes, and audio measurements.
 
@@ -90,7 +92,7 @@ Performance experiments must name one primary variable. Views cannot make a rule
 
 ## Control plane and independent runner
 
-Control Center stores a redacted projection, not another copy of the media system. Local append-only job events and immutable stage artifacts remain authoritative. The cloud projection contains safe titles, safe summaries, stage and route states, exact revision and artifact hashes, a semantic target-map hash, five hard-gate results, and private proxy object keys. It cannot contain media bytes, transcripts, local or Drive paths, credentials, raw logs, private source objects, or database identifiers.
+Control Center stores only a redacted projection of the media system. Local append-only job events and immutable stage artifacts remain authoritative. The cloud projection contains safe titles, safe summaries, stage and route states, exact revision and artifact hashes, a semantic target-map hash, five hard-gate results, and private proxy object keys. It cannot contain media bytes, transcripts, local or Drive paths, credentials, raw logs, private source objects, or database identifiers.
 
 The Windows runner is claim-driven. It authenticates with a dedicated bearer credential, validates an exact schema-major-one command, binds it to the current local revision and artifact, and compiles free-form direction into a small typed operation set. Crop scale, exact caption-token emphasis, approved overlay placement, opacity, and within-beat overlay timing are presentation controls. Meaning, claims, evidence content, story structure, unsupported directions, and no-op directions return to editorial review without producing a candidate.
 
@@ -98,7 +100,7 @@ Prepare commands create an immutable child candidate and real low-resolution Bef
 
 Each projection is compare-and-swap bound to the complete last acknowledged platform state. Its source event count, event-chain hash, and semantic revision come from one authenticated local ledger snapshot. Non-failed command receipts carry the same post-dispatch source tuple. Control Center stores the tuple atomically, accepts only monotonic advancement or an exact equal-state catch-up, and rejects delayed or divergent projections. Pending project requests and command receipts are signed and reconciled before new work is claimed.
 
-The treatment artifact contains all platform manifests, so v1 deliberately allows only one active magic-edit lineage per job. Other-platform projections and commands are blocked until return to root. A revision-only editorial or final-review projection may advance during the active lineage; its treatment artifact, candidate, and parent tuple remain immutable. Platform-scoped treatment artifacts and merge-on-return are a future protocol change, not an implicit v1 behavior.
+The treatment artifact contains all platform manifests, so v1 deliberately allows only one active magic-edit lineage per job. Other-platform projections and commands are blocked until return to root. A revision-only editorial or final-review projection may advance during the active lineage; its treatment artifact, candidate, and parent tuple remain immutable. Platform-scoped treatment artifacts and merge-on-return would need a future protocol change; v1 has neither.
 
 Non-activation `review_decision_record` commands synchronize story, treatment, final, learning, and keep-current decisions back into the authoritative local event ledger. The event binds the exact review, parent, review artifact, platform, feedback, override reason, learning action, semantic command hash, originating command-attempt UUID, and Krish attribution. It is domain-separated HMAC signed and idempotent. A fresh attempt UUID may resume an exact semantic command after a crash, but it reuses the originally signed event and cannot change any decision or lineage field. Keep-current records the negative decision without granting approval. A positive story, treatment, or final decision also records the exact local approval; final approval is accepted only when the platform master still matches its local content hash. The active media artifact remains unchanged because this command records governance rather than activating a media candidate.
 
@@ -122,13 +124,13 @@ A supported file must keep the same size, modification time, and filesystem iden
 
 Only explicit DJI names ending in `part`, `pt`, `split`, `segment`, or `seg` plus a part number can form a sequence. Generic camera numbers are standalone clips. Automatic sequence trust is capped at 16 parts, while the content-addressed candidate manifest itself is bounded at 32 media components. A gap, repeated part number, larger group, omitted component, partial exact-stem association, multiple caption or edit match, or one association shared by several candidates creates an attention state. Exact-stem audio, SRT, VTT, EDL, and FCPXML are never guessed onto another recording. An SRT containing DJI camera or flight telemetry remains an attention item rather than becoming speech. Intake acceptance is bound to the Inbox identity, scan event, candidate hash, component hashes, and Krish's confirmation. Automatic SourceBundle drafting supports one video, at most one exact-stem audio source, and unambiguous typed sidecars. Job creation and ingest validate any intake provenance against the exact local scan and accepted review event, then ingest rechecks every media and sidecar hash. A split sequence requires explicit authoring so no input is silently dropped.
 
-The portable job proof contains only the accepted candidate, its exact component observations, the immediately following accepted review, and a compact scan attestation. Proof creation validates the complete discovery ledger first. The attested health, configuration, and software values are audit anchors copied from that verified scan, not a claim that the excluded full Inbox snapshot can be reconstructed from the portable proof. The accepted review's previous-event hash must equal the attested scan event hash, and the whole portable proof is integrity-bound by the `intake_proof_hash` recorded in the job event ledger. Proof files use that hash as their immutable content address. Each source attachment records the current proof hash or explicit `null`, so replacing a take never overwrites history or leaves an older proof authoritative. Job creation and source attachment still require the live discovery ledger; later resume can validate the job-bound proof without retaining unrelated Inbox inventory.
+The portable job proof contains only the accepted candidate, its exact component observations, the immediately following accepted review, and a compact scan attestation. Proof creation validates the complete discovery ledger first. The attested health, configuration, and software values are audit anchors copied from that verified scan. They do not make the excluded full Inbox snapshot reconstructable from the portable proof. The accepted review's previous-event hash must equal the attested scan event hash, and the whole portable proof is integrity-bound by the `intake_proof_hash` recorded in the job event ledger. Proof files use that hash as their immutable content address. Each source attachment records the current proof hash or explicit `null`, so replacing a take never overwrites history or leaves an older proof authoritative. Job creation and source attachment still require the live discovery ledger; later resume can validate the job-bound proof without retaining unrelated Inbox inventory.
 
 Cloud heartbeats receive only the existing `ready`, `unavailable`, or `not_configured` Drive state. Local runner output adds path-free counts and safe codes. File names and inbox-relative paths are visible only through the explicit local candidate command. An accepted intake review records Krish's exact candidate-hash decision, but still does not create a production job. A human or Codex must author and inspect the source bundle metadata and start the normal editorial workflow.
 
 ## Radar boundary
 
-The studio does no gathering. It reads `RadarFeedV1` from the existing mm-ctrl public pool and Control Center owned/operator patterns. Offline JSON fixtures use the same schema. Internal sanitized patterns are research prompts only and are hard-blocked from factual scripting until replaced with public evidence or approved case material.
+The studio does no gathering and no selection. `studio radar pull` only fetches, validates and writes `RadarFeedV1` from the existing mm-ctrl public pool and Control Center owned/operator patterns; it never ranks, selects or prepares editorial opportunities. Offline JSON fixtures use the same schema. Internal sanitized patterns are research prompts only and are hard-blocked from factual scripting until replaced with public evidence or approved case material.
 
 ## Art director repertoire
 

@@ -1,0 +1,5 @@
+# ve: references from the inspiration board
+
+Read with SKILL.md step 6. Moved here verbatim on 4 Nov 2026 to keep the skill core under its byte cap.
+
+References come from the inspiration board, by card id (F26; Wave 3): `ve init <piece>` offers the top card per role (look, motion, captions) from `GET /api/inspiration/candidates` into `brand.references`, each marked `offered: true`. Open each card, confirm it serves this piece (delete `offered`, write the takeaway) or replace it with another board card, giving its `id` (inspiration_items.id) and keeping the file stem as `card`. ve lint refuses a reference with no `id` or with `offered` left. `ve refs` checks every id against `GET /api/inspiration/cards` and refuses an unknown, dismissed or strategy-lane card; offline it prints `board NOT CHECKED`, so say so. `ve verdict` records each card's use and Critic score (`POST /api/inspiration/uses`); `card uses NOT RECORDED` means run it again when the engine is reachable. Never type a card name the board does not hold.

@@ -74,6 +74,48 @@ def portrait_for(date):
 REFRESH_DAYS = 7
 
 WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+# A subchannel's colour belongs to its one weekly piece, never to a day (Ruling, Krish, 2026-11-04: "Post random
+# memes on a Monday but that doesn't mean it's Monday's colour and brand ... There is only one "follow the money"
+# piece, one "mind the gap" piece, and one "mind the gap" piece every week. Other stuff can be fluid, maybe
+# changeable." and "I should be allowed to post random stuff on any day but it doesn't take on the brand colours of
+# Follow the Money, Mind the Gap, or Under the Hood. Which are only once a week, omni-channel, and a completely
+# different distribution format"). The weekly piece is the one published on its subchannel's own day
+# (config/studio.json). An asset made from that piece on another day wears it too only when its facts say so
+# ("carries": the series piece's id), as the Character.AI carousel carries Monday's piece (Krish, 2026-11-04: "the
+# character.ai carousel is going to be under Monday's "Follow the Money" banner"). Anything else, on any day, wears no
+# subchannel's colour or name.
+
+
+def series_look(house_style, subchannel, date=None, carries=None):
+    """What an asset wears: {'series', 'owner', 'colour', 'day', 'carries'}. The subchannel's weekly piece
+    (published on its own day, or undated), or an asset that carries it, wears its colour and name; anything else
+    is neutral: the house cream and no owner."""
+    import datetime as dt
+    ch = channel(house_style, subchannel)
+    day = ch['day']
+    if date:
+        try:
+            day = WEEK[dt.date.fromisoformat(str(date)[:10]).weekday()]
+        except ValueError:
+            fail(f'the publishing date {date!r} is not YYYY-MM-DD, so the asset cannot be told from its series piece')
+    if carries is not None and not (isinstance(carries, str) and carries.strip()):
+        fail('"carries" names the weekly series piece this asset is made from, by its piece id')
+    if day == ch['day'] or carries:
+        return {'series': True, 'owner': ch['name'], 'colour': ch['accent'], 'day': day, 'carries': carries or None}
+    return {'series': False, 'owner': None, 'colour': house_style['tokens']['cream'], 'day': day, 'carries': None}
+
+
+def series_colours(house_style):
+    """Every subchannel's colour, upper case: what an asset outside a weekly series piece must never wear."""
+    return {c['accent'].upper() for c in house_style['channels']}
+
+
+def lean(base, colour, amount):
+    """`base` (#RRGGBB) leaned toward `colour` by `amount` (0 to 1), as #RRGGBB."""
+    a, b = base.lstrip('#'), colour.lstrip('#')
+    mixed = (round(int(a[i:i + 2], 16) * (1 - amount) + int(b[i:i + 2], 16) * amount) for i in (0, 2, 4))
+    return '#' + ''.join(f'{v:02X}' for v in mixed)
 MIME = {'.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp',
         '.gif': 'image/gif', '.svg': 'image/svg+xml'}
 

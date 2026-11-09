@@ -133,6 +133,22 @@ def weeks(tmp):
                          slides=[{'url': f'https://board.asset/s{i}.jpg'} for i in range(1, 8)],
                          download={'url': 'https://board.asset/all.zip', 'label': 'the seven cards (zip)'}), opt('sat', 1)]}
     out['offday_assets'] = wb.board(wb.V3_FROM, ideas=ideas, offdays=wb.read_offdays(done))[0]
+    # Layout v4 (from the week of 9 November; Krish, 2026-11-07: "I still have to keep looking for things... It also
+    # doesn't allow me to give feedback for every day of publishing stuff last week, say, for example, the off days"):
+    # the Desk, every day Monday to Saturday with its stages and six steps, the Creative sheet, Last week and bugs.
+    raw, mapping = wb.example_creative(tmp)
+    sheet = wb.board_v4.read_creative(raw, 'wed', wb.WED_ID, lambda f, sha, what: wb.clip_src(f, sha, tmp, mapping, what),
+                                      motions={'swiss-kinetic-type', 'data-story'})
+    v4 = wb.V4_FROM
+    lastweek = wb.board_v4.read_lastweek(wb.example_lastweek(v4), v4 - wb.timedelta(days=7))
+    bugs = wb.board_v4.read_bugs([{'id': 'b1', 'piece_id': wb.MON_ID, 'title': 'A caption repeats the title', 'cause': 'No check.', 'state': 'open'}])
+    mon4 = wb.stand_in(tmp, 'mon4', TITLE, 'follow.the.money')
+    out['v4'] = wb.board(v4, {'mon': mon4}, {'mon': wb.MON_ID, 'wed': wb.WED_ID},
+                         review={'wed': [('long', 'Five-minute script', 'Said.')]}, draft={'wed'},
+                         videos={'mon': [video('long', 'a', 305), video('short', 'c', 86)]},
+                         offdays=wb.read_offdays({k: v for k, v in done.items() if k == 'tue'} | {'sat': [opt('sat', 1), opt('sat', 2)]}),
+                         creative={'wed': sheet}, lastweek=lastweek, bugs=bugs, takes={'wed': ['long.mp4', 'short.mp4']},
+                         now=wb.datetime(2026, 11, 8, 9, tzinfo=wb.timezone.utc))[0]
     return out
 
 
@@ -158,11 +174,12 @@ def blocks(html):
 def structure(page):
     """The layout of a board, as data: each tab, and for each day each step's top-level blocks."""
     out = {'tabs': re.findall(r'role="tab" id="tab-([a-z]+)"', page), 'days': {}}
-    for name in wb.DAY_TABS:
+    v4 = 'data-layout="4"' in page
+    for name in wb.DAY_TABS + (tuple(wb.OFF_TABS.values()) if v4 else ()):
         start = page.rfind('<div', 0, page.find(f'id="panel-{name}"'))
         panel = wb.div_at(page, start)
         day = {}
-        for sub in wb.DAY_STEPS:
+        for sub in (wb.V4_STEPS if v4 else wb.DAY_STEPS):
             s = panel.find(f'<div class="subpanel" role="tabpanel" id="{name[:3]}-sub-{sub}"')
             inner = wb.div_at(panel, s)
             inner = inner[inner.index('>') + 1:-len('</div>')]
@@ -189,12 +206,25 @@ def structure(page):
     # The off days' own tabs: each one's top-level blocks and what one finished asset holds (Krish, 2026-11-03).
     for name in wb.OFF_TABS.values():
         at = page.find(f'id="panel-{name}"')
-        if at >= 0:
+        if at >= 0 and not v4:
             panel = wb.div_at(page, page.rfind('<div', 0, at))
             out[f'tab_{name}'] = blocks(panel[panel.index('>') + 1:-len('</div>')])
     asset = re.search(r'<div class="off-asset".*?<p class="tri-state"', page, re.S)
     if asset:
         out['offday_asset'] = blocks(asset.group(0)[asset.group(0).index('>') + 1:])
+    # Layout v4: the Desk's blocks, one ask, one day card, Last week's row and the Creative sheet's sections.
+    for tab, key, item in ((wb.DESK_TAB, 'desk', r'<li class="dk-ask".*?</li>'), (wb.LASTWEEK_TAB, 'lastweek', r'<li class="lw-row".*?</li>(?=<li class="lw-row"|</ol>)')):
+        at = page.find(f'id="panel-{tab}"')
+        if at >= 0:
+            panel = wb.div_at(page, page.rfind('<div', 0, at))
+            inner = panel[panel.index('>') + 1:-len('</div>')]
+            out[key] = blocks(inner)
+            one = re.search(item, panel, re.S)
+            if one:
+                out[f'{key}_item'] = blocks(one.group(0)[one.group(0).index('>') + 1:])
+    card = re.search(r'<div class="rec cr".*?<p class="tri-state" data-crstate="[a-z]+" aria-live="polite"></p></div>', page, re.S)
+    if card:
+        out['creative'] = blocks(card.group(0)[card.group(0).index('>') + 1:-len('</div>')])
     # Layout v3: the Archive tab's blocks and what one row holds (W2.1).
     at = page.find(f'id="panel-{wb.ARCHIVE_TAB}"')
     if at >= 0:
@@ -241,7 +271,9 @@ def browser(pages, tmp):
             f = Path(tmp) / f'{name}.html'
             f.write_text(web, encoding='utf-8')
             for tab in re.findall(r'role="tab" id="tab-([a-z]+)"', html):
-                views = [f'{tab}/{s}' for s in wb.DAY_STEPS] if tab in wb.DAY_TABS else [tab]
+                v4 = 'data-layout="4"' in html
+                steps = wb.V4_STEPS if v4 else wb.DAY_STEPS
+                views = [f'{tab}/{s}' for s in steps] if tab in wb.DAY_TABS or (v4 and tab in wb.OFF_TABS.values()) else [tab]
                 for view in views:
                     page.goto(f.as_uri() + '#' + view)
                     page.wait_for_timeout(150)
@@ -308,6 +340,8 @@ def browser(pages, tmp):
                 problems += decisions_in_browser(page, web)
             if name == 'archive':
                 problems += scores_in_browser(page, web)
+            if name == 'v4':
+                problems += v4_in_browser(page, web)
         if errors:
             problems.append(f'page errors: {errors[:3]}')
         b.close()
@@ -603,6 +637,57 @@ def scores_in_browser(page, web):
     return problems
 
 
+def v4_in_browser(page, web):
+    """Layout v4 by touch: Sign creative asks for every pick first, then saves picks/wed-creative with his four picks
+    bound to the sheet; Change it needs his words; an off-day post on Last week saves picks/score-<date>-<slot> with its
+    date and title; and the Desk's ask for the creative leaves once it is signed."""
+    saved, problems = [], []
+    week = board_api(page, web, 'v4', saved)
+    last = lambda path: next((b for p, b in reversed(saved) if p.endswith(f'/{path}')), None)  # noqa: E731
+    try:
+        page.goto('https://board.test/v4.html#wednesday/creative')
+        page.wait_for_selector('[data-act="creative"][data-value="sign"]:not([disabled])', timeout=5000)
+        page.click('[data-act="creative"][data-value="sign"]')
+        said = text_once(page, '[data-crstate="wed"]', 'Pick')
+        if last('picks/wed-creative') or not said.startswith('Pick'):
+            problems.append(f'v4: Sign creative saved with picks missing, or did not ask for them ({said!r})')
+        page.click('[data-act="creative"][data-value="change"]')
+        if last('picks/wed-creative') or not text_once(page, '[data-crstate="wed"]', 'Say').startswith('Say'):
+            problems.append('v4: Change it saved without his words')
+        for sec, value in (('opener', 'alt-2'), ('captions', 'cap-b'), ('motion', 'data-story'), ('thumbnail', 'th-a')):
+            page.click(f'.cr-pick[data-cr-pick="{sec}"][data-value="{value}"]')
+        page.click('[data-act="creative"][data-value="sign"]')
+        until(page, lambda: last('picks/wed-creative'))
+        body = last('picks/wed-creative') or {}
+        if (body.get('kind') != 'sign_creative' or body.get('approved') is not True or body.get('piece_id') != wb.WED_ID
+                or body.get('picks') != {'opener': 'alt-2', 'captions': 'cap-b', 'motion': 'data-story', 'thumbnail': 'th-a'}
+                or not re.fullmatch(r'[a-f0-9]{64}', str(body.get('sha256'))) or not re.fullmatch(r'[a-f0-9]{64}', str(body.get('storyboard_sha256')))):
+            problems.append(f'v4: Sign creative did not save his picks bound to the sheet ({body})')
+        page.goto('https://board.test/v4.html#desk')
+        page.wait_for_timeout(400)
+        if page.evaluate('() => { const a = document.querySelector(\'[data-settled-by="wed-creative"]\'); return !a || !a.hidden }'):
+            problems.append('v4: the Desk still asks for the creative after he signed it')
+        page.goto('https://board.test/v4.html#lastweek')
+        # On a phone each post of last week is folded to its title row (Krish, 2026-11-08): tap it open as he would.
+        row = page.locator('.lw-row:has(#lw2-scores)')
+        if row.evaluate('e => e.classList.contains("fold") && !e.classList.contains("open")'):
+            row.locator(':scope > .fold-h').click()
+        page.wait_for_selector('[data-act="save-scores"][data-for="lw2-scores"]:not([disabled])', timeout=5000)
+        page.select_option('#lw2-scores [data-score="narrative"]', '9')
+        page.select_option('#lw2-scores [data-score="production"]', '8')
+        page.click('[data-act="save-scores"][data-for="lw2-scores"]')
+        until(page, lambda: last('picks/score-2026-11-03-carousel'))
+        body = last('picks/score-2026-11-03-carousel') or {}
+        if (body.get('kind') != 'scores' or body.get('date') != '2026-11-03' or body.get('title') != 'An off-day carousel'
+                or 'piece_id' in body or body.get('narrative') != 9 or body.get('basis') != 'hindsight'):
+            problems.append(f'v4: an off-day post on Last week did not save its scores under its date ({body})')
+    except Exception as error:  # noqa: BLE001 - a step that cannot run is reported, never passed
+        problems.append(f'v4: a press could not be pressed ({str(error).splitlines()[0][:160]})')
+    finally:
+        page.unroute(re.compile(r'^https://board\.test/'))
+    return problems
+
+
 def file_hash(path):
     """sha256 of a text file with CRLF line ends read as LF, so git's Windows checkout hashes the same as Linux's."""
     return hashlib.sha256(Path(path).read_bytes().replace(b'\r\n', b'\n')).hexdigest()
@@ -726,7 +811,7 @@ def main(argv=None):
     if problems:
         print('check:board-layout FAILED:\n  ' + '\n  '.join(problems))
         return 1
-    print('check:board-layout passed: four fed weeks in the fixed layout Krish approved, its files unchanged, nothing else stamps a board'
+    print('check:board-layout passed: the fed weeks in the fixed layout Krish approved, its files unchanged, nothing else stamps a board'
           + (', and every view fits a phone' if args.browser else ''))
     return 0
 

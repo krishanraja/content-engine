@@ -89,6 +89,16 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Click every button on the board and a publish page
         run: python scripts/post-pack/buttons_in_browser.py
+      # The covers load the house fonts from node_modules (@fontsource), so the cover tests need the packages.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Nothing sits on a cover's words (Krish, 2026-11-04)
+        run: python tests/receipt_overlap_test.py
+      - name: All nine series skins drawn, Mon, Wed and Fri, tall and wide, with and without logo rows, nothing on the words or logos (Krish, 2026-11-05)
+        run: python tests/series_skins_test.py
       - name: The board keeps its fixed layout and fits a phone (390px, 44px targets)
         run: python scripts/check_board_layout.py --browser
 

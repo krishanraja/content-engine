@@ -1,6 +1,6 @@
 # ve design template: mind.the.gap tall (1080x1920)
 
-Approved by Krish on 28 Oct 2026 ("Approve direction"): format **H, the hand-held screen**, is the base; **P, two passports**, is the reusable module for any piece about where an AI lives. The machine-readable lock is `config/ve/design-lock.json`; the gates read it, not this page. Per-format detail (zone tables, slots, camera, prompts) is in `docs/ve/design/formats/`. Why this exists: the first Gate 2 proofs passed every mechanical check and were rejected on design (F19 in `config/failures.json`).
+Approved by Krish on 28 Oct 2026 ("Approve direction"): format **H, the hand-held screen**, is the base; **P, two passports**, is the reusable module for any piece about where an AI lives. Since 3 Nov 2026 face-with-proof is the base lock and H and P are both its modules (`docs/ve/design/formats/F-anatomy.md`). The machine-readable lock is `config/ve/design-lock.json`; the gates read it, not this page. Per-format detail (zone tables, slots, camera, prompts) is in `docs/ve/design/formats/`. Why this exists: the first Gate 2 proofs passed every mechanical check and were rejected on design (F19 in `config/failures.json`).
 
 ## The format in one paragraph
 One real hand holds one real phone on a real-world plate. The camera never cuts: it pushes, rolls and re-frames. Each beat has one big statement (Anton), one human line (Fraunces italic), one object that carries the evidence, and **one hand-drawn scribble** pointing at the single most important thing in that beat. The engine adds captions, the logo and the dated call. Nothing sits still, and nothing is a table.
@@ -51,7 +51,7 @@ At least six distinct moves per beat (camera, parallax, kinetic type, counter, w
 1. **Design lock**: no device card or compile for a format without an approved lock.
 2. **Composition QC** on rendered frames: fill at least 80% outside the caption zone, nothing under 30 px (44 px for quotes), caption zone clear, nothing key beyond x 960 or y 1640, nothing hugging a corner. No ILLUSTRATION tag is drawn or checked (Krish, 28 Oct 2026: "Yes remove those.").
 3. **Golden key frames**: the render at each declared key frame matches the approved still (structural similarity above the lock's threshold).
-4. **Mechanical QC** (11 checks) as before.
+4. **Mechanical QC** (13 checks today) as before.
 5. **Critic verdict** bound to the mp4's hash.
 6. `ve packet` refuses to assemble a Gate packet until 1-5 pass for that exact file. Krish's final approval is a hash, never a phrase.
 

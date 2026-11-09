@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -5,7 +6,8 @@ import { CarouselStoryV1Schema, CarouselVisualDirectionMethodV1Schema, Editorial
 import { carouselApprovalBinds, carouselEditorialPreferenceIssues, carouselHouse, carouselProductionIssues, carouselSlideInputProps, carouselStoryContentHash, hashValue, renderCarousel, theForkIssues } from '@mindmake/core'
 import studioConfig from '../config/studio.json'
 import { CarouselRenderPropsSchema } from '../apps/renderer/src/carousel/props'
-import { houseCardModel } from '../apps/renderer/src/carousel/HouseCarouselCard'
+import { FOLLOW_SIGN, houseCardModel } from '../apps/renderer/src/carousel/HouseCarouselCard'
+import { HOUSE } from '../apps/renderer/src/house/geometry'
 
 const fixturePath = resolve('examples/carousels/built-editorial-gates.review.json')
 
@@ -296,6 +298,26 @@ describe('carousel cards in the makeyourmindup house style', () => {
     expect(cards[0]!.branding.publication?.house?.day).toBe('Wednesdays')
     expect(cards.at(-1)!.slide.call).toBeUndefined()
     expect(houseCardModel(cards.at(-1)!)!.footnote).toBeNull()
+  })
+
+  it('ends every last card, and only the last, on "Follow for more" above the wordmark (Krish, 2026-11-05)', async () => {
+    // "Every single makeyourmindup carousel should have a "Follow for more" call to action on the last card, just above
+    // the "Make Your Mind Up" word mark. Which should be a bit larger and centered on the last card always".
+    for (const story of [await forkStory(), await forkStory('build_itself')]) {
+      const cards = houseCards(story)
+      const models = cards.map((card) => houseCardModel(card)!)
+      expect(models.at(-1)!.sign).toBe(FOLLOW_SIGN)
+      expect(models.slice(0, -1).every((model) => model.sign === null)).toBe(true)
+      // The sign is set by the card's place in the deck, never by its copy.
+      const renamed = { ...cards.at(-1)!, slide: { ...cards.at(-1)!.slide, body: 'Nothing about following here.' } }
+      expect(houseCardModel(renamed)!.sign).toBe(FOLLOW_SIGN)
+    }
+    expect(FOLLOW_SIGN).toBe('Follow for more')
+    // The wordmark on the last card is centred and larger than the foot mark it replaced.
+    expect(HOUSE.card.foot.lastLogoWidth).toBeGreaterThan(HOUSE.card.foot.logoWidth)
+    const source = readFileSync('apps/renderer/src/carousel/HouseCarouselCard.tsx', 'utf8')
+    expect(source).toMatch(/data-close-sign[^>]*flexDirection: 'column', alignItems: 'center'/)
+    expect(source.indexOf('{model.sign}')).toBeLessThan(source.indexOf('width={card.foot.lastLogoWidth}'))
   })
 
   it('refuses a house style theme while it is a candidate', async () => {

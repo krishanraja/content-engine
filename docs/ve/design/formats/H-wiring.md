@@ -25,7 +25,7 @@ knot (892,436), stamp (76,610,374,62) and leader (410,536) are from f5.
 The verdict headline box is an explicit 280px extension for the required headline.
 
 The strict v2 schema has no beat keyFrame field. style.keyFrames stores 0.8
-per beat; compile emits each beat's absolute keyFrame. words.test.json preserves
+per beat (0.4 for evidence); compile emits each beat's absolute keyFrame. words.test.json preserves
 the original onsets with explicitly synthetic +0.2s ends, exactly as the existing
 compile test. It proves compilation only. It is not aligned production timing.
 The original recording is played unchanged, trimBefore 102; no text is recreated.

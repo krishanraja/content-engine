@@ -1542,7 +1542,7 @@
         {
           "file": "scripts/quick-edit/opening_gate.py",
           "contains": "def check(",
-          "how": "voice from the first half second, a finished first frame, a headline that holds 2 s in the first 3 s, no flat frame, measured on the finished bytes",
+          "how": "voice from the first half second, a finished first frame, a headline that holds 2 s in the first 3 s, no flat frame, measured on the finished bytes from the cut's first frame (the frame after the house sting on a wide cut that opens on it, --lead-frames)",
           "test": "python3 scripts/quick-edit/opening_gate.py --self-test"
         },
         {
@@ -1636,7 +1636,7 @@
         {
           "file": "scripts/post-pack/board_feed.py",
           "contains": "def goodnews_problems(",
-          "how": "the weekly Saturday good news holds four stories from the seven days before its Sunday, each with its source and its own photo or clip, none a recent off day ran; the Sunday run fills them (sunday_ideas.py goodnews)",
+          "how": "the weekly Saturday good news holds five stories from the seven days before its Sunday, each with its source and its own photo or clip, none a recent off day ran; the Sunday run fills them (sunday_ideas.py goodnews)",
           "test": "python3 scripts/post-pack/board_feed.py self-test"
         }
       ]
@@ -1665,7 +1665,7 @@
         {
           "file": "scripts/velib/compile.py",
           "contains": "if index == 0 and event['verb'] in ('enter', 'type') and event['at_w'] == beat['span']['from_w']:",
-          "how": "an entrance on the first word lands on frame 0, so the hook is the first frame",
+          "how": "an entrance on the first word lands on the cut's frame 0, so the hook is the cut's first frame (in the file, frame 0 of the tall cut and the frame after the house sting on the wide cut of a series piece)",
           "test": "python3 -m unittest tests/ve_compile_test.py"
         },
         {
@@ -1835,6 +1835,10 @@
         {
           "on": "2026-11-04",
           "what": "Thursday 5 Nov: face captions moved to y 1500, into Instagram's caption zone (from y 1373), approved from stills; channel.safe_zones is still advisory."
+        },
+        {
+          "on": "2026-11-07",
+          "what": "The 6 Nov reel's cover lost its top line to Instagram's 3:4 profile grid crop and its title sat under the account row: zones channel_safe did not have (F43)."
         }
       ]
     },
@@ -2208,6 +2212,145 @@
           "contains": "raise SystemExit('RETIRED_COMPOSITOR",
           "how": "the Wednesday compositor (and Monday's two) stop before they run anything"
         }
+      ]
+    },
+    {
+      "id": "F41-mark-off-its-words",
+      "on": "2026-11-07",
+      "krish": "I can see some issues with how some of the underlining animations work where text is being drawn on or underlined.",
+      "what": "The 6 Nov reel (two passports, posted on Instagram) drew its white hand-drawn underline across the bottom border of the AT STAKE card on a tilted phone, not under the card's words (Bugs & Issues, 7 Nov, screenshot 3).",
+      "symptom": "The mark points at nothing: it sits flat on a card border while the card is tilted.",
+      "cause": "The scribble device draws in frame pixels (from/to or a frame-pixel target box); hand_phone_stage draws its card on a screen plane its camera tilts and scales. The spec named no words for the mark (meaning 'hook scribble'), and nothing checked a mark against its target on a rendered frame (docs/learning/2026-11-07-week-of-2-nov-postmortem.md, cause B).",
+      "status": "guarded",
+      "mode": "annotation_off_target",
+      "guard_level": "lint_refuse",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "props.friday-tall.json: hook_scribble from [215, 896] to [700, 916] in frame pixels over phone_hook (camera rot -3, k 1.8); no check compared the two"
+        }
+      ],
+      "surface": "A mark names the words it marks in its meaning, in quotes, and lands on them on the rendered frame; never drawn in frame pixels over the hand-held phone (ve lint and ve qc annotation.*, from 14 Nov).",
+      "guards": [
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def annotation_lints(",
+          "how": "ve lint refuses a scribble that names no words, or is drawn over a camera-moved surface, on a piece published from 14 Nov",
+          "test": "python3 tests/ve_onscreen_test.py"
+        },
+        {
+          "file": "scripts/velib/qc_onscreen.py",
+          "contains": "def on_target(",
+          "how": "ve qc and ve proof row annotation.on_target: on the frame after the stroke, the named words are read and the underline must sit under them, the loop round them",
+          "test": "python3 tests/ve_onscreen_test.py"
+        }
+      ],
+      "related": [
+        "F30-designed-blind-to-the-channel"
+      ]
+    },
+    {
+      "id": "F42-caption-repeats-the-title",
+      "on": "2026-11-07",
+      "krish": "words in visuals should also NEVER just duplicate what the script / captions is saying",
+      "what": "The 6 Nov reel showed the title DOES THAT MATTER? and, at the same moment, a caption bar reading \"Does that\"; its first caption page broke \"You may already be using | a Chinese AI.\" mid-phrase (Bugs & Issues, 7 Nov, screenshot 1).",
+      "symptom": "The frame reads as an unfinished sentence twice over: the caption repeats the headline and stops mid-phrase.",
+      "cause": "ve compile's caption pager scores a weak page ending but never refuses one (the word 'using' is not in its list), and nothing compared a caption page with the headline on screen; learning visuals-add-not-repeat named the missing check (docs/learning/2026-11-07-week-of-2-nov-postmortem.md, cause C). The 6 Nov props hold six pages that repeat their headline.",
+      "status": "guarded",
+      "mode": "caption_repeats_title",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "props.friday-tall.json: caption page 'Does that matter?' frames 122-181 under matter_head DOES THAT / MATTER? frames 122-181; page 'You may already be using' then 'a Chinese AI.'"
+        }
+      ],
+      "surface": "No caption page repeats the headline on screen at that moment, and none ends mid-phrase (ve qc captions.repeat_title and captions.phrase_breaks, from 14 Nov; the pager in compile follows after Fri 13 Nov).",
+      "guards": [
+        {
+          "file": "scripts/velib/qc_onscreen.py",
+          "contains": "def title_repeats(",
+          "how": "ve qc row captions.repeat_title: a page sharing at least 60% of its words (two or more) with a headline visible for half its time fails",
+          "test": "python3 tests/ve_onscreen_test.py"
+        },
+        {
+          "file": "scripts/velib/qc_onscreen.py",
+          "contains": "def phrase_breaks(",
+          "how": "ve qc row captions.phrase_breaks: a page ending on a weak word, or before a page opening on an article or possessive, fails",
+          "test": "python3 tests/ve_onscreen_test.py"
+        }
+      ],
+      "related": [
+        "F35-type-treatments-multiplied"
+      ]
+    },
+    {
+      "id": "F43-cover-cut-by-the-grid",
+      "on": "2026-11-07",
+      "krish": "I also think that the thumbnails need to be managed better. You can see that the Chinese AI thumbnail is not really at the top of its game.",
+      "what": "On the profile grid the 6 Nov reel's cover lost its top line \"USING A\" to Instagram's 3:4 grid crop, and in the reel the title sat under Instagram's account row (Bugs & Issues, 7 Nov, screenshots 1 and 2).",
+      "symptom": "The cover's headline is cut on the grid and covered in the reel.",
+      "cause": "scripts/channel_safe.py checked the buttons and the caption zone of a tall frame, not the grid crop (the middle 1080x1440 of the 9:16 frame) or the account row; the stage headline draws its first line from y 220, inside the 240 px the grid cuts (docs/learning/2026-11-07-week-of-2-nov-postmortem.md, cause D).",
+      "status": "guarded",
+      "mode": "cover_not_checked_in_place",
+      "guard_level": "lint_warn",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "apps/renderer/src/engine/devices/headline/index.tsx: stage headline at y 220 on 9:16; config/channel-safe-zones.json had no grid or account-row zone"
+        }
+      ],
+      "surface": "A tall cut's cover is checked where it is seen: python3 scripts/channel_safe.py COVER --shape cover_tall (the 3:4 profile grid crop and Instagram's account row).",
+      "guards": [
+        {
+          "file": "config/channel-safe-zones.json",
+          "contains": "profile grid crop (top)",
+          "how": "shape cover_tall adds the grid crop (any word crossing the line counts) and the account row; shape tall adds the account row",
+          "test": "python3 tests/channel_safe_test.py"
+        },
+        {
+          "file": "scripts/channel_safe.py",
+          "contains": "zone['cut']",
+          "how": "at a crop line a word that crosses at all is cut",
+          "test": "python3 tests/channel_safe_test.py"
+        },
+        {
+          "file": "scripts/produce_day.py",
+          "contains": "frame_violations(made['short'], 'cover_tall')",
+          "how": "produce-day lists any word on the tall cover cut by the grid or under the account row (listed, as quick-edit lists channel_safe)"
+        }
+      ],
+      "related": [
+        "F30-designed-blind-to-the-channel"
+      ]
+    },
+    {
+      "id": "F44-evidence-too-small-to-read",
+      "on": "2026-11-07",
+      "krish": "The animations get cut off. They're not full screen, specifically when there's the hand holding the phone. The screenshots are just not really clear enough in terms of being able to make a clear point.",
+      "what": "Wed 4 Nov (Claude Duet) scored 5 for production: its evidence was composited onto a hand-held phone's tilted screen, about a third of a phone frame, and its words could not be read (his Scores press, 7 Nov).",
+      "symptom": "The real artifact is shown and nobody can read it.",
+      "cause": "Nothing measured the evidence's own words on the 9:16 frame; floor group real_evidence asks for the real thing shown, and shown was taken as drawn, not read (docs/learning/2026-11-07-week-of-2-nov-postmortem.md, cause A).",
+      "status": "guarded",
+      "mode": "evidence_unreadable",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "hand_phone_stage puts its glass on a perspective plane; no qc row read its words"
+        }
+      ],
+      "surface": "Evidence is read on the 9:16 frame: its own words at least 40 px tall at each beat's key frame (ve qc evidence.readable, from 14 Nov).",
+      "guards": [
+        {
+          "file": "scripts/velib/qc_onscreen.py",
+          "contains": "def readable(",
+          "how": "ve qc row evidence.readable: at each beat's key frame the evidence device's words are read; none read, or a median under 40 px, fails",
+          "test": "python3 tests/ve_onscreen_test.py"
+        }
+      ],
+      "related": [
+        "F32-real-artifact-retyped"
       ]
     }
   ]

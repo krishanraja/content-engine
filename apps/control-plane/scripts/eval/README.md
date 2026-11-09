@@ -1,7 +1,8 @@
 # Prompt eval harness
 
 An A/B harness for the prompts this codebase sends to a model, built so
-"measurably better" can be an actual number rather than an impression.
+"measurably better" can be an actual number rather than an impression. Run it
+from `apps/control-plane`.
 
 ```bash
 # read the prompts an arm actually sends, calling nothing
@@ -10,7 +11,7 @@ npx tsx scripts/eval/run.ts revise --dry --cases 1
 # measure, with the noise-floor control arm
 npx tsx scripts/eval/run.ts revise --cases 24 --repeats 2 --null
 
-# re-read a finished run — free, and reruns the current analysis over saved samples
+# re-read a finished run: free, and reruns the current analysis over saved samples
 npx tsx scripts/eval/report.ts scripts/eval/reports/revise-<stamp>.json
 ```
 
@@ -37,9 +38,9 @@ is pure instrument noise. That number is printed as the noise floor, and any
 result smaller than it is reported as inconclusive rather than as a direction.
 Without it a report cannot tell a finding from a coin flip.
 
-The interval is a bootstrap over **cases**, not samples: two runs of one case
-are not two pieces of independent evidence, and resampling them as though they
-were produces a flattering interval that is wrong.
+The interval is a bootstrap over **cases**. Two runs of one case are not two
+pieces of independent evidence, and resampling them as though they were
+produces a flattering interval that is wrong.
 
 ## Reading a report
 
@@ -48,7 +49,7 @@ were produces a flattering interval that is wrong.
   bare        16  3.100  0.200      9074     13202  0.1817
 ```
 
-`mean` is the metric. `$` is measured, not estimated: `callClaude` takes an
+`mean` is the metric. `$` is measured: `callClaude` takes an
 optional `onUsage` callback and the harness prices real token counts.
 
 ```
@@ -84,8 +85,8 @@ evidence rewards length along with it.
 
 ## What a run cannot tell you
 
-The judge is a model applying a written rubric, not the person whose voice is at
-stake. It measures conformance to a bar. Treat a win as permission to try
+The judge is a model applying a written rubric. It measures conformance to a
+bar; only the person whose voice is at stake can judge the voice. Treat a win as permission to try
 something in the product behind a flag, never as proof it is better.
 
 Match the judge to the question. The Five Standards rubric grades whether a
@@ -102,7 +103,7 @@ surprising number can be read back rather than re-run.
 
 Implement `Suite` from `_types.ts` and register it in `run.ts`. The important
 discipline is that a suite should call the **same prompt builder the product
-calls** — `_revisePrompt.ts`, `_finalPass.ts`, `_humor.ts`, `_ladder.ts` — never
+calls** (`_revisePrompt.ts`, `_finalPass.ts`, `_humor.ts`, `_ladder.ts`), never
 a copy. A suite that measures its own transcription of a prompt measures the
 transcription.
 

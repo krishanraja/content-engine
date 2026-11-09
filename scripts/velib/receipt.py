@@ -11,6 +11,8 @@ with what makes it; nothing is copied from a session's word, and nothing here is
   visuals      the independent Critic's verdict on these bytes (ve verdict), not blocking
   full_review  Krish's final approval in the signed spec, bound to these bytes
   words        words_gate on the cut, with the rulings file as its EDL
+  opening      opening_gate.py on these bytes, from the frame after the intro sting on a cut that opens on it (the
+               receipt's `opening` says which frame the cut's own opening starts on)
   visual_clarity  the rendered-text manifest and the blind three-second review beside the cut, under his ruling
 
 The rulings file is the piece's own record of his words ({"heard_as", "removals", "visual_clarity"}), kept in the
@@ -118,6 +120,14 @@ def heard_check(take: list, heard: list, rulings: dict) -> dict:
             'changes': left, 'cleared': cleared}
 
 
+def opening_check(cut: Path, lead: int, fps: int = 30) -> dict:  # ve renders every cut at 30 fps (compile.FPS)
+    """opening_gate.check on the cut from the frame after its lead (0 for a cut with no sting). A measure that cannot run
+    here (no OCR, no transcriber) is not_measured and fails the gate closed, as the gate itself decides."""
+    _quick_edit()  # puts scripts/quick-edit on the path, after velib's own modules
+    import opening_gate  # noqa: PLC0415
+    return opening_gate.check(str(cut), lead_frames=lead, fps=fps)
+
+
 def build(cut, *, piece_id: str, library_path: str, props, spec, take_words, voice_master, script, rulings, qc,
           verdict, clarity_dir=None, model: str = 'small.en') -> dict:
     """Write <cut>.validation.json and return it with quality.delivery_problems' answer."""
@@ -161,6 +171,15 @@ def build(cut, *, piece_id: str, library_path: str, props, spec, take_words, voi
     else:
         missing['sync'] = 'the lip-sync measure on these bytes'
         missing['motion'] = 'the camera-motion assessment and final framing review'
+
+    # The opening (opening_gate.py, config/opening-gate.json): the cut's own first seconds, measured on these bytes from
+    # the frame his cut starts on. On the 16:9 whole cut of a weekly series piece that is the frame after the intro
+    # sting (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"), whose frames the
+    # props carry; the receipt records it, and delivery holds a result measured from any other frame.
+    lead = int((composed.get('sting') or {}).get('frames') or 0)
+    receipt['opening'] = ({'kind': 'sting', 'lead_frames': lead, 'series': composed['sting'].get('series'),
+                           'clip_sha256': composed['sting'].get('sha256')} if lead else {'kind': 'hook', 'lead_frames': 0})
+    checks['opening'] = opening_check(cut, lead, int(composed.get('fps') or 30))
 
     report = json.loads(Path(qc).read_text(encoding='utf-8'))
     if report.get('sha256') != sha:

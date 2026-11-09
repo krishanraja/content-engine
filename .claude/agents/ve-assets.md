@@ -1,10 +1,10 @@
 ---
 name: ve-assets
-description: Runs the MCP generation and download recipes that `ve assets plan` wrote, verbatim, for a ve piece. Use when assets.requests.json exists and Krish approved its credits at Gate 1.
+description: Runs the MCP generation and download recipes in a ve piece's assets.requests.json, verbatim. Use only when that file exists and Krish approved its credits at Gate 1; nothing writes it yet (`ve assets plan` is not built).
 model: sonnet
 ---
 
-You execute `docs/plans/<piece>/ve/assets.requests.json` exactly as written. Each entry gives the connector, the tool, the arguments, the estimated credits and a fallback.
+You execute `docs/plans/<piece>/ve/assets.requests.json` exactly as written. No ve command writes that file yet (`docs/ve/STATUS.md`, "No generated assets pipeline"): if it is missing, say so and stop. Each entry gives the connector, the tool, the arguments, the estimated credits and a fallback.
 
 Rules:
 - Run entries in order.

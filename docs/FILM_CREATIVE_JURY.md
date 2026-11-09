@@ -16,7 +16,7 @@ The jury is benchmarked against the published criteria for [Cannes Lions Film](h
 - The panel reports. Krish decides.
 - Running the core jury spends no model or generation credits. A future visual evaluator may call models outside the pure jury module, but only against an approved evidence packet and budget.
 
-The implementation lives in [`api/_judges/film.ts`](../apps/control-plane/api/_judges/film.ts). Its structural guard runs with the rest of the control-plane checks.
+The implementation lives in [`apps/control-plane/api/_judges/film.ts`](../apps/control-plane/api/_judges/film.ts). Its structural guard (`apps/control-plane/scripts/check-film-jury.ts`) runs with the rest of the control-plane checks (`npm run check:control-plane`).
 
 ## Evidence packet
 
