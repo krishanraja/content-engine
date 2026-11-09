@@ -31,4 +31,8 @@ His words are exact; all saved on the board by him (`triage-readback.md`).
 
 Not working: each Improve sends an `offday-revise` dispatch. Run 42622372777 (povteach, 13:05) failed, 42624103282 (fortytoone) was cancelled, and 42624284763 (lookalikes) is still pending, so none of his Improves has been revised yet. The workflow is engine code under this week's freeze.
 
-Open, asked one at a time in the room: what Thursday 19 Nov posts, given Friday is the midterms piece; then which good-news format Saturday uses.
+Decided, Sunday room chat, 9 Nov 2026, after 14:15 UTC, his words: "Yes, assistants explainer Thursday, midterms carousel Friday".
+- Thu 19 posts the assistants explainer (lookalikes) to his direction Improve above.
+- The midterms carousel (fortytoone, his Improve above) moves to Fri 20 as the Friday piece's own carousel, told from the signed Friday lock.
+
+Still open: which good-news format Saturday uses.
