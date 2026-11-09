@@ -73,10 +73,10 @@ APERTURE_SHRINK = 0.97      # the blend stops just inside his lid line ...
 APERTURE_FEATHER = 0.03     # ... and eases out over this share of the eye's width
 LID_SHARE, LID_MAX, LID_BLUR = 0.9, 0.12, 1.5   # share of the excess opening the upper lid takes back, its cap (eye widths), time smoothing
 GATE_FROM, GATE_SPAN = 0.1, 0.08   # no correction under 0.1 iris radii of move (about 3 deg), the whole move from 0.18 (about 5 deg)
-HARD_FROM, HARD_SPAN = 0.35, 0.2   # ...up to 0.35 radii (about 10 deg); past it the move eases off, and a glance past 0.55 is left as filmed
+HARD_FROM, HARD_SPAN = 0.6, 0.25   # ...up to 0.6 radii (about 16 deg); past it the move eases off, and a glance past 0.85 is left as filmed (Krish, 9 Nov: "make it stronger, the eye contact needs to be visible")
 PUSH_HOLD, PUSH_FADE = 1.15, 1.3   # the push carries everything within 1.15 iris radii of the iris whole, fading to nothing 1.3 radii further out
-ACROSS_MAX = 0.15                  # iris radii: the most the push moves across the eye (up or down), inside his opening only
-SEEN_MIN = 0.78                    # no move unless this share of both irises is inside his lid line (fully from 0.88): a part-hidden iris made whole read paler (9 Nov blind review, 16.13 s and 65.77 s)
+ACROSS_MAX = 0.45                  # iris radii: the most the push moves across the eye (up or down), inside his opening only; the lens sits 3 to 4 degrees under his own iris line
+SEEN_MIN = 0.55                    # no move unless this share of both irises is inside his lid line (fully from 0.65): his upper lid covers about 15% at the lens, and the push moves only his own pixels
 SHARE_SIGMA = 2.0                  # frames: the share of the move is smoothed over time, one share for both eyes
 LOOK_UP, LOOK_DOWN, LOOK_PAD, LOOK_MIN = -0.035, 0.28, 1, 15  # white under the iris, or this share of it under the upper lid: a look up or down, left alone (and a few frames either side)
 IRIS_R = 0.19               # iris radius as a share of the eye's width, for its colour match
@@ -796,12 +796,19 @@ def blend_aperture(frame, source, contour, strength: float, iris_here=None, iris
             v = np.array([-u[1], u[0]])
             along, across = ox * u[0] + oy * u[1], ox * v[0] + oy * v[1]
             across = float(np.clip(across, -ACROSS_MAX * hr, ACROSS_MAX * hr))
-            reach = np.clip((PUSH_HOLD + PUSH_FADE - d_here) / PUSH_FADE, 0, 1)
+            fade = max(PUSH_FADE, 3.0 * math.hypot(along, across) / max(1.0, hr))   # a longer move stretches the white over more of it
+            reach = np.clip((PUSH_HOLD + fade - d_here) / fade, 0, 1)
             reach = reach * reach * (3 - 2 * reach)
             soft = max(1.0, 0.3 * hr)
             band_h = np.clip(cv2.GaussianBlur(cv2.dilate(hard, np.ones((3, 3), np.uint8), iterations=max(1, int(round(0.4 * hr)))).astype(np.float32),
                                               (0, 0), soft), 0, 1)
-            band_v = np.clip(cv2.GaussianBlur(hard.astype(np.float32), (0, 0), soft), 0, 1)
+            # Up or down, the weight is the opening blurred a little and normalised at the iris, so the iris travels the whole
+            # move and the weight falls smoothly to nothing across his lid line; a hard cut there stair-stepped the lid edge
+            # (9 Nov, 8.87 s).
+            band_v = cv2.GaussianBlur(hard.astype(np.float32), (0, 0), max(0.8, 0.15 * hr))
+            iy, ix = int(round(min(max(hy - y0, 0), y1 - y0 - 1))), int(round(min(max(hx - x0, 0), x1 - x0 - 1)))
+            band_v = np.clip(band_v / max(0.25, float(band_v[iy, ix])), 0, 1)
+            band_v = band_v * band_v * (3 - 2 * band_v)
             edge = np.minimum.reduce([xs, ys, (x1 - x0 - 1) - xs, (y1 - y0 - 1) - ys])
             taper = np.clip(edge / 3.0, 0, 1)                                       # never moves the crop's own border
             wa, wc = reach * band_h * taper, reach * band_v * taper
