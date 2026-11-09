@@ -295,7 +295,8 @@ document.querySelectorAll(".pm.fixed > .steps").forEach(nav => {
     });
   });
 });
-const openStepOf = el => { const sp = el && el.closest(".subpanel"); if (sp) selectSub(sp.closest(".pm"), sp.dataset.sub) };
+const openFoldsOf = el => { for (let f = el && el.closest(".fold"); f; f = f.parentElement && f.parentElement.closest(".fold")) setFold(f, true) };
+const openStepOf = el => { const sp = el && el.closest(".subpanel"); if (sp) selectSub(sp.closest(".pm"), sp.dataset.sub); openFoldsOf(el) };
 function fromHash(){
   const h = decodeURIComponent((location.hash || "").slice(1));
   if (!h) return false;
@@ -308,6 +309,32 @@ function fromHash(){
   const tab = tp && tabs.find(t => t.getAttribute("aria-controls") === tp.id);
   if (tab) { select(tab.dataset.day); openStepOf(el); el.scrollIntoView(); return true }
   return false;
+}
+// Layout v4 on a phone: each long block (the download list, each place to post, each post of last week) starts as its
+// title row and opens on a tap, so a day is a short list to discover instead of one endless page (Krish, 2026-11-08:
+// "on mobile, we need to find a way of being able to discover things and expand them, instead of having them all there
+// to begin with"). The CSS folds only under 760px; a wider screen shows everything as before.
+function setFold(f, open){
+  f.classList.toggle("open", open);
+  const h = f.querySelector(":scope > .fold-h"); if (h) h.setAttribute("aria-expanded", open ? "true" : "false");
+}
+if (document.querySelector(".wk.v4")) {
+  const FOLDS = [[".pm.fixed .rec.dl", ".rec-head"], [".pm.fixed .run", ".run-head"], ["#panel-lastweek .lw-row", ".lw-head"]];
+  for (const [box, head] of FOLDS) document.querySelectorAll(box).forEach(f => {
+    const h = f.querySelector(":scope > " + head); if (!h) return;
+    f.classList.add("fold"); h.classList.add("fold-h");
+    const bugs = f.querySelectorAll(".bug.open").length;
+    if (bugs) { const b = document.createElement("span"); b.className = "fold-bugs"; b.textContent = bugs + (bugs === 1 ? " open bug" : " open bugs"); h.appendChild(b) }
+    h.setAttribute("role", "button"); h.tabIndex = 0; h.setAttribute("aria-expanded", "false");
+    const flip = e => { if (e.target.closest("a,button,input,select,textarea")) return; setFold(f, !f.classList.contains("open")) };
+    h.addEventListener("click", flip);
+    h.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(e) } });
+  });
+  // A link to something inside a folded block (a file named in a place to post, a Desk button) opens it on the way.
+  document.addEventListener("click", e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const el = document.getElementById(decodeURIComponent(a.getAttribute("href").slice(1))); if (el) openFoldsOf(el);
+  }, true);
 }
 tabs.forEach((t, i) => {
   t.addEventListener("click", () => select(t.dataset.day, { hash: true, top: true }));

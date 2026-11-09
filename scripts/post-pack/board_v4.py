@@ -519,14 +519,14 @@ def lastweek_rows(lw, bugs, scores_card):
 # ------------------------------------------------------------------ styles
 
 CSS = """
-.v4-stages{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;list-style:none;margin:10px 0 0;padding:0}
+.v4-stages{display:grid;grid-template-columns:repeat(7,minmax(max-content,1fr));gap:3px;list-style:none;margin:10px 0 0;padding:0}
 .v4-s{display:grid;gap:3px;min-width:0}
 .v4-bar{display:block;height:8px;border-radius:3px;background:var(--line)}
 .v4-s.done .v4-bar,.v4-k.done{background:var(--ok)}
 .v4-s.others .v4-bar,.v4-k.others{background:#c98a1b}
 .v4-s.you .v4-bar,.v4-k.you{background:var(--bad)}
 .v4-s.skip .v4-bar{background:repeating-linear-gradient(45deg,var(--line) 0 3px,transparent 3px 6px)}
-.v4-sl{font:600 10px/1.1 "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v4-sl{font:600 10px/1.1 "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);white-space:nowrap}
 .v4-s.you .v4-sl{color:var(--bad)}
 .v4-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .v4-legend{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin:8px 0}
@@ -592,6 +592,17 @@ CSS = """
 .subpanel .off-days .opt .id-flag{white-space:normal}
 .dk-next{font-size:12.5px;color:var(--muted)}
 .dk-next b{color:var(--ink);font-weight:600}
-@media (max-width:760px){.wk.fixed.v4 .wk-in{grid-auto-columns:minmax(60px,1fr);overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain}
-.wk.fixed.v4 .wk-in::-webkit-scrollbar{display:none}}
+@media (max-width:760px){
+/* Every tab in view, none cut off at the edge (Krish, 2026-11-08: "make sure nothing is cut off or truncated"): two rows of six. */
+.wk.fixed.v4 .wk-in{grid-auto-flow:row;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-columns:auto;overflow:visible}
+.wk.fixed.v4 button[role=tab]{min-width:0;overflow-wrap:anywhere}
+body:has(.wk.fixed.v4) #week[data-layout]{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+/* A folded block is its title row with an open/close mark; tapping it opens the rest. */
+.fold>.fold-h{cursor:pointer;position:relative;min-height:44px;padding-right:40px;-webkit-tap-highlight-color:transparent}
+.fold>.fold-h::after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:2px solid var(--line);border-radius:50%;display:grid;place-items:center;font:700 18px/1 Archivo,system-ui,sans-serif;color:var(--ink);background:var(--card)}
+.fold.open>.fold-h::after{content:"\\2212"}
+.fold:not(.open)>:not(.fold-h){display:none}
+.fold:not(.open){padding-bottom:8px}
+.fold-bugs{display:inline-block;margin:4px 0 0;padding:2px 8px;border-radius:999px;background:var(--bad);color:#fff;font:600 11px/1.4 "IBM Plex Mono",ui-monospace,monospace}
+}
 """
