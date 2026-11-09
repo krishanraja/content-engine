@@ -1,5 +1,6 @@
 {
   "devices": {
+    "leaderboard": { "verbs": ["enter", "add", "fill", "stamp", "move", "highlight", "mark", "exit"] },
     "logo_orbit": { "verbs": ["enter", "add", "chip", "highlight", "exit"] },
     "typing_bubble": { "verbs": ["enter", "type", "send", "pick", "exit"] },
     "cursor_buddy": { "verbs": ["enter", "bounce", "sulk", "wave", "move", "exit"] },
