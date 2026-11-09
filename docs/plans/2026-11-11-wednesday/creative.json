@@ -1,0 +1,438 @@
+{
+ "schema": "creative-sheet/0 (proposal; reconcile with the creative.json input the board v4 session documents in docs/PUBLISH_BOARDS.md)",
+ "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+ "day": "2026-11-11",
+ "series": "under.the.hood",
+ "lock": "docs/plans/2026-11-09-week/narrative-lock-wed.md (sha256 d151291b0a85afc590e80e0e0ca991d4ac5e2253af7b6406eb64b40c39c1601d)",
+ "takes": {
+  "long": {
+   "file": "ai-music-long.mp4",
+   "seconds": 315,
+   "shape": "1080x1920"
+  },
+  "short": {
+   "file": "ai-music-short.mp4",
+   "seconds": 96,
+   "shape": "1080x1920"
+  }
+ },
+ "status": "signed by Krish 2026-11-09; next: ve expect, ve proof of the Grammys split, his Approve proof",
+ "sections": {
+  "A_opener_close": {
+   "recommended": "as_recorded",
+   "options": [
+    {
+     "id": "as_recorded",
+     "words_short": "You've probably danced to this song, or at least you've danced to it on TikTok.",
+     "words_long": "Okay, so you've probably danced to this song that's playing right now.",
+     "picture": "0 to 1.8 s the song alone, full frame, its own sound; then he talks over it, clip on top, his face below (tall); clip panel left, him right (wide, after the sting)",
+     "stills": [
+      "A1-open-0s-song-alone-tall.jpg",
+      "A2-open-2s-he-talks-over-tall.jpg",
+      "A3-open-6s-the-question-tall.jpg",
+      "A7-open-wide-long-cut.jpg"
+     ]
+    },
+    {
+     "id": "alt_hook_1",
+     "words": "...and the woman who wrote both of these tracks had never made music in her life.",
+     "from_take": "long 27.98 to 35.0 s, moved to the top; no new recording",
+     "still": "A4-alt-hook-1-never-made-music-tall.jpg"
+    },
+    {
+     "id": "alt_hook_2",
+     "words": "So is it AI music or is it human music?",
+     "from_take": "long 20.44 s, as the first line over the song; no new recording",
+     "still": "A5-alt-hook-2-question-first-tall.jpg"
+    }
+   ],
+   "close": {
+    "words": "Because the song you can't stop dancing to is already both, and that's how music gets made now.",
+    "picture": "back on the song clip, its sound rising under his last line; one close, no second outro",
+    "stills": [
+     "A6-close-back-on-the-song-tall.jpg",
+     "A8-close-wide-long-cut.jpg"
+    ]
+   },
+   "picked": "as_recorded",
+   "opener_sound": {
+    "his_words": "Remember that I want the audio and the video to play at the start of this track of this video to draw people in and make it clear what I'm talking about. Then the audio fades into the background as the rest of the video kicks in. (Krish, 2026-11-09)",
+    "plan": [
+     "0.0 to 2.0 s (after the sting on the wide cut): the song clip full frame with its own sound at full level, no words on screen",
+     "2.0 s: he starts talking over it; the picture splits (clip and his face); the song's own sound eases down over 1.5 s to a steady background level under his voice, never keyed to his voice",
+     "about 0:16: the second clip (the wedding toast) carries the same song, still in the background",
+     "about 0:20, after the question: the song fades out over 2 s as the licensed bed (NO CURVES, instrumental) takes over at its bed level, so two pieces of music never play at once",
+     "the close: the song's own sound comes back under his last line and plays out the end"
+    ],
+    "source_clips": [
+     "inspiration card 90b654ca, Drive 1Dd2TMonugi1BWSj-i7zoa5ThRIpJwXtx",
+     "inspiration card f6327ce0, Drive 19Yhb_Juvqtgai4yZZJor-b478fF1-hme"
+    ],
+    "rule": "the clips' sound is never muted or replaced by the bed while they are on screen at the open (card note, Krish 2026-10-31)",
+    "clip_order": {
+     "first": "the wedding-toast clip (youtube_wSsJbXzp3DY, 30 s), the one the research brief says is set to Movin' To The Sun, so 'It's called Movin' To The Sun' is said over the song itself",
+     "second": "the dancing-cat clip (youtube_oEODyXtV49M, 55 s); an audio fingerprint against the toast clip was inconclusive (0.92 against a random baseline of 0.91), so which song it carries is for his ear at the proof",
+     "resolution": "both clips are 360x640: full frame on 9:16 is a 3x enlargement and reads soft"
+    },
+    "revision_2": {
+     "his_words": "Yes, approve the eye contact spend, we should use the cat video in the opening, and keep it going for 3-4 seconds on its own before I come in, my intro should be animated, and then the audio should turn down a bit more. mock again / Actually, let's have the cat video come in when I start talking about that in the video. (Krish, 2026-11-09)",
+     "plan": [
+      "0.0 to 3.5 s: the wedding-toast clip (Movin' To The Sun) alone, full frame, its own sound at full level",
+      "3.4 s: his intro animated: his panel slides up from the bottom on paper-cutout steps (on twos) with a lilac seam, the clip rises to the top half; at 4.2 s a cut-out card drops in: UK SINGLES CHART · No. 2 / Movin' To The Sun, gone by 15.6 s",
+      "from 3.5 s the song eases over 1.5 s to a lower background (about 18 dB under its open), held until his question, then fades over 1.8 s as the bed comes in",
+      "the cat clip enters, with its own sound low and the bed out under it, when he says people used the song on their short videos (short cut about 0:29; long cut at 'clips of cats and family weddings', about 1:33), for about 5 s"
+     ],
+     "mock": "wed11-opener-sound-mock-v2.mp4, sent 2026-11-09"
+    },
+    "revision_3": {
+     "his_words": "After I say \"Is it AI or is it human?\" that's when my normal intro card should fly in, marking the opening of the episode. I think that we should forego our usual backing music for this episode and just keep either Movin to the Sun or the other track in the background at all times (Krish, 2026-11-09)",
+     "his_pick_on_rights": "Licensed sound-alike (asked: the real song under the whole video risks a YouTube Content ID claim and an Instagram mute)",
+     "plan": [
+      "the series sting moves from frame 0 to the pause after 'Is it AI or is it human?' (short about 0:17.75, inside a 1.9 s pause; long about 0:25.8, inside a 2.5 s pause); the short wears the approved 9:16 under_the_hood clip, the wide the 16:9",
+      "no NO CURVES: after the sting a licensed Epidemic house track in the song's feel is the bed for the whole body",
+      "the real song stays at the open, on the cat clip and at the close"
+     ],
+     "bed_candidates": [
+      {
+       "title": "Seize It",
+       "artist": "Tape Machines",
+       "epidemic_id": "f34727ee-04df-4d4e-8a1d-6f202af0d3e8",
+       "bpm": 126
+      },
+      {
+       "title": "Jupiter's Atmosphere",
+       "artist": "Basixx",
+       "epidemic_id": "c2dc7440-6af3-4eef-81b0-36dc827e5637",
+       "bpm": 128
+      },
+      {
+       "title": "Make You Mine",
+       "artist": "NIGHTCAP",
+       "epidemic_id": "e420756b-0bb0-48b4-b603-fa2c8c6ab6a3",
+       "bpm": 122
+      }
+     ],
+     "bed_found_by": "Epidemic Sound similarity search against Spotify 25DgjoTlKK8KjstM4cZ8L2 (HUGEL, Ultra Nate, Movin' To The Sun), instrumental filter",
+     "engine_gaps": [
+      "ve plays outside clips muted (scripts/velib/expect.py)",
+      "ve and quick-edit place the sting at frame 0 of the wide cut only; this piece needs it after the cold open, on both cuts",
+      "the chosen bed must be licensed into config/music-library.json (full-quality download on a home computer) with his yes by ear"
+     ],
+     "mocks": [
+      "wed11-opener-mock-v3-seize-it.mp4",
+      "wed11-opener-mock-v3-jupiters-atmosphere.mp4",
+      "wed11-opener-mock-v3-make-you-mine.mp4"
+     ]
+    },
+    "revision_4": {
+     "his_words": "Happy to go ahead with your pick, but the cat video needs to stay there for a lot longer than it currently does, and I don't want the overall brand intro to come in. I want the episode card to come in. \"The human music or AI music card\". I also don't think that we should have Seize It come in until after the cat video fades out and this fades in over the top of it. I think we go straight from the first video track to the second video track and then move into Seize It. (Krish, 2026-11-09)",
+     "plan": [
+      "no brand sting on either cut: an episode card, HUMAN MUSIC / OR AI MUSIC? (cream paper card, Anton, lilac highlight, under.the.hood pill), drops in on twos in the pause after his question and flies out (short 17.75 to 19.6 s; long about 25.8 to 27.9 s)",
+      "the wedding song stays under him from the open, through the episode card, until the cat clip enters; then the cat clip's own song; no bed in between",
+      "the cat clip holds about 12 s, from 'People used it on their short videos' into the producer line (short 29.3 to 41.7 s)",
+      "Seize It (Tape Machines, licensed Epidemic, his pick) fades in over 2 s on top of the cat clip's song as it fades out, and is the bed from there"
+     ],
+     "bed": "Seize It, Tape Machines, epidemic f34727ee-04df-4d4e-8a1d-6f202af0d3e8 (Krish: \"Happy to go ahead with your pick\")",
+     "mock": "wed11-opener-mock-v4.mp4"
+    },
+    "revision_5": {
+     "his_words": "The fade out of the cat video is glitchy in terms of the video and audio. We need to be really clever about this. (Krish, 2026-11-09)",
+     "causes": [
+      "video: as the cat panel slid away, the full-frame take underneath showed a second copy of him at another size, then the picture jumped to a third framing",
+      "audio: the cat clip's song (about 108 bpm) and Seize It (126 bpm) overlapped in a 2 s crossfade, so the two beats clashed"
+     ],
+     "fix": [
+      "one continuous matched move in and out: the cat panel and his full-frame picture move together on the same smooth ease (not stepped on twos), so there is only ever one of him",
+      "a DJ-style cut, never a blend: the cat song closes on its own strong beat (12.65 s into the clip) with a quick low-pass sweep over that last beat; Seize It starts on one of its own kick hits (29.9 s into the track) at that same instant; the picture move ends on the same beat",
+      "checked: at the cut the level falls to about -48 dBFS with no sample jump above 0.003, inside a pause in his speech"
+     ],
+     "rule_for_the_engine": "two songs at different tempos never overlap; hand over on a beat of the outgoing song; frame moves that swap layouts are one matched move",
+     "mock": "wed11-opener-mock-v5.mp4"
+    },
+    "revision_6": {
+     "his_words": "Sees it needs to fade in much more slowly. (Krish, 2026-11-09)",
+     "plan": "Seize It starts from silence on the beat where the cat song ends and rises over about 6 s, never overlapping the cat song",
+     "mock": "wed11-opener-mock-v6.mp4"
+    }
+   }
+  },
+  "B_subtitles": {
+   "recommended": "B1_house",
+   "rules": [
+    "2 to 4 words a card, breaking on phrases, never ending on that, the, a, of",
+    "never repeat a title or a card on screen at the same moment",
+    "key text inside x 120 to 880, y 288 to 1300 on 9:16: clear of Instagram's rail and caption zone, YouTube Shorts' title, and inside the 3:4 grid crop",
+    "one treatment for the whole cut"
+   ],
+   "options": [
+    {
+     "id": "B1_house",
+     "what": "Archivo 900 caps, cream, ink shadow, the one key word in mint",
+     "verdict": "liked (Krish 2026-10-28: 'The captions are nice')",
+     "stills": [
+      "B1-house-captions-clean.jpg",
+      "B1-house-captions-zones.jpg"
+     ]
+    },
+    {
+     "id": "B2_lyric_line",
+     "what": "one line of Fraunces italic, lit word by word like a lyric video, a mint tick under the spoken word",
+     "verdict": "experiment",
+     "stills": [
+      "B2-lyric-line-clean.jpg",
+      "B2-lyric-line-zones.jpg"
+     ]
+    },
+    {
+     "id": "B3_pill",
+     "what": "Archivo 800 ink on a cream pill with a lilac offset block",
+     "verdict": "untested",
+     "stills": [
+      "B3-pill-clean.jpg",
+      "B3-pill-zones.jpg"
+     ]
+    }
+   ],
+   "picked": "B1_house"
+  },
+  "C_motion_style": {
+   "recommended": "paper-cutout",
+   "rule": "one motion system for the whole piece (style.motion.module); every Codex card carries its rules and never-list",
+   "options": [
+    {
+     "module": "paper-cutout",
+     "verdict": "untested",
+     "loop": "C1-paper-cutout-credit-stack.mp4",
+     "why": "the piece is layers peeled off one song: cream paper cards drop on twos, one at a time, as he names each layer"
+    },
+    {
+     "module": "swiss-kinetic-type",
+     "verdict": "untested",
+     "loop": "C2-swiss-kinetic-type-no2.mp4",
+     "why": "safest: one big number on the grid, the answer in mint"
+    },
+    {
+     "module": "riso-halftone",
+     "verdict": "experiment",
+     "loop": "C3-riso-halftone-sleeve-EXPERIMENT.mp4",
+     "why": "the song printed like a record sleeve in two inks; a real experiment for a music story"
+    }
+   ],
+   "picked": "paper-cutout",
+   "his_rule": "experimental but visually clear (Krish, 2026-11-09)"
+  },
+  "D_one_idea": {
+   "object": "the credit stack: one song's credits as four paper cards, Written by a Reiki healer / First voice an AI app / Rebuilt by HUGEL, by hand / Sung by Ultra Nate",
+   "moves": {
+    "a card drops": "he names a layer",
+    "the stack splits": "the Grammys rule writing out, singing in",
+    "the stack falls back into the song": "the close, it is already both"
+   },
+   "real_artifacts": [
+    "the two song clips with their own sound (inspiration cards 90b654ca and f6327ce0; Drive 1Dd2TMonugi1BWSj-i7zoa5ThRIpJwXtx and 19Yhb_Juvqtgai4yZZJor-b478fF1-hme)",
+    "the Official Charts entry for Movin' To The Sun (to capture full frame)",
+    "the app's own page (to capture full frame)",
+    "the top comments under the singer's video (to capture)",
+    "The Australian's Grammys report, 17 Oct 2026 (headline, to capture)"
+   ],
+   "stills": [
+    "D1-the-one-idea-credit-stack.jpg",
+    "D2-credit-stack-splits-at-the-grammys.jpg",
+    "D3-real-artifact-song-on-a-cat-clip.jpg",
+    "D4-real-artifact-song-on-a-wedding-clip.jpg"
+   ],
+   "never": [
+    "no hand-held phone for evidence: every capture full frame, its readable line at least 60% of frame height on 9:16, with a slow push and one mark",
+    "every underline or ring sits on what it marks, through every move",
+    "captions break on phrases and never repeat a title on screen",
+    "covers and thumbnails checked in Instagram's 3:4 grid crop and under its account row",
+    "the song clips never muted or buried under the bed; the bed drops out under them",
+    "no robots, glowing brains, waveforms-as-AI or other AI clip art",
+    "no redrawn logos; no faces altered in the cut-outs",
+    "no third layer of words on top of his voice and captions",
+    "no second intro or outro; the sting only before the 16:9 cut"
+   ],
+   "picked": "the credit stack"
+  },
+  "E_storyboard": {
+   "short": [
+    {
+     "t": "0:00",
+     "beat": "The song alone, its own sound, full frame",
+     "still": "E-short-01.jpg"
+    },
+    {
+     "t": "0:02",
+     "beat": "He talks over it: \"You've probably danced to this song\"",
+     "still": "E-short-02.jpg"
+    },
+    {
+     "t": "0:16",
+     "beat": "\"So is it AI or is it human?\" on the wedding clip",
+     "still": "E-short-03.jpg"
+    },
+    {
+     "t": "0:18",
+     "beat": "Credit stack, card 1 and 2: a healer, an AI app",
+     "still": "E-short-04.jpg"
+    },
+    {
+     "t": "0:33",
+     "beat": "Card 3 and 4: rebuilt by hand, sung by Ultra Naté; then the chart, full frame",
+     "still": "E-short-05.jpg"
+    },
+    {
+     "t": "0:45",
+     "beat": "The Grammys split the stack: writing out, singing in",
+     "still": "E-short-06.jpg"
+    },
+    {
+     "t": "1:03",
+     "beat": "\"AI got the artist in the door\" on his face, nothing else",
+     "still": "E-short-07.jpg"
+    },
+    {
+     "t": "1:20",
+     "beat": "Close: back on the song, \"already both\"",
+     "still": "E-short-08.jpg"
+    }
+   ],
+   "long": [
+    {
+     "t": "0:00",
+     "beat": "Sting, then the song alone with its sound (1.8 s)",
+     "still": "E-long-01.jpg"
+    },
+    {
+     "t": "0:02",
+     "beat": "He talks over the song: \"You've probably danced to this song that's playing right now\"",
+     "still": "E-long-02.jpg"
+    },
+    {
+     "t": "0:17",
+     "beat": "\"It started on an AI app. So is it AI music or human music?\"",
+     "still": "E-long-03.jpg"
+    },
+    {
+     "t": "0:56",
+     "beat": "Part one: Imael Angel, a Reiki master; card 1 drops",
+     "still": "E-long-04.jpg"
+    },
+    {
+     "t": "1:08",
+     "beat": "She typed her words into the app: the app’s own page, full frame",
+     "still": "E-long-05.jpg"
+    },
+    {
+     "t": "1:33",
+     "beat": "\"Clips of cats and family weddings\": the two real clips side by side",
+     "still": "E-long-06.jpg"
+    },
+    {
+     "t": "2:09",
+     "beat": "Part two: HUGEL rebuilt it, Ultra Naté sang it: cards 3 and 4",
+     "still": "E-long-07.jpg"
+    },
+    {
+     "t": "2:28",
+     "beat": "No. 2 in the UK: the chart entry, full frame",
+     "still": "E-long-08.jpg"
+    },
+    {
+     "t": "3:27",
+     "beat": "Part three: the Grammys split the stack, writing out, singing in",
+     "still": "E-long-09.jpg"
+    },
+    {
+     "t": "4:00",
+     "beat": "\"It makes them feel young again\": the real comments",
+     "still": "E-long-10.jpg"
+    },
+    {
+     "t": "4:59",
+     "beat": "Close: back on the song, \"already both\"",
+     "still": "E-long-11.jpg"
+    }
+   ]
+  },
+  "F_thumbnails": {
+   "recommended": "T0",
+   "note": "mockups for the words and the proof; the final pair is drawn by scripts/pages/build.py --thumbs in this week's neon skin",
+   "options": [
+    {
+     "id": "T0",
+     "headline": [
+      "IS YOUR FAVOURITE TUNE",
+      "MADE BY A HUMAN OR AN AI?"
+     ],
+     "proof": "the song on the cat clip",
+     "from": "Krish, 2026-11-09"
+    },
+    {
+     "id": "T1",
+     "headline": [
+      "A HEALER WROTE",
+      "A UK NO. 2"
+     ],
+     "proof": "the song on the cat clip"
+    },
+    {
+     "id": "T2",
+     "headline": [
+      "AI OR HUMAN?",
+      "THE GRAMMYS SAID BOTH"
+     ],
+     "proof": "the song on the wedding clip"
+    },
+    {
+     "id": "T3",
+     "headline": [
+      "YOU DANCED TO IT.",
+      "AN AI APP STARTED IT."
+     ],
+     "proof": "the song on the cat clip"
+    }
+   ],
+   "grid_neighbours": [
+    "Fri 6 Nov Two passports",
+    "Thu 5 Nov AI tips carousel",
+    "Wed 4 Nov Claude Duet",
+    "Tue 3 Nov AI agents translator",
+    "Mon 2 Nov Who trains your 2030 seniors"
+   ],
+   "picked": "T0",
+   "title": "Is your favourite tune made by a human or an AI?"
+  },
+  "G_after_sign": [
+   "ve expect on the signed storyboard",
+   "ve proof of the hardest beat on his take: the credit stack splitting at the Grammys (long 3:27, short 0:45)",
+   "his Approve proof",
+   "both cuts (two render loops, then him)",
+   "the article and the cover"
+  ]
+ },
+ "signed": {
+  "by": "Krish",
+  "at": "2026-11-09",
+  "words": "I'm happy with your recommendations. With regard to motion treatment, I endorse being experimental but visually clear. I think the headline should be much clearer and more intriguing, something like \"Is your favourite tune made by a human or an AI?\"",
+  "channel": "Claude Code session (the board has no Sign creative press yet)"
+ },
+ "eye_contact": {
+  "his_words": "Make sure that these videos do eye gaze correction as well when you do the full rendering on the local machine. (Krish, 2026-11-09)",
+  "route": "ve eyeline on both takes before ingest (docs/ve/RUNBOOK.md S3), --backend maxine with the copy from one maxine-trial.yml run per take; about $0.04 per 96 s of take, so about $0.17 for both",
+  "open_caveat": "the last blind review (pass 15) flagged the short take's 5.57 s sideways glance; the look-up and head-down moments are left as filmed by design",
+  "spend": "approved by Krish, 2026-11-09: \"Yes, approve the eye contact spend\" (about $0.17, both takes, maxine-trial.yml)",
+  "his_words_2": "we're going to need some significant work on the eye gaze. (Krish, 2026-11-09)",
+  "work": "offered as its own task (ve eyeline to a blind-review pass on both of these takes), so this session stays on the piece"
+ },
+ "body_standard": {
+  "his_words": "And then, from there, we need to go all out on visual design and motion design effects that make the rest of the video easy to understand and really clear. Highest of high standards (Krish, 2026-11-09)",
+  "means": [
+   "every beat after the opener has one designed picture that shows the mechanism the line names, never words alone",
+   "the credit stack is the hero: a Codex-built paper-cutout device, each layer landing on the word that names it, and splitting at the Grammys",
+   "every outside fact is shown as its real page, full frame and readable on a phone: the chart entry, the app, the Grammys report, the comments",
+   "captions break on phrases and never repeat what is on screen",
+   "the hardest beats are proved moving on his take before any whole cut, and the Critic scores the cut against the 2 Nov 'Ladder' reference (config/reference-cuts.json)"
+  ]
+ }
+}
