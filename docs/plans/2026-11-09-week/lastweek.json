@@ -1,0 +1,21 @@
+{
+  "_about": "Every post of the week of 2 November, Monday to Saturday, off days included, for layout v4's Last week tab (week_board.py --last-week). From the pieces' rows, his Scores presses of 7 Nov (picks/score-<piece>, week 2026-11-02), his off-day verdicts on that week's board, and the post-mortem (docs/learning/2026-11-07-week-of-2-nov-postmortem.md: views from his Instagram grid screenshot, 7 Nov). Tuesday's two approved off-day posts are listed as approved; which of them went out, and their views, are Growth's to confirm.",
+  "week": "2026-11-02",
+  "posts": [
+    {"date": "2026-11-02", "kind": "piece", "series": "follow.the.money", "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+     "title": "Claude's AI is eating the jobs of its own humans. What does that signal for the rest of us?",
+     "live": [{"label": "Substack", "url": "https://home.makeyourmindup.ai/p/claudes-ai-is-eating-the-jobs-of"}, {"label": "Instagram Reels", "url": "https://www.instagram.com/reel/DfP2RFFjbOC/"}],
+     "scores": {"narrative": 6, "production": 8}},
+    {"date": "2026-11-03", "slot": "carousel", "kind": "carousel", "title": "Claude is eating the jobs of its own humans (the four-card carousel)"},
+    {"date": "2026-11-03", "slot": "meme", "kind": "meme", "title": "When your AI talks to your customer's AI (the translator meme)"},
+    {"date": "2026-11-04", "kind": "piece", "series": "under.the.hood", "piece_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+     "title": "AI used to reply. Now it acts first. Claude Duet is the start.", "scores": {"narrative": 7, "production": 5}},
+    {"date": "2026-11-05", "kind": "none", "title": "Thursday's short was killed",
+     "why": "Killed before posting: \"Okay, this is shit... The visuals are tacky. The subtitles are all over the place typographically.\" Its re-recording is in the Inbox.",
+     "lessons": {"label": "What we learned", "url": "https://github.com/krishanraja/content-engine/blob/main/docs/learning/2026-11-04-thursday-killed.md"}},
+    {"date": "2026-11-06", "kind": "piece", "series": "mind.the.gap", "piece_id": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
+     "title": "Why every country wants its own AI, and what that means for your business", "views": 35, "views_from": "Instagram, 7 Nov",
+     "scores": {"narrative": 8, "production": 8}},
+    {"date": "2026-11-07", "kind": "news", "title": "Five good things AI did for people this week", "views": 10, "views_from": "Instagram, 7 Nov"}
+  ]
+}

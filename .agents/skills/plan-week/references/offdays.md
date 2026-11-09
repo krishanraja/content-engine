@@ -184,14 +184,18 @@ kit from the format he pointed at, credited, and never reposts the clip itself.
 A weekly series (Krish, 2026-11-02: "you focus on w/c 9 Nov for the Saturday weekly good news. You will need to find
 the actual good news on Sunday as per the usual system so that the news items are fresh"; his Improve on the 7 Nov
 good news: "I want actual news items and the content we are going to use here - embedded real world images or
-videos"). Each week's board carries it on Saturday as `{"id": "goodnews", "weekly": "good_news", "stories_due":
-"<the Sunday before the week>", ...}` with the rest of an option (hook, pitch, direction, read-back), and no stories.
-He approves the format on the board; the stories are found by the Sunday run.
+videos"; Rulings, Krish, 2026-11-07: "Saturday's good news run should be done later in the week so the good news is
+fresh" and "Happy to break the "no Claude schedules" rule for Saturday's good news. We might as well just keep that on
+an automatic schedule."). Each week's board carries it on Saturday as `{"id": "goodnews", "weekly": "good_news",
+"stories_due": "<the Thursday of that week>", ...}` with the rest of an option (hook, pitch, direction, read-back), and
+no stories: the Sunday ideas run writes it so, and its card says the stories come Thursday. He approves the format on
+the board; the stories are found on Thursday.
 
-**The Sunday run fills it** (`.github/workflows/sunday-ideas.yml`, the step after the ideas stage, for the week
-`python3 scripts/sunday_ideas.py goodnews` names, the one that starts the day after that Sunday):
+**The Thursday run fills it** (`.github/workflows/saturday-goodnews.yml`, Claude Code in GitHub Actions on his
+subscription, fired twice on Thursday, for the week `python3 scripts/saturday_goodnews.py check` names, the one whose
+Saturday comes next; a session can run the same steps by hand):
 
-1. Find four real AI stories that are good news for ordinary people (health, science, safety, access, work made
+1. Find five real AI stories that are good news for ordinary people (health, science, safety, access, work made
    better), each published in the seven days up to `stories_due`, none already run (`sources.json`
    `recent_offdays` urls). Prefer a primary source: the organisation's own page, the paper, the official
    announcement; a press story only names where it read it.
@@ -201,7 +205,7 @@ He approves the format on the board; the stories are found by the Sunday run.
    https), never a stock image.
 4. Write them into that week's `docs/plans/<Monday>-week/ideas.json`, on the good-news option only, as
    `"stories": [{"headline", "what", "why", "date": "YYYY-MM-DD", "source": {"label", "url"}, "media": {"kind": "photo"
-   or "clip", "url"}}]`, four of them, in plain English a 12-year-old follows. Change nothing else.
+   or "clip", "url"}}]`, five of them, in plain English a 12-year-old follows. Change nothing else.
 5. `python3 scripts/post-pack/copy_lint.py --applies-to carousel_text` on the words, then
    `python3 scripts/post-pack/board_feed.py gather <Monday>` and `cover <Monday>`: it refuses a story dated outside
    the seven days, one with no source or picture, and one a recent off day ran.

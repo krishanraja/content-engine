@@ -295,7 +295,8 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            composition_props=None, script: str | None = None, take_words=None, heard: dict | None = None,
            captions_drawn_by: str = 'faster-whisper', caption_ocr=None, fps: float = 30,
            caption_style: str = 'house', face_detector=None, plate_video: str | None = None,
-           plate_offset: int = 0, opening: dict | None = None) -> dict:
+           plate_offset: int = 0, opening: dict | None = None, publish_day: str | None = None,
+           onscreen_reader=None) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
@@ -401,6 +402,12 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         'pass': composition.get('pass'),
         'status': composition.get('status', 'measured') if composition['applies'] else 'not applicable',
     }
+    # The post-mortem of the week of 2 Nov (velib/qc_onscreen.py): marks on their words, captions that neither break
+    # mid-phrase nor repeat the headline, evidence read at a readable height. Advisory before its binds_from (F33).
+    if composition_props and composition_props.get('beats'):
+        from . import qc_onscreen
+        checks.update(qc_onscreen.rows(path, composition_props, publish_day, read=onscreen_reader,
+                                       lead=lead_frames(composition_props)))
     # An advisory row is measured and shown, never counted (scripts/velib/qc_channel.py until its layout card lands).
     applicable = [c for c in checks.values() if c.get('status') not in ('not applicable', 'advisory')]
     built = [c['pass'] for c in applicable if c['pass'] is not None]
