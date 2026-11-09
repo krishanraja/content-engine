@@ -67,10 +67,12 @@ class TheManifestHoldsTogether(unittest.TestCase):
     def test_approval_needs_his_words(self):
         m = copy.deepcopy(MANIFEST)
         m['approved'] = True
+        m['approval'] = None
         self.assertTrue(any('without approval' in p for p in character.manifest_problems(m, POSES)))
 
     def test_no_library_before_his_yes(self):
         m = copy.deepcopy(MANIFEST)
+        m['approved'], m['approval'] = False, None
         m['library'] = {'built': True, 'poses': ['neutral']}
         self.assertTrue(any('before Krish approved' in p for p in character.manifest_problems(m, POSES)))
 
