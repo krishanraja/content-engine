@@ -6,6 +6,23 @@ board becomes the sole place for new interactions after verified migration.
 The four Claude artifacts and the default artifact generator remain preserved;
 there is no ongoing synchronization with them after cutover.
 
+## The live board: /board/next
+
+Krish, 2026-11-09: "I should always open it with something to do for each piece or for the week, unless the day or
+the week is complete", "Absolutely everything that isn't 100% complete needs an action button", the buttons must start
+"what is actually running the machinery", and "every next action needs to have a Claude prompt as at least a backup".
+
+`/board/next/<Monday>` (plan: `docs/plans/2026-11-09-board-desk/PLAN.md`) is built on every read, never baked:
+`GET /api/board/<Monday>/view` (`apps/control-plane/api/board/_view.ts`) reads the pieces' making records, his presses,
+the week's `ideas.json` and narrative locks on GitHub (the `offday-revise/<Monday>` branch first) and each job's
+latest run. Every day not done has one next step, a first button that starts the machine doing it, and a Claude prompt
+(`viewProblems` refuses a view without them). `POST /api/board/<Monday>/run` (`_run.ts`, his press only) sends an
+allow-listed `repository_dispatch` on the token the board already holds (`OFFDAY_REVISE_DISPATCH_TOKEN`); every job it
+names lists its own type. A revised off-day option is judged on the page itself, as the same `queue/off-<day>-<id>`
+record the full board writes, bound to the same hashes (`_offdaySides.ts`, held equal to `week_board.side_sha` by
+`tests/control-plane/board-desk.test.ts`). The page's one source is `apps/control-plane/board-next/desk.html`, built
+into `_deskPage.ts` by `node scripts/build-desk-page.mjs`. `/board` stays the old board until Krish switches it.
+
 ## The fixed layout: feed it, never shape it
 
 Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it

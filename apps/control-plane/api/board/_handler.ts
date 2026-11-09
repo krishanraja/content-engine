@@ -10,6 +10,9 @@ import { readArchive } from './_archive.js'
 import { readPieces, recordPosted } from './_posted.js'
 import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
+import { readView } from './_view.js'
+import { dispatchJob, isJob } from './_run.js'
+import { DESK_PAGE } from './_deskPage.js'
 import { StandardsError, decideStandard, readStandards, renderStandards } from './_standards.js'
 import { operatorBearerAllowed } from '../_auth.js'
 import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
@@ -167,6 +170,15 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         return res.status(status).json({ ok: false, error: error instanceof StandardsError ? error.message : 'standards_unavailable' })
       }
     }
+    if (op === 'next' && method === 'GET' && monday(scalar(req.query.week))) {
+      // The live board's page holds no data, so it is served before the access check: without his cookie it opens on
+      // its own "Unlock the board" line instead of a bare 401.
+      res.setHeader('Content-Type', 'text/html; charset=utf-8')
+      res.setHeader('Cache-Control', 'no-store')
+      res.setHeader('X-Frame-Options', 'DENY')
+      res.setHeader('Content-Security-Policy', boardPolicy(process.env.SUPABASE_URL))
+      return res.status(200).send(DESK_PAGE)
+    }
     const operatorOnly = ['uploads', 'imports', 'sources'].includes(op) || (!op && !collection && method === 'PUT')
     const who = actor(req, operatorOnly)
     if (!who) return res.status(401).json({ ok: false, error: 'unauthorized' })
@@ -183,8 +195,33 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (!result.data.length) throw new BoardError(404, 'no_published_board')
         return res.redirect(303, `/board/${weekDate(result.data[0].week)}`)
       }
+      if (op === 'next' && method === 'GET' && !scalar(req.query.week)) {
+        // The live board without a week opens on the newest one (docs/plans/2026-11-09-board-desk/PLAN.md).
+        const result = await db.from('board_weeks').select('week').order('week', { ascending: false }).limit(1)
+        must(result)
+        if (!result.data.length) throw new BoardError(404, 'no_published_board')
+        return res.redirect(303, `/board/next/${weekDate(result.data[0].week)}`)
+      }
       const week = scalar(req.query.week)
       if (!monday(week)) throw new BoardError(400, 'invalid_week')
+      if (op === 'next') throw new BoardError(405, 'method_not_allowed')
+      if (op === 'view') {
+        // The week as it stands now, each day with its next step and the actions that start it (_view.ts).
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        res.setHeader('Cache-Control', 'no-store')
+        return res.status(200).json({ ok: true, ...(await readView(db, week)) })
+      }
+      if (op === 'run') {
+        // A press that starts the machine that does the work (_run.ts): his press only, an allow-listed job only.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'his_press')
+        const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
+        if (!isJob(body.job)) throw new BoardError(400, 'unknown_job')
+        const input = body.input && typeof body.input === 'object' && !Array.isArray(body.input) ? body.input as Record<string, unknown> : {}
+        const sent = await dispatchJob(body.job, input)
+        if (sent.sent) return res.status(202).json({ ok: true, ...sent })
+        return res.status('reason' in sent && sent.reason === 'invalid_input' ? 400 : 503).json({ ok: false, ...sent })
+      }
       const offset = Number(req.query.offset || 0)
       if (!Number.isSafeInteger(offset) || offset < 0) throw new BoardError(400, 'invalid_offset')
       if (op === 'state') {
