@@ -1,0 +1,3 @@
+Status: Fri 13 Nov "Counting rat tails" pre-production sheet (opener and close with two alternative hooks, three caption treatments with channel zones and the grid crop, three motion loops on his take, the counter idea with real artifacts and a never-list, storyboards for both cuts, three covers in a mock grid and results row) sent to Krish and written as creative.json; both takes recorded on the piece; takes checked against the script; the held 4 Nov send closed honestly.
+Next: Krish signs the sheet (and records the 4-second "delete" pickup); then ve expect, ve proof of 2:12 to 2:45 on his take, his Approve proof.
+North Star check (2026-11-07): holds.
