@@ -34,6 +34,8 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-09","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- ve is ready to take Krish's character (asked 2026-11-09). The Keyframes character pack is adopted, not installed: the craft in _corpus/keyframes-character.md, the manifest config/ve/character.json (his inputs and the drawn library live in his brand kit, never git; approved false), 65 poses in config/ve/character-poses.json, an optional spec.character that ve lint refuses until he approves the base, the library is built and the character_layer device exists, and cards ve-kf-6-character-library and ve-kf-7-character-layer (written, not dispatched). No image drawn, nothing spent. (2026-11-09)
+- The library sync finds Heartside's social library by its Drive ID: the engine walks the folder's parents to My Drive as its owner and hands the path to the home computers on the Heartside pending answer, so a rename or move needs no config change. A deleted or binned folder stops the Heartside pass with heartside_library_gone or heartside_library_trashed; no folder is ever made; config/heartside-library.json root is only the fallback. (2026-11-09)
 - Claude sessions in this repo load the Codex plugin (codex@openai-codex), and .claude/settings.json no longer denies git pushes to main or force pushes. (2026-11-09)
 - The 9 Nov board is live on layout v4 (build 2c5c124b, revision 26, 9 stored files, read back), published by Board rebuild run 42475151020 on Krish's yes; on a phone its long blocks fold to their titles, nothing is cut off, and its fonts are the brand fonts. (2026-11-08)
 - The 9 Nov board's rebuild recipe no longer gives this week's Ideas list: every series day is picked, and the 7 Nov gather found inspiration cards saved after 2 Nov that belong to next Sunday's ideas; the Ideas tab says the week is picked. (2026-11-07)
@@ -45,6 +47,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-09 Krish renamed 05_Social-Library to 03b_Social-Schedule on 9 Nov and every Heartside send would have stopped until the path was edited by hand (Krish, 2026-11-09: "ideally ID so if folders move it doesnt matter").
 - 2026-11-09 Codex plugin enabled for cloud sessions; push-to-main and force-push denies removed at Krish's request.
 - 2026-11-07 Fri 13 Nov pre-production sheet sent to Krish before any build (`docs/plans/2026-11-09-week/fri-preproduction/creative.json`).
 - 2026-11-07 Krish, 2026-11-07: "I think we should redesign the 9th of November board as well."
@@ -53,7 +56,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-06): put the original zip in Production Inspo from a home computer, then dispatch ve-kf-1-caption-build between pieces.
+- Next (2026-11-09): Krish drops one clear photo of himself at makeyourmindup > 1 Brand kit (permanent) > character > krish > input > photo.jpg (H:\My Drive\Ventures\Active Ventures\makeyourmindup\1 Brand kit (permanent)\character\krish\input\photo.jpg).
 - Wed 11 Nov creative sheet (2026-11-07): the pre-production sheet for the Reiki master's No. 2 hit is with Krish as files (opener and close with two alternative hooks from his own take, three caption treatments on the safe zones and grid crop, three motion loops on his footage, the credit stack as the one idea with its never-list, storyboards for both cuts, three thumbnails in his grid and a YouTube row); picks in `docs/plans/2026-11-11-wednesday/creative.json`, his recorded words against the script in `words-against-script.md`. Waiting on Krish: Sign creative. Nothing is built until he signs; then ve expect, ve proof of the Grammys split, his Approve proof.
 - Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
 - 16 Nov week (2026-11-07): Ideas tab live (run 42392494486). Next: the Sunday room on his presses; good-news stories Thu 19 Nov.
