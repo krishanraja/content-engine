@@ -382,12 +382,14 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    Reader C, the narrator, word for word (Krish, 2026-10-19, of a line he could not say on camera: "I felt like I couldn't explain what that meant. ... How do we gate that for the next time?"):
 
    ```
-   You are the presenter. You will read this video script aloud to camera, to leaders of medium-sized companies, and a viewer may stop you after any sentence and ask "what does that mean, and why does it matter to me?" Go through it sentence by sentence. List every sentence you could not answer that for in one plain sentence of your own, exactly as it is written, with what is missing: the thing it refers to, the step it skips, or why it matters to the viewer. Also list every comparison that maps the wrong things onto each other, every promise the opening makes that the script does not keep, and any advice at the end that goes further than the evidence given without saying why. Say "nothing" if you could explain every sentence. Then retell the whole video in three sentences.
+   You are the presenter. You will read this video script aloud to camera, to leaders of medium-sized companies, and a viewer may stop you after any sentence and ask "what does that mean, and why does it matter to me?" Go through it sentence by sentence. List every sentence you could not answer that for in one plain sentence of your own, exactly as it is written, with what is missing: the thing it refers to, the step it skips, or why it matters to the viewer. Also list every comparison that maps the wrong things onto each other, every promise the opening makes that the script does not keep, and any advice at the end that goes further than the evidence given without saying why. Then list every sentence you could not say aloud naturally to camera: one that sounds written rather than spoken, reads like clipped notes, or trips the tongue. Say "nothing" if you could explain and say every sentence. Then retell the whole video in three sentences.
    ```
+
+   A script over length loses a whole beat, never words from every sentence: squeezing each line to fit turns it into notes he cannot say (Krish, 2026-11-09, of a 90-second cut squeezed that way: "It's getting worse and worse and worse"; he cut the medical firm instead).
 
    Give each the script's spoken words after its prompt; then ask Reader A the two
    questions in `references/hook-and-share.md`. The script passes
-   only when all three say "nothing", Reader A says yes and names a person, (A and B lost nothing; C could explain every sentence), and every retelling matches the
+   only when all three say "nothing", Reader A says yes and names a person, (A and B lost nothing; C could explain and say every sentence), and every retelling matches the
    script's point: its one question and the answer it gives. Anything
    a reader lists is rewritten in plainer words, then steps 3 and 4 again with
    three new readers. Run the readers before every send, whatever words he uses to say send it: his sign-off records
