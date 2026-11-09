@@ -106,7 +106,12 @@ PLACE_JS = r"""([shape, geo]) => {
   const col = v('--col'), core = v('--core'), hot = v('--hot'), wall = v('--wall'), day = v('--motif');
   if (!col) return {skipped: 'not a series piece: the plain Receipt'};
   const R = q => { const e = document.querySelector(q); return e ? e.getBoundingClientRect() : null; };
-  const h1 = R('h1'), tagR = R('.tag'), fr = R('.frame'), logos = R('.logos'), wmp = R('.wmp');
+  const h1 = R('h1'), fr = R('.frame'), logos = R('.logos'), wmp = R('.wmp');
+  // A cover may leave its tag off ("show_tag": false): stand in a zero-size box where the tag would start, on the
+  // proof when the tag is pinned there, else at the top left of the headline's column.
+  const pinned = !!document.querySelector('.stack') || !!document.querySelector('.pin .tag') || (!COVER && !tall);
+  const at = pinned && fr ? fr : h1;
+  const tagR = R('.tag') || {left: at.left, right: at.left, top: at.top, bottom: at.top, width: 0, height: 0};
   const markBot = Math.max(h1.bottom, ...[...document.querySelector('h1 mark').getClientRects()].map(r => r.bottom));
   const f = n => (+n).toFixed(1);
   const KEPT = ['.wmp', 'h1', '.logos', '.pill', '.tag'].flatMap(q => [...document.querySelectorAll(q)]);
@@ -202,7 +207,9 @@ PLACE_JS = r"""([shape, geo]) => {
   const m = tall ? 26 : 18;
   // The logo plate bounds the band only where it lies under it (tall); on wide it sits in the column over the words.
   const top = Math.ceil(Math.max(tagR.bottom, markBot) + m), bot = Math.floor(logos && logos.top > top ? logos.top - m : H);
-  const tiles = [[0, top, W, Math.max(0, bot - top)]];
+  // A cover whose logos sit under its headline ("headline_first") keeps the band left of that column, off the logos.
+  const logosUnder = !tall && logos && logos.top >= markBot - 1;
+  const tiles = [[0, top, logosUnder ? Math.max(0, Math.floor(Math.min(logos.left, h1.left) - 4)) : W, Math.max(0, (logosUnder ? H : bot) - top)]];
   if (!tall) { const sx = Math.floor(Math.min(tagR.left, h1.left) - 2), sy = Math.ceil(wmp.bottom + m); if (sx > 0 && top > sy) tiles.push([0, sy, sx, top - sy]); }
   // On tall, the left margin beside the tag (under the highlight) is free ground too.
   else { const sx = Math.floor(tagR.left - 4), sy = Math.ceil(markBot + m); if (sx > 0 && top > sy) tiles.push([0, sy, sx, top - sy]); }
