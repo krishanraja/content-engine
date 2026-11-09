@@ -37,6 +37,10 @@ on:
         description: 'Stop the pod after this many minutes'
         required: false
         default: '30'
+      image:
+        description: 'nim route: the NIM image tag to run (empty = latest); take=entitlement-check lists the tags'
+        required: false
+        default: ''
       confirm:
         description: 'Type exactly: spend approved by Krish'
         required: true
@@ -74,6 +78,10 @@ jobs:
           for image in nim/nvidia/maxine-eye-contact:latest nvidia/maxine/maxine-eye-contact:latest; do
             if docker manifest inspect "nvcr.io/$image" >/dev/null 2>&1; then echo "pull allowed: $image"; else echo "pull refused: $image"; fi
           done
+          # The tags NVIDIA publishes for the Eye Contact NIM (`latest` changed under us on 9 Nov: feature 1.5.1 refused
+          # the take the 5 Nov image took). Registry v2 token for nvcr.io with the NGC key, then the tag list.
+          TOKEN=$(curl -s -u "\$oauthtoken:$NGC_API_KEY" "https://nvcr.io/proxy_auth?scope=repository:nim/nvidia/maxine-eye-contact:pull" | python -c "import json,sys; print(json.load(sys.stdin).get('token',''))")
+          curl -s -H "Authorization: Bearer $TOKEN" https://nvcr.io/v2/nim/nvidia/maxine-eye-contact/tags/list | python -c "import json,sys; d=json.load(sys.stdin); print('tags:', ' '.join(sorted(d.get('tags') or [])) or d)"
           docker logout nvcr.io >/dev/null 2>&1
       - name: Fetch the take from the recordings store
         if: ${{ inputs.take != 'cleanup' && inputs.take != 'entitlement-check' }}
@@ -128,6 +136,7 @@ jobs:
           MAX_MINUTES: ${{ inputs.max_minutes }}
           NIM: ${{ inputs.route != 'sdk' && 'yes' || '' }}
           VARIANTS: ${{ inputs.variants }}
+          MAXINE_NIM_IMAGE: ${{ inputs.image && format('nvcr.io/nim/nvidia/maxine-eye-contact:{0}', inputs.image) || '' }}
         run: python scripts/velib/maxine_pod.py "$RUNNER_TEMP/take/$TAKE" "$RUNNER_TEMP/maxine" --yes --max-usd "$MAX_USD" --max-minutes "${MAX_MINUTES:-30}" ${NIM:+--nim-client "$RUNNER_TEMP/nim-clients/eye-contact"} ${VARIANTS:+--variants "$VARIANTS"}
       - name: Keep the redirected copy and the receipt (3 days)
         if: always()

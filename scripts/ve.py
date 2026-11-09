@@ -871,7 +871,9 @@ def cmd_eyeline(args) -> int:
             out = directory / 'eyeline'
         else:
             out = eyeline.EVAL_DIR / media.stem
-        if args.backend == 'maxine':
+        if args.lens:
+            backend = eyeline.Calibrated(args.lens)
+        elif args.backend == 'maxine':
             copy = args.maxine_copy
             if args.pod:
                 from velib import maxine_pod
@@ -1738,6 +1740,7 @@ def main() -> int:
     p.add_argument('--backend', choices=('flx', 'maxine', 'identity'), default='flx',
                    help='flx: WangWilly/Hsu model, private evaluation only; maxine: NVIDIA Maxine Eye Contact on a rented RTX pod')
     p.add_argument('--maxine-copy', help="Maxine's redirected copy of the take, when it has already been made")
+    p.add_argument('--lens', help="the eyeline receipt of a Maxine run on another take of the same session: its lens point, no pod")
     p.add_argument('--pod', action='store_true', help='make the Maxine copy on one rented RunPod RTX A5000 (spend)')
     p.add_argument('--yes', action='store_true', help="Krish approved this run's spend")
     p.add_argument('--max-usd', type=float, default=1.0, help='refuse a pod run that could cost more than this')

@@ -95,8 +95,83 @@ class Gated(unittest.TestCase):
         contour = [[60 + 20 * math.cos(a), 60 + 8 * math.sin(a)] for a in np.linspace(0, 2 * math.pi, 16, endpoint=False)]
         near = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (60.5, 60, 6))    # half a pixel, 0.08 radii
         self.assertIs(near, frame)
-        far = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (70, 60, 6))       # 10 px, 1.7 radii
-        self.assertIsNot(far, frame)
+        drift = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (62.4, 60, 6))   # 0.4 radii: the prompter drift
+        self.assertIsNot(drift, frame)
+        hard = eyeline.blend_aperture(frame, other, contour, 1.0, (60, 60, 6), (78, 60, 6))      # 3 radii: past 2, as filmed
+        self.assertIs(hard, frame)
+
+
+def contour_ellipse(cx, cy, a, b):
+    """16 lid points around an ellipse, in the order eyeline's EYE_CONTOUR uses (0 and 8 are the corners)."""
+    return [[cx - a * math.cos(math.pi * k / 8), cy + b * math.sin(math.pi * k / 8)] for k in range(16)]
+
+
+class Moves(unittest.TestCase):
+    """The 9 Nov rules: the prompter drift is corrected, a hard glance, a squint and a closing eye are left alone, both
+    eyes move together, and the move is a push of his own pixels that leaves everything outside its reach exact."""
+
+    def test_the_share_of_a_move_by_its_length(self):
+        self.assertEqual(eyeline.band(0.05), 0.0)                       # under 0.1 radii: left as filmed
+        self.assertEqual(eyeline.band(0.3), 1.0)                        # the prompter drift: all of it
+        self.assertEqual(eyeline.band(1.0), 1.0)                        # a big glance: brought back as far as the white allows
+        self.assertEqual(eyeline.band(2.5), 0.0)                        # past 2 radii: left as filmed
+        self.assertGreater(eyeline.band(1.8), 0.0)
+        self.assertLess(eyeline.band(1.8), 1.0)
+
+    def test_how_much_of_an_iris_is_inside_the_lid_line(self):
+        lid = contour_ellipse(100, 100, 30, 12)
+        self.assertEqual(eyeline.iris_seen(lid, (100, 100), 8), 1.0)
+        self.assertLess(eyeline.iris_seen(lid, (100, 100), 16), 0.9)   # a big iris cut top and bottom
+        self.assertEqual(eyeline.iris_seen(lid, (200, 100), 8), 0.0)
+
+    def _rows(self, n=30, seen_open=12, blink_at=None):
+        rows, aimed = [], []
+        for i in range(n):
+            r = {'face': True, 'iris_r': {'L': 8.0, 'R': 8.0}, 'blink': 0.6 if i == blink_at else 0.0,
+                 'iris': {'R': [100.0, 100.0], 'L': [200.0, 100.0]},
+                 'contour': {'R': contour_ellipse(100, 100, 30, seen_open), 'L': contour_ellipse(200, 100, 30, seen_open)}}
+            rows.append(r)
+            aimed.append({'R': (102.4, 100.0, 8.0), 'L': (202.0, 100.0, 8.0)})    # 0.3 and 0.25 radii
+        return rows, aimed
+
+    def test_one_share_for_both_eyes_and_none_on_a_blink_or_a_squint(self):
+        rows, aimed = self._rows(blink_at=15)
+        moves = eyeline.shares(rows, aimed)
+        self.assertEqual(moves[15], 0.0)                                # a closing eye never moves
+        self.assertGreater(moves[5], 0.9)
+        rows, aimed = self._rows(seen_open=3)                          # lids over most of the iris: a squint
+        self.assertTrue(all(m == 0.0 for m in eyeline.shares(rows, aimed)))
+        rows, aimed = self._rows()
+        for i in range(8, 23):
+            aimed[i]['L'] = (225.0, 100.0, 8.0)                         # one eye far past 2 radii: neither moves
+        self.assertEqual(eyeline.shares(rows, aimed)[15], 0.0)
+
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+    def test_the_push_moves_his_iris_and_leaves_the_rest_exactly(self):
+        import cv2
+        frame = np.full((200, 300, 3), 170, np.uint8)
+        cv2.ellipse(frame, (150, 100), (40, 16), 0, 0, 360, (235, 235, 235), -1)      # the white of the eye
+        cv2.circle(frame, (150, 100), 10, (40, 50, 70), -1)                            # his iris
+        cv2.circle(frame, (147, 97), 2, (255, 255, 255), -1)                           # its catchlight
+        lid = contour_ellipse(150, 100, 40, 16)
+        out = eyeline.blend_aperture(frame, frame, lid, 1.0, (150, 100, 10), (153, 100, 10), share=1.0)
+        dark = lambda im: np.argwhere(im[60:140, 100:200].sum(2) < 300)  # noqa: E731
+        shift = dark(out)[:, 1].mean() - dark(frame)[:, 1].mean()
+        self.assertAlmostEqual(shift, 3.0, delta=0.6)                   # the iris travelled the move
+        self.assertGreater(int(out[60:140, 100:200].max()), 250)         # its catchlight came with it
+        self.assertTrue(np.array_equal(out[:40], frame[:40]))           # nothing above the eye changed
+        self.assertTrue(np.array_equal(out[:, :60], frame[:, :60]))
+        big = eyeline.blend_aperture(frame, frame, lid, 1.0, (150, 100, 10), (165, 100, 10), share=1.0)
+        self.assertTrue(np.array_equal(big[:, :111], frame[:, :111]))  # a long move never drags the eye's corners
+        self.assertTrue(np.array_equal(big[:, 190:], frame[:, 190:]))
+        moved = dark(big)[:, 1].mean() - dark(frame)[:, 1].mean()
+        self.assertGreater(moved, 4.0)                                  # brought part of the way: no side over half
+        self.assertLess(moved, 15.0)
+        none = eyeline.blend_aperture(frame, frame, lid, 1.0, (150, 100, 10), None, share=1.0)
+        self.assertIs(none, frame)                                      # no aim: as filmed, never the copy's eye
+        other = np.zeros_like(frame)
+        tiny = eyeline.blend_aperture(frame, other, lid, 1.0, (150, 100, 1.5), (153, 100, 1.5), share=0.0)
+        self.assertIs(tiny, frame)                                      # too little iris to move: as filmed, never the copy
 
 
 class Decide(unittest.TestCase):
@@ -260,6 +335,29 @@ class Media(unittest.TestCase):
                               copy_readings=[{'face': False}] * 60)
         self.assertEqual(receipt['decision'], 'rejected')       # its "redirected" copy is the take itself
         self.assertTrue(any('changed nothing' in p for p in receipt['problems']), receipt['problems'])
+
+    @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
+    def test_a_lens_point_from_another_take_holds_only_in_the_same_setup(self):
+        import json
+        receipt = self.dir / 'eyeline.short.json'
+        receipt.write_text(json.dumps({'backend': 'flx', 'lens': {'L': [0.08, -0.07], 'R': [-0.07, -0.07]}}))
+        with self.assertRaisesRegex(RuntimeError, 'not the receipt of a Maxine'):
+            eyeline.Calibrated(receipt)
+        receipt.write_text(json.dumps({'backend': 'maxine', 'decision': 'corrected', 'lens': {'L': [0.08, -0.07]},
+                                       'head': {'yaw': 0.0, 'pitch': 0.0}}))
+        with self.assertRaisesRegex(RuntimeError, 'both eyes'):           # one eye's lens point is not a calibration
+            eyeline.Calibrated(receipt)
+        receipt.write_text(json.dumps({'backend': 'maxine', 'decision': 'corrected', 'input': {'path': 'short.mp4'},
+                                       'lens': {'L': [0.08, -0.07], 'R': [-0.07, -0.07]}, 'head': {'yaw': 30.0, 'pitch': 0.0}}))
+        readings = self.scaled([reading(iris_dx=9) if 10 <= i < 30 else reading() for i in range(60)])
+        with self.assertRaisesRegex(ValueError, 'not one setup'):         # his head sits 30 degrees from where it did
+            eyeline.run(self.take, self.dir / 'out', eyeline.Calibrated(receipt), readings=readings)
+        receipt.write_text(json.dumps({'backend': 'maxine', 'decision': 'corrected', 'input': {'path': 'short.mp4'},
+                                       'lens': {'L': [0.08, -0.07], 'R': [-0.07, -0.07]}, 'head': {'yaw': 0.0, 'pitch': 0.0}}))
+        done = eyeline.run(self.take, self.dir / 'out', eyeline.Calibrated(receipt), readings=readings)
+        self.assertEqual(done['problems'], [])
+        self.assertEqual(done['lens_from'], 'short.mp4')
+        self.assertEqual(eyeline.same_media(self.take, Path(done['output']['path'])), [])
 
     @unittest.skipUnless(HAVE_CV2, 'OpenCV is not installed here')
     def test_a_maxine_copy_is_taken_only_where_the_plan_says(self):
