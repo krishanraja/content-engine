@@ -78,7 +78,7 @@ If every piece and the week are complete, the page opens on a "Week done" state 
   - A press is never accepted for something that can't run.
 - **A test with no dead buttons.** Every action the view returns must map to an allow-listed job, or be a gate press or a Copy prompt marked as a conversation. Any other action fails the build.
 
-**One thing only Krish can do.** Starting `saturday-goodnews`, `produce-day` and `sunday-ideas` from the board needs a GitHub token with Actions write on `krishanraja/content-engine`, saved as a Vercel secret on the control-plane project. That is a permission change, so he creates it. Until then, those three buttons honestly say "Start from GitHub" and link to the workflow's Run page. repository_dispatch for `make-piece` uses the token the board already has for `offday-revise`.
+**One thing only Krish can do.** Starting `saturday-goodnews`, `produce-day` and `sunday-ideas` from the board needs a GitHub token with Actions write on `krishanraja/content-engine`, saved as an environment variable on the Vercel project `content-engine` (root folder `apps/control-plane`; that project already holds `OFFDAY_REVISE_DISPATCH_TOKEN` and `PLACE_TAKES_DISPATCH_TOKEN`). The domain content.krishraja.com is attached to the Vercel project `control-center`, not to `content-engine`. That is a permission change, so he creates it. Until then, those three buttons honestly say "Start from GitHub" and link to the workflow's Run page. repository_dispatch for `make-piece` uses the token the board already has for `offday-revise`.
 
 **Mock v3** shows the real button per row:
 - Fri: **Start the make**.
