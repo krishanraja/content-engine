@@ -1,8 +1,9 @@
-# Proposal: the cover and thumbnail standard (headline first, fewest parts)
+# The cover and thumbnail standard (headline first, fewest parts)
 
-Status: proposal, 9 Nov 2026, for Krish's yes, no or edits. Nothing here binds until he approves it; once he does, it
-goes into the rejection floor (`floor.py --format cover`) and the cover drawer's defaults (`scripts/pages/receipt.py`,
-the skins) follow it.
+Status: approved. Krish, 2026-11-09: "approve the cover standard as written". It binds every cover and thumbnail made
+from now on. It reaches the rejection floor (`floor.py --format cover`) through the Rejections engine
+(krishanraja/inspirationhouse), which alone writes `config/rejection-floor.json`; the cover drawer's defaults
+(`scripts/pages/receipt.py`, the skins) follow it from branch `claude/mon-9nov-covers` once the freeze lifts (16 Nov).
 
 Applies to: series covers and thumbnails (16:9 long, 9:16 tall, Substack cover, share card, square) and the first frame
 of every tall cut. Carousel card 1 keeps its own rule ("the cover card is a scene, not a slide",
@@ -54,8 +55,6 @@ On 10 Oct he said: "I love it, but we need to add all the logos of the busineses
 talking about." Point 3 narrows "related" to the companies the headline or picture names. If he wants the wider rule
 kept for some formats, say which.
 
-## For Krish
+## His answer
 
-Yes, no, or edit any point. Two choices worth a word:
-- Point 1: is 7 words the right ceiling?
-- Point 3: three logos at most, or fewer?
+Approved as written, so the ceilings stand: 7 words (point 1) and three logos at most (point 3).
