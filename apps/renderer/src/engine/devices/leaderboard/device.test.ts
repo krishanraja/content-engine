@@ -46,7 +46,7 @@ describe('leaderboard', () => {
   it('renders fixture stills in both aspects with token colours and face clearance', () => {
     for (const aspect of ['9:16', '16:9'] as const) for (const frame of fixture.stills) {
       const markup = html(frame, aspect)
-      assertOverlayMarkup(markup, 'leaderboard')
+      assertOverlayMarkup(markup, 'leaderboard', aspect)
       if (markup) expect(markup).toContain(aspect === '9:16' ? 'width:1080px;height:960px' : 'width:1280px;height:1080px')
     }
   })

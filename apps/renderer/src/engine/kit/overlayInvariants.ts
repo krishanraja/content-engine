@@ -13,7 +13,9 @@ const decode = (s: string) => s.replace(/&quot;/g, '"').replace(/&#x27;/g, "'").
 
 /** One static-render contract for all overlays, including inherited type roles.
  * Marquee children can exceed the canvas only inside their clipped band. */
-export function assertOverlayMarkup(markup: string, id: string) {
+export function assertOverlayMarkup(markup: string, id: string, aspect: '9:16' | '16:9' = '9:16') {
+  // The frame the overlay is drawn on: a wide device may sit anywhere on 1920x1080, a tall one on 1080x1920.
+  const [frameW, frameH] = aspect === '16:9' ? [1920, 1080] : [1080, 1920]
   const tokens = Object.values(overlayTestProps.tokens)
   expect(markup).not.toMatch(/blur\(/i)
   expect(markup).not.toMatch(/#[0-9a-f]{3,8}\b|rgba?\(/i)
@@ -54,8 +56,8 @@ export function assertOverlayMarkup(markup: string, id: string) {
     const y = (parent?.y ?? 0) + parseFloat(styles.top ?? '0')
     if (styles.position === 'absolute' && !parent?.clipped) {
       expect(x).toBeGreaterThanOrEqual(0); expect(y).toBeGreaterThanOrEqual(0)
-      expect(x + parseFloat(styles.width ?? '0')).toBeLessThanOrEqual(1080)
-      expect(y + parseFloat(styles.height ?? '0')).toBeLessThanOrEqual(1920)
+      expect(x + parseFloat(styles.width ?? '0')).toBeLessThanOrEqual(frameW)
+      expect(y + parseFloat(styles.height ?? '0')).toBeLessThanOrEqual(frameH)
     }
     stack.push({ font, uppercase: styles['text-transform'] === 'uppercase' || !!parent?.uppercase,
       x, y, clipped: styles.overflow === 'hidden' || !!parent?.clipped })
