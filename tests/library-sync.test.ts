@@ -136,7 +136,7 @@ describe('the Heartside library in the same sync', () => {
   })
 
   it('finds its folder from config/heartside-library.json (never studio.json, which the media standard hashes), and skips it when none is set', () => {
-    expect(config.root).toBe('H:\\My Drive\\Ventures\\Active Ventures\\Heartside\\05_Social-Library')
+    expect(config.root).toBe('H:\\My Drive\\Ventures\\Active Ventures\\Heartside\\03b_Social-Schedule')
     expect(config.drive_id).toBe('1AHZLgwj1nHemNJeP56fQU6iTpgIEALzZ')
     expect(sync).toContain("Join-Path $RepoRoot 'config\\heartside-library.json'")
     expect(read('config/studio.json')).not.toContain('heartside')
