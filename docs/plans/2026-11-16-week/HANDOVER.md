@@ -17,3 +17,18 @@ Known on the board:
 - Saturday reads "found fresh on Sunday 2026-11-19": main's label code says Sunday whatever the date (the fix was held back by the 9 Nov code freeze). The stories are found on Thursday 19 Nov.
 - His comments on Friday's pick were lost by the page before any save (`triage-readback.md`); the board session has the fix as a freeze exception.
 - His picks did not reach their pieces by themselves; this session scheduled them (content_ideas state drafting, scheduled_for the day), the way an approved off day is placed.
+
+## Off days: his directives, and what is still open (9 Nov, 14:15 UTC)
+
+His words are exact; all saved on the board by him (`triage-readback.md`).
+
+- **Tue 17, povteach (meme video): Improve, his exact words.** "We need to use the exact existing video but just change the caption to \"POV: your AI agent using your computer without being set up properly by you\"". The caption in quotation marks is used word for word; the video is the existing one, unchanged.
+- Tue burntokens and Tue infosys: rejected. Tue fuelgauge: no press.
+- **Thu 19, fortytoone: Improve.** "Needs to be about the future of AI under the new U.S. system after the midterms." Friday's signed lock is now that story, so this overlaps Friday (open question below).
+- **Thu 19, lookalikes (voiceover short): direction Improve.** "We need this to work as a standalone explainer for the personalities and use cases for each of the assistants and be really helpful to the layperson to understand what they can use when."
+- Thu swarmdeal and Thu tinyfix: Next week, held until their full pieces have more substance.
+- **Sat 21, good news:** no press on either format; stories come from the Thursday run.
+
+Not working: each Improve sends an `offday-revise` dispatch. Run 42622372777 (povteach, 13:05) failed, 42624103282 (fortytoone) was cancelled, and 42624284763 (lookalikes) is still pending, so none of his Improves has been revised yet. The workflow is engine code under this week's freeze.
+
+Open, asked one at a time in the room: what Thursday 19 Nov posts, given Friday is the midterms piece; then which good-news format Saturday uses.
