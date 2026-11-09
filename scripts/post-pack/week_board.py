@@ -2651,6 +2651,20 @@ def upgrade_kept_v4(panel, key, weekday, creative_html, scored_html):
     return panel.replace(pub, pub + step_panel(p, 'scored', opened, scored_html), 1)
 
 
+def kept_manifest(panel, key, sha):
+    """A kept made day's Approve for publish binds the manifest --publish-manifest gives (Krish, 2026-11-09: "The Monday
+    thumbnails and covers are all the old ones"): a re-made manifest replaces the one the tab was kept with."""
+    if not sha or not re.fullmatch(r'[a-f0-9]{64}', sha):
+        return panel
+    m = re.search(r'<div class="rec so" id="' + re.escape(key) + r'-signoff"[^>]*>', panel)
+    if not m:
+        return panel
+    tag = m.group(0)
+    new = (re.sub(r'data-manifest-sha256="[a-f0-9]{64}"', f'data-manifest-sha256="{sha}"', tag) if 'data-manifest-sha256=' in tag
+           else tag[:-1] + f' data-manifest-sha256="{sha}">')
+    return panel.replace(tag, new, 1)
+
+
 def drop_settled_script_ask(panel):
     """A kept draft day whose scripts the record shows in Teleprompter: its heading's "Waiting on you" no longer asks
     him to approve them (Krish, 2026-11-09, on the 9 Nov Wednesday tab still asking for scripts sent on 4 Nov: "I'm
@@ -4787,6 +4801,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                 # The kept day's finished videos and thumbnails come from the record, as every other day's do.
                 feature = 'data-feature="true"' in panel.split('>', 1)[0]
                 panel = panel.replace(div_at(panel, group), dl_videos(f'{key}-', videos[key], feature), 1)
+            panel = kept_manifest(panel, key, (manifests or {}).get(key))
             if card:
                 # The kept day's finished videos come from the record, as every other day's do.
                 at = panel.find(f'<div class="rec" id="{key}-videos"')
@@ -6186,6 +6201,10 @@ def _v4_checks(check, mon):
           and 'Approve both Friday' not in other
           and drop_settled_script_ask(asks.format('<li>Pick a title.</li>')) == asks.format('<li>Pick a title.</li>'),
           'a kept draft whose scripts are in Teleprompter no longer asks him to approve them; its other asks stay')
+    so = '<div class="pm"><div class="rec so" id="mon-signoff" data-signoff-day="mon" data-manifest-sha256="{}"><h2>x</h2></div></div>'
+    check(kept_manifest(so.format('a' * 64), 'mon', 'b' * 64) == so.format('b' * 64)
+          and kept_manifest(so.format('a' * 64), 'mon', None) == so.format('a' * 64),
+          'a kept made day\'s Approve for publish binds the re-made manifest --publish-manifest gives')
     week = V4_FROM
     with tempfile.TemporaryDirectory() as tmp:
         raw, mapping = example_creative(tmp)
