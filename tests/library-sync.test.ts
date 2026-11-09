@@ -171,7 +171,8 @@ describe('the Heartside library in the same sync', () => {
     }
   })
 
-  describe.runIf(POWERSHELL !== null)('run in PowerShell against a folder fixture', () => {
+  // Each test starts a real PowerShell; a cold pwsh on a CI runner takes longer than the 5 s default.
+  describe.runIf(POWERSHELL !== null)('run in PowerShell against a folder fixture', { timeout: 60_000 }, () => {
     const run = (folder: unknown, configuredRoot: string, setup: (base: string) => void, setting = '') => {
       // The long form: Windows hands out a short 8.3 temp path (RUNNER~1), and PowerShell gives back the long one.
       const base = realpathSync.native(mkdtempSync(join(tmpdir(), 'heartside-folder-')))
