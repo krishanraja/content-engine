@@ -146,7 +146,11 @@ def opening(path: str, view: dict) -> dict:
             cfg, value['clips_note'] = None, f'the sting\'s config cannot be read, so no clip is compared: {error}'
         stem = ((view.get('audio') or {}).get('stem') or {})
         whole_cut = whole and int(stem.get('trimBeforeFrames') or 0) == 0  # a proof window trims the stem
-        if cfg is not None and aspect == STING_ASPECT and whole_cut and series not in ('', 'off.day') \
+        excepted = (view.get('opening') or {}).get('kind') == 'episode_card'
+        if excepted:
+            value['opening'] = 'episode_card'
+            value['opening_said'] = (view.get('opening') or {}).get('said')
+        if cfg is not None and aspect == STING_ASPECT and whole_cut and series not in ('', 'off.day') and not excepted \
                 and cfg['status'] == 'approved' and STING_SHAPE in cfg['shapes'] and channel in cfg['series']:
             problems.append(f'this 16:9 whole cut of a {series} piece opens on its hook, and the approved sting should open it: '
                             'run ve compile and ve premix again')

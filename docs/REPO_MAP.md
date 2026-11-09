@@ -4763,6 +4763,7 @@ Artifact-bound user confirmation references.
 - `const VeSpanSchema`
 - `const VeEventSchema`
 - `const VeBeatSchema`
+- `const VeCutMusicSchema`
 - `const VeCutSchema`
 - `const VeDatasetSchema`
 - `const VeObjectSchema`

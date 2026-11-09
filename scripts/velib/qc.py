@@ -197,7 +197,7 @@ def _moved(item: dict, lead: int, *keys: str) -> dict:
 
 def opening_view(props: dict) -> dict:
     """What the opening row (velib.qc_opening) reads of the props: the cut's shape, length, series and sting."""
-    return {k: props.get(k) for k in ('aspect', 'fps', 'durationFrames', 'ending', 'series', 'sting', 'audio')}
+    return {k: props.get(k) for k in ('aspect', 'fps', 'durationFrames', 'ending', 'series', 'sting', 'audio', 'opening')}
 
 
 def inputs_from_props(props: dict) -> dict:
