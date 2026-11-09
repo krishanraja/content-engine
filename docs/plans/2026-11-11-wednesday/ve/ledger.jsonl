@@ -1,0 +1,4 @@
+{"ts": "2026-11-09T12:47:50.472654Z", "kind": "preflight", "amount": 0, "note": "failures", "receipt": {"check": "failures", "version_or_hash": "326ea4d9f763791c", "at": "2026-11-09T12:47:50.472654Z", "by": "Claude Code"}}
+{"ts": "2026-11-09T12:47:51.537945Z", "kind": "preflight", "amount": 0, "note": "floor", "receipt": {"check": "floor", "version_or_hash": "65d324de4676c7e7", "at": "2026-11-09T12:47:51.537945Z", "by": "Claude Code", "format": "long_video"}}
+{"ts": "2026-11-09T12:47:52.435888Z", "kind": "preflight", "amount": 0, "note": "floor", "receipt": {"check": "floor", "version_or_hash": "65d324de4676c7e7", "at": "2026-11-09T12:47:52.435888Z", "by": "Claude Code", "format": "short_video"}}
+{"ts": "2026-11-09T12:47:53.054976Z", "kind": "preflight", "amount": 0, "note": "skill", "receipt": {"check": "skill", "version_or_hash": "e95858d26f66b556", "at": "2026-11-09T12:47:53.054976Z", "by": "Claude Code", "name": "ve"}}
