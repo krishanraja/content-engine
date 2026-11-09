@@ -309,12 +309,12 @@
     "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["A funny video of a cheerful robot getting everything about its owner wrong because nobody taught it.", "A robot assistant gets everything wrong about its owner because nobody taught it what matters to them."], "against": 24, "versus": "Ours supplies the joke your caption asked for, a concrete vegetarian-steakhouse mistake, where the original has nothing to say (one name in its sound). (Fresh reader C, Sonnet, saw both)"},
     "format": "Meme video, made fresh in the brand kit, 9:16",
     "source": {"label": "Your saved short (Geek Creative Agency), 3 Nov", "url": "https://youtube.com/shorts/tJwqPQvgQkk"},
-    "copy": "The meme you asked for, with your exact words above it. The format is credited to the clip you saved; none of its footage is used.",
-    "hook": "POV: your AI agent when you forget to teach it anything that matters to you",
+    "copy": "The short you saved, exactly as it is, with only the caption changed to your words. It is someone else's clip, so it goes out only once Geek Creative Agency says yes, with their credit on it.",
+    "hook": "POV: your AI agent using your computer without being set up properly by you",
     "pitch": {
-     "see": "A short meme video. Your words sit above it: \"POV: your AI agent when you forget to teach it anything that matters to you\". Below, a cheerful robot in our brand kit confidently gets everything about its owner wrong.",
-     "lands": "Everyone who has used an AI assistant has had it confidently miss the one thing they care about.",
-     "share": "Teach your AI what matters to you."
+     "see": "The short you saved on 3 Nov, unchanged. Above it, your caption word for word: \"POV: your AI agent using your computer without being set up properly by you\". A credit line names Geek Creative Agency.",
+     "lands": "Anyone who has let an AI agent loose on their computer knows the feeling of watching it go wrong.",
+     "share": "Set up your AI agent before it touches your computer."
     },
     "direction": {
      "look": "The saved short's format, redrawn in the brand kit with the house robot",
@@ -329,7 +329,8 @@
     "covers": ["d16fe9ff-413c-47c4-ac53-c89e40d28489"],
     "inspiration": {"label": "The short you saved on 3 Nov", "url": "https://youtube.com/shorts/tJwqPQvgQkk", "saved": "Saved 3 Nov"},
     "adds": "Your own caption on a fresh scene in our brand kit; the original is someone else's clip, never reposted.",
-    "learned_from": ["Lets make a hilarious meme. Reskin this video with the text \"POV: your AI agent when you forget to teach it anything that matters to you\" (3 Nov)"]
+    "learned_from": ["Lets make a hilarious meme. Reskin this video with the text \"POV: your AI agent when you forget to teach it anything that matters to you\" (3 Nov)"],
+    "revised": {"side": "idea", "words": "We need to use the exact existing video but just change the caption to \"POV: your AI agent using your computer without being set up properly by you\""}
    }
   ],
   "thu": [
@@ -338,13 +339,13 @@
     "read_back": {"readers": ["Fresh reader A (Sonnet, a 12-year-old reading once)", "Fresh reader B (Haiku, a 12-year-old reading once)"], "says": ["Voters won 40 times and data centres only once, across 41 local votes in 10 states.", "A four-card football-style scoreboard: voters beat data centres 40 to 1 across 41 local votes in 10 states, and two days later OpenAI promised to pay the full cost of powering its data centres."], "against": 24},
     "format": "Explainer carousel, infographic, 4 cards, 4:5",
     "source": {"label": "CNBC, 5 Nov 2026", "url": "https://www.cnbc.com/2026/11/05/openai-to-pay-for-data-center-power-after-election-shows-ai-concern.html"},
-    "copy": "In the US midterms, voters backed limits on data centres in 40 of 41 local votes, and OpenAI promised to pay its own power bills within days. Four cards, one scoreline.",
-    "hook": "Voters vs data centres: 40 to 1.",
+    "copy": "In the US midterms, voters limited or turned down new data centres in 40 of 41 local votes, by Ballotpedia's count. Four cards on what that means for the future of AI: where it gets built now, and how that changes what AI becomes.",
+    "hook": "After the midterms, AI has to find somewhere else to live.",
     "pitch": {
-     "see": "Four cards. A football scoreboard: Voters 40, Data centres 1. Across 41 local votes in 10 states, the building side won once. Two days later OpenAI promised to pay the full cost of powering its data centres.",
-     "lands": "A scoreline makes a dry election result instantly clear, and it shows AI has become a kitchen-table issue.",
-     "why_now": "US midterms on 3 November 2026; CNBC reported the tally and OpenAI's pledge on 5 November.",
-     "share": "AI just became an election issue."
+     "see": "Four cards. One: in the 3 November midterms, Ballotpedia counted 41 local votes in 10 states on data centres, and 40 went against building. Two: people fear a giant data centre pushes up their power bill. Three: the ways round, AI making its own power, small sites beside spare power, and AI small enough to run on your own devices. Four: AI gets smaller and closer to you, so ask your AI supplier where its new computing is being built.",
+     "lands": "It answers what the midterms mean for AI by following where the building goes, with no guess about politics.",
+     "why_now": "US midterms on 3 November 2026; CNBC reported the tally on 5 November.",
+     "share": "Where AI gets built now shapes what AI becomes."
     },
     "direction": {
      "look": "The infographic style you saved: one number per card, a stadium scoreboard",
@@ -359,7 +360,8 @@
      "kit": "Brand kit, mind.the.gap coral, real OpenAI logo"
     },
     "ties_to": "Fri: mind.the.gap, if you pick the election piece",
-    "recommended": true
+    "recommended": true,
+    "revised": {"side": "idea", "words": "Needs to be about the future of AI under the new U.S. system after the midterms."}
    },
    {
     "id": "lookalikes",
@@ -375,21 +377,23 @@
      "share": "Pick the AI for the job, not the logo."
     },
     "direction": {
-     "look": "The reel you saved, rebuilt in our look: fast subtitles, high-quality motion",
+     "look": "The reel you saved, rebuilt in our look as a standalone explainer anyone can follow with no AI knowledge: fast subtitles, high-quality motion",
      "format": "Voiceover short with motion graphics, about 40 seconds, 9:16",
      "frames": [
-      {"words": "THREE AI ASSISTANTS. SAME LOOK. DIFFERENT JOBS", "picture": "Three identical robot cards face down"},
-      {"words": "DOTS: KEEPS WORKING AFTER YOU CLOSE THE APP", "picture": "Card one flips: OpenAI logo, a moon and a ticking task list"},
-      {"words": "MUSE: YOUR PERSONAL ASSISTANT", "picture": "Card two flips: Meta logo, a calendar and a shopping list"},
-      {"words": "GROK BOT: MAKES YOUR CALLS. YOU'RE THE CALLER", "picture": "Card three flips: Grok logo, a phone with a small legal note"}
+      {"words": "THREE AI ASSISTANTS. WHICH ONE DO YOU USE WHEN?", "picture": "Three identical robot cards face down, a question mark above each"},
+      {"words": "DOTS IS THE NIGHT-SHIFT WORKER. USE IT FOR A GOAL THAT KEEPS GOING", "picture": "Card one flips to a character: OpenAI logo, a worker at a desk under a moon, a task list ticking itself off while the owner sleeps"},
+      {"words": "MUSE IS THE PERSONAL HELPER. USE IT FOR YOUR OWN DAY", "picture": "Card two flips to a character: Meta logo, a friendly helper holding a calendar and a shopping list"},
+      {"words": "GROK BOT IS THE PHONE CALLER. USE IT TO MAKE A CALL. YOU ARE STILL THE CALLER", "picture": "Card three flips to a character: Grok logo, a helper with a phone to its ear, a small note reading the caller is you"},
+      {"words": "ONGOING WORK, YOUR DAY, OR A CALL. PICK THE ONE FOR THE JOB", "picture": "All three characters side by side, each under its one-word job: Work, Day, Call"}
      ],
-     "tone": "Quick and clear",
-     "kit": "Brand kit, real logos at equal size, kinetic subtitles"
+     "tone": "Warm and plain, like a friend explaining it",
+     "kit": "Brand kit, real logos at equal size, one character colour per assistant, kinetic subtitles"
     },
     "covers": ["da3cacd1-b038-4827-bd22-1d4d9be07889", "e829fbfb-278d-45e2-9607-73af4c04310d", "e73a0110-a108-456c-8781-350259b1b196"],
     "inspiration": {"label": "The look-alike assistants reel you saved (buildwithomkar)", "url": "https://www.instagram.com/reel/DeR9G-JNf-8/", "saved": "Saved 2 Nov"},
     "adds": "Each maker's own dated facts, and a newer one the reel lacks: Grok Bot's phone calls of 5 Nov, where the user is legally the caller.",
-    "learned_from": ["Let's literally copy the content and production for this and just reskin it ASAP. (2 Nov)", "I want my short video shorts for Instagram and TikTok to be more of this type of quality from a visual perspective and an emotion perspective. (31 Oct)"]
+    "learned_from": ["Let's literally copy the content and production for this and just reskin it ASAP. (2 Nov)", "I want my short video shorts for Instagram and TikTok to be more of this type of quality from a visual perspective and an emotion perspective. (31 Oct)"],
+    "revised": {"side": "direction", "words": "We need this to work as a standalone explainer for the personalities and use cases for each of the assistants and be really helpful to the layperson to understand what they can use when."}
    },
    {
     "id": "tinyfix",
