@@ -1,0 +1,45 @@
+name: NOW.md trim
+
+# Main keeps NOW.md under its 14,000-byte limit itself, so no branch ever trims it by hand (AGENTS.md, Commit and
+# closeout). Two jobs fold closeout notes into NOW.md on main: auto-merge (which also trims) and the harness's own fold
+# job in harness-repository-context.yml, which is publisher-owned and does not trim. This runs after either, and after
+# any direct push to main that touches NOW.md, and moves the oldest lines verbatim to docs/history/ when needed.
+on:
+  push:
+    branches: [main]
+    paths: [NOW.md]
+  workflow_run:
+    workflows: [Repository operating context, Auto-merge]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: now-trim
+  cancel-in-progress: false
+
+jobs:
+  trim:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: main
+      - name: Trim NOW.md on main
+        run: |
+          set -uo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch --quiet origin main && git reset --quiet --hard origin/main || exit 1
+            python3 scripts/now_trim.py || exit 1
+            if [ -z "$(git status --porcelain -- NOW.md docs/history)" ]; then exit 0; fi
+            git add -A -- NOW.md docs/history
+            git commit --quiet -m "docs(steward): trim NOW.md under its size limit" -m "Moved NOW.md's oldest lines verbatim to docs/history/ with scripts/now_trim.py."
+            if git push --quiet origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 5))
+          done
+          echo "::error::Main kept moving; the next run trims NOW.md."
+          exit 1
