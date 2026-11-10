@@ -58,6 +58,30 @@ export const VeBeatSchema = z.object({
   override_reason: z.string().min(12).optional(),
 }).strict()
 
+// The cut's own music plan, when it departs from the one bed shape (config/music-bed.json): outside clips heard with
+// their own sound, and a bed that enters late. Krish, 2026-11-09, of Wednesday 11 Nov's opening: "I want the audio and the
+// video to play at the start of this track of this video to draw people in" and "we go straight from the first video
+// track to the second video track and then move into Seize It". Every time is on the cut's own clock, in seconds (a
+// sting in front is added by ve premix). A clip's level points name the ledger's approved levels: `open` is intro_lufs,
+// `under` is bed_lufs, `off` is silence, linear in dB between points. `end_s` ends the clip's sound on a beat of its own
+// song, after a low-pass sweep of `sweep_s`. Two clips sound together only inside a declared handover; the bed is silent
+// before `bed_enter_s` and rises over `bed_fade_in_s`. Handovers (and the bed's rise) are left out of the steadiness and
+// drop-out checks, the way chapter lifts are. `said` is Krish's words asking for it: the plan is never invented.
+export const VeCutMusicSchema = z.object({
+  said: z.string().min(12),
+  clips: z.array(z.object({
+    asset: SlugSchema,
+    src_from_s: z.number().min(0).default(0),
+    at_s: z.number().min(0),
+    end_s: z.number().positive(),
+    points: z.array(z.object({ t: z.number().min(0), level: z.enum(['open', 'under', 'off']) }).strict()).min(1),
+    sweep_s: z.number().min(0).max(2).default(0),
+  }).strict().refine((v) => v.end_s > v.at_s, { message: 'a clip ends after it starts', path: ['end_s'] })).default([]),
+  bed_enter_s: z.number().min(0).default(0),
+  bed_fade_in_s: z.number().min(0).max(12).default(0),
+  handovers: z.array(z.tuple([z.number().min(0), z.number().positive()])).default([]),
+}).strict()
+
 export const VeCutSchema = z.object({
   aspect: VeAspectSchema,
   take: z.string().min(1),
@@ -71,6 +95,7 @@ export const VeCutSchema = z.object({
   }).strict().refine((v) => v.speed === 1 || !!v.speed_said, { message: "a speed change needs Krish's words in speed_said", path: ['speed_said'] }),
   captions: z.object({ region: z.string().min(1).default('default'), emphasis: z.array(WordSchema).default([]) }).strict(),
   beats: z.array(VeBeatSchema).min(1),
+  music: VeCutMusicSchema.optional(),
 }).strict()
 
 export const VeDatasetSchema = z.object({
@@ -201,6 +226,10 @@ export const ProductionSpecV2Schema = z.object({
     // and one for the caption build (scripts/velib/lint.py, reference_lints).
     references: z.array(VeReferenceSchema).optional(),
     intro_sting: z.union([VeStingSchema, z.literal(VE_NO_STING)]).optional(),
+    // A piece whose wide cut opens on its own episode card in place of the series sting, by Krish's word for that piece
+    // (Krish, 2026-11-09, of Wednesday 11 Nov: "I don't want the overall brand intro to come in. I want the episode
+    // card to come in."). Without it ve compile still puts the approved sting in front of every series wide cut.
+    opening_exception: z.object({ opening: z.literal('episode_card'), said: z.string().min(12), on: DateSchema }).strict().optional(),
   }).strict(),
   call: VeCallSchema.optional(),
   signature: VeSignatureSchema,

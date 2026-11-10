@@ -111,7 +111,12 @@ export const EngineRenderPropsSchema = z.object({
    *  `frames` into the render, so his face lands on the very next frame after the sting's last. Absent, the cut
    *  opens on its hook exactly as before. */
   sting: EngineStingSchema.optional(),
+  /** A wide cut that opens on its own episode card where the sting would be, by Krish's word for that piece (spec
+   *  brand.opening_exception; Krish, 2026-11-09: "I want the episode card to come in."). Nothing is drawn from it: the
+   *  card is the spec's own beat; it only records why this series wide cut has no sting. */
+  opening: z.object({ kind: z.literal('episode_card'), said: z.string().min(12), on: z.string().min(10) }).strict().optional(),
 }).strict().superRefine((props, context) => {
+  if (props.opening && props.sting) context.addIssue({ code: 'custom', path: ['opening'], message: 'a cut opens on its episode card or on the sting, never both' })
   if (!props.sting) return
   // Only the 16:9 long cut of a weekly series piece wears it: the 9:16 short opens straight on its hook
   // (HOOK_IS_THE_INTRO), a proof excerpt (no ending band) is never a whole cut, and an off day wears no sting.

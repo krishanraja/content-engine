@@ -67,7 +67,11 @@ def lines(spec: dict, directory: Path | None = None) -> list[str]:
                    'look at the bottom and right edge yourself.')
     if _wide_unlocked(spec):
         out.append('The wide cut has no locked key frames yet: its design is judged by the Critic and by you, not measured.')
-    if _outside_clip(spec):
+    heard = sorted({c['asset'] for cut in spec['cuts'].values() for c in ((cut.get('music') or {}).get('clips') or [])})
+    if heard:
+        out.append(f"Outside clips with their own sound: {', '.join(heard)}, where the cut's music plan says (in your "
+                   'words), handing over on a beat; any other clip plays muted.')
+    elif _outside_clip(spec):
         out.append('Outside clips play muted: only your voice and the music bed are heard.')
     from . import designlock
     if spec['format'] not in designlock.load().get('formats', {}):
