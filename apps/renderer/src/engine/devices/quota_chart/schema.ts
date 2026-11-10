@@ -1,6 +1,7 @@
 import { z } from 'zod'
 const fraction = z.number().finite().min(0).max(1)
 export const ParamsSchema = z.object({
+  showSource: z.boolean().default(true),
   targetValue: z.number().positive().default(200), halfTargetValue: z.number().positive().default(100),
   bins: z.array(fraction).min(8).max(16), target: fraction, halfTarget: fraction,
   junkShare: fraction, salesLift: z.number().finite().nonnegative(),
