@@ -244,7 +244,8 @@ def s_grammys(t):  # 264.5 the Grammys
     for i, (ti, k) in enumerate([(264.9, 'grammys'), (265.9, 'edmtunes')]):
         if t < ti: continue
         p = min(1, back((t - ti) / 0.35)); dim = 1 - 0.6 * ease((t - 269.6) / 0.4)
-        paste(g, fit((S[k].astype(np.float32) * dim).astype(np.uint8), 900, 400), SW / 2 + (i - 0.5) * 120, 230 + i * 300 + (1 - p) * 400, 1, min(1, p * 2), 18, rot=(i - 0.5) * 3)
+        gone = 1 - ease((t - 291.3) / 0.35)  # the article stack leaves when the HUGEL headline arrives
+        paste(g, fit((S[k].astype(np.float32) * dim).astype(np.uint8), 900, 400), SW / 2 + (i - 0.5) * 120, 230 + i * 300 + (1 - p) * 400, 1, min(1, p * 2) * gone, 18, rot=(i - 0.5) * 3)
     for j, (at, name, verdict, vat, note, ai) in enumerate([(269.8, 'WRITING', 'RULED OUT', 274.8, 'reportedly', True), (272.4, 'PERFORMING', 'STILL IN', 287.8, 'a human sang it', False)]):
         if t < at: continue
         p = min(1, back((t - at) / 0.35)); cw, chh = 500, 600
