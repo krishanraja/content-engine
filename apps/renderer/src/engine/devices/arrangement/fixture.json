@@ -1,0 +1,290 @@
+{
+  "objects": [
+    {
+      "obj": "song",
+      "device": "arrangement",
+      "meaning": "Illustrative layered song, not captured software",
+      "params": {
+        "lanes": [
+          {
+            "id": "drums",
+            "name": "DRUMS",
+            "kind": "sample",
+            "hidden": false
+          },
+          {
+            "id": "bass",
+            "name": "BASS",
+            "kind": "synth",
+            "hidden": false
+          },
+          {
+            "id": "chords",
+            "name": "CHORDS",
+            "kind": "human",
+            "hidden": false
+          },
+          {
+            "id": "voice",
+            "name": "VOICE",
+            "kind": "human",
+            "hidden": false
+          },
+          {
+            "id": "guitar",
+            "name": "GUITAR",
+            "kind": "sample",
+            "hidden": true
+          },
+          {
+            "id": "choir",
+            "name": "CHOIR",
+            "kind": "ai",
+            "hidden": true
+          },
+          {
+            "id": "sitar",
+            "name": "SITAR",
+            "kind": "sample",
+            "hidden": true
+          },
+          {
+            "id": "robot",
+            "name": "ROBOT",
+            "kind": "both",
+            "hidden": true
+          },
+          {
+            "id": "piano",
+            "name": "PIANO",
+            "kind": "human",
+            "hidden": true
+          },
+          {
+            "id": "strings",
+            "name": "STRINGS",
+            "kind": "synth",
+            "hidden": true
+          }
+        ],
+        "fromWave": true,
+        "title": "Who made the song?"
+      },
+      "fromFrame": 0,
+      "toFrame": 260
+    }
+  ],
+  "events": [
+    {
+      "id": "0",
+      "obj": "song",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 10
+    },
+    {
+      "id": "1",
+      "obj": "song",
+      "verb": "stamp",
+      "toState": "{\"lane\": \"drums\", \"tag\": \"SAMPLE\"}",
+      "atFrame": 32
+    },
+    {
+      "id": "2",
+      "obj": "song",
+      "verb": "stamp",
+      "toState": "{\"lane\": \"bass\", \"tag\": \"SYNTH\"}",
+      "atFrame": 33
+    },
+    {
+      "id": "3",
+      "obj": "song",
+      "verb": "chip",
+      "toState": "{\"lane\": \"guitar\", \"who\": \"Splice pack\"}",
+      "atFrame": 34
+    },
+    {
+      "id": "4",
+      "obj": "song",
+      "verb": "type",
+      "toState": "{\"lane\": \"choir\", \"text\": \"add a choir\"}",
+      "atFrame": 50
+    },
+    {
+      "id": "5",
+      "obj": "song",
+      "verb": "add",
+      "toState": "sitar",
+      "atFrame": 80
+    },
+    {
+      "id": "6",
+      "obj": "song",
+      "verb": "add",
+      "toState": "robot",
+      "atFrame": 85
+    },
+    {
+      "id": "7",
+      "obj": "song",
+      "verb": "move",
+      "toState": "count",
+      "atFrame": 86
+    },
+    {
+      "id": "8",
+      "obj": "song",
+      "verb": "mark",
+      "toState": "chords",
+      "atFrame": 110
+    },
+    {
+      "id": "9",
+      "obj": "song",
+      "verb": "mark",
+      "toState": "sitar",
+      "atFrame": 110
+    },
+    {
+      "id": "10",
+      "obj": "song",
+      "verb": "mark",
+      "toState": "{\"lane\": \"voice\", \"pin\": true}",
+      "atFrame": 110
+    },
+    {
+      "id": "11",
+      "obj": "song",
+      "verb": "mark",
+      "toState": "{\"lane\": \"robot\", \"pin\": true}",
+      "atFrame": 110
+    },
+    {
+      "id": "12",
+      "obj": "song",
+      "verb": "add",
+      "toState": "piano",
+      "atFrame": 114
+    },
+    {
+      "id": "13",
+      "obj": "song",
+      "verb": "add",
+      "toState": "strings",
+      "atFrame": 114
+    },
+    {
+      "id": "14",
+      "obj": "song",
+      "verb": "highlight",
+      "toState": "voice",
+      "atFrame": 140
+    },
+    {
+      "id": "15",
+      "obj": "song",
+      "verb": "fill",
+      "toState": "{\"lane\": \"voice\", \"layers\": [{\"kind\": \"human\", \"weight\": 0.85}, {\"kind\": \"ai\", \"weight\": 0.15}]}",
+      "atFrame": 140
+    },
+    {
+      "id": "16",
+      "obj": "song",
+      "verb": "highlight",
+      "toState": "all",
+      "atFrame": 170
+    },
+    {
+      "id": "17",
+      "obj": "song",
+      "verb": "chip",
+      "toState": "{\"lane\": \"drums\", \"who\": \"Drums\"}",
+      "atFrame": 170
+    },
+    {
+      "id": "18",
+      "obj": "song",
+      "verb": "chip",
+      "toState": "{\"lane\": \"bass\", \"who\": \"Bass\"}",
+      "atFrame": 170
+    },
+    {
+      "id": "19",
+      "obj": "song",
+      "verb": "chip",
+      "toState": "{\"lane\": \"voice\", \"who\": \"Voice\"}",
+      "atFrame": 170
+    },
+    {
+      "id": "20",
+      "obj": "song",
+      "verb": "chip",
+      "toState": "{\"lane\": \"choir\", \"who\": \"Choir\"}",
+      "atFrame": 170
+    },
+    {
+      "id": "21",
+      "obj": "song",
+      "verb": "chip",
+      "toState": "{\"lane\": \"robot\", \"who\": \"Robot\"}",
+      "atFrame": 170
+    },
+    {
+      "id": "22",
+      "obj": "song",
+      "verb": "chip",
+      "toState": "{\"lane\": \"piano\", \"who\": \"Piano\"}",
+      "atFrame": 170
+    },
+    {
+      "id": "23",
+      "obj": "song",
+      "verb": "chip",
+      "toState": "{\"lane\": \"strings\", \"who\": \"Strings\"}",
+      "atFrame": 170
+    },
+    {
+      "id": "24",
+      "obj": "song",
+      "verb": "mark",
+      "toState": "choir",
+      "atFrame": 175
+    },
+    {
+      "id": "25",
+      "obj": "song",
+      "verb": "move",
+      "toState": "{\"zoom\": 1.5, \"x\": 0.6}",
+      "atFrame": 200
+    },
+    {
+      "id": "26",
+      "obj": "song",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 240
+    }
+  ],
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "stills": [
+    17,
+    45,
+    53,
+    108,
+    119,
+    155,
+    190
+  ],
+  "goldens": {
+    "G1": 17,
+    "G2": 45,
+    "G3": 53,
+    "G4": 108,
+    "G5": 119,
+    "G6": 155,
+    "G7": 190
+  }
+}
