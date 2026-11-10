@@ -34,6 +34,9 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-09","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- every piece's words pass Control Center's one voice check: the approve and publish gate asks it for every lane and blocks on a hard fail, piece making runs scripts/post-pack/voice_gate.py on scripts, the article, carousel text and every channel's copy (piece_manifest.py draft refuses to write on a hard fail), and the writers read the voice live from Control Center before the hand-kept content_voice_block. (2026-11-09)
+- No script reaches Krish's teleprompter unread: his sign-off counts only with two or more fresh readers (or his own words to skip them), Teleprompter takes only words teleprompter_send.py plan cleared, and the readers now check unexplained names, a teasing opening, wrong-way comparisons and advice past the evidence (F45). (2026-11-09)
+- The 9 Nov board's rebuild recipe carries the off days again (from build 0e79df54, the last that held them, without the Sunday Ideas check), with the Character.AI cards as stored then and the Git and homework cards as Krish approved them again on 5 Nov, read from the library; the screenshots are now taken of the exact page the publish would put live, pictures included. (2026-11-09)
 - Krish rejected the 9 Nov neon covers ("There are so many components here. The headline should take precedence."); the redraw (v2: only Google, Disney and Character.AI logos under the headline, no proof tag, a quiet series label) is filed in the post's 3 Posts folder (covers in 2 Covers and images, thumbnails in 3 Video, each matched by Drive's sha256), not yet on the board; the drawer options (show_tag, quiet_pill, headline_first) sit unmerged on claude/mon-9nov-covers under the 9 Nov freeze. Cloud sessions can now file pictures and videos to Drive through the n8n "Drive file uploader (cloud sessions)" (docs/DRIVE.md). (2026-11-09)
 - **Eye contact (2026-11-09):** `ve eyeline` passes blind review on both 11 Nov takes; Maxine's eye is opt-in, failed review twice (docs/ve/EYE_CONTACT.md).
 - 9 Nov board live (build f62502ec, 15:15 UTC) with Monday's v2 covers and thumbnails, the off-day carousels restored and Monday's re-made manifest (29eb66da...); Krish approved Monday in session ("I approve here", 2026-11-09). Fri 6 Nov counted as published. Post-mortem, board v4, cover-standard proposal and 16 Nov ideas are in; Growth is scheduling the week's posts. (2026-11-09)
@@ -48,12 +51,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-09 Krish, 2026-11-09: "we need to make sure everything goes through the same voice system. Absolutely everything."
+- 2026-11-09 Krish kept catching unclear lines in scripts himself (2026-11-09, "I shouldn't have to keep asking you to make sense"), so the readers became a gate instead of something his sign-off could replace.
 Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-10-NOW-moved-1.md`, then `2026-11-09-NOW-moved-8.md`, `2026-11-09-NOW-moved-7.md`, `2026-11-09-NOW-moved-6.md`, `2026-11-09-NOW-moved-5.md`, `2026-11-07-NOW-moved-4.md` and `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-09): the board session points mon-thumb-wide and mon-thumb-tall at the v2 thumbnails in 3 Video.
+- Next (2026-11-09): after Control Center's voice routes deploy, approve one piece and read its voice_gate answer.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
 - Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
 - 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms, lock signed). Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
