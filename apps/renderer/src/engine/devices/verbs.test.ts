@@ -7,6 +7,9 @@ describe('device verb declarations', () => {
   it('arrangement declares its ten cues', () => {
     expect(manifest.devices.arrangement.verbs).toEqual(['enter','add','type','stamp','mark','highlight','fill','chip','move','exit'])
   })
+  it('slot_machine declares its eight cues', () => {
+    expect(manifest.devices.slot_machine.verbs).toEqual(['enter', 'type', 'pick', 'send', 'fill', 'bounce', 'highlight', 'exit'])
+  })
   it('leaderboard declares its eight cues', () => {
     expect(manifest.devices.leaderboard.verbs).toEqual(['enter', 'add', 'fill', 'stamp', 'move', 'highlight', 'mark', 'exit'])
   })
