@@ -1,6 +1,6 @@
 {
  "devices": {
-  "agent_swarm 9:16": "2839d1e3dcefb2164a09fd3bcdbf559932f6c578cac8851a92cefe00072cafa6",
+  "agent_swarm 9:16": "bc480612765953cd4f360283bfaf59fdfc0b4b0746eff8b6dade0c41e250bcba",
   "arrangement 9:16": "f50ce61af200187bbe5896fcf94339bd97e4f0a7e9ee0234b9c568bd417ce731",
   "arrangement 16:9": "3f810bf213c24434bc84ace2de978ad1739be343645f875a22fd58c593243db0",
   "cursor_buddy 9:16": "7d3d0453ebdb20fd814935a0cc3103d7b28e0dd99ca99b9adff47c5761e02b2e",
@@ -19,7 +19,7 @@
   "office_floor 16:9": "309a4ee1dd8bb804ff1ed64d7e254eebc1b35a9aff9c5a7149ac34dad64cb986",
   "passport_page 9:16": "50468014f4e2dda8e6ee4c03d8d7db6aa9ca9cebae3a2ed9e5f026ebb2b8f9ff",
   "query_chip 9:16": "71e813811e463e8bc628b940f64581d9c10d01b25bfe8ac4934296841c0c69ed",
-  "quota_chart 9:16": "c93c9debe1e430d3180ea047e15d983b4d6e08ac5c9ec73c80d8b50676ae7d9a",
+  "quota_chart 9:16": "56255a3b61376111d6452cf2fe6488545d7454266d5555bb61cdead71ab0c06d",
   "quote_card 9:16": "db5cb49082af6520be14711cd20287ee7fa3d57558754f041ff87d7833ea8561",
   "record_card 9:16": "25b805d89549dc9a2472322a89b1875e04ad34c1d3e80e146043c22ef511bc4b",
   "scribble 9:16": "49c4e9603c1cbc0ea5da157e4251cc0d03d992807d0d6992d0dce43be10e9d14",
