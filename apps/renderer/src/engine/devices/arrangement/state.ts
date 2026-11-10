@@ -35,7 +35,7 @@ export function arrangementState({ object, events, frame }: Pick<DeviceProps, 'o
     if (e.verb === 'mark') { if (p.pin) l.pin = true; else { l.removed = true; l.at = e.atFrame } }
     if (e.verb === 'stamp') { l.tag = p.tag ?? ''; l.at = e.atFrame }
     if (e.verb === 'chip') l.credit = p.who ?? ''
-    if (e.verb === 'fill' && p.layers) l.layers = p.layers
+    if (e.verb === 'fill' && p.layers) { l.layers = p.layers; if (p.layers.some(l => l.kind === 'human') && p.layers.some(l => l.kind === 'ai')) l.kind = 'both' }
   }
   return { params, lanes, solo, prompt, out, enter: progress(frame - enter.atFrame, MOTION.enterFrames), enterAt: enter.atFrame,
     zoom: oldZoom + (zoom - oldZoom) * progress(frame - moveAt, MOTION.slideFrames, t => t*t*(3-2*t)),

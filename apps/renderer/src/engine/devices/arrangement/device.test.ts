@@ -35,3 +35,30 @@ it('renders every golden within all three boxes, using tokens and moving the pla
   expect(render(250)).toBe('')
  }
 })
+
+it('fills the stack, labels sixteen bars, and keeps the opening labels distinct in every box',()=>{
+ for(const [width,height] of [[1080,1920],[1920,1080],[1260,1080]] as const){
+  const render=(frame:number)=>renderToStaticMarkup(React.createElement(Device,{object,events,tokens,frame,aspect:height===1920?'9:16':'16:9',box:{left:0,top:0,width,height}}))
+  for(const frame of fixture.stills){
+   const html=render(frame)
+   expect(Number(html.match(/data-height="([\d.]+)"/)![1])).toBeGreaterThanOrEqual(height*.7)
+   expect([...html.matchAll(/data-bar="(\d+)"/g)].map(m=>Number(m[1]))).toEqual(Array.from({length:16},(_,i)=>i+1))
+  }
+  const ys=[...render(fixture.goldens.G1).matchAll(/data-y="([\d.]+)"/g)].map(m=>Number(m[1]))
+  expect(new Set(ys).size).toBe(4)
+  expect(Math.min(...ys.slice(1).map((y,i)=>y-ys[i]!))).toBeGreaterThan(100)
+  expect(render(fixture.goldens.G1)).toContain('data-source-wave')
+  const ai=render(fixture.goldens.G4)
+  expect(ai).toContain('repeating-linear-gradient(45deg')
+  expect(ai).toContain('30%')
+  expect(ai).toContain('data-ai-flag')
+  const credits=render(fixture.goldens.G7)
+  for(const who of ['a healer','Suno','strangers on TikTok','HUGEL','Ultra Naté','the AI singer']) expect(credits).toContain(who)
+  expect(state(fixture.goldens.G7).lanes.filter(l=>l.visible&&!l.removed).map(l=>l.kind)).toEqual(Array(6).fill('both'))
+  expect(render(fixture.goldens.G2)).toContain('Splice pack')
+  const lift=state(fixture.goldens.G5).lanes
+  expect(lift.filter(l=>l.removed)).toHaveLength(2)
+  expect(lift.filter(l=>l.pin)).toHaveLength(2)
+  expect(render(fixture.goldens.G5)).toContain('translateY(-20px)')
+ }
+})
