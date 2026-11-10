@@ -18,6 +18,7 @@ Everyone in a board meeting now says "hyperscaler". Few could say what one is, h
 - The backlash: the bet needs the buildings built and powered on time. People blame data centres for higher power bills, and in the midterms towns voted to limit or turn down new ones in 40 of 41 votes. The builders are now promising to pay their own power bills. That is a new cost, and a delay, landing on companies that have already borrowed.
 - The click: Oracle, where both pressures meet. One step above junk, borrowing again, $75 billion of its build paid for by customers up front, local pushback at its own sites, and positive cash only in 2028. A late building is rent that comes late, and the interest does not wait.
 - The use: three numbers to take into your next board meeting, and one question.
+- His close: the economics of AI, and of America with it, will not change as fast as promised, because the hyperscalers will not get as much free rein; what that means.
 
 ## The fun
 The landlord: a hyperscaler is explained once, plainly, as a landlord who builds the block before a single tenant has signed. Then one running picture: the receipt for one AI data centre printing line by line as he talks, each line who paid (profits, bonds, shares, partners, chip maker, customers up front). The viewer ends with three numbers they can say out loud in a meeting. Every line said plainly, the way you would say it to a friend; no clever phrasing (Krish, 9 Nov: "It's really important we aren't trying to cryptically confuse everyone.").
@@ -26,7 +27,12 @@ The landlord: a hyperscaler is explained once, plainly, as a landlord who builds
 Take three numbers into your next board meeting: about $730 billion is being spent on AI buildings this year; about 4 in 10 of those dollars are now borrowed or raised; and 40 of 41 local votes went against new data centres. Then ask which landlord your own AI runs on, and whether it pays from profits or borrows to build. (Krish, 10 Nov: "Keep the three numbers and the question")
 
 ## His close
-To come from Krish, in his own words: his own call on whether the build happens on time, now that towns get a vote (asked 10 Nov). No prediction about politics (Krish, 9 Nov: "I'd rather not make predictions about politics.").
+His call, in his words (10 Nov): "i think most things about the economics of AI (and the USA, the economies of the two are intertwined) are going to change; rather they won't change as fast. We'll likely not see the hyperscalers get as much free reign as they would have had prior and that can have a number of impacts"
+The impacts, filled in at his ask ("help me fill these in"), each from the research and none a prediction about politics:
+- The build gets slower and dearer: every new site has to win the town and pay its own power, so each data centre costs more and opens later.
+- The money gets pickier: lenders already charge the weakest builders more, so the ones paying from profits pull ahead and the ones borrowing to build feel it first.
+- AI may not get cheaper as fast as promised: if the buildings come slower, there is less spare computing to push prices down.
+- And because so much of America's growth now rides on this build, a slower build means slower growth too.
 
 ## Facts to check
 - The four biggest builders' 2026 capital spending adds up to about $720-740 billion (Amazon ~$220B, Alphabet $195-205B, Microsoft ~$170B, Meta $135-145B) | mon-research.md Key Finding 1 (REPORTED; Meta's range CONFIRMED in its 21 Oct 2026 release) | to check each on the company's own release
@@ -45,6 +51,10 @@ To come from Krish, in his own words: his own call on whether the build happens 
 - PJM's market monitor attributes $29.4 billion of capacity charges, 46.2% of the total over the last four auctions, to data-centre load | Monitoring Analytics report, 28 Jul 2026 | to check on the report itself
 - Oracle faces local pushback at its own data-centre sites | https://cryptobriefing.com/oracle-18b-data-centre-debt-strain-pushback/ (secondary) | to check on a primary or local record; cut if it does not hold
 - Gallup, March 2026: 71% of Americans oppose a local AI data centre, up from 47% in late 2025 | Gallup's own release | to check (shared with Friday's lock)
+- CoreWeave's unsecured 2031 debt traded as low as 79.5 cents on the dollar | Bloomberg, 4 Nov 2026, citing Trace pricing data | to check
+- Amazon paid 18 to 21 basis points of extra yield on its longest July 2026 bonds | Fortune, 8 Jul 2026 | to check
+- IMF: "We now have an economy that is standing on one leg, the AI leg" (Kristalina Georgieva) | Reuters, 13 Oct 2026 | to check on the IMF's own transcript
+- At least 23 US states have already decided who pays for the power that data centres need | https://www.environmentenergyleader.com/stories/who-pays-for-the-data-center-buildout-23-states-have-already-decided,129803 | to check; say only what the source holds
 - "Hyperscaler" means the companies that build and run computing at huge scale; which companies the word covers | a plain definition from a primary or standard source | to check; say who we count and why
 
 ## Outline
