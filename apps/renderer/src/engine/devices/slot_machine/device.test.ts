@@ -99,3 +99,39 @@ describe('polished slot geometry', () => {
     expect(state(fixture.golden_frames.G4).lever).toBeGreaterThanOrEqual(60)
   })
 })
+
+describe('round 3 framing and cabinet', () => {
+  for (const slot of fixture.slots) {
+    it(`contains complete typed lines and the lever ball in ${slot.width}x${slot.height}`, () => {
+      for (const frame of [fixture.golden_frames.G1, fixture.golden_frames.G2]) {
+        const p = { ...props(frame), box: { ...props(frame).box, ...slot } }
+        const l = slotLayout(p, slotState(p)!)
+        for (const input of l.inputs) {
+          expect(input.lines.length).toBeLessThanOrEqual(4)
+          for (const x of input.charXs) {
+            expect(x).toBeGreaterThanOrEqual(l.left + l.width * 0.06)
+            expect(x + input.advance).toBeLessThanOrEqual(l.left + l.width * 0.94)
+          }
+          expect(48 + input.lines.length * input.font * input.zoom * 1.4)
+            .toBeLessThanOrEqual(l.h * (input === l.inputs[0] ? 0.2 : 0.14))
+        }
+      }
+      const p = { ...props(fixture.golden_frames.G4), box: { ...props(116).box, ...slot } }
+      const s = slotState(p)!, l = slotLayout(p, s)
+      expect(s.lever).toBeGreaterThanOrEqual(60)
+      expect(l.ball.x - l.ball.radius).toBeGreaterThanOrEqual(0)
+      expect(l.ball.x + l.ball.radius).toBeLessThanOrEqual(l.w)
+      expect(l.ball.y - l.ball.radius).toBeGreaterThanOrEqual(0)
+      expect(l.ball.y + l.ball.radius).toBeLessThanOrEqual(l.h)
+      expect(render(p)).toContain('data-ball')
+    })
+  }
+  it('draws a cream cabinet with an ink outline after pick', () => {
+    for (const frame of [96, 116, 160, 180]) {
+      const cabinet = render(props(frame)).match(/data-cabinet[^>]+/)![0]
+      expect(cabinet).toContain('background:ivory')
+      expect(cabinet).toContain('border:3px solid black')
+      expect(cabinet).toContain('box-shadow:')
+    }
+  })
+})
