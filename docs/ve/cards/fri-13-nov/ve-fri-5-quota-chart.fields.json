@@ -1,0 +1,15 @@
+{
+  "card_id": "ve-fri-5-quota-chart",
+  "kind": "device",
+  "format": "face-with-proof",
+  "motion_style": "data-story",
+  "title": "Quota chart: questions bunch at the target, the junk thins, the target halves, sales rise",
+  "goal": "Fri 13 Nov 5-minute cut, the payoff: a medical-equipment firm set a monthly AI question target; most asked just enough to hit it; about a third were junk; some sales offices got half the target (A/B); junk vanished, useful questions stayed; those staff sold 7% more.\n\n1. `params`: `bins` (questions per person, 8-16 values 0..1 for a histogram), `target` (0..1 position on the x axis), `junkShare` (0..1, e.g. 0.33), `halfTarget` (0..1), `salesLift` (e.g. 0.07), `labels` {questions, target, junk, sales}, `source` (PRODUCER \u00b7 DATE).\n2. `enter`: axes draw on.\n3. `fill`: the histogram bars grow; they visibly bunch in a spike just over the target line.\n4. `draw`: the target line draws dashed, labelled.\n5. `mark`: the junk share of each bar fades to a struck, greyed hatch (one third), one short annotation points at it.\n6. `move` with `toState` = 'half': the target line slides to halfTarget (18 frames); the spike follows; hatched junk drains, the solid part stays.\n7. `count_to`: a two-bar sales comparison grows beside it, old target vs half target, the half-target bar ends (1+salesLift) taller, its label counting up, in mint, last.\n8. `exit`.",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Register in devices/registry.ts and config/ve/devices.json with exactly enter, fill, draw, mark, move, count_to, exit; update verbs.test.ts. Bars from zero; every number from params; source at the foot in Plex Mono. Draw inside the box only. Colours only from brand tokens (coral target, mint sales). Tests (device.test.ts): nothing before enter; after fill the tallest bar sits at the target bin; after mark the hatched share equals junkShare within 2%; after move the target line sits at halfTarget and the hatched area is gone; after count_to the second sales bar is (1+salesLift) of the first within 1%; tall and wide render.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/quota_chart\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+  "write_allow": "[apps/renderer/src/engine/devices/quota_chart/*, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/devices/verbs.test.ts, apps/renderer/src/engine/props.ts, config/ve/devices.json]",
+  "read": "apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/leaderboard/**, apps/renderer/src/engine/devices/stat_strip/**, apps/renderer/src/engine/devices/kinetic_stat/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/kit/**, config/ve/design-lock.json, config/ve/devices.json, config/ve/brand-tokens.json",
+  "max_minutes": 60,
+  "max_calls": 60,
+  "path": "docs/ve/cards/fri-13-nov/ve-fri-5-quota-chart.md"
+}
