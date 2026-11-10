@@ -10,6 +10,11 @@ import { readArchive } from './_archive.js'
 import { readPieces, recordPosted } from './_posted.js'
 import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
+import { readView } from './_view.js'
+import { dispatchJob, isJob } from './_run.js'
+import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
+import { researchPrompt } from './_prompts.js'
+import { DESK_PAGE } from './_deskPage.js'
 import { StandardsError, decideStandard, readStandards, renderStandards } from './_standards.js'
 import { operatorBearerAllowed } from '../_auth.js'
 import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
@@ -167,6 +172,15 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         return res.status(status).json({ ok: false, error: error instanceof StandardsError ? error.message : 'standards_unavailable' })
       }
     }
+    if (op === 'next' && method === 'GET' && monday(scalar(req.query.week))) {
+      // The live board's page holds no data, so it is served before the access check: without his cookie it opens on
+      // its own "Unlock the board" line instead of a bare 401.
+      res.setHeader('Content-Type', 'text/html; charset=utf-8')
+      res.setHeader('Cache-Control', 'no-store')
+      res.setHeader('X-Frame-Options', 'DENY')
+      res.setHeader('Content-Security-Policy', boardPolicy(process.env.SUPABASE_URL))
+      return res.status(200).send(DESK_PAGE)
+    }
     const operatorOnly = ['uploads', 'imports', 'sources'].includes(op) || (!op && !collection && method === 'PUT')
     const who = actor(req, operatorOnly)
     if (!who) return res.status(401).json({ ok: false, error: 'unauthorized' })
@@ -183,8 +197,80 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (!result.data.length) throw new BoardError(404, 'no_published_board')
         return res.redirect(303, `/board/${weekDate(result.data[0].week)}`)
       }
+      if (op === 'next' && method === 'GET' && !scalar(req.query.week)) {
+        // The live board without a week opens on the newest one (docs/plans/2026-11-09-board-desk/PLAN.md).
+        const result = await db.from('board_weeks').select('week').order('week', { ascending: false }).limit(1)
+        must(result)
+        if (!result.data.length) throw new BoardError(404, 'no_published_board')
+        return res.redirect(303, `/board/next/${weekDate(result.data[0].week)}`)
+      }
       const week = scalar(req.query.week)
       if (!monday(week)) throw new BoardError(400, 'invalid_week')
+      if (op === 'next') throw new BoardError(405, 'method_not_allowed')
+      if (op === 'view') {
+        // The week as it stands now, each day with its next step and the actions that start it (_view.ts).
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        res.setHeader('Cache-Control', 'no-store')
+        return res.status(200).json({ ok: true, ...(await readView(db, week)) })
+      }
+      if (op === 'research' || op === 'material' || op === 'look') {
+        // The day path's presses on a piece of this week (_research.ts): research it now (sonar-pro), file research he
+        // dropped, and his pick of the look. His press only; the piece must be scheduled inside this week.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'his_press')
+        const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
+        const pieceId = String(body.piece_id || '').toLowerCase()
+        if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(pieceId)) throw new BoardError(400, 'invalid_piece')
+        const row = await db.from('content_ideas').select('id,idea,scheduled_for,lane_slot').eq('id', pieceId).single()
+        const end = new Date(`${week}T00:00:00Z`); end.setUTCDate(end.getUTCDate() + 6)
+        if (row.error || !row.data || !row.data.scheduled_for || row.data.scheduled_for < week || row.data.scheduled_for > end.toISOString().slice(0, 10))
+          throw new BoardError(404, 'piece_not_in_week')
+        try {
+          if (op === 'material') {
+            const name = String(body.title || 'Research').slice(0, 180)
+            // A storyboard the session made is filed with its role in the title, so the day knows one is on file.
+            const title = body.role === 'storyboard' && !/^Storyboard:/.test(name) ? `Storyboard: ${name}` : name
+            const filed = await fileMaterial(db, pieceId, { kind: 'file', title, content: String(body.content || ''), by: 'Krish' })
+            return res.status(201).json({ ok: true, material: filed })
+          }
+          if (op === 'research') {
+            if (await recentResearch(db, pieceId)) throw new MaterialError(409, 'research_just_ran')
+            const view = await readView(db, week)
+            const day = view.days.find(d => d.piece_id === pieceId)
+            const prompt = day?.path?.prompts.research || researchPrompt({ week, day: '', dayName: '', date: String(row.data.scheduled_for), series: String(row.data.lane_slot || ''),
+              pieceId, idea: String(row.data.idea || ''), materials: [], lock: null })
+            const found = await researchForPiece(pieceId, prompt)
+            if (!found.text) throw new MaterialError(502, 'research_failed')
+            const filed = await fileMaterial(db, pieceId, { kind: 'research', title: `Engine research (sonar-pro), ${new Date().toISOString().slice(0, 10)}`, content: found.text, by: 'Krish' })
+            return res.status(201).json({ ok: true, material: filed, sources: found.sources.length })
+          }
+          // The looks the engine can make, read once from the style bank: a production format, and any format as the experiment.
+          const bank = await fetch(`https://raw.githubusercontent.com/krishanraja/content-engine/main/config/style-references.json`, { signal: AbortSignal.timeout(15_000) })
+            .then(r => (r.ok ? r.json() : null)).catch(() => null) as { formats?: { production?: Array<{ id: string }>; script?: Array<{ id: string }> } } | null
+          const production = new Set((bank?.formats?.production || []).map(f => f.id))
+          if (!production.size) throw new MaterialError(503, 'styles_unavailable')
+          const any = new Set([...production, ...(bank?.formats?.script || []).map(f => f.id)])
+          const experiment = body.experiment ? String(body.experiment) : null
+          if (experiment && !any.has(experiment)) throw new MaterialError(400, 'unknown_format')
+          const look = await saveLook(db, pieceId, { production: String(body.production || ''), experiment,
+            inspiration: Array.isArray(body.inspiration) ? body.inspiration.map(String) : [] }, new Set([...production, ...(experiment ? [experiment] : [])]))
+          return res.status(200).json({ ok: true, look })
+        } catch (e) {
+          if (e instanceof MaterialError) throw new BoardError(e.status, e.message)
+          throw e
+        }
+      }
+      if (op === 'run') {
+        // A press that starts the machine that does the work (_run.ts): his press only, an allow-listed job only.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'his_press')
+        const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
+        if (!isJob(body.job)) throw new BoardError(400, 'unknown_job')
+        const input = body.input && typeof body.input === 'object' && !Array.isArray(body.input) ? body.input as Record<string, unknown> : {}
+        const sent = await dispatchJob(body.job, input)
+        if (sent.sent) return res.status(202).json({ ok: true, ...sent })
+        return res.status('reason' in sent && sent.reason === 'invalid_input' ? 400 : 503).json({ ok: false, ...sent })
+      }
       const offset = Number(req.query.offset || 0)
       if (!Number.isSafeInteger(offset) || offset < 0) throw new BoardError(400, 'invalid_offset')
       if (op === 'state') {

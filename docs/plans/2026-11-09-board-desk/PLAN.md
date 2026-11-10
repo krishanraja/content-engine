@@ -1,0 +1,171 @@
+# Publish board: from static snapshot to a live command desk
+
+## Context
+
+Krish (2026-11-09) says the board makes extra work. Half the buttons fail, it never shows the current state, and it overwhelms him instead of letting him expand what he needs. He wants it to be "my go-to instead of just having to remember everything", and he wants it visionary: "as live, fresh, and action-oriented as possible. I should always open it with something to do for each piece or for the week, unless the day or the week is complete." On 2026-11-07 he also asked for a redesign of the 9 Nov board. He chose the **live rebuild**: stop the breaks now, then build the new board at `/board/next`. The new board replaces the old one only when he approves it.
+
+**North Star:** every press that fails or gets lost delays a piece. The number is 3 published this week against a target of 8 (U4). A board that always shows the next move removes the time Krish spends remembering what each piece needs, and that time is the bottleneck.
+
+### Why it breaks today (from the code)
+- **A snapshot, not a view.** `scripts/post-pack/week_board.py` (7,560 lines) bakes static HTML. That HTML is uploaded to Supabase storage and streamed by `apps/control-plane/api/board/_handler.ts:363`. The 5-second `/state` poll (`week_board/web.js:330`) patches only a few fields. Anything else raises a yellow "rebuild" bar (`web.js:297`).
+- **Fragile buttons.** `week.js` (1,735 lines) was written for the retired Claude-artifact runtime. `board_web.py:27` converts it to the web runtime by regex. Presses fail without saying so:
+  - the cookie has expired (401, `api/_auth.ts:251`);
+  - the Origin header doesn't match (`_contracts.ts:36`);
+  - a stale revision or stale media review returns 409 (`web.js:128`, `_handler.ts:340`).
+  Krish's lost Friday comments (`NOW.md:38`) are this class of failure.
+- **Too much at once.** Ten tabs plus Comments, and every step of every day is rendered in full.
+
+## The vision: "The Desk"
+
+One page that opens on the next move, with everything else one tap away.
+
+**The rule (enforced in code, not left to taste).** The server works out a `next_action` for every piece and for the week:
+- What it is, with a verb: "Approve Wed scripts", "Record Fri long cut", "Pick Saturday's good news".
+- Who owns it: Krish, or the engine or Growth, with the reason.
+- When it is due, and the one-tap action.
+
+If every piece and the week are complete, the page opens on a "Week done" state instead, with what shipped and the North Star count. A piece that is not complete but has no next action is a **build failure**: a test refuses it. The page can never open on nothing.
+
+### Layout (top to bottom, first visit, 390px and desktop)
+1. **Now strip.** Live pulse dot plus "Live, updated 4s ago" (Status Dot #24882). Then the North Star counter "3 of 8 this week", which animates to its value (Count Up #20068). Then a week strip Mon to Sat with a status dot for each day (pattern from Calendar with Event Indicators #25133). A day dot is green when shipped, amber when it needs Krish, grey when the engine is on it, and red when late.
+2. **Your move (the hero).** A focused card stack of everything that needs Krish, most urgent first. It works one card at a time like a triage deck: approve, improve with his words, or reject (Card Stack #35044 or Swipe Deck #23568). Undo and the keyboard keys A, I, R are kept. Each card is an Approval Card (#36498 or AI Approval #23792) with the real thing inline: the script text, the cut playing in place (Interactive Video Player #28516), the thumbnail, the options. Cleared cards fly off. The counter ticks down to "Nothing needs you. Next: Fri long cut ready Thu 18:00".
+3. **This week, by piece.** One row per piece. It shows the series, the title, the stage as a compact stepper (Brief, Scripts, Recorded, Cut, Approved, Posted, using the key-value stepper #40073), and the piece's own next action on the right. Rows are closed by default. Opening one shows its detail as an accessible accordion (#34660, native `<details>`): scripts, assets, fact gate, standards, its comment thread.
+4. **What moved since you last looked.** A timeline grouped by day (#35051), newest first. New items slide in as the live feed brings them (pattern from Live Notification Feed #36949). Example items: "Engine filed Wed short cut 14:02", "Growth posted Mon carousel". It is closed after five items.
+5. **Ideas and next week.** A tab-free section of collapsed cards that opens only when ideas are waiting. On Sundays it is promoted to the hero.
+6. **Jump anywhere.** ⌘K, or a floating button on a phone, opens a command palette (#23522). It finds any piece, day or week and runs "Approve…", "Comment on…" or "Open last week".
+
+### Live and fresh
+- Server-Sent Events from a new `GET /api/board/:week/stream`, with a 5-second poll as the fallback. The view is rebuilt on the server every time the state changes. There is no static snapshot anywhere in the new route.
+- Saves are optimistic and confirmed: the card moves at once, then shows a check when the server confirms. If the save fails, the card returns with a plain reason and Retry. Every text box keeps a local draft until the server confirms the save, so a comment is never lost again.
+- Staleness is visible. If the stream drops for more than 30 seconds, the Now strip turns amber and says "Reconnecting, showing data from 14:03".
+- On a 401, an unlock sheet opens inline and the pending press is replayed afterwards.
+
+### Look
+- The Make Your Mind Up tokens from `scripts/post-pack/tokens.css` and the board's display type: an editorial, calm, CEO-grade look rather than a neon SaaS dashboard.
+- Motion only where it carries meaning: cards clearing, the counter, new items arriving. Reduced motion is respected.
+- 44px tap targets and no sideways scroll at 390px. Both already have checks in `check_board_layout.py --browser`.
+- The 21st components are adapted into the house style, not pasted in. Code is retrieved only for the ones adopted, since each retrieval is paid (about 12).
+
+## Every button starts the real machine (Krish, 9 Nov: "Are you sure that all the buttons are as actionable as possible, given what is actually running the machinery?")
+
+**The honest answer for mock v2 is no.**
+- 4 of its 6 primary buttons were "Copy prompt", but a real runner exists for most of them.
+- Only "Run my Improve again" can be started from the board today (`api/board/_offdayRevise.ts`).
+- "Find the stories now" pointed at nothing the server can start.
+
+**The rule.** Every action names the machine that does the work, how it is started, how its progress is read back, and what it falls back to. Copy prompt is used only for work that truly needs a conversation with Krish.
+
+| Board action | Machine | How the press starts it | Can it today? | Progress shown on the button |
+|---|---|---|---|---|
+| Start Friday's make (signed lock) | `make-piece.yml` (Claude Code on his subscription) | repository_dispatch `make-piece` `{piece_id}` | No: the type exists, but nothing sends it. Add `_makePiece.ts`, copied from `_offdayRevise.ts` | GitHub run status, then the making record (`/api/content-ideas/:id/making`) |
+| Run my Improve again (off days) | `offday-revise.yml` | repository_dispatch `offday-revise` | Yes (fixed today) | Run status. The revised card then lands in Your move straight from the store, not at the next build |
+| Find the Saturday stories now | `saturday-goodnews.yml` | workflow_dispatch `{week, force}` | No. Add a `repository_dispatch` type to the workflow; the existing token then starts it | Run status, then the stories as cards |
+| Make Monday's or Wednesday's narrative lock | A conversation with Krish | The interview happens **on the board**, one question at a time (plan-week asks there already). Copy prompt stays as the fallback | Partly | Each answer saves. Then a "Sign the lock" card |
+| Sign storyboard, Pick a style, Approve proof, Approve cut | Overnight run on the home computers, or a ve session | The press writes `meta.making.gates` (existing) | Yes, but the button says nothing about what runs next | The home computer's lane report (`/api/library/recordings/lane`): "picked up by the primary at 23:10", or "home computer offline since 18:02" |
+| Titles | Home computers: `overnight.py` through the 5-minute poll | Existing press | Yes | Overnight status from the lane report |
+| Approve scripts | The server sends them to Teleprompter (`_teleprompter.ts`) | Existing press | Yes. Shows `no_key` if the key is missing | `making.teleprompter` |
+| Cut a day's videos again | `produce-day.yml` | workflow_dispatch `{date, piece}` | No. Add a `repository_dispatch` type; the existing token then starts it | Run status, then the cut as a Watch card |
+| Repair held cuts | `repair-round.yml` | repository_dispatch `repair-round` | No server caller. Only the home computer starts it with `gh` | Run status |
+| Build a device from a card | Codex lane on the home computer (`codex_lane.py`) | POST `upsert_items` to `/api/workbench` | Yes, through the API, but no button | Workbench item `close_ref.state` |
+| Rebuild the old board | `board-rebuild.yml` | workflow_dispatch | No | Not needed once the live board replaces it |
+
+**What this adds to Phase 2:**
+- **One server route,** `POST /api/board/:week/run`, with an allow-list of the jobs above. Each job maps to its trigger (repository_dispatch, workflow_dispatch, or a workbench item). The route records the run in `board_documents` (`runs/<id>`) and is guarded as his press (`hisOnlyRefusal`).
+- **A run reader.** The server reads GitHub run status (`GET /repos/{repo}/actions/runs`) and the home computers' lane report. Every action button then has five honest states: ready, starting, running (with the step and the minutes so far), done (its result becomes a card), and failed (the reason, plus Run again).
+- **Preconditions shown before the press:**
+  - "Your home computer is offline since 18:02, so the overnight cut won't start until it's on."
+  - "Teleprompter key missing, so the scripts go through a session."
+  - A press is never accepted for something that can't run.
+- **A test with no dead buttons.** Every action the view returns must map to an allow-listed job, or be a gate press or a Copy prompt marked as a conversation. Any other action fails the build.
+
+**No new token is needed** (checked 9 Nov against the Vercel project `content-engine`, the docs and the runs). The board already starts GitHub jobs with `OFFDAY_REVISE_DISPATCH_TOKEN` and `PLACE_TAKES_DISPATCH_TOKEN`, both on `content-engine`. `docs/INTEGRATIONS.md` records them as fine-grained tokens on this repository with Contents: read and write, which is what repository_dispatch needs. Krish's 9 Nov Improve presses arrived as repository_dispatch runs, so the token works. That scope cannot start a workflow_dispatch, so the build gives `saturday-goodnews.yml`, `sunday-ideas.yml` and `produce-day.yml` a `repository_dispatch` type each, as `make-piece.yml` and `repair-round.yml` already have. The existing token then starts every job. `GITHUB_TOKEN` on the same project is the read-only token for build signals and is not used here.
+
+**Mock v3** shows the real button per row:
+- Fri: **Start the make**.
+- Tue and Thu: **Run my Improve again**.
+- Mon and Wed: **Answer 1 of 5**, the interview on the board.
+- Sat: **Find the stories now**.
+
+Each runs through the five states with a "picked up by" line, and a "home computer offline" example is shown.
+
+## Phases
+
+### Phase 0: stop the breaks (this week, no layout change)
+1. Reproduce the lost Friday comments against a fixture week with `tests/board-browser.mjs`. Fix the root cause. Call the cause "suspected" until the test proves it.
+2. Add local drafts to every text box on the current board. Show plain-language save failures with Retry, and replay the press after an inline unlock on a 401.
+3. Extend `scripts/post-pack/buttons_in_browser.py` to click every button on the fixture weeks and read back the stored row. A dead button fails CI.
+
+The fixed-layout fixture is untouched, so no layout approval is needed.
+
+### Phase 1: rendered mock, then Krish's yes
+- Run the concept round (`build-apps-with-krish` / `krish-design`). The spine is fixed by his brief: the Desk above. The variants worth judging are:
+  - the hero as a card stack, a ranked list, or a one-card focus;
+  - piece rows as steppers or as a week timeline.
+- Judge the variants blind and combine the best into one mock. Render it with real 16 Nov data at 390px and 1280px in two states: "things to do" and "week done".
+- The mock passes the presentation check, then goes to Krish cold as files. It is not a Claude artifact.
+- Record the lock in `docs/PUBLISH_BOARDS.md`.
+
+### Phase 2: build `/board/next`
+- **Server (`apps/control-plane/api/board/`):**
+  - New `_view.ts` builds the view model: `next_actions[]`, `pieces[]` with stage and `next_action`, `week_status`, `moved_since[]`, `north_star`, `as_of`.
+  - It reads `board_documents`, `board_ticks`, the making record (`_live.ts`), Growth's posted ticks and the archive (`_archive.ts`). Plan-only parts (ideas, briefs, options) come from a `view.json` that `week_board.py` writes beside each build, reusing `desk_model()` (`week_board.py:2796`) and its panel models.
+  - New routes `GET /view` and `GET /stream`. Presses stay `PUT /:collection/:id` through `board_save`, guarded by `his_document` and `hisOnlyRefusal`.
+- **Client:** a Vite + React + Tailwind page built to `apps/control-plane/public/board-next/`, with the adapted 21st components under `apps/control-plane/board-next/src/components/`. No regex runtime swaps.
+- **Routing:** `vercel.json` adds `/board/next` and `/board/next/:week`. `/board` stays on the old board.
+- **Layout lock:** add the new route's structure to `fixtures/week-board/` and `check_board_layout.py` once Krish approves the mock, through `--update --approved "Krish, …"`.
+
+### Phase 3: switch over (his call)
+Run both boards side by side for a week. Switch `/board` only on his words. After a clean week, retire `week.js` and `web.js`, and cut `week_board.py` back to writing the plan feed.
+
+## Critical files
+- `apps/control-plane/api/board/{_handler.ts,_contracts.ts,_presses.ts,_live.ts,_archive.ts}` plus the new `_view.ts`; `apps/control-plane/vercel.json`
+- `scripts/post-pack/week_board.py` (`desk_model`, panel models), `week_board/{week.js,web.js}`, `board_web.py`
+- `scripts/post-pack/buttons_in_browser.py`, `tests/board-browser.mjs`, `tests/control-plane/board-*.test.ts`
+- `config/board-layout.json`, `fixtures/week-board/fixed-layout.json`, `scripts/check_board_layout.py`, `docs/PUBLISH_BOARDS.md`
+
+## Verification
+- **Phase 0:** the comment-loss repro fails before the fix and passes after. The every-button run is green, with stored rows read back.
+- **Phase 2:**
+  - Unit tests on `_view.ts` covering empty, partial, late, stale and all-done weeks.
+  - An invariant test: every unfinished piece and the week has a `next_action`, and an all-done week renders "Week done".
+  - Playwright runs on the 16 Nov fixture at 390px and 1280px:
+    - every open action saves and reads back;
+    - a failed save keeps the draft;
+    - a cookie killed mid-press recovers through the unlock sheet;
+    - the stream pushes a change into an open page within 5 seconds.
+- `npm run verify` and `npm run check:board-layout`, then a separate `reviewer` agent before the push. The pull request merges itself through `auto-merge.yml` on green.
+
+## Approval walls
+Each of these needs Krish's own words at the time:
+- the mock;
+- the layout-fixture update;
+- switching `/board` over.
+
+Nothing is published or sent on his behalf.
+
+## Each day as a guided path (Krish, 9 Nov, after the build)
+
+Krish asked for: research he can drop onto a day's idea, or a one-click research run; a choice of every look the engine can
+make, with one recommended and showcased, then "do you want a mock?"; the storyboard and the script made together
+**before** he records ("I would like to do the storyboard mocks before I record the script so that I can record correctly
+and the scripts can be in the right voice"); suggestions from his inspiration board; one simple choice at a time with
+room for long-form feedback; and copied prompts that assume a new session knows nothing and give it creative freedom
+with "a laser focus on an incredibly strong visual and scripted narrative arc".
+
+Mock: `docs/plans/2026-11-09-board-desk/day-mock.html` (Monday, real data). Opening a day shows the step it is on:
+
+| Step | One-click choices | What runs | Built from |
+|---|---|---|---|
+| 1 Research | Research it now · Copy Perplexity prompt · drop a .md | The engine's Perplexity research (sonar-pro) as a new allow-listed job; the drop goes onto the piece | `meta.materials` via `POST /api/content-ideas/:id/materials` (his login, 400k chars); corpus cards `inspiration_items kind=corpus` |
+| 2 Story | Copy Claude prompt (the lock session) · sign | A Claude session; the signed lock lands on the day | narrative-lock-<day>.md |
+| 3 Look | Use the recommended look · see the other 6 · fold in an inspiration card · Yes, mock it | `ve styles` on his last take of the format (home computer, about 7 minutes) | ideas.json `style`, `config/style-references.json` formats, `/api/inspiration/candidates` |
+| 4 Storyboard + script | Copy Claude prompt · upload the session's storyboard · Approve both | A Claude session; approval sends the scripts to Teleprompter | the existing Approve scripts press |
+| 5 Record | Open Teleprompter | his takes file themselves | home computers |
+| 6 Cut and publish | Cut the videos now | produce-day / overnight | existing |
+
+Every step keeps a long-form feedback box and a Claude prompt. Prompts follow one shape: who and what (no assumed
+context), where everything lives, the goal and the arc, freedom to make craft calls, and one moment to show Krish.
+
+Gaps to build: a showcase clip per look (the style bank has no previews; one `ve styles` render per format on his past
+take); the look press (a `picks/<day>-look` document); the research job; reading `meta.materials` into the view; and
+moving the storyboard ahead of recording in `make-piece` (a skill change, by his ruling of 9 Nov).

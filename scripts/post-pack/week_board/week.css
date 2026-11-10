@@ -461,3 +461,4 @@ main[data-checklists="hidden"] .st-note,main[data-checklists="hidden"] .ticks,ma
 .off-asset .say .go{min-width:96px;min-height:44px;border-radius:999px;border:1px solid var(--mint);background:var(--mint);color:#0C1512;font:700 13px Archivo,system-ui,sans-serif;white-space:nowrap}
 .off-asset .off-free .pl{grid-column:1/-1}
 .off-asset .tri-state.wait{color:#8a6a00}
+.wb-restored{position:sticky;top:0;z-index:50;margin:0;padding:10px 16px;background:var(--mint,#7EF0C0);color:#0C1512;font:600 14px Archivo,system-ui,sans-serif}

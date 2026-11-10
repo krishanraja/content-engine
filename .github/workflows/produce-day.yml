@@ -24,6 +24,9 @@ name: Produce the day's videos
 # One click: Actions > Produce the day's videos > Run workflow (any day, any date).
 
 on:
+  # A board press (apps/control-plane/api/board/_run.ts) starts it with the token the board already holds.
+  repository_dispatch:
+    types: [produce-day]
   workflow_dispatch:
     inputs:
       date:
@@ -83,11 +86,14 @@ jobs:
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           MAKING_BY: Production run
+          # Through env, never pasted into the script: a board press or Run workflow can carry them.
+          DAY_DATE: ${{ inputs.date || github.event.client_payload.date }}
+          DAY_PIECE: ${{ inputs.piece || github.event.client_payload.piece }}
         run: |
           python scripts/quick-edit/make.py --doctor || true
           args=()
-          [ -n "${{ inputs.date }}" ] && args+=(--date "${{ inputs.date }}")
-          [ -n "${{ inputs.piece }}" ] && args+=(--piece "${{ inputs.piece }}")
+          if [ -n "$DAY_DATE" ]; then [[ "$DAY_DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "::error::date is YYYY-MM-DD."; exit 1; }; args+=(--date "$DAY_DATE"); fi
+          if [ -n "$DAY_PIECE" ]; then [[ "$DAY_PIECE" =~ ^[0-9a-fA-F-]{36}$ ]] || { echo "::error::piece is a uuid."; exit 1; }; args+=(--piece "$DAY_PIECE"); fi
           [ "${{ inputs.dry_run }}" = "true" ] && args+=(--dry-run)
           [ "${{ inputs.redo }}" = "true" ] && args+=(--redo)
           python scripts/produce_day.py "${args[@]}"

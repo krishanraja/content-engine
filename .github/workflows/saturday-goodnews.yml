@@ -29,6 +29,9 @@ on:
   schedule:
     - cron: '41 10 * * 4'
     - cron: '23 19 * * 4'
+  # A board press (apps/control-plane/api/board/_run.ts) starts it with the token the board already holds.
+  repository_dispatch:
+    types: [saturday-goodnews]
   workflow_dispatch:
     inputs:
       week:
@@ -79,8 +82,8 @@ jobs:
         id: guard
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
-          WEEK: ${{ inputs.week }}
-          FORCE: ${{ inputs.force }}
+          WEEK: ${{ inputs.week || github.event.client_payload.week }}
+          FORCE: ${{ inputs.force || github.event.client_payload.force }}
           EVENT: ${{ github.event_name }}
         run: |
           # A typed week is normalised to its YYYY-MM-DD Monday (or refused) before it names a folder or a branch.

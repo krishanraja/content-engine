@@ -85,7 +85,13 @@ jobs:
         run: |
           folder="docs/plans/$WEEK-week"
           own="origin/offday-revise/$WEEK"
-          sunday=$(git for-each-ref --sort=-committerdate --format='%(refname:short)' "refs/remotes/origin/sunday-ideas/$WEEK-*" | head -1)
+          # The newest sunday-ideas branch that holds the week's options and is not already on main. On 9 Nov the newest
+          # one was an empty run's branch, so every Improve he pressed failed here ("has no off-day options").
+          has() { git cat-file -e "$1:$folder/ideas.json" 2>/dev/null || git cat-file -e "$1:$folder/offdays-growth.json" 2>/dev/null; }
+          sunday=""
+          for b in $(git for-each-ref --sort=-committerdate --format='%(refname:short)' "refs/remotes/origin/sunday-ideas/$WEEK-*"); do
+            if has "$b" && ! git merge-base --is-ancestor "$b" origin/main; then sunday="$b"; break; fi
+          done
           if git rev-parse -q --verify "$own" >/dev/null; then from="$own"
           elif [ -n "$sunday" ]; then from="$sunday"
           elif [ -f "$folder/ideas.json" ] || [ -f "$folder/offdays-growth.json" ]; then from="origin/main"

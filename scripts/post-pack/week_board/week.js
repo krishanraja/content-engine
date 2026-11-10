@@ -773,10 +773,15 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     const r = e.target.closest && e.target.closest("input[data-pick]"); if (!r) return;
     const day = r.dataset.pick;
     if (mode !== "live" || !pdb || busy[day]) { render(mode); return }
+    // His words go with the pick: what he typed in this idea's note box, else the note he saved on this same pick before
+    // (a pick used to drop both, and his fri-4 words were lost that way on 9 Nov).
+    const box = document.querySelector(`[data-pick-note-for="${r.value}"] input`), typed = box ? box.value.trim() : "";
+    const kept = saved[day] && saved[day].pick === r.value && typeof saved[day].note === "string" ? saved[day].note : null;
     const body = { pick: r.value, idea_id: r.dataset.ideaId || null, series: r.dataset.series, story: storyOf(r), day, at: new Date().toISOString() };
+    if (typed || kept) body.note = typed || kept;
     busy[day] = r.value; say(day, "Saving your pick…"); render(mode);
     let stored = false;
-    try { await pdb.doc("picks/" + day).set(body); saved[day] = body; stored = true } catch {}
+    try { await pdb.doc("picks/" + day).set(body); saved[day] = body; stored = true; if (box && typed && box.value.trim() === typed) box.dataset.unsaved = "false" } catch {}
     if (stored && comments) try {
       const anchor = await comments.anchorFor(r.closest(".id-card"));
       await comments.create({ anchor, text: `PICK ${day} · ${body.pick}${body.idea_id ? " · " + body.idea_id : ""} · ${body.at}\n\n${body.story}` });
@@ -1732,4 +1737,53 @@ function offdayNoteParts(note){
     catch { say(id, "Not saved. Try again", true) }
     sync(box);
   });
+})();
+
+// Nothing he types is lost (Krish, 2026-11-09: "Somehow, you've also managed to lose a bunch of my comments for that
+// article"; board_history shows his fri-4 words never reached the server). Every text box keeps its words in this
+// browser as he types, until the box's own save is confirmed (data-unsaved="false", or data-dirty cleared); a reload,
+// a rebuilt board or a closed tab brings them back into the same box, marked unsaved, with a line saying so; and the
+// page asks before it closes while any words are unsent. Drafts stay 14 days.
+(() => {
+  const PREFIX = "wb-draft:" + location.pathname + ":", TTL = 14 * 864e5;
+  const store = { get: k => { try { return JSON.parse(localStorage.getItem(PREFIX + k) || "null") } catch { return null } },
+    set: (k, v) => { try { localStorage.setItem(PREFIX + k, JSON.stringify({ v, at: Date.now() })) } catch {} },
+    del: k => { try { localStorage.removeItem(PREFIX + k) } catch {} } };
+  const attrs = el => { try { return Array.from(el.attributes || []) } catch { return [] } };
+  const own = el => attrs(el).filter(a => a.name.startsWith("data-") && !/^data-(unsaved|dirty|draft)$/.test(a.name))
+    .map(a => a.name + "=" + a.value).join("|");
+  const keyOf = el => {
+    if (el.id) return "#" + el.id;
+    const host = el.parentElement && el.parentElement.closest("[id],[data-pick-card],[data-pick-note-for],[data-press-note-for],[data-reject-for],[data-say-for]");
+    return el.tagName + "[" + own(el) + "]" + (el.getAttribute("aria-label") || "") + "@" + (host ? (host.id || own(host)) : "");
+  };
+  const boxes = () => [...document.querySelectorAll("textarea, input[type=text], input:not([type])")];
+  const pending = new Set();
+  const settled = el => el.dataset.unsaved === "false" || (el.dataset.draft === "1" && el.dataset.unsaved !== "true" && !el.dataset.dirty);
+  document.addEventListener("input", e => {
+    const el = e.target; if (!el || !el.matches || !el.matches("textarea, input[type=text], input:not([type])")) return;
+    const k = keyOf(el);
+    if (el.value.trim()) { store.set(k, el.value); el.dataset.draft = "1"; pending.add(k) } else { store.del(k); pending.delete(k) }
+  }, true);
+  if (typeof MutationObserver === "function") new MutationObserver(list => { for (const m of list) { const el = m.target;
+    if (el.dataset && el.dataset.draft === "1" && settled(el)) { const k = keyOf(el); store.del(k); pending.delete(k); delete el.dataset.draft } }
+  }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ["data-unsaved", "data-dirty"] });
+  if (typeof addEventListener === "function") addEventListener("beforeunload", e => { if (pending.size) { e.preventDefault(); e.returnValue = "" } });
+  const restore = () => {
+    let n = 0;
+    for (const el of boxes()) {
+      const k = keyOf(el), d = store.get(k); if (!d) continue;
+      if (Date.now() - d.at > TTL) { store.del(k); continue }
+      if (el.value.trim() === String(d.v).trim()) { pending.add(k); el.dataset.draft = "1"; continue }
+      el.value = d.v; el.dataset.unsaved = "true"; el.dataset.dirty = "1"; el.dataset.draft = "1"; pending.add(k); n++;
+      const hidden = el.closest("[hidden]"); if (hidden) hidden.hidden = false;
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    if (!n) return;
+    const bar = document.createElement("p"); bar.className = "wb-restored"; bar.setAttribute("role", "status");
+    bar.textContent = `Brought back ${n} unsent note${n === 1 ? "" : "s"} from your last visit. Press Save beside each to send ${n === 1 ? "it" : "them"}.`;
+    document.body.prepend(bar);
+  };
+  // After the saved words have loaded into their boxes, so the draft only returns where it differs.
+  setTimeout(() => { try { restore() } catch {} }, 1500);
 })();
