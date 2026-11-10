@@ -70,3 +70,36 @@ export async function askChecksForPiece(ideaId: string, deps: Parameters<typeof 
     return { keys: [], status: null, note: 'the board could not be read, so the cron looks within 15 minutes' }
   }
 }
+
+// ── The one voice check (Ruling, Krish, 2026-11-09) ──────────────────────────
+// "we need to make sure everything goes through the same voice system.
+// Absolutely everything." Control Center owns the check (its api/_voiceCheck.ts,
+// krish-voice's kill list in ai-harness, and Make Your Mind Up's canon for the
+// publication's channels). This engine keeps no list of its own and asks.
+
+/** The channels the voice check takes for this engine's words. */
+export type VoiceChannel = 'article' | 'script' | 'caption' | 'carousel' | 'substack' | 'linkedin' | 'x' | 'threads' | 'substack_note' | 'instagram' | 'comment' | 'email'
+
+export interface VoiceHard { rule: string; match: string; message: string }
+export interface VoiceAnswer { hard: VoiceHard[]; distance: number | null; source: string | null }
+
+/** Control Center's verdict on these words, or null when it could not be asked (no access code, unreachable, a bad reply). */
+export async function askVoiceCheck(text: string, channel: VoiceChannel, deps: { env?: Record<string, string | undefined>; fetchImpl?: typeof fetch; timeoutMs?: number } = {}): Promise<VoiceAnswer | null> {
+  const cookie = accessCookie(deps.env)
+  if (!cookie || !text.trim()) return null
+  try {
+    const r = await (deps.fetchImpl ?? fetch)(`${controlCenterUrl(deps.env)}/api/voice/check`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', cookie },
+      body: JSON.stringify({ text: text.slice(0, 60_000), channel }),
+      signal: AbortSignal.timeout(deps.timeoutMs ?? 15_000),
+    })
+    if (r.status !== 200) return null
+    const j = await r.json() as { ok?: boolean; check?: { hard?: VoiceHard[]; distance?: number; source?: { kill_list?: string } } }
+    if (j?.ok !== true || !Array.isArray(j.check?.hard)) return null
+    return { hard: j.check!.hard!, distance: typeof j.check!.distance === 'number' ? j.check!.distance : null, source: j.check!.source?.kill_list ?? null }
+  } catch {
+    return null
+  }
+}
+

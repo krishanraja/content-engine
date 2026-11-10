@@ -216,9 +216,30 @@ export async function loadConfig(keys: string[]): Promise<Record<string, any>> {
 
 /** The krish voice block (system_config.content_voice_block), for grounding rewrites. */
 export async function loadVoiceBlock(): Promise<string> {
+  // The voice, read live from the krish-voice skill through Control Center (GET /api/voice/rules;
+  // Ruling, Krish, 2026-11-09: every writer reads the one voice). system_config.content_voice_block,
+  // a hand-kept copy, is only the fallback when Control Center cannot answer.
+  const live = await loadLiveVoice('article').catch(() => '')
+  if (live) return live
   const c = await loadConfig(['content_voice_block'])
   const v = c['content_voice_block']
   return typeof v === 'string' ? v : (v ? JSON.stringify(v) : '')
+}
+
+let liveVoiceCache: { at: number; text: string } | null = null
+/** The krish-voice text Control Center serves for this kind of writer, cached five minutes; empty when it cannot answer. */
+export async function loadLiveVoice(kind: 'article' | 'social' | 'script' | 'email', env: Record<string, string | undefined> = process.env): Promise<string> {
+  if (liveVoiceCache && Date.now() - liveVoiceCache.at < 5 * 60_000) return liveVoiceCache.text
+  const code = (env.ACCESS_CODE || '').trim()
+  if (!code) return ''
+  const { createHash } = await import('node:crypto')
+  const base = (env.CONTROL_CENTER_URL || 'https://controlcenter.krishraja.com').replace(/\/+$/, '')
+  const r = await fetch(`${base}/api/voice/rules?for=${kind}`, { headers: { cookie: `cc_access=${createHash('sha256').update(code).digest('hex')}` }, signal: AbortSignal.timeout(8_000) })
+  if (r.status !== 200) return ''
+  const j = await r.json() as { ok?: boolean; text?: string }
+  const text = j?.ok === true && typeof j.text === 'string' ? j.text : ''
+  if (text) liveVoiceCache = { at: Date.now(), text }
+  return text
 }
 
 /** The channel corpus (system_config.content_corpus), for the Five Standards gate. */
