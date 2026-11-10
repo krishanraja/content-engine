@@ -169,7 +169,8 @@ describe('signed board activation and current-read revocation', () => {
     expect(metadata.status).toBe(200)
     expect(metadata.out).toMatchObject({ build_id: activation.out.build_id, media_qualification: 'unqualified', manifest: f.signedManifest })
     expect(metadata.headers['X-Media-Qualification']).toBe('unqualified')
-    const currentQueries: Record<string, string>[] = [{ op: 'html' }, { op: 'assets', id: 'video' }]
+    // The week's link serves the live board now (board-desk.test.ts); the old baked board is its archive link.
+    const currentQueries: Record<string, string>[] = [{ op: 'html', archive: '1' }, { op: 'assets', id: 'video' }]
     for (const query of currentQueries) {
       const current = await f.call('GET', query)
       expect(current.status).toBe(409)
