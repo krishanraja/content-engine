@@ -34,6 +34,6 @@
  },
  "compositions": {
   "fixtures/ve/engine-core/props.json": "53b821b8a4f13ec63a10bf98075f78e810050fb5d944634137386564a44a1cd7",
-  "docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json": "2950aeb1697614cbdb0816578385a5024ea0d0b0b1be825b8d16b2a56b877586"
+  "docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json": "b8c7e71780abaebb214cacf24949b825d5681d0c2000aa3265a89aa053594942"
  }
 }
