@@ -1,6 +1,6 @@
 # Short-Form Video Playbook
 
-> Filed 10 Nov 2026 as an observation source for `config/video-styles.json`, never taste proof: Krish shared it with the request to decide video style before the script. Its five formats are the catalogue's `playbook_formats`.
+> Filed 10 Nov 2026 as an observation source, never taste proof: Krish shared it with the request to decide video style before the script. Its five formats become format tags (docs/plans/2026-11-10-video-style-system/STYLE-CATALOGUE.md).
 
 Nov 10, 2026 · @Krish
 
