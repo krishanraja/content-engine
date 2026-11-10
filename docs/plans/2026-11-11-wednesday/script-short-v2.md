@@ -1,8 +1,8 @@
-You've danced to this song, and maybe your cat has too. It's called Movin' To The Sun, and it got to number two in the UK. But it started as words a healer typed into an AI app. So is it AI music, or human music?
+Does this track sound familiar? It's all over TikTok, and it's all over the charts. But which came first? And is it AI music, or human music? Let's find out.
 
-Here's how it really got made. She typed her lyrics and a vibe into the app, pressed a button, and got a whole song back. Tune, drums, singer, the lot.
+It started with a Reiki healer and an AI app. She typed her lyrics and a vibe into the app, pressed a button, and got a whole song back.
 
-People used it under their videos, so strangers went hunting for it. Then a top dance producer heard it, pulled it apart and rebuilt it by hand. And he got the club legend Ultra Naté to sing it. But under her voice, he kept a thin layer of the AI singer. So the hit has a robot humming along underneath.
+Then people put it under their own videos, like cats, weddings and dads dancing badly, so TikTok came first. Strangers went hunting for it, and a top dance producer found it. He pulled it apart and rebuilt it by hand, then got the club legend Ultra Naté to sing it. But listen closely, because under her voice, he kept a thin layer of the AI singer. So the hit has a robot humming along underneath.
 
 Even the Grammys reportedly ruled it out for writing, but in for singing.
 
