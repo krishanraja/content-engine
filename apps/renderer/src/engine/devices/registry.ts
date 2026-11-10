@@ -1,5 +1,6 @@
 import { Device as QuotaChart } from './quota_chart'
 import { Device as AgentSwarm } from './agent_swarm'
+import { Device as WallScreen } from './wall_screen'
 import { Device as Arrangement } from './arrangement'
 import { Device as SlotMachine } from './slot_machine'
 import { Device as UploadFlood } from './upload_flood'
@@ -31,6 +32,7 @@ import { Device as QuoteCard } from './quote_card'
 export const DEVICES: DeviceRegistry = {
   quota_chart: QuotaChart,
   agent_swarm: AgentSwarm,
+  wall_screen: WallScreen,
   arrangement: Arrangement,
   slot_machine: SlotMachine,
   upload_flood: UploadFlood,
