@@ -4,6 +4,9 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('upload_flood declares its seven cues', () => {
+    expect(manifest.devices.upload_flood.verbs).toEqual(['enter', 'fill', 'count_to', 'draw', 'type', 'pick', 'exit'])
+  })
   it('leaderboard declares its eight cues', () => {
     expect(manifest.devices.leaderboard.verbs).toEqual(['enter', 'add', 'fill', 'stamp', 'move', 'highlight', 'mark', 'exit'])
   })
