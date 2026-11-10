@@ -177,6 +177,7 @@ def s_cold(t):
     return g
 
 def kb(img, z, fx=0.5, fy=0.5):
+    z = max(1.0, z)
     h, w = img.shape[:2]; cw, ch = int(w / z), int(h / z); x = int((w - cw) * fx); y = int((h - ch) * fy)
     return cv2.resize(img[y:y + ch, x:x + cw], (w, h), interpolation=cv2.INTER_LINEAR)
 
@@ -213,7 +214,7 @@ def s_hunt(t):  # strangers went hunting for the song; a top producer found it
 def s_arr(t):
     g = devframe('arr1', t, 37.1)
     z = 1 + 0.06 * ease((t - 37.1) / 5) + 0.22 * ease((t - 43.0) / 14)
-    g = kb(g, z, 0.3, 0.62 + 0.12 * math.sin((t - 43) * 0.45) * ease((t - 43) / 3))
+    g = kb(g, z, 0.3, 0.15 + 0.06 * math.sin((t - 43) * 0.45) * ease((t - 43) / 3))
     if 42.5 <= t < 48.0:  # Ultra Nate's voice, her own single page
         p = back((t - 42.5) / 0.35); out = ease((t - 47.6) / 0.4)
         paste(g, SHOTS['apple'], W / 2 + 120, SH - 260 + out * 600, 0.5 * min(1, p), min(1, p * 2) * (1 - out), 18)
@@ -236,7 +237,7 @@ def s_grammys(t):  # headlines stack in; writing ruled out (reportedly), singing
             fg = CREAM if ai else INK
             text(card, a, ANTON(70), cw / 2, 60, fg, 'ma'); text(card, b, ANTON(96), cw / 2, 330, fg, 'ma'); text(card, c, MONO(34), cw / 2, 470, fg, 'ma')
             paste(g, card, 285 + j * 510, SH - 400 + (1 - p) * 500, 1, min(1, p * 2), 26, rot=(-3 if j == 0 else 3))
-    return kb(g, 1 + 0.12 * ease((t - 61.3) / 8.6) + 0.04 * math.sin(t * 1.3), 0.5 + 0.08 * math.sin(t * 0.9), 0.6)
+    return kb(g, 1.06 + 0.12 * ease((t - 61.3) / 8.6) + 0.04 * math.sin(t * 1.3), 0.5 + 0.08 * math.sin(t * 0.9), 0.6)
 
 def s_question(t):  # AI versus human is the wrong question
     g = ground(); p = ease((t - 69.9) / 0.4)
