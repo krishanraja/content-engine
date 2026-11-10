@@ -44,59 +44,105 @@ function avatar(g, x, y, s, color, alpha = 1) {
   g.beginPath(); g.arc(x, y + 14 * s, 15 * s, Math.PI, 0); g.fill(); g.restore()
 }
 
+function note(g, c, x, y, rot) {
+  g.save(); g.translate(x, y); g.rotate(rot)
+  rr(g, -95, -44, 190, 88, 8, c.mint, c.ink, 3); g.strokeStyle = c.ink; g.lineWidth = 3; g.strokeRect(-80, -32, 160, 64)
+  g.fillStyle = c.ink; g.beginPath(); g.arc(0, 0, 18, 0, Math.PI * 2); g.fill(); g.restore()
+}
+
 // --------------------------------------------------------------- what each panel draws
 
 const DRAW = {
   hook(env, g, t, W, H) {
-    // "Cash machines should have ended the bank teller: the person behind the counter who hands you your cash."
+    // The counter: the piece's recurring set. It acts out the opening line, comes back for "expect those jobs to
+    // disappear" and "They didn't", and again for "stopped counting cash ... talking to customers".
     const c = env.skin.colors
     const w0 = (s) => env.word(B.hook, s).s
+    const inOpening = t < at(env, B.y1988, 'city'), inTalk = t >= at(env, B.talk) - 0.3
     label(g, 'THE COUNTER', 40, 76, 38, c.creamSoft)
-    // The cash machine slides in on "Cash machines"; its screen flickers on "ended".
-    const km = env.ease.hero(clamp((t - w0('Cash') + 0.3) / 0.6))
-    const shake = clamp((t - w0('ended')) / 0.5) * (1 - clamp((t - w0('ended') - 0.5) / 0.3))
+    // The cash machine: slides in on "Cash machines", flickers on "ended"; glows smugly on "disappear".
+    const km = inOpening ? env.ease.hero(clamp((t - w0('Cash') + 0.3) / 0.6)) : 1
+    const shake = inOpening ? clamp((t - w0('ended')) / 0.5) * (1 - clamp((t - w0('ended') - 0.5) / 0.3)) : 0
+    const smug = !inOpening && !inTalk ? clamp((t - at(env, B.expect, 'disappear')) / 0.4) * (1 - clamp((t - at(env, B.didnt)) / 0.3)) : 0
     const mx = 70 - (1 - km) * 300 + Math.sin(t * 60) * 6 * shake
     g.save(); g.globalAlpha = km
+    if (smug > 0) { g.shadowColor = c.mint; g.shadowBlur = 60 * smug }
     rr(g, mx, 230, 260, 560, 26, c.inkSoft, c.line, 4)
+    g.shadowBlur = 0
     rr(g, mx + 30, 270, 200, 140, 14, c.mint)
     g.fillStyle = c.ink; g.globalAlpha = km * (0.6 + 0.4 * Math.sin(t * 9) * shake); g.fillRect(mx + 55, 320, 150, 16); g.fillRect(mx + 55, 352, 100, 16)
     g.globalAlpha = km; g.fillStyle = c.line; g.fillRect(mx + 60, 470, 140, 14); g.fillRect(mx + 40, 640, 180, 24)
     for (let i = 0; i < 9; i++) { g.fillStyle = c.line; g.fillRect(mx + 50 + (i % 3) * 60, 520 + Math.floor(i / 3) * 34, 44, 22) }
     g.restore()
-    // The teller's window: a framed opening with a sign, the teller behind it.
-    const kw = env.ease.hero(clamp((t - w0('bank') + 0.2) / 0.5))
+    // The teller's window and sign. The window light dims while the teller is a ghost.
+    const ghost = !inOpening && !inTalk ? env.ease.utility(clamp((t - at(env, B.expect, 'disappear')) / 0.5)) * (1 - clamp((t - at(env, B.didnt, "didn't")) / 0.15)) : 0
+    const back = !inOpening && !inTalk ? env.ease.hero(clamp((t - at(env, B.didnt, "didn't")) / 0.45)) : 0
+    const kw = inOpening ? env.ease.hero(clamp((t - w0('bank') + 0.2) / 0.5)) : 1
     g.save(); g.globalAlpha = kw
-    rr(g, 600, 150, 520, 420, 22, c.inkSoft, c.cream, 6)
+    rr(g, 600, 150, 520, 420, 22, ghost > 0.5 ? c.ink : c.inkSoft, c.cream, 6)
     rr(g, 760, 112, 200, 64, 14, c.cream); label(g, 'TELLER', 860, 158, 36, c.ink, { align: 'center', weight: 700 })
     g.restore()
-    // The teller rises into the window on "teller": a face, a collar, a badge, hands on the counter.
-    const kt = env.ease.hero(clamp((t - w0('teller')) / 0.5))
-    const tx = 860, ty = 560 + (1 - kt) * 140
-    g.save(); g.beginPath(); g.rect(600, 150, 520, 420); g.clip(); g.globalAlpha = kt
-    g.fillStyle = c.channel; g.beginPath(); g.arc(tx, ty + 30, 175, Math.PI, 0); g.fill()           // shoulders
-    g.fillStyle = c.cream; g.beginPath(); g.moveTo(tx - 46, ty - 140); g.lineTo(tx, ty - 70); g.lineTo(tx + 46, ty - 140); g.closePath(); g.fill() // collar
-    g.fillStyle = c.ink; g.fillRect(tx - 8, ty - 120, 16, 90)                                           // tie
-    g.fillStyle = c.creamSoft; g.beginPath(); g.arc(tx, ty - 230, 72, 0, Math.PI * 2); g.fill()        // face
-    g.fillStyle = c.ink; g.beginPath(); g.arc(tx, ty - 262, 76, Math.PI * 1.05, Math.PI * 1.95); g.fill() // hair
-    g.beginPath(); g.arc(tx - 26, ty - 226, 7, 0, Math.PI * 2); g.arc(tx + 26, ty - 226, 7, 0, Math.PI * 2); g.fill() // eyes
-    g.lineWidth = 6; g.strokeStyle = c.ink; g.beginPath(); g.arc(tx, ty - 206, 22, 0.2 * Math.PI, 0.8 * Math.PI); g.stroke() // smile
-    rr(g, tx + 64, ty - 110, 84, 52, 8, c.ink); g.fillStyle = c.channel; g.fillRect(tx + 76, ty - 92, 60, 8) // badge
+    // The teller: rises on "teller"; fades to a dashed outline on "disappear"; pops back on "didn't" with a burst.
+    const kt = inOpening ? env.ease.hero(clamp((t - w0('teller')) / 0.5)) : 1
+    const bounce = back > 0 && back < 1 ? Math.sin(Math.PI * back) * 40 : 0
+    const tx = 860, ty = 560 + (1 - kt) * 140 - bounce
+    g.save(); g.beginPath(); g.rect(600, 150, 520, 420); g.clip()
+    if (ghost > 0.5) {
+      g.setLineDash([18, 14]); g.strokeStyle = c.muted; g.lineWidth = 6
+      g.beginPath(); g.arc(tx, ty + 30, 175, Math.PI, 0); g.stroke(); g.beginPath(); g.arc(tx, ty - 230, 72, 0, Math.PI * 2); g.stroke()
+    } else {
+      g.globalAlpha = kt * (1 - ghost * 2)
+      g.fillStyle = c.channel; g.beginPath(); g.arc(tx, ty + 30, 175, Math.PI, 0); g.fill()
+      g.fillStyle = c.cream; g.beginPath(); g.moveTo(tx - 46, ty - 140); g.lineTo(tx, ty - 70); g.lineTo(tx + 46, ty - 140); g.closePath(); g.fill()
+      g.fillStyle = c.ink; g.fillRect(tx - 8, ty - 120, 16, 90)
+      g.fillStyle = c.creamSoft; g.beginPath(); g.arc(tx, ty - 230, 72, 0, Math.PI * 2); g.fill()
+      g.fillStyle = c.ink; g.beginPath(); g.arc(tx, ty - 262, 76, Math.PI * 1.05, Math.PI * 1.95); g.fill()
+      // In the talk scene the teller turns to the customer: eyes look down-left.
+      const look = inTalk ? env.ease.enter(clamp((t - at(env, B.talk, 'talking')) / 0.4)) * -10 : 0
+      g.beginPath(); g.arc(tx - 26 + look, ty - 226 - look * 0.3, 7, 0, Math.PI * 2); g.arc(tx + 26 + look, ty - 226 - look * 0.3, 7, 0, Math.PI * 2); g.fill()
+      g.lineWidth = 6; g.strokeStyle = c.ink; g.beginPath(); g.arc(tx, ty - 206, 22, 0.2 * Math.PI, 0.8 * Math.PI); g.stroke()
+      rr(g, tx + 64, ty - 110, 84, 52, 8, c.ink); g.fillStyle = c.channel; g.fillRect(tx + 76, ty - 92, 60, 8)
+    }
     g.restore()
-    // The counter, in front of the teller.
+    if (back > 0 && back < 1) for (let i = 0; i < 12; i++) {   // the burst as the teller comes back
+      const a = (i / 12) * Math.PI * 2, r = 120 + 200 * back
+      g.save(); g.globalAlpha = 1 - back; g.strokeStyle = c.mint; g.lineWidth = 8
+      g.beginPath(); g.moveTo(tx + Math.cos(a) * r * 0.8, 330 + Math.sin(a) * r * 0.8); g.lineTo(tx + Math.cos(a) * r, 330 + Math.sin(a) * r); g.stroke(); g.restore()
+    }
+    // The counter.
     g.fillStyle = c.creamSoft; g.fillRect(380, 560, W - 420, 30); g.fillStyle = c.line; g.fillRect(380, 590, W - 420, 320)
-    // On "hands you your cash": notes are passed forward over the counter to a customer's hand.
-    const kh = env.ease.hero(clamp((t - w0('you') + 0.2) / 0.5))
-    g.save(); g.globalAlpha = kh; g.fillStyle = c.cream
-    g.beginPath(); g.ellipse(760, 790, 120, 56, -0.2, 0, Math.PI * 2); g.fill()
-    for (let f = 0; f < 4; f++) { g.beginPath(); g.ellipse(680 + f * 40, 730 - (f === 0 ? -10 : 0), 22, 46, -0.3, 0, Math.PI * 2); g.fill() }
-    g.restore()
-    for (let i = 0; i < 3; i++) {
-      const k = env.ease.hero(clamp((t - w0('hands') - i * 0.18) / 0.6))
-      if (k <= 0) continue
-      const x = lerp(tx - 40, 760, k) + i * 10, y = lerp(500, 720, k) - i * 10 - Math.sin(Math.PI * k) * 70
-      g.save(); g.translate(x, y); g.rotate(-0.2 + i * 0.1)
-      rr(g, -95, -44, 190, 88, 8, c.mint, c.ink, 3); g.strokeStyle = c.ink; g.lineWidth = 3; g.strokeRect(-80, -32, 160, 64)
-      g.fillStyle = c.ink; g.beginPath(); g.arc(0, 0, 18, 0, Math.PI * 2); g.fill(); g.restore()
+    if (inOpening) {
+      // "hands you your cash": notes pass over the counter to a customer's hand.
+      const kh = env.ease.hero(clamp((t - w0('you') + 0.2) / 0.5))
+      g.save(); g.globalAlpha = kh; g.fillStyle = c.cream
+      g.beginPath(); g.ellipse(760, 790, 120, 56, -0.2, 0, Math.PI * 2); g.fill()
+      for (let f = 0; f < 4; f++) { g.beginPath(); g.ellipse(680 + f * 40, 730 - (f === 0 ? -10 : 0), 22, 46, -0.3, 0, Math.PI * 2); g.fill() }
+      g.restore()
+      for (let i = 0; i < 3; i++) {
+        const k = env.ease.hero(clamp((t - w0('hands') - i * 0.18) / 0.6))
+        if (k <= 0) continue
+        note(g, c, lerp(tx - 40, 760, k) + i * 10, lerp(500, 720, k) - i * 10 - Math.sin(Math.PI * k) * 70, -0.2 + i * 0.1)
+      }
+    }
+    if (inTalk) {
+      // "stopped counting cash": the stack on the counter slides off; "talking to customers": a customer steps up
+      // and speech bubbles go back and forth.
+      const off = env.ease.exit(clamp((t - at(env, B.talk, 'stopped')) / 0.6))
+      for (let i = 0; i < 4; i++) note(g, c, 1000 + off * 400, 540 - i * 14, 0.05 * i)
+      const kc = env.ease.hero(clamp((t - at(env, B.talk, 'spent')) / 0.5))
+      g.save(); g.globalAlpha = kc
+      g.fillStyle = c.cream; g.beginPath(); g.arc(560, 700 + (1 - kc) * 80, 80, 0, Math.PI * 2); g.fill()     // the customer, from behind
+      g.beginPath(); g.arc(560, 980 + (1 - kc) * 80, 190, Math.PI, 0); g.fill()
+      g.restore()
+      for (let i = 0; i < 5; i++) {
+        const k = env.ease.hero(clamp((t - at(env, B.talk, 'talking') - i * 0.32) / 0.3)) * (1 - clamp((t - at(env, B.talk, 'talking') - i * 0.32 - 0.9) / 0.3))
+        if (k <= 0) continue
+        const left = i % 2 === 0, bx = left ? 420 : 960, by = 330 - (i % 3) * 30
+        g.save(); g.globalAlpha = k; g.translate(bx, by); g.scale(0.7 + 0.3 * k, 0.7 + 0.3 * k)
+        rr(g, -110, -60, 220, 120, 50, left ? c.cream : c.mint)
+        g.fillStyle = c.ink; for (let d = 0; d < 3; d++) { g.beginPath(); g.arc(-40 + d * 40, 0, 12, 0, Math.PI * 2); g.fill() }
+        g.restore()
+      }
     }
   },
   cardA(env, g, t, W, H) {
@@ -124,10 +170,11 @@ const DRAW = {
       const s = `+${Math.round(43 * k)}%`; g.font = `200px 'Anton'`; const w = g.measureText(s).width
       g.fillStyle = c.channel; g.fillRect(28, 120, (w + 24) * k, 190); g.fillStyle = c.ink; g.fillText(s, 40, 290)
     } else {
-      // A live sparkline ticks along until the number is spoken.
-      g.strokeStyle = c.line; g.lineWidth = 6; g.beginPath()
-      for (let i = 0; i <= 40; i++) { const x = 40 + i * 13, y = 230 + Math.sin(i * 0.6 + t * 2) * 18; i ? g.lineTo(x, y) : g.moveTo(x, y) }
-      g.stroke()
+      // "Each branch got cheaper to run": the running cost of one branch shrinks.
+      const kc = env.ease.utility(clamp((t - at(env, B.didnt, 'cheaper')) / 0.8))
+      label(g, 'COST TO RUN', 40, 160, 34, c.muted)
+      rr(g, 40, 190, 520 * lerp(1, 0.6, kc), 70, 12, kc > 0 ? c.cream : c.line)
+      if (kc > 0) { g.fillStyle = c.mint; g.beginPath(); const ax = 40 + 520 * lerp(1, 0.6, kc) + 40; g.moveTo(ax - 22, 205); g.lineTo(ax + 22, 205); g.lineTo(ax, 245); g.closePath(); g.fill() }
     }
     // Bars: seven, then three more grow.
     for (let i = 0; i < 10; i++) {
@@ -138,12 +185,20 @@ const DRAW = {
   cardC(env, g, t) {
     const c = env.skin.colors
     label(g, 'TELLER JOBS', 36, 70, 34, c.creamSoft)
+    // Two equal rows of tellers, 1988 and 2004, and a mint equals sign on "stayed".
+    for (const [row, yr, word] of [[0, '1988', 'total'], [1, '2004', 'teller']]) {
+      label(g, yr, 36, 158 + row * 90, 30, c.muted, { track: 1 })
+      for (let i = 0; i < 8; i++) {
+        const k = env.ease.hero(clamp((t - at(env, B.same, word) - i * 0.05) / 0.3))
+        avatar(g, 150 + i * 46, 150 + row * 90, 1.1, c.channel, k)
+      }
+    }
+    const ke = env.ease.hero(clamp((t - at(env, B.same, 'stayed')) / 0.4))
+    if (ke > 0) { g.save(); g.globalAlpha = ke; g.font = `150px 'Anton'`; g.fillStyle = c.mint; g.fillText('=', 520, 250); g.restore() }
     const k = env.ease.enter(clamp((t - at(env, B.same, 'stayed')) / 0.8))
-    g.strokeStyle = k > 0 ? c.mint : c.line; g.lineWidth = 12; g.lineCap = 'round'; g.beginPath()
-    const n = k > 0 ? 64 * k : 64
-    for (let i = 0; i <= n; i++) { const x = 40 + i * 8, y = 240 + Math.sin(i * 0.7 + (k > 0 ? 0 : t * 3)) * (k > 0 ? 4 : 10); i ? g.lineTo(x, y) : g.moveTo(x, y) }
-    g.stroke()
-    if (k > 0) { label(g, 'LEVEL', 40, 360, 56, c.mint, { weight: 700 }); g.fillStyle = c.mint; g.beginPath(); g.arc(40 + n * 8, 240, 16 + 6 * Math.sin(t * 6), 0, Math.PI * 2); g.fill() }
+    if (k <= 0) return
+    g.strokeStyle = c.mint; g.lineWidth = 10; g.lineCap = 'round'; g.beginPath(); g.moveTo(40, 330); g.lineTo(40 + 520 * k, 330); g.stroke()
+    label(g, 'LEVEL', 40, 395, 50, c.mint, { weight: 700 })
   },
   main(env, g, t, W, H) {
     const c = env.skin.colors
@@ -236,7 +291,7 @@ const DRAW = {
   toast(env, g, t, W, H) {
     const c = env.skin.colors
     const T = [[at(env, B.y2004, 'thirteen'), '−7 TELLERS PER BRANCH', c.cream], [at(env, B.didnt, 'Forty-three') + 0.6, '+43% CITY BRANCHES', c.channel],
-      [at(env, B.same, 'stayed') + 0.3, 'TELLER JOBS HELD LEVEL', c.mint]]
+      [at(env, B.same, 'stayed') + 0.3, 'HELD LEVEL', c.mint]]
     const cur = T.filter(([s]) => t >= s && t < s + 2.4).at(-1)
     if (!cur) return
     rr(g, 6, 6, W - 12, H - 12, 36, c.ink, cur[2], 5)
@@ -244,14 +299,21 @@ const DRAW = {
     label(g, cur[1], 120, H / 2 + 18, 44, c.cream, { weight: 700, track: 2 })
   },
 }
+// The counter scene's three appearances: [in, out].
+function hookOn(env, t) {
+  const W = [[env.word(B.hook, 'Cash').s - 0.4, at(env, B.y1988, 'city') - 0.6], [at(env, B.expect, 'expect') - 0.3, at(env, B.didnt, 'Each') - 0.4],
+    [at(env, B.talk) - 0.3, at(env, B.two) - 0.4]]
+  return Math.max(...W.map(([a, b]) => env.ease.hero(clamp((t - a) / 0.5)) * (1 - env.ease.exit(clamp((t - b) / 0.45)))))
+}
 function toastOn(env, t) {
   const S = [at(env, B.y2004, 'thirteen'), at(env, B.didnt, 'Forty-three') + 0.6, at(env, B.same, 'stayed') + 0.3]
   return Math.max(...S.map((s) => env.ease.enter(clamp((t - s) / 0.35)) * (1 - env.ease.exit(clamp((t - s - 2.1) / 0.3)))))
 }
 
 // Which panel is lifted, when: [beat, word, panel].
-const LIFT = [[B.hook, 'Cash', 'hook'], [B.y1988, 'city', 'cardA'], [B.expect, 'expect', 'main'], [B.didnt, 'opened', 'map'], [B.didnt, 'Forty-three', 'cardB'],
-  [B.same, 'stayed', 'cardC'], [B.talk, null, 'main'], [B.two, null, 'main'], [B.ask, 'pick', 'main']]
+const LIFT = [[B.hook, 'Cash', 'hook'], [B.y1988, 'city', 'cardA'], [B.expect, 'expect', 'hook'], [B.didnt, 'Each', 'cardB'],
+  [B.didnt, 'opened', 'map'], [B.didnt, 'Forty-three', 'cardB'], [B.same, 'total', 'cardC'], [B.talk, null, 'hook'], [B.two, null, 'main'],
+  [B.ask, 'pick', 'main']]
 function lifted(env, t) {
   let cur = null, t0 = 0
   for (const [b, w, p] of LIFT) { const s = at(env, b, w) - 0.2; if (t >= s) { cur = p; t0 = s } }
@@ -422,7 +484,7 @@ export function draw(env, ctx, t, house) {
     const order = ['cardA', 'cardB', 'cardC', 'main', 'map'].indexOf(k)
     // The first frame already has the screen assembling (F01: never open on an empty frame).
     const arrive = k === 'toast' ? toastOn(env, t)
-      : k === 'hook' ? env.ease.hero(clamp((t - env.word(B.hook, 'Cash').s + 0.4) / 0.5)) * (1 - env.ease.exit(clamp((t - at(env, B.y1988, 'city') + 0.6) / 0.5)))
+      : k === 'hook' ? hookOn(env, t)
       : env.ease.hero(clamp((t + 0.5 - order * 0.32) / 0.6))
     const active = k === cur ? env.ease.hero(clamp((t - t0) / 0.6)) : 0
     const lift = (k === 'toast' ? 0.85 : k === 'hook' ? 0.75 : 0.04 + 0.5 * active) + (1 - arrive) * 2.5
