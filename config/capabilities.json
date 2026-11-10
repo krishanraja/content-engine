@@ -1,5 +1,5 @@
 {
- "_about": "The capability register: every capability the video engine has, across this repository, control-center and inspirationhouse, with what it is for, the production stage it serves, when its choice is made today, its status, and a keep, merge or retire proposal. The proposals are Krish's to decide; nothing here retires anything. Krish, 2026-11-10: \"They need to be cleaned up and made modular and really clear as to what capability it is for and what part of the production process it is for, so that in the future we can build our own suite of capabilities that are unique.\" Seeded from the 10 Nov read-only map (docs/plans/2026-11-10-video-style-system/capability-map.md). Read it with python3 scripts/capabilities.py; check with --check; docs/CAPABILITIES.md is rendered from it.",
+ "_about": "The capability register: every capability the video engine has, across this repository, control-center and inspirationhouse, with what it is for, the production stage it serves, when its choice is made today, its status, and a keep, merge, retire or decide proposal (decide: an architecture call only Krish can make). The proposals are Krish's to decide; nothing here retires anything. Krish, 2026-11-10: \"They need to be cleaned up and made modular and really clear as to what capability it is for and what part of the production process it is for, so that in the future we can build our own suite of capabilities that are unique.\" Seeded from the 10 Nov read-only map (docs/plans/2026-11-10-video-style-system/capability-map.md). Read it with python3 scripts/capabilities.py; check with --check; docs/CAPABILITIES.md is rendered from it.",
  "schema_version": 1,
  "stages": [
   "evidence",
@@ -39,7 +39,8 @@
  "proposal": [
   "keep",
   "merge",
-  "retire"
+  "retire",
+  "decide"
  ],
  "repos": {
   "control-center": "krishanraja/control-center",
@@ -55,9 +56,7 @@
    "location": "inspirationhouse:src/collect/drive.ts",
    "status": "working",
    "proposal": "keep",
-   "overlaps": [
-    "content-watcher"
-   ]
+   "overlaps": []
   },
   {
    "id": "inspo-tagger",
@@ -69,7 +68,7 @@
    "status": "working",
    "proposal": "keep",
    "overlaps": [
-    "style-bank references"
+    "style-bank"
    ]
   },
   {
@@ -95,7 +94,7 @@
    "status": "working",
    "proposal": "merge",
    "overlaps": [
-    "style-bank layers"
+    "style-bank"
    ]
   },
   {
@@ -107,8 +106,20 @@
    "location": "control-center:src/components/inspiration",
    "status": "working",
    "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "piece-inspiration",
+   "name": "Inspiration filed against a piece",
+   "purpose": "A card can name the piece it is research for, but only after the file is dropped in the general inspiration Drive folders and answered on the Inspiration page; there is no way to file inspiration or research on the piece itself while it is being made (Krish, 2026-11-10)",
+   "stage": "evidence",
+   "decided": "pre-script",
+   "location": "control-center:src/components/inspiration",
+   "status": "partial",
+   "proposal": "keep",
    "overlaps": [
-    "board Inspiration tab"
+    "cc-inspiration-page",
+    "inspo-collector"
    ]
   },
   {
@@ -130,22 +141,22 @@
    "decided": "pre-script",
    "location": "scripts/ve.py",
    "status": "working",
-   "proposal": "merge",
+   "proposal": "keep",
    "overlaps": [
-    "inspo-understanding"
+    "quick-edit-reference-study"
    ]
   },
   {
    "id": "quick-edit-reference-study",
-   "name": "quick-edit reference study",
-   "purpose": "Measures reference clips again for quick-edit",
+   "name": "Reference library (references.py)",
+   "purpose": "The shared reference measurement and transport library (publish, fetch, study) under ve study and the reference gate",
    "stage": "evidence",
-   "decided": "post-record",
+   "decided": "pre-script",
    "location": "scripts/quick-edit/references.py",
-   "status": "duplicate",
-   "proposal": "retire",
+   "status": "working",
+   "proposal": "keep",
    "overlaps": [
-    "inspo-understanding"
+    "ve-study"
    ]
   },
   {
@@ -164,15 +175,17 @@
   },
   {
    "id": "techniques",
-   "name": "Techniques list",
-   "purpose": "Older list of production techniques",
+   "name": "Technique registry",
+   "purpose": "The Studio runner's technique registry and the renderer's device adapter map",
    "stage": "direction",
    "decided": "pre-script",
    "location": "config/techniques.json",
-   "status": "duplicate",
-   "proposal": "merge",
+   "status": "working",
+   "proposal": "decide",
    "overlaps": [
-    "style-bank"
+    "style-bank",
+    "devices",
+    "studio-v2"
    ]
   },
   {
@@ -204,12 +217,12 @@
   {
    "id": "editorial-formats",
    "name": "Editorial formats",
-   "purpose": "Nine editorial formats used by drafting",
+   "purpose": "Nine slate formats used by judging, week options and drafting",
    "stage": "script",
    "decided": "pre-script",
    "location": "apps/control-plane/api/_formats.ts",
-   "status": "duplicate",
-   "proposal": "merge",
+   "status": "working",
+   "proposal": "decide",
    "overlaps": [
     "script-formats"
    ]
@@ -230,12 +243,12 @@
   {
    "id": "production-brief",
    "name": "Production brief treatments",
-   "purpose": "Treatments keyed on retired series",
+   "purpose": "Production approval hash and the brief bridge from a routed piece to a Studio job; editorial formats by series (live subchannels plus the retired pair)",
    "stage": "direction",
    "decided": "pre-record",
    "location": "apps/control-plane/api/_productionBrief.ts",
-   "status": "broken",
-   "proposal": "retire",
+   "status": "partial",
+   "proposal": "keep",
    "overlaps": [
     "ve-formats"
    ]
@@ -265,7 +278,7 @@
    "overlaps": [
     "style-bank",
     "ve-formats",
-    "recipes"
+    "ve-recipe-data-story"
    ]
   },
   {
@@ -308,11 +321,11 @@
   {
    "id": "golden-frames",
    "name": "Golden frames",
-   "purpose": "Ten target frames for the design",
+   "purpose": "5 to 10 moments Krish names from Production Inspo that the Critic ranks against; none named yet",
    "stage": "direction",
    "decided": "pre-record",
    "location": "config/ve/golden-frames.json",
-   "status": "documented-only",
+   "status": "partial",
    "proposal": "keep",
    "overlaps": [
     "design-lock"
@@ -327,9 +340,7 @@
    "location": "config/ve/design-lock.json",
    "status": "partial",
    "proposal": "keep",
-   "overlaps": [
-    "studio brand themes"
-   ]
+   "overlaps": []
   },
   {
    "id": "sunday-style-proposal",
@@ -343,7 +354,7 @@
    "overlaps": [
     "narrative-lock",
     "look-step",
-    "pick-a-style"
+    "ve-styles"
    ]
   },
   {
@@ -369,7 +380,7 @@
    "status": "partial",
    "proposal": "keep",
    "overlaps": [
-    "pick-a-style"
+    "ve-styles"
    ]
   },
   {
@@ -397,11 +408,11 @@
   {
    "id": "sfx-approved",
    "name": "Approved sound effects",
-   "purpose": "Sound effects allowed in a cut",
+   "purpose": "The gate that refuses any sound not listed by id and sha256; the set is empty until Krish approves sounds by ear",
    "stage": "sound",
    "decided": "post-record",
    "location": "config/sfx-approved.json",
-   "status": "documented-only",
+   "status": "partial",
    "proposal": "keep",
    "overlaps": []
   },
@@ -531,10 +542,10 @@
   {
    "id": "motion-styles",
    "name": "Motion style bank",
-   "purpose": "One motion style per piece, from the motion layer",
+   "purpose": "One motion style per piece, from the motion layer; apps/renderer/src/engine/kit/motion-profiles.json says how each is drawn",
    "stage": "motion",
-   "decided": "post-record",
-   "location": "apps/renderer/src/engine/kit/motion-profiles.json",
+   "decided": "pre-record",
+   "location": "config/style-references.json",
    "status": "partial",
    "proposal": "keep",
    "overlaps": [
@@ -551,7 +562,8 @@
    "status": "partial",
    "proposal": "merge",
    "overlaps": [
-    "video-styles"
+    "video-styles",
+    "motion-styles"
    ]
   },
   {
@@ -619,12 +631,12 @@
   {
    "id": "studio-v2",
    "name": "Studio V2 stations",
-   "purpose": "Job graph for 9:16 cuts",
+   "purpose": "Job-based Studio: 9:16 cuts, carousels, hash-bound approval gates and the mindmake-studio MCP stations",
    "stage": "cut",
    "decided": "post-record",
-   "location": "docs/STUDIO.md",
-   "status": "duplicate",
-   "proposal": "retire",
+   "location": "packages/core/src/runner.ts",
+   "status": "working",
+   "proposal": "decide",
    "overlaps": [
     "produce-video",
     "ve-cut"
@@ -739,9 +751,7 @@
    "location": "scripts/ve.py",
    "status": "partial",
    "proposal": "keep",
-   "overlaps": [
-    "quick-edit quality"
-   ]
+   "overlaps": []
   },
   {
    "id": "channel-safe",
@@ -777,7 +787,7 @@
    "status": "partial",
    "proposal": "keep",
    "overlaps": [
-    "engine board page"
+    "board-gates"
    ]
   },
   {
@@ -815,9 +825,7 @@
    "location": "scripts/post-pack/making.py",
    "status": "working",
    "proposal": "keep",
-   "overlaps": [
-    "ve file"
-   ]
+   "overlaps": []
   }
  ]
 }

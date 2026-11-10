@@ -1,5 +1,16 @@
 # Video style before script: the decision-ready map
 
+> **Corrections (separate reader, 10 Nov 2026).** A fresh reviewer checked this map against the code. Where they disagree, `config/capabilities.json` is right:
+> - `_productionBrief.ts` maps the three live subchannels as well as the retired pair. It is the live production approval hash and the Studio brief bridge: keep it, do not retire it.
+> - `scripts/quick-edit/references.py` is the shared reference library under `ve study` and the reference gate: keep it, do not retire it.
+> - `config/techniques.json` is the Studio runner's technique registry and the renderer's device adapter map.
+> - `_formats.ts` (nine slate formats) is live in judging and drafting and is not a duplicate of the script formats.
+> - Golden frames hold 5 to 10 slots, with live tooling.
+> - `sfx-approved` is an enforced gate whose set is empty.
+> - The motion bank lives in `config/style-references.json`.
+> - Retiring Studio V2 is an architecture call for Krish (`decide`).
+
+
 Read-only synthesis. Sources: the five area maps and the critic pass. I re-checked three things:
 - The bank holds 18 entries in the motion layer.
 - There are 5 format files in `config/ve/formats/`.

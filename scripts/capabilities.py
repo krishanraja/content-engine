@@ -6,7 +6,7 @@
     python3 scripts/capabilities.py --check            # well formed, every local path exists, the doc is current (exit 1 if not)
     python3 scripts/capabilities.py --render           # rewrite docs/CAPABILITIES.md from config/capabilities.json
 
-The register lives in config/capabilities.json. Its keep, merge and retire proposals are Krish's to decide; this
+The register lives in config/capabilities.json. Its keep, merge, retire and decide proposals are Krish's to settle; this
 script only reads and renders them. Paths prefixed control-center: or inspirationhouse: point into those repositories
 and are checked only when a sibling clone exists.
 """
@@ -62,7 +62,13 @@ def problems(doc):
         for key, field in (('stages', 'stage'), ('decided', 'decided'), ('status', 'status'), ('proposal', 'proposal')):
             if c.get(field) not in (doc.get(key) or []):
                 out.append(f'{cid}: {field} {c.get(field)!r} is not in {key}')
-        repo, path = resolve(c.get('location', ''))
+        if not c.get('location'):
+            out.append(f'{cid}: empty location')
+            continue
+        for o in c.get('overlaps') or []:
+            if o not in {x.get('id') for x in caps}:
+                out.append(f'{cid}: overlap {o!r} is not a register id')
+        repo, path = resolve(c['location'])
         if repo != 'content-engine' and repo not in doc.get('repos', {}):
             out.append(f'{cid}: unknown repository {repo}')
         elif path is not None and not os.path.exists(path):
@@ -89,8 +95,9 @@ def render(doc):
         lines += [f'## {stage}', '', '| Capability | For | Decided | Status | Proposal | Where | Overlaps |',
                   '|---|---|---|---|---|---|---|']
         for c in rows:
+            cell = {k: str(v).replace('|', '\\|') for k, v in c.items() if k != 'overlaps'}
             lines.append('| {name} (`{id}`) | {purpose} | {decided} | {status} | {proposal} | `{location}` | {ov} |'.format(
-                ov=', '.join(c['overlaps']) or '', **c))
+                ov=', '.join(c['overlaps']), **cell))
         lines.append('')
     counts = {}
     for c in caps:
@@ -114,7 +121,9 @@ def main(argv=None):
             out.append('docs/CAPABILITIES.md is not current: run python3 scripts/capabilities.py --render')
         for p in out:
             print('capabilities:', p, file=sys.stderr)
-        print(f'capabilities: {len(doc.get("capabilities", []))} entries, {len(out)} problems')
+        skipped = sum(1 for c in doc.get('capabilities', []) if resolve(c.get('location') or 'x')[1] is None)
+        print(f'capabilities: {len(doc.get("capabilities", []))} entries, {len(out)} problems'
+              + (f', {skipped} locations in repositories not cloned here were not checked' if skipped else ''))
         return 1 if out else 0
     if a.render:
         out = problems(doc)

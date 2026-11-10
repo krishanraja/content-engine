@@ -75,6 +75,9 @@ The 8-agent read-only map (full text: `docs/plans/2026-11-10-video-style-system/
 
 - **Fold the four style choices into one catalogue `style_id`,** signed in the narrative lock and shown on a CC **Style** press. This extends `/look` (`apps/control-plane/api/board/_handler.ts:230-271`) and the CC contract (`control-center/src/surfaces/content/board/contract.ts`), and fixes `api.ts:29`. These are paired changes per ADR-043.
 - **Write scripts to the style,** and generate the storyboard from style plus script before recording.
+- **File inspiration on the piece, at the moment it matters.** Krish, 2026-11-10: "My workflow never really lets me file my own inspiration and research against that post at the right time, and it go into a separate Google Drive folder."
+  - Today a card can carry `piece_id`, but only after the file reaches the general Content Inspo or Production Inspo folders and he answers it on the Control Center Inspiration page.
+  - Target: a drop point on each piece in Control Center (Story, Look and Storyboard steps) that files the link or file as that piece's inspiration, puts it in the right Drive folder, and sets `piece_id` and the style it teaches. The session making the piece then reads it first.
 - **Inspiration House:** add `style_ids` and `teaches` on cards, read `facets.understanding`, and record `style_id` in `PRODUCTION_CHOICES` so the retro learns which style performs.
 - **Cleanup proposals from synthesis G,** each put to Krish one at a time.
 
