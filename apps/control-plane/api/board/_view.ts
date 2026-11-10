@@ -5,7 +5,7 @@ import { readRuns, ENGINE_REPO, type JobName, type RunInfo } from './_run.js'
 import { offdaySides, type OffdaySides } from './_offdaySides.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
 
-// The live board ("The Desk", /board/next): one view of the week as it stands now, built on every read from the
+// The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
 // pieces' making records, his presses on the board, the week's plan files on main and the runs on GitHub. Nothing is a
 // snapshot. docs/plans/2026-11-09-board-desk/PLAN.md.
 //
@@ -303,7 +303,7 @@ export function backupPrompt(week: string, d: DayView): string {
   const where = [
     d.piece_id ? `- the piece's making record: python3 scripts/post-pack/making.py ${d.piece_id} show` : '',
     `- the week's plan, ideas and off-day options: docs/plans/${week}-week/ (ideas.json, and the offday-revise/${week} branch when it exists)`,
-    `- Krish's presses on the board: GET /api/board/${week}/view, and the board at content.krishraja.com/board/next/${week}`,
+    `- Krish's presses on the board: GET /api/board/${week}/view, and the board at content.krishraja.com/board/${week}`,
   ].filter(Boolean).join('\n')
   const options = d.reviews?.length ? `\nWhat waits on him: ${d.reviews.map(r => r.doc_id).join(', ')} (revised from his words).` : ''
   return 'You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: '
