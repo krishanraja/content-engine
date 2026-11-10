@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The capability register (config/capabilities.json, 62 capabilities, docs/CAPABILITIES.md) is checked by npm run check:capabilities. The first style catalogue was withdrawn on Krish's rejection, and its replacement design is docs/plans/2026-11-10-video-style-system/STYLE-CATALOGUE.md (styles, moves and formats as three separate libraries). No pipeline behaviour changed. (2026-11-10)
 - Pull requests no longer edit NOW.md, so they stop conflicting over it: CI's now-md-untouched job refuses a pull request that touches it (steward branches excepted), sessions close out through now-notes/, and auto-merge folds the notes and runs scripts/now_trim.py on main to keep the page under 14,000 bytes. (2026-11-10)
 - All three Wed 11 devices pass Claude's still review (slot_machine round 3: typed lines never cropped, cream cabinet with a visible lever); Krish has every mock frame. Both 10 Nov takes are eye-corrected by Maxine (short $0.015, long $0.093, 60 s chunks; off the lens 68 to 61 s and 247 to 209 s). (2026-11-10)
 - ve closes on the statement card (6 s); Krish's engine approval for Wed 11 Nov is recorded, scoped to the engine only. (2026-11-10)
@@ -47,13 +48,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-10 Krish wants the whole video chosen before the script, from a real catalogue of looks he can see, and every capability labelled by purpose and stage.
 - 2026-11-10 2026-11-10 Krish: "Why does every PR just get left unmerged and lying around? This is unacceptable." Cause: every session edited and hand-trimmed NOW.md, so open pull requests conflicted and auto-merge's merge failed silently (#499, #509, #510); all five open pull requests merged to main by hand.
 Older lines: `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-10): Watch the next two pull requests that are open at once merge themselves on green CI.
+- Next (2026-11-10): Krish rules on STYLE-CATALOGUE.md and records the 45-second house test script, so the first three styles (The Ladder, The Lit Essay, The Living Screen) can be built and rendered on it.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
 - Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
