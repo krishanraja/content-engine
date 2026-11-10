@@ -74,3 +74,5 @@ Answer: A hyperscaler is a landlord for computers that builds first and collects
 
 ## Music bed
 NO CURVES (Instrumental Version), Superintendent McCupcakes (Epidemic Sound), `no-curves-instrumental` in `config/music-library.json`, the one series bed in the ledger, in the one bed shape (`config/music-bed.json`).
+
+Signed by Krish: "signed, add in the impacts too", 2026-11-10, lock sha256 2750aaf4255f2834abdfab0e7b00ce94ddc0bc15725c3cc4ace53f68e6e17607
