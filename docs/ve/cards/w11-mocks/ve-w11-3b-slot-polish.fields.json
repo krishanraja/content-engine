@@ -1,0 +1,15 @@
+{
+  "path": "docs/ve/cards/w11-mocks/ve-w11-3b-slot-polish.md",
+  "card_id": "ve-w11-3b-slot-polish",
+  "kind": "device",
+  "format": "face-with-proof",
+  "motion_style": "living-ui",
+  "title": "Slot machine, round 2: a real machine, full frame, true copy",
+  "goal": "Round 2 of ve-w11-3-slot-machine (built; reviewed 10 Nov). Keep the verbs; fix the look and the fixture.\n1. The panel fills 80% of the box width, centred. Header: the Suno wordmark image (params.logo, fixture may use a placeholder image path 'assets/logos/suno.svg' if absent, drawn as a text fallback 'Suno' in Archivo bold) and the source line params.source in Plex Mono, always visible.\n2. Typing zoom: zoom 1.6x but keep the whole typed line inside the box: the camera follows the caret, clamped so no character is cut at any edge.\n3. The machine after `pick`: a real slot-machine silhouette: a rounded cabinet in ink, a cream window with two reel cylinders (curved shading top and bottom, tiles bending with the cylinder), a chrome-free lever on the right with a mint ball that swings visibly through `send` (angle 0 to 70 degrees and back), a payout tray mouth at the bottom.\n4. Payout cards land fully inside the box, fanned at -6 and +6 degrees, above the tray; titles from params.songs.\n5. Fixture: lyrics 'I’m movin’ to the sun' / 'leave the rain behind'; style 'deep house, female singer, summer'; songs 'Movin’ To The Sun (v1)' 3:24 and '(v2)' 3:11; source 'rebuilt from suno.com, Nov 2026'.\n6. The morph (G3) must read cleanly: boxes shrink and fade to the header strip before the reels grow, no overlap of text on reels.\n\nArt direction for every frame: fill the box with 6% safe margins on every side; nothing hugs a corner; one clear focal point; cards with 16 px radius and a soft ink shadow (0 18px 40px at 25%); generous type. It must read as a premium, real product at phone size, never a wireframe.",
+  "contract": "Same device, same verbs, same registration; change only its own folder and its houseGolden entry (VE_WRITE_HOUSE_GOLDEN=1, no other entry changing). Tokens only, no raw hex; drift()/progress() only.\n\n## Tests (`device.test.ts`), add to the existing ones\n- G1 and G2: every typed character's x lies inside the box\n- the source line is in every frame after enter\n- payout cards' bounding boxes lie inside the box\n- lever angle at G4 is at least 60 degrees",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/slot_machine\nnpx vitest run apps/renderer/src/engine\npython scripts/ve/check_route.py",
+  "write_allow": "[apps/renderer/src/engine/devices/slot_machine/*, apps/renderer/src/engine/houseGolden.json]",
+  "read": "apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/slot_machine/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/kit/**, apps/renderer/src/house/geometry.ts, config/ve/design-lock.json, config/ve/brand-tokens.json, docs/plans/2026-11-11-wednesday/motion-mocks.md",
+  "max_minutes": 50,
+  "max_calls": 70
+}
