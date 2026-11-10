@@ -163,6 +163,7 @@ const server=createServer(async(request,response)=>{
   else {req.query.week=parts[2]; if(['uploads','imports','sources','assets'].includes(parts[3]))req.query.op=parts[3];else if(parts[3])req.query.collection=parts[3];if(parts[4])req.query.id=parts[4]}
   res.status=(code:number)=>{response.statusCode=code;return res}
   res.json=(value:unknown)=>{response.setHeader('Content-Type','application/json');response.end(JSON.stringify(value));return res}
+  res.send=((value:unknown)=>{response.end(value as string);return res}) as VercelResponse['send']
   res.redirect=((code:number,url:string)=>{response.writeHead(code,{Location:url});response.end();return res}) as VercelResponse['redirect']
   await handler(req,res)
 })
@@ -328,7 +329,10 @@ try{
   await put('/api/board/2026-10-12',{manifest:reviewedManifest({version:1,week:'2026-10-12',html:priorHtml,assets:{}}),revision:0})
   assert.deepEqual((await get('/api/board/weeks')).weeks,['2026-10-19','2026-10-12'])
   await put(week,{manifest,revision:1},401,{'Content-Type':'application/json',Cookie:cookie,Origin:origin})
-  const page=await fetch(origin+'/board/2026-10-19',{headers:{Cookie:cookie}})
+  // The week's link opens the live board with no sign-in for the page itself (Krish, 2026-11-10); the old board is its archive.
+  const live=await fetch(origin+'/board/2026-10-19')
+  assert.equal(live.status,200);assert.match(await live.text(),/<title>The Desk<\/title>/)
+  const page=await fetch(origin+'/board/2026-10-19?archive=1',{headers:{Cookie:cookie}})
   assert.equal(page.status,200);assert.equal(page.headers.get('cache-control'),'private, no-store');assert.equal(digest(new Uint8Array(await page.arrayBuffer())),htmlFile.sha256)
   const downloaded=await fetch(origin+week+'/assets/file?sha='+assetFile.sha256,{headers})
   assert.equal(downloaded.headers.get('content-type'),assetFile.type)
