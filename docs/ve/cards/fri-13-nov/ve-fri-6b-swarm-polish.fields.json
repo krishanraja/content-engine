@@ -1,0 +1,15 @@
+{
+  "card_id": "ve-fri-6b-swarm-polish",
+  "kind": "device",
+  "format": "face-with-proof",
+  "motion_style": "data-story",
+  "title": "Agent swarm polish: bigger, livelier agents, a meter that spins, a strike that lands",
+  "goal": "The agent_swarm device (built, on this branch) works but looks plain: 20 px glyph agents, a default bubble, a static-looking meter. Krish's bar: \"world-class motion animation\".\n\n1. Bubble: cream, ink text in Fraunces semibold at 64 px (tall) / 56 px (wide), a hard house shadow, the comment typed on word by word.\n2. Agents: 72 px robot tokens (cream body, ink visor, mint eyes), arriving on a spiral from off-box, staggered 2 frames, each with a fading coral trail; once arrived they bob and peck (small 4 px nudges toward the bubble, out of phase).\n3. Meter: 'TOKENS' in Plex Mono 36 px above an Anton 180 px number in coral that rolls like an odometer and slows hard into tokens.to.\n4. Rank: a departure-board chip (ink, cream Plex Mono 56 px digits that flip) climbing from rank.from to rank.to.\n5. Mark: a thick coral hand-drawn strike across the bubble drawn on over 10 frames, then the agents and meter desaturate to ink-soft while the strike stays.\n6. Fixture: comment 'Can we put more AI on this?', agents 10, tokens 120 to 3,147,000, rank 48 to 1, source line 'ONE ENGINEER\\'S POST \u00b7 2026'.",
+  "contract": "Change only the agent_swarm device and its fixture/tests; verbs unchanged. Colours only from tokens. Keep every existing test passing and add: agents are at least 64 px; no text under 30 px; the meter reads tokens.to formatted with thousands separators after fill.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/agent_swarm\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts",
+  "write_allow": "[apps/renderer/src/engine/devices/agent_swarm/*, apps/renderer/src/engine/houseGolden.json]",
+  "read": "apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/agent_swarm/**, apps/renderer/src/engine/devices/typing_bubble/**, apps/renderer/src/engine/devices/cursor_buddy/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/house/geometry.ts, config/ve/brand-tokens.json",
+  "max_minutes": 45,
+  "max_calls": 45,
+  "path": "docs/ve/cards/fri-13-nov/ve-fri-6b-swarm-polish.md"
+}

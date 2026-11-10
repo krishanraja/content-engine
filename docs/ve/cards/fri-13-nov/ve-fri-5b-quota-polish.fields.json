@@ -1,0 +1,15 @@
+{
+  "card_id": "ve-fri-5b-quota-polish",
+  "kind": "device",
+  "format": "face-with-proof",
+  "motion_style": "data-story",
+  "title": "Quota chart polish: fill the frame, bold type, a junk third you can see",
+  "goal": "The quota_chart device (built, on this branch) works but reads as a small default chart: in 16:9 it uses about a quarter of the box, labels are about 12 px, the junk hatch is nearly invisible and the annotation draws a stray diagonal line across the bars. Krish's bar: \"world-class motion animation\"; every picture makes its point at a glance on a phone.\n\n1. Layout: the chart fills the box (about 86% width, 70% height, centred) in both aspects; in 9:16 the histogram sits above the sales pair, stacked.\n2. Type: axis and labels in IBM Plex Mono at 34 px tall / 30 px wide minimum; the +7% and any number in Anton at 140 px or more; one short annotation in Archivo semibold 40 px.\n3. Target line: 6 px dashed coral with a solid coral label chip ('Target: 200') that slides with the line on `move`.\n4. Junk: the junk share of each bar is a clearly visible diagonal hatch in coral on ink (not grey on grey), and on `move` it drains downward bar by bar, staggered 3 frames.\n5. Annotation: a short leader (under 120 px) from the label to the hatch, never across other bars.\n6. Sales pair: two wide bars (old target, half target) with Plex Mono labels under them; the second grows taller in mint and '+7%' counts up and slows hard into its value.\n7. Fixture: real values from the study (bins bunching at 200, target 200 to 100, junkShare 0.31, salesLift 0.07, source 'GONG ET AL. \u00b7 ARXIV 2609.32859').",
+  "contract": "Change only the quota_chart device and its fixture/tests; verbs unchanged. Colours only from tokens. Keep every existing test passing and add: chart bounding box covers at least 80% of the box width in both aspects; no text under 30 px; hatch area after mark equals junkShare within 2%; after move no hatch remains.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/quota_chart\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts",
+  "write_allow": "[apps/renderer/src/engine/devices/quota_chart/*, apps/renderer/src/engine/houseGolden.json]",
+  "read": "apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/quota_chart/**, apps/renderer/src/engine/devices/leaderboard/**, apps/renderer/src/engine/devices/kinetic_stat/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/house/geometry.ts, config/ve/brand-tokens.json",
+  "max_minutes": 45,
+  "max_calls": 45,
+  "path": "docs/ve/cards/fri-13-nov/ve-fri-5b-quota-polish.md"
+}
