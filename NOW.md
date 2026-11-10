@@ -36,7 +36,6 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 - Pull requests no longer edit NOW.md, so they stop conflicting over it: CI's now-md-untouched job refuses a pull request that touches it (steward branches excepted), sessions close out through now-notes/, and auto-merge folds the notes and runs scripts/now_trim.py on main to keep the page under 14,000 bytes. (2026-11-10)
 - All three Wed 11 devices pass Claude's still review (slot_machine round 3: typed lines never cropped, cream cabinet with a visible lever); Krish has every mock frame. Both 10 Nov takes are eye-corrected by Maxine (short $0.015, long $0.093, 60 s chunks; off the lens 68 to 61 s and 247 to 209 s). (2026-11-10)
-- The video style catalogue (config/video-styles.json, 9 complete styles, every verdict untested) and the capability register (config/capabilities.json, 62 capabilities, docs/CAPABILITIES.md) exist and are checked by npm run check:capabilities; no pipeline behaviour changed. (2026-11-10)
 - ve closes on the statement card (6 s); Krish's engine approval for Wed 11 Nov is recorded, scoped to the engine only. (2026-11-10)
 - ve has four new pieces for the Fri 13 Nov 5-minute cut, built by Codex from cards and checked here: the WINDOW layout (his face in a rounded corner window over full-bleed footage, easing between full frame and window), wall_screen (a real page flown off the office wall to full frame, its line marked), quota_chart (the medical-device study: questions bunch at the target, the junk third, the target halved, sales up 7%) and agent_swarm (ten agents on one comment, the token meter, the rank). (2026-11-10)
 - house end card is direction C, "Built to help you decide.", filmed 6 s by kit; wide frame never splits a word (docs/production/CLOSING.md). (2026-11-10)
@@ -49,7 +48,6 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 ## What changed recently
 
 - 2026-11-10 2026-11-10 Krish: "Why does every PR just get left unmerged and lying around? This is unacceptable." Cause: every session edited and hand-trimmed NOW.md, so open pull requests conflicted and auto-merge's merge failed silently (#499, #509, #510); all five open pull requests merged to main by hand.
-- 2026-11-10 Krish wants the whole video chosen before the script, from a catalogue he can see, and every capability labelled by purpose and stage (plan: docs/plans/2026-11-10-video-style-system/PLAN.md).
 Older lines: `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
