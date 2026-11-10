@@ -628,6 +628,11 @@ describe('the read-back on the script check', () => {
     expect(out.status).toBe(200)
     expect(out.body.making.script_check.read_back).toEqual({ long: signOff(SHA('a')), short: signOff(SHA('b'), { readers: ['reader A: nothing lost'] }) })
   })
+  it('keeps readers_skipped on his sign-off, so making.py --skip-readers survives the engine (F45)', async () => {
+    const out = await call('POST', { script_check: { passed: true, problems: [], cuts: ['long'], hashes: { long: SHA('a') }, read_back: { long: signOff(SHA('a'), { readers_skipped: true, krish_words: 'Krish, 2026-11-09: skip the readers' }) } } })
+    expect(out.status).toBe(200)
+    expect(out.body.making.script_check.read_back.long).toMatchObject({ found: 'approved by Krish', readers: [], readers_skipped: true })
+  })
   it('a sign-off without his words, or words that are not his, is refused', async () => {
     for (const read_back of [{ long: signOff(SHA('a'), { krish_words: undefined }) }, { long: signOff(SHA('a'), { krish_words: 'all looks good' }) }]) {
       const out = await call('POST', { script_check: { passed: true, problems: [], hashes: { long: SHA('a') }, read_back } })

@@ -115,7 +115,8 @@ def sting_problems(props: dict) -> list[str]:
         except intro.IntroError as error:
             return [f'the intro sting\'s config cannot be read, so this cut\'s opening cannot be checked: {error}']
         wanted = (cfg['status'] == 'approved' and STING_SHAPE in cfg['shapes'] and channel in cfg['series'])
-        if not sting and wanted:
+        excepted = (props.get('opening') or {}).get('kind') == 'episode_card' and len(str((props.get('opening') or {}).get('said') or '')) >= 12
+        if not sting and wanted and not excepted:
             problems.append(f'this wide cut of a {series} piece opens on the approved intro sting, and its props have none '
                             '(compiled before the approval): run ve compile again, then ve premix')
         if sting:
@@ -469,7 +470,15 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # colour or its promise (Krish, 2026-11-04: "Yes, give off days their own music and look - Rotate.").
     off = _series_day(identity['day'], spec.get('publish_day')) != identity['day']
     opening = {}
-    sting = sting_props(cut, channel, off, opening)
+    # Krish's word for this piece can put its own episode card where the sting would be (brand.opening_exception;
+    # Krish, 2026-11-09: "I don't want the overall brand intro to come in. I want the episode card to come in."). The
+    # card is drawn by the spec's own beats; compile only leaves the sting out and says why, in his words.
+    exception = (spec.get('brand') or {}).get('opening_exception')
+    if exception and cut['aspect'] == STING_ASPECT and not cut.get('excerpt', False) and not off:
+        sting = None
+        opening['opening_why'] = f"Krish, {exception['on']}: {exception['said']}"
+    else:
+        sting = sting_props(cut, channel, off, opening)
     props = {
         'pieceId': spec['piece_id'], 'cutId': cut_id, 'format': spec['format'], 'aspect': cut['aspect'],
         'fps': FPS, 'durationFrames': duration,
@@ -506,7 +515,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         sfx.append({'src': resolve_source(sound['path']), 'atFrame': event['atFrame'], 'gainDb': gain})
     props['audio']['sfx'] = sfx
     if report is not None:
-        report.update(lint='clean', sfx_missing=missing, opening='sting' if sting else 'hook', **opening)
+        report.update(lint='clean', sfx_missing=missing, opening='sting' if sting else ('episode_card' if exception else 'hook'),
+                      **opening)
         if edl is not None:
             report['edl'] = {'cut': cut_id, 'joins_s': [join['at_s'] for join in edl.get('joins', [])],
                              'duration_frames': edl.get('duration_frames'),
@@ -529,6 +539,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     if sting:
         # In front of the cut, never in it: durationFrames stays the cut's own length and no frame moves.
         props['sting'] = sting
+    elif exception and 'opening_why' in opening:
+        props['opening'] = {'kind': 'episode_card', 'said': exception['said'], 'on': exception['on']}
     if spec.get('call'):
         call = spec['call']
         props['call'] = {'statement': call['statement'], 'due': call['due'], 'confidencePercent': call['confidence_percent']}

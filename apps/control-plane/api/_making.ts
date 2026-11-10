@@ -64,7 +64,7 @@ export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Par
  *  own sign-off stands in for the readers when he gives it in words (Krish,
  *  2026-10-14: "Fix it in the engine"): found 'approved by Krish', with his
  *  words in `krish_words` (starting "Krish"), and any readers who heard it. */
-export interface MakingReadBack { script_sha256: string; at: string; by: string; readers: string[]; found: 'nothing lost' | 'approved by Krish'; krish_words?: string }
+export interface MakingReadBack { script_sha256: string; at: string; by: string; readers: string[]; found: 'nothing lost' | 'approved by Krish'; krish_words?: string; readers_skipped?: true }
 export interface MakingLink { url: string; at: string }
 export interface MakingPack { folder: string; packed_at: string; files: number; sent_at?: string; headline?: string }
 /** A recording's path is the engine's copy, `recordings/<sha256>.<ext>`
@@ -362,7 +362,7 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
       }
       check.read_back = Object.fromEntries(entries.map(([c, r]: [string, any]) => [c, {
         script_sha256: r.script_sha256, at: when(r.at, now), by: str(r.by, 60) || str(body.by, 60) || 'Claude Code', readers: [...r.readers],
-        ...(r.found === 'approved by Krish' ? { found: 'approved by Krish' as const, krish_words: r.krish_words } : { found: 'nothing lost' as const }),
+        ...(r.found === 'approved by Krish' ? { found: 'approved by Krish' as const, krish_words: r.krish_words, ...(r.readers_skipped === true ? { readers_skipped: true as const } : {}) } : { found: 'nothing lost' as const }),
       }])) as Partial<Record<MakingCut, MakingReadBack>>
     }
     patch[key] = check

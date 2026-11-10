@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Web board build adapter and explicit operator commands. No write runs by default."""
 import argparse
+import base64
 import hashlib
 import json
 import mimetypes
@@ -51,13 +52,18 @@ def web_page(page, manifest):
     manifest['sha256'] = sha(page.encode('utf-8'))
     return page, manifest
 
-def call(method, path, body=None):
+# The library lives on the engine's own host, not the board's (content.krishraja.com answers 404 for /api/library/,
+# the 9 Nov restore's first dry run): the same engine key, the address scripts/engine.py uses.
+ENGINE_BASE_URL = 'https://content-engine-flame-nu.vercel.app'
+
+
+def call(method, path, body=None, base=None):
     key = os.environ.get('ENGINE_OPERATOR_TOKEN')
     if not key:
         key, _ = engine.windows_key()
     if not key:
         raise ValueError('Engine operator credential unavailable; use the approved environment or Credential Manager entry.')
-    base = os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
+    base = (base or os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com')).rstrip('/')
     if not base.startswith('https://'):
         raise ValueError('BOARD_BASE_URL must use HTTPS')
     try:
@@ -181,6 +187,25 @@ def lift_article_pictures(week, page, assets, payloads, current):
     return ARTICLE_BLOCK.sub(lambda b: b.group(1) + ARTICLE_IMG.sub(tag, b.group(2)) + b.group(3), page)
 
 
+def library_file(week, ref, kind=None):
+    """(file, bytes) for {"path": <library path>, "sha256": <hex>} read through GET /api/library/file."""
+    import urllib.parse
+    if not (isinstance(ref, dict) and isinstance(ref.get('path'), str) and re.fullmatch(r'[a-f0-9]{64}', str(ref.get('sha256')))):
+        raise ValueError('A library asset is {"path": "<library path>", "sha256": "<64 hex>"}')
+    got = call('GET', '/api/library/file?path=' + urllib.parse.quote(ref['path']) + '&sha256=' + ref['sha256'],
+               base=os.environ.get('ENGINE_BASE_URL', ENGINE_BASE_URL))
+    url = ((got or {}).get('download') or {}).get('url')
+    if not url:
+        raise ValueError(f'The library has no ready file {ref["path"]} with sha256 {ref["sha256"][:12]}')
+    with urllib.request.urlopen(url, timeout=300) as response:
+        data = response.read()
+    if sha(data) != ref['sha256']:
+        raise ValueError(f'The library file {ref["path"]} is not the bytes the mapping names')
+    name = Path(ref['path']).name
+    mime = kind or mimetypes.guess_type(name)[0] or 'application/octet-stream'
+    return {'sha256': ref['sha256'], 'bytes': len(data), 'type': mime, 'name': name, 'key': f'boards/{week}/{ref["sha256"]}'}, data
+
+
 def publish(args):
     import week_board
     path = Path(args.page)
@@ -222,14 +247,46 @@ def publish(args):
                 file = (((older.get('manifest') or {}).get('assets') or {}).get(asset_id))
             if not file or file.get('sha256') != item['existing_sha256']:
                 raise ValueError(f'Existing asset {asset_id} changed or is missing; refresh the mapping')
+        elif item.get('library'):
+            # A picture filed to the library (send.py) after the week's last stored build: fetched by its library path
+            # and checked against the sha256 the mapping names, then stored with the build (the 9 Nov off-day carousels
+            # Krish approved again on 5 Nov live only there and in Drive).
+            file, data = library_file(week, item['library'], item.get('type'))
+            payloads.append((file, data))
         else:
             file, data = spec(week, item['path'], item.get('type'))
             payloads.append((file, data))
         assets[asset_id] = file
+        if item.get('img_id'):
+            # A picture the page holds inside itself (the made day's covers and share card, drawn into the page as it
+            # was made): the named picture shows the mapped file instead (Krish, 2026-11-09: "The Monday thumbnails and
+            # covers are all the old ones").
+            img = str(item['img_id'])
+            found = re.search(r'<img\b[^>]*\bid="' + re.escape(img) + r'"[^>]*>', page)
+            if not re.fullmatch(r'[A-Za-z0-9_-]{1,80}', img) or not found:
+                raise ValueError(f'Asset {asset_id}: the board has no picture with id {img}')
+            # The page holds its pictures' own bytes (week_board.verify: a made day's pictures are data: or https:), so
+            # the mapped file's bytes go in, with the stored asset named beside them for Download and Copy.
+            if not item.get('library'):
+                raise ValueError(f'Asset {asset_id}: img_id needs a library file')
+            uri = 'data:' + (item.get('type') or file.get('type') or 'image/png') + ';base64,' + base64.b64encode(data).decode('ascii')
+            tag = re.sub(r'\ssrc="[^"]*"', f' src="{uri}"', found.group(0), count=1)
+            tag = tag[:4] + f' data-asset="/api/board/{week}/assets/{asset_id}?sha={file["sha256"]}"' + tag[4:]
+            page = page.replace(found.group(0), tag, 1)
+            continue
         source = item['source_url']
         if source not in page:
             raise ValueError(f'Asset {asset_id} has no matching link in the board')
         page = page.replace(source, f'/api/board/{week}/assets/{asset_id}?sha={file["sha256"]}')
+        if item.get('drive_id'):
+            # The file that replaced the source's Drive file (Krish binned the 9 Nov Monday thumbnails the record still
+            # names and filed the v2 set): its Open in Drive link and drive id follow the new file, never the binned one.
+            old = re.search(r'[?&]id=([A-Za-z0-9_-]{20,})', source)
+            new = str(item['drive_id'])
+            if not old or not re.fullmatch(r'[A-Za-z0-9_-]{20,}', new):
+                raise ValueError(f'Asset {asset_id}: drive_id needs a Drive download source_url and a Drive file id')
+            page = (page.replace(f'https://drive.google.com/file/d/{old.group(1)}/', f'https://drive.google.com/file/d/{new}/')
+                    .replace(f'data-drive-id="{old.group(1)}"', f'data-drive-id="{new}"'))
     page = lift_article_pictures(week, page, assets, payloads, (state.get('manifest') or {}).get('assets') or {})
     if re.search(r'https://(?:drive\.google\.com/(?:uc\?|download\?)|drive\.usercontent\.google\.com/download\?)', page):
         raise ValueError('Map every Drive download to an immutable library asset with --assets')
@@ -241,6 +298,13 @@ def publish(args):
         raise ValueError('Board exceeds 16 MB')
     html = {'sha256': sha(data), 'bytes': len(data), 'type': 'text/html', 'name': path.name, 'key': f'boards/{week}/{sha(data)}'}
     manifest = {'version': 1, 'week': week, 'html': html, 'assets': assets}
+    if getattr(args, 'save', None):
+        # The exact page this publish would put live, and the files it would store, for the phone screenshots.
+        out = Path(args.save); (out / 'assets').mkdir(parents=True, exist_ok=True)
+        (out / 'page.html').write_bytes(data)
+        for f, b in payloads:
+            if f is not html:
+                (out / 'assets' / f['sha256']).write_bytes(b)
     if not args.apply:
         print(canonical({'dry_run': True, 'week': week, 'build_id': sha(canonical(manifest).encode()), 'html_bytes': len(data), 'assets': len(assets)}))
         return
@@ -290,23 +354,25 @@ def convert_export(args):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     sub = p.add_subparsers(dest='command', required=True)
-    pub = sub.add_parser('publish-web'); pub.add_argument('page'); pub.add_argument('--assets'); pub.add_argument('--apply', action='store_true')
+    pub = sub.add_parser('publish-web'); pub.add_argument('page'); pub.add_argument('--assets'); pub.add_argument('--apply', action='store_true'); pub.add_argument('--save')
     pub.add_argument('--expected-build', help='refuse to replace a build other than the one used for preparation')
     convert = sub.add_parser('convert-export'); convert.add_argument('page'); convert.add_argument('--week',required=True); convert.add_argument('--source',required=True); convert.add_argument('--expected-sha256',required=True); convert.add_argument('--output',required=True)
     # approvals and titles are read-only views of his day decisions in picks (api/board/_contracts.ts views).
     read = sub.add_parser('read'); read.add_argument('week'); read.add_argument('collection', choices=['ticks','links','edits','picks','queue','comments','approvals','titles'])
-    download = sub.add_parser('download'); download.add_argument('week'); download.add_argument('--output', required=True)
+    download = sub.add_parser('download'); download.add_argument('week'); download.add_argument('--output', required=True); download.add_argument('--build')
     rollback = sub.add_parser('rollback'); rollback.add_argument('week'); rollback.add_argument('build'); rollback.add_argument('--apply', action='store_true')
     args = p.parse_args()
     if args.command == 'publish-web': publish(args)
     elif args.command == 'convert-export': convert_export(args)
     elif args.command == 'read': print(json.dumps(call('GET', f'/api/board/{args.week}/{args.collection}'), ensure_ascii=False, indent=2))
     elif args.command == 'download':
-        state = call('GET', f'/api/board/{args.week}')
+        build = f'?build={args.build}' if args.build else ''
+        if args.build and not re.fullmatch(r'[a-f0-9]{64}', args.build): raise ValueError('--build is a 64-hex build id')
+        state = call('GET', f'/api/board/{args.week}{build}')
         if not state.get('manifest'): raise ValueError('Board is not published')
         key = os.environ.get('ENGINE_OPERATOR_TOKEN') or engine.windows_key()[0]
         base = os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
-        request = urllib.request.Request(base + f'/board/{args.week}', headers={'Authorization':'Bearer ' + key})
+        request = urllib.request.Request(base + f'/board/{args.week}{build}', headers={'Authorization':'Bearer ' + key})
         with urllib.request.urlopen(request, timeout=300) as response: data = response.read()
         expected = state['manifest']['html']
         if len(data) != expected['bytes'] or sha(data) != expected['sha256']: raise ValueError('Board changed during download; retry')

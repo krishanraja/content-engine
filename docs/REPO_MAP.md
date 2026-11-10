@@ -188,6 +188,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/video-studio/runner/project`
 - `/api/video-studio/runner/watch`
 - `/api/video-studio/session`
+- `/api/voice/check`
 - `/api/watch/apify`
 - `/api/watch/claim`
 - `/api/watch/read`
@@ -431,6 +432,7 @@ _content — shared helpers for the Content Engine API routes
 - `function parseVal(v: unknown): any`
 - `async function loadConfig(keys: string[]): Promise<Record<string, any>>`
 - `async function loadVoiceBlock(): Promise<string>`
+- `async function loadLiveVoice(kind: 'article' | 'social' | 'script' | 'email', env: Record<string, string | undefined> =…`
 - `async function loadCorpus(): Promise<string>`
 - `function laneToCorpusChannel(lane?: string | null, slot?: string | null): string | null`
 - `const NO_CORPUS_PLAYBOOK: Record<string, string>`
@@ -463,6 +465,10 @@ _content — shared helpers for the Content Engine API routes
 - `interface Look`
 - `async function askChecksToLook(itemIds: string[], deps: { env?: Record<string, string | undefined>; fetchImpl?: FetchLi…`
 - `async function askChecksForPiece(ideaId: string, deps: Parameters<typeof askChecksToLook>[1] = {}): Promise<Look>`
+- `type VoiceChannel`
+- `interface VoiceHard`
+- `interface VoiceAnswer`
+- `async function askVoiceCheck(text: string, channel: VoiceChannel, deps: { env?: Record<string, string | undefined>; fet…`
 
 ### `apps/control-plane/api/_copyLint.ts`
 
@@ -3203,6 +3209,10 @@ Which Windows runner may take work, and how each one looks from the cloud.
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/voice/check.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
 ### `apps/control-plane/api/watch/_paid.ts`
 
 Apify runs for the cloud backup, made by the engine so its key never leaves it.
@@ -3889,6 +3899,20 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/leaderboard/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/leaderboard/schema.ts`
+
+- `const ParamsSchema`
+- `const RowTarget`
+- `const StampTarget`
+
+### `apps/renderer/src/engine/devices/leaderboard/state.ts`
+
+- `function leaderboardState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/logo_card/index.tsx`
 
 - `function logoCardState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>, count: number)`
@@ -3926,6 +3950,22 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/marquee/state.ts`
 
 - `function marqueeState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/office_floor/index.tsx`
+
+- `function Device({ object, events, box, tokens: t, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/office_floor/schema.ts`
+
+- `const ParamsSchema`
+- `const FillSchema`
+- `const MoveSchema`
+- `const StampSchema`
+- `const TargetSchema`
+
+### `apps/renderer/src/engine/devices/office_floor/state.ts`
+
+- `function officeState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
 
 ### `apps/renderer/src/engine/devices/passport_page/index.tsx`
 
@@ -4238,7 +4278,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 ### `apps/renderer/src/engine/kit/overlayInvariants.ts`
 
 - `const overlayTestProps: Pick<DeviceProps, 'box' | 'tokens' | 'aspect'>`
-- `function assertOverlayMarkup(markup: string, id: string)`
+- `function assertOverlayMarkup(markup: string, id: string, aspect: '9:16' | '16:9' = '9:16')`
 - `function assertOverlayInvariants(Device: DeviceComponent, object: EngineObject, events: readonly EngineEvent[], id: str…`
 
 ### `apps/renderer/src/engine/kit/overlays.tsx`
@@ -4918,6 +4958,7 @@ Artifact-bound user confirmation references.
 - `const VeSpanSchema`
 - `const VeEventSchema`
 - `const VeBeatSchema`
+- `const VeCutMusicSchema`
 - `const VeCutSchema`
 - `const VeDatasetSchema`
 - `const VeObjectSchema`

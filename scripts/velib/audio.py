@@ -273,6 +273,100 @@ def episode_envelope(n: int, levels: dict, *, voice_start_s: float, last_word_en
     return np.interp(np.arange(n) / SR, t, off)
 
 
+# Outside clips heard with their own sound (spec cuts.<cut>.music): each level point names an approved ledger level.
+CLIP_LEVELS = {'open': 'intro_lufs', 'under': 'bed_lufs'}
+CLIP_END_FADE_S = 0.015
+SWEEP_FROM_HZ, SWEEP_TO_HZ = 18000.0, 300.0
+
+
+def entry_ramp_db(n: int, enter_s: float, fade_s: float) -> np.ndarray:
+    """Per-sample dB for a bed that is silent before enter_s and rises over fade_s on a squared curve (slow at first,
+    so it comes in under the voice rather than on top of it)."""
+    t = np.arange(n) / SR
+    k = np.clip((t - enter_s) / fade_s, 0.0, 1.0) if fade_s > 0 else (t >= enter_s).astype(float)
+    return 20 * np.log10(np.maximum(k ** 2, 1e-6))
+
+
+def check_clips(clips: list, duration_s: float, handovers: list) -> list[dict]:
+    """The clips, checked and in order: each inside the cut, its points on known levels, and no two sounding together
+    outside a declared handover (two songs at different tempos clash; Krish, 2026-11-09: "The fade out of the cat video
+    is glitchy")."""
+    out = []
+    for i, clip in enumerate(clips):
+        at, end = float(clip['at_s']), float(clip['end_s'])
+        if not 0 <= at < end <= duration_s + 1e-6:
+            raise ValueError(f'clip {i} ({clip.get("asset", "?")}) must sound inside the cut (0 to {duration_s:.2f} s): {at} to {end}')
+        points = sorted((float(p['t']), str(p['level'])) for p in clip['points'])
+        bad = [level for _, level in points if level not in (*CLIP_LEVELS, 'off')]
+        if bad:
+            raise ValueError(f'clip {i}: a level point is open, under or off, not {bad[0]}')
+        if points[0][0] > at:
+            points.insert(0, (at, points[0][1]))
+        sweep = float(clip.get('sweep_s') or 0)
+        if not 0 <= sweep < end - at:
+            raise ValueError(f'clip {i}: the sweep ({sweep} s) must fit inside the clip')
+        out.append({'asset': clip.get('asset'), 'src': str(clip['src']), 'src_from_s': float(clip.get('src_from_s') or 0),
+                    'at_s': at, 'end_s': end, 'points': points, 'sweep_s': sweep})
+    out.sort(key=lambda c: c['at_s'])
+    for a, b in zip(out, out[1:]):
+        lo, hi = b['at_s'], min(a['end_s'], b['end_s'])
+        if hi - lo > 0.05 and not any(x <= lo and hi <= y for x, y in handovers):
+            raise ValueError(f'clips {a["asset"]} and {b["asset"]} sound together from {lo:.2f} to {hi:.2f} s outside a '
+                             'declared handover: two songs never overlap')
+    return out
+
+
+def _decode_span(src: str, from_s: float, seconds: float) -> np.ndarray:
+    """(n, 2) float samples of src from from_s for seconds, at 48 kHz."""
+    raw = subprocess.run([ffmpeg(), '-v', 'error', '-ss', f'{from_s:.3f}', '-t', f'{seconds:.3f}', '-i', src, '-vn', '-ac', '2',
+                          '-ar', str(SR), '-f', 'f32le', 'pipe:1'], capture_output=True, check=True).stdout
+    return np.frombuffer(raw, dtype=np.float32).reshape(-1, 2).astype(np.float64)
+
+
+def lowpass_sweep(x: np.ndarray, start: int) -> np.ndarray:
+    """A one-pole low-pass whose cutoff falls from 18 kHz to 300 Hz, exponentially, from sample `start` to the end of x:
+    the DJ's sweep that ends a song on its beat. Samples before `start` are untouched."""
+    n = len(x) - start
+    if n <= 0:
+        return x
+    out = x.copy()
+    cut = SWEEP_FROM_HZ * (SWEEP_TO_HZ / SWEEP_FROM_HZ) ** (np.arange(n) / max(1, n - 1))
+    alpha = 1 - np.exp(-2 * np.pi * cut / SR)
+    y = out[start - 1].copy() if start > 0 else np.zeros(x.shape[1])
+    for i in range(n):
+        y = y + alpha[i] * (x[start + i] - y)
+        out[start + i] = y
+    return out
+
+
+def clip_stem(clips: list[dict], n: int, levels: dict, master_gain_db: float) -> tuple[np.ndarray, list[dict]]:
+    """Every clip's own sound laid on the stem's clock at the master's levels: an `open` point lands at intro_lufs and
+    an `under` point at bed_lufs in the finished master (given the master gain), linear in dB between points, held after
+    the last; `off` is silence. The clip ends on its end_s after its low-pass sweep and a 15 ms fade."""
+    stem = np.zeros((n, 2))
+    report = []
+    for clip in clips:
+        seconds = clip['end_s'] - clip['at_s']
+        raw = ebur128(clip['src'], clip['src_from_s'], clip['src_from_s'] + seconds)['I']
+        x = _decode_span(clip['src'], clip['src_from_s'], seconds)
+        if len(x) < int(seconds * SR) - SR // 10:
+            raise ValueError(f'clip {clip["asset"]} runs out {seconds - len(x) / SR:.2f} s before its end_s')
+        t = clip['at_s'] + np.arange(len(x)) / SR
+        gains = [(-120.0 if level == 'off' else float(levels[CLIP_LEVELS[level]]) - master_gain_db - raw)
+                 for _, level in clip['points']]
+        x = x * (10 ** (np.interp(t, [p[0] for p in clip['points']], gains) / 20))[:, None]
+        if clip['sweep_s']:
+            x = lowpass_sweep(x, len(x) - int(round(clip['sweep_s'] * SR)))
+        tail = min(len(x), int(CLIP_END_FADE_S * SR))
+        x[len(x) - tail:] *= np.linspace(1.0, 0.0, tail)[:, None]
+        i0 = int(round(clip['at_s'] * SR))
+        span = min(len(x), n - i0)
+        stem[i0:i0 + span] += x[:span]
+        report.append({'asset': clip['asset'], 'at_s': clip['at_s'], 'end_s': clip['end_s'], 'src_from_s': clip['src_from_s'],
+                       'source_lufs': round(raw, 2), 'points': [list(p) for p in clip['points']], 'sweep_s': clip['sweep_s']})
+    return stem, report
+
+
 def _episode_bed(tmp_bed: str, out: str, *, duration_s: float, gain_db: float, envelope_db: np.ndarray,
                  stops: list[tuple[float, float]], restart_from_s: float = 0.0) -> list[float]:
     """The episode bed alone at its final relative level, played around the track's stops; returns the crossfade
@@ -344,7 +438,8 @@ def ebur128(path: str, start: float | None = None, end: float | None = None, gai
 def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s: float, bed_start_s: float = 0.0,
            under_vo_lu: float = -20.0, lufs: float = -14.0, tp: float = -1.0, mode: str = 'continuous',
            last_word_end_s: float | None = None, levels: dict | None = None, voice_start_s: float = 0.0,
-           lifts: list | None = None, lead_frames: int = 0, fps: int = 30) -> dict:
+           lifts: list | None = None, lead_frames: int = 0, fps: int = 30, clips: list | None = None,
+           bed_enter_s: float = 0.0, bed_fade_in_s: float = 0.0, handovers: list | None = None) -> dict:
     """Cut [start_s, start_s + duration_s) from the dialogue master, lay the bed under it (see the module docstring
     for the modes), and master the sum to lufs / tp. Returns the measured result and writes `<out>.bed.json`.
     Mode episode_bed needs `levels` (the music ledger's approved levels), the first word's start and the last word's end
@@ -354,7 +449,23 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
     lead_frames is the intro sting in front of the cut (props.sting.frames, 0 for none). The dialogue is then laid from
     sample lead_frames x 48000 / fps, counted in samples (never in rounded seconds), and proved silent under the sting;
     the bed runs from sample 0 under it. duration_s, voice_start_s, last_word_end_s and lifts are all on the stem's
-    clock, the sting included, so the bed shape eases relative to his first word wherever it lands."""
+    clock, the sting included, so the bed shape eases relative to his first word wherever it lands.
+
+    clips, bed_enter_s, bed_fade_in_s and handovers are the cut's own music plan (spec cuts.<cut>.music, check_clips),
+    episode_bed only, all on the stem's clock: the clips' own sound is a third stem beside the voice and the bed, the bed
+    is silent before bed_enter_s and rises over bed_fade_in_s, and the one bed shape is checked on the music as heard
+    (clips and bed together) with the handovers and the bed's rise left out like chapter lifts."""
+    clips, handovers = list(clips or []), [tuple(map(float, w)) for w in (handovers or [])]
+    if (clips or bed_enter_s or handovers) and mode != 'episode_bed':
+        raise ValueError('a cut\'s own music plan (clips, a late bed, handovers) needs the episode_bed mode')
+    if bed_enter_s and not 0 < bed_enter_s < duration_s:
+        raise ValueError(f'the bed must enter inside the cut (0 to {duration_s:.2f} s), not at {bed_enter_s}')
+    if bed_enter_s:
+        handovers.append((float(bed_enter_s) - 0.5, float(bed_enter_s) + float(bed_fade_in_s)))
+    bad = [w for w in handovers if not 0 <= w[0] < w[1] <= duration_s + 0.5]
+    if bad:
+        raise ValueError(f'a handover window must lie inside the cut: {bad}')
+    clips = check_clips(clips, duration_s, handovers)
     if mode == 'ducked':
         raise ValueError('a ducked bed is refused: it keys the music to the voice and pumps on every phrase; '
                          'use episode_bed, the one bed shape (config/music-bed.json)')
@@ -408,6 +519,7 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
     report: dict = {'mode': mode, 'bed_present': bed is not None}
     last_end = last_word_end_s if last_word_end_s is not None else max(0.0, duration_s - 3.5)
     music = str(Path(out).with_suffix('.music.wav'))
+    heard = bed_stem  # the music as heard; the bed alone unless a cut's own clips sound with it
     if bed:
         trim = [] if mode == 'episode_bed' else ['-t', f'{duration_s:.3f}']
         _run(['-ss', f'{bed_start_s:.3f}', *trim, '-i', bed, '-ac', '2', '-ar', '48000', tmp_bed])
@@ -418,38 +530,64 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
         if mode == 'episode_bed':
             # bed_lufs is the bed's level in the finished master; the master gain is about lufs - voice, so aim the
             # bed there, master, then correct once from the measured master gain
-            envelope = episode_envelope(int(round(duration_s * SR)), levels, voice_start_s=voice_start_s,
+            n_samples = int(round(duration_s * SR))
+            envelope = episode_envelope(n_samples, levels, voice_start_s=voice_start_s,
                                         last_word_end_s=last_end, lifts=[tuple(w) for w in lifts], duration_s=duration_s)
+            if bed_enter_s:
+                envelope = envelope + entry_ramp_db(n_samples, float(bed_enter_s), float(bed_fade_in_s))
             stops = track_stops(tmp_bed)
             intro = track_intro(tmp_bed)
             probe = str(Path(out).with_suffix('.probe.wav'))
             _episode_bed(tmp_bed, probe, duration_s=duration_s, gain_db=0.0, envelope_db=np.zeros_like(envelope), stops=stops,
                          restart_from_s=intro)
             body = body_window(voice_start_s, last_end, duration_s)
+            if bed_enter_s:  # a late bed is measured only once it has fully arrived
+                body = (max(body[0], float(bed_enter_s) + float(bed_fade_in_s)), body[1])
+                if body[1] - body[0] < 3.0:
+                    raise ValueError(f'the bed enters at {bed_enter_s} s and rises for {bed_fade_in_s} s, leaving under 3 s '
+                                     'of it under his voice to measure')
             raw = ebur128(probe, *body)['I']
             Path(probe).unlink(missing_ok=True)
             gain = float(levels['bed_lufs']) - lufs + voice - raw
-            for _ in range(3):
+            clip_file = str(Path(out).with_suffix('.clips.wav'))
+            master_gain = lufs - voice  # the first guess; the loop corrects it from the master it makes
+            clip_report: list = []
+            for _ in range(4):
                 rendered = gain
                 centres = _episode_bed(tmp_bed, bed_stem, duration_s=duration_s, gain_db=gain, envelope_db=envelope, stops=stops,
                                        restart_from_s=intro)
-                graph = ('[0:a]aformat=sample_rates=48000:channel_layouts=stereo[v];[1:a]aformat=sample_rates=48000:channel_layouts=stereo[b];'
-                         '[v][b]amix=inputs=2:normalize=0:duration=first[m]')
-                _sum([tmp_dialogue, bed_stem], graph, summed, '[m]')
+                guess = master_gain
+                inputs = [tmp_dialogue, bed_stem]
+                if clips:
+                    samples, clip_report = clip_stem(clips, n_samples, levels, guess)
+                    _write_stereo(samples, clip_file)
+                    inputs.append(clip_file)
+                fmt = ''.join(f'[{i}:a]aformat=sample_rates=48000:channel_layouts=stereo[s{i}];' for i in range(len(inputs)))
+                graph = fmt + ''.join(f'[s{i}]' for i in range(len(inputs))) + f'amix=inputs={len(inputs)}:normalize=0:duration=first[m]'
+                _sum(inputs, graph, summed, '[m]')
                 final = _master(summed, out, lufs, tp)
                 master_gain = float(final['gain_db'])
                 got = ebur128(bed_stem, *body, gain_db=master_gain)['I']
                 miss = float(levels['bed_lufs']) - got
-                if abs(miss) <= 0.3:
+                if abs(miss) <= 0.3 and (not clips or abs(master_gain - guess) <= 0.3):
                     break
                 gain += miss
-            _run(['-i', bed_stem, '-af', f'volume={master_gain:.2f}dB', music])
-            # The one bed shape, on the bed stem alone, before it is called mixed: stop loudly when it misses.
+            heard = bed_stem
+            if clips:  # the music as heard: the bed and the clips' own sound together
+                heard = str(Path(out).with_suffix('.heard.wav'))
+                _sum([bed_stem, clip_file], '[0:a]aformat=sample_rates=48000:channel_layouts=stereo[b];[1:a]aformat=sample_rates=48000:'
+                     'channel_layouts=stereo[c];[b][c]amix=inputs=2:normalize=0:duration=first[m]', heard, '[m]')
+            _run(['-i', heard, '-af', f'volume={master_gain:.2f}dB', music])
+            # The one bed shape, on the music alone, before it is called mixed: stop loudly when it misses. A cut's own
+            # handovers (and a late bed's rise) are left out the way chapter lifts are.
             meter = ebur128(music)
             m_by_t = dict(meter['M'])
             shape = bed_shape.qc([(t, m_by_t.get(t, -120.0), v) for t, v in meter['S']], voice_start_s, last_end,
-                                 duration_s, [tuple(w) for w in lifts])
+                                 duration_s, [tuple(w) for w in lifts], accents=handovers)
             report['shape'] = shape
+            if clips or bed_enter_s:
+                report.update(clips=clip_report, bed_enter_s=float(bed_enter_s), bed_fade_in_s=float(bed_fade_in_s),
+                              handovers=[list(w) for w in handovers])
             bed_shape.require(shape, 've premix')
             report.update(gain_db=round(rendered, 2), level_miss_db=round(miss, 2), master_gain_db=round(master_gain, 2), bed_lufs_in_master=round(got, 2),
                           levels={k: levels[k] for k in (*EPISODE_LEVELS, 'chapter_lufs') if k in levels},
@@ -465,7 +603,7 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
             _sum([tmp_dialogue, tmp_bed], f'[1:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={bed_gain:.2f}dB,'
                  f'afade=t=in:d=0.4,afade=t=out:st={max(0.0, duration_s - 0.6):.3f}:d=0.6[b]', bed_stem, '[b]')
             report['gain_db'] = round(bed_gain, 2)
-        report.update(analyse(voice_samples, _decode(bed_stem), last_word_end_s=last_end, from_s=max(1.5, lead_frames / fps)))
+        report.update(analyse(voice_samples, _decode(heard), last_word_end_s=last_end, from_s=max(1.5, lead_frames / fps)))
     else:
         _sum([tmp_dialogue], '[0:a]aformat=sample_rates=48000:channel_layouts=stereo[v]', summed, '[v]')
     if not (bed and mode == 'episode_bed'):
@@ -475,6 +613,6 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
               'lead_frames': lead_frames, **lead_report}
     # The levels are relative, so the master gain (applied equally to voice and bed) does not change them.
     Path(out).with_suffix('.bed.json').write_text(json.dumps(result, indent=1), encoding='utf-8')
-    for tmp in (tmp_dialogue, summed, tmp_bed, bed_stem):
+    for tmp in (tmp_dialogue, summed, tmp_bed, bed_stem, str(Path(out).with_suffix('.clips.wav')), str(Path(out).with_suffix('.heard.wav'))):
         Path(tmp).unlink(missing_ok=True)
     return result

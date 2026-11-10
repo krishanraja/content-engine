@@ -353,10 +353,19 @@ def self_test():
     deliver(p, 'Krish, 2026-11-09: yes, send Monday to Growth', sent.append)
     check('deliver sends one growth-go-live-manifest dispatch with the payload', len(sent) == 1
           and json.loads(sent[0]) == {'event_type': GO_LIVE, 'client_payload': p})
-    with tempfile.TemporaryDirectory() as tmp:
-        out = Path(tmp) / 'manifest.draft.json'
-        rc = main(['draft', str(_write(Path(tmp) / 'spec.json', spec)), '--out', str(out)])
-        check('the draft command writes the draft and its sha256', rc == 0 and out.read_bytes() == db)
+    import voice_gate
+    real_run = voice_gate.run
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / 'manifest.draft.json'
+            voice_gate.run = lambda texts, out=None: 2
+            rc = main(['draft', str(_write(Path(tmp) / 'spec.json', spec)), '--out', str(out)])
+            check('a voice check that could not be asked holds the draft: exit 2, nothing written', rc == 2 and not out.exists())
+            voice_gate.run = lambda texts, out=None: 0
+            rc = main(['draft', str(_write(Path(tmp) / 'spec.json', spec)), '--out', str(out)])
+            check('the draft command writes the draft and its sha256', rc == 0 and out.read_bytes() == db)
+    finally:
+        voice_gate.run = real_run
     return problems_seen
 
 
@@ -398,7 +407,18 @@ def main(argv=None):
             print('piece_manifest self-test ' + ('FAILED:\n  ' + '\n  '.join(bad) if bad else 'passed'))
             return 1 if bad else 0
         if a.cmd == 'draft':
-            data = encode(draft(json.loads(_read(a.spec, 'SPEC').decode('utf-8'))))
+            spec = json.loads(_read(a.spec, 'SPEC').decode('utf-8'))
+            # Every channel's words pass the one voice check first (scripts/post-pack/voice_gate.py;
+            # Ruling, Krish, 2026-11-09). A hard fail writes nothing; not checked is said, loudly.
+            import voice_gate
+            voiced = voice_gate.run(voice_gate.spec_texts(spec), out=lambda line: print(line, file=sys.stderr))
+            if voiced == 1:
+                print('piece_manifest: the channel copy breaks the voice rules above; nothing was written', file=sys.stderr)
+                return 1
+            if voiced == 2:
+                print('piece_manifest: the voice check could not be asked, so nothing was written; say so on the day\'s tab', file=sys.stderr)
+                return 2
+            data = encode(draft(spec))
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_bytes(data)
             print(f'wrote {a.out}, sha256 {sha256(data)}; build the board with --publish-manifest DAY={a.out}')
