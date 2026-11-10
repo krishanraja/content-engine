@@ -145,7 +145,7 @@ after Video assets (the publish board, the posting) is this skill's to write.
 having this same clumsy conversation every single time? You just do it first
 time round when I ask you to produce a video seamlessly." Claude is the art
 director, the administrator and the standards and facts checker; Codex makes
-the plates and devices. Codex lives only on his home computer inside WSL
+the plates and devices. Codex builds cards on his home computer inside WSL
 Ubuntu, so never ask him to open a CLI, run a script or tell you it is done.
 Write the card (`ve card`), push its `.fields.json` to main, book it with
 Control Center's `reserve_credit_spend` (engine growth-makeyourmindup, pool

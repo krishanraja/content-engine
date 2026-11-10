@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-09
+as_of: 2026-11-10
 head: a07ea4e
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -36,24 +36,20 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 - every piece's words pass Control Center's one voice check: the approve and publish gate asks it for every lane and blocks on a hard fail, piece making runs scripts/post-pack/voice_gate.py on scripts, the article, carousel text and every channel's copy (piece_manifest.py draft refuses to write on a hard fail), and the writers read the voice live from Control Center before the hand-kept content_voice_block. (2026-11-09)
 - No script reaches Krish's teleprompter unread: his sign-off counts only with two or more fresh readers (or his own words to skip them), Teleprompter takes only words teleprompter_send.py plan cleared, and the readers now check unexplained names, a teasing opening, wrong-way comparisons and advice past the evidence (F45). (2026-11-09)
-- The 9 Nov board's rebuild recipe carries the off days again (from build 0e79df54, the last that held them, without the Sunday Ideas check), with the Character.AI cards as stored then and the Git and homework cards as Krish approved them again on 5 Nov, read from the library; the screenshots are now taken of the exact page the publish would put live, pictures included. (2026-11-09)
-- Krish rejected the 9 Nov neon covers ("There are so many components here. The headline should take precedence."); the redraw (v2: only Google, Disney and Character.AI logos under the headline, no proof tag, a quiet series label) is filed in the post's 3 Posts folder (covers in 2 Covers and images, thumbnails in 3 Video, each matched by Drive's sha256), not yet on the board; the drawer options (show_tag, quiet_pill, headline_first) sit unmerged on claude/mon-9nov-covers under the 9 Nov freeze. Cloud sessions can now file pictures and videos to Drive through the n8n "Drive file uploader (cloud sessions)" (docs/DRIVE.md). (2026-11-09)
 - **Eye contact (2026-11-09):** `ve eyeline` passes blind review on both 11 Nov takes; Maxine's eye is opt-in, failed review twice (docs/ve/EYE_CONTACT.md).
-- 9 Nov board live (build f62502ec, 15:15 UTC) with Monday's v2 covers and thumbnails, the off-day carousels restored and Monday's re-made manifest (29eb66da...); Krish approved Monday in session ("I approve here", 2026-11-09). Fri 6 Nov counted as published. Post-mortem, board v4, cover-standard proposal and 16 Nov ideas are in; Growth is scheduling the week's posts. (2026-11-09)
-- Wed 11 Nov (36886e0b) storyboard v2 is with Krish as files for approval: 34 long beats and 14 short, each mocked on his takes and the real pages, plus three motion mocks in his own sound; record in docs/plans/2026-11-11-wednesday/storyboard.md. Before render the fact gate settles Imael Angel (healer, or "Hungarian producer" per WeRaveYou), the Grammys ruling and the Bad Times label. (2026-11-09)
 - 16 Nov board published with his picks (Mon 8287846b, Wed db9f9f6a, Fri b019dbf8); Friday's lock signed. Lost Friday comments: a pick dropped its typed note (test proves it); fixed. Every offday-revise run since 2 Nov failed; fixed and re-run, revisions in krishanraja/content-engine#494. (2026-11-09)
 - Live board at /board/next (PLAN.md in docs/plans/2026-11-09-board-desk), React on 21st components: each series day is a guided path (Research, Story, Look, Storyboard and script before recording, Record, Cut); tested on 8 devices. /board unchanged until Krish switches. (2026-11-09)
 - Krish signed the Wed 11 Nov creative sheet (36886e0b) on 9 Nov: "I'm happy with your recommendations. With regard to motion treatment, I endorse being experimental but visually clear. I think the headline should be much clearer and more intriguing, something like "Is your favourite tune made by a human or an AI?"". Picks and his words are in docs/plans/2026-11-11-wednesday/creative.json; the title and thumbnail headline are now his line. (2026-11-09)
 - Fri 13 Nov "Counting rat tails" has new scripts in both cuts, made plain for anyone ("rat farm" hook, tails mapped to AI use, every company and term explained, the study's branch comparison and the scrap-versus-halve reason spelled out), read back by two rounds of three fresh readers per cut and sitting in Krish's Teleprompter scripts; the leaderboard-as-host format with his face never covered is the agreed look; the 5 Nov takes no longer count. (2026-11-09)
-- ve is ready to take Krish's character (asked 2026-11-09). The Keyframes character pack is adopted, not installed: the craft in _corpus/keyframes-character.md, the manifest config/ve/character.json (his inputs and the drawn library live in his brand kit, never git; approved false), 65 poses in config/ve/character-poses.json, an optional spec.character that ve lint refuses until he approves the base, the library is built and the character_layer device exists, and cards ve-kf-6-character-library and ve-kf-7-character-layer (written, not dispatched). No image drawn, nothing spent. (2026-11-09)
-- Claude sessions in this repo load the Codex plugin (codex@openai-codex), and .claude/settings.json no longer denies git pushes to main or force pushes. (2026-11-09)
+- Krish's character is built (2026-11-10): he approved base v2 ("yes", 2026-11-09, after "longer sleeves, get rid of the ear bud in my right ear"); all 65 poses are drawn closed, open and blink, check.mjs passes (one warning: hood-mask 5 px above the hair line), filed in his brand kit at 1 Brand kit (permanent)/character/krish/, never git; config/ve/character.json says ready. A spec naming him still waits on the character_layer device (card ve-kf-7-character-layer). (2026-11-10)
+- Claude sessions in this repo load the Codex plugin (codex@openai-codex); pushes to main are allowed. At session start .claude/hooks/codex-login.sh shows Krish a ChatGPT sign-in link and code whenever Codex is signed out (cloud included), never an API key. (2026-11-10)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
 - 2026-11-09 Krish, 2026-11-09: "we need to make sure everything goes through the same voice system. Absolutely everything."
 - 2026-11-09 Krish kept catching unclear lines in scripts himself (2026-11-09, "I shouldn't have to keep asking you to make sense"), so the readers became a gate instead of something his sign-off could replace.
-Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-10-NOW-moved-1.md`, then `2026-11-09-NOW-moved-8.md`, `2026-11-09-NOW-moved-7.md`, `2026-11-09-NOW-moved-6.md`, `2026-11-09-NOW-moved-5.md`, `2026-11-07-NOW-moved-4.md` and `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
+Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-10-NOW-moved-2.md`, then `2026-11-10-NOW-moved-1.md`, `2026-11-09-NOW-moved-8.md`, `2026-11-09-NOW-moved-7.md`, `2026-11-09-NOW-moved-6.md`, `2026-11-09-NOW-moved-5.md`, `2026-11-07-NOW-moved-4.md` and `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
@@ -65,7 +61,7 @@ Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-09): holds.
+- North Star check (2026-11-10): holds.
 
 ## Read next
 
