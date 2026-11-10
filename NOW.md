@@ -51,15 +51,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 ## What changed recently
 
 - 2026-11-10 Krish, 10 Nov: cutting restarted sentences and fixing eye gaze is a non-negotiable check on every take; the Grammys "out for songwriting, in for performance" line still has no primary source we hold.
-- 2026-11-09 Krish, 2026-11-09: "we need to make sure everything goes through the same voice system. Absolutely everything."
-Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-10-NOW-moved-3.md`, then `2026-11-10-NOW-moved-2.md`, `2026-11-10-NOW-moved-1.md`, `2026-11-09-NOW-moved-8.md`, `2026-11-09-NOW-moved-7.md`, `2026-11-09-NOW-moved-6.md`, `2026-11-09-NOW-moved-5.md`, `2026-11-07-NOW-moved-4.md` and `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
+Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-10-NOW-moved-4.md`, then `2026-11-10-NOW-moved-3.md`, `2026-11-10-NOW-moved-2.md`, `2026-11-10-NOW-moved-1.md`, `2026-11-09-NOW-moved-8.md`, `2026-11-09-NOW-moved-7.md`, `2026-11-09-NOW-moved-6.md`, `2026-11-09-NOW-moved-5.md`, `2026-11-07-NOW-moved-4.md` and `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
 - Next (2026-11-10): queue a round-3 slot_machine card (caret-following zoom clamp, cabinet contrast) once this is on main.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
-- Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
+- Fri 13 Nov (2026-11-10): re-recorded; 90s v2 sent to Krish; 5-minute devices in PR #508. Next: polish cards, then the 5-minute cut.
 - 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms, lock signed). Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
