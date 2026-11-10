@@ -12,7 +12,7 @@ DEV = '/tmp/claude-0/w11l'
 SRC = '/tmp/claude-0/rec2/sources'
 TAKE = '/tmp/claude-0/rec2/eyeL/out/clip.ai-music-long.eyeline.mp4'
 # Kept spans of the take (restarts cut: 20.45, 25.05, 302.35; the "weren't clubbing" slip at 232.6)
-KEEP = [(1.8, 20.45), (21.38, 25.05), (27.45, 232.6), (234.75, 282.0), (286.08, 302.35), (311.35, 335.5), (338.45, 359.2)]
+KEEP = [(1.8, 20.45), (21.38, 25.05), (27.45, 232.6), (234.75, 282.0), (286.08, 302.35), (311.35, 335.5), (338.45, 360.8)]
 OUT_LEN = sum(b - a for a, b in KEEP)
 def take_t(o):
     for a, b in KEEP:
@@ -262,8 +262,11 @@ def s_grammys(t):  # 264.5 the Grammys
         slide_card(g, S['edmhouse'], t, 291.6, SW / 2, 120, 560, 210, frm=(0, -600))
     return sway(g, t, 0.04)
 
-def s_question(t):  # 296.2 is it AI music or human music? the wrong question
-    g = ground(); title(g, t, TITLE_B)
+def s_question(t):  # 296.2 is it AI music or human music? the wrong question (one title only: here the two cards, struck)
+    g = ground(); p = ease((t - 296.3) / 0.4)
+    ai = hatch(300, 820, t * 20); text(ai, 'AI MUSIC?', ANTON(180), 410, 40, CREAM, 'ma')
+    hu = np.full((300, 820, 3), bgr(MINT), np.uint8); text(hu, 'HUMAN MUSIC?', ANTON(160), 410, 50, INK, 'ma')
+    paste(g, ai, SW / 2 - (1 - p) * 900, 230, 1, 1, 26, rot=-2); paste(g, hu, SW / 2 + (1 - p) * 900, SH - 230, 1, 1, 26, rot=2)
     if t > 300.0:
         q = ease((t - 300.0) / 0.35); cv2.line(g, (60, SH // 2 + 40), (int(60 + (SW - 120) * q), SH // 2 + 40), bgr(MINT), 18, cv2.LINE_AA)
     return g

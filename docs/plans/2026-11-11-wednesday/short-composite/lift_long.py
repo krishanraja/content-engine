@@ -15,9 +15,10 @@ SIL = silences('/tmp/claude-0/w11l/sil_long.txt')
 for a, b in CL.KEEP:
     start = a
     for s, e in SIL:
-        if e - s > 0.45 and a < s and e < b and not (s < TITLE_GAP[1] and e > TITLE_GAP[0]):
+        if e - s > 0.45 and a < s and e < b and s < 357.2 and not (s < TITLE_GAP[1] and e > TITLE_GAP[0]):
             KEEP.append((start, s + 0.18)); start = e - 0.10
     KEEP.append((start, b))
+KEEP = [(round(a * 30) / 30, round(b * 30) / 30) for a, b in KEEP]  # whole frames, so picture and voice cut alike
 OUT_LEN = sum(b - a for a, b in KEEP) / SPEED
 def take_t(o):
     o *= SPEED
@@ -56,13 +57,32 @@ def caption(dst, tt):
     cv2.rectangle(dst, (x, y - 10), (x + bw, y + size + 16), bgr(MINT if big else INK), -1)
     text(dst, s, f, x + 20, y, INK if big else CREAM)
 
+import brand_frames as B
+HIM = '/tmp/claude-0/w11l/him_long.mp4'   # his picture cut on exactly the voice's spans, then 6% faster (ffmpeg): sync by construction
+_cap = [None, -1]; _last = [None]
+def him_at(o):
+    k = int(round(o * 30))
+    if _cap[0] is None or k != _cap[1] + 1:
+        _cap[0] = cv2.VideoCapture(HIM); _cap[0].set(cv2.CAP_PROP_POS_FRAMES, k)
+    ok, fr = _cap[0].read(); _cap[1] = k
+    if not ok: fr = _last[0]
+    _last[0] = fr
+    m = CL.seg.process(cv2.cvtColor(fr, cv2.COLOR_BGR2RGB)).segmentation_mask
+    a = np.clip((cv2.GaussianBlur(m, (0, 0), 2) - 0.3) / 0.4, 0, 1).astype(np.float32)
+    a[:, :90] *= np.linspace(0, 1, 90, dtype=np.float32)[None, :]
+    return fr, a
+LAST_WORD_END = 357.4
 def frame(o):
-    tt = take_t(o); out = np.full((CL.H, CL.W, 3), bgr(CREAM), np.uint8)
-    CL._blend(out, CL.stage(tt), CL.STAGE_MASK, CL.SX, CL.SY)
-    fr, a = CL.him(tt); s = 0.75 * punch(tt)
+    tt = take_t(o); fr, a = him_at(o)
+    if 15.85 <= tt < 18.35: return B.title_full(CL.W, CL.H, tt, 15.85)
+    if tt >= LAST_WORD_END: return B.ending(CL.W, CL.H, tt, LAST_WORD_END)
+    out = np.full((CL.H, CL.W, 3), bgr(CREAM), np.uint8)
+    st = B.ending(CL.SW, CL.SH, tt, 354.9) if tt >= 354.9 else CL.stage(tt)
+    CL._blend(out, st, CL.STAGE_MASK, CL.SX, CL.SY)
+    s = 0.75 * punch(tt)
     fr = cv2.resize(fr, None, fx=s, fy=s, interpolation=cv2.INTER_AREA); a = cv2.resize(a, None, fx=s, fy=s)
     x0 = int(1225 + 500 * 0.75 - 500 * s); y0 = int(-360 + 900 * 0.75 - 900 * s)
-    CL._blend(out, fr, a, x0, y0); caption(out, tt); return out
+    CL._blend(out, fr, a, x0, y0); caption(out, tt); B.corner(out, '16:9'); return out
 
 if __name__ == '__main__':
     if sys.argv[1] == 'spans':
