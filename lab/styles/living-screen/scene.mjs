@@ -25,6 +25,7 @@ let R
 const RECT = {
   cardA: [480, 150, 600, 420], cardB: [1120, 150, 600, 420], cardC: [1760, 150, 600, 420],
   main: [480, 620, 1240, 940], map: [1760, 620, 600, 940], toast: [1560, 40, 800, 150],
+  hook: [560, 330, 1280, 940], // the counter scene the opening line acts out (Krish, 10 Nov: "some sort of bank teller visual")
 }
 const toLocal = (x, y) => [(x / UW - 0.5) * SW, (0.5 - y / UH) * SH]
 
@@ -46,6 +47,58 @@ function avatar(g, x, y, s, color, alpha = 1) {
 // --------------------------------------------------------------- what each panel draws
 
 const DRAW = {
+  hook(env, g, t, W, H) {
+    // "Cash machines should have ended the bank teller: the person behind the counter who hands you your cash."
+    const c = env.skin.colors
+    const w0 = (s) => env.word(B.hook, s).s
+    label(g, 'THE COUNTER', 40, 76, 38, c.creamSoft)
+    // The cash machine slides in on "Cash machines"; its screen flickers on "ended".
+    const km = env.ease.hero(clamp((t - w0('Cash') + 0.3) / 0.6))
+    const shake = clamp((t - w0('ended')) / 0.5) * (1 - clamp((t - w0('ended') - 0.5) / 0.3))
+    const mx = 70 - (1 - km) * 300 + Math.sin(t * 60) * 6 * shake
+    g.save(); g.globalAlpha = km
+    rr(g, mx, 230, 260, 560, 26, c.inkSoft, c.line, 4)
+    rr(g, mx + 30, 270, 200, 140, 14, c.mint)
+    g.fillStyle = c.ink; g.globalAlpha = km * (0.6 + 0.4 * Math.sin(t * 9) * shake); g.fillRect(mx + 55, 320, 150, 16); g.fillRect(mx + 55, 352, 100, 16)
+    g.globalAlpha = km; g.fillStyle = c.line; g.fillRect(mx + 60, 470, 140, 14); g.fillRect(mx + 40, 640, 180, 24)
+    for (let i = 0; i < 9; i++) { g.fillStyle = c.line; g.fillRect(mx + 50 + (i % 3) * 60, 520 + Math.floor(i / 3) * 34, 44, 22) }
+    g.restore()
+    // The teller's window: a framed opening with a sign, the teller behind it.
+    const kw = env.ease.hero(clamp((t - w0('bank') + 0.2) / 0.5))
+    g.save(); g.globalAlpha = kw
+    rr(g, 600, 150, 520, 420, 22, c.inkSoft, c.cream, 6)
+    rr(g, 760, 112, 200, 64, 14, c.cream); label(g, 'TELLER', 860, 158, 36, c.ink, { align: 'center', weight: 700 })
+    g.restore()
+    // The teller rises into the window on "teller": a face, a collar, a badge, hands on the counter.
+    const kt = env.ease.hero(clamp((t - w0('teller')) / 0.5))
+    const tx = 860, ty = 560 + (1 - kt) * 140
+    g.save(); g.beginPath(); g.rect(600, 150, 520, 420); g.clip(); g.globalAlpha = kt
+    g.fillStyle = c.channel; g.beginPath(); g.arc(tx, ty + 30, 175, Math.PI, 0); g.fill()           // shoulders
+    g.fillStyle = c.cream; g.beginPath(); g.moveTo(tx - 46, ty - 140); g.lineTo(tx, ty - 70); g.lineTo(tx + 46, ty - 140); g.closePath(); g.fill() // collar
+    g.fillStyle = c.ink; g.fillRect(tx - 8, ty - 120, 16, 90)                                           // tie
+    g.fillStyle = c.creamSoft; g.beginPath(); g.arc(tx, ty - 230, 72, 0, Math.PI * 2); g.fill()        // face
+    g.fillStyle = c.ink; g.beginPath(); g.arc(tx, ty - 262, 76, Math.PI * 1.05, Math.PI * 1.95); g.fill() // hair
+    g.beginPath(); g.arc(tx - 26, ty - 226, 7, 0, Math.PI * 2); g.arc(tx + 26, ty - 226, 7, 0, Math.PI * 2); g.fill() // eyes
+    g.lineWidth = 6; g.strokeStyle = c.ink; g.beginPath(); g.arc(tx, ty - 206, 22, 0.2 * Math.PI, 0.8 * Math.PI); g.stroke() // smile
+    rr(g, tx + 64, ty - 110, 84, 52, 8, c.ink); g.fillStyle = c.channel; g.fillRect(tx + 76, ty - 92, 60, 8) // badge
+    g.restore()
+    // The counter, in front of the teller.
+    g.fillStyle = c.creamSoft; g.fillRect(380, 560, W - 420, 30); g.fillStyle = c.line; g.fillRect(380, 590, W - 420, 320)
+    // On "hands you your cash": notes are passed forward over the counter to a customer's hand.
+    const kh = env.ease.hero(clamp((t - w0('you') + 0.2) / 0.5))
+    g.save(); g.globalAlpha = kh; g.fillStyle = c.cream
+    g.beginPath(); g.ellipse(760, 790, 120, 56, -0.2, 0, Math.PI * 2); g.fill()
+    for (let f = 0; f < 4; f++) { g.beginPath(); g.ellipse(680 + f * 40, 730 - (f === 0 ? -10 : 0), 22, 46, -0.3, 0, Math.PI * 2); g.fill() }
+    g.restore()
+    for (let i = 0; i < 3; i++) {
+      const k = env.ease.hero(clamp((t - w0('hands') - i * 0.18) / 0.6))
+      if (k <= 0) continue
+      const x = lerp(tx - 40, 760, k) + i * 10, y = lerp(500, 720, k) - i * 10 - Math.sin(Math.PI * k) * 70
+      g.save(); g.translate(x, y); g.rotate(-0.2 + i * 0.1)
+      rr(g, -95, -44, 190, 88, 8, c.mint, c.ink, 3); g.strokeStyle = c.ink; g.lineWidth = 3; g.strokeRect(-80, -32, 160, 64)
+      g.fillStyle = c.ink; g.beginPath(); g.arc(0, 0, 18, 0, Math.PI * 2); g.fill(); g.restore()
+    }
+  },
   cardA(env, g, t, W, H) {
     const c = env.skin.colors
     label(g, 'PER BRANCH', 36, 70, 34, c.creamSoft)
@@ -197,7 +250,7 @@ function toastOn(env, t) {
 }
 
 // Which panel is lifted, when: [beat, word, panel].
-const LIFT = [[B.y1988, 'city', 'cardA'], [B.expect, 'expect', 'main'], [B.didnt, 'opened', 'map'], [B.didnt, 'Forty-three', 'cardB'],
+const LIFT = [[B.hook, 'Cash', 'hook'], [B.y1988, 'city', 'cardA'], [B.expect, 'expect', 'main'], [B.didnt, 'opened', 'map'], [B.didnt, 'Forty-three', 'cardB'],
   [B.same, 'stayed', 'cardC'], [B.talk, null, 'main'], [B.two, null, 'main'], [B.ask, 'pick', 'main']]
 function lifted(env, t) {
   let cur = null, t0 = 0
@@ -268,7 +321,7 @@ export async function setup(env) {
     shadow: new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0 }),
     glow: new THREE.MeshBasicMaterial({ color: col(c.channel), transparent: true, opacity: 0, toneMapped: false }),
   }
-  const panels = Object.fromEntries(['cardA', 'cardB', 'cardC', 'main', 'map', 'toast'].map((k) => [k, makePanel(scene, rig, k, mats)]))
+  const panels = Object.fromEntries(['cardA', 'cardB', 'cardC', 'main', 'map', 'toast', 'hook'].map((k) => [k, makePanel(scene, rig, k, mats)]))
 
   // A cursor on its own plane, always in front.
   const cur = document.createElement('canvas'); cur.width = cur.height = 128
@@ -368,9 +421,11 @@ export function draw(env, ctx, t, house) {
     // Panels assemble during the hook, flying in from depth one after another.
     const order = ['cardA', 'cardB', 'cardC', 'main', 'map'].indexOf(k)
     // The first frame already has the screen assembling (F01: never open on an empty frame).
-    const arrive = k === 'toast' ? toastOn(env, t) : env.ease.hero(clamp((t + 0.5 - order * 0.32) / 0.6))
+    const arrive = k === 'toast' ? toastOn(env, t)
+      : k === 'hook' ? env.ease.hero(clamp((t - env.word(B.hook, 'Cash').s + 0.4) / 0.5)) * (1 - env.ease.exit(clamp((t - at(env, B.y1988, 'city') + 0.6) / 0.5)))
+      : env.ease.hero(clamp((t + 0.5 - order * 0.32) / 0.6))
     const active = k === cur ? env.ease.hero(clamp((t - t0) / 0.6)) : 0
-    const lift = (k === 'toast' ? 0.85 : 0.04 + 0.5 * active) + (1 - arrive) * 2.5
+    const lift = (k === 'toast' ? 0.85 : k === 'hook' ? 0.75 : 0.04 + 0.5 * active) + (1 - arrive) * 2.5
     P.group.position.z = lift; P.group.scale.setScalar((1 + 0.05 * active) * (k === 'toast' ? 0.6 + 0.4 * arrive : 1))
     P.group.rotation.y = active * 0.12 * Math.sin(t * 0.8)
     // While one panel is lifted, the others dim, so the eye goes where he is talking.
