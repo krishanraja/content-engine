@@ -10,7 +10,7 @@ A style bundles the playbook format, script format, production format, lengths, 
 picture modules, sound, opening, close and devices, and points at the banks that already hold them:
 config/style-references.json (formats and bank), config/ve/formats, config/ve/recipes, config/ve/devices.json,
 config/music-library.json, apps/control-plane/api/_video.ts (lengths) and config/failures.json (what it prevents).
---thumbs takes a JSON object of inspiration card id to a data: URI, read beforehand from inspiration_items; the
+Evidence card ids are checked for shape only; whether a card exists needs a database read. --thumbs takes a JSON object of inspiration card id to a data: URI, read beforehand from inspiration_items; the
 rendered page never reaches the network itself. Every krish_verdict stays 'untested' until Krish rates the style.
 """
 import argparse
@@ -24,6 +24,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CATALOGUE = os.path.join(ROOT, 'config', 'video-styles.json')
 UUID = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
 VERDICTS = ('untested', 'liked', 'trial', 'not for us')
+MAPPINGS = ('engine guess', 'Krish')
+CAPTION_MODULES = ('kinetic-serif-captions', 'word-bounce-in', 'vertical-captions')
 STATUSES = ('seed', 'candidate', 'retired')
 
 
@@ -44,12 +46,34 @@ def banks():
         'script': {x['id'] for x in s['formats']['script']},
         'production': {x['id'] for x in s['formats']['production']},
         'bank': {x['id'] for x in s['bank']},
+        'layer': {x['id']: x.get('layer') for x in s['bank']},
+        'said': {(k, x['id']): [e.get('said', '') for e in x.get('evidence') or []]
+                 for k in ('script', 'production') for x in s['formats'][k]},
         'motion': {x['id'] for x in s['bank'] if x.get('layer') == 'motion'},
-        'tracks': {x['id'] for x in tracks},
+        'tracks': {x['id'] for x in tracks if x.get('status') == 'approved'},
         'devices': set(devices) if isinstance(devices, dict) else {x['id'] for x in devices},
         'lengths': lengths,
         'failures': {x['id'] for x in read_json('config/failures.json')['failures']},
     }
+
+
+def quote_found(said, source, b):
+    """True when his words appear verbatim in the source a quote names. Sources outside config/ and docs/ (an
+    inspiration card's why_like) need a database read and are not checked offline."""
+    parts = source.split()
+    if parts[0] == 'config/style-references.json' and len(parts) >= 3 and parts[1].startswith('formats.'):
+        return said in b['said'].get((parts[1].split('.', 1)[1], parts[2]), [])
+    if not parts[0].startswith(('config/', 'docs/')):
+        return True
+    path = os.path.join(ROOT, parts[0])
+    if not os.path.exists(path):
+        return False
+    with open(path, encoding='utf-8') as f:
+        text = f.read()
+    if path.endswith('.json'):
+        text = json.dumps(json.loads(text), ensure_ascii=False)
+        said = json.dumps(said, ensure_ascii=False)[1:-1]
+    return said in text
 
 
 def problems(doc, b=None):
@@ -72,17 +96,24 @@ def problems(doc, b=None):
         seen.add(sid)
         need(sid, 'status', st.get('status'), STATUSES, 'the statuses')
         need(sid, 'krish_verdict', st.get('krish_verdict'), VERDICTS, 'the verdicts')
+        if st.get('krish_verdict') != 'untested' and not (st.get('krish_rating') or {}).get('said'):
+            out.append(f'{sid}: a verdict other than untested needs krish_rating with his words')
+        need(sid, 'playbook_mapping', st.get('playbook_mapping'), MAPPINGS, 'the mappings')
         need(sid, 'playbook_format', st.get('playbook_format'), formats, 'playbook_formats')
         need(sid, 'script_format', st.get('script_format'), b['script'], 'formats.script')
         need(sid, 'production_format', st.get('production_format'), b['production'], 'formats.production')
         need(sid, 'motion_style', st.get('motion_style'), b['motion'], 'the motion layer')
-        need(sid, 'caption_look', st.get('caption_look'), b['bank'], 'the style bank')
+        need(sid, 'caption_look', st.get('caption_look'), CAPTION_MODULES, 'the caption modules')
         for m in st.get('picture_modules') or []:
             need(sid, 'picture_module', m, b['bank'], 'the style bank')
         for end in ('opening', 'close'):
-            v = st.get(end) or ''
-            if v and ' ' not in v:
-                need(sid, end, v, b['bank'], 'the style bank')
+            v = st.get(end)
+            if not isinstance(v, dict) or len(v) != 1 or not (v.get('id') or v.get('text')):
+                out.append(f'{sid}: {end} must be {{"id": bank id}} or {{"text": words}}')
+            elif v.get('id'):
+                need(sid, end, v['id'], b['bank'], 'the style bank')
+                if b['layer'].get(v['id']) not in (None, end):
+                    out.append(f'{sid}: {end} {v["id"]!r} is a {b["layer"][v["id"]]} module, not one for {end}')
         for ln in st.get('lengths') or []:
             need(sid, 'length', ln, b['lengths'], '_video.ts lengths')
         if not st.get('lengths'):
@@ -105,6 +136,9 @@ def problems(doc, b=None):
         for w in ev.get('krish_words') or []:
             if not w.get('said') or not w.get('source'):
                 out.append(f'{sid}: krish_words needs said and source')
+                continue
+            if not quote_found(w['said'], w['source'], b):
+                out.append(f'{sid}: not found verbatim in {w["source"]}: {w["said"][:60]!r}')
     return out
 
 
@@ -151,8 +185,8 @@ def render(doc, thumbs=None):
             parts.append('<div class="thumbs">' + ''.join(f'<img alt="inspiration card" src="{esc(u)}">' for u in imgs) + '</div>')
         rows = [
             ('Script format', st['script_format']), ('Production', st['production_format']),
-            ('Lengths', ', '.join(st['lengths'])), ('Hook', st['hook']), ('Opening', st['opening']),
-            ('Close', st['close']), ('Motion style', st['motion_style']), ('Captions', st['caption_look']),
+            ('Lengths', ', '.join(st['lengths'])), ('Hook', st['hook']), ('Opening', st['opening'].get('id') or st['opening'].get('text')),
+            ('Close', st['close'].get('id') or st['close'].get('text')), ('Motion style', st['motion_style']), ('Captions', st['caption_look']),
             ('Picture', ', '.join(st.get('picture_modules') or [])),
             ('Sound', f'{snd.get("track") or "no track yet"}; big moment: {snd.get("big_moment") or "none"}'),
             ('Devices', ', '.join(st.get('devices') or []) or 'none named'),

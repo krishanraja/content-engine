@@ -46,7 +46,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-10 Video style before the script, step 1: `config/video-styles.json` (9 styles, verdicts untested) and `config/capabilities.json` (61 capabilities, `docs/CAPABILITIES.md`), checked by `npm run check:capabilities`; plan in `docs/plans/2026-11-10-video-style-system/`. No pipeline change.
+- 2026-11-10 Video style before the script, step 1: `config/video-styles.json` (9 styles, verdicts untested) and `config/capabilities.json` (62 capabilities, `docs/CAPABILITIES.md`), checked by `npm run check:capabilities`; plan in `docs/plans/2026-11-10-video-style-system/`. No pipeline change.
 - 2026-11-10 Krish, 2026-11-10: "the 5-minute video probably needs my face in the corner. Make sure you get Codex to do the heavy production lifting here." Review fixes: wall_screen returned -0 skew, the layout mirror test now lists WINDOW, production-spec.ts keeps main's line endings, house golden records the two new devices only.
 Older lines: `docs/history/2026-11-10-NOW-moved-6.md`, then `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
