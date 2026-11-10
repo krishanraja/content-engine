@@ -322,7 +322,7 @@ def run(media, out_dir, *, yes: bool = False, max_usd: float = MAX_USD, max_minu
 # Contact NIM (entitlement check, run 42089984680). NVIDIA's terms allow that for development and test; published
 # work needs NVIDIA AI Enterprise, which is Krish's call. The pod runs the NIM image as it is; GitHub's runner sends
 # the clip over the NIM's gRPC port with NVIDIA's own client (github.com/NVIDIA-Maxine/nim-clients, eye-contact).
-NIM_IMAGE = 'nvcr.io/nim/nvidia/maxine-eye-contact:latest'
+NIM_IMAGE = os.environ.get('MAXINE_NIM_IMAGE') or 'nvcr.io/nim/nvidia/maxine-eye-contact:latest'   # a tag can be pinned: `latest` (feature 1.5.1, 9 Nov) refused the take the 5 Nov image took
 NIM_GRPC, NIM_HTTP = 8001, 8000
 REGISTRY_AUTH = 'ngc-eyeline'
 BOOT_MAX_S, BOOT_TRIES = 12 * 60, 3   # a NIM up in 1-2 min on a good host; past 12 min, try another pod
