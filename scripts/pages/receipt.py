@@ -134,7 +134,7 @@ FIT_JS = r"""([heads, maxLines, loneMax, safe, clear, proofMin, proofWs]) => {
   const fitImage = () => {
     const box = document.querySelector('.proof').getBoundingClientRect(), img = document.querySelector('.frame img');
     const edge = parseFloat(getComputedStyle(document.querySelector('.frame')).borderTopWidth);
-    const pinTag = document.querySelector('.pin .tag'), tag = pinTag ? pinTag.getBoundingClientRect().height + edge * 1.2 : 0;
+    const pinTag = document.querySelector('.pin .tag'), tag = pinTag ? pinTag.getBoundingClientRect().height + edge * 1.2 : (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pin-reserve')) || 0);
     const nw = img.naturalWidth, nh = img.naturalHeight, k = Math.min((box.width * .9 - 2 * edge) / nw, ((box.height - tag) * .92 - 2 * edge) / nh);
     img.style.width = Math.max(40, nw * k) + 'px'; img.style.height = Math.max(20, nh * k) + 'px';
     if (pinTag) pinTag.style.maxWidth = (Math.max(40, nw * k) + 2 * edge) + 'px';
@@ -345,23 +345,36 @@ def page(facts, c, base, shape, skin=...):
         '--ink': t['ink'], '--accent': look['colour'], '--cream': t['cream'],
         '--tag-bg': look['colour'] if look['series'] else t['ink'], '--tag-fg': t['ink'] if look['series'] else t['cream'],
         '--head': f'{spec["heads"][0]}px', '--fine': f'{fine_px + 2}px', '--wm': f'{round(min(W / 30, (r - l) / 26))}px',
-        '--logo': f'{round(max(fine_px + 2, (r - l) / 24) * (1 if n_logos <= 3 else .78))}px', '--gap': f'{round(W / 40)}px', '--edge': f'{edge}px',
+        # "headline_first": true (opt-in until the extruded, bauhaus and brandbook skins keep their light off logos under the words) puts the logos under the headline, smaller, so the headline leads (Krish, 2026-11-09:
+        # "The headline should take precedence").
+        '--logo': f'{round(max(fine_px + 2, (r - l) / 24 * (.7 if c.get("headline_first") else 1)) * (1 if n_logos <= 3 else .78))}px', '--gap': f'{round(W / 40)}px', '--edge': f'{edge}px',
         '--proofw': spec.get('proofw', '58%') if side else '100%',
     }
     root = ';'.join(f'{k}:{v}' for k, v in vars_.items())
     head = (f'{esc(lead)} ' if lead else '') + f'<mark>{esc(last)}</mark>'
     # Only the subchannel's weekly piece names it: anything else sits under no series panel.
     pill = f'<div class="pill" data-fine-print>{esc(ch["name"])}</div>' if look['series'] else ''
+    # "quiet_pill" (default true, the cover standard) keeps the series name at the phone floor but drops its capsule, ring and glow, so it reads as
+    # a small label, not a second headline. Krish, 2026-11-09: "The \"Follow the Money\" badge doesn't need to be that big."
+    quiet = ('<style>.pill{background:transparent!important;box-shadow:none!important;padding:0!important;'
+             'color:var(--accent)!important;opacity:.9}</style>') if c.get('quiet_pill', True) else ''
+    # With its tag off, a pinned proof keeps the room the tag gave it, so a skin's light round the frame clears the
+    # headline above and the logos below.
+    # (The tag stays in the page when it is not shown, hidden but keeping its room, so every skin's placement still
+    # measures it and its light clears the headline and the logos.)
     foot = f'<div class="foot"><div class="logos">{logos}</div></div>' if logos else ''
-    tag = f'<div class="tag" data-fine-print>{esc(p["tag"])}</div>'
+    # "show_tag" (default false, the cover standard: no badges on a cover) leaves the tag off the picture (it stays the picture's alt text and its record). Krish,
+    # 2026-11-09: "We don't need the badge that says \"the court filing.\""
+    tag = (f'<div class="tag" data-fine-print>{esc(p["tag"])}</div>' if p.get('show_tag', False)
+           else f'<div class="tag" data-fine-print style="visibility:hidden" aria-hidden="true">{esc(p["tag"])}</div>')
     doc = f"""<!doctype html><html style="{root}"><head><meta charset="utf-8"><style>{brand.font_css()}
 {CSS.replace('@SAGE@', body_ground).replace('@GROUND@', card_ground)}</style></head><body>
-<div id="card" class="{spec['layout']}" style="width:{W}px;height:{H}px">
+{quiet}<div id="card" class="{spec['layout']}" style="width:{W}px;height:{H}px">
  <div id="safe" style="left:{l}px;top:{tp}px;width:{r - l}px;height:{b - tp}px">
   <div class="top"><div class="wmp"><img src="{brand.data_uri(brand.fetch('wordmark'), 1400)}" alt="Make Your Mind Up"></div>{pill}</div>
   <div class="main">
    <div class="proof"><div class="pin">{tag if pin_tag else ''}<div class="frame"><img src="{brand.data_uri(p['path'], 2400)}" alt="{esc(p.get('alt') or p['tag'])}">{ring}</div></div></div>
-   <div class="col">{('' if pin_tag else tag) + foot if side else ''}<h1>{head}</h1></div>
+   <div class="col">{('' if pin_tag else tag) + ('' if c.get('headline_first') else foot) if side else ''}<h1>{head}</h1>{foot if side and c.get('headline_first') else ''}</div>
    {'' if side else foot}
   </div>
  </div>
