@@ -19,7 +19,7 @@ export const VeStingSchema = z.enum(['follow_the_money', 'mind_the_gap', 'under_
 /** The sentence scripts/post-pack/creative_direction.py writes as NO_STING (tests/ve_thursday_guards_test.py pins them equal). */
 export const VE_NO_STING = 'none: this piece opens on its hook (an off day, or no wide long cut)'
 export const VeAspectSchema = z.enum(['9:16', '16:9'])
-export const VeLayoutSchema = z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT'])
+export const VeLayoutSchema = z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW'])
 export const VeRoleSchema = z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call'])
 // The same verbs as the renderer's EngineEventSchema (apps/renderer/src/engine/props.ts), so a spec can name every
 // verb a library device accepts (config/ve/devices.json); compile still refuses a verb its device does not list.
@@ -51,6 +51,7 @@ export const VeBeatSchema = z.object({
   viewer_task: NarrativeBeatV1Schema.shape.viewer_task,
   point: z.string().min(12),
   layout: VeLayoutSchema,
+  face: z.enum(['full', 'window', 'off']).optional(),
   plate: z.object({ source: z.string().regex(/^(take|none|asset:[a-z0-9][a-z0-9_-]*)$/), crop: z.string().min(1).optional() }).strict(),
   uses: z.array(z.string().min(1)).default([]),
   events: z.array(VeEventSchema).default([]),
