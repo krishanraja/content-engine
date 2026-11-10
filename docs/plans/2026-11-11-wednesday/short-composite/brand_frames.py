@@ -58,10 +58,12 @@ def pill(dst, label, x, y, size=34, anchor='l'):
 
 def corner(dst, aspect):
     """The house dress from the first frame: the mark on its ink tile (lilac shadow) and the series pill."""
-    tall = aspect == '9:16'; s = 112 if tall else 104; x, y = (34, 34) if tall else (66, 62)
-    cv2.rectangle(dst, (x + 10, y + 10), (x + s + 10, y + s + 10), bgr(LILAC), -1)
-    cv2.rectangle(dst, (x, y), (x + s, y + s), bgr(INK), -1); over(dst, MARK, x + 10, y + 10, s - 20)
-    pill(dst, 'under.the.hood', (1080 - 34) if tall else 1250, y + 26 if tall else y + 22, 32 if tall else 30, 'r')
+    # both at the top right, so the screens' own titles at the top left stay clear
+    tall = aspect == '9:16'; s = 96 if tall else 90; right = (1080 - 40) if tall else 1250; y = 30 if tall else 58
+    x = right - s
+    cv2.rectangle(dst, (x + 8, y + 8), (x + s + 8, y + s + 8), bgr(LILAC), -1)
+    cv2.rectangle(dst, (x, y), (x + s, y + s), bgr(INK), -1); over(dst, MARK, x + 9, y + 9, s - 18)
+    pill(dst, 'under.the.hood', x - 18, y + (s - 51) // 2, 30, 'r')
 
 def wave_bars(dst, y0, h, t, col, amp=1.0, seed=0.0, n=60):
     W = dst.shape[1]; bw = W / n
@@ -102,13 +104,23 @@ def title_full(W, H, t, t0):
     over(g, STACKED, (W - lw) / 2, H * (0.80 if tall else 0.83), lw, la)
     return g
 
-TICKER = 'FREE FROM JARGON  *  WEDNESDAYS  *  '
+TICKER = 'FREE FROM JARGON  *  WEDNESDAYS  *'
+_units = {}
+def _ticker_unit(th):
+    # one seamless repeat of the promise strip: drawn once, measured by its ink, tiled (no overlap at the loop)
+    if th not in _units:
+        f = ANTON(int(th * 0.62)); im = Image.new('L', (4000, th), 0); ImageDraw.Draw(im).text((20, int(th * 0.16)), TICKER, font=f, fill=255)
+        a = np.asarray(im); cols = np.where(a.max(0) > 0)[0]; x0, x1 = cols[0], cols[-1] + 1; gap = int(th * 0.45)
+        ink = a[:, x0:x1].astype(np.float32)[..., None] / 255; w = x1 - x0 + gap
+        unit = np.full((th, w, 3), bgr(LILAC), np.uint8); seg = unit[:, :x1 - x0].astype(np.float32)
+        unit[:, :x1 - x0] = (np.array(bgr(INK), np.float32) * ink + seg * (1 - ink)).astype(np.uint8); _units[th] = unit
+    return _units[th]
 def ending(W, H, t, t0):
     """The house close: ink, the stacked logo, the day, the series pill and the site, the promise strip running."""
     k = t - t0; g = np.full((H, W, 3), bgr(INK), np.uint8); tall = H > W; p = ease(k / 0.33)
-    th = 84 if tall else 70; strip = np.full((th, W, 3), bgr(LILAC), np.uint8); f = ANTON(int(th * 0.62))
-    cyc = int(f.getlength(TICKER)) + 30; off = int(k * 140) % max(1, cyc)
-    for x in range(-off, W + cyc, cyc): text(strip, TICKER, f, x, th * 0.16, INK)
+    th = 84 if tall else 70; strip = np.full((th, W, 3), bgr(LILAC), np.uint8)
+    unit = _ticker_unit(th); cyc = unit.shape[1]; off = int(k * 140) % cyc
+    row = np.tile(unit, (1, W // cyc + 3, 1)); strip[:] = row[:, off:off + W]
     ys = int(H * (0.18 if tall else 0.14)); g[ys:ys + th] = strip
     lw = int(W * (0.78 if tall else 0.46)); lh = int(lw * 740 / 2415); ly = int(H * (0.36 if tall else 0.32)) + int((1 - p) * 60)
     over(g, STACKED, (W - lw) / 2, ly, lw, p)
