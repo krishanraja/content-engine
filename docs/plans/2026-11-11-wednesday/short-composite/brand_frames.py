@@ -59,11 +59,11 @@ def pill(dst, label, x, y, size=34, anchor='l'):
 def corner(dst, aspect):
     """The house dress from the first frame: the mark on its ink tile (lilac shadow) and the series pill."""
     # both at the top right, so the screens' own titles at the top left stay clear
-    tall = aspect == '9:16'; s = 96 if tall else 90; right = (1080 - 40) if tall else 1250; y = 30 if tall else 58
-    x = right - s
-    cv2.rectangle(dst, (x + 8, y + 8), (x + s + 8, y + s + 8), bgr(LILAC), -1)
-    cv2.rectangle(dst, (x, y), (x + s, y + s), bgr(INK), -1); over(dst, MARK, x + 9, y + 9, s - 18)
-    pill(dst, 'under.the.hood', x - 18, y + (s - 51) // 2, 30, 'r')
+    tall = aspect == '9:16'
+    if tall: pill(dst, 'under.the.hood', 40, 1300, 34, 'l'); return      # on the cream, clear of the stage, him and the captions
+    pill(dst, 'under.the.hood', 1200, 962, 30, 'r'); return              # under the stage, right of the captions
+    # Krish, 2026-11-10: "I don't get why that icon even appears ... Get rid of it." No mark tile: the series pill only.
+    pill(dst, 'under.the.hood', right, y + (s - 51) // 2, 30, 'r')
 
 def wave_bars(dst, y0, h, t, col, amp=1.0, seed=0.0, n=60):
     W = dst.shape[1]; bw = W / n
