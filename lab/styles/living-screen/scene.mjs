@@ -53,7 +53,7 @@ const DRAW = {
     rr(g, W - 190, 30, 150, 60, 30, t >= at(env, B.y2004) ? c.channel : c.line); label(g, yr, W - 115, 72, 34, t >= at(env, B.y2004) ? c.ink : c.cream, { align: 'center', track: 1 })
     const f0 = at(env, B.y1988, 'city'), f1 = at(env, B.y1988, 'twenty'), d0 = at(env, B.y2004, 'thirteen') - 0.35
     const n = t < f0 ? 0 : t < d0 ? Math.round(20 * clamp((t - f0) / (f1 - f0 + 0.15))) : Math.round(lerp(20, 13, env.ease.utility(clamp((t - d0) / 0.4))))
-    g.font = `200px 'Anton'`; g.fillStyle = c.cream; g.fillText(String(n), 36, 300)
+    if (t >= f0) { g.font = `200px 'Anton'`; g.fillStyle = c.cream; g.fillText(String(n), 36, 300) } // never a "0" before the count
     if (t >= d0 + 0.4) { g.font = `96px 'Anton'`; g.fillStyle = c.muted; g.fillText('20', 260, 300); g.fillRect(254, 262, 112, 9) }
     // Twenty avatars light one by one; seven drop away in 2004.
     for (let i = 0; i < 20; i++) {
@@ -367,7 +367,8 @@ export function draw(env, ctx, t, house) {
     DRAW[k](env, P.g, t, P.w, P.h); P.tex.needsUpdate = true
     // Panels assemble during the hook, flying in from depth one after another.
     const order = ['cardA', 'cardB', 'cardC', 'main', 'map'].indexOf(k)
-    const arrive = k === 'toast' ? toastOn(env, t) : env.ease.hero(clamp((t - 0.8 - order * 0.45) / 0.7))
+    // The first frame already has the screen assembling (F01: never open on an empty frame).
+    const arrive = k === 'toast' ? toastOn(env, t) : env.ease.hero(clamp((t + 0.5 - order * 0.32) / 0.6))
     const active = k === cur ? env.ease.hero(clamp((t - t0) / 0.6)) : 0
     const lift = (k === 'toast' ? 0.85 : 0.04 + 0.5 * active) + (1 - arrive) * 2.5
     P.group.position.z = lift; P.group.scale.setScalar((1 + 0.05 * active) * (k === 'toast' ? 0.6 + 0.4 * arrive : 1))
@@ -383,7 +384,7 @@ export function draw(env, ctx, t, house) {
   R.cursor.position.set(cx + 0.11, cy - 0.11, 0.95)
   R.rig.position.y = 2.6 + Math.sin(t * 0.6) * 0.03
   R.streaks.forEach((S, i) => {
-    const k = env.ease.hero(clamp((t - 0.1 - i * 0.3) / 1.4))
+    const k = env.ease.hero(clamp((t + 0.6 - i * 0.25) / 1.4))
     for (const m of [S.baseM, S.p]) m.geometry.setDrawRange(0, Math.floor((m.geometry.index.count * k) / 3) * 3)
     S.tex.offset.x = -t * S.speed
   })
