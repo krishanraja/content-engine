@@ -1,0 +1,123 @@
+{
+  "objects": [
+    {
+      "obj": "flood",
+      "device": "upload_flood",
+      "meaning": "Uploads versus discovery",
+      "dataset": {
+        "unit": "share",
+        "denominator": null,
+        "producerLabel": "Deezer, 2026",
+        "rows": [
+          {
+            "label": "50%+",
+            "value": 0.5
+          },
+          {
+            "label": "listensShare",
+            "value": 0.02
+          }
+        ]
+      },
+      "params": {
+        "tiles": 200,
+        "query": "what is this song",
+        "answer": {
+          "title": "A song worth finding",
+          "artist": "One human voice"
+        }
+      },
+      "fromFrame": 0,
+      "toFrame": 200
+    }
+  ],
+  "events": [
+    {
+      "id": "enter",
+      "obj": "flood",
+      "verb": "enter",
+      "toState": "enter",
+      "atFrame": 5
+    },
+    {
+      "id": "fill",
+      "obj": "flood",
+      "verb": "fill",
+      "toState": "fill",
+      "atFrame": 20
+    },
+    {
+      "id": "count_to",
+      "obj": "flood",
+      "verb": "count_to",
+      "toState": "count_to",
+      "atFrame": 60
+    },
+    {
+      "id": "draw",
+      "obj": "flood",
+      "verb": "draw",
+      "toState": "draw",
+      "atFrame": 80
+    },
+    {
+      "id": "type",
+      "obj": "flood",
+      "verb": "type",
+      "toState": "type",
+      "atFrame": 120
+    },
+    {
+      "id": "pick",
+      "obj": "flood",
+      "verb": "pick",
+      "toState": "pick",
+      "atFrame": 145
+    },
+    {
+      "id": "exit",
+      "obj": "flood",
+      "verb": "exit",
+      "toState": "exit",
+      "atFrame": 180
+    }
+  ],
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "stills": [
+    38,
+    76,
+    110,
+    124,
+    164
+  ],
+  "goldenFrames": {
+    "G1": 38,
+    "G2": 76,
+    "G3": 110,
+    "G4": 124,
+    "G5": 164
+  },
+  "boxes": [
+    {
+      "left": 0,
+      "top": 0,
+      "width": 1080,
+      "height": 1920
+    },
+    {
+      "left": 0,
+      "top": 0,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "left": 660,
+      "top": 0,
+      "width": 1260,
+      "height": 1080
+    }
+  ]
+}

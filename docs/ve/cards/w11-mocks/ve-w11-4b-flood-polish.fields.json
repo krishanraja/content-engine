@@ -1,0 +1,15 @@
+{
+  "path": "docs/ve/cards/w11-mocks/ve-w11-4b-flood-polish.md",
+  "card_id": "ve-w11-4b-flood-polish",
+  "kind": "device",
+  "format": "face-with-proof",
+  "motion_style": "living-ui",
+  "title": "Upload flood, round 2: a real flood of songs, scattered AI, true answer",
+  "goal": "Round 2 of ve-w11-4-upload-flood (built; reviewed 10 Nov). Keep the verbs; fix the look and the fixture.\n1. The grid fills the box (inside 6% margins) with the counter overlaid top-right on a cream card, not beside a small grid. Tiles are song tiles: a rounded square cover (4 px radius) with a tiny play triangle; 300 tiles on wide, 360 on tall.\n2. AI tiles are scattered, not a block: tile i is AI when hash(i) < aiShare, with hash a fixed integer mix of i (deterministic). AI tiles are ink with the cream 30% hatch; others are cream with a thin ink outline and a small mint dot.\n3. The pour reads as rain: tiles fall from above the box with a little rotation that settles to 0, 4 columns at a time.\n4. Listens meter: a cream track with an ink outline, the fill mint, stopping at listensShare, labelled at its end '1-3% of listens' (from dataset.listensLabel). Nothing dark fills the track.\n5. Search: the bar is a large centred card (60% box width), Archivo 44 px, a mint search icon drawn from shapes. The answer card shows the song cover slot, 'Movin’ To The Sun', 'Imael Angel' in Plex Mono.\n6. Fixture: dataset {value: 0.5, label: '50%+', producerLabel: 'Deezer, July 2026', listensLabel: '1-3% of listens'}; answer {title: 'Movin’ To The Sun', artist: 'Imael Angel'}.\n\nArt direction for every frame: fill the box with 6% safe margins on every side; nothing hugs a corner; one clear focal point; cards with 16 px radius and a soft ink shadow (0 18px 40px at 25%); generous type. It must read as a premium, real product at phone size, never a wireframe.",
+  "contract": "Same device, same verbs, same registration; change only its own folder and its houseGolden entry (VE_WRITE_HOUSE_GOLDEN=1, no other entry changing). Tokens only, no raw hex; drift()/progress() only.\n\n## Tests (`device.test.ts`), add to the existing ones\n- AI tiles are not contiguous: among the first 40 tiles both kinds occur\n- the grid spans at least 80% of the box width\n- the meter fill uses mint and the track cream\n- the answer markup contains the song title",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/upload_flood\nnpx vitest run apps/renderer/src/engine\npython scripts/ve/check_route.py",
+  "write_allow": "[apps/renderer/src/engine/devices/upload_flood/*, apps/renderer/src/engine/houseGolden.json]",
+  "read": "apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/upload_flood/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/kit/**, apps/renderer/src/house/geometry.ts, config/ve/design-lock.json, config/ve/brand-tokens.json, docs/plans/2026-11-11-wednesday/motion-mocks.md",
+  "max_minutes": 50,
+  "max_calls": 70
+}
