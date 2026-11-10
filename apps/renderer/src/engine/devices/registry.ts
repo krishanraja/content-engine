@@ -1,3 +1,4 @@
+import { Device as WallScreen } from './wall_screen'
 import { Device as Arrangement } from './arrangement'
 import { Device as SlotMachine } from './slot_machine'
 import { Device as UploadFlood } from './upload_flood'
@@ -27,6 +28,7 @@ import { Device as QuoteCard } from './quote_card'
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
+  wall_screen: WallScreen,
   arrangement: Arrangement,
   slot_machine: SlotMachine,
   upload_flood: UploadFlood,
