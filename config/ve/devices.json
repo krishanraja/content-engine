@@ -216,6 +216,16 @@
         "count_to",
         "exit"
       ]
+    },
+    "agent_swarm": {
+      "verbs": [
+        "enter",
+        "add",
+        "fill",
+        "move",
+        "mark",
+        "exit"
+      ]
     }
   }
 }
