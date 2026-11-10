@@ -49,11 +49,11 @@ describe('the one voice check (Krish, 2026-11-09)', () => {
     assert.equal(await askVoiceCheck('Words.', 'article', { env: { ACCESS_CODE: 'x' }, fetchImpl: bad }), null)
   })
 
-  test('the approve and publish gate asks it for every lane, and a hard fail blocks', () => {
+  test('the approve gate asks it for every lane, and a hard fail blocks approval (publishing is his own act, always recorded)', () => {
     const gate = src('apps/control-plane/api/content-ideas.ts')
     assert.match(gate, /askVoiceCheck\(effective, channel\)/)
     assert.match(gate, /reason: 'voice_gate'/)
-    assert.match(gate, /updates\.state === 'approved' \|\| updates\.state === 'published'\)\) \{\s+const effective/)
+    assert.match(gate, /if \(current && updates\.state === 'approved'\) \{\s+const effective/)
   })
 
   test('the writers read the voice live from Control Center before any hand-kept copy', () => {

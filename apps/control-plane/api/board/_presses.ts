@@ -106,7 +106,9 @@ export async function heldBecause(making: unknown, texts: Record<string, string>
     if (typeof sha !== 'string' || !SHA256.test(sha)) return `${name} has no checked words on the piece's record, ${THEN}`
     if (scriptHash(text) !== sha && scriptHash(spokenText(text)) !== sha) return `${name} is not the words the scripts' check passed (were they changed since?), ${THEN}`
     const heard = isObj(read) && read.script_sha256 === sha && (read.found === READ_BACK_FOUND
-      || (read.found === READ_BACK_KRISH && typeof read.krish_words === 'string' && read.krish_words.trim().toLowerCase().startsWith('krish')))
+      || (read.found === READ_BACK_KRISH && typeof read.krish_words === 'string' && read.krish_words.trim().toLowerCase().startsWith('krish')
+        // His sign-off records his approval and never stands in for the readers, unless his words skipped them (F45).
+        && ((Array.isArray(read.readers) && read.readers.length >= 2) || read.readers_skipped === true)))
     if (!heard) return `${name} has not been read back by two fresh readers, ${THEN}`
   }
   return null

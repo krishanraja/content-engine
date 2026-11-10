@@ -249,6 +249,7 @@ describe('Approve scripts sends his exact words to Teleprompter from the server'
       ['a read-back of older words', checked({ long: 'Older words.', short: SHORT }), {}, /5-minute script is not the words/],
       ['readers who lost the thread', checked(undefined, { found: 'lost at line 3' }), {}, /has not been read back/],
       ['his sign-off not in his words', checked(undefined, { found: 'approved by Krish', krish_words: 'fine' }), {}, /has not been read back/],
+      ['his sign-off with no readers, not skipped by his word (F45)', checked(undefined, { found: 'approved by Krish', krish_words: 'Krish: send it', readers: [] }), {}, /has not been read back/],
     ]
     for (const [what, making, extra, said] of cases) {
       const t = setup(sentOk, { making })
@@ -266,6 +267,8 @@ describe('Approve scripts sends his exact words to Teleprompter from the server'
     expect((await spoken.put('picks', 'mon-scripts', approval())).out.send.status).toBe('sent')
     const his = setup(sentOk, { making: checked(undefined, { found: 'approved by Krish', krish_words: 'Krish: these are fine as they are' }) })
     expect((await his.put('picks', 'mon-scripts', approval())).out.send.status).toBe('sent')
+    const skipped = setup(sentOk, { making: checked(undefined, { found: 'approved by Krish', krish_words: 'Krish: skip the readers, send it', readers: [], readers_skipped: true }) })
+    expect((await skipped.put('picks', 'mon-scripts', approval())).out.send.status).toBe('sent')
   })
   it('records no_key so a session can finish the send, and an error without losing his approval', async () => {
     const t = setup()
