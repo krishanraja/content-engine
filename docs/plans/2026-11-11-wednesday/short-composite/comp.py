@@ -51,7 +51,8 @@ CLIPS = {k: Clip(f) for k, f in {
     'gran': 'tiktok_01_grandma_kitchen_crazyauntieann.mp4', 'kids': 'tiktok_02_kids_dance_onedaykidsafrika.mp4',
     'cat': 'tiktok_03_ai_cat_dance_ashanolas.mp4', 'car': 'tiktok_04_man_car_dancing_thegmanshow.mp4',
     'wigs': 'tiktok_05_grandmas_dressup_celindabradshaw.mp4', 'granny': 'tiktok_06_granny_original_version_hennythegranny.mp4',
-    'trackid': 'tiktok_07_track_id_original_version_dancewithema0.mp4', 'hugel': 'tiktok_08_hugel_ai_singer_live_hugelthug.mp4'}.items()}
+    'trackid': 'tiktok_07_track_id_original_version_dancewithema0.mp4', 'hugel': 'tiktok_08_hugel_ai_singer_live_hugelthug.mp4',
+    'ytcat': 'ytcat_duet.mp4'}.items()}
 
 def shot(name, x0, y0, x1, y1):
     return cv2.imread(f'{SRC}/{name}.png')[y0:y1, x0:x1]
@@ -233,6 +234,13 @@ def s_feed(t):  # people put it under their own videos: cats, weddings, dads dan
     g = ground()
     seq = [(25.6, 'gran'), (26.6, 'trackid'), (27.6, 'granny'), (28.6, 'cat'), (29.7, 'wigs'), (30.6, 'car')]
     cur = [k for k in seq if t >= k[0]][-1]; nxt = seq.index(cur)
+    if t >= 28.4:  # Krish, 2026-11-10: the cat duet, with its own sound, from "cats" (about 5 s); weddings and dads pop in beside it
+        p = min(1, back((t - 28.4) / 0.3)); g[:] = cover(CLIPS['ytcat'].at(t - 26.4), W, SH, 1.1) // 3
+        paste(g, cover(CLIPS['ytcat'].at(t - 26.4), 560, 996), 330 + (1 - p) * -400, SH / 2, 1, 1, 30, rot=(1 - p) * -6)
+        for at, k, y in [(29.7, 'wigs', 330), (30.6, 'car', 900)]:
+            if t >= at:
+                q = min(1, back((t - at) / 0.3)); paste(g, cover(CLIPS[k].at(t), 400, 520), 850 + (1 - q) * 400, y, 1, 1, 26, rot=4 if k == 'wigs' else -4)
+        return g
     if t < 28.6:  # a phone feed scrolling, one under the other
         off = (t - 25.6) / 1.0
         for i, (_, k) in enumerate(seq[:4]):
@@ -271,11 +279,11 @@ def s_grammys(t):  # headlines stack in; writing ruled out (reportedly), singing
     heads = [(58.4, 'grammys'), (59.4, 'edmtunes'), (60.2, 'weraveyou')]
     for i, (ti, k) in enumerate(heads):
         if t < ti: continue
-        p = back((t - ti) / 0.35); dim = 1 - 0.55 * ease((t - 61.3) / 0.4)
+        p = back((t - ti) / 0.35); dim = 1 - 0.55 * ease((t - 60.1) / 0.4)
         im = (SHOTS[k].astype(np.float32) * dim).astype(np.uint8)
         paste(g, fitw(im, 960), W / 2 + (i - 1) * 30, 260 + i * 300 + (1 - p) * 400, 1, min(1, p * 2), 18, rot=(i - 1) * 2)
-    if t >= 61.3:
-        cards = [(61.3, 'SONGWRITING', 'RULED OUT', 'reportedly', True), (64.6, 'SINGING', 'STILL IN', 'can compete', False)]
+    if t >= 60.1:
+        cards = [(60.1, 'SONGWRITING', 'RULED OUT', 'reportedly', True), (64.6, 'SINGING', 'STILL IN', 'can compete', False)]
         for j, (ti, a, b, c, ai) in enumerate(cards):
             if t < ti: continue
             p = back((t - ti) / 0.35); cw, chh = 470, 620
@@ -327,7 +335,8 @@ def him(t):
     take.set(cv2.CAP_PROP_POS_MSEC, take_time(t) * 1000) if abs(take.get(cv2.CAP_PROP_POS_MSEC) / 1000 - take_time(t)) > 0.05 else None
     ok, fr = take.read()
     m = seg.process(cv2.cvtColor(fr, cv2.COLOR_BGR2RGB)).segmentation_mask
-    a = np.clip((cv2.GaussianBlur(m, (0, 0), 2) - 0.3) / 0.4, 0, 1)
+    a = np.clip((cv2.GaussianBlur(m, (0, 0), 2) - 0.3) / 0.4, 0, 1).astype(np.float32)
+    a[:, :90] *= np.linspace(0, 1, 90, dtype=np.float32)[None, :]  # no hard edge where his arm leaves the frame
     return fr, a
 
 def caption(dst, t):

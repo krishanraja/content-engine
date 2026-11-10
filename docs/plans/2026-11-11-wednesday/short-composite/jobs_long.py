@@ -38,7 +38,7 @@ t0 = 190.6
 jobs['flood'] = {"device": "upload_flood", "object": {"obj": "flood", "device": "upload_flood", "meaning": "Uploads versus discovery",
   "dataset": {"unit": "share", "denominator": None, "producerLabel": "Deezer, Apr and Jul 2026", "rows": [{"label": "50%+", "value": 0.5}, {"label": "1-3% of listens", "value": 0.02}]},
   "params": {"tiles": 300, "query": "what is this song", "answer": {"title": "Movin’ To The Sun", "artist": "Imael Angel"}}, "fromFrame": 0, "toFrame": 600},
-  "events": [ev("enter", "enter", L(190.8, t0), "flood"), ev("fill", "fill", L(193.0, t0), "flood"), ev("count_to", "count_to", L(196.4, t0), "flood"),
+  "events": [ev("enter", "enter", L(190.8, t0), "flood"), ev("fill", "fill", L(191.5, t0), "flood"), ev("count_to", "count_to", L(193.9, t0), "flood"),
              ev("draw", "draw", L(198.7, t0), "flood"), ev("type", "type", L(203.6, t0), "flood"), ev("pick", "pick", L(206.0, t0), "flood")],
   "from": 0, "to": L(207.7, t0), "t0": t0}
 
@@ -61,7 +61,7 @@ jobs['rebuild'] = {"device": "arrangement", "object": {"obj": "song", "device": 
              ev("stamp", {"lane": "sdrums", "tag": "NO ONE PLAYED"}, L(227.1, t0)),
              ev("highlight", "voice", L(231.1, t0)), ev("fill", hv, L(231.4, t0)),
              ev("fill", {"lane": "voice", "layers": [{"kind": "human", "weight": 0.85}, {"kind": "ai", "weight": 0.15}]}, L(250.5, t0)),
-             ev("add", "hum", L(256.2, t0)), ev("highlight", "all", L(261.3, t0))],
+             ev("add", "hum", L(252.0, t0)), ev("highlight", "all", L(261.3, t0))],
   "from": 0, "to": L(264.5, t0), "t0": t0}
 
 # Who did which bit: 302.2 -> 328.0 (take time; the first try 302.35-311.35 is cut, so the credits run on the second try)

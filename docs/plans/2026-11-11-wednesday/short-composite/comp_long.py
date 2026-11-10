@@ -12,7 +12,7 @@ DEV = '/tmp/claude-0/w11l'
 SRC = '/tmp/claude-0/rec2/sources'
 TAKE = '/tmp/claude-0/rec2/eyeL/out/clip.ai-music-long.eyeline.mp4'
 # Kept spans of the take (restarts cut: 20.45, 25.05, 302.35; the "weren't clubbing" slip at 232.6)
-KEEP = [(1.8, 20.45), (21.38, 25.05), (27.45, 232.6), (234.75, 282.0), (285.15, 302.35), (311.35, 335.5), (338.5, 359.2)]
+KEEP = [(1.8, 20.45), (21.38, 25.05), (27.45, 232.6), (234.75, 282.0), (286.08, 302.35), (311.35, 335.5), (338.45, 359.2)]
 OUT_LEN = sum(b - a for a, b in KEEP)
 def take_t(o):
     for a, b in KEEP:
@@ -101,7 +101,7 @@ def s_cold(t):
     return g
 
 def s_track(t):  # 18.3: this track is called Movin' To The Sun ... number two in the UK
-    g = ground(); slide_card(g, S['spotify'], t, 18.4, SW / 2 - 120, SH / 2 - 60, 1000, 520, rot=-2)
+    g = ground(); slide_card(g, S['spotify'], t, 18.3, SW / 2 - 120, SH / 2 - 60, 1000, 520, rot=-2)
     slide_card(g, S['charts'], t, 22.9, SW / 2 + 230, SH / 2 + 120, 640, 520, rot=3, frm=(500, 0))
     if t > 23.3:
         q = min(1, back((t - 23.3) / 0.3)); text(g, 'No. 2 UK', ANTON(int(110 * q) + 1), SW - 40, SH - 150, MINT, 'ra', q)
@@ -170,11 +170,18 @@ def s_feed(t):  # 158 she puts them online; 164.4 under their own videos; 179.4 
     g = ground()
     if t < 164.4:
         slide_card(g, S['spsearch'], t, 158.2, SW / 2, SH / 2, 1100, 700); return sway(g, t, 0.05)
-    if t < 169.5:
+    if t < 168.6:
         off = (t - 164.4) / 1.3
         for i, k in enumerate(['gran', 'trackid', 'granny', 'wigs', 'cat']):
             x = SW / 2 + (i - off) * 420
             if -400 < x < SW + 400: paste(g, cover(CLIPS[k].at(t + i), 360, 640), x, SH / 2, 1, 1, 28)
+        return g
+    if t < 174.0 and t >= 168.6:  # Krish, 2026-11-10: the cat duet with its own sound; weddings and dads beside it
+        p = min(1, back((t - 168.6) / 0.3)); g[:] = cover(CLIPS['ytcat'].at(t - 166.6), SW, SH, 1.1) // 3
+        paste(g, cover(CLIPS['ytcat'].at(t - 166.6), 440, 782), 330 + (1 - p) * -400, SH / 2, 1, 1, 28, rot=(1 - p) * -6)
+        for at, k, x in [(170.6, 'wigs', 760), (171.3, 'car', 1040)]:
+            if t >= at:
+                q = min(1, back((t - at) / 0.3)); paste(g, cover(CLIPS[k].at(t), 280, 500), x, SH / 2 + (1 - q) * 400, 1, 1, 24, rot=3 if k == 'wigs' else -3)
         return g
     if t < 172.6:
         seq = [(169.5, 'cat'), (170.6, 'wigs'), (171.3, 'car')]; cur = [k for k in seq if t >= k[0]][-1]; p = min(1, back((t - cur[0]) / 0.3))
@@ -248,9 +255,10 @@ def s_grammys(t):  # 264.5 the Grammys
             q = min(1, back((t - vat) / 0.3)); text(card, verdict, ANTON(int(96 * q) + 1), cw / 2, 300, fg, 'ma', q); text(card, note, MONO(30), cw / 2, 460, fg, 'ma', q)
         if ai and 280.4 <= t:
             hm = hatch(70, 300, t * 30); text(hm, 'AI HUM', MONO(30), 150, 18, CREAM, 'ma'); paste(card, hm, cw / 2, 560 - 20, 1, ease((t - 280.4) / 0.3), 10, shadow=False)
-        paste(g, card, 330 + j * 580, SH / 2 + 30 + (1 - p) * 500, 1, min(1, p * 2), 26, rot=-3 if j == 0 else 3)
+        mv = ease((t - 291.4) / 0.4)
+        paste(g, card, 330 + j * 580, SH / 2 + 30 + (1 - p) * 500 + 150 * mv, 1 - 0.2 * mv, min(1, p * 2), 26, rot=-3 if j == 0 else 3)
     if t > 291.6:
-        slide_card(g, S['edmhouse'], t, 291.6, SW / 2, 190, 640, 300, frm=(0, -600))
+        slide_card(g, S['edmhouse'], t, 291.6, SW / 2, 120, 560, 210, frm=(0, -600))
     return sway(g, t, 0.04)
 
 def s_question(t):  # 296.2 is it AI music or human music? the wrong question
@@ -319,12 +327,15 @@ def him(tt):
     if abs(_pos[0] + 1 / FPS - tt) > 0.02: take.set(cv2.CAP_PROP_POS_MSEC, tt * 1000)
     ok, fr = take.read(); _pos[0] = tt
     m = seg.process(cv2.cvtColor(fr, cv2.COLOR_BGR2RGB)).segmentation_mask
-    return fr, np.clip((cv2.GaussianBlur(m, (0, 0), 2) - 0.3) / 0.4, 0, 1)
+    a = np.clip((cv2.GaussianBlur(m, (0, 0), 2) - 0.3) / 0.4, 0, 1).astype(np.float32)
+    a[:, :90] *= np.linspace(0, 1, 90, dtype=np.float32)[None, :]  # no hard edge where his arm leaves the frame
+    return fr, a
 
 words = json.load(open('/home/user/content-engine/docs/plans/2026-11-11-wednesday/ve/takes/long-1110.json'))['aligners']['a']['words']
 WORDS = [(w['onset_s'], w['end_s'], w['text']) for w in words]
 QUIET = [(11.0, 18.3), (296.1, 300.9), (354.9, 999)]
-FIX = {'UltraNate.': 'Ultra Naté', 'Hugel.': 'HUGEL', 'Hugel': 'HUGEL', 'MakeYourMindUp': 'makeyourmindup', 'non': 'non-human', '-human': ''}
+FIX = {'Badly.': 'badly', 'Cats': 'cats', 'Weddings': 'weddings', 'Dads': 'dads', 'Dancing': 'dancing', 'Generated': 'generated',
+       'Deep': 'deep', 'House,': 'house', 'Female': 'female', 'Singer,': 'singer', 'Summer': 'summer', 'Vibes': 'vibes', 'UltraNate.': 'Ultra Naté', 'Hugel.': 'HUGEL', 'Hugel': 'HUGEL', 'MakeYourMindUp': 'makeyourmindup', 'non': 'non-human', '-human': ''}
 def caption(dst, tt):
     if any(a < tt < b for a, b in QUIET): return
     cur = [w for w in WORDS if w[0] - 0.05 <= tt < max(w[1], w[0] + 0.25) + 0.12]

@@ -9,11 +9,14 @@ from comp import ease, text, bgr, ARCH, INK, MINT, CREAM
 SPEED = 1.06
 TITLE_GAP = (15.0, 18.4)
 KEEP = []
+def silences(path):
+    return [tuple(map(float, line.split())) for line in open(path) if line.strip()]
+SIL = silences('/tmp/claude-0/w11l/sil_long.txt')
 for a, b in CL.KEEP:
-    ws = [w for w in CL.WORDS if a <= w[0] < b]; start = a
-    for w, nx in zip(ws, ws[1:]):
-        if nx[0] - w[1] > 0.45 and not (TITLE_GAP[0] <= w[1] <= TITLE_GAP[1]):
-            KEEP.append((start, w[1] + 0.18)); start = nx[0] - 0.10
+    start = a
+    for s, e in SIL:
+        if e - s > 0.45 and a < s and e < b and not (s < TITLE_GAP[1] and e > TITLE_GAP[0]):
+            KEEP.append((start, s + 0.18)); start = e - 0.10
     KEEP.append((start, b))
 OUT_LEN = sum(b - a for a, b in KEEP) / SPEED
 def take_t(o):

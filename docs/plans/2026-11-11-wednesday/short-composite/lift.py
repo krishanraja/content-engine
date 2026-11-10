@@ -10,10 +10,13 @@ from comp import WORDS, ease, text, bgr, ARCH, INK, MINT, CREAM, FPS, W, H
 SPEED = 1.06
 TITLE_GAP = (13.3, 15.95)   # the title card's pause stays whole
 # 1. close up pauses: keep 0.18 s after a word and 0.10 s before the next
+def silences(path):
+    return [tuple(map(float, line.split())) for line in open(path) if line.strip()]
+def T(x): return x - 1.0 if x < 59.5 else x - 2.1
 cuts = []
-for (a0, a1, _), (b0, _, _) in zip(WORDS, WORDS[1:]):
-    if b0 - a1 > 0.45 and not (TITLE_GAP[0] <= a1 <= TITLE_GAP[1]):
-        cuts.append((a1 + 0.18, b0 - 0.10))
+for s, e in silences('/tmp/claude-0/w11l/sil_short.txt'):  # take time, from the sound (silencedetect -38 dB)
+    if e - s <= 0.45 or s < 1.0 or e > 89.4 or (s < 60.6 and e > 59.5) or (14.0 < e and s < 17.0): continue
+    cuts.append((T(s) + 0.18, T(e) - 0.10))
 KEEP, start = [], 0.0
 for a, b in cuts:
     KEEP.append((start, a)); start = b
