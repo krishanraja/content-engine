@@ -268,17 +268,17 @@
   },
   {
    "id": "video-styles",
-   "name": "Video style catalogue",
-   "purpose": "Complete styles (format, hook, length, visuals, motion, captions, sound) chosen before the script",
+   "name": "Style catalogue (designed, not built)",
+   "purpose": "Looks only, each a full style folder (essence, rendering, colour, type, motion, layout, sound, native moves, demo film on the house test script), picked separately from the story format and the moves",
    "stage": "direction",
    "decided": "pre-script",
-   "location": "config/video-styles.json",
-   "status": "partial",
+   "location": "docs/plans/2026-11-10-video-style-system/STYLE-CATALOGUE.md",
+   "status": "documented-only",
    "proposal": "keep",
    "overlaps": [
     "style-bank",
-    "ve-formats",
-    "ve-recipe-data-story"
+    "ve-recipe-data-story",
+    "motion-styles"
    ]
   },
   {
