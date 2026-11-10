@@ -1,3 +1,5 @@
+// The Living Screen, v2 (premium): a real-looking product interface, rebuilt in code so it performs on cue, shown
+// as a lit glass screen floating in 3D space with neon light streaks drawing round it. The camera locks to the part
 // being spoken about; a cursor clicks, counts run, the chart draws itself.
 // Bar set by Krish's references: the Mon 9 Nov cut (a real artefact on ink, tilted, with neon streaks and glow) and
 // the Ladder v2 he approved on 10 Nov ("much better, go"). Draws frame t from t alone.
