@@ -172,13 +172,14 @@ export function App() {
       </header>
       <main className="mx-auto max-w-[1120px] px-4 pb-24">
         <nav aria-label="Publishing weeks" className="flex gap-2 overflow-x-auto pt-5 [scrollbar-width:none]">
-          {weeks.map(w => <a key={w} href={`/board/next/${w}`} aria-current={w === week ? 'page' : undefined}
+          {weeks.map(w => <a key={w} href={`/board/${w}`} aria-current={w === week ? 'page' : undefined}
             className={cx('inline-flex h-11 shrink-0 items-center rounded-full border px-4 text-[15px] font-semibold', w === week ? 'border-ink bg-ink text-bg' : 'border-line bg-card')}>
             Week of {new Date(w + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' })}</a>)}
+          <a href={`/board/${week}?archive=1`} className="inline-flex h-11 shrink-0 items-center rounded-full border border-dashed border-line px-4 text-[15px] font-semibold text-muted hover:bg-soft">Old board (archive)</a>
         </nav>
         <p className="mt-5 font-mono text-xs font-semibold uppercase tracking-widest text-muted">{span}</p>
         <h1 className="mt-1 font-display text-[clamp(40px,8vw,72px)] uppercase leading-[0.95]">{!view ? 'The Desk' : count ? `${count} thing${count === 1 ? '' : 's'} need${count === 1 ? 's' : ''} you` : view.days.every(d => d.who === 'done') ? 'Week done' : 'Nothing needs you'}</h1>
-        {error === 'locked' && <p className="mt-4 rounded-2xl bg-[color-mix(in_srgb,var(--bad)_12%,var(--card))] p-4 font-semibold text-bad">Unlock the board to see it live: <a className="underline" href={`/board/${week}`}>open the board</a>, then come back.</p>}
+        {error === 'locked' && <p className="mt-4 rounded-2xl bg-[color-mix(in_srgb,var(--bad)_12%,var(--card))] p-4 font-semibold text-bad">Unlock the board to see it live: <a className="underline" href={`https://content.krishraja.com/board/${week}`}>open it at content.krishraja.com</a> and sign in there.</p>}
         {error === 'offline' && view && <p className="mt-4 rounded-2xl bg-soft p-4 font-semibold">Reconnecting. Showing what was true at {new Date(readAt).toTimeString().slice(0, 5)}.</p>}
         {view && (
           <>

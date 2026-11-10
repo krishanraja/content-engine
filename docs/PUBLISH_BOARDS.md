@@ -6,7 +6,13 @@ board becomes the sole place for new interactions after verified migration.
 The four Claude artifacts and the default artifact generator remain preserved;
 there is no ongoing synchronization with them after cutover.
 
-## The live board: /board/next
+## The live board: /board/<Monday>
+
+Since 10 Nov 2026 the week's own link opens the live board (Krish, 2026-11-10: "Switch fully, move the old
+board to an archive link"). Control Centre, which serves content.krishraja.com, passes only `/board/<Monday>` through
+to the engine, so `/board/next/<Monday>` there landed on Control Centre's home. The old baked board is
+`/board/<Monday>?archive=1` (sign-in asked, as before); `/board/next/<Monday>` still serves the live board on the
+engine's own address.
 
 Krish, 2026-11-09: "I should always open it with something to do for each piece or for the week, unless the day or
 the week is complete", "Absolutely everything that isn't 100% complete needs an action button", the buttons must start

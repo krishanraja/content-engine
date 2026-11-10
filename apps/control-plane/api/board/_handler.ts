@@ -172,7 +172,10 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         return res.status(status).json({ ok: false, error: error instanceof StandardsError ? error.message : 'standards_unavailable' })
       }
     }
-    if (op === 'next' && method === 'GET' && monday(scalar(req.query.week))) {
+    // The week's board link opens the live board (Krish, 2026-11-10: "Switch fully, move the old board to an archive
+    // link"): /board/<Monday> and /board/next/<Monday> serve it; the old baked board is /board/<Monday>?archive=1.
+    // Control Centre passes only /board/<Monday> through to the engine, which is why the live board lives there.
+    if ((op === 'next' || (op === 'html' && scalar(req.query.archive) !== '1')) && method === 'GET' && monday(scalar(req.query.week))) {
       // The live board's page holds no data, so it is served before the access check: without his cookie it opens on
       // its own "Unlock the board" line instead of a bare 401.
       res.setHeader('Content-Type', 'text/html; charset=utf-8')
@@ -202,7 +205,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         const result = await db.from('board_weeks').select('week').order('week', { ascending: false }).limit(1)
         must(result)
         if (!result.data.length) throw new BoardError(404, 'no_published_board')
-        return res.redirect(303, `/board/next/${weekDate(result.data[0].week)}`)
+        return res.redirect(303, `/board/${weekDate(result.data[0].week)}`)
       }
       const week = scalar(req.query.week)
       if (!monday(week)) throw new BoardError(400, 'invalid_week')
