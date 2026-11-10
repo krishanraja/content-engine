@@ -12,6 +12,10 @@
     "growth-makeyourmindup": {
       "repo": "krishanraja/growth-makeyourmindup",
       "engine": "growth-makeyourmindup"
+    },
+    "growth-heartside": {
+      "repo": "krishanraja/growth-heartside",
+      "engine": "growth-heartside"
     }
   }
 }
