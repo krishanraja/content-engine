@@ -1,0 +1,98 @@
+{
+  "objects": [
+    {
+      "obj": "quota",
+      "device": "quota_chart",
+      "meaning": "Study parameters supplied by card; normalized illustrative bin heights, not recovered study counts",
+      "fromFrame": 0,
+      "toFrame": 400,
+      "params": {
+        "bins": [
+          0.1,
+          0.15,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          1,
+          0.2
+        ],
+        "target": 0.75,
+        "halfTarget": 0.375,
+        "junkShare": 0.31,
+        "salesLift": 0.07,
+        "labels": {
+          "questions": "Questions per person",
+          "target": "Target",
+          "junk": "Junk questions",
+          "sales": "Sales"
+        },
+        "source": "GONG ET AL. \u00b7 ARXIV 2609.32859",
+        "targetValue": 200,
+        "halfTargetValue": 100
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "enter",
+      "obj": "quota",
+      "verb": "enter",
+      "toState": "enter",
+      "atFrame": 10
+    },
+    {
+      "id": "fill",
+      "obj": "quota",
+      "verb": "fill",
+      "toState": "fill",
+      "atFrame": 30
+    },
+    {
+      "id": "draw",
+      "obj": "quota",
+      "verb": "draw",
+      "toState": "draw",
+      "atFrame": 70
+    },
+    {
+      "id": "mark",
+      "obj": "quota",
+      "verb": "mark",
+      "toState": "mark",
+      "atFrame": 100
+    },
+    {
+      "id": "move",
+      "obj": "quota",
+      "verb": "move",
+      "toState": "half",
+      "atFrame": 140
+    },
+    {
+      "id": "count_to",
+      "obj": "quota",
+      "verb": "count_to",
+      "toState": "count_to",
+      "atFrame": 180
+    },
+    {
+      "id": "exit",
+      "obj": "quota",
+      "verb": "exit",
+      "toState": "exit",
+      "atFrame": 300
+    }
+  ],
+  "stills": [
+    9,
+    25,
+    65,
+    95,
+    130,
+    149,
+    170,
+    250,
+    320
+  ]
+}
