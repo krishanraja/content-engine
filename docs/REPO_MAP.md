@@ -4039,6 +4039,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/quota_chart/index.tsx`
 
+- `function chartLayout(w: number, h: number, tall: boolean)`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/quota_chart/schema.ts`
