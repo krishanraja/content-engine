@@ -4,6 +4,12 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('leaderboard declares its eight cues', () => {
+    expect(manifest.devices.leaderboard.verbs).toEqual(['enter', 'add', 'fill', 'stamp', 'move', 'highlight', 'mark', 'exit'])
+  })
+  it('office_floor declares all eleven actions', () => {
+    expect(manifest.devices.office_floor.verbs).toEqual(['enter', 'add', 'fill', 'move', 'send', 'stamp', 'carry', 'highlight', 'draw', 'mark', 'exit'])
+  })
   it('logo_orbit declares its five cues', () => {
     expect(manifest.devices.logo_orbit.verbs).toEqual(['enter', 'add', 'chip', 'highlight', 'exit'])
   })

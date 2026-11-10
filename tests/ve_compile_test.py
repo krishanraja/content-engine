@@ -574,6 +574,33 @@ class StingTest(unittest.TestCase):
             with self.subTest(said), self.env(config), self.assertRaisesRegex(ValueError, said):
                 compile_cut(spec, 'proof-wide', words, FIXTURE)
 
+    def test_his_word_puts_the_episode_card_where_the_sting_would_be(self):
+        # Krish, 2026-11-09, of Wednesday 11 Nov: "I don't want the overall brand intro to come in. I want the episode
+        # card to come in." brand.opening_exception, in his words, leaves the sting out of that piece's wide cut only.
+        said = "I don't want the overall brand intro to come in. I want the episode card to come in."
+        spec, words = self.wide(), timed_words()
+        spec['brand']['opening_exception'] = {'opening': 'episode_card', 'said': said, 'on': '2026-11-09'}
+        with self.env(self.approved):
+            report = {}
+            props = compile_cut(spec, 'proof-wide', words, FIXTURE, report=report)
+            plain = compile_cut(self.wide(), 'proof-wide', words, FIXTURE)
+        self.assertNotIn('sting', props)
+        self.assertEqual(props['opening'], {'kind': 'episode_card', 'said': said, 'on': '2026-11-09'})
+        self.assertEqual(report['opening'], 'episode_card')
+        self.assertIn(said, report['opening_why'])
+        self.assertIn('sting', plain)  # every other series wide cut still opens on the approved sting
+        with self.env(self.approved):
+            self.assertFalse([p for p in sting_problems(props) if 'opens on the approved intro sting' in p])
+            unsaid = dict(props, opening={'kind': 'episode_card', 'said': 'no', 'on': '2026-11-09'})
+            self.assertTrue([p for p in sting_problems(unsaid) if 'opens on the approved intro sting' in p])
+        code = (NODE_TYPESCRIPT +
+                "const { EngineRenderPropsSchema } = require('./apps/renderer/src/engine/props.ts'); "
+                "const parsed = EngineRenderPropsSchema.parse(JSON.parse(fs.readFileSync(0, 'utf8'))); "
+                "process.stdout.write(JSON.stringify(parsed.opening))")
+        result = run(['node', '-e', code], input=json.dumps(props), env={**os.environ, 'npm_config_offline': 'true'})
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(json.loads(result.stdout)['kind'], 'episode_card')
+
     def test_the_renderer_accepts_the_stinged_props(self):
         with self.env(self.approved):
             props = compile_cut(self.wide(), 'proof-wide', timed_words(), FIXTURE)

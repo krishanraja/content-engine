@@ -107,6 +107,61 @@ class BoardWebTests(unittest.TestCase):
             self.assertEqual(sent[0]['manifest']['assets']['drive-example'],asset)
             self.assertEqual(len(reads),1)
             self.assertEqual(len(uploads),1)  # the HTML only
+            # A picture filed to the library after the week's builds: fetched by path, checked by sha256, stored with the build.
+            sent.clear();uploads.clear()
+            pic=b'library picture bytes';psha=board_web.sha(pic)
+            def api_lib(method, path, body=None, base=None):
+                if path.startswith('/api/library/file?'):
+                    # The library is on the engine's host, never the board's (content.krishraja.com 404s it).
+                    assert base == board_web.ENGINE_BASE_URL, base
+                    return {'download':{'url':'https://store.test/x'}}
+                assert base is None, base
+                return api_empty(method, path, body)
+            class R:
+                def __init__(s,b): s.b=b
+                def read(s): return s.b
+                def __enter__(s): return s
+                def __exit__(s,*a): return False
+            mapping.write_text(json.dumps([dict(id='off-card',source_url=source,library={'path':'3 Posts/x/4 Social/card-1.png','sha256':psha})]))
+            with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                board_web.publish(args)
+            self.assertEqual(sent[0]['manifest']['assets']['off-card']['sha256'],psha)
+            self.assertEqual(sent[0]['manifest']['assets']['off-card']['type'],'image/png')
+            self.assertEqual(len(uploads),2)  # the picture and the HTML
+            mapping.write_text(json.dumps([dict(id='off-card',source_url=source,library={'path':'3 Posts/x/4 Social/card-1.png','sha256':'f'*64})]))
+            with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: None), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                with self.assertRaisesRegex(ValueError,'not the bytes'): board_web.publish(args)
+            # Krish binned the file the record names and filed a new one: drive_id moves its Open in Drive link and its
+            # drive id to the new file, so the board never sends him to a binned file.
+            sent.clear();uploads.clear()
+            old_id,new_id='O'*25,'N'*25
+            src2=f'https://drive.usercontent.google.com/download?id={old_id}&amp;export=download'
+            path.write_text(week_board.engine_stamp.stamp(page.replace(source,src2).replace('</main>',
+                f'<li data-drive-id="{old_id}"><a href="https://drive.google.com/file/d/{old_id}/view">Open in Drive</a></li></main>'),'week_board'),encoding='utf-8')
+            mapping.write_text(json.dumps([dict(id='mon-thumb',source_url=src2,drive_id=new_id,library={'path':'3 Posts/x/3 Video/thumb.jpg','sha256':psha})]))
+            with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                board_web.publish(args)
+            html_out=b''.join(x for a in uploads for x in a if isinstance(x,bytes)).decode('utf-8','replace')
+            self.assertIn(f'https://drive.google.com/file/d/{new_id}/view',html_out)
+            self.assertIn(f'data-drive-id="{new_id}"',html_out)
+            self.assertNotIn(old_id,html_out)
+            # A picture held inside the page (a made day's cover): img_id makes it show the mapped file.
+            sent.clear();uploads.clear()
+            path.write_text(week_board.engine_stamp.stamp(page.replace(source,src2).replace('</main>',
+                '<img class="dl-pic" id="mon-img-share" src="data:image/png;base64,T0xE" alt="Share card"></main>'),'week_board'),encoding='utf-8')
+            mapping.write_text(json.dumps([dict(id='mon-thumb',source_url=src2,library={'path':'3 Posts/x/3 Video/thumb.jpg','sha256':psha}),
+                dict(id='mon-share',img_id='mon-img-share',source_url='inline:mon-img-share',library={'path':'3 Posts/x/4 Social/share.png','sha256':psha})]))
+            with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: uploads.append(a)), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                board_web.publish(args)
+            html_out=b''.join(x for a in uploads for x in a if isinstance(x,bytes)).decode('utf-8','replace')
+            # The page carries the mapped file's own bytes (verify needs data: or https:), with the stored asset beside them.
+            self.assertIn(f'<img data-asset="/api/board/2026-10-12/assets/mon-share?sha={psha}" class="dl-pic" id="mon-img-share" src="data:image/png;base64,',html_out)
+            self.assertIn(board_web.base64.b64encode(pic).decode('ascii'),html_out)
+            self.assertNotIn('base64,T0xE',html_out)
+            self.assertEqual(sent[0]['manifest']['assets']['mon-share']['sha256'],psha)
+            mapping.write_text(json.dumps([dict(id='mon-share',img_id='no-such',source_url='inline:x',library={'path':'3 Posts/x/4 Social/share.png','sha256':psha})]))
+            with patch.object(board_web,'call',api_lib), patch.object(board_web,'upload',lambda *a: None), patch.object(board_web.urllib.request,'urlopen',lambda *a,**k: R(pic)), patch.object(board_web.media_standard,'enforced',return_value=False):
+                with self.assertRaisesRegex(ValueError,'no picture with id'): board_web.publish(args)
 
     def test_a_ready_video_needs_a_passing_receipt_for_its_bytes(self):
         import html as html_mod

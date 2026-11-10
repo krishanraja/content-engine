@@ -1,0 +1,93 @@
+{
+ "schema": "content-engine-piece-manifest/1",
+ "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+ "qa": {
+  "state": "passed",
+  "checked_at": "2026-11-09T11:00:00Z"
+ },
+ "assets": [
+  {
+   "name": "long_video",
+   "drive_id": "1zV1u-XAJE9XDy8geNxLBMtgmYKpu0wrO",
+   "sha256": "14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294",
+   "order": 1
+  },
+  {
+   "name": "short_video",
+   "drive_id": "1YY3asVoqWaD9fuTI18NkMkAy5hgqmEQ7",
+   "sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+   "order": 2
+  },
+  {
+   "name": "thumb_wide",
+   "drive_id": "1Ujh_WlDupwNXPGXAgq5LH4J4JRPYFjxf",
+   "sha256": "eb0d573ebaaf78e9fdbe15857b6207751c152b939693a786ac9433ec5fbc2f74",
+   "order": 3
+  },
+  {
+   "name": "thumb_tall",
+   "drive_id": "1T1q2jIVUNkTsfdEeoanGgVVYTCXvAiaR",
+   "sha256": "ea5c45402b7192ced1f6c1ef213880ba87e36cda363e9a132144301900af1437",
+   "order": 4
+  }
+ ],
+ "channels": {
+  "youtube": {
+   "words": "Why is Disney eating the scraps of bankrupt Character.AI?\n\nDisney asked a dying AI company to go bust first, so it could hire the team and leave the lawsuits behind.\n\nGoogle got there first. In 2024 it reportedly paid $2.7 billion to use Character.AI's tech, and hired its founders. Disney tried renting instead. It agreed to put $1 billion into OpenAI and let its characters appear in Sora, then OpenAI shut Sora. Now Gizmodo reports the court filings show Disney offering jobs to 66 of Character.AI's staff, at about $60 million a year in total.\n\nMy prediction: by 1 March 2027, Skydance, Universal Music and Comcast's NBCUniversal each announce buying an AI company or its team. I'm 75% sure.\n\n00:00 Why is Disney eating the scraps of bankrupt Character.AI?\n00:32 Google paid $2.7 billion for Character.AI's tech and founders\n00:55 Disney rented space in OpenAI's Sora app\n01:26 Disney is hiring Character.AI's team\n02:25 Disney leaves Character.AI's users and lawsuits behind\n03:08 Skydance, Universal and Comcast: who buys AI next\n03:33 Ask your AI supplier the four questions Character.AI failed\n\nThe full piece, with every source: makeyourmindup.ai",
+   "alt_text": null,
+   "assets": [
+    "long_video",
+    "thumb_wide"
+   ]
+  },
+  "tiktok": {
+   "words": "Character.AI went bust on 12 October. Google had already paid a reported $2.7 billion to use its tech, and hired its founders. Now Disney is offering jobs to 66 of its staff, and the lawsuits stay with what is left. The money followed the people.",
+   "alt_text": null,
+   "assets": [
+    "short_video",
+    "thumb_tall"
+   ]
+  },
+  "instagram": {
+   "words": "Disney asked a dying AI company to go bust first, so it could hire the team and leave the lawsuits behind.\n\nGoogle reportedly paid $2.7 billion in 2024 to use Character.AI's tech, and hired its founders. Now Disney is offering jobs to 66 of its staff, at about $60 million a year in total, according to the court filings Gizmodo reported.\n\nThe full piece is at makeyourmindup.ai",
+   "alt_text": null,
+   "assets": [
+    "short_video",
+    "thumb_tall"
+   ]
+  },
+  "facebook": {
+   "words": "Disney asked a dying AI company to go bust first, so it could hire the team and leave the lawsuits behind.\n\nGoogle got Character.AI's founders in 2024. Disney is now offering jobs to 66 of its staff. Disney didn't bid for the app itself, or for anyone's chats, so what happens to the app is now up to the court.\n\nThe full piece is at makeyourmindup.ai",
+   "alt_text": null,
+   "assets": [
+    "short_video"
+   ]
+  },
+  "linkedin": {
+   "words": "Disney asked a dying AI company to go bust first, so it could hire the team and leave the lawsuits behind.\n\nCharacter.AI filed for bankruptcy on 12 October. Google had reportedly paid $2.7 billion in 2024 to use its tech, and hired its founders. Disney first tried renting: it agreed to put $1 billion into OpenAI and let its characters appear in Sora. Then OpenAI shut Sora.\n\nSo Disney changed its plan. Gizmodo reports the court filings show Disney offering jobs to 66 of Character.AI's staff, at about $60 million a year in total for three years. The filings say Disney required the deal to go through the bankruptcy court, because of Character.AI's \"diminishing cash reserve and significant litigation and regulatory risks\".\n\nIf your business runs on someone else's AI, ask four things about the firm behind it:\n1. Are its founders still there?\n2. Is your tool its main product or a side bet?\n3. Is it short of cash?\n4. Is it collecting lawsuits?\n\nIf two of those answers worry you, pick your plan B now, and try it on one real task this month.\n\nThe full piece, with sources, is at makeyourmindup.ai",
+   "alt_text": null,
+   "assets": [
+    "short_video"
+   ]
+  },
+  "x": {
+   "words": "Character.AI went bust on 12 October. Google had reportedly paid $2.7 billion to use its tech, and hired its founders. Disney is now offering jobs to 66 of its staff, and the lawsuits stay with what is left.\n\nThe money followed the people.",
+   "alt_text": null,
+   "assets": [
+    "short_video"
+   ]
+  },
+  "threads": {
+   "words": "Disney asked a dying AI company to go bust first, so it could hire the team and leave the lawsuits behind.\n\nGoogle got the founders in 2024. Disney is offering jobs to most of the rest. The users and the people suing get the empty box.",
+   "alt_text": null,
+   "assets": [
+    "short_video"
+   ]
+  },
+  "substack-notes": {
+   "words": "Google and Disney both paid for pieces of Character.AI, two years apart, for two very different reasons. Here's why, and what it means for any business that runs on someone else's AI.\n\nMy prediction: Skydance, Universal Music and Comcast's NBCUniversal each buy an AI company or its team by 1 March 2027. The piece and the 5-minute video: makeyourmindup.ai",
+   "alt_text": null,
+   "assets": []
+  }
+ }
+}

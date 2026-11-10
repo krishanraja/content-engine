@@ -1,8 +1,206 @@
 [
-  {"id": "mon-video-long", "existing_sha256": "14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294", "source_url": "https://drive.usercontent.google.com/download?id=1zV1u-XAJE9XDy8geNxLBMtgmYKpu0wrO&amp;export=download", "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"},
-  {"id": "mon-video-short", "existing_sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd", "source_url": "https://drive.usercontent.google.com/download?id=1YY3asVoqWaD9fuTI18NkMkAy5hgqmEQ7&amp;export=download", "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"},
-  {"id": "mon-thumb-wide", "existing_sha256": "161f0cf265da563fb4ddda7177ff0a465c52ff6293d18e1019b04e541702cb47", "source_url": "https://drive.usercontent.google.com/download?id=1RSNmWTScUaL0_W6mp3MAQYwDQzTPaSS7&amp;export=download", "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"},
-  {"id": "mon-thumb-tall", "existing_sha256": "be8da203e04013fb76bf3fe57cdff641610c1e6bc41476a43335525451779a63", "source_url": "https://drive.usercontent.google.com/download?id=1Zt8BHUtCL-MeO7haePkDh1h9AFbQk-gJ&amp;export=download", "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"},
-  {"id": "mon-cards-sheet", "existing_sha256": "e4e5d53231275fed934b28da6c12745b4f2824121bbcde3a0edf0f8fa54e94c0", "source_url": "/api/board/2026-11-09/assets/mon-cards-sheet?sha=e4e5d53231275fed934b28da6c12745b4f2824121bbcde3a0edf0f8fa54e94c0", "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"},
-  {"id": "mon-card-ch6", "existing_sha256": "878b7a8bbadd1db7b640e14181834192d1357334bd18faafc905d0fae90fa365", "source_url": "/api/board/2026-11-09/assets/mon-card-ch6?sha=878b7a8bbadd1db7b640e14181834192d1357334bd18faafc905d0fae90fa365", "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"}
+ {
+  "id": "mon-video-long",
+  "existing_sha256": "14ccfef0f31e42814db4b4743d35cd75d047d95e0520171f755b9cd31b1a3294",
+  "source_url": "https://drive.usercontent.google.com/download?id=1zV1u-XAJE9XDy8geNxLBMtgmYKpu0wrO&amp;export=download",
+  "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"
+ },
+ {
+  "id": "mon-video-short",
+  "existing_sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+  "source_url": "https://drive.usercontent.google.com/download?id=1YY3asVoqWaD9fuTI18NkMkAy5hgqmEQ7&amp;export=download",
+  "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"
+ },
+ {
+  "id": "mon-thumb-wide",
+  "drive_id": "1Ujh_WlDupwNXPGXAgq5LH4J4JRPYFjxf",
+  "library": {
+   "path": "3 Posts/2026-11-09 Mon follow.the.money - Disney, Google and Character.AI/3 Video/FINAL neon 9 Nov v2 - Disney, Google and Character.AI - wide 16x9 - thumbnail.jpg",
+   "sha256": "eb0d573ebaaf78e9fdbe15857b6207751c152b939693a786ac9433ec5fbc2f74"
+  },
+  "type": "image/jpeg",
+  "source_url": "https://drive.usercontent.google.com/download?id=1RSNmWTScUaL0_W6mp3MAQYwDQzTPaSS7&amp;export=download"
+ },
+ {
+  "id": "mon-thumb-tall",
+  "drive_id": "1T1q2jIVUNkTsfdEeoanGgVVYTCXvAiaR",
+  "library": {
+   "path": "3 Posts/2026-11-09 Mon follow.the.money - Disney, Google and Character.AI/3 Video/FINAL neon 9 Nov v2 - Disney, Google and Character.AI - tall 9x16 - thumbnail.jpg",
+   "sha256": "ea5c45402b7192ced1f6c1ef213880ba87e36cda363e9a132144301900af1437"
+  },
+  "type": "image/jpeg",
+  "source_url": "https://drive.usercontent.google.com/download?id=1Zt8BHUtCL-MeO7haePkDh1h9AFbQk-gJ&amp;export=download"
+ },
+ {
+  "id": "mon-cards-sheet",
+  "existing_sha256": "e4e5d53231275fed934b28da6c12745b4f2824121bbcde3a0edf0f8fa54e94c0",
+  "source_url": "/api/board/2026-11-09/assets/mon-cards-sheet?sha=e4e5d53231275fed934b28da6c12745b4f2824121bbcde3a0edf0f8fa54e94c0",
+  "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"
+ },
+ {
+  "id": "mon-card-ch6",
+  "existing_sha256": "878b7a8bbadd1db7b640e14181834192d1357334bd18faafc905d0fae90fa365",
+  "source_url": "/api/board/2026-11-09/assets/mon-card-ch6?sha=878b7a8bbadd1db7b640e14181834192d1357334bd18faafc905d0fae90fa365",
+  "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef"
+ },
+ {
+  "id": "off-characterai-1",
+  "existing_sha256": "1232d13d03f323cf833a1e47aac7666e8ef9a786f144c90ee3054d200ceb87f0",
+  "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-characterai-1?sha=1232d13d03f323cf833a1e47aac7666e8ef9a786f144c90ee3054d200ceb87f0"
+ },
+ {
+  "id": "off-characterai-2",
+  "existing_sha256": "bd6565f4f2caca292de5b06d62e15a2e674b307badde6a3b655e5ba972f1398c",
+  "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-characterai-2?sha=bd6565f4f2caca292de5b06d62e15a2e674b307badde6a3b655e5ba972f1398c"
+ },
+ {
+  "id": "off-characterai-3",
+  "existing_sha256": "e5e605b0c988a7a7d8cac2454d5026a659fab18133fa577c76bfe62eedbc49a4",
+  "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-characterai-3?sha=e5e605b0c988a7a7d8cac2454d5026a659fab18133fa577c76bfe62eedbc49a4"
+ },
+ {
+  "id": "off-characterai-4",
+  "existing_sha256": "3d0b5337a6df30b40e7b878b8d6fce1f3790c1b6ac1b65400e080957ec9b2cb6",
+  "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-characterai-4?sha=3d0b5337a6df30b40e7b878b8d6fce1f3790c1b6ac1b65400e080957ec9b2cb6"
+ },
+ {
+  "id": "off-characterai-5",
+  "existing_sha256": "980c9c71f9ce78bcfe356834825732930aab2f59ec273a02e84bc13693f530df",
+  "from_build": "0e79df549e83c0da05eec17141982ca23427b650ef94145f9af3cf56a190c5ef",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-characterai-5?sha=980c9c71f9ce78bcfe356834825732930aab2f59ec273a02e84bc13693f530df"
+ },
+ {
+  "id": "off-git-1",
+  "library": {
+   "path": "3 Posts/2026-11-12 Thu off.day - AI broke Git/4 Social/git-card-1.png",
+   "sha256": "3971eb2786ce2cf98778fddbdd5b97c9ea620b697fb2c82e5e3d360684d7473b"
+  },
+  "type": "image/png",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-git-1?sha=c8d2e6c91387d477b26df0f600091284b16887aaea8f958ba2b2c116fac975d1"
+ },
+ {
+  "id": "off-git-2",
+  "library": {
+   "path": "3 Posts/2026-11-12 Thu off.day - AI broke Git/4 Social/git-card-2.png",
+   "sha256": "e27d4d23b6eb9be7f9d50f72b522113e431d42bc9e1c8c1222908ac14f95aa2a"
+  },
+  "type": "image/png",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-git-2?sha=6576bcdd6304a2e27e0427375dc54cbf448792d560b396b895dca494dbbefb4e"
+ },
+ {
+  "id": "off-git-3",
+  "library": {
+   "path": "3 Posts/2026-11-12 Thu off.day - AI broke Git/4 Social/git-card-3.png",
+   "sha256": "a862f694876e2a037d2449e1e782b7a6c78bff0d621791541f446ce51da5efcc"
+  },
+  "type": "image/png",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-git-3?sha=23381a23080d2cf058d658ffc41ee9db72eb6f6e5bae2584096270b7459f8c2a"
+ },
+ {
+  "id": "off-git-4",
+  "library": {
+   "path": "3 Posts/2026-11-12 Thu off.day - AI broke Git/4 Social/git-card-4.png",
+   "sha256": "2585cf45d1026cffab8e9682c0c956fe62e4d63c15fbe3023ed7449046bb23a3"
+  },
+  "type": "image/png",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-git-4?sha=cf719bf7fad46e7646151048785d9cb8b4f7deaabf591a80a0f809af321a1423"
+ },
+ {
+  "id": "off-git-5",
+  "library": {
+   "path": "3 Posts/2026-11-12 Thu off.day - AI broke Git/4 Social/git-card-5.png",
+   "sha256": "ce5066f720ac4763651fd02fb728556435d5ac52369257f998c13a958494a5c0"
+  },
+  "type": "image/png",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-git-5?sha=1a0800e69f95b106833c7e43c3b139389451d7e2b93310b0c22fa217e6815e4e"
+ },
+ {
+  "id": "off-homework-1",
+  "library": {
+   "path": "3 Posts/2026-11-10 Tue off.day - AI marking its own homework/4 Social/homework-card-1.png",
+   "sha256": "afcc64976bca86f5185927a0235a35236f87a69a312630b53a7d9802c0f8841e"
+  },
+  "type": "image/png",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-homework-1?sha=08f3527cb991f7ba97ee5f673e3516649c5d4fde42631bf91085bded4d0ce891"
+ },
+ {
+  "id": "off-homework-2",
+  "library": {
+   "path": "3 Posts/2026-11-10 Tue off.day - AI marking its own homework/4 Social/homework-card-2.png",
+   "sha256": "821d3ec7bbd89ca5f05baac8955d743d8a510bd29984f94aa8c432a9a0ced838"
+  },
+  "type": "image/png",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-homework-2?sha=a3e4541eb8af0408f39aeb594e39a44bdb1c833b487458ce6a5f7300afab2f55"
+ },
+ {
+  "id": "off-homework-3",
+  "library": {
+   "path": "3 Posts/2026-11-10 Tue off.day - AI marking its own homework/4 Social/homework-card-3.png",
+   "sha256": "288d6f815be72e2fc28b4f7cac61d8afd79c80d5a349ee9b81ae6d4448ccb6b6"
+  },
+  "type": "image/png",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-homework-3?sha=47bd08887940153dbac0c2a69d7f61573d8f06dcd49a76196e76f7772ce65358"
+ },
+ {
+  "id": "off-homework-4",
+  "library": {
+   "path": "3 Posts/2026-11-10 Tue off.day - AI marking its own homework/4 Social/homework-card-4.png",
+   "sha256": "dbb2c6c7b582f292a2e9506081b53c86b0ce2d4c41e5d4b05d93cfc9fc98d884"
+  },
+  "type": "image/png",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-homework-4?sha=5720ad23e455230df3f4a90f8def5a634b6a6b745dc4b259141d2b536902207f"
+ },
+ {
+  "id": "off-homework-5",
+  "library": {
+   "path": "3 Posts/2026-11-10 Tue off.day - AI marking its own homework/4 Social/homework-card-5.png",
+   "sha256": "ae560b616d69910abdd61e30eb82d8e35ea84b1aa3a25e1ac59edfac5c5e8676"
+  },
+  "type": "image/png",
+  "source_url": "https://content.krishraja.com/api/board/2026-11-09/assets/off-homework-5?sha=f7866094b7d62b16121e2833dcc71555e1e0dacb5499a015c478a45de71fde3a"
+ },
+ {
+  "id": "mon-img-cover",
+  "img_id": "mon-img-cover",
+  "library": {
+   "path": "3 Posts/2026-11-09 Mon follow.the.money - Disney, Google and Character.AI/2 Covers and images/FINAL neon 9 Nov v2 - substack-cover-1200x630.png",
+   "sha256": "c3fe577d98b825c4185af4d1a830d7febe84cc0c0f509584de5b90a2c35ca203"
+  },
+  "type": "image/png",
+  "source_url": "https://drive.usercontent.google.com/download?id=1ZPrifa0PQURC0QT_PK2mNpoeiroBCKo7&export=download"
+ },
+ {
+  "id": "mon-img-vertical",
+  "img_id": "mon-img-vertical",
+  "library": {
+   "path": "3 Posts/2026-11-09 Mon follow.the.money - Disney, Google and Character.AI/2 Covers and images/FINAL neon 9 Nov v2 - vertical-cover-1080x1920-shorts-tiktok-reels.png",
+   "sha256": "605fc9d742a39e2e91ff04aeccffe1b7208cd49a1f23d171660aba70e3887857"
+  },
+  "type": "image/png",
+  "source_url": "https://drive.usercontent.google.com/download?id=1yvv5pzEU2mqbd58Xe48KACMXczYsUorg&export=download"
+ },
+ {
+  "id": "mon-img-square",
+  "img_id": "mon-img-square",
+  "library": {
+   "path": "3 Posts/2026-11-09 Mon follow.the.money - Disney, Google and Character.AI/2 Covers and images/FINAL neon 9 Nov v2 - square-1080x1080.png",
+   "sha256": "547af534f06ef3592c846dcbabf1d31c0f39ea9d46a5083872766e73123b788b"
+  },
+  "type": "image/png",
+  "source_url": "https://drive.usercontent.google.com/download?id=1hllLv1sV_XsJJflKX9Bo-FQ2bLfsCyka&export=download"
+ },
+ {
+  "id": "mon-img-share",
+  "img_id": "mon-img-share",
+  "library": {
+   "path": "3 Posts/2026-11-09 Mon follow.the.money - Disney, Google and Character.AI/2 Covers and images/FINAL neon 9 Nov v2 - share-card-1200x675.png",
+   "sha256": "81243302577bee1d8c2542c3599ea722946e4ab8765ceb335239e3f6411a7859"
+  },
+  "type": "image/png",
+  "source_url": "https://drive.usercontent.google.com/download?id=1QzfT9DLwBfGY1xlusojyHRjtGjicAgVA&export=download"
+ }
 ]

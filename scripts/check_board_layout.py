@@ -558,6 +558,15 @@ def presses_in_browser(page, web):
             idea = (last(f'queue/{one}') or {}).get('idea') or {}
             if idea.get('verdict') != 'reject' or idea.get('words') != 'Every account does this joke.' or idea.get('sha256') != one_sha:
                 problems.append(f'sunday: an off-day Reject did not save its reason bound to the idea it showed ({last(f"queue/{one}")})')
+            # A second tap takes the Reject back and keeps his reason (9 Nov: off-tue-infosys's words were blanked so).
+            page.click(f'#{one} [data-act="offpress"][data-side="idea"][data-value="reject"]')
+            until(page, lambda: ((last(f'queue/{one}') or {}).get('idea') or {}).get('verdict', 'x') is None)
+            if ((last(f'queue/{one}') or {}).get('idea') or {}).get('words') != 'Every account does this joke.':
+                problems.append(f'sunday: taking an off-day Reject back blanks his reason ({last(f"queue/{one}")})')
+            page.click(f'#{one} [data-act="offpress"][data-side="idea"][data-value="reject"]')
+            page.wait_for_selector(f'#{one} [data-say-side="idea"]:not([hidden])', timeout=5000)
+            page.click(f'#{one} [data-act="offsay"][data-side="idea"]')
+            until(page, lambda: ((last(f'queue/{one}') or {}).get('idea') or {}).get('verdict') == 'reject')
             page.click(f'#{two} [data-act="offpress"][data-side="idea"][data-value="approve"]')
             until(page, lambda: last(f'queue/{two}'))
             body = last(f'queue/{two}') or {}
