@@ -3827,6 +3827,18 @@ Run a Vercel serverless handler locally against the real environment.
 - `function onTwos(frame: number, fromFrame: number): number`
 - `function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number`
 
+### `apps/renderer/src/engine/devices/agent_swarm/index.tsx`
+
+- `function Device(props: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/agent_swarm/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/agent_swarm/state.ts`
+
+- `function swarmState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+
 ### `apps/renderer/src/engine/devices/arrangement/hatch.ts`
 
 Eight-pixel, 45-degree cream machine hatch over ink.
@@ -4017,6 +4029,18 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function queryState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/quota_chart/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/quota_chart/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/quota_chart/state.ts`
+
+- `function quotaState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/quote_card/index.tsx`
 
 - `function Device({ object, events, tokens, frame }: DeviceProps)`
@@ -4173,6 +4197,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/upload_flood/schema.ts`
 
 - `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/wall_screen/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/wall_screen/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/wall_screen/state.ts`
+
+- `function wallState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `function pageRect(wall: {x: number; y: number; w: number; h: number; skew?: number}, full: number)`
 
 ### `apps/renderer/src/engine/fit.ts`
 
@@ -4415,6 +4452,8 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[]`
 - `function splitCameraBox(aspect: Aspect): Box`
 - `function splitPlatePosition(crop?: string): string`
+- `function windowCameraBox(aspect: Aspect): Box`
+- `function windowCameraState(beats: readonly EngineBeat[], aspect: Aspect, frame: number): { box: Box; scale: number; win…`
 
 ### `apps/renderer/src/engine/mocks/face-with-proof.tsx`
 
