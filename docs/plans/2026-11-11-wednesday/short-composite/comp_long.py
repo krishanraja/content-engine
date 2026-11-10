@@ -12,7 +12,7 @@ DEV = '/tmp/claude-0/w11l'
 SRC = '/tmp/claude-0/rec2/sources'
 TAKE = '/tmp/claude-0/rec2/eyeL/out/clip.ai-music-long.eyeline.mp4'
 # Kept spans of the take (restarts cut: 20.45, 25.05, 302.35; the "weren't clubbing" slip at 232.6)
-KEEP = [(1.8, 20.45), (21.38, 25.05), (27.45, 232.6), (234.75, 302.35), (311.35, 359.2)]
+KEEP = [(1.8, 20.45), (21.38, 25.05), (27.45, 232.6), (234.75, 282.0), (285.15, 302.35), (311.35, 335.5), (338.5, 359.2)]
 OUT_LEN = sum(b - a for a, b in KEEP)
 def take_t(o):
     for a, b in KEEP:
@@ -26,7 +26,8 @@ S.update({'imael': shot('officialcharts_imael_angel_artist', 125, 875, 1875, 160
           'ableton': shot('ableton_arrangement_view_manual', 220, 150, 1690, 1500), 'logic': shot('logic_pro_product', 600, 300, 2300, 1750),
           'splice': shot('splice_sample_packs', 0, 200, 2880, 1500), 'spsearch': shot('spotify_search_movin_to_the_sun', 700, 300, 2880, 1500),
           'm365': shot('m365_copilot_marketing', 0, 0, 2880, 1500), 'ppt': shot('powerpoint_copilot_marketing', 0, 0, 2880, 1500),
-          'deezer': shot('deezer_newsroom_50pct_jul2026', 150, 150, 2250, 1700), 'edmhouse': shot('hugel_ai_claims_edmhousenetwork', 900, 700, 2700, 1650)})
+          'deezer': shot('deezer_newsroom_50pct_jul2026', 150, 150, 2250, 1700), 'edmhouse': shot('hugel_ai_claims_edmhousenetwork', 900, 700, 2700, 1650),
+          'word': cv2.imread('/tmp/claude-0/w11l/newsrc/word.png')[0:1500, 0:2880], 'deezer44': shot('deezer_newsroom_44pct_apr2026', 150, 150, 2250, 1700)})
 
 def ground(c=INK): return np.full((SH, SW, 3), bgr(c), np.uint8)
 def fit(img, w, h):
@@ -198,11 +199,19 @@ def s_timeline(t):  # 183.6 which came first? TikTok, and the charts came later
     if t > 184.4: text(g, 'TikTok', ANTON(70), x0 + 150, 90, CREAM, 'ma', ease((t - 185.5) / 0.3))
     ch = [(x0 + 300 + i * 6, yb - int(560 / (1 + math.exp(-(i - 60) / 14)))) for i in range(int(130 * pc))]
     if len(ch) > 1: cv2.polylines(g, [np.array(ch)], False, bgr(MINT), 8, cv2.LINE_AA)
-    if t > 186.8: text(g, 'Charts', ANTON(70), x1 - 160, 60, MINT, 'ma', ease((t - 186.8) / 0.3))
-    if t > 189.0: text(g, 'No. 2', ANTON(80), x1 - 160, 150, MINT, 'ma', ease((t - 189.0) / 0.3))
+    if t > 186.8: text(g, 'Charts', ANTON(70), 900, 520, MINT, 'ma', ease((t - 186.8) / 0.3))
+    if t > 189.0: text(g, 'No. 2', ANTON(80), SW - 30, 40, MINT, 'ra', ease((t - 189.0) / 0.3))
     return sway(g, t, 0.03)
 
-def s_flood(t): return sway(devframe('flood', t, 190.6), t, 0.04)
+def s_flood(t):
+    g = sway(devframe('flood', t, 190.6), t, 0.04)
+    if 193.6 <= t < 198.4:
+        p = min(1, back((t - 193.6) / 0.35)); out = ease((t - 198.0) / 0.4)
+        paste(g, fit(S['deezer'], 520, 380), 300, SH - 230 + out * 500, 1, min(1, p * 2) * (1 - out), 16, rot=-3)
+    if 198.8 <= t < 203.4:
+        p = min(1, back((t - 198.8) / 0.35)); out = ease((t - 203.0) / 0.4)
+        paste(g, fit(S['deezer44'], 520, 380), 300, SH - 230 + out * 500, 1, min(1, p * 2) * (1 - out), 16, rot=3)
+    return g
 
 def s_hugel(t):  # 207.6 one stranger ... a dance producer called HUGEL
     g = ground()
@@ -241,7 +250,7 @@ def s_grammys(t):  # 264.5 the Grammys
             hm = hatch(70, 300, t * 30); text(hm, 'AI HUM', MONO(30), 150, 18, CREAM, 'ma'); paste(card, hm, cw / 2, 560 - 20, 1, ease((t - 280.4) / 0.3), 10, shadow=False)
         paste(g, card, 330 + j * 580, SH / 2 + 30 + (1 - p) * 500, 1, min(1, p * 2), 26, rot=-3 if j == 0 else 3)
     if t > 291.6:
-        slide_card(g, S['edmhouse'], t, 291.6, SW / 2, SH / 2, 900, 520, frm=(0, 600))
+        slide_card(g, S['edmhouse'], t, 291.6, SW / 2, 190, 640, 300, frm=(0, -600))
     return sway(g, t, 0.04)
 
 def s_question(t):  # 296.2 is it AI music or human music? the wrong question
@@ -254,7 +263,7 @@ def s_credits(t): return sway(devframe('credits', t, 311.0), t, 0.05)
 
 def s_beyond(t):  # 328 this goes way beyond music: the advert, the report, the deck
     g = ground()
-    for i, (at, k, lab) in enumerate([(330.6, 'm365', 'THE ADVERT'), (333.0, 'deezer', 'THE REPORT'), (335.8, 'ppt', 'THE DECK')]):
+    for i, (at, k, lab) in enumerate([(330.6, 'm365', 'THE ADVERT'), (333.0, 'word', 'THE REPORT'), (338.9, 'ppt', 'THE DECK')]):
         if t < at: continue
         p = min(1, back((t - at) / 0.35)); card = fit(S[k], 520, 330); h, w = card.shape[:2]
         full = np.full((h + 90, w, 3), bgr(CREAM), np.uint8); full[:h] = card

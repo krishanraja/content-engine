@@ -36,7 +36,7 @@ jobs['build'] = {"device": "arrangement", "object": {"obj": "song", "device": "a
 # Upload flood: 190.6 -> 207.6
 t0 = 190.6
 jobs['flood'] = {"device": "upload_flood", "object": {"obj": "flood", "device": "upload_flood", "meaning": "Uploads versus discovery",
-  "dataset": {"unit": "share", "denominator": None, "producerLabel": "Deezer, July 2026", "rows": [{"label": "50%+", "value": 0.5}, {"label": "1-3% of listens", "value": 0.02}]},
+  "dataset": {"unit": "share", "denominator": None, "producerLabel": "Deezer, Apr and Jul 2026", "rows": [{"label": "50%+", "value": 0.5}, {"label": "1-3% of listens", "value": 0.02}]},
   "params": {"tiles": 300, "query": "what is this song", "answer": {"title": "Movin’ To The Sun", "artist": "Imael Angel"}}, "fromFrame": 0, "toFrame": 600},
   "events": [ev("enter", "enter", L(190.8, t0), "flood"), ev("fill", "fill", L(193.0, t0), "flood"), ev("count_to", "count_to", L(196.4, t0), "flood"),
              ev("draw", "draw", L(198.7, t0), "flood"), ev("type", "type", L(203.6, t0), "flood"), ev("pick", "pick", L(206.0, t0), "flood")],
