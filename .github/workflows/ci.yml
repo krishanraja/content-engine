@@ -126,6 +126,7 @@ jobs:
           python tests/board_web_test.py
           python tests/board_today_test.py
           python tests/floor_group_test.py
+          python tests/now_trim_test.py
           python scripts/post-pack/board_today.py fixtures/week-board/today-2026-10-26.json fixtures/week-board/today-2026-11-02.json --out "$RUNNER_TEMP/board-today" --shoot --open mon
           node tests/board-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
           node tests/inspiration-said-cards.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
@@ -299,3 +300,14 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm audit --audit-level=high
+
+  # A pull request closes out through now-notes/ and never edits NOW.md: two open at once conflicted over it and
+  # auto-merge could merge neither (#499, #509, #510, 2026-11-10). Main folds the notes and trims the page itself.
+  now-md-untouched:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 scripts/check_now_untouched.py --base "origin/${{ github.base_ref }}" --branch "${{ github.head_ref }}"
