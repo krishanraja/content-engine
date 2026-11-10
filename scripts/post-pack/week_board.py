@@ -98,6 +98,7 @@ import hashlib
 import html
 import io
 import json
+import os
 import re
 import sys
 import tempfile
@@ -2310,6 +2311,27 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
     return out, warnings
 
 
+def offdays_from_page(text, where='the earlier page'):
+    """The off days a published board page carries, each option as that build kept it, for a build that carries them
+    without the Sunday Ideas check (--offdays-from; Krish, 2026-11-09: "Yes, go ahead with the restore"). A published
+    page names its stored slides by the board's own path (/api/board/<week>/assets/<id>?sha=); they are read as the
+    board's https address, which the --assets mapping turns back into this build's stored files."""
+    held = previous_conf(text, 'offdays')
+    if not held:
+        raise BoardError(f'{where} carries no off days')
+    base = os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
+    full = lambda v: base + v if isinstance(v, str) and v.startswith('/api/board/') else v  # noqa: E731
+    def absolute(o):
+        o = previous_option(o)
+        if isinstance(o.get('slides'), list):
+            o['slides'] = [dict(x, url=full(x.get('url'))) if isinstance(x, dict) else x for x in o['slides']]
+        for k in ('video', 'download', 'mock'):
+            if isinstance(o.get(k), dict):
+                o[k] = {kk: full(vv) for kk, vv in o[k].items()}
+        return o
+    return read_offdays({k: [absolute(o) for o in v] for k, v in held.items()}, where)
+
+
 def previous_option(o):
     """An off-day option as the previous board kept it, back in the shape read_offdays takes."""
     row = {'id': o['id'], 'format': o['format'], 'source': {'label': o['source'], 'url': o.get('url')} if o.get('url') else o['source'], 'copy': o['copy']}
@@ -2627,6 +2649,38 @@ def upgrade_kept_v4(panel, key, weekday, creative_html, scored_html):
     panel = panel.replace(rec, rec + step_panel(p, 'creative', opened, creative_html + gates), 1)
     pub = div_at(panel, panel.find(f'<div class="subpanel" role="tabpanel" id="{p}sub-publish"'))
     return panel.replace(pub, pub + step_panel(p, 'scored', opened, scored_html), 1)
+
+
+def kept_manifest(panel, key, sha):
+    """A kept made day's Approve for publish binds the manifest --publish-manifest gives (Krish, 2026-11-09: "The Monday
+    thumbnails and covers are all the old ones"): a re-made manifest replaces the one the tab was kept with."""
+    if not sha or not re.fullmatch(r'[a-f0-9]{64}', sha):
+        return panel
+    m = re.search(r'<div class="rec so" id="' + re.escape(key) + r'-signoff"[^>]*>', panel)
+    if not m:
+        return panel
+    tag = m.group(0)
+    new = (re.sub(r'data-manifest-sha256="[a-f0-9]{64}"', f'data-manifest-sha256="{sha}"', tag) if 'data-manifest-sha256=' in tag
+           else tag[:-1] + f' data-manifest-sha256="{sha}">')
+    return panel.replace(tag, new, 1)
+
+
+def drop_settled_script_ask(panel):
+    """A kept draft day whose scripts the record shows in Teleprompter: its heading's "Waiting on you" no longer asks
+    him to approve them (Krish, 2026-11-09, on the 9 Nov Wednesday tab still asking for scripts sent on 4 Nov: "I'm
+    pretty sure the Wednesday, the 11th, session has built most of the assets"). Every other ask stays; an empty box
+    goes."""
+    head = panel.find('<div class="day-head">')
+    at = panel.find('<div class="notice" role="note">', head) if head >= 0 else -1
+    if at < 0:
+        return panel
+    box = div_at(panel, at)
+    kept = [li for li in re.findall(r'<li>.*?</li>', box, re.S)
+            if not re.match(r'<li>\s*Approve (?:both )?(?:\w+ )?scripts?\b', li, re.I)]
+    if len(kept) == len(re.findall(r'<li>', box)):
+        return panel
+    new = re.sub(r'<ol class="do">.*?</ol>', lambda m: '<ol class="do">' + ''.join(kept) + '</ol>', box, count=1, flags=re.S) if kept else ''
+    return panel.replace(box, new, 1)
 
 
 def series_stages(key, state, piece, brief, rv, tp, takes, sheet, prod, videos, posted):
@@ -4747,6 +4801,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                 # The kept day's finished videos and thumbnails come from the record, as every other day's do.
                 feature = 'data-feature="true"' in panel.split('>', 1)[0]
                 panel = panel.replace(div_at(panel, group), dl_videos(f'{key}-', videos[key], feature), 1)
+            panel = kept_manifest(panel, key, (manifests or {}).get(key))
             if card:
                 # The kept day's finished videos come from the record, as every other day's do.
                 at = panel.find(f'<div class="rec" id="{key}-videos"')
@@ -4840,6 +4895,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                                       takes.get(key), creative.get(key), (production or {}).get(key), (videos or {}).get(key), posted)
             if state == 'draft' and not (review or {}).get(key) and key in kept_draft and not (teleprompter.get(key) or {}).get('cuts'):
                 st['script'] = 'you'
+            elif key in kept_draft and {'long', 'short'} <= set(((teleprompter.get(key) or {}).get('cuts') or {})):
+                panels[-1] = drop_settled_script_ask(panels[-1])
             doc = board_v4.score_doc(piece, when) if piece else f'score-{when.isoformat()}'
             panels[-1] = with_stage_bar(panels[-1], stage_bar_settled(key, st, notes, doc, piece, f'{key}-publish', f'{key}-scripts'))
             v4_days.append({'key': key, 'tab': name, 'when': when, 'label': short_day(when), 'series': series_label,
@@ -5598,6 +5655,10 @@ def build(args, get=None):
                 owed = coverage_problems(raw, sources) + style_problems(raw)
             if owed:
                 raise BoardError('--ideas is not ready to show (board_feed.py cover):\n  ' + '\n  '.join(owed))
+    if getattr(args, 'offdays_from', None):
+        if getattr(args, 'ideas', None):
+            raise BoardError('--offdays-from: give the off days from --ideas or from an earlier page, not both')
+        offdays = offdays_from_page(Path(args.offdays_from).read_text(encoding='utf-8-sig'), f'--offdays-from {args.offdays_from}')
     if getattr(args, 'offdays_plan', None):
         # Growth's Sunday Off-days section (growth-offdays/1): the days ideas.json did not give.
         if not fixed_layout(monday):
@@ -6132,6 +6193,18 @@ def _v4_checks(check, mon):
     once = with_stage_bar(panel, bar)
     check(with_stage_bar(once, bar.replace('>a<', '>b<')).count('class="v4-stages"') == 1,
           'a day kept from a v4 board gets its stage bar replaced, never a second one')
+    asks = ('<div class="pm"><div class="day-head"><h1>x</h1><div class="notice" role="note"><h2>Waiting on you</h2>'
+            '<ol class="do">{}</ol></div></div><p>body</p></div>')
+    only = drop_settled_script_ask(asks.format('<li>Approve both Wednesday scripts, or edit them.</li>'))
+    other = drop_settled_script_ask(asks.format('<li>Approve both Friday scripts.</li><li>Check the article call.</li>'))
+    check('Waiting on you' not in only and '<p>body</p>' in only and 'Check the article call' in other
+          and 'Approve both Friday' not in other
+          and drop_settled_script_ask(asks.format('<li>Pick a title.</li>')) == asks.format('<li>Pick a title.</li>'),
+          'a kept draft whose scripts are in Teleprompter no longer asks him to approve them; its other asks stay')
+    so = '<div class="pm"><div class="rec so" id="mon-signoff" data-signoff-day="mon" data-manifest-sha256="{}"><h2>x</h2></div></div>'
+    check(kept_manifest(so.format('a' * 64), 'mon', 'b' * 64) == so.format('b' * 64)
+          and kept_manifest(so.format('a' * 64), 'mon', None) == so.format('a' * 64),
+          'a kept made day\'s Approve for publish binds the re-made manifest --publish-manifest gives')
     week = V4_FROM
     with tempfile.TemporaryDirectory() as tmp:
         raw, mapping = example_creative(tmp)
@@ -6462,6 +6535,12 @@ def _growth_offday_checks(check, week, ideas):
     tue = dict(rich, id='translator', video={'url': 'https://board.asset/t.mp4', 'poster': 'https://board.asset/t.jpg'}, drive=drive)
     fin = read_offdays({'tue': [tue, plain], 'sat': [sat, plain]})
     fin_page = board(week, ideas=ideas, offdays=fin)[0]
+    stored = fin_page.replace('https://board.asset/s1.jpg', f'/api/board/{week.isoformat()}/assets/off-s1?sha=' + 'a' * 64)
+    again = offdays_from_page(stored)
+    check('--offdays-from: an earlier page\'s off days come back, a stored slide as the board\'s https address',
+          [o['id'] for o in again['sat']] == [o['id'] for o in fin['sat']]
+          and again['sat'][0]['slides'][0]['url'] == f'https://content.krishraja.com/api/board/{week.isoformat()}/assets/off-s1?sha=' + 'a' * 64
+          and again['tue'][0].get('video') == fin['tue'][0].get('video'))
     fin_tabs = re.findall(r'role="tab" id="tab-([a-z]+)"', fin_page)
     check('off-day asset: every slide shows as its own picture, in order, with Open in Drive before the zip',
           all(f'<img src="https://board.asset/s{i}.jpg" alt="Card {i}"' in fin_page for i in range(1, 8))
@@ -7444,6 +7523,10 @@ def parser():
                     'listed in that day\'s tab')
     ap.add_argument('--drop-review', action='append', metavar='DAY=ID', help='with --draft: a review box the board being '
                     'replaced holds that this build leaves out on purpose (Krish is done with it)')
+    ap.add_argument('--offdays-from', metavar='PAGE', help='a published board page of the same week whose off days (each '
+                    'option as that build carried it, slides and decisions included) this build carries, without the Sunday '
+                    'Ideas check: a picked week whose off days a later build dropped (Krish, 2026-11-09: "Yes, go ahead with '
+                    'the restore"). Not with --ideas.')
     ap.add_argument('--ideas', metavar='PATH', help='the week\'s checked ideas (docs/plans/<week>/ideas.json): a first tab, Ideas, '
                     'with at least three per day and a pick box for each')
     ap.add_argument('--queue', metavar='PATH', help='the saved answer of GET /api/idea-queue: the Ideas tab shows "From your queue" '
