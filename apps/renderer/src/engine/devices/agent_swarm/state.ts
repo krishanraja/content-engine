@@ -20,14 +20,16 @@ export function swarmState({ object, events, frame }: Pick<DeviceProps, 'object'
   const count = (from: number, to: number, p: number) => Math.round(from + (to - from) * p)
   return { params, out, marked: !!mark, rankMode: !!move,
     enter: progress(frame - enter.atFrame, MOTION.enterFrames),
-    text: Array.from(params.comment).slice(0, Math.ceil(Array.from(params.comment).length * progress(time - enter.atFrame, MOTION.countFrames, linear))).join(''),
+    text: params.comment.split(/\s+/).slice(0, Math.ceil(params.comment.split(/\s+/).length * progress(time - enter.atFrame, MOTION.countFrames, linear))).join(' '),
+    countProgress,
+    tokenPosition: params.tokens.from + (params.tokens.to - params.tokens.from) * countProgress,
     tokens: count(params.tokens.from, params.tokens.to, countProgress),
     rank: count(params.rank.from, params.rank.to, rankProgress), rankProgress,
-    strike: mark ? progress(frame - mark.atFrame, MOTION.dropFrames) : 0,
+    strike: mark ? progress(frame - mark.atFrame, 10, linear) : 0,
     work: fill ? drift(time, fill.atFrame, object.toFrame, 100) : 0,
     agents: Array.from({ length: params.agents }, (_, i) => ({
-      i, arrival: add ? progress(time - add.atFrame - (params.agents <= 1 ? 0 : i * 20 / (params.agents - 1)), MOTION.slideFrames) : 0,
-      visible: !!add && time >= add.atFrame + (params.agents <= 1 ? 0 : i * 20 / (params.agents - 1)),
+      i, arrival: add ? progress(time - add.atFrame - (params.agents <= 1 ? 0 : i * 2), MOTION.slideFrames) : 0,
+      visible: !!add && time >= add.atFrame + (params.agents <= 1 ? 0 : i * 2),
     })).filter(a => a.visible),
   }
 }
