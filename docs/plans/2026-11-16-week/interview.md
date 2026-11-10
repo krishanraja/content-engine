@@ -18,3 +18,10 @@ His answers, verbatim, with where and when he typed them (chat times are bounded
 - Q (the style recipe). Best guess: script fry-explainer; production face-with-proof (5-minute cut) and voice-led-pictures (90-second cut); experiment data-story (the 41 town votes as a map, each town flipping to no). Sunday room chat, 9 Nov 2026, after 13:35 UTC: "Yes, that style works"
 - Q (Thursday 19 Nov). Best guess: the assistants explainer on Thursday, the midterms carousel to Friday as that piece's own carousel. Sunday room chat, 9 Nov 2026, after 14:15 UTC: "Yes, assistants explainer Thursday, midterms carousel Friday"
 - Q (Saturday 21 Nov format). Best guess: the carousel. Sunday room chat, 9 Nov 2026, after 14:15 UTC: "carousel"
+
+## Monday 16 Nov, follow.the.money: Oracle, widened (idea 8287846b)
+Earlier, his brief on the pick (HANDOVER.md): "I think this becomes a broader piece about where, in general, money comes from that tech companies get to build AI? The output of this article should be devastatingly simple and insightful even though it's pulling in a lot of complexity of insight."
+Asked together in one message, 10 Nov 2026 (session chat); his answers to be added verbatim as he gives them.
+- Q (deeper story and the click). Best guess: the AI build moved from profits to other people's money (under 1 in 10 dollars borrowed or raised in 2024, about 4 in 10 this year, by one estimate), and the click is the last line on the receipt: customers paying up front are funding it too. Answer: pending.
+- Q (the use). Best guess: before you pay any AI supplier up front, ask it what happens to your money if its build runs late. Answer: pending.
+- Q (his close). Asked for his own call, in his own words, on whether the demand arrives by 2028. Answer: pending.
