@@ -3829,9 +3829,9 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/engine/devices/arrangement/hatch.ts`
 
-AI keeps ink beneath a 45 degree inkSoft hatch, including mixed layers.
+Eight-pixel, 45-degree cream machine hatch over ink.
 
-- `const hatch = (ink: string, inkSoft: string) =>`
+- `const hatch = (ink: string, cream: string) =>`
 
 ### `apps/renderer/src/engine/devices/arrangement/index.tsx`
 
@@ -4067,6 +4067,10 @@ AI keeps ink beneath a 45 degree inkSoft hatch, including mixed layers.
 - `function Device(props: DeviceProps)`
 - `export { slotState } from './state'`
 
+### `apps/renderer/src/engine/devices/slot_machine/layout.ts`
+
+- `function slotLayout(props: DeviceProps, s: NonNullable<ReturnType<typeof slotState>>)`
+
 ### `apps/renderer/src/engine/devices/slot_machine/schema.ts`
 
 - `const ParamsSchema`
@@ -4162,6 +4166,7 @@ AI keeps ink beneath a 45 degree inkSoft hatch, including mixed layers.
 ### `apps/renderer/src/engine/devices/upload_flood/index.tsx`
 
 - `function floodState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+- `function tileHash(i: number)`
 - `function gridGeometry(tiles: number, width: number, height: number, tall: boolean)`
 - `function Device(props: DeviceProps)`
 

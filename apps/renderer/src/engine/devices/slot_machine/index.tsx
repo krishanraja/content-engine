@@ -4,20 +4,14 @@ import { HOUSE_FONTS } from '../../../house/geometry'
 import type { DeviceProps } from '../types'
 import { material } from './hatch'
 import { slotState } from './state'
+import { slotLayout } from './layout'
 
 export function Device(props: DeviceProps) {
   const s = slotState(props)
   if (!s) return null
-  const { box, tokens: t, aspect, object } = props
-  const tall = aspect === '9:16'
-  const w = tall ? 920 : 1160, h = tall ? 1350 : 900
-  const scale = Math.min(box.width / w, box.height / h)
-  const panelH = tall ? 1000 : 660
-  const left = 55, inner = w - 190
-  const lyricsY = 150, lyricsH = tall ? 300 : 170
-  const styleY = lyricsY + lyricsH + 40, styleH = tall ? 190 : 130
-  const targetY = s.focus === 'style' ? styleY + styleH / 2 : lyricsY + lyricsH / 2
-  const m = s.morph
+  const { box, tokens: t } = props
+  const l = slotLayout(props, s), { w, h } = l
+  const shadow = `0 18px 40px color-mix(in srgb, ${t.ink} 25%, transparent)`
   const wave = (seed: number, moving = 0) => <svg viewBox="0 0 240 72" width="100%" height="100%" aria-hidden>
     {Array.from({ length: 32 }, (_, j) => {
       const height = 8 + 48 * Math.abs(Math.sin(j * 1.71 + seed + moving * 9))
@@ -25,74 +19,55 @@ export function Device(props: DeviceProps) {
     })}
   </svg>
   return <div data-device="slot_machine" style={{ position: 'absolute', ...box, overflow: 'hidden' }}>
-    <div style={{ position: 'absolute', left: (box.width - w * scale) / 2, top: (box.height - h * scale) / 2,
-      width: w, height: h, transformOrigin: 'top left', transform: `scale(${scale})` }}>
-      <div style={{ width: w, height: h, opacity: s.entrance * (1 - s.out),
-        transform: `translateY(${(1 - s.entrance) * h + s.out * h}px)`,
-        fontFamily: HOUSE_FONTS.structure, color: t.ink }}>
-        <div data-camera style={{ width: w, height: h, transformOrigin: `${w / 2}px ${targetY}px`,
-          transform: `scale(${s.zoom})` }}>
-          <div style={{ position: 'absolute', left: 24, top: 24, width: w - 100, height: panelH,
-            border: `3px solid ${t.ink}`, borderRadius: 30 + 30 * m, background: t.cream,
-            boxShadow: `10px 12px 0 ${t.inkSoft}` }} />
-          <header style={{ position: 'absolute', left, top: 55, width: inner, display: 'flex', alignItems: 'center', gap: 28,
-            opacity: 1 - 0.6 * s.focusAmount }}>
-            {s.params.logo && <Img src={s.params.logo} style={{ width: 130, height: 50, objectFit: 'contain' }} />}
-            <span style={{ fontSize: 36, fontWeight: 700 }}>Create</span>
-            <span style={{ marginLeft: 'auto', fontFamily: HOUSE_FONTS.data, fontSize: 24 }}>Custom</span>
-          </header>
-          {(['lyrics', 'style'] as const).map((key, i) => {
-            const y = i ? styleY : lyricsY, height = i ? styleH : lyricsH
-            return <section key={key} data-input={key} style={{ position: 'absolute', left,
-              top: y * (1 - m) + (135 + i * 52) * m, width: inner,
-              height: height * (1 - m) + 42 * m, overflow: 'hidden', boxSizing: 'border-box',
-              border: `2px solid ${t.inkSoft}`, borderRadius: 12, padding: 18 * (1 - m) + 4 * m,
-              background: t.cream, opacity: s.focus === key ? 1 : 1 - 0.6 * s.focusAmount }}>
-              <div style={{ fontFamily: HOUSE_FONTS.structure, fontSize: 26, fontWeight: 700, opacity: 1 - m }}>{i ? 'Style of music' : 'Lyrics'}</div>
-              <div style={{ fontFamily: HOUSE_FONTS.data, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere',
-                fontSize: 30 - m * 10, lineHeight: 1.35 }}>{s.texts[i]}{s.caret && m === 0 && <span data-caret>▎</span>}</div>
-            </section>
-          })}
-          <div style={{ position: 'absolute', left, top: styleY + styleH + 28, width: inner, height: 66,
-            borderRadius: 16, display: 'grid', placeItems: 'center', fontSize: 32, fontWeight: 700,
-            ...material('human', t), opacity: (1 - m) * (1 - 0.6 * s.focusAmount),
-            transform: `translateY(${s.pressed}px)`, boxShadow: `0 8px 0 ${t.ink}` }}>Create</div>
-          <div data-machine style={{ opacity: m, transform: `scaleY(${m})`, transformOrigin: '50% 220px' }}>
-            <div style={{ position: 'absolute', left, top: 260, width: inner, height: tall ? 390 : 225,
-              padding: 16, boxSizing: 'border-box', borderRadius: 24, display: 'flex', gap: 18, ...material('ai', t) }}>
-              {s.reels.map((reel, i) => <div key={i} data-reel={i + 1} data-spinning={reel.spinning} style={{
-                position: 'relative', flex: 1, background: t.cream, borderRadius: 12, overflow: 'hidden' }}>
-                {(reel.spinning ? [0, 1, 2] : [0]).map(copy => <div key={copy} style={{ position: 'absolute', inset: 0,
-                  opacity: [1, 0.3, 0.12][copy], transform: `translateY(${reel.offset + copy * 10}px)` }}>
-                  {Array.from({ length: 20 }, (_, tile) => <div key={tile} style={{ height: 120, padding: '12px 20px',
-                    boxSizing: 'border-box', color: t.cream, ...material('ai', t) }}>{wave(tile + i)}</div>)}
-                </div>)}
-              </div>)}
-            </div>
-            <div data-lever style={{ position: 'absolute', left: w - 78, top: 265, width: 30, height: 180,
-              transformOrigin: '50% 100%', transform: `rotate(${s.lever}deg)`, borderRadius: 15, ...material('sample', t) }}>
-              <div style={{ position: 'absolute', top: -20, left: -12, width: 54, height: 54, borderRadius: '50%',
-                border: `3px solid ${t.ink}`, ...material('human', t) }} />
-            </div>
-            <div data-tray style={{ position: 'absolute', left, top: panelH - 145, width: inner, height: 85,
-              background: t.ink, border: `12px solid ${t.inkSoft}`, borderRadius: '12px 12px 30px 30px', boxSizing: 'border-box' }} />
+    <div style={{ position: 'absolute', width: w, height: h, transformOrigin: 'top left', transform: `scale(${box.width / w})` }}>
+      <div style={{ opacity: s.entrance * (1 - s.out), transform: `translateY(${(1 - s.entrance + s.out) * h}px)`, fontFamily: HOUSE_FONTS.structure, color: t.ink }}>
+        <div style={{ position: 'absolute', left: 100, top: h * 0.1, width: 800, height: h * 0.8, borderRadius: 36,
+          background: s.reelGrow ? t.ink : t.cream, border: `2px solid ${t.inkSoft}`, boxSizing: 'border-box', boxShadow: shadow }} />
+        <header style={{ position: 'absolute', left: 132, top: h * 0.12, width: 736, color: s.reelGrow ? t.cream : t.ink }}>
+          {s.params.logo ? <Img src={s.params.logo} style={{ width: 120, height: 42, objectFit: 'contain' }} /> : <div style={{ fontSize: 42, fontWeight: 900 }}>Suno</div>}
+          <div data-source style={{ fontFamily: HOUSE_FONTS.data, fontSize: 19, lineHeight: 1.4 }}>{s.params.source}</div>
+        </header>
+        {l.inputs.map((input, i) => <section key={i} data-input={i ? 'style' : 'lyrics'} style={{ position: 'absolute',
+          left: 100, top: input.top * (1 - s.inputCollapse) + h * 0.2 * s.inputCollapse, width: 800,
+          height: h * (i ? 0.14 : 0.2) * (1 - s.inputCollapse), borderRadius: 16, background: t.cream,
+          border: `2px solid ${t.inkSoft}`, opacity: (1 - s.inputCollapse) * (s.focus === (i ? 'style' : 'lyrics') ? 1 : 1 - 0.6 * s.focusAmount),
+          transformOrigin: '50% 0', transform: `scale(${1 - 0.2 * s.inputCollapse})` }}>
+          <div style={{ margin: '12px 32px', fontSize: 24, fontWeight: 700 }}>{i ? 'Style of music' : 'Lyrics'}</div>
+          <div data-camera style={{ position: 'absolute', left: 32 + input.dx, top: 48, fontFamily: HOUSE_FONTS.data,
+            fontSize: input.font, lineHeight: 1.4, whiteSpace: 'pre', transformOrigin: 'top left', transform: `scale(${input.zoom})` }}>
+            {input.text}{s.caret && s.inputCollapse === 0 && s.focus === (i ? 'style' : 'lyrics') && <span data-caret>▎</span>}
           </div>
-          <footer style={{ position: 'absolute', left, top: panelH + 45, width: inner, fontSize: 24,
-            fontFamily: HOUSE_FONTS.data, overflowWrap: 'anywhere', opacity: 1 - 0.6 * s.focusAmount }}>{s.params.source}</footer>
-          {s.cards.map((card, i) => card.visible && <div key={i} data-song={i + 1} style={{
-            position: 'absolute', left: 90 + i * (inner / 2 - 40), top: panelH - 110 + card.payout * 90 - card.lift * 24,
-            width: inner / 2, height: tall ? 215 : 180, boxSizing: 'border-box', padding: 22,
-            border: `3px solid ${t.ink}`, borderRadius: 16, ...material('human', t),
-            boxShadow: `6px 8px 0 ${t.inkSoft}`, opacity: card.payout * card.dim * (1 - card.flip),
-            transform: `rotate(${(i ? 7 : -7) * card.payout}deg) rotateX(${card.flip * 90}deg)` }}>
-            <div style={{ fontFamily: HOUSE_FONTS.display, fontSize: 36, lineHeight: 1.1, overflowWrap: 'anywhere' }}>{card.title}</div>
-            <div style={{ fontFamily: HOUSE_FONTS.data, fontSize: 24, marginTop: 8 }}>▶ {card.length}</div>
-            <div style={{ height: 48 }}>{wave(i, card.wave)}</div>
-          </div>)}
-          {s.cards.some(c => c.visible && c.payout < 1) && [0, 1, 2].map(i => <div key={i} data-wave-coin style={{
-            position: 'absolute', left: w / 2 + (i - 1) * 100, top: panelH - 140 + s.cards[0]!.payout * 100,
-            width: 65, height: 55, color: t.mint }}>{wave(i)}</div>)}
+        </section>)}
+        <div style={{ position: 'absolute', left: 132, top: h * 0.72, width: 736, height: h * 0.1, borderRadius: 16,
+          display: 'grid', placeItems: 'center', fontSize: 32, fontWeight: 700, ...material('human', t),
+          opacity: (1 - s.inputCollapse) * (1 - 0.6 * s.focusAmount), transform: `translateY(${s.pressed}px)` }}>Create</div>
+        <div data-machine style={{ opacity: s.reelGrow, transform: `scaleY(${s.reelGrow})`, transformOrigin: `500px ${h * 0.25}px` }}>
+          <div style={{ position: 'absolute', left: 132, top: h * 0.29, width: 690, height: h * 0.31,
+            padding: 14, boxSizing: 'border-box', background: t.cream, borderRadius: 24, display: 'flex', gap: 16 }}>
+            {s.reels.map((reel, i) => <div key={i} data-reel={i + 1} data-spinning={reel.spinning} style={{ position: 'relative', flex: 1,
+              overflow: 'hidden', borderRadius: 18, background: t.inkSoft, perspective: 500 }}>
+              <div style={{ position: 'absolute', inset: 0, transform: `translateY(${reel.offset}px)` }}>
+                {Array.from({ length: 20 }, (_, tile) => <div key={tile} style={{ height: 120, padding: '12px 20px', boxSizing: 'border-box',
+                  borderRadius: '50% / 18%', transform: `rotateX(${tile % 2 ? -12 : 12}deg)`, color: t.cream, ...material('ai', t) }}>{wave(tile + i)}</div>)}
+              </div>
+              <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to bottom, ${t.ink} 0%, transparent 35%, transparent 65%, ${t.ink} 100%)`, pointerEvents: 'none' }} />
+            </div>)}
+          </div>
+          <div data-lever data-angle={s.lever} style={{ position: 'absolute', left: 850, top: h * 0.34, width: 18, height: h * 0.15,
+            transformOrigin: '50% 100%', transform: `rotate(${s.lever}deg)`, borderRadius: 12, background: t.inkSoft }}>
+            <div style={{ position: 'absolute', top: -18, left: -14, width: 46, height: 46, borderRadius: '50%', background: t.mint, border: `3px solid ${t.ink}` }} />
+          </div>
+          <div data-tray style={{ position: 'absolute', left: 150, top: h * 0.86, width: 700, height: h * 0.045,
+            borderRadius: '12px 12px 24px 24px', background: t.inkDeep, borderTop: `8px solid ${t.inkSoft}`, boxShadow: `inset 0 -6px 0 ${t.cream}` }} />
         </div>
+        {s.cards.map((card, i) => { const c = l.cards[i]!; return card.visible && <div key={i} data-song={i + 1} style={{ position: 'absolute',
+          left: c.left, top: c.top, width: c.width, height: c.height, padding: 14, boxSizing: 'border-box', borderRadius: 16,
+          background: t.mint, border: `2px solid ${t.ink}`, boxShadow: shadow, opacity: card.payout * card.dim * (1 - card.flip),
+          transform: `rotate(${c.angle}deg) rotateX(${card.flip * 90}deg)` }}>
+          <div style={{ fontWeight: 700, fontSize: Math.min(30, h * 0.03), lineHeight: 1.1 }}>{card.title}</div>
+          <div style={{ fontFamily: HOUSE_FONTS.data, fontSize: 18, marginTop: 6 }}>▶ {card.length}</div>
+          <div style={{ height: c.height * 0.18 }}>{wave(i, card.wave)}</div>
+        </div> })}
       </div>
     </div>
   </div>
