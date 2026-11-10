@@ -70,6 +70,25 @@ Each style is a folder, `styles/<id>/`, not a row in a JSON file:
 
 They stay in `config/style-references.json` formats.script, with the playbook's five formats added as tags.
 
+## 2a. The brand skin: every library style wears it
+
+Krish, 10 Nov 2026: "everything in the style library needs to be skinned slightly in my branding when we do it,
+given we're not customizing all of these styles."
+
+The skin is a fixed layer applied to every library style. It is light, because a fully customised style would be a
+new style, made through Make it mine. It is applied by the renderer from the house tokens
+(`config/ve/brand-tokens.json`, `config/studio.json` theme `makeyourmindup-video-v1`), never copied as hex into a
+style. It has three bands:
+
+| Band | What | Source |
+|---|---|---|
+| **Always the brand** (the style cannot override it) | **Captions:** Archivo house captions in the house position.<br>**Data labels and provenance:** IBM Plex Mono.<br>**Series colour:** marks channel identity only.<br>**Mint:** marks the answer, the brand and the next action only.<br>**Masthead mark.**<br>**The close:** "Built to help you decide."<br>**Sound:** the house bed shape, intro and outro.<br>**Safe zones:** the platform safe zones and his face's place. | brand-tokens `role_rules`, `type_roles`, `geometry`; `docs/production/CLOSING.md`; `config/music-bed.json`; `config/channel-safe-zones.json` |
+| **Pulled towards the brand** (the style keeps its idea, in house colours) | **Ground:** the style's ground moves to ink or cream, whichever is nearer.<br>**Accent:** the style's one accent becomes mint, unless its job is a warning or a channel mark.<br>**Grain:** sits at the house 0.07 and stays behind marks.<br>**Easing:** entrances and exits use the house curves.<br>**Motion:** obeys the house grammar ("nothing moves for its own sake"). | brand-tokens `roles`, `finish`, `motion` |
+| **The style's own** (what makes it that style) | Materials and rendering, texture, the camera grammar, the layout grammar, the native moves, its display face where that face is its signature, and its foley | the style folder |
+
+Each style folder records its skin: which tokens it took, and any accent kept for a job mint must not do, with the
+reason. Its demo film is rendered with the skin on, so what Krish rates is what he would publish.
+
 ## 3. The engines behind the styles
 
 Each style names the engine that draws it. This is where the references earn their place:
