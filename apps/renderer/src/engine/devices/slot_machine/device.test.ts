@@ -6,6 +6,7 @@ import { EngineObjectSchema, EngineEventSchema } from '../../props'
 import type { DeviceProps } from '../types'
 import { Device, slotState } from './index'
 import { material } from './hatch'
+import { slotLayout } from './layout'
 import { ParamsSchema } from './schema'
 import fixture from './fixture.json'
 
@@ -65,5 +66,36 @@ describe('slot_machine', () => {
     expect(ParamsSchema.safeParse({ ...object.params, lyrics: 'a\nb\nc\nd\ne' }).success).toBe(false)
     expect(ParamsSchema.safeParse({ ...object.params, songs: [] }).success).toBe(false)
     expect(() => slotState({ ...props(180), events: [...events, { ...events[0]!, verb: 'highlight', toState: '3', atFrame: 179 }] })).toThrow()
+  })
+})
+
+describe('polished slot geometry', () => {
+  for (const slot of fixture.slots) {
+    it(`keeps typing and rotated payouts inside ${slot.width}x${slot.height}`, () => {
+      for (const frame of [30, 72, 145, 148, 150, 160, 180]) {
+        const p = { ...props(frame), box: { ...props(frame).box, ...slot } }
+        const s = slotState(p)!
+        const l = slotLayout(p, s)
+        for (const input of l.inputs) for (const x of input.charXs) {
+          expect(x).toBeGreaterThanOrEqual(60)
+          expect(x + input.font * 0.61 * input.zoom).toBeLessThanOrEqual(l.w - 60)
+        }
+        for (const c of l.cards) {
+          expect(c.bounds.left).toBeGreaterThanOrEqual(60)
+          expect(c.bounds.left + c.bounds.width).toBeLessThanOrEqual(l.w - 60)
+          expect(c.bounds.top).toBeGreaterThanOrEqual(l.h * 0.06)
+          expect(c.bounds.top + c.bounds.height).toBeLessThanOrEqual(l.h * 0.94)
+        }
+      }
+    })
+  }
+  it('keeps the source outside the camera and clears inputs before reels grow', () => {
+    for (let frame = 5; frame < 251; frame++) {
+      if (!slotState(props(frame))) continue
+      expect(render(props(frame))).toContain('data-source')
+      const s = state(frame)
+      if (s.reelGrow > 0) expect(s.inputCollapse).toBe(1)
+    }
+    expect(state(fixture.golden_frames.G4).lever).toBeGreaterThanOrEqual(60)
   })
 })
