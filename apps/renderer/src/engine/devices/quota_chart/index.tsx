@@ -63,7 +63,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
         </g>
         {s.draw>0 && compare<1 && <text x={x} y={y-48} fontFamily={HOUSE_FONTS.display} fontSize={120} opacity={s.draw*(1-compare)}>{headline}</text>}
         {compare>0 && <g opacity={compare}>
-          <text x={x} y={tall ? h*.66 : h*.72} fontFamily={HOUSE_FONTS.display} fontSize={220} fill={tokens.mint}>+{Number((s.salesLift*s.lift*100).toFixed(2))}%</text>
+          <text x={x + cw*.43} y={(tall ? h*.87 : h*.85) - s.sales[1]! / (1+s.salesLift) * h*(tall ? .12 : .13) - 40} fontFamily={HOUSE_FONTS.display} fontSize={220} fill={tokens.mint}>+{Number((s.salesLift*s.lift*100).toFixed(2))}%</text>
           {[0,1].map(i => {
             const bx = x + cw*(i ? .43 : 0), bottom = tall ? h*.87 : h*.85
             const bh = s.sales[i]! / (1+s.salesLift) * h*(tall ? .12 : .13)
