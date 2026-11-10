@@ -1,0 +1,15 @@
+{
+  "card_id": "ve-fri-7-quota-premium",
+  "kind": "device",
+  "format": "face-with-proof",
+  "motion_style": "data-story",
+  "title": "Quota chart, premium rebuild: the target as a line in the sand, the junk crumbling, the sales lift landing",
+  "goal": "Krish, 10 Nov: \"these animations do not look very premium\". Bar: config/reference-cuts.json. 16:9 first: box 1920x1080, face window bottom right (1452,676,400,340) kept clear; tall second.\n\nEvery state:\na. Fill at least 80% of the box width.\nb. A lit stage: inkDeep to ink radial light from upper left, soft floor shadows, SVG film grain at 3% re-seeded every 2 frames.\nc. A camera: push 1.00 to 1.06 over the device's life, background parallax 0.5x, house easing from clock.ts, overshoot at most 4%.\nd. Always alive: no frame repeats for more than 15 frames while on screen.\ne. Type: numbers and the headline in Anton 120 px+, human words Fraunces semibold 56 px+, Plex Mono only for a source line 28 px+; at most two labels; no axis zeros or titles.\n\nThe story, in states (verbs unchanged): enter, a full-width row of 14 slim cream bars rises staggered 2 frames; draw, a coral line sweeps across the full width at the target with '200 A MONTH' in Anton beside it, and the bars nearest it surge up to touch it; mark, the top 31% of every bar cracks off and greys to tokens.inkSoft, with '31% JUNK' in Anton; move to half, the coral line glides down to half height with '100 A MONTH', the grey junk falls away and the bars resettle, cream; count_to, the bars slide left and shrink to a strip while two Anton numbers take the frame: an old-target sales bar and a mint half-target bar growing, '+7%' counting up from 0 in Anton 220 px mint. params gain showSource (default true); with false the source line is not drawn (the cut credits the study in its own corner).",
+  "contract": "Change only the quota_chart device and its fixture and tests; verbs and existing params keep their meaning (add showSource, optional). Colours only from tokens. Keep existing tests passing and add: at least 12 bars; no text under 28 px; no two consecutive identical frames for more than 15 frames between enter and exit (render the fixture's frames to markup and compare); the composition's bounding box spans at least 80% of a 16:9 box.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/quota_chart\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts",
+  "write_allow": "[apps/renderer/src/engine/devices/quota_chart/*, apps/renderer/src/engine/houseGolden.json]",
+  "read": "apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/quota_chart/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/house/geometry.ts, config/ve/brand-tokens.json, docs/ve/MOTION_STANDARD.md",
+  "max_minutes": 60,
+  "max_calls": 60,
+  "path": "docs/ve/cards/fri-13-nov/ve-fri-7-quota-premium.md"
+}
