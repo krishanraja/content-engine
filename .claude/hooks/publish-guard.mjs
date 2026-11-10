@@ -5,11 +5,16 @@
 // Left alone on purpose, because AGENTS.md is his standing approval for them:
 // - scripts/post-pack/send.py: every post's assets go to his library folder the same day (Krish, 2026-10-06).
 // - Teleprompter create_folder, create_script, update_script: a script goes to his account once he approves its exact
-//   words on the board (Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"). This hook does
-//   not check that approval: teleprompter_send.py plan refuses until it holds, and a session makes only the calls plan
-//   printed. Whether this hook should ask him before each of these calls is his decision, not yet made.
+//   words on the board (Krish, 2026-10-28: "Once I approve, the two scripts will go to teleprompter"), and only once
+//   fresh readers have heard them. teleprompter_send.py plan refuses until both hold, and lists the exact texts it
+//   cleared in .scratch/teleprompter-cleared.json. This hook lets create_script and update_script through only for a
+//   text on that list; any other words go to Krish in person (failure F45: on 9 Nov scripts went to his teleprompter
+//   that no reader had heard; Krish, 2026-11-09: "I shouldn't have to keep asking you to make sense").
 // - scripts/engine.py: the content engine never posts.
-import { decide, readEvent } from './lib.mjs'
+import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { ROOT, decide, readEvent } from './lib.mjs'
 
 const event = readEvent()
 const tool = String(event.tool_name || '')
@@ -18,6 +23,21 @@ const input = event.tool_input || {}
 // AGENTS.md, Teleprompter: "Never: move_script or update_folder".
 if (/^mcp__Teleprompter__(?:move_script|update_folder)$/.test(tool)) {
   decide('deny', 'publish-guard: AGENTS.md never allows move_script or update_folder in Krish\'s Teleprompter account; his folders and settings are his.')
+}
+
+// F45: words reach his teleprompter only when plan cleared them (read back by fresh readers, approved by him).
+if (/^mcp__Teleprompter__(?:create_script|update_script)$/.test(tool) && typeof input.text === 'string') {
+  const sha = createHash('sha256').update(input.text, 'utf8').digest('hex')
+  let cleared = []
+  try {
+    cleared = JSON.parse(readFileSync(process.env.TELEPROMPTER_CLEARED || resolve(ROOT, '.scratch', 'teleprompter-cleared.json'), 'utf8'))
+  } catch {
+    cleared = []
+  }
+  if (!Array.isArray(cleared) || !cleared.some((entry) => entry && entry.sha256 === sha)) {
+    decide('ask', 'publish-guard: these words are not ones teleprompter_send.py plan cleared, so no fresh readers are on record as having heard them (failure F45). Run making.py read-back with the readers, then plan; or Krish approves these exact words in person here.')
+  }
+  process.exit(0)
 }
 
 const SENDS = [

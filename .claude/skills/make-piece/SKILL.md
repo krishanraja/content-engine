@@ -375,27 +375,32 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    conversations with no other context. Reader A's prompt, word for word:
 
    ```
-   You are a smart, busy manager at a 200-person company in the UK. You run a team and sign off budgets, but you are not technical and have never worked in tech or AI. You hear this video script read aloud once (no rewinding). List every word, phrase or sentence that would genuinely lose you: one you would not understand, that would make you stop following, or that talks down to you. Say "nothing" if nothing lost you. Then retell the whole video in three sentences.
+   You are a smart, busy manager at a 200-person company in the UK. You run a team and sign off budgets, but you are not technical and have never worked in tech or AI. You hear this video script read aloud once (no rewinding). List every word, phrase or sentence that would genuinely lose you: one you would not understand, that would make you stop following, or that talks down to you. Also list every company, product, title or term you heard named but not explained, even if you could guess. Say "nothing" if nothing lost you. Then retell the whole video in three sentences.
    ```
 
    Reader B's prompt, word for word:
 
    ```
-   Pretend you run the finance or operations team at a 200-person company. You use AI tools at work but know nothing about how they are built or priced. Someone reads you this video script out loud, once. Which words or sentences would you not understand, would make you lose the thread, or would feel like they talk down to you? List each one exactly as it is said, or say "nothing" if you followed all of it. Then tell the whole video back in three sentences.
+   Pretend you run the finance or operations team at a 200-person company. You use AI tools at work but know nothing about how they are built or priced. Someone reads you this video script out loud, once. Which words or sentences would you not understand, would make you lose the thread, or would feel like they talk down to you? List each one exactly as it is said, or say "nothing" if you followed all of it. Then say whether the first two sentences told you why this is about you, or only teased. Then tell the whole video back in three sentences.
    ```
 
    Reader C, the narrator, word for word (Krish, 2026-10-19, of a line he could not say on camera: "I felt like I couldn't explain what that meant. ... How do we gate that for the next time?"):
 
    ```
-   You are the presenter. You will read this video script aloud to camera, to leaders of medium-sized companies, and a viewer may stop you after any sentence and ask "what does that mean, and why does it matter to me?" Go through it sentence by sentence. List every sentence you could not answer that for in one plain sentence of your own, exactly as it is written, with what is missing: the thing it refers to, the step it skips, or why it matters to the viewer. Say "nothing" if you could explain every sentence. Then retell the whole video in three sentences.
+   You are the presenter. You will read this video script aloud to camera, to leaders of medium-sized companies, and a viewer may stop you after any sentence and ask "what does that mean, and why does it matter to me?" Go through it sentence by sentence. List every sentence you could not answer that for in one plain sentence of your own, exactly as it is written, with what is missing: the thing it refers to, the step it skips, or why it matters to the viewer. Also list every comparison that maps the wrong things onto each other, every promise the opening makes that the script does not keep, and any advice at the end that goes further than the evidence given without saying why. Then list every sentence you could not say aloud naturally to camera: one that sounds written rather than spoken, reads like clipped notes, or trips the tongue. Say "nothing" if you could explain and say every sentence. Then retell the whole video in three sentences.
    ```
+
+   A script over length loses a whole beat, never words from every sentence: squeezing each line to fit turns it into notes he cannot say (Krish, 2026-11-09, of a 90-second cut squeezed that way: "It's getting worse and worse and worse"; he cut the medical firm instead).
 
    Give each the script's spoken words after its prompt; then ask Reader A the two
    questions in `references/hook-and-share.md`. The script passes
-   only when all three say "nothing", Reader A says yes and names a person, (A and B lost nothing; C could explain every sentence), and every retelling matches the
+   only when all three say "nothing", Reader A says yes and names a person, (A and B lost nothing; C could explain and say every sentence), and every retelling matches the
    script's point: its one question and the answer it gives. Anything
    a reader lists is rewritten in plainer words, then steps 3 and 4 again with
-   three new readers. A script the engine wrote carries its own readers'
+   three new readers. Run the readers before every send, whatever words he uses to say send it: his sign-off records
+   his approval and never stands in for them, and `making.py read-back --krish-words` refuses fewer than two readers
+   unless his own words say to skip them (`--skip-readers`; Krish, 2026-11-09: "I shouldn't have to keep asking you
+   to make sense"; failure F45). A script the engine wrote carries its own readers'
    answers (`read_back` on the script), but the words you will send are read
    back here, whatever the engine said. When rounds of readers keep finding
    smaller things while every retelling matches, put the words to Krish on
