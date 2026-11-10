@@ -3,6 +3,7 @@ import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
 import { readRuns, ENGINE_REPO, type JobName, type RunInfo } from './_run.js'
 import { offdaySides, type OffdaySides } from './_offdaySides.js'
+import { dayMedia, type MediaItem } from './_media.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -50,6 +51,8 @@ export interface DayView {
   reviews?: Array<{ doc_id: string; revision: number | null; side: string; option: OffdaySides; prev: Body | null }>
   /** A series day's guided path (PLAN.md, "Each day as a guided path"): six steps, one current, and what each needs. */
   path?: DayPath
+  /** What the day's piece has rendered (cuts, thumbnails), newest first; ids only, signed at /api/board/<week>/media/<id> (_media.ts). */
+  media: MediaItem[]
 }
 export type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'
 export const PATH: Array<{ key: PathKey; label: string }> = [
@@ -123,7 +126,7 @@ const GH = (job: JobName) => `GitHub · ${job}.yml`
 function stepState(live: LiveDay, key: string) { return live.steps.find(s => s.key === key)?.state }
 
 /** One series day (Mon, Wed, Fri): its piece's next step from the record, the lock and the runs. */
-function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayView {
+function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): Omit<DayView, 'media'> {
   const week = i.week, date = dayDate(week, day)
   const base = { day, date, label: short(week, day), kind: 'Essay and two cuts', series: SERIES[day], detail: [] as DayView['detail'] }
   if (!piece) {
@@ -237,7 +240,7 @@ function formatOf(i: ViewInputs, id: unknown): LookOption | null {
 function nameOf(i: ViewInputs, id: string): string { return formatOf(i, id)?.name || id }
 
 /** One off day (Tue, Thu, Sat): the options in the week's ideas.json and his verdicts on them. */
-function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayView {
+function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): Omit<DayView, 'media'> {
   const week = i.week, date = dayDate(week, day)
   const options = (isObj(i.ideas) && isObj(i.ideas.offdays) && Array.isArray(i.ideas.offdays[day]) ? i.ideas.offdays[day] : []) as Body[]
   const verdict = (o: Body) => i.queue.find(q => q.doc_id === `off-${day}-${String(o.id)}` && q.updated_by === 'Krish')?.body
@@ -320,7 +323,7 @@ function briefOf(i: ViewInputs, d: DayView): PieceBrief {
 /** The whole week's view from its inputs. Pure: the tests build every state from here. */
 export function buildView(i: ViewInputs): WeekView {
   const byDay = new Map(piecesByDay(i.week, i.pieces).map(p => [p.day, p.piece]))
-  const days = VIEW_DAYS.map(d => (SERIES_DAYS.includes(d) ? seriesDay(i, d, byDay.get(d)) : offDay(i, d, byDay.get(d))))
+  const days = VIEW_DAYS.map(d => ({ ...(SERIES_DAYS.includes(d) ? seriesDay(i, d, byDay.get(d)) : offDay(i, d, byDay.get(d))), media: dayMedia(byDay.get(d)) }))
   for (const d of days) {
     if (d.who === 'done' || d.actions.some(a => a.kind === 'prompt' && /Claude/.test(a.label))) continue
     d.actions.push({ kind: 'prompt', label: 'Copy Claude prompt', prompt: backupPrompt(i.week, d) })
