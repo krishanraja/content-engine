@@ -1,0 +1,171 @@
+{
+  "objects": [
+    {
+      "obj": "office",
+      "device": "office_floor",
+      "meaning": "Counted activity outruns shipped work",
+      "params": {
+        "figures": [
+          {
+            "id": "a",
+            "label": "A"
+          },
+          {
+            "id": "b",
+            "label": "B"
+          },
+          {
+            "id": "c",
+            "label": "C"
+          }
+        ],
+        "towerLabel": "AI USE",
+        "fromCrates": true,
+        "target": 0.9
+      },
+      "fromFrame": 0,
+      "toFrame": 390
+    }
+  ],
+  "events": [
+    {
+      "id": "0",
+      "obj": "office",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 10
+    },
+    {
+      "id": "1",
+      "obj": "office",
+      "verb": "add",
+      "toState": "a",
+      "atFrame": 38
+    },
+    {
+      "id": "2",
+      "obj": "office",
+      "verb": "add",
+      "toState": "b",
+      "atFrame": 66
+    },
+    {
+      "id": "3",
+      "obj": "office",
+      "verb": "add",
+      "toState": "c",
+      "atFrame": 94
+    },
+    {
+      "id": "4",
+      "obj": "office",
+      "verb": "fill",
+      "toState": "{\"id\": \"a\", \"to\": 0.8}",
+      "atFrame": 122
+    },
+    {
+      "id": "5",
+      "obj": "office",
+      "verb": "move",
+      "toState": "{\"id\": \"a\", \"rank\": 1}",
+      "atFrame": 150
+    },
+    {
+      "id": "6",
+      "obj": "office",
+      "verb": "move",
+      "toState": "{\"id\": \"b\", \"rank\": 2}",
+      "atFrame": 178
+    },
+    {
+      "id": "7",
+      "obj": "office",
+      "verb": "send",
+      "toState": "a",
+      "atFrame": 206
+    },
+    {
+      "id": "8",
+      "obj": "office",
+      "verb": "stamp",
+      "toState": "{\"id\": \"a\", \"text\": \"TOKEN LEGEND\"}",
+      "atFrame": 234
+    },
+    {
+      "id": "9",
+      "obj": "office",
+      "verb": "carry",
+      "toState": "c",
+      "atFrame": 262
+    },
+    {
+      "id": "10",
+      "obj": "office",
+      "verb": "highlight",
+      "toState": "c",
+      "atFrame": 290
+    },
+    {
+      "id": "11",
+      "obj": "office",
+      "verb": "draw",
+      "toState": "0.3",
+      "atFrame": 318
+    },
+    {
+      "id": "12",
+      "obj": "office",
+      "verb": "mark",
+      "toState": "fallen",
+      "atFrame": 346
+    },
+    {
+      "id": "13",
+      "obj": "office",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 374
+    }
+  ],
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "stills": [
+    9,
+    14,
+    38,
+    70,
+    100,
+    130,
+    160,
+    190,
+    220,
+    250,
+    280,
+    310,
+    340,
+    370,
+    390
+  ],
+  "slots": [
+    {
+      "aspect": "9:16",
+      "box": {
+        "left": 0,
+        "top": 0,
+        "width": 1080,
+        "height": 900
+      }
+    },
+    {
+      "aspect": "16:9",
+      "box": {
+        "left": 0,
+        "top": 0,
+        "width": 1280,
+        "height": 1080
+      }
+    }
+  ]
+}
