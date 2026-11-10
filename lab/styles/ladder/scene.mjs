@@ -111,7 +111,9 @@ function shots(env) {
   const z = env.shape === 'tall' ? 1.35 : 1, lift = env.shape === 'tall' ? 2.2 : 0.9
   return [
     // The look-at sits above the object (lift), so the object lands in the lower two thirds and the type owns the top.
-    [0, [8 * z, 4.2, 13 * z], [0, 2.2 + lift, 0]],
+    // The hook opens close on the lit cash machine, then reveals the branch on "ended".
+    [0, [6.6, 1.7, 5.4 * z], [3.9, 1.25 + lift * 0.35, 1.6]],
+    [at(env, B.hook, 'ended') - 0.2, [8 * z, 4.2, 13 * z], [0, 2.2 + lift, 0]],
     [at(env, B.y1988, 'city') - 0.3, [4.6 * z, 3.2, 11.6 * z], [0, 2.3 + lift, 0]],
     [at(env, B.expect) - 0.2, [-4.6 * z, 3.4, 12 * z], [0, 2.3 + lift, 0]],
     [at(env, B.didnt, 'opened') - 0.3, [0, 15 * z, 13 * z], [0, 0.5 + lift, -8]],
@@ -125,7 +127,7 @@ function placeCamera(env, t) {
   const S = shots(env)
   let i = 0; while (i + 1 < S.length && t >= S[i + 1][0]) i++
   const a = S[Math.max(0, i - 1)], b = S[i]
-  const k = i === 0 ? 1 : env.ease.hero(clamp((t - b[0]) / 1.1))
+  const k = i === 0 ? 1 : env.ease.hero(clamp((t - b[0]) / 1.3))
   const p = a[1].map((v, j) => lerp(v, b[1][j], k)), l = a[2].map((v, j) => lerp(v, b[2][j], k))
   p[0] += Math.sin(t * 0.37) * 0.25; p[1] += Math.cos(t * 0.29) * 0.12
   R.camera.position.set(...p); R.camera.lookAt(...l)
@@ -137,17 +139,21 @@ export function draw(env, ctx, t, house) {
 
   // The hero's windows fill from "city" to "twenty"; seven go dark on "needed thirteen"; all dim on "disappear"
   // and come back on "didn't".
-  const f0 = at(env, B.y1988, 'city'), f1 = at(env, B.y1988, 'twenty'), d0 = at(env, B.y2004, 'needed')
+  // The drop lands on the spoken "thirteen".
+  const f0 = at(env, B.y1988, 'city'), f1 = at(env, B.y1988, 'twenty'), d0 = at(env, B.y2004, 'thirteen') - 0.35
+  const person = at(env, B.hook, 'person')
   const ghost = clamp((t - at(env, B.expect, 'disappear')) / 0.6) * (1 - clamp((t - at(env, B.didnt)) / 0.3))
   R.hero.windows.forEach((w, i) => {
     const on = clamp((t - (f0 + (f1 - f0) * (i / 20))) / 0.18)
-    const off = i >= 13 ? env.ease.exit(clamp((t - d0 - (i - 13) * 0.07) / 0.3)) : 0
-    const k = on * (1 - off) * (1 - 0.75 * ghost)
+    const off = i >= 13 ? env.ease.exit(clamp((t - d0 - (i - 13) * 0.04) / 0.2)) : 0
+    // "the person behind the counter": one window lights first.
+    const first = i === 7 ? env.ease.enter(clamp((t - person) / 0.4)) : 0
+    const k = Math.max(on, first) * (1 - off) * (1 - 0.75 * ghost)
     w.glass.material.emissiveIntensity = 0.05 + 1.5 * k
     w.glass.material.color.set(k > 0.02 ? c.channel : c.inkSoft)
     w.head.visible = w.sh.visible = k > 0.4
   })
-  R.hero.atm.position.x = lerp(7.5, 3.9, env.ease.enter(clamp((t - 0.7) / 0.8)))
+  R.hero.atm.position.x = 3.9
   // One set on stage at a time: the hero branch, the street, or the towers.
   const inStreet = t >= at(env, B.didnt, 'opened') + 0.3 && t < at(env, B.talk) + 0.4
   const tw0 = t >= at(env, B.two) + 0.3
@@ -216,9 +222,9 @@ export function draw(env, ctx, t, house) {
   const tx = (s, x, y, o) => text(env, ctx, s, x, y, o)
   const credit = (alpha) => tx('IMF · BESSEN 2015', NX, CY, { font: 'IBM Plex Mono', size: tall ? 40 : 30, weight: 500, color: c.muted, alpha, role: 'credit', tracking: 2 })
   if (t >= f0 - 0.1 && t < at(env, B.expect)) {
-    const n = t < d0 ? Math.round(20 * clamp((t - f0) / (f1 - f0 + 0.15))) : Math.round(lerp(20, 13, env.ease.utility(clamp((t - d0) / 0.55))))
+    const n = t < d0 ? Math.round(20 * clamp((t - f0) / (f1 - f0 + 0.15))) : Math.round(lerp(20, 13, env.ease.utility(clamp((t - d0) / 0.4))))
     const k = env.ease.enter(clamp((t - f0) / 0.4))
-    if (t >= d0 + 0.55) {
+    if (t >= d0 + 0.4) {
       const sx = NX + (tall ? 330 : 320), sy = NY - (tall ? 20 : 20)
       tx('20', sx, sy, { font: 'Anton', size: tall ? 110 : 100, color: c.muted, alpha: k, role: 'number' })
       ctx.fillStyle = c.muted; ctx.fillRect(sx - 6, sy - (tall ? 40 : 36), tall ? 120 : 110, 7)
@@ -249,7 +255,7 @@ export function cues({ timeline }) {
   const out = [{ t: 0.6, kind: 'whoosh' }]
   const f0 = w(1, 'city'), f1 = w(1, 'twenty')
   for (let i = 0; i < 20; i++) out.push({ t: f0 + (f1 - f0) * (i / 20), kind: 'tick', gain: 0.55 })
-  for (let i = 0; i < 7; i++) out.push({ t: w(2, 'needed') + i * 0.07, kind: 'count', gain: 0.6 })
+  for (let i = 0; i < 7; i++) out.push({ t: w(2, 'thirteen') - 0.35 + i * 0.04, kind: 'count', gain: 0.6 })
   out.push({ t: w(4, 'opened') - 0.3, kind: 'whoosh' })
   for (let i = 0; i < 3; i++) out.push({ t: w(4, 'Forty-three') + i * 0.18 + 0.5, kind: 'thump', gain: 0.35 })
   out.push({ t: w(5, 'stayed'), kind: 'chime' }, { t: timeline.beats[7].s - 0.2, kind: 'whoosh' }, { t: timeline.beats[8].s, kind: 'chime', gain: 0.6 })
