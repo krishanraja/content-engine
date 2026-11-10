@@ -166,8 +166,8 @@ def s_cold(t):
             bot[:] = hatch(SH - SH // 2, W, t * 30) if split > 0.5 else bot
         wave(g, 60, int(SH / 2 - 260 - 120 * split), W - 120, 300, t, MINT, p)
         wave(g, 60, int(SH / 2 - 40 + 120 * split), W - 120, 300, t + 0.5, CREAM if split < 0.5 else (150, 160, 155), p * max(0.2, split), 2)
-        if t > 11.3: text(g, 'HUMAN', ANTON(110), 60, 60, MINT, alpha=ease((t - 11.3) / 0.3))
-        if t > 10.3: text(g, 'AI', ANTON(110), 60, SH - 190, CREAM, alpha=ease((t - 10.3) / 0.3))
+        g[:] = (g.astype(np.float32) * 0.45).astype(np.uint8)
+        title(g, t)
         return g
     # episode card
     p = ease((t - 13.95) / 0.35); g[:] = bgr(INKD)
@@ -181,7 +181,53 @@ def kb(img, z, fx=0.5, fy=0.5):
     h, w = img.shape[:2]; cw, ch = int(w / z), int(h / z); x = int((w - cw) * fx); y = int((h - ch) * fy)
     return cv2.resize(img[y:y + ch, x:x + cw], (w, h), interpolation=cv2.INTER_LINEAR)
 
-def s_slot(t): return kb(devframe('slot', t, 15.9), 1 + 0.08 * ease((t - 15.9) / 9.7), 0.5, 0.3)
+TITLE = [(9.55, 'IS IT', 0), (10.25, 'AI MUSIC', 1), (10.75, 'OR', 2), (11.35, 'HUMAN MUSIC?', 3)]
+def title(g, t):
+    rows = {0: (150, 130), 1: (310, 210), 2: (640, 110), 3: (790, 190)}
+    for at, s, r in TITLE:
+        if t < at: continue
+        p = back((t - at) / 0.28); y, size = rows[r]
+        if r == 1:
+            band = hatch(size + 60, W - 80, t * 30); text(band, s, ANTON(size), (W - 80) / 2, 20, CREAM, 'ma')
+            paste(g, band, W / 2, y + size / 2 + 30, 1.25 - 0.25 * min(1, p), min(1, p * 2), 20, rot=-2 * (1 - min(1, p)))
+        elif r == 3:
+            band = np.full((size + 60, W - 80, 3), bgr(MINT), np.uint8); text(band, s, ANTON(size - 20), (W - 80) / 2, 30, INK, 'ma')
+            paste(g, band, W / 2, y + size / 2 + 30, 1.25 - 0.25 * min(1, p), min(1, p * 2), 20, rot=2 * (1 - min(1, p)))
+        else:
+            f = ANTON(size) if r == 0 else font('Fraunces-Italic-Variable.ttf', size)
+            text(g, s, f, W / 2, y + (1 - min(1, p)) * 60, CREAM, 'ma', min(1, p * 2))
+
+def suno_form(t):
+    g = ground(); z = 1 + 0.05 * ease((t - 15.9) / 7)
+    card = np.full((900, 960, 3), bgr(CREAM), np.uint8)
+    text(card, 'Suno', ARCH(60), 40, 34, INK); text(card, 'rebuilt from suno.com, Nov 2026', MONO(24), 42, 110, (90, 100, 95))
+    lyr, sty = "I\u2019m movin\u2019 to the sun", 'the vibe she wanted'
+    def field(y0, h, label, s, t0, t1):
+        on = t0 <= t < t1 + 0.6
+        cv2.rectangle(card, (30, y0), (930, y0 + h), bgr(MINT) if on else (180, 185, 182), 4 if on else 2, cv2.LINE_AA)
+        text(card, label, ARCH(28), 54, y0 + 18, INK if on or t >= t0 else (120, 128, 124))
+        n = 0 if t < t0 else min(len(s), int(len(s) * (t - t0) / max(0.1, t1 - t0)) + 1)
+        text(card, s[:n] if n else ' ', MONO(46), 54, y0 + 74, INK)
+        if on and int(t * 3.4) % 2 == 0:
+            cx = 54 + int(MONO(46).getlength(s[:n])) + 4; cv2.rectangle(card, (cx, y0 + 74), (cx + 5, y0 + 128), bgr(INK), -1)
+    field(170, 250, 'Lyrics', lyr, 19.9, 20.9)
+    field(460, 170, 'Style of music', sty, 21.6, 22.4)
+    press = 1 - 0.06 * math.sin(min(1, max(0, (t - 22.8) / 0.25)) * math.pi)
+    btn = np.full((110, 900, 3), bgr(MINT), np.uint8); text(btn, 'Create', ARCH(40), 450, 30, INK, 'ma')
+    if t > 22.8: btn[:] = np.clip(btn.astype(np.int16) + int(60 * math.sin(min(1, (t - 22.8) / 0.3) * math.pi)), 0, 255).astype(np.uint8)
+    paste(card, btn, 480, 750, press, 1, 20, shadow=False)
+    p = back((t - 15.9) / 0.4)
+    paste(g, card, W / 2, SH / 2 + (1 - min(1, p)) * 200, 1.0, min(1, p * 2), 36)
+    return kb(g, z, 0.5, 0.35)
+
+def s_slot(t):
+    if t < 22.9: return suno_form(t)
+    dev = kb(devframe('slot', t, 15.9), 1 + 0.08 * ease((t - 15.9) / 9.7), 0.5, 0.3)
+    if t < 23.2:
+        a = ease((t - 22.9) / 0.3); return (suno_form(t).astype(np.float32) * (1 - a) + dev.astype(np.float32) * a).astype(np.uint8)
+    return dev
+
+def _old_slot(t): return kb(devframe('slot', t, 15.9), 1 + 0.08 * ease((t - 15.9) / 9.7), 0.5, 0.3)
 
 def s_feed(t):  # people put it under their own videos: cats, weddings, dads dancing badly
     g = ground()
@@ -286,7 +332,7 @@ def him(t):
 
 def caption(dst, t):
     cur = [w for w in WORDS if w[0] - 0.05 <= t < max(w[1], w[0] + 0.25) + 0.12]
-    if not cur or 13.9 < t < 15.9 or t > 84.4: return
+    if not cur or 9.4 < t < 15.9 or t > 84.4: return
     s = cur[-1][2].strip(',.?!').replace('UltraNate', 'Ultra Naté')
     size = 120
     while size > 50 and ARCH(size).getlength(s) > 420: size -= 4
