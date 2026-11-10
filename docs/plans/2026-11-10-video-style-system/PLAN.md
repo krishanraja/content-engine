@@ -1,5 +1,7 @@
 # Plan: video style decided before the script (step 1, inventory and style catalogue)
 
+> **Superseded in part (10 Nov 2026).** Krish rejected the 9-entry catalogue in step 1.2: "its not really a style catalogue is it? Its just a summary of the misfit hodgepodge in there." It was withdrawn. The catalogue design is now `STYLE-CATALOGUE.md`. The capability register (step 1.1) stands.
+
 ## Context
 
 Krish's ask: today the engine goes idea, then script, then recording, then craft. Motion, artwork, captions, sound and look are worked out after the recording, so production is a run of corrections. He wants the whole video designed up front from what works, chosen from a catalogue of complete video styles he can see. He also wants every capability cleaned up, modular, and labelled with its purpose and production stage. Control Center's publish board is where he makes these choices and hands them back to Claude. Inspiration House holds the videos he liked.
