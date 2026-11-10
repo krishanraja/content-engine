@@ -3624,5 +3624,4305 @@
       ]
     }
   },
-  "ingested_on": "2026-11-10"
+  "ingested_on": "2026-11-10",
+  "listen": {
+    "schema": "ve-listen/1",
+    "media_sha256": "54d1c752d0435a18ea2a2d1d572f7461aea8d9673bcabb56472d995640c63153",
+    "ears": [
+      "voicing",
+      "whisper-verbatim:medium.en"
+    ],
+    "speech_db": -14.99,
+    "quiet_line_db": -38.99,
+    "quiet": [
+      [
+        0.0,
+        1.74
+      ],
+      [
+        2.35,
+        2.37
+      ],
+      [
+        3.24,
+        3.88
+      ],
+      [
+        4.71,
+        4.73
+      ],
+      [
+        5.09,
+        5.31
+      ],
+      [
+        6.05,
+        6.07
+      ],
+      [
+        6.42,
+        6.5
+      ],
+      [
+        6.61,
+        7.33
+      ],
+      [
+        7.55,
+        7.68
+      ],
+      [
+        8.72,
+        8.74
+      ],
+      [
+        8.91,
+        8.95
+      ],
+      [
+        9.31,
+        9.33
+      ],
+      [
+        9.61,
+        9.73
+      ],
+      [
+        9.87,
+        10.28
+      ],
+      [
+        10.6,
+        11.03
+      ],
+      [
+        11.97,
+        12.1
+      ],
+      [
+        12.95,
+        12.98
+      ],
+      [
+        13.1,
+        13.15
+      ],
+      [
+        13.17,
+        13.21
+      ],
+      [
+        13.25,
+        13.9
+      ],
+      [
+        13.95,
+        13.97
+      ],
+      [
+        14.69,
+        16.98
+      ],
+      [
+        19.94,
+        20.77
+      ],
+      [
+        21.2,
+        21.23
+      ],
+      [
+        21.9,
+        22.36
+      ],
+      [
+        23.79,
+        23.83
+      ],
+      [
+        24.41,
+        25.09
+      ],
+      [
+        26.05,
+        26.09
+      ],
+      [
+        26.15,
+        26.5
+      ],
+      [
+        26.54,
+        26.57
+      ],
+      [
+        26.86,
+        26.89
+      ],
+      [
+        27.58,
+        27.81
+      ],
+      [
+        28.69,
+        28.97
+      ],
+      [
+        29.28,
+        29.33
+      ],
+      [
+        29.49,
+        29.55
+      ],
+      [
+        29.69,
+        29.75
+      ],
+      [
+        30.04,
+        30.14
+      ],
+      [
+        30.31,
+        30.79
+      ],
+      [
+        31.38,
+        31.61
+      ],
+      [
+        31.84,
+        31.89
+      ],
+      [
+        32.91,
+        33.02
+      ],
+      [
+        33.13,
+        33.17
+      ],
+      [
+        33.91,
+        33.95
+      ],
+      [
+        34.22,
+        34.25
+      ],
+      [
+        34.28,
+        34.89
+      ],
+      [
+        36.46,
+        36.49
+      ],
+      [
+        36.69,
+        36.76
+      ],
+      [
+        37.68,
+        38.23
+      ],
+      [
+        39.04,
+        39.24
+      ],
+      [
+        39.9,
+        39.92
+      ],
+      [
+        40.28,
+        40.33
+      ],
+      [
+        41.07,
+        41.23
+      ],
+      [
+        41.83,
+        42.1
+      ],
+      [
+        43.58,
+        43.97
+      ],
+      [
+        44.82,
+        45.04
+      ],
+      [
+        45.51,
+        45.57
+      ],
+      [
+        46.71,
+        46.73
+      ],
+      [
+        46.96,
+        47.79
+      ],
+      [
+        48.69,
+        48.71
+      ],
+      [
+        48.72,
+        48.95
+      ],
+      [
+        49.09,
+        49.13
+      ],
+      [
+        50.34,
+        50.38
+      ],
+      [
+        50.5,
+        50.52
+      ],
+      [
+        50.77,
+        50.8
+      ],
+      [
+        50.89,
+        52.0
+      ],
+      [
+        52.2,
+        52.29
+      ],
+      [
+        53.08,
+        53.23
+      ],
+      [
+        54.01,
+        54.16
+      ],
+      [
+        54.55,
+        55.2
+      ],
+      [
+        55.46,
+        55.57
+      ],
+      [
+        55.72,
+        55.8
+      ],
+      [
+        56.33,
+        56.37
+      ],
+      [
+        58.06,
+        58.52
+      ],
+      [
+        59.17,
+        59.47
+      ],
+      [
+        59.62,
+        60.99
+      ],
+      [
+        61.93,
+        61.97
+      ],
+      [
+        63.06,
+        63.09
+      ],
+      [
+        63.38,
+        63.48
+      ],
+      [
+        63.95,
+        63.99
+      ],
+      [
+        64.2,
+        64.31
+      ],
+      [
+        65.17,
+        65.21
+      ],
+      [
+        65.61,
+        66.32
+      ],
+      [
+        66.53,
+        66.65
+      ],
+      [
+        66.69,
+        66.82
+      ],
+      [
+        67.35,
+        67.46
+      ],
+      [
+        68.21,
+        68.32
+      ],
+      [
+        69.48,
+        69.53
+      ],
+      [
+        69.62,
+        69.64
+      ],
+      [
+        69.97,
+        70.04
+      ],
+      [
+        70.11,
+        70.97
+      ],
+      [
+        71.67,
+        71.77
+      ],
+      [
+        71.87,
+        72.36
+      ],
+      [
+        72.62,
+        72.67
+      ],
+      [
+        73.13,
+        73.56
+      ],
+      [
+        74.84,
+        75.07
+      ],
+      [
+        75.26,
+        75.42
+      ],
+      [
+        76.53,
+        77.49
+      ],
+      [
+        78.5,
+        78.54
+      ],
+      [
+        78.77,
+        78.93
+      ],
+      [
+        79.73,
+        79.76
+      ],
+      [
+        79.82,
+        79.97
+      ],
+      [
+        80.45,
+        80.47
+      ],
+      [
+        81.05,
+        81.72
+      ],
+      [
+        82.89,
+        82.91
+      ],
+      [
+        83.04,
+        83.11
+      ],
+      [
+        83.51,
+        83.53
+      ],
+      [
+        84.52,
+        84.57
+      ],
+      [
+        84.63,
+        84.69
+      ],
+      [
+        85.19,
+        85.28
+      ],
+      [
+        85.69,
+        85.73
+      ],
+      [
+        85.84,
+        86.6
+      ],
+      [
+        86.65,
+        86.73
+      ],
+      [
+        86.79,
+        86.81
+      ],
+      [
+        87.17,
+        87.2
+      ],
+      [
+        87.91,
+        87.95
+      ],
+      [
+        88.41,
+        88.63
+      ],
+      [
+        89.07,
+        92.96
+      ]
+    ],
+    "events": [
+      {
+        "kind": "unworded",
+        "s": 29.58,
+        "e": 29.69,
+        "text": "",
+        "sources": [
+          "voicing"
+        ],
+        "use": "guard"
+      }
+    ],
+    "words": [
+      {
+        "i": 0,
+        "dur_s": 0.5,
+        "dur_ratio": 1.98,
+        "db": -43.0,
+        "voiced_share": 0.62,
+        "f0_hz": 213.3,
+        "f0_range_st": 11.63,
+        "f0_slope_st_s": -18.63,
+        "probability": 0.869
+      },
+      {
+        "i": 1,
+        "dur_s": 0.2,
+        "dur_ratio": 0.79,
+        "db": -17.4,
+        "voiced_share": 0.65,
+        "f0_hz": 202.5,
+        "f0_range_st": 12.0,
+        "f0_slope_st_s": 110.24,
+        "probability": 0.976
+      },
+      {
+        "i": 2,
+        "dur_s": 0.26,
+        "dur_ratio": 0.91,
+        "db": -25.3,
+        "voiced_share": 0.22,
+        "f0_hz": 189.4,
+        "f0_range_st": 1.31,
+        "f0_slope_st_s": -33.46,
+        "probability": 0.983
+      },
+      {
+        "i": 3,
+        "dur_s": 0.36,
+        "dur_ratio": 1.26,
+        "db": -22.6,
+        "voiced_share": 0.5,
+        "f0_hz": 130.6,
+        "f0_range_st": 5.88,
+        "f0_slope_st_s": 15.69,
+        "probability": 0.993
+      },
+      {
+        "i": 4,
+        "dur_s": 0.34,
+        "dur_ratio": 0.89,
+        "db": -23.5,
+        "voiced_share": 0.76,
+        "f0_hz": 130.1,
+        "f0_range_st": 6.32,
+        "f0_slope_st_s": -5.31,
+        "probability": 0.997
+      },
+      {
+        "i": 5,
+        "dur_s": 0.1,
+        "dur_ratio": 0.45,
+        "db": -17.8,
+        "voiced_share": 0.2,
+        "probability": 0.953
+      },
+      {
+        "i": 6,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -8.3,
+        "voiced_share": 1.0,
+        "f0_hz": 198.8,
+        "f0_range_st": 12.99,
+        "f0_slope_st_s": -27.47,
+        "probability": 0.992
+      },
+      {
+        "i": 7,
+        "dur_s": 0.28,
+        "dur_ratio": 1.11,
+        "db": -15.5,
+        "voiced_share": 0.89,
+        "f0_hz": 146.8,
+        "f0_range_st": 7.49,
+        "f0_slope_st_s": -38.53,
+        "probability": 0.998
+      },
+      {
+        "i": 8,
+        "dur_s": 0.44,
+        "dur_ratio": 1.38,
+        "db": -21.9,
+        "voiced_share": 0.57,
+        "f0_hz": 141.6,
+        "f0_range_st": 19.61,
+        "f0_slope_st_s": -35.78,
+        "probability": 0.746
+      },
+      {
+        "i": 9,
+        "dur_s": 0.52,
+        "dur_ratio": 2.36,
+        "db": -38.7,
+        "voiced_share": 0.25,
+        "f0_hz": 95.8,
+        "f0_range_st": 4.87,
+        "f0_slope_st_s": -2.16,
+        "probability": 0.623
+      },
+      {
+        "i": 10,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -23.2,
+        "voiced_share": 0.44,
+        "f0_hz": 101.3,
+        "f0_range_st": 2.48,
+        "f0_slope_st_s": 44.75,
+        "probability": 0.898
+      },
+      {
+        "i": 11,
+        "dur_s": 0.12,
+        "dur_ratio": 0.54,
+        "db": -12.5,
+        "voiced_share": 1.0,
+        "f0_hz": 106.7,
+        "f0_range_st": 1.34,
+        "f0_slope_st_s": -8.53,
+        "probability": 0.993
+      },
+      {
+        "i": 12,
+        "dur_s": 0.22,
+        "dur_ratio": 0.87,
+        "db": -18.9,
+        "voiced_share": 1.0,
+        "f0_hz": 93.8,
+        "f0_range_st": 3.35,
+        "f0_slope_st_s": -15.61,
+        "probability": 0.999
+      },
+      {
+        "i": 13,
+        "dur_s": 0.14,
+        "dur_ratio": 0.64,
+        "db": -30.2,
+        "voiced_share": 0.43,
+        "f0_hz": 77.9,
+        "f0_range_st": 6.67,
+        "f0_slope_st_s": -34.18,
+        "probability": 0.996
+      },
+      {
+        "i": 14,
+        "dur_s": 0.3,
+        "dur_ratio": 0.94,
+        "db": -19.1,
+        "voiced_share": 0.67,
+        "f0_hz": 86.5,
+        "f0_range_st": 5.7,
+        "f0_slope_st_s": -25.66,
+        "probability": 0.99
+      },
+      {
+        "i": 15,
+        "dur_s": 0.74,
+        "dur_ratio": 3.36,
+        "db": -47.7,
+        "voiced_share": 0.22,
+        "f0_hz": 130.6,
+        "f0_range_st": 23.46,
+        "f0_slope_st_s": 83.93,
+        "probability": 0.959
+      },
+      {
+        "i": 16,
+        "dur_s": 0.44,
+        "dur_ratio": 1.54,
+        "db": -30.0,
+        "voiced_share": 0.73,
+        "f0_hz": 141.6,
+        "f0_range_st": 20.26,
+        "f0_slope_st_s": 4.15,
+        "probability": 0.977
+      },
+      {
+        "i": 17,
+        "dur_s": 0.32,
+        "dur_ratio": 1.27,
+        "db": -22.1,
+        "voiced_share": 0.53,
+        "f0_hz": 146.8,
+        "f0_range_st": 18.9,
+        "f0_slope_st_s": -67.01,
+        "probability": 0.989
+      },
+      {
+        "i": 18,
+        "dur_s": 0.36,
+        "dur_ratio": 1.26,
+        "db": -20.7,
+        "voiced_share": 0.66,
+        "f0_hz": 121.2,
+        "f0_range_st": 19.82,
+        "f0_slope_st_s": -13.82,
+        "probability": 0.995
+      },
+      {
+        "i": 19,
+        "dur_s": 0.2,
+        "dur_ratio": 0.63,
+        "db": -26.4,
+        "voiced_share": 0.2,
+        "f0_hz": 114.3,
+        "f0_range_st": 1.61,
+        "f0_slope_st_s": -66.84,
+        "probability": 0.973
+      },
+      {
+        "i": 20,
+        "dur_s": 0.18,
+        "dur_ratio": 0.96,
+        "db": -26.0,
+        "voiced_share": 0.56,
+        "f0_hz": 101.3,
+        "f0_range_st": 22.11,
+        "f0_slope_st_s": -190.84,
+        "probability": 0.978
+      },
+      {
+        "i": 21,
+        "dur_s": 0.08,
+        "dur_ratio": 0.36,
+        "db": -33.3,
+        "voiced_share": 0.56,
+        "f0_hz": 87.9,
+        "f0_range_st": 8.11,
+        "f0_slope_st_s": 61.97,
+        "probability": 0.985
+      },
+      {
+        "i": 22,
+        "dur_s": 0.28,
+        "dur_ratio": 0.88,
+        "db": -26.5,
+        "voiced_share": 0.62,
+        "f0_hz": 97.0,
+        "f0_range_st": 26.98,
+        "f0_slope_st_s": 74.94,
+        "probability": 0.992
+      },
+      {
+        "i": 23,
+        "dur_s": 0.26,
+        "dur_ratio": 1.18,
+        "db": -21.1,
+        "voiced_share": 0.81,
+        "f0_hz": 114.3,
+        "f0_range_st": 2.38,
+        "f0_slope_st_s": -11.77,
+        "probability": 0.933
+      },
+      {
+        "i": 24,
+        "dur_s": 0.56,
+        "dur_ratio": 2.98,
+        "db": -47.3,
+        "voiced_share": 0.27,
+        "f0_hz": 106.0,
+        "f0_range_st": 15.7,
+        "f0_slope_st_s": -1.53,
+        "probability": 0.845
+      },
+      {
+        "i": 25,
+        "dur_s": 0.12,
+        "dur_ratio": 0.64,
+        "db": -16.4,
+        "voiced_share": 0.92,
+        "f0_hz": 116.8,
+        "f0_range_st": 16.1,
+        "f0_slope_st_s": 131.17,
+        "probability": 0.993
+      },
+      {
+        "i": 26,
+        "dur_s": 0.28,
+        "dur_ratio": 1.49,
+        "db": -17.9,
+        "voiced_share": 0.93,
+        "f0_hz": 157.6,
+        "f0_range_st": 11.09,
+        "f0_slope_st_s": 2.78,
+        "probability": 0.953
+      },
+      {
+        "i": 27,
+        "dur_s": 0.24,
+        "dur_ratio": 0.84,
+        "db": -23.2,
+        "voiced_share": 0.96,
+        "f0_hz": 100.0,
+        "f0_range_st": 11.98,
+        "f0_slope_st_s": -64.37,
+        "probability": 0.974
+      },
+      {
+        "i": 28,
+        "dur_s": 0.42,
+        "dur_ratio": 2.24,
+        "db": -33.7,
+        "voiced_share": 0.6,
+        "f0_hz": 92.0,
+        "f0_range_st": 26.72,
+        "f0_slope_st_s": 6.48,
+        "probability": 0.854
+      },
+      {
+        "i": 29,
+        "dur_s": 0.1,
+        "dur_ratio": 0.53,
+        "db": -27.8,
+        "voiced_share": 0.5,
+        "f0_hz": 82.5,
+        "f0_range_st": 4.3,
+        "f0_slope_st_s": 27.87,
+        "probability": 0.975
+      },
+      {
+        "i": 30,
+        "dur_s": 0.14,
+        "dur_ratio": 0.75,
+        "db": -26.9,
+        "voiced_share": 0.64,
+        "f0_hz": 96.4,
+        "f0_range_st": 26.06,
+        "f0_slope_st_s": -31.95,
+        "probability": 0.998
+      },
+      {
+        "i": 31,
+        "dur_s": 0.22,
+        "dur_ratio": 0.77,
+        "db": -25.5,
+        "voiced_share": 0.59,
+        "f0_hz": 90.4,
+        "f0_range_st": 4.35,
+        "f0_slope_st_s": -5.2,
+        "probability": 0.988
+      },
+      {
+        "i": 32,
+        "dur_s": 0.46,
+        "dur_ratio": 1.61,
+        "db": -31.6,
+        "voiced_share": 0.91,
+        "f0_hz": 82.9,
+        "f0_range_st": 27.97,
+        "f0_slope_st_s": 54.36,
+        "probability": 0.997
+      },
+      {
+        "i": 33,
+        "dur_s": 0.22,
+        "dur_ratio": 0.87,
+        "db": -28.2,
+        "voiced_share": 0.18,
+        "f0_hz": 115.8,
+        "f0_range_st": 18.67,
+        "f0_slope_st_s": -285.99,
+        "probability": 0.989
+      },
+      {
+        "i": 34,
+        "dur_s": 0.18,
+        "dur_ratio": 0.71,
+        "db": -16.3,
+        "voiced_share": 0.94,
+        "f0_hz": 88.4,
+        "f0_range_st": 5.15,
+        "f0_slope_st_s": -53.99,
+        "probability": 0.999
+      },
+      {
+        "i": 35,
+        "dur_s": 0.4,
+        "dur_ratio": 1.82,
+        "db": -33.7,
+        "voiced_share": 0.65,
+        "f0_hz": 181.8,
+        "f0_range_st": 27.27,
+        "f0_slope_st_s": 63.08,
+        "probability": 0.999
+      },
+      {
+        "i": 36,
+        "dur_s": 0.18,
+        "dur_ratio": 0.96,
+        "db": -24.5,
+        "voiced_share": 0.39,
+        "f0_hz": 262.3,
+        "f0_range_st": 17.29,
+        "f0_slope_st_s": -317.93,
+        "probability": 0.947
+      },
+      {
+        "i": 37,
+        "dur_s": 0.1,
+        "dur_ratio": 0.53,
+        "db": -20.1,
+        "voiced_share": 0.9,
+        "f0_hz": 250.0,
+        "f0_range_st": 21.09,
+        "f0_slope_st_s": 102.86,
+        "probability": 0.866
+      },
+      {
+        "i": 38,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -16.1,
+        "voiced_share": 0.71,
+        "f0_hz": 153.1,
+        "f0_range_st": 14.71,
+        "f0_slope_st_s": -97.45,
+        "probability": 0.993
+      },
+      {
+        "i": 39,
+        "dur_s": 0.42,
+        "dur_ratio": 1.2,
+        "db": -17.8,
+        "voiced_share": 0.53,
+        "f0_hz": 141.6,
+        "f0_range_st": 10.65,
+        "f0_slope_st_s": 10.59,
+        "probability": 0.998
+      },
+      {
+        "i": 40,
+        "dur_s": 0.4,
+        "dur_ratio": 1.58,
+        "db": -23.8,
+        "voiced_share": 0.9,
+        "f0_hz": 85.8,
+        "f0_range_st": 6.17,
+        "f0_slope_st_s": -16.44,
+        "probability": 0.999
+      },
+      {
+        "i": 41,
+        "dur_s": 0.22,
+        "dur_ratio": 1.42,
+        "db": -27.0,
+        "voiced_share": 0.83,
+        "f0_hz": 92.0,
+        "f0_range_st": 24.37,
+        "f0_slope_st_s": -85.78,
+        "probability": 0.986
+      },
+      {
+        "i": 42,
+        "dur_s": 0.34,
+        "dur_ratio": 1.19,
+        "db": -21.4,
+        "voiced_share": 0.77,
+        "f0_hz": 103.9,
+        "f0_range_st": 9.17,
+        "f0_slope_st_s": -1.11,
+        "probability": 0.876
+      },
+      {
+        "i": 43,
+        "dur_s": 0.22,
+        "dur_ratio": 0.69,
+        "db": -22.3,
+        "voiced_share": 0.95,
+        "f0_hz": 109.6,
+        "f0_range_st": 6.29,
+        "f0_slope_st_s": 27.34,
+        "probability": 0.813
+      },
+      {
+        "i": 44,
+        "dur_s": 0.26,
+        "dur_ratio": 1.18,
+        "db": -24.1,
+        "voiced_share": 0.81,
+        "f0_hz": 118.5,
+        "f0_range_st": 25.87,
+        "f0_slope_st_s": -42.38,
+        "probability": 0.987
+      },
+      {
+        "i": 45,
+        "dur_s": 0.12,
+        "dur_ratio": 0.64,
+        "db": -29.5,
+        "voiced_share": 1.0,
+        "f0_hz": 87.9,
+        "f0_range_st": 18.83,
+        "f0_slope_st_s": 141.79,
+        "probability": 0.987
+      },
+      {
+        "i": 46,
+        "dur_s": 0.34,
+        "dur_ratio": 1.81,
+        "db": -25.6,
+        "voiced_share": 0.82,
+        "f0_hz": 88.9,
+        "f0_range_st": 2.25,
+        "f0_slope_st_s": -14.68,
+        "probability": 0.995
+      },
+      {
+        "i": 47,
+        "dur_s": 0.36,
+        "dur_ratio": 1.63,
+        "db": -35.6,
+        "voiced_share": 0.5,
+        "f0_hz": 217.9,
+        "f0_range_st": 28.3,
+        "f0_slope_st_s": 77.81,
+        "probability": 0.989
+      },
+      {
+        "i": 48,
+        "dur_s": 0.18,
+        "dur_ratio": 0.82,
+        "db": -29.9,
+        "voiced_share": 0.39,
+        "f0_hz": 197.5,
+        "f0_range_st": 17.15,
+        "f0_slope_st_s": -208.34,
+        "probability": 0.991
+      },
+      {
+        "i": 49,
+        "dur_s": 0.3,
+        "dur_ratio": 1.05,
+        "db": -22.0,
+        "voiced_share": 0.7,
+        "f0_hz": 124.0,
+        "f0_range_st": 17.65,
+        "f0_slope_st_s": -16.48,
+        "probability": 0.996
+      },
+      {
+        "i": 50,
+        "dur_s": 0.2,
+        "dur_ratio": 0.91,
+        "db": -26.3,
+        "voiced_share": 0.65,
+        "f0_hz": 98.8,
+        "f0_range_st": 4.35,
+        "f0_slope_st_s": -44.32,
+        "probability": 0.981
+      },
+      {
+        "i": 51,
+        "dur_s": 0.3,
+        "dur_ratio": 0.94,
+        "db": -21.6,
+        "voiced_share": 0.73,
+        "f0_hz": 122.7,
+        "f0_range_st": 6.23,
+        "f0_slope_st_s": 10.56,
+        "probability": 0.998
+      },
+      {
+        "i": 52,
+        "dur_s": 0.74,
+        "dur_ratio": 3.36,
+        "db": -47.7,
+        "voiced_share": 0.14,
+        "f0_hz": 105.6,
+        "f0_range_st": 9.22,
+        "f0_slope_st_s": -54.54,
+        "probability": 0.864
+      },
+      {
+        "i": 53,
+        "dur_s": 0.08,
+        "dur_ratio": 0.36,
+        "db": -29.7,
+        "voiced_share": 0.12,
+        "probability": 0.974
+      },
+      {
+        "i": 54,
+        "dur_s": 0.12,
+        "dur_ratio": 0.47,
+        "db": -18.5,
+        "voiced_share": 0.75,
+        "f0_hz": 117.6,
+        "f0_range_st": 2.68,
+        "f0_slope_st_s": -36.02,
+        "probability": 0.972
+      },
+      {
+        "i": 55,
+        "dur_s": 0.12,
+        "dur_ratio": 0.64,
+        "db": -24.3,
+        "voiced_share": 0.75,
+        "f0_hz": 93.0,
+        "f0_range_st": 3.6,
+        "f0_slope_st_s": -57.93,
+        "probability": 1.0
+      },
+      {
+        "i": 56,
+        "dur_s": 0.18,
+        "dur_ratio": 0.71,
+        "db": -13.9,
+        "voiced_share": 0.89,
+        "f0_hz": 95.5,
+        "f0_range_st": 3.12,
+        "f0_slope_st_s": -34.57,
+        "probability": 0.998
+      },
+      {
+        "i": 57,
+        "dur_s": 0.2,
+        "dur_ratio": 0.79,
+        "db": -28.9,
+        "voiced_share": 0.65,
+        "f0_hz": 92.0,
+        "f0_range_st": 27.74,
+        "f0_slope_st_s": 198.06,
+        "probability": 0.975
+      },
+      {
+        "i": 58,
+        "dur_s": 0.14,
+        "dur_ratio": 0.64,
+        "db": -24.6,
+        "voiced_share": 0.5,
+        "f0_hz": 121.2,
+        "f0_range_st": 10.71,
+        "f0_slope_st_s": 109.21,
+        "probability": 0.996
+      },
+      {
+        "i": 59,
+        "dur_s": 0.2,
+        "dur_ratio": 0.63,
+        "db": -25.7,
+        "voiced_share": 0.8,
+        "f0_hz": 94.4,
+        "f0_range_st": 18.47,
+        "f0_slope_st_s": 105.39,
+        "probability": 0.997
+      },
+      {
+        "i": 60,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -27.7,
+        "voiced_share": 0.31,
+        "f0_hz": 93.6,
+        "f0_range_st": 5.46,
+        "f0_slope_st_s": -169.98,
+        "probability": 0.994
+      },
+      {
+        "i": 61,
+        "dur_s": 0.24,
+        "dur_ratio": 0.69,
+        "db": -32.1,
+        "voiced_share": 0.25,
+        "f0_hz": 100.9,
+        "f0_range_st": 11.93,
+        "f0_slope_st_s": -175.13,
+        "probability": 0.993
+      },
+      {
+        "i": 62,
+        "dur_s": 0.12,
+        "dur_ratio": 0.77,
+        "db": -29.1,
+        "voiced_share": 0.33,
+        "f0_hz": 87.6,
+        "f0_range_st": 4.17,
+        "f0_slope_st_s": -176.85,
+        "probability": 0.88
+      },
+      {
+        "i": 63,
+        "dur_s": 0.22,
+        "dur_ratio": 0.69,
+        "db": -18.4,
+        "voiced_share": 0.86,
+        "f0_hz": 108.8,
+        "f0_range_st": 18.99,
+        "f0_slope_st_s": -46.68,
+        "probability": 1.0
+      },
+      {
+        "i": 64,
+        "dur_s": 0.78,
+        "dur_ratio": 3.54,
+        "db": -51.1,
+        "voiced_share": 0.19,
+        "f0_hz": 106.7,
+        "f0_range_st": 18.51,
+        "f0_slope_st_s": 12.82,
+        "probability": 0.759
+      },
+      {
+        "i": 65,
+        "dur_s": 0.1,
+        "dur_ratio": 0.45,
+        "db": -27.0,
+        "voiced_share": 0.3,
+        "f0_hz": 114.3,
+        "f0_range_st": 3.14,
+        "f0_slope_st_s": 19.4,
+        "probability": 0.995
+      },
+      {
+        "i": 66,
+        "dur_s": 0.1,
+        "dur_ratio": 0.45,
+        "db": -13.3,
+        "voiced_share": 1.0,
+        "f0_hz": 143.5,
+        "f0_range_st": 13.39,
+        "f0_slope_st_s": 86.29,
+        "probability": 0.998
+      },
+      {
+        "i": 67,
+        "dur_s": 0.12,
+        "dur_ratio": 0.77,
+        "db": -15.7,
+        "voiced_share": 0.92,
+        "f0_hz": 102.6,
+        "f0_range_st": 4.22,
+        "f0_slope_st_s": -38.19,
+        "probability": 0.844
+      },
+      {
+        "i": 68,
+        "dur_s": 0.12,
+        "dur_ratio": 0.42,
+        "db": -12.9,
+        "voiced_share": 0.92,
+        "f0_hz": 98.8,
+        "f0_range_st": 2.0,
+        "f0_slope_st_s": -37.84,
+        "probability": 0.999
+      },
+      {
+        "i": 69,
+        "dur_s": 0.22,
+        "dur_ratio": 0.87,
+        "db": -20.2,
+        "voiced_share": 0.55,
+        "f0_hz": 104.2,
+        "f0_range_st": 2.27,
+        "f0_slope_st_s": 9.48,
+        "probability": 0.999
+      },
+      {
+        "i": 70,
+        "dur_s": 0.28,
+        "dur_ratio": 1.11,
+        "db": -25.2,
+        "voiced_share": 0.82,
+        "f0_hz": 99.4,
+        "f0_range_st": 27.59,
+        "f0_slope_st_s": 64.35,
+        "probability": 0.997
+      },
+      {
+        "i": 71,
+        "dur_s": 0.18,
+        "dur_ratio": 0.57,
+        "db": -19.9,
+        "voiced_share": 0.78,
+        "f0_hz": 121.2,
+        "f0_range_st": 6.61,
+        "f0_slope_st_s": -20.16,
+        "probability": 0.996
+      },
+      {
+        "i": 72,
+        "dur_s": 0.26,
+        "dur_ratio": 1.18,
+        "db": -25.2,
+        "voiced_share": 0.58,
+        "f0_hz": 103.9,
+        "f0_range_st": 19.07,
+        "f0_slope_st_s": -2.33,
+        "probability": 0.997
+      },
+      {
+        "i": 73,
+        "dur_s": 0.12,
+        "dur_ratio": 0.64,
+        "db": -19.9,
+        "voiced_share": 0.92,
+        "f0_hz": 98.8,
+        "f0_range_st": 24.15,
+        "f0_slope_st_s": 77.3,
+        "probability": 0.998
+      },
+      {
+        "i": 74,
+        "dur_s": 0.32,
+        "dur_ratio": 1.12,
+        "db": -19.9,
+        "voiced_share": 0.97,
+        "f0_hz": 94.7,
+        "f0_range_st": 3.1,
+        "f0_slope_st_s": -1.73,
+        "probability": 0.502
+      },
+      {
+        "i": 75,
+        "dur_s": 0.46,
+        "dur_ratio": 1.61,
+        "db": -38.6,
+        "voiced_share": 0.5,
+        "f0_hz": 100.0,
+        "f0_range_st": 19.88,
+        "f0_slope_st_s": 13.98,
+        "probability": 0.878
+      },
+      {
+        "i": 76,
+        "dur_s": 0.18,
+        "dur_ratio": 0.82,
+        "db": -14.5,
+        "voiced_share": 1.0,
+        "f0_hz": 110.7,
+        "f0_range_st": 6.27,
+        "f0_slope_st_s": -16.82,
+        "probability": 0.869
+      },
+      {
+        "i": 77,
+        "dur_s": 0.46,
+        "dur_ratio": 1.45,
+        "db": -23.9,
+        "voiced_share": 0.83,
+        "f0_hz": 96.7,
+        "f0_range_st": 24.14,
+        "f0_slope_st_s": 12.09,
+        "probability": 0.99
+      },
+      {
+        "i": 78,
+        "dur_s": 0.58,
+        "dur_ratio": 3.09,
+        "db": -40.7,
+        "voiced_share": 0.36,
+        "f0_hz": 92.5,
+        "f0_range_st": 16.88,
+        "f0_slope_st_s": -19.08,
+        "probability": 0.654
+      },
+      {
+        "i": 79,
+        "dur_s": 0.34,
+        "dur_ratio": 1.07,
+        "db": -33.9,
+        "voiced_share": 0.44,
+        "f0_hz": 101.9,
+        "f0_range_st": 23.51,
+        "f0_slope_st_s": 59.25,
+        "probability": 0.757
+      },
+      {
+        "i": 80,
+        "dur_s": 0.0,
+        "dur_ratio": 0.0,
+        "db": -48.8,
+        "voiced_share": 1.0,
+        "probability": 0.961
+      },
+      {
+        "i": 81,
+        "dur_s": 0.46,
+        "dur_ratio": 1.82,
+        "db": -30.7,
+        "voiced_share": 0.43,
+        "f0_hz": 84.2,
+        "f0_range_st": 23.69,
+        "f0_slope_st_s": 32.08,
+        "probability": 0.832
+      },
+      {
+        "i": 82,
+        "dur_s": 0.24,
+        "dur_ratio": 0.63,
+        "db": -18.4,
+        "voiced_share": 0.88,
+        "f0_hz": 83.3,
+        "f0_range_st": 1.54,
+        "f0_slope_st_s": 8.48,
+        "probability": 0.994
+      },
+      {
+        "i": 83,
+        "dur_s": 0.12,
+        "dur_ratio": 0.47,
+        "db": -21.8,
+        "voiced_share": 0.83,
+        "f0_hz": 91.7,
+        "f0_range_st": 9.77,
+        "f0_slope_st_s": -36.37,
+        "probability": 0.759
+      },
+      {
+        "i": 84,
+        "dur_s": 0.44,
+        "dur_ratio": 1.26,
+        "db": -26.9,
+        "voiced_share": 0.48,
+        "f0_hz": 91.4,
+        "f0_range_st": 14.92,
+        "f0_slope_st_s": 8.58,
+        "probability": 0.992
+      },
+      {
+        "i": 85,
+        "dur_s": 0.3,
+        "dur_ratio": 1.05,
+        "db": -21.1,
+        "voiced_share": 0.77,
+        "f0_hz": 87.9,
+        "f0_range_st": 2.73,
+        "f0_slope_st_s": 2.81,
+        "probability": 0.989
+      },
+      {
+        "i": 86,
+        "dur_s": 0.08,
+        "dur_ratio": 0.43,
+        "db": -13.3,
+        "voiced_share": 1.0,
+        "f0_hz": 95.8,
+        "f0_range_st": 0.16,
+        "f0_slope_st_s": -2.57,
+        "probability": 0.988
+      },
+      {
+        "i": 87,
+        "dur_s": 0.46,
+        "dur_ratio": 1.45,
+        "db": -33.9,
+        "voiced_share": 0.48,
+        "f0_hz": 102.3,
+        "f0_range_st": 24.87,
+        "f0_slope_st_s": 6.27,
+        "probability": 0.946
+      },
+      {
+        "i": 88,
+        "dur_s": 0.22,
+        "dur_ratio": 0.53,
+        "db": -23.6,
+        "voiced_share": 0.77,
+        "f0_hz": 93.0,
+        "f0_range_st": 8.91,
+        "f0_slope_st_s": -33.84,
+        "probability": 0.976
+      },
+      {
+        "i": 89,
+        "dur_s": 0.32,
+        "dur_ratio": 1.27,
+        "db": -27.6,
+        "voiced_share": 0.56,
+        "f0_hz": 84.2,
+        "f0_range_st": 9.06,
+        "f0_slope_st_s": -32.19,
+        "probability": 0.996
+      },
+      {
+        "i": 90,
+        "dur_s": 0.44,
+        "dur_ratio": 1.54,
+        "db": -32.3,
+        "voiced_share": 0.36,
+        "f0_hz": 225.3,
+        "f0_range_st": 22.82,
+        "f0_slope_st_s": 62.29,
+        "probability": 0.998
+      },
+      {
+        "i": 91,
+        "dur_s": 0.16,
+        "dur_ratio": 0.39,
+        "db": -17.9,
+        "voiced_share": 1.0,
+        "f0_hz": 108.8,
+        "f0_range_st": 4.1,
+        "f0_slope_st_s": -23.37,
+        "probability": 0.917
+      },
+      {
+        "i": 92,
+        "dur_s": 0.18,
+        "dur_ratio": 0.71,
+        "db": -18.9,
+        "voiced_share": 0.89,
+        "f0_hz": 96.4,
+        "f0_range_st": 3.43,
+        "f0_slope_st_s": -13.49,
+        "probability": 0.996
+      },
+      {
+        "i": 93,
+        "dur_s": 0.26,
+        "dur_ratio": 0.74,
+        "db": -25.3,
+        "voiced_share": 0.54,
+        "f0_hz": 91.2,
+        "f0_range_st": 1.71,
+        "f0_slope_st_s": -13.58,
+        "probability": 0.999
+      },
+      {
+        "i": 94,
+        "dur_s": 0.26,
+        "dur_ratio": 1.18,
+        "db": -24.9,
+        "voiced_share": 0.7,
+        "f0_hz": 91.4,
+        "f0_range_st": 2.33,
+        "f0_slope_st_s": -19.9,
+        "probability": 0.998
+      },
+      {
+        "i": 95,
+        "dur_s": 0.12,
+        "dur_ratio": 0.54,
+        "db": -23.4,
+        "voiced_share": 0.58,
+        "f0_hz": 89.9,
+        "f0_range_st": 1.59,
+        "f0_slope_st_s": -33.3,
+        "probability": 0.977
+      },
+      {
+        "i": 96,
+        "dur_s": 0.2,
+        "dur_ratio": 0.79,
+        "db": -13.2,
+        "voiced_share": 0.7,
+        "f0_hz": 125.5,
+        "f0_range_st": 3.28,
+        "f0_slope_st_s": -29.93,
+        "probability": 0.999
+      },
+      {
+        "i": 97,
+        "dur_s": 0.18,
+        "dur_ratio": 0.82,
+        "db": -20.1,
+        "voiced_share": 1.0,
+        "f0_hz": 98.5,
+        "f0_range_st": 4.37,
+        "f0_slope_st_s": -33.83,
+        "probability": 0.778
+      },
+      {
+        "i": 98,
+        "dur_s": 0.1,
+        "dur_ratio": 0.64,
+        "db": -31.9,
+        "voiced_share": 0.27,
+        "f0_hz": 87.4,
+        "f0_range_st": 0.38,
+        "f0_slope_st_s": 3.71,
+        "probability": 0.945
+      },
+      {
+        "i": 99,
+        "dur_s": 0.2,
+        "dur_ratio": 0.91,
+        "db": -25.1,
+        "voiced_share": 0.75,
+        "f0_hz": 216.2,
+        "f0_range_st": 20.6,
+        "f0_slope_st_s": 63.44,
+        "probability": 0.995
+      },
+      {
+        "i": 100,
+        "dur_s": 0.38,
+        "dur_ratio": 0.99,
+        "db": -27.3,
+        "voiced_share": 0.58,
+        "f0_hz": 109.6,
+        "f0_range_st": 5.09,
+        "f0_slope_st_s": -19.87,
+        "probability": 0.996
+      },
+      {
+        "i": 101,
+        "dur_s": 0.4,
+        "dur_ratio": 1.4,
+        "db": -23.9,
+        "voiced_share": 0.42,
+        "f0_hz": 110.3,
+        "f0_range_st": 2.68,
+        "f0_slope_st_s": 4.52,
+        "probability": 0.997
+      },
+      {
+        "i": 102,
+        "dur_s": 0.3,
+        "dur_ratio": 1.6,
+        "db": -32.4,
+        "voiced_share": 0.73,
+        "f0_hz": 108.9,
+        "f0_range_st": 21.04,
+        "f0_slope_st_s": 29.92,
+        "probability": 0.999
+      },
+      {
+        "i": 103,
+        "dur_s": 0.22,
+        "dur_ratio": 1.17,
+        "db": -43.1,
+        "voiced_share": 0.21,
+        "f0_hz": 93.6,
+        "f0_range_st": 17.89,
+        "f0_slope_st_s": 128.08,
+        "probability": 0.995
+      },
+      {
+        "i": 104,
+        "dur_s": 0.16,
+        "dur_ratio": 0.5,
+        "db": -14.6,
+        "voiced_share": 0.88,
+        "f0_hz": 119.9,
+        "f0_range_st": 2.24,
+        "f0_slope_st_s": -40.37,
+        "probability": 0.999
+      },
+      {
+        "i": 105,
+        "dur_s": 0.12,
+        "dur_ratio": 0.64,
+        "db": -18.8,
+        "voiced_share": 0.83,
+        "f0_hz": 140.0,
+        "f0_range_st": 24.55,
+        "f0_slope_st_s": -147.68,
+        "probability": 0.999
+      },
+      {
+        "i": 106,
+        "dur_s": 0.3,
+        "dur_ratio": 1.05,
+        "db": -19.3,
+        "voiced_share": 0.77,
+        "f0_hz": 96.4,
+        "f0_range_st": 23.58,
+        "f0_slope_st_s": -18.92,
+        "probability": 0.998
+      },
+      {
+        "i": 107,
+        "dur_s": 0.5,
+        "dur_ratio": 2.27,
+        "db": -36.9,
+        "voiced_share": 0.54,
+        "f0_hz": 91.4,
+        "f0_range_st": 26.0,
+        "f0_slope_st_s": -45.24,
+        "probability": 0.959
+      },
+      {
+        "i": 108,
+        "dur_s": 0.42,
+        "dur_ratio": 1.2,
+        "db": -22.0,
+        "voiced_share": 0.84,
+        "f0_hz": 106.0,
+        "f0_range_st": 4.67,
+        "f0_slope_st_s": 13.45,
+        "probability": 0.959
+      },
+      {
+        "i": 109,
+        "dur_s": 0.2,
+        "dur_ratio": 0.91,
+        "db": -31.1,
+        "voiced_share": 0.3,
+        "f0_hz": 329.0,
+        "f0_range_st": 19.62,
+        "f0_slope_st_s": 68.99,
+        "probability": 0.999
+      },
+      {
+        "i": 110,
+        "dur_s": 0.28,
+        "dur_ratio": 0.98,
+        "db": -25.1,
+        "voiced_share": 0.46,
+        "f0_hz": 108.8,
+        "f0_range_st": 26.36,
+        "f0_slope_st_s": 80.15,
+        "probability": 0.999
+      },
+      {
+        "i": 111,
+        "dur_s": 0.24,
+        "dur_ratio": 0.84,
+        "db": -24.5,
+        "voiced_share": 0.67,
+        "f0_hz": 93.3,
+        "f0_range_st": 5.02,
+        "f0_slope_st_s": -42.61,
+        "probability": 0.876
+      },
+      {
+        "i": 112,
+        "dur_s": 0.2,
+        "dur_ratio": 1.06,
+        "db": -22.4,
+        "voiced_share": 0.85,
+        "f0_hz": 82.9,
+        "f0_range_st": 2.11,
+        "f0_slope_st_s": -9.78,
+        "probability": 0.972
+      },
+      {
+        "i": 113,
+        "dur_s": 0.32,
+        "dur_ratio": 1.12,
+        "db": -26.1,
+        "voiced_share": 0.79,
+        "f0_hz": 83.3,
+        "f0_range_st": 1.44,
+        "f0_slope_st_s": 2.53,
+        "probability": 0.999
+      },
+      {
+        "i": 114,
+        "dur_s": 0.1,
+        "dur_ratio": 0.4,
+        "db": -16.6,
+        "voiced_share": 1.0,
+        "f0_hz": 101.0,
+        "f0_range_st": 2.87,
+        "f0_slope_st_s": -39.88,
+        "probability": 0.996
+      },
+      {
+        "i": 115,
+        "dur_s": 0.16,
+        "dur_ratio": 0.85,
+        "db": -18.9,
+        "voiced_share": 0.75,
+        "f0_hz": 84.2,
+        "f0_range_st": 26.13,
+        "f0_slope_st_s": 0.31,
+        "probability": 0.952
+      },
+      {
+        "i": 116,
+        "dur_s": 0.26,
+        "dur_ratio": 1.03,
+        "db": -22.8,
+        "voiced_share": 0.69,
+        "f0_hz": 86.7,
+        "f0_range_st": 2.73,
+        "f0_slope_st_s": 19.94,
+        "probability": 1.0
+      },
+      {
+        "i": 117,
+        "dur_s": 0.08,
+        "dur_ratio": 0.36,
+        "db": -17.4,
+        "voiced_share": 0.88,
+        "f0_hz": 96.4,
+        "f0_range_st": 12.58,
+        "f0_slope_st_s": 23.58,
+        "probability": 0.983
+      },
+      {
+        "i": 118,
+        "dur_s": 0.12,
+        "dur_ratio": 0.47,
+        "db": -16.8,
+        "voiced_share": 1.0,
+        "f0_hz": 93.6,
+        "f0_range_st": 0.49,
+        "f0_slope_st_s": -6.18,
+        "probability": 0.991
+      },
+      {
+        "i": 119,
+        "dur_s": 0.14,
+        "dur_ratio": 0.64,
+        "db": -16.7,
+        "voiced_share": 1.0,
+        "f0_hz": 197.5,
+        "f0_range_st": 13.51,
+        "f0_slope_st_s": 96.37,
+        "probability": 0.984
+      },
+      {
+        "i": 120,
+        "dur_s": 0.6,
+        "dur_ratio": 2.72,
+        "db": -21.3,
+        "voiced_share": 0.63,
+        "f0_hz": 118.5,
+        "f0_range_st": 7.98,
+        "f0_slope_st_s": -13.21,
+        "probability": 0.667
+      },
+      {
+        "i": 121,
+        "dur_s": 0.1,
+        "dur_ratio": 0.4,
+        "db": -14.8,
+        "voiced_share": 0.8,
+        "f0_hz": 100.3,
+        "f0_range_st": 4.31,
+        "f0_slope_st_s": -55.0,
+        "probability": 0.928
+      },
+      {
+        "i": 122,
+        "dur_s": 0.42,
+        "dur_ratio": 1.32,
+        "db": -23.7,
+        "voiced_share": 0.71,
+        "f0_hz": 90.4,
+        "f0_range_st": 2.37,
+        "f0_slope_st_s": -6.81,
+        "probability": 0.997
+      },
+      {
+        "i": 123,
+        "dur_s": 0.94,
+        "dur_ratio": 2.26,
+        "db": -30.9,
+        "voiced_share": 0.41,
+        "f0_hz": 93.6,
+        "f0_range_st": 23.85,
+        "f0_slope_st_s": -24.86,
+        "probability": 0.332
+      },
+      {
+        "i": 124,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -22.2,
+        "voiced_share": 0.81,
+        "f0_hz": 90.4,
+        "f0_range_st": 21.23,
+        "f0_slope_st_s": 168.14,
+        "probability": 0.976
+      },
+      {
+        "i": 125,
+        "dur_s": 0.42,
+        "dur_ratio": 1.66,
+        "db": -41.1,
+        "voiced_share": 0.33,
+        "f0_hz": 103.9,
+        "f0_range_st": 20.99,
+        "f0_slope_st_s": -35.85,
+        "probability": 0.998
+      },
+      {
+        "i": 126,
+        "dur_s": 0.14,
+        "dur_ratio": 0.75,
+        "db": -27.1,
+        "voiced_share": 0.43,
+        "f0_hz": 88.6,
+        "f0_range_st": 0.76,
+        "f0_slope_st_s": -4.67,
+        "probability": 0.996
+      },
+      {
+        "i": 127,
+        "dur_s": 0.18,
+        "dur_ratio": 0.63,
+        "db": -29.2,
+        "voiced_share": 0.39,
+        "f0_hz": 89.9,
+        "f0_range_st": 10.45,
+        "f0_slope_st_s": -184.9,
+        "probability": 0.997
+      },
+      {
+        "i": 128,
+        "dur_s": 0.18,
+        "dur_ratio": 0.47,
+        "db": -22.2,
+        "voiced_share": 0.83,
+        "f0_hz": 92.0,
+        "f0_range_st": 1.49,
+        "f0_slope_st_s": -15.77,
+        "probability": 1.0
+      },
+      {
+        "i": 129,
+        "dur_s": 0.26,
+        "dur_ratio": 1.03,
+        "db": -18.4,
+        "voiced_share": 1.0,
+        "f0_hz": 92.0,
+        "f0_range_st": 1.59,
+        "f0_slope_st_s": 5.23,
+        "probability": 0.998
+      },
+      {
+        "i": 130,
+        "dur_s": 0.16,
+        "dur_ratio": 0.85,
+        "db": -17.0,
+        "voiced_share": 1.0,
+        "f0_hz": 98.2,
+        "f0_range_st": 18.66,
+        "f0_slope_st_s": 143.69,
+        "probability": 0.996
+      },
+      {
+        "i": 131,
+        "dur_s": 0.18,
+        "dur_ratio": 0.96,
+        "db": -22.3,
+        "voiced_share": 0.83,
+        "f0_hz": 275.9,
+        "f0_range_st": 18.09,
+        "f0_slope_st_s": -6.67,
+        "probability": 0.868
+      },
+      {
+        "i": 132,
+        "dur_s": 0.18,
+        "dur_ratio": 0.82,
+        "db": -18.5,
+        "voiced_share": 0.89,
+        "f0_hz": 91.2,
+        "f0_range_st": 9.17,
+        "f0_slope_st_s": -12.78,
+        "probability": 0.998
+      },
+      {
+        "i": 133,
+        "dur_s": 0.16,
+        "dur_ratio": 0.5,
+        "db": -22.5,
+        "voiced_share": 0.81,
+        "f0_hz": 92.0,
+        "f0_range_st": 1.67,
+        "f0_slope_st_s": -16.14,
+        "probability": 1.0
+      },
+      {
+        "i": 134,
+        "dur_s": 0.14,
+        "dur_ratio": 0.75,
+        "db": -32.5,
+        "voiced_share": 0.36,
+        "f0_hz": 106.7,
+        "f0_range_st": 4.31,
+        "f0_slope_st_s": -134.12,
+        "probability": 0.994
+      },
+      {
+        "i": 135,
+        "dur_s": 0.16,
+        "dur_ratio": 0.85,
+        "db": -22.9,
+        "voiced_share": 1.0,
+        "f0_hz": 104.2,
+        "f0_range_st": 0.8,
+        "f0_slope_st_s": 24.38,
+        "probability": 0.984
+      },
+      {
+        "i": 136,
+        "dur_s": 0.24,
+        "dur_ratio": 1.09,
+        "db": -44.5,
+        "voiced_share": 0.12,
+        "f0_hz": 106.7,
+        "f0_range_st": 3.2,
+        "f0_slope_st_s": -197.3,
+        "probability": 0.993
+      },
+      {
+        "i": 137,
+        "dur_s": 0.14,
+        "dur_ratio": 0.64,
+        "db": -15.8,
+        "voiced_share": 0.79,
+        "f0_hz": 127.0,
+        "f0_range_st": 20.48,
+        "f0_slope_st_s": 123.27,
+        "probability": 0.999
+      },
+      {
+        "i": 138,
+        "dur_s": 0.2,
+        "dur_ratio": 0.91,
+        "db": -18.8,
+        "voiced_share": 0.75,
+        "f0_hz": 111.9,
+        "f0_range_st": 17.55,
+        "f0_slope_st_s": -40.57,
+        "probability": 0.981
+      },
+      {
+        "i": 139,
+        "dur_s": 0.18,
+        "dur_ratio": 0.96,
+        "db": -23.1,
+        "voiced_share": 0.33,
+        "f0_hz": 109.6,
+        "f0_range_st": 3.59,
+        "f0_slope_st_s": -89.33,
+        "probability": 0.999
+      },
+      {
+        "i": 140,
+        "dur_s": 0.16,
+        "dur_ratio": 0.63,
+        "db": -16.7,
+        "voiced_share": 0.69,
+        "f0_hz": 145.5,
+        "f0_range_st": 9.74,
+        "f0_slope_st_s": -118.03,
+        "probability": 0.999
+      },
+      {
+        "i": 141,
+        "dur_s": 0.3,
+        "dur_ratio": 1.6,
+        "db": -40.7,
+        "voiced_share": 0.73,
+        "f0_hz": 260.2,
+        "f0_range_st": 22.91,
+        "f0_slope_st_s": 0.19,
+        "probability": 0.999
+      },
+      {
+        "i": 142,
+        "dur_s": 0.12,
+        "dur_ratio": 0.54,
+        "db": -28.2,
+        "voiced_share": 0.67,
+        "f0_hz": 116.8,
+        "f0_range_st": 9.73,
+        "f0_slope_st_s": 80.33,
+        "probability": 0.991
+      },
+      {
+        "i": 143,
+        "dur_s": 0.32,
+        "dur_ratio": 1.12,
+        "db": -20.3,
+        "voiced_share": 0.81,
+        "f0_hz": 153.1,
+        "f0_range_st": 5.17,
+        "f0_slope_st_s": 31.16,
+        "probability": 0.994
+      },
+      {
+        "i": 144,
+        "dur_s": 0.34,
+        "dur_ratio": 1.54,
+        "db": -21.0,
+        "voiced_share": 0.56,
+        "f0_hz": 155.3,
+        "f0_range_st": 10.44,
+        "f0_slope_st_s": -49.07,
+        "probability": 0.999
+      },
+      {
+        "i": 145,
+        "dur_s": 0.4,
+        "dur_ratio": 1.4,
+        "db": -25.2,
+        "voiced_share": 0.78,
+        "f0_hz": 117.6,
+        "f0_range_st": 20.9,
+        "f0_slope_st_s": -12.19,
+        "probability": 1.0
+      },
+      {
+        "i": 146,
+        "dur_s": 0.32,
+        "dur_ratio": 1.7,
+        "db": -31.0,
+        "voiced_share": 0.28,
+        "f0_hz": 113.5,
+        "f0_range_st": 3.44,
+        "f0_slope_st_s": -37.92,
+        "probability": 0.197
+      },
+      {
+        "i": 147,
+        "dur_s": 0.34,
+        "dur_ratio": 1.34,
+        "db": -30.8,
+        "voiced_share": 0.44,
+        "f0_hz": 118.5,
+        "f0_range_st": 18.5,
+        "f0_slope_st_s": 37.78,
+        "probability": 0.999
+      },
+      {
+        "i": 148,
+        "dur_s": 1.3,
+        "dur_ratio": 8.37,
+        "db": -53.0,
+        "voiced_share": 0.04,
+        "f0_hz": 102.6,
+        "f0_range_st": 17.57,
+        "f0_slope_st_s": -18.83,
+        "probability": 0.994
+      },
+      {
+        "i": 149,
+        "dur_s": 0.32,
+        "dur_ratio": 1.27,
+        "db": -26.1,
+        "voiced_share": 0.53,
+        "f0_hz": 153.8,
+        "f0_range_st": 10.42,
+        "f0_slope_st_s": -67.41,
+        "probability": 0.999
+      },
+      {
+        "i": 150,
+        "dur_s": 0.28,
+        "dur_ratio": 0.98,
+        "db": -15.2,
+        "voiced_share": 0.96,
+        "f0_hz": 90.4,
+        "f0_range_st": 5.93,
+        "f0_slope_st_s": -32.52,
+        "probability": 1.0
+      },
+      {
+        "i": 151,
+        "dur_s": 0.38,
+        "dur_ratio": 2.02,
+        "db": -25.3,
+        "voiced_share": 0.84,
+        "f0_hz": 101.0,
+        "f0_range_st": 23.12,
+        "f0_slope_st_s": -33.75,
+        "probability": 0.999
+      },
+      {
+        "i": 152,
+        "dur_s": 0.32,
+        "dur_ratio": 1.45,
+        "db": -36.2,
+        "voiced_share": 0.53,
+        "f0_hz": 177.8,
+        "f0_range_st": 22.93,
+        "f0_slope_st_s": 20.74,
+        "probability": 0.996
+      },
+      {
+        "i": 153,
+        "dur_s": 0.22,
+        "dur_ratio": 1.17,
+        "db": -19.1,
+        "voiced_share": 1.0,
+        "f0_hz": 99.1,
+        "f0_range_st": 2.33,
+        "f0_slope_st_s": -33.86,
+        "probability": 0.811
+      },
+      {
+        "i": 154,
+        "dur_s": 0.26,
+        "dur_ratio": 0.82,
+        "db": -28.8,
+        "voiced_share": 0.65,
+        "f0_hz": 83.8,
+        "f0_range_st": 7.61,
+        "f0_slope_st_s": -34.67,
+        "probability": 0.979
+      },
+      {
+        "i": 155,
+        "dur_s": 0.2,
+        "dur_ratio": 1.06,
+        "db": -15.1,
+        "voiced_share": 0.8,
+        "f0_hz": 111.5,
+        "f0_range_st": 11.22,
+        "f0_slope_st_s": -67.45,
+        "probability": 0.992
+      },
+      {
+        "i": 156,
+        "dur_s": 1.02,
+        "dur_ratio": 4.63,
+        "db": -50.5,
+        "voiced_share": 0.51,
+        "f0_hz": 114.7,
+        "f0_range_st": 21.85,
+        "f0_slope_st_s": -10.53,
+        "probability": 0.882
+      },
+      {
+        "i": 157,
+        "dur_s": 0.28,
+        "dur_ratio": 1.27,
+        "db": -30.2,
+        "voiced_share": 0.54,
+        "f0_hz": 205.1,
+        "f0_range_st": 21.08,
+        "f0_slope_st_s": 9.35,
+        "probability": 0.987
+      },
+      {
+        "i": 158,
+        "dur_s": 0.42,
+        "dur_ratio": 1.66,
+        "db": -22.2,
+        "voiced_share": 0.5,
+        "f0_hz": 173.9,
+        "f0_range_st": 25.02,
+        "f0_slope_st_s": -43.28,
+        "probability": 0.669
+      },
+      {
+        "i": 159,
+        "dur_s": 0.44,
+        "dur_ratio": 1.15,
+        "db": -26.6,
+        "voiced_share": 0.62,
+        "f0_hz": 91.2,
+        "f0_range_st": 5.92,
+        "f0_slope_st_s": 7.41,
+        "probability": 0.304
+      },
+      {
+        "i": 160,
+        "dur_s": 0.28,
+        "dur_ratio": 0.67,
+        "db": -24.1,
+        "voiced_share": 0.75,
+        "f0_hz": 103.2,
+        "f0_range_st": 3.76,
+        "f0_slope_st_s": 29.35,
+        "probability": 0.84
+      },
+      {
+        "i": 161,
+        "dur_s": 0.28,
+        "dur_ratio": 1.27,
+        "db": -19.2,
+        "voiced_share": 0.79,
+        "f0_hz": 96.7,
+        "f0_range_st": 3.54,
+        "f0_slope_st_s": -27.38,
+        "probability": 0.964
+      },
+      {
+        "i": 162,
+        "dur_s": 0.14,
+        "dur_ratio": 0.9,
+        "db": -16.6,
+        "voiced_share": 1.0,
+        "f0_hz": 97.0,
+        "f0_range_st": 2.26,
+        "f0_slope_st_s": -5.66,
+        "probability": 0.975
+      },
+      {
+        "i": 163,
+        "dur_s": 0.28,
+        "dur_ratio": 0.98,
+        "db": -15.2,
+        "voiced_share": 0.89,
+        "f0_hz": 103.9,
+        "f0_range_st": 21.57,
+        "f0_slope_st_s": 39.85,
+        "probability": 0.997
+      },
+      {
+        "i": 164,
+        "dur_s": 0.38,
+        "dur_ratio": 1.08,
+        "db": -23.6,
+        "voiced_share": 0.66,
+        "f0_hz": 90.4,
+        "f0_range_st": 4.87,
+        "f0_slope_st_s": -26.73,
+        "probability": 0.993
+      },
+      {
+        "i": 165,
+        "dur_s": 0.8,
+        "dur_ratio": 2.8,
+        "db": -39.9,
+        "voiced_share": 0.5,
+        "f0_hz": 89.9,
+        "f0_range_st": 12.3,
+        "f0_slope_st_s": 1.89,
+        "probability": 0.858
+      },
+      {
+        "i": 166,
+        "dur_s": 0.42,
+        "dur_ratio": 0.94,
+        "db": -25.3,
+        "voiced_share": 0.93,
+        "f0_hz": 88.9,
+        "f0_range_st": 5.21,
+        "f0_slope_st_s": 10.13,
+        "probability": 0.976
+      },
+      {
+        "i": 167,
+        "dur_s": 0.02,
+        "dur_ratio": 0.08,
+        "db": -11.7,
+        "voiced_share": 1.0,
+        "probability": 0.951
+      },
+      {
+        "i": 168,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -17.7,
+        "voiced_share": 0.88,
+        "f0_hz": 113.2,
+        "f0_range_st": 6.52,
+        "f0_slope_st_s": -62.71,
+        "probability": 0.969
+      },
+      {
+        "i": 169,
+        "dur_s": 0.32,
+        "dur_ratio": 0.91,
+        "db": -16.9,
+        "voiced_share": 0.84,
+        "f0_hz": 116.8,
+        "f0_range_st": 4.29,
+        "f0_slope_st_s": -20.74,
+        "probability": 0.843
+      },
+      {
+        "i": 170,
+        "dur_s": 0.5,
+        "dur_ratio": 1.12,
+        "db": -25.1,
+        "voiced_share": 0.72,
+        "f0_hz": 99.7,
+        "f0_range_st": 19.46,
+        "f0_slope_st_s": 30.4,
+        "probability": 0.993
+      },
+      {
+        "i": 171,
+        "dur_s": 0.4,
+        "dur_ratio": 1.4,
+        "db": -22.1,
+        "voiced_share": 0.97,
+        "f0_hz": 89.4,
+        "f0_range_st": 4.81,
+        "f0_slope_st_s": 8.94,
+        "probability": 0.995
+      },
+      {
+        "i": 172,
+        "dur_s": 0.14,
+        "dur_ratio": 0.75,
+        "db": -26.1,
+        "voiced_share": 0.64,
+        "f0_hz": 301.9,
+        "f0_range_st": 20.88,
+        "f0_slope_st_s": 196.98,
+        "probability": 0.985
+      },
+      {
+        "i": 173,
+        "dur_s": 0.18,
+        "dur_ratio": 0.82,
+        "db": -18.7,
+        "voiced_share": 0.89,
+        "f0_hz": 94.1,
+        "f0_range_st": 23.78,
+        "f0_slope_st_s": 123.08,
+        "probability": 0.997
+      },
+      {
+        "i": 174,
+        "dur_s": 0.3,
+        "dur_ratio": 0.86,
+        "db": -30.2,
+        "voiced_share": 0.53,
+        "f0_hz": 88.5,
+        "f0_range_st": 6.66,
+        "f0_slope_st_s": 9.17,
+        "probability": 0.97
+      },
+      {
+        "i": 175,
+        "dur_s": 0.24,
+        "dur_ratio": 1.28,
+        "db": -36.5,
+        "voiced_share": 0.42,
+        "f0_hz": 87.2,
+        "f0_range_st": 3.78,
+        "f0_slope_st_s": -25.32,
+        "probability": 0.991
+      },
+      {
+        "i": 176,
+        "dur_s": 0.12,
+        "dur_ratio": 0.54,
+        "db": -31.5,
+        "voiced_share": 0.08,
+        "probability": 0.984
+      },
+      {
+        "i": 177,
+        "dur_s": 0.46,
+        "dur_ratio": 0.96,
+        "db": -24.7,
+        "voiced_share": 0.68,
+        "f0_hz": 107.4,
+        "f0_range_st": 11.63,
+        "f0_slope_st_s": -7.9,
+        "probability": 0.962
+      },
+      {
+        "i": 178,
+        "dur_s": 0.08,
+        "dur_ratio": 0.23,
+        "db": -23.3,
+        "voiced_share": 0.62,
+        "f0_hz": 101.3,
+        "f0_range_st": 4.21,
+        "f0_slope_st_s": -112.63,
+        "probability": 0.715
+      },
+      {
+        "i": 179,
+        "dur_s": 0.2,
+        "dur_ratio": 1.06,
+        "db": -23.5,
+        "voiced_share": 0.85,
+        "f0_hz": 96.4,
+        "f0_range_st": 25.42,
+        "f0_slope_st_s": 149.19,
+        "probability": 0.669
+      },
+      {
+        "i": 180,
+        "dur_s": 0.0,
+        "dur_ratio": 0.0,
+        "db": -18.6,
+        "voiced_share": 1.0,
+        "probability": 0.982
+      },
+      {
+        "i": 181,
+        "dur_s": 0.2,
+        "dur_ratio": 1.06,
+        "db": -18.5,
+        "voiced_share": 0.9,
+        "f0_hz": 93.8,
+        "f0_range_st": 1.22,
+        "f0_slope_st_s": -0.82,
+        "probability": 0.923
+      },
+      {
+        "i": 182,
+        "dur_s": 0.18,
+        "dur_ratio": 0.82,
+        "db": -26.3,
+        "voiced_share": 0.83,
+        "f0_hz": 85.6,
+        "f0_range_st": 27.61,
+        "f0_slope_st_s": 157.08,
+        "probability": 0.711
+      },
+      {
+        "i": 183,
+        "dur_s": 0.32,
+        "dur_ratio": 1.12,
+        "db": -29.9,
+        "voiced_share": 0.45,
+        "f0_hz": 97.0,
+        "f0_range_st": 25.71,
+        "f0_slope_st_s": -76.86,
+        "probability": 0.846
+      },
+      {
+        "i": 184,
+        "dur_s": 0.16,
+        "dur_ratio": 0.85,
+        "db": -23.4,
+        "voiced_share": 1.0,
+        "f0_hz": 94.7,
+        "f0_range_st": 3.47,
+        "f0_slope_st_s": -20.05,
+        "probability": 0.953
+      },
+      {
+        "i": 185,
+        "dur_s": 0.46,
+        "dur_ratio": 2.45,
+        "db": -45.7,
+        "voiced_share": 0.26,
+        "f0_hz": 84.7,
+        "f0_range_st": 23.76,
+        "f0_slope_st_s": 49.21,
+        "probability": 0.992
+      },
+      {
+        "i": 186,
+        "dur_s": 0.26,
+        "dur_ratio": 1.18,
+        "db": -39.8,
+        "voiced_share": 0.54,
+        "f0_hz": 134.0,
+        "f0_range_st": 16.72,
+        "f0_slope_st_s": -54.56,
+        "probability": 0.981
+      },
+      {
+        "i": 187,
+        "dur_s": 0.14,
+        "dur_ratio": 0.75,
+        "db": -30.4,
+        "voiced_share": 0.64,
+        "f0_hz": 153.8,
+        "f0_range_st": 30.01,
+        "f0_slope_st_s": -188.73,
+        "probability": 0.989
+      },
+      {
+        "i": 188,
+        "dur_s": 0.46,
+        "dur_ratio": 2.09,
+        "db": -36.3,
+        "voiced_share": 0.32,
+        "f0_hz": 115.1,
+        "f0_range_st": 6.13,
+        "f0_slope_st_s": 5.73,
+        "probability": 0.98
+      },
+      {
+        "i": 189,
+        "dur_s": 0.6,
+        "dur_ratio": 2.1,
+        "db": -27.7,
+        "voiced_share": 0.23,
+        "f0_hz": 170.2,
+        "f0_range_st": 1.03,
+        "f0_slope_st_s": -26.2,
+        "probability": 0.986
+      },
+      {
+        "i": 190,
+        "dur_s": 0.48,
+        "dur_ratio": 1.37,
+        "db": -23.7,
+        "voiced_share": 0.69,
+        "f0_hz": 133.3,
+        "f0_range_st": 16.48,
+        "f0_slope_st_s": -19.98,
+        "probability": 0.999
+      },
+      {
+        "i": 191,
+        "dur_s": 0.3,
+        "dur_ratio": 1.36,
+        "db": -33.9,
+        "voiced_share": 0.63,
+        "f0_hz": 115.1,
+        "f0_range_st": 20.04,
+        "f0_slope_st_s": -5.63,
+        "probability": 0.992
+      },
+      {
+        "i": 192,
+        "dur_s": 0.14,
+        "dur_ratio": 0.64,
+        "db": -23.1,
+        "voiced_share": 0.71,
+        "f0_hz": 99.1,
+        "f0_range_st": 25.04,
+        "f0_slope_st_s": -69.41,
+        "probability": 0.669
+      },
+      {
+        "i": 193,
+        "dur_s": 0.34,
+        "dur_ratio": 0.97,
+        "db": -17.5,
+        "voiced_share": 0.5,
+        "f0_hz": 156.9,
+        "f0_range_st": 6.05,
+        "f0_slope_st_s": -43.91,
+        "probability": 0.845
+      },
+      {
+        "i": 194,
+        "dur_s": 0.38,
+        "dur_ratio": 1.33,
+        "db": -21.6,
+        "voiced_share": 0.97,
+        "f0_hz": 88.4,
+        "f0_range_st": 27.31,
+        "f0_slope_st_s": 42.65,
+        "probability": 0.991
+      },
+      {
+        "i": 195,
+        "dur_s": 0.22,
+        "dur_ratio": 1.17,
+        "db": -29.4,
+        "voiced_share": 0.64,
+        "f0_hz": 238.8,
+        "f0_range_st": 17.85,
+        "f0_slope_st_s": 71.14,
+        "probability": 0.97
+      },
+      {
+        "i": 196,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -33.9,
+        "voiced_share": 0.5,
+        "f0_hz": 124.0,
+        "f0_range_st": 8.82,
+        "f0_slope_st_s": -44.85,
+        "probability": 0.975
+      },
+      {
+        "i": 197,
+        "dur_s": 0.38,
+        "dur_ratio": 1.08,
+        "db": -30.7,
+        "voiced_share": 0.6,
+        "f0_hz": 73.6,
+        "f0_range_st": 14.88,
+        "f0_slope_st_s": -24.13,
+        "probability": 0.967
+      },
+      {
+        "i": 198,
+        "dur_s": 0.2,
+        "dur_ratio": 0.79,
+        "db": -35.4,
+        "voiced_share": 0.15,
+        "f0_hz": 101.9,
+        "f0_range_st": 4.26,
+        "f0_slope_st_s": -164.27,
+        "probability": 0.919
+      },
+      {
+        "i": 199,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -27.0,
+        "voiced_share": 0.35,
+        "f0_hz": 101.7,
+        "f0_range_st": 5.25,
+        "f0_slope_st_s": -111.6,
+        "probability": 0.997
+      },
+      {
+        "i": 200,
+        "dur_s": 0.12,
+        "dur_ratio": 0.54,
+        "db": -26.6,
+        "voiced_share": 0.17,
+        "probability": 0.988
+      },
+      {
+        "i": 201,
+        "dur_s": 0.42,
+        "dur_ratio": 0.87,
+        "db": -29.8,
+        "voiced_share": 0.49,
+        "f0_hz": 90.4,
+        "f0_range_st": 5.22,
+        "f0_slope_st_s": -22.04,
+        "probability": 0.994
+      },
+      {
+        "i": 202,
+        "dur_s": 0.14,
+        "dur_ratio": 0.75,
+        "db": -13.0,
+        "voiced_share": 0.8,
+        "f0_hz": 143.5,
+        "f0_range_st": 2.79,
+        "f0_slope_st_s": 10.75,
+        "probability": 0.94
+      },
+      {
+        "i": 203,
+        "dur_s": 0.24,
+        "dur_ratio": 1.55,
+        "db": -27.4,
+        "voiced_share": 0.79,
+        "f0_hz": 129.0,
+        "f0_range_st": 24.94,
+        "f0_slope_st_s": -44.19,
+        "probability": 0.651
+      },
+      {
+        "i": 204,
+        "dur_s": 0.24,
+        "dur_ratio": 0.76,
+        "db": -22.9,
+        "voiced_share": 0.75,
+        "f0_hz": 182.9,
+        "f0_range_st": 12.38,
+        "f0_slope_st_s": -5.61,
+        "probability": 0.998
+      },
+      {
+        "i": 205,
+        "dur_s": 0.84,
+        "dur_ratio": 4.47,
+        "db": -42.4,
+        "voiced_share": 0.65,
+        "f0_hz": 122.1,
+        "f0_range_st": 23.17,
+        "f0_slope_st_s": -13.55,
+        "probability": 0.759
+      },
+      {
+        "i": 206,
+        "dur_s": 0.44,
+        "dur_ratio": 1.38,
+        "db": -26.9,
+        "voiced_share": 0.73,
+        "f0_hz": 94.1,
+        "f0_range_st": 3.47,
+        "f0_slope_st_s": -3.89,
+        "probability": 0.429
+      },
+      {
+        "i": 207,
+        "dur_s": 0.4,
+        "dur_ratio": 1.4,
+        "db": -25.3,
+        "voiced_share": 0.55,
+        "f0_hz": 97.3,
+        "f0_range_st": 3.01,
+        "f0_slope_st_s": -23.77,
+        "probability": 0.848
+      },
+      {
+        "i": 208,
+        "dur_s": 0.52,
+        "dur_ratio": 2.77,
+        "db": -40.1,
+        "voiced_share": 0.54,
+        "f0_hz": 86.5,
+        "f0_range_st": 9.06,
+        "f0_slope_st_s": 6.02,
+        "probability": 0.977
+      },
+      {
+        "i": 209,
+        "dur_s": 0.42,
+        "dur_ratio": 1.66,
+        "db": -37.6,
+        "voiced_share": 0.29,
+        "f0_hz": 165.4,
+        "f0_range_st": 8.63,
+        "f0_slope_st_s": 75.79,
+        "probability": 0.865
+      },
+      {
+        "i": 210,
+        "dur_s": 0.14,
+        "dur_ratio": 0.75,
+        "db": -15.6,
+        "voiced_share": 0.93,
+        "f0_hz": 238.8,
+        "f0_range_st": 9.48,
+        "f0_slope_st_s": -100.12,
+        "probability": 0.998
+      },
+      {
+        "i": 211,
+        "dur_s": 0.08,
+        "dur_ratio": 0.36,
+        "db": -18.8,
+        "voiced_share": 1.0,
+        "f0_hz": 92.5,
+        "f0_range_st": 1.88,
+        "f0_slope_st_s": -31.45,
+        "probability": 0.993
+      },
+      {
+        "i": 212,
+        "dur_s": 0.14,
+        "dur_ratio": 0.49,
+        "db": -15.5,
+        "voiced_share": 1.0,
+        "f0_hz": 93.0,
+        "f0_range_st": 2.88,
+        "f0_slope_st_s": -26.54,
+        "probability": 0.999
+      },
+      {
+        "i": 213,
+        "dur_s": 0.44,
+        "dur_ratio": 1.15,
+        "db": -26.0,
+        "voiced_share": 0.45,
+        "f0_hz": 106.5,
+        "f0_range_st": 17.33,
+        "f0_slope_st_s": 5.4,
+        "probability": 0.998
+      },
+      {
+        "i": 214,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -28.5,
+        "voiced_share": 0.35,
+        "f0_hz": 146.1,
+        "f0_range_st": 12.37,
+        "f0_slope_st_s": 252.27,
+        "probability": 0.948
+      },
+      {
+        "i": 215,
+        "dur_s": 0.08,
+        "dur_ratio": 0.32,
+        "db": -28.7,
+        "voiced_share": 0.25,
+        "probability": 0.981
+      },
+      {
+        "i": 216,
+        "dur_s": 0.18,
+        "dur_ratio": 0.71,
+        "db": -21.5,
+        "voiced_share": 0.56,
+        "f0_hz": 141.0,
+        "f0_range_st": 1.44,
+        "f0_slope_st_s": -19.13,
+        "probability": 0.998
+      },
+      {
+        "i": 217,
+        "dur_s": 0.14,
+        "dur_ratio": 0.9,
+        "db": -11.9,
+        "voiced_share": 1.0,
+        "f0_hz": 150.9,
+        "f0_range_st": 1.68,
+        "f0_slope_st_s": 13.42,
+        "probability": 0.975
+      },
+      {
+        "i": 218,
+        "dur_s": 0.16,
+        "dur_ratio": 0.63,
+        "db": -15.9,
+        "voiced_share": 1.0,
+        "f0_hz": 166.7,
+        "f0_range_st": 2.6,
+        "f0_slope_st_s": 19.7,
+        "probability": 0.855
+      },
+      {
+        "i": 219,
+        "dur_s": 0.4,
+        "dur_ratio": 0.96,
+        "db": -24.4,
+        "voiced_share": 0.68,
+        "f0_hz": 153.8,
+        "f0_range_st": 18.45,
+        "f0_slope_st_s": -28.89,
+        "probability": 0.999
+      },
+      {
+        "i": 220,
+        "dur_s": 0.42,
+        "dur_ratio": 2.24,
+        "db": -36.3,
+        "voiced_share": 0.6,
+        "f0_hz": 117.6,
+        "f0_range_st": 16.85,
+        "f0_slope_st_s": 15.88,
+        "probability": 0.634
+      },
+      {
+        "i": 221,
+        "dur_s": 0.14,
+        "dur_ratio": 0.55,
+        "db": -23.0,
+        "voiced_share": 0.36,
+        "f0_hz": 142.9,
+        "f0_range_st": 0.49,
+        "f0_slope_st_s": 3.02,
+        "probability": 0.996
+      },
+      {
+        "i": 222,
+        "dur_s": 0.12,
+        "dur_ratio": 0.42,
+        "db": -23.3,
+        "voiced_share": 0.5,
+        "f0_hz": 138.6,
+        "f0_range_st": 9.49,
+        "f0_slope_st_s": -84.85,
+        "probability": 0.671
+      },
+      {
+        "i": 223,
+        "dur_s": 0.12,
+        "dur_ratio": 0.64,
+        "db": -20.7,
+        "voiced_share": 0.75,
+        "f0_hz": 103.9,
+        "f0_range_st": 13.38,
+        "f0_slope_st_s": -36.88,
+        "probability": 0.998
+      },
+      {
+        "i": 224,
+        "dur_s": 0.28,
+        "dur_ratio": 1.27,
+        "db": -25.7,
+        "voiced_share": 0.45,
+        "f0_hz": 97.6,
+        "f0_range_st": 2.24,
+        "f0_slope_st_s": -3.64,
+        "probability": 0.999
+      },
+      {
+        "i": 225,
+        "dur_s": 0.34,
+        "dur_ratio": 1.54,
+        "db": -34.6,
+        "voiced_share": 0.37,
+        "f0_hz": 130.1,
+        "f0_range_st": 13.48,
+        "f0_slope_st_s": -14.41,
+        "probability": 0.914
+      },
+      {
+        "i": 226,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -25.8,
+        "voiced_share": 0.75,
+        "f0_hz": 106.0,
+        "f0_range_st": 4.7,
+        "f0_slope_st_s": 0.46,
+        "probability": 0.998
+      },
+      {
+        "i": 227,
+        "dur_s": 0.26,
+        "dur_ratio": 0.91,
+        "db": -27.0,
+        "voiced_share": 0.78,
+        "f0_hz": 123.1,
+        "f0_range_st": 24.48,
+        "f0_slope_st_s": 161.37,
+        "probability": 0.949
+      },
+      {
+        "i": 228,
+        "dur_s": 0.24,
+        "dur_ratio": 1.09,
+        "db": -25.4,
+        "voiced_share": 0.67,
+        "f0_hz": 111.9,
+        "f0_range_st": 23.7,
+        "f0_slope_st_s": 92.97,
+        "probability": 0.835
+      },
+      {
+        "i": 229,
+        "dur_s": 0.18,
+        "dur_ratio": 0.96,
+        "db": -25.5,
+        "voiced_share": 0.89,
+        "f0_hz": 96.4,
+        "f0_range_st": 21.26,
+        "f0_slope_st_s": -58.97,
+        "probability": 0.994
+      },
+      {
+        "i": 230,
+        "dur_s": 0.2,
+        "dur_ratio": 1.06,
+        "db": -36.0,
+        "voiced_share": 0.9,
+        "f0_hz": 165.4,
+        "f0_range_st": 20.95,
+        "f0_slope_st_s": 128.93,
+        "probability": 0.998
+      },
+      {
+        "i": 231,
+        "dur_s": 0.32,
+        "dur_ratio": 0.91,
+        "db": -41.8,
+        "voiced_share": 0.28,
+        "f0_hz": 118.5,
+        "f0_range_st": 4.76,
+        "f0_slope_st_s": -75.15,
+        "probability": 0.964
+      },
+      {
+        "i": 232,
+        "dur_s": 0.2,
+        "dur_ratio": 0.91,
+        "db": -19.7,
+        "voiced_share": 0.6,
+        "f0_hz": 110.0,
+        "f0_range_st": 3.27,
+        "f0_slope_st_s": 29.87,
+        "probability": 0.996
+      },
+      {
+        "i": 233,
+        "dur_s": 0.2,
+        "dur_ratio": 0.79,
+        "db": -15.8,
+        "voiced_share": 0.7,
+        "f0_hz": 146.8,
+        "f0_range_st": 0.86,
+        "f0_slope_st_s": -2.67,
+        "probability": 0.999
+      },
+      {
+        "i": 234,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -19.9,
+        "voiced_share": 0.94,
+        "f0_hz": 216.2,
+        "f0_range_st": 14.95,
+        "f0_slope_st_s": -21.82,
+        "probability": 0.994
+      },
+      {
+        "i": 235,
+        "dur_s": 0.4,
+        "dur_ratio": 1.58,
+        "db": -23.5,
+        "voiced_share": 0.65,
+        "f0_hz": 133.3,
+        "f0_range_st": 20.07,
+        "f0_slope_st_s": -33.09,
+        "probability": 0.998
+      },
+      {
+        "i": 236,
+        "dur_s": 0.24,
+        "dur_ratio": 0.95,
+        "db": -26.1,
+        "voiced_share": 0.58,
+        "f0_hz": 283.2,
+        "f0_range_st": 21.63,
+        "f0_slope_st_s": 106.52,
+        "probability": 0.998
+      },
+      {
+        "i": 237,
+        "dur_s": 0.3,
+        "dur_ratio": 0.86,
+        "db": -22.2,
+        "voiced_share": 0.6,
+        "f0_hz": 133.3,
+        "f0_range_st": 14.72,
+        "f0_slope_st_s": -26.83,
+        "probability": 0.992
+      },
+      {
+        "i": 238,
+        "dur_s": 0.24,
+        "dur_ratio": 1.28,
+        "db": -29.2,
+        "voiced_share": 0.46,
+        "f0_hz": 97.6,
+        "f0_range_st": 20.48,
+        "f0_slope_st_s": 107.44,
+        "probability": 0.003
+      },
+      {
+        "i": 239,
+        "dur_s": 0.22,
+        "dur_ratio": 1.17,
+        "db": -23.7,
+        "voiced_share": 0.64,
+        "f0_hz": 94.7,
+        "f0_range_st": 10.55,
+        "f0_slope_st_s": -11.27,
+        "probability": 0.739
+      },
+      {
+        "i": 240,
+        "dur_s": 0.32,
+        "dur_ratio": 0.91,
+        "db": -20.7,
+        "voiced_share": 0.97,
+        "f0_hz": 107.4,
+        "f0_range_st": 4.18,
+        "f0_slope_st_s": 5.06,
+        "probability": 0.978
+      },
+      {
+        "i": 241,
+        "dur_s": 0.42,
+        "dur_ratio": 1.66,
+        "db": -26.2,
+        "voiced_share": 0.79,
+        "f0_hz": 87.4,
+        "f0_range_st": 22.71,
+        "f0_slope_st_s": 51.91,
+        "probability": 0.974
+      },
+      {
+        "i": 242,
+        "dur_s": 0.34,
+        "dur_ratio": 1.81,
+        "db": -31.0,
+        "voiced_share": 0.62,
+        "f0_hz": 86.5,
+        "f0_range_st": 21.43,
+        "f0_slope_st_s": -63.05,
+        "probability": 0.906
+      },
+      {
+        "i": 243,
+        "dur_s": 0.3,
+        "dur_ratio": 1.36,
+        "db": -26.6,
+        "voiced_share": 0.97,
+        "f0_hz": 83.8,
+        "f0_range_st": 22.93,
+        "f0_slope_st_s": -6.89,
+        "probability": 0.987
+      },
+      {
+        "i": 244,
+        "dur_s": 0.26,
+        "dur_ratio": 0.91,
+        "db": -34.1,
+        "voiced_share": 0.42,
+        "f0_hz": 85.6,
+        "f0_range_st": 7.48,
+        "f0_slope_st_s": 3.22,
+        "probability": 0.94
+      },
+      {
+        "i": 245,
+        "dur_s": 0.46,
+        "dur_ratio": 1.61,
+        "db": -36.9,
+        "voiced_share": 0.65,
+        "f0_hz": 97.9,
+        "f0_range_st": 27.48,
+        "f0_slope_st_s": 53.86,
+        "probability": 0.998
+      },
+      {
+        "i": 246,
+        "dur_s": 0.16,
+        "dur_ratio": 0.73,
+        "db": -41.8,
+        "voiced_share": 0.25,
+        "f0_hz": 82.3,
+        "f0_range_st": 5.09,
+        "f0_slope_st_s": -214.9,
+        "probability": 0.958
+      },
+      {
+        "i": 247,
+        "dur_s": 0.18,
+        "dur_ratio": 0.71,
+        "db": -20.3,
+        "voiced_share": 0.72,
+        "f0_hz": 120.3,
+        "f0_range_st": 2.9,
+        "f0_slope_st_s": -41.96,
+        "probability": 0.835
+      },
+      {
+        "i": 248,
+        "dur_s": 0.16,
+        "dur_ratio": 0.63,
+        "db": -23.0,
+        "voiced_share": 1.0,
+        "f0_hz": 97.9,
+        "f0_range_st": 17.26,
+        "f0_slope_st_s": 81.5,
+        "probability": 0.938
+      },
+      {
+        "i": 249,
+        "dur_s": 0.26,
+        "dur_ratio": 1.03,
+        "db": -21.3,
+        "voiced_share": 0.73,
+        "f0_hz": 85.6,
+        "f0_range_st": 19.54,
+        "f0_slope_st_s": -86.13,
+        "probability": 0.989
+      },
+      {
+        "i": 250,
+        "dur_s": 0.16,
+        "dur_ratio": 0.85,
+        "db": -27.2,
+        "voiced_share": 0.75,
+        "f0_hz": 86.7,
+        "f0_range_st": 4.94,
+        "f0_slope_st_s": 29.7,
+        "probability": 0.989
+      },
+      {
+        "i": 251,
+        "dur_s": 0.16,
+        "dur_ratio": 0.85,
+        "db": -27.9,
+        "voiced_share": 0.62,
+        "f0_hz": 102.9,
+        "f0_range_st": 13.19,
+        "f0_slope_st_s": -14.82,
+        "probability": 0.982
+      },
+      {
+        "i": 252,
+        "dur_s": 0.72,
+        "dur_ratio": 1.25,
+        "db": -27.9,
+        "voiced_share": 0.76,
+        "f0_hz": 85.1,
+        "f0_range_st": 23.79,
+        "f0_slope_st_s": 11.2,
+        "probability": 0.747
+      },
+      {
+        "i": 253,
+        "dur_s": 0.46,
+        "dur_ratio": 2.45,
+        "db": -33.3,
+        "voiced_share": 0.65,
+        "f0_hz": 89.7,
+        "f0_range_st": 24.54,
+        "f0_slope_st_s": -26.44,
+        "probability": 0.99
+      }
+    ],
+    "heard": {
+      "whisper-verbatim:medium.en": [
+        {
+          "text": "Does",
+          "s": 1.39,
+          "e": 1.87,
+          "p": 0.787
+        },
+        {
+          "text": "this",
+          "s": 1.87,
+          "e": 2.15,
+          "p": 0.99
+        },
+        {
+          "text": "track",
+          "s": 2.15,
+          "e": 2.39,
+          "p": 0.976
+        },
+        {
+          "text": "sound",
+          "s": 2.39,
+          "e": 2.73,
+          "p": 0.984
+        },
+        {
+          "text": "familiar?",
+          "s": 2.73,
+          "e": 3.17,
+          "p": 0.998
+        },
+        {
+          "text": "It's",
+          "s": 3.95,
+          "e": 4.09,
+          "p": 0.971
+        },
+        {
+          "text": "all",
+          "s": 4.09,
+          "e": 4.25,
+          "p": 0.998
+        },
+        {
+          "text": "over",
+          "s": 4.25,
+          "e": 4.51,
+          "p": 0.999
+        },
+        {
+          "text": "TikTok,",
+          "s": 4.51,
+          "e": 4.91,
+          "p": 0.774
+        },
+        {
+          "text": "and",
+          "s": 5.17,
+          "e": 5.47,
+          "p": 0.98
+        },
+        {
+          "text": "it's",
+          "s": 5.47,
+          "e": 5.63,
+          "p": 0.996
+        },
+        {
+          "text": "all",
+          "s": 5.63,
+          "e": 5.75,
+          "p": 0.999
+        },
+        {
+          "text": "over",
+          "s": 5.75,
+          "e": 5.93,
+          "p": 0.999
+        },
+        {
+          "text": "the",
+          "s": 5.93,
+          "e": 6.13,
+          "p": 0.998
+        },
+        {
+          "text": "charts.",
+          "s": 6.13,
+          "e": 6.55,
+          "p": 0.989
+        },
+        {
+          "text": "But",
+          "s": 7.39,
+          "e": 7.53,
+          "p": 0.933
+        },
+        {
+          "text": "which",
+          "s": 7.53,
+          "e": 8.03,
+          "p": 0.917
+        },
+        {
+          "text": "came",
+          "s": 8.03,
+          "e": 8.29,
+          "p": 0.992
+        },
+        {
+          "text": "first,",
+          "s": 8.29,
+          "e": 8.71,
+          "p": 0.998
+        },
+        {
+          "text": "TikTok",
+          "s": 8.85,
+          "e": 9.11,
+          "p": 0.989
+        },
+        {
+          "text": "or",
+          "s": 9.11,
+          "e": 9.27,
+          "p": 0.969
+        },
+        {
+          "text": "the",
+          "s": 9.27,
+          "e": 9.43,
+          "p": 0.99
+        },
+        {
+          "text": "charts?",
+          "s": 9.43,
+          "e": 9.73,
+          "p": 0.984
+        },
+        {
+          "text": "And",
+          "s": 10.33,
+          "e": 10.61,
+          "p": 0.917
+        },
+        {
+          "text": "is",
+          "s": 10.61,
+          "e": 11.17,
+          "p": 0.806
+        },
+        {
+          "text": "it",
+          "s": 11.17,
+          "e": 11.33,
+          "p": 0.991
+        },
+        {
+          "text": "AI",
+          "s": 11.33,
+          "e": 11.55,
+          "p": 0.955
+        },
+        {
+          "text": "music,",
+          "s": 11.55,
+          "e": 11.95,
+          "p": 0.992
+        },
+        {
+          "text": "or",
+          "s": 11.95,
+          "e": 12.23,
+          "p": 0.998
+        },
+        {
+          "text": "is",
+          "s": 12.23,
+          "e": 12.33,
+          "p": 0.985
+        },
+        {
+          "text": "it",
+          "s": 12.33,
+          "e": 12.49,
+          "p": 0.998
+        },
+        {
+          "text": "human",
+          "s": 12.49,
+          "e": 12.77,
+          "p": 0.995
+        },
+        {
+          "text": "music?",
+          "s": 12.77,
+          "e": 13.15,
+          "p": 0.999
+        },
+        {
+          "text": "Let's",
+          "s": 13.83,
+          "e": 14.17,
+          "p": 0.995
+        },
+        {
+          "text": "find",
+          "s": 14.17,
+          "e": 14.43,
+          "p": 0.999
+        },
+        {
+          "text": "out.",
+          "s": 14.43,
+          "e": 15.01,
+          "p": 0.999
+        },
+        {
+          "text": "So",
+          "s": 16.94,
+          "e": 17.14,
+          "p": 0.937
+        },
+        {
+          "text": "it",
+          "s": 17.14,
+          "e": 17.24,
+          "p": 0.896
+        },
+        {
+          "text": "all",
+          "s": 17.24,
+          "e": 17.4,
+          "p": 0.979
+        },
+        {
+          "text": "started",
+          "s": 17.4,
+          "e": 17.86,
+          "p": 0.999
+        },
+        {
+          "text": "with",
+          "s": 17.86,
+          "e": 18.24,
+          "p": 0.999
+        },
+        {
+          "text": "a",
+          "s": 18.24,
+          "e": 18.52,
+          "p": 0.993
+        },
+        {
+          "text": "Reiki",
+          "s": 18.52,
+          "e": 18.78,
+          "p": 0.787
+        },
+        {
+          "text": "healer",
+          "s": 18.78,
+          "e": 19.02,
+          "p": 0.938
+        },
+        {
+          "text": "and",
+          "s": 19.02,
+          "e": 19.26,
+          "p": 0.934
+        },
+        {
+          "text": "an",
+          "s": 19.26,
+          "e": 19.5,
+          "p": 0.99
+        },
+        {
+          "text": "AI",
+          "s": 19.5,
+          "e": 19.72,
+          "p": 0.995
+        },
+        {
+          "text": "app.",
+          "s": 19.72,
+          "e": 20.08,
+          "p": 0.995
+        },
+        {
+          "text": "She",
+          "s": 20.42,
+          "e": 20.94,
+          "p": 0.997
+        },
+        {
+          "text": "typed",
+          "s": 20.94,
+          "e": 21.26,
+          "p": 0.999
+        },
+        {
+          "text": "her",
+          "s": 21.26,
+          "e": 21.44,
+          "p": 0.985
+        },
+        {
+          "text": "lyrics,",
+          "s": 21.44,
+          "e": 21.78,
+          "p": 0.999
+        },
+        {
+          "text": "and",
+          "s": 21.82,
+          "e": 22.46,
+          "p": 0.989
+        },
+        {
+          "text": "the",
+          "s": 22.46,
+          "e": 22.54,
+          "p": 0.985
+        },
+        {
+          "text": "kind",
+          "s": 22.54,
+          "e": 22.7,
+          "p": 0.979
+        },
+        {
+          "text": "of",
+          "s": 22.7,
+          "e": 22.82,
+          "p": 0.999
+        },
+        {
+          "text": "vibe",
+          "s": 22.82,
+          "e": 23.0,
+          "p": 0.997
+        },
+        {
+          "text": "that",
+          "s": 23.0,
+          "e": 23.2,
+          "p": 0.92
+        },
+        {
+          "text": "she",
+          "s": 23.2,
+          "e": 23.32,
+          "p": 0.998
+        },
+        {
+          "text": "wanted,",
+          "s": 23.32,
+          "e": 23.56,
+          "p": 0.999
+        },
+        {
+          "text": "she",
+          "s": 23.64,
+          "e": 23.8,
+          "p": 0.993
+        },
+        {
+          "text": "pressed",
+          "s": 23.8,
+          "e": 24.04,
+          "p": 0.995
+        },
+        {
+          "text": "a",
+          "s": 24.04,
+          "e": 24.18,
+          "p": 0.806
+        },
+        {
+          "text": "button,",
+          "s": 24.18,
+          "e": 24.4,
+          "p": 1.0
+        },
+        {
+          "text": "and",
+          "s": 24.84,
+          "e": 25.18,
+          "p": 0.991
+        },
+        {
+          "text": "she",
+          "s": 25.18,
+          "e": 25.26,
+          "p": 0.998
+        },
+        {
+          "text": "got",
+          "s": 25.26,
+          "e": 25.36,
+          "p": 0.997
+        },
+        {
+          "text": "a",
+          "s": 25.36,
+          "e": 25.46,
+          "p": 0.702
+        },
+        {
+          "text": "whole",
+          "s": 25.46,
+          "e": 25.6,
+          "p": 0.999
+        },
+        {
+          "text": "song",
+          "s": 25.6,
+          "e": 25.86,
+          "p": 1.0
+        },
+        {
+          "text": "back.",
+          "s": 25.86,
+          "e": 26.12,
+          "p": 0.999
+        },
+        {
+          "text": "People",
+          "s": 26.62,
+          "e": 26.8,
+          "p": 0.997
+        },
+        {
+          "text": "put",
+          "s": 26.8,
+          "e": 27.06,
+          "p": 0.995
+        },
+        {
+          "text": "it",
+          "s": 27.06,
+          "e": 27.2,
+          "p": 0.998
+        },
+        {
+          "text": "under",
+          "s": 27.2,
+          "e": 27.52,
+          "p": 0.99
+        },
+        {
+          "text": "their",
+          "s": 27.52,
+          "e": 27.96,
+          "p": 0.995
+        },
+        {
+          "text": "own",
+          "s": 27.96,
+          "e": 28.14,
+          "p": 1.0
+        },
+        {
+          "text": "videos",
+          "s": 28.14,
+          "e": 28.6,
+          "p": 0.998
+        },
+        {
+          "text": "in",
+          "s": 28.6,
+          "e": 29.18,
+          "p": 0.864
+        },
+        {
+          "text": "TikTok,",
+          "s": 29.18,
+          "e": 29.52,
+          "p": 0.993
+        },
+        {
+          "text": "like",
+          "s": 29.68,
+          "e": 29.74,
+          "p": 0.992
+        },
+        {
+          "text": "cats,",
+          "s": 29.74,
+          "e": 30.24,
+          "p": 0.908
+        },
+        {
+          "text": "Even",
+          "s": 60.78,
+          "e": 61.22,
+          "p": 0.683
+        },
+        {
+          "text": "the",
+          "s": 61.22,
+          "e": 61.44,
+          "p": 0.995
+        },
+        {
+          "text": "Grammys",
+          "s": 61.44,
+          "e": 61.76,
+          "p": 0.918
+        },
+        {
+          "text": "reportedly",
+          "s": 61.76,
+          "e": 62.3,
+          "p": 0.968
+        },
+        {
+          "text": "ruled",
+          "s": 62.3,
+          "e": 62.58,
+          "p": 0.975
+        },
+        {
+          "text": "it",
+          "s": 62.58,
+          "e": 62.76,
+          "p": 0.989
+        },
+        {
+          "text": "out",
+          "s": 62.76,
+          "e": 62.94,
+          "p": 0.999
+        },
+        {
+          "text": "because",
+          "s": 62.94,
+          "e": 63.26,
+          "p": 0.976
+        },
+        {
+          "text": "of",
+          "s": 63.26,
+          "e": 63.48,
+          "p": 0.994
+        },
+        {
+          "text": "the",
+          "s": 63.48,
+          "e": 63.62,
+          "p": 0.984
+        },
+        {
+          "text": "songwriting,",
+          "s": 63.62,
+          "e": 64.12,
+          "p": 0.94
+        },
+        {
+          "text": "because",
+          "s": 64.38,
+          "e": 64.48,
+          "p": 0.848
+        },
+        {
+          "text": "the",
+          "s": 64.48,
+          "e": 64.66,
+          "p": 0.502
+        },
+        {
+          "text": "AI",
+          "s": 64.66,
+          "e": 64.84,
+          "p": 0.878
+        },
+        {
+          "text": "bit",
+          "s": 64.84,
+          "e": 65.02,
+          "p": 0.951
+        },
+        {
+          "text": "is",
+          "s": 65.02,
+          "e": 65.2,
+          "p": 0.937
+        },
+        {
+          "text": "still",
+          "s": 65.2,
+          "e": 65.38,
+          "p": 0.999
+        },
+        {
+          "text": "in",
+          "s": 65.38,
+          "e": 65.52,
+          "p": 0.998
+        },
+        {
+          "text": "it,",
+          "s": 65.52,
+          "e": 65.96,
+          "p": 0.996
+        },
+        {
+          "text": "but",
+          "s": 66.18,
+          "e": 66.44,
+          "p": 0.989
+        },
+        {
+          "text": "it",
+          "s": 66.44,
+          "e": 66.64,
+          "p": 0.997
+        },
+        {
+          "text": "can",
+          "s": 66.64,
+          "e": 67.04,
+          "p": 0.988
+        },
+        {
+          "text": "still",
+          "s": 67.04,
+          "e": 67.66,
+          "p": 0.997
+        },
+        {
+          "text": "compete",
+          "s": 67.66,
+          "e": 68.16,
+          "p": 0.999
+        },
+        {
+          "text": "for",
+          "s": 68.16,
+          "e": 68.46,
+          "p": 0.992
+        },
+        {
+          "text": "the",
+          "s": 68.46,
+          "e": 68.6,
+          "p": 0.879
+        },
+        {
+          "text": "singing",
+          "s": 68.6,
+          "e": 68.98,
+          "p": 0.844
+        },
+        {
+          "text": "award",
+          "s": 68.98,
+          "e": 69.32,
+          "p": 0.992
+        },
+        {
+          "text": "at",
+          "s": 69.32,
+          "e": 69.54,
+          "p": 0.988
+        },
+        {
+          "text": "the",
+          "s": 69.54,
+          "e": 69.72,
+          "p": 0.995
+        },
+        {
+          "text": "Grammys,",
+          "s": 69.72,
+          "e": 70.14,
+          "p": 0.976
+        },
+        {
+          "text": "just",
+          "s": 70.94,
+          "e": 71.12,
+          "p": 0.922
+        },
+        {
+          "text": "not",
+          "s": 71.12,
+          "e": 71.26,
+          "p": 0.998
+        },
+        {
+          "text": "the",
+          "s": 71.26,
+          "e": 71.42,
+          "p": 0.994
+        },
+        {
+          "text": "songwriting.",
+          "s": 71.42,
+          "e": 71.88,
+          "p": 0.956
+        },
+        {
+          "text": "So",
+          "s": 72.46,
+          "e": 72.56,
+          "p": 0.968
+        },
+        {
+          "text": "I",
+          "s": 72.56,
+          "e": 72.8,
+          "p": 0.835
+        },
+        {
+          "text": "reckon",
+          "s": 72.8,
+          "e": 73.1,
+          "p": 0.998
+        },
+        {
+          "text": "AI",
+          "s": 73.1,
+          "e": 73.9,
+          "p": 0.847
+        },
+        {
+          "text": "versus",
+          "s": 73.9,
+          "e": 74.32,
+          "p": 0.865
+        },
+        {
+          "text": "human",
+          "s": 74.32,
+          "e": 74.72,
+          "p": 0.969
+        },
+        {
+          "text": "is",
+          "s": 74.72,
+          "e": 75.24,
+          "p": 0.987
+        },
+        {
+          "text": "kind",
+          "s": 75.24,
+          "e": 75.68,
+          "p": 0.856
+        },
+        {
+          "text": "of",
+          "s": 75.68,
+          "e": 75.78,
+          "p": 0.999
+        },
+        {
+          "text": "the",
+          "s": 75.78,
+          "e": 75.9,
+          "p": 0.998
+        },
+        {
+          "text": "wrong",
+          "s": 75.9,
+          "e": 76.04,
+          "p": 1.0
+        },
+        {
+          "text": "question.",
+          "s": 76.04,
+          "e": 76.5,
+          "p": 0.999
+        },
+        {
+          "text": "See,",
+          "s": 77.52,
+          "e": 77.62,
+          "p": 0.893
+        },
+        {
+          "text": "next",
+          "s": 77.7,
+          "e": 77.82,
+          "p": 0.984
+        },
+        {
+          "text": "time",
+          "s": 77.82,
+          "e": 77.98,
+          "p": 1.0
+        },
+        {
+          "text": "I",
+          "s": 77.98,
+          "e": 78.12,
+          "p": 0.956
+        },
+        {
+          "text": "love",
+          "s": 78.12,
+          "e": 78.3,
+          "p": 0.767
+        },
+        {
+          "text": "something,",
+          "s": 78.3,
+          "e": 78.7,
+          "p": 0.999
+        },
+        {
+          "text": "I'm",
+          "s": 78.7,
+          "e": 79.1,
+          "p": 0.998
+        },
+        {
+          "text": "just",
+          "s": 79.1,
+          "e": 79.26,
+          "p": 0.998
+        },
+        {
+          "text": "going",
+          "s": 79.26,
+          "e": 79.38,
+          "p": 0.743
+        },
+        {
+          "text": "to",
+          "s": 79.38,
+          "e": 79.5,
+          "p": 0.999
+        },
+        {
+          "text": "ask",
+          "s": 79.5,
+          "e": 79.78,
+          "p": 1.0
+        },
+        {
+          "text": "who",
+          "s": 79.78,
+          "e": 80.08,
+          "p": 0.79
+        },
+        {
+          "text": "did",
+          "s": 80.08,
+          "e": 80.24,
+          "p": 0.999
+        },
+        {
+          "text": "which",
+          "s": 80.24,
+          "e": 80.54,
+          "p": 0.989
+        },
+        {
+          "text": "bit",
+          "s": 80.54,
+          "e": 80.78,
+          "p": 0.405
+        },
+        {
+          "text": "of",
+          "s": 80.78,
+          "e": 80.94,
+          "p": 0.997
+        },
+        {
+          "text": "it,",
+          "s": 80.94,
+          "e": 81.36,
+          "p": 0.999
+        },
+        {
+          "text": "because",
+          "s": 81.66,
+          "e": 81.88,
+          "p": 0.906
+        },
+        {
+          "text": "the",
+          "s": 81.88,
+          "e": 82.1,
+          "p": 0.998
+        },
+        {
+          "text": "song",
+          "s": 82.1,
+          "e": 82.26,
+          "p": 1.0
+        },
+        {
+          "text": "you",
+          "s": 82.26,
+          "e": 82.44,
+          "p": 0.974
+        },
+        {
+          "text": "can't",
+          "s": 82.44,
+          "e": 82.88,
+          "p": 0.998
+        },
+        {
+          "text": "stop",
+          "s": 82.88,
+          "e": 83.08,
+          "p": 0.997
+        },
+        {
+          "text": "dancing",
+          "s": 83.08,
+          "e": 83.48,
+          "p": 0.998
+        },
+        {
+          "text": "to",
+          "s": 83.48,
+          "e": 83.7,
+          "p": 0.996
+        },
+        {
+          "text": "is",
+          "s": 83.7,
+          "e": 83.84,
+          "p": 0.988
+        },
+        {
+          "text": "already",
+          "s": 83.84,
+          "e": 84.2,
+          "p": 0.998
+        },
+        {
+          "text": "both",
+          "s": 84.2,
+          "e": 84.62,
+          "p": 0.992
+        },
+        {
+          "text": "AI",
+          "s": 84.62,
+          "e": 84.96,
+          "p": 0.94
+        },
+        {
+          "text": "and",
+          "s": 84.96,
+          "e": 85.28,
+          "p": 0.998
+        },
+        {
+          "text": "human",
+          "s": 85.28,
+          "e": 85.52,
+          "p": 0.988
+        },
+        {
+          "text": "music.",
+          "s": 85.52,
+          "e": 85.9,
+          "p": 0.999
+        },
+        {
+          "text": "The",
+          "s": 86.76,
+          "e": 86.86,
+          "p": 0.979
+        },
+        {
+          "text": "four",
+          "s": 86.86,
+          "e": 87.02,
+          "p": 0.151
+        },
+        {
+          "text": "deep",
+          "s": 87.02,
+          "e": 87.18,
+          "p": 0.955
+        },
+        {
+          "text": "divers",
+          "s": 87.18,
+          "e": 87.52,
+          "p": 0.72
+        },
+        {
+          "text": "that",
+          "s": 87.52,
+          "e": 87.74,
+          "p": 0.982
+        },
+        {
+          "text": "make",
+          "s": 87.74,
+          "e": 87.92,
+          "p": 0.99
+        },
+        {
+          "text": "your",
+          "s": 87.92,
+          "e": 88.08,
+          "p": 0.989
+        },
+        {
+          "text": "mind",
+          "s": 88.08,
+          "e": 88.26,
+          "p": 0.998
+        },
+        {
+          "text": "up",
+          "s": 88.26,
+          "e": 88.54,
+          "p": 0.998
+        },
+        {
+          "text": "dot",
+          "s": 88.54,
+          "e": 88.78,
+          "p": 0.336
+        },
+        {
+          "text": "AI.",
+          "s": 88.78,
+          "e": 89.04,
+          "p": 0.939
+        }
+      ]
+    }
+  }
 }

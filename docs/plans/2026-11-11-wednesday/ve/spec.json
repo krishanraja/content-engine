@@ -24,7 +24,9 @@
   "audio": {
     "master": "take",
     "bed": {
-      "mode": "none"
+      "ledger_id": "no-curves-instrumental",
+      "mode": "episode_bed",
+      "under_vo_lu": -30
     },
     "sfx_kit": "house-v1"
   },
@@ -42,7 +44,24 @@
         "region": "default",
         "emphasis": []
       },
-      "beats": []
+      "beats": [
+        {
+          "id": "whole",
+          "role": "hook",
+          "span": {
+            "from_w": 0,
+            "to_w": 1010
+          },
+          "viewer_task": "locate_story",
+          "layout": "F1",
+          "point": "placeholder until the beats are written from motion-mocks.md",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [],
+          "events": []
+        }
+      ]
     },
     "short": {
       "aspect": "9:16",
@@ -57,7 +76,24 @@
         "region": "default",
         "emphasis": []
       },
-      "beats": []
+      "beats": [
+        {
+          "id": "whole",
+          "role": "hook",
+          "span": {
+            "from_w": 0,
+            "to_w": 253
+          },
+          "viewer_task": "locate_story",
+          "layout": "F1",
+          "point": "placeholder until the beats are written from motion-mocks.md",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [],
+          "events": []
+        }
+      ]
     }
   },
   "approvals": [],
@@ -66,7 +102,10 @@
     "credits": {}
   },
   "style": {
-    "motion": "living-ui",
+    "motion": {
+      "module": "living-ui",
+      "reason": "the real interfaces (TikTok, Suno, a DAW, the charts) rebuilt so the camera can zoom and they act on his words"
+    },
     "storyboard": "docs/plans/2026-11-11-wednesday/motion-mocks.md"
   }
 }
