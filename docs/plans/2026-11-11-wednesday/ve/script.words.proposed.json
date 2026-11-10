@@ -1,1607 +1,6312 @@
 {
   "schema": "ve-script-words-proposed/1",
   "source": {
-    "take": "short-1110",
-    "media_sha256": "54d1c752d0435a18ea2a2d1d572f7461aea8d9673bcabb56472d995640c63153",
+    "take": "long-1110",
+    "media_sha256": "8e409d053c37f0e191971d1e07f7ae4ea8d87d5431704e5898749d156f1a0d10",
     "aligner": "faster-whisper:small.en",
-    "script": "script-short.txt",
-    "script_sha256": "32ba30e8528b21d3b06f69b4344f40307aebc3c818338c5ab4e18a7ae30801aa"
+    "script": "script-long.txt",
+    "script_sha256": "450c743cdad17244f86aeb44ee24c96439d582ea17b5bd35dba2e8462a92e323"
   },
   "note": "What he said on the take, spelled as the script spells it where he said its words; heard_only marks his own words. A proposal: read it, then make it script.words.json (Krish, 4 Nov 2026: listen to the take).",
-  "text": "Does this track sound familiar? It's all over TikTok and it's all over the charts. But which came first, TikTok or the charts? And is it AI music, or is it human music? Let's find out. So It all started with a Reiki healer and an AI app. She typed her lyrics and the kind of vibe, that she wanted, she pressed a button, and she got a whole song back. People put it under their own videos, in TikTok, like cats, weddings dads dancing badly, so TikTok obviously came first. Strangers went hunting for the song, and a top producer found it. He pulled it apart and rebuilt the track layer by layer, hand by hand, And then the 90s club singer UltraNate, not sure if you're familiar with it or old enough to be, she got her to sing it. And under her voice, he kept a thin layer of the AI singer. So the hit song actually literally has a robot humming along underneath. Even the Grammys reportedly ruled it out because of the songwriting, because of the AI bit still in it. But it can still compete for the singing. award at the Grammys, just not the songwriting. So I reckon AI versus human is kind of the wrong question. See, Next time I love something, I'm just going to ask who did which bit. of it, Because the song you can't stop dancing to is already both. AI and human music. The full deep dive is at makeyourmindup ai.",
+  "text": "Does this track sound familiar? It's all over TikTok and it's all over the charts. But which came first, TikTok or the charts? And is it AI music, or is it human music? That's the important question. Let's find out. about that. So This track is called Movin' To The Sun. I'm sure you've heard it, I'm sure you've heard of it. It got to number two in the UK. And it started with a Reiki healer, nothing to do with music. a Reiki healer typing a few lines into an AI app. So I've been digging into how it was made, and I want to break that down for you. Because this one song kind of explains how all music gets made nowadays, even the songs you think are real. human music. So Let's start with the Reiki healer. She calls herself Imael Angel, and her day job is as a Reiki master. That's a healer who works on your energy, mostly without touching you. She did go to music school. But she has no studio, no band, no idea how to use complex music production software. So she opened an AI music app called Suno. And here's what that actually looks like. There's one box for your lyrics. and In another, you describe the sound, like deep house, female singer, summer. Vibes and then You press a button, and a few moments later you get basically a whole song back. That's the tune, the drums, the bass and the singer, all at once. If you Don't like the second verse? You don't rewrite it, you just press the button again. It's basically a slot machine that pays out in songs. right? But to see why that matters, we need to zoom in on how a song is built. Every song is a stack of layers, like the drums, the bass, the chords and the voice. And this is the bit that most people miss. For about twenty years, loads of those layers haven't actually been real instruments anyway. They're synths, which is an electronic sound, and an electronic sample, which are basically recorded snippets that anyone can reuse. So That real guitar on your favourite song? It might actually come from a pack of samples you can buy. and electronically produced. So we've been producing non-human music for years, just within the confines of human releases. So what does AI actually change? here? It actually changes Two things. Firstly, you can now talk a layer of your track into existence or like I just said the whole thing into existence without learning the software. And secondly, there are way more layers to pick from. If you want to choir, you want to sitar, you Want a robot? just ask. Okay, so she's got her songs, and she puts them online. And this is the bit where it gets interesting. People start using her track under their own videos, like AI Generated cats, and weddings and dads dancing badly. Viewers hear it behind someone else's clip and they go hunting for it. like, whoa, what's that? That's a really good catchy track. Scroll the comments and it's the same question, over and over. again. What is this song? So, which came first? TikTok, and the charts came later. after TikTok. And that tells us something big. as On one of the big streaming apps, over half of the new songs uploaded every day are actually made with AI. And almost no one listens to them. So making a song is not actually the hard part. anymore. The hard part is getting a stranger to go looking for it. distribution. And one stranger who went looking was a dance producer called HUGEL. Now, he didn't just release her AI song. He pulled it apart, kept a few pieces and threw the rest out. Then he rebuilt it by hand, with drums from a sample library, a big synth bass, piano and strings. Which means even the human version has drums no one actually ever played. Then he brought in the singer UltraNate. If you weren't clubbing in the 90s like me, you know that voice. And now she's back near the top of the charts, singing a song that a healer started on her AI app. But here's my favourite detail. Listen closely, because under her voice, in a few places, HUGEL kept a thin layer of the original AI singer. So this hit actually has a robot quietly humming along under a human dance legend. They're singing together. And then the Grammys came along. The Grammys have to decide what this thing even is. They give one prize for writing a song, and they give another for performing it. And They've reportedly ruled it out of the songwriting prize, because bits of the AI version are still in there. Remember the robot's humming. But a human sang it, so it can still compete for performing. And HUGEL is challenging that decision. He wants it to win a Grammy on that count. So, is it AI music or is it human music? Honestly, I think that's the wrong question. now. I think you can see here A healer had the idea, An app made the first version. Strangers on their phones made it famous. A healer had the idea. an app made the first version. Strangers on their phones made it famous, and a producer rebuilt it by hand. Then a legend sang it, with a robot humming underneath. So it's both, at every single layer. of the production. And this goes way beyond music. It's the advert you scrolled past this morning and the report that's lying on your desk. right now. It's even the deck your team sent you last night. So anytime someone hands me something brilliant, I'm not going to ask if AI made it. Is this AI or is this human? I'll ask who did which bit. Because the song you can't stop dancing to is already both. The full deep dive is at makeyourmindup ai.",
   "words": [
     {
       "w": 0,
       "word": "Does",
-      "onset_s": 1.39,
-      "end_s": 1.89
+      "onset_s": 2.19,
+      "end_s": 2.65
     },
     {
       "w": 1,
       "word": "this",
-      "onset_s": 1.89,
-      "end_s": 2.09
+      "onset_s": 2.65,
+      "end_s": 2.79
     },
     {
       "w": 2,
       "word": "track",
-      "onset_s": 2.09,
-      "end_s": 2.35
+      "onset_s": 2.79,
+      "end_s": 3.03
     },
     {
       "w": 3,
       "word": "sound",
-      "onset_s": 2.35,
-      "end_s": 2.71
+      "onset_s": 3.03,
+      "end_s": 3.27
     },
     {
       "w": 4,
       "word": "familiar?",
-      "onset_s": 2.71,
-      "end_s": 3.05
+      "onset_s": 3.27,
+      "end_s": 3.55
     },
     {
       "w": 5,
       "word": "It's",
-      "onset_s": 3.95,
-      "end_s": 4.05
+      "onset_s": 4.57,
+      "end_s": 4.79
     },
     {
       "w": 6,
       "word": "all",
-      "onset_s": 4.05,
-      "end_s": 4.21
+      "onset_s": 4.79,
+      "end_s": 4.91
     },
     {
       "w": 7,
       "word": "over",
-      "onset_s": 4.21,
-      "end_s": 4.49
+      "onset_s": 4.91,
+      "end_s": 5.13
     },
     {
       "w": 8,
       "word": "TikTok",
-      "onset_s": 4.49,
-      "end_s": 4.93
+      "onset_s": 5.13,
+      "end_s": 5.49
     },
     {
       "w": 9,
       "word": "and",
-      "onset_s": 4.93,
-      "end_s": 5.45
+      "onset_s": 5.49,
+      "end_s": 5.73
     },
     {
       "w": 10,
       "word": "it's",
-      "onset_s": 5.45,
-      "end_s": 5.61,
+      "onset_s": 5.73,
+      "end_s": 5.89,
       "heard_only": true
     },
     {
       "w": 11,
       "word": "all",
-      "onset_s": 5.61,
-      "end_s": 5.73
+      "onset_s": 5.89,
+      "end_s": 6.09
     },
     {
       "w": 12,
       "word": "over",
-      "onset_s": 5.73,
-      "end_s": 5.95
+      "onset_s": 6.09,
+      "end_s": 6.31
     },
     {
       "w": 13,
       "word": "the",
-      "onset_s": 5.95,
-      "end_s": 6.09
+      "onset_s": 6.31,
+      "end_s": 6.43
     },
     {
       "w": 14,
       "word": "charts.",
-      "onset_s": 6.09,
-      "end_s": 6.39
+      "onset_s": 6.43,
+      "end_s": 6.71
     },
     {
       "w": 15,
       "word": "But",
-      "onset_s": 6.77,
-      "end_s": 7.51
+      "onset_s": 6.99,
+      "end_s": 7.11
     },
     {
       "w": 16,
       "word": "which",
-      "onset_s": 7.51,
-      "end_s": 7.95
+      "onset_s": 7.11,
+      "end_s": 7.83
     },
     {
       "w": 17,
       "word": "came",
-      "onset_s": 7.95,
-      "end_s": 8.27
+      "onset_s": 7.83,
+      "end_s": 8.31
     },
     {
       "w": 18,
       "word": "first,",
-      "onset_s": 8.27,
-      "end_s": 8.63
+      "onset_s": 8.31,
+      "end_s": 8.75
     },
     {
       "w": 19,
       "word": "TikTok",
-      "onset_s": 8.89,
-      "end_s": 9.09
+      "onset_s": 9.09,
+      "end_s": 9.35
     },
     {
       "w": 20,
       "word": "or",
-      "onset_s": 9.09,
-      "end_s": 9.27
+      "onset_s": 9.35,
+      "end_s": 9.85
     },
     {
       "w": 21,
       "word": "the",
-      "onset_s": 9.27,
-      "end_s": 9.35
+      "onset_s": 9.85,
+      "end_s": 9.99
     },
     {
       "w": 22,
       "word": "charts?",
-      "onset_s": 9.35,
-      "end_s": 9.63
+      "onset_s": 9.99,
+      "end_s": 10.29
     },
     {
       "w": 23,
       "word": "And",
-      "onset_s": 10.33,
-      "end_s": 10.59
+      "onset_s": 11.07,
+      "end_s": 11.35
     },
     {
       "w": 24,
       "word": "is",
-      "onset_s": 10.59,
-      "end_s": 11.15
+      "onset_s": 11.35,
+      "end_s": 11.49
     },
     {
       "w": 25,
       "word": "it",
-      "onset_s": 11.15,
-      "end_s": 11.27
+      "onset_s": 11.49,
+      "end_s": 11.65
     },
     {
       "w": 26,
       "word": "AI",
-      "onset_s": 11.27,
-      "end_s": 11.55
+      "onset_s": 11.65,
+      "end_s": 11.83
     },
     {
       "w": 27,
       "word": "music,",
-      "onset_s": 11.55,
-      "end_s": 11.79
+      "onset_s": 11.83,
+      "end_s": 12.13
     },
     {
       "w": 28,
       "word": "or",
-      "onset_s": 11.79,
-      "end_s": 12.21
+      "onset_s": 12.13,
+      "end_s": 12.59
     },
     {
       "w": 29,
       "word": "is",
-      "onset_s": 12.21,
-      "end_s": 12.31,
+      "onset_s": 12.59,
+      "end_s": 12.79,
       "heard_only": true
     },
     {
       "w": 30,
       "word": "it",
-      "onset_s": 12.31,
-      "end_s": 12.45,
+      "onset_s": 12.79,
+      "end_s": 12.93,
       "heard_only": true
     },
     {
       "w": 31,
       "word": "human",
-      "onset_s": 12.45,
-      "end_s": 12.67
+      "onset_s": 12.93,
+      "end_s": 13.21
     },
     {
       "w": 32,
       "word": "music?",
-      "onset_s": 12.67,
-      "end_s": 13.13
+      "onset_s": 13.21,
+      "end_s": 13.59
     },
     {
       "w": 33,
-      "word": "Let's",
-      "onset_s": 13.99,
-      "end_s": 14.21
+      "word": "That's",
+      "onset_s": 13.75,
+      "end_s": 13.95,
+      "heard_only": true
     },
     {
       "w": 34,
-      "word": "find",
-      "onset_s": 14.21,
-      "end_s": 14.39
+      "word": "the",
+      "onset_s": 13.95,
+      "end_s": 14.05,
+      "heard_only": true
     },
     {
       "w": 35,
-      "word": "out.",
-      "onset_s": 14.39,
-      "end_s": 14.79
+      "word": "important",
+      "onset_s": 14.05,
+      "end_s": 14.29,
+      "heard_only": true
     },
     {
       "w": 36,
-      "word": "So",
-      "onset_s": 16.94,
-      "end_s": 17.12,
+      "word": "question.",
+      "onset_s": 14.29,
+      "end_s": 14.71,
       "heard_only": true
     },
     {
       "w": 37,
-      "word": "It",
-      "onset_s": 17.12,
-      "end_s": 17.22
+      "word": "Let's",
+      "onset_s": 14.91,
+      "end_s": 15.17
     },
     {
       "w": 38,
-      "word": "all",
-      "onset_s": 17.22,
-      "end_s": 17.38,
-      "heard_only": true
+      "word": "find",
+      "onset_s": 15.17,
+      "end_s": 15.39
     },
     {
       "w": 39,
-      "word": "started",
-      "onset_s": 17.38,
-      "end_s": 17.8
+      "word": "out.",
+      "onset_s": 15.39,
+      "end_s": 15.57
     },
     {
       "w": 40,
-      "word": "with",
-      "onset_s": 17.8,
-      "end_s": 18.2
+      "word": "about",
+      "onset_s": 15.57,
+      "end_s": 15.73,
+      "heard_only": true
     },
     {
       "w": 41,
-      "word": "a",
-      "onset_s": 18.2,
-      "end_s": 18.42
+      "word": "that.",
+      "onset_s": 15.73,
+      "end_s": 16.05,
+      "heard_only": true
     },
     {
       "w": 42,
-      "word": "Reiki",
-      "onset_s": 18.42,
-      "end_s": 18.76
+      "word": "So",
+      "onset_s": 18.38,
+      "end_s": 18.62,
+      "heard_only": true
     },
     {
       "w": 43,
-      "word": "healer",
-      "onset_s": 18.76,
-      "end_s": 18.98
+      "word": "This",
+      "onset_s": 18.62,
+      "end_s": 18.78
     },
     {
       "w": 44,
-      "word": "and",
-      "onset_s": 18.98,
-      "end_s": 19.24
+      "word": "track",
+      "onset_s": 18.78,
+      "end_s": 19.04,
+      "heard_only": true
     },
     {
       "w": 45,
-      "word": "an",
-      "onset_s": 19.24,
-      "end_s": 19.36
+      "word": "is",
+      "onset_s": 19.04,
+      "end_s": 19.22
     },
     {
       "w": 46,
-      "word": "AI",
-      "onset_s": 19.36,
-      "end_s": 19.7
+      "word": "called",
+      "onset_s": 19.22,
+      "end_s": 19.48
     },
     {
       "w": 47,
-      "word": "app.",
-      "onset_s": 19.7,
-      "end_s": 20.06
+      "word": "Movin'",
+      "onset_s": 19.48,
+      "end_s": 19.82
     },
     {
       "w": 48,
-      "word": "She",
-      "onset_s": 20.74,
-      "end_s": 20.92
+      "word": "To",
+      "onset_s": 19.84,
+      "end_s": 19.96
     },
     {
       "w": 49,
-      "word": "typed",
-      "onset_s": 20.92,
-      "end_s": 21.22
+      "word": "The",
+      "onset_s": 19.96,
+      "end_s": 20.14
     },
     {
       "w": 50,
-      "word": "her",
-      "onset_s": 21.22,
-      "end_s": 21.42
+      "word": "Sun.",
+      "onset_s": 20.14,
+      "end_s": 20.32
     },
     {
       "w": 51,
-      "word": "lyrics",
-      "onset_s": 21.42,
-      "end_s": 21.72
+      "word": "I'm",
+      "onset_s": 20.54,
+      "end_s": 20.7,
+      "heard_only": true
     },
     {
       "w": 52,
-      "word": "and",
-      "onset_s": 21.72,
-      "end_s": 22.46
+      "word": "sure",
+      "onset_s": 20.7,
+      "end_s": 20.88,
+      "heard_only": true
     },
     {
       "w": 53,
-      "word": "the",
-      "onset_s": 22.46,
-      "end_s": 22.54,
+      "word": "you've",
+      "onset_s": 20.88,
+      "end_s": 21.1,
       "heard_only": true
     },
     {
       "w": 54,
-      "word": "kind",
-      "onset_s": 22.54,
-      "end_s": 22.66,
+      "word": "heard",
+      "onset_s": 21.1,
+      "end_s": 21.24,
       "heard_only": true
     },
     {
       "w": 55,
-      "word": "of",
-      "onset_s": 22.66,
-      "end_s": 22.78,
+      "word": "it,",
+      "onset_s": 21.24,
+      "end_s": 21.38,
       "heard_only": true
     },
     {
       "w": 56,
-      "word": "vibe,",
-      "onset_s": 22.78,
-      "end_s": 22.96
+      "word": "I'm",
+      "onset_s": 21.4,
+      "end_s": 21.52,
+      "heard_only": true
     },
     {
       "w": 57,
-      "word": "that",
-      "onset_s": 22.96,
-      "end_s": 23.16,
+      "word": "sure",
+      "onset_s": 21.52,
+      "end_s": 21.62,
       "heard_only": true
     },
     {
       "w": 58,
-      "word": "she",
-      "onset_s": 23.16,
-      "end_s": 23.3,
+      "word": "you've",
+      "onset_s": 21.62,
+      "end_s": 21.84,
       "heard_only": true
     },
     {
       "w": 59,
-      "word": "wanted,",
-      "onset_s": 23.3,
-      "end_s": 23.5,
+      "word": "heard",
+      "onset_s": 21.84,
+      "end_s": 21.94,
       "heard_only": true
     },
     {
       "w": 60,
-      "word": "she",
-      "onset_s": 23.62,
-      "end_s": 23.78,
+      "word": "of",
+      "onset_s": 21.94,
+      "end_s": 22.1,
       "heard_only": true
     },
     {
       "w": 61,
-      "word": "pressed",
-      "onset_s": 23.78,
-      "end_s": 24.02
-    },
-    {
-      "w": 62,
-      "word": "a",
-      "onset_s": 24.02,
-      "end_s": 24.14
-    },
-    {
-      "w": 63,
-      "word": "button,",
-      "onset_s": 24.14,
-      "end_s": 24.36
-    },
-    {
-      "w": 64,
-      "word": "and",
-      "onset_s": 24.36,
-      "end_s": 25.14
-    },
-    {
-      "w": 65,
-      "word": "she",
-      "onset_s": 25.14,
-      "end_s": 25.24,
+      "word": "it.",
+      "onset_s": 22.1,
+      "end_s": 22.32,
       "heard_only": true
     },
     {
-      "w": 66,
+      "w": 62,
+      "word": "It",
+      "onset_s": 22.56,
+      "end_s": 22.74
+    },
+    {
+      "w": 63,
       "word": "got",
-      "onset_s": 25.24,
-      "end_s": 25.34
+      "onset_s": 22.74,
+      "end_s": 22.88
+    },
+    {
+      "w": 64,
+      "word": "to",
+      "onset_s": 22.88,
+      "end_s": 23.08
+    },
+    {
+      "w": 65,
+      "word": "number",
+      "onset_s": 23.08,
+      "end_s": 23.2
+    },
+    {
+      "w": 66,
+      "word": "two",
+      "onset_s": 23.2,
+      "end_s": 23.52
     },
     {
       "w": 67,
-      "word": "a",
-      "onset_s": 25.34,
-      "end_s": 25.46
+      "word": "in",
+      "onset_s": 23.52,
+      "end_s": 23.7
     },
     {
       "w": 68,
-      "word": "whole",
-      "onset_s": 25.46,
-      "end_s": 25.58
+      "word": "the",
+      "onset_s": 23.7,
+      "end_s": 23.82
     },
     {
       "w": 69,
-      "word": "song",
-      "onset_s": 25.58,
-      "end_s": 25.8
+      "word": "UK.",
+      "onset_s": 23.82,
+      "end_s": 24.1
     },
     {
       "w": 70,
-      "word": "back.",
-      "onset_s": 25.8,
-      "end_s": 26.08
+      "word": "And",
+      "onset_s": 24.1,
+      "end_s": 24.4
     },
     {
       "w": 71,
-      "word": "People",
-      "onset_s": 26.6,
-      "end_s": 26.78
+      "word": "it",
+      "onset_s": 24.4,
+      "end_s": 24.52
     },
     {
       "w": 72,
-      "word": "put",
-      "onset_s": 26.78,
-      "end_s": 27.04
+      "word": "started",
+      "onset_s": 24.52,
+      "end_s": 24.84
     },
     {
       "w": 73,
-      "word": "it",
-      "onset_s": 27.04,
-      "end_s": 27.16
+      "word": "with",
+      "onset_s": 24.84,
+      "end_s": 25.12
     },
     {
       "w": 74,
-      "word": "under",
-      "onset_s": 27.16,
-      "end_s": 27.48
+      "word": "a",
+      "onset_s": 25.12,
+      "end_s": 25.28,
+      "heard_only": true
     },
     {
       "w": 75,
-      "word": "their",
-      "onset_s": 27.48,
-      "end_s": 27.94
+      "word": "Reiki",
+      "onset_s": 25.28,
+      "end_s": 25.76,
+      "heard_only": true
     },
     {
       "w": 76,
-      "word": "own",
-      "onset_s": 27.94,
-      "end_s": 28.12
+      "word": "healer,",
+      "onset_s": 25.76,
+      "end_s": 26.04,
+      "heard_only": true
     },
     {
       "w": 77,
-      "word": "videos,",
-      "onset_s": 28.12,
-      "end_s": 28.58
+      "word": "nothing",
+      "onset_s": 26.16,
+      "end_s": 26.32,
+      "heard_only": true
     },
     {
       "w": 78,
-      "word": "in",
-      "onset_s": 28.58,
-      "end_s": 29.16,
+      "word": "to",
+      "onset_s": 26.32,
+      "end_s": 26.48,
       "heard_only": true
     },
     {
       "w": 79,
-      "word": "TikTok,",
-      "onset_s": 29.16,
-      "end_s": 29.5,
+      "word": "do",
+      "onset_s": 26.48,
+      "end_s": 26.6,
       "heard_only": true
     },
     {
       "w": 80,
-      "word": "like",
-      "onset_s": 29.74,
-      "end_s": 29.74
+      "word": "with",
+      "onset_s": 26.6,
+      "end_s": 26.7,
+      "heard_only": true
     },
     {
       "w": 81,
-      "word": "cats,",
-      "onset_s": 29.74,
-      "end_s": 30.2
+      "word": "music.",
+      "onset_s": 26.7,
+      "end_s": 27.0,
+      "heard_only": true
     },
     {
       "w": 82,
-      "word": "weddings",
-      "onset_s": 30.84,
-      "end_s": 31.08
+      "word": "a",
+      "onset_s": 27.52,
+      "end_s": 27.74
     },
     {
       "w": 83,
-      "word": "dads",
-      "onset_s": 31.7,
-      "end_s": 31.82
+      "word": "Reiki",
+      "onset_s": 27.74,
+      "end_s": 27.98
     },
     {
       "w": 84,
-      "word": "dancing",
-      "onset_s": 31.82,
-      "end_s": 32.26
+      "word": "healer",
+      "onset_s": 27.98,
+      "end_s": 28.26
     },
     {
       "w": 85,
-      "word": "badly,",
-      "onset_s": 32.26,
-      "end_s": 32.56
+      "word": "typing",
+      "onset_s": 28.26,
+      "end_s": 28.58
     },
     {
       "w": 86,
-      "word": "so",
-      "onset_s": 32.78,
-      "end_s": 32.86
+      "word": "a",
+      "onset_s": 28.58,
+      "end_s": 28.8
     },
     {
       "w": 87,
-      "word": "TikTok",
-      "onset_s": 32.86,
-      "end_s": 33.32
+      "word": "few",
+      "onset_s": 28.8,
+      "end_s": 28.9
     },
     {
       "w": 88,
-      "word": "obviously",
-      "onset_s": 33.32,
-      "end_s": 33.54,
-      "heard_only": true
+      "word": "lines",
+      "onset_s": 28.9,
+      "end_s": 29.16
     },
     {
       "w": 89,
-      "word": "came",
-      "onset_s": 33.54,
-      "end_s": 33.86
+      "word": "into",
+      "onset_s": 29.16,
+      "end_s": 29.52
     },
     {
       "w": 90,
-      "word": "first.",
-      "onset_s": 33.86,
-      "end_s": 34.3
+      "word": "an",
+      "onset_s": 29.52,
+      "end_s": 29.66
     },
     {
       "w": 91,
-      "word": "Strangers",
-      "onset_s": 35.06,
-      "end_s": 35.22
+      "word": "AI",
+      "onset_s": 29.66,
+      "end_s": 29.86
     },
     {
       "w": 92,
-      "word": "went",
-      "onset_s": 35.22,
-      "end_s": 35.4
+      "word": "app.",
+      "onset_s": 29.86,
+      "end_s": 30.18
     },
     {
       "w": 93,
-      "word": "hunting",
-      "onset_s": 35.4,
-      "end_s": 35.66
+      "word": "So",
+      "onset_s": 30.18,
+      "end_s": 30.82
     },
     {
       "w": 94,
-      "word": "for",
-      "onset_s": 35.66,
-      "end_s": 35.92
+      "word": "I've",
+      "onset_s": 30.82,
+      "end_s": 31.02
     },
     {
       "w": 95,
-      "word": "the",
-      "onset_s": 35.92,
-      "end_s": 36.04
+      "word": "been",
+      "onset_s": 31.02,
+      "end_s": 31.14
     },
     {
       "w": 96,
-      "word": "song,",
-      "onset_s": 36.04,
-      "end_s": 36.24
+      "word": "digging",
+      "onset_s": 31.14,
+      "end_s": 31.36
     },
     {
       "w": 97,
-      "word": "and",
-      "onset_s": 36.24,
-      "end_s": 36.42
+      "word": "into",
+      "onset_s": 31.36,
+      "end_s": 31.74
     },
     {
       "w": 98,
-      "word": "a",
-      "onset_s": 36.42,
-      "end_s": 36.52
+      "word": "how",
+      "onset_s": 31.74,
+      "end_s": 31.88
     },
     {
       "w": 99,
-      "word": "top",
-      "onset_s": 36.52,
-      "end_s": 36.72
+      "word": "it",
+      "onset_s": 31.88,
+      "end_s": 31.98
     },
     {
       "w": 100,
-      "word": "producer",
-      "onset_s": 36.72,
-      "end_s": 37.1
+      "word": "was",
+      "onset_s": 31.98,
+      "end_s": 32.1
     },
     {
       "w": 101,
-      "word": "found",
-      "onset_s": 37.1,
-      "end_s": 37.5
+      "word": "made,",
+      "onset_s": 32.1,
+      "end_s": 32.32
     },
     {
       "w": 102,
-      "word": "it.",
-      "onset_s": 37.5,
-      "end_s": 37.8
+      "word": "and",
+      "onset_s": 32.32,
+      "end_s": 32.46
     },
     {
       "w": 103,
-      "word": "He",
-      "onset_s": 38.12,
-      "end_s": 38.34
+      "word": "I",
+      "onset_s": 32.46,
+      "end_s": 32.6
     },
     {
       "w": 104,
-      "word": "pulled",
-      "onset_s": 38.34,
-      "end_s": 38.5
+      "word": "want",
+      "onset_s": 32.6,
+      "end_s": 32.96
     },
     {
       "w": 105,
-      "word": "it",
-      "onset_s": 38.5,
-      "end_s": 38.62
+      "word": "to",
+      "onset_s": 32.96,
+      "end_s": 33.06
     },
     {
       "w": 106,
-      "word": "apart",
-      "onset_s": 38.62,
-      "end_s": 38.92
+      "word": "break",
+      "onset_s": 33.06,
+      "end_s": 33.24
     },
     {
       "w": 107,
-      "word": "and",
-      "onset_s": 38.92,
-      "end_s": 39.42
+      "word": "that",
+      "onset_s": 33.24,
+      "end_s": 33.5,
+      "heard_only": true
     },
     {
       "w": 108,
-      "word": "rebuilt",
-      "onset_s": 39.42,
-      "end_s": 39.84
+      "word": "down",
+      "onset_s": 33.5,
+      "end_s": 33.7
     },
     {
       "w": 109,
-      "word": "the",
-      "onset_s": 39.84,
-      "end_s": 40.04,
-      "heard_only": true
+      "word": "for",
+      "onset_s": 33.7,
+      "end_s": 33.92
     },
     {
       "w": 110,
-      "word": "track",
-      "onset_s": 40.04,
-      "end_s": 40.32,
-      "heard_only": true
+      "word": "you.",
+      "onset_s": 33.92,
+      "end_s": 34.08
     },
     {
       "w": 111,
-      "word": "layer",
-      "onset_s": 40.32,
-      "end_s": 40.56,
-      "heard_only": true
+      "word": "Because",
+      "onset_s": 34.08,
+      "end_s": 34.38
     },
     {
       "w": 112,
-      "word": "by",
-      "onset_s": 40.56,
-      "end_s": 40.76,
-      "heard_only": true
+      "word": "this",
+      "onset_s": 34.38,
+      "end_s": 34.8
     },
     {
       "w": 113,
-      "word": "layer,",
-      "onset_s": 40.76,
-      "end_s": 41.08,
-      "heard_only": true
+      "word": "one",
+      "onset_s": 34.8,
+      "end_s": 35.14
     },
     {
       "w": 114,
-      "word": "hand",
-      "onset_s": 41.3,
-      "end_s": 41.4,
-      "heard_only": true
+      "word": "song",
+      "onset_s": 35.14,
+      "end_s": 35.46
     },
     {
       "w": 115,
-      "word": "by",
-      "onset_s": 41.4,
-      "end_s": 41.56
+      "word": "kind",
+      "onset_s": 35.46,
+      "end_s": 36.2,
+      "heard_only": true
     },
     {
       "w": 116,
-      "word": "hand,",
-      "onset_s": 41.56,
-      "end_s": 41.82
+      "word": "of",
+      "onset_s": 36.2,
+      "end_s": 36.34,
+      "heard_only": true
     },
     {
       "w": 117,
-      "word": "And",
-      "onset_s": 42.14,
-      "end_s": 42.22,
-      "heard_only": true
+      "word": "explains",
+      "onset_s": 36.34,
+      "end_s": 36.8
     },
     {
       "w": 118,
-      "word": "then",
-      "onset_s": 42.22,
-      "end_s": 42.34
+      "word": "how",
+      "onset_s": 36.8,
+      "end_s": 37.26
     },
     {
       "w": 119,
-      "word": "the",
-      "onset_s": 42.34,
-      "end_s": 42.48
+      "word": "all",
+      "onset_s": 37.26,
+      "end_s": 37.66
     },
     {
       "w": 120,
-      "word": "90s",
-      "onset_s": 42.48,
-      "end_s": 43.08,
-      "heard_only": true
+      "word": "music",
+      "onset_s": 37.66,
+      "end_s": 38.06
     },
     {
       "w": 121,
-      "word": "club",
-      "onset_s": 43.08,
-      "end_s": 43.18
+      "word": "gets",
+      "onset_s": 38.06,
+      "end_s": 38.44
     },
     {
       "w": 122,
-      "word": "singer",
-      "onset_s": 43.18,
-      "end_s": 43.6
+      "word": "made",
+      "onset_s": 38.44,
+      "end_s": 38.74
     },
     {
       "w": 123,
-      "word": "UltraNate,",
-      "onset_s": 43.6,
-      "end_s": 44.54,
+      "word": "nowadays,",
+      "onset_s": 38.74,
+      "end_s": 39.12,
       "heard_only": true
     },
     {
       "w": 124,
-      "word": "not",
-      "onset_s": 44.66,
-      "end_s": 44.82,
-      "heard_only": true
+      "word": "even",
+      "onset_s": 39.24,
+      "end_s": 39.46
     },
     {
       "w": 125,
-      "word": "sure",
-      "onset_s": 44.82,
-      "end_s": 45.24,
-      "heard_only": true
+      "word": "the",
+      "onset_s": 39.46,
+      "end_s": 39.68
     },
     {
       "w": 126,
-      "word": "if",
-      "onset_s": 45.24,
-      "end_s": 45.38,
-      "heard_only": true
+      "word": "songs",
+      "onset_s": 39.68,
+      "end_s": 39.88
     },
     {
       "w": 127,
-      "word": "you're",
-      "onset_s": 45.38,
-      "end_s": 45.56,
-      "heard_only": true
+      "word": "you",
+      "onset_s": 39.88,
+      "end_s": 40.06
     },
     {
       "w": 128,
-      "word": "familiar",
-      "onset_s": 45.56,
-      "end_s": 45.74,
-      "heard_only": true
+      "word": "think",
+      "onset_s": 40.06,
+      "end_s": 40.28
     },
     {
       "w": 129,
-      "word": "with",
-      "onset_s": 45.74,
-      "end_s": 46.0,
-      "heard_only": true
+      "word": "are",
+      "onset_s": 40.28,
+      "end_s": 40.56
     },
     {
       "w": 130,
-      "word": "it",
-      "onset_s": 46.0,
-      "end_s": 46.16,
-      "heard_only": true
+      "word": "real.",
+      "onset_s": 40.56,
+      "end_s": 41.32
     },
     {
       "w": 131,
-      "word": "or",
-      "onset_s": 46.16,
-      "end_s": 46.34,
+      "word": "human",
+      "onset_s": 41.32,
+      "end_s": 41.82,
       "heard_only": true
     },
     {
       "w": 132,
-      "word": "old",
-      "onset_s": 46.34,
-      "end_s": 46.52,
+      "word": "music.",
+      "onset_s": 41.82,
+      "end_s": 42.24,
       "heard_only": true
     },
     {
       "w": 133,
-      "word": "enough",
-      "onset_s": 46.52,
-      "end_s": 46.68,
+      "word": "So",
+      "onset_s": 43.12,
+      "end_s": 43.36,
       "heard_only": true
     },
     {
       "w": 134,
-      "word": "to",
-      "onset_s": 46.68,
-      "end_s": 46.82,
-      "heard_only": true
+      "word": "Let's",
+      "onset_s": 43.36,
+      "end_s": 43.54
     },
     {
       "w": 135,
-      "word": "be,",
-      "onset_s": 46.82,
-      "end_s": 46.98,
-      "heard_only": true
+      "word": "start",
+      "onset_s": 43.54,
+      "end_s": 43.78
     },
     {
       "w": 136,
-      "word": "she",
-      "onset_s": 47.66,
-      "end_s": 47.9,
-      "heard_only": true
+      "word": "with",
+      "onset_s": 43.78,
+      "end_s": 44.02
     },
     {
       "w": 137,
-      "word": "got",
-      "onset_s": 47.9,
-      "end_s": 48.04,
+      "word": "the",
+      "onset_s": 44.02,
+      "end_s": 44.22,
       "heard_only": true
     },
     {
       "w": 138,
-      "word": "her",
-      "onset_s": 48.04,
-      "end_s": 48.24,
+      "word": "Reiki",
+      "onset_s": 44.22,
+      "end_s": 44.42,
       "heard_only": true
     },
     {
       "w": 139,
-      "word": "to",
-      "onset_s": 48.24,
-      "end_s": 48.42
+      "word": "healer.",
+      "onset_s": 44.42,
+      "end_s": 44.58,
+      "heard_only": true
     },
     {
       "w": 140,
-      "word": "sing",
-      "onset_s": 48.42,
-      "end_s": 48.58
+      "word": "She",
+      "onset_s": 44.86,
+      "end_s": 44.9
     },
     {
       "w": 141,
-      "word": "it.",
-      "onset_s": 48.58,
-      "end_s": 48.88
+      "word": "calls",
+      "onset_s": 44.9,
+      "end_s": 45.14
     },
     {
       "w": 142,
-      "word": "And",
-      "onset_s": 49.0,
-      "end_s": 49.12
+      "word": "herself",
+      "onset_s": 45.14,
+      "end_s": 45.54
     },
     {
       "w": 143,
-      "word": "under",
-      "onset_s": 49.12,
-      "end_s": 49.44
+      "word": "Imael",
+      "onset_s": 45.54,
+      "end_s": 45.94
     },
     {
       "w": 144,
-      "word": "her",
-      "onset_s": 49.44,
-      "end_s": 49.78
+      "word": "Angel,",
+      "onset_s": 45.94,
+      "end_s": 46.26
     },
     {
       "w": 145,
-      "word": "voice,",
-      "onset_s": 49.78,
-      "end_s": 50.18
+      "word": "and",
+      "onset_s": 46.26,
+      "end_s": 46.56
     },
     {
       "w": 146,
-      "word": "he",
-      "onset_s": 50.18,
-      "end_s": 50.5
+      "word": "her",
+      "onset_s": 46.56,
+      "end_s": 46.82,
+      "heard_only": true
     },
     {
       "w": 147,
-      "word": "kept",
-      "onset_s": 50.5,
-      "end_s": 50.84
+      "word": "day",
+      "onset_s": 46.82,
+      "end_s": 47.46
     },
     {
       "w": 148,
-      "word": "a",
-      "onset_s": 50.84,
-      "end_s": 52.14
+      "word": "job",
+      "onset_s": 47.46,
+      "end_s": 47.72,
+      "heard_only": true
     },
     {
       "w": 149,
-      "word": "thin",
-      "onset_s": 52.14,
-      "end_s": 52.46
+      "word": "is",
+      "onset_s": 47.72,
+      "end_s": 48.04,
+      "heard_only": true
     },
     {
       "w": 150,
-      "word": "layer",
-      "onset_s": 52.46,
-      "end_s": 52.74
+      "word": "as",
+      "onset_s": 48.04,
+      "end_s": 48.42,
+      "heard_only": true
     },
     {
       "w": 151,
-      "word": "of",
-      "onset_s": 52.74,
-      "end_s": 53.12
+      "word": "a",
+      "onset_s": 48.42,
+      "end_s": 48.64
     },
     {
       "w": 152,
-      "word": "the",
-      "onset_s": 53.12,
-      "end_s": 53.44
+      "word": "Reiki",
+      "onset_s": 48.64,
+      "end_s": 48.94
     },
     {
       "w": 153,
-      "word": "AI",
-      "onset_s": 53.44,
-      "end_s": 53.66
+      "word": "master.",
+      "onset_s": 48.94,
+      "end_s": 49.26
     },
     {
       "w": 154,
-      "word": "singer.",
-      "onset_s": 53.66,
-      "end_s": 53.92
+      "word": "That's",
+      "onset_s": 49.98,
+      "end_s": 50.28
     },
     {
       "w": 155,
-      "word": "So",
-      "onset_s": 54.24,
-      "end_s": 54.44
+      "word": "a",
+      "onset_s": 50.28,
+      "end_s": 50.34
     },
     {
       "w": 156,
-      "word": "the",
-      "onset_s": 54.44,
-      "end_s": 55.46
+      "word": "healer",
+      "onset_s": 50.34,
+      "end_s": 50.58
     },
     {
       "w": 157,
-      "word": "hit",
-      "onset_s": 55.46,
-      "end_s": 55.74
+      "word": "who",
+      "onset_s": 50.58,
+      "end_s": 50.8
     },
     {
       "w": 158,
-      "word": "song",
-      "onset_s": 55.74,
-      "end_s": 56.16,
-      "heard_only": true
+      "word": "works",
+      "onset_s": 50.8,
+      "end_s": 51.04
     },
     {
       "w": 159,
-      "word": "actually",
-      "onset_s": 56.16,
-      "end_s": 56.6,
-      "heard_only": true
+      "word": "on",
+      "onset_s": 51.04,
+      "end_s": 51.26
     },
     {
       "w": 160,
-      "word": "literally",
-      "onset_s": 56.6,
-      "end_s": 56.88,
-      "heard_only": true
+      "word": "your",
+      "onset_s": 51.26,
+      "end_s": 51.36
     },
     {
       "w": 161,
-      "word": "has",
-      "onset_s": 56.88,
-      "end_s": 57.16
+      "word": "energy,",
+      "onset_s": 51.36,
+      "end_s": 51.74
     },
     {
       "w": 162,
-      "word": "a",
-      "onset_s": 57.16,
-      "end_s": 57.3
+      "word": "mostly",
+      "onset_s": 52.4,
+      "end_s": 52.7
     },
     {
       "w": 163,
-      "word": "robot",
-      "onset_s": 57.3,
-      "end_s": 57.58
+      "word": "without",
+      "onset_s": 52.7,
+      "end_s": 52.96
     },
     {
       "w": 164,
-      "word": "humming",
-      "onset_s": 57.58,
-      "end_s": 57.96
+      "word": "touching",
+      "onset_s": 52.96,
+      "end_s": 53.28
     },
     {
       "w": 165,
-      "word": "along",
-      "onset_s": 57.96,
-      "end_s": 58.76
+      "word": "you.",
+      "onset_s": 53.28,
+      "end_s": 53.48
     },
     {
       "w": 166,
-      "word": "underneath.",
-      "onset_s": 58.76,
-      "end_s": 59.18
+      "word": "She",
+      "onset_s": 53.48,
+      "end_s": 53.82
     },
     {
       "w": 167,
-      "word": "Even",
-      "onset_s": 61.2,
-      "end_s": 61.22
+      "word": "did",
+      "onset_s": 53.82,
+      "end_s": 54.52
     },
     {
       "w": 168,
-      "word": "the",
-      "onset_s": 61.22,
-      "end_s": 61.38
+      "word": "go",
+      "onset_s": 54.52,
+      "end_s": 54.74
     },
     {
       "w": 169,
-      "word": "Grammys",
-      "onset_s": 61.38,
-      "end_s": 61.7
+      "word": "to",
+      "onset_s": 54.74,
+      "end_s": 54.88
     },
     {
       "w": 170,
-      "word": "reportedly",
-      "onset_s": 61.7,
-      "end_s": 62.2
+      "word": "music",
+      "onset_s": 54.88,
+      "end_s": 55.06
     },
     {
       "w": 171,
-      "word": "ruled",
-      "onset_s": 62.2,
-      "end_s": 62.6
+      "word": "school.",
+      "onset_s": 55.06,
+      "end_s": 55.4
     },
     {
       "w": 172,
-      "word": "it",
-      "onset_s": 62.6,
-      "end_s": 62.74
+      "word": "But",
+      "onset_s": 55.5,
+      "end_s": 55.56
     },
     {
       "w": 173,
-      "word": "out",
-      "onset_s": 62.74,
-      "end_s": 62.92
+      "word": "she",
+      "onset_s": 55.56,
+      "end_s": 55.76
     },
     {
       "w": 174,
-      "word": "because",
-      "onset_s": 62.92,
-      "end_s": 63.22,
+      "word": "has",
+      "onset_s": 55.76,
+      "end_s": 56.04,
       "heard_only": true
     },
     {
       "w": 175,
-      "word": "of",
-      "onset_s": 63.22,
-      "end_s": 63.46,
-      "heard_only": true
+      "word": "no",
+      "onset_s": 56.04,
+      "end_s": 56.86
     },
     {
       "w": 176,
-      "word": "the",
-      "onset_s": 63.46,
-      "end_s": 63.58,
-      "heard_only": true
+      "word": "studio,",
+      "onset_s": 56.86,
+      "end_s": 57.24
     },
     {
       "w": 177,
-      "word": "songwriting,",
-      "onset_s": 63.58,
-      "end_s": 64.04
+      "word": "no",
+      "onset_s": 57.52,
+      "end_s": 57.64
     },
     {
       "w": 178,
-      "word": "because",
-      "onset_s": 64.36,
-      "end_s": 64.44
+      "word": "band,",
+      "onset_s": 57.64,
+      "end_s": 57.94
     },
     {
       "w": 179,
-      "word": "of",
-      "onset_s": 64.44,
-      "end_s": 64.64
+      "word": "no",
+      "onset_s": 58.24,
+      "end_s": 58.36
     },
     {
       "w": 180,
-      "word": "the",
-      "onset_s": 64.64,
-      "end_s": 64.64
+      "word": "idea",
+      "onset_s": 58.36,
+      "end_s": 58.64
     },
     {
       "w": 181,
-      "word": "AI",
-      "onset_s": 64.64,
-      "end_s": 64.84
+      "word": "how",
+      "onset_s": 58.64,
+      "end_s": 58.84
     },
     {
       "w": 182,
-      "word": "bit",
-      "onset_s": 64.84,
-      "end_s": 65.02,
-      "heard_only": true
+      "word": "to",
+      "onset_s": 58.84,
+      "end_s": 59.0
     },
     {
       "w": 183,
-      "word": "still",
-      "onset_s": 65.02,
-      "end_s": 65.34
+      "word": "use",
+      "onset_s": 59.0,
+      "end_s": 59.28
     },
     {
       "w": 184,
-      "word": "in",
-      "onset_s": 65.34,
-      "end_s": 65.5
+      "word": "complex",
+      "onset_s": 59.28,
+      "end_s": 60.18,
+      "heard_only": true
     },
     {
       "w": 185,
-      "word": "it.",
-      "onset_s": 65.5,
-      "end_s": 65.96
+      "word": "music",
+      "onset_s": 60.18,
+      "end_s": 60.6,
+      "heard_only": true
     },
     {
       "w": 186,
-      "word": "But",
-      "onset_s": 66.18,
-      "end_s": 66.44
+      "word": "production",
+      "onset_s": 60.6,
+      "end_s": 60.98,
+      "heard_only": true
     },
     {
       "w": 187,
-      "word": "it",
-      "onset_s": 66.44,
-      "end_s": 66.58
+      "word": "software.",
+      "onset_s": 60.98,
+      "end_s": 61.46
     },
     {
       "w": 188,
-      "word": "can",
-      "onset_s": 66.58,
-      "end_s": 67.04
+      "word": "So",
+      "onset_s": 62.34,
+      "end_s": 62.44
     },
     {
       "w": 189,
-      "word": "still",
-      "onset_s": 67.04,
-      "end_s": 67.64
+      "word": "she",
+      "onset_s": 62.44,
+      "end_s": 62.58
     },
     {
       "w": 190,
-      "word": "compete",
-      "onset_s": 67.64,
-      "end_s": 68.12
+      "word": "opened",
+      "onset_s": 62.58,
+      "end_s": 62.92
     },
     {
       "w": 191,
-      "word": "for",
-      "onset_s": 68.12,
-      "end_s": 68.42
+      "word": "an",
+      "onset_s": 62.92,
+      "end_s": 63.2
     },
     {
       "w": 192,
-      "word": "the",
-      "onset_s": 68.42,
-      "end_s": 68.56,
-      "heard_only": true
+      "word": "AI",
+      "onset_s": 63.2,
+      "end_s": 63.48
     },
     {
       "w": 193,
-      "word": "singing.",
-      "onset_s": 68.56,
-      "end_s": 68.9
+      "word": "music",
+      "onset_s": 63.48,
+      "end_s": 63.76
     },
     {
       "w": 194,
-      "word": "award",
-      "onset_s": 68.9,
-      "end_s": 69.28,
-      "heard_only": true
+      "word": "app",
+      "onset_s": 63.76,
+      "end_s": 64.06
     },
     {
       "w": 195,
-      "word": "at",
-      "onset_s": 69.28,
-      "end_s": 69.5,
-      "heard_only": true
+      "word": "called",
+      "onset_s": 64.06,
+      "end_s": 64.3
     },
     {
       "w": 196,
-      "word": "the",
-      "onset_s": 69.5,
-      "end_s": 69.66,
-      "heard_only": true
+      "word": "Suno.",
+      "onset_s": 64.3,
+      "end_s": 64.84
     },
     {
       "w": 197,
-      "word": "Grammys,",
-      "onset_s": 69.66,
-      "end_s": 70.04,
-      "heard_only": true
+      "word": "And",
+      "onset_s": 64.84,
+      "end_s": 65.32
     },
     {
       "w": 198,
-      "word": "just",
-      "onset_s": 70.9,
-      "end_s": 71.1,
-      "heard_only": true
+      "word": "here's",
+      "onset_s": 65.32,
+      "end_s": 65.68
     },
     {
       "w": 199,
-      "word": "not",
-      "onset_s": 71.1,
-      "end_s": 71.26,
-      "heard_only": true
+      "word": "what",
+      "onset_s": 65.68,
+      "end_s": 65.88
     },
     {
       "w": 200,
-      "word": "the",
-      "onset_s": 71.26,
-      "end_s": 71.38,
-      "heard_only": true
+      "word": "that",
+      "onset_s": 65.88,
+      "end_s": 66.32
     },
     {
       "w": 201,
-      "word": "songwriting.",
-      "onset_s": 71.38,
-      "end_s": 71.8,
-      "heard_only": true
+      "word": "actually",
+      "onset_s": 66.32,
+      "end_s": 66.7
     },
     {
       "w": 202,
-      "word": "So",
-      "onset_s": 72.4,
-      "end_s": 72.54
+      "word": "looks",
+      "onset_s": 66.7,
+      "end_s": 66.88
     },
     {
       "w": 203,
-      "word": "I",
-      "onset_s": 72.54,
-      "end_s": 72.78
+      "word": "like.",
+      "onset_s": 66.88,
+      "end_s": 67.32
     },
     {
       "w": 204,
-      "word": "reckon",
-      "onset_s": 72.78,
-      "end_s": 73.02
+      "word": "There's",
+      "onset_s": 68.4,
+      "end_s": 68.68
     },
     {
       "w": 205,
-      "word": "AI",
-      "onset_s": 73.02,
-      "end_s": 73.86
+      "word": "one",
+      "onset_s": 68.68,
+      "end_s": 69.08
     },
     {
       "w": 206,
-      "word": "versus",
-      "onset_s": 73.86,
-      "end_s": 74.3
+      "word": "box",
+      "onset_s": 69.08,
+      "end_s": 69.38
     },
     {
       "w": 207,
-      "word": "human",
-      "onset_s": 74.3,
-      "end_s": 74.7
+      "word": "for",
+      "onset_s": 69.38,
+      "end_s": 69.6
     },
     {
       "w": 208,
-      "word": "is",
-      "onset_s": 74.7,
-      "end_s": 75.22
+      "word": "your",
+      "onset_s": 69.6,
+      "end_s": 69.72
     },
     {
       "w": 209,
-      "word": "kind",
-      "onset_s": 75.22,
-      "end_s": 75.64,
-      "heard_only": true
+      "word": "lyrics.",
+      "onset_s": 69.72,
+      "end_s": 70.02
     },
     {
       "w": 210,
-      "word": "of",
-      "onset_s": 75.64,
-      "end_s": 75.78,
+      "word": "and",
+      "onset_s": 70.02,
+      "end_s": 70.42,
       "heard_only": true
     },
     {
       "w": 211,
-      "word": "the",
-      "onset_s": 75.78,
-      "end_s": 75.86
+      "word": "In",
+      "onset_s": 70.42,
+      "end_s": 70.54
     },
     {
       "w": 212,
-      "word": "wrong",
-      "onset_s": 75.86,
-      "end_s": 76.0
+      "word": "another,",
+      "onset_s": 70.54,
+      "end_s": 70.86
     },
     {
       "w": 213,
-      "word": "question.",
-      "onset_s": 76.0,
-      "end_s": 76.44
+      "word": "you",
+      "onset_s": 70.86,
+      "end_s": 71.34
     },
     {
       "w": 214,
-      "word": "See,",
-      "onset_s": 77.46,
-      "end_s": 77.62,
-      "heard_only": true
+      "word": "describe",
+      "onset_s": 71.34,
+      "end_s": 71.68
     },
     {
       "w": 215,
-      "word": "Next",
-      "onset_s": 77.7,
-      "end_s": 77.78
+      "word": "the",
+      "onset_s": 71.68,
+      "end_s": 71.9
     },
     {
       "w": 216,
-      "word": "time",
-      "onset_s": 77.78,
-      "end_s": 77.96
+      "word": "sound,",
+      "onset_s": 71.9,
+      "end_s": 72.22
     },
     {
       "w": 217,
-      "word": "I",
-      "onset_s": 77.96,
-      "end_s": 78.1
+      "word": "like",
+      "onset_s": 72.22,
+      "end_s": 73.06
     },
     {
       "w": 218,
-      "word": "love",
-      "onset_s": 78.1,
-      "end_s": 78.26
+      "word": "deep",
+      "onset_s": 73.06,
+      "end_s": 73.36
     },
     {
       "w": 219,
-      "word": "something,",
-      "onset_s": 78.26,
-      "end_s": 78.66
+      "word": "house,",
+      "onset_s": 73.36,
+      "end_s": 73.8
     },
     {
       "w": 220,
-      "word": "I'm",
-      "onset_s": 78.66,
-      "end_s": 79.08,
-      "heard_only": true
+      "word": "female",
+      "onset_s": 74.42,
+      "end_s": 74.74
     },
     {
       "w": 221,
-      "word": "just",
-      "onset_s": 79.08,
-      "end_s": 79.22,
-      "heard_only": true
+      "word": "singer,",
+      "onset_s": 74.74,
+      "end_s": 75.2
     },
     {
       "w": 222,
-      "word": "going",
-      "onset_s": 79.22,
-      "end_s": 79.34,
-      "heard_only": true
+      "word": "summer.",
+      "onset_s": 75.66,
+      "end_s": 75.94
     },
     {
       "w": 223,
-      "word": "to",
-      "onset_s": 79.34,
-      "end_s": 79.46,
+      "word": "Vibes",
+      "onset_s": 75.94,
+      "end_s": 76.58,
       "heard_only": true
     },
     {
       "w": 224,
-      "word": "ask",
-      "onset_s": 79.46,
-      "end_s": 79.74
+      "word": "and",
+      "onset_s": 76.58,
+      "end_s": 77.32,
+      "heard_only": true
     },
     {
       "w": 225,
-      "word": "who",
-      "onset_s": 79.74,
-      "end_s": 80.08
+      "word": "then",
+      "onset_s": 77.32,
+      "end_s": 77.42,
+      "heard_only": true
     },
     {
       "w": 226,
-      "word": "did",
-      "onset_s": 80.08,
-      "end_s": 80.24
+      "word": "You",
+      "onset_s": 77.42,
+      "end_s": 77.52
     },
     {
       "w": 227,
-      "word": "which",
-      "onset_s": 80.24,
-      "end_s": 80.5
+      "word": "press",
+      "onset_s": 77.52,
+      "end_s": 77.72
     },
     {
       "w": 228,
-      "word": "bit.",
-      "onset_s": 80.5,
-      "end_s": 80.74
+      "word": "a",
+      "onset_s": 77.72,
+      "end_s": 77.86
     },
     {
       "w": 229,
-      "word": "of",
-      "onset_s": 80.74,
-      "end_s": 80.92,
-      "heard_only": true
+      "word": "button,",
+      "onset_s": 77.86,
+      "end_s": 78.04
     },
     {
       "w": 230,
-      "word": "it,",
-      "onset_s": 80.92,
-      "end_s": 81.12,
-      "heard_only": true
+      "word": "and",
+      "onset_s": 78.04,
+      "end_s": 78.64
     },
     {
       "w": 231,
-      "word": "Because",
-      "onset_s": 81.54,
-      "end_s": 81.86
+      "word": "a",
+      "onset_s": 78.64,
+      "end_s": 79.72
     },
     {
       "w": 232,
-      "word": "the",
-      "onset_s": 81.86,
-      "end_s": 82.06
+      "word": "few",
+      "onset_s": 79.72,
+      "end_s": 79.82
     },
     {
       "w": 233,
-      "word": "song",
-      "onset_s": 82.06,
-      "end_s": 82.26
+      "word": "moments",
+      "onset_s": 79.82,
+      "end_s": 80.06
     },
     {
       "w": 234,
-      "word": "you",
-      "onset_s": 82.26,
-      "end_s": 82.42
+      "word": "later",
+      "onset_s": 80.06,
+      "end_s": 80.28
     },
     {
       "w": 235,
-      "word": "can't",
-      "onset_s": 82.42,
-      "end_s": 82.82
+      "word": "you",
+      "onset_s": 80.28,
+      "end_s": 80.5
     },
     {
       "w": 236,
-      "word": "stop",
-      "onset_s": 82.82,
-      "end_s": 83.06
+      "word": "get",
+      "onset_s": 80.5,
+      "end_s": 80.7
     },
     {
       "w": 237,
-      "word": "dancing",
-      "onset_s": 83.06,
-      "end_s": 83.36
+      "word": "basically",
+      "onset_s": 80.7,
+      "end_s": 81.22,
+      "heard_only": true
     },
     {
       "w": 238,
-      "word": "to",
-      "onset_s": 83.36,
-      "end_s": 83.6
+      "word": "a",
+      "onset_s": 81.22,
+      "end_s": 81.42,
+      "heard_only": true
     },
     {
       "w": 239,
-      "word": "is",
-      "onset_s": 83.6,
-      "end_s": 83.82
+      "word": "whole",
+      "onset_s": 81.42,
+      "end_s": 81.56
     },
     {
       "w": 240,
-      "word": "already",
-      "onset_s": 83.82,
-      "end_s": 84.14
+      "word": "song",
+      "onset_s": 81.56,
+      "end_s": 81.82,
+      "heard_only": true
     },
     {
       "w": 241,
-      "word": "both.",
-      "onset_s": 84.14,
-      "end_s": 84.56
+      "word": "back.",
+      "onset_s": 81.82,
+      "end_s": 82.08
     },
     {
       "w": 242,
-      "word": "AI",
-      "onset_s": 84.56,
-      "end_s": 84.9,
-      "heard_only": true
+      "word": "That's",
+      "onset_s": 82.08,
+      "end_s": 82.36
     },
     {
       "w": 243,
-      "word": "and",
-      "onset_s": 84.9,
-      "end_s": 85.2,
-      "heard_only": true
+      "word": "the",
+      "onset_s": 82.36,
+      "end_s": 82.5
     },
     {
       "w": 244,
-      "word": "human",
-      "onset_s": 85.2,
-      "end_s": 85.46,
-      "heard_only": true
+      "word": "tune,",
+      "onset_s": 82.5,
+      "end_s": 82.76
     },
     {
       "w": 245,
-      "word": "music.",
-      "onset_s": 85.46,
-      "end_s": 85.92,
+      "word": "the",
+      "onset_s": 83.06,
+      "end_s": 83.06,
       "heard_only": true
     },
     {
       "w": 246,
-      "word": "The",
-      "onset_s": 86.66,
-      "end_s": 86.82
+      "word": "drums,",
+      "onset_s": 83.06,
+      "end_s": 83.24
     },
     {
       "w": 247,
-      "word": "full",
-      "onset_s": 86.82,
-      "end_s": 87.0
+      "word": "the",
+      "onset_s": 83.44,
+      "end_s": 83.44,
+      "heard_only": true
     },
     {
       "w": 248,
-      "word": "deep",
-      "onset_s": 87.0,
-      "end_s": 87.16
+      "word": "bass",
+      "onset_s": 83.44,
+      "end_s": 83.68
     },
     {
       "w": 249,
-      "word": "dive",
-      "onset_s": 87.16,
-      "end_s": 87.42
+      "word": "and",
+      "onset_s": 83.68,
+      "end_s": 84.4
     },
     {
       "w": 250,
-      "word": "is",
-      "onset_s": 87.42,
-      "end_s": 87.58
+      "word": "the",
+      "onset_s": 84.4,
+      "end_s": 84.52,
+      "heard_only": true
     },
     {
       "w": 251,
-      "word": "at",
-      "onset_s": 87.58,
-      "end_s": 87.74
+      "word": "singer,",
+      "onset_s": 84.52,
+      "end_s": 84.68
     },
     {
       "w": 252,
-      "word": "makeyourmindup",
-      "onset_s": 87.74,
-      "end_s": 88.46
+      "word": "all",
+      "onset_s": 84.68,
+      "end_s": 84.98
     },
     {
       "w": 253,
+      "word": "at",
+      "onset_s": 84.98,
+      "end_s": 85.14
+    },
+    {
+      "w": 254,
+      "word": "once.",
+      "onset_s": 85.14,
+      "end_s": 85.5
+    },
+    {
+      "w": 255,
+      "word": "If",
+      "onset_s": 85.98,
+      "end_s": 86.06,
+      "heard_only": true
+    },
+    {
+      "w": 256,
+      "word": "you",
+      "onset_s": 86.06,
+      "end_s": 86.12,
+      "heard_only": true
+    },
+    {
+      "w": 257,
+      "word": "Don't",
+      "onset_s": 86.12,
+      "end_s": 86.22
+    },
+    {
+      "w": 258,
+      "word": "like",
+      "onset_s": 86.22,
+      "end_s": 86.34
+    },
+    {
+      "w": 259,
+      "word": "the",
+      "onset_s": 86.34,
+      "end_s": 86.46
+    },
+    {
+      "w": 260,
+      "word": "second",
+      "onset_s": 86.46,
+      "end_s": 86.68
+    },
+    {
+      "w": 261,
+      "word": "verse?",
+      "onset_s": 86.68,
+      "end_s": 86.92
+    },
+    {
+      "w": 262,
+      "word": "You",
+      "onset_s": 87.5,
+      "end_s": 87.62
+    },
+    {
+      "w": 263,
+      "word": "don't",
+      "onset_s": 87.62,
+      "end_s": 87.7
+    },
+    {
+      "w": 264,
+      "word": "rewrite",
+      "onset_s": 87.7,
+      "end_s": 87.96
+    },
+    {
+      "w": 265,
+      "word": "it,",
+      "onset_s": 87.96,
+      "end_s": 88.16
+    },
+    {
+      "w": 266,
+      "word": "you",
+      "onset_s": 88.16,
+      "end_s": 88.22
+    },
+    {
+      "w": 267,
+      "word": "just",
+      "onset_s": 88.22,
+      "end_s": 88.36
+    },
+    {
+      "w": 268,
+      "word": "press",
+      "onset_s": 88.36,
+      "end_s": 88.56
+    },
+    {
+      "w": 269,
+      "word": "the",
+      "onset_s": 88.56,
+      "end_s": 88.68
+    },
+    {
+      "w": 270,
+      "word": "button",
+      "onset_s": 88.68,
+      "end_s": 88.82
+    },
+    {
+      "w": 271,
+      "word": "again.",
+      "onset_s": 88.82,
+      "end_s": 89.1
+    },
+    {
+      "w": 272,
+      "word": "It's",
+      "onset_s": 89.76,
+      "end_s": 89.86
+    },
+    {
+      "w": 273,
+      "word": "basically",
+      "onset_s": 89.86,
+      "end_s": 90.18
+    },
+    {
+      "w": 274,
+      "word": "a",
+      "onset_s": 90.18,
+      "end_s": 90.38
+    },
+    {
+      "w": 275,
+      "word": "slot",
+      "onset_s": 90.38,
+      "end_s": 90.6
+    },
+    {
+      "w": 276,
+      "word": "machine",
+      "onset_s": 90.6,
+      "end_s": 90.94
+    },
+    {
+      "w": 277,
+      "word": "that",
+      "onset_s": 90.94,
+      "end_s": 91.36
+    },
+    {
+      "w": 278,
+      "word": "pays",
+      "onset_s": 91.36,
+      "end_s": 91.76
+    },
+    {
+      "w": 279,
+      "word": "out",
+      "onset_s": 91.76,
+      "end_s": 92.0
+    },
+    {
+      "w": 280,
+      "word": "in",
+      "onset_s": 92.0,
+      "end_s": 92.16
+    },
+    {
+      "w": 281,
+      "word": "songs.",
+      "onset_s": 92.16,
+      "end_s": 92.4
+    },
+    {
+      "w": 282,
+      "word": "right?",
+      "onset_s": 92.4,
+      "end_s": 92.72,
+      "heard_only": true
+    },
+    {
+      "w": 283,
+      "word": "But",
+      "onset_s": 94.14,
+      "end_s": 94.56
+    },
+    {
+      "w": 284,
+      "word": "to",
+      "onset_s": 94.56,
+      "end_s": 94.74
+    },
+    {
+      "w": 285,
+      "word": "see",
+      "onset_s": 94.74,
+      "end_s": 94.94
+    },
+    {
+      "w": 286,
+      "word": "why",
+      "onset_s": 94.94,
+      "end_s": 95.14
+    },
+    {
+      "w": 287,
+      "word": "that",
+      "onset_s": 95.14,
+      "end_s": 95.34
+    },
+    {
+      "w": 288,
+      "word": "matters,",
+      "onset_s": 95.34,
+      "end_s": 95.76
+    },
+    {
+      "w": 289,
+      "word": "we",
+      "onset_s": 95.86,
+      "end_s": 96.28
+    },
+    {
+      "w": 290,
+      "word": "need",
+      "onset_s": 96.28,
+      "end_s": 96.6
+    },
+    {
+      "w": 291,
+      "word": "to",
+      "onset_s": 96.6,
+      "end_s": 96.74
+    },
+    {
+      "w": 292,
+      "word": "zoom",
+      "onset_s": 96.74,
+      "end_s": 96.96
+    },
+    {
+      "w": 293,
+      "word": "in",
+      "onset_s": 96.96,
+      "end_s": 97.1
+    },
+    {
+      "w": 294,
+      "word": "on",
+      "onset_s": 97.1,
+      "end_s": 97.24
+    },
+    {
+      "w": 295,
+      "word": "how",
+      "onset_s": 97.24,
+      "end_s": 97.5
+    },
+    {
+      "w": 296,
+      "word": "a",
+      "onset_s": 97.5,
+      "end_s": 97.62
+    },
+    {
+      "w": 297,
+      "word": "song",
+      "onset_s": 97.62,
+      "end_s": 97.96
+    },
+    {
+      "w": 298,
+      "word": "is",
+      "onset_s": 97.96,
+      "end_s": 98.22
+    },
+    {
+      "w": 299,
+      "word": "built.",
+      "onset_s": 98.22,
+      "end_s": 98.5
+    },
+    {
+      "w": 300,
+      "word": "Every",
+      "onset_s": 99.16,
+      "end_s": 99.42
+    },
+    {
+      "w": 301,
+      "word": "song",
+      "onset_s": 99.42,
+      "end_s": 99.76
+    },
+    {
+      "w": 302,
+      "word": "is",
+      "onset_s": 99.76,
+      "end_s": 100.16
+    },
+    {
+      "w": 303,
+      "word": "a",
+      "onset_s": 100.16,
+      "end_s": 100.48
+    },
+    {
+      "w": 304,
+      "word": "stack",
+      "onset_s": 100.48,
+      "end_s": 100.74
+    },
+    {
+      "w": 305,
+      "word": "of",
+      "onset_s": 100.74,
+      "end_s": 100.92
+    },
+    {
+      "w": 306,
+      "word": "layers,",
+      "onset_s": 100.92,
+      "end_s": 101.2
+    },
+    {
+      "w": 307,
+      "word": "like",
+      "onset_s": 101.2,
+      "end_s": 101.5
+    },
+    {
+      "w": 308,
+      "word": "the",
+      "onset_s": 101.5,
+      "end_s": 101.64
+    },
+    {
+      "w": 309,
+      "word": "drums,",
+      "onset_s": 101.64,
+      "end_s": 101.98
+    },
+    {
+      "w": 310,
+      "word": "the",
+      "onset_s": 102.4,
+      "end_s": 102.42
+    },
+    {
+      "w": 311,
+      "word": "bass,",
+      "onset_s": 102.42,
+      "end_s": 102.76
+    },
+    {
+      "w": 312,
+      "word": "the",
+      "onset_s": 103.36,
+      "end_s": 103.44
+    },
+    {
+      "w": 313,
+      "word": "chords",
+      "onset_s": 103.44,
+      "end_s": 103.78
+    },
+    {
+      "w": 314,
+      "word": "and",
+      "onset_s": 103.78,
+      "end_s": 104.5
+    },
+    {
+      "w": 315,
+      "word": "the",
+      "onset_s": 104.5,
+      "end_s": 104.6
+    },
+    {
+      "w": 316,
+      "word": "voice.",
+      "onset_s": 104.6,
+      "end_s": 104.86
+    },
+    {
+      "w": 317,
+      "word": "And",
+      "onset_s": 105.46,
+      "end_s": 106.06
+    },
+    {
+      "w": 318,
+      "word": "this",
+      "onset_s": 106.06,
+      "end_s": 106.22
+    },
+    {
+      "w": 319,
+      "word": "is",
+      "onset_s": 106.22,
+      "end_s": 106.36
+    },
+    {
+      "w": 320,
+      "word": "the",
+      "onset_s": 106.36,
+      "end_s": 106.48
+    },
+    {
+      "w": 321,
+      "word": "bit",
+      "onset_s": 106.48,
+      "end_s": 106.62
+    },
+    {
+      "w": 322,
+      "word": "that",
+      "onset_s": 106.62,
+      "end_s": 106.76,
+      "heard_only": true
+    },
+    {
+      "w": 323,
+      "word": "most",
+      "onset_s": 106.76,
+      "end_s": 106.9
+    },
+    {
+      "w": 324,
+      "word": "people",
+      "onset_s": 106.9,
+      "end_s": 107.14
+    },
+    {
+      "w": 325,
+      "word": "miss.",
+      "onset_s": 107.14,
+      "end_s": 107.44
+    },
+    {
+      "w": 326,
+      "word": "For",
+      "onset_s": 107.7,
+      "end_s": 107.78
+    },
+    {
+      "w": 327,
+      "word": "about",
+      "onset_s": 107.78,
+      "end_s": 107.98
+    },
+    {
+      "w": 328,
+      "word": "twenty",
+      "onset_s": 107.98,
+      "end_s": 108.46
+    },
+    {
+      "w": 329,
+      "word": "years,",
+      "onset_s": 108.46,
+      "end_s": 108.66
+    },
+    {
+      "w": 330,
+      "word": "loads",
+      "onset_s": 108.66,
+      "end_s": 108.88
+    },
+    {
+      "w": 331,
+      "word": "of",
+      "onset_s": 108.88,
+      "end_s": 109.1
+    },
+    {
+      "w": 332,
+      "word": "those",
+      "onset_s": 109.1,
+      "end_s": 109.28
+    },
+    {
+      "w": 333,
+      "word": "layers",
+      "onset_s": 109.28,
+      "end_s": 109.58
+    },
+    {
+      "w": 334,
+      "word": "haven't",
+      "onset_s": 109.58,
+      "end_s": 110.1
+    },
+    {
+      "w": 335,
+      "word": "actually",
+      "onset_s": 110.1,
+      "end_s": 110.46,
+      "heard_only": true
+    },
+    {
+      "w": 336,
+      "word": "been",
+      "onset_s": 110.46,
+      "end_s": 110.66
+    },
+    {
+      "w": 337,
+      "word": "real",
+      "onset_s": 110.66,
+      "end_s": 110.84
+    },
+    {
+      "w": 338,
+      "word": "instruments",
+      "onset_s": 110.84,
+      "end_s": 111.32
+    },
+    {
+      "w": 339,
+      "word": "anyway.",
+      "onset_s": 111.32,
+      "end_s": 111.86
+    },
+    {
+      "w": 340,
+      "word": "They're",
+      "onset_s": 112.38,
+      "end_s": 112.8
+    },
+    {
+      "w": 341,
+      "word": "synths,",
+      "onset_s": 112.8,
+      "end_s": 113.32
+    },
+    {
+      "w": 342,
+      "word": "which",
+      "onset_s": 113.6,
+      "end_s": 113.7
+    },
+    {
+      "w": 343,
+      "word": "is",
+      "onset_s": 113.7,
+      "end_s": 114.04,
+      "heard_only": true
+    },
+    {
+      "w": 344,
+      "word": "an",
+      "onset_s": 114.04,
+      "end_s": 115.44,
+      "heard_only": true
+    },
+    {
+      "w": 345,
+      "word": "electronic",
+      "onset_s": 115.44,
+      "end_s": 115.98,
+      "heard_only": true
+    },
+    {
+      "w": 346,
+      "word": "sound,",
+      "onset_s": 115.98,
+      "end_s": 116.44,
+      "heard_only": true
+    },
+    {
+      "w": 347,
+      "word": "and",
+      "onset_s": 116.44,
+      "end_s": 117.16
+    },
+    {
+      "w": 348,
+      "word": "an",
+      "onset_s": 117.16,
+      "end_s": 117.34,
+      "heard_only": true
+    },
+    {
+      "w": 349,
+      "word": "electronic",
+      "onset_s": 117.34,
+      "end_s": 117.86,
+      "heard_only": true
+    },
+    {
+      "w": 350,
+      "word": "sample,",
+      "onset_s": 117.86,
+      "end_s": 118.32,
+      "heard_only": true
+    },
+    {
+      "w": 351,
+      "word": "which",
+      "onset_s": 118.32,
+      "end_s": 118.5
+    },
+    {
+      "w": 352,
+      "word": "are",
+      "onset_s": 118.5,
+      "end_s": 118.64
+    },
+    {
+      "w": 353,
+      "word": "basically",
+      "onset_s": 118.64,
+      "end_s": 118.9,
+      "heard_only": true
+    },
+    {
+      "w": 354,
+      "word": "recorded",
+      "onset_s": 118.9,
+      "end_s": 119.48
+    },
+    {
+      "w": 355,
+      "word": "snippets",
+      "onset_s": 119.48,
+      "end_s": 119.94
+    },
+    {
+      "w": 356,
+      "word": "that",
+      "onset_s": 119.94,
+      "end_s": 120.34,
+      "heard_only": true
+    },
+    {
+      "w": 357,
+      "word": "anyone",
+      "onset_s": 120.34,
+      "end_s": 120.8
+    },
+    {
+      "w": 358,
+      "word": "can",
+      "onset_s": 120.8,
+      "end_s": 121.16
+    },
+    {
+      "w": 359,
+      "word": "reuse.",
+      "onset_s": 121.16,
+      "end_s": 121.62
+    },
+    {
+      "w": 360,
+      "word": "So",
+      "onset_s": 122.3,
+      "end_s": 122.38,
+      "heard_only": true
+    },
+    {
+      "w": 361,
+      "word": "That",
+      "onset_s": 122.38,
+      "end_s": 122.5
+    },
+    {
+      "w": 362,
+      "word": "real",
+      "onset_s": 122.5,
+      "end_s": 123.1
+    },
+    {
+      "w": 363,
+      "word": "guitar",
+      "onset_s": 123.1,
+      "end_s": 123.5
+    },
+    {
+      "w": 364,
+      "word": "on",
+      "onset_s": 123.5,
+      "end_s": 123.76
+    },
+    {
+      "w": 365,
+      "word": "your",
+      "onset_s": 123.76,
+      "end_s": 123.96
+    },
+    {
+      "w": 366,
+      "word": "favourite",
+      "onset_s": 123.96,
+      "end_s": 124.26
+    },
+    {
+      "w": 367,
+      "word": "song?",
+      "onset_s": 124.26,
+      "end_s": 124.64
+    },
+    {
+      "w": 368,
+      "word": "It",
+      "onset_s": 124.64,
+      "end_s": 124.88
+    },
+    {
+      "w": 369,
+      "word": "might",
+      "onset_s": 124.88,
+      "end_s": 125.06
+    },
+    {
+      "w": 370,
+      "word": "actually",
+      "onset_s": 125.06,
+      "end_s": 125.42,
+      "heard_only": true
+    },
+    {
+      "w": 371,
+      "word": "come",
+      "onset_s": 125.42,
+      "end_s": 125.72
+    },
+    {
+      "w": 372,
+      "word": "from",
+      "onset_s": 125.72,
+      "end_s": 126.16
+    },
+    {
+      "w": 373,
+      "word": "a",
+      "onset_s": 126.16,
+      "end_s": 126.28
+    },
+    {
+      "w": 374,
+      "word": "pack",
+      "onset_s": 126.28,
+      "end_s": 126.46
+    },
+    {
+      "w": 375,
+      "word": "of",
+      "onset_s": 126.46,
+      "end_s": 126.64
+    },
+    {
+      "w": 376,
+      "word": "samples",
+      "onset_s": 126.64,
+      "end_s": 126.96
+    },
+    {
+      "w": 377,
+      "word": "you",
+      "onset_s": 126.96,
+      "end_s": 127.2
+    },
+    {
+      "w": 378,
+      "word": "can",
+      "onset_s": 127.2,
+      "end_s": 127.36
+    },
+    {
+      "w": 379,
+      "word": "buy.",
+      "onset_s": 127.36,
+      "end_s": 127.58
+    },
+    {
+      "w": 380,
+      "word": "and",
+      "onset_s": 127.58,
+      "end_s": 128.42,
+      "heard_only": true
+    },
+    {
+      "w": 381,
+      "word": "electronically",
+      "onset_s": 128.42,
+      "end_s": 129.0,
+      "heard_only": true
+    },
+    {
+      "w": 382,
+      "word": "produced.",
+      "onset_s": 129.0,
+      "end_s": 129.58,
+      "heard_only": true
+    },
+    {
+      "w": 383,
+      "word": "So",
+      "onset_s": 130.08,
+      "end_s": 130.48,
+      "heard_only": true
+    },
+    {
+      "w": 384,
+      "word": "we've",
+      "onset_s": 130.48,
+      "end_s": 131.5,
+      "heard_only": true
+    },
+    {
+      "w": 385,
+      "word": "been",
+      "onset_s": 131.5,
+      "end_s": 131.66,
+      "heard_only": true
+    },
+    {
+      "w": 386,
+      "word": "producing",
+      "onset_s": 131.66,
+      "end_s": 132.1,
+      "heard_only": true
+    },
+    {
+      "w": 387,
+      "word": "non-human",
+      "onset_s": 132.1,
+      "end_s": 132.58,
+      "heard_only": true
+    },
+    {
+      "w": 388,
+      "word": "music",
+      "onset_s": 132.58,
+      "end_s": 133.02,
+      "heard_only": true
+    },
+    {
+      "w": 389,
+      "word": "for",
+      "onset_s": 133.02,
+      "end_s": 133.62,
+      "heard_only": true
+    },
+    {
+      "w": 390,
+      "word": "years,",
+      "onset_s": 133.62,
+      "end_s": 134.06,
+      "heard_only": true
+    },
+    {
+      "w": 391,
+      "word": "just",
+      "onset_s": 134.06,
+      "end_s": 135.0,
+      "heard_only": true
+    },
+    {
+      "w": 392,
+      "word": "within",
+      "onset_s": 135.0,
+      "end_s": 136.1,
+      "heard_only": true
+    },
+    {
+      "w": 393,
+      "word": "the",
+      "onset_s": 136.1,
+      "end_s": 136.36,
+      "heard_only": true
+    },
+    {
+      "w": 394,
+      "word": "confines",
+      "onset_s": 136.36,
+      "end_s": 136.8,
+      "heard_only": true
+    },
+    {
+      "w": 395,
+      "word": "of",
+      "onset_s": 136.8,
+      "end_s": 137.14,
+      "heard_only": true
+    },
+    {
+      "w": 396,
+      "word": "human",
+      "onset_s": 137.14,
+      "end_s": 137.52,
+      "heard_only": true
+    },
+    {
+      "w": 397,
+      "word": "releases.",
+      "onset_s": 137.52,
+      "end_s": 137.94,
+      "heard_only": true
+    },
+    {
+      "w": 398,
+      "word": "So",
+      "onset_s": 138.24,
+      "end_s": 138.24
+    },
+    {
+      "w": 399,
+      "word": "what",
+      "onset_s": 138.24,
+      "end_s": 138.48
+    },
+    {
+      "w": 400,
+      "word": "does",
+      "onset_s": 138.48,
+      "end_s": 138.76
+    },
+    {
+      "w": 401,
+      "word": "AI",
+      "onset_s": 138.76,
+      "end_s": 139.04
+    },
+    {
+      "w": 402,
+      "word": "actually",
+      "onset_s": 139.04,
+      "end_s": 139.46
+    },
+    {
+      "w": 403,
+      "word": "change?",
+      "onset_s": 139.46,
+      "end_s": 139.74
+    },
+    {
+      "w": 404,
+      "word": "here?",
+      "onset_s": 139.74,
+      "end_s": 140.0,
+      "heard_only": true
+    },
+    {
+      "w": 405,
+      "word": "It",
+      "onset_s": 140.6,
+      "end_s": 140.7,
+      "heard_only": true
+    },
+    {
+      "w": 406,
+      "word": "actually",
+      "onset_s": 140.7,
+      "end_s": 140.88,
+      "heard_only": true
+    },
+    {
+      "w": 407,
+      "word": "changes",
+      "onset_s": 140.88,
+      "end_s": 141.14,
+      "heard_only": true
+    },
+    {
+      "w": 408,
+      "word": "Two",
+      "onset_s": 141.14,
+      "end_s": 141.38
+    },
+    {
+      "w": 409,
+      "word": "things.",
+      "onset_s": 141.38,
+      "end_s": 141.58
+    },
+    {
+      "w": 410,
+      "word": "Firstly,",
+      "onset_s": 141.72,
+      "end_s": 141.9,
+      "heard_only": true
+    },
+    {
+      "w": 411,
+      "word": "you",
+      "onset_s": 142.06,
+      "end_s": 142.12
+    },
+    {
+      "w": 412,
+      "word": "can",
+      "onset_s": 142.12,
+      "end_s": 142.26
+    },
+    {
+      "w": 413,
+      "word": "now",
+      "onset_s": 142.26,
+      "end_s": 142.46,
+      "heard_only": true
+    },
+    {
+      "w": 414,
+      "word": "talk",
+      "onset_s": 142.46,
+      "end_s": 142.78
+    },
+    {
+      "w": 415,
+      "word": "a",
+      "onset_s": 142.78,
+      "end_s": 143.18
+    },
+    {
+      "w": 416,
+      "word": "layer",
+      "onset_s": 143.18,
+      "end_s": 143.46
+    },
+    {
+      "w": 417,
+      "word": "of",
+      "onset_s": 143.46,
+      "end_s": 143.8,
+      "heard_only": true
+    },
+    {
+      "w": 418,
+      "word": "your",
+      "onset_s": 143.8,
+      "end_s": 144.04,
+      "heard_only": true
+    },
+    {
+      "w": 419,
+      "word": "track",
+      "onset_s": 144.04,
+      "end_s": 144.34,
+      "heard_only": true
+    },
+    {
+      "w": 420,
+      "word": "into",
+      "onset_s": 144.34,
+      "end_s": 144.58,
+      "heard_only": true
+    },
+    {
+      "w": 421,
+      "word": "existence",
+      "onset_s": 144.58,
+      "end_s": 145.06,
+      "heard_only": true
+    },
+    {
+      "w": 422,
+      "word": "or",
+      "onset_s": 145.06,
+      "end_s": 145.76,
+      "heard_only": true
+    },
+    {
+      "w": 423,
+      "word": "like",
+      "onset_s": 145.76,
+      "end_s": 145.9,
+      "heard_only": true
+    },
+    {
+      "w": 424,
+      "word": "I",
+      "onset_s": 145.9,
+      "end_s": 146.02,
+      "heard_only": true
+    },
+    {
+      "w": 425,
+      "word": "just",
+      "onset_s": 146.02,
+      "end_s": 146.14,
+      "heard_only": true
+    },
+    {
+      "w": 426,
+      "word": "said",
+      "onset_s": 146.14,
+      "end_s": 146.28,
+      "heard_only": true
+    },
+    {
+      "w": 427,
+      "word": "the",
+      "onset_s": 146.28,
+      "end_s": 146.44,
+      "heard_only": true
+    },
+    {
+      "w": 428,
+      "word": "whole",
+      "onset_s": 146.44,
+      "end_s": 146.66,
+      "heard_only": true
+    },
+    {
+      "w": 429,
+      "word": "thing",
+      "onset_s": 146.66,
+      "end_s": 146.92,
+      "heard_only": true
+    },
+    {
+      "w": 430,
+      "word": "into",
+      "onset_s": 146.92,
+      "end_s": 147.2
+    },
+    {
+      "w": 431,
+      "word": "existence",
+      "onset_s": 147.2,
+      "end_s": 147.72
+    },
+    {
+      "w": 432,
+      "word": "without",
+      "onset_s": 147.72,
+      "end_s": 148.14
+    },
+    {
+      "w": 433,
+      "word": "learning",
+      "onset_s": 148.14,
+      "end_s": 148.46
+    },
+    {
+      "w": 434,
+      "word": "the",
+      "onset_s": 148.46,
+      "end_s": 148.66
+    },
+    {
+      "w": 435,
+      "word": "software.",
+      "onset_s": 148.66,
+      "end_s": 149.0
+    },
+    {
+      "w": 436,
+      "word": "And",
+      "onset_s": 149.64,
+      "end_s": 149.74,
+      "heard_only": true
+    },
+    {
+      "w": 437,
+      "word": "secondly,",
+      "onset_s": 149.74,
+      "end_s": 150.12,
+      "heard_only": true
+    },
+    {
+      "w": 438,
+      "word": "there",
+      "onset_s": 150.16,
+      "end_s": 150.42
+    },
+    {
+      "w": 439,
+      "word": "are",
+      "onset_s": 150.42,
+      "end_s": 150.58
+    },
+    {
+      "w": 440,
+      "word": "way",
+      "onset_s": 150.58,
+      "end_s": 151.04
+    },
+    {
+      "w": 441,
+      "word": "more",
+      "onset_s": 151.04,
+      "end_s": 151.3
+    },
+    {
+      "w": 442,
+      "word": "layers",
+      "onset_s": 151.3,
+      "end_s": 151.58
+    },
+    {
+      "w": 443,
+      "word": "to",
+      "onset_s": 151.58,
+      "end_s": 151.82
+    },
+    {
+      "w": 444,
+      "word": "pick",
+      "onset_s": 151.82,
+      "end_s": 151.94
+    },
+    {
+      "w": 445,
+      "word": "from.",
+      "onset_s": 151.94,
+      "end_s": 152.2
+    },
+    {
+      "w": 446,
+      "word": "If",
+      "onset_s": 152.42,
+      "end_s": 152.56,
+      "heard_only": true
+    },
+    {
+      "w": 447,
+      "word": "you",
+      "onset_s": 152.56,
+      "end_s": 152.66,
+      "heard_only": true
+    },
+    {
+      "w": 448,
+      "word": "want",
+      "onset_s": 152.66,
+      "end_s": 152.76,
+      "heard_only": true
+    },
+    {
+      "w": 449,
+      "word": "to",
+      "onset_s": 152.76,
+      "end_s": 152.84,
+      "heard_only": true
+    },
+    {
+      "w": 450,
+      "word": "choir,",
+      "onset_s": 152.84,
+      "end_s": 153.2,
+      "heard_only": true
+    },
+    {
+      "w": 451,
+      "word": "you",
+      "onset_s": 153.56,
+      "end_s": 153.6,
+      "heard_only": true
+    },
+    {
+      "w": 452,
+      "word": "want",
+      "onset_s": 153.6,
+      "end_s": 153.66,
+      "heard_only": true
+    },
+    {
+      "w": 453,
+      "word": "to",
+      "onset_s": 153.66,
+      "end_s": 153.78,
+      "heard_only": true
+    },
+    {
+      "w": 454,
+      "word": "sitar,",
+      "onset_s": 153.78,
+      "end_s": 154.26,
+      "heard_only": true
+    },
+    {
+      "w": 455,
+      "word": "you",
+      "onset_s": 155.0,
+      "end_s": 155.42,
+      "heard_only": true
+    },
+    {
+      "w": 456,
+      "word": "Want",
+      "onset_s": 155.42,
+      "end_s": 155.5
+    },
+    {
+      "w": 457,
+      "word": "a",
+      "onset_s": 155.5,
+      "end_s": 155.6
+    },
+    {
+      "w": 458,
+      "word": "robot?",
+      "onset_s": 155.6,
+      "end_s": 155.9
+    },
+    {
+      "w": 459,
+      "word": "just",
+      "onset_s": 156.38,
+      "end_s": 156.56
+    },
+    {
+      "w": 460,
+      "word": "ask.",
+      "onset_s": 156.56,
+      "end_s": 156.84
+    },
+    {
+      "w": 461,
+      "word": "Okay,",
+      "onset_s": 157.94,
+      "end_s": 158.42
+    },
+    {
+      "w": 462,
+      "word": "so",
+      "onset_s": 158.62,
+      "end_s": 158.8
+    },
+    {
+      "w": 463,
+      "word": "she's",
+      "onset_s": 158.8,
+      "end_s": 159.2
+    },
+    {
+      "w": 464,
+      "word": "got",
+      "onset_s": 159.2,
+      "end_s": 159.46
+    },
+    {
+      "w": 465,
+      "word": "her",
+      "onset_s": 159.46,
+      "end_s": 159.98
+    },
+    {
+      "w": 466,
+      "word": "songs,",
+      "onset_s": 159.98,
+      "end_s": 160.18
+    },
+    {
+      "w": 467,
+      "word": "and",
+      "onset_s": 160.18,
+      "end_s": 160.46
+    },
+    {
+      "w": 468,
+      "word": "she",
+      "onset_s": 160.46,
+      "end_s": 160.7
+    },
+    {
+      "w": 469,
+      "word": "puts",
+      "onset_s": 160.7,
+      "end_s": 161.04
+    },
+    {
+      "w": 470,
+      "word": "them",
+      "onset_s": 161.04,
+      "end_s": 161.22
+    },
+    {
+      "w": 471,
+      "word": "online.",
+      "onset_s": 161.22,
+      "end_s": 161.5
+    },
+    {
+      "w": 472,
+      "word": "And",
+      "onset_s": 162.62,
+      "end_s": 162.64
+    },
+    {
+      "w": 473,
+      "word": "this",
+      "onset_s": 162.64,
+      "end_s": 162.74
+    },
+    {
+      "w": 474,
+      "word": "is",
+      "onset_s": 162.74,
+      "end_s": 162.88
+    },
+    {
+      "w": 475,
+      "word": "the",
+      "onset_s": 162.88,
+      "end_s": 163.0,
+      "heard_only": true
+    },
+    {
+      "w": 476,
+      "word": "bit",
+      "onset_s": 163.0,
+      "end_s": 163.12,
+      "heard_only": true
+    },
+    {
+      "w": 477,
+      "word": "where",
+      "onset_s": 163.12,
+      "end_s": 163.28
+    },
+    {
+      "w": 478,
+      "word": "it",
+      "onset_s": 163.28,
+      "end_s": 163.4
+    },
+    {
+      "w": 479,
+      "word": "gets",
+      "onset_s": 163.4,
+      "end_s": 163.6
+    },
+    {
+      "w": 480,
+      "word": "interesting.",
+      "onset_s": 163.6,
+      "end_s": 164.12
+    },
+    {
+      "w": 481,
+      "word": "People",
+      "onset_s": 164.4,
+      "end_s": 164.4
+    },
+    {
+      "w": 482,
+      "word": "start",
+      "onset_s": 164.4,
+      "end_s": 164.74
+    },
+    {
+      "w": 483,
+      "word": "using",
+      "onset_s": 164.74,
+      "end_s": 165.08
+    },
+    {
+      "w": 484,
+      "word": "her",
+      "onset_s": 165.08,
+      "end_s": 165.34
+    },
+    {
+      "w": 485,
+      "word": "track",
+      "onset_s": 165.34,
+      "end_s": 165.66
+    },
+    {
+      "w": 486,
+      "word": "under",
+      "onset_s": 165.66,
+      "end_s": 166.88
+    },
+    {
+      "w": 487,
+      "word": "their",
+      "onset_s": 166.88,
+      "end_s": 167.62
+    },
+    {
+      "w": 488,
+      "word": "own",
+      "onset_s": 167.62,
+      "end_s": 167.84
+    },
+    {
+      "w": 489,
+      "word": "videos,",
+      "onset_s": 167.84,
+      "end_s": 168.18
+    },
+    {
+      "w": 490,
+      "word": "like",
+      "onset_s": 168.18,
+      "end_s": 168.7
+    },
+    {
+      "w": 491,
+      "word": "AI",
+      "onset_s": 168.7,
+      "end_s": 169.08,
+      "heard_only": true
+    },
+    {
+      "w": 492,
+      "word": "Generated",
+      "onset_s": 169.08,
+      "end_s": 169.6,
+      "heard_only": true
+    },
+    {
+      "w": 493,
+      "word": "cats,",
+      "onset_s": 169.6,
+      "end_s": 169.84
+    },
+    {
+      "w": 494,
+      "word": "and",
+      "onset_s": 169.84,
+      "end_s": 170.74,
+      "heard_only": true
+    },
+    {
+      "w": 495,
+      "word": "weddings",
+      "onset_s": 170.74,
+      "end_s": 171.04
+    },
+    {
+      "w": 496,
+      "word": "and",
+      "onset_s": 171.04,
+      "end_s": 171.28
+    },
+    {
+      "w": 497,
+      "word": "dads",
+      "onset_s": 171.28,
+      "end_s": 171.54
+    },
+    {
+      "w": 498,
+      "word": "dancing",
+      "onset_s": 171.54,
+      "end_s": 171.9
+    },
+    {
+      "w": 499,
+      "word": "badly.",
+      "onset_s": 171.9,
+      "end_s": 172.36
+    },
+    {
+      "w": 500,
+      "word": "Viewers",
+      "onset_s": 172.66,
+      "end_s": 172.98
+    },
+    {
+      "w": 501,
+      "word": "hear",
+      "onset_s": 172.98,
+      "end_s": 173.22
+    },
+    {
+      "w": 502,
+      "word": "it",
+      "onset_s": 173.22,
+      "end_s": 173.5
+    },
+    {
+      "w": 503,
+      "word": "behind",
+      "onset_s": 173.5,
+      "end_s": 174.1
+    },
+    {
+      "w": 504,
+      "word": "someone",
+      "onset_s": 174.1,
+      "end_s": 174.48
+    },
+    {
+      "w": 505,
+      "word": "else's",
+      "onset_s": 174.48,
+      "end_s": 174.78
+    },
+    {
+      "w": 506,
+      "word": "clip",
+      "onset_s": 174.78,
+      "end_s": 174.96
+    },
+    {
+      "w": 507,
+      "word": "and",
+      "onset_s": 174.96,
+      "end_s": 175.14
+    },
+    {
+      "w": 508,
+      "word": "they",
+      "onset_s": 175.14,
+      "end_s": 175.24,
+      "heard_only": true
+    },
+    {
+      "w": 509,
+      "word": "go",
+      "onset_s": 175.24,
+      "end_s": 175.36
+    },
+    {
+      "w": 510,
+      "word": "hunting",
+      "onset_s": 175.36,
+      "end_s": 175.62
+    },
+    {
+      "w": 511,
+      "word": "for",
+      "onset_s": 175.62,
+      "end_s": 175.94
+    },
+    {
+      "w": 512,
+      "word": "it.",
+      "onset_s": 175.94,
+      "end_s": 176.1
+    },
+    {
+      "w": 513,
+      "word": "like,",
+      "onset_s": 176.1,
+      "end_s": 176.26,
+      "heard_only": true
+    },
+    {
+      "w": 514,
+      "word": "whoa,",
+      "onset_s": 176.36,
+      "end_s": 176.56,
+      "heard_only": true
+    },
+    {
+      "w": 515,
+      "word": "what's",
+      "onset_s": 176.56,
+      "end_s": 176.76,
+      "heard_only": true
+    },
+    {
+      "w": 516,
+      "word": "that?",
+      "onset_s": 176.76,
+      "end_s": 176.98,
+      "heard_only": true
+    },
+    {
+      "w": 517,
+      "word": "That's",
+      "onset_s": 177.08,
+      "end_s": 177.18,
+      "heard_only": true
+    },
+    {
+      "w": 518,
+      "word": "a",
+      "onset_s": 177.18,
+      "end_s": 177.28,
+      "heard_only": true
+    },
+    {
+      "w": 519,
+      "word": "really",
+      "onset_s": 177.28,
+      "end_s": 177.4,
+      "heard_only": true
+    },
+    {
+      "w": 520,
+      "word": "good",
+      "onset_s": 177.4,
+      "end_s": 177.66,
+      "heard_only": true
+    },
+    {
+      "w": 521,
+      "word": "catchy",
+      "onset_s": 177.66,
+      "end_s": 178.1,
+      "heard_only": true
+    },
+    {
+      "w": 522,
+      "word": "track.",
+      "onset_s": 178.1,
+      "end_s": 178.56,
+      "heard_only": true
+    },
+    {
+      "w": 523,
+      "word": "Scroll",
+      "onset_s": 179.4,
+      "end_s": 179.42
+    },
+    {
+      "w": 524,
+      "word": "the",
+      "onset_s": 179.42,
+      "end_s": 179.6
+    },
+    {
+      "w": 525,
+      "word": "comments",
+      "onset_s": 179.6,
+      "end_s": 179.84
+    },
+    {
+      "w": 526,
+      "word": "and",
+      "onset_s": 179.84,
+      "end_s": 180.06
+    },
+    {
+      "w": 527,
+      "word": "it's",
+      "onset_s": 180.06,
+      "end_s": 180.22
+    },
+    {
+      "w": 528,
+      "word": "the",
+      "onset_s": 180.22,
+      "end_s": 180.36
+    },
+    {
+      "w": 529,
+      "word": "same",
+      "onset_s": 180.36,
+      "end_s": 180.56
+    },
+    {
+      "w": 530,
+      "word": "question,",
+      "onset_s": 180.56,
+      "end_s": 180.92
+    },
+    {
+      "w": 531,
+      "word": "over",
+      "onset_s": 180.92,
+      "end_s": 181.22
+    },
+    {
+      "w": 532,
+      "word": "and",
+      "onset_s": 181.22,
+      "end_s": 181.32
+    },
+    {
+      "w": 533,
+      "word": "over.",
+      "onset_s": 181.32,
+      "end_s": 181.5
+    },
+    {
+      "w": 534,
+      "word": "again.",
+      "onset_s": 181.5,
+      "end_s": 181.72,
+      "heard_only": true
+    },
+    {
+      "w": 535,
+      "word": "What",
+      "onset_s": 181.86,
+      "end_s": 181.96
+    },
+    {
+      "w": 536,
+      "word": "is",
+      "onset_s": 181.96,
+      "end_s": 182.14
+    },
+    {
+      "w": 537,
+      "word": "this",
+      "onset_s": 182.14,
+      "end_s": 182.34
+    },
+    {
+      "w": 538,
+      "word": "song?",
+      "onset_s": 182.34,
+      "end_s": 182.68
+    },
+    {
+      "w": 539,
+      "word": "So,",
+      "onset_s": 183.64,
+      "end_s": 184.16
+    },
+    {
+      "w": 540,
+      "word": "which",
+      "onset_s": 184.16,
+      "end_s": 184.68
+    },
+    {
+      "w": 541,
+      "word": "came",
+      "onset_s": 184.68,
+      "end_s": 184.92
+    },
+    {
+      "w": 542,
+      "word": "first?",
+      "onset_s": 184.92,
+      "end_s": 185.22
+    },
+    {
+      "w": 543,
+      "word": "TikTok,",
+      "onset_s": 185.46,
+      "end_s": 185.78
+    },
+    {
+      "w": 544,
+      "word": "and",
+      "onset_s": 185.78,
+      "end_s": 186.72
+    },
+    {
+      "w": 545,
+      "word": "the",
+      "onset_s": 186.72,
+      "end_s": 186.84
+    },
+    {
+      "w": 546,
+      "word": "charts",
+      "onset_s": 186.84,
+      "end_s": 187.26
+    },
+    {
+      "w": 547,
+      "word": "came",
+      "onset_s": 187.26,
+      "end_s": 188.66
+    },
+    {
+      "w": 548,
+      "word": "later.",
+      "onset_s": 188.66,
+      "end_s": 189.1
+    },
+    {
+      "w": 549,
+      "word": "after",
+      "onset_s": 189.1,
+      "end_s": 189.56,
+      "heard_only": true
+    },
+    {
+      "w": 550,
+      "word": "TikTok.",
+      "onset_s": 189.56,
+      "end_s": 190.16,
+      "heard_only": true
+    },
+    {
+      "w": 551,
+      "word": "And",
+      "onset_s": 190.6,
+      "end_s": 190.62
+    },
+    {
+      "w": 552,
+      "word": "that",
+      "onset_s": 190.62,
+      "end_s": 190.8
+    },
+    {
+      "w": 553,
+      "word": "tells",
+      "onset_s": 190.8,
+      "end_s": 191.02
+    },
+    {
+      "w": 554,
+      "word": "us",
+      "onset_s": 191.02,
+      "end_s": 191.14
+    },
+    {
+      "w": 555,
+      "word": "something",
+      "onset_s": 191.14,
+      "end_s": 191.32
+    },
+    {
+      "w": 556,
+      "word": "big.",
+      "onset_s": 191.32,
+      "end_s": 191.62
+    },
+    {
+      "w": 557,
+      "word": "as",
+      "onset_s": 192.02,
+      "end_s": 192.14,
+      "heard_only": true
+    },
+    {
+      "w": 558,
+      "word": "On",
+      "onset_s": 192.14,
+      "end_s": 192.5
+    },
+    {
+      "w": 559,
+      "word": "one",
+      "onset_s": 192.5,
+      "end_s": 192.64
+    },
+    {
+      "w": 560,
+      "word": "of",
+      "onset_s": 192.64,
+      "end_s": 192.76
+    },
+    {
+      "w": 561,
+      "word": "the",
+      "onset_s": 192.76,
+      "end_s": 192.86
+    },
+    {
+      "w": 562,
+      "word": "big",
+      "onset_s": 192.86,
+      "end_s": 193.02
+    },
+    {
+      "w": 563,
+      "word": "streaming",
+      "onset_s": 193.02,
+      "end_s": 193.34
+    },
+    {
+      "w": 564,
+      "word": "apps,",
+      "onset_s": 193.34,
+      "end_s": 193.64
+    },
+    {
+      "w": 565,
+      "word": "over",
+      "onset_s": 193.76,
+      "end_s": 193.9
+    },
+    {
+      "w": 566,
+      "word": "half",
+      "onset_s": 193.9,
+      "end_s": 194.22
+    },
+    {
+      "w": 567,
+      "word": "of",
+      "onset_s": 194.22,
+      "end_s": 194.52
+    },
+    {
+      "w": 568,
+      "word": "the",
+      "onset_s": 194.52,
+      "end_s": 194.68
+    },
+    {
+      "w": 569,
+      "word": "new",
+      "onset_s": 194.68,
+      "end_s": 194.94
+    },
+    {
+      "w": 570,
+      "word": "songs",
+      "onset_s": 194.94,
+      "end_s": 195.2
+    },
+    {
+      "w": 571,
+      "word": "uploaded",
+      "onset_s": 195.2,
+      "end_s": 195.64
+    },
+    {
+      "w": 572,
+      "word": "every",
+      "onset_s": 195.64,
+      "end_s": 196.0
+    },
+    {
+      "w": 573,
+      "word": "day",
+      "onset_s": 196.0,
+      "end_s": 196.16
+    },
+    {
+      "w": 574,
+      "word": "are",
+      "onset_s": 196.16,
+      "end_s": 196.44
+    },
+    {
+      "w": 575,
+      "word": "actually",
+      "onset_s": 196.44,
+      "end_s": 196.88,
+      "heard_only": true
+    },
+    {
+      "w": 576,
+      "word": "made",
+      "onset_s": 196.88,
+      "end_s": 197.16
+    },
+    {
+      "w": 577,
+      "word": "with",
+      "onset_s": 197.16,
+      "end_s": 197.42
+    },
+    {
+      "w": 578,
+      "word": "AI.",
+      "onset_s": 197.42,
+      "end_s": 197.72
+    },
+    {
+      "w": 579,
+      "word": "And",
+      "onset_s": 198.64,
+      "end_s": 198.74
+    },
+    {
+      "w": 580,
+      "word": "almost",
+      "onset_s": 198.74,
+      "end_s": 198.92
+    },
+    {
+      "w": 581,
+      "word": "no",
+      "onset_s": 198.92,
+      "end_s": 199.14
+    },
+    {
+      "w": 582,
+      "word": "one",
+      "onset_s": 199.14,
+      "end_s": 199.22
+    },
+    {
+      "w": 583,
+      "word": "listens",
+      "onset_s": 199.22,
+      "end_s": 199.42
+    },
+    {
+      "w": 584,
+      "word": "to",
+      "onset_s": 199.42,
+      "end_s": 199.7
+    },
+    {
+      "w": 585,
+      "word": "them.",
+      "onset_s": 199.7,
+      "end_s": 199.96
+    },
+    {
+      "w": 586,
+      "word": "So",
+      "onset_s": 200.7,
+      "end_s": 200.72
+    },
+    {
+      "w": 587,
+      "word": "making",
+      "onset_s": 200.72,
+      "end_s": 201.08
+    },
+    {
+      "w": 588,
+      "word": "a",
+      "onset_s": 201.08,
+      "end_s": 201.28
+    },
+    {
+      "w": 589,
+      "word": "song",
+      "onset_s": 201.28,
+      "end_s": 201.44
+    },
+    {
+      "w": 590,
+      "word": "is",
+      "onset_s": 201.44,
+      "end_s": 201.58,
+      "heard_only": true
+    },
+    {
+      "w": 591,
+      "word": "not",
+      "onset_s": 201.58,
+      "end_s": 201.74,
+      "heard_only": true
+    },
+    {
+      "w": 592,
+      "word": "actually",
+      "onset_s": 201.74,
+      "end_s": 202.06,
+      "heard_only": true
+    },
+    {
+      "w": 593,
+      "word": "the",
+      "onset_s": 202.06,
+      "end_s": 202.18
+    },
+    {
+      "w": 594,
+      "word": "hard",
+      "onset_s": 202.18,
+      "end_s": 202.44
+    },
+    {
+      "w": 595,
+      "word": "part.",
+      "onset_s": 202.44,
+      "end_s": 202.66
+    },
+    {
+      "w": 596,
+      "word": "anymore.",
+      "onset_s": 202.66,
+      "end_s": 202.9,
+      "heard_only": true
+    },
+    {
+      "w": 597,
+      "word": "The",
+      "onset_s": 203.08,
+      "end_s": 203.14
+    },
+    {
+      "w": 598,
+      "word": "hard",
+      "onset_s": 203.14,
+      "end_s": 203.4
+    },
+    {
+      "w": 599,
+      "word": "part",
+      "onset_s": 203.4,
+      "end_s": 203.64
+    },
+    {
+      "w": 600,
+      "word": "is",
+      "onset_s": 203.64,
+      "end_s": 203.84
+    },
+    {
+      "w": 601,
+      "word": "getting",
+      "onset_s": 203.84,
+      "end_s": 204.06
+    },
+    {
+      "w": 602,
+      "word": "a",
+      "onset_s": 204.06,
+      "end_s": 204.28
+    },
+    {
+      "w": 603,
+      "word": "stranger",
+      "onset_s": 204.28,
+      "end_s": 204.56
+    },
+    {
+      "w": 604,
+      "word": "to",
+      "onset_s": 204.56,
+      "end_s": 204.78
+    },
+    {
+      "w": 605,
+      "word": "go",
+      "onset_s": 204.78,
+      "end_s": 204.92
+    },
+    {
+      "w": 606,
+      "word": "looking",
+      "onset_s": 204.92,
+      "end_s": 205.2
+    },
+    {
+      "w": 607,
+      "word": "for",
+      "onset_s": 205.2,
+      "end_s": 205.48
+    },
+    {
+      "w": 608,
+      "word": "it.",
+      "onset_s": 205.48,
+      "end_s": 205.62
+    },
+    {
+      "w": 609,
+      "word": "distribution.",
+      "onset_s": 206.06,
+      "end_s": 206.34,
+      "heard_only": true
+    },
+    {
+      "w": 610,
+      "word": "And",
+      "onset_s": 207.56,
+      "end_s": 207.9
+    },
+    {
+      "w": 611,
+      "word": "one",
+      "onset_s": 207.9,
+      "end_s": 208.08
+    },
+    {
+      "w": 612,
+      "word": "stranger",
+      "onset_s": 208.08,
+      "end_s": 208.42
+    },
+    {
+      "w": 613,
+      "word": "who",
+      "onset_s": 208.42,
+      "end_s": 208.7
+    },
+    {
+      "w": 614,
+      "word": "went",
+      "onset_s": 208.7,
+      "end_s": 208.88
+    },
+    {
+      "w": 615,
+      "word": "looking",
+      "onset_s": 208.88,
+      "end_s": 209.24
+    },
+    {
+      "w": 616,
+      "word": "was",
+      "onset_s": 209.24,
+      "end_s": 209.46
+    },
+    {
+      "w": 617,
+      "word": "a",
+      "onset_s": 209.46,
+      "end_s": 209.62
+    },
+    {
+      "w": 618,
+      "word": "dance",
+      "onset_s": 209.62,
+      "end_s": 209.88
+    },
+    {
+      "w": 619,
+      "word": "producer",
+      "onset_s": 209.88,
+      "end_s": 210.24
+    },
+    {
+      "w": 620,
+      "word": "called",
+      "onset_s": 210.24,
+      "end_s": 210.52
+    },
+    {
+      "w": 621,
+      "word": "HUGEL.",
+      "onset_s": 210.52,
+      "end_s": 210.96
+    },
+    {
+      "w": 622,
+      "word": "Now,",
+      "onset_s": 210.96,
+      "end_s": 211.36
+    },
+    {
+      "w": 623,
+      "word": "he",
+      "onset_s": 211.92,
+      "end_s": 212.36
+    },
+    {
+      "w": 624,
+      "word": "didn't",
+      "onset_s": 212.36,
+      "end_s": 212.6
+    },
+    {
+      "w": 625,
+      "word": "just",
+      "onset_s": 212.6,
+      "end_s": 212.74
+    },
+    {
+      "w": 626,
+      "word": "release",
+      "onset_s": 212.74,
+      "end_s": 213.1
+    },
+    {
+      "w": 627,
+      "word": "her",
+      "onset_s": 213.1,
+      "end_s": 213.34
+    },
+    {
+      "w": 628,
+      "word": "AI",
+      "onset_s": 213.34,
+      "end_s": 213.52
+    },
+    {
+      "w": 629,
+      "word": "song.",
+      "onset_s": 213.52,
+      "end_s": 213.78
+    },
+    {
+      "w": 630,
+      "word": "He",
+      "onset_s": 213.92,
+      "end_s": 214.04
+    },
+    {
+      "w": 631,
+      "word": "pulled",
+      "onset_s": 214.04,
+      "end_s": 214.6
+    },
+    {
+      "w": 632,
+      "word": "it",
+      "onset_s": 214.6,
+      "end_s": 214.74
+    },
+    {
+      "w": 633,
+      "word": "apart,",
+      "onset_s": 214.74,
+      "end_s": 215.06
+    },
+    {
+      "w": 634,
+      "word": "kept",
+      "onset_s": 215.56,
+      "end_s": 215.74
+    },
+    {
+      "w": 635,
+      "word": "a",
+      "onset_s": 215.74,
+      "end_s": 215.92
+    },
+    {
+      "w": 636,
+      "word": "few",
+      "onset_s": 215.92,
+      "end_s": 216.04
+    },
+    {
+      "w": 637,
+      "word": "pieces",
+      "onset_s": 216.04,
+      "end_s": 216.36
+    },
+    {
+      "w": 638,
+      "word": "and",
+      "onset_s": 216.36,
+      "end_s": 216.7
+    },
+    {
+      "w": 639,
+      "word": "threw",
+      "onset_s": 216.7,
+      "end_s": 217.08
+    },
+    {
+      "w": 640,
+      "word": "the",
+      "onset_s": 217.08,
+      "end_s": 217.2
+    },
+    {
+      "w": 641,
+      "word": "rest",
+      "onset_s": 217.2,
+      "end_s": 217.36
+    },
+    {
+      "w": 642,
+      "word": "out.",
+      "onset_s": 217.36,
+      "end_s": 217.72
+    },
+    {
+      "w": 643,
+      "word": "Then",
+      "onset_s": 218.14,
+      "end_s": 218.3
+    },
+    {
+      "w": 644,
+      "word": "he",
+      "onset_s": 218.3,
+      "end_s": 218.44
+    },
+    {
+      "w": 645,
+      "word": "rebuilt",
+      "onset_s": 218.44,
+      "end_s": 218.8
+    },
+    {
+      "w": 646,
+      "word": "it",
+      "onset_s": 218.8,
+      "end_s": 219.64
+    },
+    {
+      "w": 647,
+      "word": "by",
+      "onset_s": 219.64,
+      "end_s": 219.84
+    },
+    {
+      "w": 648,
+      "word": "hand,",
+      "onset_s": 219.84,
+      "end_s": 220.28
+    },
+    {
+      "w": 649,
+      "word": "with",
+      "onset_s": 220.28,
+      "end_s": 220.64
+    },
+    {
+      "w": 650,
+      "word": "drums",
+      "onset_s": 220.64,
+      "end_s": 221.08
+    },
+    {
+      "w": 651,
+      "word": "from",
+      "onset_s": 221.08,
+      "end_s": 221.3
+    },
+    {
+      "w": 652,
+      "word": "a",
+      "onset_s": 221.3,
+      "end_s": 221.44
+    },
+    {
+      "w": 653,
+      "word": "sample",
+      "onset_s": 221.44,
+      "end_s": 221.7
+    },
+    {
+      "w": 654,
+      "word": "library,",
+      "onset_s": 221.7,
+      "end_s": 222.06
+    },
+    {
+      "w": 655,
+      "word": "a",
+      "onset_s": 222.38,
+      "end_s": 222.38
+    },
+    {
+      "w": 656,
+      "word": "big",
+      "onset_s": 222.38,
+      "end_s": 222.6
+    },
+    {
+      "w": 657,
+      "word": "synth",
+      "onset_s": 222.6,
+      "end_s": 222.9
+    },
+    {
+      "w": 658,
+      "word": "bass,",
+      "onset_s": 222.9,
+      "end_s": 223.28
+    },
+    {
+      "w": 659,
+      "word": "piano",
+      "onset_s": 223.5,
+      "end_s": 223.72
+    },
+    {
+      "w": 660,
+      "word": "and",
+      "onset_s": 223.72,
+      "end_s": 224.02
+    },
+    {
+      "w": 661,
+      "word": "strings.",
+      "onset_s": 224.02,
+      "end_s": 224.3
+    },
+    {
+      "w": 662,
+      "word": "Which",
+      "onset_s": 224.52,
+      "end_s": 224.52
+    },
+    {
+      "w": 663,
+      "word": "means",
+      "onset_s": 224.52,
+      "end_s": 225.24
+    },
+    {
+      "w": 664,
+      "word": "even",
+      "onset_s": 225.24,
+      "end_s": 225.54
+    },
+    {
+      "w": 665,
+      "word": "the",
+      "onset_s": 225.54,
+      "end_s": 225.72
+    },
+    {
+      "w": 666,
+      "word": "human",
+      "onset_s": 225.72,
+      "end_s": 226.08
+    },
+    {
+      "w": 667,
+      "word": "version",
+      "onset_s": 226.08,
+      "end_s": 226.46
+    },
+    {
+      "w": 668,
+      "word": "has",
+      "onset_s": 226.46,
+      "end_s": 226.74
+    },
+    {
+      "w": 669,
+      "word": "drums",
+      "onset_s": 226.74,
+      "end_s": 227.14
+    },
+    {
+      "w": 670,
+      "word": "no",
+      "onset_s": 227.14,
+      "end_s": 227.52
+    },
+    {
+      "w": 671,
+      "word": "one",
+      "onset_s": 227.52,
+      "end_s": 227.64
+    },
+    {
+      "w": 672,
+      "word": "actually",
+      "onset_s": 227.64,
+      "end_s": 228.12
+    },
+    {
+      "w": 673,
+      "word": "ever",
+      "onset_s": 228.12,
+      "end_s": 228.44,
+      "heard_only": true
+    },
+    {
+      "w": 674,
+      "word": "played.",
+      "onset_s": 228.44,
+      "end_s": 228.72
+    },
+    {
+      "w": 675,
+      "word": "Then",
+      "onset_s": 230.04,
+      "end_s": 230.4
+    },
+    {
+      "w": 676,
+      "word": "he",
+      "onset_s": 230.4,
+      "end_s": 230.62
+    },
+    {
+      "w": 677,
+      "word": "brought",
+      "onset_s": 230.62,
+      "end_s": 230.8
+    },
+    {
+      "w": 678,
+      "word": "in",
+      "onset_s": 230.8,
+      "end_s": 230.98
+    },
+    {
+      "w": 679,
+      "word": "the",
+      "onset_s": 230.98,
+      "end_s": 231.12
+    },
+    {
+      "w": 680,
+      "word": "singer",
+      "onset_s": 231.12,
+      "end_s": 231.4
+    },
+    {
+      "w": 681,
+      "word": "UltraNate.",
+      "onset_s": 231.4,
+      "end_s": 232.16,
+      "heard_only": true
+    },
+    {
+      "w": 682,
+      "word": "If",
+      "onset_s": 232.72,
+      "end_s": 232.96
+    },
+    {
+      "w": 683,
+      "word": "you",
+      "onset_s": 232.96,
+      "end_s": 233.08
+    },
+    {
+      "w": 684,
+      "word": "weren't",
+      "onset_s": 233.08,
+      "end_s": 233.28,
+      "heard_only": true
+    },
+    {
+      "w": 685,
+      "word": "clubbing",
+      "onset_s": 233.28,
+      "end_s": 233.58
+    },
+    {
+      "w": 686,
+      "word": "in",
+      "onset_s": 233.58,
+      "end_s": 233.74
+    },
+    {
+      "w": 687,
+      "word": "the",
+      "onset_s": 233.74,
+      "end_s": 233.86
+    },
+    {
+      "w": 688,
+      "word": "90s",
+      "onset_s": 233.86,
+      "end_s": 234.24,
+      "heard_only": true
+    },
+    {
+      "w": 689,
+      "word": "like",
+      "onset_s": 234.24,
+      "end_s": 234.4,
+      "heard_only": true
+    },
+    {
+      "w": 690,
+      "word": "me,",
+      "onset_s": 234.4,
+      "end_s": 234.62,
+      "heard_only": true
+    },
+    {
+      "w": 691,
+      "word": "you",
+      "onset_s": 234.82,
+      "end_s": 234.9
+    },
+    {
+      "w": 692,
+      "word": "know",
+      "onset_s": 234.9,
+      "end_s": 235.0
+    },
+    {
+      "w": 693,
+      "word": "that",
+      "onset_s": 235.0,
+      "end_s": 235.18
+    },
+    {
+      "w": 694,
+      "word": "voice.",
+      "onset_s": 235.18,
+      "end_s": 235.38
+    },
+    {
+      "w": 695,
+      "word": "And",
+      "onset_s": 235.38,
+      "end_s": 235.84
+    },
+    {
+      "w": 696,
+      "word": "now",
+      "onset_s": 235.84,
+      "end_s": 236.46
+    },
+    {
+      "w": 697,
+      "word": "she's",
+      "onset_s": 236.46,
+      "end_s": 236.86
+    },
+    {
+      "w": 698,
+      "word": "back",
+      "onset_s": 236.86,
+      "end_s": 237.04
+    },
+    {
+      "w": 699,
+      "word": "near",
+      "onset_s": 237.04,
+      "end_s": 237.32
+    },
+    {
+      "w": 700,
+      "word": "the",
+      "onset_s": 237.32,
+      "end_s": 237.44
+    },
+    {
+      "w": 701,
+      "word": "top",
+      "onset_s": 237.44,
+      "end_s": 237.58
+    },
+    {
+      "w": 702,
+      "word": "of",
+      "onset_s": 237.58,
+      "end_s": 237.68
+    },
+    {
+      "w": 703,
+      "word": "the",
+      "onset_s": 237.68,
+      "end_s": 237.8
+    },
+    {
+      "w": 704,
+      "word": "charts,",
+      "onset_s": 237.8,
+      "end_s": 238.2
+    },
+    {
+      "w": 705,
+      "word": "singing",
+      "onset_s": 238.66,
+      "end_s": 238.94
+    },
+    {
+      "w": 706,
+      "word": "a",
+      "onset_s": 238.94,
+      "end_s": 239.22
+    },
+    {
+      "w": 707,
+      "word": "song",
+      "onset_s": 239.22,
+      "end_s": 239.48
+    },
+    {
+      "w": 708,
+      "word": "that",
+      "onset_s": 239.48,
+      "end_s": 240.2,
+      "heard_only": true
+    },
+    {
+      "w": 709,
+      "word": "a",
+      "onset_s": 240.2,
+      "end_s": 240.3
+    },
+    {
+      "w": 710,
+      "word": "healer",
+      "onset_s": 240.3,
+      "end_s": 240.54
+    },
+    {
+      "w": 711,
+      "word": "started",
+      "onset_s": 240.54,
+      "end_s": 241.0
+    },
+    {
+      "w": 712,
+      "word": "on",
+      "onset_s": 241.0,
+      "end_s": 241.54
+    },
+    {
+      "w": 713,
+      "word": "her",
+      "onset_s": 241.54,
+      "end_s": 241.8,
+      "heard_only": true
+    },
+    {
+      "w": 714,
+      "word": "AI",
+      "onset_s": 241.8,
+      "end_s": 242.04,
+      "heard_only": true
+    },
+    {
+      "w": 715,
+      "word": "app.",
+      "onset_s": 242.04,
+      "end_s": 242.4
+    },
+    {
+      "w": 716,
+      "word": "But",
+      "onset_s": 243.24,
+      "end_s": 243.52
+    },
+    {
+      "w": 717,
+      "word": "here's",
+      "onset_s": 243.52,
+      "end_s": 243.88
+    },
+    {
+      "w": 718,
+      "word": "my",
+      "onset_s": 243.88,
+      "end_s": 244.0
+    },
+    {
+      "w": 719,
+      "word": "favourite",
+      "onset_s": 244.0,
+      "end_s": 244.24
+    },
+    {
+      "w": 720,
+      "word": "detail.",
+      "onset_s": 244.24,
+      "end_s": 244.68
+    },
+    {
+      "w": 721,
+      "word": "Listen",
+      "onset_s": 245.66,
+      "end_s": 245.78
+    },
+    {
+      "w": 722,
+      "word": "closely,",
+      "onset_s": 245.78,
+      "end_s": 246.1
+    },
+    {
+      "w": 723,
+      "word": "because",
+      "onset_s": 246.1,
+      "end_s": 246.46
+    },
+    {
+      "w": 724,
+      "word": "under",
+      "onset_s": 246.46,
+      "end_s": 246.84
+    },
+    {
+      "w": 725,
+      "word": "her",
+      "onset_s": 246.84,
+      "end_s": 247.08
+    },
+    {
+      "w": 726,
+      "word": "voice,",
+      "onset_s": 247.08,
+      "end_s": 247.4
+    },
+    {
+      "w": 727,
+      "word": "in",
+      "onset_s": 247.68,
+      "end_s": 247.68
+    },
+    {
+      "w": 728,
+      "word": "a",
+      "onset_s": 247.68,
+      "end_s": 247.84
+    },
+    {
+      "w": 729,
+      "word": "few",
+      "onset_s": 247.84,
+      "end_s": 248.26
+    },
+    {
+      "w": 730,
+      "word": "places,",
+      "onset_s": 248.26,
+      "end_s": 248.86
+    },
+    {
+      "w": 731,
+      "word": "HUGEL",
+      "onset_s": 249.1,
+      "end_s": 249.34
+    },
+    {
+      "w": 732,
+      "word": "kept",
+      "onset_s": 249.34,
+      "end_s": 249.78
+    },
+    {
+      "w": 733,
+      "word": "a",
+      "onset_s": 249.78,
+      "end_s": 250.54
+    },
+    {
+      "w": 734,
+      "word": "thin",
+      "onset_s": 250.54,
+      "end_s": 250.82
+    },
+    {
+      "w": 735,
+      "word": "layer",
+      "onset_s": 250.82,
+      "end_s": 251.1
+    },
+    {
+      "w": 736,
+      "word": "of",
+      "onset_s": 251.1,
+      "end_s": 251.4
+    },
+    {
+      "w": 737,
+      "word": "the",
+      "onset_s": 251.4,
+      "end_s": 251.54
+    },
+    {
+      "w": 738,
+      "word": "original",
+      "onset_s": 251.54,
+      "end_s": 252.02
+    },
+    {
+      "w": 739,
+      "word": "AI",
+      "onset_s": 252.02,
+      "end_s": 252.54
+    },
+    {
+      "w": 740,
+      "word": "singer.",
+      "onset_s": 252.54,
+      "end_s": 252.88
+    },
+    {
+      "w": 741,
+      "word": "So",
+      "onset_s": 253.7,
+      "end_s": 254.06
+    },
+    {
+      "w": 742,
+      "word": "this",
+      "onset_s": 254.06,
+      "end_s": 254.24
+    },
+    {
+      "w": 743,
+      "word": "hit",
+      "onset_s": 254.24,
+      "end_s": 254.52
+    },
+    {
+      "w": 744,
+      "word": "actually",
+      "onset_s": 254.52,
+      "end_s": 255.32,
+      "heard_only": true
+    },
+    {
+      "w": 745,
+      "word": "has",
+      "onset_s": 255.32,
+      "end_s": 256.0
+    },
+    {
+      "w": 746,
+      "word": "a",
+      "onset_s": 256.0,
+      "end_s": 256.22
+    },
+    {
+      "w": 747,
+      "word": "robot",
+      "onset_s": 256.22,
+      "end_s": 256.74
+    },
+    {
+      "w": 748,
+      "word": "quietly",
+      "onset_s": 256.74,
+      "end_s": 257.66
+    },
+    {
+      "w": 749,
+      "word": "humming",
+      "onset_s": 257.66,
+      "end_s": 257.98
+    },
+    {
+      "w": 750,
+      "word": "along",
+      "onset_s": 257.98,
+      "end_s": 258.36
+    },
+    {
+      "w": 751,
+      "word": "under",
+      "onset_s": 258.36,
+      "end_s": 258.84
+    },
+    {
+      "w": 752,
+      "word": "a",
+      "onset_s": 258.84,
+      "end_s": 259.34
+    },
+    {
+      "w": 753,
+      "word": "human",
+      "onset_s": 259.34,
+      "end_s": 259.58,
+      "heard_only": true
+    },
+    {
+      "w": 754,
+      "word": "dance",
+      "onset_s": 259.58,
+      "end_s": 259.92
+    },
+    {
+      "w": 755,
+      "word": "legend.",
+      "onset_s": 259.92,
+      "end_s": 260.38
+    },
+    {
+      "w": 756,
+      "word": "They're",
+      "onset_s": 261.3,
+      "end_s": 261.9,
+      "heard_only": true
+    },
+    {
+      "w": 757,
+      "word": "singing",
+      "onset_s": 261.9,
+      "end_s": 262.38,
+      "heard_only": true
+    },
+    {
+      "w": 758,
+      "word": "together.",
+      "onset_s": 262.38,
+      "end_s": 262.88,
+      "heard_only": true
+    },
+    {
+      "w": 759,
+      "word": "And",
+      "onset_s": 264.46,
+      "end_s": 264.5
+    },
+    {
+      "w": 760,
+      "word": "then",
+      "onset_s": 264.5,
+      "end_s": 264.76
+    },
+    {
+      "w": 761,
+      "word": "the",
+      "onset_s": 264.76,
+      "end_s": 265.08
+    },
+    {
+      "w": 762,
+      "word": "Grammys",
+      "onset_s": 265.08,
+      "end_s": 265.44
+    },
+    {
+      "w": 763,
+      "word": "came",
+      "onset_s": 265.44,
+      "end_s": 265.7,
+      "heard_only": true
+    },
+    {
+      "w": 764,
+      "word": "along.",
+      "onset_s": 265.7,
+      "end_s": 265.96,
+      "heard_only": true
+    },
+    {
+      "w": 765,
+      "word": "The",
+      "onset_s": 266.12,
+      "end_s": 266.14,
+      "heard_only": true
+    },
+    {
+      "w": 766,
+      "word": "Grammys",
+      "onset_s": 266.14,
+      "end_s": 266.42,
+      "heard_only": true
+    },
+    {
+      "w": 767,
+      "word": "have",
+      "onset_s": 266.42,
+      "end_s": 266.58,
+      "heard_only": true
+    },
+    {
+      "w": 768,
+      "word": "to",
+      "onset_s": 266.58,
+      "end_s": 266.74
+    },
+    {
+      "w": 769,
+      "word": "decide",
+      "onset_s": 266.74,
+      "end_s": 267.12
+    },
+    {
+      "w": 770,
+      "word": "what",
+      "onset_s": 267.12,
+      "end_s": 267.36
+    },
+    {
+      "w": 771,
+      "word": "this",
+      "onset_s": 267.36,
+      "end_s": 267.58
+    },
+    {
+      "w": 772,
+      "word": "thing",
+      "onset_s": 267.58,
+      "end_s": 267.98
+    },
+    {
+      "w": 773,
+      "word": "even",
+      "onset_s": 267.98,
+      "end_s": 268.34
+    },
+    {
+      "w": 774,
+      "word": "is.",
+      "onset_s": 268.34,
+      "end_s": 268.7
+    },
+    {
+      "w": 775,
+      "word": "They",
+      "onset_s": 269.24,
+      "end_s": 269.34
+    },
+    {
+      "w": 776,
+      "word": "give",
+      "onset_s": 269.34,
+      "end_s": 269.58
+    },
+    {
+      "w": 777,
+      "word": "one",
+      "onset_s": 269.58,
+      "end_s": 269.9
+    },
+    {
+      "w": 778,
+      "word": "prize",
+      "onset_s": 269.9,
+      "end_s": 270.2
+    },
+    {
+      "w": 779,
+      "word": "for",
+      "onset_s": 270.2,
+      "end_s": 270.58
+    },
+    {
+      "w": 780,
+      "word": "writing",
+      "onset_s": 270.58,
+      "end_s": 270.94
+    },
+    {
+      "w": 781,
+      "word": "a",
+      "onset_s": 270.94,
+      "end_s": 271.14
+    },
+    {
+      "w": 782,
+      "word": "song,",
+      "onset_s": 271.14,
+      "end_s": 271.3
+    },
+    {
+      "w": 783,
+      "word": "and",
+      "onset_s": 271.3,
+      "end_s": 271.48
+    },
+    {
+      "w": 784,
+      "word": "they",
+      "onset_s": 271.48,
+      "end_s": 271.64,
+      "heard_only": true
+    },
+    {
+      "w": 785,
+      "word": "give",
+      "onset_s": 271.64,
+      "end_s": 271.86,
+      "heard_only": true
+    },
+    {
+      "w": 786,
+      "word": "another",
+      "onset_s": 271.86,
+      "end_s": 272.18
+    },
+    {
+      "w": 787,
+      "word": "for",
+      "onset_s": 272.18,
+      "end_s": 272.64
+    },
+    {
+      "w": 788,
+      "word": "performing",
+      "onset_s": 272.64,
+      "end_s": 273.02
+    },
+    {
+      "w": 789,
+      "word": "it.",
+      "onset_s": 273.02,
+      "end_s": 273.36
+    },
+    {
+      "w": 790,
+      "word": "And",
+      "onset_s": 274.18,
+      "end_s": 274.34,
+      "heard_only": true
+    },
+    {
+      "w": 791,
+      "word": "They've",
+      "onset_s": 274.34,
+      "end_s": 274.62
+    },
+    {
+      "w": 792,
+      "word": "reportedly",
+      "onset_s": 274.62,
+      "end_s": 275.16
+    },
+    {
+      "w": 793,
+      "word": "ruled",
+      "onset_s": 275.16,
+      "end_s": 275.52
+    },
+    {
+      "w": 794,
+      "word": "it",
+      "onset_s": 275.52,
+      "end_s": 275.64
+    },
+    {
+      "w": 795,
+      "word": "out",
+      "onset_s": 275.64,
+      "end_s": 275.86
+    },
+    {
+      "w": 796,
+      "word": "of",
+      "onset_s": 275.86,
+      "end_s": 276.1
+    },
+    {
+      "w": 797,
+      "word": "the",
+      "onset_s": 276.1,
+      "end_s": 276.3
+    },
+    {
+      "w": 798,
+      "word": "songwriting",
+      "onset_s": 276.3,
+      "end_s": 277.3,
+      "heard_only": true
+    },
+    {
+      "w": 799,
+      "word": "prize,",
+      "onset_s": 277.3,
+      "end_s": 277.7
+    },
+    {
+      "w": 800,
+      "word": "because",
+      "onset_s": 277.7,
+      "end_s": 278.08
+    },
+    {
+      "w": 801,
+      "word": "bits",
+      "onset_s": 278.08,
+      "end_s": 278.62
+    },
+    {
+      "w": 802,
+      "word": "of",
+      "onset_s": 278.62,
+      "end_s": 278.96
+    },
+    {
+      "w": 803,
+      "word": "the",
+      "onset_s": 278.96,
+      "end_s": 279.28
+    },
+    {
+      "w": 804,
+      "word": "AI",
+      "onset_s": 279.28,
+      "end_s": 279.52
+    },
+    {
+      "w": 805,
+      "word": "version",
+      "onset_s": 279.52,
+      "end_s": 279.82
+    },
+    {
+      "w": 806,
+      "word": "are",
+      "onset_s": 279.82,
+      "end_s": 280.0
+    },
+    {
+      "w": 807,
+      "word": "still",
+      "onset_s": 280.0,
+      "end_s": 280.16
+    },
+    {
+      "w": 808,
+      "word": "in",
+      "onset_s": 280.16,
+      "end_s": 280.3
+    },
+    {
+      "w": 809,
+      "word": "there.",
+      "onset_s": 280.3,
+      "end_s": 280.4
+    },
+    {
+      "w": 810,
+      "word": "Remember",
+      "onset_s": 280.48,
+      "end_s": 280.72,
+      "heard_only": true
+    },
+    {
+      "w": 811,
+      "word": "the",
+      "onset_s": 280.72,
+      "end_s": 281.02,
+      "heard_only": true
+    },
+    {
+      "w": 812,
+      "word": "robot's",
+      "onset_s": 281.02,
+      "end_s": 281.72,
+      "heard_only": true
+    },
+    {
+      "w": 813,
+      "word": "humming.",
+      "onset_s": 281.72,
+      "end_s": 281.88,
+      "heard_only": true
+    },
+    {
+      "w": 814,
+      "word": "But",
+      "onset_s": 282.92,
+      "end_s": 282.96
+    },
+    {
+      "w": 815,
+      "word": "a",
+      "onset_s": 282.96,
+      "end_s": 283.08
+    },
+    {
+      "w": 816,
+      "word": "human",
+      "onset_s": 283.08,
+      "end_s": 283.44
+    },
+    {
+      "w": 817,
+      "word": "sang",
+      "onset_s": 285.24,
+      "end_s": 286.92
+    },
+    {
+      "w": 818,
+      "word": "it,",
+      "onset_s": 286.92,
+      "end_s": 287.14
+    },
+    {
+      "w": 819,
+      "word": "so",
+      "onset_s": 287.2,
+      "end_s": 287.5
+    },
+    {
+      "w": 820,
+      "word": "it",
+      "onset_s": 287.5,
+      "end_s": 287.74
+    },
+    {
+      "w": 821,
+      "word": "can",
+      "onset_s": 287.74,
+      "end_s": 287.94
+    },
+    {
+      "w": 822,
+      "word": "still",
+      "onset_s": 287.94,
+      "end_s": 288.42
+    },
+    {
+      "w": 823,
+      "word": "compete",
+      "onset_s": 288.42,
+      "end_s": 288.92
+    },
+    {
+      "w": 824,
+      "word": "for",
+      "onset_s": 288.92,
+      "end_s": 289.26
+    },
+    {
+      "w": 825,
+      "word": "performing.",
+      "onset_s": 289.26,
+      "end_s": 290.1
+    },
+    {
+      "w": 826,
+      "word": "And",
+      "onset_s": 291.32,
+      "end_s": 291.8
+    },
+    {
+      "w": 827,
+      "word": "HUGEL",
+      "onset_s": 291.8,
+      "end_s": 292.28
+    },
+    {
+      "w": 828,
+      "word": "is",
+      "onset_s": 292.28,
+      "end_s": 292.44
+    },
+    {
+      "w": 829,
+      "word": "challenging",
+      "onset_s": 292.44,
+      "end_s": 292.86
+    },
+    {
+      "w": 830,
+      "word": "that",
+      "onset_s": 292.86,
+      "end_s": 293.32
+    },
+    {
+      "w": 831,
+      "word": "decision.",
+      "onset_s": 293.32,
+      "end_s": 293.64
+    },
+    {
+      "w": 832,
+      "word": "He",
+      "onset_s": 293.8,
+      "end_s": 293.84,
+      "heard_only": true
+    },
+    {
+      "w": 833,
+      "word": "wants",
+      "onset_s": 293.84,
+      "end_s": 294.06,
+      "heard_only": true
+    },
+    {
+      "w": 834,
+      "word": "it",
+      "onset_s": 294.06,
+      "end_s": 294.28,
+      "heard_only": true
+    },
+    {
+      "w": 835,
+      "word": "to",
+      "onset_s": 294.28,
+      "end_s": 294.44,
+      "heard_only": true
+    },
+    {
+      "w": 836,
+      "word": "win",
+      "onset_s": 294.44,
+      "end_s": 294.68,
+      "heard_only": true
+    },
+    {
+      "w": 837,
+      "word": "a",
+      "onset_s": 294.68,
+      "end_s": 295.08,
+      "heard_only": true
+    },
+    {
+      "w": 838,
+      "word": "Grammy",
+      "onset_s": 295.08,
+      "end_s": 295.26,
+      "heard_only": true
+    },
+    {
+      "w": 839,
+      "word": "on",
+      "onset_s": 295.26,
+      "end_s": 295.5,
+      "heard_only": true
+    },
+    {
+      "w": 840,
+      "word": "that",
+      "onset_s": 295.5,
+      "end_s": 295.7,
+      "heard_only": true
+    },
+    {
+      "w": 841,
+      "word": "count.",
+      "onset_s": 295.7,
+      "end_s": 295.94,
+      "heard_only": true
+    },
+    {
+      "w": 842,
+      "word": "So,",
+      "onset_s": 296.28,
+      "end_s": 296.28
+    },
+    {
+      "w": 843,
+      "word": "is",
+      "onset_s": 296.28,
+      "end_s": 297.46
+    },
+    {
+      "w": 844,
+      "word": "it",
+      "onset_s": 297.46,
+      "end_s": 297.6
+    },
+    {
+      "w": 845,
+      "word": "AI",
+      "onset_s": 297.6,
+      "end_s": 297.92
+    },
+    {
+      "w": 846,
+      "word": "music",
+      "onset_s": 297.92,
+      "end_s": 298.14
+    },
+    {
+      "w": 847,
+      "word": "or",
+      "onset_s": 298.14,
+      "end_s": 298.44
+    },
+    {
+      "w": 848,
+      "word": "is",
+      "onset_s": 298.44,
+      "end_s": 298.54,
+      "heard_only": true
+    },
+    {
+      "w": 849,
+      "word": "it",
+      "onset_s": 298.54,
+      "end_s": 298.64,
+      "heard_only": true
+    },
+    {
+      "w": 850,
+      "word": "human",
+      "onset_s": 298.64,
+      "end_s": 298.82
+    },
+    {
+      "w": 851,
+      "word": "music?",
+      "onset_s": 298.82,
+      "end_s": 299.14
+    },
+    {
+      "w": 852,
+      "word": "Honestly,",
+      "onset_s": 299.3,
+      "end_s": 299.5
+    },
+    {
+      "w": 853,
+      "word": "I",
+      "onset_s": 299.56,
+      "end_s": 299.66
+    },
+    {
+      "w": 854,
+      "word": "think",
+      "onset_s": 299.66,
+      "end_s": 299.78
+    },
+    {
+      "w": 855,
+      "word": "that's",
+      "onset_s": 299.78,
+      "end_s": 300.0
+    },
+    {
+      "w": 856,
+      "word": "the",
+      "onset_s": 300.0,
+      "end_s": 300.1
+    },
+    {
+      "w": 857,
+      "word": "wrong",
+      "onset_s": 300.1,
+      "end_s": 300.24
+    },
+    {
+      "w": 858,
+      "word": "question.",
+      "onset_s": 300.24,
+      "end_s": 300.56
+    },
+    {
+      "w": 859,
+      "word": "now.",
+      "onset_s": 300.56,
+      "end_s": 300.84,
+      "heard_only": true
+    },
+    {
+      "w": 860,
+      "word": "I",
+      "onset_s": 300.98,
+      "end_s": 300.98,
+      "heard_only": true
+    },
+    {
+      "w": 861,
+      "word": "think",
+      "onset_s": 300.98,
+      "end_s": 301.16,
+      "heard_only": true
+    },
+    {
+      "w": 862,
+      "word": "you",
+      "onset_s": 301.16,
+      "end_s": 301.78,
+      "heard_only": true
+    },
+    {
+      "w": 863,
+      "word": "can",
+      "onset_s": 301.78,
+      "end_s": 301.96,
+      "heard_only": true
+    },
+    {
+      "w": 864,
+      "word": "see",
+      "onset_s": 301.96,
+      "end_s": 302.16,
+      "heard_only": true
+    },
+    {
+      "w": 865,
+      "word": "here",
+      "onset_s": 302.16,
+      "end_s": 302.4,
+      "heard_only": true
+    },
+    {
+      "w": 866,
+      "word": "A",
+      "onset_s": 302.4,
+      "end_s": 302.58
+    },
+    {
+      "w": 867,
+      "word": "healer",
+      "onset_s": 302.58,
+      "end_s": 302.9
+    },
+    {
+      "w": 868,
+      "word": "had",
+      "onset_s": 302.9,
+      "end_s": 303.3
+    },
+    {
+      "w": 869,
+      "word": "the",
+      "onset_s": 303.3,
+      "end_s": 303.6
+    },
+    {
+      "w": 870,
+      "word": "idea,",
+      "onset_s": 303.6,
+      "end_s": 303.92
+    },
+    {
+      "w": 871,
+      "word": "An",
+      "onset_s": 304.7,
+      "end_s": 304.72,
+      "heard_only": true
+    },
+    {
+      "w": 872,
+      "word": "app",
+      "onset_s": 304.72,
+      "end_s": 304.96,
+      "heard_only": true
+    },
+    {
+      "w": 873,
+      "word": "made",
+      "onset_s": 304.96,
+      "end_s": 305.22,
+      "heard_only": true
+    },
+    {
+      "w": 874,
+      "word": "the",
+      "onset_s": 305.22,
+      "end_s": 305.36,
+      "heard_only": true
+    },
+    {
+      "w": 875,
+      "word": "first",
+      "onset_s": 305.36,
+      "end_s": 305.58,
+      "heard_only": true
+    },
+    {
+      "w": 876,
+      "word": "version.",
+      "onset_s": 305.58,
+      "end_s": 306.02,
+      "heard_only": true
+    },
+    {
+      "w": 877,
+      "word": "Strangers",
+      "onset_s": 306.34,
+      "end_s": 306.48,
+      "heard_only": true
+    },
+    {
+      "w": 878,
+      "word": "on",
+      "onset_s": 306.48,
+      "end_s": 306.68,
+      "heard_only": true
+    },
+    {
+      "w": 879,
+      "word": "their",
+      "onset_s": 306.68,
+      "end_s": 306.82,
+      "heard_only": true
+    },
+    {
+      "w": 880,
+      "word": "phones",
+      "onset_s": 306.82,
+      "end_s": 307.12,
+      "heard_only": true
+    },
+    {
+      "w": 881,
+      "word": "made",
+      "onset_s": 307.12,
+      "end_s": 307.34,
+      "heard_only": true
+    },
+    {
+      "w": 882,
+      "word": "it",
+      "onset_s": 307.34,
+      "end_s": 307.52,
+      "heard_only": true
+    },
+    {
+      "w": 883,
+      "word": "famous.",
+      "onset_s": 307.52,
+      "end_s": 308.0,
+      "heard_only": true
+    },
+    {
+      "w": 884,
+      "word": "A",
+      "onset_s": 311.42,
+      "end_s": 311.7,
+      "heard_only": true
+    },
+    {
+      "w": 885,
+      "word": "healer",
+      "onset_s": 311.7,
+      "end_s": 311.96,
+      "heard_only": true
+    },
+    {
+      "w": 886,
+      "word": "had",
+      "onset_s": 311.96,
+      "end_s": 312.24,
+      "heard_only": true
+    },
+    {
+      "w": 887,
+      "word": "the",
+      "onset_s": 312.24,
+      "end_s": 312.4,
+      "heard_only": true
+    },
+    {
+      "w": 888,
+      "word": "idea.",
+      "onset_s": 312.4,
+      "end_s": 312.74,
+      "heard_only": true
+    },
+    {
+      "w": 889,
+      "word": "an",
+      "onset_s": 313.34,
+      "end_s": 313.56
+    },
+    {
+      "w": 890,
+      "word": "app",
+      "onset_s": 313.56,
+      "end_s": 313.86
+    },
+    {
+      "w": 891,
+      "word": "made",
+      "onset_s": 313.86,
+      "end_s": 314.28
+    },
+    {
+      "w": 892,
+      "word": "the",
+      "onset_s": 314.28,
+      "end_s": 314.46
+    },
+    {
+      "w": 893,
+      "word": "first",
+      "onset_s": 314.46,
+      "end_s": 314.64
+    },
+    {
+      "w": 894,
+      "word": "version.",
+      "onset_s": 314.64,
+      "end_s": 315.1
+    },
+    {
+      "w": 895,
+      "word": "Strangers",
+      "onset_s": 315.68,
+      "end_s": 315.84
+    },
+    {
+      "w": 896,
+      "word": "on",
+      "onset_s": 315.84,
+      "end_s": 316.04
+    },
+    {
+      "w": 897,
+      "word": "their",
+      "onset_s": 316.04,
+      "end_s": 316.22
+    },
+    {
+      "w": 898,
+      "word": "phones",
+      "onset_s": 316.22,
+      "end_s": 316.46
+    },
+    {
+      "w": 899,
+      "word": "made",
+      "onset_s": 316.46,
+      "end_s": 316.7
+    },
+    {
+      "w": 900,
+      "word": "it",
+      "onset_s": 316.7,
+      "end_s": 316.84
+    },
+    {
+      "w": 901,
+      "word": "famous,",
+      "onset_s": 316.84,
+      "end_s": 317.16
+    },
+    {
+      "w": 902,
+      "word": "and",
+      "onset_s": 317.84,
+      "end_s": 318.0
+    },
+    {
+      "w": 903,
+      "word": "a",
+      "onset_s": 318.0,
+      "end_s": 318.1
+    },
+    {
+      "w": 904,
+      "word": "producer",
+      "onset_s": 318.1,
+      "end_s": 318.44
+    },
+    {
+      "w": 905,
+      "word": "rebuilt",
+      "onset_s": 318.44,
+      "end_s": 318.88
+    },
+    {
+      "w": 906,
+      "word": "it",
+      "onset_s": 318.88,
+      "end_s": 319.08
+    },
+    {
+      "w": 907,
+      "word": "by",
+      "onset_s": 319.08,
+      "end_s": 319.26
+    },
+    {
+      "w": 908,
+      "word": "hand.",
+      "onset_s": 319.26,
+      "end_s": 319.62
+    },
+    {
+      "w": 909,
+      "word": "Then",
+      "onset_s": 319.62,
+      "end_s": 320.62
+    },
+    {
+      "w": 910,
+      "word": "a",
+      "onset_s": 320.62,
+      "end_s": 320.84
+    },
+    {
+      "w": 911,
+      "word": "legend",
+      "onset_s": 320.84,
+      "end_s": 321.12
+    },
+    {
+      "w": 912,
+      "word": "sang",
+      "onset_s": 321.12,
+      "end_s": 321.56
+    },
+    {
+      "w": 913,
+      "word": "it,",
+      "onset_s": 321.56,
+      "end_s": 321.76
+    },
+    {
+      "w": 914,
+      "word": "with",
+      "onset_s": 321.76,
+      "end_s": 321.98
+    },
+    {
+      "w": 915,
+      "word": "a",
+      "onset_s": 321.98,
+      "end_s": 322.14
+    },
+    {
+      "w": 916,
+      "word": "robot",
+      "onset_s": 322.14,
+      "end_s": 322.48
+    },
+    {
+      "w": 917,
+      "word": "humming",
+      "onset_s": 322.48,
+      "end_s": 322.84
+    },
+    {
+      "w": 918,
+      "word": "underneath.",
+      "onset_s": 322.84,
+      "end_s": 323.38
+    },
+    {
+      "w": 919,
+      "word": "So",
+      "onset_s": 324.58,
+      "end_s": 324.6
+    },
+    {
+      "w": 920,
+      "word": "it's",
+      "onset_s": 324.6,
+      "end_s": 324.8
+    },
+    {
+      "w": 921,
+      "word": "both,",
+      "onset_s": 324.8,
+      "end_s": 325.16
+    },
+    {
+      "w": 922,
+      "word": "at",
+      "onset_s": 325.16,
+      "end_s": 325.48
+    },
+    {
+      "w": 923,
+      "word": "every",
+      "onset_s": 325.48,
+      "end_s": 325.92
+    },
+    {
+      "w": 924,
+      "word": "single",
+      "onset_s": 325.92,
+      "end_s": 326.24
+    },
+    {
+      "w": 925,
+      "word": "layer.",
+      "onset_s": 326.24,
+      "end_s": 326.6
+    },
+    {
+      "w": 926,
+      "word": "of",
+      "onset_s": 326.6,
+      "end_s": 326.82,
+      "heard_only": true
+    },
+    {
+      "w": 927,
+      "word": "the",
+      "onset_s": 326.82,
+      "end_s": 326.94,
+      "heard_only": true
+    },
+    {
+      "w": 928,
+      "word": "production.",
+      "onset_s": 326.94,
+      "end_s": 327.26,
+      "heard_only": true
+    },
+    {
+      "w": 929,
+      "word": "And",
+      "onset_s": 328.08,
+      "end_s": 328.16
+    },
+    {
+      "w": 930,
+      "word": "this",
+      "onset_s": 328.16,
+      "end_s": 328.3
+    },
+    {
+      "w": 931,
+      "word": "goes",
+      "onset_s": 328.3,
+      "end_s": 328.64
+    },
+    {
+      "w": 932,
+      "word": "way",
+      "onset_s": 328.64,
+      "end_s": 329.24
+    },
+    {
+      "w": 933,
+      "word": "beyond",
+      "onset_s": 329.24,
+      "end_s": 329.56
+    },
+    {
+      "w": 934,
+      "word": "music.",
+      "onset_s": 329.56,
+      "end_s": 329.92
+    },
+    {
+      "w": 935,
+      "word": "It's",
+      "onset_s": 330.36,
+      "end_s": 330.56
+    },
+    {
+      "w": 936,
+      "word": "the",
+      "onset_s": 330.56,
+      "end_s": 330.72
+    },
+    {
+      "w": 937,
+      "word": "advert",
+      "onset_s": 330.72,
+      "end_s": 331.08
+    },
+    {
+      "w": 938,
+      "word": "you",
+      "onset_s": 331.08,
+      "end_s": 331.34
+    },
+    {
+      "w": 939,
+      "word": "scrolled",
+      "onset_s": 331.34,
+      "end_s": 331.82
+    },
+    {
+      "w": 940,
+      "word": "past",
+      "onset_s": 331.82,
+      "end_s": 332.16
+    },
+    {
+      "w": 941,
+      "word": "this",
+      "onset_s": 332.16,
+      "end_s": 332.36
+    },
+    {
+      "w": 942,
+      "word": "morning",
+      "onset_s": 332.36,
+      "end_s": 332.62
+    },
+    {
+      "w": 943,
+      "word": "and",
+      "onset_s": 332.62,
+      "end_s": 332.92
+    },
+    {
+      "w": 944,
+      "word": "the",
+      "onset_s": 332.92,
+      "end_s": 333.14
+    },
+    {
+      "w": 945,
+      "word": "report",
+      "onset_s": 333.14,
+      "end_s": 333.5
+    },
+    {
+      "w": 946,
+      "word": "that's",
+      "onset_s": 333.5,
+      "end_s": 333.78,
+      "heard_only": true
+    },
+    {
+      "w": 947,
+      "word": "lying",
+      "onset_s": 333.78,
+      "end_s": 333.96,
+      "heard_only": true
+    },
+    {
+      "w": 948,
+      "word": "on",
+      "onset_s": 333.96,
+      "end_s": 334.12
+    },
+    {
+      "w": 949,
+      "word": "your",
+      "onset_s": 334.12,
+      "end_s": 334.22
+    },
+    {
+      "w": 950,
+      "word": "desk.",
+      "onset_s": 334.22,
+      "end_s": 334.44
+    },
+    {
+      "w": 951,
+      "word": "right",
+      "onset_s": 334.44,
+      "end_s": 334.64,
+      "heard_only": true
+    },
+    {
+      "w": 952,
+      "word": "now.",
+      "onset_s": 334.64,
+      "end_s": 335.2,
+      "heard_only": true
+    },
+    {
+      "w": 953,
+      "word": "It's",
+      "onset_s": 335.52,
+      "end_s": 335.6
+    },
+    {
+      "w": 954,
+      "word": "even",
+      "onset_s": 335.6,
+      "end_s": 335.74
+    },
+    {
+      "w": 955,
+      "word": "the",
+      "onset_s": 335.74,
+      "end_s": 335.9
+    },
+    {
+      "w": 956,
+      "word": "deck",
+      "onset_s": 335.9,
+      "end_s": 336.26
+    },
+    {
+      "w": 957,
+      "word": "your",
+      "onset_s": 336.26,
+      "end_s": 336.92
+    },
+    {
+      "w": 958,
+      "word": "team",
+      "onset_s": 336.92,
+      "end_s": 337.46
+    },
+    {
+      "w": 959,
+      "word": "sent",
+      "onset_s": 337.46,
+      "end_s": 339.62
+    },
+    {
+      "w": 960,
+      "word": "you",
+      "onset_s": 339.62,
+      "end_s": 340.66
+    },
+    {
+      "w": 961,
+      "word": "last",
+      "onset_s": 340.66,
+      "end_s": 340.84
+    },
+    {
+      "w": 962,
+      "word": "night.",
+      "onset_s": 340.84,
+      "end_s": 341.16
+    },
+    {
+      "w": 963,
+      "word": "So",
+      "onset_s": 342.16,
+      "end_s": 342.46
+    },
+    {
+      "w": 964,
+      "word": "anytime",
+      "onset_s": 342.46,
+      "end_s": 343.34,
+      "heard_only": true
+    },
+    {
+      "w": 965,
+      "word": "someone",
+      "onset_s": 343.34,
+      "end_s": 344.18
+    },
+    {
+      "w": 966,
+      "word": "hands",
+      "onset_s": 344.18,
+      "end_s": 344.42
+    },
+    {
+      "w": 967,
+      "word": "me",
+      "onset_s": 344.42,
+      "end_s": 344.62
+    },
+    {
+      "w": 968,
+      "word": "something",
+      "onset_s": 344.62,
+      "end_s": 344.82
+    },
+    {
+      "w": 969,
+      "word": "brilliant,",
+      "onset_s": 344.82,
+      "end_s": 345.14
+    },
+    {
+      "w": 970,
+      "word": "I'm",
+      "onset_s": 345.26,
+      "end_s": 345.38,
+      "heard_only": true
+    },
+    {
+      "w": 971,
+      "word": "not",
+      "onset_s": 345.38,
+      "end_s": 345.52,
+      "heard_only": true
+    },
+    {
+      "w": 972,
+      "word": "going",
+      "onset_s": 345.52,
+      "end_s": 345.62,
+      "heard_only": true
+    },
+    {
+      "w": 973,
+      "word": "to",
+      "onset_s": 345.62,
+      "end_s": 345.76,
+      "heard_only": true
+    },
+    {
+      "w": 974,
+      "word": "ask",
+      "onset_s": 345.76,
+      "end_s": 346.04
+    },
+    {
+      "w": 975,
+      "word": "if",
+      "onset_s": 346.04,
+      "end_s": 346.56
+    },
+    {
+      "w": 976,
+      "word": "AI",
+      "onset_s": 346.56,
+      "end_s": 347.22
+    },
+    {
+      "w": 977,
+      "word": "made",
+      "onset_s": 347.22,
+      "end_s": 347.54
+    },
+    {
+      "w": 978,
+      "word": "it.",
+      "onset_s": 347.54,
+      "end_s": 347.8
+    },
+    {
+      "w": 979,
+      "word": "Is",
+      "onset_s": 347.8,
+      "end_s": 347.94,
+      "heard_only": true
+    },
+    {
+      "w": 980,
+      "word": "this",
+      "onset_s": 347.94,
+      "end_s": 348.16,
+      "heard_only": true
+    },
+    {
+      "w": 981,
+      "word": "AI",
+      "onset_s": 348.16,
+      "end_s": 348.52,
+      "heard_only": true
+    },
+    {
+      "w": 982,
+      "word": "or",
+      "onset_s": 348.52,
+      "end_s": 348.78,
+      "heard_only": true
+    },
+    {
+      "w": 983,
+      "word": "is",
+      "onset_s": 348.78,
+      "end_s": 348.88,
+      "heard_only": true
+    },
+    {
+      "w": 984,
+      "word": "this",
+      "onset_s": 348.88,
+      "end_s": 349.04,
+      "heard_only": true
+    },
+    {
+      "w": 985,
+      "word": "human?",
+      "onset_s": 349.04,
+      "end_s": 349.3,
+      "heard_only": true
+    },
+    {
+      "w": 986,
+      "word": "I'll",
+      "onset_s": 349.8,
+      "end_s": 349.94
+    },
+    {
+      "w": 987,
+      "word": "ask",
+      "onset_s": 349.94,
+      "end_s": 350.1
+    },
+    {
+      "w": 988,
+      "word": "who",
+      "onset_s": 350.1,
+      "end_s": 350.32
+    },
+    {
+      "w": 989,
+      "word": "did",
+      "onset_s": 350.32,
+      "end_s": 350.48
+    },
+    {
+      "w": 990,
+      "word": "which",
+      "onset_s": 350.48,
+      "end_s": 350.68
+    },
+    {
+      "w": 991,
+      "word": "bit.",
+      "onset_s": 350.68,
+      "end_s": 350.94
+    },
+    {
+      "w": 992,
+      "word": "Because",
+      "onset_s": 351.06,
+      "end_s": 351.4
+    },
+    {
+      "w": 993,
+      "word": "the",
+      "onset_s": 351.4,
+      "end_s": 351.74
+    },
+    {
+      "w": 994,
+      "word": "song",
+      "onset_s": 351.74,
+      "end_s": 351.96
+    },
+    {
+      "w": 995,
+      "word": "you",
+      "onset_s": 351.96,
+      "end_s": 352.18
+    },
+    {
+      "w": 996,
+      "word": "can't",
+      "onset_s": 352.18,
+      "end_s": 352.56
+    },
+    {
+      "w": 997,
+      "word": "stop",
+      "onset_s": 352.56,
+      "end_s": 352.72
+    },
+    {
+      "w": 998,
+      "word": "dancing",
+      "onset_s": 352.72,
+      "end_s": 353.0
+    },
+    {
+      "w": 999,
+      "word": "to",
+      "onset_s": 353.0,
+      "end_s": 353.32
+    },
+    {
+      "w": 1000,
+      "word": "is",
+      "onset_s": 353.32,
+      "end_s": 353.58
+    },
+    {
+      "w": 1001,
+      "word": "already",
+      "onset_s": 353.58,
+      "end_s": 353.92
+    },
+    {
+      "w": 1002,
+      "word": "both.",
+      "onset_s": 353.92,
+      "end_s": 354.24
+    },
+    {
+      "w": 1003,
+      "word": "The",
+      "onset_s": 355.08,
+      "end_s": 355.28
+    },
+    {
+      "w": 1004,
+      "word": "full",
+      "onset_s": 355.28,
+      "end_s": 355.5
+    },
+    {
+      "w": 1005,
+      "word": "deep",
+      "onset_s": 355.5,
+      "end_s": 355.7
+    },
+    {
+      "w": 1006,
+      "word": "dive",
+      "onset_s": 355.7,
+      "end_s": 355.98
+    },
+    {
+      "w": 1007,
+      "word": "is",
+      "onset_s": 355.98,
+      "end_s": 356.24
+    },
+    {
+      "w": 1008,
+      "word": "at",
+      "onset_s": 356.24,
+      "end_s": 356.38
+    },
+    {
+      "w": 1009,
+      "word": "makeyourmindup",
+      "onset_s": 356.38,
+      "end_s": 357.04
+    },
+    {
+      "w": 1010,
       "word": "ai.",
-      "onset_s": 88.46,
-      "end_s": 88.92
+      "onset_s": 357.04,
+      "end_s": 357.56
     }
   ]
 }
