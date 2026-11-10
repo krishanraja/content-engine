@@ -29,7 +29,7 @@ def problems(text):
 
 def now_problems(text):
     size = len(text.encode('utf-8'))
-    return [f'NOW.md is {size:,} bytes, over {NOW_LIMIT:,}: move its history to docs/history/ verbatim, under a "> **Historical.**" banner line (W2.12; the docs steward refuses a history file without one).'] if size > NOW_LIMIT else []
+    return [f'NOW.md is {size:,} bytes, over {NOW_LIMIT:,}: on main, run python3 scripts/now_trim.py (auto-merge runs it after every merge); a branch never edits NOW.md (W2.12).'] if size > NOW_LIMIT else []
 
 
 def main():

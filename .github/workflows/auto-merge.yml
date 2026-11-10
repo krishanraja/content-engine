@@ -65,12 +65,17 @@ jobs:
           pin=$(grep -o -m1 '[0-9a-f]\{64\}  \.claude/hooks/harness-closeout\.mjs' .github/workflows/harness-repository-context.yml)
           for attempt in 1 2 3; do
             git fetch --quiet origin main && git reset --quiet --hard origin/main || exit 1
-            if ! ls now-notes/*.md >/dev/null 2>&1; then echo "No closeout notes to fold."; exit 0; fi
-            echo "$pin" | sha256sum --check --status || { echo "::error::.claude/hooks/harness-closeout.mjs is not the harness copy"; exit 1; }
-            status=0; node .claude/hooks/harness-closeout.mjs --fold || status=$?
-            if [ -z "$(git status --porcelain -- NOW.md now-notes)" ]; then exit "$status"; fi
-            git add -A -- NOW.md now-notes
-            git commit --quiet -m "docs(closeout): fold closeout notes into NOW.md" -m "Folded by auto-merge after the merge, with .claude/hooks/harness-closeout.mjs --fold from krishanraja/ai-harness."
+            status=0
+            if ls now-notes/*.md >/dev/null 2>&1; then
+              echo "$pin" | sha256sum --check --status || { echo "::error::.claude/hooks/harness-closeout.mjs is not the harness copy"; exit 1; }
+              node .claude/hooks/harness-closeout.mjs --fold || status=$?
+            fi
+            # Main keeps NOW.md under its limit itself, so no branch ever trims it by hand: two branches trimming
+            # NOW.md at once is what left pull requests conflicted and unmerged (2026-11-10).
+            python3 scripts/now_trim.py || status=$?
+            if [ -z "$(git status --porcelain -- NOW.md now-notes docs/history)" ]; then echo "Nothing to fold or trim."; exit "$status"; fi
+            git add -A -- NOW.md now-notes docs/history
+            git commit --quiet -m "docs(closeout): fold closeout notes into NOW.md" -m "Folded by auto-merge after the merge, with .claude/hooks/harness-closeout.mjs --fold from krishanraja/ai-harness, then trimmed under the size limit by scripts/now_trim.py."
             if git push --quiet origin HEAD:main; then exit "$status"; fi
             sleep $((attempt * 5))
           done
