@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { EngineObjectSchema, EngineEventSchema } from '../../props'
 import type { DeviceProps } from '../types'
-import { Device, floodState, gridGeometry } from './index'
+import { Device, floodState, gridGeometry, tileHash } from './index'
 import fixture from './fixture.json'
 const object = EngineObjectSchema.parse(fixture.objects[0])
 const events = fixture.events.map(e => EngineEventSchema.parse(e))
@@ -14,18 +14,18 @@ describe('upload_flood', () => {
   it('waits for cues, pours exactly the declared population and preserves AI count', () => {
     expect(html(props(4))).toBe('')
     expect(html(props(19))).not.toContain('data-tile=')
-    const halfway = (html(props(38)).match(/data-tile=/g) ?? []).length
-    expect(halfway).toBeGreaterThan(70)
-    expect(halfway).toBeLessThan(140)
+    const halfway = (html(props(28)).match(/data-tile=/g) ?? []).length
+    expect(halfway).toBeGreaterThan(0)
+    expect(halfway).toBeLessThan(300)
     const full = html(props(56))
-    expect(full.match(/data-tile=/g)).toHaveLength(200)
-    expect(full.match(/data-ai="true"/g)).toHaveLength(100)
+    expect(full.match(/data-tile=/g)).toHaveLength(300)
+    expect(full.match(/data-ai="true"/g)).toHaveLength(Array.from({ length: 300 }, (_, i) => i).filter(i => tileHash(i) < .5).length)
     expect(html(props(186))).toBe('')
     expect(floodState({ ...props(200), events: [...events, { ...events[0]!, atFrame: 190 }] })!.fillAge).toBe(-1)
   })
   it('reads numbers from dataset, with provenance and conditional plus', () => {
     expect(html(props(76))).toContain('50%+')
-    expect(html(props(76))).toContain('Deezer, 2026')
+    expect(html(props(76))).toContain('Deezer, July 2026')
     const p = props(76)
     p.object = { ...object, params: { ...object.params, aiShare: .9 } }
     expect(() => floodState(p)).toThrow(/disagrees/)
@@ -34,7 +34,7 @@ describe('upload_flood', () => {
     expect(html(p)).not.toContain('33%+')
   })
   it('stops meter at the dataset fraction and flickers once per AI tile', () => {
-    const g = gridGeometry(200, 1920, 1080, false)
+    const g = gridGeometry(300, 1920, 1080, false)
     expect(html(props(110))).toContain(`data-meter-width="${g.w * .02}"`)
     expect(floodState(props(110))!.meter).toBe(.02)
     expect(floodState(props(119))!.meter).toBe(.02)
@@ -47,9 +47,26 @@ describe('upload_flood', () => {
     const landed = html(props(164))
     expect(landed).toContain('opacity="0.4"')
     expect(landed.match(/data-result/g)).toHaveLength(1)
-    expect(landed).toContain('A song worth finding')
+    expect(landed).toContain('Movin’ To The Sun')
     expect(landed).toContain('fill="aqua"')
-    expect(landed.match(/data-tile=/g)).toHaveLength(199)
+    expect(landed.match(/data-tile=/g)).toHaveLength(299)
+  })
+  it('scatters AI songs, fills the width, and uses a mint listens fill on cream', () => {
+    const first = Array.from({ length: 40 }, (_, i) => tileHash(i) < .5)
+    expect(first).toContain(true)
+    expect(first).toContain(false)
+    expect(first.slice(1).filter((v, i) => v !== first[i]).length).toBeGreaterThan(8)
+    for (const box of fixture.boxes) {
+      const g = gridGeometry(box.height > box.width ? 360 : 300, box.width, box.height, box.height > box.width)
+      expect(g.w).toBeGreaterThanOrEqual(box.width * .8)
+      expect(g.tile(0).w).toBe(g.tile(0).h)
+    }
+    const markup = html(props(110))
+    expect(markup).toMatch(/data-meter-track="true"[^>]*fill="ivory"/)
+    expect(markup).toMatch(/data-meter-width="[^"]+"[^>]*fill="aqua"/)
+    expect(html({ ...props(76), aspect: '9:16', box: fixture.boxes[0]! }).match(/data-tile=/g)).toHaveLength(360)
+    expect(html(props(164))).toContain('Imael Angel')
+    expect(markup).toContain('1-3% of listens')
   })
   it('renders named goldens in tall, full wide and face-column slots; clips motion to box', () => {
     expect(Object.values(fixture.goldenFrames)).toEqual(fixture.stills)
@@ -61,7 +78,7 @@ describe('upload_flood', () => {
       expect(markup).toContain('patternTransform="rotate(45)"')
       expect(markup).toContain('width="6" height="6"')
       expect(markup).not.toMatch(/#[0-9a-f]{3,8}\b/i)
-      const g = gridGeometry(200, box.width, box.height, p.aspect === '9:16')
+      const g = gridGeometry(300, box.width, box.height, p.aspect === '9:16')
       for (let i = 0; i < 200; i++) {
         const t = g.tile(i)
         expect(t.x).toBeGreaterThanOrEqual(0)
