@@ -31,7 +31,7 @@ function elements(node: ReactNode): ReactElement<Record<string, unknown>>[] {
   return [node, ...elements(node.props.children as ReactNode)]
 }
 
-const layouts: Exclude<EngineBeat['layout'], 'STAGE' | 'SPLIT'>[] = ['P1', 'P3', 'P6', 'F1', 'F3']
+const layouts: Exclude<EngineBeat['layout'], 'STAGE' | 'SPLIT' | 'WINDOW'>[] = ['P1', 'P3', 'P6', 'F1', 'F3']
 const aspects: EngineRenderProps['aspect'][] = ['9:16', '16:9']
 
 describe('ve layouts', () => {
@@ -442,4 +442,26 @@ describe('the sting opens the wide long cut', () => {
     expect(render('VeFormatMasterWide', wide()).type).toBe(VeCut)
     expect(render('VeFormatMasterTall', fixture).type).toBe(FormatMaster)
   })
+})
+
+it('validates WINDOW face states strictly', () => {
+  const props = structuredClone(fixture)
+  Object.assign(props.beats[0]!, { layout: 'WINDOW', face: 'off' })
+  expect(EngineRenderPropsSchema.safeParse(props).success).toBe(true)
+  Object.assign(props.beats[0]!, { face: 'unknown' })
+  expect(EngineRenderPropsSchema.safeParse(props).success).toBe(false)
+})
+
+it('keeps one presenter layer above WINDOW plates and uses the signed window geometry', () => {
+  const props = EngineRenderPropsSchema.parse(fixture)
+  props.beats = [{ id: 'window', layout: 'WINDOW', role: 'anchor', fromFrame: 0, toFrame: 150,
+    uses: [], transitionOut: 'cut', sectionBeat: false }]
+  props.segments = [{ src: 'take.mp4', trimBeforeFrames: 0, fromFrame: 0, durationFrames: 150 }]
+  vi.mocked(useEngineFrame).mockReturnValue(75)
+  const tree = elements(FormatMaster(props))
+  expect(tree.filter(node => node.type === OffthreadVideo)).toHaveLength(1)
+  expect(tree.some(node => {
+    const style = node.props.style as Record<string, unknown> | undefined
+    return style?.left === 48 && style?.top === 1250 && style?.width === 330 && style?.height === 420
+  })).toBe(true)
 })
