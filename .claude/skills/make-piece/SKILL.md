@@ -414,13 +414,9 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    read it, when, "nothing lost" and the hash of the words they heard onto
    the script check; new words need a new read-back.
 6. **His Approve scripts press, then Teleprompter**, where he reads them
-   while he records ("The Teleprompter send", above). Before the press, the
-   storyboard for both cuts is drawn and shown beside the scripts (step 7;
-   Ruling, Krish, 2026-11-09: storyboard mocks before he records), so what he
-   approves is the words and their pictures together. File the storyboard on
-   the day (the live board's drop, filed as "Storyboard: <file>"); with none on
-   file the board reminds him and never refuses (Krish, 2026-11-09: "Remind").
-   Put both scripts on
+   while he records ("The Teleprompter send", above). The storyboard is drawn
+   first (step 7) and filed on the day; with none, the board reminds (Krish,
+   2026-11-09: "Remind"). Put both scripts on
    the day's tab for his Approve scripts press and republish it; the press
    binds to their sha256, and the server sends them and reads them back.
    His press and its answer are in the board's `approvals` collection
@@ -457,14 +453,13 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    `creative-direction.json` beside its `post.json` (`docs/CREATIVE_DIRECTION.md`):
    `creative_direction.py template` gives one beat per sentence, then
    decide every beat's point, picture, source and on-screen words, in the
-   look he picked on the live board (`meta.look`, `/board/next`), else the
-   style he picked on the Ideas tab (`config/style-references.json`
+   look in `meta.look`, else the style he picked on the Ideas tab (`config/style-references.json`
    `formats`), with the brand reference and the article's visuals. Name
    the piece's one motion system before any beat (`style.motion`, required
    from 9 November): propose one from `creative_direction.py motion
    --points <types> --format <long_video|short_video>` with its `reason`;
-   he picks from `ve styles` mocks (before he records, on his last take of
-   the format, or after, on his new take), then
+   he picks from `ve styles` mocks (his last take before he records, his
+   new one after), then
    approves the hardest beat moving (`ve proof`) before a whole cut
    renders. Its `brand.references` come from the inspiration board by
    card id, never a typed name (`ve init`, `ve refs`: the `ve` skill, step
@@ -476,16 +471,10 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    the facts, is not (`docs/production/THE_BAR.md`, quality 2). `check
    --script long=... --script short=...` must pass before he records, and
    the day's Record step says what to capture (each `capture:` source).
-   **The storyboard comes before he records, made with the script** (Ruling,
-   Krish, 2026-11-09: "I would like to do the storyboard mocks before I record
-   the script so that I can record correctly and the scripts can be in the
-   right voice"). Write both cuts and their storyboard together, a rough mock
-   frame for every line, in the look he picked on the live board
-   (`meta.look`, `/board/next`), and send him one file with each cut's script
-   beside its frames; he approves them as one, and only then do the scripts
-   go to his Teleprompter. After he records: line the takes up, re-time the
-   storyboard he approved to the real captures onto the day's Brief step (a
-   storyboard is never started fresh after recording), showing both
+   **The storyboard comes before he records, made with the script** (Krish,
+   2026-11-09: "I would like to do the storyboard mocks before I record the
+   script"): a mock frame per line, beside each cut's script. After he records: line the takes up and re-time that
+   storyboard to the real captures onto the day's Brief step, showing both
    lead pictures as stills, the series picture from the brand book and a
    story object, with your pick marked (`creative_direction.py choices`;
    under test, Krish picked: "Choose per piece"). When he signs it in words
