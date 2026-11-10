@@ -1,2 +1,2 @@
-/** AI keeps ink beneath a 45 degree inkSoft hatch, including mixed layers. */
-export const hatch = (ink: string, inkSoft: string) => `repeating-linear-gradient(45deg, transparent 0px, transparent 7px, ${inkSoft} 7px, ${inkSoft} 9px), linear-gradient(${ink}, ${ink})`
+/** Eight-pixel, 45-degree cream machine hatch over ink. */
+export const hatch = (ink: string, cream: string) => `repeating-linear-gradient(45deg, transparent 0px, transparent 7px, color-mix(in srgb, ${cream} 30%, transparent) 7px, color-mix(in srgb, ${cream} 30%, transparent) 8px), linear-gradient(${ink}, ${ink})`
