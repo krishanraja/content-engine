@@ -1,5 +1,6 @@
 import { Device as Arrangement } from './arrangement'
 import { Device as SlotMachine } from './slot_machine'
+import { Device as UploadFlood } from './upload_flood'
 import { Device as Leaderboard } from './leaderboard'
 import { Device as OfficeFloor } from './office_floor'
 import { Device as LogoOrbit } from './logo_orbit'
@@ -28,6 +29,7 @@ import { Device as QuoteCard } from './quote_card'
 export const DEVICES: DeviceRegistry = {
   arrangement: Arrangement,
   slot_machine: SlotMachine,
+  upload_flood: UploadFlood,
   leaderboard: Leaderboard,
   office_floor: OfficeFloor,
   typing_bubble: TypingBubble,
