@@ -79,7 +79,8 @@ function drawUI(env, g, t) {
 
   card(1120, 600)
   label(g, 'CITY BRANCHES', 1170, 250, 38, c.creamSoft)
-  if (t >= at(env, B.didnt, 'opened')) {
+  // Nothing shows until he says the number: never a "+0%" on screen.
+  if (t >= at(env, B.didnt, 'Forty-three')) {
     const kB = env.ease.utility(clamp((t - at(env, B.didnt, 'Forty-three')) / 0.8))
     const s = `+${Math.round(43 * kB)}%`
     g.font = `250px 'Anton'`; const w = g.measureText(s).width
@@ -202,7 +203,7 @@ function onScreen(x, y) {
 }
 
 function placeCamera(env, t) {
-  let from = FOCUS.full, to = FOCUS.full, t0 = 0
+  let from = FOCUS.hook, to = FOCUS.hook, t0 = 0
   for (const [b, key, word] of SHOTS) { const s = at(env, b, word) - 0.25; if (t >= s) { from = to; to = FOCUS[key]; t0 = s } }
   const k = env.ease.hero(clamp((t - t0) / 1.0))
   const [x, y, w] = from.map((v, i) => lerp(v, to[i], k))
