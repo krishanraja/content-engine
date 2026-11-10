@@ -135,7 +135,7 @@ def s_cold(t):
         text(g, 'TikTok', MONO(30), 48, SH - 70, CREAM, alpha=0.9)
         return g
     if t < 5.0:  # the wall fills on the beat
-        order = ['gran', 'kids', 'cat', 'car', 'wigs', 'granny']; tw, th = 340, 590
+        order = ['gran', 'trackid', 'cat', 'car', 'wigs', 'granny']; tw, th = 340, 590
         for i, k in enumerate(order):
             ti = 3.4 + i * 0.22
             if t < ti: continue
@@ -172,8 +172,8 @@ def s_cold(t):
     # episode card
     p = ease((t - 13.95) / 0.35); g[:] = bgr(INKD)
     text(g, 'under.the.hood', MONO(42), W / 2, SH / 2 - 150, MINT, 'ma', p)
-    text(g, 'A REIKI MASTER', ANTON(130), W / 2, SH / 2 - 70, CREAM, 'ma', p)
-    text(g, 'WROTE A No. 2 HIT', ANTON(130), W / 2, SH / 2 + 90, CREAM, 'ma', p)
+    text(g, 'WHO MADE', ANTON(150), W / 2, SH / 2 - 70, CREAM, 'ma', p)
+    text(g, 'THIS No. 2 HIT?', ANTON(150), W / 2, SH / 2 + 100, CREAM, 'ma', p)
     return g
 
 def kb(img, z, fx=0.5, fy=0.5):
@@ -184,7 +184,7 @@ def s_slot(t): return kb(devframe('slot', t, 15.9), 1 + 0.08 * ease((t - 15.9) /
 
 def s_feed(t):  # people put it under their own videos: cats, weddings, dads dancing badly
     g = ground()
-    seq = [(25.6, 'gran'), (26.6, 'kids'), (27.6, 'granny'), (28.6, 'cat'), (29.7, 'wigs'), (30.6, 'car')]
+    seq = [(25.6, 'gran'), (26.6, 'trackid'), (27.6, 'granny'), (28.6, 'cat'), (29.7, 'wigs'), (30.6, 'car')]
     cur = [k for k in seq if t >= k[0]][-1]; nxt = seq.index(cur)
     if t < 28.6:  # a phone feed scrolling, one under the other
         off = (t - 25.6) / 1.0
@@ -196,9 +196,6 @@ def s_feed(t):  # people put it under their own videos: cats, weddings, dads dan
     prev = seq[nxt - 1][1] if nxt > 3 else None
     if prev: g[:] = cover(CLIPS[prev].at(t), W, SH, 1.05) // 2
     paste(g, cover(CLIPS[cur[1]].at(t), 720, 1180), W / 2 + (1 - p) * 300, SH / 2 + 10, 0.85 + 0.15 * p, 1, 30, rot=(1 - p) * 6)
-    if t > 31.8:
-        q = back((t - 31.8) / 0.3)
-        text(g, 'TIKTOK CAME FIRST', ANTON(int(96 * min(1, q))), W / 2, 70, MINT, 'ma', min(1, q))
     return g
 
 def s_hunt(t):  # strangers went hunting for the song; a top producer found it
@@ -216,7 +213,7 @@ def s_hunt(t):  # strangers went hunting for the song; a top producer found it
 def s_arr(t):
     g = devframe('arr1', t, 37.1)
     z = 1 + 0.06 * ease((t - 37.1) / 5) + 0.22 * ease((t - 43.0) / 14)
-    g = kb(g, z, 0.3, 0.62)
+    g = kb(g, z, 0.3, 0.62 + 0.12 * math.sin((t - 43) * 0.45) * ease((t - 43) / 3))
     if 42.5 <= t < 48.0:  # Ultra Nate's voice, her own single page
         p = back((t - 42.5) / 0.35); out = ease((t - 47.6) / 0.4)
         paste(g, SHOTS['apple'], W / 2 + 120, SH - 260 + out * 600, 0.5 * min(1, p), min(1, p * 2) * (1 - out), 18)
@@ -239,13 +236,14 @@ def s_grammys(t):  # headlines stack in; writing ruled out (reportedly), singing
             fg = CREAM if ai else INK
             text(card, a, ANTON(70), cw / 2, 60, fg, 'ma'); text(card, b, ANTON(96), cw / 2, 330, fg, 'ma'); text(card, c, MONO(34), cw / 2, 470, fg, 'ma')
             paste(g, card, 285 + j * 510, SH - 400 + (1 - p) * 500, 1, min(1, p * 2), 26, rot=(-3 if j == 0 else 3))
-    return g
+    return kb(g, 1 + 0.12 * ease((t - 61.3) / 8.6) + 0.04 * math.sin(t * 1.3), 0.5 + 0.08 * math.sin(t * 0.9), 0.6)
 
 def s_question(t):  # AI versus human is the wrong question
     g = ground(); p = ease((t - 69.9) / 0.4)
     ai = hatch(380, 900, t * 20); text(ai, 'AI', ANTON(260), 450, 30, CREAM, 'ma')
     hu = np.full((380, 900, 3), bgr(MINT), np.uint8); text(hu, 'HUMAN', ANTON(260), 450, 30, INK, 'ma')
-    paste(g, ai, W / 2 - (1 - p) * 700, 300, 1, 1, 30); paste(g, hu, W / 2 + (1 - p) * 700, SH - 300, 1, 1, 30)
+    d = 60 * ease((t - 70.5) / 3.2)
+    paste(g, ai, W / 2 - (1 - p) * 700, 300 + d, 1, 1, 30, rot=-2 * math.sin(t * 2)); paste(g, hu, W / 2 + (1 - p) * 700, SH - 300 - d, 1, 1, 30, rot=2 * math.sin(t * 2))
     text(g, 'vs', font('Fraunces-Italic-Variable.ttf', 120), W / 2, SH / 2 - 80, CREAM, 'ma', p)
     if t > 73.7:
         q = ease((t - 73.7) / 0.35); cv2.line(g, (80, SH // 2), (int(80 + (W - 160) * q), SH // 2), bgr(MINT), 18, cv2.LINE_AA)
@@ -307,7 +305,7 @@ def frame(t):
     return out
 
 if __name__ == '__main__':
-    out = sys.argv[1]; t_from = float(sys.argv[2]) if len(sys.argv) > 2 else 0.0; t_to = float(sys.argv[3]) if len(sys.argv) > 3 else 87.3
+    out = sys.argv[1]; t_from = float(sys.argv[2]) if len(sys.argv) > 2 else 0.0; t_to = float(sys.argv[3]) if len(sys.argv) > 3 else 88.8
     step = int(sys.argv[4]) if len(sys.argv) > 4 else 1
     if out.endswith('.jpg'):  # contact sheet of one frame a step
         ims = [cv2.resize(frame(i / FPS), (216, 384)) for i in range(int(t_from * FPS), int(t_to * FPS), step)]

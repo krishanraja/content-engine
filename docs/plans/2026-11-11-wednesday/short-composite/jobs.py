@@ -7,7 +7,7 @@ jobs = {}
 # slot machine 15.9 -> 25.5
 t0 = 15.9
 jobs['slot'] = {"device": "slot_machine", "object": {"obj": "song", "device": "slot_machine", "meaning": "House rebuild of Suno create",
-  "params": {"lyrics": "I’m movin’ to the sun", "style": "deep house, female singer, summer", "source": "rebuilt from suno.com, Nov 2026",
+  "params": {"lyrics": "I’m movin’ to the sun", "style": "the vibe she wanted", "source": "rebuilt from suno.com, Nov 2026",
              "songs": [{"title": "Movin’ To The Sun (v1)", "length": "3:24"}, {"title": "Movin’ To The Sun (v2)", "length": "3:11"}]},
   "fromFrame": 0, "toFrame": 400},
   "events": [ev("song", "enter", "visible", 2), ev("song", "type", "lyrics", L(19.9, t0)), ev("song", "type", "style", L(21.6, t0)),
