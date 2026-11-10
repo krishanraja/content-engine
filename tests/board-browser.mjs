@@ -12,7 +12,7 @@ export async function checkVisual({modulePath, origin, cookie, screenshotDir, so
       const context=await browser.newContext({viewport:{width,height:900}})
       await context.addCookies([{name:'cc_access',value:cookie.split('=')[1],url:origin}])
       const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message))
-      await page.goto(origin+'/board/2026-10-19')
+      await page.goto(origin+'/board/2026-10-19?archive=1')
       const weeks=page.getByRole('navigation',{name:'Publishing weeks'})
       await weeks.getByRole('link',{name:'Week of 12 Oct'}).waitFor()
       assert.equal(await weeks.getByRole('link',{name:'Week of 19 Oct'}).getAttribute('aria-current'),'page')
@@ -60,7 +60,7 @@ export async function checkBrowser({modulePath, origin, cookie, api, write, scre
       await context.addCookies([{name:'cc_access',value:cookie.split('=')[1],url:origin}])
       const page=await context.newPage(); const errors=[]
       page.on('pageerror',e=>errors.push(e.message))
-      await page.goto(origin+'/board/2026-10-19')
+      await page.goto(origin+'/board/2026-10-19?archive=1')
       await page.locator('input[data-tick="mon-substack"]').first().waitFor()
       await page.waitForFunction(()=>!document.querySelector('input[data-tick="mon-substack"]').disabled)
       for(const tab of ['ideas','monday','wednesday','friday']) {

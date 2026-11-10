@@ -4,6 +4,24 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('quota_chart declares its seven cues', () => {
+    expect(manifest.devices.quota_chart.verbs).toEqual(['enter', 'fill', 'draw', 'mark', 'move', 'count_to', 'exit'])
+  })
+  it('agent_swarm declares its six cues', () => {
+    expect(manifest.devices.agent_swarm.verbs).toEqual(['enter', 'add', 'fill', 'move', 'mark', 'exit'])
+  })
+  it('wall_screen declares exactly its four cues', () => {
+    expect(manifest.devices.wall_screen.verbs).toEqual(['enter', 'move', 'mark', 'exit'])
+  })
+  it('arrangement declares its ten cues', () => {
+    expect(manifest.devices.arrangement.verbs).toEqual(['enter','add','type','stamp','mark','highlight','fill','chip','move','exit'])
+  })
+  it('slot_machine declares its eight cues', () => {
+    expect(manifest.devices.slot_machine.verbs).toEqual(['enter', 'type', 'pick', 'send', 'fill', 'bounce', 'highlight', 'exit'])
+  })
+  it('upload_flood declares its seven cues', () => {
+    expect(manifest.devices.upload_flood.verbs).toEqual(['enter', 'fill', 'count_to', 'draw', 'type', 'pick', 'exit'])
+  })
   it('leaderboard declares its eight cues', () => {
     expect(manifest.devices.leaderboard.verbs).toEqual(['enter', 'add', 'fill', 'stamp', 'move', 'highlight', 'mark', 'exit'])
   })

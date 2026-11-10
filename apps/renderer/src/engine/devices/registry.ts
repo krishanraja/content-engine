@@ -1,3 +1,9 @@
+import { Device as QuotaChart } from './quota_chart'
+import { Device as AgentSwarm } from './agent_swarm'
+import { Device as WallScreen } from './wall_screen'
+import { Device as Arrangement } from './arrangement'
+import { Device as SlotMachine } from './slot_machine'
+import { Device as UploadFlood } from './upload_flood'
 import { Device as Leaderboard } from './leaderboard'
 import { Device as OfficeFloor } from './office_floor'
 import { Device as LogoOrbit } from './logo_orbit'
@@ -24,6 +30,12 @@ import { Device as QuoteCard } from './quote_card'
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
+  quota_chart: QuotaChart,
+  agent_swarm: AgentSwarm,
+  wall_screen: WallScreen,
+  arrangement: Arrangement,
+  slot_machine: SlotMachine,
+  upload_flood: UploadFlood,
   leaderboard: Leaderboard,
   office_floor: OfficeFloor,
   typing_bubble: TypingBubble,

@@ -1,0 +1,132 @@
+{
+  "objects": [
+    {
+      "obj": "song",
+      "device": "slot_machine",
+      "meaning": "House rebuild of Suno create, transforming into the song slot-machine analogy",
+      "params": {
+        "lyrics": "I’m movin’ to the sun\nleave the rain behind",
+        "style": "deep house, female singer, summer",
+        "source": "rebuilt from suno.com, Nov 2026",
+        "songs": [
+          {
+            "title": "Movin’ To The Sun (v1)",
+            "length": "3:24"
+          },
+          {
+            "title": "Movin’ To The Sun (v2)",
+            "length": "3:11"
+          }
+        ]
+      },
+      "fromFrame": 0,
+      "toFrame": 250
+    }
+  ],
+  "events": [
+    {
+      "id": "enter5",
+      "obj": "song",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 5
+    },
+    {
+      "id": "type20",
+      "obj": "song",
+      "verb": "type",
+      "toState": "lyrics",
+      "atFrame": 20
+    },
+    {
+      "id": "type55",
+      "obj": "song",
+      "verb": "type",
+      "toState": "style",
+      "atFrame": 55
+    },
+    {
+      "id": "pick90",
+      "obj": "song",
+      "verb": "pick",
+      "toState": "machine",
+      "atFrame": 90
+    },
+    {
+      "id": "send110",
+      "obj": "song",
+      "verb": "send",
+      "toState": "spin",
+      "atFrame": 110
+    },
+    {
+      "id": "fill145",
+      "obj": "song",
+      "verb": "fill",
+      "toState": "songs",
+      "atFrame": 145
+    },
+    {
+      "id": "highlight170",
+      "obj": "song",
+      "verb": "highlight",
+      "toState": "1",
+      "atFrame": 170
+    },
+    {
+      "id": "bounce195",
+      "obj": "song",
+      "verb": "bounce",
+      "toState": "again",
+      "atFrame": 195
+    },
+    {
+      "id": "fill225",
+      "obj": "song",
+      "verb": "fill",
+      "toState": "songs",
+      "atFrame": 225
+    },
+    {
+      "id": "exit245",
+      "obj": "song",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 245
+    }
+  ],
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "stills": [
+    30,
+    72,
+    92,
+    116,
+    160,
+    180
+  ],
+  "golden_frames": {
+    "G1": 30,
+    "G2": 72,
+    "G3": 92,
+    "G4": 116,
+    "G5": 160,
+    "G6": 180
+  },
+  "slots": [
+    {
+      "width": 1080,
+      "height": 1920
+    },
+    {
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "width": 1260,
+      "height": 1080
+    }
+  ]
+}

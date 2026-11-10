@@ -253,3 +253,26 @@ describe('no storyboard on file: remind, never refuse (Krish, 2026-11-09: "Remin
     expect(fri.next).not.toMatch(/Reminder/)
   })
 })
+
+describe("the week's board link opens the live board (Krish, 2026-11-10: \"Switch fully, move the old board to an archive link\")", () => {
+  async function page(query: Record<string, string>) {
+    const { createBoardHandler } = await import('../../apps/control-plane/api/board/_handler')
+    const handler = createBoardHandler(async () => { throw new Error('no database for the page') })
+    let status = 0, body: unknown
+    const res = { setHeader() {}, status(code: number) { status = code; return this }, send(v: unknown) { body = v; return this }, json(v: unknown) { body = v; return this }, redirect(code: number) { status = code; return this } }
+    await handler({ method: 'GET', headers: {}, query: { week: '2026-11-16', ...query } } as never, res as never)
+    return { status, body }
+  }
+  it('serves the live board at /board/<Monday> and /board/next/<Monday>, with no sign-in needed for the page itself', async () => {
+    for (const op of ['html', 'next']) {
+      const { status, body } = await page({ op })
+      expect(status, op).toBe(200)
+      expect(body, op).toBe(DESK_PAGE)
+    }
+  })
+  it('keeps the old board behind ?archive=1, where his sign-in is still asked for', async () => {
+    const { status, body } = await page({ op: 'html', archive: '1' })
+    expect(status).toBe(401)
+    expect(body).toMatchObject({ ok: false, error: 'unauthorized' })
+  })
+})
