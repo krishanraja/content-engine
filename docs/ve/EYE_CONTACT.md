@@ -138,6 +138,7 @@ and picks against the key. Stills cannot show flicker: Krish watches the cut at 
 |---|---|
 | `its copy has N frames and the take M` | The Maxine copy is not this take, or a chunk failed. Re-run the dispatch for this take. |
 | The NIM says `Only H.264 8-bit videos with Constant Frame Rate are supported` | Use `image=1.5.0`; for a take over about 100 s add `split_seconds=90`. |
+| The same error on a 48 fps phone export (10 Nov) | The workflow now re-encodes any take above 30 fps to 30 fps before the NIM sees it (suspected cause: the NIM took 30 fps takes and refused 48 fps). |
 | `time cap ... reached`, runtime none | The image was still pulling: raise `max_minutes` to 30 (40 with chunks). |
 | `not one setup` with `--lens` | His head sat more than 4 degrees from where it sat on the calibrated take: make this take its own Maxine copy. |
 | `not the receipt of a Maxine eyeline run` | `--lens` needs the receipt of a run with `--backend maxine` that recorded both eyes' lens points. |

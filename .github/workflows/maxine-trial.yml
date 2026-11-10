@@ -112,7 +112,9 @@ jobs:
           out = subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), '-i', sys.argv[1]], capture_output=True, text=True).stderr
           import re
           m = re.search(r'Video:.*?(\d+(?:\.\d+)?) fps', out)
-          print(m.group(1) if m else '30')
+          # At most 30 fps: the NIM took the 30 fps takes of 5 Nov and refused the 48 fps takes of 10 Nov with the same
+          # "Only H.264 8-bit ... Constant Frame Rate" error (run 42805645993; suspected cause, the frame rate).
+          print(min(float(m.group(1)), 30.0) if m else '30')
           PY
           )
           LIMIT=""
