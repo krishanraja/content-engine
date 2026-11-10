@@ -226,7 +226,7 @@ def inputs_from_props(props: dict) -> dict:
         if len(active) != 1:
             raise ValueError(f"Cue {event.get('id', event['obj'])} has no unique beat slot")
         beat = active[0]
-        slot_index = 0 if beat['layout'] in ('STAGE', 'SPLIT') else beat['uses'].index(event['obj'])
+        slot_index = 0 if beat['layout'] in ('STAGE', 'SPLIT', 'WINDOW') else beat['uses'].index(event['obj'])
         box = layouts[aspect][beat['layout']][slot_index]
         params = (objects.get(event['obj']) or {}).get('params', {}) if beat['layout'] == 'SPLIT' else {}
         place = params.get('place')
@@ -382,7 +382,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     # the stage header, and an object's slot is the full canvas, so "change near the event inside its slot" cannot
     # separate an event from the camera. Both checks apply to the other layouts only; events on STAGE devices are
     # proved by their device tests and the key-frame match.
-    stage_beats = [b for b in (beats or []) if b.get('layout') == 'STAGE']
+    stage_beats = [b for b in (beats or []) if b.get('layout') in ('STAGE', 'WINDOW')]
     if stage_beats and len(stage_beats) == len(beats or []):
         for name in ('brand.mark_tile', 'motion.cue_sync'):
             checks[name] = {'value': None, 'target': 'not defined for STAGE layouts', 'pass': None,
