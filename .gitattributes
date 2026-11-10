@@ -49,3 +49,7 @@ vendor/makeyourmindup/kill-list/** -text
 
 # tests/no-claude-routines.test.ts reads the workflows' exact text. Keep them LF on Windows too.
 .github/workflows/*.yml text eol=lf
+
+# The live board's client and its built page are compared byte for byte by check:desk-page; LF on Windows too.
+apps/control-plane/board-next/** text=auto eol=lf
+apps/control-plane/api/board/_deskPage.ts text eol=lf

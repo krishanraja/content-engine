@@ -166,6 +166,26 @@
       "destination": "/api/board?week=:week&op=posted"
     },
     {
+      "source": "/api/board/:week/view",
+      "destination": "/api/board?week=:week&op=view"
+    },
+    {
+      "source": "/api/board/:week/look",
+      "destination": "/api/board?week=:week&op=look"
+    },
+    {
+      "source": "/api/board/:week/material",
+      "destination": "/api/board?week=:week&op=material"
+    },
+    {
+      "source": "/api/board/:week/research",
+      "destination": "/api/board?week=:week&op=research"
+    },
+    {
+      "source": "/api/board/:week/run",
+      "destination": "/api/board?week=:week&op=run"
+    },
+    {
       "source": "/api/board/:week/state",
       "destination": "/api/board?week=:week&op=state"
     },
@@ -196,6 +216,14 @@
     {
       "source": "/api/board/:week",
       "destination": "/api/board?week=:week"
+    },
+    {
+      "source": "/board/next/:week",
+      "destination": "/api/board?week=:week&op=next"
+    },
+    {
+      "source": "/board/next",
+      "destination": "/api/board?op=next"
     },
     {
       "source": "/board/standards",
