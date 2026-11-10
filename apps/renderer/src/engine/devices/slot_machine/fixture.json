@@ -5,17 +5,17 @@
       "device": "slot_machine",
       "meaning": "House rebuild of Suno create, transforming into the song slot-machine analogy",
       "params": {
-        "lyrics": "Stay with me tonight\nUnder summer skies",
+        "lyrics": "I’m movin’ to the sun\nleave the rain behind",
         "style": "deep house, female singer, summer",
         "source": "rebuilt from suno.com, Nov 2026",
         "songs": [
           {
-            "title": "Summer Skies",
+            "title": "Movin’ To The Sun (v1)",
             "length": "3:24"
           },
           {
-            "title": "Stay Tonight",
-            "length": "2:58"
+            "title": "Movin’ To The Sun (v2)",
+            "length": "3:11"
           }
         ]
       },

@@ -4,5 +4,5 @@ import type { EngineTokens } from '../../props'
 export function hatch(id: string, tokens: EngineTokens) {
   return React.createElement('pattern', { id, width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' },
     React.createElement('rect', { width: 6, height: 6, fill: tokens.ink }),
-    React.createElement('path', { d: 'M0 0V6', stroke: tokens.inkSoft, strokeWidth: 2 }))
+    React.createElement('path', { d: 'M0 0V6', stroke: tokens.cream, strokeOpacity: .3, strokeWidth: 2 }))
 }

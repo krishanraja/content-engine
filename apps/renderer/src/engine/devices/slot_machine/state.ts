@@ -26,6 +26,8 @@ export function slotState({ object, events, frame }: Pick<DeviceProps, 'object' 
   })
   const pick = last('pick')
   const morph = pick ? progress(frame - pick.atFrame, 12, utility) : 0
+  const inputCollapse = pick ? progress(frame - pick.atFrame, 5, utility) : 0
+  const reelGrow = pick ? progress(frame - pick.atFrame - 5, 7, utility) : 0
   const spin = cues.filter(e => e.verb === 'send' || e.verb === 'bounce').at(-1)
   const age = spin ? frame - spin.atFrame : -1
   const fill = last('fill')
@@ -35,11 +37,11 @@ export function slotState({ object, events, frame }: Pick<DeviceProps, 'object' 
   const focusAge = type ? frame - type.atFrame : 0
   const length = type && (type.toState === 'lyrics' || type.toState === 'style') ? params[type.toState].length : 0
   const focus = type && !pick ? progress(focusAge, 6, utility) * (1 - progress(focusAge - Math.ceil(length / 2) - 8, 6, utility)) : 0
-  return { params, texts, out, entrance: progress(frame - enter.atFrame, MOTION.enterFrames), morph,
+  return { params, texts, out, entrance: progress(frame - enter.atFrame, MOTION.enterFrames), morph, inputCollapse, reelGrow,
     pressed: pick ? 8 * progress(frame - pick.atFrame, 2) * (1 - progress(frame - pick.atFrame - 3, 4)) : 0,
     focus: type?.toState, zoom: 1 + 0.6 * focus, focusAmount: focus,
     caret: Math.floor(progress(frame - object.fromFrame, Math.max(1, object.toFrame - object.fromFrame), linear) * (object.toFrame - object.fromFrame) / 15) % 2 === 0,
-    lever: age < 0 ? 0 : 65 * progress(age, 6, utility) * (1 - progress(age - 6, 10, overshootEase(6))),
+    lever: age < 0 ? 0 : 70 * progress(age, 6, utility) * (1 - progress(age - 6, 10, overshootEase(6))),
     reels: [18, 26].map(stop => ({ spinning: age >= 0 && age < stop,
       offset: age < 0 ? 0 : age < stop ? -1200 * progress(age, stop, linear) : 12 * (1 - progress(age - stop, 6, overshootEase(6))) })),
     cards: params.songs.map((song, i) => ({ ...song, visible: !!fill && frame >= fill.atFrame + i * MOTION.staggerFrames && flip < 1,

@@ -45,13 +45,13 @@
           {
             "id": "sitar",
             "name": "SITAR",
-            "kind": "sample",
+            "kind": "ai",
             "hidden": true
           },
           {
             "id": "robot",
             "name": "ROBOT",
-            "kind": "both",
+            "kind": "ai",
             "hidden": true
           },
           {
@@ -68,7 +68,7 @@
           }
         ],
         "fromWave": true,
-        "title": "Who made the song?"
+        "title": "Movin\u2019 To The Sun"
       },
       "fromFrame": 0,
       "toFrame": 260
@@ -81,6 +81,13 @@
       "verb": "enter",
       "toState": "visible",
       "atFrame": 10
+    },
+    {
+      "id": "guitar-add",
+      "obj": "song",
+      "verb": "add",
+      "toState": "guitar",
+      "atFrame": 30
     },
     {
       "id": "1",
@@ -99,8 +106,8 @@
     {
       "id": "3",
       "obj": "song",
-      "verb": "chip",
-      "toState": "{\"lane\": \"guitar\", \"who\": \"Splice pack\"}",
+      "verb": "stamp",
+      "toState": "{\"lane\": \"guitar\", \"tag\": \"Splice pack\"}",
       "atFrame": 34
     },
     {
@@ -195,59 +202,101 @@
       "atFrame": 170
     },
     {
-      "id": "17",
+      "id": "credit-drums",
       "obj": "song",
       "verb": "chip",
-      "toState": "{\"lane\": \"drums\", \"who\": \"Drums\"}",
+      "toState": "{\"lane\": \"drums\", \"who\": \"a healer\"}",
       "atFrame": 170
     },
     {
-      "id": "18",
+      "id": "both-drums",
       "obj": "song",
-      "verb": "chip",
-      "toState": "{\"lane\": \"bass\", \"who\": \"Bass\"}",
+      "verb": "fill",
+      "toState": "{\"lane\": \"drums\", \"layers\": [{\"kind\": \"human\", \"weight\": 0.5}, {\"kind\": \"ai\", \"weight\": 0.5}]}",
       "atFrame": 170
     },
     {
-      "id": "19",
+      "id": "credit-bass",
       "obj": "song",
       "verb": "chip",
-      "toState": "{\"lane\": \"voice\", \"who\": \"Voice\"}",
+      "toState": "{\"lane\": \"bass\", \"who\": \"Suno\"}",
       "atFrame": 170
     },
     {
-      "id": "20",
+      "id": "both-bass",
       "obj": "song",
-      "verb": "chip",
-      "toState": "{\"lane\": \"choir\", \"who\": \"Choir\"}",
+      "verb": "fill",
+      "toState": "{\"lane\": \"bass\", \"layers\": [{\"kind\": \"human\", \"weight\": 0.5}, {\"kind\": \"ai\", \"weight\": 0.5}]}",
       "atFrame": 170
     },
     {
-      "id": "21",
+      "id": "credit-voice",
       "obj": "song",
       "verb": "chip",
-      "toState": "{\"lane\": \"robot\", \"who\": \"Robot\"}",
+      "toState": "{\"lane\": \"voice\", \"who\": \"strangers on TikTok\"}",
       "atFrame": 170
     },
     {
-      "id": "22",
+      "id": "both-voice",
       "obj": "song",
-      "verb": "chip",
-      "toState": "{\"lane\": \"piano\", \"who\": \"Piano\"}",
+      "verb": "fill",
+      "toState": "{\"lane\": \"voice\", \"layers\": [{\"kind\": \"human\", \"weight\": 0.5}, {\"kind\": \"ai\", \"weight\": 0.5}]}",
       "atFrame": 170
     },
     {
-      "id": "23",
+      "id": "credit-choir",
       "obj": "song",
       "verb": "chip",
-      "toState": "{\"lane\": \"strings\", \"who\": \"Strings\"}",
+      "toState": "{\"lane\": \"choir\", \"who\": \"HUGEL\"}",
       "atFrame": 170
     },
     {
-      "id": "24",
+      "id": "both-choir",
+      "obj": "song",
+      "verb": "fill",
+      "toState": "{\"lane\": \"choir\", \"layers\": [{\"kind\": \"human\", \"weight\": 0.5}, {\"kind\": \"ai\", \"weight\": 0.5}]}",
+      "atFrame": 170
+    },
+    {
+      "id": "credit-robot",
+      "obj": "song",
+      "verb": "chip",
+      "toState": "{\"lane\": \"robot\", \"who\": \"Ultra Nat\\u00e9\"}",
+      "atFrame": 170
+    },
+    {
+      "id": "both-robot",
+      "obj": "song",
+      "verb": "fill",
+      "toState": "{\"lane\": \"robot\", \"layers\": [{\"kind\": \"human\", \"weight\": 0.5}, {\"kind\": \"ai\", \"weight\": 0.5}]}",
+      "atFrame": 170
+    },
+    {
+      "id": "credit-piano",
+      "obj": "song",
+      "verb": "chip",
+      "toState": "{\"lane\": \"piano\", \"who\": \"the AI singer\"}",
+      "atFrame": 170
+    },
+    {
+      "id": "both-piano",
+      "obj": "song",
+      "verb": "fill",
+      "toState": "{\"lane\": \"piano\", \"layers\": [{\"kind\": \"human\", \"weight\": 0.5}, {\"kind\": \"ai\", \"weight\": 0.5}]}",
+      "atFrame": 170
+    },
+    {
+      "id": "remove-guitar",
       "obj": "song",
       "verb": "mark",
-      "toState": "choir",
+      "toState": "guitar",
+      "atFrame": 175
+    },
+    {
+      "id": "remove-strings",
+      "obj": "song",
+      "verb": "mark",
+      "toState": "strings",
       "atFrame": 175
     },
     {
@@ -274,7 +323,7 @@
     45,
     53,
     108,
-    119,
+    114,
     155,
     190
   ],
@@ -283,7 +332,7 @@
     "G2": 45,
     "G3": 53,
     "G4": 108,
-    "G5": 119,
+    "G5": 114,
     "G6": 155,
     "G7": 190
   }
