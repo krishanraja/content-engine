@@ -33,7 +33,12 @@ A long episode keeps its own longer close. `end_hold_s` holds the settled last f
 
 The same session fixed the wide cut's background (`scripts/quick-edit/kit/frame16.html`). A title never breaks inside a word ("COUNTIN / G RAT / TAILS" was `overflow-wrap: break-word`). The fit step shrinks it instead. The two columns share one grid: the series pill and the wordmark on one top line, the title centred, and the day and address on one bottom line. The right column is full-height ink rather than a floating tile. The tilted sticker is gone ("minimal random components and labels").
 
+## ve
+
+ve closes on the same card (`apps/renderer/src/engine/chrome/EndingBand.tsx`). It replaces the ticker band, which sat over the last shot. On his last word the frame cuts to full ink. The statement and the rest arrive on the same timings as kit's card (`ENDING_TIMING`, settled by 2.75 s). The close lasts 6 s (`ENDING_FRAMES = 180` in `scripts/velib/compile.py`, which also passes the tagline, "Subscribe free" and the three days in their series colours). `ending.ticker` is still accepted on old props and draws nothing. Tests in `apps/renderer/src/engine/chrome/ending.test.ts` cover the exact words, the line breaks, reading order, settling and the safe box. The house golden was regenerated for this change.
+
+The renderer is inside ve's engine freeze (F33, `config/ve/production-guards.json`). A piece whose storyboard was signed on the old engine is refused at `ve proof` and `ve render` until Krish approves this change for it, or until its storyboard is re-signed with `ve expect`. He approved it for Wed 11 Nov on 10 Nov ("approve the engine change for Wednesday"). The approval is in `docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`, bound to engine sha256 `eefc1bc04b391bc4642807a368768142431dd8bce3b1498c2438074b5a60a0c6`. `velib/guards.py` reads that file beside the spec's approvals. An approval with `scope: "engine"` waives no lint check and is not a press on a cut (F34). If the engine changes again before Wednesday renders, the hash no longer matches and he is asked again.
+
 ## Not yet
 
-- **ve.** ve closes on its own ending band (`apps/renderer/src/engine/chrome/EndingBand.tsx`, drawn by `BrandFrame` for `ENDING_FRAMES` = 105 after the cut). It is not this card. Porting the statement into that component waits until the Fri 13 Nov piece is filed, because the engine is frozen during a piece (`config/failures.json`, F33). It is the next action in `NOW.md`.
-- Off-day pieces still use the quick-edit series list. When an off-day cut runs through kit, the statement's last word should take the house mint, with no series promise (F36).
+- Off-day pieces through kit still use the series list. An off-day cut there should take the house mint for the last word, with no series promise (F36). ve already does this, because compile sets the channel colour to mint on an off day.

@@ -323,12 +323,12 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             need = math.ceil(fmt['qc'].get('layout_types_per_min_tall', 1) * min(minutes, 1.0))
             # Krish may waive variety for a piece in his own words (an exception approval), as for Thursday 5 Nov:
             # "This Thursday video should be the simplest to produce and feature my face minimally".
-            if len(layouts) < need and not any(a['gate'] == 'exception' for a in spec['approvals']):
+            if len(layouts) < need and not any(a['gate'] == 'exception' and a.get('scope') != 'engine' for a in spec['approvals']):
                 out.append(f'motion.layout_variety {where}: {len(layouts)} layout types, the format needs at least {need} a minute')
 
     bed_mode = spec['audio']['bed']['mode']
     if spec['audio']['master'] == 'vo' and bed_mode not in ('continuous', 'ducked', 'episode_bed'):
-        if not any(a['gate'] == 'exception' for a in spec['approvals']):
+        if not any(a['gate'] == 'exception' and a.get('scope') != 'engine' for a in spec['approvals']):
             out.append('sound.bed_continuous audio.bed.mode: a voiceover cut carries a continuous, ducked or episode_bed bed (episode mode needs an exception approval)')
     # A long cut carries the approved episode bed: one low level under the voice, lifts only at chapter cards
     # (config/learnings.json deep-cut-music-always-under). Krish, Gate 2, 2026-10-30, of a ducked long cut:
