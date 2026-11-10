@@ -31,20 +31,6 @@
     "colour": "coral"
    }
   ],
-  "strip": [
-   {
-    "logo": "logos/openai-symbol-cream.svg",
-    "name": "OpenAI"
-   },
-   {
-    "logo": "logos/warner-music-group-cream.svg",
-    "name": "Warner Music Group"
-   },
-   {
-    "logo": "logos/universal-music-group-cream.svg",
-    "name": "Universal Music Group"
-   }
-  ],
   "proof": {
    "pdf": {
     "url": "https://cases.stretto.com/public/x936/14939/PLEADINGS/1493910132680000000114.pdf",
@@ -64,8 +50,11 @@
     0.595,
     0.99,
     0.685
-   ]
-  }
+   ],
+   "show_tag": false
+  },
+  "quiet_pill": true,
+  "headline_first": true
  },
  "thumbs": {
   "headline": [
@@ -92,20 +81,6 @@
     "colour": "coral"
    }
   ],
-  "strip": [
-   {
-    "logo": "logos/openai-symbol-cream.svg",
-    "name": "OpenAI"
-   },
-   {
-    "logo": "logos/warner-music-group-cream.svg",
-    "name": "Warner Music Group"
-   },
-   {
-    "logo": "logos/universal-music-group-cream.svg",
-    "name": "Universal Music Group"
-   }
-  ],
   "proof": {
    "html": {
     "path": "pack/figure-timeline.html",
@@ -124,8 +99,11 @@
     0.6,
     0.355
    ],
-   "alt": "Two years, two buyers: Google reportedly paid $2.7 billion in August 2024"
-  }
+   "alt": "Two years, two buyers: Google reportedly paid $2.7 billion in August 2024",
+   "show_tag": false
+  },
+  "quiet_pill": true,
+  "headline_first": true
  },
  "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430"
 }
