@@ -376,6 +376,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             raise ValueError(f'beat {beat["id"]} has no positive frame interval')
         beats.append({'id': beat['id'], 'role': beat['role'], 'layout': beat['layout'],
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
+                      **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
                       **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {})})
         # The v2 spec reserves extensible metadata in style; beat-level keyFrame

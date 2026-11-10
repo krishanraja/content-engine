@@ -41,7 +41,8 @@ export const EngineObjectSchema = z.object({
 export const EngineBeatSchema = z.object({
   id: z.string().min(1),
   role: z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call']),
-  layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT']),
+  layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW']),
+  face: z.enum(['full', 'window', 'off']).optional(),
   plate: z.object({ source: z.string().min(1), crop: z.string().min(1).optional() }).strict().optional(),
   fromFrame: Frame,
   toFrame: Frame,
