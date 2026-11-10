@@ -1,5 +1,6 @@
 {
   "devices": {
+    "slot_machine": { "verbs": ["enter", "type", "pick", "send", "fill", "bounce", "highlight", "exit"] },
     "office_floor": { "verbs": ["enter", "add", "fill", "move", "send", "stamp", "carry", "highlight", "draw", "mark", "exit"] },
     "leaderboard": { "verbs": ["enter", "add", "fill", "stamp", "move", "highlight", "mark", "exit"] },
     "logo_orbit": { "verbs": ["enter", "add", "chip", "highlight", "exit"] },

@@ -4,6 +4,9 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('slot_machine declares its eight cues', () => {
+    expect(manifest.devices.slot_machine.verbs).toEqual(['enter', 'type', 'pick', 'send', 'fill', 'bounce', 'highlight', 'exit'])
+  })
   it('leaderboard declares its eight cues', () => {
     expect(manifest.devices.leaderboard.verbs).toEqual(['enter', 'add', 'fill', 'stamp', 'move', 'highlight', 'mark', 'exit'])
   })
