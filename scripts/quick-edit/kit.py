@@ -141,8 +141,11 @@ PANEL_LAYOUT = {
 }
 SHADOW_PX = 16
 MAX_SCALE = 1.25  # never blow a picture up past this: its words go soft
-ENDCARD_SECONDS = 4
-TAGLINE = 'A free publication on how AI really works. You make your mind up.'
+# The close: one end card, its motion settled by 2.4 s and then held, a calm close of about 6 s (the approved
+# standard on the outro: the final card held about 2 s inside a calm, roughly 6 second sequence). The tagline is
+# Krish's words, 10 Nov 2026: "The copy should read: "Built to help you decide."" docs/production/CLOSING.md.
+ENDCARD_SECONDS = 6
+TAGLINE = 'Built to help you decide.'
 CTA = 'Subscribe free'
 
 # How big a picture's words come out, from house rule SUBSTACK_FIT: a
@@ -842,14 +845,34 @@ def png_uri(img):
     return 'data:image/png;base64,' + base64.b64encode(buf.getvalue()).decode()
 
 
+def statement_lines(shape, tagline=TAGLINE):
+    """The tagline as the end card sets it: the last word alone on the last line (in the series colour), the
+    rest two words a line on the tall card and one line on the wide. Lines break only between words."""
+    words = tagline.split()
+    head, last = words[:-1], words[-1]
+    if shape == '9x16':
+        lines = [' '.join(head[i:i + 2]) for i in range(0, len(head), 2)]
+    else:
+        lines = [' '.join(head)] if head else []
+    return [*lines, last]
+
+
 def page_endcard(st, shape, masthead, fonts):
+    """The house end card (endcard.html, direction C, picked by Krish on 10 Nov 2026): the tagline as the picture,
+    the masthead on ink, the three days in their series colours, "Subscribe free" and the address, the last word
+    and the underline in this piece's series colour."""
     W, H = FRAME[shape]
-    days = ''.join(f'<div class="d"><span class="dn">{html.escape(c["day"])}</span>'
-                   f'<span class="cn" style="color:{c["accent"]}">{html.escape(c["name"])}</span></div>'
-                   for c in st['house']['channels'])
+    lines = statement_lines(shape)
+    statement = ''.join(f'<span class="ln"><span style="animation-delay: {0.1 + 0.14 * i:.2f}s">{html.escape(line)}</span></span>'
+                        for i, line in enumerate(lines))
+    day_names = [f'<span style="color:{c["accent"]}">{html.escape(c.get("days") or c["day"] + "s")}</span>'
+                 for c in st['house']['channels']]
+    days = f'<div class="days a" style="animation-delay: 1.5s">{"<b> · </b>".join(day_names)}</div>'
+    tall = shape == '9x16'
     return template('endcard.html').substitute(fonts=fonts, W=W, H=H, ink=st['ink'], cream=st['cream'], mint=st['mint'],
-                                               shape='tall' if shape == '9x16' else 'wide', masthead=masthead,
-                                               tagline=html.escape(TAGLINE), days=days, cta=html.escape(CTA),
+                                               accent=st['accent'], shape='tall' if tall else 'wide', masthead=masthead,
+                                               statement=statement, lines=len(lines), cta=html.escape(CTA),
+                                               order_days=days if tall else '', order_days_after='' if tall else days,
                                                site=html.escape(st['site']))
 
 
@@ -929,8 +952,30 @@ class Drawer:
         pg.set_content(doc, wait_until='load')
         pg.evaluate('document.fonts.ready.then(() => true)')
         bad = pg.evaluate(CHECK_JS)
+        # A page that moves (the end card) is drawn as it settles: every animation at its end.
+        pg.evaluate('document.getAnimations().forEach(a => a.finish())')
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         pg.screenshot(path=str(path), omit_background=clear, clip={'x': 0, 'y': 0, 'width': size[0], 'height': size[1]})
+        return bad
+
+    def film(self, doc, size, mp4, seconds=ENDCARD_SECONDS, fps=30):
+        """A page's motion as a clip make.py can join: each frame drawn with every animation stepped to that
+        moment (nothing depends on the machine's speed), 30 fps, a silent 48 kHz stereo track."""
+        pg = self.page()
+        pg.set_viewport_size({'width': size[0], 'height': size[1]})
+        pg.set_content(doc, wait_until='load')
+        pg.evaluate('document.fonts.ready.then(() => true)')
+        bad = pg.evaluate(CHECK_JS)
+        pg.evaluate('document.getAnimations().forEach(a => a.pause())')
+        with tempfile.TemporaryDirectory() as frames:
+            for i in range(round(seconds * fps)):
+                pg.evaluate('t => document.getAnimations().forEach(a => { a.currentTime = t; })', i * 1000 / fps)
+                pg.screenshot(path=str(Path(frames) / f'f{i:04d}.png'), clip={'x': 0, 'y': 0, 'width': size[0], 'height': size[1]})
+            subprocess.run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-framerate', str(fps), '-i', str(Path(frames) / 'f%04d.png'),
+                            '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-t', str(seconds), '-vf', 'format=yuv420p', '-r', str(fps),
+                            '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-profile:v', 'high', '-pix_fmt', 'yuv420p',
+                            '-c:a', 'aac', '-b:a', '128k', '-ar', '48000', '-ac', '2', '-shortest', '-movflags', '+faststart', str(mp4)],
+                           check=True)
         return bad
 
     def close(self):
@@ -1129,13 +1174,19 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
 
     try:
         for sh in ('9x16', '16x9'):
-            png, _ = draw(f'endcard-{sh}.png', page_endcard(st, sh, logos['masthead'], fonts), FRAME[sh])
+            doc = page_endcard(st, sh, logos['masthead'], fonts)
+            png, _ = draw(f'endcard-{sh}.png', doc, FRAME[sh])
             mp4 = out / f'endcard-{sh}.mp4'
-            sig = f'{sha256_file(png)}:{ENDCARD_SECONDS}:{KIT_VERSION}'
+            sig = f'{sha256_text(doc)}:{sha256_file(png)}:{ENDCARD_SECONDS}:{KIT_VERSION}:motion'
             if mp4.exists() and made.get(mp4.name) == sig:
                 log(f'kept  {mp4.name}')
             else:
-                endcard_video(png, mp4)
+                if hasattr(drawer, 'film'):  # the card's own motion, filmed frame by frame
+                    bad = drawer.film(doc, FRAME[sh], mp4)
+                    if bad:
+                        problems.append(f'{mp4.name}: {"; ".join(bad)}')
+                else:  # a drawer that cannot film (the self-test's paper one): the settled still
+                    endcard_video(png, mp4)
                 made[mp4.name] = sig
                 log(f'made  {mp4.name}')
         # The title on screen beside his face: post.json's "video_title" when it has one, else the
@@ -1408,6 +1459,14 @@ def self_test():
     left = [m for doc in docs for m in re.findall(r'\$\{?[A-Za-z_]\w*', doc)]
     check('every template is filled, and text is escaped', (left, 'Who gets paid &amp; why' in docs[2]), ([], True))
     check('the shadow is the subchannel colour, darker', mix('#B7A6FF', '#0C1512', 0.28), '#877DBD')
+    # The end card (Krish, 2026-11-10: "The copy should read: "Built to help you decide.""; he picked direction C).
+    check('the end card says exactly his tagline, broken only between words, the last word alone',
+          (TAGLINE, statement_lines('9x16'), statement_lines('16x9')),
+          ('Built to help you decide.', ['Built to', 'help you', 'decide.'], ['Built to help you', 'decide.']))
+    check('the end card carries the series colour, the days and one close, with no old tagline',
+          ('#FFD84D' in docs[0], '>Mondays</span>' in docs[0], docs[0].count('class="url'), 'You make your mind up' in docs[0] + docs[1]),
+          (True, True, 1, False))
+    check('the frame never splits a word', ('break-word' in docs[2], 'keep-all' in docs[2]), (False, True))
     # The tall cut's dress: the wordmark and the series tag, never a name (Krish, 2026-10-28).
     check('the dress carries the wordmark and the series tag, and no name',
           ('class="mark"' in docs[3], '>follow.the.money</span>' in docs[3], 'krish' in re.sub(r'<!--.*?-->', '', docs[3], flags=re.S).lower()),
@@ -1417,7 +1476,7 @@ def self_test():
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
-        # The end card clip: 4 seconds, 30 fps, a silent 48 kHz stereo track.
+        # The end card clip: 6 seconds, 30 fps, a silent 48 kHz stereo track.
         if shutil.which('ffmpeg') and shutil.which('ffprobe'):
             png = tmp / 'end.png'
             Image.new('RGB', (1080, 1920), (12, 21, 18)).save(png)
@@ -1425,9 +1484,9 @@ def self_test():
             probe = json.loads(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'stream=codec_type,r_frame_rate,sample_rate,channels:format=duration',
                                                '-of', 'json', str(tmp / 'end.mp4')], capture_output=True, text=True, check=True).stdout)
             streams = {s['codec_type']: s for s in probe['streams']}
-            check('the end card clip is 4 s, 30 fps, silent 48 kHz stereo',
+            check('the end card clip is 6 s, 30 fps, silent 48 kHz stereo',
                   (round(float(probe['format']['duration'])), streams['video']['r_frame_rate'], streams['audio']['sample_rate'], streams['audio']['channels']),
-                  (4, '30/1', '48000', 2))
+                  (6, '30/1', '48000', 2))
         else:
             check('ffmpeg and ffprobe are on the PATH for the end card check', False, True)
 
@@ -1476,6 +1535,9 @@ def self_test():
                     sizes = (a.size, b.size)
                 check('in a browser, the frame and a panel draw at their sizes with nothing past an edge',
                       (frame, panel, sizes), ([], [], ((1920, 1080), (1080, 1000))))
+                mast = png_uri(Image.new('RGB', (322, 99), (126, 240, 192)))  # the masthead's shape, 2415 x 740
+                ends = [drawer.shoot(page_endcard(st, sh, mast, fonts), FRAME[sh], tmp / f'end-{sh}.png') for sh in ('9x16', '16x9')]
+                check('in a browser, the end card draws settled in both shapes with nothing past an edge', ends, [[], []])
                 # The dress: clear but for its two corners, the tag ending 120 px in from the right.
                 mint = png_uri(Image.new('RGB', (260, 31), (126, 240, 192)))
                 dress = drawer.shoot(page_dress(st, mint, fonts), FRAME['9x16'], tmp / 'dress.png', clear=True)
