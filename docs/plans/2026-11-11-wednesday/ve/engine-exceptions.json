@@ -1,0 +1,14 @@
+{
+  "schema": "ve-engine-exceptions/1",
+  "about": "Krish's approval of the house-close engine change (ve's statement EndingBand, PR #509) for this piece. velib/guards.py reads it beside the spec's approvals; scope engine waives nothing else. If the engine changes again before this piece renders, the hash no longer matches and he is asked again.",
+  "approvals": [
+    {
+      "gate": "exception",
+      "scope": "engine",
+      "by": "Krish",
+      "said": "approve the engine change for Wednesday",
+      "on": "2026-11-10",
+      "artifact_hash": "eefc1bc04b391bc4642807a368768142431dd8bce3b1498c2438074b5a60a0c6"
+    }
+  ]
+}
