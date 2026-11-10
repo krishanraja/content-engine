@@ -101,7 +101,7 @@ export async function setup(env) {
   const ask = Array.from({ length: 5 }, () => { const m = new THREE.Mesh(new RoundedBoxGeometry(2.4, 0.22, 1.6, 2, 0.05), mats.slabLit); m.castShadow = true; m.visible = false; scene.add(m); return m })
   const composer = new EffectComposer(renderer)
   composer.addPass(new RenderPass(scene, camera))
-  composer.addPass(new UnrealBloomPass(new THREE.Vector2(env.W, env.H), 0.55, 0.6, 0.72))
+  composer.addPass(new UnrealBloomPass(new THREE.Vector2(env.W / 2, env.H / 2), 0.55, 0.6, 0.72))
   composer.addPass(new OutputPass())
   R = { renderer, scene, camera, composer, hero, street, level, towers, ask, glc, mats }
 }

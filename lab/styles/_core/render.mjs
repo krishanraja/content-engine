@@ -58,7 +58,7 @@ window.__draw = (t) => {
   // The close is the approved house card (docs/production/CLOSING.md), filmed by kit and joined after this cut.
   if (t < env.closeAt) house.captions(env, ctx, t)
   house.grain(env, ctx, t)
-  return { url: document.getElementById('c').toDataURL('image/png'), layout: env.layout }
+  return { url: document.getElementById('c').toDataURL(window.__still ? 'image/png' : 'image/jpeg', 0.95), layout: env.layout }
 }
 </script></body></html>`
 const pagePath = join(out, `.${name}.html`)
@@ -74,6 +74,7 @@ await page.evaluate(([s, tl, sh, ca]) => window.__setup(s, tl, sh, ca), [skin, t
 // --stills 3,12.9,24: style frames only, as PNGs, before anything is filmed.
 const stills = arg('stills')
 if (stills) {
+  await page.evaluate(() => { window.__still = true })
   for (const s of stills.split(',').map(Number)) {
     const r = await page.evaluate((tt) => window.__draw(tt), s)
     writeFileSync(join(out, `${style}-${shape}-${s.toFixed(1)}.png`), Buffer.from(r.url.split(',')[1], 'base64'))
@@ -82,7 +83,7 @@ if (stills) {
 }
 
 const video = join(out, `${name}.video.mp4`)
-const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '17', '-preset', 'medium', video], { stdio: ['pipe', 'inherit', 'inherit'] })
+const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-c:v', 'mjpeg', '-framerate', String(fps), '-i', '-', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '17', '-preset', 'medium', video], { stdio: ['pipe', 'inherit', 'inherit'] })
 const layout = []
 const n0 = Math.round(from * fps), n1 = Math.round(to * fps)
 for (let f = n0; f < n1; f++) {
