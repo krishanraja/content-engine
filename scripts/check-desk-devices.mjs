@@ -56,7 +56,7 @@ for (const [name, device] of DEVICES) for (const scheme of ['light', 'dark']) {
   const errors = []; p.on('pageerror', e => errors.push(e.message))
   await p.route('https://desk.test/**', async route => {
     const u = new URL(route.request().url()), m = route.request().method()
-    if (u.pathname.startsWith('/board/next/')) return route.fulfill({ status: 200, contentType: 'text/html', body: page })
+    if (/^\/board\/(next\/)?\d{4}-\d{2}-\d{2}$/.test(u.pathname)) return route.fulfill({ status: 200, contentType: 'text/html', body: page })
     if (u.pathname === `/api/board/${WEEK}/view`) return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, ...view }) })
     if (u.pathname === '/api/board/weeks') return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, weeks: [WEEK] }) })
     if (m !== 'GET') {
@@ -67,7 +67,7 @@ for (const [name, device] of DEVICES) for (const scheme of ['light', 'dark']) {
     }
     return route.fulfill({ status: 404, body: '' })
   })
-  await p.goto(`https://desk.test/board/next/${WEEK}`)
+  await p.goto(`https://desk.test/board/${WEEK}`)
   await p.waitForSelector('#day-mon')
   await p.waitForTimeout(400)
   await checks(p, `${where} home`)

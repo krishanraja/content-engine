@@ -20,6 +20,11 @@ import bed_shape  # noqa: E402
 
 
 def make(path: Path, graph: str, seconds: float) -> None:
+    # Seeded noise, so every run measures the same sound: unseeded, the bed's spread under his voice varied run to run
+    # and once read 2.1 LU against the shape's 2.0 in CI (10 Nov 2026), a failure of the noise, not of premix.
+    if graph.startswith('anoisesrc=') and ':seed=' not in graph:
+        head, sep, rest = graph.partition(',')
+        graph = head + ':seed=20261105' + sep + rest
     subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-y', '-f', 'lavfi', '-i', graph, '-t', str(seconds),
                     '-ac', '2', '-ar', '48000', str(path)], check=True)
 
