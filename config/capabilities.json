@@ -1,0 +1,823 @@
+{
+ "_about": "The capability register: every capability the video engine has, across this repository, control-center and inspirationhouse, with what it is for, the production stage it serves, when its choice is made today, its status, and a keep, merge or retire proposal. The proposals are Krish's to decide; nothing here retires anything. Krish, 2026-11-10: \"They need to be cleaned up and made modular and really clear as to what capability it is for and what part of the production process it is for, so that in the future we can build our own suite of capabilities that are unique.\" Seeded from the 10 Nov read-only map (docs/plans/2026-11-10-video-style-system/capability-map.md). Read it with python3 scripts/capabilities.py; check with --check; docs/CAPABILITIES.md is rendered from it.",
+ "schema_version": 1,
+ "stages": [
+  "evidence",
+  "idea",
+  "story",
+  "script",
+  "direction",
+  "pre-record",
+  "record",
+  "ingest",
+  "cut",
+  "motion",
+  "artwork",
+  "captions",
+  "sound",
+  "cover",
+  "qc",
+  "filing",
+  "board",
+  "feedback"
+ ],
+ "decided": [
+  "pre-script",
+  "pre-record",
+  "post-record",
+  "post-cut",
+  "post-publish",
+  "any"
+ ],
+ "status": [
+  "working",
+  "partial",
+  "broken",
+  "duplicate",
+  "documented-only"
+ ],
+ "proposal": [
+  "keep",
+  "merge",
+  "retire"
+ ],
+ "repos": {
+  "control-center": "krishanraja/control-center",
+  "inspirationhouse": "krishanraja/inspirationhouse"
+ },
+ "capabilities": [
+  {
+   "id": "inspo-collector",
+   "name": "Inspiration tree collector",
+   "purpose": "Every file in Content Inspo and Production Inspo becomes a 'likes' card",
+   "stage": "evidence",
+   "decided": "pre-script",
+   "location": "inspirationhouse:src/collect/drive.ts",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "content-watcher"
+   ]
+  },
+  {
+   "id": "inspo-tagger",
+   "name": "Inspiration cards and tagger",
+   "purpose": "One card per file: kind, route, facets, frames, transcript",
+   "stage": "evidence",
+   "decided": "pre-script",
+   "location": "inspirationhouse:src/tag/items.ts",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "style-bank references"
+   ]
+  },
+  {
+   "id": "inspo-understanding",
+   "name": "Understanding pass",
+   "purpose": "Measured production tags per liked clip: cut pace, camera moves, hook type, framing, speech pace",
+   "stage": "evidence",
+   "decided": "pre-script",
+   "location": "inspirationhouse:src/tag/understand.ts",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "quick-edit-reference-study"
+   ]
+  },
+  {
+   "id": "inspo-vocab",
+   "name": "Signals vocabulary",
+   "purpose": "Fixed craft words for tagging cards",
+   "stage": "evidence",
+   "decided": "pre-script",
+   "location": "inspirationhouse:src/signal/vocab.ts",
+   "status": "working",
+   "proposal": "merge",
+   "overlaps": [
+    "style-bank layers"
+   ]
+  },
+  {
+   "id": "cc-inspiration-page",
+   "name": "Control Center Inspiration page",
+   "purpose": "Krish answers why he likes a card, routes it and sets trials",
+   "stage": "board",
+   "decided": "pre-script",
+   "location": "control-center:src/components/inspiration",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "board Inspiration tab"
+   ]
+  },
+  {
+   "id": "sunday-inspiration-block",
+   "name": "Sunday inspiration block",
+   "purpose": "Routed and liked cards feed the Sunday ideas run",
+   "stage": "idea",
+   "decided": "pre-script",
+   "location": "apps/control-plane/api/_inspirationSources.ts",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "ve-study",
+   "name": "ve study",
+   "purpose": "Grammar card of one reference clip: cuts, pace, zooms, loudness, words per minute",
+   "stage": "evidence",
+   "decided": "pre-script",
+   "location": "scripts/ve.py",
+   "status": "working",
+   "proposal": "merge",
+   "overlaps": [
+    "inspo-understanding"
+   ]
+  },
+  {
+   "id": "quick-edit-reference-study",
+   "name": "quick-edit reference study",
+   "purpose": "Measures reference clips again for quick-edit",
+   "stage": "evidence",
+   "decided": "post-record",
+   "location": "scripts/quick-edit/references.py",
+   "status": "duplicate",
+   "proposal": "retire",
+   "overlaps": [
+    "inspo-understanding"
+   ]
+  },
+  {
+   "id": "style-bank",
+   "name": "Style bank",
+   "purpose": "53 reusable modules in 11 layers (opening to motion); 52 untested",
+   "stage": "direction",
+   "decided": "pre-script",
+   "location": "config/style-references.json",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "techniques",
+    "devices"
+   ]
+  },
+  {
+   "id": "techniques",
+   "name": "Techniques list",
+   "purpose": "Older list of production techniques",
+   "stage": "direction",
+   "decided": "pre-script",
+   "location": "config/techniques.json",
+   "status": "duplicate",
+   "proposal": "merge",
+   "overlaps": [
+    "style-bank"
+   ]
+  },
+  {
+   "id": "script-formats",
+   "name": "Script formats",
+   "purpose": "8 story shapes (head-to-head is the only one liked)",
+   "stage": "script",
+   "decided": "pre-script",
+   "location": "config/style-references.json",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "editorial-formats"
+   ]
+  },
+  {
+   "id": "production-formats",
+   "name": "Production formats",
+   "purpose": "7 production treatments (face-with-proof is the only one liked)",
+   "stage": "direction",
+   "decided": "pre-script",
+   "location": "config/style-references.json",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "ve-formats"
+   ]
+  },
+  {
+   "id": "editorial-formats",
+   "name": "Editorial formats",
+   "purpose": "Nine editorial formats used by drafting",
+   "stage": "script",
+   "decided": "pre-script",
+   "location": "apps/control-plane/api/_formats.ts",
+   "status": "duplicate",
+   "proposal": "merge",
+   "overlaps": [
+    "script-formats"
+   ]
+  },
+  {
+   "id": "ve-formats",
+   "name": "ve format files",
+   "purpose": "Five buildable formats with layers, devices, beats and QC",
+   "stage": "direction",
+   "decided": "pre-record",
+   "location": "config/ve/formats",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "production-formats"
+   ]
+  },
+  {
+   "id": "production-brief",
+   "name": "Production brief treatments",
+   "purpose": "Treatments keyed on retired series",
+   "stage": "direction",
+   "decided": "pre-record",
+   "location": "apps/control-plane/api/_productionBrief.ts",
+   "status": "broken",
+   "proposal": "retire",
+   "overlaps": [
+    "ve-formats"
+   ]
+  },
+  {
+   "id": "ve-recipe-data-story",
+   "name": "Recipe: data-story Ladder",
+   "purpose": "The one complete saved style, from the Mon 2 Nov cut",
+   "stage": "direction",
+   "decided": "pre-script",
+   "location": "config/ve/recipes/data-story.json",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "video-styles"
+   ]
+  },
+  {
+   "id": "video-styles",
+   "name": "Video style catalogue",
+   "purpose": "Complete styles (format, hook, length, visuals, motion, captions, sound) chosen before the script",
+   "stage": "direction",
+   "decided": "pre-script",
+   "location": "config/video-styles.json",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "style-bank",
+    "ve-formats",
+    "recipes"
+   ]
+  },
+  {
+   "id": "length-formats",
+   "name": "Length formats",
+   "purpose": "7 lengths from 15 seconds to 20 minutes, with word ceilings and shapes",
+   "stage": "script",
+   "decided": "pre-script",
+   "location": "apps/control-plane/api/_video.ts",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "hook-playbook",
+   "name": "Hook playbook",
+   "purpose": "Hook formula per surface",
+   "stage": "script",
+   "decided": "pre-script",
+   "location": "config/hook-playbook.json",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "title-verdicts"
+   ]
+  },
+  {
+   "id": "title-verdicts",
+   "name": "Title verdicts",
+   "purpose": "Krish's verdicts on titles",
+   "stage": "cover",
+   "decided": "post-record",
+   "location": "config/title-verdicts.json",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "hook-playbook"
+   ]
+  },
+  {
+   "id": "golden-frames",
+   "name": "Golden frames",
+   "purpose": "Ten target frames for the design",
+   "stage": "direction",
+   "decided": "pre-record",
+   "location": "config/ve/golden-frames.json",
+   "status": "documented-only",
+   "proposal": "keep",
+   "overlaps": [
+    "design-lock"
+   ]
+  },
+  {
+   "id": "design-lock",
+   "name": "Design lock and brand tokens",
+   "purpose": "Grid, zones, type, colour and frozen key frames",
+   "stage": "artwork",
+   "decided": "pre-record",
+   "location": "config/ve/design-lock.json",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "studio brand themes"
+   ]
+  },
+  {
+   "id": "sunday-style-proposal",
+   "name": "Sunday per-idea style",
+   "purpose": "Each idea carries script, production and experiment format ids",
+   "stage": "idea",
+   "decided": "pre-script",
+   "location": ".agents/skills/plan-week/SKILL.md",
+   "status": "working",
+   "proposal": "merge",
+   "overlaps": [
+    "narrative-lock",
+    "look-step",
+    "pick-a-style"
+   ]
+  },
+  {
+   "id": "narrative-lock",
+   "name": "Narrative lock",
+   "purpose": "Signed story with its style recipe and music bed",
+   "stage": "story",
+   "decided": "pre-script",
+   "location": ".agents/skills/plan-week/references/sunday-room.md",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "sunday-style-proposal"
+   ]
+  },
+  {
+   "id": "look-step",
+   "name": "Board Look step",
+   "purpose": "Krish picks a production format; stored as meta.look",
+   "stage": "board",
+   "decided": "pre-script",
+   "location": "apps/control-plane/api/board/_handler.ts",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "pick-a-style"
+   ]
+  },
+  {
+   "id": "music-library",
+   "name": "Music library ledger",
+   "purpose": "Approved tracks for beds (2 approved, 4 proposed)",
+   "stage": "sound",
+   "decided": "pre-script",
+   "location": "config/music-library.json",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "music-bed",
+   "name": "Music bed shape",
+   "purpose": "One bed shape: loud open, steady under voice, louder end",
+   "stage": "sound",
+   "decided": "any",
+   "location": "config/music-bed.json",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "sfx-approved",
+   "name": "Approved sound effects",
+   "purpose": "Sound effects allowed in a cut",
+   "stage": "sound",
+   "decided": "post-record",
+   "location": "config/sfx-approved.json",
+   "status": "documented-only",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "make-piece",
+   "name": "make-piece skill",
+   "purpose": "Scripts, storyboard, article, fact gate, publish page and pack for a picked piece",
+   "stage": "script",
+   "decided": "pre-record",
+   "location": ".agents/skills/make-piece/SKILL.md",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "plan-week",
+   "name": "plan-week skill",
+   "purpose": "Sunday ideas, picks, interview and narrative lock",
+   "stage": "idea",
+   "decided": "pre-script",
+   "location": ".agents/skills/plan-week/SKILL.md",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "kill-list",
+   "name": "Kill list",
+   "purpose": "Words and moves never used",
+   "stage": "script",
+   "decided": "pre-record",
+   "location": "vendor/makeyourmindup/kill-list",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "copy-lint"
+   ]
+  },
+  {
+   "id": "copy-lint",
+   "name": "Copy lint",
+   "purpose": "Word gate for every script and caption",
+   "stage": "script",
+   "decided": "pre-record",
+   "location": "scripts/post-pack/copy_lint.py",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "kill-list"
+   ]
+  },
+  {
+   "id": "teleprompter-send",
+   "name": "Teleprompter send",
+   "purpose": "Sends approved script words to teleprompter.com",
+   "stage": "pre-record",
+   "decided": "pre-record",
+   "location": "scripts/post-pack/teleprompter_send.py",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "creative-direction-legacy",
+   "name": "creative-direction.json (legacy)",
+   "purpose": "Per-beat picture, on-screen text and modules",
+   "stage": "direction",
+   "decided": "pre-record",
+   "location": "scripts/post-pack/creative_direction.py",
+   "status": "partial",
+   "proposal": "merge",
+   "overlaps": [
+    "ve-spec"
+   ]
+  },
+  {
+   "id": "ve-spec",
+   "name": "ve spec v2",
+   "purpose": "The one signed production spec for a ve cut",
+   "stage": "direction",
+   "decided": "pre-record",
+   "location": "packages/contracts/src/production-spec.ts",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "creative-direction-legacy"
+   ]
+  },
+  {
+   "id": "ve-init-lint-expect",
+   "name": "ve init, lint and expect",
+   "purpose": "Starts a spec, refuses bad specs, writes the expectations sheet",
+   "stage": "direction",
+   "decided": "pre-record",
+   "location": "scripts/velib/lint.py",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "storyboard",
+   "name": "Storyboard",
+   "purpose": "A mock frame per script line, signed before recording",
+   "stage": "direction",
+   "decided": "pre-record",
+   "location": ".agents/skills/make-piece/SKILL.md",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "creative-sheet"
+   ]
+  },
+  {
+   "id": "visual-gate",
+   "name": "Visual gate cover",
+   "purpose": "Working-headline cover and thumbnails",
+   "stage": "cover",
+   "decided": "pre-record",
+   "location": "scripts/post-pack/visual_gate.py",
+   "status": "working",
+   "proposal": "merge",
+   "overlaps": [
+    "thumbnails",
+    "creative-sheet"
+   ]
+  },
+  {
+   "id": "motion-styles",
+   "name": "Motion style bank",
+   "purpose": "One motion style per piece, from the motion layer",
+   "stage": "motion",
+   "decided": "post-record",
+   "location": "apps/renderer/src/engine/kit/motion-profiles.json",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "ve-styles"
+   ]
+  },
+  {
+   "id": "ve-styles",
+   "name": "ve styles and Pick a style",
+   "purpose": "Mocks of the top motion styles on his take, then the Pick a style press",
+   "stage": "motion",
+   "decided": "post-record",
+   "location": "scripts/ve.py",
+   "status": "partial",
+   "proposal": "merge",
+   "overlaps": [
+    "video-styles"
+   ]
+  },
+  {
+   "id": "ve-lab",
+   "name": "ve lab",
+   "purpose": "A reel of motion styles for comparison",
+   "stage": "motion",
+   "decided": "any",
+   "location": "docs/ve/lab",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "devices",
+   "name": "Device library",
+   "purpose": "The verbs FormatMaster draws (27)",
+   "stage": "artwork",
+   "decided": "pre-record",
+   "location": "config/ve/devices.json",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "techniques"
+   ]
+  },
+  {
+   "id": "codex-cards",
+   "name": "Codex cards",
+   "purpose": "Device and plate briefs Codex builds from",
+   "stage": "artwork",
+   "decided": "pre-record",
+   "location": "scripts/velib/cards.py",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "produce-video",
+   "name": "produce-video and quick-edit",
+   "purpose": "The live route: takes to 16:9 and 9:16 cuts with music and thumbnails",
+   "stage": "cut",
+   "decided": "post-record",
+   "location": "scripts/quick-edit/make.py",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "ve-cut",
+    "studio-v2"
+   ]
+  },
+  {
+   "id": "ve-cut",
+   "name": "ve S3 to S8",
+   "purpose": "Eyeline, ingest, conform, compile, proof, render, QC, file",
+   "stage": "cut",
+   "decided": "post-record",
+   "location": "scripts/ve.py",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "produce-video"
+   ]
+  },
+  {
+   "id": "studio-v2",
+   "name": "Studio V2 stations",
+   "purpose": "Job graph for 9:16 cuts",
+   "stage": "cut",
+   "decided": "post-record",
+   "location": "docs/STUDIO.md",
+   "status": "duplicate",
+   "proposal": "retire",
+   "overlaps": [
+    "produce-video",
+    "ve-cut"
+   ]
+  },
+  {
+   "id": "produce-day",
+   "name": "produce_day and the Sunday-night run",
+   "purpose": "Scripted overnight cuts",
+   "stage": "cut",
+   "decided": "post-record",
+   "location": "scripts/produce_day.py",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "take-matching",
+   "name": "Take matching",
+   "purpose": "Places each recorded take on its piece and cut",
+   "stage": "ingest",
+   "decided": "post-record",
+   "location": "scripts/post-pack/recording_match.py",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "titles-round",
+   "name": "Titles round",
+   "purpose": "Words for titles and thumbnails, after recording",
+   "stage": "cover",
+   "decided": "post-record",
+   "location": "scripts/post-pack/title_check.py",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "creative-sheet",
+   "name": "Creative sheet v4",
+   "purpose": "Subtitle, motion, idea, storyboard and thumbnail options on his take",
+   "stage": "direction",
+   "decided": "post-record",
+   "location": "scripts/post-pack/board_v4.py",
+   "status": "partial",
+   "proposal": "merge",
+   "overlaps": [
+    "storyboard"
+   ]
+  },
+  {
+   "id": "thumbnails",
+   "name": "Thumbnails (The Receipt)",
+   "purpose": "Wide and tall covers",
+   "stage": "cover",
+   "decided": "post-record",
+   "location": "scripts/pages/build.py",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "visual-gate"
+   ]
+  },
+  {
+   "id": "floor",
+   "name": "Rejection floor",
+   "purpose": "What Krish rejected and the standards nothing falls beneath",
+   "stage": "qc",
+   "decided": "any",
+   "location": "scripts/floor.py",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "failures",
+    "learnings"
+   ]
+  },
+  {
+   "id": "failures",
+   "name": "Failures register",
+   "purpose": "Every failure and its guard",
+   "stage": "qc",
+   "decided": "any",
+   "location": "config/failures.json",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "floor",
+    "learnings"
+   ]
+  },
+  {
+   "id": "learnings",
+   "name": "Learnings register",
+   "purpose": "Say nothing twice",
+   "stage": "qc",
+   "decided": "any",
+   "location": "config/learnings.json",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "failures"
+   ]
+  },
+  {
+   "id": "ve-qc",
+   "name": "ve qc, refs and Critic",
+   "purpose": "Mechanical checks, reference sheets and the non-producer Critic",
+   "stage": "qc",
+   "decided": "post-cut",
+   "location": "scripts/ve.py",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "quick-edit quality"
+   ]
+  },
+  {
+   "id": "channel-safe",
+   "name": "channel_safe",
+   "purpose": "Platform UI safe zones, grid crop and account row",
+   "stage": "qc",
+   "decided": "post-cut",
+   "location": "scripts/channel_safe.py",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "board-gates",
+   "name": "Board production gates",
+   "purpose": "Sign storyboard, Pick a style, Approve proof, Approve cut",
+   "stage": "board",
+   "decided": "any",
+   "location": "scripts/velib/gates.py",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "cc-board"
+   ]
+  },
+  {
+   "id": "cc-board",
+   "name": "Control Center publish board",
+   "purpose": "Krish's day tiles and presses; contract shared with the engine",
+   "stage": "board",
+   "decided": "any",
+   "location": "control-center:src/surfaces/content/board/contract.ts",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "engine board page"
+   ]
+  },
+  {
+   "id": "scores",
+   "name": "Scores and Reject asset presses",
+   "purpose": "Narrative and production scores per piece",
+   "stage": "feedback",
+   "decided": "post-publish",
+   "location": "docs/PUBLISH_BOARDS.md",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "retro"
+   ]
+  },
+  {
+   "id": "retro",
+   "name": "Retro and production choices",
+   "purpose": "Joins the choices made against the scores",
+   "stage": "feedback",
+   "decided": "post-publish",
+   "location": "inspirationhouse:src/retro/retro.ts",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": [
+    "scores"
+   ]
+  },
+  {
+   "id": "filing",
+   "name": "Archive, 3 Posts and the making record",
+   "purpose": "Files each cut and records it on the piece",
+   "stage": "filing",
+   "decided": "post-cut",
+   "location": "scripts/post-pack/making.py",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "ve file"
+   ]
+  }
+ ]
+}
