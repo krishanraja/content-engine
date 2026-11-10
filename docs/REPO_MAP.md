@@ -3778,10 +3778,15 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/chrome/EndingBand.tsx`
 
 - `const BAND_ARRIVAL_FRAMES`
-- `interface EndingBandProps`
+- `const ENDING_TAGLINE`
+- `const ENDING_CTA`
+- `const ENDING_DAYS`
+- `const ENDING_TIMING`
+- `const ENDING_SETTLED_S`
+- `function statementLines(aspect: EngineRenderProps['aspect'], tagline: string = ENDING_TAGLINE): string[]`
 - `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
-- `function EndingBand({ props, frame }: EndingBandProps): React.ReactElement | null`
+- `function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/LeadCaption.tsx`
 
