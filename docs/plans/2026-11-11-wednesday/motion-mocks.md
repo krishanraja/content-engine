@@ -47,6 +47,15 @@ the camera never leaves the song, it only zooms.
 
 ## Short cut (9:16): frames 1, 7, 11, 14, 17, 18 and 21, each re-authored tall.
 
+## His placement (Krish, 10 Nov)
+
+He is cut out of his room and placed on the right of the wide cut and bottom-right of the short ("Do you
+think we can reliably cut out my background ... place me on the right of the video or the bottom right in
+the short version?"). Cut-out: the free on-device model (MediaPipe selfie segmentation), run after the
+eye-gaze fix, on cream; Krish, after the 10 s side-by-side with Runway: "free model works fine". He points
+up and to the left at 1:11, 1:45 and 2:25 (long take): on those beats the visual sits top-left and moves
+away from his hand, so his gesture leads into it.
+
 ## Who builds what
 
 Codex (cards in `docs/ve/cards/w11-mocks/`, built on the home computer, verified here): `clip` (the existing
