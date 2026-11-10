@@ -3,7 +3,7 @@
     {
       "obj": "quota",
       "device": "quota_chart",
-      "meaning": "Synthetic test data, not editorial evidence",
+      "meaning": "Study parameters supplied by card; normalized illustrative bin heights, not recovered study counts",
       "fromFrame": 0,
       "toFrame": 400,
       "params": {
@@ -19,7 +19,7 @@
         ],
         "target": 0.75,
         "halfTarget": 0.375,
-        "junkShare": 0.33,
+        "junkShare": 0.31,
         "salesLift": 0.07,
         "labels": {
           "questions": "Questions per person",
@@ -27,7 +27,9 @@
           "junk": "Junk questions",
           "sales": "Sales"
         },
-        "source": "SYNTHETIC TEST \u00b7 2026-11-10"
+        "source": "GONG ET AL. \u00b7 ARXIV 2609.32859",
+        "targetValue": 200,
+        "halfTargetValue": 100
       }
     }
   ],
