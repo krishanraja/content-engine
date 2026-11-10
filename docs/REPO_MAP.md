@@ -3827,6 +3827,27 @@ Run a Vercel serverless handler locally against the real environment.
 - `function onTwos(frame: number, fromFrame: number): number`
 - `function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number`
 
+### `apps/renderer/src/engine/devices/arrangement/hatch.ts`
+
+AI keeps ink beneath a 45 degree inkSoft hatch, including mixed layers.
+
+- `const hatch = (ink: string, inkSoft: string) =>`
+
+### `apps/renderer/src/engine/devices/arrangement/index.tsx`
+
+- `export { arrangementState } from './state'`
+- `function waveform(id: string, x: number)`
+- `function Device(p: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/arrangement/schema.ts`
+
+- `const Kind`
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/arrangement/state.ts`
+
+- `function arrangementState({ object, events, frame }: Pick<DeviceProps, 'object'|'events'|'frame'>)`
+
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
 
 - `function buddyState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
@@ -4037,6 +4058,23 @@ Run a Vercel serverless handler locally against the real environment.
 - `function scribbleState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 - `function scribblePen(object: EngineObject, events: readonly EngineEvent[]): (frame: number) => Point | undefined`
 
+### `apps/renderer/src/engine/devices/slot_machine/hatch.ts`
+
+- `function material(kind: 'human' | 'ai' | 'synth' | 'sample', tokens: DeviceProps['tokens'])`
+
+### `apps/renderer/src/engine/devices/slot_machine/index.tsx`
+
+- `function Device(props: DeviceProps)`
+- `export { slotState } from './state'`
+
+### `apps/renderer/src/engine/devices/slot_machine/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/slot_machine/state.ts`
+
+- `function slotState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+
 ### `apps/renderer/src/engine/devices/stamp/index.tsx`
 
 - `function Device({ object, events, tokens, frame }: DeviceProps)`
@@ -4114,6 +4152,20 @@ Run a Vercel serverless handler locally against the real environment.
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/typing_bubble/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/upload_flood/hatch.ts`
+
+- `function hatch(id: string, tokens: EngineTokens)`
+
+### `apps/renderer/src/engine/devices/upload_flood/index.tsx`
+
+- `function floodState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
+- `function gridGeometry(tiles: number, width: number, height: number, tall: boolean)`
+- `function Device(props: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/upload_flood/schema.ts`
 
 - `const ParamsSchema`
 
