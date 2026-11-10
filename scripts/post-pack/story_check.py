@@ -450,7 +450,7 @@ def length_problem(words, cut):
     when = f'{secs // 60}:{secs % 60:02d}'
     if n > high:
         return (f'the {cut} cut runs {n} spoken words, about {when} at an unhurried pace, and Krish asked for {asked}: '
-                f'cut it to {low} to {high} words (house rule {RULE_OF.get(cut, "TWO_CUTS")})')
+                f'cut it to {low} to {high} words by dropping a whole beat, never words from every sentence (house rule {RULE_OF.get(cut, "TWO_CUTS")})')
     if n < low:
         return (f'the {cut} cut is {n} spoken words, about {when}, short of {asked}: '
                 f'it should run {low} to {high} words (house rule {RULE_OF.get(cut, "TWO_CUTS")})')

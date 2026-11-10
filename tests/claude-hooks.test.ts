@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { spawnSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -55,6 +56,23 @@ describe('publish-guard', () => {
     expect(hook('publish-guard.mjs', bash('git push origin main'))?.permissionDecision).toBe('ask')
     expect(hook('publish-guard.mjs', bash('vercel deploy --prod'))?.permissionDecision).toBe('ask')
     expect(hook('publish-guard.mjs', bash('curl -X POST https://api.linkedin.com/v2/ugcPosts -d @post.json'))?.permissionDecision).toBe('ask')
+  })
+  it('lets words onto his teleprompter only when plan cleared them, and asks him for any others (F45)', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'cleared-'))
+    const ledger = join(dir, 'cleared.json')
+    const cleared = 'Is your company running a rat farm?\n'
+    writeFileSync(ledger, JSON.stringify([{ sha256: createHash('sha256').update(cleared, 'utf8').digest('hex'), piece_id: 'x', at: '2026-11-09T12:00:00Z' }]))
+    const call = (text: string) => {
+      const result = spawnSync(process.execPath, [join(repoRoot, '.claude', 'hooks', 'publish-guard.mjs')], {
+        input: JSON.stringify({ hook_event_name: 'PreToolUse', tool_name: 'mcp__Teleprompter__update_script', tool_input: { id: 'A', text } }),
+        encoding: 'utf8', env: { ...process.env, TELEPROMPTER_CLEARED: ledger },
+      })
+      const out = result.stdout.trim()
+      return out ? JSON.parse(out).hookSpecificOutput : undefined
+    }
+    expect(call(cleared)).toBeUndefined()
+    expect(call('Words no reader heard.')?.permissionDecision).toBe('ask')
+    rmSync(dir, { recursive: true, force: true })
   })
   it('never lets a session move his scripts or change his folders', () => {
     expect(hook('publish-guard.mjs', mcp('mcp__Teleprompter__move_script'))?.permissionDecision).toBe('deny')
