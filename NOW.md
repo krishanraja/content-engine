@@ -48,10 +48,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-09 covers can lead with the headline alone (no tag, a quiet series label, logos under the words, only the companies the story is about), and cloud sessions file media to Drive through an n8n uploader (Krish, 2026-11-09).
-- 2026-11-09 Eye contact rebuilt and blind-reviewed; Maxine pinned at 1.5.0; `--lens` serves a session. Krish: "Yes, approve the extra Maxine spend on 1.5.0" ($0.165).
-- 2026-11-09 2026-11-09 Friday 13 Nov re-scripted at Krish's call ("more amusing, more hooking at the start, and more simple to understand throughout"; "Can you ensure all of this is understandable by anyone?") and sent to Teleprompter; production follows the leaderboard format he picked. Proposed to him, waiting on his yes: a gate so no script reaches Teleprompter without a fresh-reader read-back, and three new reader checks (unexplained names, an opening that only teases, comparisons and advice that don't match the evidence).
-Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-09-NOW-moved-8.md`, then `2026-11-09-NOW-moved-7.md`, `2026-11-09-NOW-moved-6.md`, `2026-11-09-NOW-moved-5.md`, `2026-11-07-NOW-moved-4.md` and `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
+Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-10-NOW-moved-1.md`, then `2026-11-09-NOW-moved-8.md`, `2026-11-09-NOW-moved-7.md`, `2026-11-09-NOW-moved-6.md`, `2026-11-09-NOW-moved-5.md`, `2026-11-07-NOW-moved-4.md` and `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish

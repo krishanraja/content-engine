@@ -3899,6 +3899,20 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/leaderboard/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/leaderboard/schema.ts`
+
+- `const ParamsSchema`
+- `const RowTarget`
+- `const StampTarget`
+
+### `apps/renderer/src/engine/devices/leaderboard/state.ts`
+
+- `function leaderboardState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/logo_card/index.tsx`
 
 - `function logoCardState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>, count: number)`
@@ -3936,6 +3950,22 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/devices/marquee/state.ts`
 
 - `function marqueeState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/office_floor/index.tsx`
+
+- `function Device({ object, events, box, tokens: t, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/office_floor/schema.ts`
+
+- `const ParamsSchema`
+- `const FillSchema`
+- `const MoveSchema`
+- `const StampSchema`
+- `const TargetSchema`
+
+### `apps/renderer/src/engine/devices/office_floor/state.ts`
+
+- `function officeState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
 
 ### `apps/renderer/src/engine/devices/passport_page/index.tsx`
 
@@ -4248,7 +4278,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 ### `apps/renderer/src/engine/kit/overlayInvariants.ts`
 
 - `const overlayTestProps: Pick<DeviceProps, 'box' | 'tokens' | 'aspect'>`
-- `function assertOverlayMarkup(markup: string, id: string)`
+- `function assertOverlayMarkup(markup: string, id: string, aspect: '9:16' | '16:9' = '9:16')`
 - `function assertOverlayInvariants(Device: DeviceComponent, object: EngineObject, events: readonly EngineEvent[], id: str…`
 
 ### `apps/renderer/src/engine/kit/overlays.tsx`
