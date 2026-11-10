@@ -112,7 +112,7 @@ export function captionPages(timeline, maxWords = 4) {
 export function captions(env, ctx, t, { y } = {}) {
   // The approved house caption (Mon 2 Nov): Archivo 900, cream on an ink plate with a hard offset shadow in the
   // series colour, built word by word as he says them, centred, inside the readable width.
-  env._pages ??= captionPages(env.timeline, env.shape === 'tall' ? 4 : 6)
+  env._pages ??= captionPages(env.timeline, env.shape === 'tall' ? 3 : 6)
   const page = env._pages.find((p) => t >= p.s - 0.05 && t < p.e)
   if (!page) return null
   const c = env.skin.colors, tall = env.shape === 'tall'
@@ -137,7 +137,8 @@ export function captions(env, ctx, t, { y } = {}) {
 export function dress(env, ctx, alpha = 1) {
   if (!env.logoImg?.complete || alpha <= 0) return
   const tall = env.shape === 'tall', c = env.skin.colors
-  const x = tall ? 72 : 96, y = tall ? 232 : 64, w = tall ? 330 : 360
+  // Tall: below Instagram's profile account row (270 px) and the grid crop (240 px), config/channel-safe-zones.json.
+  const x = tall ? 72 : 96, y = tall ? 292 : 64, w = tall ? 330 : 360
   const im = env.logoImg, h = (w * im.height) / im.width
   ctx.save(); ctx.globalAlpha = alpha; ctx.drawImage(im, x, y, w, h); ctx.restore()
   text(env, ctx, env.skin.seriesName, tall ? 860 : env.W - 96, y + h * 0.82, { font: 'IBM Plex Mono', size: tall ? 40 : 36, weight: 600, color: c.channel, align: 'right', role: 'dress', alpha })

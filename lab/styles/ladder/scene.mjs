@@ -235,7 +235,7 @@ export function draw(env, ctx, t, house) {
     tx('CITY BRANCHES · 1988 TO 2004', NX, NY + (tall ? 64 : 58), { font: 'IBM Plex Mono', size: tall ? 40 : 34, weight: 600, color: c.cream, alpha: k43, role: 'label', tracking: 2 })
     credit(k43)
   }
-  if (kl > 0.02 && t < at(env, B.talk)) tx('TELLER JOBS: LEVEL', NX, CY + (tall ? 64 : 54), { font: 'IBM Plex Mono', size: tall ? 40 : 34, weight: 700, color: c.mint, alpha: kl, role: 'label', tracking: 2 })
+  if (kl > 0.02 && t < at(env, B.talk)) tx('HELD LEVEL', NX, CY + (tall ? 64 : 54), { font: 'IBM Plex Mono', size: tall ? 40 : 34, weight: 700, color: c.mint, alpha: kl, role: 'label', tracking: 2 })
   if (tw && t < at(env, B.ask)) {
     const kk = env.ease.enter(clamp((t - at(env, B.two, 'Fewer')) / 0.4))
     tx('PER BRANCH  20 → 13', tall ? 72 : 120, NY - 60, { font: 'IBM Plex Mono', size: tall ? 40 : 34, weight: 600, color: c.creamSoft, alpha: kk * (1 - watch * 0.5), role: 'label' })
