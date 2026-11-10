@@ -166,6 +166,10 @@
       "destination": "/api/board?week=:week&op=posted"
     },
     {
+      "source": "/api/board/:week/media/:id",
+      "destination": "/api/board?week=:week&op=media&id=:id"
+    },
+    {
       "source": "/api/board/:week/view",
       "destination": "/api/board?week=:week&op=view"
     },

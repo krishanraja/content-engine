@@ -11,6 +11,7 @@ import { readPieces, recordPosted } from './_posted.js'
 import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
 import { readView } from './_view.js'
+import { signMedia } from './_media.js'
 import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
@@ -215,6 +216,16 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
         res.setHeader('Cache-Control', 'no-store')
         return res.status(200).json({ ok: true, ...(await readView(db, week)) })
+      }
+      if (op === 'media') {
+        // One rendered file of this week's pieces (_media.ts): its id from the view, answered with a short signed link.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        if (!/^[a-f0-9]{64}$/.test(id)) throw new BoardError(404, 'media_not_found')
+        const end = new Date(`${week}T00:00:00Z`); end.setUTCDate(end.getUTCDate() + 6)
+        let url: string | null
+        try { url = await signMedia(db, week, end.toISOString().slice(0, 10), id) } catch { throw new BoardError(503, 'board_store_unavailable') }
+        if (!url) throw new BoardError(404, 'media_not_found')
+        return res.redirect(302, url)
       }
       if (op === 'research' || op === 'material' || op === 'look') {
         // The day path's presses on a piece of this week (_research.ts): research it now (sonar-pro), file research he

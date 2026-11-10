@@ -29,6 +29,14 @@ record the full board writes, bound to the same hashes (`_offdaySides.ts`, held 
 `tests/control-plane/board-desk.test.ts`). The page's one source is `apps/control-plane/board-next/desk.html`, built
 into `_deskPage.ts` by `node scripts/build-desk-page.mjs`. `/board` stays the old board until Krish switches it.
 
+Each day of the view also lists what its piece has rendered (`media`, `apps/control-plane/api/board/_media.ts`): the
+newest asset of each cut on its making record and that cut's thumbnail, by an opaque id, with no path, link or key.
+`GET /api/board/<Monday>/media/<id>` (the board's own login) answers one id of that week with a short signed link
+(302) to the library file, and 404 for an id that is not on that week's pieces or not filed yet. Control Centre's
+Publish Board, the real one since 10 Nov 2026 (Ruling, Krish, 2026-11-10), draws these large when they exist: "mock ups
+and rendered assets are going to actually make up a big part of the screen as and when they are available". Look mocks
+and storyboard frames join the same list when the engine files them as library files.
+
 Each series day is a guided path (Krish, 2026-11-09): Research, Story, Look, Storyboard and script, Record, Cut. Only
 the current step is open, each in the same five regions (title and chip, why, the thing, the action bar with the
 Claude prompt pinned right, "Add your thoughts"), and every press waits five seconds for Undo. Research it now runs

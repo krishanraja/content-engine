@@ -50,9 +50,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-10 Krish, 10 Nov: cutting restarted sentences and fixing eye gaze is a non-negotiable check on every take; the Grammys "out for songwriting, in for performance" line still has no primary source we hold.
-- 2026-11-09 Krish, 2026-11-09: "we need to make sure everything goes through the same voice system. Absolutely everything."
-Older lines are in `docs/history/`: the dated `*-NOW-*.md` files (the latest, `2026-11-10-NOW-moved-3.md`, then `2026-11-10-NOW-moved-2.md`, `2026-11-10-NOW-moved-1.md`, `2026-11-09-NOW-moved-8.md`, `2026-11-09-NOW-moved-7.md`, `2026-11-09-NOW-moved-6.md`, `2026-11-09-NOW-moved-5.md`, `2026-11-07-NOW-moved-4.md` and `2026-11-06-NOW-moved-3.md`, which keeps the full list of earlier ones) and `LOG.md`.
+Older lines: `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
