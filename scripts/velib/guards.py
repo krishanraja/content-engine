@@ -47,12 +47,26 @@ def bound(spec: dict) -> bool:
     return whole and str(spec.get('publish_day') or '') >= motion_from()
 
 
-def _exception(spec: dict, sha: str) -> dict | None:
-    """Krish's exception approval bound to this exact hash, or None."""
-    for a in spec.get('approvals') or []:
+def _exception(spec: dict, sha: str, directory: Path | None = None) -> dict | None:
+    """Krish's exception approval bound to this exact hash, or None. Beside the spec's approvals, an engine approval
+    may sit in the piece's ve folder (ENGINE_EXCEPTIONS), so it binds even before the spec is written (Krish,
+    2026-11-10: "approve the engine change for Wednesday")."""
+    extra = []
+    if directory is not None and (Path(directory) / ENGINE_EXCEPTIONS).is_file():
+        extra = load_json(Path(directory) / ENGINE_EXCEPTIONS).get('approvals') or []
+    for a in [*(spec.get('approvals') or []), *extra]:
         if isinstance(a, dict) and a.get('gate') == 'exception' and a.get('by') == 'Krish' and a.get('artifact_hash') == sha:
             return a
     return None
+
+
+ENGINE_EXCEPTIONS = 'engine-exceptions.json'
+
+
+def engine_only(approval: dict) -> bool:
+    """An exception that approves an engine change and nothing else: it never waives a lint check or counts as a press
+    on a cut."""
+    return isinstance(approval, dict) and approval.get('scope') == 'engine'
 
 
 def canonical_sha(value) -> str:
@@ -290,7 +304,7 @@ def engine_problems(spec: dict, cut: str, directory: Path) -> list[str]:
     lock = load_json(path)
     files = engine_files()
     now = engine_sha(files)
-    if now == lock.get('sha256') or _exception(spec, now):
+    if now == lock.get('sha256') or _exception(spec, now, directory):
         return []
     old = lock.get('files') or {}
     changed = sorted(n for n in set(old) | set(files) if old.get(n) != files.get(n))
@@ -335,7 +349,8 @@ def last_press(spec: dict, gates: dict) -> datetime | None:
     """The latest press of any gate by Krish, on the record or in the spec's approvals."""
     times = [_when(row.get('at')) for rows in (gates or {}).values() for row in (rows if isinstance(rows, list) else [rows])
              if isinstance(row, dict) and row.get('by') == 'Krish']
-    times += [_when(a.get('on')) for a in spec.get('approvals') or [] if isinstance(a, dict) and a.get('by') == 'Krish']
+    times += [_when(a.get('on')) for a in spec.get('approvals') or [] if isinstance(a, dict) and a.get('by') == 'Krish'
+              and not engine_only(a)]
     times = [t for t in times if t is not None]
     return max(times) if times else None
 

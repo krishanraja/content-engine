@@ -103,7 +103,10 @@ export const EngineRenderPropsSchema = z.object({
   objects: z.array(EngineObjectSchema),
   events: z.array(EngineEventSchema),
   call: z.object({ statement: z.string(), due: z.string(), confidencePercent: z.number().int() }).strict().optional(),
-  ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true) }).strict().optional(),
+  // The house close (chrome/EndingBand.tsx, docs/production/CLOSING.md). `ticker` is kept for old props and drawn by nothing.
+  ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true),
+    tagline: z.string().min(1).optional(), cta: z.string().min(1).optional(),
+    days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional() }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
   /** The makeyourmindup intro sting in front of the cut (Krish, 2026-11-05: "I think it should go at the start of the
