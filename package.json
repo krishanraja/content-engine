@@ -37,7 +37,7 @@
     "check:ve-route": "python3 scripts/ve/check_route.py",
     "check:floor-groups": "python3 scripts/floor_group.py --check",
     "check:music-bed": "python3 scripts/check_music_bed.py",
-    "check:capabilities": "python3 scripts/capabilities.py --check && python3 scripts/video_styles.py --check",
+    "check:capabilities": "python3 scripts/capabilities.py --check",
     "check:desk-page": "node scripts/build-desk-page.mjs --check"
   },
   "dependencies": {

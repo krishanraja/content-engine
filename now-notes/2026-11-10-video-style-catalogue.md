@@ -1,4 +1,4 @@
-Status: The video style catalogue (config/video-styles.json, 9 complete styles, every verdict untested) and the capability register (config/capabilities.json, 62 capabilities, docs/CAPABILITIES.md) exist and are checked by npm run check:capabilities; no pipeline behaviour changed.
-Changed: Krish wants the whole video chosen before the script, from a catalogue he can see, and every capability labelled by purpose and stage (plan: docs/plans/2026-11-10-video-style-system/PLAN.md).
-Next: Krish rates the 9 styles and the register's proposals; then step 2 puts one style pick and an inspiration drop point on each Control Center piece, before the script.
+Status: The capability register (config/capabilities.json, 62 capabilities, docs/CAPABILITIES.md) is checked by npm run check:capabilities. The first style catalogue was withdrawn on Krish's rejection, and its replacement design is docs/plans/2026-11-10-video-style-system/STYLE-CATALOGUE.md (styles, moves and formats as three separate libraries). No pipeline behaviour changed.
+Changed: Krish wants the whole video chosen before the script, from a real catalogue of looks he can see, and every capability labelled by purpose and stage.
+Next: Krish rules on STYLE-CATALOGUE.md and records the 45-second house test script, so the first three styles (The Ladder, The Lit Essay, The Living Screen) can be built and rendered on it.
 North Star check (2026-11-10): holds.
