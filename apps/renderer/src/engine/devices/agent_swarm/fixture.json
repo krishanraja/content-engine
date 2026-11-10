@@ -7,15 +7,15 @@
       "fromFrame": 0,
       "toFrame": 300,
       "params": {
-        "comment": "Can we use more AI?",
+        "comment": "Can we put more AI on this?",
         "agents": 10,
         "tokens": {
           "from": 120,
-          "to": 3200
+          "to": 3147000
         },
         "rank": {
-          "from": 90,
-          "to": 12
+          "from": 48,
+          "to": 1
         },
         "labels": {
           "meter": "TOKENS",
@@ -26,7 +26,7 @@
       "dataset": {
         "unit": "illustration",
         "denominator": null,
-        "producerLabel": "ILLUSTRATIVE FIXTURE \u00b7 2026-11-10",
+        "producerLabel": "ONE ENGINEER'S POST \u00b7 2026",
         "rows": []
       }
     }
