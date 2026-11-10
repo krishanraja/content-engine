@@ -73,6 +73,13 @@ jobs:
           mkdir -p .cache/board
           python3 scripts/post-pack/board_web.py download "$WEEK" --output .cache/board/live.html
 
+      - name: Download the earlier build the recipe takes its off days from, when it names one
+        run: |
+          BUILD=$(python3 -c "import json,os; print(json.load(open(os.environ['RECIPE'])).get('offdays_build') or '')")
+          if [ -n "$BUILD" ]; then
+            python3 scripts/post-pack/board_web.py download "$WEEK" --build "$BUILD" --output .cache/board/offdays.html
+          fi
+
       - name: Gather the week's sources again (read-only), when the recipe shows its Ideas
         run: |
           if python3 -c "import json,os,sys; sys.exit(0 if json.load(open(os.environ['RECIPE'])).get('gather') else 1)"; then
@@ -84,25 +91,28 @@ jobs:
           python3 scripts/post-pack/week_board.py --recipe "$RECIPE" --previous .cache/board/live.html --out .cache/board/week-board.html
           python3 scripts/post-pack/week_board.py --verify .cache/board/week-board.html
 
-      - name: Phone screenshots for Krish
+      - name: Check the publish (no change to the live board)
+        run: |
+          ASSETS=$(python3 -c "import json,os; print(json.load(open(os.environ['RECIPE'])).get('assets') or '')")
+          python3 scripts/post-pack/board_web.py publish-web .cache/board/week-board.html ${ASSETS:+--assets "$ASSETS"} --save .cache/board/final
+
+      - name: Phone screenshots for Krish, of the exact page the publish would put live
         run: |
           pip install -q playwright==1.55.0
           python3 -m playwright install --with-deps chromium > /dev/null
-          python3 scripts/post-pack/board_shots.py .cache/board/week-board.html --out .cache/board/screenshots
+          python3 scripts/post-pack/board_shots.py .cache/board/final/page.html --out .cache/board/screenshots --assets .cache/board/final/assets
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: board-${{ github.event.inputs.week }}
           path: |
             .cache/board/week-board.html
             .cache/board/week-board.json
+            .cache/board/final/page.html
+            .cache/board/offdays.html
             .cache/board/screenshots/
           retention-days: 14
-
-      - name: Check the publish (no change to the live board)
-        run: |
-          ASSETS=$(python3 -c "import json,os; print(json.load(open(os.environ['RECIPE'])).get('assets') or '')")
-          python3 scripts/post-pack/board_web.py publish-web .cache/board/week-board.html ${ASSETS:+--assets "$ASSETS"}
 
       - name: When the publish check fails, list the live board's stored files (read-only)
         if: failure()

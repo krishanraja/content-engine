@@ -749,6 +749,7 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     const day = b.dataset.day, v = saved[day], i = document.querySelector(`[data-pick-note-for="${b.dataset.for}"] input`);
     if (mode !== "live" || !pdb || busy[day] || !v || v.pick !== b.dataset.for || !i) { render(mode); return }
     const text = i.value.trim(), body = Object.assign({}, v, { note: text || null, at: new Date().toISOString() });
+    if (text) body.notes = Object.assign({}, v.notes || {}, { [v.pick]: text });
     busy[day] = v.pick; say(day, "Saving your note…"); render(mode);
     let stored = false;
     try { await pdb.doc("picks/" + day).set(body); saved[day] = body; stored = true; if (i.value.trim() === text) i.dataset.unsaved = "false" } catch {}
@@ -1036,17 +1037,23 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
   document.addEventListener("click", e => {
     const b = e.target.closest && e.target.closest("[data-press]");
     if (b) {
-      const pid = b.dataset.for, use = b.dataset.press, again = (saved[pid] || {}).use === use;
-      const i = document.querySelector(`[data-press-note-for="${pid}"] input`); if (i) i.dataset.unsaved = "false";
+      const pid = b.dataset.for, use = b.dataset.press, prev = saved[pid] || {}, again = prev.use === use;
+      const i = document.querySelector(`[data-press-note-for="${pid}"] input`);
+      // His words go with every press, typed or saved (Krish, 2026-11-09: "Somehow, you've also managed to lose a
+      // bunch of my comments"): a second press keeps what he typed for the first, and a press taken back keeps them.
+      const typed = i && i.dataset.unsaved === "true" ? i.value.trim() : "";
+      const words = typed || (prev.use ? prev[field(prev.use)] || "" : prev.note || "");
       // Reject saves only with his reason: the press opens the box, and Save sends it (a second tap closes it).
       if (use === "not_for_us" && !again) {
         asking[pid] = !asking[pid]; render();
-        if (asking[pid] && i) { i.value = ""; i.focus() }
+        if (asking[pid] && i) { if (!typed) i.value = ""; i.focus() }
         return;
       }
       delete asking[pid];
-      save(pid, ideaBody(pid, again ? { use: null, note: null, reason: null, theme: null, target_week: null }
-        : { use, note: null, reason: null, theme: null, target_week: use === "next_week" ? b.dataset.targetWeek : null }), `[data-pressstate="${pid}"]`);
+      const keep = { note: words || null, reason: again && use === "not_for_us" ? prev.reason ?? null : null, theme: prev.theme ?? null };
+      save(pid, ideaBody(pid, again ? Object.assign({ use: null, target_week: null }, keep)
+        : Object.assign({ use, target_week: use === "next_week" ? b.dataset.targetWeek : null }, keep)), `[data-pressstate="${pid}"]`)
+        .then(ok => { if (ok && i && i.value.trim() === typed) i.dataset.unsaved = "false" });
       return;
     }
     const n = e.target.closest && e.target.closest('[data-act="save-press-note"]');
@@ -1250,7 +1257,8 @@ function offdayNoteParts(note){
     if (p) {
       const c = document.getElementById(p.dataset.for); if (!c) return;
       const id = c.dataset.offday, k = p.dataset.side, val = p.dataset.value, cur = side(id, c, k);
-      if (cur && cur.verdict === val) { delete asking[id + ":" + k]; save(c, body(c, k, null, null)); return }
+      // A second tap takes the press back and keeps his words (9 Nov: off-tue-infosys's reason was blanked so).
+      if (cur && cur.verdict === val) { delete asking[id + ":" + k]; save(c, body(c, k, null, cur.words || null)); return }
       if (val === "improve" || val === "reject") {
         asking[id + ":" + k] = val; render();
         // From a day's tab his words go in the card's box on the Ideas tab, where every reason is kept.
