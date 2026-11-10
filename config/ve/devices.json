@@ -182,6 +182,18 @@
         "move",
         "exit"
       ]
+    },
+    "slot_machine": {
+      "verbs": [
+        "enter",
+        "type",
+        "pick",
+        "send",
+        "fill",
+        "bounce",
+        "highlight",
+        "exit"
+      ]
     }
   }
 }

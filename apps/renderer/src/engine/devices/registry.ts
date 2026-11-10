@@ -1,4 +1,5 @@
 import { Device as Arrangement } from './arrangement'
+import { Device as SlotMachine } from './slot_machine'
 import { Device as Leaderboard } from './leaderboard'
 import { Device as OfficeFloor } from './office_floor'
 import { Device as LogoOrbit } from './logo_orbit'
@@ -26,6 +27,7 @@ import { Device as QuoteCard } from './quote_card'
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
   arrangement: Arrangement,
+  slot_machine: SlotMachine,
   leaderboard: Leaderboard,
   office_floor: OfficeFloor,
   typing_bubble: TypingBubble,
