@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- ve has four new pieces for the Fri 13 Nov 5-minute cut, built by Codex from cards and checked here: the WINDOW layout (his face in a rounded corner window over full-bleed footage, easing between full frame and window), wall_screen (a real page flown off the office wall to full frame, its line marked), quota_chart (the medical-device study: questions bunch at the target, the junk third, the target halved, sales up 7%) and agent_swarm (ten agents on one comment, the token meter, the rank). (2026-11-10)
 - house end card is direction C, "Built to help you decide.", filmed 6 s by kit; wide frame never splits a word (docs/production/CLOSING.md). (2026-11-10)
 - Round 2 of the Wed 11 devices is built by Codex and reviewed: arrangement (a real DAW view, AI flags, credits) and upload_flood (scattered AI songs, listens meter, search) pass; slot_machine still crops typed text and its cabinet vanishes on ink. Mock batch 2 (11 device frames, Krish cut out on the right) sent to Krish. (2026-11-10)
 - The eye-contact workflow re-encodes any take above 30 fps to 30 fps before NVIDIA's service sees it; the 48 fps ai-music takes of 10 Nov were refused with the "Only H.264 8-bit ... Constant Frame Rate" error while the 30 fps takes of 5 Nov went through (suspected cause, not yet proven by a passing run). (2026-11-10)
@@ -47,12 +48,13 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-10 Krish, 2026-11-10: "the 5-minute video probably needs my face in the corner. Make sure you get Codex to do the heavy production lifting here." Review fixes: wall_screen returned -0 skew, the layout mirror test now lists WINDOW, production-spec.ts keeps main's line endings, house golden records the two new devices only.
 Older lines: `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-10): port the close into ve's EndingBand.
+- Next (2026-11-10): Once this merges, re-queue the polish cards ve-fri-5b and ve-fri-6b (the lane builds from main, so they found no device to polish), then assemble the 5-minute cut in ve.
 - House close (2026-11-10): kit closes on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`); Krish hears the first cut with it at full size.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
 - Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
