@@ -15,7 +15,10 @@ function Odometer({ value, position, x, y, color }: { value: number; position: n
       const left = offset; offset += c === ',' ? 35 : 88
       const power = chars.slice(i + 1).filter(v => v !== ',').length
       const reel = position / 10 ** power
-      const fraction = reel - Math.floor(reel)
+      // A real odometer: the last reel turns continuously; a higher reel turns only while every reel below it
+      // rolls over from 9, so a frame never shows every digit half-way between two numbers.
+      const below = position % 10 ** power
+      const fraction = power === 0 ? reel - Math.floor(reel) : Math.max(0, below - (10 ** power - 1))
       return c === ',' ? <text key={i} x={left} y={174} fontSize={180} fill={color} fontFamily={HOUSE_FONTS.display}>,</text> :
         <svg key={i} x={left} width={88} height={210} overflow="hidden">
           <g transform={`translate(0 ${-fraction * 210})`} fill={color} fontFamily={HOUSE_FONTS.display} fontSize={180}>
