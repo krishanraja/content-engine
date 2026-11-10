@@ -33,5 +33,5 @@ export function wallState(object: EngineObject, events: readonly EngineEvent[], 
 export function pageRect(wall: {x: number; y: number; w: number; h: number; skew?: number}, full: number) {
   return { x: wall.x * (1 - full), y: wall.y * (1 - full),
     w: wall.w + (1 - wall.w) * full, h: wall.h + (1 - wall.h) * full,
-    skew: (wall.skew ?? 0) * (1 - full) }
+    skew: (wall.skew ?? 0) * (1 - full) + 0 }
 }
