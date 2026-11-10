@@ -284,6 +284,15 @@ music lives only at `MINDMAKE_MUSIC_ROOT` with its ledger
 `git push` outside the sandbox, asking Krish to approve. The sandbox runs as a
 separate Windows user that cannot see the engine key or reach the internet.
 
+**Codex sign-in, every machine.** Codex signs in with Krish's ChatGPT subscription, never an API key
+(Krish, 2026-11-10: "i can just log in to a cloud session with codex sbscription - you give me the link and
+the code and I enter it when i click the link"). It is installed on his PC both on Windows and in WSL Ubuntu,
+and Claude sessions load the Codex plugin (`codex@openai-codex`, `.claude/settings.json`). At session start
+`.claude/hooks/codex-login.sh` checks `codex login status`: signed in, it says nothing; signed out, it installs
+Codex in a cloud container if missing, starts `codex login --device-auth` and shows him the link and the
+one-time code (Krish, 2026-11-10: "ensure if codex is not connected, I am automatically given the link to sign
+in, instead of having you complain about it"). Relay that link and code; never ask him for a key or explain setup.
+
 ## What this repository is
 
 The Make Your Mind Up content engine: the engine behind Krish's publication and the

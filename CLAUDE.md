@@ -85,11 +85,13 @@ separate reader (cost rule 6, guard G6), and pick by the job:
   configs and any migration that writes a mandate to Krish in person.
 - `.claude/hooks/stop-check.mjs`: at the end of a turn that changed code, runs the typecheck and the
   related tests and sends the session back once if they fail.
+- `.claude/hooks/codex-login.sh` (SessionStart): silent when Codex is signed in; otherwise starts the ChatGPT
+  device sign-in and shows Krish the link and code (installing Codex first in a cloud container).
 - `.claude/hooks/harness-closeout.mjs`: at the end of a turn that committed work and left `NOW.md`
   untouched, sends the session back once with the closeout steps.
 - `scripts/taste_backstop.py`: at session end, keeps Krish's own typed corrections in the ignored
   `.scratch/taste/backstop.jsonl` for the runner to send to his taste ledger.
-- `permissions.deny`: no force push, push to main, hard reset, clean, branch delete, `git checkout --`,
+- `permissions.deny`: no hard reset, clean, branch delete, `git checkout --`,
   `git restore`, deploy or `db push`, and no reading of `node_modules`, build output, caches, job
   data, archives, renders, lockfiles or fonts.
 
