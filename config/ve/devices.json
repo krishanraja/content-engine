@@ -205,6 +205,17 @@
         "pick",
         "exit"
       ]
+    },
+    "quota_chart": {
+      "verbs": [
+        "enter",
+        "fill",
+        "draw",
+        "mark",
+        "move",
+        "count_to",
+        "exit"
+      ]
     }
   }
 }
