@@ -24,7 +24,7 @@ it('removes marked rows, persists pins, solos and weights the hum',()=>{
  expect(state(190).solo).toBe('')
 })
 it('renders every golden within all three boxes, using tokens and moving the playhead',()=>{
- for(const [width,height] of [[1080,1920],[1920,1080],[1260,1080]]) {
+ for(const [width,height] of [[1080,1920],[1920,1080],[1260,1080]] as const) {
   const render=(frame:number)=>renderToStaticMarkup(React.createElement(Device,{object,events,tokens,frame,aspect:height===1920?'9:16':'16:9',box:{left:20,top:30,width,height}}))
   expect(render(9)).toBe('')
   for(const frame of fixture.stills){const html=render(frame);expect(html).toContain('overflow:hidden');expect(html).not.toMatch(/#[a-f0-9]{3,8}\b/i)}
