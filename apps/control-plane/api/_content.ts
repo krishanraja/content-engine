@@ -226,10 +226,11 @@ export async function loadVoiceBlock(): Promise<string> {
   return typeof v === 'string' ? v : (v ? JSON.stringify(v) : '')
 }
 
-let liveVoiceCache: { at: number; text: string } | null = null
+const liveVoiceCache = new Map<string, { at: number; text: string }>()
 /** The krish-voice text Control Center serves for this kind of writer, cached five minutes; empty when it cannot answer. */
 export async function loadLiveVoice(kind: 'article' | 'social' | 'script' | 'email', env: Record<string, string | undefined> = process.env): Promise<string> {
-  if (liveVoiceCache && Date.now() - liveVoiceCache.at < 5 * 60_000) return liveVoiceCache.text
+  const hit = liveVoiceCache.get(kind)
+  if (hit && Date.now() - hit.at < 5 * 60_000) return hit.text
   const code = (env.ACCESS_CODE || '').trim()
   if (!code) return ''
   const { createHash } = await import('node:crypto')
@@ -238,7 +239,7 @@ export async function loadLiveVoice(kind: 'article' | 'social' | 'script' | 'ema
   if (r.status !== 200) return ''
   const j = await r.json() as { ok?: boolean; text?: string }
   const text = j?.ok === true && typeof j.text === 'string' ? j.text : ''
-  if (text) liveVoiceCache = { at: Date.now(), text }
+  if (text) liveVoiceCache.set(kind, { at: Date.now(), text })
   return text
 }
 

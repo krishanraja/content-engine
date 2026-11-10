@@ -482,9 +482,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // The one voice check (Ruling, Krish, 2026-11-09: every word written for Krish, Jonny or the
     // publication passes it). Every lane, not only the live subchannels: a publication piece is
     // checked as the publication's article, any other lane's as his own post. A hard fail blocks
-    // approval and publication; a check Control Center cannot answer blocks nothing (its own gates
-    // above still stand) and says so.
-    if (current && (updates.state === 'approved' || updates.state === 'published')) {
+    // approval; publication is Krish's own act by hand and is always recorded as it happened. A check
+    // Control Center cannot answer blocks nothing (its own gates above still stand).
+    if (current && updates.state === 'approved') {
       const effective = typeof updates.body === 'string' ? updates.body : (current.body || '')
       const channel = (LIVE_SUBCHANNELS as readonly string[]).includes(String(current.lane_slot)) ? 'article' : 'linkedin'
       const voice = effective.trim() ? await askVoiceCheck(effective, channel) : null
