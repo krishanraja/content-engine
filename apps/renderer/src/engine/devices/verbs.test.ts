@@ -10,6 +10,9 @@ describe('device verb declarations', () => {
   it('agent_swarm declares its six cues', () => {
     expect(manifest.devices.agent_swarm.verbs).toEqual(['enter', 'add', 'fill', 'move', 'mark', 'exit'])
   })
+  it('wall_screen declares exactly its four cues', () => {
+    expect(manifest.devices.wall_screen.verbs).toEqual(['enter', 'move', 'mark', 'exit'])
+  })
   it('arrangement declares its ten cues', () => {
     expect(manifest.devices.arrangement.verbs).toEqual(['enter','add','type','stamp','mark','highlight','fill','chip','move','exit'])
   })

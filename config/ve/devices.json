@@ -226,6 +226,14 @@
         "mark",
         "exit"
       ]
+    },
+    "wall_screen": {
+      "verbs": [
+        "enter",
+        "move",
+        "mark",
+        "exit"
+      ]
     }
   }
 }
