@@ -124,7 +124,8 @@ export function captions(env, ctx, t, { y } = {}) {
   const str = shown.join(' ')
   for (;;) { ctx.font = `normal 900 ${size}px 'Archivo'`; if (ctx.measureText(str).width <= maxW - 36 || size <= 44) break; size -= 2 }
   const w = ctx.measureText(str).width
-  const cx = tall ? 490 : env.W / 2, base = y ?? (tall ? 1262 : 1000)
+  // Tall: as low as a read word may sit; the plate ends just above every channel's handle zone (y 1320).
+  const cx = tall ? 490 : env.W / 2, base = y ?? (tall ? 1288 : 1010)
   const px = 18, top = base - size * 0.92, h = size * 1.18 + 10
   ctx.fillStyle = c.channel; ctx.fillRect(cx - w / 2 - px + 9, top + 9, w + px * 2, h)
   ctx.fillStyle = c.ink; ctx.fillRect(cx - w / 2 - px, top, w + px * 2, h)

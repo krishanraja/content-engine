@@ -63,6 +63,8 @@ export async function setup(env) {
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05
   const scene = new THREE.Scene(); scene.background = col(c.ink); scene.fog = new THREE.Fog(col(c.ink), 30, 70)
   const camera = new THREE.PerspectiveCamera(env.shape === 'tall' ? 42 : 30, env.W / env.H, 0.1, 200)
+  // Tall: the picture slides down so the object sits under the caption line (Krish, 10 Nov: captions lower).
+  if (env.shape === 'tall') camera.setViewOffset(env.W, env.H, 0, -360, env.W, env.H)
   const mats = {
     stucco: new THREE.MeshStandardMaterial({ map: paperTexture(env), color: col(c.cream), roughness: 0.85 }),
     stone: new THREE.MeshStandardMaterial({ color: col(c.creamSoft), roughness: 0.7 }),
@@ -108,7 +110,7 @@ export async function setup(env) {
 
 // Camera shots: [time, position, look-at]. Between shots the camera eases on the house hero curve; it never rests.
 function shots(env) {
-  const z = env.shape === 'tall' ? 1.35 : 1, lift = env.shape === 'tall' ? 2.2 : 0.9
+  const z = env.shape === 'tall' ? 1.55 : 1, lift = env.shape === 'tall' ? 2.2 : 0.9
   return [
     // The look-at sits above the object (lift), so the object lands in the lower two thirds and the type owns the top.
     // The hook opens close on the lit cash machine, then reveals the branch on "ended".
