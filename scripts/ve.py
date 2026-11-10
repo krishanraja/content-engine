@@ -1331,12 +1331,32 @@ def cmd_premix(args) -> int:
         lead = int((props.get('sting') or {}).get('frames') or 0)
         lead_s = lead / fps
         lifts = [[float(a) + lead_s, float(b) + lead_s] for a, b in (w.split('-', 1) for w in args.lift or [])]
+        # The cut's own music plan (spec cuts.<cut>.music, Krish's words in its `said`): clips heard with their own
+        # sound and a late bed, moved by the sting's frames like everything else on the stem's clock.
+        plan = spec['cuts'][args.cut].get('music') or {}
+        clips = []
+        if plan.get('clips'):
+            if not args.assets_dir:
+                raise ValueError('the cut\'s music plan names clips: give --assets-dir, the folder their asset paths are relative to')
+            assets = {a['id']: a for a in spec.get('assets', [])}
+            for clip in plan['clips']:
+                asset = assets.get(clip['asset'])
+                if asset is None or asset['kind'] not in ('broll', 'recording'):
+                    raise ValueError(f"clip {clip['asset']} is not a broll or recording asset in the spec")
+                src = Path(args.assets_dir) / asset['path']
+                if sha256_file(src) != asset['sha256']:
+                    raise ValueError(f"{src.name} does not match the spec's sha256 for {clip['asset']}")
+                clips.append({**clip, 'src': str(src), 'at_s': clip['at_s'] + lead_s, 'end_s': clip['end_s'] + lead_s,
+                              'points': [{'t': p['t'] + lead_s, 'level': p['level']} for p in clip['points']]})
         result = audio.premix(args.dialogue, str(music), args.out, start_s, (lead + props['durationFrames']) / fps,
                               bed_start_s=float(track.get('intro_cue_s') or 0), under_vo_lu=bed['under_vo_lu'],
                               lufs=spec['audio'].get('targets', {}).get('lufs', -14), tp=spec['audio'].get('targets', {}).get('tp', -1),
                               mode=bed['mode'], last_word_end_s=lead_s + float(words[-1]['end_s']) - start_s,
                               levels=ledger['levels'] | {'chapter_lufs': ledger['levels'].get('chapter_lufs', -22)},
-                              voice_start_s=lead_s + float(words[0]['onset_s']) - start_s, lifts=lifts, lead_frames=lead, fps=fps)
+                              voice_start_s=lead_s + float(words[0]['onset_s']) - start_s, lifts=lifts, lead_frames=lead, fps=fps,
+                              clips=clips, bed_enter_s=(plan['bed_enter_s'] + lead_s) if plan.get('bed_enter_s') else 0.0,
+                              bed_fade_in_s=float(plan.get('bed_fade_in_s') or 0),
+                              handovers=[[a + lead_s, b + lead_s] for a, b in plan.get('handovers') or []])
         print(json.dumps({k: result[k] for k in ('stem', 'integrated_lufs', 'true_peak_dbtp', 'lead_frames')} | {'bed': {
             k: result['bed'].get(k) for k in ('mode', 'bed_lufs_in_master', 'crossfades_s', 'lifts', 'bed_under_speech_db', 'duck_depth_db')}}, indent=1))
         print(f've premix: {sha256_file(Path(args.out))}  {args.out}')
@@ -1650,6 +1670,7 @@ def main() -> int:
     p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--dialogue', required=True)
     p.add_argument('--words', required=True); p.add_argument('--props', required=True); p.add_argument('--out', required=True)
     p.add_argument('--lift', action='append', metavar='FROM-TO', help='a chapter-card window in seconds on the cut\'s own clock (a sting in front is added by premix)')
+    p.add_argument('--assets-dir', help="the piece's assets folder, for the clips a cut's music plan names")
     p.set_defaults(fn=cmd_premix)
     p = sub.add_parser('render', help='render compiled props through FormatMaster')
     p.add_argument('props'); p.add_argument('out'); p.add_argument('--scale', type=float, default=1.0)
