@@ -205,6 +205,35 @@
         "pick",
         "exit"
       ]
+    },
+    "quota_chart": {
+      "verbs": [
+        "enter",
+        "fill",
+        "draw",
+        "mark",
+        "move",
+        "count_to",
+        "exit"
+      ]
+    },
+    "agent_swarm": {
+      "verbs": [
+        "enter",
+        "add",
+        "fill",
+        "move",
+        "mark",
+        "exit"
+      ]
+    },
+    "wall_screen": {
+      "verbs": [
+        "enter",
+        "move",
+        "mark",
+        "exit"
+      ]
     }
   }
 }

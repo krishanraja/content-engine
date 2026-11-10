@@ -1,0 +1,15 @@
+{
+  "card_id": "ve-fri-4-wall-screen",
+  "kind": "device",
+  "format": "face-with-proof",
+  "motion_style": "data-story",
+  "title": "Wall screen: a real page on the office wall, flown into full frame, its line marked, flown back",
+  "goal": "Fri 13 Nov 5-minute cut: a real page (Shopify, Duolingo, Fortune, CIO, the study) on the 2026 office wall zooms to full frame, its line is marked, it shrinks back.\n\n1. `params`: `image` (a real page screenshot, path from the spec's assets), `wall` {x, y, w, h, skew?} the screen's place in the footage frame (normalised 0..1), `line` {x, y, w, h} the box of the line to mark (normalised in the image), `source` (PRODUCER \u00b7 DATE, shown at the foot in IBM Plex Mono), `logo?` (a real logo asset shown once at the size of a part).\n2. `enter`: the screen lights on the wall (8-frame glow).\n3. `move` with `toState` = 'full': the camera glides from the wall to the page until it fills the box (18 frames, ease in-out), footage behind blurs and darkens.\n4. `mark`: the line is marked with a highlighter stroke (12 frames, series colour, low opacity), then a hand-drawn underline.\n5. `move` with `toState` = 'wall': the camera glides back, the page shrinking into the wall.\n6. `exit`: the screen goes dark.",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Register in devices/registry.ts and config/ve/devices.json with exactly enter, move, mark, exit; update verbs.test.ts. A real page is shown as itself, never redrawn or recoloured; text only from params. Draw inside the box only. Colours only from brand tokens. Tests (device.test.ts, stills at frames from fixture.json): nothing before enter; after move 'full' the page fills the box within 4%; mark draws only inside the line box and only after `mark`; after move 'wall' the page sits back on the wall box; the source line is always visible once full; tall and wide both render.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/wall_screen\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+  "write_allow": "[apps/renderer/src/engine/devices/wall_screen/*, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/devices/verbs.test.ts, config/ve/devices.json]",
+  "read": "apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/evidence_card/**, apps/renderer/src/engine/devices/scribble/**, apps/renderer/src/engine/devices/hand_phone_stage/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/kit/**, config/ve/design-lock.json, config/ve/devices.json, config/ve/brand-tokens.json",
+  "max_minutes": 60,
+  "max_calls": 60,
+  "path": "docs/ve/cards/fri-13-nov/ve-fri-4-wall-screen.md"
+}

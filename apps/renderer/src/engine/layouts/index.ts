@@ -9,6 +9,9 @@ type Aspect = EngineRenderProps['aspect']
 // Each aspect is authored in its own frame coordinates, never scaled.
 const TALL: Record<Layout, readonly Box[]> = {
   SPLIT: [{ left: 60, top: 300, width: 960, height: FWP_SPLIT_SEAM_Y - 360 }],
+  WINDOW: [
+    { left: 0, top: 0, width: 1080, height: 1250 },
+  ],
   STAGE: [
     { left: 0, top: 0, width: 1080, height: 1920 },
   ],
@@ -37,6 +40,9 @@ const TALL: Record<Layout, readonly Box[]> = {
 }
 
 const WIDE: Record<Exclude<Layout, 'SPLIT'>, readonly Box[]> = {
+  WINDOW: [
+    { left: 0, top: 0, width: 1452, height: 1080 },
+  ],
   STAGE: [
     { left: 0, top: 0, width: 1920, height: 1080 },
   ],
@@ -70,7 +76,7 @@ const WIDE: Record<Exclude<Layout, 'SPLIT'>, readonly Box[]> = {
 export function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[] {
   if (layout === 'SPLIT' && aspect === '16:9') throw new Error('ve: SPLIT has no wide lock; use 9:16')
   const boxes = aspect === '9:16' ? TALL[layout] : WIDE[layout as Exclude<Layout, 'SPLIT'>]
-  if (layout === 'STAGE' || layout === 'SPLIT') return Array.from({ length: count }, () => ({ ...boxes[0]! }))
+  if (layout === 'WINDOW' || layout === 'STAGE' || layout === 'SPLIT') return Array.from({ length: count }, () => ({ ...boxes[0]! }))
   return boxes.map((box) => ({ ...box }))
 }
 
@@ -86,4 +92,32 @@ export function splitPlatePosition(crop?: string): string {
   return tokens && tokens.length >= 1 && tokens.length <= 4
     && tokens.every((token) => /^(?:left|right|top|bottom|center|0|-?\d+(?:\.\d+)?(?:%|px))$/.test(token))
     ? crop!.trim() : FWP_POSTER_POSITIONS.proof
+}
+
+/** A rectangular device region cannot express a canvas with a hole. WINDOW slots use
+ * the largest clear rectangle; the plate is separately given the whole canvas. */
+export function windowCameraBox(aspect: Aspect): Box {
+  return aspect === '16:9'
+    ? { left: 1452, top: 676, width: 400, height: 340 }
+    : { left: 48, top: 1250, width: 330, height: 420 }
+}
+
+export function windowCameraState(beats: readonly EngineBeat[], aspect: Aspect, frame: number): { box: Box; scale: number; windowed: number } {
+  const full = { left: 0, top: 0, width: aspect === '16:9' ? 1920 : 1080, height: aspect === '16:9' ? 1080 : 1920 }
+  const small = windowCameraBox(aspect)
+  let state = { box: full, scale: 1, windowed: 0 }
+  for (const [index, beat] of beats.entries()) {
+    if (frame < beat.fromFrame) break
+    const mode = beat.face ?? (beat.layout === 'WINDOW' ? 'window' : 'full')
+    const target = { box: mode === 'full' ? full : small, scale: mode === 'off' ? 0 : 1, windowed: mode === 'full' ? 0 : 1 }
+    if (index === 0) { state = target; continue }
+    const duration = mode === 'off' || state.scale < 1 ? 6 : 12
+    const t = Math.min(1, Math.max(0, (Math.min(frame, beat.toFrame) - beat.fromFrame) / duration))
+    const ease = 1 - Math.pow(1 - t, 3)
+    const mix = (a: number, b: number) => a + (b - a) * ease
+    state = { box: { left: mix(state.box.left, target.box.left), top: mix(state.box.top, target.box.top),
+      width: mix(state.box.width, target.box.width), height: mix(state.box.height, target.box.height) },
+      scale: mix(state.scale, target.scale), windowed: mix(state.windowed, target.windowed) }
+  }
+  return state
 }
