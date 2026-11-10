@@ -23,7 +23,7 @@ Everyone in a board meeting now says "hyperscaler". Few could say what one is, h
 The landlord: a hyperscaler is explained once, plainly, as a landlord who builds the block before a single tenant has signed. Then one running picture: the receipt for one AI data centre printing line by line as he talks, each line who paid (profits, bonds, shares, partners, chip maker, customers up front). The viewer ends with three numbers they can say out loud in a meeting. Every line said plainly, the way you would say it to a friend; no clever phrasing (Krish, 9 Nov: "It's really important we aren't trying to cryptically confuse everyone.").
 
 ## The use
-Take three numbers into your next board meeting: about $730 billion is being spent on AI buildings this year; about 4 in 10 of those dollars are now borrowed or raised; and 40 of 41 local votes went against new data centres. Then ask which landlord your own AI runs on, and whether it pays from profits or borrows to build. (Best guess, put to Krish 10 Nov.)
+Take three numbers into your next board meeting: about $730 billion is being spent on AI buildings this year; about 4 in 10 of those dollars are now borrowed or raised; and 40 of 41 local votes went against new data centres. Then ask which landlord your own AI runs on, and whether it pays from profits or borrows to build. (Krish, 10 Nov: "Keep the three numbers and the question")
 
 ## His close
 To come from Krish, in his own words: his own call on whether the build happens on time, now that towns get a vote (asked 10 Nov). No prediction about politics (Krish, 9 Nov: "I'd rather not make predictions about politics.").
