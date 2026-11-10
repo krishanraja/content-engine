@@ -205,6 +205,16 @@
         "pick",
         "exit"
       ]
+    },
+    "agent_swarm": {
+      "verbs": [
+        "enter",
+        "add",
+        "fill",
+        "move",
+        "mark",
+        "exit"
+      ]
     }
   }
 }

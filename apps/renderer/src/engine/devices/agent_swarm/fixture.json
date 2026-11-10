@@ -1,0 +1,78 @@
+{
+  "objects": [
+    {
+      "obj": "swarm",
+      "device": "agent_swarm",
+      "meaning": "Illustrative test values, not editorial evidence",
+      "fromFrame": 0,
+      "toFrame": 300,
+      "params": {
+        "comment": "Can we use more AI?",
+        "agents": 10,
+        "tokens": {
+          "from": 120,
+          "to": 3200
+        },
+        "rank": {
+          "from": 90,
+          "to": 12
+        },
+        "labels": {
+          "meter": "TOKENS",
+          "rank": "RANK"
+        },
+        "annotation": "nothing fixed"
+      },
+      "dataset": {
+        "unit": "illustration",
+        "denominator": null,
+        "producerLabel": "ILLUSTRATIVE FIXTURE \u00b7 2026-11-10",
+        "rows": []
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "enter",
+      "obj": "swarm",
+      "verb": "enter",
+      "toState": "enter",
+      "atFrame": 10
+    },
+    {
+      "id": "add",
+      "obj": "swarm",
+      "verb": "add",
+      "toState": "add",
+      "atFrame": 30
+    },
+    {
+      "id": "fill",
+      "obj": "swarm",
+      "verb": "fill",
+      "toState": "fill",
+      "atFrame": 80
+    },
+    {
+      "id": "move",
+      "obj": "swarm",
+      "verb": "move",
+      "toState": "rank",
+      "atFrame": 130
+    },
+    {
+      "id": "mark",
+      "obj": "swarm",
+      "verb": "mark",
+      "toState": "mark",
+      "atFrame": 180
+    },
+    {
+      "id": "exit",
+      "obj": "swarm",
+      "verb": "exit",
+      "toState": "exit",
+      "atFrame": 240
+    }
+  ]
+}

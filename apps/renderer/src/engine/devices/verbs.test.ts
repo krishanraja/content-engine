@@ -4,6 +4,9 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('agent_swarm declares its six cues', () => {
+    expect(manifest.devices.agent_swarm.verbs).toEqual(['enter', 'add', 'fill', 'move', 'mark', 'exit'])
+  })
   it('arrangement declares its ten cues', () => {
     expect(manifest.devices.arrangement.verbs).toEqual(['enter','add','type','stamp','mark','highlight','fill','chip','move','exit'])
   })
