@@ -147,7 +147,7 @@ export function draw(env, ctx, t, house) {
     const on = clamp((t - (f0 + (f1 - f0) * (i / 20))) / 0.18)
     const off = i >= 13 ? env.ease.exit(clamp((t - d0 - (i - 13) * 0.04) / 0.2)) : 0
     // "the person behind the counter": one window lights first.
-    const first = i === 7 ? env.ease.enter(clamp((t - person) / 0.4)) : 0
+    const first = i === 1 ? env.ease.enter(clamp((t - person) / 0.4)) : 0
     const k = Math.max(on, first) * (1 - off) * (1 - 0.75 * ghost)
     w.glass.material.emissiveIntensity = 0.05 + 1.5 * k
     w.glass.material.color.set(k > 0.02 ? c.channel : c.inkSoft)
