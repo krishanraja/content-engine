@@ -1,0 +1,74 @@
+{
+  "object": {
+    "obj": "page",
+    "device": "wall_screen",
+    "meaning": "real page on office wall",
+    "variants": {},
+    "params": {
+      "image": "assets/real-page.png",
+      "wall": {
+        "x": 0.6,
+        "y": 0.15,
+        "w": 0.3,
+        "h": 0.3,
+        "skew": -3
+      },
+      "line": {
+        "x": 0.1,
+        "y": 0.35,
+        "w": 0.75,
+        "h": 0.08
+      },
+      "source": "PRODUCER \u00b7 2026-11-10"
+    },
+    "fromFrame": 0,
+    "toFrame": 180
+  },
+  "events": [
+    {
+      "id": "on",
+      "obj": "page",
+      "verb": "enter",
+      "atFrame": 10,
+      "toState": "wall"
+    },
+    {
+      "id": "in",
+      "obj": "page",
+      "verb": "move",
+      "atFrame": 30,
+      "toState": "full"
+    },
+    {
+      "id": "line",
+      "obj": "page",
+      "verb": "mark",
+      "atFrame": 60,
+      "toState": "marked"
+    },
+    {
+      "id": "back",
+      "obj": "page",
+      "verb": "move",
+      "atFrame": 100,
+      "toState": "wall"
+    },
+    {
+      "id": "off",
+      "obj": "page",
+      "verb": "exit",
+      "atFrame": 150,
+      "toState": "dark"
+    }
+  ],
+  "stills": [
+    9,
+    18,
+    48,
+    59,
+    66,
+    78,
+    118,
+    156
+  ]
+}

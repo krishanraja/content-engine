@@ -6,7 +6,13 @@ board becomes the sole place for new interactions after verified migration.
 The four Claude artifacts and the default artifact generator remain preserved;
 there is no ongoing synchronization with them after cutover.
 
-## The live board: /board/next
+## The live board: /board/<Monday>
+
+Since 10 Nov 2026 the week's own link opens the live board (Krish, 2026-11-10: "Switch fully, move the old
+board to an archive link"). Control Centre, which serves content.krishraja.com, passes only `/board/<Monday>` through
+to the engine, so `/board/next/<Monday>` there landed on Control Centre's home. The old baked board is
+`/board/<Monday>?archive=1` (sign-in asked, as before); `/board/next/<Monday>` still serves the live board on the
+engine's own address.
 
 Krish, 2026-11-09: "I should always open it with something to do for each piece or for the week, unless the day or
 the week is complete", "Absolutely everything that isn't 100% complete needs an action button", the buttons must start
@@ -22,6 +28,14 @@ names lists its own type. A revised off-day option is judged on the page itself,
 record the full board writes, bound to the same hashes (`_offdaySides.ts`, held equal to `week_board.side_sha` by
 `tests/control-plane/board-desk.test.ts`). The page's one source is `apps/control-plane/board-next/desk.html`, built
 into `_deskPage.ts` by `node scripts/build-desk-page.mjs`. `/board` stays the old board until Krish switches it.
+
+Each day of the view also lists what its piece has rendered (`media`, `apps/control-plane/api/board/_media.ts`): the
+newest asset of each cut on its making record and that cut's thumbnail, by an opaque id, with no path, link or key.
+`GET /api/board/<Monday>/media/<id>` (the board's own login) answers one id of that week with a short signed link
+(302) to the library file, and 404 for an id that is not on that week's pieces or not filed yet. Control Centre's
+Publish Board, the real one since 10 Nov 2026 (Ruling, Krish, 2026-11-10), draws these large when they exist: "mock ups
+and rendered assets are going to actually make up a big part of the screen as and when they are available". Look mocks
+and storyboard frames join the same list when the engine files them as library files.
 
 Each series day is a guided path (Krish, 2026-11-09): Research, Story, Look, Storyboard and script, Record, Cut. Only
 the current step is open, each in the same five regions (title and chip, why, the thing, the action bar with the

@@ -1,5 +1,17 @@
 # Workbench: where we are and what's next
 
+## Next for a Control Center session: three cover styles must keep clear of logos under the headline (10 Nov)
+
+The approved cover standard (`docs/production/COVER-STANDARD.md`, Krish 2026-11-09: "approve the cover standard as
+written") puts the logos under the headline. `scripts/pages/receipt.py` does that only with `"headline_first": true` in a
+cover's facts, because on wide shapes three skins draw their decoration over logos placed there:
+`scripts/pages/skins/extruded.py` (cover, upload, share and wide, every series day: "deco on logos"),
+`bauhaus.py` (wide: "deco bh on logos") and `brandbook.py` (wide, long titles: "deco slab on logos").
+`neon.py` already handles it (the `logosUnder` band in its PLACE_JS) and is the pattern to copy. Done when
+`c.get('headline_first')` defaults to true in `receipt.py` and `tests/series_skins_test.py` passes 10/10 with
+Playwright for Python installed. Krish asked for this on 10 Nov and wants it left to that session.
+
+
 [Story correction and Growth handoff, 26 Oct](docs/history/2026-10-26-story-closeout.md).
 
 ## 4 November: Wednesday 11 Nov (36886e0b, the Reiki master's No. 2) scripts on its tab (Claude Code, make-piece run)
