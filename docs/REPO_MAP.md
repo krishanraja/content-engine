@@ -2052,6 +2052,14 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `function liveDay(piece: Body, date: string): LiveDay`
 - `async function weekLive(db: SupabaseClient, week: string, builtAt: string | null): Promise<WeekLive>`
 
+### `apps/control-plane/api/board/_media.ts`
+
+- `type MediaKind = 'cut' | 'thumbnail'`
+- `interface MediaItem`
+- `function dayMedia(piece: Body | undefined): MediaItem[]`
+- `function findMedia(pieces: Body[], id: string): MediaFile | null`
+- `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string): Promise<string | null>`
+
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
 A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, locking the off-day mock: Improve
