@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "piece_id": "2026-11-11-wednesday",
+  "publish_day": "2026-11-11",
+  "format": "face-with-proof",
+  "theme": "makeyourmindup-video-v1",
+  "brand": {
+    "series": "under.the.hood",
+    "captions": "word",
+    "title": "A Reiki master wrote a No. 2 hit"
+  },
+  "signature": {
+    "hero": {
+      "device": "arrangement",
+      "status": "proven"
+    },
+    "opening_break": "real TikToks of the song slap down one per beat, then the 196.9K count",
+    "finish_pack": "house_grain",
+    "sound_palette": "house-v1",
+    "variants": {}
+  },
+  "objects": [],
+  "assets": [],
+  "audio": {
+    "master": "take",
+    "bed": {
+      "mode": "none"
+    },
+    "sfx_kit": "house-v1"
+  },
+  "cuts": {
+    "long": {
+      "aspect": "16:9",
+      "take": "long-1110",
+      "max_s": 360,
+      "excerpt": false,
+      "edit": {
+        "remove": [],
+        "speed": 1
+      },
+      "captions": {
+        "region": "default",
+        "emphasis": []
+      },
+      "beats": []
+    },
+    "short": {
+      "aspect": "9:16",
+      "take": "short-1110",
+      "max_s": 89,
+      "excerpt": false,
+      "edit": {
+        "remove": [],
+        "speed": 1
+      },
+      "captions": {
+        "region": "default",
+        "emphasis": []
+      },
+      "beats": []
+    }
+  },
+  "approvals": [],
+  "budget": {
+    "tokens_cap": 3300000,
+    "credits": {}
+  },
+  "style": {
+    "motion": "living-ui",
+    "storyboard": "docs/plans/2026-11-11-wednesday/motion-mocks.md"
+  }
+}
