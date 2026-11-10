@@ -37,7 +37,7 @@
     navigation.replaceChildren();
     for (const date of [...new Set([week, ...weeks])].sort()) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
-      const link = document.createElement('a'); link.href = `/board/${date}`;
+      const link = document.createElement('a'); link.href = `/board/${date}${typeof location !== 'undefined' && /[?&]archive=1\b/.test(location.search || '') ? '?archive=1' : ''}`;
       link.textContent = 'Week of ' + new Date(date + 'T12:00:00Z').toLocaleDateString('en-GB', {day:'numeric',month:'short',timeZone:'UTC'});
       link.className = 'wb-week';
       if (date === week) link.setAttribute('aria-current', 'page');
