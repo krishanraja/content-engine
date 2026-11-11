@@ -18,7 +18,14 @@ export function fromArchivePage(referer: string | string[] | undefined): boolean
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
-/** The baked board with the archive banner and the read-only guard, put just inside its body. Nothing else changes. */
+// What the parser reads before a page's body starts: a doctype, comments, the html and head tags, the elements a head
+// holds, and the body's own tag. A built board is a fragment (its body tag is implicit) whose script holds "<body>" in a
+// string (week.js saves a picture's page), so the first "<body" in the text can sit inside a script; the banner and the
+// guard go where this run ends, never there.
+const HEAD_RUN = /^(?:\s+|<!--[\s\S]*?-->|<!doctype\b[^>]*>|<\/?html\b[^>]*>|<\/?head\b[^>]*>|<(?:meta|link|base)\b[^>]*>|<(title|style)\b[^>]*>[\s\S]*?<\/\1\s*>|<body\b[^>]*>)*/i
+
+/** The baked board with the archive banner and the read-only guard, put just inside its body, before any of its own
+ *  scripts. Nothing else changes. */
 export function readOnlyArchive(html: string, week: string): string {
   const live = liveBoardUrl(week)
   const banner = `<div role="note" data-archive-banner style="position:sticky;top:0;z-index:2147483646;background:#FDE68A;color:#0C1512;`
@@ -33,8 +40,6 @@ export function readOnlyArchive(html: string, week: string): string {
     + `n.innerHTML='This is the archive. <a style="color:#7EF0C0;text-decoration:underline" href="'+url.replace(/"/g,'&quot;')+'">Do this on the live board</a>'}`
     + `window.fetch=function(u,o){var m=((o&&o.method)||'GET').toUpperCase();if(m!=='GET'&&m!=='HEAD'&&String(u).indexOf('/api/board')>=0){say();`
     + `return Promise.resolve(new Response(JSON.stringify({ok:false,error:'archive_read_only'}),{status:423,headers:{'Content-Type':'application/json'}}))}return f.apply(this,arguments)}})()</script>`
-  const m = /<body\b[^>]*>/i.exec(html)
-  if (!m) return banner + guard + html
-  const at = m.index + m[0].length
+  const at = (HEAD_RUN.exec(html)?.[0] ?? '').length
   return html.slice(0, at) + banner + guard + html.slice(at)
 }
