@@ -94,6 +94,7 @@ html,body {{ width:1080px; height:1920px; overflow:hidden; background:#0A100D; }
 .stop .y {{ font-family:Plex; font-size:30px; color:#0C1512; background:#7EF0C0; padding:8px 16px; border-radius:8px; }}
 .chip {{ position:absolute; left:40px; bottom:36px; font-family:Plex; font-size:34px; letter-spacing:2px; color:#0C1512; background:#7EF0C0;
       padding:14px 22px; border-radius:12px; opacity:0; }}
+.lift {{ border-radius:14px; outline:5px solid #7EF0C0; opacity:0; box-shadow:0 18px 40px rgba(0,0,0,.5); }}
 #cap {{ position:absolute; left:70px; right:210px; top:1095px; height:230px; }}
 #cap .ph {{ position:absolute; top:0; display:flex; flex-direction:column; }}
 #cap .ph.l {{ left:0; align-items:flex-start; }} #cap .ph.r {{ right:0; align-items:flex-end; }}
@@ -129,7 +130,15 @@ html,body {{ width:1080px; height:1920px; overflow:hidden; background:#0A100D; }
  </div>
  <div class="bigclock" id="bigclock">07:00</div>
  <div class="two" id="two">2</div>
+
 </div>
+<div id="shotwrap" style="position:absolute;left:260px;top:240px;width:560px;height:424px;opacity:0;transform-origin:50% 50%">
+  <img src="{b64(HERE/'guardrails.png','image/png')}" style="width:560px;height:424px;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.55)">
+ </div>
+ <img class="lift" id="rowA" src="{b64(HERE/'rowA.png','image/png')}" style="position:absolute;left:24px;top:700px">
+ <img class="lift" id="rowB" src="{b64(HERE/'rowB.png','image/png')}" style="position:absolute;left:24px;top:810px">
+ <img class="lift" id="rowC" src="{b64(HERE/'rowC.png','image/png')}" style="position:absolute;left:24px;top:912px">
+ <div class="chip" id="chip2" style="position:absolute;left:24px;top:1012px;bottom:auto">PROMPT IN THE COMMENTS &darr;</div>
 <div id="endcard" style="position:absolute;left:0;right:0;top:620px;text-align:center;opacity:0">
   <div style="font-family:Anton;font-size:150px;line-height:1;color:#F4EFE4;text-transform:uppercase">Follow<br>for more</div>
   <div style="margin-top:44px;font-family:Plex;font-size:52px;letter-spacing:2px;color:#7EF0C0">makeyourmindup.ai</div>
@@ -147,7 +156,7 @@ function leave(el,t0,t){{ if(t<t0) return; const p=outCubic((t-t0)/0.18); el.sty
 function show(el,on){{ el.style.display=on?'flex':'none'; }}
 function type(el,text,t0,t,cps=26){{ const n=Math.max(0,Math.min(text.length,Math.floor((t-t0)*cps))); el.textContent=t<t0?'':text.slice(0,n); }}
 window.render=function(t){{
-  const ec=$('endcard'); if(t>=B.endcard){{ const e=outCubic((t-B.endcard)/0.3); $('cam').style.opacity=1-e; $('cap').innerHTML=''; $('ghost').style.opacity=0;
+  const ec=$('endcard'); if(t>=B.endcard){{ const e=outCubic((t-B.endcard)/0.3); $('cam').style.opacity=1-e; ['shotwrap','rowA','rowB','rowC','chip2'].forEach(id=>$(id).style.opacity=0); $('cap').innerHTML=''; $('ghost').style.opacity=0;
     const p=outBack((t-B.endcard-0.15)/0.25); ec.style.opacity=clamp(p*1.5); ec.style.transform=`translateY(${{(1-p)*50}}px) scale(${{0.92+0.08*p}})`; return; }}
   // ---- camera: a slow push through each scene; rest on the gap; pull back for the rules
   const rest=outCubic((t-B.gap)/0.45)*(1-outCubic((t-B.two)/0.35));
@@ -208,9 +217,15 @@ window.render=function(t){{
   tw.style.opacity=t<B.two?0:clamp(pin)*(1-pout); tw.style.transform=`scale(${{0.6+0.4*pin}})`;
   // ---- scene 3: one question; it writes the rules with you; the prompt is in the comments
   const s3=t>=B.even+0.2; ['q','rules','chip'].forEach(id=>show($(id),s3));
-  if(s3){{ pop($('q'),B.ask,t); pop($('rules'),B.writes-0.1,t);
-    type($('r1'),'1  Ask me before you pay',B.writes,t,30); type($('r2'),'2  Ask me before you send',B.writes+0.85,t,30);
-    pop($('chip'),B.prompt,t,30); }}
+  if(s3){{ pop($('q'),B.ask,t); $('rules').style.display='none'; $('chip').style.display='none'; }}
+  // the real screenshot slides up over the thread; each choice lights as he says it; a slow push to the end
+  const sw=$('shotwrap'), si=outCubic((t-B.writes+0.5)/0.3);
+  sw.style.opacity=t<B.writes-0.5?0:si; sw.style.transform=`translateY(${{(1-si)*120}}px) scale(${{0.94+0.05*clamp((t-B.writes)/6)}})`;
+  // each chosen line lifts out of the real screenshot, enlarged to be read on a phone, as he says it
+  [['rowA',B.writes],['rowB',B.writes+0.46],['rowC',B.writes+0.9]].forEach(([id,t0])=>{{const e=$(id); const p=outBack((t-t0)/0.16);
+    e.style.opacity=t<t0?0:clamp(p*1.5); e.style.transform=`translateY(${{(1-clamp(p))*-60}}px) scale(${{0.85+0.15*p}})`;}});
+  if(t>=B.writes-0.5) $('thread').style.opacity=1-0.6*si; else $('thread').style.opacity=1;
+  pop($('chip2'),B.prompt,t,30); if(t<B.prompt) $('chip2').style.opacity=0;
   // ---- captions: art-directed phrases (after instagram_DfkCOCLt7KZ)
   const ph=CAP.find(c=>t>=c.s-0.02&&t<c.e), capEl=$('cap'), gh=$('ghost');
   if(!ph){{capEl.innerHTML='';gh.style.opacity=0;return;}}
