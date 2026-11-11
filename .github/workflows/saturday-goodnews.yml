@@ -168,8 +168,8 @@ jobs:
           auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
           git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/saturday-goodnews/$MONDAY-$RUN_ID"
           # The week's branch, which the live board reads before main: main, then what is already on the branch, then
-          # the stories, so nothing on either is lost (scripts/goodnews_keep.sh).
-          bash scripts/goodnews_keep.sh "$MONDAY" "$(git rev-parse HEAD)" "$auth"
+          # the stories, so nothing on either is lost (scripts/week_branch_keep.sh).
+          bash scripts/week_branch_keep.sh "$MONDAY" "$(git rev-parse HEAD)" "$auth"
           echo "::notice::The week's stories are on offday-revise/$MONDAY, which the live board reads."
           if [ -z "$(gh pr list --head "offday-revise/$MONDAY" --state open --json number --jq '.[].number')" ]; then
             gh pr create --head "offday-revise/$MONDAY" --base main --title "Saturday good news and off-day revisions for the week of $MONDAY" \

@@ -17,10 +17,13 @@ week so the good news is fresh"). This run leaves that option with its stories d
 
 The week: Krish records the whole week on the Sunday and it goes live eight days later (plan-week, "The Sunday
 loop"), so the run on Saturday 31 October (or a run by hand on Sunday 1 November) plans the week of 9 November.
-`built` reads the week's board through the engine API (GET only, the ENGINE_OPERATOR_TOKEN secret) and says built
-once the published board's Ideas tab holds ideas, never its "ideas arrive by" placeholder. It prints one line,
-`built=true` or `built=false`, for $GITHUB_OUTPUT, and exits 1 when it cannot tell, so a run never goes ahead or
-skips on a guess.
+`built` reads the week the live board draws (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old
+board is a read-only archive): GET /api/board/<Monday>/view through the engine API (GET only, the
+ENGINE_OPERATOR_TOKEN secret), and says built once each publishing day there carries its options. The view reads the
+week's ideas.json from offday-revise/<Monday> before main, which is where the workflow puts the run's ideas
+(scripts/week_branch_keep.sh). Since 10 November /board/<Monday> serves the desk, so the old check of the baked
+Ideas tab could no longer see any ideas. It prints one line, `built=true` or `built=false`, for $GITHUB_OUTPUT, and
+exits 1 when it cannot tell, so a run never goes ahead or skips on a guess.
 """
 from __future__ import annotations
 
@@ -62,18 +65,22 @@ def has_ideas(page: str) -> bool:
     return IDEAS_LIVE in page
 
 
+def view_has_ideas(view: dict) -> bool:
+    """Whether the week's view (contract 1.1.0) carries options on each publishing day, Monday, Wednesday and Friday."""
+    days = {d.get('day'): d for d in view.get('days') or [] if isinstance(d, dict)}
+    return all(isinstance(days.get(k), dict) and len(days[k].get('options') or []) > 0 for k in ('mon', 'wed', 'fri'))
+
+
 def built(monday: str) -> bool:
-    import board_web
-    state = board_web.call('GET', f'/api/board/{monday}')
-    if not state.get('manifest'):
-        return False
-    key = board_web.os.environ.get('ENGINE_OPERATOR_TOKEN') or ''
+    import json
+    import os
+    key = os.environ.get('ENGINE_OPERATOR_TOKEN') or ''
     if not key:
         raise ValueError('ENGINE_OPERATOR_TOKEN is not set')
-    base = board_web.os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
-    request = urllib.request.Request(base + f'/board/{monday}', headers={'Authorization': 'Bearer ' + key})
+    base = os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
+    request = urllib.request.Request(base + f'/api/board/{monday}/view', headers={'Authorization': 'Bearer ' + key, 'Cache-Control': 'no-cache'})
     with urllib.request.urlopen(request, timeout=120) as response:
-        return has_ideas(response.read().decode('utf-8', errors='replace'))
+        return view_has_ideas(json.loads(response.read().decode('utf-8')))
 
 
 def main() -> int:

@@ -209,11 +209,13 @@ Saturday comes next; a session can run the same steps by hand):
 5. `python3 scripts/post-pack/copy_lint.py --applies-to carousel_text` on the words, then
    `python3 scripts/post-pack/board_feed.py gather <Monday>` and `cover <Monday>`: it refuses a story dated outside
    the seven days, one with no source or picture, and one a recent off day ran.
-6. Rebuild that week's board from its live build: `board_web.py download <Monday> --output live.html`, then
-   `week_board.py --week <Monday> --live --ideas docs/plans/<Monday>-week/ideas.json --previous live.html --keep <each
-   made day> --target web`, then `--verify`. Publish with `board_web.py publish-web PAGE --assets MAP
-   --expected-build <the live build id> --apply`, mapping each kept download to the live manifest's asset by
-   `existing_sha256` (`docs/PUBLISH_BOARDS.md`). Read the live page back: the good-news card shows five stories.
+6. Put them on the live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
+   read-only archive). Set the option's `stories_due` to the week's Thursday, so the stories read as this week's. The
+   workflow's keep step puts the week's folder on the week's branch `offday-revise/<Monday>`, which the live board's
+   view reads before main (`scripts/week_branch_keep.sh`, with a pull request that merges itself), bumps the week's
+   change signal (`board_web.py touch <Monday>`), and asks the view until the good news shows its five stories
+   (`saturday_goodnews.py`, `live_has_stories`). A session by hand does the same. Never rebuild or publish a board
+   page: the archive refuses it.
 
 Growth makes the carousel from the stories as shown, and its mock comes back for his final yes as with any off day.
 

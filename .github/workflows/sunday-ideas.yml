@@ -28,6 +28,12 @@ name: Sunday ideas
 # Krish, 2026-11-07: "Saturday's good news run should be done later in the week so the good news is fresh"). This run
 # writes the good-news option with its stories due on the Thursday of its week and no stories.
 #
+# Where it lands (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive):
+# the live board draws GET /api/board/<Monday>/view, which reads the week's ideas.json from offday-revise/<Monday>
+# before main. So the keep step puts the week's folder on that branch too (scripts/week_branch_keep.sh, with a pull
+# request to main), bumps the week's change signal, and the last step asks the view whether the options are there.
+# No board page is built or published.
+#
 # The run reads untrusted web pages, so it is fenced by permissions, not by its prompt: Bash only for the named
 # engine scripts (no curl, no git push, no shell), writes only under docs/plans/, no read of /proc (where the step's
 # secrets live), and the checkout keeps no GitHub credential (persist-credentials: false). Only the keep step, after
@@ -129,16 +135,16 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 400
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             The Sunday ideas run for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub Actions
             (.github/workflows/sunday-ideas.yml). No one reads this run's chat.
 
-            Follow .claude/skills/plan-week/SKILL.md, the ideas stage only: steps 1 to 7, so the Ideas tab of that
-            week's publish board is live at content.krishraja.com (week_board.py --target web with --ideas, --queue and
-            --combine, then board_web.py publish-web --apply, then its board item week-publish-board-<Monday>, whose
-            link is the live board in Control Centre: python3 scripts/post-pack/live_board.py <Monday>).
+            Follow .claude/skills/plan-week/SKILL.md, the ideas stage only: steps 1 to 7, so that week's options are on
+            the live board in Control Centre (its link: python3 scripts/post-pack/live_board.py <Monday>), which reads
+            them from ideas.json once the workflow keeps it, and its board item week-publish-board-<Monday> carries
+            that link. Build or publish no board page: the old board is a read-only archive.
             Write each day's options through /api/week/options and the off-day options into ideas.json as the skill
             says. Research with the built-in web search and web fetch: there is no Drive or Firecrawl connector here
             (the skill's "Without the connectors").
@@ -150,21 +156,9 @@ jobs:
             (the only commands this run may use); every file you write goes under docs/plans/.
             Never write anything else: no triage readback, no interview, no narrative lock, no make, no Teleprompter,
             no day tab, no pick, no draft, no spend beyond this run. Stop
-            after step 7. Never patch the built page. Leave docs/plans/<Monday>-week/ (ideas.json, combine.json) on
-            disk and do not commit or push: the workflow keeps that folder on a branch for the Sunday room.
-            If the board refuses a build, fix the inputs and build again; if it still refuses, stop and say why.
-
-      - name: The Ideas tab is live
-        if: steps.guard.outputs.go == 'true'
-        env:
-          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
-          MONDAY: ${{ steps.guard.outputs.monday }}
-        run: |
-          state=$(python3 scripts/sunday_ideas.py built "$MONDAY")
-          if [ "$state" != "built=true" ]; then
-            echo "::error::The run ended but the Ideas tab for the week of $MONDAY is not live."
-            exit 1
-          fi
+            after step 7. Leave docs/plans/<Monday>-week/ (ideas.json, combine.json) on disk and do not commit or push:
+            the workflow puts that folder on the live board and keeps it on a branch for the Sunday room. If
+            board_feed.py cover refuses the options, fix them and check again; if it still refuses, stop and say why.
 
       - name: Keep the week's ideas for the Sunday room
         if: always() && steps.guard.outputs.go == 'true'
@@ -172,6 +166,7 @@ jobs:
           MONDAY: ${{ steps.guard.outputs.monday }}
           RUN_ID: ${{ github.run_id }}
           GH_TOKEN: ${{ github.token }}
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
         run: |
           folder="docs/plans/$MONDAY-week"
           [ -d "$folder" ] || { echo "::warning::No $folder was written."; exit 0; }
@@ -187,3 +182,24 @@ jobs:
           auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
           git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/sunday-ideas/$MONDAY-$RUN_ID"
           echo "::notice::The week's ideas are on the branch sunday-ideas/$MONDAY-$RUN_ID."
+          # The live board reads the week's branch before main: main, then what is on the branch, then these ideas.
+          bash scripts/week_branch_keep.sh "$MONDAY" "$(git rev-parse HEAD)" "$auth"
+          if [ -z "$(gh pr list --head "offday-revise/$MONDAY" --state open --json number --jq '.[].number')" ]; then
+            gh pr create --head "offday-revise/$MONDAY" --base main --title "Sunday ideas for the week of $MONDAY" \
+              --body "The week's options for $MONDAY, written by .github/workflows/sunday-ideas.yml. The live board already shows them from this branch; it merges itself once CI is green (auto-merge.yml)." || true
+          fi
+          python3 scripts/post-pack/board_web.py touch "$MONDAY" --source ideas || echo "::warning::The week's change signal was not bumped; the board shows the options at its next read."
+
+      - name: The options are on the live board
+        if: steps.guard.outputs.go == 'true'
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          MONDAY: ${{ steps.guard.outputs.monday }}
+        run: |
+          # The view the live board draws, asked until each publishing day carries its options.
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            [ "$(python3 scripts/sunday_ideas.py built "$MONDAY")" = "built=true" ] && { echo "The week's options are on the live board."; exit 0; }
+            sleep 45
+          done
+          echo "::error::The run ended but the live board's view for the week of $MONDAY does not carry the options."
+          exit 1
