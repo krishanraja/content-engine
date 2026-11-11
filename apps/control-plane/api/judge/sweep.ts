@@ -152,8 +152,35 @@ const BATCH_GIVE_UP_MIN = 360
  */
 const LIVE_TICK_MS = 240_000
 
+// ── HOW LONG A LIVE SWEEP MAY HOLD THE IDEAS IT CHOSE ─────────────────────
+//
+// A sweep fixes its idea set when it is created, so that it can finish. On the
+// ten-minute cron this was built for, a live sweep that ran out of time simply
+// carried on ten minutes later and was done within the hour; MAX_TICKS (20
+// ticks, 200 minutes then) was the ceiling. On 3 October the cron became once
+// a day, and the arithmetic changed under it: a tick judges four to six ideas,
+// so an 80-idea sweep took two weeks, and nothing made after its first morning
+// was ever chosen. Measured 11 November: sweep 8903e989, created 30 October,
+// still `running` on its thirteenth daily tick, and 0 of the 95 ideas made
+// since 2 November scored. In live mode the tick ceiling only counted when a
+// batch was out, and live mode never has one, so nothing ever ended it.
+//
+// So a live sweep's set expires, by time rather than by ticks, because ticks
+// are now days. Six hours is the code's own figure for the same thing in batch
+// mode (BATCH_GIVE_UP_MIN: past it a backlog "has stopped being a trade. It is
+// just a parked backlog"), and it is under the daily cadence, so the next
+// morning's tick always closes yesterday's sweep and chooses from the ideas
+// that exist now. A manual tick inside the six hours still carries the same
+// set on. Ideas the closed sweep never reached lose nothing: they are still
+// unjudged, and the next sweep chooses them again by the same rule.
+//
+// Only a sweep that was live from the start: one that fell back from a batch
+// holds replies paid for under its own id, and keeps the batch rules.
+const LIVE_SWEEP_MAX_MIN = 360
+
 interface SweepRow {
   id: string
+  created_at: string
   status: string
   idea_ids: string[]
   batches: BatchRef[]
@@ -225,6 +252,30 @@ function batchDeps(bus: BatchBus): LadderDeps {
     abandon: () => bus.abandon(),
     deferrable: true,
   }
+}
+
+/** How old, in minutes, a live sweep's idea set is when it has outlived
+ *  LIVE_SWEEP_MAX_MIN; null while it may still be ticked, and always null for
+ *  a batch sweep, live fallback or not. */
+export function liveSweepExpired(
+  sweep: Pick<SweepRow, 'created_at' | 'live_fallback' | 'batches'>, now: Date = new Date(),
+): number | null {
+  if (sweep.live_fallback !== true || (sweep.batches || []).length > 0) return null
+  const born = Date.parse(sweep.created_at)
+  if (!Number.isFinite(born)) return null
+  const ageMin = Math.floor((now.getTime() - born) / 60_000)
+  return ageMin >= LIVE_SWEEP_MAX_MIN ? ageMin : null
+}
+
+/** Close an expired live sweep through the same conditional write every other
+ *  ending uses, so a cancel that lands first still wins. */
+async function closeExpired(sweep: SweepRow, ageMin: number): Promise<Record<string, unknown>> {
+  const hours = Math.round(ageMin / 60)
+  const note = `closed after ${hours} hours: a live sweep keeps the ideas it chose for at most ${LIVE_SWEEP_MAX_MIN / 60} hours, ` +
+    `and after ${sweep.ticks} tick${sweep.ticks === 1 ? '' : 's'} it had not reached the end of its ${sweep.idea_ids.length} ideas. ` +
+    'Any it did not judge are still unjudged and eligible, and the next sweep chooses from the ideas that exist now.'
+  await saveSweep(sweep.id, { status: 'failed', note })
+  return { sweep_id: sweep.id, created_at: sweep.created_at, ticks: sweep.ticks, ideas: sweep.idea_ids.length, note }
 }
 
 async function loadRunning(): Promise<SweepRow | null> {
@@ -424,7 +475,12 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
   const settled = report.ready + report.escalated + report.weak
   const ticks = sweep.ticks + 1
   const barren = ref && report.deferred > 0 && drainedRows === 0 && ticks > MAX_BARREN_TICKS
-  const overrun = Boolean(ref) && ticks >= MAX_TICKS
+  // The ceiling counts in both modes. It used to be `Boolean(ref) && ...`, and
+  // a live tick never has a `ref`, so a live sweep that ran out of time every
+  // tick could never reach it (sweep 8903e989, 13 ticks and counting on
+  // 11 November). In batch mode `!done` is exactly `Boolean(ref)`, so batch
+  // behaviour is unchanged.
+  const overrun = !done && ticks >= MAX_TICKS
   const stalled = barren || overrun
 
   await saveSweep(sweep.id, {
@@ -439,7 +495,9 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
       failed: report.failed, backed_off: report.backed_off,
     },
     note: overrun
-      ? `stopped at the ${MAX_TICKS}-tick ceiling with ${report.deferred} ideas still deferring: something is not converging`
+      ? live
+        ? `stopped at the ${MAX_TICKS}-tick ceiling without reaching the end of its ${sweep.idea_ids.length} ideas; any it did not judge stay eligible for the next sweep`
+        : `stopped at the ${MAX_TICKS}-tick ceiling with ${report.deferred} ideas still deferring: something is not converging`
       : barren
         ? `stopped after ${ticks} ticks with ${report.deferred} ideas still deferring and nothing new arriving`
         // A give-up is the note worth keeping over an earlier overdue warning:
@@ -526,7 +584,13 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     // One sweep at a time, enforced by a partial unique index as well as here.
     // Two sweeps over the same ideas would each submit the other's deferred
     // work and pay for it twice.
-    if (running) return reply(res, await tick(running))
+    //
+    // A live sweep whose idea set has expired is closed first, and the same
+    // tick starts the next sweep from the ideas that exist now. Closing calls
+    // no model; the tick that follows is the one this cron run pays for anyway.
+    const expiredMin = running ? liveSweepExpired(running) : null
+    if (running && expiredMin === null) return reply(res, await tick(running))
+    const closed = running && expiredMin !== null ? await closeExpired(running, expiredMin) : null
 
     const started = await createSweep(limit, ids, dryRun, mode)
     // `ok`, not `skipped`. A tick that looked and found nothing to judge is a
@@ -534,8 +598,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     // the last OK run only — so recording an idle half-hourly tick as skipped
     // would have the dashboard report a working sweep as not having succeeded
     // in a day, every quiet day.
-    if (!started) return res.json({ ok: true, state: 'idle', ideas: 0 })
-    return reply(res, await tick(started))
+    if (!started) return res.json({ ok: true, state: 'idle', ideas: 0, ...(closed ? { closed } : {}) })
+    const out = await tick(started)
+    return reply(res, closed ? { ...out, closed } : out)
   } catch (e: any) {
     return res.status(500).json({ ok: false, error: String(e?.message || e) })
   }
