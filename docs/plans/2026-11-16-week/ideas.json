@@ -505,65 +505,6 @@
     "ties_to": "Mon: follow.the.money, if you pick the AI meter piece"
    },
    {
-    "id": "povteach",
-    "read_back": {
-     "readers": [
-      "Fresh reader A (Sonnet, a 12-year-old reading once)",
-      "Fresh reader B (Haiku, a 12-year-old reading once)"
-     ],
-     "says": [
-      "A funny video of a cheerful robot getting everything about its owner wrong because nobody taught it.",
-      "A robot assistant gets everything wrong about its owner because nobody taught it what matters to them."
-     ],
-     "against": 24,
-     "versus": "Ours supplies the joke your caption asked for, a concrete vegetarian-steakhouse mistake, where the original has nothing to say (one name in its sound). (Fresh reader C, Sonnet, saw both)"
-    },
-    "format": "Meme video, made fresh in the brand kit, 9:16",
-    "source": {
-     "label": "Your saved short (Geek Creative Agency), 3 Nov",
-     "url": "https://youtube.com/shorts/tJwqPQvgQkk"
-    },
-    "copy": "The short you saved, exactly as it is, with only the caption changed to your words. It is someone else's clip, so it goes out only once Geek Creative Agency says yes, with their credit on it.",
-    "hook": "POV: your AI agent using your computer without being set up properly by you",
-    "pitch": {
-     "see": "The short you saved on 3 Nov, unchanged. Above it, your caption word for word: \"POV: your AI agent using your computer without being set up properly by you\". A credit line names Geek Creative Agency.",
-     "lands": "Anyone who has let an AI agent loose on their computer knows the feeling of watching it go wrong.",
-     "share": "Set up your AI agent before it touches your computer."
-    },
-    "direction": {
-     "look": "The saved short's format, redrawn in the brand kit with the house robot",
-     "format": "Meme video, about 10 seconds, 9:16",
-     "frames": [
-      {
-       "words": "POV: your AI agent when you forget to teach it anything that matters to you",
-       "picture": "The house robot, grinning, booking a steakhouse for its vegetarian owner"
-      },
-      {
-       "words": "(no words)",
-       "picture": "The robot proudly holding up the wrong thing, again"
-      }
-     ],
-     "tone": "Silly",
-     "kit": "Brand kit, house robot, credit line for the format"
-    },
-    "covers": [
-     "d16fe9ff-413c-47c4-ac53-c89e40d28489"
-    ],
-    "inspiration": {
-     "label": "The short you saved on 3 Nov",
-     "url": "https://youtube.com/shorts/tJwqPQvgQkk",
-     "saved": "Saved 3 Nov"
-    },
-    "adds": "Your own caption on a fresh scene in our brand kit; the original is someone else's clip, never reposted.",
-    "learned_from": [
-     "Lets make a hilarious meme. Reskin this video with the text \"POV: your AI agent when you forget to teach it anything that matters to you\" (3 Nov)"
-    ],
-    "revised": {
-     "side": "idea",
-     "words": "We need to use the exact existing video but just change the caption to \"POV: your AI agent using your computer without being set up properly by you\""
-    }
-   },
-   {
     "id": "proactiveai",
     "format": "Voiceover short, 46 s, 9:16",
     "source": "Krish's own script, read by his ElevenLabs voice (take A), and his screenshot of an AI setting out guardrail choices (11 Nov 2026)",
