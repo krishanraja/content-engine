@@ -92,6 +92,15 @@
  ],
  "verdicts": [
   {
+   "title": "AI music or human music?",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "His own title for the piece: the one question the video and the epic title card ask",
+   "krish": "There are two title cards, I just want the one \"AI Music or Human Music\" title, but it to be more epic.",
+   "on": "2026-11-11",
+   "piece": "36886e0b-4b32-473b-be72-b0aef31fccef"
+  },
+  {
    "title": "CLAUDE IS EATING THE JOBS OF ITS OWN HUMANS",
    "surface": "cover",
    "verdict": "picked",
