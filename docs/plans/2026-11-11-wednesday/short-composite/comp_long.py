@@ -33,10 +33,13 @@ def ground(c=INK): return np.full((SH, SW, 3), bgr(c), np.uint8)
 def fit(img, w, h):
     ih, iw = img.shape[:2]; s = min(w / iw, h / ih); return cv2.resize(img, (int(iw * s), int(ih * s)), interpolation=cv2.INTER_AREA)
 def devframe(name, t, t0):
+    if os.path.isdir(f'{DEV}/{name}_w'): name = name + '_w'   # rendered with room (1600 x 1110), so no lane, tag or chip collides
     k = int(round((t - t0) * FPS)); k = max(0, k)
     p = f'{DEV}/{name}/f{k:05d}.png'
     while not os.path.exists(p) and k > 0: k -= 1; p = f'{DEV}/{name}/f{k:05d}.png'
-    im = cv2.imread(p); return im if im is not None else ground()
+    im = cv2.imread(p)
+    if im is None: return ground()
+    return cv2.resize(im, (SW, SH), interpolation=cv2.INTER_AREA) if im.shape[1] != SW else im
 def sway(img, t, amt=0.05, base=1.03):
     return kb(img, base + amt * (0.5 + 0.5 * math.sin(t * 0.35)), 0.5 + 0.25 * math.sin(t * 0.21), 0.5 + 0.25 * math.cos(t * 0.17))
 def slide_card(g, img, t, at, cx, cy, w, h, rot=0, frm=(0, 400)):
@@ -61,7 +64,7 @@ def title(g, t, words):
             text(band, s, ANTON(size - 10), (SW - 120) / 2, 25, CREAM if r == 1 else INK, 'ma')
             paste(g, band, SW / 2, y + (size + 50) / 2, 1.25 - 0.25 * p, min(1, p * 2), 20, rot=(-2 if r == 1 else 2) * (1 - p))
         else:
-            f = ANTON(size) if r == 0 else font('Fraunces-Italic-Variable.ttf', size)
+            f = ANTON(size) if r == 0 else ANTON(size)
             text(g, s, f, SW / 2, y + (1 - p) * 50, CREAM, 'ma', min(1, p * 2))
 
 # ---------------------------------------------------------------- scenes (take time)
@@ -273,41 +276,74 @@ def s_question(t):  # 296.2 is it AI music or human music? the wrong question (o
 
 def s_credits(t): return sway(devframe('credits', t, 311.0), t, 0.05)
 
-def s_beyond(t):  # 328 this goes way beyond music: the advert, the report, the deck
+R = '/tmp/claude-0/w11l/real'
+def _img(p): return cv2.imread(p)
+AD = _img(f'{R}/ad_tr.png'); AIC = _img(f'{R}/aiC-001.png'); AIP = _img(f'{R}/aiP-003.png'); AIQ = _img(f'{R}/aiQ-014.png')
+BC = _img(f'{R}/bC-001.png'); BA = _img(f'{R}/bA-005.png'); BB = _img(f'{R}/bB-012.png')
+def label(g, top, sub, x, y, a):
+    text(g, top, ANTON(64), x, y, CREAM, 'ma', a); text(g, sub, MONO(22), x, y + 78, MINT, 'ma', a)
+def slam(g, img, t, at, cx, cy, w, h, rot=0, frm=(0, 0)):
+    """In from 1.6x with a twist and a settle shake: a card that lands, not one that slides."""
+    if t < at: return
+    k = t - at; p = min(1, back(k / 0.32)); im = fit(img, w, h)
+    sh = (1 - ease(k / 0.4)) * 10
+    paste(g, im, cx + (1 - p) * frm[0] + sh * math.sin(k * 80), cy + (1 - p) * frm[1] + sh * math.cos(k * 70), 1.6 - 0.6 * p, min(1, p * 2), 14, rot=rot * (2 - p))
+def s_beyond(t):  # 328 this goes way beyond music: an actual advert, an actual report, an actual deck
     g = ground()
-    for i, (at, k, lab) in enumerate([(330.6, 'm365', 'THE ADVERT'), (333.0, 'word', 'THE REPORT'), (338.9, 'ppt', 'THE DECK')]):
-        if t < at: continue
-        p = min(1, back((t - at) / 0.35)); card = fit(S[k], 520, 330); h, w = card.shape[:2]
-        full = np.full((h + 90, w, 3), bgr(CREAM), np.uint8); full[:h] = card
-        st = full[h + 20:h + 70]; st[:, : w // 2] = hatch(50, w // 2, t * 20); st[:, w // 2:] = bgr(MINT)
-        paste(g, full, 230 + i * 390, SH / 2 + 40 + (1 - p) * 500, 1, min(1, p * 2), 16, rot=(i - 1) * 3)
-        text(g, lab, ANTON(54), 230 + i * 390, 80, CREAM, 'ma', min(1, p))
-    if t < 330.6: text(g, 'way beyond music', font('Fraunces-Italic-Variable.ttf', 96), SW / 2, SH / 2 - 60, CREAM, 'ma', ease((t - 328.2) / 0.4))
-    return sway(g, t, 0.04)
+    if t < 330.5:  # WAY BEYOND / MUSIC, each word slamming
+        for at, s, y in [(328.4, 'WAY BEYOND', 220), (329.4, 'MUSIC', 460)]:
+            if t >= at:
+                p = min(1, back((t - at) / 0.28)); size = int(220 * (1.4 - 0.4 * p))
+                text(g, s, ANTON(size), SW / 2, y - (size - 220) * 0.5, CREAM if s != 'MUSIC' else MINT, 'ma', min(1, p * 2))
+        return g
+    zoom = 1 + 0.05 * ease((t - 330.5) / 11)
+    # THE ADVERT: Coca-Cola's AI-made "Holidays Are Coming" (2024)
+    if t >= 330.6:
+        k = t - 330.6; p = min(1, back(k / 0.32)); sh = (1 - ease(k / 0.4)) * 10
+        paste(g, cover(AD, 360, 540, 1.0, 0.5), 230 + (1 - p) * -500 + sh * math.sin(k * 80), 480, 1.6 - 0.6 * p, min(1, p * 2), 14, rot=-4 * (2 - p))
+    if t > 330.8: label(g, 'THE ADVERT', 'Coca-Cola, 2024', 230, 60, ease((t - 330.8) / 0.3))
+    # THE REPORT: the Stanford AI Index 2025, its pages fanning out behind the cover
+    for i, (img, dx, r) in enumerate([(AIQ, 70, 7), (AIP, 35, 3.5), (AIC, 0, -1)]):
+        slam(g, img, t, 333.0 + i * 0.12, 610 + dx, 490, 380, 560, rot=r)
+    if t > 333.2: label(g, 'THE REPORT', 'Stanford AI Index, 2025', 640, 60, ease((t - 333.2) / 0.3))
+    # THE DECK: BOND's "Trends: Artificial Intelligence" (May 2025), slides dealt like cards
+    for i, (img, dx, dy, r) in enumerate([(BB, 70, 90, 6), (BA, 35, 45, 3), (BC, 0, 0, -2)]):
+        slam(g, img, t, 338.9 + i * 0.12, 1010 + dx * 0.4 - 15, 330 + dy * 2.6, 440, 250, rot=r, frm=(500, 0))
+    if t > 339.1: label(g, 'THE DECK', 'BOND, May 2025', 1010, 60, ease((t - 339.1) / 0.3))
+    return kb(g, zoom, 0.5, 0.5)
 
 def s_ask(t):  # 342.2 I'll ask who did which bit; the song is already both
     g = ground()
     if t < 349.9:
-        p = ease((t - 347.7) / 0.4); ai = hatch(300, 760, t * 20); text(ai, 'AI?', ANTON(200), 380, 30, CREAM, 'ma')
-        hu = np.full((300, 760, 3), bgr(MINT), np.uint8); text(hu, 'HUMAN?', ANTON(200), 380, 30, INK, 'ma')
+        p = ease((t - 347.7) / 0.4); ai = hatch(260, 640, t * 20); text(ai, 'AI?', ANTON(170), 320, 30, CREAM, 'ma')
+        hu = np.full((260, 640, 3), bgr(MINT), np.uint8); text(hu, 'HUMAN?', ANTON(170), 320, 30, INK, 'ma')
         if t < 347.7:
-            slide_card(g, S['ppt'], t, 342.3, SW / 2, SH / 2, 1000, 640); return sway(g, t, 0.05)
-        paste(g, ai, SW / 2 - (1 - p) * 900, 220, 1, 1, 26); paste(g, hu, SW / 2 + (1 - p) * 900, SH - 220, 1, 1, 26)
-        if t > 349.2: q = ease((t - 349.2) / 0.3); cv2.line(g, (80, SH // 2), (int(80 + (SW - 160) * q), SH // 2), bgr(MINT), 18, cv2.LINE_AA)
+            slam(g, BC, t, 342.3, SW / 2, SH / 2, 1000, 620); return sway(g, t, 0.05)
+        paste(g, ai, SW / 2 - 300 - (1 - p) * 900, SH / 2, 1, 1, 26, rot=-3); paste(g, hu, SW / 2 + 300 + (1 - p) * 900, SH / 2, 1, 1, 26, rot=3)
+        if t > 349.2: q = ease((t - 349.2) / 0.3); cv2.line(g, (80, SH // 2), (int(80 + (SW - 160) * q), SH // 2), bgr(MINT), 22, cv2.LINE_AA)
         return g
-    p = ease((t - 349.9) / 0.4)
-    text(g, 'who did', font('Fraunces-Italic-Variable.ttf', 150), SW / 2, 170, MINT, 'ma', p)
-    text(g, 'which bit?', font('Fraunces-Italic-Variable.ttf', 150), SW / 2, 360, MINT, 'ma', ease((t - 350.4) / 0.4))
-    if t > 353.5:
-        q = ease((t - 353.5) / 0.5); bw = int((SW - 200) * q); y = 650
-        if bw > 4:
-            band = np.zeros((90, bw, 3), np.uint8); band[:, : bw // 2] = hatch(90, bw // 2, t * 20); band[:, bw // 2:] = bgr(MINT)
-            _blend(g, band, np.ones((90, bw), np.float32), 100, y)
+    # WHO / DID / WHICH BIT? slamming on his words; WHICH BIT? lands on a mint band; on "both" the band splits two-tone
+    k = t - 349.9; beat = 0.5 + 0.5 * math.cos(k * 2 * math.pi * 2.1)
+    C.wave(g, 0, 80, SW, SH - 160, k, (40, 70, 58), 0.5 + 0.4 * beat, 1.3)
+    for at, s, y, size in [(350.0, 'WHO', 60, 230), (350.25, 'DID', 60, 230)]:
+        if t >= at:
+            p = min(1, back((t - at) / 0.25)); x = SW / 2 - 200 if s == 'WHO' else SW / 2 + 230
+            text(g, s, ANTON(int(size * (1.5 - 0.5 * p))), x, y - (1 - p) * 40, CREAM, 'ma', min(1, p * 2))
+    if t >= 350.45:
+        p = min(1, back((t - 350.45) / 0.3)); bw, bh = SW - 120, 330
+        both = ease((t - 353.5) / 0.5)
+        band = np.full((bh, bw, 3), bgr(MINT), np.uint8); text(band, 'WHICH BIT?', ANTON(250), bw / 2, 30, INK, 'ma')
+        if both > 0:  # the left half turns AI (hatched, cream type): the same words, both at once
+            ai = hatch(bh, bw, t * 30); text(ai, 'WHICH BIT?', ANTON(250), bw / 2, 30, CREAM, 'ma')
+            cut = int(bw * 0.5 * both); band[:, :cut] = ai[:, :cut]
+        paste(g, band, SW / 2, 560, 1.4 - 0.4 * p, min(1, p * 2), 24, rot=-3 * (1 - p) + 1.5 * math.sin(k * 3) * 0.3)
+    shake = (1 - ease((t - 350.45) / 0.4)) * 12 if t >= 350.45 else 0
+    if shake > 0.5: g[:] = np.roll(g, int(shake * math.sin(k * 90)), axis=1)
     return g
 
 def s_end(t):
     g = ground(INKD); p = ease((t - 355.0) / 0.4)
-    text(g, 'the full deep dive', font('Fraunces-Italic-Variable.ttf', 76), SW / 2, SH / 2 - 160, CREAM, 'ma', p)
+    text(g, 'the full deep dive', ANTON(76), SW / 2, SH / 2 - 160, CREAM, 'ma', p)
     text(g, 'makeyourmindup.ai', ANTON(130), SW / 2, SH / 2 - 40, CREAM, 'ma', p)
     q = ease((t - 356.4) / 0.6); cv2.line(g, (160, SH // 2 + 140), (int(160 + (SW - 320) * q), SH // 2 + 140), bgr(MINT), 12, cv2.LINE_AA)
     return g

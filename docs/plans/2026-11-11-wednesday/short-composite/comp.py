@@ -195,7 +195,7 @@ def title(g, t):
             band = np.full((size + 60, W - 80, 3), bgr(MINT), np.uint8); text(band, s, ANTON(size - 20), (W - 80) / 2, 30, INK, 'ma')
             paste(g, band, W / 2, y + size / 2 + 30, 1.25 - 0.25 * min(1, p), min(1, p * 2), 20, rot=2 * (1 - min(1, p)))
         else:
-            f = ANTON(size) if r == 0 else font('Fraunces-Italic-Variable.ttf', size)
+            f = ANTON(size) if r == 0 else ANTON(size)
             text(g, s, f, W / 2, y + (1 - min(1, p)) * 60, CREAM, 'ma', min(1, p * 2))
 
 def suno_form(t):
@@ -299,7 +299,7 @@ def s_question(t):  # AI versus human is the wrong question
     hu = np.full((380, 900, 3), bgr(MINT), np.uint8); text(hu, 'HUMAN', ANTON(260), 450, 30, INK, 'ma')
     d = 60 * ease((t - 70.5) / 3.2)
     paste(g, ai, W / 2 - (1 - p) * 700, 300 + d, 1, 1, 30, rot=-2 * math.sin(t * 2)); paste(g, hu, W / 2 + (1 - p) * 700, SH - 300 - d, 1, 1, 30, rot=2 * math.sin(t * 2))
-    text(g, 'vs', font('Fraunces-Italic-Variable.ttf', 120), W / 2, SH / 2 - 80, CREAM, 'ma', p)
+    text(g, 'VS', ANTON(120), W / 2, SH / 2 - 80, CREAM, 'ma', p)
     if t > 73.7:
         q = ease((t - 73.7) / 0.35); cv2.line(g, (80, SH // 2), (int(80 + (W - 160) * q), SH // 2), bgr(MINT), 18, cv2.LINE_AA)
     return g
@@ -308,7 +308,7 @@ def s_credits(t): return kb(devframe('arr2', t, 74.4), 1 + 0.25 * ease((t - 76.5
 
 def s_end(t):
     g = ground(); g[:] = bgr(INKD); p = ease((t - 84.5) / 0.4)
-    text(g, 'the full deep dive', font('Fraunces-Italic-Variable.ttf', 76), W / 2, SH / 2 - 170, CREAM, 'ma', p)
+    text(g, 'the full deep dive', ANTON(76), W / 2, SH / 2 - 170, CREAM, 'ma', p)
     text(g, 'makeyourmindup.ai', ANTON(118), W / 2, SH / 2 - 40, CREAM, 'ma', p)
     q = ease((t - 85.4) / 0.6); cv2.line(g, (110, SH // 2 + 130), (int(110 + (W - 220) * q), SH // 2 + 130), bgr(MINT), 12, cv2.LINE_AA)
     return g

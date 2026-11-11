@@ -9,3 +9,13 @@ cut-out bottom-right or play real TikTok clips, so the short is built outside it
   word captions. The sound (voice, the song under the cold open, NO CURVES at -30 LU from 13.9 s) is mixed with ffmpeg.
 
 Trim: take 1.0 to 59.5 s and 60.6 to 89.4 s (87.3 s); no ad-lib removed. Media and renders stay out of the repository.
+
+## Sources added 11 Nov (Krish: "They need to show an actual advert, an actual report, and an actual deck")
+
+- The advert: a still from Coca-Cola's AI-generated "Holidays Are Coming" (Nov 2024), as TechRadar ran it:
+  https://www.techradar.com/computing/artificial-intelligence/coca-colas-iconic-holidays-are-coming-ad-is-now-a-soulless-and-creepy-dystopian-nightmare-made-by-ai
+- The report: Stanford HAI, Artificial Intelligence Index Report 2025 (cover and two pages):
+  https://hai-production.s3.amazonaws.com/files/hai_ai_index_report_2025.pdf
+- The deck: BOND, "Trends – Artificial Intelligence" (Mary Meeker et al., 30 May 2025), slides 1, 5 and 12:
+  https://www.bondcap.com/report/pdf/Trends_Artificial_Intelligence.pdf
+- The logos: makeyourmindup.ai/brand/masthead.png (sha256 5a0e8a08…, the engine's own stacked logo in config/studio.json).

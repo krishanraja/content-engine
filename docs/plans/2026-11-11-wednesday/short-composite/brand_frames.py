@@ -16,7 +16,7 @@ def F(name, size, wght=None):
     return f
 ANTON = lambda s: F('Anton-Regular.ttf', s)
 MONO = lambda s: F('IBMPlexMono-SemiBold.ttf', s)
-FRAU = lambda s: F('Fraunces-Italic-Variable.ttf', s)
+FRAU = lambda s: F('Anton-Regular.ttf', s)  # no Fraunces (Krish, 2026-11-11)
 def ease(x): x = min(1, max(0, x)); return 1 - (1 - x) ** 3
 def back(x):
     x = min(1, max(0, x)); c = 1.7; return 1 + (c + 1) * (x - 1) ** 3 + c * (x - 1) ** 2
