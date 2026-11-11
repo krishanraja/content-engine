@@ -874,6 +874,8 @@ def self_test():
 # pass of scripts/recordings-upload.ps1); any machine that renders (GitHub's,
 # a cloud session, a home computer) gets it back with `fetch` and points
 # MINDMAKE_MUSIC_ROOT at the folder. No machine needs H: for music.
+# This library folder is a mirror of 07_Music, never a second home: a track is
+# filed only in 07_Music (docs/DRIVE.md, "The brand kit", Krish 2026-11-11).
 LIBRARY_MUSIC = '1 Brand kit (permanent)/Music'
 FETCH_DEFAULT = Path(__file__).resolve().parents[2] / '.cache' / 'music'
 
