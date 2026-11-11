@@ -52,3 +52,12 @@ Krish approved proof v2: "looks good". `build_cut.py` writes the whole 42.1 s pa
 - Open on the ledger: the four off-day tracks are still "proposed" there (no sha256, never measured) although the
   9 Nov session archive says his off-day approvals stand; music.py pick therefore falls back to the series bed. Not
   filed to 3 Posts until his approval of the cut and a bed-shape receipt for the exact file.
+
+## Music, 11 Nov 2026
+
+Krish on the Goodie Bags bed: "The audio track is terrible. Doesn't work at all." Shown the cut with Aspire,
+Illusions, Be Alone and voice only, he chose: "Aspire, but half the volume". `mixbed.py` shapes Aspire to the
+approved bed curve (`scripts/bed_shape.py` target points) 6 dB under the ledger levels, the end lift only 4.5 dB
+under so the close still rises; `bed_shape.qc` on the bed stem: pass (median -36.8 LUFS, open +13.8 LU, end +7.3 LU).
+Mix: -14.8 LUFS integrated, true peak -1.0 dB. This level is for this cut, by his word; the ledger levels are
+unchanged.
