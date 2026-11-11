@@ -219,6 +219,14 @@ describe('vertical video carries no wordmark (Ruling, Krish, 2026-11-11)', () =>
       }
     }
   })
+
+  it('keeps the brand on the closing outro card (Krish, 2026-11-11: "not the closing outro card")', () => {
+    const props = EngineRenderPropsSchema.parse({ ...fixture, aspect: '9:16', ending: { fromFrame: 90, url: 'makeyourmindup.ai' } })
+    const nodes = elements(BrandFrame({ props, beat: props.beats[0]!, frame: 100 }))
+    const band = nodes.find((node) => node.type === EndingBand)
+    expect(band).toBeTruthy()
+    expect(JSON.stringify(elements(EndingBand({ props, frame: 100 }) as ReactElement).map((n) => (n.props as { image?: { src?: string } }).image?.src ?? null))).toContain(props.brand.stacked.src)
+  })
 })
 
 describe('face-with-proof wears one brand treatment', () => {

@@ -6,7 +6,7 @@
 // Fails (exit 1) when a word to be read sits in any channel's button zone on the tall canvas (channel-safe-zones),
 // outside the title-safe box on the wide one, is under 40 px on the tall canvas (F44), when a caption repeats two or
 // more words shown elsewhere on screen at that moment (F42), or when a label is on screen too briefly to read.
-// Also: a tall cut may carry no wordmark or series badge at all, and on a wide cut no word may sit over or under the
+// Also: a tall cut's animated content may carry no wordmark or series badge (the outro card, joined after, keeps it), and on a wide cut no word may sit over or under the
 // wordmark or the series name (Ruling, Krish, 2026-11-11). Only recorded words are checked here; shapes and 3D are not.
 import { readFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
@@ -25,7 +25,7 @@ for (const f of files) {
   const seen = new Map()
   for (const { t, items } of L.layout) {
     const dress = items.filter((i) => i.role === 'dress')
-    if (L.shape === 'tall' && dress.length) note('dress:tall', `the tall cut draws "${dress[0].text}" at ${t}s: vertical video carries no wordmark or series badge`)
+    if (L.shape === 'tall' && dress.length) note('dress:tall', `the tall cut draws "${dress[0].text}" at ${t}s: no wordmark or series badge over a vertical cut's animated content`)
     if (L.shape !== 'tall') for (const it of items) {
       if (it.role === 'dress') continue
       for (const d of dress) if (hit(it.box, d.box)) note(`overdress:${it.text}`, `"${it.text}" at ${t}s sits over or under the ${d.text === '(wordmark)' ? 'wordmark' : 'series name'}`)
