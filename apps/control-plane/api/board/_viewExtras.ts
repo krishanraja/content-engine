@@ -1,6 +1,7 @@
 import { dayDate, type PostedDay } from './_posted.js'
 import { offdaySides } from './_offdaySides.js'
 import { yesByDay } from './_yes.js'
+import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, approvedLabel, dayShort, dayWords, goes, optionSha, type Approval, type Outcome } from './_gate.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
 // Control Centre; the old board is a read-only archive). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
@@ -12,11 +13,17 @@ import { yesByDay } from './_yes.js'
 // the live board saves it as it is (PUT /api/board/<Monday>/<collection>/<id>) or posts it to one of this board's own
 // routes (op). The live board fills in only his words (`words.path`) and the time (`stamp`); the server checks every
 // body as before (validBody) and binds each hash it binds (preparePress). Nothing here decides for him.
+//
+// The ideas gate (contract 1.3.0; docs/PUBLISH_BOARDS.md, "The ideas gate"): every idea on the ideas board ends in one
+// of five outcomes (_gate.ts OUTCOMES), each a press that says where it sends the idea (`goes`), and only Approve puts an
+// idea on the publish board. An option says which outcome it has (`outcome`), and an option whose words a session wrote
+// as decided is held until he presses (`held`): his words in a session are kept, never read as his press.
 
 type Body = Record<string, unknown>
 const isObj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
 const DAY_NAME: Record<string, string> = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' }
 const SERIES_SLOT: Record<string, string> = { mon: 'follow_the_money', wed: 'under_the_hood', fri: 'mind_the_gap' }
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const cut = (v: unknown, n: number) => (typeof v === 'string' ? v.trim().replace(/\s+/g, ' ').slice(0, n) : '')
 const https = (v: unknown) => (typeof v === 'string' && /^https:\/\/[^\s]{1,2000}$/.test(v) ? v : undefined)
 
@@ -38,6 +45,9 @@ export type PressAction = {
   stamp: string[]
   /** What the board says once it is saved. */
   done: string
+  /** Contract 1.3.0: which of the five outcomes the press gives an idea, and where that sends it, said before he presses. */
+  outcome?: Outcome
+  goes?: string
 }
 
 export interface ViewOption {
@@ -56,8 +66,16 @@ export interface ViewOption {
   /** Whether the good news holds this week's stories (found on or after the week's Thursday). */
   stories_fresh?: boolean
   actions: PressAction[]
+  /** Contract 1.3.0: the outcome he gave it (one of five), or null while it waits on him. */
+  outcome?: { id: Outcome; label: string; at: string | null; words: string | null } | null
+  /** Contract 1.3.0: why it cannot cross to the publish board yet (words a session wrote for him, changed words). */
+  held?: string
 }
-export interface ViewPiece { id: string; title: string; series: string; state: string; published: boolean; on_day: boolean }
+export interface ViewPiece {
+  id: string; title: string; series: string; state: string; published: boolean; on_day: boolean
+  /** Contract 1.3.0: the approval that holds it on its day ("Approved by you, Sun 9 Nov, 08:07"). */
+  approval?: { at: string; label: string; via: string } | null
+}
 export interface ViewComment { at: string; by: string; anchor: string; text: string }
 export interface ViewPosted { step: string; label: string; at: string | null; href?: string }
 export interface ViewYes { approved: boolean; via: string; at: string; words: string | null }
@@ -70,6 +88,8 @@ export interface ExtrasInputs {
   ideas: Body | null
   comments?: Array<{ doc_id: string; body: Body; updated_by: string; updated_at?: string }>
   ticks?: Array<{ tick_id: string; body: Body; updated_by: string }>
+  /** The approvals that stand now (board_approvals_now), or null when they cannot be read: then nothing is approved. */
+  approvals: Approval[] | null
 }
 
 const his = <T extends { updated_by: string }>(rows: T[]) => rows.filter(r => r.updated_by === 'Krish')
@@ -78,26 +98,36 @@ const rev = (rows: Array<{ doc_id: string; revision?: number }>, id: string) => 
   return r && Number.isInteger(r.revision) ? Number(r.revision) : 0
 }
 
-/** The Thursday of the week: the good news is found from then on (Ruling, Krish, 2026-11-07: "done later in the week so
- *  the good news is fresh"). */
+/** The Thursday of the week (kept for readers of the older rule). */
 export function thursdayOf(week: string): string { return dayDate(week, 'thu' as PostedDay) }
 
-/** Whether a weekly good-news option holds this week's stories: five or more, found for a due date on or after the
- *  week's Thursday. Stories found for an earlier due date (the 7 November run filled the 9 November week's on Saturday)
- *  are last week's news. */
+/** The day the week's one ideas run fills its whole ideas board: the Saturday nine days before its Monday, when the
+ *  Sunday ideas run first fires (.github/workflows/sunday-ideas.yml). Ruling (Krish, 2026-11-11): the ideas board fills
+ *  once a week in full, Saturday's good news included; the Thursday good-news schedule is retired. */
+export function ideasRunOf(week: string): string {
+  const d = new Date(`${week}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() - 9)
+  return d.toISOString().slice(0, 10)
+}
+
+/** Whether a weekly good-news option holds this week's stories: five or more, found for a due date on or after the day
+ *  the week's ideas run fills its board (ideasRunOf). Stories found before it were found for another week. */
 export function storiesFresh(week: string, o: Body): boolean {
   const stories = Array.isArray(o.stories) ? o.stories.filter(isObj) : []
   const due = typeof o.stories_due === 'string' ? o.stories_due : ''
-  return stories.length >= 5 && /^\d{4}-\d{2}-\d{2}$/.test(due) && due >= thursdayOf(week)
+  return stories.length >= 5 && /^\d{4}-\d{2}-\d{2}$/.test(due) && due >= ideasRunOf(week)
 }
 
-/** Every piece on the day, the one the day shows first marked. */
-export function dayPieces(pieces: Body[], date: string, shown: string | null): ViewPiece[] {
+/** Every piece on the day his approval holds there, the one the day shows first marked, each with that approval. The
+ *  pieces it does not hold are the day's `held` lines (_gate.ts gatePieces), never here. */
+export function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map()): ViewPiece[] {
   return pieces.filter(p => p.scheduled_for === date && !p.buried_at && p.state !== 'dropped' && typeof p.id === 'string')
     .map(p => {
       const id = String(p.id).toLowerCase()
+      const a = approvalOf.get(id)
       return { id, title: cut(p.idea || p.thesis || 'Untitled', 140), series: String(p.lane_slot || ''), state: String(p.state || ''),
-        published: p.state === 'published' || Boolean(p.published_at), on_day: id === shown }
+        published: p.state === 'published' || Boolean(p.published_at), on_day: id === shown,
+        approval: a ? { at: a.decided_at, label: approvedLabel(a), via: a.via } : null }
     })
     .sort((a, b) => Number(b.on_day) - Number(a.on_day) || a.id.localeCompare(b.id))
 }
@@ -125,36 +155,58 @@ export function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | nul
   return y ? { approved: y.approved, via: y.via, at: y.at, words: y.words } : null
 }
 
-/** The Sunday room's options for a series day, each with his pick, his press on it and the presses that answer it. */
+/** The Sunday room's options for a publishing day, each with its outcome and the five presses that answer it. Approve is
+ *  his pick for the day (picks/<day>): it puts the idea on the publish board on that day (placePick, _presses.ts). The
+ *  other four are queue/<pick> with the use each outcome is stored as (_gate.ts OUTCOME_OF_USE). An idea he approved
+ *  carries no other press: one idea, one outcome. */
 export function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[] {
   const list = isObj(i.ideas) && isObj(i.ideas.days) && Array.isArray(i.ideas.days[day]) ? (i.ideas.days[day] as unknown[]).filter(isObj) : []
-  const picked = his(i.picks).find(p => p.doc_id === day && !('kind' in p.body))
+  const current = (i.approvals || []).find(a => a.via === 'pick' && a.day === day) || null
   return list.map((o, n) => {
     const pick = `${day}-${n + 1}`
     const press = his(i.queue).find(q => q.doc_id === pick)?.body
-    const isPick = picked?.body.pick === pick || (typeof picked?.body.idea_id === 'string' && picked.body.idea_id === o.id)
-    const status = isPick ? 'picked' : typeof press?.use === 'string' ? press.use : 'open'
-    const said = isPick && typeof picked?.body.note === 'string' ? picked.body.note : typeof press?.note === 'string' ? press.note : typeof press?.reason === 'string' ? press.reason : null
+    const ideaId = typeof o.id === 'string' ? o.id : null
+    const approved = Boolean(current && ideaId && current.idea_id === ideaId.toLowerCase())
+    const pressed = typeof press?.use === 'string' ? OUTCOME_OF_USE[press.use] : undefined
+    const status = approved ? 'approved' : pressed || 'open'
+    const pressWords = typeof press?.reason === 'string' && press.reason.trim() ? press.reason : typeof press?.note === 'string' && press.note.trim() ? press.note : null
+    const said = approved ? current!.words : pressWords
     const story = String(o.story || o.so_what || '')
-    const card = { pick, idea_id: typeof o.id === 'string' ? o.id : null, so_what: cut(o.so_what, 2000), story, series: SERIES_SLOT[day], week: i.week, day }
-    const use = (u: string, label: string, done: string, words?: PressAction['words'], extra: Body = {}): PressAction => ({
+    const so_what = cut(o.so_what, 2000)
+    const card = { pick, idea_id: ideaId, so_what, story, series: SERIES_SLOT[day], week: i.week, day, option_sha256: optionSha({ so_what, story }) }
+    const use = (u: string, outcome: Outcome, label: string, done: string, words?: PressAction['words'], extra: Body = {}): PressAction => ({
       kind: 'press', label, collection: 'queue', id: pick, revision: rev(i.queue, pick),
-      body: { ...card, queued: true, use: u, ...extra }, ...(words ? { words } : {}), stamp: ['at'], done })
+      body: { ...card, queued: true, use: u, ...extra }, ...(words ? { words } : {}), stamp: ['at'], done, outcome, goes: goes(outcome, i.week, day) })
     const actions: PressAction[] = []
-    if (!placed && !isPick) {
-      actions.push({ kind: 'press', label: `Pick for ${DAY_NAME[day]}`, collection: 'picks', id: day, revision: rev(i.picks, day),
-        body: { day, pick, idea_id: card.idea_id, series: SERIES_SLOT[day], story }, stamp: ['at'],
-        words: { path: 'note', ask: 'Anything the story must do? (optional)', required: false }, done: `Picked for ${DAY_NAME[day]}.` })
+    let held: string | undefined
+    if (!approved) {
+      if (!placed) {
+        if (ideaId && UUID.test(ideaId)) {
+          actions.push({ kind: 'press', label: `Approve for ${dayShort(i.week, day)}`, collection: 'picks', id: day, revision: rev(i.picks, day),
+            body: { day, pick, idea_id: ideaId, series: SERIES_SLOT[day], story, so_what, option_sha256: card.option_sha256 }, stamp: ['at'],
+            words: { path: 'note', ask: 'Anything the story must do? (optional)', required: false },
+            done: `Approved. It is on the publish board for ${dayWords(i.week, day)}.`, outcome: 'approved', goes: goes('approved', i.week, day) })
+        } else {
+          held = 'This idea has no record in the engine yet, so it cannot be approved: the ideas run gives every idea one.'
+        }
+      }
+      actions.push(
+        use('next_week', 'filed', 'File for later', 'Filed for later. It comes back on a later ideas board.',
+          { path: 'note', ask: 'Anything to remember when it comes back? (optional)', required: false }, { target_week: nextMonday(i.week) }),
+        use('not_for_us', 'rejected', 'Reject', 'Rejected, with your reason. The next ideas run learns from it.',
+          { path: 'reason', ask: 'Why not? The next ideas run learns from your reason.', required: true }),
+        use('wider_piece_context', 'trend', 'Save as a trend', 'Saved with its trend, for a wider piece.',
+          { path: 'note', ask: 'Which trend is it part of?', required: true }),
+        use('improve', 'improved', 'Improve for a future piece', 'Kept with your note for a future piece.',
+          { path: 'note', ask: 'What would make it a piece later?', required: true }),
+      )
     }
-    actions.push(
-      use('wider_piece_context', 'Part of a wider piece', 'Kept for a wider piece.', { path: 'note', ask: 'What is the wider piece? (optional)', required: false }),
-      use('track_over_time', 'Track it over time', 'Kept to track over time.', { path: 'note', ask: 'What to watch for? (optional)', required: false }),
-      use('next_week', 'Next week', 'Queued for next week.', undefined, { target_week: nextMonday(i.week) }),
-      use('not_for_us', 'Not for us', 'Rejected, with your reason.', { path: 'reason', ask: 'Why not?', required: true }),
-    )
+    const outcome = approved
+      ? { id: 'approved' as const, label: approvedLabel(current!), at: current!.decided_at, words: current!.words }
+      : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof press?.at === 'string' ? press.at : null, words: pressWords } : null
     return { id: String(o.id || pick), doc_id: pick, title: headlineOf(story) || cut(o.so_what, 200), text: cut(o.so_what, 600),
       format: null, source: isObj(o.source) ? cut(o.source.label, 200) || null : typeof o.source === 'string' ? cut(o.source, 200) : null,
-      status, said: said ? cut(said, 600) : null, actions }
+      status, said: said ? cut(said, 600) : null, actions, outcome, ...(held ? { held } : {}) }
   })
 }
 
@@ -166,9 +218,19 @@ function sideOf(b: Body | undefined, side: string, sha: string | null): Body | n
   return isObj(b) && isObj(b[side]) && (b[side] as Body).sha256 === sha ? b[side] as Body : null
 }
 
-/** The week's off-day options for a day, each as the full board shows it, with Approve, Improve, Reject and Next week
- *  pressing the same queue/off-<day>-<id> record the full board writes (week_board.py; the desk's ReviewCard). An option
- *  the week's plan records as decided in his words is decided: it carries no press. */
+/** The approval that stands for an off-day option, while it still covers the words shown (its hash), or null. */
+export function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: boolean } {
+  const s = offdaySides(o)
+  const a = (approvals || []).find(x => x.doc === `queue/off-${day}-${s.id}`) || null
+  if (!a) return { approval: null, changed: false }
+  const covers = !a.option_sha256 || a.via === 'recorded' || a.option_sha256 === s.idea_sha256 || a.option_sha256 === s.copy_sha256
+  return covers ? { approval: a, changed: false } : { approval: null, changed: true }
+}
+
+/** The week's off-day options for a day, each as the full board shows it, with the five presses on its idea saved to the
+ *  same queue/off-<day>-<id> record the full board writes (week_board.py; the desk's ReviewCard). Approve puts it on the
+ *  publish board for its day; Growth makes it. An option a session wrote as decided is held until he presses: his words
+ *  in a session are shown, never read as his press (Krish, 2026-11-11: only his Approved crosses). */
 export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
   const list = isObj(i.ideas) && isObj(i.ideas.offdays) && Array.isArray(i.ideas.offdays[day]) ? (i.ideas.offdays[day] as unknown[]).filter(isObj) : []
   return list.map(o => {
@@ -177,12 +239,18 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     const row = his(i.queue).find(q => q.doc_id === docId)
     const prev = row?.body
     const idea = sideOf(prev, 'idea', s.idea_sha256), direction = sideOf(prev, 'direction', s.direction_sha256)
+    const { approval, changed } = offdayApproval(i.approvals, day, o)
     const decided = typeof o.decided === 'string' && o.decided.trim() ? cut(o.decided, 300) : null
     const verdictOf = (v: Body | null) => (v && typeof v.verdict === 'string' ? v.verdict : null)
-    const status = decided ? 'decided' : s.revised && !verdictOf(s.revised.side === 'direction' ? direction : idea) ? 'revised'
-      : verdictOf(direction) === 'improve' || verdictOf(idea) === 'improve' ? 'improve'
-        : verdictOf(idea) === 'reject' || verdictOf(direction) === 'reject' ? 'rejected'
-          : verdictOf(idea) === 'next_week' ? 'next_week' : verdictOf(idea) === 'approve' ? 'approved' : 'open'
+    const iv = verdictOf(idea), dv = verdictOf(direction)
+    const pressed = iv && iv !== 'approve' ? OUTCOME_OF_VERDICT[iv] : undefined
+    const held = changed ? 'Its words changed after you approved it, so your approval does not cover the new words.'
+      : !approval && decided ? 'Words from a session say it was decided, but you have not pressed Approve on it here, so it is not on the publish board.'
+        : !approval && iv === 'approve' ? 'Your approval of it could not be read just now, so it is not shown as approved.' : undefined
+    const status = approval ? 'approved' : held ? 'held' : s.revised && !verdictOf(s.revised.side === 'direction' ? direction : idea) ? 'revised'
+      : dv === 'improve' || iv === 'improve' ? 'improved'
+        : iv === 'reject' || dv === 'reject' ? 'rejected'
+          : iv === 'next_week' ? 'filed' : iv === 'trend' ? 'trend' : 'open'
     const words = [idea?.words, direction?.words, isObj(prev?.note) ? (prev!.note as Body).words : null].find(w => typeof w === 'string' && w.trim())
     // As the full board saves it; an empty format or source is left out (the board refuses an empty one).
     const base: Body = { pick: docId, use: 'offday', day, week: i.week, option_id: s.id, ...(s.format ? { format: s.format } : {}), ...(s.source ? { source: s.source } : {}), copy_sha256: s.copy_sha256 }
@@ -196,29 +264,37 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     }
     if (isObj(prev?.note)) base.note = prev!.note
     if (isObj(prev?.mock)) base.mock = prev!.mock
-    const press = (side: 'idea' | 'direction', verdict: string, label: string, done: string): PressAction => {
+    const ASK: Record<string, string> = { improve: 'What would make it a piece later?', reject: 'Why not? The next ideas run learns from your reason.', trend: 'Which trend is it part of?' }
+    const press = (side: 'idea' | 'direction', verdict: string, label: string, done: string, outcome?: Outcome): PressAction => {
       const sha = side === 'idea' ? s.idea_sha256 : s.direction_sha256!
       const shown = verdict === 'approve' ? { shown: side === 'idea' ? s.shown_idea : s.direction } : {}
-      const ask = verdict === 'improve' ? 'What should change?' : verdict === 'reject' ? 'Why not?' : ''
+      const ask = side === 'idea' ? ASK[verdict] : verdict === 'improve' ? 'What should change?' : verdict === 'reject' ? 'Why not?' : ''
       return { kind: 'press', label, collection: 'queue', id: docId, revision: rev(i.queue, docId),
         body: { ...base, [side]: { verdict, words: null, sha256: sha, ...shown } },
         ...(ask ? { words: { path: `${side}.words`, ask, required: true } } : {}),
-        stamp: [...stamp.filter(p => p !== `${side}.at`), `${side}.at`], done }
+        stamp: [...stamp.filter(p => p !== `${side}.at`), `${side}.at`], done,
+        ...(outcome ? { outcome, goes: goes(outcome, i.week, day, true) } : {}) }
     }
     const actions: PressAction[] = []
-    if (!decided) {
-      const ideaOpen = !idea || s.revised?.side === 'idea'
-      if (ideaOpen || verdictOf(idea) !== 'approve') {
-        actions.push(press('idea', 'approve', 'Approve', 'Approved. Growth makes it.'), press('idea', 'improve', 'Improve', 'Saved. The revise run brings the new version back here.'),
-          press('idea', 'reject', 'Reject', 'Rejected, with your reason.'), press('idea', 'next_week', 'Next week', 'Moved to next week.'))
-      } else if (s.direction_sha256 && (!direction || s.revised?.side === 'direction')) {
-        actions.push(press('direction', 'approve', 'Approve the direction', 'Approved. Growth makes it.'), press('direction', 'improve', 'Improve the direction', 'Saved. The revise run brings the new version back here.'),
-          press('direction', 'reject', 'Reject the direction', 'Rejected, with your reason.'))
-      }
+    const ideaOpen = !idea || s.revised?.side === 'idea'
+    if (!approval || ideaOpen) {
+      actions.push(
+        press('idea', 'approve', `Approve for ${dayShort(i.week, day)}`, `Approved. It is on the publish board for ${dayWords(i.week, day)}; Growth makes it.`, 'approved'),
+        press('idea', 'improve', 'Improve for a future piece', 'Kept with your note. The revise run also brings a new version back here.', 'improved'),
+        press('idea', 'reject', 'Reject', 'Rejected, with your reason. The next ideas run learns from it.', 'rejected'),
+        press('idea', 'trend', 'Save as a trend', 'Saved with its trend, for a wider piece.', 'trend'),
+        press('idea', 'next_week', 'File for later', 'Filed for later. It comes back on a later ideas board.', 'filed'))
+    } else if (s.direction_sha256 && (!direction || s.revised?.side === 'direction')) {
+      actions.push(press('direction', 'approve', 'Approve the direction', 'Approved. Growth makes it.'), press('direction', 'improve', 'Improve the direction', 'Saved. The revise run brings the new version back here.'),
+        press('direction', 'reject', 'Reject the direction', 'Rejected, with your reason.'))
     }
     const pitch = s.pitch ? [s.pitch.see, s.pitch.lands].filter(Boolean).join(' ') : ''
+    const ownWords = typeof words === 'string' ? cut(words, 600) : s.revised ? `Revised from your words: ${cut(s.revised.words, 400)}` : null
+    const said = !approval && decided ? `Said in a session, not pressed here: ${decided}` : approval ? approval.words || ownWords : ownWords
+    const outcome = approval ? { id: 'approved' as const, label: approvedLabel(approval), at: approval.decided_at, words: approval.words }
+      : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof (idea as Body | null)?.at === 'string' ? String((idea as Body).at) : null, words: typeof idea?.words === 'string' ? idea.words : null } : null
     const out: ViewOption = { id: s.id, doc_id: docId, title: s.hook || cut(s.copy, 200) || s.id, text: cut(pitch || s.copy, 600), format: s.format || null,
-      source: s.source || null, status, said: decided || (typeof words === 'string' ? cut(words, 600) : s.revised ? `Revised from your words: ${cut(s.revised.words, 400)}` : null), actions }
+      source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}) }
     if (o.weekly) {
       const stories = Array.isArray(o.stories) ? o.stories.filter(isObj) : []
       out.stories = stories.slice(0, 8).map(st => {

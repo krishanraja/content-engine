@@ -161,15 +161,21 @@ export function piecesByDay(week: string, raw: Body[]): Array<{ day: PostedDay; 
   return out
 }
 
-/** Which piece sits on which day of the week, and its boxes. A piece is on a day when it is scheduled for that date
- *  and not buried or dropped. When two share a date, a series day keeps the piece of its own series, an off day the
- *  piece whose meta.offday names that date, then the one changed last; one piece a day, as Growth reads it. */
+/** Which piece sits on which day of the week, and its boxes. A piece is on a day when it is scheduled for that date,
+ *  not buried or dropped, and his approval holds it there (the ideas gate, _gate.ts: Growth makes and posts only what
+ *  he approved). When two share a date, a series day keeps the piece of its own series, an off day the piece whose
+ *  meta.offday names that date, then the one changed last; one piece a day, as Growth reads it. When his approvals
+ *  cannot be read, nothing is handed over (503 approvals_unavailable), never everything. */
 export async function readPieces(db: SupabaseClient, week: string): Promise<{ status: number; body: Body }> {
   const end = dayDate(week, 'sun')
   const read = await db.from('content_ideas').select('id, scheduled_for, lane_slot, state, buried_at, meta, updated_at')
     .gte('scheduled_for', week).lte('scheduled_for', end)
   if (read.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
-  const days: PieceDay[] = piecesByDay(week, (read.data || []) as Body[]).map(({ day, date, piece, series }) => {
+  const { readApprovals, approvalFor } = await import('./_gate.js')
+  const approvals = await readApprovals(db, week)
+  if (!approvals) return { status: 503, body: { ok: false, error: 'approvals_unavailable' } }
+  const approved = ((read.data || []) as Body[]).filter(r => typeof r.scheduled_for === 'string' && approvalFor(approvals, r, String(r.scheduled_for).slice(0, 10)))
+  const days: PieceDay[] = piecesByDay(week, approved).map(({ day, date, piece, series }) => {
     const entry: PieceDay = { day, date, piece_id: String(piece.id).toLowerCase(), channels: [...(series ? SERIES_DAY_CHANNELS : OFF_DAY_CHANNELS)] }
     if (!series) {
       const own = isObj(piece.meta) && isObj(piece.meta.offday) ? String(piece.meta.offday.slot || '') : ''
@@ -187,9 +193,12 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
   // Growth makes the mock from the direction he approved, exactly as it was shown (shown), and puts it back on the card.
   // An option counts once its idea is approved and its direction, if it had one, is too; a returned mock he has not
   // yet approved is said in mock.
-  const off = await db.from('board_documents').select('doc_id,body').eq('week', week).eq('collection', 'queue').like('doc_id', 'off-%')
+  const off = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'queue').like('doc_id', 'off-%')
   if (off.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
+  // Only an option his Approve stands on (the ideas gate): his own press, and its latest answer an approval.
+  const standing = new Set(approvals.map(a => a.doc))
   const offdays = (off.data || []).flatMap(row => {
+    if (row.updated_by !== 'Krish' || !standing.has(`queue/${String(row.doc_id)}`)) return []
     const b = isObj(row.body) ? row.body : null
     const idea = b && isObj(b.idea) ? b.idea : null
     if (!b || !idea || idea.verdict !== 'approve') return []

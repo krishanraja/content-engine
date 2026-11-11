@@ -168,36 +168,32 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     expect(text).toContain('every question for Krish goes on the day\'s tab')
   })
 
-  it('exactly three scheduled jobs may touch a publish board, and only two of them are Claude: Sunday ideas and Thursday good news', () => {
-    // Exactly two scheduled Claude jobs may build a board (Ruling, Krish, 2026-11-07: "Happy to break the "no Claude
-    // schedules" rule for Saturday's good news. We might as well just keep that on an automatic schedule."). The third,
-    // the Monday final board, is built by code from the overnight runner, never by a workflow on a timer.
+  it('exactly two scheduled jobs may touch a publish board, and only one of them is Claude: the Sunday ideas run', () => {
+    // Ruling (Krish, 2026-11-11): the ideas board fills once a week in full, Saturday's good news included; the Thursday
+    // good-news schedule is retired. The other, the Monday final board, is built by code from the overnight runner,
+    // never by a workflow on a timer.
     const scheduled = WORKFLOWS.filter((path) => /^\s*schedule:/m.test(read(path)))
     const boards = scheduled.filter((path) => /week_board\.py|board_web\.py/.test(read(path)))
-    expect(boards).toEqual(['.github/workflows/saturday-goodnews.yml', '.github/workflows/sunday-ideas.yml'])
+    expect(boards).toEqual(['.github/workflows/sunday-ideas.yml'])
+    expect(read('.github/workflows/saturday-goodnews.yml')).not.toMatch(/^\s*schedule:|cron:/m)
     // Every other scheduled job that runs Claude Code builds no board.
     for (const path of scheduled.filter((p) => runsClaude(read(p)) && !boards.includes(p))) {
       expect(read(path), path).not.toMatch(/week_board\.py|board_web\.py/)
     }
     const agents = read('AGENTS.md')
-    expect(agents).toContain('Exactly three scheduled jobs may touch a publish board')
-    expect(agents).toContain('.github/workflows/saturday-goodnews.yml')
+    expect(agents).toContain('Exactly two scheduled jobs may touch a publish board')
+    expect(agents).toContain('Ruling (Krish, 2026-11-11): the ideas board fills once a week in full')
   })
 
-  it('the Sunday run no longer finds the good news; the Thursday run does, off the hour, outside the morning rush, idempotent, by hand too', () => {
+  it('the Sunday run finds Saturday\'s good news with the week\'s ideas; the good-news job stays, by hand only, idempotent', () => {
     const sunday = read('.github/workflows/sunday-ideas.yml')
-    expect(sunday).not.toMatch(/gn_due|sunday_ideas\.py goodnews|"The Saturday good news"/)
+    expect(sunday).toContain('"The Saturday good news"')
+    expect(sunday).toContain('stories_due set to today\'s date')
+    expect(sunday).toContain('Bash(python3 scripts/post-pack/copy_lint.py:*)')
     const text = read('.github/workflows/saturday-goodnews.yml')
-    const crons = [...text.matchAll(/cron:\s*'([^']+)'/g)].map((m) => m[1]!)
-    expect(crons).toHaveLength(2)  // the second is only a retry
-    for (const cron of crons) {
-      const [minute, hour, , , weekday] = cron.split(/\s+/)
-      expect(weekday, cron).toBe('4')  // Thursday, UTC
-      expect([0, 30], cron).not.toContain(Number(minute))
-      // 06:00 to 09:00 Pacific is 13:00 to 17:00 UTC across both clock changes.
-      expect(Number(hour) < 13 || Number(hour) >= 17, cron).toBe(true)
-    }
+    expect(text).not.toMatch(/cron:/)
     expect(text).toMatch(/workflow_dispatch:\n\s+inputs:\n\s+week:/)
+    expect(text).toContain('repository_dispatch:\n    types: [saturday-goodnews]')
     expect(text).toContain('python3 scripts/saturday_goodnews.py "$@" >> "$GITHUB_OUTPUT"')
     expect(text).toContain('EVENT: ${{ github.event_name }}')
     expect(text).toMatch(/if: steps\.guard\.outputs\.go == 'true'\n\s+uses: anthropics\/claude-code-action/)
@@ -214,25 +210,24 @@ d = dt.date.fromisoformat
 print(g.goodnews_monday(d('2026-11-19')), g.goodnews_monday(d('2026-11-21')), g.goodnews_monday(d('2026-11-15')))
 with tempfile.TemporaryDirectory() as t:
     folder = Path(t) / '2026-11-16-week'; folder.mkdir()
-    opt = {'id': 'goodnews', 'weekly': 'good_news', 'stories_due': '2026-11-19'}
+    opt = {'id': 'goodnews', 'weekly': 'good_news', 'stories_due': '2026-11-07'}
     (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [opt]}}))
     m = d('2026-11-16')
     live = lambda monday: False
-    print(g.decide(m, d('2026-11-17'), 'schedule', False, Path(t), live)[0], g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), live)[0])
-    print(g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), lambda monday: True)[0])
-    print(g.decide(d('2026-11-09'), d('2026-11-12'), 'schedule', False, Path(t), live)[0])
+    print(g.ideas_run_of(m), g.decide(m, d('2026-11-08'), 'workflow_dispatch', False, Path(t), live)[0], g.decide(m, d('2026-11-08'), 'schedule', False, Path(t), live)[0])
+    print(g.decide(m, d('2026-11-08'), 'workflow_dispatch', False, Path(t), lambda monday: True)[0])
     (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [dict(opt, stories=[{}] * 5)]}}))
-    print(g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), live)[0], g.decide(m, d('2026-11-19'), 'workflow_dispatch', True, Path(t), live)[0])
-    # Stories found for an earlier due date (the 7 Nov run filled the 9 Nov week's on Saturday) are last week's news.
-    (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [dict(opt, stories_due='2026-11-15', stories=[{}] * 5)]}}))
-    print(g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), live)[0], g.thursday_of(m))
-    view = {'days': [{'day': 'sat', 'options': [{'id': 'goodnews', 'stories': [{}] * 5, 'stories_due': '2026-11-19', 'stories_fresh': True}]}]}
-    print(g.view_has_stories(view, '2026-11-16'), g.view_has_stories({'days': [{'options': [{'stories': [{}] * 5, 'stories_due': '2026-11-15'}]}]}, '2026-11-16'))
+    print(g.decide(m, d('2026-11-12'), 'workflow_dispatch', False, Path(t), live)[0], g.decide(m, d('2026-11-12'), 'workflow_dispatch', True, Path(t), live)[0])
+    # Stories found before the week's ideas run were found for another week.
+    (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [dict(opt, stories_due='2026-11-06', stories=[{}] * 5)]}}))
+    print(g.decide(m, d('2026-11-12'), 'workflow_dispatch', False, Path(t), live)[0])
+    view = {'days': [{'day': 'sat', 'options': [{'id': 'goodnews', 'stories': [{}] * 5, 'stories_due': '2026-11-07', 'stories_fresh': True}]}]}
+    print(g.view_has_stories(view, '2026-11-16'), g.view_has_stories({'days': [{'options': [{'stories': [{}] * 5, 'stories_due': '2026-11-06'}]}]}, '2026-11-16'))
 `)
     expect(run.stderr).toBe('')
-    // Thursday 19 Nov serves the week of 16 Nov; Saturday too; Sunday serves the week that starts the next day.
-    // Not due on the Tuesday, due on the Thursday; not again once live; never on a schedule before 19 Nov; force reruns.
-    expect(run.stdout.trim().split(/\r?\n/)).toEqual(['2026-11-16 2026-11-16 2026-11-16', 'False True', 'False', 'False', 'False True', 'True 2026-11-19', 'True False'])
+    // A run by hand serves the week whose Saturday comes next; Sunday serves the week that starts the next day.
+    // Due whenever the week's stories are missing; never on a schedule; not again once live; force finds them again.
+    expect(run.stdout.trim().split(/\r?\n/)).toEqual(['2026-11-16 2026-11-16 2026-11-16', '2026-11-07 True False', 'False', 'False True', 'True', 'True False'])
     // The live board is Control Centre's: the guard asks the view, the stories go on the week's branch the view reads,
     // the week's change signal is bumped, and nothing rebuilds or publishes the archive (Ruling, Krish, 2026-11-11).
     expect(read('scripts/saturday_goodnews.py')).toContain("/api/board/{monday}/view")
@@ -264,5 +259,20 @@ for typed in ('20261109', '2026-W46-1', '2026-11-10', ''):
       'refused', 'refused', 'refused', 'refused'])
     // The workflow puts the normalised Monday, never the typed text, into its output.
     expect(read('.github/workflows/sunday-ideas.yml')).toContain('monday=$(python3 scripts/sunday_ideas.py week --date "$WEEK")')
+  })
+
+  it('the guard reads the ideas board as built only when it is full: each publishing day\'s options and Saturday\'s stories', () => {
+    // Ruling (Krish, 2026-11-11): the ideas board fills once a week in full, Saturday's good news included.
+    const run = spawnSync('python3', ['-c', `
+import sys
+sys.path.insert(0, 'scripts'); sys.path.insert(0, 'scripts/post-pack')
+import sunday_ideas as s
+day = lambda d, opts: {'day': d, 'options': opts}
+series = [day(d, [{'id': 'x'}]) for d in ('mon', 'wed', 'fri')]
+gn = lambda fresh: day('sat', [{'id': 'goodnews', 'stories': [], 'stories_fresh': fresh}])
+print(s.view_has_ideas({'days': series}), s.view_has_ideas({'days': series + [gn(False)]}), s.view_has_ideas({'days': series + [gn(True)]}), s.view_has_ideas({'days': series[:2]}))
+`], { cwd: ROOT, encoding: 'utf8' })
+    expect(run.stderr).toBe('')
+    expect(run.stdout.trim()).toBe('True False True False')
   })
 })

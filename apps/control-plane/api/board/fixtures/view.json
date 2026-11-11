@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.2.0",
+ "contract_version": "1.3.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -11,6 +11,10 @@
    "kind": "Essay and two cuts",
    "series": "follow.the.money",
    "detail": [
+    {
+     "h": "Approved by you",
+     "p": "Sun 8 Nov, 09:07"
+    },
     {
      "h": "Research",
      "p": "Storyboard: Monday"
@@ -181,7 +185,12 @@
      "series": "follow_the_money",
      "state": "drafting",
      "published": false,
-     "on_day": true
+     "on_day": true,
+     "approval": {
+      "at": "2026-11-08T14:07:00Z",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "via": "pick"
+     }
     },
     {
      "id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
@@ -189,10 +198,16 @@
      "series": "mind_the_gap",
      "state": "drafting",
      "published": false,
-     "on_day": false
+     "on_day": false,
+     "approval": {
+      "at": "2026-11-08T14:07:00Z",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "via": "pick"
+     }
     }
    ],
    "options": [],
+   "held": [],
    "comments": [
     {
      "at": "2026-11-16T08:30:00Z",
@@ -376,7 +391,7 @@
      "actions": [
       {
        "kind": "press",
-       "label": "Approve",
+       "label": "Approve for Tuesday 17 Nov",
        "collection": "queue",
        "id": "off-tue-povteach",
        "revision": 2,
@@ -404,11 +419,13 @@
         "at",
         "idea.at"
        ],
-       "done": "Approved. Growth makes it."
+       "done": "Approved. It is on the publish board for Tuesday 17 November; Growth makes it.",
+       "outcome": "approved",
+       "goes": "Goes onto the publish board for Tuesday 17 November. Growth makes it from what you approved."
       },
       {
        "kind": "press",
-       "label": "Improve",
+       "label": "Improve for a future piece",
        "collection": "queue",
        "id": "off-tue-povteach",
        "revision": 2,
@@ -428,14 +445,16 @@
        },
        "words": {
         "path": "idea.words",
-        "ask": "What should change?",
+        "ask": "What would make it a piece later?",
         "required": true
        },
        "stamp": [
         "at",
         "idea.at"
        ],
-       "done": "Saved. The revise run brings the new version back here."
+       "done": "Kept with your note. The revise run also brings a new version back here.",
+       "outcome": "improved",
+       "goes": "Kept with your note as a cue for a future piece. A revised version also comes back here to approve."
       },
       {
        "kind": "press",
@@ -459,18 +478,53 @@
        },
        "words": {
         "path": "idea.words",
-        "ask": "Why not?",
+        "ask": "Why not? The next ideas run learns from your reason.",
         "required": true
        },
        "stamp": [
         "at",
         "idea.at"
        ],
-       "done": "Rejected, with your reason."
+       "done": "Rejected, with your reason. The next ideas run learns from it.",
+       "outcome": "rejected",
+       "goes": "Rejected. Your reason is kept as a cue the next ideas run reads, and goes to your taste ledger in your words."
       },
       {
        "kind": "press",
-       "label": "Next week",
+       "label": "Save as a trend",
+       "collection": "queue",
+       "id": "off-tue-povteach",
+       "revision": 2,
+       "body": {
+        "pick": "off-tue-povteach",
+        "use": "offday",
+        "day": "tue",
+        "week": "2026-11-16",
+        "option_id": "povteach",
+        "format": "Meme video, 9:16",
+        "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
+        "idea": {
+         "verdict": "trend",
+         "words": null,
+         "sha256": "83debb90869f7c10276c52bbd96c8e3f3015e596ddd4912d994eb9794f84aa59"
+        }
+       },
+       "words": {
+        "path": "idea.words",
+        "ask": "Which trend is it part of?",
+        "required": true
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Saved with its trend, for a wider piece.",
+       "outcome": "trend",
+       "goes": "Kept with the trend you name, for a wider piece."
+      },
+      {
+       "kind": "press",
+       "label": "File for later",
        "collection": "queue",
        "id": "off-tue-povteach",
        "revision": 2,
@@ -492,11 +546,15 @@
         "at",
         "idea.at"
        ],
-       "done": "Moved to next week."
+       "done": "Filed for later. It comes back on a later ideas board.",
+       "outcome": "filed",
+       "goes": "Filed with today's date. It comes back on a later ideas board, or when you ask for it."
       }
-     ]
+     ],
+     "outcome": null
     }
    ],
+   "held": [],
    "comments": [],
    "posted": [],
    "yes": null,
@@ -523,6 +581,10 @@
    "kind": "Essay and two cuts",
    "series": "under.the.hood",
    "detail": [
+    {
+     "h": "Approved by you",
+     "p": "Sun 8 Nov, 09:07"
+    },
     {
      "h": "Research",
      "p": "WIRED: a source"
@@ -688,7 +750,12 @@
      "series": "under_the_hood",
      "state": "drafting",
      "published": false,
-     "on_day": true
+     "on_day": true,
+     "approval": {
+      "at": "2026-11-08T14:07:00Z",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "via": "pick"
+     }
     }
    ],
    "options": [
@@ -699,116 +766,18 @@
      "text": "Why it matters",
      "format": null,
      "source": null,
-     "status": "open",
+     "status": "approved",
      "said": null,
-     "actions": [
-      {
-       "kind": "press",
-       "label": "Part of a wider piece",
-       "collection": "queue",
-       "id": "wed-1",
-       "revision": 0,
-       "body": {
-        "pick": "wed-1",
-        "idea_id": "db9f9f6a-1092-49be-8024-f335e060305a",
-        "so_what": "Why it matters",
-        "story": "The story",
-        "series": "under_the_hood",
-        "week": "2026-11-16",
-        "day": "wed",
-        "queued": true,
-        "use": "wider_piece_context"
-       },
-       "words": {
-        "path": "note",
-        "ask": "What is the wider piece? (optional)",
-        "required": false
-       },
-       "stamp": [
-        "at"
-       ],
-       "done": "Kept for a wider piece."
-      },
-      {
-       "kind": "press",
-       "label": "Track it over time",
-       "collection": "queue",
-       "id": "wed-1",
-       "revision": 0,
-       "body": {
-        "pick": "wed-1",
-        "idea_id": "db9f9f6a-1092-49be-8024-f335e060305a",
-        "so_what": "Why it matters",
-        "story": "The story",
-        "series": "under_the_hood",
-        "week": "2026-11-16",
-        "day": "wed",
-        "queued": true,
-        "use": "track_over_time"
-       },
-       "words": {
-        "path": "note",
-        "ask": "What to watch for? (optional)",
-        "required": false
-       },
-       "stamp": [
-        "at"
-       ],
-       "done": "Kept to track over time."
-      },
-      {
-       "kind": "press",
-       "label": "Next week",
-       "collection": "queue",
-       "id": "wed-1",
-       "revision": 0,
-       "body": {
-        "pick": "wed-1",
-        "idea_id": "db9f9f6a-1092-49be-8024-f335e060305a",
-        "so_what": "Why it matters",
-        "story": "The story",
-        "series": "under_the_hood",
-        "week": "2026-11-16",
-        "day": "wed",
-        "queued": true,
-        "use": "next_week",
-        "target_week": "2026-11-23"
-       },
-       "stamp": [
-        "at"
-       ],
-       "done": "Queued for next week."
-      },
-      {
-       "kind": "press",
-       "label": "Not for us",
-       "collection": "queue",
-       "id": "wed-1",
-       "revision": 0,
-       "body": {
-        "pick": "wed-1",
-        "idea_id": "db9f9f6a-1092-49be-8024-f335e060305a",
-        "so_what": "Why it matters",
-        "story": "The story",
-        "series": "under_the_hood",
-        "week": "2026-11-16",
-        "day": "wed",
-        "queued": true,
-        "use": "not_for_us"
-       },
-       "words": {
-        "path": "reason",
-        "ask": "Why not?",
-        "required": true
-       },
-       "stamp": [
-        "at"
-       ],
-       "done": "Rejected, with your reason."
-      }
-     ]
+     "actions": [],
+     "outcome": {
+      "id": "approved",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "at": "2026-11-08T14:07:00Z",
+      "words": null
+     }
     }
    ],
+   "held": [],
    "comments": [],
    "posted": [],
    "yes": null,
@@ -894,7 +863,7 @@
      "actions": [
       {
        "kind": "press",
-       "label": "Approve",
+       "label": "Approve for Thursday 19 Nov",
        "collection": "queue",
        "id": "off-thu-lookalikes",
        "revision": 2,
@@ -922,11 +891,13 @@
         "at",
         "idea.at"
        ],
-       "done": "Approved. Growth makes it."
+       "done": "Approved. It is on the publish board for Thursday 19 November; Growth makes it.",
+       "outcome": "approved",
+       "goes": "Goes onto the publish board for Thursday 19 November. Growth makes it from what you approved."
       },
       {
        "kind": "press",
-       "label": "Improve",
+       "label": "Improve for a future piece",
        "collection": "queue",
        "id": "off-thu-lookalikes",
        "revision": 2,
@@ -946,14 +917,16 @@
        },
        "words": {
         "path": "idea.words",
-        "ask": "What should change?",
+        "ask": "What would make it a piece later?",
         "required": true
        },
        "stamp": [
         "at",
         "idea.at"
        ],
-       "done": "Saved. The revise run brings the new version back here."
+       "done": "Kept with your note. The revise run also brings a new version back here.",
+       "outcome": "improved",
+       "goes": "Kept with your note as a cue for a future piece. A revised version also comes back here to approve."
       },
       {
        "kind": "press",
@@ -977,18 +950,53 @@
        },
        "words": {
         "path": "idea.words",
-        "ask": "Why not?",
+        "ask": "Why not? The next ideas run learns from your reason.",
         "required": true
        },
        "stamp": [
         "at",
         "idea.at"
        ],
-       "done": "Rejected, with your reason."
+       "done": "Rejected, with your reason. The next ideas run learns from it.",
+       "outcome": "rejected",
+       "goes": "Rejected. Your reason is kept as a cue the next ideas run reads, and goes to your taste ledger in your words."
       },
       {
        "kind": "press",
-       "label": "Next week",
+       "label": "Save as a trend",
+       "collection": "queue",
+       "id": "off-thu-lookalikes",
+       "revision": 2,
+       "body": {
+        "pick": "off-thu-lookalikes",
+        "use": "offday",
+        "day": "thu",
+        "week": "2026-11-16",
+        "option_id": "lookalikes",
+        "format": "Meme video, 9:16",
+        "copy_sha256": "0c915504389eebdd22705f239e5dc94916c298ecbcced6da166bbd35f61a894a",
+        "idea": {
+         "verdict": "trend",
+         "words": null,
+         "sha256": "eaac06a6cfb9cd2214bb1b9b882ec06fcd963262dc578fc2f4447fb822036c1e"
+        }
+       },
+       "words": {
+        "path": "idea.words",
+        "ask": "Which trend is it part of?",
+        "required": true
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Saved with its trend, for a wider piece.",
+       "outcome": "trend",
+       "goes": "Kept with the trend you name, for a wider piece."
+      },
+      {
+       "kind": "press",
+       "label": "File for later",
        "collection": "queue",
        "id": "off-thu-lookalikes",
        "revision": 2,
@@ -1010,11 +1018,15 @@
         "at",
         "idea.at"
        ],
-       "done": "Moved to next week."
+       "done": "Filed for later. It comes back on a later ideas board.",
+       "outcome": "filed",
+       "goes": "Filed with today's date. It comes back on a later ideas board, or when you ask for it."
       }
-     ]
+     ],
+     "outcome": null
     }
    ],
+   "held": [],
    "comments": [],
    "posted": [],
    "yes": null,
@@ -1028,6 +1040,10 @@
    "kind": "Essay and two cuts",
    "series": "mind.the.gap",
    "detail": [
+    {
+     "h": "Approved by you",
+     "p": "Sun 8 Nov, 09:07"
+    },
     {
      "h": "Research",
      "p": "None yet"
@@ -1186,10 +1202,16 @@
      "series": "mind_the_gap",
      "state": "drafting",
      "published": false,
-     "on_day": true
+     "on_day": true,
+     "approval": {
+      "at": "2026-11-08T14:07:00Z",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "via": "pick"
+     }
     }
    ],
    "options": [],
+   "held": [],
    "comments": [],
    "posted": [],
    "yes": null,
@@ -1204,8 +1226,12 @@
    "piece_id": null,
    "detail": [
     {
+     "h": "Approved by you",
+     "p": "Sun 8 Nov, 09:07"
+    },
+    {
      "h": "goodnews",
-     "p": "Meme video, 9:16 · decided"
+     "p": "Meme video, 9:16 · Approved by you, Sun 8 Nov, 09:07"
     }
    ],
    "kind": "Off day: Meme video",
@@ -1261,9 +1287,177 @@
      "text": "Option goodnews",
      "format": "Meme video, 9:16",
      "source": null,
-     "status": "decided",
-     "said": "Signed off (Krish, 15 Nov).",
-     "actions": [],
+     "status": "approved",
+     "said": null,
+     "actions": [
+      {
+       "kind": "press",
+       "label": "Approve for Saturday 21 Nov",
+       "collection": "queue",
+       "id": "off-sat-goodnews",
+       "revision": 0,
+       "body": {
+        "pick": "off-sat-goodnews",
+        "use": "offday",
+        "day": "sat",
+        "week": "2026-11-16",
+        "option_id": "goodnews",
+        "format": "Meme video, 9:16",
+        "copy_sha256": "960e2e00ec110b6d4f494bb1686582943589113fffec0e0c93caa3c4293a2362",
+        "idea": {
+         "verdict": "approve",
+         "words": null,
+         "sha256": "60708db870b6e4dd7ff36317c82bd8e0a6b98a2950d21f69461618d5caddfbf8",
+         "shown": {
+          "copy": "Option goodnews",
+          "hook": null,
+          "pitch": null,
+          "cards": null
+         }
+        }
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Approved. It is on the publish board for Saturday 21 November; Growth makes it.",
+       "outcome": "approved",
+       "goes": "Goes onto the publish board for Saturday 21 November. Growth makes it from what you approved."
+      },
+      {
+       "kind": "press",
+       "label": "Improve for a future piece",
+       "collection": "queue",
+       "id": "off-sat-goodnews",
+       "revision": 0,
+       "body": {
+        "pick": "off-sat-goodnews",
+        "use": "offday",
+        "day": "sat",
+        "week": "2026-11-16",
+        "option_id": "goodnews",
+        "format": "Meme video, 9:16",
+        "copy_sha256": "960e2e00ec110b6d4f494bb1686582943589113fffec0e0c93caa3c4293a2362",
+        "idea": {
+         "verdict": "improve",
+         "words": null,
+         "sha256": "60708db870b6e4dd7ff36317c82bd8e0a6b98a2950d21f69461618d5caddfbf8"
+        }
+       },
+       "words": {
+        "path": "idea.words",
+        "ask": "What would make it a piece later?",
+        "required": true
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Kept with your note. The revise run also brings a new version back here.",
+       "outcome": "improved",
+       "goes": "Kept with your note as a cue for a future piece. A revised version also comes back here to approve."
+      },
+      {
+       "kind": "press",
+       "label": "Reject",
+       "collection": "queue",
+       "id": "off-sat-goodnews",
+       "revision": 0,
+       "body": {
+        "pick": "off-sat-goodnews",
+        "use": "offday",
+        "day": "sat",
+        "week": "2026-11-16",
+        "option_id": "goodnews",
+        "format": "Meme video, 9:16",
+        "copy_sha256": "960e2e00ec110b6d4f494bb1686582943589113fffec0e0c93caa3c4293a2362",
+        "idea": {
+         "verdict": "reject",
+         "words": null,
+         "sha256": "60708db870b6e4dd7ff36317c82bd8e0a6b98a2950d21f69461618d5caddfbf8"
+        }
+       },
+       "words": {
+        "path": "idea.words",
+        "ask": "Why not? The next ideas run learns from your reason.",
+        "required": true
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Rejected, with your reason. The next ideas run learns from it.",
+       "outcome": "rejected",
+       "goes": "Rejected. Your reason is kept as a cue the next ideas run reads, and goes to your taste ledger in your words."
+      },
+      {
+       "kind": "press",
+       "label": "Save as a trend",
+       "collection": "queue",
+       "id": "off-sat-goodnews",
+       "revision": 0,
+       "body": {
+        "pick": "off-sat-goodnews",
+        "use": "offday",
+        "day": "sat",
+        "week": "2026-11-16",
+        "option_id": "goodnews",
+        "format": "Meme video, 9:16",
+        "copy_sha256": "960e2e00ec110b6d4f494bb1686582943589113fffec0e0c93caa3c4293a2362",
+        "idea": {
+         "verdict": "trend",
+         "words": null,
+         "sha256": "60708db870b6e4dd7ff36317c82bd8e0a6b98a2950d21f69461618d5caddfbf8"
+        }
+       },
+       "words": {
+        "path": "idea.words",
+        "ask": "Which trend is it part of?",
+        "required": true
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Saved with its trend, for a wider piece.",
+       "outcome": "trend",
+       "goes": "Kept with the trend you name, for a wider piece."
+      },
+      {
+       "kind": "press",
+       "label": "File for later",
+       "collection": "queue",
+       "id": "off-sat-goodnews",
+       "revision": 0,
+       "body": {
+        "pick": "off-sat-goodnews",
+        "use": "offday",
+        "day": "sat",
+        "week": "2026-11-16",
+        "option_id": "goodnews",
+        "format": "Meme video, 9:16",
+        "copy_sha256": "960e2e00ec110b6d4f494bb1686582943589113fffec0e0c93caa3c4293a2362",
+        "idea": {
+         "verdict": "next_week",
+         "words": null,
+         "sha256": "60708db870b6e4dd7ff36317c82bd8e0a6b98a2950d21f69461618d5caddfbf8"
+        }
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Filed for later. It comes back on a later ideas board.",
+       "outcome": "filed",
+       "goes": "Filed with today's date. It comes back on a later ideas board, or when you ask for it."
+      }
+     ],
+     "outcome": {
+      "id": "approved",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "at": "2026-11-08T14:07:00Z",
+      "words": null
+     },
      "stories": [
       {
        "headline": "Story 1",
@@ -1315,6 +1509,7 @@
      "stories_fresh": true
     }
    ],
+   "held": [],
    "comments": [],
    "posted": [],
    "yes": null,
@@ -1622,7 +1817,8 @@
  "sources": {
   "ideas": true,
   "runs": true,
-  "store": true
+  "store": true,
+  "approvals": true
  },
  "revision": 7
 }
