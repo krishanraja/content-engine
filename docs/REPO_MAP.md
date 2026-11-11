@@ -2305,6 +2305,30 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `async function decideStandard(db: SupabaseClient, raw: unknown)`
 - `function renderStandards(groups: StandardsGroup[])`
 
+### `apps/control-plane/api/board/_style.ts`
+
+- `type StyleLayerKey = 'motion' | 'captions'`
+- `const STYLE_LAYERS: readonly StyleLayerKey[]`
+- `interface StylePress`
+- `interface StyleOption`
+- `interface StyleLayer`
+- `interface DayStyle`
+- `interface MotionModule`
+- `interface Look`
+- `const CAPTIONS: Array<{ id: string } & CaptionTheme>`
+- `function motionBank(styles: unknown): MotionModule[]`
+- `function sampleUrl(layer: StyleLayerKey, id: string, samples: unknown = styleSamples): string | null`
+- `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<StyleLayerKey, stri…`
+- `interface StyleInputs`
+- `function dayStyle(i: StyleInputs): DayStyle`
+- `class StyleError`
+- `interface StylePick`
+- `interface SavedStyle`
+- `function needsMotion(body: Body): boolean`
+- `function stylePick(body: Body, motionIds: Set<string> | null): StylePick`
+- `function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle`
+- `async function saveStyle(db: SupabaseClient, pieceId: string, pick: StylePick, now = new Date()): Promise<SavedStyle>`
+
 ### `apps/control-plane/api/board/_view.ts`
 
 - `const VIEW_DAYS: readonly PostedDay[]`
