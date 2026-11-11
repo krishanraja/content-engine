@@ -204,10 +204,54 @@ export function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): Vi
     const outcome = approved
       ? { id: 'approved' as const, label: approvedLabel(current!), at: current!.decided_at, words: current!.words }
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof press?.at === 'string' ? press.at : null, words: pressWords } : null
-    return { id: String(o.id || pick), doc_id: pick, title: headlineOf(story) || cut(o.so_what, 200), text: cut(o.so_what, 600),
+    // The plain question first (house rules STORY_ARC and BIG_PICTURE; the ideas quality plan, item 7), then the headline.
+    const question = isObj(o.pitch) ? cut(o.pitch.question, 200) : ''
+    return { id: String(o.id || pick), doc_id: pick, title: question || headlineOf(story) || cut(o.so_what, 200), text: warned(o) + cut(o.so_what, 600),
       format: null, source: isObj(o.source) ? cut(o.source.label, 200) || null : typeof o.source === 'string' ? cut(o.source, 200) : null,
       status, said: said ? cut(said, 600) : null, actions, outcome, ...(held ? { held } : {}) }
   })
+}
+
+/** The warning line on an option he warned off in another press (ideas.json `warning`, his words exactly, checked by
+ *  board_feed.py cover): said first, before the idea, so he sees it before he presses. Empty when there is none. */
+export function warned(o: Body): string {
+  const w = isObj(o.warning) ? o.warning : null
+  const said = w ? cut(w.said, 300) : ''
+  return said ? `Warned: you said "${said}"${typeof w!.at === 'string' ? ` (${dayLabel(w!.at)})` : ''}. ` : ''
+}
+
+const dayLabel = (at: string) => {
+  const d = new Date(`${at.slice(0, 10)}T12:00:00Z`)
+  return Number.isNaN(d.getTime()) ? at.slice(0, 10) : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' })
+}
+const slugOf = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 59)
+
+/** The ideas board's own lines on a day, drawn after its options (the ideas quality plan, items 1 and 3): each subject
+ *  he refused that the run will not offer again, with his words and one press to give it back ("Offer it again",
+ *  queue/veto-<subject>, his alone), and each return or ask held back, with the reason. From ideas.json `vetoes` and
+ *  `held`; a line with no day of its own goes on Monday. */
+export function ideaLines(i: ExtrasInputs, day: string): ViewOption[] {
+  const plan = isObj(i.ideas) ? i.ideas : {}
+  const on = (d: unknown) => (typeof d === 'string' && ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].includes(d) ? d : 'mon') === day
+  const out: ViewOption[] = []
+  for (const v of (Array.isArray(plan.vetoes) ? plan.vetoes : []).filter(isObj)) {
+    const subject = cut(v.subject, 120), slug = slugOf(subject)
+    if (!subject || !slug || !on(v.day)) continue
+    const id = `veto-${slug}`
+    const back = his(i.queue).find(q => q.doc_id === id && isObj(q.body) && typeof q.body.unveto === 'string')
+    out.push({ id, doc_id: id, title: `Not offered again: ${subject}`, format: null, source: null, said: cut(v.said, 600) || null, outcome: null,
+      text: `You said${typeof v.at === 'string' ? ` on ${dayLabel(v.at)}` : ''}: "${cut(v.said, 400)}" The ideas run will not offer it until you raise it again.`,
+      status: back ? 'given back' : 'not offered again',
+      actions: back ? [] : [{ kind: 'press', label: 'Offer it again', collection: 'queue', id, revision: rev(i.queue, id),
+        body: { pick: id, queued: false, unveto: subject }, stamp: ['at'], done: 'Given back. The next ideas run may offer it again.' }] })
+  }
+  for (const h of (Array.isArray(plan.held) ? plan.held : []).filter(isObj)) {
+    const ref = cut(h.ref, 160)
+    if (!ref || !on(h.day)) continue
+    out.push({ id: `held-${slugOf(ref)}`, doc_id: `held-${slugOf(ref)}`, title: `Held back: ${cut(h.title, 200) || ref}`, text: cut(h.reason, 600),
+      format: null, source: null, status: 'held back', said: null, actions: [], outcome: null })
+  }
+  return out
 }
 
 const headlineOf = (story: string) => { const m = /Headline:\s*(.+?)(?:\s+Hook:|$)/.exec(story); return m ? cut(m[1], 200) : '' }

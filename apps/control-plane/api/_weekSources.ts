@@ -16,8 +16,10 @@
 // (they are the Queue tab, and "From your queue" on each day).
 //
 // The taste evidence is his own marks only: Story and Angle verdicts on the queue, his picks (scheduled pieces and
-// week options he chose himself), A/B wins, and his Drops. A candidate within LIKED_COSINE of something he liked
-// says so in `why_here`; one that close to a Drop carries `near_drop`.
+// week options he chose himself), A/B wins, and his Drops, his Reject on an ideas board among them (the ideas gate's
+// idea_outcomes, since 11 November). A candidate within LIKED_COSINE of something he liked says so in `why_here`; one
+// that close to a Drop carries `near_drop`. An idea whose latest answer is his Reject leaves the pool the moment he
+// presses (`skipped.rejected`), never only at the next clean-up sweep (the ideas quality plan, item 1).
 
 import { cosine, parseVec } from './_vectors.js'
 
@@ -111,6 +113,15 @@ export function tasteOf(rows: Row[]): TasteItem[] {
   return out
 }
 
+/** His Reject on an ideas board, as a Drop: the rejected row with his reason, so a near copy is flagged (near_drop). A
+ *  row he already dropped in the queue is not counted twice. */
+export function rejectedTaste(rows: Row[], refused: Map<string, { said: string | null; at: string | null }>): TasteItem[] {
+  return rows.filter(r => refused.has(String(r.id).toLowerCase()) && r.meta?.queue?.triage?.verdict !== 'drop').map(r => {
+    const no = refused.get(String(r.id).toLowerCase())!
+    return { id: String(r.id), idea: String(r.idea || ''), kind: 'drop' as const, angle: null, reason: no.said, at: no.at, vec: parseVec(r) }
+  })
+}
+
 function describe(t: TasteItem): string {
   const idea = t.idea.length > 90 ? `${t.idea.slice(0, 87)}...` : t.idea
   if (t.kind === 'story') return `close to your Story mark on "${idea}"`
@@ -174,13 +185,15 @@ export interface Relayed { id: string; title: string; detail: string | null; cre
  * tasteRows: rows that may carry his marks; relayed: open board items holding his words relayed by a session
  * (`krish-ideas-*`) or filed by Control Center (`said-*`), which have no idea row yet.
  */
-export function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[] }) {
+export function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[];
+  rejected?: Array<{ id: string; said: string | null; at: string | null }>; rejectedRows?: Row[] }) {
   const win = windows(input.weekStart)
-  const taste = tasteOf(input.tasteRows)
+  const refused = new Map((input.rejected || []).filter(r => r.id).map(r => [String(r.id).toLowerCase(), r]))
+  const taste = [...tasteOf(input.tasteRows), ...rejectedTaste(input.rejectedRows || [], refused)]
   const skipped: Record<string, number> = {}
   const pool: Candidate[] = []
   for (const row of input.rows) {
-    const why = excluded(row)
+    const why = refused.has(String(row.id).toLowerCase()) ? 'rejected' : excluded(row)
     if (why) { skipped[why] = (skipped[why] || 0) + 1; continue }
     const { kind } = sourceKind(row)
     if (!inWindow(row, kind, win)) continue

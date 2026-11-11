@@ -1,0 +1,2929 @@
+{
+ "about": "The ideas board checks replayed on the past boards (scripts/post-pack/ideas_history.py). Built from read-only dumps of the live tables; ids, names and short hashes only, never his words.",
+ "boards": [
+  {
+   "week": "2026-10-19",
+   "known_before": "2026-10-18T23:59:59",
+   "options": [
+    {
+     "ref": "mon-1",
+     "day": "mon",
+     "pos": 1,
+     "main": true,
+     "idea_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+     "off_id": null,
+     "names": [
+      "Google"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": true,
+     "text16": "c30d520157dd1e26",
+     "source_dates": [
+      "2026-10-13"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "mon-2",
+     "day": "mon",
+     "pos": 2,
+     "main": true,
+     "idea_id": null,
+     "off_id": null,
+     "names": [
+      "Google",
+      "Disney"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e6bd2461cd4734a2",
+     "source_dates": [
+      "2026-10-12",
+      "2026-10-13"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "mon-3",
+     "day": "mon",
+     "pos": 3,
+     "main": true,
+     "idea_id": null,
+     "off_id": null,
+     "names": [
+      "ChatGPT"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "44145659067a69f9",
+     "source_dates": [
+      "2026-10-05"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "mon-4",
+     "day": "mon",
+     "pos": 4,
+     "main": true,
+     "idea_id": null,
+     "off_id": null,
+     "names": [
+      "Nvidia",
+      "Microsoft"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "217e1100ce1b4993",
+     "source_dates": [
+      "2026-10-12"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-1",
+     "day": "wed",
+     "pos": 1,
+     "main": true,
+     "idea_id": "d7a20885-7001-4661-b444-9d7ca1043416",
+     "off_id": null,
+     "names": [
+      "Grok Bot",
+      "Muse",
+      "Viktor",
+      "OpenClaw"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": true,
+     "text16": "f898341014e4642f",
+     "source_dates": [
+      "2026-10-13",
+      "2026-10-17"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-2",
+     "day": "wed",
+     "pos": 2,
+     "main": true,
+     "idea_id": null,
+     "off_id": null,
+     "names": [
+      "Plug Gmail",
+      "Drive"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "576c665885a48088",
+     "source_dates": [
+      "2026-06-20"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-3",
+     "day": "wed",
+     "pos": 3,
+     "main": true,
+     "idea_id": null,
+     "off_id": null,
+     "names": [
+      "Meta",
+      "Walmart",
+      "Amazon",
+      "Muse"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "1bffa47305525048",
+     "source_dates": [
+      "2026-10-06"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-4",
+     "day": "wed",
+     "pos": 4,
+     "main": true,
+     "idea_id": null,
+     "off_id": null,
+     "names": [
+      "Apple",
+      "Europe"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "3fbf54d61b6b07c0",
+     "source_dates": [
+      "2026-10-13"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-1",
+     "day": "fri",
+     "pos": 1,
+     "main": true,
+     "idea_id": "ea18db0c-60da-46ab-b4d4-114741585797",
+     "off_id": null,
+     "names": [
+      "OpenAI"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": true,
+     "text16": "e5884b61201ef269",
+     "source_dates": [
+      "2026-10-09"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-2",
+     "day": "fri",
+     "pos": 2,
+     "main": true,
+     "idea_id": null,
+     "off_id": null,
+     "names": [
+      "Claude",
+      "Chinese"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e7f657229f0e3398",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "fri-3",
+     "day": "fri",
+     "pos": 3,
+     "main": true,
+     "idea_id": null,
+     "off_id": null,
+     "names": [
+      "Denmark",
+      "Disney",
+      "Character.AI"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "2c529cafa7f57b20",
+     "source_dates": [
+      "2026-10-08"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-4",
+     "day": "fri",
+     "pos": 4,
+     "main": true,
+     "idea_id": "1d45716f-bc15-4fe6-af84-b2a09ff9c856",
+     "off_id": null,
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "189046b1e7083154",
+     "source_dates": [
+      "2026-10-01"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-5",
+     "day": "fri",
+     "pos": 5,
+     "main": true,
+     "idea_id": null,
+     "off_id": null,
+     "names": [
+      "Anthropic"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "ec00ae05aa633803",
+     "source_dates": [
+      "2026-10-12",
+      "2026-10-13"
+     ],
+     "from_press": null
+    }
+   ],
+   "refusals": [],
+   "filed": [],
+   "answers": [],
+   "mentions": [],
+   "asks": [],
+   "picks": [
+    "fri-2",
+    "mon-1",
+    "wed-1"
+   ],
+   "approvals": [],
+   "answers_ask": []
+  },
+  {
+   "week": "2026-10-26",
+   "known_before": "2026-10-25T23:59:59",
+   "options": [
+    {
+     "ref": "mon-1",
+     "day": "mon",
+     "pos": 1,
+     "main": true,
+     "idea_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+     "off_id": null,
+     "names": [
+      "Disney",
+      "Character.AI",
+      "Google"
+     ],
+     "covers": [],
+     "source_kind": "inspo",
+     "recommended": false,
+     "text16": "64a99247f3524f1e",
+     "source_dates": [
+      "2026-10-12",
+      "2026-10-19"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "mon-2",
+     "day": "mon",
+     "pos": 2,
+     "main": true,
+     "idea_id": "987a0655-b9fd-4dc6-bf1c-c694ad59a4c6",
+     "off_id": null,
+     "names": [
+      "Meta",
+      "Facebook",
+      "Instagram",
+      "Mark Zuckerberg"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "60928606e4b85817",
+     "source_dates": [
+      "2026-10-21"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "mon-3",
+     "day": "mon",
+     "pos": 3,
+     "main": true,
+     "idea_id": "3e5f0e5a-0bf6-4bd9-b6b5-a207f33dc364",
+     "off_id": null,
+     "names": [
+      "Microsoft",
+      "Nvidia",
+      "Copilot",
+      "Maia"
+     ],
+     "covers": [],
+     "source_kind": "inspo",
+     "recommended": false,
+     "text16": "089fdb487f936369",
+     "source_dates": [
+      "2026-10-12"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "mon-4",
+     "day": "mon",
+     "pos": 4,
+     "main": true,
+     "idea_id": "2ca79772-b782-4101-a219-0baaa174fb3e",
+     "off_id": null,
+     "names": [
+      "OpenClaw",
+      "OpenAI"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "316a2f38b998f0fc",
+     "source_dates": [
+      "2026-10-21"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-1",
+     "day": "wed",
+     "pos": 1,
+     "main": true,
+     "idea_id": "b63d2507-dbb4-449d-bce4-f21e859ee2ad",
+     "off_id": null,
+     "names": [
+      "Anthropic",
+      "Claude Duet"
+     ],
+     "covers": [
+      "4077d778-8f73-410a-a142-26cd9e308d07",
+      "385a5da8-2cae-41ec-8fb6-2e328920664c"
+     ],
+     "source_kind": "inspo",
+     "recommended": false,
+     "text16": "8e6161f7fdb6c0fd",
+     "source_dates": [
+      "2026-10-21"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-2",
+     "day": "wed",
+     "pos": 2,
+     "main": true,
+     "idea_id": "4e1196bc-d8b0-4e9a-a2c8-bd4b15d800c3",
+     "off_id": null,
+     "names": [
+      "Meta",
+      "Gmail",
+      "Drive"
+     ],
+     "covers": [],
+     "source_kind": "his",
+     "recommended": false,
+     "text16": "71a04c660f9e0ef0",
+     "source_dates": [
+      "2026-10-17",
+      "2026-10-30"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-3",
+     "day": "wed",
+     "pos": 3,
+     "main": true,
+     "idea_id": "36a5de8a-6be1-4db4-a554-71629c243a1f",
+     "off_id": null,
+     "names": [
+      "Kling",
+      "China Kuaishou"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "43e8c2a9cc995dcd",
+     "source_dates": [
+      "2026-10-19"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-4",
+     "day": "wed",
+     "pos": 4,
+     "main": true,
+     "idea_id": "dd9bc2c6-0e75-4723-8673-9aea04cf43ab",
+     "off_id": null,
+     "names": [
+      "PHP",
+      "PHP2Shell",
+      "OpenAI"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "38a50ef85e77f8c2",
+     "source_dates": [
+      "2026-10-21"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-1",
+     "day": "fri",
+     "pos": 1,
+     "main": true,
+     "idea_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
+     "off_id": null,
+     "names": [
+      "Claude",
+      "Disney",
+      "Anthropic",
+      "Character.AI"
+     ],
+     "covers": [],
+     "source_kind": "inspo",
+     "recommended": false,
+     "text16": "623b3bf89c4fb0a1",
+     "source_dates": [
+      "2026-10-17"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-2",
+     "day": "fri",
+     "pos": 2,
+     "main": true,
+     "idea_id": "388c764e-318d-4225-a931-d117a47f13ad",
+     "off_id": null,
+     "names": [
+      "IMF",
+      "AI-driven",
+      "Anthropic",
+      "Jack Clark",
+      "Bangkok",
+      "Global Financial Stability Report"
+     ],
+     "covers": [],
+     "source_kind": "inspo",
+     "recommended": false,
+     "text16": "08a09ca456a527da",
+     "source_dates": [
+      "2026-10-17",
+      "2026-10-19"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-3",
+     "day": "fri",
+     "pos": 3,
+     "main": true,
+     "idea_id": "41f3a946-2596-4b39-ad96-e21651009f17",
+     "off_id": null,
+     "names": [
+      "OpenAI",
+      "Hugging Face"
+     ],
+     "covers": [],
+     "source_kind": "inspo",
+     "recommended": false,
+     "text16": "743c91b3773574ca",
+     "source_dates": [
+      "2026-10-22",
+      "2026-10-23"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-4",
+     "day": "fri",
+     "pos": 4,
+     "main": true,
+     "idea_id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
+     "off_id": null,
+     "names": [
+      "Kaseya",
+      "Linus Torvalds",
+      "Linux"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "31c05c66624b390f",
+     "source_dates": [
+      "2026-10-21"
+     ],
+     "from_press": null
+    }
+   ],
+   "refusals": [
+    {
+     "ref": "cue/96357092-6496-40f4-8769-092e40b3a811",
+     "at": "2026-10-24T08:38:10",
+     "week": null,
+     "day": null,
+     "idea_id": "a397253e-bfe1-4a84-babc-27d93fd2779d",
+     "option": null,
+     "hard": false,
+     "subjects": [],
+     "via": "wider_piece_context",
+     "said16": "5905f2ce45ed5dd3"
+    },
+    {
+     "ref": "drop/ea18db0c-60da-46ab-b4d4-114741585797",
+     "at": "2026-10-19T07:31:45",
+     "week": null,
+     "day": null,
+     "idea_id": "ea18db0c-60da-46ab-b4d4-114741585797",
+     "option": null,
+     "hard": true,
+     "subjects": [],
+     "via": "drop",
+     "said16": "e3b0c44298fc1c14"
+    }
+   ],
+   "filed": [],
+   "answers": [],
+   "mentions": [
+    {
+     "at": "2026-10-24T06:17:11",
+     "names": [],
+     "ref": "ask/385a5da8-2cae-41ec-8fb6-2e328920664c"
+    },
+    {
+     "at": "2026-10-24T08:36:04",
+     "names": [
+      "Anthropic",
+      "GitHub"
+     ],
+     "ref": "ask/45e0ead0-310b-4c74-9bd2-54305fb41539"
+    },
+    {
+     "at": "2026-10-24T08:36:55",
+     "names": [],
+     "ref": "ask/5b865aa9-463c-44c3-9352-73fda39fa18e"
+    },
+    {
+     "at": "2026-10-24T08:38:10",
+     "names": [
+      "Mind Up Instagram",
+      "X",
+      "YouTube"
+     ],
+     "ref": "ask/a397253e-bfe1-4a84-babc-27d93fd2779d"
+    },
+    {
+     "at": "2026-10-24T08:39:23",
+     "names": [
+      "Hannah Fry"
+     ],
+     "ref": "ask/d501ae8a-bce1-4964-89a0-63bf076bc641"
+    },
+    {
+     "at": "2026-10-19T07:31:42",
+     "names": [
+      "Disney",
+      "Google"
+     ],
+     "ref": "cue/664ab540-7722-4d5a-a199-6be34d5947d3"
+    },
+    {
+     "at": "2026-10-19T07:31:43",
+     "names": [],
+     "ref": "cue/f67ea1c9-3bbf-4b6f-b03d-37401a04de95"
+    },
+    {
+     "at": "2026-10-19T07:31:43",
+     "names": [
+      "IP",
+      "OpenAI"
+     ],
+     "ref": "cue/3aa537c7-bc4e-41d1-a27e-a1496162a1d5"
+    },
+    {
+     "at": "2026-10-24T06:17:11",
+     "names": [],
+     "ref": "cue/86295389-e804-4d81-a265-96bae74fe77c"
+    },
+    {
+     "at": "2026-10-24T08:36:55",
+     "names": [],
+     "ref": "cue/8b529898-1665-4981-8c1c-d9bf0d50b6c7"
+    },
+    {
+     "at": "2026-10-24T08:38:10",
+     "names": [
+      "Mind Up Instagram",
+      "X",
+      "YouTube"
+     ],
+     "ref": "cue/96357092-6496-40f4-8769-092e40b3a811"
+    }
+   ],
+   "asks": [
+    "385a5da8-2cae-41ec-8fb6-2e328920664c",
+    "45e0ead0-310b-4c74-9bd2-54305fb41539",
+    "5b865aa9-463c-44c3-9352-73fda39fa18e",
+    "a397253e-bfe1-4a84-babc-27d93fd2779d",
+    "d501ae8a-bce1-4964-89a0-63bf076bc641"
+   ],
+   "picks": [
+    "fri-1",
+    "mon-1",
+    "wed-1"
+   ],
+   "approvals": [],
+   "answers_ask": [
+    "wed-1"
+   ]
+  },
+  {
+   "week": "2026-11-02",
+   "known_before": "2026-10-31T00:00:00",
+   "options": [
+    {
+     "ref": "off-tue-translator",
+     "day": "tue",
+     "pos": 1,
+     "main": false,
+     "idea_id": null,
+     "off_id": "translator",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e3b0c44298fc1c14",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-tue-claudejobs",
+     "day": "tue",
+     "pos": 2,
+     "main": false,
+     "idea_id": null,
+     "off_id": "claudejobs",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e3b0c44298fc1c14",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-thu-puppy",
+     "day": "thu",
+     "pos": 1,
+     "main": false,
+     "idea_id": null,
+     "off_id": "puppy",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e3b0c44298fc1c14",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-thu-actsfirst",
+     "day": "thu",
+     "pos": 2,
+     "main": false,
+     "idea_id": null,
+     "off_id": "actsfirst",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e3b0c44298fc1c14",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-sat-goodnews",
+     "day": "sat",
+     "pos": 1,
+     "main": false,
+     "idea_id": null,
+     "off_id": "goodnews",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e3b0c44298fc1c14",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-sat-aipassports",
+     "day": "sat",
+     "pos": 2,
+     "main": false,
+     "idea_id": null,
+     "off_id": "aipassports",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e3b0c44298fc1c14",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-sun-samequestion",
+     "day": "sun",
+     "pos": 1,
+     "main": false,
+     "idea_id": null,
+     "off_id": "samequestion",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e3b0c44298fc1c14",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-sun-weekin3",
+     "day": "sun",
+     "pos": 2,
+     "main": false,
+     "idea_id": null,
+     "off_id": "weekin3",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e3b0c44298fc1c14",
+     "source_dates": [],
+     "from_press": null
+    }
+   ],
+   "refusals": [
+    {
+     "ref": "cue/96357092-6496-40f4-8769-092e40b3a811",
+     "at": "2026-10-24T08:38:10",
+     "week": null,
+     "day": null,
+     "idea_id": "a397253e-bfe1-4a84-babc-27d93fd2779d",
+     "option": null,
+     "hard": false,
+     "subjects": [],
+     "via": "wider_piece_context",
+     "said16": "5905f2ce45ed5dd3"
+    },
+    {
+     "ref": "cue/fe04d8db-04cf-45ea-8410-7e72db580454",
+     "at": "2026-10-26T09:28:26",
+     "week": null,
+     "day": null,
+     "idea_id": "dd9bc2c6-0e75-4723-8673-9aea04cf43ab",
+     "option": null,
+     "hard": true,
+     "subjects": [],
+     "via": "not_for_us",
+     "said16": "739f3d25322e0bc2"
+    },
+    {
+     "ref": "drop/ea18db0c-60da-46ab-b4d4-114741585797",
+     "at": "2026-10-19T07:31:45",
+     "week": null,
+     "day": null,
+     "idea_id": "ea18db0c-60da-46ab-b4d4-114741585797",
+     "option": null,
+     "hard": true,
+     "subjects": [],
+     "via": "drop",
+     "said16": "e3b0c44298fc1c14"
+    }
+   ],
+   "filed": [],
+   "answers": [],
+   "mentions": [
+    {
+     "at": "2026-10-24T06:17:11",
+     "names": [],
+     "ref": "ask/385a5da8-2cae-41ec-8fb6-2e328920664c"
+    },
+    {
+     "at": "2026-10-24T08:36:04",
+     "names": [
+      "Anthropic",
+      "GitHub"
+     ],
+     "ref": "ask/45e0ead0-310b-4c74-9bd2-54305fb41539"
+    },
+    {
+     "at": "2026-10-24T08:36:55",
+     "names": [],
+     "ref": "ask/5b865aa9-463c-44c3-9352-73fda39fa18e"
+    },
+    {
+     "at": "2026-10-24T08:38:10",
+     "names": [
+      "Mind Up Instagram",
+      "X",
+      "YouTube"
+     ],
+     "ref": "ask/a397253e-bfe1-4a84-babc-27d93fd2779d"
+    },
+    {
+     "at": "2026-10-24T08:39:23",
+     "names": [
+      "Hannah Fry"
+     ],
+     "ref": "ask/d501ae8a-bce1-4964-89a0-63bf076bc641"
+    },
+    {
+     "at": "2026-10-28T03:43:51",
+     "names": [],
+     "ref": "ask/2b582f5a-52fb-49a3-8502-0e9bd914f772"
+    },
+    {
+     "at": "2026-10-28T05:53:55",
+     "names": [],
+     "ref": "ask/e73a0110-a108-456c-8781-350259b1b196"
+    },
+    {
+     "at": "2026-10-28T05:53:55",
+     "names": [],
+     "ref": "ask/501c4fd1-4aa1-4cdd-b716-03e70c89c283"
+    },
+    {
+     "at": "2026-10-28T06:08:52",
+     "names": [],
+     "ref": "ask/87a82f7f-6411-41c9-92b1-a52c4f3e4f8a"
+    },
+    {
+     "at": "2026-10-28T23:08:52",
+     "names": [],
+     "ref": "ask/7f43c6b5-a468-40f3-ad66-c988cdc16072"
+    },
+    {
+     "at": "2026-10-19T07:31:42",
+     "names": [
+      "Disney",
+      "Google"
+     ],
+     "ref": "cue/664ab540-7722-4d5a-a199-6be34d5947d3"
+    },
+    {
+     "at": "2026-10-19T07:31:43",
+     "names": [],
+     "ref": "cue/f67ea1c9-3bbf-4b6f-b03d-37401a04de95"
+    },
+    {
+     "at": "2026-10-28T05:51:08",
+     "names": [],
+     "ref": "cue/a3a4f286-4369-4cb9-b11a-12861641aebd"
+    },
+    {
+     "at": "2026-10-28T05:52:05",
+     "names": [],
+     "ref": "cue/c05ef79f-fbc2-4c6f-b2f9-1eaa39a4425b"
+    },
+    {
+     "at": "2026-10-19T07:31:43",
+     "names": [
+      "IP",
+      "OpenAI"
+     ],
+     "ref": "cue/3aa537c7-bc4e-41d1-a27e-a1496162a1d5"
+    },
+    {
+     "at": "2026-10-24T06:17:11",
+     "names": [],
+     "ref": "cue/86295389-e804-4d81-a265-96bae74fe77c"
+    },
+    {
+     "at": "2026-10-26T09:28:23",
+     "names": [],
+     "ref": "cue/7192a8ee-628c-469a-9a90-9b41e9ce5139"
+    },
+    {
+     "at": "2026-10-26T09:28:28",
+     "names": [],
+     "ref": "cue/68c03220-20a4-4795-930c-e8880cef7db8"
+    },
+    {
+     "at": "2026-10-27T15:58:16",
+     "names": [],
+     "ref": "cue/93503b71-1dd8-4391-8343-2713f674564c"
+    },
+    {
+     "at": "2026-10-27T19:50:33",
+     "names": [],
+     "ref": "cue/d3a3d8bd-832d-4ced-8ab1-d4bdcc475636"
+    },
+    {
+     "at": "2026-10-28T22:57:28",
+     "names": [],
+     "ref": "cue/7107fa22-7657-4034-b27c-1c1a4ef64739"
+    },
+    {
+     "at": "2026-10-24T08:36:55",
+     "names": [],
+     "ref": "cue/8b529898-1665-4981-8c1c-d9bf0d50b6c7"
+    },
+    {
+     "at": "2026-10-24T08:38:10",
+     "names": [
+      "Mind Up Instagram",
+      "X",
+      "YouTube"
+     ],
+     "ref": "cue/96357092-6496-40f4-8769-092e40b3a811"
+    },
+    {
+     "at": "2026-10-26T09:28:24",
+     "names": [],
+     "ref": "cue/3df46ee2-c8a4-468d-9fee-20a57ede203b"
+    },
+    {
+     "at": "2026-10-26T09:28:25",
+     "names": [],
+     "ref": "cue/ffe780eb-429d-449c-b7bb-7b941acfd328"
+    },
+    {
+     "at": "2026-10-26T09:28:25",
+     "names": [],
+     "ref": "cue/644e95e1-9a3e-4440-a573-359159b66fa7"
+    },
+    {
+     "at": "2026-10-26T09:28:27",
+     "names": [],
+     "ref": "cue/cf440d24-77c2-4698-a787-e1e9008c4b0e"
+    },
+    {
+     "at": "2026-10-26T09:28:26",
+     "names": [],
+     "ref": "cue/fe04d8db-04cf-45ea-8410-7e72db580454"
+    }
+   ],
+   "asks": [
+    "2b582f5a-52fb-49a3-8502-0e9bd914f772",
+    "385a5da8-2cae-41ec-8fb6-2e328920664c",
+    "45e0ead0-310b-4c74-9bd2-54305fb41539",
+    "501c4fd1-4aa1-4cdd-b716-03e70c89c283",
+    "5b865aa9-463c-44c3-9352-73fda39fa18e",
+    "7f43c6b5-a468-40f3-ad66-c988cdc16072",
+    "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a",
+    "a397253e-bfe1-4a84-babc-27d93fd2779d",
+    "d501ae8a-bce1-4964-89a0-63bf076bc641",
+    "e73a0110-a108-456c-8781-350259b1b196"
+   ],
+   "picks": [],
+   "approvals": [
+    "off-thu-actsfirst",
+    "off-thu-puppy",
+    "off-tue-claudejobs",
+    "off-tue-translator"
+   ],
+   "answers_ask": []
+  },
+  {
+   "week": "2026-11-09",
+   "known_before": "2026-11-02T23:59:59",
+   "options": [
+    {
+     "ref": "wed-1",
+     "day": "wed",
+     "pos": 1,
+     "main": true,
+     "idea_id": "b38fa06d-e09e-4c3f-8218-638a908c9c72",
+     "off_id": null,
+     "names": [
+      "Anthropic",
+      "Git",
+      "GitHub"
+     ],
+     "covers": [
+      "45e0ead0-310b-4c74-9bd2-54305fb41539"
+     ],
+     "source_kind": "his",
+     "recommended": false,
+     "text16": "123316a21dcadb7e",
+     "source_dates": [
+      "2026-10-13",
+      "2026-10-26"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-2",
+     "day": "wed",
+     "pos": 2,
+     "main": true,
+     "idea_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+     "off_id": null,
+     "names": [
+      "Movin",
+      "Grammy"
+     ],
+     "covers": [],
+     "source_kind": "his",
+     "recommended": false,
+     "text16": "a6e3cfa07c29785f",
+     "source_dates": [
+      "2026-09-26",
+      "2026-11-16"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-3",
+     "day": "wed",
+     "pos": 3,
+     "main": true,
+     "idea_id": "054159ab-9159-4a7c-9e5e-923d7e99a433",
+     "off_id": null,
+     "names": [
+      "Google",
+      "OpenAI",
+      "Claude",
+      "Home Depot"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "ff0372d0f45f5bd9",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "wed-4",
+     "day": "wed",
+     "pos": 4,
+     "main": true,
+     "idea_id": "428d8b21-2b59-4cfc-ba70-8c38b3fe1cc3",
+     "off_id": null,
+     "names": [
+      "Alibaba",
+      "Palisade"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "44848a73c7108d92",
+     "source_dates": [
+      "2026-10-27"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-1",
+     "day": "fri",
+     "pos": 1,
+     "main": true,
+     "idea_id": "56bb9c22-c813-47c1-bf9b-751288c60096",
+     "off_id": null,
+     "names": [
+      "Claude",
+      "Justin Bieber",
+      "Grandma",
+      "Justin Bieber Baby",
+      "Anthropic"
+     ],
+     "covers": [],
+     "source_kind": "his",
+     "recommended": false,
+     "text16": "9fadc328488ae46e",
+     "source_dates": [
+      "2026-10-16",
+      "2026-10-19"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-2",
+     "day": "fri",
+     "pos": 2,
+     "main": true,
+     "idea_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+     "off_id": null,
+     "names": [
+      "Amazon"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "328cff76fa31f425",
+     "source_dates": [
+      "2026-10-21",
+      "2026-10-28"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-3",
+     "day": "fri",
+     "pos": 3,
+     "main": true,
+     "idea_id": "941c3147-a010-4ac5-a7bf-0bdd67c2a323",
+     "off_id": null,
+     "names": [
+      "Infosys"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "c0d484f59c86799b",
+     "source_dates": [
+      "2026-10-28"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-4",
+     "day": "fri",
+     "pos": 4,
+     "main": true,
+     "idea_id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+     "off_id": null,
+     "names": [
+      "PDF"
+     ],
+     "covers": [],
+     "source_kind": "inspo",
+     "recommended": false,
+     "text16": "5fdfe5a94f54d0ef",
+     "source_dates": [
+      "2026-10-22",
+      "2026-10-26"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-tue-shell",
+     "day": "tue",
+     "pos": 1,
+     "main": false,
+     "idea_id": null,
+     "off_id": "shell",
+     "names": [
+      "Character.AI",
+      "Google",
+      "Disney"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": true,
+     "text16": "9aaefefd4d3634ed",
+     "source_dates": [
+      "2026-10-13"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-tue-mcpskin",
+     "day": "tue",
+     "pos": 2,
+     "main": false,
+     "idea_id": null,
+     "off_id": "mcpskin",
+     "names": [
+      "MCP",
+      "Anthropic"
+     ],
+     "covers": [
+      "2162c904-b0ff-452b-81aa-b8cfd7ec1909"
+     ],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "2381fb57d23a9855",
+     "source_dates": [
+      "2025-11-04"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-tue-homework",
+     "day": "tue",
+     "pos": 3,
+     "main": false,
+     "idea_id": null,
+     "off_id": "homework",
+     "names": [
+      "Home Depot",
+      "Google",
+      "OpenAI"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "03b39586f3d7099b",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-tue-quoteline",
+     "day": "tue",
+     "pos": 4,
+     "main": false,
+     "idea_id": null,
+     "off_id": "quoteline",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "44ffa52557b18b5e",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-thu-gitbroke",
+     "day": "thu",
+     "pos": 1,
+     "main": false,
+     "idea_id": null,
+     "off_id": "gitbroke",
+     "names": [
+      "Anthropic",
+      "Git"
+     ],
+     "covers": [
+      "45e0ead0-310b-4c74-9bd2-54305fb41539"
+     ],
+     "source_kind": null,
+     "recommended": true,
+     "text16": "797c5be66284a760",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-thu-phonehome",
+     "day": "thu",
+     "pos": 2,
+     "main": false,
+     "idea_id": null,
+     "off_id": "phonehome",
+     "names": [
+      "Alibaba Qwen",
+      "Alibaba"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "e325e0cec6250b2c",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-thu-burntokens",
+     "day": "thu",
+     "pos": 3,
+     "main": false,
+     "idea_id": null,
+     "off_id": "burntokens",
+     "names": [
+      "Amazon"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "67d21aa578979a0b",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-thu-otherside",
+     "day": "thu",
+     "pos": 4,
+     "main": false,
+     "idea_id": null,
+     "off_id": "otherside",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "c49e99ac025f01eb",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-sat-spotai",
+     "day": "sat",
+     "pos": 2,
+     "main": false,
+     "idea_id": null,
+     "off_id": "spotai",
+     "names": [
+      "AI-in-music",
+      "Movin",
+      "Suno"
+     ],
+     "covers": [
+      "90b654ca-204a-4aef-bffe-19cfa7a2db19",
+      "f6327ce0-a414-4365-98df-635c1780523c"
+     ],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "a915dfc34b349f7c",
+     "source_dates": [
+      "2026-09-26"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-sat-infosys",
+     "day": "sat",
+     "pos": 3,
+     "main": false,
+     "idea_id": null,
+     "off_id": "infosys",
+     "names": [
+      "Infosys"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "6f3fabc55fcddbda",
+     "source_dates": [
+      "2026-10-28"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-sat-oldproof",
+     "day": "sat",
+     "pos": 4,
+     "main": false,
+     "idea_id": null,
+     "off_id": "oldproof",
+     "names": [
+      "Axiom"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": true,
+     "text16": "da708f66cd83a142",
+     "source_dates": [],
+     "from_press": null
+    }
+   ],
+   "refusals": [
+    {
+     "ref": "2026-11-02/queue/off-sun-samequestion",
+     "at": "2026-11-02T10:42:38",
+     "week": "2026-11-02",
+     "day": "sun",
+     "idea_id": "off-sun-samequestion",
+     "option": "samequestion",
+     "hard": true,
+     "subjects": [],
+     "via": "reject",
+     "said16": "d45324de42204b6c"
+    },
+    {
+     "ref": "cue/96357092-6496-40f4-8769-092e40b3a811",
+     "at": "2026-10-24T08:38:10",
+     "week": null,
+     "day": null,
+     "idea_id": "a397253e-bfe1-4a84-babc-27d93fd2779d",
+     "option": null,
+     "hard": false,
+     "subjects": [],
+     "via": "wider_piece_context",
+     "said16": "5905f2ce45ed5dd3"
+    },
+    {
+     "ref": "cue/fe04d8db-04cf-45ea-8410-7e72db580454",
+     "at": "2026-10-26T09:28:26",
+     "week": null,
+     "day": null,
+     "idea_id": "dd9bc2c6-0e75-4723-8673-9aea04cf43ab",
+     "option": null,
+     "hard": true,
+     "subjects": [],
+     "via": "not_for_us",
+     "said16": "739f3d25322e0bc2"
+    },
+    {
+     "ref": "drop/ea18db0c-60da-46ab-b4d4-114741585797",
+     "at": "2026-10-19T07:31:45",
+     "week": null,
+     "day": null,
+     "idea_id": "ea18db0c-60da-46ab-b4d4-114741585797",
+     "option": null,
+     "hard": true,
+     "subjects": [],
+     "via": "drop",
+     "said16": "e3b0c44298fc1c14"
+    }
+   ],
+   "filed": [],
+   "answers": [
+    {
+     "ref": "2026-11-02/queue/off-sun-samequestion",
+     "kind": "rejected",
+     "at": "2026-11-02T10:42:38",
+     "week": "2026-11-02",
+     "day": "sun",
+     "doc": "queue/off-sun-samequestion",
+     "idea_id": "off-sun-samequestion",
+     "option": "samequestion",
+     "said16": "d45324de42204b6c",
+     "questions": 0,
+     "was16": null
+    },
+    {
+     "ref": "2026-11-02/queue/off-sat-aipassports",
+     "kind": "improved",
+     "at": "2026-11-02T10:42:04",
+     "week": "2026-11-02",
+     "day": "sat",
+     "doc": "queue/off-sat-aipassports",
+     "idea_id": "off-sat-aipassports",
+     "option": "aipassports",
+     "said16": "52cf9e436e696e5b",
+     "questions": 0,
+     "was16": null
+    },
+    {
+     "ref": "2026-11-02/queue/off-sat-goodnews",
+     "kind": "improved",
+     "at": "2026-11-02T10:40:08",
+     "week": "2026-11-02",
+     "day": "sat",
+     "doc": "queue/off-sat-goodnews",
+     "idea_id": "off-sat-goodnews",
+     "option": "goodnews",
+     "said16": "17d41f72718e92ab",
+     "questions": 0,
+     "was16": "49b3c55779a598bc"
+    },
+    {
+     "ref": "2026-11-02/queue/off-thu-actsfirst",
+     "kind": "improved",
+     "at": "2026-11-02T10:39:40",
+     "week": "2026-11-02",
+     "day": "thu",
+     "doc": "queue/off-thu-actsfirst",
+     "idea_id": "off-thu-actsfirst",
+     "option": "actsfirst",
+     "said16": "8d794efc3aa4ec61",
+     "questions": 0,
+     "was16": null
+    }
+   ],
+   "mentions": [
+    {
+     "at": "2026-10-24T06:17:11",
+     "names": [],
+     "ref": "ask/385a5da8-2cae-41ec-8fb6-2e328920664c"
+    },
+    {
+     "at": "2026-10-24T08:36:04",
+     "names": [
+      "Anthropic",
+      "GitHub"
+     ],
+     "ref": "ask/45e0ead0-310b-4c74-9bd2-54305fb41539"
+    },
+    {
+     "at": "2026-10-24T08:36:55",
+     "names": [],
+     "ref": "ask/5b865aa9-463c-44c3-9352-73fda39fa18e"
+    },
+    {
+     "at": "2026-10-24T08:38:10",
+     "names": [
+      "Mind Up Instagram",
+      "X",
+      "YouTube"
+     ],
+     "ref": "ask/a397253e-bfe1-4a84-babc-27d93fd2779d"
+    },
+    {
+     "at": "2026-10-24T08:39:23",
+     "names": [
+      "Hannah Fry"
+     ],
+     "ref": "ask/d501ae8a-bce1-4964-89a0-63bf076bc641"
+    },
+    {
+     "at": "2026-10-28T03:43:51",
+     "names": [],
+     "ref": "ask/2b582f5a-52fb-49a3-8502-0e9bd914f772"
+    },
+    {
+     "at": "2026-10-28T05:53:55",
+     "names": [],
+     "ref": "ask/e73a0110-a108-456c-8781-350259b1b196"
+    },
+    {
+     "at": "2026-10-28T05:53:55",
+     "names": [],
+     "ref": "ask/501c4fd1-4aa1-4cdd-b716-03e70c89c283"
+    },
+    {
+     "at": "2026-10-28T06:08:52",
+     "names": [],
+     "ref": "ask/87a82f7f-6411-41c9-92b1-a52c4f3e4f8a"
+    },
+    {
+     "at": "2026-10-28T23:08:52",
+     "names": [],
+     "ref": "ask/7f43c6b5-a468-40f3-ad66-c988cdc16072"
+    },
+    {
+     "at": "2026-10-31T16:39:19",
+     "names": [
+      "AI-generated"
+     ],
+     "ref": "ask/90b654ca-204a-4aef-bffe-19cfa7a2db19"
+    },
+    {
+     "at": "2026-10-31T16:39:19",
+     "names": [
+      "AI-generated"
+     ],
+     "ref": "ask/f6327ce0-a414-4365-98df-635c1780523c"
+    },
+    {
+     "at": "2026-10-31T20:48:51",
+     "names": [
+      "Instagram",
+      "TikTok"
+     ],
+     "ref": "ask/e829fbfb-278d-45e2-9607-73af4c04310d"
+    },
+    {
+     "at": "2026-10-31T21:13:50",
+     "names": [],
+     "ref": "ask/aae54ef9-0bd7-49a8-959e-96695e1a51a8"
+    },
+    {
+     "at": "2026-11-02T14:19:27",
+     "names": [],
+     "ref": "ask/2162c904-b0ff-452b-81aa-b8cfd7ec1909"
+    },
+    {
+     "at": "2026-11-02T21:48:54",
+     "names": [],
+     "ref": "ask/93342d88-0320-4e56-a3c1-f25889d8add4"
+    },
+    {
+     "at": "2026-11-02T23:23:54",
+     "names": [
+      "ASAP"
+     ],
+     "ref": "ask/da3cacd1-b038-4827-bd22-1d4d9be07889"
+    },
+    {
+     "at": "2026-11-02T10:42:38",
+     "names": [
+      "Publishing"
+     ],
+     "ref": "2026-11-02/queue/off-sun-samequestion"
+    },
+    {
+     "at": "2026-11-02T10:42:04",
+     "names": [
+      "Sovreign",
+      "China",
+      "Italy"
+     ],
+     "ref": "2026-11-02/queue/off-sat-aipassports"
+    },
+    {
+     "at": "2026-11-02T10:40:08",
+     "names": [],
+     "ref": "2026-11-02/queue/off-sat-goodnews"
+    },
+    {
+     "at": "2026-11-02T10:39:40",
+     "names": [],
+     "ref": "2026-11-02/queue/off-thu-actsfirst"
+    },
+    {
+     "at": "2026-10-19T07:31:42",
+     "names": [
+      "Disney",
+      "Google"
+     ],
+     "ref": "cue/664ab540-7722-4d5a-a199-6be34d5947d3"
+    },
+    {
+     "at": "2026-10-19T07:31:43",
+     "names": [],
+     "ref": "cue/f67ea1c9-3bbf-4b6f-b03d-37401a04de95"
+    },
+    {
+     "at": "2026-10-28T05:51:08",
+     "names": [],
+     "ref": "cue/a3a4f286-4369-4cb9-b11a-12861641aebd"
+    },
+    {
+     "at": "2026-10-28T05:52:05",
+     "names": [],
+     "ref": "cue/c05ef79f-fbc2-4c6f-b2f9-1eaa39a4425b"
+    },
+    {
+     "at": "2026-10-31T20:42:49",
+     "names": [
+      "Instagram",
+      "TikTok"
+     ],
+     "ref": "cue/90bc675c-9d29-45f4-8a72-78f51928742c"
+    },
+    {
+     "at": "2026-10-31T21:01:55",
+     "names": [],
+     "ref": "cue/ea9db81c-031e-44bb-b04a-b56d94b81006"
+    },
+    {
+     "at": "2026-10-19T07:31:43",
+     "names": [
+      "IP",
+      "OpenAI"
+     ],
+     "ref": "cue/3aa537c7-bc4e-41d1-a27e-a1496162a1d5"
+    },
+    {
+     "at": "2026-10-24T06:17:11",
+     "names": [],
+     "ref": "cue/86295389-e804-4d81-a265-96bae74fe77c"
+    },
+    {
+     "at": "2026-10-26T09:28:23",
+     "names": [],
+     "ref": "cue/7192a8ee-628c-469a-9a90-9b41e9ce5139"
+    },
+    {
+     "at": "2026-10-26T09:28:28",
+     "names": [],
+     "ref": "cue/68c03220-20a4-4795-930c-e8880cef7db8"
+    },
+    {
+     "at": "2026-10-27T15:58:16",
+     "names": [],
+     "ref": "cue/93503b71-1dd8-4391-8343-2713f674564c"
+    },
+    {
+     "at": "2026-10-27T19:50:33",
+     "names": [],
+     "ref": "cue/d3a3d8bd-832d-4ced-8ab1-d4bdcc475636"
+    },
+    {
+     "at": "2026-10-28T22:57:28",
+     "names": [],
+     "ref": "cue/7107fa22-7657-4034-b27c-1c1a4ef64739"
+    },
+    {
+     "at": "2026-10-31T16:37:17",
+     "names": [],
+     "ref": "cue/29efa199-7c5a-4d58-8621-7d7f2d4ba0fb"
+    },
+    {
+     "at": "2026-11-02T14:08:53",
+     "names": [],
+     "ref": "cue/707c0eb7-6ea9-41a7-8642-22909fc84212"
+    },
+    {
+     "at": "2026-11-02T23:19:21",
+     "names": [
+      "ASAP"
+     ],
+     "ref": "cue/cd817c71-1641-4550-8992-84ef83a49449"
+    },
+    {
+     "at": "2026-10-24T08:36:55",
+     "names": [],
+     "ref": "cue/8b529898-1665-4981-8c1c-d9bf0d50b6c7"
+    },
+    {
+     "at": "2026-10-24T08:38:10",
+     "names": [
+      "Mind Up Instagram",
+      "X",
+      "YouTube"
+     ],
+     "ref": "cue/96357092-6496-40f4-8769-092e40b3a811"
+    },
+    {
+     "at": "2026-10-26T09:28:24",
+     "names": [],
+     "ref": "cue/3df46ee2-c8a4-468d-9fee-20a57ede203b"
+    },
+    {
+     "at": "2026-10-26T09:28:25",
+     "names": [],
+     "ref": "cue/ffe780eb-429d-449c-b7bb-7b941acfd328"
+    },
+    {
+     "at": "2026-10-26T09:28:25",
+     "names": [],
+     "ref": "cue/644e95e1-9a3e-4440-a573-359159b66fa7"
+    },
+    {
+     "at": "2026-10-26T09:28:27",
+     "names": [],
+     "ref": "cue/cf440d24-77c2-4698-a787-e1e9008c4b0e"
+    },
+    {
+     "at": "2026-11-02T21:43:02",
+     "names": [],
+     "ref": "cue/0484e869-b193-406e-8a79-01904fde2849"
+    },
+    {
+     "at": "2026-10-26T09:28:26",
+     "names": [],
+     "ref": "cue/fe04d8db-04cf-45ea-8410-7e72db580454"
+    }
+   ],
+   "asks": [
+    "2162c904-b0ff-452b-81aa-b8cfd7ec1909",
+    "2b582f5a-52fb-49a3-8502-0e9bd914f772",
+    "385a5da8-2cae-41ec-8fb6-2e328920664c",
+    "45e0ead0-310b-4c74-9bd2-54305fb41539",
+    "501c4fd1-4aa1-4cdd-b716-03e70c89c283",
+    "5b865aa9-463c-44c3-9352-73fda39fa18e",
+    "7f43c6b5-a468-40f3-ad66-c988cdc16072",
+    "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a",
+    "90b654ca-204a-4aef-bffe-19cfa7a2db19",
+    "93342d88-0320-4e56-a3c1-f25889d8add4",
+    "a397253e-bfe1-4a84-babc-27d93fd2779d",
+    "aae54ef9-0bd7-49a8-959e-96695e1a51a8",
+    "d501ae8a-bce1-4964-89a0-63bf076bc641",
+    "da3cacd1-b038-4827-bd22-1d4d9be07889",
+    "e73a0110-a108-456c-8781-350259b1b196",
+    "e829fbfb-278d-45e2-9607-73af4c04310d",
+    "f6327ce0-a414-4365-98df-635c1780523c"
+   ],
+   "picks": [
+    "fri-2",
+    "fri-4",
+    "wed-1",
+    "wed-2"
+   ],
+   "approvals": [
+    "off-sat-oldproof",
+    "off-thu-gitbroke",
+    "off-tue-homework",
+    "off-tue-mcpskin",
+    "off-tue-shell"
+   ],
+   "answers_ask": [
+    "off-sat-spotai",
+    "off-thu-gitbroke",
+    "off-tue-mcpskin",
+    "wed-1"
+   ]
+  },
+  {
+   "week": "2026-11-16",
+   "known_before": "2026-11-07T23:59:59",
+   "options": [
+    {
+     "ref": "mon-1",
+     "day": "mon",
+     "pos": 1,
+     "main": true,
+     "idea_id": "941c3147-a010-4ac5-a7bf-0bdd67c2a323",
+     "off_id": null,
+     "names": [
+      "Infosys"
+     ],
+     "covers": [],
+     "source_kind": "his",
+     "recommended": false,
+     "text16": "ee5530047400db4a",
+     "source_dates": [
+      "2026-10-28"
+     ],
+     "from_press": "2026-11-09/queue/fri-3"
+    },
+    {
+     "ref": "mon-2",
+     "day": "mon",
+     "pos": 2,
+     "main": true,
+     "idea_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+     "off_id": null,
+     "names": [
+      "Oracle"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "47c98e44daa4884b",
+     "source_dates": [
+      "2026-11-02"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "mon-3",
+     "day": "mon",
+     "pos": 3,
+     "main": true,
+     "idea_id": "34d08cbb-35ca-4140-ba00-cf673cdc82c3",
+     "off_id": null,
+     "names": [
+      "ChatGPT",
+      "Business",
+      "Codex"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "4457f22b7aabe297",
+     "source_dates": [
+      "2026-11-01"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "mon-4",
+     "day": "mon",
+     "pos": 4,
+     "main": true,
+     "idea_id": "25eb28e1-928a-43bd-8aa8-18bb72174d89",
+     "off_id": null,
+     "names": [
+      "Anthropic"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "5eab9d3571120b23",
+     "source_dates": [
+      "2026-11-02"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-1",
+     "day": "wed",
+     "pos": 1,
+     "main": true,
+     "idea_id": "a57cf3eb-d957-489a-8939-321c3d54b9b7",
+     "off_id": null,
+     "names": [],
+     "covers": [
+      "dd93bfb1-20be-4c13-93b7-3c34ded7544b"
+     ],
+     "source_kind": "his",
+     "recommended": false,
+     "text16": "06c185438b9b501e",
+     "source_dates": [
+      "2026-11-02"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-2",
+     "day": "wed",
+     "pos": 2,
+     "main": true,
+     "idea_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+     "off_id": null,
+     "names": [
+      "Retool",
+      "Starbucks",
+      "Microsoft"
+     ],
+     "covers": [
+      "6eaaf127-ed4e-48bc-86a0-54c9e99aa428"
+     ],
+     "source_kind": "his",
+     "recommended": false,
+     "text16": "ecc7920be64501a6",
+     "source_dates": [
+      "2026-02-17",
+      "2026-07-09",
+      "2026-11-05"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-3",
+     "day": "wed",
+     "pos": 3,
+     "main": true,
+     "idea_id": "0e7bb83f-3ad2-495e-9f7c-8000e0c074bd",
+     "off_id": null,
+     "names": [
+      "OpenAI"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "3f7b6a0ed3acefeb",
+     "source_dates": [
+      "2026-11-03"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "wed-4",
+     "day": "wed",
+     "pos": 4,
+     "main": true,
+     "idea_id": "902c3db7-41e2-4cd9-9ac6-b5bca71577f1",
+     "off_id": null,
+     "names": [
+      "DeepSeek",
+      "GLM-5.3"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "37d3f7a659dc3526",
+     "source_dates": [
+      "2026-11-06"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-1",
+     "day": "fri",
+     "pos": 1,
+     "main": true,
+     "idea_id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+     "off_id": null,
+     "names": [
+      "DNA",
+      "Axiom"
+     ],
+     "covers": [],
+     "source_kind": "his",
+     "recommended": false,
+     "text16": "eed9e5eb5a5bf623",
+     "source_dates": [
+      "2026-10-26"
+     ],
+     "from_press": "2026-11-09/queue/fri-4"
+    },
+    {
+     "ref": "fri-2",
+     "day": "fri",
+     "pos": 2,
+     "main": true,
+     "idea_id": "388c764e-318d-4225-a931-d117a47f13ad",
+     "off_id": null,
+     "names": [
+      "Anthropic",
+      "METR",
+      "OpenAI"
+     ],
+     "covers": [],
+     "source_kind": "his",
+     "recommended": false,
+     "text16": "1e41086299d729b8",
+     "source_dates": [
+      "2026-10-22",
+      "2026-11-02"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-3",
+     "day": "fri",
+     "pos": 3,
+     "main": true,
+     "idea_id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
+     "off_id": null,
+     "names": [
+      "GitHub",
+      "Kaseya"
+     ],
+     "covers": [],
+     "source_kind": "his",
+     "recommended": false,
+     "text16": "1eb53d5ea1272a90",
+     "source_dates": [
+      "2026-10-21",
+      "2026-10-28",
+      "2026-10-29"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "fri-4",
+     "day": "fri",
+     "pos": 4,
+     "main": true,
+     "idea_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+     "off_id": null,
+     "names": [
+      "Texas",
+      "OpenAI"
+     ],
+     "covers": [],
+     "source_kind": "engine",
+     "recommended": false,
+     "text16": "9eeab6c93a18d7f9",
+     "source_dates": [
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-tue-infosys",
+     "day": "tue",
+     "pos": 1,
+     "main": false,
+     "idea_id": null,
+     "off_id": "infosys",
+     "names": [
+      "Infosys"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": true,
+     "text16": "6f3fabc55fcddbda",
+     "source_dates": [
+      "2026-10-28"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-tue-burntokens",
+     "day": "tue",
+     "pos": 2,
+     "main": false,
+     "idea_id": null,
+     "off_id": "burntokens",
+     "names": [
+      "Amazon"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "3292c9ea0723f14d",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-tue-fuelgauge",
+     "day": "tue",
+     "pos": 3,
+     "main": false,
+     "idea_id": null,
+     "off_id": "fuelgauge",
+     "names": [
+      "ChatGPT",
+      "Business",
+      "Business Harder"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "224798bb5c76211d",
+     "source_dates": [
+      "2026-11-01"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-tue-povteach",
+     "day": "tue",
+     "pos": 4,
+     "main": false,
+     "idea_id": null,
+     "off_id": "povteach",
+     "names": [],
+     "covers": [
+      "d16fe9ff-413c-47c4-ac53-c89e40d28489"
+     ],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "1875e6f787a5826e",
+     "source_dates": [],
+     "from_press": null
+    },
+    {
+     "ref": "off-thu-fortytoone",
+     "day": "thu",
+     "pos": 1,
+     "main": false,
+     "idea_id": null,
+     "off_id": "fortytoone",
+     "names": [
+      "OpenAI",
+      "Data"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": true,
+     "text16": "5cdfa973ed404502",
+     "source_dates": [
+      "2026-11-05"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-thu-lookalikes",
+     "day": "thu",
+     "pos": 2,
+     "main": false,
+     "idea_id": null,
+     "off_id": "lookalikes",
+     "names": [
+      "OpenAI Dots",
+      "Meta Muse",
+      "Grok Bot"
+     ],
+     "covers": [
+      "da3cacd1-b038-4827-bd22-1d4d9be07889",
+      "e829fbfb-278d-45e2-9607-73af4c04310d",
+      "e73a0110-a108-456c-8781-350259b1b196"
+     ],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "c77bd1ccdf11634e",
+     "source_dates": [
+      "2026-09-29",
+      "2026-11-05"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-thu-tinyfix",
+     "day": "thu",
+     "pos": 3,
+     "main": false,
+     "idea_id": null,
+     "off_id": "tinyfix",
+     "names": [
+      "Software"
+     ],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "ca26020da4816a37",
+     "source_dates": [
+      "2026-11-02"
+     ],
+     "from_press": null
+    },
+    {
+     "ref": "off-thu-swarmdeal",
+     "day": "thu",
+     "pos": 4,
+     "main": false,
+     "idea_id": null,
+     "off_id": "swarmdeal",
+     "names": [],
+     "covers": [],
+     "source_kind": null,
+     "recommended": false,
+     "text16": "6420b05915afda79",
+     "source_dates": [
+      "2026-11-06"
+     ],
+     "from_press": null
+    }
+   ],
+   "refusals": [
+    {
+     "ref": "2026-11-09/queue/wed-4",
+     "at": "2026-11-03T06:50:23",
+     "week": "2026-11-09",
+     "day": "wed",
+     "idea_id": "428d8b21-2b59-4cfc-ba70-8c38b3fe1cc3",
+     "option": null,
+     "hard": true,
+     "subjects": [],
+     "via": "reject",
+     "said16": "60046c07e20e8227"
+    },
+    {
+     "ref": "2026-11-09/queue/off-tue-quoteline",
+     "at": "2026-11-03T06:47:31",
+     "week": "2026-11-09",
+     "day": "tue",
+     "idea_id": "off-tue-quoteline",
+     "option": "quoteline",
+     "hard": true,
+     "subjects": [],
+     "via": "reject",
+     "said16": "a48d818bceb3eb87"
+    },
+    {
+     "ref": "2026-11-02/queue/off-sun-samequestion",
+     "at": "2026-11-02T10:42:38",
+     "week": "2026-11-02",
+     "day": "sun",
+     "idea_id": "off-sun-samequestion",
+     "option": "samequestion",
+     "hard": true,
+     "subjects": [],
+     "via": "reject",
+     "said16": "d45324de42204b6c"
+    },
+    {
+     "ref": "2026-11-09/queue/fri-3",
+     "at": "2026-11-03T06:52:43",
+     "week": "2026-11-09",
+     "day": "fri",
+     "idea_id": "941c3147-a010-4ac5-a7bf-0bdd67c2a323",
+     "option": null,
+     "hard": false,
+     "subjects": [
+      "Infosys"
+     ],
+     "via": "trend",
+     "said16": "85ec271de6535227"
+    },
+    {
+     "ref": "cue/96357092-6496-40f4-8769-092e40b3a811",
+     "at": "2026-10-24T08:38:10",
+     "week": null,
+     "day": null,
+     "idea_id": "a397253e-bfe1-4a84-babc-27d93fd2779d",
+     "option": null,
+     "hard": false,
+     "subjects": [],
+     "via": "wider_piece_context",
+     "said16": "5905f2ce45ed5dd3"
+    },
+    {
+     "ref": "cue/fe04d8db-04cf-45ea-8410-7e72db580454",
+     "at": "2026-10-26T09:28:26",
+     "week": null,
+     "day": null,
+     "idea_id": "dd9bc2c6-0e75-4723-8673-9aea04cf43ab",
+     "option": null,
+     "hard": true,
+     "subjects": [],
+     "via": "not_for_us",
+     "said16": "739f3d25322e0bc2"
+    },
+    {
+     "ref": "drop/ea18db0c-60da-46ab-b4d4-114741585797",
+     "at": "2026-10-19T07:31:45",
+     "week": null,
+     "day": null,
+     "idea_id": "ea18db0c-60da-46ab-b4d4-114741585797",
+     "option": null,
+     "hard": true,
+     "subjects": [],
+     "via": "drop",
+     "said16": "e3b0c44298fc1c14"
+    }
+   ],
+   "filed": [
+    {
+     "ref": "2026-11-09/queue/off-sat-infosys",
+     "kind": "filed",
+     "at": "2026-11-03T06:57:18",
+     "week": "2026-11-09",
+     "day": "sat",
+     "doc": "queue/off-sat-infosys",
+     "idea_id": "off-sat-infosys",
+     "option": "infosys",
+     "said16": null,
+     "questions": 0,
+     "was16": "6f3fabc55fcddbda"
+    },
+    {
+     "ref": "2026-11-09/queue/off-thu-burntokens",
+     "kind": "filed",
+     "at": "2026-11-03T06:56:52",
+     "week": "2026-11-09",
+     "day": "thu",
+     "doc": "queue/off-thu-burntokens",
+     "idea_id": "off-thu-burntokens",
+     "option": "burntokens",
+     "said16": null,
+     "questions": 0,
+     "was16": "67d21aa578979a0b"
+    }
+   ],
+   "answers": [
+    {
+     "ref": "2026-11-09/queue/wed-4",
+     "kind": "rejected",
+     "at": "2026-11-03T06:50:23",
+     "week": "2026-11-09",
+     "day": "wed",
+     "doc": "queue/wed-4",
+     "idea_id": "428d8b21-2b59-4cfc-ba70-8c38b3fe1cc3",
+     "option": null,
+     "said16": "60046c07e20e8227",
+     "questions": 0,
+     "was16": "44848a73c7108d92"
+    },
+    {
+     "ref": "2026-11-09/queue/off-tue-quoteline",
+     "kind": "rejected",
+     "at": "2026-11-03T06:47:31",
+     "week": "2026-11-09",
+     "day": "tue",
+     "doc": "queue/off-tue-quoteline",
+     "idea_id": "off-tue-quoteline",
+     "option": "quoteline",
+     "said16": "a48d818bceb3eb87",
+     "questions": 0,
+     "was16": "44ffa52557b18b5e"
+    },
+    {
+     "ref": "2026-11-02/queue/off-sun-samequestion",
+     "kind": "rejected",
+     "at": "2026-11-02T10:42:38",
+     "week": "2026-11-02",
+     "day": "sun",
+     "doc": "queue/off-sun-samequestion",
+     "idea_id": "off-sun-samequestion",
+     "option": "samequestion",
+     "said16": "d45324de42204b6c",
+     "questions": 0,
+     "was16": null
+    },
+    {
+     "ref": "2026-11-09/queue/off-sat-infosys",
+     "kind": "filed",
+     "at": "2026-11-03T06:57:18",
+     "week": "2026-11-09",
+     "day": "sat",
+     "doc": "queue/off-sat-infosys",
+     "idea_id": "off-sat-infosys",
+     "option": "infosys",
+     "said16": null,
+     "questions": 0,
+     "was16": "6f3fabc55fcddbda"
+    },
+    {
+     "ref": "2026-11-09/queue/off-thu-burntokens",
+     "kind": "filed",
+     "at": "2026-11-03T06:56:52",
+     "week": "2026-11-09",
+     "day": "thu",
+     "doc": "queue/off-thu-burntokens",
+     "idea_id": "off-thu-burntokens",
+     "option": "burntokens",
+     "said16": null,
+     "questions": 0,
+     "was16": "67d21aa578979a0b"
+    },
+    {
+     "ref": "2026-11-09/queue/fri-4",
+     "kind": "trend",
+     "at": "2026-11-03T06:55:23",
+     "week": "2026-11-09",
+     "day": "fri",
+     "doc": "queue/fri-4",
+     "idea_id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+     "option": null,
+     "said16": "ec1fbcc16eb3f112",
+     "questions": 0,
+     "was16": "5fdfe5a94f54d0ef"
+    },
+    {
+     "ref": "2026-11-09/queue/fri-2",
+     "kind": "trend",
+     "at": "2026-11-03T06:53:22",
+     "week": "2026-11-09",
+     "day": "fri",
+     "doc": "queue/fri-2",
+     "idea_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+     "option": null,
+     "said16": "59bd1a3c25fc43e6",
+     "questions": 0,
+     "was16": "328cff76fa31f425"
+    },
+    {
+     "ref": "2026-11-09/queue/fri-3",
+     "kind": "trend",
+     "at": "2026-11-03T06:52:43",
+     "week": "2026-11-09",
+     "day": "fri",
+     "doc": "queue/fri-3",
+     "idea_id": "941c3147-a010-4ac5-a7bf-0bdd67c2a323",
+     "option": null,
+     "said16": "85ec271de6535227",
+     "questions": 2,
+     "was16": "c0d484f59c86799b"
+    },
+    {
+     "ref": "2026-11-09/queue/wed-1",
+     "kind": "trend",
+     "at": "2026-11-03T06:49:40",
+     "week": "2026-11-09",
+     "day": "wed",
+     "doc": "queue/wed-1",
+     "idea_id": "b38fa06d-e09e-4c3f-8218-638a908c9c72",
+     "option": null,
+     "said16": "f5b21f5bd3bb7cfc",
+     "questions": 0,
+     "was16": "123316a21dcadb7e"
+    },
+    {
+     "ref": "2026-11-09/queue/wed-3",
+     "kind": "trend",
+     "at": "2026-11-03T06:49:30",
+     "week": "2026-11-09",
+     "day": "wed",
+     "doc": "queue/wed-3",
+     "idea_id": "054159ab-9159-4a7c-9e5e-923d7e99a433",
+     "option": null,
+     "said16": "bd4112220dc484f4",
+     "questions": 0,
+     "was16": "ff0372d0f45f5bd9"
+    },
+    {
+     "ref": "2026-11-02/queue/off-sat-aipassports",
+     "kind": "improved",
+     "at": "2026-11-02T10:42:04",
+     "week": "2026-11-02",
+     "day": "sat",
+     "doc": "queue/off-sat-aipassports",
+     "idea_id": "off-sat-aipassports",
+     "option": "aipassports",
+     "said16": "52cf9e436e696e5b",
+     "questions": 0,
+     "was16": null
+    },
+    {
+     "ref": "2026-11-02/queue/off-sat-goodnews",
+     "kind": "improved",
+     "at": "2026-11-02T10:40:08",
+     "week": "2026-11-02",
+     "day": "sat",
+     "doc": "queue/off-sat-goodnews",
+     "idea_id": "off-sat-goodnews",
+     "option": "goodnews",
+     "said16": "17d41f72718e92ab",
+     "questions": 0,
+     "was16": "49b3c55779a598bc"
+    },
+    {
+     "ref": "2026-11-02/queue/off-thu-actsfirst",
+     "kind": "improved",
+     "at": "2026-11-02T10:39:40",
+     "week": "2026-11-02",
+     "day": "thu",
+     "doc": "queue/off-thu-actsfirst",
+     "idea_id": "off-thu-actsfirst",
+     "option": "actsfirst",
+     "said16": "8d794efc3aa4ec61",
+     "questions": 0,
+     "was16": null
+    }
+   ],
+   "mentions": [
+    {
+     "at": "2026-10-24T06:17:11",
+     "names": [],
+     "ref": "ask/385a5da8-2cae-41ec-8fb6-2e328920664c"
+    },
+    {
+     "at": "2026-10-24T08:36:04",
+     "names": [
+      "Anthropic",
+      "GitHub"
+     ],
+     "ref": "ask/45e0ead0-310b-4c74-9bd2-54305fb41539"
+    },
+    {
+     "at": "2026-10-24T08:36:55",
+     "names": [],
+     "ref": "ask/5b865aa9-463c-44c3-9352-73fda39fa18e"
+    },
+    {
+     "at": "2026-10-24T08:38:10",
+     "names": [
+      "Mind Up Instagram",
+      "X",
+      "YouTube"
+     ],
+     "ref": "ask/a397253e-bfe1-4a84-babc-27d93fd2779d"
+    },
+    {
+     "at": "2026-10-24T08:39:23",
+     "names": [
+      "Hannah Fry"
+     ],
+     "ref": "ask/d501ae8a-bce1-4964-89a0-63bf076bc641"
+    },
+    {
+     "at": "2026-10-28T03:43:51",
+     "names": [],
+     "ref": "ask/2b582f5a-52fb-49a3-8502-0e9bd914f772"
+    },
+    {
+     "at": "2026-10-28T05:53:55",
+     "names": [],
+     "ref": "ask/e73a0110-a108-456c-8781-350259b1b196"
+    },
+    {
+     "at": "2026-10-28T05:53:55",
+     "names": [],
+     "ref": "ask/501c4fd1-4aa1-4cdd-b716-03e70c89c283"
+    },
+    {
+     "at": "2026-10-28T06:08:52",
+     "names": [],
+     "ref": "ask/87a82f7f-6411-41c9-92b1-a52c4f3e4f8a"
+    },
+    {
+     "at": "2026-10-28T23:08:52",
+     "names": [],
+     "ref": "ask/7f43c6b5-a468-40f3-ad66-c988cdc16072"
+    },
+    {
+     "at": "2026-10-31T16:39:19",
+     "names": [
+      "AI-generated"
+     ],
+     "ref": "ask/90b654ca-204a-4aef-bffe-19cfa7a2db19"
+    },
+    {
+     "at": "2026-10-31T16:39:19",
+     "names": [
+      "AI-generated"
+     ],
+     "ref": "ask/f6327ce0-a414-4365-98df-635c1780523c"
+    },
+    {
+     "at": "2026-10-31T20:48:51",
+     "names": [
+      "Instagram",
+      "TikTok"
+     ],
+     "ref": "ask/e829fbfb-278d-45e2-9607-73af4c04310d"
+    },
+    {
+     "at": "2026-10-31T21:13:50",
+     "names": [],
+     "ref": "ask/aae54ef9-0bd7-49a8-959e-96695e1a51a8"
+    },
+    {
+     "at": "2026-11-02T14:19:27",
+     "names": [],
+     "ref": "ask/2162c904-b0ff-452b-81aa-b8cfd7ec1909"
+    },
+    {
+     "at": "2026-11-02T21:48:54",
+     "names": [],
+     "ref": "ask/93342d88-0320-4e56-a3c1-f25889d8add4"
+    },
+    {
+     "at": "2026-11-02T23:23:54",
+     "names": [
+      "ASAP"
+     ],
+     "ref": "ask/da3cacd1-b038-4827-bd22-1d4d9be07889"
+    },
+    {
+     "at": "2026-11-03T10:18:54",
+     "names": [],
+     "ref": "ask/d16fe9ff-413c-47c4-ac53-c89e40d28489"
+    },
+    {
+     "at": "2026-11-05T06:08:55",
+     "names": [
+      "Canva",
+      "Adobe",
+      "Claude Design"
+     ],
+     "ref": "ask/50368dee-0a10-4452-a79a-0607d4f2e278"
+    },
+    {
+     "at": "2026-11-05T06:13:54",
+     "names": [
+      "SaaS"
+     ],
+     "ref": "ask/6eaaf127-ed4e-48bc-86a0-54c9e99aa428"
+    },
+    {
+     "at": "2026-11-06T17:23:54",
+     "names": [],
+     "ref": "ask/dd93bfb1-20be-4c13-93b7-3c34ded7544b"
+    },
+    {
+     "at": "2026-11-03T06:50:23",
+     "names": [],
+     "ref": "2026-11-09/queue/wed-4"
+    },
+    {
+     "at": "2026-11-03T06:47:31",
+     "names": [],
+     "ref": "2026-11-09/queue/off-tue-quoteline"
+    },
+    {
+     "at": "2026-11-02T10:42:38",
+     "names": [
+      "Publishing"
+     ],
+     "ref": "2026-11-02/queue/off-sun-samequestion"
+    },
+    {
+     "at": "2026-11-03T06:55:23",
+     "names": [],
+     "ref": "2026-11-09/queue/fri-4"
+    },
+    {
+     "at": "2026-11-03T06:53:22",
+     "names": [
+      "Meta",
+      "Perplexity"
+     ],
+     "ref": "2026-11-09/queue/fri-2"
+    },
+    {
+     "at": "2026-11-03T06:52:43",
+     "names": [],
+     "ref": "2026-11-09/queue/fri-3"
+    },
+    {
+     "at": "2026-11-03T06:49:40",
+     "names": [],
+     "ref": "2026-11-09/queue/wed-1"
+    },
+    {
+     "at": "2026-11-03T06:49:30",
+     "names": [],
+     "ref": "2026-11-09/queue/wed-3"
+    },
+    {
+     "at": "2026-11-02T10:42:04",
+     "names": [
+      "Sovreign",
+      "China",
+      "Italy"
+     ],
+     "ref": "2026-11-02/queue/off-sat-aipassports"
+    },
+    {
+     "at": "2026-11-02T10:40:08",
+     "names": [],
+     "ref": "2026-11-02/queue/off-sat-goodnews"
+    },
+    {
+     "at": "2026-11-02T10:39:40",
+     "names": [],
+     "ref": "2026-11-02/queue/off-thu-actsfirst"
+    },
+    {
+     "at": "2026-10-19T07:31:42",
+     "names": [
+      "Disney",
+      "Google"
+     ],
+     "ref": "cue/664ab540-7722-4d5a-a199-6be34d5947d3"
+    },
+    {
+     "at": "2026-10-19T07:31:43",
+     "names": [],
+     "ref": "cue/f67ea1c9-3bbf-4b6f-b03d-37401a04de95"
+    },
+    {
+     "at": "2026-10-28T05:51:08",
+     "names": [],
+     "ref": "cue/a3a4f286-4369-4cb9-b11a-12861641aebd"
+    },
+    {
+     "at": "2026-10-28T05:52:05",
+     "names": [],
+     "ref": "cue/c05ef79f-fbc2-4c6f-b2f9-1eaa39a4425b"
+    },
+    {
+     "at": "2026-10-31T20:42:49",
+     "names": [
+      "Instagram",
+      "TikTok"
+     ],
+     "ref": "cue/90bc675c-9d29-45f4-8a72-78f51928742c"
+    },
+    {
+     "at": "2026-10-31T21:01:55",
+     "names": [],
+     "ref": "cue/ea9db81c-031e-44bb-b04a-b56d94b81006"
+    },
+    {
+     "at": "2026-11-03T06:49:09",
+     "names": [],
+     "ref": "cue/ccc713ec-e66d-4b0a-8fb8-abe4c6eecaa5"
+    },
+    {
+     "at": "2026-10-19T07:31:43",
+     "names": [
+      "IP",
+      "OpenAI"
+     ],
+     "ref": "cue/3aa537c7-bc4e-41d1-a27e-a1496162a1d5"
+    },
+    {
+     "at": "2026-10-24T06:17:11",
+     "names": [],
+     "ref": "cue/86295389-e804-4d81-a265-96bae74fe77c"
+    },
+    {
+     "at": "2026-10-26T09:28:23",
+     "names": [],
+     "ref": "cue/7192a8ee-628c-469a-9a90-9b41e9ce5139"
+    },
+    {
+     "at": "2026-10-26T09:28:28",
+     "names": [],
+     "ref": "cue/68c03220-20a4-4795-930c-e8880cef7db8"
+    },
+    {
+     "at": "2026-10-27T15:58:16",
+     "names": [],
+     "ref": "cue/93503b71-1dd8-4391-8343-2713f674564c"
+    },
+    {
+     "at": "2026-10-27T19:50:33",
+     "names": [],
+     "ref": "cue/d3a3d8bd-832d-4ced-8ab1-d4bdcc475636"
+    },
+    {
+     "at": "2026-10-28T22:57:28",
+     "names": [],
+     "ref": "cue/7107fa22-7657-4034-b27c-1c1a4ef64739"
+    },
+    {
+     "at": "2026-10-31T16:37:17",
+     "names": [],
+     "ref": "cue/29efa199-7c5a-4d58-8621-7d7f2d4ba0fb"
+    },
+    {
+     "at": "2026-11-02T14:08:53",
+     "names": [],
+     "ref": "cue/707c0eb7-6ea9-41a7-8642-22909fc84212"
+    },
+    {
+     "at": "2026-11-02T23:19:21",
+     "names": [
+      "ASAP"
+     ],
+     "ref": "cue/cd817c71-1641-4550-8992-84ef83a49449"
+    },
+    {
+     "at": "2026-11-03T10:11:01",
+     "names": [],
+     "ref": "cue/99a5d6d1-1031-4ccc-9d9d-d81d4ad20d71"
+    },
+    {
+     "at": "2026-11-05T06:03:48",
+     "names": [
+      "Canva",
+      "Adobe",
+      "Claude Design"
+     ],
+     "ref": "cue/82b9ef23-dfdb-40c6-9113-6e22b9097642"
+    },
+    {
+     "at": "2026-11-05T06:10:40",
+     "names": [
+      "SaaS"
+     ],
+     "ref": "cue/a6dbd080-41f1-49f9-a1d0-30498947744b"
+    },
+    {
+     "at": "2026-11-06T17:15:00",
+     "names": [],
+     "ref": "cue/e275f875-aec9-4f4c-aa81-6ea63cdda20b"
+    },
+    {
+     "at": "2026-10-24T08:36:55",
+     "names": [],
+     "ref": "cue/8b529898-1665-4981-8c1c-d9bf0d50b6c7"
+    },
+    {
+     "at": "2026-10-24T08:38:10",
+     "names": [
+      "Mind Up Instagram",
+      "X",
+      "YouTube"
+     ],
+     "ref": "cue/96357092-6496-40f4-8769-092e40b3a811"
+    },
+    {
+     "at": "2026-10-26T09:28:24",
+     "names": [],
+     "ref": "cue/3df46ee2-c8a4-468d-9fee-20a57ede203b"
+    },
+    {
+     "at": "2026-10-26T09:28:25",
+     "names": [],
+     "ref": "cue/ffe780eb-429d-449c-b7bb-7b941acfd328"
+    },
+    {
+     "at": "2026-10-26T09:28:25",
+     "names": [],
+     "ref": "cue/644e95e1-9a3e-4440-a573-359159b66fa7"
+    },
+    {
+     "at": "2026-10-26T09:28:27",
+     "names": [],
+     "ref": "cue/cf440d24-77c2-4698-a787-e1e9008c4b0e"
+    },
+    {
+     "at": "2026-11-02T21:43:02",
+     "names": [],
+     "ref": "cue/0484e869-b193-406e-8a79-01904fde2849"
+    },
+    {
+     "at": "2026-11-03T06:53:19",
+     "names": [
+      "Meta",
+      "Perplexity"
+     ],
+     "ref": "cue/4ba9060b-80e4-4966-9372-14ce6769e598"
+    },
+    {
+     "at": "2026-10-26T09:28:26",
+     "names": [],
+     "ref": "cue/fe04d8db-04cf-45ea-8410-7e72db580454"
+    },
+    {
+     "at": "2026-11-03T06:50:20",
+     "names": [],
+     "ref": "cue/fb0bcfa1-a31a-4272-95a8-72d65b310e57"
+    },
+    {
+     "at": "2026-11-03T06:49:27",
+     "names": [],
+     "ref": "cue/981d4d84-a195-4142-a92b-f64b08a030e4"
+    },
+    {
+     "at": "2026-11-03T06:49:38",
+     "names": [],
+     "ref": "cue/9e1bba40-cc2e-447b-aa56-b423ac55e04c"
+    },
+    {
+     "at": "2026-11-03T06:52:40",
+     "names": [],
+     "ref": "cue/67606db9-537a-4cf9-ac81-0ee9f00e4e62"
+    }
+   ],
+   "asks": [
+    "2162c904-b0ff-452b-81aa-b8cfd7ec1909",
+    "2b582f5a-52fb-49a3-8502-0e9bd914f772",
+    "385a5da8-2cae-41ec-8fb6-2e328920664c",
+    "45e0ead0-310b-4c74-9bd2-54305fb41539",
+    "501c4fd1-4aa1-4cdd-b716-03e70c89c283",
+    "50368dee-0a10-4452-a79a-0607d4f2e278",
+    "5b865aa9-463c-44c3-9352-73fda39fa18e",
+    "6eaaf127-ed4e-48bc-86a0-54c9e99aa428",
+    "7f43c6b5-a468-40f3-ad66-c988cdc16072",
+    "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a",
+    "90b654ca-204a-4aef-bffe-19cfa7a2db19",
+    "93342d88-0320-4e56-a3c1-f25889d8add4",
+    "a397253e-bfe1-4a84-babc-27d93fd2779d",
+    "aae54ef9-0bd7-49a8-959e-96695e1a51a8",
+    "d16fe9ff-413c-47c4-ac53-c89e40d28489",
+    "d501ae8a-bce1-4964-89a0-63bf076bc641",
+    "da3cacd1-b038-4827-bd22-1d4d9be07889",
+    "dd93bfb1-20be-4c13-93b7-3c34ded7544b",
+    "e73a0110-a108-456c-8781-350259b1b196",
+    "e829fbfb-278d-45e2-9607-73af4c04310d",
+    "f6327ce0-a414-4365-98df-635c1780523c"
+   ],
+   "picks": [
+    "fri-3",
+    "fri-4",
+    "mon-2",
+    "wed-2"
+   ],
+   "approvals": [
+    "off-tue-povteach"
+   ],
+   "answers_ask": [
+    "off-thu-lookalikes",
+    "off-tue-povteach",
+    "wed-1",
+    "wed-2"
+   ]
+  }
+ ]
+}

@@ -127,6 +127,35 @@ What the database cannot tell: a writer holding the service key could still writ
 Nothing in a database tells a forged name from his press; the routes refuse every other writer, and the ledger names
 the revision every approval came from.
 
+## What he refused stays refused: the ideas board's checks in code (the ideas quality plan, Wave 1)
+
+Krish, 2026-11-09: "I just said that Infosys is boring so why did you make the piece about Infosys?" The Sunday run's
+ideas are checked in code before the week goes on the live board (`scripts/post-pack/idea_checks.py`, run by
+`board_feed.py cover` and `board_feed.py gate <Monday>`; `.github/workflows/sunday-ideas.yml` keeps the week off the
+live board while `gate` fails). Each check enforces a rule already live or his own words on that item:
+
+- A subject he rejected (his Reject, a not-for-us cue, a Drop) is not offered again, unless an option answers his own
+  ask, he raised the subject again, or he gave it back. The veto keys on the subject his refusing words share with the
+  option he refused, never every name an option carries.
+- Refusing words in another press (boring, lame, no point, don't understand) put a warning on the option, his words
+  first in its text, and it is never first on its day; it blocks only once he approves P6.
+- An idea he filed, saved as a trend or asked to improve comes back only with his words, an answer to each question he
+  asked, a source newer than his press, changed copy and a research prompt; otherwise it is held with its reason.
+- From the 23 Nov board every publishing-day option opens on one plain question (`pitch.question`, drawn as its title),
+  with a research prompt and a source tag.
+
+**On the board** (`_viewExtras.ts ideaLines`, after a day's options, no new contract field): each subject not offered
+again is a line "Not offered again: <subject>" with his words and one press, "Offer it again" (`queue/veto-<subject>`,
+`unveto`, his alone: `press_is_his`); each return or ask held back is a line "Held back: ..." with its reason. Status
+`not offered again`, `given back` or `held back`.
+
+**The scorecard**: `python3 scripts/post-pack/board_feed.py scorecard <Monday>` reads his presses on that board
+(`GET /api/board/<Monday>/outcomes`, read-only, the engine key: `idea_outcomes`, or for a board before the gate its
+`board_history`, triage marks and queue cues) and writes `docs/plans/<Monday>-week/scorecard.json`: each count with
+its written rule, each press labelled, ids and labels only. The history test (`scripts/post-pack/ideas_history.py`,
+`tests/ideas_history_test.py`, and the eval suite `ideas-history`) replays every check on his past boards with only
+what was known before each.
+
 ## The view's contract: add freely; never remove or rename a field
 
 Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its shape is

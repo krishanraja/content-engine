@@ -33,6 +33,8 @@ const val = (k: string, d: string) => {
 
 const SUITES: Record<string, () => Promise<{ suite: any }>> = {
   revise: () => import('./suites/revise.ts'),
+  // No model, no spend: the ideas board checks replayed on his past boards (the ideas quality plan, item 11).
+  'ideas-history': () => import('./suites/ideas-history.ts'),
 }
 
 if (!name || !SUITES[name]) {
@@ -54,7 +56,8 @@ const { suite } = await SUITES[name]()
 
 const needsDb = !opts.fixture
 const needsModel = !flag('dry')
-requireEnv([
+// A suite that calls no model and reads no database says so (requires: []).
+requireEnv(Array.isArray(suite.requires) ? suite.requires : [
   ...(needsDb ? ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY'] : []),
   ...(needsModel ? ['ANTHROPIC_API_KEY'] : []),
 ])

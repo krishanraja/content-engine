@@ -229,7 +229,10 @@ describe('the next ideas run reads his answers as cues', () => {
     expect(out.empty).toBeNull()
     // The improve was taken back, so it is not a cue; the approval is the publish board's, not a cue.
     expect(out.block.improved).toEqual([])
-    expect(out.block.rejected).toEqual([{ week: '2026-11-09', day: 'wed', idea_id: 'b', option: 'wed-4', said: 'We did this.', at: '2026-11-03T06:50:23Z' }])
+    // doc and shown: which press, and the off-day words he answered (null on a publishing day's idea), so the next run
+    // tells a return and keys a refusal on what he saw (scripts/post-pack/idea_checks.py).
+    expect(out.block.rejected).toEqual([{ week: '2026-11-09', day: 'wed', idea_id: 'b', option: 'wed-4', said: 'We did this.', at: '2026-11-03T06:50:23Z',
+      doc: 'queue/wed-4', shown: null }])
     expect(out.block.trend.map(r => r.idea_id)).toEqual(['c'])
     expect(out.block.filed.map(r => r.idea_id)).toEqual(['off-thu-x'])
     const down: any = { select: () => down, gte: () => down, lt: () => down, order: () => down, limit: async () => ({ data: null, error: { message: 'relation does not exist' } }) }

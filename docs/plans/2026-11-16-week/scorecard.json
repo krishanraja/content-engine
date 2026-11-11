@@ -1,0 +1,217 @@
+{
+ "week": "2026-11-16",
+ "counts": {
+  "options_main": 12,
+  "options_off": 8,
+  "pressed_share": 0.8,
+  "picks": 3,
+  "picks_as_written": 1,
+  "rank1_picked": 0,
+  "wasted_presses": 13,
+  "wasted_without_pick_depth": 12,
+  "main_rejects": 2,
+  "main_rejects_with_curious": 2,
+  "offday_rejects_refusing": 2,
+  "refused_subject_options": 1,
+  "big_question": {
+   "options": 5,
+   "picks": 1
+  },
+  "asks_as_typed": {
+   "options_covering_an_ask": 2,
+   "as_typed": 2,
+   "picks_as_typed": 1
+  },
+  "minutes": 17.6
+ },
+ "flags": [],
+ "picks": {
+  "mon": "mon-2",
+  "wed": "wed-2",
+  "fri": "fri-4"
+ },
+ "kinds": {
+  "mon-1": "single",
+  "mon-2": "single",
+  "mon-3": "single",
+  "mon-4": "single",
+  "wed-1": "big",
+  "wed-2": "single",
+  "wed-3": "single",
+  "wed-4": "big",
+  "fri-1": "big",
+  "fri-2": "big",
+  "fri-3": "single",
+  "fri-4": "big"
+ },
+ "labels": [
+  {
+   "doc": "queue/off-tue-povteach",
+   "outcome": "approved",
+   "parts": [],
+   "wasted": false
+  },
+  {
+   "doc": "queue/mon-1",
+   "outcome": "rejected",
+   "parts": [
+    "refuse",
+    "repeat"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "queue/mon-2",
+   "outcome": "trend",
+   "parts": [
+    "depth",
+    "simpler",
+    "reframe"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "picks/mon",
+   "outcome": "approved",
+   "parts": [],
+   "wasted": false
+  },
+  {
+   "doc": "queue/mon-4",
+   "outcome": "filed",
+   "parts": [
+    "depth",
+    "simpler",
+    "reframe",
+    "wish"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "picks/wed",
+   "outcome": "approved",
+   "parts": [
+    "depth"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "queue/wed-2",
+   "outcome": "trend",
+   "parts": [
+    "depth"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "queue/wed-3",
+   "outcome": "rejected",
+   "parts": [
+    "refuse"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "queue/wed-4",
+   "outcome": "trend",
+   "parts": [
+    "depth"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "picks/fri",
+   "outcome": "approved",
+   "parts": [],
+   "wasted": false
+  },
+  {
+   "doc": "queue/fri-3",
+   "outcome": "filed",
+   "parts": [],
+   "wasted": false
+  },
+  {
+   "doc": "queue/fri-2",
+   "outcome": "trend",
+   "parts": [
+    "depth",
+    "simpler"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "queue/fri-1",
+   "outcome": "trend",
+   "parts": [
+    "depth",
+    "simpler",
+    "reframe"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "queue/off-tue-burntokens",
+   "outcome": "rejected",
+   "parts": [
+    "refuse",
+    "format"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "queue/off-tue-infosys",
+   "outcome": "rejected",
+   "parts": [
+    "refuse",
+    "repeat"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "queue/off-thu-fortytoone",
+   "outcome": "improved",
+   "parts": [
+    "reframe"
+   ],
+   "wasted": false
+  },
+  {
+   "doc": "queue/off-thu-swarmdeal",
+   "outcome": "filed",
+   "parts": [
+    "depth"
+   ],
+   "wasted": true
+  },
+  {
+   "doc": "queue/off-thu-tinyfix",
+   "outcome": "filed",
+   "parts": [
+    "depth"
+   ],
+   "wasted": true
+  }
+ ],
+ "rules": {
+  "options_main": "Options on Monday, Wednesday and Friday on the board as he first saw it (ideas.json days).",
+  "options_off": "Off-day options on the board, the weekly good news left out (ideas.json offdays).",
+  "pressed_share": "Share of all options with a final press of his (any of the five outcomes). Under 0.8 is flagged: pressing less never passes for success.",
+  "picks": "His Approve on a publishing day, as it stood at the end (his last pick of each day).",
+  "picks_as_written": "Picks on which nothing he said (the pick's note or any other press on that option) asks to reframe it, deepen it or say it simpler (idea_checks.PART_WORDS).",
+  "rank1_picked": "Picks that were the first option of their day (the one the board led with).",
+  "wasted_presses": "Presses (his last on each option, and his words on a pick) that are a Reject worded as refusing or repeating (boring, lame, no point, don't understand; told you, I just said), or that ask for research, depth or simpler words. The 10x number: target at most 1 a board.",
+  "wasted_without_pick_depth": "The same, leaving out depth or simpler asks made on a pick.",
+  "main_rejects": "Final Reject (not for us, a Drop) on a publishing day's option.",
+  "main_rejects_with_curious": "Main rejects plus a \"curious\" verdict whose words refuse (19 Oct triage only).",
+  "offday_rejects_refusing": "Off-day options he rejected in refusing words (boring, lame, no point, don't understand).",
+  "refused_subject_options": "Options on a subject he refused before the board (idea_checks.refused_findings: refused or warned).",
+  "big_question": "A publishing day's option is a big question when the first sentence of what it says (so_what) names no company, product, person or study; otherwise it is one event. Counted for options and for picks.",
+  "asks_as_typed": "An option answers his ask as typed when it covers the ask and carries his typed words whole (in its from line, so_what or story). Counted for options and for picks.",
+  "minutes": "His pressing time on the board: from his first press to his last in each sitting (a gap over 60 minutes starts a new sitting), summed."
+ },
+ "refused_subject_refs": [
+  "mon-1"
+ ],
+ "made_by": "board_feed.scorecard_from on read-only reads of idea_outcomes, board_history, content_ideas and feedback_cues, 2026-11-11"
+}
