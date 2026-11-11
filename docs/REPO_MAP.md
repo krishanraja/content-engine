@@ -1001,6 +1001,14 @@ What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?
 - `function buildAsks(weekStart: string, items: Row[], skip: (r: Row) => boolean = () => false): Ask[]`
 - `function buildRecent(weekStart: string, rows: Row[]): RecentPiece[]`
 - `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[]; quote…`
+- `const BULK_AT_ONCE`
+- `const POSITIVE`
+- `function wordless(c: InspoCard): boolean`
+- `const FEED_DAYS`
+- `const CORRECTION_DAYS`
+- `function buildFeed(rows: Row[])`
+- `function buildCorrections(rows: Row[])`
+- `function buildHindsight(rows: Row[])`
 
 ### `apps/control-plane/api/_investigation.ts`
 
@@ -2380,6 +2388,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
 - `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
 - `function offdayOptions(i: ExtrasInputs, day: string): ViewOption[]`
+- `function mixOf(stories: Body[]): string`
 - `function thoughtPress(day: string, step: string): PressAction`
 - `function materialPress(pieceId: string): PressAction`
 - `function yesPress(i: ExtrasInputs, day: string): PressAction`

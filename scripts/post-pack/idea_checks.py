@@ -610,6 +610,197 @@ def held_findings(ideas):
     return out
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+# Wave 1, the second part: his words split, his asks at full scope, off days that say what they learned, more looked at
+# than shown, and the Saturday good news's mix. From the 23 Nov board (SHAPE_FROM), as cover findings.
+
+
+def his_texts(sources):
+    """Every piece of his words the sources hold, by ref: worded presses, off-day verdicts and notes, cues, asks."""
+    out = {a['ref']: a['said'] for a in answers_of(sources) if a['said']}
+    for v in ((sources or {}).get('offday_verdicts') or {}).get('verdicts') or []:
+        if isinstance(v, dict) and v.get('words'):
+            out.setdefault(f"{v.get('week')}/queue/{v.get('option')}#{v.get('side')}", v['words'])
+    for kind, items in ((sources or {}).get('cues') or {}).items():
+        for c in items if isinstance(items, list) else []:
+            if isinstance(c, dict) and c.get('said'):
+                out.setdefault(f"cue/{c.get('id')}", c['said'])
+    for a in (sources or {}).get('asks') or []:
+        if isinstance(a, dict) and isinstance(a.get('his_words'), dict):
+            words = ' '.join(str(v) for v in a['his_words'].values() if v)
+            if words:
+                out.setdefault(f"ask/{a.get('id')}", words)
+    return out
+
+
+def quoted(text, words):
+    """Whether some words are an exact quote of his (whitespace and curly quotes aside), at least three words long."""
+    q = norm(text).strip(' "\'.,')
+    return len(q.split()) >= 3 and q in norm(words)
+
+
+def split_findings(ideas, sources):
+    """Item 4: each worded press on the last board, split into its parts (refuse, reframe, depth, simpler, format, wish),
+    each part an exact quote of his words, in ideas.json split [{"ref": "<week>/<doc>", "parts": [{"kind", "quote"}]}].
+    A press whose words refuse (boring, lame, no point, don't understand) has a refuse part. The split is the run's
+    reading; the quotes keep it honest, and the refusal checks never rely on it (refusals_from reads his words)."""
+    week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')
+    if week < SHAPE_FROM:
+        return []
+    from datetime import date as _d, timedelta as _t
+    last = (_d.fromisoformat(week) - _t(days=7)).isoformat()
+    owed = {a['ref']: a for a in answers_of(sources) if a['said'] and str(a['week']) == last}
+    got = {str(x.get('ref')): x for x in (ideas or {}).get('split') or [] if isinstance(x, dict)}
+    out = []
+    for ref, a in owed.items():
+        s = got.get(ref)
+        parts = [p for p in (s or {}).get('parts') or [] if isinstance(p, dict)]
+        if not parts:
+            out.append({'code': 'split', 'ref': ref, 'line': f'split: {ref} is a worded press of his on last week\'s board; split it into its parts, each an exact quote'})
+            continue
+        bad = [p for p in parts if p.get('kind') not in PART_KINDS or norm(p.get('quote')) not in norm(a['said']) or not norm(p.get('quote'))]
+        if bad:
+            out.append({'code': 'split', 'ref': ref, 'line': f'split: {ref}: every part is one of {", ".join(PART_KINDS)} and an exact quote of his words'})
+        if REFUSE.search(a['said']) and not any(p.get('kind') == 'refuse' and REFUSE.search(str(p.get('quote') or '')) for p in parts):
+            out.append({'code': 'split', 'ref': ref, 'line': f'split: {ref} refuses in his words (boring, lame, no point, don\'t understand) and has no refuse part quoting them'})
+    return out
+
+
+ROW = re.compile(r'\b[0-9a-f]{8}(?:-[0-9a-f]{4}){0,4}(?:-[0-9a-f]{12})?\b')
+
+
+def known_ids(sources):
+    """Every row id the sources name: what a held ask's reason may cite."""
+    ids = set()
+    for s in (sources or {}).get('series') or []:
+        ids |= {str(c.get('id')).lower() for c in s.get('pool') or [] if isinstance(c, dict)}
+    ids |= {str(c.get('id')).lower() for c in (sources or {}).get('unassigned') or [] if isinstance(c, dict)}
+    for key in ('queue', 'recent', 'must_cover', 'asks'):
+        ids |= {str(c.get('id')).lower() for c in (sources or {}).get(key) or [] if isinstance(c, dict)}
+    for rows in ((sources or {}).get('scheduled') or {}).values():
+        ids |= {str(c.get('id')).lower() for c in rows or [] if isinstance(c, dict)}
+    return {i for i in ids if i and i != 'none'}
+
+
+def asks_findings(ideas, sources):
+    """Item 6: his asks keep their scope, and a held ask shows its reason. An option that covers an ask quotes it word for
+    word (asks [{"id", "said": his words exactly, "scope": "as_typed" or "narrowed", "why": when narrowed}]); an open ask
+    left off the board is accounted with a reason that cites only rows that exist, and is a held line on the board
+    (ideas.json held, ref "ask/<id>")."""
+    week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')
+    if week < SHAPE_FROM:
+        return []
+    asks = {str(a.get('id')): a for a in (sources or {}).get('asks') or [] if isinstance(a, dict) and a.get('state') == 'open' and not a.get('style_only')}
+    words = {i: ' '.join(str(v) for v in (a.get('his_words') or {}).values() if v) for i, a in asks.items()}
+    out = []
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    covered = set()
+    for label, o in [(f'{d}-{n}', o) for d in ('mon', 'wed', 'fri') for n, o in enumerate(days.get(d) or [], 1)] + \
+                    [(f'off-{d}-{o.get("id")}', o) for d, opts in offdays.items() for o in (opts if isinstance(opts, list) else [])]:
+        if not isinstance(o, dict):
+            continue
+        given = {str(x.get('id')): x for x in o.get('asks') or [] if isinstance(x, dict)}
+        for c in o.get('covers') or []:
+            if str(c) not in asks:
+                continue
+            covered.add(str(c))
+            g = given.get(str(c))
+            if not g or norm(g.get('said')) != norm(words[str(c)]):
+                out.append({'code': 'ask_scope', 'ref': label, 'line': f'{label}: quote his ask {c} word for word in asks [{{"id", "said", "scope"}}]'})
+            elif g.get('scope') not in ('as_typed', 'narrowed') or (g.get('scope') == 'narrowed' and len(str(g.get('why') or '').strip()) < 20):
+                out.append({'code': 'ask_scope', 'ref': label, 'line': f'{label}: say whether it answers his ask {c} as typed, or why it narrows it (scope, why)'})
+    accounted = (ideas or {}).get('accounted') if isinstance((ideas or {}).get('accounted'), dict) else {}
+    held = {str(h.get('ref')) for h in (ideas or {}).get('held') or [] if isinstance(h, dict)}
+    ids = known_ids(sources)
+    for i in asks:
+        if i in covered or i not in accounted:
+            continue
+        reason = str(accounted[i] or '')
+        cited = [r for r in ROW.findall(reason.lower()) if not any(k.startswith(r) for k in ids)]
+        if cited:
+            out.append({'code': 'ask_held', 'ref': i, 'line': f'accounted {i}: the reason cites {", ".join(cited)}, which no row in sources.json is; cite a row that exists'})
+        if f'ask/{i}' not in held:
+            out.append({'code': 'ask_held', 'ref': i, 'line': f'accounted {i}: his ask is held; show it on the board (ideas.json held, ref "ask/{i}", the reason he reads)'})
+    return out
+
+
+def learned_findings(ideas, sources):
+    """Item 8: every off-day option quotes the earlier verdict of his it learned from: a learned_from line holding an
+    exact quote, three words or more, of his words in the sources (3 of 10 options did on the 16 Nov board, 0 of 13 on
+    the 9 Nov board)."""
+    week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')
+    if week < SHAPE_FROM:
+        return []
+    texts = list(his_texts(sources).values())
+    out = []
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    for day, opts in offdays.items():
+        for o in opts if isinstance(opts, list) else []:
+            if not isinstance(o, dict) or o.get('weekly'):
+                continue
+            lines = [str(x) for x in o.get('learned_from') or [] if isinstance(x, str)]
+            spans = [q for x in lines for q in re.findall(r'["“]([^"”]+)["”]', x)] + [re.sub(r'\s*\([^)]*\)\s*$', '', x) for x in lines]
+            if not any(quoted(q, t) for q in spans for t in texts):
+                out.append({'code': 'learned_from', 'ref': f'off-{day}-{o.get("id")}',
+                            'line': f'off-{day}-{o.get("id")}: learned_from quotes the earlier verdict of his it learned from, his words exactly'})
+    return out
+
+
+CANDIDATES_MAX = 8
+
+
+def considered_findings(ideas):
+    """Item 10: look at more, show the best. ideas.json considered {"mon": n, ...}: how many candidates the run researched
+    for each publishing day, at least as many as it shows and at most eight."""
+    week = str((ideas or {}).get('week_start') or '')
+    if week < SHAPE_FROM:
+        return []
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    locked = (ideas or {}).get('locked') if isinstance((ideas or {}).get('locked'), dict) else {}
+    got = (ideas or {}).get('considered') if isinstance((ideas or {}).get('considered'), dict) else {}
+    out = []
+    for day in ('mon', 'wed', 'fri'):
+        if day in locked:
+            continue
+        shown = len(days.get(day) or [])
+        n = got.get(day)
+        if not isinstance(n, int) or not shown <= n <= CANDIDATES_MAX:
+            out.append({'code': 'considered', 'ref': day, 'line': f'considered.{day}: how many candidates were researched for the day, '
+                        f'from the {shown} shown up to {CANDIDATES_MAX}'})
+    return out
+
+
+GOOD_NEWS_KINDS = ('health', 'lab', 'science', 'work', 'money', 'learning', 'climate', 'creative', 'people', 'safety', 'other')
+
+
+def goodnews_mix_findings(ideas):
+    """Item 12: each Saturday good-news story says what kind of good it is (kind, one of GOOD_NEWS_KINDS), so the board
+    shows the week's mix. The cap on health and lab stories waits for his yes; the mix is shown, never capped here."""
+    week = str((ideas or {}).get('week_start') or '')
+    if week < SHAPE_FROM:
+        return []
+    out = []
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    for day, opts in offdays.items():
+        for o in opts if isinstance(opts, list) else []:
+            if isinstance(o, dict) and o.get('weekly') == 'good_news' and o.get('stories'):
+                bad = [str(i) for i, st in enumerate(o['stories'], 1) if not (isinstance(st, dict) and st.get('kind') in GOOD_NEWS_KINDS)]
+                if bad:
+                    out.append({'code': 'goodnews_kind', 'ref': f'off-{day}-{o.get("id")}',
+                                'line': f'off-{day}-{o.get("id")}: stories {", ".join(bad)} need their kind, one of {", ".join(GOOD_NEWS_KINDS)}'})
+    return out
+
+
+def mix_of(stories):
+    """'2 health, 1 work, 1 money, 1 creative': the kinds of the week's good news, most first."""
+    counts = {}
+    for st in stories or []:
+        if isinstance(st, dict) and st.get('kind'):
+            counts[st['kind']] = counts.get(st['kind'], 0) + 1
+    return ', '.join(f'{n} {k}' for k, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0])))
+
+
 # The findings that fail the Sunday run (board_feed.py gate): a subject he refused offered again, a warned option placed
 # first or shown without his words, and a return that came back no deeper. The rest of cover stays the run's to fix
 # before it stops, as before.

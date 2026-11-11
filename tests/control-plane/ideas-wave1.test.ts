@@ -85,3 +85,39 @@ describe('the board shows what the run will not offer, and why', () => {
     expect(ideaLines(inputs(ideas), 'wed')).toEqual([])
   })
 })
+
+describe('the run reads fuller sources, and the good news shows its mix (items 9 and 12)', () => {
+  it('a wordless card from a bulk import leaves fresh and stays in the library; a card saved as good news is positive', async () => {
+    const { buildInspiration, BULK_AT_ONCE } = await import('../../apps/control-plane/api/_inspirationSources')
+    const bulk = Array.from({ length: BULK_AT_ONCE }, (_, n) => ({ id: `b${n}`, name: `instagram_${n}.jpg`, kind: 'image', created_at: '2026-11-17T17:23:10Z', facets: {} }))
+    const words = { id: 'w1', name: 'instagram_w.jpg', kind: 'image', created_at: '2026-11-17T17:23:20Z', facets: {}, transcript: 'A robot hands a nurse a tray.' }
+    const sunny = { id: 's1', name: 'clip.mp4', kind: 'video', created_at: '2026-11-15T09:00:00Z', facets: {}, why_like: 'Just a positive story, more like this', why_like_source: 'typed',
+      answered_at: '2026-11-15T09:01:00Z' }
+    const lone = { id: 'l1', name: 'one.jpg', kind: 'image', created_at: '2026-11-16T08:00:00Z', facets: {} }
+    const out = buildInspiration({ weekStart: WEEK, items: [...bulk, words, sunny, lone] })
+    expect(out.fresh.map(c => c.id).sort()).toEqual(['l1', 'w1'])
+    expect(out.counts.fresh_left_out_bulk_wordless).toBe(BULK_AT_ONCE)
+    expect(out.positive.map(c => c.id)).toEqual(['s1'])
+  })
+
+  it('the feed, his session corrections and his hindsight scores come in plain lists, his words kept exactly', async () => {
+    const { buildCorrections, buildFeed, buildHindsight } = await import('../../apps/control-plane/api/_inspirationSources')
+    expect(buildFeed([{ title: 'A post', excerpt: 'What it says.', meta: { account: '@someone', url: 'https://example.com/p' }, occurred_at: '2026-11-15T00:00:00Z' }]))
+      .toEqual([{ title: 'A post', excerpt: 'What it says.', account: '@someone', url: 'https://example.com/p', at: '2026-11-15T00:00:00Z' }])
+    expect(buildCorrections([{ excerpt: 'Make it simpler.', title: 'The cover', meta: { said_where: 'a session' }, occurred_at: '2026-11-15T00:00:00Z' },
+      { excerpt: 'x', title: null, meta: {}, occurred_at: null }, { excerpt: 'Taken back.', withdrawn_at: '2026-11-16T00:00:00Z', meta: {} }]))
+      .toEqual([{ said: 'Make it simpler.', about: 'The cover', where: 'a session', repository: null, at: '2026-11-15T00:00:00Z' }])
+    expect(buildHindsight([{ piece_id: 'p1', narrative: 8, production: 7, note: 'Clear.', scored_at: '2026-11-07T00:00:00Z' }]))
+      .toEqual([{ piece_id: 'p1', narrative: 8, production: 7, note: 'Clear.', at: '2026-11-07T00:00:00Z' }])
+  })
+
+  it('the good-news option says its mix before he presses', async () => {
+    const { mixOf, offdayOptions } = await import('../../apps/control-plane/api/board/_viewExtras')
+    const st = (kind: string) => ({ headline: 'h', what: 'w', why: 'y', kind, date: '2026-11-20', source: { label: 'L', url: 'https://e.com' }, media: { kind: 'photo', url: 'https://e.com/i' } })
+    const stories = [st('health'), st('work'), st('health'), st('money'), st('lab')]
+    expect(mixOf(stories)).toBe('2 health, 1 lab, 1 money, 1 work')
+    const [o] = offdayOptions({ week: WEEK, pieces: [], picks: [], queue: [], approvals: [], ideas: { offdays: { sat: [{ id: 'goodnews', weekly: 'good_news',
+      hook: 'Good things AI did this week.', copy: 'Five stories.', stories_due: '2026-11-14', stories }] } } }, 'sat')
+    expect(o.text.startsWith('The mix: 2 health, 1 lab, 1 money, 1 work. ')).toBe(true)
+  })
+})
