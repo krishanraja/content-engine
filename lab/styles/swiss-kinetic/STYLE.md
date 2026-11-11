@@ -19,7 +19,7 @@ screen: the caption carries the words, the type carries the one idea.
 - Canvas 2D, frame by frame from t alone (`lab/styles/swiss-kinetic/scene.mjs`).
 - Cream field with the house paper at 18%; grid hairlines in ink at 7% (columns) and 4% (baseline), drawn on in the
   first second.
-- An ink masthead band (0 to 400 on the tall canvas) carries the dress, as on every house frame.
+- On the wide frame an ink masthead band carries the dress. The tall frame has no band and no dress (Ruling, Krish, 2026-11-11).
 
 ## 3. Colour logic
 

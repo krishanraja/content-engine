@@ -1,0 +1,4 @@
+Status: Vertical video carries no wordmark, mark tile, series badge or opening logo in any route (ve, quick-edit, the style lab, the Studio routes), by Krish's ruling of 11 November; the wide cut keeps them. ve QC proves the mark absent on 9:16 (brand.no_mark), renderer tests refuse chrome on any 9:16 beat, the lab checker fails a tall cut with a dress and any word over a wide wordmark, and quick-edit ignores an older config's dress. HOOK_IS_THE_INTRO now says so, approved by Krish.
+Next: step 2, the full-screen vertical layouts inside every platform's safe area, with before and after stills to Krish before any cut is re-rendered.
+Changed: config/studio.json was left unchanged because it is bound into the signed media standard's hash; the vertical exemption is enforced in the renderer instead.
+North Star check (2026-11-11): holds.
