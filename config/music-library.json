@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "root_env": "MINDMAKE_MUSIC_ROOT",
-  "root_default_windows": "H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\00_Brand-Assets\\07_Music",
-  "drive_folder_id": "1pmPWx8vTOZuUXkp-WjhLlCTvof8MrRxK",
+  "root_default_windows": "H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\1 Brand kit (permanent)\\Music",
+  "drive_folder_id": "1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri",
   "levels": {
     "status": "approved",
     "intro_lufs": -16,
