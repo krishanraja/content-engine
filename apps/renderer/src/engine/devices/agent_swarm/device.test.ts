@@ -2,7 +2,7 @@ import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, it, expect } from 'vitest'
 import { EngineObjectSchema, EngineEventSchema } from '../../props'
-import { Device } from './index'
+import { Device, swarmLayout } from './index'
 import { swarmState } from './state'
 import fixture from './fixture.json'
 const object = EngineObjectSchema.parse(fixture.objects[0])
@@ -34,7 +34,7 @@ describe('agent_swarm', () => {
   })
   it.each(['9:16', '16:9'] as const)('renders the authored %s layout with provenance', aspect => {
     const html = render(110, aspect)
-    expect(html).toContain('ONE ENGINEER&#x27;S POST · 2026')
+    expect(html).toContain('ILLUSTRATIVE FIXTURE · 2026-11-10')
     expect(html).toContain('overflow:hidden')
     expect(html).not.toContain('NaN'); expect(html).toContain('aquamarine'); expect(html).toContain('coral')
   })
@@ -62,5 +62,45 @@ describe('agent_swarm', () => {
     expect(swarmState({ object, events: [...events].reverse(), frame: 110 })).toEqual(at(110))
     expect(swarmState({ object, events: [...events, { ...events[0]!, obj: 'other', atFrame: 100 }], frame: 110 })).toEqual(at(110))
     expect(swarmState({ object, events: [...events, { ...events[0]!, atFrame: 260 }], frame: 280 })?.agents).toHaveLength(0)
+  })
+})
+
+describe('premium swarm contract', () => {
+  it('authors wide windows of at least 120 pixels', () => {
+    expect(swarmLayout(1920, 1080, false).windowWidth).toBeGreaterThanOrEqual(120)
+    const widths = [...render(110, '16:9').matchAll(/data-window-width="([\d.]+)"/g)].map(m => Number(m[1]))
+    expect(widths).toHaveLength(10)
+    expect(widths.every(width => width >= 120)).toBe(true)
+  })
+  it('uses marks, never readable words, within each terminal', () => {
+    const windows = render(110, '16:9').split('data-agent-window="true"').slice(1)
+    expect(windows).toHaveLength(10)
+    for (const window of windows) {
+      const terminal = window.slice(0, window.indexOf('</g>'))
+      expect(terminal).not.toMatch(/<(text|foreignObject)/)
+      expect(terminal.match(/<rect/g)).toHaveLength(5)
+    }
+  })
+  it('keeps visible type at least 28 pixels in both aspects', () => {
+    for (const aspect of ['16:9', '9:16'] as const) {
+      const sizes = [...render(220, aspect).matchAll(/font(?:-size="|Size:)([\d.]+)/g)].map(m => Number(m[1]))
+      expect(sizes.length).toBeGreaterThan(0)
+      expect(sizes.every(size => size >= 28)).toBe(true)
+    }
+  })
+  it('changes rendered geometry every frame throughout the visible life', () => {
+    for (const aspect of ['16:9', '9:16'] as const) {
+      let previous = render(10, aspect)
+      for (let frame = 11; frame < 246; frame++) {
+        const next = render(frame, aspect)
+        expect(next).not.toBe(previous)
+        previous = next
+      }
+    }
+  })
+  it('omits the rank chip when there is no rank change', () => {
+    const same = { ...object, params: { ...object.params, rank: { from: 1, to: 1 } } }
+    const html = renderToStaticMarkup(React.createElement(Device, { object: same, events, frame: 160, tokens, aspect: '16:9', box: { left: 0, top: 0, width: 1920, height: 1080 } }))
+    expect(html).not.toContain('data-rank=')
   })
 })
