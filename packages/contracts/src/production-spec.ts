@@ -224,7 +224,7 @@ export const ProductionSpecV2Schema = z.object({
     // A caption theme instead of the house caption (Krish, 2026-11-11: "install all of these different caption styles
     // in to the engine, so future productions can select from them"). Names as apps/renderer/src/engine/captionThemes/names.ts.
     caption_theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
-      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast']).optional(),
+      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed']).optional(),
     title: z.string().min(3).max(48).optional(),
     reference: z.string().min(1).optional(),
     // Required by ve lint for every piece publishing after 5 Nov 2026: at least one card for look, one for motion
