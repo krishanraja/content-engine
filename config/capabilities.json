@@ -830,10 +830,10 @@
   {
    "id": "lab-moves",
    "name": "Moves library",
-   "purpose": "The house moves (count on a part, street drop, live chart, freeze-circle-magnify and the rest), each a deterministic draw from t with its own gallery and check; styles are built from them and card ve-style-0 makes them one package ve imports",
+   "purpose": "The house moves (count on a part, street drop, live chart, freeze-circle-magnify and the rest), each a deterministic draw from t, kept once in packages/moves (@mymu/moves) and imported by the style lab and ve; lab/moves keeps the gallery, the check and re-exports",
    "stage": "motion",
    "decided": "pre-record",
-   "location": "lab/moves/README.md",
+   "location": "packages/moves/README.md",
    "status": "working",
    "proposal": "keep",
    "overlaps": [

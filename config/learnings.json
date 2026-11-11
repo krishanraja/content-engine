@@ -724,7 +724,7 @@
         },
         {
           "file": ".agents/skills/make-piece/SKILL.md",
-          "contains": "Claude artifacts are retired for good",
+          "contains": "Claude artifacts stay retired",
           "how": "make-piece, plan-week, produce-video and the week-board reference say no step makes one"
         },
         {

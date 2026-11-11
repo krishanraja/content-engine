@@ -1,0 +1,30 @@
+{
+  "name": "@mymu/moves",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./_kit.mjs": "./_kit.mjs",
+    "./index.json": "./index.json",
+    "./bars-grow/move.mjs": "./bars-grow/move.mjs",
+    "./cost-shrink/move.mjs": "./cost-shrink/move.mjs",
+    "./count-in-card/move.mjs": "./count-in-card/move.mjs",
+    "./count-on-a-part/move.mjs": "./count-on-a-part/move.mjs",
+    "./counter-scene/move.mjs": "./counter-scene/move.mjs",
+    "./freeze-circle-magnify/move.mjs": "./freeze-circle-magnify/move.mjs",
+    "./level-line/move.mjs": "./level-line/move.mjs",
+    "./light-sweep-number/move.mjs": "./light-sweep-number/move.mjs",
+    "./live-chart/move.mjs": "./live-chart/move.mjs",
+    "./map-pin-drop/move.mjs": "./map-pin-drop/move.mjs",
+    "./percent-block/move.mjs": "./percent-block/move.mjs",
+    "./rows-equal/move.mjs": "./rows-equal/move.mjs",
+    "./slab-towers/move.mjs": "./slab-towers/move.mjs",
+    "./source-on-clock/move.mjs": "./source-on-clock/move.mjs",
+    "./street-drop/move.mjs": "./street-drop/move.mjs",
+    "./task-copies-2d/move.mjs": "./task-copies-2d/move.mjs",
+    "./task-copies-3d/move.mjs": "./task-copies-3d/move.mjs",
+    "./time-bars/move.mjs": "./time-bars/move.mjs",
+    "./toast/move.mjs": "./toast/move.mjs",
+    "./type-is-the-picture/move.mjs": "./type-is-the-picture/move.mjs"
+  }
+}
