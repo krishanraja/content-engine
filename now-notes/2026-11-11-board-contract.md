@@ -1,0 +1,4 @@
+Status: The Publish Board's feed has one versioned contract (apps/control-plane/api/board/view.schema.json, contract_version 1.0.0, a frozen fixture, check:view-contract in verify) and answers with an ETag and 304; content.krishraja.com/board/<Monday> is the archive with a banner to Control Centre's live board, and every link the engine gives Krish to the board is the live one (config/boards.json live_board).
+Changed: Krish ruled Control Centre's Publish Board is where everything wires in, live; the engine's board is an archive; engine changes upgrade the board and never break it ("add freely; never remove or rename a field", docs/PUBLISH_BOARDS.md).
+Next: after deploy, open content.krishraja.com/board/2026-11-09#monday and check the archive banner opens Control Centre's board at Monday.
+North Star check (2026-11-11): holds.
