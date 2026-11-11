@@ -194,8 +194,9 @@ export function dayStyle(i: StyleInputs): DayStyle {
       const rec = l.id === i.recommendedLook && !rejected
       return { id: l.id, name: l.name, line: l.pitch, rules: [], recommended: rec,
         why: rec ? 'The Sunday room recommends it for this idea.' : null, sample_url: null, rejected,
+        // The picked look takes no "Not this": a no would leave it picked (the look op holds the pick); he picks another.
         presses: { yes: press('Yes', 'look', { production: l.id, ...keep }, `Picked. ${l.name} is the look for this piece.`),
-          not_this: press('Not this', 'style', { reject: { layer: 'treatment', id: l.id } }, 'Noted. It is not recommended for this piece any more.') } }
+          ...(look && look.production === l.id ? {} : { not_this: press('Not this', 'style', { reject: { layer: 'treatment', id: l.id } }, 'Noted. It is not recommended for this piece any more.') }) } }
     }),
     picked: look ? String(look.production) : null, picked_by: look ? 'Krish' : null, picked_at: look && typeof look.at === 'string' ? look.at : null,
   }
