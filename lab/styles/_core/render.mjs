@@ -41,8 +41,8 @@ html,body{margin:0;background:#000}canvas{display:block}</style>
 <script type="module">
 import * as house from '${pathToFileURL(join(HERE, 'house.mjs')).href}'
 import * as scene from '${pathToFileURL(join(HERE, '..', style, 'scene.mjs')).href}'
-window.__setup = async (skin, timeline, shape, closeAt, captionY) => {
-  const env = house.makeEnv(skin, timeline, shape); env.closeAt = closeAt; env.captionY = captionY
+window.__setup = async (skin, timeline, shape, closeAt, captionY, assets) => {
+  const env = house.makeEnv(skin, timeline, shape); env.closeAt = closeAt; env.captionY = captionY; env.assets = assets
   env.markImg = new Image(); env.markImg.src = skin.mark; await env.markImg.decode()
   env.logoImg = new Image(); env.logoImg.src = skin.logo; await env.logoImg.decode()
   env.paperImg = new Image(); env.paperImg.src = skin.paper; await env.paperImg.decode()
@@ -69,7 +69,7 @@ const page = await browser.newPage({ viewport: { width: W, height: H } })
 page.on('pageerror', (e) => { console.error('page error:', e.message); process.exitCode = 1 })
 await page.goto(pathToFileURL(pagePath).href)
 await page.waitForFunction(() => typeof window.__setup === 'function')
-await page.evaluate(([s, tl, sh, ca, cy]) => window.__setup(s, tl, sh, ca, cy), [skin, timeline, shape, closeAt, arg('caption-y') ? Number(arg('caption-y')) : undefined])
+await page.evaluate(([s, tl, sh, ca, cy, as]) => window.__setup(s, tl, sh, ca, cy, as), [skin, timeline, shape, closeAt, arg('caption-y') ? Number(arg('caption-y')) : undefined, arg('assets') ? pathToFileURL(resolve(arg('assets'))).href + '/' : undefined])
 
 // --stills 3,12.9,24: style frames only, as PNGs, before anything is filmed.
 const stills = arg('stills')
