@@ -192,17 +192,25 @@ try{
   assert.equal((await get(week+'/ticks')).documents[0].body.done,false)
   await put(week+'/links/mon',{body:{article:'https://example.com/story',youtube:''},revision:0},401,{'Content-Type':'application/json',Cookie:cookie,Origin:'https://attacker.example'})
   await put(week+'/links/mon',{body:{article:'https://example.com/story',youtube:''},revision:0},200,{'Content-Type':'application/json',Cookie:cookie,Origin:origin})
-  for(const [collection,id,value] of [
-    ['edits','mon-article',{text:'Saved wording',day:'mon',item:'article'}],
-    ['picks','mon',{pick:'mon-1',day:'mon',story:'Choice'}],
-    ['queue','mon-1',{pick:'mon-1',queued:true}],
-    ['comments','root',{thread_id:'root',anchor:'mon-article',text:'Note'}],
-    ['comments','reply',{thread_id:'root',anchor:'mon-article',text:'Reply'}],
+  for(const [collection,id,value,refusal] of [
+    // An edit is only ever Krish's own save, and a pick is his Approve on a day's idea (the ideas gate): the engine's key
+    // is refused with the code that names it and writes nothing, and his access cookie saves it. The rest stay open to
+    // the engine.
+    ['edits','mon-article',{text:'Saved wording',day:'mon',item:'article'},'edit_is_his_save'],
+    ['picks','mon',{pick:'mon-1',day:'mon',story:'Choice'},'pick_is_his'],
+    ['queue','mon-1',{pick:'mon-1',queued:true},null],
+    ['comments','root',{thread_id:'root',anchor:'mon-article',text:'Note'},null],
+    ['comments','reply',{thread_id:'root',anchor:'mon-article',text:'Reply'},null],
   ] as const){
-    // An edit is only ever Krish's own save (his access cookie); the engine's key is refused (edit_is_his_save).
-    const krish={'Content-Type':'application/json',Cookie:cookie,Origin:origin}
-    if(collection==='edits')await put(`${week}/${collection}/${id}`,{body:value,revision:0},403)
-    await put(`${week}/${collection}/${id}`,{body:value,revision:0},200,collection==='edits'?krish:headers);assert.ok((await get(`${week}/${collection}`)).documents.some((d:Row)=>d.id===id))}
+    const krish={'Content-Type':'application/json',Cookie:cookie,Origin:origin}, path=`${week}/${collection}/${id}`
+    if(refusal){
+      assert.equal((await put(path,{body:value,revision:0},403)).error,refusal)
+      assert.ok(!(await get(`${week}/${collection}`)).documents.some((d:Row)=>d.id===id),'a refused write leaves nothing')
+    }
+    const saved=await put(path,{body:value,revision:0},200,refusal?krish:headers)
+    // His pick names no idea the engine holds, so it is saved and nothing goes on a day (placePick refuses it).
+    if(collection==='picks')assert.equal(saved.placed?.status,'refused')
+    assert.ok((await get(`${week}/${collection}`)).documents.some((d:Row)=>d.id===id))}
   {
     // Krish's presses go through the real SQL with no migration: each lands in a collection board_documents already
     // takes, only his cookie writes it, and Approve scripts records the server's answer in a second CAS revision. The
@@ -332,8 +340,20 @@ try{
   // The week's link opens the live board with no sign-in for the page itself (Krish, 2026-11-10); the old board is its archive.
   const live=await fetch(origin+'/board/2026-10-19')
   assert.equal(live.status,200);assert.match(await live.text(),/<title>The Desk<\/title>/)
+  // The archive is read-only (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only
+  // archive). Krish reads the build with the banner and the guard just inside its body and nothing else changed; a
+  // session's download (the operator's key) is the build's own bytes, streamed.
   const page=await fetch(origin+'/board/2026-10-19?archive=1',{headers:{Cookie:cookie}})
-  assert.equal(page.status,200);assert.equal(page.headers.get('cache-control'),'private, no-store');assert.equal(digest(new Uint8Array(await page.arrayBuffer())),htmlFile.sha256)
+  assert.equal(page.status,200);assert.equal(page.headers.get('cache-control'),'private, no-store');assert.equal(page.headers.get('referrer-policy'),'same-origin')
+  const archived=await page.text(), banner=/<div role="note" data-archive-banner[\s\S]*?<\/div><script data-archive-guard>[\s\S]*?<\/script>/
+  assert.match(archived,banner);assert.equal(digest(new Uint8Array(Buffer.from(archived.replace(banner,'')))),htmlFile.sha256)
+  const built=await fetch(origin+'/board/2026-10-19?archive=1',{headers})
+  assert.equal(built.status,200);assert.equal(digest(new Uint8Array(await built.arrayBuffer())),htmlFile.sha256)
+  // His press sent from the archive page is refused by the board itself, whatever the page's own guard did, and writes nothing.
+  const ticksBefore=(await get(week+'/ticks')).documents
+  const fromArchive={'Content-Type':'application/json',Cookie:cookie,Origin:origin,Referer:origin+'/board/2026-10-19?archive=1'}
+  assert.equal((await put(week+'/ticks/mon-substack',{body:{...body,done:true},revision:ticksBefore.find((d:Row)=>d.id==='mon-substack').revision},423,fromArchive)).error,'archive_read_only')
+  assert.deepEqual((await get(week+'/ticks')).documents,ticksBefore)
   const downloaded=await fetch(origin+week+'/assets/file?sha='+assetFile.sha256,{headers})
   assert.equal(downloaded.headers.get('content-type'),assetFile.type)
   assert.equal(digest(new Uint8Array(await downloaded.arrayBuffer())),assetFile.sha256)

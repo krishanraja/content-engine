@@ -13,7 +13,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
-import { createHash } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { pathToFileURL } from 'node:url'
@@ -43,7 +43,9 @@ await pool.query(`
   end $$;
   create table public.content_ideas (id uuid primary key default gen_random_uuid(), idea text, thesis text, scheduled_for date, lane_slot text,
     state text, buried_at timestamptz, body text, meta jsonb, updated_at timestamptz default now());`)
-await pool.query(readFileSync(new URL('../../supabase/migrations/20261125093000_board_sessions_and_piece_store.sql', import.meta.url), 'utf8'))
+// The board's own tables, then the sessions' store, then the ideas gate: a piece goes on a day only by his Approve.
+for (const m of ['20261019120743_publish_board_web', '20261125093000_board_sessions_and_piece_store', '20261126090000_ideas_gate'])
+  await pool.query(readFileSync(new URL(`../../supabase/migrations/${m}.sql`, import.meta.url), 'utf8'))
 
 // ── a Supabase-shaped client over the real database (only what these routes and the view use) ───────────────────────
 const qi = (c: string) => `"${c.replace(/"/g, '')}"`
@@ -89,11 +91,14 @@ function from(table: string) {
   }
   return b
 }
+// A function that returns a table answers its rows, as PostgREST does; any other answers its one value.
+const TABLE_FUNCTIONS = new Set(['board_approvals_now'])
 async function rpc(fn: string, args: Record<string, unknown>) {
   const keys = Object.keys(args)
+  const call = `public.${qi(fn)}(${keys.map((k, i) => `${k} => $${i + 1}`).join(', ')})`
   try {
-    const r = await pool.query(`select public.${qi(fn)}(${keys.map((k, i) => `${k} => $${i + 1}`).join(', ')}) as r`, keys.map(k => args[k]))
-    return { data: r.rows[0].r, error: null }
+    const r = await pool.query(TABLE_FUNCTIONS.has(fn) ? `select * from ${call}` : `select ${call} as r`, keys.map(k => args[k]))
+    return { data: TABLE_FUNCTIONS.has(fn) ? r.rows : r.rows[0].r, error: null }
   } catch (e) { return { data: null, error: { message: (e as Error).message } } }
 }
 // The content library's bucket, in memory: signed links point back at this server.
@@ -142,9 +147,15 @@ base = `http://127.0.0.1:${(server.address() as { port: number }).port}`
 
 // ── the week: Monday's piece, with one paste already on its working set ─────────────────────────────────────────────
 const WEEK = '2026-11-16'
-const piece = (await pool.query(`insert into content_ideas (idea, scheduled_for, lane_slot, state, meta) values
-  ('Oracle files to sell $20B in new stock and bonds to fund AI', '2026-11-16', 'follow_the_money', 'drafting', $1) returning id`,
-  [{ materials: [{ id: 'm-first', kind: 'paste', title: 'Oracle 10-Q notes', content: 'Remaining performance obligations, the prepayments.', by: 'Krish', at: '2026-11-09T10:00:00Z' }] }])).rows[0].id as string
+const IDEA = 'Oracle files to sell $20B in new stock and bonds to fund AI'
+// His Approve on the ideas board puts the piece on Monday (the ideas gate): without it the database refuses the row.
+const piece = randomUUID()
+const approve = await pool.query(`select public.board_save($1, 'picks', 'mon', $2::jsonb, 0, 'Krish') as r`,
+  [WEEK, JSON.stringify({ day: 'mon', pick: 'mon-1', idea_id: piece, series: 'follow_the_money', story: IDEA })])
+assert.equal(approve.rows[0].r.ok, true, 'his Approve is saved')
+await pool.query(`insert into content_ideas (id, idea, scheduled_for, lane_slot, state, meta) values
+  ($1, $2, '2026-11-16', 'follow_the_money', 'drafting', $3)`,
+  [piece, IDEA, { materials: [{ id: 'm-first', kind: 'paste', title: 'Oracle 10-Q notes', content: 'Remaining performance obligations, the prepayments.', by: 'Krish', at: '2026-11-09T10:00:00Z' }] }])
 const offline = async () => ({ status: 404, text: async () => '' })
 const view = () => readView(db as never, WEEK, {}, offline as never, new Date(Date.now()))
 
