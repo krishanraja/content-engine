@@ -29,8 +29,11 @@ import { buildOffdayVerdicts, offdayWeeksBefore } from './_offdayVerdicts.js'
 //        Ideas tab must cover (_inspirationSources.ts), and `sources.cues`: his
 //        feedback cues (future pieces owed, wider pieces by theme, topics
 //        tracked, briefs waiting, not for us) that the Inspiration House files
-//        from his words (_feedbackCues.ts); a missing table is said in `empty`,
-//        never a failure. Evidence only: no model, no write, and the judges
+//        from his words (_feedbackCues.ts), and `sources.outcomes`: his answers on
+//        the ideas boards of the eight weeks before (the ideas gate, idea_outcomes):
+//        the ideas he filed for later, rejected with his reason, saved as a
+//        trend and improved with his note, each the cue the next ideas run reads;
+//        a missing table is said in `empty`, never a failure. Evidence only: no model, no write, and the judges
 //        never read it.
 // POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended, covers? }] }
 //        writes meta.week_option on each option's row (and its series, when
@@ -173,9 +176,38 @@ async function readSources(week: string, slugs: string[]) {
   // A said idea is a manual content idea and an inspiration card at once (20261118093200_inspiration_said_cards.sql);
   // the idea already read here is the one Sunday counts, so its card is not counted again.
   const listed = ((rows.data || []) as Array<Record<string, any>>).map(r => String(r.id))
-  const [inspiration, cues, offday] = await Promise.all([readInspiration(week, listed), readCues(), readOffdayVerdicts(week)])
-  const empty = [...sources.empty, ...(cues.empty ? [cues.empty] : []), ...(offday.empty ? [offday.empty] : [])]
-  return { ...sources, empty, inspiration, cues: cues.cues, offday_verdicts: offday.block }
+  const [inspiration, cues, offday, outcomes] = await Promise.all([readInspiration(week, listed), readCues(), readOffdayVerdicts(week), readOutcomes(week)])
+  const empty = [...sources.empty, ...(cues.empty ? [cues.empty] : []), ...(offday.empty ? [offday.empty] : []), ...(outcomes.empty ? [outcomes.empty] : [])]
+  return { ...sources, empty, inspiration, cues: cues.cues, offday_verdicts: offday.block, outcomes: outcomes.block }
+}
+
+/** His answers on the ideas boards of the eight weeks before this one (the ideas gate, idea_outcomes; Krish,
+ *  2026-11-11: "filed away for later, rejected and learnt from, saved as a trend for a wider piece, improved for a future
+ *  piece cue"): the latest answer on each idea, grouped by outcome, his words verbatim. The next ideas run offers a
+ *  filed idea again where it fits, never offers a rejected one again and learns from his reason, gathers trends by the
+ *  name he gave them, and carries an improve note into that idea's pitch. Approvals are the publish board's, not here.
+ *  Never fails the gather: a table not applied yet, or a failed read, is said in `empty`. */
+export async function readOutcomes(week: string, db: { from: typeof supabase.from } = supabase) {
+  const since = new Date(Date.parse(`${week}T00:00:00Z`) - 56 * 86_400_000).toISOString().slice(0, 10)
+  const block: Record<'filed' | 'rejected' | 'trend' | 'improved', Array<Record<string, unknown>>> = { filed: [], rejected: [], trend: [], improved: [] }
+  try {
+    const res = await db.from('idea_outcomes').select('week,day,date,idea_id,option_ref,doc,outcome,words,decided_at,id')
+      .gte('week', since).lt('week', week).order('decided_at', { ascending: false }).order('id', { ascending: false }).limit(2000)
+    if (res.error) throw new Error(res.error.message)
+    const seen = new Set<string>()
+    for (const r of (res.data || []) as Array<Record<string, unknown>>) {
+      const key = `${String(r.week).slice(0, 10)}/${r.doc}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      const o = String(r.outcome)
+      if (o === 'filed' || o === 'rejected' || o === 'trend' || o === 'improved') {
+        block[o].push({ week: String(r.week).slice(0, 10), day: r.day, idea_id: r.idea_id, option: r.option_ref ?? null, said: r.words ?? null, at: r.decided_at })
+      }
+    }
+    return { block, empty: null }
+  } catch (e) {
+    return { block, empty: `his answers on the ideas board could not be read (${String((e as Error).message || 'unknown error').slice(0, 160)}); this slate is made without them` }
+  }
 }
 
 /** His verdicts on the last weeks' off-day options (_offdayVerdicts.ts): what Sunday learns from. Never fails the

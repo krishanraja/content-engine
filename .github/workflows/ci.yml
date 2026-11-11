@@ -52,6 +52,12 @@ jobs:
         env:
           VERIFY_BASE: origin/${{ github.base_ref || 'main' }}
         run: npm run verify:quick
+      - name: The ideas gate on the real migration (only his Approve puts an idea on a publish board)
+        # Krish, 2026-11-11: "The ideas board-to-publish board process should be bulletproof." Every route without his
+        # approval is refused in the database; a few seconds on PGlite, on every pull request.
+        run: |
+          npm install --no-save --package-lock=false @electric-sql/pglite@0.3.14
+          node tests/ideas-gate-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
 
   control-plane-sql:
     # The Video Studio control plane's projection CAS, ancestry and race

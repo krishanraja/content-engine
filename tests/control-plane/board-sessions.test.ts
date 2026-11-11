@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createHash } from 'node:crypto'
+import { withApprovals } from './_approvals'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { WRITE_BACK_HEAD, attachOverlay, stepKey, withWriteBack, writeBack } from '../../apps/control-plane/api/board/_writeBack'
 import { StoreError, addText, confirmFile, listing, parseReport, parseScope, writerOf, type StoreDb } from '../../apps/control-plane/api/_pieceStore'
@@ -14,7 +15,7 @@ const WEEK = '2026-11-16'
 const MON = '8287846b-6618-4a19-9fb8-23ad4eca2718', WED = 'db9f9f6a-1092-49be-8024-f335e060305a'
 const piece = (id: string, date: string, slot: string, meta: Body = {}) =>
   ({ id, idea: `Piece ${id.slice(0, 4)}. It says one thing.`, scheduled_for: date, lane_slot: slot, state: 'drafting', buried_at: null, body: '', updated_at: '2026-11-09T12:00:00Z', meta })
-const inputs = (over: Partial<ViewInputs> = {}): ViewInputs => ({
+const inputs = (over: Partial<ViewInputs> = {}): ViewInputs => withApprovals({
   week: WEEK, now: new Date('2026-11-16T09:00:00Z'), pieces: [piece(MON, '2026-11-16', 'follow_the_money'), piece(WED, '2026-11-18', 'under_the_hood')],
   picks: [], queue: [], history: [], ideas: { offdays: { tue: [{ id: 'povteach', format: 'Meme' }], thu: [], sat: [] } }, locks: {}, runs: {}, north_star: null, ...over,
 })

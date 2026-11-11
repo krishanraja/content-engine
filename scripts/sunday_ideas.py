@@ -11,9 +11,10 @@ this guard makes every firing after the first one that built the Ideas tab do no
     python3 scripts/sunday_ideas.py week --date YYYY-MM-DD      # a typed Monday, checked and printed as YYYY-MM-DD
     python3 scripts/sunday_ideas.py built MONDAY                 # built=true once the Ideas tab is live
 
-The Saturday good news is no longer found here: the Thursday run finds it (scripts/saturday_goodnews.py,
-.github/workflows/saturday-goodnews.yml; Krish, 2026-11-07: "Saturday's good news run should be done later in the
-week so the good news is fresh"). This run leaves that option with its stories due on the Thursday.
+One refresh a week, everything in it (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's
+good news included; the Thursday good-news schedule is retired). So this run finds Saturday's five good-news stories
+too, and `built` says built only once the view carries each publishing day's options and, when the week has the
+weekly good news, its stories (stories_fresh): a firing that left them out is retried by the next one.
 
 The week: Krish records the whole week on the Sunday and it goes live eight days later (plan-week, "The Sunday
 loop"), so the run on Saturday 31 October (or a run by hand on Sunday 1 November) plans the week of 9 November.
@@ -66,9 +67,13 @@ def has_ideas(page: str) -> bool:
 
 
 def view_has_ideas(view: dict) -> bool:
-    """Whether the week's view (contract 1.2.0) carries options on each publishing day, Monday, Wednesday and Friday."""
+    """Whether the week's view (contract 1.2.0) carries the whole ideas board: options on each publishing day, Monday,
+    Wednesday and Friday, and, when the week has the weekly good news, a good-news option holding its stories."""
     days = {d.get('day'): d for d in view.get('days') or [] if isinstance(d, dict)}
-    return all(isinstance(days.get(k), dict) and len(days[k].get('options') or []) > 0 for k in ('mon', 'wed', 'fri'))
+    if not all(isinstance(days.get(k), dict) and len(days[k].get('options') or []) > 0 for k in ('mon', 'wed', 'fri')):
+        return False
+    weekly = [o for d in days.values() for o in d.get('options') or [] if isinstance(o, dict) and 'stories_fresh' in o]
+    return not weekly or any(o.get('stories_fresh') is True for o in weekly)
 
 
 def built(monday: str) -> bool:

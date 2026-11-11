@@ -2183,6 +2183,8 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null>`
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
+- `async function placePick(db: SupabaseClient, ctx: { week: string; day: string; body: Body; now: string }): Promise<{ st…`
+- `function ideaReport(week: string, id: string, body: Body, now: string)`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
 
 ### `apps/control-plane/api/board/_prompts.ts`
@@ -2278,12 +2280,14 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `interface ViewYes`
 - `interface ExtrasInputs`
 - `function thursdayOf(week: string): string`
+- `function ideasRunOf(week: string): string`
 - `function storiesFresh(week: string, o: Body): boolean`
-- `function dayPieces(pieces: Body[], date: string, shown: string | null): ViewPiece[]`
+- `function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map()): …`
 - `function dayComments(rows: ExtrasInputs['comments'], day: string): ViewComment[]`
 - `function dayPosted(rows: ExtrasInputs['ticks'], day: string): ViewPosted[]`
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
 - `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[]`
+- `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
 - `function offdayOptions(i: ExtrasInputs, day: string): ViewOption[]`
 - `function thoughtPress(day: string, step: string): PressAction`
 - `function materialPress(pieceId: string): PressAction`
@@ -3453,6 +3457,7 @@ His verdicts on past off-day options, for Sunday's gather (GET /api/week/options
 - `const PICKED_STATES`
 - `function weekEnd(monday: string): string`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+- `async function readOutcomes(week: string, db: { from: typeof supabase.from } = supabase)`
 
 ### `apps/control-plane/api/workbench.ts`
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
+import { approval, withApprovals } from './_approvals'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
-import { fillPress, storiesFresh, type PressAction } from '../../apps/control-plane/api/board/_viewExtras'
+import { fillPress, ideasRunOf, storiesFresh, type PressAction } from '../../apps/control-plane/api/board/_viewExtras'
 import { validBody } from '../../apps/control-plane/api/board/_contracts'
 import { offdaySides } from '../../apps/control-plane/api/board/_offdaySides'
 
@@ -18,7 +19,7 @@ const story = (n: number) => ({ headline: `Story ${n}`, what: 'What happened.', 
 
 function week(over: Partial<ViewInputs> = {}): ViewInputs {
   const gitbroke = opt('gitbroke', { decided: 'Signed off for publishing next week (Krish, 4 Nov). Growth posts it.', direction: { look: 'Infographic' } })
-  return {
+  return withApprovals({
     week: WEEK, now: new Date('2026-11-11T12:00:00Z'),
     pieces: [piece(MON, '2026-11-09', 'follow_the_money', { state: 'published' }), piece(WED, '2026-11-11', 'under_the_hood'),
       piece('11111111-2222-4333-8444-555555555555', '2026-11-11', 'mind_the_gap')],
@@ -31,11 +32,11 @@ function week(over: Partial<ViewInputs> = {}): ViewInputs {
       offdays: {
         tue: [opt('shell'), opt('quoteline')],
         thu: [gitbroke, opt('agentnotsetup', { decided: 'Posts Thu 12 Nov (Krish, 11 Nov). Codex schedules it.' }), opt('phonehome')],
-        sat: [opt('goodnews', { weekly: 'good_news', stories_due: '2026-11-08', decided: 'Chosen at the weekend (Krish, 4 Nov).', stories: [1, 2, 3, 4, 5].map(story) }), opt('infosys')],
+        sat: [opt('goodnews', { weekly: 'good_news', stories_due: '2026-10-28', decided: 'Chosen at the weekend (Krish, 4 Nov).', stories: [1, 2, 3, 4, 5].map(story) }), opt('infosys')],
       },
     },
     ...over,
-  }
+  })
 }
 const day = (v: ReturnType<typeof buildView>, d: string) => v.days.find(x => x.day === d)!
 const presses = (v: ReturnType<typeof buildView>) => v.days.flatMap(d => [...d.actions, ...d.options.flatMap(o => o.actions)]).filter((a): a is PressAction => a.kind === 'press')
@@ -47,44 +48,76 @@ describe('one live board: the view carries everything the old board showed', () 
     expect(wed.pieces.find(p => p.on_day)?.id).toBe(WED)
   })
 
-  it('treats an off-day option his plan records as decided as chosen, never stuck on an older press', () => {
-    const thu = day(buildView(week()), 'thu')
+  it('holds an off-day option a session wrote as decided until he presses Approve, and then it is chosen (the ideas gate)', () => {
+    // Krish, 2026-11-11: only his Approved crosses. Words a session wrote as decided are shown, never read as his press.
+    const held = day(buildView(week()), 'thu')
+    const opts = Object.fromEntries(held.options.map(o => [o.id, o]))
+    expect(opts.gitbroke.status).toBe('held')
+    expect(opts.gitbroke.said).toMatch(/^Said in a session, not pressed here: Signed off/)
+    expect(opts.gitbroke.held).toMatch(/not pressed Approve/)
+    expect(opts.gitbroke.actions.map(a => a.label)).toEqual(['Approve for Thursday 12 Nov', 'Improve for a future piece', 'Reject', 'Save as a trend', 'File for later'])
+    expect(held.held.map(h => [h.option, h.title])).toEqual([['off-thu-gitbroke', 'Held: not approved by you'], ['off-thu-agentnotsetup', 'Held: not approved by you']])
+    expect(held.next).not.toMatch(/Approved/)
+    // His Approve on it stands: it is chosen, says so with when, and carries no press; his words settled its Improve.
+    const gitbroke = opt('gitbroke', { decided: 'Signed off for publishing next week (Krish, 4 Nov). Growth posts it.', direction: { look: 'Infographic' } })
+    const approved = buildView(week({ approvals: [approval(WEEK, 'thu', 'gitbroke', { doc: 'queue/off-thu-gitbroke', option_sha256: offdaySides(gitbroke).idea_sha256, decided_at: '2026-11-03T11:56:26Z' })] }))
+    const thu = day(approved, 'thu')
     expect(thu.who).toBe('growth')
     expect(thu.next).toMatch(/Approved/)
-    const opts = Object.fromEntries(thu.options.map(o => [o.id, o]))
-    expect(opts.gitbroke.status).toBe('decided')
-    expect(opts.gitbroke.actions).toEqual([])
-    expect(opts.phonehome.status).toBe('open')
-    expect(opts.phonehome.actions.map(a => a.label)).toEqual(['Approve', 'Improve', 'Reject', 'Next week'])
+    expect(thu.detail[0]).toEqual({ h: 'Approved by you', p: 'Tue 3 Nov, 06:56' })
+    const o = thu.options.find(x => x.id === 'gitbroke')!
+    expect(o.status).toBe('approved')
+    expect(o.outcome).toMatchObject({ id: 'approved', label: 'Approved by you, Tue 3 Nov, 06:56' })
+    expect(o.actions).toEqual([])
+    expect(thu.held.map(h => h.option)).toEqual(['off-thu-agentnotsetup'])
+    expect(thu.options.find(x => x.id === 'phonehome')!.status).toBe('open')
   })
 
-  it('waits on Thursday\'s run for this week\'s good news, and shows the stories once they are in', () => {
-    const stale = day(buildView(week()), 'sat')
+  it('brings Saturday\'s good news with the week\'s one ideas run, and shows the stories once they are in', () => {
+    // Ruling (Krish, 2026-11-11): the ideas board fills once a week in full, Saturday's good news included.
+    const gnApproved = (stories_due: string) => {
+      const ideas = week().ideas as Body & { offdays: Record<string, Body[]> }
+      ideas.offdays.sat[0] = { ...ideas.offdays.sat[0], stories_due, stories: [1, 2, 3, 4, 5].map(story) }
+      return week({ ideas, approvals: [approval(WEEK, 'sat', 'goodnews', { doc: 'queue/off-sat-goodnews' })] })
+    }
+    const stale = day(buildView(gnApproved('2026-10-28')), 'sat')
     expect(stale.who).toBe('engine')
+    expect(stale.next).toMatch(/not in yet/)
     expect(stale.actions[0]).toMatchObject({ kind: 'run', job: 'saturday-goodnews', input: { week: WEEK } })
     expect(stale.options.find(o => o.id === 'goodnews')?.stories_fresh).toBe(false)
-    const ideas = week().ideas as Body & { offdays: Record<string, Body[]> }
-    ideas.offdays.sat[0] = { ...ideas.offdays.sat[0], stories_due: '2026-11-12', stories: [1, 2, 3, 4, 5].map(story) }
-    const fresh = day(buildView(week({ ideas })), 'sat')
+    // Found by the week's ideas run (the Saturday nine days before its Monday) or later: this week's stories.
+    const fresh = day(buildView(gnApproved('2026-10-31')), 'sat')
     expect(fresh.who).toBe('growth')
     expect(fresh.next).toMatch(/5 stories/)
     const gn = fresh.options.find(o => o.id === 'goodnews')!
     expect(gn.stories_fresh).toBe(true)
     expect(gn.stories).toHaveLength(5)
     expect(gn.stories![0]).toMatchObject({ headline: 'Story 1', href: 'https://example.org/1', media_kind: 'photo' })
-    expect(storiesFresh(WEEK, { stories: [1, 2, 3, 4, 5].map(story), stories_due: '2026-11-08' })).toBe(false)
+    expect(ideasRunOf(WEEK)).toBe('2026-10-31')
+    expect(storiesFresh(WEEK, { stories: [1, 2, 3, 4, 5].map(story), stories_due: '2026-10-30' })).toBe(false)
     expect(storiesFresh(WEEK, { stories: [1, 2, 3, 4].map(story), stories_due: '2026-11-12' })).toBe(false)
+    // Without his Approve the good news is an option to judge, held while a session's words call it decided.
+    const unpressed = day(buildView(week()), 'sat')
+    expect(unpressed.who).toBe('you')
+    expect(unpressed.held.map(h => h.option)).toEqual(['off-sat-goodnews'])
   })
 
-  it('offers the Sunday options of a day with no piece, each with Pick and the four presses, and points the day there', () => {
+  it('offers each Sunday option of a day with no piece its five outcomes, each saying where it goes, and points the day there', () => {
     const fri = day(buildView(week()), 'fri')
     expect(fri.actions[0]).toMatchObject({ kind: 'open', href: `/board/${WEEK}#options-fri` })
     expect(fri.options.map(o => o.doc_id)).toEqual(['fri-1', 'fri-2'])
     expect(fri.options[0].title).toBe('Meta staff gamed it.')
-    expect(fri.options[0].actions.map(a => a.label)).toEqual(['Pick for Friday', 'Part of a wider piece', 'Track it over time', 'Next week', 'Not for us'])
-    // A day with its piece placed keeps its options to read and press, with no Pick.
-    const placed = day(buildView(week({ pieces: [...week().pieces, piece('f3fcd5e1-573e-4692-a413-db7c5823a10e', '2026-11-13', 'mind_the_gap')] })), 'fri')
-    expect(placed.options[0].actions.map(a => a.label)).not.toContain('Pick for Friday')
+    const acts = fri.options[0].actions
+    expect(acts.map(a => a.label)).toEqual(['Approve for Friday 13 Nov', 'File for later', 'Reject', 'Save as a trend', 'Improve for a future piece'])
+    expect(acts.map(a => a.outcome)).toEqual(['approved', 'filed', 'rejected', 'trend', 'improved'])
+    expect(acts[0].goes).toBe("Goes onto the publish board for Friday 13 November as the day's piece.")
+    for (const a of acts) expect(a.goes, a.label).toBeTruthy()
+    // A day with its piece approved and placed keeps its options to read and press, with no Approve.
+    const F = 'f3fcd5e1-573e-4692-a413-db7c5823a10e'
+    const placed = day(buildView(week({ pieces: [...week().pieces, piece(F, '2026-11-13', 'mind_the_gap')] })), 'fri')
+    expect(placed.options[0].actions.map(a => a.label)).toEqual([])
+    expect(placed.options[0].status).toBe('approved')
+    expect(placed.options[1].actions.map(a => a.label)).toEqual(['File for later', 'Reject', 'Save as a trend', 'Improve for a future piece'])
   })
 
   it('builds every press as a document the board accepts once his words and the time are in', () => {

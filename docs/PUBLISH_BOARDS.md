@@ -64,6 +64,69 @@ board has everything up to date and, not only that, is genuinely live?" The audi
   same for any write. Both are served with a same-origin referrer, and the board answers a write from either page with
   423 `archive_read_only` and the live board's link (`_readOnly.ts`). Nothing is deleted; every address still opens.
 
+## The ideas gate: only his Approve crosses (Ruling, Krish, 2026-11-11)
+
+Krish, 2026-11-11: "Once I've completed it, ideas should either be: filed away for later, rejected and learnt from,
+saved as a trend for a wider piece, improved for a future piece cue. If they're approved, they should move into the
+publish board. The ideas board-to-publish board process should be bulletproof. I shouldn't end up seeing random ideas in
+the publish board that I never wanted there and that I didn't approve to move to the publish board. This process should
+be crystal clear, incorrigible, and incorruptible."
+
+**Five outcomes, and nothing else.** Every idea on the ideas board (a publishing day's option, an off-day option,
+Saturday's good news) ends in exactly one of five, each a press he makes on the live board. Each press says where it
+sends the idea before he presses (`goes`, contract 1.3.0), and its label says the day where it has one:
+
+| Outcome | His press | Where it goes | Stored as | His words |
+|---|---|---|---|---|
+| Approved | Approve for <day and date> | Onto the publish board on that day: the server places it (`placePick`, or `placeOffday` for a piece he records) | `picks/<day>` with `idea_id`, `so_what`, `story`, `option_sha256`; an off-day option's `idea.verdict: approve` | optional note: what the story must do |
+| Filed for later | File for later | Kept with the date; it comes back on a later ideas board, or when he asks | `use: next_week` with `target_week`; off day `verdict: next_week` | optional note |
+| Rejected and learnt from | Reject | Kept as a cue the next ideas run reads, and sent to his taste ledger in his words (`ideaReport`, `offdayReports`) | `use: not_for_us` with `reason`; off day `verdict: reject` | his reason, required |
+| Saved as a trend for a wider piece | Save as a trend | Kept with the trend he names, for a wider piece | `use: wider_piece_context` with `note` (the older Track it over time, `track_over_time`, reads as a trend); off day `verdict: trend` | the trend, required |
+| Improved for a future piece | Improve for a future piece | His note kept as a cue on that idea for a future slate; on an off day the revise run also brings a revised version back to approve | `use: improve` with `note`; off day `verdict: improve` | his note, required |
+
+An idea he approved carries no other press: one idea, one outcome. A day that already has its approved piece offers
+the other four on its other ideas, never a second Approve.
+
+**The record.** Every answer is one row of `idea_outcomes` (migration `20261126090000_ideas_gate.sql`): the week, the
+day and date, the idea, the board document and the revision he saved, the outcome, his words, the hash of the option
+text he saw (`option_sha256`), `decided_by` Krish and when. The database writes it itself, from `board_history`, only for
+a revision saved by Krish through `board_save`; an insert that names no such revision is refused, and nothing in the
+table is ever changed, removed or truncated. His presses before 11 November were recorded once from `board_history`
+(`source: board_history_backfill`); a pick from then carries no option hash, so its words were not bound and the
+board does not pretend they were.
+
+**The gate, in three places.**
+
+1. *The database* refuses to put a piece on a day (`scheduled_for` set or changed, or a piece on a day brought back
+   from buried or dropped) unless an approval of his for that exact piece and that exact date stands
+   (`content_ideas_board_gate`, `board_approval_holds`, `board_approvals_now`). It is the same for every writer: the
+   engine's routes, Control Centre, a session's SQL, a workflow. Taking a piece off a day is never refused. A
+   publishing day's approval is his latest pick for that day; an off-day option's is its latest answer, when that is
+   Approve; his Approve for publish on a day names its piece too. An approval never covers another idea, another
+   day, or (on an off day) a second piece made from the same option. Held by `tests/ideas-gate-db.mjs` on the real
+   migration.
+2. *The view* draws only the pieces his approval holds (`_gate.ts`, `gatePieces`), each with "Approved by you" and
+   when (`pieces[].approval`, and the day's first detail line), and lists every other piece on the day as a held
+   line (`held`), never hiding it: "Held: not approved by you" when nothing he pressed put it there, "Held: changed
+   since you approved it" when the option's words on the ideas board changed after his Approve (the approval binds
+   the words he saw). A held piece that is not one of the day's options carries its own Approve press. An off-day
+   option a session wrote as `decided` in `ideas.json` is held too: his words in a session are shown on it and never
+   read as his press. When his approvals cannot be read, every piece is held. Held by
+   `tests/control-plane/ideas-gate.test.ts`.
+3. *Every writer* meets the same refusal: `POST /api/content-ideas/<id>/schedule` answers 409 `not_approved_by_krish`
+   without his approval; Growth's read (`GET /api/board/<Monday>/pieces`) hands over only approved pieces and
+   off-day options (503 `approvals_unavailable` when they cannot be read, never everything); only he can save a pick
+   or a press (`hisOnlyRefusal`: `pick_is_his`, `press_is_his`). A session (plan-week, make-piece, produce-video, a
+   workflow, `board_session.py`, the connector) proposes ideas onto the ideas board and never puts one on the
+   publish board.
+
+`GET /api/board/<Monday>/gate` (the operator's key or his login, read-only) lists the week's pieces with the approval
+that holds each and every held line; `python3 scripts/post-pack/board_gate.py <Monday>` prints it.
+
+What the database cannot tell: a writer holding the service key could still write `board_history` as Krish by hand.
+Nothing in a database tells a forged name from his press; the routes refuse every other writer, and the ledger names
+the revision every approval came from.
+
 ## The view's contract: add freely; never remove or rename a field
 
 Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its shape is
@@ -89,6 +152,8 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
 - **1.1.0 (11 Nov 2026)** added `sessions` and `materials` to every day (the section below).
 - **1.2.0 (11 Nov 2026)** added `pieces`, `options`, `comments`, `posted` and `yes` to every day, the action kind
   `press`, and the week's `revision` ("One live board", above).
+- **1.3.0 (11 Nov 2026)** added the ideas gate: `held` on every day, `approval` on each piece, `outcome` and `held` on
+  each option, and `outcome` and `goes` on each press ("The ideas gate", above).
 
 ## Sessions and materials
 
@@ -240,16 +305,20 @@ then update the content.krishraja.com board?"). No Claude routine builds a
 board. The Sunday ideas board is `.github/workflows/sunday-ideas.yml`: Claude
 Code inside a GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`,
 never an API key), fired twice on Saturday (12:17 and 20:47 UTC, the second
-only a retry), idempotent for the week, and startable by hand. The Saturday good
-news is the one other Claude schedule (Ruling, Krish, 2026-11-07: "Happy to
-break the "no Claude schedules" rule for Saturday's good news"):
-`.github/workflows/saturday-goodnews.yml`, built the same way, fires twice on
-Thursday (10:41 and 19:23 UTC, the second only a retry; first live run Thursday
-19 November), finds that week's five stories, writes them onto the week's
-good-news option through the offdays feed (`ideas.json` `offdays.sat`) and
-rebuilds the live board keeping every made day, so his presses work as on any
-off-day option. Its guard (`scripts/saturday_goodnews.py check`) makes it do
-nothing once the live board shows the stories. The Monday final board is built by code (`week_board.py`)
+only a retry), idempotent for the week, and startable by hand. It fills the
+whole ideas board once a week, Saturday's good news included (Ruling, Krish,
+2026-11-11: the ideas board fills once a week in full, Saturday's good news
+included; the Thursday good-news schedule is retired): the publishing days'
+options, every off day's options and Saturday's five real, sourced stories,
+each checked against its primary source, with `stories_due` the day it found
+them. Its guard (`scripts/sunday_ideas.py built`) counts the week as built only
+when the view carries all of it. The trade-off, said plainly: the run fills the
+board for the week that starts eight days after its Sunday, so a story it finds
+is about two weeks old by the Saturday it posts on (it is dated within the seven
+days up to the run); before Growth makes the Saturday post, the fact gate checks
+every story against its source again. `.github/workflows/saturday-goodnews.yml`
+stays, by hand only (the board's "Find the stories now" press, or Run workflow),
+to find them again for a week; it has no schedule. The Monday final board is built by code (`week_board.py`)
 from the overnight runner (Wave 2; until then the first session on Monday),
 never by Claude on a timer. Every
 other build is a session he started or a `make-piece.yml` run for a piece he
@@ -313,12 +382,13 @@ writes them; a document whose `updated_by` is not Krish is never his.
 
 | Press | Where | Writes | What the server does | Who reads it |
 |---|---|---|---|---|
-| Pick for the day, with a note | Ideas, the pick box | `picks/<day>` `{pick, idea_id, series, story, day, at, note?}` | nothing new | plan-week: the pick reaches its piece; the note is his words for the brief |
-| Wider piece | Ideas | `queue/<pick>` `{use: "wider_piece_context", note?}` | nothing | the Inspiration House cue run reads it from the board (`src/collect/feedbackCues.ts`, documents Krish wrote) and files a `wider_piece_context` cue, his note as said (a theme when he named one); plan-week reads the cue. Never relayed to the idea queue |
-| Future trend | Ideas | `queue/<pick>` `{use: "track_over_time", note?}` | nothing | the cue run files a `track_over_time` cue; plan-week reads it. Never relayed to the idea queue |
-| Next week | Ideas | `queue/<pick>` `{use: "next_week", target_week: <the Monday after>, queued: true, note?}` | nothing | plan-week relays it to the idea queue (`action: queue`, no verdict) and offers it first on the day it fits the week of `target_week`; the cue run files a `future_piece` cue |
-| Reject | Ideas | `queue/<pick>` `{use: "not_for_us", reason}`; the reason is required (the board asks for it before it saves) | nothing: no rejection inbox row, since an idea is a subject and the rejection floor holds rules of form and process only | the cue run files a `not_for_us` cue, his reason as said, so the idea is never offered again. Never relayed to the idea queue |
-| Take a press back | Ideas, the same press again | `queue/<pick>` `{use: null}` | nothing | nothing reads it as a press |
+| Approve for the day (Pick until 11 Nov), with a note | Ideas, the pick box | `picks/<day>` `{pick, idea_id, series, story, so_what, option_sha256, day, at, note?}` | works out `option_sha256` from the words he saw (refused as `approval_hash_mismatch` when the press brings another), records the approval (`idea_outcomes`), and puts that idea on its day (`placePick`), answering `placed` `{status: placed, already or refused, date, error?}`; only his press does, and the database refuses any other placement ("The ideas gate") | plan-week: the note is his words for the brief |
+| Save as a trend (Wider piece until 11 Nov) | Ideas | `queue/<pick>` `{use: "wider_piece_context", note}`, the trend his words name | records the outcome (trend) | the Inspiration House cue run reads it from the board (`src/collect/feedbackCues.ts`, documents Krish wrote) and files a `wider_piece_context` cue, his note as said (a theme when he named one); plan-week reads the cue. Never relayed to the idea queue |
+| Future trend (until 11 Nov; reads as Save as a trend) | Ideas | `queue/<pick>` `{use: "track_over_time", note?}` | records the outcome (trend) | the cue run files a `track_over_time` cue; plan-week reads it. Never relayed to the idea queue |
+| File for later (Next week until 11 Nov) | Ideas | `queue/<pick>` `{use: "next_week", target_week: <the Monday after>, queued: true, note?}` | records the outcome (filed) | plan-week relays it to the idea queue (`action: queue`, no verdict) and offers it first on the day it fits the week of `target_week`; the cue run files a `future_piece` cue |
+| Reject | Ideas | `queue/<pick>` `{use: "not_for_us", reason}`; the reason is required (the board asks for it before it saves) | records the outcome (rejected) and files his reason to his taste ledger as his words (`taste_reports`, `ideaReport`); no rejection inbox row, since an idea is a subject and the rejection floor holds rules of form and process only | the cue run files a `not_for_us` cue, his reason as said, so the idea is never offered again. Never relayed to the idea queue |
+| Improve for a future piece (11 Nov) | Ideas | `queue/<pick>` `{use: "improve", note}`, his note required | records the outcome (improved) and files his note to his taste ledger as his words | the next ideas run reads it as a cue on that idea (`sources.json`, `outcomes`) |
+| Take a press back | Ideas, the same press again | `queue/<pick>` `{use: null}` | records the answer as withdrawn | nothing reads it as a press |
 | Approve, Improve, Reject or Next week on an off-day option's idea, direction or returned mock (Ruling, Krish, 2026-11-01: "Mock looks right, lock it and build it"; it replaces the one mix press of 2026-10-30) | Ideas, Off days, each option | `queue/off-<day>-<option>` `{use: "offday", idea, direction, mock}`, each side `{verdict, words, sha256, at, shown}`; Improve and Reject need his words | his Improve and Reject words filed to `taste_reports`; an Improve not asked before sends an `offday-revise` dispatch (`.github/workflows/offday-revise.yml`) | Growth reads the approved options from `GET /api/board/<Monday>/pieces` (`offdays`); Sunday reads every verdict back as `offday_verdicts` |
 | Approve or Skip an off-day option (boards before the week's mix) | Ideas, Off days (any day of the week) | `queue/off-<day>-<option>` `{use: "offday", day, approved, copy_sha256, format, source, option_id}` | nothing | Growth makes and schedules what he approved, only while `copy_sha256` is the copy it holds |
 | Approve or Skip an off-day piece he records (Ruling, Krish, 2026-10-29) | Ideas, Off days | the same, with `kind: "recorded"`, `piece_id`, `series`, `style`, `script` (the exact words he saw), `script_sha256` (worked out by the server), `folder_title`, `title`, `readers` | the server puts the piece on that day in its series, in flight, one short cut (`placeOffday`), sends the words to Teleprompter with his press as the approval and records the send; a Skip after an Approve takes it off the day unless recorded | the board shows what the send did (`send`); the recordings lane then waits for his short take |

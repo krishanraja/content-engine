@@ -8,8 +8,9 @@ import { dayMedia, type MediaItem } from './_media.js'
 import { VIEW_CONTRACT_VERSION } from './_viewContract.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
-import { dayComments, dayPieces, dayPosted, dayYes, materialPress, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
+import { dayComments, dayPieces, dayPosted, dayYes, materialPress, offdayApproval, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
+import { HELD_CHANGED, HELD_TITLE, approvedLabel, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -22,6 +23,11 @@ import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMater
 // refuses a view that breaks this, and the tests hold every state to it. An action names the machine that does the
 // work: a run on GitHub (_run.ts), a press on the board, a link to what to read or watch, or, only for work that is a
 // conversation with Krish, the prompt for a new session.
+//
+// The ideas gate (docs/PUBLISH_BOARDS.md, "The ideas gate"; Krish, 2026-11-11: "I shouldn't end up seeing random ideas
+// in the publish board that I never wanted there and that I didn't approve"): a day draws only the pieces his approval
+// holds there (_gate.ts gatePieces, the same rule the database holds every writer to), each says "Approved by you" and
+// when, and every other piece on the day is a visible held line (`held`) with a press to approve it, never hidden.
 
 type Body = Record<string, unknown>
 const isObj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
@@ -72,9 +78,12 @@ export interface DayView {
   /** What is on file for the day's piece and the day in the piece materials store, newest first; read through
    *  /api/content-ideas/store?op=read&id=<id> (api/_pieceStore.ts; contract 1.1.0). */
   materials: ViewMaterial[]
+  /** Contract 1.3.0, the ideas gate: every piece or option on the day that his approval does not hold there, and why.
+   *  Never hidden: "Held: not approved by you". */
+  held: Held[]
 }
 /** What a day's next step is built from, before the parts every day carries (media, and 1.2.0's extras). */
-export type DayCore = Omit<DayView, 'media' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials'>
+export type DayCore = Omit<DayView, 'media' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials' | 'held'>
 export type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'
 export const PATH: Array<{ key: PathKey; label: string }> = [
   { key: 'research', label: 'Research' }, { key: 'story', label: 'Story' }, { key: 'look', label: 'Look' },
@@ -135,6 +144,9 @@ export interface ViewInputs {
   revision?: number | null
   /** The sessions and the materials store for the week's pieces and days (board_overlay; _writeBack.ts). */
   overlay?: Overlay | null
+  /** The approvals that stand now (board_approvals_now, _gate.ts), or null when they cannot be read: then every piece
+   *  is held. Required, so no caller builds a view that skips the gate. */
+  approvals: Approval[] | null
 }
 
 const LOCK_SIGNED = /^Signed by Krish\b[^:\n]*:\s*"(.+)"\s*,\s*(\d{4}-\d{2}-\d{2})\b/
@@ -298,14 +310,19 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
   const options = (isObj(i.ideas) && isObj(i.ideas.offdays) && Array.isArray(i.ideas.offdays[day]) ? i.ideas.offdays[day] : []) as Body[]
   const verdict = (o: Body) => i.queue.find(q => q.doc_id === `off-${day}-${String(o.id)}` && q.updated_by === 'Krish')?.body
   const sideVerdict = (b: Body | undefined, side: string) => (isObj(b) && isObj(b[side]) ? String((b[side] as Body).verdict || '') : '')
-  // An option the week's plan records as decided, in his words (ideas.json `decided`, week_board.py offday_stages), is
-  // chosen, whatever an older press on it said: Thu 12 Nov showed "Your Improve has not come back" on a card he had
-  // signed off (Krish, 2026-11-11: everything until Saturday "is now completely ready to publish").
+  // An option is chosen once his Approve on it stands (the ideas gate, _gate.ts): words a session wrote as decided in
+  // ideas.json are shown on the option and never read as his press (Krish, 2026-11-11: only his Approved crosses). An
+  // Improve he is waiting on still leads the day, so its revision comes back to him.
+  const approvedNow = (o: Body) => offdayApproval(i.approvals, day, o).approval
   const decided = (o: Body) => typeof o.decided === 'string' && o.decided.trim().length > 0
   const said = options.map(o => ({ o, b: verdict(o) }))
-  const chosen = said.filter(x => decided(x.o) || ['approve', 'improve'].includes(sideVerdict(x.b, 'idea')) || ['improve'].includes(sideVerdict(x.b, 'direction')))
+  const chosen = said.filter(x => approvedNow(x.o) || sideVerdict(x.b, 'idea') === 'improve' || sideVerdict(x.b, 'direction') === 'improve')
+  const state = (x: { o: Body; b?: Body }) => {
+    const a = approvedNow(x.o)
+    return a ? approvedLabel(a) : sideVerdict(x.b, 'idea') || (decided(x.o) ? 'said in a session, not pressed' : 'no press')
+  }
   const base = { day, date, label: short(week, day), series: day === 'sat' ? 'good news' : 'off day', piece_id: piece ? String(piece.id).toLowerCase() : null,
-    detail: said.map(x => ({ h: String(x.o.id), p: [x.o.format, decided(x.o) ? 'decided' : sideVerdict(x.b, 'idea') || 'no press', x.o.revised ? 'revised' : ''].filter(Boolean).join(' · ') })) }
+    detail: said.map(x => ({ h: String(x.o.id), p: [x.o.format, state(x), x.o.revised ? 'revised' : ''].filter(Boolean).join(' · ') })) }
   if (piece) {
     const live = liveDay(piece, date)
     const title = String(piece.idea || 'Off-day piece').slice(0, 140)
@@ -315,7 +332,8 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
     if (day === 'sat') {
       const gn = i.runs['saturday-goodnews']
       return { ...base, kind: 'Good news', title: "This week's good news", stop: 0, who: 'engine', ...(gn ? { run: gn } : {}),
-        runs_on: `${GH('saturday-goodnews')}, runs itself on Thursday`, next: running(gn) ? 'Finding the stories now' : 'The Thursday run finds the stories; start it now if you want them sooner',
+        runs_on: `${GH('sunday-ideas')}, with the week's ideas; ${GH('saturday-goodnews')} by hand`,
+        next: running(gn) ? 'Finding the stories now' : 'The weekly ideas run brings the good news stories with the rest of the ideas; find them now if you want them sooner',
         actions: [{ kind: 'run', label: 'Find the stories now', job: 'saturday-goodnews', input: { week }, runs_on: GH('saturday-goodnews') }] }
     }
     const si = i.runs['sunday-ideas']
@@ -327,16 +345,17 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
     return { ...base, kind: 'Off day', title: `${options.length} options to judge`, stop: 0, who: 'you', runs_on: 'Your presses on the board',
       next: 'Approve, improve or reject each option', actions: [{ kind: 'open', label: `Judge the ${options.length} options`, href: optionsTab(week, day) }] }
   }
-  // The weekly good news (plan-week references/offdays.md, "The Saturday good news"): once its format is chosen, the day
-  // waits on Thursday's run for this week's stories, and is never "stuck" on an older press meanwhile.
+  // The weekly good news (plan-week references/offdays.md, "The Saturday good news"): the weekly ideas run finds its
+  // stories with the rest of the week's ideas (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full,
+  // Saturday's good news included); a format chosen without them waits on a run, and is never "stuck" meanwhile.
   const weekly = chosen.find(x => x.o.weekly)
   if (weekly) {
     const gnKind = `Off day: ${String(weekly.o.format || 'good news').split(',')[0]}`
     if (!storiesFresh(week, weekly.o)) {
       const gn = i.runs['saturday-goodnews']
       return { ...base, kind: gnKind, title: String(weekly.o.hook || "This week's good news").slice(0, 140), stop: 1, who: 'engine', ...(gn ? { run: gn } : {}),
-        runs_on: `${GH('saturday-goodnews')}, runs itself on Thursday`,
-        next: running(gn) ? 'Finding this week\'s good news stories now; they come back here' : 'Thursday\'s run finds this week\'s good news stories and brings them back here; start it now if you want them sooner',
+        runs_on: `${GH('sunday-ideas')}, with the week's ideas; ${GH('saturday-goodnews')} by hand`,
+        next: running(gn) ? 'Finding this week\'s good news stories now; they come back here' : 'This week\'s good news stories are not in yet: find them now and they come back here',
         actions: [{ kind: 'run', label: 'Find the stories now', job: 'saturday-goodnews', input: { week }, runs_on: GH('saturday-goodnews') }] }
     }
     const n = Array.isArray(weekly.o.stories) ? weekly.o.stories.length : 0
@@ -345,6 +364,9 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
       actions: [{ kind: 'open', label: 'Read the stories', href: optionsTab(week, day) },
         { kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Make the ${DAY_NAME[day]} ${date} good-news post ${String(weekly.o.id)} from the ${n} stories on the content-engine board (week of ${week}), to docs/CAROUSEL-STANDARD.md.` }] }
   }
+  // An Improve still waits on its revision, unless his words in a session settled the option (`decided`): that settles
+  // what it waits on, never whether it is approved (Thu 12 Nov showed "Your Improve has not come back" on a card he had
+  // signed off; Krish, 2026-11-11).
   const improving = (x: { o: Body; b?: Body }) => !decided(x.o) && (sideVerdict(x.b, 'idea') === 'improve' || sideVerdict(x.b, 'direction') === 'improve')
   const waiting = chosen.filter(x => improving(x) && !x.o.revised)
   const o = lead.o, kind = `Off day: ${String(o.format || 'option').split(',')[0]}`
@@ -396,15 +418,55 @@ function briefOf(i: ViewInputs, d: DayView): PieceBrief {
     materials: d.path?.materials.map(m => m.title) || [], lock: null }
 }
 
+/** His Approve for a held piece that is not one of the day's options (an option carries its own): one press puts
+ *  exactly that piece on exactly that day, bound to its words, as an Approve on the ideas board does. */
+function approveHeldPress(i: ViewInputs, day: PostedDay, piece: Body): PressAction {
+  const id = String(piece.id).toLowerCase()
+  const so_what = cutSoWhat(piece.thesis), story = String(piece.idea || piece.thesis || '')
+  const title = story.trim().replace(/\s+/g, ' ').slice(0, 60)
+  const revision = i.picks.find(p => p.doc_id === day)?.revision
+  return { kind: 'press', label: `Approve "${title}" for ${dayShort(i.week, day)}`, collection: 'picks', id: day, revision: Number.isInteger(revision) ? Number(revision) : 0,
+    body: { day, pick: `held-${id.slice(0, 8)}`, idea_id: id, series: SERIES[day]?.replace(/\./g, '_') || '', story, so_what, option_sha256: optionSha({ so_what, story }) },
+    stamp: ['at'], words: { path: 'note', ask: 'Anything the story must do? (optional)', required: false },
+    done: `Approved. It is on the publish board for ${dayWords(i.week, day)}.`, outcome: 'approved', goes: goes('approved', i.week, day) }
+}
+
 /** The whole week's view from its inputs. Pure: the tests build every state from here. */
 export function buildView(i: ViewInputs): WeekView {
-  const byDay = new Map(piecesByDay(i.week, i.pieces).map(p => [p.day, p.piece]))
+  // The ideas gate: only the pieces his approval holds on their day are drawn; every other one is a held line.
+  const gate = gatePieces(i.week, i.pieces, i.approvals, i.ideas)
+  const byDay = new Map(piecesByDay(i.week, gate.approved).map(p => [p.day, p.piece]))
   const days = attachOverlay(i.week, VIEW_DAYS.map((d): Omit<DayView, 'sessions' | 'materials'> => {
     const piece = byDay.get(d), date = dayDate(i.week, d)
     const shown = piece ? String(piece.id).toLowerCase() : null
-    return { ...(SERIES_DAYS.includes(d) ? seriesDay(i, d, piece) : offDay(i, d, piece)), media: dayMedia(piece),
-      pieces: dayPieces(i.pieces, date, shown),
-      options: SERIES_DAYS.includes(d) ? seriesOptions(i, d, Boolean(piece)) : offdayOptions(i, d),
+    const core = SERIES_DAYS.includes(d) ? seriesDay(i, d, piece) : offDay(i, d, piece)
+    const options = SERIES_DAYS.includes(d) ? seriesOptions(i, d, Boolean(piece)) : offdayOptions(i, d)
+    const approval = shown ? gate.approvalOf.get(shown) : undefined
+    if (approval) core.detail = [{ h: approval.via === 'approve_publish' ? 'Approved for publish by you' : 'Approved by you', p: approvedLabel(approval).replace(/^[^,]+, /, '') }, ...core.detail]
+    else {
+      const lead = options.find(o => o.status === 'approved' && o.outcome?.id === 'approved')
+      if (lead?.outcome) core.detail = [{ h: 'Approved by you', p: lead.outcome.label.replace(/^[^,]+, /, '') }, ...core.detail]
+    }
+    // Held: pieces on the day his approval does not hold, and options a session wrote as decided. Never hidden.
+    const held: Held[] = [...(gate.held.get(d) || []),
+      ...options.filter(o => o.status === 'held')
+        .map(o => ({ piece_id: null, option: o.doc_id, title: /changed/.test(o.held || '') ? HELD_CHANGED : HELD_TITLE, text: `${o.title}. ${o.held || ''}`.trim() }))]
+    if (held.length && core.who !== 'done') {
+      const listed = new Set(options.map(o => o.id.toLowerCase()))
+      const presses = SERIES_DAYS.includes(d) && !piece
+        ? (gate.held.get(d) || []).map(h => i.pieces.find(p => String(p.id).toLowerCase() === h.piece_id)).filter((p): p is Body => Boolean(p) && !listed.has(String(p!.id).toLowerCase()))
+          .map(p => approveHeldPress(i, d, p))
+        : []
+      // A day with nothing his approval holds leads with what is held: he decides it, and nothing else goes on it.
+      if (!piece && !options.some(o => o.status === 'approved')) {
+        core.who = 'you'
+        core.next = `${held.length === 1 ? 'One idea is' : `${held.length} ideas are`} held: not approved by you. Approve what should be on ${DAY_NAME[d]}; nothing else goes on the board`
+      }
+      core.actions = [...presses, ...core.actions]
+    }
+    return { ...core, media: dayMedia(piece),
+      pieces: dayPieces(gate.approved, date, shown, gate.approvalOf),
+      options, held,
       comments: dayComments(i.comments, d), posted: dayPosted(i.ticks, d), yes: dayYes(i.picks, d) }
   }), i.overlay ?? null)
   for (const d of days) {
@@ -428,7 +490,7 @@ export function buildView(i: ViewInputs): WeekView {
   for (const r of Object.values(i.runs)) if (r) moved.push({ at: r.updated_at, text: `${r.workflow}: ${r.state}` })
   moved.sort((a, b) => b.at.localeCompare(a.at))
   return { contract_version: VIEW_CONTRACT_VERSION, week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
-    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay) }, revision: i.revision ?? null }
+    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay), approvals: Array.isArray(i.approvals) }, revision: i.revision ?? null }
 }
 
 /** Every rule the view must keep (PLAN.md): a day not done has a next step, and that step has at least one action. */
@@ -504,6 +566,8 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   ])
   // Who is working on each piece and what is on file for it (the piece materials store); null when it cannot be read.
   const overlay = await readOverlay(db as never, week, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
+  // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held.
+  const approvals = await readApprovals(db, week)
   let formats: ViewInputs['formats'] = { script: [], production: [] }
   try {
     const f = styleText ? JSON.parse(styleText).formats : null
@@ -523,6 +587,6 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   return buildView({ week, now, pieces: pieces as Body[], picks: picks as ViewInputs['picks'], queue: queue as ViewInputs['queue'],
     history: history as ViewInputs['history'], ideas, runs, north_star: north,
     locks: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, locks[k] as string | null])),
-    research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, inspiration, overlay,
+    research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, inspiration, overlay, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null })
 }

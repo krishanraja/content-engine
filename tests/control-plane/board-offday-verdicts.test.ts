@@ -127,7 +127,7 @@ describe('Sunday reads his off-day verdicts back', async () => {
       ['off-tue-a', 'direction', 'improve', 'a real puppy', 'The AI that agrees'],
       ['off-tue-a', 'idea', 'approve', null, 'The AI that agrees'],
     ])
-    expect(out.counts).toEqual({ approve: 1, improve: 1, reject: 1, next_week: 0, note: 0 })
+    expect(out.counts).toEqual({ approve: 1, improve: 1, reject: 1, next_week: 0, trend: 0, note: 0 })
   })
   it('reads the eight weeks before the one being planned', () => {
     expect(offdayWeeksBefore('2026-11-09')).toEqual(['2026-11-02', '2026-10-26', '2026-10-19', '2026-10-12', '2026-10-05', '2026-09-28', '2026-09-21', '2026-09-14'])

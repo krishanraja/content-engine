@@ -1,15 +1,20 @@
 name: Saturday good news
 
-# Rulings (Krish, 2026-11-07): "Saturday's good news run should be done later in the week so the good news is fresh",
-# and "Happy to break the "no Claude schedules" rule for Saturday's good news. We might as well just keep that on an
-# automatic schedule."
+# By hand only. Ruling (Krish, 2026-11-11): the ideas board fills once a week in full, Saturday's good news included; the
+# Thursday good-news schedule is retired. His words: "It should be refreshed once a week for everything (including the
+# Saturday post which currently runs on a thursday, we need to realign that so the ideas board populates once a week in
+# full, and Saturday's actual real good news story ideas are presented to me." The Sunday ideas run
+# (.github/workflows/sunday-ideas.yml) now finds the stories with the rest of the week's ideas. This job stays so nothing
+# is lost: the board's "Find the stories now" press (repository_dispatch) or Run workflow finds them again for a week,
+# the same way. It was the one exception to zero Claude schedules beside the Sunday ideas run (Rulings, Krish,
+# 2026-11-07); it has no schedule now.
 #
-# So this is the one exception to zero Claude schedules beside the Sunday ideas run, built the same way: GitHub is the
-# scheduler and Claude Code runs inside this job on his subscription (CLAUDE_CODE_OAUTH_TOKEN, never an API key),
-# writing to the board only through the engine API (ENGINE_OPERATOR_TOKEN). It follows "The Saturday good news" in
-# .agents/skills/plan-week/references/offdays.md: five real AI stories from the seven days up to Thursday, each checked
-# on its own page, each with its own picture or clip, written onto the week's good-news option and put on the live
-# board, so his Approve, Improve, Reject and Next week presses work as on any off-day option.
+# Built like the Sunday ideas run: Claude Code runs inside this job on his subscription (CLAUDE_CODE_OAUTH_TOKEN, never
+# an API key), writing to the board only through the engine API (ENGINE_OPERATOR_TOKEN). It follows "The Saturday good
+# news" in .agents/skills/plan-week/references/offdays.md: five real AI stories from the seven days up to the day it
+# runs, each checked on its own page, each with its own picture or clip, written onto the week's good-news option and
+# put on the live board, so his five presses work as on any off-day option. It proposes; only his Approve puts the
+# post on the publish board (the ideas gate).
 #
 # Where it lands (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive):
 # the live board draws GET /api/board/<Monday>/view, which reads the week's ideas.json from offday-revise/<Monday>
@@ -17,11 +22,8 @@ name: Saturday good news
 # pull request to main like an Improve's revision), bumps the week's change signal (board_web.py touch), and the last
 # step asks the view, never the archive page, whether this week's stories are there. Nothing rebuilds the archive.
 #
-# When: Thursday, twice (10:41 and 19:23 UTC; 05:41 and 14:23 in New York in winter), because GitHub's cron fires hours
-# late; the second firing is only a retry. Both are outside 06:00 to 09:00 Pacific. The guard
-# (scripts/saturday_goodnews.py check) makes a firing do nothing once the week's live board shows the stories, and a
-# scheduled firing before 12 November do nothing at all (the first is for Saturday 14 November). Run workflow by hand
-# any time with a week; "force" finds the stories again even when they are live.
+# The guard (scripts/saturday_goodnews.py check) makes a run do nothing once the week's live board shows its stories;
+# "force" finds them again even when they are live.
 #
 # This repository is public: Claude's full output stays out of the log (claude-code-action's default), and nothing
 # here prints a link, a story or a source.
@@ -32,9 +34,6 @@ name: Saturday good news
 # Claude has stopped, pushes, with the token passed for that one command.
 
 on:
-  schedule:
-    - cron: '41 10 * * 4'
-    - cron: '23 19 * * 4'
   # A board press (apps/control-plane/api/board/_run.ts) starts it with the token the board already holds.
   repository_dispatch:
     types: [saturday-goodnews]
@@ -127,12 +126,13 @@ jobs:
             --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
-            The Saturday good news for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub
-            Actions on Thursday (.github/workflows/saturday-goodnews.yml). No one reads this run's chat.
+            The Saturday good news for the week starting Monday ${{ steps.guard.outputs.monday }}, started by hand
+            (.github/workflows/saturday-goodnews.yml; the Sunday ideas run finds them each week). No one reads this
+            run's chat.
 
             Run python3 scripts/check_failures.py and python3 scripts/floor.py first. Then follow the section
             "The Saturday good news" in .agents/skills/plan-week/references/offdays.md exactly: find the five stories
-            (real AI news from the seven days up to ${{ steps.guard.outputs.due }}, this week's Thursday, that helped
+            (real AI news from the seven days up to ${{ steps.guard.outputs.due }}, today, that helped
             real people, each with a real photo or clip of the thing itself the post can embed), check each against its
             primary source, write them into that week's docs/plans/<Monday>-week/ideas.json on the weekly good-news
             option, replacing any older stories there, and set that option's stories_due to
@@ -142,7 +142,8 @@ jobs:
             Change nothing but that option's stories and stories_due; never build or publish a board page (the live
             board reads ideas.json itself); never publish or post anything public; no spend beyond this run. Do not
             commit or push: the workflow puts that folder on the live board. If cover refuses the stories, fix them and
-            check again; if it still refuses, stop and say why.
+            check again; if it still refuses, stop and say why. Never set a piece's day or write a press: only
+            Krish's Approve puts the post on the publish board.
 
       - name: Put the week's stories on the live board
         if: always() && steps.guard.outputs.go == 'true'
@@ -162,8 +163,8 @@ jobs:
           git add -- "$folder"
           git diff --cached --quiet && { echo "Nothing new in $folder."; exit 0; }
           git commit -q -m "Saturday good news for the week of $MONDAY (run $RUN_ID)" \
-            -m "Written by the Thursday good-news run in GitHub Actions on Krish's subscription; on the live board through offday-revise/$MONDAY." \
-            -m 'Ruling (Krish, 2026-11-07): "Happy to break the "no Claude schedules" rule for Saturday'"'"'s good news. We might as well just keep that on an automatic schedule."'
+            -m "Written by the good-news run (by hand) in GitHub Actions on Krish's subscription; on the live board through offday-revise/$MONDAY." \
+            -m 'Ruling (Krish, 2026-11-11): the ideas board fills once a week in full, Saturday'"'"'s good news included; the Thursday good-news schedule is retired.'
           # The checkout kept no credential, so the token is passed to each push only.
           auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
           git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/saturday-goodnews/$MONDAY-$RUN_ID"

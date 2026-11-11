@@ -4,6 +4,8 @@ import type { SendApprovedInput, SendResult } from '../_teleprompter.js'
 import type { Making, MakingGates } from '../_making.js'
 import { dispatchOffdayRevise, type ReviseDispatch } from './_offdayRevise.js'
 import { recordIncident, stageOfAsset, type Incident } from '../_incidents.js'
+import { optionSha } from './_gate.js'
+import { dayDate, type PostedDay } from './_posted.js'
 
 const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -41,9 +43,17 @@ const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 //     he typed it, where and when, the piece, the formats and the asset's Drive id and moment when the board knows
 //     them. Masters are never copied anywhere: a Drive id is a pointer.
 //
-// A Reject on an idea (queue/<pick>, use not_for_us) files nothing here. An idea is a subject, and the rejection floor
-// holds rules of form and process only, while the inspirationhouse rejection job files every inbox row as one of those.
-// The inspirationhouse cue run reads the press from the board itself (src/collect/feedbackCues.ts) as a not_for_us cue.
+//   - Approve on a publishing day's idea (picks/<day>; the ideas gate, docs/PUBLISH_BOARDS.md, "The ideas gate"; Krish,
+//     2026-11-11: "If they're approved, they should move into the publish board"): before the save the hash of the words
+//     he saw is worked out here (option_sha256), so his approval binds exactly those. The database records the approval
+//     from the saved revision (idea_outcomes), and after the save the server puts that idea on its day (placePick). The
+//     database refuses the placement unless that approval stands, whoever writes it.
+//   - Reject and Improve for a future piece on a publishing day's idea (queue/<pick>, use not_for_us or improve): his
+//     words go to his taste ledger once, as his own words (ideaReport), and the outcome is kept for the next ideas run.
+//
+// A Reject on an idea files no rejection inbox row: an idea is a subject, and the rejection floor holds rules of form
+// and process only, while the inspirationhouse rejection job files every inbox row as one of those. The inspirationhouse
+// cue run reads the press from the board itself (src/collect/feedbackCues.ts) as a not_for_us cue.
 //
 // The inbox row's client_report_id is the hash of the week, the document and his words, so a press saved again files
 // nothing twice, and new words file once more.
@@ -76,6 +86,15 @@ const THEN = 'so nothing was sent: a session checks them (making.py scripts), ha
 /** His Approve scripts body with the hash of each cut's words worked out here (scripts), or refused when the hashes it
  *  brought are not the hashes of its words. Any other body is returned as it came. */
 export async function preparePress(collection: string, id: string, body: Body): Promise<Body> {
+  // An answer on a publishing day's idea (his Approve, picks/<day>, or one of the other four, queue/<pick>): the hash of
+  // the words he saw, worked out here from the two the press carries, so an approval binds exactly those words.
+  const ideaPress = (collection === 'picks' && /^(mon|wed|fri)$/.test(id) && !('kind' in body))
+    || (collection === 'queue' && 'use' in body && body.use !== 'offday' && !String(id).startsWith('off-'))
+  if (ideaPress && (typeof body.so_what === 'string' || typeof body.story === 'string')) {
+    const sha = optionSha({ so_what: body.so_what, story: body.story })
+    if (body.option_sha256 !== undefined && body.option_sha256 !== sha) throw new PressError(400, 'approval_hash_mismatch')
+    return { ...body, option_sha256: sha }
+  }
   if (isRecordedOffday(collection, body) && body.approved === true) {
     // His Approve on an off-day piece he records: the hash of the exact words he saw, worked out here, so his approval
     // binds those words (the same as Approve scripts, for the one short cut).
@@ -528,6 +547,61 @@ async function offdayRecorded(db: SupabaseClient, ctx: { week: string; id: strin
   return { ...saved, send: answer, send_recorded: false }
 }
 
+const PICKABLE = ['seeded', 'researching', 'drafting']
+const DAY_ONLY = ['review', 'approved']
+/** His Approve on a publishing day's idea puts that idea on its day: in its series, in flight (drafting) when it was not
+ *  yet, or only given the day when it is already written; the same write Control Centre's pick makes (contentPick.ts
+ *  planPick). The database refuses it unless his approval for that idea and that date stands (content_ideas_board_gate),
+ *  so this is the only way an idea crosses, and it crosses only on his press. Guarded on the row's updated_at, read again
+ *  once on a stale row. A piece already on another day stays there and the answer says so: he decides, nothing moves it. */
+export async function placePick(db: SupabaseClient, ctx: { week: string; day: string; body: Body; now: string }): Promise<{ status: 'placed' | 'already' | 'refused'; date: string; error?: string }> {
+  const { week, day, body, now } = ctx
+  const date = dayDate(week, day as PostedDay)
+  const pieceId = String(body.idea_id || '').toLowerCase()
+  if (!PIECE_UUID.test(pieceId)) return { status: 'refused', date, error: 'the idea has no record in the engine, so it cannot go on a day' }
+  for (let tries = 0; tries < 2; tries++) {
+    const read = await db.from('content_ideas').select('id, state, scheduled_for, lane_slot, buried_at, protected_at, updated_at').eq('id', pieceId).maybeSingle()
+    if (read.error) return { status: 'refused', date, error: 'the idea could not be read' }
+    if (!read.data) return { status: 'refused', date, error: 'the idea is not in the engine' }
+    const row = read.data as Record<string, any>
+    if (row.buried_at || row.state === 'dropped' || row.state === 'published') return { status: 'refused', date, error: 'the idea is buried, dropped or already published' }
+    if (row.scheduled_for === date) return { status: 'already', date }
+    if (row.scheduled_for && row.scheduled_for !== date) return { status: 'refused', date, error: `the idea is already on ${row.scheduled_for}; take it off that day first` }
+    let update: Body
+    if (PICKABLE.includes(row.state)) update = { state: 'drafting', lane_slot: body.series, scheduled_for: date, ...(row.protected_at ? {} : { protected_at: now }) }
+    else if (DAY_ONLY.includes(row.state)) update = { scheduled_for: date }
+    else return { status: 'refused', date, error: `the idea is ${row.state}, so it cannot go on a day` }
+    const written = await db.from('content_ideas').update({ ...update, updated_at: now }).eq('id', pieceId).eq('updated_at', row.updated_at).select('id')
+    if (written.error) {
+      const msg = String(written.error.message || '')
+      return { status: 'refused', date, error: /not_approved_by_krish/.test(msg) ? 'the database found no approval of yours for it on this day' : 'the idea could not be written' }
+    }
+    if (written.data?.length) return { status: 'placed', date }
+  }
+  return { status: 'refused', date, error: 'the idea changed twice while it was being put on its day' }
+}
+
+/** His words on a Reject or an Improve for a future piece on a publishing day's idea, for his taste ledger, as said. */
+export function ideaReport(week: string, id: string, body: Body, now: string) {
+  const use = String(body.use || '')
+  const words = (use === 'not_for_us' ? body.reason : body.note)
+  if ((use !== 'not_for_us' && use !== 'improve') || typeof words !== 'string' || !words.trim()) return null
+  const said = words.trim().slice(0, 2000)
+  const idea = typeof body.idea_id === 'string' && PIECE_UUID.test(body.idea_id) ? body.idea_id.toLowerCase() : null
+  return {
+    kind: 'krish_words', body: said, said_where: `publish board, ${week} queue/${id} (an idea on the ideas board)`, said_at: now,
+    // Which story to tell is a strategy call (taste_reports lanes: strategy, production, visibility, voice).
+    lane: 'strategy', polarity: use === 'not_for_us' ? 'dislikes' : 'neutral',
+    subject_ref: idea ? `idea:${idea}` : null,
+    subject: idea ? `the idea "${String(body.so_what || body.story || id).trim().replace(/\s+/g, ' ').slice(0, 160)}"` : null,
+    session_ref: 'content.krishraja.com publish board', repository: 'krishanraja/content-engine', surface: 'publish_board',
+    emitter_id: 'content-engine-board',
+    client_report_id: `idea-${digest(canonical({ week, id, use, words: said }))}`.slice(0, 96),
+    reported_at: now,
+    meta: { press: use, outcome: use === 'not_for_us' ? 'rejected' : 'improved', week, day: String(id).slice(0, 3), idea_id: body.idea_id ?? null } as Record<string, unknown>,
+  }
+}
+
 /** The side effects of a saved press, and the answer to send back: the saved document (with send, for Approve
  *  scripts) and, for a rejected asset, whether its inbox row was filed. Null when the press has none. */
 export async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: string; saved: Saved }, deps: PressDeps = {}): Promise<Saved | null> {
@@ -543,6 +617,23 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
       return { ...saved, inbox: filed.error ? 'failed' : 'filed', ...(incident ? { incident } : {}) }
     } catch {
       return { ...saved, inbox: 'failed', ...(incident ? { incident } : {}) }
+    }
+  }
+  if (collection === 'picks' && /^(mon|wed|fri)$/.test(id) && !('kind' in body) && 'pick' in body) {
+    // His Approve on a publishing day's idea: it goes on its day (the ideas gate). Only his own press places anything.
+    if (who !== 'Krish') return null
+    const placed = await placePick(db, { week, day: id, body, now }).catch(() => ({ status: 'refused' as const, date: dayDate(week, id as PostedDay), error: 'the idea could not be written' }))
+    return { ...saved, placed }
+  }
+  if (collection === 'queue' && who === 'Krish' && (body.use === 'not_for_us' || body.use === 'improve')) {
+    const report = ideaReport(week, id, body, now)
+    if (!report) return null
+    try {
+      const filed = await db.from('taste_reports').upsert(report, { onConflict: 'emitter_id,client_report_id', ignoreDuplicates: true })
+      const code = String((filed.error as { code?: string } | null)?.code || '')
+      return { ...saved, taste: !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed' }
+    } catch {
+      return { ...saved, taste: 'failed' }
     }
   }
   if (collection === 'picks' && body.kind === 'scores' && !(typeof body.piece_id === 'string' && PIECE_UUID.test(body.piece_id))) {

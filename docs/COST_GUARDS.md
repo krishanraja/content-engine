@@ -58,14 +58,13 @@ meter showed $0.40 of spend in 60 days and no retries, so it would only have add
 
 ## Scheduled Claude runs and the $15 a week
 
-Two scheduled Claude runs exist, both Claude Code in GitHub Actions on Krish's subscription (`CLAUDE_CODE_OAUTH_TOKEN`),
-never an API key, so neither adds API spend: the Sunday ideas run (`sunday-ideas.yml`, Saturday) and, from 19 November,
-the Thursday good-news run (`saturday-goodnews.yml`; Ruling, Krish, 2026-11-07: "Happy to break the "no Claude
-schedules" rule for Saturday's good news"). The Thursday run is capped at 150 turns and 120 minutes, does one week's
-five stories, and its guard skips the retry firing once the stories are live, so it costs one subscription run a week
-and GitHub's free minutes on this public repository. It makes no paid API call (no fact-check POST, no Perplexity, no
-generation), so the chain stays inside his $15 a week (Krish, 2026-10-29: "happy with $15 a week"); a run that would
-need one stops and says so.
+One scheduled Claude run exists, Claude Code in GitHub Actions on Krish's subscription (`CLAUDE_CODE_OAUTH_TOKEN`),
+never an API key, so it adds no API spend: the Sunday ideas run (`sunday-ideas.yml`, Saturday), which since 11 November
+also finds Saturday's five good-news stories (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full,
+Saturday's good news included; the Thursday good-news schedule is retired). The good-news job (`saturday-goodnews.yml`)
+stays, by hand only: capped at 150 turns and 120 minutes, one week's five stories, and its guard does nothing once the
+stories are live. Neither makes a paid API call (no fact-check POST, no Perplexity, no generation), so the chain stays
+inside his $15 a week (Krish, 2026-10-29: "happy with $15 a week"); a run that would need one stops and says so.
 
 ## The environment is the floor: a setting only Krish can change
 
