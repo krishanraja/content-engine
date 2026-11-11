@@ -51,3 +51,34 @@ what kind of thing doesn't fly with me, rather than implement incredibly specifi
   `docs/plans/<Monday>-week/scorecard.json` (ids, labels and counts only). Read it into the triage readback (step 8),
   its counts and labels beside his words; he can overrule any label. The history test (`scripts/post-pack/ideas_history.py check`) replays every check on his past
   boards; a new check joins only when it still passes.
+
+## The second part (items 4, 6, 8, 10 and 12), from the 23 Nov board
+
+`board_feed.py cover` checks each; none of them fails the gate.
+
+- **His words split** (item 4). Each worded press of his on last week's board is split into its parts in ideas.json
+  `split` (`[{"ref": "<week>/<doc>", "parts": [{"kind", "quote"}]}]`, kinds `refuse`, `reframe`, `depth`, `simpler`,
+  `format`, `wish`), each part an exact quote of his words. A press whose words refuse (boring, lame, no point, don't
+  understand) has a refuse part quoting them. The split is your reading: the quotes keep it honest, and the refusal
+  checks read his words, never the split. Until he approves P6, a refusal in a press that was not a Reject shows as a
+  warning line on its option, never ranked first (above). Durable storage of the split waits for his yes on a migration.
+- **His asks at full scope** (item 6). An option that covers his ask quotes it word for word in `asks`
+  (`[{"id", "said": his words exactly, "scope": "as_typed" or "narrowed", "why": when narrowed}]`), and says why when it
+  narrows it ("software to edit itself on the fly" is a bigger question than one lab's find). An open ask left off the
+  board is in `accounted` with a reason that cites only rows that exist in `sources.json`, never swaps his question for a
+  narrower one, and is a held line on the board: `held` with ref `ask/<id>`, his words as its title, the reason he reads.
+- **Off days say what they learned** (item 8): every off-day option quotes the earlier verdict of his it learned from
+  (`references/offdays.md`).
+- **Look at more, show the best** (item 10). Research up to eight candidates for each publishing day and show the best
+  four; record how many in ideas.json `considered` (`{"mon": 8, "wed": 7, "fri": 8}`), at least as many as shown. On
+  7 Nov the ideas stage used 20 of its 240 minutes: the time is there.
+- **Saturday's good news reads his positive saves first** (item 12; `references/offdays.md`, "The Saturday good
+  news"): each story tagged with its `kind`, the mix shown on the board.
+- **What the run reads beside the cards** (item 9): `sources.json` `inspiration.feed` (the feed's posts of the last
+  eight days: other people's posts, a topic signal, never his view), `inspiration.corrections` (his corrections reported
+  from sessions, his words exactly, with where he typed them), `inspiration.hindsight` (his hindsight scores and notes on
+  published pieces) and `inspiration.positive`. A wordless card from a bulk import (25 or more saved in the same minute)
+  leaves `fresh` and stays in the library (`counts.fresh_left_out_bulk_wordless`). A newsletter is a lead, never the
+  angle. The full text of his newsletters and his Drive inspiration folder are not read yet: the engine keeps only each
+  newsletter's mined seeds, and a Drive connector on the Sunday workflow changes what that job can reach, so it waits for
+  his yes.
