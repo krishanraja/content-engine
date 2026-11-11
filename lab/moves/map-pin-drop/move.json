@@ -1,0 +1,19 @@
+{
+ "id": "map-pin-drop",
+ "what": "Pins drop onto a street grid with ripples: the first group, then the new ones in the series colour.",
+ "says": [
+  "place",
+  "number"
+ ],
+ "needs": [
+  "number"
+ ],
+ "energy": "medium",
+ "engine": "canvas",
+ "code": "lab/moves/map-pin-drop/move.mjs",
+ "entry": "draw",
+ "vitals": "timing is fixed in the move; times come from the words that cue it",
+ "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+ "from": "lab/styles/living-screen/scene.mjs",
+ "proven_by": "Krish, 2026-11-10, on the teller opening: \"Now let's keep that pace of animation up.\""
+}

@@ -91,7 +91,7 @@ describe('the shared video kit', () => {
   it('its folder holds HTML templates only, and nothing it commits has an em or en dash', () => {
     const templates = readdirSync(join(QUICK_EDIT, 'kit'))
     // The name strap is retired (Krish, 2026-10-28: "Remember, no content refers to Krish, ever."); the dress took its place.
-    expect(templates.sort()).toEqual(['dress.html', 'endcard.html', 'frame16.html', 'panel.html'])
+    expect(templates.sort()).toEqual(['endcard.html', 'frame16.html', 'panel.html'])
     for (const file of [join(QUICK_EDIT, 'kit.py'), join(POST_PACK, 'plan_files.py'), ...templates.map(name => join(QUICK_EDIT, 'kit', name))]) {
       const text = readFileSync(file, 'utf8')
       expect(text, file).not.toContain(String.fromCharCode(0x2014))

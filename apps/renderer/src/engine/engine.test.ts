@@ -184,7 +184,7 @@ describe('BrandFrame call and ending routing', () => {
 describe('the hook is the intro', () => {
   // Under test (Krish, 29 Oct 2026: "Let's go with number one for now."): the first frame is the hook in the brand's
   // dress, the logo and the series tag in its corners from the start, with no story card or logo sting before it.
-  it.each(aspects)('draws the logo and the series tag on the first beat from frame 0 in %s', (aspect) => {
+  it.each(aspects)('opens on the hook at frame 0 in %s: the wide cut with its logo and series tag, the tall one with neither', (aspect) => {
     const props = EngineRenderPropsSchema.parse(fixture)
     props.aspect = aspect
     expect(props.beats[0]).toMatchObject({ fromFrame: 0, sectionBeat: true })
@@ -194,7 +194,10 @@ describe('the hook is the intro', () => {
     for (const layout of ['STAGE', 'P1', 'P3', 'P6', 'F3'] as const) {
       const beat = { ...props.beats[0]!, layout }
       const nodes = elements(BrandFrame({ props, beat, frame: 0 }))
-      if (layout === 'STAGE') {
+      if (aspect === '9:16') {
+        // Vertical video carries no wordmark, mark tile or series pill (Ruling, Krish, 2026-11-11).
+        expect(nodes.filter((node) => node.type === StageHeader || node.type === MarkTile || node.type === ChannelPill)).toHaveLength(0)
+      } else if (layout === 'STAGE') {
         expect(nodes.filter((node) => node.type === StageHeader)).toHaveLength(1)
       } else {
         expect(nodes.filter((node) => node.type === MarkTile)).toHaveLength(1)
@@ -204,11 +207,33 @@ describe('the hook is the intro', () => {
   })
 })
 
+describe('vertical video carries no wordmark (Ruling, Krish, 2026-11-11)', () => {
+  it('draws no mark tile, series pill or header on any 9:16 beat, of any format or layout', () => {
+    const base = { ...EngineRenderPropsSchema.parse(fixture), aspect: '9:16' as const }
+    for (const format of ['face-with-proof', 'two-passports'] as const) {
+      const props = { ...base, format }
+      for (const layout of ['STAGE', 'P1', 'P3', 'P6', 'F1', 'F3', 'SPLIT', 'WINDOW'] as const) {
+        const beat = { ...props.beats[0]!, layout, plate: { source: 'none' as const } }
+        const nodes = elements(BrandFrame({ props, beat, frame: 0 }))
+        expect(nodes.filter((node) => node.type === StageHeader || node.type === MarkTile || node.type === ChannelPill)).toHaveLength(0)
+      }
+    }
+  })
+
+  it('keeps the brand on the closing outro card (Krish, 2026-11-11: "not the closing outro card")', () => {
+    const props = EngineRenderPropsSchema.parse({ ...fixture, aspect: '9:16', ending: { fromFrame: 90, url: 'makeyourmindup.ai' } })
+    const nodes = elements(BrandFrame({ props, beat: props.beats[0]!, frame: 100 }))
+    const band = nodes.find((node) => node.type === EndingBand)
+    expect(band).toBeTruthy()
+    expect(JSON.stringify(elements(EndingBand({ props, frame: 100 }) as ReactElement).map((n) => (n.props as { image?: { src?: string } }).image?.src ?? null))).toContain(props.brand.stacked.src)
+  })
+})
+
 describe('face-with-proof wears one brand treatment', () => {
   // Krish, 2026-11-03: "The branding is wrong". Its STAGE graphics sit on the light wash of its SPLIT stage, with the
   // same mark tile and pill; the held title shows over a STAGE beat on the take, never over one with no plate.
-  it('draws the mark tile, never the ink header, on a face-with-proof STAGE beat', () => {
-    const props = { ...EngineRenderPropsSchema.parse(fixture), format: 'face-with-proof' as const }
+  it('draws the mark tile, never the ink header, on a face-with-proof STAGE beat on the wide cut', () => {
+    const props = { ...EngineRenderPropsSchema.parse(fixture), format: 'face-with-proof' as const, aspect: '16:9' as const }
     const graphics = { ...props.beats[0]!, layout: 'STAGE' as const, plate: { source: 'none' as const } }
     const nodes = elements(BrandFrame({ props, beat: graphics, frame: 0 }))
     expect(nodes.filter((node) => node.type === MarkTile)).toHaveLength(1)

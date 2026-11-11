@@ -3,7 +3,8 @@ name: Auto-merge
 # Every pull request merges itself once CI is green, ve included (Ruling, Krish, 2026-11-03: "Change everything to
 # auto-merge all the time. No manual merging"). main has no required checks (Krish, 2026-10-25: "No merge checks."), so
 # GitHub's own auto-merge would not wait for CI; this job merges on green CI instead. Red CI never merges: the branch
-# is fixed and the next green run merges it. A branch with no open pull request is never touched.
+# is fixed and the next green run merges it. A branch with no open pull request is never touched. "CI" is the quick
+# checks only (ci.yml); the full verify (full-verify.yml) runs after the merge and never holds one back.
 on:
   workflow_run:
     workflows: [CI]
@@ -43,6 +44,9 @@ jobs:
           echo "merged=true" >> "$GITHUB_OUTPUT"
           # A merge made with GitHub's own token starts no push workflow on main; start the docs steward by hand.
           gh workflow run docs-steward.yml -R "$REPO" --ref main || echo "::warning::docs-steward was not started; its nightly run picks the merge up."
+          # The full verify runs after the merge, never before it (Ruling, Krish, 2026-11-11: quick checks on pull requests,
+          # the full verify after merge; merge fast and he tests live). It opens an issue if main goes red.
+          gh workflow run full-verify.yml -R "$REPO" --ref main || echo "::warning::full-verify was not started; its nightly run picks the merge up."
       # The same token starts no push workflow, so harness-repository-context.yml's fold job never sees this merge and
       # closeout notes pile up unfolded (twelve by 4 Nov). Fold them here with the harness's own script, pinned by the
       # sha256 that workflow checks, so NOW.md is current the moment the work lands (Ruling, Krish, 2026-11-04: docs are

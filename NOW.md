@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-10
-head: a07ea4e
+as_of: 2026-11-11
+head: 90e1b12
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,39 +30,35 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-09)
+## Where it is right now (as of 2026-11-11)
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
-- NOW.md stays under 14,000 bytes on main whichever job folds notes into it: the NOW.md trim workflow (.github/workflows/now-trim.yml) runs scripts/now_trim.py after the harness fold job, after Auto-merge and after any push to main touching NOW.md. (2026-11-10)
-- The capability register (config/capabilities.json, 62 capabilities, docs/CAPABILITIES.md) is checked by npm run check:capabilities. The first style catalogue was withdrawn on Krish's rejection, and its replacement design is docs/plans/2026-11-10-video-style-system/STYLE-CATALOGUE.md (styles, moves and formats as three separate libraries). No pipeline behaviour changed. (2026-11-10)
-- Pull requests no longer edit NOW.md, so they stop conflicting over it: CI's now-md-untouched job refuses a pull request that touches it (steward branches excepted), sessions close out through now-notes/, and auto-merge folds the notes and runs scripts/now_trim.py on main to keep the page under 14,000 bytes. (2026-11-10)
-- All three Wed 11 devices pass Claude's still review (slot_machine round 3: typed lines never cropped, cream cabinet with a visible lever); Krish has every mock frame. Both 10 Nov takes are eye-corrected by Maxine (short $0.015, long $0.093, 60 s chunks; off the lens 68 to 61 s and 247 to 209 s). (2026-11-10)
-- ve closes on the statement card (6 s); Krish's engine approval for Wed 11 Nov is recorded, scoped to the engine only. (2026-11-10)
-- ve has four new pieces for the Fri 13 Nov 5-minute cut, built by Codex from cards and checked here: the WINDOW layout (his face in a rounded corner window over full-bleed footage, easing between full frame and window), wall_screen (a real page flown off the office wall to full frame, its line marked), quota_chart (the medical-device study: questions bunch at the target, the junk third, the target halved, sales up 7%) and agent_swarm (ten agents on one comment, the token meter, the rank). (2026-11-10)
-- house end card is direction C, "Built to help you decide.", filmed 6 s by kit; wide frame never splits a word (docs/production/CLOSING.md). (2026-11-10)
-- Round 2 of the Wed 11 devices is built by Codex and reviewed: arrangement (a real DAW view, AI flags, credits) and upload_flood (scattered AI songs, listens meter, search) pass; slot_machine still crops typed text and its cabinet vanishes on ink. Mock batch 2 (11 device frames, Krish cut out on the right) sent to Krish. (2026-11-10)
-- every piece's words pass Control Center's one voice check: the approve and publish gate asks it for every lane and blocks on a hard fail, piece making runs scripts/post-pack/voice_gate.py on scripts, the article, carousel text and every channel's copy (piece_manifest.py draft refuses to write on a hard fail), and the writers read the voice live from Control Center before the hand-kept content_voice_block. (2026-11-09)
-- Live board is each week's own link, /board/<Monday> (Krish switched it 2026-11-10; old board at ?archive=1; PLAN.md in docs/plans/2026-11-09-board-desk): each series day a guided path (Research, Story, Look, Storyboard and script, Record, Cut); 8 devices. (2026-11-10)
+- Pull requests now wait only on the quick checks (CI: `npm run verify:quick`, Linux, every guard plus the related and publishing-safety tests); the full `npm run verify` on Linux and Windows and the browser jobs run after merge in full-verify.yml, which opens one issue when main goes red. Ruling (Krish, 2026-11-11): quick checks on pull requests, the full verify after merge; merge fast and he tests live. (2026-11-11)
+- Wed 11 Nov (36886e0b) publish pack built and sent: fact gate passed on run 7 (all runs past the second on Krish's words), spine judge passed, visual gate passed, covers and thumbnails in the week's neon skin, titles Krish picked; both cuts in the post's working folder (the 5-minute dropped by Krish); reader test 8 9 7 8 8 8, under the bar. (2026-11-11)
+- Wed 11 Nov (36886e0b) is ready to post: fact gate passed (run 7), spine judge passed, visual gate passed, pack in its 3 Posts folder; covers and thumbnails in this week's neon skin; both cuts are in the post's working folder (not filed: a one-off composite has no ve or quick-edit receipt, Krish chose b). Reader test 8 9 7 8 8 8, under the bar (reader-test.md). (2026-11-11)
+- Vertical video carries no wordmark, mark tile, series badge or opening logo in any route (ve, quick-edit, the style lab, the Studio routes), by Krish's ruling of 11 November; the wide cut keeps them. ve QC proves the mark absent on 9:16 (brand.no_mark), renderer tests refuse chrome on any 9:16 beat, the lab checker fails a tall cut with a dress and any word over a wide wordmark, and quick-edit ignores an older config's dress. HOOK_IS_THE_INTRO now says so, approved by Krish. (2026-11-11)
+- The Publish Board's feed has one versioned contract (apps/control-plane/api/board/view.schema.json, contract_version 1.0.0, a frozen fixture, check:view-contract in verify) and answers with an ETag and 304; content.krishraja.com/board/<Monday> is the archive with a banner to Control Centre's live board, and every link the engine gives Krish to the board is the live one (config/boards.json live_board). (2026-11-11)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
-- 2026-11-10 Krish wants the whole video chosen before the script, from a real catalogue of looks he can see, and every capability labelled by purpose and stage.
-Older lines: `docs/history/2026-11-10-NOW-moved-8.md`, `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
+- 2026-11-11 config/studio.json was left unchanged because it is bound into the signed media standard's hash; the vertical exemption is enforced in the renderer instead.
+Older lines: `docs/history/2026-11-11-NOW-moved-4.md`, `docs/history/2026-11-11-NOW-moved-3.md`, `docs/history/2026-11-11-NOW-moved-2.md`, `docs/history/2026-11-11-NOW-moved-1.md`, `docs/history/2026-11-10-NOW-moved-8.md`, `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-10): Watch #512 merge itself on green CI.
+- Next (2026-11-11): Watch the first full-verify runs on main and fix any red from its issue the same day.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
+- Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
 - Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
-- 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms, lock signed). Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
+- 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms). Monday's lock signed 10 Nov: its long cut runs a few minutes over 5 and the article longer, to carry the midterm data-centre backlash. Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-10): holds.
+- North Star check (2026-11-11): holds.
 
 ## Read next
 

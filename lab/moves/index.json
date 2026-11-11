@@ -1,0 +1,499 @@
+{
+ "_about": "Every move there is: the lab moves (lab/moves/<id>) any style can call, and the ve engine devices, listed so there is one inventory. Written by node lab/moves/check.mjs --write.",
+ "moves": [
+  {
+   "id": "bars-grow",
+   "kind": "lab",
+   "what": "A row of small bars grows, then the new ones grow in the series colour.",
+   "says": [
+    "number",
+    "contrast"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "low",
+   "engine": "canvas",
+   "code": "lab/moves/bars-grow/move.mjs"
+  },
+  {
+   "id": "cost-shrink",
+   "kind": "lab",
+   "what": "A cost bar shrinks with a mint arrow: something got cheaper.",
+   "says": [
+    "number",
+    "before-after"
+   ],
+   "needs": [
+    "text"
+   ],
+   "energy": "low",
+   "engine": "canvas",
+   "code": "lab/moves/cost-shrink/move.mjs"
+  },
+  {
+   "id": "count-in-card",
+   "kind": "lab",
+   "what": "A number counts to the spoken value in a card, then to the new value with the old one struck; a row of people lights and the leavers drop away.",
+   "says": [
+    "number",
+    "before-after",
+    "person"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "medium",
+   "engine": "canvas",
+   "code": "lab/moves/count-in-card/move.mjs"
+  },
+  {
+   "id": "count-on-a-part",
+   "kind": "lab",
+   "what": "The parts of one object light one by one to the spoken number; the leavers go dark on the drop; everything dims and returns.",
+   "says": [
+    "number",
+    "before-after",
+    "person"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "high",
+   "engine": "three",
+   "code": "lab/moves/count-on-a-part/move.mjs"
+  },
+  {
+   "id": "counter-scene",
+   "kind": "lab",
+   "what": "A person at work at a counter acts the line out: a machine arrives, the person appears, hands something over; returns as a ghost and comes back; turns from the task to people.",
+   "says": [
+    "person",
+    "before-after",
+    "process"
+   ],
+   "needs": [
+    "text"
+   ],
+   "energy": "high",
+   "engine": "canvas",
+   "code": "lab/moves/counter-scene/move.mjs"
+  },
+  {
+   "id": "freeze-circle-magnify",
+   "kind": "lab",
+   "what": "A captured source page on a paper card: a hand-drawn circle (or underline) draws round the line that matters, then a loupe lifts the same pixels to twice their size.",
+   "says": [
+    "evidence",
+    "quote",
+    "number"
+   ],
+   "needs": [
+    "screenshot"
+   ],
+   "energy": "medium",
+   "engine": "canvas",
+   "code": "lab/moves/freeze-circle-magnify/move.mjs"
+  },
+  {
+   "id": "level-line",
+   "kind": "lab",
+   "what": "A mint bar draws across the ground: held level.",
+   "says": [
+    "number",
+    "contrast"
+   ],
+   "needs": [
+    "text"
+   ],
+   "energy": "low",
+   "engine": "three",
+   "code": "lab/moves/level-line/move.mjs"
+  },
+  {
+   "id": "light-sweep-number",
+   "kind": "lab",
+   "what": "One giant number rises out of a dark stage floor, a slow band of light sweeps across its face, and its reflection fades into the floor.",
+   "says": [
+    "number"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "low",
+   "engine": "canvas",
+   "code": "lab/moves/light-sweep-number/move.mjs"
+  },
+  {
+   "id": "live-chart",
+   "kind": "lab",
+   "what": "A chart draws itself: an expected line dives, the real lines draw with glowing heads, and on \"watch\" one turns mint and pulses.",
+   "says": [
+    "timeline",
+    "contrast",
+    "number"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "medium",
+   "engine": "canvas",
+   "code": "lab/moves/live-chart/move.mjs"
+  },
+  {
+   "id": "map-pin-drop",
+   "kind": "lab",
+   "what": "Pins drop onto a street grid with ripples: the first group, then the new ones in the series colour.",
+   "says": [
+    "place",
+    "number"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "medium",
+   "engine": "canvas",
+   "code": "lab/moves/map-pin-drop/move.mjs"
+  },
+  {
+   "id": "percent-block",
+   "kind": "lab",
+   "what": "A percentage counts up on a block of the series colour wiping in under it.",
+   "says": [
+    "number"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "medium",
+   "engine": "canvas",
+   "code": "lab/moves/percent-block/move.mjs"
+  },
+  {
+   "id": "rows-equal",
+   "kind": "lab",
+   "what": "Two rows of people, an equals sign and a level line: the total stayed the same.",
+   "says": [
+    "contrast",
+    "number",
+    "person"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "medium",
+   "engine": "canvas",
+   "code": "lab/moves/rows-equal/move.mjs"
+  },
+  {
+   "id": "slab-towers",
+   "kind": "lab",
+   "what": "Two towers of slabs, the two things that moved: one loses slabs that fall under gravity, one gains slabs that drop on.",
+   "says": [
+    "contrast",
+    "number"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "high",
+   "engine": "three",
+   "code": "lab/moves/slab-towers/move.mjs"
+  },
+  {
+   "id": "source-on-clock",
+   "kind": "lab",
+   "what": "Every source pinned to one timeline: year ticks, a pin drops at each source's moment as he says it, a playhead walks to the year being spoken about.",
+   "says": [
+    "timeline",
+    "evidence"
+   ],
+   "needs": [
+    "text"
+   ],
+   "energy": "low",
+   "engine": "canvas",
+   "code": "lab/moves/source-on-clock/move.mjs"
+  },
+  {
+   "id": "street-drop",
+   "kind": "lab",
+   "what": "Copies of the object rise into a street, then the new ones drop in from above: a percentage made visible.",
+   "says": [
+    "number",
+    "place"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "high",
+   "engine": "three",
+   "code": "lab/moves/street-drop/move.mjs"
+  },
+  {
+   "id": "task-copies-2d",
+   "kind": "lab",
+   "what": "One task ticks done, then the freed time opens as new slots.",
+   "says": [
+    "process",
+    "list"
+   ],
+   "needs": [
+    "text"
+   ],
+   "energy": "medium",
+   "engine": "canvas",
+   "code": "lab/moves/task-copies-2d/move.mjs"
+  },
+  {
+   "id": "task-copies-3d",
+   "kind": "lab",
+   "what": "One slab lifts off a tower, turns mint and makes four copies in the space it freed.",
+   "says": [
+    "process"
+   ],
+   "needs": [
+    "text"
+   ],
+   "energy": "medium",
+   "engine": "three",
+   "code": "lab/moves/task-copies-3d/move.mjs"
+  },
+  {
+   "id": "time-bars",
+   "kind": "lab",
+   "what": "Where time goes: one task bar shrinks, another grows; pairs of people appear, each with a bubble.",
+   "says": [
+    "before-after",
+    "person"
+   ],
+   "needs": [
+    "text"
+   ],
+   "energy": "medium",
+   "engine": "canvas",
+   "code": "lab/moves/time-bars/move.mjs"
+  },
+  {
+   "id": "toast",
+   "kind": "lab",
+   "what": "A notification slides in for each number.",
+   "says": [
+    "number",
+    "evidence"
+   ],
+   "needs": [
+    "text"
+   ],
+   "energy": "low",
+   "engine": "canvas",
+   "code": "lab/moves/toast/move.mjs"
+  },
+  {
+   "id": "type-is-the-picture",
+   "kind": "lab",
+   "what": "A word or number set huge on the grid, revealed by a mask from its baseline or from the left, held, then pushed out; optional strike and a solid block behind.",
+   "says": [
+    "number",
+    "contrast",
+    "list"
+   ],
+   "needs": [
+    "text",
+    "number"
+   ],
+   "energy": "high",
+   "engine": "canvas",
+   "code": "lab/moves/type-is-the-picture/move.mjs"
+  },
+  {
+   "id": "agent_swarm",
+   "kind": "engine-device",
+   "what": "verbs: enter, add, fill, move, mark, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "arrangement",
+   "kind": "engine-device",
+   "what": "verbs: enter, add, type, stamp, mark, highlight, fill, chip, move, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "cursor_buddy",
+   "kind": "engine-device",
+   "what": "verbs: enter, bounce, sulk, wave, move, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "evidence_card",
+   "kind": "engine-device",
+   "what": "verbs: enter, fill, mark, stamp, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "hand_phone_stage",
+   "kind": "engine-device",
+   "what": "verbs: enter, move, fill, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "headline",
+   "kind": "engine-device",
+   "what": "verbs: enter, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "kinetic_stat",
+   "kind": "engine-device",
+   "what": "verbs: enter, count_to, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "leaderboard",
+   "kind": "engine-device",
+   "what": "verbs: enter, add, fill, stamp, move, highlight, mark, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "logo_card",
+   "kind": "engine-device",
+   "what": "verbs: enter, highlight, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "logo_orbit",
+   "kind": "engine-device",
+   "what": "verbs: enter, add, chip, highlight, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "marquee",
+   "kind": "engine-device",
+   "what": "verbs: enter, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "office_floor",
+   "kind": "engine-device",
+   "what": "verbs: enter, add, fill, move, send, stamp, carry, highlight, draw, mark, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "passport_page",
+   "kind": "engine-device",
+   "what": "verbs: enter, stamp, mark, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "query_chip",
+   "kind": "engine-device",
+   "what": "verbs: enter, highlight, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "quota_chart",
+   "kind": "engine-device",
+   "what": "verbs: enter, fill, draw, mark, move, count_to, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "quote_card",
+   "kind": "engine-device",
+   "what": "verbs: enter, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "record_card",
+   "kind": "engine-device",
+   "what": "verbs: enter, stamp, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "scribble",
+   "kind": "engine-device",
+   "what": "verbs: draw, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "slot_machine",
+   "kind": "engine-device",
+   "what": "verbs: enter, type, pick, send, fill, bounce, highlight, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "stamp",
+   "kind": "engine-device",
+   "what": "verbs: stamp, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "stat_strip",
+   "kind": "engine-device",
+   "what": "verbs: enter, count_to, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "sticker",
+   "kind": "engine-device",
+   "what": "verbs: enter, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "test_grid",
+   "kind": "engine-device",
+   "what": "verbs: enter, mark, stamp, highlight, carry, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "thread_card",
+   "kind": "engine-device",
+   "what": "verbs: enter, mark, stamp, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "typing_bubble",
+   "kind": "engine-device",
+   "what": "verbs: enter, type, send, pick, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "upload_flood",
+   "kind": "engine-device",
+   "what": "verbs: enter, fill, count_to, draw, type, pick, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  },
+  {
+   "id": "wall_screen",
+   "kind": "engine-device",
+   "what": "verbs: enter, move, mark, exit",
+   "where": "config/ve/devices.json",
+   "note": "drawn by the ve renderer (frozen during a piece); not yet a lab move"
+  }
+ ]
+}

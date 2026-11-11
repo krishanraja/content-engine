@@ -1,0 +1,20 @@
+{
+ "id": "freeze-circle-magnify",
+ "what": "A captured source page on a paper card: a hand-drawn circle (or underline) draws round the line that matters, then a loupe lifts the same pixels to twice their size.",
+ "says": [
+  "evidence",
+  "quote",
+  "number"
+ ],
+ "needs": [
+  "screenshot"
+ ],
+ "energy": "medium",
+ "engine": "canvas",
+ "code": "lab/moves/freeze-circle-magnify/move.mjs",
+ "entry": "draw",
+ "vitals": "timing is fixed in the move; times come from the words that cue it",
+ "skin": "brand skin colours only (ink, cream, mint, the series colour); the pointer colour is the calling style's, recorded in its STYLE.md",
+ "from": "lab/styles/evidence-desk/scene.mjs",
+ "proven_by": "not yet: built 2026-11-11 for batch 1; waits on Krish's verdict on the style frames"
+}

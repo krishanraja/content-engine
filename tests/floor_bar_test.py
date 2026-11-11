@@ -533,7 +533,8 @@ class TheBar(unittest.TestCase):
         for source in ('each lockup has one job (p. 04)', 'hands-off rules (p. 05)', '`docs/STUDIO.md` applies the book',
                        'the placement Krish approved on 26 September 2026, for the job-based Studio',
                        'Where a reference departs from them, the book and that placement win',
-                       "whether the every-beat tile binds a quick-edit tall cut is Krish's decision"):
+                       # Krish decided it on 2026-11-11: no mark over any tall cut's animated content (the outro card keeps it).
+                       'Vertical video carries no mark, wordmark or series tag at all'):
             self.assertIn(source, branding)
         self.assertIn('`docs/brandbooknew/`', part(AIMS))
         # The question rested on a premise the book does not support, and the rulings say so.

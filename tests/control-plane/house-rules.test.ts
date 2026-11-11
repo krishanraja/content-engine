@@ -550,7 +550,10 @@ describe('the opening, the music bed and a thumbnail for every size (Krish, 2026
     // 2026-11-05: "I think it should go at the start of the longer wide videos 100%," (the sting, back on the wide cut only).
     assert.equal(HOUSE_RULES.find(x => x.id === 'INTRO_STING'), undefined, 'INTRO_STING stays folded into HOOK_IS_THE_INTRO')
     assert.match(r.text, /The 9:16 short cut opens straight on its hook/)
-    assert.match(r.text, /wordmark and the series tag small in the top corners from the very first frame/)
+    // Krish, 2026-11-11: no wordmark, mark tile or series tag over the vertical cut's animated content; the outro keeps it.
+    assert.match(r.text, /No wordmark, mark tile or series tag sits over its animated content/)
+    assert.match(r.text, /the closing outro card keeps the wordmark/)
+    assert.doesNotMatch(r.text, /series tag small in the top corners/)
     assert.match(r.text, /The 16:9 long cut of a weekly series piece opens on the house intro sting \(config\/intro-sting\.json: 56 frames at 30 fps/)
     assert.match(r.text, /with no sound of its own and the music bed under it, and his face and the hook come in on the very next frame/)
     assert.match(r.text, /no story card, no second intro, and no sting on the tall cut or on an off-day piece/)

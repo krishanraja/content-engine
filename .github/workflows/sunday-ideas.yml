@@ -129,7 +129,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 400
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             The Sunday ideas run for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub Actions
@@ -137,7 +137,8 @@ jobs:
 
             Follow .claude/skills/plan-week/SKILL.md, the ideas stage only: steps 1 to 7, so the Ideas tab of that
             week's publish board is live at content.krishraja.com (week_board.py --target web with --ideas, --queue and
-            --combine, then board_web.py publish-web --apply, then its board item week-publish-board-<Monday>).
+            --combine, then board_web.py publish-web --apply, then its board item week-publish-board-<Monday>, whose
+            link is the live board in Control Centre: python3 scripts/post-pack/live_board.py <Monday>).
             Write each day's options through /api/week/options and the off-day options into ideas.json as the skill
             says. Research with the built-in web search and web fetch: there is no Drive or Firecrawl connector here
             (the skill's "Without the connectors").

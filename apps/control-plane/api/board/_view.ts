@@ -1,9 +1,12 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
+import { yesByDay } from './_yes.js'
 import { readRuns, ENGINE_REPO, type JobName, type RunInfo } from './_run.js'
 import { offdaySides, type OffdaySides } from './_offdaySides.js'
 import { dayMedia, type MediaItem } from './_media.js'
+import { VIEW_CONTRACT_VERSION } from './_viewContract.js'
+import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -76,6 +79,8 @@ export interface DayPath {
   storyboard: { title: string; at: string | null } | null
 }
 export interface WeekView {
+  /** The contract this view keeps (view.schema.json, x-contract-version; _viewContract.ts). */
+  contract_version: string
   week: string
   as_of: string
   days: DayView[]
@@ -124,6 +129,15 @@ const running = (r?: RunInfo) => Boolean(r && (r.state === 'queued' || r.state =
 const GH = (job: JobName) => `GitHub · ${job}.yml`
 
 function stepState(live: LiveDay, key: string) { return live.steps.find(s => s.key === key)?.state }
+
+/** Whether any channel is out. The publish step turns 'now' as soon as it is the first open step, before anything is
+ * posted; only a step carrying the engine's channel count (its note, written once a channel is posted) means posting has
+ * started. Wed 11 Nov showed "Posting: some channels are out" with nothing out (Krish, 2026-11-11: "so behind where we're
+ * actually at"). */
+export function postingStarted(live: Pick<LiveDay, 'steps'>): boolean {
+  const step = live.steps.find(s => s.key === 'publish')
+  return step?.state === 'now' && Boolean(step.note)
+}
 
 /** One series day (Mon, Wed, Fri): its piece's next step from the record, the lock and the runs. */
 function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): Omit<DayView, 'media'> {
@@ -229,8 +243,18 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): Omit
       next: 'Both takes are in. Cut the videos now, or let tonight\'s overnight run do it',
       actions: [{ kind: 'run', label: 'Cut the videos now', job: 'produce-day', input: { date, piece: id }, runs_on: GH('produce-day') }] }
   }
-  return { ...v, stop: pub === 'now' ? 4 : 3, who: 'growth', runs_on: 'Growth posts it, after your Approve for publish',
-    next: pub === 'now' ? 'Posting: some channels are out' : 'Watch both cuts and press Approve for publish', actions: [{ kind: 'open', label: 'Watch and approve', href: boardTab(week, day) }] }
+  const posting = postingStarted(live)
+  // His yes for the day (one yes anywhere: a board yes, his typed words carried from a session, or Approve for publish)
+  // means the day is approved: nothing is left for him to press (Krish, 2026-11-11: "I don't want you to give me back
+  // work to do, buttons to click on the publish board").
+  const yes = yesByDay(i.picks)[day]
+  if (!posting && yes?.approved) {
+    return { ...v, stop: 4, who: 'growth', runs_on: 'Growth posts it on the day',
+      next: `Approved${yes.via === 'words' ? ' in your words' : ''}. Ready to post: Growth posts it on the day`,
+      actions: [{ kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Post the ${DAY_NAME[day]} ${date} piece ${id} that Krish approved on the content-engine board (week of ${week}), from its 3 Posts folder.` }] }
+  }
+  return { ...v, stop: posting ? 4 : 3, who: 'growth', runs_on: 'Growth posts it, after your Approve for publish',
+    next: posting ? 'Posting: some channels are out' : 'Watch both cuts and press Approve for publish', actions: [{ kind: 'open', label: 'Watch and approve', href: boardTab(week, day) }] }
 }
 
 function formatOf(i: ViewInputs, id: unknown): LookOption | null {
@@ -306,7 +330,8 @@ export function backupPrompt(week: string, d: DayView): string {
   const where = [
     d.piece_id ? `- the piece's making record: python3 scripts/post-pack/making.py ${d.piece_id} show` : '',
     `- the week's plan, ideas and off-day options: docs/plans/${week}-week/ (ideas.json, and the offday-revise/${week} branch when it exists)`,
-    `- Krish's presses on the board: GET /api/board/${week}/view, and the board at content.krishraja.com/board/${week}`,
+    `- Krish's presses on the board: GET /api/board/${week}/view; the live board, where he works, is ${liveBoardUrl(week, d.day).replace(/^https:\/\//, '')}`
+      + ` (content.krishraja.com/board/${week} is the archive; the view carries no https link, by the media rule)`,
   ].filter(Boolean).join('\n')
   const options = d.reviews?.length ? `\nWhat waits on him: ${d.reviews.map(r => r.doc_id).join(', ')} (revised from his words).` : ''
   return 'You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: '
@@ -340,7 +365,7 @@ export function buildView(i: ViewInputs): WeekView {
   const moved = i.history.filter(h => { const k = `${h.collection}/${h.doc_id}`; if (seen.has(k)) return false; seen.add(k); return true }).slice(0, 8).map(h => ({ at: h.updated_at, text: `${h.updated_by === 'Krish' ? 'You' : h.updated_by} ${name(h.collection, h.doc_id)}` }))
   for (const r of Object.values(i.runs)) if (r) moved.push({ at: r.updated_at, text: `${r.workflow}: ${r.state}` })
   moved.sort((a, b) => b.at.localeCompare(a.at))
-  return { week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
+  return { contract_version: VIEW_CONTRACT_VERSION, week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
     sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0 } }
 }
 
