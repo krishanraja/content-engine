@@ -50,6 +50,73 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   sha256) is behind. Refresh the fixture with `UPDATE_VIEW_FIXTURE=1 npx vitest run tests/control-plane/board-view-contract.test.ts`.
 - **Live:** the view answers with an `ETag` of what it says (never when it was read) and `304` to a matching
   `If-None-Match`, so Control Centre asks every few seconds at almost no cost.
+- **1.1.0 (11 Nov 2026)** added `sessions` and `materials` to every day (the section below).
+
+## Sessions and materials
+
+Krish, 2026-11-11: "If I copy a Claude prompt out of the content publish board ... that session should automatically
+update the board once it's done or as it's going. This system should be immune from multiple sessions working on stuff
+simultaneously and should have a rock-hard repository for everything it's drawing on. ... if I put a screenshot in as
+inspiration for that day or if I put a research corpus in as supporting material, that should never be lost again. Even
+if I ran four separate sessions on one piece of content, it would know where everything was."
+
+**What a copied prompt says.** Every Claude and Growth prompt on the view ends with one instruction
+(`apps/control-plane/api/board/_writeBack.ts`, `writeBack`; a Perplexity prompt does not, it is not a session). It names
+the piece (or the week and the day when there is no piece yet) and the step, and tells the session to: see what is on
+file and who else is on the piece first; choose a session id once and report `start`, `progress` at each milestone, and
+`done` (or `blocked`, with what it needs); and file everything it makes or draws on on the piece, never only in its chat.
+Two doors, both on the same routes and rules, and neither puts a key in the prompt:
+
+| Door | For | Authenticates with |
+|---|---|---|
+| Control Centre's connector: `get_piece_board`, `report_board_session`, `add_piece_material`, `read_piece_material` | a claude.ai chat, and a Claude Code session that has the connector | the connector's own sign-in; Control Centre calls the engine on his access cookie, labelled with the session (`via: control_center`) |
+| `python3 scripts/post-pack/board_session.py PIECE show / start / progress / done / blocked / add / read / archive` | a session in a checkout of this repository (Claude Code, Codex, either home computer, GitHub Actions) | the engine key `scripts/engine.py` already finds (the cloud session's network secret, `ENGINE_OPERATOR_TOKEN`, or Windows Credential Manager) |
+
+**The routes** (`apps/control-plane/api/_pieceStore.ts`; Control Centre reaches both through its own `/api/content-ideas/*` rewrite):
+
+- `POST /api/content-ideas/sessions` a report: `{ piece_id | week+day, session_id, kind, step?, summary?, client_key?, fields? }`.
+  The answer names the other sessions on the piece.
+- `GET /api/content-ideas/store?piece=<id>` (or `?week=<Monday>&day=<mon..sun>`) the one listing: every material on the
+  piece, its day and its week (latest version of each; `&all=1` every version, `&archived=1` the archived ones), each
+  session's presence and last line, the latest value of each field, and the newest reports. Reading a piece first files
+  anything on its working set the store does not hold yet.
+- `GET /api/content-ideas/store?op=read&id=<material>` a text as JSON; a file as a short signed link (`&link=1` for JSON).
+- `POST /api/content-ideas/store?op=text|link|upload-url|confirm|archive`. A file is two calls: `upload-url` (its name,
+  sha256 and size; up to 64 MB, any type the content library takes) gives a signed address for the bytes, and `confirm`
+  reads every byte back and checks the sha256 before it counts.
+
+**The rules that make several sessions safe** live in the database (migration
+`20261125093000_board_sessions_and_piece_store.sql`), so they hold whichever door a write comes through:
+
+- A report is one appended row in `board_session_events`, idempotent on the session's own key for it: a retry lands
+  once. A session's presence is read from its latest lease (30 minutes from each report by default; `done` and `end`
+  close it): `working`, `blocked`, `quiet` (it went silent), `done` or `ended`. Nothing is updated in place.
+- A field a session sets on a piece (`board_piece_fields`) names the revision it read. `set` is refused with what is
+  there now when another revision landed first; `append` adds to the list as it stands, so two sessions appending at
+  once both land. Nothing is overwritten silently.
+- A material is kept by its sha256: a text in `material_texts` (the database checks the hash), a file in the content
+  library's bucket at `files/<sha256>.<ext>`, a link by its address. `piece_materials` keeps one row per version of each
+  `material_key` (the same bytes again are one material; a new version never removes the old), on a piece or on a day
+  with no piece yet. Nothing is deleted: the tables refuse delete, update and truncate (archive only, which hides a
+  material from the lists).
+- The piece's working set, `content_ideas.meta.materials`, stays what the writers ground on. A trigger files every
+  change to it in the store in the same write, so a material trimmed from the working set (it keeps 40), taken off by
+  `DELETE /api/content-ideas/<id>/materials`, or lost to two writers racing is still on record. The writes to the
+  working set from the store, from the old materials route and from the board's research are guarded on the row's
+  `updated_at`, so a making record that lands in between is read again and kept.
+- Piece materials only: brand assets live in the brand kit (`docs/DRIVE.md`, "The brand kit"), never here.
+
+**On the board.** Each day of the view carries `sessions` (who is on the day's piece or the day, working first, with
+their step and last line) and `materials` (what is on file, newest first, with a thumbnail id for a picture and no text
+or link). Control Centre's Publish Board draws them inside its existing tabs until the redesign places them; the
+board's own upload (drag and drop on the desk, the camera or photos on a phone) is the same two calls through Control
+Centre's rewrite.
+
+**Held by:** `tests/board-sessions-db.mjs` (the migration on PGlite, and on a real Postgres four sessions on one piece at
+once: every report, note, screen grab, version and racing paste lands, and every set names the revision it read),
+`tests/control-plane/board-sessions.test.ts` (the prompts, the view, the routes), `tests/board_session_test.py` (the
+script) and `tests/integration/board-sessions-e2e.ts` (a copied prompt followed for real against the routes and a real
+database, with three more sessions on the same piece, and the view reading all of it).
 
 ## The engine's own page: /board/<Monday> (the archive)
 
