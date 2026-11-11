@@ -1,0 +1,3 @@
+Status: The proactive-AI short moved from Monday 16 to Tuesday 17 Nov at Krish's word ("Schedule it for Tuesday off day instead, I still might do a 2nd post on Tuesday like a meme later"): filed and read back in 3 Posts/2026-11-17 Tue off.day - Proactive AI; the Monday folder is in Drive's trash at his word ("delete the monday 16th folder"). It is a decided Tuesday option in docs/plans/2026-11-16-week/ideas.json, video served from the library by sha256 (board-assets.json); config/filing-exceptions.json gains the Tuesday destination with his words.
+Next: the Control Center board reads ideas.json from offday-revise/2026-11-16 first, so the option appears there once that branch carries it (Krish's yes to push to it).
+North Star check (2026-11-11): holds.
