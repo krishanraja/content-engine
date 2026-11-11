@@ -26,7 +26,7 @@ S.update({'imael': shot('officialcharts_imael_angel_artist', 125, 875, 1875, 160
           'ableton': shot('ableton_arrangement_view_manual', 220, 150, 1690, 1500), 'logic': shot('logic_pro_product', 600, 300, 2300, 1750),
           'splice': shot('splice_sample_packs', 0, 200, 2880, 1500), 'spsearch': shot('spotify_search_movin_to_the_sun', 700, 300, 2880, 1500),
           'm365': shot('m365_copilot_marketing', 0, 0, 2880, 1500), 'ppt': shot('powerpoint_copilot_marketing', 0, 0, 2880, 1500),
-          'deezer': shot('deezer_newsroom_50pct_jul2026', 150, 150, 2250, 1700), 'edmhouse': shot('hugel_ai_claims_edmhousenetwork', 900, 700, 2700, 1650),
+          'deezer': shot('deezer_newsroom_50pct_jul2026', 150, 150, 2250, 1700), 'edmhouse': shot('hugel_ai_claims_edmhousenetwork', 960, 400, 2660, 1560),
           'word': cv2.imread('/tmp/claude-0/w11l/newsrc/word.png')[0:1500, 0:2880], 'deezer44': shot('deezer_newsroom_44pct_apr2026', 150, 150, 2250, 1700)})
 
 def ground(c=INK): return np.full((SH, SW, 3), bgr(c), np.uint8)
@@ -240,6 +240,7 @@ def s_rebuild(t):
     if 237.3 <= t < 243.2:
         p = min(1, back((t - 237.3) / 0.35)); out = ease((t - 242.8) / 0.4)
         paste(g, fit(S['charts'], 560, 420), SW - 330, SH - 250 + out * 500, 1, min(1, p * 2) * (1 - out), 16, rot=2)
+    C.robot_fly(g, t, 256.0, 260.0)   # "a robot quietly humming along under a dance legend"
     return g
 
 def s_grammys(t):  # 264.5 the Grammys
@@ -260,9 +261,9 @@ def s_grammys(t):  # 264.5 the Grammys
         if ai and 280.4 <= t:
             hm = hatch(70, 300, t * 30); text(hm, 'AI HUM', MONO(30), 150, 18, CREAM, 'ma'); paste(card, hm, cw / 2, 560 - 20, 1, ease((t - 280.4) / 0.3), 10, shadow=False)
         mv = ease((t - 291.4) / 0.4)
-        paste(g, card, 330 + j * 580, SH / 2 + 30 + (1 - p) * 500 + 150 * mv, 1 - 0.2 * mv, min(1, p * 2), 26, rot=-3 if j == 0 else 3)
+        paste(g, card, 330 + j * 580, SH / 2 + 30 + (1 - p) * 500 + 215 * mv, 1 - 0.25 * mv, min(1, p * 2), 26, rot=-3 if j == 0 else 3)
     if t > 291.6:
-        slide_card(g, S['edmhouse'], t, 291.6, SW / 2, 120, 560, 210, frm=(0, -600))
+        slide_card(g, S['edmhouse'], t, 291.6, SW / 2, 190, 620, 290, frm=(0, -700))  # headline and photo, fully on the stage
     return sway(g, t, 0.04)
 
 def s_question(t):  # 296.2 is it AI music or human music? the wrong question (one title only: here the two cards, struck)

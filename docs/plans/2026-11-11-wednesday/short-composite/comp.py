@@ -221,6 +221,19 @@ def suno_form(t):
     paste(g, card, W / 2, SH / 2 + (1 - min(1, p)) * 200, 1.0, min(1, p * 2), 36)
     return kb(g, z, 0.5, 0.35)
 
+ROBOT = cv2.imread('/tmp/claude-0/w11l/real/robot.png')
+def robot_fly(g, t, at, end):
+    """Krish, 2026-11-11: "an absurd image fly in of a robot passionately humming in a recording studio with
+    headphones". It spins in from far away, lands with a thump, then bobs to the beat like it means it."""
+    if not (at <= t < end): return
+    k = t - at; Hh, Ww = g.shape[:2]; w = int(min(Ww * 0.62, Hh * 0.8 * 4 / 3)); h = int(w * 3 / 4)
+    p = min(1, back(k / 0.45)); out = ease((t - (end - 0.35)) / 0.35)
+    spin = (1 - ease(k / 0.45)) * 540
+    beat = math.sin(k * 2 * math.pi * 2.1)
+    sc = (0.15 + 0.85 * p) * (1 + 0.04 * max(0, beat)) * (1 - 0.9 * out)
+    rot = spin + 4 * beat * min(1, k / 0.6)
+    paste(g, cover(ROBOT, w, h), Ww / 2 + out * Ww, Hh / 2 - (1 - p) * Hh * 0.3, sc, min(1, p * 2), 24, rot=rot)
+
 def s_slot(t):
     if t < 22.9: return suno_form(t)
     dev = kb(devframe('slot', t, 15.9), 1 + 0.08 * ease((t - 15.9) / 9.7), 0.5, 0.3)
@@ -272,6 +285,7 @@ def s_arr(t):
     if 42.5 <= t < 48.0:  # Ultra Nate's voice, her own single page
         p = back((t - 42.5) / 0.35); out = ease((t - 47.6) / 0.4)
         paste(g, SHOTS['apple'], W / 2 + 120, SH - 260 + out * 600, 0.5 * min(1, p), min(1, p * 2) * (1 - out), 18)
+    robot_fly(g, t, 56.1, 58.35)
     return g
 
 def s_grammys(t):  # headlines stack in; writing ruled out (reportedly), singing still in
