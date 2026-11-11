@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.0.0",
+ "contract_version": "1.1.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -153,6 +153,68 @@
      "title": "Long cut thumbnail",
      "at": "2026-11-16T08:00:00Z"
     }
+   ],
+   "sessions": [
+    {
+     "session_id": "board-kxqp",
+     "label": null,
+     "surface": "claude-code",
+     "by": "Claude Code",
+     "state": "working",
+     "step": "board",
+     "doing": "Drafting the 90-second script",
+     "started_at": "2026-11-16T08:10:00Z",
+     "last_at": "2026-11-16T08:50:00Z"
+    },
+    {
+     "session_id": "look-tzrw",
+     "label": null,
+     "surface": "claude-ai",
+     "by": "claude.ai",
+     "state": "done",
+     "step": "look",
+     "doing": "Filed two frames for the look",
+     "started_at": "2026-11-16T07:00:00Z",
+     "last_at": "2026-11-16T07:40:00Z"
+    }
+   ],
+   "materials": [
+    {
+     "id": "11111111-2222-4333-8444-555555555555",
+     "kind": "screenshot",
+     "title": "Screen grab one",
+     "size": 182000,
+     "added_by": "Krish",
+     "at": "2026-11-15T21:00:00Z",
+     "thumbnail": "11111111-2222-4333-8444-555555555555",
+     "role": "inspiration",
+     "version": 1,
+     "where": "piece"
+    },
+    {
+     "id": "22222222-3333-4444-8555-666666666666",
+     "kind": "screenshot",
+     "title": "Screen grab two",
+     "size": 201000,
+     "added_by": "Krish",
+     "at": "2026-11-15T21:01:00Z",
+     "thumbnail": "22222222-3333-4444-8555-666666666666",
+     "role": "inspiration",
+     "version": 1,
+     "where": "piece"
+    },
+    {
+     "id": "33333333-4444-4555-8666-777777777777",
+     "kind": "corpus",
+     "title": "Oracle research corpus",
+     "size": 48000,
+     "added_by": "Claude Code",
+     "at": "2026-11-15T20:00:00Z",
+     "thumbnail": null,
+     "role": "research",
+     "version": 2,
+     "where": "piece"
+    }
    ]
   },
   {
@@ -223,7 +285,22 @@
      "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Tue 17 (off …"
     }
    ],
-   "media": []
+   "media": [],
+   "sessions": [],
+   "materials": [
+    {
+     "id": "44444444-5555-4666-8777-888888888888",
+     "kind": "image",
+     "title": "Tuesday reference",
+     "size": 90000,
+     "added_by": "Krish",
+     "at": "2026-11-15T19:00:00Z",
+     "thumbnail": "44444444-5555-4666-8777-888888888888",
+     "role": "inspiration",
+     "version": 1,
+     "where": "day"
+    }
+   ]
   },
   {
    "day": "wed",
@@ -369,7 +446,9 @@
      "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
     }
    ],
-   "media": []
+   "media": [],
+   "sessions": [],
+   "materials": []
   },
   {
    "day": "thu",
@@ -415,7 +494,9 @@
      "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Thu 19 (off …"
     }
    ],
-   "media": []
+   "media": [],
+   "sessions": [],
+   "materials": []
   },
   {
    "day": "fri",
@@ -538,7 +619,9 @@
      "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
     }
    ],
-   "media": []
+   "media": [],
+   "sessions": [],
+   "materials": []
   },
   {
    "day": "sat",
@@ -569,7 +652,9 @@
      "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Sat 21 (good…"
     }
    ],
-   "media": []
+   "media": [],
+   "sessions": [],
+   "materials": []
   }
  ],
  "yours": [
@@ -755,6 +840,7 @@
  },
  "sources": {
   "ideas": true,
-  "runs": true
+  "runs": true,
+  "store": true
  }
 }
