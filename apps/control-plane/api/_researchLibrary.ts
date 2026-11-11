@@ -10,10 +10,18 @@ import { liveBoardUrl } from './board/_liveBoard.js'
 //
 // One home per fact: the record is the piece materials store (api/_pieceStore.ts), which keeps every material by its
 // sha256 and never deletes one. This copies the research kinds into `makeyourmindup > 6 Research library`, one folder
-// per week, one per piece or day inside it, and adds a row to the library's `00 Index` Sheet. It only adds: a folder, a
-// file, a row. It never renames, moves, overwrites or deletes anything, and it makes nothing when the library itself is
-// gone. Idempotent by the material: a copy already in Drive (binned ones too) is never made again, and a row already in
-// the index is never added again. A copy that fails loses nothing; the store holds it and the next sweep copies it.
+// per week, one per piece or day inside it, and adds a row to the library's `00 Index` Sheet. In Drive it only adds: a
+// folder, a file. It never renames, moves, overwrites or deletes anything there, and it makes nothing when the library
+// itself is gone. Idempotent by the material: a copy already in Drive (binned ones too) is never made again, and a row
+// already in the index is never added again. A copy that fails loses nothing; the store holds it and the next sweep
+// copies it.
+//
+// One row per material (Ruling, Krish, 2026-11-11: "Yes bin", to binning the duplicate copies and removing the extra
+// index rows). The sweep keeps the index tidy by itself: inside the lease, after reading the index, a later row for a
+// material an earlier row already lists is removed, in one Sheets batchUpdate, bottom row first. When the first row links
+// a binned or missing copy and a later row links the live one, the first row takes the live link before the later rows
+// go. It never touches the header or a material's only row, and it removes nothing when the read looks short or
+// malformed (tidyPlan's guards). The write that files one material never tidies; the sweep does.
 //
 // One writer at a time. Five sweeps run by hand on 11 Nov overlapped, each read Drive and the index before the others
 // wrote, and each copied the same materials (118 extra copies, 250 extra rows). Every writer, the sweep and the write
@@ -103,10 +111,19 @@ export interface LibraryDrive {
   createFile(input: { parentId: string; name: string; mime: string; bytes: Uint8Array; description: string; props: Record<string, string> }): Promise<LibraryFile>
 }
 
-/** The `00 Index` Sheet: read the material ids already listed, add rows. Never edits a row. */
+/** The whole index as read for a tidy: every row from row `firstRow` down (the header first), and the tab it is on. */
+export interface IndexSheet { tab: number; firstRow: number; values: string[][] }
+/** One tidy of the index: the Drive links to put right first (sheet row numbers), then the rows to remove, bottom first. */
+export interface IndexTidy { tab: number; repairs: Array<{ row: number; link: string }>; deletes: number[] }
+
+/** The `00 Index` Sheet: read the material ids already listed, add rows, and tidy away a material's later rows. */
 export interface LibraryIndex {
   materialIds(): Promise<Set<string>>
   append(rows: string[][]): Promise<void>
+  /** Every row of the index as it stands, the header first. */
+  read(): Promise<IndexSheet>
+  /** One batchUpdate: each repair's Drive link, then each row in `deletes`, bottom row first. Nothing else. */
+  tidy(plan: IndexTidy): Promise<void>
 }
 
 /** Asking for the lease: taken (with its release), held by another writer, or not to be had at all. */
@@ -152,10 +169,16 @@ export interface MirrorReport {
   already: number
   mirrored: number
   indexed: number
+  /** Later rows of a material already listed, removed from the index by this run. */
+  index_deduped: number
+  /** First rows that took a later row's live link before the later rows went. */
+  index_repaired: number
   settling: number
   later: number
   failed: Array<{ id: string; why: string }>
   index_error?: string
+  /** Why the index was not tidied: it could not be read, its read looked short or malformed, or the batchUpdate failed. */
+  index_tidy_error?: string
   copies: Array<{ material: string; link: string; created: boolean }>
 }
 
@@ -255,6 +278,76 @@ export function indexRowOf(m: StoredMaterial, piece: PieceInfo | null, place: Pl
 
 const sha256Hex = (b: Uint8Array) => createHash('sha256').update(b).digest('hex')
 const MATERIAL_AT = INDEX_COLUMNS.indexOf('Material id')
+/** Where the Drive link sits in a row (column H). */
+export const INDEX_LINK_AT = INDEX_COLUMNS.indexOf('Drive link')
+/** A material id as the index's Material id column holds it (the same test the column read uses). */
+const MATERIAL_ID = /^[0-9a-f-]{36}$/
+
+/** The Drive file a link names (`.../file/d/<id>/view`, `...?id=<id>`), or null. */
+export function fileIdOf(link: string): string | null {
+  const m = /\/d\/([A-Za-z0-9_-]+)/.exec(link) || /[?&]id=([A-Za-z0-9_-]+)/.exec(link)
+  return m ? m[1] : null
+}
+
+/** Is this link a live copy of this material: a file Drive lists, not binned, carrying the material's ce_material? */
+export type LiveLink = (materialId: string, link: string) => boolean
+
+/** Every later row of a material an earlier row already lists, as sheet row numbers bottom first, and for each such
+ *  material whose first row links a binned or missing copy while a later row links the live one, that link for the first
+ *  row. Rows whose Material id is blank or not an id are never named. Unguarded: tidyPlan acts on it only when the read
+ *  looks whole. */
+export function duplicateRows(sheet: Pick<IndexSheet, 'firstRow' | 'values'>, live: LiveLink): { repairs: IndexTidy['repairs']; deletes: number[] } {
+  const first = new Map<string, number>()
+  const later = new Map<string, number[]>()
+  for (let i = 1; i < sheet.values.length; i++) {
+    const id = String(sheet.values[i]?.[MATERIAL_AT] ?? '').trim()
+    if (!MATERIAL_ID.test(id)) continue
+    if (!first.has(id)) first.set(id, i)
+    else later.set(id, [...(later.get(id) ?? []), i])
+  }
+  const repairs: IndexTidy['repairs'] = []
+  const deletes: number[] = []
+  const linkAt = (i: number) => String(sheet.values[i]?.[INDEX_LINK_AT] ?? '').trim()
+  for (const [id, rows] of later) {
+    const top = first.get(id)!
+    if (!live(id, linkAt(top))) {
+      const liveRow = rows.find(i => live(id, linkAt(i)))
+      if (liveRow !== undefined) repairs.push({ row: sheet.firstRow + top, link: linkAt(liveRow) })
+    }
+    for (const i of rows) deletes.push(sheet.firstRow + i)
+  }
+  return { repairs: repairs.sort((a, b) => a.row - b.row), deletes: deletes.sort((a, b) => b - a) }
+}
+
+/** What to tidy in the index this run, or why not. Nothing is planned unless the read is whole: it starts at row 1, its
+ *  header is INDEX_COLUMNS, it holds at least as many rows as the materials the Material id column read listed a moment
+ *  before, and it lists exactly those materials. A plan never names the header or a material's only row. */
+export function tidyPlan(sheet: IndexSheet, listed: Set<string>, live: LiveLink): { ok: true; plan: IndexTidy } | { ok: false; why: string } {
+  const found = duplicateRows(sheet, live)
+  const plan: IndexTidy = { tab: sheet.tab, ...found }
+  if (!plan.deletes.length) return { ok: true, plan: { ...plan, repairs: [] } }
+  if (sheet.firstRow !== 1) return { ok: false, why: `read starts at row ${sheet.firstRow}, not the header` }
+  const header = (sheet.values[0] ?? []).map(v => String(v ?? '').trim())
+  if (header.length !== INDEX_COLUMNS.length || INDEX_COLUMNS.some((c, i) => header[i] !== c)) return { ok: false, why: 'header differs from the index columns' }
+  const ids = sheet.values.slice(1).map(r => String(r?.[MATERIAL_AT] ?? '').trim()).filter(v => MATERIAL_ID.test(v))
+  if (ids.length < listed.size) return { ok: false, why: `read is short: ${ids.length} rows for ${listed.size} listed materials` }
+  const distinct = new Set(ids)
+  if (distinct.size !== listed.size || [...listed].some(id => !distinct.has(id))) return { ok: false, why: `read lists ${distinct.size} materials, the Material id column ${listed.size}` }
+  if (plan.deletes.some(r => r < 2) || plan.repairs.some(r => r.row < 2)) return { ok: false, why: 'a plan may never touch the header' }
+  return { ok: true, plan }
+}
+
+/** Rows to remove, as runs of neighbours [top, bottom], the bottom run first: one deleteDimension each. */
+export function deleteRuns(rows: number[]): Array<[number, number]> {
+  const sorted = [...new Set(rows)].sort((a, b) => b - a)
+  const runs: Array<[number, number]> = []
+  for (const r of sorted) {
+    const last = runs[runs.length - 1]
+    if (last && r === last[0] - 1) last[0] = r
+    else runs.push([r, r])
+  }
+  return runs
+}
 const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms))
 
 /** Ask for the lease, and while another writer holds it keep asking every `retryMs` until `waitMs` has passed. */
@@ -272,7 +365,7 @@ async function takeLease(lock: LibraryLock, waitMs: number, retryMs: number): Pr
 export async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, lock: LibraryLock, opts: MirrorOptions = {}): Promise<MirrorReport> {
   const only = opts.only?.length ? [...new Set(opts.only)] : undefined
   const budget = Math.min(opts.budgetMs ?? 80_000, LIBRARY_LEASE_MS / 2)
-  const report: MirrorReport = { ok: true, eligible: 0, already: 0, mirrored: 0, indexed: 0, settling: 0, later: 0, failed: [], copies: [] }
+  const report: MirrorReport = { ok: true, eligible: 0, already: 0, mirrored: 0, indexed: 0, index_deduped: 0, index_repaired: 0, settling: 0, later: 0, failed: [], copies: [] }
 
   const all = await source.materials(only)
   const eligible = all.filter(inLibrary).sort((a, b) => String(a.added_at).localeCompare(String(b.added_at)) || a.version - b.version)
@@ -310,8 +403,9 @@ async function mirrorHeld(source: LibrarySource, drive: LibraryDrive, index: Lib
   } catch (e) {
     return { ...report, ok: false, error: `research_library_unreadable: ${(e as Error).message.slice(0, 160)}` }
   }
+  // A material's live copy before a binned one, so a new row and the write's answer link the file Krish can open.
   const copyOf = new Map<string, LibraryFile>()
-  for (const f of copies) if (f.material && !copyOf.has(f.material)) copyOf.set(f.material, f)
+  for (const f of copies) if (f.material && (!copyOf.has(f.material) || (copyOf.get(f.material)!.trashed && !f.trashed))) copyOf.set(f.material, f)
   const weekFolder = new Map<string, string>()
   const slotFolder = new Map<string, string>()
   const sourcesFolder = new Map<string, string>()
@@ -324,6 +418,18 @@ async function mirrorHeld(source: LibrarySource, drive: LibraryDrive, index: Lib
 
   let listed: Set<string> | null = null
   try { listed = await index.materialIds() } catch (e) { report.index_error = `index_unreadable: ${(e as Error).message.slice(0, 160)}` }
+  // The sweep keeps the index to one row per material, still inside the lease. It knows every copy in the library (this
+  // run listed them all), so it can tell a live link from a binned or missing one; a write that copies one material does
+  // not, and leaves the tidy to the sweep.
+  if (!only && listed) {
+    const byFile = new Map(copies.map(f => [f.id, f]))
+    const live: LiveLink = (material, link) => {
+      const id = fileIdOf(link)
+      const f = id ? byFile.get(id) : undefined
+      return Boolean(f && !f.trashed && f.material === material)
+    }
+    await tidyIndex(index, listed, live, report)
+  }
 
   const pieces = await source.pieces([...new Set(eligible.map(m => m.piece_id).filter((x): x is string => Boolean(x)))])
   const base = { [PROP.root]: rootId }
@@ -400,7 +506,22 @@ async function mirrorHeld(source: LibrarySource, drive: LibraryDrive, index: Lib
       try { await index.append(fresh); report.indexed = fresh.length } catch (e) { report.index_error = `index_append_failed: ${(e as Error).message.slice(0, 160)}` }
     }
   }
-  report.ok = report.failed.length === 0 && !report.index_error
-  if (!report.ok && !report.error) report.error = report.index_error || `${report.failed.length} cop${report.failed.length === 1 ? 'y' : 'ies'} failed: ${report.failed.slice(0, 3).map(f => f.why).join(', ')}`
+  report.ok = report.failed.length === 0 && !report.index_error && !report.index_tidy_error
+  if (!report.ok && !report.error) report.error = report.index_error || report.index_tidy_error || `${report.failed.length} cop${report.failed.length === 1 ? 'y' : 'ies'} failed: ${report.failed.slice(0, 3).map(f => f.why).join(', ')}`
   return report
+}
+
+/** Read the whole index and, when its read is whole, put right the links and remove every later row of a material in
+ *  one batchUpdate. A refusal or a failure removes nothing and is reported; the copies and new rows go ahead either way. */
+async function tidyIndex(index: LibraryIndex, listed: Set<string>, live: LiveLink, report: MirrorReport): Promise<void> {
+  let sheet: IndexSheet
+  try { sheet = await index.read() } catch (e) { report.index_tidy_error = `index_tidy_unreadable: ${(e as Error).message.slice(0, 160)}`; return }
+  const planned = tidyPlan(sheet, listed, live)
+  if ('why' in planned) { report.index_tidy_error = `index_tidy_refused: ${planned.why}`; return }
+  if (!planned.plan.deletes.length) return
+  try {
+    await index.tidy(planned.plan)
+    report.index_deduped = planned.plan.deletes.length
+    report.index_repaired = planned.plan.repairs.length
+  } catch (e) { report.index_tidy_error = `index_tidy_failed: ${(e as Error).message.slice(0, 160)}` }
 }

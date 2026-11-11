@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { googleAccessToken, googleConfigured } from './_google.js'
 import {
-  INDEX_MATERIAL_COLUMN, LIBRARY_KINDS, LIBRARY_LEASE, LIBRARY_LEASE_MS, LIBRARY_ROLES, PROP, RESEARCH_LIBRARY_FOLDER_ID, RESEARCH_LIBRARY_INDEX_ID, mirror,
+  INDEX_LINK_AT, INDEX_MATERIAL_COLUMN, LIBRARY_KINDS, LIBRARY_LEASE, LIBRARY_LEASE_MS, LIBRARY_ROLES, PROP, RESEARCH_LIBRARY_FOLDER_ID, RESEARCH_LIBRARY_INDEX_ID, deleteRuns, mirror,
   type LibraryDrive, type LibraryFile, type LibraryFolder, type LibraryIndex, type LibraryLock, type LibrarySource, type MirrorReport, type PieceInfo, type StoredMaterial,
 } from './_researchLibrary.js'
 
@@ -9,8 +9,9 @@ import {
 // api/_researchLibrary.ts; this file only moves bytes.
 //
 // It writes as the owner of his Drive (GOOGLE_DRIVE_OWNER, krish@mindmake.co) with the delegated `drive` scope, as the
-// feedback lane does: the library is his folder, not this app's, so drive.file cannot see it. It adds a folder, a file
-// or an index row; it has no call that renames, moves, overwrites or deletes.
+// feedback lane does: the library is his folder, not this app's, so drive.file cannot see it. In Drive it adds a folder
+// or a file; it has no call that renames, moves, overwrites or deletes. In the index it adds rows, and its one other
+// write is the tidy: a batchUpdate that sets a Drive link and removes the rows tidyPlan named, and nothing else.
 
 const DRIVE = 'https://www.googleapis.com/drive/v3'
 const UPLOAD = 'https://www.googleapis.com/upload/drive/v3/files'
@@ -101,10 +102,12 @@ export function googleLibraryDrive(token: string, f: Fetch = fetch): LibraryDriv
   }
 }
 
-/** The `00 Index` Sheet on the same token (the `drive` scope covers the Sheets API). Rows are appended, never edited. */
+/** The `00 Index` Sheet on the same token (the `drive` scope covers the Sheets API). Rows are appended; the tidy sets a
+ *  link and removes rows on the tab the bare ranges read and append to (the first visible one), found by its title. */
 export function googleLibraryIndex(token: string, sheetId = RESEARCH_LIBRARY_INDEX_ID, f: Fetch = fetch): LibraryIndex {
   const headers = { Authorization: `Bearer ${token}` }
   const col = `${INDEX_MATERIAL_COLUMN}:${INDEX_MATERIAL_COLUMN}`
+  const sheet = `${SHEETS}/${encodeURIComponent(sheetId)}`
   return {
     async materialIds() {
       const j = await json(await f(`${SHEETS}/${encodeURIComponent(sheetId)}/values/${encodeURIComponent(col)}?majorDimension=COLUMNS`, { headers }), 'sheets_read')
@@ -115,6 +118,37 @@ export function googleLibraryIndex(token: string, sheetId = RESEARCH_LIBRARY_IND
       await json(await f(`${SHEETS}/${encodeURIComponent(sheetId)}/values/${encodeURIComponent('A1')}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
         method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ values: rows }),
       }), 'sheets_append')
+    },
+    async read() {
+      const j = await json(await f(`${sheet}/values/${encodeURIComponent(`A:${INDEX_MATERIAL_COLUMN}`)}?majorDimension=ROWS`, { headers }), 'sheets_read')
+      // The answer names the range it read, `'00 Index'!A1:M1214`: its tab's title and the row it starts on.
+      const range = /^(?:'((?:[^']|'')+)'|([^!']+))!\$?[A-Z]+\$?(\d+)/.exec(String(j.range || ''))
+      if (!range) throw new GoogleRefused('sheets_read_no_range')
+      const title = range[1] !== undefined ? range[1].replace(/''/g, "'") : range[2]
+      const meta = await json(await f(`${sheet}?fields=${encodeURIComponent('sheets.properties(sheetId,title)')}`, { headers }), 'sheets_meta')
+      const tab = (Array.isArray(meta.sheets) ? meta.sheets : []).map((x: any) => x?.properties).find((p: any) => p && p.title === title)
+      if (!tab) throw new GoogleRefused('sheets_tab_not_found')
+      // The API leaves out a sheetId of 0, the first tab's.
+      const tabId = tab.sheetId === undefined ? 0 : Number(tab.sheetId)
+      if (!Number.isInteger(tabId) || tabId < 0) throw new GoogleRefused('sheets_tab_id')
+      const values = Array.isArray(j.values) ? j.values.map((r: unknown) => Array.isArray(r) ? r.map(v => String(v ?? '')) : []) : []
+      return { tab: tabId, firstRow: Number(range[3]), values }
+    },
+    async tidy(plan) {
+      // Never the header, never a row that is not a whole sheet row number.
+      if ([...plan.deletes, ...plan.repairs.map(r => r.row)].some(r => !Number.isInteger(r) || r < 2)) throw new GoogleRefused('sheets_tidy_header')
+      const requests = [
+        ...plan.repairs.map(r => ({ updateCells: {
+          range: { sheetId: plan.tab, startRowIndex: r.row - 1, endRowIndex: r.row, startColumnIndex: INDEX_LINK_AT, endColumnIndex: INDEX_LINK_AT + 1 },
+          rows: [{ values: [{ userEnteredValue: { stringValue: r.link } }] }], fields: 'userEnteredValue',
+        } })),
+        ...deleteRuns(plan.deletes).map(([top, bottom]) => ({ deleteDimension: { range: { sheetId: plan.tab, dimension: 'ROWS', startIndex: top - 1, endIndex: bottom } } })),
+      ]
+      if (!requests.length) return
+      // One batchUpdate: Sheets applies all of it or none of it.
+      await json(await f(`${sheet}:batchUpdate`, {
+        method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ requests }),
+      }), 'sheets_tidy')
     },
   }
 }
@@ -203,7 +237,7 @@ export function storeSource(db: SourceDb, bucket: string): LibrarySource {
 
 /** One pass with the real store and his real Drive. `only` copies those materials now; with none it is the sweep. */
 export async function runMirror(opts: { only?: string[]; budgetMs?: number } = {}): Promise<MirrorReport> {
-  const empty: MirrorReport = { ok: false, eligible: 0, already: 0, mirrored: 0, indexed: 0, settling: 0, later: 0, failed: [], copies: [] }
+  const empty: MirrorReport = { ok: false, eligible: 0, already: 0, mirrored: 0, indexed: 0, index_deduped: 0, index_repaired: 0, settling: 0, later: 0, failed: [], copies: [] }
   if (!googleConfigured()) return { ...empty, error: 'the engine has no Google service account, so it cannot reach the research library' }
   let why = 'no_token'
   const token = await googleAccessToken([DRIVE_SCOPE], { subject: DRIVE_OWNER(), onError: r => { why = r } })
