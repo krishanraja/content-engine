@@ -92,6 +92,33 @@
  ],
  "verdicts": [
   {
+   "title": "Is it AI or human music?",
+   "surface": "shorts",
+   "verdict": "picked",
+   "why": "His own words for the short's title",
+   "krish": "1. yes. 2. B for youtube, A for substack, short should be \"Is it AI or human music?\" 3. a",
+   "on": "2026-11-11",
+   "piece": "36886e0b-4b32-473b-be72-b0aef31fccef"
+  },
+  {
+   "title": "A Reiki master wrote a UK number two, and it's both AI and human",
+   "surface": "article",
+   "verdict": "picked",
+   "why": "His pick for Substack: keep the article title",
+   "krish": "1. yes. 2. B for youtube, A for substack, short should be \"Is it AI or human music?\" 3. a",
+   "on": "2026-11-11",
+   "piece": "36886e0b-4b32-473b-be72-b0aef31fccef"
+  },
+  {
+   "title": "AI music or human music? This UK number two is both",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "His pick for YouTube from three options",
+   "krish": "1. yes. 2. B for youtube, A for substack, short should be \"Is it AI or human music?\" 3. a",
+   "on": "2026-11-11",
+   "piece": "36886e0b-4b32-473b-be72-b0aef31fccef"
+  },
+  {
    "title": "AI music or human music?",
    "surface": "thumbnail",
    "verdict": "picked",
