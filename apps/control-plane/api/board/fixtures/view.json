@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.4.0",
+ "contract_version": "1.5.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -981,6 +981,18 @@
            "inspiration": []
           },
           "done": "Picked. Face-led is the look for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "treatment",
+            "id": "face-with-proof"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
          }
         }
        },
@@ -1004,6 +1016,18 @@
            "inspiration": []
           },
           "done": "Picked. Everything moves is the look for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "treatment",
+            "id": "kinetic-movement"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
          }
         }
        }
@@ -1012,7 +1036,45 @@
       "picked_by": "Krish",
       "picked_at": "2026-11-15T10:00:00Z"
      }
-    }
+    },
+    "stages": [
+     {
+      "key": "idea",
+      "label": "Ideas",
+      "state": "done",
+      "when": "2026-11-15"
+     },
+     {
+      "key": "agreed",
+      "label": "Agreed",
+      "state": "done",
+      "when": "2026-11-08"
+     },
+     {
+      "key": "flesh_out",
+      "label": "Flesh out",
+      "state": "done",
+      "when": "2026-11-15"
+     },
+     {
+      "key": "script_record",
+      "label": "Script and record",
+      "state": "current",
+      "when": null
+     },
+     {
+      "key": "after_recording",
+      "label": "After recording",
+      "state": "todo",
+      "when": null
+     },
+     {
+      "key": "ready_to_post",
+      "label": "Ready to post",
+      "state": "todo",
+      "when": "2026-11-16"
+     }
+    ]
    },
    "stop": 3,
    "who": "you",
@@ -2448,6 +2510,18 @@
            "inspiration": []
           },
           "done": "Picked. Face-led is the look for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "treatment",
+            "id": "face-with-proof"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
          }
         }
        },
@@ -2471,6 +2545,18 @@
            "inspiration": []
           },
           "done": "Picked. Everything moves is the look for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "treatment",
+            "id": "kinetic-movement"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
          }
         }
        }
@@ -2479,7 +2565,45 @@
       "picked_by": null,
       "picked_at": null
      }
-    }
+    },
+    "stages": [
+     {
+      "key": "idea",
+      "label": "Ideas",
+      "state": "done",
+      "when": "2026-11-15"
+     },
+     {
+      "key": "agreed",
+      "label": "Agreed",
+      "state": "done",
+      "when": "2026-11-08"
+     },
+     {
+      "key": "flesh_out",
+      "label": "Flesh out",
+      "state": "current",
+      "when": null
+     },
+     {
+      "key": "script_record",
+      "label": "Script and record",
+      "state": "todo",
+      "when": null
+     },
+     {
+      "key": "after_recording",
+      "label": "After recording",
+      "state": "todo",
+      "when": null
+     },
+     {
+      "key": "ready_to_post",
+      "label": "Ready to post",
+      "state": "todo",
+      "when": "2026-11-18"
+     }
+    ]
    },
    "stop": 2,
    "who": "you",
@@ -3774,6 +3898,18 @@
            "inspiration": []
           },
           "done": "Picked. Face-led is the look for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "treatment",
+            "id": "face-with-proof"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
          }
         }
        },
@@ -3797,6 +3933,18 @@
            "inspiration": []
           },
           "done": "Picked. Everything moves is the look for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "treatment",
+            "id": "kinetic-movement"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
          }
         }
        }
@@ -3805,7 +3953,45 @@
       "picked_by": null,
       "picked_at": null
      }
-    }
+    },
+    "stages": [
+     {
+      "key": "idea",
+      "label": "Ideas",
+      "state": "done",
+      "when": "2026-11-15"
+     },
+     {
+      "key": "agreed",
+      "label": "Agreed",
+      "state": "current",
+      "when": null
+     },
+     {
+      "key": "flesh_out",
+      "label": "Flesh out",
+      "state": "todo",
+      "when": null
+     },
+     {
+      "key": "script_record",
+      "label": "Script and record",
+      "state": "todo",
+      "when": null
+     },
+     {
+      "key": "after_recording",
+      "label": "After recording",
+      "state": "todo",
+      "when": null
+     },
+     {
+      "key": "ready_to_post",
+      "label": "Ready to post",
+      "state": "todo",
+      "when": "2026-11-20"
+     }
+    ]
    },
    "stop": 1,
    "who": "you",

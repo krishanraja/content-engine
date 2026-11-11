@@ -185,6 +185,13 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   each option, and `outcome` and `goes` on each press ("The ideas gate", above).
 - **1.4.0 (11 Nov 2026)** added `style` to each series day's `path`: the piece's motion style, caption style and
   treatment, each option with its press ("The style choices", below).
+- **1.5.0 (11 Nov 2026)** added `stages` to each series day's `path`: the steps from idea to publish (approved mock
+  M5), Ideas, Agreed, Flesh out, Script and record, After recording and Ready to post, each `{ key, label, state, when
+  }`. `when` is the day the record says it happened (Ideas: the Sunday before the week; Agreed: the day the narrative
+  lock was signed, else the day of his pick; Flesh out: the day the look was picked) or, for Ready to post, the day it
+  goes out; null when the record does not say, never a guessed day. A later step done means every step before it is.
+  The working steps (`steps`, `current`) stay as they were, for the next step, the prompts and the sessions' step
+  names (`stagesOf` in `_view.ts`). A treatment option also carries "Not this" from 1.5.0 ("The style choices").
 
 ## The style choices (contract 1.4.0)
 
@@ -204,7 +211,9 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   (`captions.test.ts` holds them equal). The one with a `recommended_why` (art-directed, his pick on 11 Nov 2026) is
   recommended, with his own words, unless he said "Not this" to it on this piece.
 - **Treatment** is the looks (`path.look.options`) in the same shape, so the three draw alike; the Sunday room's
-  recommendation is marked, and its Yes is the look op with his experiment and inspiration kept.
+  recommendation is marked, and its Yes is the look op with his experiment and inspiration kept. Its "Not this" is the
+  style op with `reject: { layer: 'treatment', id }` (mock M5: Yes and Not this on every option): kept in
+  `meta.style.rejected.treatment`, it takes the look off the recommended until he picks it.
 - **Picked** shows his press on the board first (`meta.style`), then, for motion, his Pick a style gate on the making
   record (`gates.style`), then a creative direction he signed (`signed.by` Krish in the day's
   `docs/plans/<date>-<dayname>/ve/spec.json` or `creative-direction.json`, `picked_by: spec`). A spec he has not signed
@@ -213,10 +222,10 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   listed yet, and nothing renders one to fill it.
 - **His press**: `presses.yes` and `presses.not_this` (labels "Yes" and "Not this") each say `POST
   /api/board/<Monday>/<op>` with a body. `POST /api/board/<Monday>/style` takes `{ piece_id, motion?, captions?,
-  reject?: { layer: 'motion' | 'captions', id } }`, his press only, on a piece scheduled in that week, the same guards
+  reject?: { layer: 'motion' | 'captions' | 'treatment', id } }`, his press only, on a piece scheduled in that week, the same guards
   as the look. A motion id is checked against the bank on main and a caption id against `config/caption-themes.json`
-  (400 `unknown_motion` or `unknown_caption`; 400 `invalid_reject`, 400 `nothing_to_record`; 503 `styles_unavailable`
-  when the bank cannot be read). It writes `content_ideas.meta.style` `{ motion, captions, rejected: { motion, captions },
+  (400 `unknown_motion` or `unknown_caption`; a look id is checked by its shape, 400 `unknown_look`; 400 `invalid_reject`, 400 `nothing_to_record`; 503 `styles_unavailable`
+  when the bank cannot be read). It writes `content_ideas.meta.style` `{ motion, captions, rejected: { motion, captions, treatment },
   by, at }` beside `meta.look`, read and written guarded on the row's `updated_at` (`patchMeta`), so a write that lands
   in between is kept, never overwritten (409 `piece_busy` when they never stop); the `content_ideas` trigger bumps the
   week's `board_signal`. "Not this" on the picked style takes the pick away; a later Yes takes a style back off the

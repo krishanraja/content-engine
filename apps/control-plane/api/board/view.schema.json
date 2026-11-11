@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://content.krishraja.com/api/board/view.schema.json",
   "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
-  "x-contract-version": "1.4.0",
+  "x-contract-version": "1.5.0",
   "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
   "type": "object",
   "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources", "revision"],
@@ -260,7 +260,7 @@
     },
     "path": {
       "type": "object",
-      "required": ["steps", "current", "materials", "research_file", "look", "inspiration", "prompts", "storyboard", "style"],
+      "required": ["steps", "current", "materials", "research_file", "look", "inspiration", "prompts", "storyboard", "style", "stages"],
       "properties": {
         "steps": {
           "type": "array",
@@ -342,7 +342,22 @@
           "required": ["title", "at"],
           "properties": { "title": { "type": "string" }, "at": { "type": ["string", "null"] } }
         },
-        "style": { "$ref": "#/$defs/style" }
+        "style": { "$ref": "#/$defs/style" },
+        "stages": {
+          "type": "array",
+          "x-since": "1.5.0",
+          "description": "The steps from idea to publish (approved mock M5): Ideas, Agreed, Flesh out, Script and record, After recording, Ready to post, each with the day the record says it happened (Ready to post: the day it goes out), or null. The working steps stay in steps.",
+          "items": {
+            "type": "object",
+            "required": ["key", "label", "state", "when"],
+            "properties": {
+              "key": { "type": "string", "enum": ["idea", "agreed", "flesh_out", "script_record", "after_recording", "ready_to_post"], "x-open": true },
+              "label": { "type": "string" },
+              "state": { "type": "string", "enum": ["done", "current", "todo"], "x-open": true },
+              "when": { "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+            }
+          }
+        }
       }
     },
     "style": {
