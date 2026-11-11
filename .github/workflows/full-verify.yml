@@ -1,0 +1,190 @@
+name: Full verify
+
+# The complete `npm run verify` on Linux and Windows and the browser jobs, after merge and never before one (Ruling,
+# Krish, 2026-11-11: quick checks on pull requests, the full verify after merge; merge fast and he tests live). It runs
+# on main when auto-merge merges (auto-merge.yml starts it, since a merge made with GitHub's own token starts no push
+# workflow), on any other push to main, nightly, and by hand. auto-merge.yml never waits on it. When it goes red on main
+# it opens or updates one issue naming each failing job and step, and closes that issue when main is green again.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: full-verify-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install the hash-pinned Python the tests need
+        run: python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+      - name: Install hash-pinned FFmpeg and FFprobe on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $videoFfmpegBuild = 'ffmpeg-n8.1.2-53-g1005b294ff-win64-gpl-8.1'
+          $videoFfmpegSha256 = '577a6a46f9c844657ac849245487a56dfc0507f9bac3f92d40370ebfb64ace72'
+          $videoFfmpegArchive = Join-Path $env:RUNNER_TEMP "$videoFfmpegBuild.zip"
+          $videoFfmpegRoot = Join-Path $env:RUNNER_TEMP 'mindmake-ffmpeg'
+          gh release download toolchain-ffmpeg-n8.1.2-53-g1005b294ff --repo $env:GITHUB_REPOSITORY --pattern "$videoFfmpegBuild.zip" --dir $env:RUNNER_TEMP
+          $videoFfmpegActualSha256 = (Get-FileHash -LiteralPath $videoFfmpegArchive -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($videoFfmpegActualSha256 -ne $videoFfmpegSha256) { throw 'Downloaded FFmpeg archive failed its pinned SHA-256 check.' }
+          Expand-Archive -LiteralPath $videoFfmpegArchive -DestinationPath $videoFfmpegRoot
+          $videoFfmpegBin = Join-Path $videoFfmpegRoot "$videoFfmpegBuild\bin"
+          if (-not (Test-Path -LiteralPath (Join-Path $videoFfmpegBin 'ffmpeg.exe'))) { throw 'Pinned FFmpeg binary is missing after extraction.' }
+          if (-not (Test-Path -LiteralPath (Join-Path $videoFfmpegBin 'ffprobe.exe'))) { throw 'Pinned FFprobe binary is missing after extraction.' }
+          Add-Content -LiteralPath $env:GITHUB_PATH -Value $videoFfmpegBin
+      - name: Install hash-pinned FFmpeg and FFprobe on Linux
+        if: runner.os == 'Linux'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          video_ffmpeg_build='ffmpeg-n8.1.2-53-g1005b294ff-linux64-gpl-8.1'
+          video_ffmpeg_sha256='e4a088c9b16d4b729396805e589394cef45a6d1e5427f8ca32ded8a86694d5b8'
+          video_ffmpeg_archive="$RUNNER_TEMP/$video_ffmpeg_build.tar.xz"
+          gh release download toolchain-ffmpeg-n8.1.2-53-g1005b294ff --repo "$GITHUB_REPOSITORY" --pattern "$video_ffmpeg_build.tar.xz" --dir "$RUNNER_TEMP"
+          echo "$video_ffmpeg_sha256  $video_ffmpeg_archive" | sha256sum --check --strict
+          tar -xJf "$video_ffmpeg_archive" -C "$RUNNER_TEMP"
+          video_ffmpeg_bin="$RUNNER_TEMP/$video_ffmpeg_build/bin"
+          test -x "$video_ffmpeg_bin/ffmpeg"
+          test -x "$video_ffmpeg_bin/ffprobe"
+          echo "$video_ffmpeg_bin" >> "$GITHUB_PATH"
+      - name: Verify media toolchain
+        run: |
+          ffmpeg -version
+          ffprobe -version
+      - run: npm ci
+      - name: Smoke-test the Windows runner source install
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/verify-runner-source.ps1
+      - run: npm run verify
+
+  browser-buttons:
+    # Every Download, Copy picture and Copy button on a built publish board
+    # and publish page, clicked in Chromium with fetch() blocked the way
+    # claude.ai's page rules block it (Krish, 2026-10-14: "the download
+    # buttons for the images STILL do not work!!!!").
+    # Playwright 1.55 below supports this host; latest now resolves to 26.04.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install the hash-pinned Python the tests need
+        run: python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+      - name: Install Playwright and its Chromium
+        run: |
+          python -m pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Click every button on the board and a publish page
+        run: python scripts/post-pack/buttons_in_browser.py
+      # The covers load the house fonts from node_modules (@fontsource), so the cover tests need the packages.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Nothing sits on a cover's words (Krish, 2026-11-04)
+        run: python tests/receipt_overlap_test.py
+      - name: All nine series skins drawn, Mon, Wed and Fri, tall and wide, with and without logo rows, nothing on the words or logos (Krish, 2026-11-05)
+        run: python tests/series_skins_test.py
+      - name: The board keeps its fixed layout and fits a phone (390px, 44px targets)
+        run: python scripts/check_board_layout.py --browser
+
+  board-web:
+    # The isolated browser runtime below is pinned to Playwright 1.55.
+    # ubuntu-latest moved to 26.04, which that runtime does not support.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+      - run: npm ci
+      - name: Install isolated SQL and browser test runtimes
+        run: |
+          npm install --no-save --package-lock=false @electric-sql/pglite@0.3.14 playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Verify artifact conversion, migration and interactive web parity
+        run: |
+          python tests/board_web_test.py
+          python tests/board_today_test.py
+          python tests/floor_group_test.py
+          python tests/now_trim_test.py
+          python scripts/post-pack/board_today.py fixtures/week-board/today-2026-10-26.json fixtures/week-board/today-2026-11-02.json --out "$RUNNER_TEMP/board-today" --shoot --open mon
+          node tests/board-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+          node tests/inspiration-said-cards.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+          python tests/board_fixture.py "$RUNNER_TEMP/board-fixture.html"
+          node --import tsx tests/integration/board-runtime.ts "$PWD/node_modules/@electric-sql/pglite/dist/index.js" "$PWD/node_modules/playwright/index.mjs" "$RUNNER_TEMP/board-fixture.html" "$RUNNER_TEMP/board-screenshots"
+
+  report:
+    # One issue for a red main: opened or updated naming what failed, closed when main is green again.
+    needs: [verify, browser-buttons, board-web]
+    if: always() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      issues: write
+    steps:
+      - name: Open, update or close the red-main issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SHA: ${{ github.sha }}
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          set -euo pipefail
+          title='Full verify is red on main'
+          issue=$(gh issue list -R "$REPO" --state open --search "\"$title\" in:title" --json number,title \
+            --jq "[.[] | select(.title == \"$title\")][0].number // empty")
+          case " $RESULTS " in
+            *" cancelled "*) echo "A job was cancelled; the next full run decides."; exit 0 ;;
+          esac
+          case " $RESULTS " in
+            *" failure "*) ;;
+            *)
+              if [ -n "$issue" ]; then
+                gh issue close "$issue" -R "$REPO" --comment "Green again at $SHA: $RUN_URL"
+                echo "Closed #$issue."
+              else
+                echo "Main is green; no issue open."
+              fi
+              exit 0 ;;
+          esac
+          failing=$(gh api "repos/$REPO/actions/runs/$RUN_ID/jobs?per_page=100" \
+            --jq '.jobs[] | select(.conclusion == "failure") | "- **\(.name)**: " + ([.steps[]? | select(.conclusion == "failure") | .name] | join(", ")) + " ([log](\(.html_url)))"')
+          body=$(printf 'The full verify failed on main at %s.\n\nFailing job and step:\n%s\n\nRun: %s\n\nPull requests merge on the quick checks (CI); this run is the full `npm run verify` on Linux and Windows and the browser jobs. Fix it on a branch; this issue closes itself when main is green again.\n' "$SHA" "$failing" "$RUN_URL")
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" -R "$REPO" --body "$body"
+            echo "Updated #$issue."
+          else
+            gh issue create -R "$REPO" --title "$title" --body "$body"
+          fi
