@@ -135,7 +135,8 @@ begin
     execute format('drop trigger if exists %1$s_no_truncate on public.%1$s', t);
     execute format('create trigger %1$s_no_truncate before truncate on public.%1$s for each statement execute function public.board_store_refuse()', t);
     execute format('alter table public.%I enable row level security', t);
-    execute format('revoke all on public.%I from anon, authenticated', t);
+    -- Supabase's default privileges grant every role everything on a new table: the server reads and adds, no more.
+    execute format('revoke all on public.%I from anon, authenticated, service_role', t);
     execute format('grant select, insert on public.%I to service_role', t);
   end loop;
 end $$;
