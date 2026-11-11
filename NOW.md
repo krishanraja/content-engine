@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-10
-head: a07ea4e
+as_of: 2026-11-11
+head: 90e1b12
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,7 +30,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-09)
+## Where it is right now (as of 2026-11-11)
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
@@ -41,24 +41,25 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - ve closes on the statement card (6 s); Krish's engine approval for Wed 11 Nov is recorded, scoped to the engine only. (2026-11-10)
 - ve has four new pieces for the Fri 13 Nov 5-minute cut, built by Codex from cards and checked here: the WINDOW layout (his face in a rounded corner window over full-bleed footage, easing between full frame and window), wall_screen (a real page flown off the office wall to full frame, its line marked), quota_chart (the medical-device study: questions bunch at the target, the junk third, the target halved, sales up 7%) and agent_swarm (ten agents on one comment, the token meter, the rank). (2026-11-10)
 - house end card is direction C, "Built to help you decide.", filmed 6 s by kit; wide frame never splits a word (docs/production/CLOSING.md). (2026-11-10)
-- Round 2 of the Wed 11 devices is built by Codex and reviewed: arrangement (a real DAW view, AI flags, credits) and upload_flood (scattered AI songs, listens meter, search) pass; slot_machine still crops typed text and its cabinet vanishes on ink. Mock batch 2 (11 device frames, Krish cut out on the right) sent to Krish. (2026-11-10)
 - every piece's words pass Control Center's one voice check: the approve and publish gate asks it for every lane and blocks on a hard fail, piece making runs scripts/post-pack/voice_gate.py on scripts, the article, carousel text and every channel's copy (piece_manifest.py draft refuses to write on a hard fail), and the writers read the voice live from Control Center before the hand-kept content_voice_block. (2026-11-09)
 - Live board is each week's own link, /board/<Monday> (Krish switched it 2026-11-10; old board at ?archive=1; PLAN.md in docs/plans/2026-11-09-board-desk): each series day a guided path (Research, Story, Look, Storyboard and script, Record, Cut); 8 devices. (2026-11-10)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
+- 2026-11-10 Fri 13 devices rebuilt: Krish, "these animations do not look very premium", then "yes, send the three rebuilds to Codex". Cards for quota_chart, agent_swarm and leaderboard ask for a lit full-frame stage, a camera push and motion that never stands still (docs/ve/cards/fri-13-nov/).
+- 2026-11-10 Every library style gets a light brand skin (Ruling, Krish), and one 45-second house test script renders every style (docs/plans/2026-11-10-video-style-system/).
 - 2026-11-10 Krish wants the whole video chosen before the script, from a real catalogue of looks he can see, and every capability labelled by purpose and stage.
 Older lines: `docs/history/2026-11-10-NOW-moved-8.md`, `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-10): Watch #512 merge itself on green CI.
+- Next (2026-11-11): start the Monday 16 Nov piece's make (make-piece.yml, piece 8287846b) from the lock Krish signed on 10 Nov.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
 - Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
-- 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms, lock signed). Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
+- 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms). Monday's lock signed 10 Nov: its long cut runs a few minutes over 5 and the article longer, to carry the midterm data-centre backlash. Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
