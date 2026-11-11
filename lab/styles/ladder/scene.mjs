@@ -55,6 +55,8 @@ function makeBranch(mats, scale = 1) {
 }
 
 export async function setup(env) {
+  // Captions sit directly under the number, label and credit (Krish, 11 Nov: "A").
+  if (env.shape === 'tall') env.captionBase = 800
   const c = env.skin.colors
   const glc = document.createElement('canvas'); glc.width = env.W; glc.height = env.H
   const renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: true, preserveDrawingBuffer: true })
@@ -64,7 +66,7 @@ export async function setup(env) {
   const scene = new THREE.Scene(); scene.background = col(c.ink); scene.fog = new THREE.Fog(col(c.ink), 30, 70)
   const camera = new THREE.PerspectiveCamera(env.shape === 'tall' ? 42 : 30, env.W / env.H, 0.1, 200)
   // Tall: the picture slides down so the object sits under the caption line (Krish, 10 Nov: captions lower).
-  if (env.shape === 'tall') camera.setViewOffset(env.W, env.H, 0, -360, env.W, env.H)
+  if (env.shape === 'tall') camera.setViewOffset(env.W, env.H, 0, -240, env.W, env.H)
   const mats = {
     stucco: new THREE.MeshStandardMaterial({ map: paperTexture(env), color: col(c.cream), roughness: 0.85 }),
     stone: new THREE.MeshStandardMaterial({ color: col(c.creamSoft), roughness: 0.7 }),
