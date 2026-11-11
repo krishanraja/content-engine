@@ -1,0 +1,19 @@
+{
+ "pass": true,
+ "problems": [],
+ "turns": {
+  "open_end": 1.5,
+  "bed_from": 3.0,
+  "bed_to": 40.88,
+  "close_full": 41.88,
+  "fade_from": 45.0,
+  "total": 46.0
+ },
+ "bed_median_lufs": -37.0,
+ "bed_spread_lu": 1.2,
+ "direction_changes": 1,
+ "open_over_bed_lu": 14.5,
+ "end_over_bed_lu": 15.45,
+ "lifts_left_out": [],
+ "config": "config/music-bed.json"
+}
