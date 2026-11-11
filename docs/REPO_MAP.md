@@ -2107,6 +2107,7 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `function goes(outcome: Outcome, week: string, day: string, offday = false): string`
 - `async function readApprovals(db: SupabaseClient, week: string): Promise<Approval[] | null>`
 - `function approvalFor(approvals: Approval[] | null, piece: Body, date: string): Approval | null`
+- `function asSentence(title: string): string`
 - `interface Held`
 - `const HELD_TITLE`
 - `const HELD_CHANGED`
