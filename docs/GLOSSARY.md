@@ -159,6 +159,29 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 - **Confirmation ref.** `studio-user-confirmation:<client>:<gate>:<hash>:<receipt>`,
   the proof of Krish's approval at a gate.
 
+## Looks, captions and the tall frame
+
+- **Motion style.** One look a piece's motion is drawn in, from the motion layer of `config/style-references.json`
+  (`style.motion` in the spec). A style the renderer can express is a motion profile
+  (`apps/renderer/src/engine/kit/motion-profiles.json`); one that needs its own drawing is `needs_device` until a
+  Codex card builds it.
+- **Style lab.** `lab/styles/`: where a new look is designed and proved as a whole cut on his take, outside the
+  renderer (`lab/styles/README.md`). Not `ve lab`, which renders the engine's existing looks on one window of his
+  pinned take to check the house look has not moved.
+- **The Ladder, The Living Screen.** The two lab styles Krish approved to use (11 Nov 2026): one lit 3D object that
+  carries every number; a working interface the camera reads for the viewer. Bank ids `ladder`, `living-screen`.
+- **Move.** One motion that says one thing (a count, a drop, a before-and-after), timed by the words that cue it:
+  `lab/moves/`, called by every style.
+- **Caption style.** How the spoken words are drawn on screen: the house caption, the word build, or one of 15
+  caption styles named in `brand.caption_theme` (`apps/renderer/src/engine/captions/`). `art-directed` is the one
+  Krish picked; `cinematic` is Audrey's cinematic caption system rebuilt for ve.
+- **Hero word.** In the cinematic style, the one word on a page that carries the claim (a reversal, a number, the
+  spoken stress), scored and set large; a setup line has none.
+- **Safe column.** On the 9:16 frame, where words may sit: x 60 to 860 from y 280 to 1320, clear of every platform's
+  top bar, action rail and handle (`config/channel-safe-zones.json`). Pictures may bleed past it.
+- **Dress.** The wordmark and series tag on a frame. Wide cuts wear it; a tall cut's content never does, and its
+  outro card keeps the wordmark (Krish, 11 Nov 2026).
+
 ## Operations
 
 - **Publish board.** The week's page at content.krishraja.com/board/<Monday>:

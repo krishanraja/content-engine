@@ -24,6 +24,9 @@ Friday 23 Oct took a 62-hour thread, about 253M tokens, and four rejected cuts. 
 | Device capabilities | `config/ve/devices.json`; renderer `devices/registry.ts` and `devices/CONTRACT.md` |
 | Renderer | `apps/renderer/src/engine/` (one `FormatMaster`, BrandFrame, devices) |
 | Best practice | `_corpus/motion-design-video-corpus.md`, cited by section in each card |
+| Caption styles | `apps/renderer/src/engine/captions/` (`names.ts`, `kit.ts`, `themes.tsx`) and `chrome/ArtDirectedCaption.tsx`; picked with `brand.caption_theme` |
+| The style lab and the moves (outside the renderer) | `lab/styles/` (one folder per built style, `STYLE.md` and `scene.mjs`), `lab/moves/`; `lab/styles/README.md` |
+| Channel safe zones | `config/channel-safe-zones.json`, read by `scripts/channel_safe.py`, `velib/qc_channel.py` and the lab's `check.mjs` |
 
 ## Protocol
 
@@ -113,6 +116,42 @@ Captions use exact Archivo-heavy widths, aspect geometry/swipe padding. Pages: 2
 SFX kits: `config/ve/sfx-kits/<audio.sfx_kit>.json`, names mapped to `{ "path": "sfx/name.wav", "gain_db": -6 }` under assets. Kits are absent today; referenced sounds are omitted/reported, as are unknown names in present kits. Compile writes `props.<cut>.json` and `compile.<cut>.json` in the piece's ve folder; report: lint clean, sfx_missing event ids, props_sha256. Non-empty sfx_missing blocks status. Never mark intended sounds silent to hide gaps. Staged spec assets with declared SHA-256 must match; mismatches name the asset/refuse render.
 
 Render transports string values as ASCII escapes, decoded for drawing. It measures AAC lag against the stem, corrects offsets >1 ms without re-encoding video, prints lag/residual, and fails if residual >1 ms. This does not replace QC. In Bash `. scripts/ve-env.sh` pins ffmpeg n8.1.2 and puts tesseract on PATH. QC --props supplies sync, joins, OCR, brand and cue inputs. On a cut that opens on the intro sting the file runs the sting's frames and then the cut, so QC, key frames, `ve refs` and the packet move every beat, event, caption page, EDL join and the plate offset by those frames (`qc.lead_frames`), and QC's `opening` row (`velib/qc_opening.py`) checks the file's first frames are the approved clip and his cut starts on the next frame; any other cut must hold exactly `durationFrames` frames with no sting in front. Missing OCR is not_run. Exit 0 means measured checks pass, possibly incomplete; require measured_pass and complete, then status exit 0.
+
+## New capabilities: how a session uses them (11 Nov 2026)
+
+Each line says what the capability is, where it lives and the one thing a session does to use it. The decisions are
+Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
+
+- **The vertical screen, end to end.** Nothing he must read sits under any platform's buttons, and the content uses
+  the top of the screen (Krish, 11 Nov: "make maximum use of the full screen"; "stay within the boundaries of all the
+  social platforms"). On 9:16: key content in x 60 to 860, from y 280 (under the top bar at 270) to y 1050; the house
+  caption x 60 to 860, y 1090 to 1320; the word caption centred at y 1250; the held title from y 290; a SPLIT caption on
+  the seam. Footage, grounds, 3D and the end card stay full bleed. The table is `MOTION_STANDARD.md`, Channels. A
+  session never places words by hand: the layouts (`layouts/index.ts`), `HOUSE.caption` and the design lock's caption
+  zone carry it, and `ve qc` `channel.safe_zones` fails a box that strays. The lock's older format zones (header,
+  headline, lower line, marquee, platform) still predate this and are open (`STATUS.md`, Cannot do yet).
+- **No wordmark over vertical content.** The 9:16 cut carries no wordmark, mark tile or series tag over its animated
+  content and no animation ever passes over a wordmark; the closing outro card keeps the wordmark (Ruling, Krish,
+  2026-11-11; `MOTION_STANDARD.md` rule 3). The 16:9 cut keeps its mark tile and pill, and nothing may overlap them.
+- **Caption styles.** A spec sets `brand.caption_theme` to one of 15 names (`captions/names.ts`); with none, the house
+  caption draws. `art-directed` is the one Krish picked; `cinematic` is Audrey's system (one scored hero word per page
+  in silver tinted glass, support words in a cascade, layout states rotating); the other 13 are house rebuilds. Every
+  style takes ve's caption pages and timing, the house faces and tokens, and stays in the safe area. Not yet proved on
+  his take: prove a style on one before a cut ships with it, by setting `brand.caption_theme` in the spec and running
+  `ve proof` (the hardest beat on his real take, through the one render path) for his Approve proof press.
+- **Motion styles from the lab.** A piece's `style.motion` names one style in the bank (`config/style-references.json`,
+  motion layer). `ladder` (The Ladder: one lit 3D object carries every number) and `living-screen` (The Living Screen:
+  a working interface the camera reads for the viewer) joined on 11 Nov, liked by Krish, and are `needs_device`: a spec
+  naming them lints and renders in house motion until their devices land (cards `docs/ve/cards/styles-3d/`, queued after
+  Krish approves the Codex spend). How a lab style reaches ve: `lab/styles/README.md`, "From the lab to ve".
+- **Two things called "lab".** `ve lab render` (`velib/lab.py`) renders the house and word caption builds and the
+  bank's drawable styles on one window of his pinned take (`config/ve/lab.json`), to check the house look has not
+  moved; it does not render the 15 caption styles. The style lab (`lab/styles/`, `render.mjs`) is where a new
+  style is designed and proved as a whole cut, outside the renderer. They are different tools.
+- **What makeyourmindup.ai shows.** The engine's publication watcher (`apps/control-plane/api/publish/watch.ts`,
+  hourly) records each piece's Substack post, YouTube video and Short as they go live, and
+  `GET /api/publish/catalogue` serves them to the site (which takes each article's cover from Substack itself). Nothing in ve publishes; a session never edits the site's
+  copy of a video by hand.
 
 ## Rules
 

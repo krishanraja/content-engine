@@ -54,7 +54,7 @@ and a keep, merge or retire proposal that is Krish's to decide.
 | ve format files (`ve-formats`) | Five buildable formats with layers, devices, beats and QC | pre-record | partial | keep | `config/ve/formats` | production-formats |
 | Production brief treatments (`production-brief`) | Production approval hash and the brief bridge from a routed piece to a Studio job; editorial formats by series (live subchannels plus the retired pair) | pre-record | partial | keep | `apps/control-plane/api/_productionBrief.ts` | ve-formats |
 | Recipe: data-story Ladder (`ve-recipe-data-story`) | The one complete saved style, from the Mon 2 Nov cut | pre-script | working | keep | `config/ve/recipes/data-story.json` | video-styles |
-| Style catalogue (designed, not built) (`video-styles`) | Looks only, each a full style folder (essence, rendering, colour, type, motion, layout, sound, native moves, demo film on the house test script), picked separately from the story format and the moves | pre-script | documented-only | keep | `docs/plans/2026-11-10-video-style-system/STYLE-CATALOGUE.md` | style-bank, ve-recipe-data-story, motion-styles |
+| Style catalogue and the style lab (`video-styles`) | Looks only, each a full style folder (essence, rendering, colour, type, motion, layout, sound, native moves, demo film on the house test script), picked separately from the story format and the moves. Five of the twelve are built in the style lab and render whole cuts tall and wide on his take (The Ladder, The Living Screen, The Evidence Desk, Swiss Kinetic Type, Dark Keynote); a style reaches ve through a bank entry, Codex cards and a device | pre-script | partial | keep | `lab/styles/README.md` | style-bank, ve-recipe-data-story, motion-styles |
 | Golden frames (`golden-frames`) | 5 to 10 moments Krish names from Production Inspo that the Critic ranks against; none named yet | pre-record | partial | keep | `config/ve/golden-frames.json` | design-lock |
 | creative-direction.json (legacy) (`creative-direction-legacy`) | Per-beat picture, on-screen text and modules | pre-record | partial | merge | `scripts/post-pack/creative_direction.py` | ve-spec |
 | ve spec v2 (`ve-spec`) | The one signed production spec for a ve cut | pre-record | working | keep | `packages/contracts/src/production-spec.ts` | creative-direction-legacy |
@@ -87,9 +87,10 @@ and a keep, merge or retire proposal that is Krish's to decide.
 
 | Capability | For | Decided | Status | Proposal | Where | Overlaps |
 |---|---|---|---|---|---|---|
-| Motion style bank (`motion-styles`) | One motion style per piece, from the motion layer; apps/renderer/src/engine/kit/motion-profiles.json says how each is drawn | pre-record | partial | keep | `config/style-references.json` | ve-styles |
+| Motion style bank (`motion-styles`) | One motion style per piece, from the motion layer; apps/renderer/src/engine/kit/motion-profiles.json says how each is drawn, and a style whose device is not built yet (needs_device: The Ladder, The Living Screen and seven more) renders in house motion until its card lands | pre-record | partial | keep | `config/style-references.json` | ve-styles |
 | ve styles and Pick a style (`ve-styles`) | Mocks of the top motion styles on his take, then the Pick a style press | post-record | partial | merge | `scripts/ve.py` | video-styles, motion-styles |
 | ve lab (`ve-lab`) | A reel of motion styles for comparison | any | working | keep | `docs/ve/lab` |  |
+| Moves library (`lab-moves`) | The house moves (count on a part, street drop, live chart, freeze-circle-magnify and the rest), each a deterministic draw from t with its own gallery and check; styles are built from them and card ve-style-0 makes them one package ve imports | pre-record | working | keep | `lab/moves/README.md` | video-styles |
 
 ## artwork
 
@@ -98,6 +99,12 @@ and a keep, merge or retire proposal that is Krish's to decide.
 | Design lock and brand tokens (`design-lock`) | Grid, zones, type, colour and frozen key frames | pre-record | partial | keep | `config/ve/design-lock.json` |  |
 | Device library (`devices`) | The verbs FormatMaster draws (27) | pre-record | partial | keep | `config/ve/devices.json` | techniques |
 | Codex cards (`codex-cards`) | Device and plate briefs Codex builds from | pre-record | partial | keep | `scripts/velib/cards.py` |  |
+
+## captions
+
+| Capability | For | Decided | Status | Proposal | Where | Overlaps |
+|---|---|---|---|---|---|---|
+| Caption styles (`caption-styles`) | Fifteen caption styles a spec picks with brand.caption_theme (art-directed, his pick; cinematic, Audrey's system; thirteen house rebuilds), drawn from ve's caption pages in the house faces and tokens inside every channel's safe area; proved on stills, not yet on his take | pre-record | partial | keep | `apps/renderer/src/engine/captions/themes.tsx` |  |
 
 ## sound
 
@@ -124,13 +131,14 @@ and a keep, merge or retire proposal that is Krish's to decide.
 | Failures register (`failures`) | Every failure and its guard | any | working | keep | `config/failures.json` | floor, learnings |
 | Learnings register (`learnings`) | Say nothing twice | any | working | keep | `config/learnings.json` | failures |
 | ve qc, refs and Critic (`ve-qc`) | Mechanical checks, reference sheets and the non-producer Critic | post-cut | partial | keep | `scripts/ve.py` |  |
-| channel_safe (`channel-safe`) | Platform UI safe zones, grid crop and account row | post-cut | partial | keep | `scripts/channel_safe.py` |  |
+| channel_safe (`channel-safe`) | Platform UI safe zones, grid crop and account row. Since 11 Nov 2026 every tall template uses the whole safe screen (key content from y 280, x 60 to 860, captions above y 1320); ve qc counts the row and quick-edit holds a caption band under a channel's buttons | post-cut | working | keep | `scripts/channel_safe.py` |  |
 
 ## filing
 
 | Capability | For | Decided | Status | Proposal | Where | Overlaps |
 |---|---|---|---|---|---|---|
 | Archive, 3 Posts and the making record (`filing`) | Files each cut and records it on the piece | post-cut | working | keep | `scripts/post-pack/making.py` |  |
+| Publication watcher and catalogue (`publication-watch`) | Hourly, reads the Substack archive and the @makeyourmind-up YouTube feed, matches each upload to its piece and records it; GET /api/publish/catalogue serves every published piece with its video, Short and thumbnail to makeyourmindup.ai, which updates by itself | post-publish | working | keep | `apps/control-plane/api/publish/watch.ts` |  |
 
 ## board
 
@@ -150,4 +158,4 @@ and a keep, merge or retire proposal that is Krish's to decide.
 
 ## Totals
 
-62 capabilities. Proposals: keep 53, merge 6, retire 0, decide 3.
+65 capabilities. Proposals: keep 56, merge 6, retire 0, decide 3.

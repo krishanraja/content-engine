@@ -471,7 +471,14 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    he picks from `ve styles` mocks (his last take before he records, his
    new one after), then
    approves the hardest beat moving (`ve proof`) before a whole cut
-   renders. Its `brand.references` come from the inspiration board by
+   renders. Name the caption build with it: `brand.captions` (house or
+   word) or a caption style, `brand.caption_theme` (15 in
+   `apps/renderer/src/engine/captions/names.ts`; `art-directed` is the one
+   he picked, 11 Nov 2026), proved on his take before it ships. On the
+   tall cut nothing he must read sits under a platform's buttons and no
+   wordmark sits over the content; the engine's layouts hold that, so a
+   direction never places words by hand (`docs/ve/MOTION_STANDARD.md`,
+   Channels). Its `brand.references` come from the inspiration board by
    card id, never a typed name (`ve init`, `ve refs`: the `ve` skill, step
    6). Put `ve expect`'s lines beside the storyboard. Every
    picture adds meaning beyond the words (Krish, 2026-10-29: "They have to
