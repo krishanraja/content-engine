@@ -159,6 +159,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/publish/watch`
 - `/api/purge/restore`
 - `/api/purge/run`
+- `/api/research-library/sweep`
 - `/api/shifts/[id]`
 - `/api/shifts/[id]/write`
 - `/api/shifts/detect`
@@ -1568,6 +1569,45 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `interface ClassifyOpts`
 - `async function classifyRelevance(items: RelevanceItem[], opts: ClassifyOpts): Promise<RelevanceVerdict[]>`
 - `function relevanceReasonCode(prefix: string, verdict: Verdict): string`
+
+### `apps/control-plane/api/_researchLibrary.ts`
+
+- `const RESEARCH_LIBRARY_FOLDER_ID`
+- `const RESEARCH_LIBRARY_INDEX_ID`
+- `const LIBRARY_KINDS`
+- `const LIBRARY_ROLES`
+- `const SETTLE_MS`
+- `const MIRROR_FILE_MAX`
+- `const INDEX_COLUMNS`
+- `const INDEX_MATERIAL_COLUMN`
+- `const PROP`
+- `interface StoredMaterial`
+- `interface PieceInfo`
+- `interface LibraryFolder`
+- `interface LibraryFile`
+- `interface LibraryDrive`
+- `interface LibraryIndex`
+- `interface LibrarySource`
+- `interface MirrorOptions`
+- `interface MirrorReport`
+- `function inLibrary(m: Pick<StoredMaterial, 'kind' | 'role' | 'storage' | 'archived_at' | 'bytes'>): boolean`
+- `const isSource = (m: Pick<StoredMaterial, 'kind' | 'role'>) =>`
+- `interface Place`
+- `function placeOf(m: StoredMaterial, piece: PieceInfo | null): Place`
+- `function fileNameOf(m: StoredMaterial): string`
+- `function mimeOf(m: StoredMaterial): string`
+- `function descriptionOf(m: StoredMaterial, piece: PieceInfo | null, place: Place): string`
+- `function indexRowOf(m: StoredMaterial, piece: PieceInfo | null, place: Place, link: string): string[]`
+- `async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, opts: MirrorOptions = {}): Promi…`
+
+### `apps/control-plane/api/_researchLibraryGoogle.ts`
+
+- `function googleLibraryDrive(token: string, f: Fetch = fetch): LibraryDrive`
+- `function googleLibraryIndex(token: string, sheetId = RESEARCH_LIBRARY_INDEX_ID, f: Fetch = fetch): LibraryIndex`
+- `interface SourceDb`
+- `function storeSource(db: SourceDb, bucket: string): LibrarySource`
+- `async function runMirror(opts: { only?: string[]; budgetMs?: number } = {}): Promise<MirrorReport>`
+- `async function copyNow(materialId: string | null | undefined, waitMs = 20_000): Promise<Record<string, unknown>>`
 
 ### `apps/control-plane/api/_retry.ts`
 
@@ -3006,6 +3046,11 @@ A copy of every row the Monday purge is about to hard-delete.
 ### `apps/control-plane/api/purge/run.ts`
 
 - `export default withContentRun('purge', handler)`
+
+### `apps/control-plane/api/research-library/sweep.ts`
+
+- `const config`
+- `export default withContentRun('research_library_mirror', handler)`
 
 ### `apps/control-plane/api/shifts/[id].ts`
 
