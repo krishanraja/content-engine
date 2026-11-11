@@ -166,26 +166,12 @@ export function headerH(shape: Shape): number { return HEADER[shape] }
 export function Header({ shape, seriesName, seriesColour, wordmark, opacity = 1 }: {
   shape: Shape; seriesName: string; seriesColour: string; wordmark: string; opacity?: number
 }) {
+  // No wordmark or series chip on vertical video (Ruling, Krish, 2026-11-11): the 9:16 card draws no header.
+  if (shape === '9x16') return null
   const S = SAFE[shape]
   const h = HEADER[shape]
   const wm = WORDMARK_H[shape]
   const wmW = (wm * WORDMARK_PX[0]) / WORDMARK_PX[1]
-  if (shape === '9x16') {
-    // One ink bar across the safe width: the wordmark at its left, the
-    // series chip (in its own colour) at its right.
-    const ch = 56, cs = 26, pad = 20
-    const cw = pillWidth(seriesName, cs, ch)
-    if (wmW + cw + 2 * pad + 24 > S.x1 - S.x0) throw new Error(`STORY_FIT: the series name "${seriesName}" does not fit the 9x16 header beside the wordmark`)
-    return (
-      <div style={abs({ left: 0, top: 0, width: '100%', height: '100%', opacity })}>
-        <div style={abs({ left: S.x0, top: S.y0, width: S.x1 - S.x0, height: h, background: C.ink, borderRadius: 14 })}>
-          <BrandImage id="header-wordmark" group="header-wordmark" src={wordmark} px={WORDMARK_PX} height={wm} alt="makeyourmindup" style={{ left: pad, top: (h - wm) / 2 }} />
-          <Pill id="header-series" group="header-series" text={seriesName} size={cs} height={ch} bg={seriesColour} fg={C.ink}
-            style={{ left: S.x1 - S.x0 - pad - cw, top: (h - ch) / 2 }} />
-        </div>
-      </div>
-    )
-  }
   const padX = Math.round(h * 0.3)
   const cs = Math.round(h * 0.36)
   const cw = pillWidth(seriesName, cs, h)

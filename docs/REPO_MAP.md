@@ -38,6 +38,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `examples/`
 - `fixtures/`
 - `inspo/`
+- `lab/`
 - `packages/cli/`
 - `packages/contracts/`
 - `packages/core/`
@@ -151,6 +152,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/library/written`
 - `/api/media-quality`
 - `/api/media-review-pilot`
+- `/api/publish/catalogue`
 - `/api/publish/watch`
 - `/api/purge/restore`
 - `/api/purge/run`
@@ -1431,6 +1433,18 @@ The one Anthropic price table.
 - `function normalizeProductionFormat(value: unknown, series: ProductionSeries): ProductionFormat | null`
 - `function buildProductionBrief(input: { row: ContentRevisionInput & { id: string; source_url?: string | null; meta?: Jso…`
 
+### `apps/control-plane/api/_publicationCatalogue.ts`
+
+The public publication catalogue: for every published piece, the public addresses it went out at.
+
+- `const CATALOGUE_FROM`
+- `interface CataloguePiece`
+- `interface CatalogueVideo`
+- `interface CatalogueEntry`
+- `interface Catalogue`
+- `function youtubeId(url: string): string | null`
+- `function catalogue(pieces: readonly CataloguePiece[]): Catalogue`
+
 ### `apps/control-plane/api/_publishChecks.ts`
 
 The mechanical checks a piece must pass before it can be approved or
@@ -1464,11 +1478,21 @@ The publish watcher's pure half: which piece a live Substack post is.
 - `interface Post`
 - `interface Candidate`
 - `function normTitle(s: string | null | undefined): string`
+- `function archiveList(raw: unknown): Array<Record<string, unknown>>`
 - `function readPosts(raw: unknown): Post[]`
 - `type Match`
 - `function matchPost(post: Post, pieces: readonly Candidate[]): Match`
 - `function unmatchedItem(post: Post)`
 - `function unmatchedItemId(post: Pick<Post, 'id'>): string`
+- `const YOUTUBE_CHANNEL_ID`
+- `const YOUTUBE_FEED`
+- `const YOUTUBE_WATCH_FROM`
+- `interface Upload`
+- `function readUploads(xml: string): Upload[]`
+- `interface PublishedPiece`
+- `type UploadMatch`
+- `function matchUpload(upload: Upload, pieces: readonly PublishedPiece[], uploads: readonly Upload[] = [upload]): UploadM…`
+- `function uploadWrite(upload: Upload, piece: PublishedPiece): { write: Record<string, unknown> } | { skip: string }`
 
 ### `apps/control-plane/api/_quota.ts`
 
@@ -2052,6 +2076,14 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `function liveDay(piece: Body, date: string): LiveDay`
 - `async function weekLive(db: SupabaseClient, week: string, builtAt: string | null): Promise<WeekLive>`
 
+### `apps/control-plane/api/board/_liveBoard.ts`
+
+Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the publish board is 1000% where
+
+- `const LIVE_BOARD_URL`
+- `function liveBoardUrl(week?: string | null, day?: string | null): string`
+- `const ARCHIVE_LINE`
+
 ### `apps/control-plane/api/board/_media.ts`
 
 - `type MediaKind = 'cut' | 'thumbnail'`
@@ -2186,6 +2218,12 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `function buildView(i: ViewInputs): WeekView`
 - `function viewProblems(v: WeekView): string[]`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
+
+### `apps/control-plane/api/board/_viewContract.ts`
+
+- `const VIEW_CONTRACT_VERSION`
+- `function viewEtag(view: Record<string, unknown>): string`
+- `function notModified(ifNoneMatch: string | string[] | undefined, etag: string): boolean`
 
 ### `apps/control-plane/api/board/_yes.ts`
 
@@ -2823,6 +2861,10 @@ Takes place themselves (Wave 2, W2.3): once the Inbox job has copied a take
 - `function createMediaReviewPilotHandler(frozen: unknown, db: SupabaseClient, fetcher: typeof fetch = (...args) => fetch(…`
 - `export default createMediaReviewPilotHandler(pilotManifest, supabase)`
 - `const config`
+
+### `apps/control-plane/api/publish/catalogue.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/publish/watch.ts`
 
@@ -3778,10 +3820,15 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/chrome/EndingBand.tsx`
 
 - `const BAND_ARRIVAL_FRAMES`
-- `interface EndingBandProps`
+- `const ENDING_TAGLINE`
+- `const ENDING_CTA`
+- `const ENDING_DAYS`
+- `const ENDING_TIMING`
+- `const ENDING_SETTLED_S`
+- `function statementLines(aspect: EngineRenderProps['aspect'], tagline: string = ENDING_TAGLINE): string[]`
 - `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
-- `function EndingBand({ props, frame }: EndingBandProps): React.ReactElement | null`
+- `function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/LeadCaption.tsx`
 
@@ -3834,6 +3881,18 @@ Run a Vercel serverless handler locally against the real environment.
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
 - `function onTwos(frame: number, fromFrame: number): number`
 - `function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number`
+
+### `apps/renderer/src/engine/devices/agent_swarm/index.tsx`
+
+- `function Device(props: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/agent_swarm/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/agent_swarm/state.ts`
+
+- `function swarmState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
 
 ### `apps/renderer/src/engine/devices/arrangement/hatch.ts`
 
@@ -4025,6 +4084,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function queryState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/quota_chart/index.tsx`
+
+- `function chartLayout(w: number, h: number, tall: boolean)`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/quota_chart/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/quota_chart/state.ts`
+
+- `function quotaState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/quote_card/index.tsx`
 
 - `function Device({ object, events, tokens, frame }: DeviceProps)`
@@ -4181,6 +4253,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/upload_flood/schema.ts`
 
 - `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/wall_screen/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/wall_screen/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/wall_screen/state.ts`
+
+- `function wallState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `function pageRect(wall: {x: number; y: number; w: number; h: number; skew?: number}, full: number)`
 
 ### `apps/renderer/src/engine/fit.ts`
 
@@ -4423,6 +4508,8 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `function slotsFor(layout: Layout, aspect: Aspect, count = 1): Box[]`
 - `function splitCameraBox(aspect: Aspect): Box`
 - `function splitPlatePosition(crop?: string): string`
+- `function windowCameraBox(aspect: Aspect): Box`
+- `function windowCameraState(beats: readonly EngineBeat[], aspect: Aspect, frame: number): { box: Box; scale: number; win…`
 
 ### `apps/renderer/src/engine/mocks/face-with-proof.tsx`
 
@@ -6017,6 +6104,15 @@ One closer: nothing in the engine closes a board item but the board route,
 - `function shouldLaunchVideoEngine(context: VideoEngineLaunchContext): boolean`
 - `const VIDEO_ENGINE_TRIGGER_CASES: ReadonlyArray<VideoEngineLaunchContext & { expected: boolean; label: string }>`
 - `async function checkVideoEngineTrigger(repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')): Promise<void>`
+
+### `scripts/check-view-contract.ts`
+
+The Publish Board view's contract check (Ruling, Krish, 2026-11-11: engine changes upgrade Control Centre's board and
+
+- `const SCHEMA_PATH`
+- `function validate(root: S, value: unknown, node: unknown = root, at = '$', opts: { open?: boolean } = {}): string[]`
+- `function compare(oldRoot: S, newRoot: S): { breaking: string[]; additive: string[] }`
+- `function judge(oldRoot: S | null, newRoot: S): { ok: boolean; lines: string[] }`
 
 ### `scripts/rotate-runner-signing-key.ts`
 

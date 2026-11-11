@@ -136,6 +136,16 @@ class QCModules(unittest.TestCase):
         self.assertTrue(bad['value'][0]['pass'])
         self.assertFalse(bad['value'][1]['pass'])
 
+    def test_vertical_cut_must_carry_no_mark(self):
+        # Ruling, Krish, 2026-11-11: no mark on vertical video. A cut with the mark on any beat fails.
+        beats = [{'id': 'first', 'fromFrame': 0, 'toFrame': 30},
+                 {'id': 'second', 'fromFrame': 30, 'toFrame': 60}]
+        aspect = {'mark_box': [8, 8, 38, 30], 'mark_width': 32}
+        self.assertFalse(qc_brand.no_mark(self.brand['clean'], self.mark, beats, aspect)['pass'])
+        partly = qc_brand.no_mark(self.brand['absent'], self.mark, beats, aspect)
+        self.assertFalse(partly['pass'])
+        self.assertTrue(partly['value'][1]['pass'])
+
     def test_mark_geometry_matches_wide_and_tall_renderer(self):
         self.assertEqual(qc_brand.MARK_GEOMETRY['16:9']['box'], (64, 56, 112, 112))
         self.assertEqual(qc_brand.MARK_GEOMETRY['16:9']['image'], 80)
@@ -541,8 +551,8 @@ class RendererLayoutMirrorTest(unittest.TestCase):
         self.assertEqual(layouts['9:16']['F1'][0], (120, 852, 660, 290))
         self.assertEqual(layouts['16:9']['F1'][0], (1176, 54, 648, 490))
         # SPLIT is tall only (no wide lock); its stage box reads the seam from the mocks file (FWP_SPLIT_SEAM_Y).
-        self.assertEqual(set(layouts['9:16']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT'})
-        self.assertEqual(set(layouts['16:9']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE'})
+        self.assertEqual(set(layouts['9:16']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW'})
+        self.assertEqual(set(layouts['16:9']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'WINDOW'})
         self.assertEqual(layouts['9:16']['SPLIT'], [(60, 300, 960, 400)])
         for aspect in layouts.values():
             self.assertTrue(all(len(box) == 4 for boxes in aspect.values() for box in boxes))

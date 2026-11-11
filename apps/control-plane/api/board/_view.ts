@@ -5,6 +5,8 @@ import { yesByDay } from './_yes.js'
 import { readRuns, ENGINE_REPO, type JobName, type RunInfo } from './_run.js'
 import { offdaySides, type OffdaySides } from './_offdaySides.js'
 import { dayMedia, type MediaItem } from './_media.js'
+import { VIEW_CONTRACT_VERSION } from './_viewContract.js'
+import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -77,6 +79,8 @@ export interface DayPath {
   storyboard: { title: string; at: string | null } | null
 }
 export interface WeekView {
+  /** The contract this view keeps (view.schema.json, x-contract-version; _viewContract.ts). */
+  contract_version: string
   week: string
   as_of: string
   days: DayView[]
@@ -326,7 +330,8 @@ export function backupPrompt(week: string, d: DayView): string {
   const where = [
     d.piece_id ? `- the piece's making record: python3 scripts/post-pack/making.py ${d.piece_id} show` : '',
     `- the week's plan, ideas and off-day options: docs/plans/${week}-week/ (ideas.json, and the offday-revise/${week} branch when it exists)`,
-    `- Krish's presses on the board: GET /api/board/${week}/view, and the board at content.krishraja.com/board/${week}`,
+    `- Krish's presses on the board: GET /api/board/${week}/view; the live board, where he works, is ${liveBoardUrl(week, d.day).replace(/^https:\/\//, '')}`
+      + ` (content.krishraja.com/board/${week} is the archive; the view carries no https link, by the media rule)`,
   ].filter(Boolean).join('\n')
   const options = d.reviews?.length ? `\nWhat waits on him: ${d.reviews.map(r => r.doc_id).join(', ')} (revised from his words).` : ''
   return 'You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: '
@@ -360,7 +365,7 @@ export function buildView(i: ViewInputs): WeekView {
   const moved = i.history.filter(h => { const k = `${h.collection}/${h.doc_id}`; if (seen.has(k)) return false; seen.add(k); return true }).slice(0, 8).map(h => ({ at: h.updated_at, text: `${h.updated_by === 'Krish' ? 'You' : h.updated_by} ${name(h.collection, h.doc_id)}` }))
   for (const r of Object.values(i.runs)) if (r) moved.push({ at: r.updated_at, text: `${r.workflow}: ${r.state}` })
   moved.sort((a, b) => b.at.localeCompare(a.at))
-  return { week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
+  return { contract_version: VIEW_CONTRACT_VERSION, week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
     sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0 } }
 }
 

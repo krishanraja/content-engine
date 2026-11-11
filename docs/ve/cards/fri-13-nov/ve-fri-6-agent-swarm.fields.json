@@ -1,0 +1,15 @@
+{
+  "card_id": "ve-fri-6-agent-swarm",
+  "kind": "device",
+  "format": "face-with-proof",
+  "motion_style": "data-story",
+  "title": "Agent swarm: ten agents loose on one comment, the token meter spins, the rank climbs",
+  "goal": "Fri 13 Nov 'Counting rat tails', 5-minute cut. Words it carries: AI helpers called agents keep working on a task by themselves; some people set agents running on pointless jobs just to use up more AI; one engineer joked online that whenever his manager said something stupid he would set 10 agents loose on the comment, not to fix anything, just to climb the chart.\n\n1. `params`: `comment` (the manager's line, short), `agents` (count, default 10), `tokens` {from, to} for the meter, `rank` {from, to}, `labels` {meter, rank}.\n2. `enter`: a chat bubble with the comment arrives, typed on.\n3. `add`: the agents arrive one after another from the edges (small robot cursors, staggered over 20 frames), each trailing a thin line to the bubble.\n4. `fill`: they orbit and peck at the bubble; a token meter beside it spins up from tokens.from to tokens.to (counting up and slowing hard into its value).\n5. `move` with `toState` = 'rank': a small rank chip climbs from rank.from to rank.to, the number flipping like a departure board.\n6. `mark`: one hand-drawn strike across the bubble, 'nothing fixed' (at most 6 words), the agents freezing grey.\n7. `exit`.",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Register in devices/registry.ts and config/ve/devices.json with exactly enter, add, fill, move, mark, exit; update verbs.test.ts. Text only from params; counts only from params. Reuse the look of typing_bubble and cursor_buddy (read them), not their code paths if that breaks their tests. Draw inside the box only. Colours only from brand tokens (coral for tokens burned, mint never used here). Tests (device.test.ts): nothing before enter; exactly `agents` agents after add; meter shows tokens.to after fill settles; rank shows rank.to after move; after mark everything but the strike is greyed; tall and wide render.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/agent_swarm\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+  "write_allow": "[apps/renderer/src/engine/devices/agent_swarm/*, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/devices/verbs.test.ts, config/ve/devices.json]",
+  "read": "apps/renderer/src/engine/devices/CONTRACT.md, apps/renderer/src/engine/devices/typing_bubble/**, apps/renderer/src/engine/devices/cursor_buddy/**, apps/renderer/src/engine/devices/stat_strip/**, apps/renderer/src/engine/clock.ts, apps/renderer/src/engine/props.ts, apps/renderer/src/engine/kit/**, config/ve/design-lock.json, config/ve/devices.json, config/ve/brand-tokens.json",
+  "max_minutes": 60,
+  "max_calls": 60,
+  "path": "docs/ve/cards/fri-13-nov/ve-fri-6-agent-swarm.md"
+}

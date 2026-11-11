@@ -5,6 +5,12 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-11
+
+- reconciled at `90e1b12`: NOW.md re-stamped from `a07ea4e`. Its Next line still asked to watch #512 merge, which merged as `83e7af1a`; it now names the Monday 16 Nov make. Added the Fri 13 premium rebuild cards (`e4e5264e`), the style brand skin and house test script (`e0a29fc0`), and the signed Monday lock (`651d404e`).
+- rolled from NOW.md, verbatim (superseded by the round 3 bullet):
+  - Round 2 of the Wed 11 devices is built by Codex and reviewed: arrangement (a real DAW view, AI flags, credits) and upload_flood (scattered AI songs, listens meter, search) pass; slot_machine still crops typed text and its cabinet vanishes on ink. Mock batch 2 (11 device frames, Krish cut out on the right) sent to Krish. (2026-11-10)
+
 ## 2026-11-08
 
 - reconciled at `a07ea4e`: `docs/history/2026-11-07-NOW-moved-4.md` had been overwritten rather than appended to by `2766388f`, which dropped its Historical banner (strict validator failure) and the four lines moved there just before (the 5 Nov series skins and intro sting lines, two 6 Nov eye contact lines). Banner and lines restored verbatim from blob `6882b1b8`, the 6 Nov Copy article line kept. The same fix sits unmerged on `steward/2026-11-07` (PR #459), whose push to main the publish-guard hook refused. `NOW.md` re-stamped (head `8ddf532` to `a07ea4e`); the sessions since closed out their own work there. The NOW.md audit passed and no closeout notes were waiting.

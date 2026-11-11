@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
 as_of: 2026-11-11
-head: a07ea4e
+head: 90e1b12
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,36 +30,29 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-09)
+## Where it is right now (as of 2026-11-11)
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
 - Wed 11 Nov (36886e0b) is ready to post: fact gate passed (run 7), spine judge passed, visual gate passed, pack in its 3 Posts folder; covers and thumbnails in this week's neon skin; both cuts are in the post's working folder (not filed: a one-off composite has no ve or quick-edit receipt, Krish chose b). Reader test 8 9 7 8 8 8, under the bar (reader-test.md). (2026-11-11)
-- Round 2 of the Wed 11 devices is built by Codex and reviewed: arrangement (a real DAW view, AI flags, credits) and upload_flood (scattered AI songs, listens meter, search) pass; slot_machine still crops typed text and its cabinet vanishes on ink. Mock batch 2 (11 device frames, Krish cut out on the right) sent to Krish. (2026-11-10)
-- The eye-contact workflow re-encodes any take above 30 fps to 30 fps before NVIDIA's service sees it; the 48 fps ai-music takes of 10 Nov were refused with the "Only H.264 8-bit ... Constant Frame Rate" error while the 30 fps takes of 5 Nov went through (suspected cause, not yet proven by a passing run). (2026-11-10)
-- Wed 11 Nov re-recorded on 10 Nov from the approved v2 scripts; mock batch 1 (11 real-material frames) and the cold-open preview sent to Krish; Codex built arrangement, slot_machine and upload_flood (docs/ve/cards/w11-mocks/); eye-contact runs restarted on ai-music-short.mp4 and ai-music-long.mp4. (2026-11-10)
-- every piece's words pass Control Center's one voice check: the approve and publish gate asks it for every lane and blocks on a hard fail, piece making runs scripts/post-pack/voice_gate.py on scripts, the article, carousel text and every channel's copy (piece_manifest.py draft refuses to write on a hard fail), and the writers read the voice live from Control Center before the hand-kept content_voice_block. (2026-11-09)
-- No script reaches Krish's teleprompter unread: his sign-off counts only with two or more fresh readers (or his own words to skip them), Teleprompter takes only words teleprompter_send.py plan cleared, and the readers now check unexplained names, a teasing opening, wrong-way comparisons and advice past the evidence (F45). (2026-11-09)
-- **Eye contact (2026-11-09):** `ve eyeline` passes blind review on both 11 Nov takes; Maxine's eye is opt-in, failed review twice (docs/ve/EYE_CONTACT.md).
-- 16 Nov board published with his picks (Mon 8287846b, Wed db9f9f6a, Fri b019dbf8); Friday's lock signed. Lost Friday comments: a pick dropped its typed note (test proves it); fixed. Every offday-revise run since 2 Nov failed; fixed and re-run, revisions in krishanraja/content-engine#494. (2026-11-09)
-- Live board is each week's own link, /board/<Monday> (Krish switched it 2026-11-10; old board at ?archive=1; PLAN.md in docs/plans/2026-11-09-board-desk): each series day a guided path (Research, Story, Look, Storyboard and script, Record, Cut); 8 devices. (2026-11-10)
-- Krish signed the Wed 11 Nov creative sheet (36886e0b) on 9 Nov: "I'm happy with your recommendations. With regard to motion treatment, I endorse being experimental but visually clear. I think the headline should be much clearer and more intriguing, something like "Is your favourite tune made by a human or an AI?"". Picks and his words are in docs/plans/2026-11-11-wednesday/creative.json; the title and thumbnail headline are now his line. (2026-11-09)
-- Fri 13 Nov "Counting rat tails" has new scripts in both cuts, made plain for anyone ("rat farm" hook, tails mapped to AI use, every company and term explained, the study's branch comparison and the scrap-versus-halve reason spelled out), read back by two rounds of three fresh readers per cut and sitting in Krish's Teleprompter scripts; the leaderboard-as-host format with his face never covered is the agreed look; the 5 Nov takes no longer count. (2026-11-09)
-- Krish's character is built (2026-11-10): he approved base v2 ("yes", 2026-11-09, after "longer sleeves, get rid of the ear bud in my right ear"); all 65 poses are drawn closed, open and blink, check.mjs passes (one warning: hood-mask 5 px above the hair line), filed in his brand kit at 1 Brand kit (permanent)/character/krish/, never git; config/ve/character.json says ready. A spec naming him still waits on the character_layer device (card ve-kf-7-character-layer). (2026-11-10)
-- Claude sessions in this repo load the Codex plugin (codex@openai-codex); pushes to main are allowed. At session start .claude/hooks/codex-login.sh shows Krish a ChatGPT sign-in link and code whenever Codex is signed out (cloud included), never an API key. (2026-11-10)
+- Vertical video carries no wordmark, mark tile, series badge or opening logo in any route (ve, quick-edit, the style lab, the Studio routes), by Krish's ruling of 11 November; the wide cut keeps them. ve QC proves the mark absent on 9:16 (brand.no_mark), renderer tests refuse chrome on any 9:16 beat, the lab checker fails a tall cut with a dress and any word over a wide wordmark, and quick-edit ignores an older config's dress. HOOK_IS_THE_INTRO now says so, approved by Krish. (2026-11-11)
+- The Publish Board's feed has one versioned contract (apps/control-plane/api/board/view.schema.json, contract_version 1.0.0, a frozen fixture, check:view-contract in verify) and answers with an ETag and 304; content.krishraja.com/board/<Monday> is the archive with a banner to Control Centre's live board, and every link the engine gives Krish to the board is the live one (config/boards.json live_board). (2026-11-11)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
-Older lines: `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
+- 2026-11-11 config/studio.json was left unchanged because it is bound into the signed media standard's hash; the vertical exemption is enforced in the renderer instead.
+Older lines: `docs/history/2026-11-11-NOW-moved-4.md`, `docs/history/2026-11-11-NOW-moved-3.md`, `docs/history/2026-11-11-NOW-moved-2.md`, `docs/history/2026-11-11-NOW-moved-1.md`, `docs/history/2026-11-10-NOW-moved-8.md`, `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-11): Wed 11 is ready for Krish to post from its 3 Posts folder; both cuts sit in its working folder (5-minute dropped by Krish, size matches the approved file). Reader test still under the bar.
+- Next (2026-11-11): step 2, the full-screen vertical layouts inside every platform's safe area, with before and after stills to Krish before any cut is re-rendered.
+- House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
+- Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
 - Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
-- 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms, lock signed). Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
+- 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms). Monday's lock signed 10 Nov: its long cut runs a few minutes over 5 and the article longer, to carry the midterm data-centre backlash. Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).

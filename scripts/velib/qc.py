@@ -226,7 +226,7 @@ def inputs_from_props(props: dict) -> dict:
         if len(active) != 1:
             raise ValueError(f"Cue {event.get('id', event['obj'])} has no unique beat slot")
         beat = active[0]
-        slot_index = 0 if beat['layout'] in ('STAGE', 'SPLIT') else beat['uses'].index(event['obj'])
+        slot_index = 0 if beat['layout'] in ('STAGE', 'SPLIT', 'WINDOW') else beat['uses'].index(event['obj'])
         box = layouts[aspect][beat['layout']][slot_index]
         params = (objects.get(event['obj']) or {}).get('params', {}) if beat['layout'] == 'SPLIT' else {}
         place = params.get('place')
@@ -314,7 +314,9 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                  'pass': move['longest_still_s'] <= fmt.get('longest_still_s', 99), 'runs': move['still_runs']},
         'motion.periodicity': {'value': move['loop_period_s'], 'target': 'no repeating loop 2-10 s', 'pass': move['loop_period_s'] is None},
     }
-    for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', 'brand.mark_tile', 'motion.cue_sync', 'audio.bed', 'audio.bed_continuity',
+    # The vertical cut proves the mark is absent instead of present (Ruling, Krish, 2026-11-11).
+    brand_row = 'brand.no_mark' if aspect == '9:16' else 'brand.mark_tile'
+    for name in ('sync.av_xcorr', 'joins.decoder', 'captions.ocr', brand_row, 'motion.cue_sync', 'audio.bed', 'audio.bed_continuity',
                  'opening'):
         checks[name] = {'value': None, 'target': 'see config/ve/crew', 'pass': None, 'status': 'not_run'}
     # The calibrated cut gates quick-edit runs too (plan W2.4, scripts/cutgates, config/gates.json).
@@ -339,8 +341,11 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         ('audio.bed', dialogue_master is not None, lambda: qc_audio.bed(dialogue_master)),
         ('audio.bed_continuity', dialogue_master is not None, lambda: qc_audio.continuity(path, dialogue_master)),
         ('captions.ocr', pages is not None and region is not None, lambda: qc_captions.ocr(path, pages, region)),
-        ('brand.mark_tile', mark_png is not None and beats is not None and aspect is not None,
+        # The wide cut wears the mark tile; the vertical cut must not (Ruling, Krish, 2026-11-11).
+        ('brand.mark_tile', mark_png is not None and beats is not None and aspect is not None and aspect != '9:16',
          lambda: qc_brand.mark_tile(path, mark_png, beats, aspect)),
+        ('brand.no_mark', mark_png is not None and beats is not None and aspect == '9:16',
+         lambda: qc_brand.no_mark(path, mark_png, beats, aspect)),
         ('motion.cue_sync', events is not None and slots is not None, lambda: qc_cues.cue_sync(path, events, slots)),
         ('words.lost', bool(heard) and script is not None and take_words is not None,
          lambda: qc_gates.words_lost(script, take_words, heard)),
@@ -382,11 +387,12 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     # the stage header, and an object's slot is the full canvas, so "change near the event inside its slot" cannot
     # separate an event from the camera. Both checks apply to the other layouts only; events on STAGE devices are
     # proved by their device tests and the key-frame match.
-    stage_beats = [b for b in (beats or []) if b.get('layout') == 'STAGE']
+    stage_beats = [b for b in (beats or []) if b.get('layout') in ('STAGE', 'WINDOW')]
     if stage_beats and len(stage_beats) == len(beats or []):
         for name in ('brand.mark_tile', 'motion.cue_sync'):
-            checks[name] = {'value': None, 'target': 'not defined for STAGE layouts', 'pass': None,
-                            'status': 'not applicable'}
+            if name in checks or name == 'motion.cue_sync':
+                checks[name] = {'value': None, 'target': 'not defined for STAGE layouts', 'pass': None,
+                                'status': 'not applicable'}
         optional = [row for row in optional if row[0] not in ('brand.mark_tile', 'motion.cue_sync')]
     for name, supplied, measure in optional:
         if supplied:

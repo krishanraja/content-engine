@@ -18,7 +18,10 @@ from .common import ROOT, load_json
 from .lint import pending_devices_error
 
 FPS = 30
-ENDING_FRAMES = 105
+ENDING_FRAMES = 180  # the house close: 6 s, settled by 2.75 s then held (docs/production/CLOSING.md)
+# Krish, 10 Nov 2026: "The copy should read: "Built to help you decide."" (the same words as quick-edit's kit TAGLINE).
+ENDING_TAGLINE = 'Built to help you decide.'
+ENDING_CTA = 'Subscribe free'
 # The opening, under test (Krish, 29 Oct 2026: "I'd pick number one here but I think that we need to test and learn.
 # We need to figure out what the right tone is over time based on real engagement. Let's go with number one for
 # now."): the hook is the intro. The first beat owns frame 0 with the logo and the series tag in its corners, and no
@@ -373,6 +376,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             raise ValueError(f'beat {beat["id"]} has no positive frame interval')
         beats.append({'id': beat['id'], 'role': beat['role'], 'layout': beat['layout'],
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
+                      **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
                       **({'plate': {k: v for k, v in beat['plate'].items() if k in ('source', 'crop')}} if beat.get('plate') else {})})
         # The v2 spec reserves extensible metadata in style; beat-level keyFrame
@@ -525,7 +529,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro"), not only a
     # cut that carries a dated call; the call card still needs a call.
     if not cut.get('excerpt', False):
-        props['ending'] = {'fromFrame': duration, 'url': props['series']['site']}
+        props['ending'] = {'fromFrame': duration, 'url': props['series']['site'], 'tagline': ENDING_TAGLINE, 'cta': ENDING_CTA,
+                           'days': [{'day': house['channels'][c]['day'], 'colour': publication['channel_colors'][c]}
+                                    for c in house['channels'] if c in publication['channel_colors']]}
         if spec.get('style', {}).get('ending_ticker') is False:
             props['ending']['ticker'] = False  # no scrolling promise strip (Krish: no marquee)
         props['durationFrames'] += ENDING_FRAMES

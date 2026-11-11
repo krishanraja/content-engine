@@ -10,7 +10,7 @@ import { headlineState } from './devices/headline/state'
 import { DEVICES } from './devices/registry'
 import { FOCUS, PEN } from './devices/focus'
 import type { Box } from './devices/types'
-import { slotsFor, splitCameraBox, splitPlatePosition } from './layouts'
+import { slotsFor, splitCameraBox, splitPlatePosition, windowCameraState } from './layouts'
 import { setActiveCanvas } from './kit/lock'
 import { resolveMotion, type MotionProfile } from './kit/motionProfiles'
 import { beatMotion, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
@@ -84,23 +84,23 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const activeBeat = props.beats.find((beat) => frame >= beat.fromFrame && frame < beat.toFrame)
   const split = activeBeat?.layout === 'SPLIT'
   const camera = split ? splitCameraBox(props.aspect) : undefined
+  const hasWindow = props.beats.some(beat => beat.layout === 'WINDOW')
+  const faceState = hasWindow ? windowCameraState(props.beats, props.aspect, frame) : undefined
   setActiveCanvas(width, height)
   // The motion style he picked (props.motion), or the house motion when there is none: every device reads it.
   const profile = resolveMotion(props.motion)
   setMotionProfile(profile)
 
-  return (
-    <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
-      {props.segments.map((segment, index) => (
+  const take = props.segments.map((segment, index) => (
         <Sequence key={`segment-${index}`} from={segment.fromFrame} durationInFrames={segment.durationFrames}>
-          <AbsoluteFill style={{ overflow: 'hidden', ...(camera ?? {}) }}>
+          <AbsoluteFill style={{ overflow: 'hidden', ...(faceState?.box ?? camera ?? {}), ...(faceState ? { borderRadius: 210 * faceState.windowed, border: `${6 * faceState.windowed}px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `${10 * faceState.windowed}px ${10 * faceState.windowed}px 0 ${props.tokens.inkDeep}`, transform: `scale(${faceState.scale})`, transformOrigin: 'center center' } : {}) }}>
             <OffthreadVideo
               src={segment.src}
               trimBefore={segment.trimBeforeFrames}
               muted
               style={{
                 width: '100%', height: '100%', objectFit: 'cover',
-                ...(split ? { objectPosition: splitPlatePosition(activeBeat?.plate?.crop) } : segment.crop ? {
+                ...(split ? { objectPosition: splitPlatePosition(activeBeat?.plate?.crop) } : segment.crop && (!faceState || faceState.windowed === 0) ? {
                   transformOrigin: 'center center',
                   transform: `translate(${segment.crop.x}px, ${segment.crop.y}px) scale(${segment.crop.scale})`,
                 } : {}),
@@ -109,7 +109,11 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
             {profile?.ground.texture === 'halftone' && <AbsoluteFill style={halftoneTexture(props.tokens)} />}
           </AbsoluteFill>
         </Sequence>
-      ))}
+      ))
+
+  return (
+    <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
+      {!hasWindow && take}
       {props.beats.map((beat, beatIndex) => {
         // Beats mount by frame range with no time offset, so media nested inside a device (a recording's own
         // Sequence) runs on the same global clock as everything else (INV-ONE-CLOCK).
@@ -121,6 +125,8 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         if ((frame < beat.fromFrame || frame >= beat.toFrame) && !outgoing) return null
         const now = outgoing ? beat.toFrame - 1 : frame
         const slots = slotsFor(beat.layout, props.aspect, beat.uses.length)
+        if (beat.layout === 'WINDOW' && slots.length)
+          slots[0] = { left: 0, top: 0, width, height }
         // A style on twos steps its graphics; the take and captions stay on every frame.
         const at = profile?.onTwos ? onTwos(now, beat.fromFrame) : now
         const layerHeight = beat.layout === 'SPLIT' ? splitCameraBox(props.aspect).top : height
@@ -225,7 +231,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
           <AbsoluteFill style={fade < 1 ? { opacity: fade } : undefined}>
             <TornSeam id={beat.id} width={width} seam={layerHeight} tokens={props.tokens} />
           </AbsoluteFill></Fragment> : layer
-      })}
+      }).concat(hasWindow ? take : [])}
       {props.beats.map((beat) => (frame < beat.fromFrame || frame >= beat.toFrame ? null : (
         <AbsoluteFill key={`brand-${beat.id}`}>
           <BrandFrame props={props} beat={beat} frame={frame} />

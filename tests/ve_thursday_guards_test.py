@@ -218,6 +218,18 @@ class EngineFreeze(Held):
                                      'on': '2026-11-12', 'artifact_hash': guards.engine_sha(files)})
             self.assertEqual(self.refused(yes), [])
 
+    def test_an_engine_approval_in_the_piece_folder_binds_and_waives_nothing_else(self):
+        files = dict(guards.engine_files(), **{'apps/renderer/src/engine/chrome/EndingBand.tsx': '2' * 64})
+        approval = {'gate': 'exception', 'scope': 'engine', 'by': 'Krish', 'said': 'approve the engine change for Wednesday',
+                    'on': '2026-11-10', 'artifact_hash': guards.engine_sha(files)}
+        with mock.patch.object(guards, 'engine_files', return_value=files):
+            self.assertTrue(any('engine changed' in r for r in self.refused()))
+            (self.dir / guards.ENGINE_EXCEPTIONS).write_text(json.dumps({'approvals': [approval]}), encoding='utf-8')
+            self.assertEqual(self.refused(), [])
+        spec = copy.deepcopy(self.spec)
+        spec['approvals'] = [approval]
+        self.assertIsNone(guards.last_press(spec, {}), 'an engine approval is not a press on a cut')
+
     def test_no_engine_record_refuses_and_ve_expect_writes_it(self):
         guards.lock_path(self.dir).unlink()
         self.assertTrue(any('run ve expect' in r for r in self.refused()))
