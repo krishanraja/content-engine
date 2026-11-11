@@ -123,6 +123,12 @@ def write_card(path: Path, **fields) -> Path:
     fields.setdefault('effort', EFFORT)
     fields.setdefault('max_minutes', 40)
     fields.setdefault('max_calls', 40)
+    # Paths may come as a JSON list or as the card's own "[a, b]" text; the card always carries the text, since
+    # verify() reads it back by splitting on commas (11 Nov 2026: a list written as Python's repr kept its quotes,
+    # so no path matched and a correct build was refused as outside write_allow).
+    for key in ('write_allow', 'read'):
+        if isinstance(fields.get(key), (list, tuple)):
+            fields[key] = '[' + ', '.join(str(p) for p in fields[key]) + ']'
     text = CARD_TEMPLATE.format(**fields)
     if fields.get('format'):
         text = text.replace('\nkind:', f'\nformat: {fields["format"]}\nkind:', 1)
@@ -428,7 +434,7 @@ def dispatch(card_path: Path, background: bool = True, booked: str | None = None
 def verify(card_path: Path, cwd: Path) -> list[str]:
     """Re-run the card's acceptance outside the sandbox and check the diff stayed inside write_allow."""
     meta = parse_card(card_path)
-    allowed = [p.strip() for p in meta.get('write_allow', '').strip('[]').split(',') if p.strip()]
+    allowed = [p.strip().strip('\'"') for p in meta.get('write_allow', '').strip('[]').split(',') if p.strip()]
     problems: list[str] = []
     changed = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=all'], capture_output=True, text=True, cwd=cwd).stdout.splitlines()
     for line in changed:
