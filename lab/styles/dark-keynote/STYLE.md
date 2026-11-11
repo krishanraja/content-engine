@@ -29,7 +29,7 @@ Not Swiss Kinetic (no grid, no counting). Not The Ladder (no object). Never two 
 | Numbers | cream into a warm grey; muted for the expected value |
 | The answer (=, the branches, MORE?) | mint, with a mint glow |
 | Label and credit | cream-soft, muted |
-| Series name in the dress | the series colour |
+| Series name in the dress (wide only; none on vertical, Krish 2026-11-11) | the series colour |
 
 **Skin record.** The keynote's white-light accent is cream; its answer colour is mint.
 

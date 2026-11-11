@@ -81,9 +81,9 @@ export function grain(env, ctx, t) {
   ctx.restore()
 }
 
-/** The masthead mark on its tile, at the theme's anchor (72, 150 on the tall canvas). */
+/** The masthead mark on its tile. Wide only: never on vertical video (Ruling, Krish, 2026-11-11). */
 export function mark(env, ctx, alpha = 1) {
-  if (!env.markImg?.complete || alpha <= 0) return
+  if (env.shape === 'tall' || !env.markImg?.complete || alpha <= 0) return
   const tall = env.shape === 'tall'
   const x = tall ? 72 : 96, y = tall ? 228 : 64, size = tall ? 120 : 104
   ctx.save(); ctx.globalAlpha = alpha
@@ -135,13 +135,18 @@ export function captions(env, ctx, t, { y } = {}) {
   return page
 }
 
-/** The frame's dress: the masthead wordmark top left, the series name top right in its colour (Mon 9 Nov). */
+/** The frame's dress: the masthead wordmark top left, the series name top right in its colour (Mon 9 Nov). Wide only:
+ *  vertical video carries no wordmark or series badge (Ruling, Krish, 2026-11-11: "I don't think they're necessary and
+ *  should be permanently removed from all templates"). check.mjs fails a tall cut that draws one. */
 export function dress(env, ctx, alpha = 1) {
+  if (env.shape === 'tall') return
   if (!env.logoImg?.complete || alpha <= 0) return
   const tall = env.shape === 'tall', c = env.skin.colors
   // Tall: below Instagram's profile account row (270 px) and the grid crop (240 px), config/channel-safe-zones.json.
   const x = tall ? 72 : 96, y = tall ? 292 : 64, w = tall ? 330 : 360
   const im = env.logoImg, h = (w * im.height) / im.width
   ctx.save(); ctx.globalAlpha = alpha; ctx.drawImage(im, x, y, w, h); ctx.restore()
+  // Record the wordmark's box too, so check.mjs can refuse anything drawn over or under it.
+  if (alpha > 0.5) env.layout.push({ text: '(wordmark)', role: 'dress', size: Math.round(h), box: [x, y, Math.round(w), Math.round(h)] })
   text(env, ctx, env.skin.seriesName, tall ? 860 : env.W - 96, y + h * 0.82, { font: 'IBM Plex Mono', size: tall ? 40 : 36, weight: 600, color: c.channel, align: 'right', role: 'dress', alpha })
 }
