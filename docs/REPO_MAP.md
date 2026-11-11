@@ -119,6 +119,8 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/content-ideas/archive-stale`
 - `/api/content-ideas/cluster`
 - `/api/content-ideas/research-topic`
+- `/api/content-ideas/sessions`
+- `/api/content-ideas/store`
 - `/api/content-ideas/synthesize`
 - `/api/content-opportunities/refresh`
 - `/api/content-seed-candidates`
@@ -1378,6 +1380,36 @@ The YouTube title and description for a piece's video, and the title and
 - `function packagingCorrection(answer: PackageAnswer, lint: AnswerLint): string`
 - `function packagingRequest(o: { idea: string | null thesis: string | null source: string materialsBlock?: string thumbna…`
 
+### `apps/control-plane/api/_pieceStore.ts`
+
+- `const MATERIAL_KINDS`
+- `type MaterialKind = (typeof MATERIAL_KINDS)[number]`
+- `const REPORT_KINDS`
+- `type ReportKind = (typeof REPORT_KINDS)[number]`
+- `const WORKING_SET_MAX`
+- `const STORE_TEXT_MAX`
+- `const STORE_FILE_MAX`
+- `const UUID`
+- `const SESSION_ID`
+- `class StoreError`
+- `interface StoreDb`
+- `type Scope`
+- `function parseScope(q: Body): Scope`
+- `function writerOf(bearer: boolean, body: Body): string`
+- `interface ReportInput`
+- `function parseReport(body: Body): ReportInput`
+- `async function report(db: StoreDb, input: ReportInput, by: string): Promise<Body>`
+- `interface MaterialInput`
+- `async function addToWorkingSet(db: StoreDb, pieceId: string, material: Material, tries = 6): Promise<{ ok: true; materi…`
+- `async function removeFromWorkingSet(db: StoreDb, pieceId: string, materialId: string, tries = 6): Promise<{ ok: true; m…`
+- `async function addText(db: StoreDb, body: Body, bearer: boolean, by: string): Promise<Body>`
+- `async function fileType(name: unknown): Promise<{ ext: string; contentType: string }>`
+- `async function uploadUrl(db: StoreDb, body: Body): Promise<Body>`
+- `async function confirmFile(db: StoreDb, body: Body, bearer: boolean, by: string, fetcher: Fetcher = fetch as unknown as…`
+- `async function archive(db: StoreDb, id: string, by: string, reason: string | null): Promise<Body>`
+- `async function listing(db: StoreDb, scope: Scope, opts: { all?: boolean; archived?: boolean } = {}): Promise<Body>`
+- `async function readMaterial(db: StoreDb, id: string): Promise<{ kind: 'text'; body: Body } | { kind: 'redirect'; url: s…`
+
 ### `apps/control-plane/api/_pool.ts`
 
 Read-only client for the CTRL shared headlines pool (portfolio hive mind).
@@ -2226,6 +2258,21 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `function viewEtag(view: Record<string, unknown>): string`
 - `function notModified(ifNoneMatch: string | string[] | undefined, etag: string): boolean`
 
+### `apps/control-plane/api/board/_writeBack.ts`
+
+What every prompt the board copies out says about reporting back, and what the board shows of the sessions and the
+
+- `const WRITE_BACK_HEAD`
+- `interface WriteBackTarget`
+- `function stepKey(raw: string | null | undefined): string`
+- `function writeBack(t: WriteBackTarget): string`
+- `function withWriteBack<T extends DayLike>(week: string, days: T[]): T[]`
+- `interface ViewSession`
+- `interface ViewMaterial`
+- `interface Overlay`
+- `function attachOverlay<T extends { day: string; piece_id: string | null }>(week: string, days: T[], overlay: Overlay | …`
+- `async function readOverlay(db: Rpc, week: string, pieceIds: string[]): Promise<Overlay | null>`
+
 ### `apps/control-plane/api/board/_yes.ts`
 
 One yes anywhere (Ruling, Krish, 2026-11-02): his answer for each day, read from the board's picks. A day's answer is
@@ -2453,6 +2500,17 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 - `const config`
+
+### `apps/control-plane/api/content-ideas/sessions.ts`
+
+- `function createSessionsHandler(getDb: () => Promise<StoreDb>)`
+- `export default createSessionsHandler(async () => (await import('../_supabas`
+
+### `apps/control-plane/api/content-ideas/store.ts`
+
+- `const config`
+- `function createStoreHandler(getDb: () => Promise<StoreDb>)`
+- `export default createStoreHandler(async () => (await import('../_supabase.j`
 
 ### `apps/control-plane/api/content-ideas/synthesize.ts`
 

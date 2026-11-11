@@ -66,7 +66,7 @@ def has_ideas(page: str) -> bool:
 
 
 def view_has_ideas(view: dict) -> bool:
-    """Whether the week's view (contract 1.1.0) carries options on each publishing day, Monday, Wednesday and Friday."""
+    """Whether the week's view (contract 1.2.0) carries options on each publishing day, Monday, Wednesday and Friday."""
     days = {d.get('day'): d for d in view.get('days') or [] if isinstance(d, dict)}
     return all(isinstance(days.get(k), dict) and len(days[k].get('options') or []) > 0 for k in ('mon', 'wed', 'fri'))
 

@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.1.0",
+ "contract_version": "1.2.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -209,7 +209,69 @@
      "href": "https://www.youtube.com/shorts/x"
     }
    ],
-   "yes": null
+   "yes": null,
+   "sessions": [
+    {
+     "session_id": "board-kxqp",
+     "label": null,
+     "surface": "claude-code",
+     "by": "Claude Code",
+     "state": "working",
+     "step": "board",
+     "doing": "Drafting the 90-second script",
+     "started_at": "2026-11-16T08:10:00Z",
+     "last_at": "2026-11-16T08:50:00Z"
+    },
+    {
+     "session_id": "look-tzrw",
+     "label": null,
+     "surface": "claude-ai",
+     "by": "claude.ai",
+     "state": "done",
+     "step": "look",
+     "doing": "Filed two frames for the look",
+     "started_at": "2026-11-16T07:00:00Z",
+     "last_at": "2026-11-16T07:40:00Z"
+    }
+   ],
+   "materials": [
+    {
+     "id": "11111111-2222-4333-8444-555555555555",
+     "kind": "screenshot",
+     "title": "Screen grab one",
+     "size": 182000,
+     "added_by": "Krish",
+     "at": "2026-11-15T21:00:00Z",
+     "thumbnail": "11111111-2222-4333-8444-555555555555",
+     "role": "inspiration",
+     "version": 1,
+     "where": "piece"
+    },
+    {
+     "id": "22222222-3333-4444-8555-666666666666",
+     "kind": "screenshot",
+     "title": "Screen grab two",
+     "size": 201000,
+     "added_by": "Krish",
+     "at": "2026-11-15T21:01:00Z",
+     "thumbnail": "22222222-3333-4444-8555-666666666666",
+     "role": "inspiration",
+     "version": 1,
+     "where": "piece"
+    },
+    {
+     "id": "33333333-4444-4555-8666-777777777777",
+     "kind": "corpus",
+     "title": "Oracle research corpus",
+     "size": 48000,
+     "added_by": "Claude Code",
+     "at": "2026-11-15T20:00:00Z",
+     "thumbnail": null,
+     "role": "research",
+     "version": 2,
+     "where": "piece"
+    }
+   ]
   },
   {
    "day": "tue",
@@ -325,7 +387,6 @@
         "week": "2026-11-16",
         "option_id": "povteach",
         "format": "Meme video, 9:16",
-        "source": "",
         "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
         "idea": {
          "verdict": "approve",
@@ -358,7 +419,6 @@
         "week": "2026-11-16",
         "option_id": "povteach",
         "format": "Meme video, 9:16",
-        "source": "",
         "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
         "idea": {
          "verdict": "improve",
@@ -390,7 +450,6 @@
         "week": "2026-11-16",
         "option_id": "povteach",
         "format": "Meme video, 9:16",
-        "source": "",
         "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
         "idea": {
          "verdict": "reject",
@@ -422,7 +481,6 @@
         "week": "2026-11-16",
         "option_id": "povteach",
         "format": "Meme video, 9:16",
-        "source": "",
         "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
         "idea": {
          "verdict": "next_week",
@@ -441,7 +499,22 @@
    ],
    "comments": [],
    "posted": [],
-   "yes": null
+   "yes": null,
+   "sessions": [],
+   "materials": [
+    {
+     "id": "44444444-5555-4666-8777-888888888888",
+     "kind": "image",
+     "title": "Tuesday reference",
+     "size": 90000,
+     "added_by": "Krish",
+     "at": "2026-11-15T19:00:00Z",
+     "thumbnail": "44444444-5555-4666-8777-888888888888",
+     "role": "inspiration",
+     "version": 1,
+     "where": "day"
+    }
+   ]
   },
   {
    "day": "wed",
@@ -738,7 +811,9 @@
    ],
    "comments": [],
    "posted": [],
-   "yes": null
+   "yes": null,
+   "sessions": [],
+   "materials": []
   },
   {
    "day": "thu",
@@ -830,7 +905,6 @@
         "week": "2026-11-16",
         "option_id": "lookalikes",
         "format": "Meme video, 9:16",
-        "source": "",
         "copy_sha256": "0c915504389eebdd22705f239e5dc94916c298ecbcced6da166bbd35f61a894a",
         "idea": {
          "verdict": "approve",
@@ -863,7 +937,6 @@
         "week": "2026-11-16",
         "option_id": "lookalikes",
         "format": "Meme video, 9:16",
-        "source": "",
         "copy_sha256": "0c915504389eebdd22705f239e5dc94916c298ecbcced6da166bbd35f61a894a",
         "idea": {
          "verdict": "improve",
@@ -895,7 +968,6 @@
         "week": "2026-11-16",
         "option_id": "lookalikes",
         "format": "Meme video, 9:16",
-        "source": "",
         "copy_sha256": "0c915504389eebdd22705f239e5dc94916c298ecbcced6da166bbd35f61a894a",
         "idea": {
          "verdict": "reject",
@@ -927,7 +999,6 @@
         "week": "2026-11-16",
         "option_id": "lookalikes",
         "format": "Meme video, 9:16",
-        "source": "",
         "copy_sha256": "0c915504389eebdd22705f239e5dc94916c298ecbcced6da166bbd35f61a894a",
         "idea": {
          "verdict": "next_week",
@@ -946,7 +1017,9 @@
    ],
    "comments": [],
    "posted": [],
-   "yes": null
+   "yes": null,
+   "sessions": [],
+   "materials": []
   },
   {
    "day": "fri",
@@ -1119,7 +1192,9 @@
    "options": [],
    "comments": [],
    "posted": [],
-   "yes": null
+   "yes": null,
+   "sessions": [],
+   "materials": []
   },
   {
    "day": "sat",
@@ -1148,7 +1223,7 @@
     {
      "kind": "prompt",
      "label": "Copy prompt for Growth",
-     "prompt": "Make the Saturday 2026-11-21 good-news post goodnews from the 5 stories on the content-engine board (week of 2026-11-16), to docs/CAROUSEL-STANDARD.md."
+     "prompt": "Make the Saturday 2026-11-21 good-news post goodnews from the 5 stories on the content-engine board (week of 2026-11-16), to docs/CAROUSEL-STANDARD.md.\n\nKeep the board current as you work (week 2026-11-16 and day sat, step post). Krish sees…"
     },
     {
      "kind": "prompt",
@@ -1242,7 +1317,9 @@
    ],
    "comments": [],
    "posted": [],
-   "yes": null
+   "yes": null,
+   "sessions": [],
+   "materials": []
   }
  ],
  "yours": [
@@ -1544,7 +1621,8 @@
  },
  "sources": {
   "ideas": true,
-  "runs": true
+  "runs": true,
+  "store": true
  },
  "revision": 7
 }

@@ -10,6 +10,7 @@ import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
 import { dayComments, dayPieces, dayPosted, dayYes, materialPress, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
+import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
 // pieces' making records, his presses on the board, the week's plan files on main and the runs on GitHub. Nothing is a
@@ -59,16 +60,21 @@ export interface DayView {
   path?: DayPath
   /** What the day's piece has rendered (cuts, thumbnails), newest first; ids only, signed at /api/board/<week>/media/<id> (_media.ts). */
   media: MediaItem[]
-  /** Contract 1.1.0 (_viewExtras.ts): every piece on the day, the day's options with their presses, his comments, what
+  /** Contract 1.2.0 (_viewExtras.ts): every piece on the day, the day's options with their presses, his comments, what
    *  Growth posted and his yes. */
   pieces: ViewPiece[]
   options: ViewOption[]
   comments: ViewComment[]
   posted: ViewPosted[]
   yes: ViewYes | null
+  /** The sessions reporting on the day's piece or the day, working first (_writeBack.ts; contract 1.1.0). */
+  sessions: ViewSession[]
+  /** What is on file for the day's piece and the day in the piece materials store, newest first; read through
+   *  /api/content-ideas/store?op=read&id=<id> (api/_pieceStore.ts; contract 1.1.0). */
+  materials: ViewMaterial[]
 }
-/** What a day's next step is built from, before the parts every day carries (media, and 1.1.0's extras). */
-export type DayCore = Omit<DayView, 'media' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes'>
+/** What a day's next step is built from, before the parts every day carries (media, and 1.2.0's extras). */
+export type DayCore = Omit<DayView, 'media' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials'>
 export type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'
 export const PATH: Array<{ key: PathKey; label: string }> = [
   { key: 'research', label: 'Research' }, { key: 'story', label: 'Story' }, { key: 'look', label: 'Look' },
@@ -127,6 +133,8 @@ export interface ViewInputs {
   ticks?: Array<{ tick_id: string; body: Body; updated_by: string }>
   /** The week's change signal (board_signal). */
   revision?: number | null
+  /** The sessions and the materials store for the week's pieces and days (board_overlay; _writeBack.ts). */
+  overlay?: Overlay | null
 }
 
 const LOCK_SIGNED = /^Signed by Krish\b[^:\n]*:\s*"(.+)"\s*,\s*(\d{4}-\d{2}-\d{2})\b/
@@ -143,7 +151,7 @@ const short = (week: string, day: PostedDay) => {
   return `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getUTCDay()]} ${d.getUTCDate()}`
 }
 const boardTab = (week: string, tab: string) => `/board/${week}#${tab}`
-/** A day's options on the live board (the day's `options`, contract 1.1.0); the archive page reads it as the day. */
+/** A day's options on the live board (the day's `options`, contract 1.2.0); the archive page reads it as the day. */
 const optionsTab = (week: string, day: PostedDay) => boardTab(week, `options-${day}`)
 const running = (r?: RunInfo) => Boolean(r && (r.state === 'queued' || r.state === 'running'))
 const GH = (job: JobName) => `GitHub · ${job}.yml`
@@ -391,14 +399,14 @@ function briefOf(i: ViewInputs, d: DayView): PieceBrief {
 /** The whole week's view from its inputs. Pure: the tests build every state from here. */
 export function buildView(i: ViewInputs): WeekView {
   const byDay = new Map(piecesByDay(i.week, i.pieces).map(p => [p.day, p.piece]))
-  const days: DayView[] = VIEW_DAYS.map(d => {
+  const days = attachOverlay(i.week, VIEW_DAYS.map((d): Omit<DayView, 'sessions' | 'materials'> => {
     const piece = byDay.get(d), date = dayDate(i.week, d)
     const shown = piece ? String(piece.id).toLowerCase() : null
     return { ...(SERIES_DAYS.includes(d) ? seriesDay(i, d, piece) : offDay(i, d, piece)), media: dayMedia(piece),
       pieces: dayPieces(i.pieces, date, shown),
       options: SERIES_DAYS.includes(d) ? seriesOptions(i, d, Boolean(piece)) : offdayOptions(i, d),
       comments: dayComments(i.comments, d), posted: dayPosted(i.ticks, d), yes: dayYes(i.picks, d) }
-  })
+  }), i.overlay ?? null)
   for (const d of days) {
     if (d.who === 'done' || d.actions.some(a => a.kind === 'prompt' && /Claude/.test(a.label))) continue
     d.actions.push({ kind: 'prompt', label: 'Copy Claude prompt', prompt: backupPrompt(i.week, d) })
@@ -406,6 +414,8 @@ export function buildView(i: ViewInputs): WeekView {
   }
   // His thoughts on any day not done, pinned to the step it is on, as the desk's "Add your thoughts" saved them.
   for (const d of days) if (d.who !== 'done') d.actions.push(thoughtPress(d.day, d.path?.current || 'day'))
+  // Every Claude and Growth prompt says how the session reports back to the board, with no key in it (_writeBack.ts).
+  withWriteBack(i.week, days)
   const yours: WeekView['yours'] = days.filter(d => d.who === 'you' || d.who === 'stuck').flatMap((d): WeekView['yours'] => (d.reviews?.length
     ? d.reviews.map(r => ({ key: `${d.day}-${r.option.id}`, day: d.day, label: `${d.label} · ${r.option.id}`, next: 'The revised version is back. Approve it, improve it again or reject it', actions: d.actions, review: r }))
     : [{ key: d.day, day: d.day, label: d.label, next: d.next, actions: d.actions }]))
@@ -418,7 +428,7 @@ export function buildView(i: ViewInputs): WeekView {
   for (const r of Object.values(i.runs)) if (r) moved.push({ at: r.updated_at, text: `${r.workflow}: ${r.state}` })
   moved.sort((a, b) => b.at.localeCompare(a.at))
   return { contract_version: VIEW_CONTRACT_VERSION, week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
-    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0 }, revision: i.revision ?? null }
+    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay) }, revision: i.revision ?? null }
 }
 
 /** Every rule the view must keep (PLAN.md): a day not done has a next step, and that step has at least one action. */
@@ -492,6 +502,8 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     db.from('board_signal').select('revision').eq('week', week).maybeSingle().then(r => (r.error || !r.data ? null : Number(r.data.revision)), () => null),
     ...SERIES_DAYS.map(d => fetchText(fetcher, `${RAW}/docs/plans/${week}-week/${d}-research.md`).then(t => Boolean(t))),
   ])
+  // Who is working on each piece and what is on file for it (the piece materials store); null when it cannot be read.
+  const overlay = await readOverlay(db as never, week, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
   let formats: ViewInputs['formats'] = { script: [], production: [] }
   try {
     const f = styleText ? JSON.parse(styleText).formats : null
@@ -511,6 +523,6 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   return buildView({ week, now, pieces: pieces as Body[], picks: picks as ViewInputs['picks'], queue: queue as ViewInputs['queue'],
     history: history as ViewInputs['history'], ideas, runs, north_star: north,
     locks: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, locks[k] as string | null])),
-    research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, inspiration,
+    research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, inspiration, overlay,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null })
 }
