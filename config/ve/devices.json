@@ -234,6 +234,19 @@
         "mark",
         "exit"
       ]
+    },
+    "ladder_stage": {
+      "verbs": [
+        "enter",
+        "count_to",
+        "add",
+        "draw",
+        "move",
+        "fill",
+        "highlight",
+        "carry",
+        "exit"
+      ]
     }
   }
 }

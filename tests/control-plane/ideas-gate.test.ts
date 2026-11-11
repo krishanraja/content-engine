@@ -5,7 +5,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { buildView, viewProblems, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { fillPress, type PressAction } from '../../apps/control-plane/api/board/_viewExtras'
 import { validBody, hisOnlyRefusal } from '../../apps/control-plane/api/board/_contracts'
-import { HELD_CHANGED, HELD_TITLE, OUTCOMES, approvedWhen, optionSha } from '../../apps/control-plane/api/board/_gate'
+import { HELD_CHANGED, HELD_TITLE, OUTCOMES, approvedWhen, asSentence, optionSha } from '../../apps/control-plane/api/board/_gate'
 import { afterPress, ideaReport, placePick, preparePress, PressError } from '../../apps/control-plane/api/board/_presses'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler'
 import { approval } from './_approvals'
@@ -46,7 +46,7 @@ describe('the view draws only what his approval holds, and names every other pie
     // Wednesday's piece is on its day in the database, but nothing he pressed put it there.
     expect(wed.piece_id).toBeNull()
     expect(wed.pieces).toEqual([])
-    expect(wed.held).toEqual([{ piece_id: WED, option: null, title: HELD_TITLE, text: 'Piece db9f. It says one thing.. Nothing you pressed on the ideas board put it on this day.' }])
+    expect(wed.held).toEqual([{ piece_id: WED, option: null, title: HELD_TITLE, text: 'Piece db9f. It says one thing. Nothing you pressed on the ideas board put it on this day.' }])
     expect(wed.who).toBe('you')
     expect(wed.next).toMatch(/^One idea is held: not approved by you/)
     // One press approves exactly that piece for exactly that day, as an Approve on the ideas board does.
@@ -110,6 +110,12 @@ describe('the view draws only what his approval holds, and names every other pie
     const queued = day(buildView(inputs({ queue: [{ doc_id: 'mon-2', updated_by: 'Krish', body: { pick: 'mon-2', use: 'track_over_time', queued: true, at: '2026-11-09T13:06:22Z' } }] })), 'mon').options[1]
     expect(queued.outcome).toMatchObject({ id: 'trend', label: OUTCOMES.trend })
     expect(Object.values(OUTCOMES)).toEqual(['Approved', 'Filed for later', 'Rejected and learnt from', 'Saved as a trend for a wider piece', 'Improved for a future piece'])
+  })
+
+  it('ends a held line\'s title with one full stop, never two', () => {
+    expect(asSentence('Good things AI did this week.')).toBe('Good things AI did this week.')
+    expect(asSentence('Which one started as an AI demo?')).toBe('Which one started as an AI demo?')
+    expect(asSentence(' Oracle borrows to build ')).toBe('Oracle borrows to build.')
   })
 
   it('says his time of approval in his own time zone', () => {

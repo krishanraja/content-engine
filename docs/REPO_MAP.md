@@ -2107,6 +2107,7 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `function goes(outcome: Outcome, week: string, day: string, offday = false): string`
 - `async function readApprovals(db: SupabaseClient, week: string): Promise<Approval[] | null>`
 - `function approvalFor(approvals: Approval[] | null, piece: Body, date: string): Approval | null`
+- `function asSentence(title: string): string`
 - `interface Held`
 - `const HELD_TITLE`
 - `const HELD_CHANGED`
@@ -4164,6 +4165,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/kinetic_stat/state.ts`
 
 - `function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/ladder_stage/index.tsx`
+
+- `function buildSet(p:DeviceProps)`
+- `function Device(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/ladder_stage/schema.ts`
+
+- `const Params`
+
+### `apps/renderer/src/engine/devices/ladder_stage/state.ts`
+
+- `function ladderState(object:EngineObject,events:readonly EngineEvent[],frame:number)`
 
 ### `apps/renderer/src/engine/devices/leaderboard/index.tsx`
 

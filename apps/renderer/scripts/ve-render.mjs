@@ -154,6 +154,12 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
       await copyFile(local, target)
     }
   }
+  if (inputProps.objects.some(object => object.device === 'ladder_stage')) {
+    // The Ladder's house paper is one plate, staticFile('plates/two-passports/paper.jpg'), whatever the cut's format.
+    const targetDir = path.join(publicDir, 'plates', 'two-passports')
+    await mkdir(targetDir, { recursive: true })
+    await copyFile(path.join(repositoryRoot, 'assets', 'plates', 'two-passports', 'paper.jpg'), path.join(targetDir, 'paper.jpg'))
+  }
 }
 
 async function main() {
