@@ -50,6 +50,19 @@ function full(): ViewInputs {
     research_files: { wed: true },
     formats: { script: [look('fry-explainer', 'The Hannah Fry explainer')], production: [look('face-with-proof', 'Face-led'), look('kinetic-movement', 'Everything moves')] },
     inspiration: { cards: [{ id: 'c1', name: 'clip.mp4', words: 'I like how it is lit.', saved: '2026-11-01T00:00:00Z' }], unread: 3 },
+    // Two sessions on Monday's piece, two screen grabs and a corpus on it, and a picture on Tuesday with no piece yet (1.1.0).
+    overlay: {
+      sessions: [
+        { session_id: 'board-kxqp', scope: MON, piece_id: MON, day: 'mon', surface: 'claude-code', label: null, by: 'Claude Code', step: 'board', doing: 'Drafting the 90-second script', last_kind: 'progress', state: 'working', started_at: '2026-11-16T08:10:00Z', last_at: '2026-11-16T08:50:00Z', lease_until: '2026-11-16T09:20:00Z', events: 4 },
+        { session_id: 'look-tzrw', scope: MON, piece_id: MON, day: 'mon', surface: 'claude-ai', label: null, by: 'claude.ai', step: 'look', doing: 'Filed two frames for the look', last_kind: 'done', state: 'done', started_at: '2026-11-16T07:00:00Z', last_at: '2026-11-16T07:40:00Z', lease_until: '2026-11-16T07:40:00Z', events: 3 },
+      ],
+      materials: [
+        { id: '11111111-2222-4333-8444-555555555555', scope: MON, piece_id: MON, week: WEEK, day: 'mon', key: 'sha:x', version: 1, kind: 'screenshot', role: 'inspiration', title: 'Screen grab one', bytes: 182000, content_type: 'image/png', storage: 'bucket', added_by: 'Krish', at: '2026-11-15T21:00:00Z' },
+        { id: '22222222-3333-4444-8555-666666666666', scope: MON, piece_id: MON, week: WEEK, day: 'mon', key: 'sha:y', version: 1, kind: 'screenshot', role: 'inspiration', title: 'Screen grab two', bytes: 201000, content_type: 'image/png', storage: 'bucket', added_by: 'Krish', at: '2026-11-15T21:01:00Z' },
+        { id: '33333333-4444-4555-8666-777777777777', scope: MON, piece_id: MON, week: WEEK, day: 'mon', key: 'corpus', version: 2, kind: 'corpus', role: 'research', title: 'Oracle research corpus', bytes: 48000, content_type: null, storage: 'text', added_by: 'Claude Code', at: '2026-11-15T20:00:00Z' },
+        { id: '44444444-5555-4666-8777-888888888888', scope: `day:${WEEK}/tue`, piece_id: null, week: WEEK, day: 'tue', key: 'sha:z', version: 1, kind: 'image', role: 'inspiration', title: 'Tuesday reference', bytes: 90000, content_type: 'image/jpeg', storage: 'bucket', added_by: 'Krish', at: '2026-11-15T19:00:00Z' },
+      ],
+    },
   }
 }
 
@@ -144,14 +157,17 @@ describe('the Publish Board view contract', () => {
       if (v) s['x-contract-version'] = v
       return s
     }
-    const added = next(s => { s.$defs.day.properties.checklist = { type: 'array' } }, '1.1.0')
+    // The next minor and the next major of whatever version the schema is on now.
+    const [ma, mi] = String(SCHEMA['x-contract-version']).split('.').map(Number)
+    const minor = `${ma}.${mi + 1}.0`, major = `${ma + 1}.0.0`
+    const added = next(s => { s.$defs.day.properties.checklist = { type: 'array' } }, minor)
     expect(compare(base, added).breaking).toEqual([])
     expect(judge(base, added).ok).toBe(true)
     expect(judge(base, next(s => { s.$defs.day.properties.checklist = { type: 'array' } })).ok).toBe(false)
-    const removed = next(s => { delete s.$defs.day.properties.next; s.$defs.day.required = s.$defs.day.required.filter((k: string) => k !== 'next') }, '1.1.0')
+    const removed = next(s => { delete s.$defs.day.properties.next; s.$defs.day.required = s.$defs.day.required.filter((k: string) => k !== 'next') }, minor)
     expect(compare(base, removed).breaking.join()).toMatch(/next: removed or renamed/)
     expect(judge(base, removed).ok).toBe(false)
-    expect(judge(base, next(s => { delete s.$defs.day.properties.next }, '2.0.0')).ok).toBe(true)
+    expect(judge(base, next(s => { delete s.$defs.day.properties.next }, major)).ok).toBe(true)
     expect(compare(base, next(s => { s.$defs.day.properties.title.type = ['string', 'null'] })).breaking.join()).toMatch(/title: may now be null/)
     expect(compare(base, next(s => { s.$defs.action.properties.kind.enum.push('teleprompter') })).breaking).toEqual([])
     expect(compare(base, next(s => { s.$defs.dayKey.enum.push('sun') })).breaking.join()).toMatch(/sun/)

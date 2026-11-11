@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://content.krishraja.com/api/board/view.schema.json",
   "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
-  "x-contract-version": "1.0.0",
+  "x-contract-version": "1.1.0",
   "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
   "type": "object",
   "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources"],
@@ -46,7 +46,7 @@
     "who": { "type": "string", "enum": ["you", "engine", "growth", "stuck", "done"], "x-open": true },
     "day": {
       "type": "object",
-      "required": ["day", "date", "label", "kind", "series", "title", "piece_id", "stop", "who", "next", "runs_on", "actions", "detail", "media"],
+      "required": ["day", "date", "label", "kind", "series", "title", "piece_id", "stop", "who", "next", "runs_on", "actions", "detail", "media", "sessions", "materials"],
       "properties": {
         "day": { "$ref": "#/$defs/dayKey" },
         "date": { "$ref": "#/$defs/date" },
@@ -67,7 +67,40 @@
         },
         "reviews": { "type": "array", "items": { "$ref": "#/$defs/review" } },
         "path": { "$ref": "#/$defs/path" },
-        "media": { "type": "array", "items": { "$ref": "#/$defs/media" } }
+        "media": { "type": "array", "items": { "$ref": "#/$defs/media" } },
+        "sessions": { "type": "array", "items": { "$ref": "#/$defs/session" }, "x-since": "1.1.0", "description": "Who is working on the day's piece (or the day) and what each said last, working first, from each session's reports (POST /api/content-ideas/sessions)." },
+        "materials": { "type": "array", "items": { "$ref": "#/$defs/material" }, "x-since": "1.1.0", "description": "What is on file for the day's piece and the day in the piece materials store, newest first. No text and no link: one is read at /api/content-ideas/store?op=read&id=<id>." }
+      }
+    },
+    "session": {
+      "type": "object",
+      "required": ["session_id", "label", "surface", "by", "state", "step", "doing", "started_at", "last_at"],
+      "properties": {
+        "session_id": { "type": "string" },
+        "label": { "type": ["string", "null"] },
+        "surface": { "type": ["string", "null"] },
+        "by": { "type": "string" },
+        "state": { "type": "string", "enum": ["working", "blocked", "quiet", "done", "ended"], "x-open": true },
+        "step": { "type": ["string", "null"] },
+        "doing": { "type": ["string", "null"] },
+        "started_at": { "type": "string" },
+        "last_at": { "type": "string" }
+      }
+    },
+    "material": {
+      "type": "object",
+      "required": ["id", "kind", "title", "size", "added_by", "at", "thumbnail", "role", "version", "where"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string", "enum": ["screenshot", "image", "pdf", "corpus", "research", "paste", "link", "file", "output", "storyboard", "note", "video", "audio", "other"], "x-open": true },
+        "title": { "type": "string" },
+        "size": { "type": "integer" },
+        "added_by": { "type": "string" },
+        "at": { "type": ["string", "null"] },
+        "thumbnail": { "type": ["string", "null"], "description": "The material's own id when it is a picture: /api/content-ideas/store?op=read&id=<id> serves it." },
+        "role": { "type": ["string", "null"] },
+        "version": { "type": "integer" },
+        "where": { "type": "string", "enum": ["piece", "day"], "x-open": true }
       }
     },
     "action": {

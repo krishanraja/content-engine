@@ -35,5 +35,31 @@ class CardCleanupNeverFollowsLinks(unittest.TestCase):
             self.assertTrue((target / 'typescript' / 'package.json').exists(), 'the link target was emptied')
 
 
+
+class WriteAllowListsMatch(unittest.TestCase):
+    """11 Nov 2026: fields written as JSON lists became Python's repr in the card, quotes and all, so verify() matched
+    no path and refused a correct Codex build (ve-style-0-three-and-moves) as outside write_allow."""
+
+    def test_a_list_and_the_card_text_both_allow_their_paths(self):
+        from velib import cards
+        for write_allow in (['apps/renderer/package.json', 'lab/moves/**'], '[apps/renderer/package.json, lab/moves/**]'):
+            with self.subTest(form=type(write_allow).__name__), tempfile.TemporaryDirectory() as tmp:
+                tmp = Path(tmp)
+                card = cards.write_card(tmp / 'c.md', card_id='c', kind='code', title='t', goal='g', contract='c',
+                                        acceptance='python3 -c "pass"', write_allow=write_allow,
+                                        read=['a/**', 'b.md'], cwd=str(tmp / 'wt'))
+                text = card.read_text(encoding='utf-8')
+                self.assertIn('write_allow: [apps/renderer/package.json, lab/moves/**]', text)
+                self.assertIn('read: [a/**, b.md]', text)
+                wt = tmp / 'wt'
+                (wt / 'apps' / 'renderer').mkdir(parents=True)
+                (wt / 'lab' / 'moves' / 'x').mkdir(parents=True)
+                subprocess.run(['git', 'init', '-q'], cwd=wt, check=True)
+                (wt / 'apps' / 'renderer' / 'package.json').write_text('{}')
+                (wt / 'lab' / 'moves' / 'x' / 'move.mjs').write_text('')
+                self.assertEqual([p for p in cards.verify(card, wt) if 'write_allow' in p], [])
+                (wt / 'stray.txt').write_text('')
+                self.assertIn('outside write_allow: stray.txt', cards.verify(card, wt))
+
 if __name__ == '__main__':
     unittest.main()

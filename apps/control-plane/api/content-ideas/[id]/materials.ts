@@ -4,6 +4,7 @@ import { supabase } from '../../_supabase.js'
 import { MaterialsFull, pathId, readMaterials, withMaterial, type Material } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
 import { operatorAttribution } from '../../_editEvents.js'
+import { StoreError, addToWorkingSet, listing, removeFromWorkingSet, type StoreDb } from '../../_pieceStore.js'
 
 // /api/content-ideas/:id/materials
 //   GET    — list the background materials attached to a piece.
@@ -14,6 +15,15 @@ import { operatorAttribution } from '../../_editEvents.js'
 // the "corpus gets lost" problem: the research you paste/link to a piece is now
 // stored durably, surfaced in the composer, used to ground Cleo's writing, and
 // folded into the Google Doc on Save Draft.
+//
+// Since 2026-11-11 meta.materials is the working set the writers ground on, and the
+// piece materials store is where nothing is ever lost (api/_pieceStore.ts): every
+// change to meta.materials is filed there by a database trigger in the same write,
+// a DELETE here takes a material off the working set only (the store keeps it,
+// archive only), and both writes are guarded on the row's updated_at, so a write
+// landing in between (a making record, another session) is read again, never
+// overwritten. GET also carries `store`: everything on record for the piece, its
+// day and its week (GET /api/content-ideas/store?piece=<id> has the whole listing).
 
 const MAX_CONTENT = 400_000 // ~400KB of corpus per material is plenty
 
@@ -31,7 +41,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const materials = readMaterials(meta)
 
   if (req.method === 'GET') {
-    return res.status(200).json({ ok: true, materials })
+    const store = await listing(supabase as unknown as StoreDb, { piece_id: String(id).toLowerCase() }).catch(() => null)
+    return res.status(200).json({ ok: true, materials, store: store ? store.materials : null })
   }
 
   if (req.method === 'POST') {
@@ -67,29 +78,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       bytes: kind === 'link' ? url.length : content.length,
       at: new Date().toISOString(),
     }
-    let next: Material[]
     try {
-      next = withMaterial(materials, material)
+      withMaterial(materials, material)
     } catch (e) {
       if (e instanceof MaterialsFull) return res.status(409).json({ ok: false, error: e.message })
       throw e
     }
-    const { error: upErr } = await supabase.from('content_ideas')
-      .update({ meta: { ...meta, materials: next }, updated_at: new Date().toISOString() })
-      .eq('id', id)
-    if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
-    return res.status(200).json({ ok: true, material, materials: next })
+    let added: Awaited<ReturnType<typeof addToWorkingSet>>
+    try { added = await addToWorkingSet(supabase as unknown as StoreDb, id, material) } catch (e) {
+      if (e instanceof StoreError) return res.status(e.status).json({ ok: false, error: e.message })
+      throw e
+    }
+    if (added.ok === false) return res.status(added.reason === 'busy' ? 409 : 503).json({ ok: false, error: added.reason === 'busy' ? 'piece_busy: send it again' : 'materials could not be saved' })
+    return res.status(200).json({ ok: true, material, materials: added.materials })
   }
 
   if (req.method === 'DELETE') {
     const mid = Array.isArray(req.query.materialId) ? req.query.materialId[0] : req.query.materialId
     if (!mid) return res.status(400).json({ ok: false, error: 'materialId required' })
-    const next = materials.filter(m => m.id !== mid)
-    const { error: upErr } = await supabase.from('content_ideas')
-      .update({ meta: { ...meta, materials: next }, updated_at: new Date().toISOString() })
-      .eq('id', id)
-    if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
-    return res.status(200).json({ ok: true, materials: next })
+    let removed: Awaited<ReturnType<typeof removeFromWorkingSet>>
+    try { removed = await removeFromWorkingSet(supabase as unknown as StoreDb, id, String(mid)) } catch (e) {
+      if (e instanceof StoreError) return res.status(e.status).json({ ok: false, error: e.message })
+      throw e
+    }
+    if (removed.ok === false) return res.status(removed.reason === 'busy' ? 409 : 503).json({ ok: false, error: removed.reason === 'busy' ? 'piece_busy: send it again' : 'materials could not be saved' })
+    // Off the working set only: the piece materials store keeps it (archive it there to hide it).
+    return res.status(200).json({ ok: true, materials: removed.materials, kept_in_store: true })
   }
 
   return res.status(405).json({ ok: false, error: 'Method not allowed' })
