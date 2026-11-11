@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The style lab (lab/styles) draws library styles on Krish's take outside the frozen ve renderer, with the brand skin and the approved house close filmed by kit; The Ladder v2 is in real 3D and its style frames are with Krish. (2026-11-10)
 - The historical video backfill is complete with nothing unresolved: 16 of 18 YouTube uploads sit on their pieces, the launch Short and the Tuesday 3 November off-day meme (Krish: "a tuesday off day where we post a funny meme") belong to no piece. makeyourmindup.ai shows each piece's Watch and Short beside Read it (card option A, makeyourmindup#40). (2026-11-11)
 - Every published piece now holds its YouTube video, and its Short where one exists, on its making record: 16 historical uploads reconciled with evidence and written on 11 November with Krish's yes (docs/plans/2026-11-11-publication-backfill, readback 16 of 16). Going forward the hourly publish watcher records each new upload from the @makeyourmind-up feed, and reads Substack's archive again: since about 6 November it had read 0 posts, because the archive API now wraps its posts. GET /api/publish/catalogue serves every piece's article, video and Short addresses to makeyourmindup.ai, which went live with real covers the same day (makeyourmindup#39). (2026-11-11)
 - NOW.md stays under 14,000 bytes on main whichever job folds notes into it: the NOW.md trim workflow (.github/workflows/now-trim.yml) runs scripts/now_trim.py after the harness fold job, after Auto-merge and after any push to main touching NOW.md. (2026-11-10)
@@ -41,19 +42,17 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - Pull requests no longer edit NOW.md, so they stop conflicting over it: CI's now-md-untouched job refuses a pull request that touches it (steward branches excepted), sessions close out through now-notes/, and auto-merge folds the notes and runs scripts/now_trim.py on main to keep the page under 14,000 bytes. (2026-11-10)
 - All three Wed 11 devices pass Claude's still review (slot_machine round 3: typed lines never cropped, cream cabinet with a visible lever); Krish has every mock frame. Both 10 Nov takes are eye-corrected by Maxine (short $0.015, long $0.093, 60 s chunks; off the lens 68 to 61 s and 247 to 209 s). (2026-11-10)
 - ve closes on the statement card (6 s); Krish's engine approval for Wed 11 Nov is recorded, scoped to the engine only. (2026-11-10)
-- ve has four new pieces for the Fri 13 Nov 5-minute cut, built by Codex from cards and checked here: the WINDOW layout (his face in a rounded corner window over full-bleed footage, easing between full frame and window), wall_screen (a real page flown off the office wall to full frame, its line marked), quota_chart (the medical-device study: questions bunch at the target, the junk third, the target halved, sales up 7%) and agent_swarm (ten agents on one comment, the token meter, the rank). (2026-11-10)
-- house end card is direction C, "Built to help you decide.", filmed 6 s by kit; wide frame never splits a word (docs/production/CLOSING.md). (2026-11-10)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
-- 2026-11-11 one unresolved upload waits on Krish, the 3 November Short gJr6lwb-myE, which matches no piece.
-Older lines: `docs/history/2026-11-11-NOW-moved-1.md`, `docs/history/2026-11-10-NOW-moved-8.md`, `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
+- 2026-11-10 Krish ruled The Ladder must be "significantly more premium" and the improvised close "not fine at all"; the lab now builds to his Mon 2 Nov and Mon 9 Nov cuts and ends on the house card.
+Older lines: `docs/history/2026-11-11-NOW-moved-2.md`, `docs/history/2026-11-11-NOW-moved-1.md`, `docs/history/2026-11-10-NOW-moved-8.md`, `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-11): confirm the publish watcher's next hourly run marks the 9 November piece published and the Disney card gains its Watch and Short.
+- Next (2026-11-10): Krish rules on The Ladder v2 style frames; then The Living Screen is rebuilt to the same bar, and The Lit Essay waits on a video take.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
 - Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
@@ -61,7 +60,7 @@ Older lines: `docs/history/2026-11-11-NOW-moved-1.md`, `docs/history/2026-11-10-
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-11): holds.
+- North Star check (2026-11-10): holds.
 
 ## Read next
 
