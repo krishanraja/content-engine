@@ -70,8 +70,9 @@ def validate(lock, root=None) -> list[str]:
         out.append(f'brand-tokens.json: {error}')
         tokens = {}
     caption = zones.get('caption', {})
-    if caption.get('y') != 1180:
-        out.append('zones.caption.y must equal 1180')
+    # The caption sits clear of every channel's buttons (config/channel-safe-zones.json; Krish, 2026-11-11).
+    if caption.get('y') != 1090:
+        out.append('zones.caption.y must equal 1090')
     bottom = tokens.get('geometry', {}).get('caption_block_bottom_max_y')
     if (not _number(caption.get('y')) or not _number(caption.get('h')) or
             caption['y'] + caption['h'] != bottom):

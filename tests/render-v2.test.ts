@@ -853,14 +853,15 @@ describe('makeyourmindup house style', () => {
     const cue = { startMs: 0, endMs: 1_000, text: 'This changes the outcome, and here is why.', emphasis: ['changes', 'why'] }
     const fallback = { topPx: 100, rightPx: 70, bottomPx: 300, leftPx: 70 }
     const model = houseCaptionModel(props.branding, cue, fallback)
-    // The mock's .cap: left 72, right 108, top 1180; at most one loud word.
-    expect(model).toMatchObject({ left: 72, top: 1180, width: 900, background: '#0C1512', color: '#F4EFE4', shadow: { px: 12, color: '#FF6A4D' }, swipeIndex: 2 })
+    // The house .cap, inside every channel's safe area since 11 Nov 2026 (left 60 or the platform's 70, right 220 so it
+    // stops short of the action rail, top 1090 so two lines end above y 1320); at most one loud word.
+    expect(model).toMatchObject({ left: 70, top: 1090, width: 790, background: '#0C1512', color: '#F4EFE4', shadow: { px: 12, color: '#FF6A4D' }, swipeIndex: 2 })
     expect(cue.text.split(/(\s+)/)[model!.swipeIndex]).toBe('changes')
     expect(houseSwipeIndex('Two years ago, you chose the flavour.', ['you'])).toBe(6)
     expect(houseSwipeIndex('Nothing loud here.', [])).toBe(-1)
     // Where the director placed the caption layer, it sits there.
     expect(houseCaptionModel(props.branding, cue, fallback, { x: 72 / 1080, y: 1180 / 1920, width: 900 / 1080 })).toMatchObject({ left: 72, top: 1180, width: 900 })
-    expect(houseCaptionModel(props.branding, cue, { topPx: 140, rightPx: 120, bottomPx: 360, leftPx: 80 })).toMatchObject({ left: 80, width: 880 })
+    expect(houseCaptionModel(props.branding, cue, { topPx: 140, rightPx: 120, bottomPx: 360, leftPx: 80 })).toMatchObject({ left: 80, width: 780 }) // the action rail (right 220) wins over a narrower platform margin
     expect(houseCaptionModel({ ...props.branding, publication: { ...props.branding.publication!, house: undefined } } as never, cue, fallback)).toBeNull()
   })
 

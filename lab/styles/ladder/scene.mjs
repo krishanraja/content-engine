@@ -61,7 +61,7 @@ function makeBranch(mats, scale = 1) {
 
 export async function setup(env) {
   // Captions sit directly under the number, label and credit (Krish, 11 Nov: "A").
-  if (env.shape === 'tall') env.captionBase = 800
+  if (env.shape === 'tall') env.captionBase = 730
   const c = env.skin.colors
   const glc = document.createElement('canvas'); glc.width = env.W; glc.height = env.H
   const renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: true, preserveDrawingBuffer: true })
@@ -71,7 +71,8 @@ export async function setup(env) {
   const scene = new THREE.Scene(); scene.background = col(c.ink); scene.fog = new THREE.Fog(col(c.ink), 30, 70)
   const camera = new THREE.PerspectiveCamera(env.shape === 'tall' ? 42 : 30, env.W / env.H, 0.1, 200)
   // Tall: the picture slides down so the object sits under the caption line (Krish, 10 Nov: captions lower).
-  if (env.shape === 'tall') camera.setViewOffset(env.W, env.H, 0, -240, env.W, env.H)
+  // 11 Nov: the whole stack rose 70 px with the type, which now starts under every channel's top bar.
+  if (env.shape === 'tall') camera.setViewOffset(env.W, env.H, 0, -170, env.W, env.H)
   const mats = {
     stucco: new THREE.MeshStandardMaterial({ map: paperTexture(env), color: col(c.cream), roughness: 0.85 }),
     stone: new THREE.MeshStandardMaterial({ color: col(c.creamSoft), roughness: 0.7 }),
@@ -180,7 +181,9 @@ export function draw(env, ctx, t, house) {
 
   // Type over the 3D: the number, the old value struck, the producer credit.
   const tall = env.shape === 'tall'
-  const NX = tall ? 72 : 120, NY = tall ? 560 : 330, N = tall ? 240 : 230
+  // Tall: the number's cap height starts just under every channel's top bar (y 270; Krish, 2026-11-11: "make
+  // maximum use of the full screen").
+  const NX = tall ? 72 : 120, NY = tall ? 490 : 330, N = tall ? 240 : 230
   const CY = NY + (tall ? 128 : 112)
   const tx = (s, x, y, o) => text(env, ctx, s, x, y, o)
   const credit = (alpha) => tx('IMF · BESSEN 2015', NX, CY, { font: 'IBM Plex Mono', size: tall ? 40 : 30, weight: 500, color: c.muted, alpha, role: 'credit', tracking: 2 })

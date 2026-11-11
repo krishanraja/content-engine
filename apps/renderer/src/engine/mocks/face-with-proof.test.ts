@@ -20,8 +20,8 @@ describe('face-with-proof Gate 2 stills', () => {
       expect(html).toContain('src="fixture-recording-poster.jpg"')
       expect(html).toContain('src="house-logo.svg"')
       expect(html).toContain('mind.the.gap')
-      expect(html).toContain(beat === 'face' ? 'left:72px;top:1180px;width:900px;height:320px'
-        : 'left:72px;top:1460px;width:900px;height:180px')
+      expect(html).toContain(beat === 'face' ? 'left:60px;top:1090px;width:800px;height:230px'
+        : 'left:60px;top:670px;width:800px;height:180px')
       expect(html).not.toMatch(/ILLUSTRATIVE|PROVENANCE|Krish.s read|#[0-9a-f]{3,8}\b/i)
       expect(html.includes('data-proof-stage')).toBe(beat !== 'face')
     })
@@ -72,14 +72,16 @@ describe('face-with-proof Gate 2 stills', () => {
 // Check rendered layout as well as exported defaults so a disconnected constant cannot pass.
 describe('round 3 geometry', () => {
   for (const beat of ['hook', 'proof', 'close'] as const) {
-    it(`${beat} keeps caption and its shadow below the eye band`, () => {
+    it(`${beat} keeps the caption on the seam, clear of every channel's buttons`, () => {
+      // On a SPLIT beat his face is in the lower half, so the caption sits on the seam (MOTION_STANDARD, Captions),
+      // never under Instagram's handle and caption from y 1320 (Krish, 2026-11-11).
       const html = render(beat)
       const zone = html.match(/data-caption-zone="true" style="([^"]+)"/)![1]!
       const top = Number(zone.match(/top:(\d+)px/)![1])
-      expect(top).toBeGreaterThanOrEqual(1260)
-      expect(top + FWP_SPLIT_CAPTION_ZONE.height).toBeLessThanOrEqual(1920)
       expect(top).toBe(FWP_SPLIT_CAPTION_ZONE.top)
-      expect(top + FWP_SPLIT_CAPTION_ZONE.height).toBeLessThanOrEqual(1640)
+      expect(top).toBeLessThanOrEqual(FWP_SPLIT_SEAM_Y)
+      expect(top + FWP_SPLIT_CAPTION_ZONE.height).toBeGreaterThanOrEqual(FWP_SPLIT_SEAM_Y)
+      expect(top + FWP_SPLIT_CAPTION_ZONE.height).toBeLessThanOrEqual(1320)
       expect(html).toContain(`object-position:${FWP_POSTER_POSITIONS[beat]}`)
       const override = renderToStaticMarkup(React.createElement(FWP_MOCKS[beat], { ...props, posterPosition: '45% 20%' }))
       expect(override).toContain('object-position:45% 20%')
@@ -147,7 +149,7 @@ describe('higher split and single stage transform', () => {
     const html = render('face')
     expect(FWP_POSTER_POSITIONS.face).toBe('50% 0%')
     expect(html).toContain('top:0;width:1080px;height:1920px;object-fit:cover;object-position:50% 0%')
-    expect(html).toContain('left:72px;top:1180px;width:900px;height:320px')
+    expect(html).toContain('left:60px;top:1090px;width:800px;height:230px')
     expect(html).not.toContain('data-stage-graphics')
     expect(html).not.toContain('data-proof-stage')
   })

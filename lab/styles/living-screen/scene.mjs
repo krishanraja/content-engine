@@ -140,7 +140,7 @@ function makePanel(scene, rig, key, mats) {
 
 export async function setup(env) {
   // Captions sit directly under the dress and the credit (Krish, 11 Nov: "A"); the panels sit below them.
-  if (env.shape === 'tall') env.captionBase = 530
+  if (env.shape === 'tall') env.captionBase = 400
   const c = env.skin.colors
   const glc = document.createElement('canvas'); glc.width = env.W; glc.height = env.H
   const renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: true, preserveDrawingBuffer: true })
@@ -234,7 +234,9 @@ function placeCamera(env, t) {
   const [x, y, w, h] = a.map((v, i) => lerp(v, b[i], k))
   const tall = env.shape === 'tall'
   const vf = Math.tan((R.camera.fov * Math.PI) / 360), hf = vf * R.camera.aspect
-  const margin = cur ? (tall ? 1.26 : 1.3) : lerp(1.6, 1.08, hookK)
+  // Tall: the panel keeps short of the action rail (x 880; Krish, 2026-11-11: "stay within the boundaries of all the
+  // social platforms").
+  const margin = cur ? (tall ? 1.55 : 1.3) : lerp(tall ? 1.75 : 1.6, tall ? 1.4 : 1.08, hookK)
   // Tall fits the width (the frame is narrow); wide fits the height.
   const dist = Math.max((w * margin) / 2 / hf, (h * margin) / 2 / vf * (tall ? 0.55 : 1))
   R.rig.updateMatrixWorld(true)
@@ -245,7 +247,7 @@ function placeCamera(env, t) {
   const dir = normal.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw).applyAxisAngle(new THREE.Vector3(1, 0, 0), -pitch)
   const pos = focus.clone().add(dir.multiplyScalar(dist * (1 + 0.03 * Math.sin(t * 0.5))))
   // Tall: the panel sits above the caption line, between the dress and the captions.
-  const look = focus.clone(); if (tall) look.y += 0.16 * dist * vf
+  const look = focus.clone(); if (tall) look.y += 0.06 * dist * vf  // 11 Nov: raised with the credit, under the top bar
   R.camera.position.copy(pos); R.camera.lookAt(look)
 }
 
@@ -293,7 +295,7 @@ export function draw(env, ctx, t, house) {
   s1.addColorStop(0, c.ink + 'f0'); s1.addColorStop(1, c.ink + '00'); ctx.fillStyle = s1; ctx.fillRect(0, 0, env.W, tall ? 600 : 260)
   const g = ctx.createRadialGradient(env.W / 2, env.H * 0.55, env.H * 0.25, env.W / 2, env.H * 0.5, env.H * 0.85)
   g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, c.ink + 'b3'); ctx.fillStyle = g; ctx.fillRect(0, 0, env.W, env.H)
-  if (t >= at(env, B.y1988) && t < at(env, B.talk)) text(env, ctx, 'IMF · BESSEN 2015', tall ? 72 : 96, tall ? 430 : 170, { font: 'IBM Plex Mono', size: tall ? 40 : 30, weight: 500, color: c.muted, role: 'credit', tracking: 2, alpha: env.ease.enter(clamp((t - at(env, B.y1988)) / 0.4)) })
+  if (t >= at(env, B.y1988) && t < at(env, B.talk)) text(env, ctx, 'IMF · BESSEN 2015', tall ? 72 : 96, tall ? 300 : 170, { font: 'IBM Plex Mono', size: tall ? 40 : 30, weight: 500, color: c.muted, role: 'credit', tracking: 2, alpha: env.ease.enter(clamp((t - at(env, B.y1988)) / 0.4)) })
   house.dress(env, ctx)
 }
 
