@@ -183,6 +183,47 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   `press`, and the week's `revision` ("One live board", above).
 - **1.3.0 (11 Nov 2026)** added the ideas gate: `held` on every day, `approval` on each piece, `outcome` and `held` on
   each option, and `outcome` and `goes` on each press ("The ideas gate", above).
+- **1.4.0 (11 Nov 2026)** added `style` to each series day's `path`: the piece's motion style, caption style and
+  treatment, each option with its press ("The style choices", below).
+
+## The style choices (contract 1.4.0)
+
+Each series day's piece carries its style choices in `path.style`, built by `apps/control-plane/api/board/_style.ts`
+on every read, in three layers of the same shape: `motion`, `captions` and `treatment`. A layer lists every option
+(`id`, `name`, a one-line `line` on what it is, its `rules`, `recommended` with a plain `why`, `sample_url`, `rejected`
+and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
+
+- **Motion** is the bank's motion layer (`config/style-references.json`, layer `motion`; `line` is its `how`, each
+  option also carries its `point_types`, its `formats` and `ready`, false while its `ve_route` says `needs_device`).
+  Up to three are recommended and listed first: each made for every format the piece makes (a series piece makes the
+  long and the short cut), sharing a point type with the piece when its spec names them (`style.points`), one ve can
+  draw now (the rule `ve styles` keeps: `needs_device` holds a style back until his yes on its test render), never one
+  he called not for us and never one he said "Not this" to on this piece; those that suit the channel often come first,
+  then his liked ones, then the most point types matched.
+- **Captions** is `config/caption-themes.json`, one entry per name in `apps/renderer/src/engine/captions/names.ts`
+  (`captions.test.ts` holds them equal). The one with a `recommended_why` (art-directed, his pick on 11 Nov 2026) is
+  recommended, with his own words, unless he said "Not this" to it on this piece.
+- **Treatment** is the looks (`path.look.options`) in the same shape, so the three draw alike; the Sunday room's
+  recommendation is marked, and its Yes is the look op with his experiment and inspiration kept.
+- **Picked** shows his press on the board first (`meta.style`), then, for motion, his Pick a style gate on the making
+  record (`gates.style`), then a creative direction he signed (`signed.by` Krish in the day's
+  `docs/plans/<date>-<dayname>/ve/spec.json` or `creative-direction.json`, `picked_by: spec`). A spec he has not signed
+  is never shown as a pick, and one whose `piece_id` names another piece is never read.
+- **`sample_url`** is a rendered sample listed in `config/ve/style-samples.json`, as a same-site path, or null. None is
+  listed yet, and nothing renders one to fill it.
+- **His press**: `presses.yes` and `presses.not_this` (labels "Yes" and "Not this") each say `POST
+  /api/board/<Monday>/<op>` with a body. `POST /api/board/<Monday>/style` takes `{ piece_id, motion?, captions?,
+  reject?: { layer: 'motion' | 'captions', id } }`, his press only, on a piece scheduled in that week, the same guards
+  as the look. A motion id is checked against the bank on main and a caption id against `config/caption-themes.json`
+  (400 `unknown_motion` or `unknown_caption`; 400 `invalid_reject`, 400 `nothing_to_record`; 503 `styles_unavailable`
+  when the bank cannot be read). It writes `content_ideas.meta.style` `{ motion, captions, rejected: { motion, captions },
+  by, at }` beside `meta.look`, read and written guarded on the row's `updated_at` (`patchMeta`), so a write that lands
+  in between is kept, never overwritten (409 `piece_busy` when they never stop); the `content_ideas` trigger bumps the
+  week's `board_signal`. "Not this" on the picked style takes the pick away; a later Yes takes a style back off the
+  "Not this" list. It never edits a `creative-direction.json`.
+- **Who reads it:** make-piece and ve read `meta.style` as the default for a new spec's `style.motion.module` and
+  `brand.caption_theme` (`docs/ve/RUNBOOK.md`, S1), and a signed spec stays his.
+- **Held by:** `tests/control-plane/board-style.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
 
 ## Sessions and materials
 
@@ -197,6 +238,9 @@ if I ran four separate sessions on one piece of content, it would know where eve
 the piece (or the week and the day when there is no piece yet) and the step, and tells the session to: see what is on
 file and who else is on the piece first; choose a session id once and report `start`, `progress` at each milestone, and
 `done` (or `blocked`, with what it needs); and file everything it makes or draws on on the piece, never only in its chat.
+Its fourth line is the research rule (`RESEARCH_RULE`; Ruling, Krish, 2026-11-11): research is never left in scratch or
+a chat, every research document is filed on the piece as it is written, and a Markdown file Krish sends is filed on the
+piece first.
 Two doors, both on the same routes and rules, and neither puts a key in the prompt:
 
 | Door | For | Authenticates with |
@@ -237,6 +281,12 @@ Two doors, both on the same routes and rules, and neither puts a key in the prom
   working set from the store, from the old materials route and from the board's research are guarded on the row's
   `updated_at`, so a making record that lands in between is read again and kept.
 - Piece materials only: brand assets live in the brand kit (`docs/DRIVE.md`, "The brand kit"), never here.
+- Research is copied into his Drive's research library (`makeyourmindup > 6 Research library`; `docs/DRIVE.md`, "The
+  research library"): a material of kind `research`, `corpus`, `note` or `paste` (or role `research`, `sources`, `corpus`
+  or `notes`) gets a copy with the store's exact bytes under its week and piece, and a row in the library's `00 Index`.
+  `POST ?op=text` and `?op=confirm` copy it at once and answer `library` (`copied` or `already` with the Drive link,
+  `later`, or `not_research`); the hourly sweep `research_library_mirror` copies the rest. The store stays the record:
+  a failed copy loses nothing, and the library only ever gains folders, files and rows.
 
 **On the board.** Each day of the view carries `sessions` (who is on the day's piece or the day, working first, with
 their step and last line) and `materials` (what is on file, newest first, with a thumbnail id for a picture and no text

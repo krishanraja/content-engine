@@ -16,6 +16,7 @@ import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
+import { StyleError, needsMotion, saveStyle, stylePick } from './_style.js'
 import { DESK_PAGE } from './_deskPage.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARCHIVE_REFERRER_POLICY, fromArchivePage, readOnlyArchive } from './_readOnly.js'
@@ -294,9 +295,10 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (!url) throw new BoardError(404, 'media_not_found')
         return res.redirect(302, url)
       }
-      if (op === 'research' || op === 'material' || op === 'look') {
+      if (op === 'research' || op === 'material' || op === 'look' || op === 'style') {
         // The day path's presses on a piece of this week (_research.ts): research it now (sonar-pro), file research he
-        // dropped, and his pick of the look. His press only; the piece must be scheduled inside this week.
+        // dropped, his pick of the look, and his pick or "Not this" of a motion or caption style (_style.ts, contract
+        // 1.4.0). His press only; the piece must be scheduled inside this week.
         if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
         if (who !== 'Krish') throw new BoardError(403, 'his_press')
         const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
@@ -325,6 +327,16 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             const filed = await fileMaterial(db, pieceId, { kind: 'research', title: `Engine research (sonar-pro), ${new Date().toISOString().slice(0, 10)}`, content: found.text, by: 'Krish' })
             return res.status(201).json({ ok: true, material: filed, sources: found.sources.length })
           }
+          if (op === 'style') {
+            // The motion styles are the bank's motion layer, read from main only when the press names one; the caption
+            // styles are config/caption-themes.json. It writes meta.style beside meta.look and never edits a spec.
+            const motion = needsMotion(body) ? await fetch(`https://raw.githubusercontent.com/krishanraja/content-engine/main/config/style-references.json`, { signal: AbortSignal.timeout(15_000) })
+              .then(r => (r.ok ? r.json() : null)).catch(() => null)
+              .then((b: { bank?: Array<{ id?: unknown; layer?: unknown }> } | null) => new Set((b?.bank || []).filter(m => m.layer === 'motion' && typeof m.id === 'string').map(m => String(m.id))))
+              : null
+            const style = await saveStyle(db, pieceId, stylePick(body, motion))
+            return res.status(200).json({ ok: true, style })
+          }
           // The looks the engine can make, read once from the style bank: a production format, and any format as the experiment.
           const bank = await fetch(`https://raw.githubusercontent.com/krishanraja/content-engine/main/config/style-references.json`, { signal: AbortSignal.timeout(15_000) })
             .then(r => (r.ok ? r.json() : null)).catch(() => null) as { formats?: { production?: Array<{ id: string }>; script?: Array<{ id: string }> } } | null
@@ -337,7 +349,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             inspiration: Array.isArray(body.inspiration) ? body.inspiration.map(String) : [] }, new Set([...production, ...(experiment ? [experiment] : [])]))
           return res.status(200).json({ ok: true, look })
         } catch (e) {
-          if (e instanceof MaterialError) throw new BoardError(e.status, e.message)
+          if (e instanceof MaterialError || e instanceof StyleError) throw new BoardError(e.status, e.message)
           throw e
         }
       }
