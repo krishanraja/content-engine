@@ -3799,6 +3799,45 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function EngineAudio({ audio, stem = true }: { audio: EngineRenderProps['audio']; stem?: boolean })`
 
+### `apps/renderer/src/engine/captions/kit.ts`
+
+- `type Page = EngineRenderProps['captions'][number]`
+- `type Aspect = EngineRenderProps['aspect']`
+- `type Box = { left: number; top: number; width: number; height: number }`
+- `const REGIONS: Record<Aspect, { lower: Box; upper: Box }>`
+- `const scale = (aspect: Aspect) =>`
+- `const F`
+- `function livePage(props: Pick<EngineRenderProps, 'captions'>, frame: number): { page: Page; index: number } | null`
+- `function previousPage(props: Pick<EngineRenderProps, 'captions'>, index: number, frame: number, gap = 45): Page | null`
+- `function spoken(page: Page, frame: number): number`
+- `const clean = (text: string) =>`
+- `const clamp = (x: number, lo = 0, hi = 1) =>`
+- `const mix = (a: number, b: number, t: number) =>`
+- `const outCubic = (x: number) =>`
+- `const outExpo = (x: number) =>`
+- `const outBack = (x: number, c = 1.70158) =>`
+- `const settle = (x: number) =>`
+- `const spring = (x: number) =>`
+- `const since = (frame: number, at: number, fps: number) =>`
+- `type Face = keyof typeof ADVANCE`
+- `function textWidth(text: string, size: number, face: Face, upper: boolean): number`
+- `function fit(text: string, width: number, face: Face, upper: boolean, max: number, min = 40): number`
+- `function heroScore(page: Page, i: number): number`
+- `function hero(page: Page): number`
+- `function key(page: Page): number`
+- `const LIFT`
+
+### `apps/renderer/src/engine/captions/names.ts`
+
+The caption styles ve can draw, picked per piece with brand.caption_theme; with none, the house caption draws.
+
+- `const CAPTION_THEMES`
+- `type CaptionThemeName = typeof CAPTION_THEMES[number]`
+
+### `apps/renderer/src/engine/captions/themes.tsx`
+
+- `const THEMES: Record<Exclude<CaptionThemeName, 'art-directed'>, Draw>`
+
 ### `apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx`
 
 - `const ART_REGION`
@@ -3896,6 +3935,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/engine/devices/agent_swarm/index.tsx`
 
+- `function swarmLayout(w: number, h: number, tall: boolean)`
 - `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/agent_swarm/schema.ts`
