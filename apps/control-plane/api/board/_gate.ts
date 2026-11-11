@@ -129,6 +129,12 @@ export function approvalFor(approvals: Approval[] | null, piece: Body, date: str
     || (doc ? approvals.find(a => a.date === date && a.doc === doc) || null : null)
 }
 
+/** A title as the start of a held line: ended with one full stop, never two ("Good things AI did this week.."). */
+export function asSentence(title: string): string {
+  const t = title.trim()
+  return /[.!?]$/.test(t) ? t : `${t}.`
+}
+
 /** A piece the board will not draw, and why. */
 export interface Held { piece_id: string | null; option: string | null; title: string; text: string }
 export const HELD_TITLE = 'Held: not approved by you'
@@ -162,7 +168,7 @@ export function gatePieces(week: string, pieces: Body[], approvals: Approval[] |
     }
     if (why) {
       const list = held.get(day) || []
-      list.push({ piece_id: String(p.id).toLowerCase(), option: null, title: heading, text: `${title}. ${why}` })
+      list.push({ piece_id: String(p.id).toLowerCase(), option: null, title: heading, text: `${asSentence(title)} ${why}` })
       held.set(day, list)
       continue
     }
