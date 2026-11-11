@@ -81,7 +81,7 @@ export function grain(env, ctx, t) {
   ctx.restore()
 }
 
-/** The masthead mark on its tile. Wide only: never on vertical video (Ruling, Krish, 2026-11-11). */
+/** The masthead mark on its tile. Wide only: never over a vertical cut's animated content; the closing outro card, joined after the cut, keeps the wordmark (Ruling, Krish, 2026-11-11). */
 export function mark(env, ctx, alpha = 1) {
   if (env.shape === 'tall' || !env.markImg?.complete || alpha <= 0) return
   const tall = env.shape === 'tall'

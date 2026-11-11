@@ -11,6 +11,7 @@ import { StageHeader } from './chrome/StageHeader'
 import { lightStage } from './chrome/lightStage'
 import { HeldTitle, WordCaption } from './chrome/WordCaption'
 import { LeadCaption } from './chrome/LeadCaption'
+import { ThemedCaption } from './chrome/ThemedCaption'
 import { resolveMotion } from './kit/motionProfiles'
 import type { EngineBeat, EngineRenderProps } from './props'
 
@@ -42,6 +43,7 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     {props.captionStyle === 'word' && !call && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={props} frame={frame} />
       : call ? <CallCard props={props} frame={frame} />
+        : props.captionTheme ? <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />
         : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />
         : props.captionStyle === 'word' ? <WordCaption props={props} frame={frame} />
         : beat.layout === 'SPLIT' ? <SplitCaptionTrack props={props} frame={frame} /> : <CaptionTrack props={props} frame={frame} />}

@@ -221,6 +221,10 @@ export const ProductionSpecV2Schema = z.object({
     // 'word': one word at a time, off the face, under a held title (Krish, 2026-11-03: "its the georgia subtitles
     // build, and the motion and graphics of the other one"; inspiration card instagram_DePHDr_jRed).
     captions: z.enum(['house', 'word']),
+    // A caption theme instead of the house caption (Krish, 2026-11-11: "install all of these different caption styles
+    // in to the engine, so future productions can select from them"). Names as apps/renderer/src/engine/captions/names.ts.
+    caption_theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
+      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic']).optional(),
     title: z.string().min(3).max(48).optional(),
     reference: z.string().min(1).optional(),
     // Required by ve lint for every piece publishing after 5 Nov 2026: at least one card for look, one for motion

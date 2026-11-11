@@ -133,8 +133,9 @@ grain (the approved mock had grain over the logo; the brand book wins).
 
 What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
 
-- A Short carries no mark, wordmark or series tag at any point (Ruling,
-  Krish, 2026-11-11: "permanently removed from all templates"). The wide
+- A Short carries no mark, wordmark or series tag over its animated
+  content, and no animation passes over a wordmark; its closing outro card
+  keeps the wordmark (Ruling, Krish, 2026-11-11: "I don't have a no-word-mark rule for tall videos entirely. I just have a no-word-mark rule during the animated content, not the closing outro card."). The wide
   cut keeps the mark on an ink tile with a 10 px hard shadow in the
   channel's colour, top left on every beat.
   Captions on an ink block with grain, cream Archivo 900 at width 112, a 12

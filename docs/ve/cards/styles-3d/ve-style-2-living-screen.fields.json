@@ -1,0 +1,29 @@
+{
+  "path": "docs/ve/cards/styles-3d/ve-style-2-living-screen.md",
+  "card_id": "ve-style-2-living-screen",
+  "kind": "device",
+  "motion_style": "living-screen",
+  "title": "living_screen: a working interface in 3D that the camera reads for the viewer",
+  "goal": "Krish, 11 Nov 2026: \"yes port The Ladder and The Living Screen into ve\"; he chose \"Cards for Codex\" for the build. Port The Living Screen (lab/styles/living-screen/STYLE.md and scene.mjs, the approved lab build; Krish, 10 Nov: \"Now let's keep that pace of animation up.\") into one STAGE device, `living_screen`, built after card ve-style-0-three-and-moves. One persistent screen across the STAGE beats that name it.\n\n1. `params`: `cards` (2-6 of {id, label, unit?}), `chart?` ({expected, lines: [{id, label}]}), `tabs?` (names), `rows?` (task rows). Values come from `dataset`, each with its producer credit; text only from params and the dataset.\n2. `enter`: the screen comes up in a dark room as neon streaks (series colour and mint) draw round it; bloom on the streaks only, the screen crisp.\n3. `move` with `toState` = card id | 'chart' | 'wide': a locked zoom on the hero curve (1.0 s) to that part, close enough to read; 'wide' pulls back. The camera drifts between moves.\n4. `count_to` with `toState` = {card, value}: the number runs in 0.6 s in its card, landing on the spoken word (move count-in-card).\n5. `mark` with `toState` = card id: the old value appears struck beside the new one.\n6. `draw`: the live chart draws: the dashed expected line dives, then the real lines draw (move live-chart).\n7. `pick` with `toState` = tab: the cursor travels and clicks the tab (a mint ring for 0.45 s) and the panel changes.\n8. `highlight` with `toState` = line or card id: it turns mint.\n9. `add` with `toState` = n: a row ticks done and n new slots open (move task-copies-2d); also toasts (move toast).\n10. `exit`: the room goes dark.\n\nPace: something on the screen moves on every sentence (his words). Tall: the credit starts under the channels' top bar (y 270) and the panel keeps inside x 60 to 860 and above y 1320 (config/channel-safe-zones.json). Wide: the screen fills the frame at a slight angle, type top left.\n\n## Tests (`device.test.ts`, stills from `fixture.json`)\n- nothing before `enter`; `move` to a card puts that card's box at the centre of the frame within 5%\n- `count_to` lands the card's value on its frame; `mark` shows the struck old value\n- `pick` changes the panel; `draw` draws expected then the real lines\n- the same frame twice renders identical pixels; no colour outside tokens; tall and wide stills render inside the safe area\n\n## After it builds (Claude, not Codex)\n`ve verify-card`, then `ve lab render` and `ve lab diff` (the house look unchanged), then a fixture render of the house test take in this style sent to Krish for Gate 2. On his yes, Claude takes `needs_device` out of the `living-screen` entry's `ve_route` in config/style-references.json (a guarded file: his yes, in person) and out of `needs_device` in apps/renderer/src/engine/kit/motion-profiles.json, so a spec naming `style.motion: \"living-screen\"` routes to `living_screen`.",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. Register in `devices/registry.ts` and `config/ve/devices.json` with exactly enter, move, count_to, mark, draw, pick, highlight, add, exit; update `verbs.test.ts`. Draw with three.js through @remotion/three (the screen a canvas texture redrawn from the frame). Reuse packages/moves, never copy a move.",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/living_screen\nnpx vitest run apps/renderer/src/engine/devices/verbs.test.ts\npython scripts/ve/check_route.py",
+  "write_allow": [
+    "apps/renderer/src/engine/devices/living_screen/**",
+    "apps/renderer/src/engine/devices/registry.ts",
+    "apps/renderer/src/engine/devices/verbs.test.ts",
+    "config/ve/devices.json",
+    "apps/renderer/src/engine/kit/motion-profiles.json"
+  ],
+  "read": [
+    "lab/styles/living-screen/**",
+    "packages/moves/**",
+    "apps/renderer/src/engine/devices/CONTRACT.md",
+    "apps/renderer/src/engine/clock.ts",
+    "apps/renderer/src/engine/props.ts",
+    "apps/renderer/src/engine/kit/**",
+    "config/ve/devices.json",
+    "config/channel-safe-zones.json"
+  ],
+  "max_minutes": 90,
+  "max_calls": 80
+}

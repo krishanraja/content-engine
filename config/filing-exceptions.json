@@ -1,0 +1,41 @@
+{
+  "schema": "filing-exceptions/1",
+  "about": "A video Krish approved for filing although no engine wrote its receipts (config/music-bed.json receipt.engines, scripts/quick-edit/quality.py delivery_problems). Each entry covers one file by its sha256 and one exact 3 Posts destination, and only with his own words; any other bytes or any other place are refused as before. scripts/bed_shape.py filing_exception reads it; send.py skips the bed-receipt and validation-receipt gates for a matching file only. Only Krish adds an entry.",
+  "exceptions": [
+    {
+      "video_sha256": "0e02f119ddf81679c9e11119bf24e3c755cf001bbde3d8a5b5131823ea0d11aa",
+      "target": "3 Posts/2026-11-16 Mon off.day - Proactive AI/3 Video/Proactive AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+      "piece": "Proactive AI off-day short (docs/plans/2026-11-09-week/proactive-voiceover/RECORD.md)",
+      "asked": "This cut is per-piece code (the data-story recipe, as The Ladder was), so no engine wrote its bed-shape or validation receipt. Do you approve filing this one cut as an exception?",
+      "krish_words": "Yes, I approve as an exception.",
+      "where": "Claude Code session in krishanraja/content-engine (session_01JRhKysqn2sUdYAVTFvNpWi)",
+      "on": "2026-11-11",
+      "checks_run": {
+        "bed_shape": "docs/plans/2026-11-09-week/proactive-voiceover/bed-shape-qc.json: pass",
+        "loudness": "-14.4 LUFS integrated, true peak -1.0 dB",
+        "heard": "faster-whisper small.en on the cut: the script word for word",
+        "approval": "Krish: \"looks good\" (proof); \"Aspire, but half the volume\"; \"Just upgrade it to have a 'Follow for more' badge under the word mark, and then we're good to go.\""
+      }
+    },
+    {
+      "video_sha256": "0e02f119ddf81679c9e11119bf24e3c755cf001bbde3d8a5b5131823ea0d11aa",
+      "target": "3 Posts/2026-11-17 Tue off.day - Proactive AI/3 Video/Proactive AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+      "piece": "Proactive AI off-day short (docs/plans/2026-11-09-week/proactive-voiceover/RECORD.md)",
+      "asked": "This cut is per-piece code (the data-story recipe, as The Ladder was), so no engine wrote its bed-shape or validation receipt. Do you approve filing this one cut as an exception?",
+      "krish_words": "Yes, I approve as an exception.",
+      "where": "Claude Code session in krishanraja/content-engine (session_01JRhKysqn2sUdYAVTFvNpWi)",
+      "on": "2026-11-11",
+      "checks_run": {
+        "bed_shape": "docs/plans/2026-11-09-week/proactive-voiceover/bed-shape-qc.json: pass",
+        "loudness": "-14.4 LUFS integrated, true peak -1.0 dB",
+        "heard": "faster-whisper small.en on the cut: the script word for word",
+        "approval": "Krish: \"looks good\" (proof); \"Aspire, but half the volume\"; \"Just upgrade it to have a 'Follow for more' badge under the word mark, and then we're good to go.\""
+      },
+      "moved": {
+        "krish_words": "Schedule it for Tuesday off day instead, I still might do a 2nd post on Tuesday like a meme later, merge to main",
+        "on": "2026-11-11",
+        "from": "3 Posts/2026-11-16 Mon off.day - Proactive AI/3 Video/Proactive AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4"
+      }
+    }
+  ]
+}

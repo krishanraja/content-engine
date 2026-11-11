@@ -202,7 +202,9 @@ class CompileTest(unittest.TestCase):
         spec['cuts']['proof-tall']['excerpt'] = False
         whole = compile_cut(spec, 'proof-tall', words, FIXTURE)
         self.assertEqual(whole['durationFrames'], base + ENDING_FRAMES)
-        self.assertEqual(whole['ending'], {'fromFrame': base, 'url': whole['series']['site']})
+        # The ending is the statement card (compile.py): where it starts, the site, the tagline, the call and the days.
+        self.assertEqual({k: whole['ending'][k] for k in ('fromFrame', 'url')}, {'fromFrame': base, 'url': whole['series']['site']})
+        self.assertEqual(list(whole['ending']), ['fromFrame', 'url', 'tagline', 'cta', 'days'])
         self.assertEqual(whole['captions'][-1]['toFrame'], base)
         # The last beat runs through the ending band so BrandFrame stays mounted and draws it.
         self.assertEqual(whole['beats'][-1]['toFrame'], base + ENDING_FRAMES)
@@ -212,7 +214,7 @@ class CompileTest(unittest.TestCase):
         # Every whole cut closes on the ending band, with or without a dated call (Krish, 2026-11-03: "We fucking
         # have standards for intro, background audio and outro").
         del spec['call']
-        self.assertEqual(compile_cut(spec, 'proof-tall', words, FIXTURE)['ending'], {'fromFrame': base, 'url': whole['series']['site']})
+        self.assertEqual({k: compile_cut(spec, 'proof-tall', words, FIXTURE)['ending'][k] for k in ('fromFrame', 'url')}, {'fromFrame': base, 'url': whole['series']['site']})
 
     def test_motion_style_passes_through(self):
         spec = load_json(FIXTURE / 'spec.json')
@@ -303,7 +305,7 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(sum(beat['sectionBeat'] for beat in props['beats']), 1)
         self.assertEqual(min(obj['fromFrame'] for obj in props['objects']), 0)
         self.assertFalse({'intro', 'sting', 'storyCard', 'outro'} & set(props))
-        self.assertEqual(list(props['ending']), ['fromFrame', 'url'])
+        self.assertEqual(list(props['ending']), ['fromFrame', 'url', 'tagline', 'cta', 'days'])
 
     def test_caption_widths_and_long_words(self):
         spec = load_json(FIXTURE / 'spec.json')
