@@ -129,7 +129,7 @@ so it never goes in `3 Posts`.
 
 | Inside the library | Found by | What it holds |
 |---|---|---|
-| `00 Index`, a Google Sheet | its ID, `1UejePwOc_6abqX1A3TrKXDZxej4C1OOvwVM3K3C29lo` | One row per document copied in: week, day, piece, series, kind, title, date added, Drive link, sha256, version, who added it, piece id and material id. Rows are only ever added, one per material. |
+| `00 Index`, a Google Sheet | its ID, `1UejePwOc_6abqX1A3TrKXDZxej4C1OOvwVM3K3C29lo` | One row per document copied in: week, day, piece, series, kind, title, date added, Drive link, sha256, version, who added it, piece id and material id. One row per material: the sweep adds a row for each new copy and removes any later row for a material already listed. |
 | One folder per week, named by its Monday (`2026-11-16`) | its `ce_week` property | The week's pieces and days. |
 | Inside a week: one folder per piece (`Mon 16 Nov follow.the.money - Oracle files to sell $20B ... (8287846b)`), one per day with no piece yet (`Tue 17 Nov (no piece yet)`), and `Whole week` for the week's own research (the Sunday ideas sources) | its `ce_slot` property | Each research document as `<date added> <title>`, the exact bytes the store holds, and `Sources` (its `ce_sources` property), the verbatim source excerpts the fact gate reads. |
 
@@ -149,8 +149,8 @@ and a row already in the index is never added again. A copy that fails loses not
 next sweep copies it.
 
 **One writer at a time.** Five sweeps run by hand on 11 Nov overlapped, each read Drive and the index before the others
-wrote, and together they made 118 extra copies and 250 extra index rows (nothing was lost; the duplicates stay until
-Krish says what to do with them). Every writer now holds the one lease, `research_library_mirror` in `engine_leases`
+wrote, and together they made 118 extra copies and 250 extra index rows. Krish, 2026-11-11: "Yes bin": the 118 extra
+copies are in the bin, and the sweep removes the extra rows (below). Every writer now holds the one lease, `research_library_mirror` in `engine_leases`
 (migration `20261127100000_engine_leases.sql`), while it reads and writes: a second sweep, by hand or on the hour,
 answers `skipped: already_running` with when the lease runs out and writes nothing (the run ledger records it as
 skipped), and the write that filed a material waits up to ten seconds for it, then leaves the copy to the next sweep.
@@ -158,9 +158,21 @@ Inside the lease, each copy is looked for once more by its `ce_material` propert
 index's Material id column is read once more right before rows are added. Without the lease (the migration not
 applied, the database down) a run writes nothing and fails.
 
+**One row per material (Ruling, Krish, 2026-11-11).** The sweep keeps the index tidy by itself. Inside the lease, after
+reading the index, it reads the whole sheet and removes every row whose Material id an earlier row already holds, in one
+Sheets batchUpdate, bottom row first, so the first row of each material stays where it was. When that first row links a
+copy that is in the bin or gone and a later row links the material's live copy, the same batchUpdate first puts the live
+link on the first row. It never touches the header, a row whose Material id appears once, or a row with no material id.
+It removes nothing, and fails the run so Control Center shows it, when the read looks short or malformed: a read that
+does not start at the header, a header that is not the columns above, fewer rows than the materials the Material id
+column listed a moment before, or a different set of materials. The run ledger counts what it removed as
+`index_deduped` and the links it put right as `index_repaired`. The write that files one material never tidies; the
+sweep does, within the hour.
+
 **How.** The engine writes as the owner of his Drive (`GOOGLE_DRIVE_OWNER`, the delegated `drive` scope, as the feedback
-lane does) and only adds: week, piece, day and `Sources` folders inside the library, files inside them, and rows in the
-index. It never renames, moves, overwrites or deletes anything. Folders are found by their properties, never by name,
+lane does). In Drive it only adds: week, piece, day and `Sources` folders inside the library and files inside them. It
+never renames, moves, overwrites or deletes anything there. In the index it adds rows, and its one other write is the
+tidy above. Folders are found by their properties, never by name,
 so Krish may rename or move any folder inside the library. The library and its index are found by the IDs above
 (`RESEARCH_LIBRARY_FOLDER_ID` and `RESEARCH_LIBRARY_INDEX_ID` in `apps/control-plane/api/_researchLibrary.ts`, and
 `folder_id` and `index_id` in `config/research-library.json`, which a test holds equal; not in `config/studio.json`,
@@ -244,7 +256,8 @@ there, reads it back and replies "Done" with the link (`config/failures.json` F2
   overwrites.
 - Public copy never carries a Drive path (`NOW.md`, `never_publish`).
 - Three automatic writers are allowed, each by Krish's word. The research library's mirror (above; Ruling, Krish,
-  2026-11-11), which adds folders, files and index rows inside `6 Research library` only. The library sync
+  2026-11-11), which adds folders, files and index rows inside `6 Research library` only, and removes a later index row
+  for a material already listed. The library sync
   (AGENTS.md), which writes the makeyourmindup library and, since
   2026-11-03, Heartside's `03b_Social-Schedule` (then `05_Social-Library`) under `Posts` only. And content-watcher (Krish, 2026-10-24: "Yes to
   Drive filing"): on his home computers, through the synced folders, it adds

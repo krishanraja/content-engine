@@ -2,11 +2,12 @@ import { describe, expect, it } from 'vitest'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import {
-  INDEX_COLUMNS, LIBRARY_LEASE, LIBRARY_LEASE_MS, PROP, RESEARCH_LIBRARY_FOLDER_ID, RESEARCH_LIBRARY_INDEX_ID, SETTLE_MS, fileNameOf, inLibrary, mirror, placeOf,
-  type LeaseTake, type LibraryDrive, type LibraryFile, type LibraryFolder, type LibraryIndex, type LibraryLock, type LibrarySource, type PieceInfo, type StoredMaterial,
+  INDEX_COLUMNS, INDEX_LINK_AT, LIBRARY_LEASE, LIBRARY_LEASE_MS, PROP, RESEARCH_LIBRARY_FOLDER_ID, RESEARCH_LIBRARY_INDEX_ID, SETTLE_MS,
+  deleteRuns, duplicateRows, fileIdOf, fileNameOf, inLibrary, mirror, placeOf, tidyPlan,
+  type IndexSheet, type IndexTidy, type LeaseTake, type LibraryDrive, type LibraryFile, type LibraryFolder, type LibraryIndex, type LibraryLock, type LibrarySource, type PieceInfo, type StoredMaterial,
 } from '../../apps/control-plane/api/_researchLibrary'
 import { copyNow, googleLibraryDrive, googleLibraryIndex, storeLease } from '../../apps/control-plane/api/_researchLibraryGoogle'
-import { classifyRun } from '../../apps/control-plane/api/_runs'
+import { classifyRun, countsFrom } from '../../apps/control-plane/api/_runs'
 import { RESEARCH_RULE, WRITE_BACK_HEAD, writeBack } from '../../apps/control-plane/api/board/_writeBack'
 import { JOBS } from '../../apps/control-plane/api/content-engine/_jobs'
 import { CONTENT_ENGINE_JOBS } from '../../apps/control-plane/lib/contentEngineSchedule'
@@ -86,13 +87,44 @@ class FakeIndex implements LibraryIndex {
   onRead?: (read: number) => void
   async materialIds() {
     if (this.latency) await pause(this.latency)
-    const ids = new Set(this.rows.slice(1).map(r => r[12]))
+    // As the Material id column read does: only what looks like a material id.
+    const ids = new Set(this.rows.slice(1).map(r => String(r[12] ?? '').trim()).filter(v => /^[0-9a-f-]{36}$/.test(v)))
     this.onRead?.(++this.reads)
     return ids
   }
   async append(rows: string[][]) {
     if (this.latency) await pause(this.latency)
     if (this.failAppend) throw new Error('sheets_append_403'); this.rows.push(...rows)
+  }
+  /** Every tidy asked for, in order. */
+  tidies: IndexTidy[] = []
+  fullReads = 0
+  readFails = false
+  failTidy = false
+  /** What a full read answers instead of the rows as they stand: a short or malformed read. */
+  readAs?: (rows: string[][]) => IndexSheet
+  /** Called as a tidy starts: the test checks the lease is held. */
+  onTidy?: () => void
+  async read(): Promise<IndexSheet> {
+    if (this.latency) await pause(this.latency)
+    this.fullReads++
+    if (this.readFails) throw new Error('sheets_read_500')
+    const rows = this.rows.map(r => [...r])
+    return this.readAs ? this.readAs(rows) : { tab: 7, firstRow: 1, values: rows }
+  }
+  /** As Sheets applies one batchUpdate: the links first, then each row, which must come bottom first. */
+  async tidy(plan: IndexTidy) {
+    this.onTidy?.()
+    if (this.failTidy) throw new Error('sheets_tidy_500')
+    this.tidies.push(plan)
+    for (const r of plan.repairs) this.rows[r.row - 1][INDEX_LINK_AT] = r.link
+    let above = Infinity
+    for (const r of plan.deletes) {
+      if (r >= above) throw new Error('rows must be removed bottom first')
+      if (r < 2) throw new Error('the header is never removed')
+      above = r
+      this.rows.splice(r - 1, 1)
+    }
   }
 }
 
@@ -445,6 +477,154 @@ describe('one writer at a time (11 Nov: five hand-run sweeps overlapped and copi
   })
 })
 
+describe('the sweep keeps one index row per material (Ruling, Krish, 2026-11-11: overlapping sweeps left 250 extra rows)', () => {
+  // Four materials copied and listed once each; then the tests add the later rows overlapping sweeps left, some of them
+  // linking a copy that is now in the bin.
+  const setup = async () => {
+    const materials = [text('alpha'), text('beta', { kind: 'paste', title: 'reuters.com' }), text('gamma', { kind: 'note', title: 'Notes' }), text('delta')]
+    const drive = new FakeDrive(); const index = new FakeIndex()
+    const src = source(materials)
+    const first = await mirror(src, drive, index, free(), { now: NOW })
+    expect(first).toMatchObject({ ok: true, mirrored: 4, indexed: 4, index_deduped: 0 })
+    const [a, b, g, d] = index.rows.slice(1).map(r => [...r])
+    return { materials, drive, index, src, header: [...index.rows[0]], a, b, g, d }
+  }
+  /** A copy made by an overlapping sweep: live, or in the bin since. */
+  const extraCopy = (drive: FakeDrive, material: string, trashed: boolean) => {
+    const id = `file-${drive.fileList.length + 1}`
+    const f = { id, name: 'extra.md', link: `https://drive.google.com/file/d/${id}/view?usp=drivesdk`, sha256: null, material, trashed, parent: 'p',
+      bytes: new Uint8Array(), description: '', props: { [PROP.root]: ROOT, [PROP.material]: material }, mime: 'text/markdown' }
+    drive.fileList.push(f)
+    return f.link
+  }
+  const withLink = (row: string[], link: string) => row.map((v, i) => i === INDEX_LINK_AT ? link : v)
+
+  it('removes every later row of a material, bottom row first, in one batchUpdate, inside the lease, and counts it in the ledger', async () => {
+    const { materials, drive, index, src, header, a, b, g, d } = await setup()
+    const binnedA = extraCopy(drive, a[12], true)
+    const binnedG = extraCopy(drive, g[12], true)
+    // Krish's sheet after the overlap: later rows of A, B and G among rows that appear once.
+    index.rows = [header, a, b, withLink(a, binnedA), g, [...b], d, [...a], withLink(g, binnedG)]
+    const lease = new Lease()
+    let heldDuringTidy = false
+    index.onTidy = () => { heldDuringTidy = !lease.free }
+    const r = await mirror(src, drive, index, lease.lock('sweep'), { now: NOW })
+    expect(r).toMatchObject({ ok: true, index_deduped: 4, index_repaired: 0, mirrored: 0, indexed: 0 })
+    expect(index.tidies).toHaveLength(1)
+    expect(index.tidies[0]).toEqual({ tab: 7, repairs: [], deletes: [9, 8, 6, 4] })
+    expect(deleteRuns(index.tidies[0].deletes)).toEqual([[8, 9], [6, 6], [4, 4]])
+    expect(heldDuringTidy).toBe(true)
+    // Each material's first row stays where it was, with its own link; nothing else moved.
+    expect(index.rows).toEqual([header, a, b, g, d])
+    for (const m of materials) expect(tally(drive, index).get(m.id)?.rows, m.id).toBe(1)
+    expect(countsFrom(r)).toMatchObject({ index_deduped: 4, index_repaired: 0 })
+    // The next sweep finds nothing to tidy.
+    const again = await mirror(src, drive, index, lease.lock('sweep'), { now: NOW })
+    expect(again).toMatchObject({ ok: true, index_deduped: 0 })
+    expect(index.tidies).toHaveLength(1)
+  })
+
+  it('never touches the header or a row whose Material id appears once, and a row with no material id is never removed', async () => {
+    const { drive, index, src, header, a, b, g, d } = await setup()
+    const note = ['', '', 'Krish: read these together', '', '', '', '', '', '', '', '', '', '']
+    const other = ['', '', 'not a material', '', '', '', '', '', '', '', '', '', 'see row 2']
+    index.rows = [header, note, a, b, note.slice(), other, other.slice(), g, d]
+    const before = index.rows.map(r => [...r])
+    const r = await mirror(src, drive, index, free(), { now: NOW })
+    expect(r).toMatchObject({ ok: true, index_deduped: 0 })
+    expect(index.tidies).toEqual([])
+    expect(index.rows).toEqual(before)
+    // With a duplicate below them, only the duplicate goes.
+    index.rows = [...before, [...b]]
+    const tidied = await mirror(src, drive, index, free(), { now: NOW })
+    expect(tidied).toMatchObject({ ok: true, index_deduped: 1 })
+    expect(index.rows).toEqual(before)
+    expect(tidyPlan({ tab: 7, firstRow: 1, values: [header, a, [...a]] }, new Set([a[12]]), () => true)).toEqual({ ok: true, plan: { tab: 7, repairs: [], deletes: [3] } })
+  })
+
+  it('a short or malformed read removes nothing and fails the run so Control Center shows it; the copies go ahead', async () => {
+    const { drive, index, src, header, a, b, g, d } = await setup()
+    const sheet = [header, a, b, [...a], g, d]
+    const cases: Array<[string, (rows: string[][]) => IndexSheet, RegExp]> = [
+      // A read that lost B's only row: its rows shift up, so row 3 would read as A's later row while the sheet holds B there.
+      ['a row missing from the middle', rows => ({ tab: 7, firstRow: 1, values: [rows[0], rows[1], rows[3], rows[4], rows[5]] }), /read lists 3 materials, the Material id column 4/],
+      ['cut off at the bottom', rows => ({ tab: 7, firstRow: 1, values: rows.slice(0, 4) }), /read is short: 3 rows for 4 listed materials/],
+      // The answer says it read from row 2 while its rows start at the header: every row number would be one off.
+      ['not starting at the header', rows => ({ tab: 7, firstRow: 2, values: rows }), /read starts at row 2/],
+      ['the header differs', rows => ({ tab: 7, firstRow: 1, values: [rows[0].map(c => c === 'Drive link' ? 'Link' : c), ...rows.slice(1)] }), /header differs/],
+    ]
+    for (const [what, readAs, why] of cases) {
+      index.rows = sheet.map(r => [...r])
+      index.readAs = readAs
+      const r = await mirror(src, drive, index, free(), { now: NOW })
+      expect(r.ok, what).toBe(false)
+      expect(r.index_tidy_error, what).toMatch(why)
+      expect(r.error, what).toMatch(/index_tidy_refused/)
+      expect(r.index_deduped, what).toBe(0)
+      expect(index.tidies, what).toEqual([])
+      expect(index.rows, what).toEqual(sheet)
+    }
+    // A read or a batchUpdate that fails removes nothing either, and a new material is still copied and listed.
+    index.readAs = undefined
+    index.readFails = true
+    const fresh = text('epsilon')
+    const unread = await mirror(source([fresh]), drive, index, free(), { now: NOW })
+    expect(unread).toMatchObject({ ok: false, mirrored: 1, indexed: 1, index_deduped: 0 })
+    expect(unread.index_tidy_error).toMatch(/index_tidy_unreadable: sheets_read_500/)
+    index.readFails = false
+    index.failTidy = true
+    const failed = await mirror(src, drive, index, free(), { now: NOW })
+    expect(failed).toMatchObject({ ok: false, index_deduped: 0 })
+    expect(failed.index_tidy_error).toMatch(/index_tidy_failed: sheets_tidy_500/)
+    expect(index.rows.slice(0, sheet.length)).toEqual(sheet)
+  })
+
+  it('the guard is load-bearing: unguarded, a read that lost a row names the row that holds another material\'s only row', async () => {
+    const { header, a, b, g, d } = await setup()
+    const shifted = { tab: 7, firstRow: 1, values: [header, a, [...a], g, d] }
+    // The real sheet is [header, a, b, a, g, d]: row 3 is B's only row.
+    expect(duplicateRows(shifted, () => true).deletes).toEqual([3])
+    expect(tidyPlan(shifted, new Set([a[12], b[12], g[12], d[12]]), () => true)).toMatchObject({ ok: false })
+  })
+
+  it('a first row that links a binned or missing copy takes the later row\'s live link before the later rows go', async () => {
+    const { drive, index, src, header, a, b, g, d } = await setup()
+    // A: its listed copy is in the bin now, and a later row links a live copy an overlapping sweep made.
+    drive.fileList.find(f => f.material === a[12])!.trashed = true
+    const liveA = extraCopy(drive, a[12], false)
+    // B: its first row links a file that is gone; a later row links B's live copy.
+    const gone = 'https://drive.google.com/file/d/gone-1/view?usp=drivesdk'
+    // G: its first row is live and a later row links a binned copy: the first row keeps its own link.
+    const binnedG = extraCopy(drive, g[12], true)
+    // D: every row links a binned copy: nothing better to take, so its first row keeps its link.
+    drive.fileList.find(f => f.material === d[12] && !f.trashed)!.trashed = true
+    const binnedD = extraCopy(drive, d[12], true)
+    index.rows = [header, a, withLink(b, gone), g, d, withLink(a, liveA), [...b], withLink(g, binnedG), withLink(d, binnedD)]
+    const r = await mirror(src, drive, index, free(), { now: NOW })
+    expect(r).toMatchObject({ ok: true, index_deduped: 4, index_repaired: 2 })
+    expect(index.tidies[0].repairs).toEqual([{ row: 2, link: liveA }, { row: 3, link: b[INDEX_LINK_AT] }])
+    expect(index.rows).toEqual([header, withLink(a, liveA), b, g, d])
+    expect(fileIdOf(liveA)).toBe(drive.fileList.find(f => f.material === a[12] && !f.trashed)!.id)
+    expect(fileIdOf('https://drive.google.com/open?id=abc_DEF-1')).toBe('abc_DEF-1')
+    expect(fileIdOf('not a link')).toBeNull()
+  })
+
+  it('only the sweep tidies: the write that files one material, and a sweep that finds the lease held, never read the whole index', async () => {
+    const { materials, drive, index, src, header, a, b, g, d } = await setup()
+    index.rows = [header, a, b, g, d, [...a]]
+    const reads = index.fullReads
+    const write = await mirror(src, drive, index, free(), { now: NOW, only: [materials[0].id] })
+    expect(write).toMatchObject({ ok: true, index_deduped: 0 })
+    const lease = new Lease()
+    const holder = lease.lock('sweep'); await holder.take()
+    const skipped = await mirror(src, drive, index, lease.lock('sweep'), { now: NOW })
+    expect(skipped).toMatchObject({ skipped: 'already_running', index_deduped: 0 })
+    expect(index.fullReads).toBe(reads)
+    expect(index.tidies).toEqual([])
+    expect(index.rows).toHaveLength(6)
+  })
+})
+
 describe('the Google side only adds', () => {
   it('lists by properties, creates folders and files, appends rows, and calls nothing that renames, moves or deletes', async () => {
     const seen: Array<{ method: string; url: string; body?: string }> = []
@@ -472,6 +652,44 @@ describe('the Google side only adds', () => {
     expect(seen.some(s => /addParents|removeParents|\/trash|:clear|batchUpdate/.test(s.url))).toBe(false)
     expect(seen.find(s => s.url.includes(':append'))!.url).toContain('valueInputOption=RAW&insertDataOption=INSERT_ROWS')
     expect(new URL(seen.find(s => s.url.includes('/files?') && s.url.includes('q='))!.url).searchParams.get('q')).toContain(`properties has { key='${PROP.root}' and value='${ROOT}' }`)
+  })
+
+  it('the index tidy reads the tab the bare ranges use, and sends one batchUpdate: the links, then the rows bottom first, never the header', async () => {
+    const seen: Array<{ method: string; url: string; body?: string }> = []
+    let tabs: unknown = [{ properties: { sheetId: 3, title: 'Notes' } }, { properties: { sheetId: 42, title: "Krish's 00 Index" } }]
+    const f = (async (url: string, init?: { method?: string; body?: unknown }) => {
+      seen.push({ method: init?.method || 'GET', url: String(url), body: typeof init?.body === 'string' ? init.body : undefined })
+      const ok = (j: unknown) => new Response(JSON.stringify(j), { status: 200 })
+      if (String(url).includes('/values/A%3AM')) return ok({ range: "'Krish''s 00 Index'!A1:M3", majorDimension: 'ROWS', values: [[...INDEX_COLUMNS], ['2026-11-16'], []] })
+      if (String(url).includes('?fields=')) return ok({ sheets: tabs })
+      return ok({ replies: [] })
+    }) as unknown as typeof fetch
+    const index = googleLibraryIndex('t', RESEARCH_LIBRARY_INDEX_ID, f)
+    expect(await index.read()).toEqual({ tab: 42, firstRow: 1, values: [[...INDEX_COLUMNS], ['2026-11-16'], []] })
+    expect(seen[0].url).toBe(`https://sheets.googleapis.com/v4/spreadsheets/${RESEARCH_LIBRARY_INDEX_ID}/values/A%3AM?majorDimension=ROWS`)
+    // The API leaves out a sheetId of 0.
+    tabs = [{ properties: { title: "Krish's 00 Index" } }]
+    expect((await index.read()).tab).toBe(0)
+    tabs = [{ properties: { sheetId: 3, title: 'Notes' } }]
+    await expect(index.read()).rejects.toThrow(/sheets_tab_not_found/)
+
+    seen.length = 0
+    await index.tidy({ tab: 42, repairs: [{ row: 2, link: 'https://drive.google.com/file/d/live/view' }], deletes: [9, 8, 6, 4] })
+    expect(seen).toHaveLength(1)
+    expect(seen[0]).toMatchObject({ method: 'POST', url: `https://sheets.googleapis.com/v4/spreadsheets/${RESEARCH_LIBRARY_INDEX_ID}:batchUpdate` })
+    expect(JSON.parse(seen[0].body!).requests).toEqual([
+      { updateCells: { range: { sheetId: 42, startRowIndex: 1, endRowIndex: 2, startColumnIndex: 7, endColumnIndex: 8 },
+        rows: [{ values: [{ userEnteredValue: { stringValue: 'https://drive.google.com/file/d/live/view' } }] }], fields: 'userEnteredValue' } },
+      { deleteDimension: { range: { sheetId: 42, dimension: 'ROWS', startIndex: 7, endIndex: 9 } } },
+      { deleteDimension: { range: { sheetId: 42, dimension: 'ROWS', startIndex: 5, endIndex: 6 } } },
+      { deleteDimension: { range: { sheetId: 42, dimension: 'ROWS', startIndex: 3, endIndex: 4 } } },
+    ])
+    expect(INDEX_COLUMNS[INDEX_LINK_AT]).toBe('Drive link')
+    seen.length = 0
+    await expect(index.tidy({ tab: 42, repairs: [], deletes: [5, 1] })).rejects.toThrow(/sheets_tidy_header/)
+    await expect(index.tidy({ tab: 42, repairs: [{ row: 1, link: 'x' }], deletes: [5] })).rejects.toThrow(/sheets_tidy_header/)
+    await index.tidy({ tab: 42, repairs: [], deletes: [] })
+    expect(seen).toEqual([])
   })
 })
 

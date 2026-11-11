@@ -12,8 +12,12 @@ import { runMirror } from '../_researchLibraryGoogle.js'
 //
 // Copies every research material in the piece store that has no copy in `makeyourmindup > 6 Research library` yet, and
 // adds each one's row to the library's `00 Index`. It leaves a material younger than ten minutes to the write that filed
-// it. It only adds: a folder, a file, a row. It fails, so Control Center shows it, when the library cannot be reached, a
-// copy failed or the index could not be written; the store keeps every material either way and the next run tries again.
+// it. In Drive it only adds: a folder, a file. It keeps the index to one row per material (Ruling, Krish, 2026-11-11):
+// a later row for a material already listed is removed, bottom first, in one batchUpdate, the first row taking the live
+// link when its own copy is binned or missing; never the header or a material's only row, and nothing when the read looks
+// short or malformed. The ledger counts it as index_deduped (and index_repaired). It fails, so Control Center shows it,
+// when the library cannot be reached, a copy failed, or the index could not be written or tidied; the store keeps every
+// material either way and the next run tries again.
 //
 // One sweep at a time: every run holds the library's lease (engine_leases), so a second sweep started while one runs, by
 // hand or on the hour, answers `skipped: already_running` with when that lease runs out, writes nothing, and is recorded
