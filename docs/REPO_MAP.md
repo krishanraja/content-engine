@@ -454,6 +454,7 @@ _content — shared helpers for the Content Engine API routes
 - `async function getAnthropicKey(): Promise<string | null>`
 - `function buildSystemBlocks(opts: Partial<ClaudeOpts>): unknown`
 - `async function callClaude(opts: ClaudeOpts): Promise<string>`
+- `function firstText(j: any): string`
 - `interface ChatTurn`
 - `async function callClaudeMessages( system: string, messages: ChatTurn[], opts: { model?: string; maxTokens?: number; te…`
 - `function preamble(req: any, res: any, methods = 'POST, OPTIONS'): boolean`
@@ -1019,6 +1020,14 @@ _investigation: the MYMU: Teardown weekly investigation: anchor selection, claim
 - `async function priorAnchorHeadlines(): Promise<string[]>`
 - `interface AnchorDecision`
 - `async function selectAnchor( ranked: RankedAnchor[], budget: RunBudget, hctx: HarnessContext, opts: { dryRun?: boolean …`
+- `const DECOMPOSE_MAX_TOKENS`
+- `const SHORT_PAGE_CHARS`
+- `function decomposeSource(anchorText: string, pageText: string | null | undefined): { text: string; note: string | null }`
+- `interface EmptySplit`
+- `function emptySplit( res: Pick<MeteredResult, 'text' | 'error' | 'stopReason'>, parsed: unknown, maxTokens: number, ): …`
+- `interface SplitAttempt`
+- `interface SplitOutcome`
+- `async function splitClaims( headline: string, sourceText: string, pillarEvidence: string[], call: (opts: MeteredOpts) =…`
 - `interface RunResult`
 - `async function runInvestigation(opts: RunOpts = {}): Promise<RunResult>`
 - `function buildManifest(m: ManifestInput): string`
@@ -2823,6 +2832,7 @@ What the Drive scan decides, with no Drive, no model and no database.
 
 ### `apps/control-plane/api/judge/sweep.ts`
 
+- `function liveSweepExpired( sweep: Pick<SweepRow, 'created_at' | 'live_fallback' | 'batches'>, now: Date = new Date(), )…`
 - `async function providerPause(now: Date = new Date()): Promise<Record<string, unknown> | null>`
 - `export default withContentRun('judge_sweep', handler)`
 - `const config`
