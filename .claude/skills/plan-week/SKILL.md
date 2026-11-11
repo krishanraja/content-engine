@@ -32,6 +32,10 @@ then `report_board_session` (start, progress at each milestone, done, or blocked
 makes or draws on goes on the piece with `add_piece_material`, or `board_session.py <piece_id> add <file or text>`. A
 day with no piece yet is `day:<Monday>/<day>`. Add, never replace.
 
+**Research (Ruling, Krish, 2026-11-11).** Research is never left in scratch or a chat: file each research document on
+the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his
+Research library in Drive.
+
 ## The Sunday loop (rulings, Krish, 2026-10-28)
 
 Krish records the whole week on a Sunday, and it goes live eight days later:

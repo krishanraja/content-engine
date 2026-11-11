@@ -12,6 +12,7 @@ import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, of
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
 import { HELD_CHANGED, HELD_TITLE, approvedLabel, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
+import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
 // pieces' making records, his presses on the board, the week's plan files on main and the runs on GitHub. Nothing is a
@@ -35,6 +36,9 @@ export const VIEW_DAYS: readonly PostedDay[] = ['mon', 'tue', 'wed', 'thu', 'fri
 const SERIES: Record<string, string> = { mon: 'follow.the.money', wed: 'under.the.hood', fri: 'mind.the.gap' }
 const DAY_NAME: Record<string, string> = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday' }
 export const STOPS = ['Idea', 'Story', 'Make', 'Approve', 'Live'] as const
+/** What a series piece makes: the essay with a long and a short cut, so its motion style must be made for both. */
+const SERIES_FORMATS = ['long_video', 'short_video']
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'
 export type Action =
@@ -104,6 +108,8 @@ export interface DayPath {
   prompts: { research: string; story: string; storyboard: string; mock: string }
   /** The session's storyboard filed on the piece (a material titled "Storyboard: ..."), or null. */
   storyboard: { title: string; at: string | null } | null
+  /** Contract 1.4.0 (_style.ts): the piece's motion, caption and treatment choices, each option with its press. */
+  style: DayStyle | null
 }
 export interface WeekView {
   /** The contract this view keeps (view.schema.json, x-contract-version; _viewContract.ts). */
@@ -135,6 +141,10 @@ export interface ViewInputs {
   research_files?: Partial<Record<PostedDay, boolean>>
   /** The engine's looks: config/style-references.json formats (script and production). */
   formats?: { script: LookOption[]; production: LookOption[] }
+  /** The bank's motion styles: config/style-references.json, layer motion (contract 1.4.0). */
+  motion?: MotionModule[]
+  /** Each series day's creative direction (its plan folder's ve/spec.json or creative-direction.json), when on main. */
+  specs?: Partial<Record<PostedDay, Body | null>>
   /** His production inspiration: cards with his own words first, and how many recent ones have none yet. */
   inspiration?: { cards: Array<{ id: string; name: string; words: string; saved: string | null }>; unread: number }
   /** His comments on the week (board_documents, comments) and Growth's ticks (board_ticks). */
@@ -235,7 +245,13 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
     inspiration: i.inspiration || { cards: [], unread: 0 },
     prompts: { research: researchPrompt(brief), story: storyPrompt(brief), storyboard: storyboardPrompt(brief), mock: mockPrompt(brief) },
     storyboard: (m => (m ? { title: m.title, at: m.at } : null))(materials.find(m => /^Storyboard:/.test(m.title))),
+    style: null,
   }
+  // The style choices (contract 1.4.0): a spec on file for another piece is never read as this one's.
+  const spec = (s => (s && (typeof s.piece_id !== 'string' || !UUID.test(s.piece_id) || s.piece_id.toLowerCase() === id) ? s : null))(i.specs?.[day] ?? null)
+  const points = spec && isObj(spec.style) && Array.isArray(spec.style.points) ? spec.style.points.filter((p): p is string => typeof p === 'string') : []
+  path.style = dayStyle({ pieceId: id, meta, formats: SERIES_FORMATS, points: points.length ? points : null, motion: i.motion || [],
+    looks: i.formats?.production || [], recommendedLook: path.look.recommended.production?.id ?? null, gate: live.gates.style, spec })
   const detail: DayView['detail'] = [
     { h: 'Research', p: materials.length ? materials.map(m => m.title).join(' · ') : researchFile ? `${day}-research.md in the week's folder` : 'None yet' },
     { h: 'Narrative lock', p: signed ? 'Signed' : lock ? 'Written, waiting for your signature' : 'Not written yet' },
@@ -550,8 +566,15 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     ...SERIES_DAYS.map(d => fetchText(fetcher, `${RAW}/docs/plans/${week}-week/narrative-lock-${d}.md`)),
   ])
   const since = new Date(now.getTime() - 21 * 864e5).toISOString()
-  const [styleText, notedRows, unreadRows, commentRows, tickRows, signal, ...research] = await Promise.all([
+  // Each series day's creative direction, in its plan folder (docs/plans/<date>-<dayname>/): ve/spec.json first.
+  const spec = (d: PostedDay) => {
+    const dir = `${RAW}/docs/plans/${dayDate(week, d)}-${DAY_NAME[d].toLowerCase()}`
+    return fetchText(fetcher, `${dir}/ve/spec.json`).then(t => t ?? fetchText(fetcher, `${dir}/creative-direction.json`))
+      .then(t => { try { const s = t ? JSON.parse(t) : null; return isObj(s) ? s : null } catch { return null } })
+  }
+  const [styleText, specs, notedRows, unreadRows, commentRows, tickRows, signal, ...research] = await Promise.all([
     fetchText(fetcher, `${RAW}/config/style-references.json`),
+    Promise.all(SERIES_DAYS.map(spec)),
     // His production inspiration with his own words on it, newest first; and the recent videos he has said nothing about.
     db.from('inspiration_items').select('id,name,mime,why_like,drive_created_at').eq('lane', 'production').is('dismissed_at', null)
       .not('why_like', 'is', null).order('drive_created_at', { ascending: false }).limit(6).then(r => (r.error ? [] : r.data || [])),
@@ -569,8 +592,11 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held.
   const approvals = await readApprovals(db, week)
   let formats: ViewInputs['formats'] = { script: [], production: [] }
+  let motion: MotionModule[] = []
   try {
-    const f = styleText ? JSON.parse(styleText).formats : null
+    const styles = styleText ? JSON.parse(styleText) : null
+    motion = motionBank(styles)
+    const f = styles ? styles.formats : null
     const list = (xs: unknown) => (Array.isArray(xs) ? xs : []).filter(isObj).map(x => ({ id: String(x.id), name: String(x.name || x.id), pitch: String(x.pitch || ''), status: String(x.status || '') }))
     formats = { script: list(f?.script), production: list(f?.production) }
   } catch { /* the look step then offers the recommendation by id only */ }
@@ -587,6 +613,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   return buildView({ week, now, pieces: pieces as Body[], picks: picks as ViewInputs['picks'], queue: queue as ViewInputs['queue'],
     history: history as ViewInputs['history'], ideas, runs, north_star: north,
     locks: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, locks[k] as string | null])),
-    research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, inspiration, overlay, approvals,
+    research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
+    specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null })
 }

@@ -17,12 +17,28 @@ import { StoreError, addText, archive, confirmFile, listing, parseScope, readMat
 //   POST /api/content-ideas/store?op=archive     { id, reason? }   archived, never deleted
 //
 // Nothing here deletes, sends, posts or spends.
+//
+// A text or a file that is research (api/_researchLibrary.ts, inLibrary) is also copied into his Drive's Research library
+// by the write that filed it, and the answer says so: `library` is { state: copied | already, link } or { state: later }
+// (the hourly sweep copies it; the store holds it either way) or { state: not_research } (docs/DRIVE.md, "The research
+// library"). A copy that fails never fails the write.
 
 export const config = { maxDuration: 60 }
 
 const q = (v: unknown) => (Array.isArray(v) ? v[0] : v)
 
-export function createStoreHandler(getDb: () => Promise<StoreDb>) {
+/** Copies one material into the research library and says what happened; never throws. */
+export type LibraryCopy = (materialId: string | null) => Promise<Record<string, unknown>>
+const materialIdOf = (r: Record<string, unknown>): string | null => {
+  const m = r.material && typeof r.material === 'object' ? r.material as Record<string, unknown> : null
+  return typeof m?.id === 'string' ? m.id : null
+}
+
+export function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy) {
+  const withCopy = async (r: Record<string, unknown>) => {
+    if (!copy) return r
+    try { return { ...r, library: await copy(materialIdOf(r)) } } catch { return { ...r, library: { state: 'later', why: 'copy_failed' } } }
+  }
   return async (req: VercelRequest, res: VercelResponse) => {
     if (guardEngine(req, res, ['GET', 'POST'])) return
     res.setHeader('Cache-Control', 'private, no-store')
@@ -41,9 +57,10 @@ export function createStoreHandler(getDb: () => Promise<StoreDb>) {
       const body = (req.body && typeof req.body === 'object' && !Array.isArray(req.body) ? req.body : {}) as Record<string, unknown>
       const bearer = operatorBearerAllowed(req)
       const by = writerOf(bearer, body)
-      if (op === 'text' || op === 'link') return res.status(201).json(await addText(db, { ...body, op }, bearer, by))
+      if (op === 'text') return res.status(201).json(await withCopy(await addText(db, { ...body, op }, bearer, by)))
+      if (op === 'link') return res.status(201).json(await addText(db, { ...body, op }, bearer, by))
       if (op === 'upload-url') return res.status(200).json(await uploadUrl(db, body))
-      if (op === 'confirm') return res.status(201).json(await confirmFile(db, body, bearer, by))
+      if (op === 'confirm') return res.status(201).json(await withCopy(await confirmFile(db, body, bearer, by)))
       if (op === 'archive') return res.status(200).json(await archive(db, String(body.id || ''), by, typeof body.reason === 'string' ? body.reason.slice(0, 500) : null))
       return res.status(400).json({ ok: false, error: 'unknown_op', ops: ['text', 'link', 'upload-url', 'confirm', 'archive'] })
     } catch (e) {
@@ -54,4 +71,7 @@ export function createStoreHandler(getDb: () => Promise<StoreDb>) {
   }
 }
 
-export default createStoreHandler(async () => (await import('../_supabase.js')).supabase as unknown as StoreDb)
+export default createStoreHandler(
+  async () => (await import('../_supabase.js')).supabase as unknown as StoreDb,
+  async id => (await import('../_researchLibraryGoogle.js')).copyNow(id),
+)

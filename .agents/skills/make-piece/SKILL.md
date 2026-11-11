@@ -42,13 +42,13 @@ and the repository, never from the chat that started it.
 
 ## Report to the board as you work
 
-A session started from this skill, not from a prompt copied off the board, reports the same way a board prompt says
-("Keep the board current as you work", `writeBack` in `apps/control-plane/api/board/_writeBack.ts`): first
-`get_piece_board` on the Control Center connector, or `python3 scripts/post-pack/board_session.py <piece_id> show`;
-then `report_board_session` (start, progress at each milestone, done, or blocked with what it needs), or
-`board_session.py <piece_id> start|progress|done|blocked "one line" --session <id> --step <step>`; and everything it
-makes or draws on goes on the piece with `add_piece_material`, or `board_session.py <piece_id> add <file or text>`. A
-day with no piece yet is `day:<Monday>/<day>`. Add, never replace.
+Report as a board prompt says (`apps/control-plane/api/board/_writeBack.ts`): `get_piece_board` (Control
+Center's connector) or `scripts/post-pack/board_session.py <piece_id> show`; then `report_board_session` start,
+progress, done or blocked (`board_session.py <piece_id> start|progress|done|blocked "one line" --session <id> --step
+<step>`); and file all you make or draw on with `add_piece_material` (`board_session.py <piece_id> add <file or
+text>`). A day with no piece is `day:<Monday>/<day>`. Add, never replace. Research is never left in scratch or a chat:
+file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece
+first. Each is copied into his Research library in Drive. (Ruling, Krish, 2026-11-11)
 
 ## From the signed narrative lock (pieces from 9 November)
 
@@ -476,15 +476,14 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    look in `meta.look`, else the style he picked on the Ideas tab (`config/style-references.json`
    `formats`), with the brand reference and the article's visuals. Name
    the piece's one motion system before any beat (`style.motion`, required
-   from 9 November): propose one from `creative_direction.py motion
+   from 9 November; his board pick: `meta.style`): propose one from `creative_direction.py motion
    --points <types> --format <long_video|short_video>` with its `reason`;
    he picks from `ve styles` mocks (his last take before he records, his
    new one after), then
    approves the hardest beat moving (`ve proof`) before a whole cut
    renders. Name the caption build with it: `brand.captions` (house or
-   word) or a caption style, `brand.caption_theme` (15 in
-   `apps/renderer/src/engine/captions/names.ts`; `art-directed` is the one
-   he picked, 11 Nov 2026), proved on his take before it ships. On the
+   word) or a caption style, `brand.caption_theme`
+   (`config/caption-themes.json`; `art-directed` is his pick, 11 Nov 2026), proved on his take before it ships. On the
    tall cut nothing he must read sits under a platform's buttons and no
    wordmark sits over the content; the engine's layouts hold that, so a
    direction never places words by hand (`docs/ve/MOTION_STANDARD.md`,

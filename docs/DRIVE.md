@@ -91,7 +91,7 @@ home computer: `config/studio.json` rules, and a stale setting is reported.
 | `Ventures > Inspiration` (`1AH8h5pBhkOhTzA4xA_5k0_1X8XDo9oLf`). Inside it: `Production Inspo` `1QxrzxISYFXq0er0DG0XSapm7qhvuRmh-` (`H:\My Drive\Ventures\Inspiration\Production Inspo`) and `Content Inspo` `1FNztJOU82M8zb6IIbUAbvuI6Kr0pF5Hu` (was `Cold Ideas & Inspo`; holds the `What I like` sheet) | the style references (`scripts/quick-edit/references.py`, `config/style-references.json`), the Drive inspiration scan (`cleo_inspiration_folder_id`, Content Inspo by ID), the taste ledger (krishanraja/inspirationhouse), content-watcher on the home computers, and its cloud backup through `POST /api/watch/upload` (`.github/workflows/watch-cloud.yml`) | Krish, 2026-10-24: "one for the content I like ... and one for production quality I like". `Production Inspo`: videos he likes the production of (style references; studied, never published). `Content Inspo`: posts, screenshots and research he likes the content of. content-watcher adds pasted links' media to one or the other and never deletes or overwrites. |
 | `makeyourmindup > 1 Brand kit (permanent) > Music` (`H:\My Drive\Ventures\Active Ventures\makeyourmindup\1 Brand kit (permanent)\Music`, Drive folder `1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri`; `00_Brand-Assets > 07_Music` until 11 November 2026, when Krish asked for one brand folder) | `scripts/quick-edit` on both home computers (`MINDMAKE_MUSIC_ROOT`, `runtime.music_root` in `config/studio.json`, `root_default_windows` in `config/music-library.json`). Krish, 2026-10-12: "thats where it will live and the video runners need to know this" | Licensed music tracks, each with its licence certificate beside it. A track is used only once it is in the ledger `config/music-library.json` and approved by Krish; nothing browses the folder for audio. Audio is never committed. |
 | `Heartside > 03b_Social-Schedule`, named `05_Social-Library` until Krish renamed it on 2026-11-09 (`1AHZLgwj1nHemNJeP56fQU6iTpgIEALzZ`, found by that ID; fallback path `H:\My Drive\Ventures\Active Ventures\Heartside\03b_Social-Schedule`, in `config/heartside-library.json`, not `studio.json`) | the library sync on the home computer (`MINDMAKE_HEARTSIDE_LIBRARY_ROOT` overrides it on one machine); Codex, which posts from it | Heartside's social library (Krish, 2026-11-03: "Why don't you duplicate that Python script for Heartside then? We're going to need to do a lot more of this type of stuff moving forward"). The sync writes only under `Posts`, one folder per post id (`Posts/F01`). Beside it, the growth engine's Codex README, posting strategy and schedule Sheets, which the sync never touches. Found by ID (Krish, 2026-11-09: "ideally ID so if folders move it doesnt matter"): the engine reads the folder by its ID as its owner (`GOOGLE_DRIVE_OWNER`, read only), walks its parents up to My Drive, and returns the path on the Heartside `GET /api/library/pending` answer (`folder`, `api/library/_heartsideFolder.ts`); the sync maps `My Drive/...` onto the drive that holds My Drive (`Resolve-HeartsideRoot`). A rename or a move needs no change here. A folder deleted or in the bin stops the Heartside pass with `heartside_library_gone` or `heartside_library_trashed`; a found folder not yet on the H: drive stops it with `heartside_library_root_missing`. No folder is ever made. When Google cannot be asked, the configured path is used. If the folder is replaced by a new one, its ID goes in `drive_id` and `HEARTSIDE_LIBRARY_FOLDER_ID` (a test keeps them equal). |
-| `makeyourmindup` (`1HHI0u24N3o3-yeprQzHdXVZtA7cNcKxh`; `H:\My Drive\Ventures\Active Ventures\makeyourmindup`). Inside it: `3 Posts` `17KdbFrZXKmGXkCaMpmntRD9rrAhnWkcT`, `1 Brand kit (permanent) > Music` `1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri` | the library sync on the home computer that files each post's assets (`MINDMAKE_LIBRARY_ROOT`, `runtime.library_root`), and the recordings upload on both, which reads `Video Engine > Inbox` | `1 Brand kit (permanent)`, `2 Channel art (permanent)`, `3 Posts` with one folder per post; the sync writes only under these three. Also `Video Engine` and `Video Engine brief and architecture (reference only)`. `00_Brand-Assets` is gone (archived 11 November 2026, below). Its own `READ ME FIRST.txt` describes the inside. |
+| `makeyourmindup` (`1HHI0u24N3o3-yeprQzHdXVZtA7cNcKxh`; `H:\My Drive\Ventures\Active Ventures\makeyourmindup`). Inside it: `3 Posts` `17KdbFrZXKmGXkCaMpmntRD9rrAhnWkcT`, `1 Brand kit (permanent) > Music` `1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri`, `6 Research library` `12FKoQhLlUkzwJDKYao95YIY_H_HQupS6` (the engine's mirror, below) | the library sync on the home computer that files each post's assets (`MINDMAKE_LIBRARY_ROOT`, `runtime.library_root`), and the recordings upload on both, which reads `Video Engine > Inbox` | `1 Brand kit (permanent)`, `2 Channel art (permanent)`, `3 Posts` with one folder per post; the sync writes only under these three. Also `Video Engine` and `Video Engine brief and architecture (reference only)`. `00_Brand-Assets` is gone (archived 11 November 2026, below). Its own `READ ME FIRST.txt` describes the inside. |
 
 ## The brand kit (Krish, 2026-11-11)
 
@@ -114,6 +114,60 @@ Moved out on 11 November 2026, and never to be read for current brand: `00_Brand
 
 The runner's KeePass file, elsewhere on the H: drive (likely `My Drive > KeePass`, folder `1CaLXl0TuFtZElxnAjItEw9pzRm1Si05X`, not confirmed on a machine), is bound by path too: KeePass opens a file, not a Drive ID.
 
+## The research library (Ruling, Krish, 2026-11-11)
+
+Krish, 2026-11-11: "I also want to have a specific folder in Drive where all of the research from every post goes.
+Sometimes it's done invisibly by a session and held in scratch ... or I send it through in a Markdown file. Either way
+the underlying research that we do for each piece is quite deep and should be kept in a library because one of the most
+important prospects that we have over time is connecting the dots on historical data."
+
+`makeyourmindup > 6 Research library` (`12FKoQhLlUkzwJDKYao95YIY_H_HQupS6`) holds a readable copy of every piece's
+research. It is a mirror, never a second record: the record is the engine's piece materials store
+(`docs/PUBLISH_BOARDS.md`, "Sessions and materials"), which keeps every research document by its sha256, every version,
+and never deletes one. Research is not brand, so it never goes in `1 Brand kit (permanent)`; it is not ready to post,
+so it never goes in `3 Posts`.
+
+| Inside the library | Found by | What it holds |
+|---|---|---|
+| `00 Index`, a Google Sheet | its ID, `1UejePwOc_6abqX1A3TrKXDZxej4C1OOvwVM3K3C29lo` | One row per document copied in: week, day, piece, series, kind, title, date added, Drive link, sha256, version, who added it, piece id and material id. Rows are only ever added, one per material. |
+| One folder per week, named by its Monday (`2026-11-16`) | its `ce_week` property | The week's pieces and days. |
+| Inside a week: one folder per piece (`Mon 16 Nov follow.the.money - Oracle files to sell $20B ... (8287846b)`), one per day with no piece yet (`Tue 17 Nov (no piece yet)`), and `Whole week` for the week's own research (the Sunday ideas sources) | its `ce_slot` property | Each research document as `<date added> <title>`, the exact bytes the store holds, and `Sources` (its `ce_sources` property), the verbatim source excerpts the fact gate reads. |
+
+**What is copied.** Every material on a piece, a day or a week whose kind is `research`, `corpus`, `note` or `paste` (a
+paste is a verbatim source excerpt, filed in `Sources`), or whose role is `research`, `sources`, `corpus` or `notes`:
+texts and files alike, never a link (a link's page is its own source) and never an archived material. A piece with no
+date sits in the week its first research was filed. Each copy is the store's own bytes, so the file's sha256 in Drive
+equals the store's, and its Drive description names the piece, the material, its version and sha256 and links the live
+Publish Board at that week and day.
+
+**When.** The write that files it copies it at once and says so in its answer (`library`): `POST
+/api/content-ideas/store` from the board, Control Centre's connector, `board_session.py` or a backfill. Everything else
+(the working set's trigger, an import, a copy that failed) is copied by the sweep, `research_library_mirror`
+(`/api/research-library/sweep`, hourly, in the run ledger), which leaves a material younger than ten minutes to the
+write that filed it. Both are idempotent by the material: a copy already in Drive, binned ones too, is never made again,
+and a row already in the index is never added again. A copy that fails loses nothing: the store still holds it and the
+next sweep copies it.
+
+**How.** The engine writes as the owner of his Drive (`GOOGLE_DRIVE_OWNER`, the delegated `drive` scope, as the feedback
+lane does) and only adds: week, piece, day and `Sources` folders inside the library, files inside them, and rows in the
+index. It never renames, moves, overwrites or deletes anything. Folders are found by their properties, never by name,
+so Krish may rename or move any folder inside the library. The library and its index are found by the IDs above
+(`RESEARCH_LIBRARY_FOLDER_ID` and `RESEARCH_LIBRARY_INDEX_ID` in `apps/control-plane/api/_researchLibrary.ts`, and
+`folder_id` and `index_id` in `config/research-library.json`, which a test holds equal; not in `config/studio.json`,
+whose contents are bound into the media standard's hash).
+If the library is gone or in the bin, the sweep fails loudly and makes nothing; Krish makes the folder, never an agent.
+
+**The rule for every session (Ruling, Krish, 2026-11-11).** Research is never left in scratch or a chat. A session files
+every research document on its piece as it writes it (`add_piece_material`, or `python3 scripts/post-pack/board_session.py
+PIECE add FILE --kind research`), and when Krish sends a Markdown file, it files it on the piece first. The write-back
+block every copied board prompt carries says so (`apps/control-plane/api/board/_writeBack.ts`), and so do the plan-week,
+make-piece and produce-video skills; `tests/control-plane/research-library.test.ts` holds all four to it.
+
+**Research from before the store.** What sessions wrote before 11 November lives in git history and in the database
+(the fact ledgers, deep dives and Teardown investigations on `content_ideas`). It reaches the library the same way as
+anything new: filed into the store through the store's own route (source `backfill` or `repo`), never copied into
+Drive by hand.
+
 ## Safe to tidy
 
 | Folder | Drive id | What goes in it |
@@ -132,6 +186,9 @@ The first three are in `04_Content` (`1ELCdOmMGXWmLpuheEoAKA-_4jvYbmbn3`).
 - A finished Make Your Mind Up post and its pieces: `makeyourmindup > 3 Posts`, in the post's own folder, the one
   home for everything ready to post (see below).
 - A content idea, or a one-off main-channel script: `Ventures > Inspiration > Content Inspo` (Krish, 2026-10-24), where the inspiration scan reads it.
+- A piece's research (a corpus, sources, notes, a deep-research result, a Markdown file Krish sends): on the piece in the
+  engine's store (`add_piece_material` or `board_session.py PIECE add`); its copy in `6 Research library` follows by
+  itself. Never filed in the library by hand, never left in scratch.
 - Anything an AI session cannot place: `Inbox from My AI` at the top of his Drive, never loose at the top.
 - Sales material: `Sales Materials`.
 - A brand film: `Films`, next number.
@@ -169,7 +226,8 @@ there, reads it back and replies "Done" with the link (`config/failures.json` F2
   the n8n "Google Drive account" login and only adds files; it never deletes or
   overwrites.
 - Public copy never carries a Drive path (`NOW.md`, `never_publish`).
-- Two automatic writers are allowed, each by Krish's word. The library sync
+- Three automatic writers are allowed, each by Krish's word. The research library's mirror (above; Ruling, Krish,
+  2026-11-11), which adds folders, files and index rows inside `6 Research library` only. The library sync
   (AGENTS.md), which writes the makeyourmindup library and, since
   2026-11-03, Heartside's `03b_Social-Schedule` (then `05_Social-Library`) under `Posts` only. And content-watcher (Krish, 2026-10-24: "Yes to
   Drive filing"): on his home computers, through the synced folders, it adds

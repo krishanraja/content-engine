@@ -83,6 +83,20 @@ class BoardSessionTest(unittest.TestCase):
         self.assertEqual(put[0][0], 'https://store/up')
         self.assertIn('Filed screenshot', out)
 
+    def test_add_research_says_where_its_library_copy_is(self):
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / 'research.md'
+            f.write_text('# What Krish sent\n\nThe corpus.', encoding='utf-8')
+            code, out, calls, _ = run([PIECE, 'add', str(f), '--kind', 'research'], [
+                (201, {'ok': True, 'material': {'id': 'm2', 'kind': 'research', 'title': 'research.md', 'version': 1},
+                       'library': {'state': 'copied', 'link': 'https://drive.google.com/file/d/x/view'}})])
+        self.assertEqual(code, 0)
+        self.assertEqual(calls[0][1], '/api/content-ideas/store?op=text')
+        self.assertEqual(calls[0][2]['kind'], 'research')
+        self.assertIn('In the research library: https://drive.google.com/file/d/x/view', out)
+        self.assertEqual(bs.library_line({'state': 'later'}), 'The research library copy follows within the hour (the store holds it already).')
+        self.assertEqual(bs.library_line({'state': 'not_research'}), '')
+
     def test_add_a_corpus_file_a_link_and_text(self):
         with tempfile.TemporaryDirectory() as d:
             f = Path(d) / 'corpus.md'

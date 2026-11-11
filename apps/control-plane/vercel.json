@@ -119,6 +119,10 @@
     {
       "path": "/api/library/recordings/drive-inbox",
       "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/research-library/sweep",
+      "schedule": "40 * * * *"
     }
   ],
   "functions": {

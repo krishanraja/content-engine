@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://content.krishraja.com/api/board/view.schema.json",
   "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
-  "x-contract-version": "1.3.0",
+  "x-contract-version": "1.4.0",
   "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
   "type": "object",
   "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources", "revision"],
@@ -260,7 +260,7 @@
     },
     "path": {
       "type": "object",
-      "required": ["steps", "current", "materials", "research_file", "look", "inspiration", "prompts", "storyboard"],
+      "required": ["steps", "current", "materials", "research_file", "look", "inspiration", "prompts", "storyboard", "style"],
       "properties": {
         "steps": {
           "type": "array",
@@ -341,7 +341,62 @@
           "type": ["object", "null"],
           "required": ["title", "at"],
           "properties": { "title": { "type": "string" }, "at": { "type": ["string", "null"] } }
+        },
+        "style": { "$ref": "#/$defs/style" }
+      }
+    },
+    "style": {
+      "type": ["object", "null"],
+      "x-since": "1.4.0",
+      "description": "The piece's style choices (docs/PUBLISH_BOARDS.md, \"The style choices\"; _style.ts): its motion style, its caption style and its treatment (the looks of path.look in the same shape), each with every option and the press that answers it. Null when it cannot be built.",
+      "required": ["motion", "captions", "treatment"],
+      "properties": {
+        "motion": { "$ref": "#/$defs/styleLayer", "description": "The bank's motion styles (config/style-references.json, layer motion); his pick is the default style.motion of the piece's next spec." },
+        "captions": { "$ref": "#/$defs/styleLayer", "description": "The caption styles (config/caption-themes.json); his pick is the default brand.caption_theme of the piece's next spec." },
+        "treatment": { "$ref": "#/$defs/styleLayer", "description": "The looks (path.look.options), answered by the look op." }
+      }
+    },
+    "styleLayer": {
+      "type": "object",
+      "required": ["options", "picked", "picked_by", "picked_at"],
+      "properties": {
+        "options": { "type": "array", "items": { "$ref": "#/$defs/styleOption" } },
+        "picked": { "type": ["string", "null"], "description": "The option picked now: his press on the board first, then (motion) his Pick a style gate, then a creative direction he signed." },
+        "picked_by": { "type": ["string", "null"], "enum": ["Krish", "spec", null], "x-open": true, "description": "Krish (his press or his gate), spec (a creative direction he signed), or null." },
+        "picked_at": { "type": ["string", "null"] }
+      }
+    },
+    "styleOption": {
+      "type": "object",
+      "required": ["id", "name", "line", "rules", "recommended", "why", "sample_url", "rejected", "presses"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "line": { "type": "string", "description": "One line on what it is." },
+        "rules": { "type": "array", "items": { "type": "string" } },
+        "point_types": { "type": "array", "items": { "type": "string" }, "description": "Motion: the kinds of point it draws (config/style-references.json motion_point_types)." },
+        "formats": { "type": "array", "items": { "type": "string" }, "description": "Motion: the formats it is made for." },
+        "ready": { "type": "boolean", "description": "Motion: whether ve can draw it now; false while its route says needs_device (it waits on a device and his yes on its test render), and then it is never recommended." },
+        "recommended": { "type": "boolean", "description": "At most three motion styles, one caption style and the Sunday room's look." },
+        "why": { "type": ["string", "null"], "description": "Why it is recommended, in plain words; null when it is not." },
+        "sample_url": { "type": ["string", "null"], "description": "A rendered sample on this site (a path starting with one /; config/ve/style-samples.json), or null." },
+        "rejected": { "type": "boolean", "description": "He said Not this to it on this piece, or called it not for us; never recommended." },
+        "presses": {
+          "type": "object",
+          "required": ["yes"],
+          "properties": { "yes": { "$ref": "#/$defs/stylePress" }, "not_this": { "$ref": "#/$defs/stylePress" } }
         }
+      }
+    },
+    "stylePress": {
+      "type": "object",
+      "required": ["label", "op", "body", "done"],
+      "description": "POST /api/board/<Monday>/<op> with the body, his press only: style records {piece_id, motion | captions | reject: {layer, id}} on the piece (meta.style); look is the look op.",
+      "properties": {
+        "label": { "type": "string" },
+        "op": { "type": "string", "enum": ["style", "look"], "x-open": true },
+        "body": { "type": "object" },
+        "done": { "type": "string", "description": "What the board says once it is saved." }
       }
     },
     "review": {

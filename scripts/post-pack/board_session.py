@@ -152,6 +152,18 @@ def show(answer):
     return '\n'.join(lines)
 
 
+def library_line(library):
+    """What the store said about the research library copy (docs/DRIVE.md, "The research library")."""
+    if not isinstance(library, dict):
+        return ''
+    state = library.get('state')
+    if state in ('copied', 'already') and library.get('link'):
+        return f"In the research library: {library['link']}"
+    if state == 'later':
+        return 'The research library copy follows within the hour (the store holds it already).'
+    return ''
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('piece', help='the piece id, or day:MONDAY/DAY for a day with no piece yet')
@@ -196,6 +208,9 @@ def main(argv=None):
             m = answer.get('material') or {}
             print(json.dumps(answer, indent=1) if args.json or status not in (200, 201) else
                   f"Filed {m.get('kind')} \"{m.get('title')}\" as {m.get('id')} (version {m.get('version')}{', already on file' if answer.get('duplicate') else ''}).")
+            library = library_line(answer.get('library'))
+            if library and not args.json and status in (200, 201):
+                print(library)
             return 0 if status in (200, 201) else 1
         if args.command == 'read':
             mid = args.line or ''
