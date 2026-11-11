@@ -1,4 +1,0 @@
-Status: done. The board view is contract 1.4.0: each series day's `path.style` carries the piece's motion style (the bank's motion layer), caption style (new `config/caption-themes.json`, one per name ve draws) and treatment (the looks), each option with its line, rules, recommendation and why, and a Yes or Not this press. `POST /api/board/<Monday>/style` records his pick or Not this as `meta.style` on the piece, guarded on `updated_at`; make-piece and ve start a new spec's `style.motion` and `brand.caption_theme` from it.
-Changed: `apps/control-plane/api/board/_style.ts`, the view, schema and fixture (1.4.0), `docs/PUBLISH_BOARDS.md` ("The style choices"), `docs/ve/RUNBOOK.md` S1, the make-piece skill.
-Next: Control Centre's Publish Board draws the Motion and Captions tabs from `path.style` and re-pins the engine's view at 1.4.0.
-North Star check (2026-11-11): holds.
