@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-10
+as_of: 2026-11-11
 head: a07ea4e
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Wed 11 Nov (36886e0b) is ready to post except the long cut's file: fact gate passed (run 7), spine judge passed, visual gate passed, pack in its 3 Posts folder; covers and thumbnails in this week's neon skin; the 90-second cut is in the post's working folder (not filed: a one-off composite has no ve or quick-edit receipt, Krish chose b). Reader test 8 9 7 8 8 8, under the bar (reader-test.md). (2026-11-11)
 - Round 2 of the Wed 11 devices is built by Codex and reviewed: arrangement (a real DAW view, AI flags, credits) and upload_flood (scattered AI songs, listens meter, search) pass; slot_machine still crops typed text and its cabinet vanishes on ink. Mock batch 2 (11 device frames, Krish cut out on the right) sent to Krish. (2026-11-10)
 - The eye-contact workflow re-encodes any take above 30 fps to 30 fps before NVIDIA's service sees it; the 48 fps ai-music takes of 10 Nov were refused with the "Only H.264 8-bit ... Constant Frame Rate" error while the 30 fps takes of 5 Nov went through (suspected cause, not yet proven by a passing run). (2026-11-10)
 - Wed 11 Nov re-recorded on 10 Nov from the approved v2 scripts; mock batch 1 (11 real-material frames) and the cold-open preview sent to Krish; Codex built arrangement, slot_machine and upload_flood (docs/ve/cards/w11-mocks/); eye-contact runs restarted on ai-music-short.mp4 and ai-music-long.mp4. (2026-11-10)
@@ -55,14 +56,14 @@ Older lines: `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-N
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-10): queue a round-3 slot_machine card (caret-following zoom clamp, cabinet contrast) once this is on main.
+- Next (2026-11-11): get the Wed 11 5-minute cut (143 MB) into its post's working folder; the n8n uploader stops at 100 MB and the connector at 10 MB, so Krish drops the file he has, or approves a smaller re-encode.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
 - Fri 13 Nov pre-production sheet (2026-11-07): both takes on the making record (Recorded: done); takes heard against the script (`docs/plans/2026-11-09-week/fri-takes-vs-script.md`: short take says "delegate" for "delete" and adds an unsupported "AI costs halved"; long take calls Hanoi "exaggerated" and changes the close line); the held 4 Nov send closed honestly (sent 06:46 on his words, no reader read-back ever passed). Sheet A to G sent to Krish as files and written as `docs/plans/2026-11-09-week/fri-preproduction/creative.json`. Waiting on Krish: Sign creative, and the 4-second pickup for "delete". Nothing is built before he signs.
 - 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms, lock signed). Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-10): holds.
+- North Star check (2026-11-11): holds.
 
 ## Read next
 
