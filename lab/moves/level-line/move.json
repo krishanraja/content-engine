@@ -1,0 +1,19 @@
+{
+ "id": "level-line",
+ "what": "A mint bar draws across the ground: held level.",
+ "says": [
+  "number",
+  "contrast"
+ ],
+ "needs": [
+  "text"
+ ],
+ "energy": "low",
+ "engine": "three",
+ "code": "lab/moves/level-line/move.mjs",
+ "entry": "update",
+ "vitals": "timing is fixed in the move; times come from the words that cue it",
+ "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+ "from": "lab/styles/ladder/scene.mjs",
+ "proven_by": "Krish, 2026-11-10, on The Ladder v2 frames: \"much better, go\""
+}
