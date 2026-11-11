@@ -87,6 +87,16 @@ describe('the old board is a read-only archive', () => {
     expect(out.endsWith('<main>Board</main></body></html>')).toBe(true)
   })
 
+  it('puts them after a built board\'s head when its body tag is implicit, never inside its script\'s "<body>" string', () => {
+    // A built board is a fragment, and week.js holds "<body>" in a string (it saves a picture's page).
+    const head = '<meta name="mymu-engine" content="x">\n<title>Board</title>\n<link rel="stylesheet" href="f.css">\n<style>a{b:c}</style>\n'
+    const rest = '<div class="wk-top">Board</div>\n<script>\nconst page = "<html><head></head><body>\\n" + body;\n</script>\n'
+    const out = readOnlyArchive(head + rest, '2026-11-09')
+    expect(out.startsWith(head + '<div role="note" data-archive-banner')).toBe(true)
+    expect(out.indexOf('<script data-archive-guard>')).toBeLessThan(out.indexOf('<div class="wk-top">'))
+    expect(out.endsWith(rest)).toBe(true)
+  })
+
   it('bumps the week\'s change signal for a writer outside the board\'s tables, on the operator\'s key only', async () => {
     const fake = fakeDb()
     expect((await call(fake, { method: 'POST', query: { week: '2026-11-09', op: 'touch' }, body: { source: 'plan' }, headers: { cookie: cookie(), origin: 'https://controlcenter.krishraja.com' } })).status).toBe(401)
