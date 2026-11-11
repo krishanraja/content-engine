@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Fri 13 Nov "Meta staff were ranked by AI use. They gamed it." is ready to post: both cuts and thumbnails are on its making record (Video assets done), and his yes is recorded for the day (picks/yes-fri-words), so the board reads "Approved in your words. Ready to post". (2026-11-11)
 - The Ladder and The Living Screen are in the motion bank (config/style-references.json, liked, his words recorded), so a ve spec can name style.motion "ladder" or "living-screen"; each renders in house motion until its device lands (needs_device). Three Codex cards are written as fields: docs/ve/cards/styles-3d/ (three.js in the renderer and the lab moves as one package, then ladder_stage, then living_screen). (2026-11-11)
 - The proactive-AI short moved from Monday 16 to Tuesday 17 Nov at Krish's word ("Schedule it for Tuesday off day instead, I still might do a 2nd post on Tuesday like a meme later"): filed and read back in 3 Posts/2026-11-17 Tue off.day - Proactive AI; the Monday folder is in Drive's trash at his word ("delete the monday 16th folder"). It is a decided Tuesday option in docs/plans/2026-11-16-week/ideas.json, video served from the library by sha256 (board-assets.json); config/filing-exceptions.json gains the Tuesday destination with his words. (2026-11-11)
 - Fri 13 Nov "Meta staff were ranked by AI use. They gamed it." (piece f3fcd5e1) is on the 9 Nov board again: the nightly stale sweep had buried it on 8 Nov (no date then); it is dated 13 Nov and unburied. Article written and fact-gated (passed, 0 blocking, ten verbatim sources), four figures, reader test recorded (three criteria held at 8), visual gate passed, pack built and sent to its 3 Posts folder, publish page recorded. Both cuts are in 3 Video (5-minute v3 as a 95 MB HEVC copy; 90-second v4), covers and thumbnails on this week's neon skin in 2 Covers and images. (2026-11-11)
@@ -43,13 +44,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-11 config/hand-built-cuts.json lets making.py file a hand-built cut only with Krish's words on those exact bytes; the two Friday cuts are its only entries.
 - 2026-11-11 the title moved from "Meta ranked 85,000 staff" to "Meta staff were ranked" because Fortune says the board tracked 85,000+ and ranked the top 250; config/music-library.json gains Just Got Real and Drifting Valleys.
 Older lines: `docs/history/2026-11-11-NOW-moved-6.md`, `docs/history/2026-11-11-NOW-moved-5.md`, `docs/history/2026-11-11-NOW-moved-4.md`, `docs/history/2026-11-11-NOW-moved-3.md`, `docs/history/2026-11-11-NOW-moved-2.md`, `docs/history/2026-11-11-NOW-moved-1.md`, `docs/history/2026-11-10-NOW-moved-8.md`, `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-11): Krish approves the Codex spend, then queue ve-style-0-three-and-moves on the lane, then the two device cards once it is verified.
+- Next (2026-11-11): Krish schedules Friday in Buffer.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
