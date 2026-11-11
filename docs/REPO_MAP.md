@@ -2091,6 +2091,28 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 
 - `const DESK_PAGE: string`
 
+### `apps/control-plane/api/board/_gate.ts`
+
+- `const SHA256`
+- `const OUTCOMES`
+- `type Outcome = keyof typeof OUTCOMES`
+- `const OUTCOME_OF_USE: Record<string, Outcome>`
+- `const OUTCOME_OF_VERDICT: Record<string, Outcome>`
+- `interface Approval`
+- `function dayWords(week: string, day: string): string`
+- `function dayShort(week: string, day: string): string`
+- `function approvedWhen(at: string, timeZone = 'America/New_York'): string`
+- `const approvedLabel = (a: Pick<Approval, 'decided_at'> & { via?: string }) =>`
+- `function optionSha(o: { so_what?: unknown; story?: unknown }): string`
+- `function goes(outcome: Outcome, week: string, day: string, offday = false): string`
+- `async function readApprovals(db: SupabaseClient, week: string): Promise<Approval[] | null>`
+- `function approvalFor(approvals: Approval[] | null, piece: Body, date: string): Approval | null`
+- `interface Held`
+- `const HELD_TITLE`
+- `const HELD_CHANGED`
+- `function gatePieces(week: string, pieces: Body[], approvals: Approval[] | null, ideas: Body | null)`
+- `function cutSoWhat(v: unknown): string`
+
 ### `apps/control-plane/api/board/_handler.ts`
 
 - `function boardPolicy(storeUrl?: string)`
