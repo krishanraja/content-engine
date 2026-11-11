@@ -55,9 +55,9 @@ ink: that was the first draft, and Krish asked for "significantly more premium".
 
 ## 6. Shot and layout grammar
 
-- **Tall (1080 x 1920):** the type owns the top third (y 280 to 760). The object sits in the lower
-  two thirds; the camera's look-at is lifted so it lands there. Captions sit near y 1262, clear of every channel's
-  handle zone.
+- **Tall (1080 x 1920):** the number's cap height starts just under every channel's top bar (y 270; Krish, 11 Nov:
+  "make maximum use of the full screen"), with its label and credit under it and the captions under those. The object
+  fills the screen below; words stay in x 60 to 860 and above y 1320. No wordmark over the content.
 - **Wide (1920 x 1080):** the type sits top left; the object sits centre right.
 - Acts: hero branch (hook to "disappear"); the street (the 43%, the level line); back to the branch; the two
   towers; the ask. One set on stage at a time.
@@ -95,4 +95,9 @@ wide, ending on the house close card filmed by `scripts/quick-edit/kit.py` (`doc
 
 ## 12. Verdict and scores
 
-Untested. Krish's ratings and scores go here, word for word, with the date.
+Liked (bank `ladder`, recorded 11 Nov 2026). His words, in order:
+
+- 10 Nov, on the rebuilt frames: "much better, go".
+- 10 Nov, on the cut: "I think the subtitles could be a little bit lower on the cap ladder" (the captions moved down).
+- 11 Nov: "can you merge the approved styles to main so I can use them? The ladder and the other one?" and "yes port
+  The Ladder and The Living Screen into ve" (bank entry and cards, `docs/ve/cards/styles-3d/`).

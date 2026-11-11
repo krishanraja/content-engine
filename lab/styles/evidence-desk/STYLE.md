@@ -21,7 +21,7 @@ recreated in our own type as if it were the original.
 - Cards: the captured page multiplied onto near-white stock with the house paper at 22%, a deep soft shadow, a few
   degrees of tilt. Captures live with the render (`--assets`), never in the repository.
 - Desk: ink under one warm lamp pool; a vignette; the house grain.
-- Tall: the desk is a window below the clock (from y 906), so nothing on it sits behind the number, caption or clock.
+- Tall: the desk is a window below the clock (from y 756), so nothing on it sits behind the number, caption or clock.
 
 ## 3. Colour logic
 
@@ -39,7 +39,7 @@ while the series colour marks the channel only (brand skin, section 2a of the ca
 ## 4. Type and captions (the brand skin's always-band)
 
 - Anton for the number (190 px tall), IBM Plex Mono 40 px for the credit, the clock and the index card.
-- Captions at A: directly under the number and its credit (`env.captionBase` 742 on the tall canvas).
+- Captions at A: directly under the number and its credit (`env.captionBase` 592 on the tall canvas).
 - Source text is pixels of the page and is not checked as type; the strip makes the line large enough to read.
 
 ## 5. Motion quality
@@ -51,7 +51,7 @@ while the series colour marks the channel only (brand skin, section 2a of the ca
 
 - Shots: the desk whole (the source arriving), the 20 circled, the strip, the slip lifting, the 43 percent strip, the
   answer underlined in mint, the two marks joined, the index card for the ask.
-- **Tall:** credit, number, caption, clock, then the desk window (no wordmark on vertical video, Krish 2026-11-11).
+- **Tall:** the credit at y 300 just under every channel's top bar, then the number, caption, clock and the desk window (moved up 11 Nov 2026: Krish, "make maximum use of the full screen"); no wordmark over the content. The source pages are pictures and may run past x 860; their circled words stay inside it.
 - **Wide:** type and clock in the left column, the desk on the right.
 
 ## 7. Sound palette
