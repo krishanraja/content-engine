@@ -2,7 +2,7 @@ import sys, json, subprocess, re, wave, numpy as np
 sys.path.insert(0,'/home/user/content-engine/scripts'); import bed_shape as bs
 src, out = sys.argv[1], sys.argv[2]; off = float(sys.argv[3]) if len(sys.argv) > 3 else 0.0
 lev=json.load(open('/home/user/content-engine/config/music-library.json'))['levels']
-subprocess.run(['ffmpeg','-v','error','-y','-i',src,'-t','42.1','-ar','48000','-ac','2','bedtmp.wav'],check=True)
+subprocess.run(['ffmpeg','-v','error','-y','-ss','2.0','-i',src,'-t','46.0','-ar','48000','-ac','2','bedtmp.wav'],check=True)
 def lufs(p):
     e=subprocess.run(['ffmpeg','-hide_banner','-nostats','-i',p,'-af','ebur128','-f','null','-'],capture_output=True,text=True).stderr
     return float(re.findall(r'I:\s+(-?[\d.]+) LUFS',e)[-1])

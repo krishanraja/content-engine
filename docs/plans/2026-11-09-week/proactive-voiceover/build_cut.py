@@ -10,7 +10,8 @@ FONTS = REPO / "assets/fonts/makeyourmindup"
 def b64(p, mime):
     return f"data:{mime};base64," + base64.b64encode(pathlib.Path(p).read_bytes()).decode()
 
-T0, T1 = 0.0, 42.1
+T0, T1 = 0.0, 45.1
+END = 42.0  # the end card (Krish, 11 Nov 2026: "we also need to have an outro card to follow for more at makeyourmindup.ai")
 words = json.load(open(HERE / "words-a.json"))
 
 # Hand-set phrases; *KEY* marks the key word. They must match the take's words in order.
@@ -54,7 +55,7 @@ B = {"messaging": at("messaging"), "first": at("first"), "wake0": at("wake"), "d
      "two": at("two"), "stop1": at("spending"), "stop2": at("sending"),
      "nothing": at("nothing"), "out": at("out"), "yes2": at("yes", 2), "even": at("even"), "ask": at("ask", 2),
      "writes": at("writes"), "prompt": at("prompt's"), "paste": at("paste"),
-     "tonight": at("tonight"), "end": words[-1]["e"]}
+     "tonight": at("tonight"), "end": words[-1]["e"], "endcard": END}
 
 html = f"""<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face {{ font-family: Anton; src: url('{b64(FONTS/'Anton-Regular.ttf','font/ttf')}'); }}
@@ -129,6 +130,10 @@ html,body {{ width:1080px; height:1920px; overflow:hidden; background:#0A100D; }
  <div class="bigclock" id="bigclock">07:00</div>
  <div class="two" id="two">2</div>
 </div>
+<div id="endcard" style="position:absolute;left:0;right:0;top:620px;text-align:center;opacity:0">
+  <div style="font-family:Anton;font-size:150px;line-height:1;color:#F4EFE4;text-transform:uppercase">Follow<br>for more</div>
+  <div style="margin-top:44px;font-family:Plex;font-size:52px;letter-spacing:2px;color:#7EF0C0">makeyourmindup.ai</div>
+</div>
 <div id="cap"></div>
 <script>
 const B = {json.dumps(B)}, CAP = {json.dumps(cap)};
@@ -142,6 +147,8 @@ function leave(el,t0,t){{ if(t<t0) return; const p=outCubic((t-t0)/0.18); el.sty
 function show(el,on){{ el.style.display=on?'flex':'none'; }}
 function type(el,text,t0,t,cps=26){{ const n=Math.max(0,Math.min(text.length,Math.floor((t-t0)*cps))); el.textContent=t<t0?'':text.slice(0,n); }}
 window.render=function(t){{
+  const ec=$('endcard'); if(t>=B.endcard){{ const e=outCubic((t-B.endcard)/0.3); $('cam').style.opacity=1-e; $('cap').innerHTML=''; $('ghost').style.opacity=0;
+    const p=outBack((t-B.endcard-0.15)/0.25); ec.style.opacity=clamp(p*1.5); ec.style.transform=`translateY(${{(1-p)*50}}px) scale(${{0.92+0.08*p}})`; return; }}
   // ---- camera: a slow push through each scene; rest on the gap; pull back for the rules
   const rest=outCubic((t-B.gap)/0.45)*(1-outCubic((t-B.two)/0.35));
   const push=0.05*clamp(((t<B.picture?t:t-B.picture))/6);
