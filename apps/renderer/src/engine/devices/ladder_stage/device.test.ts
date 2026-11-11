@@ -28,7 +28,10 @@ it('builds identical scene geometry and token material inputs at a repeated fram
     });return out}
     expect(summary(make())).toEqual(summary(make()))
     const root=make()
-    const glass:T.Mesh[]=[];root.traverse(o=>{if(o instanceof T.Mesh&&(o.geometry as T.BoxGeometry).parameters?.width===0.62)glass.push(o)})
+    const glass:T.Mesh[]=[];root.traverse(o=>{
+      // RoundedBoxGeometry reports width 1 in parameters and bakes the size into its vertices; measure it.
+      if(!(o instanceof T.Mesh))return;o.geometry.computeBoundingBox();const b=o.geometry.boundingBox!
+      if(Math.abs(b.max.x-b.min.x-0.62)<1e-6)glass.push(o)})
     expect(glass.filter(g=>(g.material as T.MeshStandardMaterial).emissiveIntensity>1)).toHaveLength(13)
   }
 })

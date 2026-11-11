@@ -25,7 +25,7 @@ export function buildSet(p:DeviceProps) {
   const plain=new T.MeshStandardMaterial({color:c.cream,roughness:0.85})
   const lit=new T.MeshStandardMaterial({color:c.mint,emissive:c.mint,emissiveIntensity:0.22})
   const dark=new T.MeshStandardMaterial({color:c.inkSoft,roughness:0.7})
-  const mesh=(w:number,h:number,d:number,mat:T.Material,x=0,y=0,z=0)=>{
+  const mesh=<M extends T.Material,>(w:number,h:number,d:number,mat:M,x=0,y=0,z=0)=>{
     const m=new T.Mesh(new RoundedBoxGeometry(w,h,d,2,0.04),mat)
     m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;return m
   }
@@ -90,15 +90,17 @@ export function Device(p:DeviceProps) {
     camera=camera.map((v,j)=>v+(target[j]!-v)*k)
   }
   const number=p.object.dataset?.rows.find(r=>r.value===s.count)
-  const eye=new T.Vector3(camera[0]!+d,camera[1]!+d*0.4,camera[2]!)
-  const orientation=new T.Euler().setFromRotationMatrix(new T.Matrix4().lookAt(eye,new T.Vector3(0,2,0),new T.Vector3(0,1,0)))
+  // A 9:16 frame sees less width through the same lens: pull the camera back and aim above the set so it sits under the number.
+  const back=tall?2.1:1, aim=new T.Vector3(0,tall?5.5:2,0)
+  const eye=new T.Vector3((camera[0]!+d)*back,(camera[1]!+d*0.4)*back,camera[2]!*back)
+  const orientation=new T.Euler().setFromRotationMatrix(new T.Matrix4().lookAt(eye,aim,new T.Vector3(0,1,0)))
   return <div data-device="ladder_stage" style={{position:'absolute',...p.box,left:p.box.left,top:p.box.top,background:p.tokens.ink,opacity:s.opacity,overflow:'hidden'}}>
-    <div style={{position:'absolute',left:tall?w*60/1080:w*0.35,top:tall?h*720/1920:h*0.15,width:tall?w*800/1080:w*0.63,height:tall?h*590/1920:h*0.8}}>
-      <ThreeCanvas width={tall?w*800/1080:w*0.63} height={tall?h*590/1920:h*0.8} camera={{position:[eye.x,eye.y,eye.z],rotation:[orientation.x,orientation.y,orientation.z],fov:36}}
+    <div style={{position:'absolute',left:0,top:0,width:w,height:h}}>
+      <ThreeCanvas width={Math.round(w)} height={Math.round(h)} camera={{position:[eye.x,eye.y,eye.z],rotation:[orientation.x,orientation.y,orientation.z],fov:36}}
         shadows gl={{antialias:true,toneMapping:T.ACESFilmicToneMapping,toneMappingExposure:1.05}} onCreated={({gl})=>{
           gl.shadowMap.type=T.PCFSoftShadowMap
         }}>
-        <color attach="background" args={[p.tokens.ink]}/><fog attach="fog" args={[p.tokens.ink,30,70]}/>
+        <color attach="background" args={[p.tokens.ink]}/><fog attach="fog" args={[p.tokens.ink,30*back,70*back]}/>
         <hemisphereLight args={[p.tokens.cream,p.tokens.ink,0.55]}/>
         <directionalLight color={p.tokens.cream} intensity={2.6} position={[-8,14,10]} castShadow shadow-mapSize={[2048,2048]}/>
         <directionalLight color={p.tokens.mint} intensity={0.3} position={[10,6,-12]}/>
