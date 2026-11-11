@@ -44,6 +44,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 LEDGER = REPO / 'config' / 'style-references.json'
+# A mirror of Production Inspo for machines without H:, never a home: clips are filed only in
+# Production Inspo (docs/DRIVE.md, "The brand kit", Krish 2026-11-11).
 LIBRARY_REFERENCES = '1 Brand kit (permanent)/Style references'
 FETCH_DEFAULT = REPO / '.cache' / 'references'
 VIDEO_EXTENSIONS = {'.mp4', '.mov', '.webm', '.m4v'}
