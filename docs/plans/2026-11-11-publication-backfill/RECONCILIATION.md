@@ -26,7 +26,8 @@ Krish, 11 Nov 2026: "Session is no longer handling anything so you will need to 
 | of which already recorded by Growth's receipts | 2 |
 | written by this backfill | 14 |
 | Intentional exception: the launch Short, no engine piece | 1 (`ADOA0DutbQg`) |
-| Unresolved: a 3 Nov Short whose day had no piece and whose subject matches neither neighbour | 1 (`gJr6lwb-myE`, waits on Krish) |
+| Intentional exception: the Tuesday 3 Nov off-day meme, no piece (Krish, 11 Nov: "a tuesday off day where we post a funny meme") | 1 (`gJr6lwb-myE`) |
+| Unresolved | 0 |
 | Pieces with their full video after the backfill | 11 of 11 out |
 | Pieces with their Short | 5 of 11 (the other 6 had no Short on the channel) |
 
@@ -35,5 +36,5 @@ The 20 Oct pair, two full videos on one day, was the only real ambiguity. It is 
 ## How it was run
 
 - `node backfill.mjs` (dry run) printed 14 to write, 2 already recorded, 0 conflicts.
-- `--apply` writes only an empty slot, so a second run changes nothing. It runs once Krish says yes, because it writes to production.
+- `--apply` writes only an empty slot, so a second run changes nothing. Applied on 11 Nov with Krish's yes. The first apply changed nothing: the table's guard (`content_ideas_keep_newer_making`) keeps a making record unless the incoming one is newer, so the script now stamps `making.updated_at` like every engine write and reads every slot back. Readback: 16 of 16 on their pieces; a second run writes nothing.
 - Covers need no backfill: the site reads each post's own cover from Substack every 15 minutes, history included.
