@@ -1,18 +1,18 @@
 {
- "id": "light-sweep-number",
- "what": "One giant number rises out of a dark stage floor, a slow band of light sweeps across its face, and its reflection fades into the floor.",
- "says": [
-  "number"
- ],
- "needs": [
-  "number"
- ],
- "energy": "low",
- "engine": "canvas",
- "code": "lab/moves/light-sweep-number/move.mjs",
- "entry": "draw",
- "vitals": "timing is fixed in the move; times come from the words that cue it",
- "skin": "brand skin colours only (ink, cream, mint, the series colour); the pointer colour is the calling style's, recorded in its STYLE.md",
- "from": "lab/styles/dark-keynote/scene.mjs",
- "proven_by": "not yet: built 2026-11-11 for batch 1; waits on Krish's verdict on the style frames"
+  "id": "light-sweep-number",
+  "what": "One giant number rises out of a dark stage floor, a slow band of light sweeps across its face, and its reflection fades into the floor.",
+  "says": [
+    "number"
+  ],
+  "needs": [
+    "number"
+  ],
+  "energy": "low",
+  "engine": "canvas",
+  "code": "packages/moves/light-sweep-number/move.mjs",
+  "entry": "draw",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); the pointer colour is the calling style's, recorded in its STYLE.md",
+  "from": "lab/styles/dark-keynote/scene.mjs",
+  "proven_by": "not yet: built 2026-11-11 for batch 1; waits on Krish's verdict on the style frames"
 }

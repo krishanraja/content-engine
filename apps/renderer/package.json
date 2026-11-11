@@ -7,6 +7,9 @@
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "remotion": "4.0.518",
-    "zod": "4.6.7"
+    "zod": "4.6.7",
+    "three": "0.170.0",
+    "@remotion/three": "4.0.518",
+    "@mymu/moves": "0.1.0"
   }
 }

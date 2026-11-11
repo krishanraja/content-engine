@@ -1,19 +1,19 @@
 {
- "id": "street-drop",
- "what": "Copies of the object rise into a street, then the new ones drop in from above: a percentage made visible.",
- "says": [
-  "number",
-  "place"
- ],
- "needs": [
-  "number"
- ],
- "energy": "high",
- "engine": "three",
- "code": "lab/moves/street-drop/move.mjs",
- "entry": "update",
- "vitals": "timing is fixed in the move; times come from the words that cue it",
- "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
- "from": "lab/styles/ladder/scene.mjs",
- "proven_by": "Krish, 2026-11-10, on The Ladder v2 frames: \"much better, go\""
+  "id": "street-drop",
+  "what": "Copies of the object rise into a street, then the new ones drop in from above: a percentage made visible.",
+  "says": [
+    "number",
+    "place"
+  ],
+  "needs": [
+    "number"
+  ],
+  "energy": "high",
+  "engine": "three",
+  "code": "packages/moves/street-drop/move.mjs",
+  "entry": "update",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+  "from": "lab/styles/ladder/scene.mjs",
+  "proven_by": "Krish, 2026-11-10, on The Ladder v2 frames: \"much better, go\""
 }

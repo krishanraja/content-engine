@@ -90,7 +90,7 @@ and a keep, merge or retire proposal that is Krish's to decide.
 | Motion style bank (`motion-styles`) | One motion style per piece, from the motion layer; apps/renderer/src/engine/kit/motion-profiles.json says how each is drawn, and a style whose device is not built yet (needs_device: The Ladder, The Living Screen and seven more) renders in house motion until its card lands | pre-record | partial | keep | `config/style-references.json` | ve-styles |
 | ve styles and Pick a style (`ve-styles`) | Mocks of the top motion styles on his take, then the Pick a style press | post-record | partial | merge | `scripts/ve.py` | video-styles, motion-styles |
 | ve lab (`ve-lab`) | A reel of motion styles for comparison | any | working | keep | `docs/ve/lab` |  |
-| Moves library (`lab-moves`) | The house moves (count on a part, street drop, live chart, freeze-circle-magnify and the rest), each a deterministic draw from t with its own gallery and check; styles are built from them and card ve-style-0 makes them one package ve imports | pre-record | working | keep | `lab/moves/README.md` | video-styles |
+| Moves library (`lab-moves`) | The house moves (count on a part, street drop, live chart, freeze-circle-magnify and the rest), each a deterministic draw from t, kept once in packages/moves (@mymu/moves) and imported by the style lab and ve; lab/moves keeps the gallery, the check and re-exports | pre-record | working | keep | `packages/moves/README.md` | video-styles |
 
 ## artwork
 

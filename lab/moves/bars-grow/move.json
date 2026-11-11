@@ -1,19 +1,19 @@
 {
- "id": "bars-grow",
- "what": "A row of small bars grows, then the new ones grow in the series colour.",
- "says": [
-  "number",
-  "contrast"
- ],
- "needs": [
-  "number"
- ],
- "energy": "low",
- "engine": "canvas",
- "code": "lab/moves/bars-grow/move.mjs",
- "entry": "draw",
- "vitals": "timing is fixed in the move; times come from the words that cue it",
- "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
- "from": "lab/styles/living-screen/scene.mjs",
- "proven_by": "Krish, 2026-11-10, on the teller opening: \"Now let's keep that pace of animation up.\""
+  "id": "bars-grow",
+  "what": "A row of small bars grows, then the new ones grow in the series colour.",
+  "says": [
+    "number",
+    "contrast"
+  ],
+  "needs": [
+    "number"
+  ],
+  "energy": "low",
+  "engine": "canvas",
+  "code": "packages/moves/bars-grow/move.mjs",
+  "entry": "draw",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+  "from": "lab/styles/living-screen/scene.mjs",
+  "proven_by": "Krish, 2026-11-10, on the teller opening: \"Now let's keep that pace of animation up.\""
 }

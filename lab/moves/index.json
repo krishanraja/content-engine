@@ -14,7 +14,7 @@
    ],
    "energy": "low",
    "engine": "canvas",
-   "code": "lab/moves/bars-grow/move.mjs"
+   "code": "packages/moves/bars-grow/move.mjs"
   },
   {
    "id": "cost-shrink",
@@ -29,7 +29,7 @@
    ],
    "energy": "low",
    "engine": "canvas",
-   "code": "lab/moves/cost-shrink/move.mjs"
+   "code": "packages/moves/cost-shrink/move.mjs"
   },
   {
    "id": "count-in-card",
@@ -45,7 +45,7 @@
    ],
    "energy": "medium",
    "engine": "canvas",
-   "code": "lab/moves/count-in-card/move.mjs"
+   "code": "packages/moves/count-in-card/move.mjs"
   },
   {
    "id": "count-on-a-part",
@@ -61,7 +61,7 @@
    ],
    "energy": "high",
    "engine": "three",
-   "code": "lab/moves/count-on-a-part/move.mjs"
+   "code": "packages/moves/count-on-a-part/move.mjs"
   },
   {
    "id": "counter-scene",
@@ -77,7 +77,7 @@
    ],
    "energy": "high",
    "engine": "canvas",
-   "code": "lab/moves/counter-scene/move.mjs"
+   "code": "packages/moves/counter-scene/move.mjs"
   },
   {
    "id": "freeze-circle-magnify",
@@ -93,7 +93,7 @@
    ],
    "energy": "medium",
    "engine": "canvas",
-   "code": "lab/moves/freeze-circle-magnify/move.mjs"
+   "code": "packages/moves/freeze-circle-magnify/move.mjs"
   },
   {
    "id": "level-line",
@@ -108,7 +108,7 @@
    ],
    "energy": "low",
    "engine": "three",
-   "code": "lab/moves/level-line/move.mjs"
+   "code": "packages/moves/level-line/move.mjs"
   },
   {
    "id": "light-sweep-number",
@@ -122,7 +122,7 @@
    ],
    "energy": "low",
    "engine": "canvas",
-   "code": "lab/moves/light-sweep-number/move.mjs"
+   "code": "packages/moves/light-sweep-number/move.mjs"
   },
   {
    "id": "live-chart",
@@ -138,7 +138,7 @@
    ],
    "energy": "medium",
    "engine": "canvas",
-   "code": "lab/moves/live-chart/move.mjs"
+   "code": "packages/moves/live-chart/move.mjs"
   },
   {
    "id": "map-pin-drop",
@@ -153,7 +153,7 @@
    ],
    "energy": "medium",
    "engine": "canvas",
-   "code": "lab/moves/map-pin-drop/move.mjs"
+   "code": "packages/moves/map-pin-drop/move.mjs"
   },
   {
    "id": "percent-block",
@@ -167,7 +167,7 @@
    ],
    "energy": "medium",
    "engine": "canvas",
-   "code": "lab/moves/percent-block/move.mjs"
+   "code": "packages/moves/percent-block/move.mjs"
   },
   {
    "id": "rows-equal",
@@ -183,7 +183,7 @@
    ],
    "energy": "medium",
    "engine": "canvas",
-   "code": "lab/moves/rows-equal/move.mjs"
+   "code": "packages/moves/rows-equal/move.mjs"
   },
   {
    "id": "slab-towers",
@@ -198,7 +198,7 @@
    ],
    "energy": "high",
    "engine": "three",
-   "code": "lab/moves/slab-towers/move.mjs"
+   "code": "packages/moves/slab-towers/move.mjs"
   },
   {
    "id": "source-on-clock",
@@ -213,7 +213,7 @@
    ],
    "energy": "low",
    "engine": "canvas",
-   "code": "lab/moves/source-on-clock/move.mjs"
+   "code": "packages/moves/source-on-clock/move.mjs"
   },
   {
    "id": "street-drop",
@@ -228,7 +228,7 @@
    ],
    "energy": "high",
    "engine": "three",
-   "code": "lab/moves/street-drop/move.mjs"
+   "code": "packages/moves/street-drop/move.mjs"
   },
   {
    "id": "task-copies-2d",
@@ -243,7 +243,7 @@
    ],
    "energy": "medium",
    "engine": "canvas",
-   "code": "lab/moves/task-copies-2d/move.mjs"
+   "code": "packages/moves/task-copies-2d/move.mjs"
   },
   {
    "id": "task-copies-3d",
@@ -257,7 +257,7 @@
    ],
    "energy": "medium",
    "engine": "three",
-   "code": "lab/moves/task-copies-3d/move.mjs"
+   "code": "packages/moves/task-copies-3d/move.mjs"
   },
   {
    "id": "time-bars",
@@ -272,7 +272,7 @@
    ],
    "energy": "medium",
    "engine": "canvas",
-   "code": "lab/moves/time-bars/move.mjs"
+   "code": "packages/moves/time-bars/move.mjs"
   },
   {
    "id": "toast",
@@ -287,7 +287,7 @@
    ],
    "energy": "low",
    "engine": "canvas",
-   "code": "lab/moves/toast/move.mjs"
+   "code": "packages/moves/toast/move.mjs"
   },
   {
    "id": "type-is-the-picture",
@@ -304,7 +304,7 @@
    ],
    "energy": "high",
    "engine": "canvas",
-   "code": "lab/moves/type-is-the-picture/move.mjs"
+   "code": "packages/moves/type-is-the-picture/move.mjs"
   },
   {
    "id": "agent_swarm",

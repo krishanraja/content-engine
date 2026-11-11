@@ -62,4 +62,4 @@ A style proved here reaches ve in four steps, and nothing else moves it there:
 4. **Verified and switched on.** `ve verify-card`, `ve lab render` and `ve lab diff` (the house look unchanged), a fixture
    render of the house test take in the style for his Gate 2, then `needs_device` comes out of both files.
 
-The Ladder and The Living Screen are at step 3 (11 Nov 2026).
+The Ladder and The Living Screen are at step 3 (11 Nov 2026): card ve-style-0 (3D in the renderer, the moves as one package) is built and verified; the two device cards wait on Krish's approval of their Codex spend.
