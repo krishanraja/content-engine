@@ -1304,6 +1304,22 @@ def thumb_problem(cut, path):
     return None
 
 
+def hand_built_approval(piece_id, cut, video_file, config=None):
+    """The entry in config/hand-built-cuts.json that files this exact cut without a validation receipt, or None.
+    It matches only the piece, the cut and these bytes (sha256), and only with Krish's own words on it (Ruling, Krish,
+    2026-11-11: hand-built cuts he approved may be filed with his words on those exact files; nothing else is exempt)."""
+    path = Path(config) if config else Path(__file__).resolve().parents[2] / 'config' / 'hand-built-cuts.json'
+    if not video_file or not path.is_file() or not Path(video_file).is_file():
+        return None
+    entries = json.loads(path.read_text(encoding='utf-8')).get('cuts') or []
+    digest = hashlib.sha256(Path(video_file).read_bytes()).hexdigest()
+    for entry in entries:
+        if (entry.get('piece_id') == piece_id and entry.get('cut') == cut and entry.get('sha256') == digest
+                and str(entry.get('krish') or '').startswith('Krish')):
+            return entry
+    return None
+
+
 def video_patch(cut, name, path, url=None, seconds=None, thumb=None, thumb_url=None, music=None, thumb_file=None):
     """One finished video of one cut, with its thumbnail and its music.
     Krish, 2026-10-12: "I always want a video thumbnail for all video sizes
@@ -2695,8 +2711,11 @@ def main(argv=None, call=None):
                 raise MakingError('This video needs --video-file and its hash-bound validation receipt')
             receipt_path=a.video_file+'.validation.json'
             target=a.args[2] if a.args[2].startswith('3 Posts/') else guarded['library_prefix']+a.args[2] if guarded else None
-            problems=quality.delivery_problems(a.video_file,receipt_path,target)
-            if not problems:
+            approved=hand_built_approval(a.piece_id, a.args[0], a.video_file)
+            problems=[] if approved else quality.delivery_problems(a.video_file,receipt_path,target)
+            if approved:
+                patch['video_assets'][0]['hand_built']={'sha256': approved['sha256'], 'krish': approved['krish']}
+            elif not problems:
                 receipt=json.loads(Path(receipt_path).read_text(encoding='utf8'))
                 if receipt.get('piece_id')!=a.piece_id:
                     problems.append('receipt belongs to a different piece')
