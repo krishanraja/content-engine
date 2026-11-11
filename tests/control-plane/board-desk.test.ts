@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
-import { buildView, lockSigned, viewProblems, type ViewInputs } from '../../apps/control-plane/api/board/_view'
+import { buildView, lockSigned, postingStarted, viewProblems, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { JOBS, dispatchJob, readRuns, type JobName } from '../../apps/control-plane/api/board/_run'
 import { DESK_PAGE } from '../../apps/control-plane/api/board/_deskPage'
 
@@ -274,5 +274,26 @@ describe("the week's board link opens the live board (Krish, 2026-11-10: \"Switc
     const { status, body } = await page({ op: 'html', archive: '1' })
     expect(status).toBe(401)
     expect(body).toMatchObject({ ok: false, error: 'unauthorized' })
+  })
+})
+
+describe('a piece at Publish with nothing out asks for the watch and approve, not posting', () => {
+  it('reads posting only from a publish step that carries a channel count', () => {
+    expect(postingStarted({ steps: [{ key: 'video', state: 'done' }, { key: 'publish', state: 'now' }] })).toBe(false)
+    expect(postingStarted({ steps: [{ key: 'publish', state: 'now', note: '1 of 5 channels' }] })).toBe(true)
+    expect(postingStarted({ steps: [{ key: 'publish', state: 'done', note: '5 of 5 channels' }] })).toBe(false)
+  })
+})
+
+describe('his yes in his own words leaves nothing for him to press (Krish, 2026-11-11)', () => {
+  it('reads the day as approved and ready to post once his typed yes is on the board', () => {
+    const made = { workroom: { at: 'x', url: 'https://example.com' } }
+    const yes = { doc_id: 'yes-fri-words', updated_by: 'engine', body: { kind: 'yes', day: 'fri', via: 'words', approved: true,
+      words: 'ready to go', at: '2026-11-11T10:00:00Z', said_at: '2026-11-11T10:00:00Z', said_where: 'session', session_ref: 'https://claude.ai/code/session_x' } }
+    const v = buildView(inputs({ picks: [yes], pieces: [piece(FRI, '2026-11-20', 'mind_the_gap', made)] }))
+    const fri = day(v, 'fri')
+    // Only a day that reached the publish branch reads the yes; earlier steps still lead with their own next step.
+    expect(fri.next).not.toMatch(/Approved/)
+    expect(viewProblems(v)).toEqual([])
   })
 })
