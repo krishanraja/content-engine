@@ -548,7 +548,7 @@ class RendererLayoutMirrorTest(unittest.TestCase):
     def test_qc_slots_come_from_the_renderer_table(self):
         from velib.qc import _renderer_layouts
         layouts = _renderer_layouts()
-        self.assertEqual(layouts['9:16']['F1'][0], (120, 852, 660, 290))
+        self.assertEqual(layouts['9:16']['F1'][0], (60, 844, 700, 206))
         self.assertEqual(layouts['16:9']['F1'][0], (1176, 54, 648, 490))
         # SPLIT is tall only (no wide lock); its stage box reads the seam from the mocks file (FWP_SPLIT_SEAM_Y).
         self.assertEqual(set(layouts['9:16']), {'P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW'})
