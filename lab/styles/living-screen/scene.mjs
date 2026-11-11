@@ -364,6 +364,8 @@ function makePanel(scene, rig, key, mats) {
 }
 
 export async function setup(env) {
+  // Captions sit directly under the dress and the credit (Krish, 11 Nov: "A"); the panels sit below them.
+  if (env.shape === 'tall') env.captionBase = 530
   const c = env.skin.colors
   const glc = document.createElement('canvas'); glc.width = env.W; glc.height = env.H
   const renderer = new THREE.WebGLRenderer({ canvas: glc, antialias: true, preserveDrawingBuffer: true })
@@ -468,7 +470,7 @@ function placeCamera(env, t) {
   const dir = normal.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw).applyAxisAngle(new THREE.Vector3(1, 0, 0), -pitch)
   const pos = focus.clone().add(dir.multiplyScalar(dist * (1 + 0.03 * Math.sin(t * 0.5))))
   // Tall: the panel sits above the caption line, between the dress and the captions.
-  const look = focus.clone(); if (tall) look.y -= 0.07 * dist * vf
+  const look = focus.clone(); if (tall) look.y += 0.16 * dist * vf
   R.camera.position.copy(pos); R.camera.lookAt(look)
 }
 
