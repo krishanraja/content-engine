@@ -5,5 +5,7 @@
 export const CAPTION_THEMES = [
   'pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit', 'soft-ai',
   'gaming-stream', 'simple-one-word', 'podcast',
+  // The house's own: "art-directed phrases" (Krish, 2026-11-11; card instagram_DfkCOCLt7KZ), chrome/ArtDirectedCaption.tsx.
+  'art-directed',
 ] as const
 export type CaptionThemeName = typeof CAPTION_THEMES[number]

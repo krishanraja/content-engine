@@ -3,6 +3,7 @@ import { themeRegistry } from '../captionThemes/registry'
 import type { CaptionsData } from '../captionThemes/types'
 import type { CaptionThemeName } from '../captionThemes/names'
 import '../captionThemes/fonts'
+import { ArtDirectedCaption } from './ArtDirectedCaption'
 import type { EngineRenderProps } from '../props'
 
 /** Where a caption theme may draw: inside every platform's safe area on 9:16 (config/channel-safe-zones.json: clear
@@ -30,7 +31,8 @@ export function themeData(props: Pick<EngineRenderProps, 'captions' | 'fps'>): C
 
 /** A chosen caption theme in the house colours: cream words, the spoken or emphasised word in the series colour (the
  *  colour the house caption's shadow already carries). */
-export function ThemedCaption({ props, theme }: { props: EngineRenderProps; theme: CaptionThemeName }): React.ReactElement {
+export function ThemedCaption({ props, theme, frame = 0 }: { props: EngineRenderProps; theme: CaptionThemeName; frame?: number }): React.ReactElement | null {
+  if (theme === 'art-directed') return <ArtDirectedCaption props={props} frame={frame} />
   const Theme = themeRegistry[theme]
   if (!Theme) throw new Error(`ve: unknown caption theme ${theme}`)
   const box = THEME_REGION[props.aspect]
