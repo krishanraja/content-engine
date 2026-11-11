@@ -29,7 +29,7 @@ const DEFAULT = resolve(import.meta.dirname, '../cases/ideas-history.json')
 
 function replay(week: string, fixture: string, args: string[]): GenResult {
   const t0 = Date.now()
-  const output = execFileSync(process.env.PYTHON || 'python3', ['scripts/post-pack/ideas_history.py', 'replay', '--fixture', fixture, '--week', week, ...args],
+  const output = execFileSync(process.platform === 'win32' ? 'python' : 'python3', ['scripts/post-pack/ideas_history.py', 'replay', '--fixture', fixture, '--week', week, ...args],
     { cwd: ROOT, encoding: 'utf8' })
   return { output, ms: Date.now() - t0, usd: 0 }
 }

@@ -3909,6 +3909,12 @@ Re-render a saved run.
 
 Prompt A/B harness.
 
+### `apps/control-plane/scripts/eval/suites/ideas-history.ts`
+
+SUITE: ideas-history — do the ideas board's checks catch what Krish refused, without blocking anything he picked?
+
+- `const suite: Suite<Case> & { requires: string[] }`
+
 ### `apps/control-plane/scripts/eval/suites/revise.ts`
 
 SUITE: revise — is an LLM-expanded brief better than the instruction as typed?
