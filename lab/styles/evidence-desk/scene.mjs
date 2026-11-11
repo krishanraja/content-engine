@@ -94,8 +94,9 @@ export function draw(env, ctx, t, house) {
   mk(P.n13, at(env, B.y2004, 'thirteen') - 0.15, { seed: 5, out: at(env, B.expect) })
   // The answer is hidden under a slip until "They didn't."
   const slipOff = e.hero(clamp((t - at(env, B.didnt) - 0.05) / 0.55))
-  if (t >= at(env, B.expect) - 0.4 && slipOff < 1) {
-    const k = e.hero(clamp((t - at(env, B.expect) + 0.4) / 0.5))
+  // The slip lands once the camera has arrived on the line, so it never passes through the platforms' action rail.
+  if (t >= at(env, B.expect) + 0.3 && slipOff < 1) {
+    const k = e.hero(clamp((t - at(env, B.expect) - 0.3) / 0.5))
     ctx.save(); ctx.translate(para[0], para[1]); ctx.rotate(para[3]); ctx.scale(para[2], para[2])
     ctx.translate(slipOff * 700, -slipOff * 260); ctx.rotate(-0.06 + slipOff * 0.3)
     ctx.globalAlpha = k; ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 12
@@ -123,8 +124,15 @@ export function draw(env, ctx, t, house) {
     ctx.fillStyle = c.cream; ctx.fillRect(-420, -250, 840, 500); ctx.shadowColor = 'transparent'
     ctx.globalAlpha = 0.25; ctx.drawImage(env.paperImg, -420, -250, 840, 500); ctx.globalAlpha = 1
     ctx.fillStyle = POINT; ctx.fillRect(-420, -168, 840, 4)
-    text(env, ctx, 'EXHIBIT 2 · YOUR TEAM', -370, -190, { font: 'IBM Plex Mono', size: 40, weight: 700, color: c.ink, tracking: 2 })
-    const typed = (s, y, t0) => text(env, ctx, s.slice(0, Math.floor(clamp((t - t0) / 0.9) * s.length)), -370, y, { font: 'IBM Plex Mono', size: 46, weight: 600, color: c.ink, role: 'label' })
+    text(env, ctx, 'EXHIBIT 2 · YOUR DESK', -370, -190, { font: 'IBM Plex Mono', size: 40, weight: 700, color: c.ink, tracking: 2 })
+    // Each line is revealed by a wipe, not typed letter by letter: the whole line is on the card from its first frame,
+    // so it is read as one line (a typed reveal draws dozens of half-words, each too brief to read).
+    const typed = (s, y, t0) => {
+      const k = e.utility(clamp((t - t0) / 0.6)); if (k <= 0) return
+      ctx.save(); ctx.beginPath(); ctx.rect(-380, y - 50, 760 * k, 70); ctx.clip()
+      text(env, ctx, s, -370, y, { font: 'IBM Plex Mono', size: 46, weight: 600, color: c.ink, role: 'label', alpha: k > 0.6 ? 1 : 0.5 })
+      ctx.restore()
+    }
     typed('TASK AI DOES: ______', -70, at(env, B.ask, 'pick'))
     typed('ITS COST: ↓', 20, at(env, B.ask, 'Then'))
     typed('VOLUME: ↑ ?', 110, at(env, B.ask, 'what'))
@@ -157,7 +165,7 @@ export function draw(env, ctx, t, house) {
   const credit = (s, t0, t1, color = c.muted) => T(s, NX, CY, { color, alpha: e.enter(clamp((t - t0) / 0.4)) * (1 - e.exit(clamp((t - t1) / 0.3))), role: 'credit' })
   const num = (s, t0, t1, o = {}) => bigType(ctx, t, { c, e, str: s, x: NX, y: NY, size: NS, color: c.cream, at: t0, out: t1, ...o })
   credit('EXHIBIT 1 · IMF F&D · 2015', 0, at(env, B.ask) - 0.3)
-  credit('EXHIBIT 2 · YOUR TEAM', at(env, B.ask), 1e9)
+  credit('EXHIBIT 2 · YOUR DESK', at(env, B.ask), 1e9)
   num('ATM', -0.3, at(env, B.y1988) - 0.35)
   num('20', at(env, B.y1988, 'twenty') - 0.2, at(env, B.y2004) - 0.3)
   num('20', at(env, B.y2004) - 0.15, at(env, B.expect) - 0.3, { strike: at(env, B.y2004, 'thirteen') - 0.1, strikeColor: POINT, color: c.muted })
