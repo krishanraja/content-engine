@@ -93,6 +93,56 @@ export const PATH: Array<{ key: PathKey; label: string }> = [
   { key: 'research', label: 'Research' }, { key: 'story', label: 'Story' }, { key: 'look', label: 'Look' },
   { key: 'board', label: 'Storyboard and script' }, { key: 'record', label: 'Record' }, { key: 'cut', label: 'Cut and publish' },
 ]
+/**
+ * The steps from idea to publish (contract 1.5.0; approved mock M5: "Steps from idea to publish: Ideas, Agreed, Flesh
+ * out, Script and record, After recording, Ready to post", each with its day). The working steps (PATH) stay as they
+ * are, for the next step and the prompts; these are what a person reads, each from the same record.
+ */
+export type StageKey = 'idea' | 'agreed' | 'flesh_out' | 'script_record' | 'after_recording' | 'ready_to_post'
+export const STAGES: Array<{ key: StageKey; label: string }> = [
+  { key: 'idea', label: 'Ideas' }, { key: 'agreed', label: 'Agreed' }, { key: 'flesh_out', label: 'Flesh out' },
+  { key: 'script_record', label: 'Script and record' }, { key: 'after_recording', label: 'After recording' }, { key: 'ready_to_post', label: 'Ready to post' },
+]
+/** One step from idea to publish: `when` is the day it happened (from the record) or, for Ready to post, the day it
+ *  goes out; null when the record does not say. Never a guessed day. */
+export interface Stage { key: StageKey; label: string; state: 'done' | 'current' | 'todo'; when: string | null }
+
+/** A YYYY-MM-DD day moved by n days. */
+const shiftYmd = (ymd: string, n: number): string => { const d = new Date(`${ymd}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10) }
+
+/** A record's time as its day (YYYY-MM-DD), or null. */
+const dayOf = (v: unknown): string | null => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) && Number.isFinite(Date.parse(v)) ? v.slice(0, 10) : null)
+
+/** The day a narrative lock was signed, from its last line ("Signed by Krish: "...", 2026-11-08"), or null. */
+export function lockSignedOn(text: string | null | undefined): string | null {
+  if (!lockSigned(text)) return null
+  const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean)
+  return LOCK_SIGNED.exec(lines[lines.length - 1])?.[2] ?? null
+}
+
+/** The steps from idea to publish, from what is done (a later step done means every one before it is) and the days the
+ *  record holds. Pure. */
+export function stagesOf(i: {
+  done: Record<StageKey, boolean>
+  /** The Sunday the ideas were brought (the day before the week starts). */
+  ideasOn: string
+  agreedOn: string | null
+  fleshedOn: string | null
+  recordedOn: string | null
+  cutOn: string | null
+  /** The day the piece goes out. */
+  goesOn: string
+}): Stage[] {
+  const done = { ...i.done }
+  for (let k = STAGES.length - 1; k > 0; k--) if (done[STAGES[k].key]) done[STAGES[k - 1].key] = true
+  const current = STAGES.find(s => !done[s.key])?.key ?? null
+  const when: Record<StageKey, string | null> = {
+    idea: i.ideasOn, agreed: done.agreed ? i.agreedOn : null, flesh_out: done.flesh_out ? i.fleshedOn : null,
+    script_record: done.script_record ? i.recordedOn : null, after_recording: done.after_recording ? i.cutOn : null, ready_to_post: i.goesOn,
+  }
+  return STAGES.map(s => ({ ...s, state: done[s.key] ? 'done' : s.key === current ? 'current' : 'todo', when: when[s.key] }))
+}
+
 export interface LookOption { id: string; name: string; pitch: string; status: string }
 export interface DayPath {
   steps: Array<{ key: PathKey; label: string; state: 'done' | 'current' | 'todo' }>
@@ -110,6 +160,8 @@ export interface DayPath {
   storyboard: { title: string; at: string | null } | null
   /** Contract 1.4.0 (_style.ts): the piece's motion, caption and treatment choices, each option with its press. */
   style: DayStyle | null
+  /** Contract 1.5.0: the steps from idea to publish, each with its day (stagesOf). */
+  stages: Stage[]
 }
 export interface WeekView {
   /** The contract this view keeps (view.schema.json, x-contract-version; _viewContract.ts). */
@@ -246,6 +298,18 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
     prompts: { research: researchPrompt(brief), story: storyPrompt(brief), storyboard: storyboardPrompt(brief), mock: mockPrompt(brief) },
     storyboard: (m => (m ? { title: m.title, at: m.at } : null))(materials.find(m => /^Storyboard:/.test(m.title))),
     style: null,
+    stages: stagesOf({
+      done: {
+        idea: true, agreed: signed, flesh_out: done.research && done.look, script_record: done.board && done.record,
+        after_recording: vid === 'done' || done.cut, ready_to_post: done.cut,
+      },
+      ideasOn: shiftYmd(week, -1),
+      agreedOn: lockSignedOn(lock) ?? dayOf(pick?.updated_at),
+      fleshedOn: look ? dayOf(look.at) : null,
+      recordedOn: null,
+      cutOn: null,
+      goesOn: date,
+    }),
   }
   // The style choices (contract 1.4.0): a spec on file for another piece is never read as this one's.
   const spec = (s => (s && (typeof s.piece_id !== 'string' || !UUID.test(s.piece_id) || s.piece_id.toLowerCase() === id) ? s : null))(i.specs?.[day] ?? null)

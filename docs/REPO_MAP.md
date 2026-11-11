@@ -2343,6 +2343,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 
 - `type StyleLayerKey = 'motion' | 'captions'`
 - `const STYLE_LAYERS: readonly StyleLayerKey[]`
+- `type RejectLayerKey = StyleLayerKey | 'treatment'`
 - `interface StylePress`
 - `interface StyleOption`
 - `interface StyleLayer`
@@ -2352,7 +2353,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `const CAPTIONS: Array<{ id: string } & CaptionTheme>`
 - `function motionBank(styles: unknown): MotionModule[]`
 - `function sampleUrl(layer: StyleLayerKey, id: string, samples: unknown = styleSamples): string | null`
-- `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<StyleLayerKey, stri…`
+- `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, str…`
 - `interface StyleInputs`
 - `function dayStyle(i: StyleInputs): DayStyle`
 - `class StyleError`
@@ -2373,6 +2374,11 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `type DayCore`
 - `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
 - `const PATH: Array<{ key: PathKey; label: string }>`
+- `type StageKey`
+- `const STAGES: Array<{ key: StageKey; label: string }>`
+- `interface Stage`
+- `function lockSignedOn(text: string | null | undefined): string | null`
+- `function stagesOf(i: { done: Record<StageKey, boolean> /** The Sunday the ideas were brought (the day before the week s…`
 - `interface LookOption`
 - `interface DayPath`
 - `interface WeekView`
