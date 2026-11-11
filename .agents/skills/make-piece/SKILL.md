@@ -547,4 +547,6 @@ saying "Monday is still with you." I have no idea what that means.").
 
 Copy the week's ticks once more (above). Update `WORKBENCH.md` and the board
 (`WORKBENCH.md`, "The board"), and end every reply with
-https://controlcenter.krishraja.com/#/home?waiting=1.
+https://controlcenter.krishraja.com/#/home?waiting=1. A link to the week's publish board or one of its days is the live
+board in Control Centre, `python3 scripts/post-pack/live_board.py <Monday> <day>` (Ruling, Krish, 2026-11-11);
+content.krishraja.com/board/<Monday> is the archive.
