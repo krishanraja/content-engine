@@ -1,7 +1,8 @@
+import { randomUUID } from 'node:crypto'
 import { googleAccessToken, googleConfigured } from './_google.js'
 import {
-  INDEX_MATERIAL_COLUMN, LIBRARY_KINDS, LIBRARY_ROLES, PROP, RESEARCH_LIBRARY_FOLDER_ID, RESEARCH_LIBRARY_INDEX_ID, mirror,
-  type LibraryDrive, type LibraryFile, type LibraryFolder, type LibraryIndex, type LibrarySource, type MirrorReport, type PieceInfo, type StoredMaterial,
+  INDEX_MATERIAL_COLUMN, LIBRARY_KINDS, LIBRARY_LEASE, LIBRARY_LEASE_MS, LIBRARY_ROLES, PROP, RESEARCH_LIBRARY_FOLDER_ID, RESEARCH_LIBRARY_INDEX_ID, mirror,
+  type LibraryDrive, type LibraryFile, type LibraryFolder, type LibraryIndex, type LibraryLock, type LibrarySource, type MirrorReport, type PieceInfo, type StoredMaterial,
 } from './_researchLibrary.js'
 
 // The research library's Google side and the store it reads (docs/DRIVE.md, "The research library"). The rules are in
@@ -124,6 +125,34 @@ export interface SourceDb {
   storage: any
 }
 
+/** The narrow part of a Supabase client the lease needs. */
+export interface LeaseDb {
+  rpc(fn: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: { message?: string } | null }>
+}
+
+/** The library's lease in the database (engine_lease_take, migration 20261127100000), held by this one run. A lease that
+ *  cannot be asked for (the function is missing, the database is down) is not to be had: the run writes nothing. */
+export function storeLease(db: LeaseDb, who: 'sweep' | 'write', name = LIBRARY_LEASE, ms = LIBRARY_LEASE_MS): LibraryLock {
+  const holder = `${who}:${randomUUID()}`
+  return {
+    async take() {
+      let r: { data: unknown; error: { message?: string } | null }
+      try { r = await db.rpc('engine_lease_take', { p_name: name, p_holder: holder, p_seconds: Math.ceil(ms / 1000) }) } catch (e) {
+        return { ok: false, held: false, why: (e as Error).message?.slice(0, 160) || 'lease_rpc_failed' }
+      }
+      if (r.error) return { ok: false, held: false, why: String(r.error.message || 'lease_rpc_failed').slice(0, 160) }
+      const d = (r.data && typeof r.data === 'object' ? r.data : {}) as Record<string, unknown>
+      if (d.ok === true) {
+        return { ok: true, async release() { await db.rpc('engine_lease_release', { p_name: name, p_holder: holder }) } }
+      }
+      if (d.error === 'held') {
+        return { ok: false, held: true, holder: typeof d.holder === 'string' ? d.holder : null, until: typeof d.lease_until === 'string' ? d.lease_until : null }
+      }
+      return { ok: false, held: false, why: typeof d.error === 'string' ? d.error : 'lease_refused' }
+    },
+  }
+}
+
 /** The store's records and bytes, read with the service key. */
 export function storeSource(db: SourceDb, bucket: string): LibrarySource {
   return {
@@ -180,7 +209,9 @@ export async function runMirror(opts: { only?: string[]; budgetMs?: number } = {
   const token = await googleAccessToken([DRIVE_SCOPE], { subject: DRIVE_OWNER(), onError: r => { why = r } })
   if (!token) return { ...empty, error: `research_library_no_token: ${why.slice(0, 160)}` }
   const [{ supabase }, { LIBRARY_BUCKET }] = await Promise.all([import('./_supabase.js'), import('./library/_library.js')])
+  // One writer at a time: the sweep, by hand or on the hour, and the write that filed a material share one lease.
   return mirror(storeSource(supabase as unknown as SourceDb, LIBRARY_BUCKET), googleLibraryDrive(token), googleLibraryIndex(token),
+    storeLease(supabase as unknown as LeaseDb, opts.only?.length ? 'write' : 'sweep'),
     { rootId: RESEARCH_LIBRARY_FOLDER_ID, only: opts.only, budgetMs: opts.budgetMs })
 }
 
@@ -195,7 +226,7 @@ export async function copyNow(materialId: string | null | undefined, waitMs = 20
       const copy = r.copies.find(c => c.material === materialId)
       if (copy) return { state: copy.created ? 'copied' : 'already', link: copy.link, ...(r.ok ? {} : { why: r.error }) }
       if (r.eligible === 0 && !r.error) return { state: 'not_research' }
-      return { state: 'later', why: r.error || 'not_copied' }
+      return { state: 'later', why: r.error || r.skipped || 'not_copied' }
     })
     .catch((e: unknown) => ({ state: 'later', why: e instanceof Error ? e.message.slice(0, 120) : 'failed' }))
   try { return await Promise.race([work, timeout]) } finally { if (timer) clearTimeout(timer) }

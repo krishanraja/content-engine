@@ -148,6 +148,16 @@ write that filed it. Both are idempotent by the material: a copy already in Driv
 and a row already in the index is never added again. A copy that fails loses nothing: the store still holds it and the
 next sweep copies it.
 
+**One writer at a time.** Five sweeps run by hand on 11 Nov overlapped, each read Drive and the index before the others
+wrote, and together they made 118 extra copies and 250 extra index rows (nothing was lost; the duplicates stay until
+Krish says what to do with them). Every writer now holds the one lease, `research_library_mirror` in `engine_leases`
+(migration `20261127100000_engine_leases.sql`), while it reads and writes: a second sweep, by hand or on the hour,
+answers `skipped: already_running` with when the lease runs out and writes nothing (the run ledger records it as
+skipped), and the write that filed a material waits up to ten seconds for it, then leaves the copy to the next sweep.
+Inside the lease, each copy is looked for once more by its `ce_material` property right before it is made, and the
+index's Material id column is read once more right before rows are added. Without the lease (the migration not
+applied, the database down) a run writes nothing and fails.
+
 **How.** The engine writes as the owner of his Drive (`GOOGLE_DRIVE_OWNER`, the delegated `drive` scope, as the feedback
 lane does) and only adds: week, piece, day and `Sources` folders inside the library, files inside them, and rows in the
 index. It never renames, moves, overwrites or deletes anything. Folders are found by their properties, never by name,

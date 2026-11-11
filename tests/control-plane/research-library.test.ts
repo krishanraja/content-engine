@@ -2,10 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import {
-  INDEX_COLUMNS, PROP, RESEARCH_LIBRARY_FOLDER_ID, RESEARCH_LIBRARY_INDEX_ID, SETTLE_MS, fileNameOf, inLibrary, mirror, placeOf,
-  type LibraryDrive, type LibraryFile, type LibraryFolder, type LibraryIndex, type LibrarySource, type PieceInfo, type StoredMaterial,
+  INDEX_COLUMNS, LIBRARY_LEASE, LIBRARY_LEASE_MS, PROP, RESEARCH_LIBRARY_FOLDER_ID, RESEARCH_LIBRARY_INDEX_ID, SETTLE_MS, fileNameOf, inLibrary, mirror, placeOf,
+  type LeaseTake, type LibraryDrive, type LibraryFile, type LibraryFolder, type LibraryIndex, type LibraryLock, type LibrarySource, type PieceInfo, type StoredMaterial,
 } from '../../apps/control-plane/api/_researchLibrary'
-import { copyNow, googleLibraryDrive, googleLibraryIndex } from '../../apps/control-plane/api/_researchLibraryGoogle'
+import { copyNow, googleLibraryDrive, googleLibraryIndex, storeLease } from '../../apps/control-plane/api/_researchLibraryGoogle'
+import { classifyRun } from '../../apps/control-plane/api/_runs'
 import { RESEARCH_RULE, WRITE_BACK_HEAD, writeBack } from '../../apps/control-plane/api/board/_writeBack'
 import { JOBS } from '../../apps/control-plane/api/content-engine/_jobs'
 import { CONTENT_ENGINE_JOBS } from '../../apps/control-plane/lib/contentEngineSchedule'
@@ -30,6 +31,8 @@ function text(content: string, over: Partial<StoredMaterial> = {}): StoredMateri
   }
 }
 
+const pause = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms))
+
 class FakeDrive implements LibraryDrive {
   folderList: Array<LibraryFolder & { parent: string; trashed?: boolean }> = []
   fileList: Array<LibraryFile & { parent: string; bytes: Uint8Array; description: string; props: Record<string, string>; mime: string }> = []
@@ -37,22 +40,33 @@ class FakeDrive implements LibraryDrive {
   failCreate = 0
   readFails = false
   calls: string[] = []
-  async root() { return this.rootState }
+  /** Each call takes this long, as Google's do, so runs started together really interleave. */
+  latency = 0
+  /** Called after a listing is read, with what it asked for: another writer may add a copy here. */
+  onList?: (ids?: string[]) => void
+  private async wait() { if (this.latency) await pause(this.latency) }
+  async root() { await this.wait(); return this.rootState }
   async folders(rootId: string) {
+    await this.wait()
     if (this.readFails) throw new Error('drive_list_500')
     return this.folderList.filter(f => f.props[PROP.root] === rootId && !f.trashed)
   }
   async files(rootId: string, ids?: string[]) {
+    await this.wait()
     if (this.readFails) throw new Error('drive_list_500')
-    return this.fileList.filter(f => f.props[PROP.root] === rootId && (!ids || ids.includes(f.material)))
+    const found = this.fileList.filter(f => f.props[PROP.root] === rootId && (!ids || ids.includes(f.material)))
+    this.onList?.(ids)
+    return found
   }
   async createFolder(parent: string, name: string, props: Record<string, string>) {
+    await this.wait()
     this.calls.push(`folder ${name}`)
     const id = `folder-${this.folderList.length + 1}`
     this.folderList.push({ id, name, props, parent })
     return id
   }
   async createFile(input: { parentId: string; name: string; mime: string; bytes: Uint8Array; description: string; props: Record<string, string> }) {
+    await this.wait()
     this.calls.push(`file ${input.name}`)
     if (this.failCreate > 0) { this.failCreate--; throw new Error('drive_upload_503') }
     const id = `file-${this.fileList.length + 1}`
@@ -66,8 +80,57 @@ class FakeDrive implements LibraryDrive {
 class FakeIndex implements LibraryIndex {
   rows: string[][] = [[...INDEX_COLUMNS]]
   failAppend = false
-  async materialIds() { return new Set(this.rows.slice(1).map(r => r[12])) }
-  async append(rows: string[][]) { if (this.failAppend) throw new Error('sheets_append_403'); this.rows.push(...rows) }
+  latency = 0
+  reads = 0
+  /** Called after the Material id column is read: another writer may add a row here. */
+  onRead?: (read: number) => void
+  async materialIds() {
+    if (this.latency) await pause(this.latency)
+    const ids = new Set(this.rows.slice(1).map(r => r[12]))
+    this.onRead?.(++this.reads)
+    return ids
+  }
+  async append(rows: string[][]) {
+    if (this.latency) await pause(this.latency)
+    if (this.failAppend) throw new Error('sheets_append_403'); this.rows.push(...rows)
+  }
+}
+
+/** The lease as engine_lease_take keeps it: one holder at a time, taken when free or run out, released by its holder. */
+class Lease {
+  holder: string | null = null
+  until = 0
+  taken = 0
+  refused = 0
+  private n = 0
+  constructor(private ms = LIBRARY_LEASE_MS) {}
+  lock(who = 'writer'): LibraryLock {
+    const me = `${who}:${++this.n}`
+    return {
+      take: async (): Promise<LeaseTake> => {
+        await pause(1)
+        if (this.holder && this.holder !== me && this.until > Date.now()) {
+          this.refused++
+          return { ok: false, held: true, holder: this.holder, until: new Date(this.until).toISOString() }
+        }
+        this.holder = me; this.until = Date.now() + this.ms; this.taken++
+        return { ok: true, release: async () => { if (this.holder === me) { this.holder = null; this.until = 0 } } }
+      },
+    }
+  }
+  get free() { return !this.holder || this.until <= Date.now() }
+}
+/** A lease nobody else holds. */
+const free = () => new Lease().lock('test')
+/** No lease at all: every writer gets it, which is what every sweep had before 11 Nov. */
+const noLease = (): LibraryLock => ({ take: async () => ({ ok: true, release: async () => undefined }) })
+/** How many copies and how many index rows each material has. */
+const tally = (drive: FakeDrive, index: FakeIndex) => {
+  const out = new Map<string, { copies: number; rows: number }>()
+  const at = (id: string) => { if (!out.has(id)) out.set(id, { copies: 0, rows: 0 }); return out.get(id)! }
+  for (const f of drive.fileList) at(f.material).copies++
+  for (const r of index.rows.slice(1)) at(r[12]).rows++
+  return out
 }
 
 function source(materials: Array<StoredMaterial & { content?: string }>, pieces: PieceInfo[] = [{ id: PIECE, idea: 'Oracle files to sell $20B in new stock, bonds to finance AI buildout', scheduled_for: '2026-11-16', series: 'follow_the_money' }]): LibrarySource {
@@ -109,7 +172,7 @@ describe('the mirror, against a fake Drive', () => {
     const picture = { ...text('png'), kind: 'image', storage: 'bucket', object_key: `files/${'a'.repeat(64)}.png` }
     const day = text('Tuesday notes', { piece_id: null, scope: 'day:2026-11-16/tue', day: 'tue', kind: 'note', title: 'Tuesday notes' })
     const drive = new FakeDrive(); const index = new FakeIndex()
-    const r = await mirror(source([research, excerpt, picture, day]), drive, index, { now: NOW })
+    const r = await mirror(source([research, excerpt, picture, day]), drive, index, free(), { now: NOW })
     expect(r).toMatchObject({ ok: true, eligible: 3, mirrored: 3, already: 0, indexed: 3 })
     // One week folder, the piece and the day inside it, and Sources inside the piece.
     const folder = (name: string) => drive.folderList.find(f => f.name === name)!
@@ -138,7 +201,7 @@ describe('the mirror, against a fake Drive', () => {
     })
 
     // Again: nothing is made twice, and no row is added twice.
-    const again = await mirror(source([research, excerpt, picture, day]), drive, index, { now: NOW })
+    const again = await mirror(source([research, excerpt, picture, day]), drive, index, free(), { now: NOW })
     expect(again).toMatchObject({ ok: true, mirrored: 0, already: 3, indexed: 0 })
     expect(drive.fileList).toHaveLength(3)
     expect(index.rows).toHaveLength(4)
@@ -146,9 +209,9 @@ describe('the mirror, against a fake Drive', () => {
 
   it('finds its folders by their properties, so Krish may rename them', async () => {
     const drive = new FakeDrive(); const index = new FakeIndex()
-    await mirror(source([text('one')]), drive, index, { now: NOW })
+    await mirror(source([text('one')]), drive, index, free(), { now: NOW })
     for (const f of drive.folderList) f.name = `renamed ${f.name}`
-    await mirror(source([text('two')]), drive, index, { now: NOW })
+    await mirror(source([text('two')]), drive, index, free(), { now: NOW })
     expect(drive.folderList).toHaveLength(2)
     expect(drive.fileList).toHaveLength(2)
   })
@@ -157,7 +220,7 @@ describe('the mirror, against a fake Drive', () => {
     const drive = new FakeDrive(); const index = new FakeIndex()
     const v1 = text('lock v1', { material_key: 'lock', title: 'narrative-lock-mon.md', kind: 'corpus' })
     const v2 = text('lock v2', { material_key: 'lock', title: 'narrative-lock-mon.md', kind: 'corpus', version: 2, added_at: '2026-11-10T10:00:00Z' })
-    await mirror(source([v1, v2]), drive, index, { now: NOW })
+    await mirror(source([v1, v2]), drive, index, free(), { now: NOW })
     expect(drive.fileList.map(f => f.name)).toEqual(['2026-11-09 narrative-lock-mon.md', '2026-11-10 narrative-lock-mon (v2).md'])
   })
 
@@ -165,11 +228,11 @@ describe('the mirror, against a fake Drive', () => {
     const m = text('the corpus')
     const drive = new FakeDrive(); const index = new FakeIndex()
     drive.failCreate = 1
-    const first = await mirror(source([m]), drive, index, { now: NOW })
+    const first = await mirror(source([m]), drive, index, free(), { now: NOW })
     expect(first.ok).toBe(false)
     expect(first.failed).toEqual([{ id: m.id, why: 'drive_upload_503' }])
     expect(index.rows).toHaveLength(1)
-    const second = await mirror(source([m]), drive, index, { now: NOW })
+    const second = await mirror(source([m]), drive, index, free(), { now: NOW })
     expect(second).toMatchObject({ ok: true, mirrored: 1, indexed: 1 })
   })
 
@@ -177,11 +240,11 @@ describe('the mirror, against a fake Drive', () => {
     const m = text('the corpus')
     const drive = new FakeDrive(); const index = new FakeIndex()
     index.failAppend = true
-    const first = await mirror(source([m]), drive, index, { now: NOW })
+    const first = await mirror(source([m]), drive, index, free(), { now: NOW })
     expect(first).toMatchObject({ ok: false, mirrored: 1, indexed: 0 })
     expect(first.error).toMatch(/index_append_failed/)
     index.failAppend = false
-    const second = await mirror(source([m]), drive, index, { now: NOW })
+    const second = await mirror(source([m]), drive, index, free(), { now: NOW })
     expect(second).toMatchObject({ ok: true, mirrored: 0, already: 1, indexed: 1 })
     expect(drive.fileList).toHaveLength(1)
   })
@@ -189,11 +252,11 @@ describe('the mirror, against a fake Drive', () => {
   it('makes nothing when the library is gone or Drive cannot be read', async () => {
     const drive = new FakeDrive(); const index = new FakeIndex()
     drive.rootState = { ok: false, why: 'the library folder is in the bin' }
-    const gone = await mirror(source([text('x')]), drive, index, { now: NOW })
+    const gone = await mirror(source([text('x')]), drive, index, free(), { now: NOW })
     expect(gone).toMatchObject({ ok: false, mirrored: 0 })
     expect(gone.error).toMatch(/in the bin/)
     drive.rootState = { ok: true }; drive.readFails = true
-    const unread = await mirror(source([text('y')]), drive, index, { now: NOW })
+    const unread = await mirror(source([text('y')]), drive, index, free(), { now: NOW })
     expect(unread.ok).toBe(false)
     expect(drive.calls).toEqual([])
   })
@@ -202,23 +265,183 @@ describe('the mirror, against a fake Drive', () => {
     const bad = { ...text('real'), content: 'tampered' }
     const young = text('just filed', { added_at: new Date(NOW - 60_000).toISOString() })
     const drive = new FakeDrive(); const index = new FakeIndex()
-    const r = await mirror(source([bad, young]), drive, index, { now: NOW })
+    const r = await mirror(source([bad, young]), drive, index, free(), { now: NOW })
     expect(r.failed).toEqual([{ id: bad.id, why: 'store_bytes_differ' }])
     expect(r.settling).toBe(1)
     expect(drive.fileList).toHaveLength(0)
     expect(SETTLE_MS).toBe(600_000)
     // The write that filed it copies it at once.
-    const now = await mirror(source([bad, young]), drive, index, { now: NOW, only: [young.id] })
+    const now = await mirror(source([bad, young]), drive, index, free(), { now: NOW, only: [young.id] })
     expect(now).toMatchObject({ ok: true, mirrored: 1, indexed: 1 })
   })
 
   it('a binned copy counts as copied: what Krish binned is not made again', async () => {
     const m = text('binned')
     const drive = new FakeDrive(); const index = new FakeIndex()
-    await mirror(source([m]), drive, index, { now: NOW })
+    await mirror(source([m]), drive, index, free(), { now: NOW })
     drive.fileList[0].trashed = true
-    const r = await mirror(source([m]), drive, index, { now: NOW })
+    const r = await mirror(source([m]), drive, index, free(), { now: NOW })
     expect(r).toMatchObject({ mirrored: 0, already: 1 })
+  })
+})
+
+describe('one writer at a time (11 Nov: five hand-run sweeps overlapped and copied the same research again)', () => {
+  // Three materials on one piece, old enough for the sweep, and a Drive and an index that answer as slowly as Google's,
+  // so runs started together really do interleave.
+  const setup = () => {
+    const materials = [text('one'), text('two', { kind: 'paste', title: 'reuters.com' }), text('three', { kind: 'note', title: 'Notes' })]
+    const drive = new FakeDrive(); drive.latency = 2
+    const index = new FakeIndex(); index.latency = 2
+    return { materials, drive, index, src: source(materials) }
+  }
+  const once = (drive: FakeDrive, index: FakeIndex, ids: string[]) => {
+    const t = tally(drive, index)
+    expect([...t.keys()].sort()).toEqual([...ids].sort())
+    for (const id of ids) expect(t.get(id), id).toEqual({ copies: 1, rows: 1 })
+  }
+
+  it('the race is real: two sweeps at once with no lease copy the same material twice (the test can see the fault)', async () => {
+    const { materials, drive, index, src } = setup()
+    await Promise.all([mirror(src, drive, index, noLease(), { now: NOW }), mirror(src, drive, index, noLease(), { now: NOW })])
+    expect(drive.fileList.length).toBeGreaterThan(materials.length)
+    expect([...tally(drive, index).values()].some(t => t.copies > 1)).toBe(true)
+  })
+
+  it('two sweeps at once: one copies, the other answers already_running and writes nothing; one copy and one row each', async () => {
+    const { materials, drive, index, src } = setup()
+    const lease = new Lease()
+    const [a, b] = await Promise.all([mirror(src, drive, index, lease.lock('sweep'), { now: NOW }), mirror(src, drive, index, lease.lock('sweep'), { now: NOW })])
+    const [ran, skipped] = a.skipped ? [b, a] : [a, b]
+    expect(ran).toMatchObject({ ok: true, mirrored: 3, indexed: 3 })
+    expect(ran.skipped).toBeUndefined()
+    expect(skipped).toMatchObject({ ok: true, skipped: 'already_running', mirrored: 0, indexed: 0, already: 0, copies: [] })
+    expect(skipped.lease_until).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+    once(drive, index, materials.map(m => m.id))
+    expect(drive.folderList.map(f => f.props[PROP.kind]).sort()).toEqual(['slot', 'sources', 'week'])
+    // The run ledger records the second one as skipped, with its reason, never as a failure.
+    expect(classifyRun(200, skipped, null)).toEqual({ status: 'skipped', reason: 'already_running' })
+    // And the lease is free again: the next sweep runs, and finds everything copied.
+    expect(lease.free).toBe(true)
+    const next = await mirror(src, drive, index, lease.lock('sweep'), { now: NOW })
+    expect(next).toMatchObject({ ok: true, mirrored: 0, already: 3, indexed: 0 })
+    expect(next.skipped).toBeUndefined()
+    once(drive, index, materials.map(m => m.id))
+  })
+
+  it('five sweeps at once, as on 11 Nov between 18:16 and 18:20 UTC: exactly one runs, and nothing is copied or listed twice', async () => {
+    const { materials, drive, index, src } = setup()
+    const lease = new Lease()
+    const runs = await Promise.all(Array.from({ length: 5 }, () => mirror(src, drive, index, lease.lock('sweep'), { now: NOW })))
+    expect(runs.filter(r => r.skipped === 'already_running')).toHaveLength(4)
+    expect(runs.filter(r => !r.skipped).map(r => r.mirrored)).toEqual([3])
+    expect(lease.taken).toBe(1)
+    once(drive, index, materials.map(m => m.id))
+    expect(drive.folderList).toHaveLength(3)
+  })
+
+  it('the write that filed a material and a sweep at once copy it once, whichever takes the lease first', async () => {
+    for (const first of ['sweep', 'write'] as const) {
+      const { materials, drive, index, src } = setup()
+      const lease = new Lease()
+      const target = materials[0]
+      const sweep = () => mirror(src, drive, index, lease.lock('sweep'), { now: NOW })
+      const write = () => mirror(src, drive, index, lease.lock('write'), { now: NOW, only: [target.id], lockWaitMs: 2_000, lockRetryMs: 5 })
+      const [s, w] = first === 'sweep'
+        ? await (async () => { const sp = sweep(); await pause(0); const wp = write(); return Promise.all([sp, wp]) })()
+        : await (async () => { const wp = write(); await pause(0); const sp = sweep(); return [await sp, await wp] as const })()
+      once(drive, index, first === 'sweep' ? materials.map(m => m.id) : [target.id])
+      const link = drive.fileList.find(f => f.material === target.id)!.link
+      if (first === 'sweep') {
+        // The write waited for the sweep, then found its copy by ce_material and its row by Material id.
+        expect(s).toMatchObject({ ok: true, mirrored: 3, indexed: 3 })
+        expect(w).toMatchObject({ ok: true, mirrored: 0, already: 1, indexed: 0, copies: [{ material: target.id, link, created: false }] })
+        expect(w.skipped).toBeUndefined()
+      } else {
+        // The sweep does not wait: it answers already_running, and the write copies its material.
+        expect(w).toMatchObject({ ok: true, mirrored: 1, indexed: 1, copies: [{ material: target.id, link, created: true }] })
+        expect(s).toMatchObject({ skipped: 'already_running', mirrored: 0 })
+      }
+    }
+  })
+
+  it('a write that cannot have the lease in time writes nothing and leaves the material to the next sweep', async () => {
+    const { materials, drive, index, src } = setup()
+    const lease = new Lease()
+    const held = await lease.lock('sweep').take()
+    expect(held.ok).toBe(true)
+    const w = await mirror(src, drive, index, lease.lock('write'), { now: NOW, only: [materials[0].id], lockWaitMs: 30, lockRetryMs: 5 })
+    expect(w).toMatchObject({ ok: true, skipped: 'already_running', mirrored: 0, copies: [] })
+    expect(lease.refused).toBeGreaterThan(1)
+    expect(drive.calls).toEqual([])
+  })
+
+  it('inside the lease, a copy another writer made since this run read Drive is found by ce_material and not made again', async () => {
+    const { materials, drive, index, src } = setup()
+    const [m] = materials
+    // A writer that held no lease (an older deployment) copies m between this run's listing and its copy.
+    drive.onList = ids => {
+      if (ids) return
+      drive.onList = undefined
+      drive.fileList.push({ id: 'rogue', name: 'rogue copy', link: 'https://drive.google.com/file/d/rogue/view', sha256: m.sha256, material: m.id, parent: ROOT,
+        bytes: new Uint8Array(), description: '', props: { [PROP.root]: ROOT, [PROP.material]: m.id }, mime: 'text/markdown' })
+    }
+    const r = await mirror(src, drive, index, free(), { now: NOW })
+    expect(r).toMatchObject({ ok: true, mirrored: 2, already: 1, indexed: 3 })
+    expect(r.copies.find(c => c.material === m.id)).toEqual({ material: m.id, link: 'https://drive.google.com/file/d/rogue/view', created: false })
+    once(drive, index, materials.map(x => x.id))
+  })
+
+  it('inside the lease, a row another writer added since this run read the index is not added twice', async () => {
+    const { materials, drive, index, src } = setup()
+    const [m] = materials
+    index.onRead = read => { if (read === 1) index.rows.push([...Array(12).fill(''), m.id]) }
+    const r = await mirror(src, drive, index, free(), { now: NOW })
+    expect(r).toMatchObject({ ok: true, mirrored: 3, indexed: 2 })
+    expect(index.reads).toBe(2)
+    once(drive, index, materials.map(x => x.id))
+  })
+
+  it('makes nothing when the lease cannot be had at all (its migration not applied, the database down)', async () => {
+    const { drive, index, src } = setup()
+    const missing: LibraryLock = { take: async () => ({ ok: false, held: false, why: 'Could not find the function public.engine_lease_take' }) }
+    const r = await mirror(src, drive, index, missing, { now: NOW })
+    expect(r.ok).toBe(false)
+    expect(r.error).toMatch(/^research_library_lock_unavailable: Could not find the function/)
+    expect(drive.calls).toEqual([])
+    expect(index.rows).toHaveLength(1)
+    expect(classifyRun(200, r, null).status).toBe('failed')
+  })
+
+  it('a run that throws still releases the lease, and a material that is not research never asks for it', async () => {
+    const { materials, drive, index } = setup()
+    const lease = new Lease()
+    const broken: LibrarySource = { ...source(materials), async pieces() { throw new Error('pieces_unreadable') } }
+    await expect(mirror(broken, drive, index, lease.lock('sweep'), { now: NOW })).rejects.toThrow('pieces_unreadable')
+    expect(lease.free).toBe(true)
+    const picture = { ...text('png'), kind: 'image' }
+    expect(await mirror(source([picture]), drive, index, lease.lock('write'), { now: NOW, only: [picture.id] })).toMatchObject({ ok: true, eligible: 0 })
+    expect(lease.taken).toBe(1)
+  })
+
+  it('the database lease: one holder per run, the length of the lease, held and missing told apart, released by its holder', async () => {
+    const calls: Array<{ fn: string; args: Record<string, unknown> }> = []
+    const answers: Array<{ data: unknown; error: { message: string } | null }> = [
+      { data: { ok: true, lease_until: '2026-11-11T18:20:00Z' }, error: null },
+      { data: null, error: null },
+      { data: { ok: false, error: 'held', holder: 'sweep:x', lease_until: '2026-11-11T18:23:00Z' }, error: null },
+      { data: null, error: { message: 'Could not find the function public.engine_lease_take(p_holder, p_name, p_seconds)' } },
+    ]
+    const db = { rpc: async (fn: string, args: Record<string, unknown>) => { calls.push({ fn, args }); return answers.shift()! } }
+    const lock = storeLease(db, 'sweep')
+    const got = await lock.take()
+    expect(got.ok).toBe(true)
+    if (got.ok) await got.release()
+    expect(calls[0]).toMatchObject({ fn: 'engine_lease_take', args: { p_name: LIBRARY_LEASE, p_seconds: LIBRARY_LEASE_MS / 1000 } })
+    expect(String(calls[0].args.p_holder)).toMatch(/^sweep:[0-9a-f-]{36}$/)
+    expect(calls[1]).toEqual({ fn: 'engine_lease_release', args: { p_name: LIBRARY_LEASE, p_holder: calls[0].args.p_holder } })
+    expect(await lock.take()).toEqual({ ok: false, held: true, holder: 'sweep:x', until: '2026-11-11T18:23:00Z' })
+    expect(await lock.take()).toMatchObject({ ok: false, held: false, why: expect.stringMatching(/Could not find the function/) })
+    expect(storeLease(db, 'write')).not.toBe(lock)
   })
 })
 
@@ -318,6 +541,13 @@ describe('the rule every session follows, and where the library is', () => {
     const vercel = JSON.parse(readFileSync('apps/control-plane/vercel.json', 'utf8'))
     expect(vercel.crons.some((c: { path: string }) => c.path === '/api/research-library/sweep')).toBe(true)
     expect(JOBS.research_library_mirror.path).toBe('/api/research-library/sweep')
+    // The lease the code asks for is the one the migration makes, and its name passes the table's own check.
+    const sql = readFileSync('supabase/migrations/20261127100000_engine_leases.sql', 'utf8')
+    expect(sql).toMatch(/create or replace function public\.engine_lease_take\(p_name text, p_holder text, p_seconds integer\)/)
+    expect(sql).toMatch(/create or replace function public\.engine_lease_release\(p_name text, p_holder text\)/)
+    expect(sql).toMatch(/grant execute on function public\.engine_lease_take\(text, text, integer\) to service_role;/)
+    expect(LIBRARY_LEASE).toMatch(/^[a-z][a-z0-9_.:/-]{1,119}$/)
+    expect(LIBRARY_LEASE_MS / 1000).toBeGreaterThan(120)
     expect(CONTENT_ENGINE_JOBS.find(j => j.job === 'research_library_mirror')?.path).toBe('/api/research-library/sweep')
   })
 })
