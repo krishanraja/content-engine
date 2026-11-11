@@ -1812,8 +1812,8 @@
   {
    "title": "Meta ranked 85,000 staff by AI use. They gamed it.",
    "surface": "youtube",
-   "verdict": "picked",
-   "why": "a big name, a number and the twist; plainly about AI at work",
+   "verdict": "rejected",
+   "why": "not true as written: Fortune says the board tracked 85,000+ staff and ranked the top 250; changed for the fact gate",
    "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" and \"THEY FAKED / AI USE\" from four options each",
    "on": "2026-11-11",
    "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
@@ -1821,8 +1821,8 @@
   {
    "title": "Meta ranked 85,000 staff by AI use. They gamed it.",
    "surface": "cover",
-   "verdict": "picked",
-   "why": "same as the video title",
+   "verdict": "rejected",
+   "why": "not true as written: Fortune says the board tracked 85,000+ staff and ranked the top 250; changed for the fact gate",
    "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" and \"THEY FAKED / AI USE\" from four options each",
    "on": "2026-11-11",
    "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
@@ -1830,8 +1830,8 @@
   {
    "title": "Meta ranked 85,000 staff by AI use. They gamed it.",
    "surface": "tall_cover",
-   "verdict": "picked",
-   "why": "same as the video title",
+   "verdict": "rejected",
+   "why": "not true as written: Fortune says the board tracked 85,000+ staff and ranked the top 250; changed for the fact gate",
    "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" and \"THEY FAKED / AI USE\" from four options each",
    "on": "2026-11-11",
    "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
@@ -1842,6 +1842,33 @@
    "verdict": "picked",
    "why": "blunt and sensational; the logos and the Fortune proof carry who",
    "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" and \"THEY FAKED / AI USE\" from four options each",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta staff were ranked by AI use. They gamed it.",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "his pick, corrected only so it matches Fortune (the board ranked the top 250 of 85,000+)",
+   "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" from four options; wording corrected for truth by the session",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta staff were ranked by AI use. They gamed it.",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "his pick, corrected only so it matches Fortune (the board ranked the top 250 of 85,000+)",
+   "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" from four options; wording corrected for truth by the session",
+   "on": "2026-11-11",
+   "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
+  },
+  {
+   "title": "Meta staff were ranked by AI use. They gamed it.",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "his pick, corrected only so it matches Fortune (the board ranked the top 250 of 85,000+)",
+   "krish": "Krish, 2026-11-11: picked \"Staff gamed it\" from four options; wording corrected for truth by the session",
    "on": "2026-11-11",
    "piece": "f3fcd5e1-573e-4692-a413-db7c5823a10e"
   }
