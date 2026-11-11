@@ -15,6 +15,14 @@ import { liveBoardUrl } from './board/_liveBoard.js'
 // gone. Idempotent by the material: a copy already in Drive (binned ones too) is never made again, and a row already in
 // the index is never added again. A copy that fails loses nothing; the store holds it and the next sweep copies it.
 //
+// One writer at a time. Five sweeps run by hand on 11 Nov overlapped, each read Drive and the index before the others
+// wrote, and each copied the same materials (118 extra copies, 250 extra rows). Every writer, the sweep and the write
+// that filed a material alike, now holds the one lease (LIBRARY_LEASE, engine_lease_take in the database) while it reads
+// and writes: a second sweep answers already_running and writes nothing, and the write waits a few seconds for it. Inside
+// the lease, each copy is checked once more by its ce_material property right before it is made, and the index is read
+// once more right before rows are added, so a writer that held no lease (an older deployment, a lease that ran out) is
+// never copied or listed twice either.
+//
 // This file decides; the Google calls live behind LibraryDrive and LibraryIndex (api/_researchLibraryGoogle.ts), so a
 // test runs every rule against a fake Drive.
 
@@ -35,6 +43,14 @@ export const MIRROR_FILE_MAX = 64 * 1024 * 1024
 export const INDEX_COLUMNS = ['Week', 'Day', 'Piece', 'Series', 'Kind', 'Title', 'Date added', 'Drive link', 'sha256', 'Version', 'Added by', 'Piece id', 'Material id'] as const
 /** The column of the material id (M), which makes a row idempotent. */
 export const INDEX_MATERIAL_COLUMN = 'M'
+
+/** The lease every writer of the library holds while it reads and writes (engine_leases, migration 20261127100000). */
+export const LIBRARY_LEASE = 'research_library_mirror'
+/** How long a writer holds it: longer than any run lasts (the sweep's route stops at 120 s and a run stops starting new
+ *  copies at half of this), so a live run never loses it, and a writer that dies frees it when it runs out. */
+export const LIBRARY_LEASE_MS = 180_000
+/** How often a writer that may wait (the write that filed a material) asks again for a held lease. */
+export const LEASE_RETRY_MS = 1_000
 
 /** The properties every folder and file the mirror makes carries, so it is found again whatever it is called. */
 export const PROP = { root: 'ce_root', kind: 'ce_library', week: 'ce_week', slot: 'ce_slot', material: 'ce_material', sha: 'ce_sha256' } as const
@@ -93,6 +109,17 @@ export interface LibraryIndex {
   append(rows: string[][]): Promise<void>
 }
 
+/** Asking for the lease: taken (with its release), held by another writer, or not to be had at all. */
+export type LeaseTake =
+  | { ok: true; release(): Promise<void> }
+  | { ok: false; held: true; holder: string | null; until: string | null }
+  | { ok: false; held: false; why: string }
+
+/** The one lease. take() asks once and never waits; mirror() decides how long to keep asking. */
+export interface LibraryLock {
+  take(): Promise<LeaseTake>
+}
+
 /** Where the store's records and bytes come from. */
 export interface LibrarySource {
   materials(only?: string[]): Promise<StoredMaterial[]>
@@ -105,14 +132,22 @@ export interface MirrorOptions {
   /** Copy only these materials, now, with no settling time (the write that filed them, or a hand run). */
   only?: string[]
   now?: number
-  /** Stop starting new copies after this long; the rest wait for the next sweep. */
+  /** Stop starting new copies after this long; the rest wait for the next sweep. Never more than half the lease. */
   budgetMs?: number
   settleMs?: number
+  /** How long to keep asking for a lease another writer holds: none for a sweep (a second one answers already_running
+   *  and writes nothing), a few seconds for the write that filed a material. */
+  lockWaitMs?: number
+  lockRetryMs?: number
 }
 
 export interface MirrorReport {
   ok: boolean
   error?: string
+  /** `already_running`: another writer held the lease, so this run wrote nothing. */
+  skipped?: string
+  /** When that writer's lease runs out at the latest. */
+  lease_until?: string
   eligible: number
   already: number
   mirrored: number
@@ -219,20 +254,50 @@ export function indexRowOf(m: StoredMaterial, piece: PieceInfo | null, place: Pl
 }
 
 const sha256Hex = (b: Uint8Array) => createHash('sha256').update(b).digest('hex')
+const MATERIAL_AT = INDEX_COLUMNS.indexOf('Material id')
+const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms))
 
-/** Copy what is missing and list what is not yet in the index. One pass of the sweep, or one write's own copy. */
-export async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, opts: MirrorOptions = {}): Promise<MirrorReport> {
-  const rootId = opts.rootId || RESEARCH_LIBRARY_FOLDER_ID
-  const now = opts.now ?? Date.now()
-  const budget = opts.budgetMs ?? 80_000
-  const settle = opts.settleMs ?? SETTLE_MS
+/** Ask for the lease, and while another writer holds it keep asking every `retryMs` until `waitMs` has passed. */
+async function takeLease(lock: LibraryLock, waitMs: number, retryMs: number): Promise<LeaseTake> {
+  const until = Date.now() + Math.max(0, waitMs)
+  for (;;) {
+    const got = await lock.take()
+    if ('release' in got || 'why' in got || Date.now() + retryMs > until) return got
+    await sleep(retryMs)
+  }
+}
+
+/** Copy what is missing and list what is not yet in the index, holding the one lease. One pass of the sweep, or one
+ *  write's own copy. A writer that cannot have the lease writes nothing. */
+export async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, lock: LibraryLock, opts: MirrorOptions = {}): Promise<MirrorReport> {
   const only = opts.only?.length ? [...new Set(opts.only)] : undefined
+  const budget = Math.min(opts.budgetMs ?? 80_000, LIBRARY_LEASE_MS / 2)
   const report: MirrorReport = { ok: true, eligible: 0, already: 0, mirrored: 0, indexed: 0, settling: 0, later: 0, failed: [], copies: [] }
 
   const all = await source.materials(only)
   const eligible = all.filter(inLibrary).sort((a, b) => String(a.added_at).localeCompare(String(b.added_at)) || a.version - b.version)
   report.eligible = eligible.length
   if (!eligible.length) return report
+
+  // One writer at a time, taken before Drive or the index is read, so no other writer changes either between this run's
+  // reads and its writes.
+  const lease = await takeLease(lock, opts.lockWaitMs ?? (only ? Math.min(10_000, budget / 2) : 0), opts.lockRetryMs ?? LEASE_RETRY_MS)
+  if ('why' in lease) return { ...report, ok: false, error: `research_library_lock_unavailable: ${lease.why.slice(0, 160)}` }
+  if (!('release' in lease)) return { ...report, skipped: 'already_running', ...(lease.until ? { lease_until: lease.until } : {}) }
+  try {
+    return await mirrorHeld(source, drive, index, eligible, report, { ...opts, only, budgetMs: budget })
+  } finally {
+    // A release that fails frees nothing early: the lease runs out on its own.
+    await lease.release().catch(() => undefined)
+  }
+}
+
+async function mirrorHeld(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, eligible: StoredMaterial[], report: MirrorReport, opts: MirrorOptions): Promise<MirrorReport> {
+  const rootId = opts.rootId || RESEARCH_LIBRARY_FOLDER_ID
+  const now = opts.now ?? Date.now()
+  const budget = opts.budgetMs ?? 80_000
+  const settle = opts.settleMs ?? SETTLE_MS
+  const only = opts.only
 
   // Read Drive before writing anything: when it cannot be read, nothing is made (so nothing is made twice).
   const root = await drive.root(rootId)
@@ -285,6 +350,22 @@ export async function mirror(source: LibrarySource, drive: LibraryDrive, index: 
     } else {
       if (Date.now() - started > budget) { report.later++; continue }
       try {
+        // Once more, right before the copy: one made since this run read Drive, by a writer that held no lease (an older
+        // deployment, a lease that ran out), is found by its ce_material property and not made again.
+        const since = (await drive.files(rootId, [m.id])).find(f => f.material === m.id)
+        if (since) {
+          copy = since
+          copyOf.set(m.id, since)
+          report.already++
+          report.copies.push({ material: m.id, link: since.link, created: false })
+        }
+      } catch (e) {
+        report.failed.push({ id: m.id, why: `drive_recheck_failed: ${(e as Error).message.slice(0, 100)}` })
+        continue
+      }
+    }
+    if (!copy) {
+      try {
         const bytes = await source.bytes(m)
         if (!bytes) { report.failed.push({ id: m.id, why: 'bytes_unavailable' }); continue }
         if (bytes.byteLength !== Number(m.bytes) || sha256Hex(bytes) !== m.sha256) { report.failed.push({ id: m.id, why: 'store_bytes_differ' }); continue }
@@ -309,7 +390,15 @@ export async function mirror(source: LibrarySource, drive: LibraryDrive, index: 
   }
 
   if (rows.length && listed) {
-    try { await index.append(rows); report.indexed = rows.length } catch (e) { report.index_error = `index_append_failed: ${(e as Error).message.slice(0, 160)}` }
+    // Read the index once more right before adding: a row another writer added since this run read it is not added twice.
+    let fresh: string[][] | null = null
+    try {
+      const nowListed = await index.materialIds()
+      fresh = rows.filter(r => !nowListed.has(r[MATERIAL_AT]))
+    } catch (e) { report.index_error = `index_unreadable: ${(e as Error).message.slice(0, 160)}` }
+    if (fresh?.length) {
+      try { await index.append(fresh); report.indexed = fresh.length } catch (e) { report.index_error = `index_append_failed: ${(e as Error).message.slice(0, 160)}` }
+    }
   }
   report.ok = report.failed.length === 0 && !report.index_error
   if (!report.ok && !report.error) report.error = report.index_error || `${report.failed.length} cop${report.failed.length === 1 ? 'y' : 'ies'} failed: ${report.failed.slice(0, 3).map(f => f.why).join(', ')}`

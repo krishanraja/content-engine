@@ -1597,6 +1597,9 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `const MIRROR_FILE_MAX`
 - `const INDEX_COLUMNS`
 - `const INDEX_MATERIAL_COLUMN`
+- `const LIBRARY_LEASE`
+- `const LIBRARY_LEASE_MS`
+- `const LEASE_RETRY_MS`
 - `const PROP`
 - `interface StoredMaterial`
 - `interface PieceInfo`
@@ -1604,6 +1607,8 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `interface LibraryFile`
 - `interface LibraryDrive`
 - `interface LibraryIndex`
+- `type LeaseTake`
+- `interface LibraryLock`
 - `interface LibrarySource`
 - `interface MirrorOptions`
 - `interface MirrorReport`
@@ -1615,13 +1620,15 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `function mimeOf(m: StoredMaterial): string`
 - `function descriptionOf(m: StoredMaterial, piece: PieceInfo | null, place: Place): string`
 - `function indexRowOf(m: StoredMaterial, piece: PieceInfo | null, place: Place, link: string): string[]`
-- `async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, opts: MirrorOptions = {}): Promi…`
+- `async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, lock: LibraryLock, opts: MirrorO…`
 
 ### `apps/control-plane/api/_researchLibraryGoogle.ts`
 
 - `function googleLibraryDrive(token: string, f: Fetch = fetch): LibraryDrive`
 - `function googleLibraryIndex(token: string, sheetId = RESEARCH_LIBRARY_INDEX_ID, f: Fetch = fetch): LibraryIndex`
 - `interface SourceDb`
+- `interface LeaseDb`
+- `function storeLease(db: LeaseDb, who: 'sweep' | 'write', name = LIBRARY_LEASE, ms = LIBRARY_LEASE_MS): LibraryLock`
 - `function storeSource(db: SourceDb, bucket: string): LibrarySource`
 - `async function runMirror(opts: { only?: string[]; budgetMs?: number } = {}): Promise<MirrorReport>`
 - `async function copyNow(materialId: string | null | undefined, waitMs = 20_000): Promise<Record<string, unknown>>`
