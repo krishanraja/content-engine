@@ -70,7 +70,9 @@ def view_has_ideas(view: dict) -> bool:
     """Whether the week's view (contract 1.2.0) carries the whole ideas board: options on each publishing day, Monday,
     Wednesday and Friday, and, when the week has the weekly good news, a good-news option holding its stories."""
     days = {d.get('day'): d for d in view.get('days') or [] if isinstance(d, dict)}
-    if not all(isinstance(days.get(k), dict) and len(days[k].get('options') or []) > 0 for k in ('mon', 'wed', 'fri')):
+    # The board's own lines (a subject not offered again, a return held back) are not ideas (_viewExtras.ts ideaLines).
+    ideas = lambda d: [o for o in d.get('options') or [] if isinstance(o, dict) and not str(o.get('doc_id') or '').startswith(('veto-', 'held-'))]
+    if not all(isinstance(days.get(k), dict) and len(ideas(days[k])) > 0 for k in ('mon', 'wed', 'fri')):
         return False
     weekly = [o for d in days.values() for o in d.get('options') or [] if isinstance(o, dict) and 'stories_fresh' in o]
     return not weekly or any(o.get('stories_fresh') is True for o in weekly)

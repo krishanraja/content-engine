@@ -191,6 +191,10 @@
       "destination": "/api/board?week=:week&op=gate"
     },
     {
+      "source": "/api/board/:week/outcomes",
+      "destination": "/api/board?week=:week&op=outcomes"
+    },
+    {
       "source": "/api/board/:week/look",
       "destination": "/api/board?week=:week&op=look"
     },

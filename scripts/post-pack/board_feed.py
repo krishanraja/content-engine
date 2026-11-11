@@ -26,6 +26,8 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 import making  # noqa: E402
+import idea_checks  # noqa: E402
+import ideas_scorecard  # noqa: E402
 
 
 class FeedError(Exception):
@@ -181,6 +183,13 @@ def gather(week, call=None, out_dir=None, read=None):
         'recent': inspo.get('recent') if isinstance(inspo.get('recent'), list) else None,
         # Krish, 2026-11-02: the off days of this week and the two before it, for the no-repeat check and the readers.
         'recent_offdays': recent_offdays(wk, read),
+        # The ideas gate (Ruling, Krish, 2026-11-11): his answers on the eight boards before this one, the cues the run
+        # learns from, and what cover and gate check (idea_checks.py): a subject he refused, a return no deeper.
+        'outcomes': sources.get('outcomes') if isinstance(sources.get('outcomes'), dict) else {},
+        # His presses that gave a refused subject back ("Offer it again" on a veto line), newest first.
+        'unvetoed': sources.get('unvetoed') if isinstance(sources.get('unvetoed'), list) else [],
+        # The house rules the ideas are held to, as the judges and writers read them: BIG_PICTURE and STORY_ARC.
+        'house_rules': sources.get('house_rules') if isinstance(sources.get('house_rules'), list) else [],
     }
     folder = Path(out_dir) if out_dir else ROOT / 'docs' / 'plans' / f'{wk}-week'
     folder.mkdir(parents=True, exist_ok=True)
@@ -193,6 +202,10 @@ def gather(week, call=None, out_dir=None, read=None):
     lines.append('  inspiration house: ' + ', '.join(f'{k} {ic.get(k, 0)}' for k in ('routed', 'study_style', 'liked', 'fresh', 'corpora', 'creators', 'claims', 'asks')))
     if out['recent'] is None:
         lines.append('  recent pieces: not in the engine\'s answer (the route on production predates them); cover cannot check repeats')
+    oc = out['outcomes']
+    lines.append('  his answers on earlier boards: ' + (', '.join(f'{k} {len(oc.get(k) or [])}' for k in ('filed', 'rejected', 'trend', 'improved'))
+                                                       if oc else 'none in the engine\'s answer') + f'; given back {len(out["unvetoed"])}')
+    lines.append('  house rules: ' + (', '.join(str(r.get('id')) for r in out['house_rules']) or 'none in the engine\'s answer (the route predates them)'))
     cc = out['cues'].get('counts') if out['cues'] else None
     lines.append('  feedback cues: ' + (', '.join(f'{k.replace("_", " ")} {cc.get(k, 0)}' for k in ('future_pieces', 'wider_pieces', 'wider_themes', 'tracked', 'briefs', 'not_for_us'))
                                          if isinstance(cc, dict) else 'not in the engine\'s answer (the route on production predates them)'))
@@ -360,7 +373,8 @@ def repeat_problems(ideas, sources):
     # Krish, 2026-11-02: the off days of this week and the two before it count too, by every id they carried.
     off_used = {}
     for o in (sources or {}).get('recent_offdays') or []:
-        if isinstance(o, dict) and o.get('verdict') != 'next_week':
+        # An off day he filed, saved as a trend or asked to improve may come back, deeper (idea_checks.returns_findings).
+        if isinstance(o, dict) and o.get('verdict') not in ('next_week', 'trend', 'improve'):
             for c in o.get('covers') or []:
                 off_used.setdefault(str(c), o)
     his_open = {str(m.get('id')) for m in (sources or {}).get('must_cover') or [] if isinstance(m, dict) and m.get('kind') == 'his_idea'}
@@ -387,22 +401,191 @@ def repeat_problems(ideas, sources):
     return out
 
 
-def cover(week, ideas_path=None):
+def cover(week, ideas_path=None, plans=None):
     """Problems with the week's ideas.json against its sources.json: every must_cover id (his asks included) carried
     by an idea's `covers` (a style-only ask by `style_from`) or accounted for with a reason, the style rules
-    (week_board.style_problems), half and half each publishing day, and no repeat of the last 21 days. [] when ready."""
+    (week_board.style_problems), half and half each publishing day, no repeat of the last 21 days, and the Wave 1
+    checks (wave1: what he refused, returns, the plain question). [] when ready."""
     import week_board
     wk = monday(week).isoformat()
-    folder = ROOT / 'docs' / 'plans' / f'{wk}-week'
+    folder = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week'
     sources = json.loads((folder / 'sources.json').read_text(encoding='utf-8'))
     ideas = json.loads(Path(ideas_path or folder / 'ideas.json').read_text(encoding='utf-8'))
-    return check(ideas, sources, week_board)
+    return check(ideas, sources, week_board, plans)
 
 
-def check(ideas, sources, week_board):
+def check(ideas, sources, week_board, plans=None):
+    week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')
+    halves = ([f['line'] for f in wave1(ideas, sources, plans) if f['code'] in HALVES_CODES]
+              if week >= idea_checks.SHAPE_FROM else halves_problems(ideas))
     return (week_board.coverage_problems(ideas, style_answered(ideas, sources)) + week_board.style_problems(ideas)
-            + halves_problems(ideas) + locked_problems(ideas, sources) + repeat_problems(ideas, sources)
-            + readback_problems(ideas, sources) + goodnews_problems(ideas, sources))
+            + halves + locked_problems(ideas, sources) + repeat_problems(ideas, sources)
+            + readback_problems(ideas, sources) + goodnews_problems(ideas, sources)
+            + [f['line'] for f in wave1(ideas, sources, plans) if f['code'] not in HALVES_CODES and f['code'] != 'warned'])
+
+
+HALVES_CODES = ('press_refuses', 'not_his', 'his_empty', 'no_engine')
+IDEA_RULES = ('BIG_PICTURE', 'STORY_ARC')  # the live house rules the ideas are held to, as the judges and writers read them
+
+
+def plans_reader(plans=None):
+    """(shown_text, earlier_text16) for the answers on earlier boards, read from docs/plans/<week>-week: the words of the
+    option he answered, and their short hash, so a refusal keys on what he saw and a return that came back unchanged is
+    seen. None when that board's files are not on hand."""
+    plans = Path(plans) if plans else ROOT / 'docs' / 'plans'
+    cache = {}
+
+    def board(week):
+        if week not in cache:
+            folder = plans / f'{week}-week'
+            ideas = json.loads((folder / 'ideas.json').read_text(encoding='utf-8')) if (folder / 'ideas.json').exists() else {}
+            growth = json.loads((folder / 'offdays-growth.json').read_text(encoding='utf-8')) if (folder / 'offdays-growth.json').exists() else {}
+            cache[week] = (ideas, growth)
+        return cache[week]
+
+    def find(a):
+        ideas, growth = board(str(a.get('week') or ''))
+        m = re.match(r'^queue/(mon|wed|fri)-(\d+)$', str(a.get('doc') or ''))
+        if m:
+            opts = ((ideas.get('days') or {}).get(m.group(1)) or [])
+            n = int(m.group(2))
+            return idea_checks.option_text_main(opts[n - 1]) if 0 < n <= len(opts) and isinstance(opts[n - 1], dict) else None
+        off = idea_checks.offday_id(a.get('doc'))
+        if off:
+            for opts in list((ideas.get('offdays') or {}).values()) + list((growth.get('days') or {}).values()):
+                for o in opts if isinstance(opts, list) else []:
+                    if isinstance(o, dict) and str(o.get('id') or o.get('concept_id')) == off:
+                        return idea_checks.option_text_off(o)
+        return None
+
+    return (lambda a: find(a) or ''), (lambda a: (lambda t: idea_checks.short_hash(idea_checks.norm(t)) if t else None)(find(a)))
+
+
+def wave1(ideas, sources, plans=None, p6=None):
+    """The ideas quality plan's Wave 1 checks on a week's ideas.json against its sources.json (idea_checks.py): a
+    subject he refused, a warned option placed first or shown without his words, a return no deeper, an option that
+    calls itself his and points to nothing he typed, the vetoes the board lists, and from the 23 Nov board the shape
+    (the plain question first, a research prompt, a source tag) and the house rules read. Each finding is
+    {code, ref, line}."""
+    week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')
+    shown_text, earlier_text16 = plans_reader(plans)
+    opts = idea_checks.board_options(ideas)
+    refused = idea_checks.refusals_from(sources, shown_text)
+    said = idea_checks.his_words(sources)
+    unvetoed = (sources or {}).get('unvetoed') or []
+    found = idea_checks.refused_findings(opts, refused, idea_checks.his_ids(sources), said, unvetoed,
+                                         idea_checks.P6_APPROVED if p6 is None else p6)
+    words = {r['ref']: r['said'] for r in refused['refusals']}
+    found += idea_checks.warning_findings(opts, [f for f in found if f['code'] == 'warned'], words.get)
+    found += idea_checks.returns_findings(opts, idea_checks.answers_of(sources), earlier_text16, shape=week >= idea_checks.SHAPE_FROM)
+    if week >= idea_checks.SHAPE_FROM:
+        found += idea_checks.halves_findings(opts, sources, ideas, refused)
+        found += idea_checks.vetoes_findings(ideas, idea_checks.active_vetoes(refused, said, unvetoed))
+        found += idea_checks.shape_findings(ideas, week) + idea_checks.held_findings(ideas)
+        have = {str(r.get('id')) for r in (sources or {}).get('house_rules') or [] if isinstance(r, dict) and str(r.get('text') or '').strip()}
+        found += [{'code': 'house_rules', 'ref': rid, 'line': f'sources.json has no house rule {rid}; gather again, and read it before writing an idea'}
+                  for rid in IDEA_RULES if rid not in have]
+    return found
+
+
+def gate(week, ideas_path=None, plans=None):
+    """The findings that fail the Sunday run (idea_checks.GATE_CODES), each a line, and the warnings shown beside them."""
+    wk = monday(week).isoformat()
+    folder = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week'
+    sources = json.loads((folder / 'sources.json').read_text(encoding='utf-8'))
+    ideas = json.loads(Path(ideas_path or folder / 'ideas.json').read_text(encoding='utf-8'))
+    found = wave1(ideas, sources, plans)
+    return [f['line'] for f in found if f['code'] in idea_checks.GATE_CODES], [f['line'] for f in found if f['code'] == 'warned']
+
+
+SERIES_DAY = {'follow_the_money': 'mon', 'under_the_hood': 'wed', 'mind_the_gap': 'fri'}
+TRIAGE_OUTCOME = {'drop': 'rejected', 'not_for_us': 'rejected', 'story': 'filed', 'angle': 'filed', 'curious': 'passed'}
+
+
+CUE_OUTCOME = {'not_for_us': 'rejected', 'future_piece': 'filed', 'wider_piece_context': 'trend', 'track_over_time': 'trend'}
+
+
+def presses_from(data, ref_of=None):
+    """His presses on one board from GET /api/board/<Monday>/outcomes, each {doc, outcome, via, day, idea_id, pick, words,
+    at, verdict}: the ideas gate's idea_outcomes when the week has them; before it, the board_history presses (the 19 Oct
+    board's were relayed from his triage) and the triage marks filed from the board (the 26 Oct board has nothing else),
+    with the pieces scheduled from the week's options as its picks."""
+    rows = [r for r in data.get('outcomes') or [] if isinstance(r, dict)]
+    if rows:
+        return [{'doc': r['doc'], 'outcome': r['outcome'], 'via': r.get('via'), 'day': r.get('day'), 'idea_id': r.get('idea_id'),
+                 'words': r.get('words'), 'at': r.get('decided_at')} for r in rows if r.get('via') != 'approve_publish']
+    out = []
+    for h in data.get('history') or []:
+        b = h.get('body') if isinstance(h.get('body'), dict) else {}
+        if h.get('collection') == 'picks' and re.match(r'^(mon|wed|fri)$', str(h.get('doc_id'))) and b.get('pick'):
+            out.append({'doc': f'picks/{h["doc_id"]}', 'outcome': 'approved', 'via': 'pick', 'day': h['doc_id'], 'idea_id': b.get('idea_id'),
+                        'pick': b.get('pick'), 'words': b.get('note'), 'at': b.get('at') or h.get('updated_at')})
+        elif h.get('collection') == 'queue' and re.match(r'^(mon|wed|fri)-\d+$', str(h.get('doc_id'))) and b.get('verdict'):
+            out.append({'doc': f'queue/{h["doc_id"]}', 'outcome': TRIAGE_OUTCOME.get(b['verdict'], 'passed'), 'verdict': b['verdict'], 'via': 'press',
+                        'day': h['doc_id'][:3], 'idea_id': b.get('idea_id'), 'words': b.get('reason'), 'at': b.get('at') or h.get('updated_at')})
+    if not out:
+        for t in data.get('triage') or []:
+            tri = t.get('triage') if isinstance(t.get('triage'), dict) else {}
+            if tri.get('decided_by') == 'Krish' and t.get('from_pick'):
+                out.append({'doc': f'queue/{t["from_pick"]}', 'outcome': TRIAGE_OUTCOME.get(tri.get('verdict'), 'passed'), 'verdict': tri.get('verdict'),
+                            'via': 'press', 'day': str(t['from_pick'])[:3], 'idea_id': t.get('id'), 'words': tri.get('reason') or tri.get('said'), 'at': tri.get('at')})
+        pressed = {str(p.get('idea_id') or '').lower() for p in out}
+        for c in data.get('cues') or []:
+            ref = (ref_of or {}).get(str(c.get('subject_ref') or '').lower())
+            if ref and c.get('use') in CUE_OUTCOME and str(c['subject_ref']).lower() not in pressed and c.get('use_origin') == 'krish':
+                out.append({'doc': f'queue/{ref}', 'outcome': CUE_OUTCOME[c['use']], 'verdict': c['use'], 'via': 'press', 'day': ref[:3],
+                            'idea_id': c['subject_ref'], 'words': c.get('said'), 'at': c.get('said_at')})
+        for r in data.get('scheduled') or []:
+            wo = r.get('week_option') if isinstance(r.get('week_option'), dict) else {}
+            day = SERIES_DAY.get(str(wo.get('series')))
+            if day:
+                out.append({'doc': f'picks/{day}', 'outcome': 'approved', 'via': 'pick', 'day': day, 'idea_id': r.get('id'), 'words': None, 'at': r.get('picked_at')})
+    return out
+
+
+def scorecard_from(week, data, plans=None, refused_refs=None):
+    """(the scorecard, the lines that print each label beside his words) for one board, from what the outcomes route
+    answered and the week's files in docs/plans. Writes nothing."""
+    import ideas_history
+    folder = Path(plans or ROOT / 'docs' / 'plans') / f'{week}-week'
+    ideas = ideas_history.as_pressed(folder / 'ideas.json', ideas_history.FIRST_PRESS.get(week, '2100-01-01T00:00:00'))
+    growth = ideas_history.as_pressed(folder / 'offdays-growth.json', ideas_history.FIRST_PRESS.get(week, '2100-01-01T00:00:00'))
+    if growth and not ideas.get('offdays'):
+        ideas = dict(ideas, offdays={('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')[date.fromisoformat(d).weekday()]:
+                                     [dict(o, id=o.get('concept_id')) for o in opts] for d, opts in (growth.get('days') or {}).items()})
+    sources = json.loads((folder / 'sources.json').read_text(encoding='utf-8')) if (folder / 'sources.json').exists() else {}
+    asks = [{'id': a.get('id'), 'words': ' '.join(str(v) for v in (a.get('his_words') or {}).values() if v)}
+            for a in sources.get('asks') or [] if isinstance(a, dict) and isinstance(a.get('his_words'), dict)]
+    if refused_refs is None and sources and ideas.get('days'):
+        refused_refs = sorted({f['ref'] for f in wave1(ideas, sources, plans) if f['code'] in ('refused', 'warned')})
+    ref_of = {str(o.get('id') or '').lower(): f'{d}-{n}' for d in ('mon', 'wed', 'fri') for n, o in enumerate((ideas.get('days') or {}).get(d) or [], 1)
+              if isinstance(o, dict) and o.get('id')}
+    presses = presses_from(data, ref_of)
+    card = ideas_scorecard.score(week, ideas, presses, asks, refused_refs)
+    card['refused_subject_refs'] = refused_refs
+    words = {p['doc']: p.get('words') for p in ideas_scorecard.final_presses(presses).values()}
+    lines = [f'scorecard for the board of {week} (each count by its rule; he can overrule any label in the Sunday say-back):']
+    for k, v in card['counts'].items():
+        lines.append(f'  {k}: {v}  [{ideas_scorecard.RULES[k]}]')
+    lines += [f'  flag: {f}' for f in card['flags']]
+    for lab in card['labels']:
+        said = words.get(lab['doc'])
+        lines.append(f'  {lab["doc"]}: {lab["outcome"]}' + (f', {"/".join(lab["parts"])}' if lab['parts'] else '') + (', wasted' if lab['wasted'] else '')
+                     + (f'  <- his words: "{said}"' if said else ''))
+    return card, lines
+
+
+def scorecard(week, call=None, plans=None, write=True):
+    """The scorecard for one board from his real presses (GET /api/board/<Monday>/outcomes, read-only), written to
+    docs/plans/<Monday>-week/scorecard.json with ids, labels and counts only."""
+    call = call or making._engine_call
+    wk = monday(week).isoformat()
+    card, lines = scorecard_from(wk, get(call, f'/api/board/{wk}/outcomes'), plans)
+    if write:
+        path = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week' / 'scorecard.json'
+        path.write_text(json.dumps(card, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
+        lines.append(f'wrote {path}')
+    return card, lines
 
 
 COMBINE_DOC = re.compile(r'^combine-\d{1,3}$')
@@ -651,6 +834,12 @@ def main(argv=None):
     c = sub.add_parser('cover', help='check ideas.json carries every must_cover id and the style rules before the board is built')
     c.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
     c.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
+    sc = sub.add_parser('scorecard', help='the board\'s scorecard from his real presses, each count by its rule; writes docs/plans/<Monday>-week/scorecard.json')
+    sc.add_argument('week', help='the Monday of the board, YYYY-MM-DD')
+    sc.add_argument('--no-write', action='store_true', help='print only')
+    gt = sub.add_parser('gate', help='the checks that fail the Sunday run: a subject he refused, a warned option placed first, a return no deeper')
+    gt.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
+    gt.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
     a = sub.add_parser('archive', help='the Archive (layout v3): every published piece and his scores, into docs/plans/<Monday>-week/archive.json')
     a.add_argument('week', help='the Monday of the board, YYYY-MM-DD')
     sub.add_parser('self-test')
@@ -676,6 +865,25 @@ def main(argv=None):
     if args.cmd == 'self-test':
         problems = self_test()
         print('board_feed self-test ' + ('FAILED:\n  ' + '\n  '.join(problems) if problems else 'passed'))
+        return 1 if problems else 0
+    if args.cmd == 'scorecard':
+        try:
+            _, lines = scorecard(args.week, write=not args.no_write)
+        except (FeedError, making.MakingError, OSError, ValueError) as error:
+            print(f'board_feed scorecard: {error}', file=sys.stderr)
+            return 1
+        print('\n'.join(lines))
+        return 0
+    if args.cmd == 'gate':
+        try:
+            problems, warned = gate(args.week, args.ideas)
+        except (FeedError, OSError, ValueError) as error:
+            print(f'board_feed gate: {error}', file=sys.stderr)
+            return 1
+        for line in warned:
+            print(f'shown with his words: {line}')
+        print('gate: ' + ('REFUSED:\n  ' + '\n  '.join(problems) if problems else 'nothing he refused is offered again, no warned option leads its day, '
+                                                                                'and every return comes back deeper'))
         return 1 if problems else 0
     if args.cmd == 'cover':
         try:

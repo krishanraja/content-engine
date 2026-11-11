@@ -1799,8 +1799,11 @@ def read_ideas(data, monday, where='--ideas'):
 # An idea as a full story pitch (Krish, 2026-10-31: ideas shown as full story pitches): the headline, what the first ten
 # seconds say, two or three real examples, the chain of cause and effect underneath (five to eight links), and where
 # the piece lands. Optional for now; so_what, story, why_now, fact and source stay required beside it.
-PITCH_FIELDS = (('headline', 'Headline'), ('hook', 'First 10 seconds'), ('examples', 'Real examples'),
+PITCH_FIELDS = (('question', 'The question'), ('headline', 'Headline'), ('hook', 'First 10 seconds'), ('examples', 'Real examples'),
                 ('chain', "What's actually going on"), ('take', 'Where we land'))
+# The plain question the pitch opens on (house rules STORY_ARC and BIG_PICTURE; the ideas quality plan, item 7): required
+# from the 23 Nov board by board_feed.py cover (idea_checks.shape_findings), optional in the shape read here.
+PITCH_OPTIONAL = ('question',)
 PITCH_LISTS = {'examples': (2, 3), 'chain': (5, 8)}
 
 
@@ -1811,6 +1814,10 @@ def pitch_problems(pitch):
     out = [f'has {k}, which is not one of its parts' for k in pitch if k not in dict(PITCH_FIELDS)]
     for k, _ in PITCH_FIELDS:
         v = pitch.get(k)
+        if k in PITCH_OPTIONAL:
+            if v is not None and (not isinstance(v, str) or not v.strip().endswith('?')):
+                out.append(f'{k} is one plain question ending in "?"')
+            continue
         if k in PITCH_LISTS:
             lo, hi = PITCH_LISTS[k]
             if not isinstance(v, list) or not lo <= len(v) <= hi or not all(isinstance(x, str) and x.strip() for x in v):
@@ -1827,6 +1834,8 @@ def pitch_block(pitch):
     rows = []
     for k, label in PITCH_FIELDS:
         v = pitch.get(k)
+        if k in PITCH_OPTIONAL and not (isinstance(v, str) and v.strip()):
+            continue
         if k == 'chain':
             body = '<ol class="pitch-chain">' + ''.join(f'<li>{E(x.strip())}</li>' for x in v) + '</ol>'
         elif k == 'examples':
@@ -6664,7 +6673,7 @@ def _oct31_checks(check, week, ideas, opt):
     page, _, _ = board(week, ideas=pitched)
     block = page[page.find('id="idea-mon-1"'):page.find('</article>', page.find('id="idea-mon-1"'))]
     check('pitch: shown as a labelled block, the chain numbered',
-          all(f'<dt>{E(label)}</dt>' in block for _, label in PITCH_FIELDS) and block.count('<li>Link') == 5
+          all(f'<dt>{E(label)}</dt>' in block for k, label in PITCH_FIELDS if k not in PITCH_OPTIONAL) and block.count('<li>Link') == 5
           and '<ol class="pitch-chain">' in block and page.count('class="pitch"') == 1 and verify(page) == [])
     for bad, want in (({**pitch, 'chain': ['Only one.']}, 'chain is a list of 5 to 8'), ({**pitch, 'examples': ['a'] * 4}, 'examples is a list of 2 to 3'),
                       ({k: v for k, v in pitch.items() if k != 'take'}, 'has no take'), ({**pitch, 'extra': 'x'}, 'not one of its parts')):

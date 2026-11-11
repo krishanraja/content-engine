@@ -206,7 +206,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       res.setHeader('Referrer-Policy', ARCHIVE_REFERRER_POLICY)
       return res.status(200).send(DESK_PAGE)
     }
-    const operatorOnly = ['uploads', 'imports', 'sources'].includes(op) || (!op && !collection && method === 'PUT')
+    const operatorOnly = ['uploads', 'imports', 'sources', 'outcomes'].includes(op) || (!op && !collection && method === 'PUT')
     const who = actor(req, operatorOnly)
     if (!who) return res.status(401).json({ ok: false, error: 'unauthorized' })
     // One live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only
@@ -257,6 +257,33 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         return res.status(200).json({ ok: true, week, approvals_read: view.sources.approvals === true,
           days: view.days.map(d => ({ day: d.day, date: d.date, pieces: d.pieces.map(p => ({ id: p.id, title: p.title, approval: p.approval ?? null })),
             held: d.held, options: d.options.map(o => ({ id: o.id, doc_id: o.doc_id, title: o.title, status: o.status, outcome: o.outcome ?? null, held: o.held ?? null })) })) })
+      }
+      if (op === 'outcomes') {
+        // His answers on the week's ideas board, for its scorecard (scripts/post-pack/board_feed.py scorecard; the ideas
+        // quality plan, item 11): every idea_outcomes row of the week (append only, his words), and for a board from
+        // before the ideas gate its board_history presses, the triage marks filed from it and the pieces scheduled from
+        // its options. Read-only, the engine key only.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        // A cue counts only on one of this board's own options (presses_from), so its window can be wide.
+        const from = new Date(`${week}T00:00:00Z`); from.setUTCDate(from.getUTCDate() - 10)
+        const until = new Date(`${week}T00:00:00Z`); until.setUTCDate(until.getUTCDate() + 14)
+        const [outcomes, history, triage, scheduled, cues] = await Promise.all([
+          db.from('idea_outcomes').select('id,week,day,date,idea_id,option_ref,doc,outcome,via,words,decided_by,decided_at,source').eq('week', week)
+            .order('decided_at', { ascending: true }).limit(2000),
+          db.from('board_history').select('collection,doc_id,revision,body,updated_at,updated_by').eq('week', week).in('collection', ['picks', 'queue'])
+            .order('updated_at', { ascending: true }).limit(2000),
+          db.from('content_ideas').select('id,meta').eq('meta->queue->>from_week', week).limit(300),
+          db.from('content_ideas').select('id,scheduled_for,updated_at,meta').eq('meta->week_option->>week_start', week).not('scheduled_for', 'is', null).limit(50),
+          // His words on the board's ideas filed as cues from the queue (the 26 Oct board's "Ditch 4" is only here).
+          db.from('feedback_cues').select('subject_ref,use,said,said_at,use_origin').eq('venture', 'publication').eq('source', 'idea_queue')
+            .gte('said_at', from.toISOString()).lt('said_at', until.toISOString()).limit(500),
+        ])
+        must(outcomes); must(history); must(triage); must(scheduled)
+        const meta = (r: Record<string, any>) => (r.meta && typeof r.meta === 'object' ? r.meta : {})
+        return res.status(200).json({ ok: true, week, outcomes: outcomes.data || [], history: history.data || [],
+          triage: (triage.data || []).map((r: Record<string, any>) => ({ id: r.id, triage: meta(r).queue?.triage ?? null, from_pick: meta(r).queue?.from_pick ?? null })),
+          scheduled: (scheduled.data || []).map((r: Record<string, any>) => ({ id: r.id, week_option: meta(r).week_option ?? null, picked_at: meta(r).week_option?.at ?? null })),
+          cues: cues.error ? [] : cues.data || [] })
       }
       if (op === 'media') {
         // One rendered file of this week's pieces (_media.ts): its id from the view, answered with a short signed link.

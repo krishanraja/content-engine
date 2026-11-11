@@ -1,0 +1,144 @@
+{
+ "week": "2026-10-26",
+ "counts": {
+  "options_main": 12,
+  "options_off": 0,
+  "pressed_share": 0.92,
+  "picks": 3,
+  "picks_as_written": 3,
+  "rank1_picked": 3,
+  "wasted_presses": 0,
+  "wasted_without_pick_depth": 0,
+  "main_rejects": 1,
+  "main_rejects_with_curious": 1,
+  "offday_rejects_refusing": 0,
+  "refused_subject_options": 0,
+  "big_question": {
+   "options": 4,
+   "picks": 1
+  },
+  "asks_as_typed": {
+   "options_covering_an_ask": 0,
+   "as_typed": 0,
+   "picks_as_typed": 0
+  },
+  "minutes": 4.2
+ },
+ "flags": [],
+ "picks": {
+  "mon": "mon-1",
+  "wed": "wed-1",
+  "fri": "fri-1"
+ },
+ "kinds": {
+  "mon-1": "big",
+  "mon-2": "single",
+  "mon-3": "single",
+  "mon-4": "big",
+  "wed-1": "single",
+  "wed-2": "single",
+  "wed-3": "big",
+  "wed-4": "single",
+  "fri-1": "single",
+  "fri-2": "single",
+  "fri-3": "single",
+  "fri-4": "big"
+ },
+ "labels": [
+  {
+   "doc": "picks/mon",
+   "outcome": "approved",
+   "parts": [],
+   "wasted": false
+  },
+  {
+   "doc": "picks/wed",
+   "outcome": "approved",
+   "parts": [],
+   "wasted": false
+  },
+  {
+   "doc": "picks/fri",
+   "outcome": "approved",
+   "parts": [],
+   "wasted": false
+  },
+  {
+   "doc": "queue/mon-3",
+   "outcome": "filed",
+   "parts": [],
+   "wasted": false
+  },
+  {
+   "doc": "queue/mon-4",
+   "outcome": "filed",
+   "parts": [
+    "reframe"
+   ],
+   "wasted": false
+  },
+  {
+   "doc": "queue/wed-2",
+   "outcome": "filed",
+   "parts": [
+    "reframe"
+   ],
+   "wasted": false
+  },
+  {
+   "doc": "queue/wed-3",
+   "outcome": "filed",
+   "parts": [
+    "reframe"
+   ],
+   "wasted": false
+  },
+  {
+   "doc": "queue/wed-4",
+   "outcome": "rejected",
+   "parts": [],
+   "wasted": false
+  },
+  {
+   "doc": "queue/fri-2",
+   "outcome": "filed",
+   "parts": [
+    "reframe"
+   ],
+   "wasted": false
+  },
+  {
+   "doc": "queue/fri-3",
+   "outcome": "filed",
+   "parts": [
+    "reframe"
+   ],
+   "wasted": false
+  },
+  {
+   "doc": "queue/fri-4",
+   "outcome": "filed",
+   "parts": [],
+   "wasted": false
+  }
+ ],
+ "rules": {
+  "options_main": "Options on Monday, Wednesday and Friday on the board as he first saw it (ideas.json days).",
+  "options_off": "Off-day options on the board, the weekly good news left out (ideas.json offdays).",
+  "pressed_share": "Share of all options with a final press of his (any of the five outcomes). Under 0.8 is flagged: pressing less never passes for success.",
+  "picks": "His Approve on a publishing day, as it stood at the end (his last pick of each day).",
+  "picks_as_written": "Picks on which nothing he said (the pick's note or any other press on that option) asks to reframe it, deepen it or say it simpler (idea_checks.PART_WORDS).",
+  "rank1_picked": "Picks that were the first option of their day (the one the board led with).",
+  "wasted_presses": "Presses (his last on each option, and his words on a pick) that are a Reject worded as refusing or repeating (boring, lame, no point, don't understand; told you, I just said), or that ask for research, depth or simpler words. The 10x number: target at most 1 a board.",
+  "wasted_without_pick_depth": "The same, leaving out depth or simpler asks made on a pick.",
+  "main_rejects": "Final Reject (not for us, a Drop) on a publishing day's option.",
+  "main_rejects_with_curious": "Main rejects plus a \"curious\" verdict whose words refuse (19 Oct triage only).",
+  "offday_rejects_refusing": "Off-day options he rejected in refusing words (boring, lame, no point, don't understand).",
+  "refused_subject_options": "Options on a subject he refused before the board (idea_checks.refused_findings: refused or warned).",
+  "big_question": "A publishing day's option is a big question when the first sentence of what it says (so_what) names no company, product, person or study; otherwise it is one event. Counted for options and for picks.",
+  "asks_as_typed": "An option answers his ask as typed when it covers the ask and carries his typed words whole (in its from line, so_what or story). Counted for options and for picks.",
+  "minutes": "His pressing time on the board: from his first press to his last in each sitting (a gap over 60 minutes starts a new sitting), summed."
+ },
+ "refused_subject_refs": [],
+ "made_by": "board_feed.scorecard_from on read-only reads of idea_outcomes, board_history, content_ideas and feedback_cues, 2026-11-11"
+}
