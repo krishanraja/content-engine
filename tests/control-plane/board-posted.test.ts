@@ -197,7 +197,14 @@ describe('GET /api/board/<Monday>/pieces', () => {
     { id: '66666666-2222-4333-8444-555555555555', scheduled_for: '2026-11-08', lane_slot: 'mind_the_gap', state: 'drafting', meta: { offday: { date: '2026-11-08', slot: 'noonish' } }, updated_at: '2026-10-29T00:00:00Z' },
   ]
   const MIX = { kind: 'mix', approved: true, days: { tue: ['carousel'], sat: ['meme'] }, mix_sha256: 'a'.repeat(64), at: '2026-11-01T18:00:00Z' }
-  const db = (fail = false, mix: unknown = null, off: Array<{ doc_id: string; body: unknown }> = [], said: Array<{ doc_id: string; body: unknown; updated_by: string }> = []) => {
+  // His approvals that stand (the ideas gate, board_approvals_now): every piece above that is on its day, and every
+  // off-day option the tests below hand over. A test of the gate names its own.
+  const approve = (idea: string, date: string, doc: string) => ({ idea_id: idea, day: 'x', date, via: 'pick', doc, option_ref: null, revision: 1,
+    decided_at: '2026-11-01T18:00:00Z', option_sha256: null, words: null, source: 'publish_board' })
+  const APPROVALS = [approve(B, '2026-11-02', 'picks/mon'), approve(C, '2026-11-05', 'queue/off-thu-c'), approve('66666666-2222-4333-8444-555555555555', '2026-11-08', 'queue/off-sun-x'),
+    ...['off-tue-prices', 'off-tue-puppy', 'off-thu-plain', 'off-thu-half', 'off-sun-old'].map(d => approve(d, '2026-11-03', `queue/${d}`))]
+  const db = (fail = false, mix: unknown = null, off: Array<{ doc_id: string; body: unknown; updated_by?: string }> = [], said: Array<{ doc_id: string; body: unknown; updated_by: string }> = [],
+    approvals: unknown[] | null = APPROVALS) => {
     const f: Record<string, unknown> = {}
     const q: any = {
       select: () => q,
@@ -205,10 +212,30 @@ describe('GET /api/board/<Monday>/pieces', () => {
       lte: (k: string, v: string) => { f.lte = [k, v]; return Promise.resolve(fail ? { data: null, error: { message: 'down' } } : { data: rows.filter(r => r.scheduled_for >= String((f.gte as string[])[1]) && r.scheduled_for <= v), error: null }) },
     }
     const doc: any = { select: () => doc, eq: () => doc, maybeSingle: async () => ({ data: mix ? { body: mix } : null, error: null }),
-      like: async (k: string, v: string) => { expect([k, v]).toEqual(['doc_id', 'off-%']); return { data: off, error: null } },
+      like: async (k: string, v: string) => { expect([k, v]).toEqual(['doc_id', 'off-%']); return { data: off.map(o => ({ updated_by: 'Krish', ...o })), error: null } },
       or: async (f: string) => { expect(f).toBe('doc_id.like.yes-%,doc_id.like.%-publish'); return { data: said, error: null } } }
-    return { from: (t: string) => { expect(['content_ideas', 'board_documents']).toContain(t); return t === 'board_documents' ? doc : q } }
+    return { from: (t: string) => { expect(['content_ideas', 'board_documents']).toContain(t); return t === 'board_documents' ? doc : q },
+      rpc: async (name: string, args: Record<string, unknown>) => {
+        expect([name, args]).toEqual(['board_approvals_now', { p_week: '2026-11-02' }])
+        return approvals ? { data: approvals, error: null } : { data: null, error: { message: 'down' } }
+      } }
   }
+  it('hands Growth only what his approval holds (the ideas gate), and nothing when his approvals cannot be read', async () => {
+    // Krish, 2026-11-11: "I shouldn't end up seeing random ideas in the publish board that I never wanted there and that
+    // I didn't approve to move to the publish board". Growth makes and posts only what he approved.
+    const without = APPROVALS.filter(a => a.idea_id !== C && a.idea_id !== 'off-thu-plain')
+    const sha = 'b'.repeat(64)
+    const plain = { doc_id: 'off-thu-plain', body: { use: 'offday', day: 'thu', option_id: 'plain', idea: { verdict: 'approve', words: null, sha256: sha, at: 'x', shown: { hook: 'Plain' } } } }
+    const out = await readPieces(db(false, null, [plain], [], without) as never, '2026-11-02')
+    expect(out.status).toBe(200)
+    expect(out.body.days.map((d: any) => d.piece_id)).toEqual([B, '66666666-2222-4333-8444-555555555555'])
+    expect(out.body.offdays).toEqual([])
+    // A press that reads as his approval but was not saved by him is never handed over.
+    const forged = await readPieces(db(false, null, [{ ...plain, updated_by: 'engine_operator' }]) as never, '2026-11-02')
+    expect(forged.body.offdays).toEqual([])
+    // His approvals unreadable: nothing is handed over, never everything.
+    expect(await readPieces(db(false, null, [], [], null) as never, '2026-11-02')).toEqual({ status: 503, body: { ok: false, error: 'approvals_unavailable' } })
+  })
   it('carries his yes for each day, from wherever he gave it (one yes anywhere, Ruling, Krish, 2026-11-02)', async () => {
     const said = [{ doc_id: 'yes-wed-words', updated_by: 'engine_operator', body: { kind: 'yes', day: 'wed', via: 'words', approved: true,
       at: '2026-11-02T21:30:00Z', words: 'can you just approve Weds, Fri and Sat for me here', said_at: '2026-11-02T21:25:00Z',

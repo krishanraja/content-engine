@@ -97,7 +97,10 @@ the page; `week_board.py` refuses a wrong shape and names it.
 
 **His presses.** On each option he presses the idea, the direction and, once
 Growth returns it, the mock: Approve, Improve (his words) or Reject (his
-reason); the idea also takes Next week. Every option also has an open box for
+reason); the idea also takes File for later (Next week until 11 November) and
+Save as a trend (his words name the trend), so every idea ends in one of the
+five outcomes of the ideas gate (`docs/PUBLISH_BOARDS.md`, "The ideas gate"),
+and only his Approve puts it on the publish board. Every option also has an open box for
 his own words on anything (Krish, 2026-11-02: "I still need to be able to provide
 actual feedback on anything in open text format"), saved exactly as typed in the
 record's `note`; it may be the exact text to put on the post ("it would contain
@@ -184,19 +187,19 @@ kit from the format he pointed at, credited, and never reposts the clip itself.
 A weekly series (Krish, 2026-11-02: "you focus on w/c 9 Nov for the Saturday weekly good news. You will need to find
 the actual good news on Sunday as per the usual system so that the news items are fresh"; his Improve on the 7 Nov
 good news: "I want actual news items and the content we are going to use here - embedded real world images or
-videos"; Rulings, Krish, 2026-11-07: "Saturday's good news run should be done later in the week so the good news is
-fresh" and "Happy to break the "no Claude schedules" rule for Saturday's good news. We might as well just keep that on
-an automatic schedule."). Each week's board carries it on Saturday as `{"id": "goodnews", "weekly": "good_news",
-"stories_due": "<the Thursday of that week>", ...}` with the rest of an option (hook, pitch, direction, read-back), and
-no stories: the Sunday ideas run writes it so, and its card says the stories come Thursday. He approves the format on
-the board; the stories are found on Thursday.
+videos"). Since 11 November it is found with the rest of the week's ideas, once a week (Ruling, Krish, 2026-11-11: the
+ideas board fills once a week in full, Saturday's good news included; the Thursday good-news schedule is retired; his
+words: "Saturday's actual real good news story ideas are presented to me"). Each week's board carries it on Saturday
+as `{"id": "goodnews", "weekly": "good_news", "stories_due": "<the day the stories were found>", "stories": [...], ...}`
+with the rest of an option (hook, pitch, direction, read-back). He answers it like any off-day option, with the five
+outcomes; only his Approve puts it on the publish board.
 
-**The Thursday run fills it** (`.github/workflows/saturday-goodnews.yml`, Claude Code in GitHub Actions on his
-subscription, fired twice on Thursday, for the week `python3 scripts/saturday_goodnews.py check` names, the one whose
-Saturday comes next; a session can run the same steps by hand):
+**The Sunday ideas run fills it** (`.github/workflows/sunday-ideas.yml`, step 3c of the skill; by hand,
+`.github/workflows/saturday-goodnews.yml` finds them again for a week, for the week `python3
+scripts/saturday_goodnews.py check` names; a session can run the same steps):
 
 1. Find five real AI stories that are good news for ordinary people (health, science, safety, access, work made
-   better), each published in the seven days up to `stories_due`, none already run (`sources.json`
+   better), each published in the seven days up to `stories_due` (today), none already run (`sources.json`
    `recent_offdays` urls). Prefer a primary source: the organisation's own page, the paper, the official
    announcement; a press story only names where it read it.
 2. Check each against its primary source the same day: the headline, the number and the date must be on that page.
@@ -205,17 +208,22 @@ Saturday comes next; a session can run the same steps by hand):
    https), never a stock image.
 4. Write them into that week's `docs/plans/<Monday>-week/ideas.json`, on the good-news option only, as
    `"stories": [{"headline", "what", "why", "date": "YYYY-MM-DD", "source": {"label", "url"}, "media": {"kind": "photo"
-   or "clip", "url"}}]`, five of them, in plain English a 12-year-old follows. Change nothing else.
+   or "clip", "url"}}]`, five of them, in plain English a 12-year-old follows, and set `stories_due` to today.
 5. `python3 scripts/post-pack/copy_lint.py --applies-to carousel_text` on the words, then
    `python3 scripts/post-pack/board_feed.py gather <Monday>` and `cover <Monday>`: it refuses a story dated outside
    the seven days, one with no source or picture, and one a recent off day ran.
 6. Put them on the live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
-   read-only archive). Set the option's `stories_due` to the week's Thursday, so the stories read as this week's. The
-   workflow's keep step puts the week's folder on the week's branch `offday-revise/<Monday>`, which the live board's
-   view reads before main (`scripts/week_branch_keep.sh`, with a pull request that merges itself), bumps the week's
-   change signal (`board_web.py touch <Monday>`), and asks the view until the good news shows its five stories
-   (`saturday_goodnews.py`, `live_has_stories`). A session by hand does the same. Never rebuild or publish a board
-   page: the archive refuses it.
+   read-only archive) with the rest of the week's ideas: the workflow's keep step puts the week's folder on the week's
+   branch `offday-revise/<Monday>`, which the live board's view reads before main (`scripts/week_branch_keep.sh`, with a
+   pull request that merges itself), and bumps the week's change signal (`board_web.py touch <Monday>`). The view
+   counts the stories as this week's when they were found on or after the day the week's ideas run fills its board
+   (`ideasRunOf`, the Saturday nine days before the Monday). Never rebuild or publish a board page: the archive
+   refuses it.
+
+**The trade-off, said plainly.** The run fills the board for the week that starts eight days after its Sunday, so a
+story it finds is about two weeks old by the Saturday it posts on. So before Growth makes the post, each story is
+checked against its source again through the fact gate (as every off-day news claim is, above), and one the source no
+longer carries is cut and named.
 
 Growth makes the carousel from the stories as shown, and its mock comes back for his final yes as with any off day.
 

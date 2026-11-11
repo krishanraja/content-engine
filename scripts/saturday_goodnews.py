@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
-"""The Thursday good-news run's week and its guard (.github/workflows/saturday-goodnews.yml).
+"""The good-news run's week and its guard (.github/workflows/saturday-goodnews.yml, by hand only).
 
-Rulings (Krish, 2026-11-07): "Saturday's good news run should be done later in the week so the good news is fresh",
-and "Happy to break the "no Claude schedules" rule for Saturday's good news. We might as well just keep that on an
-automatic schedule." So GitHub Actions fires Claude Code on his subscription every Thursday to find that week's
-Saturday good news, the one exception to zero Claude schedules beside the Sunday ideas run. It fires twice, because
-GitHub's cron fires hours late, and this guard makes every firing after the one that put the stories live do nothing.
+Ruling (Krish, 2026-11-11): the ideas board fills once a week in full, Saturday's good news included; the Thursday
+good-news schedule is retired. The Sunday ideas run (scripts/sunday_ideas.py, .github/workflows/sunday-ideas.yml) finds
+the week's five stories with the rest of its ideas, and saturday-goodnews.yml stays as a run by hand (the board's "Find
+the stories now" press, or Run workflow) that finds them again for a week. Its earlier rulings (Krish, 2026-11-07:
+"Saturday's good news run should be done later in the week so the good news is fresh") are history.
 
     python3 scripts/saturday_goodnews.py check [--today YYYY-MM-DD] [--week YYYY-MM-DD] [--event schedule] [--force]
 
-prints, for $GITHUB_OUTPUT, `monday=<the week>`, `go=true|false` and `due=<the week's Thursday>`, and says why on
-stderr. The week is the one whose Saturday comes next (on a Thursday, the Monday three days before). It goes while
-that week's ideas.json holds the weekly good-news option, the week's Thursday has come (tomorrow counts), the option
-does not hold this week's stories (five, found for a due date on or after that Thursday: stories found earlier, as
-the 7 November run found the 9 November week's on Saturday, are last week's news) and the live board does not show
-this week's stories yet. A scheduled firing before FIRST_RUN does nothing. `--force` (a run by hand) goes whenever
-the option exists, stories or not. It exits 1 when it cannot read the board, so a run never goes or skips on a guess,
-and 2 on a typed week that is not a Monday.
+prints, for $GITHUB_OUTPUT, `monday=<the week>`, `go=true|false` and `due=<today>`, the day the stories are found up
+to, and says why on stderr. The week is the one whose Saturday comes next, unless a week is typed. It goes while that
+week's ideas.json holds the weekly good-news option, the option does not hold this week's stories (five, found for a
+due date on or after the day the week's ideas run fills its board, ideas_run_of: the view's storiesFresh says the
+same) and the live board does not show them yet. A scheduled firing does nothing at all: the job has no schedule, and
+one added by mistake still finds nothing to do. `--force` goes whenever the option exists, stories or not. It exits 1
+when it cannot read the board, so a run never goes or skips on a guess, and 2 on a typed week that is not a Monday.
 
 The live board is Control Centre's (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
 read-only archive): it reads the week's view, GET /api/board/<Monday>/view, which reads ideas.json from the week's
@@ -42,9 +41,6 @@ sys.path.insert(0, str(HERE / 'post-pack'))
 from sunday_ideas import monday_arg  # noqa: E402  the one check of a typed Monday
 
 NEW_YORK = ZoneInfo('America/New_York')
-# The first scheduled Thursday: 12 November, for Saturday 14 November (Krish, 2026-11-09: "Yes, go ahead with the
-# restore and the Thursday run").
-FIRST_RUN = dt.date(2026, 11, 12)
 # The weekly good news holds five stories (week_board.STORY_COUNT, plan-week references/offdays.md).
 STORY_COUNT = 5
 
@@ -70,29 +66,32 @@ def weekly_option(monday: dt.date, plans: Path | None = None) -> dict | None:
 
 
 def thursday_of(monday: dt.date) -> dt.date:
-    """The week's Thursday: the good news is found from then on (Krish, 2026-11-07)."""
+    """The week's Thursday (the day the retired Thursday run found the stories)."""
     return monday + dt.timedelta(days=3)
 
 
+def ideas_run_of(monday: dt.date) -> dt.date:
+    """The day the week's one ideas run fills its whole board: the Saturday nine days before its Monday, when the Sunday
+    ideas run first fires (the view's ideasRunOf, apps/control-plane/api/board/_viewExtras.ts, says the same)."""
+    return monday - dt.timedelta(days=9)
+
+
 def stories_fresh(monday: dt.date, o: dict) -> bool:
-    """Whether the option holds this week's stories: five or more, found for a due date on or after the week's
-    Thursday (the view's storiesFresh, apps/control-plane/api/board/_viewExtras.ts, says the same)."""
+    """Whether the option holds this week's stories: five or more, found for a due date on or after the day the week's
+    ideas run fills its board (the view's storiesFresh says the same). Stories found before it were for another week."""
     stories = [s for s in o.get('stories') or [] if isinstance(s, dict)]
     try:
         due = dt.date.fromisoformat(str(o.get('stories_due')))
     except ValueError:
         return False
-    return len(stories) >= STORY_COUNT and due >= thursday_of(monday)
+    return len(stories) >= STORY_COUNT and due >= ideas_run_of(monday)
 
 
 def goodnews_due(monday: dt.date, today: dt.date, plans: Path | None = None) -> bool:
-    """True while the week's weekly option does not hold this week's stories and the week's Thursday is today,
-    tomorrow or past. An option with no readable stories_due is due once Thursday has come, so the run finds it and
-    the cover check names the fault."""
+    """True while the week's weekly option does not hold this week's stories, whatever the day: the weekly ideas run
+    finds them, and a run by hand finds them again whenever he asks."""
     o = weekly_option(monday, plans)
-    if not o or stories_fresh(monday, o):
-        return False
-    return thursday_of(monday) <= today + dt.timedelta(days=1)
+    return bool(o) and not stories_fresh(monday, o)
 
 
 def view_has_stories(view: dict, monday: str) -> bool:
@@ -125,8 +124,8 @@ def live_has_stories(monday: str) -> bool:
 def decide(monday: dt.date, today: dt.date, event: str, force: bool, plans: Path | None = None,
            live=live_has_stories) -> tuple[bool, str]:
     """Whether this firing goes, and why."""
-    if event == 'schedule' and today < FIRST_RUN:
-        return False, f'scheduled firings start on {FIRST_RUN.isoformat()}'
+    if event == 'schedule':
+        return False, 'the Thursday schedule is retired (Ruling, Krish, 2026-11-11): the Sunday ideas run finds the stories'
     if weekly_option(monday, plans) is None:
         return False, f'docs/plans/{monday.isoformat()}-week/ideas.json on main holds no weekly good-news option'
     if force:
@@ -144,7 +143,7 @@ def main() -> int:
     check = sub.add_parser('check')
     check.add_argument('--today', help='YYYY-MM-DD; default: today in New York')
     check.add_argument('--week', help='a typed Monday, YYYY-MM-DD; default: the week whose Saturday comes next')
-    check.add_argument('--event', default='workflow_dispatch', help="GitHub's event name; 'schedule' applies FIRST_RUN")
+    check.add_argument('--event', default='workflow_dispatch', help="GitHub's event name; a 'schedule' firing does nothing")
     check.add_argument('--force', action='store_true')
     args = parser.parse_args()
     today = dt.date.fromisoformat(args.today) if args.today else dt.datetime.now(NEW_YORK).date()
@@ -161,7 +160,7 @@ def main() -> int:
     print(f'saturday good news, week of {monday}: {"go" if go else "nothing to do"} ({why})', file=sys.stderr)
     print(f'monday={monday.isoformat()}')
     print(f'go={"true" if go else "false"}')
-    print(f'due={thursday_of(monday).isoformat()}')
+    print(f'due={today.isoformat()}')
     return 0
 
 

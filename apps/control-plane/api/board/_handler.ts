@@ -117,7 +117,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
     }
     if (op === 'touch') {
       // The week's change signal, bumped by a writer whose change lives outside the board's tables (the week's plan
-      // files on GitHub: the Thursday good-news run, the revise run, the Sunday ideas run), so the live board reads the
+      // files on GitHub: the good-news run, the revise run, the Sunday ideas run), so the live board reads the
       // view again at once instead of at its next poll. The engine operator's key only; it changes nothing it shows.
       if (!operatorBearerAllowed(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
       if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
@@ -247,6 +247,15 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         res.setHeader('ETag', etag)
         if (notModified(req.headers['if-none-match'], etag)) return res.status(304).end()
         return res.status(200).json(view)
+      }
+      if (op === 'gate') {
+        // The ideas gate for the week (_gate.ts): every piece on a day with the approval that holds it there, and every
+        // piece or option held because none does. Read-only; the same view the live board draws.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        const view = await readView(db, week)
+        return res.status(200).json({ ok: true, week, approvals_read: view.sources.approvals === true,
+          days: view.days.map(d => ({ day: d.day, date: d.date, pieces: d.pieces.map(p => ({ id: p.id, title: p.title, approval: p.approval ?? null })),
+            held: d.held, options: d.options.map(o => ({ id: o.id, doc_id: o.doc_id, title: o.title, status: o.status, outcome: o.outcome ?? null, held: o.held ?? null })) })) })
       }
       if (op === 'media') {
         // One rendered file of this week's pieces (_media.ts): its id from the view, answered with a short signed link.
