@@ -1,4 +1,4 @@
-import { EXIT, MOTION, drift, progress, stateAt } from '../../clock'
+import { HERO, EXIT, MOTION, drift, progress, stateAt } from '../../clock'
 import type { DeviceProps } from '../types'
 import { ParamsSchema } from './schema'
 const linear = (t: number) => t
@@ -18,7 +18,12 @@ export function swarmState({ object, events, frame }: Pick<DeviceProps, 'object'
   const countProgress = fill ? progress(time - fill.atFrame, MOTION.countFrames, t => 1 - (1 - t) ** 5) : 0
   const rankProgress = move ? progress(time - move.atFrame, MOTION.countFrames, linear) : 0
   const count = (from: number, to: number, p: number) => Math.round(from + (to - from) * p)
-  return { params, out, marked: !!mark, rankMode: !!move,
+  return { params, out, marked: !!mark, rankMode: !!move && params.rank.from !== params.rank.to,
+    camera: progress(frame - enter.atFrame, Math.max(1, (events.find(e => e.obj === object.obj && e.verb === 'exit' && e.atFrame > enter.atFrame)?.atFrame ?? object.toFrame) - enter.atFrame), HERO),
+    ambient: drift(frame, enter.atFrame, object.toFrame, 100),
+    grainSeed: Math.floor((frame - enter.atFrame) / 2),
+    markAge: mark ? frame - mark.atFrame : -1,
+    agentCount: fill ? count(0, params.agents, countProgress) : 0,
     enter: progress(frame - enter.atFrame, MOTION.enterFrames),
     text: params.comment.split(/\s+/).slice(0, Math.ceil(params.comment.split(/\s+/).length * progress(time - enter.atFrame, MOTION.countFrames, linear))).join(' '),
     countProgress,

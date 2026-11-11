@@ -25,12 +25,13 @@ export function leaderboardState(object: EngineObject, events: readonly EngineEv
     const stamp = cues.findLast(e => e.verb === 'stamp' && target(e).row === row.label)
     const badge = stamp ? StampTarget.parse(JSON.parse(stamp.toState)).text : undefined
     const altIndex = alternate.findIndex(r => r.label === row.label)
+    const valueTravel = move ? progress(age(move) - altIndex * MOTION.staggerFrames, MOTION.countFrames) : 0
     return { ...row, position: i + (altIndex - i) * travel,
       rank: (travel === 1 ? altIndex : i) + 1,
       reveal: add ? progress(age(add) - i * MOTION.staggerFrames, MOTION.enterFrames) : 0,
-      bar: move ? (row.alt ?? row.value) * progress(age(move) - altIndex * MOTION.staggerFrames, MOTION.countFrames)
+      bar: move ? valueTravel === 1 ? (row.alt ?? row.value) : row.value + ((row.alt ?? row.value) - row.value) * valueTravel
         : fill ? row.value * progress(age(fill) - i * MOTION.staggerFrames, MOTION.countFrames) : 0,
-      badge, stamp: stamp ? progress(age(stamp), MOTION.slapFrames) : 0,
+      badge, stamp: stamp ? progress(age(stamp), 6) : 0,
       lift: selected === row.label && highlight ? progress(age(highlight), MOTION.slapFrames) : 0,
     }
   })
