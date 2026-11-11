@@ -981,18 +981,6 @@
            "inspiration": []
           },
           "done": "Picked. Face-led is the look for this piece."
-         },
-         "not_this": {
-          "label": "Not this",
-          "op": "style",
-          "body": {
-           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
-           "reject": {
-            "layer": "treatment",
-            "id": "face-with-proof"
-           }
-          },
-          "done": "Noted. It is not recommended for this piece any more."
          }
         }
        },
