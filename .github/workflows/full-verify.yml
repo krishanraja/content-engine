@@ -129,7 +129,7 @@ jobs:
       - run: npm ci
       - name: Install isolated SQL and browser test runtimes
         run: |
-          npm install --no-save --package-lock=false @electric-sql/pglite@0.3.14 playwright@1.55.0
+          npm install --no-save --package-lock=false @electric-sql/pglite@0.3.14 playwright@1.55.0 pg@8.13.1
           npx playwright install --with-deps chromium
       - name: Verify artifact conversion, migration and interactive web parity
         run: |
@@ -139,9 +139,19 @@ jobs:
           python tests/now_trim_test.py
           python scripts/post-pack/board_today.py fixtures/week-board/today-2026-10-26.json fixtures/week-board/today-2026-11-02.json --out "$RUNNER_TEMP/board-today" --shoot --open mon
           node tests/board-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+          node tests/board-sessions-db.mjs pglite "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+          python tests/board_session_test.py
           node tests/inspiration-said-cards.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
           python tests/board_fixture.py "$RUNNER_TEMP/board-fixture.html"
           node --import tsx tests/integration/board-runtime.ts "$PWD/node_modules/@electric-sql/pglite/dist/index.js" "$PWD/node_modules/playwright/index.mjs" "$RUNNER_TEMP/board-fixture.html" "$RUNNER_TEMP/board-screenshots"
+      - name: Board sessions on a real Postgres (four at once, and a copied prompt followed end to end)
+        run: |
+          PGBIN=$(ls -d /usr/lib/postgresql/*/bin | sort -V | tail -1)
+          "$PGBIN/initdb" -D "$RUNNER_TEMP/pg" -A trust -U postgres > /dev/null
+          "$PGBIN/pg_ctl" -D "$RUNNER_TEMP/pg" -o "-p 55432 -k $RUNNER_TEMP" -l "$RUNNER_TEMP/pg.log" start
+          PGURL="postgres://postgres@localhost/postgres?host=$RUNNER_TEMP&port=55432"
+          node tests/board-sessions-db.mjs pg "$PWD/node_modules/pg/lib/index.js" "$PGURL"
+          node --import tsx tests/integration/board-sessions-e2e.ts "$PWD/node_modules/pg/lib/index.js" "$PGURL"
 
   report:
     # One issue for a red main: opened or updated naming what failed, closed when main is green again.

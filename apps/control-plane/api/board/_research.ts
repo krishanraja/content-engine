@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { meterScope, perplexityCall } from '../_meter.js'
-import { MaterialsFull, readMaterials, withMaterial, type Material } from '../_content.js'
+import { readMaterials, type Material } from '../_content.js'
+import { StoreError, addToWorkingSet, type StoreDb } from '../_pieceStore.js'
 
 // The live board's Research step (Krish, 2026-11-09: "use sonar-pro for research now"). "Research it now" runs the
 // piece's research brief (_prompts.researchPrompt) through Perplexity sonar-pro, the model the engine already uses and
@@ -52,18 +53,16 @@ export async function fileMaterial(db: SupabaseClient, pieceId: string, m: { kin
   const content = String(m.content || '')
   if (!content.trim()) throw new MaterialError(400, 'empty_material')
   if (content.length > MAX_MATERIAL) throw new MaterialError(413, 'material_too_large')
-  const read = await db.from('content_ideas').select('id,meta').eq('id', pieceId).single()
-  if (read.error || !read.data) throw new MaterialError(404, 'piece_not_found')
-  const meta = (read.data.meta || {}) as Record<string, unknown>
   const at = new Date().toISOString()
   const material: Material = { id: randomUUID(), kind: m.kind, title: m.title.slice(0, 200), content, bytes: Buffer.byteLength(content), at, by: m.by }
-  let next: Material[]
-  try { next = withMaterial(readMaterials(meta), material) } catch (e) {
-    if (e instanceof MaterialsFull) throw new MaterialError(409, 'materials_full')
+  // Guarded on the row's updated_at (api/_pieceStore.ts): a write landing in between is read again, never overwritten;
+  // the database files it in the piece materials store in the same write.
+  let added: Awaited<ReturnType<typeof addToWorkingSet>>
+  try { added = await addToWorkingSet(db as unknown as StoreDb, pieceId, material) } catch (e) {
+    if (e instanceof StoreError) throw new MaterialError(e.status, e.message)
     throw e
   }
-  const write = await db.from('content_ideas').update({ meta: { ...meta, materials: next }, updated_at: at }).eq('id', pieceId)
-  if (write.error) throw new MaterialError(503, 'board_store_unavailable')
+  if (added.ok === false) throw new MaterialError(added.reason === 'materials_full' ? 409 : 503, added.reason === 'materials_full' ? 'materials_full' : 'board_store_unavailable')
   return { id: material.id, title: material.title || '', bytes: material.bytes || 0, at }
 }
 

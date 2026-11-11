@@ -96,7 +96,7 @@ def goodnews_due(monday: dt.date, today: dt.date, plans: Path | None = None) -> 
 
 
 def view_has_stories(view: dict, monday: str) -> bool:
-    """Whether a week's view (GET /api/board/<Monday>/view, contract 1.1.0) shows a weekly good-news option holding
+    """Whether a week's view (GET /api/board/<Monday>/view, contract 1.2.0) shows a weekly good-news option holding
     this week's stories, on any day."""
     week = dt.date.fromisoformat(monday)
     for day in view.get('days') or []:
