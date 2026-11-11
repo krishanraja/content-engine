@@ -1,0 +1,16 @@
+{
+  "object":{"obj":"branch","device":"ladder_stage","meaning":"People working in one branch","params":{},"variants":{},"fromFrame":0,"toFrame":600,"dataset":{"unit":"people","denominator":20,"producerLabel":"IMF · BESSEN 2015","rows":[{"label":"Tellers","value":20},{"label":"Tellers","value":13}]}},
+  "events":[
+    {"id":"e","obj":"branch","verb":"enter","toState":"branch","atFrame":1},
+    {"id":"c","obj":"branch","verb":"count_to","toState":"20","atFrame":40},
+    {"id":"d","obj":"branch","verb":"count_to","toState":"13","atFrame":80},
+    {"id":"m","obj":"branch","verb":"move","toState":"street","atFrame":120},
+    {"id":"a","obj":"branch","verb":"add","toState":"3","atFrame":130},
+    {"id":"l","obj":"branch","verb":"draw","toState":"level","atFrame":170},
+    {"id":"t","obj":"branch","verb":"move","toState":"towers","atFrame":210},
+    {"id":"f","obj":"branch","verb":"fill","toState":"{\"left\":13,\"right\":10}","atFrame":220},
+    {"id":"h","obj":"branch","verb":"highlight","toState":"right","atFrame":300},
+    {"id":"k","obj":"branch","verb":"carry","toState":"task","atFrame":340},
+    {"id":"x","obj":"branch","verb":"exit","toState":"ink","atFrame":550}
+  ]
+}
