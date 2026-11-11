@@ -97,8 +97,10 @@ separate reader (cost rule 6, guard G6), and pick by the job:
 
 ## Checks
 
-- Before any push: `npm run verify` (it includes `check:repo-map`, so regenerate the map with
-  `npm run repo-map` after changing exports, routes or stations).
+- Before any push: `npm run verify:quick` (every guard, the related tests and the publishing-safety tests; it
+  includes `check:repo-map`, so regenerate the map with `npm run repo-map` after changing exports, routes or
+  stations). The full `npm run verify` runs after merge (`.github/workflows/full-verify.yml`), never before one
+  (Ruling (Krish, 2026-11-11): quick checks on pull requests, the full verify after merge; merge fast and he tests live.)
 - Narrower while working: `npx vitest run <files>`, `npm run typecheck`,
   `npm run typecheck:control-plane`, `npm run check:control-plane`, `npm run skills:validate`.
 - After editing a skill in `.agents/skills`: `python scripts/validate-skills.py --sync-claude`.
