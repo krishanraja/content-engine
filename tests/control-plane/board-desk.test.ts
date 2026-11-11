@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
+import { withApprovals } from './_approvals'
 import { buildView, lockSigned, postingStarted, viewProblems, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { JOBS, dispatchJob, readRuns, type JobName } from '../../apps/control-plane/api/board/_run'
 import { DESK_PAGE } from '../../apps/control-plane/api/board/_deskPage'
@@ -18,14 +19,14 @@ const verdict = (day: string, id: string, side: Record<string, unknown>) => ({ d
 const run = (job: JobName, state: 'queued' | 'running' | 'done' | 'failed') => ({ job, workflow: JOBS[job].workflow, state, started_at: '2026-11-09T17:00:00Z', updated_at: '2026-11-09T17:05:00Z', url: `https://github.com/x/${job}`, event: 'repository_dispatch' })
 
 function inputs(over: Partial<ViewInputs> = {}): ViewInputs {
-  return {
+  return withApprovals({
     week: WEEK, now: new Date('2026-11-09T18:00:00Z'),
     pieces: [piece(MON, '2026-11-16', 'follow_the_money'), piece(WED, '2026-11-18', 'under_the_hood'), piece(FRI, '2026-11-20', 'mind_the_gap')],
     picks: [], queue: [], history: [], runs: {}, north_star: { current: 3, target: 8 },
     ideas: { offdays: { tue: [option('povteach'), option('infosys')], thu: [option('lookalikes')], sat: [] } },
     locks: { mon: null, wed: null, fri: SIGNED },
     ...over,
-  }
+  })
 }
 const day = (v: ReturnType<typeof buildView>, d: string) => v.days.find(x => x.day === d)!
 

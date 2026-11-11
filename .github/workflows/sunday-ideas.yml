@@ -24,9 +24,20 @@ name: Sunday ideas
 # This repository is public: Claude's full output stays out of the log (claude-code-action's default), and nothing
 # here prints a link, an idea or a source.
 #
-# The Saturday good news is not found here: the Thursday run does it (.github/workflows/saturday-goodnews.yml; Ruling,
-# Krish, 2026-11-07: "Saturday's good news run should be done later in the week so the good news is fresh"). This run
-# writes the good-news option with its stories due on the Thursday of its week and no stories.
+# One refresh a week, everything in it (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's
+# good news included; the Thursday good-news schedule is retired). His words: "It should be refreshed once a week for
+# everything (including the Saturday post which currently runs on a thursday, we need to realign that so the ideas board
+# populates once a week in full, and Saturday's actual real good news story ideas are presented to me." So this run
+# also finds Saturday's five real good-news stories ("The Saturday good news" in plan-week references/offdays.md), each
+# checked against its primary source, with its stories due today. The trade-off, said plainly: this run fills the board
+# for the week that starts eight days after its Sunday, so a story it finds is about two weeks old by the Saturday it
+# posts on; before Growth makes the Saturday post, the fact gate checks every story against its source again.
+# saturday-goodnews.yml stays, by hand only, to find them again.
+#
+# The ideas gate (Krish, 2026-11-11: "I shouldn't end up seeing random ideas in the publish board that I never wanted
+# there and that I didn't approve to move to the publish board"): this run proposes ideas on the ideas board and never
+# puts one on the publish board. Only his Approve does; the database refuses any other placement
+# (supabase/migrations/20261126090000_ideas_gate.sql).
 #
 # Where it lands (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive):
 # the live board draws GET /api/board/<Monday>/view, which reads the week's ideas.json from offday-revise/<Monday>
@@ -135,7 +146,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 400
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             The Sunday ideas run for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub Actions
@@ -148,6 +159,17 @@ jobs:
             Write each day's options through /api/week/options and the off-day options into ideas.json as the skill
             says. Research with the built-in web search and web fetch: there is no Drive or Firecrawl connector here
             (the skill's "Without the connectors").
+
+            The whole ideas board, once (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full,
+            Saturday's good news included): also find Saturday's good news now, following "The Saturday good news" in
+            .agents/skills/plan-week/references/offdays.md exactly: five real AI stories from the seven days up to
+            today, each checked against its primary source, each with its own real photo or clip, written onto that
+            week's weekly good-news option with its stories_due set to today's date. Then run board_feed.py gather and
+            cover again.
+
+            The ideas gate: you propose ideas on the ideas board and never put one on the publish board. Only Krish's
+            Approve does. Never set a piece's day (no /api/content-ideas/<id>/schedule), never write a pick or a press,
+            and never write "decided" on an option: his words in a session are never his press.
 
             Of step 0 take only the Inspiration cards routed to a piece (they are ideas of his for step 2): read them
             through GET /api/week/options?week_start=<Monday>&include=sources (python3 scripts/engine.py), and do not

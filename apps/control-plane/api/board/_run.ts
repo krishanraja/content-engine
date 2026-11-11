@@ -34,7 +34,8 @@ export const JOBS: Record<JobName, Job> = {
     payload: i => (isMonday(i.week) && (i.option === undefined || OPTION.test(String(i.option)))
       ? { week: i.week, ...(i.option ? { option: i.option } : {}) } : null),
   },
-  // A press means now: the run finds the stories even before Thursday (saturday_goodnews.py check --force).
+  // A press means now: the run finds the week's stories again, by hand (saturday_goodnews.py check --force); the Sunday
+  // ideas run finds them each week (Ruling, Krish, 2026-11-11).
   'saturday-goodnews': { workflow: 'saturday-goodnews.yml', payload: i => (isMonday(i.week) ? { week: i.week, force: true } : null) },
   'sunday-ideas': { workflow: 'sunday-ideas.yml', payload: i => (isMonday(i.week) ? { week: i.week } : null) },
   'produce-day': {

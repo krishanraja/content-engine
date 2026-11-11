@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { withApprovals } from './_approvals'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { dayMedia, findMedia, signMedia } from '../../apps/control-plane/api/board/_media'
 
@@ -19,7 +20,7 @@ const making = {
 const piece = (id: string, date: string, slot: string, m: Record<string, unknown> = {}) =>
   ({ id, idea: `Piece ${id.slice(0, 4)}`, scheduled_for: date, lane_slot: slot, state: 'drafting', buried_at: null, body: '', updated_at: '2026-11-09T12:00:00Z', meta: { making: m } })
 const pieces = [piece(MON, '2026-11-16', 'follow_the_money', making), piece(WED, '2026-11-18', 'under_the_hood')]
-const inputs = (): ViewInputs => ({ week: WEEK, now: new Date('2026-11-09T18:00:00Z'), pieces, picks: [], queue: [], history: [], runs: {}, north_star: null, ideas: null, locks: {} })
+const inputs = (): ViewInputs => withApprovals({ week: WEEK, now: new Date('2026-11-09T18:00:00Z'), pieces, picks: [], queue: [], history: [], runs: {}, north_star: null, ideas: null, locks: {} })
 
 describe('the board view lists rendered media', () => {
   it('lists the newest asset of each cut, then its thumbnail, with ids and no path or link', () => {

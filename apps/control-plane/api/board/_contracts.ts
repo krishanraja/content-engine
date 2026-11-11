@@ -49,8 +49,11 @@ const TP_ID = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/
 // Krish's five presses on an idea (Krish, 2026-10-28: "pick an idea for a specific day AND add any optional comments
 // easily, which can be saved, or I can: mark an idea as being useful in a future wider piece OR mark it as being an
 // idea that should be stored for a future trend OR queue it for next week OR reject it"). The pick is picks/<day>; the
-// other four are queue/<pick> with one of these uses (null takes a press back).
-export const PRESS_USES = ['wider_piece_context', 'track_over_time', 'next_week', 'not_for_us'] as const
+// other four are queue/<pick> with one of these uses (null takes a press back). Since 11 November they are four of the
+// five outcomes (Krish, 2026-11-11: "filed away for later, rejected and learnt from, saved as a trend for a wider piece,
+// improved for a future piece cue"; _gate.ts OUTCOME_OF_USE): next_week is Filed for later, not_for_us Rejected and
+// learnt from, wider_piece_context (and the older track_over_time) Saved as a trend, improve Improved for a future piece.
+export const PRESS_USES = ['wider_piece_context', 'track_over_time', 'next_week', 'not_for_us', 'improve'] as const
 // The off days (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and Sunday content within the
 // Sunday ideas session if you give me a few options to approve as you do the Mon/wed/fri"): queue/off-<day>-<option>.
 // Growth's off-day lane runs every day (Krish, 2026-10-29: "Mix wins: every day"), so its options may sit on any day;
@@ -264,8 +267,12 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'picks' && (CREATIVE_ID.test(id) || body.kind === 'sign_creative')) return creativeBody(id, body)
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
   if (collection === 'picks' && (SCORE_ID.test(id) || SCORE_DATE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)
+  // His Approve on a publishing day's idea: the idea it names (idea_id), and the hash of the words he saw
+  // (option_sha256, worked out again by preparePress from so_what and story).
   if (collection === 'picks') return day(id) && day(body.day) && text('pick', 160) && text('story') && !('kind' in body)
     && (!('note' in body) || body.note === null || text('note', 2000))
+    && (!('idea_id' in body) || body.idea_id === null || typeof body.idea_id === 'string' && UUID.test(body.idea_id))
+    && (!('so_what' in body) || text('so_what', 4000)) && (!('option_sha256' in body) || SHA256.test(String(body.option_sha256)))
   // A Combine tap on the Queue tab's "Could combine" card: his choice only, recorded as queue/combine-<n>; the next
   // session runs synthesize on his word (Krish, 2026-10-21: nothing in the queue is combined without it).
   if (collection === 'queue' && body.combine !== undefined) return /^combine-\d{1,3}$/.test(id) && body.combine === true && body.pick === id
@@ -301,6 +308,9 @@ export function validBody(collection: string, id: string, body: unknown): boolea
     // Content tab approves ideas).
     && (!('via' in body) || body.via === 'list')
     && (body.use !== 'not_for_us' || typeof body.reason === 'string' && body.reason.trim().length > 0 || body.via === 'list')
+    // Improved for a future piece is his note: the cue a future slate reads.
+    && (body.use !== 'improve' || typeof body.note === 'string' && body.note.trim().length > 0)
+    && (!('option_sha256' in body) || SHA256.test(String(body.option_sha256)))
     && (body.use === 'next_week' ? monday(String(body.target_week)) : !('target_week' in body) || body.target_week === null)
   if (collection === 'queue') return text('pick', 160) && typeof body.queued === 'boolean'
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
@@ -308,7 +318,9 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   return false
 }
 export const OFFDAY_SIDES = ['idea', 'direction', 'mock'] as const
-export const OFFDAY_VERDICTS = ['approve', 'improve', 'reject', 'next_week'] as const
+// The five outcomes on an off-day option's idea (Krish, 2026-11-11): approve, next_week (Filed for later), reject,
+// trend (Saved as a trend, his words name it) and improve. The direction and the mock take approve, improve and reject.
+export const OFFDAY_VERDICTS = ['approve', 'improve', 'reject', 'next_week', 'trend'] as const
 function offdayVerdicts(id: string, body: Record<string, unknown>): boolean {
   const line = (v: unknown, max: number) => typeof v === 'string' && v.length > 0 && v.length <= max
   if (body.use !== 'offday' || body.pick !== id || !id.startsWith(`off-${String(body.day)}-`) || 'send' in body || 'kind' in body
@@ -324,9 +336,9 @@ function offdayVerdicts(id: string, body: Record<string, unknown>): boolean {
     if (!object(v) || Object.keys(v).some(x => !['verdict', 'words', 'sha256', 'at', 'shown'].includes(x))) return false
     const verdict = v.verdict
     if (verdict !== null && !(OFFDAY_VERDICTS as readonly unknown[]).includes(verdict)) return false
-    if (verdict === 'next_week' && k !== 'idea') return false
+    if ((verdict === 'next_week' || verdict === 'trend') && k !== 'idea') return false
     const words = typeof v.words === 'string' && v.words.trim().length > 0
-    if ((verdict === 'improve' || verdict === 'reject') && !words) return false
+    if ((verdict === 'improve' || verdict === 'reject' || verdict === 'trend') && !words) return false
     if (v.words !== null && v.words !== undefined && !line(v.words, 2000)) return false
     if (!SHA256.test(String(v.sha256))) return false
     if ('shown' in v && v.shown !== null && !(object(v.shown) && JSON.stringify(v.shown).length <= 16000)) return false
@@ -381,6 +393,9 @@ export function hisOnlyRefusal(collection: string, body: unknown, who: string | 
   if (collection === 'comments' && object(body) && 'act' in body) return 'tap_is_his'
   if (collection === 'picks' && object(body) && 'kind' in body) return 'decision_is_his'
   if (collection === 'picks' && object(body) && 'note' in body) return 'pick_note_is_his'
+  // His Approve on a publishing day's idea puts it on the publish board (the ideas gate): only he makes it, with or
+  // without a note.
+  if (collection === 'picks' && object(body) && 'pick' in body) return 'pick_is_his'
   if (collection === 'queue' && object(body) && 'use' in body) return 'press_is_his'
   return null
 }

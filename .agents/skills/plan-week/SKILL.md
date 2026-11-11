@@ -64,19 +64,19 @@ through the engine API:
 - **The Sunday ideas run**, `.github/workflows/sunday-ideas.yml`: GitHub's
   cron fires it early on Saturday (UTC), twice, because GitHub fires late; a
   guard (`scripts/sunday_ideas.py built`) makes it do nothing once the live
-  board's view carries the week's options. It runs steps 1 to 7 only (of step
+  board's view carries the whole ideas board: each publishing day's options and
+  Saturday's good-news stories. It runs steps 1 to 7 only (of step
   0, only the Inspiration cards routed to a piece), and keeps `ideas.json` and
   `combine.json` on the branch `sunday-ideas/<Monday>-<run>` and on the week's
   branch `offday-revise/<Monday>`, which the live board reads before main
   (`scripts/week_branch_keep.sh`, with a pull request that merges itself).
-- **The Thursday good-news run**, `.github/workflows/saturday-goodnews.yml`:
-  the one other scheduled Claude run (Ruling, Krish, 2026-11-07). It fires
-  twice on Thursday, finds that week's Saturday good news ("The Saturday good
-  news" in `references/offdays.md`), puts it on the live board through the
-  week's branch `offday-revise/<Monday>` (with a pull request that merges
-  itself), bumps the week's change signal, and keeps a copy on
-  `saturday-goodnews/<Monday>-<run>`. Stories found before the week's Thursday
-  are last week's news, so it finds them again.
+- **Saturday's good news comes with it** (Ruling, Krish, 2026-11-11: the ideas
+  board fills once a week in full, Saturday's good news included; the Thursday
+  good-news schedule is retired). The Sunday ideas run finds the week's five
+  real, sourced stories in step 3c ("The Saturday good news" in
+  `references/offdays.md`). `.github/workflows/saturday-goodnews.yml` stays, by
+  hand only (the board's "Find the stories now" press, or Run workflow), to find
+  them again for a week; it has no schedule.
 - **The Sunday room** is a session Krish opens himself. It merges that branch
   into its own, writes the `WORKBENCH.md` lines the run could not keep (step
   7 and "Without the connectors"), does step 0's close-out, then steps 8 to
@@ -143,6 +143,12 @@ sentence>", "examples": ["<2 to 3 pub-test examples>"], "chain": ["<5 to 8
 cause-and-effect links>"], "take": "<our take, the ending>"}`. Each carousel
 option carries `cards`: `[{"words": "<what the card says>", "picture":
 "<what it shows>"}]` (the board renders both).
+
+## The ideas gate (Ruling, Krish, 2026-11-11)
+
+Every idea ends in one of five outcomes, each his press: Approve for <day>, File for later, Reject, Save as a trend,
+Improve for a future piece. Only his Approve puts an idea on a publish board: you propose and never place. Read
+`references/ideas-gate.md` before step 1.
 
 ## Steps
 
@@ -399,9 +405,11 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    before it reaches the tab; they go into ideas.json `offdays` and reach
    the tab only through `week_board.py --ideas`, never by patching the page,
    and until the board has its Off days part the room says so in step 8.
-   Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week,
-   its stories due on the Thursday of its week and none yet (the card says they come Thursday); the Thursday run
-   (`.github/workflows/saturday-goodnews.yml`) finds its five fresh stories. Never research them on Sunday.
+   Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week
+   and its five real stories, found now, in this run (Ruling, Krish, 2026-11-11: the ideas board fills once a week in
+   full, Saturday's good news included), each checked against its primary source the same day, with `stories_due`
+   today. The trade-off is said on the card and in the reply: a story found now is about two weeks old by the
+   Saturday it posts on, and the fact gate checks each one against its source again before Growth makes the post.
    Growth makes what he approved. **His own
    ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
    idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day
@@ -429,8 +437,9 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
    (`control-center api/content/slate.ts`), and the week page reads the options
    live, so nothing else is needed. Check that the board item
    `week-<Monday>` exists; if the cron has not run yet, it will.
-6. Do not pick, schedule, draft or spend. Picking is Krish's press on the
-   board's Ideas tab; a pick starts nothing by itself. Each piece's make
+6. Do not pick, schedule, draft or spend. Approving is Krish's press on the
+   live board, and his Approve puts the idea on its day itself; nothing else
+   can (the ideas gate, above). It starts no make by itself. Each piece's make
    starts once he signs its narrative lock (steps 10 and 11).
    **Sunday is his recording day** (Krish, 2026-10-24: "Yes, Sunday is my
    recording day"). The room locks the three stories with him; each make
@@ -502,26 +511,26 @@ The Sunday room now waits for him in this same session: he comes back
 after his presses, by 10:00.
 
 8. **The triage readback.** His five presses on the Ideas tab are his
-   decisions, and the board writes each into the store that holds it: Pick
-   for day (`picks/<day>`, with his optional `note`; the pick reaches its
-   piece by itself), Wider piece (`queue/<idea_id>` with `use:
-   wider_piece_context`), Future trend (`use: track_over_time`), Next week
-   (`use: next_week` with `target_week`) and Reject (`use: not_for_us`, with
-   his `reason`), and on each off-day option his verdict on the idea, the
+   decisions, the five outcomes of the ideas gate, and the board writes each
+   into the store that holds it: Approve for the day (`picks/<day>`, with his
+   optional `note`; it puts its idea on its day itself), Save as a trend
+   (`queue/<idea_id>` with `use: wider_piece_context` and the trend he names;
+   an older `use: track_over_time` reads as a trend), File for later
+   (`use: next_week` with `target_week`), Reject (`use: not_for_us`, with
+   his `reason`) and Improve for a future piece (`use: improve`, with his
+   note), and on each off-day option his verdict on the idea, the
    direction and any returned mock (`queue/off-<day>-<option>`, each side
-   `{verdict, words}`: approve, improve, reject or next week; a piece he
-   records keeps `approved`). Read them: `python3
+   `{verdict, words}`: approve, improve, reject, trend or next week; a piece he
+   records keeps `approved`). The database keeps each answer in
+   `idea_outcomes`, append only. Read them: `python3
    scripts/post-pack/board_web.py read <Monday> picks`, then the same with
    `queue` and `comments`. Only documents whose `updated_by` is Krish are
    his; nothing else is read back as his. Then say it back to him in one
    message, by day: what he picked, with his note in his exact words; each
    idea he kept for a wider piece, a future trend or next week, and each he
    rejected with his reason in his exact words; and the off-day options he
-   approved, improved (his words) or rejected (his reason). Check that each pick reached its piece (`scheduled` in
-   `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>"
-   --full`), and name any that did not; for one that did not, write the
-   picked idea onto its piece as the day's rank 1 option through
-   `/api/week/options` (creating its row first if it has none), as before.
+   approved, improved (his words) or rejected (his reason). Check each approved idea reached its day
+   (`python3 scripts/post-pack/board_gate.py <Monday>`) and name any that did not, with why; never place one yourself.
    Never relay a pick he makes in chat
    as a board tap: what he types in the room is relayed as his words with
    where he typed them ("Sunday room chat" and the time), only through a

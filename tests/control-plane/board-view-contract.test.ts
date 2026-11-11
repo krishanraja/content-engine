@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { approval, approvedAll } from './_approvals'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { JOBS, type JobName } from '../../apps/control-plane/api/board/_run'
 import { VIEW_CONTRACT_VERSION, notModified, viewEtag } from '../../apps/control-plane/api/board/_viewContract'
@@ -28,7 +29,7 @@ const look = (id: string, name: string) => ({ id, name, pitch: `${name}, pitched
 /** One week with every part of the view in it: media, a run, a path at each step, a revised off-day option, reviews. */
 function full(): ViewInputs {
   const cut = { cut: 'long', path: '3 Posts/mon/long.mp4', sha256: 'a'.repeat(64), at: '2026-11-16T08:00:00Z', seconds: 412, thumbnail: { path: '3 Posts/mon/long.jpg' } }
-  return {
+  const i: ViewInputs = {
     week: WEEK, now: new Date('2026-11-16T09:00:00Z'),
     pieces: [
       piece('5b726fc3-ac63-4607-9293-3257b4ecc75c', '2026-11-16', 'mind_the_gap'),
@@ -70,17 +71,26 @@ function full(): ViewInputs {
     comments: [{ doc_id: 'desk-mon-cut-1', updated_by: 'Krish', updated_at: '2026-11-16T08:30:00Z', body: { thread_id: 'desk-mon-cut-1', anchor: 'desk:mon:cut', text: 'Love the open.', at: '2026-11-16T08:30:00Z' } }],
     ticks: [{ tick_id: 'mon-shorts', updated_by: 'growth', body: { done: true, day: 'mon', step: 'shorts', label: 'YouTube Shorts', at: '2026-11-16T09:00:00Z', posts: [{ url: 'https://www.youtube.com/shorts/x' }] } }],
     revision: 7,
+    approvals: [],
   }
+  // The ideas gate (1.3.0): every piece and the weekly good news stand for ones he approved, so the frozen fixture has no
+  // held line (Control Centre's pinned copy draws it as is); the states below hold some.
+  return { ...i, approvals: [...approvedAll(WEEK, i.pieces), approval(WEEK, 'sat', 'goodnews', { doc: 'queue/off-sat-goodnews' })] }
 }
 
 const states = (): ViewInputs[] => {
+  // The ideas gate: one state holds the second Monday piece and the good news (no approval), one cannot read the
+  // approvals at all, so every piece is held.
   const f = full()
   return [
     f,
+    { ...f, approvals: f.approvals!.filter(a => a.idea_id !== '5b726fc3-ac63-4607-9293-3257b4ecc75c' && a.idea_id !== 'goodnews') },
     { ...f, pieces: [], ideas: null, runs: {}, north_star: null },
     { ...f, runs: { 'make-piece': run('make-piece', 'failed'), 'saturday-goodnews': run('saturday-goodnews', 'queued') } },
     { ...f, ideas: { offdays: { tue: [option('povteach')], thu: [], sat: [option('goodnews')] } }, queue: [] },
-    { ...f, queue: [verdict('tue', 'povteach', { idea: { verdict: 'approve', words: null, sha256: 'a'.repeat(64) } })] },
+    { ...f, queue: [verdict('tue', 'povteach', { idea: { verdict: 'approve', words: null, sha256: 'a'.repeat(64) } })],
+      approvals: [...f.approvals!, approval(WEEK, 'tue', 'povteach', { doc: 'queue/off-tue-povteach' })] },
+    { ...f, approvals: null },
   ]
 }
 const served = (i: ViewInputs) => JSON.parse(JSON.stringify({ ok: true, ...buildView(i) })) as Body
@@ -107,6 +117,9 @@ describe('the Publish Board view contract', () => {
     expect(v.days.some(d => d.run)).toBe(true)
     expect(v.days.some(d => Array.isArray(d.reviews) && d.reviews.length)).toBe(true)
     expect(v.days.some(d => d.path)).toBe(true)
+    // 1.3.0: every approved piece says so, and a state with held lines keeps the schema too.
+    expect(v.days.flatMap(d => d.pieces as Body[]).every(p => p.approval && /^Approved by you, /.test(p.approval.label))).toBe(true)
+    expect(states().some(st => (served(st).days as Body[]).some(d => (d.held as unknown[]).length > 0))).toBe(true)
   })
 
   it('fails a view that drops or renames anything the schema promises', () => {
