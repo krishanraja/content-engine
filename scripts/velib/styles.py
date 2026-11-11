@@ -56,7 +56,9 @@ def points_of(spec: dict) -> list[str]:
 
 
 def built(module: dict, devices: set[str]) -> list[str]:
-    return [d for d in module.get('ve_route') or [] if d in devices]
+    # needs_device holds a style back until Krish's yes on its test render, even once its device exists.
+    route = module.get('ve_route') or []
+    return [] if 'needs_device' in route else [d for d in route if d in devices]
 
 
 def shortlist(spec: dict, cut: str, top: int = 3, modules=None, devices=None, points=None):
