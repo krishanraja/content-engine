@@ -31,7 +31,7 @@ Since the 3 Nov freeze both are `role: module` (they keep working as their own f
 
 | Lock entry | Canvas | Caption zone | Key-frame compare |
 |---|---|---|---|
-| `face-with-proof` | 1080 x 1920 | x 72, y 1180, w 900, h 320 (the lock's zones) | 540 x 960 |
+| `face-with-proof` | 1080 x 1920 | x 60, y 1090, w 800, h 230 (the lock's zones since 11 Nov 2026) | 540 x 960 |
 | `face-with-proof@16:9` | 1920 x 1080 | x 260, y 773, w 1400, h 187 (QC's wide caption box) | 960 x 540 |
 
 Composition zones (fill, edges, platform UI) are written for 9:16 only; a wide cut is held to its key frames once

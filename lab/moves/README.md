@@ -18,3 +18,7 @@ that cue it. Krish, 2026-11-10: "build the moves library".
 
 The first 16 were lifted out of The Ladder and The Living Screen, unchanged: both styles now call them, and their
 frames are pixel-identical to before (12 stills each compared by PSNR, all infinite, on 11 Nov 2026).
+
+ve reaches these moves through one package: card `ve-style-0-three-and-moves` (`docs/ve/cards/styles-3d/`) moves them to
+`packages/moves/`, which both the lab and the renderer import, so a device built for The Ladder or The Living Screen
+calls the same move the lab cut was approved with.

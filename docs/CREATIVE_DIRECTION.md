@@ -42,7 +42,9 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
   `creative_direction.py motion --points number,comparison --format long_video` gives a ranked shortlist: only styles
   made for that format, never one he marked not for us, his liked ones first. Each style enters `untested` and becomes
   a default only once he rates a trial on his own footage.
-- `brand`: the series, a `reference` (an approved earlier frame or board, a path or a link), the captions module and
+- `brand`: the series, a `reference` (an approved earlier frame or board, a path or a link), the captions module
+  (`captions`, house or word, or a caption style in `caption_theme`: one of the 15 in
+  `apps/renderer/src/engine/captions/names.ts`, with `art-directed` the style Krish picked on 11 Nov 2026) and
   the intro sting (`intro_sting`): the piece's own series id (`follow_the_money`, `under_the_hood` or `mind_the_gap`)
   on a weekly series piece published on its series' day, whose 16:9 long cut opens on that series' house sting
   (`config/intro-sting.json`; Krish, 2026-11-05: "I think it should go at the start of the longer wide videos

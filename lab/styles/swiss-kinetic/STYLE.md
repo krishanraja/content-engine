@@ -35,7 +35,7 @@ screen: the caption carries the words, the type carries the one idea.
 ## 4. Type and captions (the brand skin's always-band)
 
 - Anton from 170 to 600 px for the idea; IBM Plex Mono 40 px for the facts on the grid lines and the section count.
-- Captions at A: directly under the type block (`env.captionBase` 1178 on the tall canvas).
+- Captions at A: directly under the type block (`env.captionBase` 1008 on the tall canvas).
 - No on-screen pair of words repeats the caption (F42).
 
 ## 5. Motion quality
@@ -46,7 +46,7 @@ screen: the caption carries the words, the type carries the one idea.
 ## 6. Shot and layout grammar
 
 - One frame per beat; the section number (01 / 10) counts them.
-- **Tall:** masthead band, credit and count, the type block (520 to 1100), caption, then the squares from 1330.
+- **Tall:** credit and count at y 300 just under every channel's top bar, the type block (350 to 930), caption, then the squares from y 1160, ten across ending by x 844 (moved up 11 Nov 2026: Krish, "make maximum use of the full screen"); no band and no wordmark.
 - **Wide:** type only, on the same grid; no squares.
 
 ## 7. Sound palette

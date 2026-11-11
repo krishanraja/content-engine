@@ -36,7 +36,7 @@ Not Swiss Kinetic (no grid, no counting). Not The Ladder (no object). Never two 
 ## 4. Type and captions (the brand skin's always-band)
 
 - Anton 430 px for the number (shorter words at 62%); IBM Plex Mono 40 px for the label above and the credit below.
-- Captions at A: directly under the number and its credit (`env.captionBase` 1236 on the tall canvas).
+- Captions at A: directly under the number and its credit (`env.captionBase` 1040 on the tall canvas).
 
 ## 5. Motion quality
 
@@ -46,7 +46,7 @@ Not Swiss Kinetic (no grid, no counting). Not The Ladder (no object). Never two 
 ## 6. Shot and layout grammar
 
 - One locked shot: the stage never moves; only the light and the numbers do.
-- **Tall:** label at y 590, number on the floor at 1030, credit, caption; the lower stage stays dark on purpose.
+- **Tall:** label at y 330 just under every channel's top bar, number on the floor at 820, credit, caption (moved up 11 Nov 2026: Krish, "make maximum use of the full screen"); the lower stage stays dark on purpose.
 - **Wide:** the same composition, centred.
 
 ## 7. Sound palette

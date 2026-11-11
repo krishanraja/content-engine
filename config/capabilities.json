@@ -268,12 +268,12 @@
   },
   {
    "id": "video-styles",
-   "name": "Style catalogue (designed, not built)",
-   "purpose": "Looks only, each a full style folder (essence, rendering, colour, type, motion, layout, sound, native moves, demo film on the house test script), picked separately from the story format and the moves",
+   "name": "Style catalogue and the style lab",
+   "purpose": "Looks only, each a full style folder (essence, rendering, colour, type, motion, layout, sound, native moves, demo film on the house test script), picked separately from the story format and the moves. Five of the twelve are built in the style lab and render whole cuts tall and wide on his take (The Ladder, The Living Screen, The Evidence Desk, Swiss Kinetic Type, Dark Keynote); a style reaches ve through a bank entry, Codex cards and a device",
    "stage": "direction",
    "decided": "pre-script",
-   "location": "docs/plans/2026-11-10-video-style-system/STYLE-CATALOGUE.md",
-   "status": "documented-only",
+   "location": "lab/styles/README.md",
+   "status": "partial",
    "proposal": "keep",
    "overlaps": [
     "style-bank",
@@ -542,7 +542,7 @@
   {
    "id": "motion-styles",
    "name": "Motion style bank",
-   "purpose": "One motion style per piece, from the motion layer; apps/renderer/src/engine/kit/motion-profiles.json says how each is drawn",
+   "purpose": "One motion style per piece, from the motion layer; apps/renderer/src/engine/kit/motion-profiles.json says how each is drawn, and a style whose device is not built yet (needs_device: The Ladder, The Living Screen and seven more) renders in house motion until its card lands",
    "stage": "motion",
    "decided": "pre-record",
    "location": "config/style-references.json",
@@ -756,11 +756,11 @@
   {
    "id": "channel-safe",
    "name": "channel_safe",
-   "purpose": "Platform UI safe zones, grid crop and account row",
+   "purpose": "Platform UI safe zones, grid crop and account row. Since 11 Nov 2026 every tall template uses the whole safe screen (key content from y 280, x 60 to 860, captions above y 1320); ve qc counts the row and quick-edit holds a caption band under a channel's buttons",
    "stage": "qc",
    "decided": "post-cut",
    "location": "scripts/channel_safe.py",
-   "status": "partial",
+   "status": "working",
    "proposal": "keep",
    "overlaps": []
   },
@@ -823,6 +823,41 @@
    "stage": "filing",
    "decided": "post-cut",
    "location": "scripts/post-pack/making.py",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "lab-moves",
+   "name": "Moves library",
+   "purpose": "The house moves (count on a part, street drop, live chart, freeze-circle-magnify and the rest), each a deterministic draw from t with its own gallery and check; styles are built from them and card ve-style-0 makes them one package ve imports",
+   "stage": "motion",
+   "decided": "pre-record",
+   "location": "lab/moves/README.md",
+   "status": "working",
+   "proposal": "keep",
+   "overlaps": [
+    "video-styles"
+   ]
+  },
+  {
+   "id": "caption-styles",
+   "name": "Caption styles",
+   "purpose": "Fifteen caption styles a spec picks with brand.caption_theme (art-directed, his pick; cinematic, Audrey's system; thirteen house rebuilds), drawn from ve's caption pages in the house faces and tokens inside every channel's safe area; proved on stills, not yet on his take",
+   "stage": "captions",
+   "decided": "pre-record",
+   "location": "apps/renderer/src/engine/captions/themes.tsx",
+   "status": "partial",
+   "proposal": "keep",
+   "overlaps": []
+  },
+  {
+   "id": "publication-watch",
+   "name": "Publication watcher and catalogue",
+   "purpose": "Hourly, reads the Substack archive and the @makeyourmind-up YouTube feed, matches each upload to its piece and records it; GET /api/publish/catalogue serves every published piece with its video, Short and thumbnail to makeyourmindup.ai, which updates by itself",
+   "stage": "filing",
+   "decided": "post-publish",
+   "location": "apps/control-plane/api/publish/watch.ts",
    "status": "working",
    "proposal": "keep",
    "overlaps": []
