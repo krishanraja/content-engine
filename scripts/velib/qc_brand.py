@@ -86,7 +86,8 @@ def mark_tile(render, mark_png, beats, aspect) -> dict:
 
 
 def no_mark(render, mark_png, beats, aspect) -> dict:
-    """Vertical video carries no mark (Ruling, Krish, 2026-11-11): the mark must be absent at every beat midpoint,
+    """No mark over a vertical cut's animated content (Ruling, Krish, 2026-11-11; the closing outro card keeps it, and
+    is not a beat): the mark must be absent at every beat midpoint,
     measured where the tall mark used to sit, so a template that brings it back fails."""
     found = mark_tile(render, mark_png, beats, aspect)
     rows = [{**row, 'pass': not row['pass']} for row in found['value']]
