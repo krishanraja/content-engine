@@ -200,6 +200,8 @@ def gather(week, call=None, out_dir=None, read=None):
              f'queue {len(out["queue"])}, could combine {len(out["combine"])} group(s); his relayed words {len(out["his_relayed"])}']
     ic = inspo.get('counts') or {}
     lines.append('  inspiration house: ' + ', '.join(f'{k} {ic.get(k, 0)}' for k in ('routed', 'study_style', 'liked', 'fresh', 'corpora', 'creators', 'claims', 'asks')))
+    lines.append('  beside the cards: ' + ', '.join(f'{k.replace("_", " ")} {ic.get(k, 0)}' for k in ('positive', 'feed', 'corrections', 'hindsight', 'fresh_left_out_bulk_wordless'))
+                 + (f'; not read: {", ".join(inspo.get("unread"))}' if inspo.get('unread') else ''))
     if out['recent'] is None:
         lines.append('  recent pieces: not in the engine\'s answer (the route on production predates them); cover cannot check repeats')
     oc = out['outcomes']
@@ -482,6 +484,8 @@ def wave1(ideas, sources, plans=None, p6=None):
         found += idea_checks.halves_findings(opts, sources, ideas, refused)
         found += idea_checks.vetoes_findings(ideas, idea_checks.active_vetoes(refused, said, unvetoed))
         found += idea_checks.shape_findings(ideas, week) + idea_checks.held_findings(ideas)
+        found += (idea_checks.split_findings(ideas, sources) + idea_checks.asks_findings(ideas, sources) + idea_checks.learned_findings(ideas, sources)
+                  + idea_checks.considered_findings(ideas) + idea_checks.goodnews_mix_findings(ideas))
         have = {str(r.get('id')) for r in (sources or {}).get('house_rules') or [] if isinstance(r, dict) and str(r.get('text') or '').strip()}
         found += [{'code': 'house_rules', 'ref': rid, 'line': f'sources.json has no house rule {rid}; gather again, and read it before writing an idea'}
                   for rid in IDEA_RULES if rid not in have]

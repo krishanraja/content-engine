@@ -243,3 +243,67 @@ class ScorecardTest(unittest.TestCase):
                 'cues': [{'subject_ref': ASK, 'use': 'not_for_us', 'said': 'Ditch it.', 'said_at': '2026-10-26T09:01:00Z', 'use_origin': 'krish'}]}
         presses = board_feed.presses_from(data, {ASK: 'wed-4'})
         self.assertEqual([(p['doc'], p['outcome']) for p in presses], [('queue/mon-1', 'rejected'), ('queue/wed-4', 'rejected'), ('picks/mon', 'approved')])
+
+
+class SecondPartTest(unittest.TestCase):
+    """Items 4, 6, 8, 10 and 12, from the 23 Nov board: his words split, his asks at full scope, off days that say what
+    they learned, more looked at than shown, and the good news's mix."""
+
+    def src(self):
+        press = outcome('trend', 'Acme is boring as hell but who keeps the margin is a really interesting topic. Give me a research prompt.',
+                        week='2026-11-16', doc='queue/mon-1', at='2026-11-17T09:00:00Z')
+        ask = {'id': ASK, 'state': 'open', 'style_only': False, 'his_words': {'why_here': 'Do a piece on how software edits itself on the fly'},
+               'words_at': '2026-11-16T10:00:00Z'}
+        verdict = {'week': '2026-11-09', 'option': 'off-tue-memes', 'side': 'idea', 'verdict': 'improve', 'words': 'Make the caption much shorter please', 'at': '2026-11-17T09:10:00Z'}
+        s = sources(('trend', press), asks=[ask])
+        s['offday_verdicts'] = {'verdicts': [verdict]}
+        s['series'] = [{'slug': 'follow_the_money', 'pool': [{'id': '44444444-5555-4666-8777-888888888888', 'source_kind': 'engine'}]}]
+        return s
+
+    def test_each_worded_press_is_split_into_exact_quotes_with_its_refusal(self):
+        src = self.src()
+        none = {'week_start': '2026-11-23'}
+        self.assertEqual([f['code'] for f in ic.split_findings(none, src)], ['split'])
+        made_up = {'week_start': '2026-11-23', 'split': [{'ref': '2026-11-16/queue/mon-1', 'parts': [{'kind': 'wish', 'quote': 'who keeps the margin'},
+                                                                                                    {'kind': 'refuse', 'quote': 'Acme is dull'}]}]}
+        self.assertEqual([f['code'] for f in ic.split_findings(made_up, src)], ['split', 'split'])
+        honest = {'week_start': '2026-11-23', 'split': [{'ref': '2026-11-16/queue/mon-1', 'parts': [
+            {'kind': 'refuse', 'quote': 'Acme is boring as hell'}, {'kind': 'wish', 'quote': 'who keeps the margin is a really interesting topic'},
+            {'kind': 'depth', 'quote': 'Give me a research prompt.'}]}]}
+        self.assertEqual(ic.split_findings(honest, src), [])
+        self.assertEqual(ic.split_findings(dict(none, week_start='2026-11-16'), src), [], 'earlier boards keep their shape')
+
+    def test_his_ask_is_quoted_whole_and_a_held_ask_shows_a_real_reason(self):
+        src = self.src()
+        narrowed = {'week_start': '2026-11-23', 'days': {'wed': [main_option(covers=[ASK], asks=[{'id': ASK, 'said': 'software edits itself', 'scope': 'as_typed'}])]}}
+        self.assertEqual([f['code'] for f in ic.asks_findings(narrowed, src)], ['ask_scope'])
+        said = 'Do a piece on how software edits itself on the fly'
+        no_why = {'week_start': '2026-11-23', 'days': {'wed': [main_option(covers=[ASK], asks=[{'id': ASK, 'said': said, 'scope': 'narrowed'}])]}}
+        self.assertEqual([f['code'] for f in ic.asks_findings(no_why, src)], ['ask_scope'])
+        whole = {'week_start': '2026-11-23', 'days': {'wed': [main_option(covers=[ASK], asks=[{'id': ASK, 'said': said, 'scope': 'as_typed'}])]}}
+        self.assertEqual(ic.asks_findings(whole, src), [])
+        held = {'week_start': '2026-11-23', 'accounted': {ASK: 'Held until a dated move; its row is 0c09087a.'}}
+        self.assertEqual([f['code'] for f in ic.asks_findings(held, src)], ['ask_held', 'ask_held'], 'a row that does not exist, and no held line')
+        shown = {'week_start': '2026-11-23', 'accounted': {ASK: 'Held: the evidence is thin this week; its row is 44444444.'},
+                 'held': [{'ref': f'ask/{ASK}', 'day': 'wed', 'title': said, 'reason': 'The evidence is thin this week.'}]}
+        self.assertEqual(ic.asks_findings(shown, src), [])
+
+    def test_an_off_day_quotes_the_verdict_it_learned_from(self):
+        src = self.src()
+        bare = {'week_start': '2026-11-23', 'offdays': {'tue': [{'id': 'memes', 'hook': 'h'}]}}
+        self.assertEqual([f['code'] for f in ic.learned_findings(bare, src)], ['learned_from'])
+        paraphrase = {'week_start': '2026-11-23', 'offdays': {'tue': [{'id': 'memes', 'learned_from': ['"keep captions short" (17 Nov)']}]}}
+        self.assertEqual([f['code'] for f in ic.learned_findings(paraphrase, src)], ['learned_from'])
+        quote = {'week_start': '2026-11-23', 'offdays': {'tue': [{'id': 'memes', 'learned_from': ['"Make the caption much shorter" (17 Nov)']}]}}
+        self.assertEqual(ic.learned_findings(quote, src), [])
+
+    def test_more_is_looked_at_than_shown_and_the_good_news_says_its_kind(self):
+        days = {'mon': [main_option()] * 4, 'wed': [main_option()] * 4, 'fri': [main_option()] * 4}
+        self.assertEqual([f['ref'] for f in ic.considered_findings({'week_start': '2026-11-23', 'days': days, 'considered': {'mon': 8, 'wed': 3, 'fri': 9}})],
+                         ['wed', 'fri'])
+        self.assertEqual(ic.considered_findings({'week_start': '2026-11-23', 'days': days, 'considered': {'mon': 8, 'wed': 4, 'fri': 8}}), [])
+        st = lambda kind=None: dict({'headline': 'h'}, **({'kind': kind} if kind else {}))
+        gn = lambda stories: {'week_start': '2026-11-23', 'offdays': {'sat': [{'id': 'goodnews', 'weekly': 'good_news', 'stories': stories}]}}
+        self.assertEqual([f['code'] for f in ic.goodnews_mix_findings(gn([st('health'), st(), st('work')]))], ['goodnews_kind'])
+        self.assertEqual(ic.goodnews_mix_findings(gn([st('health'), st('lab'), st('work'), st('health'), st('money')])), [])
+        self.assertEqual(ic.mix_of([st('health'), st('lab'), st('work'), st('health'), st('money')]), '2 health, 1 lab, 1 money, 1 work')

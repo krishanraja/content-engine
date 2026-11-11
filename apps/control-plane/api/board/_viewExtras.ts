@@ -349,9 +349,19 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
       })
       out.stories_due = typeof o.stories_due === 'string' ? o.stories_due : null
       out.stories_fresh = storiesFresh(i.week, o)
+      // The week's mix of good news, said before he presses (the ideas quality plan, item 12).
+      const mix = mixOf(stories)
+      if (mix) out.text = cut(`The mix: ${mix}. ${out.text}`, 700)
     }
     return out
   })
+}
+
+/** "2 health, 1 work, 1 money": the kinds of the week's good-news stories, most first, or '' when none says its kind. */
+export function mixOf(stories: Body[]): string {
+  const counts = new Map<string, number>()
+  for (const st of stories) if (typeof st.kind === 'string' && st.kind.trim()) counts.set(st.kind.trim(), (counts.get(st.kind.trim()) || 0) + 1)
+  return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([k, n]) => `${n} ${k}`).join(', ')
 }
 
 /** The day's "Add your thoughts": a comment pinned to the day and its step, as the desk saved it (desk:<day>:<step>). */
