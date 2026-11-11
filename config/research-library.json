@@ -1,0 +1,8 @@
+{
+  "_about": "Make Your Mind Up's research library in Drive (Ruling, Krish, 2026-11-11: every piece's research is kept in one Drive research library, mirrored from the engine's store, and filed by every session). A readable copy of the piece store's research, never a second record. Kept apart from studio.json, whose contents are bound into the media standard's hash. The engine finds both by ID (apps/control-plane/api/_researchLibrary.ts holds the same two, and tests/control-plane/research-library.test.ts holds them equal); verified in live Drive on 2026-11-11, made that day by Krish's request. docs/DRIVE.md, \"The research library\", says what goes in it.",
+  "folder_id": "12FKoQhLlUkzwJDKYao95YIY_H_HQupS6",
+  "folder": "makeyourmindup > 6 Research library",
+  "parent_id": "1HHI0u24N3o3-yeprQzHdXVZtA7cNcKxh",
+  "index_id": "1UejePwOc_6abqX1A3TrKXDZxej4C1OOvwVM3K3C29lo",
+  "index": "00 Index (Google Sheet)"
+}
