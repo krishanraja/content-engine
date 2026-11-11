@@ -142,6 +142,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": true,
         "why": "You liked it before. It suits the channel often.",
         "sample_url": null,
@@ -186,6 +187,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": true,
         "why": "It suits the channel often.",
         "sample_url": null,
@@ -229,6 +231,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": true,
         "why": "It suits the channel sometimes.",
         "sample_url": null,
@@ -271,6 +274,7 @@
         "formats": [
          "short_video"
         ],
+        "ready": true,
         "recommended": false,
         "why": null,
         "sample_url": null,
@@ -314,6 +318,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": false,
         "why": null,
         "sample_url": null,
@@ -336,6 +341,50 @@
            "reject": {
             "layer": "motion",
             "id": "pixel-retro"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "toy-3d",
+        "name": "The toy-3d style",
+        "line": "How toy-3d moves.",
+        "rules": [
+         "toy-3d rule one",
+         "toy-3d rule two"
+        ],
+        "point_types": [
+         "product"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "ready": false,
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "motion": "toy-3d"
+          },
+          "done": "Picked. The toy-3d style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "motion",
+            "id": "toy-3d"
            }
           },
           "done": "Noted. It is not recommended for this piece any more."
@@ -1560,6 +1609,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": true,
         "why": "You liked it before. It suits the channel often.",
         "sample_url": null,
@@ -1604,6 +1654,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": true,
         "why": "It suits the channel often.",
         "sample_url": null,
@@ -1647,6 +1698,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": true,
         "why": "It suits the channel sometimes.",
         "sample_url": null,
@@ -1689,6 +1741,7 @@
         "formats": [
          "short_video"
         ],
+        "ready": true,
         "recommended": false,
         "why": null,
         "sample_url": null,
@@ -1732,6 +1785,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": false,
         "why": null,
         "sample_url": null,
@@ -1754,6 +1808,50 @@
            "reject": {
             "layer": "motion",
             "id": "pixel-retro"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "toy-3d",
+        "name": "The toy-3d style",
+        "line": "How toy-3d moves.",
+        "rules": [
+         "toy-3d rule one",
+         "toy-3d rule two"
+        ],
+        "point_types": [
+         "product"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "ready": false,
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "motion": "toy-3d"
+          },
+          "done": "Picked. The toy-3d style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "motion",
+            "id": "toy-3d"
            }
           },
           "done": "Noted. It is not recommended for this piece any more."
@@ -2837,6 +2935,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": true,
         "why": "You liked it before. It draws the number points this piece makes. It suits the channel often.",
         "sample_url": null,
@@ -2881,6 +2980,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": true,
         "why": "It draws the number points this piece makes. It suits the channel often.",
         "sample_url": null,
@@ -2924,6 +3024,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": false,
         "why": null,
         "sample_url": null,
@@ -2966,6 +3067,7 @@
         "formats": [
          "short_video"
         ],
+        "ready": true,
         "recommended": false,
         "why": null,
         "sample_url": null,
@@ -3009,6 +3111,7 @@
          "long_video",
          "short_video"
         ],
+        "ready": true,
         "recommended": false,
         "why": null,
         "sample_url": null,
@@ -3031,6 +3134,50 @@
            "reject": {
             "layer": "motion",
             "id": "pixel-retro"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "toy-3d",
+        "name": "The toy-3d style",
+        "line": "How toy-3d moves.",
+        "rules": [
+         "toy-3d rule one",
+         "toy-3d rule two"
+        ],
+        "point_types": [
+         "product"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "ready": false,
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "motion": "toy-3d"
+          },
+          "done": "Picked. The toy-3d style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "motion",
+            "id": "toy-3d"
            }
           },
           "done": "Noted. It is not recommended for this piece any more."

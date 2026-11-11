@@ -12,11 +12,12 @@ vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforce
 
 type Body = Record<string, any>
 const PIECE = '8287846b-6618-4a19-9fb8-23ad4eca2718'
-const m = (id: string, fits: string, krish_verdict: string, point_types: string[], formats = ['long_video', 'short_video']): MotionModule =>
-  ({ id, name: `The ${id} style`, how: `How ${id} moves.`, rules: [`${id} rule`], point_types, formats, fits, krish_verdict })
+const m = (id: string, fits: string, krish_verdict: string, point_types: string[], formats = ['long_video', 'short_video'], ve_route = ['headline']): MotionModule =>
+  ({ id, name: `The ${id} style`, how: `How ${id} moves.`, rules: [`${id} rule`], point_types, formats, fits, krish_verdict, ve_route })
 const BANK = [m('swiss', 'often', 'untested', ['claim', 'number']), m('ladder', 'often', 'liked', ['number', 'comparison']),
   m('morph', 'sometimes', 'untested', ['transformation']), m('tall-only', 'often', 'untested', ['number'], ['short_video']),
-  m('retro', 'rarely', 'not for us', ['mood']), m('ink', 'rarely', 'untested', ['mood'])]
+  m('retro', 'rarely', 'not for us', ['mood']), m('ink', 'rarely', 'untested', ['mood']),
+  m('undrawn', 'often', 'liked', ['number'], ['long_video', 'short_video'], ['needs_device', 'undrawn_stage'])]
 const inputs = (extra: Partial<StyleInputs> = {}): StyleInputs => ({ pieceId: PIECE, meta: {}, formats: ['long_video', 'short_video'], points: null,
   motion: BANK, looks: [{ id: 'face-with-proof', name: 'Face-led', pitch: 'His face with the proof.', status: 'proven' }], recommendedLook: 'face-with-proof', ...extra })
 const ids = (o: Array<{ id: string; recommended: boolean }>) => o.filter(x => x.recommended).map(x => x.id)
@@ -36,8 +37,8 @@ describe('the motion styles on a piece', () => {
     expect(s.motion.options.find(o => o.id === 'ladder')!.why).toBe('You liked it before. It suits the channel often.')
     expect(s.motion.options.find(o => o.id === 'tall-only')!.recommended).toBe(false)
     // Every option is listed, with its rules, point types, formats and both presses.
-    expect(s.motion.options.map(o => o.id)).toEqual(['ladder', 'swiss', 'morph', 'tall-only', 'retro', 'ink'])
-    expect(s.motion.options[1]).toMatchObject({ line: 'How swiss moves.', rules: ['swiss rule'], point_types: ['claim', 'number'], sample_url: null,
+    expect(s.motion.options.map(o => o.id)).toEqual(['ladder', 'swiss', 'morph', 'tall-only', 'retro', 'ink', 'undrawn'])
+    expect(s.motion.options[1]).toMatchObject({ line: 'How swiss moves.', rules: ['swiss rule'], point_types: ['claim', 'number'], ready: true, sample_url: null,
       presses: { yes: { label: 'Yes', op: 'style', body: { piece_id: PIECE, motion: 'swiss' } }, not_this: { label: 'Not this', op: 'style', body: { piece_id: PIECE, reject: { layer: 'motion', id: 'swiss' } } } } })
   })
 
@@ -46,6 +47,12 @@ describe('the motion styles on a piece', () => {
     expect(ids(s.motion.options)).toEqual(['morph'])
     expect(s.motion.options.find(o => o.id === 'morph')!.why).toBe('It draws the transformation points this piece makes. It suits the channel sometimes.')
     expect(ids(dayStyle(inputs({ formats: ['short_video'], points: ['number'] })).motion.options)).toEqual(['ladder', 'swiss', 'tall-only'])
+  })
+
+  it('never recommends one ve cannot draw yet (needs_device), the rule ve styles keeps', () => {
+    const s = dayStyle(inputs({ points: ['number'] }))
+    expect(s.motion.options.find(o => o.id === 'undrawn')).toMatchObject({ ready: false, recommended: false })
+    expect(ids(s.motion.options)).toEqual(['ladder', 'swiss'])
   })
 
   it('never recommends one he called not for us, or one he said Not this to on this piece', () => {
