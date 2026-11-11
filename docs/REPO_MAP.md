@@ -151,6 +151,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/library/written`
 - `/api/media-quality`
 - `/api/media-review-pilot`
+- `/api/publish/catalogue`
 - `/api/publish/watch`
 - `/api/purge/restore`
 - `/api/purge/run`
@@ -1431,6 +1432,18 @@ The one Anthropic price table.
 - `function normalizeProductionFormat(value: unknown, series: ProductionSeries): ProductionFormat | null`
 - `function buildProductionBrief(input: { row: ContentRevisionInput & { id: string; source_url?: string | null; meta?: Jso…`
 
+### `apps/control-plane/api/_publicationCatalogue.ts`
+
+The public publication catalogue: for every published piece, the public addresses it went out at.
+
+- `const CATALOGUE_FROM`
+- `interface CataloguePiece`
+- `interface CatalogueVideo`
+- `interface CatalogueEntry`
+- `interface Catalogue`
+- `function youtubeId(url: string): string | null`
+- `function catalogue(pieces: readonly CataloguePiece[]): Catalogue`
+
 ### `apps/control-plane/api/_publishChecks.ts`
 
 The mechanical checks a piece must pass before it can be approved or
@@ -1464,6 +1477,7 @@ The publish watcher's pure half: which piece a live Substack post is.
 - `interface Post`
 - `interface Candidate`
 - `function normTitle(s: string | null | undefined): string`
+- `function archiveList(raw: unknown): Array<Record<string, unknown>>`
 - `function readPosts(raw: unknown): Post[]`
 - `type Match`
 - `function matchPost(post: Post, pieces: readonly Candidate[]): Match`
@@ -2832,6 +2846,10 @@ Takes place themselves (Wave 2, W2.3): once the Inbox job has copied a take
 - `function createMediaReviewPilotHandler(frozen: unknown, db: SupabaseClient, fetcher: typeof fetch = (...args) => fetch(…`
 - `export default createMediaReviewPilotHandler(pilotManifest, supabase)`
 - `const config`
+
+### `apps/control-plane/api/publish/catalogue.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/publish/watch.ts`
 
