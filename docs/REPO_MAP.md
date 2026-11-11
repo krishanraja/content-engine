@@ -1469,6 +1469,15 @@ The publish watcher's pure half: which piece a live Substack post is.
 - `function matchPost(post: Post, pieces: readonly Candidate[]): Match`
 - `function unmatchedItem(post: Post)`
 - `function unmatchedItemId(post: Pick<Post, 'id'>): string`
+- `const YOUTUBE_CHANNEL_ID`
+- `const YOUTUBE_FEED`
+- `const YOUTUBE_WATCH_FROM`
+- `interface Upload`
+- `function readUploads(xml: string): Upload[]`
+- `interface PublishedPiece`
+- `type UploadMatch`
+- `function matchUpload(upload: Upload, pieces: readonly PublishedPiece[], uploads: readonly Upload[] = [upload]): UploadM…`
+- `function uploadWrite(upload: Upload, piece: PublishedPiece): { write: Record<string, unknown> } | { skip: string }`
 
 ### `apps/control-plane/api/_quota.ts`
 

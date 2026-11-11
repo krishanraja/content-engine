@@ -133,3 +133,86 @@ export function unmatchedItem(post: Post) {
 export function unmatchedItemId(post: Pick<Post, 'id'>): string {
   return `post-${post.id}`.slice(0, 80)
 }
+
+// ---- YouTube: the same watcher, reading the channel's public uploads feed (Krish, 2026-11-11) ----
+//
+// Krish uploads each piece's two cuts to YouTube himself; until now nothing told the engine, so not one of the ten
+// pieces published from 5 October held its YouTube address (checked 2026-11-11), and nothing downstream (the board's
+// Archive, makeyourmindup.ai) could show a piece's video. The channel is @makeyourmind-up (the handle without the
+// hyphen, @makeyourmindup, is a 404), and its public uploads feed needs no key. It lists the newest 15 uploads, so it
+// keeps the record current going forward; anything older is history, repaired separately.
+//
+// An upload matches one published piece:
+//   1. by address: the piece already records this video's id (nothing to write);
+//   2. by title: the upload's title equals one of the piece's titles letter for letter (normTitle);
+//   3. by day: the one piece published on the upload's calendar day (UTC), and only when this upload is the only one of
+//      its kind that day (two full videos on one day, as on 20 October, cannot be told apart by date).
+// A Short (its address is /shorts/) only ever fills the shorts slot and a full video only the youtube slot. A slot that
+// already holds a different video is kept and reported, never overwritten; an upload that matches nothing is reported.
+
+export const YOUTUBE_CHANNEL_ID = 'UCvxmp6eKUqrjGGbCGl7f9-A'
+export const YOUTUBE_FEED = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CHANNEL_ID}`
+/** Uploads before this are history: their repair is a separate, reviewed backfill (Krish, 2026-11-11: "Another codex
+ *  session is currently repairing retrospectively"), so the watcher never writes over it. */
+export const YOUTUBE_WATCH_FROM = '2026-11-11T00:00:00Z'
+
+export interface Upload { id: string; title: string; url: string; posted_at: string; kind: 'youtube' | 'shorts' }
+
+function xmlText(s: string): string {
+  return s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n))).trim()
+}
+
+/** The uploads in a YouTube channel feed (Atom). Anything malformed is left out, never guessed. */
+export function readUploads(xml: string): Upload[] {
+  if (typeof xml !== 'string' || !xml.includes('<feed')) return []
+  const out: Upload[] = []
+  for (const e of xml.split('<entry>').slice(1)) {
+    const id = /<yt:videoId>([\w-]{11})<\/yt:videoId>/.exec(e)?.[1]
+    const title = /<title>([\s\S]*?)<\/title>/.exec(e)?.[1]
+    const link = /<link rel="alternate" href="([^"]+)"/.exec(e)?.[1]
+    const at = /<published>([^<]+)<\/published>/.exec(e)?.[1]
+    if (!id || !title || !link || !at || Number.isNaN(Date.parse(at))) continue
+    const kind = /\/shorts\//.test(link) ? 'shorts' : 'youtube'
+    out.push({ id, title: xmlText(title), url: kind === 'shorts' ? `https://www.youtube.com/shorts/${id}` : `https://www.youtube.com/watch?v=${id}`, posted_at: new Date(at).toISOString(), kind })
+  }
+  return out
+}
+
+export interface PublishedPiece extends Candidate { published_at: string | null }
+
+const idIn = (url: unknown): string | null => {
+  if (typeof url !== 'string') return null
+  return /(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/.exec(url)?.[1] ?? null
+}
+
+export type UploadMatch = { kind: 'one'; piece: PublishedPiece; by: 'address' | 'title' | 'day' } | { kind: 'none' } | { kind: 'ambiguous'; ids: string[] }
+
+export function matchUpload(upload: Upload, pieces: readonly PublishedPiece[], uploads: readonly Upload[] = [upload]): UploadMatch {
+  const published = pieces.filter(p => p.state === 'published' && typeof p.published_at === 'string')
+  const byAddress = published.filter(p => ['youtube', 'shorts'].some(k => idIn(p.meta?.making?.channels?.[k]?.url) === upload.id))
+  if (byAddress.length === 1) return { kind: 'one', piece: byAddress[0], by: 'address' }
+  if (byAddress.length > 1) return { kind: 'ambiguous', ids: byAddress.map(p => p.id) }
+  const t = normTitle(upload.title.replace(/^video\s*:\s*/i, ''))
+  const titles = (p: PublishedPiece) => [...titlesOf(p), normTitle(p.transformed_outputs?.youtube_package?.title)].filter(Boolean)
+  const byTitle = published.filter(p => titles(p).includes(t))
+  if (byTitle.length === 1) return { kind: 'one', piece: byTitle[0], by: 'title' }
+  if (byTitle.length > 1) return { kind: 'ambiguous', ids: byTitle.map(p => p.id) }
+  const day = upload.posted_at.slice(0, 10)
+  if (uploads.filter(u => u.kind === upload.kind && u.posted_at.slice(0, 10) === day).length > 1) return { kind: 'none' }
+  const byDay = published.filter(p => new Date(p.published_at as string).toISOString().slice(0, 10) === day)
+  if (byDay.length === 1) return { kind: 'one', piece: byDay[0], by: 'day' }
+  if (byDay.length > 1) return { kind: 'ambiguous', ids: byDay.map(p => p.id) }
+  return { kind: 'none' }
+}
+
+/** What to write to a matched piece's making record for this upload, or why nothing is written. */
+export function uploadWrite(upload: Upload, piece: PublishedPiece): { write: Record<string, unknown> } | { skip: string } {
+  const making = piece.meta?.making
+  if (!making || typeof making !== 'object') return { skip: 'no making record' }
+  const slot = making.channels?.[upload.kind]
+  const have = idIn(slot?.url)
+  if (have === upload.id) return { skip: 'already recorded' }
+  if (have) return { skip: `slot holds another video (${have}); kept` }
+  return { write: { ...(slot && typeof slot === 'object' ? slot : {}), url: upload.url, video_id: upload.id, posted_at: slot?.posted_at || upload.posted_at, recorded_by: 'publish watcher' } }
+}
