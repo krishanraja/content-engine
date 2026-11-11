@@ -23,6 +23,8 @@ function slides(env) {
     { str: '20', label: 'TELLERS PER BRANCH · 1988', a: at(env, B.y1988, 'twenty') - 0.2, b: at(env, B.y2004, 'thirteen') - 0.35 },
     { str: '13', label: 'TELLERS PER BRANCH · 2004', a: at(env, B.y2004, 'thirteen') - 0.15, b: at(env, B.expect, 'expect') - 0.3 },
     { str: '0?', label: 'EXPECTED', a: at(env, B.expect, 'expect') - 0.1, b: at(env, B.didnt) - 0.05, color: c.muted, shade: c.line },
+    { str: 'NO.', label: 'WHAT HAPPENED', a: at(env, B.didnt) - 0.05, b: at(env, B.didnt, 'cheaper') - 0.45, size: 0.9 },
+    { str: 'COST ↓', label: 'RUNNING A BRANCH', a: at(env, B.didnt, 'cheaper') - 0.15, b: at(env, B.didnt, 'Forty') - 0.45, size: 0.62 },
     { str: '+43%', label: 'BRANCHES · 1988 → 2004', a: at(env, B.didnt, 'Forty') - 0.15, b: at(env, B.same) - 0.3, size: 0.84 },
     { str: '=', label: 'TOTAL · 1988 = 2004', a: at(env, B.same, 'stayed') - 0.15, b: at(env, B.talk) - 0.3, color: c.mint, shade: '#3E8F6E', glow: 'rgba(126,240,192,0.35)', size: 1.5 },
     { str: 'CASH', label: 'THE OLD JOB', a: at(env, B.talk, 'counting') - 0.15, b: at(env, B.talk, 'talking') - 0.45, size: 0.8, color: c.muted, shade: c.line },
