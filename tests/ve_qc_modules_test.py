@@ -136,6 +136,16 @@ class QCModules(unittest.TestCase):
         self.assertTrue(bad['value'][0]['pass'])
         self.assertFalse(bad['value'][1]['pass'])
 
+    def test_vertical_cut_must_carry_no_mark(self):
+        # Ruling, Krish, 2026-11-11: no mark on vertical video. A cut with the mark on any beat fails.
+        beats = [{'id': 'first', 'fromFrame': 0, 'toFrame': 30},
+                 {'id': 'second', 'fromFrame': 30, 'toFrame': 60}]
+        aspect = {'mark_box': [8, 8, 38, 30], 'mark_width': 32}
+        self.assertFalse(qc_brand.no_mark(self.brand['clean'], self.mark, beats, aspect)['pass'])
+        partly = qc_brand.no_mark(self.brand['absent'], self.mark, beats, aspect)
+        self.assertFalse(partly['pass'])
+        self.assertTrue(partly['value'][1]['pass'])
+
     def test_mark_geometry_matches_wide_and_tall_renderer(self):
         self.assertEqual(qc_brand.MARK_GEOMETRY['16:9']['box'], (64, 56, 112, 112))
         self.assertEqual(qc_brand.MARK_GEOMETRY['16:9']['image'], 80)

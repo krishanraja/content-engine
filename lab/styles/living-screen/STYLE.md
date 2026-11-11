@@ -25,7 +25,7 @@ flat UI on flat ink (the first draft).
 - The screen is an unlit material held under the bloom threshold, so text stays sharp; a metal bezel and a soft
   reflective floor give it a place to stand.
 - Streaks are tubes along curves, drawn on over 1.6 s, glowing through a half-resolution bloom pass.
-- Over the 3D: an ink scrim behind the dress and credit, a vignette, the house grain.
+- Over the 3D: an ink scrim behind the credit (and the dress, on the wide cut only), a vignette, the house grain.
 
 ## 3. Colour logic
 
@@ -39,7 +39,7 @@ flat UI on flat ink (the first draft).
 ## 4. Type and captions (the brand skin's always-band)
 
 - Inside the interface: Anton for the numbers (the old value struck), IBM Plex Mono for labels, Archivo for the tabs.
-- Over it: the house caption build, the dress, the producer credit (IMF · BESSEN 2015) in the type zone.
+- Over it: the house caption build, the dress on the wide cut only, the producer credit (IMF · BESSEN 2015) in the type zone.
 - Interface text only counts as read when the camera brings it to at least 40 px on the tall canvas (F44); the hook
   and the ask frame the screen close enough for that.
 
@@ -52,7 +52,7 @@ flat UI on flat ink (the first draft).
 
 - Shots: the hook (screen three-quarter, streaks drawing), each card in turn, the chart, the Customers tab, the
   chart again for the two lines, then the ask.
-- **Tall:** the dress and credit own the top; the screen's focus point sits just above the caption band.
+- **Tall:** the credit owns the top (no wordmark on vertical video, Krish 2026-11-11); the screen's focus point sits just above the caption band.
 - **Wide:** the screen fills the frame at a slight angle; the type sits top left.
 
 ## 7. Sound palette
