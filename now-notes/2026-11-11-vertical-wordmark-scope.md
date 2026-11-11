@@ -1,0 +1,3 @@
+Status: The vertical wordmark rule is scoped as Krish set it: no wordmark, mark tile or series tag over a 9:16 cut's animated content and no animation over a wordmark, while the closing outro card keeps the wordmark. HOOK_IS_THE_INTRO, the motion standard, STUDIO, THE_BAR and the ve invariants say so, and a renderer test proves the 9:16 outro still draws the stacked logo. The code already behaved this way; only the wording overreached.
+Next: step 2, the full-screen vertical layouts inside every platform's safe area, with before and after stills to Krish first.
+North Star check (2026-11-11): holds.
