@@ -28,7 +28,7 @@ That order matters more than it used to, because music has never been more crowd
 
 ## The people who finished it
 
-HUGEL, a DJ and producer, didn't just re-release her AI song. He sampled pieces of her version and rearranged the track from there, with a new drop. His own list of what went in: drums from stock and Splice sample packs, a Serum bass preset layered with a Moog line, an extra piano and a string layer for tension.
+HUGEL, a DJ and producer, took small pieces of her AI version and rebuilt the track around them, with a new drop. His own list of what went in: drums from stock and Splice sample packs, a Serum bass preset layered with a Moog line, an extra piano and a string layer for tension.
 
 Even that "human" version isn't as human as it sounds. Drums from sample packs are recordings anyone can buy and reuse, and a bass preset is a sound someone else designed. We'd call that normal for dance music, and it was normal long before AI turned up.
 
