@@ -2076,6 +2076,14 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `function liveDay(piece: Body, date: string): LiveDay`
 - `async function weekLive(db: SupabaseClient, week: string, builtAt: string | null): Promise<WeekLive>`
 
+### `apps/control-plane/api/board/_liveBoard.ts`
+
+Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the publish board is 1000% where
+
+- `const LIVE_BOARD_URL`
+- `function liveBoardUrl(week?: string | null, day?: string | null): string`
+- `const ARCHIVE_LINE`
+
 ### `apps/control-plane/api/board/_media.ts`
 
 - `type MediaKind = 'cut' | 'thumbnail'`
@@ -2210,6 +2218,12 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `function buildView(i: ViewInputs): WeekView`
 - `function viewProblems(v: WeekView): string[]`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
+
+### `apps/control-plane/api/board/_viewContract.ts`
+
+- `const VIEW_CONTRACT_VERSION`
+- `function viewEtag(view: Record<string, unknown>): string`
+- `function notModified(ifNoneMatch: string | string[] | undefined, etag: string): boolean`
 
 ### `apps/control-plane/api/board/_yes.ts`
 
@@ -6090,6 +6104,15 @@ One closer: nothing in the engine closes a board item but the board route,
 - `function shouldLaunchVideoEngine(context: VideoEngineLaunchContext): boolean`
 - `const VIDEO_ENGINE_TRIGGER_CASES: ReadonlyArray<VideoEngineLaunchContext & { expected: boolean; label: string }>`
 - `async function checkVideoEngineTrigger(repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')): Promise<void>`
+
+### `scripts/check-view-contract.ts`
+
+The Publish Board view's contract check (Ruling, Krish, 2026-11-11: engine changes upgrade Control Centre's board and
+
+- `const SCHEMA_PATH`
+- `function validate(root: S, value: unknown, node: unknown = root, at = '$', opts: { open?: boolean } = {}): string[]`
+- `function compare(oldRoot: S, newRoot: S): { breaking: string[]; additive: string[] }`
+- `function judge(oldRoot: S | null, newRoot: S): { ok: boolean; lines: string[] }`
 
 ### `scripts/rotate-runner-signing-key.ts`
 
