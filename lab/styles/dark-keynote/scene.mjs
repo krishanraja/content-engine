@@ -19,15 +19,18 @@ function slides(env) {
   const c = env.skin.colors
   return [
     { str: 'ATM', label: 'THE THREAT · 1970s', a: -0.4, b: at(env, B.y1988) - 0.3 },
+    { str: '1988', label: 'THE YEAR', a: at(env, B.y1988, '1988') - 0.1, b: at(env, B.y1988, 'twenty') - 0.45, size: 0.8 },
     { str: '20', label: 'TELLERS PER BRANCH · 1988', a: at(env, B.y1988, 'twenty') - 0.2, b: at(env, B.y2004, 'thirteen') - 0.35 },
-    { str: '13', label: 'TELLERS PER BRANCH · 2004', a: at(env, B.y2004, 'thirteen') - 0.15, b: at(env, B.expect) - 0.3 },
-    { str: '0?', label: 'WHAT YOU WOULD EXPECT', a: at(env, B.expect, 'expect') - 0.1, b: at(env, B.didnt) - 0.05, color: c.muted, shade: c.line },
-    { str: '+43%', label: 'CITY BRANCHES · 1988 → 2004', a: at(env, B.didnt, 'Forty') - 0.15, b: at(env, B.same) - 0.3, size: 0.84 },
+    { str: '13', label: 'TELLERS PER BRANCH · 2004', a: at(env, B.y2004, 'thirteen') - 0.15, b: at(env, B.expect, 'expect') - 0.3 },
+    { str: '0?', label: 'EXPECTED', a: at(env, B.expect, 'expect') - 0.1, b: at(env, B.didnt) - 0.05, color: c.muted, shade: c.line },
+    { str: '+43%', label: 'BRANCHES · 1988 → 2004', a: at(env, B.didnt, 'Forty') - 0.15, b: at(env, B.same) - 0.3, size: 0.84 },
     { str: '=', label: 'TOTAL · 1988 = 2004', a: at(env, B.same, 'stayed') - 0.15, b: at(env, B.talk) - 0.3, color: c.mint, shade: '#3E8F6E', glow: 'rgba(126,240,192,0.35)', size: 1.5 },
+    { str: 'CASH', label: 'THE OLD JOB', a: at(env, B.talk, 'counting') - 0.15, b: at(env, B.talk, 'talking') - 0.45, size: 0.8, color: c.muted, shade: c.line },
     { str: 'PEOPLE', label: 'WHERE THE TIME WENT', a: at(env, B.talk, 'talking') - 0.15, b: at(env, B.two) - 0.3, size: 0.62 },
+    { str: '−35%', label: 'PER BRANCH', size: 0.84, a: at(env, B.two, 'Fewer') - 0.15, b: at(env, B.two, 'More') - 0.4 },
     { str: '+43%', label: 'BRANCHES', size: 0.84, a: at(env, B.two, 'More') - 0.15, b: at(env, B.ask) - 0.3, color: c.mint, shade: '#3E8F6E', glow: 'rgba(126,240,192,0.3)', resweep: at(env, B.watch) },
-    { str: '1 TASK', label: 'THIS WEEK · YOUR TEAM', a: at(env, B.ask, 'pick') - 0.15, b: at(env, B.ask, 'what') - 0.3, size: 0.62 },
-    { str: 'MORE?', label: 'NOW IT COSTS LESS', a: at(env, B.ask, 'what') - 0.15, b: 1e9, size: 0.62, color: c.mint, shade: '#3E8F6E', glow: 'rgba(126,240,192,0.35)' },
+    { str: '1 TASK', label: 'YOUR DESK', a: at(env, B.ask, 'pick') - 0.15, b: at(env, B.ask, 'what') - 0.3, size: 0.62 },
+    { str: 'MORE?', label: 'COST ↓', a: at(env, B.ask, 'what') - 0.15, b: 1e9, size: 0.62, color: c.mint, shade: '#3E8F6E', glow: 'rgba(126,240,192,0.35)' },
   ]
 }
 

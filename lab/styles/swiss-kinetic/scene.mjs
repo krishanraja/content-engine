@@ -34,7 +34,7 @@ export function draw(env, ctx, t, house) {
   const beat = env.timeline.beats.findIndex((b, i) => t < (env.timeline.beats[i + 1]?.s ?? 1e9))
   const X = M, TOP = tall ? 470 : 230
   L('IMF · BESSEN · 2015', X, TOP, { role: 'credit', alpha: fade(0, at(env, B.ask) - 0.3) })
-  L('YOUR TEAM', X, TOP, { role: 'credit', alpha: fade(at(env, B.ask), 1e9) })
+  L('YOUR DESK', X, TOP, { role: 'credit', alpha: fade(at(env, B.ask), 1e9) })
   L(String(beat + 1).padStart(2, '0') + ' / 10', tall ? 860 : W - M, TOP, { align: 'right', role: 'label', color: c.muted })
 
   // ---- The type block (tall: 520 to 1100) ----
@@ -51,6 +51,8 @@ export function draw(env, ctx, t, house) {
   }
   // 1988, then 2004.
   L('1988 · PER BRANCH', X, tall ? 560 : 300, { alpha: fade(at(env, B.y1988, '1988'), at(env, B.y2004) - 0.3) })
+  // The year holds the frame until the count arrives, so the block is never empty while he speaks.
+  T('1988', X - 10, base2, tall ? 420 : 400, at(env, B.y1988, '1988') - 0.1, at(env, B.y1988, 'twenty') - 0.35, { from: 'left' })
   T('20', X - 12, base2, tall ? 600 : 540, at(env, B.y1988, 'twenty') - 0.15, at(env, B.y2004, 'thirteen') - 0.25)
   L('2004 · PER BRANCH', X, tall ? 560 : 300, { alpha: fade(at(env, B.y2004, '2004'), at(env, B.expect) - 0.3) })
   T('20', X - 6, base2, tall ? 260 : 240, at(env, B.y2004, 'thirteen') - 0.2, at(env, B.expect) - 0.3, { color: c.muted, strike: at(env, B.y2004, 'thirteen'), strikeColor: c.ink })
@@ -85,7 +87,7 @@ export function draw(env, ctx, t, house) {
   // Two things moved.
   L('PER BRANCH', X, base1 - 300, { alpha: fade(at(env, B.two, 'Fewer'), at(env, B.watch) - 0.3) })
   T('−35%', X - 6, base1 - 20, tall ? 260 : 240, at(env, B.two, 'Fewer') - 0.1, at(env, B.watch) - 0.3)
-  L('BRANCHES', X, base1 + 40, { alpha: fade(at(env, B.two, 'More'), at(env, B.ask) - 0.3) })
+  L('BRANCHES', X, base1 + 22, { alpha: fade(at(env, B.two, 'More'), at(env, B.ask) - 0.3) })
   T('+43%', X - 6, base2, tall ? 260 : 240, at(env, B.two, 'More') - 0.1, at(env, B.ask) - 0.3, { block: t >= at(env, B.watch) ? c.mint : null })
   // The ask.
   T('1 TASK', X - 6, base1 - 30, tall ? 230 : 210, at(env, B.ask, 'pick') - 0.1, 1e9)
