@@ -25,7 +25,9 @@ Friday 23 Oct took a 62-hour thread, about 253M tokens, and four rejected cuts. 
 | Renderer | `apps/renderer/src/engine/` (one `FormatMaster`, BrandFrame, devices) |
 | Best practice | `_corpus/motion-design-video-corpus.md`, cited by section in each card |
 | Caption styles | `apps/renderer/src/engine/captions/` (`names.ts`, `kit.ts`, `themes.tsx`) and `chrome/ArtDirectedCaption.tsx`; picked with `brand.caption_theme` |
-| The style lab and the moves (outside the renderer) | `lab/styles/` (one folder per built style, `STYLE.md` and `scene.mjs`), `lab/moves/`; `lab/styles/README.md` |
+| The style lab | `lab/styles/` (one folder per built style, `STYLE.md` and `scene.mjs`); `lab/styles/README.md` |
+| The moves (one copy, for the lab and ve) | `packages/moves/` (`@mymu/moves`, plain ES modules, `draw` or `update` from t); `lab/moves/` keeps the gallery, the check and re-exports |
+| 3D | `three` and `@remotion/three` in `apps/renderer`; renders use software WebGL (`gl: 'swangle'` in `scripts/ve-render.mjs`), so a 3D device renders the same on every machine |
 | Channel safe zones | `config/channel-safe-zones.json`, read by `scripts/channel_safe.py`, `velib/qc_channel.py` and the lab's `check.mjs` |
 
 ## Protocol
@@ -142,8 +144,8 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
 - **Motion styles from the lab.** A piece's `style.motion` names one style in the bank (`config/style-references.json`,
   motion layer). `ladder` (The Ladder: one lit 3D object carries every number) and `living-screen` (The Living Screen:
   a working interface the camera reads for the viewer) joined on 11 Nov, liked by Krish, and are `needs_device`: a spec
-  naming them lints and renders in house motion until their devices land (cards `docs/ve/cards/styles-3d/`, queued after
-  Krish approves the Codex spend). How a lab style reaches ve: `lab/styles/README.md`, "From the lab to ve".
+  naming them lints and renders in house motion until their devices land (cards `docs/ve/cards/styles-3d/`: the
+  prerequisite, 3D and the moves package, landed 11 Nov; each device card is queued after Krish approves its Codex spend). How a lab style reaches ve: `lab/styles/README.md`, "From the lab to ve".
 - **Two things called "lab".** `ve lab render` (`velib/lab.py`) renders the house and word caption builds and the
   bank's drawable styles on one window of his pinned take (`config/ve/lab.json`), to check the house look has not
   moved; it does not render the 15 caption styles. The style lab (`lab/styles/`, `render.mjs`) is where a new
@@ -171,6 +173,11 @@ Every cut is held to the signed [motion standard](MOTION_STANDARD.md); each piec
 - **References are board cards, by id (Wave 3, 3 Nov 2026).** Each `brand.references[]` entry carries `id`, the card's `inspiration_items.id`, with the file stem kept as `card`, its label. `ve init <piece>` offers the top card per unnamed role from `GET /api/inspiration/candidates` (production lane, not dismissed; ranked by what the card `teaches`, then his kept or liked signal, then never used, then newest), each marked `offered: true`. ve lint (offline, deterministic) refuses, from 6 Nov 2026, a reference with no `id` or with `offered` left. `ve refs` checks every id against `GET /api/inspiration/cards` and refuses an unknown, dismissed, strategy-lane or non-clip card, or a Drive id that is not the card's; unreachable, it prints `board NOT CHECKED` and goes on. `ve verdict` posts one `card_uses` row per reference and role with the Critic's score (`POST /api/inspiration/uses`); the making route marks them published when a channel is posted.
 - **Library devices.** Claude writes exact cards from fields JSON. A card for a piece takes `spec: <the piece's spec.json>` (or `motion_style: <id>`) in its fields, and is refused when a piece due from 9 Nov names no style; and `ve card` writes that style's rules and never-list from `config/style-references.json` into the card (a style not in the bank's motion layer, or one Krish marked not for us, is refused); `ve brief` adds it to plate cards by itself. Codex builds devices in worktrees between pieces. dispatch uses the plugin companion with pinned model/effort. verify-card reruns acceptance outside the sandbox/checks write_allow; Claude then renders golden stills/reviews one contact sheet.
 - **Visual plates into named slots.** A slot is named in the spec, with its geometry, its duration and the line it sits under; Codex makes candidate pictures for it (stills first, then motion of an approved still: `docs/ve/design/TEMPLATE.md`, "Images: how plates are made"), and the engine places the chosen one. Codex never picks a slot's size, timing or position. Compile still refuses generated plates until Phase 2 (above). `ve brief` writes the per-plate brief and its card fields (above); dispatching it and the Critic's ranking of the eight candidates are not automated yet.
+
+Card fields name `write_allow` and `read` as `[a, b]` text or a JSON list; `ve card` writes either as `[a, b]`, the form
+`ve verify-card` matches against (11 Nov 2026: a list once reached the card as Python's list text and a correct build
+was refused). When the lane marks a build failed, read why: if the fault is the lane's, check the pushed
+`ve-card/<card>` branch yourself (its acceptance, `ve verify-card`, the stills) before spending a second run.
 
 Codex never edits a cut: it never renders, assembles, trims, retimes, captions, mixes or files a production piece, and never touches its words or audio. Its report is never proof.
 
