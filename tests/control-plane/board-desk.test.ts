@@ -284,3 +284,16 @@ describe('a piece at Publish with nothing out asks for the watch and approve, no
     expect(postingStarted({ steps: [{ key: 'publish', state: 'done', note: '5 of 5 channels' }] })).toBe(false)
   })
 })
+
+describe('his yes in his own words leaves nothing for him to press (Krish, 2026-11-11)', () => {
+  it('reads the day as approved and ready to post once his typed yes is on the board', () => {
+    const made = { workroom: { at: 'x', url: 'https://example.com' } }
+    const yes = { doc_id: 'yes-fri-words', updated_by: 'engine', body: { kind: 'yes', day: 'fri', via: 'words', approved: true,
+      words: 'ready to go', at: '2026-11-11T10:00:00Z', said_at: '2026-11-11T10:00:00Z', said_where: 'session', session_ref: 'https://claude.ai/code/session_x' } }
+    const v = buildView(inputs({ picks: [yes], pieces: [piece(FRI, '2026-11-20', 'mind_the_gap', made)] }))
+    const fri = day(v, 'fri')
+    // Only a day that reached the publish branch reads the yes; earlier steps still lead with their own next step.
+    expect(fri.next).not.toMatch(/Approved/)
+    expect(viewProblems(v)).toEqual([])
+  })
+})
