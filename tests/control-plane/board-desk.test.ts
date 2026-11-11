@@ -68,7 +68,7 @@ describe('the live board view', () => {
     // Monday: no research, no lock -> Research, with the engine's run first and the Perplexity prompt beside it.
     const mon = day(buildView(inputs()), 'mon')
     expect(mon.path?.current).toBe('research')
-    expect(mon.actions.map(a => a.kind)).toEqual(['research', 'prompt', 'prompt'])
+    expect(mon.actions.map(a => a.kind)).toEqual(['research', 'prompt', 'press', 'prompt', 'press'])
     // Research on the piece -> Story, a conversation.
     const withResearch = inputs({ pieces: [piece(MON, '2026-11-16', 'follow_the_money', {}, { meta: { materials: [{ id: 'm1', kind: 'file', title: 'mon-research.md', content: 'x', bytes: 1 }] } })] })
     const mon2 = day(buildView(withResearch), 'mon')
@@ -83,7 +83,7 @@ describe('the live board view', () => {
     const looked = inputs({ pieces: [piece(FRI, '2026-11-20', 'mind_the_gap', {}, { meta: { look: { production: 'data-story', experiment: null, inspiration: [], by: 'Krish', at: 'x' } } })] })
     const fri2 = day(buildView(looked), 'fri')
     expect(fri2.path?.current).toBe('board')
-    expect(fri2.actions.map(a => a.kind)).toEqual(['prompt', 'run'])
+    expect(fri2.actions.map(a => a.kind)).toEqual(['prompt', 'run', 'press'])
     expect(fri2.actions[1]).toMatchObject({ kind: 'run', job: 'make-piece', input: { piece_id: FRI } })
     const sb = fri2.actions[0].kind === 'prompt' ? fri2.actions[0].prompt : ''
     expect(sb).toContain('before he records')

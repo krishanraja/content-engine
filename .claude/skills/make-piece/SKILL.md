@@ -10,19 +10,19 @@ description: Make one piece end to end from the piece id Control Center or the S
 
 ## Publish-board routing
 
-Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
-current web addresses, all six collection reads, build/download/publication,
-making-record attribution and rollback. Check `config/boards.json.web_cutover`:
-while pending, source migration is unfinished; once active, use only the web
-board for new interactions. Claude artifacts are retired for good (Krish,
-2026-10-19: "we are now retiring the Claude artefact permanently and we are
-working in content.krishraja.com for all published board updates"): no step
-makes or publishes one. The week's board, a day's tab in draft, the workroom and
-the publish page all go to content.krishraja.com (`week_board.py --target web`,
-then `board_web.py publish-web`), and `scripts/hooks/artifact_gate.py` refuses
-every Artifact publish and every ArtifactData write. Any Artifact, ArtifactData,
-ArtifactComments or dual-account step below is history: read an old artifact
-only to recover what it holds.
+Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The week's
+publish board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its
+link), and it draws the week from the engine's `GET /api/board/<Monday>/view` (`docs/PUBLISH_BOARDS.md`, "One live
+board"). Update it by writing what the view reads, never a page: the piece's making record (`making.py`), his presses
+and his yes (`board_web.py read`, `yes.py`), and the week's plan files (`docs/plans/<Monday>-week/ideas.json`, the
+narrative locks, the research) on main or on the week's branch `offday-revise/<Monday>`; when only a file changed,
+`python3 scripts/post-pack/board_web.py touch <Monday>` makes the live board read the week again at once. Never build
+or publish a board page (`week_board.py`, `board_web.py publish-web`): the content.krishraja.com pages are the
+archive, read-only, and refuse every press. A question for Krish is a press the view carries or an item on his one
+list; his approval of scripts is his own words in the session, recorded with `making.py <uuid> read-back CUT
+--krish-words` before `teleprompter_send.py`. Claude artifacts stay retired (Krish, 2026-10-19;
+`scripts/hooks/artifact_gate.py` refuses them). Steps below that build,
+download or publish a board page, or work in a day's tab in draft, are history: do that work through the records above.
 
 Control Center plans and tracks; Claude Code makes. Krish, 2026-10-10: the
 control centre "becomes more of a progress tracker, suggestions compiler, and
@@ -39,6 +39,16 @@ routines. No Claude schedules of any kind in this architecture"). In a
 GitHub Actions run nobody reads the chat: every question is a press on the
 day's tab, and the workflow pushes what you commit. Everything the session learns about the piece comes from the engine
 and the repository, never from the chat that started it.
+
+## Report to the board as you work
+
+A session started from this skill, not from a prompt copied off the board, reports the same way a board prompt says
+("Keep the board current as you work", `writeBack` in `apps/control-plane/api/board/_writeBack.ts`): first
+`get_piece_board` on the Control Center connector, or `python3 scripts/post-pack/board_session.py <piece_id> show`;
+then `report_board_session` (start, progress at each milestone, done, or blocked with what it needs), or
+`board_session.py <piece_id> start|progress|done|blocked "one line" --session <id> --step <step>`; and everything it
+makes or draws on goes on the piece with `add_piece_material`, or `board_session.py <piece_id> add <file or text>`. A
+day with no piece yet is `day:<Monday>/<day>`. Add, never replace.
 
 ## From the signed narrative lock (pieces from 9 November)
 

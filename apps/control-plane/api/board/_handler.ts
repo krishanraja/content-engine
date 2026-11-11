@@ -17,6 +17,8 @@ import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
 import { DESK_PAGE } from './_deskPage.js'
+import { liveBoardUrl } from './_liveBoard.js'
+import { ARCHIVE_REFERRER_POLICY, fromArchivePage, readOnlyArchive } from './_readOnly.js'
 import { StandardsError, decideStandard, readStandards, renderStandards } from './_standards.js'
 import { operatorBearerAllowed } from '../_auth.js'
 import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
@@ -113,6 +115,21 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         return res.status(result.status).json(result.body)
       } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
     }
+    if (op === 'touch') {
+      // The week's change signal, bumped by a writer whose change lives outside the board's tables (the week's plan
+      // files on GitHub: the Thursday good-news run, the revise run, the Sunday ideas run), so the live board reads the
+      // view again at once instead of at its next poll. The engine operator's key only; it changes nothing it shows.
+      if (!operatorBearerAllowed(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+      const week = scalar(req.query.week)
+      if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
+      const source = typeof req.body?.source === 'string' && /^[a-z][a-z_-]{0,39}$/.test(req.body.source) ? req.body.source : 'plan'
+      try {
+        const bumped = await (await getDb()).rpc('board_signal_bump', { p_week: week, p_source: source })
+        if (bumped.error) return res.status(503).json({ ok: false, error: 'signal_unavailable' })
+        return res.status(200).json({ ok: true, week, revision: bumped.data })
+      } catch { return res.status(503).json({ ok: false, error: 'signal_unavailable' }) }
+    }
     if (op === 'pieces') {
       // Growth's read (_posted.ts readPieces): which piece sits on which day, and its boxes. The same key; read-only.
       if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
@@ -184,11 +201,18 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       res.setHeader('Cache-Control', 'no-store')
       res.setHeader('X-Frame-Options', 'DENY')
       res.setHeader('Content-Security-Policy', boardPolicy(process.env.SUPABASE_URL))
+      // The archive (Ruling, Krish, 2026-11-11): its own requests name the page, so the board refuses its writes.
+      res.setHeader('Referrer-Policy', ARCHIVE_REFERRER_POLICY)
       return res.status(200).send(DESK_PAGE)
     }
     const operatorOnly = ['uploads', 'imports', 'sources'].includes(op) || (!op && !collection && method === 'PUT')
     const who = actor(req, operatorOnly)
     if (!who) return res.status(401).json({ ok: false, error: 'unauthorized' })
+    // One live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only
+    // archive): a press made on one of the engine's own board pages is refused, and says where to make it.
+    if (who === 'Krish' && method !== 'GET' && fromArchivePage(req.headers.referer)) {
+      return res.status(423).json({ ok: false, error: 'archive_read_only', live: liveBoardUrl(monday(scalar(req.query.week)) ? scalar(req.query.week) : null) })
+    }
     try {
       const db = await getDb()
       if (op === 'weeks' && method === 'GET') {
@@ -474,6 +498,12 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         res.setHeader('X-Frame-Options', 'DENY')
         res.setHeader('Content-Security-Policy', boardPolicy(process.env.SUPABASE_URL))
         res.setHeader('X-Board-Build', state.build_id)
+        // The baked board is the archive (Ruling, Krish, 2026-11-11): Krish reads it with the banner and the read-only
+        // guard; a session's download (the operator's key, week_board.py --previous) gets the bytes as built.
+        if (who === 'Krish') {
+          res.setHeader('Referrer-Policy', ARCHIVE_REFERRER_POLICY)
+          return res.status(200).send(readOnlyArchive(await upstream.text(), week))
+        }
         res.status(200)
         await pipeline(Readable.fromWeb(upstream.body as Parameters<typeof Readable.fromWeb>[0]), res)
         return

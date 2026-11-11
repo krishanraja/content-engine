@@ -8,6 +8,8 @@ import { dayMedia, type MediaItem } from './_media.js'
 import { VIEW_CONTRACT_VERSION } from './_viewContract.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
+import { dayComments, dayPieces, dayPosted, dayYes, materialPress, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
+  type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
 import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -36,6 +38,7 @@ export type Action =
   | { kind: 'review'; label: string }
   | { kind: 'research'; label: string; piece_id: string }
   | { kind: 'look'; label: string; piece_id: string }
+  | PressAction
 export interface DayView {
   day: PostedDay
   date: string
@@ -57,12 +60,21 @@ export interface DayView {
   path?: DayPath
   /** What the day's piece has rendered (cuts, thumbnails), newest first; ids only, signed at /api/board/<week>/media/<id> (_media.ts). */
   media: MediaItem[]
+  /** Contract 1.2.0 (_viewExtras.ts): every piece on the day, the day's options with their presses, his comments, what
+   *  Growth posted and his yes. */
+  pieces: ViewPiece[]
+  options: ViewOption[]
+  comments: ViewComment[]
+  posted: ViewPosted[]
+  yes: ViewYes | null
   /** The sessions reporting on the day's piece or the day, working first (_writeBack.ts; contract 1.1.0). */
   sessions: ViewSession[]
   /** What is on file for the day's piece and the day in the piece materials store, newest first; read through
    *  /api/content-ideas/store?op=read&id=<id> (api/_pieceStore.ts; contract 1.1.0). */
   materials: ViewMaterial[]
 }
+/** What a day's next step is built from, before the parts every day carries (media, and 1.2.0's extras). */
+export type DayCore = Omit<DayView, 'media' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials'>
 export type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'
 export const PATH: Array<{ key: PathKey; label: string }> = [
   { key: 'research', label: 'Research' }, { key: 'story', label: 'Story' }, { key: 'look', label: 'Look' },
@@ -95,13 +107,15 @@ export interface WeekView {
   north_star: { current: number; target: number } | null
   runs: Partial<Record<JobName, RunInfo>>
   sources: Record<string, boolean>
+  /** The week's change signal (board_signal.revision): bumped by every write the view reads, null when unread. */
+  revision: number | null
 }
 
 export interface ViewInputs {
   week: string
   now: Date
   pieces: Body[]
-  picks: Array<{ doc_id: string; body: Body; updated_by: string; updated_at?: string }>
+  picks: Array<{ doc_id: string; body: Body; updated_by: string; updated_at?: string; revision?: number }>
   queue: Array<{ doc_id: string; body: Body; updated_by: string; updated_at?: string; revision?: number }>
   history: Array<{ collection: string; doc_id: string; updated_at: string; updated_by: string }>
   ideas: Body | null
@@ -114,11 +128,15 @@ export interface ViewInputs {
   formats?: { script: LookOption[]; production: LookOption[] }
   /** His production inspiration: cards with his own words first, and how many recent ones have none yet. */
   inspiration?: { cards: Array<{ id: string; name: string; words: string; saved: string | null }>; unread: number }
+  /** His comments on the week (board_documents, comments) and Growth's ticks (board_ticks). */
+  comments?: Array<{ doc_id: string; body: Body; updated_by: string; updated_at?: string }>
+  ticks?: Array<{ tick_id: string; body: Body; updated_by: string }>
+  /** The week's change signal (board_signal). */
+  revision?: number | null
   /** The sessions and the materials store for the week's pieces and days (board_overlay; _writeBack.ts). */
   overlay?: Overlay | null
 }
 
-const RAW = `https://raw.githubusercontent.com/${ENGINE_REPO}/main`
 const LOCK_SIGNED = /^Signed by Krish\b[^:\n]*:\s*"(.+)"\s*,\s*(\d{4}-\d{2}-\d{2})\b/
 /** Whether a narrative lock is signed: its last line that is not blank is his signature (making.py lock_signature). */
 export function lockSigned(text: string | null | undefined): boolean {
@@ -133,6 +151,8 @@ const short = (week: string, day: PostedDay) => {
   return `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getUTCDay()]} ${d.getUTCDate()}`
 }
 const boardTab = (week: string, tab: string) => `/board/${week}#${tab}`
+/** A day's options on the live board (the day's `options`, contract 1.2.0); the archive page reads it as the day. */
+const optionsTab = (week: string, day: PostedDay) => boardTab(week, `options-${day}`)
 const running = (r?: RunInfo) => Boolean(r && (r.state === 'queued' || r.state === 'running'))
 const GH = (job: JobName) => `GitHub · ${job}.yml`
 
@@ -148,12 +168,12 @@ export function postingStarted(live: Pick<LiveDay, 'steps'>): boolean {
 }
 
 /** One series day (Mon, Wed, Fri): its piece's next step from the record, the lock and the runs. */
-function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): Omit<DayView, 'media' | 'sessions' | 'materials'> {
+function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore {
   const week = i.week, date = dayDate(week, day)
   const base = { day, date, label: short(week, day), kind: 'Essay and two cuts', series: SERIES[day], detail: [] as DayView['detail'] }
   if (!piece) {
     return { ...base, title: 'No piece picked yet', piece_id: null, stop: 0, who: 'you', runs_on: 'A press on the board',
-      next: `Pick ${DAY_NAME[day]}'s idea from the options`, actions: [{ kind: 'open', label: 'Pick the idea', href: boardTab(week, 'ideas') }] }
+      next: `Pick ${DAY_NAME[day]}'s idea from the options`, actions: [{ kind: 'open', label: 'Pick the idea', href: optionsTab(week, day) }] }
   }
   const id = String(piece.id).toLowerCase()
   const title = String(piece.idea || piece.thesis || 'Untitled').slice(0, 140)
@@ -215,7 +235,7 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): Omit
   if (current === 'research') {
     return { ...v, stop: 1, who: 'you', runs_on: 'Perplexity sonar-pro on the engine, or your own research dropped here',
       next: 'Bring the evidence: research it now, or drop your Perplexity file on this day',
-      actions: [{ kind: 'research', label: 'Research it now', piece_id: id }, { kind: 'prompt', label: 'Copy Perplexity prompt', prompt: path.prompts.research }] }
+      actions: [{ kind: 'research', label: 'Research it now', piece_id: id }, { kind: 'prompt', label: 'Copy Perplexity prompt', prompt: path.prompts.research }, materialPress(id)] }
   }
   if (current === 'story') {
     return { ...v, stop: 1, who: 'you', runs_on: conversation,
@@ -262,7 +282,8 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): Omit
       actions: [{ kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Post the ${DAY_NAME[day]} ${date} piece ${id} that Krish approved on the content-engine board (week of ${week}), from its 3 Posts folder.` }] }
   }
   return { ...v, stop: posting ? 4 : 3, who: 'growth', runs_on: 'Growth posts it, after your Approve for publish',
-    next: posting ? 'Posting: some channels are out' : 'Watch both cuts and press Approve for publish', actions: [{ kind: 'open', label: 'Watch and approve', href: boardTab(week, day) }] }
+    next: posting ? 'Posting: some channels are out' : 'Watch both cuts and press Approve for publish',
+    actions: [{ kind: 'open', label: 'Watch and approve', href: boardTab(week, day) }, ...(posting ? [] : [yesPress(i, day)])] }
 }
 
 function formatOf(i: ViewInputs, id: unknown): LookOption | null {
@@ -272,15 +293,19 @@ function formatOf(i: ViewInputs, id: unknown): LookOption | null {
 function nameOf(i: ViewInputs, id: string): string { return formatOf(i, id)?.name || id }
 
 /** One off day (Tue, Thu, Sat): the options in the week's ideas.json and his verdicts on them. */
-function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): Omit<DayView, 'media' | 'sessions' | 'materials'> {
+function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore {
   const week = i.week, date = dayDate(week, day)
   const options = (isObj(i.ideas) && isObj(i.ideas.offdays) && Array.isArray(i.ideas.offdays[day]) ? i.ideas.offdays[day] : []) as Body[]
   const verdict = (o: Body) => i.queue.find(q => q.doc_id === `off-${day}-${String(o.id)}` && q.updated_by === 'Krish')?.body
   const sideVerdict = (b: Body | undefined, side: string) => (isObj(b) && isObj(b[side]) ? String((b[side] as Body).verdict || '') : '')
+  // An option the week's plan records as decided, in his words (ideas.json `decided`, week_board.py offday_stages), is
+  // chosen, whatever an older press on it said: Thu 12 Nov showed "Your Improve has not come back" on a card he had
+  // signed off (Krish, 2026-11-11: everything until Saturday "is now completely ready to publish").
+  const decided = (o: Body) => typeof o.decided === 'string' && o.decided.trim().length > 0
   const said = options.map(o => ({ o, b: verdict(o) }))
-  const chosen = said.filter(x => ['approve', 'improve'].includes(sideVerdict(x.b, 'idea')) || ['improve'].includes(sideVerdict(x.b, 'direction')))
+  const chosen = said.filter(x => decided(x.o) || ['approve', 'improve'].includes(sideVerdict(x.b, 'idea')) || ['improve'].includes(sideVerdict(x.b, 'direction')))
   const base = { day, date, label: short(week, day), series: day === 'sat' ? 'good news' : 'off day', piece_id: piece ? String(piece.id).toLowerCase() : null,
-    detail: said.map(x => ({ h: String(x.o.id), p: [x.o.format, sideVerdict(x.b, 'idea') || 'no press', x.o.revised ? 'revised' : ''].filter(Boolean).join(' · ') })) }
+    detail: said.map(x => ({ h: String(x.o.id), p: [x.o.format, decided(x.o) ? 'decided' : sideVerdict(x.b, 'idea') || 'no press', x.o.revised ? 'revised' : ''].filter(Boolean).join(' · ') })) }
   if (piece) {
     const live = liveDay(piece, date)
     const title = String(piece.idea || 'Off-day piece').slice(0, 140)
@@ -300,9 +325,27 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): Omit<Da
   const lead = chosen[0]
   if (!lead) {
     return { ...base, kind: 'Off day', title: `${options.length} options to judge`, stop: 0, who: 'you', runs_on: 'Your presses on the board',
-      next: 'Approve, improve or reject each option', actions: [{ kind: 'open', label: `Judge the ${options.length} options`, href: boardTab(week, 'ideas') }] }
+      next: 'Approve, improve or reject each option', actions: [{ kind: 'open', label: `Judge the ${options.length} options`, href: optionsTab(week, day) }] }
   }
-  const improving = (x: { o: Body; b?: Body }) => sideVerdict(x.b, 'idea') === 'improve' || sideVerdict(x.b, 'direction') === 'improve'
+  // The weekly good news (plan-week references/offdays.md, "The Saturday good news"): once its format is chosen, the day
+  // waits on Thursday's run for this week's stories, and is never "stuck" on an older press meanwhile.
+  const weekly = chosen.find(x => x.o.weekly)
+  if (weekly) {
+    const gnKind = `Off day: ${String(weekly.o.format || 'good news').split(',')[0]}`
+    if (!storiesFresh(week, weekly.o)) {
+      const gn = i.runs['saturday-goodnews']
+      return { ...base, kind: gnKind, title: String(weekly.o.hook || "This week's good news").slice(0, 140), stop: 1, who: 'engine', ...(gn ? { run: gn } : {}),
+        runs_on: `${GH('saturday-goodnews')}, runs itself on Thursday`,
+        next: running(gn) ? 'Finding this week\'s good news stories now; they come back here' : 'Thursday\'s run finds this week\'s good news stories and brings them back here; start it now if you want them sooner',
+        actions: [{ kind: 'run', label: 'Find the stories now', job: 'saturday-goodnews', input: { week }, runs_on: GH('saturday-goodnews') }] }
+    }
+    const n = Array.isArray(weekly.o.stories) ? weekly.o.stories.length : 0
+    return { ...base, kind: gnKind, title: String(weekly.o.hook || "This week's good news").slice(0, 140), stop: 2, who: 'growth', runs_on: 'Growth makes the post from the stories shown',
+      next: `This week's good news is in: ${n} stories. Growth makes the post, and its mock comes back for your yes`,
+      actions: [{ kind: 'open', label: 'Read the stories', href: optionsTab(week, day) },
+        { kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Make the ${DAY_NAME[day]} ${date} good-news post ${String(weekly.o.id)} from the ${n} stories on the content-engine board (week of ${week}), to docs/CAROUSEL-STANDARD.md.` }] }
+  }
+  const improving = (x: { o: Body; b?: Body }) => !decided(x.o) && (sideVerdict(x.b, 'idea') === 'improve' || sideVerdict(x.b, 'direction') === 'improve')
   const waiting = chosen.filter(x => improving(x) && !x.o.revised)
   const o = lead.o, kind = `Off day: ${String(o.format || 'option').split(',')[0]}`
   const title = waiting.length > 1 ? `${waiting.length} options waiting on your Improve: ${waiting.map(x => String(x.o.id)).join(', ')}` : String(o.hook || o.copy || o.id).slice(0, 140)
@@ -356,12 +399,21 @@ function briefOf(i: ViewInputs, d: DayView): PieceBrief {
 /** The whole week's view from its inputs. Pure: the tests build every state from here. */
 export function buildView(i: ViewInputs): WeekView {
   const byDay = new Map(piecesByDay(i.week, i.pieces).map(p => [p.day, p.piece]))
-  const days = attachOverlay(i.week, VIEW_DAYS.map(d => ({ ...(SERIES_DAYS.includes(d) ? seriesDay(i, d, byDay.get(d)) : offDay(i, d, byDay.get(d))), media: dayMedia(byDay.get(d)) })), i.overlay ?? null)
+  const days = attachOverlay(i.week, VIEW_DAYS.map((d): Omit<DayView, 'sessions' | 'materials'> => {
+    const piece = byDay.get(d), date = dayDate(i.week, d)
+    const shown = piece ? String(piece.id).toLowerCase() : null
+    return { ...(SERIES_DAYS.includes(d) ? seriesDay(i, d, piece) : offDay(i, d, piece)), media: dayMedia(piece),
+      pieces: dayPieces(i.pieces, date, shown),
+      options: SERIES_DAYS.includes(d) ? seriesOptions(i, d, Boolean(piece)) : offdayOptions(i, d),
+      comments: dayComments(i.comments, d), posted: dayPosted(i.ticks, d), yes: dayYes(i.picks, d) }
+  }), i.overlay ?? null)
   for (const d of days) {
     if (d.who === 'done' || d.actions.some(a => a.kind === 'prompt' && /Claude/.test(a.label))) continue
     d.actions.push({ kind: 'prompt', label: 'Copy Claude prompt', prompt: backupPrompt(i.week, d) })
     if (d.piece_id && d.path) (d.actions[d.actions.length - 1] as { prompt: string }).prompt = stepPrompt(briefOf(i, d), d.next)
   }
+  // His thoughts on any day not done, pinned to the step it is on, as the desk's "Add your thoughts" saved them.
+  for (const d of days) if (d.who !== 'done') d.actions.push(thoughtPress(d.day, d.path?.current || 'day'))
   // Every Claude and Growth prompt says how the session reports back to the board, with no key in it (_writeBack.ts).
   withWriteBack(i.week, days)
   const yours: WeekView['yours'] = days.filter(d => d.who === 'you' || d.who === 'stuck').flatMap((d): WeekView['yours'] => (d.reviews?.length
@@ -376,7 +428,7 @@ export function buildView(i: ViewInputs): WeekView {
   for (const r of Object.values(i.runs)) if (r) moved.push({ at: r.updated_at, text: `${r.workflow}: ${r.state}` })
   moved.sort((a, b) => b.at.localeCompare(a.at))
   return { contract_version: VIEW_CONTRACT_VERSION, week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
-    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay) } }
+    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay) }, revision: i.revision ?? null }
 }
 
 /** Every rule the view must keep (PLAN.md): a day not done has a next step, and that step has at least one action. */
@@ -396,32 +448,58 @@ export function viewProblems(v: WeekView): string[] {
 type Fetcher = (url: string, init?: { method?: string; headers?: Record<string, string> }) => Promise<{ status: number; text(): Promise<string> }>
 const fetchText = async (f: Fetcher, url: string) => { try { const r = await f(url); return r.status === 200 ? await r.text() : null } catch { return null } }
 
+/** The commit a branch points at now, by GitHub's API on the board's own token (the one runs and presses already use),
+ *  or undefined when it cannot be asked and null when the branch does not exist. The week's plan files are then read
+ *  at that commit: raw.githubusercontent.com keeps a branch's file for five minutes, so a push (the Thursday good news,
+ *  an Improve's revision) reaches the live board in seconds instead (Ruling, Krish, 2026-11-11: "genuinely live"). */
+export async function branchSha(f: Fetcher, env: Record<string, string | undefined>, branch: string): Promise<string | null | undefined> {
+  const t = String(env.OFFDAY_REVISE_DISPATCH_TOKEN || env.PLACE_TAKES_DISPATCH_TOKEN || '').trim()
+  if (!t) return undefined
+  try {
+    const r = await f(`https://api.github.com/repos/${ENGINE_REPO}/git/ref/heads/${branch}`,
+      { method: 'GET', headers: { Authorization: `Bearer ${t}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } })
+    if (r.status === 404) return null
+    if (r.status !== 200) return undefined
+    const sha = (JSON.parse(await r.text()) as { object?: { sha?: string } }).object?.sha
+    return typeof sha === 'string' && /^[0-9a-f]{40}$/.test(sha) ? sha : undefined
+  } catch { return undefined }
+}
+
 /** Read every input of the week now and build its view. Each source that cannot be read is said in sources, never a failure. */
 export async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env,
   fetcher: Fetcher = fetch as unknown as Fetcher, now = new Date()): Promise<WeekView> {
+  // main and the week's branch, each at the commit it points at now when the token can ask (branchSha); otherwise by name.
+  const [mainSha, weekSha] = await Promise.all([branchSha(fetcher, env, 'main'), branchSha(fetcher, env, `offday-revise/${week}`)])
+  const RAW = `https://raw.githubusercontent.com/${ENGINE_REPO}/${mainSha || 'main'}`
+  const weekIdeas = weekSha === null ? Promise.resolve(null)
+    : fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/${weekSha || `offday-revise/${week}`}/docs/plans/${week}-week/ideas.json`)
   const [pieces, picks, queue, history, ideasText, nowText, runs, ...locks] = await Promise.all([
     db.from('content_ideas').select('id, idea, thesis, scheduled_for, lane_slot, state, buried_at, body, meta, updated_at')
       .gte('scheduled_for', week).lte('scheduled_for', dayDate(week, 'sun')).then(r => (r.error ? [] : r.data || [])),
-    db.from('board_documents').select('doc_id,body,updated_by,updated_at').eq('week', week).eq('collection', 'picks').then(r => (r.error ? [] : r.data || [])),
+    db.from('board_documents').select('doc_id,body,updated_by,updated_at,revision').eq('week', week).eq('collection', 'picks').then(r => (r.error ? [] : r.data || [])),
     db.from('board_documents').select('doc_id,body,updated_by,updated_at,revision').eq('week', week).eq('collection', 'queue').then(r => (r.error ? [] : r.data || [])),
     db.from('board_history').select('collection,doc_id,updated_at,updated_by').eq('week', week).order('updated_at', { ascending: false }).limit(12)
       .then(r => (r.error ? [] : r.data || [])),
     // The week's revise branch first: offday-revise pushes his revised cards there, and GitHub Actions may not open
     // the pull request that brings them to main, so the board reads them where they are, the moment they exist.
-    fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/offday-revise/${week}/docs/plans/${week}-week/ideas.json`)
-      .then(t => t ?? fetchText(fetcher, `${RAW}/docs/plans/${week}-week/ideas.json`)),
+    weekIdeas.then(t => t ?? fetchText(fetcher, `${RAW}/docs/plans/${week}-week/ideas.json`)),
     fetchText(fetcher, `${RAW}/NOW.md`),
     readRuns(env, fetcher as never),
     ...SERIES_DAYS.map(d => fetchText(fetcher, `${RAW}/docs/plans/${week}-week/narrative-lock-${d}.md`)),
   ])
   const since = new Date(now.getTime() - 21 * 864e5).toISOString()
-  const [styleText, notedRows, unreadRows, ...research] = await Promise.all([
+  const [styleText, notedRows, unreadRows, commentRows, tickRows, signal, ...research] = await Promise.all([
     fetchText(fetcher, `${RAW}/config/style-references.json`),
     // His production inspiration with his own words on it, newest first; and the recent videos he has said nothing about.
     db.from('inspiration_items').select('id,name,mime,why_like,drive_created_at').eq('lane', 'production').is('dismissed_at', null)
       .not('why_like', 'is', null).order('drive_created_at', { ascending: false }).limit(6).then(r => (r.error ? [] : r.data || [])),
     db.from('inspiration_items').select('id').eq('lane', 'production').is('dismissed_at', null).is('why_like', null)
       .like('mime', 'video/%').gte('drive_created_at', since).limit(100).then(r => (r.error ? [] : r.data || [])),
+    db.from('board_documents').select('doc_id,body,updated_by,updated_at').eq('week', week).eq('collection', 'comments').order('updated_at', { ascending: false }).limit(200)
+      .then(r => (r.error ? [] : r.data || [])),
+    db.from('board_ticks').select('tick_id,body,updated_by').eq('week', week).then(r => (r.error ? [] : r.data || [])),
+    // The week's change signal (supabase/migrations/20261125090000_board_signal.sql); null until it exists.
+    db.from('board_signal').select('revision').eq('week', week).maybeSingle().then(r => (r.error || !r.data ? null : Number(r.data.revision)), () => null),
     ...SERIES_DAYS.map(d => fetchText(fetcher, `${RAW}/docs/plans/${week}-week/${d}-research.md`).then(t => Boolean(t))),
   ])
   // Who is working on each piece and what is on file for it (the piece materials store); null when it cannot be read.
@@ -445,5 +523,6 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   return buildView({ week, now, pieces: pieces as Body[], picks: picks as ViewInputs['picks'], queue: queue as ViewInputs['queue'],
     history: history as ViewInputs['history'], ideas, runs, north_star: north,
     locks: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, locks[k] as string | null])),
-    research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, inspiration, overlay })
+    research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, inspiration, overlay,
+    comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null })
 }
