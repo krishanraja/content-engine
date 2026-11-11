@@ -4164,6 +4164,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/ladder_stage/index.tsx`
+
+- `function buildSet(p:DeviceProps)`
+- `function Device(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/ladder_stage/schema.ts`
+
+- `const Params`
+
+### `apps/renderer/src/engine/devices/ladder_stage/state.ts`
+
+- `function ladderState(object:EngineObject,events:readonly EngineEvent[],frame:number)`
+
 ### `apps/renderer/src/engine/devices/leaderboard/index.tsx`
 
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
