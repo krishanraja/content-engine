@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import { api, sayError, type Day, type DayPath, type LookOption, type PathKey } from '../api'
 import { ActionBar, Button, Chip, Panel, cx } from './ui'
 import { PromptButton, ThoughtsLink } from './sheets'
+import { LiveLink } from './live'
 import { useUndo } from '../undo'
 
 /** The stepper (21st.dev ReUI Stepper with key-value stage details, Keenthemes, MIT; restyled): a dot per step, a dashed
@@ -42,31 +43,16 @@ const kb = (n: number) => (n > 1024 ? `${Math.round(n / 1024)} KB` : `${n} B`)
 const when = (iso: string | null) => (iso ? new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '')
 
 /** A Markdown file dropped on the day (21st.dev File Dropzone, joyco, restyled): read in the browser, filed on the piece. */
-export function Dropzone({ day, onFiled, role }: { day: Day; onFiled: () => void; role?: 'storyboard' }) {
-  const [over, setOver] = React.useState(false)
-  const [busy, setBusy] = React.useState(false)
-  const input = React.useRef<HTMLInputElement>(null)
-  const file = async (f: File | undefined) => {
-    if (!f || !day.piece_id) return
-    const ok = role === 'storyboard' ? /\.(html?|md|markdown|txt)$/i.test(f.name) : /\.(md|markdown|txt)$/i.test(f.name) || /markdown|text\/plain/.test(f.type)
-    if (!ok) { toast.error(role === 'storyboard' ? 'Drop the storyboard file (.html or .md).' : 'Drop a Markdown file (.md).'); return }
-    if (f.size > 400_000) { toast.error('That file is over 400 KB. Split it, or keep the main findings.'); return }
-    setBusy(true)
-    try { const text = await f.text(); await api.material(day.piece_id, f.name, text, role); toast.success(role === 'storyboard' ? `The storyboard is on file: ${f.name}.` : `${f.name} is on this piece. Every later step reads it.`); onFiled() }
-    catch (e) { toast.error(sayError(e)) }
-    setBusy(false)
-  }
+export function Dropzone({ day, role }: { day: Day; onFiled?: () => void; role?: 'storyboard' }) {
+  // The archive files nothing: a file is dropped on the live board (Ruling, Krish, 2026-11-11).
   return (
-    <div onDragOver={e => { e.preventDefault(); setOver(true) }} onDragLeave={() => setOver(false)}
-      onDrop={e => { e.preventDefault(); setOver(false); void file(e.dataTransfer.files[0]) }}
-      className={cx('flex min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-4 text-center transition-colors',
-        over ? 'border-ok bg-[color-mix(in_srgb,var(--ok)_8%,transparent)]' : 'border-line bg-bg')}>
-      <p className="text-[15px] text-muted">{busy ? 'Filing it on the piece…' : role === 'storyboard' ? 'Drop the session\'s storyboard here' : 'Drop your research Markdown here'}</p>
-      <Button tone="ghost" busy={busy} onClick={() => input.current?.click()}>Choose a file</Button>
-      <input ref={input} type="file" accept={role === 'storyboard' ? '.html,.htm,.md,.markdown,.txt,text/html,text/markdown' : '.md,.markdown,.txt,text/markdown,text/plain'} hidden onChange={e => void file(e.target.files?.[0])} />
+    <div className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-line bg-bg p-4 text-center">
+      <p className="text-[15px] text-muted">{role === 'storyboard' ? 'The storyboard is filed on the live board' : 'Research is filed on the live board'}</p>
+      <LiveLink day={day.day} />
     </div>
   )
 }
+
 
 /** The look picker (21st.dev Comparing Radio Cards, dhxwhy, restyled): real radio inputs; the picked card lifts with a
  *  ring, the recommended one carries its badge, each shows what it is and how proven it is on his channel. */
@@ -147,22 +133,11 @@ type StepProps = { day: Day; reload: () => void; chip: React.ReactNode; thoughts
 
 function ResearchStep({ day, reload, chip, thoughts, claude }: StepProps) {
   const p = day.path!
-  const undo = useUndo()
-
-    const [busy, setBusy] = React.useState(false)
-    // Busy from the press itself, so a second tap inside the Undo window never queues a second paid run.
-    const run = () => {
-      if (busy) return
-      setBusy(true)
-      undo(`Researching ${day.label} with sonar-pro`, async () => {
-        try { const r = await api.research(day.piece_id!); toast.success(`Research filed: ${kb(r.material.bytes)}, ${r.sources} sources.`); reload() }
-        catch (e) { toast.error(sayError(e)) }
-        setBusy(false)
-      }, 5000, () => setBusy(false))
-    }
+  void reload
+    // The archive runs nothing: research is started on the live board (Ruling, Krish, 2026-11-11).
     return (
       <Panel title="Bring the evidence" chip={chip} why="The engine researches it now, or you run Perplexity Deep Research and drop the file here. Every later step reads what lands on the piece."
-        actions={<ActionBar primary={<Button tone="primary" busy={busy} onClick={run}>Research it now</Button>}
+        actions={<ActionBar primary={<LiveLink day={day.day} primary />}
           secondary={<PromptButton label="Copy Perplexity prompt" prompt={p.prompts.research} target="perplexity" />} prompt={claude(p.prompts.story, 'Copy Claude prompt')} />}
         after={thoughts}>
         <div className="flex flex-col gap-2">
@@ -181,25 +156,22 @@ function ResearchStep({ day, reload, chip, thoughts, claude }: StepProps) {
 
 function LookStep({ day, reload, chip, thoughts, claude }: StepProps) {
   const p = day.path!
-  const undo = useUndo()
-
+  void reload
     const rec = p.look.recommended
     const [pick, setPick] = React.useState(p.look.picked?.production || rec.production?.id || p.look.options[0]?.id || '')
     const [more, setMore] = React.useState(false)
-    const [folded, setFolded] = React.useState<string[]>(p.look.picked?.inspiration || [])
-    const [saved, setSaved] = React.useState(Boolean(p.look.picked))
+    const folded = p.look.picked?.inspiration || []
+    const saved = Boolean(p.look.picked)
     const shown = more ? p.look.options : p.look.options.filter(o => o.id === pick || o.id === rec.production?.id)
-    const save = () => undo(`Look saved on ${day.label}`, async () => {
-      try { await api.look(day.piece_id!, pick, rec.experiment?.id || null, folded); setSaved(true); reload() } catch (e) { toast.error(sayError(e)) }
-    })
+    // The archive saves no look: it is picked on the live board (Ruling, Krish, 2026-11-11).
     return (
       <Panel title={rec.production ? `Recommended: ${rec.production.name}${rec.experiment ? `, with "${rec.experiment.name}"` : ''}` : 'Pick the look'} chip={chip}
         why={rec.why || 'Pick the look the piece is made in. The storyboard and script are written to it.'}
-        actions={<ActionBar primary={<Button tone="primary" onClick={save} disabled={!pick}>{saved ? 'Look saved' : 'Use this look'}</Button>}
+        actions={<ActionBar primary={<LiveLink day={day.day} primary />}
           secondary={<Button onClick={() => setMore(m => !m)}>{more ? 'Show fewer' : `See all ${p.look.options.length} looks`}</Button>}
           prompt={claude(p.prompts.mock, 'Copy mock prompt')} />}
         after={thoughts}>
-        <LookCards options={shown} value={pick} onChange={v => { setPick(v); setSaved(false) }} recommended={rec.production?.id || null} />
+        <LookCards options={shown} value={pick} onChange={setPick} recommended={rec.production?.id || null} />
         {(p.inspiration.cards.length > 0 || p.inspiration.unread > 0) && (
           <details className="group mt-4 rounded-2xl border border-line bg-bg">
             <summary className="flex min-h-11 cursor-pointer list-none flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-2 font-semibold">
@@ -213,7 +185,7 @@ function LookStep({ day, reload, chip, thoughts, claude }: StepProps) {
                   <div key={c.id} className="flex flex-col rounded-xl border border-line bg-card p-3">
                     <p className="text-[14px] leading-snug"><span className="font-mono text-[11px] text-muted">Your words: </span>“{c.words.length > 260 ? c.words.slice(0, 257) + '…' : c.words}”</p>
                     <p className="mt-2 truncate font-mono text-[11px] text-muted" title={c.name}>{c.name}</p>
-                    <div className="mt-3"><Button onClick={() => setFolded(f => on ? f.filter(x => x !== c.name) : [...f, c.name])}>{on ? 'Folded in' : 'Fold it into this look'}</Button></div>
+                    <div className="mt-3">{on ? <Chip tone="ok">Folded in</Chip> : null}</div>
                   </div>
                 )
               })}
@@ -231,21 +203,11 @@ function LookStep({ day, reload, chip, thoughts, claude }: StepProps) {
   }
 
 /** A run press: sent after the Undo window, its result said where he pressed it. */
-export function RunButton({ day, reload }: { day: Day; reload: () => void }) {
+export function RunButton({ day }: { day: Day; reload?: () => void }) {
   const a = day.actions.find(x => x.kind === 'run')
-  const undo = useUndo()
-  const [busy, setBusy] = React.useState(false)
   if (!a || a.kind !== 'run') return null
-  const go = () => {
-    if (busy) return
-    setBusy(true)
-    undo(`Starting ${a.runs_on}`, async () => {
-      try { const r = await api.run(a.job, a.input); toast.success(`Started on ${r.workflow}. Its progress shows on the day.`); setTimeout(reload, 4000) }
-      catch (e) { toast.error(sayError(e)) }
-      setBusy(false)
-    }, 5000, () => setBusy(false))
-  }
-  return <Button tone={day.actions[0] === a ? 'primary' : 'secondary'} busy={busy} onClick={go}>{a.label}</Button>
+  // The archive starts nothing: a run is started on the live board (Ruling, Krish, 2026-11-11).
+  return <LiveLink day={day.day} primary={day.actions[0] === a} />
 }
 
 /** A day's own actions, for days and steps without a richer panel: first is the primary, the Claude prompt sits at the right. */
@@ -257,9 +219,9 @@ export function DayActions({ day, reload, only, onReview }: { day: Day; reload: 
     if (!a) return undefined
     if (a.kind === 'prompt') return <PromptButton label={a.label} prompt={a.prompt} target={/Perplexity/.test(a.label) ? 'perplexity' : 'claude'} />
     if (a.kind === 'run') return <RunButton day={day} reload={reload} />
-    if (a.kind === 'open') return <Button tone={primary ? 'primary' : 'secondary'} onClick={() => (/^https?:/.test(a.href) ? window.open(a.href, '_blank', 'noopener') : (location.href = a.href))}>{a.label}</Button>
-    if (a.kind === 'review') return <Button tone={primary ? 'primary' : 'secondary'} onClick={onReview}>{a.label}</Button>
-    return <Button tone={primary ? 'primary' : 'secondary'} onClick={onReview}>{a.label}</Button>
+    if (a.kind === 'open' && /^https?:/.test(a.href)) return <Button tone={primary ? 'primary' : 'secondary'} onClick={() => window.open(a.href, '_blank', 'noopener')}>{a.label}</Button>
+    // Every other press happens on the live board (Ruling, Krish, 2026-11-11: the old board is a read-only archive).
+    return <LiveLink day={day.day} primary={primary} />
   }
   if (only === 'first') return render(first, true) ?? null
   if (only === 'prompt') return render(claudePrompt, false) ?? null

@@ -221,13 +221,24 @@ with tempfile.TemporaryDirectory() as t:
     print(g.decide(m, d('2026-11-17'), 'schedule', False, Path(t), live)[0], g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), live)[0])
     print(g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), lambda monday: True)[0])
     print(g.decide(d('2026-11-09'), d('2026-11-12'), 'schedule', False, Path(t), live)[0])
-    (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [dict(opt, stories=[{}])]}}))
+    (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [dict(opt, stories=[{}] * 5)]}}))
     print(g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), live)[0], g.decide(m, d('2026-11-19'), 'workflow_dispatch', True, Path(t), live)[0])
+    # Stories found for an earlier due date (the 7 Nov run filled the 9 Nov week's on Saturday) are last week's news.
+    (folder / 'ideas.json').write_text(json.dumps({'offdays': {'sat': [dict(opt, stories_due='2026-11-15', stories=[{}] * 5)]}}))
+    print(g.decide(m, d('2026-11-19'), 'schedule', False, Path(t), live)[0], g.thursday_of(m))
+    view = {'days': [{'day': 'sat', 'options': [{'id': 'goodnews', 'stories': [{}] * 5, 'stories_due': '2026-11-19', 'stories_fresh': True}]}]}
+    print(g.view_has_stories(view, '2026-11-16'), g.view_has_stories({'days': [{'options': [{'stories': [{}] * 5, 'stories_due': '2026-11-15'}]}]}, '2026-11-16'))
 `)
     expect(run.stderr).toBe('')
     // Thursday 19 Nov serves the week of 16 Nov; Saturday too; Sunday serves the week that starts the next day.
     // Not due on the Tuesday, due on the Thursday; not again once live; never on a schedule before 19 Nov; force reruns.
-    expect(run.stdout.trim().split(/\r?\n/)).toEqual(['2026-11-16 2026-11-16 2026-11-16', 'False True', 'False', 'False', 'False True'])
+    expect(run.stdout.trim().split(/\r?\n/)).toEqual(['2026-11-16 2026-11-16 2026-11-16', 'False True', 'False', 'False', 'False True', 'True 2026-11-19', 'True False'])
+    // The live board is Control Centre's: the guard asks the view, the stories go on the week's branch the view reads,
+    // the week's change signal is bumped, and nothing rebuilds or publishes the archive (Ruling, Krish, 2026-11-11).
+    expect(read('scripts/saturday_goodnews.py')).toContain("/api/board/{monday}/view")
+    expect(text).toContain('bash scripts/week_branch_keep.sh "$MONDAY"')
+    expect(text).toContain('board_web.py touch "$MONDAY" --source goodnews')
+    expect(text).not.toMatch(/publish-web|week_board\.py/)
   })
 
   it('the guard plans the week eight days after the recording Sunday and reads only a live Ideas tab as built', () => {

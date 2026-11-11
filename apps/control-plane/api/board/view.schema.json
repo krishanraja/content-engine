@@ -2,10 +2,10 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://content.krishraja.com/api/board/view.schema.json",
   "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
-  "x-contract-version": "1.1.0",
+  "x-contract-version": "1.2.0",
   "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
   "type": "object",
-  "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources"],
+  "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources", "revision"],
   "properties": {
     "ok": { "type": "boolean" },
     "contract_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
@@ -37,7 +37,11 @@
       "properties": { "current": { "type": "number" }, "target": { "type": "number" } }
     },
     "runs": { "type": "object" },
-    "sources": { "type": "object" }
+    "sources": { "type": "object" },
+    "revision": {
+      "type": ["integer", "null"],
+      "description": "The week's change signal (board_signal.revision, contract 1.2.0): bumped by every write the view reads, so a reader that hears it change reads the view again. Null when it cannot be read."
+    }
   },
   "$defs": {
     "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
@@ -46,7 +50,29 @@
     "who": { "type": "string", "enum": ["you", "engine", "growth", "stuck", "done"], "x-open": true },
     "day": {
       "type": "object",
-      "required": ["day", "date", "label", "kind", "series", "title", "piece_id", "stop", "who", "next", "runs_on", "actions", "detail", "media", "sessions", "materials"],
+      "required": [
+        "day",
+        "date",
+        "label",
+        "kind",
+        "series",
+        "title",
+        "piece_id",
+        "stop",
+        "who",
+        "next",
+        "runs_on",
+        "actions",
+        "detail",
+        "media",
+        "sessions",
+        "materials",
+        "pieces",
+        "options",
+        "comments",
+        "posted",
+        "yes"
+      ],
       "properties": {
         "day": { "$ref": "#/$defs/dayKey" },
         "date": { "$ref": "#/$defs/date" },
@@ -61,15 +87,40 @@
         "runs_on": { "type": "string" },
         "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
         "run": { "$ref": "#/$defs/run" },
-        "detail": {
-          "type": "array",
-          "items": { "type": "object", "required": ["h", "p"], "properties": { "h": { "type": "string" }, "p": { "type": "string" } } }
-        },
+        "detail": { "type": "array", "items": { "type": "object", "required": ["h", "p"], "properties": { "h": { "type": "string" }, "p": { "type": "string" } } } },
         "reviews": { "type": "array", "items": { "$ref": "#/$defs/review" } },
         "path": { "$ref": "#/$defs/path" },
         "media": { "type": "array", "items": { "$ref": "#/$defs/media" } },
-        "sessions": { "type": "array", "items": { "$ref": "#/$defs/session" }, "x-since": "1.1.0", "description": "Who is working on the day's piece (or the day) and what each said last, working first, from each session's reports (POST /api/content-ideas/sessions)." },
-        "materials": { "type": "array", "items": { "$ref": "#/$defs/material" }, "x-since": "1.1.0", "description": "What is on file for the day's piece and the day in the piece materials store, newest first. No text and no link: one is read at /api/content-ideas/store?op=read&id=<id>." }
+        "sessions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/session" },
+          "x-since": "1.1.0",
+          "description": "Who is working on the day's piece (or the day) and what each said last, working first, from each session's reports (POST /api/content-ideas/sessions)."
+        },
+        "materials": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/material" },
+          "x-since": "1.1.0",
+          "description": "What is on file for the day's piece and the day in the piece materials store, newest first. No text and no link: one is read at /api/content-ideas/store?op=read&id=<id>."
+        },
+        "pieces": {
+          "type": "array",
+          "description": "Every piece on the day (1.2.0), the one the day shows first marked on_day: a second piece or an off-day piece is never hidden.",
+          "items": { "$ref": "#/$defs/piece" }
+        },
+        "options": {
+          "type": "array",
+          "description": "The day's options in full (1.2.0): a series day's Sunday options, an off day's options (with the weekly good news's stories), each with his verdict and the presses that answer it.",
+          "items": { "$ref": "#/$defs/option" }
+        },
+        "comments": { "type": "array", "description": "His comments whose anchor names the day, newest first (1.2.0).", "items": { "$ref": "#/$defs/comment" } },
+        "posted": { "type": "array", "description": "What Growth has posted on the day, its ticks (1.2.0).", "items": { "$ref": "#/$defs/posted" } },
+        "yes": {
+          "type": ["object", "null"],
+          "description": "His yes for the day (one yes anywhere, _yes.ts), or null (1.2.0).",
+          "required": ["approved", "via", "at", "words"],
+          "properties": { "approved": { "type": "boolean" }, "via": { "type": "string" }, "at": { "type": "string" }, "words": { "type": ["string", "null"] } }
+        }
       }
     },
     "session": {
@@ -92,7 +143,11 @@
       "required": ["id", "kind", "title", "size", "added_by", "at", "thumbnail", "role", "version", "where"],
       "properties": {
         "id": { "type": "string" },
-        "kind": { "type": "string", "enum": ["screenshot", "image", "pdf", "corpus", "research", "paste", "link", "file", "output", "storyboard", "note", "video", "audio", "other"], "x-open": true },
+        "kind": {
+          "type": "string",
+          "enum": ["screenshot", "image", "pdf", "corpus", "research", "paste", "link", "file", "output", "storyboard", "note", "video", "audio", "other"],
+          "x-open": true
+        },
         "title": { "type": "string" },
         "size": { "type": "integer" },
         "added_by": { "type": "string" },
@@ -107,21 +162,39 @@
       "type": "object",
       "required": ["kind", "label"],
       "properties": {
-        "kind": { "type": "string", "enum": ["run", "open", "prompt", "review", "research", "look"], "x-open": true },
+        "kind": { "type": "string", "enum": ["run", "open", "prompt", "review", "research", "look", "press"], "x-open": true },
         "label": { "type": "string" },
         "job": { "type": "string" },
         "input": { "type": "object" },
         "runs_on": { "type": "string" },
         "href": { "type": "string" },
         "prompt": { "type": "string" },
-        "piece_id": { "type": "string" }
+        "piece_id": { "type": "string" },
+        "collection": {
+          "type": "string",
+          "enum": ["picks", "queue", "comments"],
+          "description": "press: the board document it saves (PUT /api/board/<Monday>/<collection>/<id>)."
+        },
+        "id": { "type": "string", "description": "press: the document id; {t} is replaced by the press time." },
+        "revision": { "type": "integer", "description": "press: the revision the save is made on (409 when it changed)." },
+        "op": { "type": "string", "enum": ["material"], "description": "press: or the board route it posts to (POST /api/board/<Monday>/<op>)." },
+        "body": { "type": "object", "description": "press: the document as the old board saved it; a value exactly \"{id}\" is the id." },
+        "words": {
+          "type": "object",
+          "required": ["path", "ask", "required"],
+          "properties": { "path": { "type": "string" }, "ask": { "type": "string" }, "required": { "type": "boolean" } },
+          "description": "press: his words, asked before the press and written at path."
+        },
+        "stamp": { "type": "array", "items": { "type": "string" }, "description": "press: dot paths set to the press time." },
+        "done": { "type": "string", "description": "press: what the board says once it is saved." }
       },
       "allOf": [
         { "if": { "properties": { "kind": { "const": "run" } } }, "then": { "required": ["job", "input", "runs_on"] } },
         { "if": { "properties": { "kind": { "const": "open" } } }, "then": { "required": ["href"] } },
         { "if": { "properties": { "kind": { "const": "prompt" } } }, "then": { "required": ["prompt"] } },
         { "if": { "properties": { "kind": { "const": "research" } } }, "then": { "required": ["piece_id"] } },
-        { "if": { "properties": { "kind": { "const": "look" } } }, "then": { "required": ["piece_id"] } }
+        { "if": { "properties": { "kind": { "const": "look" } } }, "then": { "required": ["piece_id"] } },
+        { "if": { "properties": { "kind": { "const": "press" } } }, "then": { "required": ["body", "stamp", "done"] } }
       ]
     },
     "run": {
@@ -182,7 +255,13 @@
           "items": {
             "type": "object",
             "required": ["id", "title", "kind", "bytes", "at"],
-            "properties": { "id": { "type": "string" }, "title": { "type": "string" }, "kind": { "type": "string" }, "bytes": { "type": "number" }, "at": { "type": ["string", "null"] } }
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "kind": { "type": "string" },
+              "bytes": { "type": "number" },
+              "at": { "type": ["string", "null"] }
+            }
           }
         },
         "research_file": { "type": "boolean" },
@@ -250,6 +329,59 @@
         "option": { "type": "object" },
         "prev": { "type": ["object", "null"] }
       }
+    },
+    "piece": {
+      "type": "object",
+      "required": ["id", "title", "series", "state", "published", "on_day"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "series": { "type": "string" },
+        "state": { "type": "string" },
+        "published": { "type": "boolean" },
+        "on_day": { "type": "boolean" }
+      }
+    },
+    "story": {
+      "type": "object",
+      "required": ["headline", "what", "date", "source", "media_kind"],
+      "properties": {
+        "headline": { "type": "string" },
+        "what": { "type": "string" },
+        "date": { "type": ["string", "null"] },
+        "source": { "type": ["string", "null"] },
+        "href": { "type": "string" },
+        "media_kind": { "type": ["string", "null"] },
+        "media": { "type": "string" }
+      }
+    },
+    "option": {
+      "type": "object",
+      "required": ["id", "doc_id", "title", "text", "format", "source", "status", "said", "actions"],
+      "properties": {
+        "id": { "type": "string" },
+        "doc_id": { "type": "string" },
+        "title": { "type": "string" },
+        "text": { "type": "string" },
+        "format": { "type": ["string", "null"] },
+        "source": { "type": ["string", "null"] },
+        "status": { "type": "string", "description": "open, picked, approved, decided, improve, rejected, next_week, revised, or a press use (x-open)." },
+        "said": { "type": ["string", "null"] },
+        "stories": { "type": "array", "items": { "$ref": "#/$defs/story" } },
+        "stories_due": { "type": ["string", "null"] },
+        "stories_fresh": { "type": "boolean" },
+        "actions": { "type": "array", "x-open": true, "items": { "$ref": "#/$defs/action" } }
+      }
+    },
+    "comment": {
+      "type": "object",
+      "required": ["at", "by", "anchor", "text"],
+      "properties": { "at": { "type": "string" }, "by": { "type": "string" }, "anchor": { "type": "string" }, "text": { "type": "string" } }
+    },
+    "posted": {
+      "type": "object",
+      "required": ["step", "label", "at"],
+      "properties": { "step": { "type": "string" }, "label": { "type": "string" }, "at": { "type": ["string", "null"] }, "href": { "type": "string" } }
     }
   }
 }

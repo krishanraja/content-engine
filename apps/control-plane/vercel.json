@@ -215,6 +215,10 @@
       "destination": "/api/board?week=:week&op=carry"
     },
     {
+      "source": "/api/board/:week/touch",
+      "destination": "/api/board?week=:week&op=touch"
+    },
+    {
       "source": "/api/board/:week/imports",
       "destination": "/api/board?week=:week&op=imports"
     },

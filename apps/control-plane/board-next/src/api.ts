@@ -48,7 +48,10 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   if (!r.ok || body.ok === false) throw new BoardError(r.status, body.error || body.reason || `error ${r.status}`)
   return body as T
 }
-const post = <T,>(op: string, payload: unknown) => call<T>(`/api/board/${week}/${op}`, { method: 'POST', body: JSON.stringify(payload) })
+// The archive writes nothing (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only
+// archive). Every press is made on the live board; the server refuses a write from this page too (_handler.ts).
+const readOnly = <T,>(): Promise<T> => Promise.reject(new BoardError(423, 'archive_read_only'))
+const post = <T,>(_op: string, _payload: unknown) => readOnly<T>()
 
 export const api = {
   view: () => call<View>(`/api/board/${week}/view`),
@@ -57,17 +60,14 @@ export const api = {
   research: (piece_id: string) => post<{ material: { title: string; bytes: number }; sources: number }>('research', { piece_id }),
   material: (piece_id: string, title: string, content: string, role?: 'storyboard') => post<{ material: { title: string; bytes: number } }>('material', { piece_id, title, content, ...(role ? { role } : {}) }),
   look: (piece_id: string, production: string, experiment: string | null, inspiration: string[]) => post<{ look: unknown }>('look', { piece_id, production, experiment, inspiration }),
-  put: (collection: string, id: string, body: unknown, revision: number) =>
-    call<{ revision: number }>(`/api/board/${week}/${collection}/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify({ body, revision }) }),
-  /** His long-form words on a step: a board comment pinned to the day and step (desk:<day>:<step>). */
-  feedback: (day: string, step: string, text: string) => {
-    const id = `desk-${day}-${step}-${Date.now().toString(36)}`
-    return call(`/api/board/${week}/comments/${id}`, { method: 'PUT', body: JSON.stringify({ body: { thread_id: id, anchor: `desk:${day}:${step}`, text, at: new Date().toISOString() }, revision: 0 }) })
-  },
+  put: (_collection: string, _id: string, _body: unknown, _revision: number) => readOnly<{ revision: number }>(),
+  /** His long-form words on a step are saved on the live board now. */
+  feedback: (_day: string, _step: string, _text: string) => readOnly<unknown>(),
 }
 
 export function sayError(e: unknown): string {
   if (e instanceof BoardError) {
+    if (e.status === 423) return 'This is the archive: do this on the live board in Control Centre.'
     if (e.status === 401) return 'Unlock the board again, then press it again. Nothing was lost.'
     if (e.status === 409) return 'This changed elsewhere. The page has reloaded it; press again.'
     if (e.message === 'not_configured') return 'The board has no GitHub key to start it. Nothing was sent.'
