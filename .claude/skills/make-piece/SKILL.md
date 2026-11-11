@@ -20,10 +20,9 @@ narrative locks, the research) on main or on the week's branch `offday-revise/<M
 or publish a board page (`week_board.py`, `board_web.py publish-web`): the content.krishraja.com pages are the
 archive, read-only, and refuse every press. A question for Krish is a press the view carries or an item on his one
 list; his approval of scripts is his own words in the session, recorded with `making.py <uuid> read-back CUT
---krish-words` before `teleprompter_send.py`. Claude artifacts stay retired (Krish, 2026-10-19), and
-`scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Steps below that build,
-download or publish a board page, or work in a day's tab in draft, are history kept as written: read them for what
-they record, and do the same work through the records above.
+--krish-words` before `teleprompter_send.py`. Claude artifacts stay retired (Krish, 2026-10-19;
+`scripts/hooks/artifact_gate.py` refuses them). Steps below that build,
+download or publish a board page, or work in a day's tab in draft, are history: do that work through the records above.
 
 Control Center plans and tracks; Claude Code makes. Krish, 2026-10-10: the
 control centre "becomes more of a progress tracker, suggestions compiler, and
@@ -40,6 +39,16 @@ routines. No Claude schedules of any kind in this architecture"). In a
 GitHub Actions run nobody reads the chat: every question is a press on the
 day's tab, and the workflow pushes what you commit. Everything the session learns about the piece comes from the engine
 and the repository, never from the chat that started it.
+
+## Report to the board as you work
+
+A session started from this skill, not from a prompt copied off the board, reports the same way a board prompt says
+("Keep the board current as you work", `writeBack` in `apps/control-plane/api/board/_writeBack.ts`): first
+`get_piece_board` on the Control Center connector, or `python3 scripts/post-pack/board_session.py <piece_id> show`;
+then `report_board_session` (start, progress at each milestone, done, or blocked with what it needs), or
+`board_session.py <piece_id> start|progress|done|blocked "one line" --session <id> --step <step>`; and everything it
+makes or draws on goes on the piece with `add_piece_material`, or `board_session.py <piece_id> add <file or text>`. A
+day with no piece yet is `day:<Monday>/<day>`. Add, never replace.
 
 ## From the signed narrative lock (pieces from 9 November)
 

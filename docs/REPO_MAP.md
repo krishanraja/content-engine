@@ -1402,6 +1402,7 @@ The YouTube title and description for a piece's video, and the title and
 - `interface MaterialInput`
 - `async function addToWorkingSet(db: StoreDb, pieceId: string, material: Material, tries = 6): Promise<{ ok: true; materi…`
 - `async function removeFromWorkingSet(db: StoreDb, pieceId: string, materialId: string, tries = 6): Promise<{ ok: true; m…`
+- `async function patchMeta(db: StoreDb, pieceId: string, patch: (meta: Body) => Body, tries = 6): Promise<{ ok: true; met…`
 - `async function addText(db: StoreDb, body: Body, bearer: boolean, by: string): Promise<Body>`
 - `async function fileType(name: unknown): Promise<{ ext: string; contentType: string }>`
 - `async function uploadUrl(db: StoreDb, body: Body): Promise<Body>`
