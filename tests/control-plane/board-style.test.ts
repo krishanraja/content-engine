@@ -106,8 +106,13 @@ describe('the treatment in the same shape', () => {
     expect(s.treatment).toMatchObject({ picked: 'face-with-proof', picked_by: 'Krish', picked_at: '2026-11-15T10:00:00Z' })
     expect(s.treatment.options[0]).toMatchObject({ recommended: true, line: 'His face with the proof.',
       presses: { yes: { op: 'look', body: { piece_id: PIECE, production: 'face-with-proof', experiment: 'kinetic-movement', inspiration: ['c1'] } } } })
-    // "Not this" on a look, the same shape as motion and captions (mock M5: Yes, Not this, Change it, Add a note on every option).
-    expect(s.treatment.options[0]!.presses.not_this).toMatchObject({ label: 'Not this', op: 'style', body: { piece_id: PIECE, reject: { layer: 'treatment', id: 'face-with-proof' } } })
+    // "Not this" on a look, the same shape as motion and captions (mock M5: Yes, Not this, Change it, Add a note on every
+    // option), on every look but the picked one, which he changes by picking another.
+    expect(s.treatment.options[0]!.presses.not_this).toBeUndefined()
+    const two = [{ id: 'face-with-proof', name: 'Face-led', pitch: 'His face with the proof.', status: 'proven' }, { id: 'data-story', name: 'One number per frame', pitch: 'A number a frame.', status: 'trial' }]
+    const other = dayStyle(inputs({ looks: two, meta: { look: { production: 'face-with-proof' } } })).treatment.options.find(o => o.id === 'data-story')!
+    expect(other.presses.not_this).toMatchObject({ label: 'Not this', op: 'style', body: { piece_id: PIECE, reject: { layer: 'treatment', id: 'data-story' } } })
+    expect(dayStyle(inputs({ looks: two })).treatment.options.every(o => o.presses.not_this)).toBe(true)
   })
 
   it('a look he said Not this to is not recommended, and is said so, until he picks it', () => {
