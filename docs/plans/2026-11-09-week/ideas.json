@@ -721,6 +721,39 @@
      "against": 13
     },
     "closed": "Not chosen: Thursday runs the Git carousel."
+   },
+   {
+    "id": "agentnotsetup",
+    "format": "Meme video, 19 s, 9:16",
+    "source": {
+     "label": "Geek Creative Agency short Krish saved on 3 Nov",
+     "url": "https://youtube.com/shorts/tJwqPQvgQkk"
+    },
+    "copy": "Gave my AI agent the keys to my laptop and zero instructions. Forty minutes later it's still hunting for the start button. 🖱️\n\nSet yours up properly before you let it drive.\n\nVideo: Geek Creative Agency (@geekanimals)",
+    "hook": "POV: your AI agent using your computer without being set up properly by you",
+    "pitch": {
+     "see": "The Geek short unchanged except the caption, his words; our wordmark and Geek's credit under the clip.",
+     "lands": "Anyone who has let an AI agent loose on their computer knows the feeling.",
+     "share": "Set up your AI agent before it touches your computer."
+    },
+    "direction": {
+     "look": "The saved short as it is",
+     "format": "Meme video, 19 s, 9:16",
+     "frames": [
+      {
+       "words": "POV: your AI agent using your computer without being set up properly by you",
+       "picture": "The Geek short"
+      }
+     ],
+     "tone": "Silly",
+     "kit": "Wordmark and Geek credit under the clip"
+    },
+    "drive": "https://drive.google.com/drive/folders/1UU2FiU2HAvUuuEbJ2GM7nqzm76rZg9GJ",
+    "posts_folder": "2026-11-12 Thu off.day - AI agent not set up",
+    "decided": "Posts Thu 12 Nov (Krish, 11 Nov: \"POV: your AI agent using your computer... is for tomorrow\"). Codex schedules it.",
+    "needs": [
+     "Finished: the video and its post description in 3 Posts › 2026-11-12 Thu off.day - AI agent not set up."
+    ]
    }
   ],
   "sat": [
@@ -784,40 +817,70 @@
       "what": "A health van visited 10 rural counties in four US states. Nurses and other staff with two hours of AI-guided training took the heart scans, and experts far away checked them. 98% of scans had every view doctors need.",
       "why": "People who live far from a heart specialist can get a proper heart check close to home. These are early results that other experts have not yet reviewed.",
       "date": "2026-11-02",
-      "source": {"label": "American Heart Association newsroom", "url": "https://newsroom.heart.org/news/non-experts-with-ai-guidance-and-off-site-review-perform-quality-mobile-rural-heart-scans"},
-      "media": {"kind": "photo", "url": "https://iprsoftwaremedia.com/67/files/20269/eec50b9c834cefd555f05b13149e03ca/6ad983fe3d633211624a8985_Ravi%20-%20Mobile%20Health%20Unit/Ravi%20-%20Mobile%20Health%20Unit_452cc052-eaae-4f6d-93f1-4363f72b0584-prv.jpg"}
+      "source": {
+       "label": "American Heart Association newsroom",
+       "url": "https://newsroom.heart.org/news/non-experts-with-ai-guidance-and-off-site-review-perform-quality-mobile-rural-heart-scans"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://iprsoftwaremedia.com/67/files/20269/eec50b9c834cefd555f05b13149e03ca/6ad983fe3d633211624a8985_Ravi%20-%20Mobile%20Health%20Unit/Ravi%20-%20Mobile%20Health%20Unit_452cc052-eaae-4f6d-93f1-4363f72b0584-prv.jpg"
+      }
      },
      {
       "headline": "Wearables and AI warned of blood pressure crises up to 3 days early",
       "what": "Researchers followed 4,190 adults with high blood pressure who wore activity trackers. When doctors changed their medicine within a day of an AI alert, crises fell by about 61%.",
       "why": "A warning days ahead gives a doctor time to act before a trip to the emergency room. These are early results that other experts have not yet reviewed.",
       "date": "2026-11-02",
-      "source": {"label": "American Heart Association newsroom", "url": "https://newsroom.heart.org/news/wearable-devices-+-ai-analysis-may-predict-high-blood-pressure-crisis-up-to-3-days-early"},
-      "media": {"kind": "clip", "url": "https://iprsoftwaremedia.com/67/files/20269/1a624d0e623e57367d5667614dca3667/Dr.%20Delgado-Lelievre%20HBP%20tracking%20and%20AI%20tracking.mp4"}
+      "source": {
+       "label": "American Heart Association newsroom",
+       "url": "https://newsroom.heart.org/news/wearable-devices-+-ai-analysis-may-predict-high-blood-pressure-crisis-up-to-3-days-early"
+      },
+      "media": {
+       "kind": "clip",
+       "url": "https://iprsoftwaremedia.com/67/files/20269/1a624d0e623e57367d5667614dca3667/Dr.%20Delgado-Lelievre%20HBP%20tracking%20and%20AI%20tracking.mp4"
+      }
      },
      {
       "headline": "Doctors preferred AI-written hospital discharge notes 95% of the time",
       "what": "Stony Brook University compared discharge notes written by AI and by doctors for 60 long hospital stays. The doctors who reviewed them preferred the AI version in 95% of cases.",
       "why": "A clearer note helps your own doctor look after you once you go home. Both kinds still had mistakes, so a doctor still checks every note.",
       "date": "2026-11-02",
-      "source": {"label": "Stony Brook University, via Newswise", "url": "https://www.newswise.com/articles/study-shows-ai-may-improve-patient-discharge-summaries"},
-      "media": {"kind": "photo", "url": "https://media.newswise.com/pio/articles/857814/6ae8bfff436b0_DischargeSummaryTable1_857814.jpg"}
+      "source": {
+       "label": "Stony Brook University, via Newswise",
+       "url": "https://www.newswise.com/articles/study-shows-ai-may-improve-patient-discharge-summaries"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://media.newswise.com/pio/articles/857814/6ae8bfff436b0_DischargeSummaryTable1_857814.jpg"
+      }
      },
      {
       "headline": "Google's free AI training for teachers reaches five more places",
       "what": "The free, on-demand course for teachers now covers Spain, Brazil, Mexico, Australia and sub-Saharan Africa. In India, 80,000 teachers took it in September.",
       "why": "Teachers learn to use AI well in class. Teachers in Malaysia say it saves them three to five hours of lesson prep per topic.",
       "date": "2026-11-03",
-      "source": {"label": "Google blog", "url": "https://blog.google/products-and-platforms/products/education/google-ai-educator-series-global-expansion-november-2026/"},
-      "media": {"kind": "photo", "url": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Regional_Blog_Header_Option_1.width-200.format-webp.webp"}
+      "source": {
+       "label": "Google blog",
+       "url": "https://blog.google/products-and-platforms/products/education/google-ai-educator-series-global-expansion-november-2026/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Regional_Blog_Header_Option_1.width-200.format-webp.webp"
+      }
      },
      {
       "headline": "AI picked 92 possible new sweeteners from 50 million chemicals",
       "what": "Scientists at the Hebrew University of Jerusalem used AI to sift about 50 million compounds for ones that could taste sweet. It narrowed them down to 92 to test next.",
       "why": "It could lead to new sugar swaps for people who need to eat less sugar. Each one still has to be tested for taste and safety.",
       "date": "2026-11-05",
-      "source": {"label": "Hebrew University of Jerusalem, via Phys.org", "url": "https://phys.org/news/2026-11-sweeter-future-ai-scientists-sugar.html"},
-      "media": {"kind": "photo", "url": "https://scx1.b-cdn.net/csz/news/800a/2026/a-sweeter-future-ai-he.jpg"}
+      "source": {
+       "label": "Hebrew University of Jerusalem, via Phys.org",
+       "url": "https://phys.org/news/2026-11-sweeter-future-ai-scientists-sugar.html"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://scx1.b-cdn.net/csz/news/800a/2026/a-sweeter-future-ai-he.jpg"
+      }
      }
     ],
     "read_back": {
