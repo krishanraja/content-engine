@@ -213,8 +213,11 @@ class DesignLockTest(unittest.TestCase):
             self.assertIn(f'format {fixture["format"]} has no frozen design lock', crew_lints(fixture))
 
     def cli(self, *args):
+        # `ve card` resolves the home computers' local layout (config/studio.json local_roots, %USERPROFILE%) before
+        # it refuses; a Linux runner has no USERPROFILE, so the test gives it a scratch one (the refusal is the test).
+        home = {'USERPROFILE': os.environ.get('USERPROFILE') or str(self.root / 'home')}
         return subprocess.run([sys.executable, str(ROOT / 'scripts/ve.py'), *args], cwd=ROOT,
-                              env=os.environ | {'PYTHONDONTWRITEBYTECODE': '1'}, capture_output=True, text=True)
+                              env=os.environ | {'PYTHONDONTWRITEBYTECODE': '1'} | home, capture_output=True, text=True)
 
     def test_cli_legacy_lint(self):
         result = self.cli('lint', 'fixtures/ve/my-test-19s/spec.json')

@@ -47,6 +47,10 @@ jobs:
           test -x "$video_ffmpeg_bin/ffmpeg"
           test -x "$video_ffmpeg_bin/ffprobe"
           echo "$video_ffmpeg_bin" >> "$GITHUB_PATH"
+      - name: OCR for the frame checks (tesseract)
+        # The composition, caption and channel-zone checks read words off frames; without OCR they cannot run
+        # (tests/ve_composition_test.py calibrates on fixtures/ve/design-lock; Krish, 2026-11-11: the real check).
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq tesseract-ocr > /dev/null && tesseract --version | head -1
       - run: npm ci
       - name: Quick verify (every guard, the related tests, the publishing-safety tests)
         env:

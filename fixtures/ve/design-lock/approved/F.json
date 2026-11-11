@@ -1,0 +1,38 @@
+{
+  "_about": "Approved calibration frames for config/ve/design-lock.json since its caption zone moved inside every channel's safe area (11 Nov 2026). Rendered by the engine (ve-render.mjs) from Krish's 5 Nov take with that day's props, under the new tall geometry (no wordmark over content). Each frame lists the caption words on screen, the only words its caption zone may hold. tests/ve_composition_test.py calibrates on these; the October H and P frames stay as history.",
+  "source": {
+    "take_sha256": "203d10c946954c5343ccec5b0e3a3626e9b2dfd7ef376485ff1bbbf4f35dddd5",
+    "props": "docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json"
+  },
+  "approved": null,
+  "frames": {
+    "F-f1.jpg": {
+      "frame": 90,
+      "caption_words": [
+        "does"
+      ],
+      "what": "hook, STAGE: the typing bubble on the light graphics ground, the word caption at 66%"
+    },
+    "F-f2.jpg": {
+      "frame": 260,
+      "caption_words": [
+        "really"
+      ],
+      "what": "face, SPLIT: graphics above the seam, his face below, the word caption on the seam"
+    },
+    "F-f3.jpg": {
+      "frame": 420,
+      "caption_words": [
+        "groceries,"
+      ],
+      "what": "proof, SPLIT: logo tiles, one circled, the word caption on the seam"
+    },
+    "F-f4.jpg": {
+      "frame": 900,
+      "caption_words": [
+        "and"
+      ],
+      "what": "b7-prompt, STAGE: a chat card under the top bar, the word caption at 66%"
+    }
+  }
+}

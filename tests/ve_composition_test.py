@@ -38,21 +38,24 @@ class Composition(unittest.TestCase):
         return comp.measure(self.image(), self.lock, ocr_words=words, **kwargs)
 
     def test_fixtures(self):
+        # Approved: engine frames of his 5 Nov take under the tall geometry of 11 Nov 2026 (fixtures/.../approved/F.json
+        # names each frame's caption words). The October H and P mocks were drawn for the old caption zone and stay as
+        # history; the rejected proof frames must still fail.
         base = ROOT / 'fixtures/ve/design-lock'
-        files = [(base / 'approved' / f'{prefix}-f{i}.jpg', True)
-                 for prefix in ('H', 'P') for i in range(1, 6)]
+        approved = json.loads((base / 'approved' / 'F.json').read_text(encoding='utf-8'))['frames']
+        files = [(base / 'approved' / name, True) for name in sorted(approved)]
         files += [(base / 'rejected' / f'tall-{i}.jpg', False) for i in range(1, 5)]
         missing = [str(path.relative_to(ROOT)) for path, _ in files if not path.is_file()]
         self.assertFalse(missing, 'Missing calibration fixtures: ' + ', '.join(missing))
-        for path, approved in files:
+        self.assertEqual(len(approved), 4)
+        for path, ok in files:
             with self.subTest(fixture=path.name):
-                # H-f4 shows the real recording: its text is evidence, exempt by design.
-                exempt = [(0, 440, 1080, 740)] if path.name == 'H-f4.jpg' else []
-                report = comp.measure(path, self.lock, exempt=exempt)
+                words = approved[path.name]['caption_words'] if ok else None
+                report = comp.measure(path, self.lock, caption_words=words)
                 fill = report['checks']['fill_pct']['value']
                 print(f'{path.name}: fill_pct={fill:.2f}')
-                self.assertEqual(report['pass'], approved, report['findings'])
-                if approved:
+                self.assertEqual(report['pass'], ok, report['findings'])
+                if ok:
                     self.assertGreaterEqual(fill, self.lock['thresholds']['fill_min_pct'] + 3)
                 else:
                     self.assertLessEqual(fill, self.lock['thresholds']['fill_min_pct'] - 15)
