@@ -31,6 +31,11 @@ describe('the caption styles (Krish, 2026-11-11)', () => {
     for (const name of CAPTION_THEMES) expect(spec).toContain(`'${name}'`)
   })
 
+  it('describes every style for the publish board, once and in the same order (config/caption-themes.json)', () => {
+    const themes = JSON.parse(readFileSync(new URL('../../../../config/caption-themes.json', import.meta.url), 'utf8')) as Record<string, unknown>
+    expect(Object.keys(themes).filter((k) => !k.startsWith('_'))).toEqual([...CAPTION_THEMES])
+  })
+
   it('keeps every caption box inside every platform safe area on 9:16 and inside title-safe on 16:9', () => {
     for (const b of Object.values(REGIONS['9:16'])) {
       expect(b.top).toBeGreaterThanOrEqual(SAFE_TALL.top); expect(b.top + b.height).toBeLessThanOrEqual(SAFE_TALL.bottom)

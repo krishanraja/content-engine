@@ -25,6 +25,8 @@ const option = (id: string, extra: Body = {}) => ({ id, format: 'Meme video, 9:1
 const verdict = (day: string, id: string, side: Body) => ({ doc_id: `off-${day}-${id}`, updated_by: 'Krish', revision: 2, body: { use: 'offday', pick: `off-${day}-${id}`, day, ...side } })
 const run = (job: JobName, state: 'queued' | 'running' | 'done' | 'failed') => ({ job, workflow: JOBS[job].workflow, state, started_at: '2026-11-09T17:00:00Z', updated_at: '2026-11-09T17:05:00Z', url: `https://github.com/krishanraja/content-engine/actions/runs/1`, event: 'repository_dispatch' })
 const look = (id: string, name: string) => ({ id, name, pitch: `${name}, pitched.`, status: 'trial' })
+const motion = (id: string, fits: string, krish_verdict: string, point_types: string[], formats = ['long_video', 'short_video']) =>
+  ({ id, name: `The ${id} style`, how: `How ${id} moves.`, rules: [`${id} rule one`, `${id} rule two`], point_types, formats, fits, krish_verdict })
 
 /** One week with every part of the view in it: media, a run, a path at each step, a revised off-day option, reviews. */
 function full(): ViewInputs {
@@ -34,7 +36,9 @@ function full(): ViewInputs {
     pieces: [
       piece('5b726fc3-ac63-4607-9293-3257b4ecc75c', '2026-11-16', 'mind_the_gap'),
       piece(MON, '2026-11-16', 'follow_the_money', { video_assets: [cut], workroom: 'done', draft: 'done', scripts: 'done' },
-        { materials: [{ id: 'm1', title: 'Storyboard: Monday', kind: 'paste', content: 'x', at: '2026-11-15T10:00:00Z' }], look: { production: 'face-with-proof', experiment: null, inspiration: [], at: '2026-11-15T10:00:00Z' } }),
+        { materials: [{ id: 'm1', title: 'Storyboard: Monday', kind: 'paste', content: 'x', at: '2026-11-15T10:00:00Z' }], look: { production: 'face-with-proof', experiment: null, inspiration: [], at: '2026-11-15T10:00:00Z' },
+          // 1.4.0: his motion pick and a "Not this" on a caption style.
+          style: { motion: 'ladder', captions: null, rejected: { motion: [], captions: ['beast'] }, by: 'Krish', at: '2026-11-15T11:00:00Z' } }),
       piece(WED, '2026-11-18', 'under_the_hood', {}, { materials: [{ id: 'm2', title: 'WIRED: a source', kind: 'paste', content: 'x', at: '2026-11-14T10:00:00Z' }] }),
       piece(FRI, '2026-11-20', 'mind_the_gap'),
     ],
@@ -53,6 +57,12 @@ function full(): ViewInputs {
     locks: { mon: SIGNED, wed: SIGNED, fri: null },
     research_files: { wed: true },
     formats: { script: [look('fry-explainer', 'The Hannah Fry explainer')], production: [look('face-with-proof', 'Face-led'), look('kinetic-movement', 'Everything moves')] },
+    // 1.4.0: the bank's motion styles, and Friday's creative direction he signed.
+    motion: [motion('ladder', 'often', 'liked', ['number', 'comparison']), motion('data-story', 'often', 'untested', ['number', 'sequence']),
+      motion('shape-morph', 'sometimes', 'untested', ['transformation']), motion('full-visual', 'sometimes', 'untested', ['mechanism'], ['short_video']),
+      motion('pixel-retro', 'rarely', 'not for us', ['mood'])],
+    specs: { fri: { schema_version: 2, piece_id: FRI, signed: { by: 'Krish', said: 'Yes, make it', on: '2026-11-15', script_sha256: 'c'.repeat(64) },
+      style: { motion: { module: 'data-story', reason: 'one number per beat' }, points: ['number'] }, brand: { caption_theme: 'art-directed' } } },
     inspiration: { cards: [{ id: 'c1', name: 'clip.mp4', words: 'I like how it is lit.', saved: '2026-11-01T00:00:00Z' }], unread: 3 },
     // Two sessions on Monday's piece, two screen grabs and a corpus on it, and a picture on Tuesday with no piece yet (1.1.0).
     overlay: {
@@ -117,6 +127,10 @@ describe('the Publish Board view contract', () => {
     expect(v.days.some(d => d.run)).toBe(true)
     expect(v.days.some(d => Array.isArray(d.reviews) && d.reviews.length)).toBe(true)
     expect(v.days.some(d => d.path)).toBe(true)
+    // 1.4.0: every path carries its style choices, each option with its press.
+    const styled = v.days.map(d => (d.path as Body | undefined)?.style as Body | undefined).filter(Boolean) as Body[]
+    expect(styled.length).toBe(3)
+    for (const st of styled) for (const layer of ['motion', 'captions', 'treatment']) expect(((st[layer] as Body).options as Body[]).length).toBeGreaterThan(0)
     // 1.3.0: every approved piece says so, and a state with held lines keeps the schema too.
     expect(v.days.flatMap(d => d.pieces as Body[]).every(p => p.approval && /^Approved by you, /.test(p.approval.label))).toBe(true)
     expect(states().some(st => (served(st).days as Body[]).some(d => (d.held as unknown[]).length > 0))).toBe(true)

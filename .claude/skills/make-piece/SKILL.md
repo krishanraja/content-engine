@@ -476,14 +476,14 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    look in `meta.look`, else the style he picked on the Ideas tab (`config/style-references.json`
    `formats`), with the brand reference and the article's visuals. Name
    the piece's one motion system before any beat (`style.motion`, required
-   from 9 November): propose one from `creative_direction.py motion
+   from 9 November; default his board pick, `meta.style`): propose one from `creative_direction.py motion
    --points <types> --format <long_video|short_video>` with its `reason`;
    he picks from `ve styles` mocks (his last take before he records, his
    new one after), then
    approves the hardest beat moving (`ve proof`) before a whole cut
    renders. Name the caption build with it: `brand.captions` (house or
    word) or a caption style, `brand.caption_theme` (15 in
-   `apps/renderer/src/engine/captions/names.ts`; `art-directed` is the one
+   `config/caption-themes.json`; `art-directed` is the one
    he picked, 11 Nov 2026), proved on his take before it ships. On the
    tall cut nothing he must read sits under a platform's buttons and no
    wordmark sits over the content; the engine's layouts hold that, so a

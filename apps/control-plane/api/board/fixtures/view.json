@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.3.0",
+ "contract_version": "1.4.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -122,6 +122,847 @@
     "storyboard": {
      "title": "Storyboard: Monday",
      "at": "2026-11-15T10:00:00Z"
+    },
+    "style": {
+     "motion": {
+      "options": [
+       {
+        "id": "ladder",
+        "name": "The ladder style",
+        "line": "How ladder moves.",
+        "rules": [
+         "ladder rule one",
+         "ladder rule two"
+        ],
+        "point_types": [
+         "number",
+         "comparison"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": true,
+        "why": "You liked it before. It suits the channel often.",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "motion": "ladder"
+          },
+          "done": "Picked. The ladder style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "motion",
+            "id": "ladder"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "data-story",
+        "name": "The data-story style",
+        "line": "How data-story moves.",
+        "rules": [
+         "data-story rule one",
+         "data-story rule two"
+        ],
+        "point_types": [
+         "number",
+         "sequence"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": true,
+        "why": "It suits the channel often.",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "motion": "data-story"
+          },
+          "done": "Picked. The data-story style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "motion",
+            "id": "data-story"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "shape-morph",
+        "name": "The shape-morph style",
+        "line": "How shape-morph moves.",
+        "rules": [
+         "shape-morph rule one",
+         "shape-morph rule two"
+        ],
+        "point_types": [
+         "transformation"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": true,
+        "why": "It suits the channel sometimes.",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "motion": "shape-morph"
+          },
+          "done": "Picked. The shape-morph style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "motion",
+            "id": "shape-morph"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "full-visual",
+        "name": "The full-visual style",
+        "line": "How full-visual moves.",
+        "rules": [
+         "full-visual rule one",
+         "full-visual rule two"
+        ],
+        "point_types": [
+         "mechanism"
+        ],
+        "formats": [
+         "short_video"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "motion": "full-visual"
+          },
+          "done": "Picked. The full-visual style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "motion",
+            "id": "full-visual"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "pixel-retro",
+        "name": "The pixel-retro style",
+        "line": "How pixel-retro moves.",
+        "rules": [
+         "pixel-retro rule one",
+         "pixel-retro rule two"
+        ],
+        "point_types": [
+         "mood"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": true,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "motion": "pixel-retro"
+          },
+          "done": "Picked. The pixel-retro style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "motion",
+            "id": "pixel-retro"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       }
+      ],
+      "picked": "ladder",
+      "picked_by": "Krish",
+      "picked_at": "2026-11-15T11:00:00Z"
+     },
+     "captions": {
+      "options": [
+       {
+        "id": "pop",
+        "name": "Pop",
+        "line": "Bold capitals land word by word, and the word being said wears the series colour.",
+        "rules": [
+         "Archivo Black capitals, centred in the caption band",
+         "At most two lines, sized to fill the width",
+         "The colour moves on to each word as it lands"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "pop"
+          },
+          "done": "Picked. Pop is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "pop"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "karaoke",
+        "name": "Karaoke",
+        "line": "The whole line is set at once, and each word fills to full cream as he says it.",
+        "rules": [
+         "Archivo ExtraBold, mixed case",
+         "Each word fills left to right across the time it is spoken",
+         "A short series-colour rule draws under the word being said"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "karaoke"
+          },
+          "done": "Picked. Karaoke is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "karaoke"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "kinetic-01",
+        "name": "Justified stack",
+        "line": "One word per row in Anton capitals, every row the same width, so the phrase becomes a block of type.",
+        "rules": [
+         "Each new row wipes up from its baseline",
+         "The block grows upward from the floor of the caption band",
+         "The key word is set in the series colour"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "kinetic-01"
+          },
+          "done": "Picked. Justified stack is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "kinetic-01"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "kinetic-02",
+        "name": "Edge snap",
+        "line": "Condensed capitals snap in from alternating sides of the frame into one left-aligned lockup.",
+        "rules": [
+         "Archivo condensed capitals",
+         "The page's hero word lands last and largest, one full step up",
+         "The hero word is in the series colour"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "kinetic-02"
+          },
+          "done": "Picked. Edge snap is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "kinetic-02"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "hustle",
+        "name": "Marker",
+        "line": "Anton capitals, with a series-colour bar drawn under the key word just after he says it.",
+        "rules": [
+         "Two lines at most",
+         "The key word turns ink on the bar, like a pen through the line"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "hustle"
+          },
+          "done": "Picked. Marker is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "hustle"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "grape",
+        "name": "Ink card",
+        "line": "The line sits on a deep-ink card that opens as the phrase starts, and the word being said is mint.",
+        "rules": [
+         "Archivo Bold, mixed case",
+         "Words arrive in cream as they are said",
+         "The easiest style to read over busy footage, such as a window or a screen behind him"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "grape"
+          },
+          "done": "Picked. Ink card is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "grape"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "beast",
+        "name": "Punch",
+        "line": "Huge outlined Anton capitals punch in, one or two words on screen at a time.",
+        "rules": [
+         "Cream type with a thick ink outline and a hard ink drop",
+         "Each word punches in from 1.3 times its size with a small turn that rights itself",
+         "The key word fills with the series colour",
+         "Loud on purpose, for the fast cuts"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": true,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "beast"
+          },
+          "done": "Picked. Punch is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "beast"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "poppin",
+        "name": "Spring",
+        "line": "Mixed-case words spring up from their baseline with one small overshoot.",
+        "rules": [
+         "Archivo ExtraBold",
+         "The key word springs a size bigger, in mint",
+         "Friendly and quick, for the lighter pieces"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "poppin"
+          },
+          "done": "Picked. Spring is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "poppin"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "aarit",
+        "name": "Editorial",
+        "line": "The setup in a quiet Fraunces italic, then the hero word alone in Anton capitals at three times the size.",
+        "rules": [
+         "A short cream rule draws first",
+         "A page without a hero word stays a single italic line",
+         "Left-aligned, for the reflective pieces"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "aarit"
+          },
+          "done": "Picked. Editorial is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "aarit"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "soft-ai",
+        "name": "Bloom",
+        "line": "Each word comes into focus from a soft blur, and the key word blooms with a brief mint glow.",
+        "rules": [
+         "Archivo Medium, mixed case",
+         "The glow settles to a clean edge within a third of a second",
+         "Sharp and easy to read at rest, for the technology pieces"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "soft-ai"
+          },
+          "done": "Picked. Bloom is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "soft-ai"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "gaming-stream",
+        "name": "Terminal",
+        "line": "Plex Mono on a deep-ink tag, each word typing itself out as he says it.",
+        "rules": [
+         "A mint prompt at the start and a mint block cursor blinking at the end",
+         "About thirty characters a second, from the frame the word is said"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "gaming-stream"
+          },
+          "done": "Picked. Terminal is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "gaming-stream"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "simple-one-word",
+        "name": "One word",
+        "line": "Only the word being said, in Archivo Black capitals fitted to the width of the caption band.",
+        "rules": [
+         "Never larger than 240 px",
+         "The word before it lingers above at a tenth of its weight",
+         "The key word is in the series colour"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "simple-one-word"
+          },
+          "done": "Picked. One word is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "simple-one-word"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "podcast",
+        "name": "Two-line scroll",
+        "line": "The line being said brightens word by word, and the line before it slides up and away.",
+        "rules": [
+         "Archivo Bold, mixed case",
+         "The line before sits above, smaller and dimmed",
+         "Left-aligned and calm, for long conversational takes"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "podcast"
+          },
+          "done": "Picked. Two-line scroll is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "podcast"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "art-directed",
+        "name": "Art-directed phrases",
+        "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+        "rules": [
+         "Cream with a soft shadow, and no box, pill, underline or colour",
+         "Words pop in over 0.12 s as he says them",
+         "The key word at 168 px, the rest at 92 px",
+         "Phrases alternate left and right inside the safe area"
+        ],
+        "recommended": true,
+        "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "art-directed"
+          },
+          "done": "Picked. Art-directed phrases is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "art-directed"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "cinematic",
+        "name": "Cinematic",
+        "line": "Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass.",
+        "rules": [
+         "Support words in Archivo Medium, mixed case",
+         "The hero word is Anton at hero scale, a glass fill the footage shows through",
+         "One light sweep across the hero word, and the layout moves between groups",
+         "A page with no hero word sets its key word one step up instead"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "captions": "cinematic"
+          },
+          "done": "Picked. Cinematic is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "reject": {
+            "layer": "captions",
+            "id": "cinematic"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       }
+      ],
+      "picked": null,
+      "picked_by": null,
+      "picked_at": null
+     },
+     "treatment": {
+      "options": [
+       {
+        "id": "face-with-proof",
+        "name": "Face-led",
+        "line": "Face-led, pitched.",
+        "rules": [],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "look",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "production": "face-with-proof",
+           "experiment": null,
+           "inspiration": []
+          },
+          "done": "Picked. Face-led is the look for this piece."
+         }
+        }
+       },
+       {
+        "id": "kinetic-movement",
+        "name": "Everything moves",
+        "line": "Everything moves, pitched.",
+        "rules": [],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "look",
+          "body": {
+           "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+           "production": "kinetic-movement",
+           "experiment": null,
+           "inspiration": []
+          },
+          "done": "Picked. Everything moves is the look for this piece."
+         }
+        }
+       }
+      ],
+      "picked": "face-with-proof",
+      "picked_by": "Krish",
+      "picked_at": "2026-11-15T10:00:00Z"
+     }
     }
    },
    "stop": 3,
@@ -699,7 +1540,848 @@
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
     },
-    "storyboard": null
+    "storyboard": null,
+    "style": {
+     "motion": {
+      "options": [
+       {
+        "id": "ladder",
+        "name": "The ladder style",
+        "line": "How ladder moves.",
+        "rules": [
+         "ladder rule one",
+         "ladder rule two"
+        ],
+        "point_types": [
+         "number",
+         "comparison"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": true,
+        "why": "You liked it before. It suits the channel often.",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "motion": "ladder"
+          },
+          "done": "Picked. The ladder style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "motion",
+            "id": "ladder"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "data-story",
+        "name": "The data-story style",
+        "line": "How data-story moves.",
+        "rules": [
+         "data-story rule one",
+         "data-story rule two"
+        ],
+        "point_types": [
+         "number",
+         "sequence"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": true,
+        "why": "It suits the channel often.",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "motion": "data-story"
+          },
+          "done": "Picked. The data-story style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "motion",
+            "id": "data-story"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "shape-morph",
+        "name": "The shape-morph style",
+        "line": "How shape-morph moves.",
+        "rules": [
+         "shape-morph rule one",
+         "shape-morph rule two"
+        ],
+        "point_types": [
+         "transformation"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": true,
+        "why": "It suits the channel sometimes.",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "motion": "shape-morph"
+          },
+          "done": "Picked. The shape-morph style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "motion",
+            "id": "shape-morph"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "full-visual",
+        "name": "The full-visual style",
+        "line": "How full-visual moves.",
+        "rules": [
+         "full-visual rule one",
+         "full-visual rule two"
+        ],
+        "point_types": [
+         "mechanism"
+        ],
+        "formats": [
+         "short_video"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "motion": "full-visual"
+          },
+          "done": "Picked. The full-visual style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "motion",
+            "id": "full-visual"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "pixel-retro",
+        "name": "The pixel-retro style",
+        "line": "How pixel-retro moves.",
+        "rules": [
+         "pixel-retro rule one",
+         "pixel-retro rule two"
+        ],
+        "point_types": [
+         "mood"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": true,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "motion": "pixel-retro"
+          },
+          "done": "Picked. The pixel-retro style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "motion",
+            "id": "pixel-retro"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       }
+      ],
+      "picked": null,
+      "picked_by": null,
+      "picked_at": null
+     },
+     "captions": {
+      "options": [
+       {
+        "id": "pop",
+        "name": "Pop",
+        "line": "Bold capitals land word by word, and the word being said wears the series colour.",
+        "rules": [
+         "Archivo Black capitals, centred in the caption band",
+         "At most two lines, sized to fill the width",
+         "The colour moves on to each word as it lands"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "pop"
+          },
+          "done": "Picked. Pop is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "pop"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "karaoke",
+        "name": "Karaoke",
+        "line": "The whole line is set at once, and each word fills to full cream as he says it.",
+        "rules": [
+         "Archivo ExtraBold, mixed case",
+         "Each word fills left to right across the time it is spoken",
+         "A short series-colour rule draws under the word being said"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "karaoke"
+          },
+          "done": "Picked. Karaoke is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "karaoke"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "kinetic-01",
+        "name": "Justified stack",
+        "line": "One word per row in Anton capitals, every row the same width, so the phrase becomes a block of type.",
+        "rules": [
+         "Each new row wipes up from its baseline",
+         "The block grows upward from the floor of the caption band",
+         "The key word is set in the series colour"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "kinetic-01"
+          },
+          "done": "Picked. Justified stack is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "kinetic-01"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "kinetic-02",
+        "name": "Edge snap",
+        "line": "Condensed capitals snap in from alternating sides of the frame into one left-aligned lockup.",
+        "rules": [
+         "Archivo condensed capitals",
+         "The page's hero word lands last and largest, one full step up",
+         "The hero word is in the series colour"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "kinetic-02"
+          },
+          "done": "Picked. Edge snap is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "kinetic-02"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "hustle",
+        "name": "Marker",
+        "line": "Anton capitals, with a series-colour bar drawn under the key word just after he says it.",
+        "rules": [
+         "Two lines at most",
+         "The key word turns ink on the bar, like a pen through the line"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "hustle"
+          },
+          "done": "Picked. Marker is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "hustle"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "grape",
+        "name": "Ink card",
+        "line": "The line sits on a deep-ink card that opens as the phrase starts, and the word being said is mint.",
+        "rules": [
+         "Archivo Bold, mixed case",
+         "Words arrive in cream as they are said",
+         "The easiest style to read over busy footage, such as a window or a screen behind him"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "grape"
+          },
+          "done": "Picked. Ink card is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "grape"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "beast",
+        "name": "Punch",
+        "line": "Huge outlined Anton capitals punch in, one or two words on screen at a time.",
+        "rules": [
+         "Cream type with a thick ink outline and a hard ink drop",
+         "Each word punches in from 1.3 times its size with a small turn that rights itself",
+         "The key word fills with the series colour",
+         "Loud on purpose, for the fast cuts"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "beast"
+          },
+          "done": "Picked. Punch is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "beast"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "poppin",
+        "name": "Spring",
+        "line": "Mixed-case words spring up from their baseline with one small overshoot.",
+        "rules": [
+         "Archivo ExtraBold",
+         "The key word springs a size bigger, in mint",
+         "Friendly and quick, for the lighter pieces"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "poppin"
+          },
+          "done": "Picked. Spring is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "poppin"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "aarit",
+        "name": "Editorial",
+        "line": "The setup in a quiet Fraunces italic, then the hero word alone in Anton capitals at three times the size.",
+        "rules": [
+         "A short cream rule draws first",
+         "A page without a hero word stays a single italic line",
+         "Left-aligned, for the reflective pieces"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "aarit"
+          },
+          "done": "Picked. Editorial is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "aarit"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "soft-ai",
+        "name": "Bloom",
+        "line": "Each word comes into focus from a soft blur, and the key word blooms with a brief mint glow.",
+        "rules": [
+         "Archivo Medium, mixed case",
+         "The glow settles to a clean edge within a third of a second",
+         "Sharp and easy to read at rest, for the technology pieces"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "soft-ai"
+          },
+          "done": "Picked. Bloom is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "soft-ai"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "gaming-stream",
+        "name": "Terminal",
+        "line": "Plex Mono on a deep-ink tag, each word typing itself out as he says it.",
+        "rules": [
+         "A mint prompt at the start and a mint block cursor blinking at the end",
+         "About thirty characters a second, from the frame the word is said"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "gaming-stream"
+          },
+          "done": "Picked. Terminal is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "gaming-stream"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "simple-one-word",
+        "name": "One word",
+        "line": "Only the word being said, in Archivo Black capitals fitted to the width of the caption band.",
+        "rules": [
+         "Never larger than 240 px",
+         "The word before it lingers above at a tenth of its weight",
+         "The key word is in the series colour"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "simple-one-word"
+          },
+          "done": "Picked. One word is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "simple-one-word"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "podcast",
+        "name": "Two-line scroll",
+        "line": "The line being said brightens word by word, and the line before it slides up and away.",
+        "rules": [
+         "Archivo Bold, mixed case",
+         "The line before sits above, smaller and dimmed",
+         "Left-aligned and calm, for long conversational takes"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "podcast"
+          },
+          "done": "Picked. Two-line scroll is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "podcast"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "art-directed",
+        "name": "Art-directed phrases",
+        "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+        "rules": [
+         "Cream with a soft shadow, and no box, pill, underline or colour",
+         "Words pop in over 0.12 s as he says them",
+         "The key word at 168 px, the rest at 92 px",
+         "Phrases alternate left and right inside the safe area"
+        ],
+        "recommended": true,
+        "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "art-directed"
+          },
+          "done": "Picked. Art-directed phrases is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "art-directed"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "cinematic",
+        "name": "Cinematic",
+        "line": "Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass.",
+        "rules": [
+         "Support words in Archivo Medium, mixed case",
+         "The hero word is Anton at hero scale, a glass fill the footage shows through",
+         "One light sweep across the hero word, and the layout moves between groups",
+         "A page with no hero word sets its key word one step up instead"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "captions": "cinematic"
+          },
+          "done": "Picked. Cinematic is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "reject": {
+            "layer": "captions",
+            "id": "cinematic"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       }
+      ],
+      "picked": null,
+      "picked_by": null,
+      "picked_at": null
+     },
+     "treatment": {
+      "options": [
+       {
+        "id": "face-with-proof",
+        "name": "Face-led",
+        "line": "Face-led, pitched.",
+        "rules": [],
+        "recommended": true,
+        "why": "The Sunday room recommends it for this idea.",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "look",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "production": "face-with-proof",
+           "experiment": null,
+           "inspiration": []
+          },
+          "done": "Picked. Face-led is the look for this piece."
+         }
+        }
+       },
+       {
+        "id": "kinetic-movement",
+        "name": "Everything moves",
+        "line": "Everything moves, pitched.",
+        "rules": [],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "look",
+          "body": {
+           "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+           "production": "kinetic-movement",
+           "experiment": null,
+           "inspiration": []
+          },
+          "done": "Picked. Everything moves is the look for this piece."
+         }
+        }
+       }
+      ],
+      "picked": null,
+      "picked_by": null,
+      "picked_at": null
+     }
+    }
    },
    "stop": 2,
    "who": "you",
@@ -1135,7 +2817,848 @@
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
     },
-    "storyboard": null
+    "storyboard": null,
+    "style": {
+     "motion": {
+      "options": [
+       {
+        "id": "ladder",
+        "name": "The ladder style",
+        "line": "How ladder moves.",
+        "rules": [
+         "ladder rule one",
+         "ladder rule two"
+        ],
+        "point_types": [
+         "number",
+         "comparison"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": true,
+        "why": "You liked it before. It draws the number points this piece makes. It suits the channel often.",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "motion": "ladder"
+          },
+          "done": "Picked. The ladder style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "motion",
+            "id": "ladder"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "data-story",
+        "name": "The data-story style",
+        "line": "How data-story moves.",
+        "rules": [
+         "data-story rule one",
+         "data-story rule two"
+        ],
+        "point_types": [
+         "number",
+         "sequence"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": true,
+        "why": "It draws the number points this piece makes. It suits the channel often.",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "motion": "data-story"
+          },
+          "done": "Picked. The data-story style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "motion",
+            "id": "data-story"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "shape-morph",
+        "name": "The shape-morph style",
+        "line": "How shape-morph moves.",
+        "rules": [
+         "shape-morph rule one",
+         "shape-morph rule two"
+        ],
+        "point_types": [
+         "transformation"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "motion": "shape-morph"
+          },
+          "done": "Picked. The shape-morph style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "motion",
+            "id": "shape-morph"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "full-visual",
+        "name": "The full-visual style",
+        "line": "How full-visual moves.",
+        "rules": [
+         "full-visual rule one",
+         "full-visual rule two"
+        ],
+        "point_types": [
+         "mechanism"
+        ],
+        "formats": [
+         "short_video"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "motion": "full-visual"
+          },
+          "done": "Picked. The full-visual style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "motion",
+            "id": "full-visual"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "pixel-retro",
+        "name": "The pixel-retro style",
+        "line": "How pixel-retro moves.",
+        "rules": [
+         "pixel-retro rule one",
+         "pixel-retro rule two"
+        ],
+        "point_types": [
+         "mood"
+        ],
+        "formats": [
+         "long_video",
+         "short_video"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": true,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "motion": "pixel-retro"
+          },
+          "done": "Picked. The pixel-retro style is the motion style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "motion",
+            "id": "pixel-retro"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       }
+      ],
+      "picked": "data-story",
+      "picked_by": "spec",
+      "picked_at": "2026-11-15"
+     },
+     "captions": {
+      "options": [
+       {
+        "id": "pop",
+        "name": "Pop",
+        "line": "Bold capitals land word by word, and the word being said wears the series colour.",
+        "rules": [
+         "Archivo Black capitals, centred in the caption band",
+         "At most two lines, sized to fill the width",
+         "The colour moves on to each word as it lands"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "pop"
+          },
+          "done": "Picked. Pop is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "pop"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "karaoke",
+        "name": "Karaoke",
+        "line": "The whole line is set at once, and each word fills to full cream as he says it.",
+        "rules": [
+         "Archivo ExtraBold, mixed case",
+         "Each word fills left to right across the time it is spoken",
+         "A short series-colour rule draws under the word being said"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "karaoke"
+          },
+          "done": "Picked. Karaoke is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "karaoke"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "kinetic-01",
+        "name": "Justified stack",
+        "line": "One word per row in Anton capitals, every row the same width, so the phrase becomes a block of type.",
+        "rules": [
+         "Each new row wipes up from its baseline",
+         "The block grows upward from the floor of the caption band",
+         "The key word is set in the series colour"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "kinetic-01"
+          },
+          "done": "Picked. Justified stack is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "kinetic-01"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "kinetic-02",
+        "name": "Edge snap",
+        "line": "Condensed capitals snap in from alternating sides of the frame into one left-aligned lockup.",
+        "rules": [
+         "Archivo condensed capitals",
+         "The page's hero word lands last and largest, one full step up",
+         "The hero word is in the series colour"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "kinetic-02"
+          },
+          "done": "Picked. Edge snap is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "kinetic-02"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "hustle",
+        "name": "Marker",
+        "line": "Anton capitals, with a series-colour bar drawn under the key word just after he says it.",
+        "rules": [
+         "Two lines at most",
+         "The key word turns ink on the bar, like a pen through the line"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "hustle"
+          },
+          "done": "Picked. Marker is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "hustle"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "grape",
+        "name": "Ink card",
+        "line": "The line sits on a deep-ink card that opens as the phrase starts, and the word being said is mint.",
+        "rules": [
+         "Archivo Bold, mixed case",
+         "Words arrive in cream as they are said",
+         "The easiest style to read over busy footage, such as a window or a screen behind him"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "grape"
+          },
+          "done": "Picked. Ink card is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "grape"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "beast",
+        "name": "Punch",
+        "line": "Huge outlined Anton capitals punch in, one or two words on screen at a time.",
+        "rules": [
+         "Cream type with a thick ink outline and a hard ink drop",
+         "Each word punches in from 1.3 times its size with a small turn that rights itself",
+         "The key word fills with the series colour",
+         "Loud on purpose, for the fast cuts"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "beast"
+          },
+          "done": "Picked. Punch is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "beast"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "poppin",
+        "name": "Spring",
+        "line": "Mixed-case words spring up from their baseline with one small overshoot.",
+        "rules": [
+         "Archivo ExtraBold",
+         "The key word springs a size bigger, in mint",
+         "Friendly and quick, for the lighter pieces"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "poppin"
+          },
+          "done": "Picked. Spring is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "poppin"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "aarit",
+        "name": "Editorial",
+        "line": "The setup in a quiet Fraunces italic, then the hero word alone in Anton capitals at three times the size.",
+        "rules": [
+         "A short cream rule draws first",
+         "A page without a hero word stays a single italic line",
+         "Left-aligned, for the reflective pieces"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "aarit"
+          },
+          "done": "Picked. Editorial is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "aarit"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "soft-ai",
+        "name": "Bloom",
+        "line": "Each word comes into focus from a soft blur, and the key word blooms with a brief mint glow.",
+        "rules": [
+         "Archivo Medium, mixed case",
+         "The glow settles to a clean edge within a third of a second",
+         "Sharp and easy to read at rest, for the technology pieces"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "soft-ai"
+          },
+          "done": "Picked. Bloom is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "soft-ai"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "gaming-stream",
+        "name": "Terminal",
+        "line": "Plex Mono on a deep-ink tag, each word typing itself out as he says it.",
+        "rules": [
+         "A mint prompt at the start and a mint block cursor blinking at the end",
+         "About thirty characters a second, from the frame the word is said"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "gaming-stream"
+          },
+          "done": "Picked. Terminal is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "gaming-stream"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "simple-one-word",
+        "name": "One word",
+        "line": "Only the word being said, in Archivo Black capitals fitted to the width of the caption band.",
+        "rules": [
+         "Never larger than 240 px",
+         "The word before it lingers above at a tenth of its weight",
+         "The key word is in the series colour"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "simple-one-word"
+          },
+          "done": "Picked. One word is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "simple-one-word"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "podcast",
+        "name": "Two-line scroll",
+        "line": "The line being said brightens word by word, and the line before it slides up and away.",
+        "rules": [
+         "Archivo Bold, mixed case",
+         "The line before sits above, smaller and dimmed",
+         "Left-aligned and calm, for long conversational takes"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "podcast"
+          },
+          "done": "Picked. Two-line scroll is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "podcast"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "art-directed",
+        "name": "Art-directed phrases",
+        "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
+        "rules": [
+         "Cream with a soft shadow, and no box, pill, underline or colour",
+         "Words pop in over 0.12 s as he says them",
+         "The key word at 168 px, the rest at 92 px",
+         "Phrases alternate left and right inside the safe area"
+        ],
+        "recommended": true,
+        "why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\".",
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "art-directed"
+          },
+          "done": "Picked. Art-directed phrases is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "art-directed"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "cinematic",
+        "name": "Cinematic",
+        "line": "Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass.",
+        "rules": [
+         "Support words in Archivo Medium, mixed case",
+         "The hero word is Anton at hero scale, a glass fill the footage shows through",
+         "One light sweep across the hero word, and the layout moves between groups",
+         "A page with no hero word sets its key word one step up instead"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "captions": "cinematic"
+          },
+          "done": "Picked. Cinematic is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "reject": {
+            "layer": "captions",
+            "id": "cinematic"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       }
+      ],
+      "picked": "art-directed",
+      "picked_by": "spec",
+      "picked_at": "2026-11-15"
+     },
+     "treatment": {
+      "options": [
+       {
+        "id": "face-with-proof",
+        "name": "Face-led",
+        "line": "Face-led, pitched.",
+        "rules": [],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "look",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "production": "face-with-proof",
+           "experiment": null,
+           "inspiration": []
+          },
+          "done": "Picked. Face-led is the look for this piece."
+         }
+        }
+       },
+       {
+        "id": "kinetic-movement",
+        "name": "Everything moves",
+        "line": "Everything moves, pitched.",
+        "rules": [],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "look",
+          "body": {
+           "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+           "production": "kinetic-movement",
+           "experiment": null,
+           "inspiration": []
+          },
+          "done": "Picked. Everything moves is the look for this piece."
+         }
+        }
+       }
+      ],
+      "picked": null,
+      "picked_by": null,
+      "picked_at": null
+     }
+    }
    },
    "stop": 1,
    "who": "you",
