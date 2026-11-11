@@ -32,3 +32,23 @@ The caption style ("art-directed phrases"), as built in `build_proof.py`:
   edge at x 870, y 1095 to 1325).
 - A huge faint echo of the key word (Anton 430 px, 7%) sits behind the scene, cropped by the frame.
 - Mint stays for the answer only; the captions themselves are never coloured.
+
+## The whole cut, 11 Nov 2026
+
+Krish approved proof v2: "looks good". `build_cut.py` writes the whole 42.1 s page on the same look (the proof's
+13.8 s to 27.6 s unchanged); `shoot2.js` renders it (`META=cut.json OUT=cutframes node shoot2.js`).
+
+- Opening, never an empty frame: the old way is already on the thread ("Can you book dinner?" / "Done"); on
+  "messaging you first" it flips and the AI speaks first. "Wake up before you do": a big clock counts 07:00 back to
+  06:12. "Muse ... WhatsApp": WhatsApp's real mark (Brandfetch, monochrome for the dark ground) lands at the size of a
+  part, then settles into the header beside MUSE. "Every assistant coming next": the thread copies itself four times;
+  the copies fold back into the one thread.
+- Close: on "until you say yes" every slot turns to a mint YES? and the stops glow once; your one question arrives;
+  the AI types the two rules on "writes the rules with you"; PROMPT IN THE COMMENTS lands; the clock reads 22:00 on
+  "tonight"; a calm hold to the end.
+- Bed: Goodie Bags (off-day, `config/music-library.json`), shaped with `scripts/bed_shape.py` target points to the
+  approved levels; `bed_shape.qc` on the bed stem: pass (median -31.0 LUFS, spread 1.4 LU, open +10.9 LU, end
+  +6.3 LU). Mix: -14.9 LUFS integrated, true peak -1.0 dB.
+- Open on the ledger: the four off-day tracks are still "proposed" there (no sha256, never measured) although the
+  9 Nov session archive says his off-day approvals stand; music.py pick therefore falls back to the series bed. Not
+  filed to 3 Posts until his approval of the cut and a bed-shape receipt for the exact file.
