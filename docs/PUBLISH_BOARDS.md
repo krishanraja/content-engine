@@ -191,7 +191,7 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   lock was signed, else the day of his pick; Flesh out: the day the look was picked) or, for Ready to post, the day it
   goes out; null when the record does not say, never a guessed day. A later step done means every step before it is.
   The working steps (`steps`, `current`) stay as they were, for the next step, the prompts and the sessions' step
-  names (`stagesOf` in `_view.ts`). A treatment option also carries "Not this" from 1.5.0 ("The style choices").
+  names (`stagesOf` in `_view.ts`). A treatment option also carries "Not this" from 1.5.0, all but the picked one ("The style choices").
 
 ## The style choices (contract 1.4.0)
 
@@ -213,7 +213,8 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
 - **Treatment** is the looks (`path.look.options`) in the same shape, so the three draw alike; the Sunday room's
   recommendation is marked, and its Yes is the look op with his experiment and inspiration kept. Its "Not this" is the
   style op with `reject: { layer: 'treatment', id }` (mock M5: Yes and Not this on every option): kept in
-  `meta.style.rejected.treatment`, it takes the look off the recommended until he picks it.
+  `meta.style.rejected.treatment`, it takes the look off the recommended until he picks it. The picked look carries
+  no "Not this" (the look op holds the pick, so a no would leave it picked); he picks another instead.
 - **Picked** shows his press on the board first (`meta.style`), then, for motion, his Pick a style gate on the making
   record (`gates.style`), then a creative direction he signed (`signed.by` Krish in the day's
   `docs/plans/<date>-<dayname>/ve/spec.json` or `creative-direction.json`, `picked_by: spec`). A spec he has not signed
