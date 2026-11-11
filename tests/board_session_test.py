@@ -12,6 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
 import board_session as bs  # noqa: E402
+sys.path.insert(0, str(ROOT / 'scripts'))
+import board_store_backfill as backfill  # noqa: E402
 
 PIECE = '8287846b-6618-4a19-9fb8-23ad4eca2718'
 
@@ -93,6 +95,16 @@ class BoardSessionTest(unittest.TestCase):
         self.assertEqual((calls[0][1], calls[0][2]['url']), ('/api/content-ideas/store?op=link', 'https://example.org/a'))
         _, _, calls, _ = run([PIECE, 'add', 'A note the session wrote.'], [(201, {'ok': True, 'material': {}})])
         self.assertEqual((calls[0][1], calls[0][2]['content']), ('/api/content-ideas/store?op=text', 'A note the session wrote.'))
+
+
+    def test_backfill_files_a_plan_file_on_its_day(self):
+        self.assertEqual(backfill.day_of('narrative-lock-fri.md'), 'fri')
+        self.assertEqual(backfill.day_of('mon-research.md'), 'mon')
+        self.assertEqual(backfill.day_of('wednesday-notes.md'), 'wed')
+        self.assertIsNone(backfill.day_of('interview.md'))
+        self.assertEqual(backfill.kind_of('wed-research.md'), 'research')
+        self.assertEqual(backfill.kind_of('fri-storyboard.md'), 'storyboard')
+        self.assertEqual(backfill.kind_of('narrative-lock-mon.md'), 'note')
 
 
 if __name__ == '__main__':
