@@ -2,7 +2,7 @@
 import React from 'react'
 import { ThreeCanvas } from '@remotion/three'
 import { Composition, registerRoot } from 'remotion'
-import { progress } from '../../clock'
+import { progress } from '../../clock.ts'
 
 export function ThreeSmoke({ frame, tokens }) {
   const turn = progress(frame, 30) * Math.PI / 2

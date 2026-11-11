@@ -22,11 +22,11 @@ test('ThreeCanvas pixels change with supplied time and repeat exactly at the sam
       await renderStill({
         serveUrl,
         composition: await selectComposition({ serveUrl, id: 'ThreeSmoke', inputProps: { frame, tokens },
-          chromiumOptions: { gl: 'angle' },
+          chromiumOptions: { gl: 'swangle' },
           ...(process.env.REMOTION_BROWSER ? { browserExecutable: process.env.REMOTION_BROWSER } : {}),
         }),
         inputProps: { frame, tokens }, frame, output, imageFormat: 'png',
-        chromiumOptions: { gl: 'angle' },
+        chromiumOptions: { gl: 'swangle' },
         ...(process.env.REMOTION_BROWSER ? { browserExecutable: process.env.REMOTION_BROWSER } : {}),
       })
       images.push(await readFile(output))
