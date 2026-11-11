@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import type { CutAnswer, CutPresses } from './_cuts.js'
 
 // The rendered media on a week's board (Control Centre's Publish Board, Ruling, Krish, 2026-11-10: the Control Centre
 // board is the real one, and "mock ups and rendered assets are going to actually make up a big part of the screen as
@@ -12,7 +13,12 @@ const isObj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && 
 const SHA = /^[a-f0-9]{64}$/
 
 export type MediaKind = 'cut' | 'thumbnail'
-export interface MediaItem { id: string; kind: MediaKind; cut: string; title: string; at: string | null; seconds?: number; poster?: string }
+export interface MediaItem {
+  id: string; kind: MediaKind; cut: string; title: string; at: string | null; seconds?: number; poster?: string
+  /** Contract 1.6.0, a cut only (_cuts.ts): his Yes and Not this on this file, and his latest answer on it, or null. */
+  presses?: CutPresses
+  verdict?: CutAnswer | null
+}
 /** What only the server keeps: where the file is in the library. */
 interface MediaFile { id: string; path: string; sha256: string | null }
 
@@ -51,6 +57,14 @@ function filesOf(piece: Body): Array<MediaItem & { file: MediaFile }> {
 /** The media list a day of the view carries: no path, no link. */
 export function dayMedia(piece: Body | undefined): MediaItem[] {
   return piece ? filesOf(piece).map(({ file: _file, ...item }) => item) : []
+}
+
+/** One cut on a piece's own making record by its media id, with where it is in the library, or null (a thumbnail, or
+ *  an id that is not on this piece). */
+export function cutOn(piece: Body, id: string): { id: string; cut: string; title: string; path: string; sha256: string | null } | null {
+  if (!SHA.test(id)) return null
+  const m = filesOf(piece).find(x => x.kind === 'cut' && x.id === id)
+  return m ? { id: m.id, cut: m.cut, title: m.title, path: m.file.path, sha256: m.file.sha256 } : null
 }
 
 /** The library file behind one media id, looked up only on the given pieces (the week's own). */

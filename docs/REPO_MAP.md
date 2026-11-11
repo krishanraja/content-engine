@@ -2159,6 +2159,25 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function fileSpec(week: string, v: unknown, html = false): v is BoardFile`
 - `function validManifest(week: string, v: unknown): v is Manifest`
 
+### `apps/control-plane/api/board/_cuts.ts`
+
+- `const WORDS_MAX`
+- `const CUT_OP`
+- `type CutSaid = 'yes' | 'not_this'`
+- `interface CutVerdict`
+- `interface CutAnswer`
+- `interface CutPress`
+- `interface CutPresses`
+- `function cutVerdicts(meta: unknown): CutVerdict[]`
+- `function answerOn(meta: unknown, mediaId: string): CutAnswer | null`
+- `function cutPresses(pieceId: string, item: Pick<MediaItem, 'id' | 'title'>): CutPresses`
+- `function mediaWithAnswers(piece: Body | undefined): MediaItem[]`
+- `class CutError`
+- `interface CutPick`
+- `function cutPick(body: Body): CutPick`
+- `function nextVerdicts(meta: Body, pick: CutPick, at: string): { list: unknown[]; entry: CutVerdict; already: boolean }`
+- `async function saveCut(db: SupabaseClient, pieceId: string, pick: CutPick, now = new Date()): Promise<{ verdict: CutVer…`
+
 ### `apps/control-plane/api/board/_deskPage.ts`
 
 Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not edit by hand.
@@ -2220,6 +2239,7 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `type MediaKind = 'cut' | 'thumbnail'`
 - `interface MediaItem`
 - `function dayMedia(piece: Body | undefined): MediaItem[]`
+- `function cutOn(piece: Body, id: string): { id: string; cut: string; title: string; path: string; sha256: string | null …`
 - `function findMedia(pieces: Body[], id: string): MediaFile | null`
 - `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string): Promise<string | null>`
 
