@@ -4,6 +4,9 @@ import { EngineEventSchema } from '../props'
 import { DEVICES } from './registry'
 
 describe('device verb declarations', () => {
+  it('ladder_stage declares its nine cues', () => {
+    expect(manifest.devices.ladder_stage.verbs).toEqual(['enter','count_to','add','draw','move','fill','highlight','carry','exit'])
+  })
   it('quota_chart declares its seven cues', () => {
     expect(manifest.devices.quota_chart.verbs).toEqual(['enter', 'fill', 'draw', 'mark', 'move', 'count_to', 'exit'])
   })

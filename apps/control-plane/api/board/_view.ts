@@ -10,7 +10,7 @@ import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
 import { dayComments, dayPieces, dayPosted, dayYes, materialPress, offdayApproval, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
-import { HELD_CHANGED, HELD_TITLE, approvedLabel, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
+import { HELD_CHANGED, HELD_TITLE, approvedLabel, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -450,7 +450,7 @@ export function buildView(i: ViewInputs): WeekView {
     // Held: pieces on the day his approval does not hold, and options a session wrote as decided. Never hidden.
     const held: Held[] = [...(gate.held.get(d) || []),
       ...options.filter(o => o.status === 'held')
-        .map(o => ({ piece_id: null, option: o.doc_id, title: /changed/.test(o.held || '') ? HELD_CHANGED : HELD_TITLE, text: `${o.title}. ${o.held || ''}`.trim() }))]
+        .map(o => ({ piece_id: null, option: o.doc_id, title: /changed/.test(o.held || '') ? HELD_CHANGED : HELD_TITLE, text: `${asSentence(o.title)} ${o.held || ''}`.trim() }))]
     if (held.length && core.who !== 'done') {
       const listed = new Set(options.map(o => o.id.toLowerCase()))
       const presses = SERIES_DAYS.includes(d) && !piece
