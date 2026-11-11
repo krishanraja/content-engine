@@ -9,11 +9,11 @@ whilst I am talking, higher during the outro)."
 
 Where things live:
   - The audio files and their licence certificates sit in Google Drive at
-    makeyourmindup > 00_Brand-Assets > 07_Music (Drive folder
-    1pmPWx8vTOZuUXkp-WjhLlCTvof8MrRxK). Krish, 2026-10-12: "thats where it
+    makeyourmindup > 1 Brand kit (permanent) > Music (Drive folder
+    1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri). Krish, 2026-10-12: "thats where it
     will live and the video runners need to know this". On the runner
     machines that is
-    H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\00_Brand-Assets\\07_Music:
+    H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\1 Brand kit (permanent)\\Music:
     env MINDMAKE_MUSIC_ROOT, else runtime.music_root in config/studio.json.
   - The ledger is config/music-library.json, committed. Audio is never
     committed (scripts/check-no-secrets.ts).
@@ -874,8 +874,9 @@ def self_test():
 # pass of scripts/recordings-upload.ps1); any machine that renders (GitHub's,
 # a cloud session, a home computer) gets it back with `fetch` and points
 # MINDMAKE_MUSIC_ROOT at the folder. No machine needs H: for music.
-# This library folder is a mirror of 07_Music, never a second home: a track is
-# filed only in 07_Music (docs/DRIVE.md, "The brand kit", Krish 2026-11-11).
+# Since 11 Nov 2026 this is also the music folder itself (Krish wanted one brand
+# folder): publish sends what the library lacks, and the sync finds the rest
+# already in place by sha256 (docs/DRIVE.md, "The brand kit").
 LIBRARY_MUSIC = '1 Brand kit (permanent)/Music'
 FETCH_DEFAULT = Path(__file__).resolve().parents[2] / '.cache' / 'music'
 

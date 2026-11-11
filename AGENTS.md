@@ -128,7 +128,7 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 - **The mandate is the test.** Read live; never copy it, the voice block or corpus.
 - **Voice.** Plain English; no public em dashes or "Not X, Y" in either order.
 - **Spend.** Stay within approval; check `meter_daily`.
-- **Drive folders are load-bearing.** Read `docs/DRIVE.md`; use IDs. Brand assets come only from `1 Brand kit (permanent)`, never `00_Brand-Assets` (music only) or `_Archive` (Krish, 2026-11-11; `docs/DRIVE.md`, "The brand kit").
+- **Drive folders are load-bearing.** Read `docs/DRIVE.md`; use IDs. Brand assets come only from `1 Brand kit (permanent)`, music included, never `_Archive` (Krish, 2026-11-11; `docs/DRIVE.md`, "The brand kit").
 - **Leave the knowledge in the repository.**
 - Never commit media, credentials, OAuth state, job data, archives or derived indexes. Never expose secrets.
 
