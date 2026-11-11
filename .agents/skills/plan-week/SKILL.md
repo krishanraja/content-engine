@@ -152,7 +152,7 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
 
 Every idea ends in one of five outcomes, each his press: Approve for <day>, File for later, Reject, Save as a trend,
 Improve for a future piece. Only his Approve puts an idea on a publish board: you propose and never place. Read
-`references/ideas-gate.md` before step 1.
+`references/ideas-gate.md` and `.agents/skills/plan-week/references/refused.md` (his refusals) before step 1.
 
 ## Steps
 

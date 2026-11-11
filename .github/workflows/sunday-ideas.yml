@@ -181,12 +181,36 @@ jobs:
             after step 7. Leave docs/plans/<Monday>-week/ (ideas.json, combine.json) on disk and do not commit or push:
             the workflow puts that folder on the live board and keeps it on a branch for the Sunday room. If
             board_feed.py cover refuses the options, fix them and check again; if it still refuses, stop and say why.
+            board_feed.py gate must pass before you stop: the workflow runs it again and keeps the week off the live
+            board while a subject he refused is offered, a warned option leads its day, or a return comes back no
+            deeper (the plan-week skill, "What he refused stays refused").
+
+      - name: What he refused stays refused, checked in code
+        id: gate
+        if: always() && steps.guard.outputs.go == 'true'
+        env:
+          MONDAY: ${{ steps.guard.outputs.monday }}
+        run: |
+          # The ideas quality plan, item 1 (Krish, 2026-11-09: "I just said that Infosys is boring so why did you make the
+          # piece about Infosys?"): a subject he refused offered again, a warned option placed first or shown without
+          # his words, or a return no deeper fails the run, and the week does not go on the live board. Only counts go to
+          # this log; the findings are kept beside the week's ideas for the Sunday room.
+          folder="docs/plans/$MONDAY-week"
+          if [ ! -f "$folder/ideas.json" ]; then echo "passed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if python3 scripts/post-pack/board_feed.py gate "$MONDAY" > "$folder/gate.txt" 2>&1; then
+            echo "passed=true" >> "$GITHUB_OUTPUT"
+            echo "The gate passed: nothing he refused is offered again."
+          else
+            echo "passed=false" >> "$GITHUB_OUTPUT"
+            echo "::error::The gate refused $(grep -c '^  ' "$folder/gate.txt" || true) option(s): see $folder/gate.txt on the run's branch."
+          fi
 
       - name: Keep the week's ideas for the Sunday room
         if: always() && steps.guard.outputs.go == 'true'
         env:
           MONDAY: ${{ steps.guard.outputs.monday }}
           RUN_ID: ${{ github.run_id }}
+          GATE: ${{ steps.gate.outputs.passed }}
           GH_TOKEN: ${{ github.token }}
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
         run: |
@@ -204,6 +228,10 @@ jobs:
           auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
           git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/sunday-ideas/$MONDAY-$RUN_ID"
           echo "::notice::The week's ideas are on the branch sunday-ideas/$MONDAY-$RUN_ID."
+          if [ "$GATE" != "true" ]; then
+            echo "::error::Kept for the Sunday room only: the gate refused the week, so it is not put on the live board."
+            exit 1
+          fi
           # The live board reads the week's branch before main: main, then what is on the branch, then these ideas.
           bash scripts/week_branch_keep.sh "$MONDAY" "$(git rev-parse HEAD)" "$auth"
           if [ -z "$(gh pr list --head "offday-revise/$MONDAY" --state open --json number --jq '.[].number')" ]; then
@@ -213,7 +241,7 @@ jobs:
           python3 scripts/post-pack/board_web.py touch "$MONDAY" --source ideas || echo "::warning::The week's change signal was not bumped; the board shows the options at its next read."
 
       - name: The options are on the live board
-        if: steps.guard.outputs.go == 'true'
+        if: steps.guard.outputs.go == 'true' && steps.gate.outputs.passed == 'true'
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           MONDAY: ${{ steps.guard.outputs.monday }}

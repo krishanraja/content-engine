@@ -23,3 +23,7 @@ didn't approve to move to the publish board."
   has enough), and carry an improve note into that idea's pitch.
 - **Check before you say a piece is on its day**: `python3 scripts/post-pack/board_gate.py <Monday>` lists every piece
   with "Approved by you, <when>" and every held line, and exits 1 when anything is held.
+- **What he refused stays refused, in code** (the ideas quality plan, Wave 1; the skill's "What he refused stays
+  refused"): `python3 scripts/post-pack/board_feed.py gate <Monday>` fails on a subject he refused offered again, a
+  warned option placed first or shown without his words, and a return that came back no deeper; the Sunday workflow
+  keeps the week off the live board while it fails. "Offer it again" on a "Not offered again" line is his press alone.

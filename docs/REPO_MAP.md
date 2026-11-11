@@ -1990,12 +1990,13 @@ Sunday's idea pool from every source, and the evidence of Krish's taste (GET /ap
 - `function sourceKind(row: Row): { kind: SourceKind; via: HisVia | null }`
 - `function excluded(row: Row): string | null`
 - `function tasteOf(rows: Row[]): TasteItem[]`
+- `function rejectedTaste(rows: Row[], refused: Map<string, { said: string | null; at: string | null }>): TasteItem[]`
 - `function nearest(vec: number[] | null, taste: TasteItem[], selfId?: string)`
 - `function candidate(row: Row, taste: TasteItem[]): Candidate`
 - `function rank(a: Candidate, b: Candidate): number`
 - `function inWindow(row: Row, kind: SourceKind, win: ReturnType<typeof windows>): boolean`
 - `interface Relayed`
-- `function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[] })`
+- `function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[]; rej…`
 
 ### `apps/control-plane/api/_weeks.ts`
 
@@ -2088,6 +2089,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function growthWriter(req: VercelRequest): boolean`
 - `function actor(req: VercelRequest, operatorOnly = false): string | null`
 - `const PRESS_USES`
+- `const VETO_ID`
 - `const OFFDAY_ID`
 - `const DECISION_ID`
 - `const DECISION_KIND`
@@ -2374,6 +2376,8 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `function dayPosted(rows: ExtrasInputs['ticks'], day: string): ViewPosted[]`
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
 - `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[]`
+- `function warned(o: Body): string`
+- `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
 - `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
 - `function offdayOptions(i: ExtrasInputs, day: string): ViewOption[]`
 - `function thoughtPress(day: string, step: string): PressAction`
@@ -3551,6 +3555,8 @@ His verdicts on past off-day options, for Sunday's gather (GET /api/week/options
 - `const PICKED_STATES`
 - `function weekEnd(monday: string): string`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+- `const IDEA_RULES`
+- `async function readUnvetoed(week: string, db: { from: typeof supabase.from } = supabase)`
 - `async function readOutcomes(week: string, db: { from: typeof supabase.from } = supabase)`
 
 ### `apps/control-plane/api/workbench.ts`
@@ -3902,6 +3908,12 @@ Re-render a saved run.
 ### `apps/control-plane/scripts/eval/run.ts`
 
 Prompt A/B harness.
+
+### `apps/control-plane/scripts/eval/suites/ideas-history.ts`
+
+SUITE: ideas-history — do the ideas board's checks catch what Krish refused, without blocking anything he picked?
+
+- `const suite: Suite<Case> & { requires: string[] }`
 
 ### `apps/control-plane/scripts/eval/suites/revise.ts`
 
