@@ -94,6 +94,10 @@ def pick(facts, look):
     if not look.get('series'):
         return None
     named = facts.get('skin')
+    # "plain" draws the house Receipt with no skin: Krish, 2026-11-11, of the Fri 13 Nov covers, "they follow the
+    # Monday style in the brand colours" (Monday 9 Nov wore the plain sage Receipt).
+    if named == 'plain':
+        return None
     if named is not None:
         if named not in ORDER:
             import brand
