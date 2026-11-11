@@ -15,9 +15,8 @@ What it does, in order:
      where it starts and one where it ends), so a re-recording needs no new
      timings unless the words change.
   4. Renders both shapes (house rule HOOK_IS_THE_INTRO): the tall cut opens
-     straight on the hook in the brand's dress from its first frame (the
-     wordmark and the series tag in the top corners, kit.py's
-     dress-9x16.png); the wide cut of a weekly series piece opens on the
+     straight on the hook from its first frame, with no wordmark, series
+     tag or logo (Ruling, Krish, 2026-11-11); the wide cut of a weekly series piece opens on the
      house intro sting, 56 frames at 30 fps in the series' colour, once Krish
      approves it (intro.py, config/intro-sting.json; Krish, 2026-11-05: "I
      think it should go at the start of the longer wide videos 100%,"), with
@@ -174,28 +173,6 @@ def _lexicon():
 _LEX, _LEX_DOC = _lexicon()
 if _LEX_DOC:
     DEFAULT_FIXES = DEFAULT_FIXES + [pair for pair in _LEX.fixes(_LEX_DOC) if pair not in DEFAULT_FIXES]
-
-
-def default_logo(out):
-    """The makeyourmindup masthead on an ink pill, centred above the tall
-    captions (they start 250 pixels down), on a transparent 1080x1920 frame.
-    Drawn once per output folder from the brand's own masthead."""
-    png = Path(out) / 'logo-9x16.png'
-    if png.exists():
-        return png
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'pages'))
-    import brand
-    from PIL import Image, ImageDraw
-    mast = Image.open(brand.fetch('masthead')).convert('RGBA')
-    w = 440
-    mast = mast.resize((w, round(mast.height * w / mast.width)), Image.LANCZOS)
-    pad_x, pad_y, top = 26, 20, 50
-    frame = Image.new('RGBA', (1080, 1920), (0, 0, 0, 0))
-    box = (540 - w // 2 - pad_x, top, 540 + w // 2 + pad_x, top + mast.height + 2 * pad_y)
-    ImageDraw.Draw(frame).rounded_rectangle(box, radius=22, fill=(12, 21, 18, 235))
-    frame.alpha_composite(mast, (540 - w // 2, top + pad_y))
-    frame.save(png)
-    return png
 
 
 def script_prompt(path):
@@ -884,8 +861,7 @@ def strap_problem(cfg):
     longer draws one). None when the config carries none."""
     if cfg.get('strap'):
         return (f'"strap" in the config would put his name on screen, and no content refers to him ({NO_NAME_RULING}). '
-                'Replace "strap" with "dress": {"9x16": "dress-9x16.png"}, the brand\'s dress the tall cut carries instead: kit.py draws '
-                'that file on every run, even when it keeps a config edited by hand, so the cut opens in the brand\'s corners')
+                'Delete "strap": the tall cut carries no name, wordmark or series tag (Ruling, Krish, 2026-11-11)')
     return None
 
 
@@ -1632,7 +1608,7 @@ def bounded_decode_inputs(inputs, threads=2):
 
 def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix):
     """The ffmpeg inputs and filter graph for one shape: the captioned main
-    (graphics, the tall cut's dress, the captions), joined after any opening
+    (graphics, the captions), joined after any opening
     clip and before the end card, with the finished mix as its sound."""
     cw, ch, cx, cy = crop
     W, H = SIZE[asp]
@@ -1716,30 +1692,8 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             g.append(f"[{n}:v]format=rgba,{card_fit(card, 1920 - px if px else 1920, 1080)}{f}[pp{n}]")
             g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
-    dress = cfg['dress'].get(asp) if isinstance(cfg.get('dress'), dict) else None
-    if dress:
-        # The brand's dress from the first frame to the end card (house rule
-        # HOOK_IS_THE_INTRO, Krish, 2026-10-29: the hook is the intro): the
-        # makeyourmindup wordmark and the series tag in the top corners, as
-        # the Friday 23 October tall cut has them. kit.py draws it from the
-        # brand's own wordmark; a transparent whole frame laid over the
-        # pictures, under the captions, with no entrance of its own.
-        inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(dress))]
-        g.append(f"[{last}][{n}:v]overlay=0:0[s{k}]")
-        last, n, k = f's{k}', n + 1, k + 1
-    elif asp == '9x16' and intro is None and cfg.get('logo', True) is not False:
-        # A config kit.py did not dress: the makeyourmindup logo in the opening
-        # seconds of the tall video (Krish, 2026-10-07: "put the Make Your Mind
-        # Up logo in the first few seconds of the video somewhere on vertical
-        # video"). The PNG is the whole frame, transparent, so it says where the
-        # logo sits. With an opening clip in front it is left out: the clip
-        # carries the brand, and a second logo entrance after it is not wanted.
-        lg = cfg['logo'] if isinstance(cfg.get('logo'), dict) else {}
-        secs = lg.get('seconds', 3.0)
-        inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(lg['png']) if lg.get('png') else default_logo(out))]
-        g.append(f"[{n}:v]format=rgba,fade=t=out:st={max(0.0, secs - 0.4):.2f}:d=0.4:alpha=1[lg]")
-        g.append(f"[{last}][lg]overlay=0:0:enable='between(t,0,{secs:.2f})'[s{k}]")
-        last, n, k = f's{k}', n + 1, k + 1
+    # No wordmark, series tag or opening logo on the tall cut (Ruling, Krish, 2026-11-11: the brand mark and badge on
+    # vertical videos "should be permanently removed from all templates"). An older config's "dress" or "logo" is ignored.
     if cfg.get('scoreboard'):
         import scoreboard
         g.extend(scoreboard.graph(last,'scored_main',asp,total,cfg['scoreboard']))
@@ -1968,7 +1922,7 @@ def self_test():
     same = lambda p: Path(p)
     _, g, audio = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0],
                               {'file': 'sting.mp4', 'frames': 45}, {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    checks.append(('a branded intro is not followed by a second logo entrance',
+    checks.append(('a branded intro is not followed by a logo entrance',
                    any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), False))
     checks.append(('the sting goes first in the join, with no sound of its own in the picture graph', g[-1], '[iv][vm][ev]concat=n=3:v=1:a=0[V]'))
     checks.append(('the sound is the finished mix', audio, '3:a'))
@@ -1980,9 +1934,9 @@ def self_test():
     checks.append(('the first split is fully visible after an intro, without a double presenter',
         'fade=t=in:' not in first_run, True))
     _, g, audio = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None, {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    checks.append(('without an intro the opening logo is retained',
-                   any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), True))
-    checks.append(('without a sting it is the main and the end card', (g[-1], audio), ('[vm][ev]concat=n=2:v=1:a=0[V]', '3:a')))
+    checks.append(('without an intro the tall cut still opens with no logo (Ruling, Krish, 2026-11-11)',
+                   any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), False))
+    checks.append(('without a sting it is the main and the end card', (g[-1], audio), ('[vm][ev]concat=n=2:v=1:a=0[V]', '2:a')))
     _, split_graph, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0,
         first_picture, ws, [720, 1280, 0, 0], None,
         {'file':'end.mp4','frames':120}, Path('mix.wav'))
@@ -2011,20 +1965,11 @@ def self_test():
                     {'kind': 'sting', 'rule': 'HOOK_IS_THE_INTRO', 'series': 'mind_the_gap', 'clip_sha256': 'ab' * 32, 'file': 's.mp4', 'frames': 56,
                      'seconds': 1.8667})))
     dressed = dict(fake, dress={'9x16': 'dress-9x16.png'})
-    _, g, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
-                          {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    dress_line = [line for line in g if line.endswith('overlay=0:0[s2]')]
-    checks.append(('the tall cut wears its dress from the first frame to the end card, with no window, fade or entrance',
-                   (len(dress_line), any('dress-9x16.png' in str(x) for x in _), any('enable=' in line or 'fade' in line for line in dress_line)),
-                   (1, False, False)))
-    inputs_dressed, _, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
+    inputs_dressed, g, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, first_picture, ws, [720, 1280, 0, 0], None,
                                        {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    checks.append(('the dress is kit.py\'s picture, and it replaces the three-second opening logo',
-                   ('dress-9x16.png' in inputs_dressed, any("enable='between(t,0,3.00)'" in line for line in g)), (True, False)))
-    _, g, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, first_picture, ws, [720, 1280, 0, 0], None,
-                          {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    order = [i for i, line in enumerate(g) if line.endswith('[run0]') or ('[s' in line and line.endswith('overlay=0:0[s3]'))]
-    checks.append(('the dress sits over the pictures, so the corners stay on through them', len(order) == 2 and order[0] < order[1], True))
+    checks.append(('an older config\'s tall dress is ignored: no wordmark, series tag or logo on vertical video (Ruling, Krish, 2026-11-11)',
+                   ('dress-9x16.png' in inputs_dressed, 'logo.png' in inputs_dressed, any("enable='between(t,0,3.00)'" in line for line in g)),
+                   (False, False, False)))
     # No name on screen (Krish, 2026-10-28: "Remember, no content refers to Krish, ever.").
     strap = strap_problem({'strap': {'png': 'strap-9x16.png', 'after': 'so'}})
     import tempfile as _st
@@ -2035,8 +1980,8 @@ def self_test():
                              capture_output=True, text=True)
     checks.append(('make.py stops on a strap config before it reads anything else', (ran.returncode != 0, 'no content refers to Krish, ever' in ran.stderr),
                    (True, True)))
-    checks.append(('a strap config is refused, quoting his ruling and naming the dress to put in its place; "strap": false is no matter',
-                   (bool(strap) and 'no content refers to Krish, ever' in strap, '"dress": {"9x16": "dress-9x16.png"}' in (strap or ''),
+    checks.append(('a strap config is refused, quoting his ruling and saying to delete it; "strap": false is no matter',
+                   (bool(strap) and 'no content refers to Krish, ever' in strap, 'Delete "strap"' in (strap or ''),
                     strap_problem({'strap': False}), strap_problem({})), (True, True, None, None)))
     checks.append(('"intro": false is no intro and no note', resolve_intro({'intro': False}, '9x16', same), (None, None)))
     checks.append(('"music": false is no music and no note', resolve_music({'name': 't', 'music': False}, '9x16', 30), (None, None)))
@@ -2174,7 +2119,7 @@ transcriber_decodes = transcriber.decodes
 # (transcriber_decodes), not only import.
 DOCTOR_MODULES = (
     ('faster_whisper', 'faster-whisper', 'fail', f'transcribes every take (make.py and recording_match.py): {TRANSCRIBER_FIX}'),
-    ('PIL', 'pillow', 'fail', 'Pillow draws the tall logo pill and the thumbnails'),
+    ('PIL', 'pillow', 'fail', 'Pillow draws the thumbnails'),
     ('playwright', 'playwright', 'warn', 'draws the graphics, end cards and thumbnails from HTML'),
 )
 

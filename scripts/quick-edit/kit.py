@@ -54,16 +54,13 @@ It writes into DIR, and nowhere else:
   endcard-9x16.png/.mp4, endcard-16x9.png/.mp4
                        the house end card, 4 seconds, 30 fps, a silent 48 kHz stereo track
   frame-16x9.png       the wide shape's background in the subchannel's look
-  dress-9x16.png       the tall cut's dress: the brand's wordmark and the series
-                       tag in the top corners, which make.py lays over the whole
-                       cut from its first frame (house rule HOOK_IS_THE_INTRO)
   panels/<id>-9x16.png, panels/<id>-16x9.png
                        every picture in the post (kind "image"), fitted to the
                        1080 x 1000 tall panel and the 1314 x 1080 wide panel
   <cut>-script.txt     the cut's script, the words only
   <cut>.json           a starter config for make.py: the recording, crop auto,
                        subject, date, TikTok, music on auto, the end cards, the
-                       frame, the dress, the script (its names go to
+                       frame, the script (its names go to
                        the transcriber as a hint) and one cue per picture the
                        script brings in, with start and end words from the
                        script line that introduces it
@@ -78,7 +75,7 @@ Which picture goes where. A picture is shown over the paragraph of the
 script that names most of what it shows (its purpose in post.json, and its
 label, alt text and caption from the manager.json beside it when there is
 one), a paragraph to a picture. The video's first sentence is Krish's face
-(the hook, in the brand's dress), and the paragraph with the
+(the hook, with no wordmark on the tall cut), and the paragraph with the
 call to action is his face before the end card, so neither gets a picture.
 A picture no paragraph names is drawn but not cued, and kit.json says so
 (a CHECK, above, unless only the hook or the call to action names it).
@@ -885,15 +882,6 @@ def page_frame16(st, subject, wordmark, fonts):
         wordmark=wordmark, days=html.escape(st['channel']['days']), site=html.escape(st['site']))
 
 
-def page_dress(st, wordmark, fonts):
-    """The tall cut's dress (dress.html): the wordmark and the series tag in
-    the top corners. No name is ever drawn on a cut (Krish, 2026-10-28:
-    "Remember, no content refers to Krish, ever."); the name strap it
-    replaces is retired."""
-    return template('dress.html').substitute(fonts=fonts, ink=st['ink'], accent=st['accent'], wordmark=wordmark,
-                                             channel=html.escape(st['channel']['name']))
-
-
 def page_panel(st, shape, picture, facts, fonts):
     w, h = facts['size']
     g = panel_geometry(shape, w, h)
@@ -1040,7 +1028,6 @@ def starter_config(post, cut, recording, out, cues, post_path, allowed=None):
         'replacements': [],
         'endcard': {'9x16': 'endcard-9x16.mp4', '16x9': 'endcard-16x9.mp4'},
         'frame16': 'frame-16x9.png',
-        'dress': {'9x16': 'dress-9x16.png'},
         'cues': cues,
         'kit': {
             'made_by': 'scripts/quick-edit/kit.py', 'post': str(post_path), 'cut': cut, 'shape': shape,
@@ -1200,7 +1187,6 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
             raise KitError(f'the title beside his face, {on_frame!r}, cannot be drawn: ' + '; '.join(why_not) +
                            '. Put the title card he picked in post.json as "video_title".')
         draw('frame-16x9.png', page_frame16(st, on_frame, logos['wordmark'], fonts), FRAME['16x9'])
-        draw('dress-9x16.png', page_dress(st, logos['wordmark'], fonts), FRAME['9x16'], clear=True)
         panels = receipt.get('panels', {})
         drawn = set()  # the pictures panelled in this run: a panel left from an earlier run is never cued
         from PIL import Image
@@ -1454,7 +1440,7 @@ def self_test():
     dot = png_uri(Image.new('RGB', (8, 8), (12, 21, 18)))
     small = Image.new('RGB', (100, 60), (12, 21, 18))
     docs = [page_endcard(st, '9x16', dot, ''), page_endcard(st, '16x9', dot, ''), page_frame16(st, 'Who gets paid & why', dot, ''),
-            page_dress(st, dot, ''), page_panel(st, '9x16', small, {'size': [100, 60], 'background': '#0C1512'}, ''),
+            page_panel(st, '9x16', small, {'size': [100, 60], 'background': '#0C1512'}, ''),
             page_panel(st, '16x9', small, {'size': [100, 60], 'background': '#0C1512'}, '')]
     left = [m for doc in docs for m in re.findall(r'\$\{?[A-Za-z_]\w*', doc)]
     check('every template is filled, and text is escaped', (left, 'Who gets paid &amp; why' in docs[2]), ([], True))
@@ -1467,12 +1453,11 @@ def self_test():
           ('#FFD84D' in docs[0], '>Mondays</span>' in docs[0], docs[0].count('class="url'), 'You make your mind up' in docs[0] + docs[1]),
           (True, True, 1, False))
     check('the frame never splits a word', ('break-word' in docs[2], 'keep-all' in docs[2]), (False, True))
-    # The tall cut's dress: the wordmark and the series tag, never a name (Krish, 2026-10-28).
-    check('the dress carries the wordmark and the series tag, and no name',
-          ('class="mark"' in docs[3], '>follow.the.money</span>' in docs[3], 'krish' in re.sub(r'<!--.*?-->', '', docs[3], flags=re.S).lower()),
-          (True, True, False))
-    check('the tall panel hides its series pill (the dress has the tag), the wide one keeps it',
-          ('visibility: hidden' in docs[4], 'visibility: visible' in docs[5]), (True, True))
+    # Vertical video carries no wordmark or series tag (Ruling, Krish, 2026-11-11): no dress template, and the tall panel
+    # hides its series pill; the wide panel keeps it.
+    check('there is no tall dress template', (TEMPLATES / 'dress.html').exists(), False)
+    check('the tall panel hides its series pill, the wide one keeps it',
+          ('visibility: hidden' in docs[3], 'visibility: visible' in docs[4]), (True, True))
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
@@ -1496,13 +1481,13 @@ def self_test():
         (tmp / 'rec').mkdir()
         post = {'subject': 'Who gets paid: AI songs?', 'date': '2026-10-12', 'piece_id': 'p1', 'subchannel': 'follow.the.money'}
         cfg = starter_config(post, 'short', tmp / 'rec' / 'take 2.mov', out, cues, tmp / 'post.json')
-        need = {'name', 'source', 'crop', 'cues', 'endcard', 'frame16', 'dress', 'music', 'tiktok', 'subject', 'date', 'script'}
+        need = {'name', 'source', 'crop', 'cues', 'endcard', 'frame16', 'music', 'tiktok', 'subject', 'date', 'script'}
         check('the starter config has everything make.py reads', sorted(need - set(cfg)), [])
         check('the recording is found from the config\'s folder', cfg['source'], '../rec/take 2.mov')
         check('the name is safe in an ffmpeg filter', (bool(re.fullmatch(r'[a-z0-9-]+', cfg['name'])), cfg['name']), (True, 'who-gets-paid-ai-songs-short'))
-        check('music on auto, TikTok on, the tall dress named, and nothing in front of the hook and no name strap (HOOK_IS_THE_INTRO)',
-              (cfg['music'], cfg['tiktok'], cfg['dress'], 'intro' in cfg, 'intro_override' in cfg, 'strap' in cfg),
-              ('auto', True, {'9x16': 'dress-9x16.png'}, False, False, False))
+        check('music on auto, TikTok on, no tall dress, nothing in front of the hook and no name strap (HOOK_IS_THE_INTRO; Krish, 2026-11-11)',
+              (cfg['music'], cfg['tiktok'], 'dress' in cfg, 'intro' in cfg, 'intro_override' in cfg, 'strap' in cfg),
+              ('auto', True, False, False, False, False))
         path, sha, kept = write_config(out / 'short.json', cfg, None)
         check('the first config is written', (path.name, kept), ('short.json', False))
         edited = json.loads(path.read_text())
@@ -1538,16 +1523,6 @@ def self_test():
                 mast = png_uri(Image.new('RGB', (322, 99), (126, 240, 192)))  # the masthead's shape, 2415 x 740
                 ends = [drawer.shoot(page_endcard(st, sh, mast, fonts), FRAME[sh], tmp / f'end-{sh}.png') for sh in ('9x16', '16x9')]
                 check('in a browser, the end card draws settled in both shapes with nothing past an edge', ends, [[], []])
-                # The dress: clear but for its two corners, the tag ending 120 px in from the right.
-                mint = png_uri(Image.new('RGB', (260, 31), (126, 240, 192)))
-                dress = drawer.shoot(page_dress(st, mint, fonts), FRAME['9x16'], tmp / 'dress.png', clear=True)
-                with Image.open(tmp / 'dress.png') as d:
-                    d = d.convert('RGBA')
-                    box = d.getchannel('A').getbbox()
-                    corners = (d.getpixel((80, 100))[:3], d.getpixel((955, 105))[:3], d.getpixel((540, 960))[3], d.getpixel((1000, 105))[3])
-                check('in a browser, the dress is the wordmark top left and the tag top right, clear everywhere else',
-                      (dress, box[1] >= 70 and box[3] <= 140 and box[0] >= 70 and box[2] <= 960, corners),
-                      ([], True, ((126, 240, 192), (255, 216, 77), 0, 0)))
             finally:
                 drawer.close()
 

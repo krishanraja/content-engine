@@ -5,15 +5,16 @@ Everything is made here and written under .cache/quick-edit/mix-test only
 (audio and video are never committed): a 20 second voice-like recording
 with pauses and its words file, a looping chord as the music bed with a
 stand-in licence and ledger, a stand-in dress (two corner blocks where
-kit.py's wordmark and series tag go), a synthetic opening clip per shape,
+an older config put a wordmark and series tag, which make.py must ignore), a synthetic opening clip per shape,
 the graphics and the end cards, and a stand-in approved intro sting (intro.py
 stand_in: synthetic clips, never Krish's). Then make.py renders six cuts and
 their reports are checked against the levels in config/music-library.json:
 
   tall 9x16 and wide 16x9 of a piece with no series (house rule
   HOOK_IS_THE_INTRO): opening straight on the hook, the report saying so
-  ("opening"), the tall cut in its dress from the first frame, over the
-  pictures and off the end card, the wide cut on its branded frame from the
+  ("opening"), the tall cut with no wordmark, series tag or logo at any
+  point even when an older config names a dress (Ruling, Krish,
+  2026-11-11), the wide cut on its branded frame from the
   first frame; the file is 30 fps with 48 kHz stereo sound,
   integrated loudness is -14 +-1 LUFS, true peak is at most -1 dBTP, the bed
   sits at its voice and outro levels, the gap under the voice is about 17
@@ -256,7 +257,7 @@ def main():
              abs(L['bed_to_voice_lu'] - (levels['final_integrated_lufs'] - levels['bed_lufs'])) <= 1.5, True),
         ]
 
-    # Every cut now: the hook is the intro, in the brand's dress, the bed under all of it.
+    # Every cut now: the hook is the intro, no wordmark on the tall cut, the bed under all of it.
     for shape, out in (('9x16', 'hook-tall'), ('16x9', 'hook-wide')):
         r = render('hook.json', out, shape, env)
         L = r['loudness']
@@ -284,12 +285,13 @@ def main():
         if shape == '9x16':
             T, M = r['total_seconds'], r['main_seconds']
             checks += [
-                ('9x16: the dress is on the first frame: the wordmark top left, the series tag top right',
-                 (near(pixel(final, 0.02, (200, 100)), MINT), near(pixel(final, 0.02, (900, 105)), CORAL)), (True, True)),
-                ('9x16: it stays on over the pictures, to the last frame of the main',
-                 (near(pixel(final, M / 2, (200, 100)), MINT), near(pixel(final, M - 0.2, (900, 105)), CORAL)), (True, True)),
-                ('9x16: and is not on the end card', near(pixel(final, T - 1.0, (200, 100)), MINT), False),
-                ('9x16: the old three-second logo is not there', near(pixel(final, 1.0, (540, 140)), MINT), False),
+                # Vertical video carries no wordmark or series tag (Ruling, Krish, 2026-11-11): the config names a dress and
+                # make.py ignores it, from the first frame to the end card; nor is there an opening logo.
+                ('9x16: no wordmark or series tag on the first frame, though the config names a dress',
+                 (near(pixel(final, 0.02, (200, 100)), MINT), near(pixel(final, 0.02, (900, 105)), CORAL)), (False, False)),
+                ('9x16: nor over the pictures, to the last frame of the main',
+                 (near(pixel(final, M / 2, (200, 100)), MINT), near(pixel(final, M - 0.2, (900, 105)), CORAL)), (False, False)),
+                ('9x16: and no opening logo', near(pixel(final, 1.0, (540, 140)), MINT), False),
             ]
         else:
             checks.append(('16x9: the branded frame shows beside him from the first frame', near(pixel(final, 0.02, (100, 540)), MINT), True))

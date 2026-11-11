@@ -31,8 +31,13 @@ Rules that follow:
    carries a beat alone and is never the piece's hero device. `ve lint` refuses both (`motion.stamp_not_hero`).
    Headline type on a graphic beat is at least 96 px (the reel's "Gemini 3.8 Flash TTS" title is 64 px of 1280, which
    is 96 px here).
-3. **Nothing collides with the mark tile.** A card's box never overlaps the mark tile's box. Codex card
-   `ve-motion-2-mark-clearance` adds the check to `ve qc` composition and the fix to the layouts.
+3. **No wordmark over vertical content; nothing touches it anywhere.** Ruling (Krish, 2026-11-11): "I don't think
+   they're necessary and should be permanently removed from all templates", of the brand mark and badge on vertical
+   videos, and "make sure animations never go above or on top of wordmarks". He then scoped it: "I don't have a no-word-mark rule for tall videos entirely. I just have a no-word-mark rule during the animated content, not the closing outro card." The 9:16 cut's animated content carries no mark tile,
+   wordmark, series pill or opening logo in any route (ve, quick-edit, the style lab, the Studio routes); `ve qc`
+   proves it (`brand.no_mark`) and `engine.test.ts` refuses chrome on any 9:16 beat. On the 16:9 cut a card's box
+   never overlaps the mark tile or the wordmark; the lab's `check.mjs` fails any word drawn over or under them.
+   The closing outro card keeps the wordmark.
 
 ## Motion
 

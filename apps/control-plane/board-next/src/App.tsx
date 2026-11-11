@@ -5,6 +5,7 @@ import { api, BoardError, week, type Day, type PathKey, type View } from './api'
 import { Button, Chip, CountUp, Panel, StatusDot, cx } from './components/ui'
 import { DayActions, StepPanel, Stepper } from './components/path'
 import { ReviewCard } from './components/review'
+import { ARCHIVE_LINE, liveBoardUrl } from '../../api/board/_liveBoard'
 
 const TONE: Record<Day['who'], 'amber' | 'bad' | 'muted' | 'ok'> = { you: 'amber', stuck: 'bad', engine: 'muted', growth: 'muted', done: 'ok' }
 const WORD: Record<Day['who'], string> = { you: 'Needs you', stuck: 'Stuck', engine: 'In hand', growth: 'With Growth', done: 'Done' }
@@ -138,6 +139,22 @@ function Palette({ view, open, setOpen, openDay }: { view: View | null; open: bo
   )
 }
 
+/** The archive's banner (Ruling, Krish, 2026-11-11: the engine's board is kept as an archive; Control Centre's Publish
+ *  Board is where everything wires in, live). It links the live board at this week and the day the address names. */
+function ArchiveBanner() {
+  const [hash, setHash] = React.useState(() => location.hash)
+  React.useEffect(() => { const on = () => setHash(location.hash); addEventListener('hashchange', on); return () => removeEventListener('hashchange', on) }, [])
+  const href = liveBoardUrl(week, hash.replace(/^#/, '').split(/[-/]/)[0])
+  return (
+    <div role="note" data-testid="archive-banner" className="border-b border-line bg-[color-mix(in_srgb,var(--amber)_14%,var(--card))]">
+      <p className="mx-auto flex max-w-[1120px] flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2 text-[15px] font-semibold">
+        <span>{ARCHIVE_LINE}.</span>
+        <a href={href} className="inline-flex min-h-11 items-center underline underline-offset-4">Open the live board</a>
+      </p>
+    </div>
+  )
+}
+
 export function App() {
   const { view, readAt, error, load } = useView()
   const [open, setOpen] = React.useState<Record<string, boolean>>({})
@@ -164,6 +181,7 @@ export function App() {
   return (
     <>
       <header className="sticky top-0 z-30 border-b border-line bg-[color-mix(in_srgb,var(--bg)_92%,transparent)] backdrop-blur">
+        <ArchiveBanner />
         <div className="mx-auto flex h-14 max-w-[1120px] items-center gap-3 px-4">
           <Live readAt={readAt} error={error} />
           {view?.north_star && <span className="ml-auto flex shrink-0 items-baseline gap-1.5"><b className="font-display text-2xl leading-none"><CountUp to={view.north_star.current} /></b><span className="font-mono text-xs text-muted">of {view.north_star.target}<span className="hidden sm:inline"> published</span> this week</span></span>}

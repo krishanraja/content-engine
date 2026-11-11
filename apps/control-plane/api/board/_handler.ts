@@ -12,6 +12,7 @@ import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
 import { readView } from './_view.js'
 import { signMedia } from './_media.js'
+import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
@@ -214,8 +215,14 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       if (op === 'view') {
         // The week as it stands now, each day with its next step and the actions that start it (_view.ts).
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
-        res.setHeader('Cache-Control', 'no-store')
-        return res.status(200).json({ ok: true, ...(await readView(db, week)) })
+        // Its entity tag names what it says (_viewContract.ts), so Control Centre can ask every few seconds and a read
+        // that finds nothing new is a 304 with no body. no-cache, not no-store: a browser may keep it but always asks.
+        const view = { ok: true, ...(await readView(db, week)) }
+        const etag = viewEtag(view)
+        res.setHeader('Cache-Control', 'private, no-cache')
+        res.setHeader('ETag', etag)
+        if (notModified(req.headers['if-none-match'], etag)) return res.status(304).end()
+        return res.status(200).json(view)
       }
       if (op === 'media') {
         // One rendered file of this week's pieces (_media.ts): its id from the view, answered with a short signed link.

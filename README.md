@@ -114,7 +114,8 @@ The full rules for agents are in `AGENTS.md`.
 
 ```bash
 npm ci
-npm run verify                  # everything below, plus the skill, station, renderer, copy, secret, board, music-bed and repo-map checks
+npm run verify:quick            # before a push and in CI: every guard, the related tests, the publishing-safety tests
+npm run verify                  # after merge (full-verify.yml): everything below, plus the skill, station, renderer, copy, secret, board, music-bed and repo-map checks
 npm run typecheck               # the packages
 npm run typecheck:control-plane # the content engine
 npm test                        # vitest across tests/, including tests/control-plane/

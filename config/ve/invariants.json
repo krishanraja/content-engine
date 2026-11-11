@@ -9,8 +9,8 @@
     },
     {
       "id": "INV-BRANDFRAME",
-      "rule": "Mark tile on every beat; channel pill on the section beat; grain behind",
-      "enforced_by": "FormatMaster wraps every beat in BrandFrame; qc_brand template match"
+      "rule": "On the 16:9 cut, mark tile on every beat and channel pill on the section beat; on the 9:16 cut no mark tile, pill, wordmark or series tag over the animated beats, the closing outro keeping the wordmark (Ruling, Krish, 2026-11-11); grain behind",
+      "enforced_by": "FormatMaster wraps every beat in BrandFrame; qc_brand.mark_tile on 16:9 and qc_brand.no_mark on 9:16; engine.test.ts"
     },
     {
       "id": "INV-NO-HEX",

@@ -214,6 +214,18 @@ completely for publishing next week" and "make sure all future carousels never n
   on the generation record before generating; it refuses a prompt that asks for a robot without the house robot's
   photos. The deck's reviewer judges whether a robot-free idea is creative enough. The 9 November covers below came
   before this ruling and are not the model for a robot.
+- Real people in a generated picture are recognisable at a glance, or they are left out (Ruling, Krish, 11 November
+  2026: "Make that caricature rule stand forever. We can't generate caricatures that people won't recognize clearly.").
+  He rejected the 20 November midterms cover, a painted caricature of Trump and the AI lab chiefs, with "These
+  caricatures do not look enough like the real people. They need to be somewhat photorealistic.", then "I think you
+  need to supply real images of each of these people's faces and make the prompt use them as a reference and not
+  deviate from them, but still make them caricatures." So a caricature of a real person is generated only with a real
+  photo of each face passed to the model as a reference, and the prompt holds each face to its photo; a loose cartoon
+  from a name alone is never used. The reviewer names each person in the picture before it ships, and a face that
+  needs its name to be read is refused. The scene stays absurd enough to read as satire, and any platform disclosure for
+  generated people goes through the publishing route.
+- No card is cryptic (Ruling, Krish, 11 November 2026: "The cards cannot be cryptic at all."). Card 1 says in plain
+  words what happened and why it matters for AI, and a story with two sides shows both, simply, before its ending.
 - The picture fills the card. Its top half holds the scene and its lower half stays dark and quiet, so the headline,
   the one-line dek (and the series pill, only on a carousel that carries a series piece) sit over it with no box. A
   gradient from clear to the house ink carries the type; nothing is cropped across a face or the scene's subject.

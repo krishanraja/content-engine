@@ -1,0 +1,760 @@
+{
+ "ok": true,
+ "contract_version": "1.0.0",
+ "week": "2026-11-16",
+ "as_of": "2026-11-16T09:00:00.000Z",
+ "days": [
+  {
+   "day": "mon",
+   "date": "2026-11-16",
+   "label": "Mon 16",
+   "kind": "Essay and two cuts",
+   "series": "follow.the.money",
+   "detail": [
+    {
+     "h": "Research",
+     "p": "Storyboard: Monday"
+    },
+    {
+     "h": "Narrative lock",
+     "p": "Signed"
+    },
+    {
+     "h": "Look",
+     "p": "Face-led"
+    }
+   ],
+   "title": "Piece 8287. It says one thing.",
+   "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+   "path": {
+    "steps": [
+     {
+      "key": "research",
+      "label": "Research",
+      "state": "done"
+     },
+     {
+      "key": "story",
+      "label": "Story",
+      "state": "done"
+     },
+     {
+      "key": "look",
+      "label": "Look",
+      "state": "done"
+     },
+     {
+      "key": "board",
+      "label": "Storyboard and script",
+      "state": "done"
+     },
+     {
+      "key": "record",
+      "label": "Record",
+      "state": "current"
+     },
+     {
+      "key": "cut",
+      "label": "Cut and publish",
+      "state": "todo"
+     }
+    ],
+    "current": "record",
+    "materials": [
+     {
+      "id": "m1",
+      "title": "Storyboard: Monday",
+      "kind": "paste",
+      "bytes": 1,
+      "at": "2026-11-15T10:00:00Z"
+     }
+    ],
+    "research_file": false,
+    "look": {
+     "recommended": {
+      "production": null,
+      "experiment": null,
+      "script": null,
+      "why": null
+     },
+     "options": [
+      {
+       "id": "face-with-proof",
+       "name": "Face-led",
+       "pitch": "Face-led, pitched.",
+       "status": "trial"
+      },
+      {
+       "id": "kinetic-movement",
+       "name": "Everything moves",
+       "pitch": "Everything moves, pitched.",
+       "status": "trial"
+      }
+     ],
+     "picked": {
+      "production": "face-with-proof",
+      "experiment": null,
+      "inspiration": [],
+      "at": "2026-11-15T10:00:00Z"
+     }
+    },
+    "inspiration": {
+     "cards": [
+      {
+       "id": "c1",
+       "name": "clip.mp4",
+       "words": "I like how it is lit.",
+       "saved": "2026-11-01T00:00:00Z"
+      }
+     ],
+     "unread": 3
+    },
+    "prompts": {
+     "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Monday 2026-11-16, the follow.the.money series.\nThe idea: Pie…",
+     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
+     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
+     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    },
+    "storyboard": {
+     "title": "Storyboard: Monday",
+     "at": "2026-11-15T10:00:00Z"
+    }
+   },
+   "stop": 3,
+   "who": "you",
+   "runs_on": "You, then your home computer places each take on its piece",
+   "next": "Record both cuts from your Teleprompter; each take files itself",
+   "actions": [
+    {
+     "kind": "open",
+     "label": "Open Teleprompter",
+     "href": "https://app.teleprompter.com"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    }
+   ],
+   "media": [
+    {
+     "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+     "kind": "cut",
+     "cut": "long",
+     "title": "Long cut",
+     "at": "2026-11-16T08:00:00Z",
+     "seconds": 412,
+     "poster": "7141f3ae5b0dea3f268d2d9d9ef04be169809eef0f9cc25e88ab0ac103f07054"
+    },
+    {
+     "id": "7141f3ae5b0dea3f268d2d9d9ef04be169809eef0f9cc25e88ab0ac103f07054",
+     "kind": "thumbnail",
+     "cut": "long",
+     "title": "Long cut thumbnail",
+     "at": "2026-11-16T08:00:00Z"
+    }
+   ]
+  },
+  {
+   "day": "tue",
+   "date": "2026-11-17",
+   "label": "Tue 17",
+   "series": "off day",
+   "piece_id": null,
+   "detail": [
+    {
+     "h": "povteach",
+     "p": "Meme video, 9:16 · improve · revised"
+    }
+   ],
+   "kind": "Off day: Meme video",
+   "title": "Option povteach",
+   "stop": 3,
+   "who": "you",
+   "runs_on": "Your press, here: the same record as the full board",
+   "next": "The revised version is back. Approve it, improve it again or reject it",
+   "reviews": [
+    {
+     "doc_id": "off-tue-povteach",
+     "revision": 2,
+     "side": "idea",
+     "option": {
+      "id": "povteach",
+      "format": "Meme video, 9:16",
+      "source": "",
+      "copy": "Option povteach",
+      "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
+      "hook": null,
+      "pitch": null,
+      "direction": null,
+      "revised": {
+       "side": "idea",
+       "words": "his words"
+      },
+      "idea_sha256": "83debb90869f7c10276c52bbd96c8e3f3015e596ddd4912d994eb9794f84aa59",
+      "direction_sha256": null,
+      "shown_idea": {
+       "copy": "Option povteach",
+       "hook": null,
+       "pitch": null,
+       "cards": null
+      }
+     },
+     "prev": {
+      "use": "offday",
+      "pick": "off-tue-povteach",
+      "day": "tue",
+      "idea": {
+       "verdict": "improve",
+       "words": "Change the caption",
+       "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+     }
+    }
+   ],
+   "actions": [
+    {
+     "kind": "review",
+     "label": "Review the revised version"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Tue 17 (off …"
+    }
+   ],
+   "media": []
+  },
+  {
+   "day": "wed",
+   "date": "2026-11-18",
+   "label": "Wed 18",
+   "kind": "Essay and two cuts",
+   "series": "under.the.hood",
+   "detail": [
+    {
+     "h": "Research",
+     "p": "WIRED: a source"
+    },
+    {
+     "h": "Narrative lock",
+     "p": "Signed"
+    },
+    {
+     "h": "Look",
+     "p": "Not picked yet"
+    }
+   ],
+   "title": "Piece db9f. It says one thing.",
+   "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+   "path": {
+    "steps": [
+     {
+      "key": "research",
+      "label": "Research",
+      "state": "done"
+     },
+     {
+      "key": "story",
+      "label": "Story",
+      "state": "done"
+     },
+     {
+      "key": "look",
+      "label": "Look",
+      "state": "current"
+     },
+     {
+      "key": "board",
+      "label": "Storyboard and script",
+      "state": "todo"
+     },
+     {
+      "key": "record",
+      "label": "Record",
+      "state": "todo"
+     },
+     {
+      "key": "cut",
+      "label": "Cut and publish",
+      "state": "todo"
+     }
+    ],
+    "current": "look",
+    "materials": [
+     {
+      "id": "m2",
+      "title": "WIRED: a source",
+      "kind": "paste",
+      "bytes": 1,
+      "at": "2026-11-14T10:00:00Z"
+     }
+    ],
+    "research_file": true,
+    "look": {
+     "recommended": {
+      "production": {
+       "id": "face-with-proof",
+       "name": "Face-led",
+       "pitch": "Face-led, pitched.",
+       "status": "trial"
+      },
+      "experiment": {
+       "id": "kinetic-movement",
+       "name": "Everything moves",
+       "pitch": "Everything moves, pitched.",
+       "status": "trial"
+      },
+      "script": {
+       "id": "fry-explainer",
+       "name": "The Hannah Fry explainer",
+       "pitch": "The Hannah Fry explainer, pitched.",
+       "status": "trial"
+      },
+      "why": "Because it moves."
+     },
+     "options": [
+      {
+       "id": "face-with-proof",
+       "name": "Face-led",
+       "pitch": "Face-led, pitched.",
+       "status": "trial"
+      },
+      {
+       "id": "kinetic-movement",
+       "name": "Everything moves",
+       "pitch": "Everything moves, pitched.",
+       "status": "trial"
+      }
+     ],
+     "picked": null
+    },
+    "inspiration": {
+     "cards": [
+      {
+       "id": "c1",
+       "name": "clip.mp4",
+       "words": "I like how it is lit.",
+       "saved": "2026-11-01T00:00:00Z"
+      }
+     ],
+     "unread": 3
+    },
+    "prompts": {
+     "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Wednesday 2026-11-18, the under.the.hood series.\nThe idea: Wh…",
+     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
+     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
+     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    },
+    "storyboard": null
+   },
+   "stop": 2,
+   "who": "you",
+   "runs_on": "Your pick, here; a mock on your own footage if you want one",
+   "next": "Pick the look: the recommended one, another, or fold in your inspiration",
+   "actions": [
+    {
+     "kind": "look",
+     "label": "Pick the look",
+     "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy mock prompt",
+     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    }
+   ],
+   "media": []
+  },
+  {
+   "day": "thu",
+   "date": "2026-11-19",
+   "label": "Thu 19",
+   "series": "off day",
+   "piece_id": null,
+   "detail": [
+    {
+     "h": "lookalikes",
+     "p": "Meme video, 9:16 · improve"
+    }
+   ],
+   "kind": "Off day: Meme video",
+   "title": "Option lookalikes",
+   "stop": 2,
+   "who": "stuck",
+   "run": {
+    "job": "offday-revise",
+    "workflow": "offday-revise.yml",
+    "state": "done",
+    "started_at": "2026-11-09T17:00:00Z",
+    "updated_at": "2026-11-09T17:05:00Z",
+    "url": "https://github.com/krishanraja/content-engine/actions/runs/1",
+    "event": "repository_dispatch"
+   },
+   "runs_on": "GitHub · offday-revise.yml",
+   "next": "Your Improve has not come back as a revision yet. Run it, and the revised version comes back here",
+   "actions": [
+    {
+     "kind": "run",
+     "label": "Run my Improve",
+     "job": "offday-revise",
+     "input": {
+      "week": "2026-11-16",
+      "option": "off-thu-lookalikes"
+     },
+     "runs_on": "GitHub · offday-revise.yml"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Thu 19 (off …"
+    }
+   ],
+   "media": []
+  },
+  {
+   "day": "fri",
+   "date": "2026-11-20",
+   "label": "Fri 20",
+   "kind": "Essay and two cuts",
+   "series": "mind.the.gap",
+   "detail": [
+    {
+     "h": "Research",
+     "p": "None yet"
+    },
+    {
+     "h": "Narrative lock",
+     "p": "Not written yet"
+    },
+    {
+     "h": "Look",
+     "p": "Not picked yet"
+    }
+   ],
+   "title": "Piece b019. It says one thing.",
+   "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+   "path": {
+    "steps": [
+     {
+      "key": "research",
+      "label": "Research",
+      "state": "current"
+     },
+     {
+      "key": "story",
+      "label": "Story",
+      "state": "todo"
+     },
+     {
+      "key": "look",
+      "label": "Look",
+      "state": "todo"
+     },
+     {
+      "key": "board",
+      "label": "Storyboard and script",
+      "state": "todo"
+     },
+     {
+      "key": "record",
+      "label": "Record",
+      "state": "todo"
+     },
+     {
+      "key": "cut",
+      "label": "Cut and publish",
+      "state": "todo"
+     }
+    ],
+    "current": "research",
+    "materials": [],
+    "research_file": false,
+    "look": {
+     "recommended": {
+      "production": null,
+      "experiment": null,
+      "script": null,
+      "why": null
+     },
+     "options": [
+      {
+       "id": "face-with-proof",
+       "name": "Face-led",
+       "pitch": "Face-led, pitched.",
+       "status": "trial"
+      },
+      {
+       "id": "kinetic-movement",
+       "name": "Everything moves",
+       "pitch": "Everything moves, pitched.",
+       "status": "trial"
+      }
+     ],
+     "picked": null
+    },
+    "inspiration": {
+     "cards": [
+      {
+       "id": "c1",
+       "name": "clip.mp4",
+       "words": "I like how it is lit.",
+       "saved": "2026-11-01T00:00:00Z"
+      }
+     ],
+     "unread": 3
+    },
+    "prompts": {
+     "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Friday 2026-11-20, the mind.the.gap series.\nThe idea: Piece b…",
+     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
+     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
+     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    },
+    "storyboard": null
+   },
+   "stop": 1,
+   "who": "you",
+   "runs_on": "Perplexity sonar-pro on the engine, or your own research dropped here",
+   "next": "Bring the evidence: research it now, or drop your Perplexity file on this day",
+   "actions": [
+    {
+     "kind": "research",
+     "label": "Research it now",
+     "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Perplexity prompt",
+     "prompt": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Friday 2026-11-20, the mind.the.gap series.\nThe idea: Piece b…"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    }
+   ],
+   "media": []
+  },
+  {
+   "day": "sat",
+   "date": "2026-11-21",
+   "label": "Sat 21",
+   "series": "good news",
+   "piece_id": null,
+   "detail": [],
+   "kind": "Good news",
+   "title": "This week's good news",
+   "stop": 0,
+   "who": "engine",
+   "runs_on": "GitHub · saturday-goodnews.yml, runs itself on Thursday",
+   "next": "The Thursday run finds the stories; start it now if you want them sooner",
+   "actions": [
+    {
+     "kind": "run",
+     "label": "Find the stories now",
+     "job": "saturday-goodnews",
+     "input": {
+      "week": "2026-11-16"
+     },
+     "runs_on": "GitHub · saturday-goodnews.yml"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Sat 21 (good…"
+    }
+   ],
+   "media": []
+  }
+ ],
+ "yours": [
+  {
+   "key": "mon",
+   "day": "mon",
+   "label": "Mon 16",
+   "next": "Record both cuts from your Teleprompter; each take files itself",
+   "actions": [
+    {
+     "kind": "open",
+     "label": "Open Teleprompter",
+     "href": "https://app.teleprompter.com"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    }
+   ]
+  },
+  {
+   "key": "tue-povteach",
+   "day": "tue",
+   "label": "Tue 17 · povteach",
+   "next": "The revised version is back. Approve it, improve it again or reject it",
+   "actions": [
+    {
+     "kind": "review",
+     "label": "Review the revised version"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Tue 17 (off …"
+    }
+   ],
+   "review": {
+    "doc_id": "off-tue-povteach",
+    "revision": 2,
+    "side": "idea",
+    "option": {
+     "id": "povteach",
+     "format": "Meme video, 9:16",
+     "source": "",
+     "copy": "Option povteach",
+     "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
+     "hook": null,
+     "pitch": null,
+     "direction": null,
+     "revised": {
+      "side": "idea",
+      "words": "his words"
+     },
+     "idea_sha256": "83debb90869f7c10276c52bbd96c8e3f3015e596ddd4912d994eb9794f84aa59",
+     "direction_sha256": null,
+     "shown_idea": {
+      "copy": "Option povteach",
+      "hook": null,
+      "pitch": null,
+      "cards": null
+     }
+    },
+    "prev": {
+     "use": "offday",
+     "pick": "off-tue-povteach",
+     "day": "tue",
+     "idea": {
+      "verdict": "improve",
+      "words": "Change the caption",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+     }
+    }
+   }
+  },
+  {
+   "key": "wed",
+   "day": "wed",
+   "label": "Wed 18",
+   "next": "Pick the look: the recommended one, another, or fold in your inspiration",
+   "actions": [
+    {
+     "kind": "look",
+     "label": "Pick the look",
+     "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy mock prompt",
+     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    }
+   ]
+  },
+  {
+   "key": "thu",
+   "day": "thu",
+   "label": "Thu 19",
+   "next": "Your Improve has not come back as a revision yet. Run it, and the revised version comes back here",
+   "actions": [
+    {
+     "kind": "run",
+     "label": "Run my Improve",
+     "job": "offday-revise",
+     "input": {
+      "week": "2026-11-16",
+      "option": "off-thu-lookalikes"
+     },
+     "runs_on": "GitHub · offday-revise.yml"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Thu 19 (off …"
+    }
+   ]
+  },
+  {
+   "key": "fri",
+   "day": "fri",
+   "label": "Fri 20",
+   "next": "Bring the evidence: research it now, or drop your Perplexity file on this day",
+   "actions": [
+    {
+     "kind": "research",
+     "label": "Research it now",
+     "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Perplexity prompt",
+     "prompt": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Friday 2026-11-20, the mind.the.gap series.\nThe idea: Piece b…"
+    },
+    {
+     "kind": "prompt",
+     "label": "Copy Claude prompt",
+     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
+    }
+   ]
+  }
+ ],
+ "moved": [
+  {
+   "at": "2026-11-15T10:00:00Z",
+   "text": "You picked Monday's idea"
+  },
+  {
+   "at": "2026-11-09T17:05:00Z",
+   "text": "make-piece.yml: running"
+  },
+  {
+   "at": "2026-11-09T17:05:00Z",
+   "text": "offday-revise.yml: done"
+  }
+ ],
+ "north_star": {
+  "current": 3,
+  "target": 8
+ },
+ "runs": {
+  "make-piece": {
+   "job": "make-piece",
+   "workflow": "make-piece.yml",
+   "state": "running",
+   "started_at": "2026-11-09T17:00:00Z",
+   "updated_at": "2026-11-09T17:05:00Z",
+   "url": "https://github.com/krishanraja/content-engine/actions/runs/1",
+   "event": "repository_dispatch"
+  },
+  "offday-revise": {
+   "job": "offday-revise",
+   "workflow": "offday-revise.yml",
+   "state": "done",
+   "started_at": "2026-11-09T17:00:00Z",
+   "updated_at": "2026-11-09T17:05:00Z",
+   "url": "https://github.com/krishanraja/content-engine/actions/runs/1",
+   "event": "repository_dispatch"
+  }
+ },
+ "sources": {
+  "ideas": true,
+  "runs": true
+ }
+}

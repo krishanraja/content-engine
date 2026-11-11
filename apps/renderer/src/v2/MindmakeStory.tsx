@@ -509,14 +509,15 @@ export function MindmakeStoryV2(props: V2RenderProps) {
           <Shot shot={shot} props={props} />
         </Sequence>
       ))}
+      {/* This route renders 9:16 only: no corner mark or wordmark lockup on vertical video (Ruling, Krish, 2026-11-11).
+          The ending band keeps the approved close. */}
       {house ? (
         <>
-          <HouseMark branding={props.branding} cue={brandCue} resolve={staticFile} />
           <HouseSticker branding={props.branding} safeZones={props.safeZones} atMs={atMs} />
           <HouseCall branding={props.branding} safeZones={props.safeZones} atMs={atMs} />
           <HouseBand branding={props.branding} cue={brandCue} safeZones={props.safeZones} atMs={atMs} resolve={staticFile} />
         </>
-      ) : <BrandLockup branding={props.branding} placement={brandCue} />}
+      ) : null}
       {props.captions.map((cue, index) => (
         <Sequence key={`${cue.startMs}-${index}`} from={frameAt(cue.startMs, fps)} durationInFrames={framesFor(cue.endMs - cue.startMs, fps)}>
           <AbsoluteFill>
