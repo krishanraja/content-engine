@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { guardCronRoute } from '../_auth.js'
+import { guardCronRoute, operatorBearerAllowed } from '../_auth.js'
 import { withContentRun } from '../_runs.js'
 import { runMirror } from '../_researchLibraryGoogle.js'
 
@@ -7,7 +7,7 @@ import { runMirror } from '../_researchLibraryGoogle.js'
 // library"; api/_researchLibrary.ts has the rules).
 //
 //   GET  /api/research-library/sweep                      cron, hourly
-//   POST /api/research-library/sweep [{ material }]        by hand, on the cron secret or the engine key; with a
+//   POST /api/research-library/sweep [{ material }]        by hand, on the cron secret, his login or the engine key; with a
 //                                                          material id (or ?material=), copies that one now
 //
 // Copies every research material in the piece store that has no copy in `makeyourmindup > 6 Research library` yet, and
@@ -20,7 +20,9 @@ export const config = { maxDuration: 120 }
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
 async function handler(req: VercelRequest, res: VercelResponse) {
-  if (guardCronRoute(req, res)) return
+  // A session on the engine key may run it by hand (a backfill, a check); everything else is the cron guard's.
+  if (!(req.method === 'POST' && operatorBearerAllowed(req)) && guardCronRoute(req, res)) return
+  res.setHeader('Cache-Control', 'no-store')
   const body = req.body && typeof req.body === 'object' && !Array.isArray(req.body) ? req.body as Record<string, unknown> : {}
   const raw = req.method === 'POST' ? String(body.material ?? (Array.isArray(req.query.material) ? req.query.material[0] : req.query.material) ?? '') : ''
   const material = raw.trim().toLowerCase()
