@@ -1606,6 +1606,8 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `interface LibraryFolder`
 - `interface LibraryFile`
 - `interface LibraryDrive`
+- `interface IndexSheet`
+- `interface IndexTidy`
 - `interface LibraryIndex`
 - `type LeaseTake`
 - `interface LibraryLock`
@@ -1620,6 +1622,12 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `function mimeOf(m: StoredMaterial): string`
 - `function descriptionOf(m: StoredMaterial, piece: PieceInfo | null, place: Place): string`
 - `function indexRowOf(m: StoredMaterial, piece: PieceInfo | null, place: Place, link: string): string[]`
+- `const INDEX_LINK_AT`
+- `function fileIdOf(link: string): string | null`
+- `type LiveLink = (materialId: string, link: string) => boolean`
+- `function duplicateRows(sheet: Pick<IndexSheet, 'firstRow' | 'values'>, live: LiveLink): { repairs: IndexTidy['repairs']…`
+- `function tidyPlan(sheet: IndexSheet, listed: Set<string>, live: LiveLink): { ok: true; plan: IndexTidy } | { ok: false;…`
+- `function deleteRuns(rows: number[]): Array<[number, number]>`
 - `async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, lock: LibraryLock, opts: MirrorO…`
 
 ### `apps/control-plane/api/_researchLibraryGoogle.ts`
