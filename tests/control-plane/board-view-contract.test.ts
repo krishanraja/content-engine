@@ -31,6 +31,7 @@ function full(): ViewInputs {
   return {
     week: WEEK, now: new Date('2026-11-16T09:00:00Z'),
     pieces: [
+      piece('5b726fc3-ac63-4607-9293-3257b4ecc75c', '2026-11-16', 'mind_the_gap'),
       piece(MON, '2026-11-16', 'follow_the_money', { video_assets: [cut], workroom: 'done', draft: 'done', scripts: 'done' },
         { materials: [{ id: 'm1', title: 'Storyboard: Monday', kind: 'paste', content: 'x', at: '2026-11-15T10:00:00Z' }], look: { production: 'face-with-proof', experiment: null, inspiration: [], at: '2026-11-15T10:00:00Z' } }),
       piece(WED, '2026-11-18', 'under_the_hood', {}, { materials: [{ id: 'm2', title: 'WIRED: a source', kind: 'paste', content: 'x', at: '2026-11-14T10:00:00Z' }] }),
@@ -44,12 +45,18 @@ function full(): ViewInputs {
     north_star: { current: 3, target: 8 },
     ideas: {
       days: { wed: [{ id: WED, so_what: 'Why it matters', story: 'The story', style: { production: 'face-with-proof', script: 'fry-explainer', experiment: { format: 'kinetic-movement', why: 'Because it moves.' } } }] },
-      offdays: { tue: [option('povteach', { revised: { side: 'idea', words: 'his words' } })], thu: [option('lookalikes')], sat: [] },
+      offdays: { tue: [option('povteach', { revised: { side: 'idea', words: 'his words' } })], thu: [option('lookalikes')],
+        sat: [option('goodnews', { weekly: 'good_news', stories_due: '2026-11-19', decided: 'Signed off (Krish, 15 Nov).', stories: [1, 2, 3, 4, 5].map(n => ({
+          headline: `Story ${n}`, what: 'What happened.', why: 'Why it helps.', date: '2026-11-18', source: { label: 'The source', url: `https://example.org/${n}` }, media: { kind: 'photo', url: `https://example.org/${n}.jpg` } })) })] },
     },
     locks: { mon: SIGNED, wed: SIGNED, fri: null },
     research_files: { wed: true },
     formats: { script: [look('fry-explainer', 'The Hannah Fry explainer')], production: [look('face-with-proof', 'Face-led'), look('kinetic-movement', 'Everything moves')] },
     inspiration: { cards: [{ id: 'c1', name: 'clip.mp4', words: 'I like how it is lit.', saved: '2026-11-01T00:00:00Z' }], unread: 3 },
+    // 1.1.0: his comments, Growth's ticks and the week's change signal; a second piece on Monday; the weekly good news.
+    comments: [{ doc_id: 'desk-mon-cut-1', updated_by: 'Krish', updated_at: '2026-11-16T08:30:00Z', body: { thread_id: 'desk-mon-cut-1', anchor: 'desk:mon:cut', text: 'Love the open.', at: '2026-11-16T08:30:00Z' } }],
+    ticks: [{ tick_id: 'mon-shorts', updated_by: 'growth', body: { done: true, day: 'mon', step: 'shorts', label: 'YouTube Shorts', at: '2026-11-16T09:00:00Z', posts: [{ url: 'https://www.youtube.com/shorts/x' }] } }],
+    revision: 7,
   }
 }
 
@@ -137,6 +144,8 @@ describe('the Publish Board view contract', () => {
   })
 
   it('judges a schema change: an addition passes with a bump, a removal needs a major', () => {
+    const [ma, mi] = VIEW_CONTRACT_VERSION.split('.').map(Number)
+    const MINOR = `${ma}.${mi + 1}.0`, MAJOR = `${ma + 1}.0.0`
     const base = JSON.parse(JSON.stringify(SCHEMA)) as Body
     const next = (f: (s: Body & Record<string, any>) => void, v?: string) => {
       const s = JSON.parse(JSON.stringify(SCHEMA)) as Body & Record<string, any>
@@ -144,14 +153,14 @@ describe('the Publish Board view contract', () => {
       if (v) s['x-contract-version'] = v
       return s
     }
-    const added = next(s => { s.$defs.day.properties.checklist = { type: 'array' } }, '1.1.0')
+    const added = next(s => { s.$defs.day.properties.checklist = { type: 'array' } }, MINOR)
     expect(compare(base, added).breaking).toEqual([])
     expect(judge(base, added).ok).toBe(true)
     expect(judge(base, next(s => { s.$defs.day.properties.checklist = { type: 'array' } })).ok).toBe(false)
-    const removed = next(s => { delete s.$defs.day.properties.next; s.$defs.day.required = s.$defs.day.required.filter((k: string) => k !== 'next') }, '1.1.0')
+    const removed = next(s => { delete s.$defs.day.properties.next; s.$defs.day.required = s.$defs.day.required.filter((k: string) => k !== 'next') }, MINOR)
     expect(compare(base, removed).breaking.join()).toMatch(/next: removed or renamed/)
     expect(judge(base, removed).ok).toBe(false)
-    expect(judge(base, next(s => { delete s.$defs.day.properties.next }, '2.0.0')).ok).toBe(true)
+    expect(judge(base, next(s => { delete s.$defs.day.properties.next }, MAJOR)).ok).toBe(true)
     expect(compare(base, next(s => { s.$defs.day.properties.title.type = ['string', 'null'] })).breaking.join()).toMatch(/title: may now be null/)
     expect(compare(base, next(s => { s.$defs.action.properties.kind.enum.push('teleprompter') })).breaking).toEqual([])
     expect(compare(base, next(s => { s.$defs.dayKey.enum.push('sun') })).breaking.join()).toMatch(/sun/)
