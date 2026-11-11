@@ -2321,6 +2321,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 What every prompt the board copies out says about reporting back, and what the board shows of the sessions and the
 
 - `const WRITE_BACK_HEAD`
+- `const RESEARCH_RULE`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
@@ -2567,8 +2568,9 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 ### `apps/control-plane/api/content-ideas/store.ts`
 
 - `const config`
-- `function createStoreHandler(getDb: () => Promise<StoreDb>)`
-- `export default createStoreHandler(async () => (await import('../_supabase.j`
+- `type LibraryCopy`
+- `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy)`
+- `export default createStoreHandler( async () => (await import('../_supabase.`
 
 ### `apps/control-plane/api/content-ideas/synthesize.ts`
 
