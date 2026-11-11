@@ -252,7 +252,7 @@ def inputs_from_props(props: dict) -> dict:
         slots.setdefault(event['obj'], box)
     # boxFor('caption') in apps/renderer/src/engine/geometry.ts, using
     # HOUSE.caption in apps/renderer/src/house/geometry.ts; round outwards.
-    region = (72, 1180, 900, 217) if aspect == '9:16' else (260, 773, 1400, 187)
+    region = (60, 1090, 800, 217) if aspect == '9:16' else (260, 773, 1400, 187)  # house/geometry.ts HOUSE.caption
     stem = props['audio']['stem']
     # The stem is already assembled. Source-take trims in props.segments must
     # never be applied to it; compare each beat at its position in this master.

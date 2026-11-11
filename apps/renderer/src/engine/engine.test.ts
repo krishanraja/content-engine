@@ -38,8 +38,9 @@ describe('ve layouts', () => {
   for (const aspect of aspects) {
     for (const layout of layouts) {
       it(`${layout} stays inside ${aspect} content safe bounds`, () => {
-        // Tall: key content in X 120-888 above Y 840; below Y 840 only X 120-780 (the platform action rail), and
-        // graphics end by Y 1150 so the caption block (top 1180) is never covered. Wide: title-safe.
+        // Tall: key content in every channel's safe column (config/channel-safe-zones.json): X 60-860, clear of the
+        // action rail from X 880, from Y 270 under the top bar, ending by Y 1050 so the caption block (top 1060) is
+        // never covered. Wide: title-safe.
         const slots = slotsFor(layout, aspect)
         expect(slots).toHaveLength({ P1: 2, P3: 3, P6: 2, F1: 3, F3: 2 }[layout])
         for (const box of slots) {
@@ -51,10 +52,10 @@ describe('ve layouts', () => {
           const right = box.left + box.width
           const bottom = box.top + box.height
           if (aspect === '9:16') {
-            expect(box.left).toBeGreaterThanOrEqual(120)
-            expect(box.top).toBeGreaterThanOrEqual(288)
-            if (bottom <= 840) expect(right).toBeLessThanOrEqual(888)
-            else { expect(right).toBeLessThanOrEqual(780); expect(bottom).toBeLessThanOrEqual(1150) }
+            expect(box.left).toBeGreaterThanOrEqual(60)
+            expect(box.top).toBeGreaterThanOrEqual(270)
+            expect(right).toBeLessThanOrEqual(860)
+            expect(bottom).toBeLessThanOrEqual(1050)
           } else {
             expect(box.left).toBeGreaterThanOrEqual(96)
             expect(box.top).toBeGreaterThanOrEqual(54)
@@ -82,7 +83,18 @@ describe('ve layouts', () => {
 
   it('returns independent slot boxes', () => {
     slotsFor('P1', '9:16')[0]!.left = 0
-    expect(slotsFor('P1', '9:16')[0]!.left).toBe(120)
+    expect(slotsFor('P1', '9:16')[0]!.left).toBe(60)
+  })
+
+  // Krish, 2026-11-11: "all vertical video templates should be adjusted to make maximum use of the full screen, as
+  // opposed to the current situation where a third of the screen at the top is now cut off". Every tall layout's key
+  // content starts just under the channels' top bar, never lower than y 340.
+  it('uses the top of the tall screen: every layout starts its content between y 270 and 340', () => {
+    for (const layout of layouts) {
+      const top = Math.min(...slotsFor(layout, '9:16').map((box) => box.top))
+      expect(top, layout).toBeGreaterThanOrEqual(270)
+      expect(top, layout).toBeLessThanOrEqual(340)
+    }
   })
 })
 

@@ -12,8 +12,8 @@ export const SCRIBBLE = {
 export const ZONES = {
   header: { x: 72, y: 79, w: 888, h: 56 },
   headline: { x: 72, y: 150, w: 888, h: 270 },
-  caption: { x: 72, y: 1180, w: 900, h: 320 },
-  key_band_bottom_y: 1170,
+  caption: { x: 60, y: 1090, w: 800, h: 230 },
+  key_band_bottom_y: 1080,
   lower_line: { x: 72, y: 1516, w: 936, h: 104 },
   marquee: { x: 0, y: 1736, w: 1080, h: 62 },
   platform: { right_x: 960, bottom_y: 1640 },

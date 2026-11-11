@@ -45,8 +45,9 @@ export const HOUSE = {
   // .mark: the tile on every beat (its left and top come from the theme's
   // anchor offsets, 72 and 150, kept inside the platform's safe zone).
   mark: { size: 136, image: 96, shadow: 10 },
-  // .cap
-  caption: { left: 72, right: 108, top: 1180, paddingTop: 34, paddingX: 42, paddingBottom: 38, size: 68, lineHeight: 1.06, letterSpacingEm: -0.015, weight: 900, stretchPercent: 112, shadow: 12 },
+  // .cap: x 60 to 860 and y 1090 to 1320 on the tall canvas (two lines with the shadow end at 1318), clear of every channel's action rail and of Instagram's
+  // handle and caption (config/channel-safe-zones.json; card ve-motion-4-channel-safe-tall; Krish, 2026-11-11).
+  caption: { left: 60, right: 220, top: 1090, paddingTop: 34, paddingX: 42, paddingBottom: 38, size: 68, lineHeight: 1.06, letterSpacingEm: -0.015, weight: 900, stretchPercent: 112, shadow: 12 },
   // .swipe and .swipe::before; h2 .swipe overrides the insets.
   swipe: { paddingEm: 0.1, skewDegrees: -8, text: { left: -0.04, right: -0.04, top: 0.08, bottom: 0.02 }, display: { left: -0.02, right: -0.06, top: -0.03, bottom: -0.05, lineHeight: 0.88 } },
   // .sticker
@@ -125,7 +126,7 @@ export function houseShortStickerFrame(text: string, safe: HouseSafeZones) {
 }
 
 /** The caption block: where the director put the caption layer, or the
- *  mock's place for it (left 72, right 108, top 1180) inside the safe zone.
+ *  mock's place for it (left 60, right 220, top 1090) inside every channel's safe zone.
  *  Its height follows its lines. */
 export function houseCaptionFrame(safe: HouseSafeZones, bounds?: { x: number; y: number; width: number }): { left: number; top: number; width: number } {
   if (bounds) return { left: Math.round(bounds.x * HOUSE.width), top: Math.round(bounds.y * HOUSE.shortHeight), width: Math.round(bounds.width * HOUSE.width) }

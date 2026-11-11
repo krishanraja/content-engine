@@ -49,23 +49,37 @@ class Zones(unittest.TestCase):
         # Below Instagram's account row (270 px, 7 Nov) and above the rails.
         self.assertEqual(channel_safe.box_violations([('card', (60, 300, 800, 240))]), [])
 
-    def test_quick_edit_caption_bands_are_measured(self):
+    def test_quick_edit_caption_bands_clear_every_channel(self):
+        # Krish, 2026-11-11: captions never "underneath the social app UI features".
         import advisory_qc
         hits = channel_safe.box_violations([(b, tuple(v)) for b, v in advisory_qc.CAPTION_BANDS['9x16'].items()])
-        # The top band (y 230) sits under the assumed account row until that row is measured on his phone (7 Nov).
-        self.assertTrue(all(h['zone'].startswith('action rail') or
-                            (h['what'] == 'normal' and h['zone'].startswith('account row')) for h in hits), hits)
+        self.assertEqual(hits, [])
+
+    def test_quick_edit_tall_panel_picture_clears_every_channel(self):
+        import kit
+        g = kit.panel_geometry('9x16')
+        x, y, w, h = g['area']
+        hits = channel_safe.box_violations([('tall panel picture', (x, y, w + kit.SHADOW_PX, h + kit.SHADOW_PX))])
+        self.assertEqual(hits, [])
+        self.assertLessEqual(y, 340)  # the picture starts at the top of the safe area, not a third of the way down
 
 
 class VeRow(unittest.TestCase):
-    def test_ve_lists_but_does_not_yet_count_the_row_and_skips_whole_stage_beats(self):
+    def test_ve_counts_the_row_and_skips_whole_stage_beats(self):
         from velib import qc_channel
         layouts = {'9:16': {'STAGE': [(0, 0, 1080, 1920)], 'P1': [(60, 1400, 960, 300)]}}
         row = qc_channel.safe_zones([], [{'id': 'a', 'layout': 'STAGE', 'uses': ['x']}], '9:16', None, 'house', layouts)
-        self.assertEqual((row['pass'], row['status']), (True, 'advisory'))
+        self.assertTrue(row['pass'])
+        self.assertNotIn('status', row)
         row = qc_channel.safe_zones([], [{'id': 'b', 'layout': 'P1', 'uses': ['y']}], '9:16', None, 'house', layouts)
         self.assertFalse(row['pass'])
-        self.assertEqual(row['status'], 'advisory')
+        self.assertNotIn('status', row)
+
+    def test_ve_real_tall_layouts_and_word_title_clear_every_channel(self):
+        from velib import qc_channel
+        beats = [{'id': l, 'layout': l, 'uses': ['a', 'b', 'c']} for l in ('P1', 'P3', 'P6', 'F1', 'F3')]
+        row = qc_channel.safe_zones([], beats, '9:16', None, 'word')
+        self.assertTrue(row['pass'], row['value'])
 
 
 class Frames(unittest.TestCase):
