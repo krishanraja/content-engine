@@ -1,0 +1,28 @@
+{
+  "path": "docs/ve/cards/styles-3d/ve-style-0-three-and-moves.md",
+  "card_id": "ve-style-0-three-and-moves",
+  "kind": "code",
+  "title": "The renderer draws three.js, and the lab moves become one package ve and the lab both import",
+  "goal": "Krish, 11 Nov 2026: \"yes port The Ladder and The Living Screen into ve\"; he chose \"Cards for Codex\" for the build. The Ladder and The Living Screen are drawn in real 3D in the style lab (lab/styles/ladder/scene.mjs, lab/styles/living-screen/scene.mjs) on the house moves in lab/moves/. Before their devices can be built, the renderer needs the same tools.\n\n1. `apps/renderer/package.json`: add `three` at the lab's pinned version (lab/styles/package.json, 0.170.0) and `@remotion/three` at the renderer's Remotion version (4.0.518). Update the lockfile with `npm install`.\n2. `apps/renderer/scripts/ve-render.mjs`: render with `chromiumOptions: { gl: 'angle' }` (WebGL in headless Chromium), for stills and cuts alike.\n3. `packages/moves/`: move every lab move (lab/moves/<move>/move.mjs and lab/moves/_kit.mjs, lab/moves/index.json) into a package (`@mymu/moves`, plain ES modules, no build step) whose draw functions take (ctx or THREE scene, t, params, tokens) and read time only from t. lab/moves/<move>/ keeps its gallery and check by importing from the package; lab/styles/*/scene.mjs import from it too, and their stills do not change (render the five styles' tall stills at 6, 12.5, 20 and 27 s before and after; they must match within 1% of pixels).\n4. Add `packages/moves/**` to `config/ve/production-guards.json` engine.paths.\n5. A smoke device test: a 64x64 three.js scene rendered through `@remotion/three` at frame 0 and frame 15 differs, and the same frame twice is identical (deterministic).",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md (frames, events and colour tokens only; nothing reads a clock, Math.random or the network). The house look must not move: `ve lab render` then `ve lab diff --against <last lab folder>` is clean.",
+  "acceptance": "npx vitest run apps/renderer/src/engine\nnode lab/moves/check.mjs\npython scripts/ve/check_route.py\nnode node_modules/typescript/bin/tsc --noEmit --pretty false",
+  "write_allow": [
+    "apps/renderer/package.json",
+    "package-lock.json",
+    "apps/renderer/scripts/ve-render.mjs",
+    "packages/moves/**",
+    "lab/moves/**",
+    "lab/styles/*/scene.mjs",
+    "config/ve/production-guards.json",
+    "apps/renderer/src/engine/devices/three_smoke/**"
+  ],
+  "read": [
+    "lab/styles/**",
+    "lab/moves/**",
+    "apps/renderer/src/engine/devices/CONTRACT.md",
+    "apps/renderer/src/engine/clock.ts",
+    "config/ve/production-guards.json"
+  ],
+  "max_minutes": 60,
+  "max_calls": 60
+}
