@@ -380,10 +380,13 @@ def refused_findings(opts, refused, ask_ids, said=(), unvetoed=(), p6=False):
     gave back with his press (unvetoed), and the return of an idea he pressed Next week on after refusing, which must
     come back deeper instead (returns_findings)."""
     out = []
+    # One finding per option and subject: a Reject before refusing words in another press, the newest first.
+    order = sorted(sorted(refused['refusals'], key=lambda r: r['at'], reverse=True), key=lambda r: not r['hard'])
     for opt in opts:
-        for r in refused['refusals']:
+        seen = set()
+        for r in order:
             subject = touches(opt, r)
-            if not subject:
+            if not subject or subject.lower() in seen:
                 continue
             if set(opt.get('covers') or []) & set(ask_ids):
                 continue
@@ -391,6 +394,7 @@ def refused_findings(opts, refused, ask_ids, said=(), unvetoed=(), p6=False):
                 continue
             if any(is_return_of(opt, f) and f['at'] >= r['at'] for f in refused['filed']):
                 continue
+            seen.add(subject.lower())
             line = f'{opt["ref"]} is on {subject}, which he refused on {day_of(r["at"])} ({r["via"]}, {r["ref"]})'
             if r['hard'] or p6:
                 out.append({'code': 'refused', 'ref': opt['ref'], 'subject': subject, 'refusal': r['ref'],
