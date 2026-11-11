@@ -18,6 +18,12 @@
     "colour": "butter"
    },
    {
+    "name": "Udio",
+    "logo": "logos/udio-cream.png",
+    "tag": "OR THIS",
+    "colour": "butter"
+   },
+   {
     "name": "Grammys",
     "logo": "logos/grammys-cream.svg",
     "tag": "SPLIT",
@@ -41,7 +47,7 @@
      0.8
     ]
    },
-   "source": "official_charts",
+   "source": "s1",
    "tag": "THE OFFICIAL CHARTS",
    "alt": "The Official Charts page for Movin' To The Sun by HUGEL, Imael Angel and Ultra Nate: peak position 2",
    "show_tag": false,

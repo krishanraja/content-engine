@@ -1,0 +1,48 @@
+{
+ "title": "A Reiki master wrote a UK number two, and it's both AI and human",
+ "subtitle": "Movin' To The Sun started as an AI demo by a Reiki master, then a DJ and a house legend finished it. The Grammys split it in two. Here is who did which bit, and why that's the question to ask at work.",
+ "date": "2026-11-11",
+ "kicker": "under.the.hood",
+ "body": "../article.md",
+ "words": "publish-words.json",
+ "images": [
+  {
+   "id": "cover",
+   "role": "cover",
+   "file": "../../../../.cache/pack/wed11/pages/cover-1200x630.png",
+   "alt": "AI music or human music? The Official Charts page for Movin' To The Sun, peak position 2, beside the Suno, Grammys and Deezer logos."
+  },
+  {
+   "id": "vertical-cover",
+   "role": "vertical-cover",
+   "file": "../../../../.cache/pack/wed11/pages/cover-1080x1920.png",
+   "alt": "AI music or human music? The Official Charts page for Movin' To The Sun, peak position 2, beside the Suno, Grammys and Deezer logos."
+  },
+  {
+   "id": "square-cover",
+   "role": "square-cover",
+   "file": "../../../../.cache/pack/wed11/pages/cover-1080x1080.png",
+   "alt": "AI music or human music? The Official Charts page for Movin' To The Sun, peak position 2, beside the Suno, Grammys and Deezer logos."
+  },
+  {
+   "id": "share-card-cover",
+   "role": "share-card-cover",
+   "file": "../../../../.cache/pack/wed11/pages/cover-1200x675.png",
+   "alt": "AI music or human music? The Official Charts page for Movin' To The Sun, peak position 2, beside the Suno, Grammys and Deezer logos."
+  }
+ ],
+ "scripts": [
+  {
+   "label": "5-minute script",
+   "file": "../script-long-v2.md"
+  },
+  {
+   "label": "90-second script",
+   "file": "../script-short-v2.md"
+  }
+ ],
+ "status": [
+  "Fact check on these words (11 November 2026): every line passed; nothing is waiting on Krish's sign-off.",
+  "Both videos are Krish's approved one-off composites (\"ok, both are ready to go\", 11 November 2026). They are not filed as video assets: no ve or quick-edit receipt exists for a one-off composite, so they sit in this post's working folder (Krish's choice b, 11 November 2026)."
+ ]
+}

@@ -92,6 +92,15 @@
  ],
  "verdicts": [
   {
+   "title": "Is this UK number two AI or human music?",
+   "surface": "shorts",
+   "verdict": "picked",
+   "why": "His pick for the short after the floor refused the bare question",
+   "krish": "\"Is this UK number two AI or human music?\" (picked in answer to the short title question, 2026-11-11)",
+   "on": "2026-11-11",
+   "piece": "36886e0b-4b32-473b-be72-b0aef31fccef"
+  },
+  {
    "title": "Is it AI or human music?",
    "surface": "shorts",
    "verdict": "picked",
