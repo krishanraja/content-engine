@@ -1,10 +1,16 @@
 {
-  "_about": "Rebuild of the 16 Nov Ideas board (.github/workflows/board-rebuild.yml) with the board code that never drops his typed words (Krish, 2026-11-09: \"Somehow, you've also managed to lose a bunch of my comments for that article\"; \"Yes, rebuild and publish the 16 Nov board\"). The inputs are the Sunday ideas run's own (ideas.json, queue.json, combine.json, sources.json, as on claude/ideas-16-nov-run, PR #464); his saved picks, presses and words live on the board server and are untouched by a rebuild.",
-  "week": "2026-11-16",
-  "gather": false,
-  "args": [
-    "--ideas", "docs/plans/2026-11-16-week/ideas.json",
-    "--queue", "docs/plans/2026-11-16-week/queue.json",
-    "--combine", "docs/plans/2026-11-16-week/combine.json"
-  ]
+ "_about": "Rebuild of the 16 Nov Ideas board (.github/workflows/board-rebuild.yml) with the board code that never drops his typed words (Krish, 2026-11-09: \"Somehow, you've also managed to lose a bunch of my comments for that article\"; \"Yes, rebuild and publish the 16 Nov board\"). The inputs are the Sunday ideas run's own (ideas.json, queue.json, combine.json, sources.json, as on claude/ideas-16-nov-run, PR #464); his saved picks, presses and words live on the board server and are untouched by a rebuild. 11 Nov: Tue 17 carries the proactive-AI short, finished and filed (Krish, 11 Nov 2026: \"Schedule it for Tuesday off day instead\"); its video is served from the library by sha256 (board-assets.json).",
+ "week": "2026-11-16",
+ "gather": false,
+ "args": [
+  "--ideas",
+  "docs/plans/2026-11-16-week/ideas.json",
+  "--queue",
+  "docs/plans/2026-11-16-week/queue.json",
+  "--combine",
+  "docs/plans/2026-11-16-week/combine.json",
+  "--assets",
+  "docs/plans/2026-11-16-week/board-assets.json"
+ ],
+ "assets": "docs/plans/2026-11-16-week/board-assets.json"
 }
