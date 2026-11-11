@@ -220,8 +220,8 @@
       "guards": [
         {
           "file": ".agents/skills/plan-week/SKILL.md",
-          "contains": "pin: true",
-          "how": "each Sunday's board is published pinned, from Krish's own account"
+          "contains": "one live board, in Control Centre",
+          "how": "since 11 Nov 2026 the week's board is Control Centre's Content tab, on Krish's own account, so there is nothing to pin (plan-week, Publish-board routing; the pinned Claude artifact it replaced is retired)"
         }
       ]
     },
