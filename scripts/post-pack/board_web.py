@@ -361,10 +361,16 @@ def main():
     read = sub.add_parser('read'); read.add_argument('week'); read.add_argument('collection', choices=['ticks','links','edits','picks','queue','comments','approvals','titles'])
     download = sub.add_parser('download'); download.add_argument('week'); download.add_argument('--output', required=True); download.add_argument('--build')
     rollback = sub.add_parser('rollback'); rollback.add_argument('week'); rollback.add_argument('build'); rollback.add_argument('--apply', action='store_true')
+    # The week's change signal (POST /api/board/<Monday>/touch): after a run pushes the week's plan files, the live board
+    # in Control Centre reads the week again at once (Ruling, Krish, 2026-11-11: one live board, in Control Centre).
+    touch = sub.add_parser('touch'); touch.add_argument('week'); touch.add_argument('--source', default='plan')
     args = p.parse_args()
     if args.command == 'publish-web': publish(args)
     elif args.command == 'convert-export': convert_export(args)
     elif args.command == 'read': print(json.dumps(call('GET', f'/api/board/{args.week}/{args.collection}'), ensure_ascii=False, indent=2))
+    elif args.command == 'touch':
+        if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', args.week) or not re.fullmatch(r'[a-z][a-z_-]{0,39}', args.source): raise ValueError('touch takes a Monday and a one-word source')
+        print(canonical(call('POST', f'/api/board/{args.week}/touch', {'source': args.source})))
     elif args.command == 'download':
         build = f'?build={args.build}' if args.build else ''
         if args.build and not re.fullmatch(r'[a-f0-9]{64}', args.build): raise ValueError('--build is a 64-hex build id')

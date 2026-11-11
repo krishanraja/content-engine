@@ -8,8 +8,14 @@ name: Saturday good news
 # scheduler and Claude Code runs inside this job on his subscription (CLAUDE_CODE_OAUTH_TOKEN, never an API key),
 # writing to the board only through the engine API (ENGINE_OPERATOR_TOKEN). It follows "The Saturday good news" in
 # .agents/skills/plan-week/references/offdays.md: five real AI stories from the seven days up to Thursday, each checked
-# on its own page, each with its own picture or clip, written onto the week's good-news option and published on that
-# week's live board, so his Approve, Improve, Reject and Next week presses work as on any off-day option.
+# on its own page, each with its own picture or clip, written onto the week's good-news option and put on the live
+# board, so his Approve, Improve, Reject and Next week presses work as on any off-day option.
+#
+# Where it lands (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive):
+# the live board draws GET /api/board/<Monday>/view, which reads the week's ideas.json from offday-revise/<Monday>
+# before main. So the keep step puts the stories on that branch (on top of main and of anything already there, with a
+# pull request to main like an Improve's revision), bumps the week's change signal (board_web.py touch), and the last
+# step asks the view, never the archive page, whether this week's stories are there. Nothing rebuilds the archive.
 #
 # When: Thursday, twice (10:41 and 19:23 UTC; 05:41 and 14:23 in New York in winter), because GitHub's cron fires hours
 # late; the second firing is only a retry. Both are outside 06:00 to 09:00 Pacific. The guard
@@ -112,12 +118,13 @@ jobs:
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           GN_MONDAY: ${{ steps.guard.outputs.monday }}
+          GN_DUE: ${{ steps.guard.outputs.due }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 150
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             The Saturday good news for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub
@@ -125,35 +132,28 @@ jobs:
 
             Run python3 scripts/check_failures.py and python3 scripts/floor.py first. Then follow the section
             "The Saturday good news" in .agents/skills/plan-week/references/offdays.md exactly: find the five stories
-            (real AI news from the seven days up to the option's stories_due that helped real people, each with a real
-            photo or clip of the thing itself the post can embed), check each against its primary source, write them
-            into that week's docs/plans/<Monday>-week/ideas.json, run board_feed.py gather and cover, rebuild that
-            week's board from its live build keeping every made day, and publish it with board_web.py publish-web
-            --apply. Read the live page back. Research with the built-in web search and web fetch.
+            (real AI news from the seven days up to ${{ steps.guard.outputs.due }}, this week's Thursday, that helped
+            real people, each with a real photo or clip of the thing itself the post can embed), check each against its
+            primary source, write them into that week's docs/plans/<Monday>-week/ideas.json on the weekly good-news
+            option, replacing any older stories there, and set that option's stories_due to
+            ${{ steps.guard.outputs.due }}. Then run board_feed.py gather and cover. Research with the built-in web
+            search and web fetch.
 
-            Change nothing but that option's stories; never patch the built page; never publish or post anything
-            public; no spend beyond this run. Do not commit or push: the workflow keeps that folder on a branch. If
-            the board refuses a build, fix the stories and build again; if it still refuses, stop and say why.
+            Change nothing but that option's stories and stories_due; never build or publish a board page (the live
+            board reads ideas.json itself); never publish or post anything public; no spend beyond this run. Do not
+            commit or push: the workflow puts that folder on the live board. If cover refuses the stories, fix them and
+            check again; if it still refuses, stop and say why.
 
-      - name: The stories are live
-        if: steps.guard.outputs.go == 'true'
-        env:
-          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
-          MONDAY: ${{ steps.guard.outputs.monday }}
-        run: |
-          live=$(python3 -c "import sys; sys.path[:0] = ['scripts', 'scripts/post-pack']; import saturday_goodnews as g; print(g.live_has_stories('$MONDAY'))")
-          if [ "$live" != "True" ]; then
-            echo "::error::The run ended but the week of $MONDAY's live board does not show the good-news stories."
-            exit 1
-          fi
-
-      - name: Keep the week's stories on a branch
+      - name: Put the week's stories on the live board
         if: always() && steps.guard.outputs.go == 'true'
+        id: keep
         env:
           MONDAY: ${{ steps.guard.outputs.monday }}
           RUN_ID: ${{ github.run_id }}
           GH_TOKEN: ${{ github.token }}
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
         run: |
+          set -euo pipefail
           folder="docs/plans/$MONDAY-week"
           [ -d "$folder" ] || { echo "::warning::No $folder was written."; exit 0; }
           git config user.name 'github-actions[bot]'
@@ -162,9 +162,33 @@ jobs:
           git add -- "$folder"
           git diff --cached --quiet && { echo "Nothing new in $folder."; exit 0; }
           git commit -q -m "Saturday good news for the week of $MONDAY (run $RUN_ID)" \
-            -m "Written by the Thursday good-news run in GitHub Actions on Krish's subscription; the next session merges it." \
+            -m "Written by the Thursday good-news run in GitHub Actions on Krish's subscription; on the live board through offday-revise/$MONDAY." \
             -m 'Ruling (Krish, 2026-11-07): "Happy to break the "no Claude schedules" rule for Saturday'"'"'s good news. We might as well just keep that on an automatic schedule."'
-          # The checkout kept no credential, so the token is passed to this one push only.
+          # The checkout kept no credential, so the token is passed to each push only.
           auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
           git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/saturday-goodnews/$MONDAY-$RUN_ID"
-          echo "::notice::The week's stories are on the branch saturday-goodnews/$MONDAY-$RUN_ID."
+          # The week's branch, which the live board reads before main: main, then what is already on the branch, then
+          # the stories, so nothing on either is lost (scripts/goodnews_keep.sh).
+          bash scripts/goodnews_keep.sh "$MONDAY" "$(git rev-parse HEAD)" "$auth"
+          echo "::notice::The week's stories are on offday-revise/$MONDAY, which the live board reads."
+          if [ -z "$(gh pr list --head "offday-revise/$MONDAY" --state open --json number --jq '.[].number')" ]; then
+            gh pr create --head "offday-revise/$MONDAY" --base main --title "Saturday good news and off-day revisions for the week of $MONDAY" \
+              --body "This week's good-news stories (and any off-day revisions) for the week of $MONDAY, written by .github/workflows/saturday-goodnews.yml. The live board already shows them from this branch; it merges itself once CI is green (auto-merge.yml)." || true
+          fi
+          # The live board reads the week again at once.
+          python3 scripts/post-pack/board_web.py touch "$MONDAY" --source goodnews || echo "::warning::The week's change signal was not bumped; the board shows the stories at its next read."
+
+      - name: The stories are on the live board
+        if: steps.guard.outputs.go == 'true'
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          MONDAY: ${{ steps.guard.outputs.monday }}
+        run: |
+          # The view the live board draws, asked until it shows this week's stories (a new branch can take a moment).
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            live=$(python3 -c "import sys; sys.path[:0] = ['scripts', 'scripts/post-pack']; import saturday_goodnews as g; print(g.live_has_stories('$MONDAY'))")
+            if [ "$live" = "True" ]; then echo "The live board shows this week's good news."; exit 0; fi
+            sleep 45
+          done
+          echo "::error::The run ended but the live board's view for the week of $MONDAY does not show this week's good-news stories."
+          exit 1
