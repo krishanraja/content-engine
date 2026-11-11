@@ -1,0 +1,3 @@
+Status: Thu 12 Nov off-day meme made and filed: the Geek Creative Agency short Krish saved, unchanged except his caption ("POV: your AI agent using your computer without being set up properly by you"), our wordmark and Geek's credit under the clip, in 3 Posts/2026-11-12 Thu off.day - AI agent not set up with its post description; a Thursday option on the 9 Nov week's board. Tue 17 carries the proactive-AI short. The working - source subfolder in the Thursday folder holds the raw Geek copy used to make it.
+Next: Codex schedules Thu 12 (meme) and Tue 17 (proactive-AI short) from their 3 Posts folders.
+North Star check (2026-11-11): holds.
