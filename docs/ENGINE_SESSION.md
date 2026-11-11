@@ -93,7 +93,7 @@ where each step lives.
 | A piece, the week, the videos | `$make-piece`, `$plan-week`, `$produce-video`, `$ve` from `.agents/skills` | `/make-piece`, `/plan-week`, `/produce-video` and `/ve` from `.claude/skills`, exact copies held by `npm run skills:validate` |
 | A Studio station | the `mindmake-video` skill and the gateway tools | the gateway tools in a tracked session; `mindmake-video` is not loaded as a Claude Code skill (`scripts/validate-skills.py`, `NOT_FOR_CLAUDE`) |
 | Models | `.codex/config.toml`, profile `production` for mechanical work | Opus by default (`.claude/settings.json`); subagents `repo-scout` (Haiku), `executor` (Sonnet), `reviewer` (Opus), and for ve `ve-assets` (Sonnet) and `ve-critic` (Opus), in `.claude/agents/`; `produce-video` on Sonnet by its frontmatter |
-| Verification | `npm run verify` | `npm run verify`; the Stop hook (`.claude/hooks/stop-check.mjs`) also typechecks and runs the related tests whenever a turn changed code |
+| Verification | `npm run verify:quick` (the full `npm run verify` runs after merge) | `npm run verify:quick`; the Stop hook (`.claude/hooks/stop-check.mjs`) also typechecks and runs the related tests whenever a turn changed code |
 | Guardrails | AGENTS.md and the sandbox | AGENTS.md plus the hooks in `.claude/settings.json`: secrets and `.env` refused, the North Star refused, every publish, send, deploy, push to main and taste-rule edit put to Krish in person, the cost guards |
 
 Observations are recorded the same way from both: only through the gateway's tool-backed actions and feedback

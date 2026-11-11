@@ -181,9 +181,9 @@
           "how": "every button clicked in Chromium with fetch blocked"
         },
         {
-          "file": ".github/workflows/ci.yml",
+          "file": ".github/workflows/full-verify.yml",
           "contains": "buttons_in_browser.py",
-          "how": "CI runs it on every push"
+          "how": "the full verify runs it after every merge and nightly, and a red main opens an issue (Ruling, Krish, 2026-11-11: quick checks on pull requests, the full verify after merge)"
         }
       ]
     },
