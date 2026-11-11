@@ -11,7 +11,7 @@ FONTS = REPO / "assets/fonts/makeyourmindup"
 def b64(p, mime):
     return f"data:{mime};base64," + base64.b64encode(pathlib.Path(p).read_bytes()).decode()
 
-T0, T1 = 13.8, 27.4
+T0, T1 = 13.8, 27.6
 words = json.load(open(HERE / "words-a.json"))
 win = [w for w in words if T0 - 0.05 <= w["s"] < T1]
 cap = [[w["w"].strip(",."), w["s"], (win[i + 1]["s"] if i + 1 < len(win) else T1)] for i, w in enumerate(win)]
