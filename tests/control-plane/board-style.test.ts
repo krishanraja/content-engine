@@ -106,7 +106,16 @@ describe('the treatment in the same shape', () => {
     expect(s.treatment).toMatchObject({ picked: 'face-with-proof', picked_by: 'Krish', picked_at: '2026-11-15T10:00:00Z' })
     expect(s.treatment.options[0]).toMatchObject({ recommended: true, line: 'His face with the proof.',
       presses: { yes: { op: 'look', body: { piece_id: PIECE, production: 'face-with-proof', experiment: 'kinetic-movement', inspiration: ['c1'] } } } })
-    expect(s.treatment.options[0]!.presses.not_this).toBeUndefined()
+    // "Not this" on a look, the same shape as motion and captions (mock M5: Yes, Not this, Change it, Add a note on every option).
+    expect(s.treatment.options[0]!.presses.not_this).toMatchObject({ label: 'Not this', op: 'style', body: { piece_id: PIECE, reject: { layer: 'treatment', id: 'face-with-proof' } } })
+  })
+
+  it('a look he said Not this to is not recommended, and is said so, until he picks it', () => {
+    const no = dayStyle(inputs({ meta: { style: { rejected: { treatment: ['face-with-proof'] } } } }))
+    const face = no.treatment.options.find(o => o.id === 'face-with-proof')!
+    expect(face).toMatchObject({ rejected: true, recommended: false, why: null })
+    const picked = dayStyle(inputs({ meta: { look: { production: 'face-with-proof' }, style: { rejected: { treatment: ['face-with-proof'] } } } }))
+    expect(picked.treatment.options.find(o => o.id === 'face-with-proof')!.rejected).toBe(false)
   })
 })
 
@@ -131,15 +140,18 @@ describe('his press on a style', () => {
     expect(refused({ captions: 'nope' })).toEqual([400, 'unknown_caption'])
     expect(refused({ reject: { layer: 'motion', id: 'nope' } })).toEqual([400, 'unknown_motion'])
     expect(refused({ reject: { layer: 'look', id: 'x' } })).toEqual([400, 'invalid_reject'])
+    expect(stylePick({ piece_id: PIECE, reject: { layer: 'treatment', id: 'face-with-proof' } }, null)).toEqual({ reject: { layer: 'treatment', id: 'face-with-proof' } })
+    expect(refused({ reject: { layer: 'treatment', id: 'Not A Look!' } })).toEqual([400, 'unknown_look'])
     expect(refused({})).toEqual([400, 'nothing_to_record'])
     expect(refused({ motion: 'ladder' }, null)).toEqual([503, 'styles_unavailable'])
   })
 
   it('keeps what he said before: a Not this takes the pick away, a pick takes a style off the Not this list', () => {
     const before = { look: { production: 'face-with-proof' }, style: { motion: 'ladder', captions: 'pop', rejected: { motion: ['swiss'], captions: [] } } }
-    expect(nextStyle(before, { reject: { layer: 'motion', id: 'ladder' } }, 'T')).toEqual({ motion: null, captions: 'pop', rejected: { motion: ['swiss', 'ladder'], captions: [] }, by: 'Krish', at: 'T' })
-    expect(nextStyle(before, { motion: 'swiss' }, 'T')).toEqual({ motion: 'swiss', captions: 'pop', rejected: { motion: [], captions: [] }, by: 'Krish', at: 'T' })
-    expect(nextStyle({}, { captions: 'cinematic' }, 'T')).toEqual({ motion: null, captions: 'cinematic', rejected: { motion: [], captions: [] }, by: 'Krish', at: 'T' })
+    expect(nextStyle(before, { reject: { layer: 'motion', id: 'ladder' } }, 'T')).toEqual({ motion: null, captions: 'pop', rejected: { motion: ['swiss', 'ladder'], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
+    expect(nextStyle(before, { motion: 'swiss' }, 'T')).toEqual({ motion: 'swiss', captions: 'pop', rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
+    expect(nextStyle({}, { captions: 'cinematic' }, 'T')).toEqual({ motion: null, captions: 'cinematic', rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: 'T' })
+    expect(nextStyle(before, { reject: { layer: 'treatment', id: 'face-with-proof' } }, 'T').rejected.treatment).toEqual(['face-with-proof'])
   })
 })
 
@@ -180,7 +192,7 @@ describe('the write', () => {
   it('writes meta.style beside meta.look, and keeps a write that lands in between', async () => {
     const { db, state } = fakeDb(ROW, 1)
     const saved = await saveStyle(db as never, PIECE, { motion: 'ladder' }, new Date('2026-11-16T09:30:00Z'))
-    expect(saved).toEqual({ motion: 'ladder', captions: null, rejected: { motion: [], captions: [] }, by: 'Krish', at: '2026-11-16T09:30:00.000Z' })
+    expect(saved).toEqual({ motion: 'ladder', captions: null, rejected: { motion: [], captions: [], treatment: [] }, by: 'Krish', at: '2026-11-16T09:30:00.000Z' })
     expect(state.conflicts).toBe(1)
     expect(state.writes).toBe(1)
     expect(state.row.meta.style).toEqual(saved)
@@ -226,7 +238,7 @@ describe('POST /api/board/<Monday>/style', () => {
   it('records a Not this on a caption style with no read of the bank', async () => {
     const { status, state } = await press({ reject: { layer: 'captions', id: 'beast' } }, { bank: null })
     expect(status).toBe(200)
-    expect(state.row.meta.style.rejected).toEqual({ motion: [], captions: ['beast'] })
+    expect(state.row.meta.style.rejected).toEqual({ motion: [], captions: ['beast'], treatment: [] })
   })
 
   it('is his press only, on a piece of this week, with a style the engine knows', async () => {

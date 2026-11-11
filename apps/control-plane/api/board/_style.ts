@@ -31,6 +31,8 @@ const strings = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is
 
 export type StyleLayerKey = 'motion' | 'captions'
 export const STYLE_LAYERS: readonly StyleLayerKey[] = ['motion', 'captions']
+/** The layers a "Not this" is kept for: the two style layers and the treatment (the looks). */
+export type RejectLayerKey = StyleLayerKey | 'treatment'
 /** A press on an option: POST /api/board/<Monday>/<op> with the body, as a press action with an op does. */
 export interface StylePress { label: string; op: 'style' | 'look'; body: Body; done: string }
 export interface StyleOption {
@@ -96,11 +98,11 @@ const MOTION_ID = /^[a-z0-9][a-z0-9_.-]{0,79}$/
 const ready = (m: MotionModule) => !m.ve_route.includes('needs_device')
 
 /** His style on the piece (meta.style), read safely. */
-export function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<StyleLayerKey, string[]>; at: string | null } {
+export function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, string[]>; at: string | null } {
   const s = isObj(meta) && isObj(meta.style) ? meta.style : {}
   const rejected = isObj(s.rejected) ? s.rejected : {}
   return { motion: typeof s.motion === 'string' ? s.motion : null, captions: typeof s.captions === 'string' ? s.captions : null,
-    rejected: { motion: strings(rejected.motion), captions: strings(rejected.captions) }, at: typeof s.at === 'string' ? s.at : null }
+    rejected: { motion: strings(rejected.motion), captions: strings(rejected.captions), treatment: strings(rejected.treatment) }, at: typeof s.at === 'string' ? s.at : null }
 }
 
 /** The plain reason a motion style is recommended for this piece. */
@@ -180,21 +182,32 @@ export function dayStyle(i: StyleInputs): DayStyle {
     ...captionPick,
   }
 
-  // Treatment: the looks, answered by the look op; his experiment and inspiration on the look are kept.
+  // Treatment: the looks, answered by the look op; his experiment and inspiration on the look are kept. "Not this" on a
+  // look is kept on the piece's style (meta.style.rejected.treatment), as on motion and captions, and takes it off the
+  // recommended; a later Yes on it takes it back.
   const look = isObj(i.meta.look) && typeof i.meta.look.production === 'string' ? i.meta.look : null
   const keep = { experiment: look && typeof look.experiment === 'string' ? look.experiment : null, inspiration: look ? strings(look.inspiration) : [] }
   const treatment: StyleLayer = {
-    options: i.looks.map(l => ({ id: l.id, name: l.name, line: l.pitch, rules: [], recommended: l.id === i.recommendedLook,
-      why: l.id === i.recommendedLook ? 'The Sunday room recommends it for this idea.' : null, sample_url: null, rejected: false,
-      presses: { yes: press('Yes', 'look', { production: l.id, ...keep }, `Picked. ${l.name} is the look for this piece.`) } })),
+    options: i.looks.map(l => {
+      // A look he picked after saying "Not this" to it (the look op) is his pick, never also a no.
+      const rejected = mine.rejected.treatment.includes(l.id) && !(look && look.production === l.id)
+      const rec = l.id === i.recommendedLook && !rejected
+      return { id: l.id, name: l.name, line: l.pitch, rules: [], recommended: rec,
+        why: rec ? 'The Sunday room recommends it for this idea.' : null, sample_url: null, rejected,
+        presses: { yes: press('Yes', 'look', { production: l.id, ...keep }, `Picked. ${l.name} is the look for this piece.`),
+          not_this: press('Not this', 'style', { reject: { layer: 'treatment', id: l.id } }, 'Noted. It is not recommended for this piece any more.') } }
+    }),
     picked: look ? String(look.production) : null, picked_by: look ? 'Krish' : null, picked_at: look && typeof look.at === 'string' ? look.at : null,
   }
   return { motion, captions, treatment }
 }
 
 export class StyleError extends Error { constructor(public status: number, message: string) { super(message) } }
-export interface StylePick { motion?: string; captions?: string; reject?: { layer: StyleLayerKey; id: string } }
-export interface SavedStyle { motion: string | null; captions: string | null; rejected: Record<StyleLayerKey, string[]>; by: 'Krish'; at: string }
+export interface StylePick { motion?: string; captions?: string; reject?: { layer: RejectLayerKey; id: string } }
+export interface SavedStyle { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, string[]>; by: 'Krish'; at: string }
+
+/** A look's id, as the style bank names its formats. */
+const LOOK_ID = /^[a-z0-9][a-z0-9_.-]{0,79}$/
 
 /** Whether a press names the motion layer, so the bank must be read to check it. */
 export function needsMotion(body: Body): boolean {
@@ -218,8 +231,10 @@ export function stylePick(body: Body, motionIds: Set<string> | null): StylePick 
   if (body.captions !== undefined) out.captions = caption(body.captions)
   if (body.reject !== undefined) {
     const r = body.reject
-    if (!isObj(r) || (r.layer !== 'motion' && r.layer !== 'captions')) throw new StyleError(400, 'invalid_reject')
-    out.reject = { layer: r.layer, id: r.layer === 'motion' ? motion(r.id) : caption(r.id) }
+    if (!isObj(r) || (r.layer !== 'motion' && r.layer !== 'captions' && r.layer !== 'treatment')) throw new StyleError(400, 'invalid_reject')
+    // A look is checked by its shape here; the board draws "Not this" only on the looks the bank lists.
+    if (r.layer === 'treatment' && (typeof r.id !== 'string' || !LOOK_ID.test(r.id))) throw new StyleError(400, 'unknown_look')
+    out.reject = { layer: r.layer, id: r.layer === 'motion' ? motion(r.id) : r.layer === 'captions' ? caption(r.id) : String(r.id) }
   }
   if (!out.motion && !out.captions && !out.reject) throw new StyleError(400, 'nothing_to_record')
   return out
@@ -228,7 +243,7 @@ export function stylePick(body: Body, motionIds: Set<string> | null): StylePick 
 /** The style after one press: "Not this" first, then a pick (a pick takes a style back off the "Not this" list). */
 export function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle {
   const now = styleOf(meta)
-  const rejected = { motion: [...now.rejected.motion], captions: [...now.rejected.captions] }
+  const rejected = { motion: [...now.rejected.motion], captions: [...now.rejected.captions], treatment: [...now.rejected.treatment] }
   let { motion, captions } = now
   if (pick.reject) {
     const { layer, id } = pick.reject
