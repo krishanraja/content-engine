@@ -1,0 +1,3 @@
+Status: done. `scripts/recover_research.py` finds research a session left on a home computer (scratch folders, files git does not hold yet, Claude Code and Codex transcripts), lists it in `.scratch/research-recovery/found.tsv` with yes or no and why, and files each yes through the store's own route so the research library copies it. Read only where it looks; never files a whole transcript or anything holding a key.
+Next: on each home computer, in the content-engine checkout, run `python scripts/recover_research.py find`, look over `.scratch/research-recovery/found.tsv`, then `python scripts/recover_research.py file`.
+- North Star check (2026-11-11): holds.
