@@ -1,0 +1,26 @@
+{
+ "_about": "One-off historical backfill, 2026-11-11: each YouTube upload before the watcher's cutover, with the piece it belongs to and the evidence. Applied once by backfill.mjs to the pieces' making records, which stay the only home of these addresses; nothing reads this file afterwards. RECONCILIATION.md is the readable report.",
+ "channel": "UCvxmp6eKUqrjGGbCGl7f9-A",
+ "uploads": [
+  {"id": "awrBEx5T1N4", "kind": "youtube", "piece": "6cb0d213-1aa6-44d3-8dc2-0b91d8dde4df", "evidence": "content: the upload's title is the 5 Oct article's own subtitle claim (Amazon blocked Meta's agent, Shopify let it in); the only piece on that story; upload date not read (YouTube refused the page)"},
+  {"id": "wmAcgXlnkos", "kind": "youtube", "piece": "9ae1a768-f32a-4533-b253-67a506bf5600", "evidence": "exact title: 'Higgsfield, taken apart: the $1bn AI video machine' is the piece's idea and Substack title"},
+  {"id": "UHZxWYukTD0", "kind": "youtube", "piece": "f328382d-71b3-41a7-a221-d8615826f12e", "evidence": "the Substack video post of the same title (12 Oct 21:05, one minute apart) says 'Read the full story: .../p/warner-sued-suno-now-it-takes-a-cut', this piece's address"},
+  {"id": "T5q098yYqxk", "kind": "shorts", "piece": "f328382d-71b3-41a7-a221-d8615826f12e", "evidence": "same day; its title (a song for your dog's birthday) is the article's opening line ('Ask Suno for a song about your dog's birthday'); the only piece that day"},
+  {"id": "Es08awi6BhQ", "kind": "youtube", "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef", "evidence": "the Substack video post of the same title went out 14 Oct 15:20, four minutes after this piece's article; both on Meta's Muse; the only piece that day"},
+  {"id": "QlErmivLs8w", "kind": "shorts", "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef", "evidence": "same day, same subject (Muse by Meta); the only piece that day"},
+  {"id": "L2Vs7Ym2bKE", "kind": "youtube", "piece": "904658db-4df2-4537-a0ed-ebe93e081db7", "evidence": "the Substack video post of the same title ('VIDEO: Does the new AI model name actually matter?') opens on the model release names (Opus 4.8, 5, 5.5), this piece's subject; not the prices piece published that day"},
+  {"id": "Wd9iMtkb76Y", "kind": "youtube", "piece": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092", "evidence": "the Substack video post of the same title opens with this piece's own dek ('Google, OpenAI and Anthropic keep changing their AI prices. How do you budget...')"},
+  {"id": "1nCobSFt2rc", "kind": "youtube", "piece": "d7a20885-7001-4661-b444-9d7ca1043416", "evidence": "exact title of the piece's Substack post"},
+  {"id": "TXvQmPEGRKs", "kind": "youtube", "piece": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67", "evidence": "exact title of the piece's Substack post"},
+  {"id": "2ikBqjPsB7o", "kind": "youtube", "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad", "evidence": "exact title of the piece's Substack post"},
+  {"id": "495I2_X4hF8", "kind": "shorts", "piece": "b63d2507-dbb4-449d-bce4-f21e859ee2ad", "evidence": "already recorded by Growth's receipt (Buffer)"},
+  {"id": "SxWsxqbrJh4", "kind": "youtube", "piece": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23", "evidence": "same day, two minutes before the piece's Substack post; title opens with the piece's title ('Why every country wants its own AI')"},
+  {"id": "xFh9sxqr8bw", "kind": "shorts", "piece": "7083d6ad-419e-4fdc-9aba-f3be7f3f3a23", "evidence": "title is the first clause of the piece's title; same day, the only piece that day"},
+  {"id": "GHN6GjGmCQ4", "kind": "youtube", "piece": "b358e788-209f-427b-a84d-1f79a8ebb430", "evidence": "exact title of the 9 Nov Substack post, which the fixed watcher matches to this piece by its schedule"},
+  {"id": "_8vLveOXrj0", "kind": "shorts", "piece": "b358e788-209f-427b-a84d-1f79a8ebb430", "evidence": "already recorded by Growth's receipt (Buffer)"}
+ ],
+ "exceptions": [
+  {"id": "ADOA0DutbQg", "kind": "shorts", "class": "no piece", "note": "the launch Short ('I got bored of the same old AI how to's...'); the 6 Oct welcome post was never an engine piece"},
+  {"id": "gJr6lwb-myE", "kind": "shorts", "class": "unresolved", "note": "3 Nov, 'When your AI agent meets your customer's AI agent': no piece went out that day and its subject matches neither neighbour (2 Nov junior hiring, 4 Nov Claude Duet, which already has its Short). Krish says which piece, if any"}
+ ]
+}

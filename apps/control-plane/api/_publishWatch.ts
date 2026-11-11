@@ -53,10 +53,19 @@ export function normTitle(s: string | null | undefined): string {
   return String(s || '').toLowerCase().normalize('NFKD').replace(/[‘’“”]/g, '').replace(/[^a-z0-9$]+/g, ' ').trim()
 }
 
+/** The archive's posts. Substack wraps them as { posts, nextCursor } (seen 2026-11-11; before about 6 November it
+ *  answered with a bare list). Any other shape is not "no posts": it throws, so the run fails visibly instead of
+ *  reporting ok with nothing read, which hid every post from 6 to 11 November. */
+export function archiveList(raw: unknown): Array<Record<string, unknown>> {
+  if (Array.isArray(raw)) return raw
+  const posts = (raw as { posts?: unknown } | null)?.posts
+  if (Array.isArray(posts)) return posts
+  throw new Error('archive_unreadable: not a list of posts')
+}
+
 export function readPosts(raw: unknown): Post[] {
-  if (!Array.isArray(raw)) return []
   const out: Post[] = []
-  for (const p of raw as Array<Record<string, unknown>>) {
+  for (const p of archiveList(raw)) {
     const url = typeof p.canonical_url === 'string' ? p.canonical_url : ''
     const title = typeof p.title === 'string' ? p.title : ''
     const at = typeof p.post_date === 'string' ? p.post_date : ''

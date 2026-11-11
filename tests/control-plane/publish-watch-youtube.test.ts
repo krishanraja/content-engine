@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { matchUpload, readUploads, uploadWrite, YOUTUBE_FEED, YOUTUBE_WATCH_FROM, type PublishedPiece } from '../../apps/control-plane/api/_publishWatch.js'
+import { archiveList, readPosts, matchUpload, readUploads, uploadWrite, YOUTUBE_FEED, YOUTUBE_WATCH_FROM, type PublishedPiece } from '../../apps/control-plane/api/_publishWatch.js'
 
 const entry = (id: string, title: string, at: string, short = false) => `<entry><id>yt:video:${id}</id><yt:videoId>${id}</yt:videoId><title>${title}</title>
 <link rel="alternate" href="https://www.youtube.com/${short ? 'shorts/' : 'watch?v='}${id}"/><published>${at}</published></entry>`
@@ -72,5 +72,17 @@ describe('what is written', () => {
   })
   test('a piece with no making record is reported, not invented', () => {
     expect(uploadWrite(video, piece('a', '2026-11-09T17:00:00Z', { meta: null }))).toEqual({ skip: 'no making record' })
+  })
+})
+
+describe('the Substack archive, as it answers now', () => {
+  const post = { id: 9, title: 'T', canonical_url: 'https://a/p/t', post_date: '2026-11-09T17:31:17Z', type: 'podcast' }
+  test('reads the wrapped shape { posts, nextCursor } as well as the old bare list', () => {
+    expect(readPosts({ posts: [post], nextCursor: 'x' })).toHaveLength(1)
+    expect(readPosts([post])).toHaveLength(1)
+  })
+  test('any other shape fails the run instead of reporting ok with nothing read', () => {
+    expect(() => archiveList({ errors: [{ msg: 'Invalid value' }] })).toThrow(/archive_unreadable/)
+    expect(() => readPosts(null)).toThrow(/archive_unreadable/)
   })
 })

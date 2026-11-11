@@ -43,7 +43,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (e: any) {
     return res.status(502).json({ ok: false, error: `archive_unreachable: ${String(e?.message || e).slice(0, 120)}` })
   }
-  const posts = readPosts(raw).filter(p => p.posted_at >= WATCH_FROM)
+  let read
+  try { read = readPosts(raw) } catch (e: any) { return res.status(502).json({ ok: false, error: String(e?.message || e).slice(0, 160) }) }
+  const posts = read.filter(p => p.posted_at >= WATCH_FROM)
 
   const { data, error } = await supabase.from('content_ideas').select(PIECE_COLUMNS)
     .in('state', ['drafting', 'review', 'approved', 'published']).is('buried_at', null).limit(800)
