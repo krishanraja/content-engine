@@ -6,7 +6,52 @@ board becomes the sole place for new interactions after verified migration.
 The four Claude artifacts and the default artifact generator remain preserved;
 there is no ongoing synchronization with them after cutover.
 
-## The live board: /board/<Monday>
+## The live board is Control Centre's; this engine's page is the archive
+
+Ruling (Krish, 2026-11-11): Control Centre's Publish Board is where everything wires in, live; the engine's board is
+an archive; engine changes upgrade the board and never break it. His words: "make sure this is built such that when I
+make other updates to the publish board and content engine, they do not regress this work, they just elegantly upgrade
+the publish board in the content tab. then lets ensure that the old publish board
+https://content.krishraja.com/board/2026-10-26#monday is kept as an archive for now, but that your version of the
+publish board is 1000% where everything wires in to fresh and live and accurately".
+
+- **Where he works:** Control Centre's Content tab, `https://controlcenter.krishraja.com/?ui=next#/content`, at a week
+  and a day with `?week=<Monday>&day=<mon..sat>`. One constant: `config/boards.json` `live_board.url`, mirrored by
+  `apps/control-plane/api/board/_liveBoard.ts` (a test holds them equal); Python prints a link with
+  `python3 scripts/post-pack/live_board.py <Monday> [day]`. Every link the engine gives him to the board is that one:
+  the reply that ends `plan-week`, the week's board item (`week-publish-board-<Monday>`, its `link`), the Sunday ideas
+  run, `make-piece`'s links to a day, `WORKBENCH.md`'s week lines and the Claude prompt on every day of the view.
+  Dropping `?ui=next` after Control Centre's cutover is the one line in each of those two files.
+- **The archive:** `content.krishraja.com/board/<Monday>` keeps serving the page below as it does, with a banner at the
+  top: "This is the archive. The live Publish Board is in Control Centre", linking the live board at the same week and
+  the day the address names (`#monday` opens Monday). `?archive=1` is the older baked board, unchanged.
+- **Writes are unchanged:** every press still goes through this engine's routes (`/api/board/<Monday>/...`), from
+  either page.
+
+## The view's contract: add freely; never remove or rename a field
+
+Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its shape is
+`apps/control-plane/api/board/view.schema.json`, versioned by `x-contract-version`; every view carries the same as
+`contract_version` (`_viewContract.ts`, `VIEW_CONTRACT_VERSION`).
+
+- **Add freely.** A new field, a new kind of action, media, step or step state, a new section on a day: add it to the
+  view and to the schema, and bump the minor. Control Centre ignores fields it does not read and draws a kind or a
+  section it does not know generically (a titled block with its text, its link or its media), so it shows up in the
+  Content tab with no change there. Lists marked `x-open` in the schema (actions, media, steps, `who`) are the ones it
+  draws generically.
+- **Never remove or rename a field,** never send `null` or another type where the schema promises one, and never stop
+  always sending a field the schema lists as required. That is a major bump, and Control Centre shows its "changed
+  shape" line and the archive page until it reads the new major.
+- **Held by:** `tests/control-plane/board-view-contract.test.ts` (every view the engine builds keeps the schema, a
+  view missing or renaming anything it promises fails, the frozen fixture `apps/control-plane/api/board/fixtures/view.json`
+  still keeps it) and `npm run check:view-contract` (in `npm run verify`), which compares the schema with main's and
+  fails a breaking change that is not a major bump, or any change with no bump; an addition passes with a notice that
+  Control Centre's pinned copy (control-center `tests/fixtures/board-view/`, with the engine commit and the schema's
+  sha256) is behind. Refresh the fixture with `UPDATE_VIEW_FIXTURE=1 npx vitest run tests/control-plane/board-view-contract.test.ts`.
+- **Live:** the view answers with an `ETag` of what it says (never when it was read) and `304` to a matching
+  `If-None-Match`, so Control Centre asks every few seconds at almost no cost.
+
+## The engine's own page: /board/<Monday> (the archive)
 
 Since 10 Nov 2026 the week's own link opens the live board (Krish, 2026-11-10: "Switch fully, move the old
 board to an archive link"). Control Centre, which serves content.krishraja.com, passes only `/board/<Monday>` through

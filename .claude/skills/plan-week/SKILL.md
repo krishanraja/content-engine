@@ -498,8 +498,8 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
      "detail": "One page for Monday, Wednesday and Friday. Tick each step as
      you do it; every tick is saved at once, and the next session copies it
      onto the piece.", "only_you": "post", "closes_on": "week_published",
-     "link": "<its link>", "link_label": "Open this week's publish
-     board"}]}` (the id and the dates are the week's). Only he posts, and it
+     "link": "<the live board: python3 scripts/post-pack/live_board.py <Monday>>",
+     "link_label": "Open this week's publish board"}]}` (the id and the dates are the week's). Only he posts, and it
      says how it ends: Control Center's done-check sweep closes it once
      every picked day is at 100% on the record, so no session moves it to
      done. While last week's board is still open, Control Center holds the
@@ -698,4 +698,5 @@ fail, record that specific blocker; never treat inaccessible feedback as empty.
 Copy the week's ticks once more (a board made this run has none yet).
 Commit what the room made (`ideas.json`, `interview.md`, each lock) and push
 the room's branch. Update `WORKBENCH.md` and end every reply with the week's
-publish board, https://content.krishraja.com/board/<Monday>.
+publish board, the live one in Control Centre: `python3 scripts/post-pack/live_board.py <Monday>`
+(Ruling, Krish, 2026-11-11; content.krishraja.com/board/<Monday> is the archive).

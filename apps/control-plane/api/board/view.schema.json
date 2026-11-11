@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://content.krishraja.com/api/board/view.schema.json",
+  "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
+  "x-contract-version": "1.0.0",
+  "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
+  "type": "object",
+  "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources"],
+  "properties": {
+    "ok": { "type": "boolean" },
+    "contract_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "week": { "$ref": "#/$defs/date" },
+    "as_of": { "type": "string" },
+    "days": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "$ref": "#/$defs/day" } },
+    "yours": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "day", "label", "next", "actions"],
+        "properties": {
+          "key": { "type": "string" },
+          "day": { "$ref": "#/$defs/dayKey" },
+          "label": { "type": "string" },
+          "next": { "type": "string" },
+          "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
+          "review": { "$ref": "#/$defs/review" }
+        }
+      }
+    },
+    "moved": {
+      "type": "array",
+      "items": { "type": "object", "required": ["at", "text"], "properties": { "at": { "type": "string" }, "text": { "type": "string" } } }
+    },
+    "north_star": {
+      "type": ["object", "null"],
+      "required": ["current", "target"],
+      "properties": { "current": { "type": "number" }, "target": { "type": "number" } }
+    },
+    "runs": { "type": "object" },
+    "sources": { "type": "object" }
+  },
+  "$defs": {
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "sha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "dayKey": { "type": "string", "enum": ["mon", "tue", "wed", "thu", "fri", "sat"] },
+    "who": { "type": "string", "enum": ["you", "engine", "growth", "stuck", "done"], "x-open": true },
+    "day": {
+      "type": "object",
+      "required": ["day", "date", "label", "kind", "series", "title", "piece_id", "stop", "who", "next", "runs_on", "actions", "detail", "media"],
+      "properties": {
+        "day": { "$ref": "#/$defs/dayKey" },
+        "date": { "$ref": "#/$defs/date" },
+        "label": { "type": "string" },
+        "kind": { "type": "string" },
+        "series": { "type": "string" },
+        "title": { "type": "string" },
+        "piece_id": { "type": ["string", "null"] },
+        "stop": { "type": "integer" },
+        "who": { "$ref": "#/$defs/who" },
+        "next": { "type": "string" },
+        "runs_on": { "type": "string" },
+        "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
+        "run": { "$ref": "#/$defs/run" },
+        "detail": {
+          "type": "array",
+          "items": { "type": "object", "required": ["h", "p"], "properties": { "h": { "type": "string" }, "p": { "type": "string" } } }
+        },
+        "reviews": { "type": "array", "items": { "$ref": "#/$defs/review" } },
+        "path": { "$ref": "#/$defs/path" },
+        "media": { "type": "array", "items": { "$ref": "#/$defs/media" } }
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": ["kind", "label"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["run", "open", "prompt", "review", "research", "look"], "x-open": true },
+        "label": { "type": "string" },
+        "job": { "type": "string" },
+        "input": { "type": "object" },
+        "runs_on": { "type": "string" },
+        "href": { "type": "string" },
+        "prompt": { "type": "string" },
+        "piece_id": { "type": "string" }
+      },
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "run" } } }, "then": { "required": ["job", "input", "runs_on"] } },
+        { "if": { "properties": { "kind": { "const": "open" } } }, "then": { "required": ["href"] } },
+        { "if": { "properties": { "kind": { "const": "prompt" } } }, "then": { "required": ["prompt"] } },
+        { "if": { "properties": { "kind": { "const": "research" } } }, "then": { "required": ["piece_id"] } },
+        { "if": { "properties": { "kind": { "const": "look" } } }, "then": { "required": ["piece_id"] } }
+      ]
+    },
+    "run": {
+      "type": "object",
+      "required": ["job", "workflow", "state", "started_at", "updated_at", "url"],
+      "properties": {
+        "job": { "type": "string" },
+        "workflow": { "type": "string" },
+        "state": { "type": "string" },
+        "started_at": { "type": "string" },
+        "updated_at": { "type": "string" },
+        "url": { "type": "string" },
+        "event": { "type": "string" }
+      }
+    },
+    "media": {
+      "type": "object",
+      "required": ["id", "kind", "cut", "title", "at"],
+      "properties": {
+        "id": { "$ref": "#/$defs/sha" },
+        "kind": { "type": "string", "enum": ["cut", "thumbnail"], "x-open": true },
+        "cut": { "type": "string" },
+        "title": { "type": "string" },
+        "at": { "type": ["string", "null"] },
+        "seconds": { "type": "number" },
+        "poster": { "$ref": "#/$defs/sha" }
+      }
+    },
+    "lookOption": {
+      "type": "object",
+      "required": ["id", "name", "pitch", "status"],
+      "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "pitch": { "type": "string" }, "status": { "type": "string" } }
+    },
+    "lookOrNull": {
+      "type": ["object", "null"],
+      "required": ["id", "name", "pitch", "status"],
+      "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "pitch": { "type": "string" }, "status": { "type": "string" } }
+    },
+    "path": {
+      "type": "object",
+      "required": ["steps", "current", "materials", "research_file", "look", "inspiration", "prompts", "storyboard"],
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "label", "state"],
+            "properties": {
+              "key": { "type": "string", "enum": ["research", "story", "look", "board", "record", "cut"], "x-open": true },
+              "label": { "type": "string" },
+              "state": { "type": "string", "enum": ["done", "current", "todo"], "x-open": true }
+            }
+          }
+        },
+        "current": { "type": ["string", "null"] },
+        "materials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "kind", "bytes", "at"],
+            "properties": { "id": { "type": "string" }, "title": { "type": "string" }, "kind": { "type": "string" }, "bytes": { "type": "number" }, "at": { "type": ["string", "null"] } }
+          }
+        },
+        "research_file": { "type": "boolean" },
+        "look": {
+          "type": "object",
+          "required": ["recommended", "options", "picked"],
+          "properties": {
+            "recommended": {
+              "type": "object",
+              "required": ["production", "experiment", "script", "why"],
+              "properties": {
+                "production": { "$ref": "#/$defs/lookOrNull" },
+                "experiment": { "$ref": "#/$defs/lookOrNull" },
+                "script": { "$ref": "#/$defs/lookOrNull" },
+                "why": { "type": ["string", "null"] }
+              }
+            },
+            "options": { "type": "array", "items": { "$ref": "#/$defs/lookOption" } },
+            "picked": {
+              "type": ["object", "null"],
+              "required": ["production", "experiment", "inspiration", "at"],
+              "properties": {
+                "production": { "type": "string" },
+                "experiment": { "type": ["string", "null"] },
+                "inspiration": { "type": "array", "items": { "type": "string" } },
+                "at": { "type": "string" }
+              }
+            }
+          }
+        },
+        "inspiration": {
+          "type": "object",
+          "required": ["cards", "unread"],
+          "properties": {
+            "cards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "name", "words", "saved"],
+                "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "words": { "type": "string" }, "saved": { "type": ["string", "null"] } }
+              }
+            },
+            "unread": { "type": "number" }
+          }
+        },
+        "prompts": {
+          "type": "object",
+          "required": ["research", "story", "storyboard", "mock"],
+          "properties": { "research": { "type": "string" }, "story": { "type": "string" }, "storyboard": { "type": "string" }, "mock": { "type": "string" } }
+        },
+        "storyboard": {
+          "type": ["object", "null"],
+          "required": ["title", "at"],
+          "properties": { "title": { "type": "string" }, "at": { "type": ["string", "null"] } }
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": ["doc_id", "revision", "side", "option", "prev"],
+      "properties": {
+        "doc_id": { "type": "string" },
+        "revision": { "type": ["integer", "null"] },
+        "side": { "type": "string" },
+        "option": { "type": "object" },
+        "prev": { "type": ["object", "null"] }
+      }
+    }
+  }
+}
