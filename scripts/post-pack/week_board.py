@@ -1834,6 +1834,8 @@ def pitch_block(pitch):
     rows = []
     for k, label in PITCH_FIELDS:
         v = pitch.get(k)
+        if k in PITCH_OPTIONAL and not (isinstance(v, str) and v.strip()):
+            continue
         if k == 'chain':
             body = '<ol class="pitch-chain">' + ''.join(f'<li>{E(x.strip())}</li>' for x in v) + '</ol>'
         elif k == 'examples':
@@ -6671,7 +6673,7 @@ def _oct31_checks(check, week, ideas, opt):
     page, _, _ = board(week, ideas=pitched)
     block = page[page.find('id="idea-mon-1"'):page.find('</article>', page.find('id="idea-mon-1"'))]
     check('pitch: shown as a labelled block, the chain numbered',
-          all(f'<dt>{E(label)}</dt>' in block for _, label in PITCH_FIELDS) and block.count('<li>Link') == 5
+          all(f'<dt>{E(label)}</dt>' in block for k, label in PITCH_FIELDS if k not in PITCH_OPTIONAL) and block.count('<li>Link') == 5
           and '<ol class="pitch-chain">' in block and page.count('class="pitch"') == 1 and verify(page) == [])
     for bad, want in (({**pitch, 'chain': ['Only one.']}, 'chain is a list of 5 to 8'), ({**pitch, 'examples': ['a'] * 4}, 'examples is a list of 2 to 3'),
                       ({k: v for k, v in pitch.items() if k != 'take'}, 'has no take'), ({**pitch, 'extra': 'x'}, 'not one of its parts')):
