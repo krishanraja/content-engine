@@ -31,7 +31,7 @@ recreated in our own type as if it were the original.
 | Numbers, labels | cream, cream-soft, muted (the old or expected value) |
 | The answer (teller jobs did not disappear; LEVEL; PEOPLE; the ask's circle; NOW) | mint |
 | Pointer: circles, underlines, playhead, the strike on an old value | red `#FF5247`, the style's one kept accent |
-| Series name in the dress | the series colour |
+| Series name in the dress (wide only; none on vertical, Krish 2026-11-11) | the series colour |
 
 **Skin record.** The style's accent stays red, not mint: its job is to point, and mint already means the answer
 while the series colour marks the channel only (brand skin, section 2a of the catalogue).
@@ -51,7 +51,7 @@ while the series colour marks the channel only (brand skin, section 2a of the ca
 
 - Shots: the desk whole (the source arriving), the 20 circled, the strip, the slip lifting, the 43 percent strip, the
   answer underlined in mint, the two marks joined, the index card for the ask.
-- **Tall:** dress, credit, number, caption, clock, then the desk window.
+- **Tall:** credit, number, caption, clock, then the desk window (no wordmark on vertical video, Krish 2026-11-11).
 - **Wide:** type and clock in the left column, the desk on the right.
 
 ## 7. Sound palette

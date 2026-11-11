@@ -14,8 +14,8 @@ import { LeadCaption } from './chrome/LeadCaption'
 import { resolveMotion } from './kit/motionProfiles'
 import type { EngineBeat, EngineRenderProps } from './props'
 
-/** The mandatory chrome on every beat (INV-BRANDFRAME, INV-CAPTIONS): mark tile top-left with the channel
- *  shadow, the channel pill on the section beat, the caption track, grain behind. No ILLUSTRATION tag (Krish,
+/** The mandatory chrome on every beat (INV-BRANDFRAME, INV-CAPTIONS): on the wide cut only, mark tile top-left with
+ *  the channel shadow and the channel pill on the section beat (none on 9:16, Krish 2026-11-11); the caption track, grain behind. No ILLUSTRATION tag (Krish,
  *  28 Oct 2026: "Yes remove those.").
  *  FormatMaster draws it over every beat; no format can omit it. Built by card ve-card-brandframe. */
 export interface BrandFrameProps { props: EngineRenderProps; beat: EngineBeat; frame: number }
@@ -31,7 +31,9 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     {/* SPLIT keeps the mark tile and series pill of every face-with-proof beat: the horizontal logo is drawn for ink
         and cannot be read on the cream stage (Krish, 2026-11-03: "We fucking have standards for intro, background
         audio and outro"; the house mark sits at the start of every beat, Krish 2026-09-26). */}
-    {beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>
+    {/* Vertical video carries no wordmark, mark tile or series pill (Ruling, Krish, 2026-11-11: "I don't think they're
+        necessary and should be permanently removed from all templates"). The wide cut keeps them. */}
+    {props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>
       <MarkTile props={props} />
       <ChannelPill props={props} beat={beat} />
     </>}
