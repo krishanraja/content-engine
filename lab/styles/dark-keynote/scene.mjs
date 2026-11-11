@@ -4,7 +4,7 @@
 // Bar: the product-keynote reveal (one number, a lot of black, light that moves slowly).
 // Draws frame t from t alone.
 import { clamp, lerp, text } from '../_core/house.mjs'
-import { draw as sweepNumber } from '../../moves/light-sweep-number/move.mjs'
+import { draw as sweepNumber } from '../../../packages/moves/light-sweep-number/move.mjs'
 
 const B = { hook: 0, y1988: 1, y2004: 2, expect: 3, didnt: 4, same: 5, talk: 6, two: 7, watch: 8, ask: 9 }
 const at = (env, b, word) => (word ? env.word(b, word).s : env.beat(b).s)

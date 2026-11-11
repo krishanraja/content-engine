@@ -1,19 +1,19 @@
 {
- "id": "task-copies-2d",
- "what": "One task ticks done, then the freed time opens as new slots.",
- "says": [
-  "process",
-  "list"
- ],
- "needs": [
-  "text"
- ],
- "energy": "medium",
- "engine": "canvas",
- "code": "lab/moves/task-copies-2d/move.mjs",
- "entry": "draw",
- "vitals": "timing is fixed in the move; times come from the words that cue it",
- "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
- "from": "lab/styles/living-screen/scene.mjs",
- "proven_by": "Krish, 2026-11-10, on the teller opening: \"Now let's keep that pace of animation up.\""
+  "id": "task-copies-2d",
+  "what": "One task ticks done, then the freed time opens as new slots.",
+  "says": [
+    "process",
+    "list"
+  ],
+  "needs": [
+    "text"
+  ],
+  "energy": "medium",
+  "engine": "canvas",
+  "code": "packages/moves/task-copies-2d/move.mjs",
+  "entry": "draw",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+  "from": "lab/styles/living-screen/scene.mjs",
+  "proven_by": "Krish, 2026-11-10, on the teller opening: \"Now let's keep that pace of animation up.\""
 }

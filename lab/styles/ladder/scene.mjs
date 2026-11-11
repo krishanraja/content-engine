@@ -12,11 +12,11 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
 import { clamp, lerp, text } from '../_core/house.mjs'
-import { update as countOnAPart } from '../../moves/count-on-a-part/move.mjs'
-import { update as streetDrop } from '../../moves/street-drop/move.mjs'
-import { update as levelLine } from '../../moves/level-line/move.mjs'
-import { update as slabTowers } from '../../moves/slab-towers/move.mjs'
-import { update as taskCopies3d } from '../../moves/task-copies-3d/move.mjs'
+import { update as countOnAPart } from '../../../packages/moves/count-on-a-part/move.mjs'
+import { update as streetDrop } from '../../../packages/moves/street-drop/move.mjs'
+import { update as levelLine } from '../../../packages/moves/level-line/move.mjs'
+import { update as slabTowers } from '../../../packages/moves/slab-towers/move.mjs'
+import { update as taskCopies3d } from '../../../packages/moves/task-copies-3d/move.mjs'
 
 const B = { hook: 0, y1988: 1, y2004: 2, expect: 3, didnt: 4, same: 5, talk: 6, two: 7, watch: 8, ask: 9 }
 const at = (env, b, word) => (word ? env.word(b, word).s : env.beat(b).s)

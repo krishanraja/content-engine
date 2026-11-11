@@ -1,19 +1,19 @@
 {
- "id": "source-on-clock",
- "what": "Every source pinned to one timeline: year ticks, a pin drops at each source's moment as he says it, a playhead walks to the year being spoken about.",
- "says": [
-  "timeline",
-  "evidence"
- ],
- "needs": [
-  "text"
- ],
- "energy": "low",
- "engine": "canvas",
- "code": "lab/moves/source-on-clock/move.mjs",
- "entry": "draw",
- "vitals": "timing is fixed in the move; times come from the words that cue it",
- "skin": "brand skin colours only (ink, cream, mint, the series colour); the pointer colour is the calling style's, recorded in its STYLE.md",
- "from": "lab/styles/evidence-desk/scene.mjs",
- "proven_by": "not yet: built 2026-11-11 for batch 1; waits on Krish's verdict on the style frames"
+  "id": "source-on-clock",
+  "what": "Every source pinned to one timeline: year ticks, a pin drops at each source's moment as he says it, a playhead walks to the year being spoken about.",
+  "says": [
+    "timeline",
+    "evidence"
+  ],
+  "needs": [
+    "text"
+  ],
+  "energy": "low",
+  "engine": "canvas",
+  "code": "packages/moves/source-on-clock/move.mjs",
+  "entry": "draw",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); the pointer colour is the calling style's, recorded in its STYLE.md",
+  "from": "lab/styles/evidence-desk/scene.mjs",
+  "proven_by": "not yet: built 2026-11-11 for batch 1; waits on Krish's verdict on the style frames"
 }

@@ -15,7 +15,7 @@ const { chromium } = createRequire(import.meta.url)('playwright')
 const out = process.argv[2]
 const skin = makeSkin()
 const LOOP = 5, FPS = 30, COLS = 4, CELL = 480, ROWS = 3
-const u = (id) => pathToFileURL(join(HERE, id, 'move.mjs')).href
+const u = (id) => pathToFileURL(join(HERE, '../../packages/moves', id, 'move.mjs')).href
 // Each move with its box and a loop's worth of times (seconds into the loop).
 const SHOW = [
   ['counter-scene', 1280, 940, `{ openEnd: 9, talkStart: 99, cash: 0.2, ended: 1.2, bank: 1.6, teller: 2.0, hands: 3.0, you: 3.3, disappear: 99, backStart: 99, didnt: 99, stopped: 99, spent: 99, talking: 99 }`],
