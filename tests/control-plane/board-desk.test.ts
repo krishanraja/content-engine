@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
-import { buildView, lockSigned, viewProblems, type ViewInputs } from '../../apps/control-plane/api/board/_view'
+import { buildView, lockSigned, postingStarted, viewProblems, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { JOBS, dispatchJob, readRuns, type JobName } from '../../apps/control-plane/api/board/_run'
 import { DESK_PAGE } from '../../apps/control-plane/api/board/_deskPage'
 
@@ -274,5 +274,13 @@ describe("the week's board link opens the live board (Krish, 2026-11-10: \"Switc
     const { status, body } = await page({ op: 'html', archive: '1' })
     expect(status).toBe(401)
     expect(body).toMatchObject({ ok: false, error: 'unauthorized' })
+  })
+})
+
+describe('a piece at Publish with nothing out asks for the watch and approve, not posting', () => {
+  it('reads posting only from a publish step that carries a channel count', () => {
+    expect(postingStarted({ steps: [{ key: 'video', state: 'done' }, { key: 'publish', state: 'now' }] })).toBe(false)
+    expect(postingStarted({ steps: [{ key: 'publish', state: 'now', note: '1 of 5 channels' }] })).toBe(true)
+    expect(postingStarted({ steps: [{ key: 'publish', state: 'done', note: '5 of 5 channels' }] })).toBe(false)
   })
 })
