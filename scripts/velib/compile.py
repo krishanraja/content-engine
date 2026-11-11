@@ -500,6 +500,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
         'captions': captions, 'captionStyle': 'word' if word_mode else 'house',
+        **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }

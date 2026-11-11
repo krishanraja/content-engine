@@ -25,6 +25,7 @@ from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / 'config' / 'music-bed.json'
+EXCEPTIONS = ROOT / 'config' / 'filing-exceptions.json'
 VIDEO_SUFFIXES = ('.mp4', '.mov', '.mkv', '.webm', '.m4v')
 
 
@@ -288,9 +289,27 @@ def social_clip(video) -> bool:
         return False
 
 
+def filing_exception(video, target: str, path: Path | None = None) -> dict | None:
+    """Krish's approval to file these exact bytes at this exact destination without engine receipts
+    (config/filing-exceptions.json; only his words add one), else None."""
+    try:
+        doc = json.loads(Path(path or EXCEPTIONS).read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return None
+    norm = str(target).replace(chr(92), '/')
+    found = [e for e in doc.get('exceptions', []) if isinstance(e, dict) and e.get('target') == norm
+             and str(e.get('krish_words', '')).strip()]
+    if not found:
+        return None
+    digest = sha256(video)
+    return next((e for e in found if e.get('video_sha256') == digest), None)
+
+
 def filing_problems(video, target: str) -> list[str]:
     """[] when the video may go to `target`; else why not. Every filing route asks this."""
     if not is_filed_video(target):
+        return []
+    if filing_exception(video, target):
         return []
     if social_clip(video) and ' off.day - ' in str(target):
         return []
