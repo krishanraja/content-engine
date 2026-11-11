@@ -3799,6 +3799,12 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function EngineAudio({ audio, stem = true }: { audio: EngineRenderProps['audio']; stem?: boolean })`
 
+### `apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx`
+
+- `const ART_REGION`
+- `function keyIndex(page: EngineRenderProps['captions'][number]): number`
+- `function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
+
 ### `apps/renderer/src/engine/chrome/CallCard.tsx`
 
 - `interface CallCardProps`
@@ -3848,6 +3854,11 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/chrome/StageHeader.tsx`
 
 - `function StageHeader({ props }: { props: EngineRenderProps })`
+
+### `apps/renderer/src/engine/chrome/ThemedCaption.tsx`
+
+- `export { REGIONS as THEME_REGION } from '../captions/kit'`
+- `function ThemedCaption({ props, theme, frame = 0 }: { props: EngineRenderProps; theme: CaptionThemeName; frame?: number…`
 
 ### `apps/renderer/src/engine/chrome/WordCaption.tsx`
 
