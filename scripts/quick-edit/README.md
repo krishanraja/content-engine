@@ -308,9 +308,9 @@ know where that is, and use it correctly (high volume during the intro, low
 whilst I am talking, higher during the outro)."
 
 - **Where the audio lives.** Google Drive, makeyourmindup >
-  00_Brand-Assets > 07_Music (Drive folder
-  `1pmPWx8vTOZuUXkp-WjhLlCTvof8MrRxK`): on the runner machines
-  `H:\My Drive\Ventures\Active Ventures\makeyourmindup\00_Brand-Assets\07_Music`. The
+  1 Brand kit (permanent) > Music (Drive folder
+  `1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri`): on the runner machines
+  `H:\My Drive\Ventures\Active Ventures\makeyourmindup\1 Brand kit (permanent)\Music`. The
   folder is `MINDMAKE_MUSIC_ROOT`, else `runtime.music_root` in
   `config/studio.json`. On a computer without that H: drive (a Mac, say),
   set `MINDMAKE_MUSIC_ROOT` to where Google Drive puts the same folder. Keep
