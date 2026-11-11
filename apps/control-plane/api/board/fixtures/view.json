@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.5.0",
+ "contract_version": "1.6.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -1108,7 +1108,43 @@
      "title": "Long cut",
      "at": "2026-11-16T08:00:00Z",
      "seconds": 412,
-     "poster": "7141f3ae5b0dea3f268d2d9d9ef04be169809eef0f9cc25e88ab0ac103f07054"
+     "poster": "7141f3ae5b0dea3f268d2d9d9ef04be169809eef0f9cc25e88ab0ac103f07054",
+     "presses": {
+      "yes": {
+       "kind": "press",
+       "label": "Yes",
+       "op": "cut-verdict",
+       "body": {
+        "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+        "media_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "verdict": "yes"
+       },
+       "stamp": [],
+       "done": "Saved on the piece: this cut is right."
+      },
+      "not_this": {
+       "kind": "press",
+       "label": "Not this",
+       "op": "cut-verdict",
+       "body": {
+        "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+        "media_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "verdict": "not_this"
+       },
+       "words": {
+        "path": "words",
+        "ask": "What is not right about the long cut?",
+        "required": true
+       },
+       "stamp": [],
+       "done": "Saved on the piece with your words. The cut itself is unchanged."
+      }
+     },
+     "verdict": {
+      "said": "not_this",
+      "words": "The open drags. Start on the number.",
+      "at": "2026-11-16T08:40:00Z"
+     }
     },
     {
      "id": "7141f3ae5b0dea3f268d2d9d9ef04be169809eef0f9cc25e88ab0ac103f07054",

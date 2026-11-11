@@ -192,6 +192,9 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   goes out; null when the record does not say, never a guessed day. A later step done means every step before it is.
   The working steps (`steps`, `current`) stay as they were, for the next step, the prompts and the sessions' step
   names (`stagesOf` in `_view.ts`). A treatment option also carries "Not this" from 1.5.0, all but the picked one ("The style choices").
+- **1.6.0 (11 Nov 2026)** added `presses` and `verdict` to each cut in a day's `media` (approved mock M5, Cuts: Yes,
+  Not this, Change it and Add a note on every cut): his Yes or Not this on that file and his latest answer on it ("His
+  answer on each cut", below). A thumbnail carries neither.
 
 ## The style choices (contract 1.4.0)
 
@@ -234,6 +237,41 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
 - **Who reads it:** make-piece and ve read `meta.style` as the default for a new spec's `style.motion.module` and
   `brand.caption_theme` (`docs/ve/RUNBOOK.md`, S1), and a signed spec stays his.
 - **Held by:** `tests/control-plane/board-style.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
+- **Routing:** `vercel.json` has no rewrite of its own for `/api/board/<Monday>/style`, and cannot have one, since
+  `GET` there is the read-only view of his Pick a style documents. So the press arrives as the collection `style`, and
+  the handler reads a `POST` with no id to `style` (or `cut-verdict`) as the press (`POST_OPS` in `_handler.ts`).
+  Until 11 Nov 2026 it did not, and every style press from Control Centre was answered 400 `read_only_view`
+  (`tests/control-plane/board-cuts.test.ts` sends it as production does).
+
+## His answer on each cut (contract 1.6.0)
+
+The approved mock M5 gives every cut in the Cuts tab its own Yes, Not this, Change it and Add a note. Change it and Add
+a note are his words on the day ("Add your thoughts", pinned to the step). Yes and Not this are this press, one per cut,
+built by `apps/control-plane/api/board/_cuts.ts` on every read.
+
+- **In the view:** each item of a day's `media` whose `kind` is `cut` carries `presses` `{ yes, not_this }` and
+  `verdict`. Each press is in the shape of the action kind `press`: `{ kind: 'press', label, op: 'cut-verdict', body:
+  { piece_id, media_id, verdict: 'yes' | 'not_this' }, stamp: [], done }`, and Not this also carries `words` `{ path:
+  'words', ask, required: true }`, so the board asks for his words first and never sends it without them. `verdict` is
+  his latest answer on that file `{ said: 'yes' | 'not_this', words, at }`, or null. A thumbnail carries neither.
+- **His press:** `POST /api/board/<Monday>/cut-verdict` with `{ piece_id, media_id, verdict, words? }`, his press only
+  (403 `his_press`), on a piece scheduled in that week (404 `piece_not_in_week`), on a cut on that piece's own making
+  record (`meta.making.video_assets`, the media id the view gave; 404 `media_not_found` for a thumbnail or any other
+  id). 400 `invalid_media`, `invalid_verdict`, and `words_required` for a Not this with no words. His words are kept as
+  he typed them, trimmed, up to 4000 characters.
+- **Kept append only on the piece:** one entry per press in `content_ideas.meta.cut_verdicts`, `{ media_id, cut,
+  verdict, words, sha256, path, by: 'Krish', at }`, where `sha256` and `path` are the file's on the making record.
+  Nothing is rewritten or removed; the same answer pressed twice in a row on one file is kept once (`already: true`).
+  The write is guarded on the row's `updated_at` (`patchMeta`), so a write that lands in between is kept (409
+  `piece_busy` when they never stop), and the `content_ideas` trigger bumps the week's `board_signal`.
+- **What it never does:** change, refile or publish the cut, or unlock anything. It is not the Approve cut gate
+  (`meta.making.gates.final`, "The production gates on a day's tab"). A new render is a new file with a new media id,
+  so an answer stays with the file he saw, and the new cut waits for his.
+- **Not `cut`:** `GET /api/board/<Monday>/cut` is the read-only view of his Approve cut documents and stays so; his
+  answer posts to `cut-verdict`.
+- **Who reads it:** the view (each cut's `verdict`). It is on the piece's record (`meta.cut_verdicts`) for a session
+  making the next cut; no skill reads it yet, and a Not this files nothing to his taste ledger or the rejection inbox.
+- **Held by:** `tests/control-plane/board-cuts.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
 
 ## Sessions and materials
 
