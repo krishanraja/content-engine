@@ -15,6 +15,7 @@
 
 import { randomUUID, createHash } from 'node:crypto'
 import { supabase } from './_supabase.js'
+import { patchMeta, type StoreDb } from './_pieceStore.js'
 import { onTeardownBeat } from './_beat.js'
 import { robustJson, sanitizeVoice } from './_content.js'
 import { isoWeekLabel } from './_weeks.js'
@@ -817,20 +818,22 @@ export function buildManifest(m: ManifestInput): string {
 }
 
 async function attachMaterials(ideaId: string, runId: string, manifest: string): Promise<void> {
-  const { data } = await supabase.from('content_ideas').select('meta').eq('id', ideaId).maybeSingle()
-  const meta = ((data as { meta?: Record<string, unknown> } | null)?.meta || {}) as Record<string, unknown>
-  const materials = Array.isArray(meta.materials) ? meta.materials as Record<string, unknown>[] : []
-  const filtered = materials.filter(x => (x as { investigation_id?: string }).investigation_id !== runId)
-  filtered.push({
-    // kind 'research' deliberately. api/shifts/[id]/write.ts writes kind 'note'
-    // with added_at and no id, which is outside the Material union and works
-    // only because materialsContext reads a subset of the fields.
-    id: createHash('sha1').update(runId).digest('hex').slice(0, 12),
-    kind: 'research',
-    title: 'MYMU: Teardown: verified evidence manifest',
-    content: manifest,
-    at: new Date().toISOString(),
-    investigation_id: runId,
-  })
-  await supabase.from('content_ideas').update({ meta: { ...meta, materials: filtered } }).eq('id', ideaId)
+  // Onto the piece as it is now, guarded on its updated_at (patchMeta), so a write that landed while the run worked is
+  // kept, never overwritten.
+  await patchMeta(supabase as unknown as StoreDb, ideaId, meta => {
+    const materials = Array.isArray(meta.materials) ? meta.materials as Record<string, unknown>[] : []
+    const filtered = materials.filter(x => (x as { investigation_id?: string }).investigation_id !== runId)
+    filtered.push({
+      // kind 'research' deliberately. api/shifts/[id]/write.ts writes kind 'note'
+      // with added_at and no id, which is outside the Material union and works
+      // only because materialsContext reads a subset of the fields.
+      id: createHash('sha1').update(runId).digest('hex').slice(0, 12),
+      kind: 'research',
+      title: 'MYMU: Teardown: verified evidence manifest',
+      content: manifest,
+      at: new Date().toISOString(),
+      investigation_id: runId,
+    })
+    return { ...meta, materials: filtered }
+  }).catch(() => undefined)
 }

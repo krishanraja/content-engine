@@ -9,18 +9,26 @@ GitHub's cron fires hours late, and this guard makes every firing after the one 
 
     python3 scripts/saturday_goodnews.py check [--today YYYY-MM-DD] [--week YYYY-MM-DD] [--event schedule] [--force]
 
-prints, for $GITHUB_OUTPUT, `monday=<the week>` and `go=true|false`, and says why on stderr. The week is the one whose
-Saturday comes next (on a Thursday, the Monday three days before). It goes while that week's ideas.json holds the
-weekly good-news option, its stories_due has come (the Thursday of the week, `references/offdays.md`) and the live
-board does not show its stories yet. A scheduled firing before FIRST_RUN does nothing. `--force` (a run by hand) goes
-whenever the option exists, stories or not. It exits 1 when it cannot read the board, so a run never goes or skips on
-a guess, and 2 on a typed week that is not a Monday.
+prints, for $GITHUB_OUTPUT, `monday=<the week>`, `go=true|false` and `due=<the week's Thursday>`, and says why on
+stderr. The week is the one whose Saturday comes next (on a Thursday, the Monday three days before). It goes while
+that week's ideas.json holds the weekly good-news option, the week's Thursday has come (tomorrow counts), the option
+does not hold this week's stories (five, found for a due date on or after that Thursday: stories found earlier, as
+the 7 November run found the 9 November week's on Saturday, are last week's news) and the live board does not show
+this week's stories yet. A scheduled firing before FIRST_RUN does nothing. `--force` (a run by hand) goes whenever
+the option exists, stories or not. It exits 1 when it cannot read the board, so a run never goes or skips on a guess,
+and 2 on a typed week that is not a Monday.
+
+The live board is Control Centre's (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
+read-only archive): it reads the week's view, GET /api/board/<Monday>/view, which reads ideas.json from the week's
+branch (offday-revise/<Monday>) before main. So the run keeps its stories on that branch, bumps the week's change
+signal, and this guard asks the view, never the archive page, whether they are there.
 """
 from __future__ import annotations
 
 import argparse
 import datetime as dt
 import json
+import os
 import sys
 import urllib.request
 from pathlib import Path
@@ -37,6 +45,8 @@ NEW_YORK = ZoneInfo('America/New_York')
 # The first scheduled Thursday: 12 November, for Saturday 14 November (Krish, 2026-11-09: "Yes, go ahead with the
 # restore and the Thursday run").
 FIRST_RUN = dt.date(2026, 11, 12)
+# The weekly good news holds five stories (week_board.STORY_COUNT, plan-week references/offdays.md).
+STORY_COUNT = 5
 
 
 def goodnews_monday(today: dt.date) -> dt.date:
@@ -59,30 +69,57 @@ def weekly_option(monday: dt.date, plans: Path | None = None) -> dict | None:
     return None
 
 
-def goodnews_due(monday: dt.date, today: dt.date, plans: Path | None = None) -> bool:
-    """True while the week's weekly option has no stories and its stories_due is today, tomorrow or past (a date that
-    cannot be read is due, so the run finds it and the build names the fault)."""
-    o = weekly_option(monday, plans)
-    if not o or o.get('stories'):
-        return False
+def thursday_of(monday: dt.date) -> dt.date:
+    """The week's Thursday: the good news is found from then on (Krish, 2026-11-07)."""
+    return monday + dt.timedelta(days=3)
+
+
+def stories_fresh(monday: dt.date, o: dict) -> bool:
+    """Whether the option holds this week's stories: five or more, found for a due date on or after the week's
+    Thursday (the view's storiesFresh, apps/control-plane/api/board/_viewExtras.ts, says the same)."""
+    stories = [s for s in o.get('stories') or [] if isinstance(s, dict)]
     try:
-        return dt.date.fromisoformat(str(o.get('stories_due'))) <= today + dt.timedelta(days=1)
+        due = dt.date.fromisoformat(str(o.get('stories_due')))
     except ValueError:
-        return True
+        return False
+    return len(stories) >= STORY_COUNT and due >= thursday_of(monday)
+
+
+def goodnews_due(monday: dt.date, today: dt.date, plans: Path | None = None) -> bool:
+    """True while the week's weekly option does not hold this week's stories and the week's Thursday is today,
+    tomorrow or past. An option with no readable stories_due is due once Thursday has come, so the run finds it and
+    the cover check names the fault."""
+    o = weekly_option(monday, plans)
+    if not o or stories_fresh(monday, o):
+        return False
+    return thursday_of(monday) <= today + dt.timedelta(days=1)
+
+
+def view_has_stories(view: dict, monday: str) -> bool:
+    """Whether a week's view (GET /api/board/<Monday>/view, contract 1.2.0) shows a weekly good-news option holding
+    this week's stories, on any day."""
+    week = dt.date.fromisoformat(monday)
+    for day in view.get('days') or []:
+        for o in (day or {}).get('options') or []:
+            if not isinstance(o, dict) or 'stories' not in o:
+                continue
+            if o.get('stories_fresh') is True:
+                return True
+            if 'stories_fresh' not in o and stories_fresh(week, {'stories': o.get('stories'), 'stories_due': o.get('stories_due')}):
+                return True
+    return False
 
 
 def live_has_stories(monday: str) -> bool:
-    """True once the week's live board shows the good news with all its stories, so the retry firing (the stories sit on
-    the run's branch until a session merges it) does not look for them again."""
-    import board_web
-    import week_board
-    key = board_web.os.environ.get('ENGINE_OPERATOR_TOKEN') or ''
+    """True once the live board shows this week's good news with all its stories, so the retry firing does not look for
+    them again. It reads the view the live board draws (GET /api/board/<Monday>/view), never the archive page."""
+    key = os.environ.get('ENGINE_OPERATOR_TOKEN') or ''
     if not key:
         raise ValueError('ENGINE_OPERATOR_TOKEN is not set')
-    base = board_web.os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
-    request = urllib.request.Request(base + f'/board/{monday}', headers={'Authorization': 'Bearer ' + key})
+    base = os.environ.get('BOARD_BASE_URL', 'https://content.krishraja.com').rstrip('/')
+    request = urllib.request.Request(base + f'/api/board/{monday}/view', headers={'Authorization': 'Bearer ' + key, 'Cache-Control': 'no-cache'})
     with urllib.request.urlopen(request, timeout=120) as response:
-        return f'data-stories="{week_board.STORY_COUNT}"' in response.read().decode('utf-8', errors='replace')
+        return view_has_stories(json.loads(response.read().decode('utf-8')), monday)
 
 
 def decide(monday: dt.date, today: dt.date, event: str, force: bool, plans: Path | None = None,
@@ -95,9 +132,9 @@ def decide(monday: dt.date, today: dt.date, event: str, force: bool, plans: Path
     if force:
         return True, 'run by hand with force'
     if not goodnews_due(monday, today, plans):
-        return False, 'the stories are already in ideas.json, or not due yet'
+        return False, 'this week\'s stories are already in ideas.json, or not due yet'
     if live(monday.isoformat()):
-        return False, 'the live board already shows the stories'
+        return False, 'the live board already shows this week\'s stories'
     return True, 'due, and not on the live board'
 
 
@@ -124,6 +161,7 @@ def main() -> int:
     print(f'saturday good news, week of {monday}: {"go" if go else "nothing to do"} ({why})', file=sys.stderr)
     print(f'monday={monday.isoformat()}')
     print(f'go={"true" if go else "false"}')
+    print(f'due={thursday_of(monday).isoformat()}')
     return 0
 
 

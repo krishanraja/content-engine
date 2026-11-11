@@ -1403,6 +1403,7 @@ The YouTube title and description for a piece's video, and the title and
 - `interface MaterialInput`
 - `async function addToWorkingSet(db: StoreDb, pieceId: string, material: Material, tries = 6): Promise<{ ok: true; materi…`
 - `async function removeFromWorkingSet(db: StoreDb, pieceId: string, materialId: string, tries = 6): Promise<{ ok: true; m…`
+- `async function patchMeta(db: StoreDb, pieceId: string, patch: (meta: Body) => Body, tries = 6): Promise<{ ok: true; met…`
 - `async function addText(db: StoreDb, body: Body, bearer: boolean, by: string): Promise<Body>`
 - `async function fileType(name: unknown): Promise<{ ext: string; contentType: string }>`
 - `async function uploadUrl(db: StoreDb, body: Body): Promise<Body>`
@@ -2197,6 +2198,12 @@ Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md
 - `function mockPrompt(p: PieceBrief): string`
 - `function stepPrompt(p: PieceBrief, step: string): string`
 
+### `apps/control-plane/api/board/_readOnly.ts`
+
+- `const ARCHIVE_REFERRER_POLICY`
+- `function fromArchivePage(referer: string | string[] | undefined): boolean`
+- `function readOnlyArchive(html: string, week: string): string`
+
 ### `apps/control-plane/api/board/_research.ts`
 
 - `const MAX_MATERIAL`
@@ -2240,6 +2247,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
 - `type Action`
 - `interface DayView`
+- `type DayCore`
 - `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
 - `const PATH: Array<{ key: PathKey; label: string }>`
 - `interface LookOption`
@@ -2251,6 +2259,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `function backupPrompt(week: string, d: DayView): string`
 - `function buildView(i: ViewInputs): WeekView`
 - `function viewProblems(v: WeekView): string[]`
+- `async function branchSha(f: Fetcher, env: Record<string, string | undefined>, branch: string): Promise<string | null | …`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
 
 ### `apps/control-plane/api/board/_viewContract.ts`
@@ -2258,6 +2267,28 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `const VIEW_CONTRACT_VERSION`
 - `function viewEtag(view: Record<string, unknown>): string`
 - `function notModified(ifNoneMatch: string | string[] | undefined, etag: string): boolean`
+
+### `apps/control-plane/api/board/_viewExtras.ts`
+
+- `type PressAction`
+- `interface ViewOption`
+- `interface ViewPiece`
+- `interface ViewComment`
+- `interface ViewPosted`
+- `interface ViewYes`
+- `interface ExtrasInputs`
+- `function thursdayOf(week: string): string`
+- `function storiesFresh(week: string, o: Body): boolean`
+- `function dayPieces(pieces: Body[], date: string, shown: string | null): ViewPiece[]`
+- `function dayComments(rows: ExtrasInputs['comments'], day: string): ViewComment[]`
+- `function dayPosted(rows: ExtrasInputs['ticks'], day: string): ViewPosted[]`
+- `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
+- `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[]`
+- `function offdayOptions(i: ExtrasInputs, day: string): ViewOption[]`
+- `function thoughtPress(day: string, step: string): PressAction`
+- `function materialPress(pieceId: string): PressAction`
+- `function yesPress(i: ExtrasInputs, day: string): PressAction`
+- `function fillPress(a: PressAction, words: string, at: string): { id: string; body: Body }`
 
 ### `apps/control-plane/api/board/_writeBack.ts`
 
@@ -3481,14 +3512,21 @@ The live board's one door to the server. Every call carries his login cookie; a 
 - `const api`
 - `function sayError(e: unknown): string`
 
+### `apps/control-plane/board-next/src/components/live.tsx`
+
+The archive is read-only (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only
+
+- `const LIVE_PRESS`
+- `function LiveLink({ day, primary = false, label = LIVE_PRESS }: { day?: string | null; primary?: boolean; label?: strin…`
+
 ### `apps/control-plane/board-next/src/components/path.tsx`
 
 One day's guided path (PLAN.md, "Each day as a guided path"): six steps, only the current one open.
 
 - `function Stepper({ path, open, onOpen }: { path: DayPath; open: PathKey | null; onOpen: (k: PathKey) => void })`
-- `function Dropzone({ day, onFiled, role }: { day: Day; onFiled: () => void; role?: 'storyboard' })`
+- `function Dropzone({ day, role }: { day: Day; onFiled?: () => void; role?: 'storyboard' })`
 - `function StepPanel({ day, step, reload }: { day: Day; step: PathKey; reload: () => void })`
-- `function RunButton({ day, reload }: { day: Day; reload: () => void })`
+- `function RunButton({ day }: { day: Day; reload?: () => void })`
 - `function DayActions({ day, reload, only, onReview }: { day: Day; reload: () => void; only?: 'first' | 'prompt'; onRevie…`
 
 ### `apps/control-plane/board-next/src/components/review.tsx`
