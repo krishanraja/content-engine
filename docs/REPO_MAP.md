@@ -2220,6 +2220,7 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `type MediaKind = 'cut' | 'thumbnail'`
 - `interface MediaItem`
 - `function dayMedia(piece: Body | undefined): MediaItem[]`
+- `function cutOn(piece: Body, id: string): { id: string; cut: string; title: string; path: string; sha256: string | null …`
 - `function findMedia(pieces: Body[], id: string): MediaFile | null`
 - `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string): Promise<string | null>`
 

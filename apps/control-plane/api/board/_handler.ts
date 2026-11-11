@@ -17,6 +17,7 @@ import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
 import { StyleError, needsMotion, saveStyle, stylePick } from './_style.js'
+import { CUT_OP, CutError, cutPick, saveCut } from './_cuts.js'
 import { DESK_PAGE } from './_deskPage.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARCHIVE_REFERRER_POLICY, fromArchivePage, readOnlyArchive } from './_readOnly.js'
@@ -26,6 +27,8 @@ import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
 
 const BUCKET = 'content-library'
+/** The presses posted to /api/board/<Monday>/<op> that reach the handler as a collection (no rewrite of their own). */
+const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP])
 const TTL = 300
 const scalar = (v: unknown) => typeof v === 'string' ? v : ''
 const weekDate = (v: string | Date) => (v instanceof Date ? v.toISOString() : v).slice(0, 10)
@@ -104,7 +107,12 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
     res.setHeader('Referrer-Policy', 'no-referrer')
     const method = req.method || ''
     if (!['GET', 'PUT', 'POST'].includes(method)) return res.status(405).json({ ok: false, error: 'method_not_allowed' })
-    const op = scalar(req.query.op), collection = scalar(req.query.collection), id = scalar(req.query.id)
+    const id = scalar(req.query.id)
+    let op = scalar(req.query.op), collection = scalar(req.query.collection)
+    // A press posted to /api/board/<Monday>/<op> whose op has no rewrite of its own arrives as a collection
+    // (vercel.json: /api/board/:week/:collection). `style` cannot have one, since GET /api/board/<Monday>/style is the
+    // read-only view of his Pick a style documents, so a POST there is the style press; `cut-verdict` the same.
+    if (!op && !id && method === 'POST' && POST_OPS.has(collection)) { op = collection; collection = '' }
     if (op === 'carry') {
       // The cross-week carry (_carry.ts): the engine operator's key only.
       if (!operatorBearerAllowed(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
@@ -295,10 +303,11 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (!url) throw new BoardError(404, 'media_not_found')
         return res.redirect(302, url)
       }
-      if (op === 'research' || op === 'material' || op === 'look' || op === 'style') {
+      if (op === 'research' || op === 'material' || op === 'look' || op === 'style' || op === CUT_OP) {
         // The day path's presses on a piece of this week (_research.ts): research it now (sonar-pro), file research he
-        // dropped, his pick of the look, and his pick or "Not this" of a motion or caption style (_style.ts, contract
-        // 1.4.0). His press only; the piece must be scheduled inside this week.
+        // dropped, his pick of the look, his pick or "Not this" of a motion or caption style (_style.ts, contract
+        // 1.4.0), and his Yes or Not this on one of its cuts (_cuts.ts, contract 1.6.0). His press only; the piece must
+        // be scheduled inside this week.
         if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
         if (who !== 'Krish') throw new BoardError(403, 'his_press')
         const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
@@ -327,6 +336,11 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             const filed = await fileMaterial(db, pieceId, { kind: 'research', title: `Engine research (sonar-pro), ${new Date().toISOString().slice(0, 10)}`, content: found.text, by: 'Krish' })
             return res.status(201).json({ ok: true, material: filed, sources: found.sources.length })
           }
+          if (op === CUT_OP) {
+            // His answer on one cut, kept append only on the piece (meta.cut_verdicts). It never changes the cut.
+            const saved = await saveCut(db, pieceId, cutPick(body))
+            return res.status(200).json({ ok: true, cut_verdict: saved.verdict, already: saved.already })
+          }
           if (op === 'style') {
             // The motion styles are the bank's motion layer, read from main only when the press names one; the caption
             // styles are config/caption-themes.json. It writes meta.style beside meta.look and never edits a spec.
@@ -349,7 +363,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             inspiration: Array.isArray(body.inspiration) ? body.inspiration.map(String) : [] }, new Set([...production, ...(experiment ? [experiment] : [])]))
           return res.status(200).json({ ok: true, look })
         } catch (e) {
-          if (e instanceof MaterialError || e instanceof StyleError) throw new BoardError(e.status, e.message)
+          if (e instanceof MaterialError || e instanceof StyleError || e instanceof CutError) throw new BoardError(e.status, e.message)
           throw e
         }
       }
