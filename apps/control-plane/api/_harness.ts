@@ -13,12 +13,12 @@
 //    returns a typed result with a verdict, including 'error' and 'budget'.
 //    Nothing here throws into the run loop.
 
-import { supportsSampling } from './_content.js'
+import { firstText, supportsSampling } from './_content.js'
 import { rootDomain } from './_trendGate.js'
 import { normalizeSpan, FETCH_BYTES, FETCH_TIMEOUT_MS, FETCH_CONCURRENCY } from './_gates.js'
 import { MODEL_PRICES, priceUsd } from './_prices.js'
 import * as meter from './_meter.js'
-import { LADDER_MODEL, UTILITY_MODEL } from './_models.js'
+import { LADDER_MODEL, UTILITY_MODEL, thinkingParam } from './_models.js'
 
 // ── Budget ──────────────────────────────────────────────────────────────────
 
@@ -86,6 +86,9 @@ export interface MeteredResult {
   outputTokens: number
   costUsd: number
   error?: string
+  /** The provider's stop_reason, so a reply cut off at max_tokens can be named
+   *  as that rather than read as an empty answer. Null when none was given. */
+  stopReason?: string | null
 }
 
 export interface MeteredOpts {
@@ -116,13 +119,24 @@ export async function callMetered(opts: MeteredOpts, budget: RunBudget): Promise
     max_tokens: opts.maxTokens ?? 1200,
     system: opts.system,
     messages: [{ role: 'user', content: opts.user }],
+    // Thinking is deliberately OFF. On opus-4-8 that is what omitting the field
+    // does; on the 5-family omission means adaptive thinking RUNS, so
+    // _models.thinkingParam states it either way rather than relying on the
+    // default, because max_tokens caps thinking plus text together and this
+    // pipeline runs on a bounded budget.
+    //
+    // This comment said so for months while the field was never sent. On
+    // UTILITY_MODEL (claude-sonnet-5) the weekly investigation's calls thought
+    // whenever the model chose to, and the reply was read from content[0],
+    // which is then a thinking block with no text. The claim split came back
+    // empty in weeks 39 to 42, 44 and 45 (1,250 to 2,430 output tokens a call,
+    // against 488 in week 43's complete run, with the anchor's page text in
+    // the prompt), each reported as "100% of claims unfound in source"; and the
+    // publisher-beat call spent all 700 of its tokens and learned nothing in 8
+    // of its 10 runs on Sonnet 5, against 547 tokens and 8 beats on Sonnet 4.6.
+    ...thinkingParam(model, false),
   }
-  // Sampling parameters are a 400 on the opus-4-7 family. Thinking is
-  // deliberately left OFF. On opus-4-8 that is what omitting the field does;
-  // on the 5-family omission means adaptive thinking RUNS, so _models.thinkingParam
-  // states it either way rather than relying on the default,
-  // because max_tokens caps thinking plus text together and this pipeline runs
-  // on a bounded budget.
+  // Sampling parameters are a 400 on the opus-4-7 family.
   if (supportsSampling(model)) body.temperature = opts.temperature ?? 0.2
 
   budget.modelCalls++
@@ -133,8 +147,9 @@ export async function callMetered(opts: MeteredOpts, budget: RunBudget): Promise
       body: JSON.stringify(body),
     })
     const j = await r.json().catch(() => ({})) as {
-      content?: { text?: string }[]
+      content?: { type?: string; text?: string }[]
       usage?: { input_tokens?: number; output_tokens?: number }
+      stop_reason?: string | null
       error?: { message?: string }
     }
     const inTok = j?.usage?.input_tokens || 0
@@ -155,7 +170,12 @@ export async function callMetered(opts: MeteredOpts, budget: RunBudget): Promise
     if (!r.ok) {
       return { ...empty, inputTokens: inTok, outputTokens: outTok, costUsd: cost, error: `anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}` }
     }
-    return { text: j?.content?.[0]?.text || '', model, inputTokens: inTok, outputTokens: outTok, costUsd: cost }
+    // The first TEXT block, never content[0]: a thinking block can come first
+    // (see above, and firstText in _content.ts, which learned this already).
+    return {
+      text: firstText(j), model, inputTokens: inTok, outputTokens: outTok, costUsd: cost,
+      stopReason: typeof j?.stop_reason === 'string' ? j.stop_reason : null,
+    }
   } catch (e) {
     return { ...empty, error: String((e as Error)?.message || e).slice(0, 160) }
   }
