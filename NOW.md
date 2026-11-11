@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Wed 11 Nov (36886e0b) publish pack built and sent: fact gate passed on run 7 (all runs past the second on Krish's words), spine judge passed, visual gate passed, covers and thumbnails in the week's neon skin, titles Krish picked; both cuts in the post's working folder (the 5-minute dropped by Krish); reader test 8 9 7 8 8 8, under the bar. (2026-11-11)
 - Wed 11 Nov (36886e0b) is ready to post: fact gate passed (run 7), spine judge passed, visual gate passed, pack in its 3 Posts folder; covers and thumbnails in this week's neon skin; both cuts are in the post's working folder (not filed: a one-off composite has no ve or quick-edit receipt, Krish chose b). Reader test 8 9 7 8 8 8, under the bar (reader-test.md). (2026-11-11)
 - Vertical video carries no wordmark, mark tile, series badge or opening logo in any route (ve, quick-edit, the style lab, the Studio routes), by Krish's ruling of 11 November; the wide cut keeps them. ve QC proves the mark absent on 9:16 (brand.no_mark), renderer tests refuse chrome on any 9:16 beat, the lab checker fails a tall cut with a dress and any word over a wide wordmark, and quick-edit ignores an older config's dress. HOOK_IS_THE_INTRO now says so, approved by Krish. (2026-11-11)
 - The Publish Board's feed has one versioned contract (apps/control-plane/api/board/view.schema.json, contract_version 1.0.0, a frozen fixture, check:view-contract in verify) and answers with an ETag and 304; content.krishraja.com/board/<Monday> is the archive with a banner to Control Centre's live board, and every link the engine gives Krish to the board is the live one (config/boards.json live_board). (2026-11-11)
@@ -47,7 +48,7 @@ Older lines: `docs/history/2026-11-11-NOW-moved-4.md`, `docs/history/2026-11-11-
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-11): step 2, the full-screen vertical layouts inside every platform's safe area, with before and after stills to Krish before any cut is re-rendered.
+- Next (2026-11-11): Krish posts from the 3 Posts folder; reader-test gaps wait on new reporting.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
