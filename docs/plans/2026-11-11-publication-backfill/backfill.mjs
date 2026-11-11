@@ -16,7 +16,9 @@ const url = (u) => (u.kind === 'shorts' ? `https://www.youtube.com/shorts/${u.id
 const stmts = plan.uploads.map((u) => {
   const path = `{making,channels,${u.kind}}`
   const add = JSON.stringify({ url: url(u), video_id: u.id, recorded_by: 'backfill 2026-11-11' })
-  return `update content_ideas set meta = jsonb_set(jsonb_set(meta, '{making,channels}', coalesce(meta->'making'->'channels', '{}'::jsonb)), ${lit(path)}, coalesce(meta->'making'->'channels'->${lit(u.kind)}, '{}'::jsonb) || ${lit(add)}::jsonb) where id = ${lit(u.piece)} and meta->'making' is not null and coalesce(meta->'making'->'channels'->${lit(u.kind)}->>'url', '') = '' returning id`
+  // The table's guard (trigger content_ideas_keep_newer_making) keeps the stored making record unless the incoming one
+  // carries a newer making.updated_at, as every engine write does (makingStamp); so the stamp moves with the write.
+  return `update content_ideas set meta = jsonb_set(jsonb_set(jsonb_set(jsonb_set(meta, '{making,channels}', coalesce(meta->'making'->'channels', '{}'::jsonb)), ${lit(path)}, coalesce(meta->'making'->'channels'->${lit(u.kind)}, '{}'::jsonb) || ${lit(add)}::jsonb), '{making,updated_at}', to_jsonb(to_char(clock_timestamp() at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"'))), '{making,by}', '"backfill 2026-11-11"'::jsonb) where id = ${lit(u.piece)} and meta->'making' is not null and coalesce(meta->'making'->'channels'->${lit(u.kind)}->>'url', '') = '' returning id`
 })
 const before = await q(`select id, meta->'making'->'channels'->'youtube'->>'url' yt, meta->'making'->'channels'->'shorts'->>'url' sh from content_ideas where id in (${[...new Set(plan.uploads.map((u) => lit(u.piece)))].join(',')})`)
 const have = new Map(before.map((r) => [r.id, r]))
@@ -30,6 +32,9 @@ for (const u of plan.uploads) {
 console.log(`\n${plan.uploads.length} associations: ${would} to write, ${already} already recorded, ${conflict} conflicts; ${plan.exceptions.length} exceptions left unwritten`)
 if (!process.argv.includes('--apply')) { console.log('dry run: nothing written'); process.exit(conflict ? 1 : 0) }
 if (conflict) { console.error('refusing to apply with conflicts'); process.exit(1) }
-let wrote = 0
-for (const s of stmts) wrote += (await q(s, false)).length
-console.log(`applied: ${wrote} slots written`)
+for (const s of stmts) await q(s, false)
+// Never trust the count of returned rows: read every slot back.
+const after = new Map((await q(`select id, meta->'making'->'channels'->'youtube'->>'url' yt, meta->'making'->'channels'->'shorts'->>'url' sh from content_ideas where id in (${[...have.keys()].map(lit).join(',')})`)).map((r) => [r.id, r]))
+const missing = plan.uploads.filter((u) => !String(after.get(u.piece)?.[u.kind === 'shorts' ? 'sh' : 'yt'] || '').includes(u.id))
+console.log(`readback: ${plan.uploads.length - missing.length} of ${plan.uploads.length} associations on their pieces`)
+if (missing.length) { console.error('missing after apply:', missing.map((u) => `${u.kind} ${u.id} -> ${u.piece}`)); process.exit(1) }
