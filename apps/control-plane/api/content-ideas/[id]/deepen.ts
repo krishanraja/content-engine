@@ -1,10 +1,11 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
 import { supabase } from '../../_supabase.js'
+import { StoreError, patchMeta, type StoreDb } from '../../_pieceStore.js'
 import { webResearch } from '../../_enrich.js'
 import { unsupportedNumbers } from '../../_numbers.js'
 import {
-  callClaude, corpusForChannel, loadCorpus, readMaterials, robustJson, withMaterial, type Material,
+  callClaude, corpusForChannel, loadCorpus, MaterialsFull, readMaterials, robustJson, withMaterial, type Material,
 } from '../../_content.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { guardEngine } from '../../_auth.js'
@@ -156,7 +157,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const unsupported = unsupportedNumbers(written, `${grounded} ${sources.join(' ')}`)
 
   const at = new Date().toISOString()
-  const meta = (idea.meta || {}) as any
   const entry = {
     format, topic, at,
     columns: cols,
@@ -182,19 +182,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     at,
   }
 
-  const { error: uErr } = await supabase
-    .from('content_ideas')
-    .update({
-      meta: {
-        ...meta,
-        deepen: [...(Array.isArray(meta.deepen) ? meta.deepen : []), entry].slice(-6),
-        research: Array.from(new Set([...(Array.isArray(meta.research) ? meta.research : []), ...sources])),
-        materials: withMaterial(readMaterials(meta), material),
-      },
-      updated_at: at,
-    })
-    .eq('id', ideaId)
-  if (uErr) return res.status(500).json({ ok: false, error: uErr.message })
+  // Written onto the piece as it is now, not as it was read before the research ran (patchMeta: a making record or a
+  // board press that landed meanwhile is kept, never overwritten).
+  let saved: Awaited<ReturnType<typeof patchMeta>>
+  try {
+    saved = await patchMeta(supabase as unknown as StoreDb, ideaId, (now: any) => ({
+      ...now,
+      deepen: [...(Array.isArray(now.deepen) ? now.deepen : []), entry].slice(-6),
+      research: Array.from(new Set([...(Array.isArray(now.research) ? now.research : []), ...sources])),
+      materials: withMaterial(readMaterials(now), material),
+    }))
+  } catch (e) {
+    if (e instanceof MaterialsFull || e instanceof StoreError) return res.status(e instanceof StoreError ? e.status : 409).json({ ok: false, error: e.message })
+    throw e
+  }
+  if (saved.ok === false) return res.status(saved.reason === 'busy' ? 409 : 500).json({ ok: false, error: saved.reason === 'busy' ? 'piece_busy: send it again' : 'the research could not be saved' })
 
   return res.status(200).json({ ok: true, entry, material })
 }

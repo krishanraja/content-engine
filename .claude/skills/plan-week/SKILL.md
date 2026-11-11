@@ -22,6 +22,16 @@ list; his approval of scripts is his own words in the session, recorded with `ma
 download or publish a board page, or work in a day's tab in draft, are history kept as written: read them for what
 they record, and do the same work through the records above.
 
+## Report to the board as you work
+
+A session started from this skill, not from a prompt copied off the board, reports the same way a board prompt says
+("Keep the board current as you work", `writeBack` in `apps/control-plane/api/board/_writeBack.ts`): first
+`get_piece_board` on the Control Center connector, or `python3 scripts/post-pack/board_session.py <piece_id> show`;
+then `report_board_session` (start, progress at each milestone, done, or blocked with what it needs), or
+`board_session.py <piece_id> start|progress|done|blocked "one line" --session <id> --step <step>`; and everything it
+makes or draws on goes on the piece with `add_piece_material`, or `board_session.py <piece_id> add <file or text>`. A
+day with no piece yet is `day:<Monday>/<day>`. Add, never replace.
+
 ## The Sunday loop (rulings, Krish, 2026-10-28)
 
 Krish records the whole week on a Sunday, and it goes live eight days later:
