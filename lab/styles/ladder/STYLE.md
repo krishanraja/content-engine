@@ -44,7 +44,7 @@ ink: that was the first draft, and Krish asked for "significantly more premium".
   (IMF · BESSEN 2015).
 - **Captions:** the house caption (Archivo 900, cream on an ink plate with a hard offset shadow in the series
   colour), built word by word.
-- **Dress:** the masthead wordmark top left, the series name top right in its colour.
+- **Dress (wide only):** the masthead wordmark top left, the series name top right in its colour. Vertical video carries neither (Ruling, Krish, 2026-11-11).
 - On-screen words never repeat the caption (F42; `check.mjs`).
 
 ## 5. Motion quality
@@ -55,7 +55,7 @@ ink: that was the first draft, and Krish asked for "significantly more premium".
 
 ## 6. Shot and layout grammar
 
-- **Tall (1080 x 1920):** the type owns the top third (y 280 to 760, under the dress). The object sits in the lower
+- **Tall (1080 x 1920):** the type owns the top third (y 280 to 760). The object sits in the lower
   two thirds; the camera's look-at is lifted so it lands there. Captions sit near y 1262, clear of every channel's
   handle zone.
 - **Wide (1920 x 1080):** the type sits top left; the object sits centre right.

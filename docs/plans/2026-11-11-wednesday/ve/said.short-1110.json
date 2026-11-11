@@ -1,0 +1,626 @@
+{
+  "schema": "ve-said/1",
+  "take": "short-1110",
+  "media_sha256": "54d1c752d0435a18ea2a2d1d572f7461aea8d9673bcabb56472d995640c63153",
+  "aligner": "faster-whisper:small.en",
+  "script": "script-short.txt",
+  "script_sha256": "32ba30e8528b21d3b06f69b4344f40307aebc3c818338c5ab4e18a7ae30801aa",
+  "rates": {
+    "script_words": 195,
+    "said_words": 254,
+    "word_for_word": 176,
+    "said_more_pct": 30.3,
+    "own_words_pct": 30.7,
+    "script_kept_pct": 90.3,
+    "minutes": 1.46,
+    "words_a_minute": 174.1,
+    "words_a_minute_talking": 179.2,
+    "differences": 18,
+    "differences_a_minute": 12.3,
+    "tags": {
+      "rephrase": 7,
+      "addition": 5,
+      "filler": 4,
+      "signpost": 2,
+      "hedge": 2,
+      "intensifier": 2,
+      "dropped": 1,
+      "to the viewer": 1,
+      "number": 1,
+      "aside": 1
+    },
+    "tags_a_minute": {
+      "rephrase": 4.8,
+      "addition": 3.43,
+      "filler": 2.74,
+      "signpost": 1.37,
+      "hedge": 1.37,
+      "intensifier": 1.37,
+      "dropped": 0.69,
+      "to the viewer": 0.69,
+      "number": 0.69,
+      "aside": 0.69
+    },
+    "sentence_words_said": 15.9,
+    "sentence_words_script": 10.8,
+    "sentences_starting_with_a_joiner_pct": {
+      "said": 43.8,
+      "script": 33.3
+    },
+    "top_starts_said": [
+      [
+        "and",
+        3
+      ],
+      [
+        "so",
+        3
+      ],
+      [
+        "does",
+        1
+      ],
+      [
+        "it's",
+        1
+      ],
+      [
+        "let's",
+        1
+      ],
+      [
+        "she",
+        1
+      ],
+      [
+        "people",
+        1
+      ],
+      [
+        "strangers",
+        1
+      ]
+    ],
+    "top_words_added": [
+      [
+        "she",
+        4
+      ],
+      [
+        "kind",
+        2
+      ],
+      [
+        "layer",
+        2
+      ],
+      [
+        "by",
+        2
+      ],
+      [
+        "hand",
+        2
+      ],
+      [
+        "and",
+        2
+      ],
+      [
+        "not",
+        2
+      ],
+      [
+        "just",
+        2
+      ],
+      [
+        "it's",
+        1
+      ],
+      [
+        "so",
+        1
+      ],
+      [
+        "all",
+        1
+      ],
+      [
+        "vibe",
+        1
+      ],
+      [
+        "wanted",
+        1
+      ],
+      [
+        "tiktok",
+        1
+      ],
+      [
+        "obviously",
+        1
+      ],
+      [
+        "track",
+        1
+      ],
+      [
+        "then",
+        1
+      ],
+      [
+        "s",
+        1
+      ],
+      [
+        "club",
+        1
+      ],
+      [
+        "singer",
+        1
+      ]
+    ],
+    "top_words_dropped": [
+      [
+        "vibe",
+        1
+      ],
+      [
+        "and",
+        1
+      ],
+      [
+        "by",
+        1
+      ],
+      [
+        "hand",
+        1
+      ],
+      [
+        "then",
+        1
+      ],
+      [
+        "got",
+        1
+      ],
+      [
+        "nineties",
+        1
+      ],
+      [
+        "club",
+        1
+      ],
+      [
+        "singer",
+        1
+      ],
+      [
+        "ultra",
+        1
+      ],
+      [
+        "nat",
+        1
+      ],
+      [
+        "for",
+        1
+      ],
+      [
+        "bits",
+        1
+      ],
+      [
+        "singing",
+        1
+      ],
+      [
+        "i'll",
+        1
+      ]
+    ]
+  },
+  "differences": [
+    {
+      "at": 5.45,
+      "kind": "added",
+      "tags": [
+        "filler"
+      ],
+      "script": "",
+      "said": "it's",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 12.21,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "is it",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 16.94,
+      "kind": "said differently",
+      "tags": [
+        "signpost",
+        "rephrase"
+      ],
+      "script": "It",
+      "said": "So it all",
+      "script_words": 1,
+      "said_words": 3
+    },
+    {
+      "at": 22.46,
+      "kind": "said differently",
+      "tags": [
+        "hedge",
+        "rephrase"
+      ],
+      "script": "a vibe,",
+      "said": "the kind of vibe that she wanted, she",
+      "script_words": 2,
+      "said_words": 8
+    },
+    {
+      "at": 25.14,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "she",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 28.58,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "in TikTok,",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 31.7,
+      "kind": "skipped",
+      "tags": [
+        "dropped"
+      ],
+      "script": "and",
+      "said": "",
+      "script_words": 1,
+      "said_words": 0
+    },
+    {
+      "at": 33.32,
+      "kind": "added",
+      "tags": [
+        "filler",
+        "intensifier"
+      ],
+      "script": "",
+      "said": "obviously",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 39.84,
+      "kind": "said differently",
+      "tags": [
+        "to the viewer",
+        "number",
+        "aside",
+        "rephrase"
+      ],
+      "script": "it by hand, then got the nineties club singer Ultra Naté",
+      "said": "the track layer by layer, hand by hand. And then the 90s club singer UltraNate, not sure if you're familiar with it or old enough to be, she got her",
+      "script_words": 11,
+      "said_words": 30
+    },
+    {
+      "at": 55.74,
+      "kind": "added",
+      "tags": [
+        "intensifier"
+      ],
+      "script": "",
+      "said": "song actually literally",
+      "script_words": 0,
+      "said_words": 3
+    },
+    {
+      "at": 62.92,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "for",
+      "said": "because of the",
+      "script_words": 1,
+      "said_words": 3
+    },
+    {
+      "at": 64.84,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "bits",
+      "said": "bit",
+      "script_words": 1,
+      "said_words": 1
+    },
+    {
+      "at": 68.42,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "singing.",
+      "said": "the singing award at the Grammys, just not the songwriting.",
+      "script_words": 1,
+      "said_words": 10
+    },
+    {
+      "at": 75.22,
+      "kind": "added",
+      "tags": [
+        "filler",
+        "hedge"
+      ],
+      "script": "",
+      "said": "kind of",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 77.46,
+      "kind": "added",
+      "tags": [
+        "filler",
+        "signpost"
+      ],
+      "script": "",
+      "said": "See,",
+      "script_words": 0,
+      "said_words": 1
+    },
+    {
+      "at": 78.66,
+      "kind": "said differently",
+      "tags": [
+        "rephrase"
+      ],
+      "script": "I'll",
+      "said": "I'm just going to",
+      "script_words": 1,
+      "said_words": 4
+    },
+    {
+      "at": 80.74,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "of it,",
+      "script_words": 0,
+      "said_words": 2
+    },
+    {
+      "at": 84.56,
+      "kind": "added",
+      "tags": [
+        "addition"
+      ],
+      "script": "",
+      "said": "AI and human music.",
+      "script_words": 0,
+      "said_words": 4
+    }
+  ],
+  "pace": [
+    {
+      "line": 1,
+      "text": "Does this track sound familiar?",
+      "from_s": 1.39,
+      "words": 5,
+      "words_per_s": 3.01,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 2,
+      "text": "It's all over TikTok and it's all over the charts.",
+      "from_s": 3.95,
+      "words": 10,
+      "words_per_s": 4.1,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 3,
+      "text": "But which came first, TikTok or the charts?",
+      "from_s": 6.77,
+      "words": 8,
+      "words_per_s": 2.8,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 4,
+      "text": "And is it AI music, or is it human music?",
+      "from_s": 10.33,
+      "words": 10,
+      "words_per_s": 3.57,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 5,
+      "text": "Let's find out.",
+      "from_s": 13.99,
+      "words": 3,
+      "words_per_s": 3.75,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 6,
+      "text": "So It all started with a Reiki healer and an AI app.",
+      "from_s": 16.94,
+      "words": 12,
+      "words_per_s": 3.85,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 7,
+      "text": "She typed her lyrics and the kind of vibe, that she wanted, she pressed a button, and she got a whole song back.",
+      "from_s": 20.74,
+      "words": 23,
+      "words_per_s": 4.31,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 8,
+      "text": "People put it under their own videos, in TikTok, like cats, weddings dads dancing badly, so TikTok obviously came first.",
+      "from_s": 26.6,
+      "words": 20,
+      "words_per_s": 2.6,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 9,
+      "text": "Strangers went hunting for the song, and a top producer found it.",
+      "from_s": 35.06,
+      "words": 12,
+      "words_per_s": 4.38,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 10,
+      "text": "He pulled it apart and rebuilt the track layer by layer, hand by hand, And then the 90s club singer UltraNate, not sure if you're familiar with it or old enough to be, she got her to sing it.",
+      "from_s": 38.12,
+      "words": 39,
+      "words_per_s": 3.62,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 11,
+      "text": "And under her voice, he kept a thin layer of the AI singer.",
+      "from_s": 49.0,
+      "words": 13,
+      "words_per_s": 2.64,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 12,
+      "text": "So the hit song actually literally has a robot humming along underneath.",
+      "from_s": 54.24,
+      "words": 12,
+      "words_per_s": 2.43,
+      "rushed": false,
+      "pauses": []
+    },
+    {
+      "line": 13,
+      "text": "Even the Grammys reportedly ruled it out because of the songwriting, because of the AI bit still in it.",
+      "from_s": 61.2,
+      "words": 19,
+      "words_per_s": 3.99,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 14,
+      "text": "But it can still compete for the singing.",
+      "from_s": 66.18,
+      "words": 8,
+      "words_per_s": 2.94,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 15,
+      "text": "award at the Grammys, just not the songwriting.",
+      "from_s": 68.9,
+      "words": 8,
+      "words_per_s": 2.76,
+      "rushed": false,
+      "pauses": [
+        {
+          "after": "Grammys,",
+          "at_s": 70.04,
+          "pause_s": 0.86
+        }
+      ]
+    },
+    {
+      "line": 16,
+      "text": "So I reckon AI versus human is kind of the wrong question.",
+      "from_s": 72.4,
+      "words": 12,
+      "words_per_s": 2.97,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 17,
+      "text": "See, Next time I love something, I'm just going to ask who did which bit.",
+      "from_s": 77.46,
+      "words": 15,
+      "words_per_s": 4.57,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 18,
+      "text": "of it, Because the song you can't stop dancing to is already both.",
+      "from_s": 80.74,
+      "words": 13,
+      "words_per_s": 3.4,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 19,
+      "text": "AI and human music.",
+      "from_s": 84.56,
+      "words": 4,
+      "words_per_s": 2.94,
+      "rushed": true,
+      "pauses": []
+    },
+    {
+      "line": 20,
+      "text": "The full deep dive is at makeyourmindup ai.",
+      "from_s": 86.66,
+      "words": 8,
+      "words_per_s": 3.54,
+      "rushed": true,
+      "pauses": []
+    }
+  ],
+  "heard_only": 69
+}

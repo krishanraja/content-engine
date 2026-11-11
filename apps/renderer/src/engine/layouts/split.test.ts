@@ -62,10 +62,10 @@ describe('frozen SPLIT geometry', () => {
     expect(device.props.box).toEqual({ left: 60, top: 300, width: 960, height: FWP_SPLIT_SEAM_Y - 360 })
     const stage = nodes.find((n) => (n.props.style as Record<string, unknown>)?.backgroundColor === props.tokens.cream)!
     expect(stage.props.style).toMatchObject({ height: FWP_SPLIT_SEAM_Y, overflow: 'hidden' })
-    // The mark tile and pill, legible on cream, not the ink-only horizontal logo (Krish, 2026-11-03).
+    // No mark tile, pill or header on the vertical cut (Ruling, Krish, 2026-11-11).
     const chrome = elements(BrandFrame({ props, beat: props.beats[1]!, frame: 75 }))
     expect(chrome.some((n) => n.type === StageHeader)).toBe(false)
-    expect(chrome.some((n) => n.type === MarkTile)).toBe(true)
+    expect(chrome.some((n) => n.type === MarkTile)).toBe(false)
   })
   it('preserves explicit placement and strips it from device params', () => {
     const props = propsForSplit()
