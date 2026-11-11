@@ -1,0 +1,97 @@
+{
+ "subchannel": "mind.the.gap",
+ "date": "2026-11-13",
+ "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+ "headline": "Meta ranked staff by AI use. Then it backfired.",
+ "video_title": "Meta ranked staff by AI use. Then it backfired.",
+ "sources": {
+  "s1": [
+   "Fortune, 9 April 2026: A Meta employee created a dashboard so coworkers can compete to be the company's No. 1 AI token user",
+   "https://fortune.com/2026/04/09/meta-killed-employee-ai-token-dashboard/"
+  ]
+ },
+ "cover": {
+  "headline": [
+   "Meta ranked staff by AI use.",
+   "It backfired."
+  ],
+  "proof": {
+   "page": {
+    "url": "https://fortune.com/2026/04/09/meta-killed-employee-ai-token-dashboard/",
+    "height": 900,
+    "crop": [
+     0.02,
+     0.36,
+     0.98,
+     0.97
+    ]
+   },
+   "source": "s1",
+   "tag": "FORTUNE, APRIL 2026",
+   "alt": "Fortune, 9 April 2026: A Meta employee created a dashboard so coworkers can compete to be the company's No. 1 AI token user"
+  },
+  "rows": [
+   {
+    "name": "Meta",
+    "logo": "logos/meta-cream.svg"
+   },
+   {
+    "name": "Amazon",
+    "logo": "logos/amazon-cream.svg"
+   }
+  ],
+  "strip": [
+   {
+    "name": "Shopify",
+    "logo": "logos/shopify-light.svg"
+   },
+   {
+    "name": "Duolingo",
+    "logo": "logos/duolingo-light.svg"
+   }
+  ]
+ },
+ "thumbs": {
+  "headline": [
+   "RANKED BY",
+   "AI USE"
+  ],
+  "rows": [
+   {
+    "name": "Meta",
+    "logo": "logos/meta-cream.svg"
+   },
+   {
+    "name": "Amazon",
+    "logo": "logos/amazon-cream.svg"
+   }
+  ],
+  "strip": [
+   {
+    "name": "Shopify",
+    "logo": "logos/shopify-light.svg"
+   },
+   {
+    "name": "Duolingo",
+    "logo": "logos/duolingo-light.svg"
+   }
+  ],
+  "proof": {
+   "page": {
+    "url": "https://fortune.com/2026/04/09/meta-killed-employee-ai-token-dashboard/",
+    "height": 900,
+    "crop": [
+     0.02,
+     0.36,
+     0.98,
+     0.97
+    ]
+   },
+   "source": "s1",
+   "tag": "FORTUNE, APRIL 2026",
+   "alt": "Fortune, 9 April 2026: A Meta employee created a dashboard so coworkers can compete to be the company's No. 1 AI token user"
+  }
+ },
+ "video_length": "5:21",
+ "skin": "plain"
+}
