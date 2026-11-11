@@ -165,10 +165,12 @@ on every read, in three layers of the same shape: `motion`, `captions` and `trea
 and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
 
 - **Motion** is the bank's motion layer (`config/style-references.json`, layer `motion`; `line` is its `how`, each
-  option also carries its `point_types` and `formats`). Up to three are recommended and listed first: each made for
-  every format the piece makes (a series piece makes the long and the short cut), sharing a point type with the piece
-  when its spec names them (`style.points`), never one he called not for us and never one he said "Not this" to on this
-  piece; those that suit the channel often come first, then his liked ones, then the most point types matched.
+  option also carries its `point_types`, its `formats` and `ready`, false while its `ve_route` says `needs_device`).
+  Up to three are recommended and listed first: each made for every format the piece makes (a series piece makes the
+  long and the short cut), sharing a point type with the piece when its spec names them (`style.points`), one ve can
+  draw now (the rule `ve styles` keeps: `needs_device` holds a style back until his yes on its test render), never one
+  he called not for us and never one he said "Not this" to on this piece; those that suit the channel often come first,
+  then his liked ones, then the most point types matched.
 - **Captions** is `config/caption-themes.json`, one entry per name in `apps/renderer/src/engine/captions/names.ts`
   (`captions.test.ts` holds them equal). The one with a `recommended_why` (art-directed, his pick on 11 Nov 2026) is
   recommended, with his own words, unless he said "Not this" to it on this piece.

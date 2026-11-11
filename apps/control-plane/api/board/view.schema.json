@@ -376,6 +376,7 @@
         "rules": { "type": "array", "items": { "type": "string" } },
         "point_types": { "type": "array", "items": { "type": "string" }, "description": "Motion: the kinds of point it draws (config/style-references.json motion_point_types)." },
         "formats": { "type": "array", "items": { "type": "string" }, "description": "Motion: the formats it is made for." },
+        "ready": { "type": "boolean", "description": "Motion: whether ve can draw it now; false while its route says needs_device (it waits on a device and his yes on its test render), and then it is never recommended." },
         "recommended": { "type": "boolean", "description": "At most three motion styles, one caption style and the Sunday room's look." },
         "why": { "type": ["string", "null"], "description": "Why it is recommended, in plain words; null when it is not." },
         "sample_url": { "type": ["string", "null"], "description": "A rendered sample on this site (a path starting with one /; config/ve/style-samples.json), or null." },

@@ -25,8 +25,8 @@ const option = (id: string, extra: Body = {}) => ({ id, format: 'Meme video, 9:1
 const verdict = (day: string, id: string, side: Body) => ({ doc_id: `off-${day}-${id}`, updated_by: 'Krish', revision: 2, body: { use: 'offday', pick: `off-${day}-${id}`, day, ...side } })
 const run = (job: JobName, state: 'queued' | 'running' | 'done' | 'failed') => ({ job, workflow: JOBS[job].workflow, state, started_at: '2026-11-09T17:00:00Z', updated_at: '2026-11-09T17:05:00Z', url: `https://github.com/krishanraja/content-engine/actions/runs/1`, event: 'repository_dispatch' })
 const look = (id: string, name: string) => ({ id, name, pitch: `${name}, pitched.`, status: 'trial' })
-const motion = (id: string, fits: string, krish_verdict: string, point_types: string[], formats = ['long_video', 'short_video']) =>
-  ({ id, name: `The ${id} style`, how: `How ${id} moves.`, rules: [`${id} rule one`, `${id} rule two`], point_types, formats, fits, krish_verdict })
+const motion = (id: string, fits: string, krish_verdict: string, point_types: string[], formats = ['long_video', 'short_video'], ve_route = ['headline']) =>
+  ({ id, name: `The ${id} style`, how: `How ${id} moves.`, rules: [`${id} rule one`, `${id} rule two`], point_types, formats, fits, krish_verdict, ve_route })
 
 /** One week with every part of the view in it: media, a run, a path at each step, a revised off-day option, reviews. */
 function full(): ViewInputs {
@@ -60,7 +60,7 @@ function full(): ViewInputs {
     // 1.4.0: the bank's motion styles, and Friday's creative direction he signed.
     motion: [motion('ladder', 'often', 'liked', ['number', 'comparison']), motion('data-story', 'often', 'untested', ['number', 'sequence']),
       motion('shape-morph', 'sometimes', 'untested', ['transformation']), motion('full-visual', 'sometimes', 'untested', ['mechanism'], ['short_video']),
-      motion('pixel-retro', 'rarely', 'not for us', ['mood'])],
+      motion('pixel-retro', 'rarely', 'not for us', ['mood']), motion('toy-3d', 'sometimes', 'untested', ['product'], ['long_video', 'short_video'], ['needs_device'])],
     specs: { fri: { schema_version: 2, piece_id: FRI, signed: { by: 'Krish', said: 'Yes, make it', on: '2026-11-15', script_sha256: 'c'.repeat(64) },
       style: { motion: { module: 'data-story', reason: 'one number per beat' }, points: ['number'] }, brand: { caption_theme: 'art-directed' } } },
     inspiration: { cards: [{ id: 'c1', name: 'clip.mp4', words: 'I like how it is lit.', saved: '2026-11-01T00:00:00Z' }], unread: 3 },

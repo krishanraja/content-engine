@@ -11,8 +11,10 @@ import type { LiveGate } from './_live.js'
 //
 // - Motion: the bank's motion layer (config/style-references.json, layer "motion"), read with the rest of the bank.
 //   Up to three are recommended: each made for every format the piece makes, sharing a point type with the piece when
-//   its spec names them (style.points), never one he called not for us, and never one he said "Not this" to on this
-//   piece; those that suit the channel often first, then his liked ones, then the most point types matched.
+//   its spec names them (style.points), one ve can draw now (its ve_route has no needs_device, the rule ve styles keeps:
+//   needs_device holds a style back until his yes on its test render), never one he called not for us, and never one
+//   he said "Not this" to on this piece; those that suit the channel often first, then his liked ones, then the most
+//   point types matched.
 // - Captions: config/caption-themes.json, one per name in apps/renderer/src/engine/captions/names.ts; the one with a
 //   recommended_why (his pick) is recommended unless he said "Not this" to it here.
 // - Treatment: the looks (path.look) in the same shape, so the three choices draw alike; its press is the look op.
@@ -37,9 +39,11 @@ export interface StyleOption {
   /** One line on what it is. */
   line: string
   rules: string[]
-  /** Motion only: the kinds of point it draws and the formats it is made for. */
+  /** Motion only: the kinds of point it draws, the formats it is made for, and whether ve can draw it now (false while
+   *  its route says needs_device: it waits on a device and his yes on its test render). */
   point_types?: string[]
   formats?: string[]
+  ready?: boolean
   recommended: boolean
   /** Why the engine recommends it, in plain words; null when it does not. */
   why: string | null
@@ -59,7 +63,7 @@ export interface StyleLayer {
 export interface DayStyle { motion: StyleLayer; captions: StyleLayer; treatment: StyleLayer }
 
 /** One motion style from the bank's motion layer. */
-export interface MotionModule { id: string; name: string; how: string; rules: string[]; point_types: string[]; formats: string[]; fits: string; krish_verdict: string }
+export interface MotionModule { id: string; name: string; how: string; rules: string[]; point_types: string[]; formats: string[]; fits: string; krish_verdict: string; ve_route: string[] }
 export interface Look { id: string; name: string; pitch: string; status: string }
 
 interface CaptionTheme { name: string; line: string; rules: string[]; recommended_why?: string }
@@ -74,7 +78,7 @@ export function motionBank(styles: unknown): MotionModule[] {
   const bank = isObj(styles) && Array.isArray(styles.bank) ? styles.bank : []
   return bank.filter(isObj).filter(m => m.layer === 'motion' && typeof m.id === 'string')
     .map(m => ({ id: String(m.id), name: String(m.name || m.id), how: String(m.how || ''), rules: strings(m.rules), point_types: strings(m.point_types),
-      formats: strings(m.formats), fits: String(m.fits || ''), krish_verdict: String(m.krish_verdict || 'untested') }))
+      formats: strings(m.formats), fits: String(m.fits || ''), krish_verdict: String(m.krish_verdict || 'untested'), ve_route: strings(m.ve_route) }))
 }
 
 /** A rendered sample's same-site path, or null: never an outside link (the view carries none, by the media rule). */
@@ -88,6 +92,8 @@ const NOT_FOR_US = new Set(['not for us', 'not_for_us', 'not-for-us', 'rejected'
 const FITS_ORDER: Record<string, number> = { often: 0, sometimes: 1, rarely: 2 }
 const LIKED = new Set(['liked', 'tested'])
 const MOTION_ID = /^[a-z0-9][a-z0-9_.-]{0,79}$/
+/** Whether ve can draw a motion style now: its route does not say needs_device (scripts/velib/styles.py built). */
+const ready = (m: MotionModule) => !m.ve_route.includes('needs_device')
 
 /** His style on the piece (meta.style), read safely. */
 export function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<StyleLayerKey, string[]>; at: string | null } {
@@ -135,7 +141,7 @@ export function dayStyle(i: StyleInputs): DayStyle {
   // Motion: up to three recommended, in their rank order, then every other option in bank order.
   const known = i.points && i.points.length ? i.points : null
   const ranked = i.motion.map((m, n) => ({ m, n, hits: known ? m.point_types.filter(p => known.includes(p)) : [] }))
-    .filter(x => !mine.rejected.motion.includes(x.m.id) && !NOT_FOR_US.has(x.m.krish_verdict))
+    .filter(x => ready(x.m) && !mine.rejected.motion.includes(x.m.id) && !NOT_FOR_US.has(x.m.krish_verdict))
     .filter(x => i.formats.every(f => x.m.formats.includes(f)) && (!known || x.hits.length > 0))
     .sort((a, b) => (FITS_ORDER[a.m.fits] ?? 3) - (FITS_ORDER[b.m.fits] ?? 3) || Number(LIKED.has(b.m.krish_verdict)) - Number(LIKED.has(a.m.krish_verdict))
       || b.hits.length - a.hits.length || a.n - b.n)
@@ -150,7 +156,7 @@ export function dayStyle(i: StyleInputs): DayStyle {
     : { picked: null, picked_by: null, picked_at: null }
   const order = [...ranked.map(x => x.m), ...i.motion.filter(m => !recommended.has(m.id))]
   const motion: StyleLayer = {
-    options: order.map(m => ({ id: m.id, name: m.name, line: m.how, rules: m.rules, point_types: m.point_types, formats: m.formats,
+    options: order.map(m => ({ id: m.id, name: m.name, line: m.how, rules: m.rules, point_types: m.point_types, formats: m.formats, ready: ready(m),
       recommended: recommended.has(m.id), why: recommended.get(m.id) ?? null, sample_url: sampleUrl('motion', m.id),
       rejected: mine.rejected.motion.includes(m.id) || NOT_FOR_US.has(m.krish_verdict),
       presses: { yes: press('Yes', 'style', { motion: m.id }, `Picked. ${m.name} is the motion style for this piece.`),
