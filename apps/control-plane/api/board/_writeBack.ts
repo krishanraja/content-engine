@@ -15,6 +15,11 @@ const obj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !A
 /** The marker every carried instruction starts with, so it is added once and a test can find it. */
 export const WRITE_BACK_HEAD = 'Keep the board current as you work'
 
+/** The research rule every carried instruction and the plan-week, make-piece and produce-video skills say (Ruling, Krish,
+ *  2026-11-11; docs/DRIVE.md, "The research library"). tests/control-plane/research-library.test.ts holds all four to it. */
+export const RESEARCH_RULE = 'Research is never left in scratch or a chat: file each research document on the piece as you write it, '
+  + 'and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive.'
+
 export interface WriteBackTarget { pieceId: string | null; week: string; day: string; step: string }
 
 const STEP = /^[a-z][a-z0-9_-]{0,40}$/
@@ -37,6 +42,7 @@ export function writeBack(t: WriteBackTarget): string {
     + `(blocked, saying what you need, if you stop). The script: board_session.py ${cli} start|progress|done|blocked "one line" --session <your id> --step ${step}\n`
     + `3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, `
     + `or board_session.py ${cli} add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py ${cli} read <id>.\n`
+    + `4. ${RESEARCH_RULE} The script: board_session.py ${cli} add <file> --kind research\n`
     + 'Nothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, '
     + 'and the script uses the engine key this machine already holds.'
 }

@@ -207,6 +207,9 @@ if I ran four separate sessions on one piece of content, it would know where eve
 the piece (or the week and the day when there is no piece yet) and the step, and tells the session to: see what is on
 file and who else is on the piece first; choose a session id once and report `start`, `progress` at each milestone, and
 `done` (or `blocked`, with what it needs); and file everything it makes or draws on on the piece, never only in its chat.
+Its fourth line is the research rule (`RESEARCH_RULE`; Ruling, Krish, 2026-11-11): research is never left in scratch or
+a chat, every research document is filed on the piece as it is written, and a Markdown file Krish sends is filed on the
+piece first.
 Two doors, both on the same routes and rules, and neither puts a key in the prompt:
 
 | Door | For | Authenticates with |
@@ -247,6 +250,12 @@ Two doors, both on the same routes and rules, and neither puts a key in the prom
   working set from the store, from the old materials route and from the board's research are guarded on the row's
   `updated_at`, so a making record that lands in between is read again and kept.
 - Piece materials only: brand assets live in the brand kit (`docs/DRIVE.md`, "The brand kit"), never here.
+- Research is copied into his Drive's research library (`makeyourmindup > 6 Research library`; `docs/DRIVE.md`, "The
+  research library"): a material of kind `research`, `corpus`, `note` or `paste` (or role `research`, `sources`, `corpus`
+  or `notes`) gets a copy with the store's exact bytes under its week and piece, and a row in the library's `00 Index`.
+  `POST ?op=text` and `?op=confirm` copy it at once and answer `library` (`copied` or `already` with the Drive link,
+  `later`, or `not_research`); the hourly sweep `research_library_mirror` copies the rest. The store stays the record:
+  a failed copy loses nothing, and the library only ever gains folders, files and rows.
 
 **On the board.** Each day of the view carries `sessions` (who is on the day's piece or the day, working first, with
 their step and last line) and `materials` (what is on file, newest first, with a thumbnail id for a picture and no text

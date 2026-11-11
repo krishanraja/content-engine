@@ -51,6 +51,10 @@ artifacts stay retired (`scripts/hooks/artifact_gate.py`). Report as you work, a
 blocked) and `add_piece_material` on the connector, or `scripts/post-pack/board_session.py <piece_id>
 show|start|progress|done|blocked|add`.
 
+**Research (Ruling, Krish, 2026-11-11).** Research is never left in scratch or a chat: file each research document on
+the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his
+Research library in Drive.
+
 ## Never call a video good without watching it
 
 ### Minimal words and visual comprehension

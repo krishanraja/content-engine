@@ -159,6 +159,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/publish/watch`
 - `/api/purge/restore`
 - `/api/purge/run`
+- `/api/research-library/sweep`
 - `/api/shifts/[id]`
 - `/api/shifts/[id]/write`
 - `/api/shifts/detect`
@@ -1569,6 +1570,45 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `async function classifyRelevance(items: RelevanceItem[], opts: ClassifyOpts): Promise<RelevanceVerdict[]>`
 - `function relevanceReasonCode(prefix: string, verdict: Verdict): string`
 
+### `apps/control-plane/api/_researchLibrary.ts`
+
+- `const RESEARCH_LIBRARY_FOLDER_ID`
+- `const RESEARCH_LIBRARY_INDEX_ID`
+- `const LIBRARY_KINDS`
+- `const LIBRARY_ROLES`
+- `const SETTLE_MS`
+- `const MIRROR_FILE_MAX`
+- `const INDEX_COLUMNS`
+- `const INDEX_MATERIAL_COLUMN`
+- `const PROP`
+- `interface StoredMaterial`
+- `interface PieceInfo`
+- `interface LibraryFolder`
+- `interface LibraryFile`
+- `interface LibraryDrive`
+- `interface LibraryIndex`
+- `interface LibrarySource`
+- `interface MirrorOptions`
+- `interface MirrorReport`
+- `function inLibrary(m: Pick<StoredMaterial, 'kind' | 'role' | 'storage' | 'archived_at' | 'bytes'>): boolean`
+- `const isSource = (m: Pick<StoredMaterial, 'kind' | 'role'>) =>`
+- `interface Place`
+- `function placeOf(m: StoredMaterial, piece: PieceInfo | null): Place`
+- `function fileNameOf(m: StoredMaterial): string`
+- `function mimeOf(m: StoredMaterial): string`
+- `function descriptionOf(m: StoredMaterial, piece: PieceInfo | null, place: Place): string`
+- `function indexRowOf(m: StoredMaterial, piece: PieceInfo | null, place: Place, link: string): string[]`
+- `async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, opts: MirrorOptions = {}): Promi…`
+
+### `apps/control-plane/api/_researchLibraryGoogle.ts`
+
+- `function googleLibraryDrive(token: string, f: Fetch = fetch): LibraryDrive`
+- `function googleLibraryIndex(token: string, sheetId = RESEARCH_LIBRARY_INDEX_ID, f: Fetch = fetch): LibraryIndex`
+- `interface SourceDb`
+- `function storeSource(db: SourceDb, bucket: string): LibrarySource`
+- `async function runMirror(opts: { only?: string[]; budgetMs?: number } = {}): Promise<MirrorReport>`
+- `async function copyNow(materialId: string | null | undefined, waitMs = 20_000): Promise<Record<string, unknown>>`
+
 ### `apps/control-plane/api/_retry.ts`
 
 One retry policy for model calls, because an overload is weather.
@@ -2322,6 +2362,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 What every prompt the board copies out says about reporting back, and what the board shows of the sessions and the
 
 - `const WRITE_BACK_HEAD`
+- `const RESEARCH_RULE`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
@@ -2568,8 +2609,9 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 ### `apps/control-plane/api/content-ideas/store.ts`
 
 - `const config`
-- `function createStoreHandler(getDb: () => Promise<StoreDb>)`
-- `export default createStoreHandler(async () => (await import('../_supabase.j`
+- `type LibraryCopy`
+- `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy)`
+- `export default createStoreHandler( async () => (await import('../_supabase.`
 
 ### `apps/control-plane/api/content-ideas/synthesize.ts`
 
@@ -3004,6 +3046,11 @@ A copy of every row the Monday purge is about to hard-delete.
 ### `apps/control-plane/api/purge/run.ts`
 
 - `export default withContentRun('purge', handler)`
+
+### `apps/control-plane/api/research-library/sweep.ts`
+
+- `const config`
+- `export default withContentRun('research_library_mirror', handler)`
 
 ### `apps/control-plane/api/shifts/[id].ts`
 
@@ -4163,6 +4210,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/kinetic_stat/state.ts`
 
 - `function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/ladder_stage/index.tsx`
+
+- `function buildSet(p:DeviceProps)`
+- `function Device(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/ladder_stage/schema.ts`
+
+- `const Params`
+
+### `apps/renderer/src/engine/devices/ladder_stage/state.ts`
+
+- `function ladderState(object:EngineObject,events:readonly EngineEvent[],frame:number)`
 
 ### `apps/renderer/src/engine/devices/leaderboard/index.tsx`
 
