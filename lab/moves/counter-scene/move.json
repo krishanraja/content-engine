@@ -1,0 +1,20 @@
+{
+ "id": "counter-scene",
+ "what": "A person at work at a counter acts the line out: a machine arrives, the person appears, hands something over; returns as a ghost and comes back; turns from the task to people.",
+ "says": [
+  "person",
+  "before-after",
+  "process"
+ ],
+ "needs": [
+  "text"
+ ],
+ "energy": "high",
+ "engine": "canvas",
+ "code": "lab/moves/counter-scene/move.mjs",
+ "entry": "draw",
+ "vitals": "timing is fixed in the move; times come from the words that cue it",
+ "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+ "from": "lab/styles/living-screen/scene.mjs",
+ "proven_by": "Krish, 2026-11-10, on the teller opening: \"Now let's keep that pace of animation up.\""
+}

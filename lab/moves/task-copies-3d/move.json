@@ -1,0 +1,18 @@
+{
+ "id": "task-copies-3d",
+ "what": "One slab lifts off a tower, turns mint and makes four copies in the space it freed.",
+ "says": [
+  "process"
+ ],
+ "needs": [
+  "text"
+ ],
+ "energy": "medium",
+ "engine": "three",
+ "code": "lab/moves/task-copies-3d/move.mjs",
+ "entry": "update",
+ "vitals": "timing is fixed in the move; times come from the words that cue it",
+ "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+ "from": "lab/styles/ladder/scene.mjs",
+ "proven_by": "Krish, 2026-11-10, on The Ladder v2 frames: \"much better, go\""
+}
