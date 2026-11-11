@@ -43,20 +43,11 @@ Preflight first: add `--piece <plan folder or uuid>` to each floor read and to
 
 ## Publish-board routing
 
-Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The week's
-publish board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its
-link), and it draws the week from the engine's `GET /api/board/<Monday>/view` (`docs/PUBLISH_BOARDS.md`, "One live
-board"). Update it by writing what the view reads, never a page: the piece's making record (`making.py`), his presses
-and his yes (`board_web.py read`, `yes.py`), and the week's plan files (`docs/plans/<Monday>-week/ideas.json`, the
-narrative locks, the research) on main or on the week's branch `offday-revise/<Monday>`; when only a file changed,
-`python3 scripts/post-pack/board_web.py touch <Monday>` makes the live board read the week again at once. Never build
-or publish a board page (`week_board.py`, `board_web.py publish-web`): the content.krishraja.com pages are the
-archive, read-only, and refuse every press. A question for Krish is a press the view carries or an item on his one
-list; his approval of scripts is his own words in the session, recorded with `making.py <uuid> read-back CUT
---krish-words` before `teleprompter_send.py`. Claude artifacts stay retired (Krish, 2026-10-19), and
-`scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Steps below that build,
-download or publish a board page, or work in a day's tab in draft, are history kept as written: read them for what
-they record, and do the same work through the records above.
+Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The live board
+(`python3 scripts/post-pack/live_board.py <Monday> [day]`) draws the week from `GET /api/board/<Monday>/view`, so a
+cut reaches it by being on the piece's record (`making.py`), never by building or publishing a board page
+(`docs/PUBLISH_BOARDS.md`, "One live board"). Claude artifacts stay retired, and `scripts/hooks/artifact_gate.py`
+refuses every Artifact publish and every ArtifactData write.
 
 ## Never call a video good without watching it
 
