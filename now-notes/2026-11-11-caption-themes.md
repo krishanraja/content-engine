@@ -1,3 +1,3 @@
-Status: ve can draw 14 caption themes: art-directed (his card instagram_DfkCOCLt7KZ) and 13 (vshukla7/remotion-captions-themes, MIT, vendored in apps/renderer/src/engine/captionThemes/) chosen per piece with brand.caption_theme; with none, the house caption draws. The themes take ve's caption pages, the house colours and a box inside every platform's safe area.
-Next: Krish picks which themes to keep after seeing the stills of all 13; then prove one on his take.
+Status: ve draws 15 caption styles, chosen per piece with brand.caption_theme: art-directed (Krish's pick), cinematic (Audrey's cinematic caption system, rebuilt for ve) and 13 house rebuilds of the remotion-captions-themes ideas after Krish judged the vendored ones not good enough. All are the house's own code in apps/renderer/src/engine/captions/, in the house faces and tokens, inside every platform's safe area; the vendored folder and its five extra fonts are gone.
+Next: Krish judges the rebuilt sheet; then prove his chosen style on one of his takes.
 North Star check (2026-11-11): holds.

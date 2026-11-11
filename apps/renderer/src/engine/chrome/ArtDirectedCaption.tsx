@@ -1,4 +1,5 @@
 import React from 'react'
+import { HOUSE_FONTS } from '../../house/geometry'
 import type { EngineRenderProps } from '../props'
 
 /** "Art-directed phrases" (Krish, 2026-11-11, of his inspiration card instagram_DfkCOCLt7KZ: "The captions are very
@@ -31,7 +32,7 @@ export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps;
   const word = (text: string, at: number, big: boolean, i: number) => {
     const p = outBack((t - at / fps) / 0.12)
     return <span key={i} style={{
-      fontFamily: 'Anton', fontSize: big ? 168 : 92, lineHeight: 0.96, letterSpacing: '0.5px', textTransform: 'uppercase',
+      fontFamily: HOUSE_FONTS.display, fontSize: big ? 168 : 92, lineHeight: 0.96, letterSpacing: '0.5px', textTransform: 'uppercase',
       color: props.tokens.cream, textShadow: '0 6px 24px rgba(0,0,0,.45)', display: 'inline-block',
       transform: `translateY(${(1 - p) * 30}px) scale(${0.85 + 0.15 * p})`, opacity: clamp(p * 2),
     }}>{text.replace(/[,.]$/, '')}</span>
@@ -48,7 +49,7 @@ export function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps;
   const box = ART_REGION[props.aspect]
   return <>
     <div data-caption-echo style={{ position: 'absolute', left: -60, right: -60, top: props.aspect === '9:16' ? 700 : 300, textAlign: 'center',
-      fontFamily: 'Anton', fontSize: 430, lineHeight: 1, color: props.tokens.cream, whiteSpace: 'nowrap', textTransform: 'uppercase',
+      fontFamily: HOUSE_FONTS.display, fontSize: 430, lineHeight: 1, color: props.tokens.cream, whiteSpace: 'nowrap', textTransform: 'uppercase',
       opacity: frame >= k.atFrame - 1 ? 0.07 * kp : 0, transform: `scale(${1.06 - 0.06 * kp})`, pointerEvents: 'none', overflow: 'hidden' }}>
       {k.text.replace(/[,.]$/, '')}
     </div>

@@ -3784,121 +3784,11 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function EngineAudio({ audio, stem = true }: { audio: EngineRenderProps['audio']; stem?: boolean })`
 
-### `apps/renderer/src/engine/captionThemes/fonts.ts`
+### `apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx`
 
-The faces the vendored caption themes name, bundled so a render never falls back to a system font. Impact and Komika
-
-### `apps/renderer/src/engine/captionThemes/layout/anchors.ts`
-
-- `function resolveAnchors( x: number, y: number, width: number, height: number ): Record<AnchorName, { x: number; y: numb…`
-
-### `apps/renderer/src/engine/captionThemes/layout/collision.ts`
-
-- `function collisionRate(a: LayoutBox, b: LayoutBox): number`
-
-### `apps/renderer/src/engine/captionThemes/layout/layoutEngine.ts`
-
-- `function computeLayout(elements: TextElementSpec[]): LayoutResult`
-
-### `apps/renderer/src/engine/captionThemes/layout/relations.ts`
-
-- `function resolveRelation( spec: RelationSpec, targetBox: LayoutBox, selfSize: { width: number; height: number } ): { x:…`
-
-### `apps/renderer/src/engine/captionThemes/layout/types.ts`
-
-- `type AnchorName`
-- `interface FontSpec`
-- `interface LayoutBox`
-- `type RelationType = "above" | "below" | "leftOf" | "rightOf" | "anchorTo"`
-- `interface RelationSpec`
-- `interface TextElementSpec`
-- `interface ComputedTextElement`
-- `interface LayoutResult`
-
-### `apps/renderer/src/engine/captionThemes/names.ts`
-
-The caption themes ve can draw (Krish, 2026-11-11: "can you install all of these different caption styles in to the
-
-- `const CAPTION_THEMES`
-- `type CaptionThemeName = typeof CAPTION_THEMES[number]`
-
-### `apps/renderer/src/engine/captionThemes/registry.ts`
-
-- `const themeRegistry: Record<string, React.FC<InternalThemeProps>>`
-- `type ThemeName = keyof typeof themeRegistry`
-
-### `apps/renderer/src/engine/captionThemes/themes/aarit.tsx`
-
-- `const AaritTheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/beast.tsx`
-
-- `const BeastTheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/gaming-stream.tsx`
-
-- `const GamingStreamTheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/grape.tsx`
-
-- `const GrapeTheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/hustle.tsx`
-
-- `const HustleTheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/karaoke.tsx`
-
-- `const KaraokeTheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/kinetic-01.tsx`
-
-- `const Kinetic01: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/kinetic-02.tsx`
-
-- `const Kinetic02: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/podcast.tsx`
-
-- `const PodcastTheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/pop.tsx`
-
-- `const PopTheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/poppin.tsx`
-
-- `const PoppinTheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/simple-one-word.tsx`
-
-- `const SimpleOneWordTheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/themes/soft-ai.tsx`
-
-- `const SoftAITheme: React.FC<InternalThemeProps>`
-
-### `apps/renderer/src/engine/captionThemes/types.ts`
-
-- `interface WordTiming`
-- `interface CaptionLine`
-- `interface CaptionsData`
-- `interface CaptionThemeProps`
-- `interface InternalThemeProps`
-
-### `apps/renderer/src/engine/captionThemes/utils/resolveColors.ts`
-
-- `function resolveColors(primaryColor?: string, secondaryColor?: string)`
-
-### `apps/renderer/src/engine/captionThemes/utils/secondsToFrames.ts`
-
-- `function secondsToFrames(seconds: number, fps: number): number`
-
-### `apps/renderer/src/engine/captionThemes/utils/useWordTiming.ts`
-
-- `interface WordWithState`
-- `function useWordTiming(data: CaptionsData)`
+- `const ART_REGION`
+- `function keyIndex(page: EngineRenderProps['captions'][number]): number`
+- `function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/CallCard.tsx`
 
@@ -3952,8 +3842,7 @@ The caption themes ve can draw (Krish, 2026-11-11: "can you install all of these
 
 ### `apps/renderer/src/engine/chrome/ThemedCaption.tsx`
 
-- `const THEME_REGION`
-- `function themeData(props: Pick<EngineRenderProps, 'captions' | 'fps'>): CaptionsData`
+- `export { REGIONS as THEME_REGION } from '../captions/kit'`
 - `function ThemedCaption({ props, theme, frame = 0 }: { props: EngineRenderProps; theme: CaptionThemeName; frame?: number…`
 
 ### `apps/renderer/src/engine/chrome/WordCaption.tsx`
