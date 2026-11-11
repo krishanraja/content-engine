@@ -42,13 +42,13 @@ and the repository, never from the chat that started it.
 
 ## Report to the board as you work
 
-A session started from this skill, not from a prompt copied off the board, reports the same way a board prompt says
-("Keep the board current as you work", `writeBack` in `apps/control-plane/api/board/_writeBack.ts`): first
-`get_piece_board` on the Control Center connector, or `python3 scripts/post-pack/board_session.py <piece_id> show`;
-then `report_board_session` (start, progress at each milestone, done, or blocked with what it needs), or
-`board_session.py <piece_id> start|progress|done|blocked "one line" --session <id> --step <step>`; and everything it
-makes or draws on goes on the piece with `add_piece_material`, or `board_session.py <piece_id> add <file or text>`. A
-day with no piece yet is `day:<Monday>/<day>`. Add, never replace.
+Report as a board prompt says (`apps/control-plane/api/board/_writeBack.ts`): `get_piece_board` (Control
+Center's connector) or `scripts/post-pack/board_session.py <piece_id> show`; then `report_board_session` start,
+progress, done or blocked (`board_session.py <piece_id> start|progress|done|blocked "one line" --session <id> --step
+<step>`); and file all you make or draw on with `add_piece_material` (`board_session.py <piece_id> add <file or
+text>`). A day with no piece is `day:<Monday>/<day>`. Add, never replace. Research is never left in scratch or a chat:
+file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece
+first. Each is copied into his Research library in Drive. (Ruling, Krish, 2026-11-11)
 
 ## From the signed narrative lock (pieces from 9 November)
 
