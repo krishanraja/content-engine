@@ -38,7 +38,9 @@ function full(): ViewInputs {
       piece(MON, '2026-11-16', 'follow_the_money', { video_assets: [cut], workroom: 'done', draft: 'done', scripts: 'done' },
         { materials: [{ id: 'm1', title: 'Storyboard: Monday', kind: 'paste', content: 'x', at: '2026-11-15T10:00:00Z' }], look: { production: 'face-with-proof', experiment: null, inspiration: [], at: '2026-11-15T10:00:00Z' },
           // 1.4.0: his motion pick and a "Not this" on a caption style.
-          style: { motion: 'ladder', captions: null, rejected: { motion: [], captions: ['beast'] }, by: 'Krish', at: '2026-11-15T11:00:00Z' } }),
+          style: { motion: 'ladder', captions: null, rejected: { motion: [], captions: ['beast'] }, by: 'Krish', at: '2026-11-15T11:00:00Z' },
+          // 1.6.0: his Not this on the long cut, with his words.
+          cut_verdicts: [{ media_id: 'a'.repeat(64), cut: 'long', verdict: 'not_this', words: 'The open drags. Start on the number.', sha256: 'a'.repeat(64), path: '3 Posts/mon/long.mp4', by: 'Krish', at: '2026-11-16T08:40:00Z' }] }),
       piece(WED, '2026-11-18', 'under_the_hood', {}, { materials: [{ id: 'm2', title: 'WIRED: a source', kind: 'paste', content: 'x', at: '2026-11-14T10:00:00Z' }] }),
       piece(FRI, '2026-11-20', 'mind_the_gap'),
     ],
@@ -124,6 +126,13 @@ describe('the Publish Board view contract', () => {
     const v = served(full()) as { days: Array<Body> }
     // The full week really carries the optional parts, so the schema has been held against them.
     expect(v.days.some(d => Array.isArray(d.media) && d.media.length === 2)).toBe(true)
+    // 1.6.0: every cut carries his Yes and Not this and his latest answer; a thumbnail carries neither.
+    const media = v.days.flatMap(d => d.media as Body[])
+    for (const m of media) {
+      if (m.kind === 'cut') expect([m.presses?.yes?.op, m.presses?.not_this?.op, m.presses?.not_this?.words?.required]).toEqual(['cut-verdict', 'cut-verdict', true])
+      else expect([m.presses, m.verdict]).toEqual([undefined, undefined])
+    }
+    expect(media.find(m => m.kind === 'cut')?.verdict).toEqual({ said: 'not_this', words: 'The open drags. Start on the number.', at: '2026-11-16T08:40:00Z' })
     expect(v.days.some(d => d.run)).toBe(true)
     expect(v.days.some(d => Array.isArray(d.reviews) && d.reviews.length)).toBe(true)
     expect(v.days.some(d => d.path)).toBe(true)

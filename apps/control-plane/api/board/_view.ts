@@ -4,7 +4,8 @@ import { liveDay, type LiveDay } from './_live.js'
 import { yesByDay } from './_yes.js'
 import { readRuns, ENGINE_REPO, type JobName, type RunInfo } from './_run.js'
 import { offdaySides, type OffdaySides } from './_offdaySides.js'
-import { dayMedia, type MediaItem } from './_media.js'
+import type { MediaItem } from './_media.js'
+import { mediaWithAnswers } from './_cuts.js'
 import { VIEW_CONTRACT_VERSION } from './_viewContract.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
@@ -68,7 +69,8 @@ export interface DayView {
   reviews?: Array<{ doc_id: string; revision: number | null; side: string; option: OffdaySides; prev: Body | null }>
   /** A series day's guided path (PLAN.md, "Each day as a guided path"): six steps, one current, and what each needs. */
   path?: DayPath
-  /** What the day's piece has rendered (cuts, thumbnails), newest first; ids only, signed at /api/board/<week>/media/<id> (_media.ts). */
+  /** What the day's piece has rendered (cuts, thumbnails), newest first; ids only, signed at /api/board/<week>/media/<id> (_media.ts).
+   *  Contract 1.6.0: each cut carries his Yes and Not this and his latest answer on it (_cuts.ts). */
   media: MediaItem[]
   /** Contract 1.2.0 (_viewExtras.ts): every piece on the day, the day's options with their presses, his comments, what
    *  Growth posted and his yes. */
@@ -544,7 +546,7 @@ export function buildView(i: ViewInputs): WeekView {
       }
       core.actions = [...presses, ...core.actions]
     }
-    return { ...core, media: dayMedia(piece),
+    return { ...core, media: mediaWithAnswers(piece),
       pieces: dayPieces(gate.approved, date, shown, gate.approvalOf),
       options, held,
       comments: dayComments(i.comments, d), posted: dayPosted(i.ticks, d), yes: dayYes(i.picks, d) }
