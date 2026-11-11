@@ -572,12 +572,41 @@
     "video": {
      "url": "https://board.asset/proactive-ai-tall.mp4"
     },
-    "drive": "DRIVE_PENDING",
+    "drive": "https://drive.google.com/drive/folders/1NKta6nIW_wPsZSFNHq9j4LXARiLIeAgT",
     "posts_folder": "2026-11-17 Tue off.day - Proactive AI",
     "decided": "Signed off for Tuesday 17 Nov (Krish, 11 Nov: \"Schedule it for Tuesday off day instead, I still might do a 2nd post on Tuesday like a meme later\"). Codex schedules it.",
     "needs": [
      "Finished: the 46 s short and its post description, with the copy-paste prompt word for word, in 3 Posts › 2026-11-17 Tue off.day - Proactive AI."
-    ]
+    ],
+    "pitch": {
+     "see": "One chat thread on the ink desk: your AI messages you first, books a flight, pays a deposit and thumbs-ups your boss, then buys a sofa with your yes left empty. Two stops drop, NO SPENDING and NO SENDING, and your real screenshot shows the three choices an AI offered you. It closes on the house sting with FOLLOW FOR MORE.",
+     "lands": "Anyone handing an assistant their apps sees the one moment that matters: the decision it made without asking.",
+     "share": "Paste the prompt in before your assistant wakes up tomorrow."
+    },
+    "direction": {
+     "look": "The data-story recipe (The Ladder): one chat thread, every move a change of state, mint only for the answer; art-directed phrase captions after his card instagram_DfkCOCLt7KZ",
+     "format": "Voiceover short, 46 s, 9:16",
+     "frames": [
+      {
+       "words": "YOUR AI IS ABOUT TO START MESSAGING YOU FIRST",
+       "picture": "The thread flips: the AI speaks first"
+      },
+      {
+       "words": "YOUR YES WAS HERE",
+       "picture": "The sofa bought with its approval slot left empty"
+      },
+      {
+       "words": "NO SPENDING / NO SENDING",
+       "picture": "Two mint stops drop across the thread"
+      },
+      {
+       "words": "FOLLOW FOR MORE",
+       "picture": "The house sting, held on the wordmark with the badge"
+      }
+     ],
+     "tone": "Playful, then clear",
+     "kit": "House ink and mint, no series colour; Aspire at half volume"
+    }
    }
   ],
   "thu": [
