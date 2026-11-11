@@ -2214,6 +2214,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `interface WeekView`
 - `interface ViewInputs`
 - `function lockSigned(text: string | null | undefined): boolean`
+- `function postingStarted(live: Pick<LiveDay, 'steps'>): boolean`
 - `function backupPrompt(week: string, d: DayView): string`
 - `function buildView(i: ViewInputs): WeekView`
 - `function viewProblems(v: WeekView): string[]`
