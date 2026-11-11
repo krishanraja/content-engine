@@ -224,6 +224,26 @@ export async function removeFromWorkingSet(db: StoreDb, pieceId: string, materia
   return { ok: false, reason: 'busy' }
 }
 
+/** Any change to a piece's meta, guarded the same way as the working set: read the row, apply `patch` to the meta as it
+ *  is now, write only if the row has not changed since the read, and read again when it has. A route that spends
+ *  seconds on a model between its read and its write (deepen, dive-deeper, the investigation) uses this, so a write
+ *  landing in between (a making record, a board press, another session) is kept, never overwritten. `patch` may throw
+ *  (MaterialsFull): the caller answers it. */
+export async function patchMeta(db: StoreDb, pieceId: string, patch: (meta: Body) => Body, tries = 6): Promise<{ ok: true; meta: Body } | { ok: false; reason: string }> {
+  for (let i = 0; i < tries; i++) {
+    const read = await db.from('content_ideas').select('id,meta,updated_at').eq('id', pieceId).maybeSingle()
+    if (read.error) return { ok: false, reason: 'unavailable' }
+    if (!read.data) throw new StoreError(404, 'piece_not_found')
+    const meta = patch((obj(read.data.meta) ? read.data.meta : {}) as Body)
+    const write = await db.from('content_ideas').update({ meta, updated_at: new Date().toISOString() })
+      .eq('id', pieceId).eq('updated_at', read.data.updated_at).select('id')
+    if (write.error) return { ok: false, reason: 'unavailable' }
+    if (write.data?.length) return { ok: true, meta }
+    await new Promise(r => setTimeout(r, 40 + Math.random() * 120 * (i + 1)))
+  }
+  return { ok: false, reason: 'busy' }
+}
+
 /** A text or a link on a piece or a day. A piece's text up to WORKING_SET_MAX (and any link) also joins the working set
  *  every writer grounds on; the capture trigger files it in the store in the same write. Everything else is the store's alone. */
 export async function addText(db: StoreDb, body: Body, bearer: boolean, by: string): Promise<Body> {

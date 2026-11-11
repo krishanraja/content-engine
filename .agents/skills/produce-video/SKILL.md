@@ -44,10 +44,12 @@ Preflight first: add `--piece <plan folder or uuid>` to each floor read and to
 ## Publish-board routing
 
 Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The live board
-(`python3 scripts/post-pack/live_board.py <Monday> [day]`) draws the week from `GET /api/board/<Monday>/view`, so a
-cut reaches it by being on the piece's record (`making.py`), never by building or publishing a board page
-(`docs/PUBLISH_BOARDS.md`, "One live board"). Claude artifacts stay retired, and `scripts/hooks/artifact_gate.py`
-refuses every Artifact publish and every ArtifactData write.
+(`live_board.py <Monday> [day]`) draws the week from `GET /api/board/<Monday>/view`, so a cut reaches it by being on
+the piece's record (`making.py`), never by a board page (`docs/PUBLISH_BOARDS.md`, "One live board"); Claude
+artifacts stay retired (`scripts/hooks/artifact_gate.py`). Report as you work, as a board prompt says (`writeBack`,
+`apps/control-plane/api/board/_writeBack.ts`): `get_piece_board`, `report_board_session` (start, progress, done or
+blocked) and `add_piece_material` on the connector, or `scripts/post-pack/board_session.py <piece_id>
+show|start|progress|done|blocked|add`.
 
 ## Never call a video good without watching it
 
