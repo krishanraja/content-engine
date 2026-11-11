@@ -1,4 +1,0 @@
-Status: Every published piece now holds its YouTube video, and its Short where one exists, on its making record: 16 historical uploads reconciled with evidence and written on 11 November with Krish's yes (docs/plans/2026-11-11-publication-backfill, readback 16 of 16). Going forward the hourly publish watcher records each new upload from the @makeyourmind-up feed, and reads Substack's archive again: since about 6 November it had read 0 posts, because the archive API now wraps its posts. GET /api/publish/catalogue serves every piece's article, video and Short addresses to makeyourmindup.ai, which went live with real covers the same day (makeyourmindup#39).
-Next: after this merges and deploys, read the catalogue and the first watcher run's youtube report, and confirm the 9 November piece turns published.
-Changed: one unresolved upload waits on Krish, the 3 November Short gJr6lwb-myE, which matches no piece.
-North Star check (2026-11-11): holds.
