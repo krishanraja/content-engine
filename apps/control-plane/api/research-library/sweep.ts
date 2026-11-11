@@ -14,6 +14,10 @@ import { runMirror } from '../_researchLibraryGoogle.js'
 // adds each one's row to the library's `00 Index`. It leaves a material younger than ten minutes to the write that filed
 // it. It only adds: a folder, a file, a row. It fails, so Control Center shows it, when the library cannot be reached, a
 // copy failed or the index could not be written; the store keeps every material either way and the next run tries again.
+//
+// One sweep at a time: every run holds the library's lease (engine_leases), so a second sweep started while one runs, by
+// hand or on the hour, answers `skipped: already_running` with when that lease runs out, writes nothing, and is recorded
+// as skipped. Without the lease (its migration not applied, the database down) it writes nothing and fails.
 
 export const config = { maxDuration: 120 }
 
