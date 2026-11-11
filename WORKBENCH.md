@@ -236,6 +236,10 @@ The live Publish Board is Control Centre's Content tab (Ruling, Krish, 2026-11-1
 is 1000% where everything wires in to fresh and live and accurately"): https://controlcenter.krishraja.com/?ui=next#/content?week=<Monday>&day=<mon..sat>
 (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints it). Every link a session gives Krish to the board is
 that one. The content.krishraja.com addresses below are the archive, kept as they are with a banner to the live board.
+Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The archive takes
+no press; update the board by writing what its view reads (`GET /api/board/<Monday>/view`: the pieces' records, his
+presses, the week's `ideas.json` on main or `offday-revise/<Monday>`), then `board_web.py touch <Monday>` when only a
+file changed (`docs/PUBLISH_BOARDS.md`, "One live board"). Never build or publish a board page.
 
 The current boards are listed under "One page a week" below. The 12 to 18 October notes in this section,
 including the "Resume this week's publish board" steps, are a dated record kept as written: how a board is built

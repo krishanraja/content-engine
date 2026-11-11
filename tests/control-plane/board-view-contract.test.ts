@@ -31,6 +31,7 @@ function full(): ViewInputs {
   return {
     week: WEEK, now: new Date('2026-11-16T09:00:00Z'),
     pieces: [
+      piece('5b726fc3-ac63-4607-9293-3257b4ecc75c', '2026-11-16', 'mind_the_gap'),
       piece(MON, '2026-11-16', 'follow_the_money', { video_assets: [cut], workroom: 'done', draft: 'done', scripts: 'done' },
         { materials: [{ id: 'm1', title: 'Storyboard: Monday', kind: 'paste', content: 'x', at: '2026-11-15T10:00:00Z' }], look: { production: 'face-with-proof', experiment: null, inspiration: [], at: '2026-11-15T10:00:00Z' } }),
       piece(WED, '2026-11-18', 'under_the_hood', {}, { materials: [{ id: 'm2', title: 'WIRED: a source', kind: 'paste', content: 'x', at: '2026-11-14T10:00:00Z' }] }),
@@ -44,7 +45,9 @@ function full(): ViewInputs {
     north_star: { current: 3, target: 8 },
     ideas: {
       days: { wed: [{ id: WED, so_what: 'Why it matters', story: 'The story', style: { production: 'face-with-proof', script: 'fry-explainer', experiment: { format: 'kinetic-movement', why: 'Because it moves.' } } }] },
-      offdays: { tue: [option('povteach', { revised: { side: 'idea', words: 'his words' } })], thu: [option('lookalikes')], sat: [] },
+      offdays: { tue: [option('povteach', { revised: { side: 'idea', words: 'his words' } })], thu: [option('lookalikes')],
+        sat: [option('goodnews', { weekly: 'good_news', stories_due: '2026-11-19', decided: 'Signed off (Krish, 15 Nov).', stories: [1, 2, 3, 4, 5].map(n => ({
+          headline: `Story ${n}`, what: 'What happened.', why: 'Why it helps.', date: '2026-11-18', source: { label: 'The source', url: `https://example.org/${n}` }, media: { kind: 'photo', url: `https://example.org/${n}.jpg` } })) })] },
     },
     locks: { mon: SIGNED, wed: SIGNED, fri: null },
     research_files: { wed: true },
@@ -63,6 +66,10 @@ function full(): ViewInputs {
         { id: '44444444-5555-4666-8777-888888888888', scope: `day:${WEEK}/tue`, piece_id: null, week: WEEK, day: 'tue', key: 'sha:z', version: 1, kind: 'image', role: 'inspiration', title: 'Tuesday reference', bytes: 90000, content_type: 'image/jpeg', storage: 'bucket', added_by: 'Krish', at: '2026-11-15T19:00:00Z' },
       ],
     },
+    // 1.2.0: his comments, Growth's ticks and the week's change signal; a second piece on Monday; the weekly good news.
+    comments: [{ doc_id: 'desk-mon-cut-1', updated_by: 'Krish', updated_at: '2026-11-16T08:30:00Z', body: { thread_id: 'desk-mon-cut-1', anchor: 'desk:mon:cut', text: 'Love the open.', at: '2026-11-16T08:30:00Z' } }],
+    ticks: [{ tick_id: 'mon-shorts', updated_by: 'growth', body: { done: true, day: 'mon', step: 'shorts', label: 'YouTube Shorts', at: '2026-11-16T09:00:00Z', posts: [{ url: 'https://www.youtube.com/shorts/x' }] } }],
+    revision: 7,
   }
 }
 

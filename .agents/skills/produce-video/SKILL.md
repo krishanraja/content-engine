@@ -43,19 +43,11 @@ Preflight first: add `--piece <plan folder or uuid>` to each floor read and to
 
 ## Publish-board routing
 
-Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
-current web addresses, all six collection reads, build/download/publication,
-making-record attribution and rollback. Check `config/boards.json.web_cutover`:
-while pending, source migration is unfinished; once active, use only the web
-board for new interactions. Claude artifacts are retired for good (Krish,
-2026-10-19: "we are now retiring the Claude artefact permanently and we are
-working in content.krishraja.com for all published board updates"): no step
-makes or publishes one. The week's board, a day's tab in draft, the workroom and
-the publish page all go to content.krishraja.com (`week_board.py --target web`,
-then `board_web.py publish-web`), and `scripts/hooks/artifact_gate.py` refuses
-every Artifact publish and every ArtifactData write. Any Artifact, ArtifactData,
-ArtifactComments or dual-account step below is history: read an old artifact
-only to recover what it holds.
+Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The live board
+(`python3 scripts/post-pack/live_board.py <Monday> [day]`) draws the week from `GET /api/board/<Monday>/view`, so a
+cut reaches it by being on the piece's record (`making.py`), never by building or publishing a board page
+(`docs/PUBLISH_BOARDS.md`, "One live board"). Claude artifacts stay retired, and `scripts/hooks/artifact_gate.py`
+refuses every Artifact publish and every ArtifactData write.
 
 ## Never call a video good without watching it
 

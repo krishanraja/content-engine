@@ -3,8 +3,9 @@
 import * as React from 'react'
 import { toast } from 'sonner'
 import { api, sayError, week, type Review } from '../api'
-import { Button, Chip, cx } from './ui'
+import { Chip, cx } from './ui'
 import { useUndo } from '../undo'
+import { LiveLink } from './live'
 
 export function ReviewCard({ review, day, label, reload }: { review: Review; day: string; label: string; reload: () => void }) {
   const o = review.option, side = review.side, d = o.direction || {}
@@ -32,6 +33,7 @@ export function ReviewCard({ review, day, label, reload }: { review: Review; day
       } catch (e) { toast.error(sayError(e)) }
     })
   }
+  void press
   return (
     <section className="rounded-[20px] border border-line bg-card p-4 sm:p-5">
       <div className="flex min-w-0 items-start justify-between gap-3">
@@ -53,17 +55,17 @@ export function ReviewCard({ review, day, label, reload }: { review: Review; day
           </>
         )}
       </div>
-      {asking && (
+      {asking && words && (
         <div className="mt-3">
           <label className="mb-1 block text-sm font-semibold" htmlFor={key}>{asking === 'improve' ? 'What should change?' : 'Why not?'}</label>
           <textarea id={key} value={words} onChange={e => keep(e.target.value)} rows={3} autoFocus
             className="w-full rounded-2xl border border-line bg-bg p-3 text-[16px] outline-none focus:border-ink" />
         </div>
       )}
+      {/* Approve, Improve and Reject are pressed on the live board (Ruling, Krish, 2026-11-11: the old board is a
+          read-only archive). Words he typed here before stay on this device and show above. */}
       <div className={cx('mt-4 flex flex-col gap-2 sm:flex-row [&>*]:w-full sm:[&>*]:w-auto', status && 'opacity-60')}>
-        <Button tone="primary" disabled={Boolean(status)} onClick={() => press('approve')}>Approve</Button>
-        <Button disabled={Boolean(status)} onClick={() => press('improve')}>{asking === 'improve' ? 'Send my Improve' : 'Improve'}</Button>
-        <Button tone="ghost" disabled={Boolean(status)} onClick={() => press('reject')}>{asking === 'reject' ? 'Send my reason' : 'Reject'}</Button>
+        <LiveLink day={day} primary />
       </div>
     </section>
   )

@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Drawer } from 'vaul'
 import { toast } from 'sonner'
 import { Button, cx } from './ui'
+import { LiveLink } from './live'
 import { api, sayError } from '../api'
 
 function useWide() {
@@ -75,14 +76,22 @@ export function ThoughtsLink({ day, step, label = 'Add your thoughts' }: { day: 
     catch (e) { toast.error(sayError(e)) }
     setBusy(false)
   }
+  // The archive saves nothing: his thoughts go on the live board (Ruling, Krish, 2026-11-11). Words he left unsent here
+  // stay on this device and are shown, so nothing he typed is lost.
+  if (!open) return (
+    <span className="inline-flex flex-wrap items-center gap-3">
+      {text && <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-11 items-center font-mono text-[13px] font-semibold text-muted hover:text-ink">Your unsent thoughts</button>}
+      <LiveLink day={day} label={`${label} on the live board`} />
+    </span>
+  )
   return (
     <>
       <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-11 items-center gap-1.5 font-mono text-[13px] font-semibold text-muted hover:text-ink">
         <span aria-hidden>+</span>{text ? 'Your unsent thoughts' : label}
       </button>
       <Sheet open={open} onOpenChange={setOpen} title={label}
-        footer={<div className="flex flex-col gap-2 sm:flex-row [&>*]:w-full sm:[&>*]:w-auto"><Button tone="primary" busy={busy} onClick={save}>Save my thoughts</Button></div>}>
-        <label className="mb-2 block text-sm text-muted" htmlFor={key}>Say as much as you like. It is kept on this device until it saves.</label>
+        footer={<div className="flex flex-col gap-2 sm:flex-row [&>*]:w-full sm:[&>*]:w-auto"><LiveLink day={day} primary label="Save them on the live board" /></div>}>
+        <label className="mb-2 block text-sm text-muted" htmlFor={key}>Your unsent words, kept on this device. Copy them onto the live board.</label>
         <textarea id={key} value={text} onChange={e => keep(e.target.value)} rows={10}
           className="min-h-[40dvh] w-full resize-y rounded-2xl border border-line bg-bg p-4 text-[16px] leading-relaxed outline-none focus:border-ink" />
       </Sheet>
