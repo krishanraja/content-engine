@@ -80,6 +80,22 @@
    "code": "lab/moves/counter-scene/move.mjs"
   },
   {
+   "id": "freeze-circle-magnify",
+   "kind": "lab",
+   "what": "A captured source page on a paper card: a hand-drawn circle (or underline) draws round the line that matters, then a loupe lifts the same pixels to twice their size.",
+   "says": [
+    "evidence",
+    "quote",
+    "number"
+   ],
+   "needs": [
+    "screenshot"
+   ],
+   "energy": "medium",
+   "engine": "canvas",
+   "code": "lab/moves/freeze-circle-magnify/move.mjs"
+  },
+  {
    "id": "level-line",
    "kind": "lab",
    "what": "A mint bar draws across the ground: held level.",
@@ -93,6 +109,20 @@
    "energy": "low",
    "engine": "three",
    "code": "lab/moves/level-line/move.mjs"
+  },
+  {
+   "id": "light-sweep-number",
+   "kind": "lab",
+   "what": "One giant number rises out of a dark stage floor, a slow band of light sweeps across its face, and its reflection fades into the floor.",
+   "says": [
+    "number"
+   ],
+   "needs": [
+    "number"
+   ],
+   "energy": "low",
+   "engine": "canvas",
+   "code": "lab/moves/light-sweep-number/move.mjs"
   },
   {
    "id": "live-chart",
@@ -171,6 +201,21 @@
    "code": "lab/moves/slab-towers/move.mjs"
   },
   {
+   "id": "source-on-clock",
+   "kind": "lab",
+   "what": "Every source pinned to one timeline: year ticks, a pin drops at each source's moment as he says it, a playhead walks to the year being spoken about.",
+   "says": [
+    "timeline",
+    "evidence"
+   ],
+   "needs": [
+    "text"
+   ],
+   "energy": "low",
+   "engine": "canvas",
+   "code": "lab/moves/source-on-clock/move.mjs"
+  },
+  {
    "id": "street-drop",
    "kind": "lab",
    "what": "Copies of the object rise into a street, then the new ones drop in from above: a percentage made visible.",
@@ -243,6 +288,23 @@
    "energy": "low",
    "engine": "canvas",
    "code": "lab/moves/toast/move.mjs"
+  },
+  {
+   "id": "type-is-the-picture",
+   "kind": "lab",
+   "what": "A word or number set huge on the grid, revealed by a mask from its baseline or from the left, held, then pushed out; optional strike and a solid block behind.",
+   "says": [
+    "number",
+    "contrast",
+    "list"
+   ],
+   "needs": [
+    "text",
+    "number"
+   ],
+   "energy": "high",
+   "engine": "canvas",
+   "code": "lab/moves/type-is-the-picture/move.mjs"
   },
   {
    "id": "agent_swarm",
