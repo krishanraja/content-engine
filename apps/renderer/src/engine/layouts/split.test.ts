@@ -82,7 +82,7 @@ describe('frozen SPLIT geometry', () => {
   })
   it('places one and two caption lines inside the frozen zone and preserves normal captions', () => {
     const props = propsForSplit()
-    for (const text of ['Proof', 'One two three four five six seven eight']) {
+    for (const text of ['Proof', 'One two three four five six seven']) {
       props.captions[0]!.words = text.split(' ').map((text) => ({ text, atFrame: 0 }))
       const caption = SplitCaptionTrack({ props, frame: 75 })!
       const style = caption.props.style
@@ -90,7 +90,10 @@ describe('frozen SPLIT geometry', () => {
       expect(style.top).toBe(FWP_SPLIT_CAPTION_ZONE.top)
       expect(style.width).toBe(FWP_SPLIT_CAPTION_ZONE.width)
       expect(Number(style.height)).toBeLessThanOrEqual(FWP_SPLIT_CAPTION_ZONE.height)
-      expect(Number(style.top)).toBeGreaterThanOrEqual(1260)
+      // On the seam, and inside every channel's safe column (Krish, 2026-11-11).
+      expect(Number(style.top)).toBeLessThanOrEqual(FWP_SPLIT_SEAM_Y)
+      expect(Number(style.top) + Number(style.height)).toBeGreaterThanOrEqual(FWP_SPLIT_SEAM_Y)
+      expect(Number(style.left) + FWP_SPLIT_CAPTION_ZONE.width).toBeLessThanOrEqual(860)
     }
     props.beats[1]!.layout = 'P1'
     expect(CaptionTrack({ props, frame: 75 })!.props.style.top).toBe(boxFor('caption', '9:16').top)

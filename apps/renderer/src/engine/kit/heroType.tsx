@@ -80,7 +80,7 @@ export function heroPhrase(beat: EngineBeat, objects: ReadonlyMap<string, Engine
 }
 
 /** Where the hero type may sit: the channel safe area of the beat's graphic ground (tall: y 200 to 1320, x 60 to 860
- *  below y 520, config/channel-safe-zones.json), under the mark tile and pill (nothing collides with the mark tile,
+ *  below y 520, config/channel-safe-zones.json), under the wide cut's mark tile and pill or the tall cut's top bar (nothing collides with the mark tile,
  *  MOTION_STANDARD rule 3), above the seam on a SPLIT beat, and above the devices it keeps. */
 export function heroArea(aspect: '9:16' | '16:9', groundHeight: number, keepsDevices: boolean): Box {
   const chrome = chromeZone(aspect)

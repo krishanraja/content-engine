@@ -7,7 +7,8 @@
 // outside the title-safe box on the wide one, is under 40 px on the tall canvas (F44), when a caption repeats two or
 // more words shown elsewhere on screen at that moment (F42), or when a label is on screen too briefly to read.
 // Also: a tall cut may carry no wordmark or series badge at all, and on a wide cut no word may sit over or under the
-// wordmark or the series name (Ruling, Krish, 2026-11-11). Only recorded words are checked here; shapes and 3D are not.
+// wordmark or the series name (Ruling, Krish, 2026-11-11), and on a tall cut the type uses the top of the screen
+// (the topmost word starts by y 340). Only recorded words are checked here; shapes and 3D are not.
 import { readFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { skin as makeSkin } from './brand.mjs'
@@ -17,6 +18,7 @@ const files = process.argv.slice(2).filter((a) => a.endsWith('.layout.json'))
 const hit = (a, b) => a[0] < b[0] + b[2] && b[0] < a[0] + a[2] && a[1] < b[1] + b[3] && b[1] < a[1] + a[3]
 const words = (s) => s.toLowerCase().replace(/[^a-z0-9% ]/g, ' ').split(/\s+/).filter(Boolean)
 let failures = 0
+const TOP_BY = 340
 
 for (const f of files) {
   const L = JSON.parse(readFileSync(f, 'utf8'))
@@ -60,6 +62,15 @@ for (const f of files) {
         }
       }
     }
+  }
+  // Uses the screen (Krish, 2026-11-11: "all vertical video templates should be adjusted to make maximum use of the
+  // full screen, as opposed to the current situation where a third of the screen at the top is now cut off"): on the
+  // tall canvas, once the opening second has passed, the topmost word on screen starts by y 340 (just under every
+  // channel's top bar at 270) on at least three quarters of the frames that carry any word but a caption.
+  if (L.shape === 'tall') {
+    const frames = L.layout.filter(({ t, items }) => t >= 1 && items.some((i) => i.role !== 'caption' && i.role !== 'close' && i.role !== 'dress'))
+    const low = frames.filter(({ items }) => Math.min(...items.filter((i) => i.role !== 'caption' && i.role !== 'close' && i.role !== 'dress').map((i) => i.box[1])) > TOP_BY)
+    if (frames.length && low.length / frames.length > 0.25) note('top:empty', `the top of the tall screen is empty on ${Math.round((100 * low.length) / frames.length)}% of frames: the topmost word starts below y ${TOP_BY} (first at ${low[0].t}s)`)
   }
   for (const [s, { first, last }] of seen) {
     const need = words(s).length / 3.3 + 0.4

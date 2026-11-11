@@ -11,7 +11,7 @@ const at = (env, b, word) => (word ? env.word(b, word).s : env.beat(b).s)
 
 export async function setup(env) {
   // Captions sit directly under the type block (Krish, 11 Nov: "A"); the counting squares sit below them.
-  if (env.shape === 'tall') env.captionBase = 1178
+  if (env.shape === 'tall') env.captionBase = 1008
 }
 
 export function draw(env, ctx, t, house) {
@@ -32,14 +32,16 @@ export function draw(env, ctx, t, house) {
   const fade = (t0, t1) => e.enter(clamp((t - t0) / 0.35)) * (1 - e.exit(clamp((t - t1) / 0.3)))
   // Section number, top right of the field: the beat we are on, as a Swiss poster numbers its parts.
   const beat = env.timeline.beats.findIndex((b, i) => t < (env.timeline.beats[i + 1]?.s ?? 1e9))
-  const X = M, TOP = tall ? 470 : 230
+  // Tall: the field starts just under every channel's top bar (y 270), so the type block uses the top of the screen and
+  // the counting squares end above y 1320 (Krish, 2026-11-11: "make maximum use of the full screen").
+  const X = M, TOP = tall ? 300 : 230
   L('IMF · BESSEN · 2015', X, TOP, { role: 'credit', alpha: fade(0, at(env, B.ask) - 0.3) })
   L('YOUR DESK', X, TOP, { role: 'credit', alpha: fade(at(env, B.ask), 1e9) })
   L(String(beat + 1).padStart(2, '0') + ' / 10', tall ? 860 : W - M, TOP, { align: 'right', role: 'label', color: c.muted })
 
-  // ---- The type block (tall: 520 to 1100) ----
+  // ---- The type block (tall: 350 to 930) ----
   const T = (str, x, y, size, t0, t1, o = {}) => bigType(ctx, t, { c, e, str, x, y, size, color: c.ink, at: t0, out: t1, ...o })
-  const base1 = tall ? 830 : 560, base2 = tall ? 1100 : 860
+  const base1 = tall ? 660 : 560, base2 = tall ? 930 : 860
   // Hook: the machine against the person.
   T('ATM', X - 8, base1, tall ? 330 : 300, -0.3, at(env, B.y1988) - 0.35, { from: 'left' })
   T('TELLER', X - 6, base2, tall ? 250 : 240, at(env, B.hook, 'teller') - 0.15, at(env, B.y1988) - 0.35)
@@ -50,11 +52,11 @@ export function draw(env, ctx, t, house) {
     ctx.fillStyle = c.ink; ctx.fillRect(X - 14, base2 - 110, (tall ? 640 : 600) * k, 22)
   }
   // 1988, then 2004.
-  L('1988 · PER BRANCH', X, tall ? 560 : 300, { alpha: fade(at(env, B.y1988, '1988'), at(env, B.y2004) - 0.3) })
+  L('1988 · PER BRANCH', X, tall ? 390 : 300, { alpha: fade(at(env, B.y1988, '1988'), at(env, B.y2004) - 0.3) })
   // The year holds the frame until the count arrives, so the block is never empty while he speaks.
   T('1988', X - 10, base2, tall ? 420 : 400, at(env, B.y1988, '1988') - 0.1, at(env, B.y1988, 'twenty') - 0.35, { from: 'left' })
   T('20', X - 12, base2, tall ? 600 : 540, at(env, B.y1988, 'twenty') - 0.15, at(env, B.y2004, 'thirteen') - 0.25)
-  L('2004 · PER BRANCH', X, tall ? 560 : 300, { alpha: fade(at(env, B.y2004, '2004'), at(env, B.expect) - 0.3) })
+  L('2004 · PER BRANCH', X, tall ? 390 : 300, { alpha: fade(at(env, B.y2004, '2004'), at(env, B.expect) - 0.3) })
   T('20', X - 6, base2, tall ? 260 : 240, at(env, B.y2004, 'thirteen') - 0.2, at(env, B.expect) - 0.3, { color: c.muted, strike: at(env, B.y2004, 'thirteen'), strikeColor: c.ink })
   T('13', tall ? 370 : 440, base2, tall ? 600 : 540, at(env, B.y2004, 'thirteen') - 0.1, at(env, B.expect) - 0.3)
   // You'd expect zero: drawn as an outline, because it never happened.
@@ -65,12 +67,12 @@ export function draw(env, ctx, t, house) {
     L('EXPECTED', tall ? 390 : 420, base2 - 40, { alpha: k * (1 - o) })
   }
   // They didn't: more branches, 43 percent, on the one mint block.
-  L('CITY BRANCHES · 1988 → 2004', X, tall ? 560 : 300, { alpha: fade(at(env, B.didnt, 'opened'), at(env, B.same) - 0.3) })
+  L('CITY BRANCHES · 1988 → 2004', X, tall ? 390 : 300, { alpha: fade(at(env, B.didnt, 'opened'), at(env, B.same) - 0.3) })
   T('NO.', X - 8, base2, tall ? 600 : 540, at(env, B.didnt) - 0.1, at(env, B.didnt, 'opened') - 0.3)
   T('+43%', X + 6, base2, tall ? 370 : 380, at(env, B.didnt, 'Forty') - 0.15, at(env, B.same) - 0.3, { block: c.mint, from: 'left' })
-  T('MORE', X - 6, tall ? 770 : 470, tall ? 170 : 150, at(env, B.didnt, 'opened') - 0.1, at(env, B.same) - 0.3)
+  T('MORE', X - 6, tall ? 600 : 470, tall ? 170 : 150, at(env, B.didnt, 'opened') - 0.1, at(env, B.same) - 0.3)
   // The total stayed level: one equals sign.
-  L('TOTAL · 1988 = 2004', X, tall ? 560 : 300, { alpha: fade(at(env, B.same, 'total'), at(env, B.talk) - 0.3) })
+  L('TOTAL · 1988 = 2004', X, tall ? 390 : 300, { alpha: fade(at(env, B.same, 'total'), at(env, B.talk) - 0.3) })
   // Equals, drawn as two ink bars on the mint block (the typeface's own sign is too slight to be the picture).
   { const k = e.enter(clamp((t - at(env, B.same, 'stayed') + 0.15) / 0.45)), o = e.exit(clamp((t - at(env, B.talk) + 0.3) / 0.35))
     if (k > 0 && o < 1) {
@@ -96,7 +98,7 @@ export function draw(env, ctx, t, house) {
 
   // ---- Below the caption: squares that count (tall only; the wide frame keeps the type alone) ----
   if (tall) {
-    const sq = 70, gap = 18, x0 = M + 4, y0 = 1330
+    const sq = 62, gap = 16, x0 = M + 4, y0 = 1160  // ten across end by x 844, short of the action rail
     const per = (i) => {
       // 20 tellers light in 1988; 7 fall away in 2004; in the branch beat each square is a branch, and three more land.
       const lit = t >= at(env, B.y1988, 'twenty') - 0.6 + i * 0.03
@@ -134,7 +136,7 @@ export function draw(env, ctx, t, house) {
     if (t >= at(env, B.same) - 0.2 && t < at(env, B.talk) + 0.2) {
       const a = e.utility(clamp((t - at(env, B.same, 'total')) / 0.6)), b = e.utility(clamp((t - at(env, B.same, 'stayed') + 0.1) / 0.6))
       const o = 1 - e.exit(clamp((t - at(env, B.talk)) / 0.3))
-      ctx.globalAlpha = o; ctx.fillStyle = c.ink; ctx.fillRect(x0, 1560, 880 * a, 56); ctx.fillStyle = c.mint; ctx.fillRect(x0, 1640, 880 * b, 56); ctx.globalAlpha = 1
+      ctx.globalAlpha = o; ctx.fillStyle = c.ink; ctx.fillRect(x0, y0 + 10, 780 * a, 56); ctx.fillStyle = c.mint; ctx.fillRect(x0, y0 + 90, 780 * b, 56); ctx.globalAlpha = 1
     }
   }
   house.dress(env, ctx)

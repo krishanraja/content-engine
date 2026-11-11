@@ -18,7 +18,7 @@ NOTE = ('Advisory only (plan W3 3a, Wave 1): measured for information on a quick
         'They block once the design locks exist and each measure is calibrated.')
 # Where write_ass draws the captions on each shape, as approximate pixel bands
 # [x, y, width, height]: the usual place, and the place over a graphic.
-CAPTION_BANDS = {'9x16': {'normal': [60, 230, 960, 200], 'over_graphic': [60, 994, 960, 200]},
+CAPTION_BANDS = {'9x16': {'normal': [60, 1060, 800, 200], 'over_graphic': [60, 994, 800, 200]},
                  '16x9': {'normal': [360, 900, 1200, 160], 'over_graphic': [16, 900, 576, 160]}}
 ASPECT = {'9x16': '9:16', '16x9': '16:9'}
 

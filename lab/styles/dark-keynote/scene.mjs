@@ -11,7 +11,7 @@ const at = (env, b, word) => (word ? env.word(b, word).s : env.beat(b).s)
 
 export async function setup(env) {
   // Captions sit directly under the number and its credit (Krish, 11 Nov: "A"); the floor runs on below them.
-  if (env.shape === 'tall') env.captionBase = 1236
+  if (env.shape === 'tall') env.captionBase = 1040
 }
 
 /** Each slide: the number, its label, when it lands and leaves, and its colour. */
@@ -40,7 +40,9 @@ export function draw(env, ctx, t, house) {
   const c = env.skin.colors, e = env.ease, tall = env.shape === 'tall', W = env.W, H = env.H
   // The stage: ink, darker at the edges, one cone of light from above, a floor that catches it.
   ctx.fillStyle = '#070C0A'; ctx.fillRect(0, 0, W, H)
-  const cx = W / 2, floor = tall ? 1030 : 760
+  // Tall: the floor is raised so the slide's label sits just under every channel's top bar and the number fills the
+  // top of the screen (Krish, 2026-11-11: "make maximum use of the full screen").
+  const cx = W / 2, floor = tall ? 820 : 760
   const cone = ctx.createLinearGradient(0, 0, 0, floor)
   cone.addColorStop(0, 'rgba(244,239,228,0.10)'); cone.addColorStop(1, 'rgba(244,239,228,0.02)')
   ctx.save(); ctx.filter = 'blur(40px)'; ctx.fillStyle = cone; ctx.beginPath()
@@ -58,7 +60,7 @@ export function draw(env, ctx, t, house) {
   ctx.restore()
 
   // The slides.
-  const NS = tall ? 430 : 400, LY = tall ? 590 : 210
+  const NS = tall ? 430 : 400, LY = tall ? 330 : 210
   for (const s of slides(env)) {
     const vis = e.enter(clamp((t - s.a) / 0.5)) * (1 - e.exit(clamp((t - s.b) / 0.45)))
     if (vis <= 0.01) continue

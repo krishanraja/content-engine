@@ -177,7 +177,7 @@ def _text_width(text: str, size: int) -> float:
 
 
 def caption_line_count(rows: list[dict], aspect: str = '9:16', emphasis=()) -> int:
-    size, available = (54, 1400 - 42 * 2) if aspect == '16:9' else (68, 1080 - 72 - 108 - 42 * 2)
+    size, available = (54, 1400 - 42 * 2) if aspect == '16:9' else (68, 1080 - 60 - 220 - 42 * 2)  # house/geometry.ts HOUSE.caption
     space = _text_width(' ', size)
     width, lines = 0, 1
     for row in rows:
