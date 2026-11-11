@@ -25,8 +25,44 @@ publish board is 1000% where everything wires in to fresh and live and accuratel
 - **The archive:** `content.krishraja.com/board/<Monday>` keeps serving the page below as it does, with a banner at the
   top: "This is the archive. The live Publish Board is in Control Centre", linking the live board at the same week and
   the day the address names (`#monday` opens Monday). `?archive=1` is the older baked board, unchanged.
-- **Writes are unchanged:** every press still goes through this engine's routes (`/api/board/<Monday>/...`), from
-  either page.
+- **The archive is read-only** (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
+  read-only archive): every press goes through this engine's routes (`/api/board/<Monday>/...`) from the live board
+  only. See "One live board", below.
+
+## One live board (Ruling, Krish, 2026-11-11)
+
+Krish, 2026-11-11: "Can we retire and deduplicate everything that's newest on the old board and make sure the new
+board has everything up to date and, not only that, is genuinely live?" The audit behind this section is control-center
+`docs/plans/ui-rebuild/board/one-live-board-audit.md`.
+
+- **The view carries everything the old board showed** (contract 1.1.0, `_viewExtras.ts`): on each day, every piece
+  on it (`pieces`, so a second piece or an off-day piece is never hidden behind the first), the day's options in full
+  (`options`: a publishing day's Sunday options, an off day's options with the weekly good news's stories), his
+  comments (`comments`), what Growth has posted (`posted`) and his yes (`yes`); on the week, the change signal
+  (`revision`). An off-day option the week's plan records as `decided` counts as chosen, and a weekly good news whose
+  stories were found before the week's Thursday waits on Thursday's run, never "stuck".
+- **Every press the old board made is in the view** as the action kind `press`: the document the old board saved
+  (Pick and the four presses on an idea, Approve, Improve, Reject and Next week on an off-day option, his yes for a
+  day, his thoughts on a step, research pasted onto a piece), which the live board saves as it is, filling in only his
+  words and the time. The server checks each as before (`validBody`, `preparePress`).
+- **Every writer lands where the view reads.** The pieces' records, his presses, Growth's ticks and the week's builds
+  are tables the view reads on every request. The week's plan files are read from the week's branch
+  `offday-revise/<Monday>` before main, at the commit each points at now (`branchSha`), so a push reaches the board
+  in seconds, not after raw.githubusercontent.com's five-minute cache. The Sunday ideas run, the Thursday good-news run
+  and the revise run all put the week's folder on that branch (`scripts/week_branch_keep.sh`: main, then what is on
+  the branch, then the run's commit; a fast-forward, never a force), each with a pull request to main that merges
+  itself. Nothing builds or publishes a board page any more.
+- **Genuinely live.** One row a week, `board_signal` (migration `20261125090000_board_signal.sql`), is bumped by a
+  trigger on every write the view reads (`board_documents`, `board_ticks`, `board_weeks`, `content_ideas` by the
+  week of its date) and published over Supabase realtime; a writer whose change is a file bumps it with
+  `python3 scripts/post-pack/board_web.py touch <Monday>` (`POST /api/board/<Monday>/touch`, the operator's key).
+  Control Centre's board listens to it and reads the view again 150 ms later; the ETag keeps an unchanged read a 304,
+  and the 15-second poll stays as the fallback. Measured on a local Postgres with the real view builder and parser:
+  write to parsed view in about 160 ms, of which 150 ms is the deliberate settle.
+- **The archive refuses presses.** The desk (`/board/<Monday>`) shows "Do this on the live board" in place of every
+  press, linking the same week and day; the baked board (`?archive=1`) carries the banner and a guard that does the
+  same for any write. Both are served with a same-origin referrer, and the board answers a write from either page with
+  423 `archive_read_only` and the live board's link (`_readOnly.ts`). Nothing is deleted; every address still opens.
 
 ## The view's contract: add freely; never remove or rename a field
 
@@ -567,6 +603,11 @@ they are attributes only and change nothing a reader sees
 secret or transcript.
 
 ## Update a board
+
+Retired on 11 November 2026 (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
+read-only archive). Do not build, download or publish a board page: write what the view reads ("One live board",
+above). Since 10 November `/board/<Monday>` serves the desk, so `board_web.py download` no longer returns the baked
+page and the steps below cannot run as written. They are kept as the record of how the archive was made.
 
 Fetch the authenticated `/board/WEEK` HTML into a local file for `--previous`;
 do not print the full board into a conversation. The operator CLI's `download`
