@@ -163,6 +163,13 @@ PIECE add FILE --kind research`), and when Krish sends a Markdown file, it files
 block every copied board prompt carries says so (`apps/control-plane/api/board/_writeBack.ts`), and so do the plan-week,
 make-piece and produce-video skills; `tests/control-plane/research-library.test.ts` holds all four to it.
 
+**Research from before the rule, left on a computer.** `python scripts/recover_research.py all`, run once on each home
+computer from the content-engine checkout (outside Codex's sandbox), looks through that computer's scratch folders,
+the files git does not hold yet in its checkouts, and its Claude Code and Codex transcripts, lists every document that
+looks like Make Your Mind Up research in `.scratch/research-recovery/found.tsv` (yes or no, with why), and files each
+yes through the store's own route, so the library copies it. It reads and adds only; a transcript is never filed whole,
+anything holding a key is never filed, and the same bytes filed twice add nothing (`tests/recover_research_test.py`).
+
 **Research from before the store.** What sessions wrote before 11 November lives in git history and in the database
 (the fact ledgers, deep dives and Teardown investigations on `content_ideas`). It reaches the library the same way as
 anything new: filed into the store through the store's own route (source `backfill` or `repo`), never copied into
