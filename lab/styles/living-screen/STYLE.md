@@ -52,7 +52,8 @@ flat UI on flat ink (the first draft).
 
 - Shots: the hook (screen three-quarter, streaks drawing), each card in turn, the chart, the Customers tab, the
   chart again for the two lines, then the ask.
-- **Tall:** the credit owns the top (no wordmark on vertical video, Krish 2026-11-11); the screen's focus point sits just above the caption band.
+- **Tall:** the credit starts just under every channel's top bar (y 300), the captions under it, and the panel below,
+  framed to keep short of the action rail (x 860) and above y 1320. No wordmark over the content (Krish, 11 Nov).
 - **Wide:** the screen fills the frame at a slight angle; the type sits top left.
 
 ## 7. Sound palette
@@ -86,4 +87,10 @@ Demo films on the house test script, tall and wide, ending on the house close ca
 
 ## 12. Verdict and scores
 
-Untested. Krish's ratings and scores go here, word for word, with the date.
+Liked (bank `living-screen`, recorded 11 Nov 2026). His words, in order:
+
+- 10 Nov, on the first cut: "the living screen looks incomplete and kind of boring. There's not enough animation,
+  movement, or visual stimulation at all." (rebuilt: the counter scene opening, more moves, the camera always moving)
+- 10 Nov, on the rebuilt opening: "Now let's keep that pace of animation up."
+- 11 Nov: "can you merge the approved styles to main so I can use them? The ladder and the other one?" and "yes port
+  The Ladder and The Living Screen into ve" (bank entry and cards, `docs/ve/cards/styles-3d/`).

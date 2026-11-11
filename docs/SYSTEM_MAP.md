@@ -90,7 +90,7 @@ the decisions.
 | 3. Drafting and iteration | `api/content-ideas/[id]/{draft,revise,final-pass,fact-check,dive-deeper,challenge,chat}.ts`, `api/_curation.ts`, `api/_finalPass.ts`, `api/_revisePrompt.ts` | `content_ideas.body`, `meta.drafts`, `meta.revisions` | the composer |
 | 4. Channel and copy | `channel-cut`, `package` (the YouTube title and description, and the Substack title and subtitle), `video-script`, `save-draft`, `production-brief`, `api/_packaging.ts` | `transformed_outputs` | the composer |
 | 5 and 6. Production and post-production | `scripts/ve.py`, `scripts/quick-edit/`, `apps/renderer`; the Studio in `packages/core`, `apps/runner`, `api/video-studio/` | the piece's making record (`meta.making`); Studio job folders and `video_studio_*` projections | the day's tab on the publish board |
-| 7. Publishing | `api/publish/watch` (reads the publication's archive hourly) | the making record's publish step; `PATCH state: published` | Approve for publish on the board; Growth posts |
+| 7. Publishing | `api/publish/watch` (hourly: the Substack archive and the @makeyourmind-up YouTube feed; matches each post, video and Short to its piece and records it) and `GET /api/publish/catalogue` (every published piece with its article, video and Short, read by makeyourmindup.ai, which takes the cover from Substack) | the making record's publish step; `PATCH state: published` | Approve for publish on the board; Growth posts |
 | 8. Learning | `api/content-edits.ts`, `api/_editEvents.ts`, `api/learning/`, `scripts/learning/`, `packages/core/src/feedback.ts` | `content_edit_events`, `judge_calibration`, `engine_incidents`, `mindmake_studio_learning_proposals` | learning proposals in Control Center |
 
 ## Rules that cross both halves

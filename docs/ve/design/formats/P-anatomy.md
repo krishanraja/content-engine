@@ -1,5 +1,10 @@
 # TWO PASSPORTS · anatomy of the template (mind.the.gap module, 1080 x 1920)
 
+> **Channel limits, 11 Nov 2026.** Where this page gives a platform limit of x 960 or y 1640, a lower line at y 1516 or
+> a marquee at y 1736, it predates Krish's ruling ("stay within the boundaries of all the social platforms"). Words now
+> keep to `docs/ve/MOTION_STANDARD.md`, Channels: x 60 to 860 below y 520, y 270 to 1320, the caption zone x 60 to 860,
+> y 1090 to 1320. The lock's older zones are open (`docs/ve/STATUS.md`, Cannot do yet); a tall cut is not made to them.
+
 A reusable five-frame module for any piece that talks about where an AI lives. Every AI holds two passports: where its company was BORN and where it LIVES (the law and servers it answers to). The module is the same five frames every time; the producer swaps the slots marked `SLOT` below.
 
 Files: `index.html` (five frames, `#f1` to `#f5` show one frame), `f1.png` to `f5.png` (renders), `assets/` (paper, guilloche, rosette, flags, all derived or generated here), `tools/` (scripts that rebuild `index.html` and the assets; `tools/index.template.html` is the editable source). Brand files are read from `../brand/`, the hardware plate from `../plates/`. Only `tools/` is kept in this repository, at `docs/ve/design/formats/ref/P/tools/` (without `render.sh`); the mock's renders, `index.html` and `assets/` are not, and the derived assets the renderer uses are in `assets/plates/two-passports/`.
@@ -11,7 +16,7 @@ Sample data used in the mock is for illustration only. Nothing in it says where 
 - Canvas 1080 x 1920, ink #0C1512 ground.
 - 12-column grid across the content box x 72 to 972 (900 px), gutter 24, column 53. Column starts: 72, 149, 226, 303, 380, 457, 534, 611, 688, 765, 842, 919. Margins 72 left; the right margin is 108 because the platform covers x > 960.
 - Baseline unit 8 px.
-- Caption zone x 72 to 972, y 1180 to 1500, placeholder labelled CAPTION (translucent so the page and threads read beneath). Nothing in it except page, thread and ground.
+- Caption zone x 60 to 860, y 1090 to 1320 (the lock's zone since 11 Nov 2026, clear of every channel's buttons), placeholder labelled CAPTION (translucent so the page and threads read beneath). Nothing in it except page, thread and ground.
 - Platform UI: y > 1640 and x > 960 carry decoration only (page, stitch, ground print).
 
 ## 2. Layout zones (px, absolute on the canvas)
@@ -24,7 +29,7 @@ Shared by every frame:
 | section pill | 72 | 72 | 270 | 55 | `mind.the.gap` |
 | headline band | 72 | 140 to 150 | 900 | 153 to 373 | Anton headline (see per-frame) |
 | hero page | 72 | 424 to 432 | 900 | 1700 (bleeds off) | passport page |
-| caption zone | 72 | 1180 | 900 | 320 | CAPTION placeholder |
+| caption zone | 60 | 1090 | 800 | 230 | CAPTION placeholder |
 | MRZ strip | 92 | 1552 to 1560 | 780 | 78 | two lines of machine-readable zone, on the page |
 | platform zone | 960 / 0 | 0 / 1640 | 120 / 1080 | 1920 / 280 | decoration only |
 
