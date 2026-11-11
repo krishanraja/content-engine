@@ -61,3 +61,20 @@ approved bed curve (`scripts/bed_shape.py` target points) 6 dB under the ledger 
 under so the close still rises; `bed_shape.qc` on the bed stem: pass (median -36.8 LUFS, open +13.8 LU, end +7.3 LU).
 Mix: -14.8 LUFS integrated, true peak -1.0 dB. This level is for this cut, by his word; the ledger levels are
 unchanged.
+
+## Final cut, 11 Nov 2026: posts Monday 16 Nov
+
+Krish: "get rid of the first couple of seconds of the Aspire track because it enters really loud. This should post
+next week on Monday. Then we also need to have an outro card to follow for more at makeyourmindup.ai." Then, on the
+wordmark: "I don't have a no-word-mark rule for tall videos entirely. I just have a no-word-mark rule during the
+animated content, not the closing outro card." and, of the house sting, "it's this one. Just upgrade it to have a
+"Follow for more" badge under the word mark, and then we're good to go."
+
+- Music: Aspire from 2.0 s into the track, 6 dB under the ledger levels (end lift 4.5 dB under); `bed-shape-qc.json`
+  is `bed_shape.qc` on the bed stem: pass. Mix -14.4 LUFS integrated, true peak -1.0 dB.
+- Outro: the house sting `makeyourmindup-sting-9x16-follow_the_money.mp4` (library `1 Brand kit (permanent)/Intro
+  sting/`, Drive file 1LxiqcxzPsRzIKu5kUcca4Z_Nw0HMJcQw) frames 1 to 48, held on frame 48 for 2.4 s with a FOLLOW FOR
+  MORE badge under the wordmark band at its 3.2 degree tilt (`badge.py`). The cut runs 46.0 s, sha256 220cd09b...
+- Filing: the bed-shape receipt the library needs can only be written by ve or quick-edit
+  (`config/music-bed.json` receipt.engines; "a per-day compositor's cut is never filed"). This cut is per-piece
+  code, as The Ladder's was, so no receipt is written and it is not in 3 Posts until Krish rules on it.
