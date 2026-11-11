@@ -100,7 +100,9 @@ describe('official brand wordmarks', () => {
   it('contains no live-text imitation fallback in the renderer', async () => {
     const shortSource = await readFile(join(fileURLToPath(new URL('..', import.meta.url)), 'apps', 'renderer', 'src', 'Short.tsx'), 'utf8')
     const storySource = await readFile(join(fileURLToPath(new URL('..', import.meta.url)), 'apps', 'renderer', 'src', 'v2', 'MindmakeStory.tsx'), 'utf8')
-    expect(shortSource).toContain('<BrandLockup wordmarks={props.brandWordmarks}')
+    // The 9:16 Short mounts no lockup at all (Ruling, Krish, 2026-11-11); the lockup it keeps for reference still draws
+    // only the official assets, never live text.
+    expect(shortSource).not.toContain('<BrandLockup wordmarks={props.brandWordmarks}')
     expect(shortSource).toContain('<OfficialWordmark asset={wordmarks.mindmake} displayWidth={identity ? layout.identity.mindmake_width : layout.anchor.mindmake_width}')
     expect(shortSource).toContain('<OfficialWordmark asset={wordmarks.series} displayWidth={layout.identity.series_width}')
     expect(shortSource).toContain('width: plate.plate_width')

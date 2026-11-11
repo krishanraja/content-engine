@@ -1670,8 +1670,8 @@
         },
         {
           "file": "apps/renderer/src/engine/BrandFrame.tsx",
-          "contains": "{beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>",
-          "how": "SPLIT beats, and face-with-proof's light STAGE beats, keep the legible mark tile and series pill",
+          "contains": "{props.aspect === '9:16' ? null : beat.layout === 'STAGE' && !lightStage(props) ? <StageHeader props={props} /> : <>",
+          "how": "on the wide cut, SPLIT beats and face-with-proof's light STAGE beats keep the legible mark tile and series pill; the vertical cut carries none (Ruling, Krish, 2026-11-11)",
           "test": "npx vitest run apps/renderer/src/engine/layouts/split.test.ts"
         }
       ]

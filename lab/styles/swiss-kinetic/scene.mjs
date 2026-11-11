@@ -25,9 +25,9 @@ export function draw(env, ctx, t, house) {
   for (let i = 0; i <= cols; i++) { const x = M + i * gw; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H * g0); ctx.stroke() }
   ctx.globalAlpha = 0.04; for (let y = 0; y < H * g0; y += 60) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() }
   ctx.restore()
-  // The masthead band: ink, so the wordmark and the series name read as they do on every house frame.
-  const band = tall ? 400 : 150
-  ctx.fillStyle = c.ink; ctx.fillRect(0, 0, W, band)
+  // The masthead band: ink, so the wordmark and the series name read as they do on the wide frame. Vertical video has
+  // no wordmark (Ruling, Krish, 2026-11-11), so the tall frame has no band.
+  if (!tall) { ctx.fillStyle = c.ink; ctx.fillRect(0, 0, W, 150) }
   const L = (s, x, y, o = {}) => text(env, ctx, s, x, y, { font: 'IBM Plex Mono', size: tall ? 40 : 30, weight: 600, color: c.ink, tracking: 2, ...o })
   const fade = (t0, t1) => e.enter(clamp((t - t0) / 0.35)) * (1 - e.exit(clamp((t - t1) / 0.3)))
   // Section number, top right of the field: the beat we are on, as a Swiss poster numbers its parts.
