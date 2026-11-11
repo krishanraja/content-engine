@@ -553,7 +553,8 @@ class Expect(unittest.TestCase):
             (Path(tmp) / 'script.words.json').write_text(json.dumps({'words': [{'w': 0, 'word': 'the'}, {'w': 1, 'word': '15'}]}))
             found = expect.lines(spec, Path(tmp))
             self.assertLessEqual(len(found), expect.MAX_LINES)
-            self.assertTrue(any('Channel buttons' in line for line in found), 'a tall cut gets the advisory line')
+            # Since 11 Nov 2026 the channel row holds (qc_channel.ADVISORY is False), so there is no caveat to give.
+            self.assertFalse(any('Channel buttons' in line for line in found), 'the channel row holds; no advisory line')
             self.assertFalse(any('(15)' in line for line in found),
                              'conform reads a number said his own way (velib.words), so no line asks him to say it as written')
             self.assertFalse(any('wide cut' in line for line in found), 'no wide cut, no wide line')
