@@ -23,11 +23,13 @@ const props: EngineRenderProps = {
 }
 
 describe('chrome geometry', () => {
-  it('re-exports the unchanged tall house kit and keeps two caption lines above Y 1500', () => {
+  it('re-exports the tall house kit and keeps two caption lines inside every channel safe area', () => {
+    // Clear of the action rail from x 880 and of Instagram's handle and caption from y 1320 (Krish, 2026-11-11).
     expect(TALL).toBe(HOUSE)
     const box = boxFor('caption', '9:16')
-    expect(box.top).toBe(1180)
-    expect(box.top + box.height + HOUSE.caption.shadow).toBeLessThanOrEqual(1500)
+    expect(box.top).toBe(1090)
+    expect(box.top + box.height + HOUSE.caption.shadow).toBeLessThanOrEqual(1320)
+    expect(box.left + box.width + HOUSE.caption.shadow).toBeLessThanOrEqual(880)
     expect(boxFor('mark', '9:16')).toEqual({ left: 72, top: 140, width: 136, height: 136 })
   })
 
@@ -89,7 +91,11 @@ describe('caption timing', () => {
 })
 
 describe('chrome zone', () => {
-  it.each(['9:16', '16:9'] as const)('contains the mark including its shadow and the pill in %s', (aspect) => {
+  it('is the channels\' top bar on 9:16, where no chrome is drawn over the content (Krish, 2026-11-11)', () => {
+    expect(chromeZone('9:16')).toEqual({ left: 0, top: 0, width: 1080, height: 270 })
+  })
+
+  it.each(['16:9'] as const)('contains the mark including its shadow and the pill in %s', (aspect) => {
     const zone = chromeZone(aspect)
     for (const kind of ['mark', 'pill'] as const) {
       const box = boxFor(kind, aspect)
@@ -98,8 +104,7 @@ describe('chrome zone', () => {
       expect(box.left + box.width + (kind === 'mark' ? 10 : 0)).toBeLessThanOrEqual(zone.left + zone.width)
       expect(box.top + box.height + (kind === 'mark' ? 10 : 0)).toBeLessThanOrEqual(zone.top + zone.height)
     }
-    if (aspect === '9:16') expect(zone.top + zone.height).toBeLessThan(288)
-    else expect(zone).toEqual({ left: 48, top: 40, width: 812, height: 152 })
+    expect(zone).toEqual({ left: 48, top: 40, width: 812, height: 152 })
   })
 })
 
@@ -117,7 +122,10 @@ describe('word caption build', () => {
     const loud = renderToStaticMarkup(createElement(WordCaption, { props: word, frame: 16 }))
     expect(loud).toContain('MYMU Fraunces')
     expect(loud).not.toContain('italic')
-    expect(WORD_CAPTION.tall.centerY - WORD_CAPTION.tall.size).toBeGreaterThan(1300)
+    // On the chest, and its box above Instagram's handle and caption at y 1320 (Krish, 2026-11-11).
+    expect(WORD_CAPTION.tall.centerY - WORD_CAPTION.tall.size * 0.6).toBeGreaterThan(1180)
+    expect(WORD_CAPTION.tall.centerY + WORD_CAPTION.tall.size * 0.6).toBeLessThanOrEqual(1320)
+    expect(WORD_CAPTION.tall.titleTop).toBeGreaterThanOrEqual(270)
     expect(renderToStaticMarkup(createElement(HeldTitle, { props: word, frame: 12 }))).toContain('Give your AI two rules')
   })
 })

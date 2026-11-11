@@ -916,7 +916,10 @@ def write_ass(path, groups, wins, aspect, house=None):
     no grain. Without it, the quick-edit captions: cream on the ink block, every figure in mint."""
     if aspect == '9x16':
         W, H, fs, box, shadow = 1080, 1920, 70, 16, 12
-        norm_pos, norm_m, cut_pos, cut_m = r'\an8\pos(540,250)', (60, 60), r'\an8\pos(540,1014)', (60, 60)
+        # Both bands sit inside every channel's safe area (config/channel-safe-zones.json): x 60 to 860, clear of the
+        # action rail, and above y 1320, clear of the handle and caption (card ve-motion-4-channel-safe-tall; Krish,
+        # 2026-11-11). Over the speaker the line sits at chest height; over a picture, on the face band's top edge.
+        norm_pos, norm_m, cut_pos, cut_m = r'\an8\pos(460,1060)', (60, 220), r'\an8\pos(460,1014)', (60, 220)
     else:
         W, H, fs, box, shadow = 1920, 1080, 48, 12, 8
         norm_pos, norm_m, cut_pos, cut_m = r'\an2\pos(960,1040)', (360, 360), r'\an2\pos(303,1040)', (24, 1920 - 582)
@@ -2972,8 +2975,10 @@ def main():
                 mark=P(cfg['brand_mark']) if cfg.get('brand_mark') else None)
             # Nothing he must read under Instagram's, TikTok's or Shorts' own buttons (Krish, 2026-11-03: "It looks
             # cramped. It looks like you almost didn't design this thoughtfully for the format or the channel").
-            # Measured and listed on every tall cut; it holds the cut once the tall layout clears the zones
-            # (docs/ve/MOTION_STANDARD.md, scripts/channel_safe.py).
+            # Holding since the tall layout cleared the zones (card ve-motion-4-channel-safe-tall, 11 Nov 2026): a
+            # caption band under a channel's buttons holds the cut. The frame read (OCR of the whole cut, the end
+            # card and any words in the room included) stays a warning (docs/ve/MOTION_STANDARD.md,
+            # scripts/channel_safe.py).
             if asp == '9x16':
                 import channel_safe  # noqa: PLC0415
                 bands = channel_safe.box_violations(
@@ -2981,7 +2986,7 @@ def main():
                 words = channel_safe.frame_violations(final, 'tall', every=2.0)
                 receipt['channel_safe'] = {'bands': bands, 'frames': words}
                 for hit in bands:
-                    warnings.append(f"{hit['what']} sits under {hit['channel']}'s {hit['zone']}")
+                    words_held.append(f"{asp}: {hit['what']} sits under {hit['channel']}'s {hit['zone']}")
                 if words.get('pass') is False:
                     warnings.append(f"{words['value']['count']} word(s) read under a channel's buttons "
                                     f"(first: '{words['value']['in_zones'][0]['word']}' at {words['value']['in_zones'][0]['at_s']} s)")

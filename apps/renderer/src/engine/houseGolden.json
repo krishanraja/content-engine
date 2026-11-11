@@ -36,7 +36,7 @@
   "wall_screen 9:16": "0c72eb8443abd1202e1a8cde2d4cb90075742cc146494c9d98113bcec19dc2e8"
  },
  "compositions": {
-  "fixtures/ve/engine-core/props.json": "0c0b427f7cbd4116b39c67828af1f602ae629108211e07a77d09c494e1bd4610",
+  "fixtures/ve/engine-core/props.json": "857202a611269e5f662a6e3514ac8339b45edee64371d3b8dc04da15575a7281",
   "docs/plans/2026-11-05-thursday-no-spending/ve/props.short.json": "4d6d31c067c4dcdae8c63b0905b41b2395b1d16a34365991f1b80d53278317be"
  }
 }

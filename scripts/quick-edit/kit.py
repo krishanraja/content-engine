@@ -129,11 +129,12 @@ KIT_VERSION = 1
 CUT_SHAPE = {'long': '16x9', 'short': '9x16'}  # house rule TWO_CUTS
 FRAME = {'9x16': (1080, 1920), '16x9': (1920, 1080)}
 PANEL = {'9x16': (1080, 1000), '16x9': (1314, 1080)}
-# Where the picture sits inside a panel. The tall panel keeps its picture
-# below the top 140 to 180 pixels that Shorts, TikTok and Reels cover with
-# their own buttons (config/studio.json, the platforms' safe zones).
+# Where the picture sits inside a panel. The tall panel is the frame's top 1000 rows; its picture starts at y 270,
+# right under every channel's top bar, and stops at x 860, short of the action rail (config/channel-safe-zones.json;
+# Krish, 2026-11-11: "make maximum use of the full screen ... stay within the boundaries of all the social
+# platforms"). It reserves no room for a series pill: vertical video shows none over its content.
 PANEL_LAYOUT = {
-    '9x16': dict(pad=48, top=96, pill=30, gap=26, bottom=40),
+    '9x16': dict(pad=60, right=220, top=270, pill=0, gap=0, bottom=40),
     '16x9': dict(pad=64, top=56, pill=32, gap=30, bottom=56),
 }
 SHADOW_PX = 16
@@ -774,7 +775,7 @@ def panel_geometry(shape, pic_w=0, pic_h=0):
     L = PANEL_LAYOUT[shape]
     pill_h = round(L['pill'] * 1.64)
     x0, y0 = L['pad'], L['top'] + pill_h + L['gap']
-    area = (x0, y0, W - 2 * L['pad'] - SHADOW_PX, H - y0 - L['bottom'] - SHADOW_PX)
+    area = (x0, y0, W - L['pad'] - L.get('right', L['pad']) - SHADOW_PX, H - y0 - L['bottom'] - SHADOW_PX)
     block = pill_h + L['gap'] + pic_h
     top = L['top'] + max(0, (H - L['bottom'] - SHADOW_PX - L['top'] - block) // 2)
     return {'W': W, 'H': H, 'area': area, 'pill_top': top, 'picture_top': top + pill_h + L['gap'],

@@ -27,7 +27,7 @@ export async function setup(env) {
   const base = (env.assets ?? '') + 'evidence-desk/'
   env.head = await img(base + 'head.png'); env.para = await img(base + 'para.png')
   // Captions sit directly under the number and its credit (Krish, 11 Nov: "A"); the desk is the picture below.
-  if (env.shape === 'tall') env.captionBase = 742
+  if (env.shape === 'tall') env.captionBase = 592
 }
 
 /** A point on a card (image pixels) in desk coordinates. */
@@ -72,15 +72,15 @@ export function draw(env, ctx, t, house) {
   const T = (s, x, y, o = {}) => text(env, ctx, s, x, y, { font: 'IBM Plex Mono', size: tall ? 40 : 30, weight: 600, color: c.creamSoft, tracking: 2, ...o })
   // The desk: ink felt under one warm lamp.
   ctx.fillStyle = c.ink; ctx.fillRect(0, 0, W, H)
-  const lamp = ctx.createRadialGradient(tall ? 560 : 1320, tall ? 1180 : 560, 40, tall ? 560 : 1320, tall ? 1180 : 560, tall ? 1050 : 900)
+  const lamp = ctx.createRadialGradient(tall ? 560 : 1320, tall ? 1030 : 560, 40, tall ? 560 : 1320, tall ? 1030 : 560, tall ? 1050 : 900)
   lamp.addColorStop(0, 'rgba(244,239,228,0.13)'); lamp.addColorStop(0.55, 'rgba(244,239,228,0.04)'); lamp.addColorStop(1, 'rgba(0,0,0,0)')
   ctx.fillStyle = lamp; ctx.fillRect(0, 0, W, H)
 
   // ---- The desk, through the camera ----
   const cam = camera(env, t)
-  const anchor = tall ? [540, 1230] : [1330, 560], base = tall ? 1 : 0.78
+  const anchor = tall ? [540, 1080] : [1330, 560], base = tall ? 1 : 0.78
   // Tall: the desk is a window below the clock, so nothing on it ever sits behind the number, caption or clock.
-  const deskTop = tall ? 906 : 0
+  const deskTop = tall ? 756 : 0
   ctx.save(); if (tall) { ctx.beginPath(); ctx.rect(0, deskTop, W, H - deskTop); ctx.clip() }
   ctx.save(); ctx.translate(...anchor); ctx.scale(cam.z * base, cam.z * base); ctx.translate(-cam.f[0], -cam.f[1])
   const away = 1.6 * e.exit(clamp((t - at(env, B.ask)) / 0.6))
@@ -151,7 +151,7 @@ export function draw(env, ctx, t, house) {
     if (m <= 0.01) return
     ctx.save(); ctx.fillStyle = c.ink; ctx.globalAlpha = 0.6 * m; ctx.fillRect(0, tall ? deskTop : 0, tall ? W : W, H); ctx.restore()
     const s = para[2] * cam.z * base
-    mark(ctx, t, { c, e, img: env.para, box, card: [0, -9999, s, 0], point: under ? c.mint : POINT, under: under ? [box] : null, times: { circle: -1, magnify: t0, out: t1 }, strip: tall ? [540, 1250, 1000] : [1330, 560, 1000] })
+    mark(ctx, t, { c, e, img: env.para, box, card: [0, -9999, s, 0], point: under ? c.mint : POINT, under: under ? [box] : null, times: { circle: -1, magnify: t0, out: t1 }, strip: tall ? [540, 1100, 1000] : [1330, 560, 1000] })
   }
   loupe(P.range, at(env, B.y2004, 'thirteen') + 0.2, at(env, B.expect) - 0.2)
   loupe(P.pct, at(env, B.didnt, 'percent') + 0.1, at(env, B.same) - 0.3)
@@ -161,7 +161,9 @@ export function draw(env, ctx, t, house) {
   s1.addColorStop(0, c.ink); s1.addColorStop(1, c.ink)
   ctx.fillStyle = s1; if (tall) ctx.fillRect(0, 0, W, deskTop)
   else { const s2 = ctx.createLinearGradient(0, 0, 900, 0); s2.addColorStop(0, c.ink); s2.addColorStop(0.85, c.ink + 'ee'); s2.addColorStop(1, c.ink + '00'); ctx.fillStyle = s2; ctx.fillRect(0, 0, 900, H) }
-  const NX = tall ? 72 : 96, NY = tall ? 650 : 470, NS = tall ? 190 : 200, CY = tall ? 440 : 250
+  // Tall: the credit starts just under every channel's top bar (y 270), the number under it, the clock under that and
+  // the desk below, so the top of the screen carries the point (Krish, 2026-11-11: "make maximum use of the full screen").
+  const NX = tall ? 72 : 96, NY = tall ? 500 : 470, NS = tall ? 190 : 200, CY = tall ? 300 : 250
   const credit = (s, t0, t1, color = c.muted) => T(s, NX, CY, { color, alpha: e.enter(clamp((t - t0) / 0.4)) * (1 - e.exit(clamp((t - t1) / 0.3))), role: 'credit' })
   const num = (s, t0, t1, o = {}) => bigType(ctx, t, { c, e, str: s, x: NX, y: NY, size: NS, color: c.cream, at: t0, out: t1, ...o })
   credit('EXHIBIT 1 · IMF F&D · 2015', 0, at(env, B.ask) - 0.3)
@@ -185,7 +187,7 @@ export function draw(env, ctx, t, house) {
     lab('CITY BRANCHES', at(env, B.didnt, 'percent'), at(env, B.same) - 0.3)
   }
   // The clock: when each of these was true.
-  const cx0 = tall ? 110 : 110, cw = tall ? 740 : 640, cy0 = tall ? 840 : 700
+  const cx0 = tall ? 110 : 110, cw = tall ? 740 : 640, cy0 = tall ? 690 : 700
   clock(ctx, t, { c, e, x: cx0, y: cy0, w: cw, years: [1970, 2030], point: POINT, start: 0,
     pins: [
       { year: 1972, label: 'ATM', at: 0.2, align: 'left' },

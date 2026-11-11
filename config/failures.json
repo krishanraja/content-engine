@@ -1822,13 +1822,13 @@
         {
           "file": "scripts/velib/qc_channel.py",
           "contains": "def safe_zones(",
-          "how": "ve qc row channel.safe_zones lists every caption, title or slot box under a channel's buttons; advisory (listed, not counted) until card ve-motion-4-channel-safe-tall moves the tall layouts, then it counts",
+          "how": "ve qc row channel.safe_zones fails any caption, title or slot box under a channel's buttons; counted since 11 Nov 2026, when the tall layouts, captions and title moved inside every channel's safe area",
           "test": "python3 tests/channel_safe_test.py"
         },
         {
           "file": "scripts/quick-edit/make.py",
           "contains": "receipt['channel_safe']",
-          "how": "every quick-edit tall cut measures and lists what sits under a channel's buttons; it holds once card ve-motion-4-channel-safe-tall moves the layout"
+          "how": "every quick-edit tall cut measures what sits under a channel's buttons; a caption band there holds the cut (since 11 Nov 2026), and words read there by OCR are a warning"
         }
       ],
       "recurrences": [
