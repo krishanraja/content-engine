@@ -1,4 +1,4 @@
-import { CAPTION_THEMES } from './captionThemes/names'
+import { CAPTION_THEMES } from './captions/names'
 import { z } from 'zod'
 import { EngineMotionSchema } from './kit/motionProfiles'
 
@@ -99,7 +99,7 @@ export const EngineRenderPropsSchema = z.object({
   captions: z.array(EngineCaptionPageSchema).min(1),
   /** 'house' pages in the ink box; 'word' shows one word at a time, off the face, under a held title. */
   captionStyle: z.enum(['house', 'word']).optional(),
-  /** A caption theme from captionThemes/names.ts drawn instead of the house caption (Krish, 2026-11-11). */
+  /** A caption theme from captions/names.ts drawn instead of the house caption (Krish, 2026-11-11). */
   captionTheme: z.enum(CAPTION_THEMES).optional(),
   title: z.string().min(1).optional(),
   beats: z.array(EngineBeatSchema).min(1),
