@@ -1,19 +1,19 @@
 {
- "id": "slab-towers",
- "what": "Two towers of slabs, the two things that moved: one loses slabs that fall under gravity, one gains slabs that drop on.",
- "says": [
-  "contrast",
-  "number"
- ],
- "needs": [
-  "number"
- ],
- "energy": "high",
- "engine": "three",
- "code": "lab/moves/slab-towers/move.mjs",
- "entry": "update",
- "vitals": "timing is fixed in the move; times come from the words that cue it",
- "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
- "from": "lab/styles/ladder/scene.mjs",
- "proven_by": "Krish, 2026-11-10, on The Ladder v2 frames: \"much better, go\""
+  "id": "slab-towers",
+  "what": "Two towers of slabs, the two things that moved: one loses slabs that fall under gravity, one gains slabs that drop on.",
+  "says": [
+    "contrast",
+    "number"
+  ],
+  "needs": [
+    "number"
+  ],
+  "energy": "high",
+  "engine": "three",
+  "code": "packages/moves/slab-towers/move.mjs",
+  "entry": "update",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+  "from": "lab/styles/ladder/scene.mjs",
+  "proven_by": "Krish, 2026-11-10, on The Ladder v2 frames: \"much better, go\""
 }

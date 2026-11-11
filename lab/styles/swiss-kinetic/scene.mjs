@@ -4,7 +4,7 @@
 // Bar: the International Typographic Style (Müller-Brockmann's grid, Ruder's type as image), moving.
 // Draws frame t from t alone.
 import { clamp, lerp, text } from '../_core/house.mjs'
-import { draw as bigType } from '../../moves/type-is-the-picture/move.mjs'
+import { draw as bigType } from '../../../packages/moves/type-is-the-picture/move.mjs'
 
 const B = { hook: 0, y1988: 1, y2004: 2, expect: 3, didnt: 4, same: 5, talk: 6, two: 7, watch: 8, ask: 9 }
 const at = (env, b, word) => (word ? env.word(b, word).s : env.beat(b).s)

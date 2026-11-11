@@ -185,7 +185,7 @@ async function main() {
       publicDir, outDir: path.join(temporary, 'bundle') })
     const transportProps = toAsciiProps(inputProps)
     const browser = await browserExecutable()
-    const composition = await selectComposition({ serveUrl, id, inputProps: transportProps, browserExecutable: browser })
+    const composition = await selectComposition({ serveUrl, id, inputProps: transportProps, browserExecutable: browser, chromiumOptions: { gl: 'angle' } })
     const tall = inputProps.aspect === '9:16'
     if (composition.fps !== 30 || composition.width !== (tall ? 1080 : 1920) || composition.height !== (tall ? 1920 : 1080)) {
       throw new Error(`${id} must use the 30 fps house canvas`)
@@ -200,7 +200,7 @@ async function main() {
         if (frame >= inputProps.durationFrames) throw new Error(`still frame ${frame} is past the cut`)
         const file = path.resolve(output, `still-${String(frame).padStart(5, '0')}.png`)
         await renderStill({ serveUrl, composition: { ...composition, durationInFrames: clock.frames },
-          inputProps: transportProps, output: file, frame: clock.lead + frame, browserExecutable: browser })
+          inputProps: transportProps, output: file, frame: clock.lead + frame, browserExecutable: browser, chromiumOptions: { gl: 'angle' } })
         console.log(`ve still: ${file}`)
       }
       return
@@ -208,7 +208,7 @@ async function main() {
     await mkdir(path.dirname(path.resolve(output)), { recursive: true })
     const raw = path.join(temporary, 'raw.mp4')
     await renderMedia({ serveUrl, composition: { ...composition, durationInFrames: clock.frames },
-      inputProps: transportProps, outputLocation: raw, codec: 'h264', crf: 18, scale, sampleRate, browserExecutable: browser })
+      inputProps: transportProps, outputLocation: raw, codec: 'h264', crf: 18, scale, sampleRate, browserExecutable: browser, chromiumOptions: { gl: 'angle' } })
     await correctAudio(raw, path.resolve(output), stemSrc, inputProps.audio.stem.trimBeforeFrames / inputProps.fps,
       temporary, lagSamples, clock.lead / inputProps.fps)
     if ((await stat(output)).size === 0) throw new Error('render produced an empty MP4')
