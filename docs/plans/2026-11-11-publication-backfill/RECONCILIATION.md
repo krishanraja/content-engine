@@ -6,7 +6,7 @@ Krish, 11 Nov 2026: "Session is no longer handling anything so you will need to 
 
 | Fault | Evidence | Fix |
 |---|---|---|
-| The newsest cards had no thumbnail | Since 24 Oct every piece goes out as a Substack video post, whose RSS enclosure is `audio/mpeg`; `apps/cover/lib/rss.ts` took a cover only from an `image/*` enclosure | The site reads covers from Substack's archive API, which holds one for every post (makeyourmindup#39) |
+| The newest cards had no thumbnail | Since 24 Oct every piece goes out as a Substack video post, whose RSS enclosure is `audio/mpeg`; `apps/cover/lib/rss.ts` took a cover only from an `image/*` enclosure | The site reads covers from Substack's archive API, which holds one for every post (makeyourmindup#39) |
 | No piece knew its YouTube video | 0 of 10 pieces published from 5 Oct held a YouTube address; Growth's receipts cover Shorts and Reels (Buffer), and Krish uploads the full cut himself, so nothing recorded it | The hourly publish watcher reads the channel's uploads feed (content-engine#517); this backfill covers the history |
 | The Substack watcher had read nothing since about 6 Nov | Its runs report `ok` with `posts: 0` every hour from 6 Nov; the archive API now answers `{posts, nextCursor}`, not a bare list | `readPosts` reads both shapes and any other shape fails the run (content-engine#517) |
 | A failed feed showed an empty newsstand | `latestPosts` returned `[]` on any failure, which drew the "nothing yet" state | No source answering now throws, so the last good page keeps serving |
@@ -14,7 +14,7 @@ Krish, 11 Nov 2026: "Session is no longer handling anything so you will need to 
 
 ## Inventory (complete, not a feed window)
 
-- **Substack:** 49 posts, read through every page of the archive API. 18 since the relaunch, 31 before it. All 49 hold a cover except 9 posts from 2025 that have none: they are before the relaunch date and never shown on the site.
+- **Substack:** 49 posts, read through every page of the archive API. 18 since the relaunch, 31 before it. All 49 hold a cover except 8 posts from 2025 that have none: they are before the relaunch date and never shown on the site.
 - **YouTube:** 18 uploads. The channel's uploads playlist says 18, and its Videos and Shorts tabs list the same 18: 11 full videos and 7 Shorts.
 - **Engine pieces:** 12 since 5 Oct. 10 are published; the 9 Nov piece went out on Substack but was never marked published (the watcher fault above); the 11 Nov piece is not out yet.
 
