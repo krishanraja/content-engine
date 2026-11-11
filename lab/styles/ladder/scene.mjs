@@ -12,6 +12,11 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
 import { clamp, lerp, text } from '../_core/house.mjs'
+import { update as countOnAPart } from '../../moves/count-on-a-part/move.mjs'
+import { update as streetDrop } from '../../moves/street-drop/move.mjs'
+import { update as levelLine } from '../../moves/level-line/move.mjs'
+import { update as slabTowers } from '../../moves/slab-towers/move.mjs'
+import { update as taskCopies3d } from '../../moves/task-copies-3d/move.mjs'
 
 const B = { hook: 0, y1988: 1, y2004: 2, expect: 3, didnt: 4, same: 5, talk: 6, two: 7, watch: 8, ask: 9 }
 const at = (env, b, word) => (word ? env.word(b, word).s : env.beat(b).s)
@@ -141,70 +146,24 @@ export function draw(env, ctx, t, house) {
   const c = env.skin.colors
   placeCamera(env, t)
 
-  // The hero's windows fill from "city" to "twenty"; seven go dark on "needed thirteen"; all dim on "disappear"
-  // and come back on "didn't".
-  // The drop lands on the spoken "thirteen".
-  const f0 = at(env, B.y1988, 'city'), f1 = at(env, B.y1988, 'twenty'), d0 = at(env, B.y2004, 'thirteen') - 0.35
-  const person = at(env, B.hook, 'person')
-  const ghost = clamp((t - at(env, B.expect, 'disappear')) / 0.6) * (1 - clamp((t - at(env, B.didnt)) / 0.3))
-  R.hero.windows.forEach((w, i) => {
-    const on = clamp((t - (f0 + (f1 - f0) * (i / 20))) / 0.18)
-    const off = i >= 13 ? env.ease.exit(clamp((t - d0 - (i - 13) * 0.04) / 0.2)) : 0
-    // "the person behind the counter": one window lights first.
-    const first = i === 1 ? env.ease.enter(clamp((t - person) / 0.4)) : 0
-    const k = Math.max(on, first) * (1 - off) * (1 - 0.75 * ghost)
-    w.glass.material.emissiveIntensity = 0.05 + 1.5 * k
-    w.glass.material.color.set(k > 0.02 ? c.channel : c.inkSoft)
-    w.head.visible = w.sh.visible = k > 0.4
-  })
+  // Moves from the library (lab/moves), timed to his words.
+  const mp = (extra) => ({ c, e: env.ease, ...extra })
+  countOnAPart(R.hero.windows, t, mp({ from: 20, to: 13, firstIndex: 1, times: {
+    countStart: at(env, B.y1988, 'city'), countLand: at(env, B.y1988, 'twenty'), drop: at(env, B.y2004, 'thirteen') - 0.35,
+    first: at(env, B.hook, 'person'), ghost: at(env, B.expect, 'disappear'), ghostEnd: at(env, B.didnt) } }))
   R.hero.atm.position.x = 3.9
   // One set on stage at a time: the hero branch, the street, or the towers.
   const inStreet = t >= at(env, B.didnt, 'opened') + 0.3 && t < at(env, B.talk) + 0.4
-  const tw0 = t >= at(env, B.two) + 0.3
-  R.hero.group.visible = !inStreet && !tw0
-
-  // The street: seven branches rise in as the camera cranes up; three more drop in on "Forty-three".
-  R.street.forEach((b, i) => {
-    const drop = i >= 7 ? env.ease.hero(clamp((t - at(env, B.didnt, 'Forty-three') - (i - 7) * 0.18) / 0.55)) : env.ease.hero(clamp((t - at(env, B.didnt, 'opened') - i * 0.05) / 0.6))
-    b.group.position.set(b.home.x, lerp(9, 0, drop), b.home.z)
-    b.group.visible = drop > 0.01 && t < at(env, B.talk) + 0.4
-    b.windows.forEach((w) => { w.glass.material.emissiveIntensity = i >= 7 ? 1.6 : 1.1; w.head.visible = w.sh.visible = false })
-  })
-  const kl = env.ease.enter(clamp((t - at(env, B.same, 'stayed')) / 0.7))
-  R.level.scale.x = Math.max(0.001, kl); R.level.visible = kl > 0.01 && t < at(env, B.two)
-
-  // The two towers: per-branch tellers fall from 20 to 13 slabs; branches grow from 7 to 10.
+  R.hero.group.visible = !inStreet && !(t >= at(env, B.two) + 0.3)
+  streetDrop(R.street, t, mp({ first: 7, times: { first: at(env, B.didnt, 'opened'), more: at(env, B.didnt, 'Forty-three'), end: at(env, B.talk) + 0.4 } }))
+  const kl = levelLine(R.level, t, mp({ times: { start: at(env, B.same, 'stayed'), end: at(env, B.two) } }))
   const tw = t >= at(env, B.two) - 0.2
   const watch = env.ease.enter(clamp((t - at(env, B.watch)) / 0.4))
-  R.towers[0].forEach((m, s) => {
-    m.visible = tw; m.position.set(-2.4, 0.13 + s * 0.26, 14); m.rotation.z = 0
-    if (s >= 13) { // a leaving slab slides out of its row and falls
-      const u = clamp((t - at(env, B.two, 'Fewer') - (19 - s) * 0.08) / 0.7)
-      m.visible = tw && u < 1
-      m.position.x = -2.4 - 3 * u; m.position.y = 0.13 + s * 0.26 - 4.9 * (u * 0.7) ** 2; m.rotation.z = u * 0.9
-    }
-  })
-  R.towers[1].forEach((m, s) => {
-    const up = clamp((t - at(env, B.two, 'More') - (s - 7) * 0.15) / 0.5)
-    m.visible = tw && (s < 7 || (s < 10 && up > 0))
-    m.position.set(2.4, s < 7 ? 0.13 + s * 0.26 : lerp(6, 0.13 + s * 0.26, env.ease.hero(up)), 14)
-    m.material = watch > 0.5 ? R.mats.slabLit : R.mats.slab
-  })
-
-  // The ask: on "pick" one slab lifts off the per-branch tower and turns mint; on "Then" it copies itself four
-  // times into the space it freed: what could we do more of?
-  const kp = env.ease.hero(clamp((t - at(env, B.ask, 'pick')) / 0.9))
-  R.ask.forEach((m, i) => {
-    if (i === 0) {
-      m.visible = kp > 0; m.position.set(lerp(-2.4, 0, kp), lerp(0.13 + 12 * 0.26, 4.4, kp), 14); m.rotation.y = kp * 0.5
-    } else {
-      const k = env.ease.hero(clamp((t - at(env, B.ask, 'Then') - (i - 1) * 0.22) / 0.6))
-      m.visible = k > 0
-      const ang = -0.6 + (i - 1) * 0.4
-      m.position.set(lerp(0, Math.sin(ang) * 3.4, k), lerp(4.4, 4.4 + (i - 1) * 0.55 + 0.6, k), 14 + lerp(0, -1.2, k)); m.rotation.y = 0.5 + ang * 0.6
-    }
-  })
+  slabTowers(R.towers, t, mp({ xs: [-2.4, 2.4], z: 14, left: [20, 13], right: [7, 10], mats: { plain: R.mats.slab, lit: R.mats.slabLit },
+    times: { show: at(env, B.two) - 0.2, fall: at(env, B.two, 'Fewer'), grow: at(env, B.two, 'More'), watch: at(env, B.watch) } }))
+  const kp = taskCopies3d(R.ask, t, mp({ from: [-2.4, 0.13 + 12 * 0.26], z: 14, times: { lift: at(env, B.ask, 'pick'), copies: at(env, B.ask, 'Then') } }))
   if (kp > 0) R.towers[0][12].visible = false
+  const f0 = at(env, B.y1988, 'city'), f1 = at(env, B.y1988, 'twenty'), d0 = at(env, B.y2004, 'thirteen') - 0.35
 
   R.composer.render()
   ctx.drawImage(R.glc, 0, 0)
