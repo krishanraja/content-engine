@@ -78,3 +78,15 @@ animated content, not the closing outro card." and, of the house sting, "it's th
 - Filing: the bed-shape receipt the library needs can only be written by ve or quick-edit
   (`config/music-bed.json` receipt.engines; "a per-day compositor's cut is never filed"). This cut is per-piece
   code, as The Ladder's was, so no receipt is written and it is not in 3 Posts until Krish rules on it.
+
+## The real screenshot, and filing, 11 Nov 2026
+
+Krish asked whether to animate his screenshot of an AI setting out guardrail choices. Yes: on "and it writes the
+rules with you" the cut now shows the real screenshot as itself (`guardrails.png`), with the three choices he picked
+(A "Approve every individual send", B "Approve every financial commitment", C "Zero unapproved incremental usage
+costs") lifted out of it as enlarged crops of its own pixels (41 to 49 px text, F44), lighting as he says them; the
+invented rules bubble is gone. Its qualifier stays visible on the screenshot. Final cut 46.0 s, sha256 0e02f119....
+
+Filed under his exception ("Yes, I approve as an exception."), recorded in `config/filing-exceptions.json` for these
+bytes and this destination only: `3 Posts/2026-11-16 Mon off.day - Proactive AI/` (3 Video: the cut; 4 Social: the
+post description with his copy-paste prompt, word for word).
