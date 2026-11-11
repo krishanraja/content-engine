@@ -1,0 +1,203 @@
+{
+ "subchannel": "mind.the.gap",
+ "date": "2026-11-13",
+ "headline": "Meta staff were ranked by AI use. They gamed it.",
+ "deck": "Big tech companies started ranking staff by how much AI they used, and staff set AI to work on nothing to climb the charts. Why counting AI use backfires, and what to count instead.",
+ "video_title": "Meta staff were ranked by AI use. They gamed it.",
+ "video_title_emphasis": "gamed it",
+ "comment_question": "WHAT DOES YOUR COMPANY COUNT?",
+ "cover": {
+  "headline": [
+   "Meta staff were ranked by AI use.",
+   "They gamed it."
+  ],
+  "proof": {
+   "page": {
+    "url": "https://fortune.com/2026/04/09/meta-killed-employee-ai-token-dashboard/",
+    "height": 900,
+    "crop": [
+     0.02,
+     0.36,
+     0.98,
+     0.97
+    ]
+   },
+   "source": "s1",
+   "tag": "FORTUNE, APRIL 2026",
+   "alt": "Fortune, 9 April 2026: A Meta employee created a dashboard so coworkers can compete to be the company's No. 1 AI token user"
+  },
+  "rows": [
+   {
+    "name": "Meta",
+    "logo": "../logos/meta-cream.svg"
+   },
+   {
+    "name": "Amazon",
+    "logo": "../logos/amazon-cream.svg"
+   }
+  ],
+  "strip": [
+   {
+    "name": "Shopify",
+    "logo": "../logos/shopify-light.svg"
+   },
+   {
+    "name": "Duolingo",
+    "logo": "../logos/duolingo-light.svg"
+   }
+  ]
+ },
+ "body": "../article.md",
+ "endnote": "Checked on 11 November 2026 against the sources below.",
+ "figures": [
+  {
+   "after": "plus a side business in rats.",
+   "image": "../../../../.cache/pack/fri/figure-tails.png",
+   "html": "figure-tails.html",
+   "alt": "How a rat bounty made more rats. Hanoi, 1902: the French paid one cent per rat, with the tail as proof. People snipped the tails and let the rats go, and health inspectors found rat farms outside Hanoi. The city wanted fewer rats; it counted tails.",
+   "shows": "comparison",
+   "data_source": "Atlas Obscura, The Great Hanoi Rat Massacre of 1902",
+   "facts": [
+    "Hanoi",
+    "1902",
+    "one cent per rat",
+    "rat tails",
+    "rat farms"
+   ]
+  },
+  {
+   "after": "the perfect way to climb a chart that counts usage.",
+   "image": "../../../../.cache/pack/fri/figure-leaderboard.png",
+   "html": "figure-leaderboard.html",
+   "alt": "The token leaderboards. A Meta employee's board tracked the tokens used by more than 85,000 Meta staff and ranked the top 250, with titles such as Token Legend and Cache Wizard. Over 30 days usage passed 60 trillion tokens; the top user alone could have cost Meta more than $1.4 million, by Fortune's sums. Meta's board went down two days after the news broke; Amazon's KiroRank, where staff set AI agents on unnecessary tasks, was taken offline over its computing bills.",
+   "shows": "comparison",
+   "data_source": "Fortune (9 Apr 2026); CIO",
+   "facts": [
+    "Meta",
+    "Amazon",
+    "KiroRank",
+    "85,000+",
+    "top 250",
+    "Token Legend",
+    "Cache Wizard",
+    "60 trillion",
+    "$1.4m"
+   ]
+  },
+  {
+   "after": "whether the work got any better.",
+   "image": "../../../../.cache/pack/fri/figure-uturns.png",
+   "html": "figure-uturns.html",
+   "alt": "The U-turns. Duolingo, April 2026: its boss said AI use was no longer part of performance reviews. Meta, September 2026: said it would stop using token counts and AI adoption dashboards to judge performance. Amazon, October 2026: told engineers token counts are deeply flawed ways to measure teams' AI use, and that AI not helping is a finding, not a failing.",
+   "shows": "comparison",
+   "data_source": "WPXI; daily.dev; CNBC",
+   "facts": [
+    "Duolingo",
+    "Meta",
+    "Amazon",
+    "April 2026",
+    "September 2026",
+    "October 2026"
+   ]
+  },
+  {
+   "after": "spent it selling.",
+   "image": "../../../../.cache/pack/fri/figure-study.png",
+   "html": "figure-study.html",
+   "alt": "Half the target, more sales. A medical-device company told about 5,000 staff to send its AI assistant at least 200 queries a month; 31% were repeated or off-task. It cut the target to 100, branch by branch. Total queries fell 30%, nine in ten of the vanished queries junk, and monthly sales among sales staff rose an estimated 7%.",
+   "shows": "comparison",
+   "data_source": "arXiv 2609.32859 (Sep 2026)",
+   "facts": [
+    "31%",
+    "200",
+    "100",
+    "30%",
+    "7%"
+   ]
+  }
+ ],
+ "sources": {
+  "s1": [
+   "Fortune: A Meta employee created a dashboard so coworkers can compete to be the company's No. 1 AI token user (9 Apr 2026)",
+   "https://fortune.com/2026/04/09/meta-killed-employee-ai-token-dashboard/"
+  ],
+  "s2": [
+   "CIO: Amazon deletes devs' tokenmaxxing leaderboard to minimize costs (29 May 2026)",
+   "https://www.cio.com/article/4178825/amazon-deletes-devs-tokenmaxxing-leaderboard-to-minimize-costs-2.html"
+  ],
+  "s3": [
+   "CNBC: Amazon's anti-tokenmaxxing memo (27 Oct 2026)",
+   "https://www.cnbc.com/2026/10/27/amazon-ai-coding-tokenmaxxing.html"
+  ],
+  "s4": [
+   "daily.dev: Meta drops AI token usage from engineer performance reviews (Sep 2026)",
+   "https://daily.dev/posts/meta-drops-ai-token-usage-from-engineer-performance-reviews-after-employees-gamed-the-metric-lcwyhjcee"
+  ],
+  "s5": [
+   "arXiv 2609.32859: AI usage targets at a medical-device company (Sep 2026)",
+   "https://arxiv.org/abs/2609.32859v1"
+  ],
+  "s6": [
+   "The Juggernaut: The Cobra Effect and the Colonial Gaze",
+   "https://www.thejuggernaut.com/cobra-effect-history-british-raj-india"
+  ],
+  "s7": [
+   "eFinancialCareers: Coinbase fired an engineer after they refused to use AI coding tools (Mar 2026)",
+   "https://www.efinancialcareers.com/news/coinbase-fired-an-engineer-after-they-refused-to-use-ai-coding-tools"
+  ],
+  "s8": [
+   "Tobi Lütke on X: Reflexive AI usage is now a baseline expectation at Shopify (7 Apr 2025)",
+   "https://x.com/tobi/status/1909251946235437514"
+  ],
+  "s9": [
+   "Atlas Obscura: The Great Hanoi Rat Massacre of 1902",
+   "https://www.atlasobscura.com/articles/hanoi-rat-massacre-1902"
+  ],
+  "s10": [
+   "WPXI: Duolingo CEO says company backtracked on AI evaluations in performance reviews (Apr 2026)",
+   "https://www.wpxi.com/news/local/duolingo-ceo-says-company-backtracked-ai-evaluations-performance-reviews/6PP4GFMW4ZC6LLAKUMAOQELQSE/"
+  ]
+ },
+ "links": [
+  [
+   "the history and travel site Atlas Obscura",
+   "s9"
+  ],
+  [
+   "reflexive AI usage is now a baseline expectation",
+   "s8"
+  ],
+  [
+   "Coinbase's boss, Brian Armstrong",
+   "s7"
+  ],
+  [
+   "as Fortune reported in April 2026",
+   "s1"
+  ],
+  [
+   "According to the tech news site CIO",
+   "s2"
+  ],
+  [
+   "Duolingo's von Ahn told a podcast in April 2026",
+   "s10"
+  ],
+  [
+   "according to daily.dev",
+   "s4"
+  ],
+  [
+   "CNBC reported",
+   "s3"
+  ],
+  [
+   "A study posted to arXiv",
+   "s5"
+  ],
+  [
+   "The Juggernaut, a publication about South Asia",
+   "s6"
+  ]
+ ]
+}

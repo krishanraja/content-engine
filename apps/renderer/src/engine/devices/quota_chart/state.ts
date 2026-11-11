@@ -23,7 +23,7 @@ export function quotaState(object: EngineObject, events: readonly EngineEvent[],
   const lift = amount('count_to', MOTION.countFrames, MOTION.countFrames)
   return { ...visibility, ...p, target, move, mark, fill, draw: amount('draw', MOTION.slideFrames),
     bars: p.bins.map((value, i) => ({ x: (i + 0.5 + (i === oldBin ? newBin - oldBin : i >= newBin && i < oldBin ? 1 : 0) * move) / p.bins.length,
-      solid: value * fill * (1 - p.junkShare * mark), junk: value * fill * p.junkShare * mark * (1 - amount('move', 18, i * 3)) })),
+      solid: value * fill * (1 - p.junkShare * mark), junk: value * fill * p.junkShare * mark * (1 - amount('move', 18, Math.min(i * 3, 22))) })),
     sales: [sales, sales * (1 + p.salesLift * lift)], lift,
   }
 }

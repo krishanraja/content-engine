@@ -17,9 +17,9 @@ describe('quota chart', () => {
   it('waits for enter, grows from zero and exits', () => {
     expect(html(9)).toBe('')
     expect(at(29).bars.every(b => b.solid === 0)).toBe(true)
-    expect(at(31).bars[6]!.solid).toBeGreaterThan(0)
-    expect(at(31).bars[6]!.solid).toBeLessThan(1)
-    expect(at(65).bars[6]!.solid).toBe(1)
+    expect(at(31).bars[10]!.solid).toBeGreaterThan(0)
+    expect(at(31).bars[10]!.solid).toBeLessThan(1)
+    expect(at(65).bars[10]!.solid).toBe(1)
     expect(Math.floor(at(65).target * 8)).toBe(6)
     expect(html(320)).toBe('')
   })
@@ -34,7 +34,7 @@ describe('quota chart', () => {
     expect(at(140).target).toBe(.75)
     expect(at(149).target).toBeGreaterThan(.375)
     expect(at(158).target).toBe(.375)
-    expect(Math.floor(moved.bars[6]!.x * 8)).toBe(3)
+    expect(Math.floor(moved.bars[10]!.x * 14)).toBe(5)
     expect(moved.bars.every(b => b.x > 0 && b.x < 1)).toBe(true)
   })
   it('reveals sales last and counts to the supplied ratio', () => {
@@ -77,6 +77,23 @@ describe('quota chart', () => {
     expect(quotaState(object, [...events].reverse(), 250)).toEqual(at(250))
     expect(quotaState(object, [...events, {...events[0]!, id: 'again', atFrame: 330}], 350).fill).toBe(0)
     expect(quotaState(object, [...events, {...events[4]!, obj:'other', atFrame:50}], 130)).toEqual(at(130))
+  })
+  it('authors fourteen bars, hides optional credit, and keeps every visible frame alive', () => {
+    expect(at(65).bars.length).toBeGreaterThanOrEqual(12)
+    const withoutSource = {...object, params: {...object.params, showSource: false}}
+    expect(renderToStaticMarkup(React.createElement(Device, {...overlayTestProps,
+      object: withoutSource, events, frame: 130}))).not.toContain(object.params.source)
+    for (const aspect of ['16:9', '9:16'] as const) {
+      let previous = '', run = 0
+      for (let frame = 11; frame < 300; frame++) {
+        const markup = html(frame, aspect)
+        run = markup === previous ? run + 1 : 1
+        expect(run).toBeLessThanOrEqual(15)
+        previous = markup
+        for (const match of markup.matchAll(/font-size="([\d.]+)"/g))
+          expect(Number(match[1])).toBeGreaterThanOrEqual(28)
+      }
+    }
   })
   it('refuses invalid data and move states', () => {
     expect(ParamsSchema.safeParse({...object.params, junkShare: 2}).success).toBe(false)
