@@ -14,20 +14,27 @@ import { HOUSE_FONTS } from '../../../house/geometry'
 import type { DeviceProps } from '../types'
 import { screenState, rect } from './state'
 const ease={enter:ENTER,hero:HERO,exit:EXIT,utility:HERO}
-export function viewport(p:DeviceProps){const tall=p.aspect==='9:16';return tall?{left:p.box.width*60/1080,top:p.box.height*370/1920,width:p.box.width*800/1080,height:p.box.height*940/1920}:{left:0,top:0,width:p.box.width,height:p.box.height}}
+// The canvas fills the device box in both shapes (a smaller canvas shows the floor as a hard-edged rectangle); the
+// camera frames the card being read inside safeBox, which in 9:16 is the words-safe zone (x 60 to 860, above y 1320).
+export function viewport(p:DeviceProps){return {left:0,top:0,width:p.box.width,height:p.box.height}}
+export function safeBox(p:DeviceProps){const {width:W,height:H}=p.box;return p.aspect==='9:16'?{left:W*60/1080,top:H*370/1920,width:W*800/1080,height:H*940/1920}:{left:0,top:0,width:W,height:H}}
 export function cameraFor(p:DeviceProps){
-  const s=screenState(p.object,p.events,p.frame),v=viewport(p),[x,y,w,h]=s.target
+  const s=screenState(p.object,p.events,p.frame),v=viewport(p),safe=safeBox(p),[x,y,w,h]=s.target
   const focus=new T.Vector3((x!/2400-.5)*6,(.5-y!/1600)*4,0)
-  const d=drift(p.frame,p.object.fromFrame,p.object.toFrame)
-  const distance=Math.max(w!/2400*6/(v.width/v.height),h!/1600*4)*1.22/(2*Math.tan(Math.PI/10))
-  const eye=focus.clone().add(new T.Vector3(.09+d,.04+d*.2,1).normalize().multiplyScalar(distance))
-  const rotation=new T.Euler().setFromRotationMatrix(new T.Matrix4().lookAt(eye,focus,new T.Vector3(0,1,0)))
-  return {eye,rotation,focus}
+  const d=drift(p.frame,p.object.fromFrame,p.object.toFrame),tan=Math.tan(Math.PI/10)
+  const distance=Math.max(w!/2400*6*v.height/safe.width,h!/1600*4*v.height/safe.height)*1.22/(2*tan)
+  // Aim off the target so it lands in the centre of the safe box rather than the centre of the frame.
+  const perPx=2*distance*tan/v.height
+  const ox=(safe.left+safe.width/2-v.width/2)*perPx,oy=(safe.top+safe.height/2-v.height/2)*perPx
+  const aim=focus.clone().add(new T.Vector3(-ox,oy,0))
+  const eye=aim.clone().add(new T.Vector3(.09+d,.04+d*.2,1).normalize().multiplyScalar(distance))
+  const rotation=new T.Euler().setFromRotationMatrix(new T.Matrix4().lookAt(eye,aim,new T.Vector3(0,1,0)))
+  return {eye,rotation,focus,distance}
 }
 export function paint(g:CanvasRenderingContext2D,p:DeviceProps){
   const s=screenState(p.object,p.events,p.frame),c={...p.tokens,creamSoft:p.tokens.cream,muted:p.tokens.cream,line:p.tokens.inkSoft},t=p.frame/30
   g.fillStyle=c.ink;g.fillRect(0,0,2400,1600)
-  g.font=`36px ${HOUSE_FONTS.body}`
+  g.font=`36px ${HOUSE_FONTS.structure}`
   s.params.tabs.forEach((tab,i)=>{g.fillStyle=tab===s.tab?c.mint:c.cream;g.fillText(tab,80+i*430,100)})
   s.params.cards.forEach((card,i)=>{
     const [x,y,w,h]=rect(i,s.params.cards.length)
@@ -43,7 +50,7 @@ export function paint(g:CanvasRenderingContext2D,p:DeviceProps){
   })
   g.save();g.translate(60,1080);g.scale(2280/1240,460/940)
   if(s.add){taskCopies(g,t,{c,e:ease,W:1240,H:940,label:s.tab??'',copies:s.copies,times:{done:s.add.atFrame/30,copies:s.add.atFrame/30+.4}},c)
-    g.font=`38px ${HOUSE_FONTS.body}`;s.params.rows.forEach((row,i)=>g.fillText(row,80,180+i*60))
+    g.font=`38px ${HOUSE_FONTS.structure}`;s.params.rows.forEach((row,i)=>g.fillText(row,80,180+i*60))
   }else if(s.params.chart&&s.draw){
     const chart=s.params.chart,ids=[chart.expected,...chart.lines.map(l=>l.id)]
     const numbers=ids.flatMap(id=>p.object.dataset!.rows.filter(r=>r.label===id||r.label.startsWith(id+':')).map(r=>r.value))
@@ -82,7 +89,7 @@ export function Device(p:DeviceProps){const s=screenState(p.object,p.events,p.fr
   const v=viewport(p),cam=cameraFor(p),tall=p.aspect==='9:16'
   return <div data-device="living_screen" style={{position:'absolute',...p.box,background:p.tokens.ink,opacity:s.opacity,overflow:'hidden'}}>
     <div style={{position:'absolute',...v,overflow:'hidden'}}><ThreeCanvas width={Math.round(v.width)} height={Math.round(v.height)} camera={{position:cam.eye.toArray(),rotation:[cam.rotation.x,cam.rotation.y,cam.rotation.z],fov:36}} gl={{antialias:true}}>
-      <color attach="background" args={[p.tokens.ink]}/><ambientLight intensity={.6}/><directionalLight color={p.tokens.cream} position={[-5,8,6]}/>
+      <color attach="background" args={[p.tokens.ink]}/><fog attach="fog" args={[p.tokens.ink,cam.distance*1.05,cam.distance*2.4]}/><ambientLight intensity={.6}/><directionalLight color={p.tokens.cream} position={[-5,8,6]}/>
       <mesh position={[0,0,-.13]}><boxGeometry args={[6.2,4.2,.22]}/><meshStandardMaterial color={p.tokens.inkSoft} metalness={.7} roughness={.25}/></mesh>
       <Screen {...p}/>{[0,1,2].map(index=><Streak key={index} p={p} index={index}/>)}
       <mesh rotation={[-Math.PI/2,0,0]} position={[0,-2.5,0]}><planeGeometry args={[80,80]}/><meshStandardMaterial color={p.tokens.inkSoft} metalness={.4} roughness={.4}/></mesh>
