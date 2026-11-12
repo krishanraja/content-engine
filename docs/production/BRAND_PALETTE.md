@@ -22,7 +22,7 @@ format is refused before it renders. Only Krish changes the palette, and only in
 | The corpus | The platform rules the palette is held to (safe areas, intros, outros, covers, carousels) | `docs/production/SOCIAL-BEST-PRACTICES-2026.md` |
 | The marks | The icon (`mark.png`), the masthead and the wordmark, by sha256 | `config/brand-palette.json` `marks`; the files are in krishanraja/makeyourmindup `apps/cover/public/brand` |
 | The wide close | `statement_card`: "Built to help you decide.", masthead, days, Subscribe free, address; 6 s, held for YouTube's end screen | `scripts/quick-edit/kit/endcard.html` (wide); ve `apps/renderer/src/engine/chrome/EndingBand.tsx` |
-| The tall close | `statement_beat`: the same words, at most 2 s, every word inside the tall core box x 120 to 820, y 330 to 1180 | `scripts/quick-edit/kit/endcard.html` (tall); ve still to follow (below) |
+| The tall close | `statement_beat`: the same words, at most 2 s, every word inside the tall core box x 120 to 820, y 330 to 1180 | `scripts/quick-edit/kit/endcard.html` (tall); ve `EndingBand.tsx` (`ENDING_TIMING_TALL`), its length `ENDING_FRAMES_BY_ASPECT` in `scripts/velib/compile.py` |
 | The sting | The series sting, 1.9 s, on a series day's long cut only, played after the hook | `config/intro-sting.json` (clips in the Drive brand kit) |
 | The carousel close | `house_close_slide`: the piece's takeaway, Subscribe free, the wordmark small in the bottom right | krishanraja/growth-makeyourmindup `render/templates/carousel-close.html` |
 
@@ -77,9 +77,9 @@ One-off piece scripts (`docs/plans/*/rebuild`, `short-composite`, `build_cut.py`
 
 ## Still to follow, and refused until it does
 
-ve is inside Friday's engine freeze, so it was not changed with the palette. Until it changes, `ve lint` refuses specs dated from 16 Nov:
-
-- **The sting:** compile plays the series sting in front of the hook. It must follow the hook (set `STING_POSITION = 'after_hook'` in `scripts/velib/compile.py` when it does).
-- **The tall close:** ve's close is 6 s on both shapes (`ENDING_FRAMES`). The tall close must be a 2 s beat inside the core box.
-
-quick-edit lays the sting in front of the hook too (`resolve_intro`), so its series long cuts are refused from 16 Nov until the sting moves after the hook. Its tall close is already 2 s.
+Both engines still play the series sting in front of the hook on a series long cut, so from 16 Nov `ve lint` and
+make.py refuse those long cuts until the sting follows the hook. Moving it mid-cut changes every check that maps a
+frame of the file back to the cut (`velib.qc.lead_frames` and its callers, the premix lead in `velib.audio.premix`,
+`sting_problems`, the opening gate), so it is built with a proof Krish approves on his own take (F04, F13). Until
+then a series long cut renders only on his words in its config (`palette_exception`), or without the sting if he
+rules that. Both tall closes, kit's and ve's, are the palette's 2 s beat, and an off-day close shows no series days.

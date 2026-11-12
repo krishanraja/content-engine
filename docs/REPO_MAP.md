@@ -4330,6 +4330,8 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `const ENDING_DAYS`
 - `const ENDING_TIMING`
 - `const ENDING_SETTLED_S`
+- `const ENDING_TIMING_TALL`
+- `const ENDING_SETTLED_TALL_S`
 - `function statementLines(aspect: EngineRenderProps['aspect'], tagline: string = ENDING_TAGLINE): string[]`
 - `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
 - `function endingBandModel(props: EngineRenderProps, frame: number)`

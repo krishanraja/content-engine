@@ -19,6 +19,9 @@ from .lint import pending_devices_error
 
 FPS = 30
 ENDING_FRAMES = 180  # the house close: 6 s, settled by 2.75 s then held (docs/production/CLOSING.md)
+# The tall close is a compact end beat of 2 s inside the tall core box (config/brand-palette.json statement_beat;
+# Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the attached").
+ENDING_FRAMES_BY_ASPECT = {'16:9': ENDING_FRAMES, '9:16': 60}
 # Krish, 10 Nov 2026: "The copy should read: "Built to help you decide."" (the same words as quick-edit's kit TAGLINE).
 ENDING_TAGLINE = 'Built to help you decide.'
 ENDING_CTA = 'Subscribe free'
@@ -532,10 +535,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     if not cut.get('excerpt', False):
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site'], 'tagline': ENDING_TAGLINE, 'cta': ENDING_CTA,
                            'days': [{'day': house['channels'][c]['day'], 'colour': publication['channel_colors'][c]}
-                                    for c in house['channels'] if c in publication['channel_colors']]}
+                                    for c in house['channels'] if c in publication['channel_colors']] if not off else []}
         if spec.get('style', {}).get('ending_ticker') is False:
             props['ending']['ticker'] = False  # no scrolling promise strip (Krish: no marquee)
-        props['durationFrames'] += ENDING_FRAMES
+        props['durationFrames'] += ENDING_FRAMES_BY_ASPECT.get(cut['aspect'], ENDING_FRAMES)
         # The ending band is drawn by BrandFrame, which FormatMaster mounts only for an active beat, so the last
         # beat (and what persists to it) runs through the ending. Captions stop at its start.
         end_frame = props['durationFrames']
