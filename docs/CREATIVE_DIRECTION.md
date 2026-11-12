@@ -50,7 +50,8 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
   (`config/intro-sting.json`; Krish, 2026-11-05: "I think it should go at the start of the longer wide videos
   100%,"), or the no-sting sentence `none: this piece opens on its hook (an off day, or no wide long cut)` for any
   other piece. The template fills it from the series and the publish day; the 9:16 short cut never carries a sting,
-  and `ve lint` refuses a sting where no cut opens on one.
+  and `ve lint` refuses a sting where no cut opens on one. While the sting is paused (since 12 Nov 2026,
+  `config/intro-sting.json` `paused`) the field stays as it is and compile lays none: every cut opens on its hook.
 - `cuts.<long|short|feature>`: the `take` (on_camera or voiceover) and its `beats`. Each beat has:
   - `words`: the exact words it sits under. All the beats together are the script, word for word, in order.
   - `point`: what the beat makes the viewer understand. A picture with no point is a gimmick (house rule
