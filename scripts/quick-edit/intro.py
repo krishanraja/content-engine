@@ -328,7 +328,10 @@ def wanted(shape, series, config=None):
     approved, the sting goes on this shape, and the series is one of its own.
     Raises IntroError when the config cannot be read."""
     cfg = load(config)
-    return cfg['status'] == 'approved' and shape in cfg['shapes'] and series_name(series) in cfg['series']
+    # Paused on Krish's words (config/intro-sting.json "paused", 12 Nov 2026): no cut wears it until the sting after
+    # the hook is built and approved.
+    return (cfg['status'] == 'approved' and not cfg.get('paused') and shape in cfg['shapes']
+            and series_name(series) in cfg['series'])
 
 
 def _engine():
@@ -551,13 +554,18 @@ def stand_in_clip(path, shape, frames=56, colour='0xB7A6FF', sound=None):
     return path
 
 
-def stand_in(work, status='approved', shapes=('16x9',), frames=56):
+def stand_in(work, status='approved', shapes=('16x9',), frames=56, paused=False):
     """A stand-in sting under `work`: a clip per shape and series (stand_in_clip,
     in each series' stand-in colour) in work/clips, and a config naming them,
-    approved on stand-in words when status is approved. Returns (config, clips)."""
+    approved on stand-in words when status is approved. It is not paused unless
+    `paused` (the live config's pause, Krish 12 Nov 2026, is not copied), so the
+    sting's own machinery stays tested for when it returns. Returns (config, clips)."""
     work = Path(work)
     folder = work / 'clips'
     cfg = json.loads(CONFIG.read_text(encoding='utf-8'))
+    held = cfg.pop('paused', None)
+    if paused:
+        cfg['paused'] = held or {'words': 'Krish (a self-test stand-in, not his words): paused'}
     cfg.update(frames=frames, seconds=round(frames / FPS, 4), shapes=list(shapes), clips={})
     for shape in shapes:
         for series in cfg['series']:
