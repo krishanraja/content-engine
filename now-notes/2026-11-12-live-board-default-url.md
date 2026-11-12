@@ -1,0 +1,3 @@
+Status: done. The live board's address drops ?ui=next now that Control Centre's rebuilt UI is its default (Ruling, Krish, 2026-11-12): https://controlcenter.krishraja.com/#/content, with ?week=<Monday>&day=<mon..sat> as before. config/boards.json live_board.url, apps/control-plane/api/board/_liveBoard.ts and the rebuilt archive page (_deskPage.ts) carry it; scripts/post-pack/live_board.py reads it from boards.json; WORKBENCH.md's week links and docs/PUBLISH_BOARDS.md follow.
+Next: none for the address; an older link with ?ui=next still opens the rebuilt UI.
+North Star check (2026-11-12): holds.

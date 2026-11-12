@@ -57,7 +57,7 @@ export async function checkBrowser({modulePath, origin, cookie, api, write, scre
     while(Date.now()<deadline){if(accept((await api(collection)).documents))return;await new Promise(resolve=>setTimeout(resolve,150))}
     assert.fail(`Timed out waiting for durable ${collection} state`)
   }
-  const LIVE='https://controlcenter.krishraja.com/?ui=next#/content?week=2026-10-19'
+  const LIVE='https://controlcenter.krishraja.com/#/content?week=2026-10-19'
   try {
     for(const width of [390,1440]) {
       const context=await browser.newContext({viewport:{width,height:900},acceptDownloads:true,permissions:['clipboard-read','clipboard-write']})
