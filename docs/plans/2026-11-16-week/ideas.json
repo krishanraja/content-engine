@@ -548,6 +548,125 @@
      "tone": "Playful, then clear",
      "kit": "House ink and mint, no series colour; Aspire at half volume"
     }
+   },
+   {
+    "id": "auditrule",
+    "recommended": true,
+    "format": "Explainer carousel, 6 cards, 4:5",
+    "source": {
+     "label": "VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); GeekWire, 30 Mar 2026 (Microsoft Critique); NeurIPS 2024 study on AI judges; SEC auditor independence rules, Jan 2003",
+     "url": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+    },
+    "hook": "Why do the biggest AI users never let an AI check its own work?",
+    "copy": "Six cards. After the Enron scandal, US rules said an accounting firm may not check its own work. The biggest AI users now hold their AI to the same rule. Home Depot has OpenAI's AI judge the answers Google's AI gives its customers. Microsoft has Claude, made by Anthropic, check research written by OpenAI's GPT, and says the reports came out better for it. The reason: researchers found an AI rates its own writing higher than people do. The rule for Monday: the AI that did the work never signs it off.",
+    "pitch": {
+     "see": "Six cards. Cover: an accountant in a grey suit bringing an APPROVED stamp down on a report with his own name on the cover, the stamp mid-air (no robot). Then the rule written after the Enron scandal (2003), Home Depot with the Google and OpenAI logos, Microsoft with the OpenAI and Claude logos, the study in one plain line, and the rule alone on the last card above Follow for more.",
+     "lands": "Every leader already knows why an auditor cannot sign off its own work, so the AI version needs no explaining, and two of the biggest names show it is how serious buyers already run AI.",
+     "why_now": "As AI writes more of the first draft, checking becomes the job: Microsoft built its checker in March and Home Depot's CIO described hers in October.",
+     "share": "The AI that did the work never signs it off."
+    },
+    "direction": {
+     "look": "House ink cards, real logos on cream tiles, a photographic scene cover",
+     "format": "Explainer carousel, 6 cards, 4:5",
+     "frames": [
+      {
+       "words": "WHY DO THE BIGGEST AI USERS NEVER LET AN AI CHECK ITS OWN WORK?",
+       "picture": "An accountant stamping APPROVED on a report with his own name on it"
+      },
+      {
+       "words": "AFTER ENRON, AN ACCOUNTING FIRM MAY NOT CHECK ITS OWN WORK",
+       "picture": "A real crop of the SEC's January 2003 auditor rule"
+      },
+      {
+       "words": "HOME DEPOT: GOOGLE'S AI ANSWERS, OPENAI'S AI JUDGES",
+       "picture": "The Home Depot, Google and OpenAI logos, with the CIO's line: \"We like the tension\""
+      },
+      {
+       "words": "MICROSOFT: GPT WRITES THE REPORT, CLAUDE CHECKS IT",
+       "picture": "The Microsoft, OpenAI and Anthropic logos over a real crop of Copilot's Critique"
+      },
+      {
+       "words": "AN AI RATES ITS OWN WRITING HIGHER THAN PEOPLE DO",
+       "picture": "A real crop of the study's own chart"
+      },
+      {
+       "words": "THE AI THAT DID THE WORK NEVER SIGNS IT OFF",
+       "picture": "The rule alone, Follow for more and the house mark"
+      }
+     ],
+     "tone": "Plain and dry",
+     "kit": "Brand kit, no series pill (off day), house mark small bottom-right, Follow for more on the last card"
+    },
+    "learned_from": [
+     "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)",
+     "Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real? (3 Nov)"
+    ],
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "Big AI users won't let an AI check its own work, the same way accounting firms can't audit themselves; the AI that did the work never signs it off.",
+      "The biggest AI users make a different company's AI check the work, because an AI rates its own writing higher than people do."
+     ],
+     "fixed": "Enron explained, the vague industry-test claim cut, \"backer\" made \"investor\", \"rated the same\" made \"rated both pieces equally good\" after both readers stumbled (12 Nov 2026)"
+    }
+   },
+   {
+    "id": "frenemies",
+    "format": "Meme carousel, 4 cards, 4:5",
+    "source": {
+     "label": "GeekWire, 30 Mar 2026 (Microsoft Critique); VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); NeurIPS 2024 study on AI judges",
+     "url": "https://www.geekwire.com/2026/gpt-drafts-claude-critiques-microsoft-blends-rival-ai-models-in-new-copilot-upgrade/"
+    },
+    "hook": "Why does Microsoft get OpenAI's rival to check OpenAI's work?",
+    "copy": "Four cards. Microsoft is OpenAI's biggest investor, and it still has Claude, made by rival Anthropic, check GPT's research before anyone reads it. Home Depot does the same with Google and OpenAI. Researchers found an AI rates its own writing higher than people do, so the companies that know AI best never let one AI mark itself.",
+    "pitch": {
+     "see": "Four cards, meme first. Cover: a relatable meme of two rival schools, a pupil from one handing in a test and a teacher from the other marking it in red pen (Krish can swap in a meme he saves to the inspiration folder). Card 2: Microsoft, GPT writes and Claude checks, with both logos. Card 3: Home Depot, Google answers and OpenAI judges. Card 4: the one-line reason and Follow for more.",
+     "lands": "The joke is the fact: Microsoft getting its partner's rival to mark the homework is funny on sight, and the reason turns the laugh into a rule.",
+     "why_now": "Microsoft's checker went live this year and Home Depot's CIO described the same set-up in October.",
+     "share": "Even Microsoft won't let one AI mark itself."
+    },
+    "direction": {
+     "look": "Meme-led and free, lightly skinned: the house mark small in the bottom-right corner only",
+     "format": "Meme carousel, 4 cards, 4:5",
+     "frames": [
+      {
+       "words": "WHY DOES MICROSOFT GET OPENAI'S RIVAL TO CHECK OPENAI'S WORK?",
+       "picture": "Rival schools: one pupil's test, the other school's teacher marking it"
+      },
+      {
+       "words": "MICROSOFT: GPT WRITES, CLAUDE CHECKS",
+       "picture": "The Microsoft, OpenAI and Anthropic logos"
+      },
+      {
+       "words": "HOME DEPOT: GOOGLE ANSWERS, OPENAI JUDGES",
+       "picture": "The Home Depot, Google and OpenAI logos"
+      },
+      {
+       "words": "AN AI RATES ITS OWN WORK HIGHER THAN PEOPLE DO",
+       "picture": "Follow for more and the house mark"
+      }
+     ],
+     "tone": "Funny first, then plain",
+     "kit": "The Tuesday meme rule: free look, house mark bottom-right, no series pill"
+    },
+    "learned_from": [
+     "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)",
+     "Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real? (3 Nov)"
+    ],
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "Microsoft backs OpenAI but still uses OpenAI's rival's AI to check OpenAI's research, and Home Depot does a similar thing, because AIs go easy on their own writing.",
+      "Microsoft has Anthropic's Claude check OpenAI's GPT work, even though Microsoft backs OpenAI, because an AI marks its own writing too kindly."
+     ],
+     "fixed": "Enron explained, the vague industry-test claim cut, \"backer\" made \"investor\", \"rated the same\" made \"rated both pieces equally good\" after both readers stumbled (12 Nov 2026)"
+    }
    }
   ],
   "thu": [
@@ -778,6 +897,66 @@
      "kit": "Brand kit, small source line"
     },
     "ties_to": "Wed: under.the.hood, if you pick the agents-and-secrets piece"
+   },
+   {
+    "id": "ownref",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "Panickssery, Bowman and Feng, NeurIPS 2024; Wataoka and others, 2024 (why AI judges favour familiar writing); VentureBeat (Home Depot, Oct 2026); GeekWire (Microsoft, 30 Mar 2026)",
+     "url": "https://arxiv.org/abs/2404.13076"
+    },
+    "hook": "Would you let a referee wear one team's shirt?",
+    "copy": "Five cards. Researchers asked AIs to judge pieces of writing, some of them their own. The AIs picked their own work more often than people did, even when people rated both pieces equally good. One likely reason: an AI prefers writing in its own style. That is why Home Depot and Microsoft have a second company's AI check the first. The 30-second version for anyone: paste the answer into a different company's AI and ask what is wrong with it.",
+    "pitch": {
+     "see": "Five cards. Cover: a football referee mid-whistle, wearing one team's shirt under his black jacket (no robot). Then the study in one plain line with a real crop of its chart, the likely reason in one line, the Home Depot and Microsoft logos as the companies doing the fix, and the 30-second habit above Follow for more.",
+     "lands": "Everyone sees at once why a referee in one team's shirt is a problem, and the habit at the end takes 30 seconds on any AI.",
+     "why_now": "AI now checks more of the work people used to check by hand, and two of the biggest users built the fix this year.",
+     "share": "Your AI is the referee wearing its own team's shirt."
+    },
+    "direction": {
+     "look": "House ink cards, a photographic scene cover, the study's own chart",
+     "format": "Explainer carousel, 5 cards, 4:5",
+     "frames": [
+      {
+       "words": "WOULD YOU LET A REFEREE WEAR ONE TEAM'S SHIRT?",
+       "picture": "A referee mid-whistle in one team's shirt"
+      },
+      {
+       "words": "AIS PICK THEIR OWN WRITING MORE OFTEN THAN PEOPLE DO",
+       "picture": "A real crop of the study's chart"
+      },
+      {
+       "words": "AN AI PREFERS WRITING IN ITS OWN STYLE",
+       "picture": "Two pages, one in the AI's own style, one not"
+      },
+      {
+       "words": "HOME DEPOT AND MICROSOFT USE A SECOND COMPANY'S AI",
+       "picture": "The Home Depot and Microsoft logos with each pair of AI logos"
+      },
+      {
+       "words": "PASTE IT INTO A DIFFERENT AI AND ASK WHAT IS WRONG",
+       "picture": "Follow for more and the house mark"
+      }
+     ],
+     "tone": "Plain, a little playful",
+     "kit": "Brand kit, no series pill (off day), house mark small bottom-right, Follow for more on the last card"
+    },
+    "learned_from": [
+     "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)",
+     "Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real? (3 Nov)",
+     "It's kind of boring and I also don't really understand the point of it or what the takeaway is. (3 Nov, of the one-question card)"
+    ],
+    "read_back": {
+     "readers": [
+      "Fresh reader A (Sonnet, a 12-year-old reading once)",
+      "Fresh reader B (Haiku, a 12-year-old reading once)"
+     ],
+     "says": [
+      "AIs pick their own writing more than people would, so Home Depot and Microsoft use a second company's AI as the checker, and you can paste an answer into a different AI and ask what is wrong.",
+      "AIs pick their own writing over people's picks, so the companies use a second company's AI to check the first one."
+     ],
+     "fixed": "Enron explained, the vague industry-test claim cut, \"backer\" made \"investor\", \"rated the same\" made \"rated both pieces equally good\" after both readers stumbled (12 Nov 2026)"
+    }
    }
   ],
   "sat": [
