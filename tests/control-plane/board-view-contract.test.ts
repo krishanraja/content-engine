@@ -6,6 +6,7 @@ import { JOBS, type JobName } from '../../apps/control-plane/api/board/_run'
 import { VIEW_CONTRACT_VERSION, notModified, viewEtag } from '../../apps/control-plane/api/board/_viewContract'
 import { LIVE_BOARD_URL, liveBoardUrl } from '../../apps/control-plane/api/board/_liveBoard'
 import { SCHEMA_PATH, compare, judge, validate } from '../../scripts/check-view-contract'
+import { assetsOf, type DriveFile } from '../../apps/control-plane/api/board/_drivePosts'
 
 // The Publish Board view's contract (Ruling, Krish, 2026-11-11: "make sure this is built such that when I make other
 // updates to the publish board and content engine, they do not regress this work, they just elegantly upgrade the
@@ -14,6 +15,11 @@ import { SCHEMA_PATH, compare, judge, validate } from '../../scripts/check-view-
 // check:view-contract. The frozen fixture is what Control Centre pins (control-center tests/fixtures/board-view/).
 
 type Body = Record<string, unknown>
+/** Drive file and folder ids for the fixture's week (1.7.0). */
+const DRIVE = { long: '1LongCutLongCutLongCut0001', thumb: '1ThumbThumbThumbThumb0001', monPost: '1MonPostMonPostMonPost001', tuePost: '1TuePostTuePostTuePost001',
+  cover: '1CoverCoverCoverCover0001', slide: '1SlideSlideSlideSlide000', video: '1VideoVideoVideoVideo0002', videoOld: '1VideoVideoVideoVideo0001', note: '1NoteNoteNoteNoteNote0001' }
+const dfile = (id: string, name: string, mimeType: string, modifiedTime: string, ms?: number): DriveFile =>
+  ({ id, name, mimeType, modifiedTime, size: '1000', ...(ms ? { videoMediaMetadata: { durationMillis: String(ms), width: 1080, height: 1920 } } : {}) })
 const SCHEMA = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8')) as Body
 const FIXTURE = 'apps/control-plane/api/board/fixtures/view.json'
 const WEEK = '2026-11-16'
@@ -30,12 +36,14 @@ const motion = (id: string, fits: string, krish_verdict: string, point_types: st
 
 /** One week with every part of the view in it: media, a run, a path at each step, a revised off-day option, reviews. */
 function full(): ViewInputs {
-  const cut = { cut: 'long', path: '3 Posts/mon/long.mp4', sha256: 'a'.repeat(64), at: '2026-11-16T08:00:00Z', seconds: 412, thumbnail: { path: '3 Posts/mon/long.jpg' } }
+  // 1.7.0: the cut and its thumbnail carry their Drive links (the making record's url), and the piece files into its post.
+  const cut = { cut: 'long', path: '3 Posts/mon/long.mp4', sha256: 'a'.repeat(64), at: '2026-11-16T08:00:00Z', seconds: 412, url: `https://drive.google.com/file/d/${DRIVE.long}/view`,
+    thumbnail: { path: '3 Posts/mon/long.jpg', url: `https://drive.google.com/file/d/${DRIVE.thumb}/view` } }
   const i: ViewInputs = {
     week: WEEK, now: new Date('2026-11-16T09:00:00Z'),
     pieces: [
       piece('5b726fc3-ac63-4607-9293-3257b4ecc75c', '2026-11-16', 'mind_the_gap'),
-      piece(MON, '2026-11-16', 'follow_the_money', { video_assets: [cut], workroom: 'done', draft: 'done', scripts: 'done' },
+      piece(MON, '2026-11-16', 'follow_the_money', { video_assets: [cut], workroom: 'done', draft: 'done', scripts: 'done', pack: { folder: '2026-11-16 Mon follow.the.money - The fixture' } },
         { materials: [{ id: 'm1', title: 'Storyboard: Monday', kind: 'paste', content: 'x', at: '2026-11-15T10:00:00Z' }], look: { production: 'face-with-proof', experiment: null, inspiration: [], at: '2026-11-15T10:00:00Z' },
           // 1.4.0: his motion pick and a "Not this" on a caption style.
           style: { motion: 'ladder', captions: null, rejected: { motion: [], captions: ['beast'] }, by: 'Krish', at: '2026-11-15T11:00:00Z' },
@@ -52,7 +60,7 @@ function full(): ViewInputs {
     north_star: { current: 3, target: 8 },
     ideas: {
       days: { wed: [{ id: WED, so_what: 'Why it matters', story: 'The story', style: { production: 'face-with-proof', script: 'fry-explainer', experiment: { format: 'kinetic-movement', why: 'Because it moves.' } } }] },
-      offdays: { tue: [option('povteach', { revised: { side: 'idea', words: 'his words' } })], thu: [option('lookalikes')],
+      offdays: { tue: [option('povteach', { revised: { side: 'idea', words: 'his words' }, drive: `https://drive.google.com/drive/folders/${DRIVE.tuePost}` })], thu: [option('lookalikes')],
         sat: [option('goodnews', { weekly: 'good_news', stories_due: '2026-11-19', decided: 'Signed off (Krish, 15 Nov).', stories: [1, 2, 3, 4, 5].map(n => ({
           headline: `Story ${n}`, what: 'What happened.', why: 'Why it helps.', date: '2026-11-18', source: { label: 'The source', url: `https://example.org/${n}` }, media: { kind: 'photo', url: `https://example.org/${n}.jpg` } })) })] },
     },
@@ -84,6 +92,20 @@ function full(): ViewInputs {
     ticks: [{ tick_id: 'mon-shorts', updated_by: 'growth', body: { done: true, day: 'mon', step: 'shorts', label: 'YouTube Shorts', at: '2026-11-16T09:00:00Z', posts: [{ url: 'https://www.youtube.com/shorts/x' }] } }],
     revision: 7,
     approvals: [],
+    // 1.7.0: the week's posts in Drive: Monday's piece's post, and Tuesday's off-day post with a carousel, a meme video in
+    // two versions and its words (_drivePosts.ts).
+    drive_posts: [
+      { id: DRIVE.monPost, name: '2026-11-16 Mon follow.the.money - The fixture', url: `https://drive.google.com/drive/folders/${DRIVE.monPost}`, date: '2026-11-16',
+        assets: assetsOf([{ folder: '3 Video', file: dfile(DRIVE.long, 'The fixture - wide 16x9.mp4', 'video/mp4', '2026-11-16T08:00:00Z', 412000) },
+          { folder: '2 Covers and images', file: dfile(DRIVE.cover, 'square-1080x1080.png', 'image/png', '2026-11-16T08:01:00Z') }]) },
+      { id: DRIVE.tuePost, name: '2026-11-17 Tue off.day - POV teach', url: `https://drive.google.com/drive/folders/${DRIVE.tuePost}`, date: '2026-11-17',
+        assets: assetsOf([
+          ...[1, 2, 3].map(n => ({ folder: '4 Social', file: dfile(`${DRIVE.slide}${n}`, `teach-card-${n}.png`, 'image/png', '2026-11-16T10:00:00Z') })),
+          { folder: '4 Social', file: dfile(`${DRIVE.slide}9`, 'teach-card-1.png', 'image/png', '2026-11-15T10:00:00Z') },
+          { folder: '', file: dfile(DRIVE.video, 'POV teach - tall 9x16 - black v2.mp4', 'video/mp4', '2026-11-16T11:00:00Z', 19000) },
+          { folder: '', file: dfile(DRIVE.videoOld, 'POV teach - tall 9x16 - Shorts, Reels.mp4', 'video/mp4', '2026-11-15T11:00:00Z', 19000) },
+          { folder: '4 Social', file: dfile(DRIVE.note, 'post-description.txt', 'text/plain', '2026-11-15T11:00:00Z') }]) },
+    ],
   }
   // The ideas gate (1.3.0): every piece and the weekly good news stand for ones he approved, so the frozen fixture has no
   // held line (Control Centre's pinned copy draws it as is); the states below hold some.
@@ -143,6 +165,20 @@ describe('the Publish Board view contract', () => {
     // 1.3.0: every approved piece says so, and a state with held lines keeps the schema too.
     expect(v.days.flatMap(d => d.pieces as Body[]).every(p => p.approval && /^Approved by you, /.test(p.approval.label))).toBe(true)
     expect(states().some(st => (served(st).days as Body[]).some(d => (d.held as unknown[]).length > 0))).toBe(true)
+    // 1.7.0: every cut and thumbnail carries its Drive link; the day's posts carry every asset with its Drive file, a
+    // carousel's slides in order with the older one kept, a video's older version, and the option the post was made for.
+    for (const m of media) expect(m.drive).toEqual({ file_id: m.kind === 'cut' ? DRIVE.long : DRIVE.thumb, url: `https://drive.google.com/file/d/${m.kind === 'cut' ? DRIVE.long : DRIVE.thumb}/view` })
+    const tue = v.days.find(d => d.day === 'tue')!.posts as Array<Body & { assets: Array<Body & { slides?: Body[]; versions: Body[] }> }>
+    expect(tue.map(p => [p.option, p.piece_id])).toEqual([['povteach', null]])
+    expect(tue[0]!.assets.map(a => [a.kind, a.title, (a.slides || []).map(x => x.title), a.versions.map(x => x.title)])).toEqual([
+      ['video', 'POV teach - tall 9x16 - black v2.mp4', [], ['POV teach - tall 9x16 - Shorts, Reels.mp4']],
+      ['carousel', '3 slides', ['teach-card-1.png', 'teach-card-2.png', 'teach-card-3.png'], ['teach-card-1.png']],
+      ['note', 'post-description.txt', [], []],
+    ])
+    expect((v.days.find(d => d.day === 'mon')!.posts as Body[]).map(p => p.piece_id)).toEqual([MON])
+    expect((v.days.find(d => d.day === 'tue')!.options as Body[]).find(o => o.id === 'povteach')!.post).toBe(DRIVE.tuePost)
+    expect(served({ ...full(), drive_posts: null }).days.map((d: Body) => d.posts)).toEqual([null, null, null, null, null, null])
+    expect((served({ ...full(), drive_posts: null }).sources as Body).drive).toBe(false)
   })
 
   it('fails a view that drops or renames anything the schema promises', () => {

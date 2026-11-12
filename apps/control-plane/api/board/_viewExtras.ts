@@ -2,6 +2,7 @@ import { dayDate, type PostedDay } from './_posted.js'
 import { offdaySides } from './_offdaySides.js'
 import { yesByDay } from './_yes.js'
 import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, approvedLabel, dayShort, dayWords, goes, optionSha, type Approval, type Outcome } from './_gate.js'
+import { driveFolderIdOf } from './_drivePosts.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
 // Control Centre; the old board is a read-only archive). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
@@ -70,6 +71,9 @@ export interface ViewOption {
   outcome?: { id: Outcome; label: string; at: string | null; words: string | null } | null
   /** Contract 1.3.0: why it cannot cross to the publish board yet (words a session wrote for him, changed words). */
   held?: string
+  /** Contract 1.7.0: the Drive folder of the post made for it (the week's plan, `drive`), whose assets the day's
+   *  `posts` lists; null when nothing is filed for it yet. An off-day option only. */
+  post?: string | null
 }
 export interface ViewPiece {
   id: string; title: string; series: string; state: string; published: boolean; on_day: boolean
@@ -338,7 +342,7 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     const outcome = approval ? { id: 'approved' as const, label: approvedLabel(approval), at: approval.decided_at, words: approval.words }
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof (idea as Body | null)?.at === 'string' ? String((idea as Body).at) : null, words: typeof idea?.words === 'string' ? idea.words : null } : null
     const out: ViewOption = { id: s.id, doc_id: docId, title: s.hook || cut(s.copy, 200) || s.id, text: cut(pitch || s.copy, 600), format: s.format || null,
-      source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}) }
+      source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}), post: driveFolderIdOf(o.drive) }
     if (o.weekly) {
       const stories = Array.isArray(o.stories) ? o.stories.filter(isObj) : []
       out.stories = stories.slice(0, 8).map(st => {
