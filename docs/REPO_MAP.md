@@ -2496,6 +2496,7 @@ What every prompt the board copies out says about reporting back, and what the b
 
 - `const WRITE_BACK_HEAD`
 - `const RESEARCH_RULE`
+- `const WALLS`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
