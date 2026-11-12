@@ -4,6 +4,7 @@ import { offdaySides } from './_offdaySides.js'
 import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, dayShort, dayWords, goes, optionSha, readApprovals, type Approval, type Outcome } from './_gate.js'
 import type { PressAction } from './_viewExtras.js'
 import { todayNY } from './_itsLive.js'
+import { itemKey, laterMoveSpec, moveSpec, readItemsIn, type MoveSpec, type OffdayItem } from './_offdayItems.js'
 
 // Ideas for later (Krish, 2026-11-12: "Does my 'Ideas for Later' tab contain everything I've not approved but not
 // rejected in all the previous ideas boards?"). GET /api/board/later reads every option on every ideas board so far
@@ -73,6 +74,10 @@ export interface LaterItem {
   actions: PressAction[]
   /** Why it has no Approve, when it has none. */
   held: string | null
+  /** Move to… (Ruling, Krish, 2026-11-12: any off-day idea moves to any day at his press): an off-day idea onto any day
+   *  from today through four weeks, his Approve for that day (_offdayItems.ts). Null for a series idea or a week's
+   *  good news, and for an option the engine cannot find in its plan. */
+  move?: MoveSpec | null
 }
 export interface LaterView {
   ok: true
@@ -94,6 +99,8 @@ export interface LaterInputs {
   cues: Array<{ subject_ref: string | null; use: string; said: string | null; said_at: string; use_origin: string | null }>
   /** The ideas' own rows (content_ideas): every id an option names, and every queued one. */
   pieces: Body[]
+  /** The rows of the one place an off-day item's day lives (offday_items), approved or in his Ideas for Later. */
+  items?: OffdayItem[]
   /** The approvals that stand now, for this week and the weeks an Approve may go to. */
   approvals: Record<string, Approval[] | null>
 }
@@ -106,6 +113,8 @@ const iso = (v: unknown) => (typeof v === 'string' && Number.isFinite(Date.parse
 interface Shown {
   week: string; day: string; kind: 'series' | 'offday'; pick: string; idea_id: string | null; option_id: string; weekly: boolean
   title: string; text: string; format: string | null; source: string | null; so_what: string; story: string; o: Body
+  /** An off-day option read from the week's ideas.json (the plan a move reads it back from), not Growth's older file. */
+  plan?: boolean
 }
 
 /** Every option on every board, in the board's order. */
@@ -140,7 +149,7 @@ export function boardOptions(boards: LaterInputs['boards'], pieces: Body[] = [])
       for (const o of (Array.isArray(off[day]) ? (off[day] as unknown[]).filter(isObj) : [])) {
         if (typeof o.id !== 'string' || !o.id) continue
         seen.add(`${day}/${o.id}`)
-        out.push(offShown(b.week, day, o))
+        out.push({ ...offShown(b.week, day, o), plan: true })
       }
     }
     // Growth's file of off-day options for the week (2 November's board had no ideas.json offdays).
@@ -265,10 +274,17 @@ export function buildLater(i: LaterInputs): LaterView {
     const group: LaterGroup = !answer ? 'never' : answer.said === 'filed' ? 'filed' : answer.said === 'trend' ? 'trend' : answer.said === 'improved' ? 'improved' : 'older'
     // A board whose week has not begun is still the Sunday slate: what he has not answered there waits on the slate.
     if (group === 'never' && last.week > weekOf(today)) { onSlate++; continue }
+    // Its row in the one place its day lives: on a day already means approved there; in his Ideas for Later, its move.
+    const row = last.kind === 'offday' ? (i.items ?? []).find(r => r.item === itemKey('engine', last.week, last.option_id))
+      ?? (i.items ?? []).find(r => r.option_id === last.option_id && r.state === 'later') ?? null : null
+    if (row && row.state === 'approved') { approved++; continue }
     const { actions, held } = laterPresses(i, last, today)
+    const move = last.kind !== 'offday' || last.weekly ? null : row ? laterMoveSpec(row, i.now)
+      : last.plan ? moveSpec({ key: itemKey('engine', last.week, last.option_id), version: 0, source: 'engine', state: 'slate', origin_week: last.week, row: null }, last.o, last.week, last.day, i.now)
+        : null
     items.push({ key, week: last.week, day: last.day, date: dayDate(last.week, last.day as PostedDay), kind: last.kind, doc: `queue/${last.pick}`, idea_id: last.idea_id,
       title: last.title, text: last.text, format: last.format, source: last.source, group, answer,
-      boards: boards.map(b => ({ week: b.week, day: b.day })), actions, held })
+      boards: boards.map(b => ({ week: b.week, day: b.day })), actions, held, ...(move ? { move } : {}) })
   }
   const order = (a: LaterItem, b: LaterItem) => b.week.localeCompare(a.week) || (b.answer?.at || '').localeCompare(a.answer?.at || '') || a.doc.localeCompare(b.doc)
   const out = LATER_GROUPS.map(g => ({ ...g, items: items.filter(x => x.group === g.id).sort(order) }))
@@ -371,12 +387,14 @@ export async function readLater(db: SupabaseClient, fetcher: Fetcher = fetch as 
   const queuedFirst = await db.from('content_ideas').select('id,idea,state,scheduled_for,published_at,buried_at,queued_at,meta').not('meta->queue', 'is', null).limit(500)
   for (const p of (queuedFirst.error ? [] : queuedFirst.data || []) as Body[]) if (typeof p.id === 'string') ids.add(p.id.toLowerCase())
   const ahead = Array.from({ length: AHEAD }, (_, k) => addDays(weekOf(today), 7 * k))
-  const [docs, outcomes, cues, named, queued, ...standing] = await Promise.all([
+  const [docs, outcomes, cues, named, queued, placed, ...standing] = await Promise.all([
     db.from('board_documents').select('week,collection,doc_id,body,updated_by,updated_at,revision').in('collection', ['picks', 'queue']).gte('week', FIRST_IDEAS_WEEK).limit(5000),
     db.from('idea_outcomes').select('week,day,idea_id,option_ref,doc,outcome,words,decided_by,decided_at,via').limit(5000),
     db.from('feedback_cues').select('subject_ref,use,said,said_at,use_origin').eq('venture', 'publication').eq('source', 'idea_queue').limit(2000),
     ids.size ? db.from('content_ideas').select('id,idea,state,scheduled_for,published_at,buried_at,queued_at,meta').in('id', [...ids]).limit(1000) : Promise.resolve({ data: [], error: null }),
     db.from('content_ideas').select('id,idea,state,scheduled_for,published_at,buried_at,queued_at,meta').not('queued_at', 'is', null).limit(500),
+    // The one place an off-day item's day lives: what he approved onto a day, and what he sent back to later.
+    readItemsIn(db, ['approved', 'later']),
     ...ahead.map(w => readApprovals(db, w)),
   ])
   for (const r of [docs, outcomes, named, queued]) if (r.error) throw new Error('later_unreadable')
@@ -393,6 +411,7 @@ export async function readLater(db: SupabaseClient, fetcher: Fetcher = fetch as 
     cues: cues.error ? [] : ((cues.data || []) as Body[]).map(c => ({ subject_ref: typeof c.subject_ref === 'string' ? c.subject_ref : null, use: String(c.use || ''),
       said: typeof c.said === 'string' ? c.said : null, said_at: String(c.said_at || ''), use_origin: typeof c.use_origin === 'string' ? c.use_origin : null })),
     pieces: [...pieces.values()],
+    items: placed ?? [],
     approvals: Object.fromEntries(ahead.map((w, k) => [w, standing[k] as Approval[] | null])),
   })
 }

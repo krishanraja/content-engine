@@ -204,7 +204,7 @@ describe('GET /api/board/<Monday>/pieces', () => {
   const APPROVALS = [approve(B, '2026-11-02', 'picks/mon'), approve(C, '2026-11-05', 'queue/off-thu-c'), approve('66666666-2222-4333-8444-555555555555', '2026-11-08', 'queue/off-sun-x'),
     ...['off-tue-prices', 'off-tue-puppy', 'off-thu-plain', 'off-thu-half', 'off-sun-old'].map(d => approve(d, '2026-11-03', `queue/${d}`))]
   const db = (fail = false, mix: unknown = null, off: Array<{ doc_id: string; body: unknown; updated_by?: string }> = [], said: Array<{ doc_id: string; body: unknown; updated_by: string }> = [],
-    approvals: unknown[] | null = APPROVALS) => {
+    approvals: unknown[] | null = APPROVALS, items: unknown[] | null = []) => {
     const f: Record<string, unknown> = {}
     const q: any = {
       select: () => q,
@@ -214,7 +214,10 @@ describe('GET /api/board/<Monday>/pieces', () => {
     const doc: any = { select: () => doc, eq: () => doc, maybeSingle: async () => ({ data: mix ? { body: mix } : null, error: null }),
       like: async (k: string, v: string) => { expect([k, v]).toEqual(['doc_id', 'off-%']); return { data: off.map(o => ({ updated_by: 'Krish', ...o })), error: null } },
       or: async (f: string) => { expect(f).toBe('doc_id.like.yes-%,doc_id.like.%-publish,doc_id.like.live-%'); return { data: said, error: null } } }
-    return { from: (t: string) => { expect(['content_ideas', 'board_documents']).toContain(t); return t === 'board_documents' ? doc : q },
+    // The one place an off-day item's day lives (offday_items, _offdayItems.ts): the week's items.
+    const placed: any = { select: () => placed, or: (f: string) => { expect(f).toBe('week.eq.2026-11-02,origin_week.eq.2026-11-02'); return placed },
+      limit: async () => (items ? { data: items, error: null } : { data: null, error: { message: 'down' } }) }
+    return { from: (t: string) => { expect(['content_ideas', 'board_documents', 'offday_items']).toContain(t); return t === 'board_documents' ? doc : t === 'offday_items' ? placed : q },
       rpc: async (name: string, args: Record<string, unknown>) => {
         expect([name, args]).toEqual(['board_approvals_now', { p_week: '2026-11-02' }])
         return approvals ? { data: approvals, error: null } : { data: null, error: { message: 'down' } }
@@ -281,9 +284,27 @@ describe('GET /api/board/<Monday>/pieces', () => {
     ]
     const out = await readPieces(db(false, null, off) as never, '2026-11-02')
     expect(out.body.offdays).toEqual([
-      { id: 'off-thu-plain', day: 'thu', option_id: 'plain', format: 'Meme', idea: { hook: 'Plain' }, direction: null, mock: null, note: 'WHEN YOUR AI MEETS\nTHEIR AI', approved_at: '2026-11-01T18:00:00Z' },
-      { id: 'off-tue-prices', day: 'tue', option_id: 'prices', format: 'Carousel', idea: { hook: 'Three prices' }, direction: { look: 'Dark ground' }, mock: null, note: null, approved_at: '2026-11-01T18:00:00Z' },
+      { id: 'off-thu-plain', day: 'thu', option_id: 'plain', format: 'Meme', idea: { hook: 'Plain' }, direction: null, mock: null, note: 'WHEN YOUR AI MEETS\nTHEIR AI', approved_at: '2026-11-01T18:00:00Z',
+        item: null, version: null, date: '2026-11-05', moved_from: null },
+      { id: 'off-tue-prices', day: 'tue', option_id: 'prices', format: 'Carousel', idea: { hook: 'Three prices' }, direction: { look: 'Dark ground' }, mock: null, note: null, approved_at: '2026-11-01T18:00:00Z',
+        item: null, version: null, date: '2026-11-03', moved_from: null },
     ])
+  })
+  it('hands an option over on the day the one place says it is on, never on the day it left (Ruling, Krish, 2026-11-12)', async () => {
+    const sha = 'b'.repeat(64)
+    const idea = { verdict: 'approve', words: null, sha256: sha, at: '2026-11-12T09:00:00Z', shown: { hook: 'Plain' } }
+    // He moved the week's own Tuesday option to Thursday: its row says Thursday, and Thursday's press carries where it came from.
+    const off = [{ doc_id: 'off-thu-plain', body: { use: 'offday', day: 'thu', option_id: 'plain', format: 'Meme', idea, moved: { from_week: '2026-11-02', from_day: 'tue', at: 'x' } } },
+      { doc_id: 'off-tue-prices', body: { use: 'offday', day: 'tue', option_id: 'prices', format: 'Carousel', idea } }]
+    const row = (item: string, day: string | null, doc: string | null, state = 'approved') => ({ item, source: 'engine', origin_week: '2026-11-02', option_id: item.split(':')[2], option: {},
+      state, week: day ? '2026-11-02' : null, day, date: day ? dayDate('2026-11-02', day as never) : null, doc, piece_id: null, drive_folder: null, scheduled: [], followed: {}, version: 3, placed_by: 'Krish', placed_at: 'x' })
+    const items = [row('engine:2026-11-02:plain', 'thu', 'queue/off-thu-plain'), row('engine:2026-11-02:prices', null, null, 'later')]
+    const out = await readPieces(db(false, null, off, [], APPROVALS, items) as never, '2026-11-02')
+    // Prices went back to his Ideas for Later: even an approval that still reads as standing is not handed over.
+    expect(out.body.offdays).toEqual([{ id: 'off-thu-plain', day: 'thu', option_id: 'plain', format: 'Meme', idea: { hook: 'Plain' }, direction: null, mock: null, note: null,
+      approved_at: '2026-11-12T09:00:00Z', item: 'engine:2026-11-02:plain', version: 3, date: '2026-11-05', moved_from: { week: '2026-11-02', day: 'tue' } }])
+    // The one place unreadable: nothing is handed over, never a day that may be stale.
+    expect(await readPieces(db(false, null, off, [], APPROVALS, null) as never, '2026-11-02')).toEqual({ status: 503, body: { ok: false, error: 'items_unavailable' } })
   })
   it('opens only to Growth\'s key or the operator\'s, and only to GET', async () => {
     process.env.ENGINE_OPERATOR_TOKEN = 'synthetic-operator'

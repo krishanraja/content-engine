@@ -195,10 +195,18 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
   // yet approved is said in mock.
   const off = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'queue').like('doc_id', 'off-%')
   if (off.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
-  // Only an option his Approve stands on (the ideas gate): his own press, and its latest answer an approval.
+  // Only an option his Approve stands on (the ideas gate): his own press, and its latest answer an approval. And only
+  // on the day the one place says it is on (offday_items, _offdayItems.ts; Ruling, Krish, 2026-11-12: any off-day post
+  // moves to any day at his press): an option he moved is handed over on its new day, in its new week, and never on
+  // the day it left. When the items cannot be read, nothing is handed over (503), never a day that may be stale.
   const standing = new Set(approvals.map(a => a.doc))
+  const { readItems, placedHere } = await import('./_offdayItems.js')
+  const items = await readItems(db, week)
+  if (!items) return { status: 503, body: { ok: false, error: 'items_unavailable' } }
   const offdays = (off.data || []).flatMap(row => {
     if (row.updated_by !== 'Krish' || !standing.has(`queue/${String(row.doc_id)}`)) return []
+    const placed = placedHere(items, week, String(row.doc_id))
+    if (!placed.keep) return []
     const b = isObj(row.body) ? row.body : null
     const idea = b && isObj(b.idea) ? b.idea : null
     if (!b || !idea || idea.verdict !== 'approve') return []
@@ -211,7 +219,11 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
       // His open words on the option, exactly as typed (Krish, 2026-11-02: "it would contain the exact meme text to
       // put above the meme video"): Growth makes the post with them.
       note: isObj(b.note) && typeof b.note.words === 'string' ? b.note.words : null,
-      approved_at: dir?.at ?? idea.at ?? null }]
+      approved_at: dir?.at ?? idea.at ?? null,
+      // Where its day lives (2026-11-12): the item, the version a move names and its date, so Growth makes and posts it
+      // on that day and nowhere else; moved_from when he moved it here from another day.
+      item: placed.item?.item ?? null, version: placed.item?.version ?? null, date: dayDate(week, String(row.doc_id).slice(4, 7) as PostedDay),
+      moved_from: isObj(b.moved) && typeof b.moved.from_week === 'string' ? { week: b.moved.from_week, day: b.moved.from_day ?? null } : null }]
   }).sort((a, b) => String(a.id).localeCompare(String(b.id)))
   // His yes for each day, from wherever he gave it (_yes.ts, one yes anywhere): Growth schedules a day's go-lives on it.
   const said = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'picks')

@@ -112,9 +112,19 @@ function full(): ViewInputs {
           { folder: '4 Social', file: dfile(DRIVE.note, 'post-description.txt', 'text/plain', '2026-11-15T11:00:00Z') }]) },
     ],
   }
+  // 1.9.0: the one place every off-day item's day lives (offday_items): one of Growth's options, which he moved to
+  // Thursday, still scheduled on Instagram for the Wednesday it left; every plan option untouched (a slate item).
+  i.items = [{ item: `growth:${WEEK}:aiintern`, source: 'growth', origin_week: WEEK, option_id: 'aiintern',
+    option: { id: 'aiintern', format: 'Meme, 1 image, 4:5', copy: 'The AI intern asks for a raise.', source: 'Growth: memes', by: 'growth' },
+    state: 'approved', week: WEEK, day: 'thu', date: '2026-11-19', doc: 'queue/off-thu-aiintern', piece_id: null, drive_folder: null,
+    // Growth's own record of it (1.9.0): made, and still scheduled on Instagram for the Wednesday it left.
+    posts: [{ state: 'made', channel: null, due_at: null, url: null, at: '2026-11-15T12:00:00.000Z', buffer_post_id: null },
+      { state: 'scheduled', channel: 'instagram', due_at: '2026-11-18T17:30:00.000Z', url: null, at: '2026-11-15T12:05:00.000Z', buffer_post_id: 'b1' }],
+    followed: {}, version: 3, placed_by: 'Krish', placed_at: '2026-11-15T10:00:00Z' }]
   // The ideas gate (1.3.0): every piece and the weekly good news stand for ones he approved, so the frozen fixture has no
   // held line (Control Centre's pinned copy draws it as is); the states below hold some.
-  return { ...i, approvals: [...approvedAll(WEEK, i.pieces), approval(WEEK, 'sat', 'goodnews', { doc: 'queue/off-sat-goodnews' })] }
+  return { ...i, approvals: [...approvedAll(WEEK, i.pieces), approval(WEEK, 'sat', 'goodnews', { doc: 'queue/off-sat-goodnews' }),
+    approval(WEEK, 'thu', 'aiintern', { doc: 'queue/off-thu-aiintern' })] }
 }
 
 const states = (): ViewInputs[] => {

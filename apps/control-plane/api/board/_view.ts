@@ -12,12 +12,13 @@ import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
 import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, offdayApproval, offdayList, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
-import { HELD_CHANGED, HELD_TITLE, approvedLabel, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
+import { HELD_CHANGED, HELD_TITLE, approvedLabel, approvedWhen, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
 import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
 import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
+import { channelWord, dayOptions, liveOn, readItems, type GrowthPost, type OffdayItem } from './_offdayItems.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
 // pieces' making records, his presses on the board, the week's plan files on main and the runs on GitHub. Nothing is a
@@ -243,6 +244,10 @@ export interface ViewInputs {
   drive_posts?: DrivePost[] | null
   /** Each piece's draft manifest, by piece id (_manifest.ts readDrafts); left out, no day carries one. */
   drafts?: Record<string, Draft>
+  /** Contract 1.9.0: the one place an off-day item's day lives (offday_items, _offdayItems.ts): every item on a day of
+   *  the week or offered by its plan, or null when it could not be read (the plan's options then show as they are,
+   *  and nothing offers a move). Left out, the plan only. */
+  items?: OffdayItem[] | null
 }
 
 /** The day's post folders, each bound to the option whose `drive` names it and to the piece whose making record files
@@ -437,7 +442,12 @@ function nameOf(i: ViewInputs, id: string): string { return formatOf(i, id)?.nam
 /** One off day (Tue, Thu, Sat): the options in the week's ideas.json and his verdicts on them. */
 function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore {
   const week = i.week, date = dayDate(week, day)
-  const options = offdayList(i.ideas, i.queue, day)
+  // The day's options from the one place their day lives (_offdayItems.ts): the plan's and the approvals carried here
+  // (offdayList), minus what moved away, plus what moved here and Growth's own.
+  const listed = dayOptions(i.ideas, i.items ?? null, week, day, offdayList(i.ideas, i.queue, day))
+  const options = listed.map(x => x.o)
+  // Growth's posting record on each option's item (made, scheduled, live), from the one place (2026-11-12).
+  const recordOf = (o: Body) => listed.find(x => x.o === o)?.placed.row ?? null
   const verdict = (o: Body) => i.queue.find(q => q.doc_id === `off-${day}-${String(o.id)}` && q.updated_by === 'Krish')?.body
   const sideVerdict = (b: Body | undefined, side: string) => (isObj(b) && isObj(b[side]) ? String((b[side] as Body).verdict || '') : '')
   // An option is chosen once his Approve on it stands (the ideas gate, _gate.ts): words a session wrote as decided in
@@ -472,6 +482,14 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
     const o = outHere[0].o
     return { ...base, kind: `Off day: ${String(o.format || 'option').split(',')[0]}`, title: String(o.hook || o.copy || o.id).slice(0, 140), stop: 4, who: 'done',
       next: liveLine(([] as LivePost[]).concat(...outHere.map(x => x.posts)).sort((a, b) => a.at.localeCompare(b.at))), runs_on: '', actions: [] }
+  }
+  // An approved option Growth posted, from Growth's own record (POST /api/board/<Monday>/offday-posts): the day is out,
+  // with no press of his (2026-11-12; Tue 10 Nov's carousel went out on six channels and the board said "With Growth").
+  const growthOut = chosen.filter(x => approvedNow(x.o)).map(x => ({ o: x.o, posts: liveOn(recordOf(x.o)) })).filter(x => x.posts.length)
+  if (growthOut.length) {
+    const o = growthOut[0].o
+    return { ...base, kind: `Off day: ${String(o.format || 'option').split(',')[0]}`, title: String(o.hook || o.copy || o.id).slice(0, 140), stop: 4, who: 'done',
+      next: growthLiveLine(([] as GrowthPost[]).concat(...growthOut.map(x => x.posts))), runs_on: '', actions: [] }
   }
   if (!options.length) {
     if (day === 'sat') {
@@ -535,8 +553,13 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
       next: back.length > 1 ? `${back.length} revised versions are back. Approve, improve again or reject each` : 'The revised version is back. Approve it, improve it again or reject it',
       reviews, actions: [{ kind: 'review', label: back.length > 1 ? `Review the ${back.length} revised versions` : 'Review the revised version' }] }
   }
-  return { ...base, kind, title, stop: 2, who: 'growth', runs_on: 'Growth makes the approved off-day post',
-    next: 'Approved. Growth makes it and posts it on the day',
+  // Where Growth is with it, from its own record: scheduled (with when and where), made, or still to make.
+  const record = recordOf(o)?.posts ?? []
+  const queued = record.filter(p => p.state === 'scheduled' && p.due_at && p.due_at.slice(0, 10) >= date.slice(0, 10))
+  const made = record.some(p => p.state === 'made')
+  return { ...base, kind, title, stop: queued.length ? 3 : 2, who: 'growth', runs_on: 'Growth makes the approved off-day post',
+    next: queued.length ? `Approved. Growth scheduled it on ${[...new Set(queued.map(p => channelWord(p.channel)))].join(', ')}`
+      : made ? 'Approved. Growth made it; it schedules it for the day' : 'Approved. Growth makes it and posts it on the day',
     actions: [{ kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Make the ${DAY_NAME[day]} ${date} off-day post ${String(o.id)} that Krish approved on the content-engine board (week of ${week}), to docs/CAROUSEL-STANDARD.md.` }] }
 }
 
@@ -624,7 +647,7 @@ export function buildView(i: ViewInputs): WeekView {
     return { ...core, manifest, media: mediaWithAnswers(piece),
       pieces: dayPieces(gate.approved, date, shown, gate.approvalOf),
       options, held,
-      comments: dayComments(i.comments, d), posted: dayPosted(i.ticks, d, liveByDay(i.picks)[d] || []), yes: dayYes(i.picks, d),
+      comments: dayComments(i.comments, d), posted: [...dayPosted(i.ticks, d, liveByDay(i.picks)[d] || []), ...growthPosted(i.items, i.week, d)], yes: dayYes(i.picks, d),
       posts: dayPosts(i.drive_posts, date, options, i.pieces) }
   }), i.overlay ?? null)
   // "It's live" on every piece on the board that is not out yet (contract 1.8.0; Krish, 2026-11-12: "How do I indicate
@@ -641,7 +664,9 @@ export function buildView(i: ViewInputs): WeekView {
       ...(d.piece_id && d.who !== 'done' ? [{ piece_id: d.piece_id, title: d.title }] : []),
       ...d.options.filter(o => o.status === 'approved' && o.doc_id.startsWith(`off-${d.day}-`)).map(o => ({ option: o.doc_id, title: o.title })),
     ]
-    const open = subjects.filter(sub => !postsFor(marked[d.day], sub).length)
+    // Out already by his mark, or by Growth's own record of the post (2026-11-12): no It's live to press.
+    const growthLive = new Set(d.options.filter(o => o.posts?.some(p => p.state === 'live')).map(o => o.doc_id))
+    const open = subjects.filter(sub => !postsFor(marked[d.day], sub).length && !(sub.option && growthLive.has(sub.option)))
     if (!open.length) continue
     const presses = open.map(sub => livePress(d.day, sub, open.length > 1 || d.who === 'done' ? `It's live: ${sub.title}` : "It's live"))
     const his = d.actions.some(a => a.kind === 'press' || a.kind === 'review' || a.kind === 'look' || a.kind === 'research')
@@ -673,7 +698,8 @@ export function buildView(i: ViewInputs): WeekView {
   for (const r of Object.values(i.runs)) if (r) moved.push({ at: r.updated_at, text: `${r.workflow}: ${r.state}` })
   moved.sort((a, b) => b.at.localeCompare(a.at))
   return { contract_version: VIEW_CONTRACT_VERSION, week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
-    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay), approvals: Array.isArray(i.approvals), drive: Array.isArray(i.drive_posts) },
+    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay), approvals: Array.isArray(i.approvals), drive: Array.isArray(i.drive_posts),
+      items: Array.isArray(i.items) },
     revision: i.revision ?? null }
 }
 
@@ -763,8 +789,9 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   const overlay = await readOverlay(db as never, week, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
   // Each piece's draft manifest (1.8.0), whose sha256 his Approve for publish binds.
   const drafts = await readDrafts(db, (pieces as Body[]).filter(p => SERIES_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
-  // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held.
-  const approvals = await readApprovals(db, week)
+  // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held. Beside
+  // them, the one place every off-day item's day lives (offday_items).
+  const [approvals, items] = await Promise.all([readApprovals(db, week), readItems(db, week)])
   let formats: ViewInputs['formats'] = { script: [], production: [] }
   let motion: MotionModule[] = []
   try {
@@ -795,5 +822,32 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
     specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
-    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts) })
+    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items })
+}
+
+/** A week's ideas.json as the view reads it: the week's offday-revise branch first, then main, each at the commit it
+ *  points at now when the board's token can ask. Null when neither has it. */
+export async function readWeekIdeas(week: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as Fetcher): Promise<Body | null> {
+  const [mainSha, weekSha] = await Promise.all([branchSha(fetcher, env, 'main'), branchSha(fetcher, env, `offday-revise/${week}`)])
+  const branch = weekSha === null ? null : await fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/${weekSha || `offday-revise/${week}`}/docs/plans/${week}-week/ideas.json`)
+  const text = branch ?? await fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/${mainSha || 'main'}/docs/plans/${week}-week/ideas.json`)
+  try { const v = text ? JSON.parse(text) : null; return isObj(v) ? v : null } catch { return null }
+}
+
+/** "Live on Instagram, TikTok. Growth posted it, Tue 10 Nov, 12:34", from Growth's own record of the posts. */
+export function growthLiveLine(posts: GrowthPost[]): string {
+  const sorted = [...posts].sort((a, b) => a.at.localeCompare(b.at))
+  const channels = [...new Set(sorted.map(p => channelWord(p.channel)))]
+  const last = sorted[sorted.length - 1]
+  return `Live on ${channels.join(', ')}. Growth posted it${last?.at ? `, ${approvedWhen(last.at)}` : ''}`
+}
+
+/** What Growth posted on a day for its off-day items, from its own record: one line per channel, with the post's link. */
+export function growthPosted(items: OffdayItem[] | null | undefined, week: string, day: PostedDay): ViewPosted[] {
+  const out: ViewPosted[] = []
+  for (const r of items ?? []) {
+    if (r.state !== 'approved' || r.week !== week || r.day !== day) continue
+    for (const p of r.posts) if (p.state === 'live' && p.channel) out.push({ step: p.channel, label: channelWord(p.channel), at: p.at || null, ...(p.url ? { href: p.url } : {}), by: 'growth' })
+  }
+  return out
 }

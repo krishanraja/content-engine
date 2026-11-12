@@ -95,7 +95,20 @@ describe('what the server does with his words', () => {
     const out = await afterPress(rejected.db as never, { week: WEEK, collection: 'queue', id: 'off-tue-prices', body: record({ idea: side('reject', 'every account does this joke') }), who: 'Krish', saved: { ok: true } }, { revise })
     expect(out).toMatchObject({ taste: { idea: 'filed' } })
     expect(asked).toHaveLength(0)
-    expect(await afterPress({} as never, { week: WEEK, collection: 'queue', id: 'off-tue-prices', body: record({ idea: side('approve') }), who: 'Krish', saved: { ok: true } }, { revise })).toBeNull()
+    // A plain Approve asks for no revision and files nothing to his taste ledger: it puts the option's row on its day,
+    // the one place an off-day item's day lives (Ruling, Krish, 2026-11-12; _offdayItems.ts syncApprove).
+    const moves: Array<Record<string, any>> = []
+    const none: any = { select: () => none, eq: () => none, in: () => none, maybeSingle: async () => ({ data: null, error: null }) }
+    const placing = { from: (t: string) => { expect(t).toBe('offday_items'); return none },
+      rpc: async (name: string, args: { p: Record<string, any> }) => { expect(name).toBe('offday_item_move'); moves.push(args.p); return { data: { ok: true, version: 1 }, error: null } } }
+    const approved = await afterPress(placing as never, { week: WEEK, collection: 'queue', id: 'off-tue-prices', body: record({ idea: side('approve', null, { shown: { copy: 'Three prices' } }) }), who: 'Krish', saved: { ok: true } },
+      { revise, ideas: async () => null })
+    expect(approved).toEqual({ ok: true, item: 'placed' })
+    expect(asked).toHaveLength(0)
+    expect(moves).toHaveLength(1)
+    expect(moves[0]).toMatchObject({ item: `engine:${WEEK}:prices`, version: 0, actor: 'Krish', state: 'approved', place: { week: WEEK, day: 'tue' }, writes: [] })
+    // Anyone but Krish places nothing.
+    expect(await afterPress(placing as never, { week: WEEK, collection: 'queue', id: 'off-tue-prices', body: record({ idea: side('approve') }), who: 'engine_operator', saved: { ok: true } }, { revise, ideas: async () => null })).toBeNull()
   })
 })
 
