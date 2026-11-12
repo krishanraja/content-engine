@@ -544,7 +544,10 @@ export function buildView(i: ViewInputs): WeekView {
     const piece = byDay.get(d), date = dayDate(i.week, d)
     const shown = piece ? String(piece.id).toLowerCase() : null
     const core = SERIES_DAYS.includes(d) ? seriesDay(i, d, piece) : offDay(i, d, piece)
-    const options = [...(SERIES_DAYS.includes(d) ? seriesOptions(i, d, Boolean(piece)) : offdayOptions(i, d)), ...ideaLines(i, d)]
+    // A publishing day can carry off-day posts too (a meme beside the week's piece): its options in ideas.json
+    // offdays[<day>] are drawn after the day's own ideas (Krish, 2026-11-12, of Wednesday's Jensen Huang post and
+    // Thursday's meme: "Put them there so I can approve").
+    const options = [...(SERIES_DAYS.includes(d) ? [...seriesOptions(i, d, Boolean(piece)), ...offdayOptions(i, d)] : offdayOptions(i, d)), ...ideaLines(i, d)]
     const approval = shown ? gate.approvalOf.get(shown) : undefined
     if (approval) core.detail = [{ h: approval.via === 'approve_publish' ? 'Approved for publish by you' : 'Approved by you', p: approvedLabel(approval).replace(/^[^,]+, /, '') }, ...core.detail]
     else {
@@ -568,6 +571,12 @@ export function buildView(i: ViewInputs): WeekView {
       }
       core.actions = [...presses, ...core.actions]
     }
+    // A held option's own Approve, on the day itself, whatever state the day is in: the held line carries no press,
+    // and a finished day shows no option list, so this is where he sees it (Krish, 2026-11-12: "Wednesday and
+    // Thursday are not in my publish board anywhere. Put them there so I can approve").
+    const heldApprove = options.filter(o => o.status === 'held')
+      .flatMap(o => (o.actions || []).filter(a => a.kind === 'press' && /^Approve/.test(a.label)).map(a => ({ ...a, label: `${a.label}: ${o.title.length > 80 ? o.title.slice(0, 79).trimEnd() + "…" : o.title}` })))
+    if (heldApprove.length) core.actions = [...heldApprove, ...core.actions.filter(a => !heldApprove.some(h => h.kind === 'press' && a.kind === 'press' && h.id === a.id))]
     return { ...core, media: mediaWithAnswers(piece),
       pieces: dayPieces(gate.approved, date, shown, gate.approvalOf),
       options, held,
