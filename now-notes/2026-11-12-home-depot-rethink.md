@@ -1,4 +1,4 @@
 Status: The delisted Home Depot carousel (Tue 10 Nov, "AI marking its own homework") is diagnosed and rethought: three new angles, each sourced, read back by two fresh readers, copy lint clean and voice-checked, are on the ideas board as off-day options (auditrule and frenemies on Tue 17 Nov, ownref on Thu 19 Nov); `docs/plans/2026-11-16-week/homework-rethink.md` holds why it failed, the research and the spines. The old cards stay in 3 Posts, untouched.
 Next: Krish presses Approve on one of auditrule, frenemies or ownref on the ideas board (week of 16 Nov); Growth then makes it to docs/CAROUSEL-STANDARD.md and it comes back to him for his yes before anything is scheduled.
 Changed: docs/plans/2026-11-16-week/ideas.json (three off-day options), docs/plans/2026-11-16-week/homework-rethink.md.
-- North Star check (2026-11-12): holds. A carousel he would approve adds one finished asset to a week at 2 of 8.
+- North Star check (2026-11-12): holds.
