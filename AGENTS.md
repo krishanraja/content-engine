@@ -165,10 +165,13 @@ Commit code/config/specs/small data before stopping; file media through the auth
 
 Guarded rules. When Krish asks for files, hand him the files themselves. When he asks for something in Drive, put it in its post's `3 Posts` folder (Ruling, Krish, 2026-11-03: "everything ready for post goes in the posts folder, not the growth folder"), read it back, and reply "Done" with the link; nothing else ("WHEN I ASK YOU TO PUTTHINGS IN DRIVE IT SHOULD JUST BE REPLIED TO WITH 'DONE'", 2026-11-03; `config/failures.json` F29). Before designing a cut, open the inspiration board's cards for it and name them in `brand.references` (F26). His words are exact typed quotes; a paraphrase stays an observation; a question his feedback already answers is not asked ("If you read what I am feeding back, it's pretty obvious what it is"). Inspiration links go to `Production Inspo` or `Content Inspo` ([detail](docs/AGENTS-REFERENCE.md)).
 
-Closeout: never edit NOW.md on a branch (`scripts/check_now_untouched.py` fails the pull request; steward branches excepted). Two pull requests editing it at once conflicted, auto-merge could merge neither, and they sat open while main moved on (2026-11-10). Write `now-notes/YYYY-MM-DD-<slug>.md` instead, with `Status:`, `Next:` (the single next action), optionally `Changed:`, and one dated line:
-- North Star check (YYYY-MM-DD): holds.
+Closeout: never edit NOW.md on a branch (`scripts/check_now_untouched.py` fails the pull request; steward branches excepted). Two pull requests editing it at once conflicted, auto-merge could merge neither, and they sat open while main moved on (2026-11-10). Write `now-notes/YYYY-MM-DD-<slug>.md` instead, with `Status:`, `Next:` (the single next action), optionally `Changed:`, and one dated line, starting with the words themselves, no dash or bullet in front:
 
-(or `recalibration proposed. <why>`). Auto-merge folds the note into NOW.md on main and `scripts/now_trim.py` keeps the page under 14,000 bytes there; never trim it by hand. A change that needs no closeout says `Closeout: not needed, <reason>` in its commit body.
+```
+North Star check (YYYY-MM-DD): holds.
+```
+
+(or `recalibration proposed. <why>`). The dash belongs to NOW.md's copy of the line, which the fold writes; a note's line with a dash never folds (three sat on main unfolded, 11 and 12 Nov). `npm run check:now-notes`, part of verify and so of CI, runs the fold's own code over every note before the merge, so a note that passes it always folds. Auto-merge folds the note into NOW.md on main and `scripts/now_trim.py` keeps the page under 14,000 bytes there; never trim it by hand. A change that needs no closeout says `Closeout: not needed, <reason>` in its commit body.
 
 Only Krish changes the North Star. Task-specific restrictions override routine commit, board and closeout actions.
 
