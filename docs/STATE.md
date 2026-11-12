@@ -55,11 +55,11 @@ When this page and the code disagree, the code wins: fix this page.
   `tests/control-plane/inspiration-actions.test.ts` on CRLF output, and the board's phone check failed because a
   long subscribe link widened the run-sheet past 390px. Both are fixed in pull request #592; #589 closes when the
   full verify after it is green.
-- **`claims_resolve` fails every day** (5 to 12 Nov, every run): "there is no unique or exclusion constraint
-  matching the ON CONFLICT specification". `apps/control-plane/api/claims/resolve.ts` upserts with
-  `onConflict: 'claim_id'`, and the only unique index on `claim_resolutions.claim_id` is partial
-  (`claim_resolutions_one_due`, `WHERE event = 'came_due'`), which an `ON CONFLICT (claim_id)` cannot use. No claim
-  that came due has been noticed in that time.
+- **`claims_resolve` failed every day** (5 to 12 Nov, every run): "there is no unique or exclusion constraint
+  matching the ON CONFLICT specification". Its upsert named `onConflict: 'claim_id'`, and the only unique index on
+  `claim_resolutions.claim_id` is partial (`claim_resolutions_one_due`, `WHERE event = 'came_due'`), which an
+  `ON CONFLICT (claim_id)` cannot use, so no claim that came due was noticed. Fixed in code on 12 Nov
+  (`apps/control-plane/api/claims/_notice.ts`, a plain insert); not yet proved live: the next run is 07:00 UTC.
 - **`investigations`** failed its last weekly run (5 Nov): "grounding failed twice".
 - **`learning_compile`** skipped its last weekly run (8 Nov): "only 0 edit events in 28 days: too thin to propose
   anything".
