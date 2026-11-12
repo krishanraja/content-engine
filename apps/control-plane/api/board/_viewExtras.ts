@@ -4,7 +4,7 @@ import { yesByDay } from './_yes.js'
 import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, approvedLabel, dayShort, dayWords, goes, optionSha, type Approval, type Outcome } from './_gate.js'
 import { channelOfUrl, type LivePost } from './_itsLive.js'
 import { driveFolderIdOf } from './_drivePosts.js'
-import { dayOptions, elsewhereLines, moveSpec, type MoveSpec, type OffdayItem } from './_offdayItems.js'
+import { dayOptions, elsewhereLines, moveSpec, viewPosts, type MoveSpec, type OffdayItem, type ViewGrowthPost } from './_offdayItems.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
 // Control Centre; the old board is a read-only archive). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
@@ -91,6 +91,8 @@ export interface ViewOption {
   move?: MoveSpec | null
   /** Contract 1.9.0: a post Growth scheduled on a platform for a day it is no longer on, said plainly. */
   elsewhere?: string[]
+  /** Contract 1.9.0: Growth's own record of the post (made, scheduled with when, live with its link). */
+  posts?: ViewGrowthPost[]
 }
 export interface ViewPiece {
   id: string; title: string; series: string; state: string; published: boolean; on_day: boolean
@@ -398,6 +400,8 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
       out.move = moveSpec(placed, o, i.week, day, i.now ?? new Date())
       const away = elsewhereLines(placed.row, i.now ?? new Date())
       if (away.length) out.elsewhere = away
+      const record = viewPosts(placed.row)
+      if (record.length) out.posts = record
     }
     if (o.weekly) {
       const stories = Array.isArray(o.stories) ? o.stories.filter(isObj) : []

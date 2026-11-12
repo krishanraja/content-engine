@@ -231,8 +231,8 @@
       "destination": "/api/board?week=:week&op=offdays"
     },
     {
-      "source": "/api/board/:week/scheduled",
-      "destination": "/api/board?week=:week&op=scheduled"
+      "source": "/api/board/:week/offday-posts",
+      "destination": "/api/board?week=:week&op=offday-posts"
     },
     {
       "source": "/api/board/:week/pieces",

@@ -219,7 +219,7 @@ a day now past, and only the one the move before took it from) and `followed`.
 | Growth's read of what to make and post on which day | `GET /api/board/<Monday>/pieces` hands an approved option over only on the day its row says (`placedHere`), with `item`, `version`, `date` and `moved_from`; 503 `items_unavailable` when the rows cannot be read, never a day that may be stale. Growth binds each approved option to the board's day, not the day it first planned |
 | The post's folder in Drive (3 Posts) | Renamed by its ID to the new date and day ("2026-11-12 Thu off.day - AI agent not set up" moved to the 19th becomes "2026-11-19 Thu off.day - ..."), so every reader that reads it by ID keeps it and the board files it under its new week (`followDrive`, as the owner of his Drive with the `drive` scope); never moved to another folder, never one outside 3 Posts, kept as it is when the item goes back to later. `followed.drive` says what happened |
 | The research library's index | Every `00 Index` row naming a piece he records takes its new Week, Day and Piece cells, under the library's one lease (`_offdayLibrary.ts`). An off-day post with no piece has no research rows of its own |
-| A post Growth already scheduled on a platform | This engine never moves a post on a platform. Growth reports what it has scheduled for each item (`POST /api/board/<Monday>/scheduled`), and until Growth's approved route moves it, the item says so plainly: "Still scheduled for Tue 17 on Instagram: move it there too" (`options[].elsewhere`, and the move's answer) |
+| A post Growth already scheduled on a platform | This engine never moves a post on a platform. Growth reports what it has scheduled for each item (`POST /api/board/<Monday>/offday-posts`, below), and until Growth's approved route moves it, the item says so plainly: "Still scheduled for Tue 17 on Instagram: move it there too" (`options[].elsewhere`, and the move's answer) |
 
 **Growth's options come in through the same place** (`POST /api/board/<Monday>/offdays` on Growth's key, the
 `growth-offdays/1` file `growth.py mix offdays` writes, or `growth-offdays/2` `{week, options: [{id, day, copy, format,
@@ -229,10 +229,23 @@ Growth; a Growth option no longer in its list and never pressed is `withdrawn`, 
 id the week's own plan uses on the same day are left out, and the answer says each one and why. `GET
 /api/board/<Monday>/offdays` gives Growth back where every item is now.
 
+**Growth writes its own off-day posts back to the same place** (`POST /api/board/<Monday>/offday-posts` on Growth's
+key, `reportPosts`; migration `20261129100000_offday_items_posts.sql`). An off-day post has no piece, so the older
+write-back (`/posted`) could not take it: Tue 10 Nov's carousel went out on six channels and the board still said "With
+Growth". Growth reports, from its own posting record, `{posts: [{option (off-<day>-<id>) or item, state, channel,
+due_at, url, at, buffer_post_id, drive?}]}`: `made` (its files are in its post folder; `drive` names the folder when
+the item has none yet), `scheduled` on a channel for a time, `live` on a channel with the post's own link, `cancelled`
+(a scheduled post taken back). It is merged into the item's record (`posts`): one made, and per channel its latest
+scheduled or live post; a live post is never undone by a later scheduled report. Live needs the channel and the link,
+and Growth never reports a post it did not post. The board shows it: the option's `posts` (contract 1.9.0), the day's
+`posted` (`by: growth`, with each link), the day's line ("Approved. Growth made it", "Growth scheduled it on Instagram,
+TikTok"), and an approved option Growth reports live makes the day done ("Live on Instagram, TikTok. Growth posted it,
+Tue 10 Nov, 13:25") with no It's live left to press.
+
 Held by `tests/offday-items-db.mjs` (the migration on PGlite: no day without his press, a move whole or not at all,
 Growth never over his row, moves append only) and `tests/control-plane/board-move.test.ts` (the one write, the route
-his press only, and a move read back from the view, Growth's read, the Drive folder, the library and what is still
-scheduled).
+his press only, a move read back from the view, Growth's read, the Drive folder, the library and what is still
+scheduled, and Growth's own made, scheduled and live posts making the day done).
 
 ## What he refused stays refused: the ideas board's checks in code (the ideas quality plan, Wave 1)
 

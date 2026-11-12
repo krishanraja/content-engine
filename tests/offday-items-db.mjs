@@ -57,6 +57,8 @@ const approve = { verdict: 'approve', words: null, sha256: SHA('d'), at: '2026-1
 await save(W1, 'off-tue-burntokens', offBody(W1, 'tue', 'burntokens', approve))
 await db.exec(await migration('20261129090000_offday_items.sql'))
 await db.exec(await migration('20261129090000_offday_items.sql')) // re-runnable: the backfill adds nothing twice
+await db.exec(await migration('20261129100000_offday_items_posts.sql'))
+await db.exec(await migration('20261129100000_offday_items_posts.sql')) // re-runnable
 await db.exec('set role service_role')
 
 const ITEM = `engine:${W1}:burntokens`
@@ -156,6 +158,11 @@ assert.equal(recMove.ok, true)
 const recRow = await one(`select scheduled_for::text d, meta from content_ideas where id = $1`, [P])
 assert.deepEqual([recRow.d, recRow.meta.offday.doc, recRow.meta.offday.date], ['2026-11-26', 'queue/off-thu-rec', '2026-11-26'], 'its piece moved with it')
 assert.equal(await holds('queue/off-tue-rec', '2026-11-24'), false)
+
+// ── Growth's posting record lives on the item ─────────────────────────────────────────────────────────────────────
+await db.query(`update offday_items set posts = $1::jsonb where item = $2`, [JSON.stringify([{ state: 'live', channel: 'instagram', url: 'https://www.instagram.com/p/x', at: '2026-11-28T17:34:00Z' }]), ITEM])
+assert.equal((await one(`select posts->0->>'state' s from offday_items where item = $1`, [ITEM])).s, 'live', 'the posts column holds Growth\'s record')
+await refused(`update offday_items set posts = '{}'::jsonb where item = $1`, [ITEM], /check constraint/, 'its record is a list')
 
 // ── every move is kept, append only ──────────────────────────────────────────────────────────────────────────────────
 const log = await rows(`select item, version, from_day, to_state, to_day, moved_by from offday_moves order by id`)

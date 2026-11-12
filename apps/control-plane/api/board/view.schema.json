@@ -565,6 +565,11 @@
           "properties": { "key": { "type": "string" }, "version": { "type": "integer", "minimum": 0 }, "source": { "type": "string", "enum": ["engine", "growth"], "x-open": true }, "state": { "type": "string" }, "origin_week": { "$ref": "#/$defs/date" } }
         },
         "move": { "anyOf": [{ "$ref": "#/$defs/move" }, { "type": "null" }], "x-since": "1.9.0", "description": "Move to… for this option; null when the one place its day lives could not be read (nothing moves on a guess)." },
+        "posts": {
+          "type": "array", "x-since": "1.9.0", "x-open": true,
+          "description": "Growth's own record of the post (POST /api/board/<Monday>/offday-posts): made, scheduled on a channel for a time, live on a channel with its link. Growth never reports a post it did not post.",
+          "items": { "type": "object", "required": ["state", "channel", "label", "at", "due_at"], "properties": { "state": { "type": "string", "enum": ["made", "scheduled", "live"], "x-open": true }, "channel": { "type": ["string", "null"] }, "label": { "type": "string" }, "at": { "type": ["string", "null"] }, "due_at": { "type": ["string", "null"] }, "href": { "type": "string" } } }
+        },
         "elsewhere": { "type": "array", "x-since": "1.9.0", "items": { "type": "string" }, "description": "A post Growth scheduled on a platform for a day the item is no longer on, said plainly: \"Still scheduled for Tue 17 on Instagram: move it there too\"." }
       }
     },

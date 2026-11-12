@@ -22,6 +22,11 @@ import { POSTS_FOLDER_ID, driveFolderIdOf, driveFolderUrl } from './_drivePosts.
 // its new date, by ID, so it files under its new week), the research library's index rows of a piece he records, and
 // a post Growth already scheduled on a platform, which this engine cannot move: the item says so plainly until Growth
 // reports it moved ("Still scheduled for Tue on Instagram: move it there too").
+//
+// Growth writes back to the same place (POST /api/board/<Monday>/offday-posts, reportPosts): each off-day post it made,
+// scheduled (with its time) or posted (with its link), from its own posting record and never anything it did not post.
+// An off-day post has no piece, so the older write-back (/posted) could not take it: Tue 10 Nov's carousel went out on
+// six channels and the board still said "With Growth".
 
 type Body = Record<string, unknown>
 const isObj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
@@ -43,7 +48,10 @@ export const REST_DAYS: readonly string[] = ['sun']
 const RECORDED_DAYS = ['tue', 'thu', 'sat']
 
 export type ItemState = 'offered' | 'approved' | 'later' | 'withdrawn'
-export interface ScheduledPost { channel: string; due_at: string; buffer_post_id?: string | null; state?: string | null }
+/** One entry of Growth's posting record for an item, as Growth reports it: made (its files are in its post folder),
+ *  scheduled on a channel for a time, live on a channel with its link, or a scheduled post taken back (cancelled). */
+export type PostState = 'made' | 'scheduled' | 'live' | 'cancelled'
+export interface GrowthPost { state: PostState; channel: string | null; due_at: string | null; url: string | null; at: string; buffer_post_id: string | null }
 /** One row of offday_items: the one place an off-day item's day lives. */
 export interface OffdayItem {
   item: string
@@ -58,13 +66,29 @@ export interface OffdayItem {
   doc: string | null
   piece_id: string | null
   drive_folder: string | null
-  scheduled: ScheduledPost[]
+  /** Growth's posting record (migration 20261129100000): made, scheduled with its time, live with its link. */
+  posts: GrowthPost[]
   followed: Body
   version: number
   placed_by: string
   placed_at: string
 }
-const COLUMNS = 'item,source,origin_week,option_id,option,state,week,day,date,doc,piece_id,drive_folder,scheduled,followed,version,placed_by,placed_at'
+const COLUMNS = 'item,source,origin_week,option_id,option,state,week,day,date,doc,piece_id,drive_folder,posts,followed,version,placed_by,placed_at'
+const POST_STATES: readonly PostState[] = ['made', 'scheduled', 'live', 'cancelled']
+const httpsUrl = (v: unknown) => (typeof v === 'string' && /^https:\/\/[^\s]{1,2000}$/.test(v) ? v : null)
+const isoOf = (v: unknown) => (typeof v === 'string' && Number.isFinite(Date.parse(v)) ? new Date(v).toISOString() : null)
+/** One entry of Growth's posting record, or null when it is not one. */
+export function growthPost(v: unknown): GrowthPost | null {
+  if (!isObj(v) || !(POST_STATES as readonly unknown[]).includes(v.state)) return null
+  const channel = typeof v.channel === 'string' && /^[a-z][a-z0-9-]{0,30}$/.test(v.channel) ? v.channel : null
+  const post: GrowthPost = { state: v.state as PostState, channel, due_at: isoOf(v.due_at), url: httpsUrl(v.url), at: isoOf(v.at) || '',
+    buffer_post_id: typeof v.buffer_post_id === 'string' && /^[A-Za-z0-9_-]{1,80}$/.test(v.buffer_post_id) ? v.buffer_post_id : null }
+  if (post.state === 'scheduled' && (!channel || !post.due_at)) return null
+  // Live only with the channel and the post's own link: Growth's record of a post it made go out.
+  if (post.state === 'live' && (!channel || !post.url)) return null
+  if (post.state === 'cancelled' && !channel) return null
+  return post
+}
 
 export const itemKey = (source: 'engine' | 'growth', week: string, id: string) => `${source}:${week}:${id}`
 const ymd = (v: unknown) => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) ? v.slice(0, 10) : v instanceof Date ? v.toISOString().slice(0, 10) : null)
@@ -82,8 +106,7 @@ export function itemOf(r: unknown): OffdayItem | null {
     option: isObj(r.option) ? r.option : {}, state: state as ItemState, week: ymd(r.week), day: typeof r.day === 'string' ? r.day : null, date: ymd(r.date),
     doc: typeof r.doc === 'string' ? r.doc : null, piece_id: typeof r.piece_id === 'string' ? r.piece_id.toLowerCase() : null,
     drive_folder: typeof r.drive_folder === 'string' ? r.drive_folder : null,
-    scheduled: Array.isArray(r.scheduled) ? (r.scheduled as unknown[]).filter(isObj).map(s => ({ channel: String(s.channel || ''), due_at: String(s.due_at || ''),
-      buffer_post_id: typeof s.buffer_post_id === 'string' ? s.buffer_post_id : null, state: typeof s.state === 'string' ? s.state : null })) : [],
+    posts: Array.isArray(r.posts) ? (r.posts as unknown[]).map(growthPost).filter((x): x is GrowthPost => Boolean(x)) : [],
     followed: isObj(r.followed) ? r.followed : {}, version: Number(r.version) || 1, placed_by: String(r.placed_by || ''), placed_at: String(r.placed_at || ''),
   }
 }
@@ -226,22 +249,31 @@ export function laterMoveSpec(r: OffdayItem, now: Date): MoveSpec {
 /** What Growth has scheduled for an item on a day it is no longer on, said plainly: "Still scheduled for Tue on
  *  Instagram: move it there too". This engine never moves a post on a platform; Growth's approved route does. */
 export function elsewhereLines(r: OffdayItem | null, now: Date): string[] {
-  if (!r || !r.scheduled.length) return []
-  const live = r.scheduled.filter(s => !['sent', 'moved', 'cancelled', 'deleted'].includes(String(s.state || 'scheduled')))
+  if (!r || !r.posts.length) return []
   const out: string[] = []
-  for (const s of live) {
-    const at = new Date(s.due_at)
-    if (!Number.isFinite(at.getTime())) continue
-    const on = todayIn(at)
+  for (const s of r.posts) {
+    if (s.state !== 'scheduled' || !s.due_at) continue
+    const on = todayIn(new Date(s.due_at))
     if (r.state === 'approved' && on === r.date) continue
     if (on < todayIn(now)) continue
-    const channel = CHANNEL_WORD[s.channel] || s.channel
-    out.push(r.state === 'approved'
-      ? `Still scheduled for ${DAY_ABBR[dayKeyOf(on)]} ${new Date(`${on}T00:00:00Z`).getUTCDate()} on ${channel}: move it there too`
-      : `Still scheduled for ${DAY_ABBR[dayKeyOf(on)]} ${new Date(`${on}T00:00:00Z`).getUTCDate()} on ${channel}: take it off there too`)
+    const where = `${DAY_ABBR[dayKeyOf(on)]} ${new Date(`${on}T00:00:00Z`).getUTCDate()} on ${channelWord(s.channel)}`
+    out.push(r.state === 'approved' ? `Still scheduled for ${where}: move it there too` : `Still scheduled for ${where}: take it off there too`)
   }
   return [...new Set(out)]
 }
+/** Growth's posting record as the board shows it on the item (contract 1.9.0, options[].posts): what is made,
+ *  scheduled (with when) and live (with its link), newest state per channel. */
+export interface ViewGrowthPost { state: PostState; channel: string | null; label: string; at: string | null; due_at: string | null; href?: string }
+export function viewPosts(r: OffdayItem | null): ViewGrowthPost[] {
+  return (r?.posts ?? []).filter(p => p.state !== 'cancelled').map(p => ({ state: p.state, channel: p.channel,
+    label: p.state === 'made' ? 'Made by Growth' : `${p.state === 'live' ? 'Live' : 'Scheduled'} on ${channelWord(p.channel)}`, at: p.at || null, due_at: p.due_at,
+    ...(p.state === 'live' && p.url ? { href: p.url } : {}) }))
+}
+/** The channels an item is live on, from Growth's record. */
+export function liveOn(r: OffdayItem | null): GrowthPost[] {
+  return (r?.posts ?? []).filter(p => p.state === 'live')
+}
+export const channelWord = (c: string | null) => (c ? CHANNEL_WORD[c] || c : 'a channel')
 const CHANNEL_WORD: Record<string, string> = { instagram: 'Instagram', reels: 'Instagram', tiktok: 'TikTok', youtube: 'YouTube', shorts: 'YouTube Shorts',
   x: 'X', threads: 'Threads', facebook: 'Facebook', linkedin: 'LinkedIn', substack: 'Substack', 'substack-notes': 'Substack Notes' }
 
@@ -480,7 +512,7 @@ export async function moveItem(db: SupabaseClient, req: MoveRequest, deps: MoveD
   if (drive) followed.drive = await followDrive(deps.drive ?? null, drive, to.date)
   if (pieceId) followed.library = await (deps.library ? deps.library.follow(pieceId) : Promise.resolve('not_configured')).catch(() => 'failed')
   await db.from('offday_items').update({ followed }).eq('item', req.item).then(() => null, () => null)
-  const after = itemOf({ ...(row || { item: req.item, source, origin_week: origin, option_id: optionId, option, placed_by: 'Krish', placed_at: at, scheduled: [] }),
+  const after = itemOf({ ...(row || { item: req.item, source, origin_week: origin, option_id: optionId, option, placed_by: 'Krish', placed_at: at, posts: [] }),
     state: to.state, week: to.week, day: to.day, date: to.date, version: Number(done.version) })
   const undo: Body = { item: req.item, version: Number(done.version), from: to.week ? { week: to.week, day: to.day } : null, undo: true,
     to: cur.state === 'slate' || cur.state === 'offered' ? { restore: 'offered', week: cur.week, day: cur.day }
@@ -546,35 +578,43 @@ export async function offerGrowth(db: SupabaseClient, week: string, body: unknow
   return { status: 200, body: { ...(isObj(r.data) ? r.data : { ok: true }), left } }
 }
 
-/** What Growth has scheduled on a platform for the week's items, as Growth reports it (its own approved route is the
- *  only one that moves a post there): {posts: [{item or option (off-<day>-<id>), channel, due_at, buffer_post_id,
- *  state}]}. Each item's list is replaced by what Growth reports for it now. */
-export async function reportScheduled(db: SupabaseClient, week: string, body: unknown): Promise<MoveResult> {
-  if (!isObj(body) || !Array.isArray(body.posts) || body.posts.length > 200) return { status: 400, body: { ok: false, error: 'invalid_scheduled' } }
+/** Growth's posting record for the week's items, from its own record (POST /api/board/<Monday>/offday-posts):
+ *  {posts: [{item or option (off-<day>-<id>), state: made | scheduled | live | cancelled, channel, due_at, url, at,
+ *  buffer_post_id, drive?}]}. Each entry is merged into the item's record: one made, and per channel its latest
+ *  scheduled or live post (a live post is never taken back by a later scheduled one; cancelled takes a scheduled one
+ *  off). Live needs the channel and the post's own link. Growth never reports a post it did not post. */
+export async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date()): Promise<MoveResult> {
+  if (!isObj(body) || !Array.isArray(body.posts) || body.posts.length > 200) return { status: 400, body: { ok: false, error: 'invalid_posts' } }
   const items = await readItems(db, week)
   if (!items) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
-  const byItem = new Map<string, ScheduledPost[]>()
+  const next = new Map<string, { row: OffdayItem; posts: GrowthPost[]; drive: string | null }>()
   let unknown = 0
-  for (const p of body.posts.filter(isObj)) {
-    const ref = String(p.item || p.option || '')
+  for (const raw of body.posts.filter(isObj)) {
+    const ref = String(raw.item || raw.option || '')
     const row = items.find(r => r.item === ref || (r.week === week && r.doc === `queue/${ref}`))
-    if (!row || typeof p.channel !== 'string' || !/^[a-z][a-z0-9-]{0,30}$/.test(p.channel) || typeof p.due_at !== 'string' || !Number.isFinite(Date.parse(p.due_at))) { unknown++; continue }
-    const list = byItem.get(row.item) || []
-    list.push({ channel: p.channel, due_at: new Date(p.due_at).toISOString(), buffer_post_id: typeof p.buffer_post_id === 'string' ? p.buffer_post_id.slice(0, 80) : null,
-      state: typeof p.state === 'string' ? p.state.slice(0, 20) : 'scheduled' })
-    byItem.set(row.item, list)
+    const post = growthPost({ ...raw, at: raw.at ?? now.toISOString() })
+    if (!row || !post) { unknown++; continue }
+    const cur = next.get(row.item) ?? { row, posts: [...row.posts], drive: null }
+    if (post.state === 'made') cur.posts = cur.posts.filter(p => p.state !== 'made')
+    else if (post.state === 'cancelled') cur.posts = cur.posts.filter(p => !(p.state === 'scheduled' && p.channel === post.channel))
+    else if (post.state === 'scheduled' && cur.posts.some(p => p.state === 'live' && p.channel === post.channel)) { next.set(row.item, cur); continue }
+    else cur.posts = cur.posts.filter(p => !(p.channel === post.channel && (p.state === 'scheduled' || p.state === 'live')))
+    if (post.state !== 'cancelled') cur.posts.push(post)
+    const folder = typeof raw.drive === 'string' ? (await import('./_drivePosts.js')).driveFolderIdOf(raw.drive) : null
+    if (folder && !row.drive_folder) cur.drive = folder
+    next.set(row.item, cur)
   }
-  for (const [item, scheduled] of byItem) {
-    const w = await db.from('offday_items').update({ scheduled: scheduled.slice(0, 40) }).eq('item', item)
+  for (const [item, { posts, drive }] of next) {
+    const w = await db.from('offday_items').update({ posts: posts.slice(-40), ...(drive ? { drive_folder: drive } : {}) }).eq('item', item)
     if (w.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   }
-  return { status: 200, body: { ok: true, items: byItem.size, unknown } }
+  return { status: 200, body: { ok: true, items: next.size, unknown } }
 }
 
 /** The week's items for Growth (GET /api/board/<Monday>/offdays): where each is now, by the one place. */
 export function itemsForGrowth(items: OffdayItem[], week: string) {
   return items.filter(r => r.week === week || r.origin_week === week).map(r => ({ item: r.item, source: r.source, option_id: r.option_id, state: r.state,
-    week: r.week, day: r.day, date: r.date, doc: r.doc, version: r.version, scheduled: r.scheduled, moved: r.origin_week !== r.week }))
+    week: r.week, day: r.day, date: r.date, doc: r.doc, version: r.version, posts: r.posts, moved: r.origin_week !== r.week }))
 }
 
 /** A press saved on an off-day option through the board's own Approve (not a move): the row follows it, so an Approve
