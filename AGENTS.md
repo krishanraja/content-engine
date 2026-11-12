@@ -175,7 +175,7 @@ Only Krish changes the North Star. Task-specific restrictions override routine c
 
 Use `docs/HARNESS_CONTEXT.md` for the owning workflow, source of truth and checks. Preserve the goal and accepted decisions when a revision changes one part; explain material trade-offs. Verify the downstream result. Record corrections and observed outcomes through the existing capture path. Experimental results retain their conditions; inferred requirements remain proposals.
 
-Before any work run `python3 scripts/check_failures.py`. At session start read the current week's comments on the live board (`board_web.py read <Monday> comments`); no session publishes a board page (`docs/PUBLISH_BOARDS.md`). Studio work requires `docs/ENGINE_SESSION.md`, `studio.session.open` and its tracked capability set; cloud Studio sessions stay read-only. Preserve observer attribution and Krish's actual decisions, keep exact feedback excerpts and never whole transcripts. `Video engine` remains the exact external launcher.
+Before any work run `python3 scripts/check_failures.py`. At session start read comments on EVERY board link in `config/boards.json`; each board publish updates every link from the same engine-built file. Studio work requires `docs/ENGINE_SESSION.md`, `studio.session.open` and its tracked capability set; cloud Studio sessions stay read-only. Preserve observer attribution and Krish's actual decisions, keep exact feedback excerpts and never whole transcripts. `Video engine` remains the exact external launcher.
 <!-- krish-repo-admin:end -->
 
 <!-- krish-canon:start release=v2026.10.31.4 sha=49ccfe98b287 rendered=2026-10-31 -->
