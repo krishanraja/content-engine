@@ -1,5 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { patchMeta, StoreError, type StoreDb } from '../_pieceStore.js'
+import { recordIncident, type Incident } from '../_incidents.js'
+import { canonical, digest } from './_contracts.js'
 import { cutOn, dayMedia, type MediaItem } from './_media.js'
 
 // His answer on each rendered cut (view contract 1.6.0; docs/PUBLISH_BOARDS.md, "His answer on each cut"). The approved
@@ -16,6 +18,14 @@ import { cutOn, dayMedia, type MediaItem } from './_media.js'
 // - It never changes the cut, never files it, never publishes, and unlocks nothing: it is not the Approve cut gate
 //   (meta.making.gates.final). A new render is a new file with a new media id, so an answer stays with the file he saw.
 // - The view gives each cut the two presses and his latest answer on that file (`verdict`), or null.
+// - A Not this is learned from the way his other rejections on the board are (fileCutLearning): his words go to his
+//   taste ledger as his own (taste_reports, krish_words, the path a Reject of the proof takes), to the rejection inbox
+//   the rejection floor is compiled from (taste_rejection_inbox, the path a Reject asset takes), and to the failure loop
+//   (engine_incidents, krish_reject at the cut stage). Each once: the same words on the same file file nothing twice.
+//   Never blocking: a write that fails is said in the answer and the press stands. A Yes files nothing: it is his
+//   press, never words.
+// - A session making the next cut reads them on the piece's record: GET /api/content-ideas/<id>/making answers with
+//   them (cut_verdicts), and `making.py <piece> show` prints each Not this in his words (make-piece, produce-video).
 
 type Body = Record<string, unknown>
 const isObj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
@@ -124,4 +134,98 @@ export async function saveCut(db: SupabaseClient, pieceId: string, pick: CutPick
   }
   if (result.ok === false) throw new CutError(result.reason === 'busy' ? 409 : 503, result.reason === 'busy' ? 'piece_busy' : 'board_store_unavailable')
   return out!
+}
+
+// ---- What a Not this teaches -----------------------------------------------------------------------------------------
+
+const REPOSITORY = 'krishanraja/content-engine'
+const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const
+/** The rejection engine's formats for a cut (inspirationhouse src/rejection/vocab.ts; week_board.py asset_formats). */
+const CUT_FORMATS: Record<string, string> = { long: 'long_video', feature: 'long_video', short: 'short_video' }
+const CUT_WORDS: Record<string, string> = { long: 'long cut', short: 'short cut', feature: 'feature cut' }
+// The tables made by the migrations: Postgres's and PostgREST's codes for one not made yet.
+const MISSING_TABLE = new Set(['42P01', 'PGRST205'])
+
+/** Where his press was made: the week, the piece's day on it, and the piece. */
+export interface CutPlace { week: string; date: string; pieceId: string }
+export type Filed = 'filed' | 'failed' | 'waits_on_migration'
+export interface CutLearning { taste: Filed; inbox: Filed; incident: Filed | 'refused' }
+
+const dayKey = (date: string) => DAY_KEYS[new Date(`${date.slice(0, 10)}T00:00:00Z`).getUTCDay()] ?? 'week'
+const cutWords = (cut: string) => CUT_WORDS[cut] || `${cut} cut`
+/** The key a Not this is filed once by: the same words on the same file file nothing twice. */
+const onceKey = (place: CutPlace, v: CutVerdict) => digest(canonical({ piece: place.pieceId, media: v.media_id, words: v.words }))
+
+/** His Not this as one taste_reports row: his typed words with where and when, never a sentence the engine wrote (the
+ *  same row a Reject of the proof files, gateReport in _presses.ts). Null for a Yes or a Not this with no words. */
+export function cutReport(place: CutPlace, v: CutVerdict) {
+  if (v.verdict !== 'not_this' || !v.words) return null
+  const day = dayKey(place.date)
+  return {
+    kind: 'krish_words', body: v.words.slice(0, 2000), said_where: `publish board, ${place.week} ${day}, Cuts: Not this on the ${cutWords(v.cut)}`, said_at: v.at,
+    lane: 'production', polarity: 'dislikes', subject_ref: `piece:${place.pieceId}`,
+    subject: `the ${cutWords(v.cut)} for the ${day} piece of the week of ${place.week}`,
+    session_ref: 'Control Centre publish board', repository: REPOSITORY, surface: 'publish_board',
+    emitter_id: 'content-engine-board',
+    client_report_id: `cut-${onceKey(place, v)}`.slice(0, 96),
+    reported_at: v.at,
+    meta: { press: 'cut_not_this', week: place.week, day, cut: v.cut, media_id: v.media_id, sha256: v.sha256, path: v.path },
+  }
+}
+
+/** His Not this as one rejection inbox row, words alone: the cut is reached by its library path (in meta), never by a
+ *  Drive id, so the row carries no master (taste_rejection_inbox_one_shape). Null for a Yes. */
+export function cutInboxRow(place: CutPlace, v: CutVerdict) {
+  if (v.verdict !== 'not_this' || !v.words) return null
+  const day = dayKey(place.date)
+  return {
+    kind: 'rejected',
+    said: v.words,
+    said_where: `publish board, ${place.week} ${day}, Cuts`,
+    said_at: v.at,
+    piece: place.pieceId,
+    formats: CUT_FORMATS[v.cut] ? [CUT_FORMATS[v.cut]] : [],
+    // The board's words about what was on screen: context, never his words.
+    note: `Not this on the ${cutWords(v.cut)}: ${v.path}`.slice(0, 2000),
+    master_drive_id: null,
+    at_ms: null,
+    whole_cut: false,
+    session_ref: `publish-board:${place.week}:cut-verdict/${v.media_id.slice(0, 16)}`,
+    repository: REPOSITORY,
+    surface: 'publish_board',
+    emitter_id: 'content-engine/publish-board',
+    client_report_id: `cut-${onceKey(place, v).slice(0, 40)}`,
+    meta: { board: { week: place.week, op: 'cut-verdict', day }, cut: v.cut, media_id: v.media_id, sha256: v.sha256, path: v.path },
+  }
+}
+
+/** His Not this as one failure-loop row (engine_incidents, krish_reject at the cut stage). Null for a Yes. */
+export function cutIncident(place: CutPlace, v: CutVerdict): Incident | null {
+  if (v.verdict !== 'not_this' || !v.words) return null
+  return {
+    piece_id: place.pieceId, stage: 'cut', kind: 'krish_reject', maker: 'unknown', his_words: v.words.slice(0, 2000),
+    session_ref: `publish-board:${place.week}:cut-verdict`, artifact_sha256: v.sha256, artifact_ref: `library:${v.path}`.slice(0, 500),
+    meta: { week: place.week, day: dayKey(place.date), press: 'cut_not_this', cut: v.cut, media_id: v.media_id },
+    client_ref: `cut-${onceKey(place, v)}`.slice(0, 120),
+  }
+}
+
+/** Files what a Not this teaches (his taste ledger, the rejection inbox, the failure loop), each once and never
+ *  blocking: what happened to each. Null for a Yes. */
+export async function fileCutLearning(db: SupabaseClient, place: CutPlace, v: CutVerdict, now = new Date()): Promise<CutLearning | null> {
+  const report = cutReport(place, v), row = cutInboxRow(place, v), incident = cutIncident(place, v)
+  if (!report || !row || !incident) return null
+  const upsert = async (table: string, value: Record<string, unknown>): Promise<Filed> => {
+    try {
+      const filed = await db.from(table).upsert(value, { onConflict: 'emitter_id,client_report_id', ignoreDuplicates: true })
+      const code = String((filed.error as { code?: string } | null)?.code || '')
+      return !filed.error ? 'filed' : MISSING_TABLE.has(code) ? 'waits_on_migration' : 'failed'
+    } catch {
+      return 'failed'
+    }
+  }
+  const taste = await upsert('taste_reports', report)
+  const inbox = await upsert('taste_rejection_inbox', row)
+  const filed = await recordIncident(db, incident, now.toISOString()).catch(() => 'failed' as const)
+  return { taste, inbox, incident: filed }
 }

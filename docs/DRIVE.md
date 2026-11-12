@@ -131,14 +131,16 @@ so it never goes in `3 Posts`.
 |---|---|---|
 | `00 Index`, a Google Sheet | its ID, `1UejePwOc_6abqX1A3TrKXDZxej4C1OOvwVM3K3C29lo` | One row per document copied in: week, day, piece, series, kind, title, date added, Drive link, sha256, version, who added it, piece id and material id. One row per material: the sweep adds a row for each new copy and removes any later row for a material already listed. |
 | One folder per week, named by its Monday (`2026-11-16`) | its `ce_week` property | The week's pieces and days. |
-| Inside a week: one folder per piece (`Mon 16 Nov follow.the.money - Oracle files to sell $20B ... (8287846b)`), one per day with no piece yet (`Tue 17 Nov (no piece yet)`), and `Whole week` for the week's own research (the Sunday ideas sources) | its `ce_slot` property | Each research document as `<date added> <title>`, the exact bytes the store holds, and `Sources` (its `ce_sources` property), the verbatim source excerpts the fact gate reads. |
+| Inside a week: one folder per piece (`Mon 16 Nov follow.the.money - Oracle files to sell $20B ... (8287846b)`), one per day with no piece yet (`Tue 17 Nov (no piece yet)`), and `Whole week` for the week's own research (the Sunday ideas sources) | its `ce_slot` property | Each research document as `<date added> <title>` (just `<title>` when the title already starts with a date, such as a recovered file's day; until 12 Nov 2026 those copies got the date added in front as well, and copies already made keep their names), the exact bytes the store holds, and `Sources` (its `ce_sources` property), the verbatim source excerpts the fact gate reads. |
 
 **What is copied.** Every material on a piece, a day or a week whose kind is `research`, `corpus`, `note` or `paste` (a
 paste is a verbatim source excerpt, filed in `Sources`), or whose role is `research`, `sources`, `corpus` or `notes`:
 texts and files alike, never a link (a link's page is its own source) and never an archived material. A piece with no
 date sits in the week its first research was filed. Each copy is the store's own bytes, so the file's sha256 in Drive
 equals the store's, and its Drive description names the piece, the material, its version and sha256 and links the live
-Publish Board at that week and day.
+Publish Board at that week and day. A piece with no date links the board itself and says it has no day on it yet: its
+folder's week is only the week its research was filed. Until 12 Nov 2026 such a copy linked that week (the week of 9
+Nov for most of the 11 Nov backfill), where the piece is not; descriptions already in Drive are never rewritten.
 
 **When.** The write that files it copies it at once and says so in its answer (`library`): `POST
 /api/content-ideas/store` from the board, Control Centre's connector, `board_session.py` or a backfill. Everything else

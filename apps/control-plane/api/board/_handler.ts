@@ -18,7 +18,7 @@ import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
 import { StyleError, needsMotion, saveStyle, stylePick } from './_style.js'
-import { CUT_OP, CutError, cutPick, saveCut } from './_cuts.js'
+import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
 import { DESK_PAGE } from './_deskPage.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARCHIVE_REFERRER_POLICY, fromArchivePage, readOnlyArchive } from './_readOnly.js'
@@ -362,9 +362,12 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             return res.status(201).json({ ok: true, material: filed, sources: found.sources.length })
           }
           if (op === CUT_OP) {
-            // His answer on one cut, kept append only on the piece (meta.cut_verdicts). It never changes the cut.
+            // His answer on one cut, kept append only on the piece (meta.cut_verdicts). It never changes the cut. A Not
+            // this also goes where his other rejections go (his taste ledger, the rejection inbox, the failure loop),
+            // once, never blocking the press (fileCutLearning).
             const saved = await saveCut(db, pieceId, cutPick(body))
-            return res.status(200).json({ ok: true, cut_verdict: saved.verdict, already: saved.already })
+            const learned = saved.already ? null : await fileCutLearning(db, { week, date: String(row.data.scheduled_for), pieceId }, saved.verdict)
+            return res.status(200).json({ ok: true, cut_verdict: saved.verdict, already: saved.already, ...(learned ? { learned } : {}) })
           }
           if (op === 'style') {
             // The motion styles are the bank's motion layer, read from main only when the press names one; the caption

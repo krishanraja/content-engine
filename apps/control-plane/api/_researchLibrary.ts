@@ -240,9 +240,15 @@ export function placeOf(m: StoredMaterial, piece: PieceInfo | null): Place {
 
 const extOf = (s: string) => (s.toLowerCase().match(/\.([a-z0-9]{1,8})$/)?.[1] || '')
 
-/** The copy's file name: the date it was filed, its title, its version when there is more than one, its extension. */
+/** A title that already starts with a date (a recovered file's "2026-10-08 notes", a plan's "2026-10-09-friday/...").
+ *  Until 12 Nov 2026 the copy's name put the filing date in front of it as well, so a recovered branch version read
+ *  "2026-11-11 2026-10-08 ..."; copies already in Drive keep their names (the library never renames). */
+const DATED_TITLE = /^\d{4}-\d{2}-\d{2}(?!\d)/
+
+/** The copy's file name: the date it was filed (unless its title already starts with a date), its title, its version
+ *  when there is more than one, its extension. */
 export function fileNameOf(m: StoredMaterial): string {
-  const date = isDate(m.added_at) ? m.added_at.slice(0, 10) : ''
+  const date = isDate(m.added_at) && !DATED_TITLE.test(m.title.trim()) ? m.added_at.slice(0, 10) : ''
   const keyExt = m.storage === 'bucket' && m.object_key ? extOf(m.object_key) : ''
   const titleExt = extOf(m.title)
   const ext = keyExt || (titleExt && TEXT_TYPES[titleExt] ? titleExt : m.storage === 'text' ? 'md' : '')
@@ -256,14 +262,18 @@ export function mimeOf(m: StoredMaterial): string {
   return TEXT_TYPES[extOf(fileNameOf(m))] || 'text/plain'
 }
 
-/** The copy's Drive description: what it is a copy of, and the link back to the piece on the live board. */
+/** The copy's Drive description: what it is a copy of, and the link back to the piece on the live board. A piece with
+ *  no day yet links the board itself: its folder's week is only the week its research was filed, and until 12 Nov 2026
+ *  the link sent it to that week (the week of 9 Nov for most of the 11 Nov backfill), where the piece is not.
+ *  Descriptions already in Drive are never rewritten. */
 export function descriptionOf(m: StoredMaterial, piece: PieceInfo | null, place: Place): string {
   const what = piece ? `piece ${piece.id} (${shortWords(piece.idea || 'Untitled piece', 120)})` : place.day === 'week' ? `the week of ${place.week}` : `${place.day} of the week of ${place.week}`
+  const undated = Boolean(m.piece_id) && !(piece && isDate(piece.scheduled_for))
   return [
     `A copy of ${m.kind} material ${m.id}, version ${m.version}, on ${what}.`,
     `sha256 ${m.sha256}. Filed ${isDate(m.added_at) ? m.added_at.slice(0, 10) : 'on an unknown date'} by ${clean(m.added_by || 'unknown', 80)}.`,
     `The record is the content engine's piece store; this file is its mirror and is never changed.`,
-    `Publish Board: ${liveBoardUrl(place.week, place.day === 'week' ? null : place.day)}`,
+    undated ? `Publish Board: ${liveBoardUrl()} (the piece has no day on it yet)` : `Publish Board: ${liveBoardUrl(place.week, place.day === 'week' ? null : place.day)}`,
   ].join('\n')
 }
 

@@ -137,6 +137,12 @@ def place(name: str, text: str, written: str, session_piece: str | None) -> str:
     return f'day:{monday.isoformat()}/{day}'
 
 
+def title_of(name: str, written: str) -> str:
+    """The store title: the day it was written in front of its file name, unless the name already starts with a date
+    (a plan's "2026-10-09-who-picks-your-ai.md" read "2026-10-08 2026-10-09-who-picks-your-ai.md" until 12 Nov 2026)."""
+    return (name if re.match(r'\d{4}-\d{2}-\d{2}(?!\d)', name) else f"{written[:10]} {name}")[:200]
+
+
 # ---- where it looks --------------------------------------------------------------------------------------------------
 
 def iso(ts: float) -> str:
@@ -449,7 +455,7 @@ def file_all(args) -> int:
                 zip(('week', 'day'), scope[4:].split('/', 1)))
             if target.get('day') == 'week':
                 target.pop('day')
-            body = {**target, 'content': text, 'title': f"{row['written'][:10]} {row['title']}"[:200], 'kind': 'research',
+            body = {**target, 'content': text, 'title': title_of(row['title'], row['written']), 'kind': 'research',
                     'role': 'research', 'source': 'backfill', 'by': args.by,
                     'material_key': f"local:{row['where']}"[:300],
                     'source_ref': f"{host}:{row['where']}"[:500],
