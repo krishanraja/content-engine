@@ -1,10 +1,10 @@
-# Publish boards: the web workflow
+# Publish boards
 
-Krish's 19 October 2026 ruling: both weeks remain available at
-`https://content.krishraja.com`, with separate overarching week tabs. The web
-board becomes the sole place for new interactions after verified migration.
-The four Claude artifacts and the default artifact generator remain preserved;
-there is no ongoing synchronization with them after cutover.
+The one live Publish Board is Control Centre's Content tab (Ruling, Krish, 2026-11-11), drawn from this engine's
+view and pressed through its routes; this page says how it is fed and used. The engine's own board pages at
+content.krishraja.com/board/<Monday> are the read-only archive. They were where Krish pressed from 19 October 2026,
+when his ruling moved the boards off the four Claude artifacts (kept, frozen, never synchronised again), until
+11 November 2026.
 
 ## The live board is Control Centre's; this engine's page is the archive
 
@@ -40,8 +40,10 @@ board has everything up to date and, not only that, is genuinely live?" The audi
   on it (`pieces`, so a second piece or an off-day piece is never hidden behind the first), the day's options in full
   (`options`: a publishing day's Sunday options, an off day's options with the weekly good news's stories), his
   comments (`comments`), what Growth has posted (`posted`) and his yes (`yes`); on the week, the change signal
-  (`revision`). An off-day option the week's plan records as `decided` counts as chosen, and a weekly good news whose
-  stories were found before the week's Thursday waits on Thursday's run, never "stuck".
+  (`revision`). An off-day option the week's plan records as `decided` counts as chosen, and a weekly good news without
+  this week's stories (`storiesFresh`: found for a date on or after the Saturday nine days before the Monday, when
+  the week's ideas run fills its board) waits on a run, with "Find the stories now" (`saturday-goodnews.yml`, by hand),
+  never "stuck".
 - **Every press the old board made is in the view** as the action kind `press`: the document the old board saved
   (Pick and the four presses on an idea, Approve, Improve, Reject and Next week on an off-day option, his yes for a
   day, his thoughts on a step, research pasted onto a piece), which the live board saves as it is, filling in only his
@@ -49,8 +51,8 @@ board has everything up to date and, not only that, is genuinely live?" The audi
 - **Every writer lands where the view reads.** The pieces' records, his presses, Growth's ticks and the week's builds
   are tables the view reads on every request. The week's plan files are read from the week's branch
   `offday-revise/<Monday>` before main, at the commit each points at now (`branchSha`), so a push reaches the board
-  in seconds, not after raw.githubusercontent.com's five-minute cache. The Sunday ideas run, the Thursday good-news run
-  and the revise run all put the week's folder on that branch (`scripts/week_branch_keep.sh`: main, then what is on
+  in seconds, not after raw.githubusercontent.com's five-minute cache. The Sunday ideas run, the good-news run (by hand
+  since the Thursday schedule was retired, Ruling, Krish, 2026-11-11), the inspiration piece run and the revise run all put the week's folder on that branch (`scripts/week_branch_keep.sh`: main, then what is on
   the branch, then the run's commit; a fast-forward, never a force), each with a pull request to main that merges
   itself. Nothing builds or publishes a board page any more.
 - **Genuinely live.** One row a week, `board_signal` (migration `20261125090000_board_signal.sql`), is bumped by a
@@ -623,11 +625,13 @@ database, with three more sessions on the same piece, and the view reading all o
 
 ## The engine's own page: /board/<Monday> (the archive)
 
-Since 10 Nov 2026 the week's own link opens the live board (Krish, 2026-11-10: "Switch fully, move the old
-board to an archive link"). Control Centre, which serves content.krishraja.com, passes only `/board/<Monday>` through
-to the engine, so `/board/next/<Monday>` there landed on Control Centre's home. The old baked board is
-`/board/<Monday>?archive=1` (sign-in asked, as before); `/board/next/<Monday>` still serves the live board on the
-engine's own address.
+This section describes the engine's own pages, which are the read-only archive since 11 Nov 2026 (Ruling, Krish,
+2026-11-11: one live board, in Control Centre; the old board is a read-only archive): a press made on either is refused
+with 423 `archive_read_only` and names the live board. From 10 Nov to 11 Nov the page below was the live board
+(Krish, 2026-11-10: "Switch fully, move the old board to an archive link"). Control Centre, which serves
+content.krishraja.com, passes `/board/<Monday>` through to the engine, which serves the page below there and at
+`/board/next/<Monday>` on its own address; `/board` redirects to the newest week's `/board/<Monday>`. The older baked
+board is `/board/<Monday>?archive=1` (sign-in asked, as before).
 
 Krish, 2026-11-09: "I should always open it with something to do for each piece or for the week, unless the day or
 the week is complete", "Absolutely everything that isn't 100% complete needs an action button", the buttons must start
@@ -641,8 +645,8 @@ latest run. Every day not done has one next step, a first button that starts the
 allow-listed `repository_dispatch` on the token the board already holds (`OFFDAY_REVISE_DISPATCH_TOKEN`); every job it
 names lists its own type. A revised off-day option is judged on the page itself, as the same `queue/off-<day>-<id>`
 record the full board writes, bound to the same hashes (`_offdaySides.ts`, held equal to `week_board.side_sha` by
-`tests/control-plane/board-desk.test.ts`). The page's one source is `apps/control-plane/board-next/desk.html`, built
-into `_deskPage.ts` by `node scripts/build-desk-page.mjs`. `/board` stays the old board until Krish switches it.
+`tests/control-plane/board-desk.test.ts`). The page's one source is the React client in `apps/control-plane/board-next` (Vite,
+one self-contained HTML file), built into `_deskPage.ts` by `node scripts/build-desk-page.mjs`.
 
 Each day of the view also lists what its piece has rendered (`media`, `apps/control-plane/api/board/_media.ts`): the
 newest asset of each cut on its making record and that cut's thumbnail, by an opaque id, with no library path, store
@@ -1044,6 +1048,10 @@ video without its Drive link or its thumbnail's.
 
 ## Finished files while editorial review remains open
 
+How the archive's pages carried finished files. Since 11 November 2026 nothing builds or publishes a board page
+(Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive): the live board
+shows a piece's files from its making record (`media`, contract 1.7.0, above). Kept as the record.
+
 Use `week_board.py --materials DAY=materials.json` for finished downloads and
 channel copy. The JSON names the exact piece, an explicit `review` or `ready`
 status, its readiness note, and sections containing labelled files and copy.
@@ -1108,8 +1116,9 @@ credential; do not paste it into a prompt, file, generated HTML or command line.
 
 ## Always current: the live overlay
 
-Ruling (Krish, 2026-11-03): "The Publish Board should just be makeyourmindup
-weekly content calendar, always up to date." A built board is an immutable
+How the archive's baked page (`/board/<Monday>?archive=1`) keeps current; the live board in Control Centre reads the
+view on every change instead ("One live board", above). Ruling (Krish, 2026-11-03): "The Publish Board should just be
+makeyourmindup weekly content calendar, always up to date." A built board is an immutable
 snapshot, so the page reads the week's live state every 5 seconds (and when the
 tab regains focus) from `GET /api/board?week=<Monday>&op=state`
 (`apps/control-plane/api/board/_live.ts`) and redraws what the records say now.
@@ -1202,7 +1211,8 @@ selected build, never newer interaction data.
 
 `config/boards.json.weeks` retains the original artifact addresses for source
 provenance and explicit legacy builds. `--target web` is the generator's default
-and the only target that is published; artifact mode builds a legacy copy for comparison only.
+and the only target that was ever published, until 11 November 2026; nothing publishes a board page now, and artifact
+mode builds a legacy copy for comparison only.
 After active cutover, do not create a new Claude weekly board or synchronize old
 copies. The artifact synchronization hook reports the web destination instead.
 
