@@ -3,7 +3,7 @@ import * as T from 'three'
 import fixture from './fixture.json'
 import type { EngineEvent, EngineObject } from '../../props'
 import { screenState } from './state'
-import { cameraFor,viewport } from './index'
+import { cameraFor,viewport,safeBox } from './index'
 const object=fixture.object as EngineObject,events=fixture.events as EngineEvent[]
 const at=(f:number)=>screenState(object,events,f)
 const tokens={ink:'black',inkDeep:'black',inkSoft:'dimgray',cream:'ivory',mint:'aquamarine',channel:'coral'}
@@ -17,8 +17,12 @@ it('centres the selected card and contains both authored viewports',()=>{
  const a=cameraFor(p),camera=new T.PerspectiveCamera(36,viewport(p).width/viewport(p).height,.1,100)
  camera.position.copy(a.eye);camera.rotation.copy(a.rotation);camera.updateMatrixWorld()
  const centre=new T.Vector3((420/2400-.5)*6,(.5-380/1600)*4,0).project(camera)
- expect(Math.abs(centre.x)).toBeLessThan(.05);expect(Math.abs(centre.y)).toBeLessThan(.05)
+ const v=viewport(p),safe=safeBox(p)
+ // The card being read lands in the centre of the safe box (the words-safe zone in 9:16), on a canvas filling the frame.
+ expect(Math.abs(centre.x-((safe.left+safe.width/2)/v.width*2-1))).toBeLessThan(.05)
+ expect(Math.abs(centre.y-(1-(safe.top+safe.height/2)/v.height*2))).toBeLessThan(.05)
+ expect(v).toEqual({left:0,top:0,width:p.box.width,height:p.box.height})
  expect(cameraFor(p).eye.toArray()).toEqual(a.eye.toArray())
- const v=viewport(p);if(aspect==='9:16'){expect(v.left).toBeGreaterThanOrEqual(60);expect(v.left+v.width).toBeLessThanOrEqual(860);expect(v.top+v.height).toBeLessThanOrEqual(1320)}
+ if(aspect==='9:16'){expect(safe.left).toBeGreaterThanOrEqual(60);expect(safe.left+safe.width).toBeLessThanOrEqual(860);expect(safe.top+safe.height).toBeLessThanOrEqual(1320)}
  }
 })
