@@ -57,3 +57,23 @@ riskiest (its habit ending sits close to the "one question" card he called borin
 Whichever he approves, Growth makes it to `docs/CAROUSEL-STANDARD.md`: a scene cover with no robot, real logos from
 Brandfetch, real crops of the SEC rule, Copilot's Critique and the study's chart, no card numbers, the house mark
 bottom-right, Follow for more over the centred mark on the last card, sources in the caption only.
+
+## Revision, 12 Nov 2026: option 2 rebuilt on real-world analogies
+
+Krish, 12 Nov 2026, of option 2: "2. Give real world analogies" (sent to his taste ledger as his words).
+
+`frenemies` is now six cards. It opens on two rules everyone already lives by, then shows the AI version:
+
+| Card | Words | Source |
+|---|---|---|
+| 1 | Why does Microsoft get OpenAI's rival to check OpenAI's work? | GeekWire, 30 Mar 2026 |
+| 2 | You can't spot your own typos (your brain reads what you meant to write) | Wired, Aug 2014, psychologist Tom Stafford (https://www.wired.com/2014/08/wuwt-typos/) |
+| 3 | A World Cup referee never runs his own country's match | ESPN and The Athletic, Jul 2026, on FIFA's neutrality rule (https://www.nytimes.com/athletic/7430912/2026/07/08/world-cup-referees-how-selected-england-argentina/) |
+| 4 | Microsoft: GPT writes, Claude checks | GeekWire, 30 Mar 2026 |
+| 5 | Home Depot: Google answers, OpenAI judges | VentureBeat, Oct 2026 |
+| 6 | An AI rates its own work higher than people do; Follow for more | NeurIPS 2024 |
+
+Two fresh readers (Haiku, Sonnet) said both analogies made the point click; both stumbled on the link to AI and on what
+Home Depot does, so the copy now says "The rule is the same: whoever did the work does not check it" and spells out
+each Home Depot AI's job. Copy lint clean; `check_voice` passes (distance 0.16). Note: `ownref` (Thu 19 Nov) also uses a
+referee, on its cover; if Krish approves both, one of them changes its picture.
