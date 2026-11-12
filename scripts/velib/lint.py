@@ -230,7 +230,8 @@ def palette_lints(spec: dict) -> list[str]:
         record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
                   'opening': 'hook', 'sting': sting,
                   'close': {'id': 'statement_card' if shape == '16x9' else 'statement_beat',
-                            'seconds': ve_compile.ENDING_FRAMES / ve_compile.FPS}}
+                            'seconds': getattr(ve_compile, 'ENDING_FRAMES_BY_ASPECT', {}).get(cut.get('aspect'), ve_compile.ENDING_FRAMES)
+                            / ve_compile.FPS, 'days_row': kind == 'series'}}
         out += [f'brand.palette cuts.{cut_id}: {p}' for p in brand_palette.check(record, palette)]
     return out
 

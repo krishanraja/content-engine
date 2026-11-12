@@ -24,7 +24,7 @@ sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from velib.common import load_json, run
-from velib.compile import compile_cut, source, caption_line_count, _caption_groups, _text_width, ENDING_FRAMES, sting_problems
+from velib.compile import compile_cut, source, caption_line_count, _caption_groups, _text_width, ENDING_FRAMES, ENDING_FRAMES_BY_ASPECT, sting_problems
 from velib import compile as ve_compile
 from velib.render import render, check_asset_hashes
 import ve
@@ -201,15 +201,18 @@ class CompileTest(unittest.TestCase):
         self.assertNotIn('ending', excerpt)
         spec['cuts']['proof-tall']['excerpt'] = False
         whole = compile_cut(spec, 'proof-tall', words, FIXTURE)
-        self.assertEqual(whole['durationFrames'], base + ENDING_FRAMES)
+        # The tall close is a 2 s beat (config/brand-palette.json statement_beat), the wide one 6 s.
+        ENDING = ENDING_FRAMES_BY_ASPECT[whole['aspect']]
+        self.assertEqual(ENDING_FRAMES_BY_ASPECT, {'16:9': 180, '9:16': 60})
+        self.assertEqual(whole['durationFrames'], base + ENDING)
         # The ending is the statement card (compile.py): where it starts, the site, the tagline, the call and the days.
         self.assertEqual({k: whole['ending'][k] for k in ('fromFrame', 'url')}, {'fromFrame': base, 'url': whole['series']['site']})
         self.assertEqual(list(whole['ending']), ['fromFrame', 'url', 'tagline', 'cta', 'days'])
         self.assertEqual(whole['captions'][-1]['toFrame'], base)
         # The last beat runs through the ending band so BrandFrame stays mounted and draws it.
-        self.assertEqual(whole['beats'][-1]['toFrame'], base + ENDING_FRAMES)
+        self.assertEqual(whole['beats'][-1]['toFrame'], base + ENDING)
         self.assertEqual(excerpt['beats'][-1]['toFrame'], base)
-        self.assertTrue(all(o['toFrame'] == base + ENDING_FRAMES for o in whole['objects'] if o['toFrame'] > base - 1
+        self.assertTrue(all(o['toFrame'] == base + ENDING for o in whole['objects'] if o['toFrame'] > base - 1
                             and o['toFrame'] >= excerpt['beats'][-1]['fromFrame']))
         # Every whole cut closes on the ending band, with or without a dated call (Krish, 2026-11-03: "We fucking
         # have standards for intro, background audio and outro").
