@@ -76,6 +76,11 @@ def sting_props(cut: dict, channel: str, off: bool, report: dict | None = None) 
         raise ValueError(f'the wide cut of a {channel} piece opens on the intro sting, and its config cannot be read: {error}') from None
     if STING_SHAPE not in cfg['shapes'] or channel not in cfg['series'] or cfg['status'] == 'retired':
         return None
+    if cfg.get('paused'):
+        if report is not None:
+            report['opening_why'] = ('the intro sting is paused on Krish\'s words (config/intro-sting.json "paused"), so this '
+                                     'wide cut opens on its hook')
+        return None
     if cfg['status'] != 'approved':
         if report is not None:
             report['opening_why'] = ('the intro sting is still a candidate waiting for Krish\'s approval '
@@ -120,7 +125,8 @@ def sting_problems(props: dict) -> list[str]:
             cfg = intro.load()
         except intro.IntroError as error:
             return [f'the intro sting\'s config cannot be read, so this cut\'s opening cannot be checked: {error}']
-        wanted = (cfg['status'] == 'approved' and STING_SHAPE in cfg['shapes'] and channel in cfg['series'])
+        wanted = (cfg['status'] == 'approved' and not cfg.get('paused') and STING_SHAPE in cfg['shapes']
+                  and channel in cfg['series'])
         excepted = (props.get('opening') or {}).get('kind') == 'episode_card' and len(str((props.get('opening') or {}).get('said') or '')) >= 12
         if not sting and wanted and not excepted:
             problems.append(f'this wide cut of a {series} piece opens on the approved intro sting, and its props have none '

@@ -65,11 +65,15 @@ class Guard(unittest.TestCase):
             with self.subTest(name):
                 self.assertTrue(brand_palette.check(dict(copy.deepcopy(GOOD_SHORT), **change)), name)
 
-    def test_the_long_cut_sting_follows_the_hook(self):
-        long_cut = {'date': '2026-11-18', 'format': 'long_cut', 'opening': 'hook', 'sting': 'before_hook',
+    def test_the_long_cut_opens_on_the_hook_with_no_sting_while_it_is_paused(self):
+        # Krish, 12 Nov 2026: the sting is paused until it can follow the hook (config/intro-sting.json "paused").
+        long_cut = {'date': '2026-11-18', 'format': 'long_cut', 'opening': 'hook', 'sting': 'none',
                     'close': {'id': 'statement_card', 'seconds': 6.0}}
-        self.assertTrue(brand_palette.check(long_cut))
-        self.assertEqual(brand_palette.check(dict(long_cut, sting='after_hook')), [])
+        self.assertEqual(brand_palette.check(long_cut), [])
+        self.assertTrue(brand_palette.check(dict(long_cut, sting='before_hook')))
+        p = brand_palette.load()
+        self.assertEqual(p['formats']['long_cut']['series']['sting_when_built'], 'after_hook')
+        self.assertTrue(json.loads((ROOT / 'config' / 'intro-sting.json').read_text(encoding='utf-8'))['paused']['words'])
 
     def test_an_off_day_close_has_no_series_days(self):
         off = dict(copy.deepcopy(GOOD_SHORT), date='2026-11-17', kind='off')
@@ -93,8 +97,8 @@ class Makers(unittest.TestCase):
         problems = lint.palette_lints(spec)
         # ve's tall close is the palette's 2 s beat, so the short passes.
         self.assertFalse(any(p.startswith('brand.palette cuts.short') for p in problems), problems)
-        if getattr(ve_compile, 'STING_POSITION', 'before_hook') == 'before_hook':
-            self.assertTrue(any(p.startswith('brand.palette cuts.long') for p in problems), problems)
+        # While the sting is paused, ve opens the long cut on its hook too, so it passes.
+        self.assertFalse(any(p.startswith('brand.palette cuts.long') for p in problems), problems)
         self.assertEqual(lint.palette_lints(dict(spec, publish_day='2026-11-13', brand={'series': 'mind.the.gap'})), [])
 
     def test_make_refuses_the_retired_outro(self):
@@ -105,6 +109,16 @@ class Makers(unittest.TestCase):
         let = make.palette_problems(dict(cfg, palette_exception='Krish, 2026-11-16: a stand-in for this test only'),
                                     '9x16', None, lambda f: Path(f), '.')
         self.assertEqual(let, [])
+
+    def test_the_paused_sting_opens_every_cut_on_the_hook(self):
+        # Krish, 12 Nov 2026 (config/intro-sting.json "paused"): no engine lays the sting while the pause stands.
+        import intro
+        from velib import compile as ve_compile
+        self.assertFalse(intro.wanted('16x9', 'follow_the_money'))
+        cut = {'aspect': '16:9', 'excerpt': False}
+        report = {}
+        self.assertIsNone(ve_compile.sting_props(cut, 'follow_the_money', False, report))
+        self.assertIn('paused', report.get('opening_why', ''))
 
     def test_the_day_runner_no_longer_swaps_in_the_stand_off_outro(self):
         src = (ROOT / 'scripts' / 'produce_day.py').read_text(encoding='utf-8')
