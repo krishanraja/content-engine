@@ -247,6 +247,19 @@
         "carry",
         "exit"
       ]
+    },
+    "living_screen": {
+      "verbs": [
+        "enter",
+        "move",
+        "count_to",
+        "mark",
+        "draw",
+        "pick",
+        "highlight",
+        "add",
+        "exit"
+      ]
     }
   }
 }

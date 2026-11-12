@@ -33,7 +33,7 @@ The catalogue has twelve looks; five are built and render a whole cut, tall and 
 | Style | What carries the numbers | His word | In ve |
 |---|---|---|---|
 | `ladder`, The Ladder | one lit 3D object (a bank branch) that changes as the numbers change | "much better, go" (10 Nov); liked | bank entry `ladder`, device `ladder_stage` built 11 Nov (card ve-style-1); routes after Krish's yes on its test render |
-| `living-screen`, The Living Screen | a working interface in 3D; the camera reads the card being spoken about | "Now let's keep that pace of animation up." (10 Nov); liked | bank entry `living-screen`, device `living_screen` to build (card ve-style-2) |
+| `living-screen`, The Living Screen | a working interface in 3D; the camera reads the card being spoken about | "Now let's keep that pace of animation up." (10 Nov); liked | bank entry `living-screen`, device `living_screen` built 12 Nov (card ve-style-2); routes after Krish's yes on its test render |
 | `evidence-desk`, The Evidence Desk | the source's own page on a desk, the line circled and magnified | rendered for his verdict (11 Nov) | not in the bank |
 | `swiss-kinetic`, Swiss Kinetic Type | type is the picture, on a strict grid, with counting squares | rendered for his verdict (11 Nov) | bank `swiss-kinetic-type` draws it as a motion profile |
 | `dark-keynote`, Dark Keynote | one number at a time on a lit stage | rendered for his verdict (11 Nov) | bank `dark-keynote` draws it as a motion profile |
@@ -62,4 +62,4 @@ A style proved here reaches ve in four steps, and nothing else moves it there:
 4. **Verified and switched on.** `ve verify-card`, `ve lab render` and `ve lab diff` (the house look unchanged), a fixture
    render of the house test take in the style for his Gate 2, then `needs_device` comes out of both files.
 
-The Ladder and The Living Screen are at step 3 (11 Nov 2026): card ve-style-0 (3D in the renderer, the moves as one package) is built and verified, and so is the Ladder's device (card ve-style-1); the Living Screen's card (ve-style-2) is next. Krish approved the Codex spend for both.
+The Ladder and The Living Screen are at step 3 (11 Nov 2026): card ve-style-0 (3D in the renderer, the moves as one package) is built and verified, and so are both style devices (cards ve-style-1 and ve-style-2). Next: one test render per style for Krish. Krish approved the Codex spend for both.
