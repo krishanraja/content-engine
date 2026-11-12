@@ -287,8 +287,9 @@ post.
    moves it there, so it is only ever on one day."). Growth's posts on an item show on the day the item is on only.
 4. *The week plans* carry no post twice under two ids (`duplicatePosts`, `tests/control-plane/board-truth.test.ts`,
    in `npm run verify`): a session never moves a post by copying it; a re-plan names the item it carries (`"item":
-   "<its key>"`, as Thu 12's `beststicker` names Tue 17's `auditrule`), and an option a re-plan settled (`closed`) leaves
-   its day on the live board as on the full board, unless a press of his stands on it.
+   "<its key>"`, as Thu 12's `beststicker` names Tue 17's `auditrule`), and the option it carries leaves its day on the
+   live board (`carriedItems`), unless a press of his stands on it. A session's `closed` words alone never take an idea
+   off his board.
 
 Held by `tests/offday-one-post-db.mjs` (the migration on PGlite, in CI) and `tests/control-plane/board-one-post.test.ts`.
 
