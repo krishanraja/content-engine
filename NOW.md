@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Krish chose option 1 (`auditrule`) of the Home Depot rethink in chat and asked for a catchier headline and a funny cover; on the week of 16 Nov ideas board it now reads "Your AI thinks it's the best. Guess who told it." with a cover of a robot pinning an I'M THE BEST sticker on its own chest while the office burns. No cover image is generated yet. (2026-11-12)
 - Option 2 of the Home Depot carousel rethink (`frenemies`, Tue 17 Nov) showed cut off mid-sentence on the ideas board, because the board joins its "see" and "lands" lines and stops at 600 characters; both lines are now shorter (559 together) and show whole. (2026-11-12)
 - The docs steward check is no longer red on every merge. Auto-merge started the full steward after each merge as github-actions[bot], and claude-code-action refuses a run a bot started, so all 121 of those runs failed from 3 Nov. A merge now starts the steward as its dry run (the digest and the validator, no model); the nightly run still writes, and a test holds the dispatch to the dry run. (2026-11-12)
 - Option 2 of the rethought Home Depot carousel (`frenemies`, Tue 17 Nov on the week of 16 Nov ideas board) is rebuilt on his ask "2. Give real world analogies": six cards that open on two sourced analogies (you can't spot your own typos; a World Cup referee never runs his own country's match) before Microsoft and Home Depot; read back by two fresh readers, copy lint clean, voice-checked. (2026-11-12)
@@ -47,7 +48,7 @@ Older lines: `docs/history/2026-11-12-NOW-moved-3.md`, `docs/history/2026-11-12-
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-12): Krish presses Approve on one of auditrule, frenemies or ownref on the week of 16 Nov ideas board.
+- Next (2026-11-12): Krish settles which robot the cover uses (his felt house robot, per his 5 Nov ruling, or a person-like robot) and approves the image credits; then he presses Approve on auditrule on the ideas board.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
