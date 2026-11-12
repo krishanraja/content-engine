@@ -4,7 +4,8 @@ Status: Current
 Owner: Krish Raja
 Last verified: 2026-11-12 against `main` at `02184d34` (the code, `apps/control-plane/vercel.json` and
 `.github/workflows/`), GitHub Actions' own run records, and a read-only readback of the shared Mindmaker OS database
-between 11:00 and 12:00 UTC the same day
+between 11:00 and 12:00 UTC the same day; the board's contract, the full verify, the engine's runs and what waits on
+Krish rechecked against `main` at `3064e769`, the live view and the database between 13:30 and 14:30 UTC
 
 `NOW.md` is the short version and says what is next. This page holds only what was checked on the day above, and
 each line names where. The page it replaced (its 4 November list, the 19 October board cutover and a body last
@@ -26,9 +27,9 @@ When this page and the code disagree, the code wins: fix this page.
   `saturday-goodnews.yml` and `maxine-trial.yml`. `board-rebuild.yml` is kept as a record; its first step stops it.
 - **The publish board.** The one live board is Control Centre's Content tab (`config/boards.json`,
   `live_board.url`; `python3 scripts/post-pack/live_board.py <Monday> [day]`), drawn from this engine's view
-  (`GET /api/board/<Monday>/view`, `apps/control-plane/api/board/_view.ts`). The view's contract is 1.9.0
-  (`VIEW_CONTRACT_VERSION`, `_viewContract.ts`), and Control Centre pins 1.9.0 (its
-  `tests/fixtures/board-view/PIN.json` on `main`). The engine's own pages at content.krishraja.com/board/<Monday>
+  (`GET /api/board/<Monday>/view`, `apps/control-plane/api/board/_view.ts`). The view's contract is 1.10.0
+  (`VIEW_CONTRACT_VERSION`, `_viewContract.ts`; the live view answered 1.10.0), and Control Centre pins 1.10.0 (its
+  `tests/fixtures/board-view/PIN.json` on `main`, the schema and fixture byte for byte this engine's at #597). The engine's own pages at content.krishraja.com/board/<Monday>
   are the read-only archive: a press made there is refused with 423 `archive_read_only`
   (`apps/control-plane/api/board/_readOnly.ts`, `_handler.ts`). How to use the board: `docs/PUBLISH_BOARDS.md`.
 - **Video.** `scripts/ve.py` (ve) is the video engine and `scripts/quick-edit/` the fallback until ve passes
@@ -51,10 +52,10 @@ When this page and the code disagree, the code wins: fix this page.
 
 ## Broken or risky
 
-- **Full verify on `main`** was red from 12 Nov 09:53 UTC (issue #589): the Windows suite failed
+- **Full verify on `main`** was red from 12 Nov 09:53 UTC (issue #589, closed 12:24 UTC): the Windows suite failed
   `tests/control-plane/inspiration-actions.test.ts` on CRLF output, and the board's phone check failed because a
-  long subscribe link widened the run-sheet past 390px. Both are fixed in pull request #592; #589 closes when the
-  full verify after it is green.
+  long subscribe link widened the run-sheet past 390px. Both were fixed in pull request #592, and the full verify on
+  `3064e769` (13:26 UTC) is green.
 - **`claims_resolve` failed every day** (5 to 12 Nov, every run): "there is no unique or exclusion constraint
   matching the ON CONFLICT specification". Its upsert named `onConflict: 'claim_id'`, and the only unique index on
   `claim_resolutions.claim_id` is partial (`claim_resolutions_one_due`, `WHERE event = 'came_due'`), which an
@@ -63,8 +64,8 @@ When this page and the code disagree, the code wins: fix this page.
 - **`investigations`** failed its last weekly run (5 Nov): "grounding failed twice".
 - **`learning_compile`** skipped its last weekly run (8 Nov): "only 0 edit events in 28 days: too thin to propose
   anything".
-- **`editorial_radar`** (`/api/content-opportunities/refresh`, scheduled daily) wrote two run rows in the eight days
-  to 12 Nov, the last on 11 Nov.
+- **`editorial_radar`** (`/api/content-opportunities/refresh`, scheduled daily) wrote three run rows in the eight
+  days to 12 Nov, the last at 12:00 UTC on 12 Nov (ok).
 - **The Studio runner** reports itself degraded with its Drive unavailable (above).
 
 The `taste_*` rows in the same run ledger are inspirationhouse's runs (`krishanraja/inspirationhouse`,
@@ -81,6 +82,11 @@ Each is checked in the record that holds it; only his own words or presses close
 - **The music levels, by ear.** Two records disagree: `config/music-library.json` holds the levels as `approved`
   (12 Oct), while house rule `MUSIC_BED` (`_houseRules.ts`) says they "stay proposed until he approves them by ear".
   Only his word settles which is true.
+- **His answers on the week of 9 Nov's ideas board** (the live view, 13:30 UTC on 12 Nov): Thu 12's
+  `beststicker` ("Your AI thinks it's the best. Guess who told it.", signed off in a session and filed in 3 Posts, so
+  it waits on his Approve on the live board, the one press that puts it on the day) and `otherside`; Wed 11's
+  `tablefortwo`; one option on Fri 13; Sat 14's `goodnews` and `spotai`. Thu 12's `agentnotsetup` is one post with Tue
+  17's `povteach`, approved on Tue 17; his Approve on Thu 12 would move it there.
 - **Friday 13 Nov's creative sheet.** `docs/plans/2026-11-09-week/fri-preproduction/creative.json` has `signed: null`;
   nothing in its "after sign" list starts before he signs it.
 
