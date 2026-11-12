@@ -130,6 +130,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/discover-lens-radar`
 - `/api/feed/ingest`
 - `/api/idea-queue`
+- `/api/inspiration/actions`
 - `/api/inspiration/candidates`
 - `/api/inspiration/cards`
 - `/api/inspiration/drive-scan`
@@ -2000,6 +2001,7 @@ The week's options, as the Sunday session writes them onto the pieces.
 - `interface WeekOptionInput`
 - `interface WeekOptionMeta`
 - `const MAX_OPTIONS`
+- `const MAX_INSPIRED`
 - `const MAX_COVERS`
 - `function isMonday(ymd: string): boolean`
 - `function keepThroughWeek(expiresAt: string | null | undefined, weekStart: string): string | null`
@@ -2837,6 +2839,21 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/inspiration/_actions.ts`
+
+His ticks on Inspiration cards, as this engine reads and answers them (docs/PUBLISH_BOARDS.md, "His instruction:
+
+- `const ACTION_COLS`
+- `const LIVE`
+- `const JOB_STATES`
+- `type JobReport = (typeof JOB_STATES)[number]`
+- `const READING_MAX`
+- `interface JobInput`
+- `function parseJobReport(body: unknown): { report: JobInput | null; problems: string[] }`
+- `function jobPatch(action: Record<string, any>, r: JobInput, now: string): { patch: Record<string, unknown> } | { refuse…`
+- `function cardWords(card: Record<string, any> | null): string[]`
+- `function brief(action: Record<string, any>, card: Record<string, any> | null, request: Record<string, any> | null, read…`
+
 ### `apps/control-plane/api/inspiration/_cards.ts`
 
 The inspiration board as ve reads it: a card by its id, the cards to offer for a role, and every cut a card shaped.
@@ -2857,7 +2874,9 @@ The inspiration board as ve reads it: a card by its id, the cards to offer for a
 - `function cardView(row: Row, uses: CardUse[])`
 - `function parseIds(raw: unknown): { ids: string[]; bad: string[] }`
 - `function usesByCard(rows: Row[]): Map<string, CardUse[]>`
-- `function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: { role: Role; format?: string; limit: number })`
+- `interface StyleTick`
+- `function tickRoles(row: Row): Role[]`
+- `function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: { role: Role; format?: string; limit: number }…`
 - `interface UseInput`
 - `function parseUses(body: unknown): { uses: UseInput[]; problems: string[] }`
 - `function migrationPending(error: { message?: string } | null | undefined): boolean`
@@ -2918,6 +2937,10 @@ What the Drive scan decides, with no Drive, no model and no database.
 - `function normaliseHandle(handle: unknown): string`
 - `function handleKey(value: unknown): string`
 - `function creatorMatches( creator: { slug?: string | null; linkedin_slug?: string | null; name?: string | null }, seen: …`
+
+### `apps/control-plane/api/inspiration/actions.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/inspiration/candidates.ts`
 

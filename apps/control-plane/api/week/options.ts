@@ -39,7 +39,9 @@ import { buildOffdayVerdicts, offdayWeeksBefore } from './_offdayVerdicts.js'
 //        refused subject he gave back with his press (queue/veto-<subject>), and `house_rules` the live rules the
 //        ideas are held to as the judges and writers read them (BIG_PICTURE, STORY_ARC; the ideas quality plan,
 //        Wave 1). Evidence only: no model, no write, and the judges never read it.
-// POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended, covers? }] }
+// POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended, covers?, inspiration_action? }] }
+//        (inspiration_action: an idea made from an Inspiration card Krish ticked names his tick, and comes on top of the
+//        day's four, one a day; Ruling, Krish, 2026-11-12)
 //        writes meta.week_option on each option's row (and its series, when
 //        the row has none), keeps each option alive through its week (a seed's
 //        own expiry can fall before the purge that would delete it), and
@@ -135,7 +137,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   for (const o of options) {
     const row = found.get(o.id)!
     const meta = row.meta && typeof row.meta === 'object' ? row.meta : {}
-    const option: WeekOptionMeta = { week_start, series, rank: o.rank, pitch: o.pitch, why_now: o.why_now, recommended: Boolean(o.recommended), by, at }
+    const option: WeekOptionMeta = { week_start, series, rank: o.rank, pitch: o.pitch, why_now: o.why_now, recommended: Boolean(o.recommended), by, at,
+      ...(o.inspiration_action ? { inspiration_action: o.inspiration_action } : {}) }
     const covers = mergeCovers(meta.covers, week_start, o.covers)
     const patch: Record<string, unknown> = { meta: { ...meta, week_option: option, ...(covers ? { covers } : {}) }, updated_at: at }
     // A row with no series takes the day's (the judges' ladder fills an empty slot the same way); a stored series is never overwritten.

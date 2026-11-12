@@ -128,6 +128,44 @@ What the database cannot tell: a writer holding the service key could still writ
 Nothing in a database tells a forged name from his press; the routes refuse every other writer, and the ledger names
 the revision every approval came from.
 
+## His instruction: a ticked inspiration card (Ruling, Krish, 2026-11-12)
+
+Krish, 2026-11-12: "In my inspiration board can I have an option to tick a box that states that this isn't just random
+inspiration but it's an actual instruction that needs to be followed (or made into a piece urgently), or a production
+style that should be mimicked within the next week? We can turn some inspiration into actual action immediately and jump
+the queue." Ruling (Krish, 2026-11-12): an inspiration card he ticks is an instruction that jumps the queue: Content
+means make it into a piece now, Production means use the style within a week.
+
+The tick is Control Centre's: one row of `inspiration_actions` (control-center migration `20261128093000`), set only by
+his press in its Inspiration place (control-center `docs/app/inspiration/README.md`, "Act on this"). This engine never
+creates, drops or closes one.
+
+- **Content: a piece now.** His press sends this repository one `repository_dispatch` (event `inspiration-piece`,
+  `client_payload` `{action_id}` only), the shape of the board's "Find the stories now" press. It is his press, never a
+  schedule: `.github/workflows/inspiration-piece.yml` has no cron, so the scheduled jobs that may touch a board are still
+  the ones in AGENTS.md. Claude Code runs on his subscription and follows
+  `.agents/skills/plan-week/references/inspiration-piece.md`: it reads the tick, his words, the card and its reading
+  (`GET /api/inspiration/actions?id=`; the brief stays in `.scratch/`, never committed), researches, and writes one
+  idea through the normal idea path (the floor, the copy lint, the kill list, a row through `POST /api/content-ideas`
+  as `week_research`) for the planning week Control Centre's To approve shows, on the earliest open day whose series it
+  fits, else as a recorded off-day option. `scripts/post-pack/inspiration_act.py place` appends it to its day in
+  `ideas.json` after the day's other options (their press ids never move), marked `from_inspiration` with his tick and
+  the card, the card in its `covers`; `board_feed.py gate` must pass; the workflow keeps `ideas.json` on the week's
+  branch, then `inspiration_act.py offer` offers it for its series through `POST /api/week/options` on top of the day's
+  four (`inspiration_action`, one a day, `MAX_INSPIRED`), and the run reports its own state on his tick
+  (`POST /api/inspiration/actions`, the operator's key: running, then drafted with the idea, or failed with the reason
+  in words, which Control Centre shows on the card and in To approve with Try again). Control Centre lists the idea
+  first in To approve, with the card's preview and its Drive link.
+- **The gate is untouched.** The idea waits for his Approve like every other; the run never sets a day, saves a pick or
+  writes `decided`, and the database refuses any other placement. `tests/ideas-gate-db.mjs` tries it: an idea his ticked
+  card made is refused a day by the run's own write and by a pick the run saves, and placed by his Approve only.
+- **Production: the style within a week.** An open Production tick comes first among the cards `ve init` offers a cut
+  (`GET /api/inspiration/candidates`, for the roles it teaches, else look, motion and captions), with its
+  `instruction` `{action_id, due_at, words}`. The next fitting cut names it in `brand.references` (failure F26's path,
+  `.agents/skills/ve/references/board-references.md`), and `ve verdict` records the use in `card_uses`, which closes
+  his tick in Control Centre (its done-check, `inspiration_act`). Growth reads the same tick in its directive (protocol
+  1.21.0). Past its day and unused, Control Centre's Publish Board says so in one line.
+
 ## What he refused stays refused: the ideas board's checks in code (the ideas quality plan, Wave 1)
 
 Krish, 2026-11-09: "I just said that Infosys is boring so why did you make the piece about Infosys?" The Sunday run's

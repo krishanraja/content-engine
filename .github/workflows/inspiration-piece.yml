@@ -1,0 +1,221 @@
+name: Inspiration piece
+
+# Ruling (Krish, 2026-11-12): an inspiration card he ticks is an instruction that jumps the queue: Content means make
+# it into a piece now, Production means use the style within a week. His words: "In my inspiration board can I have
+# an option to tick a box that states that this isn't just random inspiration but it's an actual instruction that needs
+# to be followed (or made into a piece urgently) ... We can turn some inspiration into actual action immediately and
+# jump the queue."
+#
+# His tick on a Content card in Control Centre's Inspiration place starts this run: one repository_dispatch with event
+# type inspiration-piece and client_payload {"action_id": "<uuid>"} (control-center api/_inspirationAct.ts), the same
+# shape as the board's "Find the stories now" press. It is his press, never a schedule: this workflow has no cron, so
+# the rule that only the Sunday ideas run touches a board on a timer stands (tests/no-claude-routines.test.ts). It can
+# also be started by hand: Actions > Inspiration piece > Run workflow.
+#
+# Claude Code runs on his subscription, never an API key (the docs-steward pattern), and follows
+# .agents/skills/plan-week/references/inspiration-piece.md: it reads the card, its reading and his words, researches,
+# and writes one idea for the planning week (the week Control Centre's To approve shows) through the normal idea path
+# (the floor, the kill list, the copy lint, the voice rules, a new row through POST /api/content-ideas), on the earliest
+# open day whose series it fits, else as an off-day option. The idea goes after the day's other options, marked
+# from_inspiration; the week's branch carries it to the live board, and Control Centre lists it first in To approve with
+# the card beside it.
+#
+# The ideas gate is untouched (Krish, 2026-11-11: "I shouldn't end up seeing random ideas in the publish board that I
+# never wanted there and that I didn't approve to move to the publish board"): this run proposes one idea on the ideas
+# board and never puts it on the publish board. Only his Approve does; the database refuses any other placement.
+#
+# Never silent. The run reports its own state on his tick through the engine (POST /api/inspiration/actions): running,
+# then drafted with the idea's id, or failed with the reason in words, which Control Centre shows on the card and in To
+# approve with Try again.
+#
+# The run reads untrusted web pages, so it is fenced by permissions, not by its prompt: Bash only for the named engine
+# scripts (no curl, no git push, no shell), writes only under docs/plans/ and .scratch/inspiration/, no read of /proc,
+# and the checkout keeps no GitHub credential. The brief (his words, the card's reading) stays in .scratch/, which is
+# never committed: this repository is public. Only the keep step, after Claude has stopped, pushes.
+#
+# One-time setup (Krish): CLAUDE_CODE_OAUTH_TOKEN, from `claude setup-token` (already set for the Sunday ideas run).
+
+on:
+  repository_dispatch:
+    types: [inspiration-piece]
+  workflow_dispatch:
+    inputs:
+      action_id:
+        description: 'The id of his tick (inspiration_actions.id, a uuid)'
+        required: true
+
+concurrency:
+  group: inspiration-piece-${{ github.event.inputs.action_id || github.event.client_payload.action_id }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  piece:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Claude Code runs on Krish's subscription, never an API key
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        run: |
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "::error::No CLAUDE_CODE_OAUTH_TOKEN. One setup step for Krish: run 'claude setup-token' on your computer and add what it prints as the repository secret CLAUDE_CODE_OAUTH_TOKEN (Settings > Secrets and variables > Actions). This job never uses an API key instead."
+            exit 1
+          fi
+          if [ -z "$ENGINE_OPERATOR_TOKEN" ]; then
+            echo "::error::No ENGINE_OPERATOR_TOKEN, so the run cannot read his tick or write the idea."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Which tick, and is its card ready?
+        id: guard
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          ACTION: ${{ github.event.inputs.action_id || github.event.client_payload.action_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if ! [[ "$ACTION" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]; then
+            echo "::error::action_id must be his tick's id (a lower-case uuid)."
+            exit 1
+          fi
+          echo "action=$ACTION" >> "$GITHUB_OUTPUT"
+          python3 scripts/post-pack/inspiration_act.py report "$ACTION" --state running --run-url "$RUN_URL"
+          mkdir -p .scratch/inspiration
+          # A link he ticked as he saved it has no reading until his home computer fetches it: wait up to 45 minutes.
+          for i in $(seq 1 45); do
+            python3 scripts/post-pack/inspiration_act.py brief "$ACTION" --out ".scratch/inspiration/$ACTION.json"
+            if python3 -c "import json,sys; sys.exit(0 if json.load(open('.scratch/inspiration/$ACTION.json')).get('ready') else 1)"; then
+              echo "ready=true" >> "$GITHUB_OUTPUT"; break
+            fi
+            sleep 60
+          done
+          monday=$(python3 -c "import json; print(json.load(open('.scratch/inspiration/$ACTION.json'))['week'])")
+          echo "monday=$monday" >> "$GITHUB_OUTPUT"
+          # The live board reads the week's folder from offday-revise/<Monday> before main: start from it.
+          if git fetch -q origin "+refs/heads/offday-revise/$monday:refs/inspiration/week" 2>/dev/null; then
+            git checkout -q refs/inspiration/week -- "docs/plans/$monday-week" || true
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.ready == 'true'
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install the tools the idea path runs
+        if: steps.guard.outputs.ready == 'true'
+        run: |
+          python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+          npm ci
+          mkdir -p "$HOME/.local/bin"
+
+      - name: One idea from his card, in Claude Code on his subscription
+        id: claude
+        if: steps.guard.outputs.ready == 'true'
+        uses: anthropics/claude-code-action@v1
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          claude_args: >-
+            --max-turns 250
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/inspiration_act.py:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),Edit(.scratch/inspiration/**),Write(.scratch/inspiration/**),WebSearch,WebFetch,Task,TodoWrite"
+            --disallowedTools "Read(//proc/**)"
+          prompt: |
+            action_id: ${{ steps.guard.outputs.action }}
+            Krish ticked an Inspiration card as an instruction: make it into a piece now. Follow
+            .agents/skills/plan-week/references/inspiration-piece.md exactly. The brief is
+            .scratch/inspiration/${{ steps.guard.outputs.action }}.json (his words, the card, its reading, the planning
+            week ${{ steps.guard.outputs.monday }} and its open days). Write one idea through the normal idea path and
+            place it with python3 scripts/post-pack/inspiration_act.py place on the file you write at
+            .scratch/inspiration/${{ steps.guard.outputs.action }}.idea.json, then stop.
+
+            This run was started by his press in Control Centre (.github/workflows/inspiration-piece.yml). No one reads its
+            chat. The ideas gate: you propose one idea on the ideas board and never put it on the publish board. Never set
+            a piece's day, never write a pick or a press, never write "decided" on an option. Run each python3 command on
+            its own with the ids written out, and no variables, pipes, `;`, `&&` or `echo`. Do not commit or push: the
+            workflow keeps the week's ideas.json on the week's branch when you stop. Once the idea has its row, report on
+            it and file what the research found there as you go (python3 scripts/post-pack/board_session.py <piece id>
+            start, progress, add and done), so the live board shows who is working on it and what is on file.
+
+      - name: What he refused stays refused, checked in code
+        id: gate
+        if: steps.claude.outcome == 'success'
+        env:
+          MONDAY: ${{ steps.guard.outputs.monday }}
+        run: |
+          python3 scripts/post-pack/board_feed.py gate "$MONDAY" > ".scratch/inspiration/gate.txt" 2>&1 || {
+            echo "::error::The gate refused the week's ideas: an option offers a subject he refused."; exit 1; }
+
+      - name: Keep the idea on the week's branch, offer it for its day, and tell Control Centre
+        id: keep
+        if: steps.gate.outcome == 'success'
+        env:
+          ACTION: ${{ steps.guard.outputs.action }}
+          MONDAY: ${{ steps.guard.outputs.monday }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GH_TOKEN: ${{ github.token }}
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        run: |
+          idea=".scratch/inspiration/$ACTION.idea.json"
+          [ -f "$idea" ] || { echo "::error::The run wrote no idea file."; exit 1; }
+          piece=$(python3 -c "import json; print(json.load(open('$idea'))['piece_id'])")
+          file="docs/plans/$MONDAY-week/ideas.json"
+          cp "$file" "$RUNNER_TEMP/ideas.json"
+          git reset -q --hard HEAD
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git rev-parse -q --verify refs/inspiration/week >/dev/null; then git switch -q -c "inspiration-piece/$ACTION-$RUN_ID" refs/inspiration/week; else git switch -q -c "inspiration-piece/$ACTION-$RUN_ID"; fi
+          mkdir -p "docs/plans/$MONDAY-week"
+          cp "$RUNNER_TEMP/ideas.json" "$file"
+          git add -- "$file"
+          git diff --cached --quiet && { echo "::error::The idea did not change the week's ideas.json."; exit 1; }
+          git commit -q -m "An idea from his ticked inspiration card for the week of $MONDAY (run $RUN_ID)" \
+            -m "Written by the Inspiration piece run on Krish's subscription. Only his Approve puts it on a publish board." \
+            -m "Ruling (Krish, 2026-11-12): an inspiration card he ticks is an instruction that jumps the queue: Content means make it into a piece now, Production means use the style within a week."
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c http.extraheader="AUTHORIZATION: basic $auth" push -q origin "HEAD:refs/heads/inspiration-piece/$ACTION-$RUN_ID"
+          bash scripts/week_branch_keep.sh "$MONDAY" "$(git rev-parse HEAD)" "$auth"
+          if [ -z "$(gh pr list --head "offday-revise/$MONDAY" --state open --json number --jq '.[].number')" ]; then
+            gh pr create --head "offday-revise/$MONDAY" --base main --title "The week of $MONDAY: an idea from his ticked inspiration" \
+              --body "The week's ideas for $MONDAY, with one idea from a card Krish ticked (.github/workflows/inspiration-piece.yml). The live board already shows it from this branch; it merges itself once CI is green (auto-merge.yml)." || true
+          fi
+          python3 scripts/post-pack/inspiration_act.py offer "$idea"
+          python3 scripts/post-pack/board_web.py touch "$MONDAY" --source ideas || echo "::warning::The week's change signal was not bumped; the board shows the idea at its next read."
+          python3 scripts/post-pack/inspiration_act.py report "$ACTION" --state drafted --piece "$piece" --run-url "$RUN_URL"
+
+      - name: Never silent, a run that did not draft says why on his card
+        if: failure() || steps.guard.outputs.ready != 'true'
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          ACTION: ${{ steps.guard.outputs.action }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          READY: ${{ steps.guard.outputs.ready }}
+          CLAUDE: ${{ steps.claude.outcome }}
+          GATE: ${{ steps.gate.outcome }}
+          KEEP: ${{ steps.keep.outcome }}
+        run: |
+          [ -n "$ACTION" ] || exit 0
+          if [ "$READY" != 'true' ]; then why="its link has not been read yet, so there was nothing to make it from; press Try again once its card shows"
+          elif [ "$CLAUDE" != 'success' ]; then why="the writing run stopped before it wrote an idea"
+          elif [ "$GATE" != 'success' ]; then why="the idea offered a subject you turned down before, so it was held"
+          elif [ "$KEEP" != 'success' ]; then why="the idea could not be put on the week's ideas board"
+          else why="the run stopped"; fi
+          python3 scripts/post-pack/inspiration_act.py report "$ACTION" --state failed --error "$why" --run-url "$RUN_URL" || true
+          [ "$READY" = 'true' ] || exit 1

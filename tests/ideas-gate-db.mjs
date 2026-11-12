@@ -160,5 +160,20 @@ assert.deepEqual(fri.map(r => [r.doc, r.outcome, r.words]), [
 await save('queue/fri-2', press('fri-2', 'not_for_us', { reason: 'We did this last month.', at: '2026-11-11T10:00:00Z' }))
 assert.equal((await rows(`select 1 from idea_outcomes where doc = 'queue/fri-2'`)).length, 1)
 
+// ── his ticked inspiration card: the idea it made still waits for his Approve ────────────────────────────────────────
+// Ruling (Krish, 2026-11-12): an inspiration card he ticks is an instruction that jumps the queue. It jumps the ideas
+// queue, never the gate: the inspiration-piece run writes its idea onto the ideas board marked with his tick, and that
+// idea reaches a day only by his own Approve, like every other.
+const TICK = '9d1c4c6e-0000-4000-8000-00000000a11c', CARD = '9d1c4c6e-0000-4000-8000-00000000ca7d'
+const I = await newIdea('From his ticked card', { meta: { week_option: { week_start: WEEK, series: 'mind_the_gap', rank: 5, inspiration_action: TICK }, covers: { [WEEK]: [CARD] } } })
+await refused(`update content_ideas set scheduled_for = '2026-11-20', state = 'drafting' where id = $1`, [I], NOT_APPROVED,
+  'an idea his ticked card made cannot be put on a day by the run that wrote it')
+await save('picks/fri', { day: 'fri', pick: 'fri-5', idea_id: I, series: 'mind_the_gap', story: 'Headline: from his card.', so_what: 'His card.', option_sha256: 'f'.repeat(64) }, 'engine_operator')
+await refused(`update content_ideas set scheduled_for = '2026-11-20', state = 'drafting' where id = $1`, [I], NOT_APPROVED,
+  'a pick the run saves for it is not his Approve')
+await save('picks/fri', { day: 'fri', pick: 'fri-5', idea_id: I, series: 'mind_the_gap', story: 'Headline: from his card.', so_what: 'His card.', option_sha256: 'f'.repeat(64), note: 'Make it.' })
+await db.query(`update content_ideas set scheduled_for = '2026-11-20', state = 'drafting' where id = $1`, [I])
+assert.equal((await one(`select scheduled_for::text d from content_ideas where id = $1`, [I])).d, '2026-11-20', 'his Approve places it, on its day')
+
 await db.close()
 console.log('ideas gate: every unapproved route refused; his Approve places exactly its piece on exactly its day; answers append only')
