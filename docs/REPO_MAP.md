@@ -2364,6 +2364,7 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `async function readItemsIn(db: SupabaseClient, states: ItemState[]): Promise<OffdayItem[] | null>`
 - `interface Placed`
 - `function contentOf(r: OffdayItem, ideas: Body | null, week: string): Body`
+- `function carriedItems(plans: Record<string, Body | null>): Set<string>`
 - `function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string, base?: Body[…`
 - `function twinLines(r: OffdayItem | null, plans: Record<string, Body | null>): string[]`
 - `function todayIn(now: Date, timeZone = MOVE_TZ): string`

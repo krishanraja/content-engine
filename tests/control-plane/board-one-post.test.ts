@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { duplicatePosts, postKeys, samePost } from '../../apps/control-plane/api/board/_onePost'
-import { carry, dayOptions, syncApprove, type OffdayItem } from '../../apps/control-plane/api/board/_offdayItems'
+import { carriedItems, carry, dayOptions, syncApprove, type OffdayItem } from '../../apps/control-plane/api/board/_offdayItems'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { truthProblems } from '../../apps/control-plane/api/board/_stage'
 import { approval } from './_approvals'
@@ -165,11 +165,15 @@ describe('the guard over the week plans', () => {
   })
 })
 
-describe('a settled option leaves its day', () => {
-  it('draws Tue 17\'s auditrule nowhere once a re-plan closed it into Thu 12, unless a press of his stands on it', () => {
+describe('an option a re-plan carries leaves its day', () => {
+  it('draws Tue 17\'s auditrule nowhere once Thu 12\'s beststicker names it as the item it carries, unless a press of his stands on it', () => {
     const auditrule = { id: 'auditrule', hook: "Your AI thinks it's the best. Guess who told it.", copy: 'Six cards.', closed: 'Moved to Thu 12 Nov and filed there.' }
-    expect(dayOptions({ offdays: { tue: [auditrule] } }, [], W16, 'tue', undefined, []).map(x => x.o.id)).toEqual([])
+    const plan16 = { offdays: { tue: [auditrule] } }
+    const carriedBy = { [W09]: { offdays: { thu: [{ id: 'beststicker', item: `engine:${W16}:auditrule`, hook: auditrule.hook }] } }, [W16]: plan16 }
+    expect(dayOptions(plan16, [], W16, 'tue', undefined, [], carriedItems(carriedBy)).map(x => x.o.id)).toEqual([])
+    // A session's `closed` alone never takes an idea off his board: only a re-plan that names what it carries does.
+    expect(dayOptions(plan16, [], W16, 'tue', undefined, [], carriedItems({ [W16]: plan16 })).map(x => x.o.id)).toEqual(['auditrule'])
     const his = row({ item: `engine:${W16}:auditrule`, option_id: 'auditrule', option: auditrule, doc: 'queue/off-tue-auditrule' })
-    expect(dayOptions({ offdays: { tue: [auditrule] } }, [his], W16, 'tue', undefined, [his]).map(x => x.o.id)).toEqual(['auditrule'])
+    expect(dayOptions(plan16, [his], W16, 'tue', undefined, [his], carriedItems(carriedBy)).map(x => x.o.id)).toEqual(['auditrule'])
   })
 })
