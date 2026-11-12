@@ -4,7 +4,7 @@ import { yesByDay } from './_yes.js'
 import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, approvedLabel, dayShort, dayWords, goes, optionSha, type Approval, type Outcome } from './_gate.js'
 import { channelOfUrl, type LivePost } from './_itsLive.js'
 import { driveFolderIdOf } from './_drivePosts.js'
-import { dayLabel as dateLabel, dayOptions, elsewhereLines, moveSpec, twinLines, viewPosts, type MoveSpec, type OffdayItem, type ViewGrowthPost } from './_offdayItems.js'
+import { carriedItems, dayLabel as dateLabel, dayOptions, elsewhereLines, moveSpec, twinLines, viewPosts, type MoveSpec, type OffdayItem, type ViewGrowthPost } from './_offdayItems.js'
 import type { ViewStage } from './_stage.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
@@ -346,9 +346,9 @@ export function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day
 export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
   // The day's options from the one place their day lives (_offdayItems.ts): the plan's and the approvals carried here
   // (offdayList), minus what moved away, plus what moved here and Growth's own.
-  const list = dayOptions(i.ideas, i.items === undefined ? null : i.items, i.week, day, offdayList(i.ideas, i.queue, day), i.all_items)
-  const known = i.items !== undefined && i.items !== null
   const plans: Record<string, Body | null> = { ...(i.plans || {}), [i.week]: i.ideas }
+  const list = dayOptions(i.ideas, i.items === undefined ? null : i.items, i.week, day, offdayList(i.ideas, i.queue, day), i.all_items, carriedItems(plans))
+  const known = i.items !== undefined && i.items !== null
   return list.map(({ o, placed }) => {
     const s = offdaySides(o)
     const docId = `off-${day}-${s.id}`

@@ -18,7 +18,7 @@ import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
 import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
-import { channelWord, dayLabel, dayOptions, liveOn, readItems, readItemsIn, type GrowthPost, type OffdayItem } from './_offdayItems.js'
+import { carriedItems, channelWord, dayLabel, dayOptions, liveOn, readItems, readItemsIn, type GrowthPost, type OffdayItem } from './_offdayItems.js'
 import { ideaStage, postedStage, truthProblems } from './_stage.js'
 import { scheduledOf } from './_posted.js'
 
@@ -461,7 +461,7 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
   const week = i.week, date = dayDate(week, day)
   // The day's options from the one place their day lives (_offdayItems.ts): the plan's and the approvals carried here
   // (offdayList), minus what moved away, plus what moved here and Growth's own.
-  const listed = dayOptions(i.ideas, i.items ?? null, week, day, offdayList(i.ideas, i.queue, day), i.all_items)
+  const listed = dayOptions(i.ideas, i.items ?? null, week, day, offdayList(i.ideas, i.queue, day), i.all_items, carriedItems({ ...(i.plans || {}), [week]: i.ideas }))
   const options = listed.map(x => x.o)
   // Growth's posting record on each option's item (made, scheduled, live), from the one place (2026-11-12).
   const recordOf = (o: Body) => listed.find(x => x.o === o)?.placed.row ?? null
@@ -700,7 +700,10 @@ export function buildView(i: ViewInputs): WeekView {
   // past day that is not out says it was missed, never "with Growth" or "ready".
   for (const d of days) {
     const folderMade = (id: string) => (d.posts || []).some(p => p.option === id && p.assets.length > 0)
+    const pieceStages = new Map<string, NonNullable<ViewPiece['stage']>>()
     for (const o of d.options) {
+      // A publishing day's approved option is the day's piece: it is where the piece is (filled in below).
+      if (d.piece_id && o.id.toLowerCase() === d.piece_id) continue
       if (o.status === 'approved' && o.outcome?.id === 'approved') {
         const marks = postsFor(marked[d.day], { option: o.doc_id }).flatMap(p => p.channels.map(c => ({ label: channelWord(c), href: p.url, at: p.at })))
         o.stage = postedStage({ date: d.date, today, approvedAt: o.outcome.at, approvedLabel: o.outcome.label, growth: o.posts || [], out: marks, scheduled: [], made: folderMade(o.id) })
@@ -718,6 +721,10 @@ export function buildView(i: ViewInputs): WeekView {
         ? { state: 'live', label: d.next, at: null, links: [] }
         : postedStage({ date: d.date, today, approvedAt: p.approval?.at ?? null, approvedLabel: p.approval?.label ?? 'Approved by you', growth: [], out: [...ticked, ...marks],
           scheduled: scheduledOf(i.ticks, d.day, p.id).map(q => ({ label: q.label, due_at: q.due_at })), made: mine && d.media.some(m => m.kind === 'cut') })
+      pieceStages.set(p.id, p.stage)
+    }
+    for (const o of d.options) {
+      if (d.piece_id && o.id.toLowerCase() === d.piece_id) o.stage = pieceStages.get(d.piece_id) ?? ideaStage(o.outcome, o.status)
     }
     // The same post up as an idea on another day: said on the day it is on, so it is never on two days unseen.
     const twins = d.options.filter(o => o.stage && o.stage.state !== 'idea').flatMap(o => (o.elsewhere || []).filter(l => /also has this post up as an idea/.test(l)))

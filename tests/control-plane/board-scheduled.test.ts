@@ -33,6 +33,12 @@ describe('a piece Growth has scheduled', () => {
     const fri = v.days.find(d => d.day === 'fri')!
     expect(fri.next).toBe('Approved in your words. Scheduled: Substack Notes, from Fri 13 Nov, 12:40')
     expect(fri.pieces[0].stage).toEqual({ state: 'scheduled', label: 'Scheduled on Substack Notes for Fri 13 Nov, 12:40', at: '2026-11-13T17:40:00.000Z', links: [] })
+    // The day's approved option is the day's piece: one stage, never two (Wed 11 read "Missed" on its option while the day
+    // was published on every channel).
+    const withOption = buildView(inputs({ ticks: [notes], ideas: { days: { fri: [{ id: FRI, so_what: 'Meta staff gamed it.', story: 'They gamed it.' }] } } })).days.find(d => d.day === 'fri')!
+    const mine = withOption.options.filter(x => x.id === FRI)
+    expect(mine).toHaveLength(1)
+    expect(mine[0].stage).toEqual(withOption.pieces[0].stage)
     expect(fri.posted).toEqual([]) // scheduled is not out
     expect(viewProblems(v)).toEqual([])
   })
