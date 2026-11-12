@@ -10,7 +10,10 @@ import type { EngineRenderProps } from '../props'
  *  decide." (docs/production/CLOSING.md). The tagline is the picture: Anton, each line rising out of its own mask, the
  *  last word in the series colour; then, in reading order, the stacked logo on ink, the three days in their series
  *  colours, "Subscribe free" and the address, whose underline draws on last. Everything arrives fast and settles
- *  softly and has settled by 2.75 s; the card then holds to the end of its 6 s (compile ENDING_FRAMES = 180).
+ *  softly and has settled by 2.75 s; the wide card then holds to the end of its 6 s (compile ENDING_FRAMES = 180).
+ *  The tall card is a compact end beat of 2 s (compile ENDING_FRAMES_BY_ASPECT), the same arrivals quicker and
+ *  settled by 1.3 s, every word inside the tall core box x 120 to 820, y 330 to 1180 (config/brand-palette.json
+ *  statement_beat; Ruling, Krish, 2026-11-12). An off-day card carries no series days (compile passes none).
  *  It replaces the ticker band (Krish, 10 Nov 2026: "This house card looks awful."; and earlier, no marquee). */
 
 export const BAND_ARRIVAL_FRAMES = 0  // a hard cut to ink on his last word; the type brings the motion
@@ -34,11 +37,21 @@ export const ENDING_TIMING = {
   underline: { start: 2.05, dur: 0.7 },
 } as const
 export const ENDING_SETTLED_S = ENDING_TIMING.underline.start + ENDING_TIMING.underline.dur
+/** The tall beat's timings: the same order, quicker, settled by 1.3 s inside its 2 s (kit's endcard.html, tall). */
+export const ENDING_TIMING_TALL = {
+  line: { start: 0.1, step: 0.08, dur: 0.5 },
+  logo: { start: 0, dur: 0.5 },
+  days: { start: 0.5, dur: 0.5 },
+  cta: { start: 0.6, dur: 0.5 },
+  url: { start: 0.66, dur: 0.5 },
+  underline: { start: 0.8, dur: 0.5 },
+} as const
+export const ENDING_SETTLED_TALL_S = ENDING_TIMING_TALL.underline.start + ENDING_TIMING_TALL.underline.dur
 
 const SHAPE = {
-  // Tall: every word inside x 100 to 880, y 200 to 1320 (config/channel-safe-zones.json: clear of the platforms'
-  // top bar, action rail and caption). Wide: a 160 x 120 margin.
-  '9:16': { box: { left: 100, top: 200, width: 780, height: 1120 }, logo: 520, statement: 204, days: 30, kick: 30, url: 52, gap: 44 },
+  // Tall: every word inside the tall core box x 120 to 820, y 330 to 1180 (config/brand-palette.json safe.tall_core,
+  // docs/production/SOCIAL-BEST-PRACTICES-2026.md section 3.5). Wide: a 160 x 120 margin.
+  '9:16': { box: { left: 120, top: 330, width: 700, height: 850 }, logo: 420, statement: 176, days: 24, kick: 24, url: 46, gap: 30 },
   '16:9': { box: { left: 160, top: 120, width: 1600, height: 840 }, logo: 520, statement: 190, days: 26, kick: 24, url: 44, gap: 0 },
 } as const
 
@@ -77,14 +90,15 @@ export function endingBandModel(props: EngineRenderProps, frame: number) {
   if (!props.ending || frame < props.ending.fromFrame || frame >= props.durationFrames) return null
   const layout = endingBandLayout(props)
   const since = frame - props.ending.fromFrame
-  const t = ENDING_TIMING
+  const tall = props.aspect === '9:16'
+  const t = tall ? ENDING_TIMING_TALL : ENDING_TIMING
   return {
     ...layout,
     since,
     lines: layout.lines.map((text, i) => ({ text, rise: moved(since, { start: t.line.start + t.line.step * i, dur: t.line.dur }) })),
     logo: moved(since, t.logo), days: moved(since, t.days), cta: moved(since, t.cta), url: moved(since, t.url),
     underline: moved(since, t.underline, DRAW),
-    settled: since / FPS >= ENDING_SETTLED_S,
+    settled: since / FPS >= (tall ? ENDING_SETTLED_TALL_S : ENDING_SETTLED_S),
     // Kept for callers that read the old band's arrival: the card is on screen from its first frame.
     arrival: 1,
   }
@@ -99,7 +113,8 @@ export function EndingBand({ props, frame }: { props: EngineRenderProps; frame: 
   const tall = props.aspect === '9:16'
   const shape = SHAPE[props.aspect]
   const tokens = props.tokens
-  const days = props.ending.days?.length ? props.ending.days : ENDING_DAYS
+  // compile passes [] on an off day: no series days on its card (config/brand-palette.json; F36).
+  const days = props.ending.days ?? ENDING_DAYS
   const mono: React.CSSProperties = { fontFamily: HOUSE_FONTS.data, fontWeight: 700, textTransform: 'uppercase', whiteSpace: 'nowrap' }
   const dayLine = (
     <div style={{ ...mono, ...rise(model.days), fontSize: shape.days, letterSpacing: '0.08em', ...(tall ? {} : { marginBottom: 24 }) }}>
@@ -132,8 +147,8 @@ export function EndingBand({ props, frame }: { props: EngineRenderProps; frame: 
           ))}
         </div>
         {tall
-          ? <div style={{ display: 'flex', flexDirection: 'column', gap: shape.gap }}>{dayLine}{address}</div>
-          : <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>{address}{dayLine}</div>}
+          ? <div style={{ display: 'flex', flexDirection: 'column', gap: shape.gap }}>{days.length > 0 && dayLine}{address}</div>
+          : <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>{address}{days.length > 0 && dayLine}</div>}
       </div>
       <Grain />
     </div>

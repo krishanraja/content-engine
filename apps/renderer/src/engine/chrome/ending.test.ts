@@ -10,7 +10,7 @@ vi.mock('remotion', async (importOriginal) => {
 import { houseDueLine } from '../../house/geometry'
 import { EngineRenderPropsSchema, type EngineRenderProps } from '../props'
 import { CallCard, callCardLayout, callCardModel, ENDING_SAFE } from './CallCard'
-import { ENDING_DAYS, ENDING_SETTLED_S, ENDING_TAGLINE, EndingBand, endingBandModel, statementLines } from './EndingBand'
+import { ENDING_DAYS, ENDING_SETTLED_S, ENDING_SETTLED_TALL_S, ENDING_TAGLINE, EndingBand, endingBandModel, statementLines } from './EndingBand'
 
 function fixture(aspect: EngineRenderProps['aspect']): EngineRenderProps {
   const image = { src: 'stacked.svg', pixelWidth: 1040, pixelHeight: 320 }
@@ -35,7 +35,7 @@ describe('the statement close', () => {
   })
 
   it('starts on his last word, moves in reading order, settles by 2.75 s and then holds still', () => {
-    const props = fixture('9:16')
+    const props = fixture('16:9')
     const start = props.ending!.fromFrame
     expect(endingBandModel(props, start - 1)).toBeNull()
     const first = endingBandModel(props, start)!
@@ -53,6 +53,17 @@ describe('the statement close', () => {
       expect([model.logo, model.days, model.cta, model.url, model.underline]).toEqual([1, 1, 1, 1, 1])
     }
     expect(endingBandModel(props, props.durationFrames)).toBeNull()
+  })
+
+  it('on the tall cut is a 2 s beat: the logo first, everything settled by 1.3 s (config/brand-palette.json statement_beat)', () => {
+    const props = fixture('9:16')
+    const start = props.ending!.fromFrame
+    expect(ENDING_SETTLED_TALL_S).toBeCloseTo(1.3)
+    expect(endingBandModel(props, start + 15)!.logo).toBe(1)
+    const settled = endingBandModel(props, start + Math.ceil(ENDING_SETTLED_TALL_S * 30))!
+    expect(settled.settled).toBe(true)
+    expect(settled.lines.every((line) => line.rise === 1)).toBe(true)
+    expect([settled.logo, settled.days, settled.cta, settled.url, settled.underline]).toEqual([1, 1, 1, 1, 1])
   })
 })
 
@@ -88,10 +99,10 @@ describe.each(['9:16', '16:9'] as const)('%s chrome', (aspect) => {
     const height = aspect === '9:16' ? 1920 : 1080
     expect([model.left, model.top, model.width, model.height]).toEqual([0, 0, width, height])
     const box = model.contentBox
-    if (aspect === '9:16') expect([box.left, box.top, box.left + box.width, box.top + box.height]).toEqual([100, 200, 880, 1320])
+    if (aspect === '9:16') expect([box.left, box.top, box.left + box.width, box.top + box.height]).toEqual([120, 330, 820, 1180])
     else expect([box.left, box.top, box.left + box.width, box.top + box.height]).toEqual([160, 120, 1760, 960])
-    expect(model.statementPx).toBeGreaterThanOrEqual(180)
-    expect(model.logoWidth).toBe(520)
+    expect(model.statementPx).toBeGreaterThanOrEqual(aspect === '9:16' ? 170 : 180)
+    expect(model.logoWidth).toBe(aspect === '9:16' ? 420 : 520)
   })
 
   it('renders the call data, stacked logo, day, promise, pill and URL', () => {

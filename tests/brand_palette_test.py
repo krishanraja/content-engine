@@ -91,8 +91,8 @@ class Makers(unittest.TestCase):
         spec = {'publish_day': '2026-11-16', 'brand': {'series': 'follow.the.money'},
                 'cuts': {'long': {'aspect': '16:9', 'excerpt': False}, 'short': {'aspect': '9:16', 'excerpt': False}}}
         problems = lint.palette_lints(spec)
-        if ve_compile.ENDING_FRAMES / ve_compile.FPS > 2.05:
-            self.assertTrue(any(p.startswith('brand.palette cuts.short') for p in problems), problems)
+        # ve's tall close is the palette's 2 s beat, so the short passes.
+        self.assertFalse(any(p.startswith('brand.palette cuts.short') for p in problems), problems)
         if getattr(ve_compile, 'STING_POSITION', 'before_hook') == 'before_hook':
             self.assertTrue(any(p.startswith('brand.palette cuts.long') for p in problems), problems)
         self.assertEqual(lint.palette_lints(dict(spec, publish_day='2026-11-13', brand={'series': 'mind.the.gap'})), [])
