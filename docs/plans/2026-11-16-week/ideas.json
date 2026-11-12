@@ -615,26 +615,34 @@
    },
    {
     "id": "frenemies",
-    "format": "Meme carousel, 4 cards, 4:5",
+    "format": "Meme carousel, 6 cards, 4:5",
     "source": {
-     "label": "GeekWire, 30 Mar 2026 (Microsoft Critique); VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); NeurIPS 2024 study on AI judges",
+     "label": "Wired, Aug 2014 (psychologist Tom Stafford on why you miss your own typos); ESPN and The Athletic, Jul 2026 (FIFA keeps referees off their own country's matches); GeekWire, 30 Mar 2026 (Microsoft Critique); VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); NeurIPS 2024 study on AI judges",
      "url": "https://www.geekwire.com/2026/gpt-drafts-claude-critiques-microsoft-blends-rival-ai-models-in-new-copilot-upgrade/"
     },
     "hook": "Why does Microsoft get OpenAI's rival to check OpenAI's work?",
-    "copy": "Four cards. Microsoft is OpenAI's biggest investor, and it still has Claude, made by rival Anthropic, check GPT's research before anyone reads it. Home Depot does the same with Google and OpenAI. Researchers found an AI rates its own writing higher than people do, so the companies that know AI best never let one AI mark itself.",
+    "copy": "Six cards. You can't spot your own typos, because your brain reads what you meant to write. A World Cup referee never takes charge of his own country's match. The rule is the same: whoever did the work does not check it. Microsoft runs its AI this way. It is OpenAI's biggest investor, and it still has Claude, an AI from rival Anthropic, check the research OpenAI's GPT writes before anyone reads it. Home Depot does it too: Google's AI answers its customers and OpenAI's AI checks the answers. Researchers found an AI rates its own writing higher than people do, so the companies that know AI best never let one AI mark itself.",
     "pitch": {
-     "see": "Four cards, meme first. Cover: a relatable meme of two rival schools, a pupil from one handing in a test and a teacher from the other marking it in red pen (Krish can swap in a meme he saves to the inspiration folder). Card 2: Microsoft, GPT writes and Claude checks, with both logos. Card 3: Home Depot, Google answers and OpenAI judges. Card 4: the one-line reason and Follow for more.",
-     "lands": "The joke is the fact: Microsoft getting its partner's rival to mark the homework is funny on sight, and the reason turns the laugh into a rule.",
+     "see": "Six cards, meme first. Cover: two rival schools, a pupil from one handing in a test and a teacher from the other marking it in red pen (Krish can swap in a meme he saves to the inspiration folder). Then two real-world rules everyone already lives by: a printed page with a typo its writer missed, circled in red by someone else; and a World Cup referee who never runs his own country's match. Then the AI version: Microsoft (GPT writes, Claude checks) and Home Depot (Google answers, OpenAI judges), each with its real logos. Last card: the one-line reason and Follow for more.",
+     "lands": "The two analogies make the rule obvious before AI is mentioned, so when Microsoft turns out to pay its partner's rival to mark the homework, it reads as common sense and as a joke at once.",
      "why_now": "Microsoft's checker went live this year and Home Depot's CIO described the same set-up in October.",
      "share": "Even Microsoft won't let one AI mark itself."
     },
     "direction": {
      "look": "Meme-led and free, lightly skinned: the house mark small in the bottom-right corner only",
-     "format": "Meme carousel, 4 cards, 4:5",
+     "format": "Meme carousel, 6 cards, 4:5",
      "frames": [
       {
        "words": "WHY DOES MICROSOFT GET OPENAI'S RIVAL TO CHECK OPENAI'S WORK?",
        "picture": "Rival schools: one pupil's test, the other school's teacher marking it"
+      },
+      {
+       "words": "YOU CAN'T SPOT YOUR OWN TYPOS",
+       "picture": "A printed page with a typo its writer missed, circled in red by someone else"
+      },
+      {
+       "words": "A WORLD CUP REFEREE NEVER RUNS HIS OWN COUNTRY'S MATCH",
+       "picture": "A referee's whistle and cards on the centre spot, or a match photo whose rights are clear"
       },
       {
        "words": "MICROSOFT: GPT WRITES, CLAUDE CHECKS",
@@ -653,19 +661,20 @@
      "kit": "The Tuesday meme rule: free look, house mark bottom-right, no series pill"
     },
     "learned_from": [
+     "2. Give real world analogies (12 Nov)",
      "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)",
      "Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real? (3 Nov)"
     ],
     "read_back": {
      "readers": [
-      "Fresh reader A (Sonnet, a 12-year-old reading once)",
-      "Fresh reader B (Haiku, a 12-year-old reading once)"
+      "Fresh reader A (Haiku, a 12-year-old reading once)",
+      "Fresh reader B (Sonnet, a 12-year-old reading once)"
      ],
      "says": [
-      "Microsoft backs OpenAI but still uses OpenAI's rival's AI to check OpenAI's research, and Home Depot does a similar thing, because AIs go easy on their own writing.",
-      "Microsoft has Anthropic's Claude check OpenAI's GPT work, even though Microsoft backs OpenAI, because an AI marks its own writing too kindly."
+      "Microsoft has a rival company's AI check OpenAI's research, because nobody can catch their own mistakes; the typo and referee examples made it click.",
+      "Microsoft pays a rival AI to double-check OpenAI's work, because an AI, like a person, can't reliably judge its own work."
      ],
-     "fixed": "Enron explained, the vague industry-test claim cut, \"backer\" made \"investor\", \"rated the same\" made \"rated both pieces equally good\" after both readers stumbled (12 Nov 2026)"
+     "fixed": "Added the line that ties the analogies to AI and said plainly what Home Depot's two AIs each do, after both readers stumbled there (12 Nov 2026)"
     }
    }
   ],
