@@ -1,0 +1,3 @@
+Status: Full verify's two failures since 12 Nov 09:53 (issue #589) are fixed at their cause: the inspiration-actions test split Python's output on LF only, so Windows' CRLF failed it; and the tagged subscribe link added that morning widened every run-sheet step past a phone's width, so the board scrolled sideways at 390px and its layout check could not tap Monday. Long words in a step's list now wrap on the board, the publish page and the publish manager, and buttons_in_browser.py fails a publish page that scrolls sideways on a phone.
+Next: Full verify runs green on main after this merge, and issue #589 closes with that run.
+North Star check (2026-11-12): holds.

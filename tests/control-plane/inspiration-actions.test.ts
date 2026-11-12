@@ -131,7 +131,8 @@ a.insert_option(plan, off, card)
 print(sorted(plan['offdays']), a.check_idea(dict(idea, day='sun'))[:1])
 `], { cwd: join(__dirname, '..', '..'), encoding: 'utf8' })
     expect(run.stderr).toBe('')
-    expect(run.stdout.trim().split('\n')).toEqual([
+    // Python prints CRLF on Windows: split on either line end, as the rest of the suite does.
+    expect(run.stdout.trim().split(/\r?\n/)).toEqual([
       '2026-11-16 2026-11-23 2026-10-26',
       "['fri']",
       '[]',

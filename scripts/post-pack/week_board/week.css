@@ -332,7 +332,7 @@ button.dl-btn:disabled{opacity:.6;cursor:default}
 .run-file{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;line-height:1.25}
 .run-file::before{content:"\2193";font-weight:900}
 .run-nofile{display:inline-block;padding:6px 0;font:12.5px/1.4 "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);overflow-wrap:anywhere}
-.run .do{display:grid;gap:6px;line-height:1.5}
+.run .do{display:grid;gap:6px;line-height:1.5;overflow-wrap:anywhere}
 .run-link label{display:grid;gap:4px;font-weight:700;font-size:14px}
 .run-link input{font:inherit;font-weight:400;min-height:48px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);width:100%}
 .run-link input:focus-visible{outline:3px solid var(--ok);outline-offset:1px}

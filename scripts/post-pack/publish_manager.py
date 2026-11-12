@@ -364,7 +364,7 @@ pre.txt{margin:0;white-space:pre-wrap;word-break:break-word;font:15px/1.5 Archiv
 .article h3{font:700 18px/1.3 Georgia,serif;margin:18px 0 6px}.article ul,.article ol{margin:0 0 14px;padding-left:26px;font:17px/1.6 Georgia,serif}.article li{margin:0 0 8px;padding-left:4px}.article blockquote{margin:14px 0;padding:2px 0 2px 16px;border-left:3px solid #111}.article blockquote p{font-style:italic}.article hr{border:0;border-top:1px solid #ddd;margin:20px 0}.article a{color:inherit}
 .pic{display:grid;gap:8px}.pic img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);display:block}
 .status{font-size:12.5px;color:var(--muted);min-height:1.2em}.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
-ol.do{margin:0;padding-left:20px}.files{font:12px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted)}
+ol.do{margin:0;padding-left:20px;overflow-wrap:anywhere}.files{font:12px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted)}
 .links{display:grid;gap:8px}.links label{display:grid;gap:4px;font-weight:700;font-size:14px}
 .links input{font:inherit;font-weight:400;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%}
 #toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
