@@ -412,7 +412,8 @@ file and who else is on the piece first; choose a session id once and report `st
 `done` (or `blocked`, with what it needs); and file everything it makes or draws on on the piece, never only in its chat.
 Its fourth line is the research rule (`RESEARCH_RULE`; Ruling, Krish, 2026-11-11): research is never left in scratch or
 a chat, every research document is filed on the piece as it is written, and a Markdown file Krish sends is filed on the
-piece first.
+piece first. Its fifth is the walls (`WALLS`): this board is the only place to put the work, content.krishraja.com/board is a
+read-only archive, and a session never posts or publishes anything and never puts an idea on the publish board.
 Two doors, both on the same routes and rules, and neither puts a key in the prompt:
 
 | Door | For | Authenticates with |
