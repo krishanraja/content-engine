@@ -20,6 +20,12 @@ export const WRITE_BACK_HEAD = 'Keep the board current as you work'
 export const RESEARCH_RULE = 'Research is never left in scratch or a chat: file each research document on the piece as you write it, '
   + 'and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive.'
 
+/** What no session does on the board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
+ *  read-only archive), said once in every copied prompt; how to use the board is docs/PUBLISH_BOARDS.md. */
+export const WALLS = 'This Publish Board in Control Centre is the only place to put the work; content.krishraja.com/board is a '
+  + 'read-only archive. Never post or publish anything, and never put an idea on the publish board: propose it, and only '
+  + 'Krish\'s Approve places it.'
+
 export interface WriteBackTarget { pieceId: string | null; week: string; day: string; step: string }
 
 const STEP = /^[a-z][a-z0-9_-]{0,40}$/
@@ -43,6 +49,7 @@ export function writeBack(t: WriteBackTarget): string {
     + `3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, `
     + `or board_session.py ${cli} add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py ${cli} read <id>.\n`
     + `4. ${RESEARCH_RULE} The script: board_session.py ${cli} add <file> --kind research\n`
+    + `5. ${WALLS}\n`
     + 'Nothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, '
     + 'and the script uses the engine key this machine already holds.'
 }
