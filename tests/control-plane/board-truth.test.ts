@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync, readdirSync } from 'node:fs'
 import { duplicatePosts } from '../../apps/control-plane/api/board/_onePost'
-import { STAGE_STATES, truthProblems } from '../../apps/control-plane/api/board/_stage'
+import { STAGE_STATES, ideaStage, truthProblems } from '../../apps/control-plane/api/board/_stage'
 
 // The guard that the board cannot sprawl or go stale (docs/PUBLISH_BOARDS.md, "Where everything is"). Ruling (Krish,
 // 2026-11-12): the board shows exactly where everything is, and one post is one item that can never sprawl across days
@@ -37,5 +37,14 @@ describe('where everything is', () => {
     // Today and later are never missed.
     expect(truthProblems([d({ date: '2026-11-12', who: 'growth', next: 'Approved' })], '2026-11-12')).toEqual([])
     expect([...STAGE_STATES]).toEqual(['idea', 'approved', 'made', 'scheduled', 'live', 'missed'])
+  })
+})
+
+describe('an idea says where it stands', () => {
+  it('in his outcome when it is on the record, else in its status, never "waiting" on one he answered', () => {
+    expect(ideaStage(null, 'rejected').label).toBe('Idea: Rejected and learnt from') // Thu 12's phonehome read "waiting on your answer"
+    expect(ideaStage(null, 'held').label).toBe('Idea: waiting on your Approve')
+    expect(ideaStage(null, 'open').label).toBe('Idea: waiting on your answer')
+    expect(ideaStage({ label: 'Filed for later', at: null }, 'filed').label).toBe('Idea: Filed for later')
   })
 })

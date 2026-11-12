@@ -63,10 +63,14 @@ export function postedStage(input: {
 }
 
 /** An idea's stage: on the ideas board, with his answer when he gave one. */
+/** An idea's answer in his words when the outcome is not on the record but the status is (a direction rejected, an
+ *  answer from before the ideas gate). */
+const STATUS_WORD: Record<string, string> = { held: 'waiting on your Approve', revised: 'revised, waiting on your answer', rejected: 'Rejected and learnt from',
+  filed: 'Filed for later', trend: 'Saved as a trend for a wider piece', improved: 'Improved for a future piece' }
 export function ideaStage(outcome: { label: string; at: string | null } | null | undefined, status: string, samePost?: string | null): ViewStage {
   const label = samePost ? `Idea: ${samePost}`
     : outcome ? `Idea: ${outcome.label.toLowerCase().startsWith('approved') ? 'approved, then changed' : outcome.label}`
-      : status === 'held' ? 'Idea: waiting on your Approve' : 'Idea: waiting on your answer'
+      : `Idea: ${STATUS_WORD[status] ?? 'waiting on your answer'}`
   return { state: 'idea', label, at: outcome?.at ?? null, links: [] }
 }
 
