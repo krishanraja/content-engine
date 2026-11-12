@@ -7,6 +7,7 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-11-12
 
+- moved verbatim: `docs/STATE.md` as it stood before the 12 Nov recheck (its 4 November list, the 19 October board cutover and the body last verified on 25 September) to `docs/history/2026-11-12-STATE-before-recheck.md`. The new `docs/STATE.md` holds only what was checked against the code, the workflows and a database readback that day. `docs/SYSTEM_MAP.md`, `docs/GLOSSARY.md`, `docs/STUDIO.md` and `docs/PUBLISH_BOARDS.md` were rechecked the same day.
 - reconciled at `3ab533c`: NOW.md re-stamped from `90e1b12`; sessions had folded their own closeout notes through `3ab533c`, so the body was current. The one "What changed recently" bullet was a list of files; it now says what was built and why, in the words of `0efc5a94` (the 52 to 55 ms drift from the -r conversion). Three closeout notes stay in `now-notes/` because the fold refuses their North Star line, which starts with a list dash: `2026-11-11-board-stages-treatment-no.md`, `2026-11-11-one-brand-folder.md`, `2026-11-12-home-depot-rethink.md`.
 
 ## 2026-11-11
