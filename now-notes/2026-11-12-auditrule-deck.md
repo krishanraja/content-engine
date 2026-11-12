@@ -1,0 +1,3 @@
+Status: The Tue 17 Nov off-day carousel "Your AI thinks it's the best. Guess who told it." (auditrule, the Home Depot rethink) is drawn as six 4:5 cards in the AI-broke-Git look and shown to Krish for his yes: the cover is his felt house robot pinning an I'M THE BEST sticker on its own chest in a burning office (Higgsfield gpt_image_2_6, 11 credits, his approval); copy lint clean, voice-checked, read back by an 8-year-old fresh reader. The build, caption and cover record are in docs/plans/2026-11-16-week/auditrule/; the images are not committed.
+Next: Krish says yes (or what to change) to the six cards; on his yes they are filed in 3 Posts as "2026-11-17 Tue off.day - AI marking its own homework" and Growth posts them.
+North Star check (2026-11-12): holds.
