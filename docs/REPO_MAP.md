@@ -2677,6 +2677,14 @@ One yes anywhere (Ruling, Krish, 2026-11-02): his answer for each day, read from
 - `function toScoreboardCall(row: { id: string; idea: string | null; lane_slot: string | null; body: string | null; publis…`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/claims/_notice.ts`
+
+The came_due notices the claim sweep (resolve.ts) writes: one per claim, ever.
+
+- `interface Notice`
+- `interface NoticeDb`
+- `async function recordNotices(db: NoticeDb, rows: Notice[]): Promise<number>`
+
 ### `apps/control-plane/api/claims/resolve.ts`
 
 - `export default withContentRun('claims_resolve', handler)`
