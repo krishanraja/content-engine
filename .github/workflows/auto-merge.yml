@@ -42,8 +42,12 @@ jobs:
           gh pr merge "$pr" -R "$REPO" --merge
           echo "Merged #$pr ($SHA) on green CI."
           echo "merged=true" >> "$GITHUB_OUTPUT"
-          # A merge made with GitHub's own token starts no push workflow on main; start the docs steward by hand.
-          gh workflow run docs-steward.yml -R "$REPO" --ref main || echo "::warning::docs-steward was not started; its nightly run picks the merge up."
+          # A merge made with GitHub's own token starts no push workflow on main; start the docs steward by hand, as
+          # its dry run: the digest and the validator, with no model, the half a push would run. Its writing half is
+          # the nightly run. Dispatched without the dry run, every merge started Claude as github-actions[bot], which
+          # claude-code-action refuses ("Workflow initiated by non-human actor"), so the steward check was red on
+          # every merge from 3 Nov to 12 Nov.
+          gh workflow run docs-steward.yml -R "$REPO" --ref main -f dry_run=true || echo "::warning::docs-steward was not started; its nightly run picks the merge up."
           # The full verify runs after the merge, never before it (Ruling, Krish, 2026-11-11: quick checks on pull requests,
           # the full verify after merge; merge fast and he tests live). It opens an issue if main goes red.
           gh workflow run full-verify.yml -R "$REPO" --ref main || echo "::warning::full-verify was not started; its nightly run picks the merge up."
