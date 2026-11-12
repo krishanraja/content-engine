@@ -185,10 +185,13 @@ describe("It's live on the board", () => {
   it('leads a due day Growth has with It\'s live, one per approved option, and keeps every rule of the view', () => {
     const v = buildView(week())
     const tue = day(v, 'tue')
-    expect(tue.who).toBe('growth')
+    // Tue 10 has passed with nothing marked live: the board says it was missed, never "with Growth" (Ruling, Krish,
+    // 2026-11-12: the board shows exactly where everything is), and It's live still leads.
+    expect(tue.who).toBe('missed')
     expect(tue.actions.filter(isLive).map(a => a.label)).toEqual(["It's live: Hook shell.", "It's live: Hook homework."])
     expect(isLive(tue.actions[0])).toBe(true)
-    expect(tue.next).toMatch(/Once it is out, press It's live with the post's link$/)
+    expect(tue.next).toBe("Missed: Tue 10 has passed and nothing on it is marked live. If it went out, press It's live with its link")
+    expect(tue.detail.at(-1)).toEqual({ h: 'Before its day passed', p: expect.stringMatching(/Once it is out, press It's live with the post's link$/) })
     expect(viewProblems(v)).toEqual([])
     // A piece still being made, on a day still to come, takes no It's live.
     expect(day(v, 'fri').actions.some(isLive)).toBe(false)

@@ -251,6 +251,75 @@ Growth never over his row, moves append only) and `tests/control-plane/board-mov
 his press only, a move read back from the view, Growth's read, the Drive folder, the library and what is still
 scheduled, and Growth's own made, scheduled and live posts making the day done).
 
+## One post, one item (Ruling, Krish, 2026-11-12)
+
+Ruling (Krish, 2026-11-12): the board shows exactly where everything is, and one post is one item that can never sprawl
+across days or go stale. His words: "Make sure the publish board is completely up to date with exactly where everything
+is at ... I expect Sunday's ideas board to be epic and everything to be not only up to date but impossible to sprawl over
+time."
+
+**Why.** An item's key names the id it was first offered under. On 11 Nov a session moved Tue 17's POV meme
+(`povteach`) to Thu 12 by deleting it from the week's plan and writing the same post again as `agentnotsetup`. His
+Approve (10 Nov) still stood on Tue 17, so the one post sat on two days.
+
+**What a post is.** An off-day option is known by what it is, never by the id a session gave it (`_onePost.ts`
+`postKeys`; the database's `offday_post_keys`, migration `20261130090000_offday_one_post.sql`, computes the same keys,
+held equal on `tests/fixtures/one-post-keys.json`): the item it names (`"item": "<key>"`, how a re-plan that carries an
+item says so), its hook in plain lower-case words (12 characters or more; a weekly hook such as Saturday's good news is
+keyed by its week too), its post folder in Drive, and the one public post or video it reposts (YouTube, Instagram,
+TikTok, X). An article it cites is never its identity: two posts may cite one article. Options sharing any key are one
+post.
+
+**Never on two days.**
+
+1. *The database* refuses a second item of one post on a day (`offday_items_one_post`): two rows offered or approved
+   that share a key cannot both stand, whoever writes (a move, his Approve, Growth's offer, a session's SQL). Growth
+   offering a post he already has is `taken`, never written.
+2. *His Approve carries the one item.* His Approve on an option that is a post already an item somewhere (on a day or
+   in his Ideas for Later) moves that item there under the option he approved (`syncApprove`, `carry`): his approval
+   comes off the day it leaves (the same document saved with `moved`, recorded as `withdrawn`), in the same transaction
+   (`offday_item_move`, which now takes the option id of his press, and only for the same post: `not_the_same_post`).
+   Nothing is copied and nothing of his is deleted: both presses stay in `board_history`, the carry in `offday_moves`.
+3. *The view draws the post once.* A plan option that is the same post as an item on its own day is not drawn beside
+   it; on another day it is that item (`options[].item` is the item's, `same_post` says where it is and its Approve's
+   `goes` says "Moves the one post here from Tue 17 Nov ... It is never on two days"), and the day the item is on says
+   where else it is up as an idea ("Thu 12 Nov also has this post up as an idea (agentnotsetup). Your Approve there
+   moves it there, so it is only ever on one day."). Growth's posts on an item show on the day the item is on only.
+4. *The week plans* carry no post twice under two ids (`duplicatePosts`, `tests/control-plane/board-truth.test.ts`,
+   in `npm run verify`): a session never moves a post by copying it; a re-plan names the item it carries (`"item":
+   "<its key>"`, as Thu 12's `beststicker` names Tue 17's `auditrule`), and an option a re-plan settled (`closed`) leaves
+   its day on the live board as on the full board, unless a press of his stands on it.
+
+Held by `tests/offday-one-post-db.mjs` (the migration on PGlite, in CI) and `tests/control-plane/board-one-post.test.ts`.
+
+## Where everything is: one stage per item, and a missed day says so (contract 1.10.0)
+
+Every off-day option and every piece on a day carries exactly one `stage` (`_stage.ts`), from the records and never typed
+by hand: `idea` (on the ideas board, with his answer when he gave one), `approved`, `made` (Growth's record, its post
+folder holding files, or its cuts), `scheduled` (Growth's record, with when), `live` (Growth's record, his It's live or
+the piece's own record, with each post's link) or `missed` (its day passed and it is not marked live). Back in his Ideas
+for Later is the sixth: such an item is not on a day, so `GET /api/board/later` draws it.
+
+A day before today that is not out is never "with Growth" or "ready": its `who` is `missed`, its line says "Missed: Tue
+10 has passed and nothing on it is marked live. If it went out, press It's live with its link", It's live leads, and its
+line from before is kept in `detail` ("Before its day passed"). Carrying a missed item to today is today's To approve.
+
+**A piece's scheduled posts.** `POST /api/board/<Monday>/offday-posts` (Growth's key) also takes a piece's own entries,
+`{piece_id, day, state: scheduled | cancelled, channel, due_at, buffer_post_id}`, each kept on the day's box for its
+channel (`board_ticks` `<day>-<channel>`, `done` stays false, `scheduled`); a box already out is never touched, and the
+piece must be on that day. A series day approved for publish then says "Approved in your words. Scheduled: Substack
+Notes, from Fri 13 Nov, 12:40" in place of "Ready to post", and its piece's stage is `scheduled`.
+
+**What is not filed yet is said, never guessed.** A series day's detail carries Scripts (approved by him on the board,
+written and waiting for his Approve scripts, or not filed yet: none on the record and none sent to his Teleprompter), and
+a step he settled in a session the engine cannot see is never shown as done: the line says what is not filed ("No
+narrative lock and no approved scripts are filed yet. If you settled them in a session, file them from that session; if
+not, settle the story in a short session and sign the narrative lock").
+
+`viewProblems` runs `truthProblems` on every view the tests build: no option or piece without a known stage, no item on
+two days, no past day with Growth or without "Missed". Held by `tests/control-plane/board-truth.test.ts`,
+`board-one-post.test.ts`, `board-scheduled.test.ts` and `board-its-live.test.ts`.
+
 ## What he refused stays refused: the ideas board's checks in code (the ideas quality plan, Wave 1)
 
 Krish, 2026-11-09: "I just said that Infosys is boring so why did you make the piece about Infosys?" The Sunday run's
@@ -328,6 +397,8 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
 - **1.8.0 (12 Nov 2026)** added `manifest` to each day: the day's piece's draft manifest with his Approve for publish
   bound to its sha256 ("Approve for publish, bound to the manifest", below).
 
+- **1.10.0 (12 Nov 2026)** added `stage` to every option and piece, `same_post` to an option, and `missed` to `who`
+  ("One post, one item" and "Where everything is", above).
 - **1.8.0 (12 Nov 2026)** added It's live and the ideas for later: the press kind `op: live` (a post he marked live),
   `choose` on a press (a choice he makes before it, the channels here) and `week` (the board a press saves into, when it
   is not the week shown), `by` on each `posted` item, and `measured` beside the live `north_star.current` ("It's live",
