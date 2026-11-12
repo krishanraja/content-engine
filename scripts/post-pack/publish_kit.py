@@ -330,7 +330,7 @@ h1{font:400 clamp(28px,6vw,44px)/1 Anton,Impact,sans-serif;text-transform:upperc
 .why{margin:8px 0 0;font-style:italic;color:var(--muted)}
 .files{margin:10px 0 0;padding:0;list-style:none;font:13px "IBM Plex Mono",monospace}
 .files li:before{content:"\\2192  "}
-ol{margin:10px 0 0;padding-left:22px}
+ol{margin:10px 0 0;padding-left:22px;overflow-wrap:anywhere}
 .copy{margin-top:12px;display:grid;gap:4px}
 .copy .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .copy b{font-size:13px;text-transform:uppercase;letter-spacing:.05em}
