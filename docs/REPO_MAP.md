@@ -2237,11 +2237,14 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 ### `apps/control-plane/api/board/_media.ts`
 
 - `type MediaKind = 'cut' | 'thumbnail'`
+- `interface DriveLink`
 - `interface MediaItem`
+- `const NO_DRIVE_LINK`
 - `function dayMedia(piece: Body | undefined): MediaItem[]`
 - `function cutOn(piece: Body, id: string): { id: string; cut: string; title: string; path: string; sha256: string | null …`
 - `function findMedia(pieces: Body[], id: string): MediaFile | null`
-- `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string): Promise<string | null>`
+- `function libraryPaths(file: Pick<MediaFile, 'path' | 'folder'>): string[]`
+- `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string, drive?: (fileId: string) => Pro…`
 
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
@@ -2391,6 +2394,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
 - `type Action`
 - `interface DayView`
+- `interface ViewPost`
 - `type DayCore`
 - `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
 - `const PATH: Array<{ key: PathKey; label: string }>`
@@ -2403,6 +2407,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `interface DayPath`
 - `interface WeekView`
 - `interface ViewInputs`
+- `function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost…`
 - `function lockSigned(text: string | null | undefined): boolean`
 - `function postingStarted(live: Pick<LiveDay, 'steps'>): boolean`
 - `function backupPrompt(week: string, d: DayView): string`
@@ -2945,7 +2950,7 @@ What the compiler looks for, as pure functions.
 - `function copyFits(bytes: number, elapsedMs: number): boolean`
 - `type InboxListing`
 - `async function listInbox(folderId: string): Promise<InboxListing>`
-- `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number):…`
+- `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number, …`
 
 ### `apps/control-plane/api/library/_lanes.ts`
 

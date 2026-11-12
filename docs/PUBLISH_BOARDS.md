@@ -196,6 +196,9 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
 - **1.6.0 (11 Nov 2026)** added `presses` and `verdict` to each cut in a day's `media` (approved mock M5, Cuts: Yes,
   Not this, Change it and Add a note on every cut): his Yes or Not this on that file and his latest answer on it ("His
   answer on each cut", below). A thumbnail carries neither.
+- **1.7.0 (12 Nov 2026)** added `drive` and `drive_why` to each item of a day's `media`, `posts` to each day, `post` to
+  each off-day option and `drive` to `sources` ("Every asset, with its Drive link", below). Ruling (Krish, 2026-11-12):
+  every cut on the board carries its Google Drive link; nothing on the board is ever cut off.
 
 ## The style choices (contract 1.4.0)
 
@@ -243,6 +246,37 @@ and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
   the handler reads a `POST` with no id to `style` (or `cut-verdict`) as the press (`POST_OPS` in `_handler.ts`).
   Until 11 Nov 2026 it did not, and every style press from Control Centre was answered 400 `read_only_view`
   (`tests/control-plane/board-cuts.test.ts` sends it as production does).
+
+## Every asset, with its Drive link (contract 1.7.0)
+
+Krish, 2026-11-12: "I need the Google Drive hyperlink because it is actually more useful for me: it actually enables me
+to download it directly to my device as well, or view it in a more reliable player", and "I should always be able to
+link the assets in Google Drive as well as see them if I am to approve them".
+
+- **A cut's Drive link.** Each item of a day's `media` carries `drive` `{ file_id, url }`: the exact file in his Drive,
+  read from the making record's `url` (the file's own Drive link, which `making.py PIECE drive-link` and `video` record
+  by its Drive file id; never a guessed path). With none, `drive` is null and `drive_why` says "Not in Drive yet" and
+  why. The board shows "Open in Drive" on every cut, even when its player works.
+- **A cut always plays.** `GET /api/board/<Monday>/media/<id>` signs the library's copy, looking for a path the record
+  wrote relative to the post (`3 Video/fri13-5min-v3.mp4`) inside the post's own folder (`3 Posts/<pack.folder>/...`).
+  A file the library has no copy of is served from Drive by the id on its record: the board copies that one file into
+  the engine's store (`board-drive/<id>-<version>.<ext>`, by its Drive md5) the first time and answers with a short
+  signed link, so a file replaced in Drive is copied again and an unchanged one never is. This is why Friday 13 Nov's
+  cuts drew an empty player until 12 Nov: they were in Drive but never sent to the library, and their record named
+  them relative to the post, so the route answered 404 `media_not_found`.
+- **Every asset of every post.** Each day carries `posts`: every folder in `makeyourmindup > 3 Posts` dated that day
+  (`_drivePosts.ts`, read by the folder's ID as its owner, read only, kept a minute), each `{ id, name, url, option,
+  piece_id, assets }`. `option` is the off-day option whose `drive` names the folder (the option carries it as `post`);
+  `piece_id` is the piece whose `pack.folder` names it. Each asset is `{ id, kind, title, mime, at, url, folder,
+  seconds?, width?, height?, slides?, versions }`: `kind` is cut, video, meme, carousel, image, cover, figure,
+  thumbnail or note (a plain-text file such as the post's description); a carousel's `slides` are its cards in order,
+  the newest version of each; `versions` are the older files of the same asset, newest first (a reskin "-black-v2" is
+  the newer version of the file it reskins). Working folders (`working ...`), pages, scripts and manifests are left to
+  Drive. Null when Drive could not be read, with `sources.drive` false.
+- **Seeing one.** `GET /api/board/<Monday>/drive/<file id>` (the board's own login) serves a file the week's `posts`
+  list (an asset, a slide or a version; 404 `drive_file_not_found` for any other, 503 `drive_unavailable` when Drive
+  cannot be read), the same way as a cut: copied once, then a short signed link (302).
+- **Held by:** `tests/control-plane/board-drive.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
 
 ## His answer on each cut (contract 1.6.0)
 
@@ -373,9 +407,10 @@ record the full board writes, bound to the same hashes (`_offdaySides.ts`, held 
 into `_deskPage.ts` by `node scripts/build-desk-page.mjs`. `/board` stays the old board until Krish switches it.
 
 Each day of the view also lists what its piece has rendered (`media`, `apps/control-plane/api/board/_media.ts`): the
-newest asset of each cut on its making record and that cut's thumbnail, by an opaque id, with no path, link or key.
-`GET /api/board/<Monday>/media/<id>` (the board's own login) answers one id of that week with a short signed link
-(302) to the library file, and 404 for an id that is not on that week's pieces or not filed yet. Control Centre's
+newest asset of each cut on its making record and that cut's thumbnail, by an opaque id, with no library path, store
+link or key, and (1.7.0) the file's own Drive link. `GET /api/board/<Monday>/media/<id>` (the board's own login)
+answers one id of that week with a short signed link (302) to the library file, or to the board's copy of its Drive file
+when the library has none, and 404 for an id that is not on that week's pieces or has neither. Control Centre's
 Publish Board, the real one since 10 Nov 2026 (Ruling, Krish, 2026-11-10), draws these large when they exist: "mock ups
 and rendered assets are going to actually make up a big part of the screen as and when they are available". Look mocks
 and storyboard frames join the same list when the engine files them as library files.

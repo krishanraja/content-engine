@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.6.0",
+ "contract_version": "1.7.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -1109,6 +1109,10 @@
      "at": "2026-11-16T08:00:00Z",
      "seconds": 412,
      "poster": "7141f3ae5b0dea3f268d2d9d9ef04be169809eef0f9cc25e88ab0ac103f07054",
+     "drive": {
+      "file_id": "1LongCutLongCutLongCut0001",
+      "url": "https://drive.google.com/file/d/1LongCutLongCutLongCut0001/view"
+     },
      "presses": {
       "yes": {
        "kind": "press",
@@ -1151,7 +1155,11 @@
      "kind": "thumbnail",
      "cut": "long",
      "title": "Long cut thumbnail",
-     "at": "2026-11-16T08:00:00Z"
+     "at": "2026-11-16T08:00:00Z",
+     "drive": {
+      "file_id": "1ThumbThumbThumbThumb0001",
+      "url": "https://drive.google.com/file/d/1ThumbThumbThumbThumb0001/view"
+     }
     }
    ],
    "pieces": [
@@ -1201,6 +1209,40 @@
     }
    ],
    "yes": null,
+   "posts": [
+    {
+     "id": "1MonPostMonPostMonPost001",
+     "name": "2026-11-16 Mon follow.the.money - The fixture",
+     "url": "https://drive.google.com/drive/folders/1MonPostMonPostMonPost001",
+     "option": null,
+     "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+     "assets": [
+      {
+       "id": "1LongCutLongCutLongCut0001",
+       "title": "The fixture - wide 16x9.mp4",
+       "mime": "video/mp4",
+       "at": "2026-11-16T08:00:00Z",
+       "url": "https://drive.google.com/file/d/1LongCutLongCutLongCut0001/view",
+       "seconds": 412,
+       "width": 1080,
+       "height": 1920,
+       "kind": "cut",
+       "folder": "3 Video",
+       "versions": []
+      },
+      {
+       "id": "1CoverCoverCoverCover0001",
+       "title": "square-1080x1080.png",
+       "mime": "image/png",
+       "at": "2026-11-16T08:01:00Z",
+       "url": "https://drive.google.com/file/d/1CoverCoverCoverCover0001/view",
+       "kind": "cover",
+       "folder": "2 Covers and images",
+       "versions": []
+      }
+     ]
+    }
+   ],
    "sessions": [
     {
      "session_id": "board-kxqp",
@@ -1527,13 +1569,100 @@
        "goes": "Filed with today's date. It comes back on a later ideas board, or when you ask for it."
       }
      ],
-     "outcome": null
+     "outcome": null,
+     "post": "1TuePostTuePostTuePost001"
     }
    ],
    "held": [],
    "comments": [],
    "posted": [],
    "yes": null,
+   "posts": [
+    {
+     "id": "1TuePostTuePostTuePost001",
+     "name": "2026-11-17 Tue off.day - POV teach",
+     "url": "https://drive.google.com/drive/folders/1TuePostTuePostTuePost001",
+     "option": "povteach",
+     "piece_id": null,
+     "assets": [
+      {
+       "id": "1VideoVideoVideoVideo0002",
+       "title": "POV teach - tall 9x16 - black v2.mp4",
+       "mime": "video/mp4",
+       "at": "2026-11-16T11:00:00Z",
+       "url": "https://drive.google.com/file/d/1VideoVideoVideoVideo0002/view",
+       "seconds": 19,
+       "width": 1080,
+       "height": 1920,
+       "kind": "video",
+       "folder": "",
+       "versions": [
+        {
+         "id": "1VideoVideoVideoVideo0001",
+         "title": "POV teach - tall 9x16 - Shorts, Reels.mp4",
+         "mime": "video/mp4",
+         "at": "2026-11-15T11:00:00Z",
+         "url": "https://drive.google.com/file/d/1VideoVideoVideoVideo0001/view",
+         "seconds": 19,
+         "width": 1080,
+         "height": 1920
+        }
+       ]
+      },
+      {
+       "id": "1SlideSlideSlideSlide0001",
+       "title": "3 slides",
+       "mime": "image/png",
+       "at": "2026-11-16T10:00:00Z",
+       "url": "https://drive.google.com/file/d/1SlideSlideSlideSlide0001/view",
+       "kind": "carousel",
+       "folder": "4 Social",
+       "slides": [
+        {
+         "id": "1SlideSlideSlideSlide0001",
+         "title": "teach-card-1.png",
+         "mime": "image/png",
+         "at": "2026-11-16T10:00:00Z",
+         "url": "https://drive.google.com/file/d/1SlideSlideSlideSlide0001/view"
+        },
+        {
+         "id": "1SlideSlideSlideSlide0002",
+         "title": "teach-card-2.png",
+         "mime": "image/png",
+         "at": "2026-11-16T10:00:00Z",
+         "url": "https://drive.google.com/file/d/1SlideSlideSlideSlide0002/view"
+        },
+        {
+         "id": "1SlideSlideSlideSlide0003",
+         "title": "teach-card-3.png",
+         "mime": "image/png",
+         "at": "2026-11-16T10:00:00Z",
+         "url": "https://drive.google.com/file/d/1SlideSlideSlideSlide0003/view"
+        }
+       ],
+       "versions": [
+        {
+         "id": "1SlideSlideSlideSlide0009",
+         "title": "teach-card-1.png",
+         "mime": "image/png",
+         "at": "2026-11-15T10:00:00Z",
+         "url": "https://drive.google.com/file/d/1SlideSlideSlideSlide0009/view"
+        }
+       ]
+      },
+      {
+       "id": "1NoteNoteNoteNoteNote0001",
+       "title": "post-description.txt",
+       "mime": "text/plain",
+       "at": "2026-11-15T11:00:00Z",
+       "url": "https://drive.google.com/file/d/1NoteNoteNoteNoteNote0001/view",
+       "kind": "note",
+       "folder": "4 Social",
+       "versions": []
+      }
+     ]
+    }
+   ],
    "sessions": [],
    "materials": [
     {
@@ -2709,6 +2838,7 @@
    "comments": [],
    "posted": [],
    "yes": null,
+   "posts": [],
    "sessions": [],
    "materials": []
   },
@@ -2951,13 +3081,15 @@
        "goes": "Filed with today's date. It comes back on a later ideas board, or when you ask for it."
       }
      ],
-     "outcome": null
+     "outcome": null,
+     "post": null
     }
    ],
    "held": [],
    "comments": [],
    "posted": [],
    "yes": null,
+   "posts": [],
    "sessions": [],
    "materials": []
   },
@@ -4095,6 +4227,7 @@
    "comments": [],
    "posted": [],
    "yes": null,
+   "posts": [],
    "sessions": [],
    "materials": []
   },
@@ -4338,6 +4471,7 @@
       "at": "2026-11-08T14:07:00Z",
       "words": null
      },
+     "post": null,
      "stories": [
       {
        "headline": "Story 1",
@@ -4393,6 +4527,7 @@
    "comments": [],
    "posted": [],
    "yes": null,
+   "posts": [],
    "sessions": [],
    "materials": []
   }
@@ -4698,7 +4833,8 @@
   "ideas": true,
   "runs": true,
   "store": true,
-  "approvals": true
+  "approvals": true,
+  "drive": true
  },
  "revision": 7
 }

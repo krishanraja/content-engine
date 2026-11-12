@@ -183,6 +183,10 @@
       "destination": "/api/board?week=:week&op=media&id=:id"
     },
     {
+      "source": "/api/board/:week/drive/:id",
+      "destination": "/api/board?week=:week&op=drive&id=:id"
+    },
+    {
       "source": "/api/board/:week/view",
       "destination": "/api/board?week=:week&op=view"
     },
