@@ -238,3 +238,69 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
     channels: p.channels, url: p.url, at: p.at, by: p.by })))
   return { status: 200, body: { days, mix, offdays, yes, live } }
 }
+
+// ── A piece's scheduled posts, from Growth's own record (2026-11-12) ────────────────────────────────────────────────
+//
+// Ruling (Krish, 2026-11-12): the board shows exactly where everything is. Fri 13 Nov was scheduled while the board said
+// "Ready to post: Growth posts it on the day", because the write-back above takes only a post that went out, and an
+// off-day item's (POST /offday-posts) has no piece. So POST /api/board/<Monday>/offday-posts also takes a piece's own
+// entries, {piece_id, day, state: scheduled | cancelled, channel, due_at, buffer_post_id}: each is kept on the day's box
+// for that channel (board_ticks <day>-<channel>, done stays false, actor growth) as `scheduled`, and the view says
+// "Scheduled on Substack Notes for Fri 13 Nov, 12:40". A box already ticked done (the post went out) is never touched,
+// and the piece must be on that day, as for a post that went out.
+
+export interface PieceScheduled { piece_id: string; day: PostedDay; state: 'scheduled' | 'cancelled'; channel: PostedChannel; due_at: string | null; buffer_post_id: string | null }
+
+/** One piece entry of Growth's posting record, or null when it is not one. */
+export function pieceScheduled(v: unknown): PieceScheduled | null {
+  if (!isObj(v) || typeof v.piece_id !== 'string' || !UUID.test(v.piece_id)) return null
+  if (!Object.hasOwn(DAY_OFFSET, String(v.day)) || !Object.hasOwn(POSTED_CHANNELS, String(v.channel))) return null
+  if (v.state !== 'scheduled' && v.state !== 'cancelled') return null
+  const due = typeof v.due_at === 'string' && Number.isFinite(Date.parse(v.due_at)) ? new Date(v.due_at).toISOString() : null
+  if (v.state === 'scheduled' && !due) return null
+  const buffer = typeof v.buffer_post_id === 'string' && BUFFER_ID.test(v.buffer_post_id) ? v.buffer_post_id : null
+  return { piece_id: v.piece_id.toLowerCase(), day: v.day as PostedDay, state: v.state, channel: v.channel as PostedChannel, due_at: due, buffer_post_id: buffer }
+}
+
+/** Keep each scheduled post on its piece's box; a cancelled one comes off. Counts what it kept and what it left. */
+export async function recordScheduled(db: SupabaseClient, week: string, entries: PieceScheduled[], now: string): Promise<{ kept: number; left: number; failed: boolean }> {
+  let kept = 0, left = 0
+  const days = new Map<string, string | null>()
+  for (const e of entries) {
+    if (!days.has(e.piece_id)) {
+      const p = await db.from('content_ideas').select('id, scheduled_for').eq('id', e.piece_id).maybeSingle()
+      if (p.error) return { kept, left, failed: true }
+      days.set(e.piece_id, p.data ? String((p.data as Body).scheduled_for || '').slice(0, 10) : null)
+    }
+    if (days.get(e.piece_id) !== dayDate(week, e.day)) { left++; continue }
+    const tickId = `${e.day}-${e.channel}`
+    const read = await db.from('board_ticks').select('body, revision').eq('week', week).eq('tick_id', tickId).maybeSingle()
+    if (read.error) return { kept, left, failed: true }
+    const held: Body = isObj(read.data?.body) ? read.data!.body : {}
+    if (held.done === true || (held.piece_id && held.piece_id !== e.piece_id)) { left++; continue }
+    const was = Array.isArray(held.scheduled) ? (held.scheduled as Body[]).filter(isObj) : []
+    const rest = was.filter(s => !(e.buffer_post_id ? s.buffer_post_id === e.buffer_post_id : s.due_at === e.due_at))
+    const scheduled = e.state === 'scheduled' ? [...rest, { due_at: e.due_at, buffer_post_id: e.buffer_post_id, at: now }].slice(-MAX_POSTS) : rest
+    const body: Body = { ...held, done: false, day: e.day, piece_id: e.piece_id, step: e.channel, channel: e.channel, label: POSTED_CHANNELS[e.channel], by: POSTED_ACTOR, scheduled }
+    if (!validBody('ticks', tickId, body)) { left++; continue }
+    const saved = await db.rpc('board_save', { p_week: week, p_collection: 'ticks', p_id: tickId, p_body: body, p_revision: Number(read.data?.revision || 0), p_actor: POSTED_ACTOR })
+    if (saved.error) return { kept, left, failed: true }
+    if (saved.data?.ok) kept++
+    else left++
+  }
+  return { kept, left, failed: false }
+}
+
+/** A day's scheduled posts for its piece, from the boxes Growth keeps (`scheduled`), soonest first; a box already done
+ *  is out, not scheduled. Pure. */
+export function scheduledOf(ticks: Array<{ tick_id: string; body: Body; updated_by: string }> | undefined, day: string, pieceId: string | null): Array<{ channel: string; label: string; due_at: string }> {
+  const out: Array<{ channel: string; label: string; due_at: string }> = []
+  for (const t of ticks || []) {
+    if (t.updated_by !== POSTED_ACTOR || !isObj(t.body) || t.body.done === true || t.body.day !== day) continue
+    if (pieceId && t.body.piece_id && String(t.body.piece_id).toLowerCase() !== pieceId) continue
+    for (const s of Array.isArray(t.body.scheduled) ? (t.body.scheduled as Body[]).filter(isObj) : []) {
+      if (typeof s.due_at === 'string') out.push({ channel: String(t.body.channel || t.body.step), label: String(t.body.label || t.body.step), due_at: s.due_at })
+    }
+  }
+  return out.sort((a, b) => a.due_at.localeCompare(b.due_at))
+}

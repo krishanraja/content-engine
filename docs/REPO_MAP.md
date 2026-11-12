@@ -2365,6 +2365,7 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `interface Placed`
 - `function contentOf(r: OffdayItem, ideas: Body | null, week: string): Body`
 - `function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string, base?: Body[…`
+- `function twinLines(r: OffdayItem | null, plans: Record<string, Body | null>): string[]`
 - `function todayIn(now: Date, timeZone = MOVE_TZ): string`
 - `function dayLabel(date: string): string`
 - `interface MoveDay`
@@ -2391,6 +2392,8 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date()): Promise<MoveResult>`
 - `function itemsForGrowth(items: OffdayItem[], week: string)`
 - `async function syncApprove(db: SupabaseClient, week: string, docId: string, body: Body, ideas: (w: string) => Promise<B…`
+- `async function twinItem(db: SupabaseClient, option: Body, own: string, week: string): Promise<OffdayItem | null | undef…`
+- `async function carry(db: SupabaseClient, twin: OffdayItem, to: { week: string; day: string; optionId: string; option: B…`
 - `function placedHere(items: OffdayItem[] | null, week: string, docId: string): { keep: boolean; item: OffdayItem | null }`
 - `function postFolderName(name: string, date: string): string | null`
 - `interface DriveRenamer`
@@ -2421,6 +2424,22 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `interface OffdaySides`
 - `function offdaySides(o: Body): OffdaySides`
 
+### `apps/control-plane/api/board/_onePost.ts`
+
+One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Ruling (Krish, 2026-11-12): the board
+
+- `const ITEM_REF`
+- `const HOOK_MIN`
+- `function hookWords(v: unknown): string | null`
+- `function isWeekly(o: Body): boolean`
+- `function assetOf(url: unknown): string | null`
+- `function driveOf(v: unknown): string | null`
+- `function postKeys(o: Body, ctx: { item?: string | null; week?: string | null; drive?: string | null } = {}): string[]`
+- `function samePost(a: readonly string[], b: readonly string[]): boolean`
+- `interface KeyedRow`
+- `const rowKeys = (r: KeyedRow): string[] =>`
+- `function duplicatePosts(plans: Record<string, Body | null>): Array<{ post: string; a: string; b: string }>`
+
 ### `apps/control-plane/api/board/_posted.ts`
 
 - `type PostedDay = keyof typeof DAY_OFFSET`
@@ -2442,6 +2461,10 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `interface PieceDay`
 - `function piecesByDay(week: string, raw: Body[]): Array<{ day: PostedDay; date: string; piece: Body; series: boolean }>`
 - `async function readPieces(db: SupabaseClient, week: string): Promise<{ status: number; body: Body }>`
+- `interface PieceScheduled`
+- `function pieceScheduled(v: unknown): PieceScheduled | null`
+- `async function recordScheduled(db: SupabaseClient, week: string, entries: PieceScheduled[], now: string): Promise<{ kep…`
+- `function scheduledOf(ticks: Array<{ tick_id: string; body: Body; updated_by: string }> | undefined, day: string, pieceI…`
 
 ### `apps/control-plane/api/board/_presses.ts`
 
@@ -2510,6 +2533,17 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `interface RunInfo`
 - `async function readRuns(env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as F…`
 
+### `apps/control-plane/api/board/_stage.ts`
+
+The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everything is"). Ruling (Krish, 2026-11-12):
+
+- `const STAGE_STATES`
+- `type StageState = typeof STAGE_STATES[number]`
+- `interface ViewStage`
+- `function postedStage(input: { date: string today: string approvedAt: string | null approvedLabel: string growth: ViewGr…`
+- `function ideaStage(outcome: { label: string; at: string | null } | null | undefined, status: string, samePost?: string …`
+- `function truthProblems(days: Array<{ day: string; date: string; label: string; who: string; next: string; options: Arra…`
+
 ### `apps/control-plane/api/board/_standards.ts`
 
 - `const STANDARDS_VENTURE`
@@ -2550,7 +2584,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 
 - `const VIEW_DAYS: readonly PostedDay[]`
 - `const STOPS`
-- `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
+- `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done' | 'missed'`
 - `type Action`
 - `interface DayView`
 - `interface ViewPost`
@@ -3814,6 +3848,10 @@ His verdicts on past off-day options, for Sunday's gather (GET /api/week/options
 - `const PICKED_STATES`
 - `function weekEnd(monday: string): string`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+- `async function readInstructions(db: { from: typeof supabase.from } = supabase)`
+- `interface Instruction`
+- `function instructionOf(a: Record<string, any>): Instruction | null`
+- `async function readTasteRules(db: { from: typeof supabase.from } = supabase)`
 - `const IDEA_RULES`
 - `async function readUnvetoed(week: string, db: { from: typeof supabase.from } = supabase)`
 - `async function readOutcomes(week: string, db: { from: typeof supabase.from } = supabase)`

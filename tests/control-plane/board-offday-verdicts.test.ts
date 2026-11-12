@@ -98,7 +98,9 @@ describe('what the server does with his words', () => {
     // A plain Approve asks for no revision and files nothing to his taste ledger: it puts the option's row on its day,
     // the one place an off-day item's day lives (Ruling, Krish, 2026-11-12; _offdayItems.ts syncApprove).
     const moves: Array<Record<string, any>> = []
-    const none: any = { select: () => none, eq: () => none, in: () => none, maybeSingle: async () => ({ data: null, error: null }) }
+    const none: any = { select: () => none, eq: () => none, in: () => none, maybeSingle: async () => ({ data: null, error: null }),
+      // Every item already on a day, read for one post, one item (_onePost.ts): none here, so the option gets its own row.
+      limit: async () => ({ data: [], error: null }) }
     const placing = { from: (t: string) => { expect(t).toBe('offday_items'); return none },
       rpc: async (name: string, args: { p: Record<string, any> }) => { expect(name).toBe('offday_item_move'); moves.push(args.p); return { data: { ok: true, version: 1 }, error: null } } }
     const approved = await afterPress(placing as never, { week: WEEK, collection: 'queue', id: 'off-tue-prices', body: record({ idea: side('approve', null, { shown: { copy: 'Three prices' } }) }), who: 'Krish', saved: { ok: true } },
