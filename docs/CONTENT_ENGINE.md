@@ -96,7 +96,7 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/inspiration/drive-scan` (cron) | reads screenshots and documents from a Drive folder with a vision model; upserts seeds | Google Drive, Sonnet [`inspiration_scan`] |
 | `GET /api/content-seed-candidates` | the composer's seed rail | none |
 | `/api/aeo/ingest`, `/api/aeo/context` | the AEO engine lands packets and reads context; recommendations become `aeo_signal` ideas | none |
-| `/api/investigations/run` (cron), `anchor`, `[run_id]/draft-check`, `[run_id]/trace` | the weekly investigation: anchor, decompose, climb the why-ladder, run budgeted harnesses, gates G1 to G6; attaches an evidence manifest | Sonnet and Opus [`investigations`], Perplexity `sonar` |
+| `/api/investigations/run` (cron), `anchor`, `[run_id]/draft-check`, `[run_id]/trace` | the weekly investigation: anchor, decompose, climb the why-ladder, run budgeted harnesses, gates G1 to G6; attaches an evidence manifest. Its calls run with thinking off and read the first text block; a split that gives no claims is aborted for its own reason (the call failed, no text, cut off at its limit, or the model found no checkable claim), never as "100% unfound", and logs one G2 row saying which | Sonnet and Opus [`investigations`], Perplexity `sonar` |
 
 ### 2. Curation: judge, repair, route, rank
 
@@ -104,7 +104,7 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 |---|---|---|
 | `POST /api/content-ideas/[id]/judge` | puts one piece before the panel. Idea gate: 9 judges (novelty, evidence, consequence, reader, buyer, connection, fun, standing, prosecutor). Draft gate: 7 (hook, clarity, personality, evidence_integrity, voice, channel_fit, prosecutor), which read the subchannel's mandate and the sources on file. Free deterministic judges run first. The panel reports and never changes state | Haiku [`judge-<key>`] |
 | `/api/judge/ladder` (manual) | expand the seed, judge, repair with research and re-judge, then route. Score is the lower median judge: 7 or more is `ready`, 5 or 6 `repairable`, below 5 `weak`. Nothing is buried. Sets `lane_slot` only when it is empty and the router's pick is uncontested | Sonnet [`ladder-expand`, `ladder-repair`], Haiku panel and [`ladder-router`] |
-| `/api/judge/sweep` (cron, daily at 05:00 UTC) | runs the ladder over ideas left after the free 03:00 triage; optional batch mode at half price | as the ladder, plus the Anthropic Batches API |
+| `/api/judge/sweep` (cron, daily at 05:00 UTC) | runs the ladder over ideas left after the free 03:00 triage; optional batch mode at half price. A live sweep keeps the ideas it chose for at most six hours: the next tick after that closes it (`failed`, with the reason) and starts a new one over the ideas that exist now. An idea is judged again only when its idea or thesis changed since its score | as the ladder, plus the Anthropic Batches API |
 | `/api/content-ideas/[id]/score` | the Five Standards gate (unique, researched, thoughtful, kind, helpful) | Sonnet, or Haiku on the autoscore path [`standards`] |
 | `/api/content-opportunities/refresh` (cron) | the editorial radar. Two lenses only, `money_of_ai` and `built_with_ai` | Sonnet [`editorial-radar-*`] |
 | `POST /api/content-ideas/[id]/editorial-route` | approves a radar lens into a child idea with `lane_slot` `money_of_ai` or `built_with_ai` | none |
@@ -888,7 +888,8 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
     change within a second: no second table, no polling, no copy of the
     state anywhere else. Each step names its owner (`MAKING_OWNERS`):
     Claude Code makes the workroom, the draft, the pictures, the scripts
-    and the pack and builds the publish board; Krish records and approves
+    and the pack, which the live publish board shows from the record
+    (`docs/PUBLISH_BOARDS.md`); Krish records and approves
     each post, and Growth posts what he approved (`docs/GROWTH-HANDOFF.md`).
     The video is made with ve on a home computer (`docs/ve/RUNBOOK.md`;
     `.agents/skills/produce-video/SKILL.md` is the quick-edit fallback), and

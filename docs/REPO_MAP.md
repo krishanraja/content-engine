@@ -159,6 +159,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/publish/watch`
 - `/api/purge/restore`
 - `/api/purge/run`
+- `/api/research-library/sweep`
 - `/api/shifts/[id]`
 - `/api/shifts/[id]/write`
 - `/api/shifts/detect`
@@ -453,6 +454,7 @@ _content — shared helpers for the Content Engine API routes
 - `async function getAnthropicKey(): Promise<string | null>`
 - `function buildSystemBlocks(opts: Partial<ClaudeOpts>): unknown`
 - `async function callClaude(opts: ClaudeOpts): Promise<string>`
+- `function firstText(j: any): string`
 - `interface ChatTurn`
 - `async function callClaudeMessages( system: string, messages: ChatTurn[], opts: { model?: string; maxTokens?: number; te…`
 - `function preamble(req: any, res: any, methods = 'POST, OPTIONS'): boolean`
@@ -1000,6 +1002,14 @@ What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?
 - `function buildAsks(weekStart: string, items: Row[], skip: (r: Row) => boolean = () => false): Ask[]`
 - `function buildRecent(weekStart: string, rows: Row[]): RecentPiece[]`
 - `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[]; quote…`
+- `const BULK_AT_ONCE`
+- `const POSITIVE`
+- `function wordless(c: InspoCard): boolean`
+- `const FEED_DAYS`
+- `const CORRECTION_DAYS`
+- `function buildFeed(rows: Row[])`
+- `function buildCorrections(rows: Row[])`
+- `function buildHindsight(rows: Row[])`
 
 ### `apps/control-plane/api/_investigation.ts`
 
@@ -1010,6 +1020,14 @@ _investigation: the MYMU: Teardown weekly investigation: anchor selection, claim
 - `async function priorAnchorHeadlines(): Promise<string[]>`
 - `interface AnchorDecision`
 - `async function selectAnchor( ranked: RankedAnchor[], budget: RunBudget, hctx: HarnessContext, opts: { dryRun?: boolean …`
+- `const DECOMPOSE_MAX_TOKENS`
+- `const SHORT_PAGE_CHARS`
+- `function decomposeSource(anchorText: string, pageText: string | null | undefined): { text: string; note: string | null }`
+- `interface EmptySplit`
+- `function emptySplit( res: Pick<MeteredResult, 'text' | 'error' | 'stopReason'>, parsed: unknown, maxTokens: number, ): …`
+- `interface SplitAttempt`
+- `interface SplitOutcome`
+- `async function splitClaims( headline: string, sourceText: string, pillarEvidence: string[], call: (opts: MeteredOpts) =…`
 - `interface RunResult`
 - `async function runInvestigation(opts: RunOpts = {}): Promise<RunResult>`
 - `function buildManifest(m: ManifestInput): string`
@@ -1569,6 +1587,60 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `async function classifyRelevance(items: RelevanceItem[], opts: ClassifyOpts): Promise<RelevanceVerdict[]>`
 - `function relevanceReasonCode(prefix: string, verdict: Verdict): string`
 
+### `apps/control-plane/api/_researchLibrary.ts`
+
+- `const RESEARCH_LIBRARY_FOLDER_ID`
+- `const RESEARCH_LIBRARY_INDEX_ID`
+- `const LIBRARY_KINDS`
+- `const LIBRARY_ROLES`
+- `const SETTLE_MS`
+- `const MIRROR_FILE_MAX`
+- `const INDEX_COLUMNS`
+- `const INDEX_MATERIAL_COLUMN`
+- `const LIBRARY_LEASE`
+- `const LIBRARY_LEASE_MS`
+- `const LEASE_RETRY_MS`
+- `const PROP`
+- `interface StoredMaterial`
+- `interface PieceInfo`
+- `interface LibraryFolder`
+- `interface LibraryFile`
+- `interface LibraryDrive`
+- `interface IndexSheet`
+- `interface IndexTidy`
+- `interface LibraryIndex`
+- `type LeaseTake`
+- `interface LibraryLock`
+- `interface LibrarySource`
+- `interface MirrorOptions`
+- `interface MirrorReport`
+- `function inLibrary(m: Pick<StoredMaterial, 'kind' | 'role' | 'storage' | 'archived_at' | 'bytes'>): boolean`
+- `const isSource = (m: Pick<StoredMaterial, 'kind' | 'role'>) =>`
+- `interface Place`
+- `function placeOf(m: StoredMaterial, piece: PieceInfo | null): Place`
+- `function fileNameOf(m: StoredMaterial): string`
+- `function mimeOf(m: StoredMaterial): string`
+- `function descriptionOf(m: StoredMaterial, piece: PieceInfo | null, place: Place): string`
+- `function indexRowOf(m: StoredMaterial, piece: PieceInfo | null, place: Place, link: string): string[]`
+- `const INDEX_LINK_AT`
+- `function fileIdOf(link: string): string | null`
+- `type LiveLink = (materialId: string, link: string) => boolean`
+- `function duplicateRows(sheet: Pick<IndexSheet, 'firstRow' | 'values'>, live: LiveLink): { repairs: IndexTidy['repairs']…`
+- `function tidyPlan(sheet: IndexSheet, listed: Set<string>, live: LiveLink): { ok: true; plan: IndexTidy } | { ok: false;…`
+- `function deleteRuns(rows: number[]): Array<[number, number]>`
+- `async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, lock: LibraryLock, opts: MirrorO…`
+
+### `apps/control-plane/api/_researchLibraryGoogle.ts`
+
+- `function googleLibraryDrive(token: string, f: Fetch = fetch): LibraryDrive`
+- `function googleLibraryIndex(token: string, sheetId = RESEARCH_LIBRARY_INDEX_ID, f: Fetch = fetch): LibraryIndex`
+- `interface SourceDb`
+- `interface LeaseDb`
+- `function storeLease(db: LeaseDb, who: 'sweep' | 'write', name = LIBRARY_LEASE, ms = LIBRARY_LEASE_MS): LibraryLock`
+- `function storeSource(db: SourceDb, bucket: string): LibrarySource`
+- `async function runMirror(opts: { only?: string[]; budgetMs?: number } = {}): Promise<MirrorReport>`
+- `async function copyNow(materialId: string | null | undefined, waitMs = 20_000): Promise<Record<string, unknown>>`
+
 ### `apps/control-plane/api/_retry.ts`
 
 One retry policy for model calls, because an overload is weather.
@@ -1950,12 +2022,13 @@ Sunday's idea pool from every source, and the evidence of Krish's taste (GET /ap
 - `function sourceKind(row: Row): { kind: SourceKind; via: HisVia | null }`
 - `function excluded(row: Row): string | null`
 - `function tasteOf(rows: Row[]): TasteItem[]`
+- `function rejectedTaste(rows: Row[], refused: Map<string, { said: string | null; at: string | null }>): TasteItem[]`
 - `function nearest(vec: number[] | null, taste: TasteItem[], selfId?: string)`
 - `function candidate(row: Row, taste: TasteItem[]): Candidate`
 - `function rank(a: Candidate, b: Candidate): number`
 - `function inWindow(row: Row, kind: SourceKind, win: ReturnType<typeof windows>): boolean`
 - `interface Relayed`
-- `function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[] })`
+- `function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[]; rej…`
 
 ### `apps/control-plane/api/_weeks.ts`
 
@@ -2048,6 +2121,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function growthWriter(req: VercelRequest): boolean`
 - `function actor(req: VercelRequest, operatorOnly = false): string | null`
 - `const PRESS_USES`
+- `const VETO_ID`
 - `const OFFDAY_ID`
 - `const DECISION_ID`
 - `const DECISION_KIND`
@@ -2085,11 +2159,70 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function fileSpec(week: string, v: unknown, html = false): v is BoardFile`
 - `function validManifest(week: string, v: unknown): v is Manifest`
 
+### `apps/control-plane/api/board/_cuts.ts`
+
+- `const WORDS_MAX`
+- `const CUT_OP`
+- `type CutSaid = 'yes' | 'not_this'`
+- `interface CutVerdict`
+- `interface CutAnswer`
+- `interface CutPress`
+- `interface CutPresses`
+- `function cutVerdicts(meta: unknown): CutVerdict[]`
+- `function answerOn(meta: unknown, mediaId: string): CutAnswer | null`
+- `function cutPresses(pieceId: string, item: Pick<MediaItem, 'id' | 'title'>): CutPresses`
+- `function mediaWithAnswers(piece: Body | undefined): MediaItem[]`
+- `class CutError`
+- `interface CutPick`
+- `function cutPick(body: Body): CutPick`
+- `function nextVerdicts(meta: Body, pick: CutPick, at: string): { list: unknown[]; entry: CutVerdict; already: boolean }`
+- `async function saveCut(db: SupabaseClient, pieceId: string, pick: CutPick, now = new Date()): Promise<{ verdict: CutVer…`
+- `interface CutPlace`
+- `type Filed = 'filed' | 'failed' | 'waits_on_migration'`
+- `interface CutLearning`
+- `function cutReport(place: CutPlace, v: CutVerdict)`
+- `function cutInboxRow(place: CutPlace, v: CutVerdict)`
+- `function cutIncident(place: CutPlace, v: CutVerdict): Incident | null`
+- `async function fileCutLearning(db: SupabaseClient, place: CutPlace, v: CutVerdict, now = new Date()): Promise<CutLearni…`
+
 ### `apps/control-plane/api/board/_deskPage.ts`
 
 Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not edit by hand.
 
 - `const DESK_PAGE: string`
+
+### `apps/control-plane/api/board/_drivePosts.ts`
+
+- `const POSTS_FOLDER_ID`
+- `const DRIVE_ID`
+- `interface DriveFile`
+- `const DRIVE_FIELDS`
+- `type DriveLister = (q: string) => Promise<DriveFile[]>`
+- `const driveFileUrl = (id: string) =>`
+- `const driveFolderUrl = (id: string) =>`
+- `function driveIdOf(url: unknown): string | null`
+- `function driveFolderIdOf(url: unknown): string | null`
+- `type AssetKind`
+- `interface AssetFile`
+- `interface PostAsset`
+- `interface DrivePost`
+- `function versionKey(name: string): string`
+- `function kindOf(folder: string, f: DriveFile): AssetKind`
+- `function assetsOf(files: Array<{ folder: string; file: DriveFile }>): PostAsset[]`
+- `async function readWeekPosts(list: DriveLister, week: string): Promise<DrivePost[]>`
+- `function filesOfPosts(posts: DrivePost[]): Map<string, AssetFile>`
+- `function driveLister(token: string, f: typeof fetch = fetch): DriveLister`
+- `function resetDrivePostsCache(): void`
+- `async function weekPosts(week: string, token: () => Promise<string | null>, now = Date.now(), f: typeof fetch = fetch):…`
+- `interface DriveStore`
+- `type DriveCopier`
+- `function copyKey(f: Pick<DriveFile, 'id' | 'name' | 'md5Checksum' | 'modifiedTime' | 'size'>): string`
+- `async function servedDrive(store: DriveStore, copy: DriveCopier, f: DriveFile): Promise<string | null>`
+- `function supabaseDriveStore(db: { storage: { from(b: string): any } }): DriveStore`
+- `async function driveFile(token: string, id: string, f: typeof fetch = fetch): Promise<DriveFile | null>`
+- `function ownerDriveToken(env: Record<string, string | undefined> = process.env): Promise<string | null>`
+- `interface BoardDrive`
+- `function boardDrive(db: { storage: { from(b: string): any } }, opts: { token?: () => Promise<string | null>; fetch?: ty…`
 
 ### `apps/control-plane/api/board/_gate.ts`
 
@@ -2144,10 +2277,14 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 ### `apps/control-plane/api/board/_media.ts`
 
 - `type MediaKind = 'cut' | 'thumbnail'`
+- `interface DriveLink`
 - `interface MediaItem`
+- `const NO_DRIVE_LINK`
 - `function dayMedia(piece: Body | undefined): MediaItem[]`
+- `function cutOn(piece: Body, id: string): { id: string; cut: string; title: string; path: string; sha256: string | null …`
 - `function findMedia(pieces: Body[], id: string): MediaFile | null`
-- `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string): Promise<string | null>`
+- `function libraryPaths(file: Pick<MediaFile, 'path' | 'folder'>): string[]`
+- `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string, drive?: (fileId: string) => Pro…`
 
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
@@ -2265,6 +2402,31 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `async function decideStandard(db: SupabaseClient, raw: unknown)`
 - `function renderStandards(groups: StandardsGroup[])`
 
+### `apps/control-plane/api/board/_style.ts`
+
+- `type StyleLayerKey = 'motion' | 'captions'`
+- `const STYLE_LAYERS: readonly StyleLayerKey[]`
+- `type RejectLayerKey = StyleLayerKey | 'treatment'`
+- `interface StylePress`
+- `interface StyleOption`
+- `interface StyleLayer`
+- `interface DayStyle`
+- `interface MotionModule`
+- `interface Look`
+- `const CAPTIONS: Array<{ id: string } & CaptionTheme>`
+- `function motionBank(styles: unknown): MotionModule[]`
+- `function sampleUrl(layer: StyleLayerKey, id: string, samples: unknown = styleSamples): string | null`
+- `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, str…`
+- `interface StyleInputs`
+- `function dayStyle(i: StyleInputs): DayStyle`
+- `class StyleError`
+- `interface StylePick`
+- `interface SavedStyle`
+- `function needsMotion(body: Body): boolean`
+- `function stylePick(body: Body, motionIds: Set<string> | null): StylePick`
+- `function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle`
+- `async function saveStyle(db: SupabaseClient, pieceId: string, pick: StylePick, now = new Date()): Promise<SavedStyle>`
+
 ### `apps/control-plane/api/board/_view.ts`
 
 - `const VIEW_DAYS: readonly PostedDay[]`
@@ -2272,13 +2434,21 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
 - `type Action`
 - `interface DayView`
+- `interface ViewPost`
 - `type DayCore`
 - `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
 - `const PATH: Array<{ key: PathKey; label: string }>`
+- `type StageKey`
+- `const STAGES: Array<{ key: StageKey; label: string }>`
+- `interface Stage`
+- `function lockSignedOn(text: string | null | undefined): string | null`
+- `function makingDays(piece: Body): { recordedOn: string | null; cutOn: string | null }`
+- `function stagesOf(i: { done: Record<StageKey, boolean> /** The Sunday the ideas were brought (the day before the week s…`
 - `interface LookOption`
 - `interface DayPath`
 - `interface WeekView`
 - `interface ViewInputs`
+- `function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost…`
 - `function lockSigned(text: string | null | undefined): boolean`
 - `function postingStarted(live: Pick<LiveDay, 'steps'>): boolean`
 - `function backupPrompt(week: string, d: DayView): string`
@@ -2310,8 +2480,11 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `function dayPosted(rows: ExtrasInputs['ticks'], day: string): ViewPosted[]`
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
 - `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[]`
+- `function warned(o: Body): string`
+- `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
 - `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
 - `function offdayOptions(i: ExtrasInputs, day: string): ViewOption[]`
+- `function mixOf(stories: Body[]): string`
 - `function thoughtPress(day: string, step: string): PressAction`
 - `function materialPress(pieceId: string): PressAction`
 - `function yesPress(i: ExtrasInputs, day: string): PressAction`
@@ -2322,6 +2495,8 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 What every prompt the board copies out says about reporting back, and what the board shows of the sessions and the
 
 - `const WRITE_BACK_HEAD`
+- `const RESEARCH_RULE`
+- `const WALLS`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
@@ -2568,8 +2743,9 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 ### `apps/control-plane/api/content-ideas/store.ts`
 
 - `const config`
-- `function createStoreHandler(getDb: () => Promise<StoreDb>)`
-- `export default createStoreHandler(async () => (await import('../_supabase.j`
+- `type LibraryCopy`
+- `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy)`
+- `export default createStoreHandler( async () => (await import('../_supabase.`
 
 ### `apps/control-plane/api/content-ideas/synthesize.ts`
 
@@ -2744,6 +2920,7 @@ What the Drive scan decides, with no Drive, no model and no database.
 
 ### `apps/control-plane/api/judge/sweep.ts`
 
+- `function liveSweepExpired( sweep: Pick<SweepRow, 'created_at' | 'live_fallback' | 'batches'>, now: Date = new Date(), )…`
 - `async function providerPause(now: Date = new Date()): Promise<Record<string, unknown> | null>`
 - `export default withContentRun('judge_sweep', handler)`
 - `const config`
@@ -2815,7 +2992,7 @@ What the compiler looks for, as pure functions.
 - `function copyFits(bytes: number, elapsedMs: number): boolean`
 - `type InboxListing`
 - `async function listInbox(folderId: string): Promise<InboxListing>`
-- `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number):…`
+- `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number, …`
 
 ### `apps/control-plane/api/library/_lanes.ts`
 
@@ -3004,6 +3181,11 @@ A copy of every row the Monday purge is about to hard-delete.
 ### `apps/control-plane/api/purge/run.ts`
 
 - `export default withContentRun('purge', handler)`
+
+### `apps/control-plane/api/research-library/sweep.ts`
+
+- `const config`
+- `export default withContentRun('research_library_mirror', handler)`
 
 ### `apps/control-plane/api/shifts/[id].ts`
 
@@ -3480,6 +3662,8 @@ His verdicts on past off-day options, for Sunday's gather (GET /api/week/options
 - `const PICKED_STATES`
 - `function weekEnd(monday: string): string`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+- `const IDEA_RULES`
+- `async function readUnvetoed(week: string, db: { from: typeof supabase.from } = supabase)`
 - `async function readOutcomes(week: string, db: { from: typeof supabase.from } = supabase)`
 
 ### `apps/control-plane/api/workbench.ts`
@@ -3831,6 +4015,12 @@ Re-render a saved run.
 ### `apps/control-plane/scripts/eval/run.ts`
 
 Prompt A/B harness.
+
+### `apps/control-plane/scripts/eval/suites/ideas-history.ts`
+
+SUITE: ideas-history — do the ideas board's checks catch what Krish refused, without blocking anything he picked?
+
+- `const suite: Suite<Case> & { requires: string[] }`
 
 ### `apps/control-plane/scripts/eval/suites/revise.ts`
 

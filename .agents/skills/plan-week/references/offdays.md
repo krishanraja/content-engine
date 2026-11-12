@@ -87,13 +87,16 @@ option for an idea that has left the pool, and an option covering an off day of 
 
 `hook`, `pitch` and `direction` are what he judges, so every option has them;
 `learned_from` quotes only his own words from `offday_verdicts` or `cues`,
-never a paraphrase, and is left out when none applies. One option a day is
+never a paraphrase. From the 23 Nov board every off-day option carries it: each option quotes the earlier verdict of his
+it learned from, three words or more of his exact words in quotation marks (`board_feed.py cover` checks the quote; the
+ideas quality plan, item 8). One option a day is
 `recommended`. The copy and every line of the direction pass `python3
 scripts/post-pack/copy_lint.py --applies-to channel_copy` (and `--applies-to
 carousel_text` for a carousel) and `node
 vendor/makeyourmindup/kill-list/kill-list.mjs` before they reach the tab.
-They reach the tab only through `week_board.py --ideas`, never by patching
-the page; `week_board.py` refuses a wrong shape and names it.
+They reach the live board only through `ideas.json` itself, which its view
+reads (`docs/PUBLISH_BOARDS.md`); `week_board.py --ideas`, run locally, still
+refuses a wrong shape and names it, and no page is published.
 
 **His presses.** On each option he presses the idea, the direction and, once
 Growth returns it, the mock: Approve, Improve (his words) or Reject (his
@@ -132,7 +135,7 @@ words, keep its `id`, and set `"revised": {"side": "<idea or direction>",
 "words": "<his words, verbatim>"}`. Run the same checks as above and check
 the file builds (`week_board.py --ideas`, a local build). The side's hash
 changes with its words, so his old press reads as answered and he judges the
-new card when the board is next built from these ideas; a side already
+new card when the live board next reads these ideas; a side already
 revised is never revised again from the same words. The revision run does not
 publish the board. A mock is Growth's to remake from his words.
 
@@ -198,17 +201,23 @@ outcomes; only his Approve puts it on the publish board.
 `.github/workflows/saturday-goodnews.yml` finds them again for a week, for the week `python3
 scripts/saturday_goodnews.py check` names; a session can run the same steps):
 
+0. Read his positive saves first (`sources.json` `inspiration.positive`: cards he saved as good news, his words beside
+   each, the ideas quality plan, item 12): a story they point to, or one of the kind they show he likes, comes before
+   anything the search finds.
 1. Find five real AI stories that are good news for ordinary people (health, science, safety, access, work made
    better), each published in the seven days up to `stories_due` (today), none already run (`sources.json`
-   `recent_offdays` urls). Prefer a primary source: the organisation's own page, the paper, the official
+   `recent_offdays` urls). Tag each story with its `kind`, one of `health`, `lab`, `science`, `work`, `money`,
+   `learning`, `climate`, `creative`, `people`, `safety` or `other`; the board shows the week's mix on the option
+   ("The mix: 2 health, 1 work, ..."), so he sees it before he presses. A cap on health and lab stories waits for his
+   yes; until then the mix is shown, never capped. Prefer a primary source: the organisation's own page, the paper, the official
    announcement; a press story only names where it read it.
 2. Check each against its primary source the same day: the headline, the number and the date must be on that page.
    A claim the source does not carry is cut, never softened.
 3. Each story has its own picture: a photo or clip of the thing itself from the source or the organisation (`media`,
    https), never a stock image.
 4. Write them into that week's `docs/plans/<Monday>-week/ideas.json`, on the good-news option only, as
-   `"stories": [{"headline", "what", "why", "date": "YYYY-MM-DD", "source": {"label", "url"}, "media": {"kind": "photo"
-   or "clip", "url"}}]`, five of them, in plain English a 12-year-old follows, and set `stories_due` to today.
+   `"stories": [{"headline", "what", "why", "kind", "date": "YYYY-MM-DD", "source": {"label", "url"}, "media": {"kind":
+   "photo" or "clip", "url"}}]`, five of them, in plain English a 12-year-old follows, and set `stories_due` to today.
 5. `python3 scripts/post-pack/copy_lint.py --applies-to carousel_text` on the words, then
    `python3 scripts/post-pack/board_feed.py gather <Monday>` and `cover <Monday>`: it refuses a story dated outside
    the seven days, one with no source or picture, and one a recent off day ran.

@@ -1,17 +1,21 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
+import { makingSteps } from '../_making.js'
 import { yesByDay } from './_yes.js'
 import { readRuns, ENGINE_REPO, type JobName, type RunInfo } from './_run.js'
 import { offdaySides, type OffdaySides } from './_offdaySides.js'
-import { dayMedia, type MediaItem } from './_media.js'
+import type { MediaItem } from './_media.js'
+import { mediaWithAnswers } from './_cuts.js'
 import { VIEW_CONTRACT_VERSION } from './_viewContract.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
-import { dayComments, dayPieces, dayPosted, dayYes, materialPress, offdayApproval, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
+import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, offdayApproval, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
 import { HELD_CHANGED, HELD_TITLE, approvedLabel, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
+import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
+import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
 // pieces' making records, his presses on the board, the week's plan files on main and the runs on GitHub. Nothing is a
@@ -35,6 +39,9 @@ export const VIEW_DAYS: readonly PostedDay[] = ['mon', 'tue', 'wed', 'thu', 'fri
 const SERIES: Record<string, string> = { mon: 'follow.the.money', wed: 'under.the.hood', fri: 'mind.the.gap' }
 const DAY_NAME: Record<string, string> = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday' }
 export const STOPS = ['Idea', 'Story', 'Make', 'Approve', 'Live'] as const
+/** What a series piece makes: the essay with a long and a short cut, so its motion style must be made for both. */
+const SERIES_FORMATS = ['long_video', 'short_video']
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'
 export type Action =
@@ -64,7 +71,8 @@ export interface DayView {
   reviews?: Array<{ doc_id: string; revision: number | null; side: string; option: OffdaySides; prev: Body | null }>
   /** A series day's guided path (PLAN.md, "Each day as a guided path"): six steps, one current, and what each needs. */
   path?: DayPath
-  /** What the day's piece has rendered (cuts, thumbnails), newest first; ids only, signed at /api/board/<week>/media/<id> (_media.ts). */
+  /** What the day's piece has rendered (cuts, thumbnails), newest first; ids only, signed at /api/board/<week>/media/<id> (_media.ts).
+   *  Contract 1.6.0: each cut carries his Yes and Not this and his latest answer on it (_cuts.ts). */
   media: MediaItem[]
   /** Contract 1.2.0 (_viewExtras.ts): every piece on the day, the day's options with their presses, his comments, what
    *  Growth posted and his yes. */
@@ -81,14 +89,81 @@ export interface DayView {
   /** Contract 1.3.0, the ideas gate: every piece or option on the day that his approval does not hold there, and why.
    *  Never hidden: "Held: not approved by you". */
   held: Held[]
+  /** Contract 1.7.0 (_drivePosts.ts): every post folder of the day in Drive's 3 Posts with everything made in it, each
+   *  asset with its Drive file, a carousel's slides in order and its older versions; the post bound to an option says
+   *  which (`option`), the one the day's piece files into says which (`piece_id`). Null when Drive could not be read. */
+  posts: ViewPost[] | null
 }
+/** A post folder of a day, as the view carries it (contract 1.7.0). */
+export interface ViewPost { id: string; name: string; url: string; option: string | null; piece_id: string | null; assets: PostAsset[] }
 /** What a day's next step is built from, before the parts every day carries (media, and 1.2.0's extras). */
-export type DayCore = Omit<DayView, 'media' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials' | 'held'>
+export type DayCore = Omit<DayView, 'media' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials' | 'held' | 'posts'>
 export type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'
 export const PATH: Array<{ key: PathKey; label: string }> = [
   { key: 'research', label: 'Research' }, { key: 'story', label: 'Story' }, { key: 'look', label: 'Look' },
   { key: 'board', label: 'Storyboard and script' }, { key: 'record', label: 'Record' }, { key: 'cut', label: 'Cut and publish' },
 ]
+/**
+ * The steps from idea to publish (contract 1.5.0; approved mock M5: "Steps from idea to publish: Ideas, Agreed, Flesh
+ * out, Script and record, After recording, Ready to post", each with its day). The working steps (PATH) stay as they
+ * are, for the next step and the prompts; these are what a person reads, each from the same record.
+ */
+export type StageKey = 'idea' | 'agreed' | 'flesh_out' | 'script_record' | 'after_recording' | 'ready_to_post'
+export const STAGES: Array<{ key: StageKey; label: string }> = [
+  { key: 'idea', label: 'Ideas' }, { key: 'agreed', label: 'Agreed' }, { key: 'flesh_out', label: 'Flesh out' },
+  { key: 'script_record', label: 'Script and record' }, { key: 'after_recording', label: 'After recording' }, { key: 'ready_to_post', label: 'Ready to post' },
+]
+/** One step from idea to publish: `when` is the day it happened (from the record) or, for Ready to post, the day it
+ *  goes out; null when the record does not say. Never a guessed day. */
+export interface Stage { key: StageKey; label: string; state: 'done' | 'current' | 'todo'; when: string | null }
+
+/** A YYYY-MM-DD day moved by n days. */
+const shiftYmd = (ymd: string, n: number): string => { const d = new Date(`${ymd}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10) }
+
+/** A record's time as its day (YYYY-MM-DD), or null. */
+const dayOf = (v: unknown): string | null => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) && Number.isFinite(Date.parse(v)) ? v.slice(0, 10) : null)
+
+/** The day a narrative lock was signed, from its last line ("Signed by Krish: "...", 2026-11-08"), or null. */
+export function lockSignedOn(text: string | null | undefined): string | null {
+  if (!lockSigned(text)) return null
+  const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean)
+  return LOCK_SIGNED.exec(lines[lines.length - 1])?.[2] ?? null
+}
+
+/** The days the piece's making record holds for recording and cutting: the day its Recorded step was done (its latest
+ *  take's `at`) and the day its Video assets step was done (its latest file's `at`), each as makingSteps reads the
+ *  record, so the stages say what the record's own steps say. Null while that step is not done on the record (a step
+ *  done only because a later one is has no day of its own), never a guessed day. Pure. */
+export function makingDays(piece: Body): { recordedOn: string | null; cutOn: string | null } {
+  const meta = isObj(piece.meta) ? piece.meta : {}
+  const steps = makingSteps({ id: String(piece.id), state: piece.state as string | null, body: piece.body as string | null, meta })
+  const doneOn = (key: string) => { const s = steps.find(x => x.key === key); return s && s.state === 'done' ? dayOf(s.at) : null }
+  return { recordedOn: doneOn('record'), cutOn: doneOn('video') }
+}
+
+/** The steps from idea to publish, from what is done (a later step done means every one before it is) and the days the
+ *  record holds. Pure. */
+export function stagesOf(i: {
+  done: Record<StageKey, boolean>
+  /** The Sunday the ideas were brought (the day before the week starts). */
+  ideasOn: string
+  agreedOn: string | null
+  fleshedOn: string | null
+  recordedOn: string | null
+  cutOn: string | null
+  /** The day the piece goes out. */
+  goesOn: string
+}): Stage[] {
+  const done = { ...i.done }
+  for (let k = STAGES.length - 1; k > 0; k--) if (done[STAGES[k].key]) done[STAGES[k - 1].key] = true
+  const current = STAGES.find(s => !done[s.key])?.key ?? null
+  const when: Record<StageKey, string | null> = {
+    idea: i.ideasOn, agreed: done.agreed ? i.agreedOn : null, flesh_out: done.flesh_out ? i.fleshedOn : null,
+    script_record: done.script_record ? i.recordedOn : null, after_recording: done.after_recording ? i.cutOn : null, ready_to_post: i.goesOn,
+  }
+  return STAGES.map(s => ({ ...s, state: done[s.key] ? 'done' : s.key === current ? 'current' : 'todo', when: when[s.key] }))
+}
+
 export interface LookOption { id: string; name: string; pitch: string; status: string }
 export interface DayPath {
   steps: Array<{ key: PathKey; label: string; state: 'done' | 'current' | 'todo' }>
@@ -104,6 +179,10 @@ export interface DayPath {
   prompts: { research: string; story: string; storyboard: string; mock: string }
   /** The session's storyboard filed on the piece (a material titled "Storyboard: ..."), or null. */
   storyboard: { title: string; at: string | null } | null
+  /** Contract 1.4.0 (_style.ts): the piece's motion, caption and treatment choices, each option with its press. */
+  style: DayStyle | null
+  /** Contract 1.5.0: the steps from idea to publish, each with its day (stagesOf). */
+  stages: Stage[]
 }
 export interface WeekView {
   /** The contract this view keeps (view.schema.json, x-contract-version; _viewContract.ts). */
@@ -135,6 +214,10 @@ export interface ViewInputs {
   research_files?: Partial<Record<PostedDay, boolean>>
   /** The engine's looks: config/style-references.json formats (script and production). */
   formats?: { script: LookOption[]; production: LookOption[] }
+  /** The bank's motion styles: config/style-references.json, layer motion (contract 1.4.0). */
+  motion?: MotionModule[]
+  /** Each series day's creative direction (its plan folder's ve/spec.json or creative-direction.json), when on main. */
+  specs?: Partial<Record<PostedDay, Body | null>>
   /** His production inspiration: cards with his own words first, and how many recent ones have none yet. */
   inspiration?: { cards: Array<{ id: string; name: string; words: string; saved: string | null }>; unread: number }
   /** His comments on the week (board_documents, comments) and Growth's ticks (board_ticks). */
@@ -147,6 +230,21 @@ export interface ViewInputs {
   /** The approvals that stand now (board_approvals_now, _gate.ts), or null when they cannot be read: then every piece
    *  is held. Required, so no caller builds a view that skips the gate. */
   approvals: Approval[] | null
+  /** The week's post folders in Drive (_drivePosts.ts weekPosts), or null when Drive could not be read; left out, the
+   *  view says Drive was not read. */
+  drive_posts?: DrivePost[] | null
+}
+
+/** The day's post folders, each bound to the option whose `drive` names it and to the piece whose making record files
+ *  into it (pack.folder): the bound ones first, then by name. Null when Drive could not be read. */
+export function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost[] | null {
+  if (!Array.isArray(posts)) return null
+  const packOf = (p: Body) => { const m = isObj(p.meta) && isObj(p.meta.making) && isObj(p.meta.making.pack) ? p.meta.making.pack : null; return m && typeof m.folder === 'string' ? m.folder.trim() : '' }
+  return posts.filter(p => p.date === date).map(p => {
+    const option = options.find(o => o.post === p.id)?.id ?? null
+    const piece = pieces.find(x => packOf(x) === p.name)
+    return { id: p.id, name: p.name, url: p.url, option, piece_id: piece ? String(piece.id).toLowerCase() : null, assets: p.assets }
+  }).sort((a, b) => Number(!a.option && !a.piece_id) - Number(!b.option && !b.piece_id) || a.name.localeCompare(b.name))
 }
 
 const LOCK_SIGNED = /^Signed by Krish\b[^:\n]*:\s*"(.+)"\s*,\s*(\d{4}-\d{2}-\d{2})\b/
@@ -235,7 +333,24 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
     inspiration: i.inspiration || { cards: [], unread: 0 },
     prompts: { research: researchPrompt(brief), story: storyPrompt(brief), storyboard: storyboardPrompt(brief), mock: mockPrompt(brief) },
     storyboard: (m => (m ? { title: m.title, at: m.at } : null))(materials.find(m => /^Storyboard:/.test(m.title))),
+    style: null,
+    stages: stagesOf({
+      done: {
+        idea: true, agreed: signed, flesh_out: done.research && done.look, script_record: done.board && done.record,
+        after_recording: vid === 'done' || done.cut, ready_to_post: done.cut,
+      },
+      ideasOn: shiftYmd(week, -1),
+      agreedOn: lockSignedOn(lock) ?? dayOf(pick?.updated_at),
+      fleshedOn: look ? dayOf(look.at) : null,
+      ...makingDays(piece),
+      goesOn: date,
+    }),
   }
+  // The style choices (contract 1.4.0): a spec on file for another piece is never read as this one's.
+  const spec = (s => (s && (typeof s.piece_id !== 'string' || !UUID.test(s.piece_id) || s.piece_id.toLowerCase() === id) ? s : null))(i.specs?.[day] ?? null)
+  const points = spec && isObj(spec.style) && Array.isArray(spec.style.points) ? spec.style.points.filter((p): p is string => typeof p === 'string') : []
+  path.style = dayStyle({ pieceId: id, meta, formats: SERIES_FORMATS, points: points.length ? points : null, motion: i.motion || [],
+    looks: i.formats?.production || [], recommendedLook: path.look.recommended.production?.id ?? null, gate: live.gates.style, spec })
   const detail: DayView['detail'] = [
     { h: 'Research', p: materials.length ? materials.map(m => m.title).join(' · ') : researchFile ? `${day}-research.md in the week's folder` : 'None yet' },
     { h: 'Narrative lock', p: signed ? 'Signed' : lock ? 'Written, waiting for your signature' : 'Not written yet' },
@@ -440,7 +555,10 @@ export function buildView(i: ViewInputs): WeekView {
     const piece = byDay.get(d), date = dayDate(i.week, d)
     const shown = piece ? String(piece.id).toLowerCase() : null
     const core = SERIES_DAYS.includes(d) ? seriesDay(i, d, piece) : offDay(i, d, piece)
-    const options = SERIES_DAYS.includes(d) ? seriesOptions(i, d, Boolean(piece)) : offdayOptions(i, d)
+    // A publishing day can carry off-day posts too (a meme beside the week's piece): its options in ideas.json
+    // offdays[<day>] are drawn after the day's own ideas (Krish, 2026-11-12, of Wednesday's Jensen Huang post and
+    // Thursday's meme: "Put them there so I can approve").
+    const options = [...(SERIES_DAYS.includes(d) ? [...seriesOptions(i, d, Boolean(piece)), ...offdayOptions(i, d)] : offdayOptions(i, d)), ...ideaLines(i, d)]
     const approval = shown ? gate.approvalOf.get(shown) : undefined
     if (approval) core.detail = [{ h: approval.via === 'approve_publish' ? 'Approved for publish by you' : 'Approved by you', p: approvedLabel(approval).replace(/^[^,]+, /, '') }, ...core.detail]
     else {
@@ -464,10 +582,17 @@ export function buildView(i: ViewInputs): WeekView {
       }
       core.actions = [...presses, ...core.actions]
     }
-    return { ...core, media: dayMedia(piece),
+    // A held option's own Approve, on the day itself, whatever state the day is in: the held line carries no press,
+    // and a finished day shows no option list, so this is where he sees it (Krish, 2026-11-12: "Wednesday and
+    // Thursday are not in my publish board anywhere. Put them there so I can approve").
+    const heldApprove = options.filter(o => o.status === 'held')
+      .flatMap(o => (o.actions || []).filter(a => a.kind === 'press' && /^Approve/.test(a.label)).map(a => ({ ...a, label: `${a.label}: ${o.title.length > 80 ? o.title.slice(0, 79).trimEnd() + "…" : o.title}` })))
+    if (heldApprove.length) core.actions = [...heldApprove, ...core.actions.filter(a => !heldApprove.some(h => h.kind === 'press' && a.kind === 'press' && h.id === a.id))]
+    return { ...core, media: mediaWithAnswers(piece),
       pieces: dayPieces(gate.approved, date, shown, gate.approvalOf),
       options, held,
-      comments: dayComments(i.comments, d), posted: dayPosted(i.ticks, d), yes: dayYes(i.picks, d) }
+      comments: dayComments(i.comments, d), posted: dayPosted(i.ticks, d), yes: dayYes(i.picks, d),
+      posts: dayPosts(i.drive_posts, date, options, i.pieces) }
   }), i.overlay ?? null)
   for (const d of days) {
     if (d.who === 'done' || d.actions.some(a => a.kind === 'prompt' && /Claude/.test(a.label))) continue
@@ -490,7 +615,8 @@ export function buildView(i: ViewInputs): WeekView {
   for (const r of Object.values(i.runs)) if (r) moved.push({ at: r.updated_at, text: `${r.workflow}: ${r.state}` })
   moved.sort((a, b) => b.at.localeCompare(a.at))
   return { contract_version: VIEW_CONTRACT_VERSION, week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
-    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay), approvals: Array.isArray(i.approvals) }, revision: i.revision ?? null }
+    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay), approvals: Array.isArray(i.approvals), drive: Array.isArray(i.drive_posts) },
+    revision: i.revision ?? null }
 }
 
 /** Every rule the view must keep (PLAN.md): a day not done has a next step, and that step has at least one action. */
@@ -529,7 +655,9 @@ export async function branchSha(f: Fetcher, env: Record<string, string | undefin
 
 /** Read every input of the week now and build its view. Each source that cannot be read is said in sources, never a failure. */
 export async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env,
-  fetcher: Fetcher = fetch as unknown as Fetcher, now = new Date()): Promise<WeekView> {
+  fetcher: Fetcher = fetch as unknown as Fetcher, now = new Date(),
+  /** The week's posts in Drive (_drivePosts.ts); a test passes its own, or one that answers null. */
+  drive?: (week: string) => Promise<DrivePost[] | null>): Promise<WeekView> {
   // main and the week's branch, each at the commit it points at now when the token can ask (branchSha); otherwise by name.
   const [mainSha, weekSha] = await Promise.all([branchSha(fetcher, env, 'main'), branchSha(fetcher, env, `offday-revise/${week}`)])
   const RAW = `https://raw.githubusercontent.com/${ENGINE_REPO}/${mainSha || 'main'}`
@@ -550,8 +678,15 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     ...SERIES_DAYS.map(d => fetchText(fetcher, `${RAW}/docs/plans/${week}-week/narrative-lock-${d}.md`)),
   ])
   const since = new Date(now.getTime() - 21 * 864e5).toISOString()
-  const [styleText, notedRows, unreadRows, commentRows, tickRows, signal, ...research] = await Promise.all([
+  // Each series day's creative direction, in its plan folder (docs/plans/<date>-<dayname>/): ve/spec.json first.
+  const spec = (d: PostedDay) => {
+    const dir = `${RAW}/docs/plans/${dayDate(week, d)}-${DAY_NAME[d].toLowerCase()}`
+    return fetchText(fetcher, `${dir}/ve/spec.json`).then(t => t ?? fetchText(fetcher, `${dir}/creative-direction.json`))
+      .then(t => { try { const s = t ? JSON.parse(t) : null; return isObj(s) ? s : null } catch { return null } })
+  }
+  const [styleText, specs, notedRows, unreadRows, commentRows, tickRows, signal, ...research] = await Promise.all([
     fetchText(fetcher, `${RAW}/config/style-references.json`),
+    Promise.all(SERIES_DAYS.map(spec)),
     // His production inspiration with his own words on it, newest first; and the recent videos he has said nothing about.
     db.from('inspiration_items').select('id,name,mime,why_like,drive_created_at').eq('lane', 'production').is('dismissed_at', null)
       .not('why_like', 'is', null).order('drive_created_at', { ascending: false }).limit(6).then(r => (r.error ? [] : r.data || [])),
@@ -565,12 +700,17 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     ...SERIES_DAYS.map(d => fetchText(fetcher, `${RAW}/docs/plans/${week}-week/${d}-research.md`).then(t => Boolean(t))),
   ])
   // Who is working on each piece and what is on file for it (the piece materials store); null when it cannot be read.
+  // Beside it, everything made for the week's posts, from their folders in Drive (_drivePosts.ts; contract 1.7.0).
+  const drivePosts = drive ? drive(week) : weekPosts(week, () => ownerDriveToken(env))
   const overlay = await readOverlay(db as never, week, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
   // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held.
   const approvals = await readApprovals(db, week)
   let formats: ViewInputs['formats'] = { script: [], production: [] }
+  let motion: MotionModule[] = []
   try {
-    const f = styleText ? JSON.parse(styleText).formats : null
+    const styles = styleText ? JSON.parse(styleText) : null
+    motion = motionBank(styles)
+    const f = styles ? styles.formats : null
     const list = (xs: unknown) => (Array.isArray(xs) ? xs : []).filter(isObj).map(x => ({ id: String(x.id), name: String(x.name || x.id), pitch: String(x.pitch || ''), status: String(x.status || '') }))
     formats = { script: list(f?.script), production: list(f?.production) }
   } catch { /* the look step then offers the recommendation by id only */ }
@@ -587,6 +727,8 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   return buildView({ week, now, pieces: pieces as Body[], picks: picks as ViewInputs['picks'], queue: queue as ViewInputs['queue'],
     history: history as ViewInputs['history'], ideas, runs, north_star: north,
     locks: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, locks[k] as string | null])),
-    research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, inspiration, overlay, approvals,
-    comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null })
+    research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
+    specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, approvals,
+    comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
+    drive_posts: await drivePosts })
 }

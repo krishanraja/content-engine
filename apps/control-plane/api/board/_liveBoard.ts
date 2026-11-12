@@ -3,12 +3,12 @@
 // and presses through this engine's routes; content.krishraja.com/board/<Monday> is kept as the archive.
 //
 // One constant: config/boards.json `live_board.url` holds the same text and tests/control-plane/board-view-contract.test.ts
-// holds the two equal. Python reads it through scripts/post-pack/live_board.py. Dropping `?ui=next` after Control
-// Centre's cutover is a one-line change here and there.
+// holds the two equal. Python reads it through scripts/post-pack/live_board.py. Control Centre's rebuilt UI is its
+// default since its cutover (Ruling, Krish, 2026-11-12), so the address carries no `?ui=next`.
 //
 // Pure, no Node import: the archive page (apps/control-plane/board-next) bundles it for its banner.
 
-export const LIVE_BOARD_URL = 'https://controlcenter.krishraja.com/?ui=next#/content'
+export const LIVE_BOARD_URL = 'https://controlcenter.krishraja.com/#/content'
 
 const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const
 

@@ -67,6 +67,9 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   // ID, copied into the recordings store; it also fails while a home
   // computer's last pass reported a problem (api/library/_lanes.ts).
   { job: 'recordings_drive_inbox', path: '/api/library/recordings/drive-inbox', label: 'Recordings Inbox', everyHours: 1, graceHours: 1 },
+  // Hourly: every piece's research copied from the piece store into his Drive's Research library, with a row in its
+  // index (docs/DRIVE.md, "The research library"). A failed copy loses nothing: the store is the record.
+  { job: 'research_library_mirror', path: '/api/research-library/sweep', label: 'Research library', everyHours: 1, graceHours: 2 },
 ]
 
 export interface ContentEngineRunRow {

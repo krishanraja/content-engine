@@ -492,6 +492,41 @@
     "closed": "Rejected (Krish, 3 Nov): boring, no clear takeaway."
    }
   ],
+  "wed": [
+   {
+    "id": "tablefortwo",
+    "format": "Meme, 1 image, 4:5",
+    "source": {
+     "label": "The photo Growth filed with the post on 11 Nov (Jensen Huang toasting a felt robot)",
+     "url": "https://drive.google.com/file/d/1jwnCb8VE3PdK9rDhvaz3r1y7DX5Y0j77/view"
+    },
+    "copy": "Table for two. One of them runs on a GPU. 🍷🤖\n\nTag the tech leader most likely to get caught.",
+    "hook": "POV: tech leaders getting busted in 5 years from now",
+    "pitch": {
+     "see": "Jensen Huang toasting a felt robot at a restaurant table, under one line of caption.",
+     "lands": "Anyone watching tech leaders fall for their own AI gets the joke at a glance.",
+     "share": "Tag the tech leader most likely to get caught."
+    },
+    "direction": {
+     "look": "The photo in a mint frame with a soft green glow on brand ink; the caption in cream Archivo, POV in mint; the house wordmark small, bottom right",
+     "format": "Meme, 1 image, 4:5",
+     "frames": [
+      {
+       "words": "POV: tech leaders getting busted in 5 years from now",
+       "picture": "Jensen Huang and the felt robot raising glasses"
+      }
+     ],
+     "tone": "Silly",
+     "kit": "On-ink wordmark from 1 Brand kit (permanent), bottom right"
+    },
+    "drive": "https://drive.google.com/drive/folders/1ery_5vVMg-HFwhCj4MwpcB8ClIMI7H_d",
+    "posts_folder": "2026-11-11 Wed off.day - Table for two",
+    "decided": "Growth filed it for Wed 11 Nov on white; remade on black 12 Nov (Krish, 12 Nov: \"Today's Jensen Huang post needs to have a black background not a white background so we need to reskin that.\"). Black version: 4 Social/table-for-two-meme-black-v2.png.",
+    "needs": [
+     "Finished: table-for-two-meme-black-v2.png and the post description in 3 Posts › 2026-11-11 Wed off.day - Table for two › 4 Social."
+    ]
+   }
+  ],
   "thu": [
    {
     "id": "gitbroke",
@@ -752,7 +787,7 @@
     "posts_folder": "2026-11-12 Thu off.day - AI agent not set up",
     "decided": "Posts Thu 12 Nov (Krish, 11 Nov: \"POV: your AI agent using your computer... is for tomorrow\"). Codex schedules it.",
     "needs": [
-     "Finished: the video and its post description in 3 Posts › 2026-11-12 Thu off.day - AI agent not set up."
+     "Finished: AI agent not set up - tall 9x16 - black v2.mp4 (remade on black 12 Nov, Krish: \"Same goes for Thursdays meme\") and its post description in 3 Posts › 2026-11-12 Thu off.day - AI agent not set up."
     ]
    }
   ],

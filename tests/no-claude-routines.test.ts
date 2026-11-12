@@ -125,6 +125,17 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     expect(text).not.toMatch(/gh pr merge/)
   })
 
+  it('a merge starts the docs steward as a dry run only: no Claude run as github-actions[bot] on every merge', () => {
+    // claude-code-action refuses a run a bot started ("Workflow initiated by non-human actor"), so a merge that started
+    // the full steward was red on every merge from 3 Nov to 12 Nov 2026. A merge runs the deterministic half, the
+    // digest and the validator; the writing half is the nightly run.
+    const text = read('.github/workflows/auto-merge.yml')
+    const starts = [...text.matchAll(/gh workflow run docs-steward\.yml[^\n]*/g)].map((m) => m[0])
+    expect(starts).toHaveLength(1)
+    expect(starts[0]).toContain('-f dry_run=true')
+    expect(read('.github/workflows/docs-steward.yml')).toContain('dry_run: ${{ inputs.dry_run || false }}')
+  })
+
   it('the Sunday ideas run is idempotent, fires early on Saturday, and can be started by hand', () => {
     const text = read('.github/workflows/sunday-ideas.yml')
     const crons = [...text.matchAll(/cron:\s*'([^']+)'/g)].map((m) => m[1]!)
@@ -165,7 +176,7 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     expect(text).toContain('repository_dispatch:\n    types: [make-piece]')
     expect(text).toMatch(/group: make-piece-\$\{\{ github\.event\.inputs\.piece_id \|\| github\.event\.client_payload\.piece_id \}\}/)
     expect(text).toContain('cancel-in-progress: false')
-    expect(text).toContain('every question for Krish goes on the day\'s tab')
+    expect(text).toContain('every question for Krish goes on the live board')
   })
 
   it('exactly two scheduled jobs may touch a publish board, and only one of them is Claude: the Sunday ideas run', () => {
