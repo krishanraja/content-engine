@@ -213,7 +213,7 @@ describe('GET /api/board/<Monday>/pieces', () => {
     }
     const doc: any = { select: () => doc, eq: () => doc, maybeSingle: async () => ({ data: mix ? { body: mix } : null, error: null }),
       like: async (k: string, v: string) => { expect([k, v]).toEqual(['doc_id', 'off-%']); return { data: off.map(o => ({ updated_by: 'Krish', ...o })), error: null } },
-      or: async (f: string) => { expect(f).toBe('doc_id.like.yes-%,doc_id.like.%-publish'); return { data: said, error: null } } }
+      or: async (f: string) => { expect(f).toBe('doc_id.like.yes-%,doc_id.like.%-publish,doc_id.like.live-%'); return { data: said, error: null } } }
     return { from: (t: string) => { expect(['content_ideas', 'board_documents']).toContain(t); return t === 'board_documents' ? doc : q },
       rpc: async (name: string, args: Record<string, unknown>) => {
         expect([name, args]).toEqual(['board_approvals_now', { p_week: '2026-11-02' }])
@@ -250,8 +250,18 @@ describe('GET /api/board/<Monday>/pieces', () => {
       { day: 'mon', date: '2026-11-02', piece_id: B, channels: [...SERIES_DAY_CHANNELS] },
       { day: 'thu', date: '2026-11-05', piece_id: C, channels: [...OFF_DAY_CHANNELS], slot: '17:30' },
       { day: 'sun', date: '2026-11-08', piece_id: '66666666-2222-4333-8444-555555555555', channels: [...OFF_DAY_CHANNELS], slot: '12:30' },
-    ], mix: null, offdays: [], yes: {} })
+    ], mix: null, offdays: [], yes: {}, live: [] })
     expect((await readPieces(db(true) as never, '2026-11-02')).status).toBe(503)
+  })
+  it('hands Growth every post Krish marked live on the board, for its learning (It\'s live, Krish, 2026-11-12)', async () => {
+    const said = [{ doc_id: 'live-tue', updated_by: 'Krish', body: { kind: 'live', day: 'tue', at: '2026-11-03T13:05:00Z', posts: [
+      { channels: ['instagram', 'linkedin'], url: 'https://www.instagram.com/p/abc/', at: '2026-11-03T13:05:00Z', by: 'Krish', option: 'off-tue-prices' }] } },
+    // A live document a session wrote is never handed over as his.
+    { doc_id: 'live-thu', updated_by: 'engine_operator', body: { kind: 'live', day: 'thu', at: '2026-11-05T13:05:00Z', posts: [
+      { channels: ['x'], url: 'https://x.com/a/status/1', at: '2026-11-05T13:05:00Z', by: 'Krish', option: 'off-thu-plain' }] } }]
+    const out = await readPieces(db(false, null, [], said) as never, '2026-11-02')
+    expect(out.body.live).toEqual([{ day: 'tue', date: '2026-11-03', piece_id: null, option: 'off-tue-prices', channels: ['instagram', 'linkedin'],
+      url: 'https://www.instagram.com/p/abc/', at: '2026-11-03T13:05:00Z', by: 'Krish' }])
   })
   it('carries his one press on the week\'s mix, so Growth fills only what he approved (Ruling, Krish, 2026-10-30)', async () => {
     const out = await readPieces(db(false, MIX) as never, '2026-11-02')

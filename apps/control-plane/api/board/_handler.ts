@@ -4,7 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
-import { actor, canonical, growthWriter, collections, digest, hisOnlyRefusal, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, views, type BoardFile, type Manifest, type View } from './_contracts.js'
+import { LIVE_ID, actor, canonical, growthWriter, collections, digest, hisOnlyRefusal, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, views, type BoardFile, type Manifest, type View } from './_contracts.js'
 import { PressError, afterPress, preparePress, type PressDeps } from './_presses.js'
 import { readArchive } from './_archive.js'
 import { readPieces, recordPosted } from './_posted.js'
@@ -20,6 +20,8 @@ import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook
 import { researchPrompt } from './_prompts.js'
 import { StyleError, needsMotion, saveStyle, stylePick } from './_style.js'
 import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
+import { LIVE_OP, recordLive } from './_itsLive.js'
+import { readLater } from './_later.js'
 import { DESK_PAGE } from './_deskPage.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARCHIVE_REFERRER_POLICY, fromArchivePage, readOnlyArchive } from './_readOnly.js'
@@ -30,7 +32,7 @@ import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/
 
 const BUCKET = 'content-library'
 /** The presses posted to /api/board/<Monday>/<op> that reach the handler as a collection (no rewrite of their own). */
-const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP])
+const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP, LIVE_OP])
 const TTL = 300
 const scalar = (v: unknown) => typeof v === 'string' ? v : ''
 const weekDate = (v: string | Date) => (v instanceof Date ? v.toISOString() : v).slice(0, 10)
@@ -249,6 +251,16 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (!result.data.length) throw new BoardError(404, 'no_published_board')
         return res.redirect(303, `/board/${weekDate(result.data[0].week)}`)
       }
+      if (op === 'later') {
+        // Ideas for later (_later.ts): every option on every ideas board he neither approved nor rejected, grouped,
+        // each with the five presses of the ideas gate. Read-only; his login or the operator's key.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        try {
+          const later = await readLater(db)
+          res.setHeader('Cache-Control', 'private, no-cache')
+          return res.status(200).json(later)
+        } catch { throw new BoardError(503, 'board_store_unavailable') }
+      }
       const week = scalar(req.query.week)
       if (!monday(week)) throw new BoardError(400, 'invalid_week')
       if (op === 'next') throw new BoardError(405, 'method_not_allowed')
@@ -396,6 +408,14 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           throw e
         }
       }
+      if (op === LIVE_OP) {
+        // "It's live" (_itsLive.ts, contract 1.7.0): a post he marked live, with its link and channels, appended to
+        // picks/live-<day> and copied onto the piece's making record. His press only, never a session's or Growth's.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'live_is_his')
+        const result = await recordLive(db, week, req.body, who, (deps.now ?? (() => new Date().toISOString()))())
+        return res.status(result.status).json(result.body)
+      }
       if (op === 'run') {
         // A press that starts the machine that does the work (_run.ts): his press only, an allow-listed job only.
         if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
@@ -454,6 +474,8 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           const data = await rows(db, collection === 'ticks' ? 'board_ticks' : 'board_documents', week, collection === 'ticks' ? undefined : collection, offset)
           return res.status(200).json({ ok: true, week, collection, next_offset: data.length === PAGE_SIZE ? offset + PAGE_SIZE : null, documents: data.map(r => ({ id: r.tick_id || r.doc_id, body: r.body, revision: r.revision, updated_at: r.updated_at, updated_by: r.updated_by })) })
         }
+        // His live posts are appended by their own route only, so none is ever changed or taken away by a plain write.
+        if (method === 'PUT' && collection === 'picks' && LIVE_ID.test(id)) throw new BoardError(400, 'live_is_its_own_press')
         if (method !== 'PUT' || !validBody(collection, id, req.body?.body) || !revision(req.body?.revision)) throw new BoardError(400, 'invalid_document_write')
         const refused = hisOnlyRefusal(collection, req.body.body, who)
         if (refused) throw new BoardError(403, refused)

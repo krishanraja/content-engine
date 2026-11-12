@@ -1093,6 +1093,117 @@
      "href": "https://app.teleprompter.com"
     },
     {
+     "kind": "press",
+     "label": "It's live",
+     "op": "live",
+     "body": {
+      "day": "mon",
+      "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+      "title": "Piece 8287. It says one thing."
+     },
+     "words": {
+      "path": "url",
+      "ask": "The post's link",
+      "required": true
+     },
+     "choose": {
+      "path": "channels",
+      "ask": "Where did it go out?",
+      "multi": true,
+      "required": true,
+      "from_link": true,
+      "options": [
+       {
+        "value": "substack",
+        "label": "Substack",
+        "hosts": [
+         "makeyourmindup.ai",
+         "substack.com/p"
+        ]
+       },
+       {
+        "value": "youtube",
+        "label": "YouTube",
+        "hosts": [
+         "youtube.com/watch",
+         "youtu.be"
+        ]
+       },
+       {
+        "value": "shorts",
+        "label": "YouTube Shorts",
+        "hosts": [
+         "youtube.com/shorts"
+        ]
+       },
+       {
+        "value": "tiktok",
+        "label": "TikTok",
+        "hosts": [
+         "tiktok.com"
+        ]
+       },
+       {
+        "value": "reels",
+        "label": "Instagram Reels",
+        "hosts": [
+         "instagram.com/reel"
+        ]
+       },
+       {
+        "value": "linkedin",
+        "label": "LinkedIn",
+        "hosts": [
+         "linkedin.com"
+        ]
+       },
+       {
+        "value": "spotify",
+        "label": "Spotify",
+        "hosts": [
+         "open.spotify.com"
+        ]
+       },
+       {
+        "value": "x",
+        "label": "X",
+        "hosts": [
+         "x.com",
+         "twitter.com"
+        ]
+       },
+       {
+        "value": "threads",
+        "label": "Threads",
+        "hosts": [
+         "threads.net",
+         "threads.com"
+        ]
+       },
+       {
+        "value": "facebook",
+        "label": "Facebook",
+        "hosts": [
+         "facebook.com",
+         "fb.watch"
+        ]
+       },
+       {
+        "value": "substack-notes",
+        "label": "Substack Notes",
+        "hosts": [
+         "substack.com/note",
+         "substack.com/@"
+        ]
+       }
+      ]
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Recorded as live. The day is done, and Growth learns from the post."
+    },
+    {
      "kind": "prompt",
      "label": "Copy Claude prompt",
      "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
@@ -1267,7 +1378,8 @@
      "step": "shorts",
      "label": "YouTube Shorts",
      "at": "2026-11-16T09:00:00Z",
-     "href": "https://www.youtube.com/shorts/x"
+     "href": "https://www.youtube.com/shorts/x",
+     "by": "growth"
     }
    ],
    "yes": null,
@@ -4331,6 +4443,101 @@
      "prompt": "Make the Saturday 2026-11-21 good-news post goodnews from the 5 stories on the content-engine board (week of 2026-11-16), to docs/CAROUSEL-STANDARD.md.\n\nKeep the board current as you work (week 2026-11-16 and day sat, step post). Krish sees…"
     },
     {
+     "kind": "press",
+     "label": "It's live",
+     "op": "live",
+     "body": {
+      "day": "sat",
+      "option": "off-sat-goodnews",
+      "title": "Option goodnews"
+     },
+     "words": {
+      "path": "url",
+      "ask": "The post's link",
+      "required": true
+     },
+     "choose": {
+      "path": "channels",
+      "ask": "Where did it go out?",
+      "multi": true,
+      "required": true,
+      "from_link": true,
+      "options": [
+       {
+        "value": "shorts",
+        "label": "YouTube Shorts",
+        "hosts": [
+         "youtube.com/shorts"
+        ]
+       },
+       {
+        "value": "tiktok",
+        "label": "TikTok",
+        "hosts": [
+         "tiktok.com"
+        ]
+       },
+       {
+        "value": "reels",
+        "label": "Instagram Reels",
+        "hosts": [
+         "instagram.com/reel"
+        ]
+       },
+       {
+        "value": "instagram",
+        "label": "Instagram",
+        "hosts": [
+         "instagram.com/p"
+        ]
+       },
+       {
+        "value": "linkedin",
+        "label": "LinkedIn",
+        "hosts": [
+         "linkedin.com"
+        ]
+       },
+       {
+        "value": "x",
+        "label": "X",
+        "hosts": [
+         "x.com",
+         "twitter.com"
+        ]
+       },
+       {
+        "value": "threads",
+        "label": "Threads",
+        "hosts": [
+         "threads.net",
+         "threads.com"
+        ]
+       },
+       {
+        "value": "facebook",
+        "label": "Facebook",
+        "hosts": [
+         "facebook.com",
+         "fb.watch"
+        ]
+       },
+       {
+        "value": "substack-notes",
+        "label": "Substack Notes",
+        "hosts": [
+         "substack.com/note",
+         "substack.com/@"
+        ]
+       }
+      ]
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Recorded as live. The day is done, and Growth learns from the post."
+    },
+    {
      "kind": "prompt",
      "label": "Copy Claude prompt",
      "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Sat 21 (good…"
@@ -4628,6 +4835,117 @@
      "kind": "open",
      "label": "Open Teleprompter",
      "href": "https://app.teleprompter.com"
+    },
+    {
+     "kind": "press",
+     "label": "It's live",
+     "op": "live",
+     "body": {
+      "day": "mon",
+      "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+      "title": "Piece 8287. It says one thing."
+     },
+     "words": {
+      "path": "url",
+      "ask": "The post's link",
+      "required": true
+     },
+     "choose": {
+      "path": "channels",
+      "ask": "Where did it go out?",
+      "multi": true,
+      "required": true,
+      "from_link": true,
+      "options": [
+       {
+        "value": "substack",
+        "label": "Substack",
+        "hosts": [
+         "makeyourmindup.ai",
+         "substack.com/p"
+        ]
+       },
+       {
+        "value": "youtube",
+        "label": "YouTube",
+        "hosts": [
+         "youtube.com/watch",
+         "youtu.be"
+        ]
+       },
+       {
+        "value": "shorts",
+        "label": "YouTube Shorts",
+        "hosts": [
+         "youtube.com/shorts"
+        ]
+       },
+       {
+        "value": "tiktok",
+        "label": "TikTok",
+        "hosts": [
+         "tiktok.com"
+        ]
+       },
+       {
+        "value": "reels",
+        "label": "Instagram Reels",
+        "hosts": [
+         "instagram.com/reel"
+        ]
+       },
+       {
+        "value": "linkedin",
+        "label": "LinkedIn",
+        "hosts": [
+         "linkedin.com"
+        ]
+       },
+       {
+        "value": "spotify",
+        "label": "Spotify",
+        "hosts": [
+         "open.spotify.com"
+        ]
+       },
+       {
+        "value": "x",
+        "label": "X",
+        "hosts": [
+         "x.com",
+         "twitter.com"
+        ]
+       },
+       {
+        "value": "threads",
+        "label": "Threads",
+        "hosts": [
+         "threads.net",
+         "threads.com"
+        ]
+       },
+       {
+        "value": "facebook",
+        "label": "Facebook",
+        "hosts": [
+         "facebook.com",
+         "fb.watch"
+        ]
+       },
+       {
+        "value": "substack-notes",
+        "label": "Substack Notes",
+        "hosts": [
+         "substack.com/note",
+         "substack.com/@"
+        ]
+       }
+      ]
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Recorded as live. The day is done, and Growth learns from the post."
     },
     {
      "kind": "prompt",

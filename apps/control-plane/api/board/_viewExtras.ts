@@ -1,7 +1,8 @@
-import { dayDate, type PostedDay } from './_posted.js'
+import { POSTED_CHANNELS, dayDate, type PostedDay } from './_posted.js'
 import { offdaySides } from './_offdaySides.js'
 import { yesByDay } from './_yes.js'
 import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, approvedLabel, dayShort, dayWords, goes, optionSha, type Approval, type Outcome } from './_gate.js'
+import { channelOfUrl, type LivePost } from './_itsLive.js'
 import { driveFolderIdOf } from './_drivePosts.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
@@ -37,11 +38,18 @@ export type PressAction = {
   collection?: 'picks' | 'queue' | 'comments'
   id?: string
   revision?: number
-  /** Or POST /api/board/<Monday>/<op> with the body (material: his research pasted onto the piece). */
-  op?: 'material'
+  /** Or POST /api/board/<Monday>/<op> with the body (material: his research pasted onto the piece; live: a post he
+   *  marked live, contract 1.8.0, _itsLive.ts). */
+  op?: 'material' | 'live'
+  /** Contract 1.8.0: the week the press saves into, when it is not the week the board shows (an idea for later,
+   *  answered on its own week's board or approved onto a later one; GET /api/board/later). */
+  week?: string
   body: Body
   /** His words: asked before the press, written at this dot path; required ones are never sent empty. */
   words?: { path: string; ask: string; required: boolean }
+  /** Contract 1.8.0: a choice he makes before the press, written at this dot path as the values he chose (several when
+   *  multi). from_link: the option whose hosts the link names is chosen for him first, and he can change it. */
+  choose?: { path: string; ask: string; multi: boolean; required: boolean; from_link?: boolean; options: Array<{ value: string; label: string; hosts?: string[] }> }
   /** Dot paths set to the press time (ISO). */
   stamp: string[]
   /** What the board says once it is saved. */
@@ -81,7 +89,8 @@ export interface ViewPiece {
   approval?: { at: string; label: string; via: string } | null
 }
 export interface ViewComment { at: string; by: string; anchor: string; text: string }
-export interface ViewPosted { step: string; label: string; at: string | null; href?: string }
+/** What went out on a day: Growth's posts (its ticks) and, from contract 1.8.0, the posts he marked live (by 'you'). */
+export interface ViewPosted { step: string; label: string; at: string | null; href?: string; by?: 'growth' | 'you' }
 export interface ViewYes { approved: boolean; via: string; at: string; words: string | null }
 
 export interface ExtrasInputs {
@@ -144,14 +153,21 @@ export function dayComments(rows: ExtrasInputs['comments'], day: string): ViewCo
     .sort((a, b) => b.at.localeCompare(a.at)).slice(0, 12)
 }
 
-/** What Growth has posted on the day (its ticks), with each post's public address when it gave one. */
-export function dayPosted(rows: ExtrasInputs['ticks'], day: string): ViewPosted[] {
-  return (rows || []).filter(t => t.updated_by === 'growth' && isObj(t.body) && t.body.done === true && t.body.day === day)
-    .map(t => {
+/** What went out on the day: Growth's posts (its ticks), with each post's public address when it gave one, then each
+ *  channel he marked live (contract 1.8.0), with the post's link on the channel the link belongs to. */
+export function dayPosted(rows: ExtrasInputs['ticks'], day: string, live: LivePost[] = []): ViewPosted[] {
+  const growth = (rows || []).filter(t => t.updated_by === 'growth' && isObj(t.body) && t.body.done === true && t.body.day === day)
+    .map((t): ViewPosted => {
       const posts = Array.isArray(t.body.posts) ? t.body.posts.filter(isObj) : []
       const href = https(posts[0]?.url)
-      return { step: String(t.body.step || ''), label: String(t.body.label || t.body.step || ''), at: typeof t.body.at === 'string' ? t.body.at : null, ...(href ? { href } : {}) }
+      return { step: String(t.body.step || ''), label: String(t.body.label || t.body.step || ''), at: typeof t.body.at === 'string' ? t.body.at : null, ...(href ? { href } : {}), by: 'growth' }
     })
+  const mine = live.flatMap(p => p.channels.map((c): ViewPosted => {
+    const href = https(p.url)
+    const own = channelOfUrl(p.url) === c || p.channels.length === 1
+    return { step: c, label: POSTED_CHANNELS[c] || c, at: p.at, ...(href && own ? { href } : {}), by: 'you' }
+  }))
+  return [...growth, ...mine]
 }
 
 export function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null {
@@ -275,12 +291,30 @@ export function offdayApproval(approvals: Approval[] | null, day: string, o: Bod
   return covers ? { approval: a, changed: false } : { approval: null, changed: true }
 }
 
+/** A day's off-day options: the week's ideas.json first, then each option he approved onto this day from another board
+ *  (an idea for later, GET /api/board/later; or an option the week's file no longer lists), rebuilt from the words his
+ *  Approve was bound to (idea.shown), so the approval still covers them and the day draws it. */
+export function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day: string): Body[] {
+  const list = isObj(ideas) && isObj(ideas.offdays) && Array.isArray(ideas.offdays[day]) ? (ideas.offdays[day] as unknown[]).filter(isObj) : []
+  const have = new Set(list.map(o => String(o.id)))
+  const carried = his(queue).filter(q => q.doc_id.startsWith(`off-${day}-`) && isObj(q.body) && isObj(q.body.idea) && q.body.idea.verdict === 'approve' && isObj(q.body.idea.shown))
+    .map(q => {
+      const shown = q.body.idea as Body
+      const s = shown.shown as Body
+      const id = typeof q.body.option_id === 'string' && q.body.option_id ? q.body.option_id : q.doc_id.slice(`off-${day}-`.length)
+      return { id, copy: s.copy ?? '', hook: s.hook ?? null, pitch: s.pitch ?? null, cards: s.cards ?? null,
+        ...(typeof q.body.format === 'string' ? { format: q.body.format } : {}), ...(typeof q.body.source === 'string' ? { source: q.body.source } : {}), carried: true } as Body
+    })
+    .filter(o => !have.has(String(o.id)))
+  return [...list, ...carried]
+}
+
 /** The week's off-day options for a day, each as the full board shows it, with the five presses on its idea saved to the
  *  same queue/off-<day>-<id> record the full board writes (week_board.py; the desk's ReviewCard). Approve puts it on the
  *  publish board for its day; Growth makes it. An option a session wrote as decided is held until he presses: his words
  *  in a session are shown, never read as his press (Krish, 2026-11-11: only his Approved crosses). */
 export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
-  const list = isObj(i.ideas) && isObj(i.ideas.offdays) && Array.isArray(i.ideas.offdays[day]) ? (i.ideas.offdays[day] as unknown[]).filter(isObj) : []
+  const list = offdayList(i.ideas, i.queue, day)
   return list.map(o => {
     const s = offdaySides(o)
     const docId = `off-${day}-${s.id}`
