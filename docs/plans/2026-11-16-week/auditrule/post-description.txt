@@ -6,7 +6,7 @@ The Home Depot has Google's AI answer its customers, and OpenAI's AI check the a
 
 Why bother? Scientists found that an AI gives its own writing better marks than people do. A different AI catches what the first one misses.
 
-Try it tomorrow: paste your AI's answer into a different company's AI and ask it what is wrong.
+If you're relying on the answer for an important decision, ask a different AI to check.
 
 Sources:
 VentureBeat, Beyond the Pilot, interview with Home Depot CIO Angie Brown, Oct 2026: https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot
