@@ -200,9 +200,44 @@ def motion_lints(spec: dict) -> list[str]:
     return out
 
 
+def palette_lints(spec: dict) -> list[str]:
+    """brand.palette: each whole cut's opening, sting and close against config/brand-palette.json for its day
+    (Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the
+    attached"). What ve will draw is read from compile, the one place it is decided: its close is ENDING_FRAMES
+    long on both shapes, and its sting sits where STING_POSITION says (in front of the hook until compile names
+    another). A spec dated before the palette's applies_from is not checked."""
+    import sys  # noqa: PLC0415
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import brand_palette  # noqa: PLC0415
+    from . import compile as ve_compile  # noqa: PLC0415
+    when = spec.get('publish_day')
+    if not when:
+        return []
+    palette = brand_palette.load()
+    series = str((spec.get('brand') or {}).get('series') or '').replace('.', '_')
+    day = brand_palette.day(when, palette)
+    kind = 'series' if day['kind'] == 'series' and day.get('series') == series else 'off'
+    out = []
+    for cut_id, cut in spec['cuts'].items():
+        if cut.get('excerpt'):
+            continue
+        shape = {'16:9': '16x9', '9:16': '9x16'}.get(cut.get('aspect'))
+        if not shape:
+            continue
+        sting = 'none'
+        if shape == '16x9' and kind == 'series':
+            sting = getattr(ve_compile, 'STING_POSITION', 'before_hook')
+        record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
+                  'opening': 'hook', 'sting': sting,
+                  'close': {'id': 'statement_card' if shape == '16x9' else 'statement_beat',
+                            'seconds': ve_compile.ENDING_FRAMES / ve_compile.FPS}}
+        out += [f'brand.palette cuts.{cut_id}: {p}' for p in brand_palette.check(record, palette)]
+    return out
+
+
 def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
     from . import guards
-    out: list[str] = reference_lints(spec) + motion_lints(spec) + guards.spec_lints(spec)
+    out: list[str] = reference_lints(spec) + motion_lints(spec) + guards.spec_lints(spec) + palette_lints(spec)
     from . import character
     out.extend(character.spec_lints(spec))  # nothing unless the spec names a character
     from . import designlock
