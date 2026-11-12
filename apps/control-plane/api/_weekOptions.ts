@@ -11,12 +11,16 @@
 /** covers: the Sunday gather's must_cover ids this option answers (Inspiration cards he routed, his words), as on the
  *  board idea it came from. Kept on the piece as meta.covers (by week_start), so the card a picked piece answers is known for good
  *  (inspiration_card_pieces, migration 20261114090000; krishanraja/inspirationhouse docs/TWO_WAY.md, step 3). */
-export interface WeekOptionInput { id: string; rank: number; pitch: string; why_now: string; recommended?: boolean; covers?: string[] }
-export interface WeekOptionMeta { week_start: string; series: string; rank: number; pitch: string; why_now: string; recommended: boolean; by: string; at: string }
+export interface WeekOptionInput { id: string; rank: number; pitch: string; why_now: string; recommended?: boolean; covers?: string[]; inspiration_action?: string }
+export interface WeekOptionMeta { week_start: string; series: string; rank: number; pitch: string; why_now: string; recommended: boolean; by: string; at: string; inspiration_action?: string }
 
 const YMD = /^\d{4}-\d{2}-\d{2}$/
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export const MAX_OPTIONS = 4
+/** An idea made from an Inspiration card Krish ticked (control-center inspiration_actions, make_piece; Ruling, Krish,
+ *  2026-11-12: Content means make it into a piece now) comes on top of a day's four, one a day at most, and names his
+ *  tick (`inspiration_action`), so it jumps the queue without pushing one of the day's ideas off the board. */
+export const MAX_INSPIRED = 1
 const COVER_ID = /^[A-Za-z0-9_-]{1,80}$/
 export const MAX_COVERS = 20
 
@@ -51,7 +55,7 @@ export function parseOptions(body: unknown): { week_start: string; series: strin
   if (!raw) problems.push('options must be a list of {id, rank, pitch, why_now, recommended}')
   const options: WeekOptionInput[] = []
   const seen = new Set<string>()
-  for (const o of (raw || []).slice(0, MAX_OPTIONS + 1)) {
+  for (const o of (raw || []).slice(0, MAX_OPTIONS + MAX_INSPIRED + 1)) {
     const r = (o && typeof o === 'object' ? o : {}) as Record<string, unknown>
     const id = typeof r.id === 'string' ? r.id : ''
     const pitch = typeof r.pitch === 'string' ? r.pitch.trim() : ''
@@ -69,10 +73,17 @@ export function parseOptions(body: unknown): { week_start: string; series: strin
       }
       covers = [...new Set(r.covers as string[])]
     }
+    let inspired: string | undefined
+    if (r.inspiration_action !== undefined) {
+      if (typeof r.inspiration_action !== 'string' || !UUID.test(r.inspiration_action)) { problems.push(`option ${id} inspiration_action must be the id of Krish's tick (a uuid)`); continue }
+      inspired = r.inspiration_action.toLowerCase()
+    }
     seen.add(id)
-    options.push({ id, rank, pitch, why_now: why, recommended: r.recommended === true, ...(covers ? { covers } : {}) })
+    options.push({ id, rank, pitch, why_now: why, recommended: r.recommended === true, ...(covers ? { covers } : {}), ...(inspired ? { inspiration_action: inspired } : {}) })
   }
-  if (options.length > MAX_OPTIONS) problems.push(`at most ${MAX_OPTIONS} options a day`)
+  const inspiredCount = options.filter(o => o.inspiration_action).length
+  if (inspiredCount > MAX_INSPIRED) problems.push(`at most ${MAX_INSPIRED} idea from his ticked inspiration a day`)
+  if (options.length - Math.min(inspiredCount, MAX_INSPIRED) > MAX_OPTIONS) problems.push(`at most ${MAX_OPTIONS} options a day, plus one from his ticked inspiration`)
   if (options.filter(o => o.recommended).length > 1) problems.push('recommend one option at most')
   return { week_start, series, options, problems }
 }

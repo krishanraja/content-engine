@@ -488,7 +488,8 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    direction never places words by hand (`docs/ve/MOTION_STANDARD.md`,
    Channels). Its `brand.references` come from the inspiration board by
    card id, never a typed name (`ve init`, `ve refs`: the `ve` skill, step
-   6). Put `ve expect`'s lines beside the storyboard. Every
+   6); a Production card Krish ticked comes first there, and the next fitting
+   cut uses it (Ruling, Krish, 2026-11-12; `ve/references/board-references.md`). Put `ve expect`'s lines beside the storyboard. Every
    picture adds meaning beyond the words (Krish, 2026-10-29: "They have to
    be additive in meaning. I'm all up for visually clear ideas."): a
    visually clear idea with the real facts on it is welcome, a comparison
