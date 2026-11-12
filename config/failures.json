@@ -2397,6 +2397,62 @@
       "related": [
         "F44-evidence-too-small-to-read"
       ]
+    },
+    {
+      "id": "av-sync-drift-converted-take",
+      "on": "2026-11-12",
+      "krish": "the 5-minute video had audio and video out of sync with one another. We need to ensure that never happens in the future.",
+      "what": "Wednesday 11 Nov's 5-minute (under.the.hood, AI music) was a one-off composite (docs/plans/2026-11-11-wednesday/short-composite/comp_long.py) drawn from a 30 fps copy of his 48 fps take that the Maxine prep step made with the output option -r 30 -fps_mode cfr (.github/workflows/maxine-trial.yml), then ve eyeline. Measured from the original take with scripts/av_sync.py (frames counted in decode order, never seeked): that conversion puts his picture 52 to 55 ms behind his voice for the whole take, while fps=30:round=near on the same frames reads 2 to 4 ms and a 48 fps re-encode 0.1 ms. Replaying comp_long.py's own reads showed its seven OpenCV seeks land on the right frame (0 frames off on all 10,124 frames), so the composite's picture path was exact; rebuilding the cut's timing from that 30 fps copy measures 43 to 67 ms sound-ahead on six of seven spans (fails), and from a correct conversion 18 ms at worst (passes). The delivered cut's own bytes were not measured (Drive only, over the connector's 10 MB cap) and its sound mix is unrecorded, so any further offset in it is unmeasured.",
+      "symptom": "His voice runs about two frames ahead of his lips across the 5-minute.",
+      "cause": "A frame-rate conversion with the output -r option shifted the picture against the sound; the take record's own check (laid even, 0 ms) read the file's timestamps, which share the fault; and the cut was recorded hand-built, which skipped every delivery check, sync included.",
+      "status": "guarded",
+      "mode": "picture-late-against-sound",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check compared a cut's picture against its sound from the source take; ve's sync.av_xcorr compares sound with sound, and quick-edit's SyncNet ran only inside quick-edit."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "making.py video skipped quality.delivery_problems for a hand-built cut, and a filing exception skipped every receipt."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "maxine-trial.yml converted the take's rate with -r on the output."
+        }
+      ],
+      "related": [
+        "lip-sync-drift",
+        "F10-sync-route-fragile",
+        "cut-called-done-unheard"
+      ],
+      "surface": "Every hand-built or excepted cut carries a picture-against-sound receipt for its exact bytes, measured from the source take on every span (scripts/av_sync.py, |drift| <= 45 ms), and a converted take is measured against the original before anything is built on it.",
+      "guards": [
+        {
+          "file": "scripts/av_sync.py",
+          "contains": "def measure(",
+          "how": "per span: the sound's lag and the picture's lag, each matched against the source take decoded in order; refuses |sound lag - picture lag| > 45 ms, an unreliable match, or under 80% coverage",
+          "test": "python3 tests/av_sync_test.py"
+        },
+        {
+          "file": "scripts/post-pack/making.py",
+          "contains": "problems = av_sync.receipt_problems(a.video_file)",
+          "how": "a hand-built cut is recorded on the piece only with its sync receipt for those bytes",
+          "test": "python3 tests/av_sync_test.py"
+        },
+        {
+          "file": "scripts/bed_shape.py",
+          "contains": "import av_sync",
+          "how": "a filing exception on a series cut waives the bed receipt, never the sync receipt",
+          "test": "python3 tests/av_sync_test.py"
+        },
+        {
+          "file": ".github/workflows/maxine-trial.yml",
+          "contains": "fps=$RATE:round=near",
+          "how": "the rate is changed with the fps filter, and the converted take is measured against the original before Maxine runs"
+        }
+      ]
     }
   ]
 }
