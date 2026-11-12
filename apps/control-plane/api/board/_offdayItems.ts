@@ -193,6 +193,9 @@ export function dayOptions(ideas: Body | null, items: OffdayItem[] | null | unde
     const key = onDoc?.item ?? own
     const r = onDoc ?? byKey.get(key)
     if (r && !here(r)) continue
+    // A settled option (`closed`: moved to another day or merged into another piece, the full board's rule) leaves the
+    // day, unless a press of his stands on it: a session's words never take his press away.
+    if (!r && typeof o.closed === 'string' && o.closed.trim()) continue
     // One post, one item: an option no press has touched that is the same post as an item already somewhere. On this
     // day, the item is drawn and the option is not; anywhere else, the option is that item, shown as one.
     const twin = !r ? twinOf(o, own) : null
