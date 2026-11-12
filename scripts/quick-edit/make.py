@@ -1203,6 +1203,41 @@ def sting_stop(cfg, asp, intro, why, base='.'):
             f'"I think it should go at the start of the longer wide videos 100%,"), and it could not be had: {why or "no reason given"}')
 
 
+def palette_problems(cfg, asp, intro, P, base='.'):
+    """Why this cut's opening or close differs from the brand palette for its day and format, or [] (Ruling,
+    Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the attached";
+    config/brand-palette.json, scripts/brand_palette.py). make.py lays any intro in front of the hook, so a sting
+    here is "before_hook", which the palette refuses on a wide cut from its applies_from date. Krish's own words
+    for this piece in "palette_exception" (starting with his name) let the cut through, and the report keeps them."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import brand_palette
+    series, _ = series_of(cfg, base)
+    _, post = read_post(cfg, base)
+    when = cfg.get('date') or (post or {}).get('date')
+    if not when:
+        # An undated config is off the calendar (a self-test's synthetic media), as the signed-direction gate
+        # already treats it: every piece is dated, so every piece is checked.
+        return []
+    end_file = P(cfg['endcard'][asp])
+    try:
+        seconds = clip_info(end_file)['frames'] / FPS
+    except Exception:  # noqa: BLE001 - a close that cannot be read is judged by its name alone
+        seconds = None
+    record = {'date': when, 'format': 'long_cut' if asp == '16x9' else 'short_cut', 'shape': asp,
+              'kind': 'series' if series else 'off',
+              'opening': 'hook' if intro is None else ('sting' if intro.get('source') == 'house' else 'clip'),
+              'sting': 'none' if intro is None else 'before_hook',
+              'close': {'file': end_file.name, **({'seconds': seconds} if seconds else {})}}
+    if series:
+        record['series'] = series
+    problems = brand_palette.check(record)
+    words = cfg.get('palette_exception')
+    if problems and isinstance(words, str) and words.strip().lower().startswith('krish'):
+        print(f'note: brand palette, let through on Krish\'s words ({words.strip()}): ' + ' | '.join(problems), file=sys.stderr)
+        return []
+    return problems
+
+
 def opening_of(intro, why=None):
     """What the cut opened on, for its report: "sting" (the house sting, with
     the sha256 of the clip Krish saw), "clip" (on his words) or "hook", with
@@ -2691,6 +2726,9 @@ def main():
         stop = sting_stop(cfg, asp, intro, note, base)
         if stop:
             sys.exit(f'Opening: {stop}')
+        problems = palette_problems(cfg, asp, intro, P, base)
+        if problems:
+            sys.exit('Brand palette (config/brand-palette.json): ' + ' | '.join(problems))
 
     # Stage 1: the edited talking head, cropped to the real picture.
     edited = out / f"{cfg['name']}.edited.mkv"

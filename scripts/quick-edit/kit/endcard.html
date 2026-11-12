@@ -11,9 +11,12 @@
   everything has settled by 2.75 s, so the card then holds still to the end of
   its 6 s clip (the approved standard: a calm close of about 6 s with the
   final card held about 2 s). The plan is docs/production/CLOSING.md.
-  Body class "tall" is 1080 x 1920 and keeps every word inside x 100 to 880,
-  y 200 to 1320 (config/channel-safe-zones.json: nothing under Instagram's
-  caption or buttons); "wide" is 1920 x 1080 on a 160 x 120 margin.
+  Body class "tall" is 1080 x 1920 and is a compact end beat of 2 s: every
+  word and the masthead sit inside the tall core box, x 120 to 820, y 330 to
+  1180, and everything settles by 1.3 s (config/brand-palette.json
+  statement_beat; Ruling, Krish, 2026-11-12, held to
+  docs/production/SOCIAL-BEST-PRACTICES-2026.md sections 3.5 and 5). "wide"
+  is 1920 x 1080 on a 160 x 120 margin, 6 s, held for YouTube's end screen.
   kit.py films the motion at 30 fps (Drawer.film) and draws the still at the
   settled last frame. Placeholders start with a dollar sign; kit.py fills every one.
 -->
@@ -42,13 +45,23 @@ body { background: $ink; color: $cream; font-family: 'Archivo', sans-serif; -web
 .url i { position: absolute; left: 0; right: 0; bottom: 0; height: .12em; background: $accent; transform-origin: left;
          animation: draw .7s var(--draw) both; }
 
-body.tall .ec { left: 100px; width: 780px; top: 200px; height: 1120px; }
-body.tall .mh { width: 520px; }
-body.tall .st { font-size: 204px; }
-body.tall .bot { display: flex; flex-direction: column; gap: 44px; }
-body.tall .days { font-size: 28px; }
-body.tall .kick { font-size: 26px; margin-bottom: 12px; }
-body.tall .url { font-size: 52px; }
+body.tall .ec { left: 120px; width: 700px; top: 330px; height: 850px; }
+body.tall .mh { width: 420px; }
+body.tall .st { font-size: 176px; }
+body.tall .bot { display: flex; flex-direction: column; gap: 30px; }
+body.tall .days { font-size: 24px; }
+body.tall .kick { font-size: 24px; margin-bottom: 10px; }
+body.tall .url { font-size: 46px; }
+/* The tall beat is 2 s: the same arrivals, quicker, settled by 1.3 s. */
+body.tall .a, body.tall .st .ln > span, body.tall .url i { animation-duration: .5s !important; }
+body.tall .mh { animation-delay: 0s !important; }
+body.tall .st .ln:nth-child(1) > span { animation-delay: .1s !important; }
+body.tall .st .ln:nth-child(2) > span { animation-delay: .18s !important; }
+body.tall .st .ln:nth-child(3) > span { animation-delay: .26s !important; }
+body.tall .days { animation-delay: .5s !important; }
+body.tall .kick { animation-delay: .6s !important; }
+body.tall .url { animation-delay: .66s !important; }
+body.tall .url i { animation-delay: .8s !important; }
 
 body.wide .ec { left: 160px; right: 160px; top: 120px; bottom: 120px; }
 body.wide .mh { width: 520px; }
