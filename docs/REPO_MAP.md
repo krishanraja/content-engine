@@ -2143,6 +2143,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function creativeBody(id: string, body: Record<string, unknown>): boolean`
 - `const YES_ID`
 - `function yesBody(id: string, body: Record<string, unknown>): boolean`
+- `const LIVE_ID`
+- `function liveBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
@@ -2431,12 +2433,13 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `function storiesFresh(week: string, o: Body): boolean`
 - `function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map()): …`
 - `function dayComments(rows: ExtrasInputs['comments'], day: string): ViewComment[]`
-- `function dayPosted(rows: ExtrasInputs['ticks'], day: string): ViewPosted[]`
+- `function dayPosted(rows: ExtrasInputs['ticks'], day: string, live: LivePost[] = []): ViewPosted[]`
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
 - `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[]`
 - `function warned(o: Body): string`
 - `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
 - `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
+- `function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day: string): Body[]`
 - `function offdayOptions(i: ExtrasInputs, day: string): ViewOption[]`
 - `function mixOf(stories: Body[]): string`
 - `function thoughtPress(day: string, step: string): PressAction`
