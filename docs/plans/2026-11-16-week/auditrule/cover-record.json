@@ -28,11 +28,24 @@
  ],
  "cover_sha256": "aa21e9b512d1cf71fdda10e944d5d912913356405cd0027a59b35d091e269875",
  "cards_sha256": {
-  "card-1.png": "f62f98f11a7852cdf8543998b84a1249606a559aa4abeb0c35008546138bc330",
-  "card-2.png": "20bfa596423226e759c4ce9e979d3b4e2a3950446e6ec9a731dc9d580d6b6df0",
-  "card-3.png": "c837dde90761e35c20cb5bd056cb76b33c03f1ebf06023b477bf44b6476ec64e",
-  "card-4.png": "97156bdadbdc12d9612427f94eb5b94555b60bab04fa8689bb147e25bf143ce6",
-  "card-5.png": "7a733b954138674ab8f5bbcd3ae4d657c8480cd55557d8286aeb5977cb012fdd",
-  "card-6.png": "9b5a9aeb5c1fd662a92791bea8484b1916d2780a91dbda9619487c095b26a181"
+  "card-1.png": "f352f7b2c2a9aa71454cf0f82f100bb32bf796d6af7fdd66f2c56ebbce94db93",
+  "card-2.png": "7e0eaf92b50d26cc11fed6de8dedbb6d2a691a6a99a0ebd73244c4a440aabacc",
+  "card-3.png": "1b4fd88071e33254c5fca211c7f5de05de43d7c678c3984e468a80d7d3fcffde",
+  "card-4.png": "273b9851896a675970b341a2ec04c58b745d2dbf0d1addf1da6fffc246ab4149",
+  "card-5.png": "9a621939833a9f8ff3ef938cec0696644044ab0cedf910ce71ce7d5b9ea3d37e",
+  "card-6.png": "c8c76ac1187b485a1dc1e6b364811230bf578282c15ed6014b79c22572155f41"
+ },
+ "filed_as": {
+  "folder": "3 Posts/2026-11-12 Thu off.day - Your AI thinks it's the best/4 Social",
+  "names": [
+   "best-card-1.png",
+   "best-card-2.png",
+   "best-card-3.png",
+   "best-card-4.png",
+   "best-card-5.png",
+   "best-card-6.png",
+   "post-description.txt"
+  ],
+  "signed_off": "Krish, 12 Nov 2026, in chat, with his closing line"
  }
 }

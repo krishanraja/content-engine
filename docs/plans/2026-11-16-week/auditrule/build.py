@@ -18,7 +18,7 @@ html,body{width:1080px;height:1350px;background:var(--ink)}
 .eyebrow{font-family:'IBM Plex Mono';font-weight:500;font-size:30px;letter-spacing:.14em;text-transform:uppercase;color:#B9C9C1}
 .h{font-family:Anton;font-size:104px;line-height:1.02;text-transform:uppercase;margin-top:26px}
 .h .m{color:var(--mint);display:block}
-.body{font-weight:500;font-size:44px;line-height:1.28;color:#E9E2D4;max-width:900px}
+.body{font-weight:500;font-size:44px;line-height:1.28;color:#E9E2D4;max-width:900px;text-wrap:balance}
 .mark{position:absolute;right:56px;bottom:52px;width:78px}
 .mark img{width:100%;display:block}
 .rows{width:100%;margin:56px 0 52px;display:flex;flex-direction:column;gap:22px}
@@ -108,7 +108,7 @@ cards['card-5'] = page(f"""
 cards['card-6'] = page("""
 <div class="pad" style="justify-content:center;padding-bottom:300px">
   <div class="h" style="font-size:120px">Never let an AI<br><span class="m">mark its own homework.</span></div>
-  <div class="body" style="margin-top:44px">Ask a different AI to check the answer.</div>
+  <div class="body" style="margin-top:44px">If you're relying on the answer for an important decision, ask a different AI to check.</div>
 </div>
 <div style="position:absolute;left:0;right:0;bottom:110px;display:flex;flex-direction:column;align-items:center;gap:28px">
   <div style="font-family:'IBM Plex Mono';font-weight:500;font-size:34px;letter-spacing:.12em;text-transform:uppercase;color:var(--mint)">Follow for more</div>
