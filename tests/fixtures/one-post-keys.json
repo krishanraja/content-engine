@@ -1,0 +1,207 @@
+{
+ "_about": "One post, one item: the keys an off-day option is known by (apps/control-plane/api/board/_onePost.ts postKeys and the database's offday_post_keys, supabase/migrations/20261130090000_offday_one_post.sql). tests/control-plane/board-one-post.test.ts holds the TypeScript to these and tests/offday-one-post-db.mjs the database.",
+ "cases": [
+  {
+   "name": "povteach, as his Approve on Tue 17 kept it",
+   "item": "engine:2026-11-16:povteach",
+   "week": "2026-11-16",
+   "drive": null,
+   "option": {
+    "id": "povteach",
+    "hook": "POV: your AI agent using your computer without being set up properly by you",
+    "source": {
+     "label": "Your saved short (Geek Creative Agency), 3 Nov",
+     "url": "https://youtube.com/shorts/tJwqPQvgQkk"
+    }
+   },
+   "keys": [
+    "asset:youtube:tJwqPQvgQkk",
+    "hook:pov your ai agent using your computer without being set up properly by you",
+    "item:engine:2026-11-16:povteach"
+   ]
+  },
+  {
+   "name": "agentnotsetup, the same post a session wrote for Thu 12",
+   "item": "engine:2026-11-09:agentnotsetup",
+   "week": "2026-11-09",
+   "drive": null,
+   "option": {
+    "id": "agentnotsetup",
+    "hook": "POV: your AI agent using your computer without being set up properly by you",
+    "source": {
+     "label": "Geek Creative Agency short Krish saved on 3 Nov",
+     "url": "https://youtube.com/shorts/tJwqPQvgQkk"
+    },
+    "drive": "https://drive.google.com/drive/folders/1UU2FiU2HAvUuuEbJ2GM7nqzm76rZg9GJ"
+   },
+   "keys": [
+    "asset:youtube:tJwqPQvgQkk",
+    "drive:1UU2FiU2HAvUuuEbJ2GM7nqzm76rZg9GJ",
+    "hook:pov your ai agent using your computer without being set up properly by you",
+    "item:engine:2026-11-09:agentnotsetup"
+   ]
+  },
+  {
+   "name": "homework, an article it cites is never its identity",
+   "item": "engine:2026-11-09:homework",
+   "week": "2026-11-09",
+   "drive": null,
+   "option": {
+    "id": "homework",
+    "hook": "Home Depot makes its AIs mark each other's homework.",
+    "source": {
+     "label": "VentureBeat",
+     "url": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+    }
+   },
+   "keys": [
+    "hook:home depot makes its ais mark each other s homework",
+    "item:engine:2026-11-09:homework"
+   ]
+  },
+  {
+   "name": "goodnews, a weekly hook keyed by its week",
+   "item": "engine:2026-11-16:goodnews",
+   "week": "2026-11-16",
+   "drive": null,
+   "option": {
+    "id": "goodnews",
+    "hook": "Good things AI did this week.",
+    "weekly": "good_news"
+   },
+   "keys": [
+    "hook:2026-11-16:good things ai did this week",
+    "item:engine:2026-11-16:goodnews"
+   ]
+  },
+  {
+   "name": "a short hook names no post",
+   "item": null,
+   "week": "2026-11-16",
+   "drive": null,
+   "option": {
+    "id": "pov",
+    "hook": "POV: lol!"
+   },
+   "keys": []
+  },
+  {
+   "name": "a carried option names the item it is",
+   "item": "engine:2026-11-23:carried",
+   "week": "2026-11-23",
+   "drive": null,
+   "option": {
+    "id": "carried",
+    "item": "engine:2026-11-16:povteach",
+    "hook": "A brand new headline for the same post"
+   },
+   "keys": [
+    "hook:a brand new headline for the same post",
+    "item:engine:2026-11-16:povteach",
+    "item:engine:2026-11-23:carried"
+   ]
+  },
+  {
+   "name": "a row keeps its folder when the option has none",
+   "item": "growth:2026-11-16:g1",
+   "week": "2026-11-16",
+   "drive": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+   "option": {
+    "id": "g1",
+    "copy": "no hook"
+   },
+   "keys": [
+    "drive:FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+    "item:growth:2026-11-16:g1"
+   ]
+  },
+  {
+   "name": "Instagram reel, TikTok and X posts are assets",
+   "item": null,
+   "week": "2026-11-16",
+   "drive": null,
+   "option": {
+    "id": "ig",
+    "source": {
+     "url": "https://www.instagram.com/someone/reel/DfH3_48dFpHv/?igsh=x"
+    }
+   },
+   "keys": [
+    "asset:instagram:DfH3_48dFpHv"
+   ]
+  },
+  {
+   "name": "TikTok",
+   "item": null,
+   "week": "2026-11-16",
+   "drive": null,
+   "option": {
+    "id": "tt",
+    "source": {
+     "url": "https://www.tiktok.com/@geekanimals/video/7412345678901234567"
+    }
+   },
+   "keys": [
+    "asset:tiktok:7412345678901234567"
+   ]
+  },
+  {
+   "name": "X",
+   "item": null,
+   "week": "2026-11-16",
+   "drive": null,
+   "option": {
+    "id": "x",
+    "source": {
+     "url": "https://x.com/someone/status/1987654321098765432"
+    }
+   },
+   "keys": [
+    "asset:x:1987654321098765432"
+   ]
+  },
+  {
+   "name": "YouTube watch and youtu.be are one asset",
+   "item": null,
+   "week": "2026-11-16",
+   "drive": null,
+   "option": {
+    "id": "yt",
+    "source": {
+     "url": "https://www.youtube.com/watch?si=a&v=tJwqPQvgQkk"
+    }
+   },
+   "keys": [
+    "asset:youtube:tJwqPQvgQkk"
+   ]
+  },
+  {
+   "name": "youtu.be",
+   "item": null,
+   "week": "2026-11-16",
+   "drive": null,
+   "option": {
+    "id": "yb",
+    "source": {
+     "url": "https://youtu.be/tJwqPQvgQkk"
+    }
+   },
+   "keys": [
+    "asset:youtube:tJwqPQvgQkk"
+   ]
+  },
+  {
+   "name": "Accents and punctuation fold to plain words",
+   "item": null,
+   "week": "2026-11-16",
+   "drive": null,
+   "option": {
+    "id": "acc",
+    "hook": "Café AI: it’s “here” … already?!"
+   },
+   "keys": [
+    "hook:caf ai it s here already"
+   ]
+  }
+ ]
+}

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://content.krishraja.com/api/board/view.schema.json",
   "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
-  "x-contract-version": "1.9.0",
+  "x-contract-version": "1.10.0",
   "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
   "type": "object",
   "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources", "revision"],
@@ -48,7 +48,7 @@
     "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
     "sha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "dayKey": { "type": "string", "enum": ["mon", "tue", "wed", "thu", "fri", "sat"] },
-    "who": { "type": "string", "enum": ["you", "engine", "growth", "stuck", "done"], "x-open": true },
+    "who": { "type": "string", "enum": ["you", "engine", "growth", "stuck", "done", "missed"], "x-open": true, "description": "Whose move the day waits on; missed since 1.10.0: its day passed and nothing on it is marked live." },
     "day": {
       "type": "object",
       "required": [
@@ -512,6 +512,17 @@
           "description": "The approval of Krish's that holds the piece on its day, with its label (\"Approved by you, Sun 9 Nov, 08:07\").",
           "required": ["at", "label", "via"],
           "properties": { "at": { "type": "string" }, "label": { "type": "string" }, "via": { "type": "string" } }
+        },
+        "stage": {
+          "type": "object", "x-since": "1.10.0",
+          "description": "The one state the board shows it in, from the records (_stage.ts; Ruling, Krish, 2026-11-12: the board shows exactly where everything is): idea, approved, made, scheduled (with when), live (with each post's link) or missed (its day passed and it is not marked live).",
+          "required": ["state", "label", "at", "links"],
+          "properties": {
+            "state": { "type": "string", "enum": ["idea", "approved", "made", "scheduled", "live", "missed"], "x-open": true },
+            "label": { "type": "string" },
+            "at": { "type": ["string", "null"] },
+            "links": { "type": "array", "items": { "type": "object", "required": ["label", "href"], "properties": { "label": { "type": "string" }, "href": { "type": "string" } } } }
+          }
         }
       }
     },
@@ -570,7 +581,24 @@
           "description": "Growth's own record of the post (POST /api/board/<Monday>/offday-posts): made, scheduled on a channel for a time, live on a channel with its link. Growth never reports a post it did not post.",
           "items": { "type": "object", "required": ["state", "channel", "label", "at", "due_at"], "properties": { "state": { "type": "string", "enum": ["made", "scheduled", "live"], "x-open": true }, "channel": { "type": ["string", "null"] }, "label": { "type": "string" }, "at": { "type": ["string", "null"] }, "due_at": { "type": ["string", "null"] }, "href": { "type": "string" } } }
         },
-        "elsewhere": { "type": "array", "x-since": "1.9.0", "items": { "type": "string" }, "description": "A post Growth scheduled on a platform for a day the item is no longer on, said plainly: \"Still scheduled for Tue 17 on Instagram: move it there too\"." }
+        "elsewhere": { "type": "array", "x-since": "1.9.0", "items": { "type": "string" }, "description": "A post Growth scheduled on a platform for a day the item is no longer on, said plainly: \"Still scheduled for Tue 17 on Instagram: move it there too\". Since 1.10.0 also where else the same post is up as an idea, and that this option is one post with an item on another day." },
+        "same_post": {
+          "type": "object", "x-since": "1.10.0",
+          "description": "One post, one item (_onePost.ts): this option is a post already an item on another day (or in his Ideas for Later) under another id. It is that item: its Approve here moves it here, never a second copy.",
+          "required": ["item", "week", "day", "date", "state", "line"],
+          "properties": { "item": { "type": "string" }, "week": { "type": ["string", "null"] }, "day": { "type": ["string", "null"] }, "date": { "type": ["string", "null"] }, "state": { "type": "string" }, "line": { "type": "string" } }
+        },
+        "stage": {
+          "type": "object", "x-since": "1.10.0",
+          "description": "The one state the board shows it in, from the records (_stage.ts; Ruling, Krish, 2026-11-12: the board shows exactly where everything is): idea, approved, made, scheduled (with when), live (with each post's link) or missed (its day passed and it is not marked live).",
+          "required": ["state", "label", "at", "links"],
+          "properties": {
+            "state": { "type": "string", "enum": ["idea", "approved", "made", "scheduled", "live", "missed"], "x-open": true },
+            "label": { "type": "string" },
+            "at": { "type": ["string", "null"] },
+            "links": { "type": "array", "items": { "type": "object", "required": ["label", "href"], "properties": { "label": { "type": "string" }, "href": { "type": "string" } } } }
+          }
+        }
       }
     },
     "moveDay": {

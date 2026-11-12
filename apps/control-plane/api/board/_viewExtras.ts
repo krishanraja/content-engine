@@ -4,7 +4,8 @@ import { yesByDay } from './_yes.js'
 import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, approvedLabel, dayShort, dayWords, goes, optionSha, type Approval, type Outcome } from './_gate.js'
 import { channelOfUrl, type LivePost } from './_itsLive.js'
 import { driveFolderIdOf } from './_drivePosts.js'
-import { dayOptions, elsewhereLines, moveSpec, viewPosts, type MoveSpec, type OffdayItem, type ViewGrowthPost } from './_offdayItems.js'
+import { dayLabel as dateLabel, dayOptions, elsewhereLines, moveSpec, twinLines, viewPosts, type MoveSpec, type OffdayItem, type ViewGrowthPost } from './_offdayItems.js'
+import type { ViewStage } from './_stage.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
 // Control Centre; the old board is a read-only archive). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
@@ -93,11 +94,19 @@ export interface ViewOption {
   elsewhere?: string[]
   /** Contract 1.9.0: Growth's own record of the post (made, scheduled with when, live with its link). */
   posts?: ViewGrowthPost[]
+  /** Contract 1.10.0, one post, one item (_onePost.ts): this option is a post that is already an item on another day
+   *  (or in his Ideas for Later) under another id. It is that item: its Approve here moves it here, never a copy. */
+  same_post?: { item: string; week: string | null; day: string | null; date: string | null; state: string; line: string }
+  /** Contract 1.10.0 (_stage.ts): the one state the board shows it in, from the records: idea, approved, made,
+   *  scheduled (with when), live (with its links) or missed (its day passed and it is not marked live). */
+  stage?: ViewStage
 }
 export interface ViewPiece {
   id: string; title: string; series: string; state: string; published: boolean; on_day: boolean
   /** Contract 1.3.0: the approval that holds it on its day ("Approved by you, Sun 9 Nov, 08:07"). */
   approval?: { at: string; label: string; via: string } | null
+  /** Contract 1.10.0 (_stage.ts): the one state the board shows it in, from the records. */
+  stage?: ViewStage
 }
 export interface ViewComment { at: string; by: string; anchor: string; text: string }
 /** What went out on a day: Growth's posts (its ticks) and, from contract 1.8.0, the posts he marked live (by 'you'). */
@@ -116,6 +125,12 @@ export interface ExtrasInputs {
   approvals: Approval[] | null
   /** The one place an off-day item's day lives (offday_items), or null when it cannot be read; left out, the plan only. */
   items?: OffdayItem[] | null
+  /** Every item of every week on a day or in his Ideas for Later, for one post, one item (_onePost.ts); left out, the
+   *  week's own only. */
+  all_items?: OffdayItem[] | null
+  /** The week plans beside this one (the week before and after, by Monday), so an item on a day says where else the
+   *  same post is up as an idea. */
+  plans?: Record<string, Body | null>
   /** When the view is read: a move offers today through the next four weeks. */
   now?: Date
 }
@@ -331,8 +346,9 @@ export function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day
 export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
   // The day's options from the one place their day lives (_offdayItems.ts): the plan's and the approvals carried here
   // (offdayList), minus what moved away, plus what moved here and Growth's own.
-  const list = dayOptions(i.ideas, i.items === undefined ? null : i.items, i.week, day, offdayList(i.ideas, i.queue, day))
+  const list = dayOptions(i.ideas, i.items === undefined ? null : i.items, i.week, day, offdayList(i.ideas, i.queue, day), i.all_items)
   const known = i.items !== undefined && i.items !== null
+  const plans: Record<string, Body | null> = { ...(i.plans || {}), [i.week]: i.ideas }
   return list.map(({ o, placed }) => {
     const s = offdaySides(o)
     const docId = `off-${day}-${s.id}`
@@ -377,9 +393,16 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     }
     const actions: PressAction[] = []
     const ideaOpen = !idea || s.revised?.side === 'idea'
+    // One post, one item: this option is a post already on another day, so its Approve moves that one item here.
+    const twin = placed.twin && placed.row ? placed.twin : null
+    const twinWhere = twin ? (twin.date ? dateLabel(twin.date) : 'your Ideas for Later') : ''
+    const approveIt = press('idea', 'approve', `Approve for ${dayShort(i.week, day)}`,
+      twin ? `Approved. The one post moved here from ${twinWhere}; it is on the publish board for ${dayWords(i.week, day)} only.`
+        : `Approved. It is on the publish board for ${dayWords(i.week, day)}; Growth makes it.`, 'approved')
+    if (twin) approveIt.goes = `Moves the one post here from ${twinWhere}, onto the publish board for ${dayWords(i.week, day)}. It is never on two days.`
     if (!approval || ideaOpen) {
       actions.push(
-        press('idea', 'approve', `Approve for ${dayShort(i.week, day)}`, `Approved. It is on the publish board for ${dayWords(i.week, day)}; Growth makes it.`, 'approved'),
+        approveIt,
         press('idea', 'improve', 'Improve for a future piece', 'Kept with your note. The revise run also brings a new version back here.', 'improved'),
         press('idea', 'reject', 'Reject', 'Rejected, with your reason. The next ideas run learns from it.', 'rejected'),
         press('idea', 'trend', 'Save as a trend', 'Saved with its trend, for a wider piece.', 'trend'),
@@ -398,9 +421,16 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     if (known) {
       out.item = { key: placed.key, version: placed.version, source: placed.source, state: placed.state, origin_week: placed.origin_week }
       out.move = moveSpec(placed, o, i.week, day, i.now ?? new Date())
-      const away = elsewhereLines(placed.row, i.now ?? new Date())
+      // Growth's posts are the item's own only where the item is: a twin's posts belong to the day it is on.
+      const away = twin ? [] : [...elsewhereLines(placed.row, i.now ?? new Date()), ...twinLines(placed.row, plans)]
+      if (twin && placed.row) {
+        const line = twin.state === 'later' ? `This is one post with an idea in your Ideas for Later (${placed.row.option_id}). Your Approve here puts that one post on ${dayWords(i.week, day)}.`
+          : `This is one post with the one ${twin.state === 'approved' ? 'approved' : 'offered'} for ${twinWhere} (${placed.row.option_id}). Your Approve here moves it here, so it is only ever on one day.`
+        out.same_post = { item: placed.key, week: twin.week, day: twin.day, date: twin.date, state: twin.state, line }
+        away.unshift(line)
+      }
       if (away.length) out.elsewhere = away
-      const record = viewPosts(placed.row)
+      const record = twin ? [] : viewPosts(placed.row)
       if (record.length) out.posts = record
     }
     if (o.weekly) {

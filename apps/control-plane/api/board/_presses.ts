@@ -715,7 +715,7 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
     // His Approve on the option puts its row on this day (_offdayItems.ts syncApprove): an Approve and a Move write the
     // one place an off-day item's day lives the same way.
     const item = who === 'Krish' && isObj(body.idea) && body.idea.verdict === 'approve'
-      ? await (await import('./_offdayItems.js')).syncApprove(db, week, id, body, deps.ideas ?? (async w => (await import('./_view.js')).readWeekIdeas(w))).catch(() => 'failed' as const)
+      ? await (await import('./_offdayItems.js')).syncApprove(db, week, id, body, deps.ideas ?? (async w => (await import('./_view.js')).readWeekIdeas(w)), new Date(now)).catch(() => 'failed' as const)
       : null
     const rows = offdayReports(week, id, body, now)
     if (!rows.length) return item ? { ...saved, item } : null

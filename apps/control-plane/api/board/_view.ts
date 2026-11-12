@@ -18,7 +18,9 @@ import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
 import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
-import { channelWord, dayOptions, liveOn, readItems, type GrowthPost, type OffdayItem } from './_offdayItems.js'
+import { channelWord, dayLabel, dayOptions, liveOn, readItems, readItemsIn, type GrowthPost, type OffdayItem } from './_offdayItems.js'
+import { ideaStage, postedStage, truthProblems } from './_stage.js'
+import { scheduledOf } from './_posted.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
 // pieces' making records, his presses on the board, the week's plan files on main and the runs on GitHub. Nothing is a
@@ -46,7 +48,7 @@ export const STOPS = ['Idea', 'Story', 'Make', 'Approve', 'Live'] as const
 const SERIES_FORMATS = ['long_video', 'short_video']
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
-export type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'
+export type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done' | 'missed'
 export type Action =
   | { kind: 'run'; label: string; job: JobName; input: Record<string, unknown>; runs_on: string }
   | { kind: 'open'; label: string; href: string }
@@ -248,6 +250,10 @@ export interface ViewInputs {
    *  the week or offered by its plan, or null when it could not be read (the plan's options then show as they are,
    *  and nothing offers a move). Left out, the plan only. */
   items?: OffdayItem[] | null
+  /** Contract 1.10.0, one post, one item (_onePost.ts): every item of every week on a day or in his Ideas for Later, and
+   *  the week plans beside this one (by Monday), so the same post is drawn on one day only. Left out, the week's own. */
+  all_items?: OffdayItem[] | null
+  plans?: Record<string, Body | null>
 }
 
 /** The day's post folders, each bound to the option whose `drive` names it and to the piece whose making record files
@@ -374,7 +380,14 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
     { h: 'Research', p: materials.length ? materials.map(m => m.title).join(' · ') : researchFile ? `${day}-research.md in the week's folder` : 'None yet' },
     { h: 'Narrative lock', p: signed ? 'Signed' : lock ? 'Written, waiting for your signature' : 'Not written yet' },
     { h: 'Look', p: look ? [nameOf(i, String(look.production)), look.experiment ? nameOf(i, String(look.experiment)) : ''].filter(Boolean).join(' + ') : 'Not picked yet' },
+    // Where the scripts are, from the records only (Ruling, Krish, 2026-11-12: the board shows exactly where everything
+    // is): his Approve scripts press, the making record's Scripts step, the send to his Teleprompter.
+    { h: 'Scripts', p: scriptsApproved ? 'Approved by you on the board' : stepState(live, 'scripts') === 'done' ? 'Written, waiting for your Approve scripts'
+      : 'Not filed yet: none on the piece\'s record and none sent to your Teleprompter' },
   ]
+  // A step a session settled with him somewhere the engine cannot see is never shown as done; the line says plainly
+  // what is not on file yet, so it can be filed from that session.
+  const notFiled = [!signed ? 'your locked story' : '', !scriptsApproved && stepState(live, 'scripts') !== 'done' ? 'your approved scripts' : ''].filter(Boolean)
   const v = { ...base, title, piece_id: id, detail, path }
   const conversation = 'A conversation with you in a new Claude session'
   if (live.verdict === 'done') return { ...v, stop: 4, who: 'done', next: 'Published on every channel', runs_on: '', actions: [] }
@@ -386,12 +399,13 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   }
   if (current === 'story') {
     return { ...v, stop: 1, who: 'you', runs_on: conversation,
-      next: lock ? 'Read the narrative lock and sign it, or say what to change' : 'Settle the story in a short session, then sign the narrative lock',
+      next: lock ? 'Read the narrative lock and sign it, or say what to change'
+        : `No narrative lock${notFiled.length > 1 ? ' and no approved scripts are' : ' is'} filed yet. If you settled ${notFiled.length > 1 ? 'them' : 'the story'} in a session, file ${notFiled.length > 1 ? 'them' : 'the lock'} from that session; if not, settle the story in a short session and sign the narrative lock`,
       actions: [{ kind: 'prompt', label: 'Copy Claude prompt', prompt: path.prompts.story }] }
   }
   if (current === 'look') {
     return { ...v, stop: 2, who: 'you', runs_on: 'Your pick, here; a mock on your own footage if you want one',
-      next: 'Pick the look: the recommended one, another, or fold in your inspiration',
+      next: `Pick the look: the recommended one, another, or fold in your inspiration${notFiled.includes('your approved scripts') ? '. No approved scripts are filed yet: if you approved them in a session, file them from that session' : ''}`,
       actions: [{ kind: 'look', label: 'Pick the look', piece_id: id }, { kind: 'prompt', label: 'Copy mock prompt', prompt: path.prompts.mock }] }
   }
   if (current === 'board') {
@@ -423,9 +437,12 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   // means the day is approved: nothing is left for him to press (Krish, 2026-11-11: "I don't want you to give me back
   // work to do, buttons to click on the publish board").
   const yes = yesByDay(i.picks)[day]
+  // Growth's own record of what it has scheduled for the piece (POST /offday-posts, a piece's entries; _posted.ts).
+  const queued = scheduledOf(i.ticks, day, id)
   if (!posting && yes?.approved) {
+    const when = queued.length ? `Scheduled: ${[...new Set(queued.map(q => q.label))].join(', ')}, from ${approvedWhen(queued[0].due_at)}` : 'Ready to post: Growth posts it on the day'
     return { ...v, stop: 4, who: 'growth', runs_on: 'Growth posts it on the day',
-      next: `Approved${yes.via === 'words' ? ' in your words' : ''}. Ready to post: Growth posts it on the day`,
+      next: `Approved${yes.via === 'words' ? ' in your words' : ''}. ${when}`,
       actions: [{ kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Post the ${DAY_NAME[day]} ${date} piece ${id} that Krish approved on the content-engine board (week of ${week}), from its 3 Posts folder.` }] }
   }
   return { ...v, stop: posting ? 4 : 3, who: 'growth', runs_on: 'Growth posts it, after your Approve for publish',
@@ -444,7 +461,7 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
   const week = i.week, date = dayDate(week, day)
   // The day's options from the one place their day lives (_offdayItems.ts): the plan's and the approvals carried here
   // (offdayList), minus what moved away, plus what moved here and Growth's own.
-  const listed = dayOptions(i.ideas, i.items ?? null, week, day, offdayList(i.ideas, i.queue, day))
+  const listed = dayOptions(i.ideas, i.items ?? null, week, day, offdayList(i.ideas, i.queue, day), i.all_items)
   const options = listed.map(x => x.o)
   // Growth's posting record on each option's item (made, scheduled, live), from the one place (2026-11-12).
   const recordOf = (o: Body) => listed.find(x => x.o === o)?.placed.row ?? null
@@ -677,6 +694,44 @@ export function buildView(i: ViewInputs): WeekView {
       d.next = `${d.next.replace(/[.\s]+$/, '')}. Once it is out, press It's live with the post's link`
     } else d.actions = [...d.actions, ...presses]
   }
+  // Where everything is (contract 1.10.0; Ruling, Krish, 2026-11-12: the board shows exactly where everything is, and
+  // one post is one item that can never sprawl across days or go stale). Every option and piece on a day carries its one
+  // stage from the records (_stage.ts), an item placed on a day says where else the same post is up as an idea, and a
+  // past day that is not out says it was missed, never "with Growth" or "ready".
+  for (const d of days) {
+    const folderMade = (id: string) => (d.posts || []).some(p => p.option === id && p.assets.length > 0)
+    for (const o of d.options) {
+      if (o.status === 'approved' && o.outcome?.id === 'approved') {
+        const marks = postsFor(marked[d.day], { option: o.doc_id }).flatMap(p => p.channels.map(c => ({ label: channelWord(c), href: p.url, at: p.at })))
+        o.stage = postedStage({ date: d.date, today, approvedAt: o.outcome.at, approvedLabel: o.outcome.label, growth: o.posts || [], out: marks, scheduled: [], made: folderMade(o.id) })
+      } else {
+        const sp = o.same_post
+        o.stage = ideaStage(o.outcome, o.status, sp ? `one post with ${sp.date ? `${dayLabel(sp.date)}'s, ${sp.state === 'approved' ? 'approved there' : 'offered there'}` : 'an idea in your Ideas for Later'}` : null)
+      }
+    }
+    for (const p of d.pieces) {
+      const mine = d.piece_id === p.id
+      const ticked = (i.ticks || []).filter(t => t.updated_by === 'growth' && isObj(t.body) && t.body.done === true && t.body.day === d.day && String(t.body.piece_id || '').toLowerCase() === p.id)
+        .map(t => ({ label: String(t.body.label || t.body.step || ''), href: (Array.isArray(t.body.posts) ? (t.body.posts as Body[]).filter(isObj).map(x => x.url).find(u => typeof u === 'string' && /^https:\/\//.test(u)) : undefined) as string | undefined, at: typeof t.body.at === 'string' ? t.body.at : null }))
+      const marks = postsFor(marked[d.day], { piece_id: p.id }).flatMap(x => x.channels.map(c => ({ label: channelWord(c), href: x.url, at: x.at })))
+      p.stage = mine && d.who === 'done' && !ticked.length && !marks.length
+        ? { state: 'live', label: d.next, at: null, links: [] }
+        : postedStage({ date: d.date, today, approvedAt: p.approval?.at ?? null, approvedLabel: p.approval?.label ?? 'Approved by you', growth: [], out: [...ticked, ...marks],
+          scheduled: scheduledOf(i.ticks, d.day, p.id).map(q => ({ label: q.label, due_at: q.due_at })), made: mine && d.media.some(m => m.kind === 'cut') })
+    }
+    // The same post up as an idea on another day: said on the day it is on, so it is never on two days unseen.
+    const twins = d.options.filter(o => o.stage && o.stage.state !== 'idea').flatMap(o => (o.elsewhere || []).filter(l => /also has this post up as an idea/.test(l)))
+    if (twins.length && d.who !== 'done') d.next = `${d.next.replace(/[.\s]+$/, '')}. ${twins[0]}`
+  }
+  for (const d of days) {
+    if (d.date >= today || d.who === 'done') continue
+    const was = d.next
+    d.who = 'missed'
+    d.next = `Missed: ${d.label} has passed and nothing on it is marked live. If it went out, press It's live with its link`
+    d.detail = [...d.detail, { h: 'Before its day passed', p: was }]
+    const live = d.actions.filter(a => a.kind === 'press' && (a as { op?: string }).op === 'live')
+    d.actions = [...live, ...d.actions.filter(a => !live.includes(a))]
+  }
   for (const d of days) {
     if (d.who === 'done' || d.actions.some(a => a.kind === 'prompt' && /Claude/.test(a.label))) continue
     d.actions.push({ kind: 'prompt', label: 'Copy Claude prompt', prompt: backupPrompt(i.week, d) })
@@ -714,6 +769,8 @@ export function viewProblems(v: WeekView): string[] {
     if (d.actions[0]?.kind === 'prompt' && !/conversation|Growth/.test(d.runs_on)) out.push(`${d.day}: a prompt first where a machine could run it`)
     if (d.path && !d.path.current) out.push(`${d.day}: not done and no current step`)
   }
+  // Where everything is (_stage.ts): one stage per item, one day per post, and a past day not out says it was missed.
+  out.push(...truthProblems(v.days, todayNY(new Date(v.as_of))))
   return out
 }
 
@@ -791,7 +848,10 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   const drafts = await readDrafts(db, (pieces as Body[]).filter(p => SERIES_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
   // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held. Beside
   // them, the one place every off-day item's day lives (offday_items).
-  const [approvals, items] = await Promise.all([readApprovals(db, week), readItems(db, week)])
+  // One post, one item (contract 1.10.0): every item of every week on a day or in his Ideas for Later, and the plans of
+  // the weeks beside this one, so the same post is drawn on one day only and the day it is on says where else it is up.
+  const [approvals, items, allItems, ...beside] = await Promise.all([readApprovals(db, week), readItems(db, week), readItemsIn(db, ['offered', 'approved', 'later']),
+    ...[-7, 7].map(n => readWeekIdeas(shiftYmd(week, n), env, fetcher).catch(() => null))])
   let formats: ViewInputs['formats'] = { script: [], production: [] }
   let motion: MotionModule[] = []
   try {
@@ -822,7 +882,8 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
     specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
-    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items })
+    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items, all_items: allItems,
+    plans: { [shiftYmd(week, -7)]: beside[0] ?? null, [shiftYmd(week, 7)]: beside[1] ?? null } })
 }
 
 /** A week's ideas.json as the view reads it: the week's offday-revise branch first, then main, each at the commit it
