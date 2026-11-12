@@ -123,7 +123,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 150
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             The Saturday good news for the week starting Monday ${{ steps.guard.outputs.monday }}, started by hand
@@ -137,7 +137,8 @@ jobs:
             primary source, write them into that week's docs/plans/<Monday>-week/ideas.json on the weekly good-news
             option, replacing any older stories there, and set that option's stories_due to
             ${{ steps.guard.outputs.due }}. Then run board_feed.py gather and cover. Research with the built-in web
-            search and web fetch.
+            search and web fetch, and file what you found on Saturday as you write it (python3
+            scripts/post-pack/board_session.py day:<Monday>/sat add <file>; docs/PUBLISH_BOARDS.md).
 
             Change nothing but that option's stories and stories_due; never build or publish a board page (the live
             board reads ideas.json itself); never publish or post anything public; no spend beyond this run. Do not

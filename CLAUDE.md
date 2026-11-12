@@ -63,7 +63,7 @@ separate reader (cost rule 6, guard G6), and pick by the job:
 | Subagent | Model | For |
 |---|---|---|
 | `repo-scout` | Haiku | lookups and log reading; returns `file:line` and a few lines |
-| `executor` | Sonnet | a scoped edit already decided, test runs, renders, packs, filing, board rebuilds |
+| `executor` | Sonnet | a scoped edit already decided, test runs, renders, packs, filing, feeding the live board (never a board page) |
 | `reviewer` | Opus | architecture, the final check before a push, anything touching judging, drafting, the fact gate, mandates or the ledger |
 | `ve-critic` | Opus | the non-producer review of a ve cut, after `ve qc` and `ve refs`; it writes the verdict and never edits the spec |
 
