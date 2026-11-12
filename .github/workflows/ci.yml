@@ -66,6 +66,10 @@ jobs:
         # Ruling (Krish, 2026-11-12): any off-day post or idea moves to any day at his press, and the move updates every
         # place that names its day. No day without his press, a move whole or not at all, Growth never over his row.
         run: node tests/offday-items-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+      - name: One post is one off-day item, on the real migration (never on two days)
+        # Ruling (Krish, 2026-11-12): the board shows exactly where everything is, and one post is one item that can never
+        # sprawl across days or go stale. A second item of one post is refused by every writer; his Approve carries it.
+        run: node tests/offday-one-post-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
 
   control-plane-sql:
     # The Video Studio control plane's projection CAS, ancestry and race

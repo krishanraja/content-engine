@@ -59,6 +59,7 @@ await db.exec(await migration('20261129090000_offday_items.sql'))
 await db.exec(await migration('20261129090000_offday_items.sql')) // re-runnable: the backfill adds nothing twice
 await db.exec(await migration('20261129100000_offday_items_posts.sql'))
 await db.exec(await migration('20261129100000_offday_items_posts.sql')) // re-runnable
+await db.exec(await migration('20261130090000_offday_one_post.sql')) // one post, one item: every move here still lands the same
 await db.exec('set role service_role')
 
 const ITEM = `engine:${W1}:burntokens`

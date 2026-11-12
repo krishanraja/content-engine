@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.9.0",
+ "contract_version": "1.10.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -26,6 +26,10 @@
     {
      "h": "Look",
      "p": "Face-led"
+    },
+    {
+     "h": "Scripts",
+     "p": "Approved by you on the board"
     }
    ],
    "title": "Piece 8287. It says one thing.",
@@ -1347,6 +1351,12 @@
       "at": "2026-11-08T14:07:00Z",
       "label": "Approved by you, Sun 8 Nov, 09:07",
       "via": "pick"
+     },
+     "stage": {
+      "state": "made",
+      "label": "Made: its files are in its 3 Posts folder",
+      "at": null,
+      "links": []
      }
     },
     {
@@ -1360,6 +1370,12 @@
       "at": "2026-11-08T14:07:00Z",
       "label": "Approved by you, Sun 8 Nov, 09:07",
       "via": "pick"
+     },
+     "stage": {
+      "state": "approved",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "at": "2026-11-08T14:07:00Z",
+      "links": []
      }
     }
    ],
@@ -1927,6 +1943,12 @@
         "day": "tue"
        }
       }
+     },
+     "stage": {
+      "state": "idea",
+      "label": "Idea: waiting on your answer",
+      "at": null,
+      "links": []
      }
     }
    ],
@@ -2058,6 +2080,10 @@
     {
      "h": "Look",
      "p": "Not picked yet"
+    },
+    {
+     "h": "Scripts",
+     "p": "Not filed yet: none on the piece's record and none sent to your Teleprompter"
     }
    ],
    "title": "Piece db9f. It says one thing.",
@@ -3118,7 +3144,7 @@
    "stop": 2,
    "who": "you",
    "runs_on": "Your pick, here; a mock on your own footage if you want one",
-   "next": "Pick the look: the recommended one, another, or fold in your inspiration",
+   "next": "Pick the look: the recommended one, another, or fold in your inspiration. Your approved scripts are not filed yet: file them from the session where you approved them",
    "actions": [
     {
      "kind": "look",
@@ -3170,6 +3196,12 @@
       "at": "2026-11-08T14:07:00Z",
       "label": "Approved by you, Sun 8 Nov, 09:07",
       "via": "pick"
+     },
+     "stage": {
+      "state": "approved",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "at": "2026-11-08T14:07:00Z",
+      "links": []
      }
     }
    ],
@@ -3189,6 +3221,12 @@
       "label": "Approved by you, Sun 8 Nov, 09:07",
       "at": "2026-11-08T14:07:00Z",
       "words": null
+     },
+     "stage": {
+      "state": "approved",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "at": "2026-11-08T14:07:00Z",
+      "links": []
      }
     }
    ],
@@ -3631,6 +3669,12 @@
         "day": "thu"
        }
       }
+     },
+     "stage": {
+      "state": "idea",
+      "label": "Idea: waiting on your answer",
+      "at": null,
+      "links": []
      }
     },
     {
@@ -4017,7 +4061,13 @@
        "at": "2026-11-15T12:05:00.000Z",
        "due_at": "2026-11-18T17:30:00.000Z"
       }
-     ]
+     ],
+     "stage": {
+      "state": "scheduled",
+      "label": "Scheduled on Instagram for Wed 18 Nov, 12:30",
+      "at": "2026-11-18T17:30:00.000Z",
+      "links": []
+     }
     }
    ],
    "held": [],
@@ -4050,6 +4100,10 @@
     {
      "h": "Look",
      "p": "Not picked yet"
+    },
+    {
+     "h": "Scripts",
+     "p": "Not filed yet: none on the piece's record and none sent to your Teleprompter"
     }
    ],
    "title": "Piece b019. It says one thing.",
@@ -5155,6 +5209,12 @@
       "at": "2026-11-08T14:07:00Z",
       "label": "Approved by you, Sun 8 Nov, 09:07",
       "via": "pick"
+     },
+     "stage": {
+      "state": "approved",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "at": "2026-11-08T14:07:00Z",
+      "links": []
      }
     }
    ],
@@ -5620,7 +5680,13 @@
       }
      ],
      "stories_due": "2026-11-19",
-     "stories_fresh": true
+     "stories_fresh": true,
+     "stage": {
+      "state": "approved",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "at": "2026-11-08T14:07:00Z",
+      "links": []
+     }
     }
    ],
    "held": [],
@@ -5878,7 +5944,7 @@
    "key": "wed",
    "day": "wed",
    "label": "Wed 18",
-   "next": "Pick the look: the recommended one, another, or fold in your inspiration",
+   "next": "Pick the look: the recommended one, another, or fold in your inspiration. Your approved scripts are not filed yet: file them from the session where you approved them",
    "actions": [
     {
      "kind": "look",

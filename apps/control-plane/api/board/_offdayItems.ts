@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { offdaySides } from './_offdaySides.js'
 import { dayDate, type PostedDay } from './_posted.js'
 import { POSTS_FOLDER_ID, driveFolderIdOf, driveFolderUrl } from './_drivePosts.js'
+import { postKeys, rowKeys, samePost } from './_onePost.js'
 
 // Moving an off-day item to any day (docs/PUBLISH_BOARDS.md, "Moving an off-day item to any day"). Ruling (Krish,
 // 2026-11-12): any off-day post or idea moves to any day at his press, and the move updates every place that names its
@@ -141,6 +142,9 @@ export interface Placed {
   state: ItemState | 'slate' | 'unknown'
   origin_week: string
   row: OffdayItem | null
+  /** One post, one item (_onePost.ts): this option is a post that is already an item on another day (or in his Ideas
+   *  for Later) under another id. It is that item: its Approve here moves it here, never a second copy. */
+  twin?: { week: string | null; day: string | null; date: string | null; state: ItemState }
 }
 
 /** An item's option as the board shows it: an engine item still in its own week's plan reads the plan's words (the
@@ -163,7 +167,7 @@ export function contentOf(r: OffdayItem, ideas: Body | null, week: string): Body
 /** A day's off-day options from the one place: the plan's options for the day that no row moved away, then every row
  *  that sits on the day (moved here, approved here from his Ideas for Later, or one of Growth's), each with where it
  *  is. Rows that cannot be read leave the plan's options as they are, with no move. Pure. */
-export function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string, base?: Body[]): Array<{ o: Body; placed: Placed }> {
+export function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string, base?: Body[], all?: OffdayItem[] | null): Array<{ o: Body; placed: Placed }> {
   // The day's own list: the plan's options for it, or (from the view) those and his approvals carried onto it from
   // another board (_viewExtras.ts offdayList).
   const list = (base ?? (isObj(ideas) && isObj(ideas.offdays) && Array.isArray(ideas.offdays[day]) ? ideas.offdays[day] as unknown[] : []))
@@ -172,17 +176,39 @@ export function dayOptions(ideas: Body | null, items: OffdayItem[] | null | unde
   const byKey = new Map(rows.map(r => [r.item, r]))
   const here = (r: OffdayItem) => (r.state === 'offered' || r.state === 'approved') && r.week === week && r.day === day
   const hereByDoc = new Map(rows.filter(here).map(r => [r.doc, r]))
+  // Every item of every week that is on a day or in his Ideas for Later, for one post, one item: a plan option that is
+  // the same post as one of them is that item, never a second (_onePost.ts).
+  const live = [...new Map([...(all ?? []), ...rows].filter(r => r.state === 'offered' || r.state === 'approved' || r.state === 'later').map(r => [r.item, r])).values()]
+  const keyed = live.map(r => ({ r, keys: rowKeys(r) }))
+  const twinOf = (o: Body, own: string) => {
+    const keys = postKeys(o, { item: own, week })
+    return keyed.find(x => x.r.item !== own && samePost(keys, x.keys))?.r ?? null
+  }
   const seen = new Set<string>()
   const out: Array<{ o: Body; placed: Placed }> = []
   for (const o of list) {
     // The row that sits on this option's own press here (an item moved or approved onto it), else the plan's own item.
     const onDoc = hereByDoc.get(`queue/off-${day}-${String(o.id)}`)
-    const key = onDoc?.item ?? itemKey('engine', week, String(o.id))
+    const own = itemKey('engine', week, String(o.id))
+    const key = onDoc?.item ?? own
     const r = onDoc ?? byKey.get(key)
     if (r && !here(r)) continue
-    if (seen.has(key)) continue
-    seen.add(key)
-    out.push({ o: r && r.item !== itemKey('engine', week, String(o.id)) ? { ...contentOf(r, ideas, week), ...o, id: r.option_id } : o,
+    // A settled option (`closed`: moved to another day or merged into another piece, the full board's rule) leaves the
+    // day, unless a press of his stands on it: a session's words never take his press away.
+    if (!r && typeof o.closed === 'string' && o.closed.trim()) continue
+    // One post, one item: an option no press has touched that is the same post as an item already somewhere. On this
+    // day, the item is drawn and the option is not; anywhere else, the option is that item, shown as one.
+    const twin = !r ? twinOf(o, own) : null
+    if (twin && here(twin)) continue
+    const placedKey = twin ? twin.item : key
+    if (seen.has(placedKey)) continue
+    seen.add(placedKey)
+    if (twin) {
+      out.push({ o, placed: { key: twin.item, version: twin.version, source: twin.source, state: twin.state, origin_week: twin.origin_week, row: twin,
+        twin: { week: twin.week, day: twin.day, date: twin.date, state: twin.state } } })
+      continue
+    }
+    out.push({ o: r && r.item !== own ? { ...contentOf(r, ideas, week), ...o, id: r.option_id } : o,
       placed: { key, version: r?.version ?? 0, source: r?.source ?? 'engine', state: items ? (r ? r.state : 'slate') : 'unknown', origin_week: r?.origin_week ?? week, row: r ?? null } })
   }
   for (const r of rows) {
@@ -191,6 +217,29 @@ export function dayOptions(ideas: Body | null, items: OffdayItem[] | null | unde
     out.push({ o: contentOf(r, ideas, week), placed: { key: r.item, version: r.version, source: r.source, state: r.state, origin_week: r.origin_week, row: r } })
   }
   return out
+}
+
+/** Where else the same post is put up as an idea, for an item on a day: "Thu 12 Nov also offers this post (agentnotsetup):
+ *  your Approve there moves it there, so it is only ever on one day." `plans` are the week plans the view read (its own
+ *  week and those beside it). Pure. */
+export function twinLines(r: OffdayItem | null, plans: Record<string, Body | null>): string[] {
+  if (!r || (r.state !== 'approved' && r.state !== 'offered')) return []
+  const mine = rowKeys(r)
+  const out: string[] = []
+  for (const [week, plan] of Object.entries(plans)) {
+    const offdays = isObj(plan) && isObj(plan.offdays) ? plan.offdays : {}
+    for (const day of DAYS) {
+      for (const o of Array.isArray(offdays[day]) ? (offdays[day] as unknown[]).filter(isObj) : []) {
+        if (typeof o.id !== 'string') continue
+        const own = itemKey('engine', week, o.id)
+        if (own === r.item || (week === r.week && day === r.day)) continue
+        if (!samePost(postKeys(o, { item: own, week }), mine)) continue
+        const said = typeof o.decided === 'string' && o.decided.trim() ? ' A session wrote that it is for that day; only your press moves it.' : ''
+        out.push(`${dayLabel(dayDate(week, day as PostedDay))} also has this post up as an idea (${o.id}). Your Approve there moves it there, so it is only ever on one day.${said}`)
+      }
+    }
+  }
+  return [...new Set(out)]
 }
 
 /** Today as the operator's calendar has it (YYYY-MM-DD). */
@@ -240,6 +289,11 @@ export interface MoveSpec {
 /** The move press for an option on a day, or null when its rows could not be read (nothing is moved on a guess). */
 export function moveSpec(placed: Placed, o: Body, week: string, day: string, now: Date): MoveSpec | null {
   if (placed.state === 'unknown' || placed.state === 'withdrawn') return null
+  // One post, one item: an option that is an item already elsewhere moves that item from where it is.
+  if (placed.twin && placed.row) {
+    if (placed.twin.state === 'later' || !placed.twin.week || !placed.twin.day) return laterMoveSpec(placed.row, now)
+    return moveSpec({ ...placed, twin: undefined }, placed.row.option, placed.twin.week, placed.twin.day, now)
+  }
   const date = dayDate(week, day as PostedDay)
   const weekly = Boolean(o.weekly)
   const recorded = o.kind === 'recorded'
@@ -389,16 +443,19 @@ const SAY: Record<string, string> = {
   recorded_days: 'A piece you record goes out on a Tuesday, Thursday or Saturday.',
   already_there: 'It is already on that day.',
   item_not_found: 'That idea is no longer on the board. The board has reloaded.',
+  same_post: 'That post is already on another day. It is one post: move it from there.',
 }
 
 /** Move one item, his press only (the route checks who): the one write, then every place that names the day. */
 export async function moveItem(db: SupabaseClient, req: MoveRequest, deps: MoveDeps): Promise<MoveResult> {
   const m = ITEM_KEY.exec(req.item)!
-  const source = m[1] as 'engine' | 'growth', origin = m[2], optionId = m[3]
+  const source = m[1] as 'engine' | 'growth', origin = m[2]
   const refuse = (status: number, error: string, extra: Body = {}) => ({ status, body: { ok: false, error, line: SAY[error] || null, ...extra } })
   const read = await db.from('offday_items').select(COLUMNS).eq('item', req.item).maybeSingle()
   if (read.error) return refuse(503, 'board_store_unavailable')
   const row = itemOf(read.data)
+  // The id the item's press goes under now: the option a re-plan carried it as (one post, one item), else its own.
+  const optionId = row?.option_id || m[3]
   if (row && row.version !== req.version) return refuse(409, 'stale', { version: row.version, week: row.week, day: row.day })
   if (!row && req.version !== 0) return refuse(409, 'stale', { version: 0 })
 
@@ -511,6 +568,7 @@ export async function moveItem(db: SupabaseClient, req: MoveRequest, deps: MoveD
     const msg = String(call.error.message || '')
     if (/revision_conflict/.test(msg)) return refuse(409, 'stale')
     if (/not_approved_by_krish/.test(msg)) return refuse(409, 'not_approved_by_krish')
+    if (/same_post/.test(msg)) return refuse(409, 'same_post')
     return refuse(503, 'board_store_unavailable')
   }
   const done = call.data as Body
@@ -595,6 +653,20 @@ export async function offerGrowth(db: SupabaseClient, week: string, body: unknow
  *  off). Live needs the channel and the post's own link. Growth never reports a post it did not post. */
 export async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date()): Promise<MoveResult> {
   if (!isObj(body) || !Array.isArray(body.posts) || body.posts.length > 200) return { status: 400, body: { ok: false, error: 'invalid_posts' } }
+  // A piece's own scheduled posts (a series day's, or an off-day piece's) are kept on its day's boxes (_posted.ts
+  // recordScheduled), so the board says when it goes out.
+  const { pieceScheduled, recordScheduled } = await import('./_posted.js')
+  const pieceEntries = (body.posts as unknown[]).filter(p => isObj(p) && typeof p.piece_id === 'string' && !p.item && !p.option)
+  let pieces: { kept: number; left: number } | null = null
+  if (pieceEntries.length) {
+    const ok = pieceEntries.map(pieceScheduled).filter((x): x is NonNullable<ReturnType<typeof pieceScheduled>> => Boolean(x))
+    const r = await recordScheduled(db, week, ok, now.toISOString())
+    if (r.failed) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
+    pieces = { kept: r.kept, left: r.left + (pieceEntries.length - ok.length) }
+    if (pieceEntries.length === body.posts.length) return { status: 200, body: { ok: true, items: 0, unknown: 0, pieces } }
+  }
+  body = { ...body, posts: (body.posts as unknown[]).filter(p => !pieceEntries.includes(p)) }
+  if (!isObj(body) || !Array.isArray(body.posts)) return { status: 400, body: { ok: false, error: 'invalid_posts' } }
   const items = await readItems(db, week)
   if (!items) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   const next = new Map<string, { row: OffdayItem; posts: GrowthPost[]; drive: string | null }>()
@@ -618,7 +690,7 @@ export async function reportPosts(db: SupabaseClient, week: string, body: unknow
     const w = await db.from('offday_items').update({ posts: posts.slice(-40), ...(drive ? { drive_folder: drive } : {}) }).eq('item', item)
     if (w.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   }
-  return { status: 200, body: { ok: true, items: next.size, unknown } }
+  return { status: 200, body: { ok: true, items: next.size, unknown, ...(pieces ? { pieces } : {}) } }
 }
 
 /** The week's items for Growth (GET /api/board/<Monday>/offdays): where each is now, by the one place. */
@@ -629,7 +701,8 @@ export function itemsForGrowth(items: OffdayItem[], week: string) {
 
 /** A press saved on an off-day option through the board's own Approve (not a move): the row follows it, so an Approve
  *  anywhere and a move write the one place the same way. Only his Approve; a row already there is left as it is. */
-export async function syncApprove(db: SupabaseClient, week: string, docId: string, body: Body, ideas: (w: string) => Promise<Body | null>): Promise<'placed' | 'already' | 'skipped' | 'failed'> {
+export async function syncApprove(db: SupabaseClient, week: string, docId: string, body: Body, ideas: (w: string) => Promise<Body | null>,
+  now: Date = new Date()): Promise<'placed' | 'carried' | 'already' | 'skipped' | 'failed'> {
   const approved = (isObj(body.idea) && body.idea.verdict === 'approve') || (body.kind === 'recorded' && body.approved === true)
   if (!approved) return 'skipped'
   const m = /^off-(mon|tue|wed|thu|fri|sat|sun)-([a-zA-Z0-9][a-zA-Z0-9_.:-]{0,59})$/.exec(docId)
@@ -650,12 +723,48 @@ export async function syncApprove(db: SupabaseClient, week: string, docId: strin
       const list = isObj(plan) && isObj(plan.offdays) && Array.isArray(plan.offdays[day]) ? (plan.offdays[day] as unknown[]).filter(isObj) : []
       option = list.find(x => String(x.id) === optionId) || (isObj(body.idea) && isObj(body.idea.shown) ? { id: optionId, ...body.idea.shown, format: body.format ?? '', source: body.source ?? '' } : null)
       if (!option) return 'skipped'
+      // One post, one item (_onePost.ts): his Approve on a post that is already an item somewhere else carries that item
+      // here, taking his approval off the day it leaves, never a second item of the same post.
+      if (!row) {
+        const twin = await twinItem(db, option, key, week)
+        if (twin === undefined) return 'failed'
+        if (twin) return await carry(db, twin, { week, day, optionId, option, body }, now)
+      }
     }
     const r = await db.rpc('offday_item_move', { p: { item: key, version: row?.version ?? 0, actor: 'Krish', source: row?.source ?? 'engine', origin_week: row?.origin_week ?? week,
       option_id: optionId, option, drive_folder: driveFolderIdOf(option?.drive), piece_id: typeof body.piece_id === 'string' ? body.piece_id : null,
       state: 'approved', place: { week, day }, writes: [] } })
     return r.error || !isObj(r.data) || r.data.ok !== true ? 'failed' : 'placed'
   } catch { return 'failed' }
+}
+
+/** The item a post already is, anywhere (on a day or in his Ideas for Later), other than `own`: null when it is none,
+ *  undefined when the items cannot be read. */
+export async function twinItem(db: SupabaseClient, option: Body, own: string, week: string): Promise<OffdayItem | null | undefined> {
+  const rows = await readItemsIn(db, ['offered', 'approved', 'later'])
+  if (!rows) return undefined
+  const keys = postKeys(option, { item: own, week })
+  return rows.find(r => r.item !== own && samePost(keys, rowKeys(r))) ?? null
+}
+
+/** His Approve on a day for a post that is already an item elsewhere: that one item moves to this day under the option
+ *  he approved (its press is the one he made), and his approval comes off the day it leaves (the same document saved
+ *  with `moved`, which the ideas gate records as withdrawn), in one transaction (offday_item_move). Nothing is copied
+ *  and nothing of his is deleted: both presses stay in board_history, the move in offday_moves. */
+export async function carry(db: SupabaseClient, twin: OffdayItem, to: { week: string; day: string; optionId: string; option: Body; body: Body }, now: Date): Promise<'carried' | 'failed'> {
+  const at = now.toISOString()
+  const writes: Array<{ week: string; id: string; body: Body; revision: number }> = []
+  if (twin.state === 'approved' && twin.week && twin.day) {
+    const leaving = { week: twin.week, id: `off-${twin.day}-${twin.option_id}` }
+    const prev = await readDoc(db, leaving.week, leaving.id)
+    writes.push({ ...leaving, revision: prev.revision,
+      body: leaveBody(twin.option, leaving.week, twin.day, prev.body, at, { to_week: to.week, to_day: to.day, as: to.optionId, one_post: true, at }, false) })
+  }
+  const r = await db.rpc('offday_item_move', { p: { item: twin.item, version: twin.version, actor: 'Krish', source: twin.source, origin_week: twin.origin_week,
+    option_id: to.optionId, option: to.option, drive_folder: driveFolderIdOf(to.option.drive) || twin.drive_folder,
+    piece_id: typeof to.body.piece_id === 'string' ? to.body.piece_id : twin.piece_id, state: 'approved', place: { week: to.week, day: to.day }, writes,
+    words: null, carry: true } })
+  return r.error || !isObj(r.data) || r.data.ok !== true ? 'failed' : 'carried'
 }
 
 /** Growth's read of an approved option (readPieces' `offdays`): kept only when the one place says it is on this day of
