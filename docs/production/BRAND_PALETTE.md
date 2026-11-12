@@ -23,7 +23,7 @@ format is refused before it renders. Only Krish changes the palette, and only in
 | The marks | The icon (`mark.png`), the masthead and the wordmark, by sha256 | `config/brand-palette.json` `marks`; the files are in krishanraja/makeyourmindup `apps/cover/public/brand` |
 | The wide close | `statement_card`: "Built to help you decide.", masthead, days, Subscribe free, address; 6 s, held for YouTube's end screen | `scripts/quick-edit/kit/endcard.html` (wide); ve `apps/renderer/src/engine/chrome/EndingBand.tsx` |
 | The tall close | `statement_beat`: the same words, at most 2 s, every word inside the tall core box x 120 to 820, y 330 to 1180 | `scripts/quick-edit/kit/endcard.html` (tall); ve `EndingBand.tsx` (`ENDING_TIMING_TALL`), its length `ENDING_FRAMES_BY_ASPECT` in `scripts/velib/compile.py` |
-| The sting | The series sting, 1.9 s, on a series day's long cut only, played after the hook | `config/intro-sting.json` (clips in the Drive brand kit) |
+| The sting | Paused (Krish, 12 Nov 2026): no cut wears it. When it returns it plays after the hook, on a series day's long cut only | `config/intro-sting.json` (`paused`; clips in the Drive brand kit) |
 | The carousel close | `house_close_slide`: the piece's takeaway, Subscribe free, the wordmark small in the bottom right | krishanraja/growth-makeyourmindup `render/templates/carousel-close.html` |
 
 ## The days
@@ -39,7 +39,7 @@ An asset on a series day that is not the week's series piece, and does not carry
 
 ## The formats, in one line each
 
-- **Long cut (16:9).** Opens on the hook. On a series day the series sting follows the hook. The body carries the icon tile only, with the series pill on section beats. Closes on `statement_card`.
+- **Long cut (16:9).** Opens on the hook, with no sting while it is paused (when it returns, it follows the hook on a series day). The body carries the icon tile only, with the series pill on section beats. Closes on `statement_card`.
 - **Short cut (9:16).** Opens on the hook, with no intro card and no sting. The body carries captions only: no icon, no wordmark, no pill. Closes on `statement_beat`, the only place a wordmark appears.
 - **Carousel (4:5).** Card 1 is the cover scene, with no logo at the top. Every card carries the wordmark small in the bottom right. The last card is `house_close_slide`.
 - **Meme and Notes image.** No logo at the top, and the wordmark small in the bottom right. No close.
@@ -75,11 +75,14 @@ One-off piece scripts (`docs/plans/*/rebuild`, `short-composite`, `build_cut.py`
 3. A one-off exception for one piece is `"palette_exception": "Krish, YYYY-MM-DD: <his words>"` in that cut's config. make.py prints it and lets the cut through. Nothing else lets a cut through.
 4. Never add a close, intro, mark position or colour anywhere except the palette.
 
-## Still to follow, and refused until it does
+## The sting, paused
 
-Both engines still play the series sting in front of the hook on a series long cut, so from 16 Nov `ve lint` and
-make.py refuse those long cuts until the sting follows the hook. Moving it mid-cut changes every check that maps a
-frame of the file back to the cut (`velib.qc.lead_frames` and its callers, the premix lead in `velib.audio.premix`,
-`sting_problems`, the opening gate), so it is built with a proof Krish approves on his own take (F04, F13). Until
-then a series long cut renders only on his words in its config (`palette_exception`), or without the sting if he
-rules that. Both tall closes, kit's and ve's, are the palette's 2 s beat, and an off-day close shows no series days.
+Krish, 12 Nov 2026: "Happy with your recommendations". Long cuts open on the hook with no sting until the sting
+after the hook is built and he approves its proof render. `config/intro-sting.json` carries the pause (`paused`),
+and `intro.wanted`, ve compile's `sting_props` and `sting_problems`, and ve lint all read it. His 5 Nov approval and the
+clips are kept. To bring the sting back after the hook: lay it after the hook in both engines (every check that maps a
+frame of the file back to the cut, `velib.qc.lead_frames` and its callers, the premix lead in `velib.audio.premix`,
+`sting_problems`, the opening gate, and make.py's audio graph), prove it on his own take (F04, F13), then remove the
+pause and set the palette's long cut `sting` to `after_hook`, both on his words.
+
+Both tall closes, kit's and ve's, are the palette's 2 s beat, and an off-day close shows no series days.

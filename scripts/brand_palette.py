@@ -111,7 +111,8 @@ def check(record, palette=None):
                    'SOCIAL-BEST-PRACTICES-2026 section 4)')
     if 'sting' in record and 'sting' in want and record['sting'] != want['sting']:
         why = {'before_hook': 'a brand sting may follow the hook, never precede it (SOCIAL-BEST-PRACTICES-2026 section 4.3)',
-               'none': 'this format carries no sting', 'after_hook': 'the series sting plays straight after the hook'}[want['sting']]
+               'none': 'this format carries no sting now (a paused sting: config/intro-sting.json "paused")',
+               'after_hook': 'the series sting plays straight after the hook'}[want['sting']]
         out.append(f'{say}: sting {record["sting"]}, but the palette says {want["sting"]}: {why}')
     body = record.get('body') or {}
     for mark in ('icon', 'wordmark', 'series_pill'):
@@ -163,7 +164,7 @@ def self_test():
     ok.append(('Fri 13 Nov is not checked', check(dict(good_short, date='2026-11-13', close={'file': 'outro-9x16.mp4'}), p), []))
     long_cut = {'date': '2026-11-18', 'format': 'long_cut', 'opening': 'hook', 'sting': 'before_hook'}
     ok.append(('a sting in front of the hook is refused', bool(check(long_cut, p)), True))
-    ok.append(('a sting after the hook passes', check(dict(long_cut, sting='after_hook'), p), []))
+    ok.append(('a long cut on the hook with no sting passes while the sting is paused', check(dict(long_cut, sting='none'), p), []))
     bad = [(name, got, want) for name, got, want in ok if got != want]
     for name, got, want in ok:
         print(('ok   ' if (name, got, want) not in bad else 'FAIL ') + name + ('' if (name, got, want) not in bad else f': {got!r}'))
