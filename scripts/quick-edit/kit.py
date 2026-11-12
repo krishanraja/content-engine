@@ -143,6 +143,10 @@ MAX_SCALE = 1.25  # never blow a picture up past this: its words go soft
 # standard on the outro: the final card held about 2 s inside a calm, roughly 6 second sequence). The tagline is
 # Krish's words, 10 Nov 2026: "The copy should read: "Built to help you decide."" docs/production/CLOSING.md.
 ENDCARD_SECONDS = 6
+# The tall close is a compact end beat of at most 2 s inside the tall core box (config/brand-palette.json
+# statement_beat; Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with
+# the attached", docs/production/SOCIAL-BEST-PRACTICES-2026.md section 5: a compact end beat, never a long card).
+ENDCARD_SECONDS_BY_SHAPE = {'16x9': ENDCARD_SECONDS, '9x16': 2}
 TAGLINE = 'Built to help you decide.'
 CTA = 'Subscribe free'
 
@@ -824,12 +828,16 @@ def mapping_card_svg(mercedes_uri, claude_uri, step=2, shape='9x16'):
     </svg>'''
 
 
-def style_for(subchannel):
+def style_for(subchannel, date=None):
+    """The look a piece's kit wears. A piece dated on a day that is not its series' own day is an off-day piece:
+    house mint, and no series days on its close (brand.series_look; config/brand-palette.json; F36)."""
     H = brand.house()
     ch = brand.channel(H, subchannel)
     tok = H['tokens']
-    return {'house': H, 'channel': ch, 'ink': tok['ink'], 'cream': tok['cream'], 'mint': tok['mint'],
-            'accent': ch['accent'], 'shadow': mix(ch['accent'], tok['ink'], 0.28),
+    off = bool(date) and not brand.series_look(H, subchannel, date)['series']
+    accent = tok['mint'] if off else ch['accent']
+    return {'house': H, 'channel': ch, 'ink': tok['ink'], 'cream': tok['cream'], 'mint': tok['mint'], 'off': off,
+            'accent': accent, 'shadow': mix(accent, tok['ink'], 0.28),
             'site': H['copy'].get('site', 'makeyourmindup.ai')}
 
 
@@ -858,14 +866,15 @@ def statement_lines(shape, tagline=TAGLINE):
 def page_endcard(st, shape, masthead, fonts):
     """The house end card (endcard.html, direction C, picked by Krish on 10 Nov 2026): the tagline as the picture,
     the masthead on ink, the three days in their series colours, "Subscribe free" and the address, the last word
-    and the underline in this piece's series colour."""
+    and the underline in this piece's series colour. An off-day piece (st["off"]) closes in house mint with no
+    series days on it (config/brand-palette.json; F36)."""
     W, H = FRAME[shape]
     lines = statement_lines(shape)
     statement = ''.join(f'<span class="ln"><span style="animation-delay: {0.1 + 0.14 * i:.2f}s">{html.escape(line)}</span></span>'
                         for i, line in enumerate(lines))
     day_names = [f'<span style="color:{c["accent"]}">{html.escape(c.get("days") or c["day"] + "s")}</span>'
                  for c in st['house']['channels']]
-    days = f'<div class="days a" style="animation-delay: 1.5s">{"<b> · </b>".join(day_names)}</div>'
+    days = '' if st.get('off') else f'<div class="days a" style="animation-delay: 1.5s">{"<b> · </b>".join(day_names)}</div>'
     tall = shape == '9x16'
     return template('endcard.html').substitute(fonts=fonts, W=W, H=H, ink=st['ink'], cream=st['cream'], mint=st['mint'],
                                                accent=st['accent'], shape='tall' if tall else 'wide', masthead=masthead,
@@ -1115,7 +1124,7 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
         if not folder.is_dir():
             raise KitError(f'--files {folder} is not a folder on this machine')
     shape = CUT_SHAPE[cut]
-    st = style_for(post['subchannel'])
+    st = style_for(post['subchannel'], post.get('date'))
     receipt_path = out / 'kit.json'
     try:
         receipt = json.loads(receipt_path.read_text(encoding='utf-8')) if receipt_path.exists() else {}
@@ -1165,16 +1174,17 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
             doc = page_endcard(st, sh, logos['masthead'], fonts)
             png, _ = draw(f'endcard-{sh}.png', doc, FRAME[sh])
             mp4 = out / f'endcard-{sh}.mp4'
-            sig = f'{sha256_text(doc)}:{sha256_file(png)}:{ENDCARD_SECONDS}:{KIT_VERSION}:motion'
+            seconds = ENDCARD_SECONDS_BY_SHAPE[sh]
+            sig = f'{sha256_text(doc)}:{sha256_file(png)}:{seconds}:{KIT_VERSION}:motion'
             if mp4.exists() and made.get(mp4.name) == sig:
                 log(f'kept  {mp4.name}')
             else:
                 if hasattr(drawer, 'film'):  # the card's own motion, filmed frame by frame
-                    bad = drawer.film(doc, FRAME[sh], mp4)
+                    bad = drawer.film(doc, FRAME[sh], mp4, seconds)
                     if bad:
                         problems.append(f'{mp4.name}: {"; ".join(bad)}')
                 else:  # a drawer that cannot film (the self-test's paper one): the settled still
-                    endcard_video(png, mp4)
+                    endcard_video(png, mp4, seconds)
                 made[mp4.name] = sig
                 log(f'made  {mp4.name}')
         # The title on screen beside his face: post.json's "video_title" when it has one, else the

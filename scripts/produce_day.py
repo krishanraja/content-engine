@@ -403,7 +403,8 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, work, dry_run):
             continue
         cfg_path = kit / f'{cut}.json'
         cfg = json.loads(cfg_path.read_text(encoding='utf-8'))
-        cfg['endcard'] = {**(cfg.get('endcard') or {}), shape: str(clips[shape]['outro'])}
+        if clips.get(shape):
+            cfg['endcard'] = {**(cfg.get('endcard') or {}), shape: str(clips[shape]['outro'])}
         cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
         out = work / cut
         plan = run([PY, 'scripts/quick-edit/make.py', cfg_path, '--out', out, '--only', shape, '--plan'], env=env, ok=(0, 1),
@@ -656,10 +657,12 @@ def main():
             fetch_sting()
             fetch_pictures(post_path)
             check_cards(post_path)
-            clips = story_clips(post_path, work)
+            # The close is kit's house close for each shape (config/brand-palette.json); the story stand-off outro
+            # it used to swap in is a retired close the palette refuses (Ruling, Krish, 2026-11-12).
+            clips = {}
             rendered = make_cuts(post_path, piece, takes_at, music_root, clips, work, a.dry_run)
         if a.dry_run:
-            log('dry run: both cuts planned with music and the story outro, the short opening on the hook and the long on the intro sting '
+            log('dry run: both cuts planned with music and the house close, the short opening on the hook and the long on the intro sting '
                 'once Krish approves it; nothing rendered, sent or recorded')
             return 0
         thumb = thumbs(post_path, work)

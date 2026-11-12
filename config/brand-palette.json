@@ -1,0 +1,150 @@
+{
+  "schema": "brand-palette/1",
+  "about": "The one brand palette: for each day and each format, what opens the asset, what its body may carry, how it closes, its colour and its safe areas. Every maker reads this file (scripts/brand_palette.py), and the guard refuses any cut, carousel or meme whose opening, close, icon or wordmark differs from it for its day and format. No maker keeps its own copy of these rules. Built from the sheet Krish approved on 12 Nov 2026, held to the corpus he attached (docs/production/SOCIAL-BEST-PRACTICES-2026.md): no logo-only cold open, a brand sting may follow the hook but never precede it, a compact end beat on short video instead of a long card, the tall core box for every critical word and mark, a carousel's last slide a takeaway plus one action.",
+  "status": "approved",
+  "approved": {
+    "on": "2026-11-12",
+    "by": "Krish",
+    "words": "I approve the brand palette sheet, but only if it falls in line with the attached.",
+    "attached": "docs/production/SOCIAL-BEST-PRACTICES-2026.md",
+    "sheet": "the brand palette sheet of 12 Nov 2026 (one brand palette, every day, every format)",
+    "off_day_close": "the statement close in mint with no series days (the sheet's pick; the corpus rules out the held sting as a second, longer close)",
+    "long_body": "the icon only in the body; the wordmark only at the sting and the close (the sheet's proposal)"
+  },
+  "applies_from": "2026-11-16",
+  "applies_from_why": "Fri 13 Nov is made on an engine frozen at its storyboard (F33); the palette binds every piece dated from Mon 16 Nov.",
+  "days": {
+    "monday": {"kind": "series", "series": "follow_the_money"},
+    "tuesday": {"kind": "off"},
+    "wednesday": {"kind": "series", "series": "under_the_hood"},
+    "thursday": {"kind": "off"},
+    "friday": {"kind": "series", "series": "mind_the_gap"},
+    "saturday": {"kind": "off", "note": "Saturday good news is an off day: mint, its own fixed close"},
+    "sunday": {"kind": "off"}
+  },
+  "colour": {
+    "series": "the series' own colour (config/studio.json house_style; follow.the.money #FFD84D, under.the.hood #B7A6FF, mind.the.gap #FF6A4D), never another's",
+    "off": "house mint #7EF0C0 and the house tones; never butter, lilac or coral, and no series name, pill or days row"
+  },
+  "marks": {
+    "icon": {"file": "makeyourmindup mark.png", "sha256": "4a45152311ff552a1fd08307a78e8e49c0c699663d73c35687c52887f782fb4a"},
+    "masthead": {"file": "makeyourmindup masthead.png", "sha256": "5a0e8a08d3ff027feac0e505162318e4095add2466f1096305031d8a1f29a4fc"},
+    "wordmark": {"file": "makeyourmindup wordmark.png", "sha256": "f896cc62602e00d2ed8d442d14b593d2f7a44871dc408354bfa96e1a54d67626", "same_drawing": ["463303741ec114cabc2a531afad537a7f04eb3f008efb2b384ecee52158aa7ee"]},
+    "source": "krishanraja/makeyourmindup apps/cover/public/brand (it wins over the Drive kit); never set as type, never redrawn"
+  },
+  "safe": {
+    "source": "docs/production/SOCIAL-BEST-PRACTICES-2026.md section 3.5, a house rule dated 12 Nov 2026; verify on the real preview",
+    "tall_canvas": [1080, 1920],
+    "tall_core": [120, 330, 820, 1180],
+    "tall_hook": [140, 360, 820, 720],
+    "tall_captions": [130, 940, 820, 1160],
+    "tall_cta": [140, 820, 820, 1150],
+    "tall_cover_grid": [0, 240, 1080, 1680],
+    "wide_canvas": [1920, 1080],
+    "wide_title_safe": [96, 54, 1824, 1026],
+    "feed_canvas": [1080, 1350],
+    "feed_margin_px": 80
+  },
+  "closes": {
+    "statement_card": {
+      "about": "The wide close: one cut to ink, \"Built to help you decide.\" with the last word in the colour, the masthead, Subscribe free and the address, settled by 2.75 s, then held long enough for YouTube's clickable end-screen elements (5 to 20 s, docs/production/CLOSING.md, end_hold_s). No burned-in click here.",
+      "shapes": ["16x9"],
+      "seconds_min": 6,
+      "made_by": ["scripts/quick-edit/kit.py page_endcard (endcard-16x9.mp4)", "apps/renderer/src/engine/chrome/EndingBand.tsx"]
+    },
+    "statement_beat": {
+      "about": "The tall close: one compact end beat of at most 2 s, \"Built to help you decide.\" and one action (Subscribe free, makeyourmindup.ai) with the masthead, every word and mark inside the tall core box. The only place a wordmark appears on a tall cut.",
+      "shapes": ["9x16"],
+      "seconds_max": 2.0,
+      "box": "tall_core",
+      "made_by": ["scripts/quick-edit/kit.py page_endcard (endcard-9x16.mp4)", "apps/renderer/src/engine/chrome/EndingBand.tsx"]
+    },
+    "house_close_slide": {
+      "about": "A carousel's last slide: the piece's own takeaway in one or two lines, then one small action (Subscribe free, makeyourmindup.ai) and the wordmark small in the bottom right. Never a bare call to action, never a thanks-for-swiping card.",
+      "shapes": ["4x5", "9x16"]
+    },
+    "good_news_close": {
+      "about": "Saturday good news keeps Krish's fixed close: the five photos in mint rings, \"If this inspires you to MAKE THE WORLD BETTER by combining your ideas + AI, follow for more\", the centred mark (docs/CAROUSEL-STANDARD.md).",
+      "shapes": ["4x5"]
+    }
+  },
+  "retired": {
+    "closes": {
+      "publication_card_v1": "kit's 4 s publication card, \"A free publication on how AI really works\" (to 10 Nov)",
+      "story_standoff_outro": "apps/renderer/src/story StoryOutroStandoff, rendered by scripts/quick-edit/story_io.py (12 Oct)",
+      "outro_one": "the one-screen question and address trim (26 Oct)",
+      "ending_ticker_band": "ve's ink band with a ticker over the last shot (to 10 Nov)",
+      "piece_close_card": "per-piece close cards in docs/plans/*/rebuild/scene.html",
+      "sting_held_as_outro": "the 9:16 sting held on its wordmark with a badge (11 Nov off-day cut)",
+      "packaging_outro": "apps/renderer/src/border-control Packaging outro mode",
+      "carousel_piece_kit_close": "Growth's per-piece kit endings (log, socket, keyboard, clipboard, machine takeaway)"
+    },
+    "openings": {
+      "story_standoff_intro": "the 3.5 s story intro card (retired 29 Oct, HOOK_IS_THE_INTRO)",
+      "sting_before_hook": "the series sting in front of the hook (5 Nov to 12 Nov); it now follows the hook",
+      "opening_logo": "make.py's 3 s opening logo"
+    },
+    "match": ["outro-", "story-outro", "standoff", "outro_one", "ticker", "sting-9x16", "packaging"]
+  },
+  "formats": {
+    "long_cut": {
+      "shape": "16x9",
+      "series": {
+        "opening": "hook",
+        "sting": "after_hook",
+        "body": {"icon": "tile", "wordmark": false, "series_pill": "section_beats"},
+        "close": "statement_card",
+        "days_row": true
+      },
+      "off": {
+        "opening": "hook",
+        "sting": "none",
+        "body": {"icon": "tile", "wordmark": false, "series_pill": false},
+        "close": "statement_card",
+        "days_row": false
+      }
+    },
+    "short_cut": {
+      "shape": "9x16",
+      "series": {
+        "opening": "hook",
+        "sting": "none",
+        "body": {"icon": false, "wordmark": false, "series_pill": false},
+        "close": "statement_beat",
+        "days_row": true
+      },
+      "off": {
+        "opening": "hook",
+        "sting": "none",
+        "body": {"icon": false, "wordmark": false, "series_pill": false},
+        "close": "statement_beat",
+        "days_row": false
+      }
+    },
+    "carousel": {
+      "shape": "4x5",
+      "series": {"opening": "scene_cover", "logo_top": false, "body": {"icon": false, "wordmark": "bottom_right_small"}, "close": "house_close_slide"},
+      "off": {"opening": "own_idea", "logo_top": false, "body": {"icon": false, "wordmark": "bottom_right_small"}, "close": "house_close_slide"}
+    },
+    "saturday_good_news": {
+      "shape": "4x5",
+      "off": {"opening": "photo_cover", "logo_top": false, "body": {"icon": false, "wordmark": "bottom_corner_small"}, "close": "good_news_close"}
+    },
+    "meme": {
+      "shape": "1x1",
+      "off": {"opening": "own_idea", "logo_top": false, "body": {"icon": false, "wordmark": "bottom_right_small"}, "close": "none"}
+    },
+    "notes_image": {
+      "shape": "any",
+      "off": {"opening": "own_idea", "logo_top": false, "body": {"icon": false, "wordmark": "bottom_right_small"}, "close": "none"}
+    },
+    "thumbnail_wide": {
+      "shape": "16x9",
+      "series": {"logo": "none", "why": "the corpus: avoid small logos and lower-right text on YouTube thumbnails"}
+    },
+    "cover_tall": {
+      "shape": "9x16",
+      "series": {"logo": "masthead_in_cover_grid", "why": "a separate cover, never the opening frame; face, headline and brand inside tall_cover_grid"}
+    }
+  }
+}
