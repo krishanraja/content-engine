@@ -589,13 +589,14 @@ export function buildView(i: ViewInputs): WeekView {
   const today = todayNY(i.now)
   const marked = liveByDay(i.picks)
   for (const d of days) {
-    // A series day or a piece that is out needs no press: its post is on the record already. A piece still being made
-    // takes it only once its day has come: nothing can be live before it is made or due.
-    if (d.who === 'done' && d.piece_id) continue
+    // A piece still being made takes it only once its day has come: nothing can be live before it is made or due. A
+    // piece that is out needs no press (its post is on the record already); an off-day option approved for the day, on
+    // any day, has its own.
     if (d.who !== 'growth' && d.who !== 'done' && d.date > today) continue
-    const subjects: Array<{ piece_id?: string; option?: string; title: string }> = d.piece_id
-      ? [{ piece_id: d.piece_id, title: d.title }]
-      : d.options.filter(o => o.status === 'approved' && o.doc_id.startsWith(`off-${d.day}-`)).map(o => ({ option: o.doc_id, title: o.title }))
+    const subjects: Array<{ piece_id?: string; option?: string; title: string }> = [
+      ...(d.piece_id && d.who !== 'done' ? [{ piece_id: d.piece_id, title: d.title }] : []),
+      ...d.options.filter(o => o.status === 'approved' && o.doc_id.startsWith(`off-${d.day}-`)).map(o => ({ option: o.doc_id, title: o.title })),
+    ]
     const open = subjects.filter(sub => !postsFor(marked[d.day], sub).length)
     if (!open.length) continue
     const presses = open.map(sub => livePress(d.day, sub, open.length > 1 || d.who === 'done' ? `It's live: ${sub.title}` : "It's live"))

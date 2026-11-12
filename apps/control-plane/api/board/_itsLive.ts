@@ -44,9 +44,10 @@ export interface LivePost {
 }
 export interface LiveInput { day: PostedDay; piece_id?: string; option?: string; channels: PostedChannel[]; url: string; note?: string; at?: string }
 
-/** The channels a day's piece can go out on: a series day's boxes, or an off day's (a short cut or a still). */
-export function liveChannels(day: PostedDay): PostedChannel[] {
-  return [...(SERIES_DAYS.includes(day) ? SERIES_DAY_CHANNELS : OFF_DAY_CHANNELS)]
+/** The channels a post can go out on: a series day's piece has the series boxes; an off-day option, on any day, and a
+ *  piece on an off day have the off-day boxes (a short cut or a still, never the article). */
+export function liveChannels(day: PostedDay, offday = !SERIES_DAYS.includes(day)): PostedChannel[] {
+  return [...(offday ? OFF_DAY_CHANNELS : SERIES_DAY_CHANNELS)]
 }
 
 /** The channel a post's address belongs to, when its host says so; null when it does not. Never a guess from words. */
@@ -80,11 +81,11 @@ export function liveInput(body: unknown): { input?: LiveInput; problem?: string 
   const option = typeof body.option === 'string' && OFFDAY_ID.test(body.option) && body.option.startsWith(`off-${day}-`) ? body.option : undefined
   if (Boolean(piece) === Boolean(option)) return { problem: 'name the day\'s piece (piece_id) or one of its off-day options (option), one of the two' }
   if (!Array.isArray(body.channels) || !body.channels.length || body.channels.length > 12) return { problem: 'channels lists where it went out, one or more' }
-  const allowedHere = liveChannels(day)
+  const allowedHere = liveChannels(day, Boolean(option) || !SERIES_DAYS.includes(day))
   const channels: PostedChannel[] = []
   for (const c of body.channels) {
     if (typeof c !== 'string' || !Object.hasOwn(POSTED_CHANNELS, c)) return { problem: `channels are some of ${allowedHere.join(', ')}` }
-    if (!allowedHere.includes(c as PostedChannel)) return { problem: `${c} is not a channel ${SERIES_DAYS.includes(day) ? 'a series day' : 'an off day'} posts to` }
+    if (!allowedHere.includes(c as PostedChannel)) return { problem: `${c} is not a channel ${option || !SERIES_DAYS.includes(day) ? 'an off-day post' : 'a series piece'} goes out on` }
     if (!channels.includes(c as PostedChannel)) channels.push(c as PostedChannel)
   }
   if (typeof body.url !== 'string' || body.url.length > 2048 || !/^https:\/\/[^\s]+$/.test(body.url.trim())) return { problem: 'url is the live post, https' }
@@ -142,7 +143,7 @@ export function todayNY(now: Date): string {
 /** The "It's live" press for one subject on a day (contract 1.7.0): POST /api/board/<Monday>/live. The board asks for
  *  the post's link (words) and the channels it went to (choose, several, the link's own channel ticked for him). */
 export function livePress(day: PostedDay, subject: { piece_id?: string | null; option?: string | null; title?: string | null }, label = "It's live"): PressAction {
-  const channels = liveChannels(day)
+  const channels = liveChannels(day, Boolean(subject.option) || !SERIES_DAYS.includes(day))
   return {
     kind: 'press', label, op: LIVE_OP,
     body: { day, ...(subject.piece_id ? { piece_id: subject.piece_id } : { option: subject.option }), ...(subject.title ? { title: subject.title.slice(0, 300) } : {}) },

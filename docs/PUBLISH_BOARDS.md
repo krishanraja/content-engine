@@ -223,7 +223,8 @@ any other channel it went out on.
   is on the piece); a series day once he marks its essay live on Substack (the watcher's match follows). The day's line
   says where and when ("Live on Instagram, LinkedIn. You marked it live, Tue 10 Nov, 12:30"), and `posted` lists each
   channel with `by: you` beside Growth's ticks (`by: growth`, with their links: where Growth recorded a post, no press is
-  needed). Another approved option on a day that is out keeps its own It's live, never leading.
+  needed). Another approved option on a day that is out keeps its own It's live, never leading, and an off-day option
+  approved for a series day has its own, with the off-day channels.
 - **The count**: the view's `north_star.current` is live (`publishedNow`): the pieces of the publication's series with
   `published_at` in the last seven days (the North Star reader's own rule) plus each post he marked live in that window
   that the rule cannot see yet (an off-day post, or a piece the watcher has not matched), each subject once.
@@ -262,8 +263,8 @@ neither approved nor rejected:
 - **An off-day option approved onto another board** is drawn on its new day from the words his Approve bound
   (`offdayList`), so the approval covers it and Growth's read hands it over.
 
-Measured on 12 November 2026 from the live records: 72 ideas on five boards; 20 approved, 13 rejected, 9 unanswered on
-next week's slate, and 30 for later: 9 filed, 7 trends, 4 to improve, 4 answered on the first board, 6 never answered.
+Measured on 12 November 2026 from the live records: 73 ideas on five boards; 20 approved, 13 rejected, 9 unanswered on
+next week's slate, and 31 for later: 9 filed, 7 trends, 4 to improve, 4 answered on the first board, 7 never answered.
 Held by `tests/control-plane/board-later.test.ts`.
 
 ## The style choices (contract 1.4.0)
