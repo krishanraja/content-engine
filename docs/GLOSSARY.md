@@ -199,6 +199,8 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 - **Docs steward.** A job defined in ai-harness and called by
   `.github/workflows/docs-steward.yml` on every push to `main` and nightly at
   20:30 UTC. It keeps `NOW.md` and `docs/history/LOG.md` current and moves
-  superseded documents into `docs/history/`.
+  superseded documents into `docs/history/`. A merge by auto-merge starts no
+  push run, so auto-merge starts it as a dry run (the validator, no model);
+  only the nightly run writes.
 - **The walk.** The first end-to-end live run of pieces through the engine,
   logged in `docs/walks/2026-09-three-piece-walk.md`.
