@@ -55,7 +55,7 @@ describe("It's live: the press", () => {
     expect(liveInput({ ...ok, piece_id: MON }).problem).toMatch(/one of the two/)
     expect(liveInput({ ...ok, option: undefined }).problem).toMatch(/one of the two/)
     expect(liveInput({ ...ok, option: 'off-thu-shell' }).problem).toMatch(/one of the two/)
-    expect(liveInput({ ...ok, channels: ['substack'] }).problem).toMatch(/not a channel an off day posts to/)
+    expect(liveInput({ ...ok, channels: ['substack'] }).problem).toMatch(/not a channel an off-day post goes out on/)
     expect(liveInput({ ...ok, channels: [] }).problem).toMatch(/channels/)
     expect(liveInput({ ...ok, url: 'http://insecure.example/x' }).problem).toMatch(/https/)
     expect(liveInput({ ...ok, send: true }).problem).toMatch(/unknown fields/)
@@ -217,6 +217,22 @@ describe("It's live on the board", () => {
     const v = buildView(week({ now: new Date('2026-11-13T20:00:00Z'), pieces: [week().pieces[0], fri], picks: [liveDoc('fri', [post])] }))
     expect(day(v, 'fri')).toMatchObject({ who: 'done', stop: 4, next: 'Live on Substack, YouTube Shorts. You marked it live, Fri 13 Nov, 12:30' })
     expect(day(v, 'fri').path?.stages.every(s => s.state === 'done')).toBe(true)
+  })
+
+  it('gives an off-day option approved for a series day its own It\'s live, with the off-day channels', () => {
+    const meme = opt('meme')
+    const v = buildView(week({ queue: [approved(shell), approved(homework), { ...approved(meme), doc_id: 'off-mon-meme', body: { ...approved(meme).body, pick: 'off-mon-meme', day: 'mon' } }],
+      ideas: { offdays: { tue: [shell, homework], mon: [meme] } },
+      approvals: [approval(WEEK, 'mon', MON), approval(WEEK, 'fri', FRI), approval(WEEK, 'tue', 'shell'), approval(WEEK, 'tue', 'homework'),
+        { ...approval(WEEK, 'mon', 'meme'), via: 'offday', doc: 'queue/off-mon-meme', option_ref: 'off-mon-meme' }] }))
+    const mon = day(v, 'mon')
+    expect(mon.who).toBe('done')
+    const live = mon.actions.filter(isLive)
+    expect(live.map(a => a.label)).toEqual(["It's live: Hook meme."])
+    expect(live[0].body).toMatchObject({ day: 'mon', option: 'off-mon-meme' })
+    expect(live[0].choose!.options.map(o => o.value)).toContain('instagram')
+    expect(liveInput({ day: 'mon', option: 'off-mon-meme', channels: ['instagram'], url: 'https://www.instagram.com/p/a/' }).input).toBeTruthy()
+    expect(liveInput({ day: 'mon', piece_id: MON, channels: ['instagram'], url: 'https://www.instagram.com/p/a/' }).problem).toMatch(/series piece/)
   })
 
   it('says what is out today by the day in New York', () => {

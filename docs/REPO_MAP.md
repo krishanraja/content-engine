@@ -2214,6 +2214,44 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `function boardPolicy(storeUrl?: string)`
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
 
+### `apps/control-plane/api/board/_itsLive.ts`
+
+- `const LIVE_OP`
+- `const LIVE_ACTOR`
+- `const MAX_LIVE_POSTS`
+- `interface LivePost`
+- `interface LiveInput`
+- `function liveChannels(day: PostedDay, offday = !SERIES_DAYS.includes(day)): PostedChannel[]`
+- `function channelOfUrl(url: string): PostedChannel | null`
+- `function liveInput(body: unknown): { input?: LiveInput; problem?: string }`
+- `function liveByDay(picks: Array<{ doc_id: string; body: Body; updated_by: string }>): Partial<Record<PostedDay, LivePos…`
+- `function postsFor(posts: LivePost[] | undefined, subject: { piece_id?: string | null; option?: string | null }): LivePo…`
+- `function channelWords(posts: LivePost[]): string`
+- `function liveWhen(at: string): string`
+- `function liveLine(posts: LivePost[]): string`
+- `function todayNY(now: Date): string`
+- `function livePress(day: PostedDay, subject: { piece_id?: string | null; option?: string | null; title?: string | null }…`
+- `interface LiveResult`
+- `async function recordLive(db: SupabaseClient, week: string, raw: unknown, who: string, now: string): Promise<LiveResult>`
+- `const PUBLICATION_SERIES`
+- `async function publishedNow(db: SupabaseClient, now: Date): Promise<number | null>`
+
+### `apps/control-plane/api/board/_later.ts`
+
+- `const FIRST_IDEAS_WEEK`
+- `type LaterGroup = 'filed' | 'trend' | 'improved' | 'older' | 'never'`
+- `const LATER_GROUPS: ReadonlyArray<{ id: LaterGroup; label: string; line: string }>`
+- `interface Answer`
+- `interface LaterItem`
+- `interface LaterView`
+- `interface LaterInputs`
+- `function boardOptions(boards: LaterInputs['boards'], pieces: Body[] = []): Shown[]`
+- `function answersFor(s: Shown, i: LaterInputs): Answer[]`
+- `function buildLater(i: LaterInputs): LaterView`
+- `function freeDay(i: LaterInputs, day: string, kind: 'series' | 'offday', today: string): string | null`
+- `function laterPresses(i: LaterInputs, s: Shown, today: string): { actions: PressAction[]; held: string | null }`
+- `async function readLater(db: SupabaseClient, fetcher: Fetcher = fetch as unknown as Fetcher, now = new Date()): Promise…`
+
 ### `apps/control-plane/api/board/_live.ts`
 
 - `interface LiveStep`
