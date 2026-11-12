@@ -164,3 +164,12 @@ describe('the guard over the week plans', () => {
     expect(duplicatePosts({ [W09]: { offdays: { thu: [gitbroke] } }, [W16]: { offdays: { tue: [gitbroke] } } })).toEqual([])
   })
 })
+
+describe('a settled option leaves its day', () => {
+  it('draws Tue 17\'s auditrule nowhere once a re-plan closed it into Thu 12, unless a press of his stands on it', () => {
+    const auditrule = { id: 'auditrule', hook: "Your AI thinks it's the best. Guess who told it.", copy: 'Six cards.', closed: 'Moved to Thu 12 Nov and filed there.' }
+    expect(dayOptions({ offdays: { tue: [auditrule] } }, [], W16, 'tue', undefined, []).map(x => x.o.id)).toEqual([])
+    const his = row({ item: `engine:${W16}:auditrule`, option_id: 'auditrule', option: auditrule, doc: 'queue/off-tue-auditrule' })
+    expect(dayOptions({ offdays: { tue: [auditrule] } }, [his], W16, 'tue', undefined, [his]).map(x => x.o.id)).toEqual(['auditrule'])
+  })
+})

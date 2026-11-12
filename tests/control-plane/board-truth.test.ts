@@ -21,7 +21,9 @@ describe('where everything is', () => {
       try { plans[dir.slice(0, 10)] = JSON.parse(readFileSync(new URL(`${dir}/ideas.json`, PLANS), 'utf8')) } catch { /* a week with no ideas.json */ }
     }
     expect(Object.keys(plans).length).toBeGreaterThan(3)
-    expect(duplicatePosts(plans)).toEqual([])
+    // A post written again under a new id on another day: the copy names the item it carries ("item": "<key>") and
+    // the original is closed, or the session moves nothing and Krish's Move to does (docs/PUBLISH_BOARDS.md, "One post, one item").
+    expect(duplicatePosts(plans), 'one post under two ids: on the copy, name the item it carries with "item": "<its key>"').toEqual([])
   })
 
   it('refuses a day with no stage, an unknown stage, a past day with Growth, and a past day that does not say it was missed', () => {
