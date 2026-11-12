@@ -1,4 +1,0 @@
-Status: Wednesday 11 Nov's Jensen Huang meme ("Table for two", on black) is an off-day option on Wednesday in docs/plans/2026-11-09-week/ideas.json, and Thursday 12 Nov's agent meme points at its black version. Both are held, and each carries its own "Approve for <day>" press on its day of the Publish Board, also on a finished publishing day: a publishing day can now hold off-day posts beside its piece (one or more), and a held option's Approve sits in the day's actions rather than only inside the option list.
-Next: Krish presses Approve on Wednesday 11 and Thursday 12 on the Publish Board; Growth swaps the black versions into any post already scheduled.
-Changed: apps/control-plane/api/board/_view.ts, scripts/post-pack/week_board.py (a publishing day takes 1 to 6 off-day options), docs/plans/2026-11-09-week/ideas.json, tests/control-plane/board-view-contract.test.ts
-North Star check (2026-11-12): holds.
