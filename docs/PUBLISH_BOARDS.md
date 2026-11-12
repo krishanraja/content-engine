@@ -690,7 +690,8 @@ the 9th of November board as well."). Drawn by `week_board.py` with `scripts/pos
 - A day carried over as the board held it (`--keep`, `--keep-draft`, `--carry`) takes v4's steps on the rebuild, its
   gates moved to Creative and its Scores press to Scored, nothing else changed (`upgrade_kept_v4`).
 
-**Rebuilding a live board from a cloud session.** The engine API answers 401 without the operator key, so a board is
+**Rebuilding a live board from a cloud session** (retired on 11 November 2026: the workflow now stops at its first
+step, since nothing builds a page). The engine API answers 401 without the operator key, so a board was
 rebuilt by `.github/workflows/board-rebuild.yml` (by hand only, no schedule, no Claude): it downloads the live board,
 rebuilds it from a committed recipe (`docs/plans/<Monday>-week/board-build.json`: `week_board.py`'s own flags through
 `--recipe`, never a script), verifies it, saves phone screenshots as the run's artifact (`board_shots.py`) and checks the

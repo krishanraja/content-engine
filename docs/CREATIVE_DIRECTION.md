@@ -24,7 +24,7 @@ before he recorded (`docs/plans/2026-10-23-friday/creative-direction.md`). This 
 | His sign-off | Krish | He signs the storyboard in his own words. The words go into `signed` with the hash of each script (`creative_direction.py hash`). His signature accepts Claude's lead-picture pick unless he ticks the other (`production_choices.lead_picture.ticked`); no storyboard waits on a tick. Then `making.py <piece> choices creative-direction.json` records the choices under test on the piece; if he has a cut open another way, `--opening` records what it used, so the making record stays the one home for these choices. |
 | Production | Claude, with Codex for named plates | On ve, Claude runs `python scripts/ve.py` from the signed spec (`docs/ve/RUNBOOK.md`), and Codex only builds the plates and library devices its cards name; it never edits a cut. On the quick-edit fallback, `produce-video` renders exactly the signed direction. Neither invents a visual, a caption, a figure or a style. A gap goes back to Claude. |
 | Review | A reviewer who did not make the cut | Watches every cut at full size and listens across every join, against `acceptance`. Reports fact, transport and editorial status separately. |
-| The board | Claude | The day's Publish step through `week_board.py`'s own inputs. |
+| The board | Claude | The day's Publish step through the piece's record, which the live board reads (`docs/PUBLISH_BOARDS.md`). |
 
 ## The file
 

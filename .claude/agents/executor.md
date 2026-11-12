@@ -1,6 +1,6 @@
 ---
 name: executor
-description: Separate reader for scoped, mechanical work held by deterministic checks. Use for edits whose shape is already decided, test and typecheck runs, renders, packs, filing and board rebuilds (cost rule 5, Sonnet for production work). Not for drafting, judging, fact reading or any choice of taste.
+description: Separate reader for scoped, mechanical work held by deterministic checks. Use for edits whose shape is already decided, test and typecheck runs, renders, packs, filing and feeding the live board (docs/PUBLISH_BOARDS.md; never a board page) (cost rule 5, Sonnet for production work). Not for drafting, judging, fact reading or any choice of taste.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---

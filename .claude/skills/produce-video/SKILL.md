@@ -258,11 +258,9 @@ storyboard for the cut's exact words, or the cut is held; the words gate
 (`scripts/quick-edit/words_gate.py`), blocking, so a cut that lost a content
 word, or a checkout without the gate, files nothing; every other check an
 advisory row until calibrated; and every gate below still holding. It
-builds no publish board: it records each cut, each held cut with its
-reason, and its report for the Monday board, which code builds
-(`week_board.py`) when the overnight production finishes, never Claude on a
-timer (Krish, 2026-10-29: "I want zero Claude routines"); until that code
-runs, by the first session on Monday.
+builds no publish board: it records each cut and each held cut with its
+reason on the piece, which the live board shows, never Claude on a timer
+(Krish, 2026-10-29: "I want zero Claude routines").
 No one is in its chat.
 
 ## 1. Preflight: which tool, which machine

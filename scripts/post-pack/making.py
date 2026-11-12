@@ -8,8 +8,8 @@ compiler, and ideas generator"; the work happens in Claude Code; "it's crucial
 that everything is fresh and synchronised in real time".
 
     python making.py PIECE_ID show
-    python making.py PIECE_ID workroom https://claude.ai/artifact/...
-    python making.py PIECE_ID publish-manager https://content.krishraja.com/board/YYYY-MM-DD
+    python making.py PIECE_ID workroom "$(python3 live_board.py YYYY-MM-DD DAY)"          # the live board's day
+    python making.py PIECE_ID publish-manager "$(python3 live_board.py YYYY-MM-DD DAY)"   # the live board's day
     python making.py PIECE_ID visual-gate post.json          # runs the gate, records pass or fail
     python making.py PIECE_ID scripts long.md short.md       # story_check on each, by position, with the
                                                              # piece's series, and each script's sha256; records
