@@ -182,7 +182,9 @@ Every off-day approval that stood on 12 November was given its row once. An item
 `<engine|growth>:<the week it was first offered>:<option id>`.
 
 **Move to… on every off-day item**, approved or not, made or not, live or not yet live, on every day of the board and in
-his Ideas for Later (`options[].move`, contract 1.9.0, `_offdayItems.ts` `moveSpec`): every day from today through
+his Ideas for Later (`options[].move`, contract 1.9.0, `_offdayItems.ts` `moveSpec`; each off-day idea for later in
+`GET /api/board/later` carries the same `move`, by its row when he sent it back to later, and an idea his move put on a
+day leaves that list): every day from today through
 the next four weeks, never a past day and never a Sunday (Sunday is a rest day), its current day marked; a series day
 is a day like any other (Krish, 2026-11-12: a publishing day can carry off-day posts), and a day may hold several.
 "Back to Ideas for Later" takes it off its day. Two limits, each said on the picker: a week's good news stays in its own

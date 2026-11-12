@@ -2361,6 +2361,7 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `const dayKeyOf = (d: string) =>`
 - `function itemOf(r: unknown): OffdayItem | null`
 - `async function readItems(db: SupabaseClient, week: string): Promise<OffdayItem[] | null>`
+- `async function readItemsIn(db: SupabaseClient, states: ItemState[]): Promise<OffdayItem[] | null>`
 - `interface Placed`
 - `function contentOf(r: OffdayItem, ideas: Body | null, week: string): Body`
 - `function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string, base?: Body[…`
