@@ -66,6 +66,11 @@ const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 
 export type Sender = (input: SendApprovedInput) => Promise<SendResult>
 export interface PressDeps { send?: Sender; now?: () => string; revise?: typeof import('./_offdayRevise.js').dispatchOffdayRevise
+  /** A move's followers (_offdayItems.ts): the post folders' renamer in Drive, and the research library's index. */
+  renamer?: () => import('./_offdayItems.js').DriveRenamer | null
+  library?: (db: SupabaseClient) => import('./_offdayItems.js').LibraryFollower | null
+  /** A week's ideas.json (_view.ts readWeekIdeas); a test passes its own. */
+  ideas?: (week: string) => Promise<Record<string, unknown> | null>
   /** The board's Drive (_drivePosts.ts boardDrive): the media route's copy of a cut the library lacks, and the drive route. */
   drive?: (db: SupabaseClient) => import('./_drivePosts.js').BoardDrive }
 type Body = Record<string, unknown>
@@ -707,8 +712,13 @@ export async function afterPress(db: SupabaseClient, ctx: { week: string; collec
   // hands them over), so it starts no run. A run revises only sides whose hash is still current
   // (scripts/post-pack/offday_pending.py), so a repeated ask never revises a side twice.
   if (collection === 'queue' && body.use === 'offday' && (['idea', 'direction', 'mock'].some(k => k in body) || isObj(body.note))) {
+    // His Approve on the option puts its row on this day (_offdayItems.ts syncApprove): an Approve and a Move write the
+    // one place an off-day item's day lives the same way.
+    const item = who === 'Krish' && isObj(body.idea) && body.idea.verdict === 'approve'
+      ? await (await import('./_offdayItems.js')).syncApprove(db, week, id, body, deps.ideas ?? (async w => (await import('./_view.js')).readWeekIdeas(w))).catch(() => 'failed' as const)
+      : null
     const rows = offdayReports(week, id, body, now)
-    if (!rows.length) return null
+    if (!rows.length) return item ? { ...saved, item } : null
     const taste: Record<string, string> = {}
     const revise: Record<string, ReviseDispatch | { sent: false; reason: 'already_asked' }> = {}
     for (const row of rows) {

@@ -55,6 +55,24 @@ posts only.
   and Reject words go to his taste ledger and come back on Sunday as
   `offday_verdicts`. A piece he records himself keeps its own Approve on its
   exact words.
+- **Which day an off-day post is on lives in one place** (Ruling, Krish,
+  2026-11-12: any off-day post or idea moves to any day at his press, and the
+  move updates every place that names its day; `docs/PUBLISH_BOARDS.md`,
+  "Moving an off-day item to any day"). The engine's `offday_items` holds it.
+  Growth reads each approved option on the day it is on now from `GET
+  /api/board/<Monday>/pieces` (`offdays`: `day`, `date`, `item`, `version`,
+  `moved_from`) and binds it to that day, never the day it first planned.
+  Growth hands its own options over through the engine, not a file the board
+  merges: `POST /api/board/<Monday>/offdays` with the `growth-offdays/1` file
+  `growth.py mix offdays` writes (or `growth-offdays/2`), on
+  `GROWTH_WRITEBACK_TOKEN`; each shows on the live board offered, with Move to…
+  and Approve like every other option, and only his press approves it. `GET
+  /api/board/<Monday>/offdays` gives back where every item is. When he moves a
+  post Growth already scheduled on a platform, Growth moves it only through its
+  own approved posting route, and reports what is still scheduled for each item
+  with `POST /api/board/<Monday>/scheduled` (`{posts: [{option, channel,
+  due_at, buffer_post_id, state}]}`); until it reports the post moved, the
+  board says "Still scheduled for Tue 17 on Instagram: move it there too".
 
 The sections below still hold for anything Growth asks content-engine to
 make. Where they say content-engine renders a carousel, this ruling comes

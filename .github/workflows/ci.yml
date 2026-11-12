@@ -62,6 +62,10 @@ jobs:
         # Five hand-run sweeps overlapped on 11 Nov 2026 and copied the same research again; every writer of the library
         # now holds one lease. Uses the PGlite installed by the step above.
         run: node tests/engine-leases-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+      - name: The one place an off-day item's day lives, on the real migration (only his press moves it)
+        # Ruling (Krish, 2026-11-12): any off-day post or idea moves to any day at his press, and the move updates every
+        # place that names its day. No day without his press, a move whole or not at all, Growth never over his row.
+        run: node tests/offday-items-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
 
   control-plane-sql:
     # The Video Studio control plane's projection CAS, ancestry and race

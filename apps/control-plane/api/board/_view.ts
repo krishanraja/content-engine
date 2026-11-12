@@ -18,6 +18,7 @@ import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
 import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
+import { dayOptions, readItems, type OffdayItem } from './_offdayItems.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
 // pieces' making records, his presses on the board, the week's plan files on main and the runs on GitHub. Nothing is a
@@ -243,6 +244,10 @@ export interface ViewInputs {
   drive_posts?: DrivePost[] | null
   /** Each piece's draft manifest, by piece id (_manifest.ts readDrafts); left out, no day carries one. */
   drafts?: Record<string, Draft>
+  /** Contract 1.9.0: the one place an off-day item's day lives (offday_items, _offdayItems.ts): every item on a day of
+   *  the week or offered by its plan, or null when it could not be read (the plan's options then show as they are,
+   *  and nothing offers a move). Left out, the plan only. */
+  items?: OffdayItem[] | null
 }
 
 /** The day's post folders, each bound to the option whose `drive` names it and to the piece whose making record files
@@ -437,7 +442,9 @@ function nameOf(i: ViewInputs, id: string): string { return formatOf(i, id)?.nam
 /** One off day (Tue, Thu, Sat): the options in the week's ideas.json and his verdicts on them. */
 function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore {
   const week = i.week, date = dayDate(week, day)
-  const options = offdayList(i.ideas, i.queue, day)
+  // The day's options from the one place their day lives (_offdayItems.ts): the plan's and the approvals carried here
+  // (offdayList), minus what moved away, plus what moved here and Growth's own.
+  const options = dayOptions(i.ideas, i.items ?? null, week, day, offdayList(i.ideas, i.queue, day)).map(x => x.o)
   const verdict = (o: Body) => i.queue.find(q => q.doc_id === `off-${day}-${String(o.id)}` && q.updated_by === 'Krish')?.body
   const sideVerdict = (b: Body | undefined, side: string) => (isObj(b) && isObj(b[side]) ? String((b[side] as Body).verdict || '') : '')
   // An option is chosen once his Approve on it stands (the ideas gate, _gate.ts): words a session wrote as decided in
@@ -673,7 +680,8 @@ export function buildView(i: ViewInputs): WeekView {
   for (const r of Object.values(i.runs)) if (r) moved.push({ at: r.updated_at, text: `${r.workflow}: ${r.state}` })
   moved.sort((a, b) => b.at.localeCompare(a.at))
   return { contract_version: VIEW_CONTRACT_VERSION, week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
-    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay), approvals: Array.isArray(i.approvals), drive: Array.isArray(i.drive_posts) },
+    sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay), approvals: Array.isArray(i.approvals), drive: Array.isArray(i.drive_posts),
+      items: Array.isArray(i.items) },
     revision: i.revision ?? null }
 }
 
@@ -763,8 +771,9 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   const overlay = await readOverlay(db as never, week, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
   // Each piece's draft manifest (1.8.0), whose sha256 his Approve for publish binds.
   const drafts = await readDrafts(db, (pieces as Body[]).filter(p => SERIES_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
-  // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held.
-  const approvals = await readApprovals(db, week)
+  // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held. Beside
+  // them, the one place every off-day item's day lives (offday_items).
+  const [approvals, items] = await Promise.all([readApprovals(db, week), readItems(db, week)])
   let formats: ViewInputs['formats'] = { script: [], production: [] }
   let motion: MotionModule[] = []
   try {
@@ -795,5 +804,14 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
     specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
-    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts) })
+    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items })
+}
+
+/** A week's ideas.json as the view reads it: the week's offday-revise branch first, then main, each at the commit it
+ *  points at now when the board's token can ask. Null when neither has it. */
+export async function readWeekIdeas(week: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as Fetcher): Promise<Body | null> {
+  const [mainSha, weekSha] = await Promise.all([branchSha(fetcher, env, 'main'), branchSha(fetcher, env, `offday-revise/${week}`)])
+  const branch = weekSha === null ? null : await fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/${weekSha || `offday-revise/${week}`}/docs/plans/${week}-week/ideas.json`)
+  const text = branch ?? await fetchText(fetcher, `https://raw.githubusercontent.com/${ENGINE_REPO}/${mainSha || 'main'}/docs/plans/${week}-week/ideas.json`)
+  try { const v = text ? JSON.parse(text) : null; return isObj(v) ? v : null } catch { return null }
 }

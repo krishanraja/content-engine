@@ -4,6 +4,7 @@ import { yesByDay } from './_yes.js'
 import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, approvedLabel, dayShort, dayWords, goes, optionSha, type Approval, type Outcome } from './_gate.js'
 import { channelOfUrl, type LivePost } from './_itsLive.js'
 import { driveFolderIdOf } from './_drivePosts.js'
+import { dayOptions, elsewhereLines, moveSpec, type MoveSpec, type OffdayItem } from './_offdayItems.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
 // Control Centre; the old board is a read-only archive). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
@@ -82,6 +83,14 @@ export interface ViewOption {
   /** Contract 1.7.0: the Drive folder of the post made for it (the week's plan, `drive`), whose assets the day's
    *  `posts` lists; null when nothing is filed for it yet. An off-day option only. */
   post?: string | null
+  /** Contract 1.9.0: an off-day option's item in the one place its day lives (offday_items, _offdayItems.ts): its key,
+   *  the version a move names, where it came from (the engine's plan or Growth) and where it stands. */
+  item?: { key: string; version: number; source: 'engine' | 'growth'; state: string; origin_week: string }
+  /** Contract 1.9.0: "Move to…", the days it may go to and whether it may go back to his Ideas for Later; null when
+   *  the one place could not be read (nothing moves on a guess). */
+  move?: MoveSpec | null
+  /** Contract 1.9.0: a post Growth scheduled on a platform for a day it is no longer on, said plainly. */
+  elsewhere?: string[]
 }
 export interface ViewPiece {
   id: string; title: string; series: string; state: string; published: boolean; on_day: boolean
@@ -103,6 +112,10 @@ export interface ExtrasInputs {
   ticks?: Array<{ tick_id: string; body: Body; updated_by: string }>
   /** The approvals that stand now (board_approvals_now), or null when they cannot be read: then nothing is approved. */
   approvals: Approval[] | null
+  /** The one place an off-day item's day lives (offday_items), or null when it cannot be read; left out, the plan only. */
+  items?: OffdayItem[] | null
+  /** When the view is read: a move offers today through the next four weeks. */
+  now?: Date
 }
 
 const his = <T extends { updated_by: string }>(rows: T[]) => rows.filter(r => r.updated_by === 'Krish')
@@ -314,8 +327,11 @@ export function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day
  *  publish board for its day; Growth makes it. An option a session wrote as decided is held until he presses: his words
  *  in a session are shown, never read as his press (Krish, 2026-11-11: only his Approved crosses). */
 export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
-  const list = offdayList(i.ideas, i.queue, day)
-  return list.map(o => {
+  // The day's options from the one place their day lives (_offdayItems.ts): the plan's and the approvals carried here
+  // (offdayList), minus what moved away, plus what moved here and Growth's own.
+  const list = dayOptions(i.ideas, i.items === undefined ? null : i.items, i.week, day, offdayList(i.ideas, i.queue, day))
+  const known = i.items !== undefined && i.items !== null
+  return list.map(({ o, placed }) => {
     const s = offdaySides(o)
     const docId = `off-${day}-${s.id}`
     const row = his(i.queue).find(q => q.doc_id === docId)
@@ -377,6 +393,12 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof (idea as Body | null)?.at === 'string' ? String((idea as Body).at) : null, words: typeof idea?.words === 'string' ? idea.words : null } : null
     const out: ViewOption = { id: s.id, doc_id: docId, title: s.hook || cut(s.copy, 200) || s.id, text: cut(pitch || s.copy, 600), format: s.format || null,
       source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}), post: driveFolderIdOf(o.drive) }
+    if (known) {
+      out.item = { key: placed.key, version: placed.version, source: placed.source, state: placed.state, origin_week: placed.origin_week }
+      out.move = moveSpec(placed, o, i.week, day, i.now ?? new Date())
+      const away = elsewhereLines(placed.row, i.now ?? new Date())
+      if (away.length) out.elsewhere = away
+    }
     if (o.weekly) {
       const stories = Array.isArray(o.stories) ? o.stories.filter(isObj) : []
       out.stories = stories.slice(0, 8).map(st => {
