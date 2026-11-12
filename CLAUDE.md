@@ -25,6 +25,7 @@ reading it whole. It is about 270 KB (some 65k tokens).
 | Ideas, judging, drafting, rewriting, channel copy, the ledger | `docs/CONTENT_ENGINE.md` |
 | Video | `docs/ve/ENGINE.md`, then `docs/ve/RUNBOOK.md` (`docs/ve/STATUS.md` says what ve can do today) |
 | The week's publish board | `docs/PUBLISH_BOARDS.md` |
+| Any intro, outro, icon, wordmark, sting or end card, on any day or format | `docs/production/BRAND_PALETTE.md` (the rules are `config/brand-palette.json` only) |
 | The carousel standard (Growth makes the carousels) | `docs/CAROUSEL-STANDARD.md` |
 | The Studio runner or the renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
 | What works, what is broken, what waits on Krish | `NOW.md`, `docs/STATE.md` |
