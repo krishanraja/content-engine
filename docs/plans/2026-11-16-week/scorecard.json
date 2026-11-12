@@ -3,7 +3,7 @@
  "counts": {
   "options_main": 12,
   "options_off": 8,
-  "pressed_share": 0.8,
+  "pressed_share": 0.75,
   "picks": 3,
   "picks_as_written": 1,
   "rank1_picked": 0,
@@ -212,6 +212,5 @@
  },
  "refused_subject_refs": [
   "mon-1"
- ],
- "made_by": "board_feed.scorecard_from on read-only reads of idea_outcomes, board_history, content_ideas and feedback_cues, 2026-11-11"
+ ]
 }
