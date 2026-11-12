@@ -46,6 +46,11 @@ describe('a post\'s assets', () => {
     expect(git[0]!.slides!.map(s => s.id)).toEqual([1, 2, 3, 4, 5].map(n => id(`n${n}`)))
     expect(git[0]!.versions).toHaveLength(5)
     expect(git[0]!.id).toBe(id('n1'))
+    // A card marked superseded is an older version of its slide, never a carousel of its own (Thu 12 Nov's git post).
+    const kept = assetsOf([1, 2, 3, 4, 5].map(n => ({ folder: '4 Social', file: f(id(`g${n}`), `git-card-${n}.png`, 'image/png', '2026-11-11T07:00:00Z') }))
+      .concat([{ folder: '4 Social', file: f(id('old5'), 'SUPERSEDED_git-card-5-v1.png', 'image/png', '2026-11-10T07:00:00Z') }]))
+    expect(kept.map(a => [a.kind, a.slides!.length, a.versions.map(v => v.title)])).toEqual([['carousel', 5, ['SUPERSEDED_git-card-5-v1.png']]])
+    expect(versionKey('SUPERSEDED_fri13-cover-9x16-neon.png')).toBe(versionKey('fri13-cover-9x16-neon-v2.png'))
   })
 
   it('keeps a series post\'s files apart: the wide and the tall cut, each thumbnail, each cover, and skips pages and scripts', () => {
