@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-11
+as_of: 2026-11-12
 head: 90e1b12
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,10 +30,11 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-11)
+## Where it is right now (as of 2026-11-12)
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- done. The live board's address drops ?ui=next now that Control Centre's rebuilt UI is its default (Ruling, Krish, 2026-11-12): https://controlcenter.krishraja.com/#/content, with ?week=<Monday>&day=<mon..sat> as before. config/boards.json live_board.url, apps/control-plane/api/board/_liveBoard.ts and the rebuilt archive page (_deskPage.ts) carry it; scripts/post-pack/live_board.py reads it from boards.json; WORKBENCH.md's week links and docs/PUBLISH_BOARDS.md follow. (2026-11-12)
 - done. Full verify's board-web job was red on main for three stale test expectations and one bug. The runtime test pressed a pick on the engine's key, which the ideas gate refuses (pick_is_his): it now expects that refusal and presses as Krish. The archive tests still pressed on the old board, which is read-only since the one live board: they now prove it reads and refuses every press. The sessions test put a piece on Monday with no approval: it now records his Approve first. The bug: the archive's banner and guard were put inside the board's own script, at a "<body>" in one of its strings, so Krish's archive page showed no banner and its script broke; they now go just after the board's head. (2026-11-11)
 - done. The Publish Board view is contract 1.6.0: every cut in a day's media carries his Yes (this cut is right) and Not this (with his words, required), each a press posting to /api/board/<Monday>/cut-verdict, and his latest answer on that file (verdict). Each press is kept append only on the piece in meta.cut_verdicts with the file's sha256 and library path; it never changes, refiles or publishes the cut and is not the Approve cut gate. The handler now reads a POST to /api/board/<Monday>/style as the style press: production rewrites that path to the read-only style view, which had answered every style press from Control Centre with 400 read_only_view. (2026-11-11)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
@@ -46,7 +47,7 @@ Older lines: `docs/history/2026-11-11-NOW-moved-16.md`, `docs/history/2026-11-11
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-11): watch the next Full verify on main and confirm board-web is green (the Windows verify job is a separate failure).
+- Next (2026-11-12): none for the address; an older link with ?ui=next still opens the rebuilt UI.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
@@ -55,7 +56,7 @@ Older lines: `docs/history/2026-11-11-NOW-moved-16.md`, `docs/history/2026-11-11
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-11): holds.
+- North Star check (2026-11-12): holds.
 
 ## Read next
 
