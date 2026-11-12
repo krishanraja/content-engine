@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
 as_of: 2026-11-12
-head: 90e1b12
+head: 3ab533c
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -40,7 +40,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-12 scripts/av_sync.py, tests/av_sync_test.py, scripts/post-pack/making.py, scripts/bed_shape.py, .github/workflows/maxine-trial.yml, config/failures.json (av-sync-drift-converted-take), docs/plans/2026-11-11-wednesday/ve/av-sync-edl-long.json
+- 2026-11-12 Picture against sound became a gate measured from the source take (`scripts/av_sync.py`, PR #568, `0efc5a94`). Wed 11 Nov's long cut drifted because the Maxine prep step converted the 48 fps take to 30 fps with the output option -r, which put his picture 52 to 55 ms behind his voice; the same frames through the fps filter measure 2 to 4 ms. The failure is recorded as `av-sync-drift-converted-take` in `config/failures.json`.
 Older lines: `docs/history/2026-11-12-NOW-moved-2.md`, `docs/history/2026-11-12-NOW-moved-1.md`, `docs/history/2026-11-11-NOW-moved-16.md`, `docs/history/2026-11-11-NOW-moved-15.md`, `docs/history/2026-11-11-NOW-moved-14.md`, `docs/history/2026-11-11-NOW-moved-13.md`, `docs/history/2026-11-11-NOW-moved-12.md`, `docs/history/2026-11-11-NOW-moved-11.md`, `docs/history/2026-11-11-NOW-moved-10.md`, `docs/history/2026-11-11-NOW-moved-9.md`, `docs/history/2026-11-11-NOW-moved-8.md`, `docs/history/2026-11-11-NOW-moved-7.md`, `docs/history/2026-11-11-NOW-moved-6.md`, `docs/history/2026-11-11-NOW-moved-5.md`, `docs/history/2026-11-11-NOW-moved-4.md`, `docs/history/2026-11-11-NOW-moved-3.md`, `docs/history/2026-11-11-NOW-moved-2.md`, `docs/history/2026-11-11-NOW-moved-1.md`, `docs/history/2026-11-10-NOW-moved-8.md`, `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
