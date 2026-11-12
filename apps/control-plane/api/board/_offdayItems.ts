@@ -167,7 +167,23 @@ export function contentOf(r: OffdayItem, ideas: Body | null, week: string): Body
 /** A day's off-day options from the one place: the plan's options for the day that no row moved away, then every row
  *  that sits on the day (moved here, approved here from his Ideas for Later, or one of Growth's), each with where it
  *  is. Rows that cannot be read leave the plan's options as they are, with no move. Pure. */
-export function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string, base?: Body[], all?: OffdayItem[] | null): Array<{ o: Body; placed: Placed }> {
+/** The items a re-plan carries to another option (`"item": "<key>"` on the option that carries it), across the plans the
+ *  view read: the option they were first offered as leaves its day, so one post is drawn once. Pure. */
+export function carriedItems(plans: Record<string, Body | null>): Set<string> {
+  const out = new Set<string>()
+  for (const [week, plan] of Object.entries(plans)) {
+    const offdays = isObj(plan) && isObj(plan.offdays) ? plan.offdays : {}
+    for (const list of Object.values(offdays)) {
+      for (const o of Array.isArray(list) ? list.filter(isObj) : []) {
+        if (typeof o.item === 'string' && ITEM_KEY.test(o.item) && o.item !== itemKey('engine', week, String(o.id))) out.add(o.item)
+      }
+    }
+  }
+  return out
+}
+
+export function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string, base?: Body[], all?: OffdayItem[] | null,
+  carried?: Set<string>): Array<{ o: Body; placed: Placed }> {
   // The day's own list: the plan's options for it, or (from the view) those and his approvals carried onto it from
   // another board (_viewExtras.ts offdayList).
   const list = (base ?? (isObj(ideas) && isObj(ideas.offdays) && Array.isArray(ideas.offdays[day]) ? ideas.offdays[day] as unknown[] : []))
@@ -193,9 +209,9 @@ export function dayOptions(ideas: Body | null, items: OffdayItem[] | null | unde
     const key = onDoc?.item ?? own
     const r = onDoc ?? byKey.get(key)
     if (r && !here(r)) continue
-    // A settled option (`closed`: moved to another day or merged into another piece, the full board's rule) leaves the
-    // day, unless a press of his stands on it: a session's words never take his press away.
-    if (!r && typeof o.closed === 'string' && o.closed.trim()) continue
+    // An option a re-plan carries to another option (that one names it, `item`) leaves its day, unless a press of his
+    // stands on it: one post is drawn once, and a session's words never take his press away.
+    if (!r && carried?.has(own)) continue
     // One post, one item: an option no press has touched that is the same post as an item already somewhere. On this
     // day, the item is drawn and the option is not; anywhere else, the option is that item, shown as one.
     const twin = !r ? twinOf(o, own) : null
