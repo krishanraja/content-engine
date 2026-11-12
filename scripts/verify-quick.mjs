@@ -90,7 +90,10 @@ const TS_TESTS = [
   ...walk('tests', (p) => p.endsWith('.test.ts')),
   ...walk('apps/renderer/src/engine', (p) => p.endsWith('.test.ts')),
 ]
-const PY_TESTS = readdirSync('tests').filter((n) => n.endsWith('_test.py')).map((n) => `tests/${n}`)
+// A card's own acceptance runs only with its device named (`python tests/ve_port_acceptance_test.py <device>`), by the
+// card and by `ve verify-card`; run bare it fails by design, so it is never picked by name.
+const CARD_ONLY_PY = new Set(['tests/ve_port_acceptance_test.py'])
+const PY_TESTS = readdirSync('tests').filter((n) => n.endsWith('_test.py')).map((n) => `tests/${n}`).filter((f) => !CARD_ONLY_PY.has(f))
 const text = new Map()
 const read = (p) => { if (!text.has(p)) text.set(p, readFileSync(p, 'utf8')); return text.get(p) }
 const names = (file, body) => body.includes(file) || (!GENERIC.has(basename(file)) && basename(file).length >= 6 && body.includes(basename(file)))
@@ -113,7 +116,7 @@ function plan(changed) {
   const py = new Set(ALWAYS_PY.filter((f) => existsSync(f)))
   for (const f of live) {
     if (/\.(m|c)?[jt]sx?$/.test(f)) ts.add(f)                 // vitest related follows its importers
-    if (/^tests\/[^/]+_test\.py$/.test(f)) { py.add(f); continue } // a changed Python test runs by itself
+    if (/^tests\/[^/]+_test\.py$/.test(f)) { if (!CARD_ONLY_PY.has(f)) py.add(f); continue } // a changed Python test runs by itself
     if (/\.(m|c)?[jt]sx?$/.test(f) && !f.startsWith('scripts/')) continue
     for (const t of TS_TESTS) if (t !== f && names(f, read(t))) ts.add(t)
     for (const t of PY_TESTS) if (t !== f && names(f, read(t))) py.add(t)
