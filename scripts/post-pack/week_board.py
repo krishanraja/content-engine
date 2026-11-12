@@ -2140,8 +2140,11 @@ def read_offdays(data, where='ideas.json offdays', whole=False):
         opts = data.get(key)
         if opts is None or key in REST_DAYS:
             continue
-        if not isinstance(opts, list) or not OFF_OPTIONS[0] <= len(opts) <= OFF_OPTIONS[1]:
-            problems.append(f'{weekday}: give {OFF_OPTIONS[0]} to {OFF_OPTIONS[1]} options')
+        # A publishing day's off-day post sits beside the week's piece, one or more finished posts rather than a choice
+        # (Krish, 2026-11-12, of Wednesday's Jensen Huang post: "Put them there so I can approve").
+        least = 1 if key in ('mon', 'wed', 'fri') else OFF_OPTIONS[0]
+        if not isinstance(opts, list) or not least <= len(opts) <= OFF_OPTIONS[1]:
+            problems.append(f'{weekday}: give {least} to {OFF_OPTIONS[1]} options')
             continue
         rows, seen = [], set()
         for n, o in enumerate(opts, 1):
