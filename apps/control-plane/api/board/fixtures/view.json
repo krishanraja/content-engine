@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.7.0",
+ "contract_version": "1.8.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -1070,6 +1070,24 @@
    "next": "Record both cuts from your Teleprompter; each take files itself",
    "actions": [
     {
+     "kind": "press",
+     "label": "Approve for publish",
+     "collection": "picks",
+     "id": "mon-publish",
+     "revision": 0,
+     "body": {
+      "kind": "approve_publish",
+      "day": "mon",
+      "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+      "approved": true,
+      "manifest_sha256": "48ed7ede3274d284e73733cf3114076f2e2975867df4ea7497532f98b3c4df0a"
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Approved for publish: exactly these 2 files and their words. Growth posts them; nothing else."
+    },
+    {
      "kind": "open",
      "label": "Open Teleprompter",
      "href": "https://app.teleprompter.com"
@@ -1100,6 +1118,50 @@
      "done": "Saved on the board, pinned to this step."
     }
    ],
+   "manifest": {
+    "sha256": "48ed7ede3274d284e73733cf3114076f2e2975867df4ea7497532f98b3c4df0a",
+    "qa": "passed",
+    "assets": [
+     {
+      "name": "short_video",
+      "drive_id": "1LongCutLongCutLongCut0001",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "order": 1,
+      "url": "https://drive.google.com/file/d/1LongCutLongCutLongCut0001/view"
+     },
+     {
+      "name": "vertical_cover",
+      "drive_id": "1CoverCoverCoverCover0001",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "order": 2,
+      "url": "https://drive.google.com/file/d/1CoverCoverCoverCover0001/view"
+     }
+    ],
+    "channels": [
+     "tiktok"
+    ],
+    "state": "waiting",
+    "approved_at": null,
+    "press": {
+     "kind": "press",
+     "label": "Approve for publish",
+     "collection": "picks",
+     "id": "mon-publish",
+     "revision": 0,
+     "body": {
+      "kind": "approve_publish",
+      "day": "mon",
+      "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+      "approved": true,
+      "manifest_sha256": "48ed7ede3274d284e73733cf3114076f2e2975867df4ea7497532f98b3c4df0a"
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Approved for publish: exactly these 2 files and their words. Growth posts them; nothing else."
+    },
+    "why": null
+   },
    "media": [
     {
      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -1394,6 +1456,7 @@
      "done": "Saved on the board, pinned to this step."
     }
    ],
+   "manifest": null,
    "media": [],
    "pieces": [],
    "options": [
@@ -2799,6 +2862,7 @@
      "done": "Saved on the board, pinned to this step."
     }
    ],
+   "manifest": null,
    "media": [],
    "pieces": [
     {
@@ -2906,6 +2970,7 @@
      "done": "Saved on the board, pinned to this step."
     }
    ],
+   "manifest": null,
    "media": [],
    "pieces": [],
    "options": [
@@ -4206,6 +4271,7 @@
      "done": "Saved on the board, pinned to this step."
     }
    ],
+   "manifest": null,
    "media": [],
    "pieces": [
     {
@@ -4290,6 +4356,7 @@
      "done": "Saved on the board, pinned to this step."
     }
    ],
+   "manifest": null,
    "media": [],
    "pieces": [],
    "options": [
@@ -4539,6 +4606,24 @@
    "label": "Mon 16",
    "next": "Record both cuts from your Teleprompter; each take files itself",
    "actions": [
+    {
+     "kind": "press",
+     "label": "Approve for publish",
+     "collection": "picks",
+     "id": "mon-publish",
+     "revision": 0,
+     "body": {
+      "kind": "approve_publish",
+      "day": "mon",
+      "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+      "approved": true,
+      "manifest_sha256": "48ed7ede3274d284e73733cf3114076f2e2975867df4ea7497532f98b3c4df0a"
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Approved for publish: exactly these 2 files and their words. Growth posts them; nothing else."
+    },
     {
      "kind": "open",
      "label": "Open Teleprompter",
