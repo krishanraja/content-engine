@@ -9,7 +9,8 @@ This builds a stand-in board and publish page with the engine's own builders,
 loads each with fetch() to anything blocked (connect-src 'none') and a
 stand-in viewer that grants "downloads", and clicks every Download, Copy
 picture and Copy button. Any button that does not hand over its file or its
-words fails the run. CI runs it (.github/workflows/ci.yml, browser-buttons).
+words fails the run, and so does a publish page that scrolls sideways at a
+phone's width. CI runs it (.github/workflows/ci.yml, browser-buttons).
 
     python scripts/post-pack/buttons_in_browser.py [--browser PATH]
 """
@@ -30,6 +31,10 @@ const downloads = { save: async r => { const d = r.data; window.__saves.push({ n
 window.claude = { use: async n => n === "downloads" ? downloads : null };
 '''
 DRIVE = 'https://drive.google.com/file/d/{}/view'
+# A post's channel words with every step's long link in place (the tagged subscribe page in its steps and captions).
+PUBLISH_KIT_SAMPLE = {'title': 'Warner sued Suno. Now it takes a cut.', 'date': '2026-10-12', 'piece_id': 'abc-123',
+                      'youtube_title': 'T', 'youtube_description': 'D', 'comment_question': 'Q?', 'short_caption': 'C',
+                      'linkedin_post': 'L'}
 
 
 def pages(tmp):
@@ -117,6 +122,20 @@ def click_all(browser, html, tmp, label):
     return n, fails
 
 
+def fits_a_phone(browser, html, tmp, label):
+    """The publish page at a phone's width, 390px: nothing on it scrolls sideways. A long link in a step (the tagged
+    subscribe page, 2026-11-12) once widened every step past the screen."""
+    path = Path(tmp) / (label.replace(' ', '-') + '-phone.html')
+    path.write_text(CSP + html, encoding='utf-8')
+    ctx = browser.new_context(viewport={'width': 390, 'height': 844}, is_mobile=True, has_touch=True)
+    pg = ctx.new_page()
+    pg.goto(path.as_uri())
+    pg.wait_for_timeout(300)
+    wide = pg.evaluate('() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]')
+    ctx.close()
+    return [] if wide[0] <= wide[1] else [f'{label}: scrolls sideways on a phone ({wide[0]}px wide at {wide[1]}px)']
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
     ap.add_argument('--browser', help='a Chromium to launch (default: Playwright\'s own)')
@@ -129,6 +148,11 @@ def main(argv=None):
             n, f = click_all(browser, html, tmp, label)
             print(f"{label}: clicked {n['download']} Download, {n['image']} Copy picture, {n['text']} Copy, {n['download-all']} Download all")
             fails += f
+            if label == 'publish page':
+                fails += fits_a_phone(browser, html, tmp, label)
+        # The post pack's own start page, 0 Publish/publish.html (publish_kit.py), with every channel's step.
+        import publish_kit
+        fails += fits_a_phone(browser, publish_kit.page(PUBLISH_KIT_SAMPLE), tmp, 'publish kit page')
         browser.close()
     if fails:
         print('buttons in the browser FAILED:\n  ' + '\n  '.join(fails))
