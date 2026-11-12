@@ -102,5 +102,13 @@
       "words": "I think it should go at the start of the longer wide videos 100%,",
       "design": "the clips in \"clips\", bound by source_sha256"
     }
-  ]
+  ],
+  "paused": {
+    "on": "2026-11-12",
+    "by": "Krish",
+    "words": "Happy with your recommendations and yes go for the profile links as well.",
+    "picked": "Long cuts open on the hook with no sting until the sting after the hook is built and he approves its proof render.",
+    "why": "docs/production/SOCIAL-BEST-PRACTICES-2026.md section 4.3: a brief animated logo may follow, not precede, value. The engines can only lay the sting in front of the hook today; moving it after the hook needs a proof Krish approves (F04, F13).",
+    "means": "No cut wears the sting while this block is here: make.py, the day runner and ve open every cut on the hook, and the palette (config/brand-palette.json) expects no sting. Remove the block, with his words, once the after-hook sting is built and approved."
+  }
 }

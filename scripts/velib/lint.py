@@ -200,6 +200,14 @@ def motion_lints(spec: dict) -> list[str]:
     return out
 
 
+def _sting_paused() -> bool:
+    """Whether config/intro-sting.json pauses the sting (Krish, 12 Nov 2026): then no cut wears one."""
+    try:
+        return bool(load_json(CONFIG.parent / 'intro-sting.json').get('paused'))
+    except (OSError, ValueError):
+        return False
+
+
 def palette_lints(spec: dict) -> list[str]:
     """brand.palette: each whole cut's opening, sting and close against config/brand-palette.json for its day
     (Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the
@@ -225,7 +233,7 @@ def palette_lints(spec: dict) -> list[str]:
         if not shape:
             continue
         sting = 'none'
-        if shape == '16x9' and kind == 'series':
+        if shape == '16x9' and kind == 'series' and not _sting_paused():
             sting = getattr(ve_compile, 'STING_POSITION', 'before_hook')
         record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
                   'opening': 'hook', 'sting': sting,
