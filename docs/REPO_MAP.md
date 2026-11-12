@@ -2274,6 +2274,20 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `function liveBoardUrl(week?: string | null, day?: string | null): string`
 - `const ARCHIVE_LINE`
 
+### `apps/control-plane/api/board/_manifest.ts`
+
+- `interface ManifestAsset`
+- `interface Draft`
+- `interface ViewManifest`
+- `interface ManifestPress`
+- `const sha256 = (b: Uint8Array | string) =>`
+- `function draftPath(piece: Body): string | null`
+- `function parseDraft(bytes: Uint8Array, pieceId: string): Draft | null`
+- `async function readDrafts(db: SupabaseClient, pieces: Body[]): Promise<Map<string, Draft>>`
+- `function dayManifest(draft: Draft | undefined, picks: Array<{ doc_id: string; body: Body; updated_by: string; revision?…`
+- `class ManifestBindError`
+- `async function checkPublishBind(db: SupabaseClient, body: Body): Promise<void>`
+
 ### `apps/control-plane/api/board/_media.ts`
 
 - `type MediaKind = 'cut' | 'thumbnail'`
