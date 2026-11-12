@@ -4436,6 +4436,23 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function leaderboardState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/living_screen/index.tsx`
+
+- `function viewport(p:DeviceProps)`
+- `function safeBox(p:DeviceProps)`
+- `function cameraFor(p:DeviceProps)`
+- `function paint(g:CanvasRenderingContext2D,p:DeviceProps)`
+- `function Device(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/living_screen/schema.ts`
+
+- `const Params`
+
+### `apps/renderer/src/engine/devices/living_screen/state.ts`
+
+- `const rect = (index:number,count:number):[number,number,number,number] =>`
+- `function screenState(object:EngineObject,events:readonly EngineEvent[],frame:number)`
+
 ### `apps/renderer/src/engine/devices/logo_card/index.tsx`
 
 - `function logoCardState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>, count: number)`
