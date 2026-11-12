@@ -3,6 +3,7 @@ import { offdaySides } from './_offdaySides.js'
 import { yesByDay } from './_yes.js'
 import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, approvedLabel, dayShort, dayWords, goes, optionSha, type Approval, type Outcome } from './_gate.js'
 import { channelOfUrl, type LivePost } from './_itsLive.js'
+import { driveFolderIdOf } from './_drivePosts.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
 // Control Centre; the old board is a read-only archive). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
@@ -38,15 +39,15 @@ export type PressAction = {
   id?: string
   revision?: number
   /** Or POST /api/board/<Monday>/<op> with the body (material: his research pasted onto the piece; live: a post he
-   *  marked live, contract 1.7.0, _itsLive.ts). */
+   *  marked live, contract 1.8.0, _itsLive.ts). */
   op?: 'material' | 'live'
-  /** Contract 1.7.0: the week the press saves into, when it is not the week the board shows (an idea for later,
+  /** Contract 1.8.0: the week the press saves into, when it is not the week the board shows (an idea for later,
    *  answered on its own week's board or approved onto a later one; GET /api/board/later). */
   week?: string
   body: Body
   /** His words: asked before the press, written at this dot path; required ones are never sent empty. */
   words?: { path: string; ask: string; required: boolean }
-  /** Contract 1.7.0: a choice he makes before the press, written at this dot path as the values he chose (several when
+  /** Contract 1.8.0: a choice he makes before the press, written at this dot path as the values he chose (several when
    *  multi). from_link: the option whose hosts the link names is chosen for him first, and he can change it. */
   choose?: { path: string; ask: string; multi: boolean; required: boolean; from_link?: boolean; options: Array<{ value: string; label: string; hosts?: string[] }> }
   /** Dot paths set to the press time (ISO). */
@@ -78,6 +79,9 @@ export interface ViewOption {
   outcome?: { id: Outcome; label: string; at: string | null; words: string | null } | null
   /** Contract 1.3.0: why it cannot cross to the publish board yet (words a session wrote for him, changed words). */
   held?: string
+  /** Contract 1.7.0: the Drive folder of the post made for it (the week's plan, `drive`), whose assets the day's
+   *  `posts` lists; null when nothing is filed for it yet. An off-day option only. */
+  post?: string | null
 }
 export interface ViewPiece {
   id: string; title: string; series: string; state: string; published: boolean; on_day: boolean
@@ -85,7 +89,7 @@ export interface ViewPiece {
   approval?: { at: string; label: string; via: string } | null
 }
 export interface ViewComment { at: string; by: string; anchor: string; text: string }
-/** What went out on a day: Growth's posts (its ticks) and, from contract 1.7.0, the posts he marked live (by 'you'). */
+/** What went out on a day: Growth's posts (its ticks) and, from contract 1.8.0, the posts he marked live (by 'you'). */
 export interface ViewPosted { step: string; label: string; at: string | null; href?: string; by?: 'growth' | 'you' }
 export interface ViewYes { approved: boolean; via: string; at: string; words: string | null }
 
@@ -150,7 +154,7 @@ export function dayComments(rows: ExtrasInputs['comments'], day: string): ViewCo
 }
 
 /** What went out on the day: Growth's posts (its ticks), with each post's public address when it gave one, then each
- *  channel he marked live (contract 1.7.0), with the post's link on the channel the link belongs to. */
+ *  channel he marked live (contract 1.8.0), with the post's link on the channel the link belongs to. */
 export function dayPosted(rows: ExtrasInputs['ticks'], day: string, live: LivePost[] = []): ViewPosted[] {
   const growth = (rows || []).filter(t => t.updated_by === 'growth' && isObj(t.body) && t.body.done === true && t.body.day === day)
     .map((t): ViewPosted => {
@@ -372,7 +376,7 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     const outcome = approval ? { id: 'approved' as const, label: approvedLabel(approval), at: approval.decided_at, words: approval.words }
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof (idea as Body | null)?.at === 'string' ? String((idea as Body).at) : null, words: typeof idea?.words === 'string' ? idea.words : null } : null
     const out: ViewOption = { id: s.id, doc_id: docId, title: s.hook || cut(s.copy, 200) || s.id, text: cut(pitch || s.copy, 600), format: s.format || null,
-      source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}) }
+      source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}), post: driveFolderIdOf(o.drive) }
     if (o.weekly) {
       const stories = Array.isArray(o.stories) ? o.stories.filter(isObj) : []
       out.stories = stories.slice(0, 8).map(st => {

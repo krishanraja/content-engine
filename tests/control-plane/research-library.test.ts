@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import {
   INDEX_COLUMNS, INDEX_LINK_AT, LIBRARY_LEASE, LIBRARY_LEASE_MS, PROP, RESEARCH_LIBRARY_FOLDER_ID, RESEARCH_LIBRARY_INDEX_ID, SETTLE_MS,
-  deleteRuns, duplicateRows, fileIdOf, fileNameOf, inLibrary, mirror, placeOf, tidyPlan,
+  deleteRuns, descriptionOf, duplicateRows, fileIdOf, fileNameOf, inLibrary, mirror, placeOf, tidyPlan,
   type IndexSheet, type IndexTidy, type LeaseTake, type LibraryDrive, type LibraryFile, type LibraryFolder, type LibraryIndex, type LibraryLock, type LibrarySource, type PieceInfo, type StoredMaterial,
 } from '../../apps/control-plane/api/_researchLibrary'
 import { copyNow, googleLibraryDrive, googleLibraryIndex, storeLease } from '../../apps/control-plane/api/_researchLibraryGoogle'
@@ -194,6 +194,23 @@ describe('what the library keeps', () => {
     expect(placeOf(text('z', { week: null, added_at: '2026-10-01T09:00:00Z' }), { id: PIECE, idea: 'Koa', scheduled_for: null, series: null }).week).toBe('2026-09-28')
     expect(fileNameOf(text('a', { title: 'sources.json', version: 3 }))).toBe('2026-11-09 sources (v3).json')
     expect(fileNameOf(text('a', { title: 'Notes / from the room' }))).toBe('2026-11-09 Notes - from the room.md')
+    // A title that starts with a date already keeps one date: a recovered branch version, a plan's file.
+    expect(fileNameOf(text('a', { title: '2026-10-08 who-picks-your-ai (git 757eddc).md' }))).toBe('2026-10-08 who-picks-your-ai (git 757eddc).md')
+    expect(fileNameOf(text('a', { title: '2026-10-09-friday/nine-lines.md' }))).toBe('2026-10-09-friday-nine-lines.md')
+    expect(fileNameOf(text('a', { title: '20261009 notes' }))).toBe('2026-11-09 20261009 notes.md')
+  })
+
+  it('links a dated piece to its day on the live board, and a piece with no day to the board itself', () => {
+    const m = text('x')
+    const dated = { id: PIECE, idea: 'Oracle', scheduled_for: '2026-11-16', series: 'follow_the_money' }
+    expect(descriptionOf(m, dated, placeOf(m, dated)).split('\n').pop()).toBe('Publish Board: https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=mon')
+    const undated = { id: PIECE, idea: 'Koa', scheduled_for: null, series: null }
+    const filed = text('z', { week: null, added_at: '2026-11-11T09:00:00Z' })
+    expect(placeOf(filed, undated).week).toBe('2026-11-09')
+    expect(descriptionOf(filed, undated, placeOf(filed, undated)).split('\n').pop()).toBe('Publish Board: https://controlcenter.krishraja.com/#/content (the piece has no day on it yet)')
+    // A day with no piece keeps its own week and day.
+    const day = text('y', { piece_id: null, scope: 'day:2026-11-16/tue', day: 'tue' })
+    expect(descriptionOf(day, null, placeOf(day, null)).split('\n').pop()).toBe('Publish Board: https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=tue')
   })
 })
 

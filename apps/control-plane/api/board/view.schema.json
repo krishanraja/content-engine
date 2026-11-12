@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://content.krishraja.com/api/board/view.schema.json",
   "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
-  "x-contract-version": "1.7.0",
+  "x-contract-version": "1.8.0",
   "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
   "type": "object",
   "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources", "revision"],
@@ -34,8 +34,8 @@
     "north_star": {
       "type": ["object", "null"],
       "required": ["current", "target"],
-      "properties": { "current": { "type": "number", "description": "1.7.0: live, what went out in the last seven days, his It's live posts included." }, "target": { "type": "number" },
-        "measured": { "type": "number", "x-since": "1.7.0", "description": "The number NOW.md last measured." } }
+      "properties": { "current": { "type": "number", "description": "1.8.0: live, what went out in the last seven days, his It's live posts included." }, "target": { "type": "number" },
+        "measured": { "type": "number", "x-since": "1.8.0", "description": "The number NOW.md last measured." } }
     },
     "runs": { "type": "object" },
     "sources": { "type": "object" },
@@ -116,7 +116,7 @@
           "items": { "$ref": "#/$defs/option" }
         },
         "comments": { "type": "array", "description": "His comments whose anchor names the day, newest first (1.2.0).", "items": { "$ref": "#/$defs/comment" } },
-        "posted": { "type": "array", "description": "What Growth has posted on the day, its ticks (1.2.0), and the posts he marked live (1.7.0, by: you).", "items": { "$ref": "#/$defs/posted" } },
+        "posted": { "type": "array", "description": "What Growth has posted on the day, its ticks (1.2.0), and the posts he marked live (1.8.0, by: you).", "items": { "$ref": "#/$defs/posted" } },
         "yes": {
           "type": ["object", "null"],
           "description": "His yes for the day (one yes anywhere, _yes.ts), or null (1.2.0).",
@@ -128,6 +128,12 @@
           "x-since": "1.3.0",
           "description": "The ideas gate (docs/PUBLISH_BOARDS.md, \"The ideas gate\"): every piece on the day, or option a session wrote as decided, that no approval of Krish's holds there, and why. Never hidden: drawn as a line titled \"Held: not approved by you\".",
           "items": { "$ref": "#/$defs/held" }
+        },
+        "posts": {
+          "type": ["array", "null"],
+          "x-since": "1.7.0",
+          "description": "Every post folder of the day in Drive's makeyourmindup > 3 Posts with everything made for it: the engine's cuts and thumbnails, Growth's carousels, memes, Notes, off-day posts and reskins, each with its Drive link, a carousel's slides in order and its older versions (_drivePosts.ts). Null when Drive could not be read (sources.drive false).",
+          "items": { "$ref": "#/$defs/post" }
         }
       }
     },
@@ -195,11 +201,11 @@
         },
         "id": { "type": "string", "description": "press: the document id; {t} is replaced by the press time." },
         "revision": { "type": "integer", "description": "press: the revision the save is made on (409 when it changed)." },
-        "op": { "type": "string", "enum": ["material", "live"], "x-open": true, "description": "press: or the board route it posts to (POST /api/board/<Monday>/<op>). live (1.7.0): a post he marked live, It's live, with its link and channels." },
-        "week": { "type": "string", "x-since": "1.7.0", "description": "press: the week it saves into, when it is not the week the view shows (an idea for later, GET /api/board/later)." },
+        "op": { "type": "string", "enum": ["material", "live"], "x-open": true, "description": "press: or the board route it posts to (POST /api/board/<Monday>/<op>). live (1.8.0): a post he marked live, It's live, with its link and channels." },
+        "week": { "type": "string", "x-since": "1.8.0", "description": "press: the week it saves into, when it is not the week the view shows (an idea for later, GET /api/board/later)." },
         "choose": {
           "type": "object",
-          "x-since": "1.7.0",
+          "x-since": "1.8.0",
           "required": ["path", "ask", "multi", "required", "options"],
           "properties": {
             "path": { "type": "string" }, "ask": { "type": "string" }, "multi": { "type": "boolean" }, "required": { "type": "boolean" }, "from_link": { "type": "boolean" },
@@ -258,6 +264,13 @@
         "at": { "type": ["string", "null"] },
         "seconds": { "type": "number" },
         "poster": { "$ref": "#/$defs/sha" },
+        "drive": {
+          "type": ["object", "null"],
+          "x-since": "1.7.0",
+          "description": "The exact file in Krish's Drive, by its Drive file id, from the making record (Ruling, Krish, 2026-11-12: every cut on the board carries its Google Drive link); null when the record has none, and then drive_why says why. A file the library lacks is still served at /api/board/<Monday>/media/<id>, copied from this Drive file.",
+          "allOf": [{ "if": { "type": "object" }, "then": { "$ref": "#/$defs/driveLink" } }]
+        },
+        "drive_why": { "type": "string", "x-since": "1.7.0", "description": "Why drive is null, in his words (\"Not in Drive yet: ...\")." },
         "presses": {
           "type": "object",
           "x-since": "1.6.0",
@@ -537,7 +550,8 @@
             "words": { "type": ["string", "null"] }
           }
         },
-        "held": { "type": "string", "x-since": "1.3.0", "description": "Why the idea cannot cross to the publish board yet (words a session wrote as decided, words changed since he approved, no record yet)." }
+        "held": { "type": "string", "x-since": "1.3.0", "description": "Why the idea cannot cross to the publish board yet (words a session wrote as decided, words changed since he approved, no record yet)." },
+        "post": { "type": ["string", "null"], "x-since": "1.7.0", "description": "An off-day option: the Drive folder id of the post made for it (the week's plan, drive), whose assets are in the day's posts; null when nothing is filed for it yet." }
       }
     },
     "comment": {
@@ -549,7 +563,60 @@
       "type": "object",
       "required": ["step", "label", "at"],
       "properties": { "step": { "type": "string" }, "label": { "type": "string" }, "at": { "type": ["string", "null"] }, "href": { "type": "string" },
-        "by": { "type": "string", "enum": ["growth", "you"], "x-open": true, "x-since": "1.7.0", "description": "Who recorded it: growth (its tick) or you (It's live)." } }
+        "by": { "type": "string", "enum": ["growth", "you"], "x-open": true, "x-since": "1.8.0", "description": "Who recorded it: growth (its tick) or you (It's live)." } }
+    },
+    "driveLink": {
+      "type": "object",
+      "x-since": "1.7.0",
+      "description": "The exact file in Krish's Google Drive, by its Drive file id: where he opens it to play it or download it.",
+      "required": ["file_id", "url"],
+      "properties": {
+        "file_id": { "type": "string", "pattern": "^[A-Za-z0-9_-]{20,80}$" },
+        "url": { "type": "string", "pattern": "^https://drive\\.google\\.com/file/d/[A-Za-z0-9_-]{20,80}/view$" }
+      }
+    },
+    "assetFile": {
+      "type": "object",
+      "x-since": "1.7.0",
+      "description": "One file of an asset in Drive: a version, or a slide of a carousel. The board shows it at /api/board/<Monday>/drive/<id>.",
+      "required": ["id", "title", "mime", "at", "url"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z0-9_-]{20,80}$", "description": "The Drive file id." },
+        "title": { "type": "string", "description": "The file's name in Drive." },
+        "mime": { "type": "string" },
+        "at": { "type": ["string", "null"] },
+        "url": { "type": "string", "pattern": "^https://drive\\.google\\.com/file/d/[A-Za-z0-9_-]{20,80}/view$" },
+        "seconds": { "type": "number" },
+        "width": { "type": "number" },
+        "height": { "type": "number" }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "x-since": "1.7.0",
+      "description": "One asset of a post: its newest version (the file's own fields), a carousel's slides in order, and its older versions, newest first.",
+      "allOf": [{ "$ref": "#/$defs/assetFile" }],
+      "required": ["kind", "folder", "versions"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["cut", "video", "meme", "carousel", "image", "cover", "figure", "thumbnail", "note"], "x-open": true },
+        "folder": { "type": "string", "description": "The post's sub-folder it is in (\"4 Social\", \"3 Video\"), or \"\" for the post's own folder." },
+        "slides": { "type": "array", "description": "A carousel: every slide in order, each the newest version of that slide.", "items": { "$ref": "#/$defs/assetFile" } },
+        "versions": { "type": "array", "description": "The older versions, newest first.", "items": { "$ref": "#/$defs/assetFile" } }
+      }
+    },
+    "post": {
+      "type": "object",
+      "x-since": "1.7.0",
+      "description": "A post folder of the day in makeyourmindup > 3 Posts and everything made in it (_drivePosts.ts).",
+      "required": ["id", "name", "url", "option", "piece_id", "assets"],
+      "properties": {
+        "id": { "type": "string", "description": "The folder's Drive id." },
+        "name": { "type": "string" },
+        "url": { "type": "string", "pattern": "^https://drive\\.google\\.com/drive/folders/[A-Za-z0-9_-]{20,80}$" },
+        "option": { "type": ["string", "null"], "description": "The day's option this post was made for, by its id." },
+        "piece_id": { "type": ["string", "null"], "description": "The piece whose making record files into this folder (pack.folder)." },
+        "assets": { "type": "array", "items": { "$ref": "#/$defs/asset" } }
+      }
     }
   }
 }

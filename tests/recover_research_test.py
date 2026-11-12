@@ -62,6 +62,15 @@ def claude_line(**ev):
     return json.dumps(ev) + '\n'
 
 
+class Title(unittest.TestCase):
+    def test_one_date_in_front(self):
+        self.assertEqual(rr.title_of('ai-music-dossier.md', '2026-11-03T10:00:00+00:00'), '2026-11-03 ai-music-dossier.md')
+        # A name that already starts with a date keeps its own and gets no second one.
+        self.assertEqual(rr.title_of('2026-10-09-who-picks-your-ai.md', '2026-10-08T10:00:00+00:00'), '2026-10-09-who-picks-your-ai.md')
+        self.assertEqual(rr.title_of('2026-10-09 notes.md', '2026-10-08T10:00:00+00:00'), '2026-10-09 notes.md')
+        self.assertEqual(len(rr.title_of('x' * 300, '2026-10-08T10:00:00+00:00')), 200)
+
+
 class Transcripts(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

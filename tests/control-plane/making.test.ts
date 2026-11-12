@@ -117,6 +117,12 @@ describe('the making record', () => {
   it('refuses anyone without the cookie or the engine key', async () => {
     expect((await call('GET', {}, 'nobody')).status).toBe(401)
   })
+  it('answers with his Yes or Not this on each rendered cut, oldest first, for the session making the next cut', async () => {
+    expect((await call('GET')).body.cut_verdicts).toEqual([])
+    const no = { media_id: 'a'.repeat(64), cut: 'long', verdict: 'not_this', words: 'The open drags.', sha256: 'a'.repeat(64), path: '3 Posts/mon/long.mp4', by: 'Krish', at: '2026-11-16T08:40:00Z' }
+    db.tables.content_ideas[0].meta = { ...db.tables.content_ideas[0].meta, cut_verdicts: [no, { media_id: 'not-a-file', verdict: 'yes', at: '2026-11-16T09:00:00Z' }] }
+    expect((await call('GET')).body.cut_verdicts).toEqual([no])
+  })
 
   it('a fresh piece shows every step, with the workroom up next', async () => {
     const out = await call('GET')

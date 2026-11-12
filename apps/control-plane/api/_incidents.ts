@@ -5,8 +5,8 @@
 // session read first, and their versions), so the weekly loop (scripts/learning/) can tell a repeat from a first and
 // trace it to why it kept happening.
 //
-// Writers on the server: Krish's Reject asset, Reject proof and "None of these" styles presses (board/_presses.ts) and
-// a second round (content-ideas/[id]/making.ts). Writers in Python go through POST /api/learning/incidents
+// Writers on the server: Krish's Reject asset, Reject proof and "None of these" styles presses (board/_presses.ts), his
+// Not this on a rendered cut (board/_cuts.ts) and a second round (content-ideas/[id]/making.ts). Writers in Python go through POST /api/learning/incidents
 // (scripts/incidents.py). A write never blocks the press or the record it rides on: a failure is logged and dropped.
 
 import type { SupabaseClient } from '@supabase/supabase-js'

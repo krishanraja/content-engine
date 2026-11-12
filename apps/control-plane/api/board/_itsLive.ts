@@ -140,7 +140,7 @@ export function todayNY(now: Date): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now)
 }
 
-/** The "It's live" press for one subject on a day (contract 1.7.0): POST /api/board/<Monday>/live. The board asks for
+/** The "It's live" press for one subject on a day (contract 1.8.0): POST /api/board/<Monday>/live. The board asks for
  *  the post's link (words) and the channels it went to (choose, several, the link's own channel ticked for him). */
 export function livePress(day: PostedDay, subject: { piece_id?: string | null; option?: string | null; title?: string | null }, label = "It's live"): PressAction {
   const channels = liveChannels(day, Boolean(subject.option) || !SERIES_DAYS.includes(day))
@@ -255,7 +255,7 @@ export async function recordLive(db: SupabaseClient, week: string, raw: unknown,
 export const PUBLICATION_SERIES = ['follow_the_money', 'under_the_hood', 'mind_the_gap'] as const
 
 /**
- * What has gone out in the last seven days, now (contract 1.7.0: the board's "published this week"): every piece of the
+ * What has gone out in the last seven days, now (contract 1.8.0: the board's "published this week"): every piece of the
  * publication's series with published_at in the window (the North Star reader's own rule), and every post he marked
  * live in the window that the rule does not count yet: an off-day post (it has no piece), or a piece whose Substack
  * post the publish watcher has not matched. One subject counts once. Null when the pieces cannot be read: the board

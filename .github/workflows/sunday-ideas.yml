@@ -146,7 +146,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 400
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             The Sunday ideas run for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub Actions
@@ -158,7 +158,10 @@ jobs:
             that link. Build or publish no board page: the old board is a read-only archive.
             Write each day's options through /api/week/options and the off-day options into ideas.json as the skill
             says. Research with the built-in web search and web fetch: there is no Drive or Firecrawl connector here
-            (the skill's "Without the connectors").
+            (the skill's "Without the connectors"). Report this run on each day it fills, and file each research
+            document on its day as you write it, never only in a file here (python3 scripts/post-pack/board_session.py
+            day:<Monday>/<day> start, progress or done, and add <file>; docs/PUBLISH_BOARDS.md, "Sessions and
+            materials").
 
             The whole ideas board, once (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full,
             Saturday's good news included): also find Saturday's good news now, following "The Saturday good news" in

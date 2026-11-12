@@ -46,6 +46,7 @@ def web_page(page, manifest):
     import engine_stamp
     page = engine_stamp.stamp(page, 'week_board')
     manifest['target'] = 'web'
+    # The archive's address: read-only since 11 Nov 2026 (docs/PUBLISH_BOARDS.md); the live board is Control Centre's.
     manifest['web_url'] = f'https://content.krishraja.com/board/{week}'
     manifest['publish'] = {'command': 'board_web.py publish-web', 'approval_required': True}
     manifest['bytes'] = len(page.encode('utf-8'))
