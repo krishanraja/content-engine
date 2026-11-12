@@ -310,7 +310,15 @@ def filing_problems(video, target: str) -> list[str]:
     if not is_filed_video(target):
         return []
     if filing_exception(video, target):
-        return []
+        if ' off.day - ' in str(target):
+            return []
+        # His exception waives the bed receipt, never sync: a series cut filed on his words carries its picture-against-
+        # sound receipt for these bytes (scripts/av_sync.py; Krish, 2026-11-12: "We need to ensure that never happens").
+        import sys
+        if str(Path(__file__).resolve().parent) not in sys.path:
+            sys.path.append(str(Path(__file__).resolve().parent))
+        import av_sync
+        return [f'{target}: {p}' for p in av_sync.receipt_problems(video)]
     if social_clip(video) and ' off.day - ' in str(target):
         return []
     return [f'{target}: {p}' for p in receipt_problems(video)]
