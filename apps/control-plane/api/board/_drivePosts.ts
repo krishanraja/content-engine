@@ -76,11 +76,12 @@ const classOf = (mime: string) => (mime.startsWith('video/') ? 'video' : mime.st
 const stem = (name: string) => name.replace(/\.[A-Za-z0-9]{1,5}$/, '')
 
 /** A file's name with its version marks taken out, so two versions of one asset read the same: "table-for-two-meme"
- *  and "table-for-two-meme-black-v2" are one meme; "... tall 9x16 - black v2" is the newer "... tall 9x16 - Shorts". */
+ *  and "table-for-two-meme-black-v2" are one meme; "... tall 9x16 - black v2" is the newer "... tall 9x16 - Shorts";
+ *  "SUPERSEDED_git-card-5-v1" is an older fifth card of the git carousel. */
 export function versionKey(name: string): string {
   return stem(name).toLowerCase().replace(/\(\d+\)/g, ' ')
     .replace(/[^a-z0-9]+/g, ' ')
-    .replace(/\b(v\d+|version \d+|black|white|dark|light|final|new|old|reskin|reskinned|copy|edited|updated|fixed)\b/g, ' ')
+    .replace(/\b(v\d+|version \d+|black|white|dark|light|final|new|old|previous|superseded|reskin|reskinned|copy|edited|updated|fixed)\b/g, ' ')
     .replace(/\s+/g, ' ').trim()
 }
 /** Whether two keys name one asset: the same, or one is the other followed by more words. */
