@@ -789,6 +789,65 @@
     "needs": [
      "Finished: AI agent not set up - tall 9x16 - black v2.mp4 (remade on black 12 Nov, Krish: \"Same goes for Thursdays meme\") and its post description in 3 Posts › 2026-11-12 Thu off.day - AI agent not set up."
     ]
+   },
+   {
+    "format": "Explainer carousel, 6 cards, 4:5",
+    "source": {
+     "label": "VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); GeekWire, 30 Mar 2026 (Microsoft Critique); NeurIPS 2024 study on AI judges; SEC auditor independence rules, Jan 2003",
+     "url": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
+    },
+    "hook": "Your AI thinks it's the best. Guess who told it.",
+    "pitch": {
+     "see": "Six cards. Cover: a robot proudly pressing an I'M THE BEST sticker onto its own chest, a sheet of the same stickers on the desk, while the office behind it is broken and on fire. Then the post-Enron auditor rule, Home Depot (Google answers, OpenAI judges), Microsoft (GPT writes, Claude checks), the study in one line, and the rule on the last card above Follow for more.",
+     "lands": "Everyone knows why an auditor can't sign off its own work; the sticker makes the AI version a joke before it is a rule.",
+     "why_now": "As AI writes more of the first draft, checking becomes the job: Microsoft built its checker in March and Home Depot's CIO described hers in October.",
+     "share": "Your AI gave itself the sticker."
+    },
+    "direction": {
+     "look": "A funny photographic scene cover, then house ink cards with real logos on cream tiles",
+     "format": "Explainer carousel, 6 cards, 4:5",
+     "frames": [
+      {
+       "words": "YOUR AI THINKS IT'S THE BEST. GUESS WHO TOLD IT.",
+       "picture": "A robot proudly pressing an I'M THE BEST sticker onto its own chest, a sticker sheet of the same on the desk beside it, the office around it broken and on fire"
+      },
+      {
+       "words": "AFTER ENRON, AN ACCOUNTING FIRM MAY NOT CHECK ITS OWN WORK",
+       "picture": "A real crop of the SEC's January 2003 auditor rule"
+      },
+      {
+       "words": "HOME DEPOT: GOOGLE'S AI ANSWERS, OPENAI'S AI JUDGES",
+       "picture": "The Home Depot, Google and OpenAI logos, with the CIO's line: \"We like the tension\""
+      },
+      {
+       "words": "MICROSOFT: GPT WRITES THE REPORT, CLAUDE CHECKS IT",
+       "picture": "The Microsoft, OpenAI and Anthropic logos over a real crop of Copilot's Critique"
+      },
+      {
+       "words": "AN AI RATES ITS OWN WRITING HIGHER THAN PEOPLE DO",
+       "picture": "A real crop of the study's own chart"
+      },
+      {
+       "words": "NEVER LET AN AI MARK ITS OWN HOMEWORK.",
+       "picture": "If you're relying on the answer for an important decision, ask a different AI to check. Follow for more over the centred mark"
+      }
+     ],
+     "tone": "Plain and dry",
+     "kit": "Brand kit, no series pill (off day), house mark small bottom-right, Follow for more on the last card"
+    },
+    "learned_from": [
+     "\"If you're relying on the answer for an important decision, ask a different AI to check\" can be the final statement. Then it's perfect and needs to be filed for today in the board and drive (12 Nov)",
+     "Okay, I agree with number one, but we need a more catchy, sensational heading. We need a hilarious front cover picture of a robot that looks like a person, proudly putting a sticker on his own chest saying, \"I'm the best,\" with a similar sticker sheet on the table next to him (showing that he literally just does this whilst everything around him is broken and on fire). (12 Nov)",
+     "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)"
+    ],
+    "id": "beststicker",
+    "copy": "Six cards. Your AI thinks it's the best: at school you don't mark your own test, AIs give themselves better marks, so Home Depot and Microsoft have a rival AI check their AI. If you're relying on the answer for an important decision, ask a different AI to check.",
+    "decided": "Posts Thu 12 Nov (Krish, 12 Nov: \"\"If you're relying on the answer for an important decision, ask a different AI to check\" can be the final statement. Then it's perfect and needs to be filed for today in the board and drive\"). Growth posts it.",
+    "needs": [
+     "Finished: six cards (best-card-1 to 6) and the post description with its sources in 3 Posts › 2026-11-12 Thu off.day - Your AI thinks it's the best › 4 Social."
+    ],
+    "drive": "https://drive.google.com/drive/folders/1gA2PveiPW4YAQNS2s3zOch6c5rAaXQtN",
+    "posts_folder": "2026-11-12 Thu off.day - Your AI thinks it's the best"
    }
   ],
   "sat": [
