@@ -1,6 +1,14 @@
 # Carousel quality standard
 
-Owner: content-engine. Taste authority: Krish Raja. Updated 5 November 2026.
+Owner: content-engine. Taste authority: Krish Raja. Updated 5 November 2026; the brand elements rechecked on 12
+November 2026.
+
+**The brand palette wins on every brand element** (Krish, 12 Nov 2026: "I approve the brand palette sheet, but only if
+it falls in line with the attached."): the cover's logo, the wordmark, the colour of each day and the last card come
+from `config/brand-palette.json` (`docs/production/BRAND_PALETTE.md`), and where a section below says otherwise on one
+of them, the palette is right and the section is history. A carousel's last card is `house_close_slide`: the piece's
+takeaway in one or two lines, then Subscribe free (makeyourmindup.ai) and the wordmark small in the bottom right;
+Saturday's good news keeps his fixed good-news close.
 
 Who makes carousels (Ruling, Krish, 28 October 2026: "take over posting as
 well as creating new assets like carousels"): Growth-MakeYourMindUp now makes
@@ -401,7 +409,11 @@ refuses a deck that breaks the checkable lines below.
   or licence note and which cards use vendor images; within Instagram's 2,200 characters and content-engine's channel
   copy lint.
 
-## The last card says "Follow for more" (Ruling, Krish, 5 November 2026)
+## The last card says "Follow for more" (Ruling, Krish, 5 November 2026; superseded 12 November 2026)
+
+Superseded by the brand palette Krish approved on 12 November 2026: the last card of a carousel is `house_close_slide`
+(the takeaway, Subscribe free, the wordmark small in the bottom right), which Growth's templates draw since
+growth-makeyourmindup #76 ("one carousel close, mark bottom right"). Kept as the record of the 5 November rule.
 
 His words: "Every single makeyourmindup carousel should have a "Follow for more" call to action on the last card, just
 above the "Make Your Mind Up" word mark. Which should be a bit larger and centered on the last card always".

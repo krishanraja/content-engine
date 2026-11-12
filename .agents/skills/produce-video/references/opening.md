@@ -12,6 +12,17 @@ think that we need to test and learn. We need to figure out what the right tone
 is over time based on real engagement. Let's go with number one for now."
 (house rule HOOK_IS_THE_INTRO).
 
+- **Paused since 2026-11-12.** `config/intro-sting.json` carries a `paused`
+  block with Krish's words ("Happy with your recommendations and yes go for
+  the profile links as well."): long cuts open on the hook with no sting until
+  the sting after the hook is built and he approves its proof render
+  (`docs/production/SOCIAL-BEST-PRACTICES-2026.md` section 4.3: a brief
+  animated logo may follow, not precede, value). make.py, the day runner and
+  ve read the block and open every cut on its hook, and the palette
+  (`config/brand-palette.json`) expects no sting. His 5 November approval and
+  the clips are kept; the block is removed, with his words, once the after-hook
+  sting is approved (`docs/production/BRAND_PALETTE.md`). The bullets below
+  are how the sting stands when it returns.
 - **What the wide cut opens on.** The 16:9 long cut of a weekly series piece
   opens on that series' house sting: the clip he saw, byte for byte
   (`config/intro-sting.json` names each clip by its library path and sha256,
