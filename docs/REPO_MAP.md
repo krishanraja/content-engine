@@ -2184,6 +2184,39 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 
 - `const DESK_PAGE: string`
 
+### `apps/control-plane/api/board/_drivePosts.ts`
+
+- `const POSTS_FOLDER_ID`
+- `const DRIVE_ID`
+- `interface DriveFile`
+- `const DRIVE_FIELDS`
+- `type DriveLister = (q: string) => Promise<DriveFile[]>`
+- `const driveFileUrl = (id: string) =>`
+- `const driveFolderUrl = (id: string) =>`
+- `function driveIdOf(url: unknown): string | null`
+- `function driveFolderIdOf(url: unknown): string | null`
+- `type AssetKind`
+- `interface AssetFile`
+- `interface PostAsset`
+- `interface DrivePost`
+- `function versionKey(name: string): string`
+- `function kindOf(folder: string, f: DriveFile): AssetKind`
+- `function assetsOf(files: Array<{ folder: string; file: DriveFile }>): PostAsset[]`
+- `async function readWeekPosts(list: DriveLister, week: string): Promise<DrivePost[]>`
+- `function filesOfPosts(posts: DrivePost[]): Map<string, AssetFile>`
+- `function driveLister(token: string, f: typeof fetch = fetch): DriveLister`
+- `function resetDrivePostsCache(): void`
+- `async function weekPosts(week: string, token: () => Promise<string | null>, now = Date.now(), f: typeof fetch = fetch):…`
+- `interface DriveStore`
+- `type DriveCopier`
+- `function copyKey(f: Pick<DriveFile, 'id' | 'name' | 'md5Checksum' | 'modifiedTime' | 'size'>): string`
+- `async function servedDrive(store: DriveStore, copy: DriveCopier, f: DriveFile): Promise<string | null>`
+- `function supabaseDriveStore(db: { storage: { from(b: string): any } }): DriveStore`
+- `async function driveFile(token: string, id: string, f: typeof fetch = fetch): Promise<DriveFile | null>`
+- `function ownerDriveToken(env: Record<string, string | undefined> = process.env): Promise<string | null>`
+- `interface BoardDrive`
+- `function boardDrive(db: { storage: { from(b: string): any } }, opts: { token?: () => Promise<string | null>; fetch?: ty…`
+
 ### `apps/control-plane/api/board/_gate.ts`
 
 - `const SHA256`
