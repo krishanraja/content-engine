@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
 import { guardEngine } from '../_auth.js'
-import { ROLES, type Role, rankCandidates, readCards, readUses } from './_cards.js'
+import { ROLES, type Role, type StyleTick, rankCandidates, readCards, readUses } from './_cards.js'
 
 // GET /api/inspiration/candidates?role=look&format=reel&limit=3
 //        the production-lane cards to offer a piece for one role (look, motion, captions, hook, pacing, layout), best
@@ -10,6 +10,10 @@ import { ROLES, type Role, rankCandidates, readCards, readUses } from './_cards.
 //        then a card never used (card_uses), then the newest. Dismissed cards and cards that teach no cut (a feed, a
 //        corpus, an idea) are never offered. `ve init` writes the top one per role into brand.references marked
 //        `offered: true`, and ve lint refuses a spec until the session confirms each.
+//        A card Krish ticked as a style to use within a week (control-center inspiration_actions, kind copy_style, still
+//        open; Ruling, Krish, 2026-11-12) comes before every other, the soonest due first, for the roles it teaches (or
+//        look, motion and captions when it teaches none), carrying `instruction` { action_id, due_at, words }: the next
+//        fitting cut must use it, and ve verdict's card_uses row closes his tick in Control Centre.
 //
 // The ranking is deterministic over the rows (no model, no embedding call): the readings in content_reads carry no
 // stored embedding, and embedding every reading on each request would be a paid call per offer.
@@ -31,9 +35,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (cards.error) return res.status(500).json({ ok: false, error: cards.error })
   const uses = await readUses(supabase, cards.rows.map(r => String(r.id).toLowerCase()))
   if (uses.error) return res.status(500).json({ ok: false, error: uses.error })
+  // His open style ticks. Before control-center's migration 20261128093000 there are none, and the order is as it was.
+  const t = await supabase.from('inspiration_actions').select('id,item_id,due_at,words').eq('kind', 'copy_style').in('state', ['open', 'drafted', 'in_use'])
+  if (t.error && !/does not exist|could not find the table/i.test(t.error.message)) return res.status(500).json({ ok: false, error: t.error.message })
+  const ticks = new Map<string, StyleTick>(((t.error ? [] : t.data) || []).filter((x: Record<string, any>) => x.item_id)
+    .map((x: Record<string, any>) => [String(x.item_id).toLowerCase(), { action_id: String(x.id), due_at: String(x.due_at), words: x.words ?? null }]))
   return res.status(200).json({
     ok: true, role, format: format || null,
-    candidates: rankCandidates(cards.rows, uses.uses, { role, format, limit }),
+    candidates: rankCandidates(cards.rows, uses.uses, { role, format, limit }, ticks),
     ...(cards.pending || uses.pending ? { migration_pending: true } : {}),
   })
 }
