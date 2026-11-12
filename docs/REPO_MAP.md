@@ -2184,6 +2184,39 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 
 - `const DESK_PAGE: string`
 
+### `apps/control-plane/api/board/_drivePosts.ts`
+
+- `const POSTS_FOLDER_ID`
+- `const DRIVE_ID`
+- `interface DriveFile`
+- `const DRIVE_FIELDS`
+- `type DriveLister = (q: string) => Promise<DriveFile[]>`
+- `const driveFileUrl = (id: string) =>`
+- `const driveFolderUrl = (id: string) =>`
+- `function driveIdOf(url: unknown): string | null`
+- `function driveFolderIdOf(url: unknown): string | null`
+- `type AssetKind`
+- `interface AssetFile`
+- `interface PostAsset`
+- `interface DrivePost`
+- `function versionKey(name: string): string`
+- `function kindOf(folder: string, f: DriveFile): AssetKind`
+- `function assetsOf(files: Array<{ folder: string; file: DriveFile }>): PostAsset[]`
+- `async function readWeekPosts(list: DriveLister, week: string): Promise<DrivePost[]>`
+- `function filesOfPosts(posts: DrivePost[]): Map<string, AssetFile>`
+- `function driveLister(token: string, f: typeof fetch = fetch): DriveLister`
+- `function resetDrivePostsCache(): void`
+- `async function weekPosts(week: string, token: () => Promise<string | null>, now = Date.now(), f: typeof fetch = fetch):…`
+- `interface DriveStore`
+- `type DriveCopier`
+- `function copyKey(f: Pick<DriveFile, 'id' | 'name' | 'md5Checksum' | 'modifiedTime' | 'size'>): string`
+- `async function servedDrive(store: DriveStore, copy: DriveCopier, f: DriveFile): Promise<string | null>`
+- `function supabaseDriveStore(db: { storage: { from(b: string): any } }): DriveStore`
+- `async function driveFile(token: string, id: string, f: typeof fetch = fetch): Promise<DriveFile | null>`
+- `function ownerDriveToken(env: Record<string, string | undefined> = process.env): Promise<string | null>`
+- `interface BoardDrive`
+- `function boardDrive(db: { storage: { from(b: string): any } }, opts: { token?: () => Promise<string | null>; fetch?: ty…`
+
 ### `apps/control-plane/api/board/_gate.ts`
 
 - `const SHA256`
@@ -2237,11 +2270,14 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 ### `apps/control-plane/api/board/_media.ts`
 
 - `type MediaKind = 'cut' | 'thumbnail'`
+- `interface DriveLink`
 - `interface MediaItem`
+- `const NO_DRIVE_LINK`
 - `function dayMedia(piece: Body | undefined): MediaItem[]`
 - `function cutOn(piece: Body, id: string): { id: string; cut: string; title: string; path: string; sha256: string | null …`
 - `function findMedia(pieces: Body[], id: string): MediaFile | null`
-- `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string): Promise<string | null>`
+- `function libraryPaths(file: Pick<MediaFile, 'path' | 'folder'>): string[]`
+- `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string, drive?: (fileId: string) => Pro…`
 
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
@@ -2391,6 +2427,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
 - `type Action`
 - `interface DayView`
+- `interface ViewPost`
 - `type DayCore`
 - `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
 - `const PATH: Array<{ key: PathKey; label: string }>`
@@ -2403,6 +2440,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `interface DayPath`
 - `interface WeekView`
 - `interface ViewInputs`
+- `function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost…`
 - `function lockSigned(text: string | null | undefined): boolean`
 - `function postingStarted(live: Pick<LiveDay, 'steps'>): boolean`
 - `function backupPrompt(week: string, d: DayView): string`
@@ -2945,7 +2983,7 @@ What the compiler looks for, as pure functions.
 - `function copyFits(bytes: number, elapsedMs: number): boolean`
 - `type InboxListing`
 - `async function listInbox(folderId: string): Promise<InboxListing>`
-- `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number):…`
+- `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number, …`
 
 ### `apps/control-plane/api/library/_lanes.ts`
 
