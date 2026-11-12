@@ -32,6 +32,10 @@ then `report_board_session` (start, progress at each milestone, done, or blocked
 makes or draws on goes on the piece with `add_piece_material`, or `board_session.py <piece_id> add <file or text>`. A
 day with no piece yet is `day:<Monday>/<day>`. Add, never replace.
 
+**Research (Ruling, Krish, 2026-11-11).** Research is never left in scratch or a chat: file each research document on
+the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his
+Research library in Drive.
+
 ## The Sunday loop (rulings, Krish, 2026-10-28)
 
 Krish records the whole week on a Sunday, and it goes live eight days later:
@@ -148,7 +152,7 @@ option carries `cards`: `[{"words": "<what the card says>", "picture":
 
 Every idea ends in one of five outcomes, each his press: Approve for <day>, File for later, Reject, Save as a trend,
 Improve for a future piece. Only his Approve puts an idea on a publish board: you propose and never place. Read
-`references/ideas-gate.md` before step 1.
+`references/ideas-gate.md` and `.agents/skills/plan-week/references/refused.md` (his refusals) before step 1.
 
 ## Steps
 
@@ -402,9 +406,8 @@ Improve for a future piece. Only his Approve puts an idea on a publish board: yo
    gates: someone else's image or clip is never reposted; every news claim
    names its primary source, is checked against it the same day and passes
    the fact gate; each option's copy passes the copy lint and the kill list
-   before it reaches the tab; they go into ideas.json `offdays` and reach
-   the tab only through `week_board.py --ideas`, never by patching the page,
-   and until the board has its Off days part the room says so in step 8.
+   before it reaches the tab; they go into ideas.json `offdays`, which the
+   live board reads, never a page.
    Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week
    and its five real stories, found now, in this run (Ruling, Krish, 2026-11-11: the ideas board fills once a week in
    full, Saturday's good news included), each checked against its primary source the same day, with `stories_due`

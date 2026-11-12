@@ -116,18 +116,9 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   2026-10-14: "Stop ... generating assets ... when I haven't actually
   approved your new approach ... iterate, and understand what I actually
   like, and then encode that into the system forever."
-- **Every day on the publish board is built the same way, by the engine.**
-  Each made day is its own `publish_manager.py` page (Copy on every word and
-  picture), and the board is `week_board.py` over those pages, republished
-  to its own link. Never lay a hand-written script over the board (a
-  scratchpad "draft mode" did on 2026-10-13 and stripped Wednesday's and
-  Friday's Copy cards; Krish, 2026-10-14: "why are Wednesday and Friday
-  built differently to Monday? ... I thought I didn't need to keep telling
-  you this sort of stuff?"). A day whose page link is lost is carried over
-  with `week_board.py --keep DAY --previous <the board as read>`. A day whose
-  words are in review is built with `--draft DAY` and its `--review` files,
-  never kept or given an older publish page (15 October: Friday v3 sat on
-  its first version's page, whose chips said the new words were checked).
+- **The publish board is the live board in Control Centre, and nothing builds it** (Ruling, Krish, 2026-11-11: one
+  live board, in Control Centre; the old board is a read-only archive). Write what its view reads and report and file
+  on the piece as you work (`docs/PUBLISH_BOARDS.md`); never build, patch or publish a board page.
 - Plain words. Nothing he reads may contain codes, labels, hashes, version
   numbers or project shorthand. Say what happened, what it means for him, and
   what you need from him. If a sentence would confuse someone outside the
@@ -233,7 +224,7 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
 ## This week's publish board
 
 The live Publish Board is Control Centre's Content tab (Ruling, Krish, 2026-11-11: "your version of the publish board
-is 1000% where everything wires in to fresh and live and accurately"): https://controlcenter.krishraja.com/?ui=next#/content?week=<Monday>&day=<mon..sat>
+is 1000% where everything wires in to fresh and live and accurately"): https://controlcenter.krishraja.com/#/content?week=<Monday>&day=<mon..sat>
 (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints it). Every link a session gives Krish to the board is
 that one. The content.krishraja.com addresses below are the archive, kept as they are with a banner to the live board.
 Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The archive takes
@@ -282,10 +273,7 @@ build), `docs/plans/2026-10-09-friday/nine-lines.md` (the nine fact-check lines 
 Friday's state: `docs/plans/2026-10-09-friday/HANDOVER.md`. Redrawn panels and cards: the library's
 `3 Posts/2026-10-16 Fri mind.the.gap - Why so many AIs/3 Video/working 18 Oct/`.
 
-One page a week, with a tab for Monday, Wednesday and Friday and a tick for
-every step, made each Sunday by `plan-week` and republished to the same link
-all week by every session that makes a piece (`make-piece`, "The week's
-publish board"). Krish ticks there as he goes; every making session in
+One live board a week, drawn from the records on every read (`docs/PUBLISH_BOARDS.md`). Krish ticks there as he goes; every making session in
 any tool copies his channel ticks onto the pieces at its start and before
 it stops (`make-piece`, "The week's ticks"). Each week's board has its own
 board item, `week-publish-board-<its Monday>`, with the same link. Sunday's
@@ -293,18 +281,18 @@ run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
-- Week of 2 to 6 November: https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-02 (archive: https://content.krishraja.com/board/2026-11-02).
-- Week of 9 to 13 November (recorded from Sunday 1 November): https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-09 (archive: https://content.krishraja.com/board/2026-11-09).
-- Week of 16 to 21 November (recorded from Sunday 8 November): https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-16 (archive: https://content.krishraja.com/board/2026-11-16). Ideas tab
+- Week of 2 to 6 November: https://controlcenter.krishraja.com/#/content?week=2026-11-02 (archive: https://content.krishraja.com/board/2026-11-02).
+- Week of 9 to 13 November (recorded from Sunday 1 November): https://controlcenter.krishraja.com/#/content?week=2026-11-09 (archive: https://content.krishraja.com/board/2026-11-09).
+- Week of 16 to 21 November (recorded from Sunday 8 November): https://controlcenter.krishraja.com/#/content?week=2026-11-16 (archive: https://content.krishraja.com/board/2026-11-16). Ideas tab
   live from 7 Nov (Sunday ideas run 42392494486, dispatched on Krish's ask). Researched with web search only: Drive and
   Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read. Saturday 21 Nov's good-news stories: the
   Thursday run is retired (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's good news
   included), and this week was planned before that, so they are found by hand: the live board's "Find the stories now"
   press on Saturday 21 Nov (`saturday-goodnews.yml`), any day before then. From the week of 23 Nov the Sunday ideas run
   finds them.
-- Earlier weeks: https://content.krishraja.com/board/2026-10-26 and the two below.
+- Earlier weeks, read-only archive: https://content.krishraja.com/board/2026-10-26 and the two below.
 
-Earlier publish board (19 to 23 October):
+Earlier publish board (19 to 23 October), now the read-only archive:
 
 - https://content.krishraja.com/board/2026-10-19.
   The newer source's Ideas and draft day tabs are preserved. Its three picks,
@@ -312,17 +300,17 @@ Earlier publish board (19 to 23 October):
   workflow. Monday is in review. Its editorial/video handover owns the next
   production steps; this migration does not approve those steps.
 
-Earlier publish board (12 to 16 October):
+Earlier publish board (12 to 16 October), now the read-only archive:
 
-- https://content.krishraja.com/board/2026-10-12 remains open alongside this week.
+- https://content.krishraja.com/board/2026-10-12 is kept, read-only.
   Monday and Wednesday show 7 of 7; Friday remains unfinished. Eighteen stored
   ticks (including recording ticks and false values), three saved edits and
   24 comments/replies were retained. The existing Friday files stay until its
   separately repaired cuts are watched and approved.
 - Read edits and full comment threads through `board_web.py read WEEK COLLECTION`
   along with ticks, links, picks and queue. Apply Krish's words to source drafts
-  with the existing script-change and making-record attribution rules, then
-  rebuild with `--target web`. Original Claude addresses remain in
+  with the existing script-change and making-record attribution rules (no
+  page is rebuilt since 11 November). Original Claude addresses remain in
   `config/boards.json.weeks` for provenance, not for ongoing synchronization.
 
 ### What the 12 October evening session made permanent (read this first)

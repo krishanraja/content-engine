@@ -119,6 +119,10 @@
     {
       "path": "/api/library/recordings/drive-inbox",
       "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/research-library/sweep",
+      "schedule": "40 * * * *"
     }
   ],
   "functions": {
@@ -179,12 +183,20 @@
       "destination": "/api/board?week=:week&op=media&id=:id"
     },
     {
+      "source": "/api/board/:week/drive/:id",
+      "destination": "/api/board?week=:week&op=drive&id=:id"
+    },
+    {
       "source": "/api/board/:week/view",
       "destination": "/api/board?week=:week&op=view"
     },
     {
       "source": "/api/board/:week/gate",
       "destination": "/api/board?week=:week&op=gate"
+    },
+    {
+      "source": "/api/board/:week/outcomes",
+      "destination": "/api/board?week=:week&op=outcomes"
     },
     {
       "source": "/api/board/:week/look",

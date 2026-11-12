@@ -1,0 +1,5 @@
+{
+  "_about": "Rendered samples of a motion style or a caption style, shown beside the option on the publish board (view contract 1.4.0, sample_url on day.path.style options; docs/PUBLISH_BOARDS.md). Only a sample already rendered and served on this site is listed here, by its same-site path (it starts with one /; the view carries no outside link, by the media rule). A style with no entry has sample_url null. Nothing renders a sample to fill this list: a sample is added when one is made for a piece and kept.",
+  "motion": {},
+  "captions": {}
+}

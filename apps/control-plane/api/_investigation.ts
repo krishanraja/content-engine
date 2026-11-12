@@ -33,7 +33,7 @@ import {
   newBudget, budgetLeft, callMetered, fetchPages, LADDER_MODEL, UTILITY_MODEL,
   harnessSupporting, harnessContradictory, harnessBaseRate, harnessPrimarySource,
   harnessProvenanceChain, harnessAdjacentCategory,
-  type RunBudget, type HarnessResult, type HarnessName, type HarnessContext,
+  type RunBudget, type HarnessResult, type HarnessName, type HarnessContext, type MeteredOpts, type MeteredResult,
 } from './_harness.js'
 import {
   buildDecomposePrompt, buildRegroundPrompt, buildDescentPrompt,
@@ -258,6 +258,126 @@ export async function selectAnchor(
   return {
     ranked, chosen: null, verdicts, attempts, thesisMode: 'mechanism', rung0Question: null,
     entity: null, origin: 'unknown', denominator: 'no_number', provenance, degraded,
+  }
+}
+
+// ── G2: the claim split ─────────────────────────────────────────────────────
+//
+// The anchor is split into claims, and each claim's quote must be found in the
+// anchor's own source before anything is built on it. Two ways for that to
+// fail used to read as one: a reply that gave NO claims was counted as "100%
+// of claims unfound in source" (failRate fell back to 1 on an empty list), so
+// a model call that failed, a reply with no text and a reply cut off at its
+// limit all looked like quotes the source did not hold. Weeks 38 to 45: seven
+// aborts with that reason and not one claim among them. Week 38 was a refused
+// API key; the rest were the thinking block read as the reply (_harness.ts,
+// callMetered). They are told apart here.
+
+/** The split's reply limit. With thinking off, measured: 488 tokens for three
+ *  claims (week 43), 523 and 737 for four (weeks 34 and 37), so under 200 a
+ *  claim. The prompt asks for at most 8, about 1,500 tokens, which leaves over
+ *  1,000 spare. A reply that still reaches it is named as cut off. */
+export const DECOMPOSE_MAX_TOKENS = 2600
+
+/** Under this many characters the anchor's page gave the split nothing to quote. */
+export const SHORT_PAGE_CHARS = 200
+
+/** What the split reads: the anchor's headline and snippet, then its own page,
+ *  with a note when the page added nothing (weeks 36, 38, 41 and 42 fetched
+ *  38, 152, 69 and 0 characters), so the run says so instead of leaving it to
+ *  be inferred from token counts. */
+export function decomposeSource(anchorText: string, pageText: string | null | undefined): { text: string; note: string | null } {
+  const chars = (pageText || '').trim().length
+  const note = pageText == null
+    ? 'the anchor page was not fetched, so the claim split read the headline and snippet only'
+    : chars < SHORT_PAGE_CHARS
+      ? `the anchor page gave ${chars} characters of text, so the claim split read the headline and snippet only`
+      : null
+  return { text: [anchorText, pageText || ''].join('\n\n'), note }
+}
+
+export interface EmptySplit {
+  reason: string
+  /** True when the model itself answered with an empty list: a verdict, not a
+   *  fault, so asking again would pay for the same answer. */
+  answered: boolean
+}
+
+/** Why a split reply gave nothing to ground, in words that name the fault. */
+export function emptySplit(
+  res: Pick<MeteredResult, 'text' | 'error' | 'stopReason'>, parsed: unknown, maxTokens: number,
+): EmptySplit {
+  if (res.error) return { reason: `the claim split call failed (${res.error})`, answered: false }
+  const cut = res.stopReason === 'max_tokens'
+  if (!res.text.trim()) {
+    return {
+      reason: cut
+        ? `the claim split reply reached its ${maxTokens}-token limit before writing any text`
+        : 'the claim split reply held no text',
+      answered: false,
+    }
+  }
+  const list = (parsed as { claims?: unknown } | null)?.claims
+  if (Array.isArray(list) && list.length === 0) {
+    return { reason: "the claim split found no checkable claim in the anchor's source", answered: true }
+  }
+  if (Array.isArray(list)) return { reason: 'the claim split returned claims in a shape it cannot read', answered: false }
+  return {
+    reason: cut
+      ? `the claim split reply was cut off at its ${maxTokens}-token limit, so its JSON did not parse`
+      : `the claim split reply was not the JSON asked for (${res.text.length} characters)`,
+    answered: false,
+  }
+}
+
+export interface SplitAttempt {
+  attempt: number
+  prompt: { system: string; user: string }
+  res: MeteredResult
+  grounded: { claim: RawClaim; g: GroundingResult }[]
+  /** Set when the reply gave no claims to ground. */
+  empty: EmptySplit | null
+}
+
+export interface SplitOutcome {
+  grounded: { claim: RawClaim; g: GroundingResult }[]
+  /** Share of claims whose quote was not found; null when there were none. */
+  failRate: number | null
+  /** Set when the run must stop here, in words that name the fault. */
+  abortReason: string | null
+}
+
+/** Split the anchor into claims and ground each one, in at most two calls. */
+export async function splitClaims(
+  headline: string, sourceText: string, pillarEvidence: string[],
+  call: (opts: MeteredOpts) => Promise<MeteredResult>,
+  record: (a: SplitAttempt) => Promise<void> = async () => {},
+): Promise<SplitOutcome> {
+  let grounded: { claim: RawClaim; g: GroundingResult }[] = []
+  let empty: EmptySplit | null = null
+  let failRate: number | null = null
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    // The second attempt echoes back the quotes that were not found, which is
+    // only a prompt when there were some. After a reply with no claims it asks
+    // the first question again.
+    const prompt = attempt === 1 || !grounded.length
+      ? buildDecomposePrompt(headline, sourceText, pillarEvidence)
+      : buildRegroundPrompt(headline, sourceText, grounded.filter(x => x.g.action === 'block').map(x => String(x.claim.quote || '')))
+    const res = await call({ system: prompt.system, user: prompt.user, model: UTILITY_MODEL, maxTokens: DECOMPOSE_MAX_TOKENS })
+    const parsed = robustJson(res.text)
+    const claims = readClaims(parsed)
+    grounded = claims.map(c => ({ claim: c, g: groundClaim(String(c.text || ''), String(c.quote || ''), sourceText) }))
+    empty = claims.length ? null : emptySplit(res, parsed, DECOMPOSE_MAX_TOKENS)
+    failRate = grounded.length ? grounded.filter(x => x.g.action === 'block').length / grounded.length : null
+    await record({ attempt, prompt, res, grounded, empty })
+    if (failRate !== null && failRate <= GROUNDING_FAILURE_LIMIT) return { grounded, failRate, abortReason: null }
+    if (empty?.answered) return { grounded, failRate, abortReason: empty.reason }
+  }
+  return {
+    grounded, failRate,
+    abortReason: empty
+      ? `no claims to check after two attempts: ${empty.reason}`
+      : `grounding failed on both attempts (${Math.round((failRate ?? 1) * 100)}% of claims unfound in source)`,
   }
 }
 
@@ -505,36 +625,44 @@ export async function runInvestigation(opts: RunOpts = {}): Promise<RunResult> {
 
   // 4. G2. Decompose the anchor against its own fetched page text.
   const anchorPage = stored.find(s => s.url === anchor.url)
-  const sourceText = [anchorText, anchorPage?.pageText || ''].join('\n\n')
+  const source = decomposeSource(anchorText, anchorPage?.pageText)
+  if (source.note) degraded.push(source.note)
+  const sourceText = source.text
   const pillarEvidence = await loadPillarEvidence(anchor.pillarId)
 
-  let claims: RawClaim[] = []
-  let grounded: { claim: RawClaim; g: GroundingResult }[] = []
-  for (let attempt = 1; attempt <= 2; attempt++) {
-    const p = attempt === 1
-      ? buildDecomposePrompt(anchor.headline, sourceText, pillarEvidence)
-      : buildRegroundPrompt(anchor.headline, sourceText, grounded.filter(x => x.g.action === 'block').map(x => String(x.claim.quote || '')))
-    const res = await callMetered({ system: p.system, user: p.user, model: UTILITY_MODEL, maxTokens: 2600 }, budget)
-    claims = readClaims(robustJson(res.text))
-    grounded = claims.map(c => ({ claim: c, g: groundClaim(String(c.text || ''), String(c.quote || ''), sourceText) }))
-    const failRate = grounded.length ? grounded.filter(x => x.g.action === 'block').length / grounded.length : 1
-    await logGates(ctx, grounded.map((x, i) => ({
-      gate: 'G2_grounding' as const, subject_kind: 'claim' as const, subject_ref: `c${i + 1}`,
-      subject_label: String(x.claim.text || '').slice(0, 160),
-      action: x.g.action, score: Number(x.g.containment.toFixed(3)), checks: x.g.checks, model_calls: 0,
-    })), { modelName: UTILITY_MODEL, inputTokens: res.inputTokens, outputTokens: res.outputTokens, promptSha: promptSha(p.system, p.user) })
-
-    if (failRate <= GROUNDING_FAILURE_LIMIT && grounded.length) break
-    if (attempt === 2) {
-      await supabase.from('investigations').update({
-        status: 'aborted', abort_reason: `grounding failed on both attempts (${Math.round(failRate * 100)}% of claims unfound in source)`,
-        degraded: true, degraded_reasons: degraded, finished_at: new Date().toISOString(),
-        model_calls: budget.modelCalls, input_tokens: budget.inputTokens, output_tokens: budget.outputTokens,
-        est_cost_usd: Number(budget.estCostUsd.toFixed(4)), page_fetches: budget.fetches, search_calls: budget.searchCalls,
-      }).eq('id', runId)
-      return { ...empty, candidates: candidateSummary, abortReason: 'grounding failed twice', budget: { ...budget }, degraded }
+  const split = await splitClaims(anchor.headline, sourceText, pillarEvidence, o => callMetered(o, budget), async a => {
+    const extras = { modelName: UTILITY_MODEL, inputTokens: a.res.inputTokens, outputTokens: a.res.outputTokens, promptSha: promptSha(a.prompt.system, a.prompt.user) }
+    if (a.grounded.length) {
+      await logGates(ctx, a.grounded.map((x, i) => ({
+        gate: 'G2_grounding' as const, subject_kind: 'claim' as const, subject_ref: `c${i + 1}`,
+        subject_label: String(x.claim.text || '').slice(0, 160),
+        action: x.g.action, score: Number(x.g.containment.toFixed(3)), checks: x.g.checks, model_calls: 0,
+      })), extras)
+      return
     }
+    // A reply with no claims wrote no row at all, so the log could not say the
+    // call was made, what it cost, or why it gave nothing (weeks 38 to 45: 0
+    // G2 rows in every abort). One row now says which, in its own words.
+    await logGate(ctx, {
+      gate: 'G2_grounding', subject_kind: 'anchor', subject_ref: `split${a.attempt}`,
+      subject_label: (a.empty?.reason || 'the claim split gave no claims').slice(0, 160),
+      action: 'block', score: null, model_calls: 1,
+      checks: [check('claims_returned', false, {
+        attempt: a.attempt, stop_reason: a.res.stopReason ?? null, reply_chars: a.res.text.length,
+        output_tokens: a.res.outputTokens, error: a.res.error ?? null,
+      }, 'at least one claim read from the reply')],
+    }, extras)
+  })
+  if (split.abortReason) {
+    await supabase.from('investigations').update({
+      status: 'aborted', abort_reason: split.abortReason,
+      degraded: true, degraded_reasons: degraded, finished_at: new Date().toISOString(),
+      model_calls: budget.modelCalls, input_tokens: budget.inputTokens, output_tokens: budget.outputTokens,
+      est_cost_usd: Number(budget.estCostUsd.toFixed(4)), page_fetches: budget.fetches, search_calls: budget.searchCalls,
+    }).eq('id', runId)
+    return { ...empty, candidates: candidateSummary, abortReason: split.abortReason, budget: { ...budget }, degraded }
   }
+  const grounded = split.grounded
 
   // 5. G3. Gate first, rank second. A 9 on surprise can never carry a 2 on
   // verifiability, because the gate runs before the ranking exists.

@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-11
-head: 90e1b12
+as_of: 2026-11-12
+head: 3ab533c
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,26 +30,23 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-11)
+## Where it is right now (as of 2026-11-12)
 
-<!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":2,"current_as_of":"2026-11-10","current_source":"Control Center content_ideas in the publication's series (2 published in the last 7 days)","urgency":4,"urgency_reason":"at 25% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
+<!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
-- The Ladder's 3D device (`ladder_stage`, card ve-style-1) is built by Codex and checked by Claude; four faults fixed before merge (test filter, the paper plate not staged, fractional canvas sizes, the canvas box). It does not route yet: `needs_device` stays until Krish's yes on the Ladder's test render. (2026-11-11)
-- done. The ideas gate is in: every idea on the ideas board ends in one of five outcomes (Approve for <day>, File for later, Reject, Save as a trend, Improve for a future piece), each a press saying where it goes, and only his Approve puts an idea on a publish board. The database refuses every other placement (`content_ideas_board_gate`, migration `20261126090000_ideas_gate.sql`), keeps every answer append only in `idea_outcomes`, the view draws only approved pieces ("Approved by you, <when>") and names every other one as held, and Growth's read hands over only what he approved. The Sunday ideas run now fills the whole board once a week, Saturday's good news included; `saturday-goodnews.yml` has no schedule and runs by hand only. Contract 1.3.0. (2026-11-11)
-- 3D is in the renderer and the moves are one package. Card ve-style-0-three-and-moves was built by Codex on Lorimer and checked by Claude: - `three` and `@remotion/three` in `apps/renderer`, rendering with software WebGL (`gl: 'swangle'`); - `packages/moves` (`@mymu/moves`) imported by the lab and ve; - the five lab styles render pixel-identically. The lane's write_allow refusal was a card-format bug (#543). (2026-11-11)
-- Sessions started from make-piece, plan-week or produce-video report to the Publish Board the way a copied board prompt does (get_piece_board, report_board_session, add_piece_material, or board_session.py), and deepen, dive-deeper and the investigation write onto the piece as it is at the write, guarded on its updated_at (patchMeta), so a making record or a press that landed meanwhile is kept. (2026-11-11)
+- Every Claude and Growth prompt copied off the live board now ends with the walls (`WALLS` in apps/control-plane/api/board/_writeBack.ts): the Publish Board in Control Centre is the only place to put the work, content.krishraja.com/board is a read-only archive, and a session never posts or publishes and never puts an idea on the publish board (only Krish's Approve places it). Follows #578, the sweep of every actor. (2026-11-12)
+- A Not this on a rendered cut (the Publish Board's Cuts, view contract 1.6.0) now teaches what his other rejections on the board teach: his words go to his taste ledger (taste_reports), the rejection inbox the floor is compiled from (taste_rejection_inbox) and the failure loop (engine_incidents, stage cut), once each and never blocking the press; the piece's record answers with every answer on a cut, `making.py <piece> show` prints them in his words, and make-piece and produce-video read them before the next cut. The view's Script and record and After recording stages now carry their days from the making record (the latest take, the latest cut file), which until today always read null. New research library copies keep one date in their name, and a copy for a piece with no day links the board itself, not the week its research was filed; copies and descriptions already in Drive are unchanged. (2026-11-12)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
 
 ## What changed recently
 
-- 2026-11-11 apps/renderer ladder_stage device and test, `@types/three`, `ve-render.mjs` stages the Ladder's paper, the house golden gains the ladder entry; docs/ve/STATUS.md, docs/ve/ENGINE.md, lab/styles/README.md.
-- 2026-11-11 AGENTS.md (two scheduled board jobs, not three), docs/PUBLISH_BOARDS.md ("The ideas gate"), the plan-week skill and its off-days reference, `scripts/post-pack/board_gate.py` (read the gate for a week).
-Older lines: `docs/history/2026-11-11-NOW-moved-10.md`, `docs/history/2026-11-11-NOW-moved-9.md`, `docs/history/2026-11-11-NOW-moved-8.md`, `docs/history/2026-11-11-NOW-moved-7.md`, `docs/history/2026-11-11-NOW-moved-6.md`, `docs/history/2026-11-11-NOW-moved-5.md`, `docs/history/2026-11-11-NOW-moved-4.md`, `docs/history/2026-11-11-NOW-moved-3.md`, `docs/history/2026-11-11-NOW-moved-2.md`, `docs/history/2026-11-11-NOW-moved-1.md`, `docs/history/2026-11-10-NOW-moved-8.md`, `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
+- 2026-11-12 apps/control-plane/api/board/_cuts.ts, _handler.ts, _view.ts, content-ideas/[id]/making.ts, _researchLibrary.ts, scripts/post-pack/making.py, scripts/recover_research.py, the make-piece and produce-video skills, docs/PUBLISH_BOARDS.md, docs/DRIVE.md, docs/learning/README.md.
+Older lines: `docs/history/2026-11-12-NOW-moved-7.md`, `docs/history/2026-11-12-NOW-moved-6.md`, `docs/history/2026-11-12-NOW-moved-5.md`, `docs/history/2026-11-12-NOW-moved-4.md`, `docs/history/2026-11-12-NOW-moved-3.md`, `docs/history/2026-11-12-NOW-moved-2.md`, `docs/history/2026-11-12-NOW-moved-1.md`, `docs/history/2026-11-11-NOW-moved-16.md`, `docs/history/2026-11-11-NOW-moved-15.md`, `docs/history/2026-11-11-NOW-moved-14.md`, `docs/history/2026-11-11-NOW-moved-13.md`, `docs/history/2026-11-11-NOW-moved-12.md`, `docs/history/2026-11-11-NOW-moved-11.md`, `docs/history/2026-11-11-NOW-moved-10.md`, `docs/history/2026-11-11-NOW-moved-9.md`, `docs/history/2026-11-11-NOW-moved-8.md`, `docs/history/2026-11-11-NOW-moved-7.md`, `docs/history/2026-11-11-NOW-moved-6.md`, `docs/history/2026-11-11-NOW-moved-5.md`, `docs/history/2026-11-11-NOW-moved-4.md`, `docs/history/2026-11-11-NOW-moved-3.md`, `docs/history/2026-11-11-NOW-moved-2.md`, `docs/history/2026-11-11-NOW-moved-1.md`, `docs/history/2026-11-10-NOW-moved-8.md`, `docs/history/2026-11-10-NOW-moved-7.md`, `docs/history/2026-11-10-NOW-moved-6.md`, `docs/history/2026-11-10-NOW-moved-5.md`, then `docs/history/2026-11-10-NOW-moved-4.md` (it lists the earlier `*-NOW-*.md` files) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-11): queue card ve-style-2 (The Living Screen) under a new Codex booking, verify it the same way, then render each style's test take for Krish.
+- Next (2026-11-12): the live view's Approve for publish press bound to a piece manifest's sha256, so Growth's manifests can be sealed again.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
@@ -58,7 +55,7 @@ Older lines: `docs/history/2026-11-11-NOW-moved-10.md`, `docs/history/2026-11-11
 - Waiting on Krish (as of 2026-10-29): Control Center's `GITHUB_TOKEN` needs Contents: write and Actions: read on this repository for the make press; whether the $15 cap gets a reader; the Buffer plan (due 31 October); OUR TEST or MY TEST on a video label he presents; "we" in article titles while video titles keep "I".
 - Waiting on Krish (as of 2026-10-29, Wave 2 and 3 production): by ear, the levels and a sound-effect set; Gate 2 on face-with-proof frames and six devices; 5 to 10 golden frames; 20 minutes on 9 Nov scoring shadow cuts. His 29 Oct answers and the home-computer steps: the handover above.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-11): holds.
+- North Star check (2026-11-12): holds.
 
 ## Read next
 

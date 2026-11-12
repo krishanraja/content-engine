@@ -2,6 +2,7 @@ import { dayDate, type PostedDay } from './_posted.js'
 import { offdaySides } from './_offdaySides.js'
 import { yesByDay } from './_yes.js'
 import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, approvedLabel, dayShort, dayWords, goes, optionSha, type Approval, type Outcome } from './_gate.js'
+import { driveFolderIdOf } from './_drivePosts.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
 // Control Centre; the old board is a read-only archive). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
@@ -70,6 +71,9 @@ export interface ViewOption {
   outcome?: { id: Outcome; label: string; at: string | null; words: string | null } | null
   /** Contract 1.3.0: why it cannot cross to the publish board yet (words a session wrote for him, changed words). */
   held?: string
+  /** Contract 1.7.0: the Drive folder of the post made for it (the week's plan, `drive`), whose assets the day's
+   *  `posts` lists; null when nothing is filed for it yet. An off-day option only. */
+  post?: string | null
 }
 export interface ViewPiece {
   id: string; title: string; series: string; state: string; published: boolean; on_day: boolean
@@ -204,10 +208,54 @@ export function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): Vi
     const outcome = approved
       ? { id: 'approved' as const, label: approvedLabel(current!), at: current!.decided_at, words: current!.words }
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof press?.at === 'string' ? press.at : null, words: pressWords } : null
-    return { id: String(o.id || pick), doc_id: pick, title: headlineOf(story) || cut(o.so_what, 200), text: cut(o.so_what, 600),
+    // The plain question first (house rules STORY_ARC and BIG_PICTURE; the ideas quality plan, item 7), then the headline.
+    const question = isObj(o.pitch) ? cut(o.pitch.question, 200) : ''
+    return { id: String(o.id || pick), doc_id: pick, title: question || headlineOf(story) || cut(o.so_what, 200), text: warned(o) + cut(o.so_what, 600),
       format: null, source: isObj(o.source) ? cut(o.source.label, 200) || null : typeof o.source === 'string' ? cut(o.source, 200) : null,
       status, said: said ? cut(said, 600) : null, actions, outcome, ...(held ? { held } : {}) }
   })
+}
+
+/** The warning line on an option he warned off in another press (ideas.json `warning`, his words exactly, checked by
+ *  board_feed.py cover): said first, before the idea, so he sees it before he presses. Empty when there is none. */
+export function warned(o: Body): string {
+  const w = isObj(o.warning) ? o.warning : null
+  const said = w ? cut(w.said, 300) : ''
+  return said ? `Warned: you said "${said}"${typeof w!.at === 'string' ? ` (${dayLabel(w!.at)})` : ''}. ` : ''
+}
+
+const dayLabel = (at: string) => {
+  const d = new Date(`${at.slice(0, 10)}T12:00:00Z`)
+  return Number.isNaN(d.getTime()) ? at.slice(0, 10) : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' })
+}
+const slugOf = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 59)
+
+/** The ideas board's own lines on a day, drawn after its options (the ideas quality plan, items 1 and 3): each subject
+ *  he refused that the run will not offer again, with his words and one press to give it back ("Offer it again",
+ *  queue/veto-<subject>, his alone), and each return or ask held back, with the reason. From ideas.json `vetoes` and
+ *  `held`; a line with no day of its own goes on Monday. */
+export function ideaLines(i: ExtrasInputs, day: string): ViewOption[] {
+  const plan = isObj(i.ideas) ? i.ideas : {}
+  const on = (d: unknown) => (typeof d === 'string' && ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].includes(d) ? d : 'mon') === day
+  const out: ViewOption[] = []
+  for (const v of (Array.isArray(plan.vetoes) ? plan.vetoes : []).filter(isObj)) {
+    const subject = cut(v.subject, 120), slug = slugOf(subject)
+    if (!subject || !slug || !on(v.day)) continue
+    const id = `veto-${slug}`
+    const back = his(i.queue).find(q => q.doc_id === id && isObj(q.body) && typeof q.body.unveto === 'string')
+    out.push({ id, doc_id: id, title: `Not offered again: ${subject}`, format: null, source: null, said: cut(v.said, 600) || null, outcome: null,
+      text: `You said${typeof v.at === 'string' ? ` on ${dayLabel(v.at)}` : ''}: "${cut(v.said, 400)}" The ideas run will not offer it until you raise it again.`,
+      status: back ? 'given back' : 'not offered again',
+      actions: back ? [] : [{ kind: 'press', label: 'Offer it again', collection: 'queue', id, revision: rev(i.queue, id),
+        body: { pick: id, queued: false, unveto: subject }, stamp: ['at'], done: 'Given back. The next ideas run may offer it again.' }] })
+  }
+  for (const h of (Array.isArray(plan.held) ? plan.held : []).filter(isObj)) {
+    const ref = cut(h.ref, 160)
+    if (!ref || !on(h.day)) continue
+    out.push({ id: `held-${slugOf(ref)}`, doc_id: `held-${slugOf(ref)}`, title: `Held back: ${cut(h.title, 200) || ref}`, text: cut(h.reason, 600),
+      format: null, source: null, status: 'held back', said: null, actions: [], outcome: null })
+  }
+  return out
 }
 
 const headlineOf = (story: string) => { const m = /Headline:\s*(.+?)(?:\s+Hook:|$)/.exec(story); return m ? cut(m[1], 200) : '' }
@@ -294,7 +342,7 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     const outcome = approval ? { id: 'approved' as const, label: approvedLabel(approval), at: approval.decided_at, words: approval.words }
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof (idea as Body | null)?.at === 'string' ? String((idea as Body).at) : null, words: typeof idea?.words === 'string' ? idea.words : null } : null
     const out: ViewOption = { id: s.id, doc_id: docId, title: s.hook || cut(s.copy, 200) || s.id, text: cut(pitch || s.copy, 600), format: s.format || null,
-      source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}) }
+      source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}), post: driveFolderIdOf(o.drive) }
     if (o.weekly) {
       const stories = Array.isArray(o.stories) ? o.stories.filter(isObj) : []
       out.stories = stories.slice(0, 8).map(st => {
@@ -305,9 +353,19 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
       })
       out.stories_due = typeof o.stories_due === 'string' ? o.stories_due : null
       out.stories_fresh = storiesFresh(i.week, o)
+      // The week's mix of good news, said before he presses (the ideas quality plan, item 12).
+      const mix = mixOf(stories)
+      if (mix) out.text = cut(`The mix: ${mix}. ${out.text}`, 700)
     }
     return out
   })
+}
+
+/** "2 health, 1 work, 1 money": the kinds of the week's good-news stories, most first, or '' when none says its kind. */
+export function mixOf(stories: Body[]): string {
+  const counts = new Map<string, number>()
+  for (const st of stories) if (typeof st.kind === 'string' && st.kind.trim()) counts.set(st.kind.trim(), (counts.get(st.kind.trim()) || 0) + 1)
+  return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([k, n]) => `${n} ${k}`).join(', ')
 }
 
 /** The day's "Add your thoughts": a comment pinned to the day and its step, as the desk saved it (desk:<day>:<step>). */

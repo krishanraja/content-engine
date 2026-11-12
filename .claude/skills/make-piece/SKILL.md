@@ -42,13 +42,13 @@ and the repository, never from the chat that started it.
 
 ## Report to the board as you work
 
-A session started from this skill, not from a prompt copied off the board, reports the same way a board prompt says
-("Keep the board current as you work", `writeBack` in `apps/control-plane/api/board/_writeBack.ts`): first
-`get_piece_board` on the Control Center connector, or `python3 scripts/post-pack/board_session.py <piece_id> show`;
-then `report_board_session` (start, progress at each milestone, done, or blocked with what it needs), or
-`board_session.py <piece_id> start|progress|done|blocked "one line" --session <id> --step <step>`; and everything it
-makes or draws on goes on the piece with `add_piece_material`, or `board_session.py <piece_id> add <file or text>`. A
-day with no piece yet is `day:<Monday>/<day>`. Add, never replace.
+Report as a board prompt says (`apps/control-plane/api/board/_writeBack.ts`): `get_piece_board` (Control
+Center's connector) or `scripts/post-pack/board_session.py <piece_id> show`; then `report_board_session` start,
+progress, done or blocked (`board_session.py <piece_id> start|progress|done|blocked "one line" --session <id> --step
+<step>`); and file all you make or draw on with `add_piece_material` (`board_session.py <piece_id> add <file or
+text>`). A day with no piece is `day:<Monday>/<day>`. Add, never replace. Research is never left in scratch or a chat:
+file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece
+first. Each is copied into his Research library in Drive. (Ruling, Krish, 2026-11-11)
 
 ## From the signed narrative lock (pieces from 9 November)
 
@@ -67,9 +67,8 @@ does that with him and writes one narrative lock per piece,
   row below). The lock's His close is his call in his own words, The use is
   the Monday action, its Facts to check are the facts the scripts and the
   article may state, and its Music bed is the bed. A piece that publishes from 9 November with no
-  signed lock: make nothing, put one waiting line on its day's tab
-  (`week_board.py --draft <day> --waiting "<day>=Sign the narrative lock in
-  the Sunday room"`) and stop. `making.py scripts` refuses it anyway. The
+  signed lock: make nothing, report `blocked` on the piece ("Sign the
+  narrative lock in the Sunday room") and stop. `making.py scripts` refuses it anyway. The
   backlog before 9 November keeps the Narrative step in the table below.
 - **The drafts are dated by the day it publishes**, the lock's `Publishes`
   date: `docs/plans/<that date>-draft-script.md` and `-draft-script-90s.md`.
@@ -83,13 +82,12 @@ does that with him and writes one narrative lock per piece,
   his Approve scripts press (about 12:30). The workroom, the article, the
   fact gate and the visual gate follow while he reviews and records; they
   never hold the scripts back.
-- **Every question for Krish goes on the day's tab, never into chat.** No
-  one is in this session's chat: a decision of his is a press (a
-  `--waiting` line) or a comment thread on a review box of that day's tab,
-  put as the question itself with your best guess. His answer comes back as
-  a board document (`board_web.py read <Monday> comments`, and `edits`,
-  `updated_by` Krish only) and is relayed as his words. Rebuild and
-  republish the tab each time a question is added.
+- **Every question for Krish goes on the live board, never into chat.** No
+  one is in this session's chat: report `blocked` on the piece with the
+  question itself and your best guess (`board_session.py`), or an item on his
+  one list. His answer comes back as a board document (`board_web.py read
+  <Monday> comments`, and `edits`, `updated_by` Krish only) and is relayed
+  as his words.
 - **The article's fact sign-off lines go to the Monday final board.** A line
   the fact gate cannot match (`docs/COST_GUARDS.md`, G9) is never asked in
   chat: name it exactly as the draft says it, with its source, for the
@@ -113,7 +111,12 @@ does that with him and writes one narrative lock per piece,
    each floor read and `check_failures.py`, then run `scripts/preflight.py`
    (docs/learning/README.md).
 2. Read the piece: `python3 scripts/engine.py GET "/api/content-ideas?id=<uuid>"`
-   and where it is: `python3 scripts/post-pack/making.py <uuid> show`.
+   and where it is: `python3 scripts/post-pack/making.py <uuid> show`. It also
+   prints every Yes or Not this he pressed on a rendered cut (the board's Cuts
+   tab, `meta.cut_verdicts`): a Not this, in his words, is the brief for the
+   next cut of that kind, so it goes into the creative direction and the
+   storyboard before anything is rendered again; a Yes means that file is
+   right, and it is never remade unless he asks.
 3. Record this session on the piece so the board shows it is being made:
    `python3 scripts/post-pack/making.py <uuid> session <this session's https link>`
    (in GitHub Actions, the run's link:
@@ -137,12 +140,10 @@ does that with him and writes one narrative lock per piece,
    less than six hours ago is held back and said; send it again only on
    Krish's go (`pending --retry`) or once its words change.
 
-6. **The board is where the piece is worked, from the first draft.** Put the
-   day on its tab of the week's publish board in draft
-   (`week_board.py --draft <day>` with a `--review` box for the outline, the
-   article and each script, and a `--waiting` line for each call on Krish),
-   and publish it with `board_web.py publish-web` (docs/PUBLISH_BOARDS.md) each time the words
-   change, so he reads, edits and comments there. A workroom holds the
+6. **The board is where the piece is worked, from the first draft.** File the
+   outline, the article and each script on the piece as each changes
+   (`board_session.py <uuid> add`), so the live board's day shows them and he
+   reads and comments there (`docs/PUBLISH_BOARDS.md`). A workroom holds the
    decisions beside it; it never replaces the day's tab (Krish, 2026-10-19:
    "Why have you stopped working in [the board] even though this is the
    third time I've asked you ? We have a protocol.").
@@ -158,10 +159,8 @@ does that with him and writes one narrative lock per piece,
    touched. Read what it says, then run it again with `--apply`, and with
    `--post-ledger` to write one row per save to the edit ledger as his
    (surface `publish_board`, his own saved words, `decided_by: 'Krish'`).
-   Rebuild with `--sweep <day>=<the sweep file>` so "Also changed" shows
-   under the drafts, and `--lessons` (the saved GET
-   /api/video-studio/learning-proposals) for "What I learned from your
-   edits". His taps come back as comments with `act` and `ref`: `undo`
+   File the sweep file on the piece (`board_session.py <uuid> add`) so the
+   live board's day shows what changed. His taps come back as comments with `act` and `ref`: `undo`
    (`edit_sweep.py --undo SWEEP ID --apply`), `apply` (`--accept SWEEP ID
    --apply`), `lesson_yes` and `lesson_no` (relay to POST
    /api/video-studio/learning-proposals with his decision; a yes becomes a
@@ -177,7 +176,7 @@ does that with him and writes one narrative lock per piece,
    operator key. A number is carried only where the same noun sits next to
    it or two content words match; anything weaker is a suggestion. On a day
    with recordings a script whose cut cannot be told is left alone. A failed
-   gate after the sweep is fixed before the rebuild.
+   gate after the sweep is fixed before the words are filed again.
    `references/week-board.md`, "Krish's edits on the board".
 
 Then do the first step that is not done.
@@ -204,7 +203,7 @@ Code, never this session's.
 | Step | Do | Record |
 |---|---|---|
 | Narrative (before anything is made) | From 9 November this step is the narrative lock Krish signed in the Sunday room ("From the signed narrative lock", above), and nothing more is written here: the three checks this row makes (the end message against the research, against the series' recent pieces, and any test designed as an experiment) ran in the room on its Answer, The use, His close and any test, before he signed (`plan-week`, step 10). A lock that shows they did not goes back to the room, never on. For the backlog: before any workroom, draft, script or visual, the piece has a one-page editorial narrative at `docs/plans/<week>/narrative-<day>.md`, signed by Krish in words (Krish, 2026-10-19: "I want to be crystal clear on the overarching end message and checkpoints of the piece so that we can't randomly go off track and take ages to iterate"; made standing the same day). It holds six parts in plain English a 12-year-old follows: the end message in one sentence; who it is for and the one thing they do differently on Monday; four or five checkpoints, each with a pass test and what Krish signs there; the one picture and the point it carries (VISUAL_EXPLAINS); what is out of scope; and the drift rule. The research starts with the corpus he linked to this piece on the Inspiration page, research he already pulled (Krish, 2026-10-24: a corpus is "for a specific article or a specific content piece"): `select name, drive_file_id, read_as, note_for_claude, facets from inspiration_items where kind = 'corpus' and piece_id = '<piece_id>'`; read each file in Drive (`https://drive.google.com/file/d/<drive_file_id>/view`), and its sources still pass the fact gate like any other. Then read every other card linked to the piece: `python3 scripts/post-pack/making.py <piece_id> clips` (the engine's `GET /api/content-ideas/<id>/routed-clips`). A clip is `show_with_sound` only once his own words saying so are on the record (`making.py <piece_id> clips sound <card_id> --krish-words "Krish, YYYY-MM-DD: his exact words"`, quoted from what he typed on the card or to you, never inferred; Krish, 2026-10-31: "so a new session knows they will need to be referenced with audio on during my video post production"). Watch each one whole with sound, and give it a named slot in the creative direction and the storyboard, at the line it sits under, with its own audio on. A `reference` card is read, never placed unless he asks; a card whose words seem to ask for its sound but have no record is one question to him. The end message is checked against the research before he signs it: a line the evidence does not hold changes there, never later. It is checked against the series' recent pieces too: a takeaway a recent piece already landed is never the end message again, so the new piece says what is new (Krish, 2026-10-26: "we've already done that message takeaway with the Muse versus Grok piece"). A test the piece runs is designed as an experiment before it is run: say what it tests, change one thing only (a matched control, such as the same question with only the country changed), give every tool the same access and settings, write the prompts so they need nothing outside their own words, and write down what will be read from each answer before any answer exists (Krish, 2026-10-23: "I don't think you are really thinking much about how to design a test that yields the experiment needed"). Every later step is held to it: the outline's spine is the end message, and each checkpoint is passed in order. **Drift rule:** any change to the end message, the action or a checkpoint goes back to Krish before work continues. With no signed narrative, write one and put it to him, and make nothing else | his words added under the narrative as `Signed by Krish: <his words>, <date>`; from 9 November `making.py <uuid> narrative` says signed |
-| Workroom | The day's tab of the week's web board, in draft, is the workroom (decisions, picks, mocks; never a separate page or an artifact) and the place Krish and the session walk through key decisions; it is where the piece is iterated before it goes onto the week's publish board, so it is on brand from its first version: the publish page's own tokens and fonts (`publish_manager.py`: cream `#F4EFE4`, ink `#0C1512`, mint `#7EF0C0`; Anton uppercase headings, Archivo body, IBM Plex Mono labels), never a look of its own (Krish, 2026-10-19: "Are you just using this workroom as the iteration tool before we get this in to [the board]? If so it needs to be on brand.") | `making.py <uuid> workroom https://content.krishraja.com/board/<Monday>` |
+| Workroom | The live board's day is the workroom (decisions, picks, mocks; never a separate page or an artifact) and the place Krish and the session walk through key decisions; it is where the piece is iterated before it goes onto the week's publish board, so it is on brand from its first version: the publish page's own tokens and fonts (`publish_manager.py`: cream `#F4EFE4`, ink `#0C1512`, mint `#7EF0C0`; Anton uppercase headings, Archivo body, IBM Plex Mono labels), never a look of its own (Krish, 2026-10-19: "Are you just using this workroom as the iteration tool before we get this in to [the board]? If so it needs to be on brand.") | `making.py <uuid> workroom <live_board.py <Monday> <day>>` |
 | Fact-checked draft | Write the article at 1,000 to 1,400 words, never more (house rule ARTICLE_LENGTH, Krish, 2026-10-12: "moving forward the articles need to be about 30% shorter"; check with `wc -w` before the gate). Its prediction names one checkable event on a date, not already under way in the piece's own evidence, with honest confidence (house rule SHARP_PREDICTION). It ends with a last section headed "3 things you can do tomorrow" holding exactly three concrete actions that follow from the piece's own checked evidence (house rule THREE_THINGS_TOMORROW, Krish, 2026-10-21: "The articles all need to have a really clear "3 things you can do tomorrow" at the end of every piece too."); that section is not an outline section, and the publish check THREE_THINGS_TOMORROW reads it. Then `python3 scripts/post-pack/voice_check.py <article>` until it passes (house rule SOUNDS_LIKE_KRISH, Krish, 2026-10-13: "build the sounds like Krish pass now", then "we need more aggressive anti AI scanning techniques by 10X"; bar 6; the article's "we" counts as the person behind it, as "I" does in a script), then `python3 scripts/post-pack/ai_scan.py <article>` (a language model on this machine; it names the most predictable sentences) until it passes too: rewrite each paragraph or sentence they name in his voice (krish-voice, with the branch for this channel in its `references/voice-profile.md`: a Make Your Mind Up article speaks as the publication, "more like a professional media channel"), never by swapping words to fool a detector. Then read `node scripts/post-pack/voice_score.mjs <article>`, a signal and never a gate: it measures the draft against his own long-form, read live from ai-harness, and names the habits furthest from his; for the publication's "we" treat it as a direction, not a target. Before the fact gate, run the kill list and the copy lint on the article body too (`node vendor/makeyourmindup/kill-list/kill-list.mjs <article>` and `python3 scripts/post-pack/copy_lint.py --applies-to article_body <article>`; the Scripts step, 3b). File verbatim sources, run the fact gate through `scripts/engine.py` (it reads the free pre-check first and refuses a paid run while a stated number is on no filed source: file that source or fix the number, and fix everything a run lists before running it again), fix what it lists (`docs/CONTENT_ENGINE.md` step 10) | the gate writes `meta.fact_check` itself |
 | Reader test (every Substack post) | After the fact gate and the figures, a fresh reader with no other context reads the article with its figures in place and scores it out of 10 on Krish's six criteria (house rule READER_TEST; Krish, 2026-11-01: "make those criteria the permanent judging criteria for all future Substack posts"): enjoyable; big picture (at least one plain paragraph on what it means for the reader's business and their job as a manager); investigative; incredibly easy to follow (a busy, non-technical leader reading once; every term explained where it first appears; numbers that look alike told apart); easy to learn from; and visual cues (at least one figure for every two sections, each where its question comes up, readable at a glance, matching the words exactly). In Claude Code start one subagent (the Agent tool, description "Separate reader: reader test"), give it the article and the figure files and the criteria above, and ask for a score per criterion and the exact sentence or figure behind any score under 9. Fix every one, keeping every checked fact, and read it again with a new reader until all six score 9 or more. At most one quip in an article. Draw article figures with `node scripts/pages/render_figure.mjs <figure.html> <out.png>` (house look `scripts/pages/figure.css`; it refuses a figure that spills past its frame or its card); a source screenshot and a drawn figure may sit in the same piece | the scores and the reader's notes in the piece's plan folder, `docs/plans/<date>-<day>/reader-test.md` |
 | Visual gate | The cover and thumbnails are drawn here with a working headline so the gate can check them; their words are signed off only after he records (house rule TITLES_AFTER_RECORDING), and they are redrawn then. Real logos, real pages piled up when the piece is about volume, the house cover with Krish's face (`scripts/post-pack/visual_gate.py`). Keep the plan's facts in the repository: `docs/plans/<plan>/cover-facts.json`, with every logo it draws committed as SVG in `docs/plans/<plan>/logos/` (git keeps no PNG or JPEG) and its paths relative to the facts (`"logos/<file>.svg"`), so any checkout, a home computer included, can draw the artwork. With the cover, draw the two video thumbnails (house rule THUMBNAIL_EVERY_SIZE): `python3 scripts/pages/build.py docs/plans/<plan>/cover-facts.json --thumbs --out <work folder>/thumbs`, with no `--assets`, and every company the piece names in a row or in `"thumbs": {"strip": [...]}`. Pack them as `thumbnail` entries, `"shape": "wide"` and `"tall"`, each with its logos | `making.py <uuid> visual-gate post.json` |
@@ -212,13 +211,13 @@ Code, never this session's.
 | Style recipe | Before writing the scripts, read the style bank in `config/style-references.json` (`docs/STYLE_REFERENCES.md`). If the piece has a recipe (a signed narrative lock's Style recipe is one, with his yes), apply its opening, structure, breakdown, proof, tone and close modules on top of the base: Krish's house rules, golden lines and verdicts are never overwritten. If not, propose a recipe from the bank (modules he has `liked` first) and get his yes in words. Show him the recipe's camerawork and production modules as one line on the day's publish board before he records | the recipe is in the ledger with his words; the scripts follow it |
 | Outline (one spine) | From 9 November the signed lock's Outline is the outline and his signature its approval; `making.py scripts` reads it there, and the rest of this row holds for it. Before any script: `docs/plans/<date>-outline.md` states `Spine: <the one question the piece answers>?`, `Answer: <its one-line answer>`, and at most six sections, each `N. <HEADING> \| proves: <the part of the answer it proves>`; shown to Krish, and his words added as `Approved by Krish: <his words>, <date>`. The draft's `## ` headings are exactly those sections, plus the closing "3 things you can do tomorrow" section. A new angle is a new spine and a whole new outline, approved again, never sections added on top (house rule ONE_SPINE; Krish, 2026-10-14: "we ended up with an absolute ton of drift here ... the engine cannot do this again"). `making.py scripts` refuses until the outline and the draft's sections pass (free checks, outlines from 19 October on); the scripts and their Teleprompter send never wait on a paid model call (Krish, 2026-10-26: "This seems like one of the ways in which we just burn API credits when we don't really need to be doing that", then "yes to the fix"). The engine's judge, a paid call, reads every section against the spine once, on the finished article after its voice rewrite: `spine_check.py judge <uuid> --outline <outline>`; `publish-manager` refuses until it passes on the current words | `spine_check.py outline|draft|judge`; `making.py` checks it |
 | Scripts | Two scripts, each with its own hook and its own outro (house rule TWO_CUTS, Krish, 2026-10-11; the long cut became 5 minutes on 2026-10-19: "let's make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format."): the 5-minute long cut, 675 to 825 spoken words, 16:9, for Substack and YouTube; and the 90-second short cut, 160 to 195 spoken words, 9:16, for YouTube Shorts, TikTok and Instagram Reels. Each opens straight on the hook (no series line, no "I'm Krish"), closes on the one thing Krish would do, in his first person and a short beat (never a list of orders; house rule SCRIPT_CLOSE, Ruling, Krish, 2026-10-31: the old close "sounds a bit bossy and preachy") and ends on "The full deep dive is at makeyourmindup.ai.", is held to a reading age of 12 and to what a slow listener can hold heard once (house rule LISTENING, Ruling, Krish, 2026-10-31: at most 3 figures in the long cut and 1 in the short, about 8 and 4 names, one story, a map up front and a recap before the close), written in the on-camera branch of krish-voice's `references/voice-profile.md` (his natural spoken energy, "I", contractions; Ruling, Krish, 2026-10-31: "Exuberant on camera too"; a voiceover cut follows the article register read aloud until he rules on it) and checked with `node scripts/post-pack/voice_score.mjs <script>` (a signal); before writing it, run `python3 scripts/voice/spoken_rules.py` and apply every read-aloud rule he kept, his wording first (they go live the week he keeps them on his list; exit 2 means draft without them and say so), then three fresh readers hear it, then it goes to Teleprompter: all of it in "The Scripts step", below. Keep both as the dated drafts beside the plan (`docs/plans/<date>-draft-script.md` and `-draft-script-90s.md`): the matcher and `kit.py` read them there. The Teleprompter state never holds this step back: Copy on the publish page always works | `making.py <uuid> scripts docs/plans/<date>-draft-script.md docs/plans/<date>-draft-script-90s.md`, the long cut first, both required (it checks each with the piece's series); then `making.py <uuid> read-back CUT --readers ...` for each cut; then his Approve scripts press on the day's tab, after which the server sends and records; only after a `no_key` answer, per cut sent, the `teleprompter_send.py record` line `plan` printed, with the ids Teleprompter gave |
-| Publish page | `publish_manager.py`: one page with Copy on every text and every picture, built into its day's tab of the week's publish board ("The week's publish board": `.agents/skills/make-piece/references/week-board.md`) | `making.py <uuid> publish-manager https://content.krishraja.com/board/<Monday>` |
+| Publish page | `publish_manager.py`: one page with Copy on every text and every picture, filed on the piece, which the live board's day shows | `making.py <uuid> publish-manager <live_board.py <Monday> <day>>` |
 | Record (Krish) | Krish records both cuts, each from its own script, reading it from its script in his teleprompter.com account (one folder per piece, one script per cut). Teleprompter holds scripts only. A take comes back one way: he drops the file at the top of the Video Engine Inbox, and the home computers' recordings upload sends it to the engine and places it on its piece and cut by itself (`recording_match.py --record --board --by "Recordings lane"`, every five minutes on either machine). Every take is stamped with the hash of the script it was read from. A take it is unsure of is one board item held in progress for a session, never on his list: nothing he can press answers it, so a session works it out or asks him in its reply. The step is done only when both cuts have a take of their current words; a Record tick on the week's board is information only | the recordings lane, or the production session (`.agents/skills/produce-video`): `recording_match.py --record` |
 | Titles, headlines and headings (Krish picks, after he records) | Read `.agents/skills/make-piece/references/titles-round.md` before the round; it holds this step in full. From 9 November the round is the Titles press on the day's tab on Sunday evening (Krish, 2026-10-28: "Sunday evening press"): three options per surface, best first, each through the cold read and `copy_lint.py --applies-to titles`; his press records his picks only (he starts the Sunday-night run, `produce-video`, by telling Claude Code "I've recorded"), and a surface he has not picked by 21:30 takes its top-ranked option, never recorded as his pick. Its gates: only once a take is on the record (house rule TITLES_AFTER_RECORDING), lined up with what he said (`narration_diff.py`); from the story first (STORY_FIRST); every packaging line in one round, his one sign-off sheet, before anything that waits on it (SIGN_OFF_FIRST); headings and dividers like a real media channel's, never his transcript pasted (CHANNEL_HEADINGS); `title_check.py` a floor, never the writer; Then the cold read, before anything reaches him: a fresh reader with no context drops any line it cannot explain in one go or calls cheap; and every pick and rejection recorded with his own words | `title_check.py verdict "Title" --picked|--rejected --why "..." --krish "his words" --surface <surface> --piece <uuid>` |
 | Video cards | After the titles round (his headings, from his own words in the take): every picture that cuts in while Krish talks is drawn by `scripts/pages/video_card.py cards.json` (beside post.json): brand faces and colours only, a company logo people recognise on every card, a kicker that never uses another series' ground, and nothing clipped or off the card (it refuses to draw otherwise). Look at its `--sheet` before the pack. Krish, 2026-10-13: "there are font consistency issues throughout ... we've not made any use of business logos as we're supposed to" | the cards' file names in post.json |
 | Pack | `build.py post.json` then `send.py <pack>` (both record themselves when post.json has `piece_id`). It lands in the post's `3 Posts` folder, the one home for everything ready to post; a Tuesday, Thursday or Saturday piece's folder is `YYYY-MM-DD Ddd off.day - Subject` whatever its series dress. Send it the same day: until it is sent, a home computer has none of the post's pictures for the video kit | automatic |
 | Video assets (the Sunday-night run) | Both cuts produced with the logos and the pile-up on screen, the series intro sting in front of the 16:9 long cut only (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"; the 9:16 short cut and an off-day piece open on the hook, house rule HOOK_IS_THE_INTRO), the licensed music bed and a thumbnail for each size, filed in the archive and, through the visual gate for videos and thumbnails, in the post's library folder (`3 Video`). It never rebuilds the pack and never writes the Visual gate or Pack steps. Not this session's step: `produce-video` makes them, in its Sunday-night run or when Krish engages it in Claude Code. Codex only makes pictures for them ("Visual asset maker"). Storyboard, style, proof and cut are his presses on the day's tab (`docs/PUBLISH_BOARDS.md`, production gates) | `produce-video`: `making.py --by "Claude Code" <uuid> video long "<name>" <path> --thumb <path> --thumb-file <the drawn file> --music <track id>`, with `--thumb` only for a thumbnail actually drawn and filed |
-| Publish board (the web board), then posting (Krish) | Once the video assets are on the record, the cuts and their thumbnails are in the post's library folder already. Put them in the publish page, then rebuild the week's publish board with that page and publish it with `board_web.py publish-web`, so every tick stays ("The week's publish board": `.agents/skills/make-piece/references/week-board.md`). When this session holds the post's working folder and the finished cut files, also add them to `post.json` (`video` and `thumbnail` entries, each declaring the logos on screen) and rebuild: `build.py --replace` runs the visual gate again and records Visual gate and Pack, then `send.py`. Krish posts in the amplification order (`docs/AMPLIFICATION.md`) and ticks each step on that day's tab of the week's publish board as he goes (or in Control Center). Every session copies his channel ticks onto the record ("The week's ticks", below), or records what he said he posted. The step is done when the standing five are on the record: Substack, YouTube, Shorts, TikTok and Instagram | `making.py <uuid> posted <channel> [https link]`, from his ticks or his words |
+| Publish board (the web board), then posting (Krish) | Once the video assets are on the record, the cuts and their thumbnails are in the post's library folder already. Put them in the publish page; the live board shows them from the record. When this session holds the post's working folder and the finished cut files, also add them to `post.json` (`video` and `thumbnail` entries, each declaring the logos on screen) and rebuild: `build.py --replace` runs the visual gate again and records Visual gate and Pack, then `send.py`. Krish posts in the amplification order (`docs/AMPLIFICATION.md`) and ticks each step on that day's tab of the week's publish board as he goes (or in Control Center). Every session copies his channel ticks onto the record ("The week's ticks", below), or records what he said he posted. The step is done when the standing five are on the record: Substack, YouTube, Shorts, TikTok and Instagram | `making.py <uuid> posted <channel> [https link]`, from his ticks or his words |
 
 `post.json` carries `"piece_id": "<uuid>"` so the pack tools report by
 themselves. Nothing in this skill sends, posts, spends or deletes: a paid
@@ -414,7 +413,7 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    answers (`read_back` on the script), but the words you will send are read
    back here, whatever the engine said. When rounds of readers keep finding
    smaller things while every retelling matches, put the words to Krish on
-   the day's tab (a review box and a waiting line) and ask him there. His
+   the live board (filed on the piece, `blocked` with the question). His
    sign-off in words is recorded as his, never as the readers'
    "nothing lost": `making.py <uuid> read-back CUT --krish-words "Krish,
    DATE: his words"`, with any readers who did pass it in `--readers`
@@ -436,9 +435,9 @@ signed lock's His close; with no lock, the question goes on the day's tab.
 6. **His Approve scripts press, then Teleprompter**, where he reads them
    while he records ("The Teleprompter send", above). The storyboard is drawn
    first (step 7) and filed on the day; with none, the board reminds (Krish,
-   2026-11-09: "Remind"). Put both scripts on
-   the day's tab for his Approve scripts press and republish it; the press
-   binds to their sha256, and the server sends them and reads them back.
+   2026-11-09: "Remind"). File both scripts on
+   the piece and ask for his yes on the live board; where the view carries no
+   Approve scripts press, his words approve them ("Publish-board routing").
    His press and its answer are in the board's `approvals` collection
    (`python3 scripts/post-pack/board_web.py read <Monday> approvals`, the
    collection `config/teleprompter.json` names; `updated_by` Krish only). A
@@ -476,15 +475,14 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    look in `meta.look`, else the style he picked on the Ideas tab (`config/style-references.json`
    `formats`), with the brand reference and the article's visuals. Name
    the piece's one motion system before any beat (`style.motion`, required
-   from 9 November): propose one from `creative_direction.py motion
+   from 9 November; his board pick: `meta.style`): propose one from `creative_direction.py motion
    --points <types> --format <long_video|short_video>` with its `reason`;
    he picks from `ve styles` mocks (his last take before he records, his
    new one after), then
    approves the hardest beat moving (`ve proof`) before a whole cut
    renders. Name the caption build with it: `brand.captions` (house or
-   word) or a caption style, `brand.caption_theme` (15 in
-   `apps/renderer/src/engine/captions/names.ts`; `art-directed` is the one
-   he picked, 11 Nov 2026), proved on his take before it ships. On the
+   word) or a caption style, `brand.caption_theme`
+   (`config/caption-themes.json`; `art-directed` is his pick, 11 Nov 2026), proved on his take before it ships. On the
    tall cut nothing he must read sits under a platform's buttons and no
    wordmark sits over the content; the engine's layouts hold that, so a
    direction never places words by hand (`docs/ve/MOTION_STANDARD.md`,
@@ -517,7 +515,7 @@ signed lock's His close; with no lock, the question goes on the day's tab.
 
 ## The week's publish board
 
-Read `.agents/skills/make-piece/references/week-board.md` whenever you make or republish the week's publish board (`week_board.py`, its tabs, its ticks store, `--previous`); it holds this section in full.
+Read `.agents/skills/make-piece/references/week-board.md` for the week's ticks store; no session builds or publishes a board page (`docs/PUBLISH_BOARDS.md`).
 
 ## The week's ticks
 
@@ -527,25 +525,7 @@ skill, in `plan-week` and in `produce-video`. The eight steps, and where complet
 
 ## Board items about this piece
 
-Every board item you write about this piece carries `"idea_id": "<uuid>"`
-and, when one step finishes it, `"closes_on": "<step>"` (WORKBENCH.md, "The
-board"). Control Center's done-check sweep closes it when that step lands,
-and closes every item about the piece once its publish step is done (the
-standing five ticked), so nothing about a finished piece lingers on Krish's
-board. An item waiting on
-him (`"lane": "on_you"`, such as recording both cuts) also carries
-`"only_you"` (`"face"` for a recording) and an `https://` `"link"` to what he
-acts on; without all of them, and the `idea_id` and `"closes_on"` above, the
-engine refuses it and names the field it lacks. A job of his that no step
-closes goes `"in_progress"` with `"closes_on": "session"`, its detail
-saying what would show it done, and you ask him in your reply. Every new
-open item says how it ends (the engine refuses one that does not,
-`open_needs_closes_on`). Record the fact; the check closes the item. Close
-only items you hold (`closes_on` `session`): the engine refuses any other
-close from a session (`409 check_closes_it`) and any reopen of a check's
-close (`409 check_closed_it`), unless you relay Krish's own words in
-`"said"`. It never lets a session turn a check's item into `session` work
-(`409 kind_is_the_checks`); a close he made is relayed as the close.
+Read `.agents/skills/make-piece/references/board-items.md` before you write, close or relay any board item about this piece; it holds this section in full (`idea_id`, `closes_on`, what an item on Krish must carry, and which closes are yours).
 
 ## Before you stop
 

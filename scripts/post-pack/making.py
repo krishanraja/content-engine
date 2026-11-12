@@ -8,8 +8,8 @@ compiler, and ideas generator"; the work happens in Claude Code; "it's crucial
 that everything is fresh and synchronised in real time".
 
     python making.py PIECE_ID show
-    python making.py PIECE_ID workroom https://claude.ai/artifact/...
-    python making.py PIECE_ID publish-manager https://content.krishraja.com/board/YYYY-MM-DD
+    python making.py PIECE_ID workroom "$(python3 live_board.py YYYY-MM-DD DAY)"          # the live board's day
+    python making.py PIECE_ID publish-manager "$(python3 live_board.py YYYY-MM-DD DAY)"   # the live board's day
     python making.py PIECE_ID visual-gate post.json          # runs the gate, records pass or fail
     python making.py PIECE_ID scripts long.md short.md       # story_check on each, by position, with the
                                                              # piece's series, and each script's sha256; records
@@ -346,11 +346,33 @@ def show(piece_id, call=None):
                      f"since, so it does not count; record it again, or Krish says to use it")
     lines.extend(read_back_lines(record))
     lines.extend(teleprompter_lines(record))
+    lines.extend(cut_verdict_lines(data.get('cut_verdicts')))
     chosen = record.get('production_choices') if isinstance(record.get('production_choices'), dict) else {}
     used = ', '.join(f'{k} {v}' for k, v in chosen.items() if k != 'at')
     if used:
         lines.append(f'under test: {used} (recorded {chosen.get("at", "")})'.replace(' ()', ''))
     return '\n'.join(lines)
+
+
+def cut_verdict_lines(verdicts):
+    """His answers on the rendered cuts, oldest first: each press he made on the board's Cuts tab (Yes, or Not this
+    with his words), kept on the piece in meta.cut_verdicts (apps/control-plane/api/board/_cuts.ts). A Not this is the
+    brief for the next cut of that kind: his words, exactly as he typed them."""
+    lines = []
+    for v in verdicts if isinstance(verdicts, list) else []:
+        if not isinstance(v, dict) or v.get('verdict') not in ('yes', 'not_this'):
+            continue
+        cut = CUT_NAME.get(v.get('cut'), v.get('cut') or 'a')
+        where = f" ({v['path']})" if v.get('path') else ''
+        when = str(v.get('at') or '')[:10]
+        if v['verdict'] == 'yes':
+            lines.append(f'Krish on the {cut} cut{where}, {when}: Yes, this cut is right')
+        else:
+            lines.append(f'Krish on the {cut} cut{where}, {when}: Not this: "{v.get("words") or ""}"')
+    if any(isinstance(v, dict) and v.get('verdict') == 'not_this' for v in (verdicts if isinstance(verdicts, list) else [])):
+        lines.append('A Not this is the brief for the next cut of that kind: answer his words in a new render; '
+                     'never refile the same file to answer it')
+    return lines
 
 
 # Teleprompter: what teleprompter_send.py put in Krish's teleprompter.com account for each cut.
@@ -2324,6 +2346,18 @@ def self_test():
     check('teleprompter: another folder is refused, nothing written', (code, 'are in folder' in err, len([x for x in seen if x[0] == 'POST'])), (1, True, before))
     check('show: prints the read-back and the Teleprompter lines', ('Teleprompter, 90-second cut: not sent yet' in show(pid, holds_tp),
                                                                       'Read back, 5-minute cut' in show(pid, holds_tp)), (True, True))
+
+    # His answers on the rendered cuts (the board's Cuts tab, meta.cut_verdicts): each press in his words, oldest first.
+    def answered(method, path, body):
+        return 200, json.dumps({'ok': True, 'making': {}, 'steps': [], 'cut_verdicts': [
+            {'media_id': 'a' * 64, 'cut': 'long', 'verdict': 'not_this', 'words': 'The open drags. Start on the number.', 'path': '3 Posts/mon/long.mp4', 'by': 'Krish', 'at': '2026-11-16T08:40:00Z'},
+            {'media_id': 'b' * 64, 'cut': 'short', 'verdict': 'yes', 'words': None, 'path': '3 Posts/mon/short.mp4', 'by': 'Krish', 'at': '2026-11-16T08:45:00Z'},
+            {'cut': 'long', 'verdict': 'maybe'}]})
+    check('show: prints each answer on a cut in his words, and that a Not this is the next cut\'s brief', show(pid, answered).splitlines(), [
+        'Krish on the 5-minute cut (3 Posts/mon/long.mp4), 2026-11-16: Not this: "The open drags. Start on the number."',
+        'Krish on the 90-second cut (3 Posts/mon/short.mp4), 2026-11-16: Yes, this cut is right',
+        'A Not this is the brief for the next cut of that kind: answer his words in a new render; never refile the same file to answer it'])
+    check('show: a record with no answers on its cuts prints none', cut_verdict_lines(None) + cut_verdict_lines([]), [])
     try:
         with contextlib.redirect_stderr(io.StringIO()):
             main([pid, 'descript', 'long'], call=fake)
@@ -2714,6 +2748,12 @@ def main(argv=None, call=None):
             approved=hand_built_approval(a.piece_id, a.args[0], a.video_file)
             problems=[] if approved else quality.delivery_problems(a.video_file,receipt_path,target)
             if approved:
+                # His words waive the engine's receipts, never sync: a hand-built cut carries its own picture-against-
+                # sound receipt for these bytes (scripts/av_sync.py; Krish, 2026-11-12, on Wednesday 11 Nov's
+                # 5-minute: "We need to ensure that never happens in the future").
+                sys.path.insert(0, str(HERE.parent))
+                import av_sync
+                problems = av_sync.receipt_problems(a.video_file)
                 patch['video_assets'][0]['hand_built']={'sha256': approved['sha256'], 'krish': approved['krish']}
             elif not problems:
                 receipt=json.loads(Path(receipt_path).read_text(encoding='utf8'))

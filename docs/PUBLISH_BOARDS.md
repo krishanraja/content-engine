@@ -15,13 +15,14 @@ the publish board in the content tab. then lets ensure that the old publish boar
 https://content.krishraja.com/board/2026-10-26#monday is kept as an archive for now, but that your version of the
 publish board is 1000% where everything wires in to fresh and live and accurately".
 
-- **Where he works:** Control Centre's Content tab, `https://controlcenter.krishraja.com/?ui=next#/content`, at a week
+- **Where he works:** Control Centre's Content tab, `https://controlcenter.krishraja.com/#/content`, at a week
   and a day with `?week=<Monday>&day=<mon..sat>`. One constant: `config/boards.json` `live_board.url`, mirrored by
   `apps/control-plane/api/board/_liveBoard.ts` (a test holds them equal); Python prints a link with
   `python3 scripts/post-pack/live_board.py <Monday> [day]`. Every link the engine gives him to the board is that one:
   the reply that ends `plan-week`, the week's board item (`week-publish-board-<Monday>`, its `link`), the Sunday ideas
   run, `make-piece`'s links to a day, `WORKBENCH.md`'s week lines and the Claude prompt on every day of the view.
-  Dropping `?ui=next` after Control Centre's cutover is the one line in each of those two files.
+  The address carries no `?ui=next`: Control Centre's rebuilt UI is its default since its cutover (Ruling, Krish,
+  2026-11-12).
 - **The archive:** `content.krishraja.com/board/<Monday>` keeps serving the page below as it does, with a banner at the
   top: "This is the archive. The live Publish Board is in Control Centre", linking the live board at the same week and
   the day the address names (`#monday` opens Monday). `?archive=1` is the older baked board, unchanged.
@@ -127,6 +128,35 @@ What the database cannot tell: a writer holding the service key could still writ
 Nothing in a database tells a forged name from his press; the routes refuse every other writer, and the ledger names
 the revision every approval came from.
 
+## What he refused stays refused: the ideas board's checks in code (the ideas quality plan, Wave 1)
+
+Krish, 2026-11-09: "I just said that Infosys is boring so why did you make the piece about Infosys?" The Sunday run's
+ideas are checked in code before the week goes on the live board (`scripts/post-pack/idea_checks.py`, run by
+`board_feed.py cover` and `board_feed.py gate <Monday>`; `.github/workflows/sunday-ideas.yml` keeps the week off the
+live board while `gate` fails). Each check enforces a rule already live or his own words on that item:
+
+- A subject he rejected (his Reject, a not-for-us cue, a Drop) is not offered again, unless an option answers his own
+  ask, he raised the subject again, or he gave it back. The veto keys on the subject his refusing words share with the
+  option he refused, never every name an option carries.
+- Refusing words in another press (boring, lame, no point, don't understand) put a warning on the option, his words
+  first in its text, and it is never first on its day; it blocks only once he approves P6.
+- An idea he filed, saved as a trend or asked to improve comes back only with his words, an answer to each question he
+  asked, a source newer than his press, changed copy and a research prompt; otherwise it is held with its reason.
+- From the 23 Nov board every publishing-day option opens on one plain question (`pitch.question`, drawn as its title),
+  with a research prompt and a source tag.
+
+**On the board** (`_viewExtras.ts ideaLines`, after a day's options, no new contract field): each subject not offered
+again is a line "Not offered again: <subject>" with his words and one press, "Offer it again" (`queue/veto-<subject>`,
+`unveto`, his alone: `press_is_his`); each return or ask held back is a line "Held back: ..." with its reason. Status
+`not offered again`, `given back` or `held back`.
+
+**The scorecard**: `python3 scripts/post-pack/board_feed.py scorecard <Monday>` reads his presses on that board
+(`GET /api/board/<Monday>/outcomes`, read-only, the engine key: `idea_outcomes`, or for a board before the gate its
+`board_history`, triage marks and queue cues) and writes `docs/plans/<Monday>-week/scorecard.json`: each count with
+its written rule, each press labelled, ids and labels only. The history test (`scripts/post-pack/ideas_history.py`,
+`tests/ideas_history_test.py`, and the eval suite `ideas-history`) replays every check on his past boards with only
+what was known before each.
+
 ## The view's contract: add freely; never remove or rename a field
 
 Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its shape is
@@ -154,6 +184,148 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   `press`, and the week's `revision` ("One live board", above).
 - **1.3.0 (11 Nov 2026)** added the ideas gate: `held` on every day, `approval` on each piece, `outcome` and `held` on
   each option, and `outcome` and `goes` on each press ("The ideas gate", above).
+- **1.4.0 (11 Nov 2026)** added `style` to each series day's `path`: the piece's motion style, caption style and
+  treatment, each option with its press ("The style choices", below).
+- **1.5.0 (11 Nov 2026)** added `stages` to each series day's `path`: the steps from idea to publish (approved mock
+  M5), Ideas, Agreed, Flesh out, Script and record, After recording and Ready to post, each `{ key, label, state, when
+  }`. `when` is the day the record says it happened (Ideas: the Sunday before the week; Agreed: the day the narrative
+  lock was signed, else the day of his pick; Flesh out: the day the look was picked; Script and record: the day the
+  making record's Recorded step was done, its latest take; After recording: the day its Video assets step was done, its
+  latest cut file, `makingDays`) or, for Ready to post, the day it goes out; null when the record does not say, never a
+  guessed day. Until 12 Nov 2026 Script and record and After recording always read null: the takes and files carried
+  their days, and the view did not pass them. A later step done means every step before it is.
+  The working steps (`steps`, `current`) stay as they were, for the next step, the prompts and the sessions' step
+  names (`stagesOf` in `_view.ts`). A treatment option also carries "Not this" from 1.5.0, all but the picked one ("The style choices").
+- **1.6.0 (11 Nov 2026)** added `presses` and `verdict` to each cut in a day's `media` (approved mock M5, Cuts: Yes,
+  Not this, Change it and Add a note on every cut): his Yes or Not this on that file and his latest answer on it ("His
+  answer on each cut", below). A thumbnail carries neither.
+- **1.7.0 (12 Nov 2026)** added `drive` and `drive_why` to each item of a day's `media`, `posts` to each day, `post` to
+  each off-day option and `drive` to `sources` ("Every asset, with its Drive link", below). Ruling (Krish, 2026-11-12):
+  every cut on the board carries its Google Drive link; nothing on the board is ever cut off.
+
+## The style choices (contract 1.4.0)
+
+Each series day's piece carries its style choices in `path.style`, built by `apps/control-plane/api/board/_style.ts`
+on every read, in three layers of the same shape: `motion`, `captions` and `treatment`. A layer lists every option
+(`id`, `name`, a one-line `line` on what it is, its `rules`, `recommended` with a plain `why`, `sample_url`, `rejected`
+and `presses`) and what is picked now (`picked`, `picked_by`, `picked_at`).
+
+- **Motion** is the bank's motion layer (`config/style-references.json`, layer `motion`; `line` is its `how`, each
+  option also carries its `point_types`, its `formats` and `ready`, false while its `ve_route` says `needs_device`).
+  Up to three are recommended and listed first: each made for every format the piece makes (a series piece makes the
+  long and the short cut), sharing a point type with the piece when its spec names them (`style.points`), one ve can
+  draw now (the rule `ve styles` keeps: `needs_device` holds a style back until his yes on its test render), never one
+  he called not for us and never one he said "Not this" to on this piece; those that suit the channel often come first,
+  then his liked ones, then the most point types matched.
+- **Captions** is `config/caption-themes.json`, one entry per name in `apps/renderer/src/engine/captions/names.ts`
+  (`captions.test.ts` holds them equal). The one with a `recommended_why` (art-directed, his pick on 11 Nov 2026) is
+  recommended, with his own words, unless he said "Not this" to it on this piece.
+- **Treatment** is the looks (`path.look.options`) in the same shape, so the three draw alike; the Sunday room's
+  recommendation is marked, and its Yes is the look op with his experiment and inspiration kept. Its "Not this" is the
+  style op with `reject: { layer: 'treatment', id }` (mock M5: Yes and Not this on every option): kept in
+  `meta.style.rejected.treatment`, it takes the look off the recommended until he picks it. The picked look carries
+  no "Not this" (the look op holds the pick, so a no would leave it picked); he picks another instead.
+- **Picked** shows his press on the board first (`meta.style`), then, for motion, his Pick a style gate on the making
+  record (`gates.style`), then a creative direction he signed (`signed.by` Krish in the day's
+  `docs/plans/<date>-<dayname>/ve/spec.json` or `creative-direction.json`, `picked_by: spec`). A spec he has not signed
+  is never shown as a pick, and one whose `piece_id` names another piece is never read.
+- **`sample_url`** is a rendered sample listed in `config/ve/style-samples.json`, as a same-site path, or null. None is
+  listed yet, and nothing renders one to fill it.
+- **His press**: `presses.yes` and `presses.not_this` (labels "Yes" and "Not this") each say `POST
+  /api/board/<Monday>/<op>` with a body. `POST /api/board/<Monday>/style` takes `{ piece_id, motion?, captions?,
+  reject?: { layer: 'motion' | 'captions' | 'treatment', id } }`, his press only, on a piece scheduled in that week, the same guards
+  as the look. A motion id is checked against the bank on main and a caption id against `config/caption-themes.json`
+  (400 `unknown_motion` or `unknown_caption`; a look id is checked by its shape, 400 `unknown_look`; 400 `invalid_reject`, 400 `nothing_to_record`; 503 `styles_unavailable`
+  when the bank cannot be read). It writes `content_ideas.meta.style` `{ motion, captions, rejected: { motion, captions, treatment },
+  by, at }` beside `meta.look`, read and written guarded on the row's `updated_at` (`patchMeta`), so a write that lands
+  in between is kept, never overwritten (409 `piece_busy` when they never stop); the `content_ideas` trigger bumps the
+  week's `board_signal`. "Not this" on the picked style takes the pick away; a later Yes takes a style back off the
+  "Not this" list. It never edits a `creative-direction.json`.
+- **Who reads it:** make-piece and ve read `meta.style` as the default for a new spec's `style.motion.module` and
+  `brand.caption_theme` (`docs/ve/RUNBOOK.md`, S1), and a signed spec stays his.
+- **Held by:** `tests/control-plane/board-style.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
+- **Routing:** `vercel.json` has no rewrite of its own for `/api/board/<Monday>/style`, and cannot have one, since
+  `GET` there is the read-only view of his Pick a style documents. So the press arrives as the collection `style`, and
+  the handler reads a `POST` with no id to `style` (or `cut-verdict`) as the press (`POST_OPS` in `_handler.ts`).
+  Until 11 Nov 2026 it did not, and every style press from Control Centre was answered 400 `read_only_view`
+  (`tests/control-plane/board-cuts.test.ts` sends it as production does).
+
+## Every asset, with its Drive link (contract 1.7.0)
+
+Krish, 2026-11-12: "I need the Google Drive hyperlink because it is actually more useful for me: it actually enables me
+to download it directly to my device as well, or view it in a more reliable player", and "I should always be able to
+link the assets in Google Drive as well as see them if I am to approve them".
+
+- **A cut's Drive link.** Each item of a day's `media` carries `drive` `{ file_id, url }`: the exact file in his Drive,
+  read from the making record's `url` (the file's own Drive link, which `making.py PIECE drive-link` and `video` record
+  by its Drive file id; never a guessed path). With none, `drive` is null and `drive_why` says "Not in Drive yet" and
+  why. The board shows "Open in Drive" on every cut, even when its player works.
+- **A cut always plays.** `GET /api/board/<Monday>/media/<id>` signs the library's copy, looking for a path the record
+  wrote relative to the post (`3 Video/fri13-5min-v3.mp4`) inside the post's own folder (`3 Posts/<pack.folder>/...`).
+  A file the library has no copy of is served from Drive by the id on its record: the board copies that one file into
+  the engine's store (`board-drive/<id>-<version>.<ext>`, by its Drive md5) the first time and answers with a short
+  signed link, so a file replaced in Drive is copied again and an unchanged one never is. This is why Friday 13 Nov's
+  cuts drew an empty player until 12 Nov: they were in Drive but never sent to the library, and their record named
+  them relative to the post, so the route answered 404 `media_not_found`.
+- **Every asset of every post.** Each day carries `posts`: every folder in `makeyourmindup > 3 Posts` dated that day
+  (`_drivePosts.ts`, read by the folder's ID as its owner, read only, kept a minute), each `{ id, name, url, option,
+  piece_id, assets }`. `option` is the off-day option whose `drive` names the folder (the option carries it as `post`);
+  `piece_id` is the piece whose `pack.folder` names it. Each asset is `{ id, kind, title, mime, at, url, folder,
+  seconds?, width?, height?, slides?, versions }`: `kind` is cut, video, meme, carousel, image, cover, figure,
+  thumbnail or note (a plain-text file such as the post's description); a carousel's `slides` are its cards in order,
+  the newest version of each; `versions` are the older files of the same asset, newest first (a reskin "-black-v2" is
+  the newer version of the file it reskins). Working folders (`working ...`), pages, scripts and manifests are left to
+  Drive. Null when Drive could not be read, with `sources.drive` false.
+- **Seeing one.** `GET /api/board/<Monday>/drive/<file id>` (the board's own login) serves a file the week's `posts`
+  list (an asset, a slide or a version; 404 `drive_file_not_found` for any other, 503 `drive_unavailable` when Drive
+  cannot be read), the same way as a cut: copied once, then a short signed link (302).
+- **Held by:** `tests/control-plane/board-drive.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
+
+## His answer on each cut (contract 1.6.0)
+
+The approved mock M5 gives every cut in the Cuts tab its own Yes, Not this, Change it and Add a note. Change it and Add
+a note are his words on the day ("Add your thoughts", pinned to the step). Yes and Not this are this press, one per cut,
+built by `apps/control-plane/api/board/_cuts.ts` on every read.
+
+- **In the view:** each item of a day's `media` whose `kind` is `cut` carries `presses` `{ yes, not_this }` and
+  `verdict`. Each press is in the shape of the action kind `press`: `{ kind: 'press', label, op: 'cut-verdict', body:
+  { piece_id, media_id, verdict: 'yes' | 'not_this' }, stamp: [], done }`, and Not this also carries `words` `{ path:
+  'words', ask, required: true }`, so the board asks for his words first and never sends it without them. `verdict` is
+  his latest answer on that file `{ said: 'yes' | 'not_this', words, at }`, or null. A thumbnail carries neither.
+- **His press:** `POST /api/board/<Monday>/cut-verdict` with `{ piece_id, media_id, verdict, words? }`, his press only
+  (403 `his_press`), on a piece scheduled in that week (404 `piece_not_in_week`), on a cut on that piece's own making
+  record (`meta.making.video_assets`, the media id the view gave; 404 `media_not_found` for a thumbnail or any other
+  id). 400 `invalid_media`, `invalid_verdict`, and `words_required` for a Not this with no words. His words are kept as
+  he typed them, trimmed, up to 4000 characters.
+- **Kept append only on the piece:** one entry per press in `content_ideas.meta.cut_verdicts`, `{ media_id, cut,
+  verdict, words, sha256, path, by: 'Krish', at }`, where `sha256` and `path` are the file's on the making record.
+  Nothing is rewritten or removed; the same answer pressed twice in a row on one file is kept once (`already: true`).
+  The write is guarded on the row's `updated_at` (`patchMeta`), so a write that lands in between is kept (409
+  `piece_busy` when they never stop), and the `content_ideas` trigger bumps the week's `board_signal`.
+- **What it never does:** change, refile or publish the cut, or unlock anything. It is not the Approve cut gate
+  (`meta.making.gates.final`, "The production gates on a day's tab"). A new render is a new file with a new media id,
+  so an answer stays with the file he saw, and the new cut waits for his.
+- **Not `cut`:** `GET /api/board/<Monday>/cut` is the read-only view of his Approve cut documents and stays so; his
+  answer posts to `cut-verdict`.
+- **What a Not this teaches** (`fileCutLearning`): the same learning his other rejections on the board feed, after the
+  press is saved and only when it is new (never on an `already` answer, never on a Yes):
+  - his taste ledger: one `taste_reports` row, `krish_words`, his words as typed, said where ("publish board, <Monday>
+    <day>, Cuts: Not this on the long cut") and when, lane `production`, `dislikes`, subject `piece:<id>` (the row a
+    Reject of the proof files);
+  - the rejection inbox: one `taste_rejection_inbox` row, `rejected`, his words alone with the piece and the cut's
+    format (`long_video` for the long cut and a feature, `short_video` for the short), the file's library path and
+    sha256 in `meta`; no Drive id, since the cut is reached by its library path (the row a Reject asset files, which the
+    inspirationhouse rejections job compiles into the rejection floor);
+  - the failure loop: one `engine_incidents` row, `krish_reject` at the `cut` stage, with his words, the file's sha256
+    and the piece's preflight receipt as it stood (`docs/learning/README.md`).
+  Each is keyed on the piece, the file and his words, so the same words on the same file file once. None blocks the
+  press: the answer says what happened to each, `learned` `{ taste, inbox, incident }` (`filed`, `failed`,
+  `waits_on_migration`, or `refused` for an incident the table refuses).
+- **Who reads it:** the view (each cut's `verdict`); the piece's record, `GET /api/content-ideas/<id>/making`, answers
+  with every press (`cut_verdicts`, oldest first), and `making.py <id> show` prints each one in his words, which
+  make-piece and produce-video read before the next cut ("A Not this is the brief for the next cut of that kind").
+- **Held by:** `tests/control-plane/board-cuts.test.ts`, `tests/control-plane/making.test.ts`, the making self-test and
+  `tests/control-plane/board-view-contract.test.ts`.
 
 ## Sessions and materials
 
@@ -168,6 +340,10 @@ if I ran four separate sessions on one piece of content, it would know where eve
 the piece (or the week and the day when there is no piece yet) and the step, and tells the session to: see what is on
 file and who else is on the piece first; choose a session id once and report `start`, `progress` at each milestone, and
 `done` (or `blocked`, with what it needs); and file everything it makes or draws on on the piece, never only in its chat.
+Its fourth line is the research rule (`RESEARCH_RULE`; Ruling, Krish, 2026-11-11): research is never left in scratch or
+a chat, every research document is filed on the piece as it is written, and a Markdown file Krish sends is filed on the
+piece first. Its fifth is the walls (`WALLS`): this board is the only place to put the work, content.krishraja.com/board is a
+read-only archive, and a session never posts or publishes anything and never puts an idea on the publish board.
 Two doors, both on the same routes and rules, and neither puts a key in the prompt:
 
 | Door | For | Authenticates with |
@@ -208,6 +384,12 @@ Two doors, both on the same routes and rules, and neither puts a key in the prom
   working set from the store, from the old materials route and from the board's research are guarded on the row's
   `updated_at`, so a making record that lands in between is read again and kept.
 - Piece materials only: brand assets live in the brand kit (`docs/DRIVE.md`, "The brand kit"), never here.
+- Research is copied into his Drive's research library (`makeyourmindup > 6 Research library`; `docs/DRIVE.md`, "The
+  research library"): a material of kind `research`, `corpus`, `note` or `paste` (or role `research`, `sources`, `corpus`
+  or `notes`) gets a copy with the store's exact bytes under its week and piece, and a row in the library's `00 Index`.
+  `POST ?op=text` and `?op=confirm` copy it at once and answer `library` (`copied` or `already` with the Drive link,
+  `later`, or `not_research`); the hourly sweep `research_library_mirror` copies the rest. The store stays the record:
+  a failed copy loses nothing, and the library only ever gains folders, files and rows.
 
 **On the board.** Each day of the view carries `sessions` (who is on the day's piece or the day, working first, with
 their step and last line) and `materials` (what is on file, newest first, with a thumbnail id for a picture and no text
@@ -245,9 +427,10 @@ record the full board writes, bound to the same hashes (`_offdaySides.ts`, held 
 into `_deskPage.ts` by `node scripts/build-desk-page.mjs`. `/board` stays the old board until Krish switches it.
 
 Each day of the view also lists what its piece has rendered (`media`, `apps/control-plane/api/board/_media.ts`): the
-newest asset of each cut on its making record and that cut's thumbnail, by an opaque id, with no path, link or key.
-`GET /api/board/<Monday>/media/<id>` (the board's own login) answers one id of that week with a short signed link
-(302) to the library file, and 404 for an id that is not on that week's pieces or not filed yet. Control Centre's
+newest asset of each cut on its making record and that cut's thumbnail, by an opaque id, with no library path, store
+link or key, and (1.7.0) the file's own Drive link. `GET /api/board/<Monday>/media/<id>` (the board's own login)
+answers one id of that week with a short signed link (302) to the library file, or to the board's copy of its Drive file
+when the library has none, and 404 for an id that is not on that week's pieces or has neither. Control Centre's
 Publish Board, the real one since 10 Nov 2026 (Ruling, Krish, 2026-11-10), draws these large when they exist: "mock ups
 and rendered assets are going to actually make up a big part of the screen as and when they are available". Look mocks
 and storyboard frames join the same list when the engine files them as library files.
@@ -398,7 +581,8 @@ writes them; a document whose `updated_by` is not Krish is never his.
 | Scores (layout v3) | Publish, last on a made day; and each Archive row | `picks/score-<piece>` `{kind: "scores", piece_id, narrative, production, basis: at_publish or hindsight, note?}`, each mark 1 to 10 | one `piece_scores` row, `scored_by` krish, history kept (a new score is a new row; the same marks saved again file nothing twice); answers `scores: filed`, or `waits_on_migration` until the Wave 2 migration batch is applied | the Archive, Control Center's #/week and the retrospective (W3.6), through `piece_scores_current`, which counts his scores only |
 | Reject asset | Publish, beside each ready file | `picks/<day>-reject-<asset>` `{kind: "reject_asset", day, piece_id, asset, label, reason, drive_id?, at_ms?, formats?}`; the reason is required | one `taste_rejection_inbox` row: his reason, where and when, the piece, the formats, and the file's Drive id with the moment (`at_ms`) or as the whole cut; the file itself is never copied | the inspirationhouse rejections job; the next session's repair round |
 
-Only a rejected asset files an inbox row. Each row's `client_report_id` is the
+Of these presses only a rejected asset files an inbox row (a Not this on a cut
+files one too: "His answer on each cut", above). Each row's `client_report_id` is the
 hash of the week, the document and his words, so a press saved again files
 nothing twice. A row that the inbox could not take is said on the board, and
 the board document still holds his reason for a session to file.
@@ -527,7 +711,8 @@ the 9th of November board as well."). Drawn by `week_board.py` with `scripts/pos
 - A day carried over as the board held it (`--keep`, `--keep-draft`, `--carry`) takes v4's steps on the rebuild, its
   gates moved to Creative and its Scores press to Scored, nothing else changed (`upgrade_kept_v4`).
 
-**Rebuilding a live board from a cloud session.** The engine API answers 401 without the operator key, so a board is
+**Rebuilding a live board from a cloud session** (retired on 11 November 2026: the workflow now stops at its first
+step, since nothing builds a page). The engine API answers 401 without the operator key, so a board was
 rebuilt by `.github/workflows/board-rebuild.yml` (by hand only, no schedule, no Claude): it downloads the live board,
 rebuilds it from a committed recipe (`docs/plans/<Monday>-week/board-build.json`: `week_board.py`'s own flags through
 `--recipe`, never a script), verifies it, saves phone screenshots as the run's artifact (`board_shots.py`) and checks the

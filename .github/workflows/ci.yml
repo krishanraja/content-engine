@@ -58,6 +58,10 @@ jobs:
         run: |
           npm install --no-save --package-lock=false @electric-sql/pglite@0.3.14
           node tests/ideas-gate-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+      - name: The engine's leases on the real migration (one research library sweep at a time)
+        # Five hand-run sweeps overlapped on 11 Nov 2026 and copied the same research again; every writer of the library
+        # now holds one lease. Uses the PGlite installed by the step above.
+        run: node tests/engine-leases-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
 
   control-plane-sql:
     # The Video Studio control plane's projection CAS, ancestry and race

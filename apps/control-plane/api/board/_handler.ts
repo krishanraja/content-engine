@@ -12,10 +12,13 @@ import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
 import { readView } from './_view.js'
 import { signMedia } from './_media.js'
+import { DRIVE_ID, boardDrive, filesOfPosts } from './_drivePosts.js'
 import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
+import { StyleError, needsMotion, saveStyle, stylePick } from './_style.js'
+import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
 import { DESK_PAGE } from './_deskPage.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARCHIVE_REFERRER_POLICY, fromArchivePage, readOnlyArchive } from './_readOnly.js'
@@ -25,6 +28,8 @@ import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
 
 const BUCKET = 'content-library'
+/** The presses posted to /api/board/<Monday>/<op> that reach the handler as a collection (no rewrite of their own). */
+const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP])
 const TTL = 300
 const scalar = (v: unknown) => typeof v === 'string' ? v : ''
 const weekDate = (v: string | Date) => (v instanceof Date ? v.toISOString() : v).slice(0, 10)
@@ -95,7 +100,12 @@ async function verifyFile(db: SupabaseClient, file: BoardFile) {
   if (type !== file.type && !(file.type === 'text/html' && type === 'text/plain')) throw new BoardError(422, 'board_file_type_mismatch')
 }
 
+/** A view read that does not need the week's posts in Drive (the gate, a research prompt). */
+const NO_DRIVE = async () => null
+
 export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {}) {
+  /** The board's Drive (_drivePosts.ts), as the folder's owner; a test passes its own. */
+  const driveOf = (db: SupabaseClient) => (deps.drive ? deps.drive(db) : boardDrive(db as never))
   return async (req: VercelRequest, res: VercelResponse) => {
     res.setHeader('Cache-Control', 'private, no-store')
     res.setHeader('Vary', 'Cookie, Authorization')
@@ -103,7 +113,12 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
     res.setHeader('Referrer-Policy', 'no-referrer')
     const method = req.method || ''
     if (!['GET', 'PUT', 'POST'].includes(method)) return res.status(405).json({ ok: false, error: 'method_not_allowed' })
-    const op = scalar(req.query.op), collection = scalar(req.query.collection), id = scalar(req.query.id)
+    const id = scalar(req.query.id)
+    let op = scalar(req.query.op), collection = scalar(req.query.collection)
+    // A press posted to /api/board/<Monday>/<op> whose op has no rewrite of its own arrives as a collection
+    // (vercel.json: /api/board/:week/:collection). `style` cannot have one, since GET /api/board/<Monday>/style is the
+    // read-only view of his Pick a style documents, so a POST there is the style press; `cut-verdict` the same.
+    if (!op && !id && method === 'POST' && POST_OPS.has(collection)) { op = collection; collection = '' }
     if (op === 'carry') {
       // The cross-week carry (_carry.ts): the engine operator's key only.
       if (!operatorBearerAllowed(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
@@ -205,7 +220,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       res.setHeader('Referrer-Policy', ARCHIVE_REFERRER_POLICY)
       return res.status(200).send(DESK_PAGE)
     }
-    const operatorOnly = ['uploads', 'imports', 'sources'].includes(op) || (!op && !collection && method === 'PUT')
+    const operatorOnly = ['uploads', 'imports', 'sources', 'outcomes'].includes(op) || (!op && !collection && method === 'PUT')
     const who = actor(req, operatorOnly)
     if (!who) return res.status(401).json({ ok: false, error: 'unauthorized' })
     // One live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only
@@ -241,7 +256,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
         // Its entity tag names what it says (_viewContract.ts), so Control Centre can ask every few seconds and a read
         // that finds nothing new is a 304 with no body. no-cache, not no-store: a browser may keep it but always asks.
-        const view = { ok: true, ...(await readView(db, week)) }
+        const view = { ok: true, ...(await readView(db, week, process.env, undefined, undefined, w => driveOf(db).posts(w))) }
         const etag = viewEtag(view)
         res.setHeader('Cache-Control', 'private, no-cache')
         res.setHeader('ETag', etag)
@@ -252,10 +267,37 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         // The ideas gate for the week (_gate.ts): every piece on a day with the approval that holds it there, and every
         // piece or option held because none does. Read-only; the same view the live board draws.
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
-        const view = await readView(db, week)
+        const view = await readView(db, week, process.env, undefined, undefined, NO_DRIVE)
         return res.status(200).json({ ok: true, week, approvals_read: view.sources.approvals === true,
           days: view.days.map(d => ({ day: d.day, date: d.date, pieces: d.pieces.map(p => ({ id: p.id, title: p.title, approval: p.approval ?? null })),
             held: d.held, options: d.options.map(o => ({ id: o.id, doc_id: o.doc_id, title: o.title, status: o.status, outcome: o.outcome ?? null, held: o.held ?? null })) })) })
+      }
+      if (op === 'outcomes') {
+        // His answers on the week's ideas board, for its scorecard (scripts/post-pack/board_feed.py scorecard; the ideas
+        // quality plan, item 11): every idea_outcomes row of the week (append only, his words), and for a board from
+        // before the ideas gate its board_history presses, the triage marks filed from it and the pieces scheduled from
+        // its options. Read-only, the engine key only.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        // A cue counts only on one of this board's own options (presses_from), so its window can be wide.
+        const from = new Date(`${week}T00:00:00Z`); from.setUTCDate(from.getUTCDate() - 10)
+        const until = new Date(`${week}T00:00:00Z`); until.setUTCDate(until.getUTCDate() + 14)
+        const [outcomes, history, triage, scheduled, cues] = await Promise.all([
+          db.from('idea_outcomes').select('id,week,day,date,idea_id,option_ref,doc,outcome,via,words,decided_by,decided_at,source').eq('week', week)
+            .order('decided_at', { ascending: true }).limit(2000),
+          db.from('board_history').select('collection,doc_id,revision,body,updated_at,updated_by').eq('week', week).in('collection', ['picks', 'queue'])
+            .order('updated_at', { ascending: true }).limit(2000),
+          db.from('content_ideas').select('id,meta').eq('meta->queue->>from_week', week).limit(300),
+          db.from('content_ideas').select('id,scheduled_for,updated_at,meta').eq('meta->week_option->>week_start', week).not('scheduled_for', 'is', null).limit(50),
+          // His words on the board's ideas filed as cues from the queue (the 26 Oct board's "Ditch 4" is only here).
+          db.from('feedback_cues').select('subject_ref,use,said,said_at,use_origin').eq('venture', 'publication').eq('source', 'idea_queue')
+            .gte('said_at', from.toISOString()).lt('said_at', until.toISOString()).limit(500),
+        ])
+        must(outcomes); must(history); must(triage); must(scheduled)
+        const meta = (r: Record<string, any>) => (r.meta && typeof r.meta === 'object' ? r.meta : {})
+        return res.status(200).json({ ok: true, week, outcomes: outcomes.data || [], history: history.data || [],
+          triage: (triage.data || []).map((r: Record<string, any>) => ({ id: r.id, triage: meta(r).queue?.triage ?? null, from_pick: meta(r).queue?.from_pick ?? null })),
+          scheduled: (scheduled.data || []).map((r: Record<string, any>) => ({ id: r.id, week_option: meta(r).week_option ?? null, picked_at: meta(r).week_option?.at ?? null })),
+          cues: cues.error ? [] : cues.data || [] })
       }
       if (op === 'media') {
         // One rendered file of this week's pieces (_media.ts): its id from the view, answered with a short signed link.
@@ -263,13 +305,34 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (!/^[a-f0-9]{64}$/.test(id)) throw new BoardError(404, 'media_not_found')
         const end = new Date(`${week}T00:00:00Z`); end.setUTCDate(end.getUTCDate() + 6)
         let url: string | null
-        try { url = await signMedia(db, week, end.toISOString().slice(0, 10), id) } catch { throw new BoardError(503, 'board_store_unavailable') }
+        // The library's copy first; a file the library lacks is served from its Drive copy (_media.ts, contract 1.7.0).
+        try { url = await signMedia(db, week, end.toISOString().slice(0, 10), id, fileId => driveOf(db).serve(fileId)) } catch { throw new BoardError(503, 'board_store_unavailable') }
         if (!url) throw new BoardError(404, 'media_not_found')
+        res.setHeader('Cache-Control', 'private, max-age=300')
         return res.redirect(302, url)
       }
-      if (op === 'research' || op === 'material' || op === 'look') {
+      if (op === 'drive') {
+        // One file of the week's posts in Drive (_drivePosts.ts; contract 1.7.0): only a file the view lists for this
+        // week (an asset, a slide or a version of one), answered with a short signed link to the board's copy of it.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        if (!DRIVE_ID.test(id)) throw new BoardError(404, 'drive_file_not_found')
+        const drive = driveOf(db)
+        let url: string | null
+        try {
+          const posts = await drive.posts(week)
+          if (!posts) throw new BoardError(503, 'drive_unavailable')
+          if (!filesOfPosts(posts).has(id)) throw new BoardError(404, 'drive_file_not_found')
+          url = await drive.serve(id)
+        } catch (e) { if (e instanceof BoardError) throw e; throw new BoardError(503, 'drive_unavailable') }
+        if (!url) throw new BoardError(404, 'drive_file_not_found')
+        res.setHeader('Cache-Control', 'private, max-age=300')
+        return res.redirect(302, url)
+      }
+      if (op === 'research' || op === 'material' || op === 'look' || op === 'style' || op === CUT_OP) {
         // The day path's presses on a piece of this week (_research.ts): research it now (sonar-pro), file research he
-        // dropped, and his pick of the look. His press only; the piece must be scheduled inside this week.
+        // dropped, his pick of the look, his pick or "Not this" of a motion or caption style (_style.ts, contract
+        // 1.4.0), and his Yes or Not this on one of its cuts (_cuts.ts, contract 1.6.0). His press only; the piece must
+        // be scheduled inside this week.
         if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
         if (who !== 'Krish') throw new BoardError(403, 'his_press')
         const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
@@ -289,7 +352,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           }
           if (op === 'research') {
             if (await recentResearch(db, pieceId)) throw new MaterialError(409, 'research_just_ran')
-            const view = await readView(db, week)
+            const view = await readView(db, week, process.env, undefined, undefined, NO_DRIVE)
             const day = view.days.find(d => d.piece_id === pieceId)
             const prompt = day?.path?.prompts.research || researchPrompt({ week, day: '', dayName: '', date: String(row.data.scheduled_for), series: String(row.data.lane_slot || ''),
               pieceId, idea: String(row.data.idea || ''), materials: [], lock: null })
@@ -297,6 +360,24 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             if (!found.text) throw new MaterialError(502, 'research_failed')
             const filed = await fileMaterial(db, pieceId, { kind: 'research', title: `Engine research (sonar-pro), ${new Date().toISOString().slice(0, 10)}`, content: found.text, by: 'Krish' })
             return res.status(201).json({ ok: true, material: filed, sources: found.sources.length })
+          }
+          if (op === CUT_OP) {
+            // His answer on one cut, kept append only on the piece (meta.cut_verdicts). It never changes the cut. A Not
+            // this also goes where his other rejections go (his taste ledger, the rejection inbox, the failure loop),
+            // once, never blocking the press (fileCutLearning).
+            const saved = await saveCut(db, pieceId, cutPick(body))
+            const learned = saved.already ? null : await fileCutLearning(db, { week, date: String(row.data.scheduled_for), pieceId }, saved.verdict)
+            return res.status(200).json({ ok: true, cut_verdict: saved.verdict, already: saved.already, ...(learned ? { learned } : {}) })
+          }
+          if (op === 'style') {
+            // The motion styles are the bank's motion layer, read from main only when the press names one; the caption
+            // styles are config/caption-themes.json. It writes meta.style beside meta.look and never edits a spec.
+            const motion = needsMotion(body) ? await fetch(`https://raw.githubusercontent.com/krishanraja/content-engine/main/config/style-references.json`, { signal: AbortSignal.timeout(15_000) })
+              .then(r => (r.ok ? r.json() : null)).catch(() => null)
+              .then((b: { bank?: Array<{ id?: unknown; layer?: unknown }> } | null) => new Set((b?.bank || []).filter(m => m.layer === 'motion' && typeof m.id === 'string').map(m => String(m.id))))
+              : null
+            const style = await saveStyle(db, pieceId, stylePick(body, motion))
+            return res.status(200).json({ ok: true, style })
           }
           // The looks the engine can make, read once from the style bank: a production format, and any format as the experiment.
           const bank = await fetch(`https://raw.githubusercontent.com/krishanraja/content-engine/main/config/style-references.json`, { signal: AbortSignal.timeout(15_000) })
@@ -310,7 +391,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             inspiration: Array.isArray(body.inspiration) ? body.inspiration.map(String) : [] }, new Set([...production, ...(experiment ? [experiment] : [])]))
           return res.status(200).json({ ok: true, look })
         } catch (e) {
-          if (e instanceof MaterialError) throw new BoardError(e.status, e.message)
+          if (e instanceof MaterialError || e instanceof StyleError || e instanceof CutError) throw new BoardError(e.status, e.message)
           throw e
         }
       }

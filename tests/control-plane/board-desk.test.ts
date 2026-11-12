@@ -187,9 +187,14 @@ describe('a press on the live board binds the same words as the full board', () 
   it('hashes every side of every real off-day option exactly as week_board.py does', async () => {
     const { execFileSync } = await import('node:child_process')
     const { offdaySides } = await import('../../apps/control-plane/api/board/_offdaySides')
-    const py = `import sys,json\nsys.path.insert(0,'scripts/post-pack')\nimport week_board as wb\nd=json.load(open(sys.argv[1]))\nr=wb.read_offdays(d['offdays'])\nprint(json.dumps({o['id']:[o.get('idea_sha256'),o.get('direction_sha256'),o['copy_sha256'],o['source']] for v in r.values() for o in v}))`
+    // ideas.json is read as UTF-8, the way week_board.py reads it: a bare open() is cp1252 on Windows, which turned the
+    // proactiveai option's "›" and "📲" into other characters and hashed different words (Full verify, windows-latest).
+    const py = `import sys,json\nsys.path.insert(0,'scripts/post-pack')\nimport week_board as wb\nd=json.load(open(sys.argv[1],encoding='utf-8'))\nr=wb.read_offdays(d['offdays'])\nprint(json.dumps({o['id']:[o.get('idea_sha256'),o.get('direction_sha256'),o['copy_sha256'],o['source']] for v in r.values() for o in v}))`
     const file = 'docs/plans/2026-11-16-week/ideas.json'
-    const want = JSON.parse(execFileSync('python3', ['-c', py, file], { encoding: 'utf8' })) as Record<string, [string, string | null, string, string]>
+    const PY = process.platform === 'win32' ? 'python' : 'python3'
+    const want = JSON.parse(execFileSync(PY, ['-c', py, file], { encoding: 'utf8', env: { ...process.env, PYTHONIOENCODING: 'utf-8' } })) as Record<string, [string, string | null, string, string]>
+    // At least one option carries characters outside ASCII, so a reader that is not UTF-8 is caught here, not on a press.
+    expect(readFileSync(file, 'utf8')).toMatch(/[^\x00-\x7F]/)
     const ideas = JSON.parse(readFileSync(file, 'utf8'))
     let n = 0
     for (const opts of Object.values(ideas.offdays) as Array<Array<Record<string, unknown>>>) for (const o of opts) {

@@ -58,6 +58,8 @@ export const PRESS_USES = ['wider_piece_context', 'track_over_time', 'next_week'
 // Sunday ideas session if you give me a few options to approve as you do the Mon/wed/fri"): queue/off-<day>-<option>.
 // Growth's off-day lane runs every day (Krish, 2026-10-29: "Mix wins: every day"), so its options may sit on any day;
 // a piece he records stays a Tuesday, Thursday, Saturday or Sunday piece (recordedOffday).
+// A refused subject's line on the ideas board (ideas.json vetoes): queue/veto-<the subject, lower case, dashed>.
+export const VETO_ID = /^veto-[a-z0-9][a-z0-9-]{0,59}$/
 export const OFFDAY_ID = /^off-(mon|tue|wed|thu|fri|sat|sun)-[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,59}$/
 // Sunday is a rest day (Ruling, Krish, 2026-11-02: "Let's eliminate Sunday from Publishing anythign permanently").
 const RECORDED_DAYS = ['tue', 'thu', 'sat']
@@ -312,6 +314,8 @@ export function validBody(collection: string, id: string, body: unknown): boolea
     && (body.use !== 'improve' || typeof body.note === 'string' && body.note.trim().length > 0)
     && (!('option_sha256' in body) || SHA256.test(String(body.option_sha256)))
     && (body.use === 'next_week' ? monday(String(body.target_week)) : !('target_week' in body) || body.target_week === null)
+  // "Offer it again" on a veto line (the ideas quality plan, item 1): queue/veto-<subject>, the subject he gives back.
+  if (collection === 'queue' && 'unveto' in body) return VETO_ID.test(id) && body.pick === id && body.queued === false && text('unveto', 120)
   if (collection === 'queue') return text('pick', 160) && typeof body.queued === 'boolean'
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
     && commentExtras(body)
@@ -397,6 +401,8 @@ export function hisOnlyRefusal(collection: string, body: unknown, who: string | 
   // without a note.
   if (collection === 'picks' && object(body) && 'pick' in body) return 'pick_is_his'
   if (collection === 'queue' && object(body) && 'use' in body) return 'press_is_his'
+  // "Offer it again" on a "Not offered again" line gives a subject he refused back to the next ideas run: his alone.
+  if (collection === 'queue' && object(body) && 'unveto' in body) return 'press_is_his'
   return null
 }
 // Source archives retain the export's selectors, missing anchors and synthesized

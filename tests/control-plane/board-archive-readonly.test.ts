@@ -51,7 +51,7 @@ describe('the old board is a read-only archive', () => {
     const q = { week: '2026-11-09', collection: 'comments', id: 'desk-mon-day-x' }
     const fromArchive = await call(fakeDb(), { method: 'PUT', query: q, body: comment, headers: { cookie: cookie(), origin: 'https://content.krishraja.com', referer: 'https://content.krishraja.com/board/2026-11-09' } })
     expect(fromArchive.status).toBe(423)
-    expect(fromArchive.out).toMatchObject({ ok: false, error: 'archive_read_only', live: 'https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-09' })
+    expect(fromArchive.out).toMatchObject({ ok: false, error: 'archive_read_only', live: 'https://controlcenter.krishraja.com/#/content?week=2026-11-09' })
     const live = fakeDb()
     const fromLive = await call(live, { method: 'PUT', query: q, body: comment, headers: { cookie: cookie(), origin: 'https://controlcenter.krishraja.com', referer: 'https://controlcenter.krishraja.com/?ui=next' } })
     expect(fromLive.status).toBe(200)
@@ -82,9 +82,19 @@ describe('the old board is a read-only archive', () => {
     const out = readOnlyArchive(html, '2026-11-09')
     expect(out.startsWith('<!doctype html><html><head><title>x</title></head><body class="b"><div role="note" data-archive-banner')).toBe(true)
     expect(out).toContain('This is the archive. The live Publish Board is in Control Centre. This page is read-only.')
-    expect(out).toContain('href="https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-09"')
+    expect(out).toContain('href="https://controlcenter.krishraja.com/#/content?week=2026-11-09"')
     expect(out).toContain('archive_read_only')
     expect(out.endsWith('<main>Board</main></body></html>')).toBe(true)
+  })
+
+  it('puts them after a built board\'s head when its body tag is implicit, never inside its script\'s "<body>" string', () => {
+    // A built board is a fragment, and week.js holds "<body>" in a string (it saves a picture's page).
+    const head = '<meta name="mymu-engine" content="x">\n<title>Board</title>\n<link rel="stylesheet" href="f.css">\n<style>a{b:c}</style>\n'
+    const rest = '<div class="wk-top">Board</div>\n<script>\nconst page = "<html><head></head><body>\\n" + body;\n</script>\n'
+    const out = readOnlyArchive(head + rest, '2026-11-09')
+    expect(out.startsWith(head + '<div role="note" data-archive-banner')).toBe(true)
+    expect(out.indexOf('<script data-archive-guard>')).toBeLessThan(out.indexOf('<div class="wk-top">'))
+    expect(out.endsWith(rest)).toBe(true)
   })
 
   it('bumps the week\'s change signal for a writer outside the board\'s tables, on the operator\'s key only', async () => {
