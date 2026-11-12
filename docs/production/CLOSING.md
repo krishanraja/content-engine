@@ -21,7 +21,7 @@ A long episode keeps its own longer close. `end_hold_s` holds the settled last f
 
 ## Layout
 
-- **Tall, 1080 x 1920.** Every word sits inside x 100 to 880, y 200 to 1320, clear of Instagram's and TikTok's top bar, action rail and caption (`config/channel-safe-zones.json`). The rest of the frame is ink. One column, top to bottom: the masthead (520 px), the statement (Anton 204 px, three lines), then the days, "Subscribe free" and the address.
+- **Tall, 1080 x 1920 (changed 12 Nov 2026).** The tall close is now a compact end beat of 2 s, settled by 1.3 s, with every word and the masthead inside the tall core box x 120 to 820, y 330 to 1180 (`config/brand-palette.json` `statement_beat`; Ruling, Krish, 2026-11-12, held to `docs/production/SOCIAL-BEST-PRACTICES-2026.md`). One column, top to bottom: the masthead (420 px), the statement (Anton 176 px, three lines), then the days (none on an off day), "Subscribe free" and the address. The timings in the table above are the wide close's. `docs/production/BRAND_PALETTE.md` is the index of every close.
 - **Wide, 1920 x 1080.** A 160 x 120 px margin. The masthead sits top left and the statement in two lines (Anton 190 px). The bottom row has "Subscribe free" and the address on the left and the days on the right.
 - The tagline breaks only between words. The last word always stands alone in the series colour (`statement_lines` in `scripts/quick-edit/kit.py`). The fit step shrinks the type if a line would ever overflow.
 

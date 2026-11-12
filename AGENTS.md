@@ -115,6 +115,8 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 
 **His feedback on ideas is kept as cues, permanently** ([detail](docs/AGENTS-REFERENCE.md#rule-19))
 
+**Every opening, close, icon, wordmark and sting comes from `config/brand-palette.json` and nowhere else; `scripts/brand_palette.py` refuses a cut that differs (Ruling, Krish, 2026-11-12).** ([detail](docs/production/BRAND_PALETTE.md))
+
 **Never ship beneath the rejection floor: read `python3 scripts/floor.py --format <maker>` before the brief and check the finished file against it.** ([detail](docs/AGENTS-REFERENCE.md#rule-20))
 
 ## Rules for every agent
