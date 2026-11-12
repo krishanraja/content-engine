@@ -2352,8 +2352,10 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `const MOVE_TZ`
 - `const REST_DAYS: readonly string[]`
 - `type ItemState = 'offered' | 'approved' | 'later' | 'withdrawn'`
-- `interface ScheduledPost`
+- `type PostState = 'made' | 'scheduled' | 'live' | 'cancelled'`
+- `interface GrowthPost`
 - `interface OffdayItem`
+- `function growthPost(v: unknown): GrowthPost | null`
 - `const itemKey = (source: 'engine' | 'growth', week: string, id: string) =>`
 - `const mondayOf = (d: string) =>`
 - `const dayKeyOf = (d: string) =>`
@@ -2361,7 +2363,7 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `async function readItems(db: SupabaseClient, week: string): Promise<OffdayItem[] | null>`
 - `interface Placed`
 - `function contentOf(r: OffdayItem, ideas: Body | null, week: string): Body`
-- `function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string): Array<{ o: …`
+- `function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string, base?: Body[…`
 - `function todayIn(now: Date, timeZone = MOVE_TZ): string`
 - `function dayLabel(date: string): string`
 - `interface MoveDay`
@@ -2370,6 +2372,10 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `function moveSpec(placed: Placed, o: Body, week: string, day: string, now: Date): MoveSpec | null`
 - `function laterMoveSpec(r: OffdayItem, now: Date): MoveSpec`
 - `function elsewhereLines(r: OffdayItem | null, now: Date): string[]`
+- `interface ViewGrowthPost`
+- `function viewPosts(r: OffdayItem | null): ViewGrowthPost[]`
+- `function liveOn(r: OffdayItem | null): GrowthPost[]`
+- `const channelWord = (c: string | null) =>`
 - `type MoveTo`
 - `interface MoveRequest`
 - `function moveInput(body: unknown): { input?: MoveRequest; problem?: string }`
@@ -2381,7 +2387,7 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `interface OfferItem`
 - `function growthItems(week: string, body: unknown, plan: Body | null): { items?: OfferItem[]; problem?: string; left: Ar…`
 - `async function offerGrowth(db: SupabaseClient, week: string, body: unknown, plan: Body | null): Promise<MoveResult>`
-- `async function reportScheduled(db: SupabaseClient, week: string, body: unknown): Promise<MoveResult>`
+- `async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date()): Promise<MoveResult>`
 - `function itemsForGrowth(items: OffdayItem[], week: string)`
 - `async function syncApprove(db: SupabaseClient, week: string, docId: string, body: Body, ideas: (w: string) => Promise<B…`
 - `function placedHere(items: OffdayItem[] | null, week: string, docId: string): { keep: boolean; item: OffdayItem | null }`
@@ -2569,6 +2575,8 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `async function branchSha(f: Fetcher, env: Record<string, string | undefined>, branch: string): Promise<string | null | …`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
 - `async function readWeekIdeas(week: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
+- `function growthLiveLine(posts: GrowthPost[]): string`
+- `function growthPosted(items: OffdayItem[] | null | undefined, week: string, day: PostedDay): ViewPosted[]`
 
 ### `apps/control-plane/api/board/_viewContract.ts`
 

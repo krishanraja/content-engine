@@ -69,10 +69,15 @@ posts only.
   and Approve like every other option, and only his press approves it. `GET
   /api/board/<Monday>/offdays` gives back where every item is. When he moves a
   post Growth already scheduled on a platform, Growth moves it only through its
-  own approved posting route, and reports what is still scheduled for each item
-  with `POST /api/board/<Monday>/scheduled` (`{posts: [{option, channel,
-  due_at, buffer_post_id, state}]}`); until it reports the post moved, the
-  board says "Still scheduled for Tue 17 on Instagram: move it there too".
+  own approved posting route. Growth writes back every off-day post it makes,
+  schedules or posts to the same place, from its own posting record and never
+  anything it did not post: `POST /api/board/<Monday>/offday-posts`
+  (`{posts: [{option, state: made | scheduled | live | cancelled, channel,
+  due_at, url, at, buffer_post_id}]}`). The board shows each one (made,
+  scheduled with its time, live with its link) and an approved option Growth
+  reports live makes its day done. Until a post scheduled for a day the item
+  left is moved, the board says "Still scheduled for Tue 17 on Instagram: move
+  it there too".
 
 The sections below still hold for anything Growth asks content-engine to
 make. Where they say content-engine renders a carousel, this ruling comes

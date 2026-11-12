@@ -174,24 +174,25 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         return res.status(result.status).json(result.body)
       } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
     }
-    if (op === 'offdays' || op === 'scheduled') {
+    if (op === 'offdays' || op === 'offday-posts') {
       // Growth's half of the one place an off-day item's day lives (_offdayItems.ts; Ruling, Krish, 2026-11-12): GET
       // offdays reads the week's items where they are now; POST offdays offers Growth's own options for the week (they
-      // reach the board offered, his press approves them); POST scheduled reports what Growth has scheduled on a
-      // platform for each, so an item he moved says plainly what is still scheduled for its old day. Growth's key only.
+      // reach the board offered, his press approves them); POST offday-posts writes back what Growth made, scheduled
+      // (with its time) and posted (with its link) for each, from its own record, so the board shows it out and says
+      // plainly what is still scheduled for a day an item left. Growth's key only.
       if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
       const week = scalar(req.query.week)
       if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
       try {
         const db = await getDb()
-        const { itemsForGrowth, offerGrowth, readItems, reportScheduled } = await import('./_offdayItems.js')
+        const { itemsForGrowth, offerGrowth, readItems, reportPosts } = await import('./_offdayItems.js')
         if (op === 'offdays' && method === 'GET') {
           const items = await readItems(db, week)
           if (!items) return res.status(503).json({ ok: false, error: 'board_store_unavailable' })
           return res.status(200).json({ ok: true, week, items: itemsForGrowth(items, week) })
         }
         if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
-        const result = op === 'offdays' ? await offerGrowth(db, week, req.body, await (deps.ideas ?? readWeekIdeas)(week)) : await reportScheduled(db, week, req.body)
+        const result = op === 'offdays' ? await offerGrowth(db, week, req.body, await (deps.ideas ?? readWeekIdeas)(week)) : await reportPosts(db, week, req.body, deps.now ? new Date(deps.now()) : new Date())
         return res.status(result.status).json(result.body)
       } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
     }

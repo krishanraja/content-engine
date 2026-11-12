@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.8.0",
+ "contract_version": "1.9.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -1745,7 +1745,189 @@
       }
      ],
      "outcome": null,
-     "post": "1TuePostTuePostTuePost001"
+     "post": "1TuePostTuePostTuePost001",
+     "item": {
+      "key": "engine:2026-11-16:povteach",
+      "version": 0,
+      "source": "engine",
+      "state": "slate",
+      "origin_week": "2026-11-16"
+     },
+     "move": {
+      "op": "move",
+      "label": "Move to…",
+      "item": "engine:2026-11-16:povteach",
+      "version": 0,
+      "state": "slate",
+      "from": {
+       "week": "2026-11-16",
+       "day": "tue",
+       "date": "2026-11-17"
+      },
+      "days": [
+       {
+        "date": "2026-11-16",
+        "week": "2026-11-16",
+        "day": "mon",
+        "label": "Mon 16 Nov"
+       },
+       {
+        "date": "2026-11-17",
+        "week": "2026-11-16",
+        "day": "tue",
+        "label": "Tue 17 Nov",
+        "current": true
+       },
+       {
+        "date": "2026-11-18",
+        "week": "2026-11-16",
+        "day": "wed",
+        "label": "Wed 18 Nov"
+       },
+       {
+        "date": "2026-11-19",
+        "week": "2026-11-16",
+        "day": "thu",
+        "label": "Thu 19 Nov"
+       },
+       {
+        "date": "2026-11-20",
+        "week": "2026-11-16",
+        "day": "fri",
+        "label": "Fri 20 Nov"
+       },
+       {
+        "date": "2026-11-21",
+        "week": "2026-11-16",
+        "day": "sat",
+        "label": "Sat 21 Nov"
+       },
+       {
+        "date": "2026-11-23",
+        "week": "2026-11-23",
+        "day": "mon",
+        "label": "Mon 23 Nov"
+       },
+       {
+        "date": "2026-11-24",
+        "week": "2026-11-23",
+        "day": "tue",
+        "label": "Tue 24 Nov"
+       },
+       {
+        "date": "2026-11-25",
+        "week": "2026-11-23",
+        "day": "wed",
+        "label": "Wed 25 Nov"
+       },
+       {
+        "date": "2026-11-26",
+        "week": "2026-11-23",
+        "day": "thu",
+        "label": "Thu 26 Nov"
+       },
+       {
+        "date": "2026-11-27",
+        "week": "2026-11-23",
+        "day": "fri",
+        "label": "Fri 27 Nov"
+       },
+       {
+        "date": "2026-11-28",
+        "week": "2026-11-23",
+        "day": "sat",
+        "label": "Sat 28 Nov"
+       },
+       {
+        "date": "2026-11-30",
+        "week": "2026-11-30",
+        "day": "mon",
+        "label": "Mon 30 Nov"
+       },
+       {
+        "date": "2026-12-01",
+        "week": "2026-11-30",
+        "day": "tue",
+        "label": "Tue 1 Dec"
+       },
+       {
+        "date": "2026-12-02",
+        "week": "2026-11-30",
+        "day": "wed",
+        "label": "Wed 2 Dec"
+       },
+       {
+        "date": "2026-12-03",
+        "week": "2026-11-30",
+        "day": "thu",
+        "label": "Thu 3 Dec"
+       },
+       {
+        "date": "2026-12-04",
+        "week": "2026-11-30",
+        "day": "fri",
+        "label": "Fri 4 Dec"
+       },
+       {
+        "date": "2026-12-05",
+        "week": "2026-11-30",
+        "day": "sat",
+        "label": "Sat 5 Dec"
+       },
+       {
+        "date": "2026-12-07",
+        "week": "2026-12-07",
+        "day": "mon",
+        "label": "Mon 7 Dec"
+       },
+       {
+        "date": "2026-12-08",
+        "week": "2026-12-07",
+        "day": "tue",
+        "label": "Tue 8 Dec"
+       },
+       {
+        "date": "2026-12-09",
+        "week": "2026-12-07",
+        "day": "wed",
+        "label": "Wed 9 Dec"
+       },
+       {
+        "date": "2026-12-10",
+        "week": "2026-12-07",
+        "day": "thu",
+        "label": "Thu 10 Dec"
+       },
+       {
+        "date": "2026-12-11",
+        "week": "2026-12-07",
+        "day": "fri",
+        "label": "Fri 11 Dec"
+       },
+       {
+        "date": "2026-12-12",
+        "week": "2026-12-07",
+        "day": "sat",
+        "label": "Sat 12 Dec"
+       },
+       {
+        "date": "2026-12-14",
+        "week": "2026-12-14",
+        "day": "mon",
+        "label": "Mon 14 Dec"
+       }
+      ],
+      "later": true,
+      "note": "Sunday is a rest day, so it is not offered.",
+      "body": {
+       "item": "engine:2026-11-16:povteach",
+       "version": 0,
+       "from": {
+        "week": "2026-11-16",
+        "day": "tue"
+       }
+      }
+     }
     }
    ],
    "held": [],
@@ -3026,8 +3208,16 @@
    "piece_id": null,
    "detail": [
     {
+     "h": "Approved by you",
+     "p": "Sun 8 Nov, 09:07"
+    },
+    {
      "h": "lookalikes",
      "p": "Meme video, 9:16 · improve"
+    },
+    {
+     "h": "aiintern",
+     "p": "Meme, 1 image, 4:5 · Approved by you, Sun 8 Nov, 09:07"
     }
    ],
    "kind": "Off day: Meme video",
@@ -3259,7 +3449,575 @@
       }
      ],
      "outcome": null,
-     "post": null
+     "post": null,
+     "item": {
+      "key": "engine:2026-11-16:lookalikes",
+      "version": 0,
+      "source": "engine",
+      "state": "slate",
+      "origin_week": "2026-11-16"
+     },
+     "move": {
+      "op": "move",
+      "label": "Move to…",
+      "item": "engine:2026-11-16:lookalikes",
+      "version": 0,
+      "state": "slate",
+      "from": {
+       "week": "2026-11-16",
+       "day": "thu",
+       "date": "2026-11-19"
+      },
+      "days": [
+       {
+        "date": "2026-11-16",
+        "week": "2026-11-16",
+        "day": "mon",
+        "label": "Mon 16 Nov"
+       },
+       {
+        "date": "2026-11-17",
+        "week": "2026-11-16",
+        "day": "tue",
+        "label": "Tue 17 Nov"
+       },
+       {
+        "date": "2026-11-18",
+        "week": "2026-11-16",
+        "day": "wed",
+        "label": "Wed 18 Nov"
+       },
+       {
+        "date": "2026-11-19",
+        "week": "2026-11-16",
+        "day": "thu",
+        "label": "Thu 19 Nov",
+        "current": true
+       },
+       {
+        "date": "2026-11-20",
+        "week": "2026-11-16",
+        "day": "fri",
+        "label": "Fri 20 Nov"
+       },
+       {
+        "date": "2026-11-21",
+        "week": "2026-11-16",
+        "day": "sat",
+        "label": "Sat 21 Nov"
+       },
+       {
+        "date": "2026-11-23",
+        "week": "2026-11-23",
+        "day": "mon",
+        "label": "Mon 23 Nov"
+       },
+       {
+        "date": "2026-11-24",
+        "week": "2026-11-23",
+        "day": "tue",
+        "label": "Tue 24 Nov"
+       },
+       {
+        "date": "2026-11-25",
+        "week": "2026-11-23",
+        "day": "wed",
+        "label": "Wed 25 Nov"
+       },
+       {
+        "date": "2026-11-26",
+        "week": "2026-11-23",
+        "day": "thu",
+        "label": "Thu 26 Nov"
+       },
+       {
+        "date": "2026-11-27",
+        "week": "2026-11-23",
+        "day": "fri",
+        "label": "Fri 27 Nov"
+       },
+       {
+        "date": "2026-11-28",
+        "week": "2026-11-23",
+        "day": "sat",
+        "label": "Sat 28 Nov"
+       },
+       {
+        "date": "2026-11-30",
+        "week": "2026-11-30",
+        "day": "mon",
+        "label": "Mon 30 Nov"
+       },
+       {
+        "date": "2026-12-01",
+        "week": "2026-11-30",
+        "day": "tue",
+        "label": "Tue 1 Dec"
+       },
+       {
+        "date": "2026-12-02",
+        "week": "2026-11-30",
+        "day": "wed",
+        "label": "Wed 2 Dec"
+       },
+       {
+        "date": "2026-12-03",
+        "week": "2026-11-30",
+        "day": "thu",
+        "label": "Thu 3 Dec"
+       },
+       {
+        "date": "2026-12-04",
+        "week": "2026-11-30",
+        "day": "fri",
+        "label": "Fri 4 Dec"
+       },
+       {
+        "date": "2026-12-05",
+        "week": "2026-11-30",
+        "day": "sat",
+        "label": "Sat 5 Dec"
+       },
+       {
+        "date": "2026-12-07",
+        "week": "2026-12-07",
+        "day": "mon",
+        "label": "Mon 7 Dec"
+       },
+       {
+        "date": "2026-12-08",
+        "week": "2026-12-07",
+        "day": "tue",
+        "label": "Tue 8 Dec"
+       },
+       {
+        "date": "2026-12-09",
+        "week": "2026-12-07",
+        "day": "wed",
+        "label": "Wed 9 Dec"
+       },
+       {
+        "date": "2026-12-10",
+        "week": "2026-12-07",
+        "day": "thu",
+        "label": "Thu 10 Dec"
+       },
+       {
+        "date": "2026-12-11",
+        "week": "2026-12-07",
+        "day": "fri",
+        "label": "Fri 11 Dec"
+       },
+       {
+        "date": "2026-12-12",
+        "week": "2026-12-07",
+        "day": "sat",
+        "label": "Sat 12 Dec"
+       },
+       {
+        "date": "2026-12-14",
+        "week": "2026-12-14",
+        "day": "mon",
+        "label": "Mon 14 Dec"
+       }
+      ],
+      "later": true,
+      "note": "Sunday is a rest day, so it is not offered.",
+      "body": {
+       "item": "engine:2026-11-16:lookalikes",
+       "version": 0,
+       "from": {
+        "week": "2026-11-16",
+        "day": "thu"
+       }
+      }
+     }
+    },
+    {
+     "id": "aiintern",
+     "doc_id": "off-thu-aiintern",
+     "title": "The AI intern asks for a raise.",
+     "text": "The AI intern asks for a raise.",
+     "format": "Meme, 1 image, 4:5",
+     "source": "Growth: memes",
+     "status": "approved",
+     "said": null,
+     "actions": [
+      {
+       "kind": "press",
+       "label": "Approve for Thursday 19 Nov",
+       "collection": "queue",
+       "id": "off-thu-aiintern",
+       "revision": 0,
+       "body": {
+        "pick": "off-thu-aiintern",
+        "use": "offday",
+        "day": "thu",
+        "week": "2026-11-16",
+        "option_id": "aiintern",
+        "format": "Meme, 1 image, 4:5",
+        "source": "Growth: memes",
+        "copy_sha256": "f88710226538a2173ef57b116e9115eeba4059f132f0676dfbc04cf612cbc1e3",
+        "idea": {
+         "verdict": "approve",
+         "words": null,
+         "sha256": "ed682af5cfd93256523b733de6d0f7ec308202f6e3f1583e41c41f715cd74f2c",
+         "shown": {
+          "copy": "The AI intern asks for a raise.",
+          "hook": null,
+          "pitch": null,
+          "cards": null
+         }
+        }
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Approved. It is on the publish board for Thursday 19 November; Growth makes it.",
+       "outcome": "approved",
+       "goes": "Goes onto the publish board for Thursday 19 November. Growth makes it from what you approved."
+      },
+      {
+       "kind": "press",
+       "label": "Improve for a future piece",
+       "collection": "queue",
+       "id": "off-thu-aiintern",
+       "revision": 0,
+       "body": {
+        "pick": "off-thu-aiintern",
+        "use": "offday",
+        "day": "thu",
+        "week": "2026-11-16",
+        "option_id": "aiintern",
+        "format": "Meme, 1 image, 4:5",
+        "source": "Growth: memes",
+        "copy_sha256": "f88710226538a2173ef57b116e9115eeba4059f132f0676dfbc04cf612cbc1e3",
+        "idea": {
+         "verdict": "improve",
+         "words": null,
+         "sha256": "ed682af5cfd93256523b733de6d0f7ec308202f6e3f1583e41c41f715cd74f2c"
+        }
+       },
+       "words": {
+        "path": "idea.words",
+        "ask": "What would make it a piece later?",
+        "required": true
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Kept with your note. The revise run also brings a new version back here.",
+       "outcome": "improved",
+       "goes": "Kept with your note as a cue for a future piece. A revised version also comes back here to approve."
+      },
+      {
+       "kind": "press",
+       "label": "Reject",
+       "collection": "queue",
+       "id": "off-thu-aiintern",
+       "revision": 0,
+       "body": {
+        "pick": "off-thu-aiintern",
+        "use": "offday",
+        "day": "thu",
+        "week": "2026-11-16",
+        "option_id": "aiintern",
+        "format": "Meme, 1 image, 4:5",
+        "source": "Growth: memes",
+        "copy_sha256": "f88710226538a2173ef57b116e9115eeba4059f132f0676dfbc04cf612cbc1e3",
+        "idea": {
+         "verdict": "reject",
+         "words": null,
+         "sha256": "ed682af5cfd93256523b733de6d0f7ec308202f6e3f1583e41c41f715cd74f2c"
+        }
+       },
+       "words": {
+        "path": "idea.words",
+        "ask": "Why not? The next ideas run learns from your reason.",
+        "required": true
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Rejected, with your reason. The next ideas run learns from it.",
+       "outcome": "rejected",
+       "goes": "Rejected. Your reason is kept as a cue the next ideas run reads, and goes to your taste ledger in your words."
+      },
+      {
+       "kind": "press",
+       "label": "Save as a trend",
+       "collection": "queue",
+       "id": "off-thu-aiintern",
+       "revision": 0,
+       "body": {
+        "pick": "off-thu-aiintern",
+        "use": "offday",
+        "day": "thu",
+        "week": "2026-11-16",
+        "option_id": "aiintern",
+        "format": "Meme, 1 image, 4:5",
+        "source": "Growth: memes",
+        "copy_sha256": "f88710226538a2173ef57b116e9115eeba4059f132f0676dfbc04cf612cbc1e3",
+        "idea": {
+         "verdict": "trend",
+         "words": null,
+         "sha256": "ed682af5cfd93256523b733de6d0f7ec308202f6e3f1583e41c41f715cd74f2c"
+        }
+       },
+       "words": {
+        "path": "idea.words",
+        "ask": "Which trend is it part of?",
+        "required": true
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Saved with its trend, for a wider piece.",
+       "outcome": "trend",
+       "goes": "Kept with the trend you name, for a wider piece."
+      },
+      {
+       "kind": "press",
+       "label": "File for later",
+       "collection": "queue",
+       "id": "off-thu-aiintern",
+       "revision": 0,
+       "body": {
+        "pick": "off-thu-aiintern",
+        "use": "offday",
+        "day": "thu",
+        "week": "2026-11-16",
+        "option_id": "aiintern",
+        "format": "Meme, 1 image, 4:5",
+        "source": "Growth: memes",
+        "copy_sha256": "f88710226538a2173ef57b116e9115eeba4059f132f0676dfbc04cf612cbc1e3",
+        "idea": {
+         "verdict": "next_week",
+         "words": null,
+         "sha256": "ed682af5cfd93256523b733de6d0f7ec308202f6e3f1583e41c41f715cd74f2c"
+        }
+       },
+       "stamp": [
+        "at",
+        "idea.at"
+       ],
+       "done": "Filed for later. It comes back on a later ideas board.",
+       "outcome": "filed",
+       "goes": "Filed with today's date. It comes back on a later ideas board, or when you ask for it."
+      }
+     ],
+     "outcome": {
+      "id": "approved",
+      "label": "Approved by you, Sun 8 Nov, 09:07",
+      "at": "2026-11-08T14:07:00Z",
+      "words": null
+     },
+     "post": null,
+     "item": {
+      "key": "growth:2026-11-16:aiintern",
+      "version": 3,
+      "source": "growth",
+      "state": "approved",
+      "origin_week": "2026-11-16"
+     },
+     "move": {
+      "op": "move",
+      "label": "Move to…",
+      "item": "growth:2026-11-16:aiintern",
+      "version": 3,
+      "state": "approved",
+      "from": {
+       "week": "2026-11-16",
+       "day": "thu",
+       "date": "2026-11-19"
+      },
+      "days": [
+       {
+        "date": "2026-11-16",
+        "week": "2026-11-16",
+        "day": "mon",
+        "label": "Mon 16 Nov"
+       },
+       {
+        "date": "2026-11-17",
+        "week": "2026-11-16",
+        "day": "tue",
+        "label": "Tue 17 Nov"
+       },
+       {
+        "date": "2026-11-18",
+        "week": "2026-11-16",
+        "day": "wed",
+        "label": "Wed 18 Nov"
+       },
+       {
+        "date": "2026-11-19",
+        "week": "2026-11-16",
+        "day": "thu",
+        "label": "Thu 19 Nov",
+        "current": true
+       },
+       {
+        "date": "2026-11-20",
+        "week": "2026-11-16",
+        "day": "fri",
+        "label": "Fri 20 Nov"
+       },
+       {
+        "date": "2026-11-21",
+        "week": "2026-11-16",
+        "day": "sat",
+        "label": "Sat 21 Nov"
+       },
+       {
+        "date": "2026-11-23",
+        "week": "2026-11-23",
+        "day": "mon",
+        "label": "Mon 23 Nov"
+       },
+       {
+        "date": "2026-11-24",
+        "week": "2026-11-23",
+        "day": "tue",
+        "label": "Tue 24 Nov"
+       },
+       {
+        "date": "2026-11-25",
+        "week": "2026-11-23",
+        "day": "wed",
+        "label": "Wed 25 Nov"
+       },
+       {
+        "date": "2026-11-26",
+        "week": "2026-11-23",
+        "day": "thu",
+        "label": "Thu 26 Nov"
+       },
+       {
+        "date": "2026-11-27",
+        "week": "2026-11-23",
+        "day": "fri",
+        "label": "Fri 27 Nov"
+       },
+       {
+        "date": "2026-11-28",
+        "week": "2026-11-23",
+        "day": "sat",
+        "label": "Sat 28 Nov"
+       },
+       {
+        "date": "2026-11-30",
+        "week": "2026-11-30",
+        "day": "mon",
+        "label": "Mon 30 Nov"
+       },
+       {
+        "date": "2026-12-01",
+        "week": "2026-11-30",
+        "day": "tue",
+        "label": "Tue 1 Dec"
+       },
+       {
+        "date": "2026-12-02",
+        "week": "2026-11-30",
+        "day": "wed",
+        "label": "Wed 2 Dec"
+       },
+       {
+        "date": "2026-12-03",
+        "week": "2026-11-30",
+        "day": "thu",
+        "label": "Thu 3 Dec"
+       },
+       {
+        "date": "2026-12-04",
+        "week": "2026-11-30",
+        "day": "fri",
+        "label": "Fri 4 Dec"
+       },
+       {
+        "date": "2026-12-05",
+        "week": "2026-11-30",
+        "day": "sat",
+        "label": "Sat 5 Dec"
+       },
+       {
+        "date": "2026-12-07",
+        "week": "2026-12-07",
+        "day": "mon",
+        "label": "Mon 7 Dec"
+       },
+       {
+        "date": "2026-12-08",
+        "week": "2026-12-07",
+        "day": "tue",
+        "label": "Tue 8 Dec"
+       },
+       {
+        "date": "2026-12-09",
+        "week": "2026-12-07",
+        "day": "wed",
+        "label": "Wed 9 Dec"
+       },
+       {
+        "date": "2026-12-10",
+        "week": "2026-12-07",
+        "day": "thu",
+        "label": "Thu 10 Dec"
+       },
+       {
+        "date": "2026-12-11",
+        "week": "2026-12-07",
+        "day": "fri",
+        "label": "Fri 11 Dec"
+       },
+       {
+        "date": "2026-12-12",
+        "week": "2026-12-07",
+        "day": "sat",
+        "label": "Sat 12 Dec"
+       },
+       {
+        "date": "2026-12-14",
+        "week": "2026-12-14",
+        "day": "mon",
+        "label": "Mon 14 Dec"
+       }
+      ],
+      "later": true,
+      "note": "Sunday is a rest day, so it is not offered.",
+      "body": {
+       "item": "growth:2026-11-16:aiintern",
+       "version": 3,
+       "from": {
+        "week": "2026-11-16",
+        "day": "thu"
+       }
+      }
+     },
+     "elsewhere": [
+      "Still scheduled for Wed 18 on Instagram: move it there too"
+     ],
+     "posts": [
+      {
+       "state": "made",
+       "channel": null,
+       "label": "Made by Growth",
+       "at": "2026-11-15T12:00:00.000Z",
+       "due_at": null
+      },
+      {
+       "state": "scheduled",
+       "channel": "instagram",
+       "label": "Scheduled on Instagram",
+       "at": "2026-11-15T12:05:00.000Z",
+       "due_at": "2026-11-18T17:30:00.000Z"
+      }
+     ]
     }
    ],
    "held": [],
@@ -4746,6 +5504,74 @@
       "words": null
      },
      "post": null,
+     "item": {
+      "key": "engine:2026-11-16:goodnews",
+      "version": 0,
+      "source": "engine",
+      "state": "slate",
+      "origin_week": "2026-11-16"
+     },
+     "move": {
+      "op": "move",
+      "label": "Move to…",
+      "item": "engine:2026-11-16:goodnews",
+      "version": 0,
+      "state": "slate",
+      "from": {
+       "week": "2026-11-16",
+       "day": "sat",
+       "date": "2026-11-21"
+      },
+      "days": [
+       {
+        "date": "2026-11-16",
+        "week": "2026-11-16",
+        "day": "mon",
+        "label": "Mon 16 Nov"
+       },
+       {
+        "date": "2026-11-17",
+        "week": "2026-11-16",
+        "day": "tue",
+        "label": "Tue 17 Nov"
+       },
+       {
+        "date": "2026-11-18",
+        "week": "2026-11-16",
+        "day": "wed",
+        "label": "Wed 18 Nov"
+       },
+       {
+        "date": "2026-11-19",
+        "week": "2026-11-16",
+        "day": "thu",
+        "label": "Thu 19 Nov"
+       },
+       {
+        "date": "2026-11-20",
+        "week": "2026-11-16",
+        "day": "fri",
+        "label": "Fri 20 Nov"
+       },
+       {
+        "date": "2026-11-21",
+        "week": "2026-11-16",
+        "day": "sat",
+        "label": "Sat 21 Nov",
+        "current": true
+       }
+      ],
+      "later": false,
+      "note": "This week's good news stays in its week: its stories are this week's.",
+      "body": {
+       "item": "engine:2026-11-16:goodnews",
+       "version": 0,
+       "from": {
+        "week": "2026-11-16",
+        "day": "sat"
+       }
+      }
+     },
      "stories": [
       {
        "headline": "Story 1",
@@ -5237,7 +6063,8 @@
   "runs": true,
   "store": true,
   "approvals": true,
-  "drive": true
+  "drive": true,
+  "items": true
  },
  "revision": 7
 }

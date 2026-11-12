@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import {
-  dayOptions, elsewhereLines, followDrive, growthItems, libraryFixes, moveDays, moveInput, moveItem, postFolderName, todayIn, type DriveRenamer, type OffdayItem,
+  dayOptions, elsewhereLines, followDrive, growthItems, libraryFixes, moveDays, moveInput, moveItem, postFolderName, reportPosts, todayIn, type DriveRenamer, type OffdayItem,
 } from '../../apps/control-plane/api/board/_offdayItems'
 import { offdaySides } from '../../apps/control-plane/api/board/_offdaySides'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
@@ -28,7 +28,7 @@ const PLAN: Record<string, Body> = {
   [W2]: { offdays: { thu: [option('ownref')] } },
 }
 const row = (over: Partial<OffdayItem>): OffdayItem => ({ item: `engine:${W1}:burntokens`, source: 'engine', origin_week: W1, option_id: 'burntokens', option: option('burntokens'),
-  state: 'approved', week: W1, day: 'tue', date: '2026-11-17', doc: 'queue/off-tue-burntokens', piece_id: null, drive_folder: null, scheduled: [], followed: {}, version: 1,
+  state: 'approved', week: W1, day: 'tue', date: '2026-11-17', doc: 'queue/off-tue-burntokens', piece_id: null, drive_folder: null, posts: [], followed: {}, version: 1,
   placed_by: 'Krish', placed_at: '2026-11-10T10:00:00Z', ...over })
 
 // ── An in-memory engine database: the tables a move and its readers touch, and the two functions they call ──────────
@@ -89,7 +89,7 @@ function fakeDb(start: Partial<Tables> = {}) {
       const version = (r?.version ?? 0) + 1
       if (r) Object.assign(r, { state: p.state, ...place, option: p.option ?? r.option, version, drive_folder: p.drive_folder ?? r.drive_folder, placed_by: 'Krish' })
       else t.offday_items.push({ item: p.item, source: p.source, origin_week: p.origin_week, option_id: p.option_id, option: p.option, state: p.state, ...place, piece_id: p.piece_id ?? null,
-        drive_folder: p.drive_folder ?? null, scheduled: [], followed: {}, version, placed_by: 'Krish', placed_at: 'x' })
+        drive_folder: p.drive_folder ?? null, posts: [], followed: {}, version, placed_by: 'Krish', placed_at: 'x' })
       t.offday_moves.push({ id: t.offday_moves.length + 1, item: p.item, version, from_state: r?.state ?? null, from_week: r?.week ?? null, from_day: r?.day ?? null, from_date: r?.date ?? null, to_state: p.state })
       return { data: { ok: true, version, ...place, state: p.state }, error: null }
     } catch (e) {
@@ -229,14 +229,14 @@ describe('a move, the one write', () => {
     expect(refused.error?.message).toMatch(/not_approved_by_krish/)
     expect(t.offday_items[0]).toMatchObject({ day: 'tue', version: 1 })
     const routed = JSON.parse(readFileSync(new URL('../../apps/control-plane/vercel.json', import.meta.url), 'utf8'))
-    for (const op of ['move', 'offdays', 'scheduled']) expect(JSON.stringify(routed)).toContain(`"source":"/api/board/:week/${op}","destination":"/api/board?week=:week&op=${op}"`)
+    for (const op of ['move', 'offdays', 'offday-posts']) expect(JSON.stringify(routed)).toContain(`"source":"/api/board/:week/${op}","destination":"/api/board?week=:week&op=${op}"`)
   })
 })
 
 describe('every place that names the day follows the one place', () => {
   it('moves a post and reads its day back from the view, Growth\'s read, its Drive folder, the library and what is still scheduled', async () => {
     const doc = approveDoc(W1, 'tue', 'burntokens')
-    const { db, t } = fakeDb({ offday_items: [row({ drive_folder: FOLDER, scheduled: [{ channel: 'instagram', due_at: '2026-11-17T17:30:00Z', buffer_post_id: 'b1', state: 'scheduled' }] })], board_documents: [doc] })
+    const { db, t } = fakeDb({ offday_items: [row({ drive_folder: FOLDER, posts: [{ state: 'scheduled', channel: 'instagram', due_at: '2026-11-17T17:30:00.000Z', url: null, at: '2026-11-12T10:00:00.000Z', buffer_post_id: 'b1' }] })], board_documents: [doc] })
     const { drive, renamed } = fakeDrive('2026-11-17 Tue off.day - Burn tokens')
     const followed: string[] = []
     const out = await moveItem(db, { item: `engine:${W1}:burntokens`, version: 1, from: { week: W1, day: 'tue' }, to: { date: '2026-11-26' } },
@@ -301,9 +301,10 @@ describe('every place that names the day follows the one place', () => {
   })
 
   it('says a post Growth scheduled for a day it left, and nothing once Growth moved it', () => {
-    const r = row({ week: W2, day: 'thu', date: '2026-11-26', scheduled: [{ channel: 'tiktok', due_at: '2026-11-17T22:30:00Z', state: 'scheduled' }, { channel: 'instagram', due_at: '2026-11-26T17:30:00Z', state: 'scheduled' }] })
+    const sched = (channel: string, due: string) => ({ state: 'scheduled' as const, channel, due_at: due, url: null, at: 'x', buffer_post_id: null })
+    const r = row({ week: W2, day: 'thu', date: '2026-11-26', posts: [sched('tiktok', '2026-11-17T22:30:00.000Z'), sched('instagram', '2026-11-26T17:30:00.000Z')] })
     expect(elsewhereLines(r, NOW)).toEqual(['Still scheduled for Tue 17 on TikTok: move it there too'])
-    expect(elsewhereLines({ ...r, scheduled: [{ channel: 'tiktok', due_at: '2026-11-17T22:30:00Z', state: 'moved' }] }, NOW)).toEqual([])
+    expect(elsewhereLines({ ...r, posts: [sched('tiktok', '2026-11-26T22:30:00.000Z')] }, NOW)).toEqual([])
     expect(elsewhereLines({ ...r, state: 'later', week: null, day: null, date: null }, NOW)).toEqual(['Still scheduled for Tue 17 on TikTok: take it off there too', 'Still scheduled for Thu 26 on Instagram: take it off there too'])
   })
 })
@@ -326,7 +327,7 @@ describe('Growth hands its options over through the one place', () => {
     const offered: Body[] = []
     const { db, t } = fakeDb({ offday_items: [row({})] })
     const withOffer = { ...db as object, rpc: async (fn: string, a: Body) => { if (fn === 'offday_items_offer') { offered.push(a); return { data: { ok: true, offered: a.p_items.length }, error: null } } return (db as any).rpc(fn, a) } }
-    const handler = createBoardHandler(async () => withOffer as never, { ideas: async (w: string) => PLAN[w] ?? null })
+    const handler = createBoardHandler(async () => withOffer as never, { ideas: async (w: string) => PLAN[w] ?? null, now: () => NOW.toISOString() })
     const call = async (auth: string, method: string, op: string, body?: Body) => {
       let status = 0; let out: Body = {}
       const res = { setHeader() {}, status(c: number) { status = c; return this }, json(v: Body) { out = v; return this } } as unknown as VercelResponse
@@ -339,11 +340,63 @@ describe('Growth hands its options over through the one place', () => {
     expect(offered[0]).toMatchObject({ p_week: W1, p_source: 'growth', p_items: [{ item: `growth:${W1}:meme-ai-intern`, day: 'thu' }] })
     const read = await call('Bearer synthetic-growth', 'GET', 'offdays')
     expect(read.out.items).toEqual([{ item: `engine:${W1}:burntokens`, source: 'engine', option_id: 'burntokens', state: 'approved', week: W1, day: 'tue', date: '2026-11-17',
-      doc: 'queue/off-tue-burntokens', version: 1, scheduled: [], moved: false }])
-    // What Growth has scheduled for an item, as Growth reports it.
-    const sched = await call('Bearer synthetic-growth', 'POST', 'scheduled', { posts: [{ option: 'off-tue-burntokens', channel: 'instagram', due_at: '2026-11-17T17:30:00Z', buffer_post_id: 'b1' }] })
+      doc: 'queue/off-tue-burntokens', version: 1, posts: [], moved: false }])
+    // What Growth scheduled for an item, from its own record.
+    const sched = await call('Bearer synthetic-growth', 'POST', 'offday-posts', { posts: [{ option: 'off-tue-burntokens', state: 'scheduled', channel: 'instagram', due_at: '2026-11-17T17:30:00Z', buffer_post_id: 'b1' }] })
     expect(sched.out).toEqual({ ok: true, items: 1, unknown: 0 })
-    expect(t.offday_items[0].scheduled).toEqual([{ channel: 'instagram', due_at: '2026-11-17T17:30:00.000Z', buffer_post_id: 'b1', state: 'scheduled' }])
+    expect(t.offday_items[0].posts).toEqual([{ state: 'scheduled', channel: 'instagram', due_at: '2026-11-17T17:30:00.000Z', url: null, at: '2026-11-12T15:00:00.000Z', buffer_post_id: 'b1' }])
+    // Anyone without Growth's key writes nothing there.
+    expect((await call('', 'POST', 'offday-posts', { posts: [] })).status).toBe(401)
+  })
+})
+
+describe('Growth marks its own off-day posts on the board, from its own record', () => {
+  // Tue 10 Nov: the carousel went out on six channels (Buffer, 17:34 to 18:25 UTC) and the board still said "With
+  // Growth", because the write-back took only a day with a piece. An off-day post has none.
+  const W = '2026-11-09'
+  const plan = { offdays: { tue: [option('shell')] } }
+  const shellDoc = { week: W, collection: 'queue', doc_id: 'off-tue-shell', revision: 1, updated_by: 'Krish',
+    body: { pick: 'off-tue-shell', use: 'offday', day: 'tue', week: W, option_id: 'shell', copy_sha256: offdaySides(option('shell')).copy_sha256,
+      idea: { verdict: 'approve', words: null, sha256: offdaySides(option('shell')).idea_sha256, at: 'x' } } }
+  const shell = row({ item: `engine:${W}:shell`, origin_week: W, option_id: 'shell', option: option('shell'), week: W, day: 'tue', date: '2026-11-10', doc: 'queue/off-tue-shell' })
+  const now = new Date('2026-11-10T19:00:00Z')
+  const viewOf = (t: Tables) => buildView({ week: W, now, pieces: [], picks: [], history: [], runs: {}, north_star: null, locks: {}, ideas: plan,
+    queue: t.board_documents.filter(d => d.week === W).map(d => ({ doc_id: d.doc_id, body: d.body, updated_by: d.updated_by, revision: d.revision })),
+    approvals: [{ idea_id: 'off-tue-shell', day: 'tue', date: '2026-11-10', via: 'offday', doc: 'queue/off-tue-shell', option_ref: 'off-tue-shell', revision: 1,
+      decided_at: '2026-11-03T06:55:41Z', option_sha256: null, words: null, source: 'publish_board' }], items: t.offday_items as OffdayItem[] } as ViewInputs)
+
+  it('made, then scheduled, then live on six channels: the day says so and is done, with each post\'s link', async () => {
+    const { db, t } = fakeDb({ offday_items: [shell], board_documents: [shellDoc] })
+    const report = (posts: Body[]) => reportPosts(db, W, { posts }, now)
+    expect((await report([{ option: 'off-tue-shell', state: 'made', at: '2026-11-09T20:00:00Z' }])).body).toEqual({ ok: true, items: 1, unknown: 0 })
+    expect(viewOf(t).days.find(d => d.day === 'tue')!.next).toMatch(/^Approved\. Growth made it; it schedules it for the day/)
+    const channels = ['instagram', 'facebook', 'tiktok', 'youtube', 'threads', 'x']
+    await report(channels.map((c, k) => ({ option: 'off-tue-shell', state: 'scheduled', channel: c, due_at: `2026-11-10T17:${30 + k}:00Z`, buffer_post_id: `b${k}` })))
+    const scheduled = viewOf(t).days.find(d => d.day === 'tue')!
+    expect(scheduled.next).toMatch(/^Approved\. Growth scheduled it on Instagram, Facebook, TikTok, YouTube, Threads, X/)
+    // Until Growth's record says it went out, his It's live stays one press away.
+    expect(scheduled.actions.some(a => a.kind === 'press' && /^It's live/.test(a.label))).toBe(true)
+    expect(scheduled.who).toBe('growth')
+    await report(channels.map((c, k) => ({ option: 'off-tue-shell', state: 'live', channel: c, url: `https://example.org/${c}/1`, at: `2026-11-10T${k < 3 ? '17' : '18'}:${k < 3 ? 34 + k : 20 + k}:00Z`, buffer_post_id: `b${k}` })))
+    const tue = viewOf(t).days.find(d => d.day === 'tue')!
+    expect([tue.who, tue.next]).toEqual(['done', 'Live on Instagram, Facebook, TikTok, YouTube, Threads, X. Growth posted it, Tue 10 Nov, 13:25'])
+    // Out by Growth's own record: nothing left for him to press.
+    expect(tue.actions.some(a => a.kind === 'press' && /^It's live/.test(a.label))).toBe(false)
+    expect(tue.posted.filter(p => p.by === 'growth').map(p => [p.label, p.href])).toEqual(channels.map(c => [expect.any(String), `https://example.org/${c}/1`]))
+    const shown = tue.options.find(o => o.id === 'shell')!
+    expect(shown.posts!.map(p => p.state)).toEqual(['made', ...channels.map(() => 'live')])
+    // A live post is never undone by a later scheduled report for the same channel.
+    await report([{ option: 'off-tue-shell', state: 'scheduled', channel: 'instagram', due_at: '2026-11-12T17:30:00Z' }])
+    expect((t.offday_items[0].posts as Body[]).filter(p => p.channel === 'instagram').map(p => p.state)).toEqual(['live'])
+  })
+
+  it('takes nothing live without its channel and its own link, and nothing for an item that is not on the week', async () => {
+    const { db, t } = fakeDb({ offday_items: [shell], board_documents: [shellDoc] })
+    const out = await reportPosts(db, W, { posts: [{ option: 'off-tue-shell', state: 'live', channel: 'instagram' }, { option: 'off-tue-shell', state: 'live', url: 'https://x.org/1' },
+      { option: 'off-thu-nothere', state: 'live', channel: 'x', url: 'https://x.org/2' }] }, now)
+    expect(out.body).toEqual({ ok: true, items: 0, unknown: 3 })
+    expect(t.offday_items[0].posts).toEqual([])
+    expect((await reportPosts(db, W, { nope: true }, now)).status).toBe(400)
   })
 })
 
