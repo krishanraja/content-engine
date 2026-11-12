@@ -2,7 +2,7 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-11-04 against `main` at `45161a5` for the names, ve, the board and the learning terms; the `venture_formats` and `format_aliases` rows were last read back on 2026-09-25
+Last verified: 2026-11-12 against `main` at `02184d34` for every term (each checked against the code or config it names), with `venture_formats`, `format_aliases`, the `content_ideas` state check and the tables named here read back from the database the same day
 
 Terms as this repository uses them. Where a word means different things in the
 two halves, both meanings are given. Read "Names" first: most misreadings of
@@ -13,7 +13,7 @@ this repository start with a retired name.
 | Name you may see | What it is now | Where it is still live |
 |---|---|---|
 | Mindmake | Krish's AI advisory, education and products business. The current name. This engine and the publication belong to makeyourmindup (Ruling, Krish, 2026-10-28) | everywhere for the business; in this repository, only package, environment and credential names, which keep the `mindmake` spelling |
-| Mindmaker | the older name of the business | load-bearing only as a Drive folder path, the ASR vocabulary, the CLI description and some skill descriptions; renaming those breaks paths or tests |
+| Mindmaker | the older name of the business | load-bearing only as a Drive folder path, the ASR vocabulary (`config/studio.json`), the Studio CLI's description (`packages/cli`), the shared database's name (Mindmaker OS) and some skill descriptions; renaming those breaks paths or tests |
 | Mindmaker Live | a retired channel name; its alias maps to `general` | old pilot and analytics labels |
 | follow.the.money (`follow_the_money`) | live subchannel: the money question | the publication |
 | mind.the.gap (`mind_the_gap`) | live subchannel: the pattern question; the hero subchannel | the publication |
@@ -24,9 +24,9 @@ this repository start with a retired name.
 | split.the.bill (`split_the_bill`), lift.the.lid (`lift_the_lid`) | the names follow.the.money and under.the.hood carried until Krish renamed them on 2026-09-25 ("every single instance front and back end, with zero exceptions"). Aliases in `format_aliases`, so an old link or row still resolves. Nowhere else: a test fails if either name reappears in a tracked file | the ten append-only rows written before the rename (`content_edit_events`, `judge_verdicts`), which cannot be edited |
 | Signal & Noise (`signal_noise`) | an older channel still known to the final-pass rubrics and channel cuts | legacy rubric keys |
 | `general`, `either` | rows in `venture_formats` that are not subchannels: a holding lane, and "suits more than one" | routing |
-| makeyourmindup | **the publication's name** (Krish, 2026-09-25). Hosted on Substack; its cover page is makeyourmindup.ai. Also the `corpus_key` on every live subchannel row | makeyourmindup.ai used to be CTRL's lead-magnet door; where that door goes now is open (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8) |
+| makeyourmindup | **the publication's name** (Krish, 2026-09-25). Hosted on Substack at home.makeyourmindup.ai (the archive `_publishWatch.ts` reads, and the subscribe page `publish_kit.py` links); its cover site, makeyourmindup.ai, is built from `krishanraja/makeyourmindup`, which also holds the kill list and the judges this engine runs from a pinned copy (`vendor/makeyourmindup/kill-list/`). Also the `corpus_key` on every live subchannel row | everywhere the publication is named |
 | Mindmake's publication | an older way of naming the publication, superseded on 2026-10-28 | Control Center's architecture canon |
-| Content Engine | this repository's editorial half; Control Center's Content tab holds only its two approval queues (Ideas to approve; Ready to schedule and post) | both repos |
+| Content Engine | this repository's editorial half. Control Center's Content tab draws the one live Publish Board from its view, beside its two approval queues (Ideas to approve; Ready to schedule and post) | both repos |
 | ve | the video engine: one signed spec per piece, run with `python scripts/ve.py` | `scripts/ve.py`, `scripts/velib/`, `docs/ve/` |
 | quick-edit | the older video path, the fallback until ve passes Phase 3 | `scripts/quick-edit/`, the `produce-video` skill |
 | Studio, Video Studio, video-studio | the job-based Studio route of the media half (stations, runner, gates); not how videos are made today | `packages/`, `apps/runner`, `apps/renderer`, `/api/video-studio/*` |
@@ -59,8 +59,9 @@ this repository start with a retired name.
   body; a piece once it is drafted. `idea` is its title, `thesis` its pitch,
   `body` the draft.
 - **States.** `seeded` (captured), `researching`, `drafting`, `review` (a body
-  exists and waits on Krish), `approved`, `published`, `dropped`. Only Krish
-  approves, drops or publishes.
+  exists and waits on Krish), `approved`, `published`, `dropped`, and
+  `absorbed` (a source card folded into a synthesized piece, `synthesize.ts`).
+  Only Krish approves, drops or publishes.
 - **Buried.** Set aside with a reason (`buried_at`); not deleted. The Monday
   purge is the only hard delete, and only for expired news rows.
 - **`lane` and `lane_slot`.** `lane_slot` holds the subchannel slug. `lane` is
@@ -171,7 +172,7 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 - **The Ladder, The Living Screen.** The two lab styles Krish approved to use (11 Nov 2026): one lit 3D object that
   carries every number; a working interface the camera reads for the viewer. Bank ids `ladder`, `living-screen`.
 - **Move.** One motion that says one thing (a count, a drop, a before-and-after), timed by the words that cue it:
-  `lab/moves/`, called by every style.
+  `packages/moves/` (`@mymu/moves`), re-exported unchanged in `lab/moves/`, called by every style and by ve.
 - **Caption style.** How the spoken words are drawn on screen: the house caption, the word build, or one of 15
   caption styles named in `brand.caption_theme` (`apps/renderer/src/engine/captions/`). `art-directed` is the one
   Krish picked; `cinematic` is Audrey's cinematic caption system rebuilt for ve.
