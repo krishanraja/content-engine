@@ -118,9 +118,11 @@ Growth's closed shape (`content-engine-piece-manifest/1`, copied from Growth int
 1. `draft SPEC --out "0 Publish/manifest.draft.json"`: assets in order with their
    Drive ids and sha256, the exact words and alt text per channel, and QA. The
    board's Approve for publish binds the draft's sha256
-   (`week_board.py --publish-manifest DAY=<draft>`), so his press approves exactly
-   that. That press was the archive's; the live board's view does not carry it
-   yet, so until it does no manifest can be sealed (`docs/PUBLISH_BOARDS.md`).
+   that. The live board carries the press from view contract 1.8.0: the draft is
+   read from `0 Publish/manifest.draft.json` in the post's library folder, every
+   file is shown with its Drive link beside the press, and a draft that changes
+   after his press needs his press again (`docs/PUBLISH_BOARDS.md`, "Approve for
+   publish, bound to the manifest").
 2. `seal --draft D --approval <his picks/<day>-publish document> --out manifest.json`:
    only his own approval (updated_by Krish), approved, for this piece, bound to
    this draft, with QA passed, seals it; `approval_sha256` is the sha256 of his

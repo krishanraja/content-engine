@@ -12,6 +12,7 @@ import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
 import { readView } from './_view.js'
 import { signMedia } from './_media.js'
+import { ManifestBindError, checkPublishBind } from './_manifest.js'
 import { DRIVE_ID, boardDrive, filesOfPosts } from './_drivePosts.js'
 import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
@@ -480,6 +481,10 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           const was = stored.data?.body
           if (!was || was.use !== 'offday' || typeof was.approved !== 'boolean') throw new BoardError(409, 'offday_press_not_found')
           incoming = { ...was, note: incoming.note, at: incoming.at ?? was.at, note_only: true }
+        }
+        // His Approve for publish binds the piece's manifest as it stands now (1.8.0, _manifest.ts).
+        if (collection === 'picks' && /-publish$/.test(id)) {
+          try { await checkPublishBind(db, incoming) } catch (e) { if (e instanceof ManifestBindError) throw new BoardError(e.status, e.message); throw e }
         }
         const body = await preparePress(collection, id, incoming)
         const result = await db.rpc('board_save', { p_week: week, p_collection: collection, p_id: id, p_body: body, p_revision: req.body.revision, p_actor: who })

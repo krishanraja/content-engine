@@ -7,6 +7,7 @@ import { VIEW_CONTRACT_VERSION, notModified, viewEtag } from '../../apps/control
 import { LIVE_BOARD_URL, liveBoardUrl } from '../../apps/control-plane/api/board/_liveBoard'
 import { SCHEMA_PATH, compare, judge, validate } from '../../scripts/check-view-contract'
 import { assetsOf, type DriveFile } from '../../apps/control-plane/api/board/_drivePosts'
+import { parseDraft } from '../../apps/control-plane/api/board/_manifest'
 
 // The Publish Board view's contract (Ruling, Krish, 2026-11-11: "make sure this is built such that when I make other
 // updates to the publish board and content engine, they do not regress this work, they just elegantly upgrade the
@@ -92,6 +93,10 @@ function full(): ViewInputs {
     ticks: [{ tick_id: 'mon-shorts', updated_by: 'growth', body: { done: true, day: 'mon', step: 'shorts', label: 'YouTube Shorts', at: '2026-11-16T09:00:00Z', posts: [{ url: 'https://www.youtube.com/shorts/x' }] } }],
     revision: 7,
     approvals: [],
+    // 1.8.0: Monday's piece's draft manifest, which his Approve for publish binds.
+    drafts: { [MON]: parseDraft(Buffer.from(`${JSON.stringify({ schema: 'content-engine-piece-manifest/1', piece_id: MON, qa: { state: 'passed', checked_at: '2026-11-16T07:00:00Z' },
+      assets: [{ name: 'short_video', drive_id: DRIVE.long, sha256: '1'.repeat(64), order: 1 }, { name: 'vertical_cover', drive_id: DRIVE.cover, sha256: '2'.repeat(64), order: 2 }],
+      channels: { tiktok: { words: 'Synthetic caption.', alt_text: null, assets: ['short_video'] } } }, null, 1)}\n`), MON)! },
     // 1.7.0: the week's posts in Drive: Monday's piece's post, and Tuesday's off-day post with a carousel, a meme video in
     // two versions and its words (_drivePosts.ts).
     drive_posts: [
@@ -179,6 +184,12 @@ describe('the Publish Board view contract', () => {
     expect((v.days.find(d => d.day === 'tue')!.options as Body[]).find(o => o.id === 'povteach')!.post).toBe(DRIVE.tuePost)
     expect(served({ ...full(), drive_posts: null }).days.map((d: Body) => d.posts)).toEqual([null, null, null, null, null, null])
     expect((served({ ...full(), drive_posts: null }).sources as Body).drive).toBe(false)
+    // 1.8.0: Monday's manifest waits on his Approve for publish, its press bound to the draft's sha256, and leads the day.
+    const mon = v.days.find(d => d.day === 'mon')!
+    const manifest = mon.manifest as Body & { press: Body; assets: Body[] }
+    expect([manifest.state, manifest.assets.map(a => a.name), manifest.press.id, (manifest.press.body as Body).manifest_sha256]).toEqual(['waiting', ['short_video', 'vertical_cover'], 'mon-publish', manifest.sha256])
+    expect((mon.actions as Body[])[0]).toEqual(manifest.press)
+    expect(v.days.filter(d => d.day !== 'mon').every(d => d.manifest === null)).toBe(true)
   })
 
   it('fails a view that drops or renames anything the schema promises', () => {
