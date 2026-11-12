@@ -2714,6 +2714,12 @@ def main(argv=None, call=None):
             approved=hand_built_approval(a.piece_id, a.args[0], a.video_file)
             problems=[] if approved else quality.delivery_problems(a.video_file,receipt_path,target)
             if approved:
+                # His words waive the engine's receipts, never sync: a hand-built cut carries its own picture-against-
+                # sound receipt for these bytes (scripts/av_sync.py; Krish, 2026-11-12, on Wednesday 11 Nov's
+                # 5-minute: "We need to ensure that never happens in the future").
+                sys.path.insert(0, str(HERE.parent))
+                import av_sync
+                problems = av_sync.receipt_problems(a.video_file)
                 patch['video_assets'][0]['hand_built']={'sha256': approved['sha256'], 'krish': approved['krish']}
             elif not problems:
                 receipt=json.loads(Path(receipt_path).read_text(encoding='utf8'))
