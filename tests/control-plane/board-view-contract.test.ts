@@ -218,6 +218,27 @@ describe('the Publish Board view contract', () => {
     expect(compare(base, next(s => { s.$defs.action.allOf[0].then.required = ['job'] })).breaking.join()).toMatch(/input: no longer always sent/)
   })
 
+  it('puts a held off-day option, on a publishing day too, on its day with its own Approve (Krish, 2026-11-12)', () => {
+    const f = full()
+    const decided = 'Remade on black (Krish, 12 Nov).'
+    const view = buildView({ ...f, ideas: { ...(f.ideas as Body), offdays: { ...((f.ideas as Body).offdays as Body),
+      wed: [option('tablefortwo', { decided })], thu: [option('lookalikes'), option('agentnotsetup', { decided })] } } })
+    for (const [d, id] of [['wed', 'tablefortwo'], ['thu', 'agentnotsetup']] as const) {
+      const day = view.days.find(x => x.day === d)!
+      expect(day.options.find(o => o.id === id)?.status).toBe('held')
+      expect(day.held.some(h => h.option === `off-${d}-${id}`)).toBe(true)
+      const press = day.actions.find(a => a.kind === 'press' && a.id === `off-${d}-${id}`) as Body | undefined
+      expect(press?.label).toMatch(/^Approve for /)
+      expect(((press?.body as Body).idea as Body).verdict).toBe('approve')
+    }
+    // His Approve stands: nothing is held and no extra press is drawn.
+    const approved = buildView({ ...f, ideas: { ...(f.ideas as Body), offdays: { ...((f.ideas as Body).offdays as Body), wed: [option('tablefortwo', { decided })] } },
+      approvals: [...f.approvals!, approval(WEEK, 'wed', 'tablefortwo', { doc: 'queue/off-wed-tablefortwo' })] })
+    const wed = approved.days.find(x => x.day === 'wed')!
+    expect(wed.held.some(h => h.option === 'off-wed-tablefortwo')).toBe(false)
+    expect(wed.actions.some(a => a.kind === 'press' && a.id === 'off-wed-tablefortwo')).toBe(false)
+  })
+
   it('tags a view by what it says, so a read that finds nothing new is a 304', () => {
     const a = served(full()), b = { ...served(full()), as_of: '2030-01-01T00:00:00Z' }
     expect(viewEtag(a)).toBe(viewEtag(b))
