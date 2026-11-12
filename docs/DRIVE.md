@@ -257,7 +257,7 @@ there, reads it back and replies "Done" with the link (`config/failures.json` F2
   the n8n "Google Drive account" login and only adds files; it never deletes or
   overwrites.
 - Public copy never carries a Drive path (`NOW.md`, `never_publish`).
-- Three automatic writers are allowed, each by Krish's word. The research library's mirror (above; Ruling, Krish,
+- Four automatic writers are allowed, each by Krish's word. The research library's mirror (above; Ruling, Krish,
   2026-11-11), which adds folders, files and index rows inside `6 Research library` only, and removes a later index row
   for a material already listed. The library sync
   (AGENTS.md), which writes the makeyourmindup library and, since
@@ -265,7 +265,14 @@ there, reads it back and replies "Done" with the link (`config/failures.json` F2
   Drive filing"): on his home computers, through the synced folders, it adds
   the media of links he pasted to `Ventures > Inspiration > Production Inspo`
   or `Content Inspo`. Add only: it never deletes,
-  overwrites or renames, and it writes nowhere else.
+  overwrites or renames, and it writes nowhere else. And the Publish Board's Move to… (Ruling, Krish, 2026-11-12: any
+  off-day post or idea moves to any day at his press, and the move updates every place that names its day;
+  `docs/PUBLISH_BOARDS.md`, "Moving an off-day item to any day"): when he moves an off-day post, its folder in
+  `3 Posts` is renamed, by its ID, to its new date and day ("2026-11-12 Thu off.day - AI agent not set up" moved to
+  the 19th is "2026-11-19 Thu off.day - AI agent not set up"), so the board files it under its new week and every
+  reader that holds its ID keeps it. It renames only a post folder whose parent is `3 Posts` and whose name starts with a
+  date, and only that date and day; it never moves, copies, deletes or renames anything else, and a post sent back to
+  his Ideas for Later keeps its name.
 
 ## Post folders are bound to their pieces (W3.5)
 

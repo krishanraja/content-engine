@@ -223,6 +223,18 @@
       "destination": "/api/board?week=:week&op=state"
     },
     {
+      "source": "/api/board/:week/move",
+      "destination": "/api/board?week=:week&op=move"
+    },
+    {
+      "source": "/api/board/:week/offdays",
+      "destination": "/api/board?week=:week&op=offdays"
+    },
+    {
+      "source": "/api/board/:week/offday-posts",
+      "destination": "/api/board?week=:week&op=offday-posts"
+    },
+    {
       "source": "/api/board/:week/pieces",
       "destination": "/api/board?week=:week&op=pieces"
     },
