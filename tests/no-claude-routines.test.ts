@@ -179,6 +179,19 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     expect(text).toContain('every question for Krish goes on the live board')
   })
 
+  it('a ticked inspiration card starts its piece run only on his press, never on a schedule, and never places a piece', () => {
+    // Ruling (Krish, 2026-11-12): an inspiration card he ticks is an instruction that jumps the queue. His press is the
+    // only start: no cron, so the scheduled jobs that touch a board stay the ones below.
+    const text = read('.github/workflows/inspiration-piece.yml')
+    expect(text).not.toMatch(/^\s*schedule:|cron:/m)
+    expect(text).toContain('repository_dispatch:\n    types: [inspiration-piece]')
+    expect(text).toMatch(/group: inspiration-piece-\$\{\{ github\.event\.inputs\.action_id \|\| github\.event\.client_payload\.action_id \}\}/)
+    expect(text).not.toMatch(/content-ideas\/[^\s]*\/schedule|gh pr merge|publish-web|week_board\.py/)
+    // Never silent: a run that did not draft says why on his card.
+    expect(text).toContain('report "$ACTION" --state failed')
+    expect(text).toMatch(/if: steps\.guard\.outputs\.ready == 'true'\n\s+uses: anthropics\/claude-code-action/)
+  })
+
   it('exactly two scheduled jobs may touch a publish board, and only one of them is Claude: the Sunday ideas run', () => {
     // Ruling (Krish, 2026-11-11): the ideas board fills once a week in full, Saturday's good news included; the Thursday
     // good-news schedule is retired. The other, the Monday final board, is built by code from the overnight runner,

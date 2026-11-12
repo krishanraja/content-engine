@@ -2000,6 +2000,7 @@ The week's options, as the Sunday session writes them onto the pieces.
 - `interface WeekOptionInput`
 - `interface WeekOptionMeta`
 - `const MAX_OPTIONS`
+- `const MAX_INSPIRED`
 - `const MAX_COVERS`
 - `function isMonday(ymd: string): boolean`
 - `function keepThroughWeek(expiresAt: string | null | undefined, weekStart: string): string | null`
@@ -2802,7 +2803,9 @@ The inspiration board as ve reads it: a card by its id, the cards to offer for a
 - `function cardView(row: Row, uses: CardUse[])`
 - `function parseIds(raw: unknown): { ids: string[]; bad: string[] }`
 - `function usesByCard(rows: Row[]): Map<string, CardUse[]>`
-- `function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: { role: Role; format?: string; limit: number })`
+- `interface StyleTick`
+- `function tickRoles(row: Row): Role[]`
+- `function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: { role: Role; format?: string; limit: number }…`
 - `interface UseInput`
 - `function parseUses(body: unknown): { uses: UseInput[]; problems: string[] }`
 - `function migrationPending(error: { message?: string } | null | undefined): boolean`
