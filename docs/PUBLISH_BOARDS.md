@@ -189,8 +189,11 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
 - **1.5.0 (11 Nov 2026)** added `stages` to each series day's `path`: the steps from idea to publish (approved mock
   M5), Ideas, Agreed, Flesh out, Script and record, After recording and Ready to post, each `{ key, label, state, when
   }`. `when` is the day the record says it happened (Ideas: the Sunday before the week; Agreed: the day the narrative
-  lock was signed, else the day of his pick; Flesh out: the day the look was picked) or, for Ready to post, the day it
-  goes out; null when the record does not say, never a guessed day. A later step done means every step before it is.
+  lock was signed, else the day of his pick; Flesh out: the day the look was picked; Script and record: the day the
+  making record's Recorded step was done, its latest take; After recording: the day its Video assets step was done, its
+  latest cut file, `makingDays`) or, for Ready to post, the day it goes out; null when the record does not say, never a
+  guessed day. Until 12 Nov 2026 Script and record and After recording always read null: the takes and files carried
+  their days, and the view did not pass them. A later step done means every step before it is.
   The working steps (`steps`, `current`) stay as they were, for the next step, the prompts and the sessions' step
   names (`stagesOf` in `_view.ts`). A treatment option also carries "Not this" from 1.5.0, all but the picked one ("The style choices").
 - **1.6.0 (11 Nov 2026)** added `presses` and `verdict` to each cut in a day's `media` (approved mock M5, Cuts: Yes,
@@ -304,9 +307,25 @@ built by `apps/control-plane/api/board/_cuts.ts` on every read.
   so an answer stays with the file he saw, and the new cut waits for his.
 - **Not `cut`:** `GET /api/board/<Monday>/cut` is the read-only view of his Approve cut documents and stays so; his
   answer posts to `cut-verdict`.
-- **Who reads it:** the view (each cut's `verdict`). It is on the piece's record (`meta.cut_verdicts`) for a session
-  making the next cut; no skill reads it yet, and a Not this files nothing to his taste ledger or the rejection inbox.
-- **Held by:** `tests/control-plane/board-cuts.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
+- **What a Not this teaches** (`fileCutLearning`): the same learning his other rejections on the board feed, after the
+  press is saved and only when it is new (never on an `already` answer, never on a Yes):
+  - his taste ledger: one `taste_reports` row, `krish_words`, his words as typed, said where ("publish board, <Monday>
+    <day>, Cuts: Not this on the long cut") and when, lane `production`, `dislikes`, subject `piece:<id>` (the row a
+    Reject of the proof files);
+  - the rejection inbox: one `taste_rejection_inbox` row, `rejected`, his words alone with the piece and the cut's
+    format (`long_video` for the long cut and a feature, `short_video` for the short), the file's library path and
+    sha256 in `meta`; no Drive id, since the cut is reached by its library path (the row a Reject asset files, which the
+    inspirationhouse rejections job compiles into the rejection floor);
+  - the failure loop: one `engine_incidents` row, `krish_reject` at the `cut` stage, with his words, the file's sha256
+    and the piece's preflight receipt as it stood (`docs/learning/README.md`).
+  Each is keyed on the piece, the file and his words, so the same words on the same file file once. None blocks the
+  press: the answer says what happened to each, `learned` `{ taste, inbox, incident }` (`filed`, `failed`,
+  `waits_on_migration`, or `refused` for an incident the table refuses).
+- **Who reads it:** the view (each cut's `verdict`); the piece's record, `GET /api/content-ideas/<id>/making`, answers
+  with every press (`cut_verdicts`, oldest first), and `making.py <id> show` prints each one in his words, which
+  make-piece and produce-video read before the next cut ("A Not this is the brief for the next cut of that kind").
+- **Held by:** `tests/control-plane/board-cuts.test.ts`, `tests/control-plane/making.test.ts`, the making self-test and
+  `tests/control-plane/board-view-contract.test.ts`.
 
 ## Sessions and materials
 
@@ -561,7 +580,8 @@ writes them; a document whose `updated_by` is not Krish is never his.
 | Scores (layout v3) | Publish, last on a made day; and each Archive row | `picks/score-<piece>` `{kind: "scores", piece_id, narrative, production, basis: at_publish or hindsight, note?}`, each mark 1 to 10 | one `piece_scores` row, `scored_by` krish, history kept (a new score is a new row; the same marks saved again file nothing twice); answers `scores: filed`, or `waits_on_migration` until the Wave 2 migration batch is applied | the Archive, Control Center's #/week and the retrospective (W3.6), through `piece_scores_current`, which counts his scores only |
 | Reject asset | Publish, beside each ready file | `picks/<day>-reject-<asset>` `{kind: "reject_asset", day, piece_id, asset, label, reason, drive_id?, at_ms?, formats?}`; the reason is required | one `taste_rejection_inbox` row: his reason, where and when, the piece, the formats, and the file's Drive id with the moment (`at_ms`) or as the whole cut; the file itself is never copied | the inspirationhouse rejections job; the next session's repair round |
 
-Only a rejected asset files an inbox row. Each row's `client_report_id` is the
+Of these presses only a rejected asset files an inbox row (a Not this on a cut
+files one too: "His answer on each cut", above). Each row's `client_report_id` is the
 hash of the week, the document and his words, so a press saved again files
 nothing twice. A row that the inbox could not take is said on the board, and
 the board document still holds his reason for a session to file.
