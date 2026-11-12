@@ -406,9 +406,8 @@ Improve for a future piece. Only his Approve puts an idea on a publish board: yo
    gates: someone else's image or clip is never reposted; every news claim
    names its primary source, is checked against it the same day and passes
    the fact gate; each option's copy passes the copy lint and the kill list
-   before it reaches the tab; they go into ideas.json `offdays` and reach
-   the tab only through `week_board.py --ideas`, never by patching the page,
-   and until the board has its Off days part the room says so in step 8.
+   before it reaches the tab; they go into ideas.json `offdays`, which the
+   live board reads, never a page.
    Saturday carries the weekly good news (`references/offdays.md`, "The Saturday good news"): its format each week
    and its five real stories, found now, in this run (Ruling, Krish, 2026-11-11: the ideas board fills once a week in
    full, Saturday's good news included), each checked against its primary source the same day, with `stories_due`

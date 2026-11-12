@@ -704,7 +704,7 @@
       "on": "2026-10-19",
       "krish": "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically.",
       "why": "Two Claude accounts, two artifact links that drift apart, comments that cannot be sent to Claude, and builds a session must republish by hand; one site he owns removes all of that.",
-      "means": "No session or tool publishes a Claude artifact again. Every board update (the week's board, a day's tab in draft, publish pages) goes to content.krishraja.com, and engine work merges to main automatically once its checks pass.",
+      "means": "No session or tool publishes a Claude artifact again. Every board update (the week's board, a day's tab in draft, publish pages) goes to content.krishraja.com, and engine work merges to main automatically once its checks pass. Amended 2026-11-11 (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive): see one-live-board-in-control-centre.",
       "status": "encoded",
       "encoded": [
         {
@@ -808,7 +808,7 @@
       "on": "2026-10-19",
       "krish": "yes lets move the board to content.krishraja.com",
       "why": "The board only works inside Claude; he wants Codex and any tool to build it and read his ticks.",
-      "means": "Both weeks are live at content.krishraja.com behind the existing login. All new ticks, links, wording edits, picks, queue decisions and comments use the authenticated web API from every tool. All four sources are preserved and all 87 available records verified; no ongoing Claude artifact synchronization. Production acceptance and rollback evidence are in docs/handovers/board-web-release.md.",
+      "means": "Both weeks are live at content.krishraja.com behind the existing login. All new ticks, links, wording edits, picks, queue decisions and comments use the authenticated web API from every tool. All four sources are preserved and all 87 available records verified; no ongoing Claude artifact synchronization. Production acceptance and rollback evidence are in docs/handovers/board-web-release.md. Amended 2026-11-11 (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive): see one-live-board-in-control-centre.",
       "status": "encoded",
       "encoded": [
         {
@@ -978,7 +978,7 @@
       "on": "2026-10-21",
       "krish": "how do you recommend we standardise and lock in this publish board so the content engine can just feed it? It's pretty good but I notice that it's quite inconsistent. For each publish session things move around. ... the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex.",
       "why": "Each session built and patched the board its own way (pages inlined with their own styles, panels carried byte for byte, built pages string-patched and re-stamped), so sections moved from one session to the next and he could not work through his week by habit; on a phone it was a shrunk desktop page.",
-      "means": "From the week of 26 Oct every board has one layout from config/board-layout.json: Ideas, Queue, Monday, Wednesday, Friday, and in each day Brief, Drafts, Record, Publish, with the brief due the night before and the drafts the morning of. Sessions feed it through week_board.py's inputs only; the layout changes only with his approval.",
+      "means": "From the week of 26 Oct every board has one layout from config/board-layout.json: Ideas, Queue, Monday, Wednesday, Friday, and in each day Brief, Drafts, Record, Publish, with the brief due the night before and the drafts the morning of. Sessions feed it through week_board.py's inputs only; the layout changes only with his approval. Amended 2026-11-11 (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive): see one-live-board-in-control-centre.",
       "status": "encoded",
       "encoded": [
         {
@@ -2292,6 +2292,36 @@
           "file": "scripts/post-pack/story_check.py",
           "contains": "by dropping a whole beat",
           "how": "the length refusal says how to cut"
+        }
+      ]
+    },
+    {
+      "id": "one-live-board-in-control-centre",
+      "on": "2026-11-11",
+      "krish": "make sure that the old publish board https://content.krishraja.com/board/2026-10-26#monday is kept as an archive for now, but that your version of the publish board is 1000% where everything wires in to fresh and live and accurately ... Also, does every part of the engine know that this new publish board is the only place to put stuff and how to use it?",
+      "why": "After the cutover the rules, skills, workflow prompts, hooks, docs and the overnight runner still told sessions to build, republish or open the content.krishraja.com page, and two Claude runs could not report or file on the piece at all, so work could land where he no longer looks.",
+      "means": "The one live board is Control Centre's Content tab (live_board.py prints its link, never with ?ui=next); content.krishraja.com/board is the read-only archive. Every actor feeds the live board by writing what its view reads, reports and files on the piece (board_session.py or the connector), files every research document on its piece, and never builds or publishes a board page; only his Approve puts an idea on a publish board. How: docs/PUBLISH_BOARDS.md.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "tests/one-live-board.test.ts",
+          "contains": "names content.krishraja.com/board only as the archive",
+          "how": "every rule, skill, workflow, doc, config and script that names the old board names it as the archive; no live board link carries ?ui=next; no Claude run may publish a page; every run that researches or makes can report and file on the piece"
+        },
+        {
+          "file": "AGENTS.md",
+          "contains": "the one live board is Control Centre's Content tab",
+          "how": "the start rules name the live board and docs/PUBLISH_BOARDS.md"
+        },
+        {
+          "file": "scripts/overnight/overnight.py",
+          "contains": "It builds and publishes no page",
+          "how": "the overnight run reports each cut made or held on its piece and bumps the week's change signal"
+        },
+        {
+          "file": ".github/workflows/board-rebuild.yml",
+          "contains": "Retired on 11 Nov 2026",
+          "how": "the page rebuild stops at its first step"
         }
       ]
     }

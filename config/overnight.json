@@ -1,6 +1,6 @@
 {
   "schema": "overnight/1",
-  "about": "The overnight run (plan Wave 2, W2.6), on Krish's two home computers, with no Claude on a timer: Codex and scripts only. His Titles press starts it: the recordings pass on each computer (scripts/recordings-upload.ps1, the windowless task already polling the engine) asks scripts/overnight/overnight.py due, and starts the run with no window. The primary computer makes the long cuts and builds the Monday board; the standby makes the shorts. Which computer is which is the setting MINDMAKE_OVERNIGHT_ROLE (primary or standby) on each. Steps are argument lists; a step set to null is not wired, and the run says so on the board instead of guessing.",
+  "about": "The overnight run (plan Wave 2, W2.6), on Krish's two home computers, with no Claude on a timer: Codex and scripts only. His Titles press starts it: the recordings pass on each computer (scripts/recordings-upload.ps1, the windowless task already polling the engine) asks scripts/overnight/overnight.py due, and starts the run with no window. The primary computer makes the long cuts and reports the run on the live board; the standby makes the shorts. Which computer is which is the setting MINDMAKE_OVERNIGHT_ROLE (primary or standby) on each. Steps are argument lists; a step set to null is not wired, and the run says so on the board instead of guessing.",
   "days": ["mon", "wed", "fri"],
   "roles": {
     "primary": { "cuts": ["long"], "builds_board": true },
@@ -36,9 +36,10 @@
   },
   "critic_note": "The Critic route is steps.critic (scripts/overnight/critic_run.py judge): a fresh Codex task under config/codex-profile.json with a read-only card per round. The run calls it only once the primary computer has calibrated it (critic_run.py cases, then critic.py calibrate ... --record; config/critic-calibration.json). Until a calibration record is there, a cut is made and shown on the board as not judged by a calibrated Critic; it is never called passed.",
   "board_steps": {
-    "download": ["{python}", "scripts/post-pack/board_web.py", "download", "{week}", "--output", "{previous}"],
-    "build": ["{python}", "scripts/post-pack/week_board.py", "--week", "{week}", "--live", "--target", "web", "--previous", "{previous}", "{materials}", "--out", "{page}"],
-    "publish": ["{python}", "scripts/post-pack/board_web.py", "publish-web", "{page}", "--apply"]
+    "_about": "The run reaches the live board by the piece's record and its reports, never a page (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive; docs/PUBLISH_BOARDS.md).",
+    "file": ["{python}", "scripts/post-pack/board_session.py", "{piece}", "add", "{file}", "--title", "{title}", "--kind", "output", "--role", "overnight", "--session", "{session}", "--by", "Overnight run"],
+    "report": ["{python}", "scripts/post-pack/board_session.py", "{piece}", "{kind}", "{line}", "--session", "{session}", "--step", "cut", "--by", "Overnight run"],
+    "touch": ["{python}", "scripts/post-pack/board_web.py", "touch", "{week}", "--source", "overnight"]
   },
   "repair_round": {
     "workflow": "repair-round.yml",

@@ -1,3 +1,8 @@
+# Retired on 11 November 2026 (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only
+# archive). The live board draws each week from the view on every read, so no page is built or published; this run now
+# stops at its first step and names the live board (docs/PUBLISH_BOARDS.md, "One live board"). Kept as the record of how
+# the archive's pages were rebuilt.
+#
 # Rebuild a week's publish board from a committed recipe, on the engine's own code, by hand only.
 #
 # Krish, 2026-11-07, on board v4: "I think we should redesign the 9th of November board as well." A cloud session
@@ -44,6 +49,11 @@ jobs:
       RECIPE: ${{ github.event.inputs.recipe }}
       PUBLISH: ${{ github.event.inputs.publish }}
     steps:
+      - name: Retired, the live board is built by nobody
+        run: |
+          echo "::error::Retired on 11 Nov 2026: no session or run builds or publishes a board page. The live board is Control Centre's Content tab (python3 scripts/post-pack/live_board.py $WEEK); feed it by writing what its view reads (docs/PUBLISH_BOARDS.md, One live board)."
+          exit 1
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5

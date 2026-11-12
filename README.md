@@ -1,6 +1,6 @@
 # Make Your Mind Up content engine
 
-**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, every week's board lives at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are kept as compatibility and history; never use them to synchronize artifacts.
+**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); content.krishraja.com/board/<Monday> is the read-only archive (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this document are history.
 
 
 The engine behind Krish Raja's media business: makeyourmindup, his
@@ -84,9 +84,10 @@ it means for every stage and the rules that keep the learning honest are in
 
 Control Center (`krishanraja/control-center`) is where Krish works; it reaches
 the engine through rewrites and reads the shared Supabase database directly.
-This repository's one user interface is the weekly publish board it serves at
-content.krishraja.com (`/board/<Monday>`, with the standards page at
-`/board/standards`), where Krish presses.
+This repository's one user interface is the weekly publish board's view
+(`GET /api/board/<Monday>/view`), which Control Centre's Content tab draws as the
+live board, where Krish presses; the page it serves at content.krishraja.com
+(`/board/<Monday>`) is the read-only archive (`docs/PUBLISH_BOARDS.md`).
 
 ## The publication
 

@@ -13,7 +13,7 @@ media half). Purpose lives in `docs/NORTH_STAR.md`.
 
 | Half | Folder | Runs on | Does |
 |---|---|---|---|
-| The content engine | `apps/control-plane/` | Vercel project `content-engine`, serverless, with 24 crons | ideation, curation, drafting, iteration, channel copy, production briefs, the learning ledger, and the weekly publish board at content.krishraja.com |
+| The content engine | `apps/control-plane/` | Vercel project `content-engine`, serverless, with 24 crons | ideation, curation, drafting, iteration, channel copy, production briefs, the learning ledger, and the weekly publish board's view, drawn live in Control Centre's Content tab (content.krishraja.com/board is the read-only archive) |
 | Production | `scripts/ve.py` (ve), `scripts/quick-edit/` (the fallback), `apps/renderer/`; the Studio in `packages/` and `apps/runner/` | a session in the cloud, on GitHub's machine or on a home computer (ve files its cuts from a home computer); the Studio's runner on Krish's Windows machine | both cuts of each piece from Krish's takes, with thumbnails and covers, filed to his library (carousels are Growth's); the Studio's hash-gated stations are a separate route not used for today's videos |
 
 They share one database and one purpose. The content engine decides what is
