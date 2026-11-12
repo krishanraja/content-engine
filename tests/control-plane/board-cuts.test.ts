@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createHash } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { CutError, answerOn, cutPick, cutPresses, cutVerdicts, mediaWithAnswers, nextVerdicts, saveCut } from '../../apps/control-plane/api/board/_cuts.js'
+import { CutError, answerOn, cutIncident, cutInboxRow, cutPick, cutPresses, cutReport, cutVerdicts, fileCutLearning, mediaWithAnswers, nextVerdicts, saveCut } from '../../apps/control-plane/api/board/_cuts.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
 vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => false, mediaQualityRollout: () => ({ status: 'candidate_pending_calibration' }) }))
 
@@ -93,8 +93,8 @@ describe('his press on a cut', () => {
 })
 
 /** content_ideas with one row: reads and guarded writes, and another writer that can land between a read and a write. */
-function fakeDb(row: Body, landBetween = 0) {
-  const state = { row: JSON.parse(JSON.stringify(row)) as Body, writes: 0, conflicts: 0, tables: [] as string[] }
+function fakeDb(row: Body, landBetween = 0, refuse: string[] = []) {
+  const state = { row: JSON.parse(JSON.stringify(row)) as Body, writes: 0, conflicts: 0, tables: [] as string[], upserts: [] as Array<[string, Body]> }
   const db = {
     from: (table: string) => {
       state.tables.push(table)
@@ -107,6 +107,13 @@ function fakeDb(row: Body, landBetween = 0) {
         order: () => q,
         range: async () => ({ data: [], error: null }),
         update: (u: Body) => { update = u; return q },
+        // What a Not this teaches lands in the learning tables, once each by its key (ignoreDuplicates).
+        upsert: (v: Body) => {
+          if (refuse.includes(table)) return Promise.resolve({ data: null, error: { code: '42P01', message: 'relation does not exist' } })
+          const key = table === 'engine_incidents' ? v.client_ref : `${v.emitter_id}|${v.client_report_id}`
+          if (!state.upserts.some(([t, x]) => t === table && (table === 'engine_incidents' ? x.client_ref : `${x.emitter_id}|${x.client_report_id}`) === key)) state.upserts.push([table, v])
+          return Promise.resolve({ data: null, error: null })
+        },
         single: async () => (match() ? { data: JSON.parse(JSON.stringify(state.row)), error: null } : { data: null, error: { message: 'none' } }),
         maybeSingle: async () => ({ data: match() ? JSON.parse(JSON.stringify(state.row)) : null, error: null }),
         then: (resolve: (v: unknown) => unknown, reject: (e: unknown) => unknown) => {
@@ -146,6 +153,44 @@ describe('the write', () => {
   })
 })
 
+describe('what a Not this teaches', () => {
+  const PLACE = { week: '2026-11-16', date: '2026-11-16', pieceId: PIECE }
+  const NO = { media_id: LONG, cut: 'long', verdict: 'not_this' as const, words: 'The open drags. Start on the number.', sha256: LONG, path: '3 Posts/mon/long.mp4', by: 'Krish' as const, at: '2026-11-16T09:30:00.000Z' }
+  const YES = { ...NO, verdict: 'yes' as const, words: null }
+
+  it('goes to his taste ledger as his own words, with where and when', () => {
+    expect(cutReport(PLACE, NO)).toMatchObject({ kind: 'krish_words', body: NO.words, said_where: 'publish board, 2026-11-16 mon, Cuts: Not this on the long cut',
+      said_at: NO.at, lane: 'production', polarity: 'dislikes', subject_ref: `piece:${PIECE}`, subject: 'the long cut for the mon piece of the week of 2026-11-16',
+      repository: 'krishanraja/content-engine', surface: 'publish_board', emitter_id: 'content-engine-board', meta: { press: 'cut_not_this', cut: 'long', media_id: LONG, path: NO.path } })
+    expect(cutReport(PLACE, NO)!.client_report_id).toMatch(/^cut-[a-f0-9]{64}$/)
+    expect(cutReport(PLACE, YES)).toBeNull()
+  })
+
+  it('goes to the rejection inbox as words alone, with the cut\'s format, never a Drive id it does not have', () => {
+    const row = cutInboxRow(PLACE, NO)!
+    expect(row).toMatchObject({ kind: 'rejected', said: NO.words, said_where: 'publish board, 2026-11-16 mon, Cuts', piece: PIECE, formats: ['long_video'],
+      master_drive_id: null, at_ms: null, whole_cut: false, emitter_id: 'content-engine/publish-board', meta: { cut: 'long', sha256: LONG, path: NO.path } })
+    expect(row.client_report_id).toMatch(/^cut-[a-f0-9]{40}$/)
+    expect(cutInboxRow(PLACE, { ...NO, cut: 'short' })!.formats).toEqual(['short_video'])
+    expect(cutInboxRow(PLACE, YES)).toBeNull()
+  })
+
+  it('goes to the failure loop as a rejection at the cut stage, and the same words on the same file file once', () => {
+    expect(cutIncident(PLACE, NO)).toMatchObject({ piece_id: PIECE, stage: 'cut', kind: 'krish_reject', his_words: NO.words, artifact_sha256: LONG, artifact_ref: `library:${NO.path}` })
+    expect(cutIncident(PLACE, YES)).toBeNull()
+    // Pressed again later in the same words: the same keys. New words: new keys.
+    expect(cutReport(PLACE, { ...NO, at: '2026-11-17T10:00:00.000Z' })!.client_report_id).toBe(cutReport(PLACE, NO)!.client_report_id)
+    expect(cutReport(PLACE, { ...NO, words: 'Too slow.' })!.client_report_id).not.toBe(cutReport(PLACE, NO)!.client_report_id)
+  })
+
+  it('never blocks: a table not made yet is said, and the others still file', async () => {
+    const { db, state } = fakeDb(ROW, 0, ['taste_rejection_inbox'])
+    expect(await fileCutLearning(db as never, PLACE, NO)).toEqual({ taste: 'filed', inbox: 'waits_on_migration', incident: 'filed' })
+    expect(state.upserts.map(([t]) => t)).toEqual(['taste_reports', 'engine_incidents'])
+    expect(await fileCutLearning(db as never, PLACE, YES)).toBeNull()
+  })
+})
+
 describe('POST /api/board/<Monday>/cut-verdict', () => {
   const previous = { ...process.env }
   afterEach(() => {
@@ -177,9 +222,23 @@ describe('POST /api/board/<Monday>/cut-verdict', () => {
   })
 
   it('records his Not this with his words exactly as he typed them', async () => {
-    const { status, state } = await press({ media_id: SHORT, verdict: 'not_this', words: 'The captions cover his face.' })
+    const { status, out, state } = await press({ media_id: SHORT, verdict: 'not_this', words: 'The captions cover his face.' })
     expect(status).toBe(200)
     expect(state.row.meta.cut_verdicts[0]).toMatchObject({ media_id: SHORT, verdict: 'not_this', words: 'The captions cover his face.' })
+    // And teaches what his other rejections teach: his taste ledger, the rejection inbox, the failure loop.
+    expect(out.learned).toEqual({ taste: 'filed', inbox: 'filed', incident: 'filed' })
+    expect(state.upserts.map(([t]) => t)).toEqual(['taste_reports', 'taste_rejection_inbox', 'engine_incidents'])
+  })
+
+  it('files nothing to learn from on a Yes, and nothing again when the same answer is pressed twice', async () => {
+    const yes = await press({ media_id: LONG, verdict: 'yes' })
+    expect(yes.out.learned).toBeUndefined()
+    expect(yes.state.upserts).toEqual([])
+    const meta = { ...ROW.meta, cut_verdicts: [{ media_id: SHORT, cut: 'short', verdict: 'not_this', words: 'The captions cover his face.', sha256: SHORT, path: '3 Posts/mon/short.mp4', by: 'Krish', at: '2026-11-16T08:10:00Z' }] }
+    const again = await press({ media_id: SHORT, verdict: 'not_this', words: 'The captions cover his face.' }, { row: { ...ROW, meta } })
+    expect(again.out).toMatchObject({ ok: true, already: true })
+    expect(again.out.learned).toBeUndefined()
+    expect(again.state.upserts).toEqual([])
   })
 
   it('is his press only, on a cut of a piece of this week, with his words on a Not this', async () => {

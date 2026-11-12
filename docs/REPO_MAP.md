@@ -2177,6 +2177,13 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function cutPick(body: Body): CutPick`
 - `function nextVerdicts(meta: Body, pick: CutPick, at: string): { list: unknown[]; entry: CutVerdict; already: boolean }`
 - `async function saveCut(db: SupabaseClient, pieceId: string, pick: CutPick, now = new Date()): Promise<{ verdict: CutVer…`
+- `interface CutPlace`
+- `type Filed = 'filed' | 'failed' | 'waits_on_migration'`
+- `interface CutLearning`
+- `function cutReport(place: CutPlace, v: CutVerdict)`
+- `function cutInboxRow(place: CutPlace, v: CutVerdict)`
+- `function cutIncident(place: CutPlace, v: CutVerdict): Incident | null`
+- `async function fileCutLearning(db: SupabaseClient, place: CutPlace, v: CutVerdict, now = new Date()): Promise<CutLearni…`
 
 ### `apps/control-plane/api/board/_deskPage.ts`
 
@@ -2398,6 +2405,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `const STAGES: Array<{ key: StageKey; label: string }>`
 - `interface Stage`
 - `function lockSignedOn(text: string | null | undefined): string | null`
+- `function makingDays(piece: Body): { recordedOn: string | null; cutOn: string | null }`
 - `function stagesOf(i: { done: Record<StageKey, boolean> /** The Sunday the ideas were brought (the day before the week s…`
 - `interface LookOption`
 - `interface DayPath`

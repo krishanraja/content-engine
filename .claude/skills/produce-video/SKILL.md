@@ -424,6 +424,12 @@ on the piece: `python scripts/post-pack/making.py PIECE_ID session LINK`.
 - **Video assets already done** means the cuts exist. A new take of a cut
   that is already produced is never a remake by itself: put one board item
   asking Krish, and remake only on his words.
+- **His answers on the cuts.** `show` prints every Yes or Not this he pressed
+  on a rendered cut on the board's Cuts tab (`meta.cut_verdicts`), in his
+  words. A Not this is his words to remake that cut: read them before you
+  cut, answer each in the new render (never refile the same file to answer
+  it), and check the new cut against them as well as the floor. A Yes means
+  that file is right: never remake it unless he asks.
 
 **Which take, and getting it onto this machine.** A piece's takes are on its
 record: `python scripts/engine.py GET /api/content-ideas/PIECE_ID/making

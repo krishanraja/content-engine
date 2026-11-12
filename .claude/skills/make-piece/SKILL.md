@@ -113,7 +113,12 @@ does that with him and writes one narrative lock per piece,
    each floor read and `check_failures.py`, then run `scripts/preflight.py`
    (docs/learning/README.md).
 2. Read the piece: `python3 scripts/engine.py GET "/api/content-ideas?id=<uuid>"`
-   and where it is: `python3 scripts/post-pack/making.py <uuid> show`.
+   and where it is: `python3 scripts/post-pack/making.py <uuid> show`. It also
+   prints every Yes or Not this he pressed on a rendered cut (the board's Cuts
+   tab, `meta.cut_verdicts`): a Not this, in his words, is the brief for the
+   next cut of that kind, so it goes into the creative direction and the
+   storyboard before anything is rendered again; a Yes means that file is
+   right, and it is never remade unless he asks.
 3. Record this session on the piece so the board shows it is being made:
    `python3 scripts/post-pack/making.py <uuid> session <this session's https link>`
    (in GitHub Actions, the run's link:
