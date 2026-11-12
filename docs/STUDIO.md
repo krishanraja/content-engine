@@ -2,10 +2,12 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-11-04 against the code (paths, commands, symbols and config read; no live run)
+Last verified: 2026-11-12 against `main` at `02184d34` (every path this page names checked to exist; the Studio commits since 2026-11-04 read; the jobs, commands, runner roles and heartbeat read back from the database; no live run)
 
 Scope: the Studio half of this repository: `packages/`, `apps/runner`,
-`apps/renderer`, `config/`, `scripts/`, `.agents/skills/`. The content engine
+`apps/renderer`, `config/`, `scripts/`, `.agents/skills/`. `packages/moves/`
+(`@mymu/moves`) is the exception: the motion moves ve and the style lab share,
+not part of the job-based Studio (`packages/moves/README.md`). The content engine
 in `apps/control-plane` is described in `docs/CONTENT_ENGINE.md`. How the two
 fit together is in `docs/SYSTEM_MAP.md`; why either exists is in
 `docs/NORTH_STAR.md`.
@@ -26,12 +28,15 @@ from Control Center. It never publishes: YouTube upload is private-only, and
 LinkedIn, TikTok and Instagram output stays a local package for a person to
 post.
 
-As of 2026-09-25 two Studio jobs exist in the database and no Short has a
-recorded final approval, package or upload. Since 2026-09-28 the runner is
-installed on a primary Windows machine with a cold standby on a second one,
-both on `cc0657e` since 2026-10-02, and the Studio's Drive root is on H:
-(`docs/STATE.md`, "The Studio's runners"; `docs/OPERATIONS.md`, "Primary and
-cold standby").
+Read back on 2026-11-12: the database holds two Studio jobs, both stopped at
+the treatment stage and retired on 2026-09-07 as a synthetic validation, so no
+Short has a recorded final approval, package or upload. The runner is
+installed on a primary Windows machine with a cold standby on a second one
+(`video_studio_runner_roles`: one active, one standby), both moved to
+`cc0657e` on 2026-10-02 (`docs/history/2026-11-12-STATE-before-recheck.md`,
+"The Studio's runners, 2026-10-02"; `docs/OPERATIONS.md`, "Primary and cold
+standby"). Its latest heartbeat, at 11:51 UTC on 2026-11-12, reports
+`cc0657e`, status `degraded` and its Drive `unavailable` (`docs/STATE.md`).
 
 ## Series and subchannels: two vocabularies, both live
 
@@ -253,8 +258,9 @@ Studio, `docs/ENGINE_SESSION.md`):
 
 1. Done 2026-09-28: the theme's `source.commit` is control-center
    `7dac4ce`, which holds `makeyourmindup-stacked.png`.
-2. Done 2026-10-02: both runners are on `cc0657e` (`docs/STATE.md`, "The
-   Studio's runners, 2026-10-02").
+2. Done 2026-10-02: both runners are on `cc0657e`
+   (`docs/history/2026-11-12-STATE-before-recheck.md`, "The Studio's runners,
+   2026-10-02").
 3. Render the proof in the Studio (a Short with its call, the thumbnail and a
    carousel) and show it to Krish. The call comes from the job's production
    brief, and a brief is built only from an approved piece
