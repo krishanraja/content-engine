@@ -15,13 +15,14 @@ the publish board in the content tab. then lets ensure that the old publish boar
 https://content.krishraja.com/board/2026-10-26#monday is kept as an archive for now, but that your version of the
 publish board is 1000% where everything wires in to fresh and live and accurately".
 
-- **Where he works:** Control Centre's Content tab, `https://controlcenter.krishraja.com/?ui=next#/content`, at a week
+- **Where he works:** Control Centre's Content tab, `https://controlcenter.krishraja.com/#/content`, at a week
   and a day with `?week=<Monday>&day=<mon..sat>`. One constant: `config/boards.json` `live_board.url`, mirrored by
   `apps/control-plane/api/board/_liveBoard.ts` (a test holds them equal); Python prints a link with
   `python3 scripts/post-pack/live_board.py <Monday> [day]`. Every link the engine gives him to the board is that one:
   the reply that ends `plan-week`, the week's board item (`week-publish-board-<Monday>`, its `link`), the Sunday ideas
   run, `make-piece`'s links to a day, `WORKBENCH.md`'s week lines and the Claude prompt on every day of the view.
-  Dropping `?ui=next` after Control Centre's cutover is the one line in each of those two files.
+  The address carries no `?ui=next`: Control Centre's rebuilt UI is its default since its cutover (Ruling, Krish,
+  2026-11-12).
 - **The archive:** `content.krishraja.com/board/<Monday>` keeps serving the page below as it does, with a banner at the
   top: "This is the archive. The live Publish Board is in Control Centre", linking the live board at the same week and
   the day the address names (`#monday` opens Monday). `?archive=1` is the older baked board, unchanged.

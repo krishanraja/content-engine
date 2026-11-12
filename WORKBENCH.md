@@ -233,7 +233,7 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
 ## This week's publish board
 
 The live Publish Board is Control Centre's Content tab (Ruling, Krish, 2026-11-11: "your version of the publish board
-is 1000% where everything wires in to fresh and live and accurately"): https://controlcenter.krishraja.com/?ui=next#/content?week=<Monday>&day=<mon..sat>
+is 1000% where everything wires in to fresh and live and accurately"): https://controlcenter.krishraja.com/#/content?week=<Monday>&day=<mon..sat>
 (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints it). Every link a session gives Krish to the board is
 that one. The content.krishraja.com addresses below are the archive, kept as they are with a banner to the live board.
 Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The archive takes
@@ -293,9 +293,9 @@ run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
-- Week of 2 to 6 November: https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-02 (archive: https://content.krishraja.com/board/2026-11-02).
-- Week of 9 to 13 November (recorded from Sunday 1 November): https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-09 (archive: https://content.krishraja.com/board/2026-11-09).
-- Week of 16 to 21 November (recorded from Sunday 8 November): https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-16 (archive: https://content.krishraja.com/board/2026-11-16). Ideas tab
+- Week of 2 to 6 November: https://controlcenter.krishraja.com/#/content?week=2026-11-02 (archive: https://content.krishraja.com/board/2026-11-02).
+- Week of 9 to 13 November (recorded from Sunday 1 November): https://controlcenter.krishraja.com/#/content?week=2026-11-09 (archive: https://content.krishraja.com/board/2026-11-09).
+- Week of 16 to 21 November (recorded from Sunday 8 November): https://controlcenter.krishraja.com/#/content?week=2026-11-16 (archive: https://content.krishraja.com/board/2026-11-16). Ideas tab
   live from 7 Nov (Sunday ideas run 42392494486, dispatched on Krish's ask). Researched with web search only: Drive and
   Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read. Saturday 21 Nov's good-news stories: the
   Thursday run is retired (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's good news
