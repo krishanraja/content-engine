@@ -222,7 +222,7 @@ describe('the mirror, against a fake Drive', () => {
     expect(copy.name).toBe('2026-11-09 Who Pays for the AI Build-Out.md')
     expect(copy.mime).toBe('text/markdown')
     expect(copy.description).toContain(`material ${research.id}`)
-    expect(copy.description).toContain('https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-16&day=mon')
+    expect(copy.description).toContain('https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=mon')
     const sources = drive.folderList.find(f => f.name === 'Sources')!
     expect(drive.fileList.find(f => f.material === excerpt.id)!.parent).toBe(sources.id)
     expect(index.rows).toHaveLength(4)

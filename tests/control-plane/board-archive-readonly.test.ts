@@ -51,7 +51,7 @@ describe('the old board is a read-only archive', () => {
     const q = { week: '2026-11-09', collection: 'comments', id: 'desk-mon-day-x' }
     const fromArchive = await call(fakeDb(), { method: 'PUT', query: q, body: comment, headers: { cookie: cookie(), origin: 'https://content.krishraja.com', referer: 'https://content.krishraja.com/board/2026-11-09' } })
     expect(fromArchive.status).toBe(423)
-    expect(fromArchive.out).toMatchObject({ ok: false, error: 'archive_read_only', live: 'https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-09' })
+    expect(fromArchive.out).toMatchObject({ ok: false, error: 'archive_read_only', live: 'https://controlcenter.krishraja.com/#/content?week=2026-11-09' })
     const live = fakeDb()
     const fromLive = await call(live, { method: 'PUT', query: q, body: comment, headers: { cookie: cookie(), origin: 'https://controlcenter.krishraja.com', referer: 'https://controlcenter.krishraja.com/?ui=next' } })
     expect(fromLive.status).toBe(200)
@@ -82,7 +82,7 @@ describe('the old board is a read-only archive', () => {
     const out = readOnlyArchive(html, '2026-11-09')
     expect(out.startsWith('<!doctype html><html><head><title>x</title></head><body class="b"><div role="note" data-archive-banner')).toBe(true)
     expect(out).toContain('This is the archive. The live Publish Board is in Control Centre. This page is read-only.')
-    expect(out).toContain('href="https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-09"')
+    expect(out).toContain('href="https://controlcenter.krishraja.com/#/content?week=2026-11-09"')
     expect(out).toContain('archive_read_only')
     expect(out.endsWith('<main>Board</main></body></html>')).toBe(true)
   })
