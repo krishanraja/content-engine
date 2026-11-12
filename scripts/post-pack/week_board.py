@@ -6988,8 +6988,12 @@ def _runsheet_checks(check, week, mon):
     vids = [{'cut': c, 'seconds': 90, 'url': f'https://drive.google.com/file/d/1{c}VideoAAAAAAAAAAAAAAAAAAAAAAAA/view',
              'thumbnail': {'url': f'https://drive.google.com/file/d/1{c}ThumbAAAAAAAAAAAAAAAAAAAAAAAA/view'}} for c in ('long', 'short')]
     made = made_panel(parse_day_page(legacy, 'mon'), 'mon', 'monday', 'mon-', {}, False, [], vids)
+    # The hash moved once, on 2026-11-12, for the subscribe line (Ruling, Krish, 2026-11-12: every post asks for the
+    # subscription, fixed moving forward): this fixture's page is built by today's publish kit, so its pinned comment,
+    # its captions' link-in-bio line and TikTok's profile step changed; the older layout's code did not. A real older
+    # week's publish page is the file made that week and is unchanged. Before it: 55798f3f...400ec.
     check('run-sheet: an older week\'s made day is byte for byte what it was before the run-sheet',
-          hashlib.sha256(made.encode('utf-8')).hexdigest() == '55798f3f552d6772471d9a5f51e2c67516cd09ed5e935e6af1fa351c5e8400ec')
+          hashlib.sha256(made.encode('utf-8')).hexdigest() == '690f20b3286efc2802ca4cee01f6a8ca8769abc1d44d317846ade71b3c628c36')
     use_layout(week)
 
 
@@ -7000,9 +7004,11 @@ def _feature_card_checks(check, week, videos, plain_sub):
     global FEATURES_FILE
     import making  # publish_kit.is_feature reads config/features.json through it
     # The hash moved once, on 2026-10-28, for Approve for publish and Reject asset alone (Krish, 2026-10-28: "Approve each
-    # day Monday"): the run-sheet with those taken out still hashes 11ff1480...ac36, the value before them.
+    # day Monday"): the run-sheet with those taken out still hashes 11ff1480...ac36, the value before them. It moved
+    # again on 2026-11-12, for the subscribe line in the pinned comment, the captions and TikTok's profile step alone
+    # (Ruling, Krish, 2026-11-12: every post asks for the subscription); the value before it was adb04622...570a.
     check('feature cards: a piece that is not a feature has a run-sheet byte for byte what it was, with neither card',
-          hashlib.sha256(plain_sub.encode('utf-8')).hexdigest() == 'adb04622b964682ccec5e02dd06093de3de2ad7ac7d834100ead8ed199b2570a'
+          hashlib.sha256(plain_sub.encode('utf-8')).hexdigest() == 'c0a2330a9ef108ba32f908c2ea49ce69b0b12f4809b059c2d11bdef66659bdff'
           and 'feature-youtube' not in plain_sub and 'feature-spotify' not in plain_sub)
     words = {'piece_id': MON_ID, 'feature_youtube_title': 'The feature title', 'feature_youtube_description': 'The feature description',
              'feature_spotify_chapters': '0:00 Start\n7:30 The deal',
@@ -7040,9 +7046,10 @@ def _feature_card_checks(check, week, videos, plain_sub):
           all('href="#mon-dl-video-feature"' in c and 'href="#mon-dl-thumb-feature"' in c for c in (yt, sp))
           and 'id="mon-dl-video-feature"' in fsub and 'id="mon-dl-thumb-feature"' in fsub)
     check('feature cards: their words to copy, each with one-tap Copy (title, description, chapters)',
-          all(re.search(rf'<pre class="txt" id="[^"]+" data-raw="{re.escape(t)}"', c) and 'data-act="text"' in c
-              for c, t in ((yt, 'The feature title'), (yt, 'The feature description'), (sp, 'The feature title'),
-                           (sp, 'The feature description'), (sp, '0:00 Start\n7:30 The deal'))))
+          all(re.search(rf'<pre class="txt" id="[^"]+" data-raw="{re.escape(E(t))}"', c) and 'data-act="text"' in c
+              for c, t in ((yt, 'The feature title'), (yt, publish_kit.with_subscribe('The feature description', 'youtube', words)),
+                           (sp, 'The feature title'), (sp, publish_kit.with_subscribe('The feature description', 'spotify', words)),
+                           (sp, '0:00 Start\n7:30 The deal'))))
     check('feature cards: their do-steps, uploading the feature to YouTube Studio and to Spotify for Creators',
           '<ol class="do">' in yt and 'YouTube Studio' in yt and 'Spotify for Creators' in sp and '3 Video/F - feature - thumb.jpg' in sp)
     check('feature cards: a feature board with both cards passes verify and the page check',
