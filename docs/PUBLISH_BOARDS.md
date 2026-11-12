@@ -202,6 +202,8 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
 - **1.7.0 (12 Nov 2026)** added `drive` and `drive_why` to each item of a day's `media`, `posts` to each day, `post` to
   each off-day option and `drive` to `sources` ("Every asset, with its Drive link", below). Ruling (Krish, 2026-11-12):
   every cut on the board carries its Google Drive link; nothing on the board is ever cut off.
+- **1.8.0 (12 Nov 2026)** added `manifest` to each day: the day's piece's draft manifest with his Approve for publish
+  bound to its sha256 ("Approve for publish, bound to the manifest", below).
 
 ## The style choices (contract 1.4.0)
 
@@ -280,6 +282,31 @@ link the assets in Google Drive as well as see them if I am to approve them".
   list (an asset, a slide or a version; 404 `drive_file_not_found` for any other, 503 `drive_unavailable` when Drive
   cannot be read), the same way as a cut: copied once, then a short signed link (302).
 - **Held by:** `tests/control-plane/board-drive.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
+
+## Approve for publish, bound to the manifest (contract 1.8.0)
+
+Growth posts only what Krish approved (docs/GROWTH-HANDOFF.md, "The piece manifest"). A piece's draft manifest
+(`scripts/post-pack/piece_manifest.py draft`, sent with the post's pack to `3 Posts/<pack.folder>/0 Publish/
+manifest.draft.json`) lists its exact files in order, each with its Drive id and sha256, and each channel's words. The
+archive board's Approve for publish bound its sha256; the live board's view carries that press from 1.8.0
+(`apps/control-plane/api/board/_manifest.ts`).
+
+- **In the view:** each series day's `manifest` is `{ sha256, qa, assets: [{ name, drive_id, sha256, order, url }],
+  channels, state, approved_at, press, why }`, or null when the piece has no draft. The draft is the library's newest
+  ready copy, its bytes checked against the sha256 the library recorded. `state` is `waiting` (no press of his binds
+  it), `approved` (his `picks/<day>-publish`, his login only, approved and bound to exactly this sha256) or `changed`
+  (his press binds another draft: `why` says the files or words changed after he approved them, and the press reads
+  "Approve the new files for publish"). `press` is `{ kind: 'press', label, collection: 'picks', id: '<day>-publish',
+  revision, body: { kind: 'approve_publish', day, piece_id, approved: true, manifest_sha256 }, stamp: ['at'], done }`,
+  null once his press binds the draft; while it waits it also leads the day's `actions`. Control Centre shows every file
+  of the manifest, each seen and linked in Drive, beside the press.
+- **His press:** `PUT /api/board/<Monday>/picks/<day>-publish`. The route refuses a press whose `manifest_sha256` is not
+  the draft as it stands now (409 `manifest_changed`, a page left open while the draft changed) or names a piece with no
+  draft (409 `manifest_not_found`). A press with no `manifest_sha256` (an older piece) and a take-back are unchanged.
+- **The seal:** `piece_manifest.py seal --draft D --approval <his picks/<day>-publish document>` accepts the press as
+  the live board saves it and refuses it for any other draft ("bound to another manifest").
+- **Held by:** `tests/control-plane/board-manifest.test.ts` (the bind, the seal through piece_manifest.py itself, the
+  refusal on a changed hash) and `tests/control-plane/board-view-contract.test.ts`.
 
 ## His answer on each cut (contract 1.6.0)
 
