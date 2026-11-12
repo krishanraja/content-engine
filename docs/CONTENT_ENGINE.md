@@ -888,7 +888,8 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
     change within a second: no second table, no polling, no copy of the
     state anywhere else. Each step names its owner (`MAKING_OWNERS`):
     Claude Code makes the workroom, the draft, the pictures, the scripts
-    and the pack and builds the publish board; Krish records and approves
+    and the pack, which the live publish board shows from the record
+    (`docs/PUBLISH_BOARDS.md`); Krish records and approves
     each post, and Growth posts what he approved (`docs/GROWTH-HANDOFF.md`).
     The video is made with ve on a home computer (`docs/ve/RUNBOOK.md`;
     `.agents/skills/produce-video/SKILL.md` is the quick-edit fallback), and

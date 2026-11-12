@@ -16,7 +16,7 @@ everything is.
 
 <a id="rule-02"></a>
 
-**The publish board is fed, never shaped.** Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex." From the week of 26 October every board has one layout (`config/board-layout.json`): five tabs (Ideas, Queue, Monday, Wednesday, Friday) and four steps in every day (Brief, Drafts, Record, Publish). Feed it through `week_board.py`'s inputs only (`docs/PUBLISH_BOARDS.md`, "The fixed layout"); never add a section, banner or style, never patch a built board. `week_board.verify()` and `npm run check:board-layout` (CI) refuse anything else, and a change to the layout itself is Krish's: there are no approval prompts for board edits; the layout is held by CI and changes only with his recorded words (Ruling, Krish, 2026-10-21). `scripts/check_board_layout.py` holds the hash of `config/board-layout.json` and `scripts/post-pack/tokens.css` and the board's structure in its snapshot, and fails until `--update --approved "Krish, YYYY-MM-DD: <his exact words>"` records the change with them.
+**The publish board is fed, never shaped.** Since 11 November it is fed by writing what the live board's view reads, never by a built page (Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. `docs/PUBLISH_BOARDS.md`, "One live board"); the fixed layout below is the archive's. Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex." From the week of 26 October every board has one layout (`config/board-layout.json`): five tabs (Ideas, Queue, Monday, Wednesday, Friday) and four steps in every day (Brief, Drafts, Record, Publish). Feed it through `week_board.py`'s inputs only (`docs/PUBLISH_BOARDS.md`, "The fixed layout"); never add a section, banner or style, never patch a built board. `week_board.verify()` and `npm run check:board-layout` (CI) refuse anything else, and a change to the layout itself is Krish's: there are no approval prompts for board edits; the layout is held by CI and changes only with his recorded words (Ruling, Krish, 2026-10-21). `scripts/check_board_layout.py` holds the hash of `config/board-layout.json` and `scripts/post-pack/tokens.css` and the board's structure in its snapshot, and fails until `--update --approved "Krish, YYYY-MM-DD: <his exact words>"` records the change with them.
 
 <a id="rule-03"></a>
 
@@ -203,8 +203,10 @@ connector under the same scope (`plan-week`, step 12); no routine is fired
 
 <a id="rule-13"></a>
 
-**Web publish board migration (19 October 2026).** Full parity is implemented
-behind the existing access code at `content.krishraja.com/board/<Monday>`.
+**Web publish board migration (19 October 2026).** Superseded on 11 November: the live board is Control
+Centre's Content tab and `content.krishraja.com/board/<Monday>` is its read-only archive (Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive.
+`docs/PUBLISH_BOARDS.md`). As recorded: full parity was implemented
+behind the existing access code at the archive's address.
 Released: `config/boards.json` carries the web URLs and its `web_cutover` marker
 is `active`, so the web board is the only board. Then every
 making session reads ticks, links, edits, picks, queue and comments through
@@ -219,11 +221,10 @@ The artifact workflow below applies before cutover and to explicit legacy builds
 is where it counts.** Krish, 2026-10-12: "Give me a tick box next to each
 one so I can tick as I go and you can durably record that completion where
 it needs to be recorded. That Publish Manager is what you create every
-Sunday and let me iterate inside until we're done". The Sunday session makes
-one board a week (`scripts/post-pack/week_board.py`, the web board at
-content.krishraja.com/board/<its Monday>, with a tab for every publishing
-day), which keeps itself current through its live overlay; a rebuild for
-new words or assets carries every tick and day with `--previous`. Completion is recorded
+Sunday and let me iterate inside until we're done". Since 11 November the week's board is the live board in Control Centre's
+Content tab, drawn from the records on every read, and nothing builds a
+page; the old page at content.krishraja.com/board/<its Monday> is the
+read-only archive (`docs/PUBLISH_BOARDS.md`, "One live board"). Completion is recorded
 in this order: his tick is saved at once in the board's own store; every
 making session in Claude Code (`make-piece`, `plan-week`, `produce-video`)
 copies each channel tick onto the piece the board names for that day,

@@ -1,6 +1,6 @@
 # The weekly rhythm
 
-**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, every week's board lives at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); content.krishraja.com/board/<Monday> is the read-only archive (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this document are history.
 
 
 ## The rhythm from 1 November 2026
@@ -44,7 +44,7 @@ rhythm moves over in the plan's later waves; the board's new layout (rule
 | 13:00 to 15:00 | He records all six cuts and drops each take in the Video Engine Inbox; each take is placed on its piece and cut | Krish, then the recordings lane |
 | About 15:30 | **Titles**: three options for each surface, chosen with one Sunday evening press (Krish, 2026-10-28: "Sunday evening press"). The plan, not Krish, set the time and the fallback: if he picks none by 21:30, the top-ranked ones are used (that fallback is not built yet) | Krish |
 | Sunday night | Every final asset is made: both cuts of each piece, thumbnails and covers, each through the gates. The Titles press itself only records the titles (the long title becomes the piece's title). On 1 November a session made the assets on quick-edit. From 8 November the home computers are to make them unattended: once every picked day of the week has its Titles press, each computer's recordings pass (every five minutes, Saturday to Monday noon) starts the overnight run (`scripts/overnight/overnight.py`) on a computer given its role (`MINDMAKE_OVERNIGHT_ROLE`) | the engine |
-| Monday, 06:30 | The final publish board, built from the records, with each held item and its reason (Krish, 2026-10-28: "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning") | code (`week_board.py`), from the overnight runner (Wave 2; until then the first session on Monday) |
+| Monday, 06:30 | The final publish board: the live board shows the records, with each held item and its reason (Krish, 2026-10-28: "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning") | the overnight runner reports each cut made or held on its piece (Wave 2; until then the first session on Monday) |
 | Monday, about 45 minutes | He watches each cut at full size, signs off the article's facts, then presses **Approve for publish** or **Reject asset** (with a reason) for each day | Krish |
 | After his approval | Growth schedules each approved post and reads it back (Krish, 2026-10-28: "Approve each day Monday") | Growth |
 
@@ -65,13 +65,15 @@ reads that cap back yet: the engine has no route that serves `meter_daily`
 over a week, so a weekly check against it is not built.
 
 The Sunday ideas board and the Monday final board are the only two boards a
-scheduled job may build (`AGENTS.md`, "Commit and closeout"); the Monday one
-is built by code (`week_board.py`) from the overnight runner (Wave 2; until
-then the first session on Monday), never by Claude on a timer. Until Krish
+scheduled job may touch (`AGENTS.md`, "Commit and closeout"); since 11
+November neither is a built page: the live board reads the week's records
+(`docs/PUBLISH_BOARDS.md`), and the overnight runner reports each cut made or
+held on its piece (Wave 2; until then the first session on Monday), never
+Claude on a timer. Until Krish
 says otherwise, the plan's other scheduled jobs (the repair round on held
 cuts, which the overnight run starts after it builds the Monday board, and
-the 21:30 titles fallback, not built yet) write records only, and the board
-shows what they did at its next build. Codex no
+the 21:30 titles fallback, not built yet) write records only, and the live
+board shows what they did at its next read. Codex no
 longer cuts video: it makes pictures for named slots and never edits a cut
 (`docs/ve/ENGINE.md`, "Codex"). The engine assembles every cut.
 
@@ -124,7 +126,7 @@ Times are Krish's, in New York (`system_config.operator_timezone`).
 
 | When | Where | What happens | Who |
 |---|---|---|---|
-| Sunday, early morning | A Claude Code session ("Plan the week", `.agents/skills/plan-week`; from 1 November the Sunday ideas run in GitHub Actions, never a routine) | Copies the ending week's ticks onto the records; researches three or four options for Monday, Wednesday and Friday, fleshes out what he dropped in the Cold Ideas & Inspo folder, stress-tests them, and writes them onto the pieces (`/api/week/options`); then makes the week's publish board (`scripts/post-pack/week_board.py`): one private page with a tab for each day and a tick for every step, its link on the week's own board item `week-publish-board-<Monday>` (on him, at the top) and in `WORKBENCH.md`; the ending week's board stays read until every day on it is at 100% | Claude Code |
+| Sunday, early morning | A Claude Code session ("Plan the week", `.agents/skills/plan-week`; from 1 November the Sunday ideas run in GitHub Actions, never a routine) | Copies the ending week's ticks onto the records; researches three or four options for Monday, Wednesday and Friday, fleshes out what he dropped in the Cold Ideas & Inspo folder, stress-tests them, and writes them onto the pieces (`/api/week/options`); then the live board shows the week from its `ideas.json` (no page is built since 11 November, `docs/PUBLISH_BOARDS.md`), its link (`live_board.py <Monday>`) on the week's own board item `week-publish-board-<Monday>` (on him, at the top) and in `WORKBENCH.md`; the ending week's board stays read until every day on it is at 100% | Claude Code |
 | Sunday, 8am (7am in winter) | The work board | One item asks the Sunday question and links to the week page (`control-center api/content/slate.ts`, refreshed every morning, done when all three days have a piece) | Control Center |
 | Sunday | Control Center, the week page (`#/week`) | He picks a piece for each day, or drops in an idea to flesh out. A pick holds its day (scheduled_for) | Krish |
 | Sunday, on the Monday pick | Claude Code ("Make a piece", `.agents/skills/make-piece`; from 1 November one `make-piece.yml` run per piece, never a routine) | Monday's piece is made through to its publish board: workroom, fact-checked article, visual gate, both scripts (each opening straight on the hook and closing on the deep dive line, held to a reading age of 12 and read back by two fresh readers, then sent to his teleprompter.com account: one folder for the piece, one script per cut), publish page, pack. The week's publish board is rebuilt with the picks and Monday's page and republished to its link, so its ticks stay | Claude Code |
@@ -146,13 +148,12 @@ recorded." It is recorded in three places, in this order:
 
 1. **The week's publish board, at once.** His tick is saved in the board's
    own store (`ticks/<day>-<step>`; the article and YouTube links he pastes
-   in `links/<day>`). There is one board a week, made on Sunday and
-   republished to the same link all week, so a tick is never lost
-   (`scripts/post-pack/README.md`, "The week's publish board").
+   in `links/<day>`). There is one live board a week, drawn from
+   the store on every read, so a tick is never lost (`docs/PUBLISH_BOARDS.md`).
 2. **The piece's making record, by the next session.** At its start and
    again before it stops, every making session in Claude Code (`make-piece`,
    `plan-week`, `produce-video`) copies each channel tick onto the piece the
-   board itself names for that day (`week_board.py --show`; a piece posted on
+   board itself names for that day (the view's `pieces`; a piece posted on
    Substack is published and is still its day's piece), with `making.py
    <piece> posted <channel> [url]` (`.agents/skills/make-piece/SKILL.md`,
    "The week's ticks"). It reads this week's board and last week's, until
@@ -186,8 +187,8 @@ board, the strip and both skills read the same table.
 | Scripts into Teleprompter | Claude Code, at the Scripts step, or any session that `teleprompter_send.py pending` shows a cut still to send; from 1 November, only on his Approve scripts press | `make-piece` ("The Scripts step", step 6), `scripts/post-pack/teleprompter_send.py` | one folder per piece and one script per cut in his teleprompter.com account, then `meta.making.teleprompter` (the folder, each cut's script and title, and the hash of the words sent) |
 | Record | Krish records, then drops each take in the Inbox; the home computers' recordings lane writes it, and the production session one the lane has not placed | `scripts/post-pack/recording_match.py --record`, run by `scripts/recordings-upload.ps1` at the end of every pass on either machine (`--board --by "Recordings lane"`) and in `.agents/skills/produce-video` | `meta.making.recordings`, each take with the hash of the script it was read from (`script_sha256`) |
 | Video assets | ve (`python scripts/ve.py`, `docs/ve/RUNBOOK.md`) on a home computer; quick-edit (`.agents/skills/produce-video`) only as the fallback until ve passes Phase 3. Codex makes plates and devices, never a cut | `scripts/ve.py`, `.agents/skills/ve` | `meta.making.video_assets`, each cut with its thumbnail and music track; the cuts and thumbnails in the archive and in the post's library folder (`3 Video`). Never the visual gate or the pack |
-| Publish board with the cuts | Claude Code | `make-piece` (last step) | the publish page; and the pack again with the cuts (`build.py --replace`, which records Visual gate and Pack, then `send.py`) when the session holds the post's working folder and the cut files |
-| The week's publish board, the weekly content calendar | `plan-week` builds it on Sunday; a rebuild adds new words, assets or a new day; everything else (making steps, cuts, posts, presses) shows live by itself | `scripts/post-pack/week_board.py`, `board_web.py publish-web` | the web board at content.krishraja.com/board/<Monday>, a live overlay that stays current by itself (`docs/PUBLISH_BOARDS.md`); the week's own board item `week-publish-board-<Monday>` and `WORKBENCH.md` carry the link |
+| Publish board with the cuts | Claude Code | `make-piece` (last step) | the piece's record, which the live board shows (`docs/PUBLISH_BOARDS.md`); and the pack again with the cuts (`build.py --replace`, which records Visual gate and Pack, then `send.py`) when the session holds the post's working folder and the cut files |
+| The week's publish board, the weekly content calendar | nobody builds it: the live board in Control Centre's Content tab draws the week from the records on every read, and `plan-week` writes the week's `ideas.json` (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive) | the view, `GET /api/board/<Monday>/view`; `board_web.py touch` after a file changes | `python3 scripts/post-pack/live_board.py <Monday> [day]` (`docs/PUBLISH_BOARDS.md`); the content.krishraja.com/board pages are the read-only archive; the week's own board item `week-publish-board-<Monday>` and `WORKBENCH.md` carry the link |
 | Posting and ticks | Krish ticks on the week's publish board (or in Control Center); a Claude Code session copies each channel tick onto the piece | the week's board; `make-piece`, "The week's ticks" | the board's own store at once, then `meta.making.channels` |
 
 Where each thing lives, and nowhere else:
@@ -201,7 +202,7 @@ Where each thing lives, and nowhere else:
 | Control Center's secrets (access code, cron secret) | Control Center's Vercel project | its own routes; the slate cron speaks to the board on the access-code cookie |
 | Recordings | the engine's recordings lane (object store plus manifest), fed only from the top of the Video Engine Inbox | the home computers place each Inbox take on its piece and cut by themselves (`scripts/recordings-upload.ps1`, then `scripts/post-pack/recording_match.py`); `scripts/post-pack/recording.py get` fetches a take by its Inbox name or by the path its piece's record holds (`recordings/<sha256>.<ext>`); never the Drive connector (10 MB cap) |
 | Scripts for Krish to read while he records | his teleprompter.com account: one folder per piece ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"), one script per cut ("Mon 12 Oct - 5-minute - Who gets paid for AI songs"); and the publish page's Copy | each cut's script title on the piece's making record (`meta.making.teleprompter`), shown on Control Center's Record step ("Read from Teleprompter: <title>") and on the week's publish board. Sent at the Scripts step by `teleprompter_send.py` (from 1 November, only on his Approve scripts press); words that change update the same script in place, and nothing there is ever deleted |
-| The week's publish board and all decisions | content.krishraja.com, authenticated dated boards and immutable builds | each week's `week-publish-board-<Monday>` item and `WORKBENCH.md`; every tool reads all six collections with `board_web.py`, following `docs/PUBLISH_BOARDS.md` |
+| The week's publish board and all decisions | the engine's board tables, drawn live in Control Centre's Content tab (content.krishraja.com/board is the read-only archive) | each week's `week-publish-board-<Monday>` item and `WORKBENCH.md`; every tool reads all six collections with `board_web.py`, following `docs/PUBLISH_BOARDS.md` |
 | Licensed music | Drive, `makeyourmindup > 1 Brand kit (permanent) > Music` (`MINDMAKE_MUSIC_ROOT`), each licence certificate beside its track; the ledger `config/music-library.json` in GitHub | `scripts/quick-edit/music.py` on a home computer; only approved ledger tracks, never browsed |
 | The pack, the publish page, the finished cuts | Krish's Drive library, written by his own machine from the engine's library store | `build.py`, `send.py`; the Drive folder is the canonical copy for every tool and for Krish |
 | Code, rules, skills | GitHub `main` of this repository, and of `control-center` | both tools commit small and pull first; the docs steward writes `NOW.md` and the log |

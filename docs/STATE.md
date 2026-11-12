@@ -33,15 +33,18 @@ workflows and git on 2026-11-04. The rest of this file was last verified on
   approved standards (`python3 scripts/floor.py`) refuse as before. No public
   word names Krish (house rule `NO_NAME`). `apps/control-plane/api/_houseRules.ts`
   holds 59 rules (57 live, 2 on trial); the thirteen below were the count of 25 September.
-- **Boards.** Every week's board is at content.krishraja.com/board/<Monday>
-  (`config/boards.json`, `web`: 12 October to 9 November); the two links in
-  the 19 October section were the first.
+- **Boards.** The live board is Control Centre's Content tab
+  (`python3 scripts/post-pack/live_board.py <Monday> [day]`); the dated pages at
+  content.krishraja.com/board/<Monday> (`config/boards.json`, `web`) are the
+  read-only archive (Ruling, Krish, 2026-11-11). The two links in the
+  19 October section were the first.
 
 ## 19 October: both publish boards live, web cutover verified
 
-Use https://content.krishraja.com/board/2026-10-19 and
-https://content.krishraja.com/board/2026-10-12. The overarching week tabs keep
-both available. All new interactions use this site; the four Claude boards
+As recorded on 19 October (both are the read-only archive since 11 November):
+https://content.krishraja.com/board/2026-10-19 and
+https://content.krishraja.com/board/2026-10-12. The overarching week tabs kept
+both available. All new interactions then used this site; the four Claude boards
 are preserved source archives and must not be synchronized or edited.
 
 All 87 available source records, including 10 replies, were imported and read

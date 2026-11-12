@@ -176,7 +176,7 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     expect(text).toContain('repository_dispatch:\n    types: [make-piece]')
     expect(text).toMatch(/group: make-piece-\$\{\{ github\.event\.inputs\.piece_id \|\| github\.event\.client_payload\.piece_id \}\}/)
     expect(text).toContain('cancel-in-progress: false')
-    expect(text).toContain('every question for Krish goes on the day\'s tab')
+    expect(text).toContain('every question for Krish goes on the live board')
   })
 
   it('exactly two scheduled jobs may touch a publish board, and only one of them is Claude: the Sunday ideas run', () => {

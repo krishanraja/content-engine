@@ -1,9 +1,9 @@
 # Handover: make Friday's tab on both publish boards publish-ready
 
-**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, every week's board lives at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); content.krishraja.com/board/<Monday> is the read-only archive (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this document are history.
 
-**Status (4 November 2026): history.** This was the handover of 18 October. The week of 12 October's board now
-lives at `https://content.krishraja.com/board/2026-10-12`; the two Claude artifacts below were paused at the
+**Status (4 November 2026): history.** This was the handover of 18 October. The week of 12 October's board is
+archived, read-only, at `https://content.krishraja.com/board/2026-10-12`; the two Claude artifacts below were paused at the
 cutover on 19 October (`config/boards.json`). Its "push to `main`" predates auto-merge: work now goes through a
 pull request that merges itself (`AGENTS.md`, "Commit and closeout"). Do not paste it into a new session.
 

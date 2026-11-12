@@ -94,8 +94,9 @@ ideas quality plan, item 8). One option a day is
 scripts/post-pack/copy_lint.py --applies-to channel_copy` (and `--applies-to
 carousel_text` for a carousel) and `node
 vendor/makeyourmindup/kill-list/kill-list.mjs` before they reach the tab.
-They reach the tab only through `week_board.py --ideas`, never by patching
-the page; `week_board.py` refuses a wrong shape and names it.
+They reach the live board only through `ideas.json` itself, which its view
+reads (`docs/PUBLISH_BOARDS.md`); `week_board.py --ideas`, run locally, still
+refuses a wrong shape and names it, and no page is published.
 
 **His presses.** On each option he presses the idea, the direction and, once
 Growth returns it, the mock: Approve, Improve (his words) or Reject (his
@@ -134,7 +135,7 @@ words, keep its `id`, and set `"revised": {"side": "<idea or direction>",
 "words": "<his words, verbatim>"}`. Run the same checks as above and check
 the file builds (`week_board.py --ideas`, a local build). The side's hash
 changes with its words, so his old press reads as answered and he judges the
-new card when the board is next built from these ideas; a side already
+new card when the live board next reads these ideas; a side already
 revised is never revised again from the same words. The revision run does not
 publish the board. A mock is Growth's to remake from his words.
 

@@ -49,8 +49,10 @@ def problems(tool_input):
 
 
 RETIRED = ('Claude artifacts are retired (Krish, 2026-10-19: "we are now retiring the Claude artefact permanently '
-           'and we are working in content.krishraja.com for all published board updates"). Build the board with '
-           '`week_board.py --target web` and publish it with `board_web.py publish-web` (docs/PUBLISH_BOARDS.md). '
+           'and we are working in content.krishraja.com for all published board updates"). The one live board is Control '
+           'Centre\'s Content tab (python3 scripts/post-pack/live_board.py <Monday> [day]); content.krishraja.com is its '
+           'read-only archive (Ruling, Krish, 2026-11-11). Feed it by writing what its view reads, and report and file on '
+           'the piece with scripts/post-pack/board_session.py or the Control Center connector (docs/PUBLISH_BOARDS.md). '
            'Reading an old artifact is still allowed.\n')
 
 
