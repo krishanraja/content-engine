@@ -6622,6 +6622,14 @@ Runs the control plane's structural guards from apps/control-plane, where
 - `function manualProblems(path: string, text: string): string[]`
 - `function hisWordsProblems(repoRoot: string): string[]`
 
+### `scripts/check-now-notes.ts`
+
+check:now-notes: every closeout note in now-notes/ folds into NOW.md, judged by the fold's own code.
+
+- `const HOOK`
+- `interface NotesCheck`
+- `async function checkNotes(root: string = ROOT, hookPath: string = HOOK): Promise<NotesCheck>`
+
 ### `scripts/check-one-close.ts`
 
 One closer: nothing in the engine closes a board item but the board route,
