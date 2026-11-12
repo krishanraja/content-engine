@@ -62,6 +62,7 @@ posts anything; Krish publishes every step by hand.
 import argparse
 import html
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -72,6 +73,44 @@ FEATURE_NAME = '15-minute feature'  # making.CUT_NAME['feature']; config/board-l
 # Named so the board's YouTube tick (week_board.py, "YouTube (the ...)") stays the 5-minute video's alone.
 FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'
 FEATURE_SPOTIFY = f'Spotify (the {FEATURE_NAME})'
+
+# Every post asks for the subscription, with a link Growth's Measurement can credit (Ruling, Krish, 2026-11-12:
+# "Just make sure this is fixed moving forward"). Posts from 2 to 11 November named makeyourmindup.ai but none
+# linked the subscribe page, and 1 of 86 new subscribers came in that week. The subscribe page is Growth's
+# (growth-makeyourmindup intensity.json, conversion.subscribe_url); utm_source names the channel and utm_content
+# the piece, the two tags Growth credits a subscriber by. The spoken close of a script is untouched (house rule
+# SCRIPT_CLOSE): a link is written, never said.
+SUBSCRIBE_PAGE = 'https://home.makeyourmindup.ai/subscribe'
+SUBSCRIBE_ASK = 'Get the next one in your inbox'
+
+
+def subscribe_url(channel, p, content=None):
+    """The subscribe page tagged with the channel (utm_source) and the piece (utm_content), or `content` for a
+    link that outlives one piece, such as a profile's link in bio."""
+    if content is None:
+        content = re.sub(r'[^A-Za-z0-9._-]+', '-', str(p.get('piece_id') or p.get('date') or 'post')).strip('-') or 'post'
+    return f'{SUBSCRIBE_PAGE}?utm_source={channel}&utm_medium=social&utm_content={content}'
+
+
+def with_subscribe(words, channel, p):
+    """The words, then the tagged subscribe line, once. Missing words stay missing, so the step still says so."""
+    if not words or not str(words).strip() or SUBSCRIBE_PAGE in words:
+        return words
+    return f'{words.rstrip()}\n\n{SUBSCRIBE_ASK}: {subscribe_url(channel, p)}'
+
+
+def with_bio_pointer(words):
+    """For a caption that cannot hold a clickable link (TikTok, Reels): the words, then a line pointing to the
+    profile's link, which is the tagged subscribe page."""
+    if not words or not str(words).strip() or 'link in bio' in words.lower():
+        return words
+    return f'{words.rstrip()}\n\n{SUBSCRIBE_ASK}: link in bio.'
+
+
+def pinned_comment(channel, p, question):
+    """The pinned comment under a YouTube video: the article, the subscribe page, then the comment question."""
+    return (f'The full article, with every source, free: {ARTICLE}\n\n{SUBSCRIBE_ASK}: {subscribe_url(channel, p)}'
+            + (f'\n\n{question}' if question else ''))
 
 
 def is_feature(p):
@@ -105,8 +144,9 @@ def feature_steps(p, f, article_q, on_board=False):
             f'Paste the title and description {words_at}. The article link sits at the end of the description, under the read line.',
             f'Under Thumbnail, upload the feature\'s own wide thumbnail, {thumb}. Make it public, then pin the comment {words_at}.',
         ],
-        'copy': [('Title', p.get('feature_youtube_title')), ('Description', p.get('feature_youtube_description')),
-                 ('Pinned comment', f'The full article, with every source, free: {ARTICLE}' + (f'\n\n{article_q}' if article_q else ''))],
+        'copy': [('Title', p.get('feature_youtube_title')),
+                 ('Description', with_subscribe(p.get('feature_youtube_description'), 'youtube', p)),
+                 ('Pinned comment', pinned_comment('youtube', p, article_q))],
     }
     spotify = {
         'where': FEATURE_SPOTIFY, 'tag': 'Its own video episode, with its chapters',
@@ -117,7 +157,8 @@ def feature_steps(p, f, article_q, on_board=False):
                       f'Set the episode thumbnail to {thumb}. Leave episode art empty: the show art is used.',
                       f'Paste the title and description {words_at}, then the chapters into the description. Publish.'],
         'copy': [('Episode title', p.get('feature_spotify_title') or p.get('feature_youtube_title')),
-                 ('Description', p.get('feature_spotify_description') or p.get('feature_youtube_description')),
+                 ('Description', with_subscribe(p.get('feature_spotify_description') or p.get('feature_youtube_description'),
+                                                'spotify', p)),
                  ('Chapters', p.get('feature_spotify_chapters'))],
     }
     return youtube, spotify
@@ -200,8 +241,8 @@ def steps(p, on_board=False):
                 f'Under Thumbnail, upload the wide thumbnail, {wide_thumb}. Make it public, then pin the comment {words_at}.',
                 f'Paste the video\'s link into the YouTube link box {link_box}.',
             ],
-            'copy': [('Title', p.get('youtube_title')), ('Description', p.get('youtube_description')),
-                     ('Pinned comment', f'The full article, with every source, free: {ARTICLE}' + (f'\n\n{q}' if q else ''))],
+            'copy': [('Title', p.get('youtube_title')), ('Description', with_subscribe(p.get('youtube_description'), 'youtube', p)),
+                     ('Pinned comment', pinned_comment('youtube', p, q))],
         },
         {
             'where': 'YouTube Shorts', 'tag': f'The {VERTICAL_MAX_SECONDS}-second cut, linked to the full video',
@@ -220,8 +261,9 @@ def steps(p, on_board=False):
             'files': [short_video, vertical],
             'do': [f'Upload the tall video and paste the caption {words_at}.',
                    f'Edit cover, and set it to the vertical cover, {vertical}. Then post.',
-                   'Put makeyourmindup.ai in your profile, as a link once TikTok offers the Website field, as text until then.'],
-            'copy': [('Caption', p.get('tiktok_caption') or short_caption)],
+                   f'Put the subscribe page in your profile: {subscribe_url("tiktok", p, "bio")} in the Website field '
+                   'once TikTok offers it, home.makeyourmindup.ai/subscribe as text in your bio until then.'],
+            'copy': [('Caption', with_bio_pointer(p.get('tiktok_caption') or short_caption))],
         },
         {
             'where': 'Instagram Reels', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
@@ -229,9 +271,9 @@ def steps(p, on_board=False):
             'files': [short_video, vertical, square],
             'do': [f'New Reel, add the tall video and paste the caption {words_at}.',
                    f'Edit cover, add from your camera roll and choose the vertical cover, {vertical}. Then share.',
-                   'Check the link in your bio is makeyourmindup.ai.',
+                   f'Check the link in your bio is the subscribe page, {subscribe_url("instagram", p, "bio")}.',
                    f'For the feed, when you want it: post the square cover, {square}, with the same caption.'],
-            'copy': [('Caption', short_caption)],
+            'copy': [('Caption', with_bio_pointer(short_caption))],
         },
         {
             'where': 'LinkedIn', 'tag': 'Optional: the same cut, uploaded natively',
@@ -241,7 +283,8 @@ def steps(p, on_board=False):
                    f'Straight away, add the first comment {words_at}.',
                    f'Posting a picture with the link instead of the video? Attach the share card, {share_card}.'],
             'copy': [('Post text', p.get('linkedin_post')),
-                     ('First comment', f'The full article, free, with every source: {ARTICLE}')],
+                     ('First comment', f'The full article, free, with every source: {ARTICLE}\n\n'
+                                       f'{SUBSCRIBE_ASK}: {subscribe_url("linkedin", p)}')],
         },
         {
             # Krish, 2026-10-14: "I think we should create a Spotify strategy ASAP ... treat it as a media channel and
@@ -256,7 +299,7 @@ def steps(p, on_board=False):
                    f'Paste the title and description {words_at}, then the chapters into the description.',
                    'Add the 90-second tall video as the episode\'s clip. Publish.'],
             'copy': [('Episode title', p.get('spotify_title') or p.get('youtube_title')),
-                     ('Description', p.get('spotify_description') or p.get('youtube_description')),
+                     ('Description', with_subscribe(p.get('spotify_description') or p.get('youtube_description'), 'spotify', p)),
                      ('Chapters', p.get('spotify_chapters'))],
         },
     ]
@@ -375,8 +418,35 @@ def self_test():
     if 'Optional: the same cut, uploaded natively' not in text:
         failures.append('LinkedIn must read as optional after the standing five')
     tiktok = next(x for x in steps(sample) if x['where'] == 'TikTok')
-    if tiktok['copy'][0][1] != 'C':
+    if tiktok['copy'][0][1] != with_bio_pointer('C'):
         failures.append('TikTok must fall back to the short caption')
+    # Every post asks for the subscription (Ruling, Krish, 2026-11-12): the tagged subscribe link where the channel
+    # holds a clickable one, a pointer to the profile's link where it cannot, and the profile link set to it.
+    sub = dict(sample, piece_id='abc-123', youtube_description='D', comment_question='Q?',
+               feature_youtube_description='FD')
+    sub_steps = steps(sub)
+    got = {x['where']: dict(x['copy']) for x in sub_steps}
+    for where, label, source in (('YouTube (the 5-minute video)', 'Description', 'youtube'),
+                                 ('YouTube (the 5-minute video)', 'Pinned comment', 'youtube'),
+                                 ('LinkedIn', 'First comment', 'linkedin'), ('Spotify', 'Description', 'spotify')):
+        want = f'{SUBSCRIBE_PAGE}?utm_source={source}&utm_medium=social&utm_content=abc-123'
+        if want not in (got[where].get(label) or ''):
+            failures.append(f'{where} {label} must carry the tagged subscribe link {want}')
+    for where in ('TikTok', 'Instagram Reels'):
+        if not (got[where]['Caption'] or '').endswith(f'{SUBSCRIBE_ASK}: link in bio.'):
+            failures.append(f'{where}: the caption must point to the link in bio')
+        step = next(x for x in sub_steps if x['where'] == where)
+        if not any(f'{SUBSCRIBE_PAGE}?utm_source=' in d and 'utm_content=bio' in d for d in step['do']):
+            failures.append(f'{where}: the profile link must be the tagged subscribe page')
+    if with_subscribe(None, 'youtube', sub) is not None or with_bio_pointer('') != '':
+        failures.append('a missing text stays missing, never a bare subscribe line')
+    if with_subscribe(with_subscribe('D', 'youtube', sub), 'youtube', sub).count(SUBSCRIBE_PAGE) != 1:
+        failures.append('the subscribe line is added once')
+    if got['YouTube (the 5-minute video)']['Pinned comment'].split('\n\n')[-1] != 'Q?':
+        failures.append('the comment question stays last in the pinned comment')
+    feature_youtube, feature_spotify = feature_steps(sub, {}, 'Q?')
+    if not all(f'{SUBSCRIBE_PAGE}?utm_source=' in (dict(x['copy']).get('Description') or '') for x in (feature_youtube, feature_spotify)):
+        failures.append('the feature\'s YouTube and Spotify descriptions carry the tagged subscribe link')
     if 'choose Video (not Article)' not in text:
         failures.append('step 1 must use one Substack video post')
     if '{ARTICLE_URL}' not in text or 'id="article"' not in text:

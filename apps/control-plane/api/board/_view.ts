@@ -10,12 +10,14 @@ import { mediaWithAnswers } from './_cuts.js'
 import { VIEW_CONTRACT_VERSION } from './_viewContract.js'
 import { liveBoardUrl } from './_liveBoard.js'
 import { ARC, FREEDOM, mockPrompt, researchPrompt, storyPrompt, storyboardPrompt, stepPrompt, type PieceBrief } from './_prompts.js'
-import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, offdayApproval, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
+import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, offdayApproval, offdayList, offdayOptions, seriesOptions, storiesFresh, thoughtPress, yesPress,
   type PressAction, type ViewComment, type ViewOption, type ViewPiece, type ViewPosted, type ViewYes } from './_viewExtras.js'
 import { HELD_CHANGED, HELD_TITLE, approvedLabel, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
 import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
+import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
+import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
 // pieces' making records, his presses on the board, the week's plan files on main and the runs on GitHub. Nothing is a
@@ -93,11 +95,15 @@ export interface DayView {
    *  asset with its Drive file, a carousel's slides in order and its older versions; the post bound to an option says
    *  which (`option`), the one the day's piece files into says which (`piece_id`). Null when Drive could not be read. */
   posts: ViewPost[] | null
+  /** Contract 1.8.0 (_manifest.ts): the day's piece's manifest, its exact files (each with its Drive link) and words,
+   *  with his Approve for publish bound to its sha256 while it waits on him, and whether a press of his binds it now or
+   *  bound another draft (changed). Null when the piece has no draft manifest. */
+  manifest: ViewManifest | null
 }
 /** A post folder of a day, as the view carries it (contract 1.7.0). */
 export interface ViewPost { id: string; name: string; url: string; option: string | null; piece_id: string | null; assets: PostAsset[] }
 /** What a day's next step is built from, before the parts every day carries (media, and 1.2.0's extras). */
-export type DayCore = Omit<DayView, 'media' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials' | 'held' | 'posts'>
+export type DayCore = Omit<DayView, 'media' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials' | 'held' | 'posts' | 'manifest'>
 export type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'
 export const PATH: Array<{ key: PathKey; label: string }> = [
   { key: 'research', label: 'Research' }, { key: 'story', label: 'Story' }, { key: 'look', label: 'Look' },
@@ -192,7 +198,9 @@ export interface WeekView {
   days: DayView[]
   yours: Array<{ key: string; day: PostedDay; label: string; next: string; actions: Action[]; review?: NonNullable<DayView['reviews']>[number] }>
   moved: Array<{ at: string; text: string }>
-  north_star: { current: number; target: number } | null
+  /** The week's published count against its target. current is live (contract 1.8.0, publishedNow): what went out in
+   *  the last seven days, the posts he marked live included; measured is the number NOW.md last recorded. */
+  north_star: { current: number; target: number; measured?: number } | null
   runs: Partial<Record<JobName, RunInfo>>
   sources: Record<string, boolean>
   /** The week's change signal (board_signal.revision): bumped by every write the view reads, null when unread. */
@@ -209,7 +217,7 @@ export interface ViewInputs {
   ideas: Body | null
   locks: Partial<Record<PostedDay, string | null>>
   runs: Partial<Record<JobName, RunInfo>>
-  north_star: { current: number; target: number } | null
+  north_star: { current: number; target: number; measured?: number } | null
   /** Which series days have research in the week's folder (docs/plans/<week>-week/<day>-research.md). */
   research_files?: Partial<Record<PostedDay, boolean>>
   /** The engine's looks: config/style-references.json formats (script and production). */
@@ -233,6 +241,8 @@ export interface ViewInputs {
   /** The week's post folders in Drive (_drivePosts.ts weekPosts), or null when Drive could not be read; left out, the
    *  view says Drive was not read. */
   drive_posts?: DrivePost[] | null
+  /** Each piece's draft manifest, by piece id (_manifest.ts readDrafts); left out, no day carries one. */
+  drafts?: Record<string, Draft>
 }
 
 /** The day's post folders, each bound to the option whose `drive` names it and to the piece whose making record files
@@ -311,13 +321,17 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   const style = isObj(ideaRow?.style) ? ideaRow!.style as Body : null
   const experiment = style && isObj(style.experiment) ? style.experiment as Body : null
   const rec = stepState(live, 'record'), vid = stepState(live, 'video'), pub = stepState(live, 'publish')
+  // "It's live" (contract 1.8.0): a post he marked live on Substack is the essay out, so the day is done at once,
+  // before the publish watcher matches the post by the link now on the piece's record.
+  const said = postsFor(liveByDay(i.picks)[day], { piece_id: id })
+  const essayOut = said.some(p => p.channels.includes('substack'))
   const done: Record<PathKey, boolean> = {
     research: materials.length > 0 || researchFile || signed,
     story: signed,
     look: Boolean(look),
     board: scriptsApproved,
     record: rec === 'done',
-    cut: live.verdict === 'done' || pub === 'done',
+    cut: live.verdict === 'done' || pub === 'done' || essayOut,
   }
   // A later step done means every step before it is done too: a piece recorded before the path existed is never sent back to Look.
   for (let k = PATH.length - 1; k > 0; k--) if (done[PATH[k].key]) done[PATH[k - 1].key] = true
@@ -359,6 +373,7 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   const v = { ...base, title, piece_id: id, detail, path }
   const conversation = 'A conversation with you in a new Claude session'
   if (live.verdict === 'done') return { ...v, stop: 4, who: 'done', next: 'Published on every channel', runs_on: '', actions: [] }
+  if (essayOut) return { ...v, stop: 4, who: 'done', next: liveLine(said), runs_on: '', actions: [] }
   if (current === 'research') {
     return { ...v, stop: 1, who: 'you', runs_on: 'Perplexity sonar-pro on the engine, or your own research dropped here',
       next: 'Bring the evidence: research it now, or drop your Perplexity file on this day',
@@ -422,7 +437,7 @@ function nameOf(i: ViewInputs, id: string): string { return formatOf(i, id)?.nam
 /** One off day (Tue, Thu, Sat): the options in the week's ideas.json and his verdicts on them. */
 function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore {
   const week = i.week, date = dayDate(week, day)
-  const options = (isObj(i.ideas) && isObj(i.ideas.offdays) && Array.isArray(i.ideas.offdays[day]) ? i.ideas.offdays[day] : []) as Body[]
+  const options = offdayList(i.ideas, i.queue, day)
   const verdict = (o: Body) => i.queue.find(q => q.doc_id === `off-${day}-${String(o.id)}` && q.updated_by === 'Krish')?.body
   const sideVerdict = (b: Body | undefined, side: string) => (isObj(b) && isObj(b[side]) ? String((b[side] as Body).verdict || '') : '')
   // An option is chosen once his Approve on it stands (the ideas gate, _gate.ts): words a session wrote as decided in
@@ -438,10 +453,25 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
   }
   const base = { day, date, label: short(week, day), series: day === 'sat' ? 'good news' : 'off day', piece_id: piece ? String(piece.id).toLowerCase() : null,
     detail: said.map(x => ({ h: String(x.o.id), p: [x.o.format, state(x), x.o.revised ? 'revised' : ''].filter(Boolean).join(' · ') })) }
+  const marked = liveByDay(i.picks)[day]
   if (piece) {
     const live = liveDay(piece, date)
     const title = String(piece.idea || 'Off-day piece').slice(0, 140)
     if (live.verdict === 'done') return { ...base, kind: 'Off-day piece', title, stop: 4, who: 'done', next: 'Published', runs_on: '', actions: [] }
+    // An off-day piece is out once any of its posts is: his "It's live", or a post Growth recorded (its tick, with its
+    // link, which needs no press of his).
+    const mine = postsFor(marked, { piece_id: String(piece.id).toLowerCase() })
+    if (mine.length) return { ...base, kind: 'Off-day piece', title, stop: 4, who: 'done', next: liveLine(mine), runs_on: '', actions: [] }
+    const ticked = (i.ticks || []).filter(t => t.updated_by === 'growth' && isObj(t.body) && t.body.done === true && t.body.day === day)
+    if (ticked.length) return { ...base, kind: 'Off-day piece', title, stop: 4, who: 'done', next: `Live: Growth posted it on ${ticked.map(t => String(t.body.label || t.body.step)).join(', ')}`, runs_on: '', actions: [] }
+  }
+  // An off-day option his Approve stands on, marked live by him: the day is out, led by the option that went out. An
+  // approved option not marked live keeps its own It's live press on the day (buildView).
+  const outHere = chosen.filter(x => approvedNow(x.o)).map(x => ({ o: x.o, posts: postsFor(marked, { option: `off-${day}-${String(x.o.id)}` }) })).filter(x => x.posts.length)
+  if (outHere.length) {
+    const o = outHere[0].o
+    return { ...base, kind: `Off day: ${String(o.format || 'option').split(',')[0]}`, title: String(o.hook || o.copy || o.id).slice(0, 140), stop: 4, who: 'done',
+      next: liveLine(([] as LivePost[]).concat(...outHere.map(x => x.posts)).sort((a, b) => a.at.localeCompare(b.at))), runs_on: '', actions: [] }
   }
   if (!options.length) {
     if (day === 'sat') {
@@ -588,12 +618,40 @@ export function buildView(i: ViewInputs): WeekView {
     const heldApprove = options.filter(o => o.status === 'held')
       .flatMap(o => (o.actions || []).filter(a => a.kind === 'press' && /^Approve/.test(a.label)).map(a => ({ ...a, label: `${a.label}: ${o.title.length > 80 ? o.title.slice(0, 79).trimEnd() + "…" : o.title}` })))
     if (heldApprove.length) core.actions = [...heldApprove, ...core.actions.filter(a => !heldApprove.some(h => h.kind === 'press' && a.kind === 'press' && h.id === a.id))]
-    return { ...core, media: mediaWithAnswers(piece),
+    // His Approve for publish, bound to the piece's manifest, leads while it waits on him (1.8.0).
+    const manifest = SERIES_DAYS.includes(d) && shown ? dayManifest(i.drafts?.[shown], i.picks, d) : null
+    if (manifest?.press && core.who !== 'done') core.actions = [manifest.press, ...core.actions.filter(a => !(a.kind === 'press' && a.id === manifest.press!.id))]
+    return { ...core, manifest, media: mediaWithAnswers(piece),
       pieces: dayPieces(gate.approved, date, shown, gate.approvalOf),
       options, held,
-      comments: dayComments(i.comments, d), posted: dayPosted(i.ticks, d), yes: dayYes(i.picks, d),
+      comments: dayComments(i.comments, d), posted: dayPosted(i.ticks, d, liveByDay(i.picks)[d] || []), yes: dayYes(i.picks, d),
       posts: dayPosts(i.drive_posts, date, options, i.pieces) }
   }), i.overlay ?? null)
+  // "It's live" on every piece on the board that is not out yet (contract 1.8.0; Krish, 2026-11-12: "How do I indicate
+  // that Tuesday the 10th was posted correctly?"). Once the day is due and only Growth has it, it is the press the day
+  // leads with; before that it waits under More presses.
+  const today = todayNY(i.now)
+  const marked = liveByDay(i.picks)
+  for (const d of days) {
+    // A piece still being made takes it only once its day has come: nothing can be live before it is made or due. A
+    // piece that is out needs no press (its post is on the record already); an off-day option approved for the day, on
+    // any day, has its own.
+    if (d.who !== 'growth' && d.who !== 'done' && d.date > today) continue
+    const subjects: Array<{ piece_id?: string; option?: string; title: string }> = [
+      ...(d.piece_id && d.who !== 'done' ? [{ piece_id: d.piece_id, title: d.title }] : []),
+      ...d.options.filter(o => o.status === 'approved' && o.doc_id.startsWith(`off-${d.day}-`)).map(o => ({ option: o.doc_id, title: o.title })),
+    ]
+    const open = subjects.filter(sub => !postsFor(marked[d.day], sub).length)
+    if (!open.length) continue
+    const presses = open.map(sub => livePress(d.day, sub, open.length > 1 || d.who === 'done' ? `It's live: ${sub.title}` : "It's live"))
+    const his = d.actions.some(a => a.kind === 'press' || a.kind === 'review' || a.kind === 'look' || a.kind === 'research')
+    // A day that is out already (another of its approved options went live) keeps the rest one press away, never leading.
+    if (d.who === 'done') d.actions = [...d.actions, ...presses]
+    else if (d.who === 'growth' && d.date <= today && !his) {
+      d.actions = [...presses, ...d.actions]
+      d.next = `${d.next.replace(/[.\s]+$/, '')}. Once it is out, press It's live with the post's link`
+    } else d.actions = [...d.actions, ...presses]
+  }
   for (const d of days) {
     if (d.who === 'done' || d.actions.some(a => a.kind === 'prompt' && /Claude/.test(a.label))) continue
     d.actions.push({ kind: 'prompt', label: 'Copy Claude prompt', prompt: backupPrompt(i.week, d) })
@@ -703,6 +761,8 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // Beside it, everything made for the week's posts, from their folders in Drive (_drivePosts.ts; contract 1.7.0).
   const drivePosts = drive ? drive(week) : weekPosts(week, () => ownerDriveToken(env))
   const overlay = await readOverlay(db as never, week, (pieces as Body[]).map(p => String(p.id).toLowerCase()))
+  // Each piece's draft manifest (1.8.0), whose sha256 his Approve for publish binds.
+  const drafts = await readDrafts(db, (pieces as Body[]).filter(p => SERIES_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
   // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held.
   const approvals = await readApprovals(db, week)
   let formats: ViewInputs['formats'] = { script: [], production: [] }
@@ -721,14 +781,19 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   }
   let ideas: Body | null = null
   try { ideas = ideasText ? JSON.parse(ideasText) : null } catch { ideas = null }
-  let north: { current: number; target: number } | null = null
+  let north: { current: number; target: number; measured?: number } | null = null
   const m = nowText ? /<!-- north-star-state (\{.*?\}) -->/.exec(nowText) : null
   try { if (m) { const s = JSON.parse(m[1]); north = { current: Number(s.current), target: Number(s.week_target) } } } catch { north = null }
+  // The published count, live: a post he marks live moves it at once, not at the next morning's measurement.
+  if (north) {
+    const live = await publishedNow(db, now).catch(() => null)
+    if (live !== null) north = { current: live, target: north.target, measured: north.current }
+  }
   return buildView({ week, now, pieces: pieces as Body[], picks: picks as ViewInputs['picks'], queue: queue as ViewInputs['queue'],
     history: history as ViewInputs['history'], ideas, runs, north_star: north,
     locks: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, locks[k] as string | null])),
     research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
     specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
-    drive_posts: await drivePosts })
+    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts) })
 }
