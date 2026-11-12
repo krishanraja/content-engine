@@ -34,6 +34,8 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The carousel "Your AI thinks it's the best. Guess who told it." (the Home Depot rethink, his felt robot on the cover) is signed off by Krish and filed for today, Thu 12 Nov: six cards and the post description in 3 Posts as "2026-11-12 Thu off.day - Your AI thinks it's the best", and on the week of 9 Nov board's Thursday as `beststicker` with his sign-off; the Tue 17 option it came from is closed. (2026-11-12)
+- The Tue 17 Nov off-day carousel "Your AI thinks it's the best. Guess who told it." (auditrule, the Home Depot rethink) is drawn as six 4:5 cards in the AI-broke-Git look and shown to Krish for his yes: the cover is his felt house robot pinning an I'M THE BEST sticker on its own chest in a burning office (Higgsfield gpt_image_2_6, 11 credits, his approval); copy lint clean, voice-checked, read back by an 8-year-old fresh reader. The build, caption and cover record are in docs/plans/2026-11-16-week/auditrule/; the images are not committed. (2026-11-12)
 - The intro sting is paused on Krish's words (config/intro-sting.json "paused"): every long cut opens on the hook with no sting in make.py, the day runner and ve, and the palette expects none; his 5 Nov approval and the clips are kept. (2026-11-12)
 - ve's tall close is the palette's 2 s beat inside the tall core box (compile `ENDING_FRAMES_BY_ASPECT`, EndingBand `ENDING_TIMING_TALL`), its wide close stays 6 s, and an off-day close carries no series days; the house golden changed for the one recorded short only. (2026-11-12)
 - The daily claim sweep (`/api/claims/resolve`, job `claims_resolve`) writes its came_due notices with a plain insert (`api/claims/_notice.ts`): its upsert named `onConflict: 'claim_id'`, which the partial unique index `claim_resolutions_one_due` cannot serve, so every run from at least 5 to 12 Nov failed and noticed no claim that came due. A notice a concurrent run wrote first is skipped, so a re-run still never writes a second one. (2026-11-12)
@@ -47,7 +49,7 @@ Older lines: `docs/history/2026-11-12-NOW-moved-14.md`, `docs/history/2026-11-12
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-12): Build the sting after the hook in both engines and put its proof render on his own take to Krish.
+- Next (2026-11-12): Growth posts the Thu 12 Nov carousel from its 3 Posts folder.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
