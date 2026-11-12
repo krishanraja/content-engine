@@ -65,7 +65,9 @@ const PIECE_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 // failed write is logged, and the press answers as it would have.
 
 export type Sender = (input: SendApprovedInput) => Promise<SendResult>
-export interface PressDeps { send?: Sender; now?: () => string; revise?: typeof import('./_offdayRevise.js').dispatchOffdayRevise }
+export interface PressDeps { send?: Sender; now?: () => string; revise?: typeof import('./_offdayRevise.js').dispatchOffdayRevise
+  /** The board's Drive (_drivePosts.ts boardDrive): the media route's copy of a cut the library lacks, and the drive route. */
+  drive?: (db: SupabaseClient) => import('./_drivePosts.js').BoardDrive }
 type Body = Record<string, unknown>
 type Saved = { ok: boolean; revision?: number; body?: Body; [key: string]: unknown }
 export class PressError extends Error { constructor(public status: number, message: string) { super(message) } }

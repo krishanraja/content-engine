@@ -12,12 +12,13 @@ import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
 import { readView } from './_view.js'
 import { signMedia } from './_media.js'
+import { DRIVE_ID, boardDrive, filesOfPosts } from './_drivePosts.js'
 import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
 import { StyleError, needsMotion, saveStyle, stylePick } from './_style.js'
-import { CUT_OP, CutError, cutPick, saveCut } from './_cuts.js'
+import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
 import { LIVE_OP, recordLive } from './_itsLive.js'
 import { readLater } from './_later.js'
 import { DESK_PAGE } from './_deskPage.js'
@@ -101,7 +102,12 @@ async function verifyFile(db: SupabaseClient, file: BoardFile) {
   if (type !== file.type && !(file.type === 'text/html' && type === 'text/plain')) throw new BoardError(422, 'board_file_type_mismatch')
 }
 
+/** A view read that does not need the week's posts in Drive (the gate, a research prompt). */
+const NO_DRIVE = async () => null
+
 export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {}) {
+  /** The board's Drive (_drivePosts.ts), as the folder's owner; a test passes its own. */
+  const driveOf = (db: SupabaseClient) => (deps.drive ? deps.drive(db) : boardDrive(db as never))
   return async (req: VercelRequest, res: VercelResponse) => {
     res.setHeader('Cache-Control', 'private, no-store')
     res.setHeader('Vary', 'Cookie, Authorization')
@@ -262,7 +268,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
         // Its entity tag names what it says (_viewContract.ts), so Control Centre can ask every few seconds and a read
         // that finds nothing new is a 304 with no body. no-cache, not no-store: a browser may keep it but always asks.
-        const view = { ok: true, ...(await readView(db, week)) }
+        const view = { ok: true, ...(await readView(db, week, process.env, undefined, undefined, w => driveOf(db).posts(w))) }
         const etag = viewEtag(view)
         res.setHeader('Cache-Control', 'private, no-cache')
         res.setHeader('ETag', etag)
@@ -273,7 +279,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         // The ideas gate for the week (_gate.ts): every piece on a day with the approval that holds it there, and every
         // piece or option held because none does. Read-only; the same view the live board draws.
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
-        const view = await readView(db, week)
+        const view = await readView(db, week, process.env, undefined, undefined, NO_DRIVE)
         return res.status(200).json({ ok: true, week, approvals_read: view.sources.approvals === true,
           days: view.days.map(d => ({ day: d.day, date: d.date, pieces: d.pieces.map(p => ({ id: p.id, title: p.title, approval: p.approval ?? null })),
             held: d.held, options: d.options.map(o => ({ id: o.id, doc_id: o.doc_id, title: o.title, status: o.status, outcome: o.outcome ?? null, held: o.held ?? null })) })) })
@@ -311,8 +317,27 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (!/^[a-f0-9]{64}$/.test(id)) throw new BoardError(404, 'media_not_found')
         const end = new Date(`${week}T00:00:00Z`); end.setUTCDate(end.getUTCDate() + 6)
         let url: string | null
-        try { url = await signMedia(db, week, end.toISOString().slice(0, 10), id) } catch { throw new BoardError(503, 'board_store_unavailable') }
+        // The library's copy first; a file the library lacks is served from its Drive copy (_media.ts, contract 1.7.0).
+        try { url = await signMedia(db, week, end.toISOString().slice(0, 10), id, fileId => driveOf(db).serve(fileId)) } catch { throw new BoardError(503, 'board_store_unavailable') }
         if (!url) throw new BoardError(404, 'media_not_found')
+        res.setHeader('Cache-Control', 'private, max-age=300')
+        return res.redirect(302, url)
+      }
+      if (op === 'drive') {
+        // One file of the week's posts in Drive (_drivePosts.ts; contract 1.7.0): only a file the view lists for this
+        // week (an asset, a slide or a version of one), answered with a short signed link to the board's copy of it.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        if (!DRIVE_ID.test(id)) throw new BoardError(404, 'drive_file_not_found')
+        const drive = driveOf(db)
+        let url: string | null
+        try {
+          const posts = await drive.posts(week)
+          if (!posts) throw new BoardError(503, 'drive_unavailable')
+          if (!filesOfPosts(posts).has(id)) throw new BoardError(404, 'drive_file_not_found')
+          url = await drive.serve(id)
+        } catch (e) { if (e instanceof BoardError) throw e; throw new BoardError(503, 'drive_unavailable') }
+        if (!url) throw new BoardError(404, 'drive_file_not_found')
+        res.setHeader('Cache-Control', 'private, max-age=300')
         return res.redirect(302, url)
       }
       if (op === 'research' || op === 'material' || op === 'look' || op === 'style' || op === CUT_OP) {
@@ -339,7 +364,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           }
           if (op === 'research') {
             if (await recentResearch(db, pieceId)) throw new MaterialError(409, 'research_just_ran')
-            const view = await readView(db, week)
+            const view = await readView(db, week, process.env, undefined, undefined, NO_DRIVE)
             const day = view.days.find(d => d.piece_id === pieceId)
             const prompt = day?.path?.prompts.research || researchPrompt({ week, day: '', dayName: '', date: String(row.data.scheduled_for), series: String(row.data.lane_slot || ''),
               pieceId, idea: String(row.data.idea || ''), materials: [], lock: null })
@@ -349,9 +374,12 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             return res.status(201).json({ ok: true, material: filed, sources: found.sources.length })
           }
           if (op === CUT_OP) {
-            // His answer on one cut, kept append only on the piece (meta.cut_verdicts). It never changes the cut.
+            // His answer on one cut, kept append only on the piece (meta.cut_verdicts). It never changes the cut. A Not
+            // this also goes where his other rejections go (his taste ledger, the rejection inbox, the failure loop),
+            // once, never blocking the press (fileCutLearning).
             const saved = await saveCut(db, pieceId, cutPick(body))
-            return res.status(200).json({ ok: true, cut_verdict: saved.verdict, already: saved.already })
+            const learned = saved.already ? null : await fileCutLearning(db, { week, date: String(row.data.scheduled_for), pieceId }, saved.verdict)
+            return res.status(200).json({ ok: true, cut_verdict: saved.verdict, already: saved.already, ...(learned ? { learned } : {}) })
           }
           if (op === 'style') {
             // The motion styles are the bank's motion layer, read from main only when the press names one; the caption

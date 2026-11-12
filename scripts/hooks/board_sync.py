@@ -40,8 +40,9 @@ def main():
     if not week:
         return 0
     if config.get('web_cutover', {}).get('state') == 'active':
-        sys.stderr.write('Publish boards now live at https://content.krishraja.com. '
-                         'Do not synchronize the preserved Claude copies. Follow docs/PUBLISH_BOARDS.md.\n')
+        sys.stderr.write('The one live publish board is Control Centre\'s Content tab '
+                         '(python3 scripts/post-pack/live_board.py <Monday>); content.krishraja.com is its read-only '
+                         'archive. Do not synchronize the preserved Claude copies. Follow docs/PUBLISH_BOARDS.md.\n')
         return 0
     sha = hashlib.sha256(text.encode('utf-8')).hexdigest()
     state = json.loads(STATE.read_text(encoding='utf-8')) if STATE.exists() else {}

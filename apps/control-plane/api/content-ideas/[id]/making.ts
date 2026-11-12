@@ -8,6 +8,7 @@ import { MediaQualityError, qualifyMedia, readMediaRef } from '../../_mediaQuali
 import { verifiedMaking } from '../../_verifiedMaking.js'
 import { markPublished } from '../../inspiration/_cards.js'
 import { recordIncident } from '../../_incidents.js'
+import { cutVerdicts } from '../../board/_cuts.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../../packages/core/src/media-rollout.js'
 
 // GET  /api/content-ideas/:id/making           where this piece is: the record and its steps
@@ -27,8 +28,10 @@ import { mediaQualityEnforced, mediaQualityRollout } from '../../../../../packag
 // patch is refused, and the descript field records written before then still
 // hold is kept as it is and read by nothing.
 //
-// The GET answer also carries the piece's lane_slot, its series, so
-// making.py scripts can pass it to the story check. The series line is
+// The GET answer also carries his Yes or Not this on each rendered cut
+// (cut_verdicts, oldest first; board/_cuts.ts), which making.py show prints
+// for the session making the next cut, and the piece's lane_slot, its series,
+// so making.py scripts can pass it to the story check. The series line is
 // retired since 2026-10-21 (house rule SERIES_OPENER): nothing is checked
 // for it, and the series is only passed on.
 //
@@ -76,7 +79,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const current = await verifiedMaking(supabase, ideaId, prev)
     return res.status(200).json({ ok: true, idea_id: ideaId, state: (row as any).state, lane_slot: (row as any).lane_slot ?? null, media_quality_rollout: mediaQualityRollout().status, making: current, steps: makingSteps({ ...row, meta: { ...meta, making: current } } as any),
       // An off-day piece he records: the option he approved and its exact words, which recording_match.py hears takes against.
-      ...(meta.offday && typeof meta.offday === 'object' ? { offday: meta.offday } : {}) })
+      ...(meta.offday && typeof meta.offday === 'object' ? { offday: meta.offday } : {}),
+      // His Yes or Not this on each rendered cut (board/_cuts.ts), oldest first: making.py show prints them for the
+      // session making the next cut.
+      cut_verdicts: cutVerdicts(meta) })
   }
 
   const now = new Date().toISOString()

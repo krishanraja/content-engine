@@ -184,9 +184,11 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 
 ## Operations
 
-- **Publish board.** The week's page at content.krishraja.com/board/<Monday>:
-  an Ideas tab, a Queue and a tab for each publishing day, where Krish presses
-  (`docs/PUBLISH_BOARDS.md`). Built by `week_board.py` and fed, never shaped.
+- **Publish board.** The week in Control Centre's Content tab, at
+  `#/content?week=<Monday>&day=<day>`: the one live board, where Krish presses,
+  drawn from the engine's view (`docs/PUBLISH_BOARDS.md`). Fed by writing what
+  the view reads, never by a page. The old page at
+  content.krishraja.com/board/<Monday> is the read-only archive.
 - **Making record.** A piece's record of each making step (`meta.making`),
   read and written with `scripts/post-pack/making.py`.
 - **Hero assets, off days.** The article, both cuts, thumbnails and covers this

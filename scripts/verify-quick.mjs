@@ -40,7 +40,7 @@ const PKG_KEYS = ['dependencies', 'devDependencies', 'optionalDependencies', 'ov
 
 // Publishing safety: run on every pull request, touched or not.
 const ALWAYS_TS = [
-  'tests/claude-hooks.test.ts', 'tests/secret-patterns.test.ts', 'tests/no-claude-routines.test.ts',
+  'tests/claude-hooks.test.ts', 'tests/secret-patterns.test.ts', 'tests/no-claude-routines.test.ts', 'tests/one-live-board.test.ts',
   'tests/control-plane/teleprompter-send.test.ts', 'tests/control-plane/teleprompter-server.test.ts',
   'tests/control-plane/copy-lint.test.ts', 'tests/floor-tools.test.ts', 'tests/control-plane/board-view-contract.test.ts',
 ]
