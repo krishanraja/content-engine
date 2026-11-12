@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
+import { makingSteps } from '../_making.js'
 import { yesByDay } from './_yes.js'
 import { readRuns, ENGINE_REPO, type JobName, type RunInfo } from './_run.js'
 import { offdaySides, type OffdaySides } from './_offdaySides.js'
@@ -127,6 +128,17 @@ export function lockSignedOn(text: string | null | undefined): string | null {
   if (!lockSigned(text)) return null
   const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean)
   return LOCK_SIGNED.exec(lines[lines.length - 1])?.[2] ?? null
+}
+
+/** The days the piece's making record holds for recording and cutting: the day its Recorded step was done (its latest
+ *  take's `at`) and the day its Video assets step was done (its latest file's `at`), each as makingSteps reads the
+ *  record, so the stages say what the record's own steps say. Null while that step is not done on the record (a step
+ *  done only because a later one is has no day of its own), never a guessed day. Pure. */
+export function makingDays(piece: Body): { recordedOn: string | null; cutOn: string | null } {
+  const meta = isObj(piece.meta) ? piece.meta : {}
+  const steps = makingSteps({ id: String(piece.id), state: piece.state as string | null, body: piece.body as string | null, meta })
+  const doneOn = (key: string) => { const s = steps.find(x => x.key === key); return s && s.state === 'done' ? dayOf(s.at) : null }
+  return { recordedOn: doneOn('record'), cutOn: doneOn('video') }
 }
 
 /** The steps from idea to publish, from what is done (a later step done means every one before it is) and the days the
@@ -330,8 +342,7 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
       ideasOn: shiftYmd(week, -1),
       agreedOn: lockSignedOn(lock) ?? dayOf(pick?.updated_at),
       fleshedOn: look ? dayOf(look.at) : null,
-      recordedOn: null,
-      cutOn: null,
+      ...makingDays(piece),
       goesOn: date,
     }),
   }

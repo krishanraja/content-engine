@@ -422,6 +422,12 @@ on the piece: `python scripts/post-pack/making.py PIECE_ID session LINK`.
 - **Video assets already done** means the cuts exist. A new take of a cut
   that is already produced is never a remake by itself: put one board item
   asking Krish, and remake only on his words.
+- **His answers on the cuts.** `show` prints every Yes or Not this he pressed
+  on a rendered cut on the board's Cuts tab (`meta.cut_verdicts`), in his
+  words. A Not this is his words to remake that cut: read them before you
+  cut, answer each in the new render (never refile the same file to answer
+  it), and check the new cut against them as well as the floor. A Yes means
+  that file is right: never remake it unless he asks.
 
 **Which take, and getting it onto this machine.** A piece's takes are on its
 record: `python scripts/engine.py GET /api/content-ideas/PIECE_ID/making
@@ -892,21 +898,7 @@ its thumbnail. `archive.py` refuses a thumbnail of the wrong shape too.
 
 ## 10. The board and the workbench
 
-Every board item about the piece carries `"idea_id": "PIECE_ID"` and, when
-one step finishes it, `"closes_on"` (`record`, `video`). An item for a home
-computer or another session is `"lane": "in_progress"`. Put on Krish
-(`"on_you"`) only what is his, and only with `"only_you"`, an `https://`
-`"link"` to what he acts on and a `"closes_on"` step: the engine refuses an
-item on him without them and names the field it lacks (`WORKBENCH.md`, "The
-board"). A question of his that no step closes (an approval, a remake, a
-missing folder, Library Sync to move) goes `"in_progress"` with
-`"closes_on": "session"`, its detail saying what would show it done, and
-you ask him in your reply. Every new open item says how it ends (the
-engine refuses one that does not, `open_needs_closes_on`). The
-recordings lane writes its own take questions this way. In Claude Code, copy
-the week's ticks once more (`make-piece`, "The week's ticks"). Update
-`WORKBENCH.md` and end every reply with
-https://controlcenter.krishraja.com/#/home?waiting=1.
+Read `.agents/skills/produce-video/references/board-and-workbench.md` before you write or close a board item about the piece, and at the end of the run; it holds this section in full (`idea_id`, `closes_on`, what an item on Krish must carry, the ticks, `WORKBENCH.md` and the link every reply ends with).
 
 ## The backup machine
 

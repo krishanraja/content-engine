@@ -111,7 +111,12 @@ does that with him and writes one narrative lock per piece,
    each floor read and `check_failures.py`, then run `scripts/preflight.py`
    (docs/learning/README.md).
 2. Read the piece: `python3 scripts/engine.py GET "/api/content-ideas?id=<uuid>"`
-   and where it is: `python3 scripts/post-pack/making.py <uuid> show`.
+   and where it is: `python3 scripts/post-pack/making.py <uuid> show`. It also
+   prints every Yes or Not this he pressed on a rendered cut (the board's Cuts
+   tab, `meta.cut_verdicts`): a Not this, in his words, is the brief for the
+   next cut of that kind, so it goes into the creative direction and the
+   storyboard before anything is rendered again; a Yes means that file is
+   right, and it is never remade unless he asks.
 3. Record this session on the piece so the board shows it is being made:
    `python3 scripts/post-pack/making.py <uuid> session <this session's https link>`
    (in GitHub Actions, the run's link:
@@ -520,25 +525,7 @@ skill, in `plan-week` and in `produce-video`. The eight steps, and where complet
 
 ## Board items about this piece
 
-Every board item you write about this piece carries `"idea_id": "<uuid>"`
-and, when one step finishes it, `"closes_on": "<step>"` (WORKBENCH.md, "The
-board"). Control Center's done-check sweep closes it when that step lands,
-and closes every item about the piece once its publish step is done (the
-standing five ticked), so nothing about a finished piece lingers on Krish's
-board. An item waiting on
-him (`"lane": "on_you"`, such as recording both cuts) also carries
-`"only_you"` (`"face"` for a recording) and an `https://` `"link"` to what he
-acts on; without all of them, and the `idea_id` and `"closes_on"` above, the
-engine refuses it and names the field it lacks. A job of his that no step
-closes goes `"in_progress"` with `"closes_on": "session"`, its detail
-saying what would show it done, and you ask him in your reply. Every new
-open item says how it ends (the engine refuses one that does not,
-`open_needs_closes_on`). Record the fact; the check closes the item. Close
-only items you hold (`closes_on` `session`): the engine refuses any other
-close from a session (`409 check_closes_it`) and any reopen of a check's
-close (`409 check_closed_it`), unless you relay Krish's own words in
-`"said"`. It never lets a session turn a check's item into `session` work
-(`409 kind_is_the_checks`); a close he made is relayed as the close.
+Read `.agents/skills/make-piece/references/board-items.md` before you write, close or relay any board item about this piece; it holds this section in full (`idea_id`, `closes_on`, what an item on Krish must carry, and which closes are yours).
 
 ## Before you stop
 
