@@ -59,5 +59,11 @@
     ],
     "tolerance_px": 1,
     "overlap_share": 0.04
+  },
+  "superseded": {
+    "on": "2026-11-12",
+    "by": "config/brand-palette.json",
+    "words": "I approve the brand palette sheet, but only if it falls in line with the attached.",
+    "means": "The stand-off outro (StoryOutroStandoff, story_io.py) is a retired close: every video now closes on the palette's statement_card (16:9) or statement_beat (9:16), and the guard refuses the stand-off clips. The audio treatment rule above stands. docs/production/BRAND_PALETTE.md."
   }
 }
