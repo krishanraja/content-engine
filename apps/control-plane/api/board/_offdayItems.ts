@@ -121,6 +121,16 @@ export async function readItems(db: SupabaseClient, week: string): Promise<Offda
   } catch { return null }
 }
 
+/** Every item in some states, across weeks (the ideas for later read the approved and the later ones). Null when they
+ *  cannot be read. */
+export async function readItemsIn(db: SupabaseClient, states: ItemState[]): Promise<OffdayItem[] | null> {
+  try {
+    const r = await db.from('offday_items').select(COLUMNS).in('state', states).limit(2000)
+    if (r.error || !Array.isArray(r.data)) return null
+    return (r.data as unknown[]).map(itemOf).filter((x): x is OffdayItem => Boolean(x))
+  } catch { return null }
+}
+
 /** Where an option on the board sits and how a move names it. */
 export interface Placed {
   key: string

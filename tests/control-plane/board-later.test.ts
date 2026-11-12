@@ -154,3 +154,22 @@ describe('an off-day option approved onto another board', () => {
     expect(tue.who).toBe('growth')
   })
 })
+
+describe('every off-day idea for later moves to any day (Ruling, Krish, 2026-11-12)', () => {
+  const row = (item: string, state: string, extra: Body = {}) => ({ item, source: 'engine', origin_week: '2026-11-09', option_id: item.split(':')[2], option: off(item.split(':')[2]),
+    state, week: null, day: null, date: null, doc: null, piece_id: null, drive_folder: null, posts: [], followed: {}, version: 4, placed_by: 'Krish', placed_at: 'x', ...extra })
+  it('an idea from the plan carries Move to…, onto any day from today through four weeks, its Approve for that day', () => {
+    const trendy = items(buildLater(inputs()))['Hook trendy.'].x
+    expect(trendy.move).toMatchObject({ op: 'move', item: 'engine:2026-11-09:trendy', version: 0, state: 'slate', from: { week: '2026-11-09', day: 'tue' }, later: true })
+    expect(trendy.move!.days[0].date).toBe('2026-11-12')
+    expect(trendy.move!.days.some(d => d.day === 'sun')).toBe(false)
+    // Growth's older file is not the plan a move reads back, so it is not offered there; a series idea keeps its own Approve.
+    expect(items(buildLater(inputs()))['A shopping guide.'].x.move).toBeUndefined()
+  })
+  it('one he sent back to later moves by its row; one his move put on a day is not an idea for later', () => {
+    const later = items(buildLater(inputs({ items: [row('engine:2026-11-09:trendy', 'later')] as never })))['Hook trendy.'].x
+    expect(later.move).toMatchObject({ item: 'engine:2026-11-09:trendy', version: 4, state: 'later', from: null })
+    const placed = buildLater(inputs({ items: [row('engine:2026-11-09:trendy', 'approved', { week: '2026-11-23', day: 'thu', date: '2026-11-26', doc: 'queue/off-thu-trendy' })] as never }))
+    expect(items(placed)['Hook trendy.']).toBeUndefined()
+  })
+})
