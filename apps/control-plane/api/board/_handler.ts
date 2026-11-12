@@ -10,7 +10,7 @@ import { readArchive } from './_archive.js'
 import { readPieces, recordPosted } from './_posted.js'
 import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
-import { readView } from './_view.js'
+import { readView, readWeekIdeas } from './_view.js'
 import { signMedia } from './_media.js'
 import { ManifestBindError, checkPublishBind } from './_manifest.js'
 import { DRIVE_ID, boardDrive, filesOfPosts } from './_drivePosts.js'
@@ -103,6 +103,21 @@ async function verifyFile(db: SupabaseClient, file: BoardFile) {
   if (type !== file.type && !(file.type === 'text/html' && type === 'text/plain')) throw new BoardError(422, 'board_file_type_mismatch')
 }
 
+/** The post folders' renamer for a move (_offdayItems.ts followDrive), as the owner of his Drive with the `drive` scope
+ *  the research library signs in with; null when the engine cannot sign in to Google. */
+async function moveRenamer() {
+  const { googleAccessToken } = await import('../_google.js')
+  const token = await googleAccessToken(['https://www.googleapis.com/auth/drive'], { subject: process.env.GOOGLE_DRIVE_OWNER || 'krish@mindmake.co' }).catch(() => null)
+  if (!token) return null
+  const { googleDriveRenamer } = await import('./_offdayItems.js')
+  return googleDriveRenamer(token)
+}
+/** The research library's index rows of a piece he records follow its new day (_offdayLibrary.ts). */
+async function moveLibrary(db: SupabaseClient) {
+  const { libraryFollower } = await import('./_offdayLibrary.js')
+  return libraryFollower(db)
+}
+
 /** A view read that does not need the week's posts in Drive (the gate, a research prompt). */
 const NO_DRIVE = async () => null
 
@@ -156,6 +171,27 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
       try {
         const result = await readPieces(await getDb(), week)
+        return res.status(result.status).json(result.body)
+      } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
+    }
+    if (op === 'offdays' || op === 'scheduled') {
+      // Growth's half of the one place an off-day item's day lives (_offdayItems.ts; Ruling, Krish, 2026-11-12): GET
+      // offdays reads the week's items where they are now; POST offdays offers Growth's own options for the week (they
+      // reach the board offered, his press approves them); POST scheduled reports what Growth has scheduled on a
+      // platform for each, so an item he moved says plainly what is still scheduled for its old day. Growth's key only.
+      if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      const week = scalar(req.query.week)
+      if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
+      try {
+        const db = await getDb()
+        const { itemsForGrowth, offerGrowth, readItems, reportScheduled } = await import('./_offdayItems.js')
+        if (op === 'offdays' && method === 'GET') {
+          const items = await readItems(db, week)
+          if (!items) return res.status(503).json({ ok: false, error: 'board_store_unavailable' })
+          return res.status(200).json({ ok: true, week, items: itemsForGrowth(items, week) })
+        }
+        if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+        const result = op === 'offdays' ? await offerGrowth(db, week, req.body, await (deps.ideas ?? readWeekIdeas)(week)) : await reportScheduled(db, week, req.body)
         return res.status(result.status).json(result.body)
       } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
     }
@@ -414,6 +450,23 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
         if (who !== 'Krish') throw new BoardError(403, 'live_is_his')
         const result = await recordLive(db, week, req.body, who, (deps.now ?? (() => new Date().toISOString()))())
+        return res.status(result.status).json(result.body)
+      }
+      if (op === 'move') {
+        // "Move to…" (Ruling, Krish, 2026-11-12: any off-day post or idea moves to any day at his press, and the move
+        // updates every place that names its day): the one write (_offdayItems.ts moveItem). His press only. The week in
+        // the address is the board he pressed on; the item says where it is, and the move updates both weeks.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'his_press')
+        const { moveInput, moveItem } = await import('./_offdayItems.js')
+        const { input, problem } = moveInput(req.body)
+        if (!input) throw new BoardError(400, problem || 'invalid_move')
+        const result = await moveItem(db, input, { now: deps.now ? new Date(deps.now()) : new Date(), ideas: deps.ideas ?? (w => readWeekIdeas(w)),
+          drive: deps.renamer ? deps.renamer() : await moveRenamer(), library: deps.library ? deps.library(db) : await moveLibrary(db) })
+        if (result.status === 200 && (result.body.followed as Record<string, unknown> | undefined)?.drive === 'renamed') {
+          const { resetDrivePostsCache } = await import('./_drivePosts.js')
+          resetDrivePostsCache()
+        }
         return res.status(result.status).json(result.body)
       }
       if (op === 'run') {

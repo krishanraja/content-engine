@@ -166,6 +166,74 @@ creates, drops or closes one.
   his tick in Control Centre (its done-check, `inspiration_act`). Growth reads the same tick in its directive (protocol
   1.21.0). Past its day and unused, Control Centre's Publish Board says so in one line.
 
+## Moving an off-day item to any day (Ruling, Krish, 2026-11-12)
+
+Ruling (Krish, 2026-11-12): any off-day post or idea moves to any day at his press, and the move updates every place
+that names its day. His words: "I should be able to fluidly reassign any off-day post or assign any off-day idea to any
+day at will, and that should update the single source of truth everywhere."
+
+**One place says which day an off-day item is on: `offday_items`** (migration `20261129090000_offday_items.sql`). One
+row per item, versioned: what it is (its option as shown), where it came from (`engine`, the week's `ideas.json`;
+`growth`, Growth's own options) and where it is (`offered` on a day, `approved` on a day, `later` in his Ideas for Later,
+`withdrawn` when Growth took back a proposal he never pressed). The week's `ideas.json` is the plan's starting point
+only: an engine option no press has touched sits on the day the plan offered it (state `slate` on the board); once he
+approves it, moves it or files it for later, its row is where its day lives and nothing in `ideas.json` moves it again.
+Every off-day approval that stood on 12 November was given its row once. An item's key is
+`<engine|growth>:<the week it was first offered>:<option id>`.
+
+**Move to… on every off-day item**, approved or not, made or not, live or not yet live, on every day of the board and in
+his Ideas for Later (`options[].move`, contract 1.9.0, `_offdayItems.ts` `moveSpec`): every day from today through
+the next four weeks, never a past day and never a Sunday (Sunday is a rest day), its current day marked; a series day
+is a day like any other (Krish, 2026-11-12: a publishing day can carry off-day posts), and a day may hold several.
+"Back to Ideas for Later" takes it off its day. Two limits, each said on the picker: a week's good news stays in its own
+week (its stories are that week's), and a piece he records goes out on a Tuesday, Thursday or Saturday.
+
+**One write: `POST /api/board/<Monday>/move`** `{item, version, from, to: {date} | "later"}`, his press only (403
+`his_press` for anyone else). `moveItem` reads where the item is and its words as the board shows them, refuses a
+stale version (409 `stale`, "It moved elsewhere a moment ago"), a past or Sunday date, a day past four weeks, and a
+day whose own plan already offers the same idea (409 `day_has_it`), then calls `offday_item_move`, which in one
+transaction:
+
+1. takes his approval off the day it leaves: the same `queue/off-<day>-<option>` document saved again with no verdict
+   on its idea and `moved` saying where it went, which `idea_outcome_record` reads as `withdrawn`; back to his Ideas for
+   Later it is his File for later (`verdict: next_week`, outcome `filed`);
+2. saves his Approve for the new day: `queue/off-<newday>-<option>` in the new week, bound to the words shown
+   (`idea.sha256`, `idea.shown`), his direction, mock and note on it carried over, and `moved` saying where it came
+   from. Moving an idea he never pressed onto a day **is** his Approve for that day;
+3. moves the row (its version goes up by one) and, for a piece he records, `content_ideas.scheduled_for` with it;
+4. keeps the move, append only, in `offday_moves`.
+
+The gate holds on the row as on `content_ideas`: a row is `approved` on a day only while his approval for exactly that
+document on exactly that date stands (`offday_items_gate`, `board_approval_holds`), so a session, Growth or a workflow
+cannot put an item on a day or re-date it, and a row he placed is moved by nobody else (`his_placement`). Any part
+refused (a revision changed under it, no approval standing), none of it lands. His board's own Approve on an off-day
+option writes the row the same way (`syncApprove`, in `afterPress`). The answer carries `line` (what it did), `undo`
+(the same press back: to the day it left, back to an idea offered on its old day, or back to later; an Undo may name
+a day now past, and only the one the move before took it from) and `followed`.
+
+**Every place that names the day follows the row.**
+
+| Place | How it follows |
+|---|---|
+| The live board (Control Centre's Publish Board) | The view reads the rows (`readItems`, `dayOptions`): the item leaves the day it left and shows on its new day, in its new week; both weeks' `board_signal` is bumped by the board documents and by `offday_items_signal`, so both boards read again at once |
+| Growth's read of what to make and post on which day | `GET /api/board/<Monday>/pieces` hands an approved option over only on the day its row says (`placedHere`), with `item`, `version`, `date` and `moved_from`; 503 `items_unavailable` when the rows cannot be read, never a day that may be stale. Growth binds each approved option to the board's day, not the day it first planned |
+| The post's folder in Drive (3 Posts) | Renamed by its ID to the new date and day ("2026-11-12 Thu off.day - AI agent not set up" moved to the 19th becomes "2026-11-19 Thu off.day - ..."), so every reader that reads it by ID keeps it and the board files it under its new week (`followDrive`, as the owner of his Drive with the `drive` scope); never moved to another folder, never one outside 3 Posts, kept as it is when the item goes back to later. `followed.drive` says what happened |
+| The research library's index | Every `00 Index` row naming a piece he records takes its new Week, Day and Piece cells, under the library's one lease (`_offdayLibrary.ts`). An off-day post with no piece has no research rows of its own |
+| A post Growth already scheduled on a platform | This engine never moves a post on a platform. Growth reports what it has scheduled for each item (`POST /api/board/<Monday>/scheduled`), and until Growth's approved route moves it, the item says so plainly: "Still scheduled for Tue 17 on Instagram: move it there too" (`options[].elsewhere`, and the move's answer) |
+
+**Growth's options come in through the same place** (`POST /api/board/<Monday>/offdays` on Growth's key, the
+`growth-offdays/1` file `growth.py mix offdays` writes, or `growth-offdays/2` `{week, options: [{id, day, copy, format,
+source, ...}]}`): each becomes a row offered on its day (`offday_items_offer`), shown on the board with its kind and
+source and with every press a plan option has, Move to… and Approve included. A row he has pressed is never touched by
+Growth; a Growth option no longer in its list and never pressed is `withdrawn`, never deleted. Sunday options and an
+id the week's own plan uses on the same day are left out, and the answer says each one and why. `GET
+/api/board/<Monday>/offdays` gives Growth back where every item is now.
+
+Held by `tests/offday-items-db.mjs` (the migration on PGlite: no day without his press, a move whole or not at all,
+Growth never over his row, moves append only) and `tests/control-plane/board-move.test.ts` (the one write, the route
+his press only, and a move read back from the view, Growth's read, the Drive folder, the library and what is still
+scheduled).
+
 ## What he refused stays refused: the ideas board's checks in code (the ideas quality plan, Wave 1)
 
 Krish, 2026-11-09: "I just said that Infosys is boring so why did you make the piece about Infosys?" The Sunday run's
@@ -647,7 +715,7 @@ A session feeds the slots and nothing else:
 
 | Step | What feeds it | Input |
 |---|---|---|
-| Ideas | his five presses on every idea and the Off days ("His presses", below), then the week's checked ideas, each with `source_kind` (`his`, `inspo` or `engine`, required from the fixed layout on, shown as its chip), `why_here` (the nearest idea he liked, from the gather), `beats` (3 to 5 lines of the sketch), `covers` (the gather's `must_cover` ids it answers) and `style` (a script format, a production format and one experiment from `config/style-references.json` `formats`, shown as "Suggested style" and "Or try something new"); `accounted` in the file gives the reason for any `must_cover` id no idea carries. The build refuses a fixed week without `sources.json` beside it, a routed card left off, or styles that do not diverge (`board_feed.py cover <Monday>`). ideas.json `offdays` (`{"tue": [...], "thu": [...], "sat": [...]}`, 2 to 6 options a day given; a Sunday option is refused, since Sunday is a rest day; each `{id?, format, source, copy, covers?}`, `source` a line or `{label, url}`; an off-day piece he records adds `kind: "recorded"`, `style`, `series`, `piece_id`, `title`, `script` and `read_back`, shown with its whole script, `.agents/skills/plan-week/references/offdays.md`) feeds the Off days; Growth's Sunday Off-days section (`growth.py mix offdays`, schema `growth-offdays/1`, W2.9) feeds the days ideas.json leaves out, 2 to 6 options a day with its share line and what each still needs, on any day of the week but Sunday, whose options are left off (Krish, 2026-10-29: "Mix wins: every day"; a piece he records stays a Tuesday, Thursday or Saturday piece) | `--ideas ideas.json` (plan-week, from `board_feed.py gather`); `--offdays-plan offdays.json` (Growth) |
+| Ideas | his five presses on every idea and the Off days ("His presses", below), then the week's checked ideas, each with `source_kind` (`his`, `inspo` or `engine`, required from the fixed layout on, shown as its chip), `why_here` (the nearest idea he liked, from the gather), `beats` (3 to 5 lines of the sketch), `covers` (the gather's `must_cover` ids it answers) and `style` (a script format, a production format and one experiment from `config/style-references.json` `formats`, shown as "Suggested style" and "Or try something new"); `accounted` in the file gives the reason for any `must_cover` id no idea carries. The build refuses a fixed week without `sources.json` beside it, a routed card left off, or styles that do not diverge (`board_feed.py cover <Monday>`). ideas.json `offdays` (`{"tue": [...], "thu": [...], "sat": [...]}`, 2 to 6 options a day given; a Sunday option is refused, since Sunday is a rest day; each `{id?, format, source, copy, covers?}`, `source` a line or `{label, url}`; an off-day piece he records adds `kind: "recorded"`, `style`, `series`, `piece_id`, `title`, `script` and `read_back`, shown with its whole script, `.agents/skills/plan-week/references/offdays.md`) feeds the Off days; Growth's Sunday Off-days section (`growth.py mix offdays`, schema `growth-offdays/1`, W2.9) feeds the archive's build, and since 12 November reaches the live board through `POST /api/board/<Monday>/offdays` ("Moving an off-day item to any day", above), the days ideas.json leaves out, 2 to 6 options a day with its share line and what each still needs, on any day of the week but Sunday, whose options are left off (Krish, 2026-10-29: "Mix wins: every day"; a piece he records stays a Tuesday, Thursday or Saturday piece) | `--ideas ideas.json` (plan-week, from `board_feed.py gather`); `--offdays-plan offdays.json` (Growth) |
 | Queue | the idea queue | `--queue queue.json` (GET /api/idea-queue) |
 | Queue: Could combine | two to five queued ideas that make one bigger piece: `[{"members": [queued ids], "series", "thesis", "joins": [3 to 5 beats]}]`, each a card with a Combine button that saves `queue/combine-<n>`; the next session runs synthesize on his tap (decided_by Krish) | `--combine combine.json` (with `--queue`; groups from GET /api/idea-queue?combine=1) |
 | Brief | the record-ready brief: idea, 3 to 6 beats, ending, takeaway, angle, tone, reader | `--brief DAY=brief.json` (kept on rebuild) |
@@ -708,6 +776,7 @@ writes them; a document whose `updated_by` is not Krish is never his.
 | Improve for a future piece (11 Nov) | Ideas | `queue/<pick>` `{use: "improve", note}`, his note required | records the outcome (improved) and files his note to his taste ledger as his words | the next ideas run reads it as a cue on that idea (`sources.json`, `outcomes`) |
 | Take a press back | Ideas, the same press again | `queue/<pick>` `{use: null}` | records the answer as withdrawn | nothing reads it as a press |
 | Approve, Improve, Reject or Next week on an off-day option's idea, direction or returned mock (Ruling, Krish, 2026-11-01: "Mock looks right, lock it and build it"; it replaces the one mix press of 2026-10-30) | Ideas, Off days, each option | `queue/off-<day>-<option>` `{use: "offday", idea, direction, mock}`, each side `{verdict, words, sha256, at, shown}`; Improve and Reject need his words | his Improve and Reject words filed to `taste_reports`; an Improve not asked before sends an `offday-revise` dispatch (`.github/workflows/offday-revise.yml`) | Growth reads the approved options from `GET /api/board/<Monday>/pieces` (`offdays`); Sunday reads every verdict back as `offday_verdicts` |
+| Move to… on an off-day item (Ruling, Krish, 2026-11-12: any off-day post or idea moves to any day at his press) | Every off-day option, on any day, and his Ideas for Later | `POST /api/board/<Monday>/move` `{item, version, from, to}`: his Approve for the new day (`queue/off-<day>-<option>` in its week) and his approval taken off the old one (`moved`), in one transaction with the row in `offday_items` | the post's Drive folder renamed to its new date by ID; a piece he records moves `scheduled_for` and its research index rows | Growth reads it on its new day from `GET /api/board/<Monday>/pieces`; what Growth still has scheduled on the old day is said on the item ("Moving an off-day item to any day", above) |
 | Approve or Skip an off-day option (boards before the week's mix) | Ideas, Off days (any day of the week) | `queue/off-<day>-<option>` `{use: "offday", day, approved, copy_sha256, format, source, option_id}` | nothing | Growth makes and schedules what he approved, only while `copy_sha256` is the copy it holds |
 | Approve or Skip an off-day piece he records (Ruling, Krish, 2026-10-29) | Ideas, Off days | the same, with `kind: "recorded"`, `piece_id`, `series`, `style`, `script` (the exact words he saw), `script_sha256` (worked out by the server), `folder_title`, `title`, `readers` | the server puts the piece on that day in its series, in flight, one short cut (`placeOffday`), sends the words to Teleprompter with his press as the approval and records the send; a Skip after an Approve takes it off the day unless recorded | the board shows what the send did (`send`); the recordings lane then waits for his short take |
 | Approve scripts | Drafts | `picks/<day>-scripts` `{kind: "approve_scripts", day, piece_id, approved, texts: {cut: words}, scripts: {cut: sha256}, titles: {cut}, folder_title, folder_id?, script_ids?}` | works out `scripts` from `texts` (refused as `approval_hash_mismatch` when the press brings others); sends only words the piece's making record shows the scripts' check passed and two fresh readers read back (the gate `teleprompter_send.py plan` holds a session to), else holds them; sends with `sendApprovedScripts`, writes a send that read back to the piece's making record, and writes its answer into the same document as `send` `{status: sent, held, no_key, refused or error, folder_id?, scripts?, error?, recorded?, record_error?, at, by}` | `teleprompter_send.py plan` (the `approvals` view); on `held`, `no_key`, `refused` or `error` a session checks the words if they need it, then sends exactly those words through the connector; on `sent` with `recorded: false` a session records it with `teleprompter_send.py record` and the ids in `send` |

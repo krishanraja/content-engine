@@ -141,6 +141,7 @@ jobs:
           node tests/board-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
           node tests/board-sessions-db.mjs pglite "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
           node tests/ideas-gate-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+          node tests/offday-items-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
           python tests/board_session_test.py
           python tests/recover_research_test.py
           node tests/inspiration-said-cards.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"

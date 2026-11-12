@@ -39,6 +39,14 @@ off-day options, his words verbatim. Follow every Improve note; never offer
 an option he rejected again; weigh each Reject reason as a cue (it becomes a
 standing rule only when he approves one); make more of what he approved.
 
+**Where an option's day lives once he presses** (Ruling, Krish, 2026-11-12: any off-day post or idea moves to any
+day at his press, and the move updates every place that names its day). The day you put an option under in ideas.json
+is the plan's starting point only. The moment he approves it, moves it (Move to…, any day from today through four
+weeks) or files it for later, its row in the engine's `offday_items` is the one place its day lives, and nothing you
+write in ideas.json moves it again (`docs/PUBLISH_BOARDS.md`, "Moving an off-day item to any day"). Never re-date an
+option by editing ideas.json; never place one anywhere: only his press does. Growth's own options reach the board
+through `POST /api/board/<Monday>/offdays`, never through this file.
+
 **Each option** goes into ideas.json `offdays`, `{"tue": [...], "thu":
 [...], "sat": [...]}`:
 

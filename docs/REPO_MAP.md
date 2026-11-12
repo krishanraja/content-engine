@@ -2342,6 +2342,62 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `function libraryPaths(file: Pick<MediaFile, 'path' | 'folder'>): string[]`
 - `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string, drive?: (fileId: string) => Pro…`
 
+### `apps/control-plane/api/board/_offdayItems.ts`
+
+- `const DAYS`
+- `type DayKey = typeof DAYS[number]`
+- `const OPTION_ID`
+- `const ITEM_KEY`
+- `const MOVE_AHEAD_DAYS`
+- `const MOVE_TZ`
+- `const REST_DAYS: readonly string[]`
+- `type ItemState = 'offered' | 'approved' | 'later' | 'withdrawn'`
+- `interface ScheduledPost`
+- `interface OffdayItem`
+- `const itemKey = (source: 'engine' | 'growth', week: string, id: string) =>`
+- `const mondayOf = (d: string) =>`
+- `const dayKeyOf = (d: string) =>`
+- `function itemOf(r: unknown): OffdayItem | null`
+- `async function readItems(db: SupabaseClient, week: string): Promise<OffdayItem[] | null>`
+- `interface Placed`
+- `function contentOf(r: OffdayItem, ideas: Body | null, week: string): Body`
+- `function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string): Array<{ o: …`
+- `function todayIn(now: Date, timeZone = MOVE_TZ): string`
+- `function dayLabel(date: string): string`
+- `interface MoveDay`
+- `function moveDays(now: Date, opts: { current?: string | null; onlyWeek?: string | null; recorded?: boolean } = {}): Mov…`
+- `interface MoveSpec`
+- `function moveSpec(placed: Placed, o: Body, week: string, day: string, now: Date): MoveSpec | null`
+- `function laterMoveSpec(r: OffdayItem, now: Date): MoveSpec`
+- `function elsewhereLines(r: OffdayItem | null, now: Date): string[]`
+- `type MoveTo`
+- `interface MoveRequest`
+- `function moveInput(body: unknown): { input?: MoveRequest; problem?: string }`
+- `interface MoveDeps`
+- `interface MoveResult`
+- `function approveBody(o: Body, week: string, day: string, prev: Body | null, at: string, moved: Body | null): Body`
+- `function leaveBody(o: Body, week: string, day: string, prev: Body | null, at: string, moved: Body, later: boolean): Body`
+- `async function moveItem(db: SupabaseClient, req: MoveRequest, deps: MoveDeps): Promise<MoveResult>`
+- `interface OfferItem`
+- `function growthItems(week: string, body: unknown, plan: Body | null): { items?: OfferItem[]; problem?: string; left: Ar…`
+- `async function offerGrowth(db: SupabaseClient, week: string, body: unknown, plan: Body | null): Promise<MoveResult>`
+- `async function reportScheduled(db: SupabaseClient, week: string, body: unknown): Promise<MoveResult>`
+- `function itemsForGrowth(items: OffdayItem[], week: string)`
+- `async function syncApprove(db: SupabaseClient, week: string, docId: string, body: Body, ideas: (w: string) => Promise<B…`
+- `function placedHere(items: OffdayItem[] | null, week: string, docId: string): { keep: boolean; item: OffdayItem | null }`
+- `function postFolderName(name: string, date: string): string | null`
+- `interface DriveRenamer`
+- `type DriveFollowed`
+- `async function followDrive(drive: DriveRenamer | null, folderId: string, date: string | null): Promise<DriveFollowed>`
+- `function googleDriveRenamer(token: string, f: typeof fetch = fetch): DriveRenamer`
+- `interface LibraryFollower`
+- `type IndexValues = string[][]`
+- `function libraryFixes(values: IndexValues, firstRow: number, pieceId: string, cells: [string, string, string]): Array<{…`
+
+### `apps/control-plane/api/board/_offdayLibrary.ts`
+
+- `function libraryFollower(db: SupabaseClient, f: typeof fetch = fetch): LibraryFollower`
+
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
 A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, locking the off-day mock: Improve
@@ -2512,6 +2568,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `function viewProblems(v: WeekView): string[]`
 - `async function branchSha(f: Fetcher, env: Record<string, string | undefined>, branch: string): Promise<string | null | …`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
+- `async function readWeekIdeas(week: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
 
 ### `apps/control-plane/api/board/_viewContract.ts`
 
