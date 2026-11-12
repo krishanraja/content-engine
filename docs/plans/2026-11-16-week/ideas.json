@@ -557,21 +557,21 @@
      "label": "VentureBeat, Beyond the Pilot, Home Depot CIO Angie Brown (Oct 2026); GeekWire, 30 Mar 2026 (Microsoft Critique); NeurIPS 2024 study on AI judges; SEC auditor independence rules, Jan 2003",
      "url": "https://venturebeat.com/video/grade-google-with-openai-a-fortune-50-ai-stack-at-home-depot"
     },
-    "hook": "Why do the biggest AI users never let an AI check its own work?",
+    "hook": "Your AI thinks it's the best. Guess who told it.",
     "copy": "Six cards. After the Enron scandal, US rules said an accounting firm may not check its own work. The biggest AI users now hold their AI to the same rule. Home Depot has OpenAI's AI judge the answers Google's AI gives its customers. Microsoft has Claude, made by Anthropic, check research written by OpenAI's GPT, and says the reports came out better for it. The reason: researchers found an AI rates its own writing higher than people do. The rule for Monday: the AI that did the work never signs it off.",
     "pitch": {
-     "see": "Six cards. Cover: an accountant in a grey suit bringing an APPROVED stamp down on a report with his own name on the cover, the stamp mid-air (no robot). Then the rule written after the Enron scandal (2003), Home Depot with the Google and OpenAI logos, Microsoft with the OpenAI and Claude logos, the study in one plain line, and the rule alone on the last card above Follow for more.",
-     "lands": "Every leader already knows why an auditor cannot sign off its own work, so the AI version needs no explaining, and two of the biggest names show it is how serious buyers already run AI.",
+     "see": "Six cards. Cover: a robot proudly pressing an I'M THE BEST sticker onto its own chest, a sheet of the same stickers on the desk, while the office behind it is broken and on fire. Then the post-Enron auditor rule, Home Depot (Google answers, OpenAI judges), Microsoft (GPT writes, Claude checks), the study in one line, and the rule on the last card above Follow for more.",
+     "lands": "Everyone knows why an auditor can't sign off its own work; the sticker makes the AI version a joke before it is a rule.",
      "why_now": "As AI writes more of the first draft, checking becomes the job: Microsoft built its checker in March and Home Depot's CIO described hers in October.",
-     "share": "The AI that did the work never signs it off."
+     "share": "Your AI gave itself the sticker."
     },
     "direction": {
-     "look": "House ink cards, real logos on cream tiles, a photographic scene cover",
+     "look": "A funny photographic scene cover, then house ink cards with real logos on cream tiles",
      "format": "Explainer carousel, 6 cards, 4:5",
      "frames": [
       {
-       "words": "WHY DO THE BIGGEST AI USERS NEVER LET AN AI CHECK ITS OWN WORK?",
-       "picture": "An accountant stamping APPROVED on a report with his own name on it"
+       "words": "YOUR AI THINKS IT'S THE BEST. GUESS WHO TOLD IT.",
+       "picture": "A robot proudly pressing an I'M THE BEST sticker onto its own chest, a sticker sheet of the same on the desk beside it, the office around it broken and on fire"
       },
       {
        "words": "AFTER ENRON, AN ACCOUNTING FIRM MAY NOT CHECK ITS OWN WORK",
@@ -598,6 +598,7 @@
      "kit": "Brand kit, no series pill (off day), house mark small bottom-right, Follow for more on the last card"
     },
     "learned_from": [
+     "Okay, I agree with number one, but we need a more catchy, sensational heading. We need a hilarious front cover picture of a robot that looks like a person, proudly putting a sticker on his own chest saying, \"I'm the best,\" with a similar sticker sheet on the table next to him (showing that he literally just does this whilst everything around him is broken and on fire). (12 Nov)",
      "I delisted the Home Depot post from publish because it looks like crap and doesn't really make an interesting point. We need to brainstorm that carousel. (12 Nov)",
      "Let's run this one as well and play on the hilarity of this topic. I think we have the opportunity to add a couple of relatable memes here, which I can go and find and put in the inspiration folder. But it needs to be slightly educational as to why this is being done, and we should have more businesses listed as doing this. That real? (3 Nov)"
     ],
