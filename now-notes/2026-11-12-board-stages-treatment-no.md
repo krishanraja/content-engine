@@ -1,0 +1,3 @@
+Status: Since 11 Nov the Publish Board view gives each series day `path.stages`, the steps from idea to publish (Ideas, Agreed, Flesh out, Script and record, After recording, Ready to post) with the day the record holds for each, and every treatment option carries "Not this" (kept in `meta.style.rejected.treatment`). They came in view contract 1.5.0; the view is at 1.9.0 and Control Centre's pin is 1.9.0. The working steps (`path.steps`, `path.current`) are unchanged.
+Next: Krish reads each day's stages, with their days, on the piece card in Control Centre's Content tab, which draws them from `path.stages`.
+North Star check (2026-11-12): holds.
