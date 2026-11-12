@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://content.krishraja.com/api/board/view.schema.json",
   "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
-  "x-contract-version": "1.7.0",
+  "x-contract-version": "1.8.0",
   "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
   "type": "object",
   "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources", "revision"],
@@ -34,7 +34,8 @@
     "north_star": {
       "type": ["object", "null"],
       "required": ["current", "target"],
-      "properties": { "current": { "type": "number" }, "target": { "type": "number" } }
+      "properties": { "current": { "type": "number", "description": "1.8.0: live, what went out in the last seven days, his It's live posts included." }, "target": { "type": "number" },
+        "measured": { "type": "number", "x-since": "1.8.0", "description": "The number NOW.md last measured." } }
     },
     "runs": { "type": "object" },
     "sources": { "type": "object" },
@@ -115,7 +116,7 @@
           "items": { "$ref": "#/$defs/option" }
         },
         "comments": { "type": "array", "description": "His comments whose anchor names the day, newest first (1.2.0).", "items": { "$ref": "#/$defs/comment" } },
-        "posted": { "type": "array", "description": "What Growth has posted on the day, its ticks (1.2.0).", "items": { "$ref": "#/$defs/posted" } },
+        "posted": { "type": "array", "description": "What Growth has posted on the day, its ticks (1.2.0), and the posts he marked live (1.8.0, by: you).", "items": { "$ref": "#/$defs/posted" } },
         "yes": {
           "type": ["object", "null"],
           "description": "His yes for the day (one yes anywhere, _yes.ts), or null (1.2.0).",
@@ -133,6 +134,12 @@
           "x-since": "1.7.0",
           "description": "Every post folder of the day in Drive's makeyourmindup > 3 Posts with everything made for it: the engine's cuts and thumbnails, Growth's carousels, memes, Notes, off-day posts and reskins, each with its Drive link, a carousel's slides in order and its older versions (_drivePosts.ts). Null when Drive could not be read (sources.drive false).",
           "items": { "$ref": "#/$defs/post" }
+        },
+        "manifest": {
+          "type": ["object", "null"],
+          "x-since": "1.8.0",
+          "description": "The day's piece's manifest (_manifest.ts; docs/GROWTH-HANDOFF.md, \"The piece manifest\"): its exact files in order, each with its Drive link, and the channels it has words for; his Approve for publish bound to its sha256 while it waits on him, and whether a press of his binds it now (approved) or bound another draft (changed: approve again). Null when the piece has no draft manifest.",
+          "allOf": [{ "if": { "type": "object" }, "then": { "$ref": "#/$defs/manifest" } }]
         }
       }
     },
@@ -200,7 +207,18 @@
         },
         "id": { "type": "string", "description": "press: the document id; {t} is replaced by the press time." },
         "revision": { "type": "integer", "description": "press: the revision the save is made on (409 when it changed)." },
-        "op": { "type": "string", "enum": ["material"], "description": "press: or the board route it posts to (POST /api/board/<Monday>/<op>)." },
+        "op": { "type": "string", "enum": ["material", "live"], "x-open": true, "description": "press: or the board route it posts to (POST /api/board/<Monday>/<op>). live (1.8.0): a post he marked live, It's live, with its link and channels." },
+        "week": { "type": "string", "x-since": "1.8.0", "description": "press: the week it saves into, when it is not the week the view shows (an idea for later, GET /api/board/later)." },
+        "choose": {
+          "type": "object",
+          "x-since": "1.8.0",
+          "required": ["path", "ask", "multi", "required", "options"],
+          "properties": {
+            "path": { "type": "string" }, "ask": { "type": "string" }, "multi": { "type": "boolean" }, "required": { "type": "boolean" }, "from_link": { "type": "boolean" },
+            "options": { "type": "array", "items": { "type": "object", "required": ["value", "label"], "properties": { "value": { "type": "string" }, "label": { "type": "string" }, "hosts": { "type": "array", "items": { "type": "string" } } } } }
+          },
+          "description": "press: a choice he makes before the press, written at path as the values he chose (a list when multi); from_link: the option whose hosts his link names is chosen for him first."
+        },
         "body": { "type": "object", "description": "press: the document as the old board saved it; a value exactly \"{id}\" is the id." },
         "words": {
           "type": "object",
@@ -550,7 +568,8 @@
     "posted": {
       "type": "object",
       "required": ["step", "label", "at"],
-      "properties": { "step": { "type": "string" }, "label": { "type": "string" }, "at": { "type": ["string", "null"] }, "href": { "type": "string" } }
+      "properties": { "step": { "type": "string" }, "label": { "type": "string" }, "at": { "type": ["string", "null"] }, "href": { "type": "string" },
+        "by": { "type": "string", "enum": ["growth", "you"], "x-open": true, "x-since": "1.8.0", "description": "Who recorded it: growth (its tick) or you (It's live)." } }
     },
     "driveLink": {
       "type": "object",
@@ -589,6 +608,35 @@
         "folder": { "type": "string", "description": "The post's sub-folder it is in (\"4 Social\", \"3 Video\"), or \"\" for the post's own folder." },
         "slides": { "type": "array", "description": "A carousel: every slide in order, each the newest version of that slide.", "items": { "$ref": "#/$defs/assetFile" } },
         "versions": { "type": "array", "description": "The older versions, newest first.", "items": { "$ref": "#/$defs/assetFile" } }
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "x-since": "1.8.0",
+      "required": ["sha256", "qa", "assets", "channels", "state", "approved_at", "press", "why"],
+      "properties": {
+        "sha256": { "$ref": "#/$defs/sha", "description": "The draft's sha256: what his Approve for publish binds, and what piece_manifest.py seal checks." },
+        "qa": { "type": "string", "description": "passed, held or failed: Growth holds every post until it has passed." },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "drive_id", "sha256", "order", "url"],
+            "properties": {
+              "name": { "type": "string" }, "drive_id": { "type": "string" }, "sha256": { "$ref": "#/$defs/sha" }, "order": { "type": "number" },
+              "url": { "type": "string", "pattern": "^https://drive\\.google\\.com/file/d/[A-Za-z0-9_-]{10,100}/view$" }
+            }
+          }
+        },
+        "channels": { "type": "array", "items": { "type": "string" } },
+        "state": { "type": "string", "enum": ["waiting", "approved", "changed"], "x-open": true },
+        "approved_at": { "type": ["string", "null"] },
+        "press": {
+          "type": ["object", "null"],
+          "description": "His Approve for publish: PUT picks/<day>-publish with { kind: approve_publish, day, piece_id, approved: true, manifest_sha256 } and the time at `at`; the route refuses a hash that is not the draft as it stands (409 manifest_changed). Null once his press binds this draft.",
+          "allOf": [{ "if": { "type": "object" }, "then": { "$ref": "#/$defs/action" } }]
+        },
+        "why": { "type": ["string", "null"], "description": "Why it waits, in his words: the files changed after his press, or QA has not passed." }
       }
     },
     "post": {

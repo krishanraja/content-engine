@@ -215,6 +215,25 @@ export function yesBody(id: string, body: Record<string, unknown>): boolean {
     && typeof body.said_at === 'string' && Number.isFinite(Date.parse(body.said_at))
     && oneLine(body.said_where, 300) && typeof body.session_ref === 'string' && /^https:\/\/[^\s]{1,290}$/.test(body.session_ref)
 }
+// "It's live" (Krish, 2026-11-12: "How do I indicate that Tuesday the 10th was posted correctly?"): picks/live-<day>,
+// the posts he marked live on that day, each with its link and the channels it went out on, appended only by the board's
+// own live route (_itsLive.ts recordLive); a plain write of the document is refused (live_is_its_own_press).
+export const LIVE_ID = /^live-(mon|tue|wed|thu|fri|sat|sun)$/
+const LIVE_CHANNEL = /^[a-z][a-z-]{0,30}$/
+export function liveBody(id: string, body: Record<string, unknown>): boolean {
+  const m = LIVE_ID.exec(id)
+  if (!m || body.kind !== 'live' || body.day !== m[1] || 'send' in body || !Array.isArray(body.posts)) return false
+  if (body.posts.length < 1 || body.posts.length > 40) return false
+  return body.posts.every(p => object(p) && Object.keys(p).every(k => ['channels', 'url', 'at', 'by', 'piece_id', 'option', 'title', 'note'].includes(k))
+    && Array.isArray(p.channels) && p.channels.length >= 1 && p.channels.length <= 12 && new Set(p.channels).size === p.channels.length
+    && p.channels.every(c => typeof c === 'string' && LIVE_CHANNEL.test(c))
+    && typeof p.url === 'string' && p.url.length <= 2048 && /^https:\/\/[^\s]+$/.test(p.url)
+    && typeof p.at === 'string' && Number.isFinite(Date.parse(p.at)) && p.by === 'Krish'
+    && (('piece_id' in p) !== ('option' in p))
+    && (!('piece_id' in p) || typeof p.piece_id === 'string' && UUID.test(p.piece_id))
+    && (!('option' in p) || typeof p.option === 'string' && OFFDAY_ID.test(p.option) && p.option.startsWith(`off-${m[1]}-`))
+    && (!('title' in p) || oneLine(p.title, 300)) && (!('note' in p) || typeof p.note === 'string' && p.note.length <= 2000))
+}
 export const SCRIPT_CUTS = ['long', 'short', 'feature'] as const
 export const TITLE_SURFACES = ['long_title', 'short_title', 'long_thumbnail', 'short_thumbnail'] as const
 const oneLine = (v: unknown, max: number) => typeof v === 'string' && v.trim().length > 0 && v.length <= max && !/[\x00-\x1f\x7f]/.test(v)
@@ -264,6 +283,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'edits') return text('text') && day(body.day) && text('item', 100) && id === `${body.day}-${body.item}`
   // His pick for a day, with his optional saved note; or one of his decisions on a day's tab (decisionBody).
   if (collection === 'picks' && (YES_ID.test(id) || body.kind === 'yes')) return yesBody(id, body)
+  if (collection === 'picks' && (LIVE_ID.test(id) || body.kind === 'live')) return liveBody(id, body)
   if (collection === 'picks' && FEEL_ID.test(id)) return feelBody(id, body)
   if (collection === 'picks' && (id === MIX_ID || body.kind === 'mix')) return id === MIX_ID && mixBody(body)
   if (collection === 'picks' && (CREATIVE_ID.test(id) || body.kind === 'sign_creative')) return creativeBody(id, body)

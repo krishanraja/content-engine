@@ -240,6 +240,78 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
 - **1.7.0 (12 Nov 2026)** added `drive` and `drive_why` to each item of a day's `media`, `posts` to each day, `post` to
   each off-day option and `drive` to `sources` ("Every asset, with its Drive link", below). Ruling (Krish, 2026-11-12):
   every cut on the board carries its Google Drive link; nothing on the board is ever cut off.
+- **1.8.0 (12 Nov 2026)** added `manifest` to each day: the day's piece's draft manifest with his Approve for publish
+  bound to its sha256 ("Approve for publish, bound to the manifest", below).
+
+- **1.8.0 (12 Nov 2026)** added It's live and the ideas for later: the press kind `op: live` (a post he marked live),
+  `choose` on a press (a choice he makes before it, the channels here) and `week` (the board a press saves into, when it
+  is not the week shown), `by` on each `posted` item, and `measured` beside the live `north_star.current` ("It's live",
+  and "Ideas for later", below).
+
+## It's live: marking a post live (contract 1.8.0)
+
+Krish, 2026-11-12: "How do I indicate that Tuesday the 10th was posted correctly?" One press, **It's live**, on every
+piece on the publish board, series days and off days alike: open the day on the live board; once the day is due and only
+Growth has it, the press under the card is It's live (before that it waits under More presses, and a piece still being
+made on a day to come has none). He pastes the post's link, the board ticks the channel the link belongs to, and he ticks
+any other channel it went out on.
+
+- **The record** is his, append only: `picks/live-<day>` (`_itsLive.ts`, `recordLive`, `POST /api/board/<Monday>/live`),
+  one post per press `{ channels, url, at, by: 'Krish', piece_id | option, title?, note? }`. Only his login writes it
+  (`live_is_his`); a plain write of the document is refused (`live_is_its_own_press`), so a post is never changed or
+  taken away; a repeat of the same link writes nothing. The subject is the day's piece his approval holds there, or an
+  off-day option his Approve stands on (`not_approved_by_krish` otherwise).
+- **On a piece** it copies each new channel onto the piece's making record (`meta.making.channels`, actor Krish), the link
+  on the channel it belongs to (`channelOfUrl`); a channel Growth already recorded keeps Growth's entry. So the publish
+  step moves, Control Centre's done-check sweep closes what waited on it (`piece_step`, `week_published`), and the
+  publish watcher matches a Substack link on the record by address.
+- **The day** moves to Live and Done: an off day once any approved option, or its piece, is marked live (or Growth's tick
+  is on the piece); a series day once he marks its essay live on Substack (the watcher's match follows). The day's line
+  says where and when ("Live on Instagram, LinkedIn. You marked it live, Tue 10 Nov, 12:30"), and `posted` lists each
+  channel with `by: you` beside Growth's ticks (`by: growth`, with their links: where Growth recorded a post, no press is
+  needed). Another approved option on a day that is out keeps its own It's live, never leading, and an off-day option
+  approved for a series day has its own, with the off-day channels.
+- **The count**: the view's `north_star.current` is live (`publishedNow`): the pieces of the publication's series with
+  `published_at` in the last seven days (the North Star reader's own rule) plus each post he marked live in that window
+  that the rule cannot see yet (an off-day post, or a piece the watcher has not matched), each subject once.
+  `north_star.measured` is the number NOW.md last recorded. The measured North Star line counts pieces only, so an
+  off-day carousel he marks live raises the board's count at once and the measured line only if its source line widens.
+- **Growth's learning**: `GET /api/board/<Monday>/pieces` carries `live`, every post he marked live with its day, its piece
+  or option, its channels, its link and when, so Growth learns from posts Buffer never saw.
+
+Held by `tests/control-plane/board-its-live.test.ts`.
+
+## Ideas for later (GET /api/board/later)
+
+Krish, 2026-11-12: "Does my 'Ideas for Later' tab contain everything I've not approved but not rejected in all the
+previous ideas boards?" It did not: Control Centre's Queue ("Ideas for later") showed only the ideas the older boards'
+"Queue it for later" mark put in `content_ideas.queued_at`. `GET /api/board/later` (`_later.ts`, his login or the
+operator's key, read-only) reads every option on every ideas board from the engine's records and keeps each one he
+neither approved nor rejected:
+
+- **The boards**: every week's `ideas.json` (the week's branch first) and Growth's `offdays-growth.json`, from the week of
+  19 October.
+- **His answers**: his presses in `board_documents` (picks and queue), the verdicts imported from the first boards
+  (`engine_operator`, before 26 October), `idea_outcomes` (append only), the cues the idea queue filed from his words
+  (`feedback_cues`, his and by rule, never a model's guess), and each idea's own row: on a day or published means
+  approved; `queued_at` means filed. An option with no record id is linked to the piece the old queue made of it by
+  `meta.queue.from_week` and `from_pick`, never by its words. The latest answer across every board an idea was on is the
+  one that counts; an Approve that still stands, anywhere, takes it off the list.
+- **The groups**, newest board first: Filed for later; Saved as trends; To improve (an off-day option's Improve or Reject
+  on its direction counts as his answer on it); Answered on an older board (a verdict from before the five outcomes,
+  Curious, Cute, Story or Angle, kept in his words and never read as one of the five); Never answered. What he has not
+  answered on a board whose week has not begun waits on the Sunday slate (`counts.on_slate`), not here.
+- **The presses**: each item carries the five presses of the ideas gate, each with the `week` it saves into: File for
+  later, Reject, Save as a trend and Improve on the board it was last on; Approve for the next free date of its own
+  weekday within four weeks (`picks/<day>`, or `queue/off-<day>-<id>` bound to the words it showed). An idea with no
+  record, a Sunday option or a week's good news has no Approve, and says why (`held`). Only his Approve puts an idea on a
+  publish board, through the same routes and the same refusals.
+- **An off-day option approved onto another board** is drawn on its new day from the words his Approve bound
+  (`offdayList`), so the approval covers it and Growth's read hands it over.
+
+Measured on 12 November 2026 from the live records: 73 ideas on five boards; 20 approved, 13 rejected, 9 unanswered on
+next week's slate, and 31 for later: 9 filed, 7 trends, 4 to improve, 4 answered on the first board, 7 never answered.
+Held by `tests/control-plane/board-later.test.ts`.
 
 ## The style choices (contract 1.4.0)
 
@@ -318,6 +390,31 @@ link the assets in Google Drive as well as see them if I am to approve them".
   list (an asset, a slide or a version; 404 `drive_file_not_found` for any other, 503 `drive_unavailable` when Drive
   cannot be read), the same way as a cut: copied once, then a short signed link (302).
 - **Held by:** `tests/control-plane/board-drive.test.ts` and `tests/control-plane/board-view-contract.test.ts`.
+
+## Approve for publish, bound to the manifest (contract 1.8.0)
+
+Growth posts only what Krish approved (docs/GROWTH-HANDOFF.md, "The piece manifest"). A piece's draft manifest
+(`scripts/post-pack/piece_manifest.py draft`, sent with the post's pack to `3 Posts/<pack.folder>/0 Publish/
+manifest.draft.json`) lists its exact files in order, each with its Drive id and sha256, and each channel's words. The
+archive board's Approve for publish bound its sha256; the live board's view carries that press from 1.8.0
+(`apps/control-plane/api/board/_manifest.ts`).
+
+- **In the view:** each series day's `manifest` is `{ sha256, qa, assets: [{ name, drive_id, sha256, order, url }],
+  channels, state, approved_at, press, why }`, or null when the piece has no draft. The draft is the library's newest
+  ready copy, its bytes checked against the sha256 the library recorded. `state` is `waiting` (no press of his binds
+  it), `approved` (his `picks/<day>-publish`, his login only, approved and bound to exactly this sha256) or `changed`
+  (his press binds another draft: `why` says the files or words changed after he approved them, and the press reads
+  "Approve the new files for publish"). `press` is `{ kind: 'press', label, collection: 'picks', id: '<day>-publish',
+  revision, body: { kind: 'approve_publish', day, piece_id, approved: true, manifest_sha256 }, stamp: ['at'], done }`,
+  null once his press binds the draft; while it waits it also leads the day's `actions`. Control Centre shows every file
+  of the manifest, each seen and linked in Drive, beside the press.
+- **His press:** `PUT /api/board/<Monday>/picks/<day>-publish`. The route refuses a press whose `manifest_sha256` is not
+  the draft as it stands now (409 `manifest_changed`, a page left open while the draft changed) or names a piece with no
+  draft (409 `manifest_not_found`). A press with no `manifest_sha256` (an older piece) and a take-back are unchanged.
+- **The seal:** `piece_manifest.py seal --draft D --approval <his picks/<day>-publish document>` accepts the press as
+  the live board saves it and refuses it for any other draft ("bound to another manifest").
+- **Held by:** `tests/control-plane/board-manifest.test.ts` (the bind, the seal through piece_manifest.py itself, the
+  refusal on a changed hash) and `tests/control-plane/board-view-contract.test.ts`.
 
 ## His answer on each cut (contract 1.6.0)
 

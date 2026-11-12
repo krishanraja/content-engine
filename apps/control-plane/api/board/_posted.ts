@@ -15,7 +15,7 @@ import type { Making, MakingChannel, MakingChannelPost } from '../_making.js'
 // week, or nothing is written. Any day of the week has boxes: an off-day post is first-class (2026-10-30).
 //
 // GET /api/board/<Monday>/pieces, the same key, read-only: which piece sits on which day of the week and which boxes
-// it has, {days: [{day, date, piece_id, channels, slot?}]}. slot (New York HH:MM) is given for an off day only; on
+// it has, {days: [{day, date, piece_id, channels, slot?}]}, and (2026-11-12) `live`: every post he marked live. slot (New York HH:MM) is given for an off day only; on
 // Monday, Wednesday and Friday Growth uses the series slot it already holds (12:30). Growth's board_tick.py reads it,
 // so it keeps no map of its own.
 
@@ -215,8 +215,14 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
   }).sort((a, b) => String(a.id).localeCompare(String(b.id)))
   // His yes for each day, from wherever he gave it (_yes.ts, one yes anywhere): Growth schedules a day's go-lives on it.
   const said = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'picks')
-    .or('doc_id.like.yes-%,doc_id.like.%-publish')
+    .or('doc_id.like.yes-%,doc_id.like.%-publish,doc_id.like.live-%')
   if (said.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   const yes = yesByDay((said.data || []) as YesRow[])
-  return { status: 200, body: { days, mix, offdays, yes } }
+  // Every post he marked live on the board ("It's live", _itsLive.ts), for Growth's learning: a post he made by hand
+  // is one Buffer never saw. Each with its day, its piece or off-day option, its channels, its link and when.
+  const { liveByDay } = await import('./_itsLive.js')
+  const marked = liveByDay((said.data || []) as Array<{ doc_id: string; body: Body; updated_by: string }>)
+  const live = DAYS.flatMap(d => (marked[d] || []).map(p => ({ day: d, date: dayDate(week, d), piece_id: p.piece_id ?? null, option: p.option ?? null,
+    channels: p.channels, url: p.url, at: p.at, by: p.by })))
+  return { status: 200, body: { days, mix, offdays, yes, live } }
 }

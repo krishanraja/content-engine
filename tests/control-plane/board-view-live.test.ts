@@ -4,6 +4,7 @@ import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_
 import { fillPress, ideasRunOf, storiesFresh, type PressAction } from '../../apps/control-plane/api/board/_viewExtras'
 import { validBody } from '../../apps/control-plane/api/board/_contracts'
 import { offdaySides } from '../../apps/control-plane/api/board/_offdaySides'
+import { liveInput } from '../../apps/control-plane/api/board/_itsLive'
 
 // One live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive).
 // Everything the old board showed is in the view (contract 1.1.0), and every press the old board made is a press the
@@ -126,6 +127,8 @@ describe('one live board: the view carries everything the old board showed', () 
     for (const s of states) for (const a of presses(buildView(s))) {
       const { id, body } = fillPress(a, a.words ? 'His words.' : '', '2026-11-11T12:00:00Z')
       if (a.op === 'material') { expect(typeof body.piece_id).toBe('string'); expect(body.content).toBe('His words.'); continue }
+      // It's live (1.7.0): his link and the channels he chose, checked as the live route checks them.
+      if (a.op === 'live') { expect(liveInput({ ...body, url: 'https://www.instagram.com/p/abc/', channels: [a.choose!.options[0].value] }).input, a.label).toBeTruthy(); continue }
       expect(validBody(a.collection!, id, body), `${a.collection}/${id} ${a.label}`).toBe(true)
       n++
     }
@@ -140,7 +143,7 @@ describe('one live board: the view carries everything the old board showed', () 
       revision: 41,
     }))
     expect(day(v, 'fri').comments.map(c => c.anchor)).toEqual(['idea-fri-2'])
-    expect(day(v, 'mon').posted).toEqual([{ step: 'shorts', label: 'YouTube Shorts', at: '2026-11-09T17:30:24Z', href: 'https://www.youtube.com/shorts/x' }])
+    expect(day(v, 'mon').posted).toEqual([{ step: 'shorts', label: 'YouTube Shorts', at: '2026-11-09T17:30:24Z', href: 'https://www.youtube.com/shorts/x', by: 'growth' }])
     expect(day(v, 'wed').yes).toMatchObject({ approved: true, via: 'words' })
     expect(v.revision).toBe(41)
   })

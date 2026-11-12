@@ -2144,6 +2144,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function creativeBody(id: string, body: Record<string, unknown>): boolean`
 - `const YES_ID`
 - `function yesBody(id: string, body: Record<string, unknown>): boolean`
+- `const LIVE_ID`
+- `function liveBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
@@ -2253,6 +2255,44 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `function boardPolicy(storeUrl?: string)`
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
 
+### `apps/control-plane/api/board/_itsLive.ts`
+
+- `const LIVE_OP`
+- `const LIVE_ACTOR`
+- `const MAX_LIVE_POSTS`
+- `interface LivePost`
+- `interface LiveInput`
+- `function liveChannels(day: PostedDay, offday = !SERIES_DAYS.includes(day)): PostedChannel[]`
+- `function channelOfUrl(url: string): PostedChannel | null`
+- `function liveInput(body: unknown): { input?: LiveInput; problem?: string }`
+- `function liveByDay(picks: Array<{ doc_id: string; body: Body; updated_by: string }>): Partial<Record<PostedDay, LivePos…`
+- `function postsFor(posts: LivePost[] | undefined, subject: { piece_id?: string | null; option?: string | null }): LivePo…`
+- `function channelWords(posts: LivePost[]): string`
+- `function liveWhen(at: string): string`
+- `function liveLine(posts: LivePost[]): string`
+- `function todayNY(now: Date): string`
+- `function livePress(day: PostedDay, subject: { piece_id?: string | null; option?: string | null; title?: string | null }…`
+- `interface LiveResult`
+- `async function recordLive(db: SupabaseClient, week: string, raw: unknown, who: string, now: string): Promise<LiveResult>`
+- `const PUBLICATION_SERIES`
+- `async function publishedNow(db: SupabaseClient, now: Date): Promise<number | null>`
+
+### `apps/control-plane/api/board/_later.ts`
+
+- `const FIRST_IDEAS_WEEK`
+- `type LaterGroup = 'filed' | 'trend' | 'improved' | 'older' | 'never'`
+- `const LATER_GROUPS: ReadonlyArray<{ id: LaterGroup; label: string; line: string }>`
+- `interface Answer`
+- `interface LaterItem`
+- `interface LaterView`
+- `interface LaterInputs`
+- `function boardOptions(boards: LaterInputs['boards'], pieces: Body[] = []): Shown[]`
+- `function answersFor(s: Shown, i: LaterInputs): Answer[]`
+- `function buildLater(i: LaterInputs): LaterView`
+- `function freeDay(i: LaterInputs, day: string, kind: 'series' | 'offday', today: string): string | null`
+- `function laterPresses(i: LaterInputs, s: Shown, today: string): { actions: PressAction[]; held: string | null }`
+- `async function readLater(db: SupabaseClient, fetcher: Fetcher = fetch as unknown as Fetcher, now = new Date()): Promise…`
+
 ### `apps/control-plane/api/board/_live.ts`
 
 - `interface LiveStep`
@@ -2274,6 +2314,20 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `const LIVE_BOARD_URL`
 - `function liveBoardUrl(week?: string | null, day?: string | null): string`
 - `const ARCHIVE_LINE`
+
+### `apps/control-plane/api/board/_manifest.ts`
+
+- `interface ManifestAsset`
+- `interface Draft`
+- `interface ViewManifest`
+- `interface ManifestPress`
+- `const sha256 = (b: Uint8Array | string) =>`
+- `function draftPath(piece: Body): string | null`
+- `function parseDraft(bytes: Uint8Array, pieceId: string): Draft | null`
+- `async function readDrafts(db: SupabaseClient, pieces: Body[]): Promise<Map<string, Draft>>`
+- `function dayManifest(draft: Draft | undefined, picks: Array<{ doc_id: string; body: Body; updated_by: string; revision?…`
+- `class ManifestBindError`
+- `async function checkPublishBind(db: SupabaseClient, body: Body): Promise<void>`
 
 ### `apps/control-plane/api/board/_media.ts`
 
@@ -2478,12 +2532,13 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `function storiesFresh(week: string, o: Body): boolean`
 - `function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map()): …`
 - `function dayComments(rows: ExtrasInputs['comments'], day: string): ViewComment[]`
-- `function dayPosted(rows: ExtrasInputs['ticks'], day: string): ViewPosted[]`
+- `function dayPosted(rows: ExtrasInputs['ticks'], day: string, live: LivePost[] = []): ViewPosted[]`
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
 - `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[]`
 - `function warned(o: Body): string`
 - `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
 - `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
+- `function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day: string): Body[]`
 - `function offdayOptions(i: ExtrasInputs, day: string): ViewOption[]`
 - `function mixOf(stories: Body[]): string`
 - `function thoughtPress(day: string, step: string): PressAction`
@@ -4383,6 +4438,23 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/leaderboard/state.ts`
 
 - `function leaderboardState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/living_screen/index.tsx`
+
+- `function viewport(p:DeviceProps)`
+- `function safeBox(p:DeviceProps)`
+- `function cameraFor(p:DeviceProps)`
+- `function paint(g:CanvasRenderingContext2D,p:DeviceProps)`
+- `function Device(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/living_screen/schema.ts`
+
+- `const Params`
+
+### `apps/renderer/src/engine/devices/living_screen/state.ts`
+
+- `const rect = (index:number,count:number):[number,number,number,number] =>`
+- `function screenState(object:EngineObject,events:readonly EngineEvent[],frame:number)`
 
 ### `apps/renderer/src/engine/devices/logo_card/index.tsx`
 
