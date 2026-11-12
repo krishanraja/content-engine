@@ -187,8 +187,14 @@ Content-Type: application/json
   the piece's making record (`channels.<channel>`: `posted_at`, `url`, `buffer_post_id`).
 - Idempotent per post: the same `buffer_post_id` again answers `duplicate: true` and writes nothing new. An answer
   with `making_channel: null` means the box is ticked but the making record was not; send the same call again.
-- The key opens this route and two read-only ones only: `pieces`, above, and `build` (the week's published build
-  and its manifest). `ENGINE_OPERATOR_TOKEN` also works. It records what Growth posted; it posts nothing.
+- A post Growth has only scheduled is not ticked: it goes to `POST /api/board/<Monday>/offday-posts` as `{piece_id,
+  day, state: scheduled | cancelled, channel, due_at, buffer_post_id}` (contract 1.10.0, `docs/PUBLISH_BOARDS.md`,
+  "Where everything is"), kept on the day's box for its channel with `done` false, so the day says "Scheduled:
+  Substack Notes, from Fri 13 Nov, 12:40" in place of "Ready to post"; a box already out is never touched, and the
+  piece must be on that day. growth-makeyourmindup's `board posts` step sends both since its #79 (12 Nov).
+- The key opens this route, `offdays` and `offday-posts` (above), and two read-only ones: `pieces`, above, and `build`
+  (the week's published build and its manifest). `ENGINE_OPERATOR_TOKEN` also works. It records what Growth posted or
+  scheduled; it posts nothing.
 
 ## Improve each engine at its own job
 

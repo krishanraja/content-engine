@@ -296,12 +296,15 @@ Held by `tests/offday-one-post-db.mjs` (the migration on PGlite, in CI) and `tes
 ## Where everything is: one stage per item, and a missed day says so (contract 1.10.0)
 
 Every off-day option and every piece on a day carries exactly one `stage` (`_stage.ts`), from the records and never typed
-by hand: `idea` (on the ideas board, with his answer when he gave one), `approved`, `made` (Growth's record, its post
+by hand: `idea` (on the ideas board, with his answer when he gave one; with no outcome on record, its status in his words:
+rejected, filed, saved as a trend, improved or revised), `approved`, `made` (Growth's record, its post
 folder holding files, or its cuts), `scheduled` (Growth's record, with when), `live` (Growth's record, his It's live or
 the piece's own record, with each post's link) or `missed` (its day passed and it is not marked live). Back in his Ideas
 for Later is the sixth: such an item is not on a day, so `GET /api/board/later` draws it.
 
-A day before today that is not out is never "with Growth" or "ready": its `who` is `missed`, its line says "Missed: Tue
+A publishing day's approved option is the day's piece, so it carries the piece's one stage (Wed 11's approved option
+read "Missed" while the day was published on every channel, until 12 Nov). A day before today that is not out is never
+"with Growth" or "ready": its `who` is `missed`, its line says "Missed: Tue
 10 has passed and nothing on it is marked live. If it went out, press It's live with its link", It's live leads, and its
 line from before is kept in `detail` ("Before its day passed"). Carrying a missed item to today is today's To approve.
 
@@ -396,14 +399,16 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   each off-day option and `drive` to `sources` ("Every asset, with its Drive link", below). Ruling (Krish, 2026-11-12):
   every cut on the board carries its Google Drive link; nothing on the board is ever cut off.
 - **1.8.0 (12 Nov 2026)** added `manifest` to each day: the day's piece's draft manifest with his Approve for publish
-  bound to its sha256 ("Approve for publish, bound to the manifest", below).
-
-- **1.10.0 (12 Nov 2026)** added `stage` to every option and piece, `same_post` to an option, and `missed` to `who`
-  ("One post, one item" and "Where everything is", above).
-- **1.8.0 (12 Nov 2026)** added It's live and the ideas for later: the press kind `op: live` (a post he marked live),
+  bound to its sha256 ("Approve for publish, bound to the manifest", below). It's live and the ideas for later landed in
+  the same minor, from a pull request merged the same minute: the press kind `op: live` (a post he marked live),
   `choose` on a press (a choice he makes before it, the channels here) and `week` (the board a press saves into, when it
   is not the week shown), `by` on each `posted` item, and `measured` beside the live `north_star.current` ("It's live",
   and "Ideas for later", below).
+- **1.9.0 (12 Nov 2026)** added Move to…: `item` (its row in `offday_items`, the one place its day lives) and `move` on
+  each off-day option, `elsewhere` (a post Growth still has scheduled for a day the item left) and `posts` (Growth's own
+  record of the option's posts: made, scheduled, live) ("Moving an off-day item to any day", above).
+- **1.10.0 (12 Nov 2026)** added `stage` to every option and piece, `same_post` to an option, and `missed` to `who`
+  ("One post, one item" and "Where everything is", above).
 
 ## It's live: marking a post live (contract 1.8.0)
 
@@ -743,6 +748,12 @@ scripts/check-desk-devices.mjs VIEW.json` tests it on eight devices in both them
 
 ## The fixed layout: feed it, never shape it
 
+The layout of the archive's pages, built by `week_board.py`, which nothing builds or publishes since 11 November 2026
+(Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive). Two parts still
+hold for the live board: who may write a board on a schedule ("Who builds a board, and when", below), and the week's
+files the table below names (`ideas.json` with its `offdays`, `sources.json`), which the live view reads as they are.
+The rest is kept as the record of how the archive was made.
+
 Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it
 and not be permitted to change random parts of the UI and UX but feed it in the
 right way consistently. That applies to Claude and to Codex." From the week of
@@ -795,12 +806,13 @@ is about two weeks old by the Saturday it posts on (it is dated within the seven
 days up to the run); before Growth makes the Saturday post, the fact gate checks
 every story against its source again. `.github/workflows/saturday-goodnews.yml`
 stays, by hand only (the board's "Find the stories now" press, or Run workflow),
-to find them again for a week; it has no schedule. The Monday final board is built by code (`week_board.py`)
-from the overnight runner (Wave 2; until then the first session on Monday),
-never by Claude on a timer. Every
-other build is a session he started or a `make-piece.yml` run for a piece he
-signed. All of them write through the engine API (`ENGINE_OPERATOR_TOKEN`),
-by the same inputs below.
+to find them again for a week; it has no schedule. The Monday final board is
+no built page since 11 November: the live board reads the week's records, and
+the overnight runner reports each cut made or held on its piece (Wave 2; until
+then the first session on Monday), never Claude on a timer (`docs/CADENCE.md`).
+Every other write is a session he started or a `make-piece.yml` run for a piece
+he signed. All of them write through the engine API (`ENGINE_OPERATOR_TOKEN`)
+and the week's files the live view reads.
 
 A session feeds the slots and nothing else:
 

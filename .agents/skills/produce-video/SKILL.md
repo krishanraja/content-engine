@@ -577,7 +577,12 @@ base (Krish's house rules win). Say in the report which modules were used,
 and set this cut's pace (cuts a minute, median shot) beside the pace of the
 references they came from. Then ask Krish for his verdict on each one.
 
-**The opening: one per cut** (house rule `HOOK_IS_THE_INTRO`). Krish,
+**The opening: one per cut** (house rule `HOOK_IS_THE_INTRO`). **The intro
+sting is paused since 2026-11-12** (`config/intro-sting.json`, `paused`, in
+Krish's words: "Happy with your recommendations"): make.py, the day runner and
+ve open every cut, wide and tall, on its hook until the sting after the hook
+is built and he approves its proof render, and the report says why. What
+follows is how the sting stands when it returns. Krish,
 2026-11-05, of the intro sting: "I think it should go at the start of the
 longer wide videos 100%,". The 16:9 cut of a weekly series piece opens on
 its series' house sting (`config/intro-sting.json`), his face and the hook
