@@ -1,3 +1,0 @@
-Status: Krish chose option 1 (`auditrule`) of the Home Depot rethink in chat and asked for a catchier headline and a funny cover; on the week of 16 Nov ideas board it now reads "Your AI thinks it's the best. Guess who told it." with a cover of a robot pinning an I'M THE BEST sticker on its own chest while the office burns. No cover image is generated yet.
-Next: Krish settles which robot the cover uses (his felt house robot, per his 5 Nov ruling, or a person-like robot) and approves the image credits; then he presses Approve on auditrule on the ideas board.
-North Star check (2026-11-12): holds.
