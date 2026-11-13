@@ -36,7 +36,7 @@ class IngredientsTest(unittest.TestCase):
             ingredient_props({'style': {'transitions': {'kind': 'spin', 'reason': 'x'}}})
 
     def test_the_layout_modes_are_the_renderers(self):
-        self.assertEqual(LAYOUTS, ('house', 'fill', 'stack'))
+        self.assertEqual(LAYOUTS, ('house', 'fill', 'stack', 'band', 'stage', 'tray'))
 
 
 if __name__ == '__main__':

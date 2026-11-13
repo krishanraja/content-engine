@@ -18,6 +18,8 @@ import { focusRoom, placed } from './kit/focus'
 import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
 import { cameraAt, cameraStyle, flashAt, hitFrames } from './kit/ingredients'
+import { regionSlots } from './kit/layout'
+import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
 import { EngineAudio } from './audio'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
@@ -93,10 +95,17 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const profile = resolveMotion(props.motion)
   const ingredients = props.ingredients
   setMotionProfile(profile)
+  // A staging (kit/staging.ts) places his take and a graphics panel on every beat that shows him; a piece with a
+  // WINDOW beat keeps the window's own moves.
+  const staging = !hasWindow && isStaging(props.layout?.mode)
+    ? stagingGeometry(props.layout!.mode as 'band', props.aspect, props.captionPlacement, !!props.captionTheme) : undefined
+  const stagedNow = staging && activeBeat && staged(activeBeat) ? staging : undefined
+  const stagedTake = stagedNow ? { ...boxStyle(stagedNow.take), borderRadius: stagedNow.take.radius,
+    ...(stagedNow.take.border ? { border: `6px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `14px 14px 0 ${props.tokens.inkDeep}` } : {}) } : undefined
 
   const take = props.segments.map((segment, index) => (
         <Sequence key={`segment-${index}`} from={segment.fromFrame} durationInFrames={segment.durationFrames}>
-          <AbsoluteFill style={{ overflow: 'hidden', ...(faceState?.box ?? camera ?? {}), ...(faceState ? { borderRadius: 210 * faceState.windowed, border: `${6 * faceState.windowed}px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `${10 * faceState.windowed}px ${10 * faceState.windowed}px 0 ${props.tokens.inkDeep}`, transform: `scale(${faceState.scale})`, transformOrigin: 'center center' } : {}) }}>
+          <AbsoluteFill style={{ overflow: 'hidden', ...(faceState?.box ?? camera ?? stagedTake ?? {}), ...(faceState ? { borderRadius: 210 * faceState.windowed, border: `${6 * faceState.windowed}px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `${10 * faceState.windowed}px ${10 * faceState.windowed}px 0 ${props.tokens.inkDeep}`, transform: `scale(${faceState.scale})`, transformOrigin: 'center center' } : {}) }}>
             <OffthreadVideo
               src={segment.src}
               trimBefore={segment.trimBeforeFrames}
@@ -126,7 +135,9 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const now = outgoing ? beat.toFrame - 1 : frame
         // The layout ingredient (kit/layout.ts): a graphics-only beat's devices fill the region the captions leave.
         const graphicsOnly = beat.layout === 'STAGE' && beat.plate?.source === 'none'
-        const slots = (graphicsOnly ? layoutSlots(props.layout, props.aspect, props.captionPlacement, !!props.captionTheme, beat.uses.length) : undefined)
+        const stagedBeat = staging && staged(beat) ? staging : undefined
+        const slots = (stagedBeat ? regionSlots(stagedBeat.region, beat.uses.length) : undefined)
+          ?? (graphicsOnly ? layoutSlots(props.layout, props.aspect, props.captionPlacement, !!props.captionTheme, beat.uses.length) : undefined)
           ?? slotsFor(beat.layout, props.aspect, beat.uses.length)
         if (beat.layout === 'WINDOW' && slots.length)
           slots[0] = { left: 0, top: 0, width, height }
@@ -229,6 +240,17 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
             </AbsoluteFill>
           </AbsoluteFill>
         )
+        // tray: the graphics sit in a cream tray that rises from bottom left over his chest, with a hard ink drop.
+        if (stagedBeat?.rises) {
+          const rise = trayRise(frame, beat.fromFrame)
+          return <Fragment key={`devices-${beat.id}`}>
+            <div data-staging-tray style={{ ...boxStyle(stagedBeat.panel), borderRadius: stagedBeat.panel.radius, backgroundColor: props.tokens.cream,
+              boxShadow: `16px 16px 0 ${props.tokens.inkDeep}`, opacity: rise.opacity * fade,
+              transform: `translateY(${rise.ty}px) scale(${rise.scale})`, transformOrigin: 'bottom left' }} />
+            <AbsoluteFill style={{ opacity: rise.opacity, transform: `translateY(${rise.ty}px) scale(${rise.scale})`,
+              transformOrigin: `${stagedBeat.panel.left}px ${stagedBeat.panel.top + stagedBeat.panel.height}px` }}>{layer}</AbsoluteFill>
+          </Fragment>
+        }
         // paper-cutout: the stock is torn where it meets his take, under the captions and the mark tile.
         return torn && beat.layout === 'SPLIT' ? <Fragment key={`devices-${beat.id}`}>{layer}
           <AbsoluteFill style={fade < 1 ? { opacity: fade } : undefined}>
@@ -240,10 +262,17 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
           <BrandFrame props={props} beat={beat} frame={frame} />
         </AbsoluteFill>
       )))
+  // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.
+  const stagingGround = stagedNow && !stagedNow.rises ? (
+    <AbsoluteFill key="staging-ground" data-staging={props.layout!.mode} style={{ backgroundColor: stagedNow.under === 'cream' ? props.tokens.cream : props.tokens.ink }}>
+      <div style={{ ...boxStyle(stagedNow.panel), borderRadius: stagedNow.panel.radius, background: `radial-gradient(ellipse at 30% 30%, ${props.tokens.inkSoft} 0%, ${props.tokens.ink} 70%)` }} />
+      {stagedNow.hairline ? <div style={{ ...boxStyle(stagedNow.hairline), backgroundColor: props.tokens.channel }} /> : null}
+    </AbsoluteFill>) : undefined
+  const picture = stagingGround ? [stagingGround, ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)
   // With no ingredients the tree is exactly what it was before them (houseGolden.test.ts flattens it).
   if (!ingredients) return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
-      {!hasWindow && take}
+      {stagingGround ? picture : !hasWindow && take}
       {beatLayers}
       {brandLayers}
       <EngineAudio audio={props.audio} stem={stem} />
@@ -256,7 +285,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   return (
     <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
       <AbsoluteFill data-ingredient-camera style={cameraStyle(cameraAt(ingredients, props.beats, hits, frame, width), width, height)}>
-        {!hasWindow && take}
+        {stagingGround ? picture : !hasWindow && take}
         {beatLayers}
       </AbsoluteFill>
       {flash > 0 ? <AbsoluteFill data-flash style={{ backgroundColor: props.tokens.cream, opacity: flash }} /> : null}
