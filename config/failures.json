@@ -2480,6 +2480,42 @@
           "how": "the standard Growth makes every carousel to"
         }
       ]
+    },
+    {
+      "id": "ve-3d-styles-slow-static-captions",
+      "on": "2026-11-13",
+      "krish": "no, these are both terrible. the captions should be decoupled from the animation styles, these captions are boring and not active enough. The motion design is terrible, the use of the screen space is terrible, the motion is 10X too slow, not immersive and engaging at all.",
+      "what": "The Gate 2 test cuts of The Ladder (ladder_stage) and The Living Screen (living_screen), 54 s each on his house test take: one small 3D set held in a 590 px band above a plain three-word caption box, the bottom 40% of the 9:16 frame empty, about one device event per spoken beat (roughly every 5 s), a near-still camera.",
+      "symptom": "Both cuts read as slow, static and sparse; captions are passive boxes; the frame is mostly empty.",
+      "cause": "Captions were built into each style's cut instead of as an independent layer; motion was paced to the script's beats, not to a measured cut density; the set was fitted into a small safe box; both cuts were judged from stills and frame sheets, never at speed beside a professional reference.",
+      "status": "open",
+      "mode": "style-judged-from-stills-not-at-speed",
+      "guard_level": "prose",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "No measure of events per second, frame coverage or caption motion existed for a style test; the check was framing and truth only."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "Before sending, the cuts were reviewed as contact sheets every 2 s and single frames; nobody watched them at speed beside a reference."
+        },
+        {
+          "cause": "tool_limit",
+          "evidence": "Captions are one house box (kit/lock.ts) shared by every style; captions cannot be chosen or animated apart from the style."
+        }
+      ],
+      "related": [
+        "cut-called-done-unheard"
+      ],
+      "surface": "Both 3D styles stay work in progress (needs_device kept). The next attempt makes captions their own swappable layer, measures pace and frame coverage against a professional reference, and watches every test cut at speed beside it before Krish sees it.",
+      "guards": [
+        {
+          "file": "docs/ve/FAILURE_2026-11-13_3d-styles.md",
+          "contains": "## The bar for the next attempt",
+          "how": "the failure note and the bar the next session builds to"
+        }
+      ]
     }
   ]
 }
