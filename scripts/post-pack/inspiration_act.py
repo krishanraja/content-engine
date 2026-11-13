@@ -12,7 +12,10 @@ script is the deterministic half of that job; the session (plan-week, references
   python3 scripts/post-pack/inspiration_act.py place IDEA_FILE
       puts the idea the session wrote onto the week's ideas board through the normal idea path: appended to its day in
       docs/plans/<Monday>-week/ideas.json (after the day's other options, so the board's press ids for them never move),
-      marked from_inspiration. It never sets a day: only his Approve does (the ideas gate).
+      marked from_inspiration. It never sets a day: only his Approve does (the ideas gate). When the idea is on a
+      subject he refused before, it carries that refusal in refused_before (his words, the day), which the board and
+      To approve show beside it: Ruling (Krish, 2026-11-12): his own tick outranks an older refusal; the idea comes to
+      him with the refusal shown, and only his Approve places it.
   python3 scripts/post-pack/inspiration_act.py offer IDEA_FILE
       once the workflow has put that ideas.json on the week's branch: offers the idea for its series through POST
       /api/week/options, on top of the day's four, with inspiration_action and covers naming the card (an off day's
@@ -175,16 +178,71 @@ def insert_option(plan: dict, idea: dict, card: dict | None) -> dict:
     return option
 
 
-def week_options_body(idea: dict, series: dict, card: dict | None) -> dict:
+MONTH_SHORT = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
+PITCH_CAP = 700
+
+
+def note_words(note: dict, quote_cap: int = 300) -> str:
+    """One refusal an idea from his tick is on, as he reads it beside the idea (the board's view says the same,
+    apps/control-plane/api/board/_viewExtras.ts tickNote): the day and his words exactly, or the subject when his
+    press had no words. Empty when quote_cap is too small for his words whole: they are never cut."""
+    at = str(note.get('at') or '')[:10]
+    try:
+        day = dt.date.fromisoformat(at)
+        when = f'on {day.day} {MONTH_SHORT[day.month - 1]} '
+    except ValueError:
+        when = ''
+    said = ' '.join(str(note.get('said') or '').split())
+    if said:
+        stop = '' if said[-1] in '.!?' else '.'
+        return f'Turned down before: {when}you said "{said}"{stop}' if len(said) <= quote_cap else ''
+    return f'Turned down before: {when}you turned down {note.get("subject") or "this idea"}.'
+
+
+def tick_pitch(pitch: str, notes: list) -> str:
+    """The week option's pitch for an idea from his tick: the refusals it is on first, so To approve shows them before
+    he presses, then the pitch, within the 700 characters the week options take. His words are never cut: a refusal
+    whose words do not fit is named by its subject and day."""
+    pitch = pitch.strip()
+    if not notes:
+        return pitch
+    tail = ' It is here because you ticked this card, and your Approve decides.'
+    for cap in (300, 0):
+        head = ' '.join(note_words(n, cap) or note_words(dict(n, said=None)) for n in notes) + tail
+        if len(head) + 1 + len(pitch) <= PITCH_CAP:
+            return f'{head} {pitch}'
+    room = PITCH_CAP - len(head) - 1
+    return f'{head} {pitch[:max(0, room)].rsplit(" ", 1)[0]}'.strip() if room > 40 else head[:PITCH_CAP]
+
+
+def week_options_body(idea: dict, series: dict, card: dict | None, notes: list | None = None) -> dict:
     """The day's options as they stand, with the idea from his card on top of the four (POST /api/week/options
-    replaces the day's set, so every option already there is sent again unchanged)."""
+    replaces the day's set, so every option already there is sent again unchanged). An idea on a subject he refused
+    before says so first in its pitch (notes, the option's refused_before)."""
     kept = [o for o in series.get('options') or [] if str(o.get('id', '')).lower() != idea['piece_id'].lower()]
     options = [{k: o[k] for k in ('id', 'rank', 'pitch', 'why_now', 'recommended', 'covers', 'inspiration_action') if o.get(k) is not None}
                for o in kept]
     rank = min(9, max([int(o.get('rank') or 0) for o in kept] + [0]) + 1)
-    options.append({'id': idea['piece_id'], 'rank': rank, 'pitch': idea['pitch'].strip(), 'why_now': idea['why_now'].strip(),
+    options.append({'id': idea['piece_id'], 'rank': rank, 'pitch': tick_pitch(idea['pitch'], notes or []), 'why_now': idea['why_now'].strip(),
                     'recommended': False, 'inspiration_action': idea['action_id'], **({'covers': [card['id']]} if card else {})})
     return {'week_start': idea['week'], 'series': series['slug'], 'options': options}
+
+
+def refused_before(week: str, plan: dict, piece_id: str) -> list:
+    """The refusals the placed idea is on (board_feed.tick_notes over the week's sources.json), [] when it is on none."""
+    import board_feed  # the ideas board's checks; imported here so brief and report stay light
+    return board_feed.tick_notes(week, plan, piece_id)
+
+
+def placed_option(idea: dict) -> dict | None:
+    """The option this idea placed in the week's ideas.json, or None when it is not there."""
+    path = ROOT / 'docs' / 'plans' / f"{idea['week']}-week" / 'ideas.json'
+    if not path.is_file():
+        return None
+    plan = json.loads(path.read_text(encoding='utf-8'))
+    key = 'days' if idea['day'] in SERIES_DAYS else 'offdays'
+    return next((o for o in (plan.get(key) or {}).get(idea['day']) or [] if isinstance(o, dict)
+                 and str(o.get('id', '')).lower() == idea['piece_id'].lower()), None)
 
 
 def read_idea(name: str, path: str) -> tuple:
@@ -225,9 +283,22 @@ def cmd_place(args) -> int:
             print(f'place: refused: {why}')
             return 2
     plan = json.loads(path.read_text(encoding='utf-8'))
-    insert_option(plan, idea, tick.get('card'))
+    option = insert_option(plan, idea, tick.get('card'))
+    # His tick outranks an older refusal (Ruling, Krish, 2026-11-12): the idea is placed, carrying each refusal it is on.
+    try:
+        notes = refused_before(idea['week'], plan, idea['piece_id'])
+    except (OSError, ValueError) as error:
+        print(f'place: refused: the week\'s sources.json could not be read, so what he refused could not be checked ({error})')
+        return 2
+    if notes:
+        option['refused_before'] = notes
+    else:
+        option.pop('refused_before', None)
     path.write_text(json.dumps(plan, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
     print(f"place: {path.relative_to(ROOT)} carries the idea on {idea['day']}, after the day's other options, marked from his inspiration")
+    for n in notes:
+        print(f"place: it is on {n['subject']}, which he turned down on {n['at']} ({n['via']}, {n['ref']}); his tick is newer, "
+              'so it goes to him with that refusal shown beside it, and only his Approve places it')
     return 0
 
 
@@ -242,7 +313,8 @@ def cmd_offer(args) -> int:
     if why:
         print(f'offer: refused: {why}')
         return 2
-    written = ask('POST', '/api/week/options', week_options_body(idea, series, tick.get('card')))
+    notes = (placed_option(idea) or {}).get('refused_before') or []
+    written = ask('POST', '/api/week/options', week_options_body(idea, series, tick.get('card'), notes))
     print(f"offer: offered for {series['slug']} on {idea['week']} {idea['day']} ({len(written.get('written') or [])} options written)")
     return 0
 

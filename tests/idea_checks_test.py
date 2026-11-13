@@ -208,6 +208,136 @@ class GateTest(unittest.TestCase):
         self.assertEqual(board_feed.self_test(), [])
 
 
+TICK = '44444444-5555-4666-8777-888888888888'
+PIECE = '55555555-6666-4777-8888-999999999999'
+CARD = '66666666-7777-4888-8999-aaaaaaaaaaaa'
+
+
+def ticked(**kw):
+    """An option as inspiration_act.py place writes it from his ticked card."""
+    return main_option(id=PIECE, source_kind='his', covers=[CARD], from_inspiration={'action_id': TICK, 'card_id': CARD, 'card_name': 'a-reel.mp4'}, **kw)
+
+
+class TickTest(unittest.TestCase):
+    """Ruling (Krish, 2026-11-12): his own tick outranks an older refusal; the idea comes to him with the refusal shown, and
+    only his Approve places it. Ideas the engine proposes on its own keep the gate exactly as it is."""
+
+    def setUp(self):
+        self.src = sources(('rejected', outcome('rejected', 'Told you already. Acme is boring.', idea_text='Acme cut its forecast.')))
+
+    def week(self, tmp, ideas):
+        folder = Path(tmp) / '2026-11-23-week'
+        folder.mkdir(exist_ok=True)
+        (folder / 'sources.json').write_text(json.dumps(self.src))
+        (folder / 'ideas.json').write_text(json.dumps(ideas))
+        return folder
+
+    def test_an_idea_from_his_tick_on_a_refused_subject_is_noted_never_refused(self):
+        got = findings({'days': {'mon': [main_option(), ticked(so_what='Acme staff who ask questions keep their jobs.')]}}, self.src)
+        self.assertEqual([f['code'] for f in got], ['his_tick'])
+        self.assertEqual(got[0]['note'], {'subject': 'Acme', 'said': 'Acme is boring.', 'at': '2026-11-17',
+                                          'via': 'reject', 'ref': '2026-11-16/queue/fri-3'})
+        self.assertIn('the name "Acme" is in his refusing words and the option names "Acme"', got[0]['line'])
+        self.assertIn('only his Approve places it', got[0]['line'])
+        self.assertNotIn('his_tick', ic.GATE_CODES)
+
+    def test_an_engine_idea_on_the_same_subject_is_still_refused(self):
+        got = findings({'days': {'mon': [main_option(so_what='Acme staff who ask questions keep their jobs.')]}}, self.src)
+        self.assertEqual([f['code'] for f in got], ['refused'])
+        self.assertTrue(got[0]['line'].startswith('refused: mon-1 is on Acme, which he refused on 2026-11-17 (reject, 2026-11-16/queue/fri-3): '
+                                                  'the name "Acme" is in his refusing words'), got[0]['line'])
+        same = findings({'days': {'mon': [main_option(id=IDEA)]}}, sources(('rejected', outcome('rejected', 'No point.', idea_text='x'))))
+        self.assertIn('it is the same idea he refused', same[0]['line'])
+
+    def test_the_gate_passes_his_tick_and_prints_the_match_and_why(self):
+        ideas = {'week_start': '2026-11-23', 'days': {'mon': [ticked(so_what='Acme staff who ask questions keep their jobs.')]}}
+        with tempfile.TemporaryDirectory() as tmp:
+            self.week(tmp, ideas)
+            report = board_feed.gate_report('2026-11-23', plans=tmp)
+            self.assertEqual(report['problems'], [])
+            self.assertEqual(len(report['ticks']), 1)
+            self.assertTrue(report['ticks'][0].startswith('his tick: mon-1 is on Acme, which he refused on 2026-11-17 (reject, 2026-11-16/queue/fri-3)'))
+            self.assertIn('not yet in its refused_before', report['ticks'][0])
+            notes = board_feed.tick_notes('2026-11-23', ideas, PIECE, plans=tmp)
+            self.assertEqual([n['subject'] for n in notes], ['Acme'])
+            ideas['days']['mon'][0]['refused_before'] = notes
+            (Path(tmp) / '2026-11-23-week' / 'ideas.json').write_text(json.dumps(ideas))
+            self.assertIn('refusal shown beside it (refused_before)', board_feed.gate_report('2026-11-23', plans=tmp)['ticks'][0])
+            self.assertEqual(board_feed.tick_notes('2026-11-23', {'days': {'mon': [ticked(so_what='Who keeps the saving?')]}}, PIECE, plans=tmp), [])
+
+    def test_with_base_the_gate_answers_only_for_what_the_run_added(self):
+        before = {'week_start': '2026-11-23', 'days': {'mon': [main_option(so_what='Acme says buyers keep it.')]}}
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = self.week(tmp, before)
+            base = Path(tmp) / 'ideas-before.json'
+            base.write_text(json.dumps(before))
+            after = json.loads(json.dumps(before))
+            after['days']['mon'].append(ticked(so_what='Acme staff who ask questions keep their jobs.'))
+            (folder / 'ideas.json').write_text(json.dumps(after))
+            self.assertEqual(len(board_feed.gate_report('2026-11-23', plans=tmp)['problems']), 1, 'the Sunday gate still sees the week\'s own refusal')
+            report = board_feed.gate_report('2026-11-23', plans=tmp, base_path=base)
+            self.assertEqual(report['problems'], [])
+            self.assertTrue(report['before'][0].startswith('refused: mon-1 is on Acme'))
+            self.assertTrue(report['ticks'][0].startswith('his tick: mon-2 is on Acme'))
+            # An engine idea the run adds or changes is held as it always was.
+            after['days']['mon'].append(main_option(id=IDEA.replace('1', '7'), so_what='Acme again, from the engine.'))
+            (folder / 'ideas.json').write_text(json.dumps(after))
+            held = board_feed.gate_report('2026-11-23', plans=tmp, base_path=base)['problems']
+            self.assertEqual(len(held), 1)
+            self.assertTrue(held[0].startswith('refused: mon-3 is on Acme'))
+
+    def test_place_writes_the_refusal_onto_his_idea_and_offer_says_it_first(self):
+        import inspiration_act as act
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            plans = root / 'docs' / 'plans'
+            plans.mkdir(parents=True)
+            folder = plans / '2026-11-23-week'
+            folder.mkdir()
+            (folder / 'sources.json').write_text(json.dumps(self.src))
+            (folder / 'ideas.json').write_text(json.dumps({'week_start': '2026-11-23', 'days': {'mon': [main_option()]}}))
+            idea = {'action_id': TICK, 'week': '2026-11-23', 'day': 'mon', 'piece_id': PIECE, 'pitch': 'Acme staff who ask questions keep their jobs.',
+                    'why_now': 'A report, 20 Nov 2026.', 'option': {'so_what': 'Acme staff who ask questions keep their jobs.', 'story': 'Headline: x.',
+                                                                   'why_now': 'A report, 20 Nov 2026.', 'source': {'label': 'l', 'url': 'https://x.invalid'}}}
+            path = root / 'idea.json'
+            path.write_text(json.dumps(idea))
+            series = {'series': [{'slug': 'follow_the_money', 'cadence': 'Mondays', 'options': [], 'scheduled': []}]}
+            answers = {'/api/inspiration/actions': {'action': {'kind': 'make_piece'}, 'card': {'id': CARD, 'name': 'a-reel.mp4'}}, '/api/week/options': series}
+            sent = []
+
+            def ask(method, path_, body=None):
+                sent.append((method, path_, body))
+                return next(v for k, v in answers.items() if path_.startswith(k))
+            saved = (act.ROOT, act.ask, board_feed.ROOT)
+            act.ROOT, act.ask, board_feed.ROOT = root, ask, root
+            try:
+                self.assertEqual(act.cmd_place(type('A', (), {'idea_file': str(path)})), 0)
+                placed = json.loads((folder / 'ideas.json').read_text())['days']['mon'][1]
+                self.assertEqual(placed['id'], PIECE)
+                self.assertEqual(placed['refused_before'], [{'subject': 'Acme', 'said': 'Acme is boring.', 'at': '2026-11-17',
+                                                             'via': 'reject', 'ref': '2026-11-16/queue/fri-3'}])
+                self.assertEqual(board_feed.gate_report('2026-11-23', plans=str(plans))['ticks'][0].count('(refused_before)'), 1)
+                self.assertEqual(act.cmd_offer(type('A', (), {'idea_file': str(path)})), 0)
+            finally:
+                act.ROOT, act.ask, board_feed.ROOT = saved
+            body = next(b for m, p_, b in sent if m == 'POST')
+            pitch = body['options'][-1]['pitch']
+            self.assertTrue(pitch.startswith('Turned down before: on 17 Nov you said "Acme is boring." '
+                                             'It is here because you ticked this card, and your Approve decides. Acme staff'), pitch)
+            self.assertLessEqual(len(pitch), 700)
+            self.assertEqual(body['options'][-1]['inspiration_action'], TICK)
+            self.assertNotIn('decided', json.dumps(body))
+
+    def test_a_long_pitch_keeps_his_words_whole_or_names_the_subject(self):
+        import inspiration_act as act
+        note = {'subject': 'Acme', 'said': 'Acme is boring.', 'at': '2026-11-17', 'via': 'reject', 'ref': 'r'}
+        self.assertLessEqual(len(act.tick_pitch('word ' * 139, [note])), 700)
+        self.assertIn('you said "Acme is boring."', act.tick_pitch('word ' * 100, [note]))
+        long = dict(note, said='Acme ' * 80)
+        self.assertIn('you turned down Acme.', act.tick_pitch('Short pitch.', [long]))
+        self.assertEqual(act.tick_pitch(' Plain. ', []), 'Plain.')
+
+
 if __name__ == '__main__':
     unittest.main()
 
