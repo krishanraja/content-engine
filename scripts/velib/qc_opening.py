@@ -103,9 +103,13 @@ def opening(path: str, view: dict) -> dict:
     value['file_frames'] = total
     if sting:
         lead = int(sting.get('frames') or 0)
-        value.update(lead_frames=lead, series=sting.get('series'), clip_sha256=sting.get('sha256'))
+        # The sting plays after the hook (props.sting.atFrame, the hook's last frame + 1) on a cut made from 16 Nov; at
+        # the cut's frame 0 on one made before (the retired opening). Either way it is the clip frame for frame.
+        at = int(sting.get('atFrame') or 0)
+        value.update(opening='hook' if at else 'sting', lead_frames=0 if at else lead, sting_frames_in_file=lead,
+                     sting_at_frame=at, series=sting.get('series'), clip_sha256=sting.get('sha256'))
         if aspect != STING_ASPECT or not whole or series in ('', 'off.day') or sting.get('series') != channel:
-            problems.append(f'only the 16:9 whole cut of a weekly series piece opens on its own series\' sting; this is a {aspect} '
+            problems.append(f'only the 16:9 whole cut of a weekly series piece carries its own series\' sting; this is a {aspect} '
                             f'{"whole cut" if whole else "excerpt"} of {series or "no series"} with the {sting.get("series")} sting')
         problems += sting_problems(view)
         src = Path(str(sting.get('src') or ''))
@@ -118,24 +122,29 @@ def opening(path: str, view: dict) -> dict:
                             'not run on from the frame after the sting')
         if src.is_file() and lead > 0:
             clip = frames_rgb(str(src), 0, lead - 1, size)
-            head = frames_rgb(path, 0, lead, size)
+            head = frames_rgb(path, max(0, at - 1), at + lead, size)
+            before, head = (head[0], head[1:]) if at else (None, head)
             if len(clip) != lead:
                 problems.append(f'the sting clip holds {len(clip)} frames, and the props say {lead}')
             match = _starts_with(head[:lead], clip)
             value['sting_frames'] = match
             if not match['all_same'] or match['frames'] != lead:
-                at = match['first_different']
-                problems.append(f'the file\'s first {lead} frames are not the sting clip frame for frame'
-                                + (f' (frame {at} differs)' if at is not None else ''))
+                first = match['first_different']
+                problems.append(f'the file\'s frames {at} to {at + lead - 1} are not the sting clip frame for frame'
+                                + (f' (frame {at + first} differs)' if first is not None else ''))
+            if before is not None and len(clip) and likeness(before, clip[0])['same']:
+                problems.append(f'frame {at - 1}, the hook\'s last, is already the sting: the hook is cut short')
             if len(head) > lead and len(clip):
                 cut_in = likeness(head[lead], clip[-1])
                 value['first_cut_frame_vs_sting_last'] = cut_in
                 if cut_in['same']:
-                    problems.append(f'frame {lead} is still the sting\'s last frame: his face comes in on the very next frame '
-                                    'after the sting, with no held frame')
+                    problems.append(f'frame {at + lead} is still the sting\'s last frame: his face comes back on the very next '
+                                    'frame after the sting, with no held frame')
             else:
-                problems.append(f'the file has no frame {lead}, where his cut starts')
-        target = (f'the approved {sting.get("series")} sting on frames 0 to {lead - 1}, his cut from frame {lead}, and '
+                problems.append(f'the file has no frame {at + lead}, where his cut goes on')
+        target = (f'his hook on frames 0 to {at - 1}, the approved {sting.get("series")} sting on frames {at} to {at + lead - 1}, '
+                  f'his cut again from frame {at + lead}, and {lead} + {cut_frames} frames in all' if at else
+                  f'the approved {sting.get("series")} sting on frames 0 to {lead - 1}, his cut from frame {lead}, and '
                   f'{lead} + {cut_frames} frames in all')
     else:
         value['lead_frames'] = 0

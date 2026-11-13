@@ -1,5 +1,6 @@
 """QC module acceptance on lavfi media, with clean controls and report wiring."""
 import json
+import os
 import gzip
 import re
 import shutil
@@ -406,7 +407,8 @@ class QCContracts(unittest.TestCase):
                                         {'fromFrame': 116, 'toFrame': 176, 'trimBeforeFrames': 116}])
         # The sting to his face is not a take join; the join between takes is the sting's frames later.
         self.assertEqual(after['joins'], [(60 + 56) / 30])
-        self.assertEqual(after['plate_offset'], 900 - 56)
+        # The plate under each beat is read the beat's shift back: 56 frames for every beat behind a sting in front.
+        self.assertEqual((after['plate_offset'], [b['shift'] for b in after['beats']]), (900, [56, 56]))
         self.assertEqual(after['opening'], qc.opening_view(stinged))
         self.assertEqual(stinged['beats'][0]['fromFrame'], 0, 'the props are never changed')
         # ve qc --edl: the EDL's joins are on the cut's own clock, so they move by the sting too.
@@ -512,6 +514,34 @@ class OpeningRowTest(unittest.TestCase):
         # An off-day wide cut opens on its hook.
         self.assertTrue(self.row(str(self.wide_cut), self.view(sting=False, label='off.day'))['pass'])
 
+
+    def spliced(self, name, at=60):
+        """The cut's frames to `at`, the mind_the_gap sting, then the cut on from `at`: the sting after the hook."""
+        out = self.work / name
+        ffmpeg('-i', self.wide_cut, '-i', self.clip['16x9', 'mind_the_gap'], '-filter_complex',
+               f'[0:v]split[a][b];[a]trim=end_frame={at},setpts=PTS-STARTPTS[h];[b]trim=start_frame={at},setpts=PTS-STARTPTS[r];'
+               '[1:v]setpts=PTS-STARTPTS[s];[h][s][r]concat=n=3:v=1:a=0[v]', '-map', '[v]', '-c:v', 'libx264', '-preset',
+               'ultrafast', '-pix_fmt', 'yuv420p', out)
+        return str(out)
+
+    def test_the_hook_then_an_approved_sting_after_it_passes_frame_for_frame(self):
+        # The sting after the hook (a new design; config/intro-sting.json is retired, so only a stand-in approves one here).
+        stem = self.work / 'stem-after-hook.wav'
+        stem.with_suffix('.bed.json').write_text(json.dumps({'lead_frames': 56, 'sting_at_frame': 60}), encoding='utf-8')
+        view = self.view()
+        view['sting'] = dict(view['sting'], atFrame=60)
+        view['audio'] = {'stem': {'src': str(stem), 'trimBeforeFrames': 0}}
+        row = self.row(self.spliced('after-hook.mp4'), view)
+        self.assertTrue(row['pass'], row)
+        self.assertEqual((row['value']['opening'], row['value']['lead_frames'], row['value']['sting_at_frame'],
+                          row['value']['file_frames']), ('hook', 0, 60, 176))
+        # A sting where the props do not put it fails frame for frame.
+        self.assertIn('frame for frame', ' '.join(self.row(self.spliced('early.mp4', at=40), view)['problems']))
+        # The real config is retired: the same file fails until he approves a sting.
+        with patch.dict('os.environ', {}):
+            os.environ.pop(self.intro.CONFIG_ENV, None)
+            os.environ.pop(self.intro.CLIPS_ENV, None)
+            self.assertIn('status retired', ' '.join(qc_opening.opening(self.spliced('after-hook-real.mp4'), view)['problems']))
 
 @unittest.skipUnless(shutil.which('ffmpeg'), 'ffmpeg is not on PATH')
 class StingContinuityTest(unittest.TestCase):

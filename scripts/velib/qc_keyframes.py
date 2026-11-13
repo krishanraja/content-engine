@@ -9,7 +9,7 @@ from PIL import Image, ImageFilter, ImageChops
 
 from . import designlock
 from .common import ffmpeg
-from .qc import frame_span, lead_frames
+from .qc import frame_span, to_file
 
 
 def ssim(a, b) -> float:
@@ -79,15 +79,15 @@ def _applicability(lock, fmt):
     return None
 
 
-def _frame(video, beat, lead=0):
-    """The beat's key frame, read from the file at its frame on the file's clock: the props' frame plus the frames in
-    front of the cut (the intro sting's on a wide series cut, velib.qc.lead_frames). The frame it returns is the props'."""
+def _frame(video, beat, props=None):
+    """The beat's key frame, read from the file at its frame on the file's clock (velib.qc.to_file: the intro sting's
+    frames later when the beat plays after it). The frame it returns is the props'."""
     first, end = frame_span(beat)
     at = beat.get('keyFrame', first + int((end - first) * 0.8))
     if type(at) is not int or not first <= at < end:
         raise ValueError(f'keyFrame {at} must be an integer inside beat [{first}, {end})')
     result = subprocess.run([ffmpeg(), '-nostdin', '-v', 'error', '-i', str(video), '-an',
-                             '-vf', f'select=eq(n\\,{at + lead})', '-fps_mode', 'passthrough',
+                             '-vf', f'select=eq(n\\,{to_file(at, props)})', '-fps_mode', 'passthrough',
                              '-frames:v', '1', '-f', 'image2pipe', '-vcodec', 'png', '-'],
                             capture_output=True, check=True)
     with Image.open(io.BytesIO(result.stdout)) as image:
@@ -110,7 +110,6 @@ def keyframe_checks(video, props, lock, fmt) -> dict:
     if inactive:
         return inactive
     own, actual = lock['formats'][fmt]['beats'], props.get('beats', [])
-    lead = lead_frames(props)
     rows, findings = {}, []
     minimum = lock['thresholds']['keyframe_ssim_min']
     present = [beat.get('id') for beat in actual]
@@ -127,7 +126,7 @@ def keyframe_checks(video, props, lock, fmt) -> dict:
             continue
         row = {'ssim': None, 'min': minimum, 'pass': False, 'golden': owner}
         try:
-            image, at = _frame(video, beat, lead)
+            image, at = _frame(video, beat, props)
             row.update(compare(image, designlock.golden_path(lock, owner, name), lock), frame=at)
         except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
             row['reason'] = str(error)
@@ -151,7 +150,7 @@ def sheet(video, props, lock, fmt, out_path):
     width, height = lock['thresholds']['keyframe_compare_size']
     canvas = Image.new('RGB', (width * 3, height * len(beats)))
     for index, (name, owner, beat) in enumerate(beats):
-        image, _ = _frame(video, beat, lead_frames(props))
+        image, _ = _frame(video, beat, props)
         render, golden = _images(image, designlock.golden_path(lock, owner, name), lock)
         difference = ImageChops.difference(golden, render).point(lambda value: min(255, value * 4))
         for column, tile in enumerate((golden, render, difference)):

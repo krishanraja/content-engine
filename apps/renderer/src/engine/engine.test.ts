@@ -371,9 +371,10 @@ describe('motion styles in the composition', () => {
   })
 })
 
-describe('nothing goes before the hook on the wide long cut', () => {
-  // Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for good." From 5 Nov the
-  // 16:9 whole cut of a weekly series piece opened on its series' sting clip; now props that carry one never render.
+describe('nothing goes before the hook on the wide long cut; a sting only after it', () => {
+  // Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for good." A sting in front
+  // of any cut is refused. The sting after the hook (sting.atFrame) is a new design: built here, laid by compile only
+  // once he approves it (config/intro-sting.json is retired; none is).
   const STING = { src: 'makeyourmindup-sting-16x9-mind_the_gap.mp4', series: 'mind_the_gap' as const, frames: 56, sha256: 'a'.repeat(64) }
   const raw = () => ({ ...structuredClone(fixture), aspect: '16:9',
     segments: [{ src: 'take.mp4', trimBeforeFrames: 0, fromFrame: 0, durationFrames: 120 }],
@@ -383,9 +384,33 @@ describe('nothing goes before the hook on the wide long cut', () => {
     const result = EngineRenderPropsSchema.safeParse({ ...raw(), ...change })
     return result.success ? '' : result.error.issues.map((issue) => issue.message).join('; ')
   }
+  const wide = (sting: Record<string, unknown> | null) => EngineRenderPropsSchema.parse({ ...raw(), ...(sting ? { sting } : {}) })
+  /** What one render frame draws, read with Remotion's Sequence rule: a child mounts on [from, from + durationInFrames)
+   *  and counts its own frames from `from`. VeCut, FormatMaster and EngineAudio are called, FormatMaster with the clock
+   *  at its own frame (it reads it once); everything else is kept with its children. */
+  const CALLED = new Set<unknown>([VeCut, FormatMaster, EngineAudio])
+  function at(node: ReactNode, frame: number): ReactElement<Record<string, unknown>>[] {
+    if (Array.isArray(node)) return node.flatMap((child) => at(child, frame))
+    if (!isValidElement<Record<string, unknown>>(node)) return []
+    if (node.type === Sequence) {
+      const from = (node.props.from as number | undefined) ?? 0
+      const length = (node.props.durationInFrames as number | undefined) ?? Number.POSITIVE_INFINITY
+      return frame < from || frame >= from + length ? [] : [node, ...at(node.props.children as ReactNode, frame - from)]
+    }
+    if (CALLED.has(node.type)) {
+      if (node.type === FormatMaster) vi.mocked(useEngineFrame).mockReturnValueOnce(frame)
+      return [node, ...at((node.type as (props: unknown) => ReactNode)(node.props), frame)]
+    }
+    return [node, ...at(node.props.children as ReactNode, frame)]
+  }
+  const pictures = (nodes: ReactElement<Record<string, unknown>>[]) => nodes.filter((node) => node.type === OffthreadVideo)
+    .map((node) => [node.props.src, node.props.trimBefore ?? null, node.props.muted])
+  const brands = (nodes: ReactElement<Record<string, unknown>>[]) => nodes.filter((node) => node.type === BrandFrame)
+    .map((node) => [(node.props.beat as EngineBeat).id, node.props.frame])
 
   it('refuses a sting in front of any cut, even the series wide whole cut it used to open', () => {
     expect(refused({ sting: STING })).toContain('Nothing before the hook, ever.')
+    expect(refused({ sting: { ...STING, atFrame: 0 } })).toContain('Nothing before the hook, ever.')
     expect(refused({ sting: STING, aspect: '9:16' })).toContain('Nothing before the hook, ever.')
   })
 
@@ -394,8 +419,39 @@ describe('nothing goes before the hook on the wide long cut', () => {
       .toContain('an episode card in front of the cut')
   })
 
-  it('opens the wide cut on its hook: VeCut is the cut itself, frame 0 his take', () => {
-    const props = EngineRenderPropsSchema.parse(raw())
+  it('plays the sting straight after the hook: the hook first, then the sting, then the cut goes on (atFrame)', () => {
+    const props = wide({ ...STING, atFrame: 60 })
+    for (const [render, beat, frame] of [[0, 'hook', 0], [59, 'hook', 59]] as const) {
+      const nodes = at(createElement(VeCut, props), render)
+      expect(brands(nodes)).toEqual([[beat, frame]])
+      expect(pictures(nodes)).toEqual([['take.mp4', 0, true]])
+    }
+    for (const render of [60, 115]) {
+      const nodes = at(createElement(VeCut, props), render)
+      expect(pictures(nodes)).toEqual([[STING.src, null, true]])
+      expect(nodes.some((node) => node.type === FormatMaster || node.type === BrandFrame)).toBe(false)
+    }
+    for (const [render, beat, frame] of [[116, 'call', 60], [175, 'call', 119]] as const) {
+      expect(brands(at(createElement(VeCut, props), render))).toEqual([[beat, frame]])
+    }
+    expect(at(createElement(VeCut, props), 176).some((node) => node.type === FormatMaster)).toBe(false)
+    // One stem from frame 0; the hook's sfx in the hook only, never again after the sting.
+    for (const frame of [0, 60, 116, 175]) {
+      const stems = at(createElement(VeCut, props), frame).filter((node) => node.type === Audio && node.props.src === 'stem.wav')
+      expect(stems).toHaveLength(1)
+    }
+    const sfx = (frame: number) => at(createElement(VeCut, props), frame).some((node) => node.type === Audio && node.props.src === 'hit.wav')
+    expect([sfx(10), sfx(59), sfx(60), sfx(116), sfx(175)]).toEqual([true, true, false, false, false])
+  })
+
+  it('takes the sting only on a beat boundary inside the cut, before its close', () => {
+    expect(refused({ sting: { ...STING, atFrame: 60 } })).toBe('')
+    expect(refused({ sting: { ...STING, atFrame: 30 } })).toMatch(/beat boundary/)
+    expect(refused({ sting: { ...STING, atFrame: 95 } })).toMatch(/before its close/)
+  })
+
+  it('opens the wide cut on its hook: with no sting VeCut is the cut itself, frame 0 his take', () => {
+    const props = wide(null)
     const tree = VeCut(props)
     expect(tree.type).toBe(FormatMaster)
     expect(tree.props).toEqual(props)

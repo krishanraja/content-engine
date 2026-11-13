@@ -27,12 +27,16 @@ async function decodeAudio(src, trimSeconds = 0) {
   return samples
 }
 
-/** The render's own clock: the sting's frames (props.sting.frames, none without a sting), then the cut's
- *  durationFrames. Every frame in the props, and every --stills frame asked for, is on the cut's own clock, which
- *  starts `lead` frames into the render, so a beat's keyFrame names the same picture with or without a sting. */
+/** The render's own clock: the cut's durationFrames plus the sting's frames (props.sting.frames, none without a
+ *  sting), which play at the cut's frame `at` (props.sting.atFrame: straight after the hook; 0 is the retired sting in
+ *  front of the cut). Every frame in the props, and every --stills frame asked for, is on the cut's own clock: `toRender`
+ *  puts it on the render's, so a beat's keyFrame names the same picture with or without a sting. `lead` is the frames in
+ *  front of the cut's own frame 0 (the sting's only when it plays at 0). */
 export function renderClock(inputProps) {
-  const lead = inputProps.sting?.frames ?? 0
-  return { lead, frames: lead + inputProps.durationFrames }
+  const frames = inputProps.sting?.frames ?? 0
+  const at = inputProps.sting?.atFrame ?? 0
+  return { lead: at ? 0 : frames, at, frames: frames + inputProps.durationFrames,
+    toRender: (frame) => (frames && frame >= at ? frame + frames : frame) }
 }
 
 /** The lag between the encoded audio and the stem, measured from `leadSeconds` into both (the cut's first frame, so
@@ -89,12 +93,23 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
   inputProps.audio.stem.src = await stage(inputProps.audio.stem.src)
   for (const sfx of inputProps.audio.sfx) sfx.src = await stage(sfx.src)
   for (const segment of inputProps.segments) segment.src = await stage(segment.src)
-  if (inputProps.sting || inputProps.opening) {
+  if ((inputProps.sting && !inputProps.sting.atFrame) || inputProps.opening) {
     // Nothing goes before the hook on any cut, ever (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove
     // the sting exception for good."): props carrying a sting or an episode card in front are refused before anything
     // is staged or rendered.
     throw new Error('nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."): these props carry '
       + (inputProps.sting ? 'a sting' : 'an episode card') + ' in front of the cut; run ve compile again')
+  }
+  if (inputProps.sting) {
+    // A sting after the hook is the clip named byte for byte (config/intro-sting.json): bytes that are not the props'
+    // are refused before anything renders.
+    if (/^https?:\/\//.test(inputProps.sting.src)) throw new Error('the sting must be a local clip, so its sha256 can be checked')
+    const local = path.resolve(path.dirname(path.resolve(propsPath)), inputProps.sting.src)
+    const sha256 = createHash('sha256').update(await readFile(local)).digest('hex')
+    if (sha256 !== inputProps.sting.sha256) {
+      throw new Error(`the ${inputProps.sting.series} sting at ${local} is not the clip its props name (sha256 ${sha256}, not ${inputProps.sting.sha256})`)
+    }
+    inputProps.sting.src = await stage(inputProps.sting.src)
   }
   async function stageParams(value) {
     if (Array.isArray(value)) { for (const item of value) await stageParams(item); return }
@@ -162,7 +177,7 @@ async function main() {
   const [propsPath, output, ...flags] = process.argv.slice(2)
   // --stills <f1,f2,...>: write one PNG per frame into <out> (a directory) and no MP4,
   // so a design is judged in minutes before a full render (Gate 2 stills). The frames are on the cut's own clock
-  // (renderClock): behind a sting, still 0 is his first frame, not the sting's.
+  // (renderClock): a still after the sting is that frame of his cut, never the sting's.
   const stills = flags[0] === '--stills' && flags.length === 2
     ? flags[1].split(',').map(Number) : undefined
   if (!propsPath || !output || (flags.length && (flags.length !== 2 || !['--scale', '--stills'].includes(flags[0]))) ||
@@ -202,7 +217,7 @@ async function main() {
         if (frame >= inputProps.durationFrames) throw new Error(`still frame ${frame} is past the cut`)
         const file = path.resolve(output, `still-${String(frame).padStart(5, '0')}.png`)
         await renderStill({ serveUrl, composition: { ...composition, durationInFrames: clock.frames },
-          inputProps: transportProps, output: file, frame: clock.lead + frame, browserExecutable: browser, chromiumOptions: { gl: 'swangle' } })
+          inputProps: transportProps, output: file, frame: clock.toRender(frame), browserExecutable: browser, chromiumOptions: { gl: 'swangle' } })
         console.log(`ve still: ${file}`)
       }
       return

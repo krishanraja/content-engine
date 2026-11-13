@@ -82,6 +82,10 @@ export const EngineStingSchema = z.object({
   series: z.enum(['follow_the_money', 'mind_the_gap', 'under_the_hood']),
   frames: z.number().int().positive(),
   sha256: z.string().regex(/^[0-9a-f]{64}$/),
+  /** The cut's own frame the sting plays at: the hook's last frame + 1 (config/brand-palette.json long_cut sting
+   *  after_hook; SOCIAL-BEST-PRACTICES-2026 section 4.3, a brand sting follows the hook, never precedes it). Absent or 0
+   *  is the retired sting in front of the cut, kept so props made that way still render as they were. */
+  atFrame: z.number().int().nonnegative().optional(),
 }).strict()
 
 export const EngineRenderPropsSchema = z.object({
@@ -112,22 +116,31 @@ export const EngineRenderPropsSchema = z.object({
     days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional() }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
-  /** Retired (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."): from
-   *  5 Nov the house sting played in front of the 16:9 long cut of a series piece. Kept in the shape only so the
-   *  refusal below names it; props that carry one never render. */
+  /** The series sting, only straight after the hook (`atFrame`, the hook's last frame + 1): a new design that plays
+   *  nothing in front of the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception
+   *  for good."), and that compile lays only once he approves it (config/intro-sting.json is retired; none is). The
+   *  render draws the hook on frames [0, atFrame), the clip on the next `frames`, then the cut on from atFrame. A sting
+   *  with no atFrame, in front of the cut, is refused below. */
   sting: EngineStingSchema.optional(),
   /** Retired with it: the 9 Nov episode card in place of the sting. Refused below. */
   opening: z.object({ kind: z.literal('episode_card'), said: z.string().min(12), on: z.string().min(10) }).strict().optional(),
 }).strict().superRefine((props, context) => {
   // Nothing goes before the hook on any cut, ever (Ruling, Krish, 2026-11-12).
   const ruling = 'nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.")'
-  if (props.sting) context.addIssue({ code: 'custom', path: ['sting'], message: `a sting in front of the cut: ${ruling}` })
+  if (props.sting && !(props.sting.atFrame ?? 0)) context.addIssue({ code: 'custom', path: ['sting'], message: `a sting in front of the cut: ${ruling}` })
   if (props.opening) context.addIssue({ code: 'custom', path: ['opening'], message: `an episode card in front of the cut: ${ruling}` })
   if (!props.sting) return
   // Only the 16:9 long cut of a weekly series piece wears it: the 9:16 short opens straight on its hook
   // (HOOK_IS_THE_INTRO), a proof excerpt (no ending band) is never a whole cut, and an off day wears no sting.
   if (props.aspect !== '16:9') context.addIssue({ code: 'custom', path: ['sting'], message: 'the sting opens only the 16:9 long cut; the 9:16 short opens on its hook' })
   if (!props.ending) context.addIssue({ code: 'custom', path: ['sting'], message: 'the sting opens only a whole cut, never an excerpt' })
+  const at = props.sting.atFrame ?? 0
+  if (at >= props.durationFrames || (props.ending && at >= props.ending.fromFrame)) {
+    context.addIssue({ code: 'custom', path: ['sting', 'atFrame'], message: 'the sting follows the hook, inside the cut and before its close' })
+  }
+  if (at > 0 && !props.beats.some((beat) => beat.fromFrame === at)) {
+    context.addIssue({ code: 'custom', path: ['sting', 'atFrame'], message: 'the sting plays on a beat boundary: the frame after the hook\'s last' })
+  }
   if (props.sting.series !== props.series.label.replaceAll('.', '_')) {
     context.addIssue({ code: 'custom', path: ['sting', 'series'], message: `the ${props.sting.series} sting cannot open the ${props.series.label} cut` })
   }

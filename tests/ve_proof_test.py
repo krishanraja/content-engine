@@ -141,6 +141,20 @@ class HardestBeat(unittest.TestCase):
 
 
 class StructuralHash(unittest.TestCase):
+
+    def test_a_window_never_spans_the_sting_after_the_hook(self):
+        # config/brand-palette.json long_cut sting after_hook: the stem holds the sting's silence at the hook's end, so a
+        # window stays on its beat's side of it, and the stem is read at the window's frame in the file.
+        plain = dict(props_for(FIXTURE), aspect='16:9')
+        at = plain['beats'][1]['fromFrame']
+        props = dict(plain, sting={'src': 'sting.mp4', 'series': 'mind_the_gap', 'frames': 56, 'sha256': 'a' * 64, 'atFrame': at})
+        hook = proof.window(props, plain['beats'][0]['id'])
+        after = proof.window(props, plain['beats'][1]['id'])
+        self.assertLessEqual(hook[1], at)
+        self.assertGreaterEqual(after[0], at)
+        self.assertEqual(proof.window_props(props, *hook)['audio']['stem']['trimBeforeFrames'], hook[0])
+        self.assertEqual(proof.window_props(props, *after)['audio']['stem']['trimBeforeFrames'], after[0] + 56)
+
     def test_caption_and_reason_edits_keep_the_proof(self):
         spec = whole()
         before = proof.structural_hash(spec, CUT)

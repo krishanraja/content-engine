@@ -1,0 +1,4 @@
+Status: ve can play the series sting straight after the hook (compile.hook_end, VeCut, premix gap with the bed lifted, every check through velib.qc.to_file), proved on the ve fixture with a stand-in clip; nothing lays it, since config/intro-sting.json is retired (Ruling, Krish, 2026-11-12) and sting_props gives no cut a sting. A sting in front of the hook is refused everywhere; quick-edit lays none.
+Changed: two CI fixes found on the way, both red on main too: the audio test's music hole is cut in 5 ms frames (ffmpeg n8.1.2), and ve card refuses a missing design lock before resolving its worktree.
+Next: if Krish wants the sting after the hook, render one series long cut through ve on his own take with it and get his approval in his words before anything lays it.
+North Star check (2026-11-13): holds.
