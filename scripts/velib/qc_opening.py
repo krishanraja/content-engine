@@ -1,11 +1,12 @@
 """ve qc's opening row: what the finished file shows in front of his first frame, measured on its own bytes.
 
-Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,". The 16:9 whole cut of a weekly
-series piece opens on the house intro sting, the clip he saw for that series, with his face on the very next frame after
-the sting's last; the 9:16 cut and an off-day cut open straight on the hook (house rule HOOK_IS_THE_INTRO,
-config/intro-sting.json, scripts/quick-edit/intro.py).
+Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for good." Every cut, wide or
+tall, series or off day, opens straight on its hook (house rule HOOK_IS_THE_INTRO). The house sting that opened the
+16:9 whole cut of a weekly series piece from 5 Nov is retired (config/intro-sting.json, scripts/quick-edit/intro.py),
+so this row fails any cut whose props carry a sting or an episode card in front of the hook, and any file whose first
+frames are one of the sting clips this machine holds.
 
-On a cut whose props carry the sting (props.sting, which ve compile sets only from the approved clip):
+What it measured on a cut whose props carried the sting, kept so an old file can still be read (it fails either way):
   - the props allow it: a 16:9 whole cut (it has an ending) of the series the sting is for, never an off day;
   - it is the clip Krish approved, and his voice comes in after it (velib.compile.sting_problems), and the clip at
     sting.src has the props' sha256;
@@ -87,7 +88,7 @@ def _intro():
 
 def opening(path: str, view: dict) -> dict:
     """The opening row for the file at path, from the props' opening view (velib.qc.opening_view)."""
-    from .compile import STING_ASPECT, STING_SHAPE, sting_problems  # noqa: PLC0415
+    from .compile import STING_ASPECT, sting_problems  # noqa: PLC0415
     intro = _intro()
     aspect, fps = view.get('aspect'), int(view.get('fps') or 30)
     cut_frames = int(view.get('durationFrames') or 0)
@@ -150,10 +151,8 @@ def opening(path: str, view: dict) -> dict:
         if excepted:
             value['opening'] = 'episode_card'
             value['opening_said'] = (view.get('opening') or {}).get('said')
-        if cfg is not None and aspect == STING_ASPECT and whole_cut and series not in ('', 'off.day') and not excepted \
-                and cfg['status'] == 'approved' and STING_SHAPE in cfg['shapes'] and channel in cfg['series']:
-            problems.append(f'this 16:9 whole cut of a {series} piece opens on its hook, and the approved sting should open it: '
-                            'run ve compile and ve premix again')
+            problems += sting_problems(view)
+        value['whole_cut'] = whole_cut
         compared = []
         if cfg is not None and SHAPE.get(aspect):
             head = None

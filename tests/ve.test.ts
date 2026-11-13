@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { ProductionSpecV2Schema, VE_NO_STING } from '../packages/contracts/src/production-spec'
+import { ProductionSpecV2Schema, VE_NO_STING, VE_NO_STING_BEFORE } from '../packages/contracts/src/production-spec'
 
 // ve, the spec-driven video engine (docs/ve/ENGINE.md). Friday 23 Oct's failures are fixtures here:
 // a spec that carries one is refused, and media that shows one fails QC.
@@ -33,17 +33,21 @@ describe('ve', () => {
     expect(ProductionSpecV2Schema.safeParse(spec).success).toBe(false)
   })
 
-  it('a piece names only its own series sting, or the no-sting sentence (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,")', () => {
+  it('nothing goes before the hook: a spec names no sting and no episode card in its place (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.")', () => {
     const named = (value: unknown) => { const spec = fixture(); spec.brand.intro_sting = value; return ProductionSpecV2Schema.safeParse(spec) }
-    expect(named('mind_the_gap').success).toBe(true)
     expect(named(VE_NO_STING).success).toBe(true)
-    // Another series' sting, a free string or the retired sentence is refused.
-    const wrong = named('follow_the_money')
-    expect(wrong.success).toBe(false)
-    expect(JSON.stringify(wrong.error?.issues)).toContain("a piece wears its own series' sting: mind_the_gap")
-    for (const value of ['mind-the-gap-sting', 'none: the hook is the intro (under test, ruling 8)', '']) expect(named(value).success, value).toBe(false)
+    expect(named(VE_NO_STING_BEFORE).success).toBe(true)
+    for (const value of ['mind_the_gap', 'follow_the_money', 'mind-the-gap-sting', 'none: the hook is the intro (under test, ruling 8)', '']) {
+      const got = named(value)
+      expect(got.success, value).toBe(false)
+      expect(JSON.stringify(got.error?.issues)).toContain('Nothing before the hook, ever.')
+    }
     const unset = fixture(); delete unset.brand.intro_sting
     expect(ProductionSpecV2Schema.safeParse(unset).success).toBe(true)
+    const card = fixture(); card.brand.opening_exception = { opening: 'episode_card', said: 'I want the episode card to come in.', on: '2026-11-09' }
+    const refused = ProductionSpecV2Schema.safeParse(card)
+    expect(refused.success).toBe(false)
+    expect(JSON.stringify(refused.error?.issues)).toContain('remove brand.opening_exception')
   })
 
   it('a generated picture needs no on-screen ILLUSTRATION label (Krish, 28 Oct 2026: "Yes remove those.")', () => {

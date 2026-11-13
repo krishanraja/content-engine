@@ -14,8 +14,19 @@
     "tolerance_lu": 1,
     "max_true_peak_dbtp": -1.0,
     "approved_by": "Krish",
-    "approved_on": "2026-10-12",
-    "approval_words": "Feel free to tighten it if I stumbled. For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos."
+    "approved_on": "2026-11-12",
+    "approval_words": "Approve them as they are.",
+    "asked": "Approve the music levels as they are: about -16 LUFS over the intro, -31 under his voice, -18 over the end card, the whole mix at -14 LUFS integrated with true peak at most -1 dBTP?",
+    "said_where": "a working session with Claude, answering the question above (2026-11-12)",
+    "history": [
+      {
+        "on": "2026-10-12",
+        "by": "Krish",
+        "status": "approved",
+        "words": "Feel free to tighten it if I stumbled. For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos.",
+        "means": "Recorded as approval of the levels at the time, though his words were about the videos as a whole; house rule MUSIC_BED kept the levels proposed until he approved them by ear, and the two records disagreed until 2026-11-12."
+      }
+    ]
   },
   "tracks": [
     {

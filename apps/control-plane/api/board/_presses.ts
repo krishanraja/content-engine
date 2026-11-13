@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { DECISION_ID, GATE_KINDS, canonical, digest, type GateKind } from './_contracts.js'
+import { DECISION_ID, GATE_KINDS, WORDS_ID, canonical, digest, type GateKind } from './_contracts.js'
 import type { SendApprovedInput, SendResult } from '../_teleprompter.js'
 import type { Making, MakingGates } from '../_making.js'
 import { dispatchOffdayRevise, type ReviseDispatch } from './_offdayRevise.js'
@@ -115,7 +115,8 @@ export async function preparePress(collection: string, id: string, body: Body): 
   const scripts: Record<string, string> = {}
   for (const [cut, text] of Object.entries(body.texts)) scripts[cut] = scriptHash(String(text))
   if (isObj(body.scripts) && Object.entries(body.scripts).some(([cut, sha]) => scripts[cut] !== sha)) throw new PressError(400, 'approval_hash_mismatch')
-  if (!DECISION_ID.test(id)) throw new PressError(400, 'invalid_document_write')
+  // His press (DECISION_ID) or his typed approval carried from a session (WORDS_ID; Ruling, Krish, 2026-11-12).
+  if (!DECISION_ID.test(id) && !WORDS_ID.test(id)) throw new PressError(400, 'invalid_document_write')
   return { ...body, scripts }
 }
 

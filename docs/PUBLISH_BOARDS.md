@@ -130,6 +130,35 @@ What the database cannot tell: a writer holding the service key could still writ
 Nothing in a database tells a forged name from his press; the routes refuse every other writer, and the ledger names
 the revision every approval came from.
 
+## His typed approval: scripts and locks only (Ruling, Krish, 2026-11-12)
+
+Ruling (Krish, 2026-11-12): "Scripts and locks only. Typed approval counts for locking a story and approving a script;
+putting an idea on the publish board still needs your press, so that gate is unchanged." It narrows the earlier "one yes
+anywhere" (2026-11-02) for these two decisions and adds nothing else.
+
+- **What a session carries.** His exact typed words, verbatim, with when and where he typed them and the session's link,
+  as one board document per day: `picks/<day>-lock-words` (kind `sign_lock`, bound to the lock he approved by
+  `lock_path` and `lock_sha256`, `making.py lock_body_hash`) or `picks/<day>-scripts-words` (kind `approve_scripts`, the
+  exact words of each cut as the Approve scripts press carries them, with their Teleprompter titles and folder). Written
+  only with `python3 scripts/post-pack/board_session.py <uuid> approve lock|scripts ...` (the board session tools, on the
+  operator's key); `--sign` also writes his words as the lock's signature line when it has none, so `making.py`'s
+  narrative check and the board agree. `_contracts.ts` (`WORDS_ID`, `wordsBody`) holds the shape; a session's document
+  with `via: words` anywhere else is refused.
+- **What it does.** The board draws it as "Approved in your words: "...", Fri 13 Nov (where)" on the day's Narrative lock
+  or Scripts line, and the piece's path moves on as for his press. A lock's typed approval counts only while the lock on
+  the board is the text his words approved (its hash); a lock he signed in the file shows his signature words the same
+  way. Typed approval of scripts goes to his Teleprompter exactly as the Approve scripts press does (`afterPress`,
+  `sendApprovedScripts`, held until the scripts' check and two fresh readers have passed); the Teleprompter gate
+  (`_teleprompter.ts typedApproval`, `teleprompter_send.py typed_approval`) counts his press or this document, never
+  another session's.
+- **What it never does.** Put an idea on the publish board: his Approve on an idea (`picks/<day>`), his answers on the
+  ideas board (`queue`), and the database's gate (`idea_outcomes`, `content_ideas_board_gate`) are unchanged and stay his
+  presses alone (`hisOnlyRefusal`: `pick_is_his`, `press_is_his`). Nor any other decision (titles, publish, cuts, the
+  production gates), nor taking an approval back.
+
+Held by `tests/control-plane/board-typed-approval.test.ts` (the shape, who may write it, a typed approval that places
+nothing, the Teleprompter send, the board's words) and `tests/board_session_test.py`.
+
 ## His instruction: a ticked inspiration card (Ruling, Krish, 2026-11-12)
 
 Krish, 2026-11-12: "In my inspiration board can I have an option to tick a box that states that this isn't just random
