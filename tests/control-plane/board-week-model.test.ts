@@ -127,7 +127,7 @@ describe('the week model (contract 1.12.0)', () => {
   const v = buildView(thisWeek())
 
   it('keeps the contract and every rule of the view and the model', () => {
-    expect(v.contract_version).toBe('1.13.0')
+    expect(v.contract_version).toBe('1.14.0')
     expect(validate(SCHEMA, JSON.parse(JSON.stringify({ ok: true, ...v })), SCHEMA, '$', { open: true })).toEqual([])
     expect(viewProblems(v)).toEqual([])
     expect(modelProblems(v.model!, v.days)).toEqual([])
@@ -148,10 +148,11 @@ describe('the week model (contract 1.12.0)', () => {
         if (it.type === 'piece') expect(d.pieces.find(p => `piece:${p.id}` === it.key)?.approval).toBeTruthy()
         else expect(d.options.find(o => o.doc_id === it.key)).toMatchObject({ status: 'approved', outcome: { id: 'approved' } })
       }
-      // Every open, held or revised option on the day is on the ideas board instead, and never on the day.
+      // Every open, held or revised option on the day is never on the day: on the ideas board while its day is to come,
+      // and off it once its day has passed (nothing waits on him for a day that is gone).
       for (const o of d.options.filter(x => ['open', 'held', 'revised'].includes(x.status) && !x.outcome)) {
         expect(md.items.some(it => it.key === o.doc_id)).toBe(false)
-        expect(v.model!.ideas.some(i => i.doc_id === o.doc_id)).toBe(true)
+        expect(v.model!.ideas.some(i => i.doc_id === o.doc_id)).toBe(md.date >= '2026-11-13')
       }
     }
   })
@@ -165,13 +166,17 @@ describe('the week model (contract 1.12.0)', () => {
     expect(v.yours.every(y => y.actions.every(a => !(a.kind === 'press' && a.collection === 'queue')))).toBe(true)
   })
 
-  it('Thu 12: the explainer and the meme video he approved, and the idea he never answered off the day', () => {
+  it('Thu 12: the explainer and the meme video he approved, and the idea he never answered off the day and, its day gone, off the ideas board', () => {
     const thu = dayOf(v, 'thu')
     expect(thu.items.map(i => [i.key, i.kind_label])).toEqual([['off-thu-gitbroke', 'Explainer'], ['off-thu-agentnotsetup', 'Meme']])
     expect(thu.items.every(i => i.missed && i.path.map(s => s.key).join() === POST_PATH.map(s => s.key).join())).toBe(true)
     expect(thu.items[0].next).toMatchObject({ kind: 'press', op: 'live' })
-    expect(thu.ideas).toBe(1)
-    expect(v.model!.ideas.find(i => i.doc_id === 'off-thu-otherside')).toMatchObject({ why: 'open', kind: 'supporting', kind_label: "Carousel for Friday's piece" })
+    expect(thu.ideas).toBe(0)
+    expect(v.model!.ideas.find(i => i.doc_id === 'off-thu-otherside')).toBeUndefined()
+    // The day before, it waited on him on the ideas board, with its kind.
+    const wed = buildView({ ...thisWeek(), now: new Date('2026-11-11T15:00:00Z') })
+    expect(wed.model!.ideas.find(i => i.doc_id === 'off-thu-otherside')).toMatchObject({ why: 'open', kind: 'supporting', kind_label: "Carousel for Friday's piece" })
+    expect(dayOf(wed, 'thu').ideas).toBe(1)
   })
 
   it('Sat 14: one good-news post with its stories in full, saying plainly how many of five it holds; the held five-story idea stays an idea', () => {

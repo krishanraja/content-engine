@@ -295,6 +295,21 @@ function lockWords(text: string | null | undefined): string | null {
   const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean)
   return LOCK_SIGNED.exec(lines[lines.length - 1])?.[1] ?? null
 }
+/** The piece a lock names on its `piece_id:` line, or null when it names none. */
+export function lockPieceId(text: string | null | undefined): string | null {
+  const m = /^piece_id:\s*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\s*$/im.exec(String(text || ''))
+  return m ? m[1].toLowerCase() : null
+}
+/** A piece's narrative lock: the week's lock that names it, wherever it is filed, else the day's own lock when that names
+ *  no piece. A lock follows its piece, never its day: on 13 Nov Fri 20's piece was replaced and moved to Tue 17, and the
+ *  new Fri 20 piece read as Branded from the lock Krish signed for the piece that left (narrative-lock-fri.md names
+ *  b019dbf8). */
+export function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: string): { text: string; day: PostedDay } | null {
+  const id = pieceId.toLowerCase()
+  for (const [d, text] of Object.entries(locks) as Array<[PostedDay, string | null | undefined]>) if (text && lockPieceId(text) === id) return { text, day: d }
+  const own = locks[day]
+  return own && !lockPieceId(own) ? { text: own, day } : null
+}
 export type Typed = { words: string; said_where: string; said_at: string }
 /** His typed approval of this piece's lock or scripts, carried from a session (picks/<day>-<lock|scripts>-words; Ruling,
  *  Krish, 2026-11-12: "Scripts and locks only."), or null. A lock's counts only for the lock text on the board now (its
@@ -354,7 +369,8 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   const id = String(piece.id).toLowerCase()
   const title = String(piece.idea || piece.thesis || 'Untitled').slice(0, 140)
   const live = liveDay(piece, date)
-  const lock = i.locks[day]
+  const found = lockOf(i.locks, day, id)
+  const lock = found?.text ?? null
   // His typed approval counts for the lock and the scripts (Ruling, Krish, 2026-11-12: "Scripts and locks only."),
   // shown as "Approved in your words"; his Approve on the idea itself stays his press (the ideas gate).
   const typedLock = typedApproval(i.picks, day, 'lock', id, lock)
@@ -376,7 +392,7 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
     story: typeof ideaRow?.story === 'string' ? ideaRow.story : null,
     brief: typeof pick?.body.note === 'string' ? pick.body.note : null,
     materials: [...materials.map(m => m.title), ...(researchFile ? [`docs/plans/${week}-week/${day}-research.md`] : [])],
-    lock: lock ? { path: `docs/plans/${week}-week/narrative-lock-${day}.md`, signed } : null,
+    lock: lock ? { path: `docs/plans/${week}-week/narrative-lock-${found?.day ?? day}.md`, signed } : null,
     look: look ? { production: nameOf(i, String(look.production)), experiment: look.experiment ? nameOf(i, String(look.experiment)) : null, inspiration: Array.isArray(look.inspiration) ? look.inspiration.map(String) : [] } : null,
   }
   const style = isObj(ideaRow?.style) ? ideaRow!.style as Body : null
@@ -396,6 +412,10 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   }
   // A later step done means every step before it is done too: a piece recorded before the path existed is never sent back to Look.
   for (let k = PATH.length - 1; k > 0; k--) if (done[PATH[k].key]) done[PATH[k - 1].key] = true
+  // Scripts he agreed before the production pick never skip it: until a take is recorded, the look is his next step
+  // (Krish, 2026-11-13: "I've already agreed the scripts for Monday, Wednesday, and Friday and just need to pick and lock
+  // down the rest of the production before I get recording").
+  if (!look && !done.record && !done.cut) done.look = false
   const current = PATH.find(s => !done[s.key])?.key ?? null
   const path: DayPath = {
     steps: PATH.map(s => ({ ...s, state: done[s.key] ? 'done' : s.key === current ? 'current' : 'todo' })),
@@ -457,7 +477,7 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   }
   if (current === 'look') {
     return { ...v, stop: 2, who: 'you', runs_on: 'Your pick, here; a mock on your own footage if you want one',
-      next: `Pick the look: the recommended one, another, or fold in your inspiration${notFiled.includes('your approved scripts') ? '. No approved scripts are filed yet: if you approved them in a session, file them from that session' : ''}`,
+      next: `${scriptsApproved ? 'Scripts approved. ' : ''}Pick the look: the recommended one, another, or fold in your inspiration${notFiled.includes('your approved scripts') ? '. No approved scripts are filed yet: if you approved them in a session, file them from that session' : ''}`,
       actions: [{ kind: 'look', label: 'Pick the look', piece_id: id }, { kind: 'prompt', label: 'Copy mock prompt', prompt: path.prompts.mock }] }
   }
   if (current === 'board') {
@@ -793,7 +813,8 @@ export function buildView(i: ViewInputs): WeekView {
   // Every Claude and Growth prompt says how the session reports back to the board, with no key in it (_writeBack.ts).
   withWriteBack(i.week, days)
   // The week model (contract 1.12.0): the one thing the Publish Board draws, from the days built above.
-  const model = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces })
+  const signedLocks = Object.values(i.locks).filter(t => lockSigned(t)).map(t => lockPieceId(t)).filter((x): x is string => Boolean(x))
+  const model = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks })
   // What waits on his press: only his real decisions (Approve for publish on a made piece, an approved post's missing
   // choice), never an idea (Ruling, Krish, 2026-11-13).
   const yours: WeekView['yours'] = model.days.flatMap(md => md.items.filter(it => it.decision && it.next)
@@ -954,12 +975,14 @@ export async function readWeekIdeas(week: string, env: Record<string, string | u
   try { const v = text ? JSON.parse(text) : null; return isObj(v) ? v : null } catch { return null }
 }
 
-/** "Live on Instagram, TikTok. Growth posted it, Tue 10 Nov, 12:34", from Growth's own record of the posts. */
+/** "Live on Instagram, TikTok. Growth posted it, Tue 10 Nov, 12:34", from Growth's own record of the posts; "Buffer
+ *  shows it sent" when only the done-check sweep saw the send in Buffer (check buffer_sent). */
 export function growthLiveLine(posts: GrowthPost[]): string {
   const sorted = [...posts].sort((a, b) => a.at.localeCompare(b.at))
   const channels = [...new Set(sorted.map(p => channelWord(p.channel)))]
   const last = sorted[sorted.length - 1]
-  return `Live on ${channels.join(', ')}. Growth posted it${last?.at ? `, ${approvedWhen(last.at)}` : ''}`
+  const who = sorted.length && sorted.every(p => p.check === 'buffer_sent') ? 'Buffer shows it sent' : 'Growth posted it'
+  return `Live on ${channels.join(', ')}. ${who}${last?.at ? `, ${approvedWhen(last.at)}` : ''}`
 }
 
 /** What Growth posted on a day for its off-day items, from its own record: one line per channel, with the post's link. */
