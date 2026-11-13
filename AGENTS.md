@@ -185,7 +185,7 @@ North Star check (YYYY-MM-DD): holds.
 
 Only Krish changes the North Star. Task-specific restrictions override routine commit, board and closeout actions.
 
-<!-- krish-repo-admin:start brain=379ce05f4241 sha=33ec6eef2668 -->
+<!-- krish-repo-admin:start brain=aabfeac6c45f sha=33ec6eef2668 -->
 ## Administer this repository
 
 Use `docs/HARNESS_CONTEXT.md` for the owning workflow, source of truth and checks. Preserve the goal and accepted decisions when a revision changes one part; explain material trade-offs. Verify the downstream result. Record corrections and observed outcomes through the existing capture path. Experimental results retain their conditions; inferred requirements remain proposals.

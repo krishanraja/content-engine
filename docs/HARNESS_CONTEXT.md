@@ -1,4 +1,4 @@
-<!-- krish-repo-context:start brain=379ce05f4241 sha=2f592d85e02f -->
+<!-- krish-repo-context:start brain=aabfeac6c45f sha=b88d7e84da4b -->
 # content-engine: operating context
 
 Generated from the central ai-harness brain. This is a route inventory, not a certification of current architecture. Read the section for the work at hand; repository-owned sources establish current facts. The nightly publisher rechecks source paths and named commands. This file grants no product action or spending authority.
@@ -7,7 +7,7 @@ Generated from the central ai-harness brain. This is a route inventory, not a ce
 
 - Purpose and system boundaries (orientation): `README.md`.
 - Current repository state (state): `NOW.md`.
-- CAROUSEL ENGINE STATE (state): `docs/CAROUSEL_ENGINE_STATE.md`.
+- CAROUSEL STANDARD (orientation): `docs/CAROUSEL-STANDARD.md`.
 - WORKBENCH (state): `WORKBENCH.md`.
 - NORTH STAR (orientation): `docs/NORTH_STAR.md`.
 - 2026 10 14 handoff (orientation): `docs/plans/2026-10-14-handoff.md`.
