@@ -167,6 +167,10 @@
       "destination": "/api/board?op=later"
     },
     {
+      "source": "/api/board/sign-offs",
+      "destination": "/api/board?op=sign-offs"
+    },
+    {
       "source": "/api/board/:week/sources",
       "destination": "/api/board?week=:week&op=sources"
     },

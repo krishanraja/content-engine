@@ -86,6 +86,7 @@ describe('ve', () => {
     ['the listen pass: hesitations the transcript left out are cut, no join lands on sound, the reading that sounded right wins, his lexicon learns facts and never taste (Krish, 5 Nov)', 'tests/ve_listen_test.py'],
     ['the voice pass: sniffs turned down, never cut; the repair chain only with his words (Krish, 17 Oct)', 'tests/ve_voice_test.py'],
     ['one sound on the big moment: auditioned on his cut, approved only from his words, the kit from approved rows (ruling 11)', 'tests/ve_sfx_test.py'],
+    ['the three video sign-offs: samples on his board, and only his presses write the sound, golden-frame and Gate 2 configs (Ruling, Krish, 2026-11-12)', 'tests/ve_signoffs_test.py'],
     ['the Critic sees the cut in motion: strips per beat, per move and per cut, and QC numbers marked not heard (F16, F38)', 'tests/ve_critic_inputs_test.py'],
     ['each filed piece records what it used; the next one is told when it repeats them, never refused (F14)', 'tests/ve_history_test.py'],
     ['the lab: every look on one window of his pinned take, outside any piece; a lab pick is liked, never tested', 'tests/ve_lab_test.py'],
