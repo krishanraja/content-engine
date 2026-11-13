@@ -334,7 +334,7 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const label = where.label
   const base = { key: `piece:${d.piece_id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: d.series,
     title: cut(d.title, 200), approved: p.approval.label, stage: where, path, missed, read, piece_id: d.piece_id,
-    item: null, supports: null, move: null, links: p.stage?.links ?? [], stories: null, stories_planned: null, others: [] as PressAction[] }
+    item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null, stories_planned: null, others: [] as PressAction[] }
   if (out) return { ...base, line: p.stage?.state === 'live' ? p.stage.label : d.next, next: null, decision: false }
   // His Approve for publish on the made piece, bound to its manifest: his decision for the day.
   const publish = d.manifest?.press && d.manifest.state !== 'approved' ? d.manifest.press as unknown as PressAction : null
@@ -347,6 +347,19 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const lead = d.actions[0]
   if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) return { ...base, line, next: lead, decision: false }
   return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next'), decision: false }
+}
+
+/** A piece his approval holds on a day that is not the day's own piece (moved there, or kept alongside). */
+function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number]): ModelItem {
+  const row = m.pieces.find(x => String(x.id).toLowerCase() === p.id) ?? null
+  const out = p.published || p.stage?.state === 'live'
+  const where = out ? { key: 'live', label: 'Live' } : { key: 'approved', label: 'Approved' }
+  const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
+    title: cut(p.title, 200), approved: p.approval?.label ?? null, stage: where, path: steps(PIECE_PATH, out ? PIECE_PATH.length : 0), missed: false,
+    read: readOf(null, { row }), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
+    stories_planned: null, others: [] as PressAction[] }
+  const line = out ? 'Live.' : `Approved for ${d.label}. Its make picks up from where it is.`
+  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, 'next'), decision: false }
 }
 
 /** An approved off-day post on the board: its kind, its path, where it is and its one next action. */
@@ -410,6 +423,9 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
     const items: ModelItem[] = []
     const piece = pieceItem(m, d)
     if (piece) items.push(piece)
+    // Every other piece his approval holds on the day (contract 1.13.0): one he moved here, or one he kept alongside the
+    // piece that replaced it. Drawn as a piece with its Move to…, never hidden behind the day's own piece.
+    for (const p of d.pieces) if (p.approval && p.id !== piece?.piece_id) items.push(placedPieceItem(m, d, p))
     for (const o of d.options) {
       // The day's piece is drawn as the piece; a publishing day's other Sunday options and every off-day option he has
       // not approved are ideas, on the ideas board only.

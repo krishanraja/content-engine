@@ -2303,6 +2303,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function answersFor(s: Shown, i: LaterInputs): Answer[]`
 - `function buildLater(i: LaterInputs): LaterView`
 - `function freeDay(i: LaterInputs, day: string, kind: 'series' | 'offday', today: string): string | null`
+- `function replaceTargets(i: LaterInputs, day: string, ideaId: string, today: string): Array<{ week: string; date: string…`
 - `function laterPresses(i: LaterInputs, s: Shown, today: string): { actions: PressAction[]; held: string | null }`
 - `async function readLater(db: SupabaseClient, fetcher: Fetcher = fetch as unknown as Fetcher, now = new Date()): Promise…`
 
@@ -2549,6 +2550,26 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `interface RunInfo`
 - `async function readRuns(env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as F…`
 
+### `apps/control-plane/api/board/_seriesMoves.ts`
+
+- `const PIECE_ITEM`
+- `const SERIES_OF: Record<string, string>`
+- `const titleOf = (p: Body) =>`
+- `function pieceVersion(p: Body): number`
+- `function movable(p: Body): boolean`
+- `const SERIES_MOVE_NOTE`
+- `function seriesMoveSpec(p: Body, now: Date): MoveSpec | null`
+- `function replaceChoices(now: Date, date: string, title: string): NonNullable<PressAction['choose']>`
+- `interface PickCard`
+- `function replacePress(o: { week: string; day: string; revision: number; card: PickCard; current: Body; now: Date; label…`
+- `interface SeriesDeps`
+- `async function moveSeriesPiece(db: SupabaseClient, req: MoveRequest, deps: SeriesDeps): Promise<MoveResult>`
+- `type CurrentTo = { date: string } | 'later' | 'alongside'`
+- `interface ReplaceRequest`
+- `function replaceInput(body: unknown): { input?: ReplaceRequest; problem?: string }`
+- `async function replacePick(db: SupabaseClient, week: string, req: ReplaceRequest, deps: SeriesDeps): Promise<MoveResult>`
+- `export type { MoveDay }`
+
 ### `apps/control-plane/api/board/_signOffs.ts`
 
 - `const SIGN_OFF_OP`
@@ -2685,11 +2706,11 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function thursdayOf(week: string): string`
 - `function ideasRunOf(week: string): string`
 - `function storiesFresh(week: string, o: Body): boolean`
-- `function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map()): …`
+- `function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map(), n…`
 - `function dayComments(rows: ExtrasInputs['comments'], day: string): ViewComment[]`
 - `function dayPosted(rows: ExtrasInputs['ticks'], day: string, live: LivePost[] = []): ViewPosted[]`
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
-- `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[]`
+- `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean, onDay: Body | null = null): ViewOption[]`
 - `function warned(o: Body): string`
 - `function tickNote(o: Body): string`
 - `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`

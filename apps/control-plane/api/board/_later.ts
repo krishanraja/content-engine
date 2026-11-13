@@ -5,6 +5,7 @@ import { OUTCOMES, OUTCOME_OF_USE, OUTCOME_OF_VERDICT, dayShort, dayWords, goes,
 import type { PressAction } from './_viewExtras.js'
 import { todayNY } from './_itsLive.js'
 import { itemKey, laterMoveSpec, moveSpec, readItemsIn, type MoveSpec, type OffdayItem } from './_offdayItems.js'
+import { replacePress } from './_seriesMoves.js'
 
 // Ideas for later (Krish, 2026-11-12: "Does my 'Ideas for Later' tab contain everything I've not approved but not
 // rejected in all the previous ideas boards?"). GET /api/board/later reads every option on every ideas board so far
@@ -103,6 +104,9 @@ export interface LaterInputs {
   items?: OffdayItem[]
   /** The approvals that stand now, for this week and the weeks an Approve may go to. */
   approvals: Record<string, Approval[] | null>
+  /** Contract 1.13.0: the pieces on a day from today through the weeks an Approve may go to (id, idea, scheduled_for,
+   *  updated_at), so an Approve onto a day that already holds one says what it replaces (_seriesMoves.ts). */
+  on_days?: Body[]
 }
 
 const weekOf = (d: string) => { const t = new Date(`${d}T00:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10) }
@@ -196,6 +200,14 @@ export function answersFor(s: Shown, i: LaterInputs): Answer[] {
     const o = outcomeOf(r.outcome)
     if (o) add(o, iso(r.decided_at), r.words, r.via || 'outcome', r.week)
   }
+  // His placements of a series piece (contract 1.13.0, _seriesMoves.ts): back to his Ideas for Later is his File for
+  // later on it, whatever approval put it on a day before.
+  if (s.kind === 'series' && s.idea_id) {
+    for (const r of i.outcomes) {
+      if (r.decided_by !== 'Krish' || r.via !== 'placed' || String(r.idea_id || '').toLowerCase() !== s.idea_id) continue
+      if (r.outcome === 'filed' || r.outcome === 'approved') add(r.outcome, iso(r.decided_at), r.words, 'placed', r.week)
+    }
+  }
   // The board's own documents: his, or a verdict imported from the first boards.
   for (const d of i.docs) {
     if (d.week !== s.week) continue
@@ -268,7 +280,9 @@ export function buildLater(i: LaterInputs): LaterView {
       answers.push({ said: 'filed', at: iso(piece.queued_at), words: q && typeof q.said === 'string' ? cut(q.said, 600) : null, via: 'queue', week: last.week, label: 'Queued for later' })
     }
     // An Approve anywhere put it on a publish board once: it is not an idea for later, whatever he said after.
-    if (answers.some(a => a.said === 'approved')) { approved++; continue }
+    // Unless he sent it back to his Ideas for Later after (a series piece's move, contract 1.13.0).
+    const sentBack = (a => a?.via === 'placed' && a.said === 'filed')(answers[answers.length - 1])
+    if (answers.some(a => a.said === 'approved') && !sentBack) { approved++; continue }
     const answer = answers[answers.length - 1] ?? null
     if (answer?.said === 'rejected' || (piece && (piece.state === 'dropped' || piece.buried_at) && answer)) { rejected++; continue }
     const group: LaterGroup = !answer ? 'never' : answer.said === 'filed' ? 'filed' : answer.said === 'trend' ? 'trend' : answer.said === 'improved' ? 'improved' : 'older'
@@ -312,6 +326,26 @@ export function freeDay(i: LaterInputs, day: string, kind: 'series' | 'offday', 
   return null
 }
 
+/** The dates of a weekday, from tomorrow through AHEAD weeks, whose series approval holds a piece there now: each with the
+ *  piece his pick holds on it (or the first approved piece on it), which an Approve there would replace. */
+export function replaceTargets(i: LaterInputs, day: string, ideaId: string, today: string): Array<{ week: string; date: string; piece: Body }> {
+  const out: Array<{ week: string; date: string; piece: Body }> = []
+  for (let k = 0; k < AHEAD; k++) {
+    const week = addDays(weekOf(today), 7 * k)
+    const date = dayDate(week, day as PostedDay)
+    if (date <= today) continue
+    const standing = (i.approvals[week] || []).filter(a => a.date === date && !String(a.doc).startsWith('queue/off-'))
+    if (!standing.length) continue
+    const on = (i.on_days || []).filter(p => String(p.scheduled_for || '').slice(0, 10) === date && typeof p.id === 'string' && !p.buried_at && p.state !== 'dropped')
+    const held = on.filter(p => standing.some(a => a.idea_id === String(p.id).toLowerCase()))
+    const pick = standing.find(a => a.via === 'pick')
+    const piece = held.find(p => pick && String(p.id).toLowerCase() === pick.idea_id) ?? held[0]
+    if (!piece || String(piece.id).toLowerCase() === ideaId.toLowerCase()) continue
+    out.push({ week, date, piece })
+  }
+  return out
+}
+
 /** The five presses on an idea for later: four on the board it was last on, Approve onto the next free date of its day. */
 export function laterPresses(i: LaterInputs, s: Shown, today: string): { actions: PressAction[]; held: string | null } {
   const actions: PressAction[] = []
@@ -326,6 +360,15 @@ export function laterPresses(i: LaterInputs, s: Shown, today: string): { actions
         done: `Approved. It is on the publish board for ${dayWords(target, s.day)}.`, outcome: 'approved', goes: goes('approved', target, s.day) })
     } else held = s.idea_id ? `Every ${dayWords(weekOf(today), s.day).split(' ')[0]} in the next ${AHEAD} weeks has its piece, so it waits for a free one.`
       : 'This idea has no record in the engine, so it cannot go on a day: an ideas run that offers it again gives it one.'
+    // Every date of its weekday that already holds his piece: an Approve that says what it replaces and asks where that
+    // piece goes (contract 1.13.0). Krish, 13 Nov 2026: "There is no approve button."
+    if (s.idea_id && SERIES_SLOT[s.day]) {
+      for (const r of replaceTargets(i, s.day, s.idea_id, today)) {
+        actions.push(replacePress({ week: r.week, day: s.day, revision: rev(i, r.week, 'picks', s.day), now: i.now, current: r.piece,
+          card: { pick: `later-${s.idea_id.slice(0, 8)}`, idea_id: s.idea_id, series: SERIES_SLOT[s.day], story: s.story, so_what: s.so_what, option_sha256: card.option_sha256 } }))
+        held = null
+      }
+    }
     const use = (u: string, outcome: Outcome, label: string, done: string, words: PressAction['words'], extra: Body = {}): PressAction => ({
       kind: 'press', label, week: s.week, collection: 'queue', id: s.pick, revision: rev(i, s.week, 'queue', s.pick),
       body: { ...card, queued: true, use: u, ...extra }, words, stamp: ['at'], done, outcome, goes: goes(outcome, s.week, s.day) })
@@ -387,7 +430,7 @@ export async function readLater(db: SupabaseClient, fetcher: Fetcher = fetch as 
   const queuedFirst = await db.from('content_ideas').select('id,idea,state,scheduled_for,published_at,buried_at,queued_at,meta').not('meta->queue', 'is', null).limit(500)
   for (const p of (queuedFirst.error ? [] : queuedFirst.data || []) as Body[]) if (typeof p.id === 'string') ids.add(p.id.toLowerCase())
   const ahead = Array.from({ length: AHEAD }, (_, k) => addDays(weekOf(today), 7 * k))
-  const [docs, outcomes, cues, named, queued, placed, ...standing] = await Promise.all([
+  const [docs, outcomes, cues, named, queued, placed, onDays, ...standing] = await Promise.all([
     db.from('board_documents').select('week,collection,doc_id,body,updated_by,updated_at,revision').in('collection', ['picks', 'queue']).gte('week', FIRST_IDEAS_WEEK).limit(5000),
     db.from('idea_outcomes').select('week,day,idea_id,option_ref,doc,outcome,words,decided_by,decided_at,via').limit(5000),
     db.from('feedback_cues').select('subject_ref,use,said,said_at,use_origin').eq('venture', 'publication').eq('source', 'idea_queue').limit(2000),
@@ -395,6 +438,7 @@ export async function readLater(db: SupabaseClient, fetcher: Fetcher = fetch as 
     db.from('content_ideas').select('id,idea,state,scheduled_for,published_at,buried_at,queued_at,meta').not('queued_at', 'is', null).limit(500),
     // The one place an off-day item's day lives: what he approved onto a day, and what he sent back to later.
     readItemsIn(db, ['approved', 'later']),
+    db.from('content_ideas').select('id,idea,thesis,state,scheduled_for,published_at,buried_at,meta,updated_at').gte('scheduled_for', today).lte('scheduled_for', addDays(weekOf(today), 7 * AHEAD)).is('buried_at', null).limit(200),
     ...ahead.map(w => readApprovals(db, w)),
   ])
   for (const r of [docs, outcomes, named, queued]) if (r.error) throw new Error('later_unreadable')
@@ -413,5 +457,6 @@ export async function readLater(db: SupabaseClient, fetcher: Fetcher = fetch as 
     pieces: [...pieces.values()],
     items: placed ?? [],
     approvals: Object.fromEntries(ahead.map((w, k) => [w, standing[k] as Approval[] | null])),
+    on_days: onDays.error ? [] : (onDays.data || []) as Body[],
   })
 }
