@@ -1,4 +1,0 @@
-Status: Every Growth carousel and Short now goes through the same 10/10 judges before it is approved for publish (POST /api/board/<Monday>/judge on Growth's writer key: the free copy lint and voice checks, then the panel's draft gate); the verdict, the standing and the judges' reasons are kept in the append-only asset_judgements ledger bound to the exact words and assets, a fail goes back to Growth with the reasons, and a pass that goes live is recorded there too. Control Center's content-engine North Star reading now counts published pieces plus judged passes that went live in the last 7 days.
-Next: growth-makeyourmindup's maker calls the judge before it drafts a carousel (its pull request merges once this one is deployed).
-Changed: Krish ruled on 12 Nov: "Judge them; count passes. Every Growth carousel goes through the same 10/10 judges, and each one that passes and goes live counts."
-North Star check (2026-11-13): holds.
