@@ -2284,6 +2284,15 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `const PUBLICATION_SERIES`
 - `async function publishedNow(db: SupabaseClient, now: Date): Promise<number | null>`
 
+### `apps/control-plane/api/board/_judge.ts`
+
+- `const JUDGED_FORMATS`
+- `const DAILY_CAP`
+- `interface JudgeDeps`
+- `function artifactSha256(format: string, channel: string, words: string, assets: Array<{ sha256: string }>): string`
+- `function postArtifact(b: Body): string`
+- `async function judgeAsset(db: SupabaseClient, week: string, body: unknown, deps: JudgeDeps = {}): Promise<Answer>`
+
 ### `apps/control-plane/api/board/_later.ts`
 
 - `const FIRST_IDEAS_WEEK`
