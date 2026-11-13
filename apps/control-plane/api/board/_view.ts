@@ -23,7 +23,8 @@ import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_d
 import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
 import { carriedItems, channelWord, dayLabel, dayOptions, liveOn, readItems, readItemsIn, type GrowthPost, type OffdayItem } from './_offdayItems.js'
 import { ideaStage, postedStage, truthProblems } from './_stage.js'
-import { modelProblems, weekModel, type ModelInputs, type WeekModel } from './_weekModel.js'
+import { modelProblems, offdayHead, offdayKind, weekModel, type ModelInputs, type WeekModel } from './_weekModel.js'
+import { makeRoute } from './_makeRoute.js'
 import { scheduledOf } from './_posted.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -593,7 +594,7 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
     return { ...base, kind: gnKind, title: String(weekly.o.hook || "This week's good news").slice(0, 140), stop: 2, who: 'growth', runs_on: 'Growth makes the post from the stories shown',
       next: `This week's good news is in: ${n} stories. Growth makes the post, and its mock comes back for your yes`,
       actions: [{ kind: 'open', label: 'Read the stories', href: optionsTab(week, day) },
-        { kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Make the ${DAY_NAME[day]} ${date} good-news post ${String(weekly.o.id)} from the ${n} stories on the content-engine board (week of ${week}), to docs/CAROUSEL-STANDARD.md.` }] }
+        { kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Make the ${DAY_NAME[day]} ${date} good-news post ${String(weekly.o.id)} from the ${n} stories on the content-engine board (week of ${week}).\n\n${offdayHead(makeRoute('good_news', String(weekly.o.format || ''))).trimEnd()}` }] }
   }
   // An Improve still waits on its revision, unless his words in a session settled the option (`decided`): that settles
   // what it waits on, never whether it is approved (Thu 12 Nov showed "Your Improve has not come back" on a card he had
@@ -628,7 +629,7 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
   return { ...base, kind, title, stop: queued.length ? 3 : 2, who: 'growth', runs_on: 'Growth makes the approved off-day post',
     next: queued.length ? `Approved. Growth scheduled it on ${[...new Set(queued.map(p => channelWord(p.channel)))].join(', ')}`
       : made ? 'Approved. Growth made it; it schedules it for the day' : 'Approved. Growth makes it and posts it on the day',
-    actions: [{ kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Make the ${DAY_NAME[day]} ${date} off-day post ${String(o.id)} that Krish approved on the content-engine board (week of ${week}), to docs/CAROUSEL-STANDARD.md.` }] }
+    actions: [{ kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Make the ${DAY_NAME[day]} ${date} off-day post ${String(o.id)} that Krish approved on the content-engine board (week of ${week}).\n\n${offdayHead(makeRoute(offdayKind(o).kind, String(o.format || ''))).trimEnd()}` }] }
 }
 
 /** The Claude prompt for a day's next step (Krish, 2026-11-09: "every next action needs to have a Claude prompt as at

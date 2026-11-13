@@ -269,14 +269,6 @@ export function officialSeriesMark(theme: BrandThemeV1, series: Series): BrandWo
   return asset
 }
 
-export async function stageOfficialSeriesWordmarks(theme: BrandThemeV1, series: Series, targetDirectory: string, fetchImpl: typeof fetch = fetch): Promise<Pick<StagedBrandWordmarks, 'mindmake' | 'series'>> {
-  if (!theme.rules.official_wordmarks_only || !theme.wordmarks) throw new Error('branded carousel renders require official wordmarks')
-  return {
-    mindmake: await stageAsset(theme, theme.wordmarks.mindmake, targetDirectory, 'mindmake', fetchImpl),
-    series: await stageAsset(theme, officialSeriesMark(theme, series), targetDirectory, series, fetchImpl),
-  }
-}
-
 /** A theme's faces in the four slots the renderers read. The Studio theme
  *  passes through untouched; in the house style the display face (Anton)
  *  sets the claims and Archivo the structure and body. */

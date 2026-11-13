@@ -159,6 +159,23 @@ def plan_of(piece):
     raise Stop(f'no plan in docs/plans carries piece_id {piece}: the piece is not made yet (make-piece)')
 
 
+def offday_reason(post_path):
+    """Why this run will not make the piece: it is an off-day post (its post.json is dated a day that is not a
+    series day), else None. Ruling (Krish, 2026-11-13): off-day voiceover shorts are made the same way as carousels,
+    memes and Notes images, in a Claude session with the Codex plugin, on the ve route (docs/ve/ENGINE.md,
+    docs/ve/RUNBOOK.md); never by this headless run. A post with no readable date is not refused here."""
+    try:
+        post = json.loads(Path(post_path).read_text(encoding='utf-8-sig'))
+        day = date.fromisoformat(str(post.get('date') or '')[:10])
+    except (OSError, ValueError, AttributeError):
+        return None
+    if day.weekday() in SERIES:
+        return None
+    return (f'the piece is an off-day post, dated {day:%A} {day.isoformat()}: an off-day short is made in a Claude '
+            'session on the ve route, with the Codex plugin building its pictures (docs/ve/RUNBOOK.md), never by this '
+            'run (Ruling, Krish, 2026-11-13)')
+
+
 def making(piece):
     status, data = call('GET', f'/api/content-ideas/{piece}/making')
     if status != 200:
@@ -637,6 +654,9 @@ def main():
     try:
         piece = piece or the_piece(when)
         post_path = plan_of(piece)
+        off = offday_reason(post_path)
+        if off:
+            raise Stop(off)
         work = WORK_ROOT / f'{when.isoformat()}-{piece[:8]}'
         work.mkdir(parents=True, exist_ok=True)
         log(f'{when:%A %-d %B}: piece {piece}, plan {post_path.parent.name}')

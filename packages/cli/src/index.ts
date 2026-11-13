@@ -6,16 +6,12 @@ import { Command, CommanderError } from 'commander'
 import {
   ApprovalGateSchema,
   CandidateV1Schema,
-  CarouselStoryV1Schema,
-  CarouselVisualDirectionMethodV1Schema,
   EvidenceOverlayV1Schema,
   JobPurposeSchema,
   RenderManifestV1Schema,
   SourceModeSchema,
   StageNameSchema,
   TreatmentRegistryV1Schema,
-  PreferenceRuleV1Schema,
-  normalizeEditorialFormatV1,
   normalizeSeries,
   type FeedbackEventV1,
   type StageName,
@@ -27,9 +23,6 @@ import {
   assessTranscriptQuality,
   benchmarkTranscription,
   broadenRule,
-  carouselProductionIssues,
-  carouselEditorialPreferenceIssues,
-  carouselStoryContentHash,
   captureFeedback,
   classifyError,
   completeStage,
@@ -56,7 +49,6 @@ import {
   loadCaptionTranscript,
   mergeRadarFeeds,
   normalizeMedia,
-  packageCarousel,
   probeMedia,
   pinnedConfigPath,
   proposeRule,
@@ -71,7 +63,6 @@ import {
   resolveApprovedTreatmentPreset,
   resolveBrandTheme,
   renderShort,
-  renderCarousel,
   runDoctor,
   sourceReferenceHash,
   studioPaths,
@@ -697,34 +688,6 @@ calibration.command('contact-sheet')
     const outputPath = options.output || join(jobPath(options.job), 'calibration', 'contact-sheet.jpg')
     out({ job_id: options.job, contact_sheet: await createContactSheet(options.previews, outputPath), previews: options.previews })
   })
-
-const carousel = program.command('carousel').description('Create deterministic Mindmake social carousels')
-carousel.command('method')
-  .option('--config <path>', 'visual direction method contract', 'config/carousel-visual-direction.json')
-  .action(async (options) => {
-    const method = CarouselVisualDirectionMethodV1Schema.parse(await readJson(resolve(options.config)))
-    out({ ok: true, method })
-  })
-carousel.command('validate')
-  .requiredOption('--story <path>')
-  .action(async (options) => {
-    const rawStory = await readJson<Record<string, unknown>>(options.story)
-    const story = CarouselStoryV1Schema.parse(typeof rawStory.source_format === 'string' ? { ...rawStory, source_format: normalizeEditorialFormatV1(rawStory.source_format) } : rawStory)
-    const studioConfig = await readJson<{ active_preferences?: unknown[] }>(configPath)
-    const preferences = (studioConfig.active_preferences || []).map((value) => PreferenceRuleV1Schema.parse(value))
-    out({ ok: true, story_id: story.story_id, story_hash: carouselStoryContentHash(story), editorial_preference_issues: carouselEditorialPreferenceIssues(story, preferences), production_issues: carouselProductionIssues(story) })
-  })
-
-carousel.command('render')
-  .requiredOption('--story <path>')
-  .requiredOption('--output <directory>')
-  .option('--review', 'render an approval candidate before story and visual-direction approval', false)
-  .action(async (options) => out(await renderCarousel(repoRoot, configPath, await readJson(options.story), options.output, Boolean(options.review))))
-
-carousel.command('package')
-  .requiredOption('--story <path>')
-  .requiredOption('--output <directory>')
-  .action(async (options) => out(await packageCarousel(repoRoot, configPath, await readJson(options.story), options.output)))
 
 const experiment = program.command('experiment')
 experiment.command('create')

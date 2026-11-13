@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import {
-  CarouselApprovalV1Schema,
   DriveInboxRebindV1Schema,
   DriveIntakeReviewV1Schema,
   confirmationRefMatches,
@@ -98,14 +97,5 @@ describe('schema gates that use the shared helper', () => {
     expect(parse(`codex-user-confirmation:inbox-rebind:${hash}:${otherHash}:Krish confirmed the replacement folder`).success).toBe(true)
     expect(parse(`studio-user-confirmation:claude-code:inbox-rebind:${otherHash}:${hash}:Krish confirmed the replacement folder`).success).toBe(false)
     expect(parse(`studio-user-confirmation:Claude:inbox-rebind:${hash}:${otherHash}:Krish confirmed the replacement folder`).success).toBe(false)
-  })
-
-  it('requires a carousel approval to carry a confirmation bound to its own gate and artifact hash', () => {
-    const base = { gate: 'story', decision: 'approved', approved_by: 'Krish', approved_at: '2026-09-07T09:00:00.000Z', artifact_hash: hash }
-    expect(CarouselApprovalV1Schema.safeParse(base).success).toBe(false)
-    expect(CarouselApprovalV1Schema.safeParse({ ...base, confirmation_ref: `studio-user-confirmation:claude-code:story:${hash}:Krish approved the story` }).success).toBe(true)
-    expect(CarouselApprovalV1Schema.safeParse({ ...base, confirmation_ref: `codex-user-confirmation:story:${hash}:Krish approved the story` }).success).toBe(true)
-    expect(CarouselApprovalV1Schema.safeParse({ ...base, confirmation_ref: `studio-user-confirmation:claude-code:visual_direction:${hash}:Krish approved the story` }).success).toBe(false)
-    expect(CarouselApprovalV1Schema.safeParse({ ...base, confirmation_ref: `studio-user-confirmation:claude-code:story:${otherHash}:Krish approved the story` }).success).toBe(false)
   })
 })

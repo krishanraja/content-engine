@@ -35,7 +35,6 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `docs/ve/`
 - `docs/walks/`
 - `editions/`
-- `examples/`
 - `fixtures/`
 - `inspo/`
 - `lab/`
@@ -2328,6 +2327,16 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 - `const LIVE_BOARD_URL`
 - `function liveBoardUrl(week?: string | null, day?: string | null): string`
 
+### `apps/control-plane/api/board/_makeRoute.ts`
+
+How an off-day post is made, said once for every prompt the board copies out (the week model's "Copy prompt for
+
+- `type MakeRoute = 'still' | 'motion'`
+- `function makeRoute(kind: string | null | undefined, format: string | null | undefined): MakeRoute | null`
+- `const ROUTE_RULING`
+- `const NEVER_HEADLESS`
+- `function routeLine(route: MakeRoute): string`
+
 ### `apps/control-plane/api/board/_manifest.ts`
 
 - `interface ManifestAsset`
@@ -2715,6 +2724,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function offdayKind(o: Body): { kind: OffdayKind; supports: 'mon' | 'wed' | 'fri' | null }`
 - `function kindLabel(kind: OffdayKind, supports: string | null): string`
 - `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
+- `function offdayHead(route: MakeRoute | null): string`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
 - `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
 - `function modelProblems(model: WeekModel, days: DayView[]): string[]`
@@ -4251,21 +4261,6 @@ Run a Vercel serverless handler locally against the real environment.
 - `type ShortProps`
 - `function BorderControlShort(p:ShortProps)`
 
-### `apps/renderer/src/carousel/HouseCarouselCard.tsx`
-
-- `const FOLLOW_SIGN`
-- `function houseCardModel(props: CarouselRenderProps)`
-- `function HouseCarouselCard(props: CarouselRenderProps)`
-
-### `apps/renderer/src/carousel/MindmakeCarouselSlide.tsx`
-
-- `function MindmakeCarouselSlide(props: CarouselRenderProps)`
-
-### `apps/renderer/src/carousel/props.ts`
-
-- `const CarouselRenderPropsSchema`
-- `type CarouselRenderProps = z.infer<typeof CarouselRenderPropsSchema>`
-
 ### `apps/renderer/src/engine/BrandFrame.tsx`
 
 - `interface BrandFrameProps`
@@ -5382,27 +5377,6 @@ The piece's call: the dated prediction every makeyourmindup piece ends on
 - `function hasPercentage(text: string): boolean`
 - `function readPieceCall(approvedText: string): PieceCallReadingV1`
 
-### `packages/contracts/src/carousel.ts`
-
-- `const CAROUSEL_SCHEMA_VERSION`
-- `const CarouselVisualDirectionMethodV1Schema`
-- `type CarouselVisualDirectionMethodV1 = z.infer<typeof CarouselVisualDirectionMethodV1Schema>`
-- `const CarouselPlatformSchema`
-- `const CarouselSourceFormatSchema`
-- `const CarouselSlideRoleSchema`
-- `const CarouselLayoutSchema`
-- `const CarouselSceneSchema`
-- `const CarouselAssetV1Schema`
-- `const CarouselSlideV1Schema`
-- `const CarouselEditorialAssessmentV1Schema`
-- `const CarouselApprovalV1Schema`
-- `type CarouselApprovalV1 = z.infer<typeof CarouselApprovalV1Schema>`
-- `const CarouselStoryV1Schema`
-- `type CarouselStoryV1 = z.infer<typeof CarouselStoryV1Schema>`
-- `type CarouselSlideV1 = z.infer<typeof CarouselSlideV1Schema>`
-- `const CarouselDraftPackageV1Schema`
-- `type CarouselDraftPackageV1 = z.infer<typeof CarouselDraftPackageV1Schema>`
-
 ### `packages/contracts/src/confirmation-v1.ts`
 
 Artifact-bound user confirmation references.
@@ -5568,7 +5542,6 @@ Artifact-bound user confirmation references.
 - `export * from './v2.js'`
 - `export * from './control-plane-v1.js'`
 - `export * from './drive-discovery-v1.js'`
-- `export * from './carousel.js'`
 - `export * from './session-v1.js'`
 - `export * from './confirmation-v1.js'`
 - `export * from './editorial-v1.js'`
@@ -5940,7 +5913,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `function brandWordmarkLegibilityIssues(theme: BrandThemeV1): string[]`
 - `async function stageOfficialWordmarks(manifest: RenderManifestV1, targetDirectory: string, fetchImpl: typeof fetch = fe…`
 - `function officialSeriesMark(theme: BrandThemeV1, series: Series): BrandWordmarkAssetV1`
-- `async function stageOfficialSeriesWordmarks(theme: BrandThemeV1, series: Series, targetDirectory: string, fetchImpl: ty…`
 - `function runtimeTypography(theme: BrandThemeV1): { structure: string; claim: string; body: string; data: string }`
 - `interface StagedPublicationMarks`
 - `interface PublicationLegibilityReport`
@@ -5978,22 +5950,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `function sliceTranscript(transcript: TranscriptDocument, startMs: number, endMs: number): TranscriptDocument`
 - `function captionTranscriptSimilarity(captions: RenderManifestV1['captions'], expectedText: string): number`
 - `function verifiedTextCaptionCues(text: string, timedTranscript: TranscriptDocument, durationMs: number): RenderManifest…`
-
-### `packages/core/src/carousel.ts`
-
-- `interface CarouselRenderResult`
-- `function carouselEditorialPreferenceIssues(input: CarouselStoryV1, preferences: PreferenceRuleV1[] = []): string[]`
-- `function carouselStoryContentHash(input: CarouselStoryV1): string`
-- `function carouselApprovalBinds(approval: CarouselApprovalV1, gate: CarouselApprovalV1['gate'], contentHash: string): bo…`
-- `function theForkIssues(input: CarouselStoryV1): string[]`
-- `function carouselProductionIssues(input: CarouselStoryV1): string[]`
-- `async function runtimeWordmark(asset: StagedWordmarkAsset, stagingDirectory: string)`
-- `async function renderCarousel(repoRoot: string, configPath: string, storyInput: unknown, outputDirectory: string, revie…`
-- `type CarouselBrandMarks`
-- `interface CarouselHouseV1`
-- `function carouselHouse(story: CarouselStoryV1, marks: Pick<StagedPublicationMarks, 'lockup' | 'channelColor' | 'channel…`
-- `function carouselSlideInputProps(story: CarouselStoryV1, slide: CarouselStoryV1['slides'][number], theme: BrandThemeV1,…`
-- `async function packageCarousel(repoRoot: string, configPath: string, storyInput: unknown, outputDirectory: string): Pro…`
 
 ### `packages/core/src/control-plane-client.ts`
 
@@ -6166,7 +6122,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `export * from './candidates.js'`
 - `export * from './caption-analysis.js'`
 - `export * from './captions.js'`
-- `export * from './carousel.js'`
 - `export * from './credentials.js'`
 - `export * from './control-plane-client.js'`
 - `export { APPROVAL_SIGNING_CREDENTIAL, RUNNER_RECEIPT_SIGNING_CREDENTIAL, approvalSigningCredentialReady, loadRunnerRece…`

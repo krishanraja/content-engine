@@ -832,7 +832,10 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           next_stage: 'source_bundle',
           next_command: `studio v2 production-brief materialize --brief-id ${imported.brief.brief_id} --source-bundle <source-bundle.json>`,
         } : {
-          next_stage: 'carousel_direction',
+          // A carousel is made in a Claude session, with the Codex plugin building it (Ruling, Krish, 2026-11-13;
+          // docs/CAROUSEL-STANDARD.md, "How a carousel is made"); there is no carousel stage in the Studio.
+          next_stage: 'claude_session',
+          next_route: 'docs/CAROUSEL-STANDARD.md',
         }),
       })
     })

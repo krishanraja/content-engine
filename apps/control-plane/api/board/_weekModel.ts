@@ -3,6 +3,7 @@ import { writeBack } from './_writeBack.js'
 import type { MoveSpec } from './_offdayItems.js'
 import type { PressAction, ViewOption } from './_viewExtras.js'
 import type { Action, DayView } from './_view.js'
+import { makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
 //
@@ -269,14 +270,23 @@ function readOf(raw: Body | null, extra: { title?: string; text?: string | null;
   }
 }
 
-/** The one Claude prompt for an item: what it is, where it stands, and how to report back to the board. */
-export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string): ModelAction {
+/** How an off-day post is made, before the write-back: its route (a carousel, a meme or a Notes image in a Claude
+ *  session with the Codex plugin; a voiceover short or a meme video on the ve route; Ruling, Krish, 2026-11-13;
+ *  _makeRoute.ts), else the plain hand-off to Growth. */
+export function offdayHead(route: MakeRoute | null): string {
+  if (!route) return 'Growth makes and posts off-day posts (krishanraja/growth-makeyourmindup), to content-engine docs/CAROUSEL-STANDARD.md and the rejection floor. Make or post exactly what Krish approved, nothing else.\n\n'
+  return `${routeLine(route)}\n\nMake exactly what Krish approved, nothing else, to the rejection floor`
+    + `${route === 'still' ? ' and content-engine docs/CAROUSEL-STANDARD.md' : ''}; Growth (krishanraja/growth-makeyourmindup) posts it.\n\n`
+}
+
+/** The one Claude prompt for an item: what it is, where it stands, how it is made and how to report back to the board. */
+export function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; piece_id: string | null; key: string }, step: string, route: MakeRoute | null = null): ModelAction {
   const what = it.piece_id ? `the ${DAY_WORD[it.day]} ${it.date} piece ${it.piece_id}` : `the ${DAY_WORD[it.day]} ${it.date} off-day post ${it.key} (${it.kind_label})`
   const growth = !it.piece_id
   const prompt = `You are picking up ${what} of the Make Your Mind Up content engine with no prior context: "${it.title}". `
     + `Where it stands: ${it.line}\n\n`
     + (growth
-      ? 'Growth makes and posts off-day posts (krishanraja/growth-makeyourmindup), to content-engine docs/CAROUSEL-STANDARD.md and the rejection floor. Make or post exactly what Krish approved, nothing else.\n\n'
+      ? offdayHead(route)
       : 'The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then take the next step with Krish, one question at a time.\n\n')
     + writeBack({ pieceId: it.piece_id, week, day: it.day, step })
   return { kind: 'prompt', label: CLAUDE_LABEL, prompt }
@@ -374,7 +384,7 @@ function postItem(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
       next: { kind: 'run', label: `Find the other ${GOOD_NEWS_STORIES - stories.length} stories`, job: 'saturday-goodnews', input: { week: m.week, fill: o.doc_id }, runs_on: 'GitHub · saturday-goodnews.yml' } }
   }
   if (state === 'scheduled') return { ...base, line, next: null, decision: false }
-  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post'), decision: false }
+  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, 'post', makeRoute(kind, str(raw?.format) ?? o.format)), decision: false }
 }
 
 /** Why an idea is on the ideas board, in one line. */
