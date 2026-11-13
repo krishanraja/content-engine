@@ -401,10 +401,11 @@ def cmd_study(args) -> int:
 
 
 def cmd_card(args) -> int:
-    from velib.cards import write_card
+    from velib.cards import _require_design_lock, write_card
     from velib.common import card_worktree
     fields = load_json(args.fields)
     out = Path(fields.pop('path'))
+    _require_design_lock(fields)  # a card with no frozen lock is refused before anything else is resolved
     fields.setdefault('cwd', card_worktree(fields['card_id']))  # the local layout's worktree, never a typed path (W2.11)
     print(f've card: wrote {write_card(out, **fields)}')
     return 0
