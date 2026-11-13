@@ -520,7 +520,11 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         gain = sound['gain_db']
         if isinstance(gain, bool) or not isinstance(gain, (int, float)) or not math.isfinite(gain) or gain > 0:
             raise ValueError(f'invalid sfx gain for {event["id"]}')
-        sfx.append({'src': resolve_source(sound['path']), 'atFrame': event['atFrame'], 'gainDb': gain})
+        # The approved sound itself, staged into the cut's assets from MINDMAKE_MUSIC_ROOT (the brand kit's Music
+        # folder) and checked by its sha256; a sound missing on this machine stops the compile, never drops out.
+        from .sfx import ensure_staged  # noqa: PLC0415
+        sfx.append({'src': resolve_source(ensure_staged(event['sfx'], sound['path'], assets_dir)), 'atFrame': event['atFrame'],
+                    'gainDb': gain})
     props['audio']['sfx'] = sfx
     if report is not None:
         report.update(lint='clean', sfx_missing=missing, opening='sting' if sting else 'hook', **opening)
