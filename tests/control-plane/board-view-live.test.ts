@@ -114,12 +114,18 @@ describe('one live board: the view carries everything the old board showed', () 
     expect(acts.map(a => a.outcome)).toEqual(['approved', 'filed', 'rejected', 'trend', 'improved'])
     expect(acts[0].goes).toBe("Goes onto the publish board for Friday 13 November as the day's piece.")
     for (const a of acts) expect(a.goes, a.label).toBeTruthy()
-    // A day with its piece approved and placed keeps its options to read and press, with no Approve.
+    // A day with its piece approved and placed keeps its options to read and press; since 1.13.0 each other option's
+    // Approve says what it replaces and asks where that piece goes (Krish, 13 Nov 2026: "There is no approve button").
     const F = 'f3fcd5e1-573e-4692-a413-db7c5823a10e'
     const placed = day(buildView(week({ pieces: [...week().pieces, piece(F, '2026-11-13', 'mind_the_gap')] })), 'fri')
     expect(placed.options[0].actions.map(a => a.label)).toEqual([])
     expect(placed.options[0].status).toBe('approved')
-    expect(placed.options[1].actions.map(a => a.label)).toEqual(['File for later', 'Reject', 'Save as a trend', 'Improve for a future piece'])
+    expect(placed.options[1].actions.map(a => a.label).slice(1)).toEqual(['File for later', 'Reject', 'Save as a trend', 'Improve for a future piece'])
+    const swap = placed.options[1].actions[0]
+    expect(swap.op).toBe('replace')
+    expect(swap.label).toMatch(/^Approve for Fri 13 Nov, replacing /)
+    expect(swap.choose?.path).toBe('current_to')
+    expect(swap.choose?.options.map(o => o.value).slice(-2)).toEqual(['later', 'alongside'])
   })
 
   it('builds every press as a document the board accepts once his words and the time are in', () => {

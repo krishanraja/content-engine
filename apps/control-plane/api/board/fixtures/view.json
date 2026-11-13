@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.12.0",
+ "contract_version": "1.13.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -1352,6 +1352,181 @@
       "label": "Approved by you, Sun 8 Nov, 09:07",
       "via": "pick"
      },
+     "move": {
+      "op": "move",
+      "label": "Move to…",
+      "item": "piece:8287846b-6618-4a19-9fb8-23ad4eca2718",
+      "version": 1794225600000,
+      "state": "approved",
+      "from": {
+       "week": "2026-11-16",
+       "day": "mon",
+       "date": "2026-11-16"
+      },
+      "days": [
+       {
+        "date": "2026-11-16",
+        "week": "2026-11-16",
+        "day": "mon",
+        "label": "Mon 16 Nov",
+        "current": true
+       },
+       {
+        "date": "2026-11-17",
+        "week": "2026-11-16",
+        "day": "tue",
+        "label": "Tue 17 Nov"
+       },
+       {
+        "date": "2026-11-18",
+        "week": "2026-11-16",
+        "day": "wed",
+        "label": "Wed 18 Nov"
+       },
+       {
+        "date": "2026-11-19",
+        "week": "2026-11-16",
+        "day": "thu",
+        "label": "Thu 19 Nov"
+       },
+       {
+        "date": "2026-11-20",
+        "week": "2026-11-16",
+        "day": "fri",
+        "label": "Fri 20 Nov"
+       },
+       {
+        "date": "2026-11-21",
+        "week": "2026-11-16",
+        "day": "sat",
+        "label": "Sat 21 Nov"
+       },
+       {
+        "date": "2026-11-23",
+        "week": "2026-11-23",
+        "day": "mon",
+        "label": "Mon 23 Nov"
+       },
+       {
+        "date": "2026-11-24",
+        "week": "2026-11-23",
+        "day": "tue",
+        "label": "Tue 24 Nov"
+       },
+       {
+        "date": "2026-11-25",
+        "week": "2026-11-23",
+        "day": "wed",
+        "label": "Wed 25 Nov"
+       },
+       {
+        "date": "2026-11-26",
+        "week": "2026-11-23",
+        "day": "thu",
+        "label": "Thu 26 Nov"
+       },
+       {
+        "date": "2026-11-27",
+        "week": "2026-11-23",
+        "day": "fri",
+        "label": "Fri 27 Nov"
+       },
+       {
+        "date": "2026-11-28",
+        "week": "2026-11-23",
+        "day": "sat",
+        "label": "Sat 28 Nov"
+       },
+       {
+        "date": "2026-11-30",
+        "week": "2026-11-30",
+        "day": "mon",
+        "label": "Mon 30 Nov"
+       },
+       {
+        "date": "2026-12-01",
+        "week": "2026-11-30",
+        "day": "tue",
+        "label": "Tue 1 Dec"
+       },
+       {
+        "date": "2026-12-02",
+        "week": "2026-11-30",
+        "day": "wed",
+        "label": "Wed 2 Dec"
+       },
+       {
+        "date": "2026-12-03",
+        "week": "2026-11-30",
+        "day": "thu",
+        "label": "Thu 3 Dec"
+       },
+       {
+        "date": "2026-12-04",
+        "week": "2026-11-30",
+        "day": "fri",
+        "label": "Fri 4 Dec"
+       },
+       {
+        "date": "2026-12-05",
+        "week": "2026-11-30",
+        "day": "sat",
+        "label": "Sat 5 Dec"
+       },
+       {
+        "date": "2026-12-07",
+        "week": "2026-12-07",
+        "day": "mon",
+        "label": "Mon 7 Dec"
+       },
+       {
+        "date": "2026-12-08",
+        "week": "2026-12-07",
+        "day": "tue",
+        "label": "Tue 8 Dec"
+       },
+       {
+        "date": "2026-12-09",
+        "week": "2026-12-07",
+        "day": "wed",
+        "label": "Wed 9 Dec"
+       },
+       {
+        "date": "2026-12-10",
+        "week": "2026-12-07",
+        "day": "thu",
+        "label": "Thu 10 Dec"
+       },
+       {
+        "date": "2026-12-11",
+        "week": "2026-12-07",
+        "day": "fri",
+        "label": "Fri 11 Dec"
+       },
+       {
+        "date": "2026-12-12",
+        "week": "2026-12-07",
+        "day": "sat",
+        "label": "Sat 12 Dec"
+       },
+       {
+        "date": "2026-12-14",
+        "week": "2026-12-14",
+        "day": "mon",
+        "label": "Mon 14 Dec"
+       }
+      ],
+      "later": true,
+      "note": "Any day from today through four weeks. Sunday is a rest day, so it is not offered. The Tuesday, Thursday and Saturday limit is for a piece recorded on an off day, so it does not apply to this one.",
+      "body": {
+       "item": "piece:8287846b-6618-4a19-9fb8-23ad4eca2718",
+       "version": 1794225600000,
+       "from": {
+        "week": "2026-11-16",
+        "day": "mon"
+       }
+      }
+     },
      "stage": {
       "state": "made",
       "label": "Made: its files are made and filed",
@@ -1370,6 +1545,181 @@
       "at": "2026-11-08T14:07:00Z",
       "label": "Approved by you, Sun 8 Nov, 09:07",
       "via": "pick"
+     },
+     "move": {
+      "op": "move",
+      "label": "Move to…",
+      "item": "piece:5b726fc3-ac63-4607-9293-3257b4ecc75c",
+      "version": 1794225600000,
+      "state": "approved",
+      "from": {
+       "week": "2026-11-16",
+       "day": "mon",
+       "date": "2026-11-16"
+      },
+      "days": [
+       {
+        "date": "2026-11-16",
+        "week": "2026-11-16",
+        "day": "mon",
+        "label": "Mon 16 Nov",
+        "current": true
+       },
+       {
+        "date": "2026-11-17",
+        "week": "2026-11-16",
+        "day": "tue",
+        "label": "Tue 17 Nov"
+       },
+       {
+        "date": "2026-11-18",
+        "week": "2026-11-16",
+        "day": "wed",
+        "label": "Wed 18 Nov"
+       },
+       {
+        "date": "2026-11-19",
+        "week": "2026-11-16",
+        "day": "thu",
+        "label": "Thu 19 Nov"
+       },
+       {
+        "date": "2026-11-20",
+        "week": "2026-11-16",
+        "day": "fri",
+        "label": "Fri 20 Nov"
+       },
+       {
+        "date": "2026-11-21",
+        "week": "2026-11-16",
+        "day": "sat",
+        "label": "Sat 21 Nov"
+       },
+       {
+        "date": "2026-11-23",
+        "week": "2026-11-23",
+        "day": "mon",
+        "label": "Mon 23 Nov"
+       },
+       {
+        "date": "2026-11-24",
+        "week": "2026-11-23",
+        "day": "tue",
+        "label": "Tue 24 Nov"
+       },
+       {
+        "date": "2026-11-25",
+        "week": "2026-11-23",
+        "day": "wed",
+        "label": "Wed 25 Nov"
+       },
+       {
+        "date": "2026-11-26",
+        "week": "2026-11-23",
+        "day": "thu",
+        "label": "Thu 26 Nov"
+       },
+       {
+        "date": "2026-11-27",
+        "week": "2026-11-23",
+        "day": "fri",
+        "label": "Fri 27 Nov"
+       },
+       {
+        "date": "2026-11-28",
+        "week": "2026-11-23",
+        "day": "sat",
+        "label": "Sat 28 Nov"
+       },
+       {
+        "date": "2026-11-30",
+        "week": "2026-11-30",
+        "day": "mon",
+        "label": "Mon 30 Nov"
+       },
+       {
+        "date": "2026-12-01",
+        "week": "2026-11-30",
+        "day": "tue",
+        "label": "Tue 1 Dec"
+       },
+       {
+        "date": "2026-12-02",
+        "week": "2026-11-30",
+        "day": "wed",
+        "label": "Wed 2 Dec"
+       },
+       {
+        "date": "2026-12-03",
+        "week": "2026-11-30",
+        "day": "thu",
+        "label": "Thu 3 Dec"
+       },
+       {
+        "date": "2026-12-04",
+        "week": "2026-11-30",
+        "day": "fri",
+        "label": "Fri 4 Dec"
+       },
+       {
+        "date": "2026-12-05",
+        "week": "2026-11-30",
+        "day": "sat",
+        "label": "Sat 5 Dec"
+       },
+       {
+        "date": "2026-12-07",
+        "week": "2026-12-07",
+        "day": "mon",
+        "label": "Mon 7 Dec"
+       },
+       {
+        "date": "2026-12-08",
+        "week": "2026-12-07",
+        "day": "tue",
+        "label": "Tue 8 Dec"
+       },
+       {
+        "date": "2026-12-09",
+        "week": "2026-12-07",
+        "day": "wed",
+        "label": "Wed 9 Dec"
+       },
+       {
+        "date": "2026-12-10",
+        "week": "2026-12-07",
+        "day": "thu",
+        "label": "Thu 10 Dec"
+       },
+       {
+        "date": "2026-12-11",
+        "week": "2026-12-07",
+        "day": "fri",
+        "label": "Fri 11 Dec"
+       },
+       {
+        "date": "2026-12-12",
+        "week": "2026-12-07",
+        "day": "sat",
+        "label": "Sat 12 Dec"
+       },
+       {
+        "date": "2026-12-14",
+        "week": "2026-12-14",
+        "day": "mon",
+        "label": "Mon 14 Dec"
+       }
+      ],
+      "later": true,
+      "note": "Any day from today through four weeks. Sunday is a rest day, so it is not offered. The Tuesday, Thursday and Saturday limit is for a piece recorded on an off day, so it does not apply to this one.",
+      "body": {
+       "item": "piece:5b726fc3-ac63-4607-9293-3257b4ecc75c",
+       "version": 1794225600000,
+       "from": {
+        "week": "2026-11-16",
+        "day": "mon"
+       }
+      }
      },
      "stage": {
       "state": "approved",
@@ -3196,6 +3546,181 @@
       "at": "2026-11-08T14:07:00Z",
       "label": "Approved by you, Sun 8 Nov, 09:07",
       "via": "pick"
+     },
+     "move": {
+      "op": "move",
+      "label": "Move to…",
+      "item": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
+      "version": 1794225600000,
+      "state": "approved",
+      "from": {
+       "week": "2026-11-16",
+       "day": "wed",
+       "date": "2026-11-18"
+      },
+      "days": [
+       {
+        "date": "2026-11-16",
+        "week": "2026-11-16",
+        "day": "mon",
+        "label": "Mon 16 Nov"
+       },
+       {
+        "date": "2026-11-17",
+        "week": "2026-11-16",
+        "day": "tue",
+        "label": "Tue 17 Nov"
+       },
+       {
+        "date": "2026-11-18",
+        "week": "2026-11-16",
+        "day": "wed",
+        "label": "Wed 18 Nov",
+        "current": true
+       },
+       {
+        "date": "2026-11-19",
+        "week": "2026-11-16",
+        "day": "thu",
+        "label": "Thu 19 Nov"
+       },
+       {
+        "date": "2026-11-20",
+        "week": "2026-11-16",
+        "day": "fri",
+        "label": "Fri 20 Nov"
+       },
+       {
+        "date": "2026-11-21",
+        "week": "2026-11-16",
+        "day": "sat",
+        "label": "Sat 21 Nov"
+       },
+       {
+        "date": "2026-11-23",
+        "week": "2026-11-23",
+        "day": "mon",
+        "label": "Mon 23 Nov"
+       },
+       {
+        "date": "2026-11-24",
+        "week": "2026-11-23",
+        "day": "tue",
+        "label": "Tue 24 Nov"
+       },
+       {
+        "date": "2026-11-25",
+        "week": "2026-11-23",
+        "day": "wed",
+        "label": "Wed 25 Nov"
+       },
+       {
+        "date": "2026-11-26",
+        "week": "2026-11-23",
+        "day": "thu",
+        "label": "Thu 26 Nov"
+       },
+       {
+        "date": "2026-11-27",
+        "week": "2026-11-23",
+        "day": "fri",
+        "label": "Fri 27 Nov"
+       },
+       {
+        "date": "2026-11-28",
+        "week": "2026-11-23",
+        "day": "sat",
+        "label": "Sat 28 Nov"
+       },
+       {
+        "date": "2026-11-30",
+        "week": "2026-11-30",
+        "day": "mon",
+        "label": "Mon 30 Nov"
+       },
+       {
+        "date": "2026-12-01",
+        "week": "2026-11-30",
+        "day": "tue",
+        "label": "Tue 1 Dec"
+       },
+       {
+        "date": "2026-12-02",
+        "week": "2026-11-30",
+        "day": "wed",
+        "label": "Wed 2 Dec"
+       },
+       {
+        "date": "2026-12-03",
+        "week": "2026-11-30",
+        "day": "thu",
+        "label": "Thu 3 Dec"
+       },
+       {
+        "date": "2026-12-04",
+        "week": "2026-11-30",
+        "day": "fri",
+        "label": "Fri 4 Dec"
+       },
+       {
+        "date": "2026-12-05",
+        "week": "2026-11-30",
+        "day": "sat",
+        "label": "Sat 5 Dec"
+       },
+       {
+        "date": "2026-12-07",
+        "week": "2026-12-07",
+        "day": "mon",
+        "label": "Mon 7 Dec"
+       },
+       {
+        "date": "2026-12-08",
+        "week": "2026-12-07",
+        "day": "tue",
+        "label": "Tue 8 Dec"
+       },
+       {
+        "date": "2026-12-09",
+        "week": "2026-12-07",
+        "day": "wed",
+        "label": "Wed 9 Dec"
+       },
+       {
+        "date": "2026-12-10",
+        "week": "2026-12-07",
+        "day": "thu",
+        "label": "Thu 10 Dec"
+       },
+       {
+        "date": "2026-12-11",
+        "week": "2026-12-07",
+        "day": "fri",
+        "label": "Fri 11 Dec"
+       },
+       {
+        "date": "2026-12-12",
+        "week": "2026-12-07",
+        "day": "sat",
+        "label": "Sat 12 Dec"
+       },
+       {
+        "date": "2026-12-14",
+        "week": "2026-12-14",
+        "day": "mon",
+        "label": "Mon 14 Dec"
+       }
+      ],
+      "later": true,
+      "note": "Any day from today through four weeks. Sunday is a rest day, so it is not offered. The Tuesday, Thursday and Saturday limit is for a piece recorded on an off day, so it does not apply to this one.",
+      "body": {
+       "item": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
+       "version": 1794225600000,
+       "from": {
+        "week": "2026-11-16",
+        "day": "wed"
+       }
+      }
      },
      "stage": {
       "state": "approved",
@@ -5210,6 +5735,181 @@
       "label": "Approved by you, Sun 8 Nov, 09:07",
       "via": "pick"
      },
+     "move": {
+      "op": "move",
+      "label": "Move to…",
+      "item": "piece:b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+      "version": 1794225600000,
+      "state": "approved",
+      "from": {
+       "week": "2026-11-16",
+       "day": "fri",
+       "date": "2026-11-20"
+      },
+      "days": [
+       {
+        "date": "2026-11-16",
+        "week": "2026-11-16",
+        "day": "mon",
+        "label": "Mon 16 Nov"
+       },
+       {
+        "date": "2026-11-17",
+        "week": "2026-11-16",
+        "day": "tue",
+        "label": "Tue 17 Nov"
+       },
+       {
+        "date": "2026-11-18",
+        "week": "2026-11-16",
+        "day": "wed",
+        "label": "Wed 18 Nov"
+       },
+       {
+        "date": "2026-11-19",
+        "week": "2026-11-16",
+        "day": "thu",
+        "label": "Thu 19 Nov"
+       },
+       {
+        "date": "2026-11-20",
+        "week": "2026-11-16",
+        "day": "fri",
+        "label": "Fri 20 Nov",
+        "current": true
+       },
+       {
+        "date": "2026-11-21",
+        "week": "2026-11-16",
+        "day": "sat",
+        "label": "Sat 21 Nov"
+       },
+       {
+        "date": "2026-11-23",
+        "week": "2026-11-23",
+        "day": "mon",
+        "label": "Mon 23 Nov"
+       },
+       {
+        "date": "2026-11-24",
+        "week": "2026-11-23",
+        "day": "tue",
+        "label": "Tue 24 Nov"
+       },
+       {
+        "date": "2026-11-25",
+        "week": "2026-11-23",
+        "day": "wed",
+        "label": "Wed 25 Nov"
+       },
+       {
+        "date": "2026-11-26",
+        "week": "2026-11-23",
+        "day": "thu",
+        "label": "Thu 26 Nov"
+       },
+       {
+        "date": "2026-11-27",
+        "week": "2026-11-23",
+        "day": "fri",
+        "label": "Fri 27 Nov"
+       },
+       {
+        "date": "2026-11-28",
+        "week": "2026-11-23",
+        "day": "sat",
+        "label": "Sat 28 Nov"
+       },
+       {
+        "date": "2026-11-30",
+        "week": "2026-11-30",
+        "day": "mon",
+        "label": "Mon 30 Nov"
+       },
+       {
+        "date": "2026-12-01",
+        "week": "2026-11-30",
+        "day": "tue",
+        "label": "Tue 1 Dec"
+       },
+       {
+        "date": "2026-12-02",
+        "week": "2026-11-30",
+        "day": "wed",
+        "label": "Wed 2 Dec"
+       },
+       {
+        "date": "2026-12-03",
+        "week": "2026-11-30",
+        "day": "thu",
+        "label": "Thu 3 Dec"
+       },
+       {
+        "date": "2026-12-04",
+        "week": "2026-11-30",
+        "day": "fri",
+        "label": "Fri 4 Dec"
+       },
+       {
+        "date": "2026-12-05",
+        "week": "2026-11-30",
+        "day": "sat",
+        "label": "Sat 5 Dec"
+       },
+       {
+        "date": "2026-12-07",
+        "week": "2026-12-07",
+        "day": "mon",
+        "label": "Mon 7 Dec"
+       },
+       {
+        "date": "2026-12-08",
+        "week": "2026-12-07",
+        "day": "tue",
+        "label": "Tue 8 Dec"
+       },
+       {
+        "date": "2026-12-09",
+        "week": "2026-12-07",
+        "day": "wed",
+        "label": "Wed 9 Dec"
+       },
+       {
+        "date": "2026-12-10",
+        "week": "2026-12-07",
+        "day": "thu",
+        "label": "Thu 10 Dec"
+       },
+       {
+        "date": "2026-12-11",
+        "week": "2026-12-07",
+        "day": "fri",
+        "label": "Fri 11 Dec"
+       },
+       {
+        "date": "2026-12-12",
+        "week": "2026-12-07",
+        "day": "sat",
+        "label": "Sat 12 Dec"
+       },
+       {
+        "date": "2026-12-14",
+        "week": "2026-12-14",
+        "day": "mon",
+        "label": "Mon 14 Dec"
+       }
+      ],
+      "later": true,
+      "note": "Any day from today through four weeks. Sunday is a rest day, so it is not offered. The Tuesday, Thursday and Saturday limit is for a piece recorded on an off day, so it does not apply to this one.",
+      "body": {
+       "item": "piece:b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+       "version": 1794225600000,
+       "from": {
+        "week": "2026-11-16",
+        "day": "fri"
+       }
+      }
+     },
      "stage": {
       "state": "approved",
       "label": "Approved by you, Sun 8 Nov, 09:07",
@@ -6260,7 +6960,181 @@
       "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
       "item": null,
       "supports": null,
-      "move": null,
+      "move": {
+       "op": "move",
+       "label": "Move to…",
+       "item": "piece:8287846b-6618-4a19-9fb8-23ad4eca2718",
+       "version": 1794225600000,
+       "state": "approved",
+       "from": {
+        "week": "2026-11-16",
+        "day": "mon",
+        "date": "2026-11-16"
+       },
+       "days": [
+        {
+         "date": "2026-11-16",
+         "week": "2026-11-16",
+         "day": "mon",
+         "label": "Mon 16 Nov",
+         "current": true
+        },
+        {
+         "date": "2026-11-17",
+         "week": "2026-11-16",
+         "day": "tue",
+         "label": "Tue 17 Nov"
+        },
+        {
+         "date": "2026-11-18",
+         "week": "2026-11-16",
+         "day": "wed",
+         "label": "Wed 18 Nov"
+        },
+        {
+         "date": "2026-11-19",
+         "week": "2026-11-16",
+         "day": "thu",
+         "label": "Thu 19 Nov"
+        },
+        {
+         "date": "2026-11-20",
+         "week": "2026-11-16",
+         "day": "fri",
+         "label": "Fri 20 Nov"
+        },
+        {
+         "date": "2026-11-21",
+         "week": "2026-11-16",
+         "day": "sat",
+         "label": "Sat 21 Nov"
+        },
+        {
+         "date": "2026-11-23",
+         "week": "2026-11-23",
+         "day": "mon",
+         "label": "Mon 23 Nov"
+        },
+        {
+         "date": "2026-11-24",
+         "week": "2026-11-23",
+         "day": "tue",
+         "label": "Tue 24 Nov"
+        },
+        {
+         "date": "2026-11-25",
+         "week": "2026-11-23",
+         "day": "wed",
+         "label": "Wed 25 Nov"
+        },
+        {
+         "date": "2026-11-26",
+         "week": "2026-11-23",
+         "day": "thu",
+         "label": "Thu 26 Nov"
+        },
+        {
+         "date": "2026-11-27",
+         "week": "2026-11-23",
+         "day": "fri",
+         "label": "Fri 27 Nov"
+        },
+        {
+         "date": "2026-11-28",
+         "week": "2026-11-23",
+         "day": "sat",
+         "label": "Sat 28 Nov"
+        },
+        {
+         "date": "2026-11-30",
+         "week": "2026-11-30",
+         "day": "mon",
+         "label": "Mon 30 Nov"
+        },
+        {
+         "date": "2026-12-01",
+         "week": "2026-11-30",
+         "day": "tue",
+         "label": "Tue 1 Dec"
+        },
+        {
+         "date": "2026-12-02",
+         "week": "2026-11-30",
+         "day": "wed",
+         "label": "Wed 2 Dec"
+        },
+        {
+         "date": "2026-12-03",
+         "week": "2026-11-30",
+         "day": "thu",
+         "label": "Thu 3 Dec"
+        },
+        {
+         "date": "2026-12-04",
+         "week": "2026-11-30",
+         "day": "fri",
+         "label": "Fri 4 Dec"
+        },
+        {
+         "date": "2026-12-05",
+         "week": "2026-11-30",
+         "day": "sat",
+         "label": "Sat 5 Dec"
+        },
+        {
+         "date": "2026-12-07",
+         "week": "2026-12-07",
+         "day": "mon",
+         "label": "Mon 7 Dec"
+        },
+        {
+         "date": "2026-12-08",
+         "week": "2026-12-07",
+         "day": "tue",
+         "label": "Tue 8 Dec"
+        },
+        {
+         "date": "2026-12-09",
+         "week": "2026-12-07",
+         "day": "wed",
+         "label": "Wed 9 Dec"
+        },
+        {
+         "date": "2026-12-10",
+         "week": "2026-12-07",
+         "day": "thu",
+         "label": "Thu 10 Dec"
+        },
+        {
+         "date": "2026-12-11",
+         "week": "2026-12-07",
+         "day": "fri",
+         "label": "Fri 11 Dec"
+        },
+        {
+         "date": "2026-12-12",
+         "week": "2026-12-07",
+         "day": "sat",
+         "label": "Sat 12 Dec"
+        },
+        {
+         "date": "2026-12-14",
+         "week": "2026-12-14",
+         "day": "mon",
+         "label": "Mon 14 Dec"
+        }
+       ],
+       "later": true,
+       "note": "Any day from today through four weeks. Sunday is a rest day, so it is not offered. The Tuesday, Thursday and Saturday limit is for a piece recorded on an off day, so it does not apply to this one.",
+       "body": {
+        "item": "piece:8287846b-6618-4a19-9fb8-23ad4eca2718",
+        "version": 1794225600000,
+        "from": {
+         "week": "2026-11-16",
+         "day": "mon"
+        }
+       }
+      },
       "links": [],
       "stories": null,
       "stories_planned": null,
@@ -6285,6 +7159,252 @@
        "done": "Approved for publish: exactly these 2 files and their words. Growth posts them; nothing else."
       },
       "decision": true
+     },
+     {
+      "key": "piece:5b726fc3-ac63-4607-9293-3257b4ecc75c",
+      "type": "piece",
+      "day": "mon",
+      "date": "2026-11-16",
+      "kind": "piece",
+      "kind_label": "mind.the.gap",
+      "title": "Piece 5b72. It says one thing.",
+      "approved": "Approved by you, Sun 8 Nov, 09:07",
+      "stage": {
+       "key": "approved",
+       "label": "Approved"
+      },
+      "path": [
+       {
+        "key": "branded",
+        "label": "Branded",
+        "state": "current",
+        "when": null
+       },
+       {
+        "key": "fleshed_out",
+        "label": "Fleshed out",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "production_planned",
+        "label": "Production planned",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "produced",
+        "label": "Produced",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "live",
+        "label": "Live",
+        "state": "todo",
+        "when": null
+       }
+      ],
+      "missed": false,
+      "read": {
+       "so_what": null,
+       "story": "Piece 5b72. It says one thing.",
+       "why_now": null,
+       "fact": null,
+       "text": null,
+       "sources": [],
+       "research": [],
+       "said": null
+      },
+      "piece_id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
+      "item": null,
+      "supports": null,
+      "move": {
+       "op": "move",
+       "label": "Move to…",
+       "item": "piece:5b726fc3-ac63-4607-9293-3257b4ecc75c",
+       "version": 1794225600000,
+       "state": "approved",
+       "from": {
+        "week": "2026-11-16",
+        "day": "mon",
+        "date": "2026-11-16"
+       },
+       "days": [
+        {
+         "date": "2026-11-16",
+         "week": "2026-11-16",
+         "day": "mon",
+         "label": "Mon 16 Nov",
+         "current": true
+        },
+        {
+         "date": "2026-11-17",
+         "week": "2026-11-16",
+         "day": "tue",
+         "label": "Tue 17 Nov"
+        },
+        {
+         "date": "2026-11-18",
+         "week": "2026-11-16",
+         "day": "wed",
+         "label": "Wed 18 Nov"
+        },
+        {
+         "date": "2026-11-19",
+         "week": "2026-11-16",
+         "day": "thu",
+         "label": "Thu 19 Nov"
+        },
+        {
+         "date": "2026-11-20",
+         "week": "2026-11-16",
+         "day": "fri",
+         "label": "Fri 20 Nov"
+        },
+        {
+         "date": "2026-11-21",
+         "week": "2026-11-16",
+         "day": "sat",
+         "label": "Sat 21 Nov"
+        },
+        {
+         "date": "2026-11-23",
+         "week": "2026-11-23",
+         "day": "mon",
+         "label": "Mon 23 Nov"
+        },
+        {
+         "date": "2026-11-24",
+         "week": "2026-11-23",
+         "day": "tue",
+         "label": "Tue 24 Nov"
+        },
+        {
+         "date": "2026-11-25",
+         "week": "2026-11-23",
+         "day": "wed",
+         "label": "Wed 25 Nov"
+        },
+        {
+         "date": "2026-11-26",
+         "week": "2026-11-23",
+         "day": "thu",
+         "label": "Thu 26 Nov"
+        },
+        {
+         "date": "2026-11-27",
+         "week": "2026-11-23",
+         "day": "fri",
+         "label": "Fri 27 Nov"
+        },
+        {
+         "date": "2026-11-28",
+         "week": "2026-11-23",
+         "day": "sat",
+         "label": "Sat 28 Nov"
+        },
+        {
+         "date": "2026-11-30",
+         "week": "2026-11-30",
+         "day": "mon",
+         "label": "Mon 30 Nov"
+        },
+        {
+         "date": "2026-12-01",
+         "week": "2026-11-30",
+         "day": "tue",
+         "label": "Tue 1 Dec"
+        },
+        {
+         "date": "2026-12-02",
+         "week": "2026-11-30",
+         "day": "wed",
+         "label": "Wed 2 Dec"
+        },
+        {
+         "date": "2026-12-03",
+         "week": "2026-11-30",
+         "day": "thu",
+         "label": "Thu 3 Dec"
+        },
+        {
+         "date": "2026-12-04",
+         "week": "2026-11-30",
+         "day": "fri",
+         "label": "Fri 4 Dec"
+        },
+        {
+         "date": "2026-12-05",
+         "week": "2026-11-30",
+         "day": "sat",
+         "label": "Sat 5 Dec"
+        },
+        {
+         "date": "2026-12-07",
+         "week": "2026-12-07",
+         "day": "mon",
+         "label": "Mon 7 Dec"
+        },
+        {
+         "date": "2026-12-08",
+         "week": "2026-12-07",
+         "day": "tue",
+         "label": "Tue 8 Dec"
+        },
+        {
+         "date": "2026-12-09",
+         "week": "2026-12-07",
+         "day": "wed",
+         "label": "Wed 9 Dec"
+        },
+        {
+         "date": "2026-12-10",
+         "week": "2026-12-07",
+         "day": "thu",
+         "label": "Thu 10 Dec"
+        },
+        {
+         "date": "2026-12-11",
+         "week": "2026-12-07",
+         "day": "fri",
+         "label": "Fri 11 Dec"
+        },
+        {
+         "date": "2026-12-12",
+         "week": "2026-12-07",
+         "day": "sat",
+         "label": "Sat 12 Dec"
+        },
+        {
+         "date": "2026-12-14",
+         "week": "2026-12-14",
+         "day": "mon",
+         "label": "Mon 14 Dec"
+        }
+       ],
+       "later": true,
+       "note": "Any day from today through four weeks. Sunday is a rest day, so it is not offered. The Tuesday, Thursday and Saturday limit is for a piece recorded on an off day, so it does not apply to this one.",
+       "body": {
+        "item": "piece:5b726fc3-ac63-4607-9293-3257b4ecc75c",
+        "version": 1794225600000,
+        "from": {
+         "week": "2026-11-16",
+         "day": "mon"
+        }
+       }
+      },
+      "links": [],
+      "stories": null,
+      "stories_planned": null,
+      "others": [],
+      "line": "Approved for Mon 16. Its make picks up from where it is.",
+      "next": {
+       "kind": "prompt",
+       "label": "Copy prompt for Claude",
+       "prompt": "You are picking up the Monday 2026-11-16 piece 5b726fc3-ac63-4607-9293-3257b4ecc75c of the Make Your Mind Up content engine with no prior context: \"Piece 5b72. It says one thing.\". Where it stands: Approved for Mon 16. Its make picks up fro…"
+      },
+      "decision": false
      }
     ],
     "decisions": 1,
@@ -6368,7 +7488,181 @@
       "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
       "item": null,
       "supports": null,
-      "move": null,
+      "move": {
+       "op": "move",
+       "label": "Move to…",
+       "item": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
+       "version": 1794225600000,
+       "state": "approved",
+       "from": {
+        "week": "2026-11-16",
+        "day": "wed",
+        "date": "2026-11-18"
+       },
+       "days": [
+        {
+         "date": "2026-11-16",
+         "week": "2026-11-16",
+         "day": "mon",
+         "label": "Mon 16 Nov"
+        },
+        {
+         "date": "2026-11-17",
+         "week": "2026-11-16",
+         "day": "tue",
+         "label": "Tue 17 Nov"
+        },
+        {
+         "date": "2026-11-18",
+         "week": "2026-11-16",
+         "day": "wed",
+         "label": "Wed 18 Nov",
+         "current": true
+        },
+        {
+         "date": "2026-11-19",
+         "week": "2026-11-16",
+         "day": "thu",
+         "label": "Thu 19 Nov"
+        },
+        {
+         "date": "2026-11-20",
+         "week": "2026-11-16",
+         "day": "fri",
+         "label": "Fri 20 Nov"
+        },
+        {
+         "date": "2026-11-21",
+         "week": "2026-11-16",
+         "day": "sat",
+         "label": "Sat 21 Nov"
+        },
+        {
+         "date": "2026-11-23",
+         "week": "2026-11-23",
+         "day": "mon",
+         "label": "Mon 23 Nov"
+        },
+        {
+         "date": "2026-11-24",
+         "week": "2026-11-23",
+         "day": "tue",
+         "label": "Tue 24 Nov"
+        },
+        {
+         "date": "2026-11-25",
+         "week": "2026-11-23",
+         "day": "wed",
+         "label": "Wed 25 Nov"
+        },
+        {
+         "date": "2026-11-26",
+         "week": "2026-11-23",
+         "day": "thu",
+         "label": "Thu 26 Nov"
+        },
+        {
+         "date": "2026-11-27",
+         "week": "2026-11-23",
+         "day": "fri",
+         "label": "Fri 27 Nov"
+        },
+        {
+         "date": "2026-11-28",
+         "week": "2026-11-23",
+         "day": "sat",
+         "label": "Sat 28 Nov"
+        },
+        {
+         "date": "2026-11-30",
+         "week": "2026-11-30",
+         "day": "mon",
+         "label": "Mon 30 Nov"
+        },
+        {
+         "date": "2026-12-01",
+         "week": "2026-11-30",
+         "day": "tue",
+         "label": "Tue 1 Dec"
+        },
+        {
+         "date": "2026-12-02",
+         "week": "2026-11-30",
+         "day": "wed",
+         "label": "Wed 2 Dec"
+        },
+        {
+         "date": "2026-12-03",
+         "week": "2026-11-30",
+         "day": "thu",
+         "label": "Thu 3 Dec"
+        },
+        {
+         "date": "2026-12-04",
+         "week": "2026-11-30",
+         "day": "fri",
+         "label": "Fri 4 Dec"
+        },
+        {
+         "date": "2026-12-05",
+         "week": "2026-11-30",
+         "day": "sat",
+         "label": "Sat 5 Dec"
+        },
+        {
+         "date": "2026-12-07",
+         "week": "2026-12-07",
+         "day": "mon",
+         "label": "Mon 7 Dec"
+        },
+        {
+         "date": "2026-12-08",
+         "week": "2026-12-07",
+         "day": "tue",
+         "label": "Tue 8 Dec"
+        },
+        {
+         "date": "2026-12-09",
+         "week": "2026-12-07",
+         "day": "wed",
+         "label": "Wed 9 Dec"
+        },
+        {
+         "date": "2026-12-10",
+         "week": "2026-12-07",
+         "day": "thu",
+         "label": "Thu 10 Dec"
+        },
+        {
+         "date": "2026-12-11",
+         "week": "2026-12-07",
+         "day": "fri",
+         "label": "Fri 11 Dec"
+        },
+        {
+         "date": "2026-12-12",
+         "week": "2026-12-07",
+         "day": "sat",
+         "label": "Sat 12 Dec"
+        },
+        {
+         "date": "2026-12-14",
+         "week": "2026-12-14",
+         "day": "mon",
+         "label": "Mon 14 Dec"
+        }
+       ],
+       "later": true,
+       "note": "Any day from today through four weeks. Sunday is a rest day, so it is not offered. The Tuesday, Thursday and Saturday limit is for a piece recorded on an off day, so it does not apply to this one.",
+       "body": {
+        "item": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
+        "version": 1794225600000,
+        "from": {
+         "week": "2026-11-16",
+         "day": "wed"
+        }
+       }
+      },
       "links": [],
       "stories": null,
       "stories_planned": null,
@@ -6703,7 +7997,181 @@
       "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
       "item": null,
       "supports": null,
-      "move": null,
+      "move": {
+       "op": "move",
+       "label": "Move to…",
+       "item": "piece:b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+       "version": 1794225600000,
+       "state": "approved",
+       "from": {
+        "week": "2026-11-16",
+        "day": "fri",
+        "date": "2026-11-20"
+       },
+       "days": [
+        {
+         "date": "2026-11-16",
+         "week": "2026-11-16",
+         "day": "mon",
+         "label": "Mon 16 Nov"
+        },
+        {
+         "date": "2026-11-17",
+         "week": "2026-11-16",
+         "day": "tue",
+         "label": "Tue 17 Nov"
+        },
+        {
+         "date": "2026-11-18",
+         "week": "2026-11-16",
+         "day": "wed",
+         "label": "Wed 18 Nov"
+        },
+        {
+         "date": "2026-11-19",
+         "week": "2026-11-16",
+         "day": "thu",
+         "label": "Thu 19 Nov"
+        },
+        {
+         "date": "2026-11-20",
+         "week": "2026-11-16",
+         "day": "fri",
+         "label": "Fri 20 Nov",
+         "current": true
+        },
+        {
+         "date": "2026-11-21",
+         "week": "2026-11-16",
+         "day": "sat",
+         "label": "Sat 21 Nov"
+        },
+        {
+         "date": "2026-11-23",
+         "week": "2026-11-23",
+         "day": "mon",
+         "label": "Mon 23 Nov"
+        },
+        {
+         "date": "2026-11-24",
+         "week": "2026-11-23",
+         "day": "tue",
+         "label": "Tue 24 Nov"
+        },
+        {
+         "date": "2026-11-25",
+         "week": "2026-11-23",
+         "day": "wed",
+         "label": "Wed 25 Nov"
+        },
+        {
+         "date": "2026-11-26",
+         "week": "2026-11-23",
+         "day": "thu",
+         "label": "Thu 26 Nov"
+        },
+        {
+         "date": "2026-11-27",
+         "week": "2026-11-23",
+         "day": "fri",
+         "label": "Fri 27 Nov"
+        },
+        {
+         "date": "2026-11-28",
+         "week": "2026-11-23",
+         "day": "sat",
+         "label": "Sat 28 Nov"
+        },
+        {
+         "date": "2026-11-30",
+         "week": "2026-11-30",
+         "day": "mon",
+         "label": "Mon 30 Nov"
+        },
+        {
+         "date": "2026-12-01",
+         "week": "2026-11-30",
+         "day": "tue",
+         "label": "Tue 1 Dec"
+        },
+        {
+         "date": "2026-12-02",
+         "week": "2026-11-30",
+         "day": "wed",
+         "label": "Wed 2 Dec"
+        },
+        {
+         "date": "2026-12-03",
+         "week": "2026-11-30",
+         "day": "thu",
+         "label": "Thu 3 Dec"
+        },
+        {
+         "date": "2026-12-04",
+         "week": "2026-11-30",
+         "day": "fri",
+         "label": "Fri 4 Dec"
+        },
+        {
+         "date": "2026-12-05",
+         "week": "2026-11-30",
+         "day": "sat",
+         "label": "Sat 5 Dec"
+        },
+        {
+         "date": "2026-12-07",
+         "week": "2026-12-07",
+         "day": "mon",
+         "label": "Mon 7 Dec"
+        },
+        {
+         "date": "2026-12-08",
+         "week": "2026-12-07",
+         "day": "tue",
+         "label": "Tue 8 Dec"
+        },
+        {
+         "date": "2026-12-09",
+         "week": "2026-12-07",
+         "day": "wed",
+         "label": "Wed 9 Dec"
+        },
+        {
+         "date": "2026-12-10",
+         "week": "2026-12-07",
+         "day": "thu",
+         "label": "Thu 10 Dec"
+        },
+        {
+         "date": "2026-12-11",
+         "week": "2026-12-07",
+         "day": "fri",
+         "label": "Fri 11 Dec"
+        },
+        {
+         "date": "2026-12-12",
+         "week": "2026-12-07",
+         "day": "sat",
+         "label": "Sat 12 Dec"
+        },
+        {
+         "date": "2026-12-14",
+         "week": "2026-12-14",
+         "day": "mon",
+         "label": "Mon 14 Dec"
+        }
+       ],
+       "later": true,
+       "note": "Any day from today through four weeks. Sunday is a rest day, so it is not offered. The Tuesday, Thursday and Saturday limit is for a piece recorded on an off day, so it does not apply to this one.",
+       "body": {
+        "item": "piece:b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+        "version": 1794225600000,
+        "from": {
+         "week": "2026-11-16",
+         "day": "fri"
+        }
+       }
+      },
       "links": [],
       "stories": null,
       "stories_planned": null,

@@ -70,6 +70,10 @@ jobs:
         # Ruling (Krish, 2026-11-12): the board shows exactly where everything is, and one post is one item that can never
         # sprawl across days or go stale. A second item of one post is refused by every writer; his Approve carries it.
         run: node tests/offday-one-post-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+      - name: A series piece moves and a day's piece is replaced, on the real migration (only his press)
+        # Krish, 2026-11-13: "There is no approve button." His replacing Approve and Move to… on a series piece land
+        # whole or not at all; a moved piece's old pick no longer holds it; no other writer places anything.
+        run: node tests/series-moves-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
 
   control-plane-sql:
     # The Video Studio control plane's projection CAS, ancestry and race
