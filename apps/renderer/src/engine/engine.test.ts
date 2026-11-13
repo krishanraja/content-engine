@@ -441,6 +441,42 @@ describe('the sting opens the wide long cut', () => {
     expect([sfx(10), sfx(65), sfx(66)]).toEqual([false, false, true])
   })
 
+  it('plays the sting straight after the hook: the hook first, then the sting, then the cut goes on (atFrame)', () => {
+    // config/brand-palette.json long_cut sting after_hook (SOCIAL-BEST-PRACTICES-2026 section 4.3): never in front of it.
+    const props = wide({ ...STING, atFrame: 60 })
+    for (const [render, beat, frame] of [[0, 'hook', 0], [59, 'hook', 59]] as const) {
+      const nodes = at(createElement(VeCut, props), render)
+      expect(brands(nodes)).toEqual([[beat, frame]])
+      expect(pictures(nodes)).toEqual([['take.mp4', 0, true]])
+    }
+    for (const render of [60, 115]) {
+      const nodes = at(createElement(VeCut, props), render)
+      expect(pictures(nodes)).toEqual([[STING.src, null, true]])
+      expect(nodes.some((node) => node.type === FormatMaster || node.type === BrandFrame)).toBe(false)
+    }
+    for (const [render, beat, frame] of [[116, 'call', 60], [175, 'call', 119]] as const) {
+      expect(brands(at(createElement(VeCut, props), render))).toEqual([[beat, frame]])
+    }
+    expect(at(createElement(VeCut, props), 176).some((node) => node.type === FormatMaster)).toBe(false)
+    // One stem from frame 0; the hook's sfx in the hook only, never again after the sting.
+    for (const frame of [0, 60, 116, 175]) {
+      const stems = at(createElement(VeCut, props), frame).filter((node) => node.type === Audio && node.props.src === 'stem.wav')
+      expect(stems).toHaveLength(1)
+    }
+    const sfx = (frame: number) => at(createElement(VeCut, props), frame).some((node) => node.type === Audio && node.props.src === 'hit.wav')
+    expect([sfx(10), sfx(59), sfx(60), sfx(116), sfx(175)]).toEqual([true, true, false, false, false])
+  })
+
+  it('takes the sting only on a beat boundary inside the cut, before its close', () => {
+    const refused = (atFrame: number) => {
+      const result = EngineRenderPropsSchema.safeParse({ ...wide(), sting: { ...STING, atFrame } })
+      return result.success ? '' : result.error.issues.map((issue) => issue.message).join('; ')
+    }
+    expect(refused(60)).toBe('')
+    expect(refused(30)).toMatch(/beat boundary/)
+    expect(refused(95)).toMatch(/before its close/)
+  })
+
   it('changes nothing with no sting', () => {
     const props = wide(null)
     const tree = VeCut(props)

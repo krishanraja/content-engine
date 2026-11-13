@@ -345,6 +345,65 @@ class StingLeadTest(unittest.TestCase):
                              lead_frames=lead, fps=7 if lead == 1 else 30)
 
 
+class StingAfterHookTest(unittest.TestCase):
+    """The series sting straight after the hook (config/brand-palette.json long_cut sting after_hook; SOCIAL-BEST-
+    PRACTICES-2026 section 4.3). The stem runs his hook from sample 0, then the sting's 56 frames of silence at the hook's
+    end (sting_at_frame, 120 = 4 s here), then his voice on from the same sample, all counted in samples; the bed rises
+    under the sting like a chapter lift. The voice and track are EpisodeBedTest's."""
+
+    AT, LEAD = 120, 56
+    AT_S, LEAD_S = 120 / 30, 56 / 30
+
+    @classmethod
+    def setUpClass(cls):
+        cls.temp = tempfile.TemporaryDirectory(dir=ROOT / 'tests', prefix='ve-sting-after-')
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.root = Path(cls.temp.name)
+        cls.voice, cls.track = cls.root / 'voice.wav', cls.root / 'track.wav'
+        make(cls.voice, "anoisesrc=d=60:c=pink:a=0.5,volume='if(between(t,0.2,57)*lt(mod(t-0.2,6),4),1,0)':eval=frame", 60)
+        make(cls.track, "anoisesrc=d=22:c=brown:a=0.4,volume='if(lt(mod(t,14),7),1,0.316)':eval=frame", 22)
+        cls.out = cls.root / 'audio.long.wav'
+        lead = cls.LEAD_S
+        cls.result = audio.premix(str(cls.voice), str(cls.track), str(cls.out), 0.0, 60.0 + lead, mode='episode_bed',
+                                  last_word_end_s=57.0 + lead, voice_start_s=0.2, levels=LEVELS,
+                                  lifts=[[30.0 + lead, 33.0 + lead]], lead_frames=cls.LEAD, sting_at_frame=cls.AT)
+        cls.music = str(cls.out.with_suffix('.music.wav'))
+
+    def test_the_sidecar_says_where_the_sting_sits(self):
+        sidecar = json.loads(self.out.with_suffix('.bed.json').read_text(encoding='utf-8'))
+        self.assertEqual((sidecar['lead_frames'], sidecar['sting_at_frame'], sidecar['sting_at_sample'],
+                          sidecar['dialogue_resumes_at_sample']), (56, 120, 192000, 192000 + 89600))
+        self.assertLessEqual(sidecar['dialogue_under_lead_dbfs'], -90.0, 'no take audio sounds under the sting')
+        # The sting's window is a lift: the bed is up under it, never a quiet bed under a silent clip.
+        self.assertTrue(any(abs(a - self.AT_S) < 1e-9 and abs(b - self.AT_S - self.LEAD_S) < 1e-9 for a, b in sidecar['bed']['lifts']),
+                        sidecar['bed']['lifts'])
+        self.assertTrue(self.result['bed']['shape']['pass'], self.result['bed']['shape'])
+
+    def test_his_voice_stops_at_the_hook_and_goes_on_after_the_sting_with_nothing_lost(self):
+        # A tone that runs through the hook's end: the stem has it to sample 192000, silence for 89600, then the rest,
+        # and the tone's whole length is in the stem. Measured on the stem itself.
+        tone = self.root / 'tone.wav'
+        make(tone, 'sine=f=440:r=48000', 6.0)
+        out = self.root / 'tone-after.wav'
+        audio.premix(str(tone), None, str(out), 0.0, 6.0 + self.LEAD_S, voice_start_s=0.0, lead_frames=self.LEAD,
+                     sting_at_frame=self.AT)
+        samples = np.abs(audio._decode(str(out)))
+        loud = samples > 0.1 * samples.max()
+        self.assertTrue(loud[:192000 - 2400].all() or loud[1000:192000 - 2400].mean() > 0.4, 'his hook plays to the sting')
+        # 10 ms either side for the master's resampler ringing on a tone cut mid-cycle (the premix proved the laid
+        # dialogue under -90 dBFS on every sample of the sting itself).
+        self.assertFalse(loud[192000 + 480:192000 + 89600 - 480].any(), 'silence under the sting')
+        resumed = 192000 + 89600 + int(np.argmax(loud[192000 + 89600:]))
+        self.assertLessEqual(resumed - (192000 + 89600), 480, resumed)  # within 10 ms, as above
+        self.assertAlmostEqual(len(samples) / audio.SR, 6.0 + self.LEAD_S, delta=0.01)
+
+    def test_a_first_word_after_the_hook_or_a_sting_outside_the_cut_is_refused(self):
+        for at, voice_start, said in ((120, 4.5, 'inside the hook'), (120, 0.2, 'after the hook'), (0.5, 0.2, 'whole frame')):
+            with self.subTest(at=at), self.assertRaisesRegex(ValueError, said):
+                audio.premix(str(self.voice), None, str(self.root / 'refused.wav'), 0.0, 4.0 if voice_start == 0.2 and at == 120 else 10.0,
+                             voice_start_s=voice_start, lead_frames=self.LEAD, sting_at_frame=at)
+
+
 class TileTest(unittest.TestCase):
     def test_tiling_covers_the_cut_with_no_run_longer_than_the_track(self):
         track = np.ones((audio.SR * 10, 2)) * 0.1

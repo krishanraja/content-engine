@@ -212,8 +212,8 @@ def palette_lints(spec: dict) -> list[str]:
     """brand.palette: each whole cut's opening, sting and close against config/brand-palette.json for its day
     (Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the
     attached"). What ve will draw is read from compile, the one place it is decided: its close is ENDING_FRAMES
-    long on both shapes, and its sting sits where STING_POSITION says (in front of the hook until compile names
-    another). A spec dated before the palette's applies_from is not checked."""
+    long on both shapes, and its sting sits where STING_POSITION says (after the hook, compile.hook_end). A spec dated
+    before the palette's applies_from is not checked."""
     import sys  # noqa: PLC0415
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import brand_palette  # noqa: PLC0415
@@ -234,7 +234,7 @@ def palette_lints(spec: dict) -> list[str]:
             continue
         sting = 'none'
         if shape == '16x9' and kind == 'series' and not _sting_paused():
-            sting = getattr(ve_compile, 'STING_POSITION', 'before_hook')
+            sting = ve_compile.STING_POSITION
         record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
                   'opening': 'hook', 'sting': sting,
                   'close': {'id': 'statement_card' if shape == '16x9' else 'statement_beat',

@@ -501,10 +501,19 @@ class StingTest(unittest.TestCase):
         with self.env(self.approved):
             report = {}
             props = compile_cut(spec, 'proof-wide', words, FIXTURE, report=report)
+        # Straight after the hook, never in front of it (config/brand-palette.json long_cut sting after_hook): it plays
+        # on the frame after the hook's last, the end of beat 0.
+        at = props['beats'][0]['toFrame']
         self.assertEqual(props['sting'], {'src': str((self.clips / Path(self.entry['library']).name).resolve()),
-                                          'series': 'mind_the_gap', 'frames': 56, 'sha256': self.entry['sha256']})
-        # In front of the cut, never in it: every frame is the hook-first cut's, and durationFrames leaves the sting out.
-        self.assertEqual({k: v for k, v in props.items() if k != 'sting'}, hook)
+                                          'series': 'mind_the_gap', 'frames': 56, 'sha256': self.entry['sha256'], 'atFrame': at})
+        self.assertEqual(at, props['beats'][1]['fromFrame'])
+        self.assertGreaterEqual(at, 90, 'the hook outlasts the opening gate\'s windows, so the gate never measures the sting')
+        # No frame moves: every frame is the hook-only cut's (a caption page holding into the sting closes on the hook),
+        # and durationFrames leaves the sting out.
+        self.assertTrue(all(page['toFrame'] <= at for page in props['captions'] if page['fromFrame'] < at))
+        same = lambda p: {k: v for k, v in p.items() if k not in ('sting', 'captions')}  # noqa: E731
+        self.assertEqual(same(props), same(hook))
+        self.assertEqual([(c['fromFrame'], c['words']) for c in props['captions']], [(c['fromFrame'], c['words']) for c in hook['captions']])
         base = round(words[-1]['end_s'] * 30) + 12
         self.assertEqual(props['durationFrames'], base + ENDING_FRAMES)
         self.assertEqual((props['beats'][0]['fromFrame'], props['beats'][0]['sectionBeat']), (0, True))
@@ -515,7 +524,7 @@ class StingTest(unittest.TestCase):
         self.assertEqual(report['opening'], 'sting')
         self.assertEqual(report['sting'], {'series': 'mind_the_gap', 'frames': 56, 'clip_sha256': self.entry['sha256'],
                                            'source_sha256': intro.source_hash(intro.load(self.approved)),
-                                           'library': self.entry['library']})
+                                           'library': self.entry['library'], 'at_frame': at})
         # A candidate leaves the wide cut on its hook and says why.
         self.assertNotIn('sting', hook)
         self.assertEqual(waiting['opening'], 'hook')
@@ -618,8 +627,9 @@ class StingTest(unittest.TestCase):
         self.assertEqual(json.loads(result.stdout), props['sting'])
 
     def test_premix_lays_his_voice_and_every_lift_after_the_sting(self):
-        # ve premix reads the sting from the props alone: the stem runs the sting plus the cut, and his first word, his
-        # last word and each chapter lift (given on the cut's own clock) move by exactly its 56 frames.
+        # ve premix reads the sting from the props alone: the stem runs the sting plus the cut, his first word stays in
+        # the hook, and his last word and each chapter lift after the sting (given on the cut's own clock) move by
+        # exactly its 56 frames; the sting's frame goes to the premix, which lays the gap there.
         with self.env(self.approved):
             props = compile_cut(self.wide(), 'proof-wide', timed_words(), FIXTURE)
         words = timed_words()
@@ -651,20 +661,24 @@ class StingTest(unittest.TestCase):
         self.assertEqual(lead.kwargs['lead_frames'], 56)
         self.assertAlmostEqual(lead.args[4], (56 + stinged['durationFrames']) / 30)
         self.assertAlmostEqual(lead.args[4] - plain.args[4], lead_s)
-        for key in ('voice_start_s', 'last_word_end_s'):
-            self.assertAlmostEqual(lead.kwargs[key] - plain.kwargs[key], lead_s)
+        self.assertAlmostEqual(lead.kwargs['voice_start_s'], plain.kwargs['voice_start_s'])
+        self.assertAlmostEqual(lead.kwargs['last_word_end_s'] - plain.kwargs['last_word_end_s'], lead_s)
         self.assertAlmostEqual(plain.kwargs['voice_start_s'], words[0]['onset_s'])
+        self.assertEqual((plain.kwargs['sting_at_frame'], lead.kwargs['sting_at_frame']), (0, stinged['sting']['atFrame']))
+        self.assertLess(stinged['sting']['atFrame'] / 30, 4.0, 'the lift in this fixture comes after the sting')
         self.assertEqual(plain.kwargs['lifts'], [[4.0, 6.5]])
         self.assertEqual(lead.kwargs['lifts'], [[4.0 + lead_s, 6.5 + lead_s]])
 
-    def stinged(self, lead_frames=56, sidecar=True):
+    def stinged(self, lead_frames=56, sidecar=True, at=None):
         """Compiled stinged props whose stem sits in a temp folder, with the sidecar ve premix writes."""
         with self.env(self.approved):
             props = compile_cut(self.wide(), 'proof-wide', timed_words(), FIXTURE)
         folder = self.empty()
         props['audio']['stem']['src'] = str(folder / 'audio.proof-wide.wav')
         if sidecar:
-            (folder / 'audio.proof-wide.bed.json').write_text(json.dumps({'lead_frames': lead_frames}), encoding='utf-8')
+            made_at = props['sting']['atFrame'] if at is None else at
+            (folder / 'audio.proof-wide.bed.json').write_text(json.dumps({'lead_frames': lead_frames, 'sting_at_frame': made_at}),
+                                                              encoding='utf-8')
         return props
 
     def test_render_takes_only_the_approved_clip_with_a_stem_made_for_it(self):
@@ -676,13 +690,18 @@ class StingTest(unittest.TestCase):
             self.assertRegex(' '.join(sting_problems(wrong)), 'not the approved mind_the_gap clip')
             stale = {k: v for k, v in props.items() if k != 'sting'}
             self.assertRegex(' '.join(sting_problems(stale)), 'compiled before the approval')
-            self.assertRegex(' '.join(sting_problems(self.stinged(lead_frames=0))), 'premixed with 0 frames.*opens on 56')
+            self.assertRegex(' '.join(sting_problems(self.stinged(lead_frames=0, at=0))), 'premixed with 0 frames.*plays 56')
+            # A stem made with the sting in front of the hook, or the props' sting moved back there: both refused.
+            self.assertRegex(' '.join(sting_problems(self.stinged(at=0))), 'sting at frame 0, and the cut plays 56 at frame')
+            front = copy.deepcopy(props)
+            front['sting'].pop('atFrame')
+            self.assertRegex(' '.join(sting_problems(front)), 'in front of the hook, which is retired')
             self.assertRegex(' '.join(sting_problems(self.stinged(sidecar=False))), 'no ve premix sidecar')
             # A tall or off-day cut without a sting is not this check's business, unless its stem was made for one.
             plain = dict(stale, audio=dict(stale['audio'], stem={'src': str(self.empty() / 'audio.wav'), 'trimBeforeFrames': 0}))
             for change in ({'aspect': '9:16'}, {'series': dict(stale['series'], label='off.day')}):
                 self.assertEqual(sting_problems(dict(plain, **change)), [])
-                self.assertRegex(' '.join(sting_problems(dict(stale, **change))), 'premixed with 56 frames.*opens on 0')
+                self.assertRegex(' '.join(sting_problems(dict(stale, **change))), 'premixed with 56 frames.*plays 0')
         with self.env(self.candidate):
             self.assertRegex(' '.join(sting_problems(props)), 'only a sting Krish approved opens a cut')
         with self.env(self.work / 'no-such-sting.json'):
