@@ -46,6 +46,9 @@ on:
         description: 'Find the stories again even if the live board already shows them'
         type: boolean
         default: false
+      fill:
+        description: 'off-<day>-<id>: an approved good-news post with fewer than five stories, filled to five on its own topic'
+        required: false
 
 concurrency:
   group: saturday-goodnews
@@ -89,12 +92,15 @@ jobs:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           WEEK: ${{ inputs.week || github.event.client_payload.week }}
           FORCE: ${{ inputs.force || github.event.client_payload.force }}
+          FILL: ${{ inputs.fill || github.event.client_payload.fill }}
           EVENT: ${{ github.event_name }}
         run: |
-          # A typed week is normalised to its YYYY-MM-DD Monday (or refused) before it names a folder or a branch.
+          # A typed week is normalised to its YYYY-MM-DD Monday (or refused) before it names a folder or a branch; a
+          # fill names an off-day option (off-<day>-<id>) or is refused.
           set -- check --event "$EVENT"
           [ -n "$WEEK" ] && set -- "$@" --week "$WEEK"
           [ "$FORCE" = "true" ] && set -- "$@" --force
+          [ -n "$FILL" ] && set -- "$@" --fill "$FILL"
           python3 scripts/saturday_goodnews.py "$@" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v4
@@ -118,6 +124,7 @@ jobs:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           GN_MONDAY: ${{ steps.guard.outputs.monday }}
           GN_DUE: ${{ steps.guard.outputs.due }}
+          GN_FILL: ${{ steps.guard.outputs.fill }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ github.token }}
@@ -130,8 +137,16 @@ jobs:
             (.github/workflows/saturday-goodnews.yml; the Sunday ideas run finds them each week). No one reads this
             run's chat.
 
-            Run python3 scripts/check_failures.py and python3 scripts/floor.py first. Then follow the section
-            "The Saturday good news" in .agents/skills/plan-week/references/offdays.md exactly: find the five stories
+            Run python3 scripts/check_failures.py and python3 scripts/floor.py first.
+
+            Fill: "${{ steps.guard.outputs.fill }}". When it names an option (off-<day>-<id>), this run fills that
+            approved good-news post to five stories on its own topic and does nothing else: follow "Filling an approved
+            post to five" in the section "The Saturday good news" of .agents/skills/plan-week/references/offdays.md,
+            write the stories onto that option only (its existing story first), never change its copy, hook, pitch or
+            direction (his Approve is bound to those words), then run board_feed.py gather and cover.
+
+            Otherwise follow the section
+            "The Saturday good news" in .agents/skills/plan-week/references/offdays.md exactly: find one topic and the five stories on it
             (real AI news from the seven days up to ${{ steps.guard.outputs.due }}, today, that helped
             real people, each with a real photo or clip of the thing itself the post can embed), check each against its
             primary source, write them into that week's docs/plans/<Monday>-week/ideas.json on the weekly good-news
@@ -140,7 +155,7 @@ jobs:
             search and web fetch, and file what you found on Saturday as you write it (python3
             scripts/post-pack/board_session.py day:<Monday>/sat add <file>; docs/PUBLISH_BOARDS.md).
 
-            Change nothing but that option's stories and stories_due; never build or publish a board page (the live
+            Change nothing but that option's stories and stories_due (and its topic, when the run chose one); never build or publish a board page (the live
             board reads ideas.json itself); never publish or post anything public; no spend beyond this run. Do not
             commit or push: the workflow puts that folder on the live board. If cover refuses the stories, fix them and
             check again; if it still refuses, stop and say why. Never set a piece's day or write a press: only
@@ -181,7 +196,7 @@ jobs:
           python3 scripts/post-pack/board_web.py touch "$MONDAY" --source goodnews || echo "::warning::The week's change signal was not bumped; the board shows the stories at its next read."
 
       - name: The stories are on the live board
-        if: steps.guard.outputs.go == 'true'
+        if: steps.guard.outputs.go == 'true' && steps.guard.outputs.fill == ''
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
           MONDAY: ${{ steps.guard.outputs.monday }}
