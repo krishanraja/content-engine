@@ -2199,12 +2199,6 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function cutIncident(place: CutPlace, v: CutVerdict): Incident | null`
 - `async function fileCutLearning(db: SupabaseClient, place: CutPlace, v: CutVerdict, now = new Date()): Promise<CutLearni…`
 
-### `apps/control-plane/api/board/_deskPage.ts`
-
-Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not edit by hand.
-
-- `const DESK_PAGE: string`
-
 ### `apps/control-plane/api/board/_drivePosts.ts`
 
 - `const POSTS_FOLDER_ID`
@@ -2333,7 +2327,6 @@ Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the
 
 - `const LIVE_BOARD_URL`
 - `function liveBoardUrl(week?: string | null, day?: string | null): string`
-- `const ARCHIVE_LINE`
 
 ### `apps/control-plane/api/board/_manifest.ts`
 
@@ -2521,12 +2514,6 @@ Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md
 - `function storyboardPrompt(p: PieceBrief): string`
 - `function mockPrompt(p: PieceBrief): string`
 - `function stepPrompt(p: PieceBrief, step: string): string`
-
-### `apps/control-plane/api/board/_readOnly.ts`
-
-- `const ARCHIVE_REFERRER_POLICY`
-- `function fromArchivePage(referer: string | string[] | undefined): boolean`
-- `function readOnlyArchive(html: string, week: string): string`
 
 ### `apps/control-plane/api/board/_research.ts`
 
@@ -3949,84 +3936,6 @@ His verdicts on past off-day options, for Sunday's gather (GET /api/week/options
 - `interface SaidNote`
 - `function groupSaid(rows: SaidRow[], ids: string[]): Map<string, SaidNote[]>`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
-
-### `apps/control-plane/board-next/src/App.tsx`
-
-- `function App()`
-
-### `apps/control-plane/board-next/src/api.ts`
-
-The live board's one door to the server. Every call carries his login cookie; a 401 is said plainly, never swallowed.
-
-- `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
-- `type Action`
-- `interface Run`
-- `interface LookOption`
-- `interface OffdaySides`
-- `interface Review`
-- `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
-- `interface DayPath`
-- `interface Day`
-- `interface View`
-- `class BoardError`
-- `const week`
-- `const api`
-- `function sayError(e: unknown): string`
-
-### `apps/control-plane/board-next/src/components/live.tsx`
-
-The archive is read-only (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only
-
-- `const LIVE_PRESS`
-- `function LiveLink({ day, primary = false, label = LIVE_PRESS }: { day?: string | null; primary?: boolean; label?: strin…`
-
-### `apps/control-plane/board-next/src/components/path.tsx`
-
-One day's guided path (PLAN.md, "Each day as a guided path"): six steps, only the current one open.
-
-- `function Stepper({ path, open, onOpen }: { path: DayPath; open: PathKey | null; onOpen: (k: PathKey) => void })`
-- `function Dropzone({ day, role }: { day: Day; onFiled?: () => void; role?: 'storyboard' })`
-- `function StepPanel({ day, step, reload }: { day: Day; step: PathKey; reload: () => void })`
-- `function RunButton({ day }: { day: Day; reload?: () => void })`
-- `function DayActions({ day, reload, only, onReview }: { day: Day; reload: () => void; only?: 'first' | 'prompt'; onRevie…`
-
-### `apps/control-plane/board-next/src/components/review.tsx`
-
-A revised off-day option, judged where it shows (21st.dev Approval Card, syeddhasnainn, restyled). The press writes
-
-- `function ReviewCard({ review, day, label, reload }: { review: Review; day: string; label: string; reload: () => void })`
-
-### `apps/control-plane/board-next/src/components/sheets.tsx`
-
-Sheets for what he does not need to see until he asks: the full prompt before copying, and his long-form thoughts.
-
-- `function PromptButton({ label, prompt, target = 'claude' }: { label: string; prompt: string; target?: 'claude' | 'perpl…`
-- `function ThoughtsLink({ day, step, label = 'Add your thoughts' }: { day: string; step: string; label?: string })`
-
-### `apps/control-plane/board-next/src/components/ui.tsx`
-
-The board's small parts. Every control keeps its text inside it (nowrap, ellipsis, the full text as its title) and is
-
-- `const cx = (...xs: Array<string | false | null | undefined>) =>`
-- `const Button`
-- `function Spinner()`
-- `function StatusDot({ tone, pulse, label }: { tone: 'ok' | 'amber' | 'bad' | 'muted'; pulse?: boolean; label: string })`
-- `function Chip({ tone = 'muted', children }: { tone?: 'ok' | 'amber' | 'bad' | 'muted' | 'ink'; children: React.ReactNod…`
-- `function CountUp({ to }: { to: number })`
-- `function Panel({ title, chip, why, children, actions, after }: { title: React.ReactNode; chip?: React.ReactNode; why?: …`
-- `function ActionBar({ primary, secondary, prompt }: { primary?: React.ReactNode; secondary?: React.ReactNode; prompt?: R…`
-
-### `apps/control-plane/board-next/src/undo.tsx`
-
-Every press is sent after a five-second Undo (sonner, the toast under 21st.dev's Sonner Toast), so a wrong tap costs no…
-
-- `function useUndo()`
-
-### `apps/control-plane/board-next/vite.config.ts`
-
-The live board's client (docs/plans/2026-11-09-board-desk/PLAN.md, build round 3). One self-contained HTML file:
-
-- `export default defineConfig({ root: import.meta.dirname, plugins: [react(),`
 
 ### `apps/control-plane/lib/contentEngine.ts`
 

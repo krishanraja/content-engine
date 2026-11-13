@@ -205,13 +205,19 @@ describe('every ruling carries his words and reaches a stage', () => {
   test('a production rule is enforced by the tools its source names, and those tools exist', () => {
     // No prompt reads the production stage, so a rule there is enforced
     // somewhere only when a tool holds it: its source must name that tool.
+    // A source is the rule's provenance, his to change (taste-guard), so a tool it names that was retired since stays
+    // named there; it is listed here with the ruling that retired it, and the rule must still name a tool that exists.
+    const RETIRED_TOOLS: Record<string, string> = {
+      'config/board-layout.json': 'Ruling (Krish, 2026-11-13): the old publish boards are retired for good',
+    }
     const production = rulesFor('production')
     assert.ok(production.length > 0)
     for (const r of production) {
-      const tools = r.source.match(/\b(?:scripts|config|apps)\/[\w./\-\[\]]+\.(?:py|ts|json)\b/g) || []
+      const tools = (r.source.match(/\b(?:scripts|config|apps)\/[\w./\-\[\]]+\.(?:py|ts|json)\b/g) || []).filter(t => !(t in RETIRED_TOOLS))
       assert.ok(tools.length > 0, `${r.id} names no tool that enforces it`)
       for (const tool of tools) assert.ok(existsSync(tool), `${r.id}: ${tool} does not exist`)
     }
+    for (const tool of Object.keys(RETIRED_TOOLS)) assert.ok(!existsSync(tool), `${tool} is back: take it off RETIRED_TOOLS`)
   })
 })
 

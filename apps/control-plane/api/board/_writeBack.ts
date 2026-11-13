@@ -20,11 +20,12 @@ export const WRITE_BACK_HEAD = 'Keep the board current as you work'
 export const RESEARCH_RULE = 'Research is never left in scratch or a chat: file each research document on the piece as you write it, '
   + 'and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive.'
 
-/** What no session does on the board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
- *  read-only archive), said once in every copied prompt; how to use the board is docs/PUBLISH_BOARDS.md. */
-export const WALLS = 'This Publish Board in Control Centre is the only place to put the work; content.krishraja.com/board is a '
-  + 'read-only archive. Never post or publish anything, and never put an idea on the publish board: propose it, and only '
-  + 'Krish\'s Approve places it.'
+/** What no session does on the board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; Ruling, Krish,
+ *  2026-11-13: the old publish boards are retired for good), said once in every copied prompt; how to use the board is
+ *  docs/PUBLISH_BOARDS.md. */
+export const WALLS = 'This Publish Board in Control Centre is the only place to put the work; the old pages at '
+  + 'content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on '
+  + 'the publish board: propose it, and only Krish\'s Approve places it.'
 
 export interface WriteBackTarget { pieceId: string | null; week: string; day: string; step: string }
 

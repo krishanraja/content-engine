@@ -9,8 +9,7 @@ import { monday } from './_contracts.js'
 // document is copied to the new week under the new day (its id, its day and its anchor moved from from_day to to_day),
 // through board_save, as the writer it already had: a carried edit of his stays his, so every reader still reads it.
 // Its body records where it came from (carried_from). The day's pick is not carried: the new week's pick comes from
-// that week's options. Nothing is deleted from the old week; its board drops the day only after the new board reads
-// back (week_board.py --carry builds the page). A document already in the new week with other words is left as it is
+// that week's options. Nothing is deleted from the old week. A document already in the new week with other words is left as it is
 // and named in conflicts; the same words write nothing, so a carry may be sent again.
 
 type Body = Record<string, unknown>

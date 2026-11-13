@@ -41,7 +41,7 @@ sys.path.insert(0, str(HERE / 'post-pack'))
 from sunday_ideas import monday_arg  # noqa: E402  the one check of a typed Monday
 
 NEW_YORK = ZoneInfo('America/New_York')
-# The weekly good news holds five stories (week_board.STORY_COUNT, plan-week references/offdays.md).
+# The weekly good news holds five stories (week_plan.STORY_COUNT, plan-week references/offdays.md).
 STORY_COUNT = 5
 
 

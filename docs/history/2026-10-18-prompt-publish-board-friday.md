@@ -1,3 +1,5 @@
+> **Historical.** The handover prompt of 18 October 2026 for Friday's tab on the old boards, moved from `docs/prompts/` on 13 November 2026 when the old publish boards were retired for good (Ruling, Krish, 2026-11-13). Every address it names now redirects to the live board in Control Centre. Do not paste it into a session.
+
 # Handover: make Friday's tab on both publish boards publish-ready
 
 **Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); content.krishraja.com/board/<Monday> is the read-only archive (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this document are history.

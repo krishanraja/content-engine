@@ -2,14 +2,16 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-// Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive.
+// Ruling (Krish, 2026-11-11): one live board, in Control Centre. Ruling (Krish, 2026-11-13): the old publish boards are
+// retired for good (tests/control-plane/old-boards-retired.test.ts holds that, and that every mention of content.krishraja.com/board
+// says it is retired and redirects).
 // Krish, 2026-11-12: "Also, does every part of the engine know that this new publish board is the only place to put
 // stuff and how to use it?"
 // So every actor that tells a session, a run or Krish where the board is, or how to work on it (the rules, the skills,
 // the workflow prompts, the docs, the configs and the scripts that print a link) names the live board in Control
-// Centre's Content tab, names content.krishraja.com/board only as the archive, never puts ?ui=next on a live board
-// link, never lets an unattended run publish a board page, and lets every run that researches or makes report and
-// file on the piece. How to use the board is docs/PUBLISH_BOARDS.md; this test only holds the actors to it.
+// Centre's Content tab, never puts ?ui=next on a live board link, never lets an unattended run publish a board page,
+// and lets every run that researches or makes report and file on the piece. How to use the board is
+// docs/PUBLISH_BOARDS.md; this test only holds the actors to it.
 
 const ROOT = join(__dirname, '..')
 const read = (path: string) => readFileSync(join(ROOT, path), 'utf8').replace(/\r\n/g, '\n')
@@ -44,22 +46,9 @@ const ACTORS = [
   ...files('apps/control-plane/api/board', (p) => p.endsWith('.ts') && !p.endsWith('_deskPage.ts')),
 ].filter((path) => !RECORDS.test(path))
 
-const OLD_BOARD = /content\.krishraja\.com\/board/
 // A link to the live board that would open the old UI's switch: the rebuilt UI is Control Centre's default since its
 // cutover (Ruling, Krish, 2026-11-12), so a live board link carries the week and the day and nothing else.
 const UI_NEXT_LINK = /(controlcenter\.krishraja\.com|#\/content)[^\s"'`)\]]*[?&]ui=next/
-
-/** Lines naming the old board with no word within three lines either side saying it is the archive. */
-function unmarked(text: string): number[] {
-  const lines = text.split('\n')
-  const out: number[] = []
-  lines.forEach((line, i) => {
-    if (!OLD_BOARD.test(line)) return
-    const near = lines.slice(Math.max(0, i - 3), i + 4).join(' ')
-    if (!/archive|archived/i.test(near)) out.push(i + 1)
-  })
-  return out
-}
 
 // Workflows that run Claude Code, each with the prompt and the tools it is given.
 const WORKFLOWS = files('.github/workflows', (p) => /\.ya?ml$/.test(p))
@@ -73,24 +62,9 @@ describe('one live board: every actor knows where it is and how to use it (Rulin
       '.github/workflows/make-piece.yml', '.github/workflows/sunday-ideas.yml', 'config/boards.json', 'config/overnight.json',
       'scripts/post-pack/making.py', 'scripts/hooks/artifact_gate.py', 'apps/control-plane/api/board/_writeBack.ts']))
     // The lines these actors held until 12 Nov 2026 fail each check.
-    expect(unmarked('- **Publish board.** The week\'s page at content.krishraja.com/board/<Monday>:')).toEqual([1])
-    expect(unmarked('Every link: content.krishraja.com/board/<Monday> is the read-only archive.')).toEqual([])
     expect(UI_NEXT_LINK.test('https://controlcenter.krishraja.com/?ui=next#/content?week=2026-11-16')).toBe(true)
     expect(UI_NEXT_LINK.test('#/content?week=2026-11-16&day=mon&ui=next')).toBe(true)
     expect(UI_NEXT_LINK.test('The address carries no `?ui=next`')).toBe(false)
-  })
-
-  it('names content.krishraja.com/board only as the archive', () => {
-    const found: string[] = []
-    for (const path of ACTORS) {
-      if (path === 'config/boards.json') continue // its web block lists the archive's pages; held below
-      for (const line of unmarked(read(path))) found.push(`${path}:${line}`)
-    }
-    expect(found, 'name the old board as the read-only archive, or point at docs/PUBLISH_BOARDS.md').toEqual([])
-    const boards = JSON.parse(read('config/boards.json')) as { _about: string; live_board: { url: string }; web: Record<string, string> }
-    expect(boards.live_board.url).toBe('https://controlcenter.krishraja.com/#/content')
-    expect(boards._about).toMatch(/read-only archive/)
-    expect(Object.values(boards.web).every((url) => OLD_BOARD.test(url))).toBe(true)
   })
 
   it('puts no ?ui=next on a link to the live board', () => {
@@ -104,12 +78,6 @@ describe('one live board: every actor knows where it is and how to use it (Rulin
       const tools = toolsOf(text)
       // A Claude run may read the board's store and bump its change signal; never publish, download or roll back a page.
       expect(tools.filter((t) => /board_web\.py(?::\*|\s+(publish-web|download|rollback|convert-export))/.test(t)), path).toEqual([])
-      if (path === '.github/workflows/board-rebuild.yml') {
-        // Kept as the record of how the archive was rebuilt; its first step stops it.
-        const first = text.indexOf('- name:', text.indexOf('steps:'))
-        expect(text.slice(first, first + 400)).toMatch(/Retired[\s\S]*exit 1/)
-        continue
-      }
       expect(text, path).not.toMatch(/board_web\.py publish-web|week_board\.py[^\n]*--out\b/)
     }
     // The overnight run on his home computers reports on the piece and bumps the signal; it builds no page.
@@ -137,18 +105,15 @@ describe('one live board: every actor knows where it is and how to use it (Rulin
     for (const skill of ['make-piece', 'plan-week', 'produce-video']) {
       for (const root of ['.agents/skills', '.claude/skills']) {
         const text = read(`${root}/${skill}/SKILL.md`)
-        expect(text, `${root}/${skill}`).toContain('one live board, in Control Centre; the old board is a read-only archive')
+        expect(text, `${root}/${skill}`).toContain('the old publish boards are retired for good')
         expect(text, `${root}/${skill}`).toContain('live_board.py')
         expect(text, `${root}/${skill}`).toContain('board_session.py')
         expect(text, `${root}/${skill}`).toContain('docs/PUBLISH_BOARDS.md')
       }
     }
-    // A skill or reference that still records how a page was built carries the routing that retires it.
+    // No skill or reference tells a session to build or publish a page.
     for (const path of [...files('.agents/skills', (p) => p.endsWith('.md')), ...files('.claude/skills', () => true)]) {
-      const text = read(path)
-      if (/board_web\.py publish-web|week_board\.py --draft/.test(text)) {
-        expect(text, path).toContain('one live board, in Control Centre')
-      }
+      expect(read(path), path).not.toMatch(/board_web\.py publish-web|week_board\.py --/)
     }
   })
 

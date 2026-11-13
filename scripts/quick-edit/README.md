@@ -604,7 +604,7 @@ now writes, beside `checks.words`:
   read by tesseract within 3 frames of its start (exact text, score 0.98).
 - `<cut>.joins-reel.m4a` and `.joins-reel.json`, for his ear;
   `python3 scripts/cutgates/joins_reel.py board` turns the filed reels into a
-  `--materials` file for week_board.py.
+  materials file to file on the piece (`board_session.py <piece> add`).
 
 Each check names its machine and the video's sha256. A review check this run
 did not make is listed under `missing` with what makes it, never written as a
