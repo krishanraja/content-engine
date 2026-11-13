@@ -226,7 +226,7 @@ export const ProductionSpecV2Schema = z.object({
     // A caption theme instead of the house caption (Krish, 2026-11-11: "install all of these different caption styles
     // in to the engine, so future productions can select from them"). Names as apps/renderer/src/engine/captions/names.ts.
     caption_theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
-      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic']).optional(),
+      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']).optional(),
     title: z.string().min(3).max(48).optional(),
     reference: z.string().min(1).optional(),
     // Required by ve lint for every piece publishing after 5 Nov 2026: at least one card for look, one for motion
@@ -254,6 +254,14 @@ export const ProductionSpecV2Schema = z.object({
   // (motion.required) checks the module against the bank and requires it from creative_direction.MOTION_FROM.
   style: z.object({
     motion: z.object({ module: z.string().min(1), reason: z.string().min(1) }).strict().optional(),
+    // The ingredients chosen apart from the motion style (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the captions
+    // should be decoupled from the animation styles"). captions wins over brand.caption_theme.
+    captions: z.object({ theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
+      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']),
+      placement: z.enum(['lower', 'centre', 'upper']).optional(), reason: z.string().min(1) }).strict().optional(),
+    transitions: z.object({ kind: z.enum(['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch']), reason: z.string().min(1) }).strict().optional(),
+    camera: z.object({ move: z.enum(['none', 'drift', 'phased', 'punch']), hits: z.boolean().optional(), reason: z.string().min(1) }).strict().optional(),
+    energy: z.enum(['calm', 'medium', 'high']).optional(),
   }).catchall(z.unknown()).optional(),
   max_face_share: z.number().min(0).max(1).optional(),
   character: VeCharacterSchema.optional(),

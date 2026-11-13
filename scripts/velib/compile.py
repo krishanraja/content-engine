@@ -498,6 +498,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
         'captions': captions, 'captionStyle': 'word' if word_mode else 'house',
         **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
+        **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
@@ -558,7 +559,50 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     motion = motion_props(spec)
     if motion is not None:
         props['motion'] = motion
+    ingredients = ingredient_props(spec)
+    if ingredients is not None:
+        props['ingredients'] = ingredients
     return props
+
+
+# The ingredients chosen per piece apart from the motion style (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the
+# captions should be decoupled from the animation styles"). Names as the renderer's captions/names.ts and
+# kit/ingredients.ts; engine.test.ts holds the two lists in step.
+CAPTION_PLACEMENTS = ('lower', 'centre', 'upper')
+ENERGIES = ('calm', 'medium', 'high')
+TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch')
+CAMERAS = ('none', 'drift', 'phased', 'punch')
+
+
+def caption_props(spec: dict) -> dict:
+    """props.captionTheme and props.captionPlacement from style.captions, which wins over brand.caption_theme. A caption
+    style is chosen on its own and draws over any motion style (it also wins over a style's own lead captions)."""
+    chosen = (spec.get('style') or {}).get('captions')
+    if not chosen:
+        return {}
+    out = {'captionTheme': chosen['theme']}
+    if chosen.get('placement'):
+        if chosen['placement'] not in CAPTION_PLACEMENTS:
+            raise ValueError(f"style.captions.placement {chosen['placement']} is not one of {', '.join(CAPTION_PLACEMENTS)}")
+        out['captionPlacement'] = chosen['placement']
+    return out
+
+
+def ingredient_props(spec: dict) -> dict | None:
+    """props.ingredients from style.transitions, style.camera and style.energy. None of them means none, and the cut
+    draws exactly as before (every beat cuts under a still camera)."""
+    style = spec.get('style') or {}
+    if not any(style.get(k) for k in ('transitions', 'camera', 'energy')):
+        return None
+    energy = style.get('energy') or 'medium'
+    transition = (style.get('transitions') or {}).get('kind', 'cut')
+    camera = style.get('camera') or {}
+    move = camera.get('move', 'none')
+    for value, allowed, name in ((energy, ENERGIES, 'style.energy'), (transition, TRANSITIONS, 'style.transitions.kind'),
+                                 (move, CAMERAS, 'style.camera.move')):
+        if value not in allowed:
+            raise ValueError(f"{name} {value} is not one of {', '.join(allowed)}")
+    return {'energy': energy, 'transition': transition, 'camera': move, 'hits': bool(camera.get('hits', move in ('punch', 'phased')))}
 
 
 MOTION_PROFILES = ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'kit' / 'motion-profiles.json'

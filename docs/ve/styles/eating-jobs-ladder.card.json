@@ -1,0 +1,111 @@
+{
+  "id": "eating-its-jobs",
+  "piece": "The tall 9:16 cut (mon02-tall) of Mon 2 Nov follow.the.money \"Who trains your 2030 seniors\". Title: \"Claude's AI is eating the jobs of its own humans\". Thumbnail: \"CLAUDE IS EATING ITS OWN JOBS\". Motion system: The Ladder.",
+  "source_file": "3 Posts/2026-11-02 Mon follow.the.money - Who trains your 2030 seniors/3 Video/Who trains your 2030 seniors - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4 (1080x1920, 30 fps, 68.47 s)",
+  "sha256": "2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a",
+  "idea": "One object, a career ladder, carries the whole piece. Every number is counted onto, beside or in place of a part of it. It sits either on a vignetted ink desk or in a butter tray over his chest. Every scene that steps away ends by turning back into the ladder, now changed: the gap where the junior rung was.",
+  "motion_grammar": "All timings at 30 fps.\n\n- **Tray entrance:** the butter tray over the face fades in over f0-1 to about 40% opacity, at about 0.6 scale, anchored bottom-left. Over f2-7 it rises and scales to 1.0 on the enter curve. It settles at f7 with about 2% overshoot, top edge at y 1094. The ladder then draws inside the tray: the rails go left to right over 6 f, then the rungs pop in left to right, one every 3 f.\n- **Title card:** the butter title card drops from about 60 px above, fading in over f0-2. It rotates from -4 deg to a resting -2 deg and is settled by f4-5. The ink FOLLOW.THE.MONEY tag comes with it.\n- **Mint answer cards:** they drop into the tray tilted about -8 deg, from slightly right and below. They land in 6-8 f and keep a resting tilt: left card -2 deg, right card +3 deg. Each card arrives on its own word, not on a fixed stagger.\n- **Count:** the hero number rolls on the enter curve.\n  - 0 to 27% takes 27 f, with the big steps first (0, 8, 13, 18, 21, 24, 25, 26, 27 at 10 fps).\n  - +6 to +43% takes about 15 f.\n  - A count-down leaves the previous value as a ghost to the right, at about 25% opacity and about 40% of the size.\n- **Quote reveal:** the pull quote's words go from inkSoft grey to cream one at a time, on the spoken word. Then a butter highlight sweeps behind the proving phrase word by word, about 3 f a word, with ink type on butter.\n- **Page:** the source page drops in at top right, tilted +3 deg, in about 6 f, then pushes slowly to about 1.04.\n- **Units:**\n  - On the tile field, lost tiles fade to inkSoft about 2 f apart.\n  - The BANK block copies itself in from the right every 3-4 f while the group slides left.\n  - The bars stack upward one at a time.\n- **Changes:** every change is a 10 f (0.35 s) crossfade on the word that names the new picture, panel to face and face to panel alike.\n- **Exits:** trays and cards fade out over 9-10 f. They never slide out.\n- **Drift:** objects drift about 1.5% of their size; nothing fully stops.\n- **Gaps:** the longest gap between visual events is 3.4 s; the median is 0.2 s.",
+  "layout_frame_use": "Measured on the 1080x1920 frame.\n\n- **Top band:**\n  - Wordmark pill: x 40-330, y 76-120.\n  - Butter series pill: x 635-930, y 76-127.\n- **Graphics beats:**\n  - Credit: Plex Mono caps, about 18 px, cream at about 60%, at x 30, y about 132.\n  - Hero number: Anton cream, cap height about 245 px, top-left at x about 27, y 216-460.\n  - Object block (the tile field, tilted about -3 deg): x 243-848, y 580-1323.\n  - Pull quote: Archivo Black, about 64 px on 78 px lines, at x 20-780, y 600-900.\n  - Source page above the quote: x 480-1030, y 150-570.\n- **Face beats:** the butter tray sits at x 60-940, y 1094-1400 (306 px tall), over his chest. It has a radius of about 28 px, a 4 px ink stroke and a hard ink drop of about 8 px down-right.\n- **Title card:** x about 50-900, y about 150-350.\n- **Captions:** they are separate from this style and sit at about y 1450-1525.\n- **End frame:**\n  - Cream ladder at x 338-635, y 216-905, 11 px stroke, four rungs, with the bottom rung dashed in inkSoft.\n  - \"2030\" in mint Anton, about 55 px, between the top rail stubs.\n- **ve pace coverage:** used_frame 0.51, active_frame 0.47.",
+  "profile_proposal": {
+    "entrance": {
+      "kind": "rise",
+      "frames": 7,
+      "easing": "enter",
+      "distancePx": 56,
+      "overshootPct": 2
+    },
+    "stagger": {
+      "frames": 3,
+      "unit": "word"
+    },
+    "exitFrames": 10,
+    "onTwos": false,
+    "camera": {
+      "kind": "push",
+      "scaleTo": 1.04,
+      "dimOthers": false,
+      "easing": "hero"
+    },
+    "transition": "crossfade",
+    "transitionFrames": 10,
+    "typeReveal": {
+      "kind": "roll"
+    },
+    "ground": {
+      "kind": "dark",
+      "sweepFrames": 0,
+      "texture": "none",
+      "cards": "keep"
+    },
+    "driftPct": 1.5,
+    "countFrames": 27,
+    "note": "eating-its-jobs (mon02-tall): one through-line object; numbers roll onto it on the enter curve; a butter tray rises and scales in from bottom-left over the face to hold the object or the mint answer cards; pull quotes reveal word by word, then take a butter highlight; every change is a 10-frame crossfade on its word; nothing holds still.",
+    "suggested_ingredients": {
+      "energy": "medium",
+      "transition": "cut",
+      "camera": "drift"
+    },
+    "suggested_caption_theme": "grape"
+  },
+  "gaps": [
+    "The ladder is still in needs_device. ve has no through-line object that keeps its state across beats: draw the rails, pop the rungs, thin a rung, swap a rung for a dashed gap, light the top rung.",
+    "There is no butter tray container that rises and scales in from bottom-left over the face with a hard ink drop.",
+    "Cards cannot keep a resting tilt, and there is no 'drop in with rotation' entrance kind (the title card and the mint cards need it).",
+    "A count-down cannot leave a ghost of the previous value.",
+    "There is no pull-quote reveal (grey to cream by word) followed by a highlight sweep by word.",
+    "There is no field of unit marks that loses, greys or copies units, and no isometric block object that copies itself.",
+    "The 'dark' ground has no radial vignette from ink to inkSoft.",
+    "The ingredients transition list has no crossfade value, so the profile's own transition has to carry it. The measured 10 frames is the top of the allowed 6-10 range.",
+    "ve study failed on this machine: PyAV's open() rejected the metadata_errors keyword, so grammar.json was not written. Cuts per minute (about 20) was counted by eye from the strips."
+  ],
+  "evidence": [
+    "docs/plans/2026-11-02-monday/motion-system.md",
+    "docs/plans/2026-11-02-monday/video/REVIEW.md",
+    "docs/plans/2026-11-02-monday/creative-direction.json",
+    "config/reference-cuts.json (mon02-tall)",
+    "config/ve/recipes/data-story.json",
+    "apps/renderer/src/engine/kit/motionProfiles.ts",
+    "apps/renderer/src/engine/kit/motion-profiles.json"
+  ],
+  "camera": "The camera does not move on the face beats; it is his handheld take, steadied. On graphics beats there is a slow push to about 1.03-1.04 across the beat, plus object drift. No zoom-to-focus and no whips.",
+  "captions_seen": "The cut has the burned-in house captions, which are not part of this style. They are cream Archivo Black on an ink block with a hard butter drop and underline. The phrase builds word by word at about y 1450-1525. The closest caption theme in the bank is grape (an ink card with words arriving), but any theme can be paired with this style.",
+  "devices_used": [
+    "Butter tray over the face holding the ladder or the cards",
+    "Ladder: rails, rungs, a dashed missing rung, a 2030 top label",
+    "Hero number count, with a ghost of the previous value on a count-down",
+    "Tile field of people, lost tiles greyed out",
+    "3D BANK block that copies itself",
+    "Stacked bars, clerks against accountants",
+    "Source page with a tilt and a slow push",
+    "Pull quote revealed word by word, then a butter highlight sweep",
+    "Spreadsheet with a cursor and one cell filling mint",
+    "Mint question cards and numeral cards in the tray",
+    "Butter title card that drops in",
+    "Producer credit in mono"
+  ],
+  "ground": "Graphics beats sit on an ink desk with a radial vignette, measured #101A17 at the edges lifting to #16221D (inkSoft) in the centre. Face beats are his take, with the butter tray laid over it.",
+  "palette_use": "- **Ink:** the ground, with a radial vignette lifting to inkSoft in the centre.\n- **Cream:** the objects, numbers and quote type.\n- **Series colour** (follow.the.money butter, measured #FBD54E): the tray, the title card, the series pill, the highlight behind the proving phrase, and the marks on junior tiles.\n- **Mint:** only the answer. That is the 2030 label, the question and action cards, and the one filled spreadsheet cell.\n- **inkSoft grey:** lost units and the missing rung.\n- **Nothing else** is coloured.",
+  "sound": "The licensed bed (No Curves) runs under the whole cut at about -14 LUFS. The motion system allows one sound, on the drop; no other hits were measured.",
+  "transitions": "Every picture change is a 10-frame (0.35 s) crossfade on the word that names it, between panels and between face and panel alike. There is one cut, into the end card after his last word.",
+  "type_treatment": "- **Anton:** hero numbers, the title card and card labels, all in caps.\n- **Archivo Black:** pull quotes and legends, in mixed case.\n- **IBM Plex Mono:** credits and the series tag, in caps.\n- **Fraunces:** not used.",
+  "measured": {
+    "events_per_s": 3.91,
+    "longest_gap_s": 3.4,
+    "energy_median": 2.71,
+    "used_frame": 0.51,
+    "active_frame": 0.47,
+    "cuts_per_minute": 20
+  },
+  "never": [
+    "No figures or icons acting out a sentence; the object only ever shows a number or the gap.",
+    "No on-screen words that repeat what he says; a card adds the number, the producer, the date or the changed word.",
+    "No eyebrow labels, kickers, asterisks or AI notes.",
+    "Never his name.",
+    "The series colour is never a warning and never marks the answer; mint marks nothing but the answer.",
+    "No slide or whip exits, and no hard cut between panels except into the end card.",
+    "No graphic held still for more than 3.5 s.",
+    "Do not crowd the tray under the platform buttons (F30: on Instagram he said \"It looks cramped\")."
+  ],
+  "style_id": "eating-jobs-ladder",
+  "studied": "2026-11-13, by a separate reader per cut (ve pace on the whole frame, dense strips at speed); captions burned into the cut count in events_per_s"
+}

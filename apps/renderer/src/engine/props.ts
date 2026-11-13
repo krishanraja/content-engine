@@ -1,6 +1,7 @@
 import { CAPTION_THEMES } from './captions/names'
 import { z } from 'zod'
 import { EngineMotionSchema } from './kit/motionProfiles'
+import { EngineIngredientsSchema } from './kit/ingredients'
 
 /** What `ve compile` hands the renderer for one cut: everything already resolved to frames on ONE clock.
  *  The spec (packages/contracts/src/production-spec.ts) speaks in word indexes; this speaks in frames.
@@ -105,6 +106,10 @@ export const EngineRenderPropsSchema = z.object({
   captionStyle: z.enum(['house', 'word']).optional(),
   /** A caption theme from captions/names.ts drawn instead of the house caption (Krish, 2026-11-11). */
   captionTheme: z.enum(CAPTION_THEMES).optional(),
+  /** Where a caption theme sits, chosen with it and apart from the motion style (spec style.captions.placement;
+   *  Krish, 2026-11-13: "the captions should be decoupled from the animation styles"): the lower band (the default),
+   *  the centre of the frame, or the upper strip. Every place is inside every channel's safe area (captions/kit.ts). */
+  captionPlacement: z.enum(['lower', 'centre', 'upper']).optional(),
   title: z.string().min(1).optional(),
   beats: z.array(EngineBeatSchema).min(1),
   objects: z.array(EngineObjectSchema),
@@ -116,6 +121,9 @@ export const EngineRenderPropsSchema = z.object({
     days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional() }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
+  /** The transitions, camera and energy chosen per piece (spec style.transitions, style.camera, style.energy;
+   *  kit/ingredients.ts); absent means every beat cuts under a still camera, as before. */
+  ingredients: EngineIngredientsSchema.optional(),
   /** The series sting, only straight after the hook (`atFrame`, the hook's last frame + 1): a new design that plays
    *  nothing in front of the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception
    *  for good."), and that compile lays only once he approves it (config/intro-sting.json is retired; none is). The

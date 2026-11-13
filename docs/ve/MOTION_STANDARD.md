@@ -122,6 +122,16 @@ brand kit in Drive; Krish, 2026-11-03: "add the upright Fraunces to the kit"), n
 - The Instagram zones in `config/studio.json` brought up to the measured ones: "I approve updating the Instagram
   button zones".
 
+## Widened to admit his own cuts (Ruling, Krish, 13 Nov 2026)
+
+Asked whether the floor should widen to admit two of his own cuts, Krish answered: "yes it should".
+- The AI music cut (11 Nov) slams things about 500 px with about 12% overshoot over 10 frames.
+- The Character.ai cut (26 Oct) moves its type 0 px: it fades or blurs in only.
+
+So an entrance now settles in 4 to 10 frames, travels 0 to 500 px and overshoots at most 12%. The 4 to 7 frame,
+40 to 60 px figures above stay the measured default for the house look. `kit/motionProfiles.ts` (`FLOOR`), `kit.test.ts`
+and `clock.test.ts` hold the widened floor.
+
 ## How it was measured
 
 Shot lengths and cuts: `python scripts/ve.py study <reel>` (ffmpeg scene detection). Settle time: frames after each
@@ -146,7 +156,7 @@ frames 600 and 990 of each reel.
   same 8/10 bar (`scripts/velib/refgate.py`, card `proof`). The standard above is what the proof is judged by; the
   proof is what the whole cut is judged against.
 - **How the renderer holds a style to this floor (4 Nov 2026).** Each drawable style is a profile in
-  `apps/renderer/src/engine/kit/motion-profiles.json` (entrance 4 to 7 frames, rise 40 to 60 px, overshoot at most 6%,
+  `apps/renderer/src/engine/kit/motion-profiles.json` (entrance 4 to 10 frames, travel 0 to 500 px, overshoot at most 12% since the 13 Nov ruling,
   drift above 0, timed moves under 3.5 s, grounds from brand roles); `kit.test.ts` and `clock.test.ts` fail any that
   breaks it, and FormatMaster clamps a hand-edited profile inside it. Where a style asks for more than the floor allows
   (dark-keynote's long holds) the floor wins. A cut with no style keeps the house motion it had before, which is
