@@ -38,6 +38,7 @@ describe('the engine gates', () => {
     ['the words gate: no content word he said is lost from a cut (chopped-words-published, open until calibrated)', ['tests/quick_edit_words_gate_test.py']],
     ['the production run files each cut with its receipt and stops loudly when a gate holds it', ['tests/quick_edit_produce_day_test.py']],
     ['a hand-built cut is filed only with Krish\'s words on those exact bytes (Ruling, Krish, 2026-11-11)', ['tests/hand_built_cuts_test.py']],
+    ['the ten-second swipe: every carousel card a whole sentence with its picture, the story under ten seconds, no jargon, read back by fresh readers (Krish, 2026-11-13)', ['tests/carousel_check_test.py']],
     ['picture against sound measured from the take on every span; a hand-built or excepted cut is never filed without it (Krish, 2026-11-12)', ['tests/av_sync_test.py']],
     ['the calibrated cut gates: words on every aligner, joins in gaps, captions clock and renderer truth, receipts, the joins reel (W2.4)', ['tests/cutgates_test.py']],
     ['Claude model routing preserves strict skill validation', ['tests/validate_skills_test.py']],

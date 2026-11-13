@@ -2442,6 +2442,44 @@
           "how": "the rate is changed with the fps filter, and the converted take is measured against the original before Maxine runs"
         }
       ]
+    },
+    {
+      "id": "carousel-fails-the-ten-second-swipe",
+      "on": "2026-11-13",
+      "krish": "Git carousel cards look terrible apart from the cover card and they also are not very easy to follow. Remember that a complete layperson is swiping through these cards at light speed and needs to be able to follow the story within 10 seconds. This cannot ever happen again in any future carousel.",
+      "what": "The Thursday 12 Nov Git carousel (Growth, to this repository's standard) led cards 2 to 5 with a mono label ('CODE CHANGES ANTHROPIC MERGED PER DAY'), a bare '7 ENGINEERS 5 MONTHS', a list of three companies in boxes and an abstract close; the story sat in small print under them, with no picture of the point and the word 'merged' unexplained. Its read-back was done on the pitch, not on the cards' headlines.",
+      "symptom": "Swiped fast, cards 2 to 5 do not say what happened or why it matters; they look like slides.",
+      "cause": "Nothing checked the cards' own headlines as a story a layperson reads in ten seconds; the read-back read the pitch.",
+      "status": "guarded",
+      "mode": "carousel-headlines-not-a-story",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "check_missing",
+          "evidence": "No check read a carousel's card headlines as the story; read_back on the option read its pitch."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "docs/CAROUSEL-STANDARD.md asked for reader comprehension but set no measure a deck could be refused on."
+        }
+      ],
+      "related": [
+        "F16-krish-carried-qa"
+      ],
+      "surface": "Every carousel's headlines, read in order, tell the story in ten seconds (45 words, each card one sentence with a picture of its point, no jargon), read back by two fresh readers; python3 scripts/carousel_check.py DECK.json passes before any card is drawn or filed.",
+      "guards": [
+        {
+          "file": "scripts/carousel_check.py",
+          "contains": "def problems(",
+          "how": "refuses label headlines, over 12 words a card or 45 a deck, a card with no picture, a long line, unexplained jargon, and fewer than two headline read-backs",
+          "test": "python3 tests/carousel_check_test.py"
+        },
+        {
+          "file": "docs/CAROUSEL-STANDARD.md",
+          "contains": "## The ten-second swipe",
+          "how": "the standard Growth makes every carousel to"
+        }
+      ]
     }
   ]
 }
