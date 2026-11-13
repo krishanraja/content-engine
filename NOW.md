@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Nothing in content-engine calls the old boards an archive any more. The "Copy prompt for Claude" text says the old pages are retired and redirect to the live board, and a test refuses the old wording. (2026-11-13)
 - Git carousel v3 drawn from the deck Krish approved (nine cards: what Git is, 12x more code, why, the jam moving to people with Faros AI evidence, what a business should do, centred Follow for more card); filed as git-card-N-v3.png in "3 Posts/2026-11-12 Thu off.day - AI broke Git/4 Social". The carousel check now enforces the story route on every carousel: five whys, what/happened/why/so-what/do in order, a sourced trend card, at most 50 headline words and 10 cards, Follow for more last, two readers answering all five. (2026-11-13)
 - Both Gate 2 test cuts (The Ladder, The Living Screen) rendered from the house test take and sent to Krish for a yes or no per style. The Living Screen's counts now show only the decimals their sources carry (it had shown 18.83 tellers mid-count). (2026-11-13)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
@@ -46,7 +47,7 @@ Older lines: `docs/history/2026-11-13-NOW-moved-7.md`, `docs/history/2026-11-13-
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-13): Growth swaps the v3 cards into the scheduled Thursday post.
+- Next (2026-11-13): Krish uses the rebuilt Publish Board in Control Centre and says what still reads wrong.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
