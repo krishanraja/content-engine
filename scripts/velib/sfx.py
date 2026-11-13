@@ -12,7 +12,15 @@ His Epidemic Sound plan covers sound effects in published video ("yes", 29 Oct 2
               sfx/<id>.mp4 and sfx-audition.json for his press. It approves nothing.
   approve     writes his yes, in his words, to config/sfx-approved.json, then rebuilds config/ve/sfx-kits/house-v1.json
               (the kit every ve spec names, read by compile.py) from approved rows only.
-  stage       copies the approved sounds into a cut's assets folder, where compile finds them.
+  stage       copies the approved sounds into a cut's assets folder, where compile finds them. ve compile does it
+              itself for every sound a cut uses (ensure_staged), and stops, naming the file, when an approved sound
+              is not on this machine: a cut never goes out quietly without the sound its spec asks for.
+
+Where an approved sound lives: the brand kit's Music folder, the one home for licensed music and sound
+(docs/DRIVE.md; Drive 1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri), under sfx/: MINDMAKE_MUSIC_ROOT/sfx/<id>.<ext>. A sound
+he approves on his board is filed there by the apply job (velib/signoffs.apply, signoff-apply.yml) through the
+engine's library at 1 Brand kit (permanent)/Music/sfx/<id>.<ext>; the home computers' library sync writes it into
+that Drive folder, and `python scripts/quick-edit/music.py fetch` brings it to any other machine.
 
 Nothing here places a sound on a cut: the spec does, on its one big-moment event.
 """
@@ -30,6 +38,8 @@ CANDIDATES = ROOT / 'config' / 'sfx-candidates.json'
 APPROVED = ROOT / 'config' / 'sfx-approved.json'
 KIT = ROOT / 'config' / 've' / 'sfx-kits' / 'house-v1.json'
 MUSIC_ENV = 'MINDMAKE_MUSIC_ROOT'
+LIBRARY_MUSIC = '1 Brand kit (permanent)/Music'   # the brand kit's Music folder in the engine's library (music.py)
+DRIVE_MUSIC_FOLDER = '1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri'
 BIG_VERBS = ('stamp', 'slam', 'enter', 'mark', 'count', 'drop')
 LOUDEST_DB, QUIETEST_DB = 1.5, -22.0
 DEFAULT_GAIN_DB = -8.0     # ghost-editor's "impact" role, relative to the voice's peak
@@ -58,13 +68,25 @@ def music_root() -> Path:
     return Path(root)
 
 
+def library_path(row: dict) -> str:
+    """Where an approved sound is filed in the engine's library: the brand kit's Music folder, at its file's path."""
+    return f"{LIBRARY_MUSIC}/{row['file']}"
+
+
 def local_file(row: dict) -> Path:
-    """The candidate's file on this machine, checked against the sha256 it was shortlisted with."""
+    """The sound's file on this machine, checked against the sha256 it was shortlisted or approved with."""
     if not row.get('file') or not row.get('sha256'):
         raise ValueError(f"sound {row.get('id')}: not downloaded yet (no file and sha256); downloading waits for Krish's yes")
-    path = music_root() / row['file']
+    try:
+        root = music_root()
+    except ValueError as unset:
+        raise ValueError(f"sound {row['id']}: {unset}; it is filed at {library_path(row)}") from None
+    path = root / row['file']
     if not path.is_file():
-        raise ValueError(f"sound {row['id']}: {path} is missing on this machine")
+        raise ValueError(f"sound {row['id']}: {path} is missing on this machine. It is filed in the brand kit's Music folder "
+                         f"(Drive {DRIVE_MUSIC_FOLDER}, {row['file']}); on a home computer the library sync puts it there, "
+                         'anywhere else run python scripts/quick-edit/music.py fetch and set MINDMAKE_MUSIC_ROOT to the '
+                         'folder it prints')
     if sha256_file(path) != row['sha256']:
         raise ValueError(f"sound {row['id']}: {path} is not the file shortlisted (sha256 differs)")
     return path
@@ -188,6 +210,52 @@ def approve(sid: str, words: str, on: str, audition_path: Path, *, candidates_pa
     return write_kit(approved_path, kit_path)
 
 
+def ensure_staged(sid: str, rel: str, assets_dir: Path, approved_path: Path = APPROVED) -> str:
+    """A sound a cut uses, in the cut's assets folder at the kit's path: staged from MINDMAKE_MUSIC_ROOT when it is not
+    there yet. Raises, never skips, when the sound is not approved, or is not on this machine, or is other bytes."""
+    row = approved(approved_path).get(sid)
+    if row is None:
+        raise ValueError(f'kit sound {sid} is not in the approved set (config/sfx-approved.json)')
+    staged = Path(assets_dir) / rel
+    if staged.is_file():
+        if sha256_file(staged) != row['sha256']:
+            raise ValueError(f'sound {sid}: {staged} is not the file he approved (sha256 differs)')
+        return rel
+    got = stage(row, assets_dir)
+    if got != rel:
+        raise ValueError(f'sound {sid}: the kit names {rel}, but the approved file is {got}')
+    return rel
+
+
+def fetch_approved(folder: Path, out=print, approved_path: Path = APPROVED, fetch=None) -> int:
+    """Every approved sound into folder at its file's path (sfx/<id>.<ext>), from the brand kit's Music folder in the
+    engine's library and checked by its sha256: what music.py fetch does for any machine that renders. One the library
+    lacks is said, by name; a cut that uses it then stops at ve compile. Returns how many are here."""
+    if fetch is None:
+        from .signoffs import library_fetch as fetch  # noqa: PLC0415  the one library download, sha256-checked
+    here = 0
+    for _sid, row in sorted(approved(approved_path).items()):
+        target = Path(folder) / row['file']
+        if target.is_file() and sha256_file(target) == row['sha256']:
+            out(f"have           {row['file']}")
+            here += 1
+            continue
+        try:
+            fetch(library_path(row), target, row['sha256'])
+        except ValueError as error:
+            out(f"missing        {row['file']} (approved, but not fetched: {error}); a cut that uses it stops at ve compile")
+            continue
+        out(f"fetched        {row['file']}")
+        here += 1
+    return here
+
+
+def missing_in_props(props: dict) -> list[str]:
+    """Each sound a compiled cut plays whose file is not on this machine: ve render stops on any, never drops it."""
+    return [str(s.get('src')) for s in (props.get('audio') or {}).get('sfx') or []
+            if not str(s.get('src') or '').startswith(('http://', 'https://')) and not Path(str(s.get('src') or '')).is_file()]
+
+
 def write_kit(approved_path: Path = APPROVED, kit_path: Path = KIT) -> dict:
     """config/ve/sfx-kits/house-v1.json, the shape compile.py reads: {name: {path under assets, gain_db}}."""
     kit = {sid: {'path': f"sfx/{sid}{Path(row['file']).suffix.lower()}", 'gain_db': min(0.0, float(row.get('gain_db', DEFAULT_GAIN_DB)))}
@@ -233,10 +301,13 @@ def _reviewed_row(sample: dict, on: str, at: str | None) -> dict:
 
 
 def approve_reviewed(sample: dict, *, words: str, on: str, at: str | None = None, approved_path: Path = APPROVED,
-                     kit_path: Path = KIT) -> dict:
+                     kit_path: Path = KIT, filed: dict | None = None) -> dict:
     """His Approve on a sound he heard on his board: one approved row (his press is the yes; his words when he gave
-    any), any earlier no on the same bytes removed, and the kit rebuilt from approved rows only."""
+    any), any earlier no on the same bytes removed, and the kit rebuilt from approved rows only. `filed` says where the
+    apply job filed those exact bytes (the brand kit's Music folder, filed_row), so the renderers find the file."""
     row = _reviewed_row(sample, on, at)
+    if filed:
+        row['filed'] = filed
     gain = float(sample.get('gain_db', DEFAULT_GAIN_DB))
     # His press is the yes: kept as the press it was (where, when, the bytes it names), never as words he did not type.
     row.update({'gain_db': gain, 'approved_by': 'Krish', 'approved_on': on,
@@ -249,6 +320,17 @@ def approve_reviewed(sample: dict, *, words: str, on: str, at: str | None = None
         doc.pop('declined')
     write_json(approved_path, doc)
     return write_kit(approved_path, kit_path)
+
+
+def filed_row(sample: dict, row_file: str, on: str) -> dict:
+    """The record of a sound filed in the brand kit's Music folder: where, which Drive folder, its bytes and sha256."""
+    return {'library_path': f'{LIBRARY_MUSIC}/{row_file}', 'drive_folder': DRIVE_MUSIC_FOLDER,
+            'music_root_path': row_file, 'sha256': sample['sha256'], 'bytes': sample.get('bytes'), 'on': on}
+
+
+def reviewed_file(sample: dict) -> str:
+    """The approved sound's path under MINDMAKE_MUSIC_ROOT (the Music folder): sfx/<id>.<ext>."""
+    return _reviewed_row(sample, '', None)['file']
 
 
 def decline_reviewed(sample: dict, *, words: str, on: str, at: str | None = None, approved_path: Path = APPROVED,

@@ -19,8 +19,12 @@ look at and listen to, plus Approve or Not this. About 10 minutes in total." The
   apply, by the engine      .github/workflows/signoff-apply.yml, started by his press: reads every press
                             (GET /api/board/sign-offs, the engine key), fetches each approved sample by its Drive id
                             through the engine and checks its sha256, and writes the configs through their own writers
-                            (sfx.approve_reviewed, golden.fill_from_cut, designlock.freeze with his words). A Not this is
-                            written as his no, with the date. Nothing is ever approved for him: a config row exists only
+                            (sfx.approve_reviewed, golden.fill_from_cut, designlock.freeze with his words). An approved
+                            sound is first filed, those exact bytes, in the brand kit's Music folder (the engine's
+                            library at 1 Brand kit (permanent)/Music/sfx/, which the home computers' sync writes into
+                            Drive and music.py fetch brings anywhere), so ve and quick-edit find it under
+                            MINDMAKE_MUSIC_ROOT on the next cut with nobody copying it. A Not this is written as his no,
+                            with the date. Nothing is ever approved for him: a config row exists only
                             when a press of his names that sample's exact bytes.
 """
 from __future__ import annotations
@@ -359,9 +363,11 @@ def _on(press: dict) -> str:
     return str(press.get('at') or date.today().isoformat())[:10]
 
 
-def apply(doc: dict, answers: dict, fetch_file, *, work: Path, root: Path = ROOT) -> list[str]:
+def apply(doc: dict, answers: dict, fetch_file, *, work: Path, root: Path = ROOT, file_sound=None) -> list[str]:
     """Write every press of his into the configs it names, through their own writers. fetch_file(drive_id, dest) brings
-    one sample's bytes; each is checked against its sha256 before anything is written. Returns what it did, in words."""
+    one sample's bytes; each is checked against its sha256 before anything is written. file_sound(library_path, local)
+    files an approved sound's bytes in the brand kit's Music folder before its row is written (engine_file_sound).
+    Returns what it did, in words."""
     from . import designlock, golden, sfx  # noqa: PLC0415
     done = []
     steps = plan(doc, answers)
@@ -376,10 +382,24 @@ def apply(doc: dict, answers: dict, fetch_file, *, work: Path, root: Path = ROOT
     for step in [s for s in live if s['card'] == 'sfx']:
         p, sample = step['press'], step['sample']
         if step['verdict'] == 'approve':
-            if sfx.reviewed_state(sample['id'], sample['sha256'], approved_path) == 'approved':
+            rel = sfx.reviewed_file(sample)
+            held = next((r for r in load_json(approved_path).get('approved') or []
+                         if r.get('id') == sample['id'] and r.get('sha256') == sample['sha256']), None)
+            if held and (held.get('filed') or {}).get('sha256') == sample['sha256']:
                 continue
-            sfx.approve_reviewed(sample, words=p.get('words') or '', on=_on(p), at=p.get('at'), approved_path=approved_path, kit_path=kit_path)
-            done.append(f"sound {sample['id']}: approved in config/sfx-approved.json ({_on(p)})")
+            # Filed first, then written: the ledger never names a sound the Music folder lacks.
+            if file_sound is None:
+                raise ValueError(f"sound {sample['id']}: an approved sound is filed in the Music folder before its row is "
+                                 'written, and no filer was given')
+            dest = Path(work) / 'sfx' / Path(rel).name
+            fetch_file(sample['drive']['file_id'], dest)
+            if sha256_file(dest) != sample['sha256']:
+                raise ValueError(f"sound {sample['id']}: the file in Drive is not the sound he heard")
+            file_sound(sfx.library_path({'file': rel}), dest)
+            sfx.approve_reviewed(sample, words=p.get('words') or '', on=_on(p), at=p.get('at'), approved_path=approved_path,
+                                 kit_path=kit_path, filed=sfx.filed_row(sample, rel, date.today().isoformat()))
+            done.append(f"sound {sample['id']}: approved in config/sfx-approved.json and filed in the brand kit's Music "
+                        f"folder at Music/{rel} ({_on(p)})")
         else:
             if sfx.reviewed_state(sample['id'], sample['sha256'], approved_path) == 'declined':
                 continue
@@ -453,6 +473,22 @@ def engine_fetch_file(drive_id: str, dest: Path) -> Path:
     with urllib.request.urlopen(url, timeout=600) as response, open(dest, 'wb') as handle:
         shutil.copyfileobj(response, handle, 1 << 20)
     return dest
+
+
+def engine_file_sound(path: str, local: Path, out=print) -> dict:
+    """An approved sound's exact bytes into the engine's library at the brand kit's Music folder, through the one send
+    lane (scripts/post-pack/send.py): the home computers' library sync writes it into Drive, and music.py fetch brings
+    it to any other machine. A file the library already holds at that path is left alone."""
+    import sys  # noqa: PLC0415
+    for sub in (ROOT / 'scripts', ROOT / 'scripts' / 'post-pack'):
+        if str(sub) not in sys.path:
+            sys.path.insert(0, str(sub))
+    import send  # noqa: PLC0415  scripts/post-pack/send.py
+    try:
+        return send.send([(path, Path(local), 'a sound effect Krish approved on his board, for the big moment')],
+                         send.Engine('signoff-apply'), out=out)
+    except send.SendError as error:
+        raise ValueError(f'{path}: {error}') from None
 
 
 def engine_presses() -> list[dict]:

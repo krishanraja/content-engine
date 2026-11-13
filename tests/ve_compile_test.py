@@ -379,7 +379,12 @@ class CompileTest(unittest.TestCase):
         kit = {name: {'path': f'sfx/{name}.wav', 'gain_db': -6} for name in names}
         def read(path):
             return kit if 'sfx-kits' in str(path) else real_load(path)
-        with patch('velib.compile.load_json', side_effect=read), patch('velib.compile.Path.is_file', return_value=True):
+        staged = []
+        def stage(sid, rel, assets_dir):
+            staged.append((sid, rel))
+            return rel
+        with patch('velib.compile.load_json', side_effect=read), patch('velib.compile.Path.is_file', return_value=True), \
+                patch('velib.sfx.ensure_staged', side_effect=stage):
             report = {}
             props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE, report=report)
         sounded = [e for e in props['events'] if e.get('sfx')]
@@ -387,6 +392,14 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(props['audio']['sfx'], [
             {'src': str((FIXTURE / f"sfx/{e['sfx']}.wav").resolve()), 'atFrame': e['atFrame'], 'gainDb': -6}
             for e in sounded])
+        # Each approved sound the cut plays is staged from the Music folder first; one missing on this machine stops
+        # the compile by name rather than going out silent.
+        self.assertEqual(staged, [(e['sfx'], f"sfx/{e['sfx']}.wav") for e in sounded])
+        def missing(sid, rel, assets_dir):
+            raise ValueError(f'sound {sid}: missing on this machine')
+        with patch('velib.compile.load_json', side_effect=read), patch('velib.compile.Path.is_file', return_value=True), \
+                patch('velib.sfx.ensure_staged', side_effect=missing), self.assertRaisesRegex(ValueError, 'missing on this machine'):
+            compile_cut(spec, 'proof-tall', timed_words(), FIXTURE, report={})
         with patch('velib.compile.Path.is_file', return_value=False):
             report = {}
             props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE, report=report)
@@ -565,6 +578,22 @@ class StingTest(unittest.TestCase):
             self.assertEqual(ve.cmd_render(args), 1)
         draw.assert_not_called()
         self.assertIn('must open on its hook', output.getvalue())
+
+    def test_render_refuses_a_cut_whose_sound_is_not_on_this_machine(self):
+        props = compile_cut(self.wide(), 'proof-wide', timed_words(), FIXTURE)
+        gone = str(self.empty() / 'sfx' / 'low-thud-deep.wav')
+        props['audio']['sfx'] = [{'src': gone, 'atFrame': 30, 'gainDb': -8}]
+        props_file = self.empty() / 'props.proof-wide.json'
+        props_file.write_text(json.dumps(props), encoding='utf-8')
+        args = Namespace(spec='spec.json', props=str(props_file), assets_dir=FIXTURE, out='out.mp4', scale=1)
+        with self.env(self.approved), patch('velib.lint.lint', return_value=(self.wide(), [])), \
+                patch('velib.render.check_asset_hashes'), patch('velib.preflight.problems', return_value=[]), \
+                patch('ve.render_refusal', return_value=[]), patch('velib.render.render') as draw, \
+                redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(ve.cmd_render(args), 1)
+        draw.assert_not_called()
+        self.assertIn('a sound this cut plays is not on this machine', output.getvalue())
+        self.assertIn(gone, output.getvalue())
 
 
 

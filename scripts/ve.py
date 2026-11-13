@@ -1174,7 +1174,8 @@ def cmd_signoff(args) -> int:
         # apply: his presses, read from the engine, written into the configs through their own writers
         doc = signoffs.load()
         presses = json.loads(Path(args.presses).read_text(encoding='utf-8'))['presses'] if args.presses else signoffs.engine_presses()
-        done = signoffs.apply(doc, signoffs.answers_of(presses), signoffs.engine_fetch_file, work=Path(args.work))
+        done = signoffs.apply(doc, signoffs.answers_of(presses), signoffs.engine_fetch_file, work=Path(args.work),
+                              file_sound=signoffs.engine_file_sound)
         print('\n'.join(done) if done else 've signoff: nothing new to write')
         return 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
@@ -1479,6 +1480,15 @@ def cmd_render(args) -> int:
         print('ve render: refused, a whole cut renders only after Krish approves its moving proof (F04, F13) and holds '
               'to the Thursday guards (F33 to F36):')
         print('\n'.join(f'  - {reason}' for reason in refused))
+        return 1
+    from velib.sfx import missing_in_props
+    gone = missing_in_props(props)
+    if gone:
+        # A sound the spec asks for is never dropped from a cut: it stops here, by name (ve compile stages approved
+        # sounds from MINDMAKE_MUSIC_ROOT; run it again on a machine that has them).
+        print('ve render: refused, a sound this cut plays is not on this machine (run ve compile again where '
+              'MINDMAKE_MUSIC_ROOT holds it, or python scripts/quick-edit/music.py fetch):')
+        print('\n'.join(f'  - {src}' for src in gone))
         return 1
     from velib.compile import sting_problems
     opening = sting_problems(props)
