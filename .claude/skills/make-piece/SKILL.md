@@ -442,18 +442,12 @@ signed lock's His close; with no lock, the question goes on the day's tab.
    the piece and ask for his yes on the live board; where the view carries no
    Approve scripts press, his words approve them ("Publish-board routing").
    His typed approval counts as his press for scripts and for the narrative
-   lock, and for nothing else (Ruling (Krish, 2026-11-12): "Scripts and locks only. Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs your press, so that gate is unchanged."). When he approves the scripts in
-   words he typed to this session, carry them verbatim with `python3
-   scripts/post-pack/board_session.py <uuid> approve scripts --week <Monday>
-   --day <day> --long <long script> --short <short script> --long-title <title>
-   --short-title <title> --folder-title <folder> --words "<his exact words>"
-   --said-at <ISO> --where "<where he typed them>" --session-ref <this session's
-   link>` (and a lock he approves in words, `approve lock --lock <lock> --sign`
-   with the same four): the board shows "Approved in your words", and the
-   server sends the scripts to Teleprompter as it does for the press, held until
-   the scripts' check and the two fresh readers have passed. Never a summary of
-   his words, never words he did not type to you, and never an idea: his
-   Approve on an idea stays his press on the board.
+   lock, and for nothing else (Ruling (Krish, 2026-11-12): "Scripts and locks only. Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs your press, so that gate is unchanged."). Carry
+   words he typed to this session verbatim with `board_session.py approve
+   scripts` (or `approve lock`), as `../plan-week/references/typed-approval.md`
+   says: the board shows "Approved in your words" and the server sends the
+   scripts to Teleprompter as it does for the press, held until their checks
+   pass. Never a summary of his words, and never an idea.
    His press and its answer are in the board's `approvals` collection
    (`python3 scripts/post-pack/board_web.py read <Monday> approvals`, the
    collection `config/teleprompter.json` names; `updated_by` Krish only). A
