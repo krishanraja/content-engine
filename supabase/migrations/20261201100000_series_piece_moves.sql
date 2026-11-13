@@ -16,8 +16,9 @@
 --      with later true, is his File for later on it (filed). Recorded into idea_outcomes by idea_outcome_record, like
 --      every other press, from a revision Krish saved.
 --   2. board_approvals_now stands placements too, and a placement supersedes every earlier approval of the same piece
---      in that week on another document: once he has moved a piece, the pick that first put it on a day no longer holds
---      it there, so nothing but his next press puts it back.
+--      in that week on another document (but for an approval on the same day it keeps it on, alongside): once he has
+--      moved a piece, the pick that first put it on a day no longer holds it there, so nothing but his next press puts
+--      it back. His Approve again on that day, with the same words, records a new approval (idea_outcome_record).
 --   3. series_piece_place(p): his move or his replacing Approve in one transaction: the board documents (the day's new
 --      pick, the placement the piece leaves, the placement it goes to), then each piece's day on content_ideas, guarded
 --      on the updated_at the board read, and the move kept append only in series_moves. The content_ideas gate checks
@@ -72,7 +73,7 @@ declare
   sha_re constant text := '^[a-f0-9]{64}$';
   days constant text[] := array['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
   d text; v_outcome text; v_via text; v_idea text; v_ref text; v_words text; v_sha text; v_shown jsonb;
-  last_outcome text; last_idea text; last_sha text; last_words text;
+  last_outcome text; last_idea text; last_sha text; last_words text; last_at timestamptz; last_id bigint;
 begin
   if h.updated_by is distinct from 'Krish' or b is null or jsonb_typeof(b) <> 'object' then return; end if;
   if h.collection = 'picks' and h.doc_id = any(days) and not (b ? 'kind') then
@@ -132,10 +133,14 @@ begin
   if v_outcome is null or d is null then return; end if;
   v_idea := lower(v_idea);
   if v_shown is not null and length(v_shown::text) > 20000 then v_shown := null; end if;
-  select o.outcome, o.idea_id, o.option_sha256, o.words into last_outcome, last_idea, last_sha, last_words
+  select o.outcome, o.idea_id, o.option_sha256, o.words, o.decided_at, o.id into last_outcome, last_idea, last_sha, last_words, last_at, last_id
     from idea_outcomes o where o.week = h.week and o.doc = h.collection || '/' || h.doc_id order by o.decided_at desc, o.id desc limit 1;
+  -- The same answer saved again records nothing twice, unless a placement of the same piece came after it (20261201100000):
+  -- then that answer no longer stands, and his press again is a new approval.
   if found and last_outcome = v_outcome and last_idea = v_idea and last_sha is not distinct from v_sha
-     and last_words is not distinct from left(v_words, 4000) then
+     and last_words is not distinct from left(v_words, 4000)
+     and not exists (select 1 from idea_outcomes s where s.week = h.week and s.via = 'placed' and s.idea_id = v_idea
+                     and s.doc <> h.collection || '/' || h.doc_id and (s.decided_at > last_at or (s.decided_at = last_at and s.id > last_id))) then
     return;
   end if;
   insert into idea_outcomes (week, day, date, idea_id, option_ref, doc, revision, outcome, via, words, option_sha256, shown,
@@ -164,7 +169,9 @@ language sql stable security definer set search_path = public, pg_temp as $$
     and not exists (
       select 1 from idea_outcomes s
       where s.week = p_week and s.via = 'placed' and s.idea_id = r.idea_id and s.doc <> r.doc
-        and (s.decided_at > r.decided_at or (s.decided_at = r.decided_at and s.id > r.id)))
+        and (s.decided_at > r.decided_at or (s.decided_at = r.decided_at and s.id > r.id))
+        -- Kept alongside on the same day: his approvals of it on that day (its Approve for publish) still stand.
+        and not (s.outcome = 'approved' and s.date = r.date))
   order by r.date, r.decided_at
 $$;
 revoke all on function public.board_approvals_now(date) from public, anon, authenticated;
@@ -177,6 +184,8 @@ grant execute on function public.board_approvals_now(date) to service_role;
 --   pieces: each piece's new day, in order, each {id, updated_at (as the board read it), scheduled_for (a date, or
 --     null for later), state, lane_slot, protect (true to set protected_at when it is not), kind, from_date, to_place};
 --     a piece whose day does not change still names itself (to_place 'alongside') so its move is kept.
+-- Like board_save, it trusts the actor the route names: the routes pass Krish only for his own press (403 his_press for
+-- anyone else), and a call naming any other actor is refused here.
 -- Answers {ok: true, revisions, pieces} or {ok: false, error: 'stale', piece}. A refused write (a revision that changed,
 -- no approval standing) raises, and nothing lands.
 create or replace function public.series_piece_place(p jsonb) returns jsonb

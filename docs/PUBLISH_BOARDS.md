@@ -443,8 +443,11 @@ carries `undo`, back to the day it left, a day now past included only when it is
 `board_approvals_now` lets a placement supersede every earlier approval of the same piece in that week on another
 document: once he moves a piece, the pick that first put it on a day no longer holds it there, so a session cannot put
 it back. A placement is never written through the plain document route (`PUT /picks/place-*` answers 400
-`place_is_its_own_press`); `series_piece_place` refuses any actor but Krish and any document but a day's pick (only
-with a replacing Approve) and placements. Held on the real migration by `tests/series-moves-db.mjs` on every pull
+`place_is_its_own_press`); `series_piece_place` refuses a call that names any actor but Krish (like `board_save`, it
+trusts the actor the route names, and the routes name Krish only for his own press) and any document but a day's pick
+(only with a replacing Approve) and placements. A piece kept alongside keeps his approvals on that day (its Approve for
+publish); a piece moved to another day needs his Approve for publish again there. His Approve again on a day a piece
+was moved from, with the same words, records a new approval. Held on the real migration by `tests/series-moves-db.mjs` on every pull
 request, and the routes by `tests/control-plane/board-series-moves.test.ts`.
 
 **What Control Centre reads.** An option's or idea's `actions[]` press with `op: "replace"`: draw it as an Approve

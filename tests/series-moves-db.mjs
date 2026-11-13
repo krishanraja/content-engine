@@ -138,6 +138,26 @@ await place({ actor: 'Krish', kind: 'replace', writes: [
 assert.deepEqual((await stood(W)).filter(s => s.startsWith('fri:')).sort(), [`fri:${NEW.slice(0, 4)}:placed`, `fri:${third.slice(0, 4)}:pick`].sort())
 assert.deepEqual([(await at(NEW)).d, (await at(third)).d], ['2026-11-20', '2026-11-20'])
 
+// Alongside keeps his Approve for publish on that day (the reviewer's case): The Great Recount's publish approval, saved
+// before a fourth idea replaces Friday's pick, still stands after it is kept alongside.
+await save(W, 'fri-publish', { kind: 'approve_publish', piece_id: NEW, approved: true })
+const fourth = '22222222-3333-4444-8555-666666666666'
+await db.exec(`reset role; insert into content_ideas (id, idea, state, lane_slot) values ('${fourth}', 'Fourth', 'seeded', 'mind_the_gap'); set role service_role`)
+await place({ actor: 'Krish', kind: 'replace', writes: [
+  { week: W, id: 'fri', body: pick('fri', fourth), revision: await revOf(W, 'fri') },
+  { week: W, id: `place-fri-${NEW}`, body: { kind: 'place_piece', piece_id: NEW, placed: true, alongside: fourth, again: true }, revision: await revOf(W, `place-fri-${NEW}`) },
+], pieces: [
+  { id: NEW, updated_at: (await at(NEW)).u, scheduled_for: '2026-11-20', kind: 'replaced', to_place: 'alongside' },
+  { id: fourth, updated_at: (await at(fourth)).u, scheduled_for: '2026-11-20', state: 'drafting', kind: 'replace', to_place: 'day' },
+] })
+assert.ok((await stood(W)).includes(`fri:${NEW.slice(0, 4)}:approve_publish`), 'kept alongside, its Approve for publish on that day stands')
+
+// His Approve again on the day a piece was moved from, with the same words, is a new approval (the reviewer's case):
+// Wednesday's piece went to Thu 19 by his move; his same pick for Wednesday saved again puts it back.
+await save(W, 'wed', { ...pick('wed', WED), again: true })
+await save(W, 'wed', pick('wed', WED))
+assert.ok((await stood(W)).includes(`wed:${WED.slice(0, 4)}:pick`), 'the same pick pressed again after a move stands again')
+
 // ── his moves are kept append only ─────────────────────────────────────────────────────────────────────────────────
 await db.exec('reset role')
 await assert.rejects(db.query(`delete from series_moves`), /append only/)
