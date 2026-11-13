@@ -227,6 +227,30 @@ def produce_day_intro():
     return intro
 
 
+class OffDayTests(unittest.TestCase):
+    """Ruling (Krish, 2026-11-13): off-day voiceover shorts are made the same way, in a Claude session with the Codex
+    plugin (the ve route). This headless run makes series days only, even when it is handed an off-day piece."""
+
+    def reason(self, post):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'post.json'
+            path.write_text(json.dumps(post), encoding='utf-8')
+            return produce_day.offday_reason(path)
+
+    def test_an_off_day_piece_is_refused_and_pointed_at_the_ve_route(self):
+        for day in ('2026-11-17', '2026-11-19', '2026-11-21'):
+            with self.subTest(day=day):
+                why = self.reason({'date': day, 'piece_id': 'x'})
+                self.assertIsNotNone(why)
+                self.assertIn('ve route', why)
+                self.assertIn('Claude session', why)
+
+    def test_a_series_day_piece_and_an_undated_one_go_on(self):
+        for post in ({'date': '2026-11-16'}, {'date': '2026-11-18'}, {'date': '2026-11-20'}, {}, {'date': 'soon'}):
+            with self.subTest(post=post):
+                self.assertIsNone(self.reason(post))
+
+
 class ScheduleTests(unittest.TestCase):
     def test_the_noon_schedule_is_gone_and_the_button_stays(self):
         flow = (ROOT / '.github/workflows/produce-day.yml').read_text(encoding='utf-8')

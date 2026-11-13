@@ -93,7 +93,7 @@ export const NAMED_BUILD_PRODUCTS: readonly BuildProduct[] = Object.freeze([
     repo: 'krishanraja/content-engine',
     key: 'video_studio',
     public_name: 'video-studio',
-    role: 'the bespoke AI video production agency: a governed render engine, carousel engine and review surface',
+    role: 'the bespoke AI video production agency: a governed render engine and review surface',
     mode: 'named',
     never_reveal: 'Drive paths, Supabase project ids, credential target names, any client or guest name in config',
   },

@@ -5258,7 +5258,7 @@
     {
      "kind": "prompt",
      "label": "Copy prompt for Growth",
-     "prompt": "Make the Saturday 2026-11-21 good-news post goodnews from the 5 stories on the content-engine board (week of 2026-11-16), to docs/CAROUSEL-STANDARD.md.\n\nKeep the board current as you work (week 2026-11-16 and day sat, step post). Krish sees…"
+     "prompt": "Make the Saturday 2026-11-21 good-news post goodnews from the 5 stories on the content-engine board (week of 2026-11-16).\n\nMake it in a Claude session in krishanraja/content-engine on the ve route, with the Codex plugin building its picture…"
     },
     {
      "kind": "press",
@@ -6890,7 +6890,7 @@
       "next": {
        "kind": "prompt",
        "label": "Copy prompt for Claude",
-       "prompt": "You are picking up the Saturday 2026-11-21 off-day post off-sat-goodnews (Good news) of the Make Your Mind Up content engine with no prior context: \"Option goodnews\". Where it stands: Approved by you, Sun 8 Nov, 09:07.\n\nGrowth makes and pos…"
+       "prompt": "You are picking up the Saturday 2026-11-21 off-day post off-sat-goodnews (Good news) of the Make Your Mind Up content engine with no prior context: \"Option goodnews\". Where it stands: Approved by you, Sun 8 Nov, 09:07.\n\nMake it in a Claude …"
       },
       "decision": false
      }

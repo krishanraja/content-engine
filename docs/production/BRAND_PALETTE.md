@@ -54,7 +54,7 @@ An asset on a series day that is not the week's series piece, and does not carry
 | quick-edit (`scripts/quick-edit/make.py`) | `palette_problems`, before any render, for every dated cut | Stops with `Brand palette (config/brand-palette.json): ...` |
 | The day runner (`scripts/produce_day.py`) | Through make.py; it no longer swaps in any outro of its own | The same stop |
 | ve (`scripts/velib/lint.py`) | `palette_lints`, the `brand.palette` lint, read from compile's own close length and sting position | `ve lint` fails |
-| Growth's carousels | `engine/run/artdirect.py` `OWN_CLOSE`: a new piece kit may not ship its own close | The art-direction gate refuses the kit |
+| Growth's carousels | `engine/run/kits.py` `OWN_CLOSE`: a piece kit may not ship its own close | `python growth.py run kit check`, the acceptance of the Codex card that builds the kit, refuses it |
 | Tests | `tests/brand_palette_test.py` here; `tests/test_render_templates.py` `FollowsThePalette` in Growth | CI fails |
 
 The palette binds every piece dated from **16 Nov 2026** (`applies_from`). Fri 13 Nov is made on a frozen engine (F33).

@@ -1,16 +1,17 @@
 ---
 name: mindmake-video
-description: Operate Mindmaker's deterministic video and carousel studio from an approved Control Center production brief through visual direction, approvals, rendering, platform packaging, analytics, and controlled learning. Use only inside an already valid Mindmake Video Engine workflow.
+description: Operate Mindmaker's deterministic video studio from an approved Control Center production brief through visual direction, approvals, rendering, platform packaging, analytics, and controlled learning. Use only inside an already valid Mindmake Video Engine workflow.
 ---
 
-# Mindmake Video
+# Mindmake Video
+
 
 > Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
 
 
 Use the repository CLI as the system of record. Do not improvise job state in chat or edit generated artifacts without recording the change.
 
-Every video and carousel production request loads `docs/MEDIA_STANDARD.md` and
+Every video production request loads `docs/MEDIA_STANDARD.md` and
 `node --import tsx scripts/media-standard.ts show` before choosing imagery.
 Develop this piece's own assets, brand applications and narrative motion.
 The quality floor is mandatory, including when the request is only "Produce this
@@ -27,7 +28,7 @@ qualification is active. The guide owns the activation evidence requirements.
 - For screenshots, archives, licensed media, sketches, generated assets, likeness changes, rights, provenance, or disclosure, read [references/asset-safety.md](references/asset-safety.md).
 - For podcasts, guests, multiple cameras, identity, diarisation, active speakers, or reaction shots, read [references/conversation-direction.md](references/conversation-direction.md).
 - For revisions, preferences, external edits, analytics, or rule changes, read [references/learning.md](references/learning.md).
-- For carousel visual production from a completed content idea, read [references/carousel-direction.md](references/carousel-direction.md). Do not use the carousel route for topic, recording, argument, or content ideation.
+- Carousels, memes and Notes images are not made here: each is made in a Claude session, with the Codex plugin building it (Ruling, Krish, 2026-11-13; `docs/CAROUSEL-STANDARD.md`, "How a carousel is made").
 
 Read only the references relevant to the current operation. Apply Krish's account-wide `$krish-voice` skill to public wording and his account-wide `$content-corpus` skill to series and channel decisions (the repository copies were retired on 2026-10-19).
 

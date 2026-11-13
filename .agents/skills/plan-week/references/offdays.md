@@ -45,6 +45,18 @@ from AI; or a snackable cut from a past week's approved master, named by its
 piece and word range. Mix them across the week: no day all one format, and at
 least two days feeding that week's Monday, Wednesday or Friday piece.
 
+How each is made once he approves it is not this skill's job, and it is one
+route (Rulings, Krish, 2026-11-13: "all the carousels should now be done in
+Claude, but using the Codex plug in as per the other usual workflows";
+"memes and Notes images should go the same way"; "Off-day voiceover shorts
+should go the same way too"): a carousel, a meme or a Notes image is made in
+a Claude session, with the Codex plugin building it
+(`docs/CAROUSEL-STANDARD.md`, "How a carousel is made"), and a voiceover
+short or a meme video on the ve route from a Claude session. The board's
+"Copy prompt for Claude" says so on every approved off-day post. The plan
+only proposes; never a scheduled job, a headless model run or a template
+engine makes one.
+
 **Where the ideas come from.** Add no source: there are many already (Krish,
 2026-11-01: "there are so many sources of inspiration by now throughout the
 engines"). Use what `board_feed.py gather` wrote to `sources.json`:
@@ -279,5 +291,5 @@ It never writes a second good-news option, never approves anything and never mov
 the topic in the window is said on the option (`"stories_short": "<why>"`) and on the board, never padded with a story
 off the topic.
 
-Growth makes the carousel from the stories as shown, and its mock comes back for his final yes as with any off day.
+Growth makes the carousel from the stories as shown, in a Claude session with the Codex plugin building it (`docs/CAROUSEL-STANDARD.md`, "How a carousel is made"), and its mock comes back for his final yes as with any off day.
 

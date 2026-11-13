@@ -1,7 +1,7 @@
 # Carousel quality standard
 
 Owner: content-engine. Taste authority: Krish Raja. Updated 5 November 2026; the brand elements rechecked on 12
-November 2026.
+November 2026; how a carousel is made rewritten on 13 November 2026.
 
 **The brand palette wins on every brand element** (Krish, 12 Nov 2026: "I approve the brand palette sheet, but only if
 it falls in line with the attached."): the cover's logo, the wordmark, the colour of each day and the last card come
@@ -11,12 +11,12 @@ takeaway in one or two lines, then Subscribe free (makeyourmindup.ai) and the wo
 Saturday's good news keeps his fixed good-news close.
 
 Who makes carousels (Ruling, Krish, 28 October 2026: "take over posting as
-well as creating new assets like carousels"): Growth-MakeYourMindUp now makes
-the derived carousels itself, to this standard, the rejection floor
+well as creating new assets like carousels"): Growth-MakeYourMindUp makes the
+derived carousels, to this standard, the rejection floor
 (`python3 scripts/floor.py --format carousel`) and the copy lint
 (`config/copy-lint.json`). Content-engine keeps this standard: a change to it
-is made here, never in Growth. Where the route below says content-engine
-renders a carousel, read it as the route for whoever makes it.
+is made here, never in Growth. Whoever makes one makes it by the one route
+below, "How a carousel is made".
 
 Status: approved production reference. On 26 October 2026 Krish approved the
 complete eight-card Grok Bot vs Muse revision 03 as the production pilot,
@@ -24,6 +24,54 @@ answering "yes" to the explicit full-pilot approval question. Its exact
 ordered image hashes and review evidence are retained privately. This locks
 the earned production principles, not a universal scorecard, eight-card
 length or fixed visual template. Publishing approval remains separate.
+
+## How a carousel is made (Ruling, Krish, 13 November 2026)
+
+His words, asked whether to retire the Studio's old carousel commands: "all the carousels should now be done in Claude, but
+using the Codex plug in as per the other usual workflows". Then, the same day: "memes and Notes images should go the
+same way", and "Off-day voiceover shorts should go the same way too".
+
+So there is one route. A carousel is made in a Claude session that someone opens, usually from the board item's "Copy
+prompt for Claude" (`apps/control-plane/api/board/_makeRoute.ts` writes it). It is never made by a scheduled job, a
+headless model run or a template engine. The Studio's old carousel commands are retired (their record is in
+`docs/history/`, dated 13 November 2026), and so is Growth's Saturday art-direction run. In the session:
+
+1. **Claude writes the deck: the story, the words and the creative direction.** The story route is "The ten-second
+   swipe" below: ask why five times, find the wider trend and prove it with an outside source, tell it in order, at
+   most 50 headline words and at most 10 cards, ending "Follow for more". The words live in a `carousel-deck/1` file
+   and `python3 scripts/carousel_check.py DECK.json` passes before anything is drawn. Everything follows this
+   standard, the brand palette (`config/brand-palette.json`, `docs/production/BRAND_PALETTE.md`) and the rejection
+   floor (`python3 scripts/floor.py --format carousel`).
+2. **Claude writes one Codex card for the deck** with `python3 scripts/ve.py card FIELDS.json`, kind `carousel`, naming
+   the day it posts (`date`), the deck (`deck`) and the inspiration cards Krish ticked for it (`references`, their
+   ids). `ve card` refuses a deck that fails the check and a card with no references (F26), and writes into the card
+   the brand palette's record for that day and format and the deck's shape: how many cards and what each one does,
+   never its words.
+3. **Claude sends the card to Codex through the Codex plugin**, as `ve` does for every card: `ve dispatch` where Codex is on
+   the machine. A card for Growth's renderer (`render/` in growth-makeyourmindup, kind `carousel` with its `spend_id`,
+   the Control Center booking) goes in that repository's `codex/queue/<id>.md` on the session's `claude/` branch, and
+   the Codex lane on Krish's home computer builds it through the same plugin (`docs/ve/RUNBOOK.md`, S2;
+   `config/codex-lanes.json`). Codex is the visual asset maker (Ruling, Krish, 2026-10-28): it never decides taste.
+4. **Codex builds the card images in code** from the card: each card's look as code, rendered to pictures, held to the
+   brand tokens. The words are placeholders in the code; the session puts the deck's words in when it renders.
+5. **Claude verifies them**: `ve verify-card` (or the lane's own run of it) for the card's acceptance, the deck check
+   again on the words as drawn, the 10/10 judges below (`POST /api/board/<Monday>/judge`, the panel Growth's maker
+   asks), and a look at every card at full size and at phone size.
+   Codex's own report is never proof.
+6. **Claude files them** in the post's `3 Posts` folder with `scripts/post-pack/send.py` and reports on the piece or
+   the board as `docs/PUBLISH_BOARDS.md` says ("Sessions and materials"; the cards go back as `slides` with their
+   `drive`, "Seeing a finished carousel" below).
+7. **Krish approves; Growth posts it** through its approved route, as today.
+
+Memes and Notes images take the same route, with the card's kind `meme` or `notes_image` and no deck: the session
+writes the words and the direction, Codex builds the picture in code, and the session verifies it against the meme
+and Notes rules below and the palette. Off-day voiceover shorts, and meme videos, take the video engine's route in a
+content-engine session: the session writes the script and the signed spec, Codex builds the devices and plates from
+cards, `ve` renders, and a separate reviewer watches and listens before it is called ready (`docs/ve/ENGINE.md`,
+`docs/ve/RUNBOOK.md`). The voice comes from wherever it comes from today.
+
+`tests/control-plane/make-route.test.ts` holds the board's prompts and the documents that tell a session how to make
+one of these to this route, and refuses the retired routes by name.
 
 ## Every carousel passes the 10/10 judges (Ruling, Krish, 12 November 2026)
 
@@ -156,8 +204,8 @@ makes to this standard.
 
 ## Narrative production and review
 
-Use content-engine production and editorial guidance, its live mandate,
-docs/CAROUSEL_ENGINE_STATE.md and docs/STYLE_REFERENCES.md. Growth supplies
+Use content-engine production and editorial guidance, its live mandate
+and docs/STYLE_REFERENCES.md. Growth supplies
 the distribution brief and may cite its channel playbook and research corpus
 as inputs; those are not competing production standards.
 Study the actual inspiration workbook and creator visuals when the task
@@ -181,27 +229,13 @@ the caption and the actual facts before asking Krish to review it. Record
 any failure, fix it and recheck the whole arc. His approval covers the
 exact reviewed version; publishing remains separately gated.
 
-## Repeatable production route
+## Growth's brief and the feedback loop
 
-1. Receive Growth's amplification concept, audience, channel, experiment,
-   source piece and desired reader action. Growth owns that initiative.
-2. Establish the exact claim/evidence and the newcomer's starting context.
-   Write each card's question, answer and role before rendering.
-3. Select a story-specific visual idea and arc using the approved principles.
-   Keep the metaphor subordinate to explicit meaning and checked facts.
-4. Render and inspect the entire sequence at phone size. Verify copy,
-   identity marks, claims, score/state progression where relevant, rhythm,
-   distinct final payoff and the absence of small-print artwork strips.
-5. Secure the required exact-asset creative review, preserve hashes/order,
-   and return a checked production package to Growth for platform delivery.
-6. Receive specific creative feedback and dated channel evidence. Improve
-   production craft here through the existing governed learning route.
-
-Use existing editorial and Studio contracts; do not create a second pipeline
-or learning store. The route is documented and the pilot approved; automated
-volume throughput, runtime feedback import and audience results are not
-proved by this document. Private accepted assets and evidence remain in the
-existing review package until imported through the tracked Studio route.
+Growth brings the amplification concept, the audience, the channel, the experiment, the source piece and the reader
+action it wants; Growth owns that initiative. The making is the route above, "How a carousel is made". Specific
+creative feedback and dated channel evidence come back here and improve this standard through the existing governed
+learning route, never a second pipeline or learning store. The route is documented and the pilot approved; automated
+volume throughput and audience results are not proved by this document.
 
 ## No card is numbered (Ruling, Krish, 5 November 2026)
 
@@ -393,7 +427,7 @@ carousels do not exceed 10 cards in total, including cover and call to action?"
 
 - Every carousel is ten cards or fewer, counting the cover and the last card. A format that wants more items (ten
   tips, say) puts two on a card or drops to the strongest eight; it never runs past ten.
-- The checks hold it: the carousel story schema (`packages/contracts/src/carousel.ts`, at most ten slides), the board
+- The checks hold it: the deck check (`scripts/carousel_check.py`, at most ten cards), the board
   (`week_plan.py` `OFF_CARDS` and `OFF_SLIDES`, at most ten) and Growth's carousel format (`social/formats/carousel.json`
   `max_assets`, which its packaging and release checks read before anything reaches Buffer).
 
@@ -427,9 +461,8 @@ too literal with imagery and screenshots? More so, the visual standard, theming,
 
 The format: five to ten jobs AI does well now, one per card. Each card shows the tools that do the job, a real image of
 it being done, one prompt to paste and three steps. The reader leaves with an action, where to click; the Saturday good
-news leaves a feeling. Growth makes it (28 October ruling) with the kit `render/pieces/ai-tips-screen` and the builder
-`scripts/ai_tips_deck.py` in growth-makeyourmindup, whose brief is `docs/briefs/ai-tips-carousel.md` there; the builder
-refuses a deck that breaks the checkable lines below.
+news leaves a feeling. Growth makes it (28 October ruling) by the route above, "How a carousel is made"; the lines below
+are what its card holds Codex to and what the session checks before filing it.
 
 - **Jobs, not launches.** Each card is a job a worker has ("Catch up on a long thread"), with two to four tools that do
   it. His words: "there are loads of other tools that can do the same thing and we should acknowledge those". Every
