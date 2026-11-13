@@ -1,3 +1,0 @@
-Status: Old one-off scripts with no caller are retired (Ruling, Krish, 2026-11-13): three one-shot control-plane scripts, the Content Engine v2 preview check, backfill_closes.ts with its test, and three quick-edit one-offs; the evidence and what was kept are in docs/history/2026-11-13-old-scripts-retired.md. The carousel engine stays: Growth's calendar still names content-engine as the publishing day's carousel producer while AGENTS.md says Growth makes them, which only Krish can settle.
-Next: Krish settles who makes the publishing day's carousel; if Growth, retire the carousel engine (studio carousel) and CAROUSEL_ENGINE_STATE.md the same way.
-North Star check (2026-11-13): holds.
