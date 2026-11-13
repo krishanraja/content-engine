@@ -32,6 +32,11 @@ export function cameraFor(p:DeviceProps){
   const rotation=new T.Euler().setFromRotationMatrix(new T.Matrix4().lookAt(eye,aim,new T.Vector3(0,1,0)))
   return {eye,rotation,focus,distance}
 }
+// A count shows only as many decimals as its sourced values carry: 20 to 13 never passes through 18.83.
+export function countText(value:number,sourced:number[]){
+  const places=Math.max(0,...sourced.map(v=>(String(v).split('.')[1]??'').length))
+  return value.toFixed(places)
+}
 export function paint(g:CanvasRenderingContext2D,p:DeviceProps){
   const s=screenState(p.object,p.events,p.frame),c={...p.tokens,creamSoft:p.tokens.cream,muted:p.tokens.cream,line:p.tokens.inkSoft},t=p.frame/30
   g.fillStyle=c.ink;g.fillRect(0,0,2400,1600)
@@ -45,7 +50,7 @@ export function paint(g:CanvasRenderingContext2D,p:DeviceProps){
     g.beginPath();g.rect(0,0,w,320);g.clip()
     countCard(g,0,{c,e:ease,W:w,H:h,label:card.label,years:['',''],from:Math.abs(s.values[card.id]!),to:0,times:{countStart:-2,countLand:-1,drop:Infinity,yearSwitch:Infinity}},c)
     g.fillStyle=c.inkSoft;g.fillRect(20,110,w-40,210)
-    g.fillStyle=s.highlight===card.id?c.mint:c.cream;g.font=`160px ${HOUSE_FONTS.display}`;g.fillText(String(Math.round(s.values[card.id]!*100)/100),36,290)
+    g.fillStyle=s.highlight===card.id?c.mint:c.cream;g.font=`160px ${HOUSE_FONTS.display}`;g.fillText(countText(s.values[card.id]!,p.object.dataset?.rows.filter(r=>r.label===card.id||r.label.startsWith(card.id+':')).map(r=>r.value)??[]),36,290)
     if(s.mark===card.id&&s.old[card.id]!==undefined){g.font=`64px ${HOUSE_FONTS.display}`;g.fillText(String(s.old[card.id]),400,280);g.fillRect(390,250,170,5)}
     g.restore();g.fillStyle=c.cream;g.font=`30px ${HOUSE_FONTS.data}`;g.fillText(card.unit??p.object.dataset?.unit??'',x+36,y+365)
   })
