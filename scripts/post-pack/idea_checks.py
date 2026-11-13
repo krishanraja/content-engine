@@ -327,7 +327,15 @@ def reduce_option(o, day, pos, main):
             'idea_id': str(o['id']).lower() if main and o.get('id') else None, 'off_id': None if main else str(o.get('id') or ''),
             'names': names(text), 'covers': [str(c) for c in o.get('covers') or []], 'source_kind': o.get('source_kind'),
             'recommended': bool(o.get('recommended')), 'text16': short_hash(norm(text)), 'source_dates': sorted(set(dates)),
-            'from_press': o.get('from_press'), 'returns': returns, 'warning': o.get('warning'), 'research_prompt': o.get('research_prompt')}
+            'from_press': o.get('from_press'), 'returns': returns, 'warning': o.get('warning'), 'research_prompt': o.get('research_prompt'),
+            'his_tick': his_tick(o), 'refused_before': o.get('refused_before') if isinstance(o.get('refused_before'), list) else []}
+
+
+def his_tick(o):
+    """The id of his tick when an option came from an Inspiration card he ticked (inspiration_act.py place writes
+    from_inspiration), else None."""
+    tick = o.get('from_inspiration') if isinstance(o, dict) else None
+    return str(tick['action_id']) if isinstance(tick, dict) and tick.get('action_id') else None
 
 
 def board_options(ideas):
@@ -366,6 +374,21 @@ def touches(opt, r):
     return None
 
 
+def why_touched(opt, r, subject):
+    """Why an option is on a refusal, in words: it is the idea he refused, or which name it shares with his refusal and
+    where that name stands in the option. Every line that names a match says this, so a hold is never unexplained."""
+    if is_return_of(opt, r):
+        return 'it is the same idea he refused'
+    shown = next((n for n in opt.get('names') or [] if n == subject or mentions(subject, n)), subject)
+    return f'the name "{subject}" is in his refusing words and the option names "{shown}"'
+
+
+def tick_note(r, subject):
+    """What an idea from his tick carries about a refusal it touches, for the board and To approve to show beside it:
+    the subject, his words (the refusing clause, exactly, or his whole words), the day he said them, and where."""
+    return {'subject': subject, 'said': r.get('quote') or r.get('said') or None, 'at': day_of(r['at']), 'via': r['via'], 'ref': r['ref']}
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # The checks. Each returns findings: {'code', 'ref', 'line', ...}; board_feed.py prints the lines.
 
@@ -376,26 +399,39 @@ def refused_findings(opts, refused, ask_ids, said=(), unvetoed=(), p6=False):
     code 'refused': a hard refusal (his Reject), or a soft one once he approves P6. The run fails.
     code 'warned': a soft refusal (refusing words inside another press): a warning line on the option, his words.
     code 'warned_first': a warned option placed first on its day (or recommended). The run fails.
+    code 'his_tick': an option from an Inspiration card he ticked (from_inspiration) on a subject he refused. Ruling
+    (Krish, 2026-11-12): his own tick outranks an older refusal; the idea comes to him with the refusal shown, and only
+    his Approve places it. It never fails a run: the option carries the refusal in refused_before (tick_note) instead.
+    Ideas the engine proposes on its own keep every check above.
     Passes: an option that answers one of his asks (its covers name one), a subject he raised again later, a subject he
     gave back with his press (unvetoed), and the return of an idea he pressed Next week on after refusing, which must
-    come back deeper instead (returns_findings)."""
+    come back deeper instead (returns_findings).
+    Every line says which refusal matched and why (why_touched)."""
     out = []
     # One finding per option and subject: a Reject before refusing words in another press, the newest first.
     order = sorted(sorted(refused['refusals'], key=lambda r: r['at'], reverse=True), key=lambda r: not r['hard'])
     for opt in opts:
         seen = set()
+        tick = opt.get('his_tick')
         for r in order:
             subject = touches(opt, r)
             if not subject or subject.lower() in seen:
                 continue
-            if set(opt.get('covers') or []) & set(ask_ids):
+            if not tick and set(opt.get('covers') or []) & set(ask_ids):
                 continue
             if subject != 'this idea' and (raised_again(subject, r, said) or lifted_by(subject, r, unvetoed)):
                 continue
             if any(is_return_of(opt, f) and f['at'] >= r['at'] for f in refused['filed']):
                 continue
             seen.add(subject.lower())
-            line = f'{opt["ref"]} is on {subject}, which he refused on {day_of(r["at"])} ({r["via"]}, {r["ref"]})'
+            line = f'{opt["ref"]} is on {subject}, which he refused on {day_of(r["at"])} ({r["via"]}, {r["ref"]}): {why_touched(opt, r, subject)}'
+            if tick:
+                shown = any(isinstance(n, dict) and n.get('ref') == r['ref'] for n in opt.get('refused_before') or [])
+                out.append({'code': 'his_tick', 'ref': opt['ref'], 'subject': subject, 'refusal': r['ref'], 'note': tick_note(r, subject), 'shown': shown,
+                            'line': f'his tick: {line}; his tick ({tick}) is newer and outranks it, so the idea goes to him with that '
+                                    'refusal shown beside it' + (' (refused_before)' if shown else ' (not yet in its refused_before: '
+                                                                 'inspiration_act.py place writes it)') + ', and only his Approve places it'})
+                continue
             if r['hard'] or p6:
                 out.append({'code': 'refused', 'ref': opt['ref'], 'subject': subject, 'refusal': r['ref'],
                             'line': f'refused: {line}; leave it out, or answer one of his asks that raises it again'})
@@ -809,6 +845,9 @@ def mix_of(stories):
 # first or shown without his words, and a return that came back no deeper. The rest of cover stays the run's to fix
 # before it stops, as before.
 GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return')
+# What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
+# subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
+NOTE_CODES = ('warned', 'his_tick')
 
 # P6 ("A subject you call boring, lame or pointless in any press is vetoed until you raise it"): a proposed rule that
 # waits for Krish's yes on his taste ledger. Until he approves it, refusing words outside a Reject warn and never block.

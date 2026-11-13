@@ -2638,6 +2638,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
 - `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[]`
 - `function warned(o: Body): string`
+- `function tickNote(o: Body): string`
 - `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
 - `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
 - `function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day: string): Body[]`
