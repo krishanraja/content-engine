@@ -148,7 +148,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 120
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/offday_pending.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**)"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/post-pack/offday_pending.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**)"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             Revise the off-day options waiting on Krish's Improve for the week of ${{ steps.what.outputs.week }}

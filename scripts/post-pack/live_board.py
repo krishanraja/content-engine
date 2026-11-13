@@ -1,5 +1,6 @@
 """The live Publish Board's link (Ruling, Krish, 2026-11-11: Control Centre's Publish Board is where everything wires
-in, live; the engine's board at content.krishraja.com/board/<Monday> is the archive).
+in, live). The engine's old board pages are retired for good and their addresses redirect to it (Ruling, Krish,
+2026-11-13).
 
 One constant, config/boards.json `live_board.url`; apps/control-plane/api/board/_liveBoard.ts holds the same text.
 Every link a session, a run or a message gives Krish to the week's board is this:
@@ -29,11 +30,6 @@ def live_board_url(week=None, day=None):
     if d in DAYS:
         q.append(f'day={d}')
     return base() + ('?' + '&'.join(q) if q else '')
-
-
-def archive_url(week):
-    """The engine's own page for a week: the archive."""
-    return f'https://content.krishraja.com/board/{week}'
 
 
 if __name__ == '__main__':

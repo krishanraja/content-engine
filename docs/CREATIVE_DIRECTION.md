@@ -91,4 +91,4 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
 3. Never publish, sign in to a publishing platform, or ask Krish for a login code. The board is fed; Krish publishes.
 4. Never call a cut ready from receipts. Ready is the reviewer's pass against `acceptance`, with fact, transport and
    editorial status each reported.
-5. Never write a script that patches or feeds the board by hand (`npm run check:board-layout` refuses one).
+5. Never write a script that patches or feeds the board by hand: the board is fed only through the records `docs/PUBLISH_BOARDS.md` names.

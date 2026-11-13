@@ -1,4 +1,4 @@
-"""A finished off-day post is not ready until it links its 3 Posts folder (scripts/post-pack/week_board.py).
+"""A finished off-day post is not ready until it links its 3 Posts folder (scripts/post-pack/week_plan.py).
 Ruling, Krish, 2026-11-03: "everything ready for post goes in the posts folder, not the growth folder"."""
 import json
 import sys
@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
-import week_board as wb  # noqa: E402
+import week_plan as wb  # noqa: E402
 
 FOLDER = 'https://drive.google.com/drive/folders/1iQV79HhSYABa4Wh6EM7i6-lQ-8rP5r8G'
 NAME = '2026-11-03 Tue off.day - AI agents translator'

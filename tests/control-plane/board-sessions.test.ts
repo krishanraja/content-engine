@@ -57,7 +57,7 @@ describe('every copied prompt carries how to report back, with no key in it', ()
     expect(writeBack({ pieceId: MON, week: WEEK, day: 'mon', step: 'board' })).toContain(`board_session.py ${MON} show`)
     // The walls ride in every copied prompt (Ruling, Krish, 2026-11-11): the one place, the archive, and only his Approve places an idea.
     expect(writeBack({ pieceId: MON, week: WEEK, day: 'mon', step: 'board' })).toContain(WALLS)
-    expect(WALLS).toMatch(/only place to put the work[\s\S]*read-only archive[\s\S]*Never post or publish[\s\S]*only Krish's Approve places it/)
+    expect(WALLS).toMatch(/only place to put the work[\s\S]*retired and redirect here[\s\S]*Never post or publish[\s\S]*only Krish's Approve places it/)
   })
 })
 

@@ -9,7 +9,6 @@ it serves, the meaning it adds beyond the words) is Claude's, written into the c
     ve sprint cards <week>                                       check the filled fields, write the cards, add the moves
     ve sprint gate2 <device> --words "<his exact words>" --where "<where he typed them>" --at YYYY-MM-DD
     ve sprint status                                             the device count and each Gate 2 yes
-    ve sprint feed --archive <archive.json> --out <archive.fed.json>  add them to the Archive feed for week_board.py
 
 Nothing here dispatches Codex, spends, publishes or approves: `ve dispatch` stays the one way a card goes to Codex, and a
 Gate 2 yes is recorded only from words Krish typed (AGENTS.md: `manual` means his words; never write it for him).
@@ -202,15 +201,3 @@ def status() -> dict:
         e['built'] = e['device'] in registered
     return {'count': len(registered), 'sprint_devices': len(entries),
             'proven': sum(1 for e in entries if e.get('gate2')), 'entries': entries}
-
-
-def feed(archive_in: Path | None, out: Path) -> dict:
-    """The Archive feed (GET /api/board/<Monday>/archive, board_feed.py archive) with the devices block added under
-    `devices`. week_board.py reads `rows` from the same file through its existing --archive input and leaves other keys
-    to the board's owner, so the rows are never touched here."""
-    data = load_json(archive_in) if archive_in else {'rows': []}
-    if not isinstance(data, dict) or not isinstance(data.get('rows'), list):
-        sys.exit('ve sprint feed: --archive is {"rows": [...]} from GET /api/board/<Monday>/archive')
-    data['devices'] = status()
-    write_json(out, data)
-    return data

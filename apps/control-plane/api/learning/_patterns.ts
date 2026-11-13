@@ -163,7 +163,7 @@ export function handRewriteProposals(rows: EditRow[]): Proposal[] {
 }
 
 
-// The classes edit_sweep.py gives a saved board edit, in the board's own words (week_board.py EDIT_KINDS).
+// The classes edit_sweep.py gives a saved board edit, in the board's own words (week_plan.py EDIT_KINDS).
 const BOARD_EDIT_LABELS: Record<string, string> = {
   number_fact: 'number or fact', claim: 'claim', structure: 'structure', tone: 'tone', wording: 'wording',
 }

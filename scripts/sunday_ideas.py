@@ -40,8 +40,6 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / 'post-pack'))
 
 NEW_YORK = ZoneInfo('America/New_York')
-# week_board.ideas_panel writes this on the live Ideas tab; ideas_waiting_panel writes data-state="ideas-waiting".
-IDEAS_LIVE = 'id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" data-state="ideas" '
 
 
 def target_monday(today: dt.date) -> dt.date:
@@ -60,10 +58,6 @@ def monday_arg(text: str) -> dt.date:
     if day.weekday() != 0:
         raise ValueError(f'{text} is not a Monday')
     return day
-
-
-def has_ideas(page: str) -> bool:
-    return IDEAS_LIVE in page
 
 
 def view_has_ideas(view: dict) -> bool:

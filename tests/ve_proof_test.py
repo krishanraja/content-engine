@@ -275,18 +275,11 @@ class RenderRefusal(unittest.TestCase):
 class BoardContract(unittest.TestCase):
     """The board's presses (commit ad90078): the same hashes, the per-cut final, a proof bound to its cut, rounds."""
 
-    def test_storyboard_sha_mirrors_week_board(self):
+    def test_storyboard_sha(self):
         import hashlib
         story, exp = 'Beat 1\r\nBeat 2\n', '- No sound effects.\r'
         want = hashlib.sha256('{"expect":"- No sound effects.\\n","storyboard":"Beat 1\\nBeat 2\\n"}'.encode()).hexdigest()
         self.assertEqual(gates.storyboard_sha(story, exp), want)
-        try:
-            sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
-            import week_board  # noqa: PLC0415
-        except Exception:  # noqa: BLE001
-            week_board = None
-        if week_board is not None and hasattr(week_board, 'storyboard_sha'):
-            self.assertEqual(week_board.storyboard_sha(story, exp), gates.storyboard_sha(story, exp))
 
     def test_final_press_binds_each_cut(self):
         cuts = {'long': 'a' * 64, 'short': 'b' * 64}

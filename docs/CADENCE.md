@@ -1,6 +1,6 @@
 # The weekly rhythm
 
-**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); content.krishraja.com/board/<Monday> is the read-only archive (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this document are history.
+**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); the old board pages at content.krishraja.com/board are retired for good and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good, and everything old in content-engine is retired). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this document are history.
 
 
 ## The rhythm from 1 November 2026
@@ -10,9 +10,9 @@ until the Monday after (8 days later)". That replaces the same-day rhythm of
 11 October further down this page: Monday made and recorded the Sunday it was
 picked, Wednesday and Friday when he starts them, and the midday run of
 `produce-day.yml` on each publishing day. Code that still follows the old
-rhythm moves over in the plan's later waves; the board's new layout (rule
-`recording_sunday`, `config/board-layout.json` `v3`) starts with the week of
-2 November.
+rhythm moves over in the plan's later waves; the board's layout for it (rule
+`recording_sunday`) started with the week of 2 November (the old board pages that drew it are retired for good,
+Ruling, Krish, 2026-11-13).
 
 **The shape of a week.** Call the recording Sunday S.
 
@@ -188,7 +188,7 @@ board, the strip and both skills read the same table.
 | Record | Krish records, then drops each take in the Inbox; the home computers' recordings lane writes it, and the production session one the lane has not placed | `scripts/post-pack/recording_match.py --record`, run by `scripts/recordings-upload.ps1` at the end of every pass on either machine (`--board --by "Recordings lane"`) and in `.agents/skills/produce-video` | `meta.making.recordings`, each take with the hash of the script it was read from (`script_sha256`) |
 | Video assets | ve (`python scripts/ve.py`, `docs/ve/RUNBOOK.md`) on a home computer; quick-edit (`.agents/skills/produce-video`) only as the fallback until ve passes Phase 3. Codex makes plates and devices, never a cut | `scripts/ve.py`, `.agents/skills/ve` | `meta.making.video_assets`, each cut with its thumbnail and music track; the cuts and thumbnails in the archive and in the post's library folder (`3 Video`). Never the visual gate or the pack |
 | Publish board with the cuts | Claude Code | `make-piece` (last step) | the piece's record, which the live board shows (`docs/PUBLISH_BOARDS.md`); and the pack again with the cuts (`build.py --replace`, which records Visual gate and Pack, then `send.py`) when the session holds the post's working folder and the cut files |
-| The week's publish board, the weekly content calendar | nobody builds it: the live board in Control Centre's Content tab draws the week from the records on every read, and `plan-week` writes the week's `ideas.json` (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive) | the view, `GET /api/board/<Monday>/view`; `board_web.py touch` after a file changes | `python3 scripts/post-pack/live_board.py <Monday> [day]` (`docs/PUBLISH_BOARDS.md`); the content.krishraja.com/board pages are the read-only archive; the week's own board item `week-publish-board-<Monday>` and `WORKBENCH.md` carry the link |
+| The week's publish board, the weekly content calendar | nobody builds it: the live board in Control Centre's Content tab draws the week from the records on every read, and `plan-week` writes the week's `ideas.json` (Ruling, Krish, 2026-11-11: one live board, in Control Centre) | the view, `GET /api/board/<Monday>/view`; `board_web.py touch` after a file changes | `python3 scripts/post-pack/live_board.py <Monday> [day]` (`docs/PUBLISH_BOARDS.md`); the old content.krishraja.com/board pages are retired and redirect to it; the week's own board item `week-publish-board-<Monday>` and `WORKBENCH.md` carry the link |
 | Posting and ticks | Krish ticks on the week's publish board (or in Control Center); a Claude Code session copies each channel tick onto the piece | the week's board; `make-piece`, "The week's ticks" | the board's own store at once, then `meta.making.channels` |
 
 Where each thing lives, and nowhere else:
@@ -202,7 +202,7 @@ Where each thing lives, and nowhere else:
 | Control Center's secrets (access code, cron secret) | Control Center's Vercel project | its own routes; the slate cron speaks to the board on the access-code cookie |
 | Recordings | the engine's recordings lane (object store plus manifest), fed only from the top of the Video Engine Inbox | the home computers place each Inbox take on its piece and cut by themselves (`scripts/recordings-upload.ps1`, then `scripts/post-pack/recording_match.py`); `scripts/post-pack/recording.py get` fetches a take by its Inbox name or by the path its piece's record holds (`recordings/<sha256>.<ext>`); never the Drive connector (10 MB cap) |
 | Scripts for Krish to read while he records | his teleprompter.com account: one folder per piece ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"), one script per cut ("Mon 12 Oct - 5-minute - Who gets paid for AI songs"); and the publish page's Copy | each cut's script title on the piece's making record (`meta.making.teleprompter`), shown on Control Center's Record step ("Read from Teleprompter: <title>") and on the week's publish board. Sent at the Scripts step by `teleprompter_send.py` (from 1 November, only on his Approve scripts press); words that change update the same script in place, and nothing there is ever deleted |
-| The week's publish board and all decisions | the engine's board tables, drawn live in Control Centre's Content tab (content.krishraja.com/board is the read-only archive) | each week's `week-publish-board-<Monday>` item and `WORKBENCH.md`; every tool reads all six collections with `board_web.py`, following `docs/PUBLISH_BOARDS.md` |
+| The week's publish board and all decisions | the engine's board tables, drawn live in Control Centre's Content tab (the old content.krishraja.com/board pages are retired and redirect there) | each week's `week-publish-board-<Monday>` item and `WORKBENCH.md`; every tool reads all six collections with `board_web.py`, following `docs/PUBLISH_BOARDS.md` |
 | Licensed music | Drive, `makeyourmindup > 1 Brand kit (permanent) > Music` (`MINDMAKE_MUSIC_ROOT`), each licence certificate beside its track; the ledger `config/music-library.json` in GitHub | `scripts/quick-edit/music.py` on a home computer; only approved ledger tracks, never browsed |
 | The pack, the publish page, the finished cuts | Krish's Drive library, written by his own machine from the engine's library store | `build.py`, `send.py`; the Drive folder is the canonical copy for every tool and for Krish |
 | Code, rules, skills | GitHub `main` of this repository, and of `control-center` | both tools commit small and pull first; the docs steward writes `NOW.md` and the log |
