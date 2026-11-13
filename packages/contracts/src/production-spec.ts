@@ -259,7 +259,7 @@ export const ProductionSpecV2Schema = z.object({
     captions: z.object({ theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
       'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']),
       placement: z.enum(['lower', 'centre', 'upper']).optional(), reason: z.string().min(1) }).strict().optional(),
-    transitions: z.object({ kind: z.enum(['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch']), reason: z.string().min(1) }).strict().optional(),
+    transitions: z.object({ kind: z.enum(['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade']), reason: z.string().min(1) }).strict().optional(),
     camera: z.object({ move: z.enum(['none', 'drift', 'phased', 'punch']), hits: z.boolean().optional(), reason: z.string().min(1) }).strict().optional(),
     energy: z.enum(['calm', 'medium', 'high']).optional(),
     // How a graphics-only beat uses the frame (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the use of the screen space is terrible").

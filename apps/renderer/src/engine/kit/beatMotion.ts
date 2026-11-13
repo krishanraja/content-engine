@@ -131,3 +131,26 @@ export function halftoneTexture(tokens: EngineTokens): CSSProperties {
   return { backgroundImage: `radial-gradient(circle at 4px 4px, ${tokens.ink} 1.6px, transparent 2.4px)`, backgroundSize: '8px 8px',
     opacity: 0.32, mixBlendMode: 'multiply' }
 }
+
+/** The lit, vignette and hatched grounds (motion profile ground.texture), or null for the others. Pure in the frame:
+ *  lit drifts its two glows on a slow sine, hatched scrolls its diagonals 1 px a frame. Brand roles only. */
+export function groundTexture(texture: string | undefined, tokens: EngineTokens, frame: number): CSSProperties | null {
+  if (texture === 'lit') {
+    const dx = 4 * Math.sin(frame / 90), dy = 3 * Math.cos(frame / 110)
+    return { backgroundImage: [
+      `radial-gradient(circle at ${18 + dx}% ${14 + dy}%, color-mix(in srgb, ${tokens.channel} 34%, transparent) 0%, transparent 42%)`,
+      `radial-gradient(circle at ${84 - dx}% ${86 - dy}%, color-mix(in srgb, ${tokens.mint} 26%, transparent) 0%, transparent 40%)`,
+      `linear-gradient(color-mix(in srgb, ${tokens.cream} 6%, transparent) 1px, transparent 1px)`,
+      `linear-gradient(90deg, color-mix(in srgb, ${tokens.cream} 6%, transparent) 1px, transparent 1px)`,
+    ].join(', '), backgroundSize: '100% 100%, 100% 100%, 54px 54px, 54px 54px' }
+  }
+  if (texture === 'vignette') return { background: `radial-gradient(ellipse at 50% 45%, ${tokens.inkSoft} 0%, ${tokens.ink} 78%)` }
+  if (texture === 'hatched') return hatched(tokens, frame)
+  return null
+}
+
+/** The AI material: inkSoft diagonals scrolling slowly, a fill for any band, card or chip whose subject is made by AI. */
+export function hatched(tokens: EngineTokens, frame: number): CSSProperties {
+  return { backgroundImage: `repeating-linear-gradient(135deg, ${tokens.inkSoft} 0 6px, transparent 6px 18px)`,
+    backgroundPosition: `${frame % 25}px 0`, opacity: 0.55 }
+}

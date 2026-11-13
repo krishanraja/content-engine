@@ -18,7 +18,7 @@ import { z } from 'zod'
  *  (houseGolden.test.ts). Pure functions of (props, frame): a still and a render agree frame for frame. */
 
 export const ENERGIES = ['calm', 'medium', 'high'] as const
-export const TRANSITIONS = ['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch'] as const
+export const TRANSITIONS = ['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade'] as const
 export const CAMERAS = ['none', 'drift', 'phased', 'punch'] as const
 
 export const EngineIngredientsSchema = z.object({
@@ -31,7 +31,7 @@ export const EngineIngredientsSchema = z.object({
 export type EngineIngredients = z.infer<typeof EngineIngredientsSchema>
 
 type Energy = typeof ENERGIES[number]
-const TRANSITION_FRAMES: Record<Energy, number> = { calm: 16, medium: 10, high: 6 }   // 0.53 / 0.33 / 0.2 s at 30 fps
+export const TRANSITION_FRAMES: Record<Energy, number> = { calm: 16, medium: 10, high: 6 }   // 0.53 / 0.33 / 0.2 s at 30 fps
 const BLUR_PX: Record<Energy, number> = { calm: 18, medium: 12, high: 6 }
 const PUNCH: Record<Energy, number> = { calm: 0.02, medium: 0.04, high: 0.07 }        // scale bump on a hit
 const PUNCH_FRAMES: Record<Energy, number> = { calm: 14, medium: 10, high: 7 }

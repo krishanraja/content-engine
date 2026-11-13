@@ -575,7 +575,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
 # kit/ingredients.ts; engine.test.ts holds the two lists in step.
 CAPTION_PLACEMENTS = ('lower', 'centre', 'upper')
 ENERGIES = ('calm', 'medium', 'high')
-TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch')
+TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade')
 CAMERAS = ('none', 'drift', 'phased', 'punch')
 LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray')
 
