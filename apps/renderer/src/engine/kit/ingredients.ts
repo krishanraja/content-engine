@@ -37,8 +37,10 @@ const PUNCH: Record<Energy, number> = { calm: 0.02, medium: 0.04, high: 0.07 }  
 const PUNCH_FRAMES: Record<Energy, number> = { calm: 14, medium: 10, high: 7 }
 const SHAKE_PX: Record<Energy, number> = { calm: 0, medium: 4, high: 10 }               // CollageBurst 5 / 12 px
 const SHAKE_FRAMES = 6
-const FLASH: Record<Energy, number> = { calm: 0.18, medium: 0.32, high: 0.5 }
-const FLASH_FRAMES = 5
+// Kept low and short: a cream flash over the dark ground reads as a flat grey frame when it is strong or long
+// (seen at speed on the 13 Nov test cut, frame 1 of a zoom-through at 0.5 for 5 frames).
+const FLASH: Record<Energy, number> = { calm: 0.1, medium: 0.16, high: 0.24 }
+const FLASH_FRAMES = 3
 const DRIFT_PX = { x: 4, y: 2 }
 const HEADROOM = 1.015                                                                   // so a drift never shows an edge
 
