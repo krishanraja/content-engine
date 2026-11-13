@@ -2,6 +2,7 @@ import { CAPTION_THEMES } from './captions/names'
 import { z } from 'zod'
 import { EngineMotionSchema } from './kit/motionProfiles'
 import { EngineIngredientsSchema } from './kit/ingredients'
+import { EngineLayoutSchema } from './kit/layout'
 
 /** What `ve compile` hands the renderer for one cut: everything already resolved to frames on ONE clock.
  *  The spec (packages/contracts/src/production-spec.ts) speaks in word indexes; this speaks in frames.
@@ -124,6 +125,8 @@ export const EngineRenderPropsSchema = z.object({
   /** The transitions, camera and energy chosen per piece (spec style.transitions, style.camera, style.energy;
    *  kit/ingredients.ts); absent means every beat cuts under a still camera, as before. */
   ingredients: EngineIngredientsSchema.optional(),
+  /** How a graphics-only beat uses the frame (spec style.layout; kit/layout.ts); absent means the layouts' own slots. */
+  layout: EngineLayoutSchema.optional(),
   /** The series sting, only straight after the hook (`atFrame`, the hook's last frame + 1): a new design that plays
    *  nothing in front of the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception
    *  for good."), and that compile lays only once he approves it (config/intro-sting.json is retired; none is). The
