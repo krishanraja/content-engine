@@ -4558,6 +4558,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function viewport(p:DeviceProps)`
 - `function safeBox(p:DeviceProps)`
 - `function cameraFor(p:DeviceProps)`
+- `function countText(value:number,sourced:number[])`
 - `function paint(g:CanvasRenderingContext2D,p:DeviceProps)`
 - `function Device(p:DeviceProps)`
 
