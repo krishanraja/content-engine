@@ -2447,7 +2447,7 @@
       "id": "carousel-fails-the-ten-second-swipe",
       "on": "2026-11-13",
       "krish": "Git carousel cards look terrible apart from the cover card and they also are not very easy to follow. Remember that a complete layperson is swiping through these cards at light speed and needs to be able to follow the story within 10 seconds. This cannot ever happen again in any future carousel.",
-      "what": "The Thursday 12 Nov Git carousel (Growth, to this repository's standard) led cards 2 to 5 with a mono label ('CODE CHANGES ANTHROPIC MERGED PER DAY'), a bare '7 ENGINEERS 5 MONTHS', a list of three companies in boxes and an abstract close; the story sat in small print under them, with no picture of the point and the word 'merged' unexplained. Its read-back was done on the pitch, not on the cards' headlines.",
+      "what": "The Thursday 12 Nov Git carousel (Growth, to this repository's standard) led cards 2 to 5 with a mono label ('CODE CHANGES ANTHROPIC MERGED PER DAY'), a bare '7 ENGINEERS 5 MONTHS', a list of three companies in boxes and an abstract close; the story sat in small print under them, with no picture of the point and the word 'merged' unexplained. Its read-back was done on the pitch, not on the cards' headlines. The first redraw (13 Nov) fixed the layout but still never said what Git is, why Anthropic did it, what trend it points to or what a business should do; the check passed it because it measured length, not story.",
       "symptom": "Swiped fast, cards 2 to 5 do not say what happened or why it matters; they look like slides.",
       "cause": "Nothing checked the cards' own headlines as a story a layperson reads in ten seconds; the read-back read the pitch.",
       "status": "guarded",
@@ -2461,12 +2461,16 @@
         {
           "cause": "standard_missing",
           "evidence": "docs/CAROUSEL-STANDARD.md asked for reader comprehension but set no measure a deck could be refused on."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "The 13 Nov check had no story test: no five whys, no card for why, the wider trend or what to do, no evidence for the trend."
         }
       ],
       "related": [
         "F16-krish-carried-qa"
       ],
-      "surface": "Every carousel's headlines, read in order, tell the story in ten seconds (45 words, each card one sentence with a picture of its point, no jargon), read back by two fresh readers; python3 scripts/carousel_check.py DECK.json passes before any card is drawn or filed.",
+      "surface": "Every carousel follows the route in docs/CAROUSEL-STANDARD.md (The ten-second swipe): five whys, the wider trend proven from outside the story, then what it is, what happened, why, the trend, what to do; at most 50 headline words and 10 cards; the last card centred; two fresh readers answer the five questions from the headlines alone; python3 scripts/carousel_check.py DECK.json passes before drawing.",
       "guards": [
         {
           "file": "scripts/carousel_check.py",

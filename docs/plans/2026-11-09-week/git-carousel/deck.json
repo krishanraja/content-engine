@@ -1,17 +1,123 @@
 {
  "schema": "carousel-deck/1",
- "title": "Anthropic's AI wrote so much code Git could not keep up (Thu 12 Nov, redrawn 13 Nov)",
- "explains": {"git": "Git is the tool almost every programmer uses to save and share code (card 1)"},
+ "title": "Anthropic's AI broke Git (Thu 12 Nov off day; rewritten and redrawn 13 Nov, words approved by Krish 13 Nov)",
+ "five_whys": [
+  {
+   "q": "Why did Anthropic replace Git?",
+   "a": "Git became its biggest bottleneck, in Anthropic's own words."
+  },
+  {
+   "q": "Why did Git become the bottleneck?",
+   "a": "Code changes went from about 2,500 a day in May to over 30,000 by September."
+  },
+  {
+   "q": "Why so many changes?",
+   "a": "Its AI now writes most of the code, all day and all night."
+  },
+  {
+   "q": "Why does that matter beyond programmers?",
+   "a": "When AI does the work, the hold-up moves to the people who check it: Faros AI found 21% more work done but 91% longer waits for review."
+  },
+  {
+   "q": "Why should a business person care?",
+   "a": "Every business has human-speed checks (sign-offs, approvals, legal, the boss's inbox) that will jam the same way unless checks are set by risk."
+  }
+ ],
+ "arc": {
+  "what": 1,
+  "happened": [
+   1,
+   2
+  ],
+  "why": 3,
+  "so_what": [
+   5,
+   6,
+   7
+  ],
+  "do": [
+   8,
+   9
+  ]
+ },
+ "explains": {
+  "git": "where every programmer saves their work, like track changes for code (card 1)"
+ },
+ "cta": "Follow for more",
  "cards": [
-  {"headline": "Its AI wrote so much code, Git couldn't keep up", "line": "Git is the tool almost every programmer uses to save and share code. Here's what broke it.", "picture": "The cover as approved: a robot arm in a storm of paper over a filing cabinet"},
-  {"headline": "12 times more code a day than in May.", "line": "Code changes saved per day at Anthropic.", "picture": "Two bars to scale: 2,500 in May, 30,000+ in September"},
-  {"headline": "Git became the traffic jam.", "line": "The tool every programmer uses to save code was built for people, not for an AI flood.", "picture": "Rows of code changes piling up at a narrow funnel marked GIT"},
-  {"headline": "So 7 engineers built a new Git for AI.", "line": "5 months. It's called Scion. Claude wrote most of its code. GitHub and others are building the same.", "picture": "Seven figures, and the name Scion"},
-  {"headline": "Your next software: built for AI to use, people to check.", "line": "Ask who your next tool was built for.", "picture": "A robot handing to a person with a tick"}
+  {
+   "headline": "Anthropic's AI broke Git.",
+   "line": "Git is where every programmer saves their work, like track changes for code.",
+   "picture": "The robot arm in a storm of paper over a filing cabinet, the Anthropic logo"
+  },
+  {
+   "headline": "12x more code in four months.",
+   "line": "Code changes saved per day at Anthropic.",
+   "picture": "Two bars to scale: 2,500 in May, 30,000+ in September"
+  },
+  {
+   "headline": "Git was built for human speed.",
+   "line": "People save their work a few times a day. AI saves changes all day and all night.",
+   "picture": "Code changes piling up at a narrow funnel marked GIT"
+  },
+  {
+   "headline": "So Anthropic built one for AI.",
+   "line": "7 engineers, 5 months. It's called Scion. Anthropic's AI, Claude, wrote most of its code.",
+   "picture": "Seven figures"
+  },
+  {
+   "headline": "But the jam moved to people.",
+   "line": "The hold-up is now the people who check the AI's work.",
+   "picture": "Two bars: work finished +21%, time waiting for a person to check it +91%",
+   "source": "Faros AI, The AI Productivity Paradox, 2025 (teams of 10,000+ developers)"
+  },
+  {
+   "headline": "Doing got faster. Checking didn't.",
+   "line": "So the company as a whole shipped no faster.",
+   "picture": "A robot handing work to one person behind a tall pile",
+   "source": "Faros AI, 2025: delivery metrics stayed flat"
+  },
+  {
+   "headline": "Your business has this jam coming.",
+   "line": "Any step where AI's work waits for a person to say yes.",
+   "picture": "Four in-trays stacking: sign-offs, approvals, legal checks, the boss's inbox"
+  },
+  {
+   "headline": "Check by risk, not habit.",
+   "line": "Not every piece of work needs the same human check.",
+   "picture": "Low risk: AI checks, a person spot-checks. High risk (money, customers, the law): a person signs off"
+  },
+  {
+   "headline": "Find what waits for a human.",
+   "line": "That's your new traffic jam. Fix it before AI floods it. Follow for more.",
+   "picture": "A WAITING ON YOU sign, Follow for more over the centred wordmark"
+  }
  ],
  "read_back": [
-  {"reader": "Fresh reader A (Haiku, a 12-year-old, headlines only, once)", "retold": "AI wrote so much computer code, about 12 times more in four months, that Git, the tool programmers use to save and share code, got jammed. So seven engineers built a new tool made for AI, and future software will be built so AI can use it and people can check it."},
-  {"reader": "Fresh reader B (Sonnet, a shop owner who never wrote code, headlines only, once)", "retold": "An AI company's tools wrote so much code, about 12 times more in four months, that the system programmers use to save and share code got overloaded and jammed. So seven engineers built a new one designed for AI, and the point for me is that future software will be made by AI and checked by people."}
+  {
+   "reader": "Fresh reader A (Haiku, a small-business owner, headlines only, once)",
+   "answers": {
+    "what": "A carousel about Anthropic's AI and Git, the tool programmers use to save their work.",
+    "happened": "Anthropic's AI made about 12 times more code in four months, overloading Git, so Anthropic built a version for AI.",
+    "why": "Writing got much faster but checking did not, so the slow part moved to people.",
+    "so_what": "My business may get the same jam: work arrives faster than people can check it.",
+    "do": "Find the work that waits for a human and check it by risk, not habit."
+   }
+  },
+  {
+   "reader": "Fresh reader B (Sonnet, a 15-year-old, headlines only, once)",
+   "answers": {
+    "what": "A company's AI messing up a thing programmers use to save their work.",
+    "happened": "The AI wrote way more code, the old saving tool could not keep up, so they made a new one.",
+    "why": "The old tool was made for slow humans, not fast AI.",
+    "so_what": "Work piles up when people have to check things.",
+    "do": "Check by risk and find what waits for a human, if you run a business."
+   }
+  }
  ],
- "sources": ["Anthropic engineering, Redesigning source control, 13 Oct 2026 (2,500 to 30,000+ merges a day; Git its biggest bottleneck; seven engineers, five months, Scion)"]
+ "read_back_fixed": "Both readers stumbled on 'the jam', 'checking what' and 'check by risk'; the lines under cards 5, 7 and 8 now say who is jammed, what is checked and what counts as high risk.",
+ "sources": [
+  "Anthropic engineering, Redesigning source control, 13 Oct 2026",
+  "Faros AI, The AI Productivity Paradox Research Report, 2025 (https://www.faros.ai/blog/ai-software-engineering)"
+ ]
 }

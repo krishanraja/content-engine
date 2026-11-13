@@ -23,6 +23,29 @@ class TenSecondSwipe(unittest.TestCase):
     def test_the_redrawn_git_deck_passes(self):
         self.assertEqual(carousel_check.problems(REDRAWN), [])
 
+    def test_a_deck_without_the_so_what_fails(self):
+        # The 13 Nov redraw: five clear cards that never said why it happened, what trend it shows or what to do.
+        deck = json.loads(json.dumps(REDRAWN))
+        deck['cards'] = deck['cards'][:4] + [deck['cards'][-1]]
+        deck.pop('five_whys'); deck['arc'] = {'what': 1, 'happened': 2}
+        found = ' | '.join(carousel_check.problems(deck))
+        self.assertIn('ask why five times', found)
+        self.assertIn('the wider trend it points to', found)
+        self.assertIn('what a business person should do', found)
+
+    def test_more_than_ten_cards_or_no_follow_for_more_fails(self):
+        deck = json.loads(json.dumps(REDRAWN))
+        deck['cards'] = deck['cards'] + [{'headline': 'One more.', 'picture': 'x'}] * 2
+        found = ' | '.join(carousel_check.problems(deck))
+        self.assertIn('at most 10', found)
+        self.assertIn('Follow for more', found)
+
+    def test_a_trend_without_evidence_fails(self):
+        deck = json.loads(json.dumps(REDRAWN))
+        for c in deck['cards']:
+            c.pop('source', None)
+        self.assertTrue(any('names its evidence' in p for p in carousel_check.problems(deck)))
+
     def test_the_git_deck_as_sent_fails_on_each_fault(self):
         found = ' | '.join(carousel_check.problems(AS_SENT))
         self.assertIn('card 2: the headline is not a whole sentence', found)
@@ -34,14 +57,14 @@ class TenSecondSwipe(unittest.TestCase):
     def test_a_long_story_or_a_long_line_fails(self):
         deck = json.loads(json.dumps(REDRAWN))
         deck['cards'][2]['line'] = ' '.join(['word'] * 21)
-        deck['cards'].append({'headline': 'One more card that pushes the story well past ten seconds.', 'picture': 'x'})
+        deck['cards'][3]['headline'] = 'So Anthropic built one for AI in five months with seven engineers.'
         found = ' | '.join(carousel_check.problems(deck))
         self.assertIn('card 3: the line under the headline has 21 words', found)
         self.assertIn('ten seconds or less', found)
 
     def test_jargon_explained_in_the_deck_passes(self):
         deck = json.loads(json.dumps(REDRAWN))
-        deck['cards'][1]['headline'] = 'It merged 12 times more code than in May.'
+        deck['cards'][1]['headline'] = 'It merged 12x more code.'
         self.assertTrue(any('"merged"' in p for p in carousel_check.problems(deck)))
         deck['explains']['merged'] = 'saved into the shared copy everyone works from'
         self.assertEqual(carousel_check.problems(deck), [])
