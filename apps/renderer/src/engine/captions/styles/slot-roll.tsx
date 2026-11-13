@@ -67,15 +67,18 @@ export const slotRoll: Draw = (props, frame) => {
       const out = es === undefined || exitLen < 1 ? 0 : clamp((frame - es - j * exitStep) / exitDur)
       const exitY = -1.05 * outCubic(out)
       const width = px[j + 1]! - px[j]! + (j === n - 1 ? SLACK : 0)
-      const base = { display: 'inline-block', width: `${width.toFixed(4)}em`, height: '1em', lineHeight: '1em', overflow: 'hidden',
+      // a fixed-height window that clips whole letters: its height is whole px and the roll moves in whole px, so no
+      // half-rendered glyph row shows from a subpixel transform
+      const base = { display: 'inline-block', width: `${width.toFixed(4)}em`, height: S, lineHeight: `${S}px`, overflow: 'hidden',
         verticalAlign: 'top' } as const
+      const ty = (y: number) => `translateY(${Math.round(y * S)}px)`
       const inWord = (y: number) => <span key={j} style={base}>
-        <span style={{ display: 'block', marginLeft: `${(-px[j]!).toFixed(4)}em`, whiteSpace: 'nowrap', transform: `translateY(${y.toFixed(3)}em)` }}>{text}</span>
+        <span style={{ display: 'block', marginLeft: `${(-px[j]!).toFixed(4)}em`, whiteSpace: 'nowrap', transform: ty(y) }}>{text}</span>
       </span>
       // a lone glyph centred in the letter's own column (the last window's slack left out)
       const glyph = (g: number, y: number, op: number) => <span key={j} style={base}>
         <span style={{ display: 'block', width: `${(px[j + 1]! - px[j]!).toFixed(4)}em`, textAlign: 'center', opacity: op,
-          transform: `translateY(${y.toFixed(3)}em)` }}>{g}</span>
+          transform: ty(y) }}>{g}</span>
       </span>
       if (f < 0) return <span key={j} style={{ ...base, visibility: 'hidden' }}>{ch}</span>
       if (/\d/.test(ch)) {
