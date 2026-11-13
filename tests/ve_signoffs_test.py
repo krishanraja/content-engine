@@ -7,11 +7,13 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import os
 import shutil
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from PIL import Image
 
@@ -56,6 +58,9 @@ class SignOffs(unittest.TestCase):
                 {'id': b, 'beat': b, 'title': b, 'kind': 'image', 'sha256': sha256_file(self.drive / b), 'drive': d(b)} for b in BEATS]},
         ]}
         self.fetched = []
+        # The engine's library, as the apply job files into it: path -> bytes. The home computers' sync writes it into
+        # the brand kit's Music folder in Drive, which is MINDMAKE_MUSIC_ROOT there.
+        self.library = {}
 
     def tearDown(self):
         shutil.rmtree(self.tmp)
@@ -70,8 +75,23 @@ class SignOffs(unittest.TestCase):
     def press(self, card, item, verdict, digest, at='2026-11-13T10:00:00Z', words=None, by='Krish'):
         return {'card': card, 'item': item, 'verdict': verdict, 'sha256': digest, 'words': words, 'at': at, 'by': by}
 
-    def apply(self, presses):
-        return signoffs.apply(self.doc, signoffs.answers_of(presses), self.fetch, work=self.tmp / 'work', root=self.root)
+    def file_sound(self, path, local):
+        self.library[path] = Path(local).read_bytes()
+        return {'sent': 1}
+
+    def apply(self, presses, file_sound='default'):
+        return signoffs.apply(self.doc, signoffs.answers_of(presses), self.fetch, work=self.tmp / 'work', root=self.root,
+                              file_sound=self.file_sound if file_sound == 'default' else file_sound)
+
+    def music_root(self):
+        """The Music folder as the library sync leaves it: every filed file under the brand kit's Music path."""
+        root = self.tmp / 'Music'
+        for path, data in self.library.items():
+            rel = path.removeprefix(sfx.LIBRARY_MUSIC + '/')
+            (root / rel).parent.mkdir(parents=True, exist_ok=True)
+            (root / rel).write_bytes(data)
+        root.mkdir(exist_ok=True)
+        return root
 
     def config(self, *path):
         return json.loads((self.root.joinpath(*path)).read_text(encoding='utf-8'))
@@ -106,7 +126,7 @@ class SignOffs(unittest.TestCase):
     def test_his_approve_on_a_sound_writes_it_with_his_press_never_invented_words(self):
         digest = self.doc['cards'][0]['items'][0]['sha256']
         done = self.apply([self.press('sfx', 'thud', 'approve', digest)])
-        self.assertEqual(done, ['sound thud: approved in config/sfx-approved.json (2026-11-13)'])
+        self.assertEqual(done, ["sound thud: approved in config/sfx-approved.json and filed in the brand kit's Music folder at Music/sfx/thud.wav (2026-11-13)"])
         row = self.config('config', 'sfx-approved.json')['approved'][0]
         self.assertEqual({k: row[k] for k in ('id', 'sha256', 'approved_by', 'approved_on', 'provider_id')},
                          {'id': 'thud', 'sha256': digest, 'approved_by': 'Krish', 'approved_on': '2026-11-13', 'provider_id': 'p1'})
@@ -116,6 +136,102 @@ class SignOffs(unittest.TestCase):
         self.assertEqual(json.loads((self.root / 'config' / 've' / 'sfx-kits' / 'house-v1.json').read_text()), {'thud': {'path': 'sfx/thud.wav', 'gain_db': -8.0}})
         # Applying the same presses again writes nothing new.
         self.assertEqual(self.apply([self.press('sfx', 'thud', 'approve', digest)]), [])
+
+    def test_an_approved_sound_is_filed_in_the_music_folder_and_the_render_path_finds_it(self):
+        digest = self.doc['cards'][0]['items'][0]['sha256']
+        self.apply([self.press('sfx', 'thud', 'approve', digest)])
+        # The exact bytes he heard, filed once at the brand kit's Music folder, sfx/<id>.
+        self.assertEqual(list(self.library), ['1 Brand kit (permanent)/Music/sfx/thud.wav'])
+        self.assertEqual(hashlib.sha256(self.library['1 Brand kit (permanent)/Music/sfx/thud.wav']).hexdigest(), digest)
+        row = self.config('config', 'sfx-approved.json')['approved'][0]
+        self.assertEqual(row['file'], 'sfx/thud.wav')
+        self.assertEqual({k: row['filed'][k] for k in ('library_path', 'drive_folder', 'music_root_path', 'sha256')},
+                         {'library_path': '1 Brand kit (permanent)/Music/sfx/thud.wav', 'drive_folder': sfx.DRIVE_MUSIC_FOLDER,
+                          'music_root_path': 'sfx/thud.wav', 'sha256': digest})
+        # The next cut: ve compile stages it from MINDMAKE_MUSIC_ROOT into the cut's assets, checked by its sha256.
+        assets = self.tmp / 'assets'
+        approved = self.root / 'config' / 'sfx-approved.json'
+        with patch.dict(os.environ, {sfx.MUSIC_ENV: str(self.music_root())}):
+            self.assertEqual(sfx.ensure_staged('thud', 'sfx/thud.wav', assets, approved), 'sfx/thud.wav')
+        self.assertEqual(sha256_file(assets / 'sfx' / 'thud.wav'), digest)
+        # A machine without it stops, naming the file and where it is filed, and stages nothing.
+        empty = self.tmp / 'empty-music'
+        empty.mkdir()
+        with patch.dict(os.environ, {sfx.MUSIC_ENV: str(empty)}), self.assertRaisesRegex(ValueError, r"thud.*missing on this machine.*Music folder"):
+            sfx.ensure_staged('thud', 'sfx/thud.wav', self.tmp / 'other-assets', approved)
+        with patch.dict(os.environ, {}, clear=True), self.assertRaisesRegex(ValueError, r'MINDMAKE_MUSIC_ROOT is not set.*Music/sfx/thud.wav'):
+            sfx.ensure_staged('thud', 'sfx/thud.wav', self.tmp / 'other-assets', approved)
+        self.assertFalse((self.tmp / 'other-assets').exists())
+        # Other bytes at its place in a cut's assets are refused, never played.
+        (assets / 'sfx' / 'thud.wav').write_bytes(b'another sound')
+        with self.assertRaisesRegex(ValueError, 'not the file he approved'):
+            sfx.ensure_staged('thud', 'sfx/thud.wav', assets, approved)
+        # A sound nobody approved never stages.
+        with self.assertRaisesRegex(ValueError, 'not in the approved set'):
+            sfx.ensure_staged('ding', 'sfx/ding.wav', assets, approved)
+
+    def test_music_fetch_brings_each_approved_sound_to_any_machine(self):
+        digest = self.doc['cards'][0]['items'][0]['sha256']
+        self.apply([self.press('sfx', 'thud', 'approve', digest)])
+        approved = self.root / 'config' / 'sfx-approved.json'
+        asked, lines = [], []
+        def fetch(path, dest, sha256):
+            asked.append(path)
+            if path not in self.library:
+                raise ValueError(f'the library has no copy of {path} (404)')
+            Path(dest).parent.mkdir(parents=True, exist_ok=True)
+            Path(dest).write_bytes(self.library[path])
+            if sha256_file(dest) != sha256:
+                raise ValueError('not the file on the record')
+            return dest
+        folder = self.tmp / 'fetched'
+        self.assertEqual(sfx.fetch_approved(folder, out=lines.append, approved_path=approved, fetch=fetch), 1)
+        self.assertEqual(asked, ['1 Brand kit (permanent)/Music/sfx/thud.wav'])
+        self.assertEqual(sha256_file(folder / 'sfx' / 'thud.wav'), digest)
+        # Already here with the right bytes: nothing is asked again.
+        self.assertEqual(sfx.fetch_approved(folder, out=lines.append, approved_path=approved, fetch=fetch), 1)
+        self.assertEqual(len(asked), 1)
+        # One the library lacks is said by name, never quietly left out.
+        self.library.clear()
+        lines.clear()
+        self.assertEqual(sfx.fetch_approved(self.tmp / 'elsewhere', out=lines.append, approved_path=approved, fetch=fetch), 0)
+        self.assertRegex(lines[0], r'^missing +sfx/thud.wav .*stops at ve compile')
+
+    def test_a_sound_is_never_written_unfiled(self):
+        digest = self.doc['cards'][0]['items'][0]['sha256']
+        before = self.config('config', 'sfx-approved.json')
+        with self.assertRaisesRegex(ValueError, 'no filer was given'):
+            self.apply([self.press('sfx', 'thud', 'approve', digest)], file_sound=None)
+        def refused(path, local):
+            raise ValueError(f'{path}: the library refused it')
+        with self.assertRaisesRegex(ValueError, 'the library refused it'):
+            self.apply([self.press('sfx', 'thud', 'approve', digest)], file_sound=refused)
+        (self.drive / 'thud').write_bytes(b'RIFF another thud')
+        with self.assertRaisesRegex(ValueError, 'not the sound he heard'):
+            self.apply([self.press('sfx', 'thud', 'approve', digest)])
+        self.assertEqual(self.config('config', 'sfx-approved.json'), before)
+        self.assertEqual(self.library, {})
+
+    def test_the_job_files_through_the_one_send_lane_at_the_music_folder(self):
+        sys.path[:0] = [str(ROOT / 'scripts'), str(ROOT / 'scripts' / 'post-pack')]
+        import send  # noqa: PLC0415  scripts/post-pack/send.py, with its in-memory engine
+        fake = send.FakeEngine()
+        quiet = lambda *_: None  # noqa: E731
+        with patch.object(send, 'Engine', lambda client: fake):
+            done = signoffs.engine_file_sound('1 Brand kit (permanent)/Music/sfx/thud.wav', self.drive / 'thud', out=quiet)
+            again = signoffs.engine_file_sound('1 Brand kit (permanent)/Music/sfx/thud.wav', self.drive / 'thud', out=quiet)
+        self.assertEqual((done['sent'], again['already']), (1, 1))
+        self.assertEqual(list(fake.objects.values()), [(self.drive / 'thud').read_bytes()])
+        # A path the library refuses stops the job; nothing is written for it.
+        with patch.object(send, 'Engine', lambda client: fake), self.assertRaisesRegex(ValueError, 'Music/../x.wav'):
+            signoffs.engine_file_sound('1 Brand kit (permanent)/Music/../x.wav', self.drive / 'thud', out=quiet)
+
+    def test_render_stops_on_a_sound_missing_from_its_props(self):
+        here = self.tmp / 'here.wav'
+        here.write_bytes(b'x')
+        props = {'audio': {'sfx': [{'src': str(here)}, {'src': str(self.tmp / 'gone.wav')}]}}
+        self.assertEqual(sfx.missing_in_props(props), [str(self.tmp / 'gone.wav')])
+        self.assertEqual(sfx.missing_in_props({'audio': {'sfx': []}}), [])
 
     def test_his_not_this_is_kept_as_his_no_and_takes_back_an_approval(self):
         digest = self.doc['cards'][0]['items'][0]['sha256']

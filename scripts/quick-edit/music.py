@@ -29,7 +29,7 @@ Where things live:
     python music.py pick --piece ID --both-cuts [--seconds N]
     python music.py pick --seconds N [--piece ID] [--shape 16x9|9x16 | --platforms youtube,substack]
     python music.py publish                 (a home computer: send every ledger file in the music folder to the engine's library)
-    python music.py fetch [--out DIR]       (any machine: get every ledger file from the library; prints MINDMAKE_MUSIC_ROOT)
+    python music.py fetch [--out DIR]       (any machine: get every ledger file, and every approved sound effect, from the library; prints MINDMAKE_MUSIC_ROOT)
     python music.py --self-test
 
 `add` measures the file (ebur128 loudness and true peak, length, sample rate,
@@ -975,6 +975,13 @@ def cmd_fetch(data, out_dir=None, out=print):
         with urllib.request.urlopen(url, timeout=120) as response, open(folder / rel, 'wb') as handle:
             shutil.copyfileobj(response, handle)
         out(f'fetched        {rel}')
+    # Each sound effect Krish approved, at sfx/<id>.<ext> under the same folder (filed in the brand kit's Music folder
+    # by the sign-off apply job; scripts/velib/sfx.py), so a ve compile here finds it.
+    scripts = str(Path(__file__).resolve().parents[1])
+    if scripts not in sys.path:
+        sys.path.insert(0, scripts)
+    from velib import sfx as sounds  # noqa: E402
+    sounds.fetch_approved(folder, out=out)
     return folder, got
 
 
