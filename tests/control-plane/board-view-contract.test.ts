@@ -348,8 +348,10 @@ describe('the Publish Board view contract', () => {
     expect(liveBoardUrl()).toBe(LIVE_BOARD_URL)
     const prompts = buildView(full()).days.flatMap(d => d.actions).filter(a => a.kind === 'prompt').map(a => (a as { prompt: string }).prompt)
     const live = LIVE_BOARD_URL.replace(/^https:\/\//, '')
-    const linked = prompts.filter(p => p.includes('content.krishraja.com/board/'))
+    const linked = prompts.filter(p => p.includes(live))
     expect(linked.length).toBeGreaterThan(0)
     for (const p of linked) expect(p).toMatch(new RegExp(`${live.replace(/[.?#/]/g, m => `\\${m}`)}\\?week=${WEEK}&day=(mon|tue|wed|thu|fri|sat)`))
+    // Ruling (Krish, 2026-11-13): the old boards are retired for good. No prompt sends a session to one as an archive.
+    for (const p of prompts) expect(p).not.toMatch(/content\.krishraja\.com\/board\/\d{4}-\d{2}-\d{2}|is the archive/)
   })
 })

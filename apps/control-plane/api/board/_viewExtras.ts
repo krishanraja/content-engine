@@ -8,7 +8,7 @@ import { carriedItems, dayLabel as dateLabel, dayOptions, elsewhereLines, moveSp
 import type { ViewStage } from './_stage.js'
 
 // The parts of the week the live board needs beside each day's next step (Ruling, Krish, 2026-11-11: one live board, in
-// Control Centre; the old board is a read-only archive). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
+// Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it). Contract 1.2.0 of GET /api/board/<Monday>/view adds, on each
 // day: every piece on it (`pieces`, so a second piece or an off-day piece is never hidden behind the first), the day's
 // options in full with the presses that answer them (`options`), his comments on it (`comments`), what Growth has
 // posted (`posted`) and his yes (`yes`); and on the week, the board's change signal (`revision`).
