@@ -5055,6 +5055,16 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `function cameraStyle(state: CameraState, width: number, height: number): CSSProperties`
 - `function flashAt(ing: EngineIngredients, beats: readonly Span[], hits: readonly number[], frame: number): number`
 
+### `apps/renderer/src/engine/kit/layout.ts`
+
+- `const LAYOUTS`
+- `const EngineLayoutSchema`
+- `type EngineLayout = z.infer<typeof EngineLayoutSchema>`
+- `const MAX_GROW`
+- `const isRegion = (box: Box): boolean =>`
+- `function freeRegion(aspect: Aspect, placement: Placement, themed: boolean): Box`
+- `function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, placement: Placement, themed: boolean, count: nu…`
+
 ### `apps/renderer/src/engine/kit/lock.ts`
 
 Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
