@@ -72,7 +72,9 @@ export interface PressDeps { send?: Sender; now?: () => string; revise?: typeof 
   /** A week's ideas.json (_view.ts readWeekIdeas); a test passes its own. */
   ideas?: (week: string) => Promise<Record<string, unknown> | null>
   /** The board's Drive (_drivePosts.ts boardDrive): the media route's copy of a cut the library lacks, and the drive route. */
-  drive?: (db: SupabaseClient) => import('./_drivePosts.js').BoardDrive }
+  drive?: (db: SupabaseClient) => import('./_drivePosts.js').BoardDrive
+  /** The judges' panel for Growth's carousels and Shorts (_judge.ts); a test passes its own. */
+  judgePanel?: (input: import('../_judges/panel.js').PanelInput) => Promise<import('../_judges/panel.js').PanelResult> }
 type Body = Record<string, unknown>
 type Saved = { ok: boolean; revision?: number; body?: Body; [key: string]: unknown }
 export class PressError extends Error { constructor(public status: number, message: string) { super(message) } }
