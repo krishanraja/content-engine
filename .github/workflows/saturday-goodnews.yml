@@ -16,7 +16,7 @@ name: Saturday good news
 # put on the live board, so his five presses work as on any off-day option. It proposes; only his Approve puts the
 # post on the publish board (the ideas gate).
 #
-# Where it lands (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive):
+# Where it lands (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it):
 # the live board draws GET /api/board/<Monday>/view, which reads the week's ideas.json from offday-revise/<Monday>
 # before main. So the keep step puts the stories on that branch (on top of main and of anything already there, with a
 # pull request to main like an Improve's revision), bumps the week's change signal (board_web.py touch), and the last

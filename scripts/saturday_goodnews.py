@@ -24,9 +24,9 @@ writes them onto that option (Ruling, Krish, 2026-11-13: the Saturday carousel i
 It prints `fill=<the option>` for the run's prompt.
 
 The live board is Control Centre's (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
-read-only archive): it reads the week's view, GET /api/board/<Monday>/view, which reads ideas.json from the week's
+read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it): it reads the week's view, GET /api/board/<Monday>/view, which reads ideas.json from the week's
 branch (offday-revise/<Monday>) before main. So the run keeps its stories on that branch, bumps the week's change
-signal, and this guard asks the view, never the archive page, whether they are there.
+signal, and this guard asks the view, never an old page, whether they are there.
 """
 from __future__ import annotations
 

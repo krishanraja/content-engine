@@ -39,7 +39,7 @@ name: Sunday ideas
 # puts one on the publish board. Only his Approve does; the database refuses any other placement
 # (supabase/migrations/20261126090000_ideas_gate.sql).
 #
-# Where it lands (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive):
+# Where it lands (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it):
 # the live board draws GET /api/board/<Monday>/view, which reads the week's ideas.json from offday-revise/<Monday>
 # before main. So the keep step puts the week's folder on that branch too (scripts/week_branch_keep.sh, with a pull
 # request to main), bumps the week's change signal, and the last step asks the view whether the options are there.
@@ -155,7 +155,7 @@ jobs:
             Follow .claude/skills/plan-week/SKILL.md, the ideas stage only: steps 1 to 7, so that week's options are on
             the live board in Control Centre (its link: python3 scripts/post-pack/live_board.py <Monday>), which reads
             them from ideas.json once the workflow keeps it, and its board item week-publish-board-<Monday> carries
-            that link. Build or publish no board page: the old board is a read-only archive.
+            that link. Build or publish no board page: the old boards are retired and redirect to the live board.
             Write each day's options through /api/week/options and the off-day options into ideas.json as the skill
             says. Research with the built-in web search and web fetch: there is no Drive or Firecrawl connector here
             (the skill's "Without the connectors"). Report this run on each day it fills, and file each research

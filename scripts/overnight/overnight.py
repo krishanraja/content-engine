@@ -391,7 +391,7 @@ def materials_for(day, piece_id, cuts, previous=None, calibrated_critic=True) ->
 
 def board(week, records, config, runner=default_runner, dry_run=False) -> dict:
     """Puts the run on the live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
-    read-only archive). The cuts it made are on each piece's record already, which the live board reads; for each day
+    read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it). The cuts it made are on each piece's record already, which the live board reads; for each day
     it files the run's note on the piece (each cut made and each cut held and why, board_materials' shape) and reports
     the day done or blocked there, then bumps the week's change signal. It builds and publishes no page
     (docs/PUBLISH_BOARDS.md). Returns what it did, including the held cuts and whether a repair round was started."""

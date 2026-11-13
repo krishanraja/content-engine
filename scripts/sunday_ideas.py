@@ -19,7 +19,7 @@ weekly good news, its stories (stories_fresh): a firing that left them out is re
 The week: Krish records the whole week on the Sunday and it goes live eight days later (plan-week, "The Sunday
 loop"), so the run on Saturday 31 October (or a run by hand on Sunday 1 November) plans the week of 9 November.
 `built` reads the week the live board draws (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old
-board is a read-only archive): GET /api/board/<Monday>/view through the engine API (GET only, the
+board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it): GET /api/board/<Monday>/view through the engine API (GET only, the
 ENGINE_OPERATOR_TOKEN secret), and says built once each publishing day there carries its options. The view reads the
 week's ideas.json from offday-revise/<Monday> before main, which is where the workflow puts the run's ideas
 (scripts/week_branch_keep.sh). Since 10 November /board/<Monday> serves the desk, so the old check of the baked

@@ -86,8 +86,8 @@ Control Center (`krishanraja/control-center`) is where Krish works; it reaches
 the engine through rewrites and reads the shared Supabase database directly.
 This repository's one user interface is the weekly publish board's view
 (`GET /api/board/<Monday>/view`), which Control Centre's Content tab draws as the
-live board, where Krish presses; the page it serves at content.krishraja.com
-(`/board/<Monday>`) is the read-only archive (`docs/PUBLISH_BOARDS.md`).
+live board, where Krish presses; the old pages at content.krishraja.com/board are
+retired and redirect to it (Ruling, Krish, 2026-11-13; `docs/PUBLISH_BOARDS.md`).
 
 ## The publication
 
