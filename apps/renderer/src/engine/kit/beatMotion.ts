@@ -33,7 +33,7 @@ export function keepsOutgoing(profile: MotionProfile | undefined, beat: EngineBe
 }
 
 export function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number,
-  view: CameraView, width: number, height: number): BeatMotion {
+  view: CameraView, width: number, height: number, region?: { left: number; top: number; width: number; height: number }): BeatMotion {
   const beat = beats[index]!
   const prev = index > 0 ? beats[index - 1] : undefined
   const t = frame - beat.fromFrame
@@ -65,7 +65,15 @@ export function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[],
   let origin = `${width / 2}px ${height / 2}px`
   const ox = width / 2, oy = height / 2
   const camera = profile.camera
-  if (camera.kind === 'push') {
+  if (camera.kind === 'push' && region) {
+    // A staged beat (kit/staging.ts) pushes on its own region, and never so far that the region leaves the frame.
+    const cx = region.left + region.width / 2, cy = region.top + region.height / 2
+    const m = 40   // the region keeps at least this far inside the frame at the push's height
+    const most = Math.min((cx - m) / (cx - region.left), (width - m - cx) / (region.left + region.width - cx),
+      (cy - m) / (cy - region.top), (height - m - cy) / (region.top + region.height - cy))
+    transforms.push(`scale(${1 + (Math.min(camera.scaleTo, most) - 1) * progress(t, length, HERO)})`)
+    origin = `${cx}px ${cy}px`
+  } else if (camera.kind === 'push') {
     transforms.push(`scale(${1 + (camera.scaleTo - 1) * progress(t, length, HERO)})`)
   } else if (camera.kind === 'zoomToFocus' && view.focus && view.room) {
     // Zoom to the line that proves the words (up to the profile's scale; the card's own edges may leave the frame),

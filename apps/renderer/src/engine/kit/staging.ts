@@ -15,7 +15,7 @@ import { REGIONS } from '../captions/kit'
  *  - `stage` (AI music): an ink stage over y 0 to 1236 with rounded bottom corners on a cream band, and his take in a
  *    rounded window bottom right that crosses the stage edge.
  *  - `tray` (eating its own jobs): his take stays full frame and the graphics rise in a cream tray from bottom left
- *    over his chest, with a hard ink drop.
+ *    over his chest, with a hard ink drop. His face is left clear, so the captions go in the upper strip.
  *
  *  A SPLIT or WINDOW beat keeps its own lock, and a graphics-only beat stays a full-frame takeover (the `fill` region).
  *  Pure: geometry is a function of the props alone, and every box handed to devices is a layout region they may grow
@@ -70,7 +70,8 @@ export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placem
         panel: { left: 0, top: 0, width: 1080, height: edge, radius: '0 0 56px 56px' }, under: 'cream',
         region: clearOfCaptions({ left: 60, top: 280, width: 800, height: 980 - GAP - 280 }, aspect, placement, themed), rises: false }
     }
-    const r = clearOfCaptions({ left: 60, top: 280, width: 800, height: 1320 - 280 }, aspect, placement, themed)
+    // Over his chest, clear of his face: the tray needs the captions in the upper strip (compile refuses others).
+    const r = clearOfCaptions({ left: 60, top: 900, width: 600, height: 600 }, aspect, placement, themed)
     return { take: { left: 0, top: 0, width: 1080, height: 1920, radius: 0, border: false },
       panel: { ...r, radius: '28px' }, region: { left: r.left + GAP, top: r.top + GAP, width: r.width - 2 * GAP, height: r.height - 2 * GAP }, rises: true }
   }
@@ -86,7 +87,7 @@ export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placem
       panel: { left: 0, top: 0, width: 1920, height: edge, radius: '0 0 56px 56px' }, under: 'cream',
       region: clearOfCaptions({ left: 96, top: 120, width: 1260, height: edge - 60 - 120 }, aspect, placement, themed), rises: false }
   }
-  const r = clearOfCaptions({ left: 96, top: 120, width: 1100, height: 880 }, aspect, placement, themed)
+  const r = clearOfCaptions({ left: 96, top: 480, width: 900, height: 540 }, aspect, placement, themed)
   return { take: { left: 0, top: 0, width: 1920, height: 1080, radius: 0, border: false },
     panel: { ...r, radius: '28px' }, region: { left: r.left + GAP, top: r.top + GAP, width: r.width - 2 * GAP, height: r.height - 2 * GAP }, rises: true }
 }
