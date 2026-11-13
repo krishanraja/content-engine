@@ -1,0 +1,3 @@
+Status: Krish rejected both 3D style test cuts (The Ladder, The Living Screen): slow, static, poor use of the frame, captions passive and tied to the style. Both stay work in progress (needs_device kept). Failure note: docs/ve/FAILURE_2026-11-13_3d-styles.md; failures.json ve-3d-styles-slow-static-captions. The Living Screen's counts now show only the decimals their sources carry.
+Next: A new session builds a modular ingredient library in ve (captions, motion styles, transitions, camera, layout, sound as independent layers) and explores and integrates OpenMontage.
+North Star check (2026-11-13): holds.
