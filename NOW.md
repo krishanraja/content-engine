@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-13
+as_of: 2026-11-14
 head: 3ab533c
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,10 +30,11 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-13)
+## Where it is right now (as of 2026-11-14)
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- A piece already approved on a day of the week no longer also waits on the ideas board (Fri 20's data-centres option after the piece moved to Tue 17). (2026-11-14)
 - Every piece before recording offers his production pick as three presses (look, motion style, captions) through the engine's look and style routes, the recommended one first and marked; a session's recommendation is the piece's row style in the week's plan (contract 1.15.0). (2026-11-13)
 - The view reads every day's narrative lock, so a piece moved to an off day keeps its own (Tue 17's data-centres piece). (2026-11-13)
 - The publish board says the current state: a day is Done only when every item is live, past and already-out ideas leave the ideas board, a narrative lock follows its piece, and the offday-posts route takes the done-check's Buffer sends (check buffer_sent) with the Buffer id as proof. (2026-11-13)
@@ -50,7 +51,7 @@ Older lines: `docs/history/2026-11-13-NOW-moved-14.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-13): the producing session writes each week-16 piece's recommended production, motion and captions on its row's style in the week's ideas.json.
+- Next (2026-11-14): Krish picks each week-16 piece's look on the board.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
@@ -58,7 +59,7 @@ Older lines: `docs/history/2026-11-13-NOW-moved-14.md` (it names every earlier m
 - 16 Nov week (2026-11-09): board picked and published (Mon Oracle widened, Wed build vs buy, Fri AI after the midterms). Monday's lock signed 10 Nov: its long cut runs a few minutes over 5 and the article longer, to carry the midterm data-centre backlash. Next: one session per day from `docs/plans/2026-11-16-week/HANDOVER.md`.
 - Waiting on Krish (checked 2026-11-12, 14:00 UTC): his Approve on Thu 12's `beststicker` on the live board (the Home Depot rethink he signed off in a session, filed in 3 Posts and carrying Tue 17's `auditrule`; the live view reads "Idea: waiting on your Approve"), and an answer on `frenemies` (Tue 17) and `ownref` (Thu 19), which have no outcome in `idea_outcomes`; a sound-effect set (`config/sfx-approved.json` approves none); golden frames (all 10 slots of `config/ve/golden-frames.json` empty, at least 5 wanted); Gate 2 on face-with-proof at 16:9 (`config/ve/design-lock.json`) (each still needs its review card on his Publish Board, with samples he can see and hear; not built yet). The music levels are no longer waiting: he approved them as they are on 12 Nov. `docs/STATE.md`, "Waiting on Krish".
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-13): holds.
+- North Star check (2026-11-14): holds.
 
 ## Read next
 
