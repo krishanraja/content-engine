@@ -10,7 +10,7 @@ import { readArchive } from './_archive.js'
 import { readPieces, recordPosted } from './_posted.js'
 import { carryDay } from './_carry.js'
 import { weekLive } from './_live.js'
-import { readView, readWeekIdeas } from './_view.js'
+import { branchSha, readView, readWeekIdeas } from './_view.js'
 import { signMedia } from './_media.js'
 import { ManifestBindError, checkPublishBind } from './_manifest.js'
 import { DRIVE_ID, boardDrive, filesOfPosts } from './_drivePosts.js'
@@ -21,6 +21,7 @@ import { researchPrompt } from './_prompts.js'
 import { StyleError, needsMotion, saveStyle, stylePick } from './_style.js'
 import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
 import { LIVE_OP, recordLive } from './_itsLive.js'
+import { SIGN_OFF_OP, SignOffError, checkAgainst, readSignOffPresses, readSignOffSources, recordSignOff, signOffFiles, signOffPick } from './_signOffs.js'
 import { readLater } from './_later.js'
 import { DESK_PAGE } from './_deskPage.js'
 import { liveBoardUrl } from './_liveBoard.js'
@@ -32,7 +33,7 @@ import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/
 
 const BUCKET = 'content-library'
 /** The presses posted to /api/board/<Monday>/<op> that reach the handler as a collection (no rewrite of their own). */
-const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP, LIVE_OP])
+const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP, LIVE_OP, SIGN_OFF_OP])
 const TTL = 300
 const scalar = (v: unknown) => typeof v === 'string' ? v : ''
 const weekDate = (v: string | Date) => (v instanceof Date ? v.toISOString() : v).slice(0, 10)
@@ -124,6 +125,9 @@ const NO_DRIVE = async () => null
 export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {}) {
   /** The board's Drive (_drivePosts.ts), as the folder's owner; a test passes its own. */
   const driveOf = (db: SupabaseClient) => (deps.drive ? deps.drive(db) : boardDrive(db as never))
+  /** The sign-off cards (config/ve/sign-offs.json and the configs it writes), from main at the commit it points at now. */
+  const signOffSources = () => (deps.signOffs ? deps.signOffs()
+    : branchSha(fetch as never, process.env, 'main').then(sha => readSignOffSources(fetch as never, sha)))
   return async (req: VercelRequest, res: VercelResponse) => {
     res.setHeader('Cache-Control', 'private, no-store')
     res.setHeader('Vary', 'Cookie, Authorization')
@@ -311,6 +315,29 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           return res.status(200).json(later)
         } catch { throw new BoardError(503, 'board_store_unavailable') }
       }
+      if (op === 'sign-offs') {
+        // The video sign-off cards (_signOffs.ts, contract 1.11.0), on no week: his presses for the job that writes the
+        // configs (signoff-apply.yml, the engine key), and one sample's bytes by its Drive id (?file=), only a sample a
+        // card shows, as a short signed link (302, or {url} with link=1) to the board's copy of it. Read-only.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        const file = scalar(req.query.file)
+        if (file) {
+          let url: string | null
+          try {
+            const { manifest } = await signOffSources()
+            if (!manifest) throw new BoardError(503, 'sign_offs_unavailable')
+            if (!signOffFiles(manifest).has(file)) throw new BoardError(404, 'sample_not_found')
+            url = await driveOf(db).serve(file)
+          } catch (e) { if (e instanceof BoardError) throw e; throw new BoardError(503, 'drive_unavailable') }
+          if (!url) throw new BoardError(404, 'sample_not_found')
+          res.setHeader('Cache-Control', 'private, max-age=300')
+          if (scalar(req.query.link) === '1') return res.status(200).json({ ok: true, url })
+          return res.redirect(302, url)
+        }
+        const presses = await readSignOffPresses(db)
+        if (!presses) throw new BoardError(503, 'board_store_unavailable')
+        return res.status(200).json({ ok: true, presses })
+      }
       const week = scalar(req.query.week)
       if (!monday(week)) throw new BoardError(400, 'invalid_week')
       if (op === 'next') throw new BoardError(405, 'method_not_allowed')
@@ -465,6 +492,24 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (who !== 'Krish') throw new BoardError(403, 'live_is_his')
         const result = await recordLive(db, week, req.body, who, (deps.now ?? (() => new Date().toISOString()))())
         return res.status(result.status).json(result.body)
+      }
+      if (op === SIGN_OFF_OP) {
+        // His Approve or Not this on a sign-off card's sample (_signOffs.ts, contract 1.11.0; Ruling, Krish, 2026-11-12:
+        // only his presses write the configs). His login only; kept append only on picks/signoff-<card> of this week.
+        // It writes no config itself: it starts signoff-apply.yml, which reads his presses back from the board.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'his_press')
+        try {
+          const pick = signOffPick(req.body)
+          const { manifest } = await signOffSources()
+          checkAgainst(manifest, pick)
+          const saved = await recordSignOff(db, week, pick, (deps.now ?? (() => new Date().toISOString()))())
+          const apply = saved.already ? null : await (deps.dispatch ?? dispatchJob)('signoff-apply', {})
+          return res.status(200).json({ ok: true, press: saved.press, already: saved.already, ...(apply ? { apply } : {}) })
+        } catch (e) {
+          if (e instanceof SignOffError) throw new BoardError(e.status, e.message)
+          throw e
+        }
       }
       if (op === 'move') {
         // "Move to…" (Ruling, Krish, 2026-11-12: any off-day post or idea moves to any day at his press, and the move

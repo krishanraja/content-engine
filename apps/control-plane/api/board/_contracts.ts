@@ -265,6 +265,25 @@ export function liveBody(id: string, body: Record<string, unknown>): boolean {
     && (!('option' in p) || typeof p.option === 'string' && OFFDAY_ID.test(p.option) && p.option.startsWith(`off-${m[1]}-`))
     && (!('title' in p) || oneLine(p.title, 300)) && (!('note' in p) || typeof p.note === 'string' && p.note.length <= 2000))
 }
+// The three video sign-offs, one review card each on his board (Ruling, Krish, 2026-11-12; _signOffs.ts, contract
+// 1.11.0): picks/signoff-<card>, his presses on its samples appended, written only through POST /api/board/<Monday>/
+// sign-off as Krish (hisOnlyRefusal keeps every other writer out: a picks document with a kind is his).
+export const SIGN_OFF_ID = /^signoff-(sfx|golden|gate2)$/
+/** The most presses one card's record keeps in a week (append only; one more is refused). */
+export const MAX_SIGN_OFF_PRESSES = 200
+export const SIGN_OFF_WORDS_MAX = 2000
+const SIGN_OFF_SHA = /^[a-f0-9]{64}$/
+/** One sign-off record's shape: kind sign_off, the card, and its presses. */
+export function signOffBody(id: string, body: Record<string, unknown>): boolean {
+  const m = SIGN_OFF_ID.exec(id)
+  if (!m || body.kind !== 'sign_off' || body.card !== m[1] || !Array.isArray(body.presses) || body.presses.length > MAX_SIGN_OFF_PRESSES) return false
+  if (Object.keys(body).some(k => !['kind', 'card', 'presses'].includes(k))) return false
+  return body.presses.every(p => object(p) && p.card === m[1] && typeof p.item === 'string' && p.item.length > 0 && p.item.length <= 64
+    && (p.verdict === 'approve' || p.verdict === 'not_this') && SIGN_OFF_SHA.test(String(p.sha256)) && p.by === 'Krish'
+    && typeof p.at === 'string' && Number.isFinite(Date.parse(p.at))
+    && (p.words === null || (typeof p.words === 'string' && p.words.length <= SIGN_OFF_WORDS_MAX))
+    && Object.keys(p).every(k => ['card', 'item', 'verdict', 'sha256', 'words', 'at', 'by'].includes(k)))
+}
 export const SCRIPT_CUTS = ['long', 'short', 'feature'] as const
 export const TITLE_SURFACES = ['long_title', 'short_title', 'long_thumbnail', 'short_thumbnail'] as const
 const oneLine = (v: unknown, max: number) => typeof v === 'string' && v.trim().length > 0 && v.length <= max && !/[\x00-\x1f\x7f]/.test(v)
@@ -319,6 +338,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   // His pick for a day, with his optional saved note; or one of his decisions on a day's tab (decisionBody).
   if (collection === 'picks' && (YES_ID.test(id) || body.kind === 'yes')) return yesBody(id, body)
   if (collection === 'picks' && (LIVE_ID.test(id) || body.kind === 'live')) return liveBody(id, body)
+  if (collection === 'picks' && (SIGN_OFF_ID.test(id) || body.kind === 'sign_off')) return signOffBody(id, body)
   if (collection === 'picks' && FEEL_ID.test(id)) return feelBody(id, body)
   if (collection === 'picks' && (id === MIX_ID || body.kind === 'mix')) return id === MIX_ID && mixBody(body)
   if (collection === 'picks' && (CREATIVE_ID.test(id) || body.kind === 'sign_creative')) return creativeBody(id, body)

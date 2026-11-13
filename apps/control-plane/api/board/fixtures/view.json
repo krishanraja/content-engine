@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.10.0",
+ "contract_version": "1.11.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -21,7 +21,7 @@
     },
     {
      "h": "Narrative lock",
-     "p": "Signed"
+     "p": "Approved in your words: \"Yes, this is the story\", Sun 8 Nov"
     },
     {
      "h": "Look",
@@ -1354,7 +1354,7 @@
      },
      "stage": {
       "state": "made",
-      "label": "Made: its files are in its 3 Posts folder",
+      "label": "Made: its files are made and filed",
       "at": null,
       "links": []
      }
@@ -1946,7 +1946,7 @@
      },
      "stage": {
       "state": "idea",
-      "label": "Idea: waiting on your answer",
+      "label": "Idea: revised, waiting on your answer",
       "at": null,
       "links": []
      }
@@ -2075,7 +2075,7 @@
     },
     {
      "h": "Narrative lock",
-     "p": "Signed"
+     "p": "Approved in your words: \"Yes, this is the story\", Sun 8 Nov"
     },
     {
      "h": "Look",
@@ -3144,7 +3144,7 @@
    "stop": 2,
    "who": "you",
    "runs_on": "Your pick, here; a mock on your own footage if you want one",
-   "next": "Pick the look: the recommended one, another, or fold in your inspiration. Your approved scripts are not filed yet: file them from the session where you approved them",
+   "next": "Pick the look: the recommended one, another, or fold in your inspiration. No approved scripts are filed yet: if you approved them in a session, file them from that session",
    "actions": [
     {
      "kind": "look",
@@ -5944,7 +5944,7 @@
    "key": "wed",
    "day": "wed",
    "label": "Wed 18",
-   "next": "Pick the look: the recommended one, another, or fold in your inspiration. Your approved scripts are not filed yet: file them from the session where you approved them",
+   "next": "Pick the look: the recommended one, another, or fold in your inspiration. No approved scripts are filed yet: if you approved them in a session, file them from that session",
    "actions": [
     {
      "kind": "look",
@@ -6130,7 +6130,355 @@
   "store": true,
   "approvals": true,
   "drive": true,
-  "items": true
+  "items": true,
+  "sign_offs": true
  },
- "revision": 7
+ "revision": 7,
+ "sign_offs": {
+  "waiting": 2,
+  "cards": [
+   {
+    "id": "sfx",
+    "title": "Sound effects",
+    "ask": "Approve each sound you would use.",
+    "why": null,
+    "note": null,
+    "writes": "config/sfx-approved.json",
+    "presses_mode": "each",
+    "want": null,
+    "counts": {
+     "approved": 1,
+     "declined": 0,
+     "waiting": 1,
+     "total": 2
+    },
+    "state": "waiting",
+    "line": "1 approved, 0 not this, 1 waiting on you of 2.",
+    "items": [
+     {
+      "id": "thud",
+      "title": "Impact, thud",
+      "kind": "audio",
+      "mime": "audio/wav",
+      "src": "/api/board/sign-offs?file=1FixtureDriveFileA",
+      "drive": {
+       "file_id": "1FixtureDriveFileA",
+       "url": "https://drive.google.com/file/d/1FixtureDriveFileA/view"
+      },
+      "sha256": "7841ddbc63d41539cc7a041e190a0f4559ab43030770e29a31a16dcde7875cb6",
+      "lines": [
+       "A card slams in",
+       "For: slam · 2.1 s · Epidemic Sound"
+      ],
+      "verdict": {
+       "said": "approve",
+       "words": null,
+       "at": "2026-11-13T10:00:00Z"
+      },
+      "written": true,
+      "presses": {
+       "approve": {
+        "kind": "press",
+        "label": "Approve",
+        "op": "sign-off",
+        "body": {
+         "card": "sfx",
+         "item": "thud",
+         "verdict": "approve",
+         "sha256": "7841ddbc63d41539cc7a041e190a0f4559ab43030770e29a31a16dcde7875cb6"
+        },
+        "stamp": [],
+        "done": "Approved. The engine takes it in, and this card says so when it has."
+       },
+       "not_this": {
+        "kind": "press",
+        "label": "Not this",
+        "op": "sign-off",
+        "body": {
+         "card": "sfx",
+         "item": "thud",
+         "verdict": "not_this",
+         "sha256": "7841ddbc63d41539cc7a041e190a0f4559ab43030770e29a31a16dcde7875cb6"
+        },
+        "words": {
+         "path": "words",
+         "ask": "What is not right about this sound? (optional)",
+         "required": false
+        },
+        "stamp": [],
+        "done": "Saved as your no. The engine records it, and nothing here is used."
+       }
+      }
+     },
+     {
+      "id": "ding",
+      "title": "Desk bell",
+      "kind": "audio",
+      "mime": "audio/wav",
+      "src": "/api/board/sign-offs?file=1FixtureDriveFileB",
+      "drive": {
+       "file_id": "1FixtureDriveFileB",
+       "url": "https://drive.google.com/file/d/1FixtureDriveFileB/view"
+      },
+      "sha256": "ca46a3f7dabfcc476e496bf8b5100d6091734186c6cdd1c50d132ff61e0f4b7c",
+      "lines": [
+       "A count lands",
+       "For: count · 1.2 s · Epidemic Sound"
+      ],
+      "verdict": null,
+      "written": false,
+      "presses": {
+       "approve": {
+        "kind": "press",
+        "label": "Approve",
+        "op": "sign-off",
+        "body": {
+         "card": "sfx",
+         "item": "ding",
+         "verdict": "approve",
+         "sha256": "ca46a3f7dabfcc476e496bf8b5100d6091734186c6cdd1c50d132ff61e0f4b7c"
+        },
+        "stamp": [],
+        "done": "Approved. The engine takes it in, and this card says so when it has."
+       },
+       "not_this": {
+        "kind": "press",
+        "label": "Not this",
+        "op": "sign-off",
+        "body": {
+         "card": "sfx",
+         "item": "ding",
+         "verdict": "not_this",
+         "sha256": "ca46a3f7dabfcc476e496bf8b5100d6091734186c6cdd1c50d132ff61e0f4b7c"
+        },
+        "words": {
+         "path": "words",
+         "ask": "What is not right about this sound? (optional)",
+         "required": false
+        },
+        "stamp": [],
+        "done": "Saved as your no. The engine records it, and nothing here is used."
+       }
+      }
+     }
+    ],
+    "verdict": null,
+    "presses": null,
+    "sha256": null
+   },
+   {
+    "id": "golden",
+    "title": "Golden frames",
+    "ask": "Approve the frames that set the bar.",
+    "why": null,
+    "note": null,
+    "writes": "config/ve/golden-frames.json",
+    "presses_mode": "each",
+    "want": {
+     "min": 5,
+     "max": 10
+    },
+    "counts": {
+     "approved": 0,
+     "declined": 1,
+     "waiting": 0,
+     "total": 1
+    },
+    "state": "answered",
+    "line": "0 approved, 1 not this of 1. At least 5 are wanted. The engine is writing it in.",
+    "items": [
+     {
+      "id": "mon02-tall-00178",
+      "title": "The quote, its phrase lit",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "src": "/api/board/sign-offs?file=1FixtureDriveFileC",
+      "drive": {
+       "file_id": "1FixtureDriveFileC",
+       "url": "https://drive.google.com/file/d/1FixtureDriveFileC/view"
+      },
+      "sha256": "711430f6164e93803d93428bc1fab80f41e213bb197689307de8606d437c3038",
+      "lines": [
+       "The fixture, Mon 2 Nov",
+       "tall 9:16 cut at 0:17.9"
+      ],
+      "verdict": {
+       "said": "not_this",
+       "words": "Too busy.",
+       "at": "2026-11-13T10:01:00Z"
+      },
+      "written": false,
+      "presses": {
+       "approve": {
+        "kind": "press",
+        "label": "Approve",
+        "op": "sign-off",
+        "body": {
+         "card": "golden",
+         "item": "mon02-tall-00178",
+         "verdict": "approve",
+         "sha256": "711430f6164e93803d93428bc1fab80f41e213bb197689307de8606d437c3038"
+        },
+        "stamp": [],
+        "done": "Approved. The engine takes it in, and this card says so when it has."
+       },
+       "not_this": {
+        "kind": "press",
+        "label": "Not this",
+        "op": "sign-off",
+        "body": {
+         "card": "golden",
+         "item": "mon02-tall-00178",
+         "verdict": "not_this",
+         "sha256": "711430f6164e93803d93428bc1fab80f41e213bb197689307de8606d437c3038"
+        },
+        "words": {
+         "path": "words",
+         "ask": "What is not right about this frame? (optional)",
+         "required": false
+        },
+        "stamp": [],
+        "done": "Saved as your no. The engine records it, and nothing here is used."
+       }
+      }
+     }
+    ],
+    "verdict": null,
+    "presses": null,
+    "sha256": null
+   },
+   {
+    "id": "gate2",
+    "title": "Gate 2: face-with-proof at 16:9",
+    "ask": "One press for the four frames.",
+    "why": null,
+    "note": "A target, not a ve render yet.",
+    "writes": null,
+    "presses_mode": "card",
+    "want": null,
+    "counts": {
+     "approved": 0,
+     "declined": 0,
+     "waiting": 4,
+     "total": 4
+    },
+    "state": "waiting",
+    "line": "Waiting on you: one Approve or Not this for all 4 frames.",
+    "items": [
+     {
+      "id": "hook",
+      "title": "The hook beat",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "src": "/api/board/sign-offs?file=1FixtureDriveFileG0",
+      "drive": {
+       "file_id": "1FixtureDriveFileG0",
+       "url": "https://drive.google.com/file/d/1FixtureDriveFileG0/view"
+      },
+      "sha256": "0648298b48be031996277ae472115a46e7964d2ac3882e61b84351f3c3f8a547",
+      "lines": [
+       "Beat: hook, at 0:00.0 of the cut"
+      ],
+      "verdict": null,
+      "written": false,
+      "presses": null
+     },
+     {
+      "id": "face",
+      "title": "The face beat",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "src": "/api/board/sign-offs?file=1FixtureDriveFileG1",
+      "drive": {
+       "file_id": "1FixtureDriveFileG1",
+       "url": "https://drive.google.com/file/d/1FixtureDriveFileG1/view"
+      },
+      "sha256": "0282d9b79f42c74c1550b20ff2dd16aafc3fe5d8ae9a00b2f66996d0ae882775",
+      "lines": [
+       "Beat: face, at 0:01.0 of the cut"
+      ],
+      "verdict": null,
+      "written": false,
+      "presses": null
+     },
+     {
+      "id": "proof",
+      "title": "The proof beat",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "src": "/api/board/sign-offs?file=1FixtureDriveFileG2",
+      "drive": {
+       "file_id": "1FixtureDriveFileG2",
+       "url": "https://drive.google.com/file/d/1FixtureDriveFileG2/view"
+      },
+      "sha256": "c1cda26362828b69266512052b97cb3729e3b052e4ade47c0a1e3383defe73c7",
+      "lines": [
+       "Beat: proof, at 0:02.0 of the cut"
+      ],
+      "verdict": null,
+      "written": false,
+      "presses": null
+     },
+     {
+      "id": "close",
+      "title": "The close beat",
+      "kind": "image",
+      "mime": "image/jpeg",
+      "src": "/api/board/sign-offs?file=1FixtureDriveFileG3",
+      "drive": {
+       "file_id": "1FixtureDriveFileG3",
+       "url": "https://drive.google.com/file/d/1FixtureDriveFileG3/view"
+      },
+      "sha256": "310ff200149b44a32f124023d7caba19a1a890763a980606813d3a3d4a085d36",
+      "lines": [
+       "Beat: close, at 0:03.0 of the cut"
+      ],
+      "verdict": null,
+      "written": false,
+      "presses": null
+     }
+    ],
+    "verdict": null,
+    "presses": {
+     "approve": {
+      "kind": "press",
+      "label": "Approve",
+      "op": "sign-off",
+      "body": {
+       "card": "gate2",
+       "item": "*",
+       "verdict": "approve",
+       "sha256": "d1159c9d347fc07f7e099be5e6afe3043613a41225e3ce6008ad20d3bf6ff700"
+      },
+      "words": {
+       "path": "words",
+       "ask": "Anything to add? (optional)",
+       "required": false
+      },
+      "stamp": [],
+      "done": "Approved. The engine takes it in, and this card says so when it has."
+     },
+     "not_this": {
+      "kind": "press",
+      "label": "Not this",
+      "op": "sign-off",
+      "body": {
+       "card": "gate2",
+       "item": "*",
+       "verdict": "not_this",
+       "sha256": "d1159c9d347fc07f7e099be5e6afe3043613a41225e3ce6008ad20d3bf6ff700"
+      },
+      "words": {
+       "path": "words",
+       "ask": "What is not right about these four frames? (optional)",
+       "required": false
+      },
+      "stamp": [],
+      "done": "Saved as your no. The engine records it, and nothing here is used."
+     }
+    },
+    "sha256": "d1159c9d347fc07f7e099be5e6afe3043613a41225e3ce6008ad20d3bf6ff700"
+   }
+  ]
+ }
 }

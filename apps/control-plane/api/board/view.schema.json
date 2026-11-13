@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://content.krishraja.com/api/board/view.schema.json",
   "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
-  "x-contract-version": "1.10.0",
+  "x-contract-version": "1.11.0",
   "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
   "type": "object",
   "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources", "revision"],
@@ -42,9 +42,95 @@
     "revision": {
       "type": ["integer", "null"],
       "description": "The week's change signal (board_signal.revision, contract 1.2.0): bumped by every write the view reads, so a reader that hears it change reads the view again. Null when it cannot be read."
+    },
+    "sign_offs": {
+      "type": ["object", "null"],
+      "x-since": "1.11.0",
+      "required": ["waiting", "cards"],
+      "description": "The three video sign-offs, one review card each, on every week (Ruling, Krish, 2026-11-12): sound effects, golden frames and Gate 2 on face-with-proof at 16:9, each sample with its preview, its Drive link, his answer on it and whether the engine holds it. Null when the cards cannot be read.",
+      "properties": {
+        "waiting": { "type": "integer", "description": "How many cards still wait on him." },
+        "cards": { "type": "array", "items": { "$ref": "#/$defs/signOffCard" } }
+      }
     }
   },
   "$defs": {
+    "signOffPress": {
+      "type": "object",
+      "x-since": "1.11.0",
+      "required": ["kind", "label", "op", "body", "stamp", "done"],
+      "description": "POST /api/board/<Monday>/<op> with the body, his press only: sign-off records {card, item, verdict: approve | not_this, sha256, words} on picks/signoff-<card> (append only) and starts signoff-apply.yml, which writes the configs from his presses. words is optional: on Not this, and on Gate 2's Approve.",
+      "properties": {
+        "kind": { "type": "string", "enum": ["press"] },
+        "label": { "type": "string" },
+        "op": { "type": "string", "enum": ["sign-off"] },
+        "body": { "type": "object" },
+        "words": {
+          "type": "object",
+          "required": ["path", "ask", "required"],
+          "properties": { "path": { "type": "string" }, "ask": { "type": "string" }, "required": { "type": "boolean" } }
+        },
+        "stamp": { "type": "array", "items": { "type": "string" } },
+        "done": { "type": "string", "description": "What the board says once it is saved." }
+      }
+    },
+    "signOffAnswer": {
+      "type": ["object", "null"],
+      "x-since": "1.11.0",
+      "required": ["said", "words", "at"],
+      "description": "His latest press on these exact bytes, or null.",
+      "properties": { "said": { "type": "string", "enum": ["approve", "not_this"] }, "words": { "type": ["string", "null"] }, "at": { "type": "string" } }
+    },
+    "signOffPresses": {
+      "type": ["object", "null"],
+      "x-since": "1.11.0",
+      "required": ["approve", "not_this"],
+      "properties": { "approve": { "$ref": "#/$defs/signOffPress" }, "not_this": { "$ref": "#/$defs/signOffPress" } }
+    },
+    "signOffItem": {
+      "type": "object",
+      "x-since": "1.11.0",
+      "required": ["id", "title", "kind", "mime", "src", "drive", "sha256", "lines", "verdict", "written", "presses"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "kind": { "type": "string", "enum": ["audio", "image", "video"], "x-open": true },
+        "mime": { "type": ["string", "null"] },
+        "src": { "type": "string", "description": "The same-site path the board plays or shows it from: GET /api/board/sign-offs?file=<Drive id>." },
+        "drive": { "type": "object", "required": ["file_id", "url"], "properties": { "file_id": { "type": "string" }, "url": { "type": "string" } } },
+        "sha256": { "$ref": "#/$defs/sha" },
+        "lines": { "type": "array", "items": { "type": "string" }, "description": "What it is, in a few plain lines (the slot it is for, the piece and time, the beat)." },
+        "verdict": { "$ref": "#/$defs/signOffAnswer" },
+        "written": { "type": "boolean", "description": "Whether the engine's config on main holds his answer on it." },
+        "presses": { "$ref": "#/$defs/signOffPresses" }
+      }
+    },
+    "signOffCard": {
+      "type": "object",
+      "x-since": "1.11.0",
+      "required": ["id", "title", "ask", "why", "note", "writes", "presses_mode", "want", "counts", "state", "line", "items", "verdict", "presses", "sha256"],
+      "properties": {
+        "id": { "type": "string", "enum": ["sfx", "golden", "gate2"], "x-open": true },
+        "title": { "type": "string" },
+        "ask": { "type": "string" },
+        "why": { "type": ["string", "null"] },
+        "note": { "type": ["string", "null"] },
+        "writes": { "type": ["string", "null"], "description": "The config his presses write (through signoff-apply.yml)." },
+        "presses_mode": { "type": "string", "enum": ["each", "card"], "description": "each: a press per sample; card: one press for the whole card (Gate 2)." },
+        "want": { "type": ["object", "null"], "required": ["min", "max"], "properties": { "min": { "type": "integer" }, "max": { "type": "integer" } } },
+        "counts": {
+          "type": "object",
+          "required": ["approved", "declined", "waiting", "total"],
+          "properties": { "approved": { "type": "integer" }, "declined": { "type": "integer" }, "waiting": { "type": "integer" }, "total": { "type": "integer" } }
+        },
+        "state": { "type": "string", "enum": ["waiting", "answered", "written"], "x-open": true },
+        "line": { "type": "string", "description": "Where the card stands, in one line." },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/signOffItem" } },
+        "verdict": { "$ref": "#/$defs/signOffAnswer" },
+        "presses": { "$ref": "#/$defs/signOffPresses" },
+        "sha256": { "type": ["string", "null"], "description": "Gate 2: the sha256 its one press binds (the canonical map of its stills' sha256s)." }
+      }
+    },
     "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
     "sha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "dayKey": { "type": "string", "enum": ["mon", "tue", "wed", "thu", "fri", "sat"] },

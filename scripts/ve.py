@@ -30,6 +30,7 @@
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
   python scripts/ve.py lock draft|check|show|freeze  design locks (only Krish's Gate 2 freezes one)
   python scripts/ve.py golden show|check|fill        interim golden frames he names
+  python scripts/ve.py signoff check|stills|gate2|add|apply   the three sign-offs as review cards on his board
   python scripts/ve.py expect <spec>                 expect.md: at most six lines of what this cut will and won't do
   python scripts/ve.py styles <spec> [--cut <cut>] [--top 3]   the shortlisted motion styles on his take, for his pick
   python scripts/ve.py proof <spec> --cut <cut>      the hardest beat, moving, from his take; a whole cut waits for it
@@ -1110,7 +1111,10 @@ def cmd_golden(args) -> int:
             doc = golden.load()
         state = golden.status(doc)
         for slot in doc['slots']:
-            print(f"{slot['slot']:4} " + (f"{slot['reference']} at {slot['at']}: \"{slot['said']}\"" if slot.get('status') == 'named' else 'empty'))
+            named = slot.get('status') == 'named'
+            source = (slot.get('reference') or f"{slot.get('piece') or slot.get('piece_id')} ({slot.get('cut')} cut)") if named else ''
+            said = f": \"{slot['said']}\"" if slot.get('said') else ' (his Approve on his board)' if slot.get('press') else ''
+            print(f"{slot['slot']:4} " + (f"{source} at {slot['at']}{said}" if named else 'empty'))
         print(f"named {state['named']} of {state['min']} to {state['max']}; " +
               ('ready' if state['ready'] else f"waiting on Krish: {doc['fill']}"))
         moments = golden.interim(doc)
@@ -1118,6 +1122,63 @@ def cmd_golden(args) -> int:
         return 1 if args.action == 'check' and not state['ready'] else 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f've golden: {error}', file=sys.stderr)
+        return 1
+
+
+def signoffs_seconds(text: str) -> float:
+    from velib import golden
+    return golden.seconds(text)
+
+
+def cmd_signoff(args) -> int:
+    """The three video sign-offs as review cards on his Publish Board (Ruling, Krish, 2026-11-12): a session makes the
+    samples (stills, gate2) and records each one filed in Drive (add); only his presses write the configs (apply)."""
+    from velib import signoffs
+    try:
+        if args.action == 'check':
+            problems = signoffs.validate(signoffs.load())
+            print('\n'.join(problems) if problems else 've signoff: the manifest keeps its shape')
+            return 1 if problems else 0
+        if args.action == 'stills':
+            found = signoffs.making_cut(args.piece, args.cut) if not args.path else {'path': args.path}
+            out = Path(args.out)
+            video = signoffs.library_fetch(found['path'], out / f'{args.piece[:8]}-{args.cut}.mp4', args.sha256)
+            at = [signoffs_seconds(x) for x in args.at.split(',')] if args.at else None
+            rows = signoffs.stills_for_cut(video, out, f'{args.piece[:8]}-{args.cut}', args.count, at)
+            sheet = signoffs.contact_sheet([Path(r['file']) for r in rows], out / f'{args.piece[:8]}-{args.cut}-sheet.jpg',
+                                           [r['at'] for r in rows])
+            from velib.common import sha256_file
+            write_json(out / f'{args.piece[:8]}-{args.cut}.json', {'piece_id': args.piece, 'cut': args.cut, 'path': found['path'],
+                                                                     'cut_sha256': sha256_file(video), 'stills': rows})
+            if not args.keep:
+                video.unlink()
+            print(f've signoff: {len(rows)} candidate frames from the {args.cut} cut; one look: {sheet}')
+            return 0
+        if args.action == 'gate2':
+            from velib import designlock
+            lock = designlock.load()
+            entry = lock.get('drafts', {}).get(signoffs.GATE2_LOCK) or lock['formats'].get(signoffs.GATE2_LOCK)
+            props = load_json(args.props)
+            frames = signoffs.key_frames(props, entry['beats'])
+            stills = signoffs.render_stills(Path(args.props), Path(args.out), frames)
+            strip = signoffs.strip(stills, Path(args.out) / 'strip.jpg')
+            for beat, path in stills.items():
+                print(f've signoff: {beat} at frame {frames[beat]}: {path}')
+            print(f've signoff: the four stills side by side: {strip}')
+            return 0
+        if args.action == 'add':
+            item = json.loads(Path(args.item).read_text(encoding='utf-8'))
+            row = signoffs.add_item(args.card, item, Path(args.file))
+            print(f"ve signoff: {args.card} {row['id']} recorded ({row['sha256'][:12]})")
+            return 0
+        # apply: his presses, read from the engine, written into the configs through their own writers
+        doc = signoffs.load()
+        presses = json.loads(Path(args.presses).read_text(encoding='utf-8'))['presses'] if args.presses else signoffs.engine_presses()
+        done = signoffs.apply(doc, signoffs.answers_of(presses), signoffs.engine_fetch_file, work=Path(args.work))
+        print('\n'.join(done) if done else 've signoff: nothing new to write')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've signoff: {error}', file=sys.stderr)
         return 1
 
 
@@ -1822,6 +1883,24 @@ def main() -> int:
     a.add_argument('--at', required=True); a.add_argument('--said', required=True, help="Krish's exact words naming it")
     a.add_argument('--clip'); a.add_argument('--force', action='store_true')
     p.set_defaults(fn=cmd_golden)
+    p = sub.add_parser('signoff', help="the three video sign-offs as review cards on his board; only his presses write the configs")
+    actions = p.add_subparsers(dest='action', required=True)
+    actions.add_parser('check')
+    a = actions.add_parser('stills', help='candidate golden frames from a published cut (the library copy)')
+    a.add_argument('piece'); a.add_argument('--cut', choices=['long', 'short'], required=True)
+    a.add_argument('--path', help='the library path, when the making record holds it relative to the post')
+    a.add_argument('--sha256'); a.add_argument('--count', type=int, default=6); a.add_argument('--out', required=True)
+    a.add_argument('--at', help='the times to cut, m:ss.s joined by commas (a reference moment); default: settled frames spread across it')
+    a.add_argument('--keep', action='store_true', help='keep the downloaded cut')
+    a = actions.add_parser('gate2', help='one still per locked beat of face-with-proof at 16:9, rendered from compiled props')
+    a.add_argument('props'); a.add_argument('--out', required=True)
+    a = actions.add_parser('add', help='record one sample filed in Drive (hashes the local copy)')
+    a.add_argument('card', choices=['sfx', 'golden', 'gate2']); a.add_argument('--item', required=True, help='the item fields, a JSON file')
+    a.add_argument('--file', required=True, help='the local copy of the exact bytes filed in Drive')
+    a = actions.add_parser('apply', help="write his presses into the configs (signoff-apply.yml)")
+    a.add_argument('--presses', help='his presses as a JSON file (tests); default: read from the engine')
+    a.add_argument('--work', default=str(ROOT / '.ve-work' / 'signoff'))
+    p.set_defaults(fn=cmd_signoff)
     p = sub.add_parser('stills'); p.add_argument('rest', nargs='*'); p.set_defaults(fn=not_yet('stills'))
     args = parser.parse_args()
     return args.fn(args)
