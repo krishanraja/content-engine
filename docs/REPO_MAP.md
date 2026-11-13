@@ -2675,6 +2675,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface ViewInputs`
 - `function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost…`
 - `function lockBodyHash(text: string): string`
+- `const LOCK_DAYS: PostedDay[]`
 - `function lockPieceId(text: string | null | undefined): string | null`
 - `function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: string): { text: string; day: PostedDay } | null`
 - `type Typed = { words: string; said_where: string; said_at: string }`

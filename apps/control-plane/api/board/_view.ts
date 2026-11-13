@@ -295,6 +295,8 @@ function lockWords(text: string | null | undefined): string | null {
   const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean)
   return LOCK_SIGNED.exec(lines[lines.length - 1])?.[1] ?? null
 }
+/** The days a narrative lock may be filed under: every day a piece may sit on. */
+export const LOCK_DAYS: PostedDay[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 /** The piece a lock names on its `piece_id:` line, or null when it names none. */
 export function lockPieceId(text: string | null | undefined): string | null {
   const m = /^piece_id:\s*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\s*$/im.exec(String(text || ''))
@@ -893,7 +895,9 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     weekIdeas.then(t => t ?? fetchText(fetcher, `${RAW}/docs/plans/${week}-week/ideas.json`)),
     fetchText(fetcher, `${RAW}/NOW.md`),
     readRuns(env, fetcher as never),
-    ...SERIES_DAYS.map(d => fetchText(fetcher, `${RAW}/docs/plans/${week}-week/narrative-lock-${d}.md`)),
+    // Every day's lock, not only the series days': a lock follows its piece (lockOf), and a piece moved to an off day
+    // keeps its lock there (Tue 17 Nov's data-centres piece, narrative-lock-tue.md).
+    ...LOCK_DAYS.map(d => fetchText(fetcher, `${RAW}/docs/plans/${week}-week/narrative-lock-${d}.md`)),
   ])
   const since = new Date(now.getTime() - 21 * 864e5).toISOString()
   // Each series day's creative direction, in its plan folder (docs/plans/<date>-<dayname>/): ve/spec.json first.
@@ -958,7 +962,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   }
   return buildView({ week, now, pieces: pieces as Body[], picks: picks as ViewInputs['picks'], queue: queue as ViewInputs['queue'],
     history: history as ViewInputs['history'], ideas, runs, north_star: north,
-    locks: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, locks[k] as string | null])),
+    locks: Object.fromEntries(LOCK_DAYS.map((d, k) => [d, locks[k] as string | null])),
     research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
     specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
