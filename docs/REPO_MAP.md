@@ -4049,10 +4049,6 @@ The Content Engine's schedule, as the dashboard knows it.
 - `function hasExactProductionApproval(meta: unknown): boolean`
 - `function storedProductionBriefs(outputs: unknown): StoredProductionBrief[]`
 
-### `apps/control-plane/scripts/backfill-shifts.ts`
-
-One-shot reconstruction of the Jul 2025 - Jun 2026 shifts baseline (spec §6, R6).
-
 ### `apps/control-plane/scripts/check-aeo-packet-schema.ts`
 
 The packet contract, in three repositories.
@@ -4136,16 +4132,6 @@ The editorial route: one neutral source, two independent series lenses, and
 ### `apps/control-plane/scripts/clustering/build-narrative-clusters.ts`
 
 Nightly narrative clustering for the Content tab.
-
-### `apps/control-plane/scripts/consolidate-shifts.ts`
-
-Register consolidation (backfill follow-up): merge near-duplicate shifts so
-
-### `apps/control-plane/scripts/dry-run-content-v2.ts`
-
-One-shot dry run of the Content Engine v2 core against live data (PR-A gate).
-
-- `export {}`
 
 ### `apps/control-plane/scripts/eval/_env.ts`
 
@@ -6633,29 +6619,6 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 
 - `interface YoutubeUploadInput`
 - `async function uploadPrivateYoutubeVideo(input: YoutubeUploadInput): Promise<unknown>`
-
-### `scripts/backfill_closes.ts`
-
-Backfill step 1 of step 4 (one done-check sweep): give each open board
-
-- `const ENGINE`
-- `const PUBLICATION`
-- `const ARCHIVE`
-- `const LAUNCH_DATE`
-- `interface BoardRow`
-- `interface ArchivePost`
-- `type Write = { id: string } & Record<string, unknown>`
-- `interface Plan`
-- `function stripHeld(detail: string | null | undefined): string`
-- `function shareFileId(html: string): string | null`
-- `function dayOf(iso: string): string`
-- `function oneNewsletterOn(posts: readonly ArchivePost[], day: string): ArchivePost | string`
-- `interface Facts`
-- `function planWrites(board: readonly BoardRow[], facts: Facts): Plan`
-- `function assertNeverCloses(w: Write): void`
-- `function accessCookie(code: string): string`
-- `function readArchive(raw: unknown): ArchivePost[]`
-- `async function gatherFacts(now: string): Promise<Facts>`
 
 ### `scripts/check-control-plane.ts`
 
