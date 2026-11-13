@@ -455,6 +455,47 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   record of the option's posts: made, scheduled, live) ("Moving an off-day item to any day", above).
 - **1.10.0 (12 Nov 2026)** added `stage` to every option and piece, `same_post` to an option, and `missed` to `who`
   ("One post, one item" and "Where everything is", above).
+- **1.11.0 (13 Nov 2026)** added `sign_offs` to every week: the three video sign-off cards, each sample with its preview,
+  its Drive link, his answer and whether the engine holds it, and the press kind `op: sign-off` ("To review: the video
+  sign-offs", below).
+
+## To review: the video sign-offs (contract 1.11.0)
+
+Ruling (Krish, 2026-11-12): the three video sign-offs are one review card each on his board, with samples, and only his
+presses write the configs. His words: "One review card each: each goes on your Publish Board as a card with samples to
+look at and listen to, plus Approve or Not this. About 10 minutes in total." The three that had waited on him: a set of
+sound effects (`config/sfx-approved.json`), at least five golden frames (`config/ve/golden-frames.json`) and Gate 2 on
+face-with-proof at 16:9 (`config/ve/design-lock.json`, the `face-with-proof@16:9` draft).
+
+- **The cards and their samples** are `config/ve/sign-offs.json`, made and recorded by `scripts/velib/signoffs.py`
+  (`ve signoff stills|gate2|add|check`): each sample is a file in his Drive (id and link) with the sha256 of its bytes;
+  no media is committed. The 13 Nov samples: 12 Epidemic Sound effects (his plan covers sound effects), 12 stills cut
+  from his published cuts of 26 Oct, 2 Nov, 4 Nov and 6 Nov (the library's copies, checked by sha256), and four 16:9
+  stills, one per beat, from the published Mon 2 Nov wide cut. They are in his Drive's `Inbox from My AI`, each named
+  `Video sign-off - ...` (docs/DRIVE.md).
+- **In the view:** `sign_offs` on every week, `{ waiting, cards }`. Each card has its `ask`, `why`, `note`, `counts`,
+  `state` (`waiting`, `answered`, `written`) and `line`; each sample `{ id, title, kind, mime, src, drive, sha256, lines,
+  verdict, written, presses }`. `src` is `GET /api/board/sign-offs?file=<Drive id>`, which serves only a sample a card
+  shows (302 to the board's copy; 404 `sample_not_found` for any other file). Sound effects and golden frames take a
+  press per sample; Gate 2 takes one press for the card (`presses_mode: card`), bound to the canonical map of its four
+  stills' sha256s (`sha256`). `verdict` is his latest press on those exact bytes; `written` says the config on main holds
+  it. Null when the manifest cannot be read (`sources.sign_offs` false).
+- **His press:** `POST /api/board/<Monday>/sign-off` with `{ card, item, verdict: approve | not_this, sha256, words? }`,
+  his login only (403 `his_press`), on a sample on the card now whose bytes his press names (409 `sample_changed`, 404
+  `sample_not_found`). His words are optional: on Not this, and on Gate 2's Approve. Kept append only on
+  `picks/signoff-<card>` of the week he pressed on (board_save as Krish; board_history keeps every revision); the same
+  answer twice in a row on the same bytes is kept once (`already`).
+- **What writes the configs:** never the press. It starts `.github/workflows/signoff-apply.yml` (a repository_dispatch,
+  `_run.ts` job `signoff-apply`, no payload), which reads every press back (`GET /api/board/sign-offs`, the engine key),
+  fetches each approved sample's bytes by its Drive id through the engine, checks its sha256, and writes through the
+  configs' own writers: `sfx.approve_reviewed` (an approved row carries `approved_press`, never words he did not type),
+  `golden.fill_from_cut` (the next empty slot, `source: cut`), and `designlock.freeze` with his `approved` record for
+  Gate 2. A Not this is written as his no with the date (`declined` in the first two, the draft's `gate2` in the lock).
+  The pull request merges itself on green CI, and the card then reads "Written to the engine".
+- **What it never does:** approve anything for him, publish, post or send, or freeze a lock from a press that names
+  other stills.
+- **Held by:** `tests/control-plane/board-sign-offs.test.ts`, `tests/ve_signoffs_test.py` and
+  `tests/control-plane/board-view-contract.test.ts`.
 
 ## It's live: marking a post live (contract 1.8.0)
 

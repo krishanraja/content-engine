@@ -6,6 +6,7 @@ import { liveDay, type LiveDay } from './_live.js'
 import { makingSteps } from '../_making.js'
 import { yesByDay } from './_yes.js'
 import { readRuns, ENGINE_REPO, type JobName, type RunInfo } from './_run.js'
+import { readSignOffPresses, readSignOffSources, signOffsView, type SignOffsView } from './_signOffs.js'
 import { offdaySides, type OffdaySides } from './_offdaySides.js'
 import type { MediaItem } from './_media.js'
 import { mediaWithAnswers } from './_cuts.js'
@@ -196,6 +197,9 @@ export interface DayPath {
   stages: Stage[]
 }
 export interface WeekView {
+  /** The three video sign-offs, one review card each, on every week (contract 1.11.0, _signOffs.ts); null when the
+   *  cards cannot be read. */
+  sign_offs?: SignOffsView | null
   /** The contract this view keeps (view.schema.json, x-contract-version; _viewContract.ts). */
   contract_version: string
   week: string
@@ -213,6 +217,8 @@ export interface WeekView {
 }
 
 export interface ViewInputs {
+  /** The sign-off cards as _signOffs.ts built them (contract 1.11.0); undefined in a fixture that has none. */
+  sign_offs?: SignOffsView | null
   week: string
   now: Date
   pieces: Body[]
@@ -794,7 +800,7 @@ export function buildView(i: ViewInputs): WeekView {
     : [{ key: d.day, day: d.day, label: d.label, next: d.next, actions: d.actions }]))
   const dayWord = (id: string) => DAY_NAME[id.slice(0, 3)] || id
   const name = (c: string, id: string) => (c === 'picks' && /^(mon|wed|fri)$/.test(id) ? `picked ${dayWord(id)}'s idea`
-    : c === 'picks' ? `pressed ${id}` : c === 'queue' && id.startsWith('off-') ? `judged the ${dayWord(id.slice(4))} option ${id.slice(8)}`
+    : c === 'picks' && id.startsWith('signoff-') ? 'answered a sign-off card' : c === 'picks' ? `pressed ${id}` : c === 'queue' && id.startsWith('off-') ? `judged the ${dayWord(id.slice(4))} option ${id.slice(8)}`
     : c === 'queue' ? `judged idea ${id}` : c === 'comments' ? 'left a comment' : `${c} ${id}`)
   const seen = new Set<string>()
   const moved = i.history.filter(h => { const k = `${h.collection}/${h.doc_id}`; if (seen.has(k)) return false; seen.add(k); return true }).slice(0, 8).map(h => ({ at: h.updated_at, text: `${h.updated_by === 'Krish' ? 'You' : h.updated_by} ${name(h.collection, h.doc_id)}` }))
@@ -802,8 +808,8 @@ export function buildView(i: ViewInputs): WeekView {
   moved.sort((a, b) => b.at.localeCompare(a.at))
   return { contract_version: VIEW_CONTRACT_VERSION, week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
     sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay), approvals: Array.isArray(i.approvals), drive: Array.isArray(i.drive_posts),
-      items: Array.isArray(i.items) },
-    revision: i.revision ?? null }
+      items: Array.isArray(i.items), sign_offs: Boolean(i.sign_offs) },
+    revision: i.revision ?? null, sign_offs: i.sign_offs ?? null }
 }
 
 /** Every rule the view must keep (PLAN.md): a day not done has a next step, and that step has at least one action. */
@@ -898,6 +904,9 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // them, the one place every off-day item's day lives (offday_items).
   // One post, one item (contract 1.10.0): every item of every week on a day or in his Ideas for Later, and the plans of
   // the weeks beside this one, so the same post is drawn on one day only and the day it is on says where else it is up.
+  // The three video sign-off cards (contract 1.11.0): the manifest and the configs it writes, from main, and his presses.
+  const signOffs = Promise.all([readSignOffSources(fetcher, mainSha), readSignOffPresses(db).catch(() => null)])
+    .then(([s, p]) => signOffsView(s.manifest, p ?? [], s.configs)).catch(() => null)
   const [approvals, items, allItems, ...beside] = await Promise.all([readApprovals(db, week), readItems(db, week), readItemsIn(db, ['offered', 'approved', 'later']),
     ...[-7, 7].map(n => readWeekIdeas(shiftYmd(week, n), env, fetcher).catch(() => null))])
   let formats: ViewInputs['formats'] = { script: [], production: [] }
@@ -931,7 +940,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, approvals,
     comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
     drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items, all_items: allItems,
-    plans: { [shiftYmd(week, -7)]: beside[0] ?? null, [shiftYmd(week, 7)]: beside[1] ?? null } })
+    plans: { [shiftYmd(week, -7)]: beside[0] ?? null, [shiftYmd(week, 7)]: beside[1] ?? null }, sign_offs: await signOffs })
 }
 
 /** A week's ideas.json as the view reads it: the week's offday-revise branch first, then main, each at the commit it

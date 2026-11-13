@@ -221,6 +221,8 @@ The first three are in `04_Content` (`1ELCdOmMGXWmLpuheEoAKA-_4jvYbmbn3`).
   engine's store (`add_piece_material` or `board_session.py PIECE add`); its copy in `6 Research library` follows by
   itself. Never filed in the library by hand, never left in scratch.
 - Anything an AI session cannot place: `Inbox from My AI` at the top of his Drive, never loose at the top.
+- Samples for a sign-off card on his Publish Board (`config/ve/sign-offs.json`): `Inbox from My AI`, each file named
+  `Video sign-off - ...`, filed by id and never moved by the engine; the card links each one.
 - Sales material: `Sales Materials`.
 - A brand film: `Films`, next number.
 - Nothing loose at the top of `04_Content` except the READ ME.
