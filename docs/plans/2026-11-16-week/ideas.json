@@ -56,7 +56,14 @@
           "experiment": {
             "format": "receipt-animation",
             "why": "Oracle's funding drawn as a till receipt that prints line by line: debt, shares, bonds, customer prepayments, with the 2028 date at the bottom."
-          }
+          },
+          "motion": "ladder",
+          "motion_alternatives": [
+            "living-screen",
+            "eating-jobs-ladder"
+          ],
+          "captions": "art-directed",
+          "motion_said": "Session 13 Nov (production-picks.md): never one he rejected. Not offered: swiss-kinetic-type, data-story and dark-keynote (their 11 Nov clips, rejected: \"This is absolutely fucking awful\"), and character-ai-receipts (the 26 Oct Receipts look he rejected on 28 Oct: \"still don't move enough\")."
         }
       },
       {
@@ -169,11 +176,18 @@
         ],
         "style": {
           "script": "everyday-debate",
-          "production": "scoreboard-test",
+          "production": "face-with-proof",
           "experiment": {
-            "format": "kinetic-movement",
-            "why": "Cut fast between the builder and the buyer, words bouncing in, so the debate plays like a sketch."
-          }
+            "format": "receipt-animation",
+            "why": "The lock's exhibit for the case against build: a receipt whose first line, Writing it, is tiny, then every real posted cost after it."
+          },
+          "motion": "ai-music-slam",
+          "motion_alternatives": [
+            "living-screen",
+            "ladder"
+          ],
+          "captions": "ink-block",
+          "motion_said": "Session 13 Nov (production-picks.md): never one he rejected. Not offered: swiss-kinetic-type, data-story and dark-keynote (their 11 Nov clips, rejected: \"This is absolutely fucking awful\"), and character-ai-receipts (the 26 Oct Receipts look he rejected on 28 Oct: \"still don't move enough\")."
         }
       },
       {
@@ -253,11 +267,14 @@
         ],
         "style": {
           "script": "fry-explainer",
-          "production": "fry-talking-head",
-          "experiment": {
-            "format": "everyday-debate",
-            "why": "Put one thing everyone 'knows' on screen and let the viewer vote before the checker rules."
-          }
+          "production": "face-with-proof",
+          "motion": "living-screen",
+          "motion_alternatives": [
+            "ladder",
+            "ai-music-slam"
+          ],
+          "captions": "art-directed",
+          "motion_said": "Session 13 Nov (production-picks.md): never one he rejected. Not offered: swiss-kinetic-type, data-story and dark-keynote (their 11 Nov clips, rejected: \"This is absolutely fucking awful\"), and character-ai-receipts (the 26 Oct Receipts look he rejected on 28 Oct: \"still don't move enough\")."
         }
       },
       {
@@ -336,11 +353,18 @@
         ],
         "style": {
           "script": "dated-prediction",
-          "production": "data-story",
+          "production": "face-with-proof",
           "experiment": {
-            "format": "random-headline",
-            "why": "Open on 40 to 1 with no context, a scoreline nobody expects from an election."
-          }
+            "format": "data-story",
+            "why": "The signed lock's experiment: the 41 local votes flipping to no, one by one, as the opening shot."
+          },
+          "motion": "eating-jobs-ladder",
+          "motion_alternatives": [
+            "ladder",
+            "living-screen"
+          ],
+          "captions": "art-directed",
+          "motion_said": "Session 13 Nov (production-picks.md): never one he rejected. Not offered: swiss-kinetic-type, data-story and dark-keynote (their 11 Nov clips, rejected: \"This is absolutely fucking awful\"), and character-ai-receipts (the 26 Oct Receipts look he rejected on 28 Oct: \"still don't move enough\")."
         }
       }
     ]
