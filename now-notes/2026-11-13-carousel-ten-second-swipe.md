@@ -1,4 +1,0 @@
-Status: The Thu 12 Nov Git carousel is redrawn (cards 2 to 5 rebuilt as one sentence and one picture each, the cover kept, no card numbers, "Follow for more" over the centred wordmark) and filed as git-card-1-v2.png to git-card-5-v2.png beside the old cards in 3 Posts/2026-11-12 Thu off.day - AI broke Git/4 Social. Every carousel now has a written ten-second-swipe standard (docs/CAROUSEL-STANDARD.md) and a check, scripts/carousel_check.py, that refuses a deck whose headlines do not tell the story in ten seconds.
-Next: Growth swaps the v2 cards into the scheduled Git post and runs scripts/carousel_check.py on every carousel deck before drawing it.
-Changed: scripts/carousel_check.py, config/carousel-plain-words.json, tests/carousel_check_test.py, docs/CAROUSEL-STANDARD.md (The ten-second swipe), config/failures.json (carousel-fails-the-ten-second-swipe), docs/plans/2026-11-09-week/git-carousel/deck.json
-North Star check (2026-11-13): holds.
