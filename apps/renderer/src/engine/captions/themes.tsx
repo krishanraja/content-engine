@@ -5,6 +5,8 @@ import {
   F, LIFT, REGIONS, band, type Box, clamp, clean, fit, hero, key, livePage, mix, outBack, outCubic, outExpo, previousPage,
   scale, settle, since, spoken, spring, textWidth,
 } from './kit'
+import { type Draw, root, upper, wrap } from './draw'
+import { STYLES } from './styles'
 
 /** Every caption style but `art-directed` (chrome/ArtDirectedCaption.tsx), each the house's own build of an idea
  *  (Krish, 2026-11-11: "None of other styles are amazing you need to improve them all 10X"). The house rules they all
@@ -13,26 +15,6 @@ import {
  *  are spoken, never a finished line early; one marked word per page at most; type inside the safe area, never under
  *  the platform UI; no rainbow, no permanent glow, no pill per word. */
 
-type Draw = (props: EngineRenderProps, frame: number) => React.ReactElement | null
-
-const root = (name: string, box: Box, children: React.ReactNode, extra: React.CSSProperties = {}) => (
-  <div data-caption-theme={name} style={{ position: 'absolute', ...box, pointerEvents: 'none', zIndex: 40, ...extra }}>{children}</div>
-)
-
-const upper = (t: string) => clean(t).toUpperCase()
-
-/** Rows of words, greedily wrapped to a width by the width estimate (no word is split; a page keeps its order). */
-function wrap(words: string[], size: number, width: number, face: Parameters<typeof textWidth>[2], caps: boolean, gap: number): number[][] {
-  const rows: number[][] = []
-  let row: number[] = [], used = 0
-  words.forEach((w, i) => {
-    const wd = textWidth(w, size, face, caps)
-    if (row.length && used + gap + wd > width) { rows.push(row); row = []; used = 0 }
-    used += (row.length ? gap : 0) + wd; row.push(i)
-  })
-  if (row.length) rows.push(row)
-  return rows
-}
 
 /** pop: Archivo Black capitals that land word by word with a firm settle; the word being said wears the series colour
  *  and hands it on as the next lands. Centred in the caption band, at most two lines, sized to fill the width. */
@@ -412,5 +394,5 @@ const slam: Draw = (props, frame) => {
 
 export const THEMES: Record<Exclude<CaptionThemeName, 'art-directed'>, Draw> = {
   pop, karaoke, 'kinetic-01': kinetic01, 'kinetic-02': kinetic02, hustle, grape, beast, poppin, aarit, 'soft-ai': softAi,
-  'gaming-stream': gaming, 'simple-one-word': oneWord, podcast, cinematic, slam,
+  'gaming-stream': gaming, 'simple-one-word': oneWord, podcast, cinematic, slam, ...STYLES,
 }

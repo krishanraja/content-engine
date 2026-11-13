@@ -1,157 +1,518 @@
 {
   "about": "How the renderer draws each motion style of config/style-references.json (layer motion). One home: motionProfiles.ts parses this file and compile.py copies the chosen profile into props.motion. Every value sits inside the signed floor in docs/ve/MOTION_STANDARD.md (entrances settle in 4 to 7 frames, rise 40 to 60 px, overshoot at most 6%, drift above 0); motionProfiles.test.ts fails any that does not. Grounds (dark, paper), overlays (brackets, scan lines, torn edges, a sketched frame), type (the mono data face, type as hero), lead captions and a line boil are drawn by kit/overlays.tsx, kit/heroType.tsx and chrome/LeadCaption.tsx, each only for the style whose profile names it. A style needing its own device or drawing pipeline is listed under needs_device and renders with the house motion.",
-  "needs_device": ["flat-vector-explainer", "isometric-world", "toy-3d", "shape-morph", "watercolour-ink", "pixel-retro", "film-crt", "ladder", "living-screen"],
+  "needs_device": [
+    "flat-vector-explainer",
+    "isometric-world",
+    "toy-3d",
+    "shape-morph",
+    "watercolour-ink",
+    "pixel-retro",
+    "film-crt",
+    "ladder",
+    "living-screen"
+  ],
   "profiles": {
     "swiss-kinetic-type": {
-      "entrance": {"kind": "slide", "frames": 5, "easing": "enter", "distancePx": 48, "overshootPct": 3},
-      "stagger": {"frames": 3, "unit": "word"},
+      "entrance": {
+        "kind": "slide",
+        "frames": 5,
+        "easing": "enter",
+        "distancePx": 48,
+        "overshootPct": 3
+      },
+      "stagger": {
+        "frames": 3,
+        "unit": "word"
+      },
       "exitFrames": 5,
       "onTwos": false,
-      "camera": {"kind": "none", "scaleTo": 1, "dimOthers": false, "easing": "hero"},
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
       "transition": "cut",
-      "typeReveal": {"kind": "word"},
-      "ground": {"kind": "house", "sweepFrames": 0, "texture": "none"},
+      "typeReveal": {
+        "kind": "word"
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
       "driftPct": 1,
       "countFrames": 18,
-      "type": {"font": "house", "hero": true},
+      "type": {
+        "font": "house",
+        "hero": true
+      },
       "note": "type is the picture: the beat's key phrase (its text device's words, else the clause he is saying) set in Anton at the largest size the channel safe area takes, words sliding in on the six-column grid with the house enter bezier, stagger 3 frames; mint only as the fill behind the answer word; never scaled past 105%"
     },
     "data-story": {
-      "entrance": {"kind": "rise", "frames": 6, "easing": "enter", "distancePx": 40, "overshootPct": 0},
-      "stagger": {"frames": 4, "unit": "line"},
+      "entrance": {
+        "kind": "rise",
+        "frames": 6,
+        "easing": "enter",
+        "distancePx": 40,
+        "overshootPct": 0
+      },
+      "stagger": {
+        "frames": 4,
+        "unit": "line"
+      },
       "exitFrames": 6,
       "onTwos": false,
-      "camera": {"kind": "push", "scaleTo": 1.03, "dimOthers": false, "easing": "hero"},
+      "camera": {
+        "kind": "push",
+        "scaleTo": 1.03,
+        "dimOthers": false,
+        "easing": "hero"
+      },
       "transition": "cut_on_curve",
-      "typeReveal": {"kind": "roll"},
-      "ground": {"kind": "house", "sweepFrames": 0, "texture": "none"},
+      "typeReveal": {
+        "kind": "roll"
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
       "driftPct": 1.5,
       "countFrames": 24,
       "note": "marks draw in order of the argument; numbers roll up to the sourced figure and hold; a chart never holds still (slow push)"
     },
     "dark-keynote": {
-      "entrance": {"kind": "scale", "frames": 7, "easing": "hero", "distancePx": 40, "overshootPct": 0},
-      "stagger": {"frames": 6, "unit": "line"},
+      "entrance": {
+        "kind": "scale",
+        "frames": 7,
+        "easing": "hero",
+        "distancePx": 40,
+        "overshootPct": 0
+      },
+      "stagger": {
+        "frames": 6,
+        "unit": "line"
+      },
       "exitFrames": 6,
       "onTwos": false,
-      "camera": {"kind": "push", "scaleTo": 1.05, "dimOthers": false, "easing": "hero"},
+      "camera": {
+        "kind": "push",
+        "scaleTo": 1.05,
+        "dimOthers": false,
+        "easing": "hero"
+      },
       "transition": "crossfade",
       "transitionFrames": 8,
-      "typeReveal": {"kind": "line"},
-      "ground": {"kind": "inkDeep", "sweepFrames": 30, "texture": "none"},
+      "typeReveal": {
+        "kind": "line"
+      },
+      "ground": {
+        "kind": "inkDeep",
+        "sweepFrames": 30,
+        "texture": "none"
+      },
       "driftPct": 2,
       "countFrames": 30,
       "note": "ink_deep stage with grain and one light sweep of 30 frames a beat. The style asks for long holds; the signed standard wins (no graphic held over 3.5 s), so the hold carries a slow push instead"
     },
     "living-ui": {
-      "entrance": {"kind": "slide", "frames": 6, "easing": "utility", "distancePx": 40, "overshootPct": 0},
-      "stagger": {"frames": 3, "unit": "line"},
+      "entrance": {
+        "kind": "slide",
+        "frames": 6,
+        "easing": "utility",
+        "distancePx": 40,
+        "overshootPct": 0
+      },
+      "stagger": {
+        "frames": 3,
+        "unit": "line"
+      },
       "exitFrames": 5,
       "onTwos": false,
-      "camera": {"kind": "zoomToFocus", "scaleTo": 1.5, "dimOthers": true, "easing": "utility"},
+      "camera": {
+        "kind": "zoomToFocus",
+        "scaleTo": 1.5,
+        "dimOthers": true,
+        "easing": "utility"
+      },
       "transition": "cut_on_curve",
-      "typeReveal": {"kind": "typewriter", "cps": 30},
-      "ground": {"kind": "house", "sweepFrames": 0, "texture": "none"},
+      "typeReveal": {
+        "kind": "typewriter",
+        "cps": 30
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
       "driftPct": 1,
       "countFrames": 18,
       "note": "zoom to the line that proves the words (the typed line a device reports) with the utility bezier, up to 1.5x, the line kept inside the channel safe area and off his face while the card's edges may leave the frame; everything else dims to 40%; typing at 30 characters a second with a caret"
     },
     "hud-terminal": {
-      "entrance": {"kind": "slap", "frames": 4, "easing": "enter", "distancePx": 40, "overshootPct": 4},
-      "stagger": {"frames": 2, "unit": "char"},
+      "entrance": {
+        "kind": "slap",
+        "frames": 4,
+        "easing": "enter",
+        "distancePx": 40,
+        "overshootPct": 4
+      },
+      "stagger": {
+        "frames": 2,
+        "unit": "char"
+      },
       "exitFrames": 4,
       "onTwos": false,
-      "camera": {"kind": "none", "scaleTo": 1, "dimOthers": false, "easing": "hero"},
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
       "transition": "cut",
-      "typeReveal": {"kind": "typewriter", "cps": 32},
-      "ground": {"kind": "dark", "sweepFrames": 0, "texture": "none"},
+      "typeReveal": {
+        "kind": "typewriter",
+        "cps": 32
+      },
+      "ground": {
+        "kind": "dark",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
       "driftPct": 0.5,
       "countFrames": 24,
-      "overlays": ["brackets", "scanLines"],
-      "type": {"font": "data", "hero": false},
+      "overlays": [
+        "brackets",
+        "scanLines"
+      ],
+      "type": {
+        "font": "data",
+        "hero": false
+      },
       "note": "IBM Plex Mono on ink_deep, text cards inverted (cream type, mint for the result); text types at a readable 32 characters a second; mint brackets lock onto the typed line with the slap token; faint static scan lines on the ground only, never noise over the proof; rolling numbers settle on the real figure and hold"
     },
     "riso-halftone": {
-      "entrance": {"kind": "drop", "frames": 5, "easing": "enter", "distancePx": 44, "overshootPct": 2},
-      "stagger": {"frames": 3, "unit": "line"},
+      "entrance": {
+        "kind": "drop",
+        "frames": 5,
+        "easing": "enter",
+        "distancePx": 44,
+        "overshootPct": 2
+      },
+      "stagger": {
+        "frames": 3,
+        "unit": "line"
+      },
       "exitFrames": 5,
       "onTwos": false,
-      "camera": {"kind": "none", "scaleTo": 1, "dimOthers": false, "easing": "hero"},
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
       "transition": "cut",
-      "typeReveal": {"kind": "line"},
-      "ground": {"kind": "house", "sweepFrames": 0, "texture": "halftone"},
+      "typeReveal": {
+        "kind": "line"
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "halftone"
+      },
       "driftPct": 1,
       "countFrames": 18,
       "note": "only images take the halftone (his take); type stays crisp"
     },
     "paper-cutout": {
-      "entrance": {"kind": "drop", "frames": 6, "easing": "enter", "distancePx": 50, "overshootPct": 5},
-      "stagger": {"frames": 4, "unit": "line"},
+      "entrance": {
+        "kind": "drop",
+        "frames": 6,
+        "easing": "enter",
+        "distancePx": 50,
+        "overshootPct": 5
+      },
+      "stagger": {
+        "frames": 4,
+        "unit": "line"
+      },
       "exitFrames": 6,
       "onTwos": true,
-      "camera": {"kind": "none", "scaleTo": 1, "dimOthers": false, "easing": "hero"},
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
       "transition": "cut",
-      "typeReveal": {"kind": "line"},
-      "ground": {"kind": "house", "sweepFrames": 0, "texture": "paper"},
+      "typeReveal": {
+        "kind": "line"
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "paper"
+      },
       "driftPct": 1,
       "countFrames": 18,
-      "overlays": ["torn"],
+      "overlays": [
+        "torn"
+      ],
       "note": "a warm, seeded paper stock under the graphics (the cream laid on itself; generated mottle, grain, flecks and fibres, no image), torn white where it meets his take; cards and logo tiles cut out with a thick torn white rim, a sliver of cut side and a hard 4 px shadow, each leaning 1 to 2 degrees on its own seed and nudged by at most 1 px a step; pieces drop in with a 5% overshoot and settle, on twos (15 fps steps inside the 30 fps cut); his take, the captions and the mark tile stay level, clean and on ones"
     },
     "vertical-captions": {
-      "entrance": {"kind": "slap", "frames": 4, "easing": "enter", "distancePx": 40, "overshootPct": 3},
-      "stagger": {"frames": 2, "unit": "word"},
+      "entrance": {
+        "kind": "slap",
+        "frames": 4,
+        "easing": "enter",
+        "distancePx": 40,
+        "overshootPct": 3
+      },
+      "stagger": {
+        "frames": 2,
+        "unit": "word"
+      },
       "exitFrames": 4,
       "onTwos": false,
-      "camera": {"kind": "none", "scaleTo": 1, "dimOthers": false, "easing": "hero"},
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
       "transition": "cut",
-      "typeReveal": {"kind": "word"},
-      "ground": {"kind": "house", "sweepFrames": 0, "texture": "none"},
+      "typeReveal": {
+        "kind": "word"
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
       "driftPct": 1,
       "countFrames": 18,
-      "captions": {"mode": "lead", "wordsPerCard": 3},
+      "captions": {
+        "mode": "lead",
+        "wordsPerCard": 3
+      },
       "note": "lead captions: 2 to 4 of his words a card in Archivo 900 up to 112 px on an ink card, the spoken word in mint (never more than one), cards changing on his words; above the seam on a split beat and in the face beats' caption zone, inside the channel safe area and off his face; nothing bounces on every syllable"
     },
     "single-line-drawing": {
-      "entrance": {"kind": "draw", "frames": 7, "easing": "utility", "distancePx": 40, "overshootPct": 0},
-      "stagger": {"frames": 6, "unit": "line"},
+      "entrance": {
+        "kind": "draw",
+        "frames": 7,
+        "easing": "utility",
+        "distancePx": 40,
+        "overshootPct": 0
+      },
+      "stagger": {
+        "frames": 6,
+        "unit": "line"
+      },
       "exitFrames": 6,
       "onTwos": false,
-      "camera": {"kind": "followPen", "scaleTo": 1.2, "dimOthers": false, "easing": "utility"},
+      "camera": {
+        "kind": "followPen",
+        "scaleTo": 1.2,
+        "dimOthers": false,
+        "easing": "utility"
+      },
       "transition": "cut_on_curve",
-      "typeReveal": {"kind": "line"},
-      "ground": {"kind": "house", "sweepFrames": 0, "texture": "none"},
+      "typeReveal": {
+        "kind": "line"
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
       "driftPct": 1,
       "countFrames": 18,
       "note": "graphics draw on left to right; the camera closes in to 1.2x and follows the pen tip of the line with a damped follow, never showing past the canvas (1.04 left it no room to move); labels appear after the line"
     },
     "line-boil": {
-      "entrance": {"kind": "draw", "frames": 6, "easing": "enter", "distancePx": 40, "overshootPct": 0},
-      "stagger": {"frames": 3, "unit": "line"},
+      "entrance": {
+        "kind": "draw",
+        "frames": 6,
+        "easing": "enter",
+        "distancePx": 40,
+        "overshootPct": 0
+      },
+      "stagger": {
+        "frames": 3,
+        "unit": "line"
+      },
       "exitFrames": 5,
       "onTwos": true,
-      "camera": {"kind": "none", "scaleTo": 1, "dimOthers": false, "easing": "hero"},
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
       "transition": "cut",
-      "typeReveal": {"kind": "line"},
-      "ground": {"kind": "dark", "sweepFrames": 0, "texture": "none", "cards": "keep"},
+      "typeReveal": {
+        "kind": "line"
+      },
+      "ground": {
+        "kind": "dark",
+        "sweepFrames": 0,
+        "texture": "none",
+        "cards": "keep"
+      },
       "driftPct": 1,
       "countFrames": 18,
-      "overlays": ["sketchFrame"],
-      "boil": {"amplitudePx": 2, "everyFrames": 2},
+      "overlays": [
+        "sketchFrame"
+      ],
+      "boil": {
+        "amplitudePx": 2,
+        "everyFrames": 2
+      },
       "note": "cream line on ink: a hand-drawn panel line round the ground and every scribble boil, a new seed every 2 frames, at most 2 px; cards keep their cream so the lines read; graphics on twos; never boil on type or numbers"
     },
     "full-visual": {
-      "entrance": {"kind": "rise", "frames": 4, "easing": "enter", "distancePx": 48, "overshootPct": 4},
-      "stagger": {"frames": 3, "unit": "word"},
+      "entrance": {
+        "kind": "rise",
+        "frames": 4,
+        "easing": "enter",
+        "distancePx": 48,
+        "overshootPct": 4
+      },
+      "stagger": {
+        "frames": 3,
+        "unit": "word"
+      },
       "exitFrames": 4,
       "onTwos": false,
-      "camera": {"kind": "push", "scaleTo": 1.04, "dimOthers": false, "easing": "hero"},
+      "camera": {
+        "kind": "push",
+        "scaleTo": 1.04,
+        "dimOthers": false,
+        "easing": "hero"
+      },
       "transition": "cut_on_curve",
-      "typeReveal": {"kind": "word"},
-      "ground": {"kind": "house", "sweepFrames": 0, "texture": "none"},
+      "typeReveal": {
+        "kind": "word"
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
       "driftPct": 1.5,
       "countFrames": 18,
       "note": "keyframes@0.2.13 full-visual (docs/ve/sources/keyframes.md), inside the signed floor: the real thing each sentence names arrives fast (their 7-frame blur-in at 60 fps is 4 frames here) with a small pop, words stagger 3 frames, a held picture keeps living on a slow push to 104% and 1.5% drift, every number counts to its word; the pack's 260 px travel is over the 60 px floor and is not used"
+    },
+    "character-ai-receipts": {
+      "entrance": {
+        "kind": "rise",
+        "frames": 7,
+        "easing": "enter",
+        "distancePx": 40,
+        "overshootPct": 0
+      },
+      "stagger": {
+        "frames": 4,
+        "unit": "word"
+      },
+      "exitFrames": 8,
+      "onTwos": false,
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
+      "transition": "crossfade",
+      "transitionFrames": 8,
+      "typeReveal": {
+        "kind": "word"
+      },
+      "ground": {
+        "kind": "dark",
+        "sweepFrames": 0,
+        "texture": "none",
+        "cards": "keep"
+      },
+      "type": {
+        "font": "house",
+        "hero": false
+      },
+      "driftPct": 0.5,
+      "countFrames": 20,
+      "note": "From Krish's Character.ai cut (Mon 26 Oct, mon26-tall, sha256 39f1039c), measured 13 Nov: 3.85 events a second, 81% of the frame in use. Evidence prints onto a lit ink desk above a still face band: proof objects rise into place under a fade with no overshoot, a receipt line prints on its word, the figure lands on a mint fill, headline words arrive 4 frames apart, a device changes state by an 8-frame dissolve, never a tween, and nothing moves the camera. Inside the signed floor the rise is its 40 px minimum; the cut's type travels 0 px (fade or blur only), which the floor does not allow (raised with Krish 13 Nov)."
+    },
+    "eating-jobs-ladder": {
+      "entrance": {
+        "kind": "rise",
+        "frames": 7,
+        "easing": "enter",
+        "distancePx": 56,
+        "overshootPct": 2
+      },
+      "stagger": {
+        "frames": 3,
+        "unit": "word"
+      },
+      "exitFrames": 10,
+      "onTwos": false,
+      "camera": {
+        "kind": "push",
+        "scaleTo": 1.04,
+        "dimOthers": false,
+        "easing": "hero"
+      },
+      "transition": "crossfade",
+      "transitionFrames": 10,
+      "typeReveal": {
+        "kind": "roll"
+      },
+      "ground": {
+        "kind": "dark",
+        "sweepFrames": 0,
+        "texture": "none",
+        "cards": "keep"
+      },
+      "driftPct": 1.5,
+      "countFrames": 27,
+      "note": "From Krish's eating-its-own-jobs cut (Mon 2 Nov, Who trains your 2030 seniors, mon02-tall, sha256 2cdff09a), measured 13 Nov: 3.91 events a second, 20 cuts a minute. One through-line object carries the piece; numbers roll onto it on the enter curve, a slow push holds every panel, every change is a 10-frame crossfade on its word and nothing holds still. The ladder object itself and the butter tray over his chest need devices (through_line card, docs/ve/cards/through-line/) and draw as the house devices until built."
+    },
+    "ai-music-slam": {
+      "entrance": {
+        "kind": "slap",
+        "frames": 7,
+        "easing": "hero",
+        "distancePx": 60,
+        "overshootPct": 6
+      },
+      "stagger": {
+        "frames": 6,
+        "unit": "line"
+      },
+      "exitFrames": 9,
+      "onTwos": false,
+      "camera": {
+        "kind": "push",
+        "scaleTo": 1.2,
+        "dimOthers": true,
+        "easing": "hero"
+      },
+      "transition": "cut",
+      "typeReveal": {
+        "kind": "typewriter",
+        "cps": 25
+      },
+      "ground": {
+        "kind": "dark",
+        "sweepFrames": 0,
+        "texture": "none",
+        "cards": "keep"
+      },
+      "driftPct": 1.5,
+      "countFrames": 18,
+      "note": "From Krish's AI music cut (Wed 11 Nov, AI is already in the music you love, tall, sha256 3c360c73), measured 13 Nov: 4.12 events a second, 11.2 scene changes a minute, longest gap 0.93 s, 81% of the frame in use. Real proof slams onto an ink stage on a back curve and settles tilted with a soft shadow; two materials only, mint for what a human made and hatched ink for what the machine made; the camera pushes through every scene and breathes on holds; scenes hand over with a horizontal blur whip (pair it with style.transitions whip and style.camera phased, energy high). The cut slams about 500 px with about 12% overshoot in 10 frames, above the signed floor (60 px, 6%, 7 frames), so this profile sits at the floor's top (raised with Krish 13 Nov); the hatched AI material, the stage-and-band layout and tilted settles still need building."
     }
   }
 }
