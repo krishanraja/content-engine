@@ -11,8 +11,8 @@ camera.**
 
 | Ingredient | Spec | Props | Drawn by | What it offers today |
 |---|---|---|---|---|
-| Motion style | `style.motion.module` | `motion` | `kit/motionProfiles.ts`, devices | the bank in `config/style-references.json` (motion layer): 11 profiles, plus 2 needing a device |
-| Captions | `style.captions.theme`, `.placement` | `captionTheme`, `captionPlacement` | `captions/themes.tsx` on `captions/kit.ts` | 16 styles (`captions/names.ts`, `config/caption-themes.json`); placement in the lower band, the centre or the upper strip |
+| Motion style | `style.motion.module` | `motion` | `kit/motionProfiles.ts`, devices | the bank in `config/style-references.json` (motion layer): 14 profiles, 3 of them from his own cuts (below), plus 9 needing a device |
+| Captions | `style.captions.theme`, `.placement` | `captionTheme`, `captionPlacement` | `captions/themes.tsx` and one file each in `captions/styles/`, on `captions/kit.ts` and `captions/draw.tsx` | 27 styles (`captions/names.ts`, `config/caption-themes.json`), any with any motion style; placement in the lower band, the centre or the upper strip |
 | Transitions | `style.transitions.kind` | `ingredients.transition` | `kit/ingredients.ts` | cut, whip, push, zoom-through, flash, punch |
 | Camera | `style.camera.move`, `.hits` | `ingredients.camera`, `.hits` | `kit/ingredients.ts` | none, drift, phased, punch; device events kick it (a punch-in, a shake above calm, a flash at high) |
 | Energy | `style.energy` | `ingredients.energy` | `kit/ingredients.ts` | calm, medium, high: handover length (16, 10 or 6 frames), blur, punch, shake and flash strength |
@@ -77,6 +77,41 @@ How a test cut is checked:
 1. Measure it with `ve pace`.
 2. Watch it at speed beside a reference: a side-by-side strip every 4 frames, and the cut itself.
 3. Only then does it go to Krish.
+
+
+## Styles from his own cuts (13 Nov 2026)
+
+Krish, 2026-11-13: "I want an array of animated motion caption styles available in the engine, decoupled from the
+visual treatment. Ensure the Character.ai video, the Anthropic eating its own jobs video, the AI music video are used as
+the basis for their own artistic styles too."
+
+Each cut was studied at speed and measured by a separate reader. The cards are in `docs/ve/styles/*.card.json`, and
+each cut became a motion style and a caption style of its own.
+
+| Cut | Motion style | Caption style | Measured |
+|---|---|---|---|
+| Character.ai, Mon 26 Oct (mon26-tall) | `character-ai-receipts` | `receipt-chip` | 3.85 events a second, 81% of the frame used |
+| Eating its own jobs, Mon 2 Nov (mon02-tall) | `eating-jobs-ladder` | `ink-block` | 3.91 events a second, 20 cuts a minute |
+| AI music, Wed 11 Nov (tall, sha256 3c360c73) | `ai-music-slam` | `mint-word` | 4.12 events a second, longest gap 0.93 s |
+
+The other eight new caption styles were designed from his style references, studied at speed:
+- `georgia-build`
+- `stair-flash`
+- `tuck-stack`
+- `anchor-quote`
+- `rack-focus`
+- `flip-hinge`
+- `slice`
+- `slot-roll`
+
+All eleven were built, then reviewed by a separate reader from rendered stills, fixed, and reviewed again.
+
+**The signed motion floor and his own cuts disagree.** The floor (`docs/ve/MOTION_STANDARD.md`, signed 3 Nov) sets
+an entrance travel of 40 to 60 px, overshoot of at most 6%, and 4 to 7 frames. His cuts go outside it:
+- the AI music cut slams about 500 px with about 12% overshoot over 10 frames;
+- the Character.ai cut's type travels 0 px (it fades or blurs in only).
+
+The three profiles therefore sit inside the floor, and the floor is his to change.
 
 ## What is still open
 
