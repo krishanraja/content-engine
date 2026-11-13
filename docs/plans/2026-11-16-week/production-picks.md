@@ -33,9 +33,10 @@ Nothing goes to Teleprompter until his Approve (his press, or his words in a ses
 - **Length:** the lock asked for about 8 minutes; the engine's 5-minute gate caps the long cut at 825 words, so it is
   written at about 5:30. One word from him: **keep 5:30**, or **longer** (needs a gate change first).
 - **Look (one word):** recommended **receipt**: face-with-proof for the 5-minute cut and the receipt prints for the
-  90-second cut (the lock's own style recipe, which his signature approved), motion style **character-ai-receipts**
-  (receipts on the ink desk, his own Character.ai cut), captions **receipt-chip**. Alternatives: **ladder** (The
-  Ladder, liked) or **living-screen** (liked). Inspiration cards for `brand.references`: 45e0ead0 (the Anthropic and
+  90-second cut (the lock's own style recipe, which his signature approved), motion style **ladder** (The
+  Ladder, liked: one real object carries the piece), captions **art-directed** (his pick, 11 Nov). Alternatives:
+  **living-screen** (liked) or **eating-jobs-ladder**. Not offered: character-ai-receipts, which comes from the
+  26 Oct Receipts look he rejected on 28 Oct ("still don't move enough"). Inspiration cards for `brand.references`: 45e0ead0 (the Anthropic and
   GitHub explainer, "how the visuals support most of the absorption"), d501ae8a (Hannah Fry, lighting and subtitles).
 - **Record:** 5-minute to camera (face-with-proof, eye line to lens, the receipt cut-ins land on his words "Line one"
   to "line six"); 90-second as voice over the printing receipt (no camera needed), or to camera if he prefers.
@@ -57,7 +58,7 @@ made as the piece: essay and two cuts, filed in an off-day folder.
 - **Look (one word):** recommended **one-object**: face-with-proof for the 5-minute cut and voice-led-pictures for the
   90-second (the lock's recipe), motion style **eating-jobs-ladder** (one object carries the story, from his own cut:
   the data centre turned away, getting smaller), the 41 votes drawn by the vote tally as the opening shot, captions
-  **art-directed** (his pick, 11 Nov). Alternatives: **ladder** (liked), **living-screen** (liked). Not offered again:
+  **art-directed** (his pick, 11 Nov). Motion alternatives: **ladder** (liked), **living-screen** (liked). Not offered again:
   the 11 Nov style clips (data-story, swiss-kinetic-type, dark-keynote), which he rejected because they were drawn on
   the killed 5 Nov short ("This is absolutely fucking awful"). That draft spec now sits at
   `docs/plans/2026-11-17-tuesday/ve/` with this piece's new day; its `call` is a draft political prediction the signed lock
@@ -75,7 +76,8 @@ made as the piece: essay and two cuts, filed in an off-day folder.
   on any record.
 - **Look (one word):** recommended **trial**: face-with-proof for the 5-minute cut, voice-led-pictures for the
   90-second, the community quotes shown as the real posts (the lock's recipe), motion style **ai-music-slam** (proof
-  slams onto the stage: each exhibit lands like evidence), captions **ink-block**. Its receipt exhibit reuses
+  slams onto the stage: each exhibit lands like evidence; alternatives **living-screen** or **ladder**), captions
+  **ink-block**. Its receipt exhibit reuses
   Monday's receipt device, so the hero picture is not new on Wednesday. Alternatives: the board's own pick
   **scoreboard-test** with **kinetic-movement**, or **living-screen**.
 - **Record:** 5-minute to camera; 90-second as voice only.
@@ -88,8 +90,9 @@ made as the piece: essay and two cuts, filed in an off-day folder.
   **"Signed."**
 - **Look (one word):** recommended **stamp**: face-with-proof for the 5-minute cut, voice-led-pictures for the
   90-second, the CHECKED stamp landing only where a person or a strict checker confirmed (the `stamp` device already
-  exists, so no Codex card), motion style **ladder** (liked; the recount, the double-cross, the partnership as rungs).
-  Alternatives: the board's own pick **fry-talking-head**, or **living-ui** (the real pages).
+  exists, so no Codex card), motion style **living-screen** (liked: each case shown as the real page it comes from), captions **art-directed**.
+  Motion alternatives: **ladder** or **ai-music-slam**. The board's earlier look pick, fry-talking-head, stays an
+  alternative look.
 - **Record:** after the lock and scripts.
 
 ## The house closing line and the voice check
@@ -97,3 +100,11 @@ made as the piece: essay and two cuts, filed in an off-day folder.
 Every script must end "The full deep dive is at makeyourmindup.ai." (house rule SCRIPT_CLOSE). Control Centre's one
 voice check bans "deep dive", so every script since 9 Nov fails it on that line alone (Fri 13 Nov's too). The scripts
 here pass with that line set aside. One of the two rules has to give: a word from him.
+
+## Where the picks live
+
+Each piece's recommended motion style, its two alternatives and its caption style are written in its row of
+`docs/plans/2026-11-16-week/ideas.json` (`style.motion`, `style.motion_alternatives`, `style.captions`), on the week's
+branch `offday-revise/2026-11-16` and on main, so the live board's recommended mark is this pick. Never offered: a
+style he rejected (swiss-kinetic-type, data-story and dark-keynote, whose 11 Nov clips he rejected, and
+character-ai-receipts).
