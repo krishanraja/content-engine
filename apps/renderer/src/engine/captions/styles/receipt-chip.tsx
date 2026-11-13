@@ -1,5 +1,5 @@
 import React from 'react'
-import { type Draw, exitStart, marked, root } from '../draw'
+import { type Draw, exitProgress, exitStart, marked, root } from '../draw'
 import { F, band, clamp, clean, hero, livePage, outBack, outCubic, scale, spoken } from '../kit'
 
 /** receipt-chip, from Krish's Character.ai cut (26 Oct 2026), where the evidence prints onto an ink desk: the line
@@ -53,8 +53,10 @@ export const receiptChip: Draw = (props, frame) => {
   const tl = frame - (last.atFrame - 1) // frames since the latest word began to print
   const jolt = JOLT * (1 - outCubic(tl / 5)) * (tl >= 0 ? 1 : 0)
   const es = exitStart(page, 6, fps)
-  const out = es === undefined ? 0 : clamp((frame - es) / Math.max(1, page.toFrame - 1 - es))
+  const out = exitProgress(page, es, frame)
   const centre = props.captionPlacement === 'centre'
+  // a hard 2 px cream rim round the paper (torn top included), so it reads on near-black footage
+  const rim = [[2, 0], [-2, 0], [0, -2]].map(([x, y]) => `drop-shadow(${x}px ${y}px 0 ${t.cream})`).join(' ')
 
   const line = (r: number[], ri: number) => {
     const first = page.words[r[0]!]!
@@ -93,7 +95,7 @@ export const receiptChip: Draw = (props, frame) => {
       justifyContent: centre ? 'center' : 'flex-end', paddingBottom: centre ? 0 : JOLT }}>
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 1 - out }}>
         {/* the paper: torn top edge, then the lines; it jolts and tears off, the slot stays put */}
-        <div style={{ display: 'flex', flexDirection: 'column', minWidth: S * 2.4,
+        <div style={{ display: 'flex', flexDirection: 'column', minWidth: S * 2.4, filter: rim,
           transform: `translateY(${(jolt - out * S * 0.8).toFixed(1)}px)` }}>
           <div style={{ height: 14, backgroundImage: `radial-gradient(circle at 50% 0, transparent 6px, ${t.inkDeep} 6.5px)`,
             backgroundSize: '18px 14px', backgroundRepeat: 'repeat-x' }} />

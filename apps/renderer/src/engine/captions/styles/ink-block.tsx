@@ -1,5 +1,5 @@
 import React from 'react'
-import { type Draw, exitStart, marked, root } from '../draw'
+import { type Draw, exitProgress, exitStart, marked, root } from '../draw'
 import { F, band, clamp, clean, hero, livePage, mix, outBack, outCubic, scale, spoken, textWidth } from '../kit'
 
 /** ink-block, from Krish's "Anthropic is eating its own jobs" cut (2 Nov 2026), whose motion is The Ladder: the phrase
@@ -12,6 +12,7 @@ import { F, band, clamp, clean, hero, livePage, mix, outBack, outCubic, scale, s
  *  last word has shown sharp. Sits at the foot of the band (the middle in `centre`). */
 
 const BAR = 14 // px, the underline bar at rest
+const RIM = 3 // px, a hard cream rim outside the edge so the slab reads on near-black footage
 const EDGE = 2 // px, the inkSoft edge that keeps the slab off dark footage
 
 export const inkBlock: Draw = (props, frame) => {
@@ -42,7 +43,7 @@ export const inkBlock: Draw = (props, frame) => {
   }
   const gap = S * 0.26, padX = S * 0.3, step = S * 0.9
   const es = exitStart(page, 6, fps)
-  const out = es === undefined ? 0 : clamp((frame - es) / Math.max(1, page.toFrame - 1 - es))
+  const out = exitProgress(page, es, frame)
   const centre = props.captionPlacement === 'centre'
 
   // The right edge of each word inside its slab, for the bar's reach.
@@ -73,7 +74,10 @@ export const inkBlock: Draw = (props, frame) => {
         return <div key={ri} style={{ position: 'relative', marginLeft: indent, marginRight: box.width * 0.045, height: slabH(S) + BAR,
           transformOrigin: '0% 50%', transform: `scale(${pulse.toFixed(3)})` }}>
           <div style={{ position: 'absolute', left: 0, top: 0, right: 0, height: slabH(S), background: t.inkDeep,
-            border: `${EDGE}px solid ${t.inkSoft}`, clipPath: `inset(0 ${((1 - wipe) * 100).toFixed(1)}% 0 0)` }}>
+            border: `${EDGE}px solid ${t.inkSoft}`,
+            // a hard cream edge so the slab reads on near-black footage; the clip leaves room for it
+            boxShadow: `0 0 0 ${RIM}px ${t.cream}`,
+            clipPath: `inset(${-RIM}px ${wipe >= 1 ? -RIM : ((1 - wipe) * 100).toFixed(1) + '%'} ${-RIM}px ${-RIM}px)` }}>
             <div style={{ position: 'absolute', left: padX, top: 0, height: '100%', display: 'flex', alignItems: 'center',
               whiteSpace: 'nowrap', gap }}>
               {r.map((i) => {

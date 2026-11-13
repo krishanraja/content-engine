@@ -1,5 +1,5 @@
 import { F, band, clamp, hero, livePage, outCubic, scale, since, textWidth } from '../kit'
-import { type Draw, exitStart, marked, root, upper } from '../draw'
+import { type Draw, exitProgress, exitStart, marked, root, upper } from '../draw'
 
 /** slice: each Anton word arrives cut in two, its top half nudging in from the left and its bottom half sweeping in from the right,
  *  with a mint hairline along the cut while the halves are apart; the line is gone by the time they close, so a word at
@@ -48,7 +48,7 @@ export const slice: Draw = (props, frame) => {
   const lastDur = page.words.length - 1 === kw ? KEY_DUR : DUR
   // the exit never starts before the last word has closed (its whole landing, then a beat sharp)
   const es = exitStart(page, 3, fps, lastDur + 0.06)
-  const e = es === undefined ? 0 : clamp((frame - es) / Math.max(1, page.toFrame - 1 - es))
+  const e = exitProgress(page, es, frame)
 
   const word = (i: number) => {
     const w = page.words[i]!, text = words[i]!

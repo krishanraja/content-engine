@@ -1,6 +1,6 @@
 import React from 'react'
 import { F, LIFT, band, clamp, clean, hero, livePage, mix, outCubic, outExpo, scale, since, spoken, textWidth } from '../kit'
-import { type Draw, exitStart, marked, root, upper } from '../draw'
+import { type Draw, exitProgress, exitStart, marked, root, upper } from '../draw'
 
 /** rack-focus: focus travels along the line. Archivo Bold, as said; each word focuses in from a soft blur at the frame
  *  it is said, holds sharp while it is the word being said, and slips out of focus (blur, dimmer, a touch smaller) as
@@ -49,7 +49,7 @@ export const rackFocus: Draw = (props, frame) => {
   const next = props.captions[index + 1]
   const cutsToNext = next !== undefined && next.fromFrame - page.toFrame <= 1
   const ex = cutsToNext ? undefined : exitStart(page, 5, fps, 0.2)
-  const exit = ex === undefined ? 0 : clamp((frame - ex) / Math.max(1, page.toFrame - ex))
+  const exit = exitProgress(page, ex, frame)
 
   const word = (i: number) => {
     const w = page.words[i]!

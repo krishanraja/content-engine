@@ -6,6 +6,7 @@ import { REGIONS, hero, heroScore, key } from './captions/kit'
 import { ThemedCaption } from './chrome/ThemedCaption'
 import { ART_REGION, ArtDirectedCaption, keyIndex } from './chrome/ArtDirectedCaption'
 import { BrandFrame } from './BrandFrame'
+import { exitProgress } from './captions/draw'
 import { EngineRenderPropsSchema } from './props'
 import fixture from '../../../../fixtures/ve/engine-core/props.json'
 
@@ -22,6 +23,15 @@ function visibleText(node: any, out: string[] = [], hidden = false): string[] {
   const st = node.props?.style ?? {}
   const off = hidden || st.visibility === 'hidden' || st.opacity === 0 || /inset\(-20% calc\(100% - 0%\)/.test(st.clipPath ?? '')
   return visibleText(node.props?.children, out, off)
+}
+
+/** The strongest opacity any string on screen is drawn at (ancestors multiply). */
+function peakTextOpacity(node: any, up = 1): number {
+  if (node === null || node === undefined || node === false) return 0
+  if (typeof node === 'string' || typeof node === 'number') return up
+  if (Array.isArray(node)) return Math.max(0, ...node.map((n) => peakTextOpacity(n, up)))
+  const st = node.props?.style ?? {}
+  return peakTextOpacity(node.props?.children, st.visibility === 'hidden' ? 0 : up * (typeof st.opacity === 'number' ? st.opacity : 1))
 }
 
 describe('the caption styles (Krish, 2026-11-11)', () => {
@@ -76,6 +86,24 @@ describe('the caption styles (Krish, 2026-11-11)', () => {
       const html = render(draw(base, p0.toFrame - 2))
       for (const f of html.matchAll(/"fontFamily":"((?:\\.|[^"\\])*)"/g)) expect(f[1], name).toMatch(HOUSE_FACES)
       for (const c of html.matchAll(/"(?:color|background)":"(rgb\([^"]+\))"/g)) expect(allowed.has(c[1]!), `${name} ${c[1]}`).toBe(true)
+    }
+  })
+
+  it('an outgoing page is gone on its last live frame, the frame the next page first word lands', () => {
+    const fx = EngineRenderPropsSchema.parse(fixture)
+    const next = { ...page(['Then', 'they', 'closed.']), fromFrame: 60, toFrame: 120 }
+    next.words = next.words.map((w) => ({ ...w, atFrame: w.atFrame + 60 }))
+    const alone = { ...fx, captions: [page(['Banks', 'opened', 'more', 'branches.'], 3)] }
+    const abut = { ...fx, captions: [page(['Banks', 'opened', 'more', 'branches.'], 3), next] }
+    expect(exitProgress({ toFrame: 60 }, 55, 59)).toBe(1)
+    expect(exitProgress({ toFrame: 60 }, undefined, 59)).toBe(0)
+    for (const name of ['rack-focus', 'stair-flash', 'tuck-stack', 'flip-hinge', 'receipt-chip']) {
+      const draw = (THEMES as Record<string, (p: unknown, f: number) => unknown>)[name]!
+      expect(peakTextOpacity(draw(alone, 58)), `${name} is still drawing before its exit ends`).toBeGreaterThan(0)
+      expect(peakTextOpacity(draw(alone, 59)), `${name} still shows the old page on its last frame`).toBe(0)
+      // abutting pages: on the frame the new page's first word lands, only the new page is drawn
+      const both = visibleText(draw(abut, 59)).join(' ').toLowerCase()
+      expect(both, `${name} draws the old page over the new one`).not.toMatch(/banks|opened|branches/)
     }
   })
 
