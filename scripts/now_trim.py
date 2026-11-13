@@ -28,6 +28,7 @@ from check_workbench import NOW_LIMIT  # noqa: E402
 TARGET = NOW_LIMIT - 600  # room for the next few notes, so main is not trimmed on every merge
 SECTIONS = ("## What changed recently", "## Where it is right now")  # trimmed in this order
 OLDER = re.compile(r"^Older lines: ")
+POINTER = re.compile(r"`docs/history/[^`]+\.md`")
 
 
 def _section_span(lines: list[str], heading: str) -> tuple[int, int] | None:
@@ -65,30 +66,33 @@ def trim(text: str, today: str, existing: set[str]) -> tuple[str, str | None, st
             break
         heading, i = found
         moved.setdefault(heading, []).insert(0, lines.pop(i))
-    if not moved:
+    older = next((i for i, l in enumerate(lines) if OLDER.match(l)), None)
+    earlier = POINTER.findall(lines[older]) if older is not None else []
+    # Nothing left to move, but the "Older lines:" pointer list itself has grown: fold it into a history file too
+    # (2026-11-13: it named twelve files and held the page over its limit with no bullet left to move).
+    if not moved and len(earlier) <= 1:
         return text, None, ""
     n = 1
     while f"{today}-NOW-moved-{n}.md" in existing:
         n += 1
     name = f"{today}-NOW-moved-{n}.md"
     pointer = f"`docs/history/{name}`"
-    older = next((i for i, l in enumerate(lines) if OLDER.match(l)), None)
+    # The page names only the newest history file; each history file names every move before it, so nothing is lost.
+    line = f"Older lines: {pointer} (it names every earlier move) and `LOG.md`."
     if older is not None:
-        lines[older] = OLDER.sub(f"Older lines: {pointer}, ", lines[older], count=1)
+        lines[older] = line
     else:
         span = _section_span(lines, "## What changed recently")
         at = span[1] if span else len(lines)
-        lines[at:at] = [f"Older lines: {pointer} and `LOG.md`.", ""]
+        lines[at:at] = [line, ""]
     where = " and ".join(f'"{h[3:]}"' for h in moved)
-    out = [
-        f"> **Historical.** Lines moved verbatim from `NOW.md`'s {where} on {today} by "
-        f"`scripts/now_trim.py` to keep it under {NOW_LIMIT:,} bytes (W2.12). Earlier moves are listed "
-        "in `NOW.md`'s \"Older lines:\" line as it stood before this one.",
-        "",
-    ]
+    what = f"Lines moved verbatim from `NOW.md`'s {where}" if moved else "The list of earlier moves, folded out of `NOW.md`'s \"Older lines:\" line,"
+    out = [f"> **Historical.** {what} on {today} by `scripts/now_trim.py` to keep it under {NOW_LIMIT:,} bytes (W2.12).", ""]
     for heading in SECTIONS:
         if heading in moved:
             out += [f"From {heading[3:]}:", ""] + moved[heading] + [""]
+    if earlier:
+        out += ["Earlier moves, newest first:", ""] + [f"- {p}" for p in earlier] + [""]
     return eol.join(lines), name, eol.join(out)
 
 
