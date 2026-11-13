@@ -577,7 +577,7 @@ CAPTION_PLACEMENTS = ('lower', 'centre', 'upper')
 ENERGIES = ('calm', 'medium', 'high')
 TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch')
 CAMERAS = ('none', 'drift', 'phased', 'punch')
-LAYOUTS = ('house', 'fill', 'stack')
+LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray')
 
 
 def caption_props(spec: dict) -> dict:

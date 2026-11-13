@@ -263,7 +263,7 @@ export const ProductionSpecV2Schema = z.object({
     camera: z.object({ move: z.enum(['none', 'drift', 'phased', 'punch']), hits: z.boolean().optional(), reason: z.string().min(1) }).strict().optional(),
     energy: z.enum(['calm', 'medium', 'high']).optional(),
     // How a graphics-only beat uses the frame (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the use of the screen space is terrible").
-    layout: z.object({ mode: z.enum(['house', 'fill', 'stack']), reason: z.string().min(1) }).strict().optional(),
+    layout: z.object({ mode: z.enum(['house', 'fill', 'stack', 'band', 'stage', 'tray']), reason: z.string().min(1) }).strict().optional(),
   }).catchall(z.unknown()).optional(),
   max_face_share: z.number().min(0).max(1).optional(),
   character: VeCharacterSchema.optional(),
