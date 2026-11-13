@@ -80,6 +80,8 @@ jobs:
             echo "Written by .github/workflows/signoff-apply.yml from his presses on the To review cards of his Publish Board, each bound to the sha256 of the sample he saw. Nothing is approved on his behalf."
             echo
             echo "Ruling (Krish, 2026-11-12): the three video sign-offs are one review card each on his board, with samples, and only his presses write the configs."
+            echo
+            echo "Closeout: not needed, a config write from his own presses, which the To review cards on his board show as written."
           } > .ve-signoff.msg
           git commit -q -F .ve-signoff.msg
           # The checkout kept no credential, so the token is passed to this one push only.
