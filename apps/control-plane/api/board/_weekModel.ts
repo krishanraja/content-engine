@@ -4,6 +4,7 @@ import type { MoveSpec } from './_offdayItems.js'
 import type { PressAction, ViewOption } from './_viewExtras.js'
 import type { Action, DayView } from './_view.js'
 import { makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
+import type { DayStyle, StyleLayer } from './_style.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
 //
@@ -171,6 +172,35 @@ export interface ModelInputs {
   heldPieces?: Array<{ day: PostedDay; piece: Body; press: PressAction }>
   /** The pieces a signed narrative lock of the week names (_view.ts lockOf: a lock follows its piece, not its day). */
   signedLocks?: string[]
+  /** The look choices of a piece on a day that is not its series day, by piece id (_view.ts placedStyles). */
+  placedStyles?: Record<string, DayStyle>
+}
+
+/** One layer of his production pick as one press: the options with the recommended first and marked, the one he picked
+ *  marked, nothing he said Not this to. Treatment posts to the look route, motion and captions to the style route. */
+function layerPress(pieceId: string, style: DayStyle, layer: 'treatment' | 'motion' | 'captions'): PressAction | null {
+  const L: StyleLayer = style[layer]
+  const opts = L.options.filter(o => !o.rejected)
+  if (!opts.length) return null
+  const ordered = [...opts].sort((a, b) => Number(b.id === L.picked) - Number(a.id === L.picked) || Number(b.recommended) - Number(a.recommended))
+  const options = ordered.map(o => ({ value: o.id, label: `${o.name}${o.id === L.picked ? ' (picked)' : o.recommended ? ' (recommended)' : o.ready === false ? ' (not ready yet)' : ''}` }))
+  const word = { treatment: 'the look', motion: 'the motion style', captions: 'the captions' }[layer]
+  const op = layer === 'treatment' ? 'look' : 'style'
+  const path = layer === 'treatment' ? 'production' : layer
+  // The option's own Yes press, without the choice itself: a look keeps his experiment and inspiration (_style.ts).
+  const yes = (opts[0] as { presses?: { yes?: { body?: Record<string, unknown> } } }).presses?.yes?.body
+  const body: Record<string, unknown> = { ...(yes || {}), piece_id: pieceId }
+  delete body[path]
+  return { kind: 'press', label: `${L.picked ? 'Change' : 'Pick'} ${word}`, op, body, stamp: [],
+    choose: { path, ask: layer === 'treatment' ? 'Which look?' : layer === 'motion' ? 'Which motion style?' : 'Which captions?', multi: false, required: true, options },
+    done: `Picked. It is ${word} for this piece.` } as PressAction
+}
+/** His production pick for a piece, before a take is recorded: the look, the motion style and the captions, each one
+ *  press through the engine's own look and style routes (Krish, 2026-11-13: "just need to pick and lock down the rest
+ *  of the production before I get recording"). Empty once a take is recorded or nothing can be chosen. */
+export function lookPresses(pieceId: string, style: DayStyle | null | undefined): PressAction[] {
+  if (!style) return []
+  return (['treatment', 'motion', 'captions'] as const).map(l => layerPress(pieceId, style, l)).filter((x): x is PressAction => Boolean(x))
 }
 
 /**
@@ -349,20 +379,15 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   if (decision && !missed) return { ...base, line, next: decision, decision: true }
   const live = d.actions.find(a => isLive(a, { piece_id: d.piece_id! }))
   if (live && (missed || d.who === 'growth')) return { ...base, line, next: { ...live, label: "It's live" } as Action, decision: false }
-  // His production pick: the look, one press with the looks to choose from (POST /api/board/<Monday>/look), his
-  // decision for the day; the Claude prompt for a mock stays in the read sheet.
-  const looks = d.path?.look.options ?? []
-  if (d.path?.current === 'look' && looks.length && !missed) {
-    const rec = d.path.look.recommended.production?.id ?? null
-    const ordered = [...looks].sort((a, b) => Number(b.id === rec) - Number(a.id === rec))
-    const pick: PressAction = { kind: 'press', label: 'Pick the look', op: 'look', body: { piece_id: d.piece_id, experiment: null, inspiration: [] }, stamp: [],
-      choose: { path: 'production', ask: 'Which look?', multi: false, required: true, options: ordered.map(o => ({ value: o.id, label: o.id === rec ? `${o.name} (recommended)` : o.name })) },
-      done: 'Look picked. Next: record both cuts from your Teleprompter.' }
-    return { ...base, line, next: pick as Action, decision: true }
-  }
+  // His production pick, before a take is recorded: the look, the motion style and the captions, each one press (the
+  // engine's look and style routes). At the look step the look is his decision for the day; at any earlier step the
+  // three wait in the read sheet, so he can pick before or after he signs the lock.
+  const recorded = isDone('record') || isDone('cut') || out
+  const picks = recorded || missed ? [] : lookPresses(d.piece_id, d.path?.style)
+  if (d.path?.current === 'look' && picks.length) return { ...base, line, next: picks[0] as Action, decision: true, others: picks.slice(1) }
   const lead = d.actions[0]
-  if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) return { ...base, line, next: lead, decision: false }
-  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next'), decision: false }
+  if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) return { ...base, line, next: lead, decision: false, others: picks }
+  return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next'), decision: false, others: picks }
 }
 
 /** A piece his approval holds on a day that is not the day's own piece (moved there, or kept alongside). */
@@ -380,7 +405,8 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
     stories_planned: null, others: [] as PressAction[] }
   const line = out ? 'Live.' : missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.`
     : `${branded ? 'Branded: its narrative lock is signed' : 'Approved'} for ${d.label}. Its make picks up from where it is.`
-  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, branded ? 'look' : 'next'), decision: false }
+  const picks = out || missed ? [] : lookPresses(p.id, m.placedStyles?.[p.id])
+  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, branded ? 'look' : 'next'), decision: false, others: picks }
 }
 
 /** An approved off-day post on the board: its kind, its path, where it is and its one next action. */

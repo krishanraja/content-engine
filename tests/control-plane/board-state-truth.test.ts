@@ -270,3 +270,57 @@ describe('a post scheduled after its day says when it goes, never Missed', () =>
     expect(model(v, 'fri').items.find(i => i.key === 'off-fri-beststicker')).toMatchObject({ missed: true })
   })
 })
+
+describe('his production pick on every piece before recording: the look, the motion style and the captions, each one press', () => {
+  const MON = '8287846b-6618-4a19-9fb8-23ad4eca2718', WED = 'db9f9f6a-1092-49be-8024-f335e060305a', TUE = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118'
+  const mod = (id: string, name: string, extra: Body = {}) => ({ id, name, how: `${name}.`, rules: [], point_types: ['claim'], formats: ['long_video', 'short_video'], fits: 'often', krish_verdict: '', ve_route: ['ve'], ...extra })
+  const motion = [mod('swiss-kinetic-type', 'Swiss grid'), mod('ladder', 'The Ladder', { ve_route: ['needs_device'], krish_verdict: 'liked' }), mod('character-ai-receipts', 'Receipts on the ink desk', { fits: 'sometimes' })]
+  const looks = [{ id: 'face-with-proof', name: 'Face with proof', pitch: 'x', status: 'live' }, { id: 'fry-talking-head', name: 'The lit talking head', pitch: 'x', status: 'live' }]
+  const LOCK = `# Narrative lock\n\npiece_id: ${MON}\n\nThe arc.\n\nSigned by Krish: "signed", 2026-11-10`
+  const piece = (id: string, date: string, slot: string, meta: Body = {}) => ({ id, idea: `Piece ${id.slice(0, 4)}`, thesis: 'x', scheduled_for: date, lane_slot: slot, state: 'drafting', buried_at: null, body: '', updated_at: '2026-11-13T22:00:00Z', meta })
+  const inputs = (monMeta: Body = {}): ViewInputs => ({
+    week: W16, now: new Date('2026-11-14T08:00:00Z'),
+    pieces: [piece(MON, '2026-11-16', 'follow_the_money', monMeta), piece(WED, '2026-11-18', 'under_the_hood'), piece(TUE, '2026-11-17', 'mind_the_gap')],
+    picks: [], queue: [], history: [], runs: {}, north_star: null,
+    ideas: { days: {
+      mon: [{ id: MON, so_what: 'x', style: { production: 'face-with-proof', motion: 'character-ai-receipts', captions: 'receipt-chip' } }],
+      wed: [{ id: WED, so_what: 'x', style: { production: 'fry-talking-head' } }],
+      fri: [{ id: TUE, so_what: 'x', style: { production: 'face-with-proof', motion: 'ladder', captions: 'art-directed' } }],
+    } },
+    locks: { mon: LOCK }, motion, formats: { production: looks, script: [] },
+    approvals: [approval(W16, 'mon', MON), approval(W16, 'wed', WED), approval(W16, 'tue', TUE)], items: [], all_items: [], plans: {},
+  } as unknown as ViewInputs)
+  const labels = (a: any) => a.choose.options.map((o: Body) => o.label)
+  it('Mon 16 at its look: Pick the look leads, the motion style and the captions wait beside it, the plan\'s picks first and marked', () => {
+    const it = model(buildView(inputs()), 'mon').items[0]
+    expect(it.next).toMatchObject({ kind: 'press', op: 'look', label: 'Pick the look', body: { piece_id: MON, experiment: null, inspiration: [] }, choose: { path: 'production' } })
+    expect(labels(it.next)[0]).toBe('Face with proof (recommended)')
+    expect(it.others.map(a => [a.label, (a as any).op, (a as any).choose.path])).toEqual([['Pick the motion style', 'style', 'motion'], ['Pick the captions', 'style', 'captions']])
+    expect(labels(it.others[0])).toEqual(['Receipts on the ink desk (recommended)', 'Swiss grid', 'The Ladder (not ready yet)'])
+    expect((it.others[0] as any).body).toEqual({ piece_id: MON })
+    expect(labels(it.others[1])[0]).toMatch(/\(recommended\)$/)
+    expect((it.others[1] as any).choose.options[0].value).toBe('receipt-chip')
+  })
+  it('Wed 18 before its lock is signed: the step stays the lock, and the three picks wait in the read sheet', () => {
+    const it = model(buildView(inputs()), 'wed').items[0]
+    expect(it.next).not.toMatchObject({ op: 'look' })
+    expect(it.decision).toBe(false)
+    expect(it.others.map(a => a.label)).toEqual(['Pick the look', 'Pick the motion style', 'Pick the captions'])
+    expect(labels(it.others[0])[0]).toBe('The lit talking head (recommended)')
+  })
+  it('Tue 17\'s moved piece has the same three picks, from its own row in the plan', () => {
+    const it = model(buildView(inputs()), 'tue').items.find(x => x.piece_id === TUE)!
+    expect(it.others.map(a => a.label)).toEqual(['Pick the look', 'Pick the motion style', 'Pick the captions'])
+    expect((it.others[1] as any).body).toEqual({ piece_id: TUE })
+    expect(labels(it.others[1])[0]).toBe('The Ladder (recommended)')
+  })
+  it('once picked it says so and offers a change; once a take is recorded, no pick is offered', () => {
+    const picked = model(buildView(inputs({ look: { production: 'face-with-proof', experiment: 'data-story', inspiration: ['a'], at: '2026-11-14T09:00:00Z' }, style: { motion: 'ladder', at: '2026-11-14T09:00:00Z' } })), 'mon').items[0]
+    const look = picked.others.find(a => /the look/.test(a.label)) as any
+    expect(look.label).toBe('Change the look')
+    expect(look.body).toEqual({ piece_id: MON, experiment: 'data-story', inspiration: ['a'] })
+    expect(labels(look)[0]).toBe('Face with proof (picked)')
+    const rec = model(buildView(inputs({ making: { recordings: [{ cut: 'long', at: '2026-11-14T10:00:00Z' }, { cut: 'short', at: '2026-11-14T10:10:00Z' }] } })), 'mon').items[0]
+    expect(rec.others).toEqual([])
+  })
+})
