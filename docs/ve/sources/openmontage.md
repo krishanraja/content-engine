@@ -10,18 +10,17 @@ and the handoff asked for OpenMontage to be explored and integrated where it ser
 (8 Nov 2026), 2,285 files. It was read in a scratch clone and nothing was run from it. No copy lives in this
 repository.
 
-## Licence: GNU AGPL-3.0. Read it, do not vendor it
+## Licence: GNU AGPL-3.0, and Krish allows its code (Ruling, 13 Nov 2026)
 
-- The whole repository is **AGPL-3.0** (`LICENSE`, README badge). Copying its code into content-engine makes the
-  combined work AGPL. Any part served over a network, such as the control plane on Vercel, would then owe its
-  source to its users.
-- The ideas, numbers, timings and techniques in it are not copyrightable. So ve adopts **behaviour and parameters**,
-  rewritten as ve's own code, and never copies its files. Every adopted entry says `source: "openmontage@fecb9a1"`
-  in its comment or config row. Krish decides if he wants more than this, for example running OpenMontage as a
-  separate tool at arm's length.
+- The whole repository is **AGPL-3.0** (`LICENSE`, README badge).
+- **Ruling (Krish, 2026-11-13): "you are allowed the code, no issues at all."** ve may copy and adapt OpenMontage
+  code, not only its ideas and numbers.
+- Each copied file keeps its origin in a header comment, `source: "openmontage@fecb9a1"` and the file it came from, so
+  the AGPL origin stays visible.
+- The first pass (13 Nov) adopted behaviour and numbers only, rewritten as ve's own code. That stays as it is.
 - **Vendored inside it:**
   - The 12 HyperFrames skills (HeyGen's `hyperframes`, v0.7.17; `.agents/skills/hyperframes/PROVENANCE.md`). Their
-    upstream licence was **not checked here**; check it before adopting anything word for word.
+    upstream licence was **not checked here**; Krish's ruling covers OpenMontage's own code.
   - 18 Pixabay sound effects (`hyperframes-media/assets/sfx`, Pixabay Content Licence). Under the house rule they
     are not ours to use until Krish files them in `1 Brand kit (permanent)` (AGENTS.md, "Drive folders are
     load-bearing").
@@ -131,7 +130,7 @@ ve already has 15 caption styles on one kit (`apps/renderer/src/engine/captions/
 
 ## What ve adopts, and where
 
-Rewritten as ve's own code; each item names its source.
+Rewritten as ve's own code on 13 Nov; each item names its source. Code may be copied from now on (the ruling above).
 
 | From OpenMontage | Into ve | Status |
 |---|---|---|

@@ -60,7 +60,7 @@ export function motionProfile(): MotionProfile | undefined { return active.profi
 /** Read at call time, so every device follows the active profile with no rewrite. */
 export const ENTER = (t: number): number => active.enter(t)
 export const HERO = (t: number): number => active.hero(t)
-/** The pop a logo lands with: the house back curve, or the profile's own overshoot (never past 6%). */
+/** The pop a logo lands with: the house back curve, or the profile's own overshoot (never past the floor's 12%). */
 export const BACK = (t: number): number => active.back(t)
 export const MOTION: Motion = {
   get enterFrames() { return active.motion.enterFrames },

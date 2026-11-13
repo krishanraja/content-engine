@@ -106,12 +106,10 @@ The other eight new caption styles were designed from his style references, stud
 
 All eleven were built, then reviewed by a separate reader from rendered stills, fixed, and reviewed again.
 
-**The signed motion floor and his own cuts disagree.** The floor (`docs/ve/MOTION_STANDARD.md`, signed 3 Nov) sets
-an entrance travel of 40 to 60 px, overshoot of at most 6%, and 4 to 7 frames. His cuts go outside it:
-- the AI music cut slams about 500 px with about 12% overshoot over 10 frames;
-- the Character.ai cut's type travels 0 px (it fades or blurs in only).
-
-The three profiles therefore sit inside the floor, and the floor is his to change.
+**The floor widened to admit his cuts (Ruling, Krish, 13 Nov 2026: "yes it should").** An entrance now settles in
+4 to 10 frames, travels 0 to 500 px and overshoots at most 12% (`docs/ve/MOTION_STANDARD.md`). So `ai-music-slam`
+slams 500 px with 12% overshoot over 10 frames, and `character-ai-receipts` lands with 0 px travel over 9 frames, as
+their cuts do.
 
 ## What is still open
 
@@ -126,4 +124,4 @@ The three profiles therefore sit inside the floor, and the floor is his to chang
 - **The 3D devices** (`ladder_stage`, `living_screen`) keep `needs_device`. They render over these ingredients like
   any device, but are not retried until the layout ingredient lets them fill the frame.
 
-Sources: `docs/ve/sources/openmontage.md` (what was adopted, behaviour only, AGPL code not copied).
+Sources: `docs/ve/sources/openmontage.md` (what was adopted; Krish allows its code, Ruling 13 Nov 2026).
