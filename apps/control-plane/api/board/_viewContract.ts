@@ -11,7 +11,7 @@ import { createHash } from 'node:crypto'
 // not know. tests/control-plane/board-view-contract.test.ts validates every view built against the schema, and
 // scripts/check-view-contract.ts (npm run check:view-contract) fails a breaking change that is not a major bump.
 
-export const VIEW_CONTRACT_VERSION = '1.13.0'
+export const VIEW_CONTRACT_VERSION = '1.14.0'
 
 /** The view's entity tag: what it says, never when it was read, so a read that finds nothing new answers 304. */
 export function viewEtag(view: Record<string, unknown>): string {

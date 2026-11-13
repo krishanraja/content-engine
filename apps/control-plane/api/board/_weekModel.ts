@@ -169,6 +169,8 @@ export interface ModelInputs {
   pieces: Body[]
   /** Pieces held off a day by the gate that no option offers, each with its Approve. */
   heldPieces?: Array<{ day: PostedDay; piece: Body; press: PressAction }>
+  /** The pieces a signed narrative lock of the week names (_view.ts lockOf: a lock follows its piece, not its day). */
+  signedLocks?: string[]
 }
 
 /**
@@ -322,8 +324,11 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const stage = (k: string) => d.path?.stages.find(s => s.key === k)
   const out = d.who === 'done' || p.stage?.state === 'live'
   const flags = [isDone('story'), isDone('look'), isDone('board'), stage('after_recording')?.state === 'done' || isDone('cut'), out]
-  for (let k = flags.length - 1; k > 0; k--) if (flags[k]) flags[k - 1] = true
-  const done = flags.filter(Boolean).length
+  // A later step done means the ones before are too, except that scripts agreed (board) never mark the look picked: the
+  // view's own steps already carry that (_view.ts), so only a take recorded or a piece out reaches back past the look.
+  for (let k = flags.length - 1; k > 0; k--) if (flags[k] && k !== 2) flags[k - 1] = true
+  // A path is a prefix: scripts agreed before the look leave the piece at Fleshed out until he picks it (_view.ts).
+  const done = Math.max(0, flags.findIndex(f => !f)) || (flags.every(Boolean) ? flags.length : 0)
   const when = [stage('agreed')?.when ?? null, stage('flesh_out')?.when ?? null, null, stage('after_recording')?.when ?? null, out ? (p.stage?.at?.slice(0, 10) ?? d.date) : null]
   const path = steps(PIECE_PATH, done, when)
   const missed = d.who === 'missed'
@@ -344,6 +349,17 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   if (decision && !missed) return { ...base, line, next: decision, decision: true }
   const live = d.actions.find(a => isLive(a, { piece_id: d.piece_id! }))
   if (live && (missed || d.who === 'growth')) return { ...base, line, next: { ...live, label: "It's live" } as Action, decision: false }
+  // His production pick: the look, one press with the looks to choose from (POST /api/board/<Monday>/look), his
+  // decision for the day; the Claude prompt for a mock stays in the read sheet.
+  const looks = d.path?.look.options ?? []
+  if (d.path?.current === 'look' && looks.length && !missed) {
+    const rec = d.path.look.recommended.production?.id ?? null
+    const ordered = [...looks].sort((a, b) => Number(b.id === rec) - Number(a.id === rec))
+    const pick: PressAction = { kind: 'press', label: 'Pick the look', op: 'look', body: { piece_id: d.piece_id, experiment: null, inspiration: [] }, stamp: [],
+      choose: { path: 'production', ask: 'Which look?', multi: false, required: true, options: ordered.map(o => ({ value: o.id, label: o.id === rec ? `${o.name} (recommended)` : o.name })) },
+      done: 'Look picked. Next: record both cuts from your Teleprompter.' }
+    return { ...base, line, next: pick as Action, decision: true }
+  }
   const lead = d.actions[0]
   if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) return { ...base, line, next: lead, decision: false }
   return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next'), decision: false }
@@ -353,13 +369,18 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
 function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number]): ModelItem {
   const row = m.pieces.find(x => String(x.id).toLowerCase() === p.id) ?? null
   const out = p.published || p.stage?.state === 'live'
-  const where = out ? { key: 'live', label: 'Live' } : { key: 'approved', label: 'Approved' }
+  // Its signed narrative lock comes with it (a lock follows its piece, not its day), so a piece moved to another day
+  // keeps Branded; and a day that passed with it not out says it was missed, like every other item.
+  const branded = (m.signedLocks || []).includes(p.id)
+  const done = out ? PIECE_PATH.length : branded ? 1 : 0
+  const missed = !out && d.date < m.today
   const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
-    title: cut(p.title, 200), approved: p.approval?.label ?? null, stage: where, path: steps(PIECE_PATH, out ? PIECE_PATH.length : 0), missed: false,
+    title: cut(p.title, 200), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
     read: readOf(null, { row }), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
     stories_planned: null, others: [] as PressAction[] }
-  const line = out ? 'Live.' : `Approved for ${d.label}. Its make picks up from where it is.`
-  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, 'next'), decision: false }
+  const line = out ? 'Live.' : missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.`
+    : `${branded ? 'Branded: its narrative lock is signed' : 'Approved'} for ${d.label}. Its make picks up from where it is.`
+  return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, branded ? 'look' : 'next'), decision: false }
 }
 
 /** An approved off-day post on the board: its kind, its path, where it is and its one next action. */
@@ -408,12 +429,17 @@ function ideaLine(o: ViewOption): { why: ModelIdea['why']; line: string } | null
   return null
 }
 
-function dayLine(d: ModelDay, done: boolean): string {
+/** A day's one line. Done only when every item on it is live: on Fri 13 Nov the piece was out and the day said "Done:
+ *  everything on it is live" while two approved posts on it were not. */
+export function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string {
   if (!d.items.length) return d.ideas ? `Nothing approved for ${d.label} yet. Its ideas are on the ideas board.` : `Nothing approved for ${d.label}.`
   if (d.decisions) return `${d.decisions === 1 ? 'One decision' : `${d.decisions} decisions`} for you.`
   if (d.items.some(i => i.missed)) return `Missed: ${d.label} passed and not everything on it is marked live.`
-  if (done || d.items.every(i => i.stage.key === 'live')) return 'Done: everything on it is live.'
-  return `${d.items.length === 1 ? 'One item' : `${d.items.length} items`} in progress.`
+  const live = d.items.filter(i => i.stage.key === 'live').length
+  if (live === d.items.length) return 'Done: everything on it is live.'
+  const rest = d.items.length - live
+  const going = `${rest === 1 ? 'One item' : `${rest} items`} in progress.`
+  return live ? `${live} of ${d.items.length} live. ${going}` : going
 }
 
 /** The week model from the view's days (already gated and staged from the records). Pure. */
@@ -442,16 +468,29 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
     }
     const day: ModelDay = { day: d.day, date: d.date, label: d.label, series: SERIES_DAYS.includes(d.day) ? d.series : null, items,
       decisions: items.filter(i => i.decision).length, ideas: ideas.filter(x => x.day === d.day).length, line: '' }
-    day.line = dayLine(day, d.who === 'done')
+    day.line = dayLine(day)
     return day
   })
+  // What no longer waits on him leaves the ideas board (Krish, 2026-11-13: the board shows "the current state of affairs
+  // on what needs to be done"): an idea for a day that has passed, and an idea that is the same post as an item already
+  // out or scheduled on a day (Thu 12 Nov's "POV: your AI agent..." still asked for his Approve after the one post went
+  // out on Fri 13). The plan keeps every one; only the board stops asking.
+  const goneOut = new Set(out.flatMap(md => md.items.filter(it => it.item && (it.stage.key === 'live' || it.stage.key === 'scheduled')).map(it => it.item!)))
+  const twinOf = new Map(days.flatMap(d => d.options.filter(o => o.same_post?.item).map(o => [o.doc_id, o.same_post!.item] as const)))
+  const waiting = ideas.filter(i => i.date >= m.today && !goneOut.has(twinOf.get(i.doc_id) ?? ''))
+  if (waiting.length !== ideas.length) {
+    for (const md of out) {
+      md.ideas = waiting.filter(x => x.day === md.day).length
+      md.line = dayLine(md)
+    }
+  }
   return {
     version: 1,
     kinds: [...OFFDAY_KINDS.map(k => ({ key: k.key, label: k.label })), { key: PIECE_KIND.key, label: PIECE_KIND.label }],
     piece_path: PIECE_PATH.map(s => ({ key: s.key, label: s.label })),
     post_path: POST_PATH.map(s => ({ key: s.key, label: s.label })),
     days: out,
-    ideas,
+    ideas: waiting,
   }
 }
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i

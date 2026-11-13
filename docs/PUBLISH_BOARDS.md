@@ -396,6 +396,45 @@ post.
 
 Held by `tests/offday-one-post-db.mjs` (the migration on PGlite, in CI) and `tests/control-plane/board-one-post.test.ts`.
 
+## The current state, and nothing stale (Krish, 2026-11-13)
+
+Krish, 2026-11-13: the Publish Board "fully up to date with no glitches, errors, duplicates, or fragmentation in the data
+pipeline", showing "the current state of affairs on what needs to be done". Five rules, each from a glitch the live board
+showed that day (`tests/control-plane/board-state-truth.test.ts`):
+
+- **A day is Done only when every item on it is live** (`dayLine`). Fri 13 Nov said "Done: everything on it is live"
+  because its piece was out, while two approved posts on it were not. A day with some out says "1 of 3 live. 2 items in
+  progress."
+- **The ideas board asks only what still waits on him.** An idea for a day that has passed, and an idea that is the same
+  post as an item already out or scheduled, leave `model.ideas` (Thu 12's "POV: your AI agent..." still asked for his
+  Approve after the one post went out on Fri 13). The plan keeps every one; only the board stops asking.
+- **A narrative lock follows its piece, never its day** (`lockOf`, the lock's `piece_id:` line). On 13 Nov Fri 20's piece
+  was replaced and moved to Tue 17 (his words, in the session: "chose Tue 17 Nov for the data-centre piece"); the new Fri
+  20 piece read as Branded from the lock he signed for the one that left, and the moved piece lost it. A piece moved to
+  another day keeps its lock and says it was missed when its day passes.
+- **A send Buffer recorded closes its item by itself.** Control Centre's done-check sweep (`DONE_CHECKS.buffer_sent`,
+  ADR-036) reads Buffer's sent and scheduled posts on the seven Make Your Mind Up channels and reports each one it can tie
+  to an approved off-day item to `POST /api/board/<Monday>/offday-posts` as `client: done_check, check: buffer_sent`.
+  Each post keeps `check: buffer_sent` and its Buffer post id as the proof (the public link where Buffer gives one; a live
+  post with no link is taken from a check only by its Buffer id), Growth's own entry on a channel always wins, a replay
+  writes nothing, and the day says "Live on Instagram, Facebook. Buffer shows it sent, Tue 10 Nov, 12:34". Until then a
+  post a session scheduled by hand in Buffer never reached the board: Growth's `board posts` reports only the posts its own
+  derived slots made (it reported 0 on 13 Nov while Buffer had sent four of the week's posts).
+- **Scripts agreed before the production pick never skip it** (Krish, 2026-11-13: "I've already agreed the scripts for
+  Monday, Wednesday, and Friday and just need to pick and lock down the rest of the production before I get recording").
+  Until a take is recorded, a piece with its scripts approved and no look is at its look: the card says "Branded. Scripts
+  approved. Pick the look", and its one action is the press **Pick the look** (contract 1.14.0, `op: look`, `POST /api/board/<Monday>/look`,
+  his login, the looks to choose from with the recommended one first), his decision for the day. Once picked, the next
+  step is recording from his Teleprompter. A take already recorded is never sent back to the look.
+- **A post scheduled after its day says when it goes, never Missed** (`postedStage`): Fri 13's "Your AI thinks it's the
+  best" was scheduled in Buffer for Tue 17, so its card says "Scheduled on Instagram, X for Tue 17 Nov, 08:30, after its
+  day (Fri 13 Nov)". Its day on the board moves only with his Move to…. A schedule whose time passed with no send is
+  missed, as before.
+- **His approval in a session reaches the record.** Every copied prompt for a piece now says to file his typed approval
+  of the lock or the scripts at once with `board_session.py <piece> approve lock|scripts` (`APPROVAL_RULE`): on 13 Nov he
+  had agreed Mon 16's and Wed 18's stories and scripts in sessions, and the board said "No approved scripts are filed yet",
+  because the approvals stayed in the chats and in draft files the board never reads.
+
 ## Replacing a day's piece, and Move to… on a series piece (contract 1.13.0)
 
 Krish, 13 Nov 2026, on the live board, trying to put "The Great Recount" on Fri 20 and bring Fri 20's data-centre piece

@@ -2377,7 +2377,8 @@ How an off-day post is made, said once for every prompt the board copies out (th
 - `type PostState = 'made' | 'scheduled' | 'live' | 'cancelled'`
 - `interface GrowthPost`
 - `interface OffdayItem`
-- `function growthPost(v: unknown): GrowthPost | null`
+- `const POST_CHECKS`
+- `function growthPost(v: unknown, check: string | null = null): GrowthPost | null`
 - `const itemKey = (source: 'engine' | 'growth', week: string, id: string) =>`
 - `const mondayOf = (d: string) =>`
 - `const dayKeyOf = (d: string) =>`
@@ -2674,6 +2675,8 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface ViewInputs`
 - `function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost…`
 - `function lockBodyHash(text: string): string`
+- `function lockPieceId(text: string | null | undefined): string | null`
+- `function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: string): { text: string; day: PostedDay } | null`
 - `type Typed = { words: string; said_where: string; said_at: string }`
 - `function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: st…`
 - `function inYourWords(words: string, on: string | null, where?: string | null): string`
@@ -2747,6 +2750,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
 - `function offdayHead(route: MakeRoute | null): string`
 - `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
 - `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
 - `function modelProblems(model: WeekModel, days: DayView[]): string[]`
 
@@ -2757,6 +2761,7 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const WRITE_BACK_HEAD`
 - `const RESEARCH_RULE`
 - `const WALLS`
+- `const APPROVAL_RULE`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`

@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.13.0",
+ "contract_version": "1.14.0",
  "week": "2026-11-09",
  "as_of": "2026-11-13T15:00:00.000Z",
  "days": [
@@ -91,9 +91,9 @@
     },
     "prompts": {
      "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nUse primary sources: filings, earnings, regulators, rating agencies and the companies' own pages. Date every figure and mark every estimate as one. Write one Markdown file with: a one-paragraph answer; the ten most surprising facts, each sourced; a table of the main players and the numbers that matter; what the sceptics and the believers each say; and the open questions. Follow the evidence where it goes, and if the real story differs from the idea, say so first.",
-     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-mon.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-mon.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id b358e788-209f-427b-a84d-1f79a8ebb430, Monday 2026-11-09, the follow.the.money series.\nThe idea: When an AI app millions of people loved goes bust, who walks away with the money?\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-mon.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id b358e788-209f-427b-a84d-1f79a8ebb430, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id b358e788-209f-427b-a84d-1f79a8ebb430. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id b358e788-209f-427b-a84d-1f79a8ebb430, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py b358e788-209f-427b-a84d-1f79a8ebb430 approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     "storyboard": null,
     "style": {
@@ -655,6 +655,462 @@
            "reject": {
             "layer": "captions",
             "id": "cinematic"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "slam",
+        "name": "Slam",
+        "line": "Every word slams in as it is said, and the words already said stack above it, smaller.",
+        "rules": [
+         "Anton capitals, the newest word largest, the two before it stepping down and dimming",
+         "Each word lands from twice its size with a motion blur and a small turn, in about a sixth of a second",
+         "The stack slides up as the next word lands, filling the band from the bottom",
+         "The key word in the series colour with an ink outline; the fastest caption, one event per word"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "slam"
+          },
+          "done": "Picked. Slam is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "slam"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "georgia-build",
+        "name": "Georgia build",
+        "line": "Small mixed-case words at chest height, one to three at a time, where the typeface shows the stress: Fraunces for small words, Archivo ExtraBold for content, a size up for numbers and names, and Fraunces italic for the key word. Each chunk builds and then cuts hard to the next.",
+        "rules": [
+         "Chunks hold at most 3 words and 16 characters, and a new chunk starts at the key word",
+         "Each chunk stays on screen until the next chunk's first word, with a hard cut and no crossfade",
+         "A word fades in over 2 frames and settles from 1.06 to 1 in 4 frames, with no movement",
+         "All type is cream with the soft lift shadow, and one key word per page is set in Fraunces italic"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "georgia-build"
+          },
+          "done": "Picked. Georgia build is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "georgia-build"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "stair-flash",
+        "name": "Staircase flash",
+        "line": "Anton capitals build a stepped lockup word by word on hard cuts, with small connector words at about half size on the same baseline. The key word lands with a short series-colour streak and then cools to cream under a left-to-right wipe.",
+        "rules": [
+         "Content words are Anton capitals up to 112 px, short stop words are 0.58 of that, and the hero is 1.34 of it, all on one baseline",
+         "Up to 3 rows, each stepping in by 0.9 of the size, and the anchor swaps left, right, left by page",
+         "Words cut on at full opacity and settle from 1.08 to 1 over 3 frames, and only the key word slides 40 px with a channel streak, then is wiped back to cream by 0.3 s",
+         "The page leaves over its last 3 frames on a blur to 12 px and a fade, with no movement"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "stair-flash"
+          },
+          "done": "Picked. Staircase flash is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "stair-flash"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "tuck-stack",
+        "name": "Tuck stack",
+        "line": "Tiny lead words tuck tight above big lowercase-as-said Archivo words, so each phrase sets as a mixed-scale lockup. The key word is a size up in the series colour, and the stack lifts away as the page ends.",
+        "rules": [
+         "Every content word is a head in Archivo ExtraBold up to 118 px, and the stop words before it are its tuck at 0.3 of that size, set tight above its left edge",
+         "A tucked head starts a new row, an untucked head joins the row before if it fits, and closing stop words always join the last row",
+         "Heads fade in over 2 frames, scale from 0.92 and draw their letter-spacing tight from +0.02em to -0.035em over 0.2 s, while tucks fade up from 0.25 and rise 6 px",
+         "Only the key head carries the series colour, and the whole stack rises 24 px and fades over the last 4 frames"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "tuck-stack"
+          },
+          "done": "Picked. Tuck stack is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "tuck-stack"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "anchor-quote",
+        "name": "Quote anchor",
+        "line": "A small running caption of up to three words changes every few words, while the page's hero holds beneath it in big Fraunces capitals between mint curly quotes, staying still across the next pages until a new anchor lands or 3 s pass.",
+        "rules": [
+         "The anchor is the page's hero, or else its key word when that has 5 or more letters. It is the page's one marked word, and the running tier never repeats it.",
+         "The anchor lands at its word with a settle from 1.18x. Its mint quotes close in 2 frames later, and it leaves just before the next anchor is due (quotes slide out, word fades), never later than 3 s.",
+         "The running tier is Archivo Bold as said, in chunks of 3 words at most, each word rising 8 px into place as it is said. The next chunk replaces it with a hard cut.",
+         "The anchor's slot is always kept, so the running tier never moves. lower sits the slot on the band's bottom, upper hangs the running tier from the band's top, and centre centres the pair."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "anchor-quote"
+          },
+          "done": "Picked. Quote anchor is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "anchor-quote"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "rack-focus",
+        "name": "Rack focus",
+        "line": "Focus travels along the line: the word being said is sharp, the words already said slip out of focus, and the hero arrives on its own row in big Anton capitals from a deep blur.",
+        "rules": [
+         "Archivo Bold as said, at most 90 px and at most two support rows. Each word focuses in from a 10 px blur at the frame it is said.",
+         "When the next word starts, the words already said defocus to a 3.5 px blur, 0.55 opacity and 0.97 scale, and stay there.",
+         "The hero (else the key word when it scores 3 or more) gets its own row in Anton capitals at 1.6x, arriving from a 22 px blur at 1.3x. It never defocuses.",
+         "The page racks out to a 16 px blur over its last 4 frames. It is left-aligned in lower and upper and centred in centre, and the whole block is shrunk to fit the band's height."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "rack-focus"
+          },
+          "done": "Picked. Rack focus is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "rack-focus"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "flip-hinge",
+        "name": "Hinge",
+        "line": "Each word swings up into place on a hinge at its baseline, like a card flipped upright, lighting as it faces the camera, and the phrase falls away backward word after word as the page ends.",
+        "rules": [
+         "Archivo Black capitals, centred, at most two rows, with 700 px perspective. Each word turns rotateX from -95 deg to 0 about its baseline over 0.2 s, overshooting about 8 deg, with brightness going 0.55 to 1.",
+         "The key word is in the series colour at 1.1x, on a slightly slower 0.26 s swing. No other word is marked.",
+         "Over the page's last 4 frames the words fall back about their top edge to +90 deg and fade, staggered up to 1 frame apart from the first word.",
+         "lower puts the bottom row on the band's bottom, upper starts at band.top + 10, and centre is centred. Sizes shrink until the page fits two rows and the band's height."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "flip-hinge"
+          },
+          "done": "Picked. Hinge is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "flip-hinge"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "slice",
+        "name": "Slice",
+        "line": "Each Anton capital word arrives cut in two: the top half slides in from the left and the bottom half from the right, and they close on a mint hairline that flashes and fades.",
+        "rules": [
+         "Every word is drawn twice and clipped at its middle; the halves slide in from opposite sides (70 px, 0.16 s, outExpo) and meet on a 3 px mint hairline that draws out from the centre and fades by 0.30 s.",
+         "The key word is in the series colour and comes in wider and slower (120 px, 0.22 s).",
+         "Anton capitals up to 120 px, at most two rows, left-aligned in the lower and upper bands and centred in the centre band; a half never starts past the band's right edge.",
+         "Over the page's last 3 frames the halves part again (40 px each way) and fade."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "slice"
+          },
+          "done": "Picked. Slice is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "slice"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "slot-roll",
+        "name": "Slot Roll",
+        "line": "Letters roll up one after another into their own little windows like a slot reel, and every digit spins through four other digits before it lands on the true one.",
+        "rules": [
+         "Each Anton letter sits in its own 1 em window and rolls up into place (outBack 1.3, 0.16 s), one frame after the last, with the whole word's stagger capped at 0.2 s.",
+         "A digit spins down through four lead digits, fixed by the true digit as (d + 3 + 7j) mod 10, and lands with a blur that clears in 0.2 s, so a still and a render always match.",
+         "The key word is in the series colour with a 1.5-frame stagger; Anton capitals up to 112 px, at most two rows, left-aligned in the lower and upper bands and centred in the centre band.",
+         "Over the page's last 4 frames every letter rolls up out of its window, half a frame apart; a digit that has landed leaves like a letter, so its lead digits never show again."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "slot-roll"
+          },
+          "done": "Picked. Slot Roll is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "slot-roll"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "receipt-chip",
+        "name": "Receipt chip",
+        "line": "Words type onto a till receipt as he says them, in lower-case mono on deep ink, the paper jolting down on every word and the figure printed on a mint fill.",
+        "rules": [
+         "From Krish's Character.ai cut (26 Oct)",
+         "Each word types on in hard steps behind a mint print head, finishing within 4 frames",
+         "Every landing kicks the paper down 10 px and eases back; each new line feeds up out of a cream slot",
+         "At most two lines; the page tears off upward when it ends"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "receipt-chip"
+          },
+          "done": "Picked. Receipt chip is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "receipt-chip"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "ink-block",
+        "name": "Ink block",
+        "line": "The phrase builds word by word on stepped full-width ink slabs, each slab wiping in from the left with a thick series-colour bar drawing under the newest word.",
+        "rules": [
+         "From Krish's eating-its-own-jobs cut (2 Nov)",
+         "Each line is its own slab, the second stepped in like a rung",
+         "Each word rises into its slab with a slight overshoot while the bar draws out to it",
+         "The marked word stays in the series colour; the slabs wipe out to the left when the page ends"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "ink-block"
+          },
+          "done": "Picked. Ink block is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "ink-block"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "mint-word",
+        "name": "Mint word",
+        "line": "One big word at a time slams into its own box, which wipes open just ahead of it; small words sit small, and the key word lands in a mint box.",
+        "rules": [
+         "From Krish's AI music cut (11 Nov)",
+         "Each content word is a 7-frame event: the box wipes open, then box and word slam in from 1.25 times their size and settle",
+         "Small linking words are set at six-tenths of the size",
+         "Only a real hero word turns the box mint"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "captions": "mint-word"
+          },
+          "done": "Picked. Mint word is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+           "reject": {
+            "layer": "captions",
+            "id": "mint-word"
            }
           },
           "done": "Noted. It is not recommended for this piece any more."
@@ -2150,9 +2606,9 @@
     },
     "prompts": {
      "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nUse primary sources: filings, earnings, regulators, rating agencies and the companies' own pages. Date every figure and mark every estimate as one. Write one Markdown file with: a one-paragraph answer; the ten most surprising facts, each sourced; a table of the main players and the numbers that matter; what the sceptics and the believers each say; and the open questions. Follow the evidence where it goes, and if the real story differs from the idea, say so first.",
-     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-wed.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-wed.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, Wednesday 2026-11-11, the under.the.hood series.\nThe idea: AI is already inside the songs people have on repeat, hidden in the credits.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-wed.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id 36886e0b-4b32-473b-be72-b0aef31fccef, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py 36886e0b-4b32-473b-be72-b0aef31fccef approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     "storyboard": null,
     "style": {
@@ -2714,6 +3170,462 @@
            "reject": {
             "layer": "captions",
             "id": "cinematic"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "slam",
+        "name": "Slam",
+        "line": "Every word slams in as it is said, and the words already said stack above it, smaller.",
+        "rules": [
+         "Anton capitals, the newest word largest, the two before it stepping down and dimming",
+         "Each word lands from twice its size with a motion blur and a small turn, in about a sixth of a second",
+         "The stack slides up as the next word lands, filling the band from the bottom",
+         "The key word in the series colour with an ink outline; the fastest caption, one event per word"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "slam"
+          },
+          "done": "Picked. Slam is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "slam"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "georgia-build",
+        "name": "Georgia build",
+        "line": "Small mixed-case words at chest height, one to three at a time, where the typeface shows the stress: Fraunces for small words, Archivo ExtraBold for content, a size up for numbers and names, and Fraunces italic for the key word. Each chunk builds and then cuts hard to the next.",
+        "rules": [
+         "Chunks hold at most 3 words and 16 characters, and a new chunk starts at the key word",
+         "Each chunk stays on screen until the next chunk's first word, with a hard cut and no crossfade",
+         "A word fades in over 2 frames and settles from 1.06 to 1 in 4 frames, with no movement",
+         "All type is cream with the soft lift shadow, and one key word per page is set in Fraunces italic"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "georgia-build"
+          },
+          "done": "Picked. Georgia build is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "georgia-build"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "stair-flash",
+        "name": "Staircase flash",
+        "line": "Anton capitals build a stepped lockup word by word on hard cuts, with small connector words at about half size on the same baseline. The key word lands with a short series-colour streak and then cools to cream under a left-to-right wipe.",
+        "rules": [
+         "Content words are Anton capitals up to 112 px, short stop words are 0.58 of that, and the hero is 1.34 of it, all on one baseline",
+         "Up to 3 rows, each stepping in by 0.9 of the size, and the anchor swaps left, right, left by page",
+         "Words cut on at full opacity and settle from 1.08 to 1 over 3 frames, and only the key word slides 40 px with a channel streak, then is wiped back to cream by 0.3 s",
+         "The page leaves over its last 3 frames on a blur to 12 px and a fade, with no movement"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "stair-flash"
+          },
+          "done": "Picked. Staircase flash is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "stair-flash"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "tuck-stack",
+        "name": "Tuck stack",
+        "line": "Tiny lead words tuck tight above big lowercase-as-said Archivo words, so each phrase sets as a mixed-scale lockup. The key word is a size up in the series colour, and the stack lifts away as the page ends.",
+        "rules": [
+         "Every content word is a head in Archivo ExtraBold up to 118 px, and the stop words before it are its tuck at 0.3 of that size, set tight above its left edge",
+         "A tucked head starts a new row, an untucked head joins the row before if it fits, and closing stop words always join the last row",
+         "Heads fade in over 2 frames, scale from 0.92 and draw their letter-spacing tight from +0.02em to -0.035em over 0.2 s, while tucks fade up from 0.25 and rise 6 px",
+         "Only the key head carries the series colour, and the whole stack rises 24 px and fades over the last 4 frames"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "tuck-stack"
+          },
+          "done": "Picked. Tuck stack is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "tuck-stack"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "anchor-quote",
+        "name": "Quote anchor",
+        "line": "A small running caption of up to three words changes every few words, while the page's hero holds beneath it in big Fraunces capitals between mint curly quotes, staying still across the next pages until a new anchor lands or 3 s pass.",
+        "rules": [
+         "The anchor is the page's hero, or else its key word when that has 5 or more letters. It is the page's one marked word, and the running tier never repeats it.",
+         "The anchor lands at its word with a settle from 1.18x. Its mint quotes close in 2 frames later, and it leaves just before the next anchor is due (quotes slide out, word fades), never later than 3 s.",
+         "The running tier is Archivo Bold as said, in chunks of 3 words at most, each word rising 8 px into place as it is said. The next chunk replaces it with a hard cut.",
+         "The anchor's slot is always kept, so the running tier never moves. lower sits the slot on the band's bottom, upper hangs the running tier from the band's top, and centre centres the pair."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "anchor-quote"
+          },
+          "done": "Picked. Quote anchor is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "anchor-quote"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "rack-focus",
+        "name": "Rack focus",
+        "line": "Focus travels along the line: the word being said is sharp, the words already said slip out of focus, and the hero arrives on its own row in big Anton capitals from a deep blur.",
+        "rules": [
+         "Archivo Bold as said, at most 90 px and at most two support rows. Each word focuses in from a 10 px blur at the frame it is said.",
+         "When the next word starts, the words already said defocus to a 3.5 px blur, 0.55 opacity and 0.97 scale, and stay there.",
+         "The hero (else the key word when it scores 3 or more) gets its own row in Anton capitals at 1.6x, arriving from a 22 px blur at 1.3x. It never defocuses.",
+         "The page racks out to a 16 px blur over its last 4 frames. It is left-aligned in lower and upper and centred in centre, and the whole block is shrunk to fit the band's height."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "rack-focus"
+          },
+          "done": "Picked. Rack focus is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "rack-focus"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "flip-hinge",
+        "name": "Hinge",
+        "line": "Each word swings up into place on a hinge at its baseline, like a card flipped upright, lighting as it faces the camera, and the phrase falls away backward word after word as the page ends.",
+        "rules": [
+         "Archivo Black capitals, centred, at most two rows, with 700 px perspective. Each word turns rotateX from -95 deg to 0 about its baseline over 0.2 s, overshooting about 8 deg, with brightness going 0.55 to 1.",
+         "The key word is in the series colour at 1.1x, on a slightly slower 0.26 s swing. No other word is marked.",
+         "Over the page's last 4 frames the words fall back about their top edge to +90 deg and fade, staggered up to 1 frame apart from the first word.",
+         "lower puts the bottom row on the band's bottom, upper starts at band.top + 10, and centre is centred. Sizes shrink until the page fits two rows and the band's height."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "flip-hinge"
+          },
+          "done": "Picked. Hinge is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "flip-hinge"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "slice",
+        "name": "Slice",
+        "line": "Each Anton capital word arrives cut in two: the top half slides in from the left and the bottom half from the right, and they close on a mint hairline that flashes and fades.",
+        "rules": [
+         "Every word is drawn twice and clipped at its middle; the halves slide in from opposite sides (70 px, 0.16 s, outExpo) and meet on a 3 px mint hairline that draws out from the centre and fades by 0.30 s.",
+         "The key word is in the series colour and comes in wider and slower (120 px, 0.22 s).",
+         "Anton capitals up to 120 px, at most two rows, left-aligned in the lower and upper bands and centred in the centre band; a half never starts past the band's right edge.",
+         "Over the page's last 3 frames the halves part again (40 px each way) and fade."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "slice"
+          },
+          "done": "Picked. Slice is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "slice"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "slot-roll",
+        "name": "Slot Roll",
+        "line": "Letters roll up one after another into their own little windows like a slot reel, and every digit spins through four other digits before it lands on the true one.",
+        "rules": [
+         "Each Anton letter sits in its own 1 em window and rolls up into place (outBack 1.3, 0.16 s), one frame after the last, with the whole word's stagger capped at 0.2 s.",
+         "A digit spins down through four lead digits, fixed by the true digit as (d + 3 + 7j) mod 10, and lands with a blur that clears in 0.2 s, so a still and a render always match.",
+         "The key word is in the series colour with a 1.5-frame stagger; Anton capitals up to 112 px, at most two rows, left-aligned in the lower and upper bands and centred in the centre band.",
+         "Over the page's last 4 frames every letter rolls up out of its window, half a frame apart; a digit that has landed leaves like a letter, so its lead digits never show again."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "slot-roll"
+          },
+          "done": "Picked. Slot Roll is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "slot-roll"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "receipt-chip",
+        "name": "Receipt chip",
+        "line": "Words type onto a till receipt as he says them, in lower-case mono on deep ink, the paper jolting down on every word and the figure printed on a mint fill.",
+        "rules": [
+         "From Krish's Character.ai cut (26 Oct)",
+         "Each word types on in hard steps behind a mint print head, finishing within 4 frames",
+         "Every landing kicks the paper down 10 px and eases back; each new line feeds up out of a cream slot",
+         "At most two lines; the page tears off upward when it ends"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "receipt-chip"
+          },
+          "done": "Picked. Receipt chip is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "receipt-chip"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "ink-block",
+        "name": "Ink block",
+        "line": "The phrase builds word by word on stepped full-width ink slabs, each slab wiping in from the left with a thick series-colour bar drawing under the newest word.",
+        "rules": [
+         "From Krish's eating-its-own-jobs cut (2 Nov)",
+         "Each line is its own slab, the second stepped in like a rung",
+         "Each word rises into its slab with a slight overshoot while the bar draws out to it",
+         "The marked word stays in the series colour; the slabs wipe out to the left when the page ends"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "ink-block"
+          },
+          "done": "Picked. Ink block is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "ink-block"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "mint-word",
+        "name": "Mint word",
+        "line": "One big word at a time slams into its own box, which wipes open just ahead of it; small words sit small, and the key word lands in a mint box.",
+        "rules": [
+         "From Krish's AI music cut (11 Nov)",
+         "Each content word is a 7-frame event: the box wipes open, then box and word slam in from 1.25 times their size and settle",
+         "Small linking words are set at six-tenths of the size",
+         "Only a real hero word turns the box mint"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "captions": "mint-word"
+          },
+          "done": "Picked. Mint word is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+           "reject": {
+            "layer": "captions",
+            "id": "mint-word"
            }
           },
           "done": "Noted. It is not recommended for this piece any more."
@@ -4312,9 +5224,9 @@
     },
     "prompts": {
      "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nUse primary sources: filings, earnings, regulators, rating agencies and the companies' own pages. Date every figure and mark every estimate as one. Write one Markdown file with: a one-paragraph answer; the ten most surprising facts, each sourced; a table of the main players and the numbers that matter; what the sceptics and the believers each say; and the open questions. Follow the evidence where it goes, and if the real story differs from the idea, say so first.",
-     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-fri.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
-     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your best guess, so he can answer in a line. Write the lock to docs/plans/2026-11-09-week/narrative-lock-fri.md (its surface story, deeper story, arc, the fun, the use, his close), and take his signature.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step story). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example story- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"story\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step story\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: make the script and the storyboard together, before he records, so he records the right words in his own voice and every line already has its picture. Two cuts: about 5 minutes and about 90 seconds. Use the look he picked as the spine, and be bold with the visuals: borrow from his inspiration where it makes the point land faster.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nWhen you have it, send him one HTML file with both cuts' scripts side by side with their storyboard frames (rough mock frames are fine), the run time of each cut, and the three lines you are least sure of. His Approve press on the board sends the scripts to his Teleprompter.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step board). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example board- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"board\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step board\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds.",
+     "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by how much AI they used, so they gamed the count.\nThe story so far: Headline: Meta staff were ranked by AI use. They gamed it. Hook: ...\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- the narrative lock: docs/plans/2026-11-09-week/narrative-lock-fri.md (signed by Krish)\n- the look he picked: face-with-proof (config/style-references.json formats)\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe job: show Krish what the look he picked will feel like, before anything is scripted. Run `python scripts/ve.py styles` for this piece on his own footage (his last take of this format when the piece has none yet; never stock footage), and send him the clips side by side with one line each on what it does for this story.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step look). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example look- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"look\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step look\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     "storyboard": null,
     "style": {
@@ -4881,6 +5793,462 @@
           "done": "Noted. It is not recommended for this piece any more."
          }
         }
+       },
+       {
+        "id": "slam",
+        "name": "Slam",
+        "line": "Every word slams in as it is said, and the words already said stack above it, smaller.",
+        "rules": [
+         "Anton capitals, the newest word largest, the two before it stepping down and dimming",
+         "Each word lands from twice its size with a motion blur and a small turn, in about a sixth of a second",
+         "The stack slides up as the next word lands, filling the band from the bottom",
+         "The key word in the series colour with an ink outline; the fastest caption, one event per word"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "slam"
+          },
+          "done": "Picked. Slam is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "slam"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "georgia-build",
+        "name": "Georgia build",
+        "line": "Small mixed-case words at chest height, one to three at a time, where the typeface shows the stress: Fraunces for small words, Archivo ExtraBold for content, a size up for numbers and names, and Fraunces italic for the key word. Each chunk builds and then cuts hard to the next.",
+        "rules": [
+         "Chunks hold at most 3 words and 16 characters, and a new chunk starts at the key word",
+         "Each chunk stays on screen until the next chunk's first word, with a hard cut and no crossfade",
+         "A word fades in over 2 frames and settles from 1.06 to 1 in 4 frames, with no movement",
+         "All type is cream with the soft lift shadow, and one key word per page is set in Fraunces italic"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "georgia-build"
+          },
+          "done": "Picked. Georgia build is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "georgia-build"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "stair-flash",
+        "name": "Staircase flash",
+        "line": "Anton capitals build a stepped lockup word by word on hard cuts, with small connector words at about half size on the same baseline. The key word lands with a short series-colour streak and then cools to cream under a left-to-right wipe.",
+        "rules": [
+         "Content words are Anton capitals up to 112 px, short stop words are 0.58 of that, and the hero is 1.34 of it, all on one baseline",
+         "Up to 3 rows, each stepping in by 0.9 of the size, and the anchor swaps left, right, left by page",
+         "Words cut on at full opacity and settle from 1.08 to 1 over 3 frames, and only the key word slides 40 px with a channel streak, then is wiped back to cream by 0.3 s",
+         "The page leaves over its last 3 frames on a blur to 12 px and a fade, with no movement"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "stair-flash"
+          },
+          "done": "Picked. Staircase flash is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "stair-flash"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "tuck-stack",
+        "name": "Tuck stack",
+        "line": "Tiny lead words tuck tight above big lowercase-as-said Archivo words, so each phrase sets as a mixed-scale lockup. The key word is a size up in the series colour, and the stack lifts away as the page ends.",
+        "rules": [
+         "Every content word is a head in Archivo ExtraBold up to 118 px, and the stop words before it are its tuck at 0.3 of that size, set tight above its left edge",
+         "A tucked head starts a new row, an untucked head joins the row before if it fits, and closing stop words always join the last row",
+         "Heads fade in over 2 frames, scale from 0.92 and draw their letter-spacing tight from +0.02em to -0.035em over 0.2 s, while tucks fade up from 0.25 and rise 6 px",
+         "Only the key head carries the series colour, and the whole stack rises 24 px and fades over the last 4 frames"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "tuck-stack"
+          },
+          "done": "Picked. Tuck stack is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "tuck-stack"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "anchor-quote",
+        "name": "Quote anchor",
+        "line": "A small running caption of up to three words changes every few words, while the page's hero holds beneath it in big Fraunces capitals between mint curly quotes, staying still across the next pages until a new anchor lands or 3 s pass.",
+        "rules": [
+         "The anchor is the page's hero, or else its key word when that has 5 or more letters. It is the page's one marked word, and the running tier never repeats it.",
+         "The anchor lands at its word with a settle from 1.18x. Its mint quotes close in 2 frames later, and it leaves just before the next anchor is due (quotes slide out, word fades), never later than 3 s.",
+         "The running tier is Archivo Bold as said, in chunks of 3 words at most, each word rising 8 px into place as it is said. The next chunk replaces it with a hard cut.",
+         "The anchor's slot is always kept, so the running tier never moves. lower sits the slot on the band's bottom, upper hangs the running tier from the band's top, and centre centres the pair."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "anchor-quote"
+          },
+          "done": "Picked. Quote anchor is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "anchor-quote"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "rack-focus",
+        "name": "Rack focus",
+        "line": "Focus travels along the line: the word being said is sharp, the words already said slip out of focus, and the hero arrives on its own row in big Anton capitals from a deep blur.",
+        "rules": [
+         "Archivo Bold as said, at most 90 px and at most two support rows. Each word focuses in from a 10 px blur at the frame it is said.",
+         "When the next word starts, the words already said defocus to a 3.5 px blur, 0.55 opacity and 0.97 scale, and stay there.",
+         "The hero (else the key word when it scores 3 or more) gets its own row in Anton capitals at 1.6x, arriving from a 22 px blur at 1.3x. It never defocuses.",
+         "The page racks out to a 16 px blur over its last 4 frames. It is left-aligned in lower and upper and centred in centre, and the whole block is shrunk to fit the band's height."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "rack-focus"
+          },
+          "done": "Picked. Rack focus is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "rack-focus"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "flip-hinge",
+        "name": "Hinge",
+        "line": "Each word swings up into place on a hinge at its baseline, like a card flipped upright, lighting as it faces the camera, and the phrase falls away backward word after word as the page ends.",
+        "rules": [
+         "Archivo Black capitals, centred, at most two rows, with 700 px perspective. Each word turns rotateX from -95 deg to 0 about its baseline over 0.2 s, overshooting about 8 deg, with brightness going 0.55 to 1.",
+         "The key word is in the series colour at 1.1x, on a slightly slower 0.26 s swing. No other word is marked.",
+         "Over the page's last 4 frames the words fall back about their top edge to +90 deg and fade, staggered up to 1 frame apart from the first word.",
+         "lower puts the bottom row on the band's bottom, upper starts at band.top + 10, and centre is centred. Sizes shrink until the page fits two rows and the band's height."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "flip-hinge"
+          },
+          "done": "Picked. Hinge is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "flip-hinge"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "slice",
+        "name": "Slice",
+        "line": "Each Anton capital word arrives cut in two: the top half slides in from the left and the bottom half from the right, and they close on a mint hairline that flashes and fades.",
+        "rules": [
+         "Every word is drawn twice and clipped at its middle; the halves slide in from opposite sides (70 px, 0.16 s, outExpo) and meet on a 3 px mint hairline that draws out from the centre and fades by 0.30 s.",
+         "The key word is in the series colour and comes in wider and slower (120 px, 0.22 s).",
+         "Anton capitals up to 120 px, at most two rows, left-aligned in the lower and upper bands and centred in the centre band; a half never starts past the band's right edge.",
+         "Over the page's last 3 frames the halves part again (40 px each way) and fade."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "slice"
+          },
+          "done": "Picked. Slice is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "slice"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "slot-roll",
+        "name": "Slot Roll",
+        "line": "Letters roll up one after another into their own little windows like a slot reel, and every digit spins through four other digits before it lands on the true one.",
+        "rules": [
+         "Each Anton letter sits in its own 1 em window and rolls up into place (outBack 1.3, 0.16 s), one frame after the last, with the whole word's stagger capped at 0.2 s.",
+         "A digit spins down through four lead digits, fixed by the true digit as (d + 3 + 7j) mod 10, and lands with a blur that clears in 0.2 s, so a still and a render always match.",
+         "The key word is in the series colour with a 1.5-frame stagger; Anton capitals up to 112 px, at most two rows, left-aligned in the lower and upper bands and centred in the centre band.",
+         "Over the page's last 4 frames every letter rolls up out of its window, half a frame apart; a digit that has landed leaves like a letter, so its lead digits never show again."
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "slot-roll"
+          },
+          "done": "Picked. Slot Roll is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "slot-roll"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "receipt-chip",
+        "name": "Receipt chip",
+        "line": "Words type onto a till receipt as he says them, in lower-case mono on deep ink, the paper jolting down on every word and the figure printed on a mint fill.",
+        "rules": [
+         "From Krish's Character.ai cut (26 Oct)",
+         "Each word types on in hard steps behind a mint print head, finishing within 4 frames",
+         "Every landing kicks the paper down 10 px and eases back; each new line feeds up out of a cream slot",
+         "At most two lines; the page tears off upward when it ends"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "receipt-chip"
+          },
+          "done": "Picked. Receipt chip is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "receipt-chip"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "ink-block",
+        "name": "Ink block",
+        "line": "The phrase builds word by word on stepped full-width ink slabs, each slab wiping in from the left with a thick series-colour bar drawing under the newest word.",
+        "rules": [
+         "From Krish's eating-its-own-jobs cut (2 Nov)",
+         "Each line is its own slab, the second stepped in like a rung",
+         "Each word rises into its slab with a slight overshoot while the bar draws out to it",
+         "The marked word stays in the series colour; the slabs wipe out to the left when the page ends"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "ink-block"
+          },
+          "done": "Picked. Ink block is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "ink-block"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
+       },
+       {
+        "id": "mint-word",
+        "name": "Mint word",
+        "line": "One big word at a time slams into its own box, which wipes open just ahead of it; small words sit small, and the key word lands in a mint box.",
+        "rules": [
+         "From Krish's AI music cut (11 Nov)",
+         "Each content word is a 7-frame event: the box wipes open, then box and word slam in from 1.25 times their size and settle",
+         "Small linking words are set at six-tenths of the size",
+         "Only a real hero word turns the box mint"
+        ],
+        "recommended": false,
+        "why": null,
+        "sample_url": null,
+        "rejected": false,
+        "presses": {
+         "yes": {
+          "label": "Yes",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "captions": "mint-word"
+          },
+          "done": "Picked. Mint word is the caption style for this piece."
+         },
+         "not_this": {
+          "label": "Not this",
+          "op": "style",
+          "body": {
+           "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+           "reject": {
+            "layer": "captions",
+            "id": "mint-word"
+           }
+          },
+          "done": "Noted. It is not recommended for this piece any more."
+         }
+        }
        }
       ],
       "picked": null,
@@ -5052,12 +6420,12 @@
     {
      "kind": "prompt",
      "label": "Copy prompt for Growth",
-     "prompt": "Post the Friday 2026-11-13 piece f3fcd5e1-573e-4692-a413-db7c5823a10e that Krish approved on the content-engine board (week of 2026-11-09), from its 3 Posts folder.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "prompt": "Post the Friday 2026-11-13 piece f3fcd5e1-573e-4692-a413-db7c5823a10e that Krish approved on the content-engine board (week of 2026-11-09), from its 3 Posts folder.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step post). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example post- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"post\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step post\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     {
      "kind": "prompt",
      "label": "Copy Claude prompt",
-     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by AI use. They gamed it.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe step it is on: Approved in your words. Ready to post: Growth posts it on the day. Once it is out, press It's live with the post's link. Do it, working from the record first.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nShow Krish what you made in one message before anything is sent or published.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step cut). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example cut- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"cut\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step cut\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
+     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, Friday 2026-11-13, the mind.the.gap series.\nThe idea: Meta staff were ranked by AI use. They gamed it.\n\nWhere everything lives:\n- the piece's making record: python3 scripts/post-pack/making.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n- the week's plan, ideas and notes: docs/plans/2026-11-09-week/\n- his production inspiration: GET /api/inspiration/candidates?role=look (newest and never used first)\n\nThe step it is on: Approved in your words. Ready to post: Growth posts it on the day. Once it is out, press It's live with the post's link. Do it, working from the record first.\n\nAim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.\n\nWork freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.\n\nShow Krish what you made in one message before anything is sent or published.\n\nKeep the board current as you work (piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, step cut). Krish sees it live on the Publish Board, and other sessions may be working on this piece at the same time.\n1. First see what is already on file and who else is on it: get_piece_board on the Control Center connector with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e. In a checkout of krishanraja/content-engine: python3 scripts/post-pack/board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e show\n2. Choose a session id once (for example cut- and four random letters) and report with it: report_board_session with piece_id f3fcd5e1-573e-4692-a413-db7c5823a10e, your session_id, step \"cut\" and one plain line, as kind start when you begin, progress at each milestone, and done when you finish (blocked, saying what you need, if you stop). The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e start|progress|done|blocked \"one line\" --session <your id> --step cut\n3. File everything you make or draw on (research, scripts, storyboards, screenshots, links) on the piece with add_piece_material, or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file or text>. Never leave it only in this chat. Read a material with read_piece_material or board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e read <id>.\n4. Research is never left in scratch or a chat: file each research document on the piece as you write it, and when Krish sends a Markdown file, file it on the piece first. Each is copied into his Research library in Drive. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e add <file> --kind research\n5. When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file. The script: board_session.py f3fcd5e1-573e-4692-a413-db7c5823a10e approve lock|scripts (docs/PUBLISH_BOARDS.md, \"His typed approval\")\n6. This Publish Board in Control Centre is the only place to put the work; the old pages at content.krishraja.com/board are retired and redirect here. Never post or publish anything, and never put an idea on the publish board: propose it, and only Krish's Approve places it.\nNothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, and the script uses the engine key this machine already holds."
     },
     {
      "kind": "press",
@@ -7512,7 +8880,7 @@
      }
     ],
     "decisions": 0,
-    "ideas": 1,
+    "ideas": 0,
     "line": "Done: everything on it is live."
    },
    {
@@ -7840,7 +9208,7 @@
      }
     ],
     "decisions": 0,
-    "ideas": 1,
+    "ideas": 0,
     "line": "Missed: Thu 12 passed and not everything on it is marked live."
    },
    {
@@ -8309,378 +9677,6 @@
    }
   ],
   "ideas": [
-   {
-    "doc_id": "off-wed-tablefortwo",
-    "piece_id": null,
-    "day": "wed",
-    "date": "2026-11-11",
-    "kind": "meme",
-    "kind_label": "Meme",
-    "title": "POV: tech leaders getting busted in 5 years from now",
-    "why": "held",
-    "line": "Words from a session say it was decided, but you have not pressed Approve on it here, so it is not on the publish board.",
-    "read": {
-     "so_what": null,
-     "story": null,
-     "why_now": null,
-     "fact": null,
-     "text": "Table for two. One of them runs on a GPU.",
-     "sources": [],
-     "research": [],
-     "said": "Said in a session, not pressed here: Growth filed it for Wed 11 Nov on white; remade on black 12 Nov."
-    },
-    "actions": [
-     {
-      "kind": "press",
-      "label": "Approve for Wednesday 11 Nov",
-      "collection": "queue",
-      "id": "off-wed-tablefortwo",
-      "revision": 0,
-      "body": {
-       "pick": "off-wed-tablefortwo",
-       "use": "offday",
-       "day": "wed",
-       "week": "2026-11-09",
-       "option_id": "tablefortwo",
-       "format": "Meme, 1 image, 4:5",
-       "copy_sha256": "a82e30a11f48fcc1e385253ac283142bf24c8297951cdbee0e521dfa86c445cb",
-       "idea": {
-        "verdict": "approve",
-        "words": null,
-        "sha256": "2ff02a3a768ee2a96166f5f332bd87bc6b100e313827f78adf1723135e56a0fc",
-        "shown": {
-         "copy": "Table for two. One of them runs on a GPU.",
-         "hook": "POV: tech leaders getting busted in 5 years from now",
-         "pitch": null,
-         "cards": null
-        }
-       }
-      },
-      "stamp": [
-       "at",
-       "idea.at"
-      ],
-      "done": "Approved. It is on the publish board for Wednesday 11 November; Growth makes it.",
-      "outcome": "approved",
-      "goes": "Goes onto the publish board for Wednesday 11 November. Growth makes it from what you approved."
-     },
-     {
-      "kind": "press",
-      "label": "Improve for a future piece",
-      "collection": "queue",
-      "id": "off-wed-tablefortwo",
-      "revision": 0,
-      "body": {
-       "pick": "off-wed-tablefortwo",
-       "use": "offday",
-       "day": "wed",
-       "week": "2026-11-09",
-       "option_id": "tablefortwo",
-       "format": "Meme, 1 image, 4:5",
-       "copy_sha256": "a82e30a11f48fcc1e385253ac283142bf24c8297951cdbee0e521dfa86c445cb",
-       "idea": {
-        "verdict": "improve",
-        "words": null,
-        "sha256": "2ff02a3a768ee2a96166f5f332bd87bc6b100e313827f78adf1723135e56a0fc"
-       }
-      },
-      "words": {
-       "path": "idea.words",
-       "ask": "What would make it a piece later?",
-       "required": true
-      },
-      "stamp": [
-       "at",
-       "idea.at"
-      ],
-      "done": "Kept with your note. The revise run also brings a new version back here.",
-      "outcome": "improved",
-      "goes": "Kept with your note as a cue for a future piece. A revised version also comes back here to approve."
-     },
-     {
-      "kind": "press",
-      "label": "Reject",
-      "collection": "queue",
-      "id": "off-wed-tablefortwo",
-      "revision": 0,
-      "body": {
-       "pick": "off-wed-tablefortwo",
-       "use": "offday",
-       "day": "wed",
-       "week": "2026-11-09",
-       "option_id": "tablefortwo",
-       "format": "Meme, 1 image, 4:5",
-       "copy_sha256": "a82e30a11f48fcc1e385253ac283142bf24c8297951cdbee0e521dfa86c445cb",
-       "idea": {
-        "verdict": "reject",
-        "words": null,
-        "sha256": "2ff02a3a768ee2a96166f5f332bd87bc6b100e313827f78adf1723135e56a0fc"
-       }
-      },
-      "words": {
-       "path": "idea.words",
-       "ask": "Why not? The next ideas run learns from your reason.",
-       "required": true
-      },
-      "stamp": [
-       "at",
-       "idea.at"
-      ],
-      "done": "Rejected, with your reason. The next ideas run learns from it.",
-      "outcome": "rejected",
-      "goes": "Rejected. Your reason is kept as a cue the next ideas run reads, and goes to your taste ledger in your words."
-     },
-     {
-      "kind": "press",
-      "label": "Save as a trend",
-      "collection": "queue",
-      "id": "off-wed-tablefortwo",
-      "revision": 0,
-      "body": {
-       "pick": "off-wed-tablefortwo",
-       "use": "offday",
-       "day": "wed",
-       "week": "2026-11-09",
-       "option_id": "tablefortwo",
-       "format": "Meme, 1 image, 4:5",
-       "copy_sha256": "a82e30a11f48fcc1e385253ac283142bf24c8297951cdbee0e521dfa86c445cb",
-       "idea": {
-        "verdict": "trend",
-        "words": null,
-        "sha256": "2ff02a3a768ee2a96166f5f332bd87bc6b100e313827f78adf1723135e56a0fc"
-       }
-      },
-      "words": {
-       "path": "idea.words",
-       "ask": "Which trend is it part of?",
-       "required": true
-      },
-      "stamp": [
-       "at",
-       "idea.at"
-      ],
-      "done": "Saved with its trend, for a wider piece.",
-      "outcome": "trend",
-      "goes": "Kept with the trend you name, for a wider piece."
-     },
-     {
-      "kind": "press",
-      "label": "File for later",
-      "collection": "queue",
-      "id": "off-wed-tablefortwo",
-      "revision": 0,
-      "body": {
-       "pick": "off-wed-tablefortwo",
-       "use": "offday",
-       "day": "wed",
-       "week": "2026-11-09",
-       "option_id": "tablefortwo",
-       "format": "Meme, 1 image, 4:5",
-       "copy_sha256": "a82e30a11f48fcc1e385253ac283142bf24c8297951cdbee0e521dfa86c445cb",
-       "idea": {
-        "verdict": "next_week",
-        "words": null,
-        "sha256": "2ff02a3a768ee2a96166f5f332bd87bc6b100e313827f78adf1723135e56a0fc"
-       }
-      },
-      "stamp": [
-       "at",
-       "idea.at"
-      ],
-      "done": "Filed for later. It comes back on a later ideas board.",
-      "outcome": "filed",
-      "goes": "Filed with today's date. It comes back on a later ideas board, or when you ask for it."
-     }
-    ],
-    "stories": null,
-    "move": null
-   },
-   {
-    "doc_id": "off-thu-otherside",
-    "piece_id": null,
-    "day": "thu",
-    "date": "2026-11-12",
-    "kind": "supporting",
-    "kind_label": "Carousel for Friday's piece",
-    "title": "Before you take your AI's advice, ask this.",
-    "why": "open",
-    "line": "Waiting on your answer.",
-    "read": {
-     "so_what": null,
-     "story": null,
-     "why_now": null,
-     "fact": null,
-     "text": "Four cards. Your AI says hire the cheaper supplier. Ask it for the strongest case against it.",
-     "sources": [],
-     "research": [],
-     "said": null
-    },
-    "actions": [
-     {
-      "kind": "press",
-      "label": "Approve for Thursday 12 Nov",
-      "collection": "queue",
-      "id": "off-thu-otherside",
-      "revision": 0,
-      "body": {
-       "pick": "off-thu-otherside",
-       "use": "offday",
-       "day": "thu",
-       "week": "2026-11-09",
-       "option_id": "otherside",
-       "format": "Level-up move, carousel, 4 cards, 4:5",
-       "copy_sha256": "6d0098fe5f2e493e43b87723fc6c8b7ce8bbff065b603f33324150e0ce14a931",
-       "idea": {
-        "verdict": "approve",
-        "words": null,
-        "sha256": "817029bac52bd9775e58b1f216ef117d497343547f7a99550757ac2e85d72194",
-        "shown": {
-         "copy": "Four cards. Your AI says hire the cheaper supplier. Ask it for the strongest case against it.",
-         "hook": "Before you take your AI's advice, ask this.",
-         "pitch": null,
-         "cards": null
-        }
-       }
-      },
-      "stamp": [
-       "at",
-       "idea.at"
-      ],
-      "done": "Approved. It is on the publish board for Thursday 12 November; Growth makes it.",
-      "outcome": "approved",
-      "goes": "Goes onto the publish board for Thursday 12 November. Growth makes it from what you approved."
-     },
-     {
-      "kind": "press",
-      "label": "Improve for a future piece",
-      "collection": "queue",
-      "id": "off-thu-otherside",
-      "revision": 0,
-      "body": {
-       "pick": "off-thu-otherside",
-       "use": "offday",
-       "day": "thu",
-       "week": "2026-11-09",
-       "option_id": "otherside",
-       "format": "Level-up move, carousel, 4 cards, 4:5",
-       "copy_sha256": "6d0098fe5f2e493e43b87723fc6c8b7ce8bbff065b603f33324150e0ce14a931",
-       "idea": {
-        "verdict": "improve",
-        "words": null,
-        "sha256": "817029bac52bd9775e58b1f216ef117d497343547f7a99550757ac2e85d72194"
-       }
-      },
-      "words": {
-       "path": "idea.words",
-       "ask": "What would make it a piece later?",
-       "required": true
-      },
-      "stamp": [
-       "at",
-       "idea.at"
-      ],
-      "done": "Kept with your note. The revise run also brings a new version back here.",
-      "outcome": "improved",
-      "goes": "Kept with your note as a cue for a future piece. A revised version also comes back here to approve."
-     },
-     {
-      "kind": "press",
-      "label": "Reject",
-      "collection": "queue",
-      "id": "off-thu-otherside",
-      "revision": 0,
-      "body": {
-       "pick": "off-thu-otherside",
-       "use": "offday",
-       "day": "thu",
-       "week": "2026-11-09",
-       "option_id": "otherside",
-       "format": "Level-up move, carousel, 4 cards, 4:5",
-       "copy_sha256": "6d0098fe5f2e493e43b87723fc6c8b7ce8bbff065b603f33324150e0ce14a931",
-       "idea": {
-        "verdict": "reject",
-        "words": null,
-        "sha256": "817029bac52bd9775e58b1f216ef117d497343547f7a99550757ac2e85d72194"
-       }
-      },
-      "words": {
-       "path": "idea.words",
-       "ask": "Why not? The next ideas run learns from your reason.",
-       "required": true
-      },
-      "stamp": [
-       "at",
-       "idea.at"
-      ],
-      "done": "Rejected, with your reason. The next ideas run learns from it.",
-      "outcome": "rejected",
-      "goes": "Rejected. Your reason is kept as a cue the next ideas run reads, and goes to your taste ledger in your words."
-     },
-     {
-      "kind": "press",
-      "label": "Save as a trend",
-      "collection": "queue",
-      "id": "off-thu-otherside",
-      "revision": 0,
-      "body": {
-       "pick": "off-thu-otherside",
-       "use": "offday",
-       "day": "thu",
-       "week": "2026-11-09",
-       "option_id": "otherside",
-       "format": "Level-up move, carousel, 4 cards, 4:5",
-       "copy_sha256": "6d0098fe5f2e493e43b87723fc6c8b7ce8bbff065b603f33324150e0ce14a931",
-       "idea": {
-        "verdict": "trend",
-        "words": null,
-        "sha256": "817029bac52bd9775e58b1f216ef117d497343547f7a99550757ac2e85d72194"
-       }
-      },
-      "words": {
-       "path": "idea.words",
-       "ask": "Which trend is it part of?",
-       "required": true
-      },
-      "stamp": [
-       "at",
-       "idea.at"
-      ],
-      "done": "Saved with its trend, for a wider piece.",
-      "outcome": "trend",
-      "goes": "Kept with the trend you name, for a wider piece."
-     },
-     {
-      "kind": "press",
-      "label": "File for later",
-      "collection": "queue",
-      "id": "off-thu-otherside",
-      "revision": 0,
-      "body": {
-       "pick": "off-thu-otherside",
-       "use": "offday",
-       "day": "thu",
-       "week": "2026-11-09",
-       "option_id": "otherside",
-       "format": "Level-up move, carousel, 4 cards, 4:5",
-       "copy_sha256": "6d0098fe5f2e493e43b87723fc6c8b7ce8bbff065b603f33324150e0ce14a931",
-       "idea": {
-        "verdict": "next_week",
-        "words": null,
-        "sha256": "817029bac52bd9775e58b1f216ef117d497343547f7a99550757ac2e85d72194"
-       }
-      },
-      "stamp": [
-       "at",
-       "idea.at"
-      ],
-      "done": "Filed for later. It comes back on a later ideas board.",
-      "outcome": "filed",
-      "goes": "Filed with today's date. It comes back on a later ideas board, or when you ask for it."
-     }
-    ],
-    "stories": null,
-    "move": null
-   },
    {
     "doc_id": "fri-1",
     "piece_id": "56bb9c22-c813-47c1-bf9b-751288c60096",

@@ -44,7 +44,7 @@ export type PressAction = {
   /** Or POST /api/board/<Monday>/<op> with the body (material: his research pasted onto the piece; live: a post he
    *  marked live, contract 1.8.0, _itsLive.ts; replace: his Approve on a day that already holds a piece, contract 1.13.0,
    *  _seriesMoves.ts, with the chosen `current_to`). */
-  op?: 'material' | 'live' | 'replace'
+  op?: 'material' | 'live' | 'replace' | 'look'
   /** Contract 1.8.0: the week the press saves into, when it is not the week the board shows (an idea for later,
    *  answered on its own week's board or approved onto a later one; GET /api/board/later). */
   week?: string
