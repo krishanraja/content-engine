@@ -22,6 +22,8 @@
 
 - **`python scripts/ve.py pace CUT.mp4`** measures how fast a cut moves and how much of the frame it uses. It does
   this beside his style references and his three cuts, so pace is measured, not judged from stills.
+- **A layout ingredient** (`style.layout`, 13 Nov): graphics-only beats can fill the frame the captions leave instead of
+  drawing small at the top.
 - **Nothing chosen means nothing changes.** A spec that sets none of the new fields renders exactly as before
   (`houseGolden.test.ts`).
 
@@ -32,17 +34,19 @@
    (`lower`, the default; `centre`; or `upper`). Choose for the piece, not for the motion style.
    - Over a full-bleed picture, `centre` puts the words in the middle of it.
    - Over graphics that fill the middle, keep `lower`.
-3. **Pick the handover and camera:**
+3. **Pick the layout:** `style.layout.mode` is `fill` or `stack` on a graphics-only piece (see "The layout").
+4. **Pick the handover and camera:**
    - `style.transitions.kind` is one of `cut`, `whip`, `push`, `zoom-through`, `flash` or `punch`.
    - `style.camera.move` is one of `none`, `drift`, `phased` or `punch`, and `hits: true` lets device events kick it.
    - `style.energy` is `calm`, `medium` or `high`.
    - Each motion style's bank entry names the ingredients it was measured with. For example, `ai-music-slam` was
      measured with `whip`, `phased` and `high`.
-4. **`ve lint` and `ve compile`, as before.** Compile turns these choices into props:
+5. **`ve lint` and `ve compile`, as before.** Compile turns these choices into props:
    - `captionTheme`
    - `captionPlacement`
    - `ingredients`
-5. **Measure before anyone sees it.** Run `ve pace CUT.mp4`; a row that reads BELOW EVERY REFERENCE is a cut to fix.
+   - `layout`
+6. **Measure before anyone sees it.** Run `ve pace CUT.mp4`; a row that reads BELOW EVERY REFERENCE is a cut to fix.
    Then watch it at speed beside a reference before it goes to Krish.
 
 ```json
@@ -51,7 +55,8 @@
   "captions": { "theme": "mint-word", "placement": "lower", "reason": "one word at a time, the hero in mint" },
   "transitions": { "kind": "whip", "reason": "scenes hand over on a blur whip, as in the cut" },
   "camera": { "move": "phased", "hits": true, "reason": "the camera never stops pushing" },
-  "energy": "high"
+  "energy": "high",
+  "layout": { "mode": "fill", "reason": "every device fills the frame the captions leave" }
 }
 ```
 
@@ -65,7 +70,7 @@
 | Camera | `style.camera.move`, `.hits` | `ingredients.camera`, `.hits` | `kit/ingredients.ts` | `none`, `drift`, `phased`, `punch`. Device events kick it: a punch-in, a shake above calm, a cream flash at high |
 | Energy | `style.energy` | `ingredients.energy` | `kit/ingredients.ts` | `calm`, `medium`, `high`: the handover lasts 16, 10 or 6 frames, and blur, punch, shake and flash scale with it |
 | Sound | `audio`, `ve sfx` | `audio` | `audio.tsx` | unchanged. The bed is one shape (F40), and effects come only from the brand kit |
-| Layout and frame use | beat `layout`, device boxes | `beats`, `objects` | `layouts/`, devices | unchanged. **This is the open gap** (see "What is still open") |
+| Layout | `style.layout.mode` | `layout` | `kit/layout.ts`, `fit.ts`, devices | `house` (as before), `fill` (each device on a graphics-only beat gets the safe region the captions leave, and grows up to 3x, centred), `stack` (the beat's devices share that region top to bottom) |
 
 ## All 27 caption styles
 
@@ -125,6 +130,47 @@ layout, never-list and what the renderer still cannot draw, is in `docs/ve/style
 | Character.ai, Mon 26 Oct (sha256 39f1039c) | `character-ai-receipts` | `receipt-chip` | 3.85 events a second, 81% of the frame used | Evidence prints onto a lit ink desk above a still face band. Receipts, money maps and logo rows land on the word that names them, with no camera move and an 8-frame dissolve between states |
 | Eating its own jobs, Mon 2 Nov (sha256 2cdff09a) | `eating-jobs-ladder` | `ink-block` | 3.91 events a second, 20 cuts a minute | One object, a career ladder, carries the whole piece. Numbers roll onto it, a slow push holds every panel, and every change is a 10-frame crossfade |
 | AI music, Wed 11 Nov (sha256 3c360c73) | `ai-music-slam` | `mint-word` | 4.12 events a second, longest gap 0.93 s, 81% of the frame used | Real proof slams 500 px onto an ink stage with 12% overshoot. Mint is what a human made and hatched ink is what the machine made. The camera always pushes, and scenes hand over on a blur whip |
+
+## The layout (13 Nov 2026)
+
+Krish, 2026-11-13: "build the layout ingredient next"; of the 3D test cuts, "the use of the screen space is terrible".
+
+**Why.** A STAGE beat hands every device the whole frame. The devices that fit themselves (`fit.ts`) only ever shrank to
+fit and pinned themselves to the top, so a count drew 120 px tall at the top of a 1920 px frame.
+
+**What `fill` does.**
+- Each device on a graphics-only beat (STAGE with no plate) gets the free region: the channel-safe column (x 60 to 860,
+  y 280 to 1320) minus the band the captions sit in. The free region for each caption placement:
+
+| Captions | Free region |
+|---|---|
+| `lower` | y 280 to 966 |
+| `upper` | y 544 to 1320 |
+| house caption | y 280 to 1060 |
+
+- A device that fits itself grows up to 3x and centres in it. These are `headline`, `kinetic_stat`, `evidence_card`,
+  `query_chip` and `test_grid`.
+- A headline too long for the 800 px safe width at its 150 px minimum keeps its old stage placement instead of failing.
+
+**What `stack` does.** The beat's devices share the free region top to bottom, each filling its share.
+
+**How it stays safe.** Only boxes the layout hands out may grow (`isRegion`), so chrome and every other user of
+`fit.ts` draw exactly as before.
+
+**Measured on the house test take** (`fill`, with `slam` captions, a `phased` camera and `zoom-through`):
+
+| Cut | Events a second | Frame used |
+|---|---|---|
+| Before the layout | 2.56 | 0.28 |
+| With `fill` | 2.58 | 0.26 |
+
+Watched at speed beside the AI music cut, the count now sits big and centred, but the frame is still mostly dark
+ground.
+
+**The finding.** The layout gives the graphics the space. What fills the frame in his cuts is real pictures: clips,
+screens, his take in the band below. Nothing but pictures may sit below y 1320, and this test is text on an empty ground
+with no picture at all. The next lever is the picture layer: every beat carries a real picture that fills the frame (his
+take, a screen recording, the real artifact, footage), with the graphics laid over it.
 
 ## Pace is measured, not judged from stills
 
@@ -198,14 +244,14 @@ the captions.**
 
 ## What is still open
 
-- **Layout, the use of the frame.** None of the ingredients moves a device's box, so graphics still sit where their
-  layout puts them.
-  - Next to build: a `layout` ingredient (full-bleed, stack, split-tall), with devices that draw to the frame they are
-    given and pictures that bleed into the bottom band where no words may sit.
-  - His cuts each need a staging the renderer cannot yet draw, listed under `gaps` in each card:
-    - AI music: the ink stage over a cream band;
-    - Character.ai: the ink desk over a still face band;
-    - eating its own jobs: the butter tray over his chest.
+- **The picture layer.** The layout is built (above), but a text-only cut still leaves most of the frame as empty
+  ground. Next: every beat carries a real picture that fills the frame, with the graphics over it. His cuts each use a
+  staging the renderer cannot yet draw, listed under `gaps` in each card:
+  - AI music: the ink stage over a cream band;
+  - Character.ai: the ink desk over a still face band;
+  - eating its own jobs: the butter tray over his chest.
+- **Devices that place themselves at fixed zones** (`quote_card`, `stat_strip`, `record_card` and others) do not grow
+  in a `fill` region yet.
 - **Parts of his three styles that need devices:**
   - the hatched AI material, and tilted settles with a soft shadow (AI music);
   - the line-print jolt and the 250 px rise of a whole proof object (Character.ai);
