@@ -117,7 +117,7 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   approved your new approach ... iterate, and understand what I actually
   like, and then encode that into the system forever."
 - **The publish board is the live board in Control Centre, and nothing builds it** (Ruling, Krish, 2026-11-11: one
-  live board, in Control Centre; the old board is a read-only archive). Write what its view reads and report and file
+  live board, in Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it). Write what its view reads and report and file
   on the piece as you work (`docs/PUBLISH_BOARDS.md`); never build, patch or publish a board page.
 - Plain words. Nothing he reads may contain codes, labels, hashes, version
   numbers or project shorthand. Say what happened, what it means for him, and

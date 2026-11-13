@@ -464,7 +464,7 @@ class RunTests(unittest.TestCase):
         self.assertNotIn('file', block['cuts'][0])
 
     def test_the_run_names_every_held_cut_on_the_live_board_and_builds_no_page(self):
-        # Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive.
+        # Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it.
         records = [{'critic_calibrated': True, 'cuts': [
             {'day': 'mon', 'cut': 'long', 'piece_id': PIECE, 'status': 'made', 'url': 'https://drive.google.com/file/d/' + 'y' * 25 + '/view'}]},
             overnight.unfinished({'state': 'running', 'cuts': []}, 'standby', '2026-11-16', {'mon': PIECE}, self.config)]
