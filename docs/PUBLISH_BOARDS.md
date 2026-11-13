@@ -488,7 +488,10 @@ face-with-proof at 16:9 (`config/ve/design-lock.json`, the `face-with-proof@16:9
 - **What writes the configs:** never the press. It starts `.github/workflows/signoff-apply.yml` (a repository_dispatch,
   `_run.ts` job `signoff-apply`, no payload), which reads every press back (`GET /api/board/sign-offs`, the engine key),
   fetches each approved sample's bytes by its Drive id through the engine, checks its sha256, and writes through the
-  configs' own writers: `sfx.approve_reviewed` (an approved row carries `approved_press`, never words he did not type),
+  configs' own writers: `sfx.approve_reviewed` (an approved row carries `approved_press`, never words he did not type;
+  before it is written, the sound's exact bytes are filed in the brand kit's Music folder at `sfx/<id>.<ext>` through
+  the library, recorded as `filed`, so ve compile stages it from `MINDMAKE_MUSIC_ROOT` on the next cut and stops by
+  name on a machine without it),
   `golden.fill_from_cut` (the next empty slot, `source: cut`), and `designlock.freeze` with his `approved` record for
   Gate 2. A Not this is written as his no with the date (`declined` in the first two, the draft's `gate2` in the lock).
   The pull request merges itself on green CI, and the card then reads "Written to the engine".
