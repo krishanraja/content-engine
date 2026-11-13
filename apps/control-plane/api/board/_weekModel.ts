@@ -358,8 +358,8 @@ function postItem(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
     item: o.item?.key ?? null, supports, move: o.move ?? null, links: o.stage?.links ?? [], stories, stories_planned: kind === 'good_news' ? GOOD_NEWS_STORIES : null, others: [] as PressAction[] }
   if (state === 'live') return { ...base, line: o.stage!.label, next: null, decision: false }
   const where = o.stage?.label ?? 'Approved by you'
-  const short = stories && stories.length < GOOD_NEWS_STORIES ? ` ${stories.length} of ${GOOD_NEWS_STORIES} stories found.` : ''
-  const line = `${missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.` : `${where}.`}${short}`.replace(/\.\./g, '.')
+  // How many of its five stories good news holds is said by its stories (`stories`, `stories_planned`), never twice.
+  const line = (missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.` : `${where}.`).replace(/\.\./g, '.')
   // A choice the approved post is still missing: its direction (the look), offered as his presses after his Approve.
   const choice = (o.actions || []).filter(a => /direction/i.test(a.label))
   if (choice.length && !missed) {

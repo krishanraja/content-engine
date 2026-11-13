@@ -106,7 +106,8 @@ Publish Board draws `model` and nothing else on a day.
 - **His decisions on a day** are only his real ones (`decision`): Approve for publish on a made piece, and a choice an
   approved post is still missing (its direction, with the other answers in `others`). Never an idea.
 - **Good news is one post, five stories on one topic.** The Saturday item lists its stories in full (headline, what,
-  why it matters, source, date). One that holds fewer says so ("1 of 5 stories found") and its next action is "Find
+  why it matters, source, date) and how many of five it holds (`stories`, `stories_planned`; the board says "1 of 5 stories
+  found"). One that holds fewer has as its next action "Find
   the other N stories", `saturday-goodnews.yml` with `fill: off-<day>-<id>`, which fills that approved post to five
   on its own topic and changes none of the words his Approve is bound to (plan-week `references/offdays.md`, "Filling
   an approved post to five").

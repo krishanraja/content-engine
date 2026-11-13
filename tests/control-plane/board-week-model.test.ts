@@ -181,7 +181,7 @@ describe('the week model (contract 1.12.0)', () => {
     expect(gn).toMatchObject({ key: 'off-sat-oldproof', kind: 'good_news', kind_label: 'Good news', stories_planned: GOOD_NEWS_STORIES })
     expect(gn.stories).toEqual([{ headline: 'AI found a mistake in a maths proof from 1986, its makers say.', what: expect.stringContaining('15,000-page'),
       why: 'AI is a great checker when something strict checks it.', date: null, source: 'Axiom, The enormous theorem formalized', href: 'https://axiommath.ai/research/the-enormous-theorem-formalized/' }])
-    expect(gn.line).toMatch(/1 of 5 stories found/)
+    expect(gn.stories!.length).toBeLessThan(gn.stories_planned!)
     expect(gn.next).toMatchObject({ kind: 'run', job: 'saturday-goodnews', label: 'Find the other 4 stories', input: { week: WEEK, fill: 'off-sat-oldproof' } })
     const held = v.model!.ideas.find(i => i.doc_id === 'off-sat-goodnews')!
     expect(held.stories!.map(s => s.headline)).toHaveLength(5)
