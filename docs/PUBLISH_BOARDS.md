@@ -292,6 +292,11 @@ Growth never over his row, moves append only) and `tests/control-plane/board-mov
 his press only, a move read back from the view, Growth's read, the Drive folder, the library and what is still
 scheduled, and Growth's own made, scheduled and live posts making the day done).
 
+**Growth asks the judges here too** (`POST /api/board/<Monday>/judge` on Growth's key; Ruling, Krish, 2026-11-12:
+"Judge them; count passes."): every carousel and Short is judged by the draft judges' panel before Growth makes it, a
+pass is bound to its Buffer post, and every sent post is reported so the judged ones count as live
+(`docs/GROWTH-HANDOFF.md`, "Every carousel and Short through the 10/10 judges"; `asset_judgements`).
+
 ## One post, one item (Ruling, Krish, 2026-11-12)
 
 Ruling (Krish, 2026-11-12): the board shows exactly where everything is, and one post is one item that can never sprawl
