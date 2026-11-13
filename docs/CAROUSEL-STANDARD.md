@@ -112,6 +112,28 @@ earned full-pilot acceptance after explicit tasks, cumulative scores and a
 distinct practical ending corrected those failures. Acceptance proves this
 reference met Krish's bar; it does not prove audience or growth performance.
 
+## The ten-second swipe (Ruling, Krish, 13 November 2026)
+
+His words, of the Thursday 12 Nov Git carousel: "Git carousel cards look terrible apart from the cover card and they
+also are not very easy to follow. Remember that a complete layperson is swiping through these cards at light speed and
+needs to be able to follow the story within 10 seconds. This cannot ever happen again in any future carousel."
+
+- The headlines alone, read in order, tell the whole story in ten seconds: at most 45 words across the deck, 3 to 12 on
+  any one card. Everything else on a card only adds to its headline.
+- Every headline after the cover is one whole sentence ending in a full stop, saying what happened or why it matters.
+  A label ("Code changes Anthropic merged per day"), a bare number ("7 engineers, 5 months") or a list of names is not
+  a headline.
+- Every card after the cover shows its point as a picture: bars to scale, the thing jammed, the people, the hand-off.
+  Words alone, a number alone or a list of logos in boxes is not a card.
+- The line under a headline is at most 20 words.
+- No jargon a layperson does not know (`config/carousel-plain-words.json`) unless the deck explains it in plain words
+  where it first appears.
+- Before the cards are drawn, two fresh readers see only the headlines, in order, once, and retell the story in their
+  own words; every place they got stuck is fixed first.
+- The deck's words live in a `carousel-deck/1` file, and `python3 scripts/carousel_check.py DECK.json` passes before any
+  card is drawn or filed (`tests/carousel_check_test.py`: the Git deck as sent on 12 Nov fails, the redrawn one passes).
+  Growth runs it on every carousel it makes to this standard.
+
 ## Narrative production and review
 
 Use content-engine production and editorial guidance, its live mandate,

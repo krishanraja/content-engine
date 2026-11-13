@@ -1,0 +1,4 @@
+{
+  "about": "Words a complete layperson swiping a carousel does not know (scripts/carousel_check.py; Krish, 2026-11-13: \"a complete layperson is swiping through these cards at light speed and needs to be able to follow the story within 10 seconds\"). A card may use one only when the deck explains it in plain words. Add a word when a deck used it and a reader stumbled.",
+  "jargon": ["merged", "merge", "commit", "commits", "repo", "repository", "version control", "pull request", "codebase", "API", "LLM", "token", "tokens", "inference", "bottleneck", "agentic", "throughput", "latency", "deploy", "stack", "SaaS", "open weights", "fine-tune", "benchmark"]
+}

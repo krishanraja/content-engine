@@ -12,6 +12,24 @@ and build it"; he had asked for "Ideas and a suggested creative direction to
 approve or improve or flat out reject for a reason, and the machine can learn
 over time").
 
+**Every off-day option names its kind** (Ruling, Krish, 2026-11-13: the publish board shows only what he approved,
+in one week model, three pieces and off-day posts of fixed kinds; his words: "In general, we have carousels that
+support Monday, Wednesday, or Friday. We have voiceovers, explainers, uplifting carousels, and memes."). Write
+`"kind"` on each option, one of the five, and the board says its plain name everywhere he reads it
+(`apps/control-plane/api/board/_weekModel.ts`, `OFFDAY_KINDS`):
+
+| `kind` | Its name on the board | What it is |
+|---|---|---|
+| `supporting` (with `"supports": "mon"`, `"wed"` or `"fri"`) | Carousel for Monday's piece | A carousel that carries that day's piece further |
+| `voiceover` | Voiceover short | A short with his voice over motion graphics or footage. A piece he records keeps `"kind": "recorded"` (below) and reads as a Voiceover short |
+| `explainer` | Explainer | An explainer carousel or infographic that stands on its own |
+| `good_news` | Good news | Saturday's uplifting good news: one topic and five stories on it (below) |
+| `meme` | Meme | A meme, a meme carousel or a meme video |
+
+An older plan with no `kind` is read from its format by one rule (`offdayKind`); a quiz or level-up carousel is a
+supporting carousel when it ties to a publishing day and an explainer when it does not. A suggestion that is none of
+the five is not offered.
+
 On the Ideas tab, 4 to 6 options each for Tuesday, Thursday and Saturday
 (the board takes 2 to 6; Sunday is a rest day and nothing is published on it:
 Ruling, Krish, 2026-11-02, "Let's eliminate Sunday from Publishing anythign
@@ -211,9 +229,13 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
 0. Read his positive saves first (`sources.json` `inspiration.positive`: cards he saved as good news, his words beside
    each, the ideas quality plan, item 12): a story they point to, or one of the kind they show he likes, comes before
    anything the search finds.
-1. Find five real AI stories that are good news for ordinary people (health, science, safety, access, work made
-   better), each published in the seven days up to `stories_due` (today), none already run (`sources.json`
-   `recent_offdays` urls). Tag each story with its `kind`, one of `health`, `lab`, `science`, `work`, `money`,
+1. **One topic, five stories on it** (Ruling, Krish, 2026-11-13: the publish board shows only what he approved, in one
+   week model; his words: "The Saturday carousel is supposed to be five good news stories on that same topic"). Choose
+   one topic first (for example "AI fixing old mistakes", "AI in the clinic this week"), write it on the option as
+   `"topic": "<a few plain words>"`, and make the option's hook say it. Then find five real AI stories on that topic
+   that are good news for ordinary people (health, science, safety, access, work made better), each published in the
+   seven days up to `stories_due` (today), none already run (`sources.json` `recent_offdays` urls). Five is the post:
+   four or fewer is not a good-news post yet, and the board says so plainly on Saturday ("1 of 5 stories found"). Tag each story with its `kind`, one of `health`, `lab`, `science`, `work`, `money`,
    `learning`, `climate`, `creative`, `people`, `safety` or `other`; the board shows the week's mix on the option
    ("The mix: 2 health, 1 work, ..."), so he sees it before he presses. A cap on health and lab stories waits for his
    yes; until then the mix is shown, never capped. Prefer a primary source: the organisation's own page, the paper, the official
@@ -239,6 +261,23 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
 story it finds is about two weeks old by the Saturday it posts on. So before Growth makes the post, each story is
 checked against its source again through the fact gate (as every off-day news claim is, above), and one the source no
 longer carries is cut and named.
+
+**Filling an approved post to five.** When he approves a good-news post that holds fewer than five stories (an
+uplifting option with one story of its own, as Sat 14 Nov's "AI found a mistake in a maths proof from 1986" was), its
+topic stands and his Approve stands: the board's "Find the other N stories" press starts
+`.github/workflows/saturday-goodnews.yml` with `fill: off-<day>-<id>`. The run then:
+
+1. reads the option's own story (its hook, copy and source) as the topic and the first story, and writes it as the
+   first entry of `stories` when the option has none;
+2. finds the rest, to five, on that same topic, by steps 0 to 3 above (the seven days up to today, checked against
+   each primary source, each with its own picture);
+3. writes them onto that option only, sets `stories_due` to today, and never changes its copy, hook, pitch or
+   direction: his Approve is bound to those words (`_offdaySides.ts`), and a story list is not part of them;
+4. runs `board_feed.py gather` and `cover`, and the keep step puts the week on its branch as above.
+
+It never writes a second good-news option, never approves anything and never moves a day. Fewer than five found on
+the topic in the window is said on the option (`"stories_short": "<why>"`) and on the board, never padded with a story
+off the topic.
 
 Growth makes the carousel from the stories as shown, and its mock comes back for his final yes as with any off day.
 

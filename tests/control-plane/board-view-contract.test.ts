@@ -304,7 +304,7 @@ describe('the Publish Board view contract', () => {
     expect(compare(base, next(s => { s.$defs.action.allOf[0].then.required = ['job'] })).breaking.join()).toMatch(/input: no longer always sent/)
   })
 
-  it('puts a held off-day option, on a publishing day too, on its day with its own Approve (Krish, 2026-11-12)', () => {
+  it('puts a held off-day option, on a publishing day too, on the ideas board with its own Approve, never on the day (Ruling, Krish, 2026-11-13)', () => {
     const f = full()
     const decided = 'Remade on black (Krish, 12 Nov).'
     const view = buildView({ ...f, ideas: { ...(f.ideas as Body), offdays: { ...((f.ideas as Body).offdays as Body),
@@ -313,9 +313,13 @@ describe('the Publish Board view contract', () => {
       const day = view.days.find(x => x.day === d)!
       expect(day.options.find(o => o.id === id)?.status).toBe('held')
       expect(day.held.some(h => h.option === `off-${d}-${id}`)).toBe(true)
-      const press = day.actions.find(a => a.kind === 'press' && a.id === `off-${d}-${id}`) as Body | undefined
-      expect(press?.label).toMatch(/^Approve for /)
+      // Never a press on the day: the publish board shows only what he approved; its Approve is on the ideas board.
+      expect(day.actions.some(a => a.kind === 'press' && a.id === `off-${d}-${id}`)).toBe(false)
+      const idea = view.model!.ideas.find(x => x.doc_id === `off-${d}-${id}`)!
+      expect(idea.why).toBe('held')
+      const press = idea.actions.find(a => /^Approve for /.test(a.label)) as Body | undefined
       expect(((press?.body as Body).idea as Body).verdict).toBe('approve')
+      expect(view.model!.days.find(x => x.day === d)!.items.some(it => it.key === `off-${d}-${id}`)).toBe(false)
     }
     // His Approve stands: nothing is held and no extra press is drawn.
     const approved = buildView({ ...f, ideas: { ...(f.ideas as Body), offdays: { ...((f.ideas as Body).offdays as Body), wed: [option('tablefortwo', { decided })] } },

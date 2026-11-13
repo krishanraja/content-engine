@@ -47,10 +47,12 @@ describe('the view draws only what his approval holds, and names every other pie
     expect(wed.piece_id).toBeNull()
     expect(wed.pieces).toEqual([])
     expect(wed.held).toEqual([{ piece_id: WED, option: null, title: HELD_TITLE, text: 'Piece db9f. It says one thing. Nothing you pressed on the ideas board put it on this day.' }])
-    expect(wed.who).toBe('you')
-    expect(wed.next).toMatch(/^One idea is held: not approved by you/)
-    // One press approves exactly that piece for exactly that day, as an Approve on the ideas board does.
-    const press = wed.actions[0] as PressAction
+    // The held piece is an idea, on the ideas board with the one press that approves exactly that piece for exactly that
+    // day; the day itself never leads with it (Ruling, Krish, 2026-11-13: the publish board shows only what he approved).
+    expect(wed.actions.some(a => a.kind === 'press' && a.collection === 'picks' && a.id === 'wed')).toBe(false)
+    const idea = v.model!.ideas.find(x => x.piece_id === WED)!
+    expect(idea).toMatchObject({ why: 'held_piece', day: 'wed' })
+    const press = idea.actions[0] as PressAction
     expect(press).toMatchObject({ kind: 'press', collection: 'picks', id: 'wed', outcome: 'approved', label: 'Approve "Piece db9f. It says one thing." for Wednesday 18 Nov' })
     expect(press.body).toMatchObject({ day: 'wed', idea_id: WED, series: 'under_the_hood' })
     const { id, body } = fillPress(press, '', '2026-11-12T10:00:00Z')
