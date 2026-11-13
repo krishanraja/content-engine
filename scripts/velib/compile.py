@@ -562,6 +562,11 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     ingredients = ingredient_props(spec)
     if ingredients is not None:
         props['ingredients'] = ingredients
+    layout = ((spec.get('style') or {}).get('layout') or {}).get('mode')
+    if layout and layout != 'house':
+        if layout not in LAYOUTS:
+            raise ValueError(f"style.layout.mode {layout} is not one of {', '.join(LAYOUTS)}")
+        props['layout'] = {'mode': layout}
     return props
 
 
@@ -572,6 +577,7 @@ CAPTION_PLACEMENTS = ('lower', 'centre', 'upper')
 ENERGIES = ('calm', 'medium', 'high')
 TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch')
 CAMERAS = ('none', 'drift', 'phased', 'punch')
+LAYOUTS = ('house', 'fill', 'stack')
 
 
 def caption_props(spec: dict) -> dict:

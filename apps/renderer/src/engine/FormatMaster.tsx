@@ -18,6 +18,7 @@ import { focusRoom, placed } from './kit/focus'
 import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
 import { cameraAt, cameraStyle, flashAt, hitFrames } from './kit/ingredients'
+import { layoutSlots } from './kit/layout'
 import { EngineAudio } from './audio'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
 
@@ -123,7 +124,10 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const outgoing = frame >= beat.toFrame && frame < beat.toFrame + overlap
         if ((frame < beat.fromFrame || frame >= beat.toFrame) && !outgoing) return null
         const now = outgoing ? beat.toFrame - 1 : frame
-        const slots = slotsFor(beat.layout, props.aspect, beat.uses.length)
+        // The layout ingredient (kit/layout.ts): a graphics-only beat's devices fill the region the captions leave.
+        const graphicsOnly = beat.layout === 'STAGE' && beat.plate?.source === 'none'
+        const slots = (graphicsOnly ? layoutSlots(props.layout, props.aspect, props.captionPlacement, !!props.captionTheme, beat.uses.length) : undefined)
+          ?? slotsFor(beat.layout, props.aspect, beat.uses.length)
         if (beat.layout === 'WINDOW' && slots.length)
           slots[0] = { left: 0, top: 0, width, height }
         // A style on twos steps its graphics; the take and captions stay on every frame.

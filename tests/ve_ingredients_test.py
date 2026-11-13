@@ -10,7 +10,7 @@ from pathlib import Path
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
-from velib.compile import caption_props, ingredient_props  # noqa: E402
+from velib.compile import LAYOUTS, caption_props, ingredient_props  # noqa: E402
 
 
 class IngredientsTest(unittest.TestCase):
@@ -34,6 +34,9 @@ class IngredientsTest(unittest.TestCase):
                          {'energy': 'calm', 'transition': 'cut', 'camera': 'none', 'hits': False})
         with self.assertRaises(ValueError):
             ingredient_props({'style': {'transitions': {'kind': 'spin', 'reason': 'x'}}})
+
+    def test_the_layout_modes_are_the_renderers(self):
+        self.assertEqual(LAYOUTS, ('house', 'fill', 'stack'))
 
 
 if __name__ == '__main__':
