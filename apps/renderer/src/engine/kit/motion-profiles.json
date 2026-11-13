@@ -408,9 +408,9 @@
     "character-ai-receipts": {
       "entrance": {
         "kind": "rise",
-        "frames": 7,
+        "frames": 9,
         "easing": "enter",
-        "distancePx": 40,
+        "distancePx": 0,
         "overshootPct": 0
       },
       "stagger": {
@@ -442,7 +442,7 @@
       },
       "driftPct": 0.5,
       "countFrames": 20,
-      "note": "From Krish's Character.ai cut (Mon 26 Oct, mon26-tall, sha256 39f1039c), measured 13 Nov: 3.85 events a second, 81% of the frame in use. Evidence prints onto a lit ink desk above a still face band: proof objects rise into place under a fade with no overshoot, a receipt line prints on its word, the figure lands on a mint fill, headline words arrive 4 frames apart, a device changes state by an 8-frame dissolve, never a tween, and nothing moves the camera. Inside the signed floor the rise is its 40 px minimum; the cut's type travels 0 px (fade or blur only), which the floor does not allow (raised with Krish 13 Nov)."
+      "note": "From Krish's Character.ai cut (Mon 26 Oct, mon26-tall, sha256 39f1039c), measured 13 Nov: 3.85 events a second, 81% of the frame in use. Evidence prints onto a lit ink desk above a still face band: proof objects rise into place under a fade with no overshoot, a receipt line prints on its word, the figure lands on a mint fill, headline words arrive 4 frames apart, a device changes state by an 8-frame dissolve, never a tween, and nothing moves the camera. Its type and proof land with 0 px travel and no overshoot over 9 frames, as in the cut (the floor widened to admit this, Ruling, Krish, 2026-11-13); the 250 px rise of a whole proof object and the line-print jolt still need a device-level move."
     },
     "eating-jobs-ladder": {
       "entrance": {
@@ -482,10 +482,10 @@
     "ai-music-slam": {
       "entrance": {
         "kind": "slap",
-        "frames": 7,
+        "frames": 10,
         "easing": "hero",
-        "distancePx": 60,
-        "overshootPct": 6
+        "distancePx": 500,
+        "overshootPct": 12
       },
       "stagger": {
         "frames": 6,
@@ -512,7 +512,7 @@
       },
       "driftPct": 1.5,
       "countFrames": 18,
-      "note": "From Krish's AI music cut (Wed 11 Nov, AI is already in the music you love, tall, sha256 3c360c73), measured 13 Nov: 4.12 events a second, 11.2 scene changes a minute, longest gap 0.93 s, 81% of the frame in use. Real proof slams onto an ink stage on a back curve and settles tilted with a soft shadow; two materials only, mint for what a human made and hatched ink for what the machine made; the camera pushes through every scene and breathes on holds; scenes hand over with a horizontal blur whip (pair it with style.transitions whip and style.camera phased, energy high). The cut slams about 500 px with about 12% overshoot in 10 frames, above the signed floor (60 px, 6%, 7 frames), so this profile sits at the floor's top (raised with Krish 13 Nov); the hatched AI material, the stage-and-band layout and tilted settles still need building."
+      "note": "From Krish's AI music cut (Wed 11 Nov, AI is already in the music you love, tall, sha256 3c360c73), measured 13 Nov: 4.12 events a second, 11.2 scene changes a minute, longest gap 0.93 s, 81% of the frame in use. Real proof slams onto an ink stage on a back curve and settles tilted with a soft shadow; two materials only, mint for what a human made and hatched ink for what the machine made; the camera pushes through every scene and breathes on holds; scenes hand over with a horizontal blur whip (pair it with style.transitions whip and style.camera phased, energy high). Slams travel 500 px with 12% overshoot over 10 frames, as measured on the cut (the floor widened to admit this, Ruling, Krish, 2026-11-13); the hatched AI material, the stage-and-band layout and tilted settles still need building."
     }
   }
 }

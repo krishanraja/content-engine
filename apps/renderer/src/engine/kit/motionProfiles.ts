@@ -63,9 +63,11 @@ export const MOTION_PROFILES: Readonly<Record<string, MotionProfile>> = Object.f
 /** Styles that need their own device or drawing pipeline: they render with the house motion until it is built. */
 export const NEEDS_DEVICE: readonly string[] = table.needs_device
 
-/** The signed floor (docs/ve/MOTION_STANDARD.md, signed by Krish 3 Nov 2026). */
+/** The signed floor (docs/ve/MOTION_STANDARD.md, signed by Krish 3 Nov 2026), widened on 13 Nov 2026 to admit his own
+ *  cuts (Ruling, Krish, 2026-11-13: "yes it should"): the AI music cut slams about 500 px with about 12% overshoot over
+ *  10 frames, and the Character.ai cut's type travels 0 px (it fades or blurs in only). */
 export const FLOOR = {
-  entranceFrames: [4, 7], risePx: [40, 60], overshootPctMax: 6, driftPctMin: 0,
+  entranceFrames: [4, 10], risePx: [0, 500], overshootPctMax: 12, driftPctMin: 0,
   /** No graphic held more than 3.5 s without a change: nothing a profile times may run longer. */
   maxHoldFrames: 105,
   zoom: [1, 3], cps: [25, 40],
@@ -79,9 +81,9 @@ const clamp = (value: number, low: number, high: number) => Math.min(high, Math.
 export function floorProblems(profile: MotionProfile): string[] {
   const problems: string[] = []
   const { entrance } = profile
-  if (entrance.frames < FLOOR.entranceFrames[0] || entrance.frames > FLOOR.entranceFrames[1]) problems.push(`entrance settles in ${entrance.frames} frames, not 4 to 7`)
-  if (entrance.distancePx < FLOOR.risePx[0] || entrance.distancePx > FLOOR.risePx[1]) problems.push(`entrance travels ${entrance.distancePx} px, not 40 to 60`)
-  if (entrance.overshootPct > FLOOR.overshootPctMax) problems.push(`overshoot ${entrance.overshootPct}% is over 6%`)
+  if (entrance.frames < FLOOR.entranceFrames[0] || entrance.frames > FLOOR.entranceFrames[1]) problems.push(`entrance settles in ${entrance.frames} frames, not 4 to 10`)
+  if (entrance.distancePx < FLOOR.risePx[0] || entrance.distancePx > FLOOR.risePx[1]) problems.push(`entrance travels ${entrance.distancePx} px, not 0 to 500`)
+  if (entrance.overshootPct > FLOOR.overshootPctMax) problems.push(`overshoot ${entrance.overshootPct}% is over 12%`)
   if (!(profile.driftPct > FLOOR.driftPctMin)) problems.push('drift must be above 0 so nothing fully stops')
   if (profile.ground.sweepFrames > FLOOR.maxHoldFrames || profile.countFrames > FLOOR.maxHoldFrames || profile.exitFrames > FLOOR.maxHoldFrames)
     problems.push('a timed move runs past 3.5 s')

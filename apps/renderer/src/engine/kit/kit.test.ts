@@ -93,10 +93,10 @@ describe('motion style profiles', () => {
     expect(floorProblems(profile)).toEqual([])
     expect(clampToFloor(profile)).toEqual(profile)
     expect(profile.entrance.frames).toBeGreaterThanOrEqual(4)
-    expect(profile.entrance.frames).toBeLessThanOrEqual(7)
-    expect(profile.entrance.distancePx).toBeGreaterThanOrEqual(40)
-    expect(profile.entrance.distancePx).toBeLessThanOrEqual(60)
-    expect(profile.entrance.overshootPct).toBeLessThanOrEqual(6)
+    expect(profile.entrance.frames).toBeLessThanOrEqual(10)
+    expect(profile.entrance.distancePx).toBeGreaterThanOrEqual(0)
+    expect(profile.entrance.distancePx).toBeLessThanOrEqual(500)
+    expect(profile.entrance.overshootPct).toBeLessThanOrEqual(12)
     expect(profile.driftPct).toBeGreaterThan(0)
     expect(['house', 'inkDeep', 'dark']).toContain(profile.ground.kind) // brand roles only
     if (profile.boil) expect(profile.boil.amplitudePx).toBeLessThanOrEqual(2) // line-boil's bank rule
@@ -106,7 +106,7 @@ describe('motion style profiles', () => {
 
   it('pulls an out-of-floor profile inside it and refuses an unknown style', () => {
     const wild = { ...MOTION_PROFILES['swiss-kinetic-type']!,
-      entrance: { kind: 'rise' as const, frames: 20, easing: 'enter' as const, distancePx: 300, overshootPct: 40 }, driftPct: 0 }
+      entrance: { kind: 'rise' as const, frames: 20, easing: 'enter' as const, distancePx: 900, overshootPct: 40 }, driftPct: 0 }
     expect(floorProblems(wild).length).toBeGreaterThanOrEqual(4)
     const held = clampToFloor(wild)
     expect(floorProblems(held)).toEqual([])
