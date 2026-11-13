@@ -13,11 +13,11 @@ import type { Box } from './devices/types'
 import { slotsFor, splitCameraBox, splitPlatePosition, windowCameraState } from './layouts'
 import { setActiveCanvas } from './kit/lock'
 import { resolveMotion, type MotionProfile } from './kit/motionProfiles'
-import { beatMotion, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
+import { beatMotion, groundTexture, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, transitionFrames, type CameraView } from './kit/beatMotion'
 import { focusRoom, placed } from './kit/focus'
 import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
-import { cameraAt, cameraStyle, flashAt, hitFrames } from './kit/ingredients'
+import { TRANSITION_FRAMES, cameraAt, cameraStyle, flashAt, hitFrames } from './kit/ingredients'
 import { regionSlots } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
@@ -92,8 +92,12 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const faceState = hasWindow ? windowCameraState(props.beats, props.aspect, frame) : undefined
   setActiveCanvas(width, height)
   // The motion style he picked (props.motion), or the house motion when there is none: every device reads it.
-  const profile = resolveMotion(props.motion)
   const ingredients = props.ingredients
+  // A crossfade handover (style.transitions crossfade) dissolves beat into beat on the style's own clock, its length
+  // set by the energy and kept within the 6 to 10 frames a crossfade may take.
+  const chosen = resolveMotion(props.motion)
+  const profile = chosen && ingredients?.transition === 'crossfade'
+    ? { ...chosen, transition: 'crossfade' as const, transitionFrames: Math.min(10, Math.max(6, TRANSITION_FRAMES[ingredients.energy])) } : chosen
   setMotionProfile(profile)
   // A staging (kit/staging.ts) places his take and a graphics panel on every beat that shows him; a piece with a
   // WINDOW beat keeps the window's own moves.
@@ -168,6 +172,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
             {/* With no style this slot holds nothing, exactly as before (houseGolden.test.ts). */}
             {profile ? <>
               {sweep && <AbsoluteFill style={sweep} />}
+              {grounded && groundTexture(profile.ground.texture, props.tokens, frame) && <AbsoluteFill data-ground-texture style={groundTexture(profile.ground.texture, props.tokens, frame)!} />}
               {grounded && profile.ground.texture === 'paper' && <PaperTexture id={beat.id} width={width} height={layerHeight} tokens={props.tokens} />}
               {grounded && overlays.includes('scanLines') && <AbsoluteFill data-scan-lines style={scanLines(props.tokens)} />}
               {grounded && overlays.includes('sketchFrame') && profile.boil && <SketchFrame id={beat.id} width={width} height={layerHeight}
@@ -266,6 +271,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   const stagingGround = stagedNow && !stagedNow.rises ? (
     <AbsoluteFill key="staging-ground" data-staging={props.layout!.mode} style={{ backgroundColor: stagedNow.under === 'cream' ? props.tokens.cream : props.tokens.ink }}>
       <div style={{ ...boxStyle(stagedNow.panel), borderRadius: stagedNow.panel.radius, background: `radial-gradient(ellipse at 30% 30%, ${props.tokens.inkSoft} 0%, ${props.tokens.ink} 70%)` }} />
+      {groundTexture(profile?.ground.texture, props.tokens, frame) ? <div data-ground-texture style={{ ...boxStyle(stagedNow.panel), borderRadius: stagedNow.panel.radius, ...groundTexture(profile?.ground.texture, props.tokens, frame)! }} /> : null}
       {stagedNow.hairline ? <div style={{ ...boxStyle(stagedNow.hairline), backgroundColor: props.tokens.channel }} /> : null}
     </AbsoluteFill>) : undefined
   const picture = stagingGround ? [stagingGround, ...(!hasWindow ? take : [])] : (!hasWindow ? take : false)

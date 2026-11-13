@@ -13,6 +13,12 @@ export const MotionProfileSchema = z.object({
     easing: z.enum(['enter', 'hero', 'utility']),
     distancePx: z.number().nonnegative(),
     overshootPct: z.number().nonnegative(),
+    /** Blur-in: px of blur at the start of the entrance, sharp by its end (Character.ai: 8 px in 2 to 3 frames). */
+    blurPx: z.number().min(0).max(12).optional(),
+    /** Turn during the entrance, degrees, reaching 0 as it lands (a drop in with rotation; eating its own jobs). */
+    spinDeg: z.number().min(-20).max(20).optional(),
+    /** The resting tilt it settles on, degrees (AI music settles slams on 2 to 4 degrees). */
+    tiltDeg: z.number().min(-6).max(6).optional(),
   }).strict(),
   stagger: z.object({ frames: z.number().int().nonnegative(), unit: z.enum(['line', 'word', 'char']) }).strict(),
   exitFrames: z.number().int().positive(),
@@ -29,8 +35,10 @@ export const MotionProfileSchema = z.object({
   typeReveal: z.object({ kind: z.enum(['line', 'word', 'typewriter', 'roll']), cps: z.number().positive().optional() }).strict(),
   /** house: the cream stage; inkDeep: ink_deep under a graphics-only beat (dark-keynote); dark: ink_deep under every
    *  graphic ground, SPLIT included, with text cards inverted for contrast (hud-terminal, line-boil). paper: a seeded,
-   *  generated grain and fibre over the ground (paper-cutout), no image asset. */
-  ground: z.object({ kind: z.enum(['house', 'inkDeep', 'dark']), sweepFrames: z.number().int().nonnegative(), texture: z.enum(['none', 'halftone', 'paper']),
+   *  generated grain and fibre over the ground (paper-cutout), no image asset. lit: a series-colour glow top left and a
+   *  mint glow bottom right, drifting slowly, over a faint 54 px grid (Character.ai). vignette: a radial ink to inkSoft
+   *  (eating its own jobs). hatched: scrolling inkSoft diagonals, the AI material (AI music). */
+  ground: z.object({ kind: z.enum(['house', 'inkDeep', 'dark']), sweepFrames: z.number().int().nonnegative(), texture: z.enum(['none', 'halftone', 'paper', 'lit', 'vignette', 'hatched']),
     /** On a dark ground, text cards invert (the default) or keep their house cream; type drawn straight on the ground
      *  always inverts so it reads. */
     cards: z.enum(['invert', 'keep']).optional() }).strict(),
