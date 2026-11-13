@@ -171,18 +171,6 @@
       "destination": "/api/board?op=sign-offs"
     },
     {
-      "source": "/api/board/:week/sources",
-      "destination": "/api/board?week=:week&op=sources"
-    },
-    {
-      "source": "/api/board/:week/assets/:id",
-      "destination": "/api/board?week=:week&op=assets&id=:id"
-    },
-    {
-      "source": "/api/board/:week/uploads",
-      "destination": "/api/board?week=:week&op=uploads"
-    },
-    {
       "source": "/api/board/:week/judge",
       "destination": "/api/board?week=:week&op=judge"
     },
@@ -227,10 +215,6 @@
       "destination": "/api/board?week=:week&op=run"
     },
     {
-      "source": "/api/board/:week/state",
-      "destination": "/api/board?week=:week&op=state"
-    },
-    {
       "source": "/api/board/:week/move",
       "destination": "/api/board?week=:week&op=move"
     },
@@ -257,10 +241,6 @@
     {
       "source": "/api/board/:week/touch",
       "destination": "/api/board?week=:week&op=touch"
-    },
-    {
-      "source": "/api/board/:week/imports",
-      "destination": "/api/board?week=:week&op=imports"
     },
     {
       "source": "/api/board/:week/:collection/:id",

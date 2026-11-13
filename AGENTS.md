@@ -29,7 +29,7 @@ repository's `docs/CAROUSEL-STANDARD.md`, the rejection floor and the copy
 lint. Content-engine keeps the standard and makes the hero assets: the
 article, both cuts, thumbnails and covers.
 
-**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); content.krishraja.com/board/<Monday> is the read-only archive (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this repository are history.
+**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); the old board pages at content.krishraja.com/board are retired for good and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good, and everything old in content-engine is retired). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this repository are history.
 
 
 <!-- north-star:start -->

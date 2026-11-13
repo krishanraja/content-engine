@@ -340,7 +340,7 @@ is the good-news carousel for Saturday 7 November 2026 (`docs/plans/2026-11-02-w
 
 - Its style is its own: a photo-led cover, one card per story, a closing card.
 - It carries exactly five stories about real people who benefited from AI, each checked against its primary source
-  and dated, each with its own real photo or clip (the good-news rules above and `week_board.py` `STORY_COUNT`).
+  and dated, each with its own real photo or clip (the good-news rules above and `week_plan.py` `STORY_COUNT`).
 - The house mark sits small and subtle in a bottom corner of every card (the brand-mark rule above).
 - It wears no subchannel colour or name.
 
@@ -352,7 +352,7 @@ carousels do not exceed 10 cards in total, including cover and call to action?"
 - Every carousel is ten cards or fewer, counting the cover and the last card. A format that wants more items (ten
   tips, say) puts two on a card or drops to the strongest eight; it never runs past ten.
 - The checks hold it: the carousel story schema (`packages/contracts/src/carousel.ts`, at most ten slides), the board
-  (`week_board.py` `OFF_CARDS` and `OFF_SLIDES`, at most ten) and Growth's carousel format (`social/formats/carousel.json`
+  (`week_plan.py` `OFF_CARDS` and `OFF_SLIDES`, at most ten) and Growth's carousel format (`social/formats/carousel.json`
   `max_assets`, which its packaging and release checks read before anything reaches Buffer).
 
 ## Seeing a finished carousel (Ruling, Krish, 3 November 2026)
@@ -361,7 +361,7 @@ His words: "I should be able to see the assets directly in the publish board or 
 the assets are. I shouldn't have to download a fucking zip and then look at it that way."
 
 A finished carousel goes back to the board with every slide as its own image (`slides`), its Drive folder (`drive`)
-and the zip only as a secondary download (`download`), in the off-day option `week_board.py` reads
+and the zip only as a secondary download (`download`), in the off-day option `week_plan.py` reads
 (docs/PUBLISH_BOARDS.md). A finished video goes back as `video` with its `drive`. The board refuses slides or a video
 without the Drive folder.
 

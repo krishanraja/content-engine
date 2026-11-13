@@ -43,7 +43,7 @@ Preflight first: add `--piece <plan folder or uuid>` to each floor read and to
 
 ## Publish-board routing
 
-Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The live board
+Ruling (Krish, 2026-11-11): one live board, in Control Centre. Ruling (Krish, 2026-11-13): the old publish boards are retired for good. The live board
 (`live_board.py <Monday> [day]`) draws the week from `GET /api/board/<Monday>/view`, so a cut reaches it by being on
 the piece's record (`making.py`), never by a board page (`docs/PUBLISH_BOARDS.md`, "One live board"); Claude
 artifacts stay retired (`scripts/hooks/artifact_gate.py`). Report as you work, as a board prompt says (`writeBack`,

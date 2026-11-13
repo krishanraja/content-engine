@@ -69,8 +69,8 @@ from pathlib import Path
 ARTICLE = '{ARTICLE_URL}'
 YOUTUBE = '{YOUTUBE_URL}'
 VERTICAL_MAX_SECONDS = 90  # the short cut, house rule TWO_CUTS; inside WhatsApp Status's limit too
-FEATURE_NAME = '15-minute feature'  # making.CUT_NAME['feature']; config/board-layout.json cuts.feature
-# Named so the board's YouTube tick (week_board.py, "YouTube (the ...)") stays the 5-minute video's alone.
+FEATURE_NAME = '15-minute feature'  # making.CUT_NAME['feature']
+# Named so the board's YouTube tick ("YouTube (the ...)") stays the 5-minute video's alone.
 FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'
 FEATURE_SPOTIFY = f'Spotify (the {FEATURE_NAME})'
 
@@ -126,10 +126,10 @@ def is_feature(p):
     return making.feature_piece(str(p['piece_id']))
 
 
-def feature_steps(p, f, article_q, on_board=False):
-    """The feature's own two steps (house rule FEATURE): YouTube long-form and a Spotify episode. Its words sit above
-    the steps on the week's board and below them on publish.html, as in every other step."""
-    words_at = 'above' if on_board else 'below'
+def feature_steps(p, f, article_q):
+    """The feature's own two steps (house rule FEATURE): YouTube long-form and a Spotify episode. Its words sit below
+    the steps on publish.html, as in every other step."""
+    words_at = 'below'
     waiting = p.get('feature_waiting')
     wait = [f'Not ready yet: {waiting}. Everything else in this step is ready.'] if waiting else []
     names = file_names({'files': f})
@@ -166,8 +166,7 @@ def feature_steps(p, f, article_q, on_board=False):
 
 def file_names(p):
     """{role: the file's name in the post's folder} for every file a step names: the words' own names, or the
-    standing ones. The board's run-sheet (week_board.py) matches each step's files to its Download first list by
-    these roles."""
+    standing ones."""
     f = p.get('files') or {}
     wide_thumb = f.get('wide_thumbnail') or '3 Video/ the wide (16:9) thumbnail'
     return {
@@ -186,7 +185,7 @@ def file_names(p):
     }
 
 
-def steps(p, on_board=False):
+def steps(p):
     """The channels, in the order they are published (docs/AMPLIFICATION.md).
 
     Krish, 2026-10-11: "I always want a 3-minute video and a 90-second
@@ -207,12 +206,11 @@ def steps(p, on_board=False):
     share_card, square, copy_page = names['share_card'], names['square'], names['substack_copy']
     q = p.get('comment_question') or ''
     short_caption = p.get('short_caption')
-    # On the week's board each step is a card with its words above what to do and its link box below that
-    # (week_board.py run_sheet); on publish.html the words follow the steps and the link boxes are at the top.
-    words_at = 'above' if on_board else 'below'
-    link_box = 'below' if on_board else 'at the top of this page'
-    paste_post = ('Press Copy article above and paste it into the text under the video.' if on_board else
-                  f'Open {copy_page}, press Copy post, and paste it into the text under the video.')
+    # On publish.html the words follow the steps and the link boxes are at the top. (The old board's run-sheet, which
+    # put the words above and its link box below, was retired with the old boards on 13 Nov 2026.)
+    words_at = 'below'
+    link_box = 'at the top of this page'
+    paste_post = f'Open {copy_page}, press Copy post, and paste it into the text under the video.'
     out = [
         {
             'where': 'Substack', 'tag': 'The home: one post, one email',
@@ -305,7 +303,7 @@ def steps(p, on_board=False):
     ]
     if is_feature(p):
         # Beside the 5-minute steps: the feature's YouTube after the 5-minute YouTube, its episode after the 5-minute one.
-        youtube, spotify = feature_steps(p, p.get('files') or {}, q, on_board)
+        youtube, spotify = feature_steps(p, p.get('files') or {}, q)
         at = next(i for i, x in enumerate(out) if x['where'].startswith('YouTube (the '))
         out.insert(at + 1, youtube)
         out.insert(next(i for i, x in enumerate(out) if x['where'] == 'Spotify') + 1, spotify)
@@ -482,14 +480,9 @@ def self_test():
         failures.append('Spotify must use its dedicated thumbnail in both files and instructions')
     if named['files']['wide_thumbnail'] not in by_where['Spotify']['files']:
         failures.append('Spotify must retain the existing wide-thumbnail fallback')
-    # On the week's board (week_board.py run_sheet) a step's words sit above what to do and its link box below it.
-    board = steps(sample, on_board=True)
-    if not (any('Copy article above' in d for d in board[0]['do']) and any('Article link box below' in d for d in board[0]['do'])
-            and any('the ones above' in d for d in board[1]['do']) and not any(' below.' in d for s in board for d in s['do'][:-1] if 'link box' not in d)):
-        failures.append('on the board, the words are above each step\'s list and its link box below it')
-    if steps(sample)[0]['do'] != [d.replace('Press Copy article above and paste', 'Open 1 Article/substack-copy.html, press Copy post, and paste')
-                                   .replace('box below', 'box at the top of this page').replace('subtitle above', 'subtitle below')
-                                   for d in board[0]['do']]:
+    first = steps(sample)[0]['do']
+    if not (any('Open 1 Article/substack-copy.html, press Copy post, and paste' in d for d in first)
+            and any('box at the top of this page' in d for d in first)):
         failures.append('publish.html keeps its own words: the steps above, the link boxes at the top')
     if file_names({})['spotify_thumbnail'] != file_names({})['wide_thumbnail'] or file_names({'files': {'cover': 'c.png'}})['cover'] != 'c.png':
         failures.append('file_names: the standing names, the words\' own, and Spotify falling back to the wide thumbnail')
@@ -534,12 +527,10 @@ def self_test():
     waiting = {x['where']: x for x in steps(dict(feature, feature_waiting='being cut'))}
     if not all(any('Not ready yet: being cut' in d for d in waiting[w]['do']) for w in (FEATURE_YOUTUBE, FEATURE_SPOTIFY)):
         failures.append('a feature not made yet says so in its steps')
-    # On the board the feature's words are above its steps, as every other step's are; on publish.html below.
-    on_board = {x['where']: x for x in steps(feature, on_board=True)}
+    # On publish.html the feature's words are below its steps, as every other step's are.
     for where in (FEATURE_YOUTUBE, FEATURE_SPOTIFY):
-        said = ' '.join(on_board[where]['do'])
-        if ' below' in said or ' above' not in said or ' above' in ' '.join(by_feature[where]['do']):
-            failures.append(f'{where}: its words are above its steps on the board and below them on publish.html')
+        if ' above' in ' '.join(by_feature[where]['do']):
+            failures.append(f'{where}: its words are below its steps on publish.html')
     making.FEATURES = saved_features
     tmp.cleanup()
     checks = 34
