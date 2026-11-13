@@ -1,0 +1,3 @@
+Status: The Fri 20 Nov swap is done, on Krish's typed instruction in the session ("The board isn't suitable for me to make these actions. Can you just get this done?", and Tue 17 Nov chosen for the data-centre piece): The Great Recount (c00cd4e0) is Fri 20's piece, in drafting, and the data-centre piece (b019dbf8) is on Tue 17 Nov, in one series_piece_place transaction whose board documents carry his words (via words). Control Centre's Content tab session has the brief to draw the replacing Approve, Move to… on series pieces, several pieces on a day, and every option at once instead of one per page.
+Next: The data-centre piece's scripts and recording are ready for Tue 17 Nov.
+North Star check (2026-11-13): holds.
