@@ -1,0 +1,90 @@
+name: Write his sign-offs
+
+# Ruling (Krish, 2026-11-12): the three video sign-offs are one review card each on his board, with samples, and only
+# his presses write the configs. His words: "One review card each: each goes on your Publish Board as a card with
+# samples to look at and listen to, plus Approve or Not this. About 10 minutes in total."
+#
+# His Approve or Not this on a sign-off card (POST /api/board/<Monday>/sign-off, his login only;
+# apps/control-plane/api/board/_signOffs.ts) starts this job as a repository_dispatch of type signoff-apply. The job
+# reads every press of his back from the board (GET /api/board/sign-offs, the engine key), never from the dispatch,
+# which carries nothing. For each approved sample it fetches the exact bytes from his Drive through the engine
+# (GET /api/board/sign-offs?file=<id>), checks the sha256 his press named, and writes config/sfx-approved.json (and the
+# kit built from it), config/ve/golden-frames.json and config/ve/design-lock.json through their own writers
+# (scripts/velib/signoffs.py apply). A Not this is written as his no, with the date. It opens a pull request that
+# merges itself on green CI (auto-merge.yml), like every other.
+#
+# No Claude runs here and it has no schedule (Ruling, Krish, 2026-10-29: "I want zero Claude routines"): his press or
+# Run workflow is the only start. Nothing is published, posted or sent.
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [signoff-apply]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: signoff-apply
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the pinned Python tools (Pillow for the lock's key frames)
+        run: python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+
+      - name: Write his presses into the configs
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+        run: |
+          if [ -z "$ENGINE_OPERATOR_TOKEN" ]; then
+            echo "::error::No ENGINE_OPERATOR_TOKEN, so the job cannot read his presses."
+            exit 1
+          fi
+          python3 scripts/ve.py signoff apply | tee .ve-signoff.log
+          python3 scripts/ve.py signoff check
+          python3 tests/ve_signoffs_test.py
+
+      - name: Open the pull request (it merges itself on green CI)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+          REPO: ${{ github.repository }}
+        run: |
+          git add -A -- config/sfx-approved.json config/ve/sfx-kits config/ve/golden-frames.json config/ve/design-lock.json fixtures/ve/design-lock
+          if git diff --cached --quiet; then echo "Nothing new to write."; exit 0; fi
+          today=$(date -u +%Y-%m-%d)
+          branch="signoff/$today-$RUN_ID"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          {
+            echo "His sign-offs from the board, $today"
+            echo
+            cat .ve-signoff.log
+            echo
+            echo "Written by .github/workflows/signoff-apply.yml from his presses on the To review cards of his Publish Board, each bound to the sha256 of the sample he saw. Nothing is approved on his behalf."
+            echo
+            echo "Ruling (Krish, 2026-11-12): the three video sign-offs are one review card each on his board, with samples, and only his presses write the configs."
+          } > .ve-signoff.msg
+          git commit -q -F .ve-signoff.msg
+          # The checkout kept no credential, so the token is passed to this one push only.
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c http.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$branch"
+          gh pr create -R "$REPO" --head "$branch" --base main --title "His sign-offs from the board, $today" --body-file .ve-signoff.msg
+          # A push and a pull request made with GitHub's own token start no CI; start it on the branch.
+          gh workflow run ci.yml -R "$REPO" --ref "$branch"

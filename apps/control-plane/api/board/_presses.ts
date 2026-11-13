@@ -74,7 +74,10 @@ export interface PressDeps { send?: Sender; now?: () => string; revise?: typeof 
   /** The board's Drive (_drivePosts.ts boardDrive): the media route's copy of a cut the library lacks, and the drive route. */
   drive?: (db: SupabaseClient) => import('./_drivePosts.js').BoardDrive
   /** The judges' panel for Growth's carousels and Shorts (_judge.ts); a test passes its own. */
-  judgePanel?: (input: import('../_judges/panel.js').PanelInput) => Promise<import('../_judges/panel.js').PanelResult> }
+  judgePanel?: (input: import('../_judges/panel.js').PanelInput) => Promise<import('../_judges/panel.js').PanelResult>
+  /** The sign-off cards' sources (_signOffs.ts readSignOffSources) and the apply job's dispatch; a test passes its own. */
+  signOffs?: () => ReturnType<typeof import('./_signOffs.js').readSignOffSources>
+  dispatch?: typeof import('./_run.js').dispatchJob }
 type Body = Record<string, unknown>
 type Saved = { ok: boolean; revision?: number; body?: Body; [key: string]: unknown }
 export class PressError extends Error { constructor(public status: number, message: string) { super(message) } }

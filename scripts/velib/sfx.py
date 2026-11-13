@@ -44,9 +44,11 @@ def candidates(path: Path = CANDIDATES) -> dict[str, dict]:
 
 
 def approved(path: Path = APPROVED) -> dict[str, dict]:
-    """The sounds Krish approved: each names him, carries his words and the sha256 of the file he heard."""
+    """The sounds Krish approved: each names him and the sha256 of the file he heard, with his words or his Approve press
+    on those exact bytes (the Sound effects card on his board, Ruling, Krish, 2026-11-12)."""
     return {row['id']: row for row in _rows(path, 'approved')
-            if row.get('id') and row.get('sha256') and row.get('approved_by') == 'Krish' and row.get('approval_words')}
+            if row.get('id') and row.get('sha256') and row.get('approved_by') == 'Krish'
+            and (row.get('approval_words') or (row.get('approved_press') or {}).get('sha256') == row['sha256'])}
 
 
 def music_root() -> Path:
@@ -201,3 +203,62 @@ def kit_problems(kit_path: Path = KIT, approved_path: Path = APPROVED) -> list[s
         return []
     kit, ok = load_json(kit_path), approved(approved_path)
     return [f'kit sound {name} is not in the approved set' for name in kit if name not in ok]
+
+
+# ---------------------------------------------------------------- heard on his board (Ruling, Krish, 2026-11-12)
+# "One review card each: each goes on your Publish Board as a card with samples to look at and listen to, plus Approve
+# or Not this." A sound he heard on the Sound effects card (config/ve/sign-offs.json, card sfx) is approved by his
+# Approve press on its exact bytes, as surely as by an audition on his cut; the row says which he heard. Only
+# velib/signoffs.apply calls these, with a press the engine kept as his (by Krish, bound to the sample's sha256).
+REVIEW_WHERE = 'his Publish Board, To review: Sound effects'
+
+
+def reviewed_state(sid: str, sha256: str, approved_path: Path = APPROVED) -> str | None:
+    """approved, declined or None: what config/sfx-approved.json holds now for this sound's exact bytes."""
+    doc = load_json(approved_path)
+    if any(r.get('id') == sid and r.get('sha256') == sha256 for r in doc.get('approved') or []):
+        return 'approved'
+    if any(r.get('id') == sid and r.get('sha256') == sha256 for r in doc.get('declined') or []):
+        return 'declined'
+    return None
+
+
+def _reviewed_row(sample: dict, on: str, at: str | None) -> dict:
+    if not sample.get('sha256') or not sample.get('provider_id'):
+        raise ValueError(f"{sample.get('id')}: a reviewed sound names its provider id and the sha256 he heard")
+    return {'id': sample['id'], 'title': sample.get('title'), 'provider': sample.get('provider', 'Epidemic Sound'),
+            'provider_id': sample['provider_id'], 'file': f"sfx/{sample['id']}{Path(sample.get('name') or '.wav').suffix.lower() or '.wav'}",
+            'sha256': sample['sha256'], 'drive_id': (sample.get('drive') or {}).get('file_id'), 'slot': sample.get('slot'),
+            'heard_on': {'where': REVIEW_WHERE, 'card': 'sfx', 'sample_sha256': sample['sha256'], **({'at': at} if at else {})}}
+
+
+def approve_reviewed(sample: dict, *, words: str, on: str, at: str | None = None, approved_path: Path = APPROVED,
+                     kit_path: Path = KIT) -> dict:
+    """His Approve on a sound he heard on his board: one approved row (his press is the yes; his words when he gave
+    any), any earlier no on the same bytes removed, and the kit rebuilt from approved rows only."""
+    row = _reviewed_row(sample, on, at)
+    gain = float(sample.get('gain_db', DEFAULT_GAIN_DB))
+    # His press is the yes: kept as the press it was (where, when, the bytes it names), never as words he did not type.
+    row.update({'gain_db': gain, 'approved_by': 'Krish', 'approved_on': on,
+                'approved_press': {'where': REVIEW_WHERE, 'press': 'Approve', 'sha256': sample['sha256'], **({'at': at} if at else {})},
+                **({'approval_words': words.strip()} if words.strip() else {})})
+    doc = load_json(approved_path)
+    doc['approved'] = [r for r in doc.get('approved') or [] if r.get('id') != sample['id']] + [row]
+    doc['declined'] = [r for r in doc.get('declined') or [] if r.get('id') != sample['id']]
+    if not doc['declined']:
+        doc.pop('declined')
+    write_json(approved_path, doc)
+    return write_kit(approved_path, kit_path)
+
+
+def decline_reviewed(sample: dict, *, words: str, on: str, at: str | None = None, approved_path: Path = APPROVED,
+                     kit_path: Path = KIT) -> dict:
+    """His Not this: recorded as his no, with the date, and the sound taken out of the approved set and the kit if it
+    was in them."""
+    row = _reviewed_row(sample, on, at)
+    row.update({'declined_by': 'Krish', 'declined_on': on, **({'words': words.strip()} if words.strip() else {})})
+    doc = load_json(approved_path)
+    doc['approved'] = [r for r in doc.get('approved') or [] if r.get('id') != sample['id']]
+    doc['declined'] = [r for r in doc.get('declined') or [] if r.get('id') != sample['id']] + [row]
+    write_json(approved_path, doc)
+    return write_kit(approved_path, kit_path)

@@ -2153,6 +2153,10 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function wordsBody(id: string, body: Record<string, unknown>): boolean`
 - `const LIVE_ID`
 - `function liveBody(id: string, body: Record<string, unknown>): boolean`
+- `const SIGN_OFF_ID`
+- `const MAX_SIGN_OFF_PRESSES`
+- `const SIGN_OFF_WORDS_MAX`
+- `function signOffBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
@@ -2548,6 +2552,40 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `type RunState = 'queued' | 'running' | 'done' | 'failed' | 'cancelled'`
 - `interface RunInfo`
 - `async function readRuns(env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as F…`
+
+### `apps/control-plane/api/board/_signOffs.ts`
+
+- `const SIGN_OFF_OP`
+- `const SIGN_OFF_CARDS`
+- `type SignOffCardId = typeof SIGN_OFF_CARDS[number]`
+- `export { SIGN_OFF_ID }`
+- `const CARD_ITEM`
+- `const GATE2_LOCK`
+- `export { MAX_SIGN_OFF_PRESSES, SIGN_OFF_WORDS_MAX }`
+- `type SignOffSaid = 'approve' | 'not_this'`
+- `interface SignOffSample`
+- `interface SignOffManifestCard`
+- `interface SignOffManifest`
+- `interface SignOffPress`
+- `interface SignOffConfigs`
+- `interface SignOffAction`
+- `interface SignOffAnswer`
+- `interface SignOffItemView`
+- `interface SignOffCardView`
+- `interface SignOffsView`
+- `function cardSha256(card: Pick<SignOffManifestCard, 'items'>): string`
+- `function parseManifest(text: string | null): SignOffManifest | null`
+- `function pressesOf(rows: Array<{ week?: string; doc_id: string; body: unknown; updated_by: string }>): SignOffPress[]`
+- `function signOffPresses(card: SignOffManifestCard, item: SignOffSample | null): { approve: SignOffAction; not_this: Sig…`
+- `function signOffsView(manifest: SignOffManifest | null, presses: SignOffPress[], configs: SignOffConfigs): SignOffsView…`
+- `async function readSignOffSources(fetcher: Fetcher, mainSha?: string | null): Promise<{ manifest: SignOffManifest | nul…`
+- `async function readSignOffPresses(db: SupabaseClient): Promise<SignOffPress[] | null>`
+- `function signOffFiles(manifest: SignOffManifest | null): Set<string>`
+- `class SignOffError`
+- `interface SignOffPick`
+- `function signOffPick(body: unknown): SignOffPick`
+- `function checkAgainst(manifest: SignOffManifest | null, pick: SignOffPick): void`
+- `async function recordSignOff(db: SupabaseClient, week: string, pick: SignOffPick, now: string): Promise<{ press: SignOf…`
 
 ### `apps/control-plane/api/board/_stage.ts`
 

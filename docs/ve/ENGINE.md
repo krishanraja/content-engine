@@ -80,6 +80,7 @@ voice-ab <piece> --cut <cut> --assets-dir <assets> --at <s> [--seconds 10]
 sfx audition <piece> --cut <cut> --assets-dir <assets> --candidates <id> ... [--at-frame <n>] [--beat <id>] | approve --id <id> --words <his words> --on <date> --audition <sfx-audition.json> | stage --assets-dir <assets>
 brief <piece> [--cut <cut>] [--beat <id> ...] [--move <beat>=<move> ...] [--check <dir> --plate <id>]
 golden show|check|fill <slot> --reference <file> --at <mm:ss.s> --said <his words>
+signoff check | stills <piece> --cut long|short --out <dir> [--at <m:ss.s,...>] | gate2 <props> --out <dir> | add <card> --item <json> --file <local> | apply
 init <piece> [--format <clip format>]
 refs <piece> <cut>
 lock draft <format> --aspect 9:16|16:9 --beats <b> ... [--modules <format> ...] --anatomy <md> --motion <md>
@@ -105,6 +106,8 @@ Also: `comp`, `keyframes`, `lock check|show|freeze`, `fonts`, `lane`, `verdict w
 **file** files only cuts `ve status` calls READY, through `scripts/quick-edit/archive.py` (`MINDMAKE_ARCHIVE_ROOT`) and the library rules of `scripts/post-pack/library.py` (`MINDMAKE_LIBRARY_ROOT`, `3 Posts/<post>/3 Video`), re-hashing each file first and never overwriting; it writes `ve-<piece_id>.json` beside the videos and `filed.json` in the piece. Shadow cuts are compared, not filed.
 
 **brief** writes `briefs/<plate>.brief.json` and `<plate>.card.json` (fields for `ve card`) per plate slot: the point, the line and duration, slot geometry, style recipe, a named move (`config/ve/plate-moves.json`), the eight floor nevers from `scripts/floor.py`, acceptance tests and the tool route; 2 treatments x 4 candidates; the Critic ranks the eight and blocks only on a never or a failed test. It never dispatches. `--check` runs the mechanical acceptance on a candidate folder.
+
+**signoff** (Ruling, Krish, 2026-11-12: the three video sign-offs are one review card each on his board, with samples, and only his presses write the configs) makes the samples for the To review cards (`stills` cuts candidate frames from a published cut's library copy, `gate2` renders one 16:9 still per locked beat through `ve-render.mjs --stills`, `add` records a sample filed in Drive with its sha256) and `apply`, run by `signoff-apply.yml` on his press, writes his answers into `config/sfx-approved.json`, `config/ve/golden-frames.json` and `config/ve/design-lock.json` (docs/PUBLISH_BOARDS.md, "To review").
 
 **lock draft** writes an unfrozen entry under `drafts` in the design lock with one empty key-frame slot per beat; a 16:9 entry is `<format>@16:9` on a 1920x1080 canvas. Only `lock freeze` with Krish's Gate 2 stills turns a draft into a lock; the formats a draft names become modules then. **golden** holds 5 to 10 Production Inspo moments he names (`config/ve/golden-frames.json`), filled only with his words; Monday 26's moments serve meanwhile.
 All commands accept `-h` / `--help`. Render scale defaults to 1 and must be

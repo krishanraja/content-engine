@@ -10,7 +10,7 @@
 // The repository is public, so the runs' status is read from GitHub's public API (readRuns), with the same token when
 // one is set (a higher rate limit). The board shows each job's latest run: queued, running, done or failed.
 
-export type JobName = 'make-piece' | 'offday-revise' | 'saturday-goodnews' | 'sunday-ideas' | 'produce-day' | 'repair-round'
+export type JobName = 'make-piece' | 'offday-revise' | 'saturday-goodnews' | 'sunday-ideas' | 'produce-day' | 'repair-round' | 'signoff-apply'
 
 interface Job {
   workflow: string
@@ -49,6 +49,9 @@ export const JOBS: Record<JobName, Job> = {
     payload: i => (isMonday(i.week) && Array.isArray(i.cuts) && i.cuts.length > 0 && i.cuts.length <= 6 && i.cuts.every(c => CUT.test(String(c)))
       ? { week: i.week, cuts: i.cuts.map(String).join(',') } : null),
   },
+  // His press on a sign-off card (_signOffs.ts) starts the job that writes the configs from his presses, read back from
+  // the board, never from this payload (Ruling, Krish, 2026-11-12: only his presses write the configs). No Claude runs.
+  'signoff-apply': { workflow: 'signoff-apply.yml', payload: () => ({}) },
 }
 
 export const isJob = (v: unknown): v is JobName => typeof v === 'string' && Object.hasOwn(JOBS, v)
