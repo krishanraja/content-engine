@@ -36,7 +36,14 @@ class IngredientsTest(unittest.TestCase):
             ingredient_props({'style': {'transitions': {'kind': 'spin', 'reason': 'x'}}})
 
     def test_the_layout_modes_are_the_renderers(self):
-        self.assertEqual(LAYOUTS, ('house', 'fill', 'stack'))
+        self.assertEqual(LAYOUTS, ('house', 'fill', 'stack', 'band', 'stage', 'tray'))
+
+
+class TrayTest(unittest.TestCase):
+    def test_the_tray_needs_upper_captions(self):
+        from velib import compile as c
+        src = Path(c.__file__).read_text(encoding='utf-8')
+        self.assertIn("layout == 'tray' and props.get('captionPlacement') != 'upper'", src)
 
 
 if __name__ == '__main__':

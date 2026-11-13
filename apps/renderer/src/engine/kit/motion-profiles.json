@@ -411,7 +411,8 @@
         "frames": 9,
         "easing": "enter",
         "distancePx": 0,
-        "overshootPct": 0
+        "overshootPct": 0,
+        "blurPx": 8
       },
       "stagger": {
         "frames": 4,
@@ -433,7 +434,7 @@
       "ground": {
         "kind": "dark",
         "sweepFrames": 0,
-        "texture": "none",
+        "texture": "lit",
         "cards": "keep"
       },
       "type": {
@@ -450,7 +451,9 @@
         "frames": 7,
         "easing": "enter",
         "distancePx": 56,
-        "overshootPct": 2
+        "overshootPct": 2,
+        "spinDeg": -8,
+        "tiltDeg": -1.5
       },
       "stagger": {
         "frames": 3,
@@ -472,7 +475,7 @@
       "ground": {
         "kind": "dark",
         "sweepFrames": 0,
-        "texture": "none",
+        "texture": "vignette",
         "cards": "keep"
       },
       "driftPct": 1.5,
@@ -485,7 +488,8 @@
         "frames": 10,
         "easing": "hero",
         "distancePx": 500,
-        "overshootPct": 12
+        "overshootPct": 12,
+        "tiltDeg": 3
       },
       "stagger": {
         "frames": 6,

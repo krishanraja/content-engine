@@ -1,3 +1,4 @@
+import { MAX_GROW, isRegion } from '../../kit/layout'
 import React from 'react'
 import { textWidth, wrapWords } from '../../../house/metrics'
 import { font } from '../../kit/typeRole'
@@ -130,7 +131,17 @@ export function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight
 
 // Existing copy slots: who supplies chat names, order product names and email
 // subject/recipient; text remains the event-revealed message or product detail.
-export function Device({ object, events, box, tokens, aspect, frame }: DeviceProps) {
+export function Device(props: DeviceProps) {
+  const { object, events, box, tokens, aspect, frame } = props
+  // In a layout region (kit/layout.ts, kit/staging.ts) the card lays out at its house width and is scaled to the
+  // region's width, so it never overhangs the region's edge (it is at least 920 wide, wider than an 800 region).
+  if (isRegion(box)) {
+    const natural = 920, g = Math.min(MAX_GROW, box.width / natural)
+    return <div data-region-fit="" style={{ position: 'absolute', left: box.left, top: box.top, width: natural,
+      height: box.height / g, transformOrigin: '0 0', transform: `scale(${g})` }}>
+      <Device {...props} box={{ left: 0, top: -box.height / g * 0.1, width: natural, height: box.height / g }} />
+    </div>
+  }
   const s = bubbleState({ object, events, frame })
   if (!s) return null
   const tall = aspect === '9:16'

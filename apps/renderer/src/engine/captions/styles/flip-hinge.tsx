@@ -40,7 +40,7 @@ export const flipHinge: Draw = (props, frame) => {
   // the exit: each word falls back over D frames, the next one a stagger later, word after word from the first;
   // it starts only once the last word (and the key word's slower swing) has fully stood upright
   const n = words.length, D = 3, stagger = Math.max(1, Math.round(0.04 * fps))
-  const fall = exitStart(page, D + (n - 1) * stagger, fps, 0.27)
+  const fall = exitStart(page, D + (n - 1) * stagger + 1, fps, 0.27) // +1: the last word is down by toFrame - 1
 
   const span = (i: number) => {
     const w = page.words[i]!, size = S * mult(i)

@@ -1,0 +1,14 @@
+{
+  "card_id": "ve-gap-video-wall-1",
+  "title": "video_wall: real clips as placed, tilted, shadowed cards, and a 3x2 wall that fills a tile every 6 to 7 frames",
+  "goal": "From Krish's AI music cut (docs/ve/styles/ai-music-slam.card.json, gaps). Build device `video_wall`: clips (plates the piece names; OffthreadVideo on the one clock, muted) drawn as cream-bordered cards with a hard ink drop, each settling on a 2 to 4 deg tilt; as a wall, a 3x2 grid fills one tile every 6 to 7 frames. Verbs: enter, add, dim (the wall drops to about a third behind whatever slams over it next). Fixture uses still images standing in for clips; test asserts tile timing and the dim.\n\nPer devices/CONTRACT.md: index.tsx, state.ts, schema.ts, fixture.json, device.test.ts; register in registry.ts and config/ve/devices.json.",
+  "write_allow": "[apps/renderer/src/engine/devices/video_wall/**, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/props.ts, config/ve/devices.json]",
+  "read": "apps/renderer/src/engine/**, docs/ve/MOTION_STANDARD.md, docs/ve/INGREDIENTS.md, config/ve/design-lock.json, docs/ve/styles/ai-music-slam.card.json",
+  "kind": "device",
+  "motion_style": "ai-music-slam",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. Every number carries its producer. In a layout region (kit/layout.ts isRegion, kit/staging.ts) the device lays out at its natural size and grows to fill the region (kit/regionFit.tsx).",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/video_wall\nnpx vitest run apps/renderer/src/engine\nnode node_modules/typescript/bin/tsc --noEmit --pretty false",
+  "max_minutes": 60,
+  "max_calls": 60,
+  "path": "docs/ve/cards/style-gaps/ve-gap-video-wall-1.md"
+}

@@ -13,11 +13,13 @@ import { REGIONS } from '../captions/kit'
  *  - `fill`: each device on a graphics-only beat gets the free region (the channel-safe area the captions leave) and a
  *    device that fits itself grows to fill it, up to 3x, centred in it.
  *  - `stack`: the free region is shared top to bottom by the beat's devices, each filling its share.
+ *  - `band`, `stage`, `tray`: stagings for the beats that show his take (kit/staging.ts); their graphics-only beats
+ *    fill as under `fill`.
  *
  *  Only boxes this module hands out may grow (`isRegion`), so chrome and every other user of `fit.ts` draw exactly as
  *  before. Pure: the regions are a function of the props alone. */
 
-export const LAYOUTS = ['house', 'fill', 'stack'] as const
+export const LAYOUTS = ['house', 'fill', 'stack', 'band', 'stage', 'tray'] as const
 export const EngineLayoutSchema = z.object({ mode: z.enum(LAYOUTS) }).strict()
 export type EngineLayout = z.infer<typeof EngineLayoutSchema>
 
@@ -29,6 +31,8 @@ const regions = new WeakSet<Box>()
 /** Whether a box is a layout region: only then may a device grow to fill it and centre in it. */
 export const isRegion = (box: Box): boolean => regions.has(box)
 const mark = (box: Box): Box => { regions.add(box); return box }
+/** Mark a box as a region devices may grow into (the stagings, kit/staging.ts). */
+export const markRegion = mark
 
 type Aspect = '9:16' | '16:9'
 type Placement = 'lower' | 'centre' | 'upper' | undefined
@@ -50,7 +54,15 @@ export function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, pl
   count: number): Box[] | undefined {
   if (!layout || layout.mode === 'house' || count < 1) return undefined
   const r = freeRegion(aspect, placement, themed)
-  if (layout.mode === 'fill' || count === 1) return Array.from({ length: count }, () => mark({ ...r }))
+  // Under a staging a graphics-only beat is a full-frame takeover: its devices fill the free region.
+  if (layout.mode !== 'stack' || count === 1) return Array.from({ length: count }, () => mark({ ...r }))
   const h = (r.height - GAP * (count - 1)) / count
   return Array.from({ length: count }, (_, i) => mark({ left: r.left, top: Math.round(r.top + i * (h + GAP)), width: r.width, height: Math.floor(h) }))
+}
+
+/** The boxes for a staged beat's devices: the staging's region, shared top to bottom when there are several. */
+export function regionSlots(region: Box, count: number): Box[] {
+  if (count <= 1) return [mark({ ...region })]
+  const h = (region.height - GAP * (count - 1)) / count
+  return Array.from({ length: count }, (_, i) => mark({ left: region.left, top: Math.round(region.top + i * (h + GAP)), width: region.width, height: Math.floor(h) }))
 }

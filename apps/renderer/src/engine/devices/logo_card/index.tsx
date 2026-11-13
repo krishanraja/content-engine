@@ -1,3 +1,4 @@
+import { isRegion } from '../../kit/layout'
 import React from 'react'
 import { staticFile } from 'remotion'
 import { HOUSE_FONTS } from '../../../house/geometry'
@@ -39,7 +40,8 @@ export function logoCardState({ object, events, frame }: Pick<DeviceProps, 'obje
 }
 
 export function Device({ object, events, box, tokens, aspect, frame }: DeviceProps) {
-  const params = ParamsSchema.parse(object.params)
+  // In a layout region the logos draw as tiles, which size themselves to fill the box.
+  const params = { ...ParamsSchema.parse(object.params), ...(isRegion(box) ? { tiles: true } : {}) }
   const s = logoCardState({ object, events, frame }, params.logos.length)
   if (!s) return null
   if (params.tiles) {
