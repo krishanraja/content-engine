@@ -135,7 +135,7 @@ def canonical_sha(value) -> str:
 
 def storyboard_sha(storyboard: str, expect: str) -> str:
     """What the Sign storyboard press binds: canonical JSON {"expect", "storyboard"} of the two files' text, LF line
-    endings, exactly as the files hold it. Mirrors week_board.storyboard_sha (board commit ad90078)."""
+    endings, exactly as the files hold it. The old board's builder carried the same hash until it was retired (13 Nov 2026)."""
     lf = lambda text: str(text).replace('\r\n', '\n').replace('\r', '\n')  # noqa: E731
     return canonical_sha({'expect': lf(expect), 'storyboard': lf(storyboard)})
 

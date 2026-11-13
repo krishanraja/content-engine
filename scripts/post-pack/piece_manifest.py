@@ -15,7 +15,7 @@ Three steps, and nothing here sends anything unless Krish's yes is given for tha
 
     python3 piece_manifest.py draft SPEC.json --out "0 Publish/manifest.draft.json"
         The draft, before he approves: every field but approval_sha256. Its sha256 is what the board's Approve for
-        publish binds (week_board.py --publish-manifest DAY=<the draft>), so his press approves exactly these words,
+        publish binds, so his press approves exactly these words,
         files and alt text. Growth refuses a draft (no approval digest: manifest_unapproved).
     python3 piece_manifest.py seal --draft D --approval APPROVAL.json --out "0 Publish/manifest.json"
         After his press: APPROVAL.json is his picks/<day>-publish document as the board API returns it

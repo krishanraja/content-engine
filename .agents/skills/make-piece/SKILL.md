@@ -10,19 +10,18 @@ description: Make one piece end to end from the piece id Control Center or the S
 
 ## Publish-board routing
 
-Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The week's
+Ruling (Krish, 2026-11-11): one live board, in Control Centre. Ruling (Krish, 2026-11-13): the old publish boards are retired for good. The week's
 publish board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its
 link), and it draws the week from the engine's `GET /api/board/<Monday>/view` (`docs/PUBLISH_BOARDS.md`, "One live
 board"). Update it by writing what the view reads, never a page: the piece's making record (`making.py`), his presses
 and his yes (`board_web.py read`, `yes.py`), and the week's plan files (`docs/plans/<Monday>-week/ideas.json`, the
 narrative locks, the research) on main or on the week's branch `offday-revise/<Monday>`; when only a file changed,
 `python3 scripts/post-pack/board_web.py touch <Monday>` makes the live board read the week again at once. Never build
-or publish a board page (`week_board.py`, `board_web.py publish-web`): the content.krishraja.com pages are the
-archive, read-only, and refuse every press. A question for Krish is a press the view carries or an item on his one
+or publish a board page: the old content.krishraja.com pages, their builder and publisher are gone, and every old
+address redirects to the live board. A question for Krish is a press the view carries or an item on his one
 list; his approval of scripts is his own words in the session, recorded with `making.py <uuid> read-back CUT
 --krish-words` before `teleprompter_send.py`. Claude artifacts stay retired (Krish, 2026-10-19;
-`scripts/hooks/artifact_gate.py` refuses them). Steps below that build,
-download or publish a board page, or work in a day's tab in draft, are history: do that work through the records above.
+`scripts/hooks/artifact_gate.py` refuses them). Do all board work through the records above.
 
 Control Center plans and tracks; Claude Code makes. Krish, 2026-10-10: the
 control centre "becomes more of a progress tracker, suggestions compiler, and
@@ -220,7 +219,7 @@ Code, never this session's.
 | Video cards | After the titles round (his headings, from his own words in the take): every picture that cuts in while Krish talks is drawn by `scripts/pages/video_card.py cards.json` (beside post.json): brand faces and colours only, a company logo people recognise on every card, a kicker that never uses another series' ground, and nothing clipped or off the card (it refuses to draw otherwise). Look at its `--sheet` before the pack. Krish, 2026-10-13: "there are font consistency issues throughout ... we've not made any use of business logos as we're supposed to" | the cards' file names in post.json |
 | Pack | `build.py post.json` then `send.py <pack>` (both record themselves when post.json has `piece_id`). It lands in the post's `3 Posts` folder, the one home for everything ready to post; a Tuesday, Thursday or Saturday piece's folder is `YYYY-MM-DD Ddd off.day - Subject` whatever its series dress. Send it the same day: until it is sent, a home computer has none of the post's pictures for the video kit | automatic |
 | Video assets (the Sunday-night run) | Both cuts produced with the logos and the pile-up on screen, every cut opening on its hook with nothing in front of it (house rule HOOK_IS_THE_INTRO; Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."; the house sting is retired in `config/intro-sting.json`), the licensed music bed and a thumbnail for each size, filed in the archive and, through the visual gate for videos and thumbnails, in the post's library folder (`3 Video`). It never rebuilds the pack and never writes the Visual gate or Pack steps. Not this session's step: `produce-video` makes them, in its Sunday-night run or when Krish engages it in Claude Code. Codex only makes pictures for them ("Visual asset maker"). Storyboard, style, proof and cut are his presses on the day's tab (`docs/PUBLISH_BOARDS.md`, production gates) | `produce-video`: `making.py --by "Claude Code" <uuid> video long "<name>" <path> --thumb <path> --thumb-file <the drawn file> --music <track id>`, with `--thumb` only for a thumbnail actually drawn and filed |
-| Publish board (the web board), then posting (Krish) | Once the video assets are on the record, the cuts and their thumbnails are in the post's library folder already. Put them in the publish page; the live board shows them from the record. When this session holds the post's working folder and the finished cut files, also add them to `post.json` (`video` and `thumbnail` entries, each declaring the logos on screen) and rebuild: `build.py --replace` runs the visual gate again and records Visual gate and Pack, then `send.py`. Krish posts in the amplification order (`docs/AMPLIFICATION.md`) and ticks each step on that day's tab of the week's publish board as he goes (or in Control Center). Every session copies his channel ticks onto the record ("The week's ticks", below), or records what he said he posted. The step is done when the standing five are on the record: Substack, YouTube, Shorts, TikTok and Instagram | `making.py <uuid> posted <channel> [https link]`, from his ticks or his words |
+| Publish board (the live board), then posting (Krish) | Once the video assets are on the record, the cuts and their thumbnails are in the post's library folder already. Put them in the publish page; the live board shows them from the record. When this session holds the post's working folder and the finished cut files, also add them to `post.json` (`video` and `thumbnail` entries, each declaring the logos on screen) and rebuild: `build.py --replace` runs the visual gate again and records Visual gate and Pack, then `send.py`. Krish posts in the amplification order (`docs/AMPLIFICATION.md`) and ticks each step on that day's tab of the week's publish board as he goes (or in Control Center). Every session copies his channel ticks onto the record ("The week's ticks", below), or records what he said he posted. The step is done when the standing five are on the record: Substack, YouTube, Shorts, TikTok and Instagram | `making.py <uuid> posted <channel> [https link]`, from his ticks or his words |
 
 `post.json` carries `"piece_id": "<uuid>"` so the pack tools report by
 themselves. Nothing in this skill sends, posts, spends or deletes: a paid
@@ -557,4 +556,4 @@ Copy the week's ticks once more (above). Update `WORKBENCH.md` and the board
 (`WORKBENCH.md`, "The board"), and end every reply with
 https://controlcenter.krishraja.com/#/home?waiting=1. A link to the week's publish board or one of its days is the live
 board in Control Centre, `python3 scripts/post-pack/live_board.py <Monday> <day>` (Ruling, Krish, 2026-11-11);
-content.krishraja.com/board/<Monday> is the archive.
+the old pages at content.krishraja.com/board/<Monday> are retired and redirect to it.

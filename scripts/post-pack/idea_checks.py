@@ -514,7 +514,7 @@ def halves_findings(opts, sources, ideas, refused):
             continue
         day_opts = [o for o in opts if o['main'] and o['day'] == day]
         if not day_opts:
-            continue  # a day with no options at all is week_board's to refuse (at least four to pick from)
+            continue  # a day with no options at all is coverage_problems' to refuse (week_plan.py)
         his = []
         for o in day_opts:
             if o.get('source_kind') not in ('his', 'inspo'):

@@ -430,9 +430,6 @@ def cmd_sprint(args) -> int:
         for e in s['entries']:
             gate = f"Gate 2 yes {e['gate2']['at']}" if e.get('gate2') else ('built, awaiting Gate 2' if e['built'] else 'carded')
             print(f"  {e['week']}  {e['device']:<24} {e['aim']:<15} {gate}")
-    elif args.action == 'feed':
-        data = sprint.feed(Path(args.archive) if args.archive else None, Path(args.out))
-        print(f"ve sprint: wrote {args.out} ({len(data['rows'])} Archive rows, {data['devices']['count']} devices)")
     return 0
 
 
@@ -1701,7 +1698,6 @@ def main() -> int:
     a = actions.add_parser('gate2'); a.add_argument('device'); a.add_argument('--words', required=True)
     a.add_argument('--where', required=True); a.add_argument('--at', required=True)
     actions.add_parser('status')
-    a = actions.add_parser('feed'); a.add_argument('--archive'); a.add_argument('--out', required=True)
     p.set_defaults(fn=cmd_sprint)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')

@@ -7,8 +7,8 @@ name: Sunday ideas
 # So GitHub is the scheduler and Claude Code runs inside this job on his subscription, never on an API key: the
 # docs-steward pattern (.github/workflows/docs-steward.yml, which calls ai-harness's reusable workflow). It runs the
 # plan-week skill's ideas stage only (steps 1 to 7: research, three or four options for each publishing day and the
-# off-day options Growth feeds, written through /api/week/options and onto the week's board through week_board.py's
-# inputs and the engine API), so the Ideas tab is live by 06:00 Sunday in New York. It stops before the triage
+# off-day options Growth feeds, written through /api/week/options and the week's plan files the live board's view
+# reads), so the ideas board is live by 06:00 Sunday in New York. It stops before the triage
 # readback and the interview, which happen in the Sunday room Krish opens himself.
 #
 # One-time setup (Krish): run `claude setup-token` on his own computer and add the result to this repository as the

@@ -85,7 +85,7 @@ def figure(img):
 # Krish, 2026-11-01, on the 2 Nov board's article: the "3 things you can do tomorrow" list came out as one paragraph
 # with its hyphens inline ("can we make sure the article formatting is 11/10?"). The old reader split on blank lines
 # and joined every line of a block with spaces, so a list, a quote or a heading without a blank line after it was
-# flattened. This reads the article line by line, the way scripts/pages/build.py and week_board.md_block() do.
+# flattened. This reads the article line by line, the way scripts/pages/build.py does.
 _HEADING = re.compile(r'^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$')
 _RULE = re.compile(r'^\s*([-*_])\s*(?:\1\s*){2,}$')
 _ITEM = re.compile(r'^\s*(?:([-*+\u2022])|(\d+)[.)])\s+(.*)$')
@@ -513,9 +513,9 @@ def pic_card(img, slug):
 
 
 def page_data(words, images):
-    """The page's words and its pictures' roles as data, for the week's board: its Publish run-sheet is built from
-    these (week_board.py run_sheet), never from this page's markup. Inert JSON, with "<" escaped so nothing in it
-    can close the script element."""
+    """The page's words and its pictures' roles as data, for a reader that needs them without parsing this page's
+    markup (the old board's run-sheet read them until it was retired on 13 Nov 2026). Inert JSON, with "<" escaped so
+    nothing in it can close the script element."""
     meta = [{k: i[k] for k in ('id', 'role', 'alt', 'after_heading', 'caption', 'label') if i.get(k)} for i in images]
     data = json.dumps({'version': 1, 'words': words, 'images': meta}, ensure_ascii=False, sort_keys=True).replace('<', '\\u003c')
     return '<script type="application/json" id="pm-data">' + data + '</script>'
@@ -575,7 +575,7 @@ def page(m, base):
     covers = ''.join(pic_card({**i, 'label': COVER_ROLES[i['role']]}, slug) for i in others)
 
     # 2 onwards: every other channel, from the same plan as publish_kit.py. Each section is headed with its step's where,
-    # which is how the week's board finds its copy (week_board.section_kit), never by its number or its id.
+    # so a reader finds its copy by where it goes, never by its number or its id.
     for k, s in enumerate((s for s in publish_kit.steps(words) if s['where'] != 'Substack'), 2):
         cards = ''.join(text_card(cid(), label, text) for label, text in s['copy'])
         files = ''.join(file_item(f, links) for f in s['files'])

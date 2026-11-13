@@ -188,8 +188,9 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 - **Publish board.** The week in Control Centre's Content tab, at
   `#/content?week=<Monday>&day=<day>`: the one live board, where Krish presses,
   drawn from the engine's view (`docs/PUBLISH_BOARDS.md`). Fed by writing what
-  the view reads, never by a page. The old page at
-  content.krishraja.com/board/<Monday> is the read-only archive.
+  the view reads, never by a page. The old pages at
+  content.krishraja.com/board/<Monday> are retired for good and redirect to it
+  (Ruling, Krish, 2026-11-13).
 - **Making record.** A piece's record of each making step (`meta.making`),
   read and written with `scripts/post-pack/making.py`.
 - **Hero assets, off days.** The article, both cuts, thumbnails and covers this

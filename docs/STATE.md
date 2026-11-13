@@ -24,14 +24,15 @@ When this page and the code disagree, the code wins: fix this page.
   `auto-merge.yml` (merges a pull request on green CI, then folds the closeout notes into `NOW.md`),
   `harness-repository-context.yml` and `now-trim.yml`. By hand or by dispatch only: `make-piece.yml`,
   `inspiration-piece.yml`, `produce-day.yml`, `place-takes.yml`, `repair-round.yml`, `offday-revise.yml`,
-  `saturday-goodnews.yml` and `maxine-trial.yml`. `board-rebuild.yml` is kept as a record; its first step stops it.
+  `saturday-goodnews.yml` and `maxine-trial.yml`. `board-rebuild.yml` was removed with the old boards on 13 Nov.
 - **The publish board.** The one live board is Control Centre's Content tab (`config/boards.json`,
   `live_board.url`; `python3 scripts/post-pack/live_board.py <Monday> [day]`), drawn from this engine's view
   (`GET /api/board/<Monday>/view`, `apps/control-plane/api/board/_view.ts`). The view's contract is 1.10.0
   (`VIEW_CONTRACT_VERSION`, `_viewContract.ts`; the live view answered 1.10.0), and Control Centre pins 1.10.0 (its
-  `tests/fixtures/board-view/PIN.json` on `main`, the schema and fixture byte for byte this engine's at #597). The engine's own pages at content.krishraja.com/board/<Monday>
-  are the read-only archive: a press made there is refused with 423 `archive_read_only`
-  (`apps/control-plane/api/board/_readOnly.ts`, `_handler.ts`). How to use the board: `docs/PUBLISH_BOARDS.md`.
+  `tests/fixtures/board-view/PIN.json` on `main`, the schema and fixture byte for byte this engine's at #597). The engine's own old pages at content.krishraja.com/board/<Monday>
+  are retired for good (Ruling, Krish, 2026-11-13): every old address answers a permanent redirect (308) to the live
+  board at the same week (`apps/control-plane/api/board/_handler.ts`, `OLD_PAGES`). How to use the board:
+  `docs/PUBLISH_BOARDS.md`.
 - **Video.** `scripts/ve.py` (ve) is the video engine and `scripts/quick-edit/` the fallback until ve passes
   Phase 3 (`docs/ve/STATUS.md` says what ve can do today). ve's design lock (`config/ve/design-lock.json`) is
   frozen for face-with-proof at 9:16; its 16:9 draft is "awaiting Gate 2".

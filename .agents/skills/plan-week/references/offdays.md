@@ -89,9 +89,8 @@ pitch, "I have zero idea what this even means"). Before an option reaches the ta
 A **weekly series** (an option with `"weekly"`, today only the Saturday good news) recurs every week by design: its
 format coming back is never a repeat, and its readers judge only whether its stories could repeat.
 
-`board_feed.py cover` refuses an option without these, and the build (`week_board.py --ideas`) refuses an option with
-no `hook`, `pitch.see`, `pitch.lands` and `direction`, a gather older than two days before the week, a recorded
-option for an idea that has left the pool, and an option covering an off day of the last three weeks.
+`board_feed.py cover` refuses an option without these, and reads the file's off-day options with
+`week_plan.read_offdays`, which refuses a shape it cannot read and names it.
 
 `hook`, `pitch` and `direction` are what he judges, so every option has them;
 `learned_from` quotes only his own words from `offday_verdicts` or `cues`,
@@ -103,8 +102,8 @@ scripts/post-pack/copy_lint.py --applies-to channel_copy` (and `--applies-to
 carousel_text` for a carousel) and `node
 vendor/makeyourmindup/kill-list/kill-list.mjs` before they reach the tab.
 They reach the live board only through `ideas.json` itself, which its view
-reads (`docs/PUBLISH_BOARDS.md`); `week_board.py --ideas`, run locally, still
-refuses a wrong shape and names it, and no page is published.
+reads (`docs/PUBLISH_BOARDS.md`); `board_feed.py cover` refuses a wrong shape
+and names it, and no page is published.
 
 **His presses.** On each option he presses the idea, the direction and, once
 Growth returns it, the mock: Approve, Improve (his words) or Reject (his
@@ -141,7 +140,7 @@ side's current hash. Revise only those. For each, change only that side of
 that option in `docs/plans/<Monday>-week/ideas.json` `offdays` to answer his
 words, keep its `id`, and set `"revised": {"side": "<idea or direction>",
 "words": "<his words, verbatim>"}`. Run the same checks as above and check
-the file builds (`week_board.py --ideas`, a local build). The side's hash
+the file reads (`board_feed.py cover <Monday>`). The side's hash
 changes with its words, so his old press reads as answered and he judges the
 new card when the live board next reads these ideas; a side already
 revised is never revised again from the same words. The revision run does not
@@ -175,7 +174,7 @@ it fits best, ranked first that day. It is one short cut, nothing else:
    Pick the style from the idea: to camera when it is his take or story, a
    voiceover when the point is a mechanism or numbers a picture shows better.
 
-`week_board.py` refuses a recorded option that fails any of this. On the card
+`board_feed.py cover` (`week_plan.read_offdays`) refuses a recorded option that fails any of this. On the card
 he sees the whole script. His Approve puts the piece on that day in its
 series and the server sends those exact words to Teleprompter in the piece's
 folder (`apps/control-plane/api/board/_presses.ts`, `offdayRecorded`); the
@@ -229,13 +228,12 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
 5. `python3 scripts/post-pack/copy_lint.py --applies-to carousel_text` on the words, then
    `python3 scripts/post-pack/board_feed.py gather <Monday>` and `cover <Monday>`: it refuses a story dated outside
    the seven days, one with no source or picture, and one a recent off day ran.
-6. Put them on the live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a
-   read-only archive) with the rest of the week's ideas: the workflow's keep step puts the week's folder on the week's
+6. Put them on the live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre) with the rest of the week's ideas: the workflow's keep step puts the week's folder on the week's
    branch `offday-revise/<Monday>`, which the live board's view reads before main (`scripts/week_branch_keep.sh`, with a
    pull request that merges itself), and bumps the week's change signal (`board_web.py touch <Monday>`). The view
    counts the stories as this week's when they were found on or after the day the week's ideas run fills its board
-   (`ideasRunOf`, the Saturday nine days before the Monday). Never rebuild or publish a board page: the archive
-   refuses it.
+   (`ideasRunOf`, the Saturday nine days before the Monday). Never build or publish a board page: the old pages are
+   retired for good.
 
 **The trade-off, said plainly.** The run fills the board for the week that starts eight days after its Sunday, so a
 story it finds is about two weeks old by the Saturday it posts on. So before Growth makes the post, each story is

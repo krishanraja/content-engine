@@ -8,8 +8,8 @@ and tells the session why. Wired in .claude/settings.json.
 
 G1  removed (Ruling, Krish, 2026-11-03: "Remove that stupid fucking limit as well. You waste my life whinging about
     limits when you're only at 52% context"): no context nudge, no handover prompt; a session finishes its job.
-G5  no full board in the chat: an `Artifact read` of a week's board link (config/boards.json) is refused; the
-    builder reads the saved copy (`week_board.py --previous`).
+G5  no full board in the chat: an `Artifact read` of one of the old Claude-artifact boards (config/boards.json weeks)
+    is refused; the live board's view is read instead.
 G6  agents and workflows only for work that needs a separate reader: an Agent prompt must say what the separate
     reader is for ("Separate reader: ..." in its description or prompt); a Workflow must carry Krish's words ("said: ...").
 
@@ -41,8 +41,8 @@ def tool_problem(tool, ti):
     if tool == 'Artifact' and ti.get('action') == 'read' and not ti.get('path') and not ti.get('paths'):
         if str(ti.get('url') or '').rstrip('/') in board_links():
             return ('G5: a week\'s publish board is never read into the chat (it is megabytes, re-read on every later '
-                    'step). The builder reads the saved copy: `python3 scripts/post-pack/week_board.py --previous ...`; '
-                    'read comments with ArtifactComments.')
+                    'step). The old boards are retired for good (Ruling, Krish, 2026-11-13); read the week from the live '
+                    'board\'s view (GET /api/board/<Monday>/view, docs/PUBLISH_BOARDS.md), and comments with ArtifactComments.')
     if tool == 'Agent':
         said = str(ti.get('description') or '') + '\n' + str(ti.get('prompt') or '')[:600]
         if not re.search(r'separate reader', said, re.I):

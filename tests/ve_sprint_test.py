@@ -1,6 +1,6 @@
 """The weekly device sprint (W3.8): 1 to 2 references briefed through `ve brief` (a thin adapter until W2.7 lands), cards
-written only from filled fields, a Gate 2 yes recorded only with his words for a built device, and the device count and
-each yes fed to the Archive through week_board.py's existing --archive input. Synthetic fixtures; nothing dispatched."""
+written only from filled fields, a Gate 2 yes recorded only with his words for a built device, and the device count.
+Synthetic fixtures; nothing dispatched."""
 import json
 import shutil
 import sys
@@ -140,24 +140,6 @@ class Sprint(unittest.TestCase):
             entry = sprint.gate2('split_screen_race', 'Yes, use it', 'publish board, Archive', '2026-11-20')
             self.assertEqual(entry['gate2']['words'], 'Yes, use it')
             self.assertEqual(sprint.status()['proven'], 1)
-
-    def test_the_archive_feed_keeps_the_rows_and_adds_the_devices(self):
-        with tempfile.TemporaryDirectory() as temp, Sandbox(Path(temp)) as box:
-            rows = {'rows': [{'piece_id': None, 'date': '2026-10-06', 'series': None, 'title': 'The Launch', 'links': []}]}
-            archive = box.root / 'archive.json'
-            archive.write_text(json.dumps(rows))
-            out = box.root / 'archive.fed.json'
-            data = sprint.feed(archive, out)
-            self.assertEqual(data['rows'], rows['rows'])
-            self.assertEqual(data['devices']['count'], len(json.loads((ROOT / 'config/ve/devices.json').read_text())['devices']))
-            not_a_feed = box.root / 'not-a-feed.json'
-            not_a_feed.write_text('[]')
-            with self.assertRaises(SystemExit):
-                sprint.feed(not_a_feed, out)
-        sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
-        import week_board  # noqa: E402
-        if hasattr(week_board, 'read_archive'):  # W2.1's --archive input reads the rows and ignores the devices block
-            self.assertEqual(len(week_board.read_archive(data)), 1)
 
 
 if __name__ == '__main__':

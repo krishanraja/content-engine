@@ -156,7 +156,7 @@ sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402
 
 CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify',
-            'feature_youtube', 'feature_spotify',  # the 15-minute feature's own two posts (config/board-layout.json)
+            'feature_youtube', 'feature_spotify',  # the 15-minute feature's own two posts
             'instagram', 'x', 'threads', 'facebook')  # Growth's posts, reported through the board's posted route
 CUTS = ('long', 'short')  # the two cuts every piece gets (house rule TWO_CUTS)
 FEATURE = 'feature'
@@ -571,7 +571,7 @@ def feature_piece(piece_id, path=None):
     """True when Krish called a 15-minute feature for this piece
     (config/features.json `pieces.<piece id>`, house rule FEATURE): its
     scripts then take a third, the feature, checked at about 15 minutes.
-    Only his call adds a piece there. week_board.py reads the same file."""
+    Only his call adds a piece there."""
     if not piece_id:
         return False
     try:
@@ -2366,7 +2366,7 @@ def self_test():
         retired = stop.code != 0
     check('descript: retired on 2026-10-12, so the command line no longer takes it', retired, True)
 
-    # The 15-minute feature's two posting cards on the board (config/board-layout.json) record as their own channels.
+    # The 15-minute feature's two posting cards on the board record as their own channels.
     for channel in ('feature_youtube', 'feature_spotify'):
         code, _ = run([pid, 'posted', channel, 'https://youtu.be/feature'])
         check(f'posted: the feature\'s {channel} card records as its own channel', (code, seen[-1][2].get('channels')),

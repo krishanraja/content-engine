@@ -7,20 +7,19 @@ description: Plan the publishing week and run the Sunday room. Research at least
 
 ## Publish-board routing
 
-Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The week's
+Ruling (Krish, 2026-11-11): one live board, in Control Centre. Ruling (Krish, 2026-11-13): the old publish boards are retired for good. The week's
 publish board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its
 link), and it draws the week from the engine's `GET /api/board/<Monday>/view` (`docs/PUBLISH_BOARDS.md`, "One live
 board"). Update it by writing what the view reads, never a page: the piece's making record (`making.py`), his presses
 and his yes (`board_web.py read`, `yes.py`), and the week's plan files (`docs/plans/<Monday>-week/ideas.json`, the
 narrative locks, the research) on main or on the week's branch `offday-revise/<Monday>`; when only a file changed,
 `python3 scripts/post-pack/board_web.py touch <Monday>` makes the live board read the week again at once. Never build
-or publish a board page (`week_board.py`, `board_web.py publish-web`): the content.krishraja.com pages are the
-archive, read-only, and refuse every press. A question for Krish is a press the view carries or an item on his one
+or publish a board page: the old content.krishraja.com pages, their builder and publisher are gone, and every old
+address redirects to the live board. A question for Krish is a press the view carries or an item on his one
 list; his approval of scripts is his own words in the session, recorded with `making.py <uuid> read-back CUT
 --krish-words` before `teleprompter_send.py`. Claude artifacts stay retired (Krish, 2026-10-19), and
-`scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Steps below that build,
-download or publish a board page, or work in a day's tab in draft, are history kept as written: read them for what
-they record, and do the same work through the records above.
+`scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Do all board work
+through the records above.
 
 ## Report to the board as you work
 
@@ -338,10 +337,10 @@ he ticks: `references/inspiration-piece.md`.
    from or that it recommends for specific content ... pushing and pushing
    and pushing, becoming more and more creative and experimental"). Pick
    the recommendation for the content (the format's `fits`), and make the
-   experiment a format that has not been made yet. The board refuses a day
-   with one script format, a day with no untried experiment, a week where
-   one production format is over half the cards, and a format he marked
-   not for us (`week_board.style_problems`).
+   experiment a format that has not been made yet. `board_feed.py cover`
+   refuses a day with one script format, a day with no untried experiment, a
+   week where one production format is over half the cards, and a format he
+   marked not for us (`week_plan.style_problems`).
    **The quality bar, before an idea reaches him** (Krish, 2026-10-24:
    "most importantly focus on improving your own work quality"). Each day's
    ideas are four different stories, never four angles on one headline.
@@ -466,8 +465,7 @@ he ticks: `references/inspiration-piece.md`.
    feature as a third cut on that day. `config/deep-cuts.json` is retired
    and gets no new week.
 7. **Put the week on the live board**, last, once the options are written
-   (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old
-   board is a read-only archive). The live board draws the week from
+   (Ruling, Krish, 2026-11-11: one live board, in Control Centre). The live board draws the week from
    `GET /api/board/<Monday>/view`, which reads `ideas.json` (each publishing
    day's options and the off-day options) from the week's branch
    `offday-revise/<Monday>` before main, his presses from the board's store
@@ -479,9 +477,8 @@ he ticks: `references/inspiration-piece.md`.
    (a pull request), then `python3 scripts/post-pack/board_web.py touch
    <Monday>`. Read the view back (`python3 scripts/engine.py GET
    /api/board/<Monday>/view`): each publishing day lists its options. Never
-   build or publish a board page with `week_board.py` and `board_web.py
-   publish-web` (the archive refuses it all). The steps that follow are kept
-   as written where they still apply.
+   build or publish a board page (the old pages are retired for good and
+   redirect to the live board).
    - **Record its link where every later session finds it.** On the board,
      an item of its own for this week, `week-publish-board-<Monday>`, so
      last week's item and link stay as they are: `POST /api/workbench` with
