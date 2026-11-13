@@ -445,7 +445,8 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   const spec = (s => (s && (typeof s.piece_id !== 'string' || !UUID.test(s.piece_id) || s.piece_id.toLowerCase() === id) ? s : null))(i.specs?.[day] ?? null)
   const points = spec && isObj(spec.style) && Array.isArray(spec.style.points) ? spec.style.points.filter((p): p is string => typeof p === 'string') : []
   path.style = dayStyle({ pieceId: id, meta, formats: SERIES_FORMATS, points: points.length ? points : null, motion: i.motion || [],
-    looks: i.formats?.production || [], recommendedLook: path.look.recommended.production?.id ?? null, gate: live.gates.style, spec })
+    looks: i.formats?.production || [], recommendedLook: path.look.recommended.production?.id ?? null, gate: live.gates.style, spec,
+    recommendedMotion: typeof style?.motion === 'string' ? style.motion : null, recommendedCaptions: typeof style?.captions === 'string' ? style.captions : null })
   const detail: DayView['detail'] = [
     { h: 'Research', p: materials.length ? materials.map(m => m.title).join(' · ') : researchFile ? `${day}-research.md in the week's folder` : 'None yet' },
     { h: 'Narrative lock', p: typedLock ? inYourWords(typedLock.words, typedLock.said_at, typedLock.said_where)
@@ -814,7 +815,20 @@ export function buildView(i: ViewInputs): WeekView {
   withWriteBack(i.week, days)
   // The week model (contract 1.12.0): the one thing the Publish Board draws, from the days built above.
   const signedLocks = Object.values(i.locks).filter(t => lockSigned(t)).map(t => lockPieceId(t)).filter((x): x is string => Boolean(x))
-  const model = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks })
+  // A piece his approval holds on a day that is not its series day (Tue 17's data-centres piece) has no day path of its
+  // own: its look choices are worked out here, from its own record, so his production pick is a press there too.
+  const placedStyles = Object.fromEntries(days.flatMap(d => d.pieces.filter(p => p.approval && (p.id !== d.piece_id || !SERIES_DAYS.includes(d.day))).map(p => {
+    const row = i.pieces.find(x => String(x.id).toLowerCase() === p.id)
+    const meta = row && isObj(row.meta) ? row.meta : {}
+    // Its row in the week's plan, on whichever day it was offered: what a session recommends for its production.
+    const planRow = isObj(i.ideas) && isObj(i.ideas.days) ? Object.values(i.ideas.days as Body).flatMap(l => (Array.isArray(l) ? l : []).filter(isObj))
+      .find(x => String(x.id).toLowerCase() === p.id) : undefined
+    const st = planRow && isObj(planRow.style) ? planRow.style as Body : null
+    return [p.id, dayStyle({ pieceId: p.id, meta, formats: SERIES_FORMATS, points: null, motion: i.motion || [], looks: i.formats?.production || [],
+      recommendedLook: typeof st?.production === 'string' ? st.production : null,
+      recommendedMotion: typeof st?.motion === 'string' ? st.motion : null, recommendedCaptions: typeof st?.captions === 'string' ? st.captions : null })]
+  })))
+  const model = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles })
   // What waits on his press: only his real decisions (Approve for publish on a made piece, an approved post's missing
   // choice), never an idea (Ruling, Krish, 2026-11-13).
   const yours: WeekView['yours'] = model.days.flatMap(md => md.items.filter(it => it.decision && it.next)

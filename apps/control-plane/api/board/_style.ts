@@ -131,6 +131,10 @@ export interface StyleInputs {
   gate?: LiveGate
   /** The piece's creative direction (ve spec), when one is on file. */
   spec?: Body | null
+  /** The production pick a session recommends for this piece, from its row in the week's plan (`style.motion`,
+   *  `style.captions`): the one recommended, first, in place of the channel's own three. */
+  recommendedMotion?: string | null
+  recommendedCaptions?: string | null
 }
 
 /** The piece's style choices: motion, captions and treatment, each with every option and the press that answers it. */
@@ -148,7 +152,9 @@ export function dayStyle(i: StyleInputs): DayStyle {
     .sort((a, b) => (FITS_ORDER[a.m.fits] ?? 3) - (FITS_ORDER[b.m.fits] ?? 3) || Number(LIKED.has(b.m.krish_verdict)) - Number(LIKED.has(a.m.krish_verdict))
       || b.hits.length - a.hits.length || a.n - b.n)
     .slice(0, 3)
-  const recommended = new Map(ranked.map(x => [x.m.id, motionWhy(x.m, x.hits)]))
+  const planned = i.recommendedMotion && i.motion.some(m => m.id === i.recommendedMotion) && !mine.rejected.motion.includes(i.recommendedMotion) ? i.recommendedMotion : null
+  const recommended = planned ? new Map([[planned, 'The production pick recommended for this piece.']])
+    : new Map(ranked.map(x => [x.m.id, motionWhy(x.m, x.hits)]))
   const motionIds = new Set(i.motion.map(m => m.id))
   const gateModule = i.gate?.state === 'picked' && i.gate.module && motionIds.has(i.gate.module) && !mine.rejected.motion.includes(i.gate.module) ? i.gate.module : null
   const specMotion = signed && isObj(signed.style) && isObj(signed.style.motion) && typeof signed.style.motion.module === 'string' ? signed.style.motion.module : null
@@ -156,7 +162,8 @@ export function dayStyle(i: StyleInputs): DayStyle {
     : gateModule ? { picked: gateModule, picked_by: 'Krish', picked_at: i.gate?.at ?? null }
     : specMotion && MOTION_ID.test(specMotion) && !mine.rejected.motion.includes(specMotion) ? { picked: specMotion, picked_by: 'spec', picked_at: signedOn }
     : { picked: null, picked_by: null, picked_at: null }
-  const order = [...ranked.map(x => x.m), ...i.motion.filter(m => !recommended.has(m.id))]
+  const order = planned ? [...i.motion.filter(m => m.id === planned), ...i.motion.filter(m => m.id !== planned)]
+    : [...ranked.map(x => x.m), ...i.motion.filter(m => !recommended.has(m.id))]
   const motion: StyleLayer = {
     options: order.map(m => ({ id: m.id, name: m.name, line: m.how, rules: m.rules, point_types: m.point_types, formats: m.formats, ready: ready(m),
       recommended: recommended.has(m.id), why: recommended.get(m.id) ?? null, sample_url: sampleUrl('motion', m.id),
@@ -174,8 +181,10 @@ export function dayStyle(i: StyleInputs): DayStyle {
   const captions: StyleLayer = {
     options: CAPTIONS.map(c => {
       const rejected = mine.rejected.captions.includes(c.id)
-      const rec = Boolean(c.recommended_why) && !rejected
-      return { id: c.id, name: c.name, line: c.line, rules: c.rules, recommended: rec, why: rec ? c.recommended_why! : null, sample_url: sampleUrl('captions', c.id), rejected,
+      const plannedCaption = i.recommendedCaptions && CAPTION_IDS.has(i.recommendedCaptions) && !mine.rejected.captions.includes(i.recommendedCaptions) ? i.recommendedCaptions : null
+      const rec = plannedCaption ? c.id === plannedCaption : Boolean(c.recommended_why) && !rejected
+      const why = plannedCaption ? (rec ? 'The production pick recommended for this piece.' : null) : rec ? c.recommended_why! : null
+      return { id: c.id, name: c.name, line: c.line, rules: c.rules, recommended: rec, why, sample_url: sampleUrl('captions', c.id), rejected,
         presses: { yes: press('Yes', 'style', { captions: c.id }, `Picked. ${c.name} is the caption style for this piece.`),
           not_this: press('Not this', 'style', { reject: { layer: 'captions', id: c.id } }, 'Noted. It is not recommended for this piece any more.') } }
     }),

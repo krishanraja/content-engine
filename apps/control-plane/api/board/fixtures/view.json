@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.14.0",
+ "contract_version": "1.15.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -7825,7 +7825,7 @@
        }
       ]
      },
-     "done": "Look picked. Next: record both cuts from your Teleprompter."
+     "done": "Picked. It is the look for this piece."
     }
    ]
   }
@@ -8801,7 +8801,200 @@
       "links": [],
       "stories": null,
       "stories_planned": null,
-      "others": [],
+      "others": [
+       {
+        "kind": "press",
+        "label": "Pick the look",
+        "op": "look",
+        "body": {
+         "piece_id": "5b726fc3-ac63-4607-9293-3257b4ecc75c",
+         "experiment": null,
+         "inspiration": []
+        },
+        "stamp": [],
+        "choose": {
+         "path": "production",
+         "ask": "Which look?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "face-with-proof",
+           "label": "Face-led"
+          },
+          {
+           "value": "kinetic-movement",
+           "label": "Everything moves"
+          }
+         ]
+        },
+        "done": "Picked. It is the look for this piece."
+       },
+       {
+        "kind": "press",
+        "label": "Pick the motion style",
+        "op": "style",
+        "body": {
+         "piece_id": "5b726fc3-ac63-4607-9293-3257b4ecc75c"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "motion",
+         "ask": "Which motion style?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "ladder",
+           "label": "The ladder style (recommended)"
+          },
+          {
+           "value": "data-story",
+           "label": "The data-story style (recommended)"
+          },
+          {
+           "value": "shape-morph",
+           "label": "The shape-morph style (recommended)"
+          },
+          {
+           "value": "full-visual",
+           "label": "The full-visual style"
+          },
+          {
+           "value": "toy-3d",
+           "label": "The toy-3d style (not ready yet)"
+          }
+         ]
+        },
+        "done": "Picked. It is the motion style for this piece."
+       },
+       {
+        "kind": "press",
+        "label": "Pick the captions",
+        "op": "style",
+        "body": {
+         "piece_id": "5b726fc3-ac63-4607-9293-3257b4ecc75c"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "captions",
+         "ask": "Which captions?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "art-directed",
+           "label": "Art-directed phrases (recommended)"
+          },
+          {
+           "value": "pop",
+           "label": "Pop"
+          },
+          {
+           "value": "karaoke",
+           "label": "Karaoke"
+          },
+          {
+           "value": "kinetic-01",
+           "label": "Justified stack"
+          },
+          {
+           "value": "kinetic-02",
+           "label": "Edge snap"
+          },
+          {
+           "value": "hustle",
+           "label": "Marker"
+          },
+          {
+           "value": "grape",
+           "label": "Ink card"
+          },
+          {
+           "value": "beast",
+           "label": "Punch"
+          },
+          {
+           "value": "poppin",
+           "label": "Spring"
+          },
+          {
+           "value": "aarit",
+           "label": "Editorial"
+          },
+          {
+           "value": "soft-ai",
+           "label": "Bloom"
+          },
+          {
+           "value": "gaming-stream",
+           "label": "Terminal"
+          },
+          {
+           "value": "simple-one-word",
+           "label": "One word"
+          },
+          {
+           "value": "podcast",
+           "label": "Two-line scroll"
+          },
+          {
+           "value": "cinematic",
+           "label": "Cinematic"
+          },
+          {
+           "value": "slam",
+           "label": "Slam"
+          },
+          {
+           "value": "georgia-build",
+           "label": "Georgia build"
+          },
+          {
+           "value": "stair-flash",
+           "label": "Staircase flash"
+          },
+          {
+           "value": "tuck-stack",
+           "label": "Tuck stack"
+          },
+          {
+           "value": "anchor-quote",
+           "label": "Quote anchor"
+          },
+          {
+           "value": "rack-focus",
+           "label": "Rack focus"
+          },
+          {
+           "value": "flip-hinge",
+           "label": "Hinge"
+          },
+          {
+           "value": "slice",
+           "label": "Slice"
+          },
+          {
+           "value": "slot-roll",
+           "label": "Slot Roll"
+          },
+          {
+           "value": "receipt-chip",
+           "label": "Receipt chip"
+          },
+          {
+           "value": "ink-block",
+           "label": "Ink block"
+          },
+          {
+           "value": "mint-word",
+           "label": "Mint word"
+          }
+         ]
+        },
+        "done": "Picked. It is the captions for this piece."
+       }
+      ],
       "line": "Approved for Mon 16. Its make picks up from where it is.",
       "next": {
        "kind": "prompt",
@@ -9070,7 +9263,172 @@
       "links": [],
       "stories": null,
       "stories_planned": null,
-      "others": [],
+      "others": [
+       {
+        "kind": "press",
+        "label": "Pick the motion style",
+        "op": "style",
+        "body": {
+         "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "motion",
+         "ask": "Which motion style?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "ladder",
+           "label": "The ladder style (recommended)"
+          },
+          {
+           "value": "data-story",
+           "label": "The data-story style (recommended)"
+          },
+          {
+           "value": "shape-morph",
+           "label": "The shape-morph style (recommended)"
+          },
+          {
+           "value": "full-visual",
+           "label": "The full-visual style"
+          },
+          {
+           "value": "toy-3d",
+           "label": "The toy-3d style (not ready yet)"
+          }
+         ]
+        },
+        "done": "Picked. It is the motion style for this piece."
+       },
+       {
+        "kind": "press",
+        "label": "Pick the captions",
+        "op": "style",
+        "body": {
+         "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "captions",
+         "ask": "Which captions?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "art-directed",
+           "label": "Art-directed phrases (recommended)"
+          },
+          {
+           "value": "pop",
+           "label": "Pop"
+          },
+          {
+           "value": "karaoke",
+           "label": "Karaoke"
+          },
+          {
+           "value": "kinetic-01",
+           "label": "Justified stack"
+          },
+          {
+           "value": "kinetic-02",
+           "label": "Edge snap"
+          },
+          {
+           "value": "hustle",
+           "label": "Marker"
+          },
+          {
+           "value": "grape",
+           "label": "Ink card"
+          },
+          {
+           "value": "beast",
+           "label": "Punch"
+          },
+          {
+           "value": "poppin",
+           "label": "Spring"
+          },
+          {
+           "value": "aarit",
+           "label": "Editorial"
+          },
+          {
+           "value": "soft-ai",
+           "label": "Bloom"
+          },
+          {
+           "value": "gaming-stream",
+           "label": "Terminal"
+          },
+          {
+           "value": "simple-one-word",
+           "label": "One word"
+          },
+          {
+           "value": "podcast",
+           "label": "Two-line scroll"
+          },
+          {
+           "value": "cinematic",
+           "label": "Cinematic"
+          },
+          {
+           "value": "slam",
+           "label": "Slam"
+          },
+          {
+           "value": "georgia-build",
+           "label": "Georgia build"
+          },
+          {
+           "value": "stair-flash",
+           "label": "Staircase flash"
+          },
+          {
+           "value": "tuck-stack",
+           "label": "Tuck stack"
+          },
+          {
+           "value": "anchor-quote",
+           "label": "Quote anchor"
+          },
+          {
+           "value": "rack-focus",
+           "label": "Rack focus"
+          },
+          {
+           "value": "flip-hinge",
+           "label": "Hinge"
+          },
+          {
+           "value": "slice",
+           "label": "Slice"
+          },
+          {
+           "value": "slot-roll",
+           "label": "Slot Roll"
+          },
+          {
+           "value": "receipt-chip",
+           "label": "Receipt chip"
+          },
+          {
+           "value": "ink-block",
+           "label": "Ink block"
+          },
+          {
+           "value": "mint-word",
+           "label": "Mint word"
+          }
+         ]
+        },
+        "done": "Picked. It is the captions for this piece."
+       }
+      ],
       "line": "Branded. Pick the look: the recommended one, another, or fold in your inspiration. No approved scripts are filed yet: if you approved them in a session, file them from that session.",
       "next": {
        "kind": "press",
@@ -9098,7 +9456,7 @@
          }
         ]
        },
-       "done": "Look picked. Next: record both cuts from your Teleprompter."
+       "done": "Picked. It is the look for this piece."
       },
       "decision": true
      }
@@ -9602,7 +9960,200 @@
       "links": [],
       "stories": null,
       "stories_planned": null,
-      "others": [],
+      "others": [
+       {
+        "kind": "press",
+        "label": "Pick the look",
+        "op": "look",
+        "body": {
+         "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+         "experiment": null,
+         "inspiration": []
+        },
+        "stamp": [],
+        "choose": {
+         "path": "production",
+         "ask": "Which look?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "face-with-proof",
+           "label": "Face-led"
+          },
+          {
+           "value": "kinetic-movement",
+           "label": "Everything moves"
+          }
+         ]
+        },
+        "done": "Picked. It is the look for this piece."
+       },
+       {
+        "kind": "press",
+        "label": "Change the motion style",
+        "op": "style",
+        "body": {
+         "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "motion",
+         "ask": "Which motion style?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "data-story",
+           "label": "The data-story style (picked)"
+          },
+          {
+           "value": "ladder",
+           "label": "The ladder style (recommended)"
+          },
+          {
+           "value": "shape-morph",
+           "label": "The shape-morph style"
+          },
+          {
+           "value": "full-visual",
+           "label": "The full-visual style"
+          },
+          {
+           "value": "toy-3d",
+           "label": "The toy-3d style (not ready yet)"
+          }
+         ]
+        },
+        "done": "Picked. It is the motion style for this piece."
+       },
+       {
+        "kind": "press",
+        "label": "Change the captions",
+        "op": "style",
+        "body": {
+         "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118"
+        },
+        "stamp": [],
+        "choose": {
+         "path": "captions",
+         "ask": "Which captions?",
+         "multi": false,
+         "required": true,
+         "options": [
+          {
+           "value": "art-directed",
+           "label": "Art-directed phrases (picked)"
+          },
+          {
+           "value": "pop",
+           "label": "Pop"
+          },
+          {
+           "value": "karaoke",
+           "label": "Karaoke"
+          },
+          {
+           "value": "kinetic-01",
+           "label": "Justified stack"
+          },
+          {
+           "value": "kinetic-02",
+           "label": "Edge snap"
+          },
+          {
+           "value": "hustle",
+           "label": "Marker"
+          },
+          {
+           "value": "grape",
+           "label": "Ink card"
+          },
+          {
+           "value": "beast",
+           "label": "Punch"
+          },
+          {
+           "value": "poppin",
+           "label": "Spring"
+          },
+          {
+           "value": "aarit",
+           "label": "Editorial"
+          },
+          {
+           "value": "soft-ai",
+           "label": "Bloom"
+          },
+          {
+           "value": "gaming-stream",
+           "label": "Terminal"
+          },
+          {
+           "value": "simple-one-word",
+           "label": "One word"
+          },
+          {
+           "value": "podcast",
+           "label": "Two-line scroll"
+          },
+          {
+           "value": "cinematic",
+           "label": "Cinematic"
+          },
+          {
+           "value": "slam",
+           "label": "Slam"
+          },
+          {
+           "value": "georgia-build",
+           "label": "Georgia build"
+          },
+          {
+           "value": "stair-flash",
+           "label": "Staircase flash"
+          },
+          {
+           "value": "tuck-stack",
+           "label": "Tuck stack"
+          },
+          {
+           "value": "anchor-quote",
+           "label": "Quote anchor"
+          },
+          {
+           "value": "rack-focus",
+           "label": "Rack focus"
+          },
+          {
+           "value": "flip-hinge",
+           "label": "Hinge"
+          },
+          {
+           "value": "slice",
+           "label": "Slice"
+          },
+          {
+           "value": "slot-roll",
+           "label": "Slot Roll"
+          },
+          {
+           "value": "receipt-chip",
+           "label": "Receipt chip"
+          },
+          {
+           "value": "ink-block",
+           "label": "Ink block"
+          },
+          {
+           "value": "mint-word",
+           "label": "Mint word"
+          }
+         ]
+        },
+        "done": "Picked. It is the captions for this piece."
+       }
+      ],
       "line": "Approved. Bring the evidence: research it now, or drop your Perplexity file on this day.",
       "next": {
        "kind": "research",

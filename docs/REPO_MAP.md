@@ -2745,6 +2745,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface ModelDay`
 - `interface WeekModel`
 - `interface ModelInputs`
+- `function lookPresses(pieceId: string, style: DayStyle | null | undefined): PressAction[]`
 - `function offdayKind(o: Body): { kind: OffdayKind; supports: 'mon' | 'wed' | 'fri' | null }`
 - `function kindLabel(kind: OffdayKind, supports: string | null): string`
 - `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
