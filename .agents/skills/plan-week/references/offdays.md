@@ -45,6 +45,18 @@ from AI; or a snackable cut from a past week's approved master, named by its
 piece and word range. Mix them across the week: no day all one format, and at
 least two days feeding that week's Monday, Wednesday or Friday piece.
 
+How each is made once he approves it is not this skill's job, and it is one
+route (Rulings, Krish, 2026-11-13: "all the carousels should now be done in
+Claude, but using the Codex plug in as per the other usual workflows";
+"memes and Notes images should go the same way"; "Off-day voiceover shorts
+should go the same way too"): a carousel, a meme or a Notes image is made in
+a Claude session, with the Codex plugin building it
+(`docs/CAROUSEL-STANDARD.md`, "How a carousel is made"), and a voiceover
+short or a meme video on the ve route from a Claude session. The board's
+"Copy prompt for Claude" says so on every approved off-day post. The plan
+only proposes; never a scheduled job, a headless model run or a template
+engine makes one.
+
 **Where the ideas come from.** Add no source: there are many already (Krish,
 2026-11-01: "there are so many sources of inspiration by now throughout the
 engines"). Use what `board_feed.py gather` wrote to `sources.json`:
@@ -145,8 +157,9 @@ Sunday in `offday_verdicts`. An Improve on the idea or the direction also
 starts a revision run (`.github/workflows/offday-revise.yml`, below), whose
 revised card goes live at the board's next build. Growth reads each option whose
 idea and direction he approved (`GET /api/board/<Monday>/pieces`, `offdays`),
-makes the mock in the brand kit from the direction exactly as shown, and
-returns it on the option as `mock` for his final yes; this repository cuts any
+makes the mock from the direction exactly as shown, in a Claude session with
+the Codex plugin building it (`docs/CAROUSEL-STANDARD.md`, "How a carousel is
+made"), and returns it on the option as `mock` for his final yes; this repository cuts any
 snackable clip.
 
 **Revising one option** (the revision run, or a session asked to). What waits
@@ -162,7 +175,7 @@ the file reads (`board_feed.py cover <Monday>`). The side's hash
 changes with its words, so his old press reads as answered and he judges the
 new card when the live board next reads these ideas; a side already
 revised is never revised again from the same words. The revision run does not
-publish the board. A mock is Growth's to remake from his words.
+publish the board. A mock is Growth's to remake from his words, by the same route.
 
 **An off-day piece he records** (Ruling, Krish, 2026-10-29: an idea he drops in
 "should appear on my Sunday board for either Tuesday, Thursday, Saturday, or
@@ -279,5 +292,5 @@ It never writes a second good-news option, never approves anything and never mov
 the topic in the window is said on the option (`"stories_short": "<why>"`) and on the board, never padded with a story
 off the topic.
 
-Growth makes the carousel from the stories as shown, and its mock comes back for his final yes as with any off day.
+Growth makes the carousel from the stories as shown, in a Claude session with the Codex plugin building it (`docs/CAROUSEL-STANDARD.md`, "How a carousel is made"), and its mock comes back for his final yes as with any off day.
 

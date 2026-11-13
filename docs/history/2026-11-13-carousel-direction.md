@@ -1,3 +1,7 @@
+> Retired on 13 November 2026 (Ruling, Krish, 2026-11-13: every carousel is made in a Claude session, with the Codex
+> plugin building it, as in the other usual workflows). Kept unchanged as history: the commands, contracts and
+> renderer it describes were removed. How a carousel is made now: `docs/CAROUSEL-STANDARD.md`.
+
 # Carousel visual direction
 
 Read `docs/MEDIA_STANDARD.md` and resolve its current policy hash first. Apply the

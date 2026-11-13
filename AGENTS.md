@@ -29,6 +29,16 @@ repository's `docs/CAROUSEL-STANDARD.md`, the rejection floor and the copy
 lint. Content-engine keeps the standard and makes the hero assets: the
 article, both cuts, thumbnails and covers.
 
+How they are made (Ruling, Krish, 2026-11-13: "all the carousels should now be
+done in Claude, but using the Codex plug in as per the other usual
+workflows"; "memes and Notes images should go the same way"; "Off-day
+voiceover shorts should go the same way too"): every carousel, meme and Notes
+image is made in a Claude session, with the Codex plugin building it (a
+`ve card` of kind carousel, meme or notes_image), and every off-day voiceover
+short on the ve route from a Claude session. Never a scheduled job, a
+headless model run or a template engine. The route is
+`docs/CAROUSEL-STANDARD.md`, "How a carousel is made".
+
 **Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); the old board pages at content.krishraja.com/board are retired for good and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good, and everything old in content-engine is retired). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this repository are history.
 
 

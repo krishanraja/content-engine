@@ -226,8 +226,7 @@ pinned by sha256 in control-center, `src/assets/brand/makeyourmindup/`,
 because content-engine never tracks image files. The house faces load under
 names of their own (`apps/renderer/src/house/fonts.css`), so the retired
 theme's faces resolve exactly as before. The renderer's house code is in
-`apps/renderer/src/house/`, `apps/renderer/src/v2/HouseShort.tsx`,
-`apps/renderer/src/carousel/HouseCarouselCard.tsx` and
+`apps/renderer/src/house/`, `apps/renderer/src/v2/HouseShort.tsx` and
 `apps/renderer/src/thumbnail/`.
 
 `brandThemeRefusal` refuses the theme for a retired series, while it is a
@@ -319,8 +318,8 @@ The V1 graph still exists only so V1 jobs can resume. New work is V2.
 | Core | the job store, stage logic, editorial gates, evidence, art director, feedback, runner protocol | `packages/core` |
 | CLI | the `studio` command; `studio --help` and `studio v2 --help` print the machine-readable groups | `packages/cli`; `scripts/studio.ps1` on Windows |
 | Runner | a Windows daemon: heartbeats, Drive Inbox discovery, claims queued commands and approved production briefs from Control Center, writes signed local decisions | `apps/runner`, logic in `packages/core/src/runner.ts` |
-| Renderer | ve: `FormatMaster` (1080x1920 or 1920x1080); job-based Studio: `MindmakeStoryV2` (1080x1920), `MindmakeCarouselSlide` (1080x1350) and the V1 `MindmakeShort` | `apps/renderer` |
-| Carousel director | authored swipe stories of 5 to 10 slides; PNG for Instagram, PNG plus PDF for LinkedIn | `packages/core/src/carousel.ts`, `config/carousel-visual-direction.json` |
+| Renderer | ve: `FormatMaster` (1080x1920 or 1920x1080); job-based Studio: `MindmakeStoryV2` (1080x1920) and the V1 `MindmakeShort` | `apps/renderer` |
+| Carousels | no Studio stage: a carousel, a meme or a Notes image is made in a Claude session, with the Codex plugin building it (Ruling, Krish, 2026-11-13) | `docs/CAROUSEL-STANDARD.md`, "How a carousel is made" |
 | Station harnesses | a typed boundary (`station.json`) and a judgement card (`STATION.md`) per stage; checked for parity with the stage graph by `npm run check:stations`. Nothing reads them at runtime | `.agents/skills/mindmake-video/stations/` |
 | Art director | one governed registry of visual devices with fail-closed eligibility and scoring | `config/techniques.json`, `docs/ART_DIRECTOR_REPERTOIRE.md` |
 | Learning | local feedback lifecycle (`observed` to `active`); a rule is active only when it is in reviewed Git config; cloud session and learning tables | `packages/core/src/feedback.ts`, `config/studio.json`, `supabase/migrations/20260907091923_studio_session_learning_spine.sql` |
@@ -352,8 +351,8 @@ in `docs/AMPLIFICATION.md`. The rule is
   engine (`api/content-ideas/[id]/production-brief.ts`). The runner claims it:
   a short-native brief becomes a job at once, an extract or solo brief waits at
   `awaiting_source_bundle` for a reviewed Drive source, and a carousel-only
-  brief is recorded without a video job. The carousel director does not read
-  briefs; carousel stories are authored separately.
+  brief is recorded without a video job: a carousel is made in a Claude
+  session (`docs/CAROUSEL-STANDARD.md`, "How a carousel is made").
 - **Runner protocol.** The runner POSTs only to the runner routes (`claim`,
   `heartbeat`, `complete`, preview upload and retention, `project`, brief claim
   and complete) under `/api/video-studio/runner`. Its default base URL is
@@ -416,7 +415,6 @@ Each is current for the Studio except where the note says otherwise
 | `docs/OPERATIONS.md` | setup, typical runs, recovery, failure codes | nothing |
 | `docs/DEPLOYMENT.md` | secrets, runner install, the standby machine, the shipped versus installed boundary | the upstream review order, the cursor rollout and the radar checklist are historical procedures, kept for a rebuild |
 | `docs/ENGINE_SECRETS_HANDOVER.md` | the Windows credential contract, per runner machine | nothing |
-| `docs/CAROUSEL_ENGINE_STATE.md` | the carousel engine's gate and decision record | last verified 2026-09-07; calls the repo `mindmake-video-studio`; its test counts are old |
 | `docs/ART_DIRECTOR_REPERTOIRE.md` | the visual device registry and the sharp-alternative path | nothing |
 | `docs/OPENING_LOOP_CALIBRATION.md` | the opening contract (promise match, open question) | nothing |
 | `docs/REFERENCE_VIDEO_CALIBRATION.md` | the calibration record behind the active preferences | nothing |

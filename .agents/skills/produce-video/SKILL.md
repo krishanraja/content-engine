@@ -167,9 +167,17 @@ renders with `--only 16x9`, the short cut with `--only 9x16`.
 making route as `offday`) holds the style he approved: `to_camera` is his
 take with motion-designed subtitles and the brand; `voiceover` is his voice
 over motion-designed infographics, so the pictures carry the mechanism the
-words name. Make only the 9:16 short and its thumbnail (`--only 9x16`); never
-ask him for a long take of it, and the Video assets step is done with the
-short alone.
+words name. Make only the 9:16 short and its thumbnail; never ask him for a
+long take of it, and the Video assets step is done with the short alone.
+
+**An off-day short is made on the ve route, from a Claude session** (Ruling,
+Krish, 2026-11-13: "Off-day voiceover shorts should go the same way too"):
+hand it to the `ve` skill. The session writes the script and the signed spec,
+Codex builds the devices and plates from cards through the plugin, `ve`
+renders the cut, and a separate reviewer watches and listens before it is
+called ready (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`). The voice comes from
+wherever it comes from today. Never per-piece code, and never
+`scripts/produce_day.py`, which refuses an off-day piece.
 
 Commands are written `python`, as on Windows; it is `python3` in the cloud.
 

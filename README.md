@@ -149,8 +149,7 @@ document; code outranks prose about what the code does.
    the brand tokens, `docs/ve/MOTION_STANDARD.md` and the style bank hold that.
 7. `docs/STUDIO.md`: the Studio, and the index of its detailed documents
    (`docs/ENGINE_SESSION.md`, `docs/ARCHITECTURE.md`, `docs/OPERATIONS.md`,
-   `docs/DEPLOYMENT.md`, `docs/CAROUSEL_ENGINE_STATE.md` and the calibration
-   records).
+   `docs/DEPLOYMENT.md` and the calibration records).
 8. `docs/GLOSSARY.md`: every term and every retired name.
 9. `docs/walks/`: live engineering records. They explain why things are as
    they are; they are not instructions.

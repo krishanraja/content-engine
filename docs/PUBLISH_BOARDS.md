@@ -97,7 +97,12 @@ Publish Board draws `model` and nothing else on a day.
 - **One next action per item** (`next`): a press that does the thing (It's live, Approve for publish, a run on GitHub
   such as "Find the other 4 stories") or the one prompt, "Copy prompt for Claude", which names the item and tells the
   session to report back to the board as it works (`writeBack`). Never a page of the archive, never the old look
-  picker or review. A live item has none; a scheduled one waits on Growth.
+  picker or review. A live item has none; a scheduled one waits on Growth. An off-day post's prompt also says how it is
+  made (`makeRoute` and `routeLine`, `apps/control-plane/api/board/_makeRoute.ts`; Rulings, Krish, 2026-11-13): a
+  carousel, a meme or a Notes image in that Claude session, with the Codex plugin building it
+  (`docs/CAROUSEL-STANDARD.md`, "How a carousel is made"), and a voiceover short or a meme video on the ve route from a
+  Claude session (`docs/ve/ENGINE.md`). Never a scheduled job, a headless model run or a template engine
+  (`tests/control-plane/make-route.test.ts`).
 - **His decisions on a day** are only his real ones (`decision`): Approve for publish on a made piece, and a choice an
   approved post is still missing (its direction, with the other answers in `others`). Never an idea.
 - **Good news is one post, five stories on one topic.** The Saturday item lists its stories in full (headline, what,
