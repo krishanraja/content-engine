@@ -36,7 +36,10 @@ export const JOBS: Record<JobName, Job> = {
   },
   // A press means now: the run finds the week's stories again, by hand (saturday_goodnews.py check --force); the Sunday
   // ideas run finds them each week (Ruling, Krish, 2026-11-11).
-  'saturday-goodnews': { workflow: 'saturday-goodnews.yml', payload: i => (isMonday(i.week) ? { week: i.week, force: true } : null) },
+  // `fill` (Ruling, Krish, 2026-11-13: the Saturday carousel is five good-news stories on one topic): the good-news post
+  // he approved holds fewer than five, so the run finds the rest on its topic and writes them onto that option.
+  'saturday-goodnews': { workflow: 'saturday-goodnews.yml', payload: i => (isMonday(i.week) && (i.fill === undefined || OPTION.test(String(i.fill)))
+    ? { week: i.week, force: true, ...(i.fill ? { fill: i.fill } : {}) } : null) },
   'sunday-ideas': { workflow: 'sunday-ideas.yml', payload: i => (isMonday(i.week) ? { week: i.week } : null) },
   'produce-day': {
     workflow: 'produce-day.yml',
