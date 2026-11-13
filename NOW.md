@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- Every piece before recording offers his production pick as three presses (look, motion style, captions) through the engine's look and style routes, the recommended one first and marked; a session's recommendation is the piece's row style in the week's plan (contract 1.15.0). (2026-11-13)
 - The view reads every day's narrative lock, so a piece moved to an off day keeps its own (Tue 17's data-centres piece). (2026-11-13)
 - The publish board says the current state: a day is Done only when every item is live, past and already-out ideas leave the ideas board, a narrative lock follows its piece, and the offday-posts route takes the done-check's Buffer sends (check buffer_sent) with the Buffer id as proof. (2026-11-13)
 - ve gained three stagings from Krish's own cuts (band, stage, tray), the lit, vignette and hatched grounds, blur-in, turn and tilt entrances, a crossfade handover, region fitting for five more devices, the open caption fixes and a ve study that no longer crashes; rendered on his pinned take and watched: up to 3.88 events a second and 82% of the frame, against 2.58 and 26% before (docs/ve/INGREDIENTS.md, "The stagings"). (2026-11-13)
@@ -49,7 +50,7 @@ Older lines: `docs/history/2026-11-13-NOW-moved-14.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-13): the re-dated Tue 17 lock needs Krish's signature again (re-dating changed the words his 9 Nov signature bound), filed by the producing session.
+- Next (2026-11-13): the producing session writes each week-16 piece's recommended production, motion and captions on its row's style in the week's ideas.json.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
