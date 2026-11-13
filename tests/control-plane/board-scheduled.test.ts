@@ -95,6 +95,6 @@ describe('what is not filed yet is said, never guessed', () => {
     expect(story.detail.find(x => x.h === 'Scripts')?.p).toBe("Not filed yet: none on the piece's record and none sent to your Teleprompter")
     const look = buildView(inputs({ pieces: [fresh], picks: [] })).days.find(d => d.day === 'fri')!
     expect(look.next).toBe('Pick the look: the recommended one, another, or fold in your inspiration. No approved scripts are filed yet: if you approved them in a session, file them from that session')
-    expect(look.detail.find(x => x.h === 'Narrative lock')?.p).toBe('Signed')
+    expect(look.detail.find(x => x.h === 'Narrative lock')?.p).toBe('Approved in your words: "yes", Sat 7 Nov')
   })
 })
