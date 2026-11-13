@@ -79,9 +79,6 @@ Each is checked in the record that holds it; only his own words or presses close
 - **Golden frames.** All 10 slots in `config/ve/golden-frames.json` are empty; at least 5 are wanted, and only his
   words naming a moment fill one.
 - **Gate 2 on face-with-proof at 16:9** (`config/ve/design-lock.json`, `drafts`).
-- **The music levels, by ear.** Two records disagree: `config/music-library.json` holds the levels as `approved`
-  (12 Oct), while house rule `MUSIC_BED` (`_houseRules.ts`) says they "stay proposed until he approves them by ear".
-  Only his word settles which is true.
 - **His answers on the week of 9 Nov's ideas board** (the live view, 13:30 UTC on 12 Nov): Thu 12's
   `beststicker` ("Your AI thinks it's the best. Guess who told it.", signed off in a session and filed in 3 Posts, so
   it waits on his Approve on the live board, the one press that puts it on the day) and `otherside`; Wed 11's

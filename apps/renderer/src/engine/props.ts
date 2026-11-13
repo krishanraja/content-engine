@@ -112,18 +112,17 @@ export const EngineRenderPropsSchema = z.object({
     days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional() }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
-  /** The makeyourmindup intro sting in front of the cut (Krish, 2026-11-05: "I think it should go at the start of the
-   *  longer wide videos 100%,"): one of the fixed clips in config/intro-sting.json, played as it is for its `frames`,
-   *  silent, with the stem under it. Every other frame in these props stays on the cut's own clock, which starts
-   *  `frames` into the render, so his face lands on the very next frame after the sting's last. Absent, the cut
-   *  opens on its hook exactly as before. */
+  /** Retired (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."): from
+   *  5 Nov the house sting played in front of the 16:9 long cut of a series piece. Kept in the shape only so the
+   *  refusal below names it; props that carry one never render. */
   sting: EngineStingSchema.optional(),
-  /** A wide cut that opens on its own episode card where the sting would be, by Krish's word for that piece (spec
-   *  brand.opening_exception; Krish, 2026-11-09: "I want the episode card to come in."). Nothing is drawn from it: the
-   *  card is the spec's own beat; it only records why this series wide cut has no sting. */
+  /** Retired with it: the 9 Nov episode card in place of the sting. Refused below. */
   opening: z.object({ kind: z.literal('episode_card'), said: z.string().min(12), on: z.string().min(10) }).strict().optional(),
 }).strict().superRefine((props, context) => {
-  if (props.opening && props.sting) context.addIssue({ code: 'custom', path: ['opening'], message: 'a cut opens on its episode card or on the sting, never both' })
+  // Nothing goes before the hook on any cut, ever (Ruling, Krish, 2026-11-12).
+  const ruling = 'nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.")'
+  if (props.sting) context.addIssue({ code: 'custom', path: ['sting'], message: `a sting in front of the cut: ${ruling}` })
+  if (props.opening) context.addIssue({ code: 'custom', path: ['opening'], message: `an episode card in front of the cut: ${ruling}` })
   if (!props.sting) return
   // Only the 16:9 long cut of a weekly series piece wears it: the 9:16 short opens straight on its hook
   // (HOOK_IS_THE_INTRO), a proof excerpt (no ending band) is never a whole cut, and an off day wears no sting.

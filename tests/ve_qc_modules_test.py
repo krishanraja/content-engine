@@ -423,8 +423,8 @@ class QCContracts(unittest.TestCase):
 @unittest.skipUnless(shutil.which('ffmpeg') and shutil.which('ffprobe'), 'ffmpeg is not on PATH')
 class OpeningRowTest(unittest.TestCase):
     """ve qc's opening row (velib.qc_opening) on synthetic media: stand-in sting clips (intro.stand_in, under .cache,
-    where the stand-in config is honoured), never Krish's. Krish, 2026-11-05: "I think it should go at the start of the
-    longer wide videos 100%,"."""
+    where the stand-in config is honoured), never Krish's. Ruling (Krish, 2026-11-12): "Nothing before the hook, ever.
+    Remove the sting exception for good." Props or a file with a sting in front fail, even the approved clip."""
 
     @classmethod
     def setUpClass(cls):
@@ -468,37 +468,28 @@ class OpeningRowTest(unittest.TestCase):
         with patch.dict('os.environ', env):
             return qc_opening.opening(path, view)
 
-    def test_the_approved_sting_then_his_cut_on_the_very_next_frame_passes(self):
+    def test_even_the_approved_sting_in_front_of_a_series_wide_cut_fails(self):
         path = self.joined('stinged.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut)
         row = self.row(path, self.view())
-        self.assertTrue(row['pass'], row)
-        value = row['value']
-        self.assertEqual((value['opening'], value['lead_frames'], value['file_frames']), ('sting', 56, 176))
-        self.assertTrue(value['sting_frames']['all_same'])
-        self.assertLessEqual(value['sting_frames']['worst_mad'], qc_opening.MATCH_MAD_MAX)
-        self.assertFalse(value['first_cut_frame_vs_sting_last']['same'])
+        self.assertFalse(row['pass'], row)
+        self.assertIn('Nothing before the hook, ever.', ' '.join(row['problems']))
         # Through run_qc, as ve qc runs it.
-        with patch.object(qc_opening, 'opening', wraps=qc_opening.opening) as measured, \
-                patch.dict('os.environ', {self.intro.CONFIG_ENV: str(self.approved), self.intro.CLIPS_ENV: str(self.clips)}):
+        with patch.dict('os.environ', {self.intro.CONFIG_ENV: str(self.approved), self.intro.CLIPS_ENV: str(self.clips)}):
             report = qc.run_qc(path, 'scoreboard-test', opening=self.view())
-        measured.assert_called_once()
-        self.assertTrue(report['checks']['opening']['pass'], report['checks']['opening'])
+        self.assertFalse(report['checks']['opening']['pass'], report['checks']['opening'])
 
-    def test_another_series_sting_a_held_frame_or_a_short_file_fails(self):
-        other = self.joined('other.mp4', self.clip['16x9', 'follow_the_money'], self.wide_cut)
-        self.assertIn('frame for frame', ' '.join(self.row(other, self.view())['problems']))
-        held = self.joined('held.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut, hold=1)
-        self.assertIn('still the sting\'s last frame', ' '.join(self.row(held, self.view())['problems']))
-        self.assertIn('the cut does not run on', ' '.join(self.row(str(self.wide_cut), self.view())['problems']))
-
-    def test_a_sting_the_props_should_not_carry_fails(self):
+    def test_a_sting_the_props_carry_fails_on_any_cut(self):
         path = self.joined('stinged-tall-props.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut)
         for why, view in (('a tall cut', self.view(aspect='9:16')), ('an off day', self.view(label='off.day')),
-                          ('another series', self.view(label='under.the.hood'))):
+                          ('another series', self.view(label='under.the.hood')), ('a series wide cut', self.view())):
             with self.subTest(why):
-                self.assertIn('only the 16:9 whole cut', ' '.join(self.row(path, view)['problems']))
-        # A candidate sting opens no cut: props carrying one were not compiled from the approved clip.
-        self.assertIn('does not open this cut on one', ' '.join(self.row(path, self.view(), self.candidate)['problems']))
+                self.assertIn('Nothing before the hook, ever.', ' '.join(self.row(path, view)['problems']))
+
+    def test_an_episode_card_in_front_fails(self):
+        view = dict(self.view(sting=False), opening={'kind': 'episode_card', 'said': 'I want the episode card to come in.', 'on': '2026-11-09'})
+        row = self.row(str(self.wide_cut), view)
+        self.assertFalse(row['pass'], row)
+        self.assertIn('episode card', ' '.join(row['problems']))
 
     def test_a_cut_that_opens_on_its_hook_shows_no_sting(self):
         for name, path, aspect in (('tall', self.tall_cut, '9:16'), ('wide, candidate', self.wide_cut, '16:9')):
@@ -509,14 +500,13 @@ class OpeningRowTest(unittest.TestCase):
         tall = self.row(str(self.tall_cut), self.view(aspect='9:16', sting=False))
         self.assertEqual(len(tall['value']['clips_compared']), 3, 'each series\' 9x16 stand-in clip was compared')
 
-    def test_a_sting_in_front_of_a_hook_cut_or_missing_from_a_wide_series_cut_fails(self):
+    def test_a_sting_in_front_of_a_hook_cut_fails_and_a_hook_cut_passes(self):
         tall = self.joined('tall-stinged.mp4', self.clip['9x16', 'under_the_hood'], self.tall_cut)
         found = ' '.join(self.row(tall, self.view(aspect='9:16', sting=False))['problems'])
         self.assertIn('opens on the under_the_hood 9x16 sting', found)
         self.assertIn('something is in front of it', found)
-        # Once the sting is approved, a wide whole series cut left on its hook was compiled before the approval.
-        self.assertIn('the approved sting should open it',
-                      ' '.join(self.row(str(self.wide_cut), self.view(sting=False))['problems']))
+        # A wide whole series cut on its hook passes, even with an approved stand-in sting config: nothing goes before it.
+        self.assertTrue(self.row(str(self.wide_cut), self.view(sting=False))['pass'])
         # A proof window keeps its ending and trims the stem: it is not a whole cut, and opens on no sting.
         self.assertTrue(self.row(str(self.wide_cut), self.view(sting=False, trim=200))['pass'])
         # An off-day wide cut opens on its hook.
