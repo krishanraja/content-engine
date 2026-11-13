@@ -15,9 +15,10 @@ import type { DeviceProps } from '../types'
 import { screenState, rect } from './state'
 const ease={enter:ENTER,hero:HERO,exit:EXIT,utility:HERO}
 // The canvas fills the device box in both shapes (a smaller canvas shows the floor as a hard-edged rectangle); the
-// camera frames the card being read inside safeBox, which in 9:16 is the words-safe zone (x 60 to 860, above y 1320).
+// camera frames the card being read inside safeBox: in 9:16 the words-safe x 60 to 860, from under the headline zone
+// to the key band's bottom (y 470 to 1060), so the house caption box (y 1090 to 1320, kit/lock.ts) never covers it.
 export function viewport(p:DeviceProps){return {left:0,top:0,width:p.box.width,height:p.box.height}}
-export function safeBox(p:DeviceProps){const {width:W,height:H}=p.box;return p.aspect==='9:16'?{left:W*60/1080,top:H*370/1920,width:W*800/1080,height:H*940/1920}:{left:0,top:0,width:W,height:H}}
+export function safeBox(p:DeviceProps){const {width:W,height:H}=p.box;return p.aspect==='9:16'?{left:W*60/1080,top:H*470/1920,width:W*800/1080,height:H*590/1920}:{left:0,top:0,width:W,height:H}}
 export function cameraFor(p:DeviceProps){
   const s=screenState(p.object,p.events,p.frame),v=viewport(p),safe=safeBox(p),[x,y,w,h]=s.target
   const focus=new T.Vector3((x!/2400-.5)*6,(.5-y!/1600)*4,0)
