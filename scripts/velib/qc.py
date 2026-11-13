@@ -184,15 +184,44 @@ def caption_pages_shown(props: dict) -> list:
 
 
 def lead_frames(props: dict | None) -> int:
-    """The frames in front of the cut in its finished file: the intro sting's (props.sting.frames) on the 16:9 whole
-    cut of a weekly series piece, else 0. The props stay on the cut's own clock (compile moves no frame for the sting),
-    so cut frame f is frame f + lead of the file (apps/renderer/src/engine/VeCut.tsx)."""
+    """The intro sting's frames in the cut's finished file (props.sting.frames), else 0. The props stay on the cut's own
+    clock (compile moves no frame for the sting); where in the file the sting sits is sting_at (to_file)."""
     return int(((props or {}).get('sting') or {}).get('frames') or 0)
 
 
-def _moved(item: dict, lead: int, *keys: str) -> dict:
-    """A copy of item with each frame key present moved onto the file's clock."""
-    return {k: (int(v) + lead if k in keys and v is not None else v) for k, v in item.items()}
+def sting_at(props: dict | None) -> int:
+    """The cut's own frame the sting plays at: props.sting.atFrame, the hook's last frame + 1 (the sting after the hook,
+    config/brand-palette.json long_cut sting after_hook, SOCIAL-BEST-PRACTICES-2026 section 4.3). 0, or absent, is the
+    sting in front of the cut (the retired opening, kept so a cut made that way still reads true)."""
+    return int(((props or {}).get('sting') or {}).get('atFrame') or 0)
+
+
+def to_file(frame, props: dict | None, end: bool = False) -> int:
+    """Cut frame `frame` on the finished file's clock (apps/renderer/src/engine/VeCut.tsx): the frames before the sting
+    stay where they are, and every frame from the sting on falls the sting's frames later. An exclusive end (`end`) on
+    the sting's own frame stays before it: the hook ends where the sting starts."""
+    lead, at, f = lead_frames(props), sting_at(props), int(frame)
+    return f + lead if (f > at if end else f >= at) else f
+
+
+def to_file_s(seconds: float, props: dict | None) -> float:
+    """A time on the cut's own clock on the finished file's clock, as to_file does for a frame."""
+    fps = float((props or {}).get('fps') or 30)
+    lead, at = lead_frames(props), sting_at(props)
+    return float(seconds) + lead / fps if lead and float(seconds) >= at / fps else float(seconds)
+
+
+def opening_lead(props: dict | None) -> int:
+    """The frames in front of the hook in the file: the sting's when it opens the cut, 0 when it follows the hook."""
+    return lead_frames(props) if not sting_at(props) else 0
+
+
+END_KEYS = ('toFrame',)
+
+
+def _moved(item: dict, props: dict, *keys: str) -> dict:
+    """A copy of item with each frame key present moved onto the file's clock (to_file; toFrame is an exclusive end)."""
+    return {k: (to_file(v, props, end=k in END_KEYS) if k in keys and v is not None else v) for k, v in item.items()}
 
 
 def opening_view(props: dict) -> dict:
@@ -202,16 +231,20 @@ def opening_view(props: dict) -> dict:
 
 def inputs_from_props(props: dict) -> dict:
     """Resolve QC inputs on the finished file's 30 fps clock: the renderer's global clock, plus the intro sting's frames
-    in front of the cut when it opens on one (lead_frames). Every frame a check reads in the file (beats, events,
-    caption pages, the lip-sync EDL, joins and the plate offset) is moved by the lead; the stem already starts on the
-    file's frame 0, so the EDL's stem positions are the moved frames."""
+    of every frame from where it plays (to_file: after the hook, or in front of the cut on a cut made before 16 Nov).
+    Every frame a check reads in the file (beats, events, caption pages, the lip-sync EDL, joins and the plate under
+    each beat) is moved with it; the stem already runs on the file's clock, so the EDL's stem positions are the moved
+    frames."""
     # Mirrors apps/renderer/src/engine/layouts/index.ts, slotsFor():
     # boxes are x, y, width, height in beat.uses order, authored per aspect.
     layouts = _renderer_layouts()
-    lead = lead_frames(props)
     aspect = props['aspect']
-    beats = [_moved(b, lead, 'fromFrame', 'toFrame', 'keyFrame') for b in props['beats']]
-    events = [_moved(e, lead, 'atFrame') for e in props['events']]
+    # Each beat says how far it moved (shift): the plate under it is read that many frames back (velib.qc_as_shot).
+    beats = [_moved(b, props, 'fromFrame', 'toFrame', 'keyFrame') for b in props['beats']]
+    for beat, original in zip(beats, props['beats']):
+        if beat['fromFrame'] != original['fromFrame']:
+            beat['shift'] = beat['fromFrame'] - int(original['fromFrame'])
+    events = [_moved(e, props, 'atFrame') for e in props['events']]
     objects = {o['obj']: o for o in props.get('objects', [])}
     split_scale, split_caption = _split_geometry()
     split_seam = int(re.search(r'export const FWP_SPLIT_SEAM_Y = (\d+)', (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'mocks'
@@ -258,19 +291,19 @@ def inputs_from_props(props: dict) -> dict:
     # never be applied to it; compare each beat at its position in this master.
     # The ending band carries no speech, so lip sync is measured up to its start, never across it.
     stop = (props.get('ending') or {}).get('fromFrame', props.get('durationFrames'))
-    stop = None if stop is None else int(stop) + lead
+    stop = None if stop is None else to_file(stop, props)
     edl = [{'fromFrame': b['fromFrame'], 'toFrame': b['toFrame'] if stop is None else min(b['toFrame'], stop),
             'trimBeforeFrames': b['fromFrame'] + stem.get('trimBeforeFrames', 0)} for b in beats
            if stop is None or b['fromFrame'] < stop]
     # A take join is where a later picture segment starts. The sting's last frame to his face is not one: the stem
     # runs on unbroken under it, and the one take segment starts on the cut's own frame 0.
-    joins = sorted({(s['fromFrame'] + lead) / props.get('fps', 30) for s in props.get('segments', []) if s['fromFrame'] > 0})
+    joins = sorted({to_file(s['fromFrame'], props) / props.get('fps', 30) for s in props.get('segments', []) if s['fromFrame'] > 0})
     from . import qc_faces
     pages = []
     style = props.get('captionStyle') or 'house'
     for original in caption_pages_shown(props):
-        page = dict(_moved(original, lead, 'fromFrame', 'toFrame'),
-                    words=[_moved(w, lead, 'atFrame') for w in original.get('words') or []])
+        page = dict(_moved(original, props, 'fromFrame', 'toFrame'),
+                    words=[_moved(w, props, 'atFrame') for w in original.get('words') or []])
         beat = next((b for b in beats if b['fromFrame'] <= page['fromFrame'] < b['toFrame']), {})
         if beat.get('layout') == 'SPLIT' and style != 'word':
             page['region'] = split_caption
@@ -280,12 +313,12 @@ def inputs_from_props(props: dict) -> dict:
         left, top = max(0, x - 12), max(0, y - 12)
         page['region'] = (left, top, min(width, x + w + 12) - left, min(height, y + h + 12) - top)
         pages.append(page)
-    # The plate's frame under file frame F is F - lead + the segment's trim.
+    # The plate's frame under file frame F of a beat is F - the beat's shift + the segment's trim.
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
                 region=region, mark_png=props['brand']['mark']['src'], dialogue_master=stem['src'],
                 edl=edl, joins=joins, caption_style=props.get('captionStyle') or 'house',
                 plate_video=(props.get('segments') or [{}])[0].get('src') if len(props.get('segments') or []) == 1 else None,
-                plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)) - lead,
+                plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)),
                 opening=opening_view(props))
 
 
@@ -436,7 +469,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     if composition_props and composition_props.get('beats'):
         from . import qc_onscreen
         checks.update(qc_onscreen.rows(path, composition_props, publish_day, read=onscreen_reader,
-                                       lead=lead_frames(composition_props)))
+                                       lead=opening_lead(composition_props)))
     # An advisory row is measured and shown, never counted (scripts/velib/qc_channel.py until its layout card lands).
     applicable = [c for c in checks.values() if c.get('status') not in ('not applicable', 'advisory')]
     built = [c['pass'] for c in applicable if c['pass'] is not None]

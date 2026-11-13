@@ -83,6 +83,15 @@ the same day, answering the openings question: "Nothing before the hook, ever. R
 `sting_props` lays none and `sting_problems` refuses props that carry one, ve lint and the contract refuse a spec that
 names one or an episode card in its place, and make.py leaves out any intro clip and stops a cut handed one. The
 palette's long cut keeps `sting_when_built: after_hook` as the record of the sheet he approved: a sting after the hook
-would be a new design, built, proved on his own take (F04, F13) and approved in his words first; none is built.
+would be a new design, built, proved on his own take (F04, F13) and approved in his words first.
+
+**Built in ve, not switched on (13 Nov 2026, after Krish: "Can you sort out the sting now?").** ve can now play a
+sting straight after the hook and never in front of it: `compile.hook_end` (the end of beat 0, at least 3 s so the
+opening gate measures the hook), `props.sting.atFrame`, `VeCut.tsx` (hook, clip, then the cut on), premix's
+`sting_at_frame` (his voice to the hook's end, the sting's frames of silence, the bed lifted under them), and every check
+through `velib.qc.to_file`. A sting with no `atFrame` is refused everywhere. Nothing lays one: `sting_props` still
+gives no cut a sting and the config stays retired, so `sting_problems` refuses any sting. To use it, Krish approves a
+proof on his own take, in his words; then the config, `intro.py` and `sting_props` change to lay it after the hook.
+quick-edit cannot lay it.
 
 Both tall closes, kit's and ve's, are the palette's 2 s beat, and an off-day close shows no series days.

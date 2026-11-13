@@ -88,7 +88,11 @@ describe('nothing before the hook', () => {
     const carded = { ...props, sting: undefined, opening: { kind: 'episode_card', said: 'I want the episode card to come in.', on: '2026-11-09' } }
     await expect(stageRenderAssets(carded, path.join(root, 'props.json'), path.join(root, 'public'), root)).rejects.toThrow(/episode card/)
   })
-  it('runs the cut on its own clock, nothing in front', () => {
-    expect(renderClock({ durationFrames: 120 })).toEqual({ lead: 0, frames: 120 })
+  it('runs the cut on its own clock: nothing in front, a sting only after the hook', () => {
+    const plain = renderClock({ durationFrames: 120 })
+    expect([plain.lead, plain.frames, plain.toRender(0), plain.toRender(119)]).toEqual([0, 120, 0, 119])
+    // After the hook (config/brand-palette.json): the hook's frames stay, every frame from the sting on is 56 later.
+    const after = renderClock({ durationFrames: 120, sting: { frames: 56, atFrame: 60 } })
+    expect([after.lead, after.at, after.frames, after.toRender(59), after.toRender(60), after.toRender(119)]).toEqual([0, 60, 176, 59, 116, 175])
   })
 })

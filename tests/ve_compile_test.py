@@ -9,7 +9,7 @@ import copy
 import io
 import hashlib
 from argparse import Namespace
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 import json
 import os
 from pathlib import Path
@@ -24,7 +24,7 @@ sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from velib.common import load_json, run
-from velib.compile import compile_cut, source, caption_line_count, _caption_groups, _text_width, ENDING_FRAMES, ENDING_FRAMES_BY_ASPECT, sting_problems
+from velib.compile import compile_cut, source, caption_line_count, _caption_groups, _text_width, ENDING_FRAMES, ENDING_FRAMES_BY_ASPECT, sting_problems, hook_end
 from velib import compile as ve_compile
 from velib.render import render, check_asset_hashes
 import ve
@@ -553,7 +553,7 @@ class StingTest(unittest.TestCase):
         self.assertRegex(' '.join(sting_problems(carded)), 'episode card.*Nothing before the hook, ever')
         # A stem premixed with frames in front of his voice is refused too.
         (folder / 'audio.proof-wide.bed.json').write_text(json.dumps({'lead_frames': 56}), encoding='utf-8')
-        self.assertRegex(' '.join(sting_problems(props)), 'premixed with 56 frames.*opens on 0')
+        self.assertRegex(' '.join(sting_problems(props)), 'premixed with 56 frames.*plays 0')
         # ve render stops before anything renders.
         props_file = self.empty() / 'props.proof-wide.json'
         props_file.write_text(json.dumps(stinged), encoding='utf-8')
@@ -565,6 +565,97 @@ class StingTest(unittest.TestCase):
             self.assertEqual(ve.cmd_render(args), 1)
         draw.assert_not_called()
         self.assertIn('must open on its hook', output.getvalue())
+
+
+
+class StingAfterHookTest(StingTest):
+    """The sting straight after the hook: a new design, built in ve and laid by compile only once Krish approves one
+    (config/intro-sting.json is retired; none is). Here a sting is placed by hand on compiled props, at hook_end, with a
+    stand-in approved config and clips (never his), to hold every piece that would carry it."""
+
+    def placed(self):
+        props = compile_cut(self.wide(), 'proof-wide', timed_words(), FIXTURE)
+        at = hook_end(props)
+        props['sting'] = {'src': str(self.clips / Path(self.entry['library']).name), 'series': 'mind_the_gap',
+                          'frames': 56, 'sha256': self.entry['sha256'], 'atFrame': at}
+        return props, at
+
+    def test_hook_end_is_the_end_of_beat_0_and_outlasts_the_opening_gate(self):
+        props, at = self.placed()
+        self.assertEqual(at, props['beats'][1]['fromFrame'])
+        self.assertGreaterEqual(at, 90, 'the hook outlasts the opening gate\'s windows, so the gate never measures the sting')
+        self.assertTrue(all(page['toFrame'] <= at for page in props['captions'] if page['fromFrame'] < at))
+        short = copy.deepcopy(props)
+        short['beats'][0]['toFrame'] = short['beats'][1]['fromFrame'] = 60
+        with self.assertRaisesRegex(ValueError, 'opening the gate measures'):
+            hook_end(short)
+
+    def test_only_an_approved_sting_after_the_hook_passes_and_its_stem_must_match(self):
+        props, at = self.placed()
+        folder = self.empty()
+        props['audio']['stem']['src'] = str(folder / 'audio.proof-wide.wav')
+        sidecar = folder / 'audio.proof-wide.bed.json'
+        sidecar.write_text(json.dumps({'lead_frames': 56, 'sting_at_frame': at}), encoding='utf-8')
+        with self.env(self.approved):
+            self.assertEqual(sting_problems(props), [])
+            front = copy.deepcopy(props)
+            front['sting'].pop('atFrame')
+            self.assertRegex(' '.join(sting_problems(front)), 'in front of the hook.*Nothing before the hook, ever')
+            sidecar.write_text(json.dumps({'lead_frames': 56, 'sting_at_frame': 0}), encoding='utf-8')
+            self.assertRegex(' '.join(sting_problems(props)), 'sting at frame 0, and the cut plays 56 at frame')
+        # The real config is retired: no sting plays anywhere until he approves one.
+        with patch.dict(os.environ, {}):
+            os.environ.pop(intro.CONFIG_ENV, None)
+            os.environ.pop(intro.CLIPS_ENV, None)
+            self.assertRegex(' '.join(sting_problems(props)), 'lays none .status retired')
+
+    def test_premix_lays_the_gap_at_the_hooks_end_and_moves_what_follows(self):
+        props, at = self.placed()
+        words = timed_words()
+        track = next(t for t in load_json(ve.MUSIC_LEDGER)['tracks'] if t['id'] == self.wide()['audio']['bed']['ledger_id'])
+        real_load = load_json
+
+        def read(path):
+            return {'props.json': props, 'words.json': words}.get(Path(path).name) or real_load(path)
+
+        args = Namespace(spec='spec.json', cut='proof-wide', dialogue='dialogue.wav', words='words.json', props='props.json',
+                         out=str(self.empty() / 'audio.proof-wide.wav'), lift=['4.0-6.5'])
+        with patch('velib.lint.lint', return_value=(self.wide(), [])), patch('ve.load_json', side_effect=read), \
+                patch.dict(os.environ, {'MINDMAKE_MUSIC_ROOT': str(self.work)}), \
+                patch('velib.common.sha256_file', return_value=track['sha256']), \
+                patch('velib.audio.premix', return_value={'stem': 's', 'integrated_lufs': -14, 'true_peak_dbtp': -1.5,
+                                                          'lead_frames': 56, 'bed': {}}) as mix, \
+                redirect_stdout(io.StringIO()):
+            self.assertEqual(ve.cmd_premix(args), 0)
+        kw, lead_s = mix.call_args.kwargs, 56 / 30
+        self.assertEqual((kw['lead_frames'], kw['sting_at_frame']), (56, at))
+        self.assertAlmostEqual(kw['voice_start_s'], words[0]['onset_s'], msg='his first word stays in the hook')
+        self.assertAlmostEqual(kw['last_word_end_s'], words[-1]['end_s'] + lead_s)
+        self.assertLess(at / 30, 4.0)
+        self.assertEqual(kw['lifts'], [[4.0 + lead_s, 6.5 + lead_s]])
+        # A lift across the sting is refused: it would play through it and come back out of step.
+        args.lift = [f'{at / 30 - 0.5}-{at / 30 + 0.5}']
+        with patch('velib.lint.lint', return_value=(self.wide(), [])), patch('ve.load_json', side_effect=read), \
+                patch.dict(os.environ, {'MINDMAKE_MUSIC_ROOT': str(self.work)}), \
+                patch('velib.common.sha256_file', return_value=track['sha256']), patch('velib.audio.premix') as mix, \
+                redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()) as err:
+            self.assertEqual(ve.cmd_premix(args), 1)
+        mix.assert_not_called()
+        self.assertIn('run across it', err.getvalue())
+
+    def test_the_renderer_accepts_the_sting_after_the_hook_only(self):
+        props, at = self.placed()
+        code = (NODE_TYPESCRIPT +
+                "const { EngineRenderPropsSchema } = require('./apps/renderer/src/engine/props.ts'); "
+                "const r = EngineRenderPropsSchema.safeParse(JSON.parse(fs.readFileSync(0, 'utf8'))); "
+                "process.stdout.write(JSON.stringify(r.success ? r.data.sting : r.error.issues.map(i => i.message)))")
+        result = run(['node', '-e', code], input=json.dumps(props), env={**os.environ, 'npm_config_offline': 'true'})
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(json.loads(result.stdout), props['sting'])
+        front = copy.deepcopy(props)
+        front['sting'].pop('atFrame')
+        result = run(['node', '-e', code], input=json.dumps(front), env={**os.environ, 'npm_config_offline': 'true'})
+        self.assertIn('Nothing before the hook, ever', result.stdout)
 
 
 if __name__ == '__main__':

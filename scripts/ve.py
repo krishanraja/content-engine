@@ -304,14 +304,13 @@ def _gate_inputs(args) -> dict:
 
 
 def cmd_qc(args) -> int:
-    from velib.qc import inputs_from_props, lead_frames, run_qc
+    from velib.qc import inputs_from_props, run_qc, to_file_s
     props = load_json(args.props) if getattr(args, 'props', None) else None
     inputs = inputs_from_props(props) if props is not None else {}
     if getattr(args, 'edl', None):
         # The conformed take is one picture segment: its joins come from the EDL ve conform wrote, on the cut's own
-        # clock. In the file they fall the intro sting's frames later on a cut that opens on it (velib.qc.lead_frames).
-        lead_s = lead_frames(props) / float((props or {}).get('fps') or 30)
-        inputs['joins'] = [join['at_s'] + lead_s for join in load_json(args.edl).get('joins', [])]
+        # clock. In the file a join after the sting falls its frames later (velib.qc.to_file_s).
+        inputs['joins'] = [to_file_s(join['at_s'], props) for join in load_json(args.edl).get('joins', [])]
     if props is not None and props.get('aspect') == '9:16':
         inputs['composition_props'] = props
     inputs.update(_gate_inputs(args))
@@ -1325,16 +1324,27 @@ def cmd_premix(args) -> int:
         words = load_json(args.words)
         words = words['words'] if isinstance(words, dict) else words
         start_s = 0.0  # dialogue.<cut>.wav is already conformed to the cut's clock
-        # A cut that opens on the intro sting (props.sting, set by ve compile) carries its frames in front of the cut's
-        # own clock: the stem starts on the sting's first frame, so his voice, his first and last word and every lift
-        # move by exactly those frames, and the stem runs the sting plus the cut. The sting's length comes from the
-        # props only, never a flag.
+        # A cut that carries the series sting (props.sting, set by ve compile) has its frames in the stem where it plays:
+        # straight after the hook (sting.atFrame). Every time from there on (his last word, lifts, clips, handovers)
+        # moves by exactly those frames (velib.qc.to_file_s), and the stem runs the sting plus the cut. The sting's length
+        # and place come from the props only, never a flag.
+        from velib.qc import to_file_s  # noqa: PLC0415
         lead = int((props.get('sting') or {}).get('frames') or 0)
-        lead_s = lead / fps
-        lifts = [[float(a) + lead_s, float(b) + lead_s] for a, b in (w.split('-', 1) for w in args.lift or [])]
+        at = int((props.get('sting') or {}).get('atFrame') or 0)
+        moved = lambda t: to_file_s(float(t), props)  # noqa: E731
+        lifts = [[moved(a), moved(b)] for a, b in (w.split('-', 1) for w in args.lift or [])]
         # The cut's own music plan (spec cuts.<cut>.music, Krish's words in its `said`): clips heard with their own
         # sound and a late bed, moved by the sting's frames like everything else on the stem's clock.
         plan = spec['cuts'][args.cut].get('music') or {}
+        # A clip heard with its own sound, a handover or a lift that runs across the sting would play through it and
+        # come back out of step with its picture: each sits wholly before the hook's end or after it.
+        if at:
+            at_s = at / fps
+            across = [f"{w['asset']} {w['at_s']}-{w['end_s']}" for w in plan.get('clips') or [] if w['at_s'] < at_s < w['end_s']]
+            across += [f'{a}-{b}' for a, b in [*(plan.get('handovers') or []), *((float(x), float(y)) for x, y in
+                                                (w.split('-', 1) for w in args.lift or []))] if a < at_s < b]
+            if across:
+                raise ValueError(f'the sting plays at {at_s:.3f} s, after the hook; these run across it: {", ".join(across)}')
         clips = []
         if plan.get('clips'):
             if not args.assets_dir:
@@ -1347,17 +1357,17 @@ def cmd_premix(args) -> int:
                 src = Path(args.assets_dir) / asset['path']
                 if sha256_file(src) != asset['sha256']:
                     raise ValueError(f"{src.name} does not match the spec's sha256 for {clip['asset']}")
-                clips.append({**clip, 'src': str(src), 'at_s': clip['at_s'] + lead_s, 'end_s': clip['end_s'] + lead_s,
-                              'points': [{'t': p['t'] + lead_s, 'level': p['level']} for p in clip['points']]})
+                clips.append({**clip, 'src': str(src), 'at_s': moved(clip['at_s']), 'end_s': moved(clip['end_s']),
+                              'points': [{'t': moved(p['t']), 'level': p['level']} for p in clip['points']]})
         result = audio.premix(args.dialogue, str(music), args.out, start_s, (lead + props['durationFrames']) / fps,
                               bed_start_s=float(track.get('intro_cue_s') or 0), under_vo_lu=bed['under_vo_lu'],
                               lufs=spec['audio'].get('targets', {}).get('lufs', -14), tp=spec['audio'].get('targets', {}).get('tp', -1),
-                              mode=bed['mode'], last_word_end_s=lead_s + float(words[-1]['end_s']) - start_s,
+                              mode=bed['mode'], last_word_end_s=moved(float(words[-1]['end_s']) - start_s),
                               levels=ledger['levels'] | {'chapter_lufs': ledger['levels'].get('chapter_lufs', -22)},
-                              voice_start_s=lead_s + float(words[0]['onset_s']) - start_s, lifts=lifts, lead_frames=lead, fps=fps,
-                              clips=clips, bed_enter_s=(plan['bed_enter_s'] + lead_s) if plan.get('bed_enter_s') else 0.0,
+                              voice_start_s=moved(float(words[0]['onset_s']) - start_s), lifts=lifts, lead_frames=lead, fps=fps,
+                              clips=clips, bed_enter_s=moved(plan['bed_enter_s']) if plan.get('bed_enter_s') else 0.0,
                               bed_fade_in_s=float(plan.get('bed_fade_in_s') or 0),
-                              handovers=[[a + lead_s, b + lead_s] for a, b in plan.get('handovers') or []])
+                              handovers=[[moved(a), moved(b)] for a, b in plan.get('handovers') or []], sting_at_frame=at)
         print(json.dumps({k: result[k] for k in ('stem', 'integrated_lufs', 'true_peak_dbtp', 'lead_frames')} | {'bed': {
             k: result['bed'].get(k) for k in ('mode', 'bed_lufs_in_master', 'crossfades_s', 'lifts', 'bed_under_speech_db', 'duck_depth_db')}}, indent=1))
         print(f've premix: {sha256_file(Path(args.out))}  {args.out}')
