@@ -10,7 +10,9 @@ import { JOBS, dispatchJob, readRuns, type JobName } from '../../apps/control-pl
 
 const WEEK = '2026-11-16'
 const MON = '8287846b-6618-4a19-9fb8-23ad4eca2718', WED = 'db9f9f6a-1092-49be-8024-f335e060305a', FRI = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118'
-const SIGNED = readFileSync('docs/plans/2026-11-16-week/narrative-lock-fri.md', 'utf8')
+// A lock as Krish signed it on 9 Nov, frozen here: the week's own lock files change as the week is made (the
+// data-centres lock moved to Tue 17 on 13 Nov and waits on his signature again), and this test reads a signed one.
+const SIGNED = readFileSync('tests/control-plane/fixtures/narrative-lock-signed-2026-11-09.md', 'utf8')
 const piece = (id: string, date: string, slot: string, making: Record<string, unknown> = {}, extra: Record<string, unknown> = {}) =>
   ({ id, idea: `Piece ${id.slice(0, 4)}`, scheduled_for: date, lane_slot: slot, state: 'drafting', buried_at: null, body: '', updated_at: '2026-11-09T12:00:00Z', meta: { making }, ...extra })
 const option = (id: string, extra: Record<string, unknown> = {}) => ({ id, format: 'Meme video, 9:16', copy: `Option ${id}`, ...extra })
