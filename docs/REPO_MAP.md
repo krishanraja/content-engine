@@ -4289,7 +4289,8 @@ Run a Vercel serverless handler locally against the real environment.
 - `type Page = EngineRenderProps['captions'][number]`
 - `type Aspect = EngineRenderProps['aspect']`
 - `type Box = { left: number; top: number; width: number; height: number }`
-- `const REGIONS: Record<Aspect, { lower: Box; upper: Box }>`
+- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box }>`
+- `function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'>): Box`
 - `const scale = (aspect: Aspect) =>`
 - `const F`
 - `function livePage(props: Pick<EngineRenderProps, 'captions'>, frame: number): { page: Page; index: number } | null`

@@ -75,5 +75,10 @@
     "name": "Cinematic",
     "line": "Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass.",
     "rules": ["Support words in Archivo Medium, mixed case", "The hero word is Anton at hero scale, a glass fill the footage shows through", "One light sweep across the hero word, and the layout moves between groups", "A page with no hero word sets its key word one step up instead"]
+  },
+  "slam": {
+    "name": "Slam",
+    "line": "Every word slams in as it is said, and the words already said stack above it, smaller.",
+    "rules": ["Anton capitals, the newest word largest, the two before it stepping down and dimming", "Each word lands from twice its size with a motion blur and a small turn, in about a sixth of a second", "The stack slides up as the next word lands, filling the band from the bottom", "The key word in the series colour with an ink outline; the fastest caption, one event per word"]
   }
 }

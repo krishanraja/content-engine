@@ -6,6 +6,8 @@
   python scripts/ve.py lint <spec.json>              schema + crew lints (blocks a render)
   python scripts/ve.py qc <cut.mp4> --format <id> [--out qc.json]
   python scripts/ve.py study <reference.mp4>         grammar card: cuts, change density, stills, loops
+  python scripts/ve.py pace <cut.mp4> [--out pace.json]   events a second, energy and frame use, beside his references
+  python scripts/ve.py pace --refs [--dir .cache/references]   re-measure the references into config/ve/pace-references.json
   python scripts/ve.py card <card.json>              write a Codex task card from its fields
   python scripts/ve.py dispatch <card.md> [--wait]   send it to Codex (pinned model and effort)
   python scripts/ve.py verify-card <card.md> --cwd <worktree>
@@ -385,6 +387,50 @@ def cmd_keyframes(args) -> int:
         return 0 if report['pass'] else 1
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f've keyframes: {error}', file=sys.stderr)
+        return 1
+
+
+def cmd_pace(args) -> int:
+    """How fast a cut moves and how much of the frame it uses, beside the references he keeps (velib.pace)."""
+    from velib import pace
+    table = ROOT / 'config' / 've' / 'pace-references.json'
+    try:
+        if args.refs:
+            folder = Path(args.dir)
+            names = [r['file'] for r in json.loads((ROOT / 'config' / 'style-references.json').read_text(encoding='utf-8'))['references']
+                     if str(r.get('file', '')).endswith('.mp4')]
+            rows = []
+            for name in names:
+                if not (folder / name).is_file():
+                    print(f've pace: {name} is not in {folder} (references.py fetch)')
+                    continue
+                card = pace.measure(folder / name)
+                card['file'] = name
+                card.pop('event_times_s', None)
+                card.pop('note', None)
+                rows.append(card)
+                print(f"ve pace: {name}: {card['events_per_s']}/s, longest gap {card['longest_gap_s']} s, used {card['used_frame']}, active {card['active_frame']}")
+            pace.write({'schema': 've-pace-references/1', 'note': pace.NOTE, 'grid': [pace.GRID_W, pace.GRID_H, pace.SAMPLE_FPS],
+                        'references': rows}, table)
+            print(f've pace: {len(rows)} references -> {table}')
+            return 0
+        if not args.video:
+            print('ve pace: give a cut, or --refs', file=sys.stderr)
+            return 2
+        card = pace.measure(args.video, args.seconds)
+        refs = json.loads(table.read_text(encoding='utf-8'))['references']
+        verdict = pace.compare(card, refs)
+        card['against_references'] = verdict
+        out = Path(args.out) if args.out else Path(args.video).with_suffix('.pace.json')
+        pace.write(card, out)
+        for key, row in verdict['rows'].items():
+            flag = '  BELOW EVERY REFERENCE' if row['below_all'] else ''
+            print(f"ve pace: {key:14} {row['cut']:>6}   refs {row['ref_min']} .. {row['ref_median']} .. {row['ref_max']}{flag}")
+        print(f've pace: {pace.NOTE}')
+        print(f've pace: -> {out}')
+        return 0
+    except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
+        print(f've pace: {error}', file=sys.stderr)
         return 1
 
 
@@ -1690,6 +1736,10 @@ def main() -> int:
     p.add_argument('format'); p.add_argument('video'); p.add_argument('props'); p.add_argument('--sheet')
     p.set_defaults(fn=cmd_keyframes)
     p = sub.add_parser('study'); p.add_argument('ref'); p.add_argument('--out'); p.set_defaults(fn=cmd_study)
+    p = sub.add_parser('pace', help='events a second, motion energy and frame use, beside the references he keeps')
+    p.add_argument('video', nargs='?'); p.add_argument('--out'); p.add_argument('--seconds', type=float)
+    p.add_argument('--refs', action='store_true'); p.add_argument('--dir', default=str(ROOT / '.cache' / 'references'))
+    p.set_defaults(fn=cmd_pace)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
     p = sub.add_parser('sprint', help='the weekly device sprint: brief, card, Gate 2 record (docs/ve/SPRINT.md)')
     actions = p.add_subparsers(dest='action', required=True)

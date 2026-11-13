@@ -1,0 +1,115 @@
+{
+  "schema": "ve-pace-references/1",
+  "note": "Describes the cut; never a target (THE_BAR). Compared with the references he keeps, it flags; it never refuses.",
+  "grid": [
+    90,
+    160,
+    15
+  ],
+  "references": [
+    {
+      "file": "igexport-DCHp2RLIxMt.mp4",
+      "duration_s": 42.0,
+      "events": 193,
+      "events_per_s": 4.6,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 0.73,
+      "gaps_over_2s": 0,
+      "energy_median": 12.3,
+      "energy_p75": 22.6,
+      "used_frame": 0.87,
+      "active_frame": 1.0
+    },
+    {
+      "file": "stamp-duty-is-stupid-ytshorts.savetube.vip.mp4",
+      "duration_s": 173.93,
+      "events": 780,
+      "events_per_s": 4.48,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 3.0,
+      "gaps_over_2s": 1,
+      "energy_median": 6.17,
+      "energy_p75": 9.61,
+      "used_frame": 0.81,
+      "active_frame": 0.69
+    },
+    {
+      "file": "instagram_DeypYeWN5hL.mp4",
+      "duration_s": 74.4,
+      "events": 226,
+      "events_per_s": 3.04,
+      "median_gap_s": 0.27,
+      "longest_gap_s": 2.13,
+      "gaps_over_2s": 1,
+      "energy_median": 0.3,
+      "energy_p75": 0.77,
+      "used_frame": 0.27,
+      "active_frame": 0.1
+    },
+    {
+      "file": "instagram_DeZuQ7-lATg.mp4",
+      "duration_s": 33.87,
+      "events": 142,
+      "events_per_s": 4.19,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 0.6,
+      "gaps_over_2s": 0,
+      "energy_median": 3.21,
+      "energy_p75": 5.23,
+      "used_frame": 0.88,
+      "active_frame": 0.98
+    },
+    {
+      "file": "youtube_wh3D5Zx6Prg.mp4",
+      "duration_s": 156.67,
+      "events": 705,
+      "events_per_s": 4.5,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 0.93,
+      "gaps_over_2s": 0,
+      "energy_median": 3.04,
+      "energy_p75": 4.84,
+      "used_frame": 0.87,
+      "active_frame": 0.5
+    },
+    {
+      "file": "instagram_DePHDr_jRed.mp4",
+      "duration_s": 69.2,
+      "events": 295,
+      "events_per_s": 4.26,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 0.6,
+      "gaps_over_2s": 0,
+      "energy_median": 1.64,
+      "energy_p75": 2.5,
+      "used_frame": 0.94,
+      "active_frame": 0.27
+    },
+    {
+      "file": "instagram_DdCY4cJAQZk.mp4",
+      "duration_s": 17.07,
+      "events": 49,
+      "events_per_s": 2.87,
+      "median_gap_s": 0.27,
+      "longest_gap_s": 1.13,
+      "gaps_over_2s": 0,
+      "energy_median": 1.26,
+      "energy_p75": 3.1,
+      "used_frame": 0.15,
+      "active_frame": 0.17
+    },
+    {
+      "file": "instagram_DdcAPSuEw-o.mp4",
+      "duration_s": 22.8,
+      "events": 102,
+      "events_per_s": 4.47,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 0.47,
+      "gaps_over_2s": 0,
+      "energy_median": 9.56,
+      "energy_p75": 17.64,
+      "used_frame": 0.82,
+      "active_frame": 1.0
+    }
+  ]
+}
