@@ -32,6 +32,7 @@
     "store": "the week's publish board: GET /api/board/<Monday>/<collection> (board_web.py read), each document with the actor who wrote it. approvals is a read-only view of his Approve scripts presses, stored in picks as <day>-scripts (kind approve_scripts), which also hold the server's answer as send",
     "collection": "approvals",
     "writer": "Krish",
+    "typed": "His typed approval counts as his press (Ruling, Krish, 2026-11-12: \"Scripts and locks only.\"): picks/<day>-scripts-words, kind approve_scripts, via words, his exact words with when and where he typed them and the session link, written by the engine from a session (board_session.py approve scripts). No other document a session writes approves anything.",
     "body": "names the piece (piece_id) and the approved hash of each cut's words (scripts: {cut: sha256}, or [{cut, sha256}]); approved: false withdraws it. The newest document naming a cut is the one that counts",
     "hash": "making.py script_hash of the words: either the script file the scripts' check passed or the words Teleprompter shows (its spoken text). Either one binds those exact words",
     "weeks": "the Monday of the piece's date and the two after it, then this Monday and next; plan --week names one"

@@ -200,20 +200,12 @@ def motion_lints(spec: dict) -> list[str]:
     return out
 
 
-def _sting_paused() -> bool:
-    """Whether config/intro-sting.json pauses the sting (Krish, 12 Nov 2026): then no cut wears one."""
-    try:
-        return bool(load_json(CONFIG.parent / 'intro-sting.json').get('paused'))
-    except (OSError, ValueError):
-        return False
-
-
 def palette_lints(spec: dict) -> list[str]:
     """brand.palette: each whole cut's opening, sting and close against config/brand-palette.json for its day
     (Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the
     attached"). What ve will draw is read from compile, the one place it is decided: its close is ENDING_FRAMES
-    long on both shapes, and its sting sits where STING_POSITION says (after the hook, compile.hook_end). A spec dated
-    before the palette's applies_from is not checked."""
+    long on both shapes, and no cut carries a sting (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove
+    the sting exception for good."). A spec dated before the palette's applies_from is not checked."""
     import sys  # noqa: PLC0415
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import brand_palette  # noqa: PLC0415
@@ -233,8 +225,6 @@ def palette_lints(spec: dict) -> list[str]:
         if not shape:
             continue
         sting = 'none'
-        if shape == '16x9' and kind == 'series' and not _sting_paused():
-            sting = ve_compile.STING_POSITION
         record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
                   'opening': 'hook', 'sting': sting,
                   'close': {'id': 'statement_card' if shape == '16x9' else 'statement_beat',
@@ -312,7 +302,7 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         first = beats[0]
         if not any(e['at_w'] <= first['span']['from_w'] + 4 for e in first['events']):
             out.append(f'story.hook_event {where}.beats.0: the first visual event must land within the first 4 words of the hook '
-                       '(about 1.5 s after his first word, which follows the intro sting on a wide series cut)')
+                       '(about 1.5 s after his first word, the cut\'s first frame: nothing goes before the hook)')
         roles = [b['role'] for b in beats]
         whole = not cut.get('excerpt')
         if whole and roles.count('payoff') != 1:

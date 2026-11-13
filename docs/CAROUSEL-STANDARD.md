@@ -25,6 +25,14 @@ ordered image hashes and review evidence are retained privately. This locks
 the earned production principles, not a universal scorecard, eight-card
 length or fixed visual template. Publishing approval remains separate.
 
+## Every carousel passes the 10/10 judges (Ruling, Krish, 12 November 2026)
+
+Krish: "Judge them; count passes. Every Growth carousel goes through the same 10/10 judges, and each one that passes and goes live counts." Whoever makes it, a carousel is judged
+before it is made for posting: Growth's maker asks `POST /api/board/<Monday>/judge`, the draft judges' panel reads its
+exact words with its claim, and only a pass is made, bound to its post and counted on the North Star once it goes live.
+A fail comes back with each judge's fix and is never posted. `docs/GROWTH-HANDOFF.md`, "Every carousel and Short
+through the 10/10 judges", has the route.
+
 ## Approved floor
 
 Every carousel needs an original visual idea that carries the specific

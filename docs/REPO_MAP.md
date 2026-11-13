@@ -1861,6 +1861,8 @@ What Krish has confirmed he likes, for the writers.
 - `const DEFAULT_TELEPROMPTER_MCP_URL`
 - `const WORDS_PER_MINUTE`
 - `const APPROVAL_WRITER`
+- `const TYPED_SCRIPTS_ID`
+- `function typedApproval(a: { id?: unknown; body?: unknown }): boolean`
 - `const ALLOWED_TOOLS: Readonly<Record<string, readonly string[]>>`
 - `class TeleprompterRefusal`
 - `class TeleprompterError`
@@ -2145,6 +2147,10 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function creativeBody(id: string, body: Record<string, unknown>): boolean`
 - `const YES_ID`
 - `function yesBody(id: string, body: Record<string, unknown>): boolean`
+- `const WORDS_ID`
+- `const WORDS_KIND`
+- `function saidInWords(body: Record<string, unknown>): boolean`
+- `function wordsBody(id: string, body: Record<string, unknown>): boolean`
 - `const LIVE_ID`
 - `function liveBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
@@ -2277,6 +2283,15 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `async function recordLive(db: SupabaseClient, week: string, raw: unknown, who: string, now: string): Promise<LiveResult>`
 - `const PUBLICATION_SERIES`
 - `async function publishedNow(db: SupabaseClient, now: Date): Promise<number | null>`
+
+### `apps/control-plane/api/board/_judge.ts`
+
+- `const JUDGED_FORMATS`
+- `const DAILY_CAP`
+- `interface JudgeDeps`
+- `function artifactSha256(format: string, channel: string, words: string, assets: Array<{ sha256: string }>): string`
+- `function postArtifact(b: Body): string`
+- `async function judgeAsset(db: SupabaseClient, week: string, body: unknown, deps: JudgeDeps = {}): Promise<Answer>`
 
 ### `apps/control-plane/api/board/_later.ts`
 
@@ -2603,6 +2618,10 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `interface WeekView`
 - `interface ViewInputs`
 - `function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost…`
+- `function lockBodyHash(text: string): string`
+- `type Typed = { words: string; said_where: string; said_at: string }`
+- `function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: st…`
+- `function inYourWords(words: string, on: string | null, where?: string | null): string`
 - `function lockSigned(text: string | null | undefined): boolean`
 - `function postingStarted(live: Pick<LiveDay, 'steps'>): boolean`
 - `function backupPrompt(week: string, d: DayView): string`
@@ -2638,6 +2657,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
 - `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): ViewOption[]`
 - `function warned(o: Body): string`
+- `function tickNote(o: Body): string`
 - `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
 - `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
 - `function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day: string): Body[]`
@@ -5691,6 +5711,8 @@ Artifact-bound user confirmation references.
 - `const VeSeriesSchema`
 - `const VeStingSchema`
 - `const VE_NO_STING`
+- `const VE_NO_STING_BEFORE`
+- `const VE_NOTHING_BEFORE_HOOK`
 - `const VeAspectSchema`
 - `const VeLayoutSchema`
 - `const VeRoleSchema`

@@ -116,18 +116,19 @@ export const EngineRenderPropsSchema = z.object({
     days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional() }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
-  /** The makeyourmindup series sting (config/intro-sting.json, one fixed clip per series), played as it is for its
-   *  `frames`, silent, with the stem under it, straight after the hook (`atFrame`; config/brand-palette.json). Every
-   *  other frame in these props stays on the cut's own clock: the hook draws on the render's frames [0, atFrame), the
-   *  sting on the next `frames`, and the cut goes on from its frame atFrame on the very next frame after the sting's
-   *  last. Absent, the cut has no sting. */
+  /** The series sting, only straight after the hook (`atFrame`, the hook's last frame + 1): a new design that plays
+   *  nothing in front of the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception
+   *  for good."), and that compile lays only once he approves it (config/intro-sting.json is retired; none is). The
+   *  render draws the hook on frames [0, atFrame), the clip on the next `frames`, then the cut on from atFrame. A sting
+   *  with no atFrame, in front of the cut, is refused below. */
   sting: EngineStingSchema.optional(),
-  /** A wide cut that opens on its own episode card where the sting would be, by Krish's word for that piece (spec
-   *  brand.opening_exception; Krish, 2026-11-09: "I want the episode card to come in."). Nothing is drawn from it: the
-   *  card is the spec's own beat; it only records why this series wide cut has no sting. */
+  /** Retired with it: the 9 Nov episode card in place of the sting. Refused below. */
   opening: z.object({ kind: z.literal('episode_card'), said: z.string().min(12), on: z.string().min(10) }).strict().optional(),
 }).strict().superRefine((props, context) => {
-  if (props.opening && props.sting) context.addIssue({ code: 'custom', path: ['opening'], message: 'a cut opens on its episode card or on the sting, never both' })
+  // Nothing goes before the hook on any cut, ever (Ruling, Krish, 2026-11-12).
+  const ruling = 'nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.")'
+  if (props.sting && !(props.sting.atFrame ?? 0)) context.addIssue({ code: 'custom', path: ['sting'], message: `a sting in front of the cut: ${ruling}` })
+  if (props.opening) context.addIssue({ code: 'custom', path: ['opening'], message: `an episode card in front of the cut: ${ruling}` })
   if (!props.sting) return
   // Only the 16:9 long cut of a weekly series piece wears it: the 9:16 short opens straight on its hook
   // (HOOK_IS_THE_INTRO), a proof excerpt (no ending band) is never a whole cut, and an off day wears no sting.

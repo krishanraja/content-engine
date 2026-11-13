@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { DECISION_ID, GATE_KINDS, canonical, digest, type GateKind } from './_contracts.js'
+import { DECISION_ID, GATE_KINDS, WORDS_ID, canonical, digest, type GateKind } from './_contracts.js'
 import type { SendApprovedInput, SendResult } from '../_teleprompter.js'
 import type { Making, MakingGates } from '../_making.js'
 import { dispatchOffdayRevise, type ReviseDispatch } from './_offdayRevise.js'
@@ -72,7 +72,9 @@ export interface PressDeps { send?: Sender; now?: () => string; revise?: typeof 
   /** A week's ideas.json (_view.ts readWeekIdeas); a test passes its own. */
   ideas?: (week: string) => Promise<Record<string, unknown> | null>
   /** The board's Drive (_drivePosts.ts boardDrive): the media route's copy of a cut the library lacks, and the drive route. */
-  drive?: (db: SupabaseClient) => import('./_drivePosts.js').BoardDrive }
+  drive?: (db: SupabaseClient) => import('./_drivePosts.js').BoardDrive
+  /** The judges' panel for Growth's carousels and Shorts (_judge.ts); a test passes its own. */
+  judgePanel?: (input: import('../_judges/panel.js').PanelInput) => Promise<import('../_judges/panel.js').PanelResult> }
 type Body = Record<string, unknown>
 type Saved = { ok: boolean; revision?: number; body?: Body; [key: string]: unknown }
 export class PressError extends Error { constructor(public status: number, message: string) { super(message) } }
@@ -115,7 +117,8 @@ export async function preparePress(collection: string, id: string, body: Body): 
   const scripts: Record<string, string> = {}
   for (const [cut, text] of Object.entries(body.texts)) scripts[cut] = scriptHash(String(text))
   if (isObj(body.scripts) && Object.entries(body.scripts).some(([cut, sha]) => scripts[cut] !== sha)) throw new PressError(400, 'approval_hash_mismatch')
-  if (!DECISION_ID.test(id)) throw new PressError(400, 'invalid_document_write')
+  // His press (DECISION_ID) or his typed approval carried from a session (WORDS_ID; Ruling, Krish, 2026-11-12).
+  if (!DECISION_ID.test(id) && !WORDS_ID.test(id)) throw new PressError(400, 'invalid_document_write')
   return { ...body, scripts }
 }
 

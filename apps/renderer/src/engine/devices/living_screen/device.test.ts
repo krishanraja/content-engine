@@ -23,6 +23,6 @@ it('centres the selected card and contains both authored viewports',()=>{
  expect(Math.abs(centre.y-(1-(safe.top+safe.height/2)/v.height*2))).toBeLessThan(.05)
  expect(v).toEqual({left:0,top:0,width:p.box.width,height:p.box.height})
  expect(cameraFor(p).eye.toArray()).toEqual(a.eye.toArray())
- if(aspect==='9:16'){expect(safe.left).toBeGreaterThanOrEqual(60);expect(safe.left+safe.width).toBeLessThanOrEqual(860);expect(safe.top+safe.height).toBeLessThanOrEqual(1320)}
+ if(aspect==='9:16'){expect(safe.left).toBeGreaterThanOrEqual(60);expect(safe.left+safe.width).toBeLessThanOrEqual(860);expect(safe.top+safe.height).toBeLessThanOrEqual(1080)}
  }
 })

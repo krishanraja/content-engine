@@ -1,5 +1,6 @@
 """QC module acceptance on lavfi media, with clean controls and report wiring."""
 import json
+import os
 import gzip
 import re
 import shutil
@@ -424,8 +425,8 @@ class QCContracts(unittest.TestCase):
 @unittest.skipUnless(shutil.which('ffmpeg') and shutil.which('ffprobe'), 'ffmpeg is not on PATH')
 class OpeningRowTest(unittest.TestCase):
     """ve qc's opening row (velib.qc_opening) on synthetic media: stand-in sting clips (intro.stand_in, under .cache,
-    where the stand-in config is honoured), never Krish's. Krish, 2026-11-05: "I think it should go at the start of the
-    longer wide videos 100%,"."""
+    where the stand-in config is honoured), never Krish's. Ruling (Krish, 2026-11-12): "Nothing before the hook, ever.
+    Remove the sting exception for good." Props or a file with a sting in front fail, even the approved clip."""
 
     @classmethod
     def setUpClass(cls):
@@ -447,8 +448,6 @@ class OpeningRowTest(unittest.TestCase):
                    '-pix_fmt', 'yuv420p', path)
         cls.stem = cls.work / 'stem.wav'
         cls.stem.with_suffix('.bed.json').write_text(json.dumps({'lead_frames': 56}), encoding='utf-8')
-        cls.after_stem = cls.work / 'stem-after-hook.wav'
-        cls.after_stem.with_suffix('.bed.json').write_text(json.dumps({'lead_frames': 56, 'sting_at_frame': 60}), encoding='utf-8')
 
     def joined(self, name, first, cut, hold=0):
         """first's frames, its last held `hold` more frames, then the cut, keeping the cut's frame count."""
@@ -459,66 +458,40 @@ class OpeningRowTest(unittest.TestCase):
                'ultrafast', '-pix_fmt', 'yuv420p', out)
         return str(out)
 
-    def spliced(self, name, at=60):
-        """The cut's frames to `at`, the mind_the_gap sting, then the cut on from `at`: the sting after the hook."""
-        out = self.work / name
-        ffmpeg('-i', self.wide_cut, '-i', self.clip['16x9', 'mind_the_gap'], '-filter_complex',
-               f'[0:v]split[a][b];[a]trim=end_frame={at},setpts=PTS-STARTPTS[h];[b]trim=start_frame={at},setpts=PTS-STARTPTS[r];'
-               '[1:v]setpts=PTS-STARTPTS[s];[h][s][r]concat=n=3:v=1:a=0[v]', '-map', '[v]', '-c:v', 'libx264', '-preset',
-               'ultrafast', '-pix_fmt', 'yuv420p', out)
-        return str(out)
-
-    def view(self, aspect='16:9', sting=True, label='mind.the.gap', trim=0, at=None):
+    def view(self, aspect='16:9', sting=True, label='mind.the.gap', trim=0):
         entry = self.cfg['clips']['16x9']['mind_the_gap']
-        stem = self.after_stem if at else self.stem
         return {'aspect': aspect, 'fps': 30, 'durationFrames': 120, 'ending': {'fromFrame': 90, 'url': 'makeyourmindup.ai'},
-                'series': {'label': label}, 'audio': {'stem': {'src': str(stem), 'trimBeforeFrames': trim}},
+                'series': {'label': label}, 'audio': {'stem': {'src': str(self.stem), 'trimBeforeFrames': trim}},
                 'sting': {'src': str(self.clip['16x9', 'mind_the_gap']), 'series': 'mind_the_gap', 'frames': 56,
-                          'sha256': entry['sha256'], **({'atFrame': at} if at else {})} if sting else None}
+                          'sha256': entry['sha256']} if sting else None}
 
     def row(self, path, view, config=None):
         env = {self.intro.CONFIG_ENV: str(config or self.approved), self.intro.CLIPS_ENV: str(self.clips)}
         with patch.dict('os.environ', env):
             return qc_opening.opening(path, view)
 
-    def test_the_hook_then_the_approved_sting_then_his_cut_on_the_very_next_frame_passes(self):
-        # config/brand-palette.json long_cut sting after_hook: the file opens on the hook, the sting follows it.
-        path = self.spliced('stinged.mp4')
-        row = self.row(path, self.view(at=60))
-        self.assertTrue(row['pass'], row)
-        value = row['value']
-        self.assertEqual((value['opening'], value['lead_frames'], value['sting_at_frame'], value['file_frames']),
-                         ('hook', 0, 60, 176))
-        self.assertTrue(value['sting_frames']['all_same'])
-        self.assertLessEqual(value['sting_frames']['worst_mad'], qc_opening.MATCH_MAD_MAX)
-        self.assertFalse(value['first_cut_frame_vs_sting_last']['same'])
+    def test_even_the_approved_sting_in_front_of_a_series_wide_cut_fails(self):
+        path = self.joined('stinged.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut)
+        row = self.row(path, self.view())
+        self.assertFalse(row['pass'], row)
+        self.assertIn('Nothing before the hook, ever.', ' '.join(row['problems']))
         # Through run_qc, as ve qc runs it.
-        with patch.object(qc_opening, 'opening', wraps=qc_opening.opening) as measured, \
-                patch.dict('os.environ', {self.intro.CONFIG_ENV: str(self.approved), self.intro.CLIPS_ENV: str(self.clips)}):
-            report = qc.run_qc(path, 'scoreboard-test', opening=self.view(at=60))
-        measured.assert_called_once()
-        self.assertTrue(report['checks']['opening']['pass'], report['checks']['opening'])
-        # The same sting in front of the hook is the retired opening: refused, though the clip is his to the frame.
-        front = self.row(self.joined('in-front.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut), self.view())
-        self.assertIn('in front of the hook, which is retired', ' '.join(front['problems']))
-        # A sting where the props do not put it, or a hook cut short by it, fails frame for frame.
-        self.assertIn('frame for frame', ' '.join(self.row(self.spliced('early.mp4', at=40), self.view(at=60))['problems']))
+        with patch.dict('os.environ', {self.intro.CONFIG_ENV: str(self.approved), self.intro.CLIPS_ENV: str(self.clips)}):
+            report = qc.run_qc(path, 'scoreboard-test', opening=self.view())
+        self.assertFalse(report['checks']['opening']['pass'], report['checks']['opening'])
 
-    def test_another_series_sting_a_held_frame_or_a_short_file_fails(self):
-        other = self.joined('other.mp4', self.clip['16x9', 'follow_the_money'], self.wide_cut)
-        self.assertIn('frame for frame', ' '.join(self.row(other, self.view())['problems']))
-        held = self.joined('held.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut, hold=1)
-        self.assertIn('still the sting\'s last frame', ' '.join(self.row(held, self.view())['problems']))
-        self.assertIn('the cut does not run on', ' '.join(self.row(str(self.wide_cut), self.view())['problems']))
-
-    def test_a_sting_the_props_should_not_carry_fails(self):
+    def test_a_sting_the_props_carry_fails_on_any_cut(self):
         path = self.joined('stinged-tall-props.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut)
         for why, view in (('a tall cut', self.view(aspect='9:16')), ('an off day', self.view(label='off.day')),
-                          ('another series', self.view(label='under.the.hood'))):
+                          ('another series', self.view(label='under.the.hood')), ('a series wide cut', self.view())):
             with self.subTest(why):
-                self.assertIn('only the 16:9 whole cut', ' '.join(self.row(path, view)['problems']))
-        # A candidate sting opens no cut: props carrying one were not compiled from the approved clip.
-        self.assertIn('does not open this cut on one', ' '.join(self.row(path, self.view(), self.candidate)['problems']))
+                self.assertIn('Nothing before the hook, ever.', ' '.join(self.row(path, view)['problems']))
+
+    def test_an_episode_card_in_front_fails(self):
+        view = dict(self.view(sting=False), opening={'kind': 'episode_card', 'said': 'I want the episode card to come in.', 'on': '2026-11-09'})
+        row = self.row(str(self.wide_cut), view)
+        self.assertFalse(row['pass'], row)
+        self.assertIn('episode card', ' '.join(row['problems']))
 
     def test_a_cut_that_opens_on_its_hook_shows_no_sting(self):
         for name, path, aspect in (('tall', self.tall_cut, '9:16'), ('wide, candidate', self.wide_cut, '16:9')):
@@ -529,19 +502,46 @@ class OpeningRowTest(unittest.TestCase):
         tall = self.row(str(self.tall_cut), self.view(aspect='9:16', sting=False))
         self.assertEqual(len(tall['value']['clips_compared']), 3, 'each series\' 9x16 stand-in clip was compared')
 
-    def test_a_sting_in_front_of_a_hook_cut_or_missing_from_a_wide_series_cut_fails(self):
+    def test_a_sting_in_front_of_a_hook_cut_fails_and_a_hook_cut_passes(self):
         tall = self.joined('tall-stinged.mp4', self.clip['9x16', 'under_the_hood'], self.tall_cut)
         found = ' '.join(self.row(tall, self.view(aspect='9:16', sting=False))['problems'])
         self.assertIn('opens on the under_the_hood 9x16 sting', found)
         self.assertIn('something is in front of it', found)
-        # Once the sting is approved, a wide whole series cut left on its hook was compiled before the approval.
-        self.assertIn('the approved sting should follow its hook',
-                      ' '.join(self.row(str(self.wide_cut), self.view(sting=False))['problems']))
+        # A wide whole series cut on its hook passes, even with an approved stand-in sting config: nothing goes before it.
+        self.assertTrue(self.row(str(self.wide_cut), self.view(sting=False))['pass'])
         # A proof window keeps its ending and trims the stem: it is not a whole cut, and opens on no sting.
         self.assertTrue(self.row(str(self.wide_cut), self.view(sting=False, trim=200))['pass'])
         # An off-day wide cut opens on its hook.
         self.assertTrue(self.row(str(self.wide_cut), self.view(sting=False, label='off.day'))['pass'])
 
+
+    def spliced(self, name, at=60):
+        """The cut's frames to `at`, the mind_the_gap sting, then the cut on from `at`: the sting after the hook."""
+        out = self.work / name
+        ffmpeg('-i', self.wide_cut, '-i', self.clip['16x9', 'mind_the_gap'], '-filter_complex',
+               f'[0:v]split[a][b];[a]trim=end_frame={at},setpts=PTS-STARTPTS[h];[b]trim=start_frame={at},setpts=PTS-STARTPTS[r];'
+               '[1:v]setpts=PTS-STARTPTS[s];[h][s][r]concat=n=3:v=1:a=0[v]', '-map', '[v]', '-c:v', 'libx264', '-preset',
+               'ultrafast', '-pix_fmt', 'yuv420p', out)
+        return str(out)
+
+    def test_the_hook_then_an_approved_sting_after_it_passes_frame_for_frame(self):
+        # The sting after the hook (a new design; config/intro-sting.json is retired, so only a stand-in approves one here).
+        stem = self.work / 'stem-after-hook.wav'
+        stem.with_suffix('.bed.json').write_text(json.dumps({'lead_frames': 56, 'sting_at_frame': 60}), encoding='utf-8')
+        view = self.view()
+        view['sting'] = dict(view['sting'], atFrame=60)
+        view['audio'] = {'stem': {'src': str(stem), 'trimBeforeFrames': 0}}
+        row = self.row(self.spliced('after-hook.mp4'), view)
+        self.assertTrue(row['pass'], row)
+        self.assertEqual((row['value']['opening'], row['value']['lead_frames'], row['value']['sting_at_frame'],
+                          row['value']['file_frames']), ('hook', 0, 60, 176))
+        # A sting where the props do not put it fails frame for frame.
+        self.assertIn('frame for frame', ' '.join(self.row(self.spliced('early.mp4', at=40), view)['problems']))
+        # The real config is retired: the same file fails until he approves a sting.
+        with patch.dict('os.environ', {}):
+            os.environ.pop(self.intro.CONFIG_ENV, None)
+            os.environ.pop(self.intro.CLIPS_ENV, None)
+            self.assertIn('status retired', ' '.join(qc_opening.opening(self.spliced('after-hook-real.mp4'), view)['problems']))
 
 @unittest.skipUnless(shutil.which('ffmpeg'), 'ffmpeg is not on PATH')
 class StingContinuityTest(unittest.TestCase):

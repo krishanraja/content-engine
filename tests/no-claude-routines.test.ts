@@ -190,6 +190,12 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     // Never silent: a run that did not draft says why on his card.
     expect(text).toContain('report "$ACTION" --state failed')
     expect(text).toMatch(/if: steps\.guard\.outputs\.ready == 'true'\n\s+uses: anthropics\/claude-code-action/)
+    // His tick outranks an older refusal (Ruling, Krish, 2026-11-12): the gate answers only for what the run added, prints
+    // every line it read, and a hold says which refusal matched; it never blames his idea for the week's own options.
+    expect(text).toContain('board_feed.py gate "$MONDAY" "${base[@]}"')
+    expect(text).toContain('cat ".scratch/inspiration/gate.txt"')
+    expect(text).toContain('why="${GATE_WHY:-')
+    expect(text).not.toContain('an option offers a subject he refused')
   })
 
   it('exactly two scheduled jobs may touch a publish board, and only one of them is Claude: the Sunday ideas run', () => {

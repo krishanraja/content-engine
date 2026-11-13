@@ -604,7 +604,11 @@ after his presses, by 10:00.
    lock to him in the room, the words themselves and never a pointer to
    them, and ask him to sign it. Once he does, the last line is his exact
    typed words, the date and that hash: `Signed by Krish: "<his words>",
-   <YYYY-MM-DD>, lock sha256 <hash>`. Run `narrative` again until it says
+   <YYYY-MM-DD>, lock sha256 <hash>`. His typed words are his approval of the
+   lock (Ruling, Krish, 2026-11-12): carry them to the board verbatim in the
+   same step with `board_session.py approve lock`, and the board shows "Approved
+   in your words" (`.agents/skills/plan-week/references/typed-approval.md`). Never for an idea: his
+   Approve on an idea stays his press. Run `narrative` again until it says
    signed, commit the lock and `interview.md`, push the room's session
    branch and open its pull request with auto-merge on (`AGENTS.md`,
    "Commit and closeout"; nothing lives only in this container). The signed
@@ -639,7 +643,11 @@ after his presses, by 10:00.
    checked and read back). Read each press and its answer on the board: `python3
    scripts/post-pack/board_web.py read <Monday> approvals` (the collection
    `config/teleprompter.json` `approval.collection` names; only documents
-   whose `updated_by` is Krish are his press).
+   whose `updated_by` is Krish are his press, and `<day>-scripts-words` is his
+   typed approval). When he approves the scripts in his own typed words in the
+   room instead, carry them with `board_session.py approve scripts`
+   (`references/typed-approval.md`): the server sends them to Teleprompter as
+   it does for his press, held the same way until their checks pass.
    - `sent`: nothing to do; `making.py <uuid> show` says, per cut,
      "Teleprompter, 5-minute cut: holds the current words".
    - `no_key` (the Teleprompter key is not set yet): the room sends exactly
@@ -659,30 +667,9 @@ after his presses, by 10:00.
 
 ## Without the connectors
 
-The Sunday ideas run in GitHub Actions has no Drive and no Firecrawl
-connector. Then research with the built-in web search and web fetch instead,
-and skip the Cold Ideas & Inspo folder rather than guessing what is in it.
-Say which sources were unavailable on the week's board item, in one plain line
-at the end of its detail, for example "Researched with web search only: Drive
-and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not
-read." Write it with `POST /api/workbench {"action": "upsert_items",
-"client": "claude_code", "items": [{"id": "week-<Monday>", "detail": "..."}]}`,
-keeping the detail already there (read it first with `GET /api/workbench`); if
-the item does not exist yet, give it `"lane": "on_you"`, a `"title"`,
-`"only_you": "judgment"`, `"link": "https://controlcenter.krishraja.com/#/week"`,
-`"link_label": "Open the week"` and `"closes_on": "week_planned"` too, or
-the engine refuses it, naming the field it lacks (`WORKBENCH.md`, the
-board).
-Put the same line in `WORKBENCH.md`, because the slate cron rewrites the week
-item's text each morning.
-
-The server sends approved scripts to Teleprompter itself; only a `no_key`
-answer needs the Teleprompter connector (step 12). Without it, name each
-waiting cut in one line on its day's tab. Descript was retired on 12
-October (Krish: "Descript is permanently gone, teleprompter.com is
-permanently in, connected via MCP here"): nothing is sent there. The active web board needs the existing engine
-operator credential, not an Artifact connector. If authenticated board reads
-fail, record that specific blocker; never treat inaccessible feedback as empty.
+Read `.agents/skills/plan-week/references/without-connectors.md` when the run has no Drive,
+Firecrawl or Teleprompter connector, or the board will not read: it says what to research with, what to
+say on the week's board item, and what never to treat as empty.
 
 ## Before you stop
 
