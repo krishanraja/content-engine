@@ -229,32 +229,32 @@
   },
   "receipt-chip": {
     "name": "Receipt chip",
-    "line": "Lower-case cream Archivo 900 prints word by word onto an ink chip with a hard 12 px series-colour shadow. The chip widens as each word blurs in and jolts 2 px, and the spoken figure sits on a mint fill.",
+    "line": "Words type onto a till receipt as he says them, in lower-case mono on deep ink, the paper jolting down on every word and the figure printed on a mint fill.",
     "rules": [
-      "One ink chip with a hard series-colour shadow down and to the right, set at the top of the band (centred in centre placement)",
-      "Each word opens its own slot over 4 frames so the chip really resizes, blurs in over 4 frames, and the chip drops 2 px for 3 frames on every landing",
-      "Mint fill with ink type for the first spoken figure, else the page's hero word; never more than one per page",
-      "Lower case as said, two rows at most, nothing shown before its word is spoken"
+      "From Krish's Character.ai cut (26 Oct)",
+      "Each word types on in hard steps behind a mint print head, finishing within 4 frames",
+      "Every landing kicks the paper down 10 px and eases back; each new line feeds up out of a cream slot",
+      "At most two lines; the page tears off upward when it ends"
     ]
   },
   "ink-block": {
     "name": "Ink block",
-    "line": "A cream Archivo Black phrase builds word by word on ink blocks, one per line, each with a hard series-colour drop that reads as an underline. Each new word rises into its block, and the drop is stamped out again on every landing.",
+    "line": "The phrase builds word by word on stepped full-width ink slabs, each slab wiping in from the left with a thick series-colour bar drawing under the newest word.",
     "rules": [
-      "One ink block per line, stepped and centred in the band, each with a hard 8 px series-colour drop down and right",
-      "The block widens to take each word over 4 frames; the word rises in from below its baseline, masked by the block",
-      "On each landing the hot line's drop springs back out from nothing with a small overshoot",
-      "The page's key word wears the series colour only while it is the word being said, then returns to cream"
+      "From Krish's eating-its-own-jobs cut (2 Nov)",
+      "Each line is its own slab, the second stepped in like a rung",
+      "Each word rises into its slab with a slight overshoot while the bar draws out to it",
+      "The marked word stays in the series colour; the slabs wipe out to the left when the page ends"
     ]
   },
   "mint-word": {
     "name": "Mint word",
-    "line": "One lower-case word at a time, Archivo 900 at up to 120 px, cream on a tight ink box. It snaps on 10% oversize and sets in 3 frames, and the page's key word turns the box mint and sits higher.",
+    "line": "One big word at a time slams into its own box, which wipes open just ahead of it; small words sit small, and the key word lands in a mint box.",
     "rules": [
-      "Only the word being said is on screen, each word replacing the last the frame it is spoken",
-      "Archivo 900 at up to 120 px, shrunk to fit the band, lower case, on a tight ink box",
-      "Each word lands 10% oversize and a little low, then sets in 3 frames",
-      "The page's key word gets a mint box with ink type, lifted a little above the line; one per page"
+      "From Krish's AI music cut (11 Nov)",
+      "Each content word is a 7-frame event: the box wipes open, then box and word slam in from 1.25 times their size and settle",
+      "Small linking words are set at six-tenths of the size",
+      "Only a real hero word turns the box mint"
     ]
   }
 }
