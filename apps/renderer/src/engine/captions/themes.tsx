@@ -148,8 +148,8 @@ const grape: Draw = (props, frame) => {
   const open = outExpo(since(frame, page.fromFrame, props.fps) / 0.26)
   return root('grape', box, (
     <div style={{ position: 'absolute', left: 0, bottom: 0, maxWidth: box.width, padding: `${size * 0.36}px ${size * 0.5}px`,
-      background: props.tokens.inkDeep, borderRadius: 18, opacity: 0.94, boxShadow: '0 18px 50px rgba(0,0,0,.35)',
-      clipPath: `inset(0 ${100 - open * 100}% 0 0 round 18px)`, display: 'flex', flexWrap: 'wrap', columnGap: size * 0.28, rowGap: size * 0.1 }}>
+      background: props.tokens.inkDeep, borderRadius: 18, opacity: 0.94, boxShadow: `0 0 0 3px ${props.tokens.cream}, 0 18px 50px rgba(0,0,0,.35)`,
+      clipPath: `inset(-3px ${open >= 1 ? -3 : 100 - open * 100}${open >= 1 ? 'px' : '%'} -3px -3px round 18px)`, display: 'flex', flexWrap: 'wrap', columnGap: size * 0.28, rowGap: size * 0.1 }}>
       <span style={{ position: 'absolute', left: 0, top: 18, bottom: 18, width: 6, background: props.tokens.mint, borderRadius: 3 }} />
       {page.words.map((w, i) => {
         const t = since(frame, w.atFrame, props.fps) / 0.16
@@ -267,7 +267,7 @@ const gaming: Draw = (props, frame) => {
   return root('gaming-stream', box, (
     <div style={{ position: 'absolute', left: 0, bottom: 0, maxWidth: box.width, background: props.tokens.inkDeep, opacity: 0.94,
       borderRadius: 10, padding: `${size * 0.3}px ${size * 0.42}px`, fontFamily: F.data, fontWeight: 500, fontSize: size, lineHeight: 1.2,
-      color: props.tokens.cream, boxShadow: `0 0 0 2px ${props.tokens.inkSoft}, 0 18px 50px rgba(0,0,0,.35)` }}>
+      color: props.tokens.cream, boxShadow: `0 0 0 2px ${props.tokens.inkSoft}, 0 0 0 4px ${props.tokens.cream}, 0 18px 50px rgba(0,0,0,.35)` }}>
       <span style={{ color: props.tokens.mint }}>{'> '}</span>{text}
       <span style={{ display: 'inline-block', width: size * 0.55, height: size * 0.95, marginLeft: size * 0.1, verticalAlign: '-0.12em',
         background: props.tokens.mint, opacity: blink ? 1 : 0 }} />
