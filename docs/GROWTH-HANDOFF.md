@@ -53,6 +53,15 @@ posts only.
   rejection floor (`python3 scripts/floor.py --format carousel` in this
   repository) and the copy lint (`config/copy-lint.json`, which Growth's
   `release.py` applies to every post it releases).
+- It makes every carousel, meme and Notes image in a Claude session, with the
+  Codex plugin building it, and every off-day voiceover short (and meme
+  video) on the ve route from a Claude session (Rulings, Krish, 2026-11-13:
+  "all the carousels should now be done in Claude, but using the Codex plug
+  in as per the other usual workflows"; "memes and Notes images should go the
+  same way"; "Off-day voiceover shorts should go the same way too"). The route
+  is CAROUSEL-STANDARD.md, "How a carousel is made". Never a scheduled job, a
+  headless model run or a template engine: Growth's Saturday art-direction
+  run is retired, and `scripts/produce_day.py` refuses an off-day piece.
 - Content-engine keeps the standard and the learning that improves it, and
   still makes the hero assets: the article, both cuts, thumbnails and covers.
 - A clip from a past week is still cut here. Growth names the moment by word
@@ -68,7 +77,7 @@ posts only.
   rejects each side, saved in `queue/off-<day>-<option>`. Growth reads the
   options whose idea and direction he approved from `GET
   /api/board/<Monday>/pieces` (`offdays`, the idea and the direction exactly
-  as shown), makes the mock in the brand kit from that direction and returns
+  as shown), makes the mock by that route from that direction and returns
   it on the option (`mock`) for his final yes; nothing he did not approve
   goes out. Each option also carries his own words (`note`), exactly as he
   typed them on the board (Krish, 2 November 2026: "it would contain the exact
@@ -127,7 +136,7 @@ existing editorial and tracked Studio route. Do not add a parallel renderer,
 feedback database or client-specific production memory for Growth requests.
 
 For publication carousel work, read [CAROUSEL-STANDARD.md](CAROUSEL-STANDARD.md)
-alongside the live mandate and existing Studio contracts. The 26 October
+alongside the live mandate; its route, "How a carousel is made", is the only one. The 26 October
 visual floor, clean-artwork and newcomer-comprehension requirements were
 transferred from Growth into that sole production home. Krish approved the
 full eight-card Grok Bot vs Muse revision 03 as the production pilot on
