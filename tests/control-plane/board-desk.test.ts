@@ -118,10 +118,11 @@ describe('the live board view', () => {
     expect(back.reviews?.[0].option.idea_sha256).toMatch(/^[0-9a-f]{64}$/)
   })
 
-  it('lets Saturday start the good-news run, and lists only his and stuck days in Your move', () => {
+  it('lets Saturday start the good-news run, and lists only his real decisions in Your move (Ruling, Krish, 2026-11-13)', () => {
     const v = buildView(inputs())
     expect(day(v, 'sat').actions[0]).toMatchObject({ kind: 'run', job: 'saturday-goodnews', input: { week: WEEK } })
-    expect([...new Set(v.yours.map(y => y.day))].sort()).toEqual(v.days.filter(d => d.who === 'you' || d.who === 'stuck').map(d => d.day).sort())
+    // Your move is the week model's decisions only (Approve for publish, an approved post's missing choice), never an idea.
+    expect(v.yours.map(y => y.key)).toEqual(v.model!.days.flatMap(d => d.items.filter(it => it.decision).map(it => `${d.day}-${it.key}`)))
   })
 
   it('opens on Week done when every day is published', () => {

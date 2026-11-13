@@ -58,7 +58,8 @@ describe('one live board: the view carries everything the old board showed', () 
     expect(opts.gitbroke.held).toMatch(/not pressed Approve/)
     expect(opts.gitbroke.actions.map(a => a.label)).toEqual(['Approve for Thursday 12 Nov', 'Improve for a future piece', 'Reject', 'Save as a trend', 'File for later'])
     expect(held.held.map(h => [h.option, h.title])).toEqual([['off-thu-gitbroke', 'Held: not approved by you'], ['off-thu-agentnotsetup', 'Held: not approved by you']])
-    expect(held.next).not.toMatch(/Approved/)
+    // A held idea is the ideas board's: the day never leads with it (Ruling, Krish, 2026-11-13).
+    expect(held.actions.some(a => a.kind === 'press' && /^Approve/.test(a.label))).toBe(false)
     // His Approve on it stands: it is chosen, says so with when, and carries no press; his words settled its Improve.
     const gitbroke = opt('gitbroke', { decided: 'Signed off for publishing next week (Krish, 4 Nov). Growth posts it.', direction: { look: 'Infographic' } })
     const approved = buildView(week({ approvals: [approval(WEEK, 'thu', 'gitbroke', { doc: 'queue/off-thu-gitbroke', option_sha256: offdaySides(gitbroke).idea_sha256, decided_at: '2026-11-03T11:56:26Z' })] }))
