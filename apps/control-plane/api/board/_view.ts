@@ -1,4 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { createHash } from 'node:crypto'
+import { wordsBody } from './_contracts.js'
 import { dayDate, piecesByDay, SERIES_DAYS, type PostedDay } from './_posted.js'
 import { liveDay, type LiveDay } from './_live.js'
 import { makingSteps } from '../_making.js'
@@ -269,6 +271,38 @@ export function dayPosts(posts: DrivePost[] | null | undefined, date: string, op
 }
 
 const LOCK_SIGNED = /^Signed by Krish\b[^:\n]*:\s*"(.+)"\s*,\s*(\d{4}-\d{2}-\d{2})\b/
+/** The sha256 of the words a lock's signature binds (making.py lock_body_hash): every line above it that is not blank,
+ *  read flush left; an unsigned lock hashes whole. */
+export function lockBodyHash(text: string): string {
+  let lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean)
+  if (lines.length && LOCK_SIGNED.test(lines[lines.length - 1])) lines = lines.slice(0, -1)
+  return createHash('sha256').update(lines.join('\n'), 'utf8').digest('hex')
+}
+/** The words he signed a lock with (its last line), or null. */
+function lockWords(text: string | null | undefined): string | null {
+  if (!lockSigned(text)) return null
+  const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean)
+  return LOCK_SIGNED.exec(lines[lines.length - 1])?.[1] ?? null
+}
+export type Typed = { words: string; said_where: string; said_at: string }
+/** His typed approval of this piece's lock or scripts, carried from a session (picks/<day>-<lock|scripts>-words; Ruling,
+ *  Krish, 2026-11-12: "Scripts and locks only."), or null. A lock's counts only for the lock text on the board now (its
+ *  lock_sha256 is that text's lockBodyHash), so a lock changed after his words is never shown as approved. */
+export function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: string,
+  lockText?: string | null): Typed | null {
+  const doc = picks.find(p => p.doc_id === `${day}-${what}-words`)
+  const b = doc && isObj(doc.body) ? doc.body : null
+  if (!b || !wordsBody(`${day}-${what}-words`, b) || String(b.piece_id).toLowerCase() !== pieceId) return null
+  if (what === 'lock' && (!lockText || lockBodyHash(lockText) !== b.lock_sha256)) return null
+  return { words: String(b.words), said_where: String(b.said_where), said_at: String(b.said_at) }
+}
+/** "Approved in your words: "...", Thu 12 Nov, in a Claude Code session" (Ruling, Krish, 2026-11-12). */
+export function inYourWords(words: string, on: string | null, where?: string | null): string {
+  const said = words.length > 160 ? `${words.slice(0, 157).trimEnd()}...` : words
+  const day = on && /^\d{4}-\d{2}-\d{2}/.test(on) ? new Date(`${on.slice(0, 10)}T12:00:00Z`) : null
+  const when = day ? `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][day.getUTCDay()]} ${day.getUTCDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][day.getUTCMonth()]}` : ''
+  return `Approved in your words: "${said}"${when ? `, ${when}` : ''}${where ? ` (${where})` : ''}`
+}
 /** Whether a narrative lock is signed: its last line that is not blank is his signature (making.py lock_signature). */
 export function lockSigned(text: string | null | undefined): boolean {
   if (!text) return false
@@ -310,10 +344,15 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
   const title = String(piece.idea || piece.thesis || 'Untitled').slice(0, 140)
   const live = liveDay(piece, date)
   const lock = i.locks[day]
-  const signed = lockSigned(lock)
+  // His typed approval counts for the lock and the scripts (Ruling, Krish, 2026-11-12: "Scripts and locks only."),
+  // shown as "Approved in your words"; his Approve on the idea itself stays his press (the ideas gate).
+  const typedLock = typedApproval(i.picks, day, 'lock', id, lock)
+  const typedScripts = typedApproval(i.picks, day, 'scripts', id)
+  const signed = lockSigned(lock) || Boolean(typedLock)
   const make = i.runs['make-piece']
   const meta = isObj(piece.meta) ? piece.meta : {}
-  const scriptsApproved = i.picks.some(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === id)
+  const scriptsPressed = i.picks.some(p => p.doc_id === `${day}-scripts` && p.updated_by === 'Krish' && p.body.approved === true && String(p.body.piece_id || '').toLowerCase() === id)
+  const scriptsApproved = scriptsPressed || Boolean(typedScripts)
   // What the Sunday room wrote about the idea, and his note on his pick: the brief every prompt starts from.
   const ideaRow = (isObj(i.ideas) && isObj(i.ideas.days) && Array.isArray(i.ideas.days[day]) ? i.ideas.days[day] as Body[] : []).find(x => String(x.id).toLowerCase() === id)
   const pick = i.picks.find(p => p.doc_id === day && p.updated_by === 'Krish')
@@ -365,7 +404,7 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
         after_recording: vid === 'done' || done.cut, ready_to_post: done.cut,
       },
       ideasOn: shiftYmd(week, -1),
-      agreedOn: lockSignedOn(lock) ?? dayOf(pick?.updated_at),
+      agreedOn: lockSignedOn(lock) ?? dayOf(typedLock?.said_at) ?? dayOf(pick?.updated_at),
       fleshedOn: look ? dayOf(look.at) : null,
       ...makingDays(piece),
       goesOn: date,
@@ -378,11 +417,13 @@ function seriesDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayC
     looks: i.formats?.production || [], recommendedLook: path.look.recommended.production?.id ?? null, gate: live.gates.style, spec })
   const detail: DayView['detail'] = [
     { h: 'Research', p: materials.length ? materials.map(m => m.title).join(' · ') : researchFile ? `${day}-research.md in the week's folder` : 'None yet' },
-    { h: 'Narrative lock', p: signed ? 'Signed' : lock ? 'Written, waiting for your signature' : 'Not written yet' },
+    { h: 'Narrative lock', p: typedLock ? inYourWords(typedLock.words, typedLock.said_at, typedLock.said_where)
+      : lockSigned(lock) ? inYourWords(lockWords(lock) ?? '', lockSignedOn(lock)) : lock ? 'Written, waiting for your signature' : 'Not written yet' },
     { h: 'Look', p: look ? [nameOf(i, String(look.production)), look.experiment ? nameOf(i, String(look.experiment)) : ''].filter(Boolean).join(' + ') : 'Not picked yet' },
     // Where the scripts are, from the records only (Ruling, Krish, 2026-11-12: the board shows exactly where everything
     // is): his Approve scripts press, the making record's Scripts step, the send to his Teleprompter.
-    { h: 'Scripts', p: scriptsApproved ? 'Approved by you on the board' : stepState(live, 'scripts') === 'done' ? 'Written, waiting for your Approve scripts'
+    { h: 'Scripts', p: scriptsPressed ? 'Approved by you on the board' : typedScripts ? inYourWords(typedScripts.words, typedScripts.said_at, typedScripts.said_where)
+      : stepState(live, 'scripts') === 'done' ? 'Written, waiting for your Approve scripts'
       : 'Not filed yet: none on the piece\'s record and none sent to your Teleprompter' },
   ]
   // A step a session settled with him somewhere the engine cannot see is never shown as done; the line says plainly

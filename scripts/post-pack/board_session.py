@@ -22,6 +22,16 @@ Usage (PIECE is the piece id; for a day with no piece yet it is day:MONDAY/mon..
       a text is printed; a file is saved to DIR (default .scratch/materials/)
   python3 scripts/post-pack/board_session.py PIECE archive MATERIAL_ID --reason "why"
       hidden from the lists, never deleted
+  python3 scripts/post-pack/board_session.py PIECE approve lock --week MONDAY --day mon --lock LOCK.md \
+      --words "his exact words" --said-at ISO --where "where he typed them" --session-ref URL [--sign]
+  python3 scripts/post-pack/board_session.py PIECE approve scripts --week MONDAY --day mon --long FILE [--short FILE] \
+      --long-title T [--short-title T] --folder-title T --words "his exact words" --said-at ISO --where "..." --session-ref URL
+      his typed approval of the narrative lock or of the scripts, carried to the board as his words (Ruling, Krish,
+      2026-11-12: "Scripts and locks only. Typed approval counts for locking a story and approving a script; putting an
+      idea on the publish board still needs your press, so that gate is unchanged."). Only words he typed to this
+      session, verbatim; never a summary, never for an idea. The board shows it as "Approved in your words"; approved
+      scripts go to his Teleprompter as the Approve scripts press sends them (held until the scripts' check and the two
+      fresh readers have passed). --sign also writes his words as the lock's signature line, bound to its sha256.
 
 The engine key comes from scripts/engine.py (ENGINE_OPERATOR_TOKEN, the cloud session's network secret, or Windows
 Credential Manager); it is never printed or written anywhere. Writes are recorded as --by (default "Claude Code", or
@@ -33,18 +43,23 @@ import json
 import mimetypes
 import os
 import random
+import re
 import string
 import sys
 import urllib.parse
 import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402
 
 KINDS = ('start', 'progress', 'heartbeat', 'blocked', 'done', 'end')
+DAYS = ('mon', 'wed', 'fri')
+CUTS = ('long', 'short', 'feature')
 TEXT_FILES = {'.md', '.txt', '.csv', '.json', '.html', '.htm', '.srt', '.vtt'}
 TEXT_MAX = 2_000_000
 
@@ -125,6 +140,99 @@ def call(method, path, body=None):
     return status, answer
 
 
+class Refused(ValueError):
+    """A typed approval that cannot be carried, in plain words."""
+
+
+def said(words, said_at, where, session_ref):
+    """His words as the board keeps them: verbatim, when and where he typed them, and the session link."""
+    if not isinstance(words, str) or not words.strip() or len(words) > 2000:
+        raise Refused('--words: his exact typed words, 1 to 2000 characters, never a summary of them')
+    try:
+        datetime.fromisoformat(str(said_at).replace('Z', '+00:00'))
+    except ValueError:
+        raise Refused('--said-at: when he typed them, an ISO time') from None
+    if not where or len(where) > 300 or any(ord(c) < 32 for c in where):
+        raise Refused('--where: where he typed them, one line')
+    if not re.fullmatch(r'https://\S{1,290}', session_ref or ''):
+        raise Refused('--session-ref: the https link of the session he typed them in')
+    return {'words': words, 'said_at': said_at, 'said_where': where, 'session_ref': session_ref}
+
+
+def lock_words_body(piece, day, lock_path, text, words, said_at, where, session_ref, at=None):
+    """picks/<day>-lock-words: his typed approval of the narrative lock, bound to the words above any signature
+    (making.py lock_body_hash). A signature already on the lock must carry these same words."""
+    import making  # noqa: PLC0415
+    if day not in DAYS:
+        raise Refused(f'{day}: a lock is for mon, wed or fri')
+    if not re.fullmatch(r'docs/plans/\d{4}-\d{2}-\d{2}-week/narrative-lock-(mon|wed|fri)\.md', lock_path) or not lock_path.endswith(f'-{day}.md'):
+        raise Refused(f'--lock is docs/plans/<Monday>-week/narrative-lock-{day}.md')
+    signed = making.lock_signature(text)
+    if signed and signed[0] != words.strip():
+        raise Refused(f'the lock is already signed with other words ("{signed[0]}"); his typed approval must be the words he signed')
+    return {'kind': 'sign_lock', 'day': day, 'via': 'words', 'approved': True, 'piece_id': piece, 'lock_path': lock_path,
+            'lock_sha256': making.lock_body_hash(text), 'at': at or now_iso(), **said(words, said_at, where, session_ref)}
+
+
+def scripts_words_body(piece, day, texts, titles, folder_title, words, said_at, where, session_ref, at=None):
+    """picks/<day>-scripts-words: his typed approval of these exact words, cut by cut, as the Approve scripts press
+    carries them (the server hashes each cut and sends them to Teleprompter as it does for the press)."""
+    if day not in DAYS:
+        raise Refused(f'{day}: scripts are approved for mon, wed or fri')
+    if not texts or any(c not in CUTS for c in texts) or any(not str(t).strip() for t in texts.values()):
+        raise Refused('the scripts: --long, and --short or --feature where there is one, each a file of his words')
+    if set(titles) != set(texts) or any(not str(t).strip() or len(t) > 200 for t in titles.values()):
+        raise Refused('a Teleprompter title for each cut given (--long-title, --short-title, --feature-title)')
+    if not folder_title or len(folder_title) > 200:
+        raise Refused('--folder-title: the Teleprompter folder they go in')
+    return {'kind': 'approve_scripts', 'day': day, 'via': 'words', 'approved': True, 'piece_id': piece, 'texts': texts,
+            'titles': titles, 'folder_title': folder_title, 'at': at or now_iso(), **said(words, said_at, where, session_ref)}
+
+
+def now_iso():
+    return datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.000Z')
+
+
+def sign_lock(path, words, on):
+    """His words as the lock's signature line, bound to its sha256 (making.py's own format), when it has none."""
+    import making  # noqa: PLC0415
+    text = Path(path).read_text(encoding='utf-8')
+    if making.lock_signature(text):
+        return text
+    line = f'Signed by Krish: "{words.strip()}", {on}, lock sha256 {making.lock_body_hash(text)}'
+    signed = text.rstrip('\n') + '\n\n' + line + '\n'
+    Path(path).write_text(signed, encoding='utf-8')
+    return signed
+
+
+def approve(args):
+    """Carry his typed approval of the lock or the scripts to the week's board; return (status, answer, doc id)."""
+    if args.what not in ('lock', 'scripts'):
+        raise Refused('approve lock, or approve scripts: typed approval counts for nothing else (Ruling, Krish, 2026-11-12)')
+    piece = (args.piece or '').lower()
+    if not re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', piece):
+        raise Refused('the piece id is the content_ideas uuid')
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', args.week or ''):
+        raise Refused('--week: the Monday of the board week')
+    if args.what == 'lock':
+        if not args.lock:
+            raise Refused('--lock: the narrative lock file he approved')
+        text = Path(args.lock).read_text(encoding='utf-8')
+        if args.sign:
+            text = sign_lock(args.lock, args.words or '', str(args.said_at or '')[:10])
+        rel = Path(args.lock).resolve().relative_to(ROOT).as_posix() if Path(args.lock).resolve().is_relative_to(ROOT) else args.lock
+        body = lock_words_body(piece, args.day, rel, text, args.words, args.said_at, args.where, args.session_ref)
+    else:
+        texts = {c: Path(f).read_text(encoding='utf-8') for c, f in (('long', args.long), ('short', args.short), ('feature', args.feature)) if f}
+        titles = {c: t for c, t in (('long', args.long_title), ('short', args.short_title), ('feature', args.feature_title)) if t}
+        body = scripts_words_body(piece, args.day, texts, titles, args.folder_title, args.words, args.said_at, args.where, args.session_ref)
+    doc = f'{args.day}-{args.what}-words'
+    status, listing = call('GET', f'/api/board/{args.week}/picks')
+    revisions = {d.get('id'): d.get('revision', 0) for d in (listing.get('documents') or [])} if status == 200 else {}
+    status, answer = call('PUT', f'/api/board/{args.week}/picks/{doc}', {'body': body, 'revision': revisions.get(doc, 0)})
+    return status, answer, doc
+
+
 def put_bytes(upload, data):
     req = urllib.request.Request(upload['url'], data=data, method='PUT')
     for k, v in (upload.get('headers') or {}).items():
@@ -167,15 +275,32 @@ def library_line(library):
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('piece', help='the piece id, or day:MONDAY/DAY for a day with no piece yet')
-    p.add_argument('command', choices=('show',) + KINDS + ('add', 'read', 'archive'))
+    p.add_argument('command', choices=('show',) + KINDS + ('add', 'read', 'archive', 'approve'))
     p.add_argument('line', nargs='?', help='the one plain line (a report), or what to add, or a material id')
     p.add_argument('--session'); p.add_argument('--step'); p.add_argument('--key', help='this report\'s own retry key')
     p.add_argument('--title'); p.add_argument('--role'); p.add_argument('--kind'); p.add_argument('--note')
     p.add_argument('--reason'); p.add_argument('--out', default='.scratch/materials')
     p.add_argument('--by', default=default_by())
     p.add_argument('--json', action='store_true', help='print the engine\'s answer whole')
+    # approve: his typed approval of the narrative lock or the scripts (Ruling, Krish, 2026-11-12).
+    p.add_argument('--week'); p.add_argument('--day', choices=DAYS); p.add_argument('--lock'); p.add_argument('--sign', action='store_true')
+    p.add_argument('--long'); p.add_argument('--short'); p.add_argument('--feature')
+    p.add_argument('--long-title'); p.add_argument('--short-title'); p.add_argument('--feature-title'); p.add_argument('--folder-title')
+    p.add_argument('--words'); p.add_argument('--said-at'); p.add_argument('--where'); p.add_argument('--session-ref')
     args = p.parse_args(argv)
     try:
+        if args.command == 'approve':
+            args.what = args.line
+            try:
+                status, answer, doc = approve(args)
+            except (Refused, OSError) as e:
+                print(f'Not carried: {e}'); return 1
+            if status in (200, 201) and answer.get('ok') is not False:
+                send = (answer.get('send') or {})
+                print(f'Carried his words to the board as picks/{doc}: it shows "Approved in your words".'
+                      + (f' Teleprompter: {send.get("status")}{" (" + send.get("error") + ")" if send.get("error") else ""}.' if send else ''))
+                return 0
+            print(json.dumps(answer)); return 1
         if args.command == 'show':
             status, answer = call('GET', f'/api/content-ideas/store?{query(args)}')
             print(json.dumps(answer, indent=1) if args.json or status != 200 else show(answer))

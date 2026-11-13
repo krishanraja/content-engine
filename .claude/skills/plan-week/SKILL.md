@@ -604,8 +604,16 @@ after his presses, by 10:00.
    lock to him in the room, the words themselves and never a pointer to
    them, and ask him to sign it. Once he does, the last line is his exact
    typed words, the date and that hash: `Signed by Krish: "<his words>",
-   <YYYY-MM-DD>, lock sha256 <hash>`. Run `narrative` again until it says
-   signed, commit the lock and `interview.md`, push the room's session
+   <YYYY-MM-DD>, lock sha256 <hash>`. His typed words are his approval of the
+   lock (Ruling (Krish, 2026-11-12): "Scripts and locks only. Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs your press, so that gate is unchanged."): carry them to the board in the same step, verbatim, with
+   when and where he typed them and this session's link, `python3
+   scripts/post-pack/board_session.py <uuid> approve lock --week <Monday> --day
+   <day> --lock <lock> --sign --words "<his exact words>" --said-at <ISO> --where
+   "<where he typed them>" --session-ref <session link>` (`--sign` writes the
+   signature line above when it is not there yet), and the board shows the lock
+   as "Approved in your words". Only words he typed to you; never a summary,
+   and never for an idea: his Approve on an idea stays his press on the board.
+   Run `narrative` again until it says signed, commit the lock and `interview.md`, push the room's session
    branch and open its pull request with auto-merge on (`AGENTS.md`,
    "Commit and closeout"; nothing lives only in this container). The signed
    lock stands for the outline's approval and the style recipe's yes
@@ -639,7 +647,16 @@ after his presses, by 10:00.
    checked and read back). Read each press and its answer on the board: `python3
    scripts/post-pack/board_web.py read <Monday> approvals` (the collection
    `config/teleprompter.json` `approval.collection` names; only documents
-   whose `updated_by` is Krish are his press).
+   whose `updated_by` is Krish are his press, and `<day>-scripts-words` is his
+   typed approval). When he approves the scripts in his own typed words in the
+   room instead (Ruling (Krish, 2026-11-12): "Scripts and locks only. Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs your press, so that gate is unchanged."), carry them with `python3
+   scripts/post-pack/board_session.py <uuid> approve scripts --week <Monday>
+   --day <day> --long <long script> --short <short script> --long-title <title>
+   --short-title <title> --folder-title <folder> --words "<his exact words>"
+   --said-at <ISO> --where "<where>" --session-ref <session link>`: the board
+   shows "Approved in your words" and the server sends them to Teleprompter as
+   it does for the press, held the same way until the scripts' check and the two
+   fresh readers have passed.
    - `sent`: nothing to do; `making.py <uuid> show` says, per cut,
      "Teleprompter, 5-minute cut: holds the current words".
    - `no_key` (the Teleprompter key is not set yet): the room sends exactly
