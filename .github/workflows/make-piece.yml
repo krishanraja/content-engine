@@ -14,7 +14,7 @@ name: Make a piece
 #   - Krish, from Actions > Make a piece > Run workflow.
 # Its questions for Krish go onto the live board (Control Centre's Content tab), never into chat: nobody reads this
 # run's output. It writes to the board only through the engine API, on ENGINE_OPERATOR_TOKEN, and builds no board page
-# (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive).
+# (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it).
 #
 # One-time setup (Krish): run `claude setup-token` on his own computer and add the result to this repository as the
 # Actions secret CLAUDE_CODE_OAUTH_TOKEN. Until it exists every run fails at its first step, naming that step.

@@ -6,7 +6,7 @@ import { validBody } from '../../apps/control-plane/api/board/_contracts'
 import { offdaySides } from '../../apps/control-plane/api/board/_offdaySides'
 import { liveInput } from '../../apps/control-plane/api/board/_itsLive'
 
-// One live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive).
+// One live board (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it).
 // Everything the old board showed is in the view (contract 1.1.0), and every press the old board made is a press the
 // view carries, built so the board accepts it once his words and the time are filled in.
 
