@@ -411,7 +411,8 @@ showed that day (`tests/control-plane/board-state-truth.test.ts`):
 - **A narrative lock follows its piece, never its day** (`lockOf`, the lock's `piece_id:` line). On 13 Nov Fri 20's piece
   was replaced and moved to Tue 17 (his words, in the session: "chose Tue 17 Nov for the data-centre piece"); the new Fri
   20 piece read as Branded from the lock he signed for the one that left, and the moved piece lost it. A piece moved to
-  another day keeps its lock and says it was missed when its day passes.
+  another day keeps its lock and says it was missed when its day passes. Every day's `narrative-lock-<day>.md` is read
+  (`LOCK_DAYS`), so the data-centres piece's lock on Tue 17 counts there.
 - **A send Buffer recorded closes its item by itself.** Control Centre's done-check sweep (`DONE_CHECKS.buffer_sent`,
   ADR-036) reads Buffer's sent and scheduled posts on the seven Make Your Mind Up channels and reports each one it can tie
   to an approved off-day item to `POST /api/board/<Monday>/offday-posts` as `client: done_check, check: buffer_sent`.
