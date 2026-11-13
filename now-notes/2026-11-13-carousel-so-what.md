@@ -1,0 +1,4 @@
+Status: Git carousel v3 drawn from the deck Krish approved (nine cards: what Git is, 12x more code, why, the jam moving to people with Faros AI evidence, what a business should do, centred Follow for more card); filed as git-card-N-v3.png in "3 Posts/2026-11-12 Thu off.day - AI broke Git/4 Social". The carousel check now enforces the story route on every carousel: five whys, what/happened/why/so-what/do in order, a sourced trend card, at most 50 headline words and 10 cards, Follow for more last, two readers answering all five.
+Next: Growth swaps the v3 cards into the scheduled Thursday post.
+Changed: scripts/carousel_check.py, tests/carousel_check_test.py, docs/CAROUSEL-STANDARD.md, config/failures.json, docs/plans/2026-11-09-week/git-carousel/deck.json.
+North Star check (2026-11-13): holds.
