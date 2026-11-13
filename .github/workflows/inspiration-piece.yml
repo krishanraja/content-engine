@@ -24,6 +24,10 @@ name: Inspiration piece
 # never wanted there and that I didn't approve to move to the publish board"): this run proposes one idea on the ideas
 # board and never puts it on the publish board. Only his Approve does; the database refuses any other placement.
 #
+# Ruling (Krish, 2026-11-12): his own tick outranks an older refusal; the idea comes to him with the refusal shown, and
+# only his Approve places it. What he refused stays refused for every idea the engine proposes on its own; an idea from
+# his tick on a subject he refused carries that refusal (refused_before, his words and the day) and is never held for it.
+#
 # Never silent. The run reports its own state on his tick through the engine (POST /api/inspiration/actions): running,
 # then drafted with the idea's id, or failed with the reason in words, which Control Centre shows on the card and in To
 # approve with Try again.
@@ -109,6 +113,11 @@ jobs:
           if git fetch -q origin "+refs/heads/offday-revise/$monday:refs/inspiration/week" 2>/dev/null; then
             git checkout -q refs/inspiration/week -- "docs/plans/$monday-week" || true
           fi
+          # The week's ideas as they stand before the run: the gate answers only for what this run adds.
+          if [ -f "docs/plans/$monday-week/ideas.json" ]; then
+            cp "docs/plans/$monday-week/ideas.json" "$RUNNER_TEMP/ideas-before.json"
+            cp "docs/plans/$monday-week/ideas.json" ".scratch/inspiration/ideas-before.json"
+          fi
 
       - uses: actions/setup-node@v4
         if: steps.guard.outputs.ready == 'true'
@@ -143,7 +152,10 @@ jobs:
             .scratch/inspiration/${{ steps.guard.outputs.action }}.json (his words, the card, its reading, the planning
             week ${{ steps.guard.outputs.monday }} and its open days). Write one idea through the normal idea path and
             place it with python3 scripts/post-pack/inspiration_act.py place on the file you write at
-            .scratch/inspiration/${{ steps.guard.outputs.action }}.idea.json, then stop.
+            .scratch/inspiration/${{ steps.guard.outputs.action }}.idea.json, then check it with
+            python3 scripts/post-pack/board_feed.py gate ${{ steps.guard.outputs.monday }} --base .scratch/inspiration/ideas-before.json
+            and stop. His tick outranks an older refusal: if place says the idea is on a subject he turned down, leave it
+            as placed (it carries the refusal for him to see). Never edit the week's other options.
 
             This run was started by his press in Control Centre (.github/workflows/inspiration-piece.yml). No one reads its
             chat. The ideas gate: you propose one idea on the ideas board and never put it on the publish board. Never set
@@ -159,8 +171,31 @@ jobs:
         env:
           MONDAY: ${{ steps.guard.outputs.monday }}
         run: |
-          python3 scripts/post-pack/board_feed.py gate "$MONDAY" > ".scratch/inspiration/gate.txt" 2>&1 || {
-            echo "::error::The gate refused the week's ideas: an option offers a subject he refused."; exit 1; }
+          # Ruling (Krish, 2026-11-12): his own tick outranks an older refusal; the idea comes to him with the refusal
+          # shown, and only his Approve places it. So an idea from his tick on a subject he refused never fails here (the
+          # gate prints it as "his tick: ...", and place wrote the refusal onto the idea). The gate answers only for what
+          # this run added (--base, the week's ideas before the run): the week's own options were the Sunday run's to
+          # answer, and their findings are printed as on the board before this run. On 12 Nov the whole week's old
+          # findings (the 16 Nov board's Infosys Monday and two off-day returns) held his idea, and the log said nothing.
+          # Every line is printed, so a hold is never unexplained: which refusal matched and why. No words of his are in
+          # these lines, only subjects, days and refs.
+          base=()
+          [ -f "$RUNNER_TEMP/ideas-before.json" ] && base=(--base "$RUNNER_TEMP/ideas-before.json")
+          set +e
+          python3 scripts/post-pack/board_feed.py gate "$MONDAY" "${base[@]}" > ".scratch/inspiration/gate.txt" 2>&1
+          code=$?
+          set -e
+          cat ".scratch/inspiration/gate.txt"
+          [ "$code" -eq 0 ] && exit 0
+          if [ "$code" -eq 1 ]; then
+            first=$(grep -m1 '^  ' ".scratch/inspiration/gate.txt" | sed 's/^ *//')
+            echo "why=the ideas gate held it: ${first:0:250}" >> "$GITHUB_OUTPUT"
+            echo "::error::The ideas gate held what this run added: $first"
+          else
+            echo "why=the ideas gate could not read the week's ideas, so nothing was checked or placed" >> "$GITHUB_OUTPUT"
+            echo "::error::The ideas gate could not read the week: $(tail -1 .scratch/inspiration/gate.txt)"
+          fi
+          exit 1
 
       - name: Keep the idea on the week's branch, offer it for its day, and tell Control Centre
         id: keep
@@ -209,12 +244,13 @@ jobs:
           READY: ${{ steps.guard.outputs.ready }}
           CLAUDE: ${{ steps.claude.outcome }}
           GATE: ${{ steps.gate.outcome }}
+          GATE_WHY: ${{ steps.gate.outputs.why }}
           KEEP: ${{ steps.keep.outcome }}
         run: |
           [ -n "$ACTION" ] || exit 0
           if [ "$READY" != 'true' ]; then why="its link has not been read yet, so there was nothing to make it from; press Try again once its card shows"
           elif [ "$CLAUDE" != 'success' ]; then why="the writing run stopped before it wrote an idea"
-          elif [ "$GATE" != 'success' ]; then why="the idea offered a subject you turned down before, so it was held"
+          elif [ "$GATE" != 'success' ]; then why="${GATE_WHY:-the ideas gate stopped the run}"
           elif [ "$KEEP" != 'success' ]; then why="the idea could not be put on the week's ideas board"
           else why="the run stopped"; fi
           python3 scripts/post-pack/inspiration_act.py report "$ACTION" --state failed --error "$why" --run-url "$RUN_URL" || true

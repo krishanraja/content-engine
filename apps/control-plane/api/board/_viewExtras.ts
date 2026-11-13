@@ -256,7 +256,7 @@ export function seriesOptions(i: ExtrasInputs, day: string, placed: boolean): Vi
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof press?.at === 'string' ? press.at : null, words: pressWords } : null
     // The plain question first (house rules STORY_ARC and BIG_PICTURE; the ideas quality plan, item 7), then the headline.
     const question = isObj(o.pitch) ? cut(o.pitch.question, 200) : ''
-    return { id: String(o.id || pick), doc_id: pick, title: question || headlineOf(story) || cut(o.so_what, 200), text: warned(o) + cut(o.so_what, 600),
+    return { id: String(o.id || pick), doc_id: pick, title: question || headlineOf(story) || cut(o.so_what, 200), text: warned(o) + tickNote(o) + cut(o.so_what, 600),
       format: null, source: isObj(o.source) ? cut(o.source.label, 200) || null : typeof o.source === 'string' ? cut(o.source, 200) : null,
       status, said: said ? cut(said, 600) : null, actions, outcome, ...(held ? { held } : {}) }
   })
@@ -268,6 +268,22 @@ export function warned(o: Body): string {
   const w = isObj(o.warning) ? o.warning : null
   const said = w ? cut(w.said, 300) : ''
   return said ? `Warned: you said "${said}"${typeof w!.at === 'string' ? ` (${dayLabel(w!.at)})` : ''}. ` : ''
+}
+
+/** What an idea from his ticked Inspiration card says first when it is on a subject he refused before (ideas.json
+ *  `refused_before`, written by inspiration_act.py place): each refusal with his words exactly and the day, then that his
+ *  tick put it here and his Approve decides. Ruling (Krish, 2026-11-12): his own tick outranks an older refusal; the idea
+ *  comes to him with the refusal shown, and only his Approve places it. The words match inspiration_act.py note_words. */
+export function tickNote(o: Body): string {
+  const notes = (Array.isArray(o.refused_before) ? o.refused_before : []).filter(isObj)
+  if (!notes.length) return ''
+  const one = (n: Body) => {
+    const when = typeof n.at === 'string' && /^\d{4}-\d{2}-\d{2}/.test(n.at) ? `on ${dayLabel(n.at)} ` : ''
+    const said = typeof n.said === 'string' ? n.said.trim().split(/\s+/).join(' ') : ''
+    return said ? `Turned down before: ${when}you said "${said}"${/[.!?]$/.test(said) ? '' : '.'}`
+      : `Turned down before: ${when}you turned down ${cut(n.subject, 120) || 'this idea'}.`
+  }
+  return `${notes.map(one).join(' ')} It is here because you ticked this card, and your Approve decides. `
 }
 
 const dayLabel = (at: string) => {
@@ -416,7 +432,7 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     const said = !approval && decided ? `Said in a session, not pressed here: ${decided}` : approval ? approval.words || ownWords : ownWords
     const outcome = approval ? { id: 'approved' as const, label: approvedLabel(approval), at: approval.decided_at, words: approval.words }
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof (idea as Body | null)?.at === 'string' ? String((idea as Body).at) : null, words: typeof idea?.words === 'string' ? idea.words : null } : null
-    const out: ViewOption = { id: s.id, doc_id: docId, title: s.hook || cut(s.copy, 200) || s.id, text: cut(pitch || s.copy, 600), format: s.format || null,
+    const out: ViewOption = { id: s.id, doc_id: docId, title: s.hook || cut(s.copy, 200) || s.id, text: tickNote(o) + cut(pitch || s.copy, 600), format: s.format || null,
       source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}), post: driveFolderIdOf(o.drive) }
     if (known) {
       out.item = { key: placed.key, version: placed.version, source: placed.source, state: placed.state, origin_week: placed.origin_week }
