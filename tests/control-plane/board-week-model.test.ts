@@ -127,7 +127,7 @@ describe('the week model (contract 1.12.0)', () => {
   const v = buildView(thisWeek())
 
   it('keeps the contract and every rule of the view and the model', () => {
-    expect(v.contract_version).toBe('1.12.0')
+    expect(v.contract_version).toBe('1.13.0')
     expect(validate(SCHEMA, JSON.parse(JSON.stringify({ ok: true, ...v })), SCHEMA, '$', { open: true })).toEqual([])
     expect(viewProblems(v)).toEqual([])
     expect(modelProblems(v.model!, v.days)).toEqual([])

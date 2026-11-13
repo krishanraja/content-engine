@@ -681,7 +681,7 @@ export function buildView(i: ViewInputs): WeekView {
     // A publishing day can carry off-day posts too (a meme beside the week's piece): its options in ideas.json
     // offdays[<day>] are drawn after the day's own ideas (Krish, 2026-11-12, of Wednesday's Jensen Huang post and
     // Thursday's meme: "Put them there so I can approve").
-    const options = [...(SERIES_DAYS.includes(d) ? [...seriesOptions(i, d, Boolean(piece)), ...offdayOptions(i, d)] : offdayOptions(i, d)), ...ideaLines(i, d)]
+    const options = [...(SERIES_DAYS.includes(d) ? [...seriesOptions(i, d, Boolean(piece), piece ?? null), ...offdayOptions(i, d)] : offdayOptions(i, d)), ...ideaLines(i, d)]
     const approval = shown ? gate.approvalOf.get(shown) : undefined
     if (approval) core.detail = [{ h: approval.via === 'approve_publish' ? 'Approved for publish by you' : 'Approved by you', p: approvedLabel(approval).replace(/^[^,]+, /, '') }, ...core.detail]
     else {
@@ -706,7 +706,7 @@ export function buildView(i: ViewInputs): WeekView {
     const manifest = SERIES_DAYS.includes(d) && shown ? dayManifest(i.drafts?.[shown], i.picks, d) : null
     if (manifest?.press && core.who !== 'done') core.actions = [manifest.press, ...core.actions.filter(a => !(a.kind === 'press' && a.id === manifest.press!.id))]
     return { ...core, manifest, media: mediaWithAnswers(piece),
-      pieces: dayPieces(gate.approved, date, shown, gate.approvalOf),
+      pieces: dayPieces(gate.approved, date, shown, gate.approvalOf, i.now),
       options, held,
       comments: dayComments(i.comments, d), posted: [...dayPosted(i.ticks, d, liveByDay(i.picks)[d] || []), ...growthPosted(i.items, i.week, d)], yes: dayYes(i.picks, d),
       posts: dayPosts(i.drive_posts, date, options, i.pieces) }
