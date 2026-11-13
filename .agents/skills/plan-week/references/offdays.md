@@ -157,8 +157,9 @@ Sunday in `offday_verdicts`. An Improve on the idea or the direction also
 starts a revision run (`.github/workflows/offday-revise.yml`, below), whose
 revised card goes live at the board's next build. Growth reads each option whose
 idea and direction he approved (`GET /api/board/<Monday>/pieces`, `offdays`),
-makes the mock in the brand kit from the direction exactly as shown, and
-returns it on the option as `mock` for his final yes; this repository cuts any
+makes the mock from the direction exactly as shown, in a Claude session with
+the Codex plugin building it (`docs/CAROUSEL-STANDARD.md`, "How a carousel is
+made"), and returns it on the option as `mock` for his final yes; this repository cuts any
 snackable clip.
 
 **Revising one option** (the revision run, or a session asked to). What waits
@@ -174,7 +175,7 @@ the file reads (`board_feed.py cover <Monday>`). The side's hash
 changes with its words, so his old press reads as answered and he judges the
 new card when the live board next reads these ideas; a side already
 revised is never revised again from the same words. The revision run does not
-publish the board. A mock is Growth's to remake from his words.
+publish the board. A mock is Growth's to remake from his words, by the same route.
 
 **An off-day piece he records** (Ruling, Krish, 2026-10-29: an idea he drops in
 "should appear on my Sunday board for either Tuesday, Thursday, Saturday, or
