@@ -3,82 +3,258 @@
   "pop": {
     "name": "Pop",
     "line": "Bold capitals land word by word, and the word being said wears the series colour.",
-    "rules": ["Archivo Black capitals, centred in the caption band", "At most two lines, sized to fill the width", "The colour moves on to each word as it lands"]
+    "rules": [
+      "Archivo Black capitals, centred in the caption band",
+      "At most two lines, sized to fill the width",
+      "The colour moves on to each word as it lands"
+    ]
   },
   "karaoke": {
     "name": "Karaoke",
     "line": "The whole line is set at once, and each word fills to full cream as he says it.",
-    "rules": ["Archivo ExtraBold, mixed case", "Each word fills left to right across the time it is spoken", "A short series-colour rule draws under the word being said"]
+    "rules": [
+      "Archivo ExtraBold, mixed case",
+      "Each word fills left to right across the time it is spoken",
+      "A short series-colour rule draws under the word being said"
+    ]
   },
   "kinetic-01": {
     "name": "Justified stack",
     "line": "One word per row in Anton capitals, every row the same width, so the phrase becomes a block of type.",
-    "rules": ["Each new row wipes up from its baseline", "The block grows upward from the floor of the caption band", "The key word is set in the series colour"]
+    "rules": [
+      "Each new row wipes up from its baseline",
+      "The block grows upward from the floor of the caption band",
+      "The key word is set in the series colour"
+    ]
   },
   "kinetic-02": {
     "name": "Edge snap",
     "line": "Condensed capitals snap in from alternating sides of the frame into one left-aligned lockup.",
-    "rules": ["Archivo condensed capitals", "The page's hero word lands last and largest, one full step up", "The hero word is in the series colour"]
+    "rules": [
+      "Archivo condensed capitals",
+      "The page's hero word lands last and largest, one full step up",
+      "The hero word is in the series colour"
+    ]
   },
   "hustle": {
     "name": "Marker",
     "line": "Anton capitals, with a series-colour bar drawn under the key word just after he says it.",
-    "rules": ["Two lines at most", "The key word turns ink on the bar, like a pen through the line"]
+    "rules": [
+      "Two lines at most",
+      "The key word turns ink on the bar, like a pen through the line"
+    ]
   },
   "grape": {
     "name": "Ink card",
     "line": "The line sits on a deep-ink card that opens as the phrase starts, and the word being said is mint.",
-    "rules": ["Archivo Bold, mixed case", "Words arrive in cream as they are said", "The easiest style to read over busy footage, such as a window or a screen behind him"]
+    "rules": [
+      "Archivo Bold, mixed case",
+      "Words arrive in cream as they are said",
+      "The easiest style to read over busy footage, such as a window or a screen behind him"
+    ]
   },
   "beast": {
     "name": "Punch",
     "line": "Huge outlined Anton capitals punch in, one or two words on screen at a time.",
-    "rules": ["Cream type with a thick ink outline and a hard ink drop", "Each word punches in from 1.3 times its size with a small turn that rights itself", "The key word fills with the series colour", "Loud on purpose, for the fast cuts"]
+    "rules": [
+      "Cream type with a thick ink outline and a hard ink drop",
+      "Each word punches in from 1.3 times its size with a small turn that rights itself",
+      "The key word fills with the series colour",
+      "Loud on purpose, for the fast cuts"
+    ]
   },
   "poppin": {
     "name": "Spring",
     "line": "Mixed-case words spring up from their baseline with one small overshoot.",
-    "rules": ["Archivo ExtraBold", "The key word springs a size bigger, in mint", "Friendly and quick, for the lighter pieces"]
+    "rules": [
+      "Archivo ExtraBold",
+      "The key word springs a size bigger, in mint",
+      "Friendly and quick, for the lighter pieces"
+    ]
   },
   "aarit": {
     "name": "Editorial",
     "line": "The setup in a quiet Fraunces italic, then the hero word alone in Anton capitals at three times the size.",
-    "rules": ["A short cream rule draws first", "A page without a hero word stays a single italic line", "Left-aligned, for the reflective pieces"]
+    "rules": [
+      "A short cream rule draws first",
+      "A page without a hero word stays a single italic line",
+      "Left-aligned, for the reflective pieces"
+    ]
   },
   "soft-ai": {
     "name": "Bloom",
     "line": "Each word comes into focus from a soft blur, and the key word blooms with a brief mint glow.",
-    "rules": ["Archivo Medium, mixed case", "The glow settles to a clean edge within a third of a second", "Sharp and easy to read at rest, for the technology pieces"]
+    "rules": [
+      "Archivo Medium, mixed case",
+      "The glow settles to a clean edge within a third of a second",
+      "Sharp and easy to read at rest, for the technology pieces"
+    ]
   },
   "gaming-stream": {
     "name": "Terminal",
     "line": "Plex Mono on a deep-ink tag, each word typing itself out as he says it.",
-    "rules": ["A mint prompt at the start and a mint block cursor blinking at the end", "About thirty characters a second, from the frame the word is said"]
+    "rules": [
+      "A mint prompt at the start and a mint block cursor blinking at the end",
+      "About thirty characters a second, from the frame the word is said"
+    ]
   },
   "simple-one-word": {
     "name": "One word",
     "line": "Only the word being said, in Archivo Black capitals fitted to the width of the caption band.",
-    "rules": ["Never larger than 240 px", "The word before it lingers above at a tenth of its weight", "The key word is in the series colour"]
+    "rules": [
+      "Never larger than 240 px",
+      "The word before it lingers above at a tenth of its weight",
+      "The key word is in the series colour"
+    ]
   },
   "podcast": {
     "name": "Two-line scroll",
     "line": "The line being said brightens word by word, and the line before it slides up and away.",
-    "rules": ["Archivo Bold, mixed case", "The line before sits above, smaller and dimmed", "Left-aligned and calm, for long conversational takes"]
+    "rules": [
+      "Archivo Bold, mixed case",
+      "The line before sits above, smaller and dimmed",
+      "Left-aligned and calm, for long conversational takes"
+    ]
   },
   "art-directed": {
     "name": "Art-directed phrases",
     "line": "Each caption is one phrase in Anton capitals, its key word alone on its own row, with a huge faint echo of that word behind.",
-    "rules": ["Cream with a soft shadow, and no box, pill, underline or colour", "Words pop in over 0.12 s as he says them", "The key word at 168 px, the rest at 92 px", "Phrases alternate left and right inside the safe area"],
+    "rules": [
+      "Cream with a soft shadow, and no box, pill, underline or colour",
+      "Words pop in over 0.12 s as he says them",
+      "The key word at 168 px, the rest at 92 px",
+      "Phrases alternate left and right inside the safe area"
+    ],
     "recommended_why": "You picked this style on 11 Nov 2026 from your inspiration card: \"The captions are very unique and well-designed, like an art director would do them\"."
   },
   "cinematic": {
     "name": "Cinematic",
     "line": "Captions as designed editorial moments: support words rise in a cascade and the hero word lands on its own line in tinted glass.",
-    "rules": ["Support words in Archivo Medium, mixed case", "The hero word is Anton at hero scale, a glass fill the footage shows through", "One light sweep across the hero word, and the layout moves between groups", "A page with no hero word sets its key word one step up instead"]
+    "rules": [
+      "Support words in Archivo Medium, mixed case",
+      "The hero word is Anton at hero scale, a glass fill the footage shows through",
+      "One light sweep across the hero word, and the layout moves between groups",
+      "A page with no hero word sets its key word one step up instead"
+    ]
   },
   "slam": {
     "name": "Slam",
     "line": "Every word slams in as it is said, and the words already said stack above it, smaller.",
-    "rules": ["Anton capitals, the newest word largest, the two before it stepping down and dimming", "Each word lands from twice its size with a motion blur and a small turn, in about a sixth of a second", "The stack slides up as the next word lands, filling the band from the bottom", "The key word in the series colour with an ink outline; the fastest caption, one event per word"]
+    "rules": [
+      "Anton capitals, the newest word largest, the two before it stepping down and dimming",
+      "Each word lands from twice its size with a motion blur and a small turn, in about a sixth of a second",
+      "The stack slides up as the next word lands, filling the band from the bottom",
+      "The key word in the series colour with an ink outline; the fastest caption, one event per word"
+    ]
+  },
+  "georgia-build": {
+    "name": "Georgia build",
+    "line": "Small type at chest height, 1 to 3 words at a time, where each word's face carries its stress and each chunk cuts hard to the next.",
+    "rules": [
+      "Chunking: split each page into chunks of at most 3 words and 16 characters, and start a new chunk at hero(page) or key(page)",
+      "A chunk is on screen from its first word's atFrame until the next chunk's first word's atFrame",
+      "It is a hard cut with 0 frames of crossfade",
+      "Inside a chunk the words build in one row"
+    ]
+  },
+  "stair-flash": {
+    "name": "Staircase flash",
+    "line": "Anton capitals build a stepped lockup with small connector words, and the key word lands in a series-colour streak that cools to cream.",
+    "rules": [
+      "Sizes: content words in Anton capitals at C = min(112, fit) px",
+      "Stop words of 4 letters or fewer at 0.58*C on the same baseline, with a gap of 0.18*C",
+      "A hero word at 1.34*C (150 px)",
+      "lineHeight 0.92"
+    ]
+  },
+  "tuck-stack": {
+    "name": "Tuck stack",
+    "line": "Tiny lead words tuck tight above big lowercase words, so each phrase sets as a mixed-scale lockup.",
+    "rules": [
+      "Grouping: every content word is a head, and the stop words just before it are its tuck",
+      "Head words: Archivo 800, as said (never forced to capitals), H = min(118, fit to 760) px, letterSpacing ending at -0.035em, lineHeight 0.86",
+      "The key word head is 1.25*H in tokens.channel, the only colour",
+      "Tuck words: Archivo 600 at 0.3*H (about 36 px), set over the head's left edge with marginBottom -0.22*H, so they sit in the head's ascender space"
+    ]
+  },
+  "anchor-quote": {
+    "name": "Quote anchor",
+    "line": "A small running caption changes every few words, while the page's hero holds under it in big Fraunces capitals inside mint quote marks.",
+    "rules": [
+      "Running tier: Archivo 700, as said, 52 px (60 px when no anchor is held), cream with LIFT plus '0 0 2px #070D0B'",
+      "It shows the current chunk of at most 3 words",
+      "Each word cuts on at atFrame with translateY 8 to 0 px over 3 frames, outCubic",
+      "When a chunk ends, the next replaces it with a hard cut"
+    ]
+  },
+  "rack-focus": {
+    "name": "Rack focus",
+    "line": "Focus travels along the line: the word being said is sharp, the words before it slip out of focus, and the hero arrives from a deep blur.",
+    "rules": [
+      "Archivo 700, as said, S = min(90, fit) px, lineHeight 1.04, at most 2 rows",
+      "New word: from atFrame, blur 10 to 0 px, opacity 0 to 1 and scale 1.06 to 1 over 0.14 s, outCubic",
+      "The focal plane is the word at spoken(page, frame), held at blur 0, opacity 1 and scale 1",
+      "When the next word starts, each earlier word defocuses to blur 3.5 px, opacity 0.55 and scale 0.97 over 0.25 s (outCubic) and stays there"
+    ]
+  },
+  "flip-hinge": {
+    "name": "Hinge",
+    "line": "Each word swings up into place on a hinge at its baseline, like a card flipped upright, and the phrase falls away backward when it ends.",
+    "rules": [
+      "Archivo 900 capitals, S = min(104, fit) px, letterSpacing -0.01em, at most 2 rows, centred",
+      "The container has perspective 700 px",
+      "Each word: transformOrigin 50% 100% (the baseline)",
+      "It turns rotateX from -95 deg to 0 over 0.2 s with outBack(1.5), which overshoots to about +8 deg and settles"
+    ]
+  },
+  "slice": {
+    "name": "Slice",
+    "line": "Each Anton word arrives cut in two, its top and bottom halves sliding in from opposite sides and closing on a mint hairline.",
+    "rules": [
+      "Anton capitals, S = min(120, fit) px, lineHeight 0.94, at most 2 rows, word gap 0.22*S",
+      "Each word is drawn twice",
+      "The top copy uses clip-path inset(0 0 50% 0) and the bottom copy inset(50% 0 0 0)",
+      "From atFrame, the top half moves translateX -70 to 0 px and the bottom half +70 to 0 px over 0.16 s (outExpo), with opacity 0 to 1 over the first 0.04 s"
+    ]
+  },
+  "slot-roll": {
+    "name": "Slot roll",
+    "line": "Letters roll up into place one after another like a slot reel, and numbers spin through digits before they land.",
+    "rules": [
+      "Anton capitals, S = min(112, fit) px, lineHeight 0.96, at most 2 rows",
+      "Each letter sits in its own cell with overflow hidden, 1.0em tall",
+      "Letter i starts at atFrame + i frames (33 ms stagger, with the whole word's stagger capped at 0.2 s)",
+      "It rolls translateY 100% to 0 over 0.16 s with outBack(1.3)"
+    ]
+  },
+  "receipt-chip": {
+    "name": "Receipt chip",
+    "line": "Cream heavy words print onto an ink chip with a hard series-colour shadow, the figure landing on a mint fill.",
+    "rules": [
+      "From Krish's Character.ai cut (26 Oct)",
+      "The chip grows to fit each word as it prints on with a small jolt",
+      "The spoken figure sits on a mint fill",
+      "Inside the chosen band, never at the cut's old position"
+    ]
+  },
+  "ink-block": {
+    "name": "Ink block",
+    "line": "The phrase builds word by word in cream on an ink block with a hard series-colour drop and underline.",
+    "rules": [
+      "From Krish's eating-its-own-jobs cut (2 Nov)",
+      "Each word lands on the block as it is said",
+      "A hard series-colour drop and underline under the block",
+      "Inside the chosen band, never at the cut's old position"
+    ]
+  },
+  "mint-word": {
+    "name": "Mint word",
+    "line": "One big word at a time on an ink box, the key word in mint.",
+    "rules": [
+      "From Krish's AI music cut (11 Nov)",
+      "One word on screen at a time, sized to fit the box",
+      "The key word turns mint",
+      "Inside the chosen band, never at the cut's old position"
+    ]
   }
 }
