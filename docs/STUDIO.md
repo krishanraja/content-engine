@@ -115,11 +115,9 @@ cuts changed on 2026-10-12: both of a piece's videos were then made with
 there Krish asked for an opening, "I also want the video to have a 1-2 sec
 animated make your mind up intro visual before my face comes in" (house rule
 INTRO_STING, retired on 2026-10-29 when he picked "The hook is the intro",
-house rule HOOK_IS_THE_INTRO, and back on 2026-11-05 for the wide cut only: "I
-think it should go at the start of the longer wide videos 100%,"; so a 16:9
-cut of a weekly series piece opens on that series' house sting, the clip he
-saw, and then the hook, and a 9:16 cut opens straight on the hook in the
-brand's dress, the wordmark and the series tag in its top corners), with
+house rule HOOK_IS_THE_INTRO, back on 2026-11-05 for the wide cut only, and
+retired for good on 2026-11-12: "Nothing before the hook, ever. Remove the
+sting exception for good."; so every cut opens straight on its hook), with
 licensed music under the video (MUSIC_BED). The job-based Studio
 stays without music or an intro until its audio ledger exists: its V2 contract
 refuses music until then (`packages/contracts/src/v2.ts`), its dialogue

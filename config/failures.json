@@ -1542,7 +1542,7 @@
         {
           "file": "scripts/quick-edit/opening_gate.py",
           "contains": "def check(",
-          "how": "voice from the first half second, a finished first frame, a headline that holds 2 s in the first 3 s, no flat frame, measured on the finished bytes from the cut's first frame (the frame after the house sting on a wide cut that opens on it, --lead-frames)",
+          "how": "voice from the first half second, a finished first frame, a headline that holds 2 s in the first 3 s, no flat frame, measured on the finished bytes from the cut's first frame (nothing goes before the hook since 12 Nov 2026, so --lead-frames is 0)",
           "test": "python3 scripts/quick-edit/opening_gate.py --self-test"
         },
         {
@@ -1665,7 +1665,7 @@
         {
           "file": "scripts/velib/compile.py",
           "contains": "if index == 0 and event['verb'] in ('enter', 'type') and event['at_w'] == beat['span']['from_w']:",
-          "how": "an entrance on the first word lands on the cut's frame 0, so the hook is the cut's first frame (in the file, frame 0 of the tall cut and the frame after the house sting on the wide cut of a series piece)",
+          "how": "an entrance on the first word lands on the cut's frame 0, so the hook is the cut's first frame (in the file, frame 0 of every cut: nothing goes before the hook since 12 Nov 2026)",
           "test": "python3 -m unittest tests/ve_compile_test.py"
         },
         {

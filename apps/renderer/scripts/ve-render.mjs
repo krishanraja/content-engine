@@ -89,16 +89,12 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
   inputProps.audio.stem.src = await stage(inputProps.audio.stem.src)
   for (const sfx of inputProps.audio.sfx) sfx.src = await stage(sfx.src)
   for (const segment of inputProps.segments) segment.src = await stage(segment.src)
-  if (inputProps.sting) {
-    // The sting is the clip Krish saw, byte for byte (config/intro-sting.json): a clip whose bytes are not the ones
-    // its props name is refused before anything renders, and it reaches the page the way the take does.
-    if (/^https?:\/\//.test(inputProps.sting.src)) throw new Error('the sting must be a local clip, so its sha256 can be checked')
-    const local = path.resolve(path.dirname(path.resolve(propsPath)), inputProps.sting.src)
-    const sha256 = createHash('sha256').update(await readFile(local)).digest('hex')
-    if (sha256 !== inputProps.sting.sha256) {
-      throw new Error(`the ${inputProps.sting.series} sting at ${local} is not the clip its props name (sha256 ${sha256}, not ${inputProps.sting.sha256})`)
-    }
-    inputProps.sting.src = await stage(inputProps.sting.src)
+  if (inputProps.sting || inputProps.opening) {
+    // Nothing goes before the hook on any cut, ever (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove
+    // the sting exception for good."): props carrying a sting or an episode card in front are refused before anything
+    // is staged or rendered.
+    throw new Error('nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."): these props carry '
+      + (inputProps.sting ? 'a sting' : 'an episode card') + ' in front of the cut; run ve compile again')
   }
   async function stageParams(value) {
     if (Array.isArray(value)) { for (const item of value) await stageParams(item); return }

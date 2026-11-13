@@ -72,8 +72,8 @@ class NoIdeaNoProduction(unittest.TestCase):
 
 
 class TheOpening(unittest.TestCase):
-    """Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,". A piece names the intro
-    sting only where ve compile puts it: the 16:9 whole cut of a weekly series piece on its series' day."""
+    """Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for good." A spec naming a
+    sting, or an episode card where the sting was, is refused on every cut, every day and every date."""
 
     def wide(self, day='2026-11-13', sting='mind_the_gap'):
         spec = whole(day=day)
@@ -81,26 +81,26 @@ class TheOpening(unittest.TestCase):
         spec['brand']['intro_sting'] = sting
         return spec
 
-    def test_a_series_piece_with_a_wide_whole_cut_names_its_sting(self):
-        self.assertEqual(guards.opening_problems(self.wide()), [])
-        self.assertEqual(guards.sting_named(self.wide()), 'mind_the_gap')
-        self.assertFalse([line for line in guards.spec_lints(self.wide()) if line.startswith(('opening.', 'offday.'))])
+    def test_a_sting_is_refused_even_on_a_series_wide_whole_cut_on_its_own_day(self):
+        found = guards.opening_problems(self.wide())
+        self.assertEqual(codes(found), ['opening.nothing_before_hook'])
+        self.assertIn('Nothing before the hook, ever.', found[0])
+        self.assertIn('opening.nothing_before_hook', codes(guards.spec_lints(self.wide())))
 
-    def test_a_sting_on_a_piece_with_no_wide_whole_cut_is_refused(self):
+    def test_a_sting_is_refused_on_a_tall_only_piece_and_on_an_off_day_at_any_date(self):
         tall_only = whole()  # proof-tall is whole; proof-wide stays an excerpt
         tall_only['brand']['intro_sting'] = 'mind_the_gap'
-        self.assertEqual(codes(guards.opening_problems(tall_only)), ['opening.sting_no_wide'])
-        self.assertIn('opening.sting_no_wide', codes(guards.spec_lints(tall_only)))
+        self.assertEqual(codes(guards.opening_problems(tall_only)), ['opening.nothing_before_hook'])
+        for day in ('2026-11-05', '2026-11-12'):
+            self.assertEqual(codes(guards.opening_problems(self.wide(day=day))), ['opening.nothing_before_hook'], day)
 
-    def test_a_sting_on_an_off_day_is_refused_on_any_date_and_once(self):
-        # Before MOTION_FROM the off-day guard does not bind, so the opening guard refuses it.
-        early = self.wide(day='2026-11-05')  # a Thursday
-        self.assertFalse(guards.bound(early))
-        self.assertEqual(codes(guards.opening_problems(early)), ['opening.sting_off_day'])
-        # From it, offday.chrome refuses it and the opening guard does not say it twice.
-        late = self.wide(day='2026-11-12')
-        self.assertEqual(guards.opening_problems(late), [])
-        self.assertIn('offday.chrome', codes(guards.spec_lints(late)))
+    def test_an_episode_card_before_the_hook_is_refused(self):
+        from creative_direction import NO_STING  # noqa: PLC0415
+        spec = self.wide(sting=NO_STING)
+        spec['brand']['opening_exception'] = {'opening': 'episode_card', 'said': 'I want the episode card to come in.', 'on': '2026-11-09'}
+        found = guards.opening_problems(spec)
+        self.assertEqual(codes(found), ['opening.nothing_before_hook'])
+        self.assertIn('brand.opening_exception', found[0])
 
     def test_no_sting_named_is_never_refused(self):
         from creative_direction import NO_STING  # noqa: PLC0415
@@ -116,6 +116,7 @@ class TheOpening(unittest.TestCase):
         from creative_direction import NO_STING  # noqa: PLC0415
         source = (ROOT / 'packages/contracts/src/production-spec.ts').read_text(encoding='utf-8')
         self.assertEqual(re.search(r"export const VE_NO_STING = '([^']*)'", source).group(1), NO_STING)
+        self.assertIn('nothing goes before it', NO_STING)
         enum = re.search(r"export const VeStingSchema = z\.enum\(\[([^\]]*)\]\)", source).group(1)
         self.assertEqual(sorted(re.findall(r"'([a-z_]+)'", enum)), sorted(guards.STINGS))
 

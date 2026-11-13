@@ -2210,38 +2210,63 @@
       "on": "2026-11-05",
       "krish": "I think it should go at the start of the longer wide videos 100%,",
       "why": "Of the Intro Sting page he asked \"where is this additive?\". The engine said no cut used it, since every video had opened on the hook from 29 October, and proposed the wordmark on the hook's first frame instead of a separate intro before his face. His answer put the sting back, on the wide long cut only.",
-      "means": "The 16:9 long cut of a weekly series piece opens on that series' house sting, the clip he saw (config/intro-sting.json: fixed clips pinned by sha256 in the library, no sound of their own, the bed under them), and his face and the hook come in on the very next frame; the 9:16 short cut opens straight on the hook; an off-day piece wears no sting. Nothing else goes in front of the hook. Asked about the colours, he picked \"Keep it as I saw it\": each series' clip flashes the other series' colours, the one written exception to the series-colour rule. Every check that reads a finished wide file counts the sting's frames first, and the opening gate measures from the frame after it with its thresholds unchanged. His approval of the clips is recorded in his own words (intro.py approve); until it is, the wide cut opens on its hook and its report says why.",
+      "means": "Superseded on 2026-11-12 by nothing-before-the-hook (Ruling, Krish: \"Nothing before the hook, ever. Remove the sting exception for good.\"). What it meant from 5 to 12 Nov: The 16:9 long cut of a weekly series piece opens on that series' house sting, the clip he saw (config/intro-sting.json: fixed clips pinned by sha256 in the library, no sound of their own, the bed under them), and his face and the hook come in on the very next frame; the 9:16 short cut opens straight on the hook; an off-day piece wears no sting. Nothing else goes in front of the hook. Asked about the colours, he picked \"Keep it as I saw it\": each series' clip flashes the other series' colours, the one written exception to the series-colour rule. Every check that reads a finished wide file counts the sting's frames first, and the opening gate measures from the frame after it with its thresholds unchanged. His approval of the clips is recorded in his own words (intro.py approve); until it is, the wide cut opens on its hook and its report says why.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/intro-sting.json",
+          "contains": "\"words\": \"I think it should go at the start of the longer wide videos 100%,\"",
+          "how": "his 5 Nov placement words kept in the retired sting's record (placement and history)"
+        },
+        {
+          "file": "config/reference-cuts.json",
+          "contains": "\"before\": {\"on\": \"2026-11-05\", \"by\": \"Krish\", \"default\": \"sting_wide_hook_tall\"",
+          "how": "the bar's opening keeps what the default was before the 12 Nov ruling"
+        }
+      ]
+    },
+    {
+      "id": "nothing-before-the-hook",
+      "on": "2026-11-12",
+      "krish": "Nothing before the hook, ever. Remove the sting exception for good.",
+      "why": "Asked whether anything may go before the hook (the house sting on the 16:9 long cut was the one exception, paused that morning), he chose to remove the exception for good.",
+      "means": "Every cut, wide or tall, series or off day, opens on its hook; no sting, logo animation, story card, episode card, title card or second intro goes in front, and no words for one piece let one in. The house sting is retired (config/intro-sting.json), the opening under test is the hook only, and quick-edit, ve compile, ve lint, the contract, ve render and ve qc each refuse anything before the hook.",
       "status": "encoded",
       "encoded": [
         {
           "file": "apps/control-plane/api/_houseRules.ts",
-          "contains": "The 16:9 long cut of a weekly series piece opens on the house intro sting",
-          "how": "HOOK_IS_THE_INTRO: the sting on the wide cut of a series piece, the hook on the tall cut and on off days"
+          "contains": "nothing goes before the hook, ever (Ruling, Krish, 2026-11-12)",
+          "how": "HOOK_IS_THE_INTRO, with no exception; HOOK_AND_CTA says the same"
         },
         {
           "file": "config/intro-sting.json",
-          "contains": "\"words\": \"I think it should go at the start of the longer wide videos 100%,\"",
-          "how": "the clips by library path and sha256, the shapes the sting goes on, and his placement and colour words"
+          "contains": "\"words\": \"Nothing before the hook, ever. Remove the sting exception for good.\"",
+          "how": "the sting retired in his words (status retired)"
+        },
+        {
+          "file": "scripts/quick-edit/intro.py",
+          "contains": "the sting is retired for good (Ruling, Krish",
+          "how": "load refuses any other status on the committed config; approve refuses every approval; sting_for gives none"
         },
         {
           "file": "scripts/quick-edit/make.py",
           "contains": "def sting_stop(",
-          "how": "quick-edit lays the sting on a series piece's wide cut and stops a wide series cut that cannot have the approved one"
+          "how": "quick-edit leaves out any intro clip and stops a cut handed one"
+        },
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "opening.nothing_before_hook",
+          "how": "ve lint refuses a spec naming a sting or an episode card before the hook"
         },
         {
           "file": "scripts/velib/compile.py",
-          "contains": "def sting_props(",
-          "how": "ve compile puts the approved sting in front of the 16:9 whole cut of a series piece only"
+          "contains": "def sting_problems(",
+          "how": "ve compile lays no sting and ve render refuses props carrying one"
         },
         {
-          "file": "scripts/velib/qc_opening.py",
-          "contains": "def opening(",
-          "how": "ve qc's opening row checks the file's first frames are the approved clip and his cut starts on the next frame"
-        },
-        {
-          "file": "scripts/quick-edit/opening_gate.py",
-          "contains": "lead_frames",
-          "how": "the opening gate measures a stinged cut from the frame after the sting"
+          "file": "tests/control-plane/house-rules.test.ts",
+          "contains": "nothing before the hook: no house rule, skill, ve document or format allows",
+          "how": "fails on any rule, skill or ve document that allows a sting before the hook"
         }
       ]
     },
