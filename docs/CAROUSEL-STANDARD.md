@@ -116,23 +116,43 @@ reference met Krish's bar; it does not prove audience or growth performance.
 
 His words, of the Thursday 12 Nov Git carousel: "Git carousel cards look terrible apart from the cover card and they
 also are not very easy to follow. Remember that a complete layperson is swiping through these cards at light speed and
-needs to be able to follow the story within 10 seconds. This cannot ever happen again in any future carousel."
+needs to be able to follow the story within 10 seconds. This cannot ever happen again in any future carousel." Then, of
+the first redraw: "Nobody knows what Git is. No one knows why Anthropic did this. No one knows why it's important to
+basic people or what could change as a result. What everyday trend could this point towards that every business person
+might benefit from knowing? Ask why five times and then rewrite this script before you start rendering any more cards";
+"the 'so what' is missing. What is this piece of news an indicator of in terms of macro trends and how to solve a
+bottleneck in your business that never used to exist? That's where the gold dust lies"; and, approving the rewrite:
+"50 words is fine ... The number of cards is irrelevant as long as it doesn't exceed 10 in total, including the cover
+card and the call-to-action card."
 
-- The headlines alone, read in order, tell the whole story in ten seconds: at most 45 words across the deck, 3 to 12 on
-  any one card. Everything else on a card only adds to its headline.
-- Every headline after the cover is one whole sentence ending in a full stop, saying what happened or why it matters.
-  A label ("Code changes Anthropic merged per day"), a bare number ("7 engineers, 5 months") or a list of names is not
-  a headline.
-- Every card after the cover shows its point as a picture: bars to scale, the thing jammed, the people, the hand-off.
-  Words alone, a number alone or a list of logos in boxes is not a card.
-- The line under a headline is at most 20 words.
-- No jargon a layperson does not know (`config/carousel-plain-words.json`) unless the deck explains it in plain words
-  where it first appears.
-- Before the cards are drawn, two fresh readers see only the headlines, in order, once, and retell the story in their
-  own words; every place they got stuck is fixed first.
-- The deck's words live in a `carousel-deck/1` file, and `python3 scripts/carousel_check.py DECK.json` passes before any
-  card is drawn or filed (`tests/carousel_check_test.py`: the Git deck as sent on 12 Nov fails, the redrawn one passes).
-  Growth runs it on every carousel it makes to this standard.
+The route, for every carousel, whatever the topic. Nothing is drawn until the words pass it.
+
+1. **Ask why five times** about the news before writing a word, ending on why an everyday business person should
+   care. The fifth answer is usually the piece.
+2. **Find the wider trend it is a sign of, and prove it with evidence from outside the story**: a study, a number, a
+   second company. That is the "so what", where the value lies; a trend is shown with its source, never asserted.
+3. **Tell it in this order, a card or more for each**: what the thing is, in plain words (a layperson never knows the
+   tool, the company or the term); what happened; why; the wider trend and why it matters to them; what to do about it.
+   The doing is concrete enough to act on this week.
+4. **The headlines alone, read in order, tell that whole story in about ten seconds**: at most 50 words across the
+   deck and 3 to 12 on any one card. Each headline after the cover is one whole sentence. A label ("Code changes
+   Anthropic merged per day"), a bare number ("7 engineers, 5 months") or a list of names is not a headline.
+5. **Every card after the cover shows its point as a picture**: bars to scale, the thing jammed, the people, the
+   hand-off. The line under a headline is at most 20 words and only adds: it defines a word, names a source or gives the
+   number. No jargon a layperson does not know (`config/carousel-plain-words.json`) unless the deck explains it.
+6. **At most 10 cards, the cover and the call-to-action card included.** The number in between is whatever the story
+   needs.
+7. **The last card is centred**: its headline, one picture, its line, then "Follow for more" over the centred wordmark,
+   all on one centre line, never left-aligned type above a centred mark.
+8. **Two fresh readers see only the headlines, in order, once**, and answer in their own words what it is, what
+   happened, why, why it matters to them and what to do. Every place either got stuck is fixed before drawing.
+
+The deck's words live in a `carousel-deck/1` file (`five_whys`, `arc` naming the card for each step, a `source` on the
+trend card, `cta`, `read_back` with each reader's five answers), and `python3 scripts/carousel_check.py DECK.json` passes
+before any card is drawn or filed. `tests/carousel_check_test.py` holds both failures: the deck as sent on 12 Nov, and
+the five-card redraw of 13 Nov with no "so what". The Git deck of 13 Nov
+(`docs/plans/2026-11-09-week/git-carousel/deck.json`) is the worked example. Growth runs the check on every carousel it
+makes to this standard.
 
 ## Narrative production and review
 
