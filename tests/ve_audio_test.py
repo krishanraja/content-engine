@@ -191,7 +191,10 @@ class EpisodeBedTest(unittest.TestCase):
         holed = self.root / 'holed.wav'
         # the same mix with the music gone for 0.3 s inside one pause (22.6-24.6 s), where only music plays: as long
         # as the stop in Friday 23's track, which a 400 ms loudness meter cannot see
-        graph = "[1:a]volume='if(between(t,22.8,23.1),0,1)':eval=frame[m];[0:a][m]amix=inputs=2:normalize=0[o]"
+        # Cut in 5 ms frames (asetnsamples), so the hole is its full 0.3 s whatever frame size the decoder hands volume:
+        # with ffmpeg n8.1.2's larger frames it came out about 0.2 s, under the check's 0.25 s, and CI failed (13 Nov).
+        graph = ("[1:a]asetnsamples=n=240,volume='if(between(t,22.8,23.1),0,1)':eval=frame[m];"
+                 "[0:a][m]amix=inputs=2:normalize=0[o]")
         subprocess.run([ffmpeg(), '-v', 'error', '-y', '-i', str(self.voice), '-i', self.music, '-filter_complex', graph,
                         '-map', '[o]', str(holed)], check=True)
         shutil.copy(self.out.with_suffix('.bed.json'), holed.with_suffix('.bed.json'))
