@@ -43,6 +43,13 @@ def study(ref: str | Path, out: str | Path | None = None, words: bool = True) ->
             'loudness_lufs': references.loudness(str(ref))}
     segments = references.transcript(str(ref)) if words else None
     card['speech'] = references.speech_summary(segments, length) if segments else None
+    if not words:
+        card['words_skipped'] = 'words were skipped: asked not to transcribe'
+    elif not segments:
+        why = getattr(references.transcript, 'skipped', None)
+        card['words_skipped'] = 'words were skipped: ' + (why if isinstance(why, str) and why else 'no speech found')
+    if card.get('words_skipped'):
+        print(f"ve study: {card['words_skipped']}; grammar.json is written without a transcript", file=sys.stderr)
     sheet = out.with_suffix('.contact.jpg')
     card['contact_sheet'] = sheet.name if references.contact_sheet(str(ref), shots, sheet) else None
     write_json(out, card)
