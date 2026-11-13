@@ -17,6 +17,12 @@ what kind of thing doesn't fly with me, rather than implement incredibly specifi
   again". List every refusal that stands in ideas.json `vetoes` (`{"subject", "said": his words exactly, "at", "ref",
   "day"}`, as `cover` prints them); the board shows each as "Not offered again: <subject>" with his words and the one
   press that gives it back. A rejected idea is already out of the pool (`skipped.rejected`) and is one of his Drops.
+- **His tick outranks an older refusal.** Ruling (Krish, 2026-11-12): his own tick outranks an older refusal; the
+  idea comes to him with the refusal shown, and only his Approve places it. An option from an Inspiration card he
+  ticked (`from_inspiration`, written by `inspiration_act.py place`) on a refused subject never fails the gate: it
+  carries the refusal in `refused_before` and the gate prints a `his tick:` line. Every other option keeps the checks
+  here exactly. Every line the gate prints names the refusal that matched and why ("it is the same idea he refused", or
+  the name his refusing words and the option share).
 - **Refusing words inside another press warn.** "boring", "lame", "no point", "don't understand" in a Track, File or
   Improve press: the option on that subject carries `warning` (`{"subject", "said": his refusing words exactly, "at"}`,
   drawn first on the option) and is never first on its day nor `recommended`. It blocks only once he approves P6 on

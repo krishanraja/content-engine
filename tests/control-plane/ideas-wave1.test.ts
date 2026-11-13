@@ -6,7 +6,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { buildSources } from '../../apps/control-plane/api/_weekSources'
 import { hisOnlyRefusal, validBody, VETO_ID } from '../../apps/control-plane/api/board/_contracts.js'
-import { ideaLines, seriesOptions, warned, type ExtrasInputs } from '../../apps/control-plane/api/board/_viewExtras'
+import { ideaLines, offdayOptions, seriesOptions, tickNote, warned, type ExtrasInputs } from '../../apps/control-plane/api/board/_viewExtras'
 
 const WEEK = '2026-11-23'
 const at = (d: string) => `${d}T10:00:00Z`
@@ -61,6 +61,24 @@ describe('the board shows what the run will not offer, and why', () => {
     const [option] = seriesOptions(inputs({ days: { mon: [o] } }), 'mon', false)
     expect(option.text.startsWith('Warned: you said "Acme is boring" (17 Nov). Who keeps')).toBe(true)
     expect(warned({ so_what: 'x' })).toBe('')
+  })
+
+  it('an idea from his ticked card on a subject he turned down says so first, and still waits for his Approve (Ruling, Krish, 2026-11-12)', () => {
+    const tick = { action_id: '44444444-5555-4666-8777-888888888888', card_id: '66666666-7777-4888-8999-aaaaaaaaaaaa', card_name: 'a-reel.mp4' }
+    const refused_before = [{ subject: 'Acme', said: 'Acme is boring.', at: '2026-11-17', via: 'reject', ref: '2026-11-16/queue/fri-3' }]
+    const o = { id: '55555555-6666-4777-8888-999999999999', so_what: 'Acme staff who ask questions keep their jobs.', story: 'Headline: x.', from_inspiration: tick, refused_before }
+    const note = 'Turned down before: on 17 Nov you said "Acme is boring." It is here because you ticked this card, and your Approve decides. '
+    expect(tickNote(o)).toBe(note)
+    const [, option] = seriesOptions(inputs({ days: { mon: [{ id: '22222222-3333-4444-8555-666666666666', so_what: 'Other.', story: 'Headline: y.' }, o] } }), 'mon', false)
+    expect(option.text).toBe(`${note}Acme staff who ask questions keep their jobs.`)
+    expect(option.actions.map(a => a.label)[0]).toMatch(/^Approve for /)
+    expect(option.status).toBe('open')
+    const off = { id: o.id, kind: 'recorded', hook: 'The good employee is the one AI replaces', copy: 'Acme staff who ask questions keep their jobs.', from_inspiration: tick,
+      refused_before: [{ subject: 'Acme', said: null, at: '2026-11-17' }] }
+    const [shown] = offdayOptions({ week: WEEK, pieces: [], picks: [], queue: [], approvals: [], ideas: { offdays: { tue: [off] } } }, 'tue')
+    expect(shown.text.startsWith('Turned down before: on 17 Nov you turned down Acme. It is here because you ticked this card, and your Approve decides. Acme staff')).toBe(true)
+    expect(shown.actions.map(a => a.label)[0]).toMatch(/^Approve for /)
+    expect(tickNote({ so_what: 'x' })).toBe('')
   })
 
   it('each subject not offered again is a line with his words and one press to give it back, which is his alone', () => {

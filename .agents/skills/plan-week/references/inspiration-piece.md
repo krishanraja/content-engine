@@ -25,8 +25,12 @@ is held to, and it still waits for his Approve.
    guess as his words), the `card` (its name, kind, how he said to read it, the post it came from, its transcript),
    the `reading` (content-watcher's reading of the post), the planning `week` and its `open_days` in order, each with
    its series' mandate. The brief is private: it stays in `.scratch/`, which is never committed.
-3. Read `.agents/skills/plan-week/references/ideas-gate.md` and `references/refused.md`: a subject he refused is not
-   offered again unless his words on this card raise it again.
+3. Read `.agents/skills/plan-week/references/ideas-gate.md` and `references/refused.md`. Ruling (Krish, 2026-11-12):
+   his own tick outranks an older refusal; the idea comes to him with the refusal shown, and only his Approve places
+   it. So write the idea his tick asks for even when it is on a subject he turned down before: `place` finds each
+   refusal it is on and writes it onto the option (`refused_before`: the subject, his words exactly, the day), which
+   the board and To approve show first, beside the idea. Never soften the idea to dodge a refusal, and never write
+   `refused_before` yourself.
 
 ## The idea
 
@@ -67,10 +71,15 @@ Once it has its row, report on it as you work and file what the research found t
     option to its day in `docs/plans/<Monday>-week/ideas.json`, after the day's other options so the board's press
     ids for them never move, marked `from_inspiration` with his tick and the card, and with the card in its `covers`.
     It refuses a day that already has its piece.
-11. `python3 scripts/post-pack/board_feed.py gate <Monday>` must pass (what he refused stays refused). Then stop. The
-    workflow keeps the week's `ideas.json` on the week's branch, offers the idea for its series through
-    `/api/week/options` on top of the day's four (`inspiration_action`), bumps the week's change signal and tells
-    Control Centre the idea is drafted, so it is listed first in To approve with the card beside it.
+11. `python3 scripts/post-pack/board_feed.py gate <Monday> --base .scratch/inspiration/ideas-before.json` must pass
+    (the week's ideas as they stood before the run, which the workflow copied there). It answers only for what this
+    run added: what the week's other options already had is printed as "on the board before this run" and is never
+    this run's to fix, so never edit them. An idea from his tick on a subject he refused prints a "his tick:" line
+    naming the refusal and why it matched, and passes. Then stop. The workflow runs the same gate again, prints every
+    line, keeps the week's `ideas.json` on the week's branch, offers the idea for its series through
+    `/api/week/options` on top of the day's four (`inspiration_action`, with any refusal it is on said first in its
+    pitch), bumps the week's change signal and tells Control Centre the idea is drafted, so it is listed first in To
+    approve with the card beside it.
 
 ## Never
 
