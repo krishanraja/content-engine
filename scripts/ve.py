@@ -410,15 +410,17 @@ def cmd_pace(args) -> int:
                 card.pop('note', None)
                 rows.append(card)
                 print(f"ve pace: {name}: {card['events_per_s']}/s, longest gap {card['longest_gap_s']} s, used {card['used_frame']}, active {card['active_frame']}")
+            kept = json.loads(table.read_text(encoding='utf-8')) if table.is_file() else {}
             pace.write({'schema': 've-pace-references/1', 'note': pace.NOTE, 'grid': [pace.GRID_W, pace.GRID_H, pace.SAMPLE_FPS],
-                        'references': rows}, table)
+                        'references': rows, **{k: kept[k] for k in ('house', 'house_note') if k in kept}}, table)
             print(f've pace: {len(rows)} references -> {table}')
             return 0
         if not args.video:
             print('ve pace: give a cut, or --refs', file=sys.stderr)
             return 2
         card = pace.measure(args.video, args.seconds)
-        refs = json.loads(table.read_text(encoding='utf-8'))['references']
+        loaded = json.loads(table.read_text(encoding='utf-8'))
+        refs = loaded['references'] + loaded.get('house', [])
         verdict = pace.compare(card, refs)
         card['against_references'] = verdict
         out = Path(args.out) if args.out else Path(args.video).with_suffix('.pace.json')

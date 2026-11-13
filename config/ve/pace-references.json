@@ -111,5 +111,38 @@
       "used_frame": 0.82,
       "active_frame": 1.0
     }
-  ]
+  ],
+  "house": [
+    {
+      "file": "mon26-tall",
+      "sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+      "style": "character-ai-receipts",
+      "events_per_s": 3.85,
+      "longest_gap_s": 3.47,
+      "energy_median": 2.68,
+      "used_frame": 0.81,
+      "active_frame": 0.42
+    },
+    {
+      "file": "mon02-tall",
+      "sha256": "2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a",
+      "style": "eating-jobs-ladder",
+      "events_per_s": 3.91,
+      "longest_gap_s": 3.4,
+      "energy_median": 2.71,
+      "used_frame": 0.51,
+      "active_frame": 0.47
+    },
+    {
+      "file": "wed11-tall",
+      "sha256": "3c360c733036e84690035521c2abfd364099974ac33832f644a988dc2fd7dc13",
+      "style": "ai-music-slam",
+      "events_per_s": 4.12,
+      "longest_gap_s": 0.93,
+      "energy_median": 2.84,
+      "used_frame": 0.81,
+      "active_frame": 0.56
+    }
+  ],
+  "house_note": "Krish's own cuts that three bank styles come from (Krish, 2026-11-13), measured the same way on 13 Nov; ve pace compares a cut with these and with the references."
 }

@@ -76,12 +76,14 @@ describe('motion style profiles', () => {
   const bank = (JSON.parse(readFileSync('config/style-references.json', 'utf8')).bank as Array<{ id: string; layer: string; ve_route: string[] }>)
     .filter(style => style.layer === 'motion')
 
+  // Three styles from his own cuts joined on 13 Nov 2026 (Krish: "Ensure the Character.ai video, the Anthropic eating
+  // its own jobs video, the AI music video are used as the basis for their own artistic styles too").
   // The Ladder and The Living Screen joined the bank on 11 Nov 2026 as styles waiting on their devices (cards
   // ve-style-1-ladder-stage and ve-style-2-living-screen); each leaves needs_device when its device is verified.
   it('draws every motion style a profile can express, and names the nine that need their own device', () => {
     const drawable = bank.filter(style => !style.ve_route.includes('needs_device')).map(style => style.id).sort()
     expect(Object.keys(MOTION_PROFILES).sort()).toEqual(drawable)
-    expect(drawable).toHaveLength(11)
+    expect(drawable).toHaveLength(14)
     expect([...NEEDS_DEVICE].sort()).toEqual(bank.filter(style => style.ve_route.includes('needs_device')).map(style => style.id).sort())
     expect(NEEDS_DEVICE).toHaveLength(9)
   })
