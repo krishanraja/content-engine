@@ -376,7 +376,8 @@ const isMonday = (v: unknown): v is string => typeof v === 'string' && DATE.test
 /** The move press as the board sends it, or why not. */
 export function moveInput(body: unknown): { input?: MoveRequest; problem?: string } {
   if (!isObj(body)) return { problem: 'invalid_move' }
-  if (typeof body.item !== 'string' || !ITEM_KEY.test(body.item)) return { problem: 'invalid_item' }
+  // A series piece moves through the same press (contract 1.13.0, _seriesMoves.ts): its item is piece:<id>.
+  if (typeof body.item !== 'string' || !(ITEM_KEY.test(body.item) || /^piece:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(body.item))) return { problem: 'invalid_item' }
   if (!Number.isSafeInteger(body.version) || Number(body.version) < 0) return { problem: 'invalid_version' }
   let from: MoveRequest['from'] = null
   if (body.from !== null && body.from !== undefined) {

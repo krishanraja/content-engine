@@ -219,6 +219,10 @@
       "destination": "/api/board?week=:week&op=move"
     },
     {
+      "source": "/api/board/:week/replace",
+      "destination": "/api/board?week=:week&op=replace"
+    },
+    {
       "source": "/api/board/:week/offdays",
       "destination": "/api/board?week=:week&op=offdays"
     },

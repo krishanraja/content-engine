@@ -24,7 +24,7 @@ import { qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
 
 /** The presses posted to /api/board/<Monday>/<op> that reach the handler as a collection (no rewrite of their own). */
-const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP, LIVE_OP, SIGN_OFF_OP])
+const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP, LIVE_OP, SIGN_OFF_OP, 'replace'])
 /** The ops vercel.json gives the old board pages' addresses (/board/<Monday>, /board, /board/next[/<Monday>]): each is
  *  a permanent redirect to the live board now (Ruling, Krish, 2026-11-13). */
 const OLD_PAGES: ReadonlySet<string> = new Set(['html', 'next', 'latest'])
@@ -453,12 +453,29 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         const { moveInput, moveItem } = await import('./_offdayItems.js')
         const { input, problem } = moveInput(req.body)
         if (!input) throw new BoardError(400, problem || 'invalid_move')
+        if (input.item.startsWith('piece:')) {
+          // Move to… on a series piece (contract 1.13.0, _seriesMoves.ts): the same press, one transaction.
+          const { moveSeriesPiece } = await import('./_seriesMoves.js')
+          const moved = await moveSeriesPiece(db, input, { now: deps.now ? new Date(deps.now()) : new Date(), library: deps.library ? deps.library(db) : await moveLibrary(db) })
+          return res.status(moved.status).json(moved.body)
+        }
         const result = await moveItem(db, input, { now: deps.now ? new Date(deps.now()) : new Date(), ideas: deps.ideas ?? (w => readWeekIdeas(w)),
           drive: deps.renamer ? deps.renamer() : await moveRenamer(), library: deps.library ? deps.library(db) : await moveLibrary(db) })
         if (result.status === 200 && (result.body.followed as Record<string, unknown> | undefined)?.drive === 'renamed') {
           const { resetDrivePostsCache } = await import('./_drivePosts.js')
           resetDrivePostsCache()
         }
+        return res.status(result.status).json(result.body)
+      }
+      if (op === 'replace') {
+        // His Approve on a day that already holds a piece (contract 1.13.0, _seriesMoves.ts): his new pick for the day,
+        // and the piece it replaces to the day he chose, his Ideas for Later, or alongside it, in one transaction.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'his_press')
+        const { replaceInput, replacePick } = await import('./_seriesMoves.js')
+        const { input, problem } = replaceInput(req.body)
+        if (!input) throw new BoardError(400, problem || 'invalid_replace')
+        const result = await replacePick(db, week, input, { now: deps.now ? new Date(deps.now()) : new Date(), library: deps.library ? deps.library(db) : await moveLibrary(db) })
         return res.status(result.status).json(result.body)
       }
       if (op === 'run') {
@@ -488,6 +505,8 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         }
         // His live posts are appended by their own route only, so none is ever changed or taken away by a plain write.
         if (method === 'PUT' && collection === 'picks' && LIVE_ID.test(id)) throw new BoardError(400, 'live_is_its_own_press')
+        // A series piece's placement on a day is written only by its move or a replacing Approve, with the piece.
+        if (method === 'PUT' && collection === 'picks' && /^place-/.test(id)) throw new BoardError(400, 'place_is_its_own_press')
         if (method !== 'PUT' || !validBody(collection, id, req.body?.body) || !revision(req.body?.revision)) throw new BoardError(400, 'invalid_document_write')
         const refused = hisOnlyRefusal(collection, req.body.body, who)
         if (refused) throw new BoardError(403, refused)

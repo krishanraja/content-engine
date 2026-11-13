@@ -141,7 +141,9 @@ sends the idea before he presses (`goes`, contract 1.3.0), and its label says th
 | Improved for a future piece | Improve for a future piece | His note kept as a cue on that idea for a future slate; on an off day the revise run also brings a revised version back to approve | `use: improve` with `note`; off day `verdict: improve` | his note, required |
 
 An idea he approved carries no other press: one idea, one outcome. A day that already has its approved piece offers
-the other four on its other ideas, never a second Approve.
+every other idea an Approve that says what it replaces and asks where that piece goes (contract 1.13.0, "Replacing a
+day's piece, and Move to… on a series piece", below), with the other four beside it. Until 13 November it offered no
+Approve at all there, and Krish could not put an idea on a held day ("There is no approve button").
 
 **The record.** Every answer is one row of `idea_outcomes` (migration `20261126090000_ideas_gate.sql`): the week, the
 day and date, the idea, the board document and the revision he saved, the outcome, his words, the hash of the option
@@ -394,6 +396,67 @@ post.
 
 Held by `tests/offday-one-post-db.mjs` (the migration on PGlite, in CI) and `tests/control-plane/board-one-post.test.ts`.
 
+## Replacing a day's piece, and Move to… on a series piece (contract 1.13.0)
+
+Krish, 13 Nov 2026, on the live board, trying to put "The Great Recount" on Fri 20 and bring Fri 20's data-centre piece
+forward: "There is no approve button. I have to click through five different fucking pages for one idea, even though
+there are actually many ideas." Earlier the same day: "the great recount should be for 20 Nov, and the current 20 Nov
+piece should be brought forward as it is time sensitive", then "approved on both, get it done". The cause, read from
+the live API that day: Fri 20 held his pick of 9 Nov, so its options offered no Approve; Ideas for Later offered the
+idea only "Approve for Friday 27 Nov" (the next free Friday); Move to… existed only for off-day items; and nothing could
+replace a day's pick. Two presses close it, each his only, each one transaction (`_seriesMoves.ts`; migration
+`20261201100000_series_piece_moves.sql`).
+
+**Approve on a day that already holds a piece.** Every idea on a held series day, and every idea for later on each
+date of its weekday that holds a piece (`replaceTargets`, four weeks ahead), carries an Approve that says what it
+replaces: "Approve for Fri 20 Nov, replacing <title>". Its `choose` (written at `current_to`, one value, required) asks
+where the current piece goes: any day a move may go to (a date), `later` (his Ideas for Later), or `alongside` (it
+stays on the same day beside the new one). The press is `op: "replace"`: `POST /api/board/<Monday>/replace` with
+`{day, revision, pick: {pick, idea_id, series, story, so_what, option_sha256}, replaces: {item: "piece:<id>", version},
+current_to, note?, at}`. 403 `his_press` for anyone else. It refuses words that changed (`changed_words`), a stale pick
+or piece (`stale`), a piece no longer on that day (`not_on_day`), an idea already on another day (`new_elsewhere`), and
+a past day, a Sunday or a day past four weeks for the old piece. One call to `series_piece_place` then:
+
+1. saves his pick for the day (`picks/<day>`, the same body his Approve saves, with `replaced`), which idea_outcomes
+   records as `approved` via `pick`;
+2. writes the old piece's placements: alongside, `picks/place-<day>-<id>` `{kind: place_piece, placed: true}` on the
+   same day; another day, `placed: false` on the day it leaves and `placed: true` on the day it goes to; later,
+   `placed: false, later: true`, his File for later on it (outcome `filed`);
+3. moves both pieces' `scheduled_for` (the new one into the series and in flight, as `placePick` does), each guarded
+   on the `updated_at` the board read; the content_ideas gate checks his approval for every new day;
+4. keeps the move, append only, in `series_moves`.
+
+Any part refused, none of it lands. The research library's index rows then follow each piece that moved
+(`libraryFollower`). The answer carries `line` ("Approved for Fri 20 Nov. "<title>" moved to Tue 17 Nov, approved for
+that day.").
+
+**Move to… on a series piece.** Every piece his approval holds on a day carries `move` (`days[].pieces[].move` and the
+model's piece item `move`), the same shape as an off-day item's: `item` is `piece:<id>`, `version` is the piece's
+`updated_at` in milliseconds, `days` runs from today through four weeks, never a past day and never a Sunday, and
+`later` sends it back to his Ideas for Later. The Tuesday, Thursday and Saturday limit is for a piece recorded on an off
+day; a series piece goes on any other day, and its picker says so (`note`). It posts to the same route as every move,
+`POST /api/board/<Monday>/move` `{item, version, from, to: {date} | "later"}`, which hands a `piece:` item to
+`moveSeriesPiece`; a piece that is out, buried or an off-day item (its own row moves it) has no `move`. The answer
+carries `undo`, back to the day it left, a day now past included only when it is the day his last move took it from.
+
+**The gate holds.** A placement is his approval only from a revision Krish saved (idea_outcomes, via `placed`), and
+`board_approvals_now` lets a placement supersede every earlier approval of the same piece in that week on another
+document: once he moves a piece, the pick that first put it on a day no longer holds it there, so a session cannot put
+it back. A placement is never written through the plain document route (`PUT /picks/place-*` answers 400
+`place_is_its_own_press`); `series_piece_place` refuses a call that names any actor but Krish (like `board_save`, it
+trusts the actor the route names, and the routes name Krish only for his own press) and any document but a day's pick
+(only with a replacing Approve) and placements. A piece kept alongside keeps his approvals on that day (its Approve for
+publish); a piece moved to another day needs his Approve for publish again there. His Approve again on a day a piece
+was moved from, with the same words, records a new approval. Held on the real migration by `tests/series-moves-db.mjs` on every pull
+request, and the routes by `tests/control-plane/board-series-moves.test.ts`.
+
+**What Control Centre reads.** An option's or idea's `actions[]` press with `op: "replace"`: draw it as an Approve
+button with its `label`, show `goes`, ask `choose` (one of `options[]`, `value` a date, `later` or `alongside`; draw the
+dates as the Move to… picker draws `days`) and `words` (the optional note), stamp `at`, and post `body` with
+`current_to` set to the value chosen, to `/api/board/<week>/replace`, where `week` is the press's own `week`. A piece's
+`move` is drawn with the same Move to… component as an off-day item's. A day may now hold more than one piece (one moved
+there, or one kept alongside): `model.days[].items[]` lists each as its own `type: piece` item.
+
 ## Where everything is: one stage per item, and a missed day says so (contract 1.10.0)
 
 Every off-day option and every piece on a day carries exactly one `stage` (`_stage.ts`), from the records and never typed
@@ -517,6 +580,10 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   off-day posts he approved, each with its kind, path and one next action; the ideas that wait on the ideas board; "The
   week model", above). From 1.12.0 a held option's Approve is no longer spliced into its day's `actions`, a day with
   only held ideas no longer leads with them, and `yours` holds only his real decisions.
+- **1.13.0 (13 Nov 2026)** added the replacing Approve (`op: "replace"` on a press, with `choose` at `current_to`) on
+  every idea on a day that already holds a piece and on every idea for later on such a date, and `move` on every piece
+  his approval holds (`days[].pieces[].move`, the model's piece `move`), the same shape as an off-day item's; a day's
+  model may list more than one piece ("Replacing a day's piece, and Move to… on a series piece", above).
 
 ## To review: the video sign-offs (contract 1.11.0)
 
