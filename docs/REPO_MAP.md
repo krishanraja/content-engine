@@ -2693,6 +2693,32 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 - `function yesPress(i: ExtrasInputs, day: string): PressAction`
 - `function fillPress(a: PressAction, words: string, at: string): { id: string; body: Body }`
 
+### `apps/control-plane/api/board/_weekModel.ts`
+
+- `const OFFDAY_KINDS`
+- `type OffdayKind = typeof OFFDAY_KINDS[number]['key']`
+- `const PIECE_KIND`
+- `const PIECE_PATH`
+- `const POST_PATH`
+- `const GOOD_NEWS_STORIES`
+- `const CLAUDE_LABEL`
+- `interface ModelStep`
+- `interface ModelSource`
+- `interface ModelStory`
+- `interface ModelRead`
+- `type ModelAction = Action`
+- `interface ModelItem`
+- `interface ModelIdea`
+- `interface ModelDay`
+- `interface WeekModel`
+- `interface ModelInputs`
+- `function offdayKind(o: Body): { kind: OffdayKind; supports: 'mon' | 'wed' | 'fri' | null }`
+- `function kindLabel(kind: OffdayKind, supports: string | null): string`
+- `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
+- `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
+- `function modelProblems(model: WeekModel, days: DayView[]): string[]`
+
 ### `apps/control-plane/api/board/_writeBack.ts`
 
 What every prompt the board copies out says about reporting back, and what the board shows of the sessions and the

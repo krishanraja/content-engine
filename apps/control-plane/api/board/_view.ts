@@ -23,6 +23,7 @@ import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_d
 import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
 import { carriedItems, channelWord, dayLabel, dayOptions, liveOn, readItems, readItemsIn, type GrowthPost, type OffdayItem } from './_offdayItems.js'
 import { ideaStage, postedStage, truthProblems } from './_stage.js'
+import { modelProblems, weekModel, type ModelInputs, type WeekModel } from './_weekModel.js'
 import { scheduledOf } from './_posted.js'
 
 // The live board ("The Desk", /board/<Monday> since 10 Nov 2026; /board/next/<Monday> still serves it): one view of the week as it stands now, built on every read from the
@@ -214,6 +215,9 @@ export interface WeekView {
   sources: Record<string, boolean>
   /** The week's change signal (board_signal.revision): bumped by every write the view reads, null when unread. */
   revision: number | null
+  /** Contract 1.12.0 (_weekModel.ts): the week model the Publish Board draws, the three pieces and the off-day posts he
+   *  approved, each with its kind, its path and one next action, and the ideas that wait on the ideas board. */
+  model?: WeekModel
 }
 
 export interface ViewInputs {
@@ -668,6 +672,7 @@ export function buildView(i: ViewInputs): WeekView {
   // The ideas gate: only the pieces his approval holds on their day are drawn; every other one is a held line.
   const gate = gatePieces(i.week, i.pieces, i.approvals, i.ideas)
   const byDay = new Map(piecesByDay(i.week, gate.approved).map(p => [p.day, p.piece]))
+  const heldPieces: NonNullable<ModelInputs['heldPieces']> = []
   const days = attachOverlay(i.week, VIEW_DAYS.map((d): Omit<DayView, 'sessions' | 'materials'> => {
     const piece = byDay.get(d), date = dayDate(i.week, d)
     const shown = piece ? String(piece.id).toLowerCase() : null
@@ -682,29 +687,20 @@ export function buildView(i: ViewInputs): WeekView {
       const lead = options.find(o => o.status === 'approved' && o.outcome?.id === 'approved')
       if (lead?.outcome) core.detail = [{ h: 'Approved by you', p: lead.outcome.label.replace(/^[^,]+, /, '') }, ...core.detail]
     }
-    // Held: pieces on the day his approval does not hold, and options a session wrote as decided. Never hidden.
+    // Held: pieces on the day his approval does not hold, and options a session wrote as decided. They are ideas, on the
+    // ideas board only (Ruling, Krish, 2026-11-13: the publish board shows only what he approved): the day's own lead and
+    // presses never carry one. The held lines stay as data; a held piece that is not one of the day's options takes its
+    // Approve to the ideas board through the model.
     const held: Held[] = [...(gate.held.get(d) || []),
       ...options.filter(o => o.status === 'held')
         .map(o => ({ piece_id: null, option: o.doc_id, title: /changed/.test(o.held || '') ? HELD_CHANGED : HELD_TITLE, text: `${asSentence(o.title)} ${o.held || ''}`.trim() }))]
-    if (held.length && core.who !== 'done') {
+    if (SERIES_DAYS.includes(d) && !piece) {
       const listed = new Set(options.map(o => o.id.toLowerCase()))
-      const presses = SERIES_DAYS.includes(d) && !piece
-        ? (gate.held.get(d) || []).map(h => i.pieces.find(p => String(p.id).toLowerCase() === h.piece_id)).filter((p): p is Body => Boolean(p) && !listed.has(String(p!.id).toLowerCase()))
-          .map(p => approveHeldPress(i, d, p))
-        : []
-      // A day with nothing his approval holds leads with what is held: he decides it, and nothing else goes on it.
-      if (!piece && !options.some(o => o.status === 'approved')) {
-        core.who = 'you'
-        core.next = `${held.length === 1 ? 'One idea is' : `${held.length} ideas are`} held: not approved by you. Approve what should be on ${DAY_NAME[d]}; nothing else goes on the board`
+      for (const h of gate.held.get(d) || []) {
+        const p = i.pieces.find(x => String(x.id).toLowerCase() === h.piece_id)
+        if (p && !listed.has(String(p.id).toLowerCase())) heldPieces.push({ day: d, piece: p, press: approveHeldPress(i, d, p) })
       }
-      core.actions = [...presses, ...core.actions]
     }
-    // A held option's own Approve, on the day itself, whatever state the day is in: the held line carries no press,
-    // and a finished day shows no option list, so this is where he sees it (Krish, 2026-11-12: "Wednesday and
-    // Thursday are not in my publish board anywhere. Put them there so I can approve").
-    const heldApprove = options.filter(o => o.status === 'held')
-      .flatMap(o => (o.actions || []).filter(a => a.kind === 'press' && /^Approve/.test(a.label)).map(a => ({ ...a, label: `${a.label}: ${o.title.length > 80 ? o.title.slice(0, 79).trimEnd() + "…" : o.title}` })))
-    if (heldApprove.length) core.actions = [...heldApprove, ...core.actions.filter(a => !heldApprove.some(h => h.kind === 'press' && a.kind === 'press' && h.id === a.id))]
     // His Approve for publish, bound to the piece's manifest, leads while it waits on him (1.8.0).
     const manifest = SERIES_DAYS.includes(d) && shown ? dayManifest(i.drafts?.[shown], i.picks, d) : null
     if (manifest?.press && core.who !== 'done') core.actions = [manifest.press, ...core.actions.filter(a => !(a.kind === 'press' && a.id === manifest.press!.id))]
@@ -795,9 +791,12 @@ export function buildView(i: ViewInputs): WeekView {
   for (const d of days) if (d.who !== 'done') d.actions.push(thoughtPress(d.day, d.path?.current || 'day'))
   // Every Claude and Growth prompt says how the session reports back to the board, with no key in it (_writeBack.ts).
   withWriteBack(i.week, days)
-  const yours: WeekView['yours'] = days.filter(d => d.who === 'you' || d.who === 'stuck').flatMap((d): WeekView['yours'] => (d.reviews?.length
-    ? d.reviews.map(r => ({ key: `${d.day}-${r.option.id}`, day: d.day, label: `${d.label} · ${r.option.id}`, next: 'The revised version is back. Approve it, improve it again or reject it', actions: d.actions, review: r }))
-    : [{ key: d.day, day: d.day, label: d.label, next: d.next, actions: d.actions }]))
+  // The week model (contract 1.12.0): the one thing the Publish Board draws, from the days built above.
+  const model = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces })
+  // What waits on his press: only his real decisions (Approve for publish on a made piece, an approved post's missing
+  // choice), never an idea (Ruling, Krish, 2026-11-13).
+  const yours: WeekView['yours'] = model.days.flatMap(md => md.items.filter(it => it.decision && it.next)
+    .map(it => ({ key: `${md.day}-${it.key}`, day: md.day, label: md.label, next: it.line, actions: [it.next!] })))
   const dayWord = (id: string) => DAY_NAME[id.slice(0, 3)] || id
   const name = (c: string, id: string) => (c === 'picks' && /^(mon|wed|fri)$/.test(id) ? `picked ${dayWord(id)}'s idea`
     : c === 'picks' && id.startsWith('signoff-') ? 'answered a sign-off card' : c === 'picks' ? `pressed ${id}` : c === 'queue' && id.startsWith('off-') ? `judged the ${dayWord(id.slice(4))} option ${id.slice(8)}`
@@ -809,7 +808,7 @@ export function buildView(i: ViewInputs): WeekView {
   return { contract_version: VIEW_CONTRACT_VERSION, week: i.week, as_of: i.now.toISOString(), days, yours, moved: moved.slice(0, 10), north_star: i.north_star, runs: i.runs,
     sources: { ideas: Boolean(i.ideas), runs: Object.keys(i.runs).length > 0, store: Boolean(i.overlay), approvals: Array.isArray(i.approvals), drive: Array.isArray(i.drive_posts),
       items: Array.isArray(i.items), sign_offs: Boolean(i.sign_offs) },
-    revision: i.revision ?? null, sign_offs: i.sign_offs ?? null }
+    revision: i.revision ?? null, sign_offs: i.sign_offs ?? null, model }
 }
 
 /** Every rule the view must keep (PLAN.md): a day not done has a next step, and that step has at least one action. */
@@ -825,6 +824,8 @@ export function viewProblems(v: WeekView): string[] {
   }
   // Where everything is (_stage.ts): one stage per item, one day per post, and a past day not out says it was missed.
   out.push(...truthProblems(v.days, todayNY(new Date(v.as_of))))
+  // The week model (1.12.0): only what he approved on a day, one action an item, kinds and paths from their lists.
+  if (v.model) out.push(...modelProblems(v.model, v.days))
   return out
 }
 

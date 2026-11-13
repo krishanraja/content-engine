@@ -1,0 +1,17 @@
+{
+ "schema": "carousel-deck/1",
+ "title": "Anthropic's AI wrote so much code Git could not keep up (Thu 12 Nov, redrawn 13 Nov)",
+ "explains": {"git": "Git is the tool almost every programmer uses to save and share code (card 1)"},
+ "cards": [
+  {"headline": "Its AI wrote so much code, Git couldn't keep up", "line": "Git is the tool almost every programmer uses to save and share code. Here's what broke it.", "picture": "The cover as approved: a robot arm in a storm of paper over a filing cabinet"},
+  {"headline": "12 times more code a day than in May.", "line": "Code changes saved per day at Anthropic.", "picture": "Two bars to scale: 2,500 in May, 30,000+ in September"},
+  {"headline": "Git became the traffic jam.", "line": "The tool every programmer uses to save code was built for people, not for an AI flood.", "picture": "Rows of code changes piling up at a narrow funnel marked GIT"},
+  {"headline": "So 7 engineers built a new Git for AI.", "line": "5 months. It's called Scion. Claude wrote most of its code. GitHub and others are building the same.", "picture": "Seven figures, and the name Scion"},
+  {"headline": "Your next software: built for AI to use, people to check.", "line": "Ask who your next tool was built for.", "picture": "A robot handing to a person with a tick"}
+ ],
+ "read_back": [
+  {"reader": "Fresh reader A (Haiku, a 12-year-old, headlines only, once)", "retold": "AI wrote so much computer code, about 12 times more in four months, that Git, the tool programmers use to save and share code, got jammed. So seven engineers built a new tool made for AI, and future software will be built so AI can use it and people can check it."},
+  {"reader": "Fresh reader B (Sonnet, a shop owner who never wrote code, headlines only, once)", "retold": "An AI company's tools wrote so much code, about 12 times more in four months, that the system programmers use to save and share code got overloaded and jammed. So seven engineers built a new one designed for AI, and the point for me is that future software will be made by AI and checked by people."}
+ ],
+ "sources": ["Anthropic engineering, Redesigning source control, 13 Oct 2026 (2,500 to 30,000+ merges a day; Git its biggest bottleneck; seven engineers, five months, Scion)"]
+}
