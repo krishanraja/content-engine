@@ -10,6 +10,6 @@
 export const CAPTION_THEMES = [
   'pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit', 'soft-ai',
   'gaming-stream', 'simple-one-word', 'podcast',
-  'art-directed', 'cinematic',
+  'art-directed', 'cinematic', 'slam',
 ] as const
 export type CaptionThemeName = typeof CAPTION_THEMES[number]
