@@ -128,7 +128,7 @@ test('only a subject on the editorial allowlist is stamped as a publication stor
   assert.equal(isEditorialAeoSubject(null), false)
 
   const p = packet()
-  for (const slug of ['ctrl', 'circle', 'pulse', 'full-time', 'mindmake']) {
+  for (const slug of ['ctrl', 'circle', 'pulse', 'full-time', 'mindmake', 'heartside', 'legibility', 'publication']) {
     const row = aeoSignalRow(packet({ subject: { id: SUBJECT, kind: 'venture', slug, product_slug: slug } }), p.recommendations[0], slug)
     assert.equal(row.lane, isEditorialAeoSubject(slug) ? 'publication' : null, `lane for ${slug}`)
     // The row is still written and still carries its subject, so the Growth
