@@ -54,10 +54,15 @@ made as the piece: essay and two cuts, filed in an off-day folder.
   `docs/plans/2026-11-17-draft-script-90s.md` (90-second). Story check ready; kill list and copy lint clean; voice
   check clean except the house closing line. Two reader rounds; retellings match. Readers still ask what "training"
   an AI means and why a solar farm has power to spare.
-- **Look (one word):** recommended **data-story** (the lock's experiment: the 41 votes flipping to no as the opening
-  shot), with face-with-proof for the 5-minute cut and voice-led-pictures for the 90-second (the lock's recipe),
-  motion style **eating-jobs-ladder** (one object carries the story: the data centre turned away, getting smaller),
-  captions **art-directed** (his pick, 11 Nov). Alternatives: **ladder** (liked), **living-screen** (liked).
+- **Look (one word):** recommended **one-object**: face-with-proof for the 5-minute cut and voice-led-pictures for the
+  90-second (the lock's recipe), motion style **eating-jobs-ladder** (one object carries the story, from his own cut:
+  the data centre turned away, getting smaller), the 41 votes drawn by the vote tally as the opening shot, captions
+  **art-directed** (his pick, 11 Nov). Alternatives: **ladder** (liked), **living-screen** (liked). Not offered again:
+  the 11 Nov style clips (data-story, swiss-kinetic-type, dark-keynote), which he rejected because they were drawn on
+  the killed 5 Nov short ("This is absolutely fucking awful"). That draft spec now sits at
+  `docs/plans/2026-11-17-tuesday/ve/` with this piece's new day; its `call` is a draft political prediction the signed lock
+  rules out, so it is rewritten before anything renders. The ten-card carousel for this piece is filed in 3 Posts under
+  "2026-11-20 Fri mind.the.gap - Voters just said no to AI's power bill" and needs moving to Tue 17's folder.
 - **Record:** 5-minute to camera; 90-second as voice only (voice-led pictures).
 - **Codex:** card `docs/ve/cards/w1116/ve-w1116-vote-tally.md` (41 tiles under 10 state labels flipping to no; no
   unsourced map borders).
