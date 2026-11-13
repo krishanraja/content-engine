@@ -407,7 +407,9 @@ showed that day (`tests/control-plane/board-state-truth.test.ts`):
   progress."
 - **The ideas board asks only what still waits on him.** An idea for a day that has passed, and an idea that is the same
   post as an item already out or scheduled, leave `model.ideas` (Thu 12's "POV: your AI agent..." still asked for his
-  Approve after the one post went out on Fri 13). The plan keeps every one; only the board stops asking.
+  Approve after the one post went out on Fri 13), and a piece his approval already holds on a day of the week (Fri 20's
+  "Voters just said no to AI's power bill" still asked for his answer after he moved that piece to Tue 17). The plan
+  keeps every one; only the board stops asking.
 - **A narrative lock follows its piece, never its day** (`lockOf`, the lock's `piece_id:` line). On 13 Nov Fri 20's piece
   was replaced and moved to Tue 17 (his words, in the session: "chose Tue 17 Nov for the data-centre piece"); the new Fri
   20 piece read as Branded from the lock he signed for the one that left, and the moved piece lost it. A piece moved to
