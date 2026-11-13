@@ -1,0 +1,3 @@
+Status: His ticked inspiration card is no longer held by an older refusal. The 12 Nov hold on his "human qualities" tick matched none of his refusals: the run gated the whole 16 Nov board, which already failed on its own Infosys Monday option and two off-day returns, and the log hid the lines. Now an idea from his tick on a refused subject carries the refusal (refused_before, his words and the day), shown first on the board and in the week option's pitch, and only his Approve places it; the run's gate answers only for what it added (gate --base) and prints every line; engine ideas keep the gate as it was.
+Next: Krish reads the idea from his tick in To approve on the 16 Nov board and presses Approve, Reject or File for later.
+North Star check (2026-11-13): holds.

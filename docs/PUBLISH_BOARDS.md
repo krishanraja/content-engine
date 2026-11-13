@@ -161,6 +161,18 @@ creates, drops or closes one.
 - **The gate is untouched.** The idea waits for his Approve like every other; the run never sets a day, saves a pick or
   writes `decided`, and the database refuses any other placement. `tests/ideas-gate-db.mjs` tries it: an idea his ticked
   card made is refused a day by the run's own write and by a pick the run saves, and placed by his Approve only.
+- **His tick outranks an older refusal.** Ruling (Krish, 2026-11-12): his own tick outranks an older refusal; the idea
+  comes to him with the refusal shown, and only his Approve places it. `place` finds each refusal the idea is on
+  (`board_feed.tick_notes`, the same match as the gate) and writes it onto the option as `refused_before` (the
+  subject, his words exactly, the day, the ref); the board's view says it first on the option ("Turned down before: on
+  3 Nov you said ...", `tickNote` in `_viewExtras.ts`) and `offer` says it first in the week option's pitch, which To
+  approve shows. The gate prints it as a `his tick:` line and never fails on it. Every idea the engine proposes on its
+  own keeps the gate exactly as it was. The run's gate answers only for what the run added (`gate --base`, the week's
+  ideas before the run): what the week's own options already had is printed as "on the board before this run" and
+  never holds his idea. Every line says which refusal matched and why, and the run prints them all. On 12 Nov his tick
+  ("what kind of human qualities are going to result in job loss versus succeeding") was held because the 16 Nov
+  board, made before the gate existed, already failed it on its own Infosys Monday and two off-day returns; his idea
+  matched no refusal.
 - **Production: the style within a week.** An open Production tick comes first among the cards `ve init` offers a cut
   (`GET /api/inspiration/candidates`, for the roles it teaches, else look, motion and captions), with its
   `instruction` `{action_id, due_at, words}`. The next fitting cut names it in `brand.references` (failure F26's path,
