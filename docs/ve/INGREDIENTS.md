@@ -223,6 +223,19 @@ These checks used stand-in brand marks because the brand kit's marks are not rea
 stagings were judged on geometry and pace, not on the brand chrome. `stage` sits at the bottom of his range because
 these beats carry one device each; its cut leans on real clips (`video_wall`, below).
 
+## Sound on handovers and hits (14 Nov 2026)
+
+Krish, 14 Nov 2026: "dispatch the cards, including the sound effects".
+
+- **`style.sound`** (`{handover, hit, gainDb, reason}`) places one sound on every beat handover and one on every device hit,
+  one frame before the picture changes. That is the nearest a 30 fps frame gets to the rule that a whoosh starts 10 to
+  20 ms early and peaks on the change. Two sounds are never closer than 6 frames, and a hit never lands on a handover.
+  Handovers sit at -14 dB and hits at -12 dB, under his voice. The Codex card is `ve-gap-handover-sfx-1`.
+- **Only approved sounds play.** Every id must be an approved row in `config/sfx-approved.json`, written only from his
+  press on the Sound effects card or his own words. Until then `style.sound` is refused by name.
+- **The shortlist for his ear** is `config/ve/sfx-candidates.json`: four handover whooshes and three hits from his
+  Epidemic Sound plan, short and dry, each with Epidemic's preview link.
+
 ## Pace is measured, not judged from stills
 
 `python scripts/ve.py pace CUT.mp4 [--out pace.json]` measures four things:
