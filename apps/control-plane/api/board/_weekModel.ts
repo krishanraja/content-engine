@@ -503,7 +503,10 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
   // out on Fri 13). The plan keeps every one; only the board stops asking.
   const goneOut = new Set(out.flatMap(md => md.items.filter(it => it.item && (it.stage.key === 'live' || it.stage.key === 'scheduled')).map(it => it.item!)))
   const twinOf = new Map(days.flatMap(d => d.options.filter(o => o.same_post?.item).map(o => [o.doc_id, o.same_post!.item] as const)))
-  const waiting = ideas.filter(i => i.date >= m.today && !goneOut.has(twinOf.get(i.doc_id) ?? ''))
+  // A piece his approval already holds on a day of the week is never also an idea elsewhere in it (Fri 20's "Voters just
+  // said no to AI's power bill" still waited on his answer after he moved that piece to Tue 17 on 13 Nov).
+  const onDay = new Set(out.flatMap(md => md.items.map(it => it.piece_id).filter((x): x is string => Boolean(x))))
+  const waiting = ideas.filter(i => i.date >= m.today && !goneOut.has(twinOf.get(i.doc_id) ?? '') && !(i.piece_id && onDay.has(i.piece_id)))
   if (waiting.length !== ideas.length) {
     for (const md of out) {
       md.ideas = waiting.filter(x => x.day === md.day).length

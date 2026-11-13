@@ -324,3 +324,19 @@ describe('his production pick on every piece before recording: the look, the mot
     expect(rec.others).toEqual([])
   })
 })
+
+describe('a piece already on a day is never also an idea', () => {
+  it('Fri 20\'s data-centres option leaves the ideas board once that piece is approved on Tue 17', () => {
+    const TUE = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118', FRI = 'c00cd4e0-e1bb-4c60-b36f-cea92897e38c'
+    const piece = (id: string, date: string) => ({ id, idea: `Piece ${id.slice(0, 4)}`, thesis: 'x', scheduled_for: date, lane_slot: 'mind_the_gap', state: 'drafting', buried_at: null, body: '', updated_at: '2026-11-13T22:00:00Z', meta: {} })
+    const base = { week: W16, now: new Date('2026-11-14T08:00:00Z'), picks: [], queue: [], history: [], runs: {}, north_star: null,
+      ideas: { days: { fri: [{ id: FRI, so_what: 'x' }, { id: TUE, so_what: 'Voters just said no to AI\'s power bill.' }] } }, locks: {}, items: [], all_items: [], plans: {} }
+    const on = buildView({ ...base, pieces: [piece(FRI, '2026-11-20'), piece(TUE, '2026-11-17')], approvals: [approval(W16, 'fri', FRI), approval(W16, 'tue', TUE)] } as unknown as ViewInputs)
+    expect(model(on, 'tue').items.map(i => i.piece_id)).toContain(TUE)
+    expect(on.model!.ideas.find(i => i.piece_id === TUE)).toBeUndefined()
+    expect(model(on, 'fri').ideas).toBe(0)
+    // Not on a day, it is his to answer.
+    const off = buildView({ ...base, pieces: [piece(FRI, '2026-11-20'), piece(TUE, '2026-11-17')], approvals: [approval(W16, 'fri', FRI)] } as unknown as ViewInputs)
+    expect(off.model!.ideas.find(i => i.piece_id === TUE)).toBeTruthy()
+  })
+})
