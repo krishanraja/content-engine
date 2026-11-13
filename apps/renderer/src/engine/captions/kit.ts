@@ -33,7 +33,10 @@ export const F = HOUSE_FONTS
 
 /** The live page and its index, one frame early so a word never pops on late. */
 export function livePage(props: Pick<EngineRenderProps, 'captions'>, frame: number): { page: Page; index: number } | null {
-  const index = props.captions.findIndex((p) => frame >= p.fromFrame - 1 && frame < p.toFrame)
+  // The later page wins where two overlap: the frame before a page starts (its first word lands) is also the previous
+  // page's last live frame when they abut, and the old page must be gone there, never drawn over or ahead of the new one.
+  let index = -1
+  props.captions.forEach((p, i) => { if (frame >= p.fromFrame - 1 && frame < p.toFrame) index = i })
   return index < 0 ? null : { page: props.captions[index]!, index }
 }
 
