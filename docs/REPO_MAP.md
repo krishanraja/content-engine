@@ -4309,6 +4309,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `const STOP`
 - `const isStop = (text: string) =>`
 - `function exitStart(page: { toFrame: number; words: readonly { atFrame: number }[] }, frames: number, fps: number, holdS…`
+- `function exitProgress(page: { toFrame: number }, es: number | undefined, frame: number): number`
 - `function marked(hero: number): number`
 
 ### `apps/renderer/src/engine/captions/kit.ts`
@@ -4746,7 +4747,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/quote_card/index.tsx`
 
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device({ object, events, box, tokens, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/quote_card/schema.ts`
 
@@ -4820,7 +4821,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/stat_strip/index.tsx`
 
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device({ object, events, box, tokens, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/stat_strip/schema.ts`
 
@@ -4880,7 +4881,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
 - `function bubbleFocus({ object, events, box, aspect, frame }: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' |…`
 - `function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight = 1920)`
-- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/typing_bubble/schema.ts`
 
@@ -4950,6 +4951,8 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function stageGround(profile: MotionProfile | undefined, tokens: EngineTokens): CSSProperties`
 - `function sweepStyle(profile: MotionProfile, tokens: EngineTokens, beat: EngineBeat, frame: number): CSSProperties | null`
 - `function halftoneTexture(tokens: EngineTokens): CSSProperties`
+- `function groundTexture(texture: string | undefined, tokens: EngineTokens, frame: number): CSSProperties | null`
+- `function hatched(tokens: EngineTokens, frame: number): CSSProperties`
 
 ### `apps/renderer/src/engine/kit/camera.ts`
 
@@ -5048,6 +5051,7 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `const CAMERAS`
 - `const EngineIngredientsSchema`
 - `type EngineIngredients = z.infer<typeof EngineIngredientsSchema>`
+- `const TRANSITION_FRAMES: Record<Energy, number>`
 - `interface Span`
 - `interface CameraState`
 - `function hitFrames(events: readonly { atFrame: number }[]): number[]`
@@ -5062,8 +5066,10 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `type EngineLayout = z.infer<typeof EngineLayoutSchema>`
 - `const MAX_GROW`
 - `const isRegion = (box: Box): boolean =>`
+- `const markRegion`
 - `function freeRegion(aspect: Aspect, placement: Placement, themed: boolean): Box`
 - `function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, placement: Placement, themed: boolean, count: nu…`
+- `function regionSlots(region: Box, count: number): Box[]`
 
 ### `apps/renderer/src/engine/kit/lock.ts`
 
@@ -5144,6 +5150,11 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `class Screen`
 - `function uiClipPath(expand=9,rad=36): string`
 
+### `apps/renderer/src/engine/kit/regionFit.tsx`
+
+- `function bestNatural(box: Box, candidates: readonly number[], heightAt: (width: number) => number): { width: number; he…`
+- `function RegionFit({ natural, box, children }: { natural: { width: number; height: number }; box: Box; children: React.…`
+
 ### `apps/renderer/src/engine/kit/reveal.ts`
 
 - `function entranceStyle(p: number): CSSProperties`
@@ -5160,6 +5171,17 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `type Target = { x: number; y: number; w: number; h: number }`
 - `type ScribbleSpec`
 - `function scribblePath(spec: ScribbleSpec, seed: string): string`
+
+### `apps/renderer/src/engine/kit/staging.ts`
+
+- `const STAGINGS`
+- `type Staging = typeof STAGINGS[number]`
+- `const isStaging = (mode: string | undefined): mode is Staging =>`
+- `interface StagingGeometry`
+- `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry`
+- `function staged(beat: { layout: string; plate?: { source: string } | undefined }): boolean`
+- `function trayRise(frame: number, from: number): { scale: number; ty: number; opacity: number }`
+- `function boxStyle(box: Box): CSSProperties`
 
 ### `apps/renderer/src/engine/kit/threadPath.ts`
 
