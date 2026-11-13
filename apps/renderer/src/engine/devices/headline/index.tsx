@@ -1,3 +1,4 @@
+import { isRegion } from '../../kit/layout'
 import React from 'react'
 import { Swipe } from '../../../house/components'
 import { HOUSE_FONTS } from '../../../house/geometry'
@@ -20,8 +21,14 @@ export function headlineLayout(lines: string[], width: number, swipedLine = -1, 
 export function Device({ object, events, box, aspect, tokens, frame }: DeviceProps) {
   const s = headlineState(object, events, frame)
   if (!s.visible) return null
-  const stage = !s.at && box.top === 0 && box.height === (aspect === '9:16' ? 1920 : 1080)
-  const at = { ...(s.at ?? (stage ? { x: 60, y: aspect === '9:16' ? 220 : 180, w: box.width - 120, h: aspect === '9:16' ? 987 : 720 } : ZONES.headline)) }
+  // In a layout region (kit/layout.ts) the headline fills the region it is given and centres in it, like a stage; a
+  // headline too long for the region's rail-safe width at the 150 px minimum keeps the stage placement it had before.
+  const stageAt = { x: 60, y: aspect === '9:16' ? 220 : 180, w: (aspect === '9:16' ? 1080 : 1920) - 120, h: aspect === '9:16' ? 987 : 720 }
+  let region = !s.at && isRegion(box)
+  if (region) { try { headlineLayout(s.lines, box.width, s.swipe?.line, box.height) } catch { region = false } }
+  const stage = (!s.at && isRegion(box)) || (!s.at && box.top === 0 && box.height === (aspect === '9:16' ? 1920 : 1080))
+  const at = { ...(s.at ?? (region ? { x: box.left, y: box.top, w: box.width, h: box.height }
+    : stage ? (isRegion(box) ? stageAt : { ...stageAt, w: box.width - 120 }) : ZONES.headline)) }
   const l = headlineLayout(s.lines, at.w, s.swipe?.line, 'h' in at ? at.h : undefined)
   if (stage) at.y += (at.h! - l.height - (s.dek ? 134 : 0)) / 2
   const singleWord = s.lines.length === 1 && s.lines[0]!.split(/\s+/).length === 1
