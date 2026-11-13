@@ -401,10 +401,11 @@ def cmd_study(args) -> int:
 
 
 def cmd_card(args) -> int:
-    from velib.cards import write_card
+    from velib.cards import _require_design_lock, write_card
     from velib.common import card_worktree
     fields = load_json(args.fields)
     out = Path(fields.pop('path'))
+    _require_design_lock(fields)  # a card with no frozen lock is refused before anything else is resolved
     fields.setdefault('cwd', card_worktree(fields['card_id']))  # the local layout's worktree, never a typed path (W2.11)
     print(f've card: wrote {write_card(out, **fields)}')
     return 0
@@ -1411,9 +1412,9 @@ def cmd_render(args) -> int:
     from velib.compile import sting_problems
     opening = sting_problems(props)
     if opening:
-        # Only the clip Krish approved opens a cut, and an approved sting is never skipped (Krish, 2026-11-05: "I think
-        # it should go at the start of the longer wide videos 100%,"; config/intro-sting.json).
-        print('ve render: refused, the cut\'s opening is not the one Krish approved:')
+        # Nothing goes before the hook on any cut (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the
+        # sting exception for good."; config/intro-sting.json, retired).
+        print('ve render: refused, the cut must open on its hook:')
         print('\n'.join(f'  - {reason}' for reason in opening))
         return 1
     render(args.props, args.out, args.scale)

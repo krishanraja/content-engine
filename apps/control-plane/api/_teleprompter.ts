@@ -61,8 +61,20 @@ const PAGE = 100 // the most items Teleprompter lists at once
 const MAX_PAGES = 50 // past 5,000 a folder or script cannot be proved absent, so none is made
 const TIMEOUT_MS = 20_000
 const CUT_NAME = { long: '5-minute', short: '90-second', feature: '15-minute feature' } as const
-/** Whose board document is an approval (config/teleprompter.json approval.writer): his press, never a session's. */
+/** Whose board document is an approval (config/teleprompter.json approval.writer): his press, never a session's, or
+ *  his own typed words a session carried (typedApproval). */
 export const APPROVAL_WRITER = 'Krish'
+/** His typed approval of scripts, carried from a session (Ruling, Krish, 2026-11-12: "Typed approval counts for locking a
+ *  story and approving a script"): picks/<day>-scripts-words, kind approve_scripts, via words, his exact words with
+ *  when and where he typed them and the session link (api/board/_contracts.ts wordsBody). It approves as his press does. */
+export const TYPED_SCRIPTS_ID = /^(mon|wed|fri)-scripts-words$/
+export function typedApproval(a: { id?: unknown; body?: unknown }): boolean {
+  const b = isObj(a?.body) ? a.body : null
+  return Boolean(b) && typeof a.id === 'string' && TYPED_SCRIPTS_ID.test(a.id) && b!.kind === 'approve_scripts' && b!.via === 'words'
+    && b!.approved === true && typeof b!.words === 'string' && b!.words.trim().length > 0 && b!.words.length <= 2000
+    && typeof b!.said_at === 'string' && Number.isFinite(Date.parse(b!.said_at))
+    && typeof b!.said_where === 'string' && b!.said_where.trim().length > 0 && typeof b!.session_ref === 'string' && /^https:\/\/\S+$/.test(b!.session_ref)
+}
 
 /** Every tool this sender may call, and every argument each may carry. Nothing else is ever sent. */
 export const ALLOWED_TOOLS: Readonly<Record<string, readonly string[]>> = Object.freeze({
@@ -357,7 +369,7 @@ function inputProblem(input: SendApprovedInput, features: Record<string, unknown
   const a = input.approval
   const nothing = 'so nothing goes to Teleprompter until he approves those exact words with the Approve scripts press'
   if (!isObj(a) || !isObj(a.body) || typeof a.id !== 'string' || !DOC_ID.test(a.id)) return `there is no approval: the board document Krish's Approve scripts press wrote, ${nothing}`
-  if (a.updated_by !== APPROVAL_WRITER) return `the approval "${a.id}" was written by ${String(a.updated_by || 'no one named')}, and only Krish's press counts, ${nothing}`
+  if (a.updated_by !== APPROVAL_WRITER && !typedApproval(a)) return `the approval "${a.id}" was written by ${String(a.updated_by || 'no one named')}, and only Krish's press or his own typed words count, ${nothing}`
   if (String(a.body.piece_id ?? '').toLowerCase() !== input.piece_id.toLowerCase()) return `the approval "${a.id}" names another piece, ${nothing}`
   if (a.body.approved === false) return `Krish withdrew his approval ("${a.id}"), ${nothing}`
   const approved = approvedHashes(a.body)

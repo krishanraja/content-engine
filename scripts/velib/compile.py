@@ -28,11 +28,11 @@ ENDING_CTA = 'Subscribe free'
 # The opening, under test (Krish, 29 Oct 2026: "I'd pick number one here but I think that we need to test and learn.
 # We need to figure out what the right tone is over time based on real engagement. Let's go with number one for
 # now."): the hook is the intro. The first beat owns frame 0 with the logo and the series tag in its corners, and no
-# story card comes before it. One thing goes in front of it, on one cut only (Krish, 2026-11-05: "I think it should go
-# at the start of the longer wide videos 100%,"): the house intro sting on the 16:9 whole cut of a weekly series
-# piece (sting_props). It moves no frame: the cut keeps its own clock, which starts sting.frames into the render
-# (apps/renderer/src/engine/VeCut.tsx), so frame 0 is still the hook, his face on the frame after the sting's last.
-# Each compile report records the opening it used ("sting" or "hook"), so real engagement can settle it.
+# story card comes before it. Nothing goes in front of it on any cut (Ruling, Krish, 2026-11-12: "Nothing before the
+# hook, ever. Remove the sting exception for good."): the house sting that opened the 16:9 whole cut of a weekly
+# series piece from 5 Nov is retired, sting_props gives no cut one, and sting_problems refuses props that carry one.
+# Each compile report records the opening it used ("hook"), so real engagement can still be read against it.
+NOTHING_BEFORE_HOOK = 'Nothing before the hook, ever. Remove the sting exception for good.'
 STING_ASPECT, STING_SHAPE = '16:9', '16x9'  # the long cut, and the name config/intro-sting.json gives its shape
 
 
@@ -59,89 +59,25 @@ def _intro():
 
 
 def sting_props(cut: dict, channel: str, off: bool, report: dict | None = None) -> dict | None:
-    """props.sting for this cut, or None when it opens on its hook.
-
-    Only the 16:9 whole cut of a weekly series piece wears the sting (Krish, 2026-11-05: "I think it should go at the
-    start of the longer wide videos 100%,"). The 9:16 cut, a proof excerpt and an off-day cut open on the hook (house
-    rule HOOK_IS_THE_INTRO) and never read the sting's config. A candidate sting leaves the cut on its hook and says so
-    in the report. An approved sting is never skipped: the clip is the one Krish saw, checked by its size and sha256
-    and fetched from the library when this machine does not have it, or the cut is refused with what to do. A
-    voiceover master or a split first beat gets it too: his words cover every wide long cut."""
-    if cut['aspect'] != STING_ASPECT or cut.get('excerpt', False) or off:
-        return None
-    intro = _intro()
-    try:
-        cfg = intro.load()
-    except intro.IntroError as error:
-        raise ValueError(f'the wide cut of a {channel} piece opens on the intro sting, and its config cannot be read: {error}') from None
-    if STING_SHAPE not in cfg['shapes'] or channel not in cfg['series'] or cfg['status'] == 'retired':
-        return None
-    if cfg.get('paused'):
-        if report is not None:
-            report['opening_why'] = ('the intro sting is paused on Krish\'s words (config/intro-sting.json "paused"), so this '
-                                     'wide cut opens on its hook')
-        return None
-    if cfg['status'] != 'approved':
-        if report is not None:
-            report['opening_why'] = ('the intro sting is still a candidate waiting for Krish\'s approval '
-                                     '(config/intro-sting.json), so this wide cut opens on its hook')
-        return None
-    if cfg.get('source_sha256') != intro.source_hash(cfg):
-        raise ValueError('the clips config/intro-sting.json names are not the ones Krish approved (source_sha256), so this wide cut '
-                         'cannot open as it should: show him the clips and record his words again')
-    entry = cfg['clips'][STING_SHAPE][channel]
-    refused = f'the wide cut of a {channel} piece opens on the approved intro sting, and its clip could not be had'
-    try:
-        path = intro.clip(STING_SHAPE, channel, cfg)
-    except intro.IntroError:
-        try:
-            _, _, missing = intro.fetch(cfg, out=lambda line: None, only=[(STING_SHAPE, channel)])
-            if missing:
-                raise intro.IntroError(f'{entry["library"]} is not in the library yet: a machine that has the clips sends them '
-                                       'with python scripts/quick-edit/intro.py publish')
-            path = intro.clip(STING_SHAPE, channel, cfg)
-        except (OSError, ValueError) as error:  # IntroError is a ValueError; a failed download an OSError
-            raise ValueError(f'{refused}: {error}. On a machine with the engine key, python scripts/quick-edit/intro.py fetch '
-                             'gets it') from None
-    if report is not None:
-        report['sting'] = {'series': channel, 'frames': cfg['frames'], 'clip_sha256': entry['sha256'],
-                           'source_sha256': cfg['source_sha256'], 'library': entry['library']}
-    return {'src': str(Path(path).resolve()), 'series': channel, 'frames': cfg['frames'], 'sha256': entry['sha256']}
+    """props.sting for this cut: None, for every cut (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove
+    the sting exception for good."). From 5 Nov to 12 Nov the 16:9 whole cut of a weekly series piece opened on the
+    house sting; config/intro-sting.json keeps that record, retired, and is no longer read to open a cut."""
+    return None
 
 
 def sting_problems(props: dict) -> list[str]:
-    """Why compiled props must not render for their opening ([] when it is right): a sting that is not the approved
-    clip of its series, a wide whole cut of a series piece that the approved sting should open and does not (props
-    compiled before the approval), or a stem whose lead is not the sting's frames (ve premix lays his voice after the
-    sting; a stem made for another opening would play his voice over the sting, or the sting's length late)."""
+    """Why compiled props must not render for their opening ([] when it is right): anything in front of the hook, a
+    sting or an episode card (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for
+    good."), or a stem whose lead is not zero frames (ve premix lays his voice from frame 0; a stem made with a sting in
+    front would play his voice late)."""
     sting = props.get('sting')
-    series = (props.get('series') or {}).get('label') or ''
-    wide_whole = props.get('aspect') == STING_ASPECT and bool(props.get('ending')) and series not in ('', 'off.day')
     problems = []
-    if sting or wide_whole:
-        intro = _intro()
-        channel = series.replace('.', '_')
-        try:
-            cfg = intro.load()
-        except intro.IntroError as error:
-            return [f'the intro sting\'s config cannot be read, so this cut\'s opening cannot be checked: {error}']
-        wanted = (cfg['status'] == 'approved' and not cfg.get('paused') and STING_SHAPE in cfg['shapes']
-                  and channel in cfg['series'])
-        excepted = (props.get('opening') or {}).get('kind') == 'episode_card' and len(str((props.get('opening') or {}).get('said') or '')) >= 12
-        if not sting and wanted and not excepted:
-            problems.append(f'this wide cut of a {series} piece opens on the approved intro sting, and its props have none '
-                            '(compiled before the approval): run ve compile again, then ve premix')
-        if sting:
-            entry = (cfg['clips'].get(STING_SHAPE) or {}).get(sting.get('series')) or {}
-            if not wanted:
-                problems.append(f'the props carry a sting, and config/intro-sting.json does not open this cut on one (status '
-                                f'{cfg["status"]}): only a sting Krish approved opens a cut; run ve compile again')
-            elif cfg.get('source_sha256') != intro.source_hash(cfg):
-                problems.append('the clips config/intro-sting.json names are not the ones Krish approved (source_sha256)')
-            elif sting.get('series') != channel or sting.get('sha256') != entry.get('sha256') or sting.get('frames') != cfg['frames']:
-                problems.append(f'the props\' sting ({sting.get("series")}, {sting.get("frames")} frames, sha256 {sting.get("sha256")}) '
-                                f'is not the approved {channel} clip ({cfg["frames"]} frames, sha256 {entry.get("sha256")}): '
-                                'run ve compile again')
+    if sting:
+        problems.append(f'the props carry a sting ({sting.get("series")}, {sting.get("frames")} frames) in front of the hook: '
+                        f'nothing goes before the hook (Ruling, Krish, 2026-11-12: "{NOTHING_BEFORE_HOOK}"); run ve compile again')
+    if (props.get('opening') or {}).get('kind') == 'episode_card':
+        problems.append(f'the props open on an episode card where the sting was: nothing goes before the hook (Ruling, Krish, '
+                        f'2026-11-12: "{NOTHING_BEFORE_HOOK}"); run ve compile again')
     lead = int((sting or {}).get('frames') or 0)
     stem = (props.get('audio') or {}).get('stem') or {}
     sidecar = Path(stem['src']).with_suffix('.bed.json') if stem.get('src') else None
@@ -483,15 +419,12 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # colour or its promise (Krish, 2026-11-04: "Yes, give off days their own music and look - Rotate.").
     off = _series_day(identity['day'], spec.get('publish_day')) != identity['day']
     opening = {}
-    # Krish's word for this piece can put its own episode card where the sting would be (brand.opening_exception;
-    # Krish, 2026-11-09: "I don't want the overall brand intro to come in. I want the episode card to come in."). The
-    # card is drawn by the spec's own beats; compile only leaves the sting out and says why, in his words.
-    exception = (spec.get('brand') or {}).get('opening_exception')
-    if exception and cut['aspect'] == STING_ASPECT and not cut.get('excerpt', False) and not off:
-        sting = None
-        opening['opening_why'] = f"Krish, {exception['on']}: {exception['said']}"
-    else:
-        sting = sting_props(cut, channel, off, opening)
+    # Nothing goes before the hook (Ruling, Krish, 2026-11-12): no sting, and no episode card in its place (the
+    # brand.opening_exception of 9 Nov, which ve lint now refuses).
+    if (spec.get('brand') or {}).get('opening_exception'):
+        raise ValueError(f'brand.opening_exception puts an episode card before the hook: nothing goes before the hook (Ruling, '
+                         f'Krish, 2026-11-12: "{NOTHING_BEFORE_HOOK}"); remove it from the spec')
+    sting = sting_props(cut, channel, off, opening)
     props = {
         'pieceId': spec['piece_id'], 'cutId': cut_id, 'format': spec['format'], 'aspect': cut['aspect'],
         'fps': FPS, 'durationFrames': duration,
@@ -529,8 +462,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         sfx.append({'src': resolve_source(sound['path']), 'atFrame': event['atFrame'], 'gainDb': gain})
     props['audio']['sfx'] = sfx
     if report is not None:
-        report.update(lint='clean', sfx_missing=missing, opening='sting' if sting else ('episode_card' if exception else 'hook'),
-                      **opening)
+        report.update(lint='clean', sfx_missing=missing, opening='sting' if sting else 'hook', **opening)
         if edl is not None:
             report['edl'] = {'cut': cut_id, 'joins_s': [join['at_s'] for join in edl.get('joins', [])],
                              'duration_frames': edl.get('duration_frames'),
@@ -553,10 +485,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             if compiled['toFrame'] == duration:
                 compiled['toFrame'] = end_frame
     if sting:
-        # In front of the cut, never in it: durationFrames stays the cut's own length and no frame moves.
+        # Never: sting_props gives no cut one (Ruling, Krish, 2026-11-12), and sting_problems refuses props that carry one.
         props['sting'] = sting
-    elif exception and 'opening_why' in opening:
-        props['opening'] = {'kind': 'episode_card', 'said': exception['said'], 'on': exception['on']}
     if spec.get('call'):
         call = spec['call']
         props['call'] = {'statement': call['statement'], 'due': call['due'], 'confidencePercent': call['confidence_percent']}

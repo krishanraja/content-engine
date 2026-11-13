@@ -66,8 +66,8 @@ it('drives REMOTION_BROWSER, else an installed headless shell, else lets Remotio
   expect(await browserExecutable({}, root)).toBe(path.join(shell, 'chrome-headless-shell'))
 })
 
-describe('the sting', () => {
-  // Small stand-in bytes: the check is on the bytes, not on decoding them.
+describe('nothing before the hook', () => {
+  // Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for good."
   async function stingProps(change: (sting: { src: string; sha256: string }) => void = () => {}) {
     const root = await mkdtemp(path.join(tmpdir(), 've-sting-test-'))
     temporary.push(root)
@@ -79,18 +79,16 @@ describe('the sting', () => {
     const props = { brand: {}, audio: { stem: { src: 'https://example.test/stem.wav' }, sfx: [] }, segments: [], objects: [], sting }
     return { root, props, bytes, stage: () => stageRenderAssets(props, path.join(root, 'props.json'), path.join(root, 'public'), root) }
   }
-  it('stages the clip its props name, the way the take is staged', async () => {
-    const { root, props, bytes, stage } = await stingProps()
-    await stage()
-    expect(props.sting.src).toMatch(/^\/public\/asset-\d+\.mp4$/)
-    expect(await readFile(path.join(root, props.sting.src))).toEqual(bytes)
+  it('refuses props carrying a sting before anything is staged, even the clip its props name', async () => {
+    await expect((await stingProps()).stage()).rejects.toThrow(/Nothing before the hook, ever/)
+    await expect((await stingProps((sting) => { sting.src = 'https://example.test/sting.mp4' })).stage()).rejects.toThrow(/Nothing before the hook, ever/)
   })
-  it('refuses a clip whose bytes are not the ones its props name, and a remote clip', async () => {
-    await expect((await stingProps((sting) => { sting.sha256 = 'b'.repeat(64) })).stage()).rejects.toThrow(/not the clip its props name/)
-    await expect((await stingProps((sting) => { sting.src = 'https://example.test/sting.mp4' })).stage()).rejects.toThrow(/local clip/)
+  it('and props carrying an episode card in front', async () => {
+    const { props, root } = await stingProps()
+    const carded = { ...props, sting: undefined, opening: { kind: 'episode_card', said: 'I want the episode card to come in.', on: '2026-11-09' } }
+    await expect(stageRenderAssets(carded, path.join(root, 'props.json'), path.join(root, 'public'), root)).rejects.toThrow(/episode card/)
   })
-  it('runs the sting, then the cut on its own clock', () => {
+  it('runs the cut on its own clock, nothing in front', () => {
     expect(renderClock({ durationFrames: 120 })).toEqual({ lead: 0, frames: 120 })
-    expect(renderClock({ durationFrames: 120, sting: { frames: 56 } })).toEqual({ lead: 56, frames: 176 })
   })
 })
