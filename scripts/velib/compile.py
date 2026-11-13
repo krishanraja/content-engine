@@ -566,6 +566,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     if layout and layout != 'house':
         if layout not in LAYOUTS:
             raise ValueError(f"style.layout.mode {layout} is not one of {', '.join(LAYOUTS)}")
+        if layout == 'tray' and props.get('captionPlacement') != 'upper':
+            raise ValueError('style.layout.mode tray leaves his face clear, so the captions go in the upper strip: '
+                             'set style.captions.placement upper')
         props['layout'] = {'mode': layout}
     return props
 
@@ -575,9 +578,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
 # kit/ingredients.ts; engine.test.ts holds the two lists in step.
 CAPTION_PLACEMENTS = ('lower', 'centre', 'upper')
 ENERGIES = ('calm', 'medium', 'high')
-TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch')
+TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade')
 CAMERAS = ('none', 'drift', 'phased', 'punch')
-LAYOUTS = ('house', 'fill', 'stack')
+LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray')
 
 
 def caption_props(spec: dict) -> dict:

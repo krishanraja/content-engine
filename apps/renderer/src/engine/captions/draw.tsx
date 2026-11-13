@@ -42,6 +42,12 @@ export function exitStart(page: { toFrame: number; words: readonly { atFrame: nu
   return start < page.toFrame ? start : undefined
 }
 
+/** How far a page's exit has run, 0 to 1, reaching 1 on the page's last live frame (toFrame - 1): the frame the next page's
+ *  first word lands (one frame early, `livePage`) shows the old page gone, never a faint ghost of it under the new one. */
+export function exitProgress(page: { toFrame: number }, es: number | undefined, frame: number): number {
+  return es === undefined ? 0 : Math.max(0, Math.min(1, (frame - es) / Math.max(1, page.toFrame - 1 - es)))
+}
+
 /** The one word a style may mark on a page: the hero when the page has one, else none. key() falls back to the longest
  *  word, which marks filler ("ended" in "have ended the"); a marked word should be one that carries the point. */
 export function marked(hero: number): number { return hero >= 0 ? hero : -1 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Draw } from '../draw'
-import { exitStart, marked, root, upper } from '../draw'
+import { exitProgress, exitStart, marked, root, upper } from '../draw'
 import { F, LIFT, band, clamp, clean, hero, livePage, mix, outCubic, outExpo, scale, since, textWidth } from '../kit'
 
 /** stair-flash, the staircase flash: Anton capitals build a stepped lockup, word by word on hard cuts, with the small
@@ -47,7 +47,7 @@ export const stairFlash: Draw = (props, frame) => {
   const placement = props.captionPlacement ?? 'lower'
   const vpos: React.CSSProperties = placement === 'upper' ? { top: 0 } : placement === 'centre' ? { top: '50%', transform: 'translateY(-50%)' } : { bottom: 0 }
   const xs = exitStart(page, 3, props.fps)
-  const exit = xs === undefined ? 0 : clamp((frame - xs) / Math.max(1, page.toFrame - xs))
+  const exit = exitProgress(page, xs, frame)
   return root('stair-flash', box, (
     <div style={{ position: 'absolute', left: 0, width, ...(right ? { left: box.width - width } : {}), ...vpos,
       display: 'flex', flexDirection: 'column', alignItems: right ? 'flex-end' : 'flex-start',

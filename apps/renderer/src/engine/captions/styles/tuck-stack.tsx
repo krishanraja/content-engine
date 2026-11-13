@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Draw } from '../draw'
-import { exitStart, marked, root } from '../draw'
+import { exitProgress, exitStart, marked, root } from '../draw'
 import { F, LIFT, band, clamp, clean, hero, livePage, mix, outBack, outCubic, outExpo, scale, since, textWidth } from '../kit'
 
 /** tuck-stack: small lead words tuck tight above big lowercase-as-said words, so each phrase sets as a mixed-scale
@@ -67,7 +67,7 @@ export const tuckStack: Draw = (props, frame) => {
   while (!L.ok && H > 40 * k) { H -= 4 * k; L = layout(H) }
 
   const xs = exitStart(page, 4, props.fps)
-  const exitT = xs === undefined ? 0 : clamp((frame - xs) / Math.max(1, page.toFrame - xs)), exitE = exitT * exitT * exitT
+  const exitT = exitProgress(page, xs, frame), exitE = exitT * exitT * exitT
   const vpos: React.CSSProperties = placement === 'upper' ? { top: 0 } : centre ? { top: '50%', transform: `translateY(calc(-50% - ${(exitE * 24).toFixed(1)}px))` } : { bottom: 0 }
   const lift = centre ? undefined : `translateY(${(-exitE * 24).toFixed(1)}px)`
 
