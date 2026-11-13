@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- The view reads every day's narrative lock, so a piece moved to an off day keeps its own (Tue 17's data-centres piece). (2026-11-13)
 - The publish board says the current state: a day is Done only when every item is live, past and already-out ideas leave the ideas board, a narrative lock follows its piece, and the offday-posts route takes the done-check's Buffer sends (check buffer_sent) with the Buffer id as proof. (2026-11-13)
 - ve gained three stagings from Krish's own cuts (band, stage, tray), the lit, vignette and hatched grounds, blur-in, turn and tilt entrances, a crossfade handover, region fitting for five more devices, the open caption fixes and a ve study that no longer crashes; rendered on his pinned take and watched: up to 3.88 events a second and 82% of the frame, against 2.58 and 26% before (docs/ve/INGREDIENTS.md, "The stagings"). (2026-11-13)
 - Week of 16 Nov made ready for Krish's production picks. No agreed scripts for Mon 16, Wed 18 or Fri 20 are on any record (Teleprompter, git, the pieces, the board, Drive). Drafted and checked from the signed locks: Mon 16 scripts (on the making record, waiting on his Approve) and Tue 17 scripts (the data-centres piece, moved from Fri 20; its lock re-dated to Tue 17 and waiting on his "Signed." again). Wed 18's rewritten lock and a Fri 20 Great Recount lock wait on his signature. Production picks, recording notes and two Codex device cards (receipt, vote tally) are in docs/plans/2026-11-16-week/production-picks.md and docs/ve/cards/w1116/. (2026-11-13)
@@ -48,7 +49,7 @@ Older lines: `docs/history/2026-11-13-NOW-moved-14.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-13): Control Centre's done-check entry buffer_sent reports Buffer's sends here; it needs BUFFER_API_KEY on Control Centre's Vercel to run.
+- Next (2026-11-13): the re-dated Tue 17 lock needs Krish's signature again (re-dating changed the words his 9 Nov signature bound), filed by the producing session.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
