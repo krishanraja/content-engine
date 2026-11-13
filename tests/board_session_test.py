@@ -121,5 +121,67 @@ class BoardSessionTest(unittest.TestCase):
         self.assertEqual(backfill.kind_of('narrative-lock-mon.md'), 'note')
 
 
+class TypedApprovalTest(unittest.TestCase):
+    """approve lock|scripts: his typed approval carried to the board (Ruling, Krish, 2026-11-12: "Scripts and locks only.
+    Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs
+    your press, so that gate is unchanged.")."""
+    SAID = ['--words', 'Yes, lock it.', '--said-at', '2026-11-13T09:10:00Z', '--where', 'Claude Code session', '--session-ref', 'https://claude.ai/code/s']
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.dir = Path(self.tmp.name) / 'docs' / 'plans' / '2026-11-16-week'
+        self.dir.mkdir(parents=True)
+        self.lock = self.dir / 'narrative-lock-mon.md'
+        self.lock.write_text(f'# Lock\npiece_id: {PIECE}\n## Surface story\nOracle borrows.\n', encoding='utf-8')
+        self.root = bs.ROOT
+        bs.ROOT = Path(self.tmp.name)
+        self.addCleanup(lambda: setattr(bs, 'ROOT', self.root))
+
+    def test_a_lock_is_carried_as_his_words_bound_to_its_hash_and_signed_when_asked(self):
+        import making
+        code, out, calls, _ = run([PIECE, 'approve', 'lock', '--week', '2026-11-16', '--day', 'mon', '--lock', str(self.lock), '--sign', *self.SAID],
+                                  [(200, {'documents': [{'id': 'mon-lock-words', 'revision': 2}]}), (200, {'ok': True})])
+        self.assertEqual(code, 0, out)
+        method, path, body = calls[1]
+        self.assertEqual((method, path, body['revision']), ('PUT', '/api/board/2026-11-16/picks/mon-lock-words', 2))
+        doc = body['body']
+        self.assertEqual((doc['kind'], doc['via'], doc['approved'], doc['words'], doc['lock_path']),
+                         ('sign_lock', 'words', True, 'Yes, lock it.', 'docs/plans/2026-11-16-week/narrative-lock-mon.md'))
+        text = self.lock.read_text(encoding='utf-8')
+        self.assertEqual(doc['lock_sha256'], making.lock_body_hash(text))
+        self.assertEqual(making.lock_signature(text), ('Yes, lock it.', '2026-11-13', making.lock_body_hash(text)))
+        self.assertIn('Approved in your words', out)
+
+    def test_scripts_carry_each_cut_its_title_and_folder(self):
+        long = Path(self.tmp.name) / 'long.md'
+        long.write_text('Oracle just borrowed another twenty billion dollars.', encoding='utf-8')
+        code, out, calls, _ = run([PIECE, 'approve', 'scripts', '--week', '2026-11-16', '--day', 'mon', '--long', str(long),
+                                   '--long-title', 'Mon 16 Nov - 5-minute - Oracle', '--folder-title', 'Mon 16 Nov follow.the.money - Oracle', *self.SAID],
+                                  [(200, {'documents': []}), (200, {'ok': True, 'send': {'status': 'held', 'error': 'not checked yet'}})])
+        self.assertEqual(code, 0, out)
+        doc = calls[1][2]['body']
+        self.assertEqual((calls[1][1], doc['kind'], doc['texts'], doc['titles']),
+                         ('/api/board/2026-11-16/picks/mon-scripts-words', 'approve_scripts', {'long': 'Oracle just borrowed another twenty billion dollars.'},
+                          {'long': 'Mon 16 Nov - 5-minute - Oracle'}))
+        self.assertIn('Teleprompter: held', out)
+
+    def test_nothing_else_is_carried_and_never_without_his_words(self):
+        for argv, why in (([PIECE, 'approve', 'idea', '--week', '2026-11-16', '--day', 'mon', *self.SAID], 'typed approval counts for nothing else'),
+                          ([PIECE, 'approve', 'lock', '--week', '2026-11-16', '--day', 'mon', '--lock', str(self.lock),
+                            '--words', '', '--said-at', '2026-11-13T09:10:00Z', '--where', 'x', '--session-ref', 'https://a'], '--words'),
+                          ([PIECE, 'approve', 'lock', '--week', '2026-11-16', '--day', 'mon', '--lock', str(self.lock),
+                            '--words', 'yes', '--said-at', 'today', '--where', 'x', '--session-ref', 'https://a'], '--said-at')):
+            code, out, calls, _ = run(argv, [])
+            self.assertEqual(code, 1, argv)
+            self.assertIn(why, out)
+            self.assertEqual(calls, [])
+        # A lock already signed with other words is not carried as these.
+        self.lock.write_text(self.lock.read_text(encoding='utf-8') + '\nSigned by Krish: "Something else.", 2026-11-12\n', encoding='utf-8')
+        code, out, calls, _ = run([PIECE, 'approve', 'lock', '--week', '2026-11-16', '--day', 'mon', '--lock', str(self.lock), *self.SAID], [])
+        self.assertEqual((code, calls), (1, []))
+        self.assertIn('already signed with other words', out)
+
+
 if __name__ == '__main__':
     unittest.main()
