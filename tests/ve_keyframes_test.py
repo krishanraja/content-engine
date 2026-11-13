@@ -46,10 +46,15 @@ class StingLeadTest(unittest.TestCase):
 
         beat = {'id': 'hook', 'fromFrame': 0, 'toFrame': 60, 'keyFrame': 48}
         with patch.object(kf.subprocess, 'run', side_effect=run):
-            self.assertEqual(kf._frame('cut.mp4', beat, 56)[1], 48, 'the frame it reports is the props\' frame')
+            self.assertEqual(kf._frame('cut.mp4', beat, {'sting': {'frames': 56}})[1], 48, 'the frame it reports is the props\' frame')
             kf._frame('cut.mp4', beat)
+            # The sting after the hook (atFrame 60): the hook's key frame is where it is, a later beat's 56 frames on.
+            kf._frame('cut.mp4', beat, {'sting': {'frames': 56, 'atFrame': 60}})
+            kf._frame('cut.mp4', {'id': 'b1', 'fromFrame': 60, 'toFrame': 120, 'keyFrame': 90}, {'sting': {'frames': 56, 'atFrame': 60}})
         self.assertIn('select=eq(n\\,104)', calls[0])
         self.assertIn('select=eq(n\\,48)', calls[1])
+        self.assertIn('select=eq(n\\,48)', calls[2])
+        self.assertIn('select=eq(n\\,146)', calls[3])
         self.assertEqual(qc.lead_frames({'sting': {'frames': 56}}), 56)
         self.assertEqual(qc.lead_frames({'beats': []}), 0)
 

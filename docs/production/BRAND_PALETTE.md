@@ -23,7 +23,7 @@ format is refused before it renders. Only Krish changes the palette, and only in
 | The marks | The icon (`mark.png`), the masthead and the wordmark, by sha256 | `config/brand-palette.json` `marks`; the files are in krishanraja/makeyourmindup `apps/cover/public/brand` |
 | The wide close | `statement_card`: "Built to help you decide.", masthead, days, Subscribe free, address; 6 s, held for YouTube's end screen | `scripts/quick-edit/kit/endcard.html` (wide); ve `apps/renderer/src/engine/chrome/EndingBand.tsx` |
 | The tall close | `statement_beat`: the same words, at most 2 s, every word inside the tall core box x 120 to 820, y 330 to 1180 | `scripts/quick-edit/kit/endcard.html` (tall); ve `EndingBand.tsx` (`ENDING_TIMING_TALL`), its length `ENDING_FRAMES_BY_ASPECT` in `scripts/velib/compile.py` |
-| The sting | Paused (Krish, 12 Nov 2026): no cut wears it. When it returns it plays after the hook, on a series day's long cut only | `config/intro-sting.json` (`paused`; clips in the Drive brand kit) |
+| The sting | Paused (Krish, 12 Nov 2026): no cut wears it. Built after the hook in ve on 13 Nov; it returns when he approves its proof render, on a series day's long cut only | `config/intro-sting.json` (`paused`; clips in the Drive brand kit); ve `compile.hook_end`, `VeCut.tsx` |
 | The carousel close | `house_close_slide`: the piece's takeaway, Subscribe free, the wordmark small in the bottom right | krishanraja/growth-makeyourmindup `render/templates/carousel-close.html` |
 
 ## The days
@@ -77,12 +77,22 @@ One-off piece scripts (`docs/plans/*/rebuild`, `short-composite`, `build_cut.py`
 
 ## The sting, paused
 
-Krish, 12 Nov 2026: "Happy with your recommendations". Long cuts open on the hook with no sting until the sting
-after the hook is built and he approves its proof render. `config/intro-sting.json` carries the pause (`paused`),
-and `intro.wanted`, ve compile's `sting_props` and `sting_problems`, and ve lint all read it. His 5 Nov approval and the
-clips are kept. To bring the sting back after the hook: lay it after the hook in both engines (every check that maps a
-frame of the file back to the cut, `velib.qc.lead_frames` and its callers, the premix lead in `velib.audio.premix`,
-`sting_problems`, the opening gate, and make.py's audio graph), prove it on his own take (F04, F13), then remove the
-pause and set the palette's long cut `sting` to `after_hook`, both on his words.
+Krish, 12 Nov 2026: "Happy with your recommendations". Long cuts open on the hook with no sting until he approves
+the proof render of the sting after the hook. `config/intro-sting.json` carries the pause (`paused`), and
+`intro.wanted`, ve compile's `sting_props` and `sting_problems`, QC's opening row and ve lint all read it. His 5 Nov
+approval and the clips are kept.
+
+**Built in ve, 13 Nov 2026.** Compile puts the sting on the frame after the hook (`compile.hook_end`, the end of beat 0;
+the hook must run at least 3 s so the opening gate measures the hook, never the sting). The render draws the hook, the
+clip, then the cut on (`VeCut.tsx`); premix lays the sting's frames of silence there and lifts the bed under them; every
+check maps a cut frame to the file through `velib.qc.to_file`. A sting in front of the hook is refused. Proved on the ve
+fixture with a stand-in clip; not yet on his take.
+
+**Not built in quick-edit.** make.py still lays any intro in front of the hook, and the palette guard refuses that, so
+quick-edit's wide cuts stay on the hook with no sting. When the pause lifts, a series long cut wants the sting, so it
+goes through ve, or quick-edit gains the same splice first.
+
+To bring it back: render one series long cut through ve on his own take, with the sting after the hook (F04, F13), let
+him watch it, then remove the pause and set the palette's long cut `sting` to `after_hook`, both on his words.
 
 Both tall closes, kit's and ve's, are the palette's 2 s beat, and an off-day close shows no series days.

@@ -406,7 +406,8 @@ class QCContracts(unittest.TestCase):
                                         {'fromFrame': 116, 'toFrame': 176, 'trimBeforeFrames': 116}])
         # The sting to his face is not a take join; the join between takes is the sting's frames later.
         self.assertEqual(after['joins'], [(60 + 56) / 30])
-        self.assertEqual(after['plate_offset'], 900 - 56)
+        # The plate under each beat is read the beat's shift back: 56 frames for every beat behind a sting in front.
+        self.assertEqual((after['plate_offset'], [b['shift'] for b in after['beats']]), (900, [56, 56]))
         self.assertEqual(after['opening'], qc.opening_view(stinged))
         self.assertEqual(stinged['beats'][0]['fromFrame'], 0, 'the props are never changed')
         # ve qc --edl: the EDL's joins are on the cut's own clock, so they move by the sting too.
@@ -446,6 +447,8 @@ class OpeningRowTest(unittest.TestCase):
                    '-pix_fmt', 'yuv420p', path)
         cls.stem = cls.work / 'stem.wav'
         cls.stem.with_suffix('.bed.json').write_text(json.dumps({'lead_frames': 56}), encoding='utf-8')
+        cls.after_stem = cls.work / 'stem-after-hook.wav'
+        cls.after_stem.with_suffix('.bed.json').write_text(json.dumps({'lead_frames': 56, 'sting_at_frame': 60}), encoding='utf-8')
 
     def joined(self, name, first, cut, hold=0):
         """first's frames, its last held `hold` more frames, then the cut, keeping the cut's frame count."""
@@ -456,33 +459,50 @@ class OpeningRowTest(unittest.TestCase):
                'ultrafast', '-pix_fmt', 'yuv420p', out)
         return str(out)
 
-    def view(self, aspect='16:9', sting=True, label='mind.the.gap', trim=0):
+    def spliced(self, name, at=60):
+        """The cut's frames to `at`, the mind_the_gap sting, then the cut on from `at`: the sting after the hook."""
+        out = self.work / name
+        ffmpeg('-i', self.wide_cut, '-i', self.clip['16x9', 'mind_the_gap'], '-filter_complex',
+               f'[0:v]split[a][b];[a]trim=end_frame={at},setpts=PTS-STARTPTS[h];[b]trim=start_frame={at},setpts=PTS-STARTPTS[r];'
+               '[1:v]setpts=PTS-STARTPTS[s];[h][s][r]concat=n=3:v=1:a=0[v]', '-map', '[v]', '-c:v', 'libx264', '-preset',
+               'ultrafast', '-pix_fmt', 'yuv420p', out)
+        return str(out)
+
+    def view(self, aspect='16:9', sting=True, label='mind.the.gap', trim=0, at=None):
         entry = self.cfg['clips']['16x9']['mind_the_gap']
+        stem = self.after_stem if at else self.stem
         return {'aspect': aspect, 'fps': 30, 'durationFrames': 120, 'ending': {'fromFrame': 90, 'url': 'makeyourmindup.ai'},
-                'series': {'label': label}, 'audio': {'stem': {'src': str(self.stem), 'trimBeforeFrames': trim}},
+                'series': {'label': label}, 'audio': {'stem': {'src': str(stem), 'trimBeforeFrames': trim}},
                 'sting': {'src': str(self.clip['16x9', 'mind_the_gap']), 'series': 'mind_the_gap', 'frames': 56,
-                          'sha256': entry['sha256']} if sting else None}
+                          'sha256': entry['sha256'], **({'atFrame': at} if at else {})} if sting else None}
 
     def row(self, path, view, config=None):
         env = {self.intro.CONFIG_ENV: str(config or self.approved), self.intro.CLIPS_ENV: str(self.clips)}
         with patch.dict('os.environ', env):
             return qc_opening.opening(path, view)
 
-    def test_the_approved_sting_then_his_cut_on_the_very_next_frame_passes(self):
-        path = self.joined('stinged.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut)
-        row = self.row(path, self.view())
+    def test_the_hook_then_the_approved_sting_then_his_cut_on_the_very_next_frame_passes(self):
+        # config/brand-palette.json long_cut sting after_hook: the file opens on the hook, the sting follows it.
+        path = self.spliced('stinged.mp4')
+        row = self.row(path, self.view(at=60))
         self.assertTrue(row['pass'], row)
         value = row['value']
-        self.assertEqual((value['opening'], value['lead_frames'], value['file_frames']), ('sting', 56, 176))
+        self.assertEqual((value['opening'], value['lead_frames'], value['sting_at_frame'], value['file_frames']),
+                         ('hook', 0, 60, 176))
         self.assertTrue(value['sting_frames']['all_same'])
         self.assertLessEqual(value['sting_frames']['worst_mad'], qc_opening.MATCH_MAD_MAX)
         self.assertFalse(value['first_cut_frame_vs_sting_last']['same'])
         # Through run_qc, as ve qc runs it.
         with patch.object(qc_opening, 'opening', wraps=qc_opening.opening) as measured, \
                 patch.dict('os.environ', {self.intro.CONFIG_ENV: str(self.approved), self.intro.CLIPS_ENV: str(self.clips)}):
-            report = qc.run_qc(path, 'scoreboard-test', opening=self.view())
+            report = qc.run_qc(path, 'scoreboard-test', opening=self.view(at=60))
         measured.assert_called_once()
         self.assertTrue(report['checks']['opening']['pass'], report['checks']['opening'])
+        # The same sting in front of the hook is the retired opening: refused, though the clip is his to the frame.
+        front = self.row(self.joined('in-front.mp4', self.clip['16x9', 'mind_the_gap'], self.wide_cut), self.view())
+        self.assertIn('in front of the hook, which is retired', ' '.join(front['problems']))
+        # A sting where the props do not put it, or a hook cut short by it, fails frame for frame.
+        self.assertIn('frame for frame', ' '.join(self.row(self.spliced('early.mp4', at=40), self.view(at=60))['problems']))
 
     def test_another_series_sting_a_held_frame_or_a_short_file_fails(self):
         other = self.joined('other.mp4', self.clip['16x9', 'follow_the_money'], self.wide_cut)
@@ -515,7 +535,7 @@ class OpeningRowTest(unittest.TestCase):
         self.assertIn('opens on the under_the_hood 9x16 sting', found)
         self.assertIn('something is in front of it', found)
         # Once the sting is approved, a wide whole series cut left on its hook was compiled before the approval.
-        self.assertIn('the approved sting should open it',
+        self.assertIn('the approved sting should follow its hook',
                       ' '.join(self.row(str(self.wide_cut), self.view(sting=False))['problems']))
         # A proof window keeps its ending and trims the stem: it is not a whole cut, and opens on no sting.
         self.assertTrue(self.row(str(self.wide_cut), self.view(sting=False, trim=200))['pass'])

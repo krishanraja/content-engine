@@ -176,9 +176,16 @@ def build(cut, *, piece_id: str, library_path: str, props, spec, take_words, voi
     # the frame his cut starts on. On the 16:9 whole cut of a weekly series piece that is the frame after the intro
     # sting (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"), whose frames the
     # props carry; the receipt records it, and delivery holds a result measured from any other frame.
-    lead = int((composed.get('sting') or {}).get('frames') or 0)
-    receipt['opening'] = ({'kind': 'sting', 'lead_frames': lead, 'series': composed['sting'].get('series'),
-                           'clip_sha256': composed['sting'].get('sha256')} if lead else {'kind': 'hook', 'lead_frames': 0})
+    # From 16 Nov the sting follows the hook (props.sting.atFrame; config/brand-palette.json long_cut sting after_hook),
+    # so the file opens on the hook at frame 0 and the gate measures from there; the receipt names where the sting sits.
+    sting = composed.get('sting') or {}
+    at = int(sting.get('atFrame') or 0)
+    lead = 0 if at else int(sting.get('frames') or 0)
+    receipt['opening'] = ({'kind': 'sting', 'lead_frames': lead, 'series': sting.get('series'), 'clip_sha256': sting.get('sha256')}
+                          if lead else {'kind': 'hook', 'lead_frames': 0,
+                                        **({'sting': {'at_frame': at, 'frames': int(sting.get('frames') or 0),
+                                                      'series': sting.get('series'), 'clip_sha256': sting.get('sha256')}}
+                                           if sting else {})})
     checks['opening'] = opening_check(cut, lead, int(composed.get('fps') or 30))
 
     report = json.loads(Path(qc).read_text(encoding='utf-8'))

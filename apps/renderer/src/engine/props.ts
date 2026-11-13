@@ -82,6 +82,10 @@ export const EngineStingSchema = z.object({
   series: z.enum(['follow_the_money', 'mind_the_gap', 'under_the_hood']),
   frames: z.number().int().positive(),
   sha256: z.string().regex(/^[0-9a-f]{64}$/),
+  /** The cut's own frame the sting plays at: the hook's last frame + 1 (config/brand-palette.json long_cut sting
+   *  after_hook; SOCIAL-BEST-PRACTICES-2026 section 4.3, a brand sting follows the hook, never precedes it). Absent or 0
+   *  is the retired sting in front of the cut, kept so props made that way still render as they were. */
+  atFrame: z.number().int().nonnegative().optional(),
 }).strict()
 
 export const EngineRenderPropsSchema = z.object({
@@ -112,11 +116,11 @@ export const EngineRenderPropsSchema = z.object({
     days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional() }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
-  /** The makeyourmindup intro sting in front of the cut (Krish, 2026-11-05: "I think it should go at the start of the
-   *  longer wide videos 100%,"): one of the fixed clips in config/intro-sting.json, played as it is for its `frames`,
-   *  silent, with the stem under it. Every other frame in these props stays on the cut's own clock, which starts
-   *  `frames` into the render, so his face lands on the very next frame after the sting's last. Absent, the cut
-   *  opens on its hook exactly as before. */
+  /** The makeyourmindup series sting (config/intro-sting.json, one fixed clip per series), played as it is for its
+   *  `frames`, silent, with the stem under it, straight after the hook (`atFrame`; config/brand-palette.json). Every
+   *  other frame in these props stays on the cut's own clock: the hook draws on the render's frames [0, atFrame), the
+   *  sting on the next `frames`, and the cut goes on from its frame atFrame on the very next frame after the sting's
+   *  last. Absent, the cut has no sting. */
   sting: EngineStingSchema.optional(),
   /** A wide cut that opens on its own episode card where the sting would be, by Krish's word for that piece (spec
    *  brand.opening_exception; Krish, 2026-11-09: "I want the episode card to come in."). Nothing is drawn from it: the
@@ -129,6 +133,13 @@ export const EngineRenderPropsSchema = z.object({
   // (HOOK_IS_THE_INTRO), a proof excerpt (no ending band) is never a whole cut, and an off day wears no sting.
   if (props.aspect !== '16:9') context.addIssue({ code: 'custom', path: ['sting'], message: 'the sting opens only the 16:9 long cut; the 9:16 short opens on its hook' })
   if (!props.ending) context.addIssue({ code: 'custom', path: ['sting'], message: 'the sting opens only a whole cut, never an excerpt' })
+  const at = props.sting.atFrame ?? 0
+  if (at >= props.durationFrames || (props.ending && at >= props.ending.fromFrame)) {
+    context.addIssue({ code: 'custom', path: ['sting', 'atFrame'], message: 'the sting follows the hook, inside the cut and before its close' })
+  }
+  if (at > 0 && !props.beats.some((beat) => beat.fromFrame === at)) {
+    context.addIssue({ code: 'custom', path: ['sting', 'atFrame'], message: 'the sting plays on a beat boundary: the frame after the hook\'s last' })
+  }
   if (props.sting.series !== props.series.label.replaceAll('.', '_')) {
     context.addIssue({ code: 'custom', path: ['sting', 'series'], message: `the ${props.sting.series} sting cannot open the ${props.series.label} cut` })
   }
