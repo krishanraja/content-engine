@@ -165,7 +165,7 @@
     },
     "openings": {
       "story_standoff_intro": "the 3.5 s story intro card (retired 29 Oct, HOOK_IS_THE_INTRO)",
-      "sting_before_hook": "the series sting in front of the hook (5 Nov to 12 Nov); it now follows the hook",
+      "sting_before_hook": "the series sting in front of the hook (5 Nov to 12 Nov); retired for good on 12 Nov (Ruling, Krish: \"Nothing before the hook, ever. Remove the sting exception for good.\")",
       "opening_logo": "make.py's 3 s opening logo"
     },
     "match": [
@@ -192,10 +192,11 @@
         "close": "statement_card",
         "days_row": true,
         "sting_when_built": "after_hook",
-        "sting_paused": {
+        "sting_retired": {
           "on": "2026-11-12",
-          "words": "Happy with your recommendations and yes go for the profile links as well.",
-          "see": "config/intro-sting.json paused"
+          "words": "Nothing before the hook, ever. Remove the sting exception for good.",
+          "see": "config/intro-sting.json (retired)",
+          "means": "No cut carries anything in front of its hook. A sting after the hook would be a new design, built and approved by him first; none is."
         }
       },
       "off": {

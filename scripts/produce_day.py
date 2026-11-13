@@ -28,8 +28,8 @@ Nothing here needs H:. Every input comes from the engine:
   - the music:              scripts/quick-edit/music.py fetch
   - the pictures:           GET /api/library/file for the post's pack, staged where plan_files.py looks
   - the story outro:        scripts/quick-edit/story_io.py, from the plan's cover-facts.json
-  - the intro sting:        scripts/quick-edit/intro.py fetch, once Krish approves it: the long (wide) cut opens on it,
-                            the short cut on the hook (house rule HOOK_IS_THE_INTRO)
+  - the intro sting:        none: it is retired for good, and every cut opens on its hook (house rule HOOK_IS_THE_INTRO;
+                            Ruling, Krish, 2026-11-12: "Nothing before the hook, ever.")
 
 A fix Krish calls out in words ("in the short version, I botched from 1m11s
 to 1m15s and restarted my sentence", 2026-10-14) sits beside post.json in
@@ -221,18 +221,17 @@ def fetch_music():
 
 
 def fetch_sting():
-    """The intro sting's clips from the library, once Krish approves it (Krish,
-    2026-11-05: "I think it should go at the start of the longer wide videos
-    100%,"): make.py puts it in front of the long cut and stops that cut's
-    render without it. While it is a candidate the long cut opens on the hook
-    and nothing is fetched."""
+    """Nothing, ever: the intro sting is retired for good (Ruling, Krish,
+    2026-11-12: "Nothing before the hook, ever. Remove the sting exception for
+    good."), so every cut opens on its hook and no clip is fetched. The config
+    is still read, so one that cannot be read stops the run."""
     import intro  # noqa: PLC0415  scripts/quick-edit/intro.py
     try:
         cfg = intro.load()
     except intro.IntroError as e:
         raise Stop(f'the intro sting\'s config cannot be read: {e}')
-    if cfg['status'] != 'approved' or SHAPE['long'] not in cfg['shapes']:
-        log(f'the intro sting is {cfg["status"]}: the long cut opens on the hook until Krish approves it')
+    if cfg['status'] != 'approved' or SHAPE['long'] not in cfg['shapes'] or not intro.wanted(SHAPE['long'], 'follow_the_money'):
+        log(f'the intro sting is {cfg["status"]}: every cut opens on its hook, with nothing before it')
         return False
     p = run([PY, 'scripts/quick-edit/intro.py', 'fetch'], ok=(0, 2), what='getting the intro sting')
     if p.returncode != 0:
@@ -302,9 +301,8 @@ def fetch_pictures(post_path):
 
 def story_clips(post_path, work):
     """The story outro rendered for this piece, both shapes. No story intro
-    (house rule HOOK_IS_THE_INTRO): the short cut opens straight on the hook,
-    and make.py puts the house intro sting in front of the long cut once Krish
-    approves it (fetch_sting); nothing else goes in front."""
+    (house rule HOOK_IS_THE_INTRO): both cuts open straight on the hook, and
+    nothing goes in front (Ruling, Krish, 2026-11-12)."""
     cfg = json.loads(STORY_CONFIG.read_text(encoding='utf-8'))
     approved = cfg.get('approved') or {}
     words = approved.get('words') if isinstance(approved, dict) else None
@@ -380,8 +378,8 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, work, dry_run):
             cfg['remove'] = (cfg.get('remove') or []) + removals
             cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
             log(f'the {cut} cut takes out what Krish called out: {removals}')
-    # The music is sized to the long cut as it will run (trimmed, with the
-    # intro sting in front once Krish approves it, and the story outro), not to
+    # The music is sized to the long cut as it will run (trimmed, nothing in
+    # front of the hook, and the story outro), not to
     # its raw take, and both cuts ask for the same. A track shorter than that
     # starts again under a crossfade (music.py), so the bed never drops out.
     probe = run([PY, 'scripts/quick-edit/make.py', kit / 'long.json', '--out', work / 'long', '--only', '16x9', '--plan'],
@@ -420,7 +418,7 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, work, dry_run):
             log(f'the {cut} cut: no line found for {", ".join(report["missing_cues"])}; those pictures are left out')
         if not (report.get('shapes', {}).get(shape) or {}).get('music'):
             raise Stop(f'the {cut} cut would go out without music: ' + '; '.join((report.get('shapes', {}).get(shape) or {}).get('warnings') or []))
-        # Once Krish approves the sting, the long cut opens on it or does not go (make.py stops its render too).
+        # Nothing goes in front of the hook: a cut handed anything there does not go (make.py stops its render too).
         stop = (report.get('shapes', {}).get(shape) or {}).get('opening_stop')
         if stop:
             raise Stop(f'the {cut} cut: {stop}')
@@ -662,8 +660,8 @@ def main():
             clips = {}
             rendered = make_cuts(post_path, piece, takes_at, music_root, clips, work, a.dry_run)
         if a.dry_run:
-            log('dry run: both cuts planned with music and the house close, the short opening on the hook and the long on the intro sting '
-                'once Krish approves it; nothing rendered, sent or recorded')
+            log('dry run: both cuts planned with music and the house close, each opening on its hook with nothing before it; '
+                'nothing rendered, sent or recorded')
             return 0
         thumb = thumbs(post_path, work)
         folder = file_and_record(post_path, piece, rendered, thumb, work)

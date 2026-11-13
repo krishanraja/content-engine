@@ -179,6 +179,10 @@
       "destination": "/api/board?week=:week&op=uploads"
     },
     {
+      "source": "/api/board/:week/judge",
+      "destination": "/api/board?week=:week&op=judge"
+    },
+    {
       "source": "/api/board/:week/posted",
       "destination": "/api/board?week=:week&op=posted"
     },

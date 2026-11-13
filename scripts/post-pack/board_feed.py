@@ -423,7 +423,7 @@ def check(ideas, sources, week_board, plans=None):
     return (week_board.coverage_problems(ideas, style_answered(ideas, sources)) + week_board.style_problems(ideas)
             + halves + locked_problems(ideas, sources) + repeat_problems(ideas, sources)
             + readback_problems(ideas, sources) + goodnews_problems(ideas, sources)
-            + [f['line'] for f in wave1(ideas, sources, plans) if f['code'] not in HALVES_CODES and f['code'] != 'warned'])
+            + [f['line'] for f in wave1(ideas, sources, plans) if f['code'] not in HALVES_CODES and f['code'] not in idea_checks.NOTE_CODES])
 
 
 HALVES_CODES = ('press_refuses', 'not_his', 'his_empty', 'no_engine')
@@ -494,12 +494,44 @@ def wave1(ideas, sources, plans=None, p6=None):
 
 def gate(week, ideas_path=None, plans=None):
     """The findings that fail the Sunday run (idea_checks.GATE_CODES), each a line, and the warnings shown beside them."""
+    report = gate_report(week, ideas_path, plans)
+    return report['problems'], report['warned']
+
+
+def gate_report(week, ideas_path=None, plans=None, base_path=None):
+    """The gate, every line it read: {problems (they fail the run), warned, ticks (an idea from his tick on a subject he
+    refused: shown to him, never failing; Ruling, Krish, 2026-11-12), before}. With base_path (the week's ideas.json as it
+    stood before a run that adds one idea, the Inspiration piece run), a problem the board already had is moved to
+    before: it is the week's own, reported and never this run's to answer. Without it, the gate is the Sunday gate."""
     wk = monday(week).isoformat()
     folder = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week'
     sources = json.loads((folder / 'sources.json').read_text(encoding='utf-8'))
     ideas = json.loads(Path(ideas_path or folder / 'ideas.json').read_text(encoding='utf-8'))
     found = wave1(ideas, sources, plans)
-    return [f['line'] for f in found if f['code'] in idea_checks.GATE_CODES], [f['line'] for f in found if f['code'] == 'warned']
+    problems = [f['line'] for f in found if f['code'] in idea_checks.GATE_CODES]
+    before = []
+    if base_path:
+        had = {f['line'] for f in wave1(json.loads(Path(base_path).read_text(encoding='utf-8')), sources, plans) if f['code'] in idea_checks.GATE_CODES}
+        before = [p for p in problems if p in had]
+        problems = [p for p in problems if p not in had]
+    return {'problems': problems, 'warned': [f['line'] for f in found if f['code'] == 'warned'],
+            'ticks': [f['line'] for f in found if f['code'] == 'his_tick'], 'before': before}
+
+
+def tick_notes(week, plan, piece_id, plans=None):
+    """What the option from his tick (the one whose id is piece_id) carries about each subject he refused that it is on:
+    [{subject, said, at, via, ref}], his words exactly, newest first, for the board and To approve to show beside it
+    (Ruling, Krish, 2026-11-12: his own tick outranks an older refusal; the idea comes to him with the refusal shown, and
+    only his Approve places it). [] when it touches none. Raises OSError when the week has no sources.json."""
+    wk = monday(week).isoformat()
+    sources = json.loads((Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week' / 'sources.json').read_text(encoding='utf-8'))
+    shown_text, _ = plans_reader(plans)
+    pid = str(piece_id).lower()
+    opts = [o for o in idea_checks.board_options(plan) if (o.get('idea_id') or str(o.get('off_id') or '').lower()) == pid]
+    refused = idea_checks.refusals_from(sources, shown_text)
+    found = idea_checks.refused_findings(opts, refused, idea_checks.his_ids(sources), idea_checks.his_words(sources),
+                                         (sources or {}).get('unvetoed') or [])
+    return [f['note'] for f in found if f['code'] == 'his_tick']
 
 
 SERIES_DAY = {'follow_the_money': 'mon', 'under_the_hood': 'wed', 'mind_the_gap': 'fri'}
@@ -844,6 +876,7 @@ def main(argv=None):
     gt = sub.add_parser('gate', help='the checks that fail the Sunday run: a subject he refused, a warned option placed first, a return no deeper')
     gt.add_argument('week', help='the Monday the week starts on, YYYY-MM-DD')
     gt.add_argument('--ideas', help='an ideas file other than docs/plans/<Monday>-week/ideas.json')
+    gt.add_argument('--base', help='the week\'s ideas.json before a run that adds one idea: what the board already had is reported, never this run\'s to answer')
     a = sub.add_parser('archive', help='the Archive (layout v3): every published piece and his scores, into docs/plans/<Monday>-week/archive.json')
     a.add_argument('week', help='the Monday of the board, YYYY-MM-DD')
     sub.add_parser('self-test')
@@ -880,14 +913,21 @@ def main(argv=None):
         return 0
     if args.cmd == 'gate':
         try:
-            problems, warned = gate(args.week, args.ideas)
+            report = gate_report(args.week, args.ideas, base_path=args.base)
         except (FeedError, OSError, ValueError) as error:
-            print(f'board_feed gate: {error}', file=sys.stderr)
-            return 1
-        for line in warned:
+            # Not a refusal: the gate could not read the week. Exit 2, so no run says he refused something he did not.
+            print(f'board_feed gate: could not read the week: {error}', file=sys.stderr)
+            return 2
+        problems = report['problems']
+        for line in report['warned']:
             print(f'shown with his words: {line}')
+        for line in report['ticks']:
+            print(line)
+        for line in report['before']:
+            print(f'on the board before this run, the week\'s own and not this run\'s to answer: {line}')
         print('gate: ' + ('REFUSED:\n  ' + '\n  '.join(problems) if problems else 'nothing he refused is offered again, no warned option leads its day, '
-                                                                                'and every return comes back deeper'))
+                                                                                'and every return comes back deeper'
+                                                                                + (' (in what this run added)' if args.base else '')))
         return 1 if problems else 0
     if args.cmd == 'cover':
         try:

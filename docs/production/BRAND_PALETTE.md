@@ -23,7 +23,7 @@ format is refused before it renders. Only Krish changes the palette, and only in
 | The marks | The icon (`mark.png`), the masthead and the wordmark, by sha256 | `config/brand-palette.json` `marks`; the files are in krishanraja/makeyourmindup `apps/cover/public/brand` |
 | The wide close | `statement_card`: "Built to help you decide.", masthead, days, Subscribe free, address; 6 s, held for YouTube's end screen | `scripts/quick-edit/kit/endcard.html` (wide); ve `apps/renderer/src/engine/chrome/EndingBand.tsx` |
 | The tall close | `statement_beat`: the same words, at most 2 s, every word inside the tall core box x 120 to 820, y 330 to 1180 | `scripts/quick-edit/kit/endcard.html` (tall); ve `EndingBand.tsx` (`ENDING_TIMING_TALL`), its length `ENDING_FRAMES_BY_ASPECT` in `scripts/velib/compile.py` |
-| The sting | Paused (Krish, 12 Nov 2026): no cut wears it. Built after the hook in ve on 13 Nov; it returns when he approves its proof render, on a series day's long cut only | `config/intro-sting.json` (`paused`; clips in the Drive brand kit); ve `compile.hook_end`, `VeCut.tsx` |
+| The sting | Retired for good (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."): no cut carries anything before its hook | `config/intro-sting.json` (`retired`; the clips stay in the Drive brand kit for the record) |
 | The carousel close | `house_close_slide`: the piece's takeaway, Subscribe free, the wordmark small in the bottom right | krishanraja/growth-makeyourmindup `render/templates/carousel-close.html` |
 
 ## The days
@@ -39,7 +39,7 @@ An asset on a series day that is not the week's series piece, and does not carry
 
 ## The formats, in one line each
 
-- **Long cut (16:9).** Opens on the hook, with no sting while it is paused (when it returns, it follows the hook on a series day). The body carries the icon tile only, with the series pill on section beats. Closes on `statement_card`.
+- **Long cut (16:9).** Opens on the hook, with nothing before it (the sting is retired). The body carries the icon tile only, with the series pill on section beats. Closes on `statement_card`.
 - **Short cut (9:16).** Opens on the hook, with no intro card and no sting. The body carries captions only: no icon, no wordmark, no pill. Closes on `statement_beat`, the only place a wordmark appears.
 - **Carousel (4:5).** Card 1 is the cover scene, with no logo at the top. Every card carries the wordmark small in the bottom right. The last card is `house_close_slide`.
 - **Meme and Notes image.** No logo at the top, and the wordmark small in the bottom right. No close.
@@ -75,24 +75,23 @@ One-off piece scripts (`docs/plans/*/rebuild`, `short-composite`, `build_cut.py`
 3. A one-off exception for one piece is `"palette_exception": "Krish, YYYY-MM-DD: <his words>"` in that cut's config. make.py prints it and lets the cut through. Nothing else lets a cut through.
 4. Never add a close, intro, mark position or colour anywhere except the palette.
 
-## The sting, paused
+## The sting, retired
 
-Krish, 12 Nov 2026: "Happy with your recommendations". Long cuts open on the hook with no sting until he approves
-the proof render of the sting after the hook. `config/intro-sting.json` carries the pause (`paused`), and
-`intro.wanted`, ve compile's `sting_props` and `sting_problems`, QC's opening row and ve lint all read it. His 5 Nov
-approval and the clips are kept.
+Krish, 12 Nov 2026, first: "Happy with your recommendations" (the sting paused until it could follow the hook); then,
+the same day, answering the openings question: "Nothing before the hook, ever. Remove the sting exception for good."
+`config/intro-sting.json` says `retired`; `intro.py` gives no cut a sting and refuses every approval, ve compile's
+`sting_props` lays none and `sting_problems` refuses props that carry one, ve lint and the contract refuse a spec that
+names one or an episode card in its place, and make.py leaves out any intro clip and stops a cut handed one. The
+palette's long cut keeps `sting_when_built: after_hook` as the record of the sheet he approved: a sting after the hook
+would be a new design, built, proved on his own take (F04, F13) and approved in his words first.
 
-**Built in ve, 13 Nov 2026.** Compile puts the sting on the frame after the hook (`compile.hook_end`, the end of beat 0;
-the hook must run at least 3 s so the opening gate measures the hook, never the sting). The render draws the hook, the
-clip, then the cut on (`VeCut.tsx`); premix lays the sting's frames of silence there and lifts the bed under them; every
-check maps a cut frame to the file through `velib.qc.to_file`. A sting in front of the hook is refused. Proved on the ve
-fixture with a stand-in clip; not yet on his take.
-
-**Not built in quick-edit.** make.py still lays any intro in front of the hook, and the palette guard refuses that, so
-quick-edit's wide cuts stay on the hook with no sting. When the pause lifts, a series long cut wants the sting, so it
-goes through ve, or quick-edit gains the same splice first.
-
-To bring it back: render one series long cut through ve on his own take, with the sting after the hook (F04, F13), let
-him watch it, then remove the pause and set the palette's long cut `sting` to `after_hook`, both on his words.
+**Built in ve, not switched on (13 Nov 2026, after Krish: "Can you sort out the sting now?").** ve can now play a
+sting straight after the hook and never in front of it: `compile.hook_end` (the end of beat 0, at least 3 s so the
+opening gate measures the hook), `props.sting.atFrame`, `VeCut.tsx` (hook, clip, then the cut on), premix's
+`sting_at_frame` (his voice to the hook's end, the sting's frames of silence, the bed lifted under them), and every check
+through `velib.qc.to_file`. A sting with no `atFrame` is refused everywhere. Nothing lays one: `sting_props` still
+gives no cut a sting and the config stays retired, so `sting_problems` refuses any sting. To use it, Krish approves a
+proof on his own take, in his words; then the config, `intro.py` and `sting_props` change to lay it after the hook.
+quick-edit cannot lay it.
 
 Both tall closes, kit's and ve's, are the palette's 2 s beat, and an off-day close shows no series days.

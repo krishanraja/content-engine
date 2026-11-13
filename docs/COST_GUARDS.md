@@ -66,6 +66,13 @@ stays, by hand only: capped at 150 turns and 120 minutes, one week's five storie
 stories are live. Neither makes a paid API call (no fact-check POST, no Perplexity, no generation), so the chain stays
 inside his $15 a week (Krish, 2026-10-29: "happy with $15 a week"); a run that would need one stops and says so.
 
+## The judges on Growth's carousels and Shorts
+
+Every carousel and Short Growth makes is judged by the draft judges' panel before it is made (Ruling, Krish,
+2026-11-12: "Judge them; count passes."; `apps/control-plane/api/board/_judge.ts`). Free checks run first and fail a post
+without a model call; a post judged before answers from `asset_judgements` and pays nothing; at most `DAILY_CAP` (40)
+panels a day are paid for, then the route answers 429 and Growth holds the slot. Each row records its `cost_usd`.
+
 ## The environment is the floor: a setting only Krish can change
 
 A fresh session in this cloud environment read **110k tokens on its first call** before any work (18 October;

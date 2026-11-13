@@ -196,7 +196,8 @@ field that nothing reads.
 Amended (Ruling, Krish, 2026-10-28): "Once I approve, the two scripts will go
 to teleprompter" and "Server sends directly". This replaces the 12 October
 "Yes, automatic": a cut's script is sent only when he presses Approve scripts
-for its day on the board, and the engine's server sends it
+for its day on the board, or approves them in his own typed words carried to
+the board as `picks/<day>-scripts-words` (Ruling (Krish, 2026-11-12): "Scripts and locks only. Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs your press, so that gate is unchanged."; `board_session.py approve`), and the engine's server sends it
 (`apps/control-plane/api/_teleprompter.ts`, `sendApprovedScripts`, with the
 `TELEPROMPTER_API_KEY` secret), refusing any text whose hash is not the one he
 approved and reading each script back. The never list above is unchanged:

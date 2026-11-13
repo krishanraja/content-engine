@@ -358,6 +358,22 @@ def approved_hashes(body):
     return {cut: sha for cut, sha in pairs if cut in ALL_CUTS and isinstance(sha, str) and making.SHA256.match(sha)}
 
 
+TYPED_SCRIPTS_ID = re.compile(r'^(mon|wed|fri)-scripts-words$')
+
+
+def typed_approval(doc):
+    """His typed approval of scripts, carried from a session (Ruling, Krish, 2026-11-12: "Typed approval counts for
+    locking a story and approving a script"): picks/<day>-scripts-words, kind approve_scripts, via words, his exact
+    words with when and where he typed them and the session link. It approves as his press does (the same as
+    _teleprompter.ts typedApproval)."""
+    body = doc.get('body') if isinstance(doc.get('body'), dict) else {}
+    words = body.get('words')
+    return bool(TYPED_SCRIPTS_ID.match(str(doc.get('id') or '')) and body.get('kind') == 'approve_scripts'
+                and body.get('via') == 'words' and body.get('approved') is True
+                and isinstance(words, str) and words.strip() and len(words) <= 2000 and _when(body.get('said_at'))
+                and str(body.get('said_where') or '').strip() and re.match(r'^https://\S+$', str(body.get('session_ref') or '')))
+
+
 def his_approval(piece_id, wanted, cfg, weeks, call=None):
     """Krish's approval of these exact words, read from the board:
     {cut: {'sha256', 'doc', 'week', 'at'}} for every cut in wanted, which
@@ -372,8 +388,8 @@ def his_approval(piece_id, wanted, cfg, weeks, call=None):
             body = doc.get('body') if isinstance(doc.get('body'), dict) else {}
             if str(body.get('piece_id') or '').lower() != piece_id:
                 continue
-            if doc.get('updated_by') != rule['writer']:
-                others += 1  # a session wrote it: never his press
+            if doc.get('updated_by') != rule['writer'] and not typed_approval(doc):
+                others += 1  # a session wrote it, and it is not his own typed words: never his approval
                 continue
             at = _when(doc.get('updated_at') or body.get('at')) or oldest
             withdrawn = body.get('approved') is False

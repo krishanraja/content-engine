@@ -371,16 +371,20 @@ describe('motion styles in the composition', () => {
   })
 })
 
-describe('the sting opens the wide long cut', () => {
-  // Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,". The 16:9 whole cut of a
-  // weekly series piece opens on its series' sting clip, and his face comes in on the very next frame after its last.
+describe('nothing goes before the hook on the wide long cut; a sting only after it', () => {
+  // Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for good." A sting in front
+  // of any cut is refused. The sting after the hook (sting.atFrame) is a new design: built here, laid by compile only
+  // once he approves it (config/intro-sting.json is retired; none is).
   const STING = { src: 'makeyourmindup-sting-16x9-mind_the_gap.mp4', series: 'mind_the_gap' as const, frames: 56, sha256: 'a'.repeat(64) }
-  function wide(sting: Record<string, unknown> | null = STING) {
-    return EngineRenderPropsSchema.parse({ ...structuredClone(fixture), aspect: '16:9',
-      segments: [{ src: 'take.mp4', trimBeforeFrames: 0, fromFrame: 0, durationFrames: 120 }],
-      audio: { stem: { src: 'stem.wav', trimBeforeFrames: 0 }, sfx: [{ src: 'hit.wav', atFrame: 10, gainDb: -6 }] },
-      ending: { fromFrame: 90, url: 'makeyourmindup.ai' }, ...(sting ? { sting } : {}) })
+  const raw = () => ({ ...structuredClone(fixture), aspect: '16:9',
+    segments: [{ src: 'take.mp4', trimBeforeFrames: 0, fromFrame: 0, durationFrames: 120 }],
+    audio: { stem: { src: 'stem.wav', trimBeforeFrames: 0 }, sfx: [{ src: 'hit.wav', atFrame: 10, gainDb: -6 }] },
+    ending: { fromFrame: 90, url: 'makeyourmindup.ai' } })
+  const refused = (change: Record<string, unknown>) => {
+    const result = EngineRenderPropsSchema.safeParse({ ...raw(), ...change })
+    return result.success ? '' : result.error.issues.map((issue) => issue.message).join('; ')
   }
+  const wide = (sting: Record<string, unknown> | null) => EngineRenderPropsSchema.parse({ ...raw(), ...(sting ? { sting } : {}) })
   /** What one render frame draws, read with Remotion's Sequence rule: a child mounts on [from, from + durationInFrames)
    *  and counts its own frames from `from`. VeCut, FormatMaster and EngineAudio are called, FormatMaster with the clock
    *  at its own frame (it reads it once); everything else is kept with its children. */
@@ -404,45 +408,18 @@ describe('the sting opens the wide long cut', () => {
   const brands = (nodes: ReactElement<Record<string, unknown>>[]) => nodes.filter((node) => node.type === BrandFrame)
     .map((node) => [(node.props.beat as EngineBeat).id, node.props.frame])
 
-  it('draws the sting clip, muted and full frame, on frames 0 to 55 and nothing of the cut', () => {
-    const props = wide()
-    for (let frame = 0; frame < 56; frame++) {
-      const nodes = at(createElement(VeCut, props), frame)
-      expect(pictures(nodes)).toEqual([[STING.src, null, true]])
-      expect(nodes.find((node) => node.type === OffthreadVideo)!.props.style).toMatchObject({ width: '100%', height: '100%' })
-      expect(nodes.some((node) => node.type === FormatMaster || node.type === BrandFrame)).toBe(false)
-    }
+  it('refuses a sting in front of any cut, even the series wide whole cut it used to open', () => {
+    expect(refused({ sting: STING })).toContain('Nothing before the hook, ever.')
+    expect(refused({ sting: { ...STING, atFrame: 0 } })).toContain('Nothing before the hook, ever.')
+    expect(refused({ sting: STING, aspect: '9:16' })).toContain('Nothing before the hook, ever.')
   })
 
-  it("draws beat 0's BrandFrame and his take's first frame on frame 56, on the cut's own clock", () => {
-    const props = wide()
-    const nodes = at(createElement(VeCut, props), 56)
-    expect(pictures(nodes)).toEqual([['take.mp4', 0, true]])
-    expect(brands(nodes)).toEqual([[props.beats[0]!.id, 0]])
-    expect(nodes.find((node) => node.type === BrandFrame)!.props.beat).toMatchObject({ fromFrame: 0, sectionBeat: true })
-    // FormatMaster never sees the sting and leaves the stem to the wrapper.
-    const master = nodes.find((node) => node.type === FormatMaster)!
-    expect(master.props).not.toHaveProperty('sting')
-    expect(master.props.stem).toBe(false)
-    // Every later render frame is the cut's frame 56 earlier, to its last; after it nothing of the cut is drawn.
-    for (const [render, beat, frame] of [[115, 'hook', 59], [116, 'call', 60], [175, 'call', 119]] as const) {
-      expect(brands(at(createElement(VeCut, props), render))).toEqual([[beat, frame]])
-    }
-    expect(at(createElement(VeCut, props), 176).some((node) => node.type === FormatMaster)).toBe(false)
-  })
-
-  it("plays the one stem from the render's frame 0 and keeps each sfx on the cut's clock", () => {
-    const props = wide()
-    for (const frame of [0, 55, 56, 175]) {
-      const stems = at(createElement(VeCut, props), frame).filter((node) => node.type === Audio && node.props.src === 'stem.wav')
-      expect(stems.map((node) => node.props.trimBefore)).toEqual([0])
-    }
-    const sfx = (frame: number) => at(createElement(VeCut, props), frame).some((node) => node.type === Audio && node.props.src === 'hit.wav')
-    expect([sfx(10), sfx(65), sfx(66)]).toEqual([false, false, true])
+  it('refuses an episode card in place of the sting', () => {
+    expect(refused({ opening: { kind: 'episode_card', said: 'I want the episode card to come in.', on: '2026-11-09' } }))
+      .toContain('an episode card in front of the cut')
   })
 
   it('plays the sting straight after the hook: the hook first, then the sting, then the cut goes on (atFrame)', () => {
-    // config/brand-palette.json long_cut sting after_hook (SOCIAL-BEST-PRACTICES-2026 section 4.3): never in front of it.
     const props = wide({ ...STING, atFrame: 60 })
     for (const [render, beat, frame] of [[0, 'hook', 0], [59, 'hook', 59]] as const) {
       const nodes = at(createElement(VeCut, props), render)
@@ -468,52 +445,20 @@ describe('the sting opens the wide long cut', () => {
   })
 
   it('takes the sting only on a beat boundary inside the cut, before its close', () => {
-    const refused = (atFrame: number) => {
-      const result = EngineRenderPropsSchema.safeParse({ ...wide(), sting: { ...STING, atFrame } })
-      return result.success ? '' : result.error.issues.map((issue) => issue.message).join('; ')
-    }
-    expect(refused(60)).toBe('')
-    expect(refused(30)).toMatch(/beat boundary/)
-    expect(refused(95)).toMatch(/before its close/)
+    expect(refused({ sting: { ...STING, atFrame: 60 } })).toBe('')
+    expect(refused({ sting: { ...STING, atFrame: 30 } })).toMatch(/beat boundary/)
+    expect(refused({ sting: { ...STING, atFrame: 95 } })).toMatch(/before its close/)
   })
 
-  it('changes nothing with no sting', () => {
+  it('opens the wide cut on its hook: with no sting VeCut is the cut itself, frame 0 his take', () => {
     const props = wide(null)
     const tree = VeCut(props)
     expect(tree.type).toBe(FormatMaster)
     expect(tree.props).toEqual(props)
-    expect(tree.props).not.toHaveProperty('stem')
-    expect(pictures(at(tree, 0))).toEqual([['take.mp4', 0, true]])
-    expect(brands(at(tree, 0))).toEqual([[props.beats[0]!.id, 0]])
-    expect(at(tree, 0).filter((node) => node.type === Audio).map((node) => node.props.src)).toEqual(['stem.wav'])
-  })
-
-  it('takes a sting only on a whole 16:9 cut of its own series', () => {
-    expect(EngineRenderPropsSchema.safeParse(wide()).success).toBe(true)
-    const refused = (change: Record<string, unknown>) => {
-      const result = EngineRenderPropsSchema.safeParse({ ...wide(), ...change })
-      return result.success ? '' : result.error.issues.map((issue) => issue.message).join('; ')
-    }
-    expect(refused({ aspect: '9:16' })).toContain('the 9:16 short opens on its hook')
-    expect(refused({ ending: undefined })).toContain('never an excerpt')
-    expect(refused({ sting: { ...STING, series: 'follow_the_money' } })).toContain('cannot open the mind.the.gap cut')
-    expect(refused({ series: { ...wide().series, label: 'off.day' } })).toContain('cannot open the off.day cut')
-    for (const sting of [{ ...STING, extra: 1 }, { ...STING, sha256: 'A'.repeat(64) }, { ...STING, frames: 0 }, { ...STING, series: 'off_day' }]) {
-      expect(refused({ sting })).not.toBe('')
-    }
-  })
-
-  it('runs the wide composition through VeCut, the sting then the cut, and leaves the tall one alone', () => {
     const compositions = elements(RemotionRoot()).filter((node) => node.type === Composition)
-    const composition = (id: string) => compositions.find((node) => node.props.id === id)!
-    const length = (id: string, props: unknown) =>
-      (composition(id).props.calculateMetadata as (input: { props: unknown }) => { durationInFrames: number })({ props }).durationInFrames
-    const render = (id: string, props: unknown) => (composition(id).props.component as (p: unknown) => ReactElement)(props)
-    expect(length('VeFormatMasterWide', wide())).toBe(56 + 120)
-    expect(length('VeFormatMasterWide', wide(null))).toBe(120)
-    expect(length('VeFormatMasterTall', fixture)).toBe(120)
-    expect(render('VeFormatMasterWide', wide()).type).toBe(VeCut)
-    expect(render('VeFormatMasterTall', fixture).type).toBe(FormatMaster)
+    const composition = compositions.find((node) => node.props.id === 'VeFormatMasterWide')!
+    const length = (composition.props.calculateMetadata as (input: { props: unknown }) => { durationInFrames: number })({ props }).durationInFrames
+    expect(length).toBe(120)
   })
 })
 

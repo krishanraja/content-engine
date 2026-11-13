@@ -164,12 +164,10 @@ The week of 19 October's queue notes are in `docs/history/2026-10-27-workbench-1
   then two fresh readers; `make-piece`, "The Scripts step").
 - Every video, in every format, gets its audio treatment and an animated
   outro card made for its own story; the animated story intro was retired on
-  2026-10-29 (house rule `HOOK_IS_THE_INTRO`). From 2026-11-05 the 16:9 long
-  cut of a series piece opened on the house sting (`config/intro-sting.json`),
-  then the hook; the 9:16 cut opens on its hook. Since 2026-11-12 the sting is
-  paused (its `paused` block, Krish: "Happy with your recommendations"): every
-  cut opens on its hook until the sting after the hook is built and he
-  approves its proof render.
+  2026-10-29 (house rule `HOOK_IS_THE_INTRO`). From 2026-11-05 to 2026-11-12
+  the 16:9 long cut of a series piece opened on the house sting; it is retired
+  for good (Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting exception for good."; `config/intro-sting.json`): every cut opens on its
+  hook, and nothing goes before it.
   His earlier words, 2026-10-12: "when the videos come back bear in mind that I want a proper
   animated branded intro to this specific story visually, the audio
   treatment, and then a proper animated outro card. Across all formats, and

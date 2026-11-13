@@ -130,6 +130,35 @@ What the database cannot tell: a writer holding the service key could still writ
 Nothing in a database tells a forged name from his press; the routes refuse every other writer, and the ledger names
 the revision every approval came from.
 
+## His typed approval: scripts and locks only (Ruling, Krish, 2026-11-12)
+
+Ruling (Krish, 2026-11-12): "Scripts and locks only. Typed approval counts for locking a story and approving a script;
+putting an idea on the publish board still needs your press, so that gate is unchanged." It narrows the earlier "one yes
+anywhere" (2026-11-02) for these two decisions and adds nothing else.
+
+- **What a session carries.** His exact typed words, verbatim, with when and where he typed them and the session's link,
+  as one board document per day: `picks/<day>-lock-words` (kind `sign_lock`, bound to the lock he approved by
+  `lock_path` and `lock_sha256`, `making.py lock_body_hash`) or `picks/<day>-scripts-words` (kind `approve_scripts`, the
+  exact words of each cut as the Approve scripts press carries them, with their Teleprompter titles and folder). Written
+  only with `python3 scripts/post-pack/board_session.py <uuid> approve lock|scripts ...` (the board session tools, on the
+  operator's key); `--sign` also writes his words as the lock's signature line when it has none, so `making.py`'s
+  narrative check and the board agree. `_contracts.ts` (`WORDS_ID`, `wordsBody`) holds the shape; a session's document
+  with `via: words` anywhere else is refused.
+- **What it does.** The board draws it as "Approved in your words: "...", Fri 13 Nov (where)" on the day's Narrative lock
+  or Scripts line, and the piece's path moves on as for his press. A lock's typed approval counts only while the lock on
+  the board is the text his words approved (its hash); a lock he signed in the file shows his signature words the same
+  way. Typed approval of scripts goes to his Teleprompter exactly as the Approve scripts press does (`afterPress`,
+  `sendApprovedScripts`, held until the scripts' check and two fresh readers have passed); the Teleprompter gate
+  (`_teleprompter.ts typedApproval`, `teleprompter_send.py typed_approval`) counts his press or this document, never
+  another session's.
+- **What it never does.** Put an idea on the publish board: his Approve on an idea (`picks/<day>`), his answers on the
+  ideas board (`queue`), and the database's gate (`idea_outcomes`, `content_ideas_board_gate`) are unchanged and stay his
+  presses alone (`hisOnlyRefusal`: `pick_is_his`, `press_is_his`). Nor any other decision (titles, publish, cuts, the
+  production gates), nor taking an approval back.
+
+Held by `tests/control-plane/board-typed-approval.test.ts` (the shape, who may write it, a typed approval that places
+nothing, the Teleprompter send, the board's words) and `tests/board_session_test.py`.
+
 ## His instruction: a ticked inspiration card (Ruling, Krish, 2026-11-12)
 
 Krish, 2026-11-12: "In my inspiration board can I have an option to tick a box that states that this isn't just random
@@ -161,6 +190,18 @@ creates, drops or closes one.
 - **The gate is untouched.** The idea waits for his Approve like every other; the run never sets a day, saves a pick or
   writes `decided`, and the database refuses any other placement. `tests/ideas-gate-db.mjs` tries it: an idea his ticked
   card made is refused a day by the run's own write and by a pick the run saves, and placed by his Approve only.
+- **His tick outranks an older refusal.** Ruling (Krish, 2026-11-12): his own tick outranks an older refusal; the idea
+  comes to him with the refusal shown, and only his Approve places it. `place` finds each refusal the idea is on
+  (`board_feed.tick_notes`, the same match as the gate) and writes it onto the option as `refused_before` (the
+  subject, his words exactly, the day, the ref); the board's view says it first on the option ("Turned down before: on
+  3 Nov you said ...", `tickNote` in `_viewExtras.ts`) and `offer` says it first in the week option's pitch, which To
+  approve shows. The gate prints it as a `his tick:` line and never fails on it. Every idea the engine proposes on its
+  own keeps the gate exactly as it was. The run's gate answers only for what the run added (`gate --base`, the week's
+  ideas before the run): what the week's own options already had is printed as "on the board before this run" and
+  never holds his idea. Every line says which refusal matched and why, and the run prints them all. On 12 Nov his tick
+  ("what kind of human qualities are going to result in job loss versus succeeding") was held because the 16 Nov
+  board, made before the gate existed, already failed it on its own Infosys Monday and two off-day returns; his idea
+  matched no refusal.
 - **Production: the style within a week.** An open Production tick comes first among the cards `ve init` offers a cut
   (`GET /api/inspiration/candidates`, for the roles it teaches, else look, motion and captions), with its
   `instruction` `{action_id, due_at, words}`. The next fitting cut names it in `brand.references` (failure F26's path,
@@ -250,6 +291,11 @@ Held by `tests/offday-items-db.mjs` (the migration on PGlite: no day without his
 Growth never over his row, moves append only) and `tests/control-plane/board-move.test.ts` (the one write, the route
 his press only, a move read back from the view, Growth's read, the Drive folder, the library and what is still
 scheduled, and Growth's own made, scheduled and live posts making the day done).
+
+**Growth asks the judges here too** (`POST /api/board/<Monday>/judge` on Growth's key; Ruling, Krish, 2026-11-12:
+"Judge them; count passes."): every carousel and Short is judged by the draft judges' panel before Growth makes it, a
+pass is bound to its Buffer post, and every sent post is reported so the judged ones count as live
+(`docs/GROWTH-HANDOFF.md`, "Every carousel and Short through the 10/10 judges"; `asset_judgements`).
 
 ## One post, one item (Ruling, Krish, 2026-11-12)
 
