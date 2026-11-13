@@ -1,0 +1,3 @@
+Status: The AEO packet ingest takes each venture's product: heartside, legibility and publication beside ctrl, circle, pulse, full-time and mindmake (`PRODUCT_SLUGS` in apps/control-plane/api/_growth.ts, docs/AEO-PACKET.schema.json, identical to AEO-Engine's and Control Center's copies), with no content lane of their own, so a venture engine's request for its own product's AI answers is researched by AEO-Engine and its packet is taken (Ruling, Krish, 2026-11-12: AEO-Engine is the one AI-answers specialist every venture's engine calls).
+Next: After AEO-Engine's research run of Sunday 2026-11-22, read back that a heartside or publication packet was taken by /api/aeo/ingest.
+North Star check (2026-11-12): holds.
