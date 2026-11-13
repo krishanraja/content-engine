@@ -1,0 +1,14 @@
+{
+  "card_id": "ve-gap-checklist-1",
+  "title": "checklist: numbered slots arrive blank, then fill one by one",
+  "goal": "From the Character.ai cut. Build device `checklist`: numbered empty slots arrive 2 frames apart, then each fills with its line on its own event (verb fill), a mint tick drawing on as it fills. Up to 6 slots. Fixture and test: blank arrival stagger and the fill order.\n\nPer devices/CONTRACT.md: index.tsx, state.ts, schema.ts, fixture.json, device.test.ts; register in registry.ts and config/ve/devices.json.",
+  "write_allow": "[apps/renderer/src/engine/devices/checklist/**, apps/renderer/src/engine/devices/registry.ts, apps/renderer/src/engine/props.ts, config/ve/devices.json]",
+  "read": "apps/renderer/src/engine/**, docs/ve/MOTION_STANDARD.md, docs/ve/INGREDIENTS.md, config/ve/design-lock.json, docs/ve/styles/character-ai-receipts.card.json",
+  "kind": "device",
+  "motion_style": "character-ai-receipts",
+  "contract": "Device rules: apps/renderer/src/engine/devices/CONTRACT.md. One clock (useCurrentFrame only in apps/renderer/src/engine/clock.ts). Pure functions of props, no Math.random, no wall clock. Colour roles from tokens, never raw hex. Every number carries its producer. In a layout region (kit/layout.ts isRegion, kit/staging.ts) the device lays out at its natural size and grows to fill the region (kit/regionFit.tsx).",
+  "acceptance": "npx vitest run apps/renderer/src/engine/devices/checklist\nnpx vitest run apps/renderer/src/engine\nnode node_modules/typescript/bin/tsc --noEmit --pretty false",
+  "max_minutes": 60,
+  "max_calls": 60,
+  "path": "docs/ve/cards/style-gaps/ve-gap-checklist-1.md"
+}

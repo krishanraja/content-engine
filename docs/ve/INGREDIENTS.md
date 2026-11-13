@@ -24,6 +24,9 @@
   this beside his style references and his three cuts, so pace is measured, not judged from stills.
 - **A layout ingredient** (`style.layout`, 13 Nov): graphics-only beats can fill the frame the captions leave instead of
   drawing small at the top.
+- **Three stagings from his own cuts** (`style.layout.mode` `band`, `stage` or `tray`, 13 Nov): his take and a graphics
+  panel share the frame the way they do in his Character.ai, AI music and eating-its-own-jobs cuts. Measured on his
+  take, they lift a cut from 26% of the frame to 45 to 82%, and from 2.58 to as much as 3.88 events a second.
 - **Nothing chosen means nothing changes.** A spec that sets none of the new fields renders exactly as before
   (`houseGolden.test.ts`).
 
@@ -34,9 +37,12 @@
    (`lower`, the default; `centre`; or `upper`). Choose for the piece, not for the motion style.
    - Over a full-bleed picture, `centre` puts the words in the middle of it.
    - Over graphics that fill the middle, keep `lower`.
-3. **Pick the layout:** `style.layout.mode` is `fill` or `stack` on a graphics-only piece (see "The layout").
+3. **Pick the layout:** `style.layout.mode` is `fill` or `stack` on a graphics-only piece (see "The layout"), or a
+   staging, `band`, `stage` or `tray`, on a piece that shows his take (see "The stagings"). `tray` needs
+   `style.captions.placement: upper`, because it keeps his face clear; compile refuses anything else.
 4. **Pick the handover and camera:**
-   - `style.transitions.kind` is one of `cut`, `whip`, `push`, `zoom-through`, `flash` or `punch`.
+   - `style.transitions.kind` is one of `cut`, `whip`, `push`, `zoom-through`, `flash`, `punch` or `crossfade`
+     (a dissolve of 6 to 10 frames, set by the energy; it needs a motion style).
    - `style.camera.move` is one of `none`, `drift`, `phased` or `punch`, and `hits: true` lets device events kick it.
    - `style.energy` is `calm`, `medium` or `high`.
    - Each motion style's bank entry names the ingredients it was measured with. For example, `ai-music-slam` was
@@ -66,11 +72,12 @@
 |---|---|---|---|---|
 | Motion style | `style.motion.module` | `motion` | `kit/motionProfiles.ts`, `kit/motion-profiles.json`, devices | 14 drawable: `swiss-kinetic-type`, `data-story`, `dark-keynote`, `living-ui`, `hud-terminal`, `riso-halftone`, `paper-cutout`, `vertical-captions`, `single-line-drawing`, `line-boil`, `full-visual`, `character-ai-receipts`, `eating-jobs-ladder`, `ai-music-slam`. 9 more need a device of their own: `flat-vector-explainer`, `isometric-world`, `toy-3d`, `shape-morph`, `watercolour-ink`, `pixel-retro`, `film-crt`, `ladder`, `living-screen` |
 | Captions | `style.captions.theme`, `.placement` | `captionTheme`, `captionPlacement` | `captions/themes.tsx` and one file each in `captions/styles/`, on `captions/kit.ts` and `captions/draw.tsx` | 27 styles (below) |
-| Transitions | `style.transitions.kind` | `ingredients.transition` | `kit/ingredients.ts` | `cut`, `whip`, `push`, `zoom-through`, `flash`, `punch` |
+| Transitions | `style.transitions.kind` | `ingredients.transition` | `kit/ingredients.ts` | `cut`, `whip`, `push`, `zoom-through`, `flash`, `punch`, `crossfade` |
 | Camera | `style.camera.move`, `.hits` | `ingredients.camera`, `.hits` | `kit/ingredients.ts` | `none`, `drift`, `phased`, `punch`. Device events kick it: a punch-in, a shake above calm, a cream flash at high |
 | Energy | `style.energy` | `ingredients.energy` | `kit/ingredients.ts` | `calm`, `medium`, `high`: the handover lasts 16, 10 or 6 frames, and blur, punch, shake and flash scale with it |
 | Sound | `audio`, `ve sfx` | `audio` | `audio.tsx` | unchanged. The bed is one shape (F40), and effects come only from the brand kit |
-| Layout | `style.layout.mode` | `layout` | `kit/layout.ts`, `fit.ts`, devices | `house` (as before), `fill` (each device on a graphics-only beat gets the safe region the captions leave, and grows up to 3x, centred), `stack` (the beat's devices share that region top to bottom) |
+| Layout | `style.layout.mode` | `layout` | `kit/layout.ts`, `kit/staging.ts`, `fit.ts`, devices | `house` (as before), `fill` (each device on a graphics-only beat gets the safe region the captions leave, and grows up to 3x, centred), `stack` (the beat's devices share that region top to bottom), and the stagings `band`, `stage`, `tray` (below) |
+| Ground and entrance details | in the motion style (`kit/motion-profiles.json`) | `motion` | `kit/beatMotion.ts`, `kit/reveal.ts` | grounds `lit`, `vignette`, `hatched` beside `none`, `halftone`, `paper`; entrances may add `blurPx` (blur-in), `spinDeg` (a turn while entering) and `tiltDeg` (a resting tilt) |
 
 ## All 27 caption styles
 
@@ -172,6 +179,50 @@ screens, his take in the band below. Nothing but pictures may sit below y 1320, 
 with no picture at all. The next lever is the picture layer: every beat carries a real picture that fills the frame (his
 take, a screen recording, the real artifact, footage), with the graphics laid over it.
 
+## The stagings (13 Nov 2026)
+
+**Why.** The layout gave graphics the space, but the frame stayed mostly empty ground (26% used). In each of his three
+style cuts his take and the graphics share the frame in a staging ve could not draw (each study card's `gaps`). Now it
+can, on every beat that shows his take (`kit/staging.ts`). SPLIT and WINDOW beats keep their own locks, and a
+graphics-only beat in a staged piece becomes a full-frame takeover that fills as under `fill`.
+
+| Staging | From | 9:16 geometry | The graphics region |
+|---|---|---|---|
+| `band` | Character.ai | ink panel y 0 to 1000 with a 10 px series-colour hairline; his take as a band y 1000 to 1920 | x 60 to 860, y 280 to 960, clear of the captions |
+| `stage` | AI music | ink stage y 0 to 1236 with rounded bottom corners on a cream band; his take in a rounded, cream-edged window (x 600, y 980, 420 by 700) crossing the stage edge | x 60 to 860, y 280 to 956 |
+| `tray` | eating its own jobs | his take full frame; a cream tray with a hard ink drop rises from bottom left (9 frames, a slight overshoot) | the tray, x 60 to 660, y 900 to 1500, over his chest; captions go upper |
+
+16:9 has its own geometry: band is a side panel with his take on the right, stage a wide stage with his window bottom
+right, and tray a lower-left tray.
+
+- Each staged beat's devices get the staging's region and may grow into it (`isRegion`); several devices share it top
+  to bottom.
+- A style's own push zooms on the region's centre and never so far that the region leaves the frame.
+- The panel takes the style's ground texture (`lit`, `vignette` or `hatched`).
+- The held title (`captionStyle: word`) is not drawn under a staging, because it would sit on the graphics.
+
+**Measured** on the lab's pinned take (the 5 Nov window, re-staged with its beats as P1 so his take shows; never the
+rejected face-with-proof frames), each with its own style, caption style and ingredients:
+
+| Staging | Style and captions | Events a second | Frame used |
+|---|---|---|---|
+| Before stagings (`fill`, 13 Nov) | | 2.58 | 0.26 |
+| `band` | `character-ai-receipts`, `receipt-chip` lower, `whip`, `phased`, high | 3.75 | 0.69 |
+| `stage` | `ai-music-slam`, `slam` lower, `whip`, `phased`, high | 2.88 | 0.45 |
+| `tray` | `eating-jobs-ladder`, `georgia-build` upper, `crossfade`, `phased`, high | 3.88 | 0.82 |
+| His references | | 2.9 to 4.6 | median 0.81 |
+
+Watched at speed. What the frames showed was fixed before these numbers:
+- the held title collided with the graphics, so it is now off under a staging;
+- the tray covered his face, so it was moved to his chest and narrowed;
+- `typing_bubble` overhung the region, so it now scales into it;
+- `logo_card` drew a small row, so it now tiles to fill a region;
+- the AI music push cropped a card, so it is now bounded to the region.
+
+These checks used stand-in brand marks because the brand kit's marks are not reachable from a cloud session; the
+stagings were judged on geometry and pace, not on the brand chrome. `stage` sits at the bottom of his range because
+these beats carry one device each; its cut leans on real clips (`video_wall`, below).
+
 ## Pace is measured, not judged from stills
 
 `python scripts/ve.py pace CUT.mp4 [--out pace.json]` measures four things:
@@ -242,26 +293,34 @@ the captions.**
 8. **A test cut** on the house test take was rendered, measured and watched at speed beside a reference (the pace
    table above).
 
+## What was done later on 13 Nov 2026 ("do all the things not done to make this 11/10")
+
+1. **The three stagings**, built, rendered on his take, watched, fixed and measured (above).
+2. **Grounds and entrance details** from the study cards' gaps: `lit` (Character.ai), `vignette` (eating its own
+   jobs) and `hatched` (the AI material); blur-in, a turn while entering and a resting tilt. The three style profiles
+   now use them: Character.ai blurs its type in over 8 px on a lit ground, eating its own jobs drops cards in turning
+   8 degrees to a 1.5 degree tilt on a vignette, and AI music settles on a 3 degree tilt.
+3. **`crossfade` as a handover**, so the eating-its-own-jobs dissolve no longer has to come from the motion style.
+4. **Fixed-zone devices grow in a region:** `quote_card`, `stat_strip`, `record_card` (`kit/regionFit.tsx`), and now
+   `typing_bubble` and `logo_card`.
+5. **The caption details the reviewers left open:** a cream rim on ink boxes over dark footage, whole-pixel `slot-roll`
+   windows, and no old page on the frame a new page lands.
+6. **`ve study` no longer crashes** on an older PyAV: it decodes the audio with ffmpeg first, and still writes
+   `grammar.json` without words when no transcriber is installed.
+7. **Nine Codex device cards** for the parts of his styles that need a device of their own
+   (`docs/ve/cards/style-gaps/`).
+
 ## What is still open
 
-- **The picture layer.** The layout is built (above), but a text-only cut still leaves most of the frame as empty
-  ground. Next: every beat carries a real picture that fills the frame, with the graphics over it. His cuts each use a
-  staging the renderer cannot yet draw, listed under `gaps` in each card:
-  - AI music: the ink stage over a cream band;
-  - Character.ai: the ink desk over a still face band;
-  - eating its own jobs: the butter tray over his chest.
-- **Devices that place themselves at fixed zones** (`quote_card`, `stat_strip`, `record_card` and others) do not grow
-  in a `fill` region yet.
-- **Parts of his three styles that need devices:**
-  - the hatched AI material, and tilted settles with a soft shadow (AI music);
-  - the line-print jolt and the 250 px rise of a whole proof object (Character.ai);
-  - the ladder that keeps its state across beats (eating its own jobs; card `docs/ve/cards/through-line/`).
-- **No new style has been proved on his take.** Each needs `ve proof` and his press before a cut ships with it.
-- **Caption details the reviewers left open:**
-  - ink boxes are faint over very dark footage;
-  - `slot-roll`'s letter windows look torn mid-roll;
-  - a few one-frame overlaps on landing.
+- **The devices his styles still need** are carded, not built: `receipt_print`, `slam_word`, `checklist`
+  (Character.ai); `pull_quote`, `unit_field`, the count-down ghost and the ladder `through_line` (eating its own jobs);
+  `video_wall`, `mint_ring`, `takeover` (AI music). Codex builds them from `docs/ve/cards/style-gaps/` and
+  `docs/ve/cards/through-line/`, dispatched from a home computer (`ve card` reads its local roots).
+- **No staging or new style is proved on his take with the real brand chrome.** Each needs `ve proof` on a home computer
+  (where the brand marks are) and his press before a cut ships with it.
 - **Sound effects on handovers and hits.** The timing rule is noted: start 10 to 20 ms before the visual change and
-  peak on it. No handover sound is filed in the brand kit yet.
-- **The 3D devices** (`ladder_stage`, `living_screen`) keep `needs_device` until the layout ingredient lets them fill
-  the frame.
+  peak on it. No handover sound is filed in the brand kit yet; that is Krish's to approve (`config/sfx-approved.json`).
+- **A re-layout dissolve inside one device** (Character.ai: the map gains a headline, the chip lifts and moves along an
+  arrow) needs a device that crossfades between its own states.
+- **The 3D devices** (`ladder_stage`, `living_screen`) keep `needs_device`: Krish rejected both 3D cuts on 13 Nov, and
+  they come back only through a new card he asks for.
