@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.11.0",
+ "contract_version": "1.12.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -5700,10 +5700,10 @@
  ],
  "yours": [
   {
-   "key": "mon",
+   "key": "mon-piece:8287846b-6618-4a19-9fb8-23ad4eca2718",
    "day": "mon",
    "label": "Mon 16",
-   "next": "Record both cuts from your Teleprompter; each take files itself",
+   "next": "Production planned. Record both cuts from your Teleprompter; each take files itself.",
    "actions": [
     {
      "kind": "press",
@@ -5722,366 +5722,6 @@
       "at"
      ],
      "done": "Approved for publish: exactly these 2 files and their words. Growth posts them; nothing else."
-    },
-    {
-     "kind": "open",
-     "label": "Open Teleprompter",
-     "href": "https://app.teleprompter.com"
-    },
-    {
-     "kind": "press",
-     "label": "It's live",
-     "op": "live",
-     "body": {
-      "day": "mon",
-      "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
-      "title": "Piece 8287. It says one thing."
-     },
-     "words": {
-      "path": "url",
-      "ask": "The post's link",
-      "required": true
-     },
-     "choose": {
-      "path": "channels",
-      "ask": "Where did it go out?",
-      "multi": true,
-      "required": true,
-      "from_link": true,
-      "options": [
-       {
-        "value": "substack",
-        "label": "Substack",
-        "hosts": [
-         "makeyourmindup.ai",
-         "substack.com/p"
-        ]
-       },
-       {
-        "value": "youtube",
-        "label": "YouTube",
-        "hosts": [
-         "youtube.com/watch",
-         "youtu.be"
-        ]
-       },
-       {
-        "value": "shorts",
-        "label": "YouTube Shorts",
-        "hosts": [
-         "youtube.com/shorts"
-        ]
-       },
-       {
-        "value": "tiktok",
-        "label": "TikTok",
-        "hosts": [
-         "tiktok.com"
-        ]
-       },
-       {
-        "value": "reels",
-        "label": "Instagram Reels",
-        "hosts": [
-         "instagram.com/reel"
-        ]
-       },
-       {
-        "value": "linkedin",
-        "label": "LinkedIn",
-        "hosts": [
-         "linkedin.com"
-        ]
-       },
-       {
-        "value": "spotify",
-        "label": "Spotify",
-        "hosts": [
-         "open.spotify.com"
-        ]
-       },
-       {
-        "value": "x",
-        "label": "X",
-        "hosts": [
-         "x.com",
-         "twitter.com"
-        ]
-       },
-       {
-        "value": "threads",
-        "label": "Threads",
-        "hosts": [
-         "threads.net",
-         "threads.com"
-        ]
-       },
-       {
-        "value": "facebook",
-        "label": "Facebook",
-        "hosts": [
-         "facebook.com",
-         "fb.watch"
-        ]
-       },
-       {
-        "value": "substack-notes",
-        "label": "Substack Notes",
-        "hosts": [
-         "substack.com/note",
-         "substack.com/@"
-        ]
-       }
-      ]
-     },
-     "stamp": [
-      "at"
-     ],
-     "done": "Recorded as live. The day is done, and Growth learns from the post."
-    },
-    {
-     "kind": "prompt",
-     "label": "Copy Claude prompt",
-     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
-    },
-    {
-     "kind": "press",
-     "label": "Add your thoughts",
-     "collection": "comments",
-     "id": "desk-mon-record-{t}",
-     "revision": 0,
-     "body": {
-      "thread_id": "{id}",
-      "anchor": "desk:mon:record"
-     },
-     "words": {
-      "path": "text",
-      "ask": "Your thoughts on this step",
-      "required": true
-     },
-     "stamp": [
-      "at"
-     ],
-     "done": "Saved on the board, pinned to this step."
-    }
-   ]
-  },
-  {
-   "key": "tue-povteach",
-   "day": "tue",
-   "label": "Tue 17 · povteach",
-   "next": "The revised version is back. Approve it, improve it again or reject it",
-   "actions": [
-    {
-     "kind": "review",
-     "label": "Review the revised version"
-    },
-    {
-     "kind": "prompt",
-     "label": "Copy Claude prompt",
-     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Tue 17 (off …"
-    },
-    {
-     "kind": "press",
-     "label": "Add your thoughts",
-     "collection": "comments",
-     "id": "desk-tue-day-{t}",
-     "revision": 0,
-     "body": {
-      "thread_id": "{id}",
-      "anchor": "desk:tue:day"
-     },
-     "words": {
-      "path": "text",
-      "ask": "Your thoughts on this step",
-      "required": true
-     },
-     "stamp": [
-      "at"
-     ],
-     "done": "Saved on the board, pinned to this step."
-    }
-   ],
-   "review": {
-    "doc_id": "off-tue-povteach",
-    "revision": 2,
-    "side": "idea",
-    "option": {
-     "id": "povteach",
-     "format": "Meme video, 9:16",
-     "source": "",
-     "copy": "Option povteach",
-     "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
-     "hook": null,
-     "pitch": null,
-     "direction": null,
-     "revised": {
-      "side": "idea",
-      "words": "his words"
-     },
-     "idea_sha256": "83debb90869f7c10276c52bbd96c8e3f3015e596ddd4912d994eb9794f84aa59",
-     "direction_sha256": null,
-     "shown_idea": {
-      "copy": "Option povteach",
-      "hook": null,
-      "pitch": null,
-      "cards": null
-     }
-    },
-    "prev": {
-     "use": "offday",
-     "pick": "off-tue-povteach",
-     "day": "tue",
-     "idea": {
-      "verdict": "improve",
-      "words": "Change the caption",
-      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-     }
-    }
-   }
-  },
-  {
-   "key": "wed",
-   "day": "wed",
-   "label": "Wed 18",
-   "next": "Pick the look: the recommended one, another, or fold in your inspiration. No approved scripts are filed yet: if you approved them in a session, file them from that session",
-   "actions": [
-    {
-     "kind": "look",
-     "label": "Pick the look",
-     "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a"
-    },
-    {
-     "kind": "prompt",
-     "label": "Copy mock prompt",
-     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
-    },
-    {
-     "kind": "prompt",
-     "label": "Copy Claude prompt",
-     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
-    },
-    {
-     "kind": "press",
-     "label": "Add your thoughts",
-     "collection": "comments",
-     "id": "desk-wed-look-{t}",
-     "revision": 0,
-     "body": {
-      "thread_id": "{id}",
-      "anchor": "desk:wed:look"
-     },
-     "words": {
-      "path": "text",
-      "ask": "Your thoughts on this step",
-      "required": true
-     },
-     "stamp": [
-      "at"
-     ],
-     "done": "Saved on the board, pinned to this step."
-    }
-   ]
-  },
-  {
-   "key": "thu",
-   "day": "thu",
-   "label": "Thu 19",
-   "next": "Your Improve has not come back as a revision yet. Run it, and the revised version comes back here",
-   "actions": [
-    {
-     "kind": "run",
-     "label": "Run my Improve",
-     "job": "offday-revise",
-     "input": {
-      "week": "2026-11-16",
-      "option": "off-thu-lookalikes"
-     },
-     "runs_on": "GitHub · offday-revise.yml"
-    },
-    {
-     "kind": "prompt",
-     "label": "Copy Claude prompt",
-     "prompt": "You are picking up one day of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe day: Thu 19 (off …"
-    },
-    {
-     "kind": "press",
-     "label": "Add your thoughts",
-     "collection": "comments",
-     "id": "desk-thu-day-{t}",
-     "revision": 0,
-     "body": {
-      "thread_id": "{id}",
-      "anchor": "desk:thu:day"
-     },
-     "words": {
-      "path": "text",
-      "ask": "Your thoughts on this step",
-      "required": true
-     },
-     "stamp": [
-      "at"
-     ],
-     "done": "Saved on the board, pinned to this step."
-    }
-   ]
-  },
-  {
-   "key": "fri",
-   "day": "fri",
-   "label": "Fri 20",
-   "next": "Bring the evidence: research it now, or drop your Perplexity file on this day",
-   "actions": [
-    {
-     "kind": "research",
-     "label": "Research it now",
-     "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118"
-    },
-    {
-     "kind": "prompt",
-     "label": "Copy Perplexity prompt",
-     "prompt": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Friday 2026-11-20, the mind.the.gap series.\nThe idea: Piece b…"
-    },
-    {
-     "kind": "press",
-     "label": "Paste research",
-     "op": "material",
-     "body": {
-      "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
-      "title": "Research"
-     },
-     "words": {
-      "path": "content",
-      "ask": "Paste your research (Markdown is fine)",
-      "required": true
-     },
-     "stamp": [],
-     "done": "Filed on the piece. Every later step reads it."
-    },
-    {
-     "kind": "prompt",
-     "label": "Copy Claude prompt",
-     "prompt": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
-    },
-    {
-     "kind": "press",
-     "label": "Add your thoughts",
-     "collection": "comments",
-     "id": "desk-fri-research-{t}",
-     "revision": 0,
-     "body": {
-      "thread_id": "{id}",
-      "anchor": "desk:fri:research"
-     },
-     "words": {
-      "path": "text",
-      "ask": "Your thoughts on this step",
-      "required": true
-     },
-     "stamp": [
-      "at"
-     ],
-     "done": "Saved on the board, pinned to this step."
     }
    ]
   }
@@ -6478,6 +6118,1508 @@
      }
     },
     "sha256": "d1159c9d347fc07f7e099be5e6afe3043613a41225e3ce6008ad20d3bf6ff700"
+   }
+  ]
+ },
+ "model": {
+  "version": 1,
+  "kinds": [
+   {
+    "key": "supporting",
+    "label": "Supporting carousel"
+   },
+   {
+    "key": "voiceover",
+    "label": "Voiceover short"
+   },
+   {
+    "key": "explainer",
+    "label": "Explainer"
+   },
+   {
+    "key": "good_news",
+    "label": "Good news"
+   },
+   {
+    "key": "meme",
+    "label": "Meme"
+   },
+   {
+    "key": "piece",
+    "label": "The piece"
+   }
+  ],
+  "piece_path": [
+   {
+    "key": "branded",
+    "label": "Branded"
+   },
+   {
+    "key": "fleshed_out",
+    "label": "Fleshed out"
+   },
+   {
+    "key": "production_planned",
+    "label": "Production planned"
+   },
+   {
+    "key": "produced",
+    "label": "Produced"
+   },
+   {
+    "key": "live",
+    "label": "Live"
+   }
+  ],
+  "post_path": [
+   {
+    "key": "approved",
+    "label": "Approved"
+   },
+   {
+    "key": "made",
+    "label": "Made"
+   },
+   {
+    "key": "scheduled",
+    "label": "Scheduled"
+   },
+   {
+    "key": "live",
+    "label": "Live"
+   }
+  ],
+  "days": [
+   {
+    "day": "mon",
+    "date": "2026-11-16",
+    "label": "Mon 16",
+    "series": "follow.the.money",
+    "items": [
+     {
+      "key": "piece:8287846b-6618-4a19-9fb8-23ad4eca2718",
+      "type": "piece",
+      "day": "mon",
+      "date": "2026-11-16",
+      "kind": "piece",
+      "kind_label": "follow.the.money",
+      "title": "Piece 8287. It says one thing.",
+      "approved": "Approved by you, Sun 8 Nov, 09:07",
+      "stage": {
+       "key": "production_planned",
+       "label": "Production planned"
+      },
+      "path": [
+       {
+        "key": "branded",
+        "label": "Branded",
+        "state": "done",
+        "when": "2026-11-08"
+       },
+       {
+        "key": "fleshed_out",
+        "label": "Fleshed out",
+        "state": "done",
+        "when": "2026-11-15"
+       },
+       {
+        "key": "production_planned",
+        "label": "Production planned",
+        "state": "done",
+        "when": null
+       },
+       {
+        "key": "produced",
+        "label": "Produced",
+        "state": "current",
+        "when": null
+       },
+       {
+        "key": "live",
+        "label": "Live",
+        "state": "todo",
+        "when": null
+       }
+      ],
+      "missed": false,
+      "read": {
+       "so_what": null,
+       "story": "Piece 8287. It says one thing.",
+       "why_now": null,
+       "fact": null,
+       "text": null,
+       "sources": [],
+       "research": [
+        "Storyboard: Monday",
+        "Screen grab one",
+        "Screen grab two",
+        "Oracle research corpus"
+       ],
+       "said": null
+      },
+      "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+      "item": null,
+      "supports": null,
+      "move": null,
+      "links": [],
+      "stories": null,
+      "stories_planned": null,
+      "others": [],
+      "line": "Production planned. Record both cuts from your Teleprompter; each take files itself.",
+      "next": {
+       "kind": "press",
+       "label": "Approve for publish",
+       "collection": "picks",
+       "id": "mon-publish",
+       "revision": 0,
+       "body": {
+        "kind": "approve_publish",
+        "day": "mon",
+        "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
+        "approved": true,
+        "manifest_sha256": "48ed7ede3274d284e73733cf3114076f2e2975867df4ea7497532f98b3c4df0a"
+       },
+       "stamp": [
+        "at"
+       ],
+       "done": "Approved for publish: exactly these 2 files and their words. Growth posts them; nothing else."
+      },
+      "decision": true
+     }
+    ],
+    "decisions": 1,
+    "ideas": 0,
+    "line": "One decision for you."
+   },
+   {
+    "day": "tue",
+    "date": "2026-11-17",
+    "label": "Tue 17",
+    "series": null,
+    "items": [],
+    "decisions": 0,
+    "ideas": 1,
+    "line": "Nothing approved for Tue 17 yet. Its ideas are on the ideas board."
+   },
+   {
+    "day": "wed",
+    "date": "2026-11-18",
+    "label": "Wed 18",
+    "series": "under.the.hood",
+    "items": [
+     {
+      "key": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
+      "type": "piece",
+      "day": "wed",
+      "date": "2026-11-18",
+      "kind": "piece",
+      "kind_label": "under.the.hood",
+      "title": "Piece db9f. It says one thing.",
+      "approved": "Approved by you, Sun 8 Nov, 09:07",
+      "stage": {
+       "key": "branded",
+       "label": "Branded"
+      },
+      "path": [
+       {
+        "key": "branded",
+        "label": "Branded",
+        "state": "done",
+        "when": "2026-11-08"
+       },
+       {
+        "key": "fleshed_out",
+        "label": "Fleshed out",
+        "state": "current",
+        "when": null
+       },
+       {
+        "key": "production_planned",
+        "label": "Production planned",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "produced",
+        "label": "Produced",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "live",
+        "label": "Live",
+        "state": "todo",
+        "when": null
+       }
+      ],
+      "missed": false,
+      "read": {
+       "so_what": "Why it matters",
+       "story": "The story",
+       "why_now": null,
+       "fact": null,
+       "text": null,
+       "sources": [],
+       "research": [
+        "WIRED: a source"
+       ],
+       "said": null
+      },
+      "piece_id": "db9f9f6a-1092-49be-8024-f335e060305a",
+      "item": null,
+      "supports": null,
+      "move": null,
+      "links": [],
+      "stories": null,
+      "stories_planned": null,
+      "others": [],
+      "line": "Branded. Pick the look: the recommended one, another, or fold in your inspiration. No approved scripts are filed yet: if you approved them in a session, file them from that session.",
+      "next": {
+       "kind": "prompt",
+       "label": "Copy prompt for Claude",
+       "prompt": "You are picking up the Wednesday 2026-11-18 piece db9f9f6a-1092-49be-8024-f335e060305a of the Make Your Mind Up content engine with no prior context: \"Piece db9f. It says one thing.\". Where it stands: Branded. Pick the look: the recommended…"
+      },
+      "decision": false
+     }
+    ],
+    "decisions": 0,
+    "ideas": 0,
+    "line": "One item in progress."
+   },
+   {
+    "day": "thu",
+    "date": "2026-11-19",
+    "label": "Thu 19",
+    "series": null,
+    "items": [
+     {
+      "key": "off-thu-aiintern",
+      "type": "post",
+      "day": "thu",
+      "date": "2026-11-19",
+      "kind": "meme",
+      "kind_label": "Meme",
+      "title": "The AI intern asks for a raise.",
+      "approved": "Approved by you, Sun 8 Nov, 09:07",
+      "stage": {
+       "key": "scheduled",
+       "label": "Scheduled"
+      },
+      "path": [
+       {
+        "key": "approved",
+        "label": "Approved",
+        "state": "done",
+        "when": "2026-11-08"
+       },
+       {
+        "key": "made",
+        "label": "Made",
+        "state": "done",
+        "when": null
+       },
+       {
+        "key": "scheduled",
+        "label": "Scheduled",
+        "state": "done",
+        "when": "2026-11-18"
+       },
+       {
+        "key": "live",
+        "label": "Live",
+        "state": "current",
+        "when": null
+       }
+      ],
+      "missed": false,
+      "read": {
+       "so_what": null,
+       "story": null,
+       "why_now": null,
+       "fact": null,
+       "text": "The AI intern asks for a raise.",
+       "sources": [
+        {
+         "label": "Growth: memes",
+         "href": null
+        }
+       ],
+       "research": [],
+       "said": null
+      },
+      "piece_id": null,
+      "item": "growth:2026-11-16:aiintern",
+      "supports": null,
+      "move": {
+       "op": "move",
+       "label": "Move to…",
+       "item": "growth:2026-11-16:aiintern",
+       "version": 3,
+       "state": "approved",
+       "from": {
+        "week": "2026-11-16",
+        "day": "thu",
+        "date": "2026-11-19"
+       },
+       "days": [
+        {
+         "date": "2026-11-16",
+         "week": "2026-11-16",
+         "day": "mon",
+         "label": "Mon 16 Nov"
+        },
+        {
+         "date": "2026-11-17",
+         "week": "2026-11-16",
+         "day": "tue",
+         "label": "Tue 17 Nov"
+        },
+        {
+         "date": "2026-11-18",
+         "week": "2026-11-16",
+         "day": "wed",
+         "label": "Wed 18 Nov"
+        },
+        {
+         "date": "2026-11-19",
+         "week": "2026-11-16",
+         "day": "thu",
+         "label": "Thu 19 Nov",
+         "current": true
+        },
+        {
+         "date": "2026-11-20",
+         "week": "2026-11-16",
+         "day": "fri",
+         "label": "Fri 20 Nov"
+        },
+        {
+         "date": "2026-11-21",
+         "week": "2026-11-16",
+         "day": "sat",
+         "label": "Sat 21 Nov"
+        },
+        {
+         "date": "2026-11-23",
+         "week": "2026-11-23",
+         "day": "mon",
+         "label": "Mon 23 Nov"
+        },
+        {
+         "date": "2026-11-24",
+         "week": "2026-11-23",
+         "day": "tue",
+         "label": "Tue 24 Nov"
+        },
+        {
+         "date": "2026-11-25",
+         "week": "2026-11-23",
+         "day": "wed",
+         "label": "Wed 25 Nov"
+        },
+        {
+         "date": "2026-11-26",
+         "week": "2026-11-23",
+         "day": "thu",
+         "label": "Thu 26 Nov"
+        },
+        {
+         "date": "2026-11-27",
+         "week": "2026-11-23",
+         "day": "fri",
+         "label": "Fri 27 Nov"
+        },
+        {
+         "date": "2026-11-28",
+         "week": "2026-11-23",
+         "day": "sat",
+         "label": "Sat 28 Nov"
+        },
+        {
+         "date": "2026-11-30",
+         "week": "2026-11-30",
+         "day": "mon",
+         "label": "Mon 30 Nov"
+        },
+        {
+         "date": "2026-12-01",
+         "week": "2026-11-30",
+         "day": "tue",
+         "label": "Tue 1 Dec"
+        },
+        {
+         "date": "2026-12-02",
+         "week": "2026-11-30",
+         "day": "wed",
+         "label": "Wed 2 Dec"
+        },
+        {
+         "date": "2026-12-03",
+         "week": "2026-11-30",
+         "day": "thu",
+         "label": "Thu 3 Dec"
+        },
+        {
+         "date": "2026-12-04",
+         "week": "2026-11-30",
+         "day": "fri",
+         "label": "Fri 4 Dec"
+        },
+        {
+         "date": "2026-12-05",
+         "week": "2026-11-30",
+         "day": "sat",
+         "label": "Sat 5 Dec"
+        },
+        {
+         "date": "2026-12-07",
+         "week": "2026-12-07",
+         "day": "mon",
+         "label": "Mon 7 Dec"
+        },
+        {
+         "date": "2026-12-08",
+         "week": "2026-12-07",
+         "day": "tue",
+         "label": "Tue 8 Dec"
+        },
+        {
+         "date": "2026-12-09",
+         "week": "2026-12-07",
+         "day": "wed",
+         "label": "Wed 9 Dec"
+        },
+        {
+         "date": "2026-12-10",
+         "week": "2026-12-07",
+         "day": "thu",
+         "label": "Thu 10 Dec"
+        },
+        {
+         "date": "2026-12-11",
+         "week": "2026-12-07",
+         "day": "fri",
+         "label": "Fri 11 Dec"
+        },
+        {
+         "date": "2026-12-12",
+         "week": "2026-12-07",
+         "day": "sat",
+         "label": "Sat 12 Dec"
+        },
+        {
+         "date": "2026-12-14",
+         "week": "2026-12-14",
+         "day": "mon",
+         "label": "Mon 14 Dec"
+        }
+       ],
+       "later": true,
+       "note": "Sunday is a rest day, so it is not offered.",
+       "body": {
+        "item": "growth:2026-11-16:aiintern",
+        "version": 3,
+        "from": {
+         "week": "2026-11-16",
+         "day": "thu"
+        }
+       }
+      },
+      "links": [],
+      "stories": null,
+      "stories_planned": null,
+      "others": [],
+      "line": "Scheduled on Instagram for Wed 18 Nov, 12:30.",
+      "next": null,
+      "decision": false
+     }
+    ],
+    "decisions": 0,
+    "ideas": 1,
+    "line": "One item in progress."
+   },
+   {
+    "day": "fri",
+    "date": "2026-11-20",
+    "label": "Fri 20",
+    "series": "mind.the.gap",
+    "items": [
+     {
+      "key": "piece:b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+      "type": "piece",
+      "day": "fri",
+      "date": "2026-11-20",
+      "kind": "piece",
+      "kind_label": "mind.the.gap",
+      "title": "Piece b019. It says one thing.",
+      "approved": "Approved by you, Sun 8 Nov, 09:07",
+      "stage": {
+       "key": "approved",
+       "label": "Approved"
+      },
+      "path": [
+       {
+        "key": "branded",
+        "label": "Branded",
+        "state": "current",
+        "when": null
+       },
+       {
+        "key": "fleshed_out",
+        "label": "Fleshed out",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "production_planned",
+        "label": "Production planned",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "produced",
+        "label": "Produced",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "live",
+        "label": "Live",
+        "state": "todo",
+        "when": null
+       }
+      ],
+      "missed": false,
+      "read": {
+       "so_what": null,
+       "story": "Piece b019. It says one thing.",
+       "why_now": null,
+       "fact": null,
+       "text": null,
+       "sources": [],
+       "research": [],
+       "said": null
+      },
+      "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+      "item": null,
+      "supports": null,
+      "move": null,
+      "links": [],
+      "stories": null,
+      "stories_planned": null,
+      "others": [],
+      "line": "Approved. Bring the evidence: research it now, or drop your Perplexity file on this day.",
+      "next": {
+       "kind": "research",
+       "label": "Research it now",
+       "piece_id": "b019dbf8-8051-4cab-9b5e-2ad77b3f5118"
+      },
+      "decision": false
+     }
+    ],
+    "decisions": 0,
+    "ideas": 0,
+    "line": "One item in progress."
+   },
+   {
+    "day": "sat",
+    "date": "2026-11-21",
+    "label": "Sat 21",
+    "series": null,
+    "items": [
+     {
+      "key": "off-sat-goodnews",
+      "type": "post",
+      "day": "sat",
+      "date": "2026-11-21",
+      "kind": "good_news",
+      "kind_label": "Good news",
+      "title": "Option goodnews",
+      "approved": "Approved by you, Sun 8 Nov, 09:07",
+      "stage": {
+       "key": "approved",
+       "label": "Approved"
+      },
+      "path": [
+       {
+        "key": "approved",
+        "label": "Approved",
+        "state": "done",
+        "when": "2026-11-08"
+       },
+       {
+        "key": "made",
+        "label": "Made",
+        "state": "current",
+        "when": null
+       },
+       {
+        "key": "scheduled",
+        "label": "Scheduled",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "live",
+        "label": "Live",
+        "state": "todo",
+        "when": null
+       }
+      ],
+      "missed": false,
+      "read": {
+       "so_what": null,
+       "story": null,
+       "why_now": null,
+       "fact": null,
+       "text": "Option goodnews",
+       "sources": [],
+       "research": [],
+       "said": null
+      },
+      "piece_id": null,
+      "item": "engine:2026-11-16:goodnews",
+      "supports": null,
+      "move": {
+       "op": "move",
+       "label": "Move to…",
+       "item": "engine:2026-11-16:goodnews",
+       "version": 0,
+       "state": "slate",
+       "from": {
+        "week": "2026-11-16",
+        "day": "sat",
+        "date": "2026-11-21"
+       },
+       "days": [
+        {
+         "date": "2026-11-16",
+         "week": "2026-11-16",
+         "day": "mon",
+         "label": "Mon 16 Nov"
+        },
+        {
+         "date": "2026-11-17",
+         "week": "2026-11-16",
+         "day": "tue",
+         "label": "Tue 17 Nov"
+        },
+        {
+         "date": "2026-11-18",
+         "week": "2026-11-16",
+         "day": "wed",
+         "label": "Wed 18 Nov"
+        },
+        {
+         "date": "2026-11-19",
+         "week": "2026-11-16",
+         "day": "thu",
+         "label": "Thu 19 Nov"
+        },
+        {
+         "date": "2026-11-20",
+         "week": "2026-11-16",
+         "day": "fri",
+         "label": "Fri 20 Nov"
+        },
+        {
+         "date": "2026-11-21",
+         "week": "2026-11-16",
+         "day": "sat",
+         "label": "Sat 21 Nov",
+         "current": true
+        }
+       ],
+       "later": false,
+       "note": "This week's good news stays in its week: its stories are this week's.",
+       "body": {
+        "item": "engine:2026-11-16:goodnews",
+        "version": 0,
+        "from": {
+         "week": "2026-11-16",
+         "day": "sat"
+        }
+       }
+      },
+      "links": [],
+      "stories": [
+       {
+        "headline": "Story 1",
+        "what": "What happened.",
+        "why": "Why it helps.",
+        "date": "2026-11-18",
+        "source": "The source",
+        "href": "https://example.org/1"
+       },
+       {
+        "headline": "Story 2",
+        "what": "What happened.",
+        "why": "Why it helps.",
+        "date": "2026-11-18",
+        "source": "The source",
+        "href": "https://example.org/2"
+       },
+       {
+        "headline": "Story 3",
+        "what": "What happened.",
+        "why": "Why it helps.",
+        "date": "2026-11-18",
+        "source": "The source",
+        "href": "https://example.org/3"
+       },
+       {
+        "headline": "Story 4",
+        "what": "What happened.",
+        "why": "Why it helps.",
+        "date": "2026-11-18",
+        "source": "The source",
+        "href": "https://example.org/4"
+       },
+       {
+        "headline": "Story 5",
+        "what": "What happened.",
+        "why": "Why it helps.",
+        "date": "2026-11-18",
+        "source": "The source",
+        "href": "https://example.org/5"
+       }
+      ],
+      "stories_planned": 5,
+      "others": [],
+      "line": "Approved by you, Sun 8 Nov, 09:07.",
+      "next": {
+       "kind": "prompt",
+       "label": "Copy prompt for Claude",
+       "prompt": "You are picking up the Saturday 2026-11-21 off-day post off-sat-goodnews (Good news) of the Make Your Mind Up content engine with no prior context: \"Option goodnews\". Where it stands: Approved by you, Sun 8 Nov, 09:07.\n\nGrowth makes and pos…"
+      },
+      "decision": false
+     }
+    ],
+    "decisions": 0,
+    "ideas": 0,
+    "line": "One item in progress."
+   }
+  ],
+  "ideas": [
+   {
+    "doc_id": "off-tue-povteach",
+    "piece_id": null,
+    "day": "tue",
+    "date": "2026-11-17",
+    "kind": "meme",
+    "kind_label": "Meme",
+    "title": "Option povteach",
+    "why": "revised",
+    "line": "Revised from your words: waiting on your answer.",
+    "read": {
+     "so_what": null,
+     "story": null,
+     "why_now": null,
+     "fact": null,
+     "text": "Option povteach",
+     "sources": [],
+     "research": [],
+     "said": "Revised from your words: his words"
+    },
+    "actions": [
+     {
+      "kind": "press",
+      "label": "Approve for Tuesday 17 Nov",
+      "collection": "queue",
+      "id": "off-tue-povteach",
+      "revision": 2,
+      "body": {
+       "pick": "off-tue-povteach",
+       "use": "offday",
+       "day": "tue",
+       "week": "2026-11-16",
+       "option_id": "povteach",
+       "format": "Meme video, 9:16",
+       "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
+       "idea": {
+        "verdict": "approve",
+        "words": null,
+        "sha256": "83debb90869f7c10276c52bbd96c8e3f3015e596ddd4912d994eb9794f84aa59",
+        "shown": {
+         "copy": "Option povteach",
+         "hook": null,
+         "pitch": null,
+         "cards": null
+        }
+       }
+      },
+      "stamp": [
+       "at",
+       "idea.at"
+      ],
+      "done": "Approved. It is on the publish board for Tuesday 17 November; Growth makes it.",
+      "outcome": "approved",
+      "goes": "Goes onto the publish board for Tuesday 17 November. Growth makes it from what you approved."
+     },
+     {
+      "kind": "press",
+      "label": "Improve for a future piece",
+      "collection": "queue",
+      "id": "off-tue-povteach",
+      "revision": 2,
+      "body": {
+       "pick": "off-tue-povteach",
+       "use": "offday",
+       "day": "tue",
+       "week": "2026-11-16",
+       "option_id": "povteach",
+       "format": "Meme video, 9:16",
+       "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
+       "idea": {
+        "verdict": "improve",
+        "words": null,
+        "sha256": "83debb90869f7c10276c52bbd96c8e3f3015e596ddd4912d994eb9794f84aa59"
+       }
+      },
+      "words": {
+       "path": "idea.words",
+       "ask": "What would make it a piece later?",
+       "required": true
+      },
+      "stamp": [
+       "at",
+       "idea.at"
+      ],
+      "done": "Kept with your note. The revise run also brings a new version back here.",
+      "outcome": "improved",
+      "goes": "Kept with your note as a cue for a future piece. A revised version also comes back here to approve."
+     },
+     {
+      "kind": "press",
+      "label": "Reject",
+      "collection": "queue",
+      "id": "off-tue-povteach",
+      "revision": 2,
+      "body": {
+       "pick": "off-tue-povteach",
+       "use": "offday",
+       "day": "tue",
+       "week": "2026-11-16",
+       "option_id": "povteach",
+       "format": "Meme video, 9:16",
+       "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
+       "idea": {
+        "verdict": "reject",
+        "words": null,
+        "sha256": "83debb90869f7c10276c52bbd96c8e3f3015e596ddd4912d994eb9794f84aa59"
+       }
+      },
+      "words": {
+       "path": "idea.words",
+       "ask": "Why not? The next ideas run learns from your reason.",
+       "required": true
+      },
+      "stamp": [
+       "at",
+       "idea.at"
+      ],
+      "done": "Rejected, with your reason. The next ideas run learns from it.",
+      "outcome": "rejected",
+      "goes": "Rejected. Your reason is kept as a cue the next ideas run reads, and goes to your taste ledger in your words."
+     },
+     {
+      "kind": "press",
+      "label": "Save as a trend",
+      "collection": "queue",
+      "id": "off-tue-povteach",
+      "revision": 2,
+      "body": {
+       "pick": "off-tue-povteach",
+       "use": "offday",
+       "day": "tue",
+       "week": "2026-11-16",
+       "option_id": "povteach",
+       "format": "Meme video, 9:16",
+       "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
+       "idea": {
+        "verdict": "trend",
+        "words": null,
+        "sha256": "83debb90869f7c10276c52bbd96c8e3f3015e596ddd4912d994eb9794f84aa59"
+       }
+      },
+      "words": {
+       "path": "idea.words",
+       "ask": "Which trend is it part of?",
+       "required": true
+      },
+      "stamp": [
+       "at",
+       "idea.at"
+      ],
+      "done": "Saved with its trend, for a wider piece.",
+      "outcome": "trend",
+      "goes": "Kept with the trend you name, for a wider piece."
+     },
+     {
+      "kind": "press",
+      "label": "File for later",
+      "collection": "queue",
+      "id": "off-tue-povteach",
+      "revision": 2,
+      "body": {
+       "pick": "off-tue-povteach",
+       "use": "offday",
+       "day": "tue",
+       "week": "2026-11-16",
+       "option_id": "povteach",
+       "format": "Meme video, 9:16",
+       "copy_sha256": "058088ee53a411dd6a95dd5d9e22f26d0e11b930c8c9f0e10f939da756dd0a57",
+       "idea": {
+        "verdict": "next_week",
+        "words": null,
+        "sha256": "83debb90869f7c10276c52bbd96c8e3f3015e596ddd4912d994eb9794f84aa59"
+       }
+      },
+      "stamp": [
+       "at",
+       "idea.at"
+      ],
+      "done": "Filed for later. It comes back on a later ideas board.",
+      "outcome": "filed",
+      "goes": "Filed with today's date. It comes back on a later ideas board, or when you ask for it."
+     }
+    ],
+    "stories": null,
+    "move": {
+     "op": "move",
+     "label": "Move to…",
+     "item": "engine:2026-11-16:povteach",
+     "version": 0,
+     "state": "slate",
+     "from": {
+      "week": "2026-11-16",
+      "day": "tue",
+      "date": "2026-11-17"
+     },
+     "days": [
+      {
+       "date": "2026-11-16",
+       "week": "2026-11-16",
+       "day": "mon",
+       "label": "Mon 16 Nov"
+      },
+      {
+       "date": "2026-11-17",
+       "week": "2026-11-16",
+       "day": "tue",
+       "label": "Tue 17 Nov",
+       "current": true
+      },
+      {
+       "date": "2026-11-18",
+       "week": "2026-11-16",
+       "day": "wed",
+       "label": "Wed 18 Nov"
+      },
+      {
+       "date": "2026-11-19",
+       "week": "2026-11-16",
+       "day": "thu",
+       "label": "Thu 19 Nov"
+      },
+      {
+       "date": "2026-11-20",
+       "week": "2026-11-16",
+       "day": "fri",
+       "label": "Fri 20 Nov"
+      },
+      {
+       "date": "2026-11-21",
+       "week": "2026-11-16",
+       "day": "sat",
+       "label": "Sat 21 Nov"
+      },
+      {
+       "date": "2026-11-23",
+       "week": "2026-11-23",
+       "day": "mon",
+       "label": "Mon 23 Nov"
+      },
+      {
+       "date": "2026-11-24",
+       "week": "2026-11-23",
+       "day": "tue",
+       "label": "Tue 24 Nov"
+      },
+      {
+       "date": "2026-11-25",
+       "week": "2026-11-23",
+       "day": "wed",
+       "label": "Wed 25 Nov"
+      },
+      {
+       "date": "2026-11-26",
+       "week": "2026-11-23",
+       "day": "thu",
+       "label": "Thu 26 Nov"
+      },
+      {
+       "date": "2026-11-27",
+       "week": "2026-11-23",
+       "day": "fri",
+       "label": "Fri 27 Nov"
+      },
+      {
+       "date": "2026-11-28",
+       "week": "2026-11-23",
+       "day": "sat",
+       "label": "Sat 28 Nov"
+      },
+      {
+       "date": "2026-11-30",
+       "week": "2026-11-30",
+       "day": "mon",
+       "label": "Mon 30 Nov"
+      },
+      {
+       "date": "2026-12-01",
+       "week": "2026-11-30",
+       "day": "tue",
+       "label": "Tue 1 Dec"
+      },
+      {
+       "date": "2026-12-02",
+       "week": "2026-11-30",
+       "day": "wed",
+       "label": "Wed 2 Dec"
+      },
+      {
+       "date": "2026-12-03",
+       "week": "2026-11-30",
+       "day": "thu",
+       "label": "Thu 3 Dec"
+      },
+      {
+       "date": "2026-12-04",
+       "week": "2026-11-30",
+       "day": "fri",
+       "label": "Fri 4 Dec"
+      },
+      {
+       "date": "2026-12-05",
+       "week": "2026-11-30",
+       "day": "sat",
+       "label": "Sat 5 Dec"
+      },
+      {
+       "date": "2026-12-07",
+       "week": "2026-12-07",
+       "day": "mon",
+       "label": "Mon 7 Dec"
+      },
+      {
+       "date": "2026-12-08",
+       "week": "2026-12-07",
+       "day": "tue",
+       "label": "Tue 8 Dec"
+      },
+      {
+       "date": "2026-12-09",
+       "week": "2026-12-07",
+       "day": "wed",
+       "label": "Wed 9 Dec"
+      },
+      {
+       "date": "2026-12-10",
+       "week": "2026-12-07",
+       "day": "thu",
+       "label": "Thu 10 Dec"
+      },
+      {
+       "date": "2026-12-11",
+       "week": "2026-12-07",
+       "day": "fri",
+       "label": "Fri 11 Dec"
+      },
+      {
+       "date": "2026-12-12",
+       "week": "2026-12-07",
+       "day": "sat",
+       "label": "Sat 12 Dec"
+      },
+      {
+       "date": "2026-12-14",
+       "week": "2026-12-14",
+       "day": "mon",
+       "label": "Mon 14 Dec"
+      }
+     ],
+     "later": true,
+     "note": "Sunday is a rest day, so it is not offered.",
+     "body": {
+      "item": "engine:2026-11-16:povteach",
+      "version": 0,
+      "from": {
+       "week": "2026-11-16",
+       "day": "tue"
+      }
+     }
+    }
+   },
+   {
+    "doc_id": "off-thu-lookalikes",
+    "piece_id": null,
+    "day": "thu",
+    "date": "2026-11-19",
+    "kind": "meme",
+    "kind_label": "Meme",
+    "title": "Option lookalikes",
+    "why": "open",
+    "line": "Waiting on your answer.",
+    "read": {
+     "so_what": null,
+     "story": null,
+     "why_now": null,
+     "fact": null,
+     "text": "Option lookalikes",
+     "sources": [],
+     "research": [],
+     "said": null
+    },
+    "actions": [
+     {
+      "kind": "press",
+      "label": "Approve for Thursday 19 Nov",
+      "collection": "queue",
+      "id": "off-thu-lookalikes",
+      "revision": 2,
+      "body": {
+       "pick": "off-thu-lookalikes",
+       "use": "offday",
+       "day": "thu",
+       "week": "2026-11-16",
+       "option_id": "lookalikes",
+       "format": "Meme video, 9:16",
+       "copy_sha256": "0c915504389eebdd22705f239e5dc94916c298ecbcced6da166bbd35f61a894a",
+       "idea": {
+        "verdict": "approve",
+        "words": null,
+        "sha256": "eaac06a6cfb9cd2214bb1b9b882ec06fcd963262dc578fc2f4447fb822036c1e",
+        "shown": {
+         "copy": "Option lookalikes",
+         "hook": null,
+         "pitch": null,
+         "cards": null
+        }
+       }
+      },
+      "stamp": [
+       "at",
+       "idea.at"
+      ],
+      "done": "Approved. It is on the publish board for Thursday 19 November; Growth makes it.",
+      "outcome": "approved",
+      "goes": "Goes onto the publish board for Thursday 19 November. Growth makes it from what you approved."
+     },
+     {
+      "kind": "press",
+      "label": "Improve for a future piece",
+      "collection": "queue",
+      "id": "off-thu-lookalikes",
+      "revision": 2,
+      "body": {
+       "pick": "off-thu-lookalikes",
+       "use": "offday",
+       "day": "thu",
+       "week": "2026-11-16",
+       "option_id": "lookalikes",
+       "format": "Meme video, 9:16",
+       "copy_sha256": "0c915504389eebdd22705f239e5dc94916c298ecbcced6da166bbd35f61a894a",
+       "idea": {
+        "verdict": "improve",
+        "words": null,
+        "sha256": "eaac06a6cfb9cd2214bb1b9b882ec06fcd963262dc578fc2f4447fb822036c1e"
+       }
+      },
+      "words": {
+       "path": "idea.words",
+       "ask": "What would make it a piece later?",
+       "required": true
+      },
+      "stamp": [
+       "at",
+       "idea.at"
+      ],
+      "done": "Kept with your note. The revise run also brings a new version back here.",
+      "outcome": "improved",
+      "goes": "Kept with your note as a cue for a future piece. A revised version also comes back here to approve."
+     },
+     {
+      "kind": "press",
+      "label": "Reject",
+      "collection": "queue",
+      "id": "off-thu-lookalikes",
+      "revision": 2,
+      "body": {
+       "pick": "off-thu-lookalikes",
+       "use": "offday",
+       "day": "thu",
+       "week": "2026-11-16",
+       "option_id": "lookalikes",
+       "format": "Meme video, 9:16",
+       "copy_sha256": "0c915504389eebdd22705f239e5dc94916c298ecbcced6da166bbd35f61a894a",
+       "idea": {
+        "verdict": "reject",
+        "words": null,
+        "sha256": "eaac06a6cfb9cd2214bb1b9b882ec06fcd963262dc578fc2f4447fb822036c1e"
+       }
+      },
+      "words": {
+       "path": "idea.words",
+       "ask": "Why not? The next ideas run learns from your reason.",
+       "required": true
+      },
+      "stamp": [
+       "at",
+       "idea.at"
+      ],
+      "done": "Rejected, with your reason. The next ideas run learns from it.",
+      "outcome": "rejected",
+      "goes": "Rejected. Your reason is kept as a cue the next ideas run reads, and goes to your taste ledger in your words."
+     },
+     {
+      "kind": "press",
+      "label": "Save as a trend",
+      "collection": "queue",
+      "id": "off-thu-lookalikes",
+      "revision": 2,
+      "body": {
+       "pick": "off-thu-lookalikes",
+       "use": "offday",
+       "day": "thu",
+       "week": "2026-11-16",
+       "option_id": "lookalikes",
+       "format": "Meme video, 9:16",
+       "copy_sha256": "0c915504389eebdd22705f239e5dc94916c298ecbcced6da166bbd35f61a894a",
+       "idea": {
+        "verdict": "trend",
+        "words": null,
+        "sha256": "eaac06a6cfb9cd2214bb1b9b882ec06fcd963262dc578fc2f4447fb822036c1e"
+       }
+      },
+      "words": {
+       "path": "idea.words",
+       "ask": "Which trend is it part of?",
+       "required": true
+      },
+      "stamp": [
+       "at",
+       "idea.at"
+      ],
+      "done": "Saved with its trend, for a wider piece.",
+      "outcome": "trend",
+      "goes": "Kept with the trend you name, for a wider piece."
+     },
+     {
+      "kind": "press",
+      "label": "File for later",
+      "collection": "queue",
+      "id": "off-thu-lookalikes",
+      "revision": 2,
+      "body": {
+       "pick": "off-thu-lookalikes",
+       "use": "offday",
+       "day": "thu",
+       "week": "2026-11-16",
+       "option_id": "lookalikes",
+       "format": "Meme video, 9:16",
+       "copy_sha256": "0c915504389eebdd22705f239e5dc94916c298ecbcced6da166bbd35f61a894a",
+       "idea": {
+        "verdict": "next_week",
+        "words": null,
+        "sha256": "eaac06a6cfb9cd2214bb1b9b882ec06fcd963262dc578fc2f4447fb822036c1e"
+       }
+      },
+      "stamp": [
+       "at",
+       "idea.at"
+      ],
+      "done": "Filed for later. It comes back on a later ideas board.",
+      "outcome": "filed",
+      "goes": "Filed with today's date. It comes back on a later ideas board, or when you ask for it."
+     }
+    ],
+    "stories": null,
+    "move": {
+     "op": "move",
+     "label": "Move to…",
+     "item": "engine:2026-11-16:lookalikes",
+     "version": 0,
+     "state": "slate",
+     "from": {
+      "week": "2026-11-16",
+      "day": "thu",
+      "date": "2026-11-19"
+     },
+     "days": [
+      {
+       "date": "2026-11-16",
+       "week": "2026-11-16",
+       "day": "mon",
+       "label": "Mon 16 Nov"
+      },
+      {
+       "date": "2026-11-17",
+       "week": "2026-11-16",
+       "day": "tue",
+       "label": "Tue 17 Nov"
+      },
+      {
+       "date": "2026-11-18",
+       "week": "2026-11-16",
+       "day": "wed",
+       "label": "Wed 18 Nov"
+      },
+      {
+       "date": "2026-11-19",
+       "week": "2026-11-16",
+       "day": "thu",
+       "label": "Thu 19 Nov",
+       "current": true
+      },
+      {
+       "date": "2026-11-20",
+       "week": "2026-11-16",
+       "day": "fri",
+       "label": "Fri 20 Nov"
+      },
+      {
+       "date": "2026-11-21",
+       "week": "2026-11-16",
+       "day": "sat",
+       "label": "Sat 21 Nov"
+      },
+      {
+       "date": "2026-11-23",
+       "week": "2026-11-23",
+       "day": "mon",
+       "label": "Mon 23 Nov"
+      },
+      {
+       "date": "2026-11-24",
+       "week": "2026-11-23",
+       "day": "tue",
+       "label": "Tue 24 Nov"
+      },
+      {
+       "date": "2026-11-25",
+       "week": "2026-11-23",
+       "day": "wed",
+       "label": "Wed 25 Nov"
+      },
+      {
+       "date": "2026-11-26",
+       "week": "2026-11-23",
+       "day": "thu",
+       "label": "Thu 26 Nov"
+      },
+      {
+       "date": "2026-11-27",
+       "week": "2026-11-23",
+       "day": "fri",
+       "label": "Fri 27 Nov"
+      },
+      {
+       "date": "2026-11-28",
+       "week": "2026-11-23",
+       "day": "sat",
+       "label": "Sat 28 Nov"
+      },
+      {
+       "date": "2026-11-30",
+       "week": "2026-11-30",
+       "day": "mon",
+       "label": "Mon 30 Nov"
+      },
+      {
+       "date": "2026-12-01",
+       "week": "2026-11-30",
+       "day": "tue",
+       "label": "Tue 1 Dec"
+      },
+      {
+       "date": "2026-12-02",
+       "week": "2026-11-30",
+       "day": "wed",
+       "label": "Wed 2 Dec"
+      },
+      {
+       "date": "2026-12-03",
+       "week": "2026-11-30",
+       "day": "thu",
+       "label": "Thu 3 Dec"
+      },
+      {
+       "date": "2026-12-04",
+       "week": "2026-11-30",
+       "day": "fri",
+       "label": "Fri 4 Dec"
+      },
+      {
+       "date": "2026-12-05",
+       "week": "2026-11-30",
+       "day": "sat",
+       "label": "Sat 5 Dec"
+      },
+      {
+       "date": "2026-12-07",
+       "week": "2026-12-07",
+       "day": "mon",
+       "label": "Mon 7 Dec"
+      },
+      {
+       "date": "2026-12-08",
+       "week": "2026-12-07",
+       "day": "tue",
+       "label": "Tue 8 Dec"
+      },
+      {
+       "date": "2026-12-09",
+       "week": "2026-12-07",
+       "day": "wed",
+       "label": "Wed 9 Dec"
+      },
+      {
+       "date": "2026-12-10",
+       "week": "2026-12-07",
+       "day": "thu",
+       "label": "Thu 10 Dec"
+      },
+      {
+       "date": "2026-12-11",
+       "week": "2026-12-07",
+       "day": "fri",
+       "label": "Fri 11 Dec"
+      },
+      {
+       "date": "2026-12-12",
+       "week": "2026-12-07",
+       "day": "sat",
+       "label": "Sat 12 Dec"
+      },
+      {
+       "date": "2026-12-14",
+       "week": "2026-12-14",
+       "day": "mon",
+       "label": "Mon 14 Dec"
+      }
+     ],
+     "later": true,
+     "note": "Sunday is a rest day, so it is not offered.",
+     "body": {
+      "item": "engine:2026-11-16:lookalikes",
+      "version": 0,
+      "from": {
+       "week": "2026-11-16",
+       "day": "thu"
+      }
+     }
+    }
    }
   ]
  }

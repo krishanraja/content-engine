@@ -67,6 +67,58 @@ board has everything up to date and, not only that, is genuinely live?" The audi
   same for any write. Both are served with a same-origin referrer, and the board answers a write from either page with
   423 `archive_read_only` and the live board's link (`_readOnly.ts`). Nothing is deleted; every address still opens.
 
+## The week model: what the publish board draws (contract 1.12.0)
+
+Ruling (Krish, 2026-11-13): the publish board shows only what he approved, in one week model (three pieces and off-day
+posts of fixed kinds), one action per item, ideas only on the ideas board, and never the old composer. His words: "The
+Publish board is still SO confusing ... I thought this UI was retired and that the purpose of the publish board was now
+to either only do an action (for example in GitHub or somewhere else) or copy a prompt to Claude so I can run a session
+on it. That session would automatically re-update the board when it was done ... Monday, Wednesday, and Friday are
+set-in-stone ideas on that topic: branded, fleshed out, production planned, and then produced. On a Sunday, I decide
+where all the off-day stuff goes."
+
+**One model, computed in the engine** (`apps/control-plane/api/board/_weekModel.ts`, the view's `model`). The view
+builds it on every read from the days it already gates and stages from the records (the pieces in `content_ideas`
+through the ideas gate, the off-day items in `offday_items`, his presses, Growth's records), and Control Centre's
+Publish Board draws `model` and nothing else on a day.
+
+- **The week is two kinds of thing.** The three pieces, Mon, Wed and Fri, each on one fixed path, and the off-day posts
+  he approved, each of one fixed kind, on one day, on its own path:
+
+  | Path | Its steps | Read from (one place: `PIECE_PATH`, `POST_PATH`) |
+  |---|---|---|
+  | A piece | Branded, Fleshed out, Production planned, Produced, Live | Branded: his Approve and the signed narrative lock (`story`). Fleshed out: the research on file and the look picked (`research`, `look`). Production planned: the storyboard and both scripts approved (`board`). Produced: both cuts recorded and cut (`after_recording`). Live: out on its channels |
+  | An off-day post | Approved, Made, Scheduled, Live | Its stage (`_stage.ts`): his Approve, Growth's made, scheduled and live records, his It's live |
+
+  The kinds are one short list (`OFFDAY_KINDS`), each with one plain name the board uses everywhere: Supporting
+  carousel ("Carousel for Friday's piece"), Voiceover short, Explainer, Good news and Meme. A plan names the kind
+  (`kind`, `supports`; plan-week `references/offdays.md`); an older plan is read from its format by one rule
+  (`offdayKind`).
+- **Only what he approved is on a day.** A day's `items` are the piece his approval holds and the off-day options his
+  Approve stands on. An idea he has not answered, one a session said was decided that he never pressed (held), a
+  revised option and any other suggestion is in `model.ideas`, which only the ideas board draws, with the five presses
+  that answer it; a day says only how many wait there (`ideas`). The day's own presses never carry an idea's Approve
+  any more, and `yours` holds only his real decisions.
+- **One next action per item** (`next`): a press that does the thing (It's live, Approve for publish, a run on GitHub
+  such as "Find the other 4 stories") or the one prompt, "Copy prompt for Claude", which names the item and tells the
+  session to report back to the board as it works (`writeBack`). Never a page of the archive, never the old look
+  picker or review. A live item has none; a scheduled one waits on Growth.
+- **His decisions on a day** are only his real ones (`decision`): Approve for publish on a made piece, and a choice an
+  approved post is still missing (its direction, with the other answers in `others`). Never an idea.
+- **Good news is one post, five stories on one topic.** The Saturday item lists its stories in full (headline, what,
+  why it matters, source, date). One that holds fewer says so ("1 of 5 stories found") and its next action is "Find
+  the other N stories", `saturday-goodnews.yml` with `fill: off-<day>-<id>`, which fills that approved post to five
+  on its own topic and changes none of the words his Approve is bound to (plan-week `references/offdays.md`, "Filling
+  an approved post to five").
+- **The read sheet** (`read` on every item and idea): its story, why now, the fact, its sources and the research on
+  file, read-only, with its one action. Control Centre opens it from a card, and `#/content?idea=<id>` opens it for
+  that idea; the old content composer is never reached from the board.
+
+Held by `tests/control-plane/board-week-model.test.ts` on the week of 9 Nov as it stood on Fri 13 Nov (an unanswered or
+held option is never on a day; Thu 12's explainer and meme video; Sat 14's one-story good news beside the held
+five-story idea; the piece path; one action an item; decisions), `modelProblems` inside `viewProblems`, and the frozen
+fixture `apps/control-plane/api/board/fixtures/week-2026-11-09.view.json`, which Control Centre's board specs draw.
+
 ## The ideas gate: only his Approve crosses (Ruling, Krish, 2026-11-11)
 
 Krish, 2026-11-11: "Once I've completed it, ideas should either be: filed away for later, rejected and learnt from,
@@ -112,7 +164,9 @@ board does not pretend they were.
    when (`pieces[].approval`, and the day's first detail line), and lists every other piece on the day as a held
    line (`held`), never hiding it: "Held: not approved by you" when nothing he pressed put it there, "Held: changed
    since you approved it" when the option's words on the ideas board changed after his Approve (the approval binds
-   the words he saw). A held piece that is not one of the day's options carries its own Approve press. An off-day
+   the words he saw). A held piece that is not one of the day's options carries its own Approve press. Since 1.12.0
+   (Ruling, Krish, 2026-11-13) a held line and its Approve are the ideas board's (`model.ideas`), never drawn on the day
+   ("The week model", above). An off-day
    option a session wrote as `decided` in `ideas.json` is held too: his words in a session are shown on it and never
    read as his press. When his approvals cannot be read, every piece is held. Held by
    `tests/control-plane/ideas-gate.test.ts`.
@@ -458,6 +512,10 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
 - **1.11.0 (13 Nov 2026)** added `sign_offs` to every week: the three video sign-off cards, each sample with its preview,
   its Drive link, his answer and whether the engine holds it, and the press kind `op: sign-off` ("To review: the video
   sign-offs", below).
+- **1.12.0 (13 Nov 2026)** added `model` to every week: the week model the Publish Board draws (the pieces and the
+  off-day posts he approved, each with its kind, path and one next action; the ideas that wait on the ideas board; "The
+  week model", above). From 1.12.0 a held option's Approve is no longer spliced into its day's `actions`, a day with
+  only held ideas no longer leads with them, and `yours` holds only his real decisions.
 
 ## To review: the video sign-offs (contract 1.11.0)
 
