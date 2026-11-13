@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { buildView, lockOf, type ViewInputs } from '../../apps/control-plane/api/board/_view'
+import { LOCK_DAYS, buildView, lockOf, type ViewInputs } from '../../apps/control-plane/api/board/_view'
+import { readFileSync } from 'node:fs'
 import { dayLine } from '../../apps/control-plane/api/board/_weekModel'
 import { reportPosts, type OffdayItem } from '../../apps/control-plane/api/board/_offdayItems'
 import { writeBack } from '../../apps/control-plane/api/board/_writeBack'
@@ -132,6 +133,15 @@ describe('a narrative lock follows its piece, never its day', () => {
     expect(tue.line).toMatch(/^Branded: its narrative lock is signed for Tue 17/)
     const later = buildView({ ...i, now: new Date('2026-11-18T15:00:00Z') })
     expect(model(later, 'tue').items.find(x => x.piece_id === FRI_OLD)).toMatchObject({ missed: true, line: expect.stringMatching(/^Missed: Tue 17 passed/) })
+  })
+})
+
+describe('every day\'s lock is read, so a piece moved to an off day keeps its own', () => {
+  it('reads narrative-lock-<day>.md for all six days (Tue 17 Nov holds the data-centres piece\'s lock)', () => {
+    expect(LOCK_DAYS).toEqual(['mon', 'tue', 'wed', 'thu', 'fri', 'sat'])
+    const src = readFileSync('apps/control-plane/api/board/_view.ts', 'utf8')
+    expect(src).toMatch(/\.\.\.LOCK_DAYS\.map\(d => fetchText\(fetcher, `\$\{RAW\}\/docs\/plans\/\$\{week\}-week\/narrative-lock-\$\{d\}\.md`\)\)/)
+    expect(src).toMatch(/locks: Object\.fromEntries\(LOCK_DAYS\.map\(/)
   })
 })
 
