@@ -17,6 +17,7 @@ import { beatMotion, halftoneTexture, keepsOutgoing, stageGround, sweepStyle, tr
 import { focusRoom, placed } from './kit/focus'
 import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
+import { cameraAt, cameraStyle, flashAt, hitFrames } from './kit/ingredients'
 import { EngineAudio } from './audio'
 import type { EngineBeat, EngineObject, EngineRenderProps } from './props'
 
@@ -89,6 +90,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   setActiveCanvas(width, height)
   // The motion style he picked (props.motion), or the house motion when there is none: every device reads it.
   const profile = resolveMotion(props.motion)
+  const ingredients = props.ingredients
   setMotionProfile(profile)
 
   const take = props.segments.map((segment, index) => (
@@ -111,10 +113,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         </Sequence>
       ))
 
-  return (
-    <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
-      {!hasWindow && take}
-      {props.beats.map((beat, beatIndex) => {
+  const beatLayers = props.beats.map((beat, beatIndex) => {
         // Beats mount by frame range with no time offset, so media nested inside a device (a recording's own
         // Sequence) runs on the same global clock as everything else (INV-ONE-CLOCK).
         const next = props.beats[beatIndex + 1]
@@ -231,12 +230,33 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
           <AbsoluteFill style={fade < 1 ? { opacity: fade } : undefined}>
             <TornSeam id={beat.id} width={width} seam={layerHeight} tokens={props.tokens} />
           </AbsoluteFill></Fragment> : layer
-      }).concat(hasWindow ? take : [])}
-      {props.beats.map((beat) => (frame < beat.fromFrame || frame >= beat.toFrame ? null : (
+      }).concat(hasWindow ? take : [])
+  const brandLayers = props.beats.map((beat) => (frame < beat.fromFrame || frame >= beat.toFrame ? null : (
         <AbsoluteFill key={`brand-${beat.id}`}>
           <BrandFrame props={props} beat={beat} frame={frame} />
         </AbsoluteFill>
-      )))}
+      )))
+  // With no ingredients the tree is exactly what it was before them (houseGolden.test.ts flattens it).
+  if (!ingredients) return (
+    <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
+      {!hasWindow && take}
+      {beatLayers}
+      {brandLayers}
+      <EngineAudio audio={props.audio} stem={stem} />
+    </AbsoluteFill>
+  )
+  // The camera and the handover (kit/ingredients.ts) move the whole picture, his take and the graphics together; the
+  // captions and the frame stay still over it, and a flash of cream lands over the picture under the captions.
+  const hits = ingredients.hits ? hitFrames(props.events) : []
+  const flash = flashAt(ingredients, props.beats, hits, frame)
+  return (
+    <AbsoluteFill style={{ backgroundColor: props.tokens.ink, overflow: 'hidden' }}>
+      <AbsoluteFill data-ingredient-camera style={cameraStyle(cameraAt(ingredients, props.beats, hits, frame, width), width, height)}>
+        {!hasWindow && take}
+        {beatLayers}
+      </AbsoluteFill>
+      {flash > 0 ? <AbsoluteFill data-flash style={{ backgroundColor: props.tokens.cream, opacity: flash }} /> : null}
+      {brandLayers}
       <EngineAudio audio={props.audio} stem={stem} />
     </AbsoluteFill>
   )

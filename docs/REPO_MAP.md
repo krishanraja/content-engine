@@ -4300,12 +4300,24 @@ Run a Vercel serverless handler locally against the real environment.
 
 - `function EngineAudio({ audio, stem = true }: { audio: EngineRenderProps['audio']; stem?: boolean })`
 
+### `apps/renderer/src/engine/captions/draw.tsx`
+
+- `type Draw`
+- `const root = (name: string, box: Box, children: React.ReactNode, extra: React.CSSProperties = {}) =>`
+- `const upper = (t: string) =>`
+- `function wrap(words: string[], size: number, width: number, face: Parameters<typeof textWidth>[2], caps: boolean, gap: …`
+- `const STOP`
+- `const isStop = (text: string) =>`
+- `function exitStart(page: { toFrame: number; words: readonly { atFrame: number }[] }, frames: number, fps: number, holdS…`
+- `function marked(hero: number): number`
+
 ### `apps/renderer/src/engine/captions/kit.ts`
 
 - `type Page = EngineRenderProps['captions'][number]`
 - `type Aspect = EngineRenderProps['aspect']`
 - `type Box = { left: number; top: number; width: number; height: number }`
-- `const REGIONS: Record<Aspect, { lower: Box; upper: Box }>`
+- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box }>`
+- `function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'>): Box`
 - `const scale = (aspect: Aspect) =>`
 - `const F`
 - `function livePage(props: Pick<EngineRenderProps, 'captions'>, frame: number): { page: Page; index: number } | null`
@@ -4334,6 +4346,55 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 
 - `const CAPTION_THEMES`
 - `type CaptionThemeName = typeof CAPTION_THEMES[number]`
+
+### `apps/renderer/src/engine/captions/styles/anchor-quote.tsx`
+
+- `const anchorQuote: Draw`
+
+### `apps/renderer/src/engine/captions/styles/flip-hinge.tsx`
+
+- `const flipHinge: Draw`
+
+### `apps/renderer/src/engine/captions/styles/georgia-build.tsx`
+
+- `const georgiaBuild: Draw`
+
+### `apps/renderer/src/engine/captions/styles/index.ts`
+
+- `const STYLES`
+- `type StyleName = keyof typeof STYLES`
+
+### `apps/renderer/src/engine/captions/styles/ink-block.tsx`
+
+- `const inkBlock: Draw`
+
+### `apps/renderer/src/engine/captions/styles/mint-word.tsx`
+
+- `const mintWord: Draw`
+
+### `apps/renderer/src/engine/captions/styles/rack-focus.tsx`
+
+- `const rackFocus: Draw`
+
+### `apps/renderer/src/engine/captions/styles/receipt-chip.tsx`
+
+- `const receiptChip: Draw`
+
+### `apps/renderer/src/engine/captions/styles/slice.tsx`
+
+- `const slice: Draw`
+
+### `apps/renderer/src/engine/captions/styles/slot-roll.tsx`
+
+- `const slotRoll: Draw`
+
+### `apps/renderer/src/engine/captions/styles/stair-flash.tsx`
+
+- `const stairFlash: Draw`
+
+### `apps/renderer/src/engine/captions/styles/tuck-stack.tsx`
+
+- `const tuckStack: Draw`
 
 ### `apps/renderer/src/engine/captions/themes.tsx`
 
@@ -4979,6 +5040,20 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `type Homography = readonly [Point3, Point3, Point3]`
 - `function homography(src: readonly Point[], dst: readonly Point[]): Homography`
 - `function matrix3d(h: Homography): string`
+
+### `apps/renderer/src/engine/kit/ingredients.ts`
+
+- `const ENERGIES`
+- `const TRANSITIONS`
+- `const CAMERAS`
+- `const EngineIngredientsSchema`
+- `type EngineIngredients = z.infer<typeof EngineIngredientsSchema>`
+- `interface Span`
+- `interface CameraState`
+- `function hitFrames(events: readonly { atFrame: number }[]): number[]`
+- `function cameraAt(ing: EngineIngredients, beats: readonly Span[], hits: readonly number[], frame: number, width: number…`
+- `function cameraStyle(state: CameraState, width: number, height: number): CSSProperties`
+- `function flashAt(ing: EngineIngredients, beats: readonly Span[], hits: readonly number[], frame: number): number`
 
 ### `apps/renderer/src/engine/kit/lock.ts`
 

@@ -1,0 +1,120 @@
+{
+  "id": "character-ai",
+  "piece": "Mon 26 Oct 2026 follow.the.money \"Why is Disney eating the scraps of bankrupt Character.AI?\" (Disney, Google and Character.AI), tall 9:16 cut, reference mon26-tall",
+  "source_file": "3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/3 Video/Disney, Google and Character.AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4 (1080x1920, 24 fps, 85.67 s)",
+  "sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+  "idea": "Evidence prints onto a lit ink desk above a still face band. Proof objects (torn receipts, a money map, logo rows, blank checklists) fade and rise into the panel, and each line or chip lands on the word that names it. The panel changes layout by dissolving, never by moving a camera.",
+  "motion_grammar": "The source runs at 24 fps. Numbers are given as 24 fps frames and then as 30 fps frames.\n\nBUILD FADE (cold open, 0 to 0.9 s): each element goes from opacity 0 to 1 in 3 to 4 frames (4 to 5 at 30 fps) and does not move. The build is layered: card, then logo, then name, then figure chip, about 2 frames apart (3 at 30). The second card starts 13 frames (16 at 30) after the first. The VS disc fades in over 2 frames.\n\nOBJECT RISE (the receipt drop at 16.0 s): the object comes in at about 40% opacity, about 250 px below its rest position and tilted about -3 deg. It rises to rest in 7 frames (9 at 30) with an ease-out. Over the next 6 to 8 frames its tilt settles to -1.5 deg with a wobble of about 1 deg. It has no overshoot. The outgoing state dissolves underneath it in the same 6 frames.\n\nLINE PRINT (the receipt lines, 18.4 to 19.6 s): a line fades in over 3 to 4 frames on its spoken word. For 3 frames the card jolts about 2 px and shows a doubled ghost image, which reads as the print. The figure's mint fill arrives in the same frames. Rules draw left to right in 4 frames. The source label (WIRED, COURT FILINGS VIA GIZMODO) fades in over 2 to 3 frames, about 6 frames after the header rule.\n\nWORD BLUR-IN (headlines, for example LAWSUITS STAY BEHIND at about 42.9 s): each word arrives blurred (about 8 px) at about 50% opacity and sharpens in 2 to 3 frames. Words are 3 to 4 frames apart (4 to 5 at 30 fps) and do not move.\n\nRE-LAYOUT DISSOLVE: when a device changes state (the money map gains its headline, THE PEOPLE chip lifts to about -8 deg in mint and moves across along a mint arrow to the Disney side), the old and new layouts crossfade over 6 frames (8 at 30), so both show as ghosts. Nothing is tweened.\n\nSLAM (once per piece, NOW IT'S BANKRUPT. at 13.0 s): the word comes in at about 250% scale and slams to 100% in 3 frames (4 at 30), with no overshoot. Caution tapes in the series colour (CHAPTER 11 \u00b7 FILED 12 OCT 2026 \u00b7 COURT FILING) cross at about plus and minus 4 deg and drift sideways all the time. A confetti burst of mint, cream and series-colour slips goes off. On exit everything fades to about 30% over 6 frames, then cuts to the bare ink ground.\n\nCHECKLIST (66 to 79 s): blank numbered cream slots fade in from top to bottom, 2 frames apart; the last one comes in as a ghost sliding up. Each slot fills on its spoken question with a 6-frame ghost dissolve. The header changes from 4 QUESTIONS to THE FOUR CLUES by word blur-in.\n\nCOUNT: 75% counts up on its word in Anton in the series colour, taking about 18 to 24 frames.\n\nEND: a 6-frame dissolve of the panel and the face, then a hard cut at 81.67 s to the end card. The end card builds the brand bar first, then the pill (2 frames), then the question one line at a time, each line fading in over 3 frames, 3 frames apart (4 at 30).\n\nHOLDS: the longest still stretch is 2 s. The panel changes every 0.27 s at the median (pace events). Logo rows slide or fade in when their names are said.",
+  "layout_frame_use": "Split frame, measured on 1080x1920 frames:\n- Series-colour hairline: y 0 to 10, full width.\n- Graphic panel: y 10 to 1000 (990 px, 52% of the frame).\n- Face band: y 1000 to 1920 (920 px, 48%). It is a still, centred crop of the take with no punch-in. There is no divider line at y 1000; the edge is hard.\n\nInside the panel:\n- Source kicker: Plex Mono caps, x 62, y 928 to 954 (cap height 26 px, about 36 px type), cream at about 70%. Examples: COURT FILINGS, OUR PREDICTION, THIS STORY.\n- Headline: Anton caps in cream, centred, y 340 to 416 (cap height 76 px, about 105 px type), x 146 to 932.\n- Receipt: x 66 to 1012, y 254 to 752 (946 x 498), tilted about -1.5 deg.\n- Money map rows: y 450 to 700. THE PEOPLE chip: x 554 to 982, y 536 to 660.\n- Logo rows sit near y 130 to 200, with a second row near y 300.\n- Checklist slots: x about 30 to 1050, four rows of about 80 px, about 105 px apart, from y about 110.\n\nThe cold open (0 to 3.5 s) is a full-frame split poster:\n- Mint over y 0 to 986, the series colour over y 986 to 1920.\n- Brand bar and pill near y 90 to 130.\n- Two ink cards at x 146 to 934, with a VS disc on the seam.\n\nThe end card (from 81.67 s): the series colour over y 0 to 1300, inkDeep over y 1300 to 1920. The headline is set left at x 120. pace.json: used_frame 0.81, active_frame 0.42.\n\nCaptions sit on the face band's top edge (y about 1000 to 1110), so the panel's own text stays above y 960. That keeps the proof words inside the safe area (y 270 to 1320). The kicker sits above the caption band.",
+  "transitions": "Inside the panel, beats and device states change by 6-frame dissolves at 24 fps (8 at 30 fps, transitionFrames 8). The old layout ghosts under the new one. There are two hard cuts: cold open to split at 3.5 s, and split to end card at 81.67 s. The face band never shows a cut; take edits are hidden under panel changes. scdet found 6.3 cuts a minute, all of them panel-state changes. The slam's exit is a fade to about 30% over 6 frames, then a cut to the bare ink ground (character.ai wordmark only) for about 0.3 s before the next logo row fades in.",
+  "camera": "None. There is no push, zoom or pan on the panel or the face band. Every zoom that ve study detected is Krish leaning towards the lens, not an edit. The panel ground is the only thing that moves on its own: a series-colour glow at top left and a mint glow at bottom right drift a few levels over several seconds.",
+  "ground": "Ink panel (measured #0E1A16, between ink #0C1512 and inkSoft #16221D). A series-colour radial glow at top left lifts it to about #31321D, and a mint glow at bottom right lifts it to about #24352F. Both drift slowly (pixel values move by about 5 over 6 s). Underneath is a faint cream grid with cells of about 54 px at about 4% opacity (approximate). A 10 px series-colour hairline runs across the top edge. The cold open and the end card are the only flat colour fields (mint and series colour, series colour and inkDeep).",
+  "palette_use": "Ink is always the panel. Cream is for proof paper (receipts, checklist slots) and Anton headlines. Mint is only for the figure fill on a receipt line ($2.7B (REPORTED), ~$60M A YEAR), the chip that moves (THE PEOPLE), arrows, and the \".ai\" on the end card. The series colour (follow.the.money #FFD84D) is for the top hairline, the caution-tape slam, small date and status pills (IN CHAPTER 11), the THE LAWSUITS chip, the 75% count and the end-card field. Logos appear in white on ink, at their real shape.",
+  "type_treatment": "Anton caps for headlines (at most 3 words, about 105 px), checklist answers and the end-card question. Plex Mono caps for receipt lines, kickers, pills and tape text. Archivo bold for the names under logos on cold-open cards and for the end-card address. Type never moves: it fades or blurs in, one word or one line at a time. Every label adds a source, date, number or name, never the spoken sentence.",
+  "captions_seen": "House caption, which is separate from this style. Cream Archivo 900 on an ink chip at the top of the face band (chip y about 995 to 1119, about 46 px type), centred, with a hard series-colour shadow of about 12 px. The spoken figure sits on a mint fill ($2.7, 66, 75%, 2024). Sentence case, about 3 to 5 words, paged by phrase.",
+  "sound": "The study measured loudness at -14.2 LUFS. The transcript pass did not run: faster-whisper failed to decode the file with this container's PyAV. The voice is Krish's take. Whether there is a music bed was not checked by ear in this study.",
+  "devices_used": [
+    "torn receipt (itemised-receipt) with line print and mint figure fill",
+    "logo row (Google / character.ai / Disney, then Skydance / Universal Music Group / Comcast) with headline",
+    "screen-proof document, blurred except the proving line on a mint highlight, with source kicker",
+    "money map: character.ai box in Chapter 11 with THE PEOPLE / THE LAWSUITS chips, the people chip moving along an arrow to Disney",
+    "caution-tape slam with confetti (NOW IT'S BANKRUPT.)",
+    "blur-in word headline over a dot field of character tiles (MILLIONS MADE FRIENDS HERE.)",
+    "prediction card with count-up 75% and precedent row (Warner Music Group already bought Suno AI, June 2026)",
+    "numbered checklist arriving blank then filling",
+    "cold-open split poster with two ink cards and VS disc",
+    "end card on the series colour"
+  ],
+  "measured": {
+    "active_frame": 0.42,
+    "cuts_per_minute": 6.3,
+    "energy_median": 2.68,
+    "events_per_s": 3.85,
+    "longest_gap_s": 3.47,
+    "used_frame": 0.81
+  },
+  "never": [
+    "camera moves, pushes or punch-ins on the face band or the panel",
+    "full-frame cutaways between the cold open and the end card",
+    "overshoot or bounce on any entrance",
+    "travel on type: type only fades or blurs in",
+    "more than one slam (tape plus confetti) per piece",
+    "an on-screen label that repeats the spoken line",
+    "character artwork in place of a company's logo",
+    "flat colour fields other than the cold open and the end card",
+    "a divider line or frame between the panel and the face"
+  ],
+  "profile_proposal": {
+    "profile": {
+      "entrance": {
+        "kind": "rise",
+        "frames": 7,
+        "easing": "enter",
+        "distancePx": 60,
+        "overshootPct": 0
+      },
+      "stagger": {
+        "frames": 4,
+        "unit": "word"
+      },
+      "exitFrames": 8,
+      "onTwos": false,
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
+      "transition": "crossfade",
+      "transitionFrames": 8,
+      "typeReveal": {
+        "kind": "word"
+      },
+      "ground": {
+        "kind": "dark",
+        "sweepFrames": 0,
+        "texture": "none",
+        "cards": "keep"
+      },
+      "overlays": [
+        "torn"
+      ],
+      "type": {
+        "font": "house",
+        "hero": false
+      },
+      "driftPct": 0.5,
+      "countFrames": 20,
+      "note": "character-ai (mon26-tall): evidence prints on a lit ink desk above a still face band. Proof objects rise into place under a fade, with no overshoot. Receipt lines print on their word with a 3-frame jolt, and the figure lands on a mint fill. Headline words blur in 4 frames apart. A device changes state by an 8-frame dissolve, never a tween. No camera. One slam per piece at most."
+    },
+    "ingredients": {
+      "energy": "medium",
+      "transition": "cut",
+      "camera": "none"
+    },
+    "caption_theme": "house (leave brand.caption_theme unset); the cut was made with the house caption, but captions are decoupled and any theme can sit on the face band's top edge",
+    "measured_vs_floor": "Measured entrance: 7 frames at 24 fps (about 9 at 30) over about 250 px. The floor caps this at 7 frames and 60 px, so this profile sits at the floor's top end. Type entrances measured 0 px of travel (fade or blur only), below the floor's 40 px minimum."
+  },
+  "gaps": [
+    "Split layout: a still face band at y 1000 to 1920 under an ink graphic panel at y 10 to 1000, with a 10 px series-colour hairline on top. The profile has no layout field; the renderer's SPLIT ground would need these exact proportions and no divider.",
+    "Lit ground: a series-colour radial glow at top left and a mint glow at bottom right, slowly drifting, plus a faint grid of about 54 px cells. ground.texture offers only none, halftone and paper.",
+    "Opacity-first entrances with 0 px travel for type and logos. The floor (entrance distance 40 to 60 px) forces travel the reference does not have. The receipt's real rise is about 250 px with a tilt from -3 to -1.5 deg and a 1 deg settle wobble; neither tilt nor wobble is expressible.",
+    "Word blur-in (about 8 px blur to sharp in 2 to 3 frames). typeReveal word has no blur parameter.",
+    "Line print jolt: a 2 px card jolt with a doubled ghost image for 3 frames as each receipt line prints, with the mint figure fill arriving at the same moment.",
+    "Re-layout dissolve: a device crossfades between two of its own states (map gains headline, chip lifts to -8 deg and moves along an arrow). transition crossfade applies only between beats.",
+    "Slam device: a word scaled from 250% to 100% in 3 frames, two drifting caution tapes in the series colour with mono text, a confetti burst of mint, cream and series-colour slips, and a fade to 30% before the cut.",
+    "Checklist that arrives blank (numbered slots, 2 frames apart) and fills slot by slot on its spoken words.",
+    "Cold-open split poster (mint over series colour, ink cards with hard offset shadow, VS disc on the seam) built by layered fades. This is a device and an intro choice, not a profile value.",
+    "End card on the series colour over inkDeep, with the question built one line at a time 3 frames apart.",
+    "The source is 24 fps. All frame counts were measured at 24 and need converting to the 30 fps the profile assumes.",
+    "ve study's transcript step crashed in this container: faster-whisper passes metadata_errors to av.open, which this PyAV version does not accept. The grammar was run with words=False, so speech pace and words a minute are missing."
+  ],
+  "evidence": [
+    "/home/user/content-engine/docs/plans/2026-10-26-monday/creative-direction.json",
+    "/home/user/content-engine/docs/plans/2026-10-26-monday/storyboard-head.md",
+    "/home/user/content-engine/config/reference-cuts.json (mon26-tall, mon26-wide)",
+    "/home/user/content-engine/apps/renderer/src/engine/kit/motionProfiles.ts"
+  ],
+  "style_id": "character-ai-receipts",
+  "studied": "2026-11-13, by a separate reader per cut (ve pace on the whole frame, dense strips at speed); captions burned into the cut count in events_per_s"
+}

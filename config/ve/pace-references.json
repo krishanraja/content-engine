@@ -1,0 +1,148 @@
+{
+  "schema": "ve-pace-references/1",
+  "note": "Describes the cut; never a target (THE_BAR). Compared with the references he keeps, it flags; it never refuses.",
+  "grid": [
+    90,
+    160,
+    15
+  ],
+  "references": [
+    {
+      "file": "igexport-DCHp2RLIxMt.mp4",
+      "duration_s": 42.0,
+      "events": 193,
+      "events_per_s": 4.6,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 0.73,
+      "gaps_over_2s": 0,
+      "energy_median": 12.3,
+      "energy_p75": 22.6,
+      "used_frame": 0.87,
+      "active_frame": 1.0
+    },
+    {
+      "file": "stamp-duty-is-stupid-ytshorts.savetube.vip.mp4",
+      "duration_s": 173.93,
+      "events": 780,
+      "events_per_s": 4.48,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 3.0,
+      "gaps_over_2s": 1,
+      "energy_median": 6.17,
+      "energy_p75": 9.61,
+      "used_frame": 0.81,
+      "active_frame": 0.69
+    },
+    {
+      "file": "instagram_DeypYeWN5hL.mp4",
+      "duration_s": 74.4,
+      "events": 226,
+      "events_per_s": 3.04,
+      "median_gap_s": 0.27,
+      "longest_gap_s": 2.13,
+      "gaps_over_2s": 1,
+      "energy_median": 0.3,
+      "energy_p75": 0.77,
+      "used_frame": 0.27,
+      "active_frame": 0.1
+    },
+    {
+      "file": "instagram_DeZuQ7-lATg.mp4",
+      "duration_s": 33.87,
+      "events": 142,
+      "events_per_s": 4.19,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 0.6,
+      "gaps_over_2s": 0,
+      "energy_median": 3.21,
+      "energy_p75": 5.23,
+      "used_frame": 0.88,
+      "active_frame": 0.98
+    },
+    {
+      "file": "youtube_wh3D5Zx6Prg.mp4",
+      "duration_s": 156.67,
+      "events": 705,
+      "events_per_s": 4.5,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 0.93,
+      "gaps_over_2s": 0,
+      "energy_median": 3.04,
+      "energy_p75": 4.84,
+      "used_frame": 0.87,
+      "active_frame": 0.5
+    },
+    {
+      "file": "instagram_DePHDr_jRed.mp4",
+      "duration_s": 69.2,
+      "events": 295,
+      "events_per_s": 4.26,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 0.6,
+      "gaps_over_2s": 0,
+      "energy_median": 1.64,
+      "energy_p75": 2.5,
+      "used_frame": 0.94,
+      "active_frame": 0.27
+    },
+    {
+      "file": "instagram_DdCY4cJAQZk.mp4",
+      "duration_s": 17.07,
+      "events": 49,
+      "events_per_s": 2.87,
+      "median_gap_s": 0.27,
+      "longest_gap_s": 1.13,
+      "gaps_over_2s": 0,
+      "energy_median": 1.26,
+      "energy_p75": 3.1,
+      "used_frame": 0.15,
+      "active_frame": 0.17
+    },
+    {
+      "file": "instagram_DdcAPSuEw-o.mp4",
+      "duration_s": 22.8,
+      "events": 102,
+      "events_per_s": 4.47,
+      "median_gap_s": 0.2,
+      "longest_gap_s": 0.47,
+      "gaps_over_2s": 0,
+      "energy_median": 9.56,
+      "energy_p75": 17.64,
+      "used_frame": 0.82,
+      "active_frame": 1.0
+    }
+  ],
+  "house": [
+    {
+      "file": "mon26-tall",
+      "sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+      "style": "character-ai-receipts",
+      "events_per_s": 3.85,
+      "longest_gap_s": 3.47,
+      "energy_median": 2.68,
+      "used_frame": 0.81,
+      "active_frame": 0.42
+    },
+    {
+      "file": "mon02-tall",
+      "sha256": "2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a",
+      "style": "eating-jobs-ladder",
+      "events_per_s": 3.91,
+      "longest_gap_s": 3.4,
+      "energy_median": 2.71,
+      "used_frame": 0.51,
+      "active_frame": 0.47
+    },
+    {
+      "file": "wed11-tall",
+      "sha256": "3c360c733036e84690035521c2abfd364099974ac33832f644a988dc2fd7dc13",
+      "style": "ai-music-slam",
+      "events_per_s": 4.12,
+      "longest_gap_s": 0.93,
+      "energy_median": 2.84,
+      "used_frame": 0.81,
+      "active_frame": 0.56
+    }
+  ],
+  "house_note": "Krish's own cuts that three bank styles come from (Krish, 2026-11-13), measured the same way on 13 Nov; ve pace compares a cut with these and with the references."
+}
