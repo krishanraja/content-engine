@@ -212,6 +212,19 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         return res.status(503).json({ ok: false, error: 'board_store_unavailable' })
       }
     }
+    if (op === 'judge') {
+      // content-engine's 10/10 judges on Growth's carousels and Shorts (_judge.ts; Ruling, Krish, 2026-11-12: "Judge
+      // them; count passes."): judge one post, bind a pass to its Buffer post, or mark posts live. Growth's key only.
+      if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+      const week = scalar(req.query.week)
+      if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
+      try {
+        const { judgeAsset } = await import('./_judge.js')
+        const result = await judgeAsset(await getDb(), week, req.body, { ...(deps.judgePanel ? { panel: deps.judgePanel } : {}), ...(deps.now ? { now: () => new Date(deps.now!()) } : {}) })
+        return res.status(result.status).json(result.body)
+      } catch { return res.status(503).json({ ok: false, error: 'judgements_unavailable' }) }
+    }
     if (op === 'posted') {
       // Growth's write-back (_posted.ts): its own key, or the engine operator's; never a browser.
       if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })

@@ -5,6 +5,28 @@ to content-engine. Growth-MakeYourMindUp owns posting and social strategy.
 This serves the creator-studio North Star by keeping production focused on
 its own craft, reusable methods, review and reduced human decision time.
 
+## Every carousel and Short through the 10/10 judges (Ruling, Krish, 2026-11-12)
+
+Krish: "Judge them; count passes. Every Growth carousel goes through the same 10/10 judges, and each one that passes and goes live counts."
+
+- **Before it is made.** Growth's maker sends each carousel and Short it is about to make (its format, channel, claim,
+  exact words and each picture's sha256) to `POST /api/board/<Monday>/judge` (`op: judge`, Growth's key;
+  `apps/control-plane/api/board/_judge.ts`). The free checks run first (the copy lint, em dashes, banned phrases, "Not
+  X, Y"): a hit fails it before any model is paid. Then the draft judges' panel, the same roster, rubric and bar a draft
+  is judged on, reads the post; it passes only when the panel stands ready (`standing`, `READY_AT`).
+- **A fail comes back with the judges' reasons, never silently.** The answer carries each judge's one fix that did not
+  pass; Growth never makes the post, holds the slot loudly as `judges_failed` and keeps the reasons for the session that
+  rewrites it. The same post judged again answers from the record and pays nothing.
+- **Recorded on the item.** Every verdict, with each judge's score and fix, is a row in `asset_judgements` (migration
+  `20261201090000_asset_judgements.sql`, append only) under Growth's slot id; a pass is bound to its Buffer post
+  (`op: bind`), and Growth's board tick reports every sent post (`op: live`), which marks only bound posts live.
+- **Counted.** The North Star's number counts each Growth carousel and Short whose latest verdict is a pass and that went
+  live in the last 7 days, once however many channels carried it, beside the essays published (Control Center's reader,
+  `judgedLiveCount`; NOW.md's `current_source` names both). A judgement store that cannot be read makes the reading
+  unknown.
+- **Spend.** At most `DAILY_CAP` (40) panels a day; past it the route answers 429 `judge_cap_reached` and Growth holds
+  the slot (`docs/COST_GUARDS.md`).
+
 ## Growth makes derived carousels (Ruling, Krish, 28 October 2026)
 
 Krish: "take over posting as well as creating new assets like carousels".
