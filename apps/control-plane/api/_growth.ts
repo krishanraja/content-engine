@@ -42,7 +42,7 @@ export const SUBJECT_KINDS = new Set(['venture', 'prospect', 'aspiration'])
 export const AEO_ENGINES = new Set(['perplexity', 'chatgpt', 'claude', 'grok', 'gemini'])
 
 /** Mirrors growth_aeo_digests.themes_status. */
-export const AEO_THEMES_STATUSES = new Set(['ok', 'no_calls', 'no_attributed_calls', 'fireflies_unavailable', 'not_applicable'])
+export const AEO_THEMES_STATUSES = new Set(['ok', 'no_calls', 'no_attributed_calls', 'transcripts_unavailable', 'not_applicable'])
 
 /** Trim a string field, returning null for blank so we never store empty text. */
 export function text(v: unknown): string | null {
