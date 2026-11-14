@@ -38,5 +38,25 @@ class MusicUseTest(unittest.TestCase):
         self.assertEqual(goodie['for'], 'off-day')
 
 
+
+class FetchBehindMain(unittest.TestCase):
+    """Audit ve-11: a checkout behind main stops the music fetch with a plain "pull main", before any download."""
+
+    def test_a_checkout_behind_main_is_told_to_pull(self):
+        import tempfile  # noqa: PLC0415
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(music.MusicError, r'3 commits behind main on the music ledger.*pull main'):
+                music.cmd_fetch({'tracks': []}, tmp, out=lambda _l: None, behind=lambda: 3)
+
+    def test_behind_main_reads_git_and_says_none_when_it_cannot(self):
+        class Done:
+            stdout = '2\n'
+        self.assertEqual(music.behind_main(run=lambda *a, **k: Done()), 2)
+
+        def broken(*_a, **_k):
+            raise OSError('no git')
+        self.assertIsNone(music.behind_main(run=broken))
+
+
 if __name__ == '__main__':
     unittest.main()
