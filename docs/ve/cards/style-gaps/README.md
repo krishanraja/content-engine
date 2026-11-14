@@ -17,7 +17,11 @@ three study cards of Krish's own cuts, which he named as styles on 13 Nov 2026 (
 
 The ladder that keeps its state across beats is `docs/ve/cards/through-line/` (`through_line`).
 
-**How to dispatch them (a home computer; `ve card` reads the local roots, so not a cloud session):**
+**Built 14 Nov 2026.** Codex ran each card in its own worktree in a cloud session (the Codex CLI on the pinned model
+and effort), `ve verify-card` checked each, and every device was rendered and looked at; two fix-up runs made them fill
+their region and kept the ladder's text off its strokes. The handover sound card added `style.sound`.
+
+**How to dispatch a card like these (a home computer; `ve card` reads the local roots, so not a cloud session):**
 
 1. `python scripts/ve.py card docs/ve/cards/style-gaps/<card>.fields.json` writes the card with its `## Motion style`
    section from `motion_style`.
