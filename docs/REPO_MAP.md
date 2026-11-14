@@ -264,12 +264,15 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `interface CitedPageRow`
 - `function citedPageRows(packet: AeoPacket, stored: ReadonlyArray<Pick<CitedPageRow, 'url' | 'mention' | 'mention_ok' | '…`
 - `const KRISH_DOMAINS: readonly string[]`
+- `function isKrishsOwn(url: string, domains: readonly string[] = KRISH_DOMAINS): boolean`
 - `const NOT_OURS: readonly string[]`
 - `const PACKET_FEATURES: readonly string[]`
 - `const CONTEXT_FEATURES: readonly string[]`
 - `interface BrandCheck`
 - `function brandNamesOf(v: unknown): string[]`
 - `function brandChecksOf(v: unknown): BrandCheck[]`
+- `type RecommendationRoute = 'kits' | 'held' | 'unknown' | 'ideas'`
+- `function recommendationRoute(kits: unknown, hold: 'held' | 'active' | 'unknown'): RecommendationRoute`
 - `function heldProducts(engines: ReadonlyArray<{ product_slug?: unknown; role?: unknown; activation_state?: unknown }>): …`
 - `interface ShippedDeclaration`
 - `function shippedFor(rows: ReadonlyArray<Record<string, unknown>>, product: string): ShippedDeclaration[]`
