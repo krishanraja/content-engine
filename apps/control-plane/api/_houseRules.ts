@@ -124,7 +124,7 @@ export interface Listening { long: ListenLimits; short: ListenLimits; feature: L
 // "I still feel like all my video scripts are a little bit hard to follow".
 // A figure is an amount, count or share said aloud (a year is a date, not
 // counted); a name is a distinct capitalised thing; the close is the beat
-// before the deep dive line.
+// before the script's last line (SCRIPT_CLOSE_LINE).
 // LISTENING:BEGIN
 export const LISTENING: Readonly<Listening> = Object.freeze({
   "long": { "figures": 3, "names": 8 },
@@ -134,6 +134,42 @@ export const LISTENING: Readonly<Listening> = Object.freeze({
   "close_most_orders": 1
 })
 // LISTENING:END
+
+// The last sentence of every script of a minute or more (house rule
+// SCRIPT_CLOSE), in one place: the writers read it here and
+// scripts/post-pack/story_check.py reads the object between the two marker
+// lines below as JSON, so it stays JSON and keeps its markers. Ruling (Krish,
+// 2026-11-14): the voice check wins; no script or caption may end on the
+// phrase the krish-voice kill list bans, which the line he set on 2026-10-21
+// ended on. Asked which rule wins, his answer: "stick to voice check". The
+// line passes Control Center's check_voice on the script and caption
+// channels, and apps/control-plane/scripts/check-voice-close.ts fails the build if the banned
+// phrase comes back into any script rule, prompt or skill.
+export interface ScriptCloseLine { line: string }
+// SCRIPT_CLOSE_LINE:BEGIN
+export const SCRIPT_CLOSE_BLOCK: Readonly<ScriptCloseLine> = Object.freeze({
+  "line": "The full story is free at makeyourmindup.ai."
+})
+// SCRIPT_CLOSE_LINE:END
+export const SCRIPT_CLOSE_LINE: string = SCRIPT_CLOSE_BLOCK.line
+
+// How long the long cut may run (house rule TWO_CUTS), in one place:
+// scripts/post-pack/long_cut.py reads the object between the two marker lines
+// below as JSON, and story_check.py's self-test holds its CUTS to it. A piece's long cut
+// is 675 to 825 spoken words (about 5 minutes at 150 a minute) unless
+// config/long-cuts.json lifts it, for that piece alone, to at most
+// lifted_most_words (about 8 minutes, the most Krish asked for). Ruling (Krish,
+// 2026-11-14): the long cut's word cap lifts for a piece when the story is worth
+// it; the narrative lock says so and why. His answer: "lift if worth it".
+export interface LongCut { fewest_words: number; most_words: number; lifted_most_words: number; words_per_minute: number }
+// LONG_CUT:BEGIN
+export const LONG_CUT: Readonly<LongCut> = Object.freeze({
+  "fewest_words": 675,
+  "most_words": 825,
+  "lifted_most_words": 1200,
+  "words_per_minute": 150
+})
+// LONG_CUT:END
 
 const JARGON_LIST = SCRIPT_READING.jargon.join(', ')
 
@@ -333,7 +369,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'STORY_ARC', name: 'One story, start to finish',
-    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes as SCRIPT_CLOSE says, after the call: the one thing Krish would do, then where the full deep dive is; it never ends on the number.',
+    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes as SCRIPT_CLOSE says, after the call: the one thing Krish would do, then where the full story is free to read; it never ends on the number.',
     said: 'what does that mean? We\'ve never introduced that concept yet, and I dont get why it matters to whats been said thus far. It also barely connects to the next bits, the takeaways. ... now it just ends randomly on 85%, with nothing after that, no outro. Then, of the five-point story check: yes, i agree with it being there. happy with that idea.',
     on: '2026-10-06', source: 'walk log F75', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
@@ -375,7 +411,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'HOOK_AND_CTA', name: 'Open on a provocation, close on the article',
-    text: 'A video opens straight on the hook (SERIES_OPENER): the most provocative true thing in the piece, said in the first sentence, inside the first second, such as what he did ("I put GrokBot and Muse head to head"), a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. The hook passes one test: would someone stop scrolling in under one second? The topic\'s keyword (the words people would search for it) is spoken in that first sentence and shown on screen in the first beat, the on-screen words adding to the line, never repeating it. It never opens on a series line, a greeting ("Hey guys"), throat-clearing, a long intro or a definition, and nothing goes in front of the hook on any cut, ever: no logo animation and no sting (HOOK_IS_THE_INTRO). Somewhere in the script one line makes the viewer think of a specific person who needs it, named by their situation (the colleague who signs off the AI budget), never an ask to share; the save line goes in the caption and one specific question in the pinned comment (YOUTUBE_PACKAGE), never in the spoken script. It closes as SCRIPT_CLOSE says: the one thing Krish would do, in a short beat, and then the last sentence, "The full deep dive is at makeyourmindup.ai.", said out loud so the line works on every channel without "link below". No question for the comments and no sign-off. The vertical cut keeps both, inside 90 seconds.',
+    text: 'A video opens straight on the hook (SERIES_OPENER): the most provocative true thing in the piece, said in the first sentence, inside the first second, such as what he did ("I put GrokBot and Muse head to head"), a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. The hook passes one test: would someone stop scrolling in under one second? The topic\'s keyword (the words people would search for it) is spoken in that first sentence and shown on screen in the first beat, the on-screen words adding to the line, never repeating it. It never opens on a series line, a greeting ("Hey guys"), throat-clearing, a long intro or a definition, and nothing goes in front of the hook on any cut, ever: no logo animation and no sting (HOOK_IS_THE_INTRO). Somewhere in the script one line makes the viewer think of a specific person who needs it, named by their situation (the colleague who signs off the AI budget), never an ask to share; the save line goes in the caption and one specific question in the pinned comment (YOUTUBE_PACKAGE), never in the spoken script. It closes as SCRIPT_CLOSE says: the one thing Krish would do, in a short beat, and then the last sentence, "' + SCRIPT_CLOSE_LINE + '", said out loud so the line works on every channel without "link below". No question for the comments and no sign-off. The vertical cut keeps both, inside 90 seconds.',
     said: 'make the intro more provocative and hooking, and the outro more CTA based, acknowledging there is a full article. Then, 2026-10-21: "we need to cut that opening line from every content piece moving forward and just launch straight in to "I put GrokBot and Muse head to head" etc. Also trim the closing to "the full deep dive is at makeyourmindup.ai." right after a "Here\'s what I\'d do with this info if I were you" closing line. That needs to be the format moving forward for all scripts." Then, 2026-11-05, sharing an Instagram checklist ("Strong hook in the first second. Keyword spoken immediately. Keyword on screen. Built for shares." and "Quick test: Would someone stop scrolling in under ONE second? If not... rewrite the hook."): "Can you ensure my teleprompter scripts and captions follow rules like this every time? Adapt the existing protocol towards this instead of making broad sweeping random changes." Asked where the save, share and comment asks go, he chose "Script names the person; asks go in caption".',
     on: '2026-10-09', source: 'chat, Friday piece 2 script review, then the 2026-10-21 ruling and the 2026-11-05 checklist; checked by scripts/post-pack/story_check.py (greeting and long-intro openers refused) and the read-back\'s first-second and send test (make-piece)', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
@@ -388,10 +424,10 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
-    id: 'SCRIPT_CLOSE', name: 'Every script closes on the one thing he would do, then the deep dive line',
-    text: `Every video script of a minute or more closes in two parts. After the call comes one short beat, at most ${LISTENING.close_most_sentences} sentences, saying the one thing Krish himself would do with this, in his own first person ("If I ran a team, I\'d do one thing this week. I\'d write down who my experts will be in five years."). It is never a list of orders for the viewer: at most ${LISTENING.close_most_orders} sentence that tells the listener to do something, and no "you should", "make sure" or "decide now". It no longer opens on "Here\'s what I\'d do with this info if I were you" (retired 2026-10-31: the line led into a list of orders, which sounded bossy). Advice for particular people (people in IT, people early in their career) goes in the article, not the close. The script\'s final sentence is exactly "The full deep dive is at makeyourmindup.ai." with nothing after it: no sign-off, no "I\'m Krish", no question for the comments, no ask to like or subscribe. Both cuts carry it, and the deep cut too. scripts/post-pack/story_check.py refuses a close that is a list of orders, runs long, keeps the retired line, or ends on any other sentence.`,
-    said: 'I think it\'s so complex, and then the last paragraph of all my scripts still sounds a bit bossy and preachy. (2026-10-31; then "Yes, replace it" to one thing he would do, in his first person, in a short beat. It replaces his ruling of 2026-10-21: "Also trim the closing to "the full deep dive is at makeyourmindup.ai." right after a "Here\'s what I\'d do with this info if I were you" closing line. That needs to be the format moving forward for all scripts.")',
-    on: '2026-10-31', source: 'chat, the 2026-10-31 ruling on the close (docs/plans/2026-10-31-script-clarity-audit.md), replacing the 2026-10-21 one; checked by scripts/post-pack/story_check.py (close_problems), which build.py and making.py scripts run before a script is packed or recorded; the writer closes on it (api/_video.ts STORY_OUTRO)', status: 'live',
+    id: 'SCRIPT_CLOSE', name: 'Every script closes on the one thing he would do, then where the full story is',
+    text: `Every video script of a minute or more closes in two parts. After the call comes one short beat, at most ${LISTENING.close_most_sentences} sentences, saying the one thing Krish himself would do with this, in his own first person ("If I ran a team, I\'d do one thing this week. I\'d write down who my experts will be in five years."). It is never a list of orders for the viewer: at most ${LISTENING.close_most_orders} sentence that tells the listener to do something, and no "you should", "make sure" or "decide now". It no longer opens on "Here\'s what I\'d do with this info if I were you" (retired 2026-10-31: the line led into a list of orders, which sounded bossy). Advice for particular people (people in IT, people early in their career) goes in the article, not the close. The script\'s final sentence is exactly "${SCRIPT_CLOSE_LINE}" with nothing after it: no sign-off, no "I\'m Krish", no question for the comments, no ask to like or subscribe. Both cuts carry it, and the feature too; a caption that closes on where to read it says the same words. It replaced the line of 2026-10-21 on 2026-11-14, because that line ended on a phrase the voice check bans, so every script failed the voice check on its last line (Ruling, Krish, 2026-11-14: the voice check wins). scripts/post-pack/story_check.py refuses a close that is a list of orders, runs long, keeps the retired lead-in or the retired last line, or ends on any other sentence.`,
+    said: 'I think it\'s so complex, and then the last paragraph of all my scripts still sounds a bit bossy and preachy. (2026-10-31; then "Yes, replace it" to one thing he would do, in his first person, in a short beat. It replaces his ruling of 2026-10-21: "Also trim the closing to "the full deep dive is at makeyourmindup.ai." right after a "Here\'s what I\'d do with this info if I were you" closing line. That needs to be the format moving forward for all scripts.") Then, 2026-11-14, asked which wins when that last line fails the voice check on its banned phrase, the close rule or the voice check: "stick to voice check".',
+    on: '2026-11-14', source: 'chat, the 2026-10-31 ruling on the close (docs/plans/2026-10-31-script-clarity-audit.md), replacing the 2026-10-21 one, then the 2026-11-14 ruling on its last line (SCRIPT_CLOSE_LINE in this file); checked by scripts/post-pack/story_check.py (close_problems), which build.py and making.py scripts run before a script is packed or recorded, and by apps/control-plane/scripts/check-voice-close.ts, which fails the build if the banned phrase comes back into a script rule, prompt or skill; the writer closes on it (api/_video.ts STORY_OUTRO)', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
@@ -403,9 +439,9 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'TWO_CUTS', name: 'A five-minute video and a ninety-second one',
-    text: 'Every piece gets two videos, each recorded from its own script with its own hook and its own outro. The long cut is about five minutes: 675 to 825 spoken words at an unhurried 150 a minute, wide, for the Substack post and YouTube. The short cut is at most 90 seconds: 160 to 225 spoken words, tall, for YouTube Shorts, TikTok and Instagram Reels. Both keep the hook and the call to action (HOOK_AND_CTA). Material that does not fit is cut, never spoken faster.',
-    said: 'I always want a 3-minute video and a 90-second version. I always want to repost to YouTube and then Shorts, TikTok, and Instagram. Then, 2026-10-19: "from here moving forward, let\'s make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format."',
-    on: '2026-10-19', source: 'chat, weekly planning; checked by scripts/post-pack/story_check.py (the cut lengths)', status: 'live',
+    text: `Every piece gets two videos, each recorded from its own script with its own hook and its own outro. The long cut is about five minutes: ${LONG_CUT.fewest_words} to ${LONG_CUT.most_words} spoken words at an unhurried ${LONG_CUT.words_per_minute} a minute, wide, for the Substack post and YouTube. The short cut is at most 90 seconds: 160 to 225 spoken words, tall, for YouTube Shorts, TikTok and Instagram Reels. Both keep the hook and the call to action (HOOK_AND_CTA). Material that does not fit is cut, never spoken faster. One piece's long cut may run longer, up to ${LONG_CUT.lifted_most_words} words (about ${Math.round(LONG_CUT.lifted_most_words / LONG_CUT.words_per_minute)} minutes), only when the story is worth it: its signed narrative lock asks for the longer cut, and config/long-cuts.json gives that piece its length, the lock's own words asking for it and a one-line reason, which the Scripts step shows on the board. Nothing else lifts it, and the extra minutes go on explaining, never on more figures or names than LISTENING allows.`,
+    said: 'I always want a 3-minute video and a 90-second version. I always want to repost to YouTube and then Shorts, TikTok, and Instagram. Then, 2026-10-19: "from here moving forward, let\'s make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format." Then, 2026-11-14, asked whether to keep the cap at about 5:30 or lift it when a signed lock asks for about 8 minutes: "lift if worth it".',
+    on: '2026-11-14', source: 'chat, weekly planning, then the 2026-11-14 ruling on the cap (LONG_CUT in this file, config/long-cuts.json); checked by scripts/post-pack/story_check.py (the cut lengths, --piece for a lifted long cut) and recorded on the piece by making.py scripts (script_check.long_cut)', status: 'live',
     stages: ['write', 'final_pass'],
   },
   {

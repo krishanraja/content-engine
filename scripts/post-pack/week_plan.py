@@ -634,7 +634,7 @@ def read_growth_offdays(data, monday, where='--offdays-plan'):
 def recorded_problems(o):
     """Why a recorded off-day option is not ready to show, or []. It names his idea (piece_id), its series, its style,
     a title, and the exact words, which pass the story check as a short cut (all but the article close, since an off-day
-    piece has no article: house rule SCRIPT_CLOSE names the deep dive) and were read back by two fresh readers with
+    piece has no article: house rule SCRIPT_CLOSE sends the viewer to it) and were read back by two fresh readers with
     nothing lost (house rule R7)."""
     import making
     import story_check

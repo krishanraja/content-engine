@@ -931,7 +931,7 @@
       "on": "2026-10-21",
       "krish": "we need to cut that opening line from every content piece moving forward and just launch straight in to \"I put GrokBot and Muse head to head\" etc. Also trim the closing to \"the full deep dive is at makeyourmindup.ai.\" right after a \"Here's what I'd do with this info if I were you\" closing line. That needs to be the format moving forward for all scripts.",
       "why": "The series line and the sign-off with his name delayed the hook and the ending asked for too much; he wants the script to start on what he did and end on what the listener can do, with one line to the full piece.",
-      "means": "No script carries a series line or \"I'm Krish\". After the call it closes on a beat that starts \"Here's what I'd do with this info if I were you\" and says the actions, and its last sentence is exactly \"The full deep dive is at makeyourmindup.ai.\" with nothing after it. This replaces the 2026-10-12 series line for every series and both cuts.",
+      "means": "No script carries a series line or \"I'm Krish\". After the call it closes on the one thing he would do, in his first person (house rule SCRIPT_CLOSE since 2026-10-31, which retired the \"Here's what I'd do with this info if I were you\" lead-in), and its last sentence is the one SCRIPT_CLOSE_LINE holds, with nothing after it. Since 2026-11-14 that line is \"The full story is free at makeyourmindup.ai.\", because the one he set here failed the voice check (learning voice-check-wins-the-close). This replaces the 2026-10-12 series line for every series and both cuts.",
       "status": "encoded",
       "encoded": [
         {
@@ -2350,6 +2350,61 @@
           "was": [
             ".github/workflows/board-rebuild.yml: Retired on 11 Nov 2026"
           ]
+        }
+      ]
+    },
+    {
+      "id": "voice-check-wins-the-close",
+      "on": "2026-11-14",
+      "krish": "stick to voice check",
+      "why": "SCRIPT_CLOSE made every script end on the line he set on 2026-10-21, and the krish-voice kill list behind Control Center's one voice check bans that line's last phrase, so every script from 9 November failed the voice check on its last line alone. Asked which rule wins, he chose the voice check: one voice system, with no house rule writing words it refuses.",
+      "means": "Every script of a minute or more ends on \"The full story is free at makeyourmindup.ai.\" (SCRIPT_CLOSE_LINE, passing check_voice on the script and caption channels), and a caption that closes on where to read it uses the same words. No script, caption, rule, prompt or skill asks for the phrase the voice check bans; a rule that conflicts with the voice check gives way to it. Posts already published keep their words.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "\"line\": \"The full story is free at makeyourmindup.ai.\"",
+          "how": "the close line, once, which SCRIPT_CLOSE, HOOK_AND_CTA and the writer's STORY_OUTRO read and story_check.py reads as JSON"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "RETIRED_CLOSE",
+          "how": "refuses the old line, naming the ruling and the line to say, and any other last line"
+        },
+        {
+          "file": "apps/control-plane/scripts/check-voice-close.ts",
+          "contains": "export const PHRASE",
+          "how": "fails the build when the banned phrase comes back into a house rule, the writer's prompt, a skill, a prompt builder, a lint, the golden examples, a rule doc or this register"
+        }
+      ]
+    },
+    {
+      "id": "long-cut-lifts-when-worth-it",
+      "on": "2026-11-14",
+      "krish": "lift if worth it",
+      "why": "The engine capped every long cut at 825 words, about 5:30, and Monday 16's signed lock asked for about 8 minutes, so the lock and the gate disagreed. He wants the cap kept as the rule and lifted for a story that earns the minutes, said and justified, never by habit.",
+      "means": "A long cut stays 675 to 825 words unless its signed narrative lock asks for more and config/long-cuts.json declares that piece's length (at most 1,200 words, about 8 minutes) with the lock's own words and a one-line reason, after the session judged the story worth it. The check holds that script to its own length, the record carries the lift and the board's Scripts step names the length and the reason. The extra minutes go on explaining, never on more figures or names.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "\"lifted_most_words\": 1200",
+          "how": "the long cut's limits once (LONG_CUT), which TWO_CUTS states and long_cut.py reads"
+        },
+        {
+          "file": "scripts/post-pack/long_cut.py",
+          "contains": "def lift_for",
+          "how": "a lift holds only for a signed lock that asks for it, at most 1,200 words, with a reason"
+        },
+        {
+          "file": "scripts/post-pack/story_check.py",
+          "contains": "lifted for this piece by config/long-cuts.json",
+          "how": "story_check --piece holds a lifted long cut to its own length and refuses a lift that does not hold"
+        },
+        {
+          "file": "apps/control-plane/api/_making.ts",
+          "contains": "export function longCutNote",
+          "how": "the Scripts step names the lifted length and the reason on the board"
         }
       ]
     }

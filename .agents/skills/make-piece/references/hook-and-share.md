@@ -24,8 +24,8 @@ His three choices that day are the house rules HOOK_AND_CTA, PERSONAL_INTRO, LIS
 
 Somewhere in the script, one line makes the viewer think of a specific person who needs it, named by their situation:
 "the colleague who signs off your AI budget", "whoever runs payroll". Never an ask: no "share this", "send this to",
-"tag a friend" (Growth's `share_cta` refuses those). The spoken script makes no ask at all; it still closes on the
-deep dive line (SCRIPT_CLOSE).
+"tag a friend" (Growth's `share_cta` refuses those). The spoken script makes no ask at all; it still closes on
+"The full story is free at makeyourmindup.ai." (SCRIPT_CLOSE; Ruling, Krish, 2026-11-14: the voice check wins).
 
 ## The read-back's two extra questions
 

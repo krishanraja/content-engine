@@ -23,6 +23,7 @@ import { activeManualReviews, bodyHash, effectiveBlocking } from './_factGate.js
 import { MediaRefSchema, mediaReviewProblems, type MediaRef } from '../../../packages/core/src/media-quality.js'
 import { mediaQualityEnforced } from '../../../packages/core/src/media-rollout.js'
 import type { ClipPlacement, ClipUseRecord } from './_routedClips.js'
+import { LONG_CUT } from './_houseRules.js'
 
 /** Every channel a piece can go to, in the order Krish posts them
  *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
@@ -54,7 +55,9 @@ export interface MakingCheck { passed: boolean; checked_at: string; problems: st
  *  take look older than its script. `changed_at` is when each cut's words
  *  last changed, so a change to one cut never makes the other's take look
  *  old (scripts/post-pack/recording_match.py's time rule). */
-export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>>; /** The one question the piece answers (house rule ONE_SPINE): the publish page then needs a passing spine check. */ spine?: string; /** An off-day piece he records is one short cut (Ruling, Krish, 2026-10-29), written by the server when he approves its option; makingCuts then asks for the short alone. */ one_cut?: boolean }
+export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>>; /** The one question the piece answers (house rule ONE_SPINE): the publish page then needs a passing spine check. */ spine?: string; /** An off-day piece he records is one short cut (Ruling, Krish, 2026-10-29), written by the server when he approves its option; makingCuts then asks for the short alone. */ one_cut?: boolean; /** The piece's long cut lifted past 825 words by config/long-cuts.json, with why (Ruling, Krish, 2026-11-14: "lift if worth it"); the Scripts step says so, so a cut is never lifted silently. */ long_cut?: MakingLongCut }
+/** A lifted long cut: the most words it may run (up to LONG_CUT.lifted_most_words in _houseRules.ts) and the one-line reason the story is worth it. */
+export interface MakingLongCut { words: number; reason: string }
 /** A cut read back by two fresh readers, each an ordinary 12-year-old
  *  hearing it once, who found nothing that lost them (house rule R7, the hard
  *  gate on every script; Krish, 2026-10-12: "Every single script should be
@@ -333,6 +336,16 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     if (key === 'script_check' && typeof v.spine === 'string' && v.spine.trim()) (check as MakingScriptCheck).spine = String(v.spine).trim().slice(0, 300)
     if (key === 'script_check' && Array.isArray(v.cuts)) check.cuts = v.cuts.filter(isCut)
     if (key === 'script_check' && v.one_cut === true) (check as MakingScriptCheck).one_cut = true
+    if (key === 'script_check' && v.long_cut !== undefined) {
+      const l = v.long_cut
+      const reason = isObj(l) && typeof l.reason === 'string' ? l.reason.trim() : ''
+      if (!isObj(l) || !Number.isInteger(l.words) || Number(l.words) <= LONG_CUT.most_words || Number(l.words) > LONG_CUT.lifted_most_words
+        || !reason || reason.length > 200 || /[\r\n]/.test(reason)) {
+        problems.push(`script_check.long_cut is the lifted long cut: {words: a whole number above ${LONG_CUT.most_words} and at most ${LONG_CUT.lifted_most_words}, reason: one line} (config/long-cuts.json)`)
+        continue
+      }
+      (check as MakingScriptCheck).long_cut = { words: Number(l.words), reason }
+    }
     if (key === 'script_check' && v.hashes !== undefined) {
       const entries = isObj(v.hashes) ? Object.entries(v.hashes) : null
       if (!entries || !entries.every(([c, h]) => isCut(c) && typeof h === 'string' && SCRIPT_SHA256.test(h))) {
@@ -725,6 +738,15 @@ export function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut
  *  has an older script", "the Teleprompter send failed" or "not in
  *  Teleprompter yet", naming the cut when only one is so. Never holds the
  *  step back. */
+/** The lifted long cut, said first on the Scripts step so the board shows its length and reason (Ruling, Krish,
+ *  2026-11-14: the long cut's word cap lifts for a piece when the story is worth it; the narrative lock says so and why). */
+export function longCutNote(check: Partial<MakingScriptCheck> | undefined): string {
+  const l = check?.long_cut
+  if (!l || !Number.isInteger(l.words) || !l.reason) return ''
+  const secs = Math.round(l.words / LONG_CUT.words_per_minute * 60)
+  return `long cut lifted to about ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')} (${l.words} words): ${l.reason}`
+}
+
 export function teleprompterNote(m: Partial<Making>): string {
   const states = teleprompterStates(m)
   const cuts = MAKING_ALL_CUTS.filter(c => states[c])
@@ -790,7 +812,7 @@ export function makingSteps(row: { id?: string; state?: string | null; body?: st
     : { key: 'visual_gate', label: 'Visual gate', state: 'todo' })
   // Where the scripts are in Teleprompter is said on the step and never holds it back.
   steps.push(m.script_check
-    ? { key: 'scripts', label: 'Scripts', state: m.script_check.passed ? 'done' : 'failed', at: m.script_check.checked_at, note: m.script_check.passed ? [(m.script_check.cuts || []).join(' and '), teleprompterNote(m)].filter(Boolean).join('; ') || undefined : m.script_check.problems[0] }
+    ? { key: 'scripts', label: 'Scripts', state: m.script_check.passed ? 'done' : 'failed', at: m.script_check.checked_at, note: m.script_check.passed ? [longCutNote(m.script_check), (m.script_check.cuts || []).join(' and '), teleprompterNote(m)].filter(Boolean).join('; ') || undefined : [m.script_check.problems[0], longCutNote(m.script_check)].filter(Boolean).join('; ') }
     : { key: 'scripts', label: 'Scripts', state: 'todo' })
   steps.push(m.pack
     ? { key: 'pack', label: m.pack.sent_at ? 'Pack in Drive' : 'Pack built', state: m.pack.sent_at ? 'done' : 'now', at: m.pack.sent_at || m.pack.packed_at, note: m.pack.folder }
