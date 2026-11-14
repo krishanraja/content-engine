@@ -53,3 +53,7 @@ vendor/makeyourmindup/kill-list/** -text
 # The live board's client and its built page are compared byte for byte by check:desk-page; LF on Windows too.
 apps/control-plane/board-next/** text=auto eol=lf
 apps/control-plane/api/board/_deskPage.ts text eol=lf
+
+# Tests match the engine's Python source by its text (tests/control-plane/make-route.test.ts and others); keep it LF on
+# Windows too, so a regex over a line break means the same on every runner (full verify red on Windows from 13 Nov).
+scripts/**/*.py text eol=lf
