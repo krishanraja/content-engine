@@ -24,6 +24,12 @@ Krish: "Judge them; count passes. Every Growth carousel goes through the same 10
   tied to its board item by its Buffer post id, never matched by title (I-09, 14 Nov): `op: bindings` with
   `buffer_post_ids` reads back each post's item, artifact and whether it went live, read only, and lists a post never
   bound with `item: null`.
+- **One subscribe route.** Every subscribe link content-engine writes (`scripts/post-pack/publish_kit.py`) is built from
+  Growth's `specs/subscribe-route.json`, vendored byte for byte at `vendor/makeyourmindup/subscribe-route.json` and
+  refused if its sha256 differs (`tests/subscribe_route_test.py`): four tags on a post, the profile tags on a link in
+  bio, and `utm_content = content_of(<board item id>-<channel>)`. A piece's own board item id for one cut is
+  `<piece_id>-<cut>` (`long`, `short` or `feature`), so Control Center binds a sent post to its item by exact match.
+  The rules change in Growth's file first; this copy follows with its new hash.
 - **Counted.** The North Star's number counts each Growth carousel and Short whose latest verdict is a pass and that went
   live in the last 7 days, once however many channels carried it, beside the essays published (Control Center's reader,
   `judgedLiveCount`; NOW.md's `current_source` names both). A judgement store that cannot be read makes the reading

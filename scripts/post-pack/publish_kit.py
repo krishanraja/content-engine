@@ -76,27 +76,67 @@ FEATURE_SPOTIFY = f'Spotify (the {FEATURE_NAME})'
 
 # Every post asks for the subscription, with a link Growth's Measurement can credit (Ruling, Krish, 2026-11-12:
 # "Just make sure this is fixed moving forward"). Posts from 2 to 11 November named makeyourmindup.ai but none
-# linked the subscribe page, and 1 of 86 new subscribers came in that week. The subscribe page is Growth's
-# (growth-makeyourmindup intensity.json, conversion.subscribe_url); utm_source names the channel and utm_content
-# the piece, the two tags Growth credits a subscriber by. The spoken close of a script is untouched (house rule
-# SCRIPT_CLOSE): a link is written, never said.
-SUBSCRIBE_PAGE = 'https://home.makeyourmindup.ai/subscribe'
+# linked the subscribe page, and 1 of 86 new subscribers came in that week. The spoken close of a script is untouched
+# (house rule SCRIPT_CLOSE): a link is written, never said.
+#
+# Every subscribe link is built from Growth's one subscribe route, vendored byte for byte with its sha256 (audit
+# 2026-11-14, I-09): vendor/makeyourmindup/subscribe-route.json, from growth-makeyourmindup specs/subscribe-route.json.
+# A post carries four tags (utm_source from the spec's sources, utm_medium, utm_campaign, utm_content); a profile's
+# link in bio carries the spec's profile link. utm_content is content_of(<board item id> + '-' + <channel>), and a
+# piece's board item id for one cut is <piece_id>-<cut> (long, short or feature), so Control Center binds a sent post
+# to its item by exact match. A change to the rules changes Growth's file first; this copy follows with its new hash.
+SUBSCRIBE_SPEC = Path(__file__).resolve().parents[2] / 'vendor' / 'makeyourmindup' / 'subscribe-route.json'
+SUBSCRIBE_SPEC_SHA256 = '9927b32dbae962a97a3dc8223b08105833197a1e6e5d2ee1a3f2fb3519a5c639'
+
+
+def load_subscribe_route(path=SUBSCRIBE_SPEC, sha256=SUBSCRIBE_SPEC_SHA256):
+    """Growth's subscribe route, refused unless its bytes are the vendored ones."""
+    import hashlib
+    raw = Path(path).read_bytes()
+    if hashlib.sha256(raw).hexdigest() != sha256:
+        raise ValueError(f'{path} is not the vendored subscribe route (sha256 differs); copy it again from Growth')
+    return json.loads(raw)
+
+
+ROUTE = load_subscribe_route()
+SUBSCRIBE_PAGE = ROUTE['page']
 SUBSCRIBE_ASK = 'Get the next one in your inbox'
+UTM_CONTENT = re.compile(ROUTE['utm_content_pattern'])
 
 
-def subscribe_url(channel, p, content=None):
-    """The subscribe page tagged with the channel (utm_source) and the piece (utm_content), or `content` for a
-    link that outlives one piece, such as a profile's link in bio."""
-    if content is None:
-        content = re.sub(r'[^A-Za-z0-9._-]+', '-', str(p.get('piece_id') or p.get('date') or 'post')).strip('-') or 'post'
-    return f'{SUBSCRIBE_PAGE}?utm_source={channel}&utm_medium=social&utm_content={content}'
+def content_of(text):
+    """Growth's content_of: lower case; each run outside a-z, 0-9, _ and - becomes one -; no leading - or _; at most 64."""
+    out = re.sub(r'[^a-z0-9_-]+', '-', str(text).lower()).lstrip('-_')[:64]
+    return out or 'post'
 
 
-def with_subscribe(words, channel, p):
+def board_item_id(p, cut):
+    """A piece's own board item for one cut: <piece_id>-<cut> (long, short or feature)."""
+    if cut not in ('long', 'short', 'feature'):
+        raise ValueError(f'unknown cut {cut!r}')
+    return f"{p.get('piece_id') or p.get('date') or 'post'}-{cut}"
+
+
+def subscribe_url(channel, p, content=None, cut='long'):
+    """The subscribe page tagged for one post: the channel's utm_source, the spec's medium and campaign, and
+    utm_content = content_of(<board item id>-<channel>). content='bio' gives the profile's link in bio instead, which
+    outlives one piece and carries the spec's profile tags."""
+    source = (ROUTE['sources'].get(channel) or [channel])[0]
+    if content == 'bio':
+        tags = {'utm_source': source, **ROUTE['profile_link']}
+    else:
+        value = content_of(content if content is not None else f'{board_item_id(p, cut)}-{channel}')
+        tags = {'utm_source': source, 'utm_medium': ROUTE['medium'], 'utm_campaign': ROUTE['campaign'], 'utm_content': value}
+    if not UTM_CONTENT.match(tags['utm_content']):
+        raise ValueError(f"utm_content {tags['utm_content']!r} breaks the subscribe route's pattern")
+    return SUBSCRIBE_PAGE + '?' + '&'.join(f'{k}={v}' for k, v in tags.items())
+
+
+def with_subscribe(words, channel, p, cut='long'):
     """The words, then the tagged subscribe line, once. Missing words stay missing, so the step still says so."""
     if not words or not str(words).strip() or SUBSCRIBE_PAGE in words:
         return words
-    return f'{words.rstrip()}\n\n{SUBSCRIBE_ASK}: {subscribe_url(channel, p)}'
+    return f'{words.rstrip()}\n\n{SUBSCRIBE_ASK}: {subscribe_url(channel, p, cut=cut)}'
 
 
 def with_bio_pointer(words):
@@ -107,9 +147,9 @@ def with_bio_pointer(words):
     return f'{words.rstrip()}\n\n{SUBSCRIBE_ASK}: link in bio.'
 
 
-def pinned_comment(channel, p, question):
+def pinned_comment(channel, p, question, cut='long'):
     """The pinned comment under a YouTube video: the article, the subscribe page, then the comment question."""
-    return (f'The full article, with every source, free: {ARTICLE}\n\n{SUBSCRIBE_ASK}: {subscribe_url(channel, p)}'
+    return (f'The full article, with every source, free: {ARTICLE}\n\n{SUBSCRIBE_ASK}: {subscribe_url(channel, p, cut=cut)}'
             + (f'\n\n{question}' if question else ''))
 
 
@@ -145,8 +185,8 @@ def feature_steps(p, f, article_q):
             f'Under Thumbnail, upload the feature\'s own wide thumbnail, {thumb}. Make it public, then pin the comment {words_at}.',
         ],
         'copy': [('Title', p.get('feature_youtube_title')),
-                 ('Description', with_subscribe(p.get('feature_youtube_description'), 'youtube', p)),
-                 ('Pinned comment', pinned_comment('youtube', p, article_q))],
+                 ('Description', with_subscribe(p.get('feature_youtube_description'), 'youtube', p, 'feature')),
+                 ('Pinned comment', pinned_comment('youtube', p, article_q, 'feature'))],
     }
     spotify = {
         'where': FEATURE_SPOTIFY, 'tag': 'Its own video episode, with its chapters',
@@ -158,7 +198,7 @@ def feature_steps(p, f, article_q):
                       f'Paste the title and description {words_at}, then the chapters into the description. Publish.'],
         'copy': [('Episode title', p.get('feature_spotify_title') or p.get('feature_youtube_title')),
                  ('Description', with_subscribe(p.get('feature_spotify_description') or p.get('feature_youtube_description'),
-                                                'spotify', p)),
+                                                'spotify', p, 'feature')),
                  ('Chapters', p.get('feature_spotify_chapters'))],
     }
     return youtube, spotify
@@ -282,7 +322,7 @@ def steps(p):
                    f'Posting a picture with the link instead of the video? Attach the share card, {share_card}.'],
             'copy': [('Post text', p.get('linkedin_post')),
                      ('First comment', f'The full article, free, with every source: {ARTICLE}\n\n'
-                                       f'{SUBSCRIBE_ASK}: {subscribe_url("linkedin", p)}')],
+                                       f'{SUBSCRIBE_ASK}: {subscribe_url("linkedin", p, cut="short")}')],
         },
         {
             # Krish, 2026-10-14: "I think we should create a Spotify strategy ASAP ... treat it as a media channel and
@@ -424,12 +464,28 @@ def self_test():
                feature_youtube_description='FD')
     sub_steps = steps(sub)
     got = {x['where']: dict(x['copy']) for x in sub_steps}
-    for where, label, source in (('YouTube (the 5-minute video)', 'Description', 'youtube'),
-                                 ('YouTube (the 5-minute video)', 'Pinned comment', 'youtube'),
-                                 ('LinkedIn', 'First comment', 'linkedin'), ('Spotify', 'Description', 'spotify')):
-        want = f'{SUBSCRIBE_PAGE}?utm_source={source}&utm_medium=social&utm_content=abc-123'
+    # Growth's subscribe route, vendored (I-09): four tags, utm_content = content_of(<board item id>-<channel>), where a
+    # piece's board item id is <piece_id>-<cut>.
+    for where, label, source, content in (('YouTube (the 5-minute video)', 'Description', 'youtube', 'abc-123-long-youtube'),
+                                          ('YouTube (the 5-minute video)', 'Pinned comment', 'youtube', 'abc-123-long-youtube'),
+                                          ('LinkedIn', 'First comment', 'linkedin', 'abc-123-short-linkedin'),
+                                          ('Spotify', 'Description', 'spotify', 'abc-123-long-spotify')):
+        want = f'{SUBSCRIBE_PAGE}?utm_source={source}&utm_medium=social&utm_campaign=growth&utm_content={content}'
         if want not in (got[where].get(label) or ''):
             failures.append(f'{where} {label} must carry the tagged subscribe link {want}')
+    if SUBSCRIBE_PAGE != 'https://home.makeyourmindup.ai/subscribe' or ROUTE.get('schema') != 'mymu-subscribe-route/1':
+        failures.append('the subscribe page and schema come from the vendored route')
+    if content_of('Engine:2026-11-09:Gitbroke-threads') != 'engine-2026-11-09-gitbroke-threads' or content_of('__-X') != 'x':
+        failures.append('content_of follows Growth: lower case, runs become one -, no leading - or _')
+    if subscribe_url('x', {'piece_id': 'P1'}, cut='short') != f'{SUBSCRIBE_PAGE}?utm_source=twitter&utm_medium=social&utm_campaign=growth&utm_content=p1-short-x':
+        failures.append('a pinned channel takes its utm_source from the route (x is twitter)')
+    if subscribe_url('instagram', {}, 'bio') != f'{SUBSCRIBE_PAGE}?utm_source=instagram&utm_medium=social&utm_content=bio':
+        failures.append('the profile link carries the route\'s profile tags')
+    try:
+        load_subscribe_route(sha256='0' * 64)
+        failures.append('a subscribe route with other bytes is refused')
+    except ValueError:
+        pass
     for where in ('TikTok', 'Instagram Reels'):
         if not (got[where]['Caption'] or '').endswith(f'{SUBSCRIBE_ASK}: link in bio.'):
             failures.append(f'{where}: the caption must point to the link in bio')
@@ -443,7 +499,7 @@ def self_test():
     if got['YouTube (the 5-minute video)']['Pinned comment'].split('\n\n')[-1] != 'Q?':
         failures.append('the comment question stays last in the pinned comment')
     feature_youtube, feature_spotify = feature_steps(sub, {}, 'Q?')
-    if not all(f'{SUBSCRIBE_PAGE}?utm_source=' in (dict(x['copy']).get('Description') or '') for x in (feature_youtube, feature_spotify)):
+    if not all('utm_content=abc-123-feature-' in (dict(x['copy']).get('Description') or '') for x in (feature_youtube, feature_spotify)):
         failures.append('the feature\'s YouTube and Spotify descriptions carry the tagged subscribe link')
     if 'choose Video (not Article)' not in text:
         failures.append('step 1 must use one Substack video post')
