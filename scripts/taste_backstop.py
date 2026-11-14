@@ -3,13 +3,17 @@
 At the end of a session in this repository it reads the session's transcript
 and keeps only Krish's own typed lines that a local filter flags as a
 correction or a rejection. Each is scrubbed with secret-guard patterns,
-tagged with this repository's venture and appended to the ignored
-`.scratch/taste/backstop.jsonl` with its digest, so a line is never kept
-twice. It never sends anything and never keeps a whole chat: the session
-holds no Control Center key (AGENTS.md), so the runner that does (Krish's
-choice, 29 October 2026: "Local file, runner posts") takes them on from that
-file. Tool output, pasted material, system notes and the assistant's words
-are never read as his.
+tagged with this repository's venture and posted to Control Center's
+backstop route (POST /api/taste/backstop, the route Control Center's own hook
+uses) when TASTE_BACKSTOP_TOKEN is set, or in a cloud session, whose network
+proxy injects that key (I-33, Ruling, Krish, 2026-11-14, D24).
+Without the key, or when the post fails, the lines are appended to the
+ignored `.scratch/taste/backstop.jsonl` with their digest instead, so a line
+is never kept twice and the runner (Krish's choice, 29 October 2026: "Local
+file, runner posts") takes them on from that file. It never keeps a whole
+chat. Tool output, pasted material, system notes and the assistant's words
+are never read as his. Posting to his own taste ledger is exempt from the
+approval wall (Ruling, Krish, 2026-10-26).
 
 It always exits 0: a hook must never break the end of a session.
 
@@ -21,8 +25,10 @@ import datetime as dt
 import hashlib
 import json
 from pathlib import Path
+import os
 import re
 import sys
+import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTBOX = Path('.scratch') / 'taste' / 'backstop.jsonl'
@@ -30,6 +36,14 @@ VENTURE = 'makeyourmindup'
 REPO = 'krishanraja/content-engine'
 MAX_LINE = 600
 MAX_TRANSCRIPT = 50 * 1024 * 1024
+ORIGIN = 'https://controlcenter.krishraja.com'
+BATCH = 50
+# In a Claude Code cloud session the key is a network secret the proxy injects for Control Center's host, so
+# the session sends this placeholder and never holds the value. Elsewhere TASTE_BACKSTOP_TOKEN is the key.
+PROXY_PLACEHOLDER = 'injected-by-network-proxy'
+# The route's two kinds, as Control Center's own hook names them (scripts/hooks/taste-backstop.mjs).
+REJECTION = re.compile(r"\b(no,|nope|don'?t like|do not like|hate|dislike|reject|not this|kill (it|this)|drop (it|this)|"
+                       r"scrap|ugly|cheesy|cringe|doesn'?t fly|won'?t fly|never (use|do|again|put))\b", re.I)
 
 # A correction or rejection in his words. Plain phrases only: a line must say it, not hint at it.
 FLAGS = re.compile(
@@ -127,6 +141,8 @@ def entries(lines, session_id, now=None):
 
 def append(rows, root=ROOT):
     """Append new rows to the outbox; a line already kept (by digest) is never kept twice."""
+    if not rows:
+        return 0
     path = Path(root) / OUTBOX
     path.parent.mkdir(parents=True, exist_ok=True)
     known = set()
@@ -143,7 +159,42 @@ def append(rows, root=ROOT):
     return len(fresh)
 
 
-def main(argv=None, stdin=None, root=ROOT, out=print):
+def kind_of(line):
+    """The route's kind for one flagged line: a rejection when it turns something down, else a correction."""
+    return 'rejection' if REJECTION.search(line) else 'correction'
+
+
+def http_post(url, headers, body):
+    request = urllib.request.Request(url, data=body.encode('utf-8'), headers=headers, method='POST')
+    with urllib.request.urlopen(request, timeout=8) as response:  # noqa: S310 (a fixed https origin)
+        text = response.read().decode('utf-8', errors='replace')
+    try:
+        return response.status, json.loads(text) if text.strip() else None
+    except ValueError:
+        return response.status, None
+
+
+def send(rows, token, origin=ORIGIN, post=http_post):
+    """Post rows to Control Center in batches; the digests it accepted. Never raises, never logs the key."""
+    url = origin.rstrip('/') + '/api/taste/backstop'
+    headers = {'authorization': 'Bearer ' + token, 'content-type': 'application/json'}
+    accepted = set()
+    for i in range(0, len(rows), BATCH):
+        batch = rows[i:i + BATCH]
+        body = json.dumps({'schema': 'growth-taste-backstop/1', 'rows': [
+            {'venture': r['venture'], 'repository': r['repository'], 'kind': kind_of(r['line']), 'line': r['line'],
+             'line_sha256': r['line_sha256'], 'session': r['session'] or 'unknown-session',
+             'noted_at': r['noted_at'], 'posted': False} for r in batch]}, ensure_ascii=False)
+        try:
+            status, reply = post(url, headers, body)
+        except Exception:
+            continue
+        if 200 <= status < 300 and not (isinstance(reply, dict) and reply.get('ok') is False):
+            accepted.update(r['line_sha256'] for r in batch)
+    return accepted
+
+
+def main(argv=None, stdin=None, root=ROOT, out=print, env=None, post=http_post):
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--dry-run', metavar='TRANSCRIPT')
     try:
@@ -157,8 +208,15 @@ def main(argv=None, stdin=None, root=ROOT, out=print):
         transcript = hook.get('transcript_path') if isinstance(hook, dict) else None
         if not isinstance(transcript, str):
             return 0
-        kept = append(entries(flagged(transcript), hook.get('session_id')), root)
-        out('taste backstop: ' + str(kept) + ' flagged line' + ('' if kept == 1 else 's') + ' kept locally; nothing sent')
+        rows = entries(flagged(transcript), hook.get('session_id'))
+        env = os.environ if env is None else env
+        token = env.get('TASTE_BACKSTOP_TOKEN') or (PROXY_PLACEHOLDER if env.get('CLAUDE_CODE_REMOTE') == 'true' else '')
+        sent = send(rows, token, env.get('CONTROL_CENTER_ORIGIN') or ORIGIN, post) if token and rows else set()
+        kept = append([r for r in rows if r['line_sha256'] not in sent], root)
+        if sent:
+            out('taste backstop: ' + str(len(sent)) + ' sent to Control Center, ' + str(kept) + ' kept locally')
+        else:
+            out('taste backstop: ' + str(kept) + ' flagged line' + ('' if kept == 1 else 's') + ' kept locally; nothing sent')
     except Exception:  # a hook never breaks the end of a session, and never prints what it read
         return 0
     return 0
