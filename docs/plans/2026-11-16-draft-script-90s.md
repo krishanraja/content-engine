@@ -4,7 +4,7 @@ These four are called hyperscalers. Everyone says that word now, so I want to br
 
 They used to pay for the building out of profits. Now, by one count, about one in three dollars is borrowed.
 
-But people have started blaming data centres for their higher power bills. In this month's US elections, town after town voted against new ones. So now the landlord has to win the town and pay for its own power. And every month of delay is more interest, before any rent comes in.
+But lots of people now blame data centres, at least in part, for higher power bills. In this month's US elections, town after town voted to limit new ones. So now the landlord has to win the town and pay for its own power. And every month of delay is more interest, before any rent comes in.
 
 So my call is that AI won't get cheaper as fast as the sellers say. If I ran a business, I'd ask each AI supplier which landlord it runs on. If it borrows to build, I wouldn't plan on my bill coming down.
 
