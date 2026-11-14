@@ -590,7 +590,7 @@ function Send-LaneReport([bool]$Ok) {
   $client = New-HttpClient
   try {
     $machine = (($env:COMPUTERNAME -replace '[^A-Za-z0-9_-]', '-') + '-library')
-    [void](Invoke-Engine $client (Resolve-EngineUrl) (Get-RunnerToken) 'POST' '/api/library/recordings/lane' ([ordered]@{ machine = $machine; problems = @($script:Problems | Select-Object -Unique) }))
+    [void](Invoke-Engine $client (Resolve-EngineUrl) (Get-RunnerToken) 'POST' '/api/library/recordings/lane' ([ordered]@{ machine = $machine; problems = @(@($script:Problems) + @($script:PullProblems) | Select-Object -Unique) }))
   } catch {
     Write-Log "this pass's report did not reach the engine: $($_.Exception.Message)"
   } finally { $client.Dispose() }
@@ -649,11 +649,20 @@ function Update-Source {
     $code = $LASTEXITCODE
   } finally { $ErrorActionPreference = $previous }
   if ($code -ne 0) { Write-Log "git pull did not finish ($($output -join ' ')); this pass runs on the copy as it is" }
+  Set-PullProblem 'library_source_pull_failed' ($code -ne 0)
 }
 
 # ---- one pass, or a pass every few minutes -----------------------------------
 
 $script:Problems = New-Object System.Collections.Generic.List[string]
+
+# A failed pull of main is kept outside the per-pass problem list, which each pass clears before it runs: the pull
+# happens outside the pass, and its result rides on every lane report until a pull succeeds (audit ve-11).
+$script:PullProblems = New-Object System.Collections.Generic.List[string]
+function Set-PullProblem([string]$Code, [bool]$Failed) {
+  [void]$script:PullProblems.Remove($Code)
+  if ($Failed) { $script:PullProblems.Add($Code) }
+}
 
 $mutex = [System.Threading.Mutex]::new($false, 'Local\MindmakeLibrarySync')
 $owned = $false
