@@ -262,6 +262,9 @@ export const ProductionSpecV2Schema = z.object({
     transitions: z.object({ kind: z.enum(['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade']), reason: z.string().min(1) }).strict().optional(),
     camera: z.object({ move: z.enum(['none', 'drift', 'phased', 'punch']), hits: z.boolean().optional(), reason: z.string().min(1) }).strict().optional(),
     energy: z.enum(['calm', 'medium', 'high']).optional(),
+    // IDs are checked against Krish's approved sounds by ve lint and compile.
+    sound: z.object({ handover: z.string().min(1).optional(), hit: z.string().min(1).optional(),
+      gainDb: z.number().finite().max(0).optional(), reason: z.string().min(1) }).strict().optional(),
     // How a graphics-only beat uses the frame (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the use of the screen space is terrible").
     layout: z.object({ mode: z.enum(['house', 'fill', 'stack', 'band', 'stage', 'tray']), reason: z.string().min(1) }).strict().optional(),
   }).catchall(z.unknown()).optional(),

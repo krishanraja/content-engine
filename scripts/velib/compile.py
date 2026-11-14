@@ -562,6 +562,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     ingredients = ingredient_props(spec)
     if ingredients is not None:
         props['ingredients'] = ingredients
+    if 'sound' in (spec.get('style') or {}):
+        props['audio']['sfx'] = sound_props(spec, props, assets_dir)
     layout = ((spec.get('style') or {}).get('layout') or {}).get('mode')
     if layout and layout != 'house':
         if layout not in LAYOUTS:
@@ -594,6 +596,52 @@ def caption_props(spec: dict) -> dict:
         if chosen['placement'] not in CAPTION_PLACEMENTS:
             raise ValueError(f"style.captions.placement {chosen['placement']} is not one of {', '.join(CAPTION_PLACEMENTS)}")
         out['captionPlacement'] = chosen['placement']
+    return out
+
+
+def sound_props(spec: dict, props: dict, assets_dir: Path) -> list[dict]:
+    """Approved cues on the picture's clock, one frame ahead, at least six frames apart.
+
+    Beat starts match lastHandover and device frames match hitFrames in kit/ingredients.ts.
+    Existing explicit cues participate in spacing only when style.sound is chosen.
+    """
+    from . import sfx  # noqa: PLC0415
+    problems = sfx.style_problems(spec)
+    if problems:
+        raise ValueError('; '.join(problems))
+    sound = (spec.get('style') or {}).get('sound')
+    existing = (props.get('audio') or {}).get('sfx') or []
+    if sound is None:
+        return existing
+    ok = sfx.approved(sfx.APPROVED)
+    handovers = {beat['fromFrame'] for beat in props.get('beats', [])[1:]}
+    cues = []
+    if sound.get('handover'):
+        cues.extend((frame, 'handover') for frame in handovers)
+    ingredients = ingredient_props(spec)
+    if sound.get('hit') and ingredients and ingredients['hits']:
+        hits = []
+        for frame in sorted({event['atFrame'] for event in props.get('events', [])}):
+            if not hits or frame - hits[-1] >= 3:
+                hits.append(frame)
+        cues.extend((frame, 'hit') for frame in hits if not (sound.get('handover') and frame in handovers))
+    # Handovers win ties, including frame 0 when the lead is clamped.
+    candidates = [(cue['atFrame'], 1, cue) for cue in existing]
+    paths = {}
+    for frame, role in cues:
+        sid = sound[role]
+        if sid not in paths:
+            row = ok[sid]
+            rel = f"sfx/{sid}{Path(row['file']).suffix.lower()}"
+            paths[sid] = source(sfx.ensure_staged(sid, rel, assets_dir, sfx.APPROVED), assets_dir)
+        at = max(0, frame - 1)
+        candidates.append((at, 0 if role == 'handover' else 2,
+                           {'src': paths[sid], 'atFrame': at,
+                            'gainDb': sound.get('gainDb', -14 if role == 'handover' else -12)}))
+    out = []
+    for at, _priority, cue in sorted(candidates, key=lambda item: item[:2]):
+        if not out or at - out[-1]['atFrame'] >= 6:
+            out.append(cue)
     return out
 
 

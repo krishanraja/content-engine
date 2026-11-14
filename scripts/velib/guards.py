@@ -255,8 +255,9 @@ def annotation_lints(spec: dict) -> list[str]:
 
 def spec_lints(spec: dict) -> list[str]:
     """The spec-level guards, for ve lint."""
+    from .sfx import style_problems  # noqa: PLC0415
     return (idea_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
-            + annotation_lints(spec))
+            + annotation_lints(spec) + style_problems(spec))
 
 
 # ---------------------------------------------------------------- 3. freeze the engine during a piece

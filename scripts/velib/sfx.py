@@ -27,6 +27,7 @@ Nothing here places a sound on a cut: the spec does, on its one big-moment event
 from __future__ import annotations
 
 import json
+import math
 import os
 import shutil
 import subprocess
@@ -59,6 +60,29 @@ def approved(path: Path = APPROVED) -> dict[str, dict]:
     return {row['id']: row for row in _rows(path, 'approved')
             if row.get('id') and row.get('sha256') and row.get('approved_by') == 'Krish'
             and (row.get('approval_words') or (row.get('approved_press') or {}).get('sha256') == row['sha256'])}
+
+
+def style_problems(spec: dict) -> list[str]:
+    """Sound ingredients name only approved bytes; this never approves a candidate."""
+    sound = (spec.get('style') or {}).get('sound')
+    if sound is None:
+        return []
+    if not isinstance(sound, dict):
+        return ['style.sound must be an object']
+    out = []
+    if not isinstance(sound.get('reason'), str) or not sound['reason'].strip():
+        out.append('style.sound.reason must explain the sound choice')
+    if set(sound) - {'handover', 'hit', 'gainDb', 'reason'}:
+        out.append('style.sound has unknown fields')
+    if 'gainDb' in sound:
+        gain = sound['gainDb']
+        if isinstance(gain, bool) or not isinstance(gain, (int, float)) or not math.isfinite(gain) or gain > 0:
+            out.append('style.sound.gainDb must be finite and <= 0')
+    ok = approved(APPROVED)
+    for role in ('handover', 'hit'):
+        if role in sound and (not isinstance(sound[role], str) or sound[role] not in ok):
+            out.append(f'style.sound.{role} {sound[role]!r} is not in the approved set (config/sfx-approved.json)')
+    return out
 
 
 def music_root() -> Path:
