@@ -26,6 +26,18 @@ more week, then is retired by his word.
 
 Questions for him: is three the right number? Should both cuts of a piece count as one?
 
+### Also proposed for this test (the repair lane, 14 Nov 2026)
+
+Three points the test above leaves open, also for his ruling and not in force:
+
+- **Rounds.** Each cut reaches his Approve within two full-cut rounds (`ve packet`'s round count); a third round
+  resets the count.
+- **No quick-edit rescue.** A cut that reached him and was then re-made on quick-edit does not count.
+- **Pace as a watch, not a refusal.** A cut below every kept reference on both events per second and active frame is
+  watched side by side with the slowest reference before it reaches his board; it is never refused on the number
+  alone (THE_BAR). The pace line it would use already prints in `ve styles`, `ve lab render` and `ve packet`
+  (`pace.beside_references`).
+
 ## 2. The $15 a week chain: which unit keys count
 
 AGENTS.md and `docs/COST_GUARDS.md` set the cap (Krish, 2026-10-29: "happy with $15 a week") for "the engine's Vercel
