@@ -14,12 +14,13 @@ export function receiptLayout(state: ReceiptState, aspect: DeviceProps['aspect']
   const labelSize = tall ? 32 : 30, figureSize = tall ? 40 : 38, sourceSize = 30, titleSize = tall ? 52 : 56
   const pad = 32, gap = 14
   const labelWidth = Math.max(...state.lines.map(line => textWidth('mono', line.label, labelSize)))
-  const figureWidth = Math.max(...state.lines.map(line => textWidth('mono', line.figure, figureSize))) + 20
+  const figureWidth = Math.max(...[...state.lines.map(line => line.figure), ...state.totalFigures]
+    .map(figure => textWidth('mono', figure, figureSize))) + 20
   const width = Math.max(tall ? 760 : 960, textWidth('mono', state.title, titleSize) + 2 * pad,
     textWidth('mono', state.producerLabel, sourceSize) + 2 * pad,
     (tall ? Math.max(labelWidth, figureWidth) : labelWidth + gap + figureWidth) + 2 * pad)
   const rowHeight = tall ? 106 : 68, rowsTop = 112
-  const height = rowsTop + rowHeight * state.lines.length + 86
+  const height = rowsTop + rowHeight * (state.lines.length + 1) + 86
   // Conservative rotational envelope at every tilt, including the ghost and full 250 px rise.
   const angle = Math.abs(PRINT.startDeg) * Math.PI / 180
   const marginX = height * Math.sin(angle) / 2 + 8
@@ -42,6 +43,13 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
         {state.dissolve < 1 && <g data-previous-layout="" aria-hidden="true" opacity={1 - state.dissolve}>{paper(state.previousHighlight)}</g>}
         <g data-current-layout="" opacity={state.dissolve}>{paper(state.highlighted)}</g>
         {state.ghost && <g data-print-ghost="" aria-hidden="true" opacity={0.25} transform={`translate(${PRINT.joltPx} ${PRINT.joltPx})`}>{paper(state.highlighted, true)}</g>}
+        {state.stamped && <g data-receipt-stamp="" opacity={state.stampProgress}
+          transform={`translate(${centreX} ${centreY}) rotate(-8) scale(${1.25 - 0.25 * state.stampProgress})`}
+          fill={tokens.channel} stroke={tokens.channel}>
+          <rect x={-l.paper.width * 0.3} y={-56} width={l.paper.width * 0.6} height={112} rx={4} fill="none" strokeWidth={6} />
+          <text textAnchor="middle" dominantBaseline="central" stroke="none" fontFamily={HOUSE_FONTS.data}
+            fontSize={Math.min(80, 80 * l.paper.width * 0.54 / textWidth('mono', state.stampText, 80))}>{state.stampText}</text>
+        </g>}
       </g>
     </svg>
   </RegionFit>
@@ -63,6 +71,12 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
           <path d={`M ${l.pad} ${y + l.rowHeight - 4} H ${l.paper.width - l.pad}`} stroke={tokens.inkSoft} strokeWidth={1} strokeDasharray="4 6" />
         </g>
       })}
+      {state.total && <g data-receipt-total="" transform={`translate(${l.pad} ${l.rowsTop + state.lines.length * l.rowHeight})`}>
+        <rect x={-8} y={0} width={l.paper.width - 2 * l.pad + 16} height={l.rowHeight - 8} fill={tokens.mint} />
+        <text y={l.labelSize} fontSize={l.labelSize}>TOTAL</text>
+        <text x={l.tall ? 10 : l.paper.width - 2 * l.pad - l.figureWidth + 10}
+          y={l.tall ? 46 + l.figureSize : 6 + l.figureSize} fontSize={l.figureSize}>{state.total.figure}</text>
+      </g>}
       <text x={l.pad} y={l.paper.height - 32} fontSize={l.sourceSize}>{state.producerLabel}</text>
     </g>
   }
