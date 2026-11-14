@@ -19,6 +19,9 @@ piece published from 9 Nov 2026 whose receipt for its maker is missing or older 
 The file, config/rejection-floor.json, is written only by the Rejections engine (krishanraja/inspirationhouse,
 src/rejection/) and changes only by a pull request Krish merges. Never edit it by hand. Krish, 2026-10-28: "It then
 makes it really easy for a new session to understand what is a no-no and what kind of stuff cannot be produced."
+Where Krish has ruled on a record's wording, config/floor-rulings.json holds the ruling and load() applies it over the
+engine's file, so a rebuild never undoes it (scripts/floor_rulings.py; Ruling, Krish, 2026-11-14: a caption page holds
+two to five words, and the rejections engine keeps the ruled wording).
 
 A standard is approved or reworded by Krish, or a draft the engine read into his rejections. Reviewers and
 pre-delivery checks test work against approved and reworded standards and his words, for craft and process only,
@@ -51,17 +54,29 @@ import textwrap
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import floor_rulings  # noqa: E402
+
 FLOOR = ROOT / 'config' / 'rejection-floor.json'
 BAR = ROOT / 'config' / 'reference-cuts.json'
 NO_FLOOR = ('No rejection floor yet: config/rejection-floor.json arrives by pull request from the Rejections engine '
             '(krishanraja/inspirationhouse). Until then, config/failures.json and config/learnings.json hold what he rejected.')
 
 
-def load(path=FLOOR):
+def load_raw(path=FLOOR):
+    """The file exactly as the Rejections engine wrote it."""
+    path = Path(path)
     if not path.exists():
         return None
     with path.open(encoding='utf-8') as f:
         return json.load(f)
+
+
+def load(path=FLOOR):
+    """The floor as sessions read it: the engine's file with Krish's rulings on wording applied
+    (config/floor-rulings.json; Ruling, Krish, 2026-11-14: the rejections engine keeps the ruled wording)."""
+    doc, _ = floor_rulings.apply(load_raw(path))
+    return doc
 
 
 # Only his eight nevers may block on taste (Krish, 2026-10-29: "I would much rather the engine know what kind of thing
@@ -993,6 +1008,7 @@ def main(argv=None):
     doc = load(a.file)
     if a.check:
         problems = [f'rejection floor: {problem}' for problem in (check(doc) if doc is not None else [])]
+        problems += floor_rulings.apply(load_raw(a.file))[1]
         bar, error = read_bar(a.bar_file)
         # No bar file is the floor alone (inspirationhouse checks its file that way): bar_check passes it, and so do the
         # nevers, which live in the bar. A bar that is there holds exactly his eight.

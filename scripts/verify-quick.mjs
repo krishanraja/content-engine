@@ -48,7 +48,7 @@ const ALWAYS_TS = [
 // The board's contract and schema tests, whatever they are named when they land.
 const ALWAYS_TS_PATTERN = /^tests\/control-plane\/board-[^/]*(contract|schema)[^/]*\.test\.ts$/
 const ALWAYS_PY = [
-  'tests/copy_lint_test.py', 'tests/floor_blocking_test.py', 'tests/floor_bar_test.py',
+  'tests/copy_lint_test.py', 'tests/floor_blocking_test.py', 'tests/floor_bar_test.py', 'tests/floor_rulings_test.py',
   'tests/publish_figures_test.py', 'tests/taste_backstop_test.py',
 ]
 
