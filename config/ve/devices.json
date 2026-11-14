@@ -11,6 +11,9 @@
     "takeover": {
       "verbs": ["enter", "exit"]
     },
+    "video_wall": {
+      "verbs": ["enter", "add", "dim"]
+    },
     "office_floor": {
       "verbs": [
         "enter",
