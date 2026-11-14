@@ -123,6 +123,12 @@ Choose one with `style.captions.theme`. The words below are what the publish boa
   every channel's safe area, and in the house faces and colours only. Scores were 6.5 to 7.5 out of 10.
 - **None has been watched moving on one of his takes yet.** Prove a style on his take before a cut ships with it.
 
+**How many words a page.** Every style draws the pages `compile.py` builds (`_caption_groups`): 2 to 5 words a page, at
+most two lines, never a one-word orphan. No style caps a page at three words, and no ruling of his does: `anchor-quote`
+and `georgia-build` show their own running chunk of at most three inside a longer page, and `slam` shows the newest word
+with the two before it. The rejection floor's endorsed "two to four words per caption" (9 Sep, with no words of his
+quoted) is his to rule on; until he does, the pager stays at 2 to 5 (audit ve-7, 14 Nov 2026).
+
 ## The three styles from his own cuts
 
 Krish, 2026-11-13: "I want an array of animated motion caption styles available in the engine, decoupled from the
