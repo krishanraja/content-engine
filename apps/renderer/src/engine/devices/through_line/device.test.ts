@@ -1,4 +1,6 @@
+import { markRegion, MAX_GROW } from '../../kit/layout'
 import React from 'react'
+import { textWidth } from '../../../house/metrics'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { EngineBeatSchema, EngineEventSchema, EngineObjectSchema } from '../../props'
@@ -115,4 +117,74 @@ describe('through_line', () => {
     expect(ParamsSchema.safeParse({ ...p, states: { bad: { verb: 'connect', part: 'senior', to: 'absent' } } }).success).toBe(false)
     expect(ParamsSchema.safeParse({ ...p, states: { bad: { verb: 'count_to', part: 'junior', number: { value: 9, unit: 'hours', producer: 'ANTHROPIC', date: '2026' } } } }).success).toBe(false)
   })
+})
+
+
+describe('region fit bounds', () => {
+  it.each(['9:16', '16:9'] as const)('grows and centres the rendered %s device inside its region at every fixture frame', aspect => {
+    const box = markRegion({ left: 72, top: 96, width: 2400, height: 2200 })
+    let drawn = 0
+    for (let frame = object.fromFrame; frame < object.toFrame; frame++) {
+      const markup = renderToStaticMarkup(Device({ object, events, box, tokens: overlayTestProps.tokens, aspect, frame }))
+      if (!markup) continue
+      const wrapper = markup.match(/data-region-fit="" style="([^"]+)"/)
+      expect(wrapper, `frame ${frame}`).not.toBeNull()
+      const css = wrapper![1]!
+      const px = (key: string) => Number(css.match(new RegExp(`(?:^|;)${key}:([\\d.e+-]+)px`))![1])
+      const scale = Number(css.match(/transform:scale\(([^)]+)\)/)![1])
+      const width = px('width') * scale, height = px('height') * scale
+      expect(scale).toBeGreaterThan(1)
+      expect(scale).toBeLessThanOrEqual(MAX_GROW)
+      expect(px('left')).toBeGreaterThanOrEqual(box.left - 1e-8)
+      expect(px('top')).toBeGreaterThanOrEqual(box.top - 1e-8)
+      expect(px('left') + width).toBeLessThanOrEqual(box.left + box.width + 1e-8)
+      expect(px('top') + height).toBeLessThanOrEqual(box.top + box.height + 1e-8)
+      expect(px('left') + width / 2).toBeCloseTo(box.left + box.width / 2)
+      expect(px('top') + height / 2).toBeCloseTo(box.top + box.height / 2)
+      // It fills one dimension unless the shared growth ceiling is reached.
+      expect(Math.min(Math.abs(width - box.width), Math.abs(height - box.height), Math.abs(scale - MAX_GROW))).toBeLessThan(1e-8)
+      drawn++
+    }
+    expect(drawn).toBeGreaterThan(0)
+  })
+})
+
+
+it.each(['9:16', '16:9'] as const)('keeps the number box and every label box disjoint throughout the %s fixture', aspect => {
+  // Check the actual SVG positions, including the camera transform, rather than a parallel layout model.
+  for (const box of [markRegion({ left: 60, top: 280, width: 800, height: 780 }),
+    markRegion({ left: 96, top: 140, width: 1728, height: 600 })]) {
+    for (let frame = object.fromFrame; frame < object.toFrame; frame++) {
+      const markup = renderToStaticMarkup(Device({ ...overlayTestProps, object, events, frame, aspect, box }))
+      const stack = [{ scale: 1, x: 0, y: 0 }]
+      const boxes: { number: boolean; text: string; left: number; top: number; right: number; bottom: number }[] = []
+      for (const match of markup.matchAll(/<g\b([^>]*)>|<\/g>|<text\b([^>]*)>(.*?)<\/text>/g)) {
+        if (match[0] === '</g>') { stack.pop(); continue }
+        const parent = stack.at(-1)!
+        if (match[1] !== undefined) {
+          const transform = match[1].match(/transform="translate\(([^ ]+) ([^)]+)\) scale\(([^)]+)\) translate\(([^ ]+) ([^)]+)\)"/)
+          const scale = transform ? Number(transform[3]) : 1
+          stack.push(transform ? { scale: parent.scale * scale,
+            x: parent.x + parent.scale * (Number(transform[1]) + scale * Number(transform[4])),
+            y: parent.y + parent.scale * (Number(transform[2]) + scale * Number(transform[5])) } : parent)
+          continue
+        }
+        const attrs = match[2]!, text = match[3]!.replace(/&amp;/g, '&')
+        const attr = (key: string) => Number(attrs.match(new RegExp(`(?:^| )${key}="([^"]+)"`))![1])
+        const number = attrs.includes('data-number-row')
+        const size = attr('font-size')
+        const face = number ? 'anton' : attrs.includes('Plex Mono') ? 'mono' : 'fraunces'
+        const left = parent.x + parent.scale * attr('x'), baseline = parent.y + parent.scale * attr('y')
+        // Conservative ascender/descender envelope, wider than the house face's ink bounds.
+        boxes.push({ number, text, left, right: left + parent.scale * textWidth(face, text, size),
+          top: baseline - parent.scale * size * 1.1, bottom: baseline + parent.scale * size * .25 })
+      }
+      expect(boxes.some(b => b.number)).toBe(frame < 287 || frame >= 460)
+      for (let a = 0; a < boxes.length; a++) for (let b = a + 1; b < boxes.length; b++) {
+        const x = boxes[a]!, y = boxes[b]!
+        const intersects = x.left < y.right && x.right > y.left && x.top < y.bottom && x.bottom > y.top
+        expect(intersects, `frame ${frame}: ${x.text} / ${y.text}`).toBe(false)
+      }
+    }
+  }
 })

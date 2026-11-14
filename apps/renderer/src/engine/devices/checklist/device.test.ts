@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
 import { fitBox, fitScale } from '../../fit'
-import { markRegion } from '../../kit/layout'
+import { markRegion, MAX_GROW } from '../../kit/layout'
 import { DEVICES } from '../registry'
 import manifest from '../../../../../../config/ve/devices.json'
 import { Device, checklistLayout } from './index'
@@ -99,5 +99,35 @@ describe('checklist blank arrival and event-driven fill', () => {
     expect(render(100).split('data-device')[0]).toBe(sizing)
     const long = { ...object, params: { slots: [{ id: 'long', line: 'LongUnbrokenText'.repeat(12) }] } }
     expect(checklistLayout(box, long, aspect).heights[0]).toBeGreaterThan(layout.heights[0]!)
+  })
+})
+
+
+describe('region fit bounds', () => {
+  it.each(['9:16', '16:9'] as const)('grows and centres the rendered %s device inside its region at every fixture frame', aspect => {
+    const box = markRegion({ left: 72, top: 96, width: 2400, height: 2200 })
+    let drawn = 0
+    for (let frame = object.fromFrame; frame < object.toFrame; frame++) {
+      const markup = renderToStaticMarkup(Device({ object, events, box, tokens: tokens, aspect, frame }))
+      if (!markup) continue
+      const wrapper = markup.match(/data-region-fit="" style="([^"]+)"/)
+      expect(wrapper, `frame ${frame}`).not.toBeNull()
+      const css = wrapper![1]!
+      const px = (key: string) => Number(css.match(new RegExp(`(?:^|;)${key}:([\\d.e+-]+)px`))![1])
+      const scale = Number(css.match(/transform:scale\(([^)]+)\)/)![1])
+      const width = px('width') * scale, height = px('height') * scale
+      expect(scale).toBeGreaterThan(1)
+      expect(scale).toBeLessThanOrEqual(MAX_GROW)
+      expect(px('left')).toBeGreaterThanOrEqual(box.left - 1e-8)
+      expect(px('top')).toBeGreaterThanOrEqual(box.top - 1e-8)
+      expect(px('left') + width).toBeLessThanOrEqual(box.left + box.width + 1e-8)
+      expect(px('top') + height).toBeLessThanOrEqual(box.top + box.height + 1e-8)
+      expect(px('left') + width / 2).toBeCloseTo(box.left + box.width / 2)
+      expect(px('top') + height / 2).toBeCloseTo(box.top + box.height / 2)
+      // It fills one dimension unless the shared growth ceiling is reached.
+      expect(Math.min(Math.abs(width - box.width), Math.abs(height - box.height), Math.abs(scale - MAX_GROW))).toBeLessThan(1e-8)
+      drawn++
+    }
+    expect(drawn).toBeGreaterThan(0)
   })
 })
