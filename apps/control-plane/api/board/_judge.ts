@@ -17,7 +17,12 @@ import { houseRulesBlock } from '../_houseRules.js'
 //       stands ready. The answer carries every judge's one fix that did not pass, so a fail comes back with its reasons.
 //       The same artifact judged again on the same roster answers from the record, paying nothing.
 //   {op: bind, artifact_sha256, buffer_post_id, payload_sha256?, item?}   a passing verdict tied to the saved post
-//   {op: live, posts: [{buffer_post_id, url, at}]}                         posts gone out: marked for bound artifacts only
+//   {op: live, posts: [{buffer_post_id, url, at}]}                         posts gone out: marked for bound artifacts only,
+//                                                                          each live row carrying the item it was bound to
+//   {op: bindings, buffer_post_ids: [...]}                                 read only: the board item and artifact each Buffer
+//                                                                          post was bound to when it was saved, and whether it
+//                                                                          went live (I-09: a post is tied to its board item by
+//                                                                          id at the moment it is saved, never matched by title)
 // Every row goes to asset_judgements (append only); Control Center's reader counts each artifact whose latest verdict
 // is a pass and that went live in the last 7 days. At most DAILY_CAP panels a day are paid for (docs/COST_GUARDS.md).
 
@@ -90,6 +95,7 @@ export async function judgeAsset(db: SupabaseClient, week: string, body: unknown
     if (body.op === 'judge') return await judge(db, week, body, now, by, deps.panel ?? runPanel)
     if (body.op === 'bind') return await bind(db, body, by)
     if (body.op === 'live') return await live(db, body, by)
+    if (body.op === 'bindings') return await bindings(db, body)
   } catch {
     return { status: 503, body: { ok: false, error: 'judgements_unavailable' } }
   }
@@ -142,7 +148,7 @@ async function live(db: SupabaseClient, b: Body, by: string): Promise<Answer> {
   if (!posts || posts.length > 200) return { status: 400, body: { ok: false, error: 'invalid_live' } }
   if (!posts.length) return { status: 200, body: { ok: true, marked: 0 } }
   const ids = [...new Set(posts.map(p => String(p.buffer_post_id)))]
-  const bound = await db.from('asset_judgements').select('artifact_sha256,buffer_post_id,event').in('buffer_post_id', ids).in('event', ['bound', 'live'])
+  const bound = await db.from('asset_judgements').select('artifact_sha256,buffer_post_id,event,item').in('buffer_post_id', ids).in('event', ['bound', 'live'])
   if (bound.error) throw new Error('judgements_unreadable')
   const rows = (bound.data || []) as Body[]
   const already = new Set(rows.filter(r => r.event === 'live').map(r => `${r.artifact_sha256}:${r.buffer_post_id}`))
@@ -152,10 +158,34 @@ async function live(db: SupabaseClient, b: Body, by: string): Promise<Answer> {
     if (already.has(key)) continue
     const post = posts.find(p => p.buffer_post_id === r.buffer_post_id)!
     const wrote = await db.from('asset_judgements').insert({ event: 'live', artifact_sha256: r.artifact_sha256, buffer_post_id: r.buffer_post_id,
-      url: post.url, live_at: new Date(String(post.at)).toISOString(), written_by: by })
+      item: typeof r.item === 'string' ? r.item : null, url: post.url, live_at: new Date(String(post.at)).toISOString(), written_by: by })
     if (wrote.error && !/duplicate|23505/.test(String(wrote.error.message || wrote.error.code))) throw new Error('judgements_unwritable')
     already.add(key)
     marked += 1
   }
   return { status: 200, body: { ok: true, marked } }
+}
+
+/** Read only: what each Buffer post was bound to when it was saved. The board tick and Control Center read this, by the
+ *  post's id, instead of matching a post to an item by its title. The newest binding of a post wins; a post never bound
+ *  is listed with item null, so the caller sees it is unbound rather than guessing. */
+async function bindings(db: SupabaseClient, b: Body): Promise<Answer> {
+  const ids = Array.isArray(b.buffer_post_ids) ? [...new Set(b.buffer_post_ids.map(String))] : null
+  if (!ids || !ids.length || ids.length > 200 || !ids.every(id => POST_ID.test(id))) return { status: 400, body: { ok: false, error: 'invalid_bindings' } }
+  const read = await db.from('asset_judgements').select('artifact_sha256,buffer_post_id,event,item,url,live_at,created_at')
+    .in('buffer_post_id', ids).in('event', ['bound', 'live']).order('created_at', { ascending: false })
+  if (read.error) throw new Error('judgements_unreadable')
+  const rows = (read.data || []) as Body[]
+  const out = ids.map((id) => {
+    const bound = rows.find(r => r.buffer_post_id === id && r.event === 'bound')
+    const went = bound ? rows.find(r => r.buffer_post_id === id && r.event === 'live' && r.artifact_sha256 === bound.artifact_sha256) : undefined
+    return {
+      buffer_post_id: id,
+      item: bound && typeof bound.item === 'string' ? bound.item : null,
+      artifact_sha256: bound ? String(bound.artifact_sha256) : null,
+      bound_at: bound && typeof bound.created_at === 'string' ? bound.created_at : null,
+      live: went ? { url: went.url ?? null, at: went.live_at ?? null } : null,
+    }
+  })
+  return { status: 200, body: { ok: true, bindings: out } }
 }
