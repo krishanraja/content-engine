@@ -36,15 +36,15 @@ Now take just one line, the borrowing. By one count, new borrowing now pays for 
 
 Part three is the votes. All of this is a bet that everything happens on time. The building goes up, it gets plugged into enough power, and the tenants move in and start paying.
 
-But data centres use huge amounts of power, and people have started blaming them for their higher power bills. So in this month's midterm elections, lots of US towns and counties also voted on new data centres. One election tracker counted 41 of those local votes, and voters went against the data centres in all but one.
+But data centres use huge amounts of power. And lots of people now blame them, at least in part, for higher power bills. So in this month's midterm elections, lots of US towns and counties also voted on new data centres. One election tracker counted 41 of those local votes. In all but one, voters chose to limit new data centres.
 
-Within days, OpenAI promised to pay the full cost of powering its own data centres. That tells you how loud the backlash got.
+Within days, OpenAI repeated its promise to pay the full cost of powering the data centres it runs. That tells you how loud the backlash got.
 
 Now think like a landlord who borrowed to build. First, you have to win over the town, and that takes time. Then you're expected to pay for your own power, so it doesn't land on everyone else's bills. That's a new cost. And every month you wait is another month of interest on the loan. The rent comes late, but the loan payments come on time.
 
 So who feels that first? Look at Oracle, the landlord with the most lines on the receipt. Right now it's selling new shares and borrowing more, both at once. The rating firms put it one step above junk, which is the grade where borrowing gets a lot dearer. Its biggest customers pay up front, and that helps. But Oracle itself doesn't expect to have spare cash again until the second half of 2028. So for Oracle, a late building really hurts, because it's borrowed money waiting on rent that hasn't started.
 
-Here's what I'd take into your next board meeting. Nearly three quarters of a trillion dollars is going into AI buildings this year. About one in three of those dollars is now borrowed. And voters turned down new data centres in all but one of those local votes. Then ask one question. Which landlord does our AI run on, and does it pay from profits or borrow to build?
+Here's what I'd take into your next board meeting. Nearly three quarters of a trillion dollars is going into AI buildings this year. About one in three of those dollars is now borrowed. And in all but one of those local votes, people chose to limit new data centres. Then ask one question. Which landlord does our AI run on, and does it pay from profits or borrow to build?
 
 So what do I think happens? I think the money side of AI still changes, but it won't change as fast as promised. And the US economy is tied up with it, so the same goes there. The hyperscalers just won't get as free a hand as they had before.
 
