@@ -152,7 +152,11 @@ export function dayStyle(i: StyleInputs): DayStyle {
     .sort((a, b) => (FITS_ORDER[a.m.fits] ?? 3) - (FITS_ORDER[b.m.fits] ?? 3) || Number(LIKED.has(b.m.krish_verdict)) - Number(LIKED.has(a.m.krish_verdict))
       || b.hits.length - a.hits.length || a.n - b.n)
     .slice(0, 3)
-  const planned = i.recommendedMotion && i.motion.some(m => m.id === i.recommendedMotion) && !mine.rejected.motion.includes(i.recommendedMotion) ? i.recommendedMotion : null
+  // The planned pick passes the same filter as the ranked list: ve can draw it now (no needs_device) and he never called
+  // it not for us. A plan naming one that fails is not recommended; the channel's own three are (fleet audit 14 Nov,
+  // ve-1: the week plan named the two 3D styles he rejected on 13 Nov, and a pick would have rendered house motion).
+  const plannedModule = i.recommendedMotion ? i.motion.find(m => m.id === i.recommendedMotion) : undefined
+  const planned = plannedModule && ready(plannedModule) && !NOT_FOR_US.has(plannedModule.krish_verdict) && !mine.rejected.motion.includes(plannedModule.id) ? plannedModule.id : null
   const recommended = planned ? new Map([[planned, 'The production pick recommended for this piece.']])
     : new Map(ranked.map(x => [x.m.id, motionWhy(x.m, x.hits)]))
   const motionIds = new Set(i.motion.map(m => m.id))
