@@ -131,6 +131,7 @@ vi.mock('../../apps/control-plane/api/library/_heartsideFolder.js', () => ({
 import uploadUrl from '../../apps/control-plane/api/library/upload-url.js'
 import confirm from '../../apps/control-plane/api/library/confirm.js'
 import pending from '../../apps/control-plane/api/library/pending.js'
+import fileRoute from '../../apps/control-plane/api/library/file.js'
 import written from '../../apps/control-plane/api/library/written.js'
 import { LIBRARY_MAX_BYTES, libraryMimeTypes } from '../../apps/control-plane/api/library/_library.js'
 import { videoStudioRunnerIdentity } from '../../apps/control-plane/api/_videoStudioAuth.js'
@@ -574,6 +575,26 @@ describe('the Heartside library on the same routes', () => {
     folder.throws = false
     expect(down.statusCode).toBe(200)
     expect(down.body.folder).toMatchObject({ state: 'unknown', drive_id: found.drive_id })
+  })
+
+  // I-07: Control Center mints a SendLinks file link onto the stored object, with no bytes moved.
+  it('finds a library file by its sha256 and names its library and storage object, without signing or moving anything', async () => {
+    const other = 'b'.repeat(64)
+    db.files.push(readyRow({ ready_at: '2026-10-06T08:01:00.000Z' }))
+    db.files.push(readyRow({ library: 'heartside', path: 'Posts/F01/heartside_F01_same.html', ready_at: '2026-11-03T08:01:00.000Z' }))
+    db.files.push(readyRow({ sha256: SHA, state: 'reserved', ready_at: null, path: '3 Posts/x/reserved.html' }))
+    db.files.push(readyRow({ sha256: other, object_key: `files/${other}.html` }))
+    const get = (query: Record<string, unknown>, headers: Record<string, string> = { authorization: `Bearer ${ENGINE}` }) => call(fileRoute, { method: 'GET', headers, query })
+    const res = await get({ sha256: SHA })
+    expect(res.statusCode).toBe(200)
+    expect(res.body.file).toMatchObject({ library: 'heartside', path: 'Posts/F01/heartside_F01_same.html', sha256: SHA, state: 'ready' })
+    expect(res.body.object).toEqual({ bucket: 'content-library', key: KEY })
+    expect(res.body.also_at).toEqual([{ library: 'makeyourmindup', path: PATH }])
+    expect(res.body).not.toHaveProperty('download')
+    expect((await get({ sha256: 'c'.repeat(64) })).statusCode).toBe(404)
+    expect((await get({ sha256: 'NOT-A-HASH' })).body).toEqual({ ok: false, error: { code: 'invalid_library_hash' } })
+    expect((await get({})).statusCode).toBe(400)
+    expect((await get({ sha256: SHA }, {})).statusCode).toBe(401)
   })
 
   it('asks the database for one library at a time', async () => {
