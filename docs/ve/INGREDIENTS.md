@@ -126,8 +126,9 @@ Choose one with `style.captions.theme`. The words below are what the publish boa
 **How many words a page.** Every style draws the pages `compile.py` builds (`_caption_groups`): 2 to 5 words a page, at
 most two lines, never a one-word orphan. No style caps a page at three words, and no ruling of his does: `anchor-quote`
 and `georgia-build` show their own running chunk of at most three inside a longer page, and `slam` shows the newest word
-with the two before it. The rejection floor's endorsed "two to four words per caption" (9 Sep, with no words of his
-quoted) is his to rule on; until he does, the pager stays at 2 to 5 (audit ve-7, 14 Nov 2026).
+with the two before it. Ruling (Krish, 2026-11-14): caption pages are 2 to 5 words (his words: "I agree with everything
+else until Batch 6"); the rejection floor's entry, endorsed on 8 Sep as "two to four words per caption", now says two to
+five.
 
 ## The three styles from his own cuts
 
