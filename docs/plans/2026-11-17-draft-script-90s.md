@@ -8,4 +8,4 @@ My call is that all three push AI the same way. It gets smaller, closer to you, 
 
 If I ran a business, I'd ask my AI supplier one question this week. Where are you building the data centres my tools run on? If the town's fighting them, expect delays.
 
-The full deep dive is at makeyourmindup.ai.
+The full story is free at makeyourmindup.ai.

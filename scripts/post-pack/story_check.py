@@ -15,7 +15,12 @@ parts a rule can see, and refuses to pack a script that fails one:
   - a script of a minute or more closes the way Krish ruled on 2026-10-31
     (house rule SCRIPT_CLOSE): one short beat saying the one thing he would
     do, in his first person, never a list of orders, then, as its last
-    sentence and nothing after it, "The full deep dive is at makeyourmindup.ai.";
+    sentence and nothing after it, "The full story is free at makeyourmindup.ai."
+    (SCRIPT_CLOSE_LINE in apps/control-plane/api/_houseRules.ts, read from
+    there). The line he set on 2026-10-21 ended on a phrase the voice check
+    bans, so every script failed it on its last line; Ruling (Krish,
+    2026-11-14): the voice check wins ("stick to voice check"), and that old
+    line is refused with the reason;
   - a listener can hold it, heard once (house rule LISTENING, Ruling, Krish,
     2026-10-31): no more figures or names than LISTENING in
     apps/control-plane/api/_houseRules.ts allows for its cut;
@@ -27,7 +32,11 @@ parts a rule can see, and refuses to pack a script that fails one:
     TWO_CUTS), then, 2026-10-19: "let's make the 3-minute scripts into
     5-minute scripts and videos". At an unhurried 150 spoken words a minute,
     the long cut is 675 to 825 words (about 4:30 to 5:30) and the short cut 160 to 225
-    words (about 1:05 to 1:30);
+    words (about 1:05 to 1:30). With --piece, a piece whose long cut
+    config/long-cuts.json lifts (long_cut.py; Ruling, Krish, 2026-11-14:
+    "lift if worth it") is held to its own length instead, never past 1,200
+    words (about 8:00), and the check says so; a lift that does not hold
+    refuses the long cut with the reason;
   - it no longer opens with a series line. Krish, 2026-10-21: "we need to
     cut that opening line from every content piece moving forward and just
     launch straight in to "I put GrokBot and Muse head to head" etc."
@@ -60,6 +69,7 @@ catches the rest.
     python scripts/post-pack/story_check.py SCRIPT [SCRIPT ...]
     python scripts/post-pack/story_check.py --cut long SCRIPT    # or --cut short
     python scripts/post-pack/story_check.py --cut long --series follow_the_money SCRIPT
+    python scripts/post-pack/story_check.py --cut long --piece PIECE_ID SCRIPT   # a long cut config/long-cuts.json lifts
     python scripts/post-pack/story_check.py --self-test
 
 Without --cut, a file whose name says "90", "short" or "vertical" is the
@@ -105,13 +115,18 @@ CUTS = {
 # The close, as scripts/quick-edit/kit.py finds the paragraph a picture may not cover: it names makeyourmindup
 # and, in a script recorded on the old lines, the full article (house rule HOOK_AND_CTA).
 OUTRO = re.compile(r'makeyourmindup', re.I)
-ARTICLE = re.compile(r'\b(article|full piece|full story|full teardown|full deep dive|read it|the rest)\b', re.I)
+ARTICLE = re.compile(r'\b(article|full piece|full story|full teardown|read it|the rest)\b', re.I)
 # House rule SCRIPT_CLOSE. Krish, 2026-10-21, asked for the close to lead in with
 # "Here's what I'd do with this info if I were you"; on 2026-10-31 he retired that line
 # ("the last paragraph of all my scripts still sounds a bit bossy and preachy", then
 # "Yes, replace it"), so a close that still says it is refused.
 CLOSE_LEAD = re.compile(r"\bhere's what i'd do with this info if i were you\b[:.,]?", re.I)
-CLOSE_LAST = "the full deep dive is at makeyourmindup.ai."
+# The last line itself lives once, in the house rules (SCRIPT_CLOSE_LINE): close_line() reads it. The line of
+# 2026-10-21 ended on a phrase the krish-voice kill list bans, so every script failed the voice check on it; Ruling
+# (Krish, 2026-11-14): the voice check wins. That line is kept here only to be refused (apps/control-plane/scripts/check-voice-close.ts
+# allows this one line), and BANNED_LAST names the phrase in any last line.
+RETIRED_CLOSE = 'The full deep dive is at makeyourmindup.ai.'  # retired 2026-11-14: refused, never written
+BANNED_LAST = re.compile(r'\bdeep[\s-]*dives?\b', re.I)
 CLOSE_BEATS = 3  # the lead-in sits in the last three beats of the script
 META_START = re.compile(r'^\s*(changes from|before you record|the story in one line|#{1,3}\s)', re.I)
 SAY_LINE = re.compile(r'^\s*(?:\*\*say:\*\*|say:)\s*(.*)$', re.I)
@@ -150,6 +165,19 @@ def house_block(name, path=HOUSE_RULES):
         return json.loads(block[block.index('{'):block.rindex('}') + 1])
     except ValueError as error:
         raise ValueError(f'the {name} block in {Path(path).name} is not JSON: {error}')
+
+
+@functools.lru_cache(maxsize=None)
+def close_line():
+    """The last sentence of every script of a minute or more, from the house rules (SCRIPT_CLOSE_LINE)."""
+    line = house_block('SCRIPT_CLOSE_LINE').get('line')
+    if not isinstance(line, str) or not line.strip() or BANNED_LAST.search(line):
+        raise ValueError('SCRIPT_CLOSE_LINE has no line, or one the voice check bans')
+    return line.strip()
+
+
+def _is_close(sentence):
+    return _plain(sentence).rstrip('"\' ').lower() == close_line().lower()
 
 
 @functools.lru_cache(maxsize=None)
@@ -216,8 +244,9 @@ def close_problems(beats):
     short beat saying the one thing he would do, in his own first person,
     never a list of orders, and never the retired lead-in "Here's what I'd do
     with this info if I were you". Its last sentence is still exactly the
-    line he set on 2026-10-21: nothing after it, no sign-off, no question for
-    the comments."""
+    line in the house rules (SCRIPT_CLOSE_LINE): nothing after it, no
+    sign-off, no question for the comments. Ruling (Krish, 2026-11-14): the
+    voice check wins, so the line of 2026-10-21 is refused with the reason."""
     found = []
     rules = listen_rules()
     if CLOSE_LEAD.search(_plain(' '.join(beats[-CLOSE_BEATS:]))):
@@ -239,9 +268,14 @@ def close_problems(beats):
             found.append(f'its close does not say what Krish would do in his own first person ("{_plain(tail[0])[:70]}"): '
                          '"If I ran a team, I\'d do one thing this week..." (house rule SCRIPT_CLOSE, Krish, 2026-10-31)')
     last = (sentences(beats) or [''])[-1]
-    if _plain(last).rstrip('"\' ').lower() != CLOSE_LAST:
-        found.append('its last sentence must be exactly "The full deep dive is at makeyourmindup.ai." with nothing after it: no sign-off, '
-                     f'no "I\'m Krish", no question for the comments (house rule SCRIPT_CLOSE, Krish, 2026-10-21). It ends: "{_plain(last)[-90:]}"')
+    banned = BANNED_LAST.search(_plain(last))
+    if banned and not _is_close(last):
+        found.append(f'its last sentence says "{banned.group(0)}", which the voice check bans, so the script fails it on its last line: '
+                     f'end on exactly "{close_line()}" with nothing after it (house rule SCRIPT_CLOSE; Ruling, Krish, 2026-11-14: '
+                     '"stick to voice check")')
+    elif not _is_close(last):
+        found.append(f'its last sentence must be exactly "{close_line()}" with nothing after it: no sign-off, '
+                     f'no "I\'m Krish", no question for the comments (house rule SCRIPT_CLOSE). It ends: "{_plain(last)[-90:]}"')
     return found
 
 
@@ -440,20 +474,26 @@ def cut_of(name):
 RULE_OF = {'deep': 'DEEP_CUT, retired 2026-10-21', 'feature': 'FEATURE'}
 
 
-def length_problem(words, cut):
-    """The reason a script is the wrong length for its cut, or None."""
+def length_problem(words, cut, lift=None):
+    """The reason a script is the wrong length for its cut, or None. `lift` is the piece's lifted long cut
+    (long_cut.lift_for: {words, reason, minutes}); it holds the long cut to its own length instead of 825 words."""
     if cut not in CUTS:
         return None
     low, high, asked = CUTS[cut]
+    rule = RULE_OF.get(cut, 'TWO_CUTS')
+    if cut == 'long' and lift:
+        high = lift['words']
+        asked = f'a long cut lifted to about {lift["minutes"]} for this piece ({lift["reason"]})'
+        rule = 'TWO_CUTS, lifted for this piece by config/long-cuts.json; Ruling, Krish, 2026-11-14: "lift if worth it"'
     n = len(words)
     secs = round(n / WORDS_PER_MINUTE * 60)
     when = f'{secs // 60}:{secs % 60:02d}'
     if n > high:
         return (f'the {cut} cut runs {n} spoken words, about {when} at an unhurried pace, and Krish asked for {asked}: '
-                f'cut it to {low} to {high} words by dropping a whole beat, never words from every sentence (house rule {RULE_OF.get(cut, "TWO_CUTS")})')
+                f'cut it to {low} to {high} words by dropping a whole beat, never words from every sentence (house rule {rule})')
     if n < low:
         return (f'the {cut} cut is {n} spoken words, about {when}, short of {asked}: '
-                f'it should run {low} to {high} words (house rule {RULE_OF.get(cut, "TWO_CUTS")})')
+                f'it should run {low} to {high} words (house rule {rule})')
     return None
 
 
@@ -462,7 +502,7 @@ def length_problem(words, cut):
 SPOKEN_CAP_S = {'short': 89, 'long': 330, 'deep': 720, 'feature': 990}
 
 
-def spoken_length_warning(words, cut, ledger=None):
+def spoken_length_warning(words, cut, ledger=None, lift=None):
     """How long the script will run as Krish says it, from his own takes
     (config/narration-ledger.json, narration_diff.py): he adds to every script
     (9% on Monday 12 Oct, 38% by Friday 16 Oct) at 170 to 180 words a minute, so
@@ -474,9 +514,9 @@ def spoken_length_warning(words, cut, ledger=None):
     if not got:
         return None
     secs, how = got
-    if secs <= SPOKEN_CAP_S[cut]:
+    cap = round(lift['words'] / WORDS_PER_MINUTE * 60) if cut == 'long' and lift else SPOKEN_CAP_S[cut]
+    if secs <= cap:
         return None
-    cap = SPOKEN_CAP_S[cut]
     return (f'as Krish says it, this {cut} cut will run about {int(secs) // 60}:{int(secs) % 60:02d}, over {cap // 60}:{cap % 60:02d} '
             f'({how}): cut about {round(len(words) * (1 - cap / secs))} words (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
 
@@ -571,15 +611,16 @@ def takes(text):
             for i, m in enumerate(marks)]
 
 
-def problems(text, cut=None, series=None):
+def problems(text, cut=None, series=None, lift=None):
     """Plain-words reasons this script is not ready, or [] when it passes.
     `cut` ('long' or 'short') adds the length rule; `series` (the piece's
     lane_slot) is accepted and ignored: the series line is retired (house rule
     SERIES_OPENER, 2026-10-21). The close (SCRIPT_CLOSE) holds for a script of
-    SHORT_WORDS or more, and the reading gate (house rule R7) for every script."""
+    SHORT_WORDS or more, and the reading gate (house rule R7) for every script. `lift` is the piece's lifted long
+    cut (long_cut.lift_for), which holds the long cut to its own length."""
     parts = takes(text)
     if parts:
-        return [f'{label}: {why}' for label, words in parts for why in problems(words, cut, series)]
+        return [f'{label}: {why}' for label, words in parts for why in problems(words, cut, series, lift)]
     found = []
     if UNCHECKED in text:
         found.append(f'some lines are marked {UNCHECKED}: add those facts to the article and run the fact check, or cut them')
@@ -607,7 +648,7 @@ def problems(text, cut=None, series=None):
                      'words as plain paragraphs; shots go in the shot list and joke options beside it (house rule SCRIPT_ONLY)')
     if len(words) >= SHORT_WORDS:
         found += close_problems(beats)
-    too = length_problem(words, cut)
+    too = length_problem(words, cut, lift)
     if too:
         found.append(too)
     for beat in beats:
@@ -816,7 +857,9 @@ def close_orders(beats):
     flat = [(i, x) for i, ss in enumerate(sents_by_beat) for x in ss]
     if not flat:
         return [], []
-    body = flat[:-1] if _plain(flat[-1][1]).rstrip('"\' ').lower() == CLOSE_LAST else flat
+    # The last line is left out when it is the line or another line naming makeyourmindup (the retired one among them),
+    # so a script ending on the wrong line is told about that line once, and its close beat is still read as its close.
+    body = flat[:-1] if _is_close(flat[-1][1]) or OUTRO.search(flat[-1][1]) else flat
     if not body:
         return [], []
     beat = body[-1][0]
@@ -874,9 +917,9 @@ def chapter_problems(text, chapters):
     return found
 
 
-def check_file(path, cut=None, series=None):
+def check_file(path, cut=None, series=None, lift=None):
     text = Path(path).read_text(encoding='utf-8-sig')
-    found = problems(text, cut or cut_of(Path(path).name), series)
+    found = problems(text, cut or cut_of(Path(path).name), series, lift)
     chapters = Path(path).with_suffix('.chapters.md')
     if chapters.is_file():
         found += chapter_problems(text, chapters.read_text(encoding='utf-8-sig'))
@@ -924,7 +967,7 @@ So here's our call. We're eighty-five per cent sure, and we'll mark it right or 
 
 If I ran an AI firm, I'd do one thing. I'd show everyone how I count my sales.
 
-The full deep dive is at makeyourmindup.ai.
+The full story is free at makeyourmindup.ai.
 '''
 
 ONE_OFF = '''# 01 A one-off
@@ -974,15 +1017,24 @@ def self_test():
     one_off = problems(ONE_OFF)
     check('a script with Say: lines, timings and notes is more than words', any('SCRIPT_ONLY' in p for p in one_off), True)
     check('stage directions are more than words', any('SCRIPT_ONLY' in p for p in problems(HIGGSFIELD_V1)), True)
-    # House rule SCRIPT_CLOSE (Krish, 2026-10-21): the lead-in, then exactly one last sentence.
+    # House rule SCRIPT_CLOSE (Krish, 2026-10-21, then 2026-11-14): the beat, then exactly one last sentence.
+    line = close_line()
+    check('the last line is read from the house rules, and it is the one Krish\'s voice check passes',
+          (line, bool(BANNED_LAST.search(line))), ('The full story is free at makeyourmindup.ai.', False))
     check('the old close (series sign-off and a question) is refused on its last sentence',
-          any('last sentence must be exactly' in p for p in problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', "That's under.the.hood for this week. The full teardown is free at makeyourmindup.ai. What do you think? Make your mind up."))), True)
+          any('last sentence must be exactly' in p for p in problems(GOOD.replace(line, "That's under.the.hood for this week. The full teardown is free at makeyourmindup.ai. What do you think? Make your mind up."))), True)
+    retired = [p for p in problems(GOOD.replace(line, RETIRED_CLOSE)) if 'SCRIPT_CLOSE' in p]
+    check('the line of 2026-10-21 is refused because the voice check bans its phrase, naming the ruling and the line to say',
+          (len(retired), 'voice check bans' in ''.join(retired), '"stick to voice check"' in ''.join(retired), line in ''.join(retired)), (1, True, True, True))
+    check('the banned phrase in any other last line, in any case or with a hyphen, is refused the same way',
+          [any('voice check bans' in p for p in problems(GOOD.replace(line, t))) for t in
+           (RETIRED_CLOSE.upper(), RETIRED_CLOSE.replace(' dive', '-dive'), 'Read it at makeyourmindup.ai.')], [True, True, False])
     check('the retired lead-in is refused (Krish, 2026-10-31)',
           any('Krish retired on 2026-10-31' in p for p in problems(GOOD.replace("If I ran an AI firm", "Here's what I'd do with this info if I were you. If I ran an AI firm"))), True)
     check('a last sentence that is not the line is refused, with the sign-off named',
-          any('last sentence must be exactly' in p for p in problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', 'Find us at makeyourmindup.ai.'))), True)
+          any('last sentence must be exactly' in p for p in problems(GOOD.replace(line, 'Find us at makeyourmindup.ai.'))), True)
     check('anything after the line is refused', any('last sentence must be exactly' in p for p in problems(GOOD + "\nMake your mind up.\n")), True)
-    check('the line in any case passes', problems(GOOD.replace('The full deep dive is at makeyourmindup.ai.', 'the full deep dive is at makeyourmindup.ai.')), [])
+    check('the line in any case passes', problems(GOOD.replace(line, line.lower())), [])
     check('a close in the third person is refused', any('own first person' in p for p in problems(GOOD.replace(
           "If I ran an AI firm, I'd do one thing. I'd show everyone how I count my sales.", "Firms that count their sales openly win trust."))), True)
     check('notes after the script are never spoken', any('heading or stamp' in p for p in problems(ONE_OFF)), False)
@@ -1049,6 +1101,16 @@ def self_test():
     check('a 90-second short cut passes', length_problem(filler(185).split(), 'short'), None)
     check('a two-minute short cut is refused', 'TWO_CUTS' in (length_problem(filler(300).split(), 'short') or ''), True)
     check('a long cut far too short is refused', 'short of a 5-minute video' in (length_problem(filler(250).split(), 'long') or ''), True)
+    # A piece whose long cut config/long-cuts.json lifts (long_cut.py; Ruling, Krish, 2026-11-14: "lift if worth it").
+    lifted = {'words': 1200, 'minutes': '8:00', 'reason': 'Two stories in one piece.'}
+    check('a lifted long cut of about 7 minutes passes, and the same script is refused without the lift',
+          (length_problem(filler(1050).split(), 'long', lifted), 'cut it to 675 to 825' in (length_problem(filler(1050).split(), 'long') or '')), (None, True))
+    over = length_problem(filler(1300).split(), 'long', lifted) or ''
+    check('a lifted long cut past its own length is refused, naming the length, the reason and the ruling',
+          ('cut it to 675 to 1200' in over, 'about 8:00' in over, 'Two stories in one piece.' in over, 'lift if worth it' in over), (True, True, True, True))
+    check('a lift never moves the short cut', 'TWO_CUTS' in (length_problem(filler(300).split(), 'short', lifted) or ''), True)
+    check('the ordinary long cut is the house rules\' LONG_CUT', CUTS['long'][:2],
+          (house_block('LONG_CUT')['fewest_words'], house_block('LONG_CUT')['most_words']))
     check('no cut, no length rule', length_problem(filler(900).split(), None), None)
     check('a file named 90s is the short cut', cut_of('script-90s.md'), 'short')
     check('a file named long is the long cut', cut_of('script_long.md'), 'long')
@@ -1180,22 +1242,31 @@ def main(argv):
     if argv[1:2] == ['--self-test']:
         return self_test()
     args = list(argv[1:])
-    cut = series = None
-    while args[:1] in (['--cut'], ['--series']) and len(args) >= 2:
+    cut = series = piece = None
+    while args[:1] in (['--cut'], ['--series'], ['--piece']) and len(args) >= 2:
         flag, value, args = args[0], args[1], args[2:]
         if flag == '--cut':
             cut = value if value in CUTS else None
             if cut is None:
                 print(f'--cut must be one of {", ".join(CUTS)}')
                 return 2
+        elif flag == '--piece':
+            piece = value  # its long cut may be lifted by config/long-cuts.json (long_cut.py)
         else:
             series = value  # accepted and ignored: the series line is retired (house rule SERIES_OPENER, 2026-10-21)
     if not args:
         print(__doc__.strip())
         return 2
+    lift, lift_why = None, []
+    if piece:
+        import long_cut
+        lift, lift_why = long_cut.lift_for(piece)
     worst = 0
     for path in args:
-        found = check_file(path, cut, series)
+        this_cut = cut or cut_of(Path(path).name)
+        found = check_file(path, cut, series, lift)
+        if this_cut == 'long' and lift_why:
+            found = lift_why + found  # a lift that does not hold is never applied quietly
         if found:
             worst = 1
             print(f'NOT READY  {path}')
@@ -1203,9 +1274,12 @@ def main(argv):
                 print(f'  - {item}')
         else:
             print(f'ready      {path}')
+        if this_cut == 'long' and lift:
+            print(f'  LIFTED {long_cut.notice(lift)} (config/long-cuts.json; Ruling, Krish, 2026-11-14: "lift if worth it")')
         for item in warn_file(path):
             print(f'  WARN {item}')
-        long_said = spoken_length_warning(words_of(' '.join(spoken_paragraphs(Path(path).read_text(encoding='utf-8-sig')))), cut)
+        long_said = spoken_length_warning(words_of(' '.join(spoken_paragraphs(Path(path).read_text(encoding='utf-8-sig')))), this_cut,
+                                          lift=lift if this_cut == 'long' else None)
         if long_said:
             print(f'  WARN {long_said}')
     return worst

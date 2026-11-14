@@ -24,4 +24,4 @@ So if you remember one thing, make it this. Where AI gets built is now being dec
 
 If I ran a business, I'd ask my AI supplier one question this week. Where are you building the data centres my tools will run on? If it's a town that's fighting them, I'd expect delays and higher prices.
 
-The full deep dive is at makeyourmindup.ai.
+The full story is free at makeyourmindup.ai.

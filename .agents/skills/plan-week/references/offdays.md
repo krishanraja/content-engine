@@ -193,7 +193,7 @@ it fits best, ranked first that day. It is one short cut, nothing else:
    it, never his name, and closing on the one thing he would do, in his first
    person and one short beat, never a list of orders (house rule SCRIPT_CLOSE,
    2026-10-31). There is no article, so
-   it never says "The full deep dive is at makeyourmindup.ai.".
+   it never says "The full story is free at makeyourmindup.ai." (SCRIPT_CLOSE_LINE).
 2. Check it: `python3 scripts/post-pack/story_check.py --cut short <file>`
    (every finding but the article close must be fixed), the copy lint and
    the kill list as above.

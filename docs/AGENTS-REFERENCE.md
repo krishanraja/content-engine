@@ -133,11 +133,9 @@ Inbox.
 would do, and a slow listener can follow it heard once; every article ends with "3 things you can do
 tomorrow".** Krish, 2026-10-21: "we need to cut that opening line from every
 content piece moving forward and just launch straight in to "I put GrokBot
-and Muse head to head" etc. Also trim the closing to "the full deep dive is
-at makeyourmindup.ai." right after a "Here's what I'd do with this info if I
-were you" closing line. That needs to be the format moving forward for all
-scripts. The articles all need to have a really clear "3 things you can do
-tomorrow" at the end of every piece too." So a script has no series line and
+and Muse head to head" etc. ... That needs to be the format moving forward
+for all scripts. The articles all need to have a really clear "3 things you
+can do tomorrow" at the end of every piece too." So a script has no series line and
 no "I'm Krish" (house rule `SERIES_OPENER`, which retires the lines he
 picked on 2026-10-12; they stay in `SERIES_OPENERS` in
 `apps/control-plane/api/_houseRules.ts` only for records made under them).
@@ -147,8 +145,13 @@ what I'd do with this info if I were you" (Ruling, Krish, 2026-10-31: "the
 last paragraph of all my scripts still sounds a bit bossy and preachy"), and
 a slow listener can hold it heard once (house rule `LISTENING`: 3 figures and
 about 8 names in the long cut, 1 and about 4 in the short); its final sentence is exactly
-"The full deep dive is at makeyourmindup.ai." (house rule `SCRIPT_CLOSE`,
-refused by `scripts/post-pack/story_check.py`). An article ends with a
+"The full story is free at makeyourmindup.ai." (house rule `SCRIPT_CLOSE`, the
+line `SCRIPT_CLOSE_LINE` in `apps/control-plane/api/_houseRules.ts`, refused
+otherwise by `scripts/post-pack/story_check.py`). The line he set on
+2026-10-21 ended on a phrase the voice check bans, so every script failed it;
+Ruling (Krish, 2026-11-14): the voice check wins ("stick to voice check"), and
+`apps/control-plane/scripts/check-voice-close.ts` fails the build if that phrase comes back into
+a script rule, prompt or skill. An article ends with a
 section headed "3 things you can do tomorrow" holding exactly three concrete
 actions (house rule `THREE_THINGS_TOMORROW`, read by the publish check of the
 same name). The tone in every series is observational, witty and positive,

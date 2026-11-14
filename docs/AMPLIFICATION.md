@@ -33,7 +33,7 @@ rest of the work below (an article with a video dropped in gets none of it).
 own outro (house rule TWO_CUTS). Krish, 2026-10-11: "I always want a 3-minute
 video and a 90-second version. I always want to repost to YouTube and then
 Shorts, TikTok, and Instagram."
-- The long cut (wide, 16:9, about 5 minutes: 675 to 825 spoken words; 3 minutes until Krish, 2026-10-19: "let's make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format.") lives on
+- The long cut (wide, 16:9, about 5 minutes: 675 to 825 spoken words; 3 minutes until Krish, 2026-10-19: "let's make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format."; up to about 8 minutes, 1,200 words, for a piece `config/long-cuts.json` lifts, Ruling, Krish, 2026-11-14: "lift if worth it") lives on
   Substack and YouTube.
 - The short cut (tall, 9:16, finished under 89 seconds: 160 to 195 spoken
   words) goes to YouTube Shorts, TikTok and Instagram Reels, every time; and
@@ -44,8 +44,10 @@ Shorts, TikTok, and Instagram."
 - `scripts/post-pack/story_check.py` refuses a cut of the wrong length.
 
 **Same face everywhere.** Same title idea, same cover frame, same opening
-line, same closing line ("The full deep dive is at makeyourmindup.ai.", house
-rule SCRIPT_CLOSE), said out loud so it works even where links do not.
+line, same closing line ("The full story is free at makeyourmindup.ai.", house
+rule SCRIPT_CLOSE; Ruling, Krish, 2026-11-14: the voice check wins), said out
+loud so it works even where links do not, and written the same way where a
+caption closes on where to read it.
 
 ## The order
 

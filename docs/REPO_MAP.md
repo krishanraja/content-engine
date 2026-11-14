@@ -946,6 +946,11 @@ Krish's house rules, in one place.
 - `interface ListenLimits`
 - `interface Listening`
 - `const LISTENING: Readonly<Listening>`
+- `interface ScriptCloseLine`
+- `const SCRIPT_CLOSE_BLOCK: Readonly<ScriptCloseLine>`
+- `const SCRIPT_CLOSE_LINE: string`
+- `interface LongCut`
+- `const LONG_CUT: Readonly<LongCut>`
 - `const HOUSE_RULES: readonly HouseRule[]`
 - `function rulesFor(stage: Stage, subchannel?: string | null): HouseRule[]`
 - `function subchannelRulesBlock(stage: Stage, subchannel?: string | null): string`
@@ -1215,6 +1220,7 @@ The making record: where one piece is on its way from the workroom to
 - `type MakingCut = (typeof MAKING_ALL_CUTS)[number]`
 - `interface MakingCheck`
 - `type MakingScriptCheck`
+- `interface MakingLongCut`
 - `interface MakingReadBack`
 - `interface MakingLink`
 - `interface MakingPack`
@@ -1252,6 +1258,7 @@ The making record: where one piece is on its way from the workroom to
 - `function takeCounts(take: Pick<MakingRecording, 'cut' | 'script_sha256'>, check: MakingScriptCheck | null | undefined):…`
 - `type TeleprompterState = 'in' | 'older' | 'failed' | 'missing'`
 - `function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut, TeleprompterState>>`
+- `function longCutNote(check: Partial<MakingScriptCheck> | undefined): string`
 - `function teleprompterNote(m: Partial<Making>): string`
 - `function oneCut(m: Partial<Making>): boolean`
 - `function makingCuts(m: Partial<Making>): MakingCut[]`
