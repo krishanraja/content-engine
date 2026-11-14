@@ -1,5 +1,8 @@
 {
   "devices": {
+    "slam_word": {
+      "verbs": ["enter", "exit"]
+    },
     "office_floor": {
       "verbs": [
         "enter",
