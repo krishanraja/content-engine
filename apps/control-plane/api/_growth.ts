@@ -39,7 +39,7 @@ export const LANE_SLUG: Record<string, string | null> = {
 export const SUBJECT_KINDS = new Set(['venture', 'prospect', 'aspiration'])
 
 /** Mirrors growth_geo_probes.engine, minus google_aio which no engine writes. */
-export const AEO_ENGINES = new Set(['perplexity', 'chatgpt', 'claude', 'grok'])
+export const AEO_ENGINES = new Set(['perplexity', 'chatgpt', 'claude', 'grok', 'gemini'])
 
 /** Mirrors growth_aeo_digests.themes_status. */
 export const AEO_THEMES_STATUSES = new Set(['ok', 'no_calls', 'no_attributed_calls', 'fireflies_unavailable', 'not_applicable'])

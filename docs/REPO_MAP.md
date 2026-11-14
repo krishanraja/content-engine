@@ -241,14 +241,17 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `const OPEN_GOVERNOR`
 - `const SIGNAL_TTL_DAYS`
 - `type SubjectKind = 'venture' | 'prospect' | 'aspiration'`
-- `type AeoEngine = 'perplexity' | 'chatgpt' | 'claude' | 'grok'`
+- `type AeoEngine = 'perplexity' | 'chatgpt' | 'claude' | 'grok' | 'gemini'`
 - `type ThemesStatus`
 - `interface AeoEvidence`
 - `interface AeoProbe`
 - `interface AeoQuery`
+- `interface AeoCitedPage`
 - `interface AeoRecommendation`
 - `interface AeoNotWorthChasing`
 - `interface AeoPacket`
+- `const PROBE_FEATURE_FIELDS`
+- `function schemaCheck(node: SchemaNode, v: unknown, path: string, errs: string[]): void`
 - `function validatePacket(input: unknown): { ok: true; packet: AeoPacket } | { ok: false; errors: string[] }`
 - `function aeoSourceRef(kind: SubjectKind, slug: string, weekStart: string, n: number): string`
 - `interface AeoSignalRow`
@@ -258,6 +261,8 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `function aeoSignalSummary(meta: AeoSignalRow['meta']['aeo'], thesis: string): string`
 - `function probeRows(packet: AeoPacket): Array<Record<string, unknown>>`
 - `function queryRows(packet: AeoPacket): Array<Record<string, unknown>>`
+- `interface CitedPageRow`
+- `function citedPageRows(packet: AeoPacket, stored: ReadonlyArray<Pick<CitedPageRow, 'url' | 'mention' | 'mention_ok' | '…`
 - `const KRISH_DOMAINS: readonly string[]`
 - `const NOT_OURS: readonly string[]`
 - `const PACKET_FEATURES: readonly string[]`

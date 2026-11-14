@@ -130,12 +130,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let priorQueries: Row[] = []
     if (priorKeys.length) {
       const pq = await supabase.from('growth_aeo_queries')
-        .select('subject_id, week_start, query_id, query, demand_score, status, trend')
+        .select('subject_id, week_start, query_id, query, demand_score, status, trend, panel')
         .in('subject_id', priorKeys.map(d => String(d.subject_id)))
         .in('week_start', [...new Set(priorKeys.map(d => String(d.week_start)))])
         .limit(60 * priorKeys.length)
       if (pq.error) throw new Error(pq.error.message)
       priorQueries = (pq.data || []) as Row[]
+    }
+    // The cited-pages sheet as AEO last sent it, its own columns only (brief,
+    // section J), so the next run can say a mention was acquired or lost.
+    let citedPages: Row[] = []
+    if (productSlugs.length) {
+      const cp = await supabase.from('growth_aeo_cited_pages')
+        .select('product_slug, url, host, page_type, questions, engines, times_cited, times_first, mention, mention_ok, checked_at, platform, own')
+        .in('product_slug', productSlugs)
+        .order('times_first', { ascending: false })
+        .limit(60 * productSlugs.length)
+      if (cp.error) throw new Error(cp.error.message)
+      citedPages = (cp.data || []) as Row[]
     }
 
     const out = subjects.map(s => {
@@ -195,7 +207,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           competitor_gap: prior.competitor_gap ?? null,
           queries: priorQueries.filter(q => q.subject_id === id && q.week_start === prior.week_start).map(q => ({
             query_id: q.query_id, query: q.query, demand_score: q.demand_score, status: q.status, trend: q.trend ?? null,
+            // The panel exactly as AEO sent it last run, when it sent one.
+            ...(q.panel && typeof q.panel === 'object' ? { panel: q.panel } : {}),
           })),
+          ...(s.kind === 'venture' && product ? {
+            cited_pages: citedPages.filter(c => c.product_slug === product).map(({ product_slug: _p, ...c }) => c),
+          } : {}),
         } : null,
       }
     })
