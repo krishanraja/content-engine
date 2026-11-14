@@ -225,9 +225,11 @@ export function yesBody(id: string, body: Record<string, unknown>): boolean {
 //                              press carries them; the server sends them to Teleprompter as it does for the press.
 // The board shows each as "Approved in your words". Nothing else counts from a session: his Approve on an idea (the ideas
 // gate), any other decision and taking an approval back stay his presses alone (hisOnlyRefusal).
-export const WORDS_ID = /^(mon|wed|fri)-(lock|scripts)-words$/
+// Any day a piece is placed on (Ruling, Krish, 2026-11-13: he moved the data-centres piece to Tue 17 with place_piece;
+// a piece on an off day is still a piece, and its lock and scripts are approved the same way).
+export const WORDS_ID = /^(mon|tue|wed|thu|fri|sat)-(lock|scripts)-words$/
 export const WORDS_KIND = { lock: 'sign_lock', scripts: 'approve_scripts' } as const
-const LOCK_PATH = /^docs\/plans\/\d{4}-\d{2}-\d{2}-week\/narrative-lock-(mon|wed|fri)\.md$/
+const LOCK_PATH = /^docs\/plans\/\d{4}-\d{2}-\d{2}-week\/narrative-lock-(mon|tue|wed|thu|fri|sat)\.md$/
 /** His words as a session carries them: verbatim, when and where he typed them, and the session they came from. */
 export function saidInWords(body: Record<string, unknown>): boolean {
   return typeof body.words === 'string' && body.words.trim().length > 0 && body.words.length <= 2000

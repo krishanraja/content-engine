@@ -194,7 +194,8 @@ putting an idea on the publish board still needs your press, so that gate is unc
 anywhere" (2026-11-02) for these two decisions and adds nothing else.
 
 - **What a session carries.** His exact typed words, verbatim, with when and where he typed them and the session's link,
-  as one board document per day: `picks/<day>-lock-words` (kind `sign_lock`, bound to the lock he approved by
+  as one board document per day the piece is on (Monday to Saturday, since 14 Nov: a piece he places on an off day is
+  still a piece), or his own "Signed." press on the board (Sign the lock): `picks/<day>-lock-words` (kind `sign_lock`, bound to the lock he approved by
   `lock_path` and `lock_sha256`, `making.py lock_body_hash`) or `picks/<day>-scripts-words` (kind `approve_scripts`, the
   exact words of each cut as the Approve scripts press carries them, with their Teleprompter titles and folder). Written
   only with `python3 scripts/post-pack/board_session.py <uuid> approve lock|scripts ...` (the board session tools, on the
@@ -407,7 +408,9 @@ showed that day (`tests/control-plane/board-state-truth.test.ts`):
   progress."
 - **The ideas board asks only what still waits on him.** An idea for a day that has passed, and an idea that is the same
   post as an item already out or scheduled, leave `model.ideas` (Thu 12's "POV: your AI agent..." still asked for his
-  Approve after the one post went out on Fri 13). The plan keeps every one; only the board stops asking.
+  Approve after the one post went out on Fri 13), and a piece his approval already holds on a day of the week (Fri 20's
+  "Voters just said no to AI's power bill" still asked for his answer after he moved that piece to Tue 17). The plan
+  keeps every one; only the board stops asking.
 - **A narrative lock follows its piece, never its day** (`lockOf`, the lock's `piece_id:` line). On 13 Nov Fri 20's piece
   was replaced and moved to Tue 17 (his words, in the session: "chose Tue 17 Nov for the data-centre piece"); the new Fri
   20 piece read as Branded from the lock he signed for the one that left, and the moved piece lost it. A piece moved to
@@ -439,6 +442,12 @@ showed that day (`tests/control-plane/board-state-truth.test.ts`):
   best" was scheduled in Buffer for Tue 17, so its card says "Scheduled on Instagram, X for Tue 17 Nov, 08:30, after its
   day (Fri 13 Nov)". Its day on the board moves only with his Move to…. A schedule whose time passed with no send is
   missed, as before.
+- **His "Signed." is one press on the board, on any day the piece is placed.** A piece whose narrative lock is written
+  under the day it is on and not signed offers **Sign the lock** (his words, "Signed.", saved as his typed approval of the
+  lock as it stands, `picks/<day>-lock-words`, bound by the lock's hash), with the lock to read in its read sheet. The
+  typed-approval route takes any day from Monday to Saturday (`WORDS_ID`): a piece he moved to an off day with
+  `place_piece` (Tue 17's data-centres piece) is still a piece. His words there sign it on the board; the producing
+  session writes the signature line into the lock file (`board_session.py approve lock --sign`) for `making.py`'s gate.
 - **His approval in a session reaches the record.** Every copied prompt for a piece now says to file his typed approval
   of the lock or the scripts at once with `board_session.py <piece> approve lock|scripts` (`APPROVAL_RULE`): on 13 Nov he
   had agreed Mon 16's and Wed 18's stories and scripts in sessions, and the board said "No approved scripts are filed yet",

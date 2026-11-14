@@ -2,7 +2,7 @@ import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
 import type { MoveSpec } from './_offdayItems.js'
 import type { PressAction, ViewOption } from './_viewExtras.js'
-import type { Action, DayView } from './_view.js'
+import type { Action, DayView, LockToSign } from './_view.js'
 import { makeRoute, routeLine, type MakeRoute } from './_makeRoute.js'
 import type { DayStyle, StyleLayer } from './_style.js'
 
@@ -174,7 +174,23 @@ export interface ModelInputs {
   signedLocks?: string[]
   /** The look choices of a piece on a day that is not its series day, by piece id (_view.ts placedStyles). */
   placedStyles?: Record<string, DayStyle>
+  /** Each piece's lock on file and unsigned, by piece id (_view.ts locksToSign). */
+  locksToSign?: Record<string, LockToSign>
 }
+
+/** The address of the live board on a week and day: where his typed approval was given. */
+const boardAt = (week: string, day: string) => `https://controlcenter.krishraja.com/#/content?week=${week}&day=${day}`
+/** His "Signed." on a piece's narrative lock, as one press on the board: his typed approval of the lock as it stands
+ *  (picks/<day>-lock-words, bound to the lock's words by their hash), on whatever day the piece is placed. */
+export function signPress(week: string, pieceId: string, lock: LockToSign): PressAction {
+  return { kind: 'press', label: 'Sign the lock', collection: 'picks', id: `${lock.day}-lock-words`, revision: lock.revision,
+    body: { kind: 'sign_lock', day: lock.day, via: 'words', approved: true, piece_id: pieceId, lock_path: lock.path, lock_sha256: lock.sha256,
+      said_where: 'the Publish Board in Control Centre', session_ref: boardAt(week, lock.day) },
+    words: { path: 'words', ask: 'Your words to sign it ("Signed.")', required: true }, stamp: ['at', 'said_at'],
+    goes: `Signs ${lock.path} as it stands now: the piece's story, in your words.`,
+    done: 'Signed in your words. The lock is this piece\'s story.' } as PressAction
+}
+const lockSource = (path: string): ModelSource => ({ label: `The narrative lock (${path.split('/').pop()})`, href: `https://github.com/krishanraja/content-engine/blob/main/${path}` })
 
 /** One layer of his production pick as one press: the options with the recommended first and marked, the one he picked
  *  marked, nothing he said Not this to. Treatment posts to the look route, motion and captions to the style route. */
@@ -385,6 +401,13 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const recorded = isDone('record') || isDone('cut') || out
   const picks = recorded || missed ? [] : lookPresses(d.piece_id, d.path?.style)
   if (d.path?.current === 'look' && picks.length) return { ...base, line, next: picks[0] as Action, decision: true, others: picks.slice(1) }
+  // His "Signed." on the lock on file, one press, when the story is the step.
+  const toSign = m.locksToSign?.[d.piece_id]
+  if (d.path?.current === 'story' && toSign && !missed) {
+    const prompt = itemPrompt(m.week, { ...base, line }, 'story') as unknown as PressAction
+    return { ...base, read: { ...read, sources: [lockSource(toSign.path), ...read.sources] }, line, next: signPress(m.week, d.piece_id, toSign) as Action,
+      decision: true, others: [prompt, ...picks] }
+  }
   const lead = d.actions[0]
   if (doable(lead) && !(lead.kind === 'press' && lead.op === 'live')) return { ...base, line, next: lead, decision: false, others: picks }
   return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next'), decision: false, others: picks }
@@ -406,6 +429,20 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const line = out ? 'Live.' : missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.`
     : `${branded ? 'Branded: its narrative lock is signed' : 'Approved'} for ${d.label}. Its make picks up from where it is.`
   const picks = out || missed ? [] : lookPresses(p.id, m.placedStyles?.[p.id])
+  const toSign = !out && !missed && !branded ? m.locksToSign?.[p.id] : undefined
+  if (toSign) {
+    const signLine = `Approved for ${d.label}. Read the narrative lock and sign it, or say what to change.`
+    return { ...base, read: { ...base.read, sources: [lockSource(toSign.path), ...base.read.sources] }, line: signLine,
+      next: signPress(m.week, p.id, toSign) as Action, decision: true,
+      others: [itemPrompt(m.week, { ...base, line: signLine }, 'story') as unknown as PressAction, ...picks] }
+  }
+  // Signed and its look not picked: his production pick leads, as on a series day (Tue 17's piece is still a piece).
+  const lookPicked = Boolean(m.placedStyles?.[p.id]?.treatment.picked)
+  const lookPress = picks.find(a => a.op === 'look')
+  if (branded && !lookPicked && lookPress) {
+    return { ...base, line: `Branded for ${d.label}. Pick the look: the recommended one, another, or fold in your inspiration.`, next: lookPress as Action, decision: true,
+      others: picks.filter(a => a !== lookPress) }
+  }
   return { ...base, line, next: out ? null : itemPrompt(m.week, { ...base, line }, branded ? 'look' : 'next'), decision: false, others: picks }
 }
 
@@ -503,7 +540,10 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
   // out on Fri 13). The plan keeps every one; only the board stops asking.
   const goneOut = new Set(out.flatMap(md => md.items.filter(it => it.item && (it.stage.key === 'live' || it.stage.key === 'scheduled')).map(it => it.item!)))
   const twinOf = new Map(days.flatMap(d => d.options.filter(o => o.same_post?.item).map(o => [o.doc_id, o.same_post!.item] as const)))
-  const waiting = ideas.filter(i => i.date >= m.today && !goneOut.has(twinOf.get(i.doc_id) ?? ''))
+  // A piece his approval already holds on a day of the week is never also an idea elsewhere in it (Fri 20's "Voters just
+  // said no to AI's power bill" still waited on his answer after he moved that piece to Tue 17 on 13 Nov).
+  const onDay = new Set(out.flatMap(md => md.items.map(it => it.piece_id).filter((x): x is string => Boolean(x))))
+  const waiting = ideas.filter(i => i.date >= m.today && !goneOut.has(twinOf.get(i.doc_id) ?? '') && !(i.piece_id && onDay.has(i.piece_id)))
   if (waiting.length !== ideas.length) {
     for (const md of out) {
       md.ideas = waiting.filter(x => x.day === md.day).length

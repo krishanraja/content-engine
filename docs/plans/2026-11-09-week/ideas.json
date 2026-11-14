@@ -1175,7 +1175,66 @@
     "needs": [
      "A candidate for the weekend decision beside the fresh good news (Krish, 4 Nov). If chosen: real stories only, with a funny generated cover (Krish, 3 Nov)."
     ],
-    "decided": "Chosen at the weekend from fresh news (Krish, 4 Nov): the run on Sat 7 Nov brings the week's good news, and you pick on Sun 8 Nov."
+    "decided": "Chosen at the weekend from fresh news (Krish, 4 Nov): the run on Sat 7 Nov brings the week's good news, and you pick on Sun 8 Nov.",
+    "stories": [
+     {
+      "headline": "Four years misdiagnosed. ChatGPT found it.",
+      "what": "A young woman in Cardiff was misdiagnosed for four years. She asked ChatGPT; it suggested hereditary spastic paraplegia, her GP agreed, and genetic testing confirmed it.",
+      "why": "AI flagged it; a doctor and a test confirmed it.",
+      "kind": "health",
+      "date": "2026-04-10",
+      "source": {
+       "label": "BBC, 10 Apr 2026",
+       "url": "https://www.bbc.com/news/articles/cx24njzzkgjo"
+      }
+     },
+     {
+      "headline": "AI found forgotten oil wells.",
+      "what": "Berkeley Lab's AI read oil maps from 1947 to 1992 and flagged 1,301 possible undocumented wells. Researchers then confirmed 29 by satellite and 15 more in the field.",
+      "why": "AI reread decades of maps; people confirmed what it found.",
+      "kind": "environment",
+      "date": "2024-12-04",
+      "source": {
+       "label": "Berkeley Lab, 4 Dec 2024",
+       "url": "https://newscenter.lbl.gov/2024/12/04/ai-helps-researchers-dig-through-old-maps-to-find-lost-oil-and-gas-wells/"
+      }
+     },
+     {
+      "headline": "AI broke an 80-year-old maths belief.",
+      "what": "Paul Erdős's 1946 guess about dots and equal distances was disproved by an OpenAI model, and nine mathematicians checked the proof.",
+      "why": "AI found it; nine mathematicians checked it.",
+      "kind": "science",
+      "date": "2026-05-20",
+      "source": {
+       "label": "arXiv, 20 May 2026",
+       "url": "https://arxiv.org/abs/2605.20695"
+      }
+     },
+     {
+      "headline": "AI alone raises false alarms.",
+      "what": "An AI company says a painting sold as a copy is a real Caravaggio. Experts aren't convinced. AI on its own isn't proof.",
+      "why": "The twist: AI works best with a person beside it.",
+      "kind": "culture",
+      "date": "2025-09-29",
+      "source": {
+       "label": "Hyperallergic, 29 Sep 2025",
+       "url": "https://hyperallergic.com/ai-company-says-it-has-outsmarted-caravaggio-experts/"
+      }
+     },
+     {
+      "headline": "AI plus doctors found 29% more cancers.",
+      "what": "In Sweden's MASAI trial of 106,000 women, AI plus radiologists found 29% more cancers than standard screening, with 44% less reading work.",
+      "why": "AI plus a person beats either alone.",
+      "kind": "health",
+      "date": "2026-01-30",
+      "source": {
+       "label": "Lund University, The Lancet, 30 Jan 2026",
+       "url": "https://www.lunduniversity.lu.se/article/ai-support-breast-cancer-screening-fewer-missed-cancer-cases"
+      }
+     }
+    ],
+    "stories_due": "2026-11-13",
+    "stories_from": "Buffer: the scheduled Sat 14 Nov deck (Instagram post 6af772edbb36d00909c78294)"
    }
   ]
  },

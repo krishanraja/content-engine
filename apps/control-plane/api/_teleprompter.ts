@@ -67,7 +67,7 @@ export const APPROVAL_WRITER = 'Krish'
 /** His typed approval of scripts, carried from a session (Ruling, Krish, 2026-11-12: "Typed approval counts for locking a
  *  story and approving a script"): picks/<day>-scripts-words, kind approve_scripts, via words, his exact words with
  *  when and where he typed them and the session link (api/board/_contracts.ts wordsBody). It approves as his press does. */
-export const TYPED_SCRIPTS_ID = /^(mon|wed|fri)-scripts-words$/
+export const TYPED_SCRIPTS_ID = /^(mon|tue|wed|thu|fri|sat)-scripts-words$/
 export function typedApproval(a: { id?: unknown; body?: unknown }): boolean {
   const b = isObj(a?.body) ? a.body : null
   return Boolean(b) && typeof a.id === 'string' && TYPED_SCRIPTS_ID.test(a.id) && b!.kind === 'approve_scripts' && b!.via === 'words'
