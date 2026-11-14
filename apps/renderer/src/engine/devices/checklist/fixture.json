@@ -1,0 +1,98 @@
+{
+  "objects": [
+    {
+      "obj": "questions",
+      "device": "checklist",
+      "meaning": "Questions become checked evidence one by one",
+      "params": {
+        "slots": [
+          {
+            "id": "slot-1",
+            "line": "Ownership"
+          },
+          {
+            "id": "slot-2",
+            "line": "Data rights"
+          },
+          {
+            "id": "slot-3",
+            "line": "Exit costs"
+          },
+          {
+            "id": "slot-4",
+            "line": "Human review"
+          }
+        ]
+      },
+      "dataset": {
+        "unit": "question",
+        "denominator": 4,
+        "producerLabel": "Fixture editorial checklist",
+        "rows": [
+          {
+            "label": "slot-1",
+            "value": 1
+          },
+          {
+            "label": "slot-2",
+            "value": 2
+          },
+          {
+            "label": "slot-3",
+            "value": 3
+          },
+          {
+            "label": "slot-4",
+            "value": 4
+          }
+        ]
+      },
+      "fromFrame": 0,
+      "toFrame": 180
+    }
+  ],
+  "events": [
+    {
+      "id": "enter",
+      "obj": "questions",
+      "verb": "enter",
+      "toState": "blank",
+      "atFrame": 10
+    },
+    {
+      "id": "fill-3",
+      "obj": "questions",
+      "verb": "fill",
+      "toState": "slot-3",
+      "atFrame": 30
+    },
+    {
+      "id": "fill-1",
+      "obj": "questions",
+      "verb": "fill",
+      "toState": "slot-1",
+      "atFrame": 50
+    },
+    {
+      "id": "fill-4",
+      "obj": "questions",
+      "verb": "fill",
+      "toState": "slot-4",
+      "atFrame": 70
+    },
+    {
+      "id": "fill-2",
+      "obj": "questions",
+      "verb": "fill",
+      "toState": "slot-2",
+      "atFrame": 90
+    },
+    {
+      "id": "exit",
+      "obj": "questions",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 150
+    }
+  ]
+}
