@@ -1,0 +1,48 @@
+{
+ "title": "Meta staff were ranked by AI use. They gamed it.",
+ "subtitle": "Big tech companies started ranking staff by how much AI they used, and staff set AI to work on nothing to climb the charts. Why counting AI use backfires, and what to count instead.",
+ "date": "2026-11-13",
+ "kicker": "mind.the.gap",
+ "body": "../article.md",
+ "words": "publish-words.json",
+ "images": [
+  {
+   "id": "cover",
+   "role": "cover",
+   "file": "../../../../.cache/pack/fri/pages/cover-1200x630.png",
+   "alt": "Meta staff were ranked by AI use. They gamed it: Fortune's story on Meta's AI token leaderboard, with the Meta, Amazon, Shopify and Duolingo logos."
+  },
+  {
+   "id": "vertical-cover",
+   "role": "vertical-cover",
+   "file": "../../../../.cache/pack/fri/pages/cover-1080x1920.png",
+   "alt": "Meta staff were ranked by AI use. They gamed it: Fortune's story on Meta's AI token leaderboard, with the Meta, Amazon, Shopify and Duolingo logos."
+  },
+  {
+   "id": "square-cover",
+   "role": "square-cover",
+   "file": "../../../../.cache/pack/fri/pages/cover-1080x1080.png",
+   "alt": "Meta staff were ranked by AI use. They gamed it: Fortune's story on Meta's AI token leaderboard, with the Meta, Amazon, Shopify and Duolingo logos."
+  },
+  {
+   "id": "share-card-cover",
+   "role": "share-card-cover",
+   "file": "../../../../.cache/pack/fri/pages/cover-1200x675.png",
+   "alt": "Meta staff were ranked by AI use. They gamed it: Fortune's story on Meta's AI token leaderboard, with the Meta, Amazon, Shopify and Duolingo logos."
+  }
+ ],
+ "scripts": [
+  {
+   "label": "5-minute script",
+   "file": "../../2026-11-13-draft-script.md"
+  },
+  {
+   "label": "90-second script",
+   "file": "../../2026-11-13-draft-script-90s.md"
+  }
+ ],
+ "status": [
+  "Fact check on these words (11 November 2026): every line passed against verbatim sources. Nothing is waiting on a sign-off.",
+  "Both videos are in Drive (3 Video): the 5-minute cut with Drifting Valleys and the 90-second cut with Just Got Real."
+ ]
+}

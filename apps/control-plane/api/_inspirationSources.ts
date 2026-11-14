@@ -128,6 +128,8 @@ export interface InspirationBlock {
   study_style: InspoCard[]
   liked: InspoCard[]
   fresh: InspoCard[]
+  /** Cards he saved as good news, read first for Saturday's good news (the ideas quality plan, item 12). */
+  positive: InspoCard[]
   corpora: Array<{ id: string; title: string; shape: string | null; platform: string | null; source_url: string | null; excerpt: string | null; created_at: string | null }>
   creators: Array<{ id: string; creator: string; post_url: string | null; why_it_works: string | null; krish_angle: string | null; idea_id: string | null; created_at: string | null }>
   claims: Array<{ id: string; layer: string | null; status: string; statement: string; his_words: string | null; support: number | null }>
@@ -219,7 +221,15 @@ export function buildInspiration(input: { weekStart: string; items: Row[]; reads
   const routed = cards.filter(c => c.routes.includes('make_piece') && !c.piece_id).sort(byNewest)
   const studyStyle = cards.filter(c => c.routes.includes('study_style')).sort(byNewest)
   const liked = cards.filter(c => (c.why_like || c.endorsed) && !c.routes.length).sort(byNewest)
-  const fresh = cards.filter(c => !c.answered_at && !c.routes.length && String(c.created_at || '') >= freshSince).sort(byNewest)
+  // A card with no words of any kind from a bulk import (BULK_AT_ONCE or more cards saved in the same minute: 459 images
+  // on 6 Nov) stays in the library but leaves fresh, so the run reads what carries words (the ideas quality plan, item 9).
+  const perMinute = new Map<string, number>()
+  for (const c of cards) perMinute.set(String(c.created_at || '').slice(0, 16), (perMinute.get(String(c.created_at || '').slice(0, 16)) || 0) + 1)
+  const bulkWordless = (c: InspoCard) => (perMinute.get(String(c.created_at || '').slice(0, 16)) || 0) >= BULK_AT_ONCE && wordless(c)
+  const unseen = cards.filter(c => !c.answered_at && !c.routes.length && String(c.created_at || '') >= freshSince)
+  const fresh = unseen.filter(c => !bulkWordless(c)).sort(byNewest)
+  const positive = cards.filter(c => POSITIVE.test([c.why_like, c.endorsed, c.would_do, c.saved_why, c.note_for_claude].filter(Boolean).join(' '))
+    || [...c.tags.confirmed, ...c.tags.guessed].some(t => POSITIVE.test(t.label))).sort(byNewest)
 
   // A reading that already became a card is the card's (its words are the card's transcript); the rest are research
   // he dropped in. Cards carry the reading's sha256 in facets (read_from), so match on that, then on the file name.
@@ -277,8 +287,39 @@ export function buildInspiration(input: { weekStart: string; items: Row[]; reads
   }
   const recent = buildRecent(input.weekStart, input.recentPieces || [])
   return {
-    routed, study_style: studyStyle, liked, fresh, corpora, creators, claims, must_cover, asks, recent,
+    routed, study_style: studyStyle, liked, fresh, positive, corpora, creators, claims, must_cover, asks, recent,
     counts: { routed: routed.length, study_style: studyStyle.length, liked: liked.length, fresh: fresh.length,
+      fresh_left_out_bulk_wordless: unseen.length - fresh.length, positive: positive.length,
       corpora: corpora.length, creators: creators.length, claims: claims.length, asks: asks.length, recent: recent.length },
   }
+}
+
+/** Cards saved in the same minute at or above this count are a bulk import. */
+export const BULK_AT_ONCE = 25
+/** His words, or a tag, that mark a card as good news (87a82f7f: "Just a positive ray of sunshine"). */
+export const POSITIVE = /\b(?:positive|good news|sunshine|uplifting|hopeful|heart-?warming|feel-?good|wholesome)\b/i
+
+/** A card that carries no words at all: none of his, no reading of it, no confirmed tag. */
+export function wordless(c: InspoCard): boolean {
+  return !c.heard && !c.why_like && !c.endorsed && !c.would_do && !c.saved_why && !c.note_for_claude && !c.tags.confirmed.length
+}
+
+/** What the run reads beside the cards (the ideas quality plan, item 9): the feed posts of the last FEED_DAYS days
+ *  (other people's posts, a topic signal, never his view), his own corrections reported from sessions in the last
+ *  CORRECTION_DAYS days (his words exactly, with where he typed them), and his hindsight scores on published pieces with
+ *  his note. Read-only rows in, plain lists out. */
+export const FEED_DAYS = 8
+export const CORRECTION_DAYS = 14
+export function buildFeed(rows: Row[]) {
+  return rows.map(r => ({ title: clip(r.title, 200), excerpt: clip(r.excerpt, 600), account: r.meta?.account || null,
+    url: typeof r.meta?.url === 'string' && /^https:\/\//.test(r.meta.url) ? r.meta.url : null, at: r.occurred_at || null }))
+}
+export function buildCorrections(rows: Row[]) {
+  return rows.filter(r => typeof r.excerpt === 'string' && r.excerpt.trim().length > 1 && !r.withdrawn_at)
+    .map(r => ({ said: clip(r.excerpt, 800), about: clip(r.title, 200), where: r.meta?.said_where || r.meta?.surface || null,
+      repository: r.meta?.repository || null, at: r.occurred_at || null }))
+}
+export function buildHindsight(rows: Row[]) {
+  return rows.map(r => ({ piece_id: String(r.piece_id), narrative: r.narrative ?? null, production: r.production ?? null,
+    note: clip(r.note, 600), at: r.scored_at || null }))
 }

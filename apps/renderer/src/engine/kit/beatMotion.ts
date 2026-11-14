@@ -33,7 +33,7 @@ export function keepsOutgoing(profile: MotionProfile | undefined, beat: EngineBe
 }
 
 export function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[], index: number, frame: number,
-  view: CameraView, width: number, height: number): BeatMotion {
+  view: CameraView, width: number, height: number, region?: { left: number; top: number; width: number; height: number }): BeatMotion {
   const beat = beats[index]!
   const prev = index > 0 ? beats[index - 1] : undefined
   const t = frame - beat.fromFrame
@@ -65,7 +65,15 @@ export function beatMotion(profile: MotionProfile, beats: readonly EngineBeat[],
   let origin = `${width / 2}px ${height / 2}px`
   const ox = width / 2, oy = height / 2
   const camera = profile.camera
-  if (camera.kind === 'push') {
+  if (camera.kind === 'push' && region) {
+    // A staged beat (kit/staging.ts) pushes on its own region, and never so far that the region leaves the frame.
+    const cx = region.left + region.width / 2, cy = region.top + region.height / 2
+    const m = 40   // the region keeps at least this far inside the frame at the push's height
+    const most = Math.min((cx - m) / (cx - region.left), (width - m - cx) / (region.left + region.width - cx),
+      (cy - m) / (cy - region.top), (height - m - cy) / (region.top + region.height - cy))
+    transforms.push(`scale(${1 + (Math.min(camera.scaleTo, most) - 1) * progress(t, length, HERO)})`)
+    origin = `${cx}px ${cy}px`
+  } else if (camera.kind === 'push') {
     transforms.push(`scale(${1 + (camera.scaleTo - 1) * progress(t, length, HERO)})`)
   } else if (camera.kind === 'zoomToFocus' && view.focus && view.room) {
     // Zoom to the line that proves the words (up to the profile's scale; the card's own edges may leave the frame),
@@ -130,4 +138,27 @@ export function sweepStyle(profile: MotionProfile, tokens: EngineTokens, beat: E
 export function halftoneTexture(tokens: EngineTokens): CSSProperties {
   return { backgroundImage: `radial-gradient(circle at 4px 4px, ${tokens.ink} 1.6px, transparent 2.4px)`, backgroundSize: '8px 8px',
     opacity: 0.32, mixBlendMode: 'multiply' }
+}
+
+/** The lit, vignette and hatched grounds (motion profile ground.texture), or null for the others. Pure in the frame:
+ *  lit drifts its two glows on a slow sine, hatched scrolls its diagonals 1 px a frame. Brand roles only. */
+export function groundTexture(texture: string | undefined, tokens: EngineTokens, frame: number): CSSProperties | null {
+  if (texture === 'lit') {
+    const dx = 4 * Math.sin(frame / 90), dy = 3 * Math.cos(frame / 110)
+    return { backgroundImage: [
+      `radial-gradient(circle at ${18 + dx}% ${14 + dy}%, color-mix(in srgb, ${tokens.channel} 34%, transparent) 0%, transparent 42%)`,
+      `radial-gradient(circle at ${84 - dx}% ${86 - dy}%, color-mix(in srgb, ${tokens.mint} 26%, transparent) 0%, transparent 40%)`,
+      `linear-gradient(color-mix(in srgb, ${tokens.cream} 6%, transparent) 1px, transparent 1px)`,
+      `linear-gradient(90deg, color-mix(in srgb, ${tokens.cream} 6%, transparent) 1px, transparent 1px)`,
+    ].join(', '), backgroundSize: '100% 100%, 100% 100%, 54px 54px, 54px 54px' }
+  }
+  if (texture === 'vignette') return { background: `radial-gradient(ellipse at 50% 45%, ${tokens.inkSoft} 0%, ${tokens.ink} 78%)` }
+  if (texture === 'hatched') return hatched(tokens, frame)
+  return null
+}
+
+/** The AI material: inkSoft diagonals scrolling slowly, a fill for any band, card or chip whose subject is made by AI. */
+export function hatched(tokens: EngineTokens, frame: number): CSSProperties {
+  return { backgroundImage: `repeating-linear-gradient(135deg, ${tokens.inkSoft} 0 6px, transparent 6px 18px)`,
+    backgroundPosition: `${frame % 25}px 0`, opacity: 0.55 }
 }

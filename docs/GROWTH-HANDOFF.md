@@ -5,6 +5,28 @@ to content-engine. Growth-MakeYourMindUp owns posting and social strategy.
 This serves the creator-studio North Star by keeping production focused on
 its own craft, reusable methods, review and reduced human decision time.
 
+## Every carousel and Short through the 10/10 judges (Ruling, Krish, 2026-11-12)
+
+Krish: "Judge them; count passes. Every Growth carousel goes through the same 10/10 judges, and each one that passes and goes live counts."
+
+- **Before it is made.** Growth's maker sends each carousel and Short it is about to make (its format, channel, claim,
+  exact words and each picture's sha256) to `POST /api/board/<Monday>/judge` (`op: judge`, Growth's key;
+  `apps/control-plane/api/board/_judge.ts`). The free checks run first (the copy lint, em dashes, banned phrases, "Not
+  X, Y"): a hit fails it before any model is paid. Then the draft judges' panel, the same roster, rubric and bar a draft
+  is judged on, reads the post; it passes only when the panel stands ready (`standing`, `READY_AT`).
+- **A fail comes back with the judges' reasons, never silently.** The answer carries each judge's one fix that did not
+  pass; Growth never makes the post, holds the slot loudly as `judges_failed` and keeps the reasons for the session that
+  rewrites it. The same post judged again answers from the record and pays nothing.
+- **Recorded on the item.** Every verdict, with each judge's score and fix, is a row in `asset_judgements` (migration
+  `20261201090000_asset_judgements.sql`, append only) under Growth's slot id; a pass is bound to its Buffer post
+  (`op: bind`), and Growth's board tick reports every sent post (`op: live`), which marks only bound posts live.
+- **Counted.** The North Star's number counts each Growth carousel and Short whose latest verdict is a pass and that went
+  live in the last 7 days, once however many channels carried it, beside the essays published (Control Center's reader,
+  `judgedLiveCount`; NOW.md's `current_source` names both). A judgement store that cannot be read makes the reading
+  unknown.
+- **Spend.** At most `DAILY_CAP` (40) panels a day; past it the route answers 429 `judge_cap_reached` and Growth holds
+  the slot (`docs/COST_GUARDS.md`).
+
 ## Growth makes derived carousels (Ruling, Krish, 28 October 2026)
 
 Krish: "take over posting as well as creating new assets like carousels".
@@ -31,6 +53,15 @@ posts only.
   rejection floor (`python3 scripts/floor.py --format carousel` in this
   repository) and the copy lint (`config/copy-lint.json`, which Growth's
   `release.py` applies to every post it releases).
+- It makes every carousel, meme and Notes image in a Claude session, with the
+  Codex plugin building it, and every off-day voiceover short (and meme
+  video) on the ve route from a Claude session (Rulings, Krish, 2026-11-13:
+  "all the carousels should now be done in Claude, but using the Codex plug
+  in as per the other usual workflows"; "memes and Notes images should go the
+  same way"; "Off-day voiceover shorts should go the same way too"). The route
+  is CAROUSEL-STANDARD.md, "How a carousel is made". Never a scheduled job, a
+  headless model run or a template engine: Growth's Saturday art-direction
+  run is retired, and `scripts/produce_day.py` refuses an off-day piece.
 - Content-engine keeps the standard and the learning that improves it, and
   still makes the hero assets: the article, both cuts, thumbnails and covers.
 - A clip from a past week is still cut here. Growth names the moment by word
@@ -46,7 +77,7 @@ posts only.
   rejects each side, saved in `queue/off-<day>-<option>`. Growth reads the
   options whose idea and direction he approved from `GET
   /api/board/<Monday>/pieces` (`offdays`, the idea and the direction exactly
-  as shown), makes the mock in the brand kit from that direction and returns
+  as shown), makes the mock by that route from that direction and returns
   it on the option (`mock`) for his final yes; nothing he did not approve
   goes out. Each option also carries his own words (`note`), exactly as he
   typed them on the board (Krish, 2 November 2026: "it would contain the exact
@@ -55,6 +86,29 @@ posts only.
   and Reject words go to his taste ledger and come back on Sunday as
   `offday_verdicts`. A piece he records himself keeps its own Approve on its
   exact words.
+- **Which day an off-day post is on lives in one place** (Ruling, Krish,
+  2026-11-12: any off-day post or idea moves to any day at his press, and the
+  move updates every place that names its day; `docs/PUBLISH_BOARDS.md`,
+  "Moving an off-day item to any day"). The engine's `offday_items` holds it.
+  Growth reads each approved option on the day it is on now from `GET
+  /api/board/<Monday>/pieces` (`offdays`: `day`, `date`, `item`, `version`,
+  `moved_from`) and binds it to that day, never the day it first planned.
+  Growth hands its own options over through the engine, not a file the board
+  merges: `POST /api/board/<Monday>/offdays` with the `growth-offdays/1` file
+  `growth.py mix offdays` writes (or `growth-offdays/2`), on
+  `GROWTH_WRITEBACK_TOKEN`; each shows on the live board offered, with Move to…
+  and Approve like every other option, and only his press approves it. `GET
+  /api/board/<Monday>/offdays` gives back where every item is. When he moves a
+  post Growth already scheduled on a platform, Growth moves it only through its
+  own approved posting route. Growth writes back every off-day post it makes,
+  schedules or posts to the same place, from its own posting record and never
+  anything it did not post: `POST /api/board/<Monday>/offday-posts`
+  (`{posts: [{option, state: made | scheduled | live | cancelled, channel,
+  due_at, url, at, buffer_post_id}]}`). The board shows each one (made,
+  scheduled with its time, live with its link) and an approved option Growth
+  reports live makes its day done. Until a post scheduled for a day the item
+  left is moved, the board says "Still scheduled for Tue 17 on Instagram: move
+  it there too".
 
 The sections below still hold for anything Growth asks content-engine to
 make. Where they say content-engine renders a carousel, this ruling comes
@@ -82,7 +136,7 @@ existing editorial and tracked Studio route. Do not add a parallel renderer,
 feedback database or client-specific production memory for Growth requests.
 
 For publication carousel work, read [CAROUSEL-STANDARD.md](CAROUSEL-STANDARD.md)
-alongside the live mandate and existing Studio contracts. The 26 October
+alongside the live mandate; its route, "How a carousel is made", is the only one. The 26 October
 visual floor, clean-artwork and newcomer-comprehension requirements were
 transferred from Growth into that sole production home. Krish approved the
 full eight-card Grok Bot vs Muse revision 03 as the production pilot on
@@ -118,8 +172,11 @@ Growth's closed shape (`content-engine-piece-manifest/1`, copied from Growth int
 1. `draft SPEC --out "0 Publish/manifest.draft.json"`: assets in order with their
    Drive ids and sha256, the exact words and alt text per channel, and QA. The
    board's Approve for publish binds the draft's sha256
-   (`week_board.py --publish-manifest DAY=<draft>`), so his press approves exactly
-   that.
+   that. The live board carries the press from view contract 1.8.0: the draft is
+   read from `0 Publish/manifest.draft.json` in the post's library folder, every
+   file is shown with its Drive link beside the press, and a draft that changes
+   after his press needs his press again (`docs/PUBLISH_BOARDS.md`, "Approve for
+   publish, bound to the manifest").
 2. `seal --draft D --approval <his picks/<day>-publish document> --out manifest.json`:
    only his own approval (updated_by Krish), approved, for this piece, bound to
    this draft, with QA passed, seals it; `approval_sha256` is the sha256 of his
@@ -161,8 +218,14 @@ Content-Type: application/json
   the piece's making record (`channels.<channel>`: `posted_at`, `url`, `buffer_post_id`).
 - Idempotent per post: the same `buffer_post_id` again answers `duplicate: true` and writes nothing new. An answer
   with `making_channel: null` means the box is ticked but the making record was not; send the same call again.
-- The key opens this route and two read-only ones only: `pieces`, above, and `build` (the week's published build
-  and its manifest). `ENGINE_OPERATOR_TOKEN` also works. It records what Growth posted; it posts nothing.
+- A post Growth has only scheduled is not ticked: it goes to `POST /api/board/<Monday>/offday-posts` as `{piece_id,
+  day, state: scheduled | cancelled, channel, due_at, buffer_post_id}` (contract 1.10.0, `docs/PUBLISH_BOARDS.md`,
+  "Where everything is"), kept on the day's box for its channel with `done` false, so the day says "Scheduled:
+  Substack Notes, from Fri 13 Nov, 12:40" in place of "Ready to post"; a box already out is never touched, and the
+  piece must be on that day. growth-makeyourmindup's `board posts` step sends both since its #79 (12 Nov).
+- The key opens this route, `offdays` and `offday-posts` (above), and two read-only ones: `pieces`, above, and `build`
+  (the week's published build and its manifest). `ENGINE_OPERATOR_TOKEN` also works. It records what Growth posted or
+  scheduled; it posts nothing.
 
 ## Improve each engine at its own job
 

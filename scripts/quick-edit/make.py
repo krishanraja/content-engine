@@ -15,9 +15,8 @@ What it does, in order:
      where it starts and one where it ends), so a re-recording needs no new
      timings unless the words change.
   4. Renders both shapes (house rule HOOK_IS_THE_INTRO): the tall cut opens
-     straight on the hook in the brand's dress from its first frame (the
-     wordmark and the series tag in the top corners, kit.py's
-     dress-9x16.png); the wide cut of a weekly series piece opens on the
+     straight on the hook from its first frame, with no wordmark, series
+     tag or logo (Ruling, Krish, 2026-11-11); the wide cut of a weekly series piece opens on the
      house intro sting, 56 frames at 30 fps in the series' colour, once Krish
      approves it (intro.py, config/intro-sting.json; Krish, 2026-11-05: "I
      think it should go at the start of the longer wide videos 100%,"), with
@@ -94,7 +93,7 @@ from datetime import date
 from pathlib import Path
 
 import episode
-import intro as sting  # the series intro sting in front of the wide cut of a series piece (HOOK_IS_THE_INTRO)
+import intro as sting  # the retired intro sting: nothing goes before the hook (HOOK_IS_THE_INTRO; Ruling, Krish, 2026-11-12)
 import music
 import spelling
 import transcriber
@@ -174,28 +173,6 @@ def _lexicon():
 _LEX, _LEX_DOC = _lexicon()
 if _LEX_DOC:
     DEFAULT_FIXES = DEFAULT_FIXES + [pair for pair in _LEX.fixes(_LEX_DOC) if pair not in DEFAULT_FIXES]
-
-
-def default_logo(out):
-    """The makeyourmindup masthead on an ink pill, centred above the tall
-    captions (they start 250 pixels down), on a transparent 1080x1920 frame.
-    Drawn once per output folder from the brand's own masthead."""
-    png = Path(out) / 'logo-9x16.png'
-    if png.exists():
-        return png
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'pages'))
-    import brand
-    from PIL import Image, ImageDraw
-    mast = Image.open(brand.fetch('masthead')).convert('RGBA')
-    w = 440
-    mast = mast.resize((w, round(mast.height * w / mast.width)), Image.LANCZOS)
-    pad_x, pad_y, top = 26, 20, 50
-    frame = Image.new('RGBA', (1080, 1920), (0, 0, 0, 0))
-    box = (540 - w // 2 - pad_x, top, 540 + w // 2 + pad_x, top + mast.height + 2 * pad_y)
-    ImageDraw.Draw(frame).rounded_rectangle(box, radius=22, fill=(12, 21, 18, 235))
-    frame.alpha_composite(mast, (540 - w // 2, top + pad_y))
-    frame.save(png)
-    return png
 
 
 def script_prompt(path):
@@ -884,8 +861,7 @@ def strap_problem(cfg):
     longer draws one). None when the config carries none."""
     if cfg.get('strap'):
         return (f'"strap" in the config would put his name on screen, and no content refers to him ({NO_NAME_RULING}). '
-                'Replace "strap" with "dress": {"9x16": "dress-9x16.png"}, the brand\'s dress the tall cut carries instead: kit.py draws '
-                'that file on every run, even when it keeps a config edited by hand, so the cut opens in the brand\'s corners')
+                'Delete "strap": the tall cut carries no name, wordmark or series tag (Ruling, Krish, 2026-11-11)')
     return None
 
 
@@ -940,7 +916,10 @@ def write_ass(path, groups, wins, aspect, house=None):
     no grain. Without it, the quick-edit captions: cream on the ink block, every figure in mint."""
     if aspect == '9x16':
         W, H, fs, box, shadow = 1080, 1920, 70, 16, 12
-        norm_pos, norm_m, cut_pos, cut_m = r'\an8\pos(540,250)', (60, 60), r'\an8\pos(540,1014)', (60, 60)
+        # Both bands sit inside every channel's safe area (config/channel-safe-zones.json): x 60 to 860, clear of the
+        # action rail, and above y 1320, clear of the handle and caption (card ve-motion-4-channel-safe-tall; Krish,
+        # 2026-11-11). Over the speaker the line sits at chest height; over a picture, on the face band's top edge.
+        norm_pos, norm_m, cut_pos, cut_m = r'\an8\pos(460,1060)', (60, 220), r'\an8\pos(460,1014)', (60, 220)
     else:
         W, H, fs, box, shadow = 1920, 1080, 48, 12, 8
         norm_pos, norm_m, cut_pos, cut_m = r'\an2\pos(960,1040)', (360, 360), r'\an2\pos(303,1040)', (24, 1920 - 582)
@@ -1128,100 +1107,77 @@ def sting_shapes():
 
 
 def intro_override(cfg):
-    """Krish's own words letting a clip that is not the approved house sting
-    open the cut, or None. Like "thumbnail_override", they start with his name."""
+    """Krish's words in "intro_override", or None. Kept so a config that still carries them is named in the report:
+    since 2026-11-12 they let nothing in front of the hook (Ruling, Krish: "Nothing before the hook, ever. Remove the
+    sting exception for good.")."""
     words = cfg.get('intro_override')
     return words.strip() if isinstance(words, str) and words.strip().lower().startswith('krish') else None
 
 
+NOTHING_BEFORE_HOOK = ('nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. '
+                       'Remove the sting exception for good.")')
+
+
 def resolve_intro(cfg, asp, P, base='.', fetch=True):
-    """Anything in front of the hook in this cut: (intro, note). intro is
-    None when the cut opens straight on the hook. The config's "intro" is
-    "auto" (kit.py's cuts), false, or {"9x16": file, "16x9": file}.
-      - "auto": the house sting (intro.sting_for) on a shape it goes on, for a
-        weekly series piece, once Krish has approved it: the wide cut (Krish,
-        2026-11-05: "I think it should go at the start of the longer wide
-        videos 100%,"). The tall cut and an off-day piece open on the hook
-        (house rule HOOK_IS_THE_INTRO); a clip not on this machine is fetched
-        from the library unless `fetch` is false (--plan fetches nothing).
-      - a file: it goes in front only if it is that house sting, or on
-        Krish's own words for this piece in "intro_override", so a different
-        opening can be tried on his say and the report records it ("opening").
-    Its own sound is never used: make.py lays silence under it, with the music
-    bed over it. Whether a cut with no intro may render is sting_stop's to say."""
+    """Anything in front of the hook in this cut: (None, note), always. Every cut, wide or tall, series or off day,
+    opens on its hook (house rule HOOK_IS_THE_INTRO; Ruling, Krish, 2026-11-12: "Nothing before the hook, ever.
+    Remove the sting exception for good."). "intro": "auto" (kit.py's cuts) or false is the hook, with no note; a
+    config that still names a clip ({"9x16": file, "16x9": file}) or carries "intro_override" has it left out, and
+    the note says so, so the report never hides it. The house sting is retired (scripts/quick-edit/intro.py)."""
     want = cfg.get('intro', 'auto')
-    if want is False or want is None:
-        return None, None
-    series, series_note = series_of(cfg, base)
     notes = []
-    if want == 'auto':
-        if not series:
-            return None, (series_note if asp in sting_shapes() else None)
-        path, why = sting.sting_for(asp, series, fetch_missing=fetch)
-        if not path:
-            return None, why
-        source = 'house'
-    elif isinstance(want, dict):
-        if not want.get(asp):
-            return None, f'the config\'s "intro" names no {asp} file, so this cut has no intro'
-        path = P(want[asp])
-        if not path.is_file():
-            return None, f'the intro file {path} is missing, so this cut has no intro'
-        house, why = sting.sting_for(asp, series, fetch_missing=False) if series else (None, series_note)
-        override = intro_override(cfg)
-        if house and sha256_file(house) == sha256_file(path):
-            source = 'house'
-        elif override:
-            source = 'override'
-            notes.append(f'the intro is a file named in the config, not the approved house sting, used on Krish\'s words in "intro_override": "{override}"')
-        else:
-            return None, (f'the intro file {path.name} named in the config is not the approved house sting for {asp} {series or "an off-day piece"}, '
-                          'so this cut has no intro. Only the approved sting, or Krish\'s own words in "intro_override", puts a clip there'
-                          + (f' (the house sting: {why.replace(", so this cut has no intro", "")})' if why else ''))
-    else:
-        return None, '"intro" in the config is "auto", false or {"9x16": file, "16x9": file}; this cut has no intro'
-    try:
-        info = clip_info(path)
-    except (ValueError, subprocess.CalledProcessError, KeyError) as e:
-        return None, f'the intro {path} could not be read ({e}), so this cut has no intro'
-    lo, hi = sting.SECONDS
-    if source == 'override':
-        # A clip on Krish's words may run longer than the 1 to 2 s house
-        # sting: up to STORY_INTRO_MAX_S.
-        lo, hi = sting.SECONDS[0], STORY_INTRO_MAX_S
-    if not lo - 0.5 / FPS <= info['seconds'] <= hi + 0.5 / FPS:
-        return None, f'the intro {path.name} runs {info["seconds"]} s, outside {lo} to {hi} s, so this cut has no intro'
-    if source == 'house' and sting.config_path() != sting.CONFIG:
-        notes.append(f'the intro sting came from {sting.config_path()}, not config/intro-sting.json')
-    if info['audio'] and source != 'house':
-        # The house sting's track is silent by construction (intro.finish);
-        # any other clip's sound is named, since it is dropped.
-        notes.append(f'the intro {path.name} has a sound track of its own; it is replaced with silence, under the music bed')
-    return ({'file': path, 'source': source, 'series': series if source == 'house' else None, 'sha256': sha256_file(path),
-             'clip_sha256': sting.clip_sha256(asp, series) if source == 'house' else None,
-             'own_sound_replaced': info['audio'], **info}, '; '.join(notes) or None)
+    if isinstance(want, dict) and want.get(asp):
+        notes.append(f'the config\'s "intro" names {Path(str(want[asp])).name} for the {asp} cut, and it is left out: {NOTHING_BEFORE_HOOK}')
+    elif not (want is False or want is None or want == 'auto' or isinstance(want, dict)):
+        notes.append('"intro" in the config is "auto", false or {"9x16": file, "16x9": file}; this cut opens on its hook either way')
+    if intro_override(cfg):
+        notes.append(f'"intro_override" ("{intro_override(cfg)}") lets nothing in front of the hook any more: {NOTHING_BEFORE_HOOK}')
+    return None, '; '.join(notes) or None
 
 
 def sting_stop(cfg, asp, intro, why, base='.'):
-    """Why this cut must not render: the house sting is approved, it goes on
-    this shape, the piece is a weekly series piece, and the cut would open
-    without it (Krish, 2026-11-05: "I think it should go at the start of the
-    longer wide videos 100%,"). None otherwise: a cut with its sting, a
-    candidate sting, the tall cut, an off-day piece, or Krish's own words for
-    this piece in "intro_override". A sting config that cannot be read stops a
-    series piece's render too, since it cannot say the cut may go without."""
-    if intro is not None or intro_override(cfg):
-        return None
+    """Why this cut must not render: anything at all in front of its hook (Ruling, Krish, 2026-11-12: "Nothing before
+    the hook, ever. Remove the sting exception for good."). resolve_intro never gives one; this is the stop that holds
+    if anything else ever did. None otherwise, for every shape, series and config."""
+    if intro is not None:
+        name = Path(str(intro.get('file') or 'a clip')).name if isinstance(intro, dict) else 'a clip'
+        return f'the {asp} cut would open on {name} before its hook: {NOTHING_BEFORE_HOOK}'
+    return None
+
+
+def palette_problems(cfg, asp, intro, P, base='.'):
+    """Why this cut's opening or close differs from the brand palette for its day and format, or [] (Ruling,
+    Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the attached";
+    config/brand-palette.json, scripts/brand_palette.py). make.py lays any intro in front of the hook, so a sting
+    here is "before_hook", which the palette refuses on a wide cut from its applies_from date. Krish's own words
+    for this piece in "palette_exception" (starting with his name) let the cut through, and the report keeps them."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import brand_palette
     series, _ = series_of(cfg, base)
-    if not series:
-        return None
+    _, post = read_post(cfg, base)
+    when = cfg.get('date') or (post or {}).get('date')
+    if not when:
+        # An undated config is off the calendar (a self-test's synthetic media), as the signed-direction gate
+        # already treats it: every piece is dated, so every piece is checked.
+        return []
+    end_file = P(cfg['endcard'][asp])
     try:
-        if not sting.wanted(asp, series):
-            return None
-    except sting.IntroError as e:
-        return f'the intro sting\'s config cannot be read, so this {series} piece\'s {asp} cut cannot be shown to open as it should: {e}'
-    return (f'the {asp} cut of this {series} piece opens on the approved intro sting (house rule HOOK_IS_THE_INTRO; Krish, 2026-11-05: '
-            f'"I think it should go at the start of the longer wide videos 100%,"), and it could not be had: {why or "no reason given"}')
+        seconds = clip_info(end_file)['frames'] / FPS
+    except Exception:  # noqa: BLE001 - a close that cannot be read is judged by its name alone
+        seconds = None
+    record = {'date': when, 'format': 'long_cut' if asp == '16x9' else 'short_cut', 'shape': asp,
+              'kind': 'series' if series else 'off',
+              'opening': 'hook' if intro is None else ('sting' if intro.get('source') == 'house' else 'clip'),
+              'sting': 'none' if intro is None else 'before_hook',
+              'close': {'file': end_file.name, **({'seconds': seconds} if seconds else {})}}
+    if series:
+        record['series'] = series
+    problems = brand_palette.check(record)
+    words = cfg.get('palette_exception')
+    if problems and isinstance(words, str) and words.strip().lower().startswith('krish'):
+        print(f'note: brand palette, let through on Krish\'s words ({words.strip()}): ' + ' | '.join(problems), file=sys.stderr)
+        return []
+    return problems
 
 
 def opening_of(intro, why=None):
@@ -1632,7 +1588,7 @@ def bounded_decode_inputs(inputs, threads=2):
 
 def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix):
     """The ffmpeg inputs and filter graph for one shape: the captioned main
-    (graphics, the tall cut's dress, the captions), joined after any opening
+    (graphics, the captions), joined after any opening
     clip and before the end card, with the finished mix as its sound."""
     cw, ch, cx, cy = crop
     W, H = SIZE[asp]
@@ -1716,30 +1672,8 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             g.append(f"[{n}:v]format=rgba,{card_fit(card, 1920 - px if px else 1920, 1080)}{f}[pp{n}]")
             g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
-    dress = cfg['dress'].get(asp) if isinstance(cfg.get('dress'), dict) else None
-    if dress:
-        # The brand's dress from the first frame to the end card (house rule
-        # HOOK_IS_THE_INTRO, Krish, 2026-10-29: the hook is the intro): the
-        # makeyourmindup wordmark and the series tag in the top corners, as
-        # the Friday 23 October tall cut has them. kit.py draws it from the
-        # brand's own wordmark; a transparent whole frame laid over the
-        # pictures, under the captions, with no entrance of its own.
-        inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(dress))]
-        g.append(f"[{last}][{n}:v]overlay=0:0[s{k}]")
-        last, n, k = f's{k}', n + 1, k + 1
-    elif asp == '9x16' and intro is None and cfg.get('logo', True) is not False:
-        # A config kit.py did not dress: the makeyourmindup logo in the opening
-        # seconds of the tall video (Krish, 2026-10-07: "put the Make Your Mind
-        # Up logo in the first few seconds of the video somewhere on vertical
-        # video"). The PNG is the whole frame, transparent, so it says where the
-        # logo sits. With an opening clip in front it is left out: the clip
-        # carries the brand, and a second logo entrance after it is not wanted.
-        lg = cfg['logo'] if isinstance(cfg.get('logo'), dict) else {}
-        secs = lg.get('seconds', 3.0)
-        inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(lg['png']) if lg.get('png') else default_logo(out))]
-        g.append(f"[{n}:v]format=rgba,fade=t=out:st={max(0.0, secs - 0.4):.2f}:d=0.4:alpha=1[lg]")
-        g.append(f"[{last}][lg]overlay=0:0:enable='between(t,0,{secs:.2f})'[s{k}]")
-        last, n, k = f's{k}', n + 1, k + 1
+    # No wordmark, series tag or opening logo on the tall cut (Ruling, Krish, 2026-11-11: the brand mark and badge on
+    # vertical videos "should be permanently removed from all templates"). An older config's "dress" or "logo" is ignored.
     if cfg.get('scoreboard'):
         import scoreboard
         g.extend(scoreboard.graph(last,'scored_main',asp,total,cfg['scoreboard']))
@@ -1968,7 +1902,7 @@ def self_test():
     same = lambda p: Path(p)
     _, g, audio = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0],
                               {'file': 'sting.mp4', 'frames': 45}, {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    checks.append(('a branded intro is not followed by a second logo entrance',
+    checks.append(('a branded intro is not followed by a logo entrance',
                    any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), False))
     checks.append(('the sting goes first in the join, with no sound of its own in the picture graph', g[-1], '[iv][vm][ev]concat=n=3:v=1:a=0[V]'))
     checks.append(('the sound is the finished mix', audio, '3:a'))
@@ -1980,9 +1914,9 @@ def self_test():
     checks.append(('the first split is fully visible after an intro, without a double presenter',
         'fade=t=in:' not in first_run, True))
     _, g, audio = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None, {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    checks.append(('without an intro the opening logo is retained',
-                   any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), True))
-    checks.append(('without a sting it is the main and the end card', (g[-1], audio), ('[vm][ev]concat=n=2:v=1:a=0[V]', '3:a')))
+    checks.append(('without an intro the tall cut still opens with no logo (Ruling, Krish, 2026-11-11)',
+                   any("overlay=0:0:enable='between(t,0,3.00)'" in line for line in g), False))
+    checks.append(('without a sting it is the main and the end card', (g[-1], audio), ('[vm][ev]concat=n=2:v=1:a=0[V]', '2:a')))
     _, split_graph, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0,
         first_picture, ws, [720, 1280, 0, 0], None,
         {'file':'end.mp4','frames':120}, Path('mix.wav'))
@@ -1993,17 +1927,13 @@ def self_test():
                           {'file': 'end.mp4', 'frames': 510, 'held_s': 13.0}, Path('mix.wav'))
     checks.append(('a long episode\'s end card holds its last frame for the end-screen tiles',
                    any('tpad=stop_mode=clone:stop_duration=13.000,trim=end_frame=510' in line for line in g), True))
-    # The opening (house rule HOOK_IS_THE_INTRO): the tall cut on the hook, the wide cut of a series piece on the sting once
-    # Krish approves it (2026-11-05), an off-day piece on the hook. The committed config, whatever its status:
+    # The opening (house rule HOOK_IS_THE_INTRO; Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the
+    # sting exception for good."): every cut, wide or tall, series or off day, opens on its hook.
     series_day = {'name': 't', 'series': 'follow.the.money', 'date': '2026-11-02'}
-    checks.append(('"intro": "auto" opens the tall cut on the hook with no clip and no note, at any status',
-                   resolve_intro(series_day, '9x16', same, fetch=False), (None, None)))
-    clip, why = resolve_intro({'name': 't'}, '16x9', same, fetch=False)
-    checks.append(('a wide cut of a piece with no series opens on the hook, saying it is an off-day piece', (clip, 'off-day piece' in (why or '')), (None, True)))
-    if sting.load()['status'] == 'candidate':
-        clip, why = resolve_intro(series_day, '16x9', same, fetch=False)
-        checks.append(('while the sting is a candidate, the wide cut of a series piece opens on the hook and says why',
-                       (clip, 'candidate' in (why or ''), sting_stop(series_day, '16x9', clip, why)), (None, True, None)))
+    checks.append(('"intro": "auto" opens every cut on the hook with no clip and no note, wide or tall, series or off day',
+                   [resolve_intro(c, asp, same, fetch=False) for c in (series_day, {'name': 't'}) for asp in ('9x16', '16x9')], [(None, None)] * 4))
+    checks.append(('and every one may render', [sting_stop(c, asp, None, None) for c in (series_day, {'name': 't'}) for asp in ('9x16', '16x9')], [None] * 4))
+    checks.append(('the committed sting is retired for good', sting.load()['status'], 'retired'))
     checks.append(('each cut records what it opened on, so engagement can settle the choice',
                    (opening_of(None), opening_of(None, 'an off-day piece'), opening_of({'source': 'override', 'file': Path('clip.mp4'), 'seconds': 3.0})['kind'],
                     opening_of({'source': 'house', 'series': 'mind_the_gap', 'clip_sha256': 'ab' * 32, 'file': Path('s.mp4'), 'frames': 56, 'seconds': 1.8667})),
@@ -2011,20 +1941,11 @@ def self_test():
                     {'kind': 'sting', 'rule': 'HOOK_IS_THE_INTRO', 'series': 'mind_the_gap', 'clip_sha256': 'ab' * 32, 'file': 's.mp4', 'frames': 56,
                      'seconds': 1.8667})))
     dressed = dict(fake, dress={'9x16': 'dress-9x16.png'})
-    _, g, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
-                          {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    dress_line = [line for line in g if line.endswith('overlay=0:0[s2]')]
-    checks.append(('the tall cut wears its dress from the first frame to the end card, with no window, fade or entrance',
-                   (len(dress_line), any('dress-9x16.png' in str(x) for x in _), any('enable=' in line or 'fade' in line for line in dress_line)),
-                   (1, False, False)))
-    inputs_dressed, _, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
+    inputs_dressed, g, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, first_picture, ws, [720, 1280, 0, 0], None,
                                        {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    checks.append(('the dress is kit.py\'s picture, and it replaces the three-second opening logo',
-                   ('dress-9x16.png' in inputs_dressed, any("enable='between(t,0,3.00)'" in line for line in g)), (True, False)))
-    _, g, _ = video_graph(dressed, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, first_picture, ws, [720, 1280, 0, 0], None,
-                          {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
-    order = [i for i, line in enumerate(g) if line.endswith('[run0]') or ('[s' in line and line.endswith('overlay=0:0[s3]'))]
-    checks.append(('the dress sits over the pictures, so the corners stay on through them', len(order) == 2 and order[0] < order[1], True))
+    checks.append(('an older config\'s tall dress is ignored: no wordmark, series tag or logo on vertical video (Ruling, Krish, 2026-11-11)',
+                   ('dress-9x16.png' in inputs_dressed, 'logo.png' in inputs_dressed, any("enable='between(t,0,3.00)'" in line for line in g)),
+                   (False, False, False)))
     # No name on screen (Krish, 2026-10-28: "Remember, no content refers to Krish, ever.").
     strap = strap_problem({'strap': {'png': 'strap-9x16.png', 'after': 'so'}})
     import tempfile as _st
@@ -2035,8 +1956,8 @@ def self_test():
                              capture_output=True, text=True)
     checks.append(('make.py stops on a strap config before it reads anything else', (ran.returncode != 0, 'no content refers to Krish, ever' in ran.stderr),
                    (True, True)))
-    checks.append(('a strap config is refused, quoting his ruling and naming the dress to put in its place; "strap": false is no matter',
-                   (bool(strap) and 'no content refers to Krish, ever' in strap, '"dress": {"9x16": "dress-9x16.png"}' in (strap or ''),
+    checks.append(('a strap config is refused, quoting his ruling and saying to delete it; "strap": false is no matter',
+                   (bool(strap) and 'no content refers to Krish, ever' in strap, 'Delete "strap"' in (strap or ''),
                     strap_problem({'strap': False}), strap_problem({})), (True, True, None, None)))
     checks.append(('"intro": false is no intro and no note', resolve_intro({'intro': False}, '9x16', same), (None, None)))
     checks.append(('"music": false is no music and no note', resolve_music({'name': 't', 'music': False}, '9x16', 30), (None, None)))
@@ -2174,7 +2095,7 @@ transcriber_decodes = transcriber.decodes
 # (transcriber_decodes), not only import.
 DOCTOR_MODULES = (
     ('faster_whisper', 'faster-whisper', 'fail', f'transcribes every take (make.py and recording_match.py): {TRANSCRIBER_FIX}'),
-    ('PIL', 'pillow', 'fail', 'Pillow draws the tall logo pill and the thumbnails'),
+    ('PIL', 'pillow', 'fail', 'Pillow draws the thumbnails'),
     ('playwright', 'playwright', 'warn', 'draws the graphics, end cards and thumbnails from HTML'),
 )
 
@@ -2316,26 +2237,19 @@ def gate_self_test():
     checks.append(('a picture in pages is shown a part at a time, touching, over its window',
                    [(c['panel'], c['s'], c['e']) for c in paged], [('p1', 10.0, 12.0), ('p2', 12.0, 14.0), ('p3', 14.0, 16.0)]))
     checks.append(('pages for another shape leave the picture whole', len(expand_pages(paged[:1] and [{'id': 'm', 'panel': 'x', 's': 1, 'e': 2, 'pages': {'9x16': ['a', 'b']}}], '16x9')), 1))
-    checks.append(('a config-named intro with no approved sting and no words from Krish is left out', (got, 'intro_override' in (why or '')), (None, True)))
-    got, why = resolve_intro(dict(named, intro_override='use it, said someone'), '9x16', here)
-    checks.append(('an intro_override that does not start with Krish\'s words lets nothing through', got, None))
-    words = 'Krish (a self-test stand-in, not his words): open with this clip'
-    got, why = resolve_intro(dict(named, intro_override=words), '9x16', here)
-    checks.append(('Krish\'s words in intro_override let it through, and the report quotes them',
-                   (got and got['source'], words in (why or ''), got and got['own_sound_replaced']), ('override', True, True)))
+    checks.append(('a config-named intro is left out, saying nothing goes before the hook', (got, 'Nothing before the hook, ever.' in (why or '')), (None, True)))
+    got, why = resolve_intro(dict(named, intro_override='Krish (a self-test stand-in, not his words): open with this clip'), '9x16', here)
+    checks.append(('Krish\'s words in "intro_override" let nothing through any more, and the report says so',
+                   (got, 'intro_override' in (why or ''), 'Nothing before the hook, ever.' in (why or '')), (None, True, True)))
     real = sting.sting_for
     try:
         sting.sting_for = lambda shape, *a, **k: (loud, None)
-        series_named = dict(named, series='follow_the_money', date='2026-11-02')
-        got, why = resolve_intro(series_named, '9x16', here)
-        checks.append(('a config-named file that is the approved house sting is used', got and (got['source'], got['series']), ('house', 'follow_the_money')))
-        got, why = resolve_intro(named, '9x16', here)
-        checks.append(('but never for a piece with no series', (got, 'off-day piece' in (why or '')), (None, True)))
-        sting.sting_for = lambda shape, *a, **k: (other, None)
-        got, why = resolve_intro(series_named, '9x16', here)
-        checks.append(('one that is not, is not', (got, 'not the approved house sting' in (why or '')), (None, True)))
+        got, why = resolve_intro(dict(named, series='follow_the_money', date='2026-11-02'), '9x16', here)
+        checks.append(('even a file that is the clip the house sting was is left out', got, None))
     finally:
         sting.sting_for = real
+    checks.append(('and a cut handed an intro anyway stops before it renders, quoting the ruling',
+                   'Nothing before the hook, ever.' in (sting_stop({'name': 't'}, '16x9', {'file': loud}, None) or ''), True))
     checks += sting_self_test(work)
     # The sting's own tone is never mixed: its stretch is silence.
     intro = {'file': loud, **clip_info(loud)}
@@ -2366,10 +2280,9 @@ def gate_self_test():
 
 
 def sting_self_test(work):
-    """The house sting on a stand-in approved config (intro.stand_in: synthetic
-    clips, never Krish's): the wide cut of a series piece opens on it, the tall
-    cut and an off-day piece on the hook, a wide cut that cannot have it stops,
-    and at 24 fps the 56 frames become 45 with no drift."""
+    """The house sting on a stand-in approved config (intro.stand_in: synthetic clips, never Krish's): even approved,
+    with its clips here, no cut opens on it, wide or tall, series or off day (Ruling, Krish, 2026-11-12: "Nothing
+    before the hook, ever. Remove the sting exception for good.")."""
     checks = []
     keep = {k: os.environ.get(k) for k in (sting.CONFIG_ENV, sting.CLIPS_ENV)}
     config, clips = sting.stand_in(work / 'sting')
@@ -2377,53 +2290,13 @@ def sting_self_test(work):
     same = lambda p: Path(p)
     try:
         piece = {'name': 't', 'series': 'mind.the.gap', 'date': '2026-11-06'}
-        got, why = resolve_intro(piece, '16x9', same, fetch=False)
-        want_sha = sting.load()['clips']['16x9']['mind_the_gap']['sha256']
-        checks.append(('the wide cut of a series piece opens on its own series\' sting, 56 frames, the clip Krish saw named by its sha256',
-                       got and (got['source'], got['series'], got['frames'], got['seconds'], got['clip_sha256']),
-                       ('house', 'mind_the_gap', 56, 1.8667, want_sha)))
-        checks.append(('the report says so', opening_of(got)['kind'], 'sting'))
-        checks.append(('and a stand-in config is named in its notes, never taken quietly', 'not config/intro-sting.json' in (why or ''), True))
-        checks.append(('it may render', sting_stop(piece, '16x9', got, why), None))
-        checks.append(('the tall cut of the same piece opens on the hook, saying nothing', resolve_intro(piece, '9x16', same, fetch=False), (None, None)))
-        checks.append(('and may render', sting_stop(piece, '9x16', None, None), None))
         off = dict(piece, date='2026-11-05')
-        got, why = resolve_intro(off, '16x9', same, fetch=False)
-        checks.append(('an off-day piece\'s wide cut opens on the hook, and may render', (got, sting_stop(off, '16x9', got, why)), (None, None)))
-        (clips / 'stand-in-sting-16x9-mind_the_gap.mp4').rename(clips / 'away.mp4')
-        got, why = resolve_intro(piece, '16x9', same, fetch=False)
-        stop = sting_stop(piece, '16x9', got, why)
-        checks.append(('a wide series cut that cannot have the approved sting stops before it renders, quoting Krish and saying why',
-                       (got, bool(stop) and '100%,' in stop and 'intro.py fetch' in stop), (None, True)))
-        checks.append(('unless Krish\'s own words for the piece are in "intro_override"',
-                       sting_stop(dict(piece, intro_override='Krish (a self-test stand-in, not his words): no sting on this one'), '16x9', got, why), None))
-        checks.append(('"intro": false is no way round it', bool(sting_stop(dict(piece, intro=False), '16x9', None, None)), True))
-        (clips / 'away.mp4').rename(clips / 'stand-in-sting-16x9-mind_the_gap.mp4')
+        checks.append(('an approved stand-in sting opens no cut: the wide and tall cuts of a series piece and an off-day piece open on the hook',
+                       [resolve_intro(c, asp, same, fetch=False) for c in (piece, off) for asp in ('16x9', '9x16')], [(None, None)] * 4))
+        checks.append(('each records the hook as its opening', opening_of(None)['kind'], 'hook'))
+        checks.append(('and each may render', [sting_stop(c, asp, None, None) for c in (piece, off) for asp in ('16x9', '9x16')], [None] * 4))
         os.environ[sting.CONFIG_ENV] = str(work / 'missing-sting.json')
-        checks.append(('a sting config that cannot be read stops a series piece\'s render', bool(sting_stop(piece, '16x9', None, None)), True))
-        os.environ[sting.CONFIG_ENV] = str(config)
-        # A take at 24 fps: the cut runs at 24, and the 56 frames at 30 become 45 (1.875 s) in the fps filter video_graph
-        # uses, ending on the clip's last frame (the wordmark plate); the sound under it is 45 frames' worth, so nothing drifts.
-        finished = sting.finish('16x9', 'follow_the_money')
-        keep_fps = FPS
-        try:
-            globals()['FPS'] = 24
-            info = clip_info(finished)
-            _, g, _ = video_graph({'name': 't', 'face': [100, 450], 'frame16': 'frame16.png'}, '16x9', same, Path('.'), Path('edited.mkv'), 20.0,
-                                  [], [], [720, 1280, 0, 0],
-                                  {'file': finished, **info}, {'file': 'end.mp4', 'frames': 96}, Path('mix.wav'))
-            line = next(x for x in g if x.endswith('[iv]'))
-            tl = timeline(info['frames'], 480, 96, [])
-        finally:
-            globals()['FPS'] = keep_fps
-        frames = lambda p, vf: [x.split(',')[-1].strip() for x in subprocess.run(
-            ['ffmpeg', '-v', 'error', '-i', str(p), '-filter_complex', vf, '-map', '[o]', '-f', 'framemd5', '-'],
-            capture_output=True, text=True, check=True).stdout.splitlines() if x and not x.startswith('#')]
-        made = frames(finished, '[0:v]' + line.split(']', 1)[1].replace('[iv]', '[o]'))
-        source = frames(finished, '[0:v]setsar=1,format=yuv420p[o]')
-        checks.append(('at 24 fps the sting is 45 frames, 1.875 s, and its sound 90000 samples, the same 1.875 s',
-                       (info['frames'], info['seconds'], len(made), tl['samples']['intro_s'], tl['samples']['intro_s'] / RATE), (45, 1.875, 45, 90000, 1.875)))
-        checks.append(('and it ends on the clip\'s last frame, so the wordmark plate lands before his face', made[-1] == source[-1], True))
+        checks.append(('a sting config that cannot be read stops nothing either', sting_stop(piece, '16x9', None, None), None))
     finally:
         for k, v in keep.items():
             if v is None:
@@ -2514,22 +2387,11 @@ def doctor(as_json=False):
         add('music ledger', 'fail', str(e))
     try:
         s = sting.status()
-        on, off = '/'.join(s['shapes']), '/'.join(sh for sh in sting.SHAPES if sh not in s['shapes'])
-        if s['status'] == 'retired':
-            d = s['last_decision'] or {}
-            add('opening', 'ok', f'every cut opens on the hook (house rule HOOK_IS_THE_INTRO); the sting is retired (Krish, {d.get("on")})')
-        else:
-            add('opening', 'ok', f'the {off} cut opens on the hook (house rule HOOK_IS_THE_INTRO); the {on} cut of a weekly series piece '
-                                 'opens on the intro sting once Krish approves it; an off-day piece opens on the hook')
-            every = [f'{shape} {series}' for shape in s['shapes'] for series in s['series']]
-            ready = [f'{shape} {series}' for shape in s['shapes'] for series in s['series'] if s['clips'][shape][series]['verified']]
-            add('intro sting', 'ok' if s['status'] == 'approved' and s['matches'] and len(ready) == len(every) else 'warn',
-                f'{s["status"]}; clips here and verified for {", ".join(ready) or "no shape and series"}'
-                + ('' if len(ready) == len(every) else '; a render fetches the rest from the library (python scripts/quick-edit/intro.py fetch)')
-                + ('' if s['status'] != 'approved' or s['matches'] else '; the clips named are not the ones Krish approved, so no cut opens on them')
-                + ('' if s['status'] == 'approved' else f'; {on} cuts render without it until Krish approves it'))
+        d = s['last_decision'] or {}
+        add('opening', 'ok', f'every cut opens on the hook, with nothing before it (house rule HOOK_IS_THE_INTRO); the sting is retired (Krish, {d.get("on")})')
     except (OSError, ValueError) as e:
-        add('intro sting', 'warn', str(e))
+        # load() refuses any status but "retired" on config/intro-sting.json (Ruling, Krish, 2026-11-12).
+        add('opening', 'fail', str(e))
     failed = [r for r in rows if r['state'] == 'fail']
     if as_json:
         print(json.dumps({'ready': not failed, 'checks': rows}, indent=1))
@@ -2743,6 +2605,9 @@ def main():
         stop = sting_stop(cfg, asp, intro, note, base)
         if stop:
             sys.exit(f'Opening: {stop}')
+        problems = palette_problems(cfg, asp, intro, P, base)
+        if problems:
+            sys.exit('Brand palette (config/brand-palette.json): ' + ' | '.join(problems))
 
     # Stage 1: the edited talking head, cropped to the real picture.
     edited = out / f"{cfg['name']}.edited.mkv"
@@ -3027,8 +2892,10 @@ def main():
                 mark=P(cfg['brand_mark']) if cfg.get('brand_mark') else None)
             # Nothing he must read under Instagram's, TikTok's or Shorts' own buttons (Krish, 2026-11-03: "It looks
             # cramped. It looks like you almost didn't design this thoughtfully for the format or the channel").
-            # Measured and listed on every tall cut; it holds the cut once the tall layout clears the zones
-            # (docs/ve/MOTION_STANDARD.md, scripts/channel_safe.py).
+            # Holding since the tall layout cleared the zones (card ve-motion-4-channel-safe-tall, 11 Nov 2026): a
+            # caption band under a channel's buttons holds the cut. The frame read (OCR of the whole cut, the end
+            # card and any words in the room included) stays a warning (docs/ve/MOTION_STANDARD.md,
+            # scripts/channel_safe.py).
             if asp == '9x16':
                 import channel_safe  # noqa: PLC0415
                 bands = channel_safe.box_violations(
@@ -3036,7 +2903,7 @@ def main():
                 words = channel_safe.frame_violations(final, 'tall', every=2.0)
                 receipt['channel_safe'] = {'bands': bands, 'frames': words}
                 for hit in bands:
-                    warnings.append(f"{hit['what']} sits under {hit['channel']}'s {hit['zone']}")
+                    words_held.append(f"{asp}: {hit['what']} sits under {hit['channel']}'s {hit['zone']}")
                 if words.get('pass') is False:
                     warnings.append(f"{words['value']['count']} word(s) read under a channel's buttons "
                                     f"(first: '{words['value']['in_zones'][0]['word']}' at {words['value']['in_zones'][0]['at_s']} s)")

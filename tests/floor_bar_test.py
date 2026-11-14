@@ -324,9 +324,9 @@ class TheBar(unittest.TestCase):
         self.assertIn('Monday 26 October', part(AIMS))
         # The three it lists under test are the three choices recorded per piece, in its order.
         self.assertEqual([c['id'] for c in BAR['under_test']['choices']], ['opening', 'lead_picture', 'big_moment_sound'])
-        # The opening's default moved on 2026-11-05 (Krish: "I think it should go at the start of the longer wide videos
-        # 100%,"): the sting on the wide cut, the hook on the tall cut; an off-day piece keeps the hook.
-        self.assertEqual(BAR['under_test']['choices'][0]['default'], 'sting_wide_hook_tall')
+        # The opening's default moved on 2026-11-05 (the sting on the wide cut) and back on 2026-11-12 (Ruling, Krish:
+        # "Nothing before the hook, ever. Remove the sting exception for good."): the hook, on every cut.
+        self.assertEqual(BAR['under_test']['choices'][0]['default'], 'hook_is_intro')
 
     def test_the_bar_is_a_draft_reading_until_he_approves_it(self):
         self.assertEqual(BAR['standing'], 'draft')
@@ -461,12 +461,12 @@ class TheBar(unittest.TestCase):
             self.assertNotIn('never', c['what'].lower(), c['id'])
             self.assertTrue(c['options'], c['id'])
         opening = choices[0]
-        self.assertEqual((opening['default'], opening['off_day']), ('sting_wide_hook_tall', 'hook_is_intro'))
-        self.assertIn(opening['default'], opening['options'])
-        self.assertIn(opening['off_day'], opening['options'])
-        self.assertEqual(opening['changed'], {'on': '2026-11-05', 'by': 'Krish', 'from': 'hook_is_intro',
-                                              'words': 'I think it should go at the start of the longer wide videos 100%,',
-                                              'where': 'the Intro Sting page; config/intro-sting.json placement'})
+        # Ruling (Krish, 2026-11-12): nothing goes before the hook, so the hook is the only opening left to record.
+        self.assertEqual((opening['default'], opening['off_day'], opening['options']), ('hook_is_intro', 'hook_is_intro', ['hook_is_intro']))
+        self.assertEqual(opening['changed'], {'on': '2026-11-12', 'by': 'Krish', 'from': 'sting_wide_hook_tall',
+                                              'words': 'Nothing before the hook, ever. Remove the sting exception for good.',
+                                              'where': 'a working session, answering the openings question; config/intro-sting.json, retired'})
+        self.assertEqual(opening['before']['words'], 'I think it should go at the start of the longer wide videos 100%,')
         self.assertEqual(choices[1]['options'], ['series_picture', 'story_object'])
         sound = choices[2]
         self.assertEqual((sound['default'], sound['until_approved'], sound['approved_set']), ('big_moment_only', 'none', None))
@@ -533,7 +533,8 @@ class TheBar(unittest.TestCase):
         for source in ('each lockup has one job (p. 04)', 'hands-off rules (p. 05)', '`docs/STUDIO.md` applies the book',
                        'the placement Krish approved on 26 September 2026, for the job-based Studio',
                        'Where a reference departs from them, the book and that placement win',
-                       "whether the every-beat tile binds a quick-edit tall cut is Krish's decision"):
+                       # Krish decided it on 2026-11-11: no mark over any tall cut's animated content (the outro card keeps it).
+                       'Vertical video carries no mark, wordmark or series tag at all'):
             self.assertIn(source, branding)
         self.assertIn('`docs/brandbooknew/`', part(AIMS))
         # The question rested on a premise the book does not support, and the rulings say so.

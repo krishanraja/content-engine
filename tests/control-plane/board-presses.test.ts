@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { hisOnlyRefusal, validBody } from '../../apps/control-plane/api/board/_contracts.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
+import { signPress } from '../../apps/control-plane/api/board/_weekModel.js'
 import { scriptHash, spokenText, type SendApprovedInput, type SendResult } from '../../apps/control-plane/api/_teleprompter.js'
 vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => true, mediaQualityRollout: () => ({ status: 'active' }) }))
 
@@ -109,7 +110,7 @@ describe('what each press may carry', () => {
 })
 
 describe('only Krish presses', () => {
-  it('refuses every new press from a session holding the operator key, and leaves a plain pick and triage open', () => {
+  it('refuses every new press from a session holding the operator key, a plain pick included, and leaves triage open', () => {
     const op = 'engine_operator'
     expect(hisOnlyRefusal('picks', { pick: 'mon-2', day: 'mon', story: 's', note: 'mine' }, op)).toBe('pick_note_is_his')
     expect(hisOnlyRefusal('queue', press('not_for_us'), op)).toBe('press_is_his')
@@ -119,7 +120,8 @@ describe('only Krish presses', () => {
     expect(hisOnlyRefusal('picks', { kind: 'titles', day: 'mon', picks: { long_title: 'x' } }, op)).toBe('decision_is_his')
     expect(hisOnlyRefusal('picks', { kind: 'approve_publish', day: 'mon', piece_id: PIECE, approved: true }, op)).toBe('decision_is_his')
     expect(hisOnlyRefusal('picks', reject(), null)).toBe('decision_is_his')
-    expect(hisOnlyRefusal('picks', { pick: 'mon-2', day: 'mon', story: 's' }, op)).toBeNull()
+    // A pick is his Approve (the ideas gate, Krish, 2026-11-11): a session proposes ideas and never picks one, relayed or not.
+    expect(hisOnlyRefusal('picks', { pick: 'mon-2', day: 'mon', story: 's' }, op)).toBe('pick_is_his')
     expect(hisOnlyRefusal('queue', { pick: 'mon-1', queued: true }, op)).toBeNull()
     for (const body of [approval(), press('next_week', { target_week: '2026-11-16' }), offday(), reject()]) expect(hisOnlyRefusal('picks', body, 'Krish')).toBeNull()
   })
@@ -310,16 +312,15 @@ describe('a document he saved stays his', () => {
     const pick = { pick: 'mon-2', idea_id: IDEA, series: 'follow_the_money', story: 'The story.', day: 'mon', note: 'Lead with the deal.' }
     expect((await t.put('picks', 'mon', pick)).status).toBe(200)
     // A body without the note hisOnlyRefusal reads would otherwise erase his note, and readers skip what he did not write.
-    expect(await t.put('picks', 'mon', { pick: 'mon-3', day: 'mon', story: 'Another.' }, 'operator', 1)).toMatchObject({ status: 403, out: { error: 'his_document' } })
+    expect(await t.put('picks', 'mon', { pick: 'mon-3', day: 'mon', story: 'Another.' }, 'operator', 1)).toMatchObject({ status: 403, out: { error: 'pick_is_his' } })
     expect((await t.put('queue', 'mon-2', press('not_for_us', { reason: 'Done to death this month.' }))).status).toBe(200)
     expect(await t.put('queue', 'mon-2', { pick: 'mon-2', queued: false }, 'operator', 1)).toMatchObject({ status: 403, out: { error: 'his_document' } })
     expect(t.calls).toHaveLength(2)
-    // A plain pick or queue mark nobody else wrote stays open to the engine, and to its own next write.
-    expect((await t.put('picks', 'wed', { pick: 'wed-1', day: 'wed', story: 'Relayed.' }, 'operator')).status).toBe(200)
-    expect((await t.put('picks', 'wed', { pick: 'wed-2', day: 'wed', story: 'Relayed again.' }, 'operator', 1)).status).toBe(200)
+    // A pick is his Approve (the ideas gate): the engine can never write one, relayed or not. A plain queue mark nobody
+    // else wrote stays open to the engine.
+    expect(await t.put('picks', 'wed', { pick: 'wed-1', day: 'wed', story: 'Relayed.' }, 'operator')).toMatchObject({ status: 403, out: { error: 'pick_is_his' } })
     expect((await t.put('queue', 'wed-1', { pick: 'wed-1', queued: true }, 'operator')).status).toBe(200)
-    // And he can always save over it.
-    expect((await t.put('picks', 'wed', { pick: 'wed-3', day: 'wed', story: 'His.' }, 'krish', 2)).status).toBe(200)
+    expect((await t.put('picks', 'wed', { pick: 'wed-3', day: 'wed', story: 'His.' }, 'krish')).status).toBe(200)
   })
 })
 
@@ -365,5 +366,28 @@ describe('a rejected asset files his reason in the rejection inbox', () => {
     const t = setup(undefined, { inboxError: true })
     const { status, out } = await t.put('picks', 'mon-reject-video-short', reject())
     expect(status).toBe(200); expect(out).toMatchObject({ ok: true, revision: 1, inbox: 'failed' })
+  })
+})
+
+describe('his "Signed." on a narrative lock, one press on the board, on any day the piece is placed', () => {
+  // Tue 17 Nov: the data-centres piece he moved there with place_piece (13 Nov); a piece on an off day is still a piece.
+  const TUE = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118'
+  const filled = (day: string, over: Record<string, unknown> = {}) => {
+    const p = signPress('2026-11-16', TUE, { day: day as never, path: `docs/plans/2026-11-16-week/narrative-lock-${day}.md`, sha256: 'a'.repeat(64), revision: 0 })
+    // As the board fills it in: his words at words.path and the press time at each stamp.
+    return { ...(p.body as Record<string, unknown>), words: 'Signed.', at: '2026-11-14T08:05:00.000Z', said_at: '2026-11-14T08:05:00.000Z', ...over }
+  }
+  it('saves his typed approval of the lock as his, on Tuesday as on Monday', async () => {
+    for (const day of ['tue', 'mon']) {
+      const t = setup()
+      const { status, out } = await t.put('picks', `${day}-lock-words`, filled(day))
+      expect(status, `${day}: ${JSON.stringify(out)}`).toBe(200)
+      expect(t.calls[0].args).toMatchObject({ p_collection: 'picks', p_id: `${day}-lock-words`, p_actor: 'Krish', p_body: { kind: 'sign_lock', words: 'Signed.', piece_id: TUE } })
+    }
+  })
+  it('refuses a lock filed under another day, a day with no pieces (Sunday), and a no', async () => {
+    expect((await setup().put('picks', 'tue-lock-words', filled('tue', { lock_path: 'docs/plans/2026-11-16-week/narrative-lock-fri.md' }))).status).toBe(400)
+    expect((await setup().put('picks', 'sun-lock-words', filled('sun'))).status).toBe(400)
+    expect((await setup().put('picks', 'tue-lock-words', filled('tue', { approved: false }))).status).toBe(400)
   })
 })

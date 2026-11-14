@@ -40,9 +40,11 @@ export function boxFor(element: ChromeElement, aspect: Aspect): Box {
   }
 }
 
-/** Includes the mark shadow and the one-line channel pill. */
+/** What key content must stay below at the top of the frame. Wide: the mark tile with its shadow and the one-line
+ *  channel pill. Tall: no chrome is drawn over the content (Ruling, Krish, 2026-11-11), so it is the channels' own top
+ *  bar, the strip every platform covers (config/channel-safe-zones.json: y 0 to 270). */
 export function chromeZone(aspect: Aspect): Box {
   return aspect === '16:9'
     ? { left: 48, top: 40, width: 812, height: 152 }
-    : { left: 72, top: 140, width: 826, height: 146 }
+    : { left: 0, top: 0, width: 1080, height: 270 }
 }

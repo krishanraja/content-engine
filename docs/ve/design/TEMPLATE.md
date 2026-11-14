@@ -1,5 +1,10 @@
 # ve design template: mind.the.gap tall (1080x1920)
 
+> **Channel limits, 11 Nov 2026.** Where this page gives a platform limit of x 960 or y 1640, a lower line at y 1516 or
+> a marquee at y 1736, it predates Krish's ruling ("stay within the boundaries of all the social platforms"). Words now
+> keep to `docs/ve/MOTION_STANDARD.md`, Channels: x 60 to 860 below y 520, y 270 to 1320, the caption zone x 60 to 860,
+> y 1090 to 1320. The lock's older zones are open (`docs/ve/STATUS.md`, Cannot do yet); a tall cut is not made to them.
+
 Approved by Krish on 28 Oct 2026 ("Approve direction"): format **H, the hand-held screen**, is the base; **P, two passports**, is the reusable module for any piece about where an AI lives. Since 3 Nov 2026 face-with-proof is the base lock and H and P are both its modules (`docs/ve/design/formats/F-anatomy.md`). The machine-readable lock is `config/ve/design-lock.json`; the gates read it, not this page. Per-format detail (zone tables, slots, camera, prompts) is in `docs/ve/design/formats/`. Why this exists: the first Gate 2 proofs passed every mechanical check and were rejected on design (F19 in `config/failures.json`).
 
 ## The format in one paragraph
@@ -13,7 +18,7 @@ One real hand holds one real phone on a real-world plate. The camera never cuts:
 | Headline | 72 | 150 | 888 | 270 | Anton, 1 or 2 lines, one swiped word |
 | Hero stage | 0 | 0 | 1080 | 1920 | full bleed, the focal object fills it |
 | Key band | | | | to y 1170 | every focal item and its scribble live here |
-| Caption | 72 | 1180 | 900 | 320 | reserved for the engine's captions; nothing else |
+| Caption | 60 | 1090 | 800 | 230 | reserved for the engine's captions; nothing else (moved 11 Nov 2026 so it ends above y 1320 and short of the action rail) |
 | Lower line | 72 | 1516 | 936 | 104 | one stat strip, one dek or one sticker |
 | Platform | x>960, y>1640 | | | | decoration only, no key content |
 

@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict'
 import { test } from 'vitest'
 import {
-  EDITORIAL_AEO_SUBJECTS, MAX_IDEAS_PER_SUBJECT, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef,
-  isEditorialAeoSubject, probeRows, queryRows, validatePacket,
+  EDITORIAL_AEO_SUBJECTS, KRISH_DOMAINS, MAX_IDEAS_PER_SUBJECT, NOT_OURS, PACKET_FEATURES, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef,
+  brandChecksOf, brandNamesOf, citedPageRows, heldProducts, searchSignalsFor, shippedFor, subjectHostsOf, isEditorialAeoSubject, probeRows, queryRows, validatePacket,
   type AeoPacket,
 } from '../../apps/control-plane/api/_aeo.ts'
 import { CONTENT_ENGINE_JOBS, contentEngineAttention } from '../../apps/control-plane/lib/contentEngineSchedule.ts'
 import { LANE_SLUG, PRODUCT_SLUGS } from '../../apps/control-plane/api/_growth.ts'
+import { readFileSync } from 'node:fs'
 
 // The AEO engine's landing, the pure half: the packet contract, the row the
 // content spine receives, and the schedule row that says when the machine
@@ -128,7 +129,7 @@ test('only a subject on the editorial allowlist is stamped as a publication stor
   assert.equal(isEditorialAeoSubject(null), false)
 
   const p = packet()
-  for (const slug of ['ctrl', 'circle', 'pulse', 'full-time', 'mindmake']) {
+  for (const slug of ['ctrl', 'circle', 'pulse', 'full-time', 'mindmake', 'heartside', 'legibility', 'publication']) {
     const row = aeoSignalRow(packet({ subject: { id: SUBJECT, kind: 'venture', slug, product_slug: slug } }), p.recommendations[0], slug)
     assert.equal(row.lane, isEditorialAeoSubject(slug) ? 'publication' : null, `lane for ${slug}`)
     // The row is still written and still carries its subject, so the Growth
@@ -205,4 +206,180 @@ test('what not to chase must point at questions the packet actually probed', () 
     not_worth_chasing: Array.from({ length: 7 }, () => ({ query_id: Q2, query: 'x', owned_by: [], why_not: 'y' })),
   }))
   assert.equal(tooMany.ok, false)
+})
+
+// AEO-Engine's brief (docs/briefs/2026-11-13-aeo-specialist.md), sections B and C:
+// what the context tells the engine about Krish and each subject.
+
+test("Krish's own sites are his, and fractionl.us is never ours (Ruling, Krish, 2026-11-13)", () => {
+  for (const d of ['krishraja.ai', 'krishraja.com', 'themindmaker.ai', 'mindmake.co']) assert.ok(KRISH_DOMAINS.includes(d), d)
+  assert.deepEqual([...NOT_OURS], ['fractionl.us'])
+  assert.ok(!KRISH_DOMAINS.some(d => NOT_OURS.includes(d)))
+})
+
+test('every optional packet field AEO-Engine knows is listed, and each is stored', () => {
+  assert.deepEqual([...PACKET_FEATURES].sort(), ['cited_pages', 'diagnosis', 'engine_gemini', 'kits', 'name_mentions', 'outcome', 'panel', 'probe_detail', 'run_kind', 'samples', 'site'])
+})
+
+// The contract with AEO-Engine: its own packets, copied from its
+// tests/fixtures/expected (the plain v1 packet and the one with every feature
+// on), must validate here unchanged.
+const fixture = (name: string) => JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8')) as AeoPacket
+
+test("AEO-Engine's plain packet and its full-feature packet both validate, and the gated fields reach the rows", () => {
+  const plain = validatePacket(fixture('aeo-packet.v1.json'))
+  assert.equal(plain.ok, true, plain.ok ? '' : plain.errors.join('; '))
+  const full = validatePacket(fixture('aeo-packet.features.json'))
+  assert.equal(full.ok, true, full.ok ? '' : full.errors.join('; '))
+  if (!full.ok) return
+  const probes = probeRows(full.packet)
+  assert.ok(probes.length > 0)
+  assert.ok(probes.every(r => r.run_kind === 'research'))
+  assert.ok(probes.some(r => Array.isArray(r.retrieved) && typeof r.searched === 'boolean'))
+  const queries = queryRows(full.packet)
+  assert.ok(queries.some(q => q.panel && q.diagnosis))
+  assert.equal(full.packet.kits!.length, 10)
+  // A plain packet writes nulls where the new columns are, so it lands exactly as before.
+  if (plain.ok) {
+    const r = probeRows(plain.packet)[0]
+    assert.equal(r.retrieved, null)
+    assert.equal(r.run_kind, 'research')
+    assert.equal(queryRows(plain.packet)[0].panel, null)
+  }
+})
+
+test('a gated field in the wrong shape is refused with its path, and kits and sheets belong to a venture', () => {
+  const p = fixture('aeo-packet.features.json')
+  const badPanel = structuredClone(p)
+  ;(badPanel.queries[0] as unknown as Record<string, unknown>).panel = { state: 'winning' }
+  const r1 = validatePacket(badPanel)
+  assert.equal(r1.ok, false)
+  if (!r1.ok) assert.ok(r1.errors.some(e => e.startsWith('packet.queries[0].panel')), r1.errors.join('; '))
+  const badKit = structuredClone(p)
+  ;(badKit.kits![0] as Record<string, unknown>).query_id = '99999999-9999-4999-8999-999999999999'
+  const r2 = validatePacket(badKit)
+  assert.equal(r2.ok, false)
+  if (!r2.ok) assert.ok(r2.errors.some(e => /kits\[0\]\.query_id/.test(e)))
+  const extraField = structuredClone(p)
+  ;(extraField.cited_pages![0] as unknown as Record<string, unknown>).contact = 'someone'
+  assert.equal(validatePacket(extraField).ok, false)
+  const tooMany = structuredClone(p)
+  tooMany.queries[0].probes[0].fan_out = Array.from({ length: 9 }, (_, i) => `search ${i}`)
+  assert.equal(validatePacket(tooMany).ok, false)
+})
+
+test('gemini is a fifth engine', () => {
+  const p = packet({ engines: ['perplexity', 'chatgpt', 'claude', 'grok', 'gemini'] })
+  p.queries[0].probes.push({ engine: 'gemini', model: 'gemini-3.6-flash', question: 'best AI decision tools for founders', answer_snapshot: 'An answer.', we_cited: false, citations: [], cost_usd: 0 })
+  assert.equal(validatePacket(p).ok, true)
+})
+
+test('a verify packet writes verify probes; the sheet keeps an unchecked mention and marks a mention acquired', () => {
+  const v = validatePacket(fixture('aeo-packet.features.json'))
+  assert.equal(v.ok, true)
+  if (!v.ok) return
+  const verify = { ...v.packet, run_kind: 'verify' as const }
+  assert.ok(probeRows(verify).every(r => r.run_kind === 'verify'))
+
+  const pages = v.packet.cited_pages!
+  const [a, b] = pages
+  const sent = { ...v.packet, cited_pages: [{ ...a, mention: 'unchecked' as const, mention_ok: null, checked_at: null }, { ...b, mention: 'link' as const, mention_ok: true, checked_at: '2026-11-22' }] }
+  const rows = citedPageRows(sent, [
+    { url: a.url, mention: 'name', mention_ok: true, checked_at: '2026-11-08' },
+    { url: b.url, mention: 'none', mention_ok: null, checked_at: '2026-11-08' },
+  ])
+  assert.equal(rows[0].mention, 'name')
+  assert.equal(rows[0].checked_at, '2026-11-08')
+  assert.equal(rows[0].status, undefined)
+  assert.equal(rows[1].mention, 'link')
+  assert.equal(rows[1].status, 'mention acquired')
+  assert.ok(rows.every(r => r.product_slug === 'ctrl' && r.last_run_id === v.packet.run_id))
+  // Without a stored sheet nothing is said to have been acquired.
+  assert.ok(citedPageRows(sent, []).every(r => r.status === undefined))
+  // A prospect never has a sheet.
+  assert.deepEqual(citedPageRows({ ...sent, subject: { ...sent.subject, kind: 'prospect', product_slug: null } }, []), [])
+})
+
+test('brand names and brand checks are read loosely and capped; a check with nothing to test is dropped', () => {
+  assert.deepEqual(brandNamesOf(['Heartside', '', 3, '  Mindmake  ']), ['Heartside', 'Mindmake'])
+  assert.deepEqual(brandNamesOf(null), [])
+  assert.deepEqual(brandChecksOf([{ question: 'What is fulltime.fm?', must_not: ['betting tips'], must: [] }]), [{ question: 'What is fulltime.fm?', must_not: ['betting tips'], must: [] }])
+  assert.deepEqual(brandChecksOf([{ question: 'No phrases?', must_not: [], must: [] }, { must_not: ['x'] }, 'nope']), [])
+  const four = Array.from({ length: 4 }, (_, i) => ({ question: `Q${i}?`, must_not: ['x'], must: [] }))
+  assert.equal(brandChecksOf(four).length, 3)
+})
+
+test('a venture is held only when its own venture engine is held; the specialist and active engines are not', () => {
+  const held = heldProducts([
+    { product_slug: 'legibility', role: 'venture', activation_state: 'held' },
+    { product_slug: 'full-time', role: 'venture', activation_state: 'held' },
+    { product_slug: 'heartside', role: 'venture', activation_state: 'active' },
+    { product_slug: 'mindmake', role: 'specialist', activation_state: 'held' },
+  ])
+  assert.deepEqual([...held].sort(), ['full-time', 'legibility'])
+})
+
+test("a venture's shipped pages reach AEO newest first, one a page, never one with no question or no https page", () => {
+  const rows = [
+    { product_slug: 'heartside', question: 'What is a good gift from my dog?', query_id: null, url: 'https://heartside.io/answers/gift', shipped_at: '2026-11-12T00:00:00.000Z', engine_id: 'growth-heartside' },
+    { product_slug: 'heartside', question: 'What is a good gift from my dog?', query_id: null, url: 'https://heartside.io/answers/gift', shipped_at: '2026-11-10T00:00:00.000Z', engine_id: 'growth-heartside' },
+    { product_slug: 'heartside', question: null, query_id: null, url: 'https://heartside.io/answers/none', shipped_at: null, engine_id: 'growth-heartside' },
+    { product_slug: 'heartside', question: 'Which mug?', query_id: null, url: 'http://heartside.io/mug', shipped_at: null, engine_id: 'growth-heartside' },
+    { product_slug: 'mindmake', question: 'Who helps a board with AI?', query_id: null, url: 'https://mindmake.co/answers/board', shipped_at: null, engine_id: 'growth-mindmake' },
+  ]
+  assert.deepEqual(shippedFor(rows, 'heartside'), [{ question: 'What is a good gift from my dog?', url: 'https://heartside.io/answers/gift', shipped_at: '2026-11-12T00:00:00.000Z', by: 'growth-heartside' }])
+  assert.equal(shippedFor(rows, 'mindmake').length, 1)
+  assert.deepEqual(shippedFor(rows, 'legibility'), [])
+})
+
+test("subject hosts: each domain's bare host, never a path, www or a not-ours one", () => {
+  assert.deepEqual(subjectHostsOf(['mindmake.co', 'https://www.krishraja.ai/', 'linkedin.com/in/krishraja', 'fractionl.us', 'x.fractionl.us', 7]), ['mindmake.co', 'krishraja.ai', 'linkedin.com'])
+  assert.deepEqual(subjectHostsOf(null), [])
+})
+
+test("search signals: a list is null until one of the subject's hosts has a read that worked; the reasons ride along", () => {
+  const hosts = ['mindmake.co', 'krishraja.ai']
+  const reads = [
+    { source: 'gsc', part: 'search_analytics', host: 'mindmake.co', last_ok_at: '2026-11-14T13:20:00Z', reason: null, note: '2026-11-04 to 2026-11-13' },
+    { source: 'gsc', part: 'search_analytics', host: 'krishraja.ai', last_ok_at: null, reason: 'Search Console has not shared krishraja.ai with sa@x', note: null },
+    { source: 'bing', part: 'queries', host: 'mindmake.co', last_ok_at: null, reason: 'BING_ANALYTICS_API_KEY is not set', note: null },
+    { source: 'ga4', part: 'ai_referrals', host: 'heartside.io', last_ok_at: '2026-11-14T13:20:00Z', reason: null, note: null },
+  ]
+  const gsc = [
+    { host: 'mindmake.co', page: 'https://mindmake.co/a', query: 'ai pilot', date_from: '2026-11-07', date_to: '2026-11-13', impressions: 40, clicks: 1, avg_position: 4.5 },
+    { host: 'fulltime.fm', page: 'https://fulltime.fm/', query: 'x', date_from: '2026-11-07', date_to: '2026-11-13', impressions: 1, clicks: 0, avg_position: 1 },
+  ]
+  const out = searchSignalsFor(hosts, { reads, gsc, bing: [], recent: [], referrals: [{ source: 'ga4', host: 'heartside.io', page: 'https://heartside.io/', day: '2026-11-12', ai_source: 'chatgpt.com', sessions: 3 }] })
+  assert.deepEqual(out.gsc_queries, [{ query: 'ai pilot', page: 'https://mindmake.co/a', impressions: 40, clicks: 1, position: 4.5, date_from: '2026-11-07', date_to: '2026-11-13' }])
+  assert.equal(out.bing, null, 'no Bing read ever worked here')
+  assert.equal(out.ai_referrals, null, "another venture's GA4 read is not this one's")
+  assert.equal(out.reads.length, 3)
+  assert.deepEqual(out.reads.find(r => r.host === 'krishraja.ai'), { source: 'gsc', part: 'search_analytics', host: 'krishraja.ai', ok: false, last_ok_at: null, reason: 'Search Console has not shared krishraja.ai with sa@x', note: null })
+})
+
+test('search signals: Bing lists by part, newest index detail a page, newest crawl day, four weeks of keyword volume; AI referrals keep their via', () => {
+  const ok = (source: string, part: string) => ({ source, part, host: 'mindmake.co', last_ok_at: '2026-11-14T13:20:00Z', reason: null, note: null })
+  const reads = [ok('bing', 'queries'), ok('bing', 'url_info'), ok('bing', 'crawl_issues'), ok('bing', 'keywords'), ok('clarity', 'ai_referrals')]
+  const bing = [
+    { kind: 'query', host: 'mindmake.co', query: 'ai pilot', day: '2026-11-09', day_to: '2026-11-15', impressions: 10, clicks: 1, position: 5 },
+    { kind: 'page', host: 'mindmake.co', page: 'https://mindmake.co/a', day: '2026-11-09', day_to: '2026-11-15', impressions: 10, clicks: 1, position: 5 },
+  ]
+  const recent = [
+    { kind: 'url_info', host: 'mindmake.co', page: 'https://mindmake.co/a', day: '2026-11-13', indexed: false, last_crawled: null },
+    { kind: 'url_info', host: 'mindmake.co', page: 'https://mindmake.co/a', day: '2026-11-14', indexed: true, last_crawled: '2026-11-10T00:00:00.000Z' },
+    { kind: 'crawl_issue', host: 'mindmake.co', page: 'https://mindmake.co/old', day: '2026-11-14', detail: { http_code: 404, issues: 2, in_links: 1 } },
+    { kind: 'crawl_issue', host: 'mindmake.co', page: 'https://mindmake.co/older', day: '2026-11-13', detail: { http_code: 500 } },
+    ...['2026-10-12', '2026-10-19', '2026-10-26', '2026-11-02', '2026-11-09'].map((d, i) => ({ kind: 'keyword', host: 'mindmake.co', query: 'what is an ai pilot', day: d, day_to: d, volume: (i + 1) * 10 })),
+  ]
+  const out = searchSignalsFor(['mindmake.co'], { reads, gsc: [], bing, recent, referrals: [
+    { source: 'clarity', host: 'mindmake.co', page: 'https://mindmake.co/', day: '2026-11-14', ai_source: 'perplexity.ai', sessions: 2 },
+    { source: 'ga4', host: 'mindmake.co', page: 'https://mindmake.co/', day: '2026-11-14', ai_source: 'perplexity.ai', sessions: 1 },
+  ] })
+  assert.equal(out.gsc_queries, null)
+  assert.equal(out.bing?.queries?.length, 1)
+  assert.equal(out.bing?.pages, null, 'pages never read')
+  assert.deepEqual(out.bing?.url_info, [{ url: 'https://mindmake.co/a', indexed: true, last_crawled: '2026-11-10T00:00:00.000Z', checked: '2026-11-14' }])
+  assert.deepEqual(out.bing?.crawl_issues, [{ url: 'https://mindmake.co/old', http_code: 404, issues: 2, in_links: 1, checked: '2026-11-14' }])
+  assert.deepEqual(out.bing?.keyword_volume, [{ query: 'what is an ai pilot', volume: 140, weeks: 4, date_from: '2026-10-19', date_to: '2026-11-09' }])
+  assert.deepEqual(out.ai_referrals?.map(r => [r.via, r.sessions]), [['clarity', 2], ['ga4', 1]], 'each via apart, never summed')
 })

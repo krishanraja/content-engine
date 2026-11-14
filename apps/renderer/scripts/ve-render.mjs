@@ -27,12 +27,16 @@ async function decodeAudio(src, trimSeconds = 0) {
   return samples
 }
 
-/** The render's own clock: the sting's frames (props.sting.frames, none without a sting), then the cut's
- *  durationFrames. Every frame in the props, and every --stills frame asked for, is on the cut's own clock, which
- *  starts `lead` frames into the render, so a beat's keyFrame names the same picture with or without a sting. */
+/** The render's own clock: the cut's durationFrames plus the sting's frames (props.sting.frames, none without a
+ *  sting), which play at the cut's frame `at` (props.sting.atFrame: straight after the hook; 0 is the retired sting in
+ *  front of the cut). Every frame in the props, and every --stills frame asked for, is on the cut's own clock: `toRender`
+ *  puts it on the render's, so a beat's keyFrame names the same picture with or without a sting. `lead` is the frames in
+ *  front of the cut's own frame 0 (the sting's only when it plays at 0). */
 export function renderClock(inputProps) {
-  const lead = inputProps.sting?.frames ?? 0
-  return { lead, frames: lead + inputProps.durationFrames }
+  const frames = inputProps.sting?.frames ?? 0
+  const at = inputProps.sting?.atFrame ?? 0
+  return { lead: at ? 0 : frames, at, frames: frames + inputProps.durationFrames,
+    toRender: (frame) => (frames && frame >= at ? frame + frames : frame) }
 }
 
 /** The lag between the encoded audio and the stem, measured from `leadSeconds` into both (the cut's first frame, so
@@ -89,9 +93,16 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
   inputProps.audio.stem.src = await stage(inputProps.audio.stem.src)
   for (const sfx of inputProps.audio.sfx) sfx.src = await stage(sfx.src)
   for (const segment of inputProps.segments) segment.src = await stage(segment.src)
+  if ((inputProps.sting && !inputProps.sting.atFrame) || inputProps.opening) {
+    // Nothing goes before the hook on any cut, ever (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove
+    // the sting exception for good."): props carrying a sting or an episode card in front are refused before anything
+    // is staged or rendered.
+    throw new Error('nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."): these props carry '
+      + (inputProps.sting ? 'a sting' : 'an episode card') + ' in front of the cut; run ve compile again')
+  }
   if (inputProps.sting) {
-    // The sting is the clip Krish saw, byte for byte (config/intro-sting.json): a clip whose bytes are not the ones
-    // its props name is refused before anything renders, and it reaches the page the way the take does.
+    // A sting after the hook is the clip named byte for byte (config/intro-sting.json): bytes that are not the props'
+    // are refused before anything renders.
     if (/^https?:\/\//.test(inputProps.sting.src)) throw new Error('the sting must be a local clip, so its sha256 can be checked')
     const local = path.resolve(path.dirname(path.resolve(propsPath)), inputProps.sting.src)
     const sha256 = createHash('sha256').update(await readFile(local)).digest('hex')
@@ -154,13 +165,19 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
       await copyFile(local, target)
     }
   }
+  if (inputProps.objects.some(object => object.device === 'ladder_stage')) {
+    // The Ladder's house paper is one plate, staticFile('plates/two-passports/paper.jpg'), whatever the cut's format.
+    const targetDir = path.join(publicDir, 'plates', 'two-passports')
+    await mkdir(targetDir, { recursive: true })
+    await copyFile(path.join(repositoryRoot, 'assets', 'plates', 'two-passports', 'paper.jpg'), path.join(targetDir, 'paper.jpg'))
+  }
 }
 
 async function main() {
   const [propsPath, output, ...flags] = process.argv.slice(2)
   // --stills <f1,f2,...>: write one PNG per frame into <out> (a directory) and no MP4,
   // so a design is judged in minutes before a full render (Gate 2 stills). The frames are on the cut's own clock
-  // (renderClock): behind a sting, still 0 is his first frame, not the sting's.
+  // (renderClock): a still after the sting is that frame of his cut, never the sting's.
   const stills = flags[0] === '--stills' && flags.length === 2
     ? flags[1].split(',').map(Number) : undefined
   if (!propsPath || !output || (flags.length && (flags.length !== 2 || !['--scale', '--stills'].includes(flags[0]))) ||
@@ -185,7 +202,7 @@ async function main() {
       publicDir, outDir: path.join(temporary, 'bundle') })
     const transportProps = toAsciiProps(inputProps)
     const browser = await browserExecutable()
-    const composition = await selectComposition({ serveUrl, id, inputProps: transportProps, browserExecutable: browser })
+    const composition = await selectComposition({ serveUrl, id, inputProps: transportProps, browserExecutable: browser, chromiumOptions: { gl: 'swangle' } })
     const tall = inputProps.aspect === '9:16'
     if (composition.fps !== 30 || composition.width !== (tall ? 1080 : 1920) || composition.height !== (tall ? 1920 : 1080)) {
       throw new Error(`${id} must use the 30 fps house canvas`)
@@ -200,7 +217,7 @@ async function main() {
         if (frame >= inputProps.durationFrames) throw new Error(`still frame ${frame} is past the cut`)
         const file = path.resolve(output, `still-${String(frame).padStart(5, '0')}.png`)
         await renderStill({ serveUrl, composition: { ...composition, durationInFrames: clock.frames },
-          inputProps: transportProps, output: file, frame: clock.lead + frame, browserExecutable: browser })
+          inputProps: transportProps, output: file, frame: clock.toRender(frame), browserExecutable: browser, chromiumOptions: { gl: 'swangle' } })
         console.log(`ve still: ${file}`)
       }
       return
@@ -208,7 +225,7 @@ async function main() {
     await mkdir(path.dirname(path.resolve(output)), { recursive: true })
     const raw = path.join(temporary, 'raw.mp4')
     await renderMedia({ serveUrl, composition: { ...composition, durationInFrames: clock.frames },
-      inputProps: transportProps, outputLocation: raw, codec: 'h264', crf: 18, scale, sampleRate, browserExecutable: browser })
+      inputProps: transportProps, outputLocation: raw, codec: 'h264', crf: 18, scale, sampleRate, browserExecutable: browser, chromiumOptions: { gl: 'swangle' } })
     await correctAudio(raw, path.resolve(output), stemSrc, inputProps.audio.stem.trimBeforeFrames / inputProps.fps,
       temporary, lagSamples, clock.lead / inputProps.fps)
     if ((await stat(output)).size === 0) throw new Error('render produced an empty MP4')

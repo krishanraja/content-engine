@@ -8,8 +8,8 @@ compiler, and ideas generator"; the work happens in Claude Code; "it's crucial
 that everything is fresh and synchronised in real time".
 
     python making.py PIECE_ID show
-    python making.py PIECE_ID workroom https://claude.ai/artifact/...
-    python making.py PIECE_ID publish-manager https://content.krishraja.com/board/YYYY-MM-DD
+    python making.py PIECE_ID workroom "$(python3 live_board.py YYYY-MM-DD DAY)"          # the live board's day
+    python making.py PIECE_ID publish-manager "$(python3 live_board.py YYYY-MM-DD DAY)"   # the live board's day
     python making.py PIECE_ID visual-gate post.json          # runs the gate, records pass or fail
     python making.py PIECE_ID scripts long.md short.md       # story_check on each, by position, with the
                                                              # piece's series, and each script's sha256; records
@@ -156,7 +156,7 @@ sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402
 
 CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify',
-            'feature_youtube', 'feature_spotify',  # the 15-minute feature's own two posts (config/board-layout.json)
+            'feature_youtube', 'feature_spotify',  # the 15-minute feature's own two posts
             'instagram', 'x', 'threads', 'facebook')  # Growth's posts, reported through the board's posted route
 CUTS = ('long', 'short')  # the two cuts every piece gets (house rule TWO_CUTS)
 FEATURE = 'feature'
@@ -346,11 +346,33 @@ def show(piece_id, call=None):
                      f"since, so it does not count; record it again, or Krish says to use it")
     lines.extend(read_back_lines(record))
     lines.extend(teleprompter_lines(record))
+    lines.extend(cut_verdict_lines(data.get('cut_verdicts')))
     chosen = record.get('production_choices') if isinstance(record.get('production_choices'), dict) else {}
     used = ', '.join(f'{k} {v}' for k, v in chosen.items() if k != 'at')
     if used:
         lines.append(f'under test: {used} (recorded {chosen.get("at", "")})'.replace(' ()', ''))
     return '\n'.join(lines)
+
+
+def cut_verdict_lines(verdicts):
+    """His answers on the rendered cuts, oldest first: each press he made on the board's Cuts tab (Yes, or Not this
+    with his words), kept on the piece in meta.cut_verdicts (apps/control-plane/api/board/_cuts.ts). A Not this is the
+    brief for the next cut of that kind: his words, exactly as he typed them."""
+    lines = []
+    for v in verdicts if isinstance(verdicts, list) else []:
+        if not isinstance(v, dict) or v.get('verdict') not in ('yes', 'not_this'):
+            continue
+        cut = CUT_NAME.get(v.get('cut'), v.get('cut') or 'a')
+        where = f" ({v['path']})" if v.get('path') else ''
+        when = str(v.get('at') or '')[:10]
+        if v['verdict'] == 'yes':
+            lines.append(f'Krish on the {cut} cut{where}, {when}: Yes, this cut is right')
+        else:
+            lines.append(f'Krish on the {cut} cut{where}, {when}: Not this: "{v.get("words") or ""}"')
+    if any(isinstance(v, dict) and v.get('verdict') == 'not_this' for v in (verdicts if isinstance(verdicts, list) else [])):
+        lines.append('A Not this is the brief for the next cut of that kind: answer his words in a new render; '
+                     'never refile the same file to answer it')
+    return lines
 
 
 # Teleprompter: what teleprompter_send.py put in Krish's teleprompter.com account for each cut.
@@ -549,7 +571,7 @@ def feature_piece(piece_id, path=None):
     """True when Krish called a 15-minute feature for this piece
     (config/features.json `pieces.<piece id>`, house rule FEATURE): its
     scripts then take a third, the feature, checked at about 15 minutes.
-    Only his call adds a piece there. week_board.py reads the same file."""
+    Only his call adds a piece there."""
     if not piece_id:
         return False
     try:
@@ -1301,6 +1323,22 @@ def thumb_problem(cut, path):
         return f'{THUMB_RECEIPT} beside it does not list {path.name}: it was changed after the drawer made it, or is another picture'
     if made[0].get('shape') != shape:
         return f'{path.name} is the drawer\'s {made[0].get("shape")} thumbnail, not the {shape} one the {cut} cut carries'
+    return None
+
+
+def hand_built_approval(piece_id, cut, video_file, config=None):
+    """The entry in config/hand-built-cuts.json that files this exact cut without a validation receipt, or None.
+    It matches only the piece, the cut and these bytes (sha256), and only with Krish's own words on it (Ruling, Krish,
+    2026-11-11: hand-built cuts he approved may be filed with his words on those exact files; nothing else is exempt)."""
+    path = Path(config) if config else Path(__file__).resolve().parents[2] / 'config' / 'hand-built-cuts.json'
+    if not video_file or not path.is_file() or not Path(video_file).is_file():
+        return None
+    entries = json.loads(path.read_text(encoding='utf-8')).get('cuts') or []
+    digest = hashlib.sha256(Path(video_file).read_bytes()).hexdigest()
+    for entry in entries:
+        if (entry.get('piece_id') == piece_id and entry.get('cut') == cut and entry.get('sha256') == digest
+                and str(entry.get('krish') or '').startswith('Krish')):
+            return entry
     return None
 
 
@@ -2308,6 +2346,18 @@ def self_test():
     check('teleprompter: another folder is refused, nothing written', (code, 'are in folder' in err, len([x for x in seen if x[0] == 'POST'])), (1, True, before))
     check('show: prints the read-back and the Teleprompter lines', ('Teleprompter, 90-second cut: not sent yet' in show(pid, holds_tp),
                                                                       'Read back, 5-minute cut' in show(pid, holds_tp)), (True, True))
+
+    # His answers on the rendered cuts (the board's Cuts tab, meta.cut_verdicts): each press in his words, oldest first.
+    def answered(method, path, body):
+        return 200, json.dumps({'ok': True, 'making': {}, 'steps': [], 'cut_verdicts': [
+            {'media_id': 'a' * 64, 'cut': 'long', 'verdict': 'not_this', 'words': 'The open drags. Start on the number.', 'path': '3 Posts/mon/long.mp4', 'by': 'Krish', 'at': '2026-11-16T08:40:00Z'},
+            {'media_id': 'b' * 64, 'cut': 'short', 'verdict': 'yes', 'words': None, 'path': '3 Posts/mon/short.mp4', 'by': 'Krish', 'at': '2026-11-16T08:45:00Z'},
+            {'cut': 'long', 'verdict': 'maybe'}]})
+    check('show: prints each answer on a cut in his words, and that a Not this is the next cut\'s brief', show(pid, answered).splitlines(), [
+        'Krish on the 5-minute cut (3 Posts/mon/long.mp4), 2026-11-16: Not this: "The open drags. Start on the number."',
+        'Krish on the 90-second cut (3 Posts/mon/short.mp4), 2026-11-16: Yes, this cut is right',
+        'A Not this is the brief for the next cut of that kind: answer his words in a new render; never refile the same file to answer it'])
+    check('show: a record with no answers on its cuts prints none', cut_verdict_lines(None) + cut_verdict_lines([]), [])
     try:
         with contextlib.redirect_stderr(io.StringIO()):
             main([pid, 'descript', 'long'], call=fake)
@@ -2316,7 +2366,7 @@ def self_test():
         retired = stop.code != 0
     check('descript: retired on 2026-10-12, so the command line no longer takes it', retired, True)
 
-    # The 15-minute feature's two posting cards on the board (config/board-layout.json) record as their own channels.
+    # The 15-minute feature's two posting cards on the board record as their own channels.
     for channel in ('feature_youtube', 'feature_spotify'):
         code, _ = run([pid, 'posted', channel, 'https://youtu.be/feature'])
         check(f'posted: the feature\'s {channel} card records as its own channel', (code, seen[-1][2].get('channels')),
@@ -2490,7 +2540,7 @@ def self_test():
         code, _ = run([pid, 'choices', str(direction)])
         check('choices: read from the direction, his signature accepting the proposal',
               (code, seen[-1][2].get('production_choices') if len(seen) > before else None),
-              (0, {'opening': 'sting_wide_hook_tall', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}))
+              (0, {'opening': 'hook_is_intro', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}))
         code, _ = run([pid, 'choices', str(direction), '--big-moment-sound', 'big_moment_only'])
         check('choices: a flag records what was actually used', seen[-1][2]['production_choices']['big_moment_sound'],
               'big_moment_only')
@@ -2593,7 +2643,7 @@ def main(argv=None, call=None):
     ap.add_argument('--title', metavar='TITLE', help='with teleprompter: the script\'s title')
     ap.add_argument('--sent-at', metavar='TIME', help='with teleprompter: when it was sent (default now)')
     ap.add_argument('--error', metavar='TEXT', help='with teleprompter: what Teleprompter said when the send failed')
-    ap.add_argument('--opening', metavar='OPTION', help='with choices: the opening the piece used (sting_wide_hook_tall, hook_is_intro ...)')
+    ap.add_argument('--opening', metavar='OPTION', help='with choices: the opening the piece used (hook_is_intro, the only one since 12 Nov 2026)')
     ap.add_argument('--lead-picture', metavar='OPTION', help='with choices: series_picture or story_object')
     ap.add_argument('--big-moment-sound', metavar='OPTION', help='with choices: big_moment_only or none')
     ap.add_argument('--at-s', type=float, metavar='SECONDS', help='with clips: where the routed clip starts in the cut')
@@ -2695,8 +2745,17 @@ def main(argv=None, call=None):
                 raise MakingError('This video needs --video-file and its hash-bound validation receipt')
             receipt_path=a.video_file+'.validation.json'
             target=a.args[2] if a.args[2].startswith('3 Posts/') else guarded['library_prefix']+a.args[2] if guarded else None
-            problems=quality.delivery_problems(a.video_file,receipt_path,target)
-            if not problems:
+            approved=hand_built_approval(a.piece_id, a.args[0], a.video_file)
+            problems=[] if approved else quality.delivery_problems(a.video_file,receipt_path,target)
+            if approved:
+                # His words waive the engine's receipts, never sync: a hand-built cut carries its own picture-against-
+                # sound receipt for these bytes (scripts/av_sync.py; Krish, 2026-11-12, on Wednesday 11 Nov's
+                # 5-minute: "We need to ensure that never happens in the future").
+                sys.path.insert(0, str(HERE.parent))
+                import av_sync
+                problems = av_sync.receipt_problems(a.video_file)
+                patch['video_assets'][0]['hand_built']={'sha256': approved['sha256'], 'krish': approved['krish']}
+            elif not problems:
                 receipt=json.loads(Path(receipt_path).read_text(encoding='utf8'))
                 if receipt.get('piece_id')!=a.piece_id:
                     problems.append('receipt belongs to a different piece')

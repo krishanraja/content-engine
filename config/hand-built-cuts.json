@@ -1,0 +1,19 @@
+{
+ "about": "Cuts made outside ve and quick-edit that Krish approved, file by file, after watching them. making.py video files one of these only when the piece, the cut and the exact bytes (sha256) match an entry here, and the entry carries his own words. Every other cut keeps the full validation receipt (quality.delivery_problems). Ruling (Krish, 2026-11-11): hand-built cuts he approved may be filed with his words on those exact files; nothing else is exempt.",
+ "cuts": [
+  {
+   "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+   "cut": "long",
+   "sha256": "f59ddf0bdf9729dfb1b4ccef0262a3ffb63b4e725405e9b0637118534ea7e2e7",
+   "file": "3 Video/fri13-5min-v3.mp4",
+   "krish": "Krish, 2026-11-11: \"yes\" (asked to watch both cuts in 3 Video and say yes), then chose \"Exception for these two\""
+  },
+  {
+   "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+   "cut": "short",
+   "sha256": "2ec462aa99a85776f117f312a515e689b5c999f8dd8fceb31f2d9375b488b87b",
+   "file": "3 Video/fri13-counting-rat-tails-90s-9x16.mp4",
+   "krish": "Krish, 2026-11-11: \"yes\" (asked to watch both cuts in 3 Video and say yes), then chose \"Exception for these two\""
+  }
+ ]
+}

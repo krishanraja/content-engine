@@ -399,7 +399,7 @@
       "status": "encoded",
       "encoded": [
         {
-          "file": "scripts/post-pack/week_board.py",
+          "file": "scripts/post-pack/week_plan.py",
           "contains": "MIN_IDEAS = 4",
           "how": "the board refuses an Ideas tab with fewer than four checked ideas a day (read_ideas, --verify)"
         },
@@ -434,11 +434,6 @@
           "how": "a test names every sweep's guard"
         },
         {
-          "file": "scripts/post-pack/week_board/week.js",
-          "contains": "qdb.doc(\"queue/\" + pid).set(body)",
-          "how": "the Ideas tab saves a Queue mark and a verdict, and posts a comment"
-        },
-        {
           "file": ".agents/skills/plan-week/SKILL.md",
           "contains": "Read the idea queue first",
           "how": "plan-week step 1 reads the queue before any research"
@@ -447,6 +442,14 @@
           "file": "docs/ENGINE_SESSION.md",
           "contains": "read the idea queue, first in the chat",
           "how": "every session start reads the queue"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "scripts/post-pack/week_board/week.js: qdb.doc(\"queue/\" + pid).set(body)"
+          ]
         }
       ]
     },
@@ -459,7 +462,7 @@
       "status": "encoded",
       "encoded": [
         {
-          "file": "scripts/post-pack/week_board.py",
+          "file": "scripts/post-pack/week_plan.py",
           "contains": "('so_what', 'story', 'why_now', 'fact')",
           "how": "read_ideas refuses an idea with no so_what"
         },
@@ -704,7 +707,7 @@
       "on": "2026-10-19",
       "krish": "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically.",
       "why": "Two Claude accounts, two artifact links that drift apart, comments that cannot be sent to Claude, and builds a session must republish by hand; one site he owns removes all of that.",
-      "means": "No session or tool publishes a Claude artifact again. Every board update (the week's board, a day's tab in draft, publish pages) goes to content.krishraja.com, and engine work merges to main automatically once its checks pass.",
+      "means": "No session or tool publishes a Claude artifact again. Every board update (the week's board, a day's tab in draft, publish pages) goes to content.krishraja.com, and engine work merges to main automatically once its checks pass. Amended 2026-11-11 (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive): see one-live-board-in-control-centre.",
       "status": "encoded",
       "encoded": [
         {
@@ -718,19 +721,22 @@
           "how": "the hook is wired on both tools"
         },
         {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "default='web'",
-          "how": "the board builds for content.krishraja.com unless told otherwise"
-        },
-        {
           "file": ".agents/skills/make-piece/SKILL.md",
-          "contains": "Claude artifacts are retired for good",
+          "contains": "Claude artifacts stay retired",
           "how": "make-piece, plan-week, produce-video and the week-board reference say no step makes one"
         },
         {
           "file": "AGENTS.md",
           "contains": "`.github/workflows/auto-merge.yml` merges it to main once CI is green",
           "how": "the standing rule every agent reads: verify, push, PR, auto-merge"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "scripts/post-pack/week_board.py: default='web'"
+          ]
         }
       ]
     },
@@ -808,23 +814,22 @@
       "on": "2026-10-19",
       "krish": "yes lets move the board to content.krishraja.com",
       "why": "The board only works inside Claude; he wants Codex and any tool to build it and read his ticks.",
-      "means": "Both weeks are live at content.krishraja.com behind the existing login. All new ticks, links, wording edits, picks, queue decisions and comments use the authenticated web API from every tool. All four sources are preserved and all 87 available records verified; no ongoing Claude artifact synchronization. Production acceptance and rollback evidence are in docs/handovers/board-web-release.md.",
+      "means": "Both weeks are live at content.krishraja.com behind the existing login. All new ticks, links, wording edits, picks, queue decisions and comments use the authenticated web API from every tool. All four sources are preserved and all 87 available records verified; no ongoing Claude artifact synchronization. Production acceptance and rollback evidence are in docs/handovers/board-web-release.md. Amended 2026-11-11 (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive): see one-live-board-in-control-centre.",
       "status": "encoded",
       "encoded": [
-        {
-          "file": "scripts/post-pack/board_web.py",
-          "contains": "def web_page",
-          "how": "Web runtime and explicit operator publisher preserve artifact mode."
-        },
         {
           "file": "apps/control-plane/api/board/_handler.ts",
           "contains": "createBoardHandler",
           "how": "Private API persists all board collections and immutable builds."
         },
         {
-          "file": "config/boards.json",
-          "contains": "\"interaction_source\": \"web\"",
-          "how": "Verified active cutover routes every workflow to the web; original artifact addresses remain provenance."
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "scripts/post-pack/board_web.py: def web_page",
+            "config/boards.json: \"interaction_source\": \"web\""
+          ]
         }
       ]
     },
@@ -848,7 +853,7 @@
       "on": "2026-10-19",
       "krish": "I am deleting the publish board Claude schedules from both accounts FYI, scrub them from everywhere. We are not ready for this yet",
       "why": "The scheduled board-videos task ran on its own on both accounts while the board moved to content.krishraja.com; he wants board updates to come only from sessions he starts.",
-      "means": "No session creates or relies on a scheduled task that builds, updates or publishes a publish board, and no current document names one, until he says he is ready. Amended 2026-10-28, when he said so for two boards: \"on a Sunday, Claude Code proactively brings me ideas\"; \"an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning\". Exactly those two routines (the Sunday ideas board and the Monday final board) may build a board; every other board update still comes from a session he started, and any other scheduled job writes records only. Amended 2026-10-29: \"FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture\"; then \"Could you not get Github to trigger Claude subscription to do something and then update the content.krishraja.com board?\", and \"happy with $15 a week\". So no claude.ai scheduled or fired trigger and no headless Claude on a home-computer timer. GitHub Actions is the scheduler: the Sunday ideas board is .github/workflows/sunday-ideas.yml, Claude Code inside the job on his subscription (CLAUDE_CODE_OAUTH_TOKEN, never an API key), and the Monday final board is built by code (week_board.py) when the overnight production finishes, never by Claude on a timer. The chain's metered API spend stays under $15 a week. Amended 2026-11-07: \"Happy to break the \"no Claude schedules\" rule for Saturday's good news. We might as well just keep that on an automatic schedule.\" So a third scheduled job, .github/workflows/saturday-goodnews.yml (Claude Code on his subscription, Thursday), finds that week's Saturday good news and writes only that option's stories onto the live board; no other scheduled Claude run may touch a board.",
+      "means": "No session creates or relies on a scheduled task that builds, updates or publishes a publish board, and no current document names one, until he says he is ready. Amended 2026-10-28, when he said so for two boards: \"on a Sunday, Claude Code proactively brings me ideas\"; \"an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning\". Exactly those two routines (the Sunday ideas board and the Monday final board) may build a board; every other board update still comes from a session he started, and any other scheduled job writes records only. Amended 2026-10-29: \"FYI, I want zero Claude routines. No Claude schedules of any kind in this architecture\"; then \"Could you not get Github to trigger Claude subscription to do something and then update the content.krishraja.com board?\", and \"happy with $15 a week\". So no claude.ai scheduled or fired trigger and no headless Claude on a home-computer timer. GitHub Actions is the scheduler: the Sunday ideas board is .github/workflows/sunday-ideas.yml, Claude Code inside the job on his subscription (CLAUDE_CODE_OAUTH_TOKEN, never an API key), and the Monday final board is built by code (week_board.py) when the overnight production finishes, never by Claude on a timer. The chain's metered API spend stays under $15 a week. Amended 2026-11-07: \"Happy to break the \"no Claude schedules\" rule for Saturday's good news. We might as well just keep that on an automatic schedule.\" So a third scheduled job, .github/workflows/saturday-goodnews.yml (Claude Code on his subscription, Thursday), finds that week's Saturday good news and writes only that option's stories onto the live board; no other scheduled Claude run may touch a board. Amended 2026-11-11: \"It should be refreshed once a week for everything (including the Saturday post which currently runs on a thursday, we need to realign that so the ideas board populates once a week in full, and Saturday's actual real good news story ideas are presented to me.\" So the Thursday schedule is retired: the Sunday ideas run finds Saturday's good news with the rest of the week's ideas, saturday-goodnews.yml runs by hand only, and exactly two scheduled jobs may touch a board again (the Sunday ideas board and the Monday final board). Every scheduled job proposes; only his Approve puts an idea on a publish board (the ideas gate).",
       "status": "encoded",
       "encoded": [
         {
@@ -858,13 +863,8 @@
         },
         {
           "file": "AGENTS.md",
-          "contains": "Exactly three scheduled jobs may touch a publish board: the Sunday ideas board, the Monday final board and the Thursday Saturday-options run",
-          "how": "the 28 Oct exception and the 7 Nov one, named so they cannot widen unseen"
-        },
-        {
-          "file": "WORKBENCH.md",
-          "contains": "No schedule puts the videos on the board",
-          "how": "the handover no longer points sessions at the deleted schedule"
+          "contains": "Exactly two scheduled jobs may touch a publish board: the Sunday ideas board and the Monday final board",
+          "how": "the 28 Oct exception, named so it cannot widen unseen; the 7 Nov Thursday exception retired on 11 Nov"
         },
         {
           "file": "AGENTS.md",
@@ -880,6 +880,14 @@
           "file": "scripts/overnight/preflight.ps1",
           "contains": "It never starts Claude",
           "how": "the Saturday preflight no longer starts a headless Claude turn on a timer"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "WORKBENCH.md: No schedule puts the videos on the board"
+          ]
         }
       ]
     },
@@ -978,33 +986,24 @@
       "on": "2026-10-21",
       "krish": "how do you recommend we standardise and lock in this publish board so the content engine can just feed it? It's pretty good but I notice that it's quite inconsistent. For each publish session things move around. ... the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex.",
       "why": "Each session built and patched the board its own way (pages inlined with their own styles, panels carried byte for byte, built pages string-patched and re-stamped), so sections moved from one session to the next and he could not work through his week by habit; on a phone it was a shrunk desktop page.",
-      "means": "From the week of 26 Oct every board has one layout from config/board-layout.json: Ideas, Queue, Monday, Wednesday, Friday, and in each day Brief, Drafts, Record, Publish, with the brief due the night before and the drafts the morning of. Sessions feed it through week_board.py's inputs only; the layout changes only with his approval.",
+      "means": "From the week of 26 Oct every board has one layout from config/board-layout.json: Ideas, Queue, Monday, Wednesday, Friday, and in each day Brief, Drafts, Record, Publish, with the brief due the night before and the drafts the morning of. Sessions feed it through week_board.py's inputs only; the layout changes only with his approval. Amended 2026-11-11 (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive): see one-live-board-in-control-centre.",
       "status": "encoded",
       "encoded": [
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "def fixed_problems(page):",
-          "how": "verify() refuses a board whose tabs, steps or slots differ, a second stylesheet or a hand-laid banner"
-        },
-        {
-          "file": "scripts/check_board_layout.py",
-          "contains": "stamps a board outside the board",
-          "how": "npm run check:board-layout (CI, so Codex too) holds the build to the snapshot, fits every view at 390px and fails any script that patches and re-stamps a board"
-        },
-        {
-          "file": "scripts/check_board_layout.py",
-          "contains": "def lock_problems(want, weeks_seen, files):",
-          "how": "CI fails when the layout file, the colours or the board's structure differ from the snapshot, until --update --approved records the change with his words (Ruling, Krish, 2026-10-21: no approval prompts; the layout is held by CI)"
-        },
-        {
-          "file": "config/board-layout.json",
-          "contains": "\"on\": \"sunday_before\", \"when\": \"morning\"",
-          "how": "the brief is due Sunday morning and the scripts Sunday midday, his recording day (Krish, 2026-10-24, replacing the night-before rhythm)"
-        },
         {
           "file": "AGENTS.md",
           "contains": "**The publish board is fed, never shaped.**",
           "how": "the rule Claude and Codex both read"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "scripts/post-pack/week_board.py: def fixed_problems(page):",
+            "scripts/check_board_layout.py: stamps a board outside the board",
+            "scripts/check_board_layout.py: def lock_problems(want, weeks_seen, files):",
+            "config/board-layout.json: \"on\": \"sunday_before\", \"when\": \"morning\""
+          ]
         }
       ]
     },
@@ -1017,16 +1016,6 @@
       "status": "encoded",
       "encoded": [
         {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):",
-          "how": "the Publish step of a made day in the fixed layout is drawn from the page's data and the record, never from its markup"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "def run_sheet_problems(name, panel, tag):",
-          "how": "verify() refuses a Publish step with no Download first, a card out of order, a card without its own tick or a tick with no card"
-        },
-        {
           "file": "scripts/post-pack/publish_manager.py",
           "contains": "id=\"pm-data\"",
           "how": "every publish page carries its words and its pictures' roles as data for the run-sheet"
@@ -1037,9 +1026,14 @@
           "how": "CI clicks every Download, Copy and Download all on a fixed week's run-sheet in a real browser"
         },
         {
-          "file": "docs/PUBLISH_BOARDS.md",
-          "contains": "### The Publish run-sheet",
-          "how": "the run-sheet's order and how a session feeds it"
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "scripts/post-pack/week_board.py: def run_sheet(day, p, page, data, videos, delivery, feature, folder, warnings):",
+            "scripts/post-pack/week_board.py: def run_sheet_problems(name, panel, tag):",
+            "docs/PUBLISH_BOARDS.md: ### The Publish run-sheet"
+          ]
         }
       ]
     },
@@ -1060,11 +1054,6 @@
           "file": "scripts/post-pack/story_check.py",
           "contains": "'feature': (2025, 2475,",
           "how": "the script check holds a feature to about 15 minutes"
-        },
-        {
-          "file": "config/board-layout.json",
-          "contains": "\"name\": \"15-minute feature\"",
-          "how": "the board shows the feature only on a feature piece"
         },
         {
           "file": ".agents/skills/plan-week/SKILL.md",
@@ -1100,6 +1089,14 @@
           "file": "scripts/post-pack/publish_kit.py",
           "contains": "FEATURE_YOUTUBE = f'YouTube long-form (the {FEATURE_NAME})'",
           "how": "the publish page adds a YouTube long-form step and a Spotify episode step for a feature piece"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "config/board-layout.json: \"name\": \"15-minute feature\""
+          ]
         }
       ]
     },
@@ -1112,16 +1109,6 @@
       "status": "encoded",
       "encoded": [
         {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "def editor_card(day, items, built_at=None, kept_at=None):",
-          "how": "the Drafts step in the fixed layout: each draft a read view (Markdown drawn, no # signs), a paragraph opened by a tap, one Save bar per day; the store edits/<day>-<item> and its built-at guard unchanged"
-        },
-        {
-          "file": "scripts/post-pack/week_board/week.js",
-          "contains": "async function saveDay(day)",
-          "how": "tap to edit, picked words get Comment on this pinned to {box, paragraph, quote}, N unsaved changes then Saved, the 409 path said; Undo, Change it too, Make it a rule and Not a rule saved as comments with act and ref"
-        },
-        {
           "file": "apps/control-plane/api/board/_contracts.ts",
           "contains": "export const COMMENT_ACTS",
           "how": "a comment may carry box, paragraph, quote, and one of his taps (act, ref), each bounded"
@@ -1130,11 +1117,6 @@
           "file": "scripts/post-pack/edit_sweep.py",
           "contains": "def sweep(day, drafts, edits, pieces=None, recorded=None, week=None):",
           "how": "each save diffed against base_sha256, each change classified by rule (number or fact, claim, structure, tone, wording), numbers, facts and claims carried into every draft of the piece and later drafts, tone and wording only suggested, recorded cuts left alone, the gates run again, Undo and Change it too by id"
-        },
-        {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "def sweep_card(p, sweep):",
-          "how": "--sweep DAY=sweep.json shows Also changed under the drafts, each with Undo; --lessons shows What I learned from your edits, each waiting for his yes"
         },
         {
           "file": "apps/control-plane/api/_editEvents.ts",
@@ -1152,9 +1134,15 @@
           "how": "the session that picks up his edits runs edit_sweep.py, posts the ledger rows and rebuilds with --sweep and --lessons"
         },
         {
-          "file": "scripts/check_board_layout.py",
-          "contains": "def editor_in_browser(page, web):",
-          "how": "CI taps a paragraph, edits it, saves, sees Saved and the store's fields, pins a comment to picked words and sees a 409 said"
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "scripts/post-pack/week_board.py: def editor_card(day, items, built_at=None, kept_at=None):",
+            "scripts/post-pack/week_board/week.js: async function saveDay(day)",
+            "scripts/post-pack/week_board.py: def sweep_card(p, sweep):",
+            "scripts/check_board_layout.py: def editor_in_browser(page, web):"
+          ]
         }
       ]
     },
@@ -1192,14 +1180,17 @@
           "how": "one read-only gather writes sources.json and names any empty source"
         },
         {
-          "file": "scripts/post-pack/week_board.py",
-          "contains": "def read_combine(data, queue, where='--combine'):",
-          "how": "the Queue tab's Could combine cards with a Combine button; every idea card says where it came from, why it is here and its beats"
-        },
-        {
           "file": ".agents/skills/plan-week/SKILL.md",
           "contains": "python3 scripts/post-pack/board_feed.py gather <Monday>",
           "how": "the Sunday session gathers first, writes ideas.json and combine.json from it, and copies his Combine taps into synthesize"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "scripts/post-pack/week_board.py: def read_combine(data, queue, where='--combine'):"
+          ]
         }
       ]
     },
@@ -1535,7 +1526,7 @@
           "how": "the formats he chooses from, each with its evidence"
         },
         {
-          "file": "scripts/post-pack/week_board.py",
+          "file": "scripts/post-pack/week_plan.py",
           "contains": "def style_problems",
           "how": "the build refuses a week that does not diverge"
         },
@@ -1555,14 +1546,17 @@
       "status": "encoded",
       "encoded": [
         {
-          "file": "config/board-layout.json",
-          "contains": "sunday_before",
-          "how": "the board's due dates"
-        },
-        {
           "file": ".agents/skills/plan-week/SKILL.md",
           "contains": "Sunday is his recording day",
           "how": "plan-week runs make-piece for all three days the same Sunday"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "config/board-layout.json: sunday_before"
+          ]
         }
       ]
     },
@@ -1949,11 +1943,6 @@
       "status": "encoded",
       "encoded": [
         {
-          "file": "scripts/post-pack/board_web.py",
-          "contains": "def ready_video_problems",
-          "how": "publish-web refuses a ready video without a passing receipt for its bytes"
-        },
-        {
           "file": "scripts/quick-edit/quality.py",
           "contains": "opening_gate.delivery_problems",
           "how": "the delivery gate requires the opening check for posts dated from its required_from"
@@ -1962,6 +1951,14 @@
           "file": "config/opening-gate.json",
           "contains": "\"required_from\": \"2026-11-02\"",
           "how": "the opening thresholds, calibrated on the four rejected openings"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            "scripts/post-pack/board_web.py: def ready_video_problems"
+          ]
         }
       ]
     },
@@ -2210,38 +2207,63 @@
       "on": "2026-11-05",
       "krish": "I think it should go at the start of the longer wide videos 100%,",
       "why": "Of the Intro Sting page he asked \"where is this additive?\". The engine said no cut used it, since every video had opened on the hook from 29 October, and proposed the wordmark on the hook's first frame instead of a separate intro before his face. His answer put the sting back, on the wide long cut only.",
-      "means": "The 16:9 long cut of a weekly series piece opens on that series' house sting, the clip he saw (config/intro-sting.json: fixed clips pinned by sha256 in the library, no sound of their own, the bed under them), and his face and the hook come in on the very next frame; the 9:16 short cut opens straight on the hook; an off-day piece wears no sting. Nothing else goes in front of the hook. Asked about the colours, he picked \"Keep it as I saw it\": each series' clip flashes the other series' colours, the one written exception to the series-colour rule. Every check that reads a finished wide file counts the sting's frames first, and the opening gate measures from the frame after it with its thresholds unchanged. His approval of the clips is recorded in his own words (intro.py approve); until it is, the wide cut opens on its hook and its report says why.",
+      "means": "Superseded on 2026-11-12 by nothing-before-the-hook (Ruling, Krish: \"Nothing before the hook, ever. Remove the sting exception for good.\"). What it meant from 5 to 12 Nov: The 16:9 long cut of a weekly series piece opens on that series' house sting, the clip he saw (config/intro-sting.json: fixed clips pinned by sha256 in the library, no sound of their own, the bed under them), and his face and the hook come in on the very next frame; the 9:16 short cut opens straight on the hook; an off-day piece wears no sting. Nothing else goes in front of the hook. Asked about the colours, he picked \"Keep it as I saw it\": each series' clip flashes the other series' colours, the one written exception to the series-colour rule. Every check that reads a finished wide file counts the sting's frames first, and the opening gate measures from the frame after it with its thresholds unchanged. His approval of the clips is recorded in his own words (intro.py approve); until it is, the wide cut opens on its hook and its report says why.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/intro-sting.json",
+          "contains": "\"words\": \"I think it should go at the start of the longer wide videos 100%,\"",
+          "how": "his 5 Nov placement words kept in the retired sting's record (placement and history)"
+        },
+        {
+          "file": "config/reference-cuts.json",
+          "contains": "\"before\": {\"on\": \"2026-11-05\", \"by\": \"Krish\", \"default\": \"sting_wide_hook_tall\"",
+          "how": "the bar's opening keeps what the default was before the 12 Nov ruling"
+        }
+      ]
+    },
+    {
+      "id": "nothing-before-the-hook",
+      "on": "2026-11-12",
+      "krish": "Nothing before the hook, ever. Remove the sting exception for good.",
+      "why": "Asked whether anything may go before the hook (the house sting on the 16:9 long cut was the one exception, paused that morning), he chose to remove the exception for good.",
+      "means": "Every cut, wide or tall, series or off day, opens on its hook; no sting, logo animation, story card, episode card, title card or second intro goes in front, and no words for one piece let one in. The house sting is retired (config/intro-sting.json), the opening under test is the hook only, and quick-edit, ve compile, ve lint, the contract, ve render and ve qc each refuse anything before the hook.",
       "status": "encoded",
       "encoded": [
         {
           "file": "apps/control-plane/api/_houseRules.ts",
-          "contains": "The 16:9 long cut of a weekly series piece opens on the house intro sting",
-          "how": "HOOK_IS_THE_INTRO: the sting on the wide cut of a series piece, the hook on the tall cut and on off days"
+          "contains": "nothing goes before the hook, ever (Ruling, Krish, 2026-11-12)",
+          "how": "HOOK_IS_THE_INTRO, with no exception; HOOK_AND_CTA says the same"
         },
         {
           "file": "config/intro-sting.json",
-          "contains": "\"words\": \"I think it should go at the start of the longer wide videos 100%,\"",
-          "how": "the clips by library path and sha256, the shapes the sting goes on, and his placement and colour words"
+          "contains": "\"words\": \"Nothing before the hook, ever. Remove the sting exception for good.\"",
+          "how": "the sting retired in his words (status retired)"
+        },
+        {
+          "file": "scripts/quick-edit/intro.py",
+          "contains": "the sting is retired for good (Ruling, Krish",
+          "how": "load refuses any other status on the committed config; approve refuses every approval; sting_for gives none"
         },
         {
           "file": "scripts/quick-edit/make.py",
           "contains": "def sting_stop(",
-          "how": "quick-edit lays the sting on a series piece's wide cut and stops a wide series cut that cannot have the approved one"
+          "how": "quick-edit leaves out any intro clip and stops a cut handed one"
+        },
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "opening.nothing_before_hook",
+          "how": "ve lint refuses a spec naming a sting or an episode card before the hook"
         },
         {
           "file": "scripts/velib/compile.py",
-          "contains": "def sting_props(",
-          "how": "ve compile puts the approved sting in front of the 16:9 whole cut of a series piece only"
+          "contains": "def sting_problems(",
+          "how": "ve compile lays no sting and ve render refuses props carrying one"
         },
         {
-          "file": "scripts/velib/qc_opening.py",
-          "contains": "def opening(",
-          "how": "ve qc's opening row checks the file's first frames are the approved clip and his cut starts on the next frame"
-        },
-        {
-          "file": "scripts/quick-edit/opening_gate.py",
-          "contains": "lead_frames",
-          "how": "the opening gate measures a stinged cut from the frame after the sting"
+          "file": "tests/control-plane/house-rules.test.ts",
+          "contains": "nothing before the hook: no house rule, skill, ve document or format allows",
+          "how": "fails on any rule, skill or ve document that allows a sting before the hook"
         }
       ]
     },
@@ -2292,6 +2314,42 @@
           "file": "scripts/post-pack/story_check.py",
           "contains": "by dropping a whole beat",
           "how": "the length refusal says how to cut"
+        }
+      ]
+    },
+    {
+      "id": "one-live-board-in-control-centre",
+      "on": "2026-11-11",
+      "krish": "make sure that the old publish board https://content.krishraja.com/board/2026-10-26#monday is kept as an archive for now, but that your version of the publish board is 1000% where everything wires in to fresh and live and accurately ... Also, does every part of the engine know that this new publish board is the only place to put stuff and how to use it?",
+      "why": "After the cutover the rules, skills, workflow prompts, hooks, docs and the overnight runner still told sessions to build, republish or open the content.krishraja.com page, and two Claude runs could not report or file on the piece at all, so work could land where he no longer looks.",
+      "means": "The one live board is Control Centre's Content tab (live_board.py prints its link, never with ?ui=next); content.krishraja.com/board is the read-only archive. Every actor feeds the live board by writing what its view reads, reports and files on the piece (board_session.py or the connector), files every research document on its piece, and never builds or publishes a board page; only his Approve puts an idea on a publish board. How: docs/PUBLISH_BOARDS.md.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "sends nobody to content.krishraja.com/board to work",
+          "how": "every rule, skill, workflow, doc, config and script that names the old board says it is retired and redirects to the live board (Ruling, Krish, 2026-11-13); tests/one-live-board.test.ts still holds that no live board link carries ?ui=next, no Claude run may publish a page, and every run that researches or makes can report and file on the piece",
+          "was": [
+            "tests/one-live-board.test.ts: names content.krishraja.com/board only as the archive"
+          ]
+        },
+        {
+          "file": "AGENTS.md",
+          "contains": "the one live board is Control Centre's Content tab",
+          "how": "the start rules name the live board and docs/PUBLISH_BOARDS.md"
+        },
+        {
+          "file": "scripts/overnight/overnight.py",
+          "contains": "It builds and publishes no page",
+          "how": "the overnight run reports each cut made or held on its piece and bumps the week's change signal"
+        },
+        {
+          "file": "tests/control-plane/old-boards-retired.test.ts",
+          "contains": "OLD_BOARD_RETIRED",
+          "how": "Retired with the old board page (Ruling, Krish, 2026-11-13: the old publish boards are retired for good): the page this guard held, its builder and its publisher are gone, every old address redirects to the live board in Control Centre, and this test fails if any of them comes back. What the live board shows is its view's, held by tests/control-plane/board-view-contract.test.ts.",
+          "was": [
+            ".github/workflows/board-rebuild.yml: Retired on 11 Nov 2026"
+          ]
         }
       ]
     }

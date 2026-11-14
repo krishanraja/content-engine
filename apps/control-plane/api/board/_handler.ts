@@ -1,34 +1,37 @@
-import { yesByDay, type YesRow } from './_yes.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { createHash } from 'node:crypto'
-import { Readable } from 'node:stream'
-import { pipeline } from 'node:stream/promises'
-import { actor, canonical, growthWriter, collections, digest, hisOnlyRefusal, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, views, type BoardFile, type Manifest, type View } from './_contracts.js'
+import { LIVE_ID, actor, growthWriter, collections, hisOnlyRefusal, monday, revision, validBody, validManifest, views, type Manifest, type View } from './_contracts.js'
 import { PressError, afterPress, preparePress, type PressDeps } from './_presses.js'
-import { readArchive } from './_archive.js'
 import { readPieces, recordPosted } from './_posted.js'
 import { carryDay } from './_carry.js'
-import { weekLive } from './_live.js'
-import { readView } from './_view.js'
+import { branchSha, readView, readWeekIdeas } from './_view.js'
 import { signMedia } from './_media.js'
+import { ManifestBindError, checkPublishBind } from './_manifest.js'
+import { DRIVE_ID, boardDrive, filesOfPosts } from './_drivePosts.js'
+import { notModified, viewEtag } from './_viewContract.js'
 import { dispatchJob, isJob } from './_run.js'
 import { MaterialError, fileMaterial, recentResearch, researchForPiece, saveLook } from './_research.js'
 import { researchPrompt } from './_prompts.js'
-import { DESK_PAGE } from './_deskPage.js'
+import { StyleError, needsMotion, saveStyle, stylePick } from './_style.js'
+import { CUT_OP, CutError, cutPick, fileCutLearning, saveCut } from './_cuts.js'
+import { LIVE_OP, recordLive } from './_itsLive.js'
+import { SIGN_OFF_OP, SignOffError, checkAgainst, readSignOffPresses, readSignOffSources, recordSignOff, signOffFiles, signOffPick } from './_signOffs.js'
+import { readLater } from './_later.js'
+import { liveBoardUrl } from './_liveBoard.js'
 import { StandardsError, decideStandard, readStandards, renderStandards } from './_standards.js'
 import { operatorBearerAllowed } from '../_auth.js'
-import { MediaQualityError, qualifyBoard } from '../_mediaQuality.js'
+import { qualifyBoard } from '../_mediaQuality.js'
 import { mediaQualityEnforced, mediaQualityRollout } from '../../../../packages/core/src/media-rollout.js'
 
-const BUCKET = 'content-library'
-const TTL = 300
+/** The presses posted to /api/board/<Monday>/<op> that reach the handler as a collection (no rewrite of their own). */
+const POST_OPS: ReadonlySet<string> = new Set(['style', CUT_OP, LIVE_OP, SIGN_OFF_OP, 'replace'])
+/** The ops vercel.json gives the old board pages' addresses (/board/<Monday>, /board, /board/next[/<Monday>]): each is
+ *  a permanent redirect to the live board now (Ruling, Krish, 2026-11-13). */
+const OLD_PAGES: ReadonlySet<string> = new Set(['html', 'next', 'latest'])
 const scalar = (v: unknown) => typeof v === 'string' ? v : ''
 const weekDate = (v: string | Date) => (v instanceof Date ? v.toISOString() : v).slice(0, 10)
-/** The board page's content security policy. A board picture or video is served at /api/board/<week>/assets/<id>,
- *  which redirects to a signed link on the engine's file store, so img-src and media-src name that store's origin
- *  too: without it every image on the board is blocked (Krish, 2026-11-03, of the Saturday mock: "Permanently ensure
- *  the publish board doesn't look as stupid and shitty as this when a carousel is complete"). Nothing else widens. */
+/** The standards page's content security policy (the old board pages that also wore it are retired: Ruling, Krish,
+ *  2026-11-13). img-src and media-src name the engine's file store's origin; nothing else widens. */
 export function boardPolicy(storeUrl?: string) {
   let store = ''
   try { const u = new URL(storeUrl || ''); if (u.protocol === 'https:') store = ' ' + u.origin } catch { /* no store: same-site only */ }
@@ -45,7 +48,7 @@ async function rows(db: SupabaseClient, table: string, week: string, collection:
     let query = db.from(table).select('*').eq('week', week)
     if (collection) query = query.eq('collection', collection)
     if (kind) query = query.eq('body->>kind', kind)
-    const result = await query.order(table === 'board_ticks' ? 'tick_id' : table === 'board_imports' ? 'source_sha256' : 'doc_id').range(offset, offset + PAGE_SIZE - 1)
+    const result = await query.order(table === 'board_ticks' ? 'tick_id' : 'doc_id').range(offset, offset + PAGE_SIZE - 1)
     must(result)
     return result.data
 }
@@ -59,48 +62,51 @@ async function current(db: SupabaseClient, week: string, build?: string) {
   if (!result.data || !validManifest(week, result.data.manifest)) throw new BoardError(404, 'board_build_not_found')
   return { manifest: result.data.manifest as Manifest, revision: pointer.data?.revision || 0, build_id: id }
 }
-/** When the week's live build was made (board_builds.created_at), or null when the week has none. */
-async function builtAt(db: SupabaseClient, week: string, build: string | null): Promise<string | null> {
-  if (!build) return null
-  const result = await db.from('board_builds').select('created_at').eq('week', week).eq('build_id', build).maybeSingle()
-  must(result)
-  const at = result.data?.created_at
-  return typeof at === 'string' && Number.isFinite(Date.parse(at)) ? at : at instanceof Date ? at.toISOString() : null
+/** The post folders' renamer for a move (_offdayItems.ts followDrive), as the owner of his Drive with the `drive` scope
+ *  the research library signs in with; null when the engine cannot sign in to Google. */
+async function moveRenamer() {
+  const { googleAccessToken } = await import('../_google.js')
+  const token = await googleAccessToken(['https://www.googleapis.com/auth/drive'], { subject: process.env.GOOGLE_DRIVE_OWNER || 'krish@mindmake.co' }).catch(() => null)
+  if (!token) return null
+  const { googleDriveRenamer } = await import('./_offdayItems.js')
+  return googleDriveRenamer(token)
 }
-async function signed(db: SupabaseClient, file: BoardFile, download = false) {
-  const result = await db.storage.from(BUCKET).createSignedUrl(file.key, TTL, download ? { download: file.name } : undefined)
-  if (result.error || !result.data?.signedUrl) throw new BoardError(503, 'board_file_unavailable')
-  return result.data.signedUrl
-}
-async function verifyFile(db: SupabaseClient, file: BoardFile) {
-  const response = await fetch(await signed(db, file), { signal: AbortSignal.timeout(120000), redirect: 'error' })
-  if (!response.ok || !response.body) throw new BoardError(422, 'board_file_missing')
-  const hash = createHash('sha256'); let bytes = 0
-  const reader = response.body.getReader()
-  try {
-    for (;;) {
-      const { value, done } = await reader.read(); if (done) break
-      bytes += value.byteLength
-      if (bytes > file.bytes) throw new BoardError(422, 'board_file_size_mismatch')
-      hash.update(value)
-    }
-  } finally { await reader.cancel() }
-  if (bytes !== file.bytes || hash.digest('hex') !== file.sha256) throw new BoardError(422, 'board_file_hash_mismatch')
-  const type = (response.headers.get('content-type') || '').split(';')[0]
-  // Supabase deliberately serves stored HTML as text/plain. The authenticated
-  // board route supplies text/html only after the immutable bytes were verified.
-  if (type !== file.type && !(file.type === 'text/html' && type === 'text/plain')) throw new BoardError(422, 'board_file_type_mismatch')
+/** The research library's index rows of a piece he records follow its new day (_offdayLibrary.ts). */
+async function moveLibrary(db: SupabaseClient) {
+  const { libraryFollower } = await import('./_offdayLibrary.js')
+  return libraryFollower(db)
 }
 
+/** A view read that does not need the week's posts in Drive (the gate, a research prompt). */
+const NO_DRIVE = async () => null
+
 export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {}) {
+  /** The board's Drive (_drivePosts.ts), as the folder's owner; a test passes its own. */
+  const driveOf = (db: SupabaseClient) => (deps.drive ? deps.drive(db) : boardDrive(db as never))
+  /** The sign-off cards (config/ve/sign-offs.json and the configs it writes), from main at the commit it points at now. */
+  const signOffSources = () => (deps.signOffs ? deps.signOffs()
+    : branchSha(fetch as never, process.env, 'main').then(sha => readSignOffSources(fetch as never, sha)))
   return async (req: VercelRequest, res: VercelResponse) => {
     res.setHeader('Cache-Control', 'private, no-store')
     res.setHeader('Vary', 'Cookie, Authorization')
     res.setHeader('X-Content-Type-Options', 'nosniff')
     res.setHeader('Referrer-Policy', 'no-referrer')
     const method = req.method || ''
+    let op = scalar(req.query.op), collection = scalar(req.query.collection)
+    if (OLD_PAGES.has(op)) {
+      // The old publish boards are retired for good (Ruling, Krish, 2026-11-13: "We need to retire the old publish
+      // boards now permanently"): every address of one, a week (/board/<Monday>, ?archive=1 included), the newest
+      // (/board) and the desk (/board/next, /board/next/<Monday>), answers a permanent redirect to the live board in
+      // Control Centre at the same week. No page is served and nothing is read.
+      const week = scalar(req.query.week)
+      return res.redirect(308, liveBoardUrl(monday(week) ? week : null, scalar(req.query.day) || null))
+    }
     if (!['GET', 'PUT', 'POST'].includes(method)) return res.status(405).json({ ok: false, error: 'method_not_allowed' })
-    const op = scalar(req.query.op), collection = scalar(req.query.collection), id = scalar(req.query.id)
+    const id = scalar(req.query.id)
+    // A press posted to /api/board/<Monday>/<op> whose op has no rewrite of its own arrives as a collection
+    // (vercel.json: /api/board/:week/:collection). `style` cannot have one, since GET /api/board/<Monday>/style is the
+    // read-only view of his Pick a style documents, so a POST there is the style press; `cut-verdict` the same.
+    if (!op && !id && method === 'POST' && POST_OPS.has(collection)) { op = collection; collection = '' }
     if (op === 'carry') {
       // The cross-week carry (_carry.ts): the engine operator's key only.
       if (!operatorBearerAllowed(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
@@ -112,6 +118,21 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         return res.status(result.status).json(result.body)
       } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
     }
+    if (op === 'touch') {
+      // The week's change signal, bumped by a writer whose change lives outside the board's tables (the week's plan
+      // files on GitHub: the good-news run, the revise run, the Sunday ideas run), so the live board reads the
+      // view again at once instead of at its next poll. The engine operator's key only; it changes nothing it shows.
+      if (!operatorBearerAllowed(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+      const week = scalar(req.query.week)
+      if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
+      const source = typeof req.body?.source === 'string' && /^[a-z][a-z_-]{0,39}$/.test(req.body.source) ? req.body.source : 'plan'
+      try {
+        const bumped = await (await getDb()).rpc('board_signal_bump', { p_week: week, p_source: source })
+        if (bumped.error) return res.status(503).json({ ok: false, error: 'signal_unavailable' })
+        return res.status(200).json({ ok: true, week, revision: bumped.data })
+      } catch { return res.status(503).json({ ok: false, error: 'signal_unavailable' }) }
+    }
     if (op === 'pieces') {
       // Growth's read (_posted.ts readPieces): which piece sits on which day, and its boxes. The same key; read-only.
       if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
@@ -120,6 +141,28 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
       try {
         const result = await readPieces(await getDb(), week)
+        return res.status(result.status).json(result.body)
+      } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
+    }
+    if (op === 'offdays' || op === 'offday-posts') {
+      // Growth's half of the one place an off-day item's day lives (_offdayItems.ts; Ruling, Krish, 2026-11-12): GET
+      // offdays reads the week's items where they are now; POST offdays offers Growth's own options for the week (they
+      // reach the board offered, his press approves them); POST offday-posts writes back what Growth made, scheduled
+      // (with its time) and posted (with its link) for each, from its own record, so the board shows it out and says
+      // plainly what is still scheduled for a day an item left. Growth's key only.
+      if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      const week = scalar(req.query.week)
+      if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
+      try {
+        const db = await getDb()
+        const { itemsForGrowth, offerGrowth, readItems, reportPosts } = await import('./_offdayItems.js')
+        if (op === 'offdays' && method === 'GET') {
+          const items = await readItems(db, week)
+          if (!items) return res.status(503).json({ ok: false, error: 'board_store_unavailable' })
+          return res.status(200).json({ ok: true, week, items: itemsForGrowth(items, week) })
+        }
+        if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+        const result = op === 'offdays' ? await offerGrowth(db, week, req.body, await (deps.ideas ?? readWeekIdeas)(week)) : await reportPosts(db, week, req.body, deps.now ? new Date(deps.now()) : new Date())
         return res.status(result.status).json(result.body)
       } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
     }
@@ -138,6 +181,19 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (error instanceof BoardError) return res.status(error.status).json({ ok: false, error: error.message })
         return res.status(503).json({ ok: false, error: 'board_store_unavailable' })
       }
+    }
+    if (op === 'judge') {
+      // content-engine's 10/10 judges on Growth's carousels and Shorts (_judge.ts; Ruling, Krish, 2026-11-12: "Judge
+      // them; count passes."): judge one post, bind a pass to its Buffer post, or mark posts live. Growth's key only.
+      if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+      const week = scalar(req.query.week)
+      if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
+      try {
+        const { judgeAsset } = await import('./_judge.js')
+        const result = await judgeAsset(await getDb(), week, req.body, { ...(deps.judgePanel ? { panel: deps.judgePanel } : {}), ...(deps.now ? { now: () => new Date(deps.now!()) } : {}) })
+        return res.status(result.status).json(result.body)
+      } catch { return res.status(503).json({ ok: false, error: 'judgements_unavailable' }) }
     }
     if (op === 'posted') {
       // Growth's write-back (_posted.ts): its own key, or the engine operator's; never a browser.
@@ -173,19 +229,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         return res.status(status).json({ ok: false, error: error instanceof StandardsError ? error.message : 'standards_unavailable' })
       }
     }
-    // The week's board link opens the live board (Krish, 2026-11-10: "Switch fully, move the old board to an archive
-    // link"): /board/<Monday> and /board/next/<Monday> serve it; the old baked board is /board/<Monday>?archive=1.
-    // Control Centre passes only /board/<Monday> through to the engine, which is why the live board lives there.
-    if ((op === 'next' || (op === 'html' && scalar(req.query.archive) !== '1')) && method === 'GET' && monday(scalar(req.query.week))) {
-      // The live board's page holds no data, so it is served before the access check: without his cookie it opens on
-      // its own "Unlock the board" line instead of a bare 401.
-      res.setHeader('Content-Type', 'text/html; charset=utf-8')
-      res.setHeader('Cache-Control', 'no-store')
-      res.setHeader('X-Frame-Options', 'DENY')
-      res.setHeader('Content-Security-Policy', boardPolicy(process.env.SUPABASE_URL))
-      return res.status(200).send(DESK_PAGE)
-    }
-    const operatorOnly = ['uploads', 'imports', 'sources'].includes(op) || (!op && !collection && method === 'PUT')
+    const operatorOnly = op === 'outcomes'
     const who = actor(req, operatorOnly)
     if (!who) return res.status(401).json({ ok: false, error: 'unauthorized' })
     try {
@@ -195,27 +239,88 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         must(result)
         return res.status(200).json({ ok: true, weeks: result.data.map(r => weekDate(r.week)) })
       }
-      if (op === 'latest' && method === 'GET') {
-        const result = await db.from('board_weeks').select('week').order('week', { ascending: false }).limit(1)
-        must(result)
-        if (!result.data.length) throw new BoardError(404, 'no_published_board')
-        return res.redirect(303, `/board/${weekDate(result.data[0].week)}`)
+      if (op === 'later') {
+        // Ideas for later (_later.ts): every option on every ideas board he neither approved nor rejected, grouped,
+        // each with the five presses of the ideas gate. Read-only; his login or the operator's key.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        try {
+          const later = await readLater(db)
+          res.setHeader('Cache-Control', 'private, no-cache')
+          return res.status(200).json(later)
+        } catch { throw new BoardError(503, 'board_store_unavailable') }
       }
-      if (op === 'next' && method === 'GET' && !scalar(req.query.week)) {
-        // The live board without a week opens on the newest one (docs/plans/2026-11-09-board-desk/PLAN.md).
-        const result = await db.from('board_weeks').select('week').order('week', { ascending: false }).limit(1)
-        must(result)
-        if (!result.data.length) throw new BoardError(404, 'no_published_board')
-        return res.redirect(303, `/board/${weekDate(result.data[0].week)}`)
+      if (op === 'sign-offs') {
+        // The video sign-off cards (_signOffs.ts, contract 1.11.0), on no week: his presses for the job that writes the
+        // configs (signoff-apply.yml, the engine key), and one sample's bytes by its Drive id (?file=), only a sample a
+        // card shows, as a short signed link (302, or {url} with link=1) to the board's copy of it. Read-only.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        const file = scalar(req.query.file)
+        if (file) {
+          let url: string | null
+          try {
+            const { manifest } = await signOffSources()
+            if (!manifest) throw new BoardError(503, 'sign_offs_unavailable')
+            if (!signOffFiles(manifest).has(file)) throw new BoardError(404, 'sample_not_found')
+            url = await driveOf(db).serve(file)
+          } catch (e) { if (e instanceof BoardError) throw e; throw new BoardError(503, 'drive_unavailable') }
+          if (!url) throw new BoardError(404, 'sample_not_found')
+          res.setHeader('Cache-Control', 'private, max-age=300')
+          if (scalar(req.query.link) === '1') return res.status(200).json({ ok: true, url })
+          return res.redirect(302, url)
+        }
+        const presses = await readSignOffPresses(db)
+        if (!presses) throw new BoardError(503, 'board_store_unavailable')
+        return res.status(200).json({ ok: true, presses })
       }
       const week = scalar(req.query.week)
       if (!monday(week)) throw new BoardError(400, 'invalid_week')
-      if (op === 'next') throw new BoardError(405, 'method_not_allowed')
       if (op === 'view') {
         // The week as it stands now, each day with its next step and the actions that start it (_view.ts).
         if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
-        res.setHeader('Cache-Control', 'no-store')
-        return res.status(200).json({ ok: true, ...(await readView(db, week)) })
+        // Its entity tag names what it says (_viewContract.ts), so Control Centre can ask every few seconds and a read
+        // that finds nothing new is a 304 with no body. no-cache, not no-store: a browser may keep it but always asks.
+        const view = { ok: true, ...(await readView(db, week, process.env, undefined, undefined, w => driveOf(db).posts(w))) }
+        const etag = viewEtag(view)
+        res.setHeader('Cache-Control', 'private, no-cache')
+        res.setHeader('ETag', etag)
+        if (notModified(req.headers['if-none-match'], etag)) return res.status(304).end()
+        return res.status(200).json(view)
+      }
+      if (op === 'gate') {
+        // The ideas gate for the week (_gate.ts): every piece on a day with the approval that holds it there, and every
+        // piece or option held because none does. Read-only; the same view the live board draws.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        const view = await readView(db, week, process.env, undefined, undefined, NO_DRIVE)
+        return res.status(200).json({ ok: true, week, approvals_read: view.sources.approvals === true,
+          days: view.days.map(d => ({ day: d.day, date: d.date, pieces: d.pieces.map(p => ({ id: p.id, title: p.title, approval: p.approval ?? null })),
+            held: d.held, options: d.options.map(o => ({ id: o.id, doc_id: o.doc_id, title: o.title, status: o.status, outcome: o.outcome ?? null, held: o.held ?? null })) })) })
+      }
+      if (op === 'outcomes') {
+        // His answers on the week's ideas board, for its scorecard (scripts/post-pack/board_feed.py scorecard; the ideas
+        // quality plan, item 11): every idea_outcomes row of the week (append only, his words), and for a board from
+        // before the ideas gate its board_history presses, the triage marks filed from it and the pieces scheduled from
+        // its options. Read-only, the engine key only.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        // A cue counts only on one of this board's own options (presses_from), so its window can be wide.
+        const from = new Date(`${week}T00:00:00Z`); from.setUTCDate(from.getUTCDate() - 10)
+        const until = new Date(`${week}T00:00:00Z`); until.setUTCDate(until.getUTCDate() + 14)
+        const [outcomes, history, triage, scheduled, cues] = await Promise.all([
+          db.from('idea_outcomes').select('id,week,day,date,idea_id,option_ref,doc,outcome,via,words,decided_by,decided_at,source').eq('week', week)
+            .order('decided_at', { ascending: true }).limit(2000),
+          db.from('board_history').select('collection,doc_id,revision,body,updated_at,updated_by').eq('week', week).in('collection', ['picks', 'queue'])
+            .order('updated_at', { ascending: true }).limit(2000),
+          db.from('content_ideas').select('id,meta').eq('meta->queue->>from_week', week).limit(300),
+          db.from('content_ideas').select('id,scheduled_for,updated_at,meta').eq('meta->week_option->>week_start', week).not('scheduled_for', 'is', null).limit(50),
+          // His words on the board's ideas filed as cues from the queue (the 26 Oct board's "Ditch 4" is only here).
+          db.from('feedback_cues').select('subject_ref,use,said,said_at,use_origin').eq('venture', 'publication').eq('source', 'idea_queue')
+            .gte('said_at', from.toISOString()).lt('said_at', until.toISOString()).limit(500),
+        ])
+        must(outcomes); must(history); must(triage); must(scheduled)
+        const meta = (r: Record<string, any>) => (r.meta && typeof r.meta === 'object' ? r.meta : {})
+        return res.status(200).json({ ok: true, week, outcomes: outcomes.data || [], history: history.data || [],
+          triage: (triage.data || []).map((r: Record<string, any>) => ({ id: r.id, triage: meta(r).queue?.triage ?? null, from_pick: meta(r).queue?.from_pick ?? null })),
+          scheduled: (scheduled.data || []).map((r: Record<string, any>) => ({ id: r.id, week_option: meta(r).week_option ?? null, picked_at: meta(r).week_option?.at ?? null })),
+          cues: cues.error ? [] : cues.data || [] })
       }
       if (op === 'media') {
         // One rendered file of this week's pieces (_media.ts): its id from the view, answered with a short signed link.
@@ -223,13 +328,34 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (!/^[a-f0-9]{64}$/.test(id)) throw new BoardError(404, 'media_not_found')
         const end = new Date(`${week}T00:00:00Z`); end.setUTCDate(end.getUTCDate() + 6)
         let url: string | null
-        try { url = await signMedia(db, week, end.toISOString().slice(0, 10), id) } catch { throw new BoardError(503, 'board_store_unavailable') }
+        // The library's copy first; a file the library lacks is served from its Drive copy (_media.ts, contract 1.7.0).
+        try { url = await signMedia(db, week, end.toISOString().slice(0, 10), id, fileId => driveOf(db).serve(fileId)) } catch { throw new BoardError(503, 'board_store_unavailable') }
         if (!url) throw new BoardError(404, 'media_not_found')
+        res.setHeader('Cache-Control', 'private, max-age=300')
         return res.redirect(302, url)
       }
-      if (op === 'research' || op === 'material' || op === 'look') {
+      if (op === 'drive') {
+        // One file of the week's posts in Drive (_drivePosts.ts; contract 1.7.0): only a file the view lists for this
+        // week (an asset, a slide or a version of one), answered with a short signed link to the board's copy of it.
+        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
+        if (!DRIVE_ID.test(id)) throw new BoardError(404, 'drive_file_not_found')
+        const drive = driveOf(db)
+        let url: string | null
+        try {
+          const posts = await drive.posts(week)
+          if (!posts) throw new BoardError(503, 'drive_unavailable')
+          if (!filesOfPosts(posts).has(id)) throw new BoardError(404, 'drive_file_not_found')
+          url = await drive.serve(id)
+        } catch (e) { if (e instanceof BoardError) throw e; throw new BoardError(503, 'drive_unavailable') }
+        if (!url) throw new BoardError(404, 'drive_file_not_found')
+        res.setHeader('Cache-Control', 'private, max-age=300')
+        return res.redirect(302, url)
+      }
+      if (op === 'research' || op === 'material' || op === 'look' || op === 'style' || op === CUT_OP) {
         // The day path's presses on a piece of this week (_research.ts): research it now (sonar-pro), file research he
-        // dropped, and his pick of the look. His press only; the piece must be scheduled inside this week.
+        // dropped, his pick of the look, his pick or "Not this" of a motion or caption style (_style.ts, contract
+        // 1.4.0), and his Yes or Not this on one of its cuts (_cuts.ts, contract 1.6.0). His press only; the piece must
+        // be scheduled inside this week.
         if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
         if (who !== 'Krish') throw new BoardError(403, 'his_press')
         const body = (req.body && typeof req.body === 'object' ? req.body : {}) as Record<string, unknown>
@@ -249,7 +375,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           }
           if (op === 'research') {
             if (await recentResearch(db, pieceId)) throw new MaterialError(409, 'research_just_ran')
-            const view = await readView(db, week)
+            const view = await readView(db, week, process.env, undefined, undefined, NO_DRIVE)
             const day = view.days.find(d => d.piece_id === pieceId)
             const prompt = day?.path?.prompts.research || researchPrompt({ week, day: '', dayName: '', date: String(row.data.scheduled_for), series: String(row.data.lane_slot || ''),
               pieceId, idea: String(row.data.idea || ''), materials: [], lock: null })
@@ -257,6 +383,24 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             if (!found.text) throw new MaterialError(502, 'research_failed')
             const filed = await fileMaterial(db, pieceId, { kind: 'research', title: `Engine research (sonar-pro), ${new Date().toISOString().slice(0, 10)}`, content: found.text, by: 'Krish' })
             return res.status(201).json({ ok: true, material: filed, sources: found.sources.length })
+          }
+          if (op === CUT_OP) {
+            // His answer on one cut, kept append only on the piece (meta.cut_verdicts). It never changes the cut. A Not
+            // this also goes where his other rejections go (his taste ledger, the rejection inbox, the failure loop),
+            // once, never blocking the press (fileCutLearning).
+            const saved = await saveCut(db, pieceId, cutPick(body))
+            const learned = saved.already ? null : await fileCutLearning(db, { week, date: String(row.data.scheduled_for), pieceId }, saved.verdict)
+            return res.status(200).json({ ok: true, cut_verdict: saved.verdict, already: saved.already, ...(learned ? { learned } : {}) })
+          }
+          if (op === 'style') {
+            // The motion styles are the bank's motion layer, read from main only when the press names one; the caption
+            // styles are config/caption-themes.json. It writes meta.style beside meta.look and never edits a spec.
+            const motion = needsMotion(body) ? await fetch(`https://raw.githubusercontent.com/krishanraja/content-engine/main/config/style-references.json`, { signal: AbortSignal.timeout(15_000) })
+              .then(r => (r.ok ? r.json() : null)).catch(() => null)
+              .then((b: { bank?: Array<{ id?: unknown; layer?: unknown }> } | null) => new Set((b?.bank || []).filter(m => m.layer === 'motion' && typeof m.id === 'string').map(m => String(m.id))))
+              : null
+            const style = await saveStyle(db, pieceId, stylePick(body, motion))
+            return res.status(200).json({ ok: true, style })
           }
           // The looks the engine can make, read once from the style bank: a production format, and any format as the experiment.
           const bank = await fetch(`https://raw.githubusercontent.com/krishanraja/content-engine/main/config/style-references.json`, { signal: AbortSignal.timeout(15_000) })
@@ -270,9 +414,69 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             inspiration: Array.isArray(body.inspiration) ? body.inspiration.map(String) : [] }, new Set([...production, ...(experiment ? [experiment] : [])]))
           return res.status(200).json({ ok: true, look })
         } catch (e) {
-          if (e instanceof MaterialError) throw new BoardError(e.status, e.message)
+          if (e instanceof MaterialError || e instanceof StyleError || e instanceof CutError) throw new BoardError(e.status, e.message)
           throw e
         }
+      }
+      if (op === LIVE_OP) {
+        // "It's live" (_itsLive.ts, contract 1.7.0): a post he marked live, with its link and channels, appended to
+        // picks/live-<day> and copied onto the piece's making record. His press only, never a session's or Growth's.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'live_is_his')
+        const result = await recordLive(db, week, req.body, who, (deps.now ?? (() => new Date().toISOString()))())
+        return res.status(result.status).json(result.body)
+      }
+      if (op === SIGN_OFF_OP) {
+        // His Approve or Not this on a sign-off card's sample (_signOffs.ts, contract 1.11.0; Ruling, Krish, 2026-11-12:
+        // only his presses write the configs). His login only; kept append only on picks/signoff-<card> of this week.
+        // It writes no config itself: it starts signoff-apply.yml, which reads his presses back from the board.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'his_press')
+        try {
+          const pick = signOffPick(req.body)
+          const { manifest } = await signOffSources()
+          checkAgainst(manifest, pick)
+          const saved = await recordSignOff(db, week, pick, (deps.now ?? (() => new Date().toISOString()))())
+          const apply = saved.already ? null : await (deps.dispatch ?? dispatchJob)('signoff-apply', {})
+          return res.status(200).json({ ok: true, press: saved.press, already: saved.already, ...(apply ? { apply } : {}) })
+        } catch (e) {
+          if (e instanceof SignOffError) throw new BoardError(e.status, e.message)
+          throw e
+        }
+      }
+      if (op === 'move') {
+        // "Move to…" (Ruling, Krish, 2026-11-12: any off-day post or idea moves to any day at his press, and the move
+        // updates every place that names its day): the one write (_offdayItems.ts moveItem). His press only. The week in
+        // the address is the board he pressed on; the item says where it is, and the move updates both weeks.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'his_press')
+        const { moveInput, moveItem } = await import('./_offdayItems.js')
+        const { input, problem } = moveInput(req.body)
+        if (!input) throw new BoardError(400, problem || 'invalid_move')
+        if (input.item.startsWith('piece:')) {
+          // Move to… on a series piece (contract 1.13.0, _seriesMoves.ts): the same press, one transaction.
+          const { moveSeriesPiece } = await import('./_seriesMoves.js')
+          const moved = await moveSeriesPiece(db, input, { now: deps.now ? new Date(deps.now()) : new Date(), library: deps.library ? deps.library(db) : await moveLibrary(db) })
+          return res.status(moved.status).json(moved.body)
+        }
+        const result = await moveItem(db, input, { now: deps.now ? new Date(deps.now()) : new Date(), ideas: deps.ideas ?? (w => readWeekIdeas(w)),
+          drive: deps.renamer ? deps.renamer() : await moveRenamer(), library: deps.library ? deps.library(db) : await moveLibrary(db) })
+        if (result.status === 200 && (result.body.followed as Record<string, unknown> | undefined)?.drive === 'renamed') {
+          const { resetDrivePostsCache } = await import('./_drivePosts.js')
+          resetDrivePostsCache()
+        }
+        return res.status(result.status).json(result.body)
+      }
+      if (op === 'replace') {
+        // His Approve on a day that already holds a piece (contract 1.13.0, _seriesMoves.ts): his new pick for the day,
+        // and the piece it replaces to the day he chose, his Ideas for Later, or alongside it, in one transaction.
+        if (method !== 'POST') throw new BoardError(405, 'method_not_allowed')
+        if (who !== 'Krish') throw new BoardError(403, 'his_press')
+        const { replaceInput, replacePick } = await import('./_seriesMoves.js')
+        const { input, problem } = replaceInput(req.body)
+        if (!input) throw new BoardError(400, problem || 'invalid_replace')
+        const result = await replacePick(db, week, input, { now: deps.now ? new Date(deps.now()) : new Date(), library: deps.library ? deps.library(db) : await moveLibrary(db) })
+        return res.status(result.status).json(result.body)
       }
       if (op === 'run') {
         // A press that starts the machine that does the work (_run.ts): his press only, an allow-listed job only.
@@ -287,39 +491,6 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       }
       const offset = Number(req.query.offset || 0)
       if (!Number.isSafeInteger(offset) || offset < 0) throw new BoardError(400, 'invalid_offset')
-      if (op === 'state') {
-        // The live state the Today view reads on every poll (Krish, 2026-11-02: "the whole Today board seems totally
-        // outdated, and I can barely ever see what the current state of things are there"): his yes for each day
-        // (_yes.ts), what Growth has posted (its ticks), and the build that is live, so an open tab can say it is old.
-        // And the live overlay (_live.ts; Ruling, Krish, 2026-11-03: "The Publish Board should just be makeyourmindup
-        // weekly content calendar, always up to date"): each day's piece as its making record holds it now, and
-        // whether any piece was written after the live build was made (rebuild_needed).
-        if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
-        const said = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'picks')
-          .or('doc_id.like.yes-%,doc_id.like.%-publish')
-        must(said)
-        const ticks = await db.from('board_ticks').select('tick_id,body,updated_by').eq('week', week)
-        must(ticks)
-        const posted: Record<string, string[]> = {}
-        for (const t of ticks.data || []) {
-          const b = t.body as Record<string, unknown> | null
-          if (!b || b.done !== true || t.updated_by !== 'growth' || typeof b.day !== 'string' || typeof b.step !== 'string') continue
-          ;(posted[b.day] ||= []).push(b.step)
-        }
-        const active = await current(db, week)
-        const built_at = await builtAt(db, week, active.build_id)
-        // An overlay that cannot be read never costs him his yes or Growth's ticks: live is null, and the page keeps
-        // what it was built with until the next poll.
-        const overlay = await weekLive(db, week, built_at).catch(() => ({ live: null, rebuild_needed: false }))
-        return res.status(200).json({ ok: true, week, build_id: active.build_id, built_at, yes: yesByDay((said.data || []) as YesRow[]), posted,
-          live: overlay.live, rebuild_needed: overlay.rebuild_needed })
-      }
-      if (collection === 'archive') {
-        // The Archive (_archive.ts): every published piece and his scores, read-only.
-        if (method !== 'GET' || id) throw new BoardError(400, 'read_only_view')
-        const archive = await readArchive(db).catch(() => { throw new BoardError(503, 'board_store_unavailable') })
-        return res.status(200).json({ ok: true, week, collection, ...archive })
-      }
       if (collection && Object.hasOwn(views, collection)) {
         // A read-only view of his day decisions in picks (views in _contracts.ts): listed, never written.
         if (method !== 'GET' || id) throw new BoardError(400, 'read_only_view')
@@ -332,6 +503,10 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           const data = await rows(db, collection === 'ticks' ? 'board_ticks' : 'board_documents', week, collection === 'ticks' ? undefined : collection, offset)
           return res.status(200).json({ ok: true, week, collection, next_offset: data.length === PAGE_SIZE ? offset + PAGE_SIZE : null, documents: data.map(r => ({ id: r.tick_id || r.doc_id, body: r.body, revision: r.revision, updated_at: r.updated_at, updated_by: r.updated_by })) })
         }
+        // His live posts are appended by their own route only, so none is ever changed or taken away by a plain write.
+        if (method === 'PUT' && collection === 'picks' && LIVE_ID.test(id)) throw new BoardError(400, 'live_is_its_own_press')
+        // A series piece's placement on a day is written only by its move or a replacing Approve, with the piece.
+        if (method === 'PUT' && collection === 'picks' && /^place-/.test(id)) throw new BoardError(400, 'place_is_its_own_press')
         if (method !== 'PUT' || !validBody(collection, id, req.body?.body) || !revision(req.body?.revision)) throw new BoardError(400, 'invalid_document_write')
         const refused = hisOnlyRefusal(collection, req.body.body, who)
         if (refused) throw new BoardError(403, refused)
@@ -360,71 +535,18 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
           if (!was || was.use !== 'offday' || typeof was.approved !== 'boolean') throw new BoardError(409, 'offday_press_not_found')
           incoming = { ...was, note: incoming.note, at: incoming.at ?? was.at, note_only: true }
         }
+        // His Approve for publish binds the piece's manifest as it stands now (1.8.0, _manifest.ts).
+        if (collection === 'picks' && /-publish$/.test(id)) {
+          try { await checkPublishBind(db, incoming) } catch (e) { if (e instanceof ManifestBindError) throw new BoardError(e.status, e.message); throw e }
+        }
         const body = await preparePress(collection, id, incoming)
         const result = await db.rpc('board_save', { p_week: week, p_collection: collection, p_id: id, p_body: body, p_revision: req.body.revision, p_actor: who })
         must(result)
         const after = await afterPress(db, { week, collection, id, body, who, saved: result.data }, deps)
         return res.status(result.data.ok ? 200 : 409).json(after || result.data)
       }
-      if (op === 'uploads' && method === 'POST') {
-        const file = req.body?.file
-        if (!fileSpec(week, file, file?.type === 'text/html')) throw new BoardError(400, 'invalid_file')
-        const bucket = await db.storage.getBucket(BUCKET)
-        if (bucket.error || !bucket.data || bucket.data.public) throw new BoardError(503, 'private_library_required')
-        // An existing object is immutable. Its bytes are verified at activation.
-        const info = await db.storage.from(BUCKET).info(file.key)
-        if (!info.error) return res.status(200).json({ ok: true, exists: true })
-        const upload = await db.storage.from(BUCKET).createSignedUploadUrl(file.key, { upsert: false })
-        if (upload.error || !upload.data?.signedUrl) throw new BoardError(503, 'board_upload_unavailable')
-        return res.status(200).json({ ok: true, upload_url: upload.data.signedUrl })
-      }
-      if (op === 'imports') {
-        if (method === 'GET') {
-          const records = await rows(db, 'board_imports', week, undefined, offset)
-          return res.status(200).json({ ok: true, records, next_offset: records.length === PAGE_SIZE ? offset + PAGE_SIZE : null })
-        }
-        const records = req.body?.records
-        if (method !== 'POST' || !Array.isArray(records) || records.length > 100 || Buffer.byteLength(JSON.stringify(records)) > 1024 * 1024) throw new BoardError(400, 'invalid_import')
-        const values = records.map(r => {
-          if (!r || !/^https:\/\/claude\.ai\/artifact\/[a-zA-Z0-9]+$/.test(r.source || '') || !validSourceBody(r.collection, r.id, r.body)) throw new BoardError(400, 'invalid_import_record')
-          const raw = { week, source: r.source, collection: r.collection, id: r.id, body: r.body }
-          return { week, source: r.source, collection: r.collection, doc_id: r.id, body: r.body, source_sha256: digest(canonical(raw)) }
-        })
-        const result = await db.from('board_imports').upsert(values, { onConflict: 'source_sha256', ignoreDuplicates: true })
-        must(result)
-        return res.status(200).json({ ok: true, hashes: values.map(r => r.source_sha256) })
-      }
-      if (op === 'sources') {
-        if (method === 'GET') {
-          const found = await db.from('board_sources').select('*').eq('week', week)
-          must(found); return res.status(200).json({ ok: true, sources: found.data })
-        }
-        const { source, files } = req.body || {}
-        const unavailable = files?.manifest_unavailable
-        const manifestRecorded = files?.manifest
-          ? fileSpec(week, files.manifest) && !unavailable
-          : unavailable?.accessible === false && typeof unavailable.reason === 'string' && unavailable.reason.trim().length > 0 && Buffer.byteLength(JSON.stringify(unavailable)) < 10000
-        if (method !== 'POST' || !/^https:\/\/claude\.ai\/artifact\/[a-zA-Z0-9]+$/.test(source || '') || !files
-          || !fileSpec(week, files.export) || !fileSpec(week, files.html, true) || !manifestRecorded) throw new BoardError(400, 'invalid_source_archive')
-        for (const f of [files.export, files.html, ...(files.manifest ? [files.manifest] : [])]) await verifyFile(db, f)
-        const stored = await db.from('board_sources').upsert({ export_sha256: files.export.sha256, week, source, files }, { onConflict: 'export_sha256', ignoreDuplicates: true })
-        must(stored); return res.status(200).json({ ok: true, export_sha256: files.export.sha256 })
-      }
       const build = scalar(req.query.build)
       if (build && !/^[a-f0-9]{64}$/.test(build)) throw new BoardError(400, 'invalid_build')
-      if (!op && method === 'PUT') {
-        const manifest = req.body?.manifest
-        if (!validManifest(week, manifest) || !revision(req.body?.revision)) throw new BoardError(400, 'invalid_manifest')
-        const { delivery_review, ...reviewedManifest } = manifest
-        try { if (mediaQualityEnforced()) await qualifyBoard(db, reviewedManifest, delivery_review) }
-        catch (e) { throw new BoardError(e instanceof MediaQualityError ? 409 : 503, e instanceof MediaQualityError ? e.message : 'media_quality_unavailable') }
-        const buildId = digest(canonical(manifest))
-        // Even a replay verifies retrievability; metadata alone is not proof.
-        for (const file of [manifest.html, ...Object.values(manifest.assets)]) await verifyFile(db, file)
-        const result = await db.rpc('board_activate', { p_week: week, p_build: buildId, p_manifest: manifest, p_revision: req.body.revision, p_actor: who })
-        must(result)
-        return res.status(result.data.ok ? 200 : 409).json({ ...result.data, media_quality_rollout: mediaQualityRollout().status })
-      }
       if (method !== 'GET') throw new BoardError(405, 'method_not_allowed')
       const state = await current(db, week, build)
       const enforced = mediaQualityEnforced()
@@ -437,40 +559,9 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       // Metadata remains readable for repair. Explicit build reads are historical;
       // a revoked current build cannot continue presenting itself as ready.
       res.setHeader('X-Media-Qualification', quality)
+      // The week's last published build, read-only: Control Centre's list and Growth's ledger still read the manifests
+      // the retired board pages were built from. Nothing publishes a build any more (Ruling, Krish, 2026-11-13).
       if (!op) return res.status(200).json({ ok: true, ...state, media_qualification: quality, media_quality_rollout: mediaQualityRollout().status })
-      if (quality === 'unqualified') throw new BoardError(409, 'board_media_review_no_longer_valid')
-      if (!state.manifest) throw new BoardError(404, 'board_not_published')
-      if (op === 'assets') {
-        if (!validId(id)) throw new BoardError(404, 'asset_not_found')
-        const sha = scalar(req.query.sha)
-        let file = state.manifest.assets[id]
-        if (sha && (!file || file.sha256 !== sha)) {
-          if (!/^[a-f0-9]{64}$/.test(sha)) throw new BoardError(400, 'invalid_asset_hash')
-          const old = await db.from('board_builds').select('manifest').eq('week', week).contains('manifest', { assets: { [id]: { sha256: sha } } }).limit(1)
-          must(old)
-          file = old.data[0]?.manifest?.assets?.[id]
-        }
-        if (!file || !fileSpec(week, file)) throw new BoardError(404, 'asset_not_found')
-        // ?link=1: the same signed link the redirect gives, as JSON, for Copy article to hand Substack. The board page may
-        // only connect to its own site, so it cannot follow the redirect to read it. A picture only, never a download.
-        if (scalar(req.query.link) === '1') {
-          if (!file.type.startsWith('image/')) throw new BoardError(404, 'asset_not_found')
-          res.setHeader('Cache-Control', 'private, no-store')
-          return res.status(200).json({ ok: true, url: await signed(db, file) })
-        }
-        return res.redirect(303, await signed(db, file, true))
-      }
-      if (op === 'html') {
-        const upstream = await fetch(await signed(db, state.manifest.html), { signal: AbortSignal.timeout(120000), redirect: 'error' })
-        if (!upstream.ok || !upstream.body) throw new BoardError(503, 'board_html_unavailable')
-        res.setHeader('Content-Type', 'text/html; charset=utf-8')
-        res.setHeader('X-Frame-Options', 'DENY')
-        res.setHeader('Content-Security-Policy', boardPolicy(process.env.SUPABASE_URL))
-        res.setHeader('X-Board-Build', state.build_id)
-        res.status(200)
-        await pipeline(Readable.fromWeb(upstream.body as Parameters<typeof Readable.fromWeb>[0]), res)
-        return
-      }
       throw new BoardError(404, 'board_route_not_found')
     } catch (error) {
       if (res.headersSent) { res.end(); return }

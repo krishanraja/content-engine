@@ -141,6 +141,20 @@ class HardestBeat(unittest.TestCase):
 
 
 class StructuralHash(unittest.TestCase):
+
+    def test_a_window_never_spans_the_sting_after_the_hook(self):
+        # config/brand-palette.json long_cut sting after_hook: the stem holds the sting's silence at the hook's end, so a
+        # window stays on its beat's side of it, and the stem is read at the window's frame in the file.
+        plain = dict(props_for(FIXTURE), aspect='16:9')
+        at = plain['beats'][1]['fromFrame']
+        props = dict(plain, sting={'src': 'sting.mp4', 'series': 'mind_the_gap', 'frames': 56, 'sha256': 'a' * 64, 'atFrame': at})
+        hook = proof.window(props, plain['beats'][0]['id'])
+        after = proof.window(props, plain['beats'][1]['id'])
+        self.assertLessEqual(hook[1], at)
+        self.assertGreaterEqual(after[0], at)
+        self.assertEqual(proof.window_props(props, *hook)['audio']['stem']['trimBeforeFrames'], hook[0])
+        self.assertEqual(proof.window_props(props, *after)['audio']['stem']['trimBeforeFrames'], after[0] + 56)
+
     def test_caption_and_reason_edits_keep_the_proof(self):
         spec = whole()
         before = proof.structural_hash(spec, CUT)
@@ -261,18 +275,11 @@ class RenderRefusal(unittest.TestCase):
 class BoardContract(unittest.TestCase):
     """The board's presses (commit ad90078): the same hashes, the per-cut final, a proof bound to its cut, rounds."""
 
-    def test_storyboard_sha_mirrors_week_board(self):
+    def test_storyboard_sha(self):
         import hashlib
         story, exp = 'Beat 1\r\nBeat 2\n', '- No sound effects.\r'
         want = hashlib.sha256('{"expect":"- No sound effects.\\n","storyboard":"Beat 1\\nBeat 2\\n"}'.encode()).hexdigest()
         self.assertEqual(gates.storyboard_sha(story, exp), want)
-        try:
-            sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
-            import week_board  # noqa: PLC0415
-        except Exception:  # noqa: BLE001
-            week_board = None
-        if week_board is not None and hasattr(week_board, 'storyboard_sha'):
-            self.assertEqual(week_board.storyboard_sha(story, exp), gates.storyboard_sha(story, exp))
 
     def test_final_press_binds_each_cut(self):
         cuts = {'long': 'a' * 64, 'short': 'b' * 64}
@@ -553,7 +560,8 @@ class Expect(unittest.TestCase):
             (Path(tmp) / 'script.words.json').write_text(json.dumps({'words': [{'w': 0, 'word': 'the'}, {'w': 1, 'word': '15'}]}))
             found = expect.lines(spec, Path(tmp))
             self.assertLessEqual(len(found), expect.MAX_LINES)
-            self.assertTrue(any('Channel buttons' in line for line in found), 'a tall cut gets the advisory line')
+            # Since 11 Nov 2026 the channel row holds (qc_channel.ADVISORY is False), so there is no caveat to give.
+            self.assertFalse(any('Channel buttons' in line for line in found), 'the channel row holds; no advisory line')
             self.assertFalse(any('(15)' in line for line in found),
                              'conform reads a number said his own way (velib.words), so no line asks him to say it as written')
             self.assertFalse(any('wide cut' in line for line in found), 'no wide cut, no wide line')

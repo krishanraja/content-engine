@@ -12,6 +12,15 @@
           "value": "no-store"
         }
       ]
+    },
+    {
+      "source": "/api/publish/catalogue",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=60, s-maxage=300, stale-while-revalidate=3600"
+        }
+      ]
     }
   ],
   "crons": [
@@ -110,6 +119,10 @@
     {
       "path": "/api/library/recordings/drive-inbox",
       "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/research-library/sweep",
+      "schedule": "40 * * * *"
     }
   ],
   "functions": {
@@ -150,16 +163,16 @@
       "destination": "/api/board?op=weeks"
     },
     {
-      "source": "/api/board/:week/sources",
-      "destination": "/api/board?week=:week&op=sources"
+      "source": "/api/board/later",
+      "destination": "/api/board?op=later"
     },
     {
-      "source": "/api/board/:week/assets/:id",
-      "destination": "/api/board?week=:week&op=assets&id=:id"
+      "source": "/api/board/sign-offs",
+      "destination": "/api/board?op=sign-offs"
     },
     {
-      "source": "/api/board/:week/uploads",
-      "destination": "/api/board?week=:week&op=uploads"
+      "source": "/api/board/:week/judge",
+      "destination": "/api/board?week=:week&op=judge"
     },
     {
       "source": "/api/board/:week/posted",
@@ -170,8 +183,20 @@
       "destination": "/api/board?week=:week&op=media&id=:id"
     },
     {
+      "source": "/api/board/:week/drive/:id",
+      "destination": "/api/board?week=:week&op=drive&id=:id"
+    },
+    {
       "source": "/api/board/:week/view",
       "destination": "/api/board?week=:week&op=view"
+    },
+    {
+      "source": "/api/board/:week/gate",
+      "destination": "/api/board?week=:week&op=gate"
+    },
+    {
+      "source": "/api/board/:week/outcomes",
+      "destination": "/api/board?week=:week&op=outcomes"
     },
     {
       "source": "/api/board/:week/look",
@@ -190,8 +215,20 @@
       "destination": "/api/board?week=:week&op=run"
     },
     {
-      "source": "/api/board/:week/state",
-      "destination": "/api/board?week=:week&op=state"
+      "source": "/api/board/:week/move",
+      "destination": "/api/board?week=:week&op=move"
+    },
+    {
+      "source": "/api/board/:week/replace",
+      "destination": "/api/board?week=:week&op=replace"
+    },
+    {
+      "source": "/api/board/:week/offdays",
+      "destination": "/api/board?week=:week&op=offdays"
+    },
+    {
+      "source": "/api/board/:week/offday-posts",
+      "destination": "/api/board?week=:week&op=offday-posts"
     },
     {
       "source": "/api/board/:week/pieces",
@@ -206,8 +243,8 @@
       "destination": "/api/board?week=:week&op=carry"
     },
     {
-      "source": "/api/board/:week/imports",
-      "destination": "/api/board?week=:week&op=imports"
+      "source": "/api/board/:week/touch",
+      "destination": "/api/board?week=:week&op=touch"
     },
     {
       "source": "/api/board/:week/:collection/:id",

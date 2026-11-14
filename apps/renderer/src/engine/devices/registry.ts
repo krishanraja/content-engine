@@ -1,3 +1,7 @@
+import { Device as Checklist } from './checklist'
+import { Device as LivingScreen } from './living_screen'
+import { Device as Takeover } from './takeover'
+import { Device as LadderStage } from './ladder_stage'
 import { Device as QuotaChart } from './quota_chart'
 import { Device as AgentSwarm } from './agent_swarm'
 import { Device as WallScreen } from './wall_screen'
@@ -11,6 +15,10 @@ import { Device as TypingBubble } from './typing_bubble'
 import { Device as CursorBuddy } from './cursor_buddy'
 import { Device as LogoCard } from './logo_card'
 import { Device as HandPhoneStage } from './hand_phone_stage'
+import { Device as SlamWord } from './slam_word'
+import { Device as UnitField } from './unit_field'
+import { Device as VideoWall } from './video_wall'
+import { Device as ThroughLine } from './through_line'
 import type { DeviceRegistry } from './types'
 import { TestGrid } from './test_grid'
 import { Device as RecordCard } from './record_card'
@@ -20,16 +28,27 @@ import { Device as KineticStat } from './kinetic_stat'
 import { Device as ThreadCard } from './thread_card'
 import { Device as PassportPage } from './passport_page'
 import { Device as Scribble } from './scribble'
+import { Device as MintRing } from './mint_ring'
 import { Device as Headline } from './headline'
 import { Device as Sticker } from './sticker'
 import { Device as Stamp } from './stamp'
 import { Device as StatStrip } from './stat_strip'
 import { Device as Marquee } from './marquee'
 import { Device as QuoteCard } from './quote_card'
+import { Device as PullQuote } from './pull_quote'
+import { Device as ReceiptPrint } from './receipt_print'
 
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
+  checklist: Checklist,
+  receipt_print: ReceiptPrint,
+  slam_word: SlamWord,
+  takeover: Takeover,
+  video_wall: VideoWall,
+  through_line: ThroughLine,
+  living_screen: LivingScreen,
+  ladder_stage: LadderStage,
   quota_chart: QuotaChart,
   agent_swarm: AgentSwarm,
   wall_screen: WallScreen,
@@ -48,8 +67,10 @@ export const DEVICES: DeviceRegistry = {
   stat_strip: StatStrip,
   marquee: Marquee,
   quote_card: QuoteCard,
+  pull_quote: PullQuote,
   hand_phone_stage: HandPhoneStage,
   test_grid: TestGrid,
+  unit_field: UnitField,
   record_card: RecordCard,
   query_chip: QueryChip,
   evidence_card: EvidenceCard,
@@ -57,4 +78,5 @@ export const DEVICES: DeviceRegistry = {
   thread_card: ThreadCard,
   passport_page: PassportPage,
   scribble: Scribble,
+  mint_ring: MintRing,
 }

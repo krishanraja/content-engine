@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""The makeyourmindup intro sting: 56 frames at 30 fps in front of every 16:9
-long cut of a weekly series piece, and nowhere else.
+"""The makeyourmindup intro sting, retired for good: no cut carries it.
 
-Krish, 2026-11-05, of the Intro Sting page: "I think it should go at the start
-of the longer wide videos 100%,". The 9:16 short cut opens straight on its hook
-(house rule HOOK_IS_THE_INTRO), and an off-day piece (no weekly series) wears no
-sting, never another series' colour. Asked about the colours he picked "Keep it
-as I saw it": each series' clip flashes the other series' colours on its way to
-its own colour and the full MAKE YOUR MIND/UP wordmark plate, the one written
-exception to the series-colour rule (config/intro-sting.json "colours").
+Ruling (Krish, 2026-11-12): "Nothing before the hook, ever. Remove the sting
+exception for good." Every cut, wide or tall, series or off day, opens on its
+hook (house rule HOOK_IS_THE_INTRO). sting_for() gives no cut a sting and
+wanted() says no cut wants one, whatever a config says; load() refuses any
+status but "retired" on config/intro-sting.json, and approve() refuses to
+approve anything. The rest of this file (the clips, fetch, publish, finish) is
+kept so the record of what he saw stays readable and checked by its sha256.
+
+History: on 2026-11-05 he put the sting in front of the 16:9 long cut of a
+weekly series piece ("I think it should go at the start of the longer wide
+videos 100%,"); on 2026-11-12 it was paused, then retired by the ruling above.
 
 The design is six fixed clips, not source code. The Remotion source of the clips
 he saw on 12 October was never committed and is lost, so the clips themselves,
@@ -82,6 +85,9 @@ SECONDS = (1.0, 2.0)
 AAC_FRAME = 1024
 SHA256 = re.compile(r'[0-9a-f]{64}')
 DECISIONS = ('approved', 'rejected', 'retired')
+# Ruling (Krish, 2026-11-12): nothing goes before the hook on any cut, ever.
+NOTHING_BEFORE_HOOK = "Nothing before the hook, ever. Remove the sting exception for good."
+RETIRED_ON = '2026-11-12'
 STATUSES = ('candidate', 'approved', 'retired')
 PLACEMENT = "I think it should go at the start of the longer wide videos 100%,"
 
@@ -131,6 +137,9 @@ def load(path=None):
         raise IntroError(f'{path}: schema_version must be 2 (the sting as fixed clips)')
     if cfg.get('status') not in STATUSES:
         raise IntroError(f'{path}: status is "candidate", "approved" or "retired"')
+    if path.resolve() == CONFIG.resolve() and cfg['status'] != 'retired':
+        raise IntroError(f'{path}: the sting is retired for good (Ruling, Krish, {RETIRED_ON}: "{NOTHING_BEFORE_HOOK}"), '
+                         'so its status is "retired" and nothing opens a cut before the hook')
     if cfg.get('fps') != FPS:
         raise IntroError(f'{path}: fps is {FPS}, the rate the clips were made at')
     frames = cfg.get('frames')
@@ -324,11 +333,11 @@ def finish(shape, series, cfg=None, clips=None, cache=None, force=False):
 
 
 def wanted(shape, series, config=None):
-    """Whether a cut of this shape and series must open on the sting: it is
-    approved, the sting goes on this shape, and the series is one of its own.
-    Raises IntroError when the config cannot be read."""
-    cfg = load(config)
-    return cfg['status'] == 'approved' and shape in cfg['shapes'] and series_name(series) in cfg['series']
+    """Whether a cut of this shape and series must open on the sting: never (Ruling, Krish, 2026-11-12: "Nothing
+    before the hook, ever. Remove the sting exception for good."). The config is still read, so one that cannot be
+    read is said. Raises IntroError when the config cannot be read."""
+    load(config)
+    return False
 
 
 def _engine():
@@ -427,47 +436,15 @@ def publish(cfg=None, clips=None, out=print, send_module=None):
 
 
 def sting_for(shape, series=None, config=None, clips=None, cache=None, fetch_missing=True):
-    """What make.py asks: the cut-ready sting for this shape and series, or
-    None and why. It never raises.
-      - a shape the sting does not go on (the 9:16 short cut): (None, None),
-        the cut opens on the hook (house rule HOOK_IS_THE_INTRO);
-      - a retired sting: (None, None);
-      - no series, or none of the three (an off-day piece): (None, None), never
-        another series' colour;
-      - a candidate: (None, why), until Krish approves it;
-      - an approval whose clips are not the ones config/intro-sting.json names: (None, why);
-      - a clip not on this machine: fetched from the library when fetch_missing,
-        else (None, why)."""
+    """What make.py asks: the cut-ready sting for this shape and series, or None and why. It never raises, and it
+    never gives a sting (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for
+    good."): (None, None) for every shape, series and status once the config reads, nothing fetched; (None, why)
+    when the config cannot be read, so the report says so. The other arguments are kept for the callers."""
     try:
-        cfg = load(config)
+        load(config)
     except IntroError as e:
-        return None, f'the intro sting could not be used, so this cut has no intro: {e}'
-    if shape not in cfg['shapes'] or cfg['status'] == 'retired':
-        return None, None
-    found = series_name(series)
-    if not found or found not in cfg['series']:
-        return None, None
-    if cfg['status'] != 'approved':
-        return None, 'the intro sting is still a candidate waiting for Krish\'s approval (config/intro-sting.json), so this cut has no intro'
-    if cfg['source_sha256'] != source_hash(cfg):
-        return None, ('the clips config/intro-sting.json names are not the ones Krish approved (source_sha256), so this cut has no intro: '
-                      'show him the clips and record his words again')
-    try:
-        clip(shape, found, cfg, clips)
-    except IntroError as e:
-        if not fetch_missing:
-            return None, f'the approved intro sting is not ready on this machine, so this cut has no intro: {e}'
-        try:
-            _, _, missing = fetch(cfg, clips, out=lambda line: None, only=[(shape, found)])
-        except Exception as error:  # a fetch failure is a note here; make.py decides whether it stops
-            return None, f'the approved intro sting could not be fetched, so this cut has no intro: {error}'
-        if missing:
-            return None, (f'the approved intro sting\'s {shape} {found} clip is not in the library yet, so this cut has no intro: '
-                          'a machine that has the clips sends them with python scripts/quick-edit/intro.py publish')
-    try:
-        return finish(shape, found, cfg, clips, cache), None
-    except (IntroError, OSError, ValueError, subprocess.CalledProcessError) as e:
-        return None, f'the intro sting could not be used, so this cut has no intro: {e}'
+        return None, f'the intro sting\'s config could not be read ({e}); no cut opens on a sting either way'
+    return None, None
 
 
 def status(config=None, clips=None, cache=None):
@@ -493,38 +470,12 @@ def status(config=None, clips=None, cache=None):
 
 
 def approve(path, words, by='Krish', on=None, clips=None):
-    """Record Krish's approval of the sting, bound to the clips the cuts use."""
-    words = (words or '').strip()
-    if not words:
-        raise IntroError('--words is Krish\'s own words of approval, exactly as he said them')
-    if not by.lower().startswith('krish'):
-        raise IntroError('only Krish approves the intro sting')
-    path = config_path(path)
-    cfg = load(path)
-    if cfg['status'] == 'retired':
-        raise IntroError('the sting is retired on Krish\'s words: change house rule HOOK_IS_THE_INTRO with him first')
-    problems = []
-    for shape in cfg['shapes']:
-        for series in cfg['series']:
-            try:
-                wrong = form_problems(describe(clip(shape, series, cfg, clips)), shape, cfg['frames'], finished=False)
-                problems += [f'{shape} {series}: {"; ".join(wrong)}'] if wrong else []
-            except (IntroError, subprocess.CalledProcessError) as e:
-                problems.append(f'{shape} {series}: {e}')
-    if problems:
-        raise IntroError('these clips are not here and verified, so nothing was approved: ' + ' | '.join(problems))
-    digest = source_hash(cfg)
-    on = on or date.today().isoformat()
-    record = {'on': on, 'by': by, 'decision': 'approved', 'words': words}
-    raw = json.loads(path.read_text(encoding='utf-8'))
-    raw.update(status='approved', approved_by=by, approved_on=on, approval_words=words, source_sha256=digest, last_decision=record)
-    raw['history'] = list(raw.get('history') or []) + [dict(record, design='the clips in "clips", bound by source_sha256')]
-    text = json.dumps(raw, indent=2, ensure_ascii=False) + '\n'
-    tmp = path.with_name(path.name + '.part')
-    tmp.write_text(text, encoding='utf-8')
-    load(tmp)
-    os.replace(tmp, path)
-    return digest
+    """Refused, always: the sting is retired for good (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever.
+    Remove the sting exception for good."), so no words approve it and no config records an approval. The config is
+    read first, so one that cannot be read is said."""
+    load(config_path(path))
+    raise IntroError(f'nothing is approved: the sting is retired for good (Ruling, Krish, {RETIRED_ON}: "{NOTHING_BEFORE_HOOK}"), '
+                     'and no cut carries anything before its hook')
 
 
 # The stand-ins the self-tests use (here, make.py's and mix_test.py's): synthetic
@@ -551,13 +502,18 @@ def stand_in_clip(path, shape, frames=56, colour='0xB7A6FF', sound=None):
     return path
 
 
-def stand_in(work, status='approved', shapes=('16x9',), frames=56):
+def stand_in(work, status='approved', shapes=('16x9',), frames=56, paused=False):
     """A stand-in sting under `work`: a clip per shape and series (stand_in_clip,
     in each series' stand-in colour) in work/clips, and a config naming them,
-    approved on stand-in words when status is approved. Returns (config, clips)."""
+    approved on stand-in words when status is approved. It is not paused unless
+    `paused` (the live config's pause, Krish 12 Nov 2026, is not copied), so the
+    sting's own machinery stays tested for when it returns. Returns (config, clips)."""
     work = Path(work)
     folder = work / 'clips'
     cfg = json.loads(CONFIG.read_text(encoding='utf-8'))
+    held = cfg.pop('paused', None)
+    if paused:
+        cfg['paused'] = held or {'words': 'Krish (a self-test stand-in, not his words): paused'}
     cfg.update(frames=frames, seconds=round(frames / FPS, 4), shapes=list(shapes), clips={})
     for shape in shapes:
         for series in cfg['series']:
@@ -604,6 +560,17 @@ def self_test():
     failed = [f'{label}: got {got!r}, want {want!r}' for label, got, want in checks if got != want]
     print('\n'.join(failed) if failed else f'intro self-test passed: {len(checks)} checks')
     return 1 if failed else 0
+
+
+def _load_as_committed(path):
+    """load() of a stand-in config as if it were config/intro-sting.json, the one the ruling holds to "retired"."""
+    global CONFIG
+    real = CONFIG
+    CONFIG = Path(path)
+    try:
+        return load(path)
+    finally:
+        CONFIG = real
 
 
 def _self_test(checks, refused, work):
@@ -688,35 +655,20 @@ def _self_test(checks, refused, work):
     refused('a clip at 25 fps is refused', lambda: finish_clip(slow, work / 'x.mp4', '16x9', 56), "fps '25/1'")
     checks.append(('nothing half-made is left behind', sorted(p.name for p in work.glob('*.part.mp4')), []))
 
-    # sting_for, per shape, status and series.
-    got, why = sting_for('16x9', 'mind.the.gap', good, clips, cache)
-    checks.append(('a wide cut of mind.the.gap gets the mind_the_gap sting, cut-ready and cached by its clip\'s hash',
-                   (got, why), (cached('16x9', 'mind_the_gap', cfg['clips']['16x9']['mind_the_gap']['sha256'], cache), None)))
-    checks.append(('each series its own', len({sting_for('16x9', s, good, clips, cache)[0] for s in SERIES}), 3))
-    checks.append(('the tall cut gets none and no note, approved or not', [sting_for('9x16', 'follow_the_money', c, clips, cache) for c in (good, cand)],
-                   [(None, None), (None, None)]))
-    checks.append(('an off-day piece gets none and no note, never follow_the_money\'s',
-                   [sting_for('16x9', s, good, clips, cache) for s in (None, '', 'built_with_ai', 'off.day')], [(None, None)] * 4))
-    got, why = sting_for('16x9', 'follow_the_money', cand, cand_clips, cache)
-    checks.append(('a candidate gives no sting, and says it waits for Krish', (got, 'candidate' in (why or '')), (None, True)))
-    swapped = work / 'swapped.json'
-    moved = json.loads(good.read_text())
-    moved['clips']['16x9']['under_the_hood'] = dict(moved['clips']['16x9']['follow_the_money'])
-    moved['clips']['16x9']['under_the_hood']['library'] = f'{LIBRARY_STING}/stand-in-sting-16x9-under_the_hood.mp4'
-    swapped.write_text(json.dumps(moved))
-    got, why = sting_for('16x9', 'follow_the_money', swapped, clips, cache)
-    checks.append(('an approval whose clips are not the ones named gives no sting, saying so', (got, 'not the ones Krish approved' in (why or '')), (None, True)))
+    # sting_for and wanted, per shape, status and series: never a sting (Ruling, Krish, 2026-11-12: "Nothing before
+    # the hook, ever. Remove the sting exception for good."), even for an approved stand-in with its clips here.
+    for label, config in (('approved', good), ('candidate', cand)):
+        for shape in ('16x9', '9x16'):
+            checks.append((f'an {label} config gives the {shape} cut no sting and no note, for every series and an off day',
+                           [sting_for(shape, s, config, clips, cache) for s in (*SERIES, None, 'off.day')], [(None, None)] * 5))
+    checks.append(('and no cut wants one', [wanted(shape, s, good) for shape in ('16x9', '9x16') for s in SERIES], [False] * 6))
+    checks.append(('nothing is fetched or finished for it', sorted(p.name for p in cache.glob('*.mp4')) if cache.exists() else [], []))
     retired = work / 'retired.json'
     retired.write_text(json.dumps(dict(json.loads(good.read_text()), status='retired',
                                        last_decision={'on': '2026-10-29', 'by': 'Krish', 'decision': 'retired', 'words': 'a self-test stand-in'})))
-    checks.append(('a retired sting gives no sting and no note, even approved clips', sting_for('16x9', 'follow_the_money', retired, clips, cache), (None, None)))
-    shutil.rmtree(spare)
-    shutil.copytree(clips, spare)
-    (spare / 'stand-in-sting-16x9-under_the_hood.mp4').unlink()
-    got, why = sting_for('16x9', 'under_the_hood', good, spare, cache, fetch_missing=False)
-    checks.append(('a clip not here, with no fetch, gives no sting and says how to get it', (got, 'intro.py fetch' in (why or '')), (None, True)))
-    checks.append(('wanted: approved, wide, a series', [wanted('16x9', 'mind.the.gap', good), wanted('9x16', 'mind_the_gap', good),
-                                                        wanted('16x9', None, good), wanted('16x9', 'follow_the_money', cand)], [True, False, False, False]))
+    checks.append(('a retired sting gives no sting and no note', sting_for('16x9', 'follow_the_money', retired, clips, cache), (None, None)))
+    got, why = sting_for('16x9', 'follow_the_money', work / 'nowhere.json', clips, cache)
+    checks.append(('a config that cannot be read gives no sting and says so', (got, 'could not be read' in (why or '')), (None, True)))
 
     # Fetch and publish, on a fake engine and a fake send: no network here.
     class FakeEngine:
@@ -774,21 +726,6 @@ def _self_test(checks, refused, work):
                           opener=opener_for(clips)), 'answered 200')
     refused('an engine error is refused, naming the status', lambda: fetch(cfg, work / 'fetched-500', print, engine_api=FakeEngine(libs, (500, '{}')),
                                                                          opener=opener_for(clips)), 'answered 500')
-    # make.py's sting_for fetches a missing clip itself: here through the fake engine.
-    real_fetch = fetch
-    try:
-        globals()['fetch'] = lambda *a, **k: real_fetch(*a, **k, engine_api=FakeEngine(set()), opener=opener_for(clips))
-        got, why = sting_for('16x9', 'under_the_hood', good, spare, cache)
-        checks.append(('a clip the library does not hold yet gives no sting, saying how it gets there',
-                       (got, 'not in the library yet' in (why or ''), 'intro.py publish' in (why or '')), (None, True, True)))
-        globals()['fetch'] = lambda *a, **k: real_fetch(*a, **k, engine_api=FakeEngine(libs), opener=opener_for(clips))
-        got, why = sting_for('16x9', 'under_the_hood', good, spare, cache)
-        checks.append(('a clip not here is fetched when allowed, checked, and used',
-                       (got, why, verified(spare / 'stand-in-sting-16x9-under_the_hood.mp4', cfg['clips']['16x9']['under_the_hood'])),
-                       (cached('16x9', 'under_the_hood', cfg['clips']['16x9']['under_the_hood']['sha256'], cache), None, True)))
-    finally:
-        globals()['fetch'] = real_fetch
-
     class FakeSend:
         class SendError(RuntimeError):
             pass
@@ -815,30 +752,15 @@ def _self_test(checks, refused, work):
     refused('a wrong clip stops the publish before anything is sent', lambda: publish(cfg, bad, lambda line: None, send_module=fake), 'bytes')
     checks.append(('and send.py is never called', fake.planned, None))
 
-    # The approval lane: his words, bound to the clips the cuts use.
+    # The approval lane is closed for good: no words approve the sting, on any config (Ruling, Krish, 2026-11-12).
     lane = work / 'lane'
     lane_cfg, lane_clips = stand_in(lane, status='candidate', shapes=('16x9',))
-    refused('an approval with no words is refused', lambda: approve(lane_cfg, '', clips=lane_clips), 'exact')
-    refused('only Krish approves', lambda: approve(lane_cfg, 'fine', by='someone', clips=lane_clips), 'only Krish')
-    hidden = lane_clips / 'stand-in-sting-16x9-mind_the_gap.mp4'
-    hidden.rename(hidden.with_suffix('.away'))
-    refused('an approval with a used clip missing is refused, naming it', lambda: approve(lane_cfg, 'Yes', clips=lane_clips), '16x9 mind_the_gap')
+    refused('his words approve nothing: the sting is retired for good', lambda: approve(lane_cfg, 'Krish (a self-test stand-in): yes', clips=lane_clips),
+            NOTHING_BEFORE_HOOK)
     checks.append(('and the config is untouched', load(lane_cfg)['status'], 'candidate'))
-    hidden.with_suffix('.away').rename(hidden)
-    words = 'Krish (a self-test stand-in, not his words): yes, that one'
-    digest = approve(lane_cfg, words, on='2026-11-05', clips=lane_clips)
-    after = load(lane_cfg)
-    checks.append(('approve records his words and binds the clips',
-                   (after['status'], after['approved_by'], after['approved_on'], after['approval_words'], after['source_sha256'], digest),
-                   ('approved', 'Krish', '2026-11-05', words, source_hash(after), source_hash(after))))
-    checks.append(('his last decision is the approval in his words, and the history keeps every word before it',
-                   (after['last_decision'], [h['decision'] for h in after['history']]),
-                   ({'on': '2026-11-05', 'by': 'Krish', 'decision': 'approved', 'words': words},
-                    [h['decision'] for h in json.loads(CONFIG.read_text())['history']] + ['approved'])))
-    checks.append(('his placement and colours survive the approval', (after['placement'], after['colours']), (raw['placement'], raw['colours'])))
-    got, why = sting_for('16x9', 'under_the_hood', lane_cfg, lane_clips, cache)
-    checks.append(('once approved, the wide cut of a series piece gets its sting', (got is not None, why), (True, None)))
-    refused('a retired sting cannot be approved', lambda: approve(retired, 'Yes', clips=clips), 'retired')
+    refused('nor on the committed config', lambda: approve(None, 'Krish (a self-test stand-in): yes'), 'retired')
+    refused('a committed config set back to approved is refused', lambda: _load_as_committed(good), 'retired for good')
+    refused('or to a candidate', lambda: _load_as_committed(cand), 'retired for good')
 
     # What the config itself must say.
     def variant(name, **change):

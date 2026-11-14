@@ -5,33 +5,31 @@ Everything is made here and written under .cache/quick-edit/mix-test only
 (audio and video are never committed): a 20 second voice-like recording
 with pauses and its words file, a looping chord as the music bed with a
 stand-in licence and ledger, a stand-in dress (two corner blocks where
-kit.py's wordmark and series tag go), a synthetic opening clip per shape,
+an older config put a wordmark and series tag, which make.py must ignore), a synthetic opening clip per shape,
 the graphics and the end cards, and a stand-in approved intro sting (intro.py
 stand_in: synthetic clips, never Krish's). Then make.py renders six cuts and
 their reports are checked against the levels in config/music-library.json:
 
   tall 9x16 and wide 16x9 of a piece with no series (house rule
   HOOK_IS_THE_INTRO): opening straight on the hook, the report saying so
-  ("opening"), the tall cut in its dress from the first frame, over the
-  pictures and off the end card, the wide cut on its branded frame from the
+  ("opening"), the tall cut with no wordmark, series tag or logo at any
+  point even when an older config names a dress (Ruling, Krish,
+  2026-11-11), the wide cut on its branded frame from the
   first frame; the file is 30 fps with 48 kHz stereo sound,
   integrated loudness is -14 +-1 LUFS, true peak is at most -1 dBTP, the bed
   sits at its voice and outro levels, the gap under the voice is about 17
   LU, and the bed never drops out under the cut (Krish, 2026-10-28: "Yes I
   think music should be audible throughout but just lower.");
 
-  wide 16x9 of a follow.the.money piece with the stand-in sting approved
-  (Krish, 2026-11-05: "I think it should go at the start of the longer wide
-  videos 100%,"): the report records the sting as the opening, its 56 frames
-  are the first thing on screen and his branded frame comes in on the very
-  next frame, the music is up over the sting and eases under his voice, and
-  the clock and the loudness hold as for every cut;
+  wide 16x9 of a follow.the.money piece with a stand-in sting approved and
+  its clips here: it still opens on the hook, nothing in front (Ruling,
+  Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting
+  exception for good."), his branded frame from the first frame, and the
+  clock and the loudness hold as for every cut;
 
-  tall and wide with a clip in front, which only Krish's own words for a
-  piece put there ("intro_override"; here a stand-in): the report records
-  the clip as the opening and quotes the words, the tall clip's loud tone of
-  its own never reaches the mix (its stretch measures as the silent wide
-  clip's does), and no logo entrance follows it;
+  tall and wide with a clip named in front and Krish's words in
+  "intro_override" (here a stand-in): the clip is left out, the cut opens on
+  the hook, and the report says why, quoting the ruling;
 
   tall 9x16 with no approved track: voice only, and the report says why, at
   the same loudness.
@@ -256,9 +254,11 @@ def main():
              abs(L['bed_to_voice_lu'] - (levels['final_integrated_lufs'] - levels['bed_lufs'])) <= 1.5, True),
         ]
 
-    # Every cut now: the hook is the intro, in the brand's dress, the bed under all of it.
+    # Every cut now: the hook is the intro, no wordmark on the tall cut, the bed under all of it.
+    hook_out, hook_file = {'9x16': 'hook-tall', '16x9': 'hook-wide'}, {}
     for shape, out in (('9x16', 'hook-tall'), ('16x9', 'hook-wide')):
         r = render('hook.json', out, shape, env)
+        hook_file[shape] = r['shapes'][shape]['file']
         L = r['loudness']
         final = WORK / out / r['shapes'][shape]['file']
         info = probe(final)
@@ -268,9 +268,8 @@ def main():
             (f'{shape}: it opens on the hook, nothing in front, and the report records it',
              ((opening['kind'], opening['rule']), r['intro_seconds'], round(r['main_seconds'] + r['outro_seconds'], 3)),
              (('hook', 'HOOK_IS_THE_INTRO'), 0.0, round(r['total_seconds'], 3))),
-            # The tall cut opens on the hook by rule; the wide cut of a piece with no series says why it has no sting.
-            (f'{shape}: why it has no sting, on the wide cut only', ('why' in opening, 'off-day piece' in opening.get('why', '')),
-             (shape == '16x9', shape == '16x9')),
+            # Every cut opens on the hook by rule (Ruling, Krish, 2026-11-12), so no cut needs a note about a sting.
+            (f'{shape}: no note about a sting', ('why' in opening, any('sting' in w for w in r['warnings'])), (False, False)),
             # The one bed shape (config/music-bed.json): with no sting the bed still opens loud for 1.5 s, then eases
             # under his voice (Krish, 2026-11-04: "It should just start loudly and then get a little bit softer").
             (f'{shape}: the bed opens loud, steadies under him and lifts at the end, with no sting',
@@ -284,70 +283,52 @@ def main():
         if shape == '9x16':
             T, M = r['total_seconds'], r['main_seconds']
             checks += [
-                ('9x16: the dress is on the first frame: the wordmark top left, the series tag top right',
-                 (near(pixel(final, 0.02, (200, 100)), MINT), near(pixel(final, 0.02, (900, 105)), CORAL)), (True, True)),
-                ('9x16: it stays on over the pictures, to the last frame of the main',
-                 (near(pixel(final, M / 2, (200, 100)), MINT), near(pixel(final, M - 0.2, (900, 105)), CORAL)), (True, True)),
-                ('9x16: and is not on the end card', near(pixel(final, T - 1.0, (200, 100)), MINT), False),
-                ('9x16: the old three-second logo is not there', near(pixel(final, 1.0, (540, 140)), MINT), False),
+                # Vertical video carries no wordmark or series tag (Ruling, Krish, 2026-11-11): the config names a dress and
+                # make.py ignores it, from the first frame to the end card; nor is there an opening logo.
+                ('9x16: no wordmark or series tag on the first frame, though the config names a dress',
+                 (near(pixel(final, 0.02, (200, 100)), MINT), near(pixel(final, 0.02, (900, 105)), CORAL)), (False, False)),
+                ('9x16: nor over the pictures, to the last frame of the main',
+                 (near(pixel(final, M / 2, (200, 100)), MINT), near(pixel(final, M - 0.2, (900, 105)), CORAL)), (False, False)),
+                ('9x16: and no opening logo', near(pixel(final, 1.0, (540, 140)), MINT), False),
             ]
         else:
             checks.append(('16x9: the branded frame shows beside him from the first frame', near(pixel(final, 0.02, (100, 540)), MINT), True))
 
-    # The wide cut of a series piece once the sting is approved: the sting first, his frame on the very next frame.
+    # The wide cut of a series piece with a stand-in sting approved and its clips here: still on the hook, nothing in
+    # front (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.").
     r = render('sting.json', 'sting-wide', '16x9', sting_env)
     L = r['loudness']
     final = WORK / 'sting-wide' / r['shapes']['16x9']['file']
     info = probe(final)
-    table.append(('16x9 on the sting, bed', r['total_seconds'], L))
-    opening, cfg = r['shapes']['16x9']['opening'], intro.load(sting_config)
-    centre = (960, 540)
+    table.append(('16x9 series, sting approved', r['total_seconds'], L))
+    opening = r['shapes']['16x9']['opening']
     checks += [
-        ('16x9 sting: the report records the sting as the opening, by the sha256 of its clip',
-         (opening['kind'], opening['series'], opening['frames'], opening['clip_sha256'], r['intro'] and r['intro']['source']),
-         ('sting', 'follow_the_money', 56, cfg['clips']['16x9']['follow_the_money']['sha256'], 'house')),
-        ('16x9 sting: 56 frames, 1.8667 s, and the clock adds up', (r['intro_seconds'], round(r['intro_seconds'] + r['main_seconds'] + r['outro_seconds'], 3)),
-         (1.8667, round(r['total_seconds'], 3))),
-        ('16x9 sting: the stand-in config is named in the report, never taken quietly', any('not config/intro-sting.json' in w for w in r['warnings']), True),
-        ('16x9 sting: its first and last frames are the sting, with no branded frame beside it',
-         (near(frame_pixel(final, 0, centre), LILAC), near(frame_pixel(final, 55, centre), LILAC), near(frame_pixel(final, 55, (100, 540)), MINT)),
-         (True, True, False)),
-        ('16x9 sting: his branded frame comes in on the very next frame, frame 56', near(frame_pixel(final, 56, (100, 540)), MINT), True),
-        (f'16x9 sting: the music is up over the sting: {L["intro_short_term"]} LUFS, about {levels["intro_lufs"]}',
-         abs(L['intro_short_term'] - levels['intro_lufs']) <= 1.5, True),
-        ('16x9 sting: the bed opens loud over the sting, steadies under him and lifts at the end',
+        ('16x9 series: it opens on the hook though a sting is approved, and the report records it',
+         ((opening['kind'], opening['rule']), r['intro'], r['intro_seconds']), (('hook', 'HOOK_IS_THE_INTRO'), None, 0.0)),
+        ('16x9 series: no sting on its first frame; the branded frame is there from the first frame',
+         (near(frame_pixel(final, 0, (960, 540)), LILAC), near(frame_pixel(final, 0, (100, 540)), MINT)), (False, True)),
+        ('16x9 series: the bed opens loud, steadies under him and lifts at the end',
          (r['shapes']['16x9']['music']['shape']['pass'], r['shapes']['16x9']['music']['shape']['open_over_bed_lu'] >= 6,
           r['shapes']['16x9']['music']['shape']['direction_changes'] <= 2), (True, True, True)),
-        ('16x9 sting: the bed never drops out under it or the cut', gaps(WORK / 'sting-wide' / 'audio-16x9' / 'bed.wav', r['total_seconds'] - 1.0), []),
-        ('16x9 sting: a preview inside the sting, then the opening', ((WORK / 'sting-wide' / 'preview-16x9-intro.jpg').exists(),
-                                                                     (WORK / 'sting-wide' / 'preview-16x9-00.jpg').exists()), (True, True)),
-    ] + sound('16x9 sting', r, L, final, info)
+        ('16x9 series: the bed never drops out under the cut', gaps(WORK / 'sting-wide' / 'audio-16x9' / 'bed.wav', r['total_seconds'] - 1.0), []),
+    ] + sound('16x9 series', r, L, final, info)
 
-    # A clip in front only on Krish's own words: recorded as the opening, its sound never mixed.
+    # A clip named in front, with Krish's words in "intro_override": left out, the cut on its hook, the report saying why.
     for shape, out in (('9x16', 'clip-tall'), ('16x9', 'clip-wide')):
         r = render('clip.json', out, shape, env)
         L = r['loudness']
         final = WORK / out / r['shapes'][shape]['file']
-        table.append((f'{shape} with a clip, bed', r['total_seconds'], L))
+        table.append((f'{shape} clip named, left out', r['total_seconds'], L))
         checks += [
-            (f'{shape}: the clip is 1.5 s and the clock adds up', (r['intro_seconds'], round(r['intro_seconds'] + r['main_seconds'] + r['outro_seconds'], 3)),
-             (1.5, round(r['total_seconds'], 3))),
-            (f'{shape}: the report records the clip as the opening, in on the override\'s words',
-             (r['shapes'][shape]['opening']['kind'], r['intro'] and r['intro']['source'], any(OVERRIDE in w for w in r['warnings'])), ('clip', 'override', True)),
-            (f'{shape}: the clip\'s own sound track is replaced with silence', r['intro'] and r['intro']['own_sound_replaced'], True),
-            (f'{shape}: the intro {L["intro_short_term"]} LUFS is about {levels["intro_lufs"]}', abs(L['intro_short_term'] - levels['intro_lufs']) <= 1.5, True),
-            (f'{shape}: the clip is the first thing on screen', near(pixel(final, 0.5, (intro.SHAPES[shape][0] // 2, intro.SHAPES[shape][1] // 2)), LILAC), True),
+            (f'{shape}: the named clip is left out and the cut opens on the hook',
+             (r['shapes'][shape]['opening']['kind'], r['intro'], r['intro_seconds']), ('hook', None, 0.0)),
+            (f'{shape}: the report says why, quoting the ruling', any('Nothing before the hook, ever.' in w for w in r['warnings']), True),
+            (f'{shape}: its first half second is the hook cut\'s, frame for frame where sampled, not the clip',
+             all(near(pixel(final, t, (intro.SHAPES[shape][0] // 2, intro.SHAPES[shape][1] // 2)),
+                      pixel(WORK / hook_out[shape] / hook_file[shape], t, (intro.SHAPES[shape][0] // 2, intro.SHAPES[shape][1] // 2)), 12)
+                 for t in (0.02, 0.5)), True),
             (f'{shape}: the bed never drops out under the cut', gaps(WORK / out / f'audio-{shape}' / 'bed.wav', r['total_seconds'] - 1.0), []),
         ] + sound(shape, r, L, final, probe(final))
-        if shape == '9x16':
-            I = r['intro_seconds']
-            checks += [
-                ('9x16: no logo pill over the clip', near(pixel(final, I - 0.3, (540, 140)), MINT), False),
-                ('9x16: no second logo entrance follows it', near(pixel(final, I + 1.0, (540, 140)), MINT), False),
-            ]
-    tall_intro, wide_intro = (L['intro_short_term'] for name, _, L in table if 'with a clip' in name)
-    checks.append((f'9x16: the clip\'s loud tone stays out: its intro {tall_intro} LUFS matches the silent wide clip\'s {wide_intro}',
-                   abs(tall_intro - wide_intro) <= 0.3, True))
 
     r = render('bare.json', 'bare', '9x16', bare_env)
     L = r['loudness']

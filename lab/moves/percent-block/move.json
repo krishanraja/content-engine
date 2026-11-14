@@ -1,0 +1,18 @@
+{
+  "id": "percent-block",
+  "what": "A percentage counts up on a block of the series colour wiping in under it.",
+  "says": [
+    "number"
+  ],
+  "needs": [
+    "number"
+  ],
+  "energy": "medium",
+  "engine": "canvas",
+  "code": "packages/moves/percent-block/move.mjs",
+  "entry": "draw",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+  "from": "lab/styles/living-screen/scene.mjs",
+  "proven_by": "Krish, 2026-11-10, on the teller opening: \"Now let's keep that pace of animation up.\""
+}

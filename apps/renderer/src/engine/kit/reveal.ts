@@ -10,7 +10,18 @@ export function entranceStyle(p: number): CSSProperties {
   const d = MOTION.risePx
   if (!profile) return { opacity: p, transform: `translateY(${d * (1 - p)}px)` }
   const opacity = Math.min(1, Math.max(0, p))
-  switch (profile.entrance.kind) {
+  const base = kindStyle(profile.entrance.kind, p, d, opacity)
+  const { blurPx, spinDeg, tiltDeg } = profile.entrance
+  if (!blurPx && !spinDeg && !tiltDeg) return base
+  // The extras (blur-in, a turn while entering, a resting tilt) compose over the kind's own look.
+  const turn = (tiltDeg ?? 0) + (spinDeg ?? 0) * (1 - Math.min(1, Math.max(0, p)))
+  return { ...base,
+    ...(turn ? { transform: `${base.transform ?? ''} rotate(${turn.toFixed(3)}deg)`.trim() } : {}),
+    ...(blurPx && opacity < 1 ? { filter: `blur(${(blurPx * (1 - opacity)).toFixed(2)}px)` } : {}) }
+}
+
+function kindStyle(kind: string, p: number, d: number, opacity: number): CSSProperties {
+  switch (kind) {
     case 'rise': return { opacity, transform: `translateY(${d * (1 - p)}px)` }
     case 'drop': return { opacity, transform: `translateY(${-d * (1 - p)}px)` }
     case 'slide': return { opacity, transform: `translateX(${-d * (1 - p)}px)` }
@@ -18,6 +29,7 @@ export function entranceStyle(p: number): CSSProperties {
     case 'slap': return { opacity, transform: `scale(${1 + 0.05 * (1 - p)})` }
     case 'scale': return { opacity, transform: `scale(${0.92 + 0.08 * p})` }
     case 'draw': return { opacity: p > 0 ? 1 : 0, clipPath: `inset(0 ${(100 * (1 - opacity)).toFixed(3)}% 0 0)` }
+    default: return { opacity }
   }
 }
 

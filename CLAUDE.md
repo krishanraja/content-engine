@@ -23,8 +23,9 @@ reading it whole. It is about 270 KB (some 65k tokens).
 | Pick up where the last session stopped | `WORKBENCH.md` |
 | Find a file, a function, a route or a station | `docs/REPO_MAP.md` (search it) |
 | Ideas, judging, drafting, rewriting, channel copy, the ledger | `docs/CONTENT_ENGINE.md` |
-| Video | `docs/ve/ENGINE.md`, then `docs/ve/RUNBOOK.md` (`docs/ve/STATUS.md` says what ve can do today) |
+| Video | `docs/ve/ENGINE.md`, then `docs/ve/RUNBOOK.md` (`docs/ve/STATUS.md` says what ve can do today; `docs/ve/INGREDIENTS.md` for caption styles, motion styles, transitions, camera, energy and `ve pace`) |
 | The week's publish board | `docs/PUBLISH_BOARDS.md` |
+| Any intro, outro, icon, wordmark, sting or end card, on any day or format | `docs/production/BRAND_PALETTE.md` (the rules are `config/brand-palette.json` only) |
 | The carousel standard (Growth makes the carousels) | `docs/CAROUSEL-STANDARD.md` |
 | The Studio runner or the renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
 | What works, what is broken, what waits on Krish | `NOW.md`, `docs/STATE.md` |
@@ -63,7 +64,7 @@ separate reader (cost rule 6, guard G6), and pick by the job:
 | Subagent | Model | For |
 |---|---|---|
 | `repo-scout` | Haiku | lookups and log reading; returns `file:line` and a few lines |
-| `executor` | Sonnet | a scoped edit already decided, test runs, renders, packs, filing, board rebuilds |
+| `executor` | Sonnet | a scoped edit already decided, test runs, renders, packs, filing, feeding the live board (never a board page) |
 | `reviewer` | Opus | architecture, the final check before a push, anything touching judging, drafting, the fact gate, mandates or the ledger |
 | `ve-critic` | Opus | the non-producer review of a ve cut, after `ve qc` and `ve refs`; it writes the verdict and never edits the spec |
 
@@ -97,8 +98,10 @@ separate reader (cost rule 6, guard G6), and pick by the job:
 
 ## Checks
 
-- Before any push: `npm run verify` (it includes `check:repo-map`, so regenerate the map with
-  `npm run repo-map` after changing exports, routes or stations).
+- Before any push: `npm run verify:quick` (every guard, the related tests and the publishing-safety tests; it
+  includes `check:repo-map`, so regenerate the map with `npm run repo-map` after changing exports, routes or
+  stations). The full `npm run verify` runs after merge (`.github/workflows/full-verify.yml`), never before one
+  (Ruling (Krish, 2026-11-11): quick checks on pull requests, the full verify after merge; merge fast and he tests live.)
 - Narrower while working: `npx vitest run <files>`, `npm run typecheck`,
   `npm run typecheck:control-plane`, `npm run check:control-plane`, `npm run skills:validate`.
 - After editing a skill in `.agents/skills`: `python scripts/validate-skills.py --sync-claude`.

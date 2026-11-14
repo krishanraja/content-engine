@@ -240,4 +240,4 @@ remains Interactive by design so Windows DPAPI can unlock Credential Manager.
 Do not change the task principal. Both machines were verified at
 `6bf78628a481a61bf16ea3b4deec0d326281eee6` on 2026-09-28 with clean detached
 checkouts and verified source provenance, and both moved to `cc0657e` on
-2026-10-02 (`docs/STATE.md`, "The Studio's runners, 2026-10-02").
+2026-10-02 (`docs/history/2026-11-12-STATE-before-recheck.md`, "The Studio's runners, 2026-10-02").

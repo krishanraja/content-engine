@@ -2,10 +2,12 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-11-04 against the code (paths, commands, symbols and config read; no live run)
+Last verified: 2026-11-12 against `main` at `02184d34` (every path this page names checked to exist; the Studio commits since 2026-11-04 read; the jobs, commands, runner roles and heartbeat read back from the database; no live run)
 
 Scope: the Studio half of this repository: `packages/`, `apps/runner`,
-`apps/renderer`, `config/`, `scripts/`, `.agents/skills/`. The content engine
+`apps/renderer`, `config/`, `scripts/`, `.agents/skills/`. `packages/moves/`
+(`@mymu/moves`) is the exception: the motion moves ve and the style lab share,
+not part of the job-based Studio (`packages/moves/README.md`). The content engine
 in `apps/control-plane` is described in `docs/CONTENT_ENGINE.md`. How the two
 fit together is in `docs/SYSTEM_MAP.md`; why either exists is in
 `docs/NORTH_STAR.md`.
@@ -26,12 +28,15 @@ from Control Center. It never publishes: YouTube upload is private-only, and
 LinkedIn, TikTok and Instagram output stays a local package for a person to
 post.
 
-As of 2026-09-25 two Studio jobs exist in the database and no Short has a
-recorded final approval, package or upload. Since 2026-09-28 the runner is
-installed on a primary Windows machine with a cold standby on a second one,
-both on `cc0657e` since 2026-10-02, and the Studio's Drive root is on H:
-(`docs/STATE.md`, "The Studio's runners"; `docs/OPERATIONS.md`, "Primary and
-cold standby").
+Read back on 2026-11-12: the database holds two Studio jobs, both stopped at
+the treatment stage and retired on 2026-09-07 as a synthetic validation, so no
+Short has a recorded final approval, package or upload. The runner is
+installed on a primary Windows machine with a cold standby on a second one
+(`video_studio_runner_roles`: one active, one standby), both moved to
+`cc0657e` on 2026-10-02 (`docs/history/2026-11-12-STATE-before-recheck.md`,
+"The Studio's runners, 2026-10-02"; `docs/OPERATIONS.md`, "Primary and cold
+standby"). Its latest heartbeat, at 11:51 UTC on 2026-11-12, reports
+`cc0657e`, status `degraded` and its Drive `unavailable` (`docs/STATE.md`).
 
 ## Series and subchannels: two vocabularies, both live
 
@@ -110,11 +115,9 @@ cuts changed on 2026-10-12: both of a piece's videos were then made with
 there Krish asked for an opening, "I also want the video to have a 1-2 sec
 animated make your mind up intro visual before my face comes in" (house rule
 INTRO_STING, retired on 2026-10-29 when he picked "The hook is the intro",
-house rule HOOK_IS_THE_INTRO, and back on 2026-11-05 for the wide cut only: "I
-think it should go at the start of the longer wide videos 100%,"; so a 16:9
-cut of a weekly series piece opens on that series' house sting, the clip he
-saw, and then the hook, and a 9:16 cut opens straight on the hook in the
-brand's dress, the wordmark and the series tag in its top corners), with
+house rule HOOK_IS_THE_INTRO, back on 2026-11-05 for the wide cut only, and
+retired for good on 2026-11-12: "Nothing before the hook, ever. Remove the
+sting exception for good."; so every cut opens straight on its hook), with
 licensed music under the video (MUSIC_BED). The job-based Studio
 stays without music or an intro until its audio ledger exists: its V2 contract
 refuses music until then (`packages/contracts/src/v2.ts`), its dialogue
@@ -133,9 +136,11 @@ grain (the approved mock had grain over the logo; the brand book wins).
 
 What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
 
-- A Short. The mark on an ink tile with a 10 px hard shadow in the
-  channel's colour, top left on every beat (left 72, top 150, inside the
-  platform's safe zone; top right when the shot's lead room asks for it).
+- A Short carries no mark, wordmark or series tag over its animated
+  content, and no animation passes over a wordmark; its closing outro card
+  keeps the wordmark (Ruling, Krish, 2026-11-11: "I don't have a no-word-mark rule for tall videos entirely. I just have a no-word-mark rule during the animated content, not the closing outro card."). The wide
+  cut keeps the mark on an ink tile with a 10 px hard shadow in the
+  channel's colour, top left on every beat.
   Captions on an ink block with grain, cream Archivo 900 at width 112, a 12
   px shadow in the channel's colour, and one loud word on the mint swipe
   (the first emphasis word; sentence case, at most one loud word, Krish,
@@ -221,8 +226,7 @@ pinned by sha256 in control-center, `src/assets/brand/makeyourmindup/`,
 because content-engine never tracks image files. The house faces load under
 names of their own (`apps/renderer/src/house/fonts.css`), so the retired
 theme's faces resolve exactly as before. The renderer's house code is in
-`apps/renderer/src/house/`, `apps/renderer/src/v2/HouseShort.tsx`,
-`apps/renderer/src/carousel/HouseCarouselCard.tsx` and
+`apps/renderer/src/house/`, `apps/renderer/src/v2/HouseShort.tsx` and
 `apps/renderer/src/thumbnail/`.
 
 `brandThemeRefusal` refuses the theme for a retired series, while it is a
@@ -251,8 +255,9 @@ Studio, `docs/ENGINE_SESSION.md`):
 
 1. Done 2026-09-28: the theme's `source.commit` is control-center
    `7dac4ce`, which holds `makeyourmindup-stacked.png`.
-2. Done 2026-10-02: both runners are on `cc0657e` (`docs/STATE.md`, "The
-   Studio's runners, 2026-10-02").
+2. Done 2026-10-02: both runners are on `cc0657e`
+   (`docs/history/2026-11-12-STATE-before-recheck.md`, "The Studio's runners,
+   2026-10-02").
 3. Render the proof in the Studio (a Short with its call, the thumbnail and a
    carousel) and show it to Krish. The call comes from the job's production
    brief, and a brief is built only from an approved piece
@@ -313,8 +318,8 @@ The V1 graph still exists only so V1 jobs can resume. New work is V2.
 | Core | the job store, stage logic, editorial gates, evidence, art director, feedback, runner protocol | `packages/core` |
 | CLI | the `studio` command; `studio --help` and `studio v2 --help` print the machine-readable groups | `packages/cli`; `scripts/studio.ps1` on Windows |
 | Runner | a Windows daemon: heartbeats, Drive Inbox discovery, claims queued commands and approved production briefs from Control Center, writes signed local decisions | `apps/runner`, logic in `packages/core/src/runner.ts` |
-| Renderer | ve: `FormatMaster` (1080x1920 or 1920x1080); job-based Studio: `MindmakeStoryV2` (1080x1920), `MindmakeCarouselSlide` (1080x1350) and the V1 `MindmakeShort` | `apps/renderer` |
-| Carousel director | authored swipe stories of 5 to 10 slides; PNG for Instagram, PNG plus PDF for LinkedIn | `packages/core/src/carousel.ts`, `config/carousel-visual-direction.json` |
+| Renderer | ve: `FormatMaster` (1080x1920 or 1920x1080); job-based Studio: `MindmakeStoryV2` (1080x1920) and the V1 `MindmakeShort` | `apps/renderer` |
+| Carousels | no Studio stage: a carousel, a meme or a Notes image is made in a Claude session, with the Codex plugin building it (Ruling, Krish, 2026-11-13) | `docs/CAROUSEL-STANDARD.md`, "How a carousel is made" |
 | Station harnesses | a typed boundary (`station.json`) and a judgement card (`STATION.md`) per stage; checked for parity with the stage graph by `npm run check:stations`. Nothing reads them at runtime | `.agents/skills/mindmake-video/stations/` |
 | Art director | one governed registry of visual devices with fail-closed eligibility and scoring | `config/techniques.json`, `docs/ART_DIRECTOR_REPERTOIRE.md` |
 | Learning | local feedback lifecycle (`observed` to `active`); a rule is active only when it is in reviewed Git config; cloud session and learning tables | `packages/core/src/feedback.ts`, `config/studio.json`, `supabase/migrations/20260907091923_studio_session_learning_spine.sql` |
@@ -346,8 +351,8 @@ in `docs/AMPLIFICATION.md`. The rule is
   engine (`api/content-ideas/[id]/production-brief.ts`). The runner claims it:
   a short-native brief becomes a job at once, an extract or solo brief waits at
   `awaiting_source_bundle` for a reviewed Drive source, and a carousel-only
-  brief is recorded without a video job. The carousel director does not read
-  briefs; carousel stories are authored separately.
+  brief is recorded without a video job: a carousel is made in a Claude
+  session (`docs/CAROUSEL-STANDARD.md`, "How a carousel is made").
 - **Runner protocol.** The runner POSTs only to the runner routes (`claim`,
   `heartbeat`, `complete`, preview upload and retention, `project`, brief claim
   and complete) under `/api/video-studio/runner`. Its default base URL is
@@ -410,7 +415,6 @@ Each is current for the Studio except where the note says otherwise
 | `docs/OPERATIONS.md` | setup, typical runs, recovery, failure codes | nothing |
 | `docs/DEPLOYMENT.md` | secrets, runner install, the standby machine, the shipped versus installed boundary | the upstream review order, the cursor rollout and the radar checklist are historical procedures, kept for a rebuild |
 | `docs/ENGINE_SECRETS_HANDOVER.md` | the Windows credential contract, per runner machine | nothing |
-| `docs/CAROUSEL_ENGINE_STATE.md` | the carousel engine's gate and decision record | last verified 2026-09-07; calls the repo `mindmake-video-studio`; its test counts are old |
 | `docs/ART_DIRECTOR_REPERTOIRE.md` | the visual device registry and the sharp-alternative path | nothing |
 | `docs/OPENING_LOOP_CALIBRATION.md` | the opening contract (promise match, open question) | nothing |
 | `docs/REFERENCE_VIDEO_CALIBRATION.md` | the calibration record behind the active preferences | nothing |

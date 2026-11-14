@@ -2,9 +2,9 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 
 // The board's Archive (W2.1; Krish, 2026-10-29: "backfill every piece we've done historically, and allow me to add a
 // score out of 10 for narrative quality and production quality"): every piece published from the Launch on 6 October
-// 2026, newest first, each with its date, series, title, live links and his scores. GET /api/board/<Monday>/archive is
-// read-only; board_feed.py archive writes it beside the week's inputs and week_board.py --archive draws it. Only his
-// scores are shown (piece_scores_current, which counts scored_by krish alone).
+// 2026, newest first, each with its date, series, title, live links and his scores; the purge job reads it. The old
+// board's Archive tab and its route were retired with the old boards (Ruling, Krish, 2026-11-13). Only his scores are
+// shown (piece_scores_current, which counts scored_by krish alone).
 
 /** The first piece the engine published went out on 5 October 2026 and the Launch on 6 October; nothing older counts. */
 export const ARCHIVE_FROM = '2026-10-05T00:00:00Z'

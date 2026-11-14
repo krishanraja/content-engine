@@ -1,0 +1,20 @@
+{
+  "id": "live-chart",
+  "what": "A chart draws itself: an expected line dives, the real lines draw with glowing heads, and on \"watch\" one turns mint and pulses.",
+  "says": [
+    "timeline",
+    "contrast",
+    "number"
+  ],
+  "needs": [
+    "number"
+  ],
+  "energy": "medium",
+  "engine": "canvas",
+  "code": "packages/moves/live-chart/move.mjs",
+  "entry": "draw",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+  "from": "lab/styles/living-screen/scene.mjs",
+  "proven_by": "Krish, 2026-11-10, on the teller opening: \"Now let's keep that pace of animation up.\""
+}

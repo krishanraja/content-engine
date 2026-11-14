@@ -96,7 +96,7 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/inspiration/drive-scan` (cron) | reads screenshots and documents from a Drive folder with a vision model; upserts seeds | Google Drive, Sonnet [`inspiration_scan`] |
 | `GET /api/content-seed-candidates` | the composer's seed rail | none |
 | `/api/aeo/ingest`, `/api/aeo/context` | the AEO engine lands packets and reads context; recommendations become `aeo_signal` ideas | none |
-| `/api/investigations/run` (cron), `anchor`, `[run_id]/draft-check`, `[run_id]/trace` | the weekly investigation: anchor, decompose, climb the why-ladder, run budgeted harnesses, gates G1 to G6; attaches an evidence manifest | Sonnet and Opus [`investigations`], Perplexity `sonar` |
+| `/api/investigations/run` (cron), `anchor`, `[run_id]/draft-check`, `[run_id]/trace` | the weekly investigation: anchor, decompose, climb the why-ladder, run budgeted harnesses, gates G1 to G6; attaches an evidence manifest. Its calls run with thinking off and read the first text block; a split that gives no claims is aborted for its own reason (the call failed, no text, cut off at its limit, or the model found no checkable claim), never as "100% unfound", and logs one G2 row saying which | Sonnet and Opus [`investigations`], Perplexity `sonar` |
 
 ### 2. Curation: judge, repair, route, rank
 
@@ -104,7 +104,7 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 |---|---|---|
 | `POST /api/content-ideas/[id]/judge` | puts one piece before the panel. Idea gate: 9 judges (novelty, evidence, consequence, reader, buyer, connection, fun, standing, prosecutor). Draft gate: 7 (hook, clarity, personality, evidence_integrity, voice, channel_fit, prosecutor), which read the subchannel's mandate and the sources on file. Free deterministic judges run first. The panel reports and never changes state | Haiku [`judge-<key>`] |
 | `/api/judge/ladder` (manual) | expand the seed, judge, repair with research and re-judge, then route. Score is the lower median judge: 7 or more is `ready`, 5 or 6 `repairable`, below 5 `weak`. Nothing is buried. Sets `lane_slot` only when it is empty and the router's pick is uncontested | Sonnet [`ladder-expand`, `ladder-repair`], Haiku panel and [`ladder-router`] |
-| `/api/judge/sweep` (cron, daily at 05:00 UTC) | runs the ladder over ideas left after the free 03:00 triage; optional batch mode at half price | as the ladder, plus the Anthropic Batches API |
+| `/api/judge/sweep` (cron, daily at 05:00 UTC) | runs the ladder over ideas left after the free 03:00 triage; optional batch mode at half price. A live sweep keeps the ideas it chose for at most six hours: the next tick after that closes it (`failed`, with the reason) and starts a new one over the ideas that exist now. An idea is judged again only when its idea or thesis changed since its score | as the ladder, plus the Anthropic Batches API |
 | `/api/content-ideas/[id]/score` | the Five Standards gate (unique, researched, thoughtful, kind, helpful) | Sonnet, or Haiku on the autoscore path [`standards`] |
 | `/api/content-opportunities/refresh` (cron) | the editorial radar. Two lenses only, `money_of_ai` and `built_with_ai` | Sonnet [`editorial-radar-*`] |
 | `POST /api/content-ideas/[id]/editorial-route` | approves a radar lens into a child idea with `lane_slot` `money_of_ai` or `built_with_ai` | none |
@@ -117,7 +117,8 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/content-ideas/[id]/call-market` | pin a prediction market (Polymarket slug or Kalshi ticker) to a piece's dated Call, read once to refuse a wrong one; GET reads it, `{clear: true}` unpins | none, keyless |
 | `/api/content-ideas/[id]/making` | where the piece is between the workroom and every channel (`meta.making`: workroom and publish page links, visual gate, script check, pack, recordings, video assets, channels posted, the session making it); GET reads it with the steps, POST merges a patch. Written by Claude Code sessions (`scripts/post-pack/making.py`) and by Krish's cookie when he ticks a channel off; read by Control Center over its realtime subscription on `content_ideas`, and by its done-check sweep for each piece's steps. After a write lands it asks that sweep to look at the piece's open board items (`POST /api/done-checks {keys}` with the access cookie, `_controlCenter.ts`; the write waits up to 3 s for it before it answers); it closes none itself | none, keyless |
 | `/api/week/options` | the week's options (Krish, 2026-10-11: one Sunday decision for Monday, Wednesday and Friday). GET `?week_start=<Monday>` hands a session each series' mandate, the options written for that week, what is in flight, the judges' best and the ideas Krish dropped in; POST `{week_start, series, options:[{id, rank, pitch, why_now, recommended}]}` writes `meta.week_option` on each row and clears it from rows the day no longer offers. Read live by Control Center's week page. Picks nothing | none, keyless |
-| `/api/publish/watch` | hourly: marks a piece published from the publication's public archive (and ticks Substack on its making record, when it has one), asks the done-check sweep to look at its board items, and holds a fresh post that matches no piece as one `post_matched` question for a session (`_publishWatch.ts`). It closes no board item: Control Center's done-check sweep does (step 4) | none, keyless |
+| `/api/publish/watch` | hourly: marks a piece published from the publication's public archive (the Substack archive) and records its YouTube video and Short from the @makeyourmind-up channel feed, matched to the piece by address, then title, then day (and ticks Substack on its making record, when it has one), asks the done-check sweep to look at its board items, and holds a fresh post that matches no piece as one `post_matched` question for a session (`_publishWatch.ts`). It closes no board item: Control Center's done-check sweep does (step 4) | none, keyless |
+| `/api/publish/catalogue` | public, read-only: every published piece with its article, its YouTube video and its Short, from the making record; makeyourmindup.ai reads it and takes each cover from Substack | none |
 | `/api/calls` | public, read-only: every published piece's Call, our confidence, `not_due_yet` or `due`, Krish's verdict when he has made it, and the pinned market's odds; the scoreboard on makeyourmindup.ai reads it | none |
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
@@ -548,7 +549,7 @@ accept is recorded by whoever accepted it.
 | `GET /api/content-engine/ping` | commit and a ready flag, no auth |
 | `/api/content-engine/runs/replay` | re-runs a registered job by calling its GET with `CRON_SECRET`; refuses `manual_only` jobs |
 | `/api/purge/run` (cron, Mondays), `/api/purge/restore` | exports doomed rows to the `content-engine-archive` bucket and `trend_observations`, then hard-deletes expired news rows; deletes nothing if either copy fails, and keeps any row an open board item names (`kept_for_board`). The engine's only hard delete |
-| `POST /api/aeo/meter` | prices the AEO engine's token use into `meter_daily` |
+| `POST /api/aeo/meter` | prices the AEO engine's token use into `meter_daily` (`reportedUsage` in `_meter.ts`): Anthropic through `anthropicCall` with its web searches at $10 a thousand, Perplexity from its table, OpenAI, Google and xAI as tokens with no rate yet (`unpriced-model`), and subscription rows as tokens with no dollar amount in a bucket of their own (AEO brief F; the context lists `meter_billing`) |
 
 Every scheduled route is wrapped in `withContentRun` (`api/_runs.ts`), which
 writes one `content_engine_runs` row per run, and a redacted failure artifact
@@ -887,7 +888,8 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
     change within a second: no second table, no polling, no copy of the
     state anywhere else. Each step names its owner (`MAKING_OWNERS`):
     Claude Code makes the workroom, the draft, the pictures, the scripts
-    and the pack and builds the publish board; Krish records and approves
+    and the pack, which the live publish board shows from the record
+    (`docs/PUBLISH_BOARDS.md`); Krish records and approves
     each post, and Growth posts what he approved (`docs/GROWTH-HANDOFF.md`).
     The video is made with ve on a home computer (`docs/ve/RUNBOOK.md`;
     `.agents/skills/produce-video/SKILL.md` is the quick-edit fallback), and

@@ -76,12 +76,16 @@ describe('motion style profiles', () => {
   const bank = (JSON.parse(readFileSync('config/style-references.json', 'utf8')).bank as Array<{ id: string; layer: string; ve_route: string[] }>)
     .filter(style => style.layer === 'motion')
 
-  it('draws every motion style a profile can express, and names the seven that need their own device', () => {
+  // Three styles from his own cuts joined on 13 Nov 2026 (Krish: "Ensure the Character.ai video, the Anthropic eating
+  // its own jobs video, the AI music video are used as the basis for their own artistic styles too").
+  // The Ladder and The Living Screen joined the bank on 11 Nov 2026 as styles waiting on their devices (cards
+  // ve-style-1-ladder-stage and ve-style-2-living-screen); each leaves needs_device when its device is verified.
+  it('draws every motion style a profile can express, and names the nine that need their own device', () => {
     const drawable = bank.filter(style => !style.ve_route.includes('needs_device')).map(style => style.id).sort()
     expect(Object.keys(MOTION_PROFILES).sort()).toEqual(drawable)
-    expect(drawable).toHaveLength(11)
+    expect(drawable).toHaveLength(14)
     expect([...NEEDS_DEVICE].sort()).toEqual(bank.filter(style => style.ve_route.includes('needs_device')).map(style => style.id).sort())
-    expect(NEEDS_DEVICE).toHaveLength(7)
+    expect(NEEDS_DEVICE).toHaveLength(9)
   })
 
   it.each(Object.entries(MOTION_PROFILES))('%s parses and sits inside the signed floor', (id, profile) => {
@@ -89,10 +93,10 @@ describe('motion style profiles', () => {
     expect(floorProblems(profile)).toEqual([])
     expect(clampToFloor(profile)).toEqual(profile)
     expect(profile.entrance.frames).toBeGreaterThanOrEqual(4)
-    expect(profile.entrance.frames).toBeLessThanOrEqual(7)
-    expect(profile.entrance.distancePx).toBeGreaterThanOrEqual(40)
-    expect(profile.entrance.distancePx).toBeLessThanOrEqual(60)
-    expect(profile.entrance.overshootPct).toBeLessThanOrEqual(6)
+    expect(profile.entrance.frames).toBeLessThanOrEqual(10)
+    expect(profile.entrance.distancePx).toBeGreaterThanOrEqual(0)
+    expect(profile.entrance.distancePx).toBeLessThanOrEqual(500)
+    expect(profile.entrance.overshootPct).toBeLessThanOrEqual(12)
     expect(profile.driftPct).toBeGreaterThan(0)
     expect(['house', 'inkDeep', 'dark']).toContain(profile.ground.kind) // brand roles only
     if (profile.boil) expect(profile.boil.amplitudePx).toBeLessThanOrEqual(2) // line-boil's bank rule
@@ -102,7 +106,7 @@ describe('motion style profiles', () => {
 
   it('pulls an out-of-floor profile inside it and refuses an unknown style', () => {
     const wild = { ...MOTION_PROFILES['swiss-kinetic-type']!,
-      entrance: { kind: 'rise' as const, frames: 20, easing: 'enter' as const, distancePx: 300, overshootPct: 40 }, driftPct: 0 }
+      entrance: { kind: 'rise' as const, frames: 20, easing: 'enter' as const, distancePx: 900, overshootPct: 40 }, driftPct: 0 }
     expect(floorProblems(wild).length).toBeGreaterThanOrEqual(4)
     const held = clampToFloor(wild)
     expect(floorProblems(held)).toEqual([])

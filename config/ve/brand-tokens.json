@@ -65,7 +65,7 @@
     "corpus": "_corpus/motion-design-video-corpus.md sections 5.1-5.3, 14.2"
   },
   "geometry": {
-    "tall": "apps/renderer/src/house/geometry.ts HOUSE (caption top 1180, mark 136 at 72/150)",
+    "tall": "apps/renderer/src/house/geometry.ts HOUSE (caption top 1180; no mark on the tall cut, Ruling, Krish, 2026-11-11)",
     "tall_safe_key_text": {
       "x": [
         120,
@@ -80,7 +80,7 @@
         780
       ]
     },
-    "caption_block_bottom_max_y": 1500,
+    "caption_block_bottom_max_y": 1320,
     "wide_title_safe": [
       96,
       54,

@@ -85,7 +85,7 @@ def figure(img):
 # Krish, 2026-11-01, on the 2 Nov board's article: the "3 things you can do tomorrow" list came out as one paragraph
 # with its hyphens inline ("can we make sure the article formatting is 11/10?"). The old reader split on blank lines
 # and joined every line of a block with spaces, so a list, a quote or a heading without a blank line after it was
-# flattened. This reads the article line by line, the way scripts/pages/build.py and week_board.md_block() do.
+# flattened. This reads the article line by line, the way scripts/pages/build.py does.
 _HEADING = re.compile(r'^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$')
 _RULE = re.compile(r'^\s*([-*_])\s*(?:\1\s*){2,}$')
 _ITEM = re.compile(r'^\s*(?:([-*+\u2022])|(\d+)[.)])\s+(.*)$')
@@ -364,7 +364,7 @@ pre.txt{margin:0;white-space:pre-wrap;word-break:break-word;font:15px/1.5 Archiv
 .article h3{font:700 18px/1.3 Georgia,serif;margin:18px 0 6px}.article ul,.article ol{margin:0 0 14px;padding-left:26px;font:17px/1.6 Georgia,serif}.article li{margin:0 0 8px;padding-left:4px}.article blockquote{margin:14px 0;padding:2px 0 2px 16px;border-left:3px solid #111}.article blockquote p{font-style:italic}.article hr{border:0;border-top:1px solid #ddd;margin:20px 0}.article a{color:inherit}
 .pic{display:grid;gap:8px}.pic img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);display:block}
 .status{font-size:12.5px;color:var(--muted);min-height:1.2em}.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
-ol.do{margin:0;padding-left:20px}.files{font:12px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted)}
+ol.do{margin:0;padding-left:20px;overflow-wrap:anywhere}.files{font:12px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted)}
 .links{display:grid;gap:8px}.links label{display:grid;gap:4px;font-weight:700;font-size:14px}
 .links input{font:inherit;font-weight:400;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%}
 #toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
@@ -513,9 +513,9 @@ def pic_card(img, slug):
 
 
 def page_data(words, images):
-    """The page's words and its pictures' roles as data, for the week's board: its Publish run-sheet is built from
-    these (week_board.py run_sheet), never from this page's markup. Inert JSON, with "<" escaped so nothing in it
-    can close the script element."""
+    """The page's words and its pictures' roles as data, for a reader that needs them without parsing this page's
+    markup (the old board's run-sheet read them until it was retired on 13 Nov 2026). Inert JSON, with "<" escaped so
+    nothing in it can close the script element."""
     meta = [{k: i[k] for k in ('id', 'role', 'alt', 'after_heading', 'caption', 'label') if i.get(k)} for i in images]
     data = json.dumps({'version': 1, 'words': words, 'images': meta}, ensure_ascii=False, sort_keys=True).replace('<', '\\u003c')
     return '<script type="application/json" id="pm-data">' + data + '</script>'
@@ -575,7 +575,7 @@ def page(m, base):
     covers = ''.join(pic_card({**i, 'label': COVER_ROLES[i['role']]}, slug) for i in others)
 
     # 2 onwards: every other channel, from the same plan as publish_kit.py. Each section is headed with its step's where,
-    # which is how the week's board finds its copy (week_board.section_kit), never by its number or its id.
+    # so a reader finds its copy by where it goes, never by its number or its id.
     for k, s in enumerate((s for s in publish_kit.steps(words) if s['where'] != 'Substack'), 2):
         cards = ''.join(text_card(cid(), label, text) for label, text in s['copy'])
         files = ''.join(file_item(f, links) for f in s['files'])

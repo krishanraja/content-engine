@@ -1,0 +1,56 @@
+{
+ "schema": "av-sync-edl/1",
+ "about": "The Wed 11 Nov 5-minute (short-composite/comp_long.py): KEEP spans of the long take in output order, and where his picture sits: the take (1080x1920) scaled 0.75 and placed at (1225, -360) on the 1920x1080 cut, so cut x 1225..1920, y 0..1080 shows take x 0..926, y 480..1920. Measure against the original take ai-music-long.mp4 (sha256 561bc44a...), never the 30 fps clip. python scripts/av_sync.py measure CUT --take ai-music-long.mp4 --edl this",
+ "take_sha256": "561bc44ab5b46568c950dc3abe58f5e8b2932463f7e90ca9ef3eec748dbc66cb",
+ "picture": {
+  "cut": [
+   1225,
+   0,
+   695,
+   1080
+  ],
+  "take": [
+   0,
+   480,
+   926,
+   1440
+  ]
+ },
+ "spans": [
+  {
+   "out_s": 0.0,
+   "src_s": 1.8,
+   "dur_s": 18.65
+  },
+  {
+   "out_s": 18.65,
+   "src_s": 21.38,
+   "dur_s": 3.67
+  },
+  {
+   "out_s": 22.32,
+   "src_s": 27.45,
+   "dur_s": 205.15
+  },
+  {
+   "out_s": 227.47,
+   "src_s": 234.75,
+   "dur_s": 47.25
+  },
+  {
+   "out_s": 274.72,
+   "src_s": 286.08,
+   "dur_s": 16.27
+  },
+  {
+   "out_s": 290.99,
+   "src_s": 311.35,
+   "dur_s": 24.15
+  },
+  {
+   "out_s": 315.14,
+   "src_s": 338.45,
+   "dur_s": 22.35
+  }
+ ]
+}

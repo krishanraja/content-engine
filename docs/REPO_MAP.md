@@ -35,12 +35,13 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `docs/ve/`
 - `docs/walks/`
 - `editions/`
-- `examples/`
 - `fixtures/`
 - `inspo/`
+- `lab/`
 - `packages/cli/`
 - `packages/contracts/`
 - `packages/core/`
+- `packages/moves/`
 - `scripts/`
 - `scripts/channel-kit/`
 - `scripts/cutgates/`
@@ -118,6 +119,8 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/content-ideas/archive-stale`
 - `/api/content-ideas/cluster`
 - `/api/content-ideas/research-topic`
+- `/api/content-ideas/sessions`
+- `/api/content-ideas/store`
 - `/api/content-ideas/synthesize`
 - `/api/content-opportunities/refresh`
 - `/api/content-seed-candidates`
@@ -126,6 +129,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/discover-lens-radar`
 - `/api/feed/ingest`
 - `/api/idea-queue`
+- `/api/inspiration/actions`
 - `/api/inspiration/candidates`
 - `/api/inspiration/cards`
 - `/api/inspiration/drive-scan`
@@ -151,9 +155,11 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/library/written`
 - `/api/media-quality`
 - `/api/media-review-pilot`
+- `/api/publish/catalogue`
 - `/api/publish/watch`
 - `/api/purge/restore`
 - `/api/purge/run`
+- `/api/research-library/sweep`
 - `/api/shifts/[id]`
 - `/api/shifts/[id]/write`
 - `/api/shifts/detect`
@@ -235,14 +241,17 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `const OPEN_GOVERNOR`
 - `const SIGNAL_TTL_DAYS`
 - `type SubjectKind = 'venture' | 'prospect' | 'aspiration'`
-- `type AeoEngine = 'perplexity' | 'chatgpt' | 'claude' | 'grok'`
+- `type AeoEngine = 'perplexity' | 'chatgpt' | 'claude' | 'grok' | 'gemini'`
 - `type ThemesStatus`
 - `interface AeoEvidence`
 - `interface AeoProbe`
 - `interface AeoQuery`
+- `interface AeoCitedPage`
 - `interface AeoRecommendation`
 - `interface AeoNotWorthChasing`
 - `interface AeoPacket`
+- `const PROBE_FEATURE_FIELDS`
+- `function schemaCheck(node: SchemaNode, v: unknown, path: string, errs: string[]): void`
 - `function validatePacket(input: unknown): { ok: true; packet: AeoPacket } | { ok: false; errors: string[] }`
 - `function aeoSourceRef(kind: SubjectKind, slug: string, weekStart: string, n: number): string`
 - `interface AeoSignalRow`
@@ -252,6 +261,22 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `function aeoSignalSummary(meta: AeoSignalRow['meta']['aeo'], thesis: string): string`
 - `function probeRows(packet: AeoPacket): Array<Record<string, unknown>>`
 - `function queryRows(packet: AeoPacket): Array<Record<string, unknown>>`
+- `interface CitedPageRow`
+- `function citedPageRows(packet: AeoPacket, stored: ReadonlyArray<Pick<CitedPageRow, 'url' | 'mention' | 'mention_ok' | '…`
+- `const KRISH_DOMAINS: readonly string[]`
+- `const NOT_OURS: readonly string[]`
+- `const PACKET_FEATURES: readonly string[]`
+- `const CONTEXT_FEATURES: readonly string[]`
+- `interface BrandCheck`
+- `function brandNamesOf(v: unknown): string[]`
+- `function brandChecksOf(v: unknown): BrandCheck[]`
+- `function heldProducts(engines: ReadonlyArray<{ product_slug?: unknown; role?: unknown; activation_state?: unknown }>): …`
+- `interface ShippedDeclaration`
+- `function shippedFor(rows: ReadonlyArray<Record<string, unknown>>, product: string): ShippedDeclaration[]`
+- `function subjectHostsOf(domains: unknown): string[]`
+- `interface SearchRead`
+- `interface SearchSignals`
+- `function searchSignalsFor(hosts: readonly string[], input: { reads: readonly SigRow[]; gsc: readonly SigRow[]; bing: re…`
 
 ### `apps/control-plane/api/_alert.ts`
 
@@ -448,6 +473,7 @@ _content — shared helpers for the Content Engine API routes
 - `async function getAnthropicKey(): Promise<string | null>`
 - `function buildSystemBlocks(opts: Partial<ClaudeOpts>): unknown`
 - `async function callClaude(opts: ClaudeOpts): Promise<string>`
+- `function firstText(j: any): string`
 - `interface ChatTurn`
 - `async function callClaudeMessages( system: string, messages: ChatTurn[], opts: { model?: string; maxTokens?: number; te…`
 - `function preamble(req: any, res: any, methods = 'POST, OPTIONS'): boolean`
@@ -995,6 +1021,14 @@ What Krish's Inspiration House holds, for Sunday's ideas (GET /api/week/options?
 - `function buildAsks(weekStart: string, items: Row[], skip: (r: Row) => boolean = () => false): Ask[]`
 - `function buildRecent(weekStart: string, rows: Row[]): RecentPiece[]`
 - `function buildInspiration(input: { weekStart: string; items: Row[]; reads?: Row[]; moves?: Row[]; claims?: Row[]; quote…`
+- `const BULK_AT_ONCE`
+- `const POSITIVE`
+- `function wordless(c: InspoCard): boolean`
+- `const FEED_DAYS`
+- `const CORRECTION_DAYS`
+- `function buildFeed(rows: Row[])`
+- `function buildCorrections(rows: Row[])`
+- `function buildHindsight(rows: Row[])`
 
 ### `apps/control-plane/api/_investigation.ts`
 
@@ -1005,6 +1039,14 @@ _investigation: the MYMU: Teardown weekly investigation: anchor selection, claim
 - `async function priorAnchorHeadlines(): Promise<string[]>`
 - `interface AnchorDecision`
 - `async function selectAnchor( ranked: RankedAnchor[], budget: RunBudget, hctx: HarnessContext, opts: { dryRun?: boolean …`
+- `const DECOMPOSE_MAX_TOKENS`
+- `const SHORT_PAGE_CHARS`
+- `function decomposeSource(anchorText: string, pageText: string | null | undefined): { text: string; note: string | null }`
+- `interface EmptySplit`
+- `function emptySplit( res: Pick<MeteredResult, 'text' | 'error' | 'stopReason'>, parsed: unknown, maxTokens: number, ): …`
+- `interface SplitAttempt`
+- `interface SplitOutcome`
+- `async function splitClaims( headline: string, sourceText: string, pillarEvidence: string[], call: (opts: MeteredOpts) =…`
 - `interface RunResult`
 - `async function runInvestigation(opts: RunOpts = {}): Promise<RunResult>`
 - `function buildManifest(m: ManifestInput): string`
@@ -1231,7 +1273,7 @@ The making record: where one piece is on its way from the workroom to
 
 ### `apps/control-plane/api/_meter.ts`
 
-- `type MeterProvider = 'apify' | 'n8n' | 'anthropic' | 'perplexity' | 'openai'`
+- `type MeterProvider`
 - `type MeterUnitKind = 'actor' | 'workflow' | 'agent'`
 - `interface MeterScope`
 - `function meterScope<T>(s: MeterScope, fn: () => Promise<T>): Promise<T>`
@@ -1249,6 +1291,7 @@ The making record: where one piece is on its way from the workroom to
 - `async function anthropicFailure(e: { agent?: string | null model: string error: unknown /** The usage the provider repo…`
 - `async function perplexityCall(e: { agent: string; model: string; usage?: unknown; failed?: boolean }): Promise<void>`
 - `async function openaiEmbeddingCall(e: { agent: string; model: string; usage?: unknown; failed?: boolean }): Promise<voi…`
+- `async function reportedUsage(e: { provider: 'anthropic' | 'openai' | 'perplexity' | 'google' | 'xai' agent?: string | n…`
 - `interface FactRunCost`
 - `function newestRunCost(rows: Array<{ at: string; run_id: string | null; piece_id: string | null; usd: number | string }…`
 - `async function lastFactRunCost(): Promise<FactRunCost | null>`
@@ -1376,6 +1419,37 @@ The YouTube title and description for a piece's video, and the title and
 - `function packagingCorrection(answer: PackageAnswer, lint: AnswerLint): string`
 - `function packagingRequest(o: { idea: string | null thesis: string | null source: string materialsBlock?: string thumbna…`
 
+### `apps/control-plane/api/_pieceStore.ts`
+
+- `const MATERIAL_KINDS`
+- `type MaterialKind = (typeof MATERIAL_KINDS)[number]`
+- `const REPORT_KINDS`
+- `type ReportKind = (typeof REPORT_KINDS)[number]`
+- `const WORKING_SET_MAX`
+- `const STORE_TEXT_MAX`
+- `const STORE_FILE_MAX`
+- `const UUID`
+- `const SESSION_ID`
+- `class StoreError`
+- `interface StoreDb`
+- `type Scope`
+- `function parseScope(q: Body): Scope`
+- `function writerOf(bearer: boolean, body: Body): string`
+- `interface ReportInput`
+- `function parseReport(body: Body): ReportInput`
+- `async function report(db: StoreDb, input: ReportInput, by: string): Promise<Body>`
+- `interface MaterialInput`
+- `async function addToWorkingSet(db: StoreDb, pieceId: string, material: Material, tries = 6): Promise<{ ok: true; materi…`
+- `async function removeFromWorkingSet(db: StoreDb, pieceId: string, materialId: string, tries = 6): Promise<{ ok: true; m…`
+- `async function patchMeta(db: StoreDb, pieceId: string, patch: (meta: Body) => Body, tries = 6): Promise<{ ok: true; met…`
+- `async function addText(db: StoreDb, body: Body, bearer: boolean, by: string): Promise<Body>`
+- `async function fileType(name: unknown): Promise<{ ext: string; contentType: string }>`
+- `async function uploadUrl(db: StoreDb, body: Body): Promise<Body>`
+- `async function confirmFile(db: StoreDb, body: Body, bearer: boolean, by: string, fetcher: Fetcher = fetch as unknown as…`
+- `async function archive(db: StoreDb, id: string, by: string, reason: string | null): Promise<Body>`
+- `async function listing(db: StoreDb, scope: Scope, opts: { all?: boolean; archived?: boolean } = {}): Promise<Body>`
+- `async function readMaterial(db: StoreDb, id: string): Promise<{ kind: 'text'; body: Body } | { kind: 'redirect'; url: s…`
+
 ### `apps/control-plane/api/_pool.ts`
 
 Read-only client for the CTRL shared headlines pool (portfolio hive mind).
@@ -1403,6 +1477,7 @@ The one Anthropic price table.
 - `function readUsage(usage: unknown): TokenUsage`
 - `const PERPLEXITY_PRICES: Record<string, { in: number; out: number; request: number }>`
 - `function perplexityUsd(model: string, usage: unknown): number`
+- `const ANTHROPIC_WEB_SEARCH_USD`
 - `const OPENAI_EMBEDDING_PRICES: Record<string, number>`
 
 ### `apps/control-plane/api/_productionBrief.ts`
@@ -1430,6 +1505,18 @@ The one Anthropic price table.
 - `function normalizeProductionSourceMode(value: unknown): ProductionSourceMode | null`
 - `function normalizeProductionFormat(value: unknown, series: ProductionSeries): ProductionFormat | null`
 - `function buildProductionBrief(input: { row: ContentRevisionInput & { id: string; source_url?: string | null; meta?: Jso…`
+
+### `apps/control-plane/api/_publicationCatalogue.ts`
+
+The public publication catalogue: for every published piece, the public addresses it went out at.
+
+- `const CATALOGUE_FROM`
+- `interface CataloguePiece`
+- `interface CatalogueVideo`
+- `interface CatalogueEntry`
+- `interface Catalogue`
+- `function youtubeId(url: string): string | null`
+- `function catalogue(pieces: readonly CataloguePiece[]): Catalogue`
 
 ### `apps/control-plane/api/_publishChecks.ts`
 
@@ -1464,11 +1551,21 @@ The publish watcher's pure half: which piece a live Substack post is.
 - `interface Post`
 - `interface Candidate`
 - `function normTitle(s: string | null | undefined): string`
+- `function archiveList(raw: unknown): Array<Record<string, unknown>>`
 - `function readPosts(raw: unknown): Post[]`
 - `type Match`
 - `function matchPost(post: Post, pieces: readonly Candidate[]): Match`
 - `function unmatchedItem(post: Post)`
 - `function unmatchedItemId(post: Pick<Post, 'id'>): string`
+- `const YOUTUBE_CHANNEL_ID`
+- `const YOUTUBE_FEED`
+- `const YOUTUBE_WATCH_FROM`
+- `interface Upload`
+- `function readUploads(xml: string): Upload[]`
+- `interface PublishedPiece`
+- `type UploadMatch`
+- `function matchUpload(upload: Upload, pieces: readonly PublishedPiece[], uploads: readonly Upload[] = [upload]): UploadM…`
+- `function uploadWrite(upload: Upload, piece: PublishedPiece): { write: Record<string, unknown> } | { skip: string }`
 
 ### `apps/control-plane/api/_quota.ts`
 
@@ -1510,6 +1607,60 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `interface ClassifyOpts`
 - `async function classifyRelevance(items: RelevanceItem[], opts: ClassifyOpts): Promise<RelevanceVerdict[]>`
 - `function relevanceReasonCode(prefix: string, verdict: Verdict): string`
+
+### `apps/control-plane/api/_researchLibrary.ts`
+
+- `const RESEARCH_LIBRARY_FOLDER_ID`
+- `const RESEARCH_LIBRARY_INDEX_ID`
+- `const LIBRARY_KINDS`
+- `const LIBRARY_ROLES`
+- `const SETTLE_MS`
+- `const MIRROR_FILE_MAX`
+- `const INDEX_COLUMNS`
+- `const INDEX_MATERIAL_COLUMN`
+- `const LIBRARY_LEASE`
+- `const LIBRARY_LEASE_MS`
+- `const LEASE_RETRY_MS`
+- `const PROP`
+- `interface StoredMaterial`
+- `interface PieceInfo`
+- `interface LibraryFolder`
+- `interface LibraryFile`
+- `interface LibraryDrive`
+- `interface IndexSheet`
+- `interface IndexTidy`
+- `interface LibraryIndex`
+- `type LeaseTake`
+- `interface LibraryLock`
+- `interface LibrarySource`
+- `interface MirrorOptions`
+- `interface MirrorReport`
+- `function inLibrary(m: Pick<StoredMaterial, 'kind' | 'role' | 'storage' | 'archived_at' | 'bytes'>): boolean`
+- `const isSource = (m: Pick<StoredMaterial, 'kind' | 'role'>) =>`
+- `interface Place`
+- `function placeOf(m: StoredMaterial, piece: PieceInfo | null): Place`
+- `function fileNameOf(m: StoredMaterial): string`
+- `function mimeOf(m: StoredMaterial): string`
+- `function descriptionOf(m: StoredMaterial, piece: PieceInfo | null, place: Place): string`
+- `function indexRowOf(m: StoredMaterial, piece: PieceInfo | null, place: Place, link: string): string[]`
+- `const INDEX_LINK_AT`
+- `function fileIdOf(link: string): string | null`
+- `type LiveLink = (materialId: string, link: string) => boolean`
+- `function duplicateRows(sheet: Pick<IndexSheet, 'firstRow' | 'values'>, live: LiveLink): { repairs: IndexTidy['repairs']…`
+- `function tidyPlan(sheet: IndexSheet, listed: Set<string>, live: LiveLink): { ok: true; plan: IndexTidy } | { ok: false;…`
+- `function deleteRuns(rows: number[]): Array<[number, number]>`
+- `async function mirror(source: LibrarySource, drive: LibraryDrive, index: LibraryIndex, lock: LibraryLock, opts: MirrorO…`
+
+### `apps/control-plane/api/_researchLibraryGoogle.ts`
+
+- `function googleLibraryDrive(token: string, f: Fetch = fetch): LibraryDrive`
+- `function googleLibraryIndex(token: string, sheetId = RESEARCH_LIBRARY_INDEX_ID, f: Fetch = fetch): LibraryIndex`
+- `interface SourceDb`
+- `interface LeaseDb`
+- `function storeLease(db: LeaseDb, who: 'sweep' | 'write', name = LIBRARY_LEASE, ms = LIBRARY_LEASE_MS): LibraryLock`
+- `function storeSource(db: SourceDb, bucket: string): LibrarySource`
+- `async function runMirror(opts: { only?: string[]; budgetMs?: number } = {}): Promise<MirrorReport>`
+- `async function copyNow(materialId: string | null | undefined, waitMs = 20_000): Promise<Record<string, unknown>>`
 
 ### `apps/control-plane/api/_retry.ts`
 
@@ -1730,6 +1881,8 @@ What Krish has confirmed he likes, for the writers.
 - `const DEFAULT_TELEPROMPTER_MCP_URL`
 - `const WORDS_PER_MINUTE`
 - `const APPROVAL_WRITER`
+- `const TYPED_SCRIPTS_ID`
+- `function typedApproval(a: { id?: unknown; body?: unknown }): boolean`
 - `const ALLOWED_TOOLS: Readonly<Record<string, readonly string[]>>`
 - `class TeleprompterRefusal`
 - `class TeleprompterError`
@@ -1870,6 +2023,7 @@ The week's options, as the Sunday session writes them onto the pieces.
 - `interface WeekOptionInput`
 - `interface WeekOptionMeta`
 - `const MAX_OPTIONS`
+- `const MAX_INSPIRED`
 - `const MAX_COVERS`
 - `function isMonday(ymd: string): boolean`
 - `function keepThroughWeek(expiresAt: string | null | undefined, weekStart: string): string | null`
@@ -1892,12 +2046,13 @@ Sunday's idea pool from every source, and the evidence of Krish's taste (GET /ap
 - `function sourceKind(row: Row): { kind: SourceKind; via: HisVia | null }`
 - `function excluded(row: Row): string | null`
 - `function tasteOf(rows: Row[]): TasteItem[]`
+- `function rejectedTaste(rows: Row[], refused: Map<string, { said: string | null; at: string | null }>): TasteItem[]`
 - `function nearest(vec: number[] | null, taste: TasteItem[], selfId?: string)`
 - `function candidate(row: Row, taste: TasteItem[]): Candidate`
 - `function rank(a: Candidate, b: Candidate): number`
 - `function inWindow(row: Row, kind: SourceKind, win: ReturnType<typeof windows>): boolean`
 - `interface Relayed`
-- `function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[] })`
+- `function buildSources(input: { weekStart: string; series: string[]; rows: Row[]; tasteRows: Row[]; relayed?: Row[]; rej…`
 
 ### `apps/control-plane/api/_weeks.ts`
 
@@ -1927,6 +2082,8 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 
 ### `apps/control-plane/api/aeo/meter.ts`
 
+- `const METER_PROVIDERS`
+- `function rowErrors(rows: readonly UsageRow[]): string[]`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/aeo/queries.ts`
@@ -1990,6 +2147,7 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function growthWriter(req: VercelRequest): boolean`
 - `function actor(req: VercelRequest, operatorOnly = false): string | null`
 - `const PRESS_USES`
+- `const VETO_ID`
 - `const OFFDAY_ID`
 - `const DECISION_ID`
 - `const DECISION_KIND`
@@ -2011,6 +2169,16 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function creativeBody(id: string, body: Record<string, unknown>): boolean`
 - `const YES_ID`
 - `function yesBody(id: string, body: Record<string, unknown>): boolean`
+- `const WORDS_ID`
+- `const WORDS_KIND`
+- `function saidInWords(body: Record<string, unknown>): boolean`
+- `function wordsBody(id: string, body: Record<string, unknown>): boolean`
+- `const LIVE_ID`
+- `function liveBody(id: string, body: Record<string, unknown>): boolean`
+- `const SIGN_OFF_ID`
+- `const MAX_SIGN_OFF_PRESSES`
+- `const SIGN_OFF_WORDS_MAX`
+- `function signOffBody(id: string, body: Record<string, unknown>): boolean`
 - `const SCRIPT_CUTS`
 - `const TITLE_SURFACES`
 - `function validBody(collection: string, id: string, body: unknown): boolean`
@@ -2027,16 +2195,140 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function fileSpec(week: string, v: unknown, html = false): v is BoardFile`
 - `function validManifest(week: string, v: unknown): v is Manifest`
 
-### `apps/control-plane/api/board/_deskPage.ts`
+### `apps/control-plane/api/board/_cuts.ts`
 
-Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not edit by hand.
+- `const WORDS_MAX`
+- `const CUT_OP`
+- `type CutSaid = 'yes' | 'not_this'`
+- `interface CutVerdict`
+- `interface CutAnswer`
+- `interface CutPress`
+- `interface CutPresses`
+- `function cutVerdicts(meta: unknown): CutVerdict[]`
+- `function answerOn(meta: unknown, mediaId: string): CutAnswer | null`
+- `function cutPresses(pieceId: string, item: Pick<MediaItem, 'id' | 'title'>): CutPresses`
+- `function mediaWithAnswers(piece: Body | undefined): MediaItem[]`
+- `class CutError`
+- `interface CutPick`
+- `function cutPick(body: Body): CutPick`
+- `function nextVerdicts(meta: Body, pick: CutPick, at: string): { list: unknown[]; entry: CutVerdict; already: boolean }`
+- `async function saveCut(db: SupabaseClient, pieceId: string, pick: CutPick, now = new Date()): Promise<{ verdict: CutVer…`
+- `interface CutPlace`
+- `type Filed = 'filed' | 'failed' | 'waits_on_migration'`
+- `interface CutLearning`
+- `function cutReport(place: CutPlace, v: CutVerdict)`
+- `function cutInboxRow(place: CutPlace, v: CutVerdict)`
+- `function cutIncident(place: CutPlace, v: CutVerdict): Incident | null`
+- `async function fileCutLearning(db: SupabaseClient, place: CutPlace, v: CutVerdict, now = new Date()): Promise<CutLearni…`
 
-- `const DESK_PAGE: string`
+### `apps/control-plane/api/board/_drivePosts.ts`
+
+- `const POSTS_FOLDER_ID`
+- `const DRIVE_ID`
+- `interface DriveFile`
+- `const DRIVE_FIELDS`
+- `type DriveLister = (q: string) => Promise<DriveFile[]>`
+- `const driveFileUrl = (id: string) =>`
+- `const driveFolderUrl = (id: string) =>`
+- `function driveIdOf(url: unknown): string | null`
+- `function driveFolderIdOf(url: unknown): string | null`
+- `type AssetKind`
+- `interface AssetFile`
+- `interface PostAsset`
+- `interface DrivePost`
+- `function versionKey(name: string): string`
+- `function kindOf(folder: string, f: DriveFile): AssetKind`
+- `function assetsOf(files: Array<{ folder: string; file: DriveFile }>): PostAsset[]`
+- `async function readWeekPosts(list: DriveLister, week: string): Promise<DrivePost[]>`
+- `function filesOfPosts(posts: DrivePost[]): Map<string, AssetFile>`
+- `function driveLister(token: string, f: typeof fetch = fetch): DriveLister`
+- `function resetDrivePostsCache(): void`
+- `async function weekPosts(week: string, token: () => Promise<string | null>, now = Date.now(), f: typeof fetch = fetch):…`
+- `interface DriveStore`
+- `type DriveCopier`
+- `function copyKey(f: Pick<DriveFile, 'id' | 'name' | 'md5Checksum' | 'modifiedTime' | 'size'>): string`
+- `async function servedDrive(store: DriveStore, copy: DriveCopier, f: DriveFile): Promise<string | null>`
+- `function supabaseDriveStore(db: { storage: { from(b: string): any } }): DriveStore`
+- `async function driveFile(token: string, id: string, f: typeof fetch = fetch): Promise<DriveFile | null>`
+- `function ownerDriveToken(env: Record<string, string | undefined> = process.env): Promise<string | null>`
+- `interface BoardDrive`
+- `function boardDrive(db: { storage: { from(b: string): any } }, opts: { token?: () => Promise<string | null>; fetch?: ty…`
+
+### `apps/control-plane/api/board/_gate.ts`
+
+- `const SHA256`
+- `const OUTCOMES`
+- `type Outcome = keyof typeof OUTCOMES`
+- `const OUTCOME_OF_USE: Record<string, Outcome>`
+- `const OUTCOME_OF_VERDICT: Record<string, Outcome>`
+- `interface Approval`
+- `function dayWords(week: string, day: string): string`
+- `function dayShort(week: string, day: string): string`
+- `function approvedWhen(at: string, timeZone = 'America/New_York'): string`
+- `const approvedLabel = (a: Pick<Approval, 'decided_at'> & { via?: string }) =>`
+- `function optionSha(o: { so_what?: unknown; story?: unknown }): string`
+- `function goes(outcome: Outcome, week: string, day: string, offday = false): string`
+- `async function readApprovals(db: SupabaseClient, week: string): Promise<Approval[] | null>`
+- `function approvalFor(approvals: Approval[] | null, piece: Body, date: string): Approval | null`
+- `function asSentence(title: string): string`
+- `interface Held`
+- `const HELD_TITLE`
+- `const HELD_CHANGED`
+- `function gatePieces(week: string, pieces: Body[], approvals: Approval[] | null, ideas: Body | null)`
+- `function cutSoWhat(v: unknown): string`
 
 ### `apps/control-plane/api/board/_handler.ts`
 
 - `function boardPolicy(storeUrl?: string)`
 - `function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: PressDeps = {})`
+
+### `apps/control-plane/api/board/_itsLive.ts`
+
+- `const LIVE_OP`
+- `const LIVE_ACTOR`
+- `const MAX_LIVE_POSTS`
+- `interface LivePost`
+- `interface LiveInput`
+- `function liveChannels(day: PostedDay, offday = !SERIES_DAYS.includes(day)): PostedChannel[]`
+- `function channelOfUrl(url: string): PostedChannel | null`
+- `function liveInput(body: unknown): { input?: LiveInput; problem?: string }`
+- `function liveByDay(picks: Array<{ doc_id: string; body: Body; updated_by: string }>): Partial<Record<PostedDay, LivePos…`
+- `function postsFor(posts: LivePost[] | undefined, subject: { piece_id?: string | null; option?: string | null }): LivePo…`
+- `function channelWords(posts: LivePost[]): string`
+- `function liveWhen(at: string): string`
+- `function liveLine(posts: LivePost[]): string`
+- `function todayNY(now: Date): string`
+- `function livePress(day: PostedDay, subject: { piece_id?: string | null; option?: string | null; title?: string | null }…`
+- `interface LiveResult`
+- `async function recordLive(db: SupabaseClient, week: string, raw: unknown, who: string, now: string): Promise<LiveResult>`
+- `const PUBLICATION_SERIES`
+- `async function publishedNow(db: SupabaseClient, now: Date): Promise<number | null>`
+
+### `apps/control-plane/api/board/_judge.ts`
+
+- `const JUDGED_FORMATS`
+- `const DAILY_CAP`
+- `interface JudgeDeps`
+- `function artifactSha256(format: string, channel: string, words: string, assets: Array<{ sha256: string }>): string`
+- `function postArtifact(b: Body): string`
+- `async function judgeAsset(db: SupabaseClient, week: string, body: unknown, deps: JudgeDeps = {}): Promise<Answer>`
+
+### `apps/control-plane/api/board/_later.ts`
+
+- `const FIRST_IDEAS_WEEK`
+- `type LaterGroup = 'filed' | 'trend' | 'improved' | 'older' | 'never'`
+- `const LATER_GROUPS: ReadonlyArray<{ id: LaterGroup; label: string; line: string }>`
+- `interface Answer`
+- `interface LaterItem`
+- `interface LaterView`
+- `interface LaterInputs`
+- `function boardOptions(boards: LaterInputs['boards'], pieces: Body[] = []): Shown[]`
+- `function answersFor(s: Shown, i: LaterInputs): Answer[]`
+- `function buildLater(i: LaterInputs): LaterView`
+- `function freeDay(i: LaterInputs, day: string, kind: 'series' | 'offday', today: string): string | null`
+- `function replaceTargets(i: LaterInputs, day: string, ideaId: string, today: string): Array<{ week: string; date: string…`
+- `function laterPresses(i: LaterInputs, s: Shown, today: string): { actions: PressAction[]; held: string | null }`
+- `async function readLater(db: SupabaseClient, fetcher: Fetcher = fetch as unknown as Fetcher, now = new Date()): Promise…`
 
 ### `apps/control-plane/api/board/_live.ts`
 
@@ -2052,13 +2344,116 @@ Built by scripts/build-desk-page.mjs from apps/control-plane/board-next. Do not 
 - `function liveDay(piece: Body, date: string): LiveDay`
 - `async function weekLive(db: SupabaseClient, week: string, builtAt: string | null): Promise<WeekLive>`
 
+### `apps/control-plane/api/board/_liveBoard.ts`
+
+Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the publish board is 1000% where
+
+- `const LIVE_BOARD_URL`
+- `function liveBoardUrl(week?: string | null, day?: string | null): string`
+
+### `apps/control-plane/api/board/_makeRoute.ts`
+
+How an off-day post is made, said once for every prompt the board copies out (the week model's "Copy prompt for
+
+- `type MakeRoute = 'still' | 'motion'`
+- `function makeRoute(kind: string | null | undefined, format: string | null | undefined): MakeRoute | null`
+- `const ROUTE_RULING`
+- `const NEVER_HEADLESS`
+- `function routeLine(route: MakeRoute): string`
+
+### `apps/control-plane/api/board/_manifest.ts`
+
+- `interface ManifestAsset`
+- `interface Draft`
+- `interface ViewManifest`
+- `interface ManifestPress`
+- `const sha256 = (b: Uint8Array | string) =>`
+- `function draftPath(piece: Body): string | null`
+- `function parseDraft(bytes: Uint8Array, pieceId: string): Draft | null`
+- `async function readDrafts(db: SupabaseClient, pieces: Body[]): Promise<Map<string, Draft>>`
+- `function dayManifest(draft: Draft | undefined, picks: Array<{ doc_id: string; body: Body; updated_by: string; revision?…`
+- `class ManifestBindError`
+- `async function checkPublishBind(db: SupabaseClient, body: Body): Promise<void>`
+
 ### `apps/control-plane/api/board/_media.ts`
 
 - `type MediaKind = 'cut' | 'thumbnail'`
+- `interface DriveLink`
 - `interface MediaItem`
+- `const NO_DRIVE_LINK`
 - `function dayMedia(piece: Body | undefined): MediaItem[]`
+- `function cutOn(piece: Body, id: string): { id: string; cut: string; title: string; path: string; sha256: string | null …`
 - `function findMedia(pieces: Body[], id: string): MediaFile | null`
-- `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string): Promise<string | null>`
+- `function libraryPaths(file: Pick<MediaFile, 'path' | 'folder'>): string[]`
+- `async function signMedia(db: SupabaseClient, week: string, weekEnd: string, id: string, drive?: (fileId: string) => Pro…`
+
+### `apps/control-plane/api/board/_offdayItems.ts`
+
+- `const DAYS`
+- `type DayKey = typeof DAYS[number]`
+- `const OPTION_ID`
+- `const ITEM_KEY`
+- `const MOVE_AHEAD_DAYS`
+- `const MOVE_TZ`
+- `const REST_DAYS: readonly string[]`
+- `type ItemState = 'offered' | 'approved' | 'later' | 'withdrawn'`
+- `type PostState = 'made' | 'scheduled' | 'live' | 'cancelled'`
+- `interface GrowthPost`
+- `interface OffdayItem`
+- `const POST_CHECKS`
+- `function growthPost(v: unknown, check: string | null = null): GrowthPost | null`
+- `const itemKey = (source: 'engine' | 'growth', week: string, id: string) =>`
+- `const mondayOf = (d: string) =>`
+- `const dayKeyOf = (d: string) =>`
+- `function itemOf(r: unknown): OffdayItem | null`
+- `async function readItems(db: SupabaseClient, week: string): Promise<OffdayItem[] | null>`
+- `async function readItemsIn(db: SupabaseClient, states: ItemState[]): Promise<OffdayItem[] | null>`
+- `interface Placed`
+- `function contentOf(r: OffdayItem, ideas: Body | null, week: string): Body`
+- `function carriedItems(plans: Record<string, Body | null>): Set<string>`
+- `function dayOptions(ideas: Body | null, items: OffdayItem[] | null | undefined, week: string, day: string, base?: Body[…`
+- `function twinLines(r: OffdayItem | null, plans: Record<string, Body | null>): string[]`
+- `function todayIn(now: Date, timeZone = MOVE_TZ): string`
+- `function dayLabel(date: string): string`
+- `interface MoveDay`
+- `function moveDays(now: Date, opts: { current?: string | null; onlyWeek?: string | null; recorded?: boolean } = {}): Mov…`
+- `interface MoveSpec`
+- `function moveSpec(placed: Placed, o: Body, week: string, day: string, now: Date): MoveSpec | null`
+- `function laterMoveSpec(r: OffdayItem, now: Date): MoveSpec`
+- `function elsewhereLines(r: OffdayItem | null, now: Date): string[]`
+- `interface ViewGrowthPost`
+- `function viewPosts(r: OffdayItem | null): ViewGrowthPost[]`
+- `function liveOn(r: OffdayItem | null): GrowthPost[]`
+- `const channelWord = (c: string | null) =>`
+- `type MoveTo`
+- `interface MoveRequest`
+- `function moveInput(body: unknown): { input?: MoveRequest; problem?: string }`
+- `interface MoveDeps`
+- `interface MoveResult`
+- `function approveBody(o: Body, week: string, day: string, prev: Body | null, at: string, moved: Body | null): Body`
+- `function leaveBody(o: Body, week: string, day: string, prev: Body | null, at: string, moved: Body, later: boolean): Body`
+- `async function moveItem(db: SupabaseClient, req: MoveRequest, deps: MoveDeps): Promise<MoveResult>`
+- `interface OfferItem`
+- `function growthItems(week: string, body: unknown, plan: Body | null): { items?: OfferItem[]; problem?: string; left: Ar…`
+- `async function offerGrowth(db: SupabaseClient, week: string, body: unknown, plan: Body | null): Promise<MoveResult>`
+- `async function reportPosts(db: SupabaseClient, week: string, body: unknown, now: Date = new Date()): Promise<MoveResult>`
+- `function itemsForGrowth(items: OffdayItem[], week: string)`
+- `async function syncApprove(db: SupabaseClient, week: string, docId: string, body: Body, ideas: (w: string) => Promise<B…`
+- `async function twinItem(db: SupabaseClient, option: Body, own: string, week: string): Promise<OffdayItem | null | undef…`
+- `async function carry(db: SupabaseClient, twin: OffdayItem, to: { week: string; day: string; optionId: string; option: B…`
+- `function placedHere(items: OffdayItem[] | null, week: string, docId: string): { keep: boolean; item: OffdayItem | null }`
+- `function postFolderName(name: string, date: string): string | null`
+- `interface DriveRenamer`
+- `type DriveFollowed`
+- `async function followDrive(drive: DriveRenamer | null, folderId: string, date: string | null): Promise<DriveFollowed>`
+- `function googleDriveRenamer(token: string, f: typeof fetch = fetch): DriveRenamer`
+- `interface LibraryFollower`
+- `type IndexValues = string[][]`
+- `function libraryFixes(values: IndexValues, firstRow: number, pieceId: string, cells: [string, string, string]): Array<{…`
+
+### `apps/control-plane/api/board/_offdayLibrary.ts`
+
+- `function libraryFollower(db: SupabaseClient, f: typeof fetch = fetch): LibraryFollower`
 
 ### `apps/control-plane/api/board/_offdayRevise.ts`
 
@@ -2075,6 +2470,22 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `function pyJson(v: unknown): string`
 - `interface OffdaySides`
 - `function offdaySides(o: Body): OffdaySides`
+
+### `apps/control-plane/api/board/_onePost.ts`
+
+One post is one off-day item (docs/PUBLISH_BOARDS.md, "One post, one item"). Ruling (Krish, 2026-11-12): the board
+
+- `const ITEM_REF`
+- `const HOOK_MIN`
+- `function hookWords(v: unknown): string | null`
+- `function isWeekly(o: Body): boolean`
+- `function assetOf(url: unknown): string | null`
+- `function driveOf(v: unknown): string | null`
+- `function postKeys(o: Body, ctx: { item?: string | null; week?: string | null; drive?: string | null } = {}): string[]`
+- `function samePost(a: readonly string[], b: readonly string[]): boolean`
+- `interface KeyedRow`
+- `const rowKeys = (r: KeyedRow): string[] =>`
+- `function duplicatePosts(plans: Record<string, Body | null>): Array<{ post: string; a: string; b: string }>`
 
 ### `apps/control-plane/api/board/_posted.ts`
 
@@ -2097,6 +2508,10 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `interface PieceDay`
 - `function piecesByDay(week: string, raw: Body[]): Array<{ day: PostedDay; date: string; piece: Body; series: boolean }>`
 - `async function readPieces(db: SupabaseClient, week: string): Promise<{ status: number; body: Body }>`
+- `interface PieceScheduled`
+- `function pieceScheduled(v: unknown): PieceScheduled | null`
+- `async function recordScheduled(db: SupabaseClient, week: string, entries: PieceScheduled[], now: string): Promise<{ kep…`
+- `function scheduledOf(ticks: Array<{ tick_id: string; body: Body; updated_by: string }> | undefined, day: string, pieceI…`
 
 ### `apps/control-plane/api/board/_presses.ts`
 
@@ -2117,6 +2532,8 @@ A revised off-day card when Krish presses Improve (Ruling, Krish, 2026-11-01, lo
 - `async function recordTitle(db: SupabaseClient, body: Body): Promise<'recorded' | 'waits_on_migration' | 'failed' | null>`
 - `function offdayDate(week: string, day: string): string`
 - `async function placeOffday(db: SupabaseClient, ctx: { week: string; id: string; body: Body; who: string; now: string })…`
+- `async function placePick(db: SupabaseClient, ctx: { week: string; day: string; body: Body; now: string }): Promise<{ st…`
+- `function ideaReport(week: string, id: string, body: Body, now: string)`
 - `async function afterPress(db: SupabaseClient, ctx: { week: string; collection: string; id: string; body: Body; who: str…`
 
 ### `apps/control-plane/api/board/_prompts.ts`
@@ -2157,6 +2574,71 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `interface RunInfo`
 - `async function readRuns(env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as F…`
 
+### `apps/control-plane/api/board/_seriesMoves.ts`
+
+- `const PIECE_ITEM`
+- `const SERIES_OF: Record<string, string>`
+- `const titleOf = (p: Body) =>`
+- `function pieceVersion(p: Body): number`
+- `function movable(p: Body): boolean`
+- `const SERIES_MOVE_NOTE`
+- `function seriesMoveSpec(p: Body, now: Date): MoveSpec | null`
+- `function replaceChoices(now: Date, date: string, title: string): NonNullable<PressAction['choose']>`
+- `interface PickCard`
+- `function replacePress(o: { week: string; day: string; revision: number; card: PickCard; current: Body; now: Date; label…`
+- `interface SeriesDeps`
+- `async function moveSeriesPiece(db: SupabaseClient, req: MoveRequest, deps: SeriesDeps): Promise<MoveResult>`
+- `type CurrentTo = { date: string } | 'later' | 'alongside'`
+- `interface ReplaceRequest`
+- `function replaceInput(body: unknown): { input?: ReplaceRequest; problem?: string }`
+- `async function replacePick(db: SupabaseClient, week: string, req: ReplaceRequest, deps: SeriesDeps): Promise<MoveResult>`
+- `export type { MoveDay }`
+
+### `apps/control-plane/api/board/_signOffs.ts`
+
+- `const SIGN_OFF_OP`
+- `const SIGN_OFF_CARDS`
+- `type SignOffCardId = typeof SIGN_OFF_CARDS[number]`
+- `export { SIGN_OFF_ID }`
+- `const CARD_ITEM`
+- `const GATE2_LOCK`
+- `export { MAX_SIGN_OFF_PRESSES, SIGN_OFF_WORDS_MAX }`
+- `type SignOffSaid = 'approve' | 'not_this'`
+- `interface SignOffSample`
+- `interface SignOffManifestCard`
+- `interface SignOffManifest`
+- `interface SignOffPress`
+- `interface SignOffConfigs`
+- `interface SignOffAction`
+- `interface SignOffAnswer`
+- `interface SignOffItemView`
+- `interface SignOffCardView`
+- `interface SignOffsView`
+- `function cardSha256(card: Pick<SignOffManifestCard, 'items'>): string`
+- `function parseManifest(text: string | null): SignOffManifest | null`
+- `function pressesOf(rows: Array<{ week?: string; doc_id: string; body: unknown; updated_by: string }>): SignOffPress[]`
+- `function signOffPresses(card: SignOffManifestCard, item: SignOffSample | null): { approve: SignOffAction; not_this: Sig…`
+- `function signOffsView(manifest: SignOffManifest | null, presses: SignOffPress[], configs: SignOffConfigs): SignOffsView…`
+- `async function readSignOffSources(fetcher: Fetcher, mainSha?: string | null): Promise<{ manifest: SignOffManifest | nul…`
+- `async function readSignOffPresses(db: SupabaseClient): Promise<SignOffPress[] | null>`
+- `function signOffFiles(manifest: SignOffManifest | null): Set<string>`
+- `class SignOffError`
+- `interface SignOffPick`
+- `function signOffPick(body: unknown): SignOffPick`
+- `function checkAgainst(manifest: SignOffManifest | null, pick: SignOffPick): void`
+- `async function recordSignOff(db: SupabaseClient, week: string, pick: SignOffPick, now: string): Promise<{ press: SignOf…`
+
+### `apps/control-plane/api/board/_stage.ts`
+
+The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everything is"). Ruling (Krish, 2026-11-12):
+
+- `const STAGE_STATES`
+- `type StageState = typeof STAGE_STATES[number]`
+- `interface ViewStage`
+- `function postedStage(input: { date: string today: string approvedAt: string | null approvedLabel: string growth: ViewGr…`
+- `function ideaStage(outcome: { label: string; at: string | null } | null | undefined, status: string, samePost?: string …`
+- `function truthProblems(days: Array<{ day: string; date: string; label: string; who: string; next: string; options: Arra…`
+
 ### `apps/control-plane/api/board/_standards.ts`
 
 - `const STANDARDS_VENTURE`
@@ -2168,24 +2650,154 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `async function decideStandard(db: SupabaseClient, raw: unknown)`
 - `function renderStandards(groups: StandardsGroup[])`
 
+### `apps/control-plane/api/board/_style.ts`
+
+- `type StyleLayerKey = 'motion' | 'captions'`
+- `const STYLE_LAYERS: readonly StyleLayerKey[]`
+- `type RejectLayerKey = StyleLayerKey | 'treatment'`
+- `interface StylePress`
+- `interface StyleOption`
+- `interface StyleLayer`
+- `interface DayStyle`
+- `interface MotionModule`
+- `interface Look`
+- `const CAPTIONS: Array<{ id: string } & CaptionTheme>`
+- `function motionBank(styles: unknown): MotionModule[]`
+- `function sampleUrl(layer: StyleLayerKey, id: string, samples: unknown = styleSamples): string | null`
+- `function styleOf(meta: unknown): { motion: string | null; captions: string | null; rejected: Record<RejectLayerKey, str…`
+- `interface StyleInputs`
+- `function dayStyle(i: StyleInputs): DayStyle`
+- `class StyleError`
+- `interface StylePick`
+- `interface SavedStyle`
+- `function needsMotion(body: Body): boolean`
+- `function stylePick(body: Body, motionIds: Set<string> | null): StylePick`
+- `function nextStyle(meta: Body, pick: StylePick, at: string): SavedStyle`
+- `async function saveStyle(db: SupabaseClient, pieceId: string, pick: StylePick, now = new Date()): Promise<SavedStyle>`
+
 ### `apps/control-plane/api/board/_view.ts`
 
 - `const VIEW_DAYS: readonly PostedDay[]`
 - `const STOPS`
-- `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
+- `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done' | 'missed'`
 - `type Action`
 - `interface DayView`
+- `interface ViewPost`
+- `type DayCore`
 - `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
 - `const PATH: Array<{ key: PathKey; label: string }>`
+- `type StageKey`
+- `const STAGES: Array<{ key: StageKey; label: string }>`
+- `interface Stage`
+- `function lockSignedOn(text: string | null | undefined): string | null`
+- `function makingDays(piece: Body): { recordedOn: string | null; cutOn: string | null }`
+- `function stagesOf(i: { done: Record<StageKey, boolean> /** The Sunday the ideas were brought (the day before the week s…`
 - `interface LookOption`
 - `interface DayPath`
 - `interface WeekView`
 - `interface ViewInputs`
+- `function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost…`
+- `function lockBodyHash(text: string): string`
+- `const LOCK_DAYS: PostedDay[]`
+- `function lockPieceId(text: string | null | undefined): string | null`
+- `function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: string): { text: string; day: PostedDay } | null`
+- `type Typed = { words: string; said_where: string; said_at: string }`
+- `interface LockToSign`
+- `function typedApproval(picks: Array<{ doc_id: string; body: Body }>, day: string, what: 'lock' | 'scripts', pieceId: st…`
+- `function inYourWords(words: string, on: string | null, where?: string | null): string`
 - `function lockSigned(text: string | null | undefined): boolean`
+- `function postingStarted(live: Pick<LiveDay, 'steps'>): boolean`
 - `function backupPrompt(week: string, d: DayView): string`
 - `function buildView(i: ViewInputs): WeekView`
 - `function viewProblems(v: WeekView): string[]`
+- `async function branchSha(f: Fetcher, env: Record<string, string | undefined>, branch: string): Promise<string | null | …`
 - `async function readView(db: SupabaseClient, week: string, env: Record<string, string | undefined> = process.env, fetche…`
+- `async function readWeekIdeas(week: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
+- `function growthLiveLine(posts: GrowthPost[]): string`
+- `function growthPosted(items: OffdayItem[] | null | undefined, week: string, day: PostedDay): ViewPosted[]`
+
+### `apps/control-plane/api/board/_viewContract.ts`
+
+- `const VIEW_CONTRACT_VERSION`
+- `function viewEtag(view: Record<string, unknown>): string`
+- `function notModified(ifNoneMatch: string | string[] | undefined, etag: string): boolean`
+
+### `apps/control-plane/api/board/_viewExtras.ts`
+
+- `type PressAction`
+- `interface ViewOption`
+- `interface ViewPiece`
+- `interface ViewComment`
+- `interface ViewPosted`
+- `interface ViewYes`
+- `interface ExtrasInputs`
+- `function thursdayOf(week: string): string`
+- `function ideasRunOf(week: string): string`
+- `function storiesFresh(week: string, o: Body): boolean`
+- `function dayPieces(pieces: Body[], date: string, shown: string | null, approvalOf: Map<string, Approval> = new Map(), n…`
+- `function dayComments(rows: ExtrasInputs['comments'], day: string): ViewComment[]`
+- `function dayPosted(rows: ExtrasInputs['ticks'], day: string, live: LivePost[] = []): ViewPosted[]`
+- `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
+- `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean, onDay: Body | null = null): ViewOption[]`
+- `function warned(o: Body): string`
+- `function tickNote(o: Body): string`
+- `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
+- `function offdayApproval(approvals: Approval[] | null, day: string, o: Body): { approval: Approval | null; changed: bool…`
+- `function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day: string): Body[]`
+- `function offdayOptions(i: ExtrasInputs, day: string): ViewOption[]`
+- `function mixOf(stories: Body[]): string`
+- `function thoughtPress(day: string, step: string): PressAction`
+- `function materialPress(pieceId: string): PressAction`
+- `function yesPress(i: ExtrasInputs, day: string): PressAction`
+- `function fillPress(a: PressAction, words: string, at: string): { id: string; body: Body }`
+
+### `apps/control-plane/api/board/_weekModel.ts`
+
+- `const OFFDAY_KINDS`
+- `type OffdayKind = typeof OFFDAY_KINDS[number]['key']`
+- `const PIECE_KIND`
+- `const PIECE_PATH`
+- `const POST_PATH`
+- `const GOOD_NEWS_STORIES`
+- `const CLAUDE_LABEL`
+- `interface ModelStep`
+- `interface ModelSource`
+- `interface ModelStory`
+- `interface ModelRead`
+- `type ModelAction = Action`
+- `interface ModelItem`
+- `interface ModelIdea`
+- `interface ModelDay`
+- `interface WeekModel`
+- `interface ModelInputs`
+- `function signPress(week: string, pieceId: string, lock: LockToSign): PressAction`
+- `function lookPresses(pieceId: string, style: DayStyle | null | undefined): PressAction[]`
+- `function offdayKind(o: Body): { kind: OffdayKind; supports: 'mon' | 'wed' | 'fri' | null }`
+- `function kindLabel(kind: OffdayKind, supports: string | null): string`
+- `function storiesOf(raw: Body | null, o: ViewOption): ModelStory[]`
+- `function offdayHead(route: MakeRoute | null): string`
+- `function itemPrompt(week: string, it: { day: PostedDay; date: string; title: string; line: string; kind_label: string; …`
+- `function dayLine(d: Pick<ModelDay, 'label' | 'items' | 'decisions' | 'ideas'>): string`
+- `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
+- `function modelProblems(model: WeekModel, days: DayView[]): string[]`
+
+### `apps/control-plane/api/board/_writeBack.ts`
+
+What every prompt the board copies out says about reporting back, and what the board shows of the sessions and the
+
+- `const WRITE_BACK_HEAD`
+- `const RESEARCH_RULE`
+- `const WALLS`
+- `const APPROVAL_RULE`
+- `interface WriteBackTarget`
+- `function stepKey(raw: string | null | undefined): string`
+- `function writeBack(t: WriteBackTarget): string`
+- `function withWriteBack<T extends DayLike>(week: string, days: T[]): T[]`
+- `interface ViewSession`
+- `interface ViewMaterial`
+- `interface Overlay`
+- `function attachOverlay<T extends { day: string; piece_id: string | null }>(week: string, days: T[], overlay: Overlay | …`
+- `async function readOverlay(db: Rpc, week: string, pieceIds: string[]): Promise<Overlay | null>`
 
 ### `apps/control-plane/api/board/_yes.ts`
 
@@ -2233,6 +2845,14 @@ One yes anywhere (Ruling, Krish, 2026-11-02): his answer for each day, read from
 - `interface ScoreboardCall`
 - `function toScoreboardCall(row: { id: string; idea: string | null; lane_slot: string | null; body: string | null; publis…`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/claims/_notice.ts`
+
+The came_due notices the claim sweep (resolve.ts) writes: one per claim, ever.
+
+- `interface Notice`
+- `interface NoticeDb`
+- `async function recordNotices(db: NoticeDb, rows: Notice[]): Promise<number>`
 
 ### `apps/control-plane/api/claims/resolve.ts`
 
@@ -2415,6 +3035,18 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 - `const config`
 
+### `apps/control-plane/api/content-ideas/sessions.ts`
+
+- `function createSessionsHandler(getDb: () => Promise<StoreDb>)`
+- `export default createSessionsHandler(async () => (await import('../_supabas`
+
+### `apps/control-plane/api/content-ideas/store.ts`
+
+- `const config`
+- `type LibraryCopy`
+- `function createStoreHandler(getDb: () => Promise<StoreDb>, copy?: LibraryCopy)`
+- `export default createStoreHandler( async () => (await import('../_supabase.`
+
 ### `apps/control-plane/api/content-ideas/synthesize.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
@@ -2450,6 +3082,21 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
+### `apps/control-plane/api/inspiration/_actions.ts`
+
+His ticks on Inspiration cards, as this engine reads and answers them (docs/PUBLISH_BOARDS.md, "His instruction:
+
+- `const ACTION_COLS`
+- `const LIVE`
+- `const JOB_STATES`
+- `type JobReport = (typeof JOB_STATES)[number]`
+- `const READING_MAX`
+- `interface JobInput`
+- `function parseJobReport(body: unknown): { report: JobInput | null; problems: string[] }`
+- `function jobPatch(action: Record<string, any>, r: JobInput, now: string): { patch: Record<string, unknown> } | { refuse…`
+- `function cardWords(card: Record<string, any> | null): string[]`
+- `function brief(action: Record<string, any>, card: Record<string, any> | null, request: Record<string, any> | null, read…`
+
 ### `apps/control-plane/api/inspiration/_cards.ts`
 
 The inspiration board as ve reads it: a card by its id, the cards to offer for a role, and every cut a card shaped.
@@ -2470,7 +3117,9 @@ The inspiration board as ve reads it: a card by its id, the cards to offer for a
 - `function cardView(row: Row, uses: CardUse[])`
 - `function parseIds(raw: unknown): { ids: string[]; bad: string[] }`
 - `function usesByCard(rows: Row[]): Map<string, CardUse[]>`
-- `function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: { role: Role; format?: string; limit: number })`
+- `interface StyleTick`
+- `function tickRoles(row: Row): Role[]`
+- `function rankCandidates(rows: Row[], uses: Map<string, CardUse[]>, opts: { role: Role; format?: string; limit: number }…`
 - `interface UseInput`
 - `function parseUses(body: unknown): { uses: UseInput[]; problems: string[] }`
 - `function migrationPending(error: { message?: string } | null | undefined): boolean`
@@ -2532,6 +3181,10 @@ What the Drive scan decides, with no Drive, no model and no database.
 - `function handleKey(value: unknown): string`
 - `function creatorMatches( creator: { slug?: string | null; linkedin_slug?: string | null; name?: string | null }, seen: …`
 
+### `apps/control-plane/api/inspiration/actions.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
 ### `apps/control-plane/api/inspiration/candidates.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
@@ -2588,6 +3241,7 @@ What the Drive scan decides, with no Drive, no model and no database.
 
 ### `apps/control-plane/api/judge/sweep.ts`
 
+- `function liveSweepExpired( sweep: Pick<SweepRow, 'created_at' | 'live_fallback' | 'batches'>, now: Date = new Date(), )…`
 - `async function providerPause(now: Date = new Date()): Promise<Record<string, unknown> | null>`
 - `export default withContentRun('judge_sweep', handler)`
 - `const config`
@@ -2659,7 +3313,7 @@ What the compiler looks for, as pure functions.
 - `function copyFits(bytes: number, elapsedMs: number): boolean`
 - `type InboxListing`
 - `async function listInbox(folderId: string): Promise<InboxListing>`
-- `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number):…`
+- `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number, …`
 
 ### `apps/control-plane/api/library/_lanes.ts`
 
@@ -2824,6 +3478,10 @@ Takes place themselves (Wave 2, W2.3): once the Inbox job has copied a take
 - `export default createMediaReviewPilotHandler(pilotManifest, supabase)`
 - `const config`
 
+### `apps/control-plane/api/publish/catalogue.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
 ### `apps/control-plane/api/publish/watch.ts`
 
 - `export default withContentRun('publish_watch', handler)`
@@ -2844,6 +3502,11 @@ A copy of every row the Monday purge is about to hard-delete.
 ### `apps/control-plane/api/purge/run.ts`
 
 - `export default withContentRun('purge', handler)`
+
+### `apps/control-plane/api/research-library/sweep.ts`
+
+- `const config`
+- `export default withContentRun('research_library_mirror', handler)`
 
 ### `apps/control-plane/api/shifts/[id].ts`
 
@@ -3320,6 +3983,13 @@ His verdicts on past off-day options, for Sunday's gather (GET /api/week/options
 - `const PICKED_STATES`
 - `function weekEnd(monday: string): string`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+- `async function readInstructions(db: { from: typeof supabase.from } = supabase)`
+- `interface Instruction`
+- `function instructionOf(a: Record<string, any>): Instruction | null`
+- `async function readTasteRules(db: { from: typeof supabase.from } = supabase)`
+- `const IDEA_RULES`
+- `async function readUnvetoed(week: string, db: { from: typeof supabase.from } = supabase)`
+- `async function readOutcomes(week: string, db: { from: typeof supabase.from } = supabase)`
 
 ### `apps/control-plane/api/workbench.ts`
 
@@ -3355,77 +4025,6 @@ His verdicts on past off-day options, for Sunday's gather (GET /api/week/options
 - `interface SaidNote`
 - `function groupSaid(rows: SaidRow[], ids: string[]): Map<string, SaidNote[]>`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
-
-### `apps/control-plane/board-next/src/App.tsx`
-
-- `function App()`
-
-### `apps/control-plane/board-next/src/api.ts`
-
-The live board's one door to the server. Every call carries his login cookie; a 401 is said plainly, never swallowed.
-
-- `type Who = 'you' | 'engine' | 'growth' | 'stuck' | 'done'`
-- `type Action`
-- `interface Run`
-- `interface LookOption`
-- `interface OffdaySides`
-- `interface Review`
-- `type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'`
-- `interface DayPath`
-- `interface Day`
-- `interface View`
-- `class BoardError`
-- `const week`
-- `const api`
-- `function sayError(e: unknown): string`
-
-### `apps/control-plane/board-next/src/components/path.tsx`
-
-One day's guided path (PLAN.md, "Each day as a guided path"): six steps, only the current one open.
-
-- `function Stepper({ path, open, onOpen }: { path: DayPath; open: PathKey | null; onOpen: (k: PathKey) => void })`
-- `function Dropzone({ day, onFiled, role }: { day: Day; onFiled: () => void; role?: 'storyboard' })`
-- `function StepPanel({ day, step, reload }: { day: Day; step: PathKey; reload: () => void })`
-- `function RunButton({ day, reload }: { day: Day; reload: () => void })`
-- `function DayActions({ day, reload, only, onReview }: { day: Day; reload: () => void; only?: 'first' | 'prompt'; onRevie…`
-
-### `apps/control-plane/board-next/src/components/review.tsx`
-
-A revised off-day option, judged where it shows (21st.dev Approval Card, syeddhasnainn, restyled). The press writes
-
-- `function ReviewCard({ review, day, label, reload }: { review: Review; day: string; label: string; reload: () => void })`
-
-### `apps/control-plane/board-next/src/components/sheets.tsx`
-
-Sheets for what he does not need to see until he asks: the full prompt before copying, and his long-form thoughts.
-
-- `function PromptButton({ label, prompt, target = 'claude' }: { label: string; prompt: string; target?: 'claude' | 'perpl…`
-- `function ThoughtsLink({ day, step, label = 'Add your thoughts' }: { day: string; step: string; label?: string })`
-
-### `apps/control-plane/board-next/src/components/ui.tsx`
-
-The board's small parts. Every control keeps its text inside it (nowrap, ellipsis, the full text as its title) and is
-
-- `const cx = (...xs: Array<string | false | null | undefined>) =>`
-- `const Button`
-- `function Spinner()`
-- `function StatusDot({ tone, pulse, label }: { tone: 'ok' | 'amber' | 'bad' | 'muted'; pulse?: boolean; label: string })`
-- `function Chip({ tone = 'muted', children }: { tone?: 'ok' | 'amber' | 'bad' | 'muted' | 'ink'; children: React.ReactNod…`
-- `function CountUp({ to }: { to: number })`
-- `function Panel({ title, chip, why, children, actions, after }: { title: React.ReactNode; chip?: React.ReactNode; why?: …`
-- `function ActionBar({ primary, secondary, prompt }: { primary?: React.ReactNode; secondary?: React.ReactNode; prompt?: R…`
-
-### `apps/control-plane/board-next/src/undo.tsx`
-
-Every press is sent after a five-second Undo (sonner, the toast under 21st.dev's Sonner Toast), so a wrong tap costs no…
-
-- `function useUndo()`
-
-### `apps/control-plane/board-next/vite.config.ts`
-
-The live board's client (docs/plans/2026-11-09-board-desk/PLAN.md, build round 3). One self-contained HTML file:
-
-- `export default defineConfig({ root: import.meta.dirname, plugins: [react(),`
 
 ### `apps/control-plane/lib/contentEngine.ts`
 
@@ -3513,10 +4112,6 @@ The Content Engine's schedule, as the dashboard knows it.
 - `function hasExactProductionApproval(meta: unknown): boolean`
 - `function storedProductionBriefs(outputs: unknown): StoredProductionBrief[]`
 
-### `apps/control-plane/scripts/backfill-shifts.ts`
-
-One-shot reconstruction of the Jul 2025 - Jun 2026 shifts baseline (spec §6, R6).
-
 ### `apps/control-plane/scripts/check-aeo-packet-schema.ts`
 
 The packet contract, in three repositories.
@@ -3601,16 +4196,6 @@ The editorial route: one neutral source, two independent series lenses, and
 
 Nightly narrative clustering for the Content tab.
 
-### `apps/control-plane/scripts/consolidate-shifts.ts`
-
-Register consolidation (backfill follow-up): merge near-duplicate shifts so
-
-### `apps/control-plane/scripts/dry-run-content-v2.ts`
-
-One-shot dry run of the Content Engine v2 core against live data (PR-A gate).
-
-- `export {}`
-
 ### `apps/control-plane/scripts/eval/_env.ts`
 
 Load .env.production.local / .env.local into process.env, same as
@@ -3663,6 +4248,12 @@ Re-render a saved run.
 ### `apps/control-plane/scripts/eval/run.ts`
 
 Prompt A/B harness.
+
+### `apps/control-plane/scripts/eval/suites/ideas-history.ts`
+
+SUITE: ideas-history — do the ideas board's checks catch what Krish refused, without blocking anything he picked?
+
+- `const suite: Suite<Case> & { requires: string[] }`
 
 ### `apps/control-plane/scripts/eval/suites/revise.ts`
 
@@ -3723,21 +4314,6 @@ Run a Vercel serverless handler locally against the real environment.
 - `type ShortProps`
 - `function BorderControlShort(p:ShortProps)`
 
-### `apps/renderer/src/carousel/HouseCarouselCard.tsx`
-
-- `const FOLLOW_SIGN`
-- `function houseCardModel(props: CarouselRenderProps)`
-- `function HouseCarouselCard(props: CarouselRenderProps)`
-
-### `apps/renderer/src/carousel/MindmakeCarouselSlide.tsx`
-
-- `function MindmakeCarouselSlide(props: CarouselRenderProps)`
-
-### `apps/renderer/src/carousel/props.ts`
-
-- `const CarouselRenderPropsSchema`
-- `type CarouselRenderProps = z.infer<typeof CarouselRenderPropsSchema>`
-
 ### `apps/renderer/src/engine/BrandFrame.tsx`
 
 - `interface BrandFrameProps`
@@ -3755,6 +4331,113 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/audio.tsx`
 
 - `function EngineAudio({ audio, stem = true }: { audio: EngineRenderProps['audio']; stem?: boolean })`
+
+### `apps/renderer/src/engine/captions/draw.tsx`
+
+- `type Draw`
+- `const root = (name: string, box: Box, children: React.ReactNode, extra: React.CSSProperties = {}) =>`
+- `const upper = (t: string) =>`
+- `function wrap(words: string[], size: number, width: number, face: Parameters<typeof textWidth>[2], caps: boolean, gap: …`
+- `const STOP`
+- `const isStop = (text: string) =>`
+- `function exitStart(page: { toFrame: number; words: readonly { atFrame: number }[] }, frames: number, fps: number, holdS…`
+- `function exitProgress(page: { toFrame: number }, es: number | undefined, frame: number): number`
+- `function marked(hero: number): number`
+
+### `apps/renderer/src/engine/captions/kit.ts`
+
+- `type Page = EngineRenderProps['captions'][number]`
+- `type Aspect = EngineRenderProps['aspect']`
+- `type Box = { left: number; top: number; width: number; height: number }`
+- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box }>`
+- `function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'>): Box`
+- `const scale = (aspect: Aspect) =>`
+- `const F`
+- `function livePage(props: Pick<EngineRenderProps, 'captions'>, frame: number): { page: Page; index: number } | null`
+- `function previousPage(props: Pick<EngineRenderProps, 'captions'>, index: number, frame: number, gap = 45): Page | null`
+- `function spoken(page: Page, frame: number): number`
+- `const clean = (text: string) =>`
+- `const clamp = (x: number, lo = 0, hi = 1) =>`
+- `const mix = (a: number, b: number, t: number) =>`
+- `const outCubic = (x: number) =>`
+- `const outExpo = (x: number) =>`
+- `const outBack = (x: number, c = 1.70158) =>`
+- `const settle = (x: number) =>`
+- `const spring = (x: number) =>`
+- `const since = (frame: number, at: number, fps: number) =>`
+- `type Face = keyof typeof ADVANCE`
+- `function textWidth(text: string, size: number, face: Face, upper: boolean): number`
+- `function fit(text: string, width: number, face: Face, upper: boolean, max: number, min = 40): number`
+- `function heroScore(page: Page, i: number): number`
+- `function hero(page: Page): number`
+- `function key(page: Page): number`
+- `const LIFT`
+
+### `apps/renderer/src/engine/captions/names.ts`
+
+The caption styles ve can draw, picked per piece with brand.caption_theme; with none, the house caption draws.
+
+- `const CAPTION_THEMES`
+- `type CaptionThemeName = typeof CAPTION_THEMES[number]`
+
+### `apps/renderer/src/engine/captions/styles/anchor-quote.tsx`
+
+- `const anchorQuote: Draw`
+
+### `apps/renderer/src/engine/captions/styles/flip-hinge.tsx`
+
+- `const flipHinge: Draw`
+
+### `apps/renderer/src/engine/captions/styles/georgia-build.tsx`
+
+- `const georgiaBuild: Draw`
+
+### `apps/renderer/src/engine/captions/styles/index.ts`
+
+- `const STYLES`
+- `type StyleName = keyof typeof STYLES`
+
+### `apps/renderer/src/engine/captions/styles/ink-block.tsx`
+
+- `const inkBlock: Draw`
+
+### `apps/renderer/src/engine/captions/styles/mint-word.tsx`
+
+- `const mintWord: Draw`
+
+### `apps/renderer/src/engine/captions/styles/rack-focus.tsx`
+
+- `const rackFocus: Draw`
+
+### `apps/renderer/src/engine/captions/styles/receipt-chip.tsx`
+
+- `const receiptChip: Draw`
+
+### `apps/renderer/src/engine/captions/styles/slice.tsx`
+
+- `const slice: Draw`
+
+### `apps/renderer/src/engine/captions/styles/slot-roll.tsx`
+
+- `const slotRoll: Draw`
+
+### `apps/renderer/src/engine/captions/styles/stair-flash.tsx`
+
+- `const stairFlash: Draw`
+
+### `apps/renderer/src/engine/captions/styles/tuck-stack.tsx`
+
+- `const tuckStack: Draw`
+
+### `apps/renderer/src/engine/captions/themes.tsx`
+
+- `const THEMES: Record<Exclude<CaptionThemeName, 'art-directed'>, Draw>`
+
+### `apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx`
+
+- `const ART_REGION`
+- `function keyIndex(page: EngineRenderProps['captions'][number]): number`
+- `function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/CallCard.tsx`
 
@@ -3778,10 +4461,17 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/chrome/EndingBand.tsx`
 
 - `const BAND_ARRIVAL_FRAMES`
-- `interface EndingBandProps`
+- `const ENDING_TAGLINE`
+- `const ENDING_CTA`
+- `const ENDING_DAYS`
+- `const ENDING_TIMING`
+- `const ENDING_SETTLED_S`
+- `const ENDING_TIMING_TALL`
+- `const ENDING_SETTLED_TALL_S`
+- `function statementLines(aspect: EngineRenderProps['aspect'], tagline: string = ENDING_TAGLINE): string[]`
 - `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
-- `function EndingBand({ props, frame }: EndingBandProps): React.ReactElement | null`
+- `function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/LeadCaption.tsx`
 
@@ -3800,6 +4490,11 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/chrome/StageHeader.tsx`
 
 - `function StageHeader({ props }: { props: EngineRenderProps })`
+
+### `apps/renderer/src/engine/chrome/ThemedCaption.tsx`
+
+- `export { REGIONS as THEME_REGION } from '../captions/kit'`
+- `function ThemedCaption({ props, theme, frame = 0 }: { props: EngineRenderProps; theme: CaptionThemeName; frame?: number…`
 
 ### `apps/renderer/src/engine/chrome/WordCaption.tsx`
 
@@ -3837,6 +4532,7 @@ Run a Vercel serverless handler locally against the real environment.
 
 ### `apps/renderer/src/engine/devices/agent_swarm/index.tsx`
 
+- `function swarmLayout(w: number, h: number, tall: boolean)`
 - `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/agent_swarm/schema.ts`
@@ -3867,6 +4563,21 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/arrangement/state.ts`
 
 - `function arrangementState({ object, events, frame }: Pick<DeviceProps, 'object'|'events'|'frame'>)`
+
+### `apps/renderer/src/engine/devices/checklist/index.tsx`
+
+- `function checklistLayout(box: Box, object: DeviceProps['object'], aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/checklist/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/checklist/state.ts`
+
+- `const SLOT_STAGGER`
+- `const FILL_FRAMES`
+- `function checklistState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/cursor_buddy/index.tsx`
 
@@ -3929,7 +4640,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/kinetic_stat/index.tsx`
 
-- `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'])`
+- `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'], ghos…`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/kinetic_stat/schema.ts`
@@ -3939,6 +4650,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/kinetic_stat/state.ts`
 
 - `function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/ladder_stage/index.tsx`
+
+- `function buildSet(p:DeviceProps)`
+- `function Device(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/ladder_stage/schema.ts`
+
+- `const Params`
+
+### `apps/renderer/src/engine/devices/ladder_stage/state.ts`
+
+- `function ladderState(object:EngineObject,events:readonly EngineEvent[],frame:number)`
 
 ### `apps/renderer/src/engine/devices/leaderboard/index.tsx`
 
@@ -3953,6 +4677,24 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/leaderboard/state.ts`
 
 - `function leaderboardState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/living_screen/index.tsx`
+
+- `function viewport(p:DeviceProps)`
+- `function safeBox(p:DeviceProps)`
+- `function cameraFor(p:DeviceProps)`
+- `function countText(value:number,sourced:number[])`
+- `function paint(g:CanvasRenderingContext2D,p:DeviceProps)`
+- `function Device(p:DeviceProps)`
+
+### `apps/renderer/src/engine/devices/living_screen/schema.ts`
+
+- `const Params`
+
+### `apps/renderer/src/engine/devices/living_screen/state.ts`
+
+- `const rect = (index:number,count:number):[number,number,number,number] =>`
+- `function screenState(object:EngineObject,events:readonly EngineEvent[],frame:number)`
 
 ### `apps/renderer/src/engine/devices/logo_card/index.tsx`
 
@@ -3992,6 +4734,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function marqueeState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
+### `apps/renderer/src/engine/devices/mint_ring/index.tsx`
+
+- `function Device({ object, events, box, tokens, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/mint_ring/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/mint_ring/state.ts`
+
+- `const DRAW_FRAMES`
+- `function ringGeometry(object: EngineObject)`
+- `function mintRingState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/office_floor/index.tsx`
 
 - `function Device({ object, events, box, tokens: t, aspect, frame }: DeviceProps)`
@@ -4023,6 +4779,18 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function passportState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 - `function mrzLine(text: string)`
 
+### `apps/renderer/src/engine/devices/pull_quote/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/pull_quote/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/pull_quote/state.ts`
+
+- `function pullQuoteState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/query_chip/index.tsx`
 
 - `function queryLayout(box: Box, text: string, aspect: DeviceProps['aspect'])`
@@ -4052,7 +4820,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/quote_card/index.tsx`
 
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device({ object, events, box, tokens, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/quote_card/schema.ts`
 
@@ -4061,6 +4829,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/quote_card/state.ts`
 
 - `function quoteCardState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/receipt_print/index.tsx`
+
+- `function receiptLayout(state: ReceiptState, aspect: DeviceProps['aspect'])`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/receipt_print/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/receipt_print/state.ts`
+
+- `const PRINT`
+- `function receiptState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/record_card/index.tsx`
 
@@ -4090,6 +4872,20 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `function scribbleState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 - `function scribblePen(object: EngineObject, events: readonly EngineEvent[]): (frame: number) => Point | undefined`
+
+### `apps/renderer/src/engine/devices/slam_word/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/slam_word/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/slam_word/state.ts`
+
+- `const SLAM`
+- `function burstFor(id: string)`
+- `function slamWordState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/slot_machine/hatch.ts`
 
@@ -4126,7 +4922,7 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 ### `apps/renderer/src/engine/devices/stat_strip/index.tsx`
 
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device({ object, events, box, tokens, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/stat_strip/schema.ts`
 
@@ -4147,6 +4943,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/sticker/state.ts`
 
 - `function stickerState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
+### `apps/renderer/src/engine/devices/takeover/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/takeover/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/takeover/state.ts`
+
+- `const FLICKER_OFFSETS`
+- `function takeoverState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/test_grid/index.tsx`
 
@@ -4174,6 +4983,21 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 
 - `const ParamsSchema`
 
+### `apps/renderer/src/engine/devices/through_line/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/through_line/schema.ts`
+
+- `const NumberSchema`
+- `const CommandSchema`
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/through_line/state.ts`
+
+- `const entranceFrames = () =>`
+- `function throughLineState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+
 ### `apps/renderer/src/engine/devices/types.ts`
 
 - `interface Box`
@@ -4186,11 +5010,31 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function bubbleState({ object, events, frame }: Pick<DeviceProps, 'object' | 'events' | 'frame'>)`
 - `function bubbleFocus({ object, events, box, aspect, frame }: Pick<DeviceProps, 'object' | 'events' | 'box' | 'aspect' |…`
 - `function stageBubbleBox(params: unknown, canvasWidth = 1080, canvasHeight = 1920)`
-- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/typing_bubble/schema.ts`
 
 - `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/unit_field/grid.tsx`
+
+- `function dotGridPosition(index: number, columns: number, pitch = 64)`
+- `function UnitMark({ kind, weight, colour, soft }: { kind: 'dot' | 'block'; weight: number; colour: string; soft: string…`
+
+### `apps/renderer/src/engine/devices/unit_field/index.tsx`
+
+- `export { dotGridPosition, UnitMark } from './grid'`
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/unit_field/schema.ts`
+
+- `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/unit_field/state.ts`
+
+- `const CHANGE_FRAMES`
+- `const COPY_STEP_FRAMES`
+- `function unitFieldState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/upload_flood/hatch.ts`
 
@@ -4206,6 +5050,19 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 ### `apps/renderer/src/engine/devices/upload_flood/schema.ts`
 
 - `const ParamsSchema`
+
+### `apps/renderer/src/engine/devices/video_wall/index.tsx`
+
+- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/video_wall/schema.ts`
+
+- `const ParamsSchema`
+- `type Params = z.infer<typeof ParamsSchema>`
+
+### `apps/renderer/src/engine/devices/video_wall/state.ts`
+
+- `function videoWallState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/wall_screen/index.tsx`
 
@@ -4256,6 +5113,8 @@ Eight-pixel, 45-degree cream machine hatch over ink.
 - `function stageGround(profile: MotionProfile | undefined, tokens: EngineTokens): CSSProperties`
 - `function sweepStyle(profile: MotionProfile, tokens: EngineTokens, beat: EngineBeat, frame: number): CSSProperties | null`
 - `function halftoneTexture(tokens: EngineTokens): CSSProperties`
+- `function groundTexture(texture: string | undefined, tokens: EngineTokens, frame: number): CSSProperties | null`
+- `function hatched(tokens: EngineTokens, frame: number): CSSProperties`
 
 ### `apps/renderer/src/engine/kit/camera.ts`
 
@@ -4347,6 +5206,33 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `function homography(src: readonly Point[], dst: readonly Point[]): Homography`
 - `function matrix3d(h: Homography): string`
 
+### `apps/renderer/src/engine/kit/ingredients.ts`
+
+- `const ENERGIES`
+- `const TRANSITIONS`
+- `const CAMERAS`
+- `const EngineIngredientsSchema`
+- `type EngineIngredients = z.infer<typeof EngineIngredientsSchema>`
+- `const TRANSITION_FRAMES: Record<Energy, number>`
+- `interface Span`
+- `interface CameraState`
+- `function hitFrames(events: readonly { atFrame: number }[]): number[]`
+- `function cameraAt(ing: EngineIngredients, beats: readonly Span[], hits: readonly number[], frame: number, width: number…`
+- `function cameraStyle(state: CameraState, width: number, height: number): CSSProperties`
+- `function flashAt(ing: EngineIngredients, beats: readonly Span[], hits: readonly number[], frame: number): number`
+
+### `apps/renderer/src/engine/kit/layout.ts`
+
+- `const LAYOUTS`
+- `const EngineLayoutSchema`
+- `type EngineLayout = z.infer<typeof EngineLayoutSchema>`
+- `const MAX_GROW`
+- `const isRegion = (box: Box): boolean =>`
+- `const markRegion`
+- `function freeRegion(aspect: Aspect, placement: Placement, themed: boolean): Box`
+- `function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, placement: Placement, themed: boolean, count: nu…`
+- `function regionSlots(region: Box, count: number): Box[]`
+
 ### `apps/renderer/src/engine/kit/lock.ts`
 
 Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
@@ -4426,6 +5312,11 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `class Screen`
 - `function uiClipPath(expand=9,rad=36): string`
 
+### `apps/renderer/src/engine/kit/regionFit.tsx`
+
+- `function bestNatural(box: Box, candidates: readonly number[], heightAt: (width: number) => number): { width: number; he…`
+- `function RegionFit({ natural, box, children }: { natural: { width: number; height: number }; box: Box; children: React.…`
+
 ### `apps/renderer/src/engine/kit/reveal.ts`
 
 - `function entranceStyle(p: number): CSSProperties`
@@ -4442,6 +5333,17 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `type Target = { x: number; y: number; w: number; h: number }`
 - `type ScribbleSpec`
 - `function scribblePath(spec: ScribbleSpec, seed: string): string`
+
+### `apps/renderer/src/engine/kit/staging.ts`
+
+- `const STAGINGS`
+- `type Staging = typeof STAGINGS[number]`
+- `const isStaging = (mode: string | undefined): mode is Staging =>`
+- `interface StagingGeometry`
+- `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry`
+- `function staged(beat: { layout: string; plate?: { source: string } | undefined }): boolean`
+- `function trayRise(frame: number, from: number): { scale: number; ty: number; opacity: number }`
+- `function boxStyle(box: Box): CSSProperties`
 
 ### `apps/renderer/src/engine/kit/threadPath.ts`
 
@@ -4765,27 +5667,6 @@ The piece's call: the dated prediction every makeyourmindup piece ends on
 - `function hasPercentage(text: string): boolean`
 - `function readPieceCall(approvedText: string): PieceCallReadingV1`
 
-### `packages/contracts/src/carousel.ts`
-
-- `const CAROUSEL_SCHEMA_VERSION`
-- `const CarouselVisualDirectionMethodV1Schema`
-- `type CarouselVisualDirectionMethodV1 = z.infer<typeof CarouselVisualDirectionMethodV1Schema>`
-- `const CarouselPlatformSchema`
-- `const CarouselSourceFormatSchema`
-- `const CarouselSlideRoleSchema`
-- `const CarouselLayoutSchema`
-- `const CarouselSceneSchema`
-- `const CarouselAssetV1Schema`
-- `const CarouselSlideV1Schema`
-- `const CarouselEditorialAssessmentV1Schema`
-- `const CarouselApprovalV1Schema`
-- `type CarouselApprovalV1 = z.infer<typeof CarouselApprovalV1Schema>`
-- `const CarouselStoryV1Schema`
-- `type CarouselStoryV1 = z.infer<typeof CarouselStoryV1Schema>`
-- `type CarouselSlideV1 = z.infer<typeof CarouselSlideV1Schema>`
-- `const CarouselDraftPackageV1Schema`
-- `type CarouselDraftPackageV1 = z.infer<typeof CarouselDraftPackageV1Schema>`
-
 ### `packages/contracts/src/confirmation-v1.ts`
 
 Artifact-bound user confirmation references.
@@ -4951,7 +5832,6 @@ Artifact-bound user confirmation references.
 - `export * from './v2.js'`
 - `export * from './control-plane-v1.js'`
 - `export * from './drive-discovery-v1.js'`
-- `export * from './carousel.js'`
 - `export * from './session-v1.js'`
 - `export * from './confirmation-v1.js'`
 - `export * from './editorial-v1.js'`
@@ -5054,6 +5934,8 @@ Artifact-bound user confirmation references.
 - `const VeSeriesSchema`
 - `const VeStingSchema`
 - `const VE_NO_STING`
+- `const VE_NO_STING_BEFORE`
+- `const VE_NOTHING_BEFORE_HOOK`
 - `const VeAspectSchema`
 - `const VeLayoutSchema`
 - `const VeRoleSchema`
@@ -5321,7 +6203,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `function brandWordmarkLegibilityIssues(theme: BrandThemeV1): string[]`
 - `async function stageOfficialWordmarks(manifest: RenderManifestV1, targetDirectory: string, fetchImpl: typeof fetch = fe…`
 - `function officialSeriesMark(theme: BrandThemeV1, series: Series): BrandWordmarkAssetV1`
-- `async function stageOfficialSeriesWordmarks(theme: BrandThemeV1, series: Series, targetDirectory: string, fetchImpl: ty…`
 - `function runtimeTypography(theme: BrandThemeV1): { structure: string; claim: string; body: string; data: string }`
 - `interface StagedPublicationMarks`
 - `interface PublicationLegibilityReport`
@@ -5359,22 +6240,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `function sliceTranscript(transcript: TranscriptDocument, startMs: number, endMs: number): TranscriptDocument`
 - `function captionTranscriptSimilarity(captions: RenderManifestV1['captions'], expectedText: string): number`
 - `function verifiedTextCaptionCues(text: string, timedTranscript: TranscriptDocument, durationMs: number): RenderManifest…`
-
-### `packages/core/src/carousel.ts`
-
-- `interface CarouselRenderResult`
-- `function carouselEditorialPreferenceIssues(input: CarouselStoryV1, preferences: PreferenceRuleV1[] = []): string[]`
-- `function carouselStoryContentHash(input: CarouselStoryV1): string`
-- `function carouselApprovalBinds(approval: CarouselApprovalV1, gate: CarouselApprovalV1['gate'], contentHash: string): bo…`
-- `function theForkIssues(input: CarouselStoryV1): string[]`
-- `function carouselProductionIssues(input: CarouselStoryV1): string[]`
-- `async function runtimeWordmark(asset: StagedWordmarkAsset, stagingDirectory: string)`
-- `async function renderCarousel(repoRoot: string, configPath: string, storyInput: unknown, outputDirectory: string, revie…`
-- `type CarouselBrandMarks`
-- `interface CarouselHouseV1`
-- `function carouselHouse(story: CarouselStoryV1, marks: Pick<StagedPublicationMarks, 'lockup' | 'channelColor' | 'channel…`
-- `function carouselSlideInputProps(story: CarouselStoryV1, slide: CarouselStoryV1['slides'][number], theme: BrandThemeV1,…`
-- `async function packageCarousel(repoRoot: string, configPath: string, storyInput: unknown, outputDirectory: string): Pro…`
 
 ### `packages/core/src/control-plane-client.ts`
 
@@ -5547,7 +6412,6 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `export * from './candidates.js'`
 - `export * from './caption-analysis.js'`
 - `export * from './captions.js'`
-- `export * from './carousel.js'`
 - `export * from './credentials.js'`
 - `export * from './control-plane-client.js'`
 - `export { APPROVAL_SIGNING_CREDENTIAL, RUNNER_RECEIPT_SIGNING_CREDENTIAL, approvalSigningCredentialReady, loadRunnerRece…`
@@ -6002,29 +6866,6 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 - `interface YoutubeUploadInput`
 - `async function uploadPrivateYoutubeVideo(input: YoutubeUploadInput): Promise<unknown>`
 
-### `scripts/backfill_closes.ts`
-
-Backfill step 1 of step 4 (one done-check sweep): give each open board
-
-- `const ENGINE`
-- `const PUBLICATION`
-- `const ARCHIVE`
-- `const LAUNCH_DATE`
-- `interface BoardRow`
-- `interface ArchivePost`
-- `type Write = { id: string } & Record<string, unknown>`
-- `interface Plan`
-- `function stripHeld(detail: string | null | undefined): string`
-- `function shareFileId(html: string): string | null`
-- `function dayOf(iso: string): string`
-- `function oneNewsletterOn(posts: readonly ArchivePost[], day: string): ArchivePost | string`
-- `interface Facts`
-- `function planWrites(board: readonly BoardRow[], facts: Facts): Plan`
-- `function assertNeverCloses(w: Write): void`
-- `function accessCookie(code: string): string`
-- `function readArchive(raw: unknown): ArchivePost[]`
-- `async function gatherFacts(now: string): Promise<Facts>`
-
 ### `scripts/check-control-plane.ts`
 
 Runs the control plane's structural guards from apps/control-plane, where
@@ -6033,6 +6874,14 @@ Runs the control plane's structural guards from apps/control-plane, where
 - `function transcriptionProblems(path: string, text: string): string[]`
 - `function manualProblems(path: string, text: string): string[]`
 - `function hisWordsProblems(repoRoot: string): string[]`
+
+### `scripts/check-now-notes.ts`
+
+check:now-notes: every closeout note in now-notes/ folds into NOW.md, judged by the fold's own code.
+
+- `const HOOK`
+- `interface NotesCheck`
+- `async function checkNotes(root: string = ROOT, hookPath: string = HOOK): Promise<NotesCheck>`
 
 ### `scripts/check-one-close.ts`
 
@@ -6057,6 +6906,15 @@ One closer: nothing in the engine closes a board item but the board route,
 - `function shouldLaunchVideoEngine(context: VideoEngineLaunchContext): boolean`
 - `const VIDEO_ENGINE_TRIGGER_CASES: ReadonlyArray<VideoEngineLaunchContext & { expected: boolean; label: string }>`
 - `async function checkVideoEngineTrigger(repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')): Promise<void>`
+
+### `scripts/check-view-contract.ts`
+
+The Publish Board view's contract check (Ruling, Krish, 2026-11-11: engine changes upgrade Control Centre's board and
+
+- `const SCHEMA_PATH`
+- `function validate(root: S, value: unknown, node: unknown = root, at = '$', opts: { open?: boolean } = {}): string[]`
+- `function compare(oldRoot: S, newRoot: S): { breaking: string[]; additive: string[] }`
+- `function judge(oldRoot: S | null, newRoot: S): { ok: boolean; lines: string[] }`
 
 ### `scripts/rotate-runner-signing-key.ts`
 

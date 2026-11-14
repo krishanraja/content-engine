@@ -12,8 +12,9 @@ name: Make a piece
 #   - a repository_dispatch with event type make-piece and client_payload {"piece_id": "<uuid>", "ref": "<branch>"}
 #     (ref optional, default main), for a press elsewhere that starts a make;
 #   - Krish, from Actions > Make a piece > Run workflow.
-# Its questions for Krish go onto the day's tab of the week's board as presses, never into chat: nobody reads this
-# run's output. It writes to the board only through the engine API, on ENGINE_OPERATOR_TOKEN.
+# Its questions for Krish go onto the live board (Control Centre's Content tab), never into chat: nobody reads this
+# run's output. It writes to the board only through the engine API, on ENGINE_OPERATOR_TOKEN, and builds no board page
+# (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it).
 #
 # One-time setup (Krish): run `claude setup-token` on his own computer and add the result to this repository as the
 # Actions secret CLAUDE_CODE_OAUTH_TOKEN. Until it exists every run fails at its first step, naming that step.
@@ -121,7 +122,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 600
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/week_board.py:*),Bash(python3 scripts/post-pack/board_web.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/title_check.py:*),Bash(python3 scripts/post-pack/narration_diff.py:*),Bash(python3 scripts/post-pack/voice_check.py:*),Bash(python3 scripts/post-pack/story_check.py:*),Bash(python3 scripts/post-pack/ai_scan.py:*),Bash(python3 scripts/post-pack/creative_direction.py:*),Bash(python3 scripts/post-pack/edit_sweep.py:*),Bash(python3 scripts/post-pack/teleprompter_send.py:*),Bash(python3 scripts/pages/build.py:*),Bash(python3 scripts/voice/spoken_rules.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),Edit(WORKBENCH.md),Write(WORKBENCH.md),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_web.py touch:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/title_check.py:*),Bash(python3 scripts/post-pack/narration_diff.py:*),Bash(python3 scripts/post-pack/voice_check.py:*),Bash(python3 scripts/post-pack/story_check.py:*),Bash(python3 scripts/post-pack/ai_scan.py:*),Bash(python3 scripts/post-pack/creative_direction.py:*),Bash(python3 scripts/post-pack/edit_sweep.py:*),Bash(python3 scripts/post-pack/teleprompter_send.py:*),Bash(python3 scripts/pages/build.py:*),Bash(python3 scripts/voice/spoken_rules.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),Edit(WORKBENCH.md),Write(WORKBENCH.md),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             piece_id: ${{ steps.piece.outputs.id }}
@@ -129,16 +130,17 @@ jobs:
             where it is from the engine, record this session on it, then do the first step that is not done.
 
             This run was started in GitHub Actions (.github/workflows/make-piece.yml), one fresh run for this piece.
-            No one reads its chat: every question for Krish goes on the day's tab of the week's board as a press (a
-            --waiting line or a comment thread), put as the question itself with your best guess, never as a message
-            here. Run the engine scripts with python3 (the only commands this run may use besides git status, diff,
+            No one reads its chat: every question for Krish goes on the live board, reported on the piece as blocked
+            with the question itself and your best guess (python3 scripts/post-pack/board_session.py), never as a
+            message here. Report start, progress and done on the piece the same way, and file everything you make or
+            draw on there (docs/PUBLISH_BOARDS.md, "Sessions and materials"). Never build or publish a board page. Run the engine scripts with python3 (the only commands this run may use besides git status, diff,
             add and commit); every file you write goes under docs/plans/ or is WORKBENCH.md. Commit what you make on
             the current branch; do not push or open a pull request: the workflow pushes the branch and opens one when
             you stop.
 
             This run cannot read Google Drive or watch videos. The research a piece rests on is in docs/plans (for
             example docs/plans/<week>/<day>-research.md, written by the Sunday room). If a step needs something that is
-            not there, put that one question on the day's tab with your best guess, write a short note under docs/plans
+            not there, report that one question on the piece as blocked with your best guess, write a short note under docs/plans
             naming exactly what was missing, commit it, and stop. Never end a run without a commit: a run with no
             commit goes red.
 

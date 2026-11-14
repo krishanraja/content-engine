@@ -1,0 +1,815 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://content.krishraja.com/api/board/view.schema.json",
+  "title": "The Publish Board's view of one week (GET /api/board/<Monday>/view)",
+  "x-contract-version": "1.15.0",
+  "x-rule": "Add freely; never remove or rename a field. An addition is a minor bump; Control Centre draws what it does not know generically. A removal, a rename or a widened type is a major bump. docs/PUBLISH_BOARDS.md, \"The view's contract\"; scripts/check-view-contract.ts.",
+  "type": "object",
+  "required": ["ok", "contract_version", "week", "as_of", "days", "yours", "moved", "north_star", "runs", "sources", "revision"],
+  "properties": {
+    "ok": { "type": "boolean" },
+    "contract_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "week": { "$ref": "#/$defs/date" },
+    "as_of": { "type": "string" },
+    "days": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "$ref": "#/$defs/day" } },
+    "yours": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "day", "label", "next", "actions"],
+        "properties": {
+          "key": { "type": "string" },
+          "day": { "$ref": "#/$defs/dayKey" },
+          "label": { "type": "string" },
+          "next": { "type": "string" },
+          "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
+          "review": { "$ref": "#/$defs/review" }
+        }
+      }
+    },
+    "moved": {
+      "type": "array",
+      "items": { "type": "object", "required": ["at", "text"], "properties": { "at": { "type": "string" }, "text": { "type": "string" } } }
+    },
+    "north_star": {
+      "type": ["object", "null"],
+      "required": ["current", "target"],
+      "properties": { "current": { "type": "number", "description": "1.8.0: live, what went out in the last seven days, his It's live posts included." }, "target": { "type": "number" },
+        "measured": { "type": "number", "x-since": "1.8.0", "description": "The number NOW.md last measured." } }
+    },
+    "runs": { "type": "object" },
+    "sources": { "type": "object" },
+    "revision": {
+      "type": ["integer", "null"],
+      "description": "The week's change signal (board_signal.revision, contract 1.2.0): bumped by every write the view reads, so a reader that hears it change reads the view again. Null when it cannot be read."
+    },
+    "sign_offs": {
+      "type": ["object", "null"],
+      "x-since": "1.11.0",
+      "required": ["waiting", "cards"],
+      "description": "The three video sign-offs, one review card each, on every week (Ruling, Krish, 2026-11-12): sound effects, golden frames and Gate 2 on face-with-proof at 16:9, each sample with its preview, its Drive link, his answer on it and whether the engine holds it. Null when the cards cannot be read.",
+      "properties": {
+        "waiting": { "type": "integer", "description": "How many cards still wait on him." },
+        "cards": { "type": "array", "items": { "$ref": "#/$defs/signOffCard" } }
+      }
+    },
+    "model": {"type": "object", "x-since": "1.12.0", "description": "The week model the Publish Board draws (Ruling, Krish, 2026-11-13: the publish board shows only what he approved, in one week model, three pieces and off-day posts of fixed kinds, one action per item, ideas only on the ideas board). _weekModel.ts; docs/PUBLISH_BOARDS.md, \"The week model\".", "required": ["version", "kinds", "piece_path", "post_path", "days", "ideas"], "properties": {"version": {"type": "integer"}, "kinds": {"type": "array", "items": {"type": "object", "required": ["key", "label"], "properties": {"key": {"type": "string"}, "label": {"type": "string"}}}}, "piece_path": {"type": "array", "items": {"type": "object", "required": ["key", "label"], "properties": {"key": {"type": "string"}, "label": {"type": "string"}}}}, "post_path": {"type": "array", "items": {"type": "object", "required": ["key", "label"], "properties": {"key": {"type": "string"}, "label": {"type": "string"}}}}, "days": {"type": "array", "items": {"$ref": "#/$defs/modelDay"}}, "ideas": {"type": "array", "items": {"$ref": "#/$defs/modelIdea"}}}}
+  },
+  "$defs": {
+    "modelStep": {"type": "object", "x-since": "1.12.0", "required": ["key", "label", "state", "when"], "properties": {"key": {"type": "string"}, "label": {"type": "string"}, "state": {"type": "string", "enum": ["done", "current", "todo"]}, "when": {"type": ["string", "null"]}}},
+    "modelRead": {"type": "object", "x-since": "1.12.0", "description": "What the read sheet shows, read-only: the idea's story, its sources and the research on file.", "required": ["so_what", "story", "why_now", "fact", "text", "sources", "research", "said"], "properties": {"so_what": {"type": ["string", "null"]}, "story": {"type": ["string", "null"]}, "why_now": {"type": ["string", "null"]}, "fact": {"type": ["string", "null"]}, "text": {"type": ["string", "null"]}, "sources": {"type": "array", "items": {"type": "object", "required": ["label", "href"], "properties": {"label": {"type": "string"}, "href": {"type": ["string", "null"]}}}}, "research": {"type": "array", "items": {"type": "string"}}, "said": {"type": ["string", "null"]}}},
+    "modelStory": {"type": "object", "x-since": "1.12.0", "required": ["headline", "what", "why", "date", "source", "href"], "properties": {"headline": {"type": "string"}, "what": {"type": "string"}, "why": {"type": ["string", "null"]}, "date": {"type": ["string", "null"]}, "source": {"type": ["string", "null"]}, "href": {"type": ["string", "null"]}}},
+    "modelItem": {"type": "object", "x-since": "1.12.0", "description": "One thing on a day: a series piece (type piece) or an off-day post he approved (type post), with its kind, its path, where it is and one next action.", "required": ["key", "type", "day", "date", "kind", "kind_label", "title", "approved", "stage", "path", "missed", "line", "next", "decision", "others", "read", "piece_id", "item", "supports", "move", "links", "stories", "stories_planned"], "properties": {"key": {"type": "string"}, "type": {"type": "string", "enum": ["piece", "post"]}, "day": {"$ref": "#/$defs/dayKey"}, "date": {"$ref": "#/$defs/date"}, "kind": {"type": "string", "enum": ["piece", "supporting", "voiceover", "explainer", "good_news", "meme"], "x-open": true}, "kind_label": {"type": "string"}, "title": {"type": "string"}, "approved": {"type": ["string", "null"]}, "stage": {"type": "object", "required": ["key", "label"], "properties": {"key": {"type": "string"}, "label": {"type": "string"}}}, "path": {"type": "array", "items": {"$ref": "#/$defs/modelStep"}}, "missed": {"type": "boolean"}, "line": {"type": "string"}, "next": {"anyOf": [{"$ref": "#/$defs/action"}, {"type": "null"}]}, "decision": {"type": "boolean"}, "others": {"type": "array", "items": {"$ref": "#/$defs/action"}}, "read": {"$ref": "#/$defs/modelRead"}, "piece_id": {"type": ["string", "null"]}, "item": {"type": ["string", "null"]}, "supports": {"type": ["string", "null"], "enum": ["mon", "wed", "fri", null]}, "move": {"anyOf": [{"$ref": "#/$defs/move"}, {"type": "null"}]}, "links": {"type": "array", "items": {"type": "object", "required": ["label", "href"], "properties": {"label": {"type": "string"}, "href": {"type": "string"}}}}, "stories": {"type": ["array", "null"], "items": {"$ref": "#/$defs/modelStory"}}, "stories_planned": {"type": ["integer", "null"]}}},
+    "modelIdea": {"type": "object", "x-since": "1.12.0", "description": "An idea he has not answered, held (a session said it was decided, he never pressed), or revised: on the ideas board only, with the presses that answer it. Never on a day.", "required": ["doc_id", "piece_id", "day", "date", "kind", "kind_label", "title", "why", "line", "read", "actions", "stories", "move"], "properties": {"doc_id": {"type": "string"}, "piece_id": {"type": ["string", "null"]}, "day": {"$ref": "#/$defs/dayKey"}, "date": {"$ref": "#/$defs/date"}, "kind": {"type": "string", "enum": ["piece", "supporting", "voiceover", "explainer", "good_news", "meme"], "x-open": true}, "kind_label": {"type": "string"}, "title": {"type": "string"}, "why": {"type": "string", "enum": ["open", "held", "revised", "held_piece"], "x-open": true}, "line": {"type": "string"}, "read": {"$ref": "#/$defs/modelRead"}, "actions": {"type": "array", "x-open": true, "items": {"$ref": "#/$defs/action"}}, "stories": {"type": ["array", "null"], "items": {"$ref": "#/$defs/modelStory"}}, "move": {"anyOf": [{"$ref": "#/$defs/move"}, {"type": "null"}]}}},
+    "modelDay": {"type": "object", "x-since": "1.12.0", "required": ["day", "date", "label", "series", "items", "decisions", "ideas", "line"], "properties": {"day": {"$ref": "#/$defs/dayKey"}, "date": {"$ref": "#/$defs/date"}, "label": {"type": "string"}, "series": {"type": ["string", "null"]}, "items": {"type": "array", "items": {"$ref": "#/$defs/modelItem"}}, "decisions": {"type": "integer"}, "ideas": {"type": "integer"}, "line": {"type": "string"}}},
+    "signOffPress": {
+      "type": "object",
+      "x-since": "1.11.0",
+      "required": ["kind", "label", "op", "body", "stamp", "done"],
+      "description": "POST /api/board/<Monday>/<op> with the body, his press only: sign-off records {card, item, verdict: approve | not_this, sha256, words} on picks/signoff-<card> (append only) and starts signoff-apply.yml, which writes the configs from his presses. words is optional: on Not this, and on Gate 2's Approve.",
+      "properties": {
+        "kind": { "type": "string", "enum": ["press"] },
+        "label": { "type": "string" },
+        "op": { "type": "string", "enum": ["sign-off"] },
+        "body": { "type": "object" },
+        "words": {
+          "type": "object",
+          "required": ["path", "ask", "required"],
+          "properties": { "path": { "type": "string" }, "ask": { "type": "string" }, "required": { "type": "boolean" } }
+        },
+        "stamp": { "type": "array", "items": { "type": "string" } },
+        "done": { "type": "string", "description": "What the board says once it is saved." }
+      }
+    },
+    "signOffAnswer": {
+      "type": ["object", "null"],
+      "x-since": "1.11.0",
+      "required": ["said", "words", "at"],
+      "description": "His latest press on these exact bytes, or null.",
+      "properties": { "said": { "type": "string", "enum": ["approve", "not_this"] }, "words": { "type": ["string", "null"] }, "at": { "type": "string" } }
+    },
+    "signOffPresses": {
+      "type": ["object", "null"],
+      "x-since": "1.11.0",
+      "required": ["approve", "not_this"],
+      "properties": { "approve": { "$ref": "#/$defs/signOffPress" }, "not_this": { "$ref": "#/$defs/signOffPress" } }
+    },
+    "signOffItem": {
+      "type": "object",
+      "x-since": "1.11.0",
+      "required": ["id", "title", "kind", "mime", "src", "drive", "sha256", "lines", "verdict", "written", "presses"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "kind": { "type": "string", "enum": ["audio", "image", "video"], "x-open": true },
+        "mime": { "type": ["string", "null"] },
+        "src": { "type": "string", "description": "The same-site path the board plays or shows it from: GET /api/board/sign-offs?file=<Drive id>." },
+        "drive": { "type": "object", "required": ["file_id", "url"], "properties": { "file_id": { "type": "string" }, "url": { "type": "string" } } },
+        "sha256": { "$ref": "#/$defs/sha" },
+        "lines": { "type": "array", "items": { "type": "string" }, "description": "What it is, in a few plain lines (the slot it is for, the piece and time, the beat)." },
+        "verdict": { "$ref": "#/$defs/signOffAnswer" },
+        "written": { "type": "boolean", "description": "Whether the engine's config on main holds his answer on it." },
+        "presses": { "$ref": "#/$defs/signOffPresses" }
+      }
+    },
+    "signOffCard": {
+      "type": "object",
+      "x-since": "1.11.0",
+      "required": ["id", "title", "ask", "why", "note", "writes", "presses_mode", "want", "counts", "state", "line", "items", "verdict", "presses", "sha256"],
+      "properties": {
+        "id": { "type": "string", "enum": ["sfx", "golden", "gate2"], "x-open": true },
+        "title": { "type": "string" },
+        "ask": { "type": "string" },
+        "why": { "type": ["string", "null"] },
+        "note": { "type": ["string", "null"] },
+        "writes": { "type": ["string", "null"], "description": "The config his presses write (through signoff-apply.yml)." },
+        "presses_mode": { "type": "string", "enum": ["each", "card"], "description": "each: a press per sample; card: one press for the whole card (Gate 2)." },
+        "want": { "type": ["object", "null"], "required": ["min", "max"], "properties": { "min": { "type": "integer" }, "max": { "type": "integer" } } },
+        "counts": {
+          "type": "object",
+          "required": ["approved", "declined", "waiting", "total"],
+          "properties": { "approved": { "type": "integer" }, "declined": { "type": "integer" }, "waiting": { "type": "integer" }, "total": { "type": "integer" } }
+        },
+        "state": { "type": "string", "enum": ["waiting", "answered", "written"], "x-open": true },
+        "line": { "type": "string", "description": "Where the card stands, in one line." },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/signOffItem" } },
+        "verdict": { "$ref": "#/$defs/signOffAnswer" },
+        "presses": { "$ref": "#/$defs/signOffPresses" },
+        "sha256": { "type": ["string", "null"], "description": "Gate 2: the sha256 its one press binds (the canonical map of its stills' sha256s)." }
+      }
+    },
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "sha": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "dayKey": { "type": "string", "enum": ["mon", "tue", "wed", "thu", "fri", "sat"] },
+    "who": { "type": "string", "enum": ["you", "engine", "growth", "stuck", "done", "missed"], "x-open": true, "description": "Whose move the day waits on; missed since 1.10.0: its day passed and nothing on it is marked live." },
+    "day": {
+      "type": "object",
+      "required": [
+        "day",
+        "date",
+        "label",
+        "kind",
+        "series",
+        "title",
+        "piece_id",
+        "stop",
+        "who",
+        "next",
+        "runs_on",
+        "actions",
+        "detail",
+        "media",
+        "sessions",
+        "materials",
+        "pieces",
+        "options",
+        "comments",
+        "posted",
+        "yes",
+        "held"
+      ],
+      "properties": {
+        "day": { "$ref": "#/$defs/dayKey" },
+        "date": { "$ref": "#/$defs/date" },
+        "label": { "type": "string" },
+        "kind": { "type": "string" },
+        "series": { "type": "string" },
+        "title": { "type": "string" },
+        "piece_id": { "type": ["string", "null"] },
+        "stop": { "type": "integer" },
+        "who": { "$ref": "#/$defs/who" },
+        "next": { "type": "string" },
+        "runs_on": { "type": "string" },
+        "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
+        "run": { "$ref": "#/$defs/run" },
+        "detail": { "type": "array", "items": { "type": "object", "required": ["h", "p"], "properties": { "h": { "type": "string" }, "p": { "type": "string" } } } },
+        "reviews": { "type": "array", "items": { "$ref": "#/$defs/review" } },
+        "path": { "$ref": "#/$defs/path" },
+        "media": { "type": "array", "items": { "$ref": "#/$defs/media" } },
+        "sessions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/session" },
+          "x-since": "1.1.0",
+          "description": "Who is working on the day's piece (or the day) and what each said last, working first, from each session's reports (POST /api/content-ideas/sessions)."
+        },
+        "materials": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/material" },
+          "x-since": "1.1.0",
+          "description": "What is on file for the day's piece and the day in the piece materials store, newest first. No text and no link: one is read at /api/content-ideas/store?op=read&id=<id>."
+        },
+        "pieces": {
+          "type": "array",
+          "description": "Every piece on the day (1.2.0), the one the day shows first marked on_day: a second piece or an off-day piece is never hidden.",
+          "items": { "$ref": "#/$defs/piece" }
+        },
+        "options": {
+          "type": "array",
+          "description": "The day's options in full (1.2.0): a series day's Sunday options, an off day's options (with the weekly good news's stories), each with his verdict and the presses that answer it.",
+          "items": { "$ref": "#/$defs/option" }
+        },
+        "comments": { "type": "array", "description": "His comments whose anchor names the day, newest first (1.2.0).", "items": { "$ref": "#/$defs/comment" } },
+        "posted": { "type": "array", "description": "What Growth has posted on the day, its ticks (1.2.0), and the posts he marked live (1.8.0, by: you).", "items": { "$ref": "#/$defs/posted" } },
+        "yes": {
+          "type": ["object", "null"],
+          "description": "His yes for the day (one yes anywhere, _yes.ts), or null (1.2.0).",
+          "required": ["approved", "via", "at", "words"],
+          "properties": { "approved": { "type": "boolean" }, "via": { "type": "string" }, "at": { "type": "string" }, "words": { "type": ["string", "null"] } }
+        },
+        "held": {
+          "type": "array",
+          "x-since": "1.3.0",
+          "description": "The ideas gate (docs/PUBLISH_BOARDS.md, \"The ideas gate\"): every piece on the day, or option a session wrote as decided, that no approval of Krish's holds there, and why. Never hidden: drawn as a line titled \"Held: not approved by you\".",
+          "items": { "$ref": "#/$defs/held" }
+        },
+        "posts": {
+          "type": ["array", "null"],
+          "x-since": "1.7.0",
+          "description": "Every post folder of the day in Drive's makeyourmindup > 3 Posts with everything made for it: the engine's cuts and thumbnails, Growth's carousels, memes, Notes, off-day posts and reskins, each with its Drive link, a carousel's slides in order and its older versions (_drivePosts.ts). Null when Drive could not be read (sources.drive false).",
+          "items": { "$ref": "#/$defs/post" }
+        },
+        "manifest": {
+          "type": ["object", "null"],
+          "x-since": "1.8.0",
+          "description": "The day's piece's manifest (_manifest.ts; docs/GROWTH-HANDOFF.md, \"The piece manifest\"): its exact files in order, each with its Drive link, and the channels it has words for; his Approve for publish bound to its sha256 while it waits on him, and whether a press of his binds it now (approved) or bound another draft (changed: approve again). Null when the piece has no draft manifest.",
+          "allOf": [{ "if": { "type": "object" }, "then": { "$ref": "#/$defs/manifest" } }]
+        }
+      }
+    },
+    "held": {
+      "type": "object",
+      "required": ["piece_id", "option", "title", "text"],
+      "properties": {
+        "piece_id": { "type": ["string", "null"], "description": "The piece on the day that is held, or null for an option." },
+        "option": { "type": ["string", "null"], "description": "The option (its board document id) that is held, or null for a piece." },
+        "title": { "type": "string", "description": "Held: not approved by you, or Held: changed since you approved it." },
+        "text": { "type": "string", "description": "What it is and why it is held, in one or two plain sentences." }
+      }
+    },
+    "session": {
+      "type": "object",
+      "required": ["session_id", "label", "surface", "by", "state", "step", "doing", "started_at", "last_at"],
+      "properties": {
+        "session_id": { "type": "string" },
+        "label": { "type": ["string", "null"] },
+        "surface": { "type": ["string", "null"] },
+        "by": { "type": "string" },
+        "state": { "type": "string", "enum": ["working", "blocked", "quiet", "done", "ended"], "x-open": true },
+        "step": { "type": ["string", "null"] },
+        "doing": { "type": ["string", "null"] },
+        "started_at": { "type": "string" },
+        "last_at": { "type": "string" }
+      }
+    },
+    "material": {
+      "type": "object",
+      "required": ["id", "kind", "title", "size", "added_by", "at", "thumbnail", "role", "version", "where"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": ["screenshot", "image", "pdf", "corpus", "research", "paste", "link", "file", "output", "storyboard", "note", "video", "audio", "other"],
+          "x-open": true
+        },
+        "title": { "type": "string" },
+        "size": { "type": "integer" },
+        "added_by": { "type": "string" },
+        "at": { "type": ["string", "null"] },
+        "thumbnail": { "type": ["string", "null"], "description": "The material's own id when it is a picture: /api/content-ideas/store?op=read&id=<id> serves it." },
+        "role": { "type": ["string", "null"] },
+        "version": { "type": "integer" },
+        "where": { "type": "string", "enum": ["piece", "day"], "x-open": true }
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": ["kind", "label"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["run", "open", "prompt", "review", "research", "look", "press"], "x-open": true },
+        "label": { "type": "string" },
+        "job": { "type": "string" },
+        "input": { "type": "object" },
+        "runs_on": { "type": "string" },
+        "href": { "type": "string" },
+        "prompt": { "type": "string" },
+        "piece_id": { "type": "string" },
+        "collection": {
+          "type": "string",
+          "enum": ["picks", "queue", "comments"],
+          "description": "press: the board document it saves (PUT /api/board/<Monday>/<collection>/<id>)."
+        },
+        "id": { "type": "string", "description": "press: the document id; {t} is replaced by the press time." },
+        "revision": { "type": "integer", "description": "press: the revision the save is made on (409 when it changed)." },
+        "op": { "type": "string", "enum": ["material", "live", "replace", "look", "style"], "x-open": true, "description": "press: or the board route it posts to (POST /api/board/<Monday>/<op>). live (1.8.0): a post he marked live, It's live, with its link and channels. replace (1.13.0): his Approve on a day that already holds a piece; the press names what it replaces in its label and goes, and its choose (current_to) asks where that piece goes: a date, later, or alongside. look (1.14.0): his production pick, the look for a piece whose path is at its look (the week model's next), its choose (production) the looks with the recommended one first. style (1.15.0): the motion style or the captions for a piece not yet recorded, its choose (motion or captions) the options with the recommended first, posted to the style route as his press." },
+        "week": { "type": "string", "x-since": "1.8.0", "description": "press: the week it saves into, when it is not the week the view shows (an idea for later, GET /api/board/later)." },
+        "choose": {
+          "type": "object",
+          "x-since": "1.8.0",
+          "required": ["path", "ask", "multi", "required", "options"],
+          "properties": {
+            "path": { "type": "string" }, "ask": { "type": "string" }, "multi": { "type": "boolean" }, "required": { "type": "boolean" }, "from_link": { "type": "boolean" },
+            "options": { "type": "array", "items": { "type": "object", "required": ["value", "label"], "properties": { "value": { "type": "string" }, "label": { "type": "string" }, "hosts": { "type": "array", "items": { "type": "string" } } } } }
+          },
+          "description": "press: a choice he makes before the press, written at path as the values he chose (a list when multi); from_link: the option whose hosts his link names is chosen for him first."
+        },
+        "body": { "type": "object", "description": "press: the document as the old board saved it; a value exactly \"{id}\" is the id." },
+        "words": {
+          "type": "object",
+          "required": ["path", "ask", "required"],
+          "properties": { "path": { "type": "string" }, "ask": { "type": "string" }, "required": { "type": "boolean" } },
+          "description": "press: his words, asked before the press and written at path."
+        },
+        "stamp": { "type": "array", "items": { "type": "string" }, "description": "press: dot paths set to the press time." },
+        "done": { "type": "string", "description": "press: what the board says once it is saved." },
+        "outcome": {
+          "type": "string",
+          "enum": ["approved", "filed", "rejected", "trend", "improved"],
+          "x-open": true,
+          "x-since": "1.3.0",
+          "description": "press: which of the five outcomes it gives an idea (Approved, Filed for later, Rejected and learnt from, Saved as a trend for a wider piece, Improved for a future piece). Only approved crosses to the publish board."
+        },
+        "goes": { "type": "string", "x-since": "1.3.0", "description": "press: where it sends the idea, said before he presses." }
+      },
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "run" } } }, "then": { "required": ["job", "input", "runs_on"] } },
+        { "if": { "properties": { "kind": { "const": "open" } } }, "then": { "required": ["href"] } },
+        { "if": { "properties": { "kind": { "const": "prompt" } } }, "then": { "required": ["prompt"] } },
+        { "if": { "properties": { "kind": { "const": "research" } } }, "then": { "required": ["piece_id"] } },
+        { "if": { "properties": { "kind": { "const": "look" } } }, "then": { "required": ["piece_id"] } },
+        { "if": { "properties": { "kind": { "const": "press" } } }, "then": { "required": ["body", "stamp", "done"] } }
+      ]
+    },
+    "run": {
+      "type": "object",
+      "required": ["job", "workflow", "state", "started_at", "updated_at", "url"],
+      "properties": {
+        "job": { "type": "string" },
+        "workflow": { "type": "string" },
+        "state": { "type": "string" },
+        "started_at": { "type": "string" },
+        "updated_at": { "type": "string" },
+        "url": { "type": "string" },
+        "event": { "type": "string" }
+      }
+    },
+    "media": {
+      "type": "object",
+      "required": ["id", "kind", "cut", "title", "at"],
+      "properties": {
+        "id": { "$ref": "#/$defs/sha" },
+        "kind": { "type": "string", "enum": ["cut", "thumbnail"], "x-open": true },
+        "cut": { "type": "string" },
+        "title": { "type": "string" },
+        "at": { "type": ["string", "null"] },
+        "seconds": { "type": "number" },
+        "poster": { "$ref": "#/$defs/sha" },
+        "drive": {
+          "type": ["object", "null"],
+          "x-since": "1.7.0",
+          "description": "The exact file in Krish's Drive, by its Drive file id, from the making record (Ruling, Krish, 2026-11-12: every cut on the board carries its Google Drive link); null when the record has none, and then drive_why says why. A file the library lacks is still served at /api/board/<Monday>/media/<id>, copied from this Drive file.",
+          "allOf": [{ "if": { "type": "object" }, "then": { "$ref": "#/$defs/driveLink" } }]
+        },
+        "drive_why": { "type": "string", "x-since": "1.7.0", "description": "Why drive is null, in his words (\"Not in Drive yet: ...\")." },
+        "presses": {
+          "type": "object",
+          "x-since": "1.6.0",
+          "required": ["yes", "not_this"],
+          "description": "A cut only: his answer on this file (approved mock M5, Cuts). Yes: this cut is right. Not this: with his words, which are required. Kept append only on the piece (meta.cut_verdicts); it never changes the cut.",
+          "properties": {
+            "yes": { "$ref": "#/$defs/cutPress" },
+            "not_this": { "$ref": "#/$defs/cutPress" }
+          }
+        },
+        "verdict": {
+          "type": ["object", "null"],
+          "x-since": "1.6.0",
+          "required": ["said", "words", "at"],
+          "description": "A cut only: his latest answer on this file, or null when he has not given one. A new render is a new file with a new id, so an answer stays with the file he saw.",
+          "properties": {
+            "said": { "type": "string", "enum": ["yes", "not_this"] },
+            "words": { "type": ["string", "null"], "description": "His words on a Not this, exactly as he typed them." },
+            "at": { "type": "string" }
+          }
+        }
+      }
+    },
+    "cutPress": {
+      "type": "object",
+      "x-since": "1.6.0",
+      "required": ["kind", "label", "op", "body", "stamp", "done"],
+      "description": "POST /api/board/<Monday>/<op> with the body, his press only, in the shape of the action kind press: cut-verdict records {piece_id, media_id, verdict: yes | not_this, words} on the piece (meta.cut_verdicts, append only). words says where his words go and that a Not this needs them.",
+      "properties": {
+        "kind": { "type": "string", "enum": ["press"] },
+        "label": { "type": "string" },
+        "op": { "type": "string", "enum": ["cut-verdict"] },
+        "body": { "type": "object" },
+        "words": {
+          "type": "object",
+          "required": ["path", "ask", "required"],
+          "properties": { "path": { "type": "string" }, "ask": { "type": "string" }, "required": { "type": "boolean" } }
+        },
+        "stamp": { "type": "array", "items": { "type": "string" } },
+        "done": { "type": "string", "description": "What the board says once it is saved." }
+      }
+    },
+    "lookOption": {
+      "type": "object",
+      "required": ["id", "name", "pitch", "status"],
+      "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "pitch": { "type": "string" }, "status": { "type": "string" } }
+    },
+    "lookOrNull": {
+      "type": ["object", "null"],
+      "required": ["id", "name", "pitch", "status"],
+      "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "pitch": { "type": "string" }, "status": { "type": "string" } }
+    },
+    "path": {
+      "type": "object",
+      "required": ["steps", "current", "materials", "research_file", "look", "inspiration", "prompts", "storyboard", "style", "stages"],
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "label", "state"],
+            "properties": {
+              "key": { "type": "string", "enum": ["research", "story", "look", "board", "record", "cut"], "x-open": true },
+              "label": { "type": "string" },
+              "state": { "type": "string", "enum": ["done", "current", "todo"], "x-open": true }
+            }
+          }
+        },
+        "current": { "type": ["string", "null"] },
+        "materials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "kind", "bytes", "at"],
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "kind": { "type": "string" },
+              "bytes": { "type": "number" },
+              "at": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "research_file": { "type": "boolean" },
+        "look": {
+          "type": "object",
+          "required": ["recommended", "options", "picked"],
+          "properties": {
+            "recommended": {
+              "type": "object",
+              "required": ["production", "experiment", "script", "why"],
+              "properties": {
+                "production": { "$ref": "#/$defs/lookOrNull" },
+                "experiment": { "$ref": "#/$defs/lookOrNull" },
+                "script": { "$ref": "#/$defs/lookOrNull" },
+                "why": { "type": ["string", "null"] }
+              }
+            },
+            "options": { "type": "array", "items": { "$ref": "#/$defs/lookOption" } },
+            "picked": {
+              "type": ["object", "null"],
+              "required": ["production", "experiment", "inspiration", "at"],
+              "properties": {
+                "production": { "type": "string" },
+                "experiment": { "type": ["string", "null"] },
+                "inspiration": { "type": "array", "items": { "type": "string" } },
+                "at": { "type": "string" }
+              }
+            }
+          }
+        },
+        "inspiration": {
+          "type": "object",
+          "required": ["cards", "unread"],
+          "properties": {
+            "cards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "name", "words", "saved"],
+                "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "words": { "type": "string" }, "saved": { "type": ["string", "null"] } }
+              }
+            },
+            "unread": { "type": "number" }
+          }
+        },
+        "prompts": {
+          "type": "object",
+          "required": ["research", "story", "storyboard", "mock"],
+          "properties": { "research": { "type": "string" }, "story": { "type": "string" }, "storyboard": { "type": "string" }, "mock": { "type": "string" } }
+        },
+        "storyboard": {
+          "type": ["object", "null"],
+          "required": ["title", "at"],
+          "properties": { "title": { "type": "string" }, "at": { "type": ["string", "null"] } }
+        },
+        "style": { "$ref": "#/$defs/style" },
+        "stages": {
+          "type": "array",
+          "x-since": "1.5.0",
+          "description": "The steps from idea to publish (approved mock M5): Ideas, Agreed, Flesh out, Script and record, After recording, Ready to post, each with the day the record says it happened (Ready to post: the day it goes out), or null. The working steps stay in steps.",
+          "items": {
+            "type": "object",
+            "required": ["key", "label", "state", "when"],
+            "properties": {
+              "key": { "type": "string", "enum": ["idea", "agreed", "flesh_out", "script_record", "after_recording", "ready_to_post"], "x-open": true },
+              "label": { "type": "string" },
+              "state": { "type": "string", "enum": ["done", "current", "todo"], "x-open": true },
+              "when": { "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+            }
+          }
+        }
+      }
+    },
+    "style": {
+      "type": ["object", "null"],
+      "x-since": "1.4.0",
+      "description": "The piece's style choices (docs/PUBLISH_BOARDS.md, \"The style choices\"; _style.ts): its motion style, its caption style and its treatment (the looks of path.look in the same shape), each with every option and the press that answers it. Null when it cannot be built.",
+      "required": ["motion", "captions", "treatment"],
+      "properties": {
+        "motion": { "$ref": "#/$defs/styleLayer", "description": "The bank's motion styles (config/style-references.json, layer motion); his pick is the default style.motion of the piece's next spec." },
+        "captions": { "$ref": "#/$defs/styleLayer", "description": "The caption styles (config/caption-themes.json); his pick is the default brand.caption_theme of the piece's next spec." },
+        "treatment": { "$ref": "#/$defs/styleLayer", "description": "The looks (path.look.options), answered by the look op." }
+      }
+    },
+    "styleLayer": {
+      "type": "object",
+      "required": ["options", "picked", "picked_by", "picked_at"],
+      "properties": {
+        "options": { "type": "array", "items": { "$ref": "#/$defs/styleOption" } },
+        "picked": { "type": ["string", "null"], "description": "The option picked now: his press on the board first, then (motion) his Pick a style gate, then a creative direction he signed." },
+        "picked_by": { "type": ["string", "null"], "enum": ["Krish", "spec", null], "x-open": true, "description": "Krish (his press or his gate), spec (a creative direction he signed), or null." },
+        "picked_at": { "type": ["string", "null"] }
+      }
+    },
+    "styleOption": {
+      "type": "object",
+      "required": ["id", "name", "line", "rules", "recommended", "why", "sample_url", "rejected", "presses"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "line": { "type": "string", "description": "One line on what it is." },
+        "rules": { "type": "array", "items": { "type": "string" } },
+        "point_types": { "type": "array", "items": { "type": "string" }, "description": "Motion: the kinds of point it draws (config/style-references.json motion_point_types)." },
+        "formats": { "type": "array", "items": { "type": "string" }, "description": "Motion: the formats it is made for." },
+        "ready": { "type": "boolean", "description": "Motion: whether ve can draw it now; false while its route says needs_device (it waits on a device and his yes on its test render), and then it is never recommended." },
+        "recommended": { "type": "boolean", "description": "At most three motion styles, one caption style and the Sunday room's look." },
+        "why": { "type": ["string", "null"], "description": "Why it is recommended, in plain words; null when it is not." },
+        "sample_url": { "type": ["string", "null"], "description": "A rendered sample on this site (a path starting with one /; config/ve/style-samples.json), or null." },
+        "rejected": { "type": "boolean", "description": "He said Not this to it on this piece, or called it not for us; never recommended." },
+        "presses": {
+          "type": "object",
+          "required": ["yes"],
+          "properties": { "yes": { "$ref": "#/$defs/stylePress" }, "not_this": { "$ref": "#/$defs/stylePress" } }
+        }
+      }
+    },
+    "stylePress": {
+      "type": "object",
+      "required": ["label", "op", "body", "done"],
+      "description": "POST /api/board/<Monday>/<op> with the body, his press only: style records {piece_id, motion | captions | reject: {layer, id}} on the piece (meta.style); look is the look op.",
+      "properties": {
+        "label": { "type": "string" },
+        "op": { "type": "string", "enum": ["style", "look"], "x-open": true },
+        "body": { "type": "object" },
+        "done": { "type": "string", "description": "What the board says once it is saved." }
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": ["doc_id", "revision", "side", "option", "prev"],
+      "properties": {
+        "doc_id": { "type": "string" },
+        "revision": { "type": ["integer", "null"] },
+        "side": { "type": "string" },
+        "option": { "type": "object" },
+        "prev": { "type": ["object", "null"] }
+      }
+    },
+    "piece": {
+      "type": "object",
+      "required": ["id", "title", "series", "state", "published", "on_day"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "series": { "type": "string" },
+        "state": { "type": "string" },
+        "published": { "type": "boolean" },
+        "on_day": { "type": "boolean" },
+        "move": { "x-since": "1.13.0", "description": "Move to\u2026 on a series piece: the same press as an off-day item's move, its item piece:<id>, its version the piece's updated_at in milliseconds. Any day from today through four weeks, never a past day or a Sunday, or back to his Ideas for Later (_seriesMoves.ts). Null when it does not move here.", "anyOf": [{ "$ref": "#/$defs/move" }, { "type": "null" }] },
+        "approval": {
+          "type": ["object", "null"],
+          "x-since": "1.3.0",
+          "description": "The approval of Krish's that holds the piece on its day, with its label (\"Approved by you, Sun 9 Nov, 08:07\").",
+          "required": ["at", "label", "via"],
+          "properties": { "at": { "type": "string" }, "label": { "type": "string" }, "via": { "type": "string" } }
+        },
+        "stage": {
+          "type": "object", "x-since": "1.10.0",
+          "description": "The one state the board shows it in, from the records (_stage.ts; Ruling, Krish, 2026-11-12: the board shows exactly where everything is): idea, approved, made, scheduled (with when), live (with each post's link) or missed (its day passed and it is not marked live).",
+          "required": ["state", "label", "at", "links"],
+          "properties": {
+            "state": { "type": "string", "enum": ["idea", "approved", "made", "scheduled", "live", "missed"], "x-open": true },
+            "label": { "type": "string" },
+            "at": { "type": ["string", "null"] },
+            "links": { "type": "array", "items": { "type": "object", "required": ["label", "href"], "properties": { "label": { "type": "string" }, "href": { "type": "string" } } } }
+          }
+        }
+      }
+    },
+    "story": {
+      "type": "object",
+      "required": ["headline", "what", "date", "source", "media_kind"],
+      "properties": {
+        "headline": { "type": "string" },
+        "what": { "type": "string" },
+        "date": { "type": ["string", "null"] },
+        "source": { "type": ["string", "null"] },
+        "href": { "type": "string" },
+        "media_kind": { "type": ["string", "null"] },
+        "media": { "type": "string" }
+      }
+    },
+    "option": {
+      "type": "object",
+      "required": ["id", "doc_id", "title", "text", "format", "source", "status", "said", "actions"],
+      "properties": {
+        "id": { "type": "string" },
+        "doc_id": { "type": "string" },
+        "title": { "type": "string" },
+        "text": { "type": "string" },
+        "format": { "type": ["string", "null"] },
+        "source": { "type": ["string", "null"] },
+        "status": { "type": "string", "description": "open, approved, filed, rejected, trend, improved, revised or held since 1.3.0 (the five outcomes of the ideas gate, docs/PUBLISH_BOARDS.md); before it: picked, decided, improve, next_week or a press use (x-open)." },
+        "said": { "type": ["string", "null"] },
+        "stories": { "type": "array", "items": { "$ref": "#/$defs/story" } },
+        "stories_due": { "type": ["string", "null"] },
+        "stories_fresh": { "type": "boolean" },
+        "actions": { "type": "array", "x-open": true, "items": { "$ref": "#/$defs/action" } },
+        "outcome": {
+          "type": ["object", "null"],
+          "x-since": "1.3.0",
+          "description": "The outcome Krish gave the idea, one of five, with its label, when and his words; null while it waits on him.",
+          "required": ["id", "label", "at", "words"],
+          "properties": {
+            "id": { "type": "string", "enum": ["approved", "filed", "rejected", "trend", "improved"], "x-open": true },
+            "label": { "type": "string" },
+            "at": { "type": ["string", "null"] },
+            "words": { "type": ["string", "null"] }
+          }
+        },
+        "held": { "type": "string", "x-since": "1.3.0", "description": "Why the idea cannot cross to the publish board yet (words a session wrote as decided, words changed since he approved, no record yet)." },
+        "post": { "type": ["string", "null"], "x-since": "1.7.0", "description": "An off-day option: the Drive folder id of the post made for it (the week's plan, drive), whose assets are in the day's posts; null when nothing is filed for it yet." },
+        "item": {
+          "type": "object", "x-since": "1.9.0",
+          "description": "An off-day option's item in offday_items, the one place its day lives (Ruling, Krish, 2026-11-12): its key, the version a move names, where it came from (engine: the week's plan; growth: Growth's own options) and where it stands (slate, offered, approved, later).",
+          "required": ["key", "version", "source", "state", "origin_week"],
+          "properties": { "key": { "type": "string" }, "version": { "type": "integer", "minimum": 0 }, "source": { "type": "string", "enum": ["engine", "growth"], "x-open": true }, "state": { "type": "string" }, "origin_week": { "$ref": "#/$defs/date" } }
+        },
+        "move": { "anyOf": [{ "$ref": "#/$defs/move" }, { "type": "null" }], "x-since": "1.9.0", "description": "Move to… for this option; null when the one place its day lives could not be read (nothing moves on a guess)." },
+        "posts": {
+          "type": "array", "x-since": "1.9.0", "x-open": true,
+          "description": "Growth's own record of the post (POST /api/board/<Monday>/offday-posts): made, scheduled on a channel for a time, live on a channel with its link. Growth never reports a post it did not post.",
+          "items": { "type": "object", "required": ["state", "channel", "label", "at", "due_at"], "properties": { "state": { "type": "string", "enum": ["made", "scheduled", "live"], "x-open": true }, "channel": { "type": ["string", "null"] }, "label": { "type": "string" }, "at": { "type": ["string", "null"] }, "due_at": { "type": ["string", "null"] }, "href": { "type": "string" } } }
+        },
+        "elsewhere": { "type": "array", "x-since": "1.9.0", "items": { "type": "string" }, "description": "A post Growth scheduled on a platform for a day the item is no longer on, said plainly: \"Still scheduled for Tue 17 on Instagram: move it there too\". Since 1.10.0 also where else the same post is up as an idea, and that this option is one post with an item on another day." },
+        "same_post": {
+          "type": "object", "x-since": "1.10.0",
+          "description": "One post, one item (_onePost.ts): this option is a post already an item on another day (or in his Ideas for Later) under another id. It is that item: its Approve here moves it here, never a second copy.",
+          "required": ["item", "week", "day", "date", "state", "line"],
+          "properties": { "item": { "type": "string" }, "week": { "type": ["string", "null"] }, "day": { "type": ["string", "null"] }, "date": { "type": ["string", "null"] }, "state": { "type": "string" }, "line": { "type": "string" } }
+        },
+        "stage": {
+          "type": "object", "x-since": "1.10.0",
+          "description": "The one state the board shows it in, from the records (_stage.ts; Ruling, Krish, 2026-11-12: the board shows exactly where everything is): idea, approved, made, scheduled (with when), live (with each post's link) or missed (its day passed and it is not marked live).",
+          "required": ["state", "label", "at", "links"],
+          "properties": {
+            "state": { "type": "string", "enum": ["idea", "approved", "made", "scheduled", "live", "missed"], "x-open": true },
+            "label": { "type": "string" },
+            "at": { "type": ["string", "null"] },
+            "links": { "type": "array", "items": { "type": "object", "required": ["label", "href"], "properties": { "label": { "type": "string" }, "href": { "type": "string" } } } }
+          }
+        }
+      }
+    },
+    "moveDay": {
+      "type": "object", "x-since": "1.9.0",
+      "description": "One day a move may go to: today through the next four weeks, never a past day, never a Sunday; current marks the day it is on.",
+      "required": ["date", "week", "day", "label"],
+      "properties": { "date": { "$ref": "#/$defs/date" }, "week": { "$ref": "#/$defs/date" }, "day": { "$ref": "#/$defs/dayKey" }, "label": { "type": "string" }, "current": { "type": "boolean" } }
+    },
+    "move": {
+      "type": "object", "x-since": "1.9.0",
+      "description": "Move to… on an off-day item (Ruling, Krish, 2026-11-12: any off-day post or idea moves to any day at his press, and the move updates every place that names its day). POST /api/board/<Monday>/move with body and to: {date} (his Approve for that day) or \"later\" (back to his Ideas for Later). The answer carries undo, the same press back, and line, what it did. docs/PUBLISH_BOARDS.md, \"Moving an off-day item to any day\".",
+      "required": ["op", "label", "item", "version", "state", "from", "days", "later", "note", "body"],
+      "properties": {
+        "op": { "type": "string", "const": "move" },
+        "label": { "type": "string" },
+        "item": { "type": "string" },
+        "version": { "type": "integer", "minimum": 0 },
+        "state": { "type": "string", "x-open": true, "description": "slate (offered by the plan, untouched), offered, approved or later." },
+        "from": { "type": ["object", "null"], "required": ["week", "day", "date"], "properties": { "week": { "$ref": "#/$defs/date" }, "day": { "$ref": "#/$defs/dayKey" }, "date": { "$ref": "#/$defs/date" } } },
+        "days": { "type": "array", "items": { "$ref": "#/$defs/moveDay" } },
+        "later": { "type": "boolean" },
+        "note": { "type": ["string", "null"] },
+        "body": { "type": "object" }
+      }
+    },
+    "comment": {
+      "type": "object",
+      "required": ["at", "by", "anchor", "text"],
+      "properties": { "at": { "type": "string" }, "by": { "type": "string" }, "anchor": { "type": "string" }, "text": { "type": "string" } }
+    },
+    "posted": {
+      "type": "object",
+      "required": ["step", "label", "at"],
+      "properties": { "step": { "type": "string" }, "label": { "type": "string" }, "at": { "type": ["string", "null"] }, "href": { "type": "string" },
+        "by": { "type": "string", "enum": ["growth", "you"], "x-open": true, "x-since": "1.8.0", "description": "Who recorded it: growth (its tick) or you (It's live)." } }
+    },
+    "driveLink": {
+      "type": "object",
+      "x-since": "1.7.0",
+      "description": "The exact file in Krish's Google Drive, by its Drive file id: where he opens it to play it or download it.",
+      "required": ["file_id", "url"],
+      "properties": {
+        "file_id": { "type": "string", "pattern": "^[A-Za-z0-9_-]{20,80}$" },
+        "url": { "type": "string", "pattern": "^https://drive\\.google\\.com/file/d/[A-Za-z0-9_-]{20,80}/view$" }
+      }
+    },
+    "assetFile": {
+      "type": "object",
+      "x-since": "1.7.0",
+      "description": "One file of an asset in Drive: a version, or a slide of a carousel. The board shows it at /api/board/<Monday>/drive/<id>.",
+      "required": ["id", "title", "mime", "at", "url"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z0-9_-]{20,80}$", "description": "The Drive file id." },
+        "title": { "type": "string", "description": "The file's name in Drive." },
+        "mime": { "type": "string" },
+        "at": { "type": ["string", "null"] },
+        "url": { "type": "string", "pattern": "^https://drive\\.google\\.com/file/d/[A-Za-z0-9_-]{20,80}/view$" },
+        "seconds": { "type": "number" },
+        "width": { "type": "number" },
+        "height": { "type": "number" }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "x-since": "1.7.0",
+      "description": "One asset of a post: its newest version (the file's own fields), a carousel's slides in order, and its older versions, newest first.",
+      "allOf": [{ "$ref": "#/$defs/assetFile" }],
+      "required": ["kind", "folder", "versions"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["cut", "video", "meme", "carousel", "image", "cover", "figure", "thumbnail", "note"], "x-open": true },
+        "folder": { "type": "string", "description": "The post's sub-folder it is in (\"4 Social\", \"3 Video\"), or \"\" for the post's own folder." },
+        "slides": { "type": "array", "description": "A carousel: every slide in order, each the newest version of that slide.", "items": { "$ref": "#/$defs/assetFile" } },
+        "versions": { "type": "array", "description": "The older versions, newest first.", "items": { "$ref": "#/$defs/assetFile" } }
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "x-since": "1.8.0",
+      "required": ["sha256", "qa", "assets", "channels", "state", "approved_at", "press", "why"],
+      "properties": {
+        "sha256": { "$ref": "#/$defs/sha", "description": "The draft's sha256: what his Approve for publish binds, and what piece_manifest.py seal checks." },
+        "qa": { "type": "string", "description": "passed, held or failed: Growth holds every post until it has passed." },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "drive_id", "sha256", "order", "url"],
+            "properties": {
+              "name": { "type": "string" }, "drive_id": { "type": "string" }, "sha256": { "$ref": "#/$defs/sha" }, "order": { "type": "number" },
+              "url": { "type": "string", "pattern": "^https://drive\\.google\\.com/file/d/[A-Za-z0-9_-]{10,100}/view$" }
+            }
+          }
+        },
+        "channels": { "type": "array", "items": { "type": "string" } },
+        "state": { "type": "string", "enum": ["waiting", "approved", "changed"], "x-open": true },
+        "approved_at": { "type": ["string", "null"] },
+        "press": {
+          "type": ["object", "null"],
+          "description": "His Approve for publish: PUT picks/<day>-publish with { kind: approve_publish, day, piece_id, approved: true, manifest_sha256 } and the time at `at`; the route refuses a hash that is not the draft as it stands (409 manifest_changed). Null once his press binds this draft.",
+          "allOf": [{ "if": { "type": "object" }, "then": { "$ref": "#/$defs/action" } }]
+        },
+        "why": { "type": ["string", "null"], "description": "Why it waits, in his words: the files changed after his press, or QA has not passed." }
+      }
+    },
+    "post": {
+      "type": "object",
+      "x-since": "1.7.0",
+      "description": "A post folder of the day in makeyourmindup > 3 Posts and everything made in it (_drivePosts.ts).",
+      "required": ["id", "name", "url", "option", "piece_id", "assets"],
+      "properties": {
+        "id": { "type": "string", "description": "The folder's Drive id." },
+        "name": { "type": "string" },
+        "url": { "type": "string", "pattern": "^https://drive\\.google\\.com/drive/folders/[A-Za-z0-9_-]{20,80}$" },
+        "option": { "type": ["string", "null"], "description": "The day's option this post was made for, by its id." },
+        "piece_id": { "type": ["string", "null"], "description": "The piece whose making record files into this folder (pack.folder)." },
+        "assets": { "type": "array", "items": { "$ref": "#/$defs/asset" } }
+      }
+    }
+  }
+}

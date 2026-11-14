@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "status": "approved",
-  "about": "The makeyourmindup intro sting: 56 frames at 30 fps in front of every 16:9 long cut of a weekly series piece, and nowhere else (Krish, 2026-11-05). The 9:16 short cut opens straight on the hook (house rule HOOK_IS_THE_INTRO). The sting is the clips Krish saw on the Intro Sting page, byte for byte: its Remotion source was never committed and is lost, so the clips are the design. They live in the library at clips.<shape>.<series>.library, and every machine that renders gets them with python scripts/quick-edit/intro.py fetch, checked by size and sha256. Off-day pieces wear no sting.",
+  "status": "retired",
+  "about": "The makeyourmindup intro sting, retired for good (Ruling, Krish, 2026-11-12: \"Nothing before the hook, ever. Remove the sting exception for good.\"). No cut, wide or tall, series or off day, carries anything before its hook: the first frame of every cut is the hook (house rule HOOK_IS_THE_INTRO). The six clips he saw on the Intro Sting page stay in the library and are named here for the record only; intro.py gives no cut a sting, refuses an approval of this config, and refuses any status but \"retired\" on it. Its history keeps every word he said about it.",
   "frames": 56,
   "fps": 30,
   "seconds": 1.8667,
@@ -54,29 +54,29 @@
     "version": "1791810665-c08a",
     "label": "Second direction",
     "published_on": "2026-10-12",
-    "how": "Each clip was taken byte for byte from the page Krish looked at; its sha256 here is the clip he saw. The 9:16 clips are kept for the record and used nowhere: shapes says where the sting goes."
+    "how": "Each clip was taken byte for byte from the page Krish looked at; its sha256 here is the clip he saw. Every clip is kept for the record only and used nowhere."
   },
   "placement": {
     "on": "2026-11-05",
     "by": "Krish",
     "words": "I think it should go at the start of the longer wide videos 100%,",
-    "means": "The 16:9 long cut opens on the sting, then the hook, with his face on the very next frame after the sting's last; the 9:16 short cut opens straight on the hook."
+    "means": "Superseded on 2026-11-12 (Ruling, Krish: \"Nothing before the hook, ever.\"). It meant: the 16:9 long cut opened on the sting, then the hook; the 9:16 short cut opened straight on the hook."
   },
   "colours": {
     "on": "2026-11-05",
     "by": "Krish",
     "picked": "Keep it as I saw it",
-    "means": "Asked whether each series' sting may flash the other series' colours on its way to its own colour and the wordmark, he picked the option to keep it as he saw it. This is the one written exception to the series-colour rule (scripts/pages/brand.py series_look): the brand intro on a weekly series piece's wide cut."
+    "means": "Asked whether each series' sting may flash the other series' colours on its way to its own colour and the wordmark, he picked the option to keep it as he saw it. It was the one written exception to the series-colour rule (scripts/pages/brand.py series_look) while the sting opened the wide cut; with the sting retired there is none."
   },
-  "approved_by": "Krish",
-  "approved_on": "2026-11-05",
-  "approval_words": "I think it should go at the start of the longer wide videos 100%,",
-  "source_sha256": "d7ba49595c99603c502c54b1323af5c26e663458e381b87b9f0613188b07584b",
+  "approved_by": null,
+  "approved_on": null,
+  "approval_words": null,
+  "source_sha256": null,
   "last_decision": {
-    "on": "2026-11-05",
+    "on": "2026-11-12",
     "by": "Krish",
-    "decision": "approved",
-    "words": "I think it should go at the start of the longer wide videos 100%,"
+    "decision": "retired",
+    "words": "Nothing before the hook, ever. Remove the sting exception for good."
   },
   "history": [
     {
@@ -101,6 +101,24 @@
       "decision": "approved",
       "words": "I think it should go at the start of the longer wide videos 100%,",
       "design": "the clips in \"clips\", bound by source_sha256"
+    },
+    {
+      "on": "2026-11-12",
+      "by": "Krish",
+      "words": "Happy with your recommendations and yes go for the profile links as well.",
+      "picked": "Long cuts open on the hook with no sting until the sting after the hook is built and he approves its proof render.",
+      "why": "docs/production/SOCIAL-BEST-PRACTICES-2026.md section 4.3: a brief animated logo may follow, not precede, value. The engines can only lay the sting in front of the hook today; moving it after the hook needs a proof Krish approves (F04, F13).",
+      "means": "No cut wears the sting while this block is here: make.py, the day runner and ve open every cut on the hook, and the palette (config/brand-palette.json) expects no sting. Remove the block, with his words, once the after-hook sting is built and approved.",
+      "decision": "paused"
+    },
+    {
+      "on": "2026-11-12",
+      "by": "Krish",
+      "decision": "retired",
+      "rule": "HOOK_IS_THE_INTRO",
+      "words": "Nothing before the hook, ever. Remove the sting exception for good.",
+      "asked": "Openings: may anything go before the hook, such as the house sting on the 16:9 long cut?",
+      "means": "Nothing goes before the hook on any cut, ever: the exception that let the house sting open the 16:9 long cut of a series piece is removed for good, and the pause above is superseded."
     }
   ]
 }

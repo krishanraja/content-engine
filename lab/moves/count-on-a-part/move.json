@@ -1,0 +1,20 @@
+{
+  "id": "count-on-a-part",
+  "what": "The parts of one object light one by one to the spoken number; the leavers go dark on the drop; everything dims and returns.",
+  "says": [
+    "number",
+    "before-after",
+    "person"
+  ],
+  "needs": [
+    "number"
+  ],
+  "energy": "high",
+  "engine": "three",
+  "code": "packages/moves/count-on-a-part/move.mjs",
+  "entry": "update",
+  "vitals": "timing is fixed in the move; times come from the words that cue it",
+  "skin": "brand skin colours only (ink, cream, mint, the series colour); never a copied hex",
+  "from": "lab/styles/ladder/scene.mjs",
+  "proven_by": "Krish, 2026-11-10, on The Ladder v2 frames: \"much better, go\""
+}

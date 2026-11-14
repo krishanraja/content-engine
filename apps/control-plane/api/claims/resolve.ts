@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { withContentRun } from '../_runs.js'
+import { recordNotices, type Notice, type NoticeDb } from './_notice.js'
 
 // Notice when a claim's falsifier comes due.
 //
@@ -46,22 +47,15 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       .limit(500)
     if (dueErr) throw new Error(dueErr.message)
 
-    const rows = (due || []).filter(d => !d.noticed_at).map(d => ({
+    const rows: Notice[] = (due || []).filter(d => !d.noticed_at).map(d => ({
       claim_id: d.claim_id,
       event: 'came_due',
       due_on: d.falsifier_due_on,
     }))
 
-    let noticed = 0
-    if (rows.length) {
-      // ignoreDuplicates against the one-per-claim partial index, so a re-run
-      // on the same day is free and can never write a second notice.
-      const { error, count } = await supabase
-        .from('claim_resolutions')
-        .upsert(rows, { onConflict: 'claim_id', ignoreDuplicates: true, count: 'exact' })
-      if (error) throw new Error(error.message)
-      noticed = count ?? 0
-    }
+    // One notice per claim, ever, against the one-per-claim partial index; a
+    // re-run on the same day is free and can never write a second notice.
+    const noticed = await recordNotices(supabase as unknown as NoticeDb, rows)
 
     const awaiting = (due || []).length
     const worstOverdue = (due || []).reduce(

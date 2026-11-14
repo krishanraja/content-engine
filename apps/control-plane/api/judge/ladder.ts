@@ -473,8 +473,17 @@ async function repair(
     if (!nextIdea || nextIdea.length < 12) {
       return { outcome: 'call_failed', detail: 'the model returned no usable idea' }
     }
+    // Cleaned HERE, where the words come back, so the panel judges, the row
+    // stores and the ladder record hashes one and the same text. It used to be
+    // cleaned only at the write, after the hash was taken from the uncleaned
+    // text: any repair with an em dash in it (most of them) left a record whose
+    // hash matched nothing on the row, so the next sweep judged the idea again
+    // and paid for it twice. Measured 11 November on sweep 8903e989: 9eda3e4a,
+    // 428d8b21, 0224fe5f and 3575b38b, each judged one morning and again first
+    // thing the next, each stored as the repair's text with its dashes turned
+    // into commas.
     return {
-      outcome: 'improved', idea: nextIdea, thesis: nextThesis,
+      outcome: 'improved', idea: sanitizeVoice(nextIdea), thesis: sanitizeVoice(nextThesis),
       what_changed: typeof parsed.what_changed === 'string' ? parsed.what_changed.trim().slice(0, 300) : '',
     }
   } catch (e) {
@@ -879,8 +888,14 @@ export async function runLadder(
         }
 
         const router = await route({ ...idea, ...current }, mandates, deps.call)
+        // The text this pass leaves on the row: the repair's when one was kept,
+        // the row's own otherwise. The record's hash is taken from exactly this,
+        // because needsJudging compares it with the row and a record that names
+        // other text is re-judged, and paid for, on the next sweep.
+        const repaired = attempts.some(a => a.changed)
+        const onRow = repaired ? current : { idea: idea.idea, thesis: idea.thesis }
         const ladder = {
-          artifact_hash: artifactHash(artifactOf(current)),
+          artifact_hash: artifactHash(artifactOf(onRow)),
           roster_version: ROSTER_VERSION,
           judged_at: new Date().toISOString(),
           first, final: { score: s.score, weakest: s.weakest, band: s.band },
@@ -917,7 +932,11 @@ export async function runLadder(
         // Every other writer runs its words through sanitizeVoice before storing
         // them; the repair was the one that did not, so an em dash it wrote
         // stayed in the idea and the voice check then marked the idea down for it.
-        if (attempts.some(a => a.changed)) { patch.idea = sanitizeVoice(current.idea); patch.thesis = current.thesis == null ? current.thesis : sanitizeVoice(current.thesis) }
+        // repair() now cleans them as they arrive, so they are written exactly
+        // as judged and hashed: cleaning again here could change them a second
+        // time (sanitizeVoice is not idempotent on every input) and part the row
+        // from its record.
+        if (repaired) { patch.idea = onRow.idea; patch.thesis = onRow.thesis }
         // Never overwrite a subchannel a human chose. The router records its pick
         // either way and is graded on the disagreement.
         if (!idea.lane_slot && router?.winner && !router.contested.length) patch.lane_slot = router.winner

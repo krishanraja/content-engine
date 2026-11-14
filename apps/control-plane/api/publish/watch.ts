@@ -4,7 +4,7 @@ import { supabase } from '../_supabase.js'
 import { withContentRun } from '../_runs.js'
 import { makingStamp } from '../_making.js'
 import { askChecksForPiece } from '../_controlCenter.js'
-import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts, unmatchedItem, type Candidate } from '../_publishWatch.js'
+import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, YOUTUBE_FEED, YOUTUBE_WATCH_FROM, matchPost, matchUpload, readPosts, readUploads, unmatchedItem, uploadWrite, type Candidate } from '../_publishWatch.js'
 
 // GET (cron, hourly) or POST (an operator session): the publish watcher.
 //
@@ -43,12 +43,14 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (e: any) {
     return res.status(502).json({ ok: false, error: `archive_unreachable: ${String(e?.message || e).slice(0, 120)}` })
   }
-  const posts = readPosts(raw).filter(p => p.posted_at >= WATCH_FROM)
+  let read
+  try { read = readPosts(raw) } catch (e: any) { return res.status(502).json({ ok: false, error: String(e?.message || e).slice(0, 160) }) }
+  const posts = read.filter(p => p.posted_at >= WATCH_FROM)
 
   const { data, error } = await supabase.from('content_ideas').select(PIECE_COLUMNS)
     .in('state', ['drafting', 'review', 'approved', 'published']).is('buried_at', null).limit(800)
   if (error) return res.status(500).json({ ok: false, error: error.message })
-  const pieces = (data || []) as Array<Candidate & { published_at: string | null; buried_at: string | null; updated_at: string }>
+  const pieces = (data || []) as Piece[]
 
   const report: Array<Record<string, unknown>> = []
   let published = 0, ambiguous = 0, held = 0
@@ -90,6 +92,8 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       if (write.error || !write.data?.length) { report.push({ post: post.url, piece: piece.id, by: m.by, written: false, note: write.error?.message || 'the row changed; the next pass tries again' }); continue }
       piece.state = 'published'
       piece.meta = nextMeta
+      piece.updated_at = stamp
+      piece.published_at = piece.published_at || post.posted_at
       published++
       // The sweep looks at this piece's items now rather than at its next pass.
       await askChecksForPiece(piece.id)
@@ -112,7 +116,47 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     report.push({ post: post.url, piece: piece.id, by: m.by, written: true })
   }
 
-  return res.status(200).json({ ok: true, posts: posts.length, published, ambiguous, held, report })
+  // YouTube: record each recent upload on its piece (_publishWatch.ts, matchUpload). A feed that fails is reported in
+  // the run, with its status, and changes nothing: the record keeps what it had.
+  const youtube = await watchYoutube(pieces, now)
+  return res.status(200).json({ ok: true, posts: posts.length, published, ambiguous, held, report, youtube })
+}
+
+type Piece = Candidate & { published_at: string | null; buried_at: string | null; updated_at: string }
+
+async function watchYoutube(pieces: Piece[], now: Date) {
+  let xml = ''
+  // Bounded: two tries, then the run reports the failure; the hourly cron is the retry after that.
+  for (let attempt = 0; attempt < 2 && !xml; attempt++) {
+    try {
+      const r = await fetch(YOUTUBE_FEED, { headers: { accept: 'application/atom+xml' }, signal: AbortSignal.timeout(10_000) })
+      if (r.ok) xml = await r.text()
+      else if (attempt === 1) return { ok: false, error: `youtube_feed_unavailable: ${r.status}` }
+    } catch (e: any) {
+      if (attempt === 1) return { ok: false, error: `youtube_feed_unreachable: ${String(e?.message || e).slice(0, 120)}` }
+    }
+  }
+  const all = readUploads(xml)
+  if (!all.length) return { ok: false, error: 'youtube_feed_empty_or_unreadable' }
+  const uploads = all.filter(u => u.posted_at >= YOUTUBE_WATCH_FROM)
+  const report: Array<Record<string, unknown>> = []
+  let recorded = 0
+  for (const up of uploads) {
+    const m = matchUpload(up, pieces, all)
+    if (m.kind !== 'one') { report.push({ video: up.url, kind: up.kind, matched: null, ...(m.kind === 'ambiguous' ? { ambiguous: m.ids } : {}) }); continue }
+    const piece = pieces.find(p => p.id === m.piece.id)!
+    const w = uploadWrite(up, piece)
+    if ('skip' in w) { report.push({ video: up.url, kind: up.kind, piece: piece.id, by: m.by, written: false, note: w.skip }); continue }
+    const stamp = now.toISOString()
+    const making = piece.meta!.making
+    const nextMeta = { ...piece.meta, making: { ...making, channels: { ...(making.channels || {}), [up.kind]: w.write }, updated_at: makingStamp(making, stamp), by: 'publish watcher' } }
+    const write = await supabase.from('content_ideas').update({ meta: nextMeta, updated_at: stamp })
+      .eq('id', piece.id).eq('updated_at', piece.updated_at).select('id')
+    if (write.error || !write.data?.length) { report.push({ video: up.url, kind: up.kind, piece: piece.id, by: m.by, written: false, note: write.error?.message || 'the row changed; the next pass tries again' }); continue }
+    piece.meta = nextMeta; piece.updated_at = stamp; recorded++
+    report.push({ video: up.url, kind: up.kind, piece: piece.id, by: m.by, written: true })
+  }
+  return { ok: true, uploads: uploads.length, history_left: all.length - uploads.length, recorded, report }
 }
 
 export default withContentRun('publish_watch', handler)

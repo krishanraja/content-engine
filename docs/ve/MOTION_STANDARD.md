@@ -31,8 +31,13 @@ Rules that follow:
    carries a beat alone and is never the piece's hero device. `ve lint` refuses both (`motion.stamp_not_hero`).
    Headline type on a graphic beat is at least 96 px (the reel's "Gemini 3.8 Flash TTS" title is 64 px of 1280, which
    is 96 px here).
-3. **Nothing collides with the mark tile.** A card's box never overlaps the mark tile's box. Codex card
-   `ve-motion-2-mark-clearance` adds the check to `ve qc` composition and the fix to the layouts.
+3. **No wordmark over vertical content; nothing touches it anywhere.** Ruling (Krish, 2026-11-11): "I don't think
+   they're necessary and should be permanently removed from all templates", of the brand mark and badge on vertical
+   videos, and "make sure animations never go above or on top of wordmarks". He then scoped it: "I don't have a no-word-mark rule for tall videos entirely. I just have a no-word-mark rule during the animated content, not the closing outro card." The 9:16 cut's animated content carries no mark tile,
+   wordmark, series pill or opening logo in any route (ve, quick-edit, the style lab, the Studio routes); `ve qc`
+   proves it (`brand.no_mark`) and `engine.test.ts` refuses chrome on any 9:16 beat. On the 16:9 cut a card's box
+   never overlaps the mark tile or the wordmark; the lab's `check.mjs` fails any word drawn over or under them.
+   The closing outro card keeps the wordmark.
 
 ## Motion
 
@@ -54,8 +59,8 @@ to 7 frames; a ring or waveform keeps moving underneath. A move that restarts on
 |---|---|---|
 | Words a page | one | one (`brand.captions: "word"`) |
 | Word colour and weight | white, heavy sans, soft shadow, no box | white Archivo bold, shadow |
-| Word position, face shot | centre at 66% of the height, on the chest, under the chin | centre at about y 1270 to 1440, and never on the face |
-| Held title | yellow, two lines, top at 19% of the height, about 44 px cap height of 718 | `brand.title`, top at y 250, 66 px |
+| Word position, face shot | centre at 66% of the height, on the chest, under the chin | centre at y 1250, its box ending above y 1320 where Instagram's handle and caption start (11 Nov 2026), and never on the face |
+| Held title | yellow, two lines, top at 19% of the height, about 44 px cap height of 718 | `brand.title`, top at y 290 (under every channel's top bar since 11 Nov 2026), 66 px |
 | Loud word | a large upright serif in quotes ("SPEAK") over the chest in the jackroberts reel | the upright house serif (Fraunces, added to the kit 3 Nov 2026: "add the upright Fraunces to the kit") |
 
 **Never on the face.** `ve qc` fails any caption page whose box overlaps the face found in that frame, grown by 10%
@@ -71,7 +76,26 @@ y 126, its like rail x 895 to 1080 from y 548 to 1671, its handle and caption fr
 everything below y 1747. A tall cut's words, headline and the point of every graphic sit between y 200 and 1320, and
 inside x 60 to 860 below y 520. `ve qc` fails a box that strays (`channel.safe_zones`); `python3
 scripts/channel_safe.py FILE` reads the words in any finished video, cover or card and fails one under a button;
-quick-edit lists both on every tall cut. Codex card `ve-motion-4-channel-safe-tall` moves the layouts.
+quick-edit holds a tall cut whose caption band strays and lists any word its OCR reads there.
+
+**Use the whole safe screen (Krish, 11 Nov 2026).** "All vertical video templates should be adjusted to make maximum use
+of the full screen, as opposed to the current situation where a third of the screen at the top is now cut off. Ensure
+that we stay within the boundaries of all the social platforms so that elements and captions don't end up underneath
+the social app UI features." So on the tall canvas:
+
+| What | Where |
+|---|---|
+| Key content (every ve slot box, a lab style's type, a quick-edit picture) | starts by y 340, just under the top bar at 270; x 60 to 860; ends by y 1050 in ve |
+| House caption | x 60 to 860, y 1090 to 1320 (`house/geometry.ts` `HOUSE.caption`, `config/ve/design-lock.json` `zones.caption`) |
+| Word caption | centred at y 1250 on face beats, its box ending by 1320; on the seam on SPLIT beats |
+| SPLIT house caption | on the seam, y 670 to 850 (`FWP_SPLIT_CAPTION_ZONE`) |
+| Held title | from y 290 |
+| quick-edit captions | x 60 to 860 at y 1060 (over the speaker) or 1014 (over a picture); its tall picture from y 270, x 60 to 860 |
+| Footage, grounds, 3D, the end card | full bleed: only words and the point of a graphic keep to the safe area |
+
+Checks: `engine.test.ts` ("uses the top of the tall screen"), `tests/channel_safe_test.py` (the real ve layouts, the
+quick-edit bands and the tall panel clear every channel) and the lab's `check.mjs` ("the top of the tall screen is
+empty" when the topmost word starts below y 340 on more than a quarter of frames).
 
 ## The reference gate
 
@@ -98,6 +122,16 @@ brand kit in Drive; Krish, 2026-11-03: "add the upright Fraunces to the kit"), n
 - The Instagram zones in `config/studio.json` brought up to the measured ones: "I approve updating the Instagram
   button zones".
 
+## Widened to admit his own cuts (Ruling, Krish, 13 Nov 2026)
+
+Asked whether the floor should widen to admit two of his own cuts, Krish answered: "yes it should".
+- The AI music cut (11 Nov) slams things about 500 px with about 12% overshoot over 10 frames.
+- The Character.ai cut (26 Oct) moves its type 0 px: it fades or blurs in only.
+
+So an entrance now settles in 4 to 10 frames, travels 0 to 500 px and overshoots at most 12%. The 4 to 7 frame,
+40 to 60 px figures above stay the measured default for the house look. `kit/motionProfiles.ts` (`FLOOR`), `kit.test.ts`
+and `clock.test.ts` hold the widened floor.
+
 ## How it was measured
 
 Shot lengths and cuts: `python scripts/ve.py study <reel>` (ffmpeg scene detection). Settle time: frames after each
@@ -113,17 +147,16 @@ frames 600 and 990 of each reel.
   `motion.required`), and a Codex card written for that piece carries the style as its own `## Motion style` section
   (`scripts/velib/cards.py`). The format's own motion notes (`docs/ve/design/formats/*-motion.md`) hold its frame;
   the style works inside them, and this standard wins where they differ.
-- **Channel safe zones are listed, not counted, today.** `scripts/velib/qc_channel.py` has `ADVISORY = True`: `ve qc`
-  shows a box under a channel's buttons but does not fail the cut until card `ve-motion-4-channel-safe-tall` moves the
-  tall layouts out of the zones. Until then a session reads the `channel.safe_zones` row itself before calling a tall
-  cut ready.
+- **Channel safe zones count (since 11 Nov 2026).** The tall layouts, the house caption, the word caption and the held
+  title sit inside every channel's safe area (card `ve-motion-4-channel-safe-tall`, done that day), so
+  `scripts/velib/qc_channel.py` has `ADVISORY = False` and `ve qc` fails a box under a channel's buttons.
 - **Proved moving before scaled (4 Nov 2026, F04, F13).** From 9 Nov a whole cut renders only after Krish approves its
   hardest beat moving on his own take (`ve proof`, `scripts/velib/proof.py`), in the style he picked from mocks on that
   take (`ve styles`). The Critic scores the cut against that approved proof clip as well as the board cards, with the
   same 8/10 bar (`scripts/velib/refgate.py`, card `proof`). The standard above is what the proof is judged by; the
   proof is what the whole cut is judged against.
 - **How the renderer holds a style to this floor (4 Nov 2026).** Each drawable style is a profile in
-  `apps/renderer/src/engine/kit/motion-profiles.json` (entrance 4 to 7 frames, rise 40 to 60 px, overshoot at most 6%,
+  `apps/renderer/src/engine/kit/motion-profiles.json` (entrance 4 to 10 frames, travel 0 to 500 px, overshoot at most 12% since the 13 Nov ruling,
   drift above 0, timed moves under 3.5 s, grounds from brand roles); `kit.test.ts` and `clock.test.ts` fail any that
   breaks it, and FormatMaster clamps a hand-edited profile inside it. Where a style asks for more than the floor allows
   (dark-keynote's long holds) the floor wins. A cut with no style keeps the house motion it had before, which is

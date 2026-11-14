@@ -13,7 +13,7 @@ that name it.
 
 | Beat | Holds | Layouts |
 |---|---|---|
-| `hook` | the cut's frame 0 is the hook in the brand's dress, logo and series tag in its corners; in the file that is frame 0 of a 9:16 cut, and the frame after the series' house sting on the 16:9 whole cut of a weekly series piece (house rule HOOK_IS_THE_INTRO, under test) | F3, P1 |
+| `hook` | the cut's frame 0 is the hook in the brand's dress, logo and series tag in its corners; in the file that is frame 0 of every cut, 9:16 and 16:9: nothing goes before the hook (house rule HOOK_IS_THE_INTRO; Ruling, Krish, 2026-11-12) | F3, P1 |
 | `face` | his face carries the line; a kinetic label adds the number, name or date the voice does not say | P1, F1 |
 | `proof` | the evidence the line names (a real record, document, quote or screen) beside or over him | P3, P6 |
 | `close` | one calm close: the ending band, held long enough to read | F1 |
@@ -31,7 +31,7 @@ Since the 3 Nov freeze both are `role: module` (they keep working as their own f
 
 | Lock entry | Canvas | Caption zone | Key-frame compare |
 |---|---|---|---|
-| `face-with-proof` | 1080 x 1920 | x 72, y 1180, w 900, h 320 (the lock's zones) | 540 x 960 |
+| `face-with-proof` | 1080 x 1920 | x 60, y 1090, w 800, h 230 (the lock's zones since 11 Nov 2026) | 540 x 960 |
 | `face-with-proof@16:9` | 1920 x 1080 | x 260, y 773, w 1400, h 187 (QC's wide caption box) | 960 x 540 |
 
 Composition zones (fill, edges, platform UI) are written for 9:16 only; a wide cut is held to its key frames once

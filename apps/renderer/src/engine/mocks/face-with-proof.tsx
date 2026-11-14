@@ -21,7 +21,9 @@ export const FWP_SPLIT_SEAM_Y = 760
 // Frozen mocks only. Real beats never use this stage scale.
 export const FWP_MOCK_STAGE_SCALE = 0.76
 const STAGE_LEFT = (1080 - 1080 * FWP_MOCK_STAGE_SCALE) / 2
-export const FWP_SPLIT_CAPTION_ZONE = { left: 72, top: 1460, width: 900, height: 180 } as const
+/** On a SPLIT beat his face is in the lower half, so the caption sits on the seam (MOTION_STANDARD, Captions), inside
+ *  every channel's safe column: x 60 to 860, never under Instagram's handle from y 1320 (Krish, 2026-11-11). */
+export const FWP_SPLIT_CAPTION_ZONE = { left: 60, top: 670, width: 800, height: 180 } as const // centred on FWP_SPLIT_SEAM_Y
 /** Poster crop defaults for the Thursday still; override after camera-plate review. */
 export const FWP_POSTER_POSITIONS = { hook: '50% 88%', face: '50% 0%', proof: '50% 88%', close: '50% 88%' } as const
 /** Copy these stage-coordinate placements into SPLIT object.params.place. */
@@ -73,7 +75,7 @@ function Frame({ children, caption, face = false, tokens, posterSrc, logoSrc, se
       <span data-series style={{ fontFamily: HOUSE_FONTS.data, fontSize: 30, background: tokens.channel,
         color: tokens.ink, padding: '8px 12px' }}>{series}</span>
     </header>
-    <div data-caption-zone style={{ position: 'absolute', ...(face ? { left: 72, top: 1180, width: 900, height: 320 } : FWP_SPLIT_CAPTION_ZONE) }}>
+    <div data-caption-zone style={{ position: 'absolute', ...(face ? { left: 60, top: 1090, width: 800, height: 230 } : FWP_SPLIT_CAPTION_ZONE) }}>
       <div style={{ boxSizing: 'border-box', background: tokens.ink, color: tokens.cream,
         padding: `${face ? HOUSE.caption.paddingTop : 10}px ${HOUSE.caption.paddingX}px ${face ? HOUSE.caption.paddingBottom : 10}px`,
         fontFamily: HOUSE_FONTS.structure, fontWeight: HOUSE.caption.weight, fontSize: HOUSE.caption.size,

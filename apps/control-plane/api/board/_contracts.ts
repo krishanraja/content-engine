@@ -49,12 +49,17 @@ const TP_ID = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/
 // Krish's five presses on an idea (Krish, 2026-10-28: "pick an idea for a specific day AND add any optional comments
 // easily, which can be saved, or I can: mark an idea as being useful in a future wider piece OR mark it as being an
 // idea that should be stored for a future trend OR queue it for next week OR reject it"). The pick is picks/<day>; the
-// other four are queue/<pick> with one of these uses (null takes a press back).
-export const PRESS_USES = ['wider_piece_context', 'track_over_time', 'next_week', 'not_for_us'] as const
+// other four are queue/<pick> with one of these uses (null takes a press back). Since 11 November they are four of the
+// five outcomes (Krish, 2026-11-11: "filed away for later, rejected and learnt from, saved as a trend for a wider piece,
+// improved for a future piece cue"; _gate.ts OUTCOME_OF_USE): next_week is Filed for later, not_for_us Rejected and
+// learnt from, wider_piece_context (and the older track_over_time) Saved as a trend, improve Improved for a future piece.
+export const PRESS_USES = ['wider_piece_context', 'track_over_time', 'next_week', 'not_for_us', 'improve'] as const
 // The off days (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and Sunday content within the
 // Sunday ideas session if you give me a few options to approve as you do the Mon/wed/fri"): queue/off-<day>-<option>.
 // Growth's off-day lane runs every day (Krish, 2026-10-29: "Mix wins: every day"), so its options may sit on any day;
 // a piece he records stays a Tuesday, Thursday, Saturday or Sunday piece (recordedOffday).
+// A refused subject's line on the ideas board (ideas.json vetoes): queue/veto-<the subject, lower case, dashed>.
+export const VETO_ID = /^veto-[a-z0-9][a-z0-9-]{0,59}$/
 export const OFFDAY_ID = /^off-(mon|tue|wed|thu|fri|sat|sun)-[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,59}$/
 // Sunday is a rest day (Ruling, Krish, 2026-11-02: "Let's eliminate Sunday from Publishing anythign permanently").
 const RECORDED_DAYS = ['tue', 'thu', 'sat']
@@ -210,6 +215,77 @@ export function yesBody(id: string, body: Record<string, unknown>): boolean {
     && typeof body.said_at === 'string' && Number.isFinite(Date.parse(body.said_at))
     && oneLine(body.said_where, 300) && typeof body.session_ref === 'string' && /^https:\/\/[^\s]{1,290}$/.test(body.session_ref)
 }
+// Typed approval, for a narrative lock or a piece's scripts only (Ruling, Krish, 2026-11-12: "Scripts and locks only.
+// Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs
+// your press, so that gate is unchanged."). A session carries his exact typed words, verbatim, with when and where he
+// typed them and the session link, as one board document per day and decision:
+//   picks/<day>-lock-words     kind sign_lock, bound to the lock he approved (lock_path, lock_sha256: making.py
+//                              lock_body_hash of the words above his signature);
+//   picks/<day>-scripts-words  kind approve_scripts, with the exact words of each cut (texts) as the Approve scripts
+//                              press carries them; the server sends them to Teleprompter as it does for the press.
+// The board shows each as "Approved in your words". Nothing else counts from a session: his Approve on an idea (the ideas
+// gate), any other decision and taking an approval back stay his presses alone (hisOnlyRefusal).
+// Any day a piece is placed on (Ruling, Krish, 2026-11-13: he moved the data-centres piece to Tue 17 with place_piece;
+// a piece on an off day is still a piece, and its lock and scripts are approved the same way).
+export const WORDS_ID = /^(mon|tue|wed|thu|fri|sat)-(lock|scripts)-words$/
+export const WORDS_KIND = { lock: 'sign_lock', scripts: 'approve_scripts' } as const
+const LOCK_PATH = /^docs\/plans\/\d{4}-\d{2}-\d{2}-week\/narrative-lock-(mon|tue|wed|thu|fri|sat)\.md$/
+/** His words as a session carries them: verbatim, when and where he typed them, and the session they came from. */
+export function saidInWords(body: Record<string, unknown>): boolean {
+  return typeof body.words === 'string' && body.words.trim().length > 0 && body.words.length <= 2000
+    && typeof body.said_at === 'string' && Number.isFinite(Date.parse(body.said_at))
+    && oneLine(body.said_where, 300) && typeof body.session_ref === 'string' && /^https:\/\/[^\s]{1,290}$/.test(body.session_ref)
+}
+export function wordsBody(id: string, body: Record<string, unknown>): boolean {
+  const m = WORDS_ID.exec(id)
+  if (!m || body.day !== m[1] || body.via !== 'words' || body.approved !== true || 'send' in body) return false
+  if (body.kind !== WORDS_KIND[m[2] as keyof typeof WORDS_KIND]) return false
+  if (typeof body.piece_id !== 'string' || !UUID.test(body.piece_id)) return false
+  if (typeof body.at !== 'string' || !Number.isFinite(Date.parse(body.at)) || !saidInWords(body)) return false
+  if (m[2] === 'lock') {
+    const path = LOCK_PATH.exec(String(body.lock_path))
+    return Boolean(path) && path![1] === m[1] && SHA256.test(String(body.lock_sha256))
+  }
+  return scriptsBody(body)
+}
+// "It's live" (Krish, 2026-11-12: "How do I indicate that Tuesday the 10th was posted correctly?"): picks/live-<day>,
+// the posts he marked live on that day, each with its link and the channels it went out on, appended only by the board's
+// own live route (_itsLive.ts recordLive); a plain write of the document is refused (live_is_its_own_press).
+export const LIVE_ID = /^live-(mon|tue|wed|thu|fri|sat|sun)$/
+const LIVE_CHANNEL = /^[a-z][a-z-]{0,30}$/
+export function liveBody(id: string, body: Record<string, unknown>): boolean {
+  const m = LIVE_ID.exec(id)
+  if (!m || body.kind !== 'live' || body.day !== m[1] || 'send' in body || !Array.isArray(body.posts)) return false
+  if (body.posts.length < 1 || body.posts.length > 40) return false
+  return body.posts.every(p => object(p) && Object.keys(p).every(k => ['channels', 'url', 'at', 'by', 'piece_id', 'option', 'title', 'note'].includes(k))
+    && Array.isArray(p.channels) && p.channels.length >= 1 && p.channels.length <= 12 && new Set(p.channels).size === p.channels.length
+    && p.channels.every(c => typeof c === 'string' && LIVE_CHANNEL.test(c))
+    && typeof p.url === 'string' && p.url.length <= 2048 && /^https:\/\/[^\s]+$/.test(p.url)
+    && typeof p.at === 'string' && Number.isFinite(Date.parse(p.at)) && p.by === 'Krish'
+    && (('piece_id' in p) !== ('option' in p))
+    && (!('piece_id' in p) || typeof p.piece_id === 'string' && UUID.test(p.piece_id))
+    && (!('option' in p) || typeof p.option === 'string' && OFFDAY_ID.test(p.option) && p.option.startsWith(`off-${m[1]}-`))
+    && (!('title' in p) || oneLine(p.title, 300)) && (!('note' in p) || typeof p.note === 'string' && p.note.length <= 2000))
+}
+// The three video sign-offs, one review card each on his board (Ruling, Krish, 2026-11-12; _signOffs.ts, contract
+// 1.11.0): picks/signoff-<card>, his presses on its samples appended, written only through POST /api/board/<Monday>/
+// sign-off as Krish (hisOnlyRefusal keeps every other writer out: a picks document with a kind is his).
+export const SIGN_OFF_ID = /^signoff-(sfx|golden|gate2)$/
+/** The most presses one card's record keeps in a week (append only; one more is refused). */
+export const MAX_SIGN_OFF_PRESSES = 200
+export const SIGN_OFF_WORDS_MAX = 2000
+const SIGN_OFF_SHA = /^[a-f0-9]{64}$/
+/** One sign-off record's shape: kind sign_off, the card, and its presses. */
+export function signOffBody(id: string, body: Record<string, unknown>): boolean {
+  const m = SIGN_OFF_ID.exec(id)
+  if (!m || body.kind !== 'sign_off' || body.card !== m[1] || !Array.isArray(body.presses) || body.presses.length > MAX_SIGN_OFF_PRESSES) return false
+  if (Object.keys(body).some(k => !['kind', 'card', 'presses'].includes(k))) return false
+  return body.presses.every(p => object(p) && p.card === m[1] && typeof p.item === 'string' && p.item.length > 0 && p.item.length <= 64
+    && (p.verdict === 'approve' || p.verdict === 'not_this') && SIGN_OFF_SHA.test(String(p.sha256)) && p.by === 'Krish'
+    && typeof p.at === 'string' && Number.isFinite(Date.parse(p.at))
+    && (p.words === null || (typeof p.words === 'string' && p.words.length <= SIGN_OFF_WORDS_MAX))
+    && Object.keys(p).every(k => ['card', 'item', 'verdict', 'sha256', 'words', 'at', 'by'].includes(k)))
+}
 export const SCRIPT_CUTS = ['long', 'short', 'feature'] as const
 export const TITLE_SURFACES = ['long_title', 'short_title', 'long_thumbnail', 'short_thumbnail'] as const
 const oneLine = (v: unknown, max: number) => typeof v === 'string' && v.trim().length > 0 && v.length <= max && !/[\x00-\x1f\x7f]/.test(v)
@@ -239,6 +315,10 @@ function decisionBody(id: string, body: Record<string, unknown>): boolean {
   // Teleprompter names they go under; scripts, when given, is the hash of each (the server checks it, or fills it).
   if (typeof body.approved !== 'boolean') return false
   if (body.approved === false) return true
+  return scriptsBody(body)
+}
+/** The words of an approval of scripts: each cut's text, its Teleprompter title and the folder they go in. */
+function scriptsBody(body: Record<string, unknown>): boolean {
   const cuts = object(body.texts) ? Object.keys(body.texts) : []
   const same = (v: unknown) => object(v) && Object.keys(v).every(k => cuts.includes(k))
   return keyed(body.texts, SCRIPT_CUTS, x => typeof x === 'string' && x.trim().length > 0 && x.length <= 100_000)
@@ -259,13 +339,23 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'edits') return text('text') && day(body.day) && text('item', 100) && id === `${body.day}-${body.item}`
   // His pick for a day, with his optional saved note; or one of his decisions on a day's tab (decisionBody).
   if (collection === 'picks' && (YES_ID.test(id) || body.kind === 'yes')) return yesBody(id, body)
+  if (collection === 'picks' && (LIVE_ID.test(id) || body.kind === 'live')) return liveBody(id, body)
+  if (collection === 'picks' && (SIGN_OFF_ID.test(id) || body.kind === 'sign_off')) return signOffBody(id, body)
   if (collection === 'picks' && FEEL_ID.test(id)) return feelBody(id, body)
   if (collection === 'picks' && (id === MIX_ID || body.kind === 'mix')) return id === MIX_ID && mixBody(body)
   if (collection === 'picks' && (CREATIVE_ID.test(id) || body.kind === 'sign_creative')) return creativeBody(id, body)
+  // His typed approval of a lock or of scripts (WORDS_ID); "via: words" anywhere else is refused, so a session's words
+  // never stand as one of his presses.
+  if (collection === 'picks' && WORDS_ID.test(id)) return wordsBody(id, body)
+  if (collection === 'picks' && body.via === 'words') return false
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
   if (collection === 'picks' && (SCORE_ID.test(id) || SCORE_DATE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)
+  // His Approve on a publishing day's idea: the idea it names (idea_id), and the hash of the words he saw
+  // (option_sha256, worked out again by preparePress from so_what and story).
   if (collection === 'picks') return day(id) && day(body.day) && text('pick', 160) && text('story') && !('kind' in body)
     && (!('note' in body) || body.note === null || text('note', 2000))
+    && (!('idea_id' in body) || body.idea_id === null || typeof body.idea_id === 'string' && UUID.test(body.idea_id))
+    && (!('so_what' in body) || text('so_what', 4000)) && (!('option_sha256' in body) || SHA256.test(String(body.option_sha256)))
   // A Combine tap on the Queue tab's "Could combine" card: his choice only, recorded as queue/combine-<n>; the next
   // session runs synthesize on his word (Krish, 2026-10-21: nothing in the queue is combined without it).
   if (collection === 'queue' && body.combine !== undefined) return /^combine-\d{1,3}$/.test(id) && body.combine === true && body.pick === id
@@ -301,14 +391,21 @@ export function validBody(collection: string, id: string, body: unknown): boolea
     // Content tab approves ideas).
     && (!('via' in body) || body.via === 'list')
     && (body.use !== 'not_for_us' || typeof body.reason === 'string' && body.reason.trim().length > 0 || body.via === 'list')
+    // Improved for a future piece is his note: the cue a future slate reads.
+    && (body.use !== 'improve' || typeof body.note === 'string' && body.note.trim().length > 0)
+    && (!('option_sha256' in body) || SHA256.test(String(body.option_sha256)))
     && (body.use === 'next_week' ? monday(String(body.target_week)) : !('target_week' in body) || body.target_week === null)
+  // "Offer it again" on a veto line (the ideas quality plan, item 1): queue/veto-<subject>, the subject he gives back.
+  if (collection === 'queue' && 'unveto' in body) return VETO_ID.test(id) && body.pick === id && body.queued === false && text('unveto', 120)
   if (collection === 'queue') return text('pick', 160) && typeof body.queued === 'boolean'
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
     && commentExtras(body)
   return false
 }
 export const OFFDAY_SIDES = ['idea', 'direction', 'mock'] as const
-export const OFFDAY_VERDICTS = ['approve', 'improve', 'reject', 'next_week'] as const
+// The five outcomes on an off-day option's idea (Krish, 2026-11-11): approve, next_week (Filed for later), reject,
+// trend (Saved as a trend, his words name it) and improve. The direction and the mock take approve, improve and reject.
+export const OFFDAY_VERDICTS = ['approve', 'improve', 'reject', 'next_week', 'trend'] as const
 function offdayVerdicts(id: string, body: Record<string, unknown>): boolean {
   const line = (v: unknown, max: number) => typeof v === 'string' && v.length > 0 && v.length <= max
   if (body.use !== 'offday' || body.pick !== id || !id.startsWith(`off-${String(body.day)}-`) || 'send' in body || 'kind' in body
@@ -324,9 +421,9 @@ function offdayVerdicts(id: string, body: Record<string, unknown>): boolean {
     if (!object(v) || Object.keys(v).some(x => !['verdict', 'words', 'sha256', 'at', 'shown'].includes(x))) return false
     const verdict = v.verdict
     if (verdict !== null && !(OFFDAY_VERDICTS as readonly unknown[]).includes(verdict)) return false
-    if (verdict === 'next_week' && k !== 'idea') return false
+    if ((verdict === 'next_week' || verdict === 'trend') && k !== 'idea') return false
     const words = typeof v.words === 'string' && v.words.trim().length > 0
-    if ((verdict === 'improve' || verdict === 'reject') && !words) return false
+    if ((verdict === 'improve' || verdict === 'reject' || verdict === 'trend') && !words) return false
     if (v.words !== null && v.words !== undefined && !line(v.words, 2000)) return false
     if (!SHA256.test(String(v.sha256))) return false
     if ('shown' in v && v.shown !== null && !(object(v.shown) && JSON.stringify(v.shown).length <= 16000)) return false
@@ -376,12 +473,22 @@ export function hisOnlyRefusal(collection: string, body: unknown, who: string | 
   // His typed yes, carried from a session: the engine may write it, only as his words (yesBody holds them verbatim
   // with where, when and the session link), and only a yes; a board press, or taking a yes back, is his alone.
   if (collection === 'picks' && object(body) && body.kind === 'yes') return body.via === 'words' && body.approved === true ? null : 'yes_press_is_his'
+  // His typed approval of a narrative lock or of scripts (Ruling, Krish, 2026-11-12: "Scripts and locks only."): the
+  // engine may carry it, only as his words and only as a yes (validBody holds the document's id and shape).
+  if (collection === 'picks' && object(body) && body.via === 'words' && (body.kind === WORDS_KIND.lock || body.kind === WORDS_KIND.scripts)) {
+    return body.approved === true ? null : 'typed_approval_is_a_yes'
+  }
   if (combineWriterRefused(collection, body, who)) return 'combine_is_his_tap'
   if (collection === 'edits') return 'edit_is_his_save'
   if (collection === 'comments' && object(body) && 'act' in body) return 'tap_is_his'
   if (collection === 'picks' && object(body) && 'kind' in body) return 'decision_is_his'
   if (collection === 'picks' && object(body) && 'note' in body) return 'pick_note_is_his'
+  // His Approve on a publishing day's idea puts it on the publish board (the ideas gate): only he makes it, with or
+  // without a note.
+  if (collection === 'picks' && object(body) && 'pick' in body) return 'pick_is_his'
   if (collection === 'queue' && object(body) && 'use' in body) return 'press_is_his'
+  // "Offer it again" on a "Not offered again" line gives a subject he refused back to the next ideas run: his alone.
+  if (collection === 'queue' && object(body) && 'unveto' in body) return 'press_is_his'
   return null
 }
 // Source archives retain the export's selectors, missing anchors and synthesized

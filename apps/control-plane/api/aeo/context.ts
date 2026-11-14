@@ -4,6 +4,7 @@ import { supabase } from '../_supabase.js'
 import { loadConfig, loadVoiceBlock } from '../_content.js'
 import { loadCuratedVoices } from '../_creators.js'
 import { LANE_SLUG, mondayOf } from '../_growth.js'
+import { CONTEXT_FEATURES, KRISH_DOMAINS, NOT_OURS, PACKET_FEATURES, brandChecksOf, brandNamesOf, heldProducts, searchSignalsFor, shippedFor, subjectHostsOf, type SearchSignals } from '../_aeo.js'
 // The room lane stays in Control Center, so its 293-line helper does not come
 // with this route for one column list. Copied deliberately, named so a drift is
 // findable: api/_room.ts CONTACT_COLUMNS in krishanraja/control-center.
@@ -22,7 +23,10 @@ const CONTACT_COLUMNS = 'id, full_name, first_name, email, company, title, linke
 // LANE_SLUG (the one map between the two venture key spaces), and every probe
 // from the last 28 days; for a prospect the linked Room target and the face
 // ICP; and the prior week's digest and queries so the engine can carry a
-// query_id forward and compute a trend.
+// query_id forward and compute a trend. A venture also carries its
+// search_signals: what Search Console, Bing, GA4 and Clarity say about its own
+// hosts, as Control Center's site-visits check read them (null until a read
+// has worked, with every read's reason beside them).
 //
 // It also carries the two things Krish has already told the OS once and
 // should never have to say again (2026-09-09): the krish-voice block
@@ -52,10 +56,62 @@ const ROOM_FACE = {
  *  the answer for a venture or a prospect read. */
 const KRISH = {
   name: 'Krish Raja',
-  domains: ['mindmake.co', 'krishraja.com', 'mindmakerlive.substack.com', 'home.makeyourmindup.ai', 'makeyourmindup.ai', 'linkedin.com/in/krishraja'],
+  domains: [...KRISH_DOMAINS],
+  // Never ours, whatever a list says (Ruling, Krish, 2026-11-13).
+  not_ours: [...NOT_OURS],
 }
 
 type Row = Record<string, any>
+
+const SIGNAL_DAYS = 91
+const RECENT_SIGNAL_DAYS = 35
+const SIGNAL_ROWS = 1000
+
+/**
+ * Each venture subject's search signals by subject id, or null when a read
+ * failed (Control Center's tables, migration 20261201094000). One subject at
+ * a time: its Search Console weeks through growth_search_gsc_weekly, Bing's
+ * weekly rows, Bing's recent index, crawl and keyword rows, and the AI
+ * referrals, each newest first and at most 1000 rows.
+ */
+async function readSearchSignals(subjects: Row[]): Promise<Map<string, SearchSignals> | null> {
+  const hostsBy = new Map<string, string[]>()
+  for (const s of subjects) {
+    if (s.kind !== 'venture') continue
+    const hosts = subjectHostsOf(s.domains)
+    if (hosts.length) hostsBy.set(String(s.id), hosts)
+  }
+  if (!hostsBy.size) return new Map()
+  const day = (back: number) => new Date(Date.now() - back * 86_400_000).toISOString().slice(0, 10)
+  try {
+    const reads = await supabase.from('growth_search_reads').select('source, part, host, last_ok_at, reason, note')
+      .in('host', [...new Set([...hostsBy.values()].flat())])
+    if (reads.error) throw new Error(reads.error.message)
+    const per = await Promise.all([...hostsBy].map(async ([id, hosts]) => {
+      const [gsc, bing, recent, referrals] = await Promise.all([
+        supabase.rpc('growth_search_gsc_weekly', { p_hosts: hosts, p_days: SIGNAL_DAYS, p_limit: SIGNAL_ROWS }),
+        supabase.from('growth_search_signals').select('kind, host, page, query, day, day_to, impressions, clicks, position')
+          .eq('source', 'bing').in('kind', ['query', 'page']).in('host', hosts).gte('day', day(SIGNAL_DAYS))
+          .order('day', { ascending: false }).limit(SIGNAL_ROWS),
+        supabase.from('growth_search_signals').select('kind, host, page, query, day, day_to, indexed, last_crawled, volume, detail')
+          .eq('source', 'bing').in('kind', ['url_info', 'crawl_issue', 'keyword']).in('host', hosts).gte('day', day(RECENT_SIGNAL_DAYS))
+          .order('day', { ascending: false }).limit(SIGNAL_ROWS),
+        supabase.from('growth_search_signals').select('source, host, page, day, ai_source, sessions')
+          .in('source', ['ga4', 'clarity']).eq('kind', 'ai_referral').in('host', hosts).gte('day', day(SIGNAL_DAYS))
+          .order('day', { ascending: false }).limit(SIGNAL_ROWS),
+      ])
+      for (const r of [gsc, bing, recent, referrals]) if (r.error) throw new Error(r.error.message)
+      return [id, searchSignalsFor(hosts, {
+        reads: (reads.data || []) as Row[], gsc: (gsc.data || []) as Row[], bing: (bing.data || []) as Row[],
+        recent: (recent.data || []) as Row[], referrals: (referrals.data || []) as Row[],
+      })] as const
+    }))
+    return new Map(per)
+  } catch (e: unknown) {
+    console.warn('[aeo/context] search signals unread:', (e as Error)?.message?.slice(0, 200))
+    return null
+  }
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardBearerExport(req, res, 'AEO_ENGINE_SECRET', ['GET'])) return
@@ -78,7 +134,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const since = new Date(Date.now() - PROBE_WINDOW_DAYS * 86_400_000).toISOString()
     const weekStart = mondayOf(new Date())
 
-    const [voiceBlock, canonConfig, ratedVoices, touchpoints, striking, probes, digests, rooms] = await Promise.all([
+    const [voiceBlock, canonConfig, ratedVoices, touchpoints, striking, probes, digests, rooms, engines] = await Promise.all([
       // Told to the OS once, on the Content side, and read here ever since.
       loadVoiceBlock().catch(() => ''),
       loadConfig(['mindmake_canon']).catch(() => ({} as Record<string, unknown>)),
@@ -98,6 +154,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       supabase.from('growth_geo_probes')
         .select('id, product_slug, subject_id, subject_kind, question, engine, we_cited, competitors_cited, run_at, run_id, query_id')
         .gte('run_at', since)
+        // A verify run's probes (an off-week re-check) never stand in for a research week (brief, section I).
+        .eq('run_kind', 'research')
         .or(`subject_id.in.(${ids.join(',')})${productSlugs.length ? `,and(subject_id.is.null,subject_kind.eq.venture,product_slug.in.(${productSlugs.join(',')}))` : ''}`)
         .order('run_at', { ascending: false })
         .limit(500 * ids.length),
@@ -112,8 +170,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .select(`id, why_face, trigger_signal, trigger_source_url, state, contact:contacts(${CONTACT_COLUMNS})`)
           .in('id', roomIds)
         : Promise.resolve({ data: [], error: null }),
+      // Which ventures' growth engines Krish holds: AEO measures them and builds no kit for them (brief, B4).
+      supabase.from('growth_engines').select('product_slug, role, activation_state'),
     ])
-    for (const r of [touchpoints, striking, probes, digests, rooms]) if (r.error) throw new Error(r.error.message)
+    for (const r of [touchpoints, striking, probes, digests, rooms, engines]) if (r.error) throw new Error(r.error.message)
+    const held = heldProducts((engines.data || []) as Row[])
 
     // The prior week's queries, one read for every subject's latest digest week.
     const priorBySubject = new Map<string, Row>()
@@ -122,13 +183,46 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let priorQueries: Row[] = []
     if (priorKeys.length) {
       const pq = await supabase.from('growth_aeo_queries')
-        .select('subject_id, week_start, query_id, query, demand_score, status, trend')
+        .select('subject_id, week_start, query_id, query, demand_score, status, trend, panel')
         .in('subject_id', priorKeys.map(d => String(d.subject_id)))
         .in('week_start', [...new Set(priorKeys.map(d => String(d.week_start)))])
         .limit(60 * priorKeys.length)
       if (pq.error) throw new Error(pq.error.message)
       priorQueries = (pq.data || []) as Row[]
     }
+    // The cited-pages sheet as AEO last sent it, its own columns only (brief,
+    // section J), so the next run can say a mention was acquired or lost.
+    let citedPages: Row[] = []
+    if (productSlugs.length) {
+      const cp = await supabase.from('growth_aeo_cited_pages')
+        .select('product_slug, url, host, page_type, questions, engines, times_cited, times_first, mention, mention_ok, checked_at, platform, own')
+        .in('product_slug', productSlugs)
+        .order('times_first', { ascending: false })
+        .limit(60 * productSlugs.length)
+      if (cp.error) throw new Error(cp.error.message)
+      citedPages = (cp.data || []) as Row[]
+    }
+    // What each venture's engine says has shipped for its questions (Control
+    // Center's growth_answer_shipped, protocol 1.26.0): AEO asks those
+    // questions first, and re-checks them in an off week on Krish's approved
+    // go-live. Newest first, at most 25 a product.
+    let shipped: Row[] = []
+    if (productSlugs.length) {
+      const sh = await supabase.from('growth_answer_shipped')
+        .select('product_slug, question, query_id, url, shipped_at, engine_id, declared_at')
+        .in('product_slug', productSlugs)
+        .order('declared_at', { ascending: false })
+        .limit(25 * productSlugs.length)
+      if (sh.error) throw new Error(sh.error.message)
+      shipped = (sh.data || []) as Row[]
+    }
+
+    // What Search Console, Bing, GA4 and Clarity say about each venture's own
+    // hosts (brief, section C), read once a day by Control Center's site-visits
+    // check (api/_searchSignals.ts there). AEO-Engine holds none of those keys.
+    // A read that fails here leaves every venture's search_signals null:
+    // unknown, never zero, and never a failed context.
+    const signals = await readSearchSignals(subjects)
 
     const out = subjects.map(s => {
       const id = String(s.id)
@@ -149,6 +243,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         never_say: s.never_say || [],
         product_slug: product,
         lane_slug: lane,
+        // A venture's distinctive names and its brand-accuracy checks (brief, B3 and B6), and whether its engine is held (B4).
+        brand_names: brandNamesOf(s.brand_names),
+        brand_checks: brandChecksOf(s.brand_checks),
+        ...(s.kind === 'venture' && product ? { shipped: shippedFor(shipped, product) } : {}),
+        ...(s.kind === 'venture' ? { engine_held: !!product && held.has(product) } : {}),
+        ...(s.kind === 'venture' ? { search_signals: signals?.get(id) ?? null } : {}),
         room_target: room ? {
           id: room.id,
           // The company and the title, never the person's name or email:
@@ -183,7 +283,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           competitor_gap: prior.competitor_gap ?? null,
           queries: priorQueries.filter(q => q.subject_id === id && q.week_start === prior.week_start).map(q => ({
             query_id: q.query_id, query: q.query, demand_score: q.demand_score, status: q.status, trend: q.trend ?? null,
+            // The panel exactly as AEO sent it last run, when it sent one.
+            ...(q.panel && typeof q.panel === 'object' ? { panel: q.panel } : {}),
           })),
+          ...(s.kind === 'venture' && product ? {
+            cited_pages: citedPages.filter(c => c.product_slug === product).map(({ product_slug: _p, ...c }) => c),
+          } : {}),
         } : null,
       }
     })
@@ -210,6 +315,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         canon: typeof canonConfig.mindmake_canon === 'string' ? canonConfig.mindmake_canon : '',
       },
       icp: { room_face: ROOM_FACE },
+      // The optional packet fields the ingest accepts; the engine sends a field only when it is listed.
+      // Then the context features that are not packet fields (the meter's billing rows).
+      packet_features: [...PACKET_FEATURES, ...CONTEXT_FEATURES],
       subjects: out,
     })
   } catch (e: unknown) {

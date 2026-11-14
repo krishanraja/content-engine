@@ -1,20 +1,28 @@
 name: CI
 
+# The quick checks a pull request waits on, Linux only, in a few minutes (Ruling, Krish, 2026-11-11: quick checks on pull
+# requests, the full verify after merge; merge fast and he tests live). Krish, 2026-11-11: "can we remove the checks that
+# take hours after you have finished working? I would rather you do quick checks, merge fast and then I use it live."
+# `npm run verify:quick` (scripts/verify-quick.mjs) runs every guard of `npm run verify`, the tests related to the change
+# and the publishing-safety tests every time. The full verify on Linux and Windows and the browser jobs run after merge
+# in full-verify.yml, which never blocks a merge. auto-merge.yml waits on this workflow, by its name "CI", only.
 on:
-  push:
   pull_request:
   # make-piece.yml starts CI on its branch this way: its push, made with GitHub's own token, starts none.
   workflow_dispatch:
 
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verify:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # verify:quick diffs against the merge base with main.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -24,26 +32,7 @@ jobs:
           python-version: '3.12'
       - name: Install the hash-pinned Python the tests need
         run: python -m pip install --require-hashes --no-deps -r requirements-ci.txt
-      - name: Install hash-pinned FFmpeg and FFprobe on Windows
-        if: runner.os == 'Windows'
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          $videoFfmpegBuild = 'ffmpeg-n8.1.2-53-g1005b294ff-win64-gpl-8.1'
-          $videoFfmpegSha256 = '577a6a46f9c844657ac849245487a56dfc0507f9bac3f92d40370ebfb64ace72'
-          $videoFfmpegArchive = Join-Path $env:RUNNER_TEMP "$videoFfmpegBuild.zip"
-          $videoFfmpegRoot = Join-Path $env:RUNNER_TEMP 'mindmake-ffmpeg'
-          gh release download toolchain-ffmpeg-n8.1.2-53-g1005b294ff --repo $env:GITHUB_REPOSITORY --pattern "$videoFfmpegBuild.zip" --dir $env:RUNNER_TEMP
-          $videoFfmpegActualSha256 = (Get-FileHash -LiteralPath $videoFfmpegArchive -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($videoFfmpegActualSha256 -ne $videoFfmpegSha256) { throw 'Downloaded FFmpeg archive failed its pinned SHA-256 check.' }
-          Expand-Archive -LiteralPath $videoFfmpegArchive -DestinationPath $videoFfmpegRoot
-          $videoFfmpegBin = Join-Path $videoFfmpegRoot "$videoFfmpegBuild\bin"
-          if (-not (Test-Path -LiteralPath (Join-Path $videoFfmpegBin 'ffmpeg.exe'))) { throw 'Pinned FFmpeg binary is missing after extraction.' }
-          if (-not (Test-Path -LiteralPath (Join-Path $videoFfmpegBin 'ffprobe.exe'))) { throw 'Pinned FFprobe binary is missing after extraction.' }
-          Add-Content -LiteralPath $env:GITHUB_PATH -Value $videoFfmpegBin
-      - name: Install hash-pinned FFmpeg and FFprobe on Linux
-        if: runner.os == 'Linux'
+      - name: Install hash-pinned FFmpeg and FFprobe
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -58,79 +47,33 @@ jobs:
           test -x "$video_ffmpeg_bin/ffmpeg"
           test -x "$video_ffmpeg_bin/ffprobe"
           echo "$video_ffmpeg_bin" >> "$GITHUB_PATH"
-      - name: Verify media toolchain
-        run: |
-          ffmpeg -version
-          ffprobe -version
       - run: npm ci
-      - name: Smoke-test the Windows runner source install
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/verify-runner-source.ps1
-      - run: npm run verify
-
-  browser-buttons:
-    # Every Download, Copy picture and Copy button on a built publish board
-    # and publish page, clicked in Chromium with fetch() blocked the way
-    # claude.ai's page rules block it (Krish, 2026-10-14: "the download
-    # buttons for the images STILL do not work!!!!").
-    # Playwright 1.55 below supports this host; latest now resolves to 26.04.
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install the hash-pinned Python the tests need
-        run: python -m pip install --require-hashes --no-deps -r requirements-ci.txt
-      - name: Install Playwright and its Chromium
+      - name: Quick verify (every guard, the related tests, the publishing-safety tests)
+        env:
+          VERIFY_BASE: origin/${{ github.base_ref || 'main' }}
+        run: npm run verify:quick
+      - name: The ideas gate on the real migration (only his Approve puts an idea on a publish board)
+        # Krish, 2026-11-11: "The ideas board-to-publish board process should be bulletproof." Every route without his
+        # approval is refused in the database; a few seconds on PGlite, on every pull request.
         run: |
-          python -m pip install playwright==1.55.0
-          python -m playwright install --with-deps chromium
-      - name: Click every button on the board and a publish page
-        run: python scripts/post-pack/buttons_in_browser.py
-      # The covers load the house fonts from node_modules (@fontsource), so the cover tests need the packages.
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: npm
-      - run: npm ci
-      - name: Nothing sits on a cover's words (Krish, 2026-11-04)
-        run: python tests/receipt_overlap_test.py
-      - name: All nine series skins drawn, Mon, Wed and Fri, tall and wide, with and without logo rows, nothing on the words or logos (Krish, 2026-11-05)
-        run: python tests/series_skins_test.py
-      - name: The board keeps its fixed layout and fits a phone (390px, 44px targets)
-        run: python scripts/check_board_layout.py --browser
-
-  board-web:
-    # The isolated browser runtime below is pinned to Playwright 1.55.
-    # ubuntu-latest moved to 26.04, which that runtime does not support.
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: npm
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: python -m pip install --require-hashes --no-deps -r requirements-ci.txt
-      - run: npm ci
-      - name: Install isolated SQL and browser test runtimes
-        run: |
-          npm install --no-save --package-lock=false @electric-sql/pglite@0.3.14 playwright@1.55.0
-          npx playwright install --with-deps chromium
-      - name: Verify artifact conversion, migration and interactive web parity
-        run: |
-          python tests/board_web_test.py
-          python tests/board_today_test.py
-          python tests/floor_group_test.py
-          python scripts/post-pack/board_today.py fixtures/week-board/today-2026-10-26.json fixtures/week-board/today-2026-11-02.json --out "$RUNNER_TEMP/board-today" --shoot --open mon
-          node tests/board-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
-          node tests/inspiration-said-cards.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
-          python tests/board_fixture.py "$RUNNER_TEMP/board-fixture.html"
-          node --import tsx tests/integration/board-runtime.ts "$PWD/node_modules/@electric-sql/pglite/dist/index.js" "$PWD/node_modules/playwright/index.mjs" "$RUNNER_TEMP/board-fixture.html" "$RUNNER_TEMP/board-screenshots"
+          npm install --no-save --package-lock=false @electric-sql/pglite@0.3.14
+          node tests/ideas-gate-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+      - name: The engine's leases on the real migration (one research library sweep at a time)
+        # Five hand-run sweeps overlapped on 11 Nov 2026 and copied the same research again; every writer of the library
+        # now holds one lease. Uses the PGlite installed by the step above.
+        run: node tests/engine-leases-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+      - name: The one place an off-day item's day lives, on the real migration (only his press moves it)
+        # Ruling (Krish, 2026-11-12): any off-day post or idea moves to any day at his press, and the move updates every
+        # place that names its day. No day without his press, a move whole or not at all, Growth never over his row.
+        run: node tests/offday-items-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+      - name: One post is one off-day item, on the real migration (never on two days)
+        # Ruling (Krish, 2026-11-12): the board shows exactly where everything is, and one post is one item that can never
+        # sprawl across days or go stale. A second item of one post is refused by every writer; his Approve carries it.
+        run: node tests/offday-one-post-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
+      - name: A series piece moves and a day's piece is replaced, on the real migration (only his press)
+        # Krish, 2026-11-13: "There is no approve button." His replacing Approve and Move to… on a series piece land
+        # whole or not at all; a moved piece's old pick no longer holds it; no other writer places anything.
+        run: node tests/series-moves-db.mjs "$PWD/node_modules/@electric-sql/pglite/dist/index.js"
 
   control-plane-sql:
     # The Video Studio control plane's projection CAS, ancestry and race
@@ -299,3 +242,14 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm audit --audit-level=high
+
+  # A pull request closes out through now-notes/ and never edits NOW.md: two open at once conflicted over it and
+  # auto-merge could merge neither (#499, #509, #510, 2026-11-10). Main folds the notes and trims the page itself.
+  now-md-untouched:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 scripts/check_now_untouched.py --base "origin/${{ github.base_ref }}" --branch "${{ github.head_ref }}"
