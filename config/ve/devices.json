@@ -260,6 +260,13 @@
         "add",
         "exit"
       ]
+    },
+    "checklist": {
+      "verbs": [
+        "enter",
+        "fill",
+        "exit"
+      ]
     }
   }
 }
