@@ -128,6 +128,13 @@ vi.mock('../../apps/control-plane/api/library/_heartsideFolder.js', () => ({
   },
 }))
 
+// The runtime folders by their Drive IDs: stubbed here, walked in
+// library-runtime-folders.test.ts.
+const runtime = vi.hoisted(() => ({ answer: [] as unknown[], asked: 0 }))
+vi.mock('../../apps/control-plane/api/library/_runtimeFolders.js', () => ({
+  resolveRuntimeFolders: async () => { runtime.asked += 1; return runtime.answer },
+}))
+
 import uploadUrl from '../../apps/control-plane/api/library/upload-url.js'
 import confirm from '../../apps/control-plane/api/library/confirm.js'
 import pending from '../../apps/control-plane/api/library/pending.js'
@@ -595,6 +602,23 @@ describe('the Heartside library on the same routes', () => {
     expect((await get({ sha256: 'NOT-A-HASH' })).body).toEqual({ ok: false, error: { code: 'invalid_library_hash' } })
     expect((await get({})).statusCode).toBe(400)
     expect((await get({ sha256: SHA }, {})).statusCode).toBe(401)
+  })
+
+  // 11 Nov: a rename above the library and music roots broke both home computers, found by path.
+  it('says where the runtime folders are now, by their Drive IDs, only when the sync asks with folders=1', async () => {
+    runtime.answer = [
+      { name: 'library_root', state: 'found', drive_id: 'lib-id-0000000', path: 'My Drive/Ventures/Active Ventures/makeyourmindup', segments: ['My Drive', 'Ventures', 'Active Ventures', 'makeyourmindup'] },
+      { name: 'music_root', state: 'unknown', drive_id: 'music-id-00000', reason: 'Google Drive could not be asked where the folder is' },
+    ]
+    runtime.asked = 0
+    const plain = await call(pending, asRunner('GET', { query: { machine } }))
+    expect(plain.statusCode).toBe(200)
+    expect(plain.body).not.toHaveProperty('folders')
+    expect(runtime.asked).toBe(0)
+    const asked = await call(pending, asRunner('GET', { query: { machine, limit: '1', folders: '1' } }))
+    expect(asked.statusCode).toBe(200)
+    expect(asked.body.folders).toEqual(runtime.answer)
+    expect(runtime.asked).toBe(1)
   })
 
   it('asks the database for one library at a time', async () => {

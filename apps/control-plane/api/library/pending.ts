@@ -13,6 +13,7 @@ import {
   type LibraryName,
 } from './_library.js'
 import { HEARTSIDE_LIBRARY_FOLDER_ID, resolveHeartsideFolder, type HeartsideFolder } from './_heartsideFolder.js'
+import { resolveRuntimeFolders, type RuntimeFolder } from './_runtimeFolders.js'
 
 // GET /api/library/pending?machine=<id>&limit=<1..100>[&library=heartside], on the runner bearer.
 // Each library is asked for on its own; without one it is makeyourmindup.
@@ -30,6 +31,11 @@ import { HEARTSIDE_LIBRARY_FOLDER_ID, resolveHeartsideFolder, type HeartsideFold
 // stops the sync (Krish, 2026-11-09: "ideally ID so if folders move it doesnt
 // matter"). A Drive problem never fails the request: the answer says unknown
 // and the sync uses its configured folder.
+//
+// With folders=1 the answer also says where every runtime folder in
+// config/studio.json drive_ids is now (`folders`, _runtimeFolders.ts): the
+// library and music roots first, which broke on 11 Nov when a folder above
+// them was renamed. Same rule: a Drive problem is an unknown, never a failure.
 
 const SIGNED_DOWNLOAD_TTL_SECONDS = 30 * 60
 
@@ -89,6 +95,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     folder = await resolveHeartsideFolder().catch(() => ({ state: 'unknown' as const, drive_id: HEARTSIDE_LIBRARY_FOLDER_ID, reason: 'the folder lookup failed' }))
   }
 
+  let folders: RuntimeFolder[] | undefined
+  if (query.folders) folders = await resolveRuntimeFolders()
+
   const store = await configuredLibraryStore()
   if (!store.config) return sendVideoStudioError(res, 503, store.error || 'library_store_unavailable')
 
@@ -146,6 +155,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     machine: machineHash.slice(0, 8),
     library: query.library,
     ...(folder ? { folder } : {}),
+    ...(folders ? { folders } : {}),
     files,
     skipped,
     more,
