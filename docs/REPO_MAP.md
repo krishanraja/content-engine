@@ -160,6 +160,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/publish/watch`
 - `/api/purge/restore`
 - `/api/purge/run`
+- `/api/research-library/export`
 - `/api/research-library/find`
 - `/api/research-library/sweep`
 - `/api/shifts/[id]`
@@ -840,6 +841,19 @@ _gates: the investigation double-check gate set. Pure module: no I/O, no
 - `interface DraftEvidenceRow`
 - `interface DraftGateResult`
 - `function gateDraft( body: string, assertions: DraftAssertion[], evidence: DraftEvidenceRow[], terminalStatementText: st…`
+
+### `apps/control-plane/api/_githubIdentity.ts`
+
+- `const GITHUB_OIDC_ISSUER`
+- `const GITHUB_OIDC_JWKS`
+- `const RESEARCH_EXPORT_AUDIENCE`
+- `interface IdentityRule`
+- `const VAULT_RULE: IdentityRule`
+- `type Jwks = { keys: Array<JsonWebKey & { kid?: string }> }`
+- `type JwksFetcher = () => Promise<Jwks>`
+- `type IdentityResult`
+- `const fetchGithubJwks: JwksFetcher`
+- `async function verifyGithubIdentity(authorization: string | undefined, rule: IdentityRule, jwks: JwksFetcher = fetchGit…`
 
 ### `apps/control-plane/api/_goals.ts`
 
@@ -3568,6 +3582,19 @@ A copy of every row the Monday purge is about to hard-delete.
 ### `apps/control-plane/api/purge/run.ts`
 
 - `export default withContentRun('purge', handler)`
+
+### `apps/control-plane/api/research-library/export.ts`
+
+- `const EXPORT_LIMIT_DEFAULT`
+- `const EXPORT_LIMIT_MAX`
+- `const EXPORT_PAGE_BYTES`
+- `interface ExportItem`
+- `type Verify`
+- `const cursorOf = (r: { added_at: string; id: string }) =>`
+- `function parseCursor(c: unknown): { at: string; id: string } | null`
+- `const ventureOfScope = (scope: string) =>`
+- `function createExportHandler(getDb: () => Promise<Db>, verify: Verify = a => verifyGithubIdentity(a, VAULT_RULE))`
+- `export default createExportHandler(async () => (await import('../_supabase.`
 
 ### `apps/control-plane/api/research-library/find.ts`
 
