@@ -87,6 +87,12 @@
         "exit"
       ]
     },
+    "pull_quote": {
+      "verbs": [
+        "enter",
+        "highlight"
+      ]
+    },
     "quote_card": {
       "verbs": [
         "enter",
