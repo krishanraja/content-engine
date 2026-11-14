@@ -37,7 +37,7 @@ export const SIGNAL_TTL_DAYS = 21
 
 export type SubjectKind = 'venture' | 'prospect' | 'aspiration'
 export type AeoEngine = 'perplexity' | 'chatgpt' | 'claude' | 'grok' | 'gemini'
-export type ThemesStatus = 'ok' | 'no_calls' | 'no_attributed_calls' | 'fireflies_unavailable' | 'not_applicable'
+export type ThemesStatus = 'ok' | 'no_calls' | 'no_attributed_calls' | 'transcripts_unavailable' | 'not_applicable'
 
 export interface AeoEvidence { call_ref: string; date: string; paraphrase: string }
 
