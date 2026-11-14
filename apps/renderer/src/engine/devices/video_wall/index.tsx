@@ -2,6 +2,7 @@ import React from 'react'
 import { Img, OffthreadVideo, Sequence } from 'remotion'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import { MOTION } from '../../clock'
+import { isRegion } from '../../kit/layout'
 import { RegionFit } from '../../kit/regionFit'
 import type { DeviceProps } from '../types'
 import { videoWallState } from './state'
@@ -18,7 +19,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const innerH = natural.height - 2 * pad - (object.dataset ? 42 : 0)
   const tileW = (innerW - 2 * gap) / 3
   const tileH = (innerH - gap) / 2
-  const content = <div data-device="video_wall" style={{ position: 'relative', ...natural, opacity: s.opacity }}>
+  const content = <div data-device="video_wall" style={{ position: 'relative', ...natural, ...(isRegion(box) ? { overflow: 'hidden' as const } : {}), opacity: s.opacity }}>
     <div style={{ position: 'absolute', inset: 0, transform: `scale(${s.push})`, transformOrigin: 'center' }}>
       {s.params.clips.map((clip, i) => {
         const tile = s.tiles[i]!

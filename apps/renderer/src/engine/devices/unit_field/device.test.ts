@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { EngineEventSchema, EngineObjectSchema } from '../../props'
 import { overlayTestProps } from '../../kit/overlayInvariants'
-import { markRegion } from '../../kit/layout'
+import { markRegion, MAX_GROW } from '../../kit/layout'
 import { Device } from './index'
 import { dotGridPosition, UnitMark } from './grid'
 import { unitFieldState } from './state'
@@ -92,5 +92,35 @@ describe('unit_field', () => {
     expect(ParamsSchema.safeParse({columns:0}).success).toBe(false)
     const huge = {...object,dataset:{...object.dataset!,rows:object.dataset!.rows.map(r=>r.label==='growth'?{...r,value:100}:r)}}
     expect(()=>unitFieldState(huge,events,100)).toThrow('1000 marks')
+  })
+})
+
+
+describe('region fit bounds', () => {
+  it.each(['9:16', '16:9'] as const)('grows and centres the rendered %s device inside its region at every fixture frame', aspect => {
+    const box = markRegion({ left: 72, top: 96, width: 2400, height: 2200 })
+    let drawn = 0
+    for (let frame = object.fromFrame; frame < object.toFrame; frame++) {
+      const markup = renderToStaticMarkup(Device({ object, events, box, tokens: overlayTestProps.tokens, aspect, frame }))
+      if (!markup) continue
+      const wrapper = markup.match(/data-region-fit="" style="([^"]+)"/)
+      expect(wrapper, `frame ${frame}`).not.toBeNull()
+      const css = wrapper![1]!
+      const px = (key: string) => Number(css.match(new RegExp(`(?:^|;)${key}:([\\d.e+-]+)px`))![1])
+      const scale = Number(css.match(/transform:scale\(([^)]+)\)/)![1])
+      const width = px('width') * scale, height = px('height') * scale
+      expect(scale).toBeGreaterThan(1)
+      expect(scale).toBeLessThanOrEqual(MAX_GROW)
+      expect(px('left')).toBeGreaterThanOrEqual(box.left - 1e-8)
+      expect(px('top')).toBeGreaterThanOrEqual(box.top - 1e-8)
+      expect(px('left') + width).toBeLessThanOrEqual(box.left + box.width + 1e-8)
+      expect(px('top') + height).toBeLessThanOrEqual(box.top + box.height + 1e-8)
+      expect(px('left') + width / 2).toBeCloseTo(box.left + box.width / 2)
+      expect(px('top') + height / 2).toBeCloseTo(box.top + box.height / 2)
+      // It fills one dimension unless the shared growth ceiling is reached.
+      expect(Math.min(Math.abs(width - box.width), Math.abs(height - box.height), Math.abs(scale - MAX_GROW))).toBeLessThan(1e-8)
+      drawn++
+    }
+    expect(drawn).toBeGreaterThan(0)
   })
 })

@@ -4,7 +4,7 @@ import { textWidth } from '../../../house/metrics'
 import { MOTION } from '../../clock'
 import { fitBox, fitScale } from '../../fit'
 import { isRegion } from '../../kit/layout'
-import { RegionFit } from '../../kit/regionFit'
+import { bestNatural, RegionFit } from '../../kit/regionFit'
 import type { Box, DeviceProps } from '../types'
 import { ParamsSchema } from './schema'
 import { checklistState } from './state'
@@ -36,8 +36,10 @@ export function checklistLayout(box: Box, object: DeviceProps['object'], aspect:
 export function Device({ object, events, box, tokens, aspect, frame }: DeviceProps) {
   const state = checklistState(object, events, frame)
   if (!state.visible) return null
-  const l = checklistLayout(box, object, aspect)
-  const content = <div data-device="checklist" style={{ width: l.natural.width, height: l.natural.height, opacity: 1 - state.exit }}>
+  const natural = isRegion(box) ? bestNatural(box, aspect === '9:16' ? [480, 600, 720] : [640, 800, 1040],
+    width => checklistLayout({ ...box, width }, object, aspect).natural.height) : undefined
+  const l = checklistLayout(natural ? { ...box, width: natural.width } : box, object, aspect)
+  const content = <div data-device="checklist" style={{ width: l.natural.width, height: l.natural.height, ...(isRegion(box) ? { overflow: 'hidden' as const } : {}), opacity: 1 - state.exit }}>
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {state.slots.map((slot, index) => <div key={slot.id} data-slot={slot.id} data-filled={slot.filled}
         style={{ position: 'relative', height: l.heights[index], opacity: slot.arrival,
