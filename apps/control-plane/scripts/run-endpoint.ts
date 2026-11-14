@@ -37,10 +37,9 @@ if (!handlerPath) {
 const query: Record<string, string> = {}
 for (const [k, v] of new URLSearchParams(queryStr)) query[k] = v
 
-// CRON_SECRET is marked sensitive in Vercel so `env pull` will not return it.
-// LENS_RADAR_SECRET is not, and the discovery handlers accept either, so use
-// that as the local key rather than weakening the check in the handler.
-if (!query.secret && process.env.LENS_RADAR_SECRET) query.secret = process.env.LENS_RADAR_SECRET
+// CRON_SECRET is marked sensitive in Vercel so `env pull` will not return it:
+// set it in this shell to run a cron-gated handler. No handler takes a secret
+// from the query string (security sweep, 2026-11-14).
 
 const mod = await import(resolve(process.cwd(), handlerPath))
 const handler = mod.default
