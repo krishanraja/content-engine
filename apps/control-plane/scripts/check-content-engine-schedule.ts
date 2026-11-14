@@ -20,6 +20,11 @@ const cronPaths = new Set((vercel.crons || []).map(c => c.path))
 for (const job of CONTENT_ENGINE_JOBS) {
   // An external job is fired by a machine outside this repo (the AEO engine on
   // GitHub Actions). It must not be a cron here, and it must still record.
+  // A ledger job is run and recorded by another repository straight into content_engine_runs: no route, no cron here.
+  if (job.trigger === 'ledger') {
+    if (job.path.startsWith('/api/')) bad(`${job.job} is marked ledger but names a route here (${job.path})`)
+    continue
+  }
   if (job.trigger === 'external') {
     if (cronPaths.has(job.path)) bad(`${job.job} is marked external but ${job.path} is a cron in vercel.json`)
   } else if (!cronPaths.has(job.path)) bad(`${job.job} points at ${job.path}, which is not a cron in vercel.json`)

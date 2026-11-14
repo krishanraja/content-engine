@@ -19,8 +19,12 @@ export interface ContentEngineJob {
   graceHours: number
   /** Who fires it. 'cron' (default) is a vercel.json cron; 'external' is a
    *  machine outside this repo POSTing in (the AEO engine on GitHub Actions).
-   *  An external job has no cron entry, but its silence is still said here. */
-  trigger?: 'cron' | 'external'
+   *  An external job has no cron entry, but its silence is still said here.
+   *  'ledger' is a job another repository runs and records straight into
+   *  content_engine_runs, with no route here: its `path` names that repository. */
+  trigger?: 'cron' | 'external' | 'ledger'
+  /** Run only when asked (a press, a card): judged on a failed last run, never on silence. */
+  onDemand?: boolean
 }
 
 const DAY = 24
@@ -70,6 +74,15 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   // Hourly: every piece's research copied from the piece store into his Drive's Research library, with a row in its
   // index (docs/DRIVE.md, "The research library"). A failed copy loses nothing: the store is the record.
   { job: 'research_library_mirror', path: '/api/research-library/sweep', label: 'Research library', everyHours: 1, graceHours: 2 },
+  // The taste engine (krishanraja/inspirationhouse), started by Control Center's clock and recorded by
+  // inspirationhouse itself into content_engine_runs (its src/runs.ts). Keys as the ledger records them (read
+  // 14 Nov 2026): taste_daily 05:17 UTC, taste_harness 05:47 UTC, taste_weekly Saturday 18:23 UTC; taste_cards and
+  // taste_retro run when asked, so only a failed last run is said.
+  { job: 'taste_daily',      path: 'inspirationhouse',                   label: 'Taste daily',           everyHours: DAY,  graceHours: 12, trigger: 'ledger' },
+  { job: 'taste_harness',    path: 'inspirationhouse',                   label: 'Taste harness',         everyHours: DAY,  graceHours: 12, trigger: 'ledger' },
+  { job: 'taste_weekly',     path: 'inspirationhouse',                   label: 'Taste weekly',          everyHours: WEEK, graceHours: DAY, trigger: 'ledger' },
+  { job: 'taste_cards',      path: 'inspirationhouse',                   label: 'Taste cards',           everyHours: WEEK, graceHours: DAY, trigger: 'ledger', onDemand: true },
+  { job: 'taste_retro',      path: 'inspirationhouse',                   label: 'Taste retro',           everyHours: WEEK, graceHours: DAY, trigger: 'ledger', onDemand: true },
 ]
 
 export interface ContentEngineRunRow {
@@ -112,7 +125,7 @@ export function contentEngineAttention(rows: ContentEngineRunRow[], now: Date = 
         job: job.job, label: job.label, kind: 'failed',
         line: `${job.label} failed on its last run${last.reason ? `: ${last.reason}` : ''}.`,
       })
-    } else if (okAge > allowanceMs) {
+    } else if (!job.onDemand && okAge > allowanceMs) {
       const days = Math.floor(okAge / 86_400_000)
       attention.push({
         job: job.job, label: job.label, kind: 'stale',
