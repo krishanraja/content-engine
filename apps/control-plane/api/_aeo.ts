@@ -515,3 +515,66 @@ export function queryRows(packet: AeoPacket): Array<Record<string, unknown>> {
     touchpoint_id: q.touchpoint_id,
   }))
 }
+
+// ── What the context tells the engine about Krish and each subject ─────────
+// AEO-Engine docs/briefs/2026-11-13-aeo-specialist.md, sections B and C.
+
+/**
+ * Where Krish himself is cited: a hit on any of these counts as being in the
+ * answer for a venture or a prospect read. krishraja.ai, krishraja.com and
+ * themindmaker.ai are his (Ruling, Krish, 2026-11-13).
+ */
+export const KRISH_DOMAINS: readonly string[] = [
+  'mindmake.co', 'krishraja.com', 'krishraja.ai', 'themindmaker.ai', 'mindmakerlive.substack.com',
+  'home.makeyourmindup.ai', 'makeyourmindup.ai', 'linkedin.com/in/krishraja',
+]
+
+/**
+ * Never ours, whatever a list says (Ruling, Krish, 2026-11-13: fractionl.us is
+ * not his). The same list as Control Center's NOT_OURS (src/lib/aiAnswers.ts)
+ * and AEO-Engine's config/own-domains.json, so every count agrees.
+ */
+export const NOT_OURS: readonly string[] = ['fractionl.us']
+
+/**
+ * The optional packet fields this ingest accepts (AEO-Engine
+ * src/schema/packet.ts, PACKET_FEATURES). The engine sends a field only when it
+ * is listed, so an empty list keeps every packet exactly the v1 shape. Fields
+ * join it as validatePacket learns to store them.
+ */
+export const PACKET_FEATURES: readonly string[] = []
+
+/** A subject's brand-accuracy check (brief, B6): an answer must not say any of must_not and must say every must. */
+export interface BrandCheck { question: string; must_not: string[]; must: string[] }
+
+const strings = (v: unknown, max: number, len: number): string[] =>
+  Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string' && s.trim().length > 0).map(s => s.trim().slice(0, len)).slice(0, max) : []
+
+/** A subject's distinctive names, as stored (growth_aeo_subjects.brand_names): at most 5, never empty strings. */
+export function brandNamesOf(v: unknown): string[] {
+  return strings(v, 5, 60)
+}
+
+/** A subject's brand checks, as stored (growth_aeo_subjects.brand_checks): at most 3, each with a question and a phrase to test. */
+export function brandChecksOf(v: unknown): BrandCheck[] {
+  if (!Array.isArray(v)) return []
+  const out: BrandCheck[] = []
+  for (const c of v) {
+    if (!c || typeof c !== 'object' || Array.isArray(c)) continue
+    const r = c as Record<string, unknown>
+    if (typeof r.question !== 'string' || !r.question.trim()) continue
+    const check = { question: r.question.trim().slice(0, 300), must_not: strings(r.must_not, 10, 80), must: strings(r.must, 10, 80) }
+    if (check.must_not.length || check.must.length) out.push(check)
+    if (out.length === 3) break
+  }
+  return out
+}
+
+/** The products whose venture growth engine Krish holds (growth_engines: role venture, activation_state held). */
+export function heldProducts(engines: ReadonlyArray<{ product_slug?: unknown; role?: unknown; activation_state?: unknown }>): Set<string> {
+  const held = new Set<string>()
+  for (const e of engines) {
+    if (e.role === 'venture' && e.activation_state === 'held' && typeof e.product_slug === 'string') held.add(e.product_slug)
+  }
+  return held
+}
