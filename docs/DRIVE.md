@@ -171,6 +171,14 @@ column listed a moment before, or a different set of materials. The run ledger c
 `index_deduped` and the links it put right as `index_repaired`. The write that files one material never tidies; the
 sweep does, within the hour.
 
+**Found before it is paid for (I-16, 14 Nov).** Before a session pays for a web search, an Apify run or a research call,
+it asks what the store already holds: `GET /api/research-library/find?q=<words>[&limit=1..50]` on the engine key, read
+only. The database function `research_find` (migration `20261202090000_research_find.sql`) searches the same materials
+this library mirrors (the newest version of each research, corpus, note or paste text, never an archived one) by English
+full text over the title and the first 200,000 characters, and answers each hit's piece, week, day, kind, version,
+sha256, rank and a short snippet; the full text is read by its material id. A file kept in the bucket (a PDF, a
+screenshot) is not searched.
+
 **How.** The engine writes as the owner of his Drive (`GOOGLE_DRIVE_OWNER`, the delegated `drive` scope, as the feedback
 lane does). In Drive it only adds: week, piece, day and `Sources` folders inside the library and files inside them. It
 never renames, moves, overwrites or deletes anything there. In the index it adds rows, and its one other write is the
