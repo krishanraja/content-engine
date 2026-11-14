@@ -11,6 +11,11 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 import carousel_check  # noqa: E402
 
 REDRAWN = json.loads((ROOT / 'docs/plans/2026-11-09-week/git-carousel/deck.json').read_text(encoding='utf-8'))
+# The 13 Nov deck ended on "Follow for more". From 14 Nov the last card is the palette's close (Ruling, Krish,
+# 2026-11-14: the carousel ends on the palette's close, the takeaway then "Subscribe free (makeyourmindup.ai)"), so the
+# reference deck is held to it with that one card's foot changed and its story untouched.
+REDRAWN['cards'][-1]['line'] = "That's your new traffic jam. Fix it before AI floods it."
+REDRAWN['cards'][-1]['cta'] = 'Subscribe free (makeyourmindup.ai)'
 AS_SENT = {'schema': 'carousel-deck/1', 'cards': [
     {'headline': "Its AI wrote so much code, Git couldn't keep up", 'line': "Git is the tool almost every programmer uses to save and share code.", 'picture': 'the cover scene'},
     {'headline': 'CODE CHANGES ANTHROPIC MERGED PER DAY', 'line': 'Twelve times as much, in four months. Most of it written by Claude.', 'picture': ''},
@@ -33,12 +38,34 @@ class TenSecondSwipe(unittest.TestCase):
         self.assertIn('the wider trend it points to', found)
         self.assertIn('what a business person should do', found)
 
-    def test_more_than_ten_cards_or_no_follow_for_more_fails(self):
+    def test_more_than_ten_cards_or_no_palette_close_fails(self):
         deck = json.loads(json.dumps(REDRAWN))
         deck['cards'] = deck['cards'] + [{'headline': 'One more.', 'picture': 'x'}] * 2
         found = ' | '.join(carousel_check.problems(deck))
         self.assertIn('at most 10', found)
-        self.assertIn('Follow for more', found)
+        self.assertIn('Subscribe free (makeyourmindup.ai)', found)
+
+    def test_the_old_follow_for_more_close_fails(self):
+        deck = json.loads(json.dumps(REDRAWN))
+        deck['cards'][-1]['line'] = "That's your new traffic jam. Follow for more."
+        deck['cards'][-1].pop('cta')
+        found = ' | '.join(carousel_check.problems(deck))
+        self.assertIn('Subscribe free (makeyourmindup.ai)', found)
+        deck['cards'][-1]['cta'] = 'Subscribe free (makeyourmindup.ai)'
+        self.assertIn('not "Follow for more"', ' | '.join(carousel_check.problems(deck)))
+
+    def test_the_close_carries_the_takeaway(self):
+        deck = json.loads(json.dumps(REDRAWN))
+        deck['cards'][-1] = {'cta': 'Subscribe free (makeyourmindup.ai)', 'picture': 'the wordmark'}
+        self.assertIn('takeaway', ' | '.join(carousel_check.problems(deck)))
+
+    def test_saturday_good_news_keeps_its_fixed_close(self):
+        deck = json.loads(json.dumps(REDRAWN))
+        deck['good_news'] = True
+        self.assertIn('good-news close', ' | '.join(carousel_check.problems(deck)))
+        deck['cards'][-1]['cta'] = ('If this inspires you to MAKE THE WORLD BETTER by combining your ideas + AI, '
+                                    'follow for more')
+        self.assertEqual(carousel_check.problems(deck), [])
 
     def test_a_trend_without_evidence_fails(self):
         deck = json.loads(json.dumps(REDRAWN))
