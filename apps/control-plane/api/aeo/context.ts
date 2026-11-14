@@ -4,7 +4,7 @@ import { supabase } from '../_supabase.js'
 import { loadConfig, loadVoiceBlock } from '../_content.js'
 import { loadCuratedVoices } from '../_creators.js'
 import { LANE_SLUG, mondayOf } from '../_growth.js'
-import { KRISH_DOMAINS, NOT_OURS, PACKET_FEATURES, brandChecksOf, brandNamesOf, heldProducts, searchSignalsFor, shippedFor, subjectHostsOf, type SearchSignals } from '../_aeo.js'
+import { CONTEXT_FEATURES, KRISH_DOMAINS, NOT_OURS, PACKET_FEATURES, brandChecksOf, brandNamesOf, heldProducts, searchSignalsFor, shippedFor, subjectHostsOf, type SearchSignals } from '../_aeo.js'
 // The room lane stays in Control Center, so its 293-line helper does not come
 // with this route for one column list. Copied deliberately, named so a drift is
 // findable: api/_room.ts CONTACT_COLUMNS in krishanraja/control-center.
@@ -316,7 +316,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       },
       icp: { room_face: ROOM_FACE },
       // The optional packet fields the ingest accepts; the engine sends a field only when it is listed.
-      packet_features: [...PACKET_FEATURES],
+      // Then the context features that are not packet fields (the meter's billing rows).
+      packet_features: [...PACKET_FEATURES, ...CONTEXT_FEATURES],
       subjects: out,
     })
   } catch (e: unknown) {

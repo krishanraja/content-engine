@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from 'node:async_hooks'
-import { priceUsd, priceUsdDetailed, priceUsdUncached, readUsage, isPriced, perplexityUsd, PERPLEXITY_PRICES, OPENAI_EMBEDDING_PRICES, type TokenUsage } from './_prices.js'
+import { priceUsd, priceUsdDetailed, priceUsdUncached, readUsage, isPriced, perplexityUsd, PERPLEXITY_PRICES, OPENAI_EMBEDDING_PRICES, ANTHROPIC_WEB_SEARCH_USD, type TokenUsage } from './_prices.js'
 import { classifyAnthropicFailure, noteAnthropicSuccess, recordAnthropicFailure, type ProviderFailure } from './_modelProvider.js'
 
 /**
@@ -44,7 +44,7 @@ function db(): Promise<Db | null> {
 //                  Accumulates. Never use it for a value the provider can
 //                  restate, or a re-sync will stack on top of what is there.
 
-export type MeterProvider = 'apify' | 'n8n' | 'anthropic' | 'perplexity' | 'openai'
+export type MeterProvider = 'apify' | 'n8n' | 'anthropic' | 'perplexity' | 'openai' | 'google' | 'xai'
 export type MeterUnitKind = 'actor' | 'workflow' | 'agent'
 
 // ── Which piece and which run a call was for (cost guard G12) ───────────────
@@ -528,6 +528,75 @@ export async function openaiEmbeddingCall(e: { agent: string; model: string; usa
       provider: 'openai', unitKind: 'agent', unitKey: normalizeAgent(e.agent), bucket: e.model,
       label: normalizeAgent(e.agent), category: rate !== undefined ? 'priced' : 'unpriced-model',
       usd: rate !== undefined ? tokens / 1e6 * rate : 0, runs: 1, failed: e.failed ? 1 : 0, units: tokens, unitName: 'tokens',
+    })
+  } catch { /* metering is never load-bearing */ }
+}
+
+/**
+ * Usage another process measured and posts as a total (the AEO engine, one row
+ * per provider, model and billing a run): tokens, calls, failures and search
+ * requests, priced here and nowhere else. Never throws.
+ *
+ *   subscription  tokens on a subscription (the Claude Code lane): written as
+ *                 tokens with no dollar amount, in a bucket of their own so
+ *                 they never blend with the same model's API dollars (Ruling,
+ *                 Krish, 2026-11-13: subscription rows carry tokens with no
+ *                 dollar amount).
+ *   api           Anthropic through anthropicCall, the one place its usage is
+ *                 read; its search requests at ANTHROPIC_WEB_SEARCH_USD in a
+ *                 bucket of their own. Perplexity at PERPLEXITY_PRICES, tokens
+ *                 plus one request fee a call. OpenAI, Google and xAI have no
+ *                 rate in the table yet: tokens with no dollars beside them,
+ *                 `unpriced-model`, visibly a gap (_prices.ts).
+ */
+export async function reportedUsage(e: {
+  provider: 'anthropic' | 'openai' | 'perplexity' | 'google' | 'xai'
+  agent?: string | null
+  model: string
+  billing: 'api' | 'subscription'
+  /** Anthropic's own usage object, cache fields and all, when the reporter kept it. */
+  usage?: unknown
+  inputTokens?: number
+  outputTokens?: number
+  calls?: number
+  failedCalls?: number
+  searchCalls?: number
+  day?: string
+}): Promise<void> {
+  try {
+    const runs = Math.max(1, Math.trunc(Number(e.calls) || 1))
+    const failed = Math.min(runs, Math.max(0, Math.trunc(Number(e.failedCalls) || 0)))
+    const searches = Math.max(0, Math.trunc(Number(e.searchCalls) || 0))
+    const agent = normalizeAgent(e.agent)
+    const u: TokenUsage = e.usage && typeof e.usage === 'object'
+      ? readUsage(e.usage)
+      : { input: Math.max(0, Number(e.inputTokens) || 0), output: Math.max(0, Number(e.outputTokens) || 0) }
+    const tokens = u.input + u.output + (u.cacheRead || 0) + (u.cacheWrite5m || 0) + (u.cacheWrite1h || 0)
+    if (e.billing === 'subscription') {
+      if (!tokens && !failed) return
+      await add({
+        provider: e.provider, unitKind: 'agent', unitKey: agent, bucket: `${e.model} (subscription)`, label: agent,
+        category: 'subscription', usd: 0, usdUncached: 0, runs, failed, units: tokens, unitName: 'tokens', day: e.day,
+      })
+      return
+    }
+    if (e.provider === 'anthropic') {
+      await anthropicCall({ agent: e.agent, model: e.model, usage: e.usage && typeof e.usage === 'object' ? e.usage : undefined,
+        inputTokens: u.input, outputTokens: u.output, calls: runs, failedCalls: failed, day: e.day })
+      if (searches) {
+        await add({
+          provider: 'anthropic', unitKind: 'agent', unitKey: agent, bucket: `${e.model} web search`, label: agent,
+          category: 'priced', usd: searches * ANTHROPIC_WEB_SEARCH_USD, runs: 0, units: searches, unitName: 'searches', day: e.day,
+        })
+      }
+      return
+    }
+    if (!tokens && !failed) return
+    const p = e.provider === 'perplexity' ? PERPLEXITY_PRICES[e.model] : undefined
+    const usd = p ? (u.input / 1e6) * p.in + (u.output / 1e6) * p.out + p.request * (runs - failed) : 0
+    await add({
+      provider: e.provider, unitKind: 'agent', unitKey: agent, bucket: e.model, label: agent,
+      category: p ? 'priced' : 'unpriced-model', usd, runs, failed, units: tokens, unitName: 'tokens', day: e.day,
     })
   } catch { /* metering is never load-bearing */ }
 }
