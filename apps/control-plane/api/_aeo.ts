@@ -800,3 +800,126 @@ export function shippedFor(rows: ReadonlyArray<Record<string, unknown>>, product
   }
   return out
 }
+
+/**
+ * A venture subject's own hosts: each domain's host, lower case, with no
+ * scheme, www or path, and never a not-ours one. The same rule as Control
+ * Center's subjectHosts (api/_searchSignals.ts), which keys the search signals
+ * by these hosts.
+ */
+export function subjectHostsOf(domains: unknown): string[] {
+  if (!Array.isArray(domains)) return []
+  const out = new Set<string>()
+  for (const d of domains) {
+    if (typeof d !== 'string') continue
+    const host = d.trim().toLowerCase().replace(/^[a-z][a-z0-9+.-]*:\/\//, '').replace(/^www\./, '').split(/[/?#]/)[0]
+    if (host && !NOT_OURS.some(n => host === n || host.endsWith(`.${n}`))) out.add(host)
+  }
+  return [...out]
+}
+
+/** One read's state as Control Center recorded it (growth_search_reads): when it last worked, and why the last try failed. */
+export interface SearchRead { source: string; part: string; host: string; ok: boolean; last_ok_at: string | null; reason: string | null; note: string | null }
+
+/**
+ * What AEO-Engine reads as `subject.search_signals` (its brief, section C;
+ * src/schema/context.ts SearchSignals there). A list is null when no read of
+ * it has ever worked on one of the subject's hosts: unknown, never zero.
+ * `reads` says, per source, part and host, when it last worked and why the
+ * last try failed.
+ */
+export interface SearchSignals {
+  gsc_queries: Array<{ query: string; page: string; impressions: number; clicks: number; position: number | null; date_from: string; date_to: string }> | null
+  bing: {
+    queries: Array<{ query: string; impressions: number | null; clicks: number | null; position: number | null; date_from: string; date_to: string | null }> | null
+    pages: Array<{ page: string; impressions: number | null; clicks: number | null; position: number | null; date_from: string; date_to: string | null }> | null
+    url_info: Array<{ url: string; indexed: boolean | null; last_crawled: string | null; checked: string }> | null
+    crawl_issues: Array<{ url: string; http_code: number | null; issues: unknown; in_links: number | null; checked: string }> | null
+    keyword_volume: Array<{ query: string; volume: number; weeks: number; date_from: string; date_to: string }> | null
+  } | null
+  ai_referrals: Array<{ landing_page: string; source: string | null; sessions: number; date: string; via: 'ga4' | 'clarity' }> | null
+  reads: SearchRead[]
+}
+
+type SigRow = Record<string, unknown>
+const n = (v: unknown): number | null => {
+  const x = typeof v === 'string' ? Number(v) : v
+  return typeof x === 'number' && Number.isFinite(x) ? x : null
+}
+const s = (v: unknown): string | null => (typeof v === 'string' && v ? v : null)
+
+/**
+ * One subject's search signals from Control Center's rows: the read states,
+ * its Search Console rows already summed into weeks (growth_search_gsc_weekly),
+ * Bing's weekly query and page rows, Bing's recent index, crawl and keyword
+ * rows, and the AI-referral rows. Pure.
+ */
+export function searchSignalsFor(hosts: readonly string[], input: { reads: readonly SigRow[]; gsc: readonly SigRow[]; bing: readonly SigRow[]; recent: readonly SigRow[]; referrals: readonly SigRow[] }): SearchSignals {
+  const mine = new Set(hosts)
+  const reads: SearchRead[] = input.reads.filter(r => typeof r.host === 'string' && mine.has(r.host)).map(r => ({
+    source: String(r.source), part: String(r.part), host: String(r.host),
+    ok: r.reason == null && !!r.last_ok_at, last_ok_at: s(r.last_ok_at), reason: s(r.reason), note: s(r.note),
+  }))
+  const known = (source: string, part: string) => reads.some(r => r.source === source && r.part === part && !!r.last_ok_at)
+  const onMine = (r: SigRow) => typeof r.host === 'string' && mine.has(r.host)
+
+  const gsc_queries = known('gsc', 'search_analytics')
+    ? input.gsc.filter(onMine).flatMap(r => {
+      const query = s(r.query), page = s(r.page), from = s(r.date_from), to = s(r.date_to)
+      const impressions = n(r.impressions), clicks = n(r.clicks)
+      return query && page && from && to && impressions != null && clicks != null
+        ? [{ query, page, impressions, clicks, position: n(r.avg_position), date_from: from, date_to: to }] : []
+    })
+    : null
+
+  const bingParts = ['queries', 'pages', 'url_info', 'crawl_issues', 'keywords'] as const
+  let bing: SearchSignals['bing'] = null
+  if (bingParts.some(p => known('bing', p))) {
+    const weekly = input.bing.filter(onMine)
+    const recent = input.recent.filter(onMine)
+    const urlInfo = new Map<string, { url: string; indexed: boolean | null; last_crawled: string | null; checked: string }>()
+    for (const r of recent) {
+      const url = s(r.page), day = s(r.day)
+      if (r.kind !== 'url_info' || !url || !day) continue
+      const had = urlInfo.get(url)
+      if (!had || had.checked < day) urlInfo.set(url, { url, indexed: typeof r.indexed === 'boolean' ? r.indexed : null, last_crawled: s(r.last_crawled), checked: day })
+    }
+    const newestCrawl = new Map<string, string>()
+    for (const r of recent) if (r.kind === 'crawl_issue' && typeof r.day === 'string' && (newestCrawl.get(String(r.host)) ?? '') < r.day) newestCrawl.set(String(r.host), r.day)
+    const keywords = new Map<string, Array<{ day: string; to: string; volume: number }>>()
+    for (const r of recent) {
+      const q = s(r.query), day = s(r.day), volume = n(r.volume)
+      if (r.kind !== 'keyword' || !q || !day || volume == null) continue
+      const list = keywords.get(q) ?? []
+      if (!list.some(w => w.day === day)) list.push({ day, to: s(r.day_to) ?? day, volume })
+      keywords.set(q, list)
+    }
+    bing = {
+      queries: known('bing', 'queries') ? weekly.filter(r => r.kind === 'query' && s(r.query) && s(r.day)).map(r => ({
+        query: String(r.query), impressions: n(r.impressions), clicks: n(r.clicks), position: n(r.position), date_from: String(r.day), date_to: s(r.day_to),
+      })) : null,
+      pages: known('bing', 'pages') ? weekly.filter(r => r.kind === 'page' && s(r.page) && s(r.day)).map(r => ({
+        page: String(r.page), impressions: n(r.impressions), clicks: n(r.clicks), position: n(r.position), date_from: String(r.day), date_to: s(r.day_to),
+      })) : null,
+      url_info: known('bing', 'url_info') ? [...urlInfo.values()] : null,
+      crawl_issues: known('bing', 'crawl_issues') ? recent.filter(r => r.kind === 'crawl_issue' && s(r.page) && r.day === newestCrawl.get(String(r.host))).map(r => {
+        const d = r.detail && typeof r.detail === 'object' ? r.detail as SigRow : {}
+        return { url: String(r.page), http_code: n(d.http_code), issues: d.issues ?? null, in_links: n(d.in_links), checked: String(r.day) }
+      }) : null,
+      keyword_volume: known('bing', 'keywords') ? [...keywords.entries()].map(([query, weeks]) => {
+        const newest = weeks.sort((a, b) => (a.day < b.day ? 1 : -1)).slice(0, 4)
+        return { query, volume: newest.reduce((t, w) => t + w.volume, 0), weeks: newest.length, date_from: newest[newest.length - 1].day, date_to: newest[0].to }
+      }) : null,
+    }
+  }
+
+  const ai_referrals = known('ga4', 'ai_referrals') || known('clarity', 'ai_referrals')
+    ? input.referrals.filter(onMine).flatMap(r => {
+      const page = s(r.page), day = s(r.day), sessions = n(r.sessions)
+      const via: 'ga4' | 'clarity' | null = r.source === 'ga4' ? 'ga4' : r.source === 'clarity' ? 'clarity' : null
+      return page && day && sessions != null && via ? [{ landing_page: page, source: s(r.ai_source), sessions, date: day, via }] : []
+    })
+    : null
+
+  return { gsc_queries, bing, ai_referrals, reads }
+}

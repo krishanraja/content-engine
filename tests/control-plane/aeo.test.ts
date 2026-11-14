@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'vitest'
 import {
   EDITORIAL_AEO_SUBJECTS, KRISH_DOMAINS, MAX_IDEAS_PER_SUBJECT, NOT_OURS, PACKET_FEATURES, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef,
-  brandChecksOf, brandNamesOf, citedPageRows, heldProducts, shippedFor, isEditorialAeoSubject, probeRows, queryRows, validatePacket,
+  brandChecksOf, brandNamesOf, citedPageRows, heldProducts, searchSignalsFor, shippedFor, subjectHostsOf, isEditorialAeoSubject, probeRows, queryRows, validatePacket,
   type AeoPacket,
 } from '../../apps/control-plane/api/_aeo.ts'
 import { CONTENT_ENGINE_JOBS, contentEngineAttention } from '../../apps/control-plane/lib/contentEngineSchedule.ts'
@@ -330,4 +330,56 @@ test("a venture's shipped pages reach AEO newest first, one a page, never one wi
   assert.deepEqual(shippedFor(rows, 'heartside'), [{ question: 'What is a good gift from my dog?', url: 'https://heartside.io/answers/gift', shipped_at: '2026-11-12T00:00:00.000Z', by: 'growth-heartside' }])
   assert.equal(shippedFor(rows, 'mindmake').length, 1)
   assert.deepEqual(shippedFor(rows, 'legibility'), [])
+})
+
+test("subject hosts: each domain's bare host, never a path, www or a not-ours one", () => {
+  assert.deepEqual(subjectHostsOf(['mindmake.co', 'https://www.krishraja.ai/', 'linkedin.com/in/krishraja', 'fractionl.us', 'x.fractionl.us', 7]), ['mindmake.co', 'krishraja.ai', 'linkedin.com'])
+  assert.deepEqual(subjectHostsOf(null), [])
+})
+
+test("search signals: a list is null until one of the subject's hosts has a read that worked; the reasons ride along", () => {
+  const hosts = ['mindmake.co', 'krishraja.ai']
+  const reads = [
+    { source: 'gsc', part: 'search_analytics', host: 'mindmake.co', last_ok_at: '2026-11-14T13:20:00Z', reason: null, note: '2026-11-04 to 2026-11-13' },
+    { source: 'gsc', part: 'search_analytics', host: 'krishraja.ai', last_ok_at: null, reason: 'Search Console has not shared krishraja.ai with sa@x', note: null },
+    { source: 'bing', part: 'queries', host: 'mindmake.co', last_ok_at: null, reason: 'BING_ANALYTICS_API_KEY is not set', note: null },
+    { source: 'ga4', part: 'ai_referrals', host: 'heartside.io', last_ok_at: '2026-11-14T13:20:00Z', reason: null, note: null },
+  ]
+  const gsc = [
+    { host: 'mindmake.co', page: 'https://mindmake.co/a', query: 'ai pilot', date_from: '2026-11-07', date_to: '2026-11-13', impressions: 40, clicks: 1, avg_position: 4.5 },
+    { host: 'fulltime.fm', page: 'https://fulltime.fm/', query: 'x', date_from: '2026-11-07', date_to: '2026-11-13', impressions: 1, clicks: 0, avg_position: 1 },
+  ]
+  const out = searchSignalsFor(hosts, { reads, gsc, bing: [], recent: [], referrals: [{ source: 'ga4', host: 'heartside.io', page: 'https://heartside.io/', day: '2026-11-12', ai_source: 'chatgpt.com', sessions: 3 }] })
+  assert.deepEqual(out.gsc_queries, [{ query: 'ai pilot', page: 'https://mindmake.co/a', impressions: 40, clicks: 1, position: 4.5, date_from: '2026-11-07', date_to: '2026-11-13' }])
+  assert.equal(out.bing, null, 'no Bing read ever worked here')
+  assert.equal(out.ai_referrals, null, "another venture's GA4 read is not this one's")
+  assert.equal(out.reads.length, 3)
+  assert.deepEqual(out.reads.find(r => r.host === 'krishraja.ai'), { source: 'gsc', part: 'search_analytics', host: 'krishraja.ai', ok: false, last_ok_at: null, reason: 'Search Console has not shared krishraja.ai with sa@x', note: null })
+})
+
+test('search signals: Bing lists by part, newest index detail a page, newest crawl day, four weeks of keyword volume; AI referrals keep their via', () => {
+  const ok = (source: string, part: string) => ({ source, part, host: 'mindmake.co', last_ok_at: '2026-11-14T13:20:00Z', reason: null, note: null })
+  const reads = [ok('bing', 'queries'), ok('bing', 'url_info'), ok('bing', 'crawl_issues'), ok('bing', 'keywords'), ok('clarity', 'ai_referrals')]
+  const bing = [
+    { kind: 'query', host: 'mindmake.co', query: 'ai pilot', day: '2026-11-09', day_to: '2026-11-15', impressions: 10, clicks: 1, position: 5 },
+    { kind: 'page', host: 'mindmake.co', page: 'https://mindmake.co/a', day: '2026-11-09', day_to: '2026-11-15', impressions: 10, clicks: 1, position: 5 },
+  ]
+  const recent = [
+    { kind: 'url_info', host: 'mindmake.co', page: 'https://mindmake.co/a', day: '2026-11-13', indexed: false, last_crawled: null },
+    { kind: 'url_info', host: 'mindmake.co', page: 'https://mindmake.co/a', day: '2026-11-14', indexed: true, last_crawled: '2026-11-10T00:00:00.000Z' },
+    { kind: 'crawl_issue', host: 'mindmake.co', page: 'https://mindmake.co/old', day: '2026-11-14', detail: { http_code: 404, issues: 2, in_links: 1 } },
+    { kind: 'crawl_issue', host: 'mindmake.co', page: 'https://mindmake.co/older', day: '2026-11-13', detail: { http_code: 500 } },
+    ...['2026-10-12', '2026-10-19', '2026-10-26', '2026-11-02', '2026-11-09'].map((d, i) => ({ kind: 'keyword', host: 'mindmake.co', query: 'what is an ai pilot', day: d, day_to: d, volume: (i + 1) * 10 })),
+  ]
+  const out = searchSignalsFor(['mindmake.co'], { reads, gsc: [], bing, recent, referrals: [
+    { source: 'clarity', host: 'mindmake.co', page: 'https://mindmake.co/', day: '2026-11-14', ai_source: 'perplexity.ai', sessions: 2 },
+    { source: 'ga4', host: 'mindmake.co', page: 'https://mindmake.co/', day: '2026-11-14', ai_source: 'perplexity.ai', sessions: 1 },
+  ] })
+  assert.equal(out.gsc_queries, null)
+  assert.equal(out.bing?.queries?.length, 1)
+  assert.equal(out.bing?.pages, null, 'pages never read')
+  assert.deepEqual(out.bing?.url_info, [{ url: 'https://mindmake.co/a', indexed: true, last_crawled: '2026-11-10T00:00:00.000Z', checked: '2026-11-14' }])
+  assert.deepEqual(out.bing?.crawl_issues, [{ url: 'https://mindmake.co/old', http_code: 404, issues: 2, in_links: 1, checked: '2026-11-14' }])
+  assert.deepEqual(out.bing?.keyword_volume, [{ query: 'what is an ai pilot', volume: 140, weeks: 4, date_from: '2026-10-19', date_to: '2026-11-09' }])
+  assert.deepEqual(out.ai_referrals?.map(r => [r.via, r.sessions]), [['clarity', 2], ['ga4', 1]], 'each via apart, never summed')
 })
