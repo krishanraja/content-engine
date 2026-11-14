@@ -260,6 +260,21 @@
         "add",
         "exit"
       ]
+    },
+    "through_line": {
+      "verbs": [
+        "enter",
+        "count_to",
+        "thin",
+        "grow",
+        "multiply",
+        "drop",
+        "light",
+        "connect",
+        "rest_on",
+        "carry",
+        "exit"
+      ]
     }
   }
 }
