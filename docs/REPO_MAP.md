@@ -258,6 +258,13 @@ Every tracked TypeScript module outside tests, with its leading comment and its 
 - `function aeoSignalSummary(meta: AeoSignalRow['meta']['aeo'], thesis: string): string`
 - `function probeRows(packet: AeoPacket): Array<Record<string, unknown>>`
 - `function queryRows(packet: AeoPacket): Array<Record<string, unknown>>`
+- `const KRISH_DOMAINS: readonly string[]`
+- `const NOT_OURS: readonly string[]`
+- `const PACKET_FEATURES: readonly string[]`
+- `interface BrandCheck`
+- `function brandNamesOf(v: unknown): string[]`
+- `function brandChecksOf(v: unknown): BrandCheck[]`
+- `function heldProducts(engines: ReadonlyArray<{ product_slug?: unknown; role?: unknown; activation_state?: unknown }>): …`
 
 ### `apps/control-plane/api/_alert.ts`
 
