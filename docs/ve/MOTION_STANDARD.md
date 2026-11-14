@@ -146,7 +146,10 @@ frames 600 and 990 of each reel.
   `{module, reason}` in its spec. ve lint refuses a spec without it from `creative_direction.MOTION_FROM` (9 Nov 2026,
   `motion.required`), and a Codex card written for that piece carries the style as its own `## Motion style` section
   (`scripts/velib/cards.py`). The format's own motion notes (`docs/ve/design/formats/*-motion.md`) hold its frame;
-  the style works inside them, and this standard wins where they differ.
+  the style works inside them, and this standard wins where they differ. ve lint also refuses a style the renderer
+  cannot draw yet (`motion.not_drawable`, from 14 Nov 2026: one listed under `needs_device` in
+  `apps/renderer/src/engine/kit/motion-profiles.json`), which would otherwise render in the house motion without a
+  word; the board's style choices never recommend one either, even when a week plan names it.
 - **Channel safe zones count (since 11 Nov 2026).** The tall layouts, the house caption, the word caption and the held
   title sit inside every channel's safe area (card `ve-motion-4-channel-safe-tall`, done that day), so
   `scripts/velib/qc_channel.py` has `ADVISORY = False` and `ve qc` fails a box under a channel's buttons.

@@ -312,7 +312,10 @@ describe('his production pick on every piece before recording: the look, the mot
     const it = model(buildView(inputs()), 'tue').items.find(x => x.piece_id === TUE)!
     expect(it.others.map(a => a.label)).toEqual(['Pick the look', 'Pick the motion style', 'Pick the captions'])
     expect((it.others[1] as any).body).toEqual({ piece_id: TUE })
-    expect(labels(it.others[1])[0]).toBe('The Ladder (recommended)')
+    // Its plan row names the ladder, which waits on a device: the planned pick passes the ranked list's filter, so the
+    // channel's own pick leads and the ladder is never recommended (fleet audit 14 Nov, ve-1).
+    expect(labels(it.others[1])[0]).toBe('Swiss grid (recommended)')
+    expect(labels(it.others[1])).toContain('The Ladder (not ready yet)')
   })
   it('once picked it says so and offers a change; once a take is recorded, no pick is offered', () => {
     const picked = model(buildView(inputs({ look: { production: 'face-with-proof', experiment: 'data-story', inspiration: ['a'], at: '2026-11-14T09:00:00Z' }, style: { motion: 'ladder', at: '2026-11-14T09:00:00Z' } })), 'mon').items[0]
