@@ -445,6 +445,25 @@ describe('the pure helpers', () => {
     expect(takeCounts({ cut: 'long', script_sha256: SHA('b') }, undefined)).toBe(true)
   })
 
+  // Ruling (Krish, 2026-11-14): the long cut's word cap lifts for a piece when the story is worth it; the narrative
+  // lock says so and why. The lift rides the script check (making.py scripts, from config/long-cuts.json), and the
+  // Scripts step says it first, so the board shows the length and the reason and a cut is never lifted silently.
+  it('a lifted long cut is kept on the script check and named first on the Scripts step, with its length and reason', () => {
+    const reason = 'Two stories meet in one company; you asked for about 8 minutes.'
+    const { patch, problems } = parseMakingPatch({ script_check: { passed: true, problems: [], cuts: ['long', 'short'], long_cut: { words: 1200, reason } } }, '2026-11-14T09:00:00Z')
+    expect(problems).toEqual([])
+    expect(patch.script_check?.long_cut).toEqual({ words: 1200, reason })
+    const note = (check: any) => makingSteps({ state: 'drafting', meta: { making: { script_check: check } } }).find(s => s.key === 'scripts')!.note
+    expect(note(patch.script_check)).toBe(`long cut lifted to about 8:00 (1200 words): ${reason}; long and short`)
+    expect(note({ passed: false, problems: ['long cut: too long'], checked_at: 'x', long_cut: { words: 1100, reason } })).toBe(`long cut: too long; long cut lifted to about 7:20 (1100 words): ${reason}`)
+    expect(note({ passed: true, problems: [], checked_at: 'x', cuts: ['long', 'short'] })).toBe('long and short')
+    for (const bad of [{ words: 825, reason }, { words: 1500, reason }, { words: 1200, reason: '' }, { words: 1200, reason: 'one\ntwo' }, 'eight minutes']) {
+      const out = parseMakingPatch({ script_check: { passed: true, problems: [], long_cut: bad } }, '2026-11-14T09:00:00Z')
+      expect(out.problems.some(p => /script_check\.long_cut/.test(p)), JSON.stringify(bad)).toBe(true)
+      expect(out.patch.script_check).toBeUndefined()
+    }
+  })
+
   it('makingSteps: only takes of an older script, on both cuts, leave Record at now', () => {
     const steps = makingSteps({ state: 'review', meta: { making: { script_check: { passed: true, checked_at: 'x', problems: [], hashes: { long: SHA('a'), short: SHA('b') } }, recordings: [
       { cut: 'long', path: 'a', at: '2026-10-12T08:00:00Z', script_sha256: SHA('c') },

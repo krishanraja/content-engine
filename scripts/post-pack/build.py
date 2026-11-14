@@ -272,14 +272,14 @@ def plan(post, base):
             if not isinstance(entry['text'], str) or not entry['text'].strip():
                 raise PackError(f'{label}: "text" is empty')
             if kind == 'video-script':
-                story_gate(entry, entry['text'], label, series)
+                story_gate(entry, entry['text'], label, series, post.get('piece_id'))
             name = entry.get('name') or script_name(entry, '.md') or (fixed if '.' in fixed else f'{fixed}.md')
             planned.append({'kind': kind, 'logos': [l for l in (entry.get('logos') or []) if isinstance(l, str)], 'evidence': entry.get('evidence') if isinstance(entry.get('evidence'), dict) else None, 'section': section, 'name': safe_name(name), 'purpose': purpose,
                             'text': entry['text'].strip() + '\n'})
             continue
         source = source_of(entry, label)
         if kind == 'video-script':
-            story_gate(entry, source.read_text(encoding='utf-8-sig'), label, series)
+            story_gate(entry, source.read_text(encoding='utf-8-sig'), label, series, post.get('piece_id'))
         if kind == 'image':
             edge_gate(entry, source, label)
         if kind == 'video-words':
@@ -538,22 +538,30 @@ def script_name(entry, suffix):
     return Path(plan_files.USUAL[cut]).stem + (suffix or '.md')
 
 
-def story_gate(entry, text, label, series=None):
+def story_gate(entry, text, label, series=None, piece=None):
     """Krish, 2026-10-06 (walk log F75): a script that does not make sense out
     loud, or stops dead on the number, is not packed; nor one a 12-year-old
     could not follow (house rule R7), nor one of a minute or more that does
     not close on the one thing Krish would do (never a list of orders, 2026-10-31) and end
-    on "The full deep dive is at makeyourmindup.ai." (house rule SCRIPT_CLOSE;
+    on "The full story is free at makeyourmindup.ai." (house rule SCRIPT_CLOSE,
+    SCRIPT_CLOSE_LINE; Ruling, Krish, 2026-11-14: the voice check wins;
     series is the post's subchannel as a lane_slot, passed on and no longer
-    checked: the series line is retired, house rule SERIES_OPENER). Only his
-    own words in "story_check_override" let one through."""
+    checked: the series line is retired, house rule SERIES_OPENER). piece is
+    the post's piece_id: a long cut config/long-cuts.json lifts for it is held
+    to its own length (long_cut.py; Ruling, Krish, 2026-11-14: "lift if worth
+    it"), and a lift that does not hold refuses the long cut. Only his own
+    words in "story_check_override" let one through."""
     # The cut a script says it is ("cut": "long" or "short", or its name),
     # so the length rule holds (house rule TWO_CUTS, Krish 2026-10-11).
     cut = entry.get('cut') if entry.get('cut') in story_check.CUTS else story_check.cut_of(entry.get('name') or entry.get('file') or '')
     if cut is None:
         warn(f'{label}: the script\'s length was checked against neither cut, so a 3-minute or 90-second '
              f'script of the wrong length would pass (house rule TWO_CUTS). Add "cut": "long" or "short" to the entry.')
-    found = story_check.problems(text, cut, series)
+    lift, lift_why = None, []
+    if piece and cut == 'long':
+        import long_cut
+        lift, lift_why = long_cut.lift_for(piece)
+    found = lift_why + story_check.problems(text, cut, series, lift)
     override = entry.get('story_check_override')
     if found and not (isinstance(override, str) and override.strip().lower().startswith('krish')):
         raise PackError(f'{label}: the script fails the story check:\n  - ' + '\n  - '.join(found) +

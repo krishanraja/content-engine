@@ -26,4 +26,4 @@ So what do I think happens? I think the money side of AI still changes, just not
 
 If I ran a business, I'd ask each AI supplier which landlord its tools run on. If that landlord borrows to build, I wouldn't budget for my AI bill coming down any time soon.
 
-The full deep dive is at makeyourmindup.ai.
+The full story is free at makeyourmindup.ai.

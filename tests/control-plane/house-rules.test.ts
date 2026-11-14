@@ -446,9 +446,9 @@ describe('a script is only the words, opening on a provocation and closing on th
     assert.match(HOUSE_RULES.find(x => x.id === 'SCRIPT_ONLY')!.said, /literally just scripts/)
     assert.match(HOUSE_RULES.find(x => x.id === 'HOOK_AND_CTA')!.text, /makeyourmindup\.ai/)
   })
-  test('the script writer keeps "say" to spoken words and its close sends people to the deep dive', async () => {
+  test('the script writer keeps "say" to spoken words and its close sends people to the full story', async () => {
     const video = await import('../../apps/control-plane/api/_video.js')
-    assert.match(video.STORY_OUTRO, /full deep dive/)
+    assert.match(video.STORY_OUTRO, /The full story is free at makeyourmindup\.ai\./)
     assert.match(video.SCRIPT_STORY, /HOOK_AND_CTA/)
     assert.doesNotMatch(video.SCRIPT_STORY, /Offer two options for each joke, marked/)
   })
@@ -480,6 +480,30 @@ describe('two cuts, each from its own script, inside the lengths story_check hol
       assert.ok(video.wordCeiling(f) <= hi, `${id} ceiling inside ${hi}`)
       assert.equal(client.VIDEO_FORMATS.find(x => x.id === id)?.words, f.words, `${id} picker matches the server`)
     }
+  })
+  // Ruling (Krish, 2026-11-14): the long cut's word cap lifts for a piece when the story is worth it; the narrative
+  // lock says so and why. His answer: "lift if worth it".
+  test('one piece\'s long cut lifts only by config/long-cuts.json, to at most about 8 minutes, and every tool reads one LONG_CUT', async () => {
+    const { LONG_CUT } = await import('../../apps/control-plane/api/_houseRules.js')
+    assert.deepEqual({ ...LONG_CUT }, { fewest_words: 675, most_words: 825, lifted_most_words: 1200, words_per_minute: 150 })
+    const r = HOUSE_RULES.find(x => x.id === 'TWO_CUTS')!
+    assert.equal(r.on, '2026-11-14')
+    assert.match(r.said, /"lift if worth it"/)
+    assert.match(r.text, /up to 1200 words \(about 8 minutes\), only when the story is worth it: its signed narrative lock asks for the longer cut, and config\/long-cuts\.json/)
+    assert.match(r.text, /never on more figures or names than LISTENING allows/)
+    const ts = readFileSync('apps/control-plane/api/_houseRules.ts', 'utf8')
+    const block = ts.split('// LONG_CUT:BEGIN')[1]!.split('// LONG_CUT:END')[0]!
+    assert.deepEqual(JSON.parse(block.slice(block.indexOf('{'), block.lastIndexOf('}') + 1)), { ...LONG_CUT })
+    const { spawnSync } = await import('node:child_process')
+    const py = process.platform === 'win32' ? 'python' : 'python3'
+    const out = spawnSync(py, ['scripts/post-pack/long_cut.py', '--self-test'], { encoding: 'utf8' })
+    assert.equal(out.status, 0, out.stdout + out.stderr)
+    const check = spawnSync(py, ['scripts/post-pack/long_cut.py', '--check'], { encoding: 'utf8' })
+    assert.equal(check.status, 0, check.stdout + check.stderr)
+    // Monday 16 Nov: the signed lock asks for about 8 minutes, and the lift says so on the record and the board.
+    const monday = spawnSync(py, ['scripts/post-pack/long_cut.py', '8287846b-6618-4a19-9fb8-23ad4eca2718'], { encoding: 'utf8' })
+    assert.equal(monday.status, 0, monday.stdout + monday.stderr)
+    assert.match(monday.stdout, /^long cut lifted to about 8:00 \(1200 words\) for this piece: /)
   })
 })
 
@@ -661,7 +685,7 @@ describe('every script opens straight on the hook: the series line is retired (S
     assert.match(r.text, /opens straight on the hook \(SERIES_OPENER\)/)
     assert.match(r.text, /It never opens on a series line, a greeting/)
     assert.match(r.text, /closes as SCRIPT_CLOSE says/)
-    assert.match(r.text, /The full deep dive is at makeyourmindup\.ai\./)
+    assert.match(r.text, /The full story is free at makeyourmindup\.ai\./)
     assert.match(r.text, /No question for the comments and no sign-off/)
     // The script opens on the hook, and nothing goes in front of it on any cut (Ruling, Krish, 2026-11-12).
     assert.match(r.text, /nothing goes in front of the hook on any cut, ever: no logo animation and no sting \(HOOK_IS_THE_INTRO\)/)
@@ -702,18 +726,21 @@ describe('every script opens straight on the hook: the series line is retired (S
   })
 })
 
-describe('every script closes on the one thing he would do, then the deep dive line (SCRIPT_CLOSE, Ruling, Krish, 2026-10-31)', () => {
+describe('every script closes on the one thing he would do, then where the full story is (SCRIPT_CLOSE, Rulings, Krish, 2026-10-31 and 2026-11-14)', () => {
   test('the rule is live, carries his words, and reaches the writers, the draft judges and the final pass', () => {
     const r = HOUSE_RULES.find(x => x.id === 'SCRIPT_CLOSE')
     assert.ok(r)
     assert.equal(r.status, 'live')
-    assert.equal(r.on, '2026-10-31')
+    assert.equal(r.on, '2026-11-14')
     assert.match(r.said, /^I think it's so complex, and then the last paragraph of all my scripts still sounds a bit bossy and preachy\./)
     assert.match(r.said, /Yes, replace it/)
+    // Ruling (Krish, 2026-11-14): the voice check wins over the old last line.
+    assert.match(r.said, /"stick to voice check"/)
+    assert.match(r.text, /the voice check wins/)
     assert.match(r.text, /the one thing Krish himself would do with this, in his own first person/)
     assert.match(r.text, /at most 3 sentences/)
     assert.match(r.text, /never a list of orders/)
-    assert.match(r.text, /final sentence is exactly "The full deep dive is at makeyourmindup\.ai\." with nothing after it/)
+    assert.match(r.text, /final sentence is exactly "The full story is free at makeyourmindup\.ai\." with nothing after it/)
     assert.match(r.text, /no sign-off, no "I'm Krish", no question for the comments/)
     for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
     assert.ok(existsSync('scripts/post-pack/story_check.py') && r.source.includes('scripts/post-pack/story_check.py'))
@@ -722,7 +749,7 @@ describe('every script closes on the one thing he would do, then the deep dive l
     const video = await import('../../apps/control-plane/api/_video.js')
     assert.match(video.STORY_OUTRO, /the one thing Krish himself would do with this, in his own first person/)
     assert.match(video.STORY_OUTRO, /never the retired line "Here's what I'd do with this info if I were you"/)
-    assert.match(video.STORY_OUTRO, /exactly "The full deep dive is at makeyourmindup\.ai\." with nothing after it/)
+    assert.match(video.STORY_OUTRO, /exactly "The full story is free at makeyourmindup\.ai\." with nothing after it/)
     for (const f of video.VIDEO_FORMATS.filter(x => x.seconds >= 60)) assert.match(f.shape, /STORY_OUTRO/, f.id)
     const { spawnSync } = await import('node:child_process')
     const py = process.platform === 'win32' ? 'python' : 'python3'
@@ -733,14 +760,18 @@ describe('every script closes on the one thing he would do, then the deep dive l
     }
     const found = ask([
       'body = " ".join(["More words that fill the middle of the script."] * 20)',
-      'good = "I put two AI helpers head to head. So which one would you trust?\\n\\n" + body + "\\n\\nSo here is my call.\\n\\nIf I paid for one, I\'d check the bill first.\\n\\nThe full deep dive is at makeyourmindup.ai."',
-      'old = good.replace("The full deep dive is at makeyourmindup.ai.", "The full teardown is free at makeyourmindup.ai. What do you think? I\'m Krish.")',
+      'good = "I put two AI helpers head to head. So which one would you trust?\\n\\n" + body + "\\n\\nSo here is my call.\\n\\nIf I paid for one, I\'d check the bill first.\\n\\nThe full story is free at makeyourmindup.ai."',
+      'old = good.replace("The full story is free at makeyourmindup.ai.", "The full teardown is free at makeyourmindup.ai. What do you think? I\'m Krish.")',
+      'voice = good.replace("The full story is free at makeyourmindup.ai.", s.RETIRED_CLOSE)',
       'retired = good.replace("If I paid for one", "Here\'s what I\'d do with this info if I were you. If I paid for one")',
       'bossy = good.replace("If I paid for one, I\'d check the bill first.", "Pick one tool. Ask its maker four things. Check every draft.")',
-      'print(json.dumps([[p for p in s.problems(t) if "SCRIPT_CLOSE" in p] for t in (good, old, retired, bossy)]))',
+      'print(json.dumps([[p for p in s.problems(t) if "SCRIPT_CLOSE" in p] for t in (good, old, retired, bossy, voice)]))',
     ].join('\n'))
     assert.deepEqual(found[0], [])
-    assert.ok(found[1].some((p: string) => /last sentence must be exactly "The full deep dive is at makeyourmindup\.ai\."/.test(p)))
+    assert.ok(found[1].some((p: string) => /last sentence must be exactly "The full story is free at makeyourmindup\.ai\."/.test(p)))
+    // The line of 2026-10-21 fails the voice check, so it is refused naming the ruling (Krish, 2026-11-14).
+    assert.equal(found[4].length, 1)
+    assert.match(found[4][0], /which the voice check bans.*"stick to voice check"/)
     assert.ok(found[2].some((p: string) => /Krish retired on 2026-10-31/.test(p)))
     assert.ok(found[3].some((p: string) => /bossy and preachy/.test(p)))
   })

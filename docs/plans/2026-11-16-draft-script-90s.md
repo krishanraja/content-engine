@@ -8,4 +8,4 @@ But people blame data centres for higher power bills. In this month's US electio
 
 So my call is that AI won't get cheaper as fast as the sellers say. If I ran a business, I'd ask my AI suppliers which landlord they run on. If it borrows to build, I wouldn't count on my bill coming down.
 
-The full deep dive is at makeyourmindup.ai.
+The full story is free at makeyourmindup.ai.

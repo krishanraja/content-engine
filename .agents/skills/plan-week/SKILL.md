@@ -464,6 +464,15 @@ he ticks: `references/inspiration-piece.md`.
    `pieces.<piece id>` with his words and the date; the board then shows the
    feature as a third cut on that day. `config/deep-cuts.json` is retired
    and gets no new week.
+6c. **A longer long cut, only when the story is worth it** (house rule
+   TWO_CUTS; Ruling, Krish, 2026-11-14: the long cut's word cap lifts for a
+   piece when the story is worth it; the narrative lock says so and why;
+   his words: "lift if worth it"). When the room finds a piece needs more
+   than about 5 minutes, its lock's Style recipe says so in plain words,
+   with the length (never past about 8 minutes) and why, in his words where
+   he gave them. The lock is what he signs; the make session then judges it
+   and declares it in `config/long-cuts.json` quoting those words
+   (`make-piece`, "A longer long cut"). Never propose one to fill time.
 7. **Put the week on the live board**, last, once the options are written
    (Ruling, Krish, 2026-11-11: one live board, in Control Centre). The live board draws the week from
    `GET /api/board/<Monday>/view`, which reads `ideas.json` (each publishing

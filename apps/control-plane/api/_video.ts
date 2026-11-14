@@ -75,7 +75,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
     shape: [
       'Hook (the most provocative true thing, then the one question), then two beats, then the call, then the close.',
       'Each beat is one point with its one number. No third beat: there is no room.',
-      'The call answers the question in one sentence. The close is the actions beat and then the deep dive line at makeyourmindup.ai, nothing else (STORY_OUTRO).',
+      'The call answers the question in one sentence. The close is the one thing Krish would do and then the last line, where the full story is free at makeyourmindup.ai, nothing else (STORY_OUTRO).',
     ].join(' '),
   },
   {
@@ -124,7 +124,7 @@ export function videoFormat(id?: string | null): VideoFormat | null {
 // approved the same evening, as the script writer reads it. The house rules
 // FOR_THE_EAR and STORY_ARC carry it to every other stage, and
 // scripts/post-pack/story_check.py refuses to pack a script that fails it.
-export const STORY_OUTRO = 'STORY_OUTRO (house rule SCRIPT_CLOSE, Ruling, Krish 2026-10-31): a script of a minute or more closes in two parts, after the call. First one short beat, at most three sentences, saying the one thing Krish himself would do with this, in his own first person ("If I ran a team, I\'d do one thing this week. I\'d write down who my experts will be in five years."). Never a list of orders for the viewer, never "you should", "make sure" or "decide now", and never the retired line "Here\'s what I\'d do with this info if I were you" (Krish, 2026-10-31: the last paragraph "sounds a bit bossy and preachy"). Then the final sentence of the script, exactly "The full deep dive is at makeyourmindup.ai." with nothing after it: no sign-off, no "I\'m Krish", no question for the comments, no ask to like or subscribe. That is the only call to action a script makes.'
+export const STORY_OUTRO = 'STORY_OUTRO (house rule SCRIPT_CLOSE, Rulings, Krish 2026-10-31 and 2026-11-14): a script of a minute or more closes in two parts, after the call. First one short beat, at most three sentences, saying the one thing Krish himself would do with this, in his own first person ("If I ran a team, I\'d do one thing this week. I\'d write down who my experts will be in five years."). Never a list of orders for the viewer, never "you should", "make sure" or "decide now", and never the retired line "Here\'s what I\'d do with this info if I were you" (Krish, 2026-10-31: the last paragraph "sounds a bit bossy and preachy"). Then the final sentence of the script, exactly "' + SCRIPT_CLOSE_LINE + '" with nothing after it: no sign-off, no "I\'m Krish", no question for the comments, no ask to like or subscribe. That is the only call to action a script makes.'
 
 /** How a script opens (house rule SERIES_OPENER, retired series line, Krish 2026-10-21). */
 export const SCRIPT_OPENING = 'THE OPENING (SERIES_OPENER, Krish 2026-10-21): the first beat\'s "say" starts straight on the hook, the most provocative true thing in the piece, such as what you did, for example "I put X and Y head to head" (X and Y being the things in THIS piece). No series line, no greeting, no "I\'m Krish", anywhere in the script, and nothing in front of the hook (no "Hey guys", welcome or "in this video"). The hook is the first sentence and would stop someone scrolling in under one second: the biggest mistake, the result, an unexpected fact or the middle of the story, always leaving the one question the script answers, which follows at once (HOOK_AND_CTA, LISTENING, Krish 2026-11-05). The topic\'s keyword, the words people would search for it, is said in that first sentence. Krish\'s personal line (what he has been doing with the thing, why it matters, that he wants to break it down: PERSONAL_INTRO) comes second or third, one short sentence. Somewhere one line makes the viewer think of a specific person who needs it, named by their situation, never an ask to share.'
@@ -163,7 +163,7 @@ import {
   robustJson, sanitizeVoice, type Material,
 } from './_content.js'
 import { UTILITY_MODEL } from './_models.js'
-import { houseRulesBlock } from './_houseRules.js'
+import { houseRulesBlock, SCRIPT_CLOSE_LINE } from './_houseRules.js'
 
 export interface VideoBeat { t: string; say: string; shot: string }
 
@@ -266,7 +266,7 @@ export async function buildVideoScript(o: {
     `This is a hard ceiling, not a style note: ${f.words} words is what fits in ${f.seconds} seconds at an unhurried pace. Going over does not produce a longer ${f.label}, it produces a script that overruns, and at the short lengths that is the difference between a hook and a rambling clip. If the material will not fit, cut material. Do not speed up the delivery to make room.`,
     `STRUCTURE FOR THIS LENGTH (not a suggestion, this is what this length can carry):\n${f.shape}`,
     SPOKEN_RULES,
-    // Krish, 2026-10-21: every script opens straight on the hook and closes on the actions and the deep dive line
+    // Krish, 2026-10-21: every script opens straight on the hook and closes on the one thing he would do and the last line
     // (house rules SERIES_OPENER and SCRIPT_CLOSE). The close sits in STORY_OUTRO, inside SCRIPT_STORY.
     SCRIPT_OPENING,
     // Formats under a minute have no room for the outro; everything longer carries the full story check.
