@@ -1,13 +1,14 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
-import { callClaude, robustJson, sanitizeVoice, loadVoiceBlock, loadCorpus, corpusForChannel } from '../_content.js'
+import { callClaude, sanitizeVoice, loadVoiceBlock, loadCorpus, corpusForChannel } from '../_content.js'
 import { isoWeekLabel, startOfIsoWeek } from '../_weeks.js'
 import { realSource } from '../shifts/detect.js'
 import { loadStandingNotes, standingNotesPrompt } from '../_briefNotes.js'
 import { goalsSpine } from '../_goals.js'
 import { SYNTHESIS_MODEL } from '../_models.js'
 import { faceBlock } from '../_mission.js'
+import { askForBrief } from './_ask.js'
 import { withContentRun } from '../_runs.js'
 
 // Weekly brief assembly (Content Engine v2, spec §4). Fri 18:00 UTC.
@@ -101,18 +102,6 @@ const BRIEF_HONESTY = [
 // `headlines` keeps its historic key: it is the clue list, and every stored
 // brief plus the factory payload already reads that name.
 const BRIEF_JSON = '{"title":"...","stance":"contradicts"|"confirms","belief":"the one belief being contradicted, or the twelve-month thesis being confirmed, in a single sentence","standfirst":"...","headlines":[{"id":"<story id>","headline":"...","why":"the inference, one line","url":"...","source":"..."}],"consensus_md":"...","evidence_md":"...","next_year_md":"...","position_md":"..."}'
-
-/** Name the first missing piece of the contract, or '' when the shape is good. */
-function shapeFault(p: any): string {
-  if (!p || typeof p !== 'object') return 'not JSON'
-  if (!p.title) return 'no title'
-  if (!Array.isArray(p.headlines) || p.headlines.length < 3) return 'fewer than 3 clues'
-  if (!p.belief) return 'no belief named, so there is nothing being argued'
-  if (!p.standfirst) return 'no standfirst, so the verdict is buried'
-  if (!p.evidence_md) return 'no investigation section'
-  if (!p.next_year_md) return 'no twelve-month section'
-  return ''
-}
 
 async function loadWeekItems(weekStart: Date): Promise<WeekItem[]> {
   const { data, error } = await supabase
@@ -214,26 +203,13 @@ export async function runAssemble(force = false) {
   // named belief is the roundup this brief exists to stop being), so a miss is
   // worth a second pass with the failure named. Two misses is a real fault and
   // throws: the cron surfaces it and POST re-assembles on demand.
-  let parsed: any = null
-  let shapeError = ''
-  for (let attempt = 0; attempt < 2 && !parsed; attempt++) {
-    const raw = await callClaude({
-      agent: 'briefs-assemble',
-      model: SYNTHESIS_MODEL,
-      // The weekly brief is the longest single piece this system writes and
-      // the most reasoned. Thinking on, with headroom above the 5000 the
-      // ANSWER needs, because adaptive thinking spends the ceiling first.
-      maxTokens: 12000,
-      think: true,
-      temperature: 0.4,
-      system: attempt === 0 ? system : `${system}\n\nYour last reply was rejected: ${shapeError}. Return the full JSON with every required field.`,
-      user,
-    })
-    const candidate = robustJson(raw)
-    shapeError = shapeFault(candidate)
-    if (!shapeError) parsed = candidate
-  }
-  if (!parsed) throw new Error(`assemble: model returned an unusable shape (${shapeError})`)
+  const { parsed } = await askForBrief(callClaude, {
+    agent: 'briefs-assemble',
+    model: SYNTHESIS_MODEL,
+    temperature: 0.4,
+    system,
+    user,
+  })
 
   // Ground-check: only keep headlines whose id resolves to a real story; take
   // the URL from OUR row, never the model's.
