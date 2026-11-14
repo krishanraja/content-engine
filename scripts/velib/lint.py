@@ -307,10 +307,17 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
                 continue
         # sound: one, on the big moment only (Krish, 29 Oct 2026, THE_BAR ruling 11: "Only the big moment"); every
         # other move is silent by default, so a move with no sound is no longer a finding. Binds pieces from 9 Nov.
+        # style.sound places one sound on every handover and every device hit (docs/ve/INGREDIENTS.md), so it counts
+        # here too: until Krish says in his words that ruling 11 changed, it cannot get round the one sound (audit ve-4).
         sounded = [e for b in beats for e in b['events'] if e.get('sfx')]
-        if len(sounded) > 1 and (spec.get('publish_day') or '') >= SOUND_FROM:
-            out.append(f'sound.one_moment {where}: {len(sounded)} moves carry a sound; one sound, on the big moment only '
-                       '(THE_BAR ruling 11)')
+        styled = (spec.get('style') or {}).get('sound')
+        styled = styled if isinstance(styled, dict) else {}
+        placed = (max(len(beats) - 1, 0) if styled.get('handover') else 0) + \
+            (sum(len(b['events']) for b in beats) if styled.get('hit') else 0)
+        if len(sounded) + placed > 1 and (spec.get('publish_day') or '') >= SOUND_FROM:
+            via = f' ({placed} placed by style.sound)' if placed else ''
+            out.append(f'sound.one_moment {where}: {len(sounded) + placed} moves carry a sound{via}; one sound, on the big '
+                       'moment only (THE_BAR ruling 11)')
         # dialogue
         if cut['aspect'] == '9:16' and cut['max_s'] > 89:
             out.append(f'dialogue.short_max {where}.max_s: a 9:16 short is 89 s or less')
