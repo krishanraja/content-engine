@@ -127,6 +127,36 @@ def main():
                        post=lambda url, headers, body: (calls.append(headers), (200, {'ok': True}))[1]) == 0
         assert calls == [] and len((root / tb.OUTBOX).read_text(encoding='utf-8').splitlines()) == 4
 
+    # Only the hook itself sends. A caller of main() that passes no post, a test above all, keeps the lines
+    # locally whatever the environment says, even in a cloud session whose proxy holds the key (I-33 follow-up,
+    # after invented test lines reached the real ledger on 14 Nov 2026).
+    import urllib.request
+    real_urlopen = urllib.request.urlopen
+
+    reached = []
+
+    def refuse(*_args, **_kwargs):
+        reached.append(1)
+        raise AssertionError('main() without post reached the network')
+
+    urllib.request.urlopen = refuse
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            transcript = root / 't.jsonl'
+            transcript.write_text('\n'.join(rows) + '\n', encoding='utf-8')
+            hook = json.dumps({'transcript_path': str(transcript), 'session_id': 'session_cloud'})
+            said = []
+            env = {'CLAUDE_CODE_REMOTE': 'true', 'TASTE_BACKSTOP_TOKEN': 'fixture-key'}
+            assert tb.main([], stdin=io.StringIO(hook), root=root, out=said.append, env=env) == 0
+            assert len((root / tb.OUTBOX).read_text(encoding='utf-8').splitlines()) == 4
+            assert 'nothing sent' in said[0], said
+            assert reached == [], 'main() without post never tries the network'
+    finally:
+        urllib.request.urlopen = real_urlopen
+    src = (Path(__file__).resolve().parents[1] / 'scripts' / 'taste_backstop.py').read_text(encoding='utf-8')
+    assert "sys.exit(main(post=http_post))" in src, 'only the hook entry point sends'
+
     assert tb.kind_of('I hate that font') == 'rejection'
     assert tb.kind_of('That is wrong, use the other one instead') == 'correction'
 
