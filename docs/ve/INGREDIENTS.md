@@ -233,8 +233,9 @@ Krish, 14 Nov 2026: "dispatch the cards, including the sound effects".
   Handovers sit at -14 dB and hits at -12 dB, under his voice. The Codex card is `ve-gap-handover-sfx-1`.
 - **Only approved sounds play.** Every id must be an approved row in `config/sfx-approved.json`, written only from his
   press on the Sound effects card or his own words. Until then `style.sound` is refused by name.
-- **The shortlist for his ear** is `config/ve/sfx-candidates.json`: four handover whooshes and three hits from his
-  Epidemic Sound plan, short and dry, each with Epidemic's preview link.
+- **The shortlist for his ear** is the one shortlist, `config/sfx-candidates.json` (the file `ve sfx` reads), each
+  row with its `role`: `big_moment` (the one sound on the big moment), `handover` (four whooshes) or `hit` (three),
+  from his Epidemic Sound plan, short and dry, each with Epidemic's preview link.
 
 ## Pace is measured, not judged from stills
 
