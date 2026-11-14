@@ -1,7 +1,8 @@
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, describe, expect, it } from 'vitest'
-import { setMotionProfile } from '../../clock'
+import manifest from '../../../../../../config/ve/devices.json'
+import { MOTION, setMotionProfile } from '../../clock'
 import { fitBox, fitScale } from '../../fit'
 import { markRegion, MAX_GROW } from '../../kit/layout'
 import { resolveMotion } from '../../kit/motionProfiles'
@@ -26,6 +27,7 @@ afterEach(() => setMotionProfile(undefined))
 describe('receipt_print', () => {
   it('registers the device and authors five sourced lines over one beat', () => {
     expect(DEVICES.receipt_print).toBe(Device)
+    expect(manifest.devices.receipt_print.verbs).toEqual(['enter', 'add', 'fill', 'highlight', 'count_to', 'stamp', 'exit'])
     expect(EngineBeatSchema.parse(fixture.beats[0]).uses).toEqual([object.obj])
     expect(at(100).lines.filter(line => line.printed)).toHaveLength(5)
     expect(still(100)).toContain(object.dataset!.producerLabel)
@@ -50,7 +52,7 @@ describe('receipt_print', () => {
   })
 
   it('prints precisely one line per cue, with a three-frame jolt and visible doubled ink', () => {
-    for (const cue of events.filter(event => event.verb === 'add')) {
+    for (const cue of events.filter(event => event.verb === 'add' || event.verb === 'fill')) {
       const lineAt = (frame: number) => at(frame).lines.find(line => line.key === cue.toState)!
       expect(lineAt(cue.atFrame - 1)).toMatchObject({ printed: false, opacity: 0 })
       expect(lineAt(cue.atFrame)).toMatchObject({ printed: true, opacity: 0.25 })
@@ -69,6 +71,90 @@ describe('receipt_print', () => {
     expect(still(30)).toContain('data-figure-fill=""')
     expect(still(30)).toContain('fill="aquamarine"')
     expect(at(54).lines.filter(line => line.printed)).toHaveLength(3)
+  })
+
+  it('treats fill and add as the same idempotent print cue, including jolt and ghost', () => {
+    const filled = events.map(event => event.verb === 'add' ? { ...event, verb: 'fill' as const } : event)
+    for (const frame of [29, 30, 31, 32, 33, 42, 78, 100]) {
+      expect(renderToStaticMarkup(React.createElement(Device, { ...props(frame), events: filled }))).toBe(still(frame))
+    }
+    const duplicate = { ...events[1]!, id: 'fill-again', verb: 'fill' as const, atFrame: 105 }
+    expect(receiptState(object, [...events, duplicate], 106)).toEqual(at(106))
+  })
+
+  it('counts a sourced total from zero to its target over the house frames with mono type and provenance', () => {
+    expect(at(101).total).toBeUndefined()
+    expect(still(101)).not.toContain('data-receipt-total')
+    expect(at(102).total).toMatchObject({ value: 0, target: 320, figure: '0 USD' })
+    expect(at(102 + MOTION.countFrames / 2).total!.value).toBe(160)
+    let previous = 0
+    for (let frame = 102; frame <= 102 + MOTION.countFrames; frame++) {
+      const state = at(frame)
+      expect(state.total!.value).toBeGreaterThanOrEqual(previous)
+      expect(state.total!.value).toBeLessThanOrEqual(320)
+      previous = state.total!.value
+      const html = still(frame)
+      expect(html).toContain('data-receipt-total=""')
+      expect(html).toContain(state.producerLabel)
+      expect(html).toContain('MYMU Plex Mono')
+      expect(receiptLayout(state, '9:16')).toEqual(receiptLayout(at(101), '9:16'))
+    }
+    expect(at(120).total!.figure).toBe('320 USD')
+    const divided = { ...object, dataset: { ...object.dataset!, denominator: 500 } }
+    expect(receiptState(divided, events, 120).total!.figure).toBe('320/500 USD')
+    for (const toState of ['320', 'Total']) {
+      expect(receiptState(object, events.map(event => event.verb === 'count_to' ? { ...event, toState } : event), 120).total!.value).toBe(320)
+    }
+    expect(receiptState(object, events.map(event => event.verb === 'count_to' ? { ...event, toState: 'licence' } : event), 120).total!.value).toBe(120)
+    expect(() => receiptState(object, events.map(event => event.verb === 'count_to' ? { ...event, toState: '999' } : event), 120)).toThrow(/dataset value/)
+  })
+
+  it('seeks interrupted counts deterministically and reads count timing from the active profile', () => {
+    const next = { ...events[7]!, id: 'count-again', atFrame: 111, toState: 'Licence' }
+    const interrupted = [...events, next]
+    expect(receiptState(object, interrupted, 111).total!.value).toBe(160)
+    expect(receiptState(object, interrupted, 129).total!.value).toBe(120)
+    expect(receiptState(object, interrupted.reverse(), 115)).toEqual(receiptState(object, [...events, next], 115))
+    const profile = resolveMotion({ style: 'character-ai-receipts' })!
+    setMotionProfile({ ...profile, countFrames: 10, exitFrames: 4 })
+    expect(at(107).total!.value).toBe(160)
+    expect(at(112).total!.value).toBe(320)
+    expect(at(143).visible).toBe(true)
+    expect(at(144).visible).toBe(false)
+  })
+
+  it('lands a rotated channel-colour VOID or custom stamp and holds it in both aspects', () => {
+    expect(at(123).stamped).toBe(false)
+    expect(still(123)).not.toContain('data-receipt-stamp')
+    expect(at(124)).toMatchObject({ stamped: true, stampProgress: 0 })
+    expect(at(124 + MOTION.slapFrames).stampProgress).toBe(1)
+    for (const aspect of ['9:16', '16:9'] as const) {
+      const html = renderToStaticMarkup(React.createElement(Device, props(130, aspect)))
+      expect(html).toContain('data-receipt-stamp=""')
+      expect(html).toContain('rotate(-8) scale(1)')
+      expect(html).toContain('fill="coral" stroke="coral"')
+      expect(html).toContain('>VOID</text>')
+      const custom = { ...object, params: { ...object.params, stampText: 'CANCELLED' } }
+      expect(renderToStaticMarkup(React.createElement(Device, { ...props(130, aspect), object: custom }))).toContain('>CANCELLED</text>')
+    }
+  })
+
+  it('fades and drops over the house exit frames, then can enter again', () => {
+    expect(at(139)).toMatchObject({ visible: true, y: 0, opacity: 1 })
+    expect(at(140)).toMatchObject({ visible: true, y: 0, opacity: 1 })
+    let y = 0, opacity = 1
+    for (let frame = 141; frame < 140 + MOTION.exitFrames; frame++) {
+      const state = at(frame)
+      expect(state.visible).toBe(true)
+      expect(state.y).toBeGreaterThan(y)
+      expect(state.opacity).toBeLessThan(opacity)
+      expect(still(frame)).toContain('data-current-layout')
+      y = state.y; opacity = state.opacity
+    }
+    expect(at(140 + MOTION.exitFrames)).toMatchObject({ visible: false, y: 250, opacity: 0 })
+    expect(still(140 + MOTION.exitFrames)).toBe('')
+    const reenter = { ...events[0]!, id: 'reenter', atFrame: 147 }
+    expect(receiptState(object, [...events, reenter], 147)).toMatchObject({ visible: true, y: 250, opacity: 0.4 })
   })
 
   it('dissolves a highlight for eight frames and never reprints a line', () => {
