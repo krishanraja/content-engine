@@ -172,6 +172,40 @@ Krish's; his words are in the commits and in `docs/ve/STATUS.md`.
   `GET /api/publish/catalogue` serves them to the site (which takes each article's cover from Substack itself). Nothing in ve publishes; a session never edits the site's
   copy of a video by hand.
 
+## Phase 3: when ve replaces quick-edit (Ruling, Krish, 2026-11-14)
+
+Ruling (Krish, 2026-11-14): the video engine's Phase 3 pass criteria, approved as written in
+`docs/proposals/2026-11-14-phase3-and-chain-cap.md` (his words: "I agree with everything else until Batch 6").
+Quick-edit stays the fallback until ve passes this test, and no longer.
+
+ve passes Phase 3 when **three consecutive series cuts** (any of Monday, Wednesday or Friday; each long cut and each
+short cut counts as one) each meet all five:
+
+1. **Made on ve end to end.** Built from one signed `creative-direction.json` (`schema_version: 2`), with no quick-edit
+   step and no hand-built composition, and filed with `ve file`.
+2. **His Approve cut press** is on that cut's exact bytes. The Critic's verdict alone never counts.
+3. **Pace inside his house band.** `ve pace` puts the cut inside the band in `config/ve/pace-references.json` for its
+   shape.
+4. **Clean `ve qc`, nothing beneath the floor.** No refusal from `ve qc`, nothing beneath
+   `python3 scripts/floor.py --format long_video` (or `short_video`), and none of his standing nevers.
+5. **Heard and watched.** The non-producer review (`ve-critic`) watched it at full size and heard it against its script
+   (`config/failures.json`, `cut-called-done-unheard`).
+
+And, approved with them:
+
+- **Rounds.** Each cut reaches his Approve within two full-cut rounds (`ve packet`'s round count); a third round resets
+  the count.
+- **No quick-edit rescue.** A cut that reached him and was then re-made on quick-edit does not count.
+- **Pace as a watch, not a refusal.** A cut below every kept reference on both events per second and active frame is
+  watched side by side with the slowest reference before it reaches his board; it is never refused on the number alone
+  (THE_BAR). The pace line it uses prints in `ve styles`, `ve lab render` and `ve packet` (`pace.beside_references`).
+  It still does not count toward the three until its pace is inside the band (criterion 3).
+
+If any cut fails, the count goes back to zero. Once ve passes, quick-edit stays only as a read-only fallback for one more
+week, then is retired by his word. The count is kept in `docs/ve/STATUS.md` ("Phase 3 count"), each counted cut named
+with its piece, shape, file SHA-256 and the evidence for all five; nothing counts a cut by itself today, so the session
+that files a series cut on ve updates it.
+
 ## Rules
 
 - Captions always on (schema); colour roles only, never hex.
