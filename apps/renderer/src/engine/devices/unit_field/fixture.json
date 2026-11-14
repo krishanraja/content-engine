@@ -1,0 +1,90 @@
+{
+  "objects": [
+    {
+      "obj": "units",
+      "device": "unit_field",
+      "meaning": "Stable units, seven lost, then 43% growth of the surviving field",
+      "params": {
+        "initialRow": "initial",
+        "columns": 5,
+        "mark": "dot"
+      },
+      "dataset": {
+        "unit": "units",
+        "denominator": 20,
+        "producerLabel": "FIXTURE STUDY \u00b7 2026-11-13",
+        "rows": [
+          {
+            "label": "initial",
+            "value": 20
+          },
+          {
+            "label": "lost",
+            "value": 7
+          },
+          {
+            "label": "growth",
+            "value": 1.43
+          },
+          {
+            "label": "soft",
+            "value": 3
+          }
+        ]
+      },
+      "fromFrame": 0,
+      "toFrame": 240
+    }
+  ],
+  "events": [
+    {
+      "id": "show",
+      "obj": "units",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 0
+    },
+    {
+      "id": "loss",
+      "obj": "units",
+      "verb": "drop",
+      "toState": "lost",
+      "atFrame": 30
+    },
+    {
+      "id": "copy",
+      "obj": "units",
+      "verb": "multiply",
+      "toState": "growth",
+      "atFrame": 70
+    },
+    {
+      "id": "grey",
+      "obj": "units",
+      "verb": "grey",
+      "toState": "soft",
+      "atFrame": 120
+    },
+    {
+      "id": "hide",
+      "obj": "units",
+      "verb": "exit",
+      "toState": "hidden",
+      "atFrame": 200
+    }
+  ],
+  "stills": [
+    0,
+    30,
+    35,
+    40,
+    70,
+    72,
+    90,
+    100,
+    125,
+    140,
+    205,
+    210
+  ]
+}
