@@ -1,3 +1,0 @@
-Status: AEO's context now names Krish's own sites (krishraja.ai, krishraja.com, themindmaker.ai) and the not-ours list (fractionl.us), and gives each venture subject its brand names, its brand-accuracy checks and whether its growth engine is held; probes from an off-week verify run are left out of its four weeks of history, and an empty packet_features list keeps every packet the v1 shape.
-Next: accept and store AEO's new packet fields (probe detail, panel, kits, cited pages, Gemini, verify runs) and list them in packet_features before the 22 November research run.
-North Star check (2026-11-14): holds.
