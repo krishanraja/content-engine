@@ -2,11 +2,12 @@ import assert from 'node:assert/strict'
 import { test } from 'vitest'
 import {
   EDITORIAL_AEO_SUBJECTS, KRISH_DOMAINS, MAX_IDEAS_PER_SUBJECT, NOT_OURS, PACKET_FEATURES, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef,
-  brandChecksOf, brandNamesOf, heldProducts, isEditorialAeoSubject, probeRows, queryRows, validatePacket,
+  brandChecksOf, brandNamesOf, citedPageRows, heldProducts, isEditorialAeoSubject, probeRows, queryRows, validatePacket,
   type AeoPacket,
 } from '../../apps/control-plane/api/_aeo.ts'
 import { CONTENT_ENGINE_JOBS, contentEngineAttention } from '../../apps/control-plane/lib/contentEngineSchedule.ts'
 import { LANE_SLUG, PRODUCT_SLUGS } from '../../apps/control-plane/api/_growth.ts'
+import { readFileSync } from 'node:fs'
 
 // The AEO engine's landing, the pure half: the packet contract, the row the
 // content spine receives, and the schedule row that says when the machine
@@ -216,8 +217,87 @@ test("Krish's own sites are his, and fractionl.us is never ours (Ruling, Krish, 
   assert.ok(!KRISH_DOMAINS.some(d => NOT_OURS.includes(d)))
 })
 
-test('no optional packet field is listed until the ingest stores it', () => {
-  assert.deepEqual([...PACKET_FEATURES], [])
+test('every optional packet field AEO-Engine knows is listed, and each is stored', () => {
+  assert.deepEqual([...PACKET_FEATURES].sort(), ['cited_pages', 'diagnosis', 'engine_gemini', 'kits', 'name_mentions', 'outcome', 'panel', 'probe_detail', 'run_kind', 'samples', 'site'])
+})
+
+// The contract with AEO-Engine: its own packets, copied from its
+// tests/fixtures/expected (the plain v1 packet and the one with every feature
+// on), must validate here unchanged.
+const fixture = (name: string) => JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8')) as AeoPacket
+
+test("AEO-Engine's plain packet and its full-feature packet both validate, and the gated fields reach the rows", () => {
+  const plain = validatePacket(fixture('aeo-packet.v1.json'))
+  assert.equal(plain.ok, true, plain.ok ? '' : plain.errors.join('; '))
+  const full = validatePacket(fixture('aeo-packet.features.json'))
+  assert.equal(full.ok, true, full.ok ? '' : full.errors.join('; '))
+  if (!full.ok) return
+  const probes = probeRows(full.packet)
+  assert.ok(probes.length > 0)
+  assert.ok(probes.every(r => r.run_kind === 'research'))
+  assert.ok(probes.some(r => Array.isArray(r.retrieved) && typeof r.searched === 'boolean'))
+  const queries = queryRows(full.packet)
+  assert.ok(queries.some(q => q.panel && q.diagnosis))
+  assert.equal(full.packet.kits!.length, 10)
+  // A plain packet writes nulls where the new columns are, so it lands exactly as before.
+  if (plain.ok) {
+    const r = probeRows(plain.packet)[0]
+    assert.equal(r.retrieved, null)
+    assert.equal(r.run_kind, 'research')
+    assert.equal(queryRows(plain.packet)[0].panel, null)
+  }
+})
+
+test('a gated field in the wrong shape is refused with its path, and kits and sheets belong to a venture', () => {
+  const p = fixture('aeo-packet.features.json')
+  const badPanel = structuredClone(p)
+  ;(badPanel.queries[0] as unknown as Record<string, unknown>).panel = { state: 'winning' }
+  const r1 = validatePacket(badPanel)
+  assert.equal(r1.ok, false)
+  if (!r1.ok) assert.ok(r1.errors.some(e => e.startsWith('packet.queries[0].panel')), r1.errors.join('; '))
+  const badKit = structuredClone(p)
+  ;(badKit.kits![0] as Record<string, unknown>).query_id = '99999999-9999-4999-8999-999999999999'
+  const r2 = validatePacket(badKit)
+  assert.equal(r2.ok, false)
+  if (!r2.ok) assert.ok(r2.errors.some(e => /kits\[0\]\.query_id/.test(e)))
+  const extraField = structuredClone(p)
+  ;(extraField.cited_pages![0] as unknown as Record<string, unknown>).contact = 'someone'
+  assert.equal(validatePacket(extraField).ok, false)
+  const tooMany = structuredClone(p)
+  tooMany.queries[0].probes[0].fan_out = Array.from({ length: 9 }, (_, i) => `search ${i}`)
+  assert.equal(validatePacket(tooMany).ok, false)
+})
+
+test('gemini is a fifth engine', () => {
+  const p = packet({ engines: ['perplexity', 'chatgpt', 'claude', 'grok', 'gemini'] })
+  p.queries[0].probes.push({ engine: 'gemini', model: 'gemini-3.6-flash', question: 'best AI decision tools for founders', answer_snapshot: 'An answer.', we_cited: false, citations: [], cost_usd: 0 })
+  assert.equal(validatePacket(p).ok, true)
+})
+
+test('a verify packet writes verify probes; the sheet keeps an unchecked mention and marks a mention acquired', () => {
+  const v = validatePacket(fixture('aeo-packet.features.json'))
+  assert.equal(v.ok, true)
+  if (!v.ok) return
+  const verify = { ...v.packet, run_kind: 'verify' as const }
+  assert.ok(probeRows(verify).every(r => r.run_kind === 'verify'))
+
+  const pages = v.packet.cited_pages!
+  const [a, b] = pages
+  const sent = { ...v.packet, cited_pages: [{ ...a, mention: 'unchecked' as const, mention_ok: null, checked_at: null }, { ...b, mention: 'link' as const, mention_ok: true, checked_at: '2026-11-22' }] }
+  const rows = citedPageRows(sent, [
+    { url: a.url, mention: 'name', mention_ok: true, checked_at: '2026-11-08' },
+    { url: b.url, mention: 'none', mention_ok: null, checked_at: '2026-11-08' },
+  ])
+  assert.equal(rows[0].mention, 'name')
+  assert.equal(rows[0].checked_at, '2026-11-08')
+  assert.equal(rows[0].status, undefined)
+  assert.equal(rows[1].mention, 'link')
+  assert.equal(rows[1].status, 'mention acquired')
+  assert.ok(rows.every(r => r.product_slug === 'ctrl' && r.last_run_id === v.packet.run_id))
+  // Without a stored sheet nothing is said to have been acquired.
+  assert.ok(citedPageRows(sent, []).every(r => r.status === undefined))
+  // A prospect never has a sheet.
+  assert.deepEqual(citedPageRows({ ...sent, subject: { ...sent.subject, kind: 'prospect', product_slug: null } }, []), [])
 })
 
 test('brand names and brand checks are read loosely and capped; a check with nothing to test is dropped', () => {
