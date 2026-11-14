@@ -122,5 +122,17 @@ class SfxTest(unittest.TestCase):
             sfx.local_file(sfx.candidates(self.candidates)['low-thud'])
 
 
+
+class OneShortlist(unittest.TestCase):
+    def test_every_sound_candidate_lives_in_the_one_file_ve_reads(self):
+        # Fleet audit 14 Nov (ve-4): a second shortlist (config/ve/sfx-candidates.json) was read by nothing.
+        found = [p.relative_to(ROOT).as_posix() for p in ROOT.joinpath('config').rglob('*sfx-candidates*.json')]
+        self.assertEqual(found, ['config/sfx-candidates.json'])
+        rows = sfx.candidates()
+        self.assertTrue({'big_moment', 'handover', 'hit'} <= {r.get('role') for r in rows.values()})
+        self.assertEqual(len({r['provider_id'] for r in rows.values()}), len(rows))
+        self.assertTrue(all(r.get('file') is None and r.get('sha256') is None for r in rows.values() if r.get('role') != 'big_moment'))
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=1)
