@@ -171,6 +171,14 @@ export function perplexityUsd(model: string, usage: unknown): number {
   return (Number(u.prompt_tokens) || 0) / 1e6 * p.in + (Number(u.completion_tokens) || 0) / 1e6 * p.out + p.request
 }
 
+/**
+ * Anthropic's hosted web search, USD per search request, billed beside the
+ * tokens: $10 per 1,000 searches (Anthropic's published price, "Introducing
+ * web search on the Anthropic API", claude.com). Only an API call pays it; a
+ * call on a subscription does not.
+ */
+export const ANTHROPIC_WEB_SEARCH_USD = 0.01
+
 /** OpenAI embedding models, USD per 1M input tokens. */
 export const OPENAI_EMBEDDING_PRICES: Record<string, number> = {
   'text-embedding-3-small': 0.02,

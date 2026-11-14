@@ -739,6 +739,16 @@ export const PACKET_FEATURES: readonly string[] = [
   'probe_detail', 'name_mentions', 'samples', 'panel', 'diagnosis', 'kits', 'site', 'run_kind', 'engine_gemini', 'outcome', 'cited_pages',
 ]
 
+/**
+ * Context features that are not packet fields, served in the same
+ * `packet_features` list because AEO-Engine reads that one list:
+ *
+ *   meter_billing  POST /api/aeo/meter reads provider, billing, input_tokens,
+ *                  output_tokens and search_calls (AEO brief, section F), so the
+ *                  engine posts its subscription and non-Anthropic rows.
+ */
+export const CONTEXT_FEATURES: readonly string[] = ['meter_billing']
+
 /** A subject's brand-accuracy check (brief, B6): an answer must not say any of must_not and must say every must. */
 export interface BrandCheck { question: string; must_not: string[]; must: string[] }
 
