@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { createHash, timingSafeEqual } from 'node:crypto'
+import { accessCookieValid } from './_accessCookie.js'
 
 // Access gate for the routes that serve private judgments about named people.
 //
@@ -101,9 +102,7 @@ export function guardBearerExport(
 export function hasAccess(req: VercelRequest): boolean {
   const code = process.env.ACCESS_CODE
   if (!code) return true
-  const expected = createHash('sha256').update(code).digest('hex')
-  const got = parseCookies(req.headers.cookie)[COOKIE] || ''
-  return safeEqual(got, expected)
+  return accessCookieValid(parseCookies(req.headers.cookie)[COOKIE] || '', code)
 }
 
 /** Standard header block for the gated routes.
@@ -157,9 +156,7 @@ export function guardSensitiveRead(req: VercelRequest, res: VercelResponse, meth
     return true
   }
   const accessCode = process.env.ACCESS_CODE || ''
-  const expectedCookie = accessCode ? createHash('sha256').update(accessCode).digest('hex') : ''
-  const suppliedCookie = parseCookies(req.headers.cookie)[COOKIE] || ''
-  const browserAllowed = Boolean(expectedCookie) && safeEqual(suppliedCookie, expectedCookie)
+  const browserAllowed = accessCookieValid(parseCookies(req.headers.cookie)[COOKIE] || '', accessCode)
   const exportToken = process.env.VIDEO_STUDIO_EXPORT_TOKEN || ''
   const authorization = req.headers.authorization || ''
   const bearerAllowed = Boolean(exportToken) && safeEqual(authorization, `Bearer ${exportToken}`)
@@ -200,9 +197,7 @@ export function guardOperatorOrCron(req: VercelRequest, res: VercelResponse, met
     return true
   }
   const accessCode = process.env.ACCESS_CODE || ''
-  const expectedCookie = accessCode ? createHash('sha256').update(accessCode).digest('hex') : ''
-  const suppliedCookie = parseCookies(req.headers.cookie)[COOKIE] || ''
-  const browserAllowed = Boolean(expectedCookie) && safeEqual(suppliedCookie, expectedCookie)
+  const browserAllowed = accessCookieValid(parseCookies(req.headers.cookie)[COOKIE] || '', accessCode)
 
   const cronSecret = process.env.CRON_SECRET || ''
   const authorization = req.headers.authorization || ''
@@ -250,9 +245,7 @@ export function guardEngine(req: VercelRequest, res: VercelResponse, methods = [
  *  no credential; see that file). Everything else calls `guardEngine`. */
 export function hasEngineAccess(req: VercelRequest): boolean {
   const accessCode = process.env.ACCESS_CODE || ''
-  const expectedCookie = accessCode ? createHash('sha256').update(accessCode).digest('hex') : ''
-  const suppliedCookie = parseCookies(req.headers.cookie)[COOKIE] || ''
-  const browserAllowed = Boolean(expectedCookie) && safeEqual(suppliedCookie, expectedCookie)
+  const browserAllowed = accessCookieValid(parseCookies(req.headers.cookie)[COOKIE] || '', accessCode)
 
   return browserAllowed || operatorBearerAllowed(req)
 }
