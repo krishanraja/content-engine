@@ -6,6 +6,8 @@
   python scripts/ve.py lint <spec.json>              schema + crew lints (blocks a render)
   python scripts/ve.py qc <cut.mp4> --format <id> [--out qc.json]
   python scripts/ve.py study <reference.mp4>         grammar card: cuts, change density, stills, loops
+  python scripts/ve.py pace <cut.mp4> [--out pace.json]   events a second, energy and frame use, beside his references
+  python scripts/ve.py pace --refs [--dir .cache/references]   re-measure the references into config/ve/pace-references.json
   python scripts/ve.py card <card.json>              write a Codex task card from its fields
   python scripts/ve.py dispatch <card.md> [--wait]   send it to Codex (pinned model and effort)
   python scripts/ve.py verify-card <card.md> --cwd <worktree>
@@ -30,6 +32,7 @@
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
   python scripts/ve.py lock draft|check|show|freeze  design locks (only Krish's Gate 2 freezes one)
   python scripts/ve.py golden show|check|fill        interim golden frames he names
+  python scripts/ve.py signoff check|stills|gate2|add|apply   the three sign-offs as review cards on his board
   python scripts/ve.py expect <spec>                 expect.md: at most six lines of what this cut will and won't do
   python scripts/ve.py styles <spec> [--cut <cut>] [--top 3]   the shortlisted motion styles on his take, for his pick
   python scripts/ve.py proof <spec> --cut <cut>      the hardest beat, moving, from his take; a whole cut waits for it
@@ -304,14 +307,13 @@ def _gate_inputs(args) -> dict:
 
 
 def cmd_qc(args) -> int:
-    from velib.qc import inputs_from_props, lead_frames, run_qc
+    from velib.qc import inputs_from_props, run_qc, to_file_s
     props = load_json(args.props) if getattr(args, 'props', None) else None
     inputs = inputs_from_props(props) if props is not None else {}
     if getattr(args, 'edl', None):
         # The conformed take is one picture segment: its joins come from the EDL ve conform wrote, on the cut's own
-        # clock. In the file they fall the intro sting's frames later on a cut that opens on it (velib.qc.lead_frames).
-        lead_s = lead_frames(props) / float((props or {}).get('fps') or 30)
-        inputs['joins'] = [join['at_s'] + lead_s for join in load_json(args.edl).get('joins', [])]
+        # clock. In the file a join after the sting falls its frames later (velib.qc.to_file_s).
+        inputs['joins'] = [to_file_s(join['at_s'], props) for join in load_json(args.edl).get('joins', [])]
     if props is not None and props.get('aspect') == '9:16':
         inputs['composition_props'] = props
     inputs.update(_gate_inputs(args))
@@ -388,6 +390,52 @@ def cmd_keyframes(args) -> int:
         return 1
 
 
+def cmd_pace(args) -> int:
+    """How fast a cut moves and how much of the frame it uses, beside the references he keeps (velib.pace)."""
+    from velib import pace
+    table = ROOT / 'config' / 've' / 'pace-references.json'
+    try:
+        if args.refs:
+            folder = Path(args.dir)
+            names = [r['file'] for r in json.loads((ROOT / 'config' / 'style-references.json').read_text(encoding='utf-8'))['references']
+                     if str(r.get('file', '')).endswith('.mp4')]
+            rows = []
+            for name in names:
+                if not (folder / name).is_file():
+                    print(f've pace: {name} is not in {folder} (references.py fetch)')
+                    continue
+                card = pace.measure(folder / name)
+                card['file'] = name
+                card.pop('event_times_s', None)
+                card.pop('note', None)
+                rows.append(card)
+                print(f"ve pace: {name}: {card['events_per_s']}/s, longest gap {card['longest_gap_s']} s, used {card['used_frame']}, active {card['active_frame']}")
+            kept = json.loads(table.read_text(encoding='utf-8')) if table.is_file() else {}
+            pace.write({'schema': 've-pace-references/1', 'note': pace.NOTE, 'grid': [pace.GRID_W, pace.GRID_H, pace.SAMPLE_FPS],
+                        'references': rows, **{k: kept[k] for k in ('house', 'house_note') if k in kept}}, table)
+            print(f've pace: {len(rows)} references -> {table}')
+            return 0
+        if not args.video:
+            print('ve pace: give a cut, or --refs', file=sys.stderr)
+            return 2
+        card = pace.measure(args.video, args.seconds)
+        loaded = json.loads(table.read_text(encoding='utf-8'))
+        refs = loaded['references'] + loaded.get('house', [])
+        verdict = pace.compare(card, refs)
+        card['against_references'] = verdict
+        out = Path(args.out) if args.out else Path(args.video).with_suffix('.pace.json')
+        pace.write(card, out)
+        for key, row in verdict['rows'].items():
+            flag = '  BELOW EVERY REFERENCE' if row['below_all'] else ''
+            print(f"ve pace: {key:14} {row['cut']:>6}   refs {row['ref_min']} .. {row['ref_median']} .. {row['ref_max']}{flag}")
+        print(f've pace: {pace.NOTE}')
+        print(f've pace: -> {out}')
+        return 0
+    except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
+        print(f've pace: {error}', file=sys.stderr)
+        return 1
+
+
 def cmd_study(args) -> int:
     """A reference's grammar card: cuts, motion, shots and pace, zooms, loudness and words a minute (velib.study)."""
     from velib import study
@@ -401,10 +449,11 @@ def cmd_study(args) -> int:
 
 
 def cmd_card(args) -> int:
-    from velib.cards import write_card
+    from velib.cards import _require_design_lock, write_card
     from velib.common import card_worktree
     fields = load_json(args.fields)
     out = Path(fields.pop('path'))
+    _require_design_lock(fields)  # a card with no frozen lock is refused before anything else is resolved
     fields.setdefault('cwd', card_worktree(fields['card_id']))  # the local layout's worktree, never a typed path (W2.11)
     print(f've card: wrote {write_card(out, **fields)}')
     return 0
@@ -429,9 +478,6 @@ def cmd_sprint(args) -> int:
         for e in s['entries']:
             gate = f"Gate 2 yes {e['gate2']['at']}" if e.get('gate2') else ('built, awaiting Gate 2' if e['built'] else 'carded')
             print(f"  {e['week']}  {e['device']:<24} {e['aim']:<15} {gate}")
-    elif args.action == 'feed':
-        data = sprint.feed(Path(args.archive) if args.archive else None, Path(args.out))
-        print(f"ve sprint: wrote {args.out} ({len(data['rows'])} Archive rows, {data['devices']['count']} devices)")
     return 0
 
 
@@ -1110,7 +1156,10 @@ def cmd_golden(args) -> int:
             doc = golden.load()
         state = golden.status(doc)
         for slot in doc['slots']:
-            print(f"{slot['slot']:4} " + (f"{slot['reference']} at {slot['at']}: \"{slot['said']}\"" if slot.get('status') == 'named' else 'empty'))
+            named = slot.get('status') == 'named'
+            source = (slot.get('reference') or f"{slot.get('piece') or slot.get('piece_id')} ({slot.get('cut')} cut)") if named else ''
+            said = f": \"{slot['said']}\"" if slot.get('said') else ' (his Approve on his board)' if slot.get('press') else ''
+            print(f"{slot['slot']:4} " + (f"{source} at {slot['at']}{said}" if named else 'empty'))
         print(f"named {state['named']} of {state['min']} to {state['max']}; " +
               ('ready' if state['ready'] else f"waiting on Krish: {doc['fill']}"))
         moments = golden.interim(doc)
@@ -1118,6 +1167,64 @@ def cmd_golden(args) -> int:
         return 1 if args.action == 'check' and not state['ready'] else 0
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f've golden: {error}', file=sys.stderr)
+        return 1
+
+
+def signoffs_seconds(text: str) -> float:
+    from velib import golden
+    return golden.seconds(text)
+
+
+def cmd_signoff(args) -> int:
+    """The three video sign-offs as review cards on his Publish Board (Ruling, Krish, 2026-11-12): a session makes the
+    samples (stills, gate2) and records each one filed in Drive (add); only his presses write the configs (apply)."""
+    from velib import signoffs
+    try:
+        if args.action == 'check':
+            problems = signoffs.validate(signoffs.load())
+            print('\n'.join(problems) if problems else 've signoff: the manifest keeps its shape')
+            return 1 if problems else 0
+        if args.action == 'stills':
+            found = signoffs.making_cut(args.piece, args.cut) if not args.path else {'path': args.path}
+            out = Path(args.out)
+            video = signoffs.library_fetch(found['path'], out / f'{args.piece[:8]}-{args.cut}.mp4', args.sha256)
+            at = [signoffs_seconds(x) for x in args.at.split(',')] if args.at else None
+            rows = signoffs.stills_for_cut(video, out, f'{args.piece[:8]}-{args.cut}', args.count, at)
+            sheet = signoffs.contact_sheet([Path(r['file']) for r in rows], out / f'{args.piece[:8]}-{args.cut}-sheet.jpg',
+                                           [r['at'] for r in rows])
+            from velib.common import sha256_file
+            write_json(out / f'{args.piece[:8]}-{args.cut}.json', {'piece_id': args.piece, 'cut': args.cut, 'path': found['path'],
+                                                                     'cut_sha256': sha256_file(video), 'stills': rows})
+            if not args.keep:
+                video.unlink()
+            print(f've signoff: {len(rows)} candidate frames from the {args.cut} cut; one look: {sheet}')
+            return 0
+        if args.action == 'gate2':
+            from velib import designlock
+            lock = designlock.load()
+            entry = lock.get('drafts', {}).get(signoffs.GATE2_LOCK) or lock['formats'].get(signoffs.GATE2_LOCK)
+            props = load_json(args.props)
+            frames = signoffs.key_frames(props, entry['beats'])
+            stills = signoffs.render_stills(Path(args.props), Path(args.out), frames)
+            strip = signoffs.strip(stills, Path(args.out) / 'strip.jpg')
+            for beat, path in stills.items():
+                print(f've signoff: {beat} at frame {frames[beat]}: {path}')
+            print(f've signoff: the four stills side by side: {strip}')
+            return 0
+        if args.action == 'add':
+            item = json.loads(Path(args.item).read_text(encoding='utf-8'))
+            row = signoffs.add_item(args.card, item, Path(args.file))
+            print(f"ve signoff: {args.card} {row['id']} recorded ({row['sha256'][:12]})")
+            return 0
+        # apply: his presses, read from the engine, written into the configs through their own writers
+        doc = signoffs.load()
+        presses = json.loads(Path(args.presses).read_text(encoding='utf-8'))['presses'] if args.presses else signoffs.engine_presses()
+        done = signoffs.apply(doc, signoffs.answers_of(presses), signoffs.engine_fetch_file, work=Path(args.work),
+                              file_sound=signoffs.engine_file_sound)
+        print('\n'.join(done) if done else 've signoff: nothing new to write')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've signoff: {error}', file=sys.stderr)
         return 1
 
 
@@ -1324,16 +1431,27 @@ def cmd_premix(args) -> int:
         words = load_json(args.words)
         words = words['words'] if isinstance(words, dict) else words
         start_s = 0.0  # dialogue.<cut>.wav is already conformed to the cut's clock
-        # A cut that opens on the intro sting (props.sting, set by ve compile) carries its frames in front of the cut's
-        # own clock: the stem starts on the sting's first frame, so his voice, his first and last word and every lift
-        # move by exactly those frames, and the stem runs the sting plus the cut. The sting's length comes from the
-        # props only, never a flag.
+        # A cut that carries the series sting (props.sting, set by ve compile) has its frames in the stem where it plays:
+        # straight after the hook (sting.atFrame). Every time from there on (his last word, lifts, clips, handovers)
+        # moves by exactly those frames (velib.qc.to_file_s), and the stem runs the sting plus the cut. The sting's length
+        # and place come from the props only, never a flag.
+        from velib.qc import to_file_s  # noqa: PLC0415
         lead = int((props.get('sting') or {}).get('frames') or 0)
-        lead_s = lead / fps
-        lifts = [[float(a) + lead_s, float(b) + lead_s] for a, b in (w.split('-', 1) for w in args.lift or [])]
+        at = int((props.get('sting') or {}).get('atFrame') or 0)
+        moved = lambda t: to_file_s(float(t), props)  # noqa: E731
+        lifts = [[moved(a), moved(b)] for a, b in (w.split('-', 1) for w in args.lift or [])]
         # The cut's own music plan (spec cuts.<cut>.music, Krish's words in its `said`): clips heard with their own
         # sound and a late bed, moved by the sting's frames like everything else on the stem's clock.
         plan = spec['cuts'][args.cut].get('music') or {}
+        # A clip heard with its own sound, a handover or a lift that runs across the sting would play through it and
+        # come back out of step with its picture: each sits wholly before the hook's end or after it.
+        if at:
+            at_s = at / fps
+            across = [f"{w['asset']} {w['at_s']}-{w['end_s']}" for w in plan.get('clips') or [] if w['at_s'] < at_s < w['end_s']]
+            across += [f'{a}-{b}' for a, b in [*(plan.get('handovers') or []), *((float(x), float(y)) for x, y in
+                                                (w.split('-', 1) for w in args.lift or []))] if a < at_s < b]
+            if across:
+                raise ValueError(f'the sting plays at {at_s:.3f} s, after the hook; these run across it: {", ".join(across)}')
         clips = []
         if plan.get('clips'):
             if not args.assets_dir:
@@ -1346,17 +1464,17 @@ def cmd_premix(args) -> int:
                 src = Path(args.assets_dir) / asset['path']
                 if sha256_file(src) != asset['sha256']:
                     raise ValueError(f"{src.name} does not match the spec's sha256 for {clip['asset']}")
-                clips.append({**clip, 'src': str(src), 'at_s': clip['at_s'] + lead_s, 'end_s': clip['end_s'] + lead_s,
-                              'points': [{'t': p['t'] + lead_s, 'level': p['level']} for p in clip['points']]})
+                clips.append({**clip, 'src': str(src), 'at_s': moved(clip['at_s']), 'end_s': moved(clip['end_s']),
+                              'points': [{'t': moved(p['t']), 'level': p['level']} for p in clip['points']]})
         result = audio.premix(args.dialogue, str(music), args.out, start_s, (lead + props['durationFrames']) / fps,
                               bed_start_s=float(track.get('intro_cue_s') or 0), under_vo_lu=bed['under_vo_lu'],
                               lufs=spec['audio'].get('targets', {}).get('lufs', -14), tp=spec['audio'].get('targets', {}).get('tp', -1),
-                              mode=bed['mode'], last_word_end_s=lead_s + float(words[-1]['end_s']) - start_s,
+                              mode=bed['mode'], last_word_end_s=moved(float(words[-1]['end_s']) - start_s),
                               levels=ledger['levels'] | {'chapter_lufs': ledger['levels'].get('chapter_lufs', -22)},
-                              voice_start_s=lead_s + float(words[0]['onset_s']) - start_s, lifts=lifts, lead_frames=lead, fps=fps,
-                              clips=clips, bed_enter_s=(plan['bed_enter_s'] + lead_s) if plan.get('bed_enter_s') else 0.0,
+                              voice_start_s=moved(float(words[0]['onset_s']) - start_s), lifts=lifts, lead_frames=lead, fps=fps,
+                              clips=clips, bed_enter_s=moved(plan['bed_enter_s']) if plan.get('bed_enter_s') else 0.0,
                               bed_fade_in_s=float(plan.get('bed_fade_in_s') or 0),
-                              handovers=[[a + lead_s, b + lead_s] for a, b in plan.get('handovers') or []])
+                              handovers=[[moved(a), moved(b)] for a, b in plan.get('handovers') or []], sting_at_frame=at)
         print(json.dumps({k: result[k] for k in ('stem', 'integrated_lufs', 'true_peak_dbtp', 'lead_frames')} | {'bed': {
             k: result['bed'].get(k) for k in ('mode', 'bed_lufs_in_master', 'crossfades_s', 'lifts', 'bed_under_speech_db', 'duck_depth_db')}}, indent=1))
         print(f've premix: {sha256_file(Path(args.out))}  {args.out}')
@@ -1408,12 +1526,21 @@ def cmd_render(args) -> int:
               'to the Thursday guards (F33 to F36):')
         print('\n'.join(f'  - {reason}' for reason in refused))
         return 1
+    from velib.sfx import missing_in_props
+    gone = missing_in_props(props)
+    if gone:
+        # A sound the spec asks for is never dropped from a cut: it stops here, by name (ve compile stages approved
+        # sounds from MINDMAKE_MUSIC_ROOT; run it again on a machine that has them).
+        print('ve render: refused, a sound this cut plays is not on this machine (run ve compile again where '
+              'MINDMAKE_MUSIC_ROOT holds it, or python scripts/quick-edit/music.py fetch):')
+        print('\n'.join(f'  - {src}' for src in gone))
+        return 1
     from velib.compile import sting_problems
     opening = sting_problems(props)
     if opening:
-        # Only the clip Krish approved opens a cut, and an approved sting is never skipped (Krish, 2026-11-05: "I think
-        # it should go at the start of the longer wide videos 100%,"; config/intro-sting.json).
-        print('ve render: refused, the cut\'s opening is not the one Krish approved:')
+        # Nothing goes before the hook on any cut (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the
+        # sting exception for good."; config/intro-sting.json, retired).
+        print('ve render: refused, the cut must open on its hook:')
         print('\n'.join(f'  - {reason}' for reason in opening))
         return 1
     render(args.props, args.out, args.scale)
@@ -1611,6 +1738,10 @@ def main() -> int:
     p.add_argument('format'); p.add_argument('video'); p.add_argument('props'); p.add_argument('--sheet')
     p.set_defaults(fn=cmd_keyframes)
     p = sub.add_parser('study'); p.add_argument('ref'); p.add_argument('--out'); p.set_defaults(fn=cmd_study)
+    p = sub.add_parser('pace', help='events a second, motion energy and frame use, beside the references he keeps')
+    p.add_argument('video', nargs='?'); p.add_argument('--out'); p.add_argument('--seconds', type=float)
+    p.add_argument('--refs', action='store_true'); p.add_argument('--dir', default=str(ROOT / '.cache' / 'references'))
+    p.set_defaults(fn=cmd_pace)
     p = sub.add_parser('card'); p.add_argument('fields'); p.set_defaults(fn=cmd_card)
     p = sub.add_parser('sprint', help='the weekly device sprint: brief, card, Gate 2 record (docs/ve/SPRINT.md)')
     actions = p.add_subparsers(dest='action', required=True)
@@ -1619,7 +1750,6 @@ def main() -> int:
     a = actions.add_parser('gate2'); a.add_argument('device'); a.add_argument('--words', required=True)
     a.add_argument('--where', required=True); a.add_argument('--at', required=True)
     actions.add_parser('status')
-    a = actions.add_parser('feed'); a.add_argument('--archive'); a.add_argument('--out', required=True)
     p.set_defaults(fn=cmd_sprint)
     p = sub.add_parser('dispatch'); p.add_argument('card'); p.add_argument('--wait', action='store_true')
     p.add_argument('--piece', help='refuse dispatch when this piece is over any budget cap')
@@ -1811,6 +1941,24 @@ def main() -> int:
     a.add_argument('--at', required=True); a.add_argument('--said', required=True, help="Krish's exact words naming it")
     a.add_argument('--clip'); a.add_argument('--force', action='store_true')
     p.set_defaults(fn=cmd_golden)
+    p = sub.add_parser('signoff', help="the three video sign-offs as review cards on his board; only his presses write the configs")
+    actions = p.add_subparsers(dest='action', required=True)
+    actions.add_parser('check')
+    a = actions.add_parser('stills', help='candidate golden frames from a published cut (the library copy)')
+    a.add_argument('piece'); a.add_argument('--cut', choices=['long', 'short'], required=True)
+    a.add_argument('--path', help='the library path, when the making record holds it relative to the post')
+    a.add_argument('--sha256'); a.add_argument('--count', type=int, default=6); a.add_argument('--out', required=True)
+    a.add_argument('--at', help='the times to cut, m:ss.s joined by commas (a reference moment); default: settled frames spread across it')
+    a.add_argument('--keep', action='store_true', help='keep the downloaded cut')
+    a = actions.add_parser('gate2', help='one still per locked beat of face-with-proof at 16:9, rendered from compiled props')
+    a.add_argument('props'); a.add_argument('--out', required=True)
+    a = actions.add_parser('add', help='record one sample filed in Drive (hashes the local copy)')
+    a.add_argument('card', choices=['sfx', 'golden', 'gate2']); a.add_argument('--item', required=True, help='the item fields, a JSON file')
+    a.add_argument('--file', required=True, help='the local copy of the exact bytes filed in Drive')
+    a = actions.add_parser('apply', help="write his presses into the configs (signoff-apply.yml)")
+    a.add_argument('--presses', help='his presses as a JSON file (tests); default: read from the engine')
+    a.add_argument('--work', default=str(ROOT / '.ve-work' / 'signoff'))
+    p.set_defaults(fn=cmd_signoff)
     p = sub.add_parser('stills'); p.add_argument('rest', nargs='*'); p.set_defaults(fn=not_yet('stills'))
     args = parser.parse_args()
     return args.fn(args)

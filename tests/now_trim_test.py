@@ -30,13 +30,26 @@ class NowTrim(unittest.TestCase):
             self.assertNotIn(moved, new)
             self.assertIn(moved, history)
         self.assertTrue(history.startswith("> **Historical.**"))
-        self.assertIn("Older lines: `docs/history/2026-11-10-NOW-moved-2.md`, `docs/history/a.md`", new)
+        self.assertIn("Older lines: `docs/history/2026-11-10-NOW-moved-2.md` (it names every earlier move)", new)
+        self.assertNotIn("`docs/history/a.md`", new)
+        self.assertIn("- `docs/history/a.md`", history)
 
     def test_no_line_is_lost(self):
         new, _, history = trim(PAGE, "2026-11-10", set())
         for line in PAGE.splitlines():
             if line.startswith("- "):
                 self.assertTrue(line in new.splitlines() or line in history.splitlines(), line[:30])
+
+    def test_a_long_list_of_earlier_moves_folds_into_history_when_no_line_can_move(self):
+        older = "Older lines: " + ", ".join(f"`docs/history/2026-11-1{i}-NOW-moved-1.md`" for i in range(9)) + " and `LOG.md`."
+        page = "# N\n\n## What changed recently\n\n- only " + "y" * 13800 + "\n" + older + "\n\n## Next\n"
+        new, name, history = trim(page, "2026-11-13", set())
+        self.assertEqual(name, "2026-11-13-NOW-moved-1.md")
+        self.assertLess(len(new.encode()), len(page.encode()))
+        self.assertIn("- only y", new)
+        for i in range(9):
+            self.assertIn(f"`docs/history/2026-11-1{i}-NOW-moved-1.md`", history)
+        self.assertIsNone(trim(new, "2026-11-13", {name})[1])  # one pointer left: nothing more to fold
 
 
 if __name__ == '__main__':

@@ -156,7 +156,7 @@ sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402
 
 CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify',
-            'feature_youtube', 'feature_spotify',  # the 15-minute feature's own two posts (config/board-layout.json)
+            'feature_youtube', 'feature_spotify',  # the 15-minute feature's own two posts
             'instagram', 'x', 'threads', 'facebook')  # Growth's posts, reported through the board's posted route
 CUTS = ('long', 'short')  # the two cuts every piece gets (house rule TWO_CUTS)
 FEATURE = 'feature'
@@ -571,7 +571,7 @@ def feature_piece(piece_id, path=None):
     """True when Krish called a 15-minute feature for this piece
     (config/features.json `pieces.<piece id>`, house rule FEATURE): its
     scripts then take a third, the feature, checked at about 15 minutes.
-    Only his call adds a piece there. week_board.py reads the same file."""
+    Only his call adds a piece there."""
     if not piece_id:
         return False
     try:
@@ -2366,7 +2366,7 @@ def self_test():
         retired = stop.code != 0
     check('descript: retired on 2026-10-12, so the command line no longer takes it', retired, True)
 
-    # The 15-minute feature's two posting cards on the board (config/board-layout.json) record as their own channels.
+    # The 15-minute feature's two posting cards on the board record as their own channels.
     for channel in ('feature_youtube', 'feature_spotify'):
         code, _ = run([pid, 'posted', channel, 'https://youtu.be/feature'])
         check(f'posted: the feature\'s {channel} card records as its own channel', (code, seen[-1][2].get('channels')),
@@ -2540,7 +2540,7 @@ def self_test():
         code, _ = run([pid, 'choices', str(direction)])
         check('choices: read from the direction, his signature accepting the proposal',
               (code, seen[-1][2].get('production_choices') if len(seen) > before else None),
-              (0, {'opening': 'sting_wide_hook_tall', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}))
+              (0, {'opening': 'hook_is_intro', 'lead_picture': 'story_object', 'big_moment_sound': 'none'}))
         code, _ = run([pid, 'choices', str(direction), '--big-moment-sound', 'big_moment_only'])
         check('choices: a flag records what was actually used', seen[-1][2]['production_choices']['big_moment_sound'],
               'big_moment_only')
@@ -2643,7 +2643,7 @@ def main(argv=None, call=None):
     ap.add_argument('--title', metavar='TITLE', help='with teleprompter: the script\'s title')
     ap.add_argument('--sent-at', metavar='TIME', help='with teleprompter: when it was sent (default now)')
     ap.add_argument('--error', metavar='TEXT', help='with teleprompter: what Teleprompter said when the send failed')
-    ap.add_argument('--opening', metavar='OPTION', help='with choices: the opening the piece used (sting_wide_hook_tall, hook_is_intro ...)')
+    ap.add_argument('--opening', metavar='OPTION', help='with choices: the opening the piece used (hook_is_intro, the only one since 12 Nov 2026)')
     ap.add_argument('--lead-picture', metavar='OPTION', help='with choices: series_picture or story_object')
     ap.add_argument('--big-moment-sound', metavar='OPTION', help='with choices: big_moment_only or none')
     ap.add_argument('--at-s', type=float, metavar='SECONDS', help='with clips: where the routed clip starts in the cut')

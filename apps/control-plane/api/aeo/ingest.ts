@@ -4,7 +4,7 @@ import { supabase } from '../_supabase.js'
 import { checkDuplicate } from '../_dedup.js'
 import { withContentRun } from '../_runs.js'
 import {
-  MAX_IDEAS_PER_SUBJECT, OPEN_GOVERNOR, aeoSignalRow, aeoSourceRef, probeRows, queryRows, validatePacket,
+  MAX_IDEAS_PER_SUBJECT, OPEN_GOVERNOR, aeoSignalRow, aeoSourceRef, citedPageRows, probeRows, queryRows, validatePacket,
   type AeoPacket,
 } from '../_aeo.js'
 
@@ -67,6 +67,32 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // 2. Idempotency.
+    // A verify run (an off-week re-check of shipped questions, run only on
+    // Krish's approved spend go-live) writes its probes as verify and nothing
+    // else: no queries, no digest, no replaced week and no ideas, so it never
+    // stands in for a research week or counts in the share (AEO-Engine brief,
+    // section I). A replay of the same run changes nothing.
+    if (packet.run_kind === 'verify') {
+      const seen = await supabase.from('growth_geo_probes').select('id', { count: 'exact', head: true }).eq('run_id', packet.run_id)
+      if (seen.error) throw new Error(`verify read failed: ${seen.error.message}`)
+      if ((seen.count ?? 0) > 0) {
+        return res.status(200).json({ ok: true, deduped: true, replaced: false, run_kind: 'verify', week_start: packet.week_start, subject: packet.subject.slug, probes: 0, ms: Date.now() - started })
+      }
+      const rows = probeRows(packet)
+      if (rows.length) {
+        const ins = await supabase.from('growth_geo_probes').insert(rows)
+        if (ins.error) throw new Error(`verify probe insert failed: ${ins.error.message}`)
+      }
+      await supabase.from('audit_log').insert({
+        event_type: 'aeo_ingest',
+        actor: 'aeo-engine',
+        target: 'growth_geo_probes',
+        display_message: `AEO verify run landed for ${subject.name}, week of ${packet.week_start}: ${rows.length} probes, never counted in the share.`,
+        details: JSON.stringify({ subject: packet.subject, week_start: packet.week_start, run_id: packet.run_id, run_kind: 'verify', probes: rows.length }),
+      }).then(r => { if (r.error) console.error('aeo_ingest audit write failed', r.error.message) })
+      return res.status(200).json({ ok: true, deduped: false, replaced: false, run_kind: 'verify', week_start: packet.week_start, subject: packet.subject.slug, probes: rows.length, ms: Date.now() - started })
+    }
+
     const existingRead = await supabase.from('growth_aeo_digests')
       .select('id, run_id, recommendations')
       .eq('subject_id', packet.subject.id).eq('week_start', packet.week_start).maybeSingle()
@@ -102,7 +128,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // 4. Recommendations into the content spine.
-    const counts: Record<string, number> = { ideas_inserted: 0, ideas_refreshed: 0, ideas_duplicate: 0, ideas_capped: 0, ideas_governed: 0 }
+    const counts: Record<string, number> = { ideas_inserted: 0, ideas_refreshed: 0, ideas_duplicate: 0, ideas_capped: 0, ideas_governed: 0, ideas_kits: 0, cited_pages: 0, mentions_acquired: 0 }
     const openRead = await supabase.from('content_ideas')
       .select('id,state,meta')
       .eq('source_type', 'aeo_signal')
@@ -113,12 +139,17 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     if (openRead.error) throw new Error(`aeo_signal open read failed: ${openRead.error.message}`)
     const open = ((openRead.data || []) as Row[]).filter(r => !decided(r)).length
     const governed = open >= OPEN_GOVERNOR
+    // Once AEO sends win kits, its moves reach Krish through each venture's
+    // engine (Ruling, Krish, 2026-11-13), so its recommendations no longer
+    // seed content ideas (brief, A3). The ideas seeded before stay as history.
+    const kitsFlow = Array.isArray(packet.kits)
 
     const recs = [...packet.recommendations].sort((a, b) => a.n - b.n)
     const enriched: Row[] = []
     let admitted = 0
     for (const rec of recs) {
       const out: Row = { ...rec, content_idea_id: null, dismissed_at: priorDismissed.get(rec.query_id) ?? null }
+      if (kitsFlow) { counts.ideas_kits += 1; enriched.push(out); continue }
       if (governed) { counts.ideas_governed += 1; enriched.push(out); continue }
       if (admitted >= MAX_IDEAS_PER_SUBJECT) { counts.ideas_capped += 1; enriched.push(out); continue }
       const row = aeoSignalRow(packet, rec, String(subject.name))
@@ -163,6 +194,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       competitor_gap: packet.competitor_gap,
       playbook: packet.playbook,
       approach_hook: packet.approach_hook,
+      // Packet features kits and site; a packet without them leaves the week with none.
+      kits: packet.kits ?? [],
+      site: packet.site ?? null,
       stats: { ...packet.stats, calls: packet.calls, engines_used: packet.engines, generated_at: packet.generated_at },
       updated_at: new Date().toISOString(),
     }
@@ -170,6 +204,30 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     if (up.error) throw new Error(`digest upsert failed: ${up.error.message}`)
 
     // 5. The Run-now ledger.
+    // The cited-pages sheet (packet feature cited_pages; brief, section J):
+    // AEO's measured columns merged with what is stored, the outreach columns
+    // untouched but for "mention acquired".
+    if (Array.isArray(packet.cited_pages) && packet.subject.product_slug) {
+      const storedRead = await supabase.from('growth_aeo_cited_pages')
+        .select('url, mention, mention_ok, checked_at')
+        .eq('product_slug', packet.subject.product_slug)
+        .in('url', packet.cited_pages.map(c => c.url))
+      if (storedRead.error) throw new Error(`cited pages read failed: ${storedRead.error.message}`)
+      const sheet = citedPageRows(packet, (storedRead.data || []) as Row[] as never)
+      // Rows that set "mention acquired" and rows that leave the status alone go
+      // up apart: a bulk upsert fills a key one row lacks with null, and the
+      // status is the venture's to keep.
+      const now = new Date().toISOString()
+      for (const batch of [sheet.filter(r => r.status), sheet.filter(r => !r.status)]) {
+        if (!batch.length) continue
+        const up = await supabase.from('growth_aeo_cited_pages')
+          .upsert(batch.map(r => ({ ...r, updated_at: now })), { onConflict: 'product_slug,url' })
+        if (up.error) throw new Error(`cited pages upsert failed: ${up.error.message}`)
+      }
+      counts.cited_pages = sheet.length
+      counts.mentions_acquired = sheet.filter(r => r.status === 'mention acquired').length
+    }
+
     const finishedAt = new Date().toISOString()
     const result = `${packet.subject.slug}: ${packet.queries.length} queries, ${probes.length} probes, ${packet.recommendations.length} recommendations, $${packet.stats.cost_usd.toFixed(2)}`
     if (packet.command_id != null) {

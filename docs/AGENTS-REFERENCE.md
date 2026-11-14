@@ -16,7 +16,9 @@ everything is.
 
 <a id="rule-02"></a>
 
-**The publish board is fed, never shaped.** Since 11 November it is fed by writing what the live board's view reads, never by a built page (Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. `docs/PUBLISH_BOARDS.md`, "One live board"); the fixed layout below is the archive's. Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex." From the week of 26 October every board has one layout (`config/board-layout.json`): five tabs (Ideas, Queue, Monday, Wednesday, Friday) and four steps in every day (Brief, Drafts, Record, Publish). Feed it through `week_board.py`'s inputs only (`docs/PUBLISH_BOARDS.md`, "The fixed layout"); never add a section, banner or style, never patch a built board. `week_board.verify()` and `npm run check:board-layout` (CI) refuse anything else, and a change to the layout itself is Krish's: there are no approval prompts for board edits; the layout is held by CI and changes only with his recorded words (Ruling, Krish, 2026-10-21). `scripts/check_board_layout.py` holds the hash of `config/board-layout.json` and `scripts/post-pack/tokens.css` and the board's structure in its snapshot, and fails until `--update --approved "Krish, YYYY-MM-DD: <his exact words>"` records the change with them.
+**The publish board is fed, never shaped.** Since 11 November it is fed by writing what the live board's view reads, never by a built page (Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. `docs/PUBLISH_BOARDS.md`, "One live board"); the fixed layout below was the old board's, retired on 13 November (the amendment below). Krish, 2026-10-21: "the rest of the content engine needs to know how to feed it and not be permitted to change random parts of the UI and UX but feed it in the right way consistently. That applies to Claude and to Codex." From the week of 26 October every board has one layout (`config/board-layout.json`): five tabs (Ideas, Queue, Monday, Wednesday, Friday) and four steps in every day (Brief, Drafts, Record, Publish). Feed it through `week_board.py`'s inputs only (`docs/PUBLISH_BOARDS.md`, "The fixed layout"); never add a section, banner or style, never patch a built board. `week_board.verify()` and `npm run check:board-layout` (CI) refuse anything else, and a change to the layout itself is Krish's: there are no approval prompts for board edits; the layout is held by CI and changes only with his recorded words (Ruling, Krish, 2026-10-21). `scripts/check_board_layout.py` holds the hash of `config/board-layout.json` and `scripts/post-pack/tokens.css` and the board's structure in its snapshot, and fails until `--update --approved "Krish, YYYY-MM-DD: <his exact words>"` records the change with them.
+
+Amended (Ruling, Krish, 2026-11-13): the old publish boards are retired for good, and everything old in content-engine is retired. `week_board.py`, its fixed layout, the desk and `board_web.py publish-web` are gone (`docs/history/2026-11-13-old-boards-retired.md`); every old board address redirects to the live board, and what this rule says about building or publishing a page is history.
 
 <a id="rule-03"></a>
 
@@ -29,6 +31,8 @@ Amended (Ruling, Krish, 2026-10-29): "FYI, I want zero Claude routines. No Claud
 Amended (Krish, 2026-11-09): "change content engine settings to allow pushes to main and force pushes". Pushing straight to main is allowed; the usual route is still a session branch and a pull request that merges itself (AGENTS.md, "Commit and closeout"), so "never push to main directly" above is history.
 
 Amended (Ruling, Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. From that day no board update is built with `week_board.py` or published with `board_web.py publish-web`: a session writes what the live view reads (the week's files on its branch, the making record, the engine API; `docs/PUBLISH_BOARDS.md`, "One live board"), the live view is built on every read, and the overlay above describes the archive. The same day (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full, Saturday's good news included) the Thursday good-news schedule was retired, so the Sunday ideas run is the one scheduled job that writes a board, and the Monday final board is the live board reading the week's records as the overnight runner fills them (`docs/CADENCE.md`).
+
+Amended (Ruling, Krish, 2026-11-13): the old publish boards are retired for good, and everything old in content-engine is retired. `week_board.py`, its fixed layout, the desk and `board_web.py publish-web` are gone (`docs/history/2026-11-13-old-boards-retired.md`); every old board address redirects to the live board, and what this rule says about building or publishing a page is history.
 
 <a id="rule-04"></a>
 
@@ -196,7 +200,8 @@ field that nothing reads.
 Amended (Ruling, Krish, 2026-10-28): "Once I approve, the two scripts will go
 to teleprompter" and "Server sends directly". This replaces the 12 October
 "Yes, automatic": a cut's script is sent only when he presses Approve scripts
-for its day on the board, and the engine's server sends it
+for its day on the board, or approves them in his own typed words carried to
+the board as `picks/<day>-scripts-words` (Ruling (Krish, 2026-11-12): "Scripts and locks only. Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs your press, so that gate is unchanged."; `board_session.py approve`), and the engine's server sends it
 (`apps/control-plane/api/_teleprompter.ts`, `sendApprovedScripts`, with the
 `TELEPROMPTER_API_KEY` secret), refusing any text whose hash is not the one he
 approved and reading each script back. The never list above is unchanged:
@@ -207,17 +212,11 @@ connector under the same scope (`plan-week`, step 12); no routine is fired
 
 <a id="rule-13"></a>
 
-**Web publish board migration (19 October 2026).** Superseded on 11 November: the live board is Control
-Centre's Content tab and `content.krishraja.com/board/<Monday>` is its read-only archive (Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive.
-`docs/PUBLISH_BOARDS.md`). As recorded: full parity was implemented
-behind the existing access code at the archive's address.
-Released: `config/boards.json` carries the web URLs and its `web_cutover` marker
-is `active`, so the web board is the only board. Then every
-making session reads ticks, links, edits, picks, queue and comments through
-`board_web.py read`; only the web board takes new interactions. Preserve the
-Claude artifacts and artifact generator; no ongoing two-way sync. See
-`docs/handovers/board-web-release.md` for approval gates and exact commands.
-The artifact workflow below applies before cutover and to explicit legacy builds.
+**Web publish board migration (19 October 2026).** Superseded twice: on 11 November the live board became Control
+Centre's Content tab, and on 13 November the old pages at `content.krishraja.com/board/<Monday>` were retired for good
+and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good;
+`docs/PUBLISH_BOARDS.md`, `docs/history/2026-11-13-old-boards-retired.md`). Every making session still reads ticks,
+links, edits, picks, queue and comments through `board_web.py read`; only the live board takes new interactions.
 
 <a id="rule-14"></a>
 
@@ -227,8 +226,8 @@ one so I can tick as I go and you can durably record that completion where
 it needs to be recorded. That Publish Manager is what you create every
 Sunday and let me iterate inside until we're done". Since 11 November the week's board is the live board in Control Centre's
 Content tab, drawn from the records on every read, and nothing builds a
-page; the old page at content.krishraja.com/board/<its Monday> is the
-read-only archive (`docs/PUBLISH_BOARDS.md`, "One live board"). Completion is recorded
+page; the old pages at content.krishraja.com/board/<its Monday> are retired
+and redirect to it (Ruling, Krish, 2026-11-13). Completion is recorded
 in this order: his tick is saved at once in the board's own store; every
 making session in Claude Code (`make-piece`, `plan-week`, `produce-video`)
 copies each channel tick onto the piece the board names for that day,

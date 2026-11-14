@@ -5,6 +5,12 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-13
+
+- retired as old, by evidence (no caller, no workflow, no route, no skill, no live write): three one-shot control-plane scripts, the Content Engine v2 preview check, `backfill_closes.ts` and its test, and three quick-edit one-offs. What was kept and why, the carousel engine among it (its owner is unsettled): `docs/history/2026-11-13-old-scripts-retired.md`.
+- retired for good (Ruling, Krish, 2026-11-13: the old publish boards are retired for good, and everything old in content-engine is retired): the engine's own board pages, their builder (`week_board.py`), publisher (`board_web.py publish-web`), desk client (`board-next`), archive guard and `board-rebuild.yml`; every old address redirects (308) to the live board in Control Centre. Record: `docs/history/2026-11-13-old-boards-retired.md`.
+- moved verbatim: `docs/PUBLISH_BOARDS.md` before the retirement to `docs/history/2026-11-13-PUBLISH_BOARDS-before-retirement.md`; `WORKBENCH.md`'s 12 to 18 October board notes to `docs/history/2026-11-13-WORKBENCH-old-board-notes.md`; `.agents/skills/make-piece/references/week-board.md` to `docs/history/2026-11-13-make-piece-week-board-reference.md`; `docs/prompts/publish-board-friday.md` to `docs/history/2026-10-18-prompt-publish-board-friday.md`.
+
 ## 2026-11-12
 
 - moved verbatim: `docs/STATE.md` as it stood before the 12 Nov recheck (its 4 November list, the 19 October board cutover and the body last verified on 25 September) to `docs/history/2026-11-12-STATE-before-recheck.md`. The new `docs/STATE.md` holds only what was checked against the code, the workflows and a database readback that day. `docs/SYSTEM_MAP.md`, `docs/GLOSSARY.md`, `docs/STUDIO.md` and `docs/PUBLISH_BOARDS.md` were rechecked the same day.

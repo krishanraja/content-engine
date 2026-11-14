@@ -43,7 +43,7 @@ Preflight first: add `--piece <plan folder or uuid>` to each floor read and to
 
 ## Publish-board routing
 
-Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The live board
+Ruling (Krish, 2026-11-11): one live board, in Control Centre. Ruling (Krish, 2026-11-13): the old publish boards are retired for good. The live board
 (`live_board.py <Monday> [day]`) draws the week from `GET /api/board/<Monday>/view`, so a cut reaches it by being on
 the piece's record (`making.py`), never by a board page (`docs/PUBLISH_BOARDS.md`, "One live board"); Claude
 artifacts stay retired (`scripts/hooks/artifact_gate.py`). Report as you work, as a board prompt says (`writeBack`,
@@ -167,9 +167,17 @@ renders with `--only 16x9`, the short cut with `--only 9x16`.
 making route as `offday`) holds the style he approved: `to_camera` is his
 take with motion-designed subtitles and the brand; `voiceover` is his voice
 over motion-designed infographics, so the pictures carry the mechanism the
-words name. Make only the 9:16 short and its thumbnail (`--only 9x16`); never
-ask him for a long take of it, and the Video assets step is done with the
-short alone.
+words name. Make only the 9:16 short and its thumbnail; never ask him for a
+long take of it, and the Video assets step is done with the short alone.
+
+**An off-day short is made on the ve route, from a Claude session** (Ruling,
+Krish, 2026-11-13: "Off-day voiceover shorts should go the same way too"):
+hand it to the `ve` skill. The session writes the script and the signed spec,
+Codex builds the devices and plates from cards through the plugin, `ve`
+renders the cut, and a separate reviewer watches and listens before it is
+called ready (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`). The voice comes from
+wherever it comes from today. Never per-piece code, and never
+`scripts/produce_day.py`, which refuses an off-day piece.
 
 Commands are written `python`, as on Windows; it is `python3` in the cloud.
 
@@ -203,8 +211,9 @@ itself, stamped with the script it was read from (step 2). He never has to
 give a file name or a piece id. He is asked only when the matcher is unsure,
 in a session's reply to him (the lane holds one board item per take for a
 session, never on his list), and for approvals that are his alone (a music
-track, the mix levels, the story outro's design, the intro sting's clips, any
-opening but the house one, and a sound under a piece's big moment).
+track, the story outro's design and a sound under a piece's big moment; the
+mix levels are approved, 12 Nov 2026, and nothing goes before the hook, so no
+opening is asked about).
 
 **Descript was retired on 12 October.** That morning his takes were to be
 recorded in Descript; the same afternoon Krish ruled "Descript is
@@ -315,8 +324,8 @@ No one is in its chat.
   --doctor` (or `--doctor --json`). It checks ffmpeg and ffprobe and every
   filter, the caption font, `faster-whisper`, Pillow, Playwright, node, the
   music folder and the archive folder, the music ledger, every approved
-  track's file against its sha256, and the opening (`intro sting`: whether
-  the wide cut's sting is approved and its clips are here). **Exit 1 stops the run**: fix what it names first. A
+  track's file against its sha256, and the opening (`intro sting`: retired for
+  good, so no clip is needed). **Exit 1 stops the run**: fix what it names first. A
   `faster_whisper` that is missing, or that imports but cannot decode a
   second of sound, is a FAIL, because the matcher and make.py both hear the
   takes with it. Install the pinned set, never an unpinned `pip install
@@ -577,22 +586,14 @@ base (Krish's house rules win). Say in the report which modules were used,
 and set this cut's pace (cuts a minute, median shot) beside the pace of the
 references they came from. Then ask Krish for his verdict on each one.
 
-**The opening: one per cut** (house rule `HOOK_IS_THE_INTRO`). **The intro
-sting is paused since 2026-11-12** (`config/intro-sting.json`, `paused`, in
-Krish's words: "Happy with your recommendations"): make.py, the day runner and
-ve open every cut, wide and tall, on its hook until the sting after the hook
-is built and he approves its proof render, and the report says why. What
-follows is how the sting stands when it returns. Krish,
-2026-11-05, of the intro sting: "I think it should go at the start of the
-longer wide videos 100%,". The 16:9 cut of a weekly series piece opens on
-its series' house sting (`config/intro-sting.json`), his face and the hook
-on the very next frame; the 9:16 cut opens straight on his hook in the
-brand's dress (kit.py's `dress`; his 2026-10-29 pick, "The hook is the
-intro"); an off-day piece wears no sting. Nothing else goes in front. make.py
-lays the sting itself, so leave `"intro"` and `"intro_override"` out of a
-config; while the sting is a `candidate` the wide cut opens on its hook and
-says why. Each report records the opening it used (`opening`), and another
-opening is tried only on his own words for that piece. Read
+**The opening: one per cut** (house rule `HOOK_IS_THE_INTRO`). Ruling (Krish,
+2026-11-12): "Nothing before the hook, ever. Remove the sting exception for
+good." Every cut, wide and tall, series or off day, opens straight on its
+hook; nothing goes in front of it, and no words for one piece let anything in.
+Leave `"intro"` and `"intro_override"` out of a config: make.py leaves out any
+clip one names and says so, and stops a cut handed an intro anyway. The house
+sting is retired (`config/intro-sting.json`). Each report records its opening
+(`opening`), always the hook. Read
 `.agents/skills/produce-video/references/opening.md`.
 
 **Then the outro card and the audio treatment: required before the final
@@ -634,7 +635,7 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
 ```
 
 - **Plan until clean.** Read `shapes.16x9` (or `9x16`): the `opening` (the
-  sting or the hook), the music track or why not, the main, end card and total seconds,
+  hook, always), the music track or why not, the main, end card and total seconds,
   and the warnings. A plan or render that stops on his name in the captions
   ("the captions name him", with the time in the cut and in the take) means
   he said it, or the transcriber heard a self-introduction: cut it with a
@@ -656,7 +657,7 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
   `--archive` on either run (that files the two cuts in two folders), and
   never one recording for both shapes.
 - Each cut opens as above and carries the music bed from the ledger under
-  the whole cut, sting included, low under his voice and never
+  the whole cut, low under his voice and never
   dropping out (Krish, 2026-10-28: "Yes I think music should be audible
   throughout but just lower."): a track shorter than the cut starts again
   under a two-second crossfade. Read
@@ -756,11 +757,10 @@ report these numbers back in plain words:
 - `loudness.integrated` within -14 plus or minus 1 LU and
   `loudness.true_peak` at most -1.0 dBTP. With music, `bed_to_voice_lu`
   about 17 and the voice and outro short-term about -14 and -18 (on the hook
-  no intro stretch; with the sting, the sting is the intro). `normalisation` should be
+  there is no intro stretch). `normalisation` should be
   `linear` (an episode's continuous bed reads `separately levelled stems;
   peak limiter only`); anything else comes with a warning.
-- `opening` (`kind` `sting` or `hook`, with `why` on a wide cut left on its
-  hook), `intro_seconds` (0 on the hook), `main_seconds`,
+- `opening` (`kind` `hook`, always), `intro_seconds` (0), `main_seconds`,
   `outro_seconds`, `total_seconds`, and `music` (the track id, its sha256,
   the levels used, and where a short track was started again).
 - **The 90 second check is on his speech.** House rule TWO_CUTS gives the
@@ -915,7 +915,7 @@ Read `.agents/skills/produce-video/references/music.md` before you choose or lay
 
 ## The opening
 
-Read `.agents/skills/produce-video/references/opening.md` before you plan a cut's opening (step 4); it holds this section in full. House rules it carries: HOOK_IS_THE_INTRO (the wide cut's sting, INTRO_STING, with it).
+Read `.agents/skills/produce-video/references/opening.md` before you plan a cut's opening (step 4); it holds this section in full. House rules it carries: HOOK_IS_THE_INTRO (nothing before the hook, ever; the retired INTRO_STING with it).
 
 ## Walls
 
@@ -926,7 +926,7 @@ Read `.agents/skills/produce-video/references/opening.md` before you plan a cut'
   one outro card, in both sizes, from a design Krish approved
   (`STORY_INTRO_OUTRO`, `config/story-intro-outro.json`): until then the
   report says "story outro not designed yet". Nothing goes in front of the
-  hook but a series piece's 16:9 sting (`HOOK_IS_THE_INTRO`).
+  hook on any cut, ever (`HOOK_IS_THE_INTRO`; Ruling, Krish, 2026-11-12).
 - No cut carries his name: no strap, no caption, no on-screen word (Krish,
   2026-10-28). His face is the only part of him in a cut.
 - Nothing is sent to, read from or published in Descript, which Krish

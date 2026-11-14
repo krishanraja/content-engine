@@ -1,6 +1,8 @@
 import { CAPTION_THEMES } from './captions/names'
 import { z } from 'zod'
 import { EngineMotionSchema } from './kit/motionProfiles'
+import { EngineIngredientsSchema } from './kit/ingredients'
+import { EngineLayoutSchema } from './kit/layout'
 
 /** What `ve compile` hands the renderer for one cut: everything already resolved to frames on ONE clock.
  *  The spec (packages/contracts/src/production-spec.ts) speaks in word indexes; this speaks in frames.
@@ -18,7 +20,7 @@ export const EngineImageSchema = z.object({ src: z.string().min(1), pixelWidth: 
 export const EngineEventSchema = z.object({
   id: z.string().min(1),
   obj: z.string().min(1),
-  verb: z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick']),
+  verb: z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick', 'drop', 'grey', 'multiply', 'dim', 'thin', 'grow', 'light', 'connect', 'rest_on']),
   toState: z.string().min(1),
   atFrame: Frame,
   sfx: z.string().optional(),
@@ -82,6 +84,10 @@ export const EngineStingSchema = z.object({
   series: z.enum(['follow_the_money', 'mind_the_gap', 'under_the_hood']),
   frames: z.number().int().positive(),
   sha256: z.string().regex(/^[0-9a-f]{64}$/),
+  /** The cut's own frame the sting plays at: the hook's last frame + 1 (config/brand-palette.json long_cut sting
+   *  after_hook; SOCIAL-BEST-PRACTICES-2026 section 4.3, a brand sting follows the hook, never precedes it). Absent or 0
+   *  is the retired sting in front of the cut, kept so props made that way still render as they were. */
+  atFrame: z.number().int().nonnegative().optional(),
 }).strict()
 
 export const EngineRenderPropsSchema = z.object({
@@ -101,6 +107,10 @@ export const EngineRenderPropsSchema = z.object({
   captionStyle: z.enum(['house', 'word']).optional(),
   /** A caption theme from captions/names.ts drawn instead of the house caption (Krish, 2026-11-11). */
   captionTheme: z.enum(CAPTION_THEMES).optional(),
+  /** Where a caption theme sits, chosen with it and apart from the motion style (spec style.captions.placement;
+   *  Krish, 2026-11-13: "the captions should be decoupled from the animation styles"): the lower band (the default),
+   *  the centre of the frame, or the upper strip. Every place is inside every channel's safe area (captions/kit.ts). */
+  captionPlacement: z.enum(['lower', 'centre', 'upper']).optional(),
   title: z.string().min(1).optional(),
   beats: z.array(EngineBeatSchema).min(1),
   objects: z.array(EngineObjectSchema),
@@ -112,23 +122,36 @@ export const EngineRenderPropsSchema = z.object({
     days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional() }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
-  /** The makeyourmindup intro sting in front of the cut (Krish, 2026-11-05: "I think it should go at the start of the
-   *  longer wide videos 100%,"): one of the fixed clips in config/intro-sting.json, played as it is for its `frames`,
-   *  silent, with the stem under it. Every other frame in these props stays on the cut's own clock, which starts
-   *  `frames` into the render, so his face lands on the very next frame after the sting's last. Absent, the cut
-   *  opens on its hook exactly as before. */
+  /** The transitions, camera and energy chosen per piece (spec style.transitions, style.camera, style.energy;
+   *  kit/ingredients.ts); absent means every beat cuts under a still camera, as before. */
+  ingredients: EngineIngredientsSchema.optional(),
+  /** How a graphics-only beat uses the frame (spec style.layout; kit/layout.ts); absent means the layouts' own slots. */
+  layout: EngineLayoutSchema.optional(),
+  /** The series sting, only straight after the hook (`atFrame`, the hook's last frame + 1): a new design that plays
+   *  nothing in front of the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception
+   *  for good."), and that compile lays only once he approves it (config/intro-sting.json is retired; none is). The
+   *  render draws the hook on frames [0, atFrame), the clip on the next `frames`, then the cut on from atFrame. A sting
+   *  with no atFrame, in front of the cut, is refused below. */
   sting: EngineStingSchema.optional(),
-  /** A wide cut that opens on its own episode card where the sting would be, by Krish's word for that piece (spec
-   *  brand.opening_exception; Krish, 2026-11-09: "I want the episode card to come in."). Nothing is drawn from it: the
-   *  card is the spec's own beat; it only records why this series wide cut has no sting. */
+  /** Retired with it: the 9 Nov episode card in place of the sting. Refused below. */
   opening: z.object({ kind: z.literal('episode_card'), said: z.string().min(12), on: z.string().min(10) }).strict().optional(),
 }).strict().superRefine((props, context) => {
-  if (props.opening && props.sting) context.addIssue({ code: 'custom', path: ['opening'], message: 'a cut opens on its episode card or on the sting, never both' })
+  // Nothing goes before the hook on any cut, ever (Ruling, Krish, 2026-11-12).
+  const ruling = 'nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.")'
+  if (props.sting && !(props.sting.atFrame ?? 0)) context.addIssue({ code: 'custom', path: ['sting'], message: `a sting in front of the cut: ${ruling}` })
+  if (props.opening) context.addIssue({ code: 'custom', path: ['opening'], message: `an episode card in front of the cut: ${ruling}` })
   if (!props.sting) return
   // Only the 16:9 long cut of a weekly series piece wears it: the 9:16 short opens straight on its hook
   // (HOOK_IS_THE_INTRO), a proof excerpt (no ending band) is never a whole cut, and an off day wears no sting.
   if (props.aspect !== '16:9') context.addIssue({ code: 'custom', path: ['sting'], message: 'the sting opens only the 16:9 long cut; the 9:16 short opens on its hook' })
   if (!props.ending) context.addIssue({ code: 'custom', path: ['sting'], message: 'the sting opens only a whole cut, never an excerpt' })
+  const at = props.sting.atFrame ?? 0
+  if (at >= props.durationFrames || (props.ending && at >= props.ending.fromFrame)) {
+    context.addIssue({ code: 'custom', path: ['sting', 'atFrame'], message: 'the sting follows the hook, inside the cut and before its close' })
+  }
+  if (at > 0 && !props.beats.some((beat) => beat.fromFrame === at)) {
+    context.addIssue({ code: 'custom', path: ['sting', 'atFrame'], message: 'the sting plays on a beat boundary: the frame after the hook\'s last' })
+  }
   if (props.sting.series !== props.series.label.replaceAll('.', '_')) {
     context.addIssue({ code: 'custom', path: ['sting', 'series'], message: `the ${props.sting.series} sting cannot open the ${props.series.label} cut` })
   }

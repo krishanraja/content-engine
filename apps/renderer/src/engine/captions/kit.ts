@@ -12,9 +12,18 @@ export type Box = { left: number; top: number; width: number; height: number }
 /** Where caption type may sit. 9:16 is inside every platform's safe area (config/channel-safe-zones.json): clear of the
  *  270 px top band, of the action rail from x 880 below y 520, and of the bottom band from y 1320. `lower` is the
  *  talking-head caption band under the face; `upper` is the full-width strip above the rail. 16:9 is title-safe. */
-export const REGIONS: Record<Aspect, { lower: Box; upper: Box }> = {
-  '9:16': { lower: { left: 70, top: 990, width: 800, height: 330 }, upper: { left: 70, top: 290, width: 940, height: 230 } },
-  '16:9': { lower: { left: 192, top: 760, width: 1536, height: 266 }, upper: { left: 192, top: 108, width: 1536, height: 240 } },
+export const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box }> = {
+  '9:16': { lower: { left: 70, top: 990, width: 800, height: 330 }, upper: { left: 70, top: 290, width: 940, height: 230 },
+    centre: { left: 70, top: 700, width: 800, height: 420 } },
+  '16:9': { lower: { left: 192, top: 760, width: 1536, height: 266 }, upper: { left: 192, top: 108, width: 1536, height: 240 },
+    centre: { left: 192, top: 380, width: 1536, height: 320 } },
+}
+
+/** The band a caption style draws in: the piece's own placement (props.captionPlacement, spec style.captions.placement),
+ *  else the lower band. The placement is the captions' own choice, never the motion style's. `centre` sits the words
+ *  over the middle of the picture, clear of the right rail (x 870 at most) and above the bottom band. */
+export function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'>): Box {
+  return REGIONS[props.aspect][props.captionPlacement ?? 'lower']
 }
 
 /** Type scale per aspect: the tall sizes are designed at 1080 wide, the wide ones a little smaller. */
@@ -24,7 +33,10 @@ export const F = HOUSE_FONTS
 
 /** The live page and its index, one frame early so a word never pops on late. */
 export function livePage(props: Pick<EngineRenderProps, 'captions'>, frame: number): { page: Page; index: number } | null {
-  const index = props.captions.findIndex((p) => frame >= p.fromFrame - 1 && frame < p.toFrame)
+  // The later page wins where two overlap: the frame before a page starts (its first word lands) is also the previous
+  // page's last live frame when they abut, and the old page must be gone there, never drawn over or ahead of the new one.
+  let index = -1
+  props.captions.forEach((p, i) => { if (frame >= p.fromFrame - 1 && frame < p.toFrame) index = i })
   return index < 0 ? null : { page: props.captions[index]!, index }
 }
 

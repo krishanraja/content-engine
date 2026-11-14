@@ -1,12 +1,11 @@
 // Where the live Publish Board is (Ruling, Krish, 2026-11-11: "your version of the publish board is 1000% where
 // everything wires in to fresh and live and accurately"). Control Centre draws the week from GET /api/board/<Monday>/view
-// and presses through this engine's routes; content.krishraja.com/board/<Monday> is kept as the archive.
+// and presses through this engine's routes. The engine's old board pages are retired for good, and every one of their
+// addresses (content.krishraja.com/board/<Monday> and the rest) redirects here (Ruling, Krish, 2026-11-13).
 //
 // One constant: config/boards.json `live_board.url` holds the same text and tests/control-plane/board-view-contract.test.ts
 // holds the two equal. Python reads it through scripts/post-pack/live_board.py. Control Centre's rebuilt UI is its
 // default since its cutover (Ruling, Krish, 2026-11-12), so the address carries no `?ui=next`.
-//
-// Pure, no Node import: the archive page (apps/control-plane/board-next) bundles it for its banner.
 
 export const LIVE_BOARD_URL = 'https://controlcenter.krishraja.com/#/content'
 
@@ -20,6 +19,3 @@ export function liveBoardUrl(week?: string | null, day?: string | null): string 
   if ((DAYS as readonly string[]).includes(d)) q.push(`day=${d}`)
   return q.length ? `${LIVE_BOARD_URL}?${q.join('&')}` : LIVE_BOARD_URL
 }
-
-/** The banner the archive carries, in his words. */
-export const ARCHIVE_LINE = 'This is the archive. The live Publish Board is in Control Centre'

@@ -7,20 +7,19 @@ description: Plan the publishing week and run the Sunday room. Research at least
 
 ## Publish-board routing
 
-Ruling (Krish, 2026-11-11): one live board, in Control Centre; the old board is a read-only archive. The week's
+Ruling (Krish, 2026-11-11): one live board, in Control Centre. Ruling (Krish, 2026-11-13): the old publish boards are retired for good. The week's
 publish board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its
 link), and it draws the week from the engine's `GET /api/board/<Monday>/view` (`docs/PUBLISH_BOARDS.md`, "One live
 board"). Update it by writing what the view reads, never a page: the piece's making record (`making.py`), his presses
 and his yes (`board_web.py read`, `yes.py`), and the week's plan files (`docs/plans/<Monday>-week/ideas.json`, the
 narrative locks, the research) on main or on the week's branch `offday-revise/<Monday>`; when only a file changed,
 `python3 scripts/post-pack/board_web.py touch <Monday>` makes the live board read the week again at once. Never build
-or publish a board page (`week_board.py`, `board_web.py publish-web`): the content.krishraja.com pages are the
-archive, read-only, and refuse every press. A question for Krish is a press the view carries or an item on his one
+or publish a board page: the old content.krishraja.com pages, their builder and publisher are gone, and every old
+address redirects to the live board. A question for Krish is a press the view carries or an item on his one
 list; his approval of scripts is his own words in the session, recorded with `making.py <uuid> read-back CUT
 --krish-words` before `teleprompter_send.py`. Claude artifacts stay retired (Krish, 2026-10-19), and
-`scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Steps below that build,
-download or publish a board page, or work in a day's tab in draft, are history kept as written: read them for what
-they record, and do the same work through the records above.
+`scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Do all board work
+through the records above.
 
 ## Report to the board as you work
 
@@ -338,10 +337,10 @@ he ticks: `references/inspiration-piece.md`.
    from or that it recommends for specific content ... pushing and pushing
    and pushing, becoming more and more creative and experimental"). Pick
    the recommendation for the content (the format's `fits`), and make the
-   experiment a format that has not been made yet. The board refuses a day
-   with one script format, a day with no untried experiment, a week where
-   one production format is over half the cards, and a format he marked
-   not for us (`week_board.style_problems`).
+   experiment a format that has not been made yet. `board_feed.py cover`
+   refuses a day with one script format, a day with no untried experiment, a
+   week where one production format is over half the cards, and a format he
+   marked not for us (`week_plan.style_problems`).
    **The quality bar, before an idea reaches him** (Krish, 2026-10-24:
    "most importantly focus on improving your own work quality"). Each day's
    ideas are four different stories, never four angles on one headline.
@@ -466,8 +465,7 @@ he ticks: `references/inspiration-piece.md`.
    feature as a third cut on that day. `config/deep-cuts.json` is retired
    and gets no new week.
 7. **Put the week on the live board**, last, once the options are written
-   (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old
-   board is a read-only archive). The live board draws the week from
+   (Ruling, Krish, 2026-11-11: one live board, in Control Centre). The live board draws the week from
    `GET /api/board/<Monday>/view`, which reads `ideas.json` (each publishing
    day's options and the off-day options) from the week's branch
    `offday-revise/<Monday>` before main, his presses from the board's store
@@ -479,9 +477,8 @@ he ticks: `references/inspiration-piece.md`.
    (a pull request), then `python3 scripts/post-pack/board_web.py touch
    <Monday>`. Read the view back (`python3 scripts/engine.py GET
    /api/board/<Monday>/view`): each publishing day lists its options. Never
-   build or publish a board page with `week_board.py` and `board_web.py
-   publish-web` (the archive refuses it all). The steps that follow are kept
-   as written where they still apply.
+   build or publish a board page (the old pages are retired for good and
+   redirect to the live board).
    - **Record its link where every later session finds it.** On the board,
      an item of its own for this week, `week-publish-board-<Monday>`, so
      last week's item and link stay as they are: `POST /api/workbench` with
@@ -604,7 +601,11 @@ after his presses, by 10:00.
    lock to him in the room, the words themselves and never a pointer to
    them, and ask him to sign it. Once he does, the last line is his exact
    typed words, the date and that hash: `Signed by Krish: "<his words>",
-   <YYYY-MM-DD>, lock sha256 <hash>`. Run `narrative` again until it says
+   <YYYY-MM-DD>, lock sha256 <hash>`. His typed words are his approval of the
+   lock (Ruling, Krish, 2026-11-12): carry them to the board verbatim in the
+   same step with `board_session.py approve lock`, and the board shows "Approved
+   in your words" (`.agents/skills/plan-week/references/typed-approval.md`). Never for an idea: his
+   Approve on an idea stays his press. Run `narrative` again until it says
    signed, commit the lock and `interview.md`, push the room's session
    branch and open its pull request with auto-merge on (`AGENTS.md`,
    "Commit and closeout"; nothing lives only in this container). The signed
@@ -639,7 +640,11 @@ after his presses, by 10:00.
    checked and read back). Read each press and its answer on the board: `python3
    scripts/post-pack/board_web.py read <Monday> approvals` (the collection
    `config/teleprompter.json` `approval.collection` names; only documents
-   whose `updated_by` is Krish are his press).
+   whose `updated_by` is Krish are his press, and `<day>-scripts-words` is his
+   typed approval). When he approves the scripts in his own typed words in the
+   room instead, carry them with `board_session.py approve scripts`
+   (`references/typed-approval.md`): the server sends them to Teleprompter as
+   it does for his press, held the same way until their checks pass.
    - `sent`: nothing to do; `making.py <uuid> show` says, per cut,
      "Teleprompter, 5-minute cut: holds the current words".
    - `no_key` (the Teleprompter key is not set yet): the room sends exactly
@@ -659,30 +664,9 @@ after his presses, by 10:00.
 
 ## Without the connectors
 
-The Sunday ideas run in GitHub Actions has no Drive and no Firecrawl
-connector. Then research with the built-in web search and web fetch instead,
-and skip the Cold Ideas & Inspo folder rather than guessing what is in it.
-Say which sources were unavailable on the week's board item, in one plain line
-at the end of its detail, for example "Researched with web search only: Drive
-and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not
-read." Write it with `POST /api/workbench {"action": "upsert_items",
-"client": "claude_code", "items": [{"id": "week-<Monday>", "detail": "..."}]}`,
-keeping the detail already there (read it first with `GET /api/workbench`); if
-the item does not exist yet, give it `"lane": "on_you"`, a `"title"`,
-`"only_you": "judgment"`, `"link": "https://controlcenter.krishraja.com/#/week"`,
-`"link_label": "Open the week"` and `"closes_on": "week_planned"` too, or
-the engine refuses it, naming the field it lacks (`WORKBENCH.md`, the
-board).
-Put the same line in `WORKBENCH.md`, because the slate cron rewrites the week
-item's text each morning.
-
-The server sends approved scripts to Teleprompter itself; only a `no_key`
-answer needs the Teleprompter connector (step 12). Without it, name each
-waiting cut in one line on its day's tab. Descript was retired on 12
-October (Krish: "Descript is permanently gone, teleprompter.com is
-permanently in, connected via MCP here"): nothing is sent there. The active web board needs the existing engine
-operator credential, not an Artifact connector. If authenticated board reads
-fail, record that specific blocker; never treat inaccessible feedback as empty.
+Read `.agents/skills/plan-week/references/without-connectors.md` when the run has no Drive,
+Firecrawl or Teleprompter connector, or the board will not read: it says what to research with, what to
+say on the week's board item, and what never to treat as empty.
 
 ## Before you stop
 

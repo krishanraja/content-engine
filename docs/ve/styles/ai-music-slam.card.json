@@ -1,0 +1,105 @@
+{
+  "id": "ai-music",
+  "piece": "Wed 11 Nov 2026 under.the.hood, \"AI is already in the music you love\" (A Reiki master wrote a No. 2 hit), tall 9:16 short as delivered: 80.6 s, 1080x1920, 30 fps, AAC 48 kHz stereo, -16.1 LUFS integrated. Built as the one-off composite (Ruling, Krish, 2026-11-10); planned motion was living-ui.",
+  "source_file": "Drive \"AI is already in the music you love - tall 9x16 - 90-second.mp4\" (45409994 bytes), studied at /tmp/claude-0/-home-user-content-engine/4d8a1333-80c4-5e6d-a80e-6a10a0801215/scratchpad/study/ai-music/ai-music-tall.mp4",
+  "sha256": "3c360c733036e84690035521c2abfd364099974ac33832f644a988dc2fd7dc13",
+  "idea": "Real proof slams onto an ink stage over the top 64% of the frame while he talks from a cream band below. There are two materials only: mint for what a human made and hatched ink for what the machine made. The camera never stops pushing, and horizontal blur whips join the scenes.",
+  "motion_grammar": "Measured on the cut.\n\nENTRANCES (back-eased slam): the mint SINGING verdict card enters from below the stage edge at 57.27 s. Its top edge reads y 824, 648, 530, 462, 428, 422 over frames 0-5. It passes its rest line at frame 3-4 and peaks 61 px past it at frame 5. It then comes back through 436, 456, 475 and rests at y 483 from frame 9. That is a 10-frame entrance with about 12% overshoot on roughly 500 px of travel. The card settles on a +3deg tilt with a soft drop shadow.\n- 'No. 2' (Anton, mint) slams in at the top right of the chart screenshot in 2 frames (4.63 to 4.70 s). A mint ring is drawn round the chart's peak cell.\n- The chart screenshot slams over the TikTok wall at 4.43 s, and the wall behind it dims to about a third.\n\nSTAGGER: the TikTok wall is 6 tiles in a 3x2 grid. Onsets fall at frames 1, 7, 13, 19, 26 and 32 from 2.90 s, so 6-7 frames apart (0.20-0.22 s). Each tile pops from small to full size.\n- Title words land one per spoken word: 'IS IT' at about 8.4 s, the hatched 'AI MUSIC' band at about 9.0 s, 'OR' at about 9.4 s and the mint 'HUMAN MUSIC?' band at about 10.0 s. The bands enter oversize and tilted and settle almost flat.\n- The waveform under the title grows from a flat line to full bars in about 3 frames at 8.2 s.\n\nTYPING: the Suno lyrics field turns active with a 4 px mint border at 17.7 s. It types 'I'm movin' to the sun' (21 characters) by 18.6 s, about 23 characters a second, with a blinking block caret.\n\nHOLDS: nothing stays still. ve pace gives a median gap of 0.20 s and a longest gap of 0.93 s.\n\nEXITS: scenes leave only by a whip or a hard cut. Inside a scene, items slide off on the same curve.",
+  "layout_frame_use": "Frame 1080x1920.\n- Stage: x 0..1080, y 0..1236, ink ground (measured RGB 10,20,17, which is ink #0C1512 after encoding), rounded bottom corners.\n- Cream band: y 1236..1920 (measured 241,238,225, which is cream #F4EFE4).\n- Series pill: under.the.hood #B7A6FF (measured 181,164,252), x 40..370, y 1300..1356, Plex Mono ink text, on every split frame.\n- Him: cut-out at the bottom right, x 447..1080. His head rises to about y 1150, so it crosses the stage edge; his body runs to y 1910-1919.\n- Word caption box: x 26.., y 1506..1650 (144 px tall), left of him.\n- Stage contents:\n  - TikTok wall: 3x2 tiles from x 30, y 40, with a 355 px column pitch and a 610 px row pitch.\n  - Verdict cards: 470x620, near x 285 and x 795. The mint card rests at x 534..1079, y 483..1231.\n  - AI vs HUMAN mint band: x 90..989, y 738..1117.\n  - HUMAN MUSIC? band: x 40..1039, y 790..1039.\n- Full-frame moments: twice he leaves and the stage takes all 1920 px. These are the title card (12.43-14.27 s, 55 frames) and the end card (77.23-80.60 s).\n- ve pace: used_frame 0.81, active_frame 0.56.\n- Outside today's safe words area:\n  - 'No. 2' at x 723..1063, y 168..~300.\n  - 'IS IT' at about y 90.\n  - The TikTok/Charts labels at about y 70.\n  - The caption at y 1506..1650.\n- The style keeps the stage/band split and moves stage words into y 270..1320 and x 60..860. The caption band belongs to the caption ingredient.",
+  "camera": "The camera is always moving: one push per scene, with a slow sine sway on long holds.\n- Grammys scene: the mint card's left edge drifts 535, 544, 555, 565, 554 px over 57.7-61.5 s, about +/-15 px of breathing.\n- Arrangement scene: the device title drifts from x 54 to x 0 and moves up between 35 s and 51 s as the camera pushes toward its upper left.\n- There is no shake and no spring.\n- The exact push scale was not measured because there is no feature tracker in this container. comp.py sets 1.05-1.28 per scene.",
+  "transitions": "Whips: 7 horizontal blur whips, at 12.43, 14.30, 22.70, 29.50, 33.40, 51.80 and 66.03 s.\n- The old scene leaves to the left and the new one arrives from the right, both smeared horizontally.\n- The smear reads for 4-5 frames: the horizontal-to-vertical gradient ratio stays under 0.6 for frames 22.70-22.83, 29.53-29.63, 33.40-33.53, 51.80-51.90 and 66.03-66.13.\n- The whole move takes about 9 frames, cubic-out.\n\nHard cuts: 8, at 2.90, 5.77, 8.13, 20.63, 31.87, 61.93, 74.70 and 77.23 s. That makes 16 scenes in 80.6 s, or 11.2 scene changes a minute.\n\nThere is one crossfade, inside a scene: the Suno form into the slot device. The full-frame title card has a 1-frame red/cyan split flicker on 'AI MUSIC' every few tenths of a second and a diagonal light streak sweeping across.",
+  "type_treatment": "- Anton for every slam word: No. 2, IS IT / AI MUSIC / OR / HUMAN MUSIC?, SONGWRITING RULED OUT, SINGING STILL IN, AI VS HUMAN, and the end-card ticker.\n- Plex Mono for small labels and sources: 'reportedly', 'can compete', 'rebuilt from suno.com, Nov 2026', the pill and the url.\n- Archivo for the device interfaces and the word caption.\n- AI words are cream on hatched ink bands; human words are ink on mint bands.",
+  "palette_use": "- ink #0C1512: the stage.\n- inkDeep #070D0B: the title and end cards.\n- inkSoft #16221D: the diagonal hatch on every AI band and card.\n- cream #F4EFE4: the band under him, the device paper, and type on ink.\n- mint #7EF0C0: human (bands, cards, lanes, the ring, No. 2, the active field border, the ? mark) and the only accent.\n- Series colour, under.the.hood #B7A6FF: only on the pill and the end-card ticker band.\n- Real screenshots keep their own colours.",
+  "captions_seen": "One word at a time in an ink box at x 26, y 1506..1650, Archivo heavy. The word is cream, or mint on key words such as TikTok, first, which, thin and familiar. Captions are off during the full-frame title and end cards. The closest engine theme by name is ink-block (named in captions/names.ts, not yet in themes.tsx). Captions are not part of this style.",
+  "sound": "Integrated loudness is -16.1 LUFS. The song from the TikToks plays under the cold open, then his voice, with a low music bed under him (the plan says NO CURVES at -30 LU from 13.9 s). The bed was not measured separately.",
+  "ground": "An ink stage on a cream page. Inside the stage, graphics sit on ink or on the devices' own cream paper. The full-frame title card is mint waveform bars on inkDeep.",
+  "devices_used": [
+    "real TikTok clips (full bleed, 3x2 wall, two-up stacks)",
+    "real screenshots (Official Charts, Grammys headline, Apple Music single)",
+    "slot_machine (Suno create, two songs)",
+    "arrangement x2 (who made which layer; credits)",
+    "verdict cards (hatched SONGWRITING RULED OUT, mint SINGING STILL IN)",
+    "AI vs HUMAN bands with a strike line",
+    "waveform title card",
+    "robot fly-in insert",
+    "brand end card with series ticker"
+  ],
+  "measured": {
+    "events_per_s": 4.12,
+    "cuts_per_minute": 11.2,
+    "longest_gap_s": 0.93,
+    "energy_median": 2.84,
+    "used_frame": 0.81,
+    "active_frame": 0.56
+  },
+  "profile_proposal": {
+    "entrance": {
+      "kind": "slap",
+      "frames": 7,
+      "easing": "hero",
+      "distancePx": 60,
+      "overshootPct": 6
+    },
+    "stagger": {
+      "frames": 6,
+      "unit": "line"
+    },
+    "exitFrames": 9,
+    "onTwos": false,
+    "camera": {
+      "kind": "push",
+      "scaleTo": 1.2,
+      "dimOthers": true,
+      "easing": "hero"
+    },
+    "transition": "cut",
+    "typeReveal": {
+      "kind": "typewriter",
+      "cps": 25
+    },
+    "ground": {
+      "kind": "dark",
+      "sweepFrames": 0,
+      "texture": "none",
+      "cards": "keep"
+    },
+    "driftPct": 1.5,
+    "countFrames": 18,
+    "ingredients": {
+      "energy": "high",
+      "transition": "whip",
+      "camera": "phased"
+    },
+    "caption_theme": "ink-block",
+    "floor_note": "The cut ran above the floor: slams take 10 frames with about 12% overshoot over about 500 px, so the profile is clamped to 7 frames, 6% and 60 px. Typing ran at about 23 characters a second; 25 is the floor's minimum. The profile's transition list has no whip, so the whip comes from the transition ingredient.",
+    "note": "From Krish's Wed 11 Nov AI music cut (tall, sha256 3c360c73), measured 13 Nov: 4.12 events a second, 11.2 scene changes a minute, longest gap 0.93 s. An ink stage fills the top 64% of the frame, with a cream band and his cut-out below. Two materials: mint is human and hatched ink is AI. Every real thing slams in on a back curve and settles tilted with a soft shadow. The camera pushes through every scene and breathes on holds, and scenes hand over with a horizontal blur whip."
+  },
+  "never": [
+    "a third material or colour for provenance: human is mint, AI is hatched ink",
+    "a still frame: no hold without the camera, the hatch or a playhead moving",
+    "a crossfade between scenes (one crossfade inside a scene only)",
+    "stage words above y 270, or right of x 860 below y 520, in 9:16",
+    "the series colour anywhere but the pill and the end-card ticker",
+    "a rebuilt interface passed off as real: each one carries its 'rebuilt from' line",
+    "fonts other than Anton, Archivo, Fraunces, Plex Mono",
+    "captions defined by this style (the caption theme is chosen separately)"
+  ],
+  "gaps": [
+    "Stage/band layout: ve cannot draw an ink stage over y 0..1236 with rounded bottom corners and a cream band below, or place his cut-out bottom right crossing the stage edge. This is why the piece was a one-off composite.",
+    "Real video clips (TikToks) as placed, tilted, shadowed cards, and a 3x2 wall that fills one tile every 6-7 frames.",
+    "Slams travel about 500 px with about 12% back overshoot and settle on a 2-4deg tilt. The floor caps travel at 60 px and overshoot at 6%, and the profile has no rotation or settle-tilt field.",
+    "A hatched AI material (inkSoft diagonals, scrolling) as a fill chosen by provenance for any band, card or chip.",
+    "Dimming the previous picture under a slam: the wall drops to about a third behind the chart.",
+    "Whip in the profile itself: the profile transition list is cut, cut_on_curve or crossfade, and whip exists only as an ingredient.",
+    "A push for each scene with its own focus point plus sine breathing; the camera ingredient has no per-beat focus.",
+    "A mint ring drawn round a value on a screenshot.",
+    "A full-frame takeover beat (the title card) that removes him mid-cut and returns to the split, with a red/cyan split flicker and a light streak.",
+    "ve study crashed on this machine (faster_whisper passes metadata_errors to an older av.open), so grammar.json was not written. The numbers come from ve pace and direct pixel measurement."
+  ],
+  "evidence": [
+    "/home/user/content-engine/docs/plans/2026-11-11-wednesday/short-composite/comp.py",
+    "/home/user/content-engine/docs/plans/2026-11-11-wednesday/short-composite/README.md"
+  ],
+  "style_id": "ai-music-slam",
+  "studied": "2026-11-13, by a separate reader per cut (ve pace on the whole frame, dense strips at speed); captions burned into the cut count in events_per_s"
+}

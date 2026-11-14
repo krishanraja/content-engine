@@ -5,6 +5,28 @@ to content-engine. Growth-MakeYourMindUp owns posting and social strategy.
 This serves the creator-studio North Star by keeping production focused on
 its own craft, reusable methods, review and reduced human decision time.
 
+## Every carousel and Short through the 10/10 judges (Ruling, Krish, 2026-11-12)
+
+Krish: "Judge them; count passes. Every Growth carousel goes through the same 10/10 judges, and each one that passes and goes live counts."
+
+- **Before it is made.** Growth's maker sends each carousel and Short it is about to make (its format, channel, claim,
+  exact words and each picture's sha256) to `POST /api/board/<Monday>/judge` (`op: judge`, Growth's key;
+  `apps/control-plane/api/board/_judge.ts`). The free checks run first (the copy lint, em dashes, banned phrases, "Not
+  X, Y"): a hit fails it before any model is paid. Then the draft judges' panel, the same roster, rubric and bar a draft
+  is judged on, reads the post; it passes only when the panel stands ready (`standing`, `READY_AT`).
+- **A fail comes back with the judges' reasons, never silently.** The answer carries each judge's one fix that did not
+  pass; Growth never makes the post, holds the slot loudly as `judges_failed` and keeps the reasons for the session that
+  rewrites it. The same post judged again answers from the record and pays nothing.
+- **Recorded on the item.** Every verdict, with each judge's score and fix, is a row in `asset_judgements` (migration
+  `20261201090000_asset_judgements.sql`, append only) under Growth's slot id; a pass is bound to its Buffer post
+  (`op: bind`), and Growth's board tick reports every sent post (`op: live`), which marks only bound posts live.
+- **Counted.** The North Star's number counts each Growth carousel and Short whose latest verdict is a pass and that went
+  live in the last 7 days, once however many channels carried it, beside the essays published (Control Center's reader,
+  `judgedLiveCount`; NOW.md's `current_source` names both). A judgement store that cannot be read makes the reading
+  unknown.
+- **Spend.** At most `DAILY_CAP` (40) panels a day; past it the route answers 429 `judge_cap_reached` and Growth holds
+  the slot (`docs/COST_GUARDS.md`).
+
 ## Growth makes derived carousels (Ruling, Krish, 28 October 2026)
 
 Krish: "take over posting as well as creating new assets like carousels".
@@ -31,6 +53,15 @@ posts only.
   rejection floor (`python3 scripts/floor.py --format carousel` in this
   repository) and the copy lint (`config/copy-lint.json`, which Growth's
   `release.py` applies to every post it releases).
+- It makes every carousel, meme and Notes image in a Claude session, with the
+  Codex plugin building it, and every off-day voiceover short (and meme
+  video) on the ve route from a Claude session (Rulings, Krish, 2026-11-13:
+  "all the carousels should now be done in Claude, but using the Codex plug
+  in as per the other usual workflows"; "memes and Notes images should go the
+  same way"; "Off-day voiceover shorts should go the same way too"). The route
+  is CAROUSEL-STANDARD.md, "How a carousel is made". Never a scheduled job, a
+  headless model run or a template engine: Growth's Saturday art-direction
+  run is retired, and `scripts/produce_day.py` refuses an off-day piece.
 - Content-engine keeps the standard and the learning that improves it, and
   still makes the hero assets: the article, both cuts, thumbnails and covers.
 - A clip from a past week is still cut here. Growth names the moment by word
@@ -46,7 +77,7 @@ posts only.
   rejects each side, saved in `queue/off-<day>-<option>`. Growth reads the
   options whose idea and direction he approved from `GET
   /api/board/<Monday>/pieces` (`offdays`, the idea and the direction exactly
-  as shown), makes the mock in the brand kit from that direction and returns
+  as shown), makes the mock by that route from that direction and returns
   it on the option (`mock`) for his final yes; nothing he did not approve
   goes out. Each option also carries his own words (`note`), exactly as he
   typed them on the board (Krish, 2 November 2026: "it would contain the exact
@@ -105,7 +136,7 @@ existing editorial and tracked Studio route. Do not add a parallel renderer,
 feedback database or client-specific production memory for Growth requests.
 
 For publication carousel work, read [CAROUSEL-STANDARD.md](CAROUSEL-STANDARD.md)
-alongside the live mandate and existing Studio contracts. The 26 October
+alongside the live mandate; its route, "How a carousel is made", is the only one. The 26 October
 visual floor, clean-artwork and newcomer-comprehension requirements were
 transferred from Growth into that sole production home. Krish approved the
 full eight-card Grok Bot vs Muse revision 03 as the production pilot on

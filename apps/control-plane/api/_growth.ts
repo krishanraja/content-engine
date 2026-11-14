@@ -5,7 +5,9 @@
 // Supabase, so a bad value comes back as a readable 400 instead of a raw
 // Postgres constraint error.
 
-export const PRODUCT_SLUGS = new Set(['ctrl', 'circle', 'pulse', 'full-time', 'mindmake'])
+// heartside, legibility and publication since 2026-11-12 (Ruling, Krish: AEO-Engine is the one AI-answers specialist every
+// venture's engine calls), so a venture engine's request for its own product's AI answers is researched and its packet taken.
+export const PRODUCT_SLUGS = new Set(['ctrl', 'circle', 'pulse', 'full-time', 'mindmake', 'heartside', 'legibility', 'publication'])
 
 export const TOUCHPOINT_CHANNELS = new Set([
   'seo', 'geo', 'social_organic', 'social_paid', 'substack',
@@ -27,13 +29,17 @@ export const LANE_SLUG: Record<string, string | null> = {
   pulse: 'fractionl_pulse',
   'full-time': 'full_time',
   mindmake: null,
+  // No content lane of their own: their AI-answer readings go to their engines (protocol 1.22.0), never into a lane.
+  heartside: null,
+  legibility: null,
+  publication: null,
 }
 
 /** Mirrors growth_aeo_subjects.kind. */
 export const SUBJECT_KINDS = new Set(['venture', 'prospect', 'aspiration'])
 
 /** Mirrors growth_geo_probes.engine, minus google_aio which no engine writes. */
-export const AEO_ENGINES = new Set(['perplexity', 'chatgpt', 'claude', 'grok'])
+export const AEO_ENGINES = new Set(['perplexity', 'chatgpt', 'claude', 'grok', 'gemini'])
 
 /** Mirrors growth_aeo_digests.themes_status. */
 export const AEO_THEMES_STATUSES = new Set(['ok', 'no_calls', 'no_attributed_calls', 'fireflies_unavailable', 'not_applicable'])

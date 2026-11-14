@@ -215,6 +215,39 @@ export function yesBody(id: string, body: Record<string, unknown>): boolean {
     && typeof body.said_at === 'string' && Number.isFinite(Date.parse(body.said_at))
     && oneLine(body.said_where, 300) && typeof body.session_ref === 'string' && /^https:\/\/[^\s]{1,290}$/.test(body.session_ref)
 }
+// Typed approval, for a narrative lock or a piece's scripts only (Ruling, Krish, 2026-11-12: "Scripts and locks only.
+// Typed approval counts for locking a story and approving a script; putting an idea on the publish board still needs
+// your press, so that gate is unchanged."). A session carries his exact typed words, verbatim, with when and where he
+// typed them and the session link, as one board document per day and decision:
+//   picks/<day>-lock-words     kind sign_lock, bound to the lock he approved (lock_path, lock_sha256: making.py
+//                              lock_body_hash of the words above his signature);
+//   picks/<day>-scripts-words  kind approve_scripts, with the exact words of each cut (texts) as the Approve scripts
+//                              press carries them; the server sends them to Teleprompter as it does for the press.
+// The board shows each as "Approved in your words". Nothing else counts from a session: his Approve on an idea (the ideas
+// gate), any other decision and taking an approval back stay his presses alone (hisOnlyRefusal).
+// Any day a piece is placed on (Ruling, Krish, 2026-11-13: he moved the data-centres piece to Tue 17 with place_piece;
+// a piece on an off day is still a piece, and its lock and scripts are approved the same way).
+export const WORDS_ID = /^(mon|tue|wed|thu|fri|sat)-(lock|scripts)-words$/
+export const WORDS_KIND = { lock: 'sign_lock', scripts: 'approve_scripts' } as const
+const LOCK_PATH = /^docs\/plans\/\d{4}-\d{2}-\d{2}-week\/narrative-lock-(mon|tue|wed|thu|fri|sat)\.md$/
+/** His words as a session carries them: verbatim, when and where he typed them, and the session they came from. */
+export function saidInWords(body: Record<string, unknown>): boolean {
+  return typeof body.words === 'string' && body.words.trim().length > 0 && body.words.length <= 2000
+    && typeof body.said_at === 'string' && Number.isFinite(Date.parse(body.said_at))
+    && oneLine(body.said_where, 300) && typeof body.session_ref === 'string' && /^https:\/\/[^\s]{1,290}$/.test(body.session_ref)
+}
+export function wordsBody(id: string, body: Record<string, unknown>): boolean {
+  const m = WORDS_ID.exec(id)
+  if (!m || body.day !== m[1] || body.via !== 'words' || body.approved !== true || 'send' in body) return false
+  if (body.kind !== WORDS_KIND[m[2] as keyof typeof WORDS_KIND]) return false
+  if (typeof body.piece_id !== 'string' || !UUID.test(body.piece_id)) return false
+  if (typeof body.at !== 'string' || !Number.isFinite(Date.parse(body.at)) || !saidInWords(body)) return false
+  if (m[2] === 'lock') {
+    const path = LOCK_PATH.exec(String(body.lock_path))
+    return Boolean(path) && path![1] === m[1] && SHA256.test(String(body.lock_sha256))
+  }
+  return scriptsBody(body)
+}
 // "It's live" (Krish, 2026-11-12: "How do I indicate that Tuesday the 10th was posted correctly?"): picks/live-<day>,
 // the posts he marked live on that day, each with its link and the channels it went out on, appended only by the board's
 // own live route (_itsLive.ts recordLive); a plain write of the document is refused (live_is_its_own_press).
@@ -233,6 +266,25 @@ export function liveBody(id: string, body: Record<string, unknown>): boolean {
     && (!('piece_id' in p) || typeof p.piece_id === 'string' && UUID.test(p.piece_id))
     && (!('option' in p) || typeof p.option === 'string' && OFFDAY_ID.test(p.option) && p.option.startsWith(`off-${m[1]}-`))
     && (!('title' in p) || oneLine(p.title, 300)) && (!('note' in p) || typeof p.note === 'string' && p.note.length <= 2000))
+}
+// The three video sign-offs, one review card each on his board (Ruling, Krish, 2026-11-12; _signOffs.ts, contract
+// 1.11.0): picks/signoff-<card>, his presses on its samples appended, written only through POST /api/board/<Monday>/
+// sign-off as Krish (hisOnlyRefusal keeps every other writer out: a picks document with a kind is his).
+export const SIGN_OFF_ID = /^signoff-(sfx|golden|gate2)$/
+/** The most presses one card's record keeps in a week (append only; one more is refused). */
+export const MAX_SIGN_OFF_PRESSES = 200
+export const SIGN_OFF_WORDS_MAX = 2000
+const SIGN_OFF_SHA = /^[a-f0-9]{64}$/
+/** One sign-off record's shape: kind sign_off, the card, and its presses. */
+export function signOffBody(id: string, body: Record<string, unknown>): boolean {
+  const m = SIGN_OFF_ID.exec(id)
+  if (!m || body.kind !== 'sign_off' || body.card !== m[1] || !Array.isArray(body.presses) || body.presses.length > MAX_SIGN_OFF_PRESSES) return false
+  if (Object.keys(body).some(k => !['kind', 'card', 'presses'].includes(k))) return false
+  return body.presses.every(p => object(p) && p.card === m[1] && typeof p.item === 'string' && p.item.length > 0 && p.item.length <= 64
+    && (p.verdict === 'approve' || p.verdict === 'not_this') && SIGN_OFF_SHA.test(String(p.sha256)) && p.by === 'Krish'
+    && typeof p.at === 'string' && Number.isFinite(Date.parse(p.at))
+    && (p.words === null || (typeof p.words === 'string' && p.words.length <= SIGN_OFF_WORDS_MAX))
+    && Object.keys(p).every(k => ['card', 'item', 'verdict', 'sha256', 'words', 'at', 'by'].includes(k)))
 }
 export const SCRIPT_CUTS = ['long', 'short', 'feature'] as const
 export const TITLE_SURFACES = ['long_title', 'short_title', 'long_thumbnail', 'short_thumbnail'] as const
@@ -263,6 +315,10 @@ function decisionBody(id: string, body: Record<string, unknown>): boolean {
   // Teleprompter names they go under; scripts, when given, is the hash of each (the server checks it, or fills it).
   if (typeof body.approved !== 'boolean') return false
   if (body.approved === false) return true
+  return scriptsBody(body)
+}
+/** The words of an approval of scripts: each cut's text, its Teleprompter title and the folder they go in. */
+function scriptsBody(body: Record<string, unknown>): boolean {
   const cuts = object(body.texts) ? Object.keys(body.texts) : []
   const same = (v: unknown) => object(v) && Object.keys(v).every(k => cuts.includes(k))
   return keyed(body.texts, SCRIPT_CUTS, x => typeof x === 'string' && x.trim().length > 0 && x.length <= 100_000)
@@ -284,9 +340,14 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   // His pick for a day, with his optional saved note; or one of his decisions on a day's tab (decisionBody).
   if (collection === 'picks' && (YES_ID.test(id) || body.kind === 'yes')) return yesBody(id, body)
   if (collection === 'picks' && (LIVE_ID.test(id) || body.kind === 'live')) return liveBody(id, body)
+  if (collection === 'picks' && (SIGN_OFF_ID.test(id) || body.kind === 'sign_off')) return signOffBody(id, body)
   if (collection === 'picks' && FEEL_ID.test(id)) return feelBody(id, body)
   if (collection === 'picks' && (id === MIX_ID || body.kind === 'mix')) return id === MIX_ID && mixBody(body)
   if (collection === 'picks' && (CREATIVE_ID.test(id) || body.kind === 'sign_creative')) return creativeBody(id, body)
+  // His typed approval of a lock or of scripts (WORDS_ID); "via: words" anywhere else is refused, so a session's words
+  // never stand as one of his presses.
+  if (collection === 'picks' && WORDS_ID.test(id)) return wordsBody(id, body)
+  if (collection === 'picks' && body.via === 'words') return false
   if (collection === 'picks' && DECISION_ID.test(id)) return decisionBody(id, body)
   if (collection === 'picks' && (SCORE_ID.test(id) || SCORE_DATE_ID.test(id) || body.kind === 'scores')) return scoreBody(id, body)
   // His Approve on a publishing day's idea: the idea it names (idea_id), and the hash of the words he saw
@@ -412,6 +473,11 @@ export function hisOnlyRefusal(collection: string, body: unknown, who: string | 
   // His typed yes, carried from a session: the engine may write it, only as his words (yesBody holds them verbatim
   // with where, when and the session link), and only a yes; a board press, or taking a yes back, is his alone.
   if (collection === 'picks' && object(body) && body.kind === 'yes') return body.via === 'words' && body.approved === true ? null : 'yes_press_is_his'
+  // His typed approval of a narrative lock or of scripts (Ruling, Krish, 2026-11-12: "Scripts and locks only."): the
+  // engine may carry it, only as his words and only as a yes (validBody holds the document's id and shape).
+  if (collection === 'picks' && object(body) && body.via === 'words' && (body.kind === WORDS_KIND.lock || body.kind === WORDS_KIND.scripts)) {
+    return body.approved === true ? null : 'typed_approval_is_a_yes'
+  }
   if (combineWriterRefused(collection, body, who)) return 'combine_is_his_tap'
   if (collection === 'edits') return 'edit_is_his_save'
   if (collection === 'comments' && object(body) && 'act' in body) return 'tap_is_his'

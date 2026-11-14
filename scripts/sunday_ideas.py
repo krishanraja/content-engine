@@ -19,7 +19,7 @@ weekly good news, its stories (stories_fresh): a firing that left them out is re
 The week: Krish records the whole week on the Sunday and it goes live eight days later (plan-week, "The Sunday
 loop"), so the run on Saturday 31 October (or a run by hand on Sunday 1 November) plans the week of 9 November.
 `built` reads the week the live board draws (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old
-board is a read-only archive): GET /api/board/<Monday>/view through the engine API (GET only, the
+board is a read-only archive; Ruling, Krish, 2026-11-13: the old boards are retired for good and redirect to it): GET /api/board/<Monday>/view through the engine API (GET only, the
 ENGINE_OPERATOR_TOKEN secret), and says built once each publishing day there carries its options. The view reads the
 week's ideas.json from offday-revise/<Monday> before main, which is where the workflow puts the run's ideas
 (scripts/week_branch_keep.sh). Since 10 November /board/<Monday> serves the desk, so the old check of the baked
@@ -40,8 +40,6 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / 'post-pack'))
 
 NEW_YORK = ZoneInfo('America/New_York')
-# week_board.ideas_panel writes this on the live Ideas tab; ideas_waiting_panel writes data-state="ideas-waiting".
-IDEAS_LIVE = 'id="panel-ideas" role="tabpanel" aria-labelledby="tab-ideas" data-day="ideas" data-state="ideas" '
 
 
 def target_monday(today: dt.date) -> dt.date:
@@ -60,10 +58,6 @@ def monday_arg(text: str) -> dt.date:
     if day.weekday() != 0:
         raise ValueError(f'{text} is not a Monday')
     return day
-
-
-def has_ideas(page: str) -> bool:
-    return IDEAS_LIVE in page
 
 
 def view_has_ideas(view: dict) -> bool:

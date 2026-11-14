@@ -1,0 +1,14 @@
+{
+  "objects": [{
+    "obj": "title", "device": "takeover", "meaning": "Graphics-only mid-cut title takeover",
+    "params": { "lines": ["AI MUSIC", "HUMAN MUSIC?"] }, "fromFrame": 0, "toFrame": 180
+  }],
+  "events": [
+    { "id": "show", "obj": "title", "verb": "enter", "toState": "visible", "atFrame": 10 },
+    { "id": "hide", "obj": "title", "verb": "exit", "toState": "hidden", "atFrame": 100 }
+  ],
+  "beats": [{
+    "id": "takeover", "role": "pivot", "layout": "STAGE", "face": "off", "plate": { "source": "none" },
+    "fromFrame": 10, "toFrame": 106, "uses": ["title"], "transitionOut": "cut"
+  }]
+}

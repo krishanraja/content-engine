@@ -1,6 +1,6 @@
 # Make Your Mind Up content engine
 
-**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); content.krishraja.com/board/<Monday> is the read-only archive (Ruling, Krish, 2026-11-11: one live board, in Control Centre; the old board is a read-only archive). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this document are history.
+**Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); the old board pages at content.krishraja.com/board are retired for good and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good, and everything old in content-engine is retired). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this document are history.
 
 
 The engine behind Krish Raja's media business: makeyourmindup, his
@@ -86,8 +86,8 @@ Control Center (`krishanraja/control-center`) is where Krish works; it reaches
 the engine through rewrites and reads the shared Supabase database directly.
 This repository's one user interface is the weekly publish board's view
 (`GET /api/board/<Monday>/view`), which Control Centre's Content tab draws as the
-live board, where Krish presses; the page it serves at content.krishraja.com
-(`/board/<Monday>`) is the read-only archive (`docs/PUBLISH_BOARDS.md`).
+live board, where Krish presses; the old pages at content.krishraja.com/board are
+retired and redirect to it (Ruling, Krish, 2026-11-13; `docs/PUBLISH_BOARDS.md`).
 
 ## The publication
 
@@ -149,8 +149,7 @@ document; code outranks prose about what the code does.
    the brand tokens, `docs/ve/MOTION_STANDARD.md` and the style bank hold that.
 7. `docs/STUDIO.md`: the Studio, and the index of its detailed documents
    (`docs/ENGINE_SESSION.md`, `docs/ARCHITECTURE.md`, `docs/OPERATIONS.md`,
-   `docs/DEPLOYMENT.md`, `docs/CAROUSEL_ENGINE_STATE.md` and the calibration
-   records).
+   `docs/DEPLOYMENT.md` and the calibration records).
 8. `docs/GLOSSARY.md`: every term and every retired name.
 9. `docs/walks/`: live engineering records. They explain why things are as
    they are; they are not instructions.

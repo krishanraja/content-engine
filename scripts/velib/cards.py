@@ -116,9 +116,67 @@ def _piece_motion(fields: dict) -> None:
         sys.exit(f've card: {spec_path} names no style.motion; pick one from the bank before a card goes to Codex')
 
 
+# The one route for a carousel, a meme or a Notes image (Ruling, Krish, 2026-11-13: "all the carousels should now be
+# done in Claude, but using the Codex plug in as per the other usual workflows"; then "memes and Notes images should go
+# the same way"; docs/CAROUSEL-STANDARD.md, "How a carousel is made"). The Claude session writes the words, the story
+# and the direction first, then one card of one of these kinds; Codex builds the pictures in code through the plugin
+# (ve dispatch here, or the Codex lane for a venture's own card) and the session verifies them. ve card holds the card
+# to the brand palette for its day and to the inspiration cards Krish ticked (F26), and a carousel's to its deck, which
+# must pass scripts/carousel_check.py before anything is drawn. The deck's words never go into the card: a venture's
+# card sits in a public repository, so the card carries only the deck's shape.
+VISUAL_KINDS = ('carousel', 'meme', 'notes_image')
+
+
+def visual_sections(fields: dict) -> str:
+    """The card's own Brand, References and (for a carousel) Deck sections; refuses what the route forbids."""
+    import datetime
+    kind = fields['kind']
+    refs = fields.pop('references', None)
+    refs = [str(r).strip() for r in (refs if isinstance(refs, (list, tuple)) else [refs] if refs else []) if str(r).strip()]
+    if not refs:
+        sys.exit(f've card: a {kind} card names the inspiration cards Krish ticked for it ("references": their ids); '
+                 'a picture designed without its references is refused (F26)')
+    when = str(fields.pop('date', '') or '')
+    try:
+        datetime.date.fromisoformat(when)
+    except ValueError:
+        sys.exit(f've card: a {kind} card names the day it posts ("date": YYYY-MM-DD), so it wears that day\'s palette')
+    palette_kind = fields.pop('palette_kind', None) or 'off'
+    fmt = 'saturday_good_news' if kind == 'carousel' and fields.pop('good_news', False) else kind
+    sys.path.insert(0, str(ROOT / 'scripts'))
+    import brand_palette
+    brand = brand_palette.expect(when, fmt, palette_kind)
+    if brand is None:
+        sys.exit(f've card: config/brand-palette.json has no {fmt} ({palette_kind}) for {when}')
+    out = (f'\n## Brand ({fmt}, {palette_kind}, {when}; config/brand-palette.json, Ruling, Krish, 2026-11-12)\n'
+           f'{json.dumps(brand, sort_keys=True)}\n'
+           'Colours and type only from the brand tokens; the mark is the official file, sized and placed, never type.\n'
+           '\n## References (the inspiration cards Krish ticked; build to them, never copy them)\n'
+           + ''.join(f'- {r}\n' for r in refs))
+    deck_path = fields.pop('deck', None)
+    if kind == 'carousel':
+        if not deck_path:
+            sys.exit('ve card: a carousel card names its deck ("deck": a carousel-deck/1 file); the words come first')
+        import carousel_check
+        deck = load_json(ROOT / deck_path if not Path(deck_path).is_absolute() else Path(deck_path))
+        problems = carousel_check.problems(deck)
+        if problems:
+            sys.exit('ve card: the deck does not pass scripts/carousel_check.py, so nothing is drawn yet:\n  '
+                     + '\n  '.join(problems))
+        cards = deck.get('cards') or []
+        roles = {n: step for step, at in (deck.get('arc') or {}).items()
+                 for n in (at if isinstance(at, list) else [at]) if isinstance(n, int)}
+        out += (f'\n## Deck ({len(cards)} cards; the words are fixed and passed scripts/carousel_check.py)\n'
+                + ''.join(f'- card {n}: {"cover" if n == 1 else "last card" if n == len(cards) else roles.get(n, "body")}'
+                          f', one picture of its point\n' for n in range(1, len(cards) + 1))
+                + 'Template every card with placeholders; the session fills in the deck\'s words when it renders.\n')
+    return out
+
+
 def write_card(path: Path, **fields) -> Path:
     _piece_motion(fields)
     _require_design_lock(fields)
+    visual = visual_sections(fields) if fields.get('kind') in VISUAL_KINDS else ''
     fields.setdefault('model', MODEL)
     fields.setdefault('effort', EFFORT)
     fields.setdefault('max_minutes', 40)
@@ -136,6 +194,11 @@ def write_card(path: Path, **fields) -> Path:
         text = text.replace('\nkind:', f'\nmotion_style: {fields["motion_style"]}\nkind:', 1)
         text = text.replace('\n## Acceptance', motion_section(fields['motion_style']) + recipe_section(fields['motion_style'])
                             + '\n## Acceptance', 1)
+    if fields.get('spend_id'):
+        # A venture's card carries its Control Center booking (reserve_credit_spend, pool codex) for the Codex lane.
+        text = text.replace('\nkind:', f'\nspend_id: {fields["spend_id"]}\nkind:', 1)
+    if visual:
+        text = text.replace('\n## Acceptance', visual + '\n## Acceptance', 1)
     if len(text.encode('utf-8')) > 6144:
         sys.exit(f've card: {path.name} is {len(text.encode())} bytes; a card is 6 KB or less')
     path.parent.mkdir(parents=True, exist_ok=True)

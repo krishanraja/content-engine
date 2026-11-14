@@ -19,7 +19,6 @@ describe('the engine gates', () => {
     ['every failure in the register still has its guard', ['scripts/check_failures.py']],
     ['the title gate', ['scripts/post-pack/title_check.py', '--self-test']],
     ['the engine stamp', ['scripts/post-pack/engine_stamp.py']],
-    ['the week board, its publish check and its thumbnails', ['scripts/post-pack/week_board.py', '--self-test']],
     ['the publish page', ['scripts/post-pack/publish_manager.py', '--self-test']],
     ['the article keeps its pictures: pack figures fed in, zero or stray pictures refused (Krish, 2026-10-31)', ['tests/publish_figures_test.py']],
     ['the making record, drive-link and thumbnails', ['scripts/post-pack/making.py', '--self-test']],
@@ -39,6 +38,7 @@ describe('the engine gates', () => {
     ['the words gate: no content word he said is lost from a cut (chopped-words-published, open until calibrated)', ['tests/quick_edit_words_gate_test.py']],
     ['the production run files each cut with its receipt and stops loudly when a gate holds it', ['tests/quick_edit_produce_day_test.py']],
     ['a hand-built cut is filed only with Krish\'s words on those exact bytes (Ruling, Krish, 2026-11-11)', ['tests/hand_built_cuts_test.py']],
+    ['the ten-second swipe: every carousel card a whole sentence with its picture, the story under ten seconds, no jargon, read back by fresh readers (Krish, 2026-11-13)', ['tests/carousel_check_test.py']],
     ['picture against sound measured from the take on every span; a hand-built or excepted cut is never filed without it (Krish, 2026-11-12)', ['tests/av_sync_test.py']],
     ['the calibrated cut gates: words on every aligner, joins in gaps, captions clock and renderer truth, receipts, the joins reel (W2.4)', ['tests/cutgates_test.py']],
     ['Claude model routing preserves strict skill validation', ['tests/validate_skills_test.py']],
@@ -60,24 +60,16 @@ describe('the engine gates', () => {
 
   it('the publish hook refuses every artifact publish and lets a read through', () => {
     const dir = mkdtempSync(join(tmpdir(), 'gate-'))
-    const made = py(['-c', [
-      'import sys; sys.path.insert(0, "scripts/post-pack"); import engine_stamp',
-      'print(engine_stamp.stamp("<title>This Week\'s Publish Board</title>\\n<p>x</p>\\n", "week_board"), end="")',
-    ].join('\n')])
-    expect(made.status, made.stderr).toBe(0)
-    const good = join(dir, 'week-board.html')
-    const edited = join(dir, 'week-board-edited.html')
-    writeFileSync(good, made.stdout)
-    writeFileSync(edited, made.stdout.replace('<p>x</p>', '<p>y</p>'))
-    const hook = (file: string) => py(['scripts/hooks/artifact_gate.py'],
-      JSON.stringify({ tool_name: 'Artifact', tool_input: { file_path: file, url: 'https://claude.ai/artifact/x' } }))
-    // Claude artifacts are retired (Krish, 2026-10-19): even an engine-built board is refused
-    const retired = hook(good)
+    const page = join(dir, 'week-board.html')
+    writeFileSync(page, '<title>This Week\'s Publish Board</title>\n<p>x</p>\n')
+    const hook = (input: Record<string, unknown>, tool = 'Artifact') => py(['scripts/hooks/artifact_gate.py'], JSON.stringify({ tool_name: tool, tool_input: input }))
+    // Claude artifacts are retired (Krish, 2026-10-19), and so are the old board pages (Ruling, Krish, 2026-11-13).
+    const retired = hook({ file_path: page, url: 'https://claude.ai/artifact/x' })
     expect(retired.status).toBe(2)
-    expect(retired.stderr).toContain('content.krishraja.com')
-    expect(hook(edited).status).toBe(2)
-    const read = py(['scripts/hooks/artifact_gate.py'],
-      JSON.stringify({ tool_name: 'Artifact', tool_input: { action: 'read', url: 'https://claude.ai/artifact/x' } }))
-    expect(read.status).toBe(0)
+    expect(retired.stderr).toContain('scripts/post-pack/live_board.py')
+    expect(hook({ action: 'pin', url: 'https://claude.ai/artifact/x' }).status).toBe(2)
+    expect(hook({ action: 'set', url: 'https://claude.ai/artifact/x' }, 'ArtifactData').status).toBe(2)
+    expect(hook({ action: 'read', url: 'https://claude.ai/artifact/x' }).status).toBe(0)
+    expect(hook({ action: 'query', url: 'https://claude.ai/artifact/x' }, 'ArtifactData').status).toBe(0)
   })
 })

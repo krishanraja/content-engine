@@ -439,7 +439,8 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
            under_vo_lu: float = -20.0, lufs: float = -14.0, tp: float = -1.0, mode: str = 'continuous',
            last_word_end_s: float | None = None, levels: dict | None = None, voice_start_s: float = 0.0,
            lifts: list | None = None, lead_frames: int = 0, fps: int = 30, clips: list | None = None,
-           bed_enter_s: float = 0.0, bed_fade_in_s: float = 0.0, handovers: list | None = None) -> dict:
+           bed_enter_s: float = 0.0, bed_fade_in_s: float = 0.0, handovers: list | None = None,
+           sting_at_frame: int = 0) -> dict:
     """Cut [start_s, start_s + duration_s) from the dialogue master, lay the bed under it (see the module docstring
     for the modes), and master the sum to lufs / tp. Returns the measured result and writes `<out>.bed.json`.
     Mode episode_bed needs `levels` (the music ledger's approved levels), the first word's start and the last word's end
@@ -450,6 +451,12 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
     sample lead_frames x 48000 / fps, counted in samples (never in rounded seconds), and proved silent under the sting;
     the bed runs from sample 0 under it. duration_s, voice_start_s, last_word_end_s and lifts are all on the stem's
     clock, the sting included, so the bed shape eases relative to his first word wherever it lands.
+
+    sting_at_frame is where the sting plays on the cut's own clock (props.sting.atFrame, the hook's last frame + 1;
+    config/brand-palette.json long_cut sting after_hook). With it, his voice runs from sample 0 to that frame, then the
+    sting's frames are silence (proved), then his voice goes on; his first word must come inside the hook, and the bed
+    is lifted to the chapter level under the sting like a chapter card, so the sting never plays over a quiet bed.
+    0 is the retired sting in front of the cut, laid as before.
 
     clips, bed_enter_s, bed_fade_in_s and handovers are the cut's own music plan (spec cuts.<cut>.music, check_clips),
     episode_bed only, all on the stem's clock: the clips' own sound is a third stem beside the voice and the bed, the bed
@@ -479,10 +486,22 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
         if bad:
             raise ValueError(f'a lift window must lie inside the cut (0 to {duration_s:.2f} s): {bad}')
     lead_samples, total_samples = lead_frames * SR // fps, int(round(duration_s * SR))
+    if isinstance(sting_at_frame, bool) or not isinstance(sting_at_frame, int) or sting_at_frame < 0:
+        raise ValueError(f'the sting plays at a whole frame inside the cut, after the hook ({sting_at_frame})')
+    at = sting_at_frame
+    at_samples = at * SR // fps
+    if at and (not lead_frames or at * SR % fps
+               or not at_samples + lead_samples < total_samples):
+        raise ValueError(f'the sting plays at a whole frame inside the cut, after the hook ({at})')
+    if at and not 0 <= voice_start_s < at / fps:
+        raise ValueError(f'his first word ({voice_start_s:.3f} s) must come inside the hook, before the sting at {at / fps:.4f} s')
+    if at and mode == 'episode_bed':
+        # The bed rises under the sting as it does under a chapter card (config/music-bed.json chapter lift).
+        lifts = sorted([*(lifts or []), [at / fps, (at + lead_frames) / fps]])
     if lead_frames:
         if isinstance(lead_frames, bool) or not isinstance(lead_frames, int) or lead_frames < 0 or lead_frames * SR % fps:
             raise ValueError(f'the sting lead is a whole number of frames that is a whole number of samples at {fps} fps')
-        if not lead_frames / fps <= voice_start_s < duration_s:
+        if not at and not lead_frames / fps <= voice_start_s < duration_s:
             raise ValueError(f'his first word ({voice_start_s:.3f} s) must come after the sting ({lead_frames} frames, '
                              f'{lead_frames / fps:.4f} s) and inside the cut ({duration_s:.3f} s)')
     Path(out).parent.mkdir(parents=True, exist_ok=True)
@@ -493,14 +512,26 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
         # padded to the cut's length: the dialogue ends at the last word, the cut runs on through its ending card
         _run(['-ss', f'{start_s:.3f}', '-t', f'{duration_s:.3f}', '-i', dialogue, '-af', f'apad=whole_dur={duration_s:.3f}',
               '-ac', '2', '-ar', '48000', tmp_dialogue])
+    elif at:
+        # His hook to the sting's frame, the sting's frames of silence, then his voice on from the same sample, padded to
+        # the whole stem: all in samples, so not a sample of him is lost or moved by rounding.
+        _run(['-ss', f'{start_s:.3f}', '-i', dialogue, '-filter_complex',
+              f'[0:a]aresample={SR},aformat=channel_layouts=stereo,asplit=2[a][b];'
+              f'[a]atrim=end_sample={at_samples},asetpts=PTS-STARTPTS[hook];'
+              f'[b]atrim=start_sample={at_samples}:end_sample={total_samples - lead_samples},asetpts=PTS-STARTPTS,'
+              f'adelay=delays={lead_samples}S:all=1[rest];'
+              f'[hook][rest]concat=n=2:v=0:a=1,apad=whole_len={total_samples},atrim=end_sample={total_samples}[d]',
+              '-map', '[d]', '-ac', '2', '-ar', '48000', tmp_dialogue])
     else:
         # The sting's frames of silence, then his voice from its first sample, padded to the whole stem: all in samples.
         _run(['-ss', f'{start_s:.3f}', '-i', dialogue, '-af',
               f'aresample={SR},aformat=channel_layouts=stereo,atrim=end_sample={total_samples - lead_samples},'
               f'adelay=delays={lead_samples}S:all=1,apad=whole_len={total_samples},atrim=end_sample={total_samples}',
               '-ac', '2', '-ar', '48000', tmp_dialogue])
+    if lead_frames:
         # Both channels of the sting's samples only (a long cut decoded whole in stereo would cost hundreds of MB).
-        head = np.frombuffer(subprocess.run([ffmpeg(), '-v', 'error', '-i', tmp_dialogue, '-af', f'atrim=end_sample={lead_samples}',
+        head = np.frombuffer(subprocess.run([ffmpeg(), '-v', 'error', '-i', tmp_dialogue, '-af',
+                                             f'atrim=start_sample={at_samples}:end_sample={at_samples + lead_samples}',
                                              '-ac', '2', '-ar', str(SR), '-f', 'f32le', 'pipe:1'], capture_output=True, check=True).stdout,
                              dtype=np.float32)
         laid = _decode(tmp_dialogue)
@@ -508,10 +539,12 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
             raise ValueError(f'the dialogue behind the sting is {len(laid)} samples, not the stem\'s {total_samples}')
         under_db = round(20 * float(np.log10(max(float(np.abs(head).max()), 1e-12))), 1)
         if under_db > -90.0:
-            raise ValueError(f'the dialogue is not silent under the sting ({under_db} dBFS over its first {lead_samples} '
-                             'samples): his voice would play over it')
-        lead_report = {'lead_frames': lead_frames, 'lead_s': round(lead_frames / fps, 4), 'dialogue_from_sample': lead_samples,
-                       'dialogue_under_lead_dbfs': under_db}
+            raise ValueError(f'the dialogue is not silent under the sting ({under_db} dBFS over its {lead_samples} samples '
+                             f'from sample {at_samples}): his voice would play over it')
+        lead_report = {'lead_frames': lead_frames, 'lead_s': round(lead_frames / fps, 4),
+                       'dialogue_from_sample': at_samples + lead_samples if not at else 0,
+                       'dialogue_under_lead_dbfs': under_db, 'sting_at_frame': at, 'sting_at_sample': at_samples,
+                       **({'dialogue_resumes_at_sample': at_samples + lead_samples} if at else {})}
     voice = float(_measure(tmp_dialogue)['input_i'])
     summed = str(Path(out).with_suffix('.sum.wav'))
     tmp_bed = str(Path(out).with_suffix('.bed.wav'))
@@ -603,7 +636,7 @@ def premix(dialogue: str, bed: str | None, out: str, start_s: float, duration_s:
             _sum([tmp_dialogue, tmp_bed], f'[1:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={bed_gain:.2f}dB,'
                  f'afade=t=in:d=0.4,afade=t=out:st={max(0.0, duration_s - 0.6):.3f}:d=0.6[b]', bed_stem, '[b]')
             report['gain_db'] = round(bed_gain, 2)
-        report.update(analyse(voice_samples, _decode(heard), last_word_end_s=last_end, from_s=max(1.5, lead_frames / fps)))
+        report.update(analyse(voice_samples, _decode(heard), last_word_end_s=last_end, from_s=max(1.5, 0 if at else lead_frames / fps)))
     else:
         _sum([tmp_dialogue], '[0:a]aformat=sample_rates=48000:channel_layouts=stereo[v]', summed, '[v]')
     if not (bed and mode == 'episode_bed'):

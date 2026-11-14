@@ -1,6 +1,8 @@
+import { createHash } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { approval, approvedAll } from './_approvals'
+import { parseManifest, pressesOf, signOffsView } from '../../apps/control-plane/api/board/_signOffs'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { JOBS, type JobName } from '../../apps/control-plane/api/board/_run'
 import { VIEW_CONTRACT_VERSION, notModified, viewEtag } from '../../apps/control-plane/api/board/_viewContract'
@@ -121,10 +123,32 @@ function full(): ViewInputs {
     posts: [{ state: 'made', channel: null, due_at: null, url: null, at: '2026-11-15T12:00:00.000Z', buffer_post_id: null },
       { state: 'scheduled', channel: 'instagram', due_at: '2026-11-18T17:30:00.000Z', url: null, at: '2026-11-15T12:05:00.000Z', buffer_post_id: 'b1' }],
     followed: {}, version: 3, placed_by: 'Krish', placed_at: '2026-11-15T10:00:00Z' }]
+  // 1.11.0: the three video sign-off cards, one sound approved and written, one frame he said no to, Gate 2 waiting.
+  i.sign_offs = signOffsFixture()
   // The ideas gate (1.3.0): every piece and the weekly good news stand for ones he approved, so the frozen fixture has no
   // held line (Control Centre's pinned copy draws it as is); the states below hold some.
   return { ...i, approvals: [...approvedAll(WEEK, i.pieces), approval(WEEK, 'sat', 'goodnews', { doc: 'queue/off-sat-goodnews' }),
     approval(WEEK, 'thu', 'aiintern', { doc: 'queue/off-thu-aiintern' })] }
+}
+
+/** Synthetic sign-off cards (_signOffs.ts): every name, hash and Drive id is invented. */
+function signOffsFixture() {
+  const sha = (s: string) => createHash('sha256').update(s).digest('hex')
+  const file = (n: string) => ({ file_id: `1FixtureDriveFile${n}`, url: `https://drive.google.com/file/d/1FixtureDriveFile${n}/view` })
+  const m = parseManifest(JSON.stringify({ schema: 've-sign-offs/1', cards: [
+    { id: 'sfx', title: 'Sound effects', ask: 'Approve each sound you would use.', presses: 'each', writes: 'config/sfx-approved.json', items: [
+      { id: 'thud', title: 'Impact, thud', kind: 'audio', mime: 'audio/wav', sha256: sha('thud'), drive: file('A'), slot: 'slam', use: 'A card slams in', seconds: 2.1, provider: 'Epidemic Sound', provider_id: 'fixture-1' },
+      { id: 'ding', title: 'Desk bell', kind: 'audio', mime: 'audio/wav', sha256: sha('ding'), drive: file('B'), slot: 'count', use: 'A count lands', seconds: 1.2, provider: 'Epidemic Sound', provider_id: 'fixture-2' }] },
+    { id: 'golden', title: 'Golden frames', ask: 'Approve the frames that set the bar.', presses: 'each', want: { min: 5, max: 10 }, writes: 'config/ve/golden-frames.json', items: [
+      { id: 'mon02-tall-00178', title: 'The quote, its phrase lit', kind: 'image', mime: 'image/jpeg', sha256: sha('g1'), drive: file('C'), piece: 'The fixture', date: '2026-11-02', shape: 'tall 9:16', at: '0:17.9', at_s: 17.87, cut: 'short', cut_sha256: sha('cut') }] },
+    { id: 'gate2', title: 'Gate 2: face-with-proof at 16:9', ask: 'One press for the four frames.', presses: 'card', lock: 'face-with-proof@16:9', note: 'A target, not a ve render yet.', items: ['hook', 'face', 'proof', 'close'].map((b, k) => (
+      { id: b, beat: b, title: `The ${b} beat`, kind: 'image', mime: 'image/jpeg', sha256: sha(b), drive: file(`G${k}`), at: `0:0${k}.0` })) },
+  ] }))
+  const presses = pressesOf([
+    { doc_id: 'signoff-sfx', updated_by: 'Krish', body: { kind: 'sign_off', card: 'sfx', presses: [{ card: 'sfx', item: 'thud', verdict: 'approve', sha256: sha('thud'), words: null, at: '2026-11-13T10:00:00Z', by: 'Krish' }] } },
+    { doc_id: 'signoff-golden', updated_by: 'Krish', body: { kind: 'sign_off', card: 'golden', presses: [{ card: 'golden', item: 'mon02-tall-00178', verdict: 'not_this', sha256: sha('g1'), words: 'Too busy.', at: '2026-11-13T10:01:00Z', by: 'Krish' }] } },
+  ])
+  return signOffsView(m, presses, { sfx: { approved: [{ id: 'thud', sha256: sha('thud') }] }, golden: { slots: [] }, lock: { formats: {}, drafts: {} } })
 }
 
 const states = (): ViewInputs[] => {
@@ -171,6 +195,11 @@ describe('the Publish Board view contract', () => {
     }
     expect(media.find(m => m.kind === 'cut')?.verdict).toEqual({ said: 'not_this', words: 'The open drags. Start on the number.', at: '2026-11-16T08:40:00Z' })
     expect(v.days.some(d => d.run)).toBe(true)
+    // 1.11.0: the sign-off cards ride on every week, each sample with its preview, its Drive link and his answer.
+    const so = (served(full()) as Body).sign_offs as any
+    expect(so.cards.map((c: any) => [c.id, c.state])).toEqual([['sfx', 'waiting'], ['golden', 'answered'], ['gate2', 'waiting']])
+    expect(so.cards[0].items[0]).toMatchObject({ verdict: { said: 'approve' }, written: true, presses: { approve: { op: 'sign-off' } } })
+    expect(so.cards[2].presses.approve.body.item).toBe('*')
     expect(v.days.some(d => Array.isArray(d.reviews) && d.reviews.length)).toBe(true)
     expect(v.days.some(d => d.path)).toBe(true)
     // 1.4.0: every path carries its style choices, each option with its press.
@@ -275,7 +304,7 @@ describe('the Publish Board view contract', () => {
     expect(compare(base, next(s => { s.$defs.action.allOf[0].then.required = ['job'] })).breaking.join()).toMatch(/input: no longer always sent/)
   })
 
-  it('puts a held off-day option, on a publishing day too, on its day with its own Approve (Krish, 2026-11-12)', () => {
+  it('puts a held off-day option, on a publishing day too, on the ideas board with its own Approve, never on the day (Ruling, Krish, 2026-11-13)', () => {
     const f = full()
     const decided = 'Remade on black (Krish, 12 Nov).'
     const view = buildView({ ...f, ideas: { ...(f.ideas as Body), offdays: { ...((f.ideas as Body).offdays as Body),
@@ -284,9 +313,13 @@ describe('the Publish Board view contract', () => {
       const day = view.days.find(x => x.day === d)!
       expect(day.options.find(o => o.id === id)?.status).toBe('held')
       expect(day.held.some(h => h.option === `off-${d}-${id}`)).toBe(true)
-      const press = day.actions.find(a => a.kind === 'press' && a.id === `off-${d}-${id}`) as Body | undefined
-      expect(press?.label).toMatch(/^Approve for /)
+      // Never a press on the day: the publish board shows only what he approved; its Approve is on the ideas board.
+      expect(day.actions.some(a => a.kind === 'press' && a.id === `off-${d}-${id}`)).toBe(false)
+      const idea = view.model!.ideas.find(x => x.doc_id === `off-${d}-${id}`)!
+      expect(idea.why).toBe('held')
+      const press = idea.actions.find(a => /^Approve for /.test(a.label)) as Body | undefined
       expect(((press?.body as Body).idea as Body).verdict).toBe('approve')
+      expect(view.model!.days.find(x => x.day === d)!.items.some(it => it.key === `off-${d}-${id}`)).toBe(false)
     }
     // His Approve stands: nothing is held and no extra press is drawn.
     const approved = buildView({ ...f, ideas: { ...(f.ideas as Body), offdays: { ...((f.ideas as Body).offdays as Body), wed: [option('tablefortwo', { decided })] } },
@@ -315,8 +348,10 @@ describe('the Publish Board view contract', () => {
     expect(liveBoardUrl()).toBe(LIVE_BOARD_URL)
     const prompts = buildView(full()).days.flatMap(d => d.actions).filter(a => a.kind === 'prompt').map(a => (a as { prompt: string }).prompt)
     const live = LIVE_BOARD_URL.replace(/^https:\/\//, '')
-    const linked = prompts.filter(p => p.includes('content.krishraja.com/board/'))
+    const linked = prompts.filter(p => p.includes(live))
     expect(linked.length).toBeGreaterThan(0)
     for (const p of linked) expect(p).toMatch(new RegExp(`${live.replace(/[.?#/]/g, m => `\\${m}`)}\\?week=${WEEK}&day=(mon|tue|wed|thu|fri|sat)`))
+    // Ruling (Krish, 2026-11-13): the old boards are retired for good. No prompt sends a session to one as an archive.
+    for (const p of prompts) expect(p).not.toMatch(/content\.krishraja\.com\/board\/\d{4}-\d{2}-\d{2}|is the archive/)
   })
 })

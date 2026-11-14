@@ -15,9 +15,10 @@ import type { DeviceProps } from '../types'
 import { screenState, rect } from './state'
 const ease={enter:ENTER,hero:HERO,exit:EXIT,utility:HERO}
 // The canvas fills the device box in both shapes (a smaller canvas shows the floor as a hard-edged rectangle); the
-// camera frames the card being read inside safeBox, which in 9:16 is the words-safe zone (x 60 to 860, above y 1320).
+// camera frames the card being read inside safeBox: in 9:16 the words-safe x 60 to 860, from under the headline zone
+// to the key band's bottom (y 470 to 1060), so the house caption box (y 1090 to 1320, kit/lock.ts) never covers it.
 export function viewport(p:DeviceProps){return {left:0,top:0,width:p.box.width,height:p.box.height}}
-export function safeBox(p:DeviceProps){const {width:W,height:H}=p.box;return p.aspect==='9:16'?{left:W*60/1080,top:H*370/1920,width:W*800/1080,height:H*940/1920}:{left:0,top:0,width:W,height:H}}
+export function safeBox(p:DeviceProps){const {width:W,height:H}=p.box;return p.aspect==='9:16'?{left:W*60/1080,top:H*470/1920,width:W*800/1080,height:H*590/1920}:{left:0,top:0,width:W,height:H}}
 export function cameraFor(p:DeviceProps){
   const s=screenState(p.object,p.events,p.frame),v=viewport(p),safe=safeBox(p),[x,y,w,h]=s.target
   const focus=new T.Vector3((x!/2400-.5)*6,(.5-y!/1600)*4,0)
@@ -30,6 +31,11 @@ export function cameraFor(p:DeviceProps){
   const eye=aim.clone().add(new T.Vector3(.09+d,.04+d*.2,1).normalize().multiplyScalar(distance))
   const rotation=new T.Euler().setFromRotationMatrix(new T.Matrix4().lookAt(eye,aim,new T.Vector3(0,1,0)))
   return {eye,rotation,focus,distance}
+}
+// A count shows only as many decimals as its sourced values carry: 20 to 13 never passes through 18.83.
+export function countText(value:number,sourced:number[]){
+  const places=Math.max(0,...sourced.map(v=>(String(v).split('.')[1]??'').length))
+  return value.toFixed(places)
 }
 export function paint(g:CanvasRenderingContext2D,p:DeviceProps){
   const s=screenState(p.object,p.events,p.frame),c={...p.tokens,creamSoft:p.tokens.cream,muted:p.tokens.cream,line:p.tokens.inkSoft},t=p.frame/30
@@ -44,7 +50,7 @@ export function paint(g:CanvasRenderingContext2D,p:DeviceProps){
     g.beginPath();g.rect(0,0,w,320);g.clip()
     countCard(g,0,{c,e:ease,W:w,H:h,label:card.label,years:['',''],from:Math.abs(s.values[card.id]!),to:0,times:{countStart:-2,countLand:-1,drop:Infinity,yearSwitch:Infinity}},c)
     g.fillStyle=c.inkSoft;g.fillRect(20,110,w-40,210)
-    g.fillStyle=s.highlight===card.id?c.mint:c.cream;g.font=`160px ${HOUSE_FONTS.display}`;g.fillText(String(Math.round(s.values[card.id]!*100)/100),36,290)
+    g.fillStyle=s.highlight===card.id?c.mint:c.cream;g.font=`160px ${HOUSE_FONTS.display}`;g.fillText(countText(s.values[card.id]!,p.object.dataset?.rows.filter(r=>r.label===card.id||r.label.startsWith(card.id+':')).map(r=>r.value)??[]),36,290)
     if(s.mark===card.id&&s.old[card.id]!==undefined){g.font=`64px ${HOUSE_FONTS.display}`;g.fillText(String(s.old[card.id]),400,280);g.fillRect(390,250,170,5)}
     g.restore();g.fillStyle=c.cream;g.font=`30px ${HOUSE_FONTS.data}`;g.fillText(card.unit??p.object.dataset?.unit??'',x+36,y+365)
   })
