@@ -72,6 +72,16 @@ stories, and its guard does nothing once the stories are live. None of these mak
 no Perplexity, no generation), so the chain stays inside his $15 a week (Krish, 2026-10-29: "happy with $15 a week"); a
 run that would need one stops and says so.
 
+What counts against the $15 is measured by its own unit keys, never by everything metered (Ruling, Krish, 2026-11-14:
+the chain cap as proposed in `docs/proposals/2026-11-14-phase3-and-chain-cap.md`; his words: "I agree with everything
+else until Batch 6"). The families live in `config/chain-cap.json` (inspirationhouse's daily runs, the engine's Vercel
+crons, the fact gate; `unit_kind` agent only), and `chainWeekSpend()` in `apps/control-plane/api/_meter.ts` sums them
+for the week from Monday 00:00 UTC (`tests/control-plane/chain-cap.test.ts`). Left out, each with its reason in that
+file: `aeo-*`, Apify actors, Control Center's own agents and Claude Code on his subscription. Measured on 14 Nov 2026:
+$15.45 (week of 26 Oct), $14.53 (2 Nov), $19.64 (9 Nov, to 14 Nov). Not built yet: the sweep that skips optional runs,
+inspirationhouse tagging first, once the week passes $15, and writes one board item saying so; it never stops the fact
+gate on a piece he picked.
+
 ## The judges on Growth's carousels and Shorts
 
 Every carousel and Short Growth makes is judged by the draft judges' panel before it is made (Ruling, Krish,
