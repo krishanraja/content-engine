@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process'
-import { copyFileSync, readFileSync, writeFileSync } from 'node:fs'
+import { copyFileSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
@@ -41,7 +41,7 @@ describe('the repo map heals itself after a merge', () => {
       expect(run('workflow_dispatch').status).toBe(1)
     } finally {
       copyFileSync(keep, map)
-      spawnSync('rm', ['-f', keep])
+      rmSync(keep, { force: true })
     }
-  })
+  }, 60_000) // three runs of the generator, each a second or two, slower on Windows
 })
