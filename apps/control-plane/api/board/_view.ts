@@ -313,6 +313,8 @@ export function lockOf(locks: ViewInputs['locks'], day: PostedDay, pieceId: stri
   return own && !lockPieceId(own) ? { text: own, day } : null
 }
 export type Typed = { words: string; said_where: string; said_at: string }
+/** A piece's lock on file, unsigned, under the day the piece is on: what his "Signed." press binds (_weekModel.ts). */
+export interface LockToSign { day: PostedDay; path: string; sha256: string; revision: number }
 /** His typed approval of this piece's lock or scripts, carried from a session (picks/<day>-<lock|scripts>-words; Ruling,
  *  Krish, 2026-11-12: "Scripts and locks only."), or null. A lock's counts only for the lock text on the board now (its
  *  lock_sha256 is that text's lockBodyHash), so a lock changed after his words is never shown as approved. */
@@ -830,7 +832,22 @@ export function buildView(i: ViewInputs): WeekView {
       recommendedLook: typeof st?.production === 'string' ? st.production : null,
       recommendedMotion: typeof st?.motion === 'string' ? st.motion : null, recommendedCaptions: typeof st?.captions === 'string' ? st.captions : null })]
   })))
-  const model = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles })
+  // Each piece on a day with its lock written and not yet signed: his "Signed." is one press there, his typed approval of
+  // the lock (picks/<day>-lock-words), on whatever day the piece is placed (Tue 17's data-centres piece too). A lock his
+  // words already approved counts as signed, wherever the piece is.
+  const locksToSign: Record<string, LockToSign> = {}
+  for (const d of days) {
+    for (const p of d.pieces.filter(x => x.approval)) {
+      const lk = lockOf(i.locks, d.day, p.id)
+      if (!lk) continue
+      if (typedApproval(i.picks, lk.day, 'lock', p.id, lk.text)) { signedLocks.push(p.id); continue }
+      if (lockSigned(lk.text) || lk.day !== d.day) continue
+      const doc = `${d.day}-lock-words`
+      locksToSign[p.id] = { day: d.day, path: `docs/plans/${i.week}-week/narrative-lock-${d.day}.md`, sha256: lockBodyHash(lk.text),
+        revision: i.picks.find(x => x.doc_id === doc)?.revision ?? 0 }
+    }
+  }
+  const model = weekModel(days, { week: i.week, today, ideas: i.ideas, plans: i.plans, pieces: i.pieces, heldPieces, signedLocks, placedStyles, locksToSign })
   // What waits on his press: only his real decisions (Approve for publish on a made piece, an approved post's missing
   // choice), never an idea (Ruling, Krish, 2026-11-13).
   const yours: WeekView['yours'] = model.days.flatMap(md => md.items.filter(it => it.decision && it.next)

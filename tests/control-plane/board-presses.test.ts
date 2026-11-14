@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { hisOnlyRefusal, validBody } from '../../apps/control-plane/api/board/_contracts.js'
 import { createBoardHandler } from '../../apps/control-plane/api/board/_handler.js'
+import { signPress } from '../../apps/control-plane/api/board/_weekModel.js'
 import { scriptHash, spokenText, type SendApprovedInput, type SendResult } from '../../apps/control-plane/api/_teleprompter.js'
 vi.mock('../../packages/core/src/media-rollout.js', () => ({ mediaQualityEnforced: () => true, mediaQualityRollout: () => ({ status: 'active' }) }))
 
@@ -365,5 +366,28 @@ describe('a rejected asset files his reason in the rejection inbox', () => {
     const t = setup(undefined, { inboxError: true })
     const { status, out } = await t.put('picks', 'mon-reject-video-short', reject())
     expect(status).toBe(200); expect(out).toMatchObject({ ok: true, revision: 1, inbox: 'failed' })
+  })
+})
+
+describe('his "Signed." on a narrative lock, one press on the board, on any day the piece is placed', () => {
+  // Tue 17 Nov: the data-centres piece he moved there with place_piece (13 Nov); a piece on an off day is still a piece.
+  const TUE = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118'
+  const filled = (day: string, over: Record<string, unknown> = {}) => {
+    const p = signPress('2026-11-16', TUE, { day: day as never, path: `docs/plans/2026-11-16-week/narrative-lock-${day}.md`, sha256: 'a'.repeat(64), revision: 0 })
+    // As the board fills it in: his words at words.path and the press time at each stamp.
+    return { ...(p.body as Record<string, unknown>), words: 'Signed.', at: '2026-11-14T08:05:00.000Z', said_at: '2026-11-14T08:05:00.000Z', ...over }
+  }
+  it('saves his typed approval of the lock as his, on Tuesday as on Monday', async () => {
+    for (const day of ['tue', 'mon']) {
+      const t = setup()
+      const { status, out } = await t.put('picks', `${day}-lock-words`, filled(day))
+      expect(status, `${day}: ${JSON.stringify(out)}`).toBe(200)
+      expect(t.calls[0].args).toMatchObject({ p_collection: 'picks', p_id: `${day}-lock-words`, p_actor: 'Krish', p_body: { kind: 'sign_lock', words: 'Signed.', piece_id: TUE } })
+    }
+  })
+  it('refuses a lock filed under another day, a day with no pieces (Sunday), and a no', async () => {
+    expect((await setup().put('picks', 'tue-lock-words', filled('tue', { lock_path: 'docs/plans/2026-11-16-week/narrative-lock-fri.md' }))).status).toBe(400)
+    expect((await setup().put('picks', 'sun-lock-words', filled('sun'))).status).toBe(400)
+    expect((await setup().put('picks', 'tue-lock-words', filled('tue', { approved: false }))).status).toBe(400)
   })
 })

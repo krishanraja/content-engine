@@ -340,3 +340,43 @@ describe('a piece already on a day is never also an idea', () => {
     expect(off.model!.ideas.find(i => i.piece_id === TUE)).toBeTruthy()
   })
 })
+
+describe('his "Signed." is one press on the piece whose lock is written and not signed, on any day it is placed', () => {
+  const TUE = 'b019dbf8-8051-4cab-9b5e-2ad77b3f5118', WED = 'db9f9f6a-1092-49be-8024-f335e060305a'
+  const lockText = (id: string, day: string) => `# Narrative lock: ${day}\n\npiece_id: ${id}\nPublishes: 2026-11-17\n\nThe arc.`
+  const piece = (id: string, date: string, slot: string) => ({ id, idea: `Piece ${id.slice(0, 4)}`, thesis: 'x', scheduled_for: date, lane_slot: slot, state: 'drafting', buried_at: null, body: '', updated_at: '2026-11-13T22:00:00Z', meta: {} })
+  const inputs = (picks: Body[] = []): ViewInputs => ({
+    week: W16, now: new Date('2026-11-14T08:00:00Z'), pieces: [piece(TUE, '2026-11-17', 'mind_the_gap'), piece(WED, '2026-11-18', 'under_the_hood')],
+    picks, queue: [], history: [], runs: {}, north_star: null, ideas: { days: { wed: [{ id: WED, so_what: 'x' }] } },
+    locks: { tue: lockText(TUE, 'tue'), wed: lockText(WED, 'wed') }, research_files: { wed: true },
+    formats: { production: [{ id: 'face-with-proof', name: 'Face with proof', pitch: 'x', status: 'live' }], script: [] }, approvals: [approval(W16, 'tue', TUE), approval(W16, 'wed', WED)], items: [], all_items: [], plans: {},
+  } as unknown as ViewInputs)
+  it('Tue 17 and Wed 18: Sign the lock is the card\'s press, bound to the lock as it stands, with the lock to read', () => {
+    const v = buildView(inputs())
+    for (const [day, id] of [['tue', TUE], ['wed', WED]] as const) {
+      const it = model(v, day).items.find(x => x.piece_id === id)!
+      expect(it.next, day).toMatchObject({ kind: 'press', label: 'Sign the lock', collection: 'picks', id: `${day}-lock-words`,
+        body: { kind: 'sign_lock', day, via: 'words', approved: true, piece_id: id, lock_path: `docs/plans/${W16}-week/narrative-lock-${day}.md` },
+        words: { path: 'words', required: true } })
+      expect(it.decision).toBe(true)
+      expect(it.read.sources[0]).toMatchObject({ label: `The narrative lock (narrative-lock-${day}.md)` })
+    }
+  })
+  it('his words saved there sign it: Tue 17\'s piece is Branded and the press is gone', () => {
+    const sha = (buildView(inputs()).model!.days.find(d => d.day === 'tue')!.items[0].next as any).body.lock_sha256
+    const doc = { doc_id: 'tue-lock-words', updated_by: 'Krish', revision: 1, body: { kind: 'sign_lock', day: 'tue', via: 'words', approved: true, piece_id: TUE,
+      lock_path: `docs/plans/${W16}-week/narrative-lock-tue.md`, lock_sha256: sha, words: 'Signed.', at: '2026-11-14T08:05:00Z', said_at: '2026-11-14T08:05:00Z',
+      said_where: 'the Publish Board in Control Centre', session_ref: 'https://controlcenter.krishraja.com/#/content?week=2026-11-16&day=tue' } }
+    const it = model(buildView(inputs([doc])), 'tue').items[0]
+    expect(it.stage.key).toBe('branded')
+    expect(it.next).not.toMatchObject({ label: 'Sign the lock' })
+    // Then his production pick leads, as on a series day.
+    expect(it.next).toMatchObject({ kind: 'press', op: 'look', label: 'Pick the look' })
+    expect(it.decision).toBe(true)
+    expect(it.others.map(a => a.label)).toContain('Pick the captions')
+    expect(it.others.map(a => a.label)).not.toContain('Pick the look')
+    // A lock changed after his words is not signed by them.
+    const changed = { ...inputs([doc]), locks: { tue: `${lockText(TUE, 'tue')}\nOne more line.` } } as ViewInputs
+    expect(model(buildView(changed), 'tue').items[0].next).toMatchObject({ label: 'Sign the lock' })
+  })
+})
