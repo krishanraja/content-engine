@@ -1,5 +1,7 @@
 """QC crops follow the renderer geometry for each caption page's starting beat."""
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -8,6 +10,8 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from velib import qc, qc_faces, qc_captions, qc_gates
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ocr_guard import real_ocr  # noqa: E402
 
 
 def props():
@@ -64,6 +68,24 @@ class CaptionRegions(unittest.TestCase):
         self.assertEqual(report['value']['count'], 2)
         self.assertEqual(report['value']['pages'], 3)
 
+
+
+class RealCaptionReader(unittest.TestCase):
+    """The renderer check's own reader on real pixels: the tests above stand a fake in for it (audit ve-9)."""
+
+    @real_ocr
+    def test_tesseract_reads_a_drawn_caption_page(self):
+        _, captions, *_ = qc_gates._cutgates()
+        with tempfile.TemporaryDirectory() as tmp:
+            video = Path(tmp) / 'page.mp4'
+            subprocess.run([captions._ffmpeg(), '-v', 'error', '-y', '-f', 'lavfi', '-i', 'color=c=black:s=1080x1920:d=0.2:r=30',
+                            '-vf', "drawtext=text='MONEY MOVES':fontsize=96:fontcolor=white:x=120:y=1200",
+                            '-pix_fmt', 'yuv420p', str(video)], check=True)
+            reader = captions.tesseract_reader(video, (60, 1150, 960, 200))
+            self.assertIsNotNone(reader)
+            read = reader(2, 'MONEY MOVES')
+            self.assertGreaterEqual(read['score'], 0.9, read)
+            self.assertLess(reader(2, 'NOTHING ALIKE')['score'], 0.5, 'a different page does not read as this one')
 
 if __name__ == '__main__':
     unittest.main()

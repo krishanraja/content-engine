@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-24.04, windows-latest]  # the tesseract pin below is for 24.04
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -68,6 +68,12 @@ jobs:
           test -x "$video_ffmpeg_bin/ffmpeg"
           test -x "$video_ffmpeg_bin/ffprobe"
           echo "$video_ffmpeg_bin" >> "$GITHUB_PATH"
+      - name: Install pinned tesseract on Linux (the on-screen text checks read real frames here, audit ve-9)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends tesseract-ocr=5.3.4-1build5 tesseract-ocr-eng=1:4.1.0-2
+          tesseract --version
       - name: Verify media toolchain
         run: |
           ffmpeg -version
@@ -78,6 +84,15 @@ jobs:
         shell: pwsh
         run: powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/verify-runner-source.ps1
       - run: npm run verify
+      - name: Real OCR checks (fail, never skip, without tesseract)
+        if: runner.os == 'Linux'
+        env:
+          VE_REQUIRE_OCR: '1'
+        run: |
+          python tests/channel_safe_test.py
+          python tests/ve_composition_test.py
+          python tests/ve_qc_modules_test.py
+          python tests/ve_qc_captions_where_test.py
 
   browser-buttons:
     # Every Download, Copy picture and Copy button on a built publish page,
