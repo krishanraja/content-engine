@@ -25,8 +25,7 @@ export const VeLayoutSchema = z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SP
 export const VeRoleSchema = z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call'])
 // The same verbs as the renderer's EngineEventSchema (apps/renderer/src/engine/props.ts), so a spec can name every
 // verb a library device accepts (config/ve/devices.json); compile still refuses a verb its device does not list.
-export const VeVerbSchema = z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw',
-  'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick'])
+export const VeVerbSchema = z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick', 'drop', 'grey', 'multiply', 'dim', 'thin', 'grow', 'light', 'connect', 'rest_on'])
 export const VeTransitionSchema = z.enum(['cut', 'cut_on_curve', 'carry', 'zoom_out'])
 export const VeFinishSchema = z.enum(['house_grain', 'halftone_news', 'analog_paper'])
 
