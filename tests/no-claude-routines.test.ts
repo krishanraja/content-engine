@@ -148,6 +148,21 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
     }
     expect(text).toContain('workflow_dispatch:')
     expect(text).toContain('python3 scripts/sunday_ideas.py built')
+    // The 13 Nov run could not open its pull request ("Resource not accessible by integration") and `|| true` hid it.
+    expect(text).toMatch(/^permissions:\n(?:  .*\n)*  pull-requests: write$/m)
+    expect(text).not.toMatch(/gh pr create(?:[^\n]*\\\n)*[^\n]*\|\| true/)
+    expect(text).toContain('python3 scripts/sunday_ideas.py why "$MONDAY"')
+    const why = spawnSync('python3', ['-c', `
+import sys; sys.path.insert(0, 'scripts')
+from sunday_ideas import missing, view_has_ideas
+opt = lambda i: {'doc_id': i}
+gn = {'doc_id': 'off-sat-goodnews', 'stories_fresh': False, 'stories_due': '2026-11-13'}
+v = {'days': [{'day': 'mon', 'options': [opt('mon-1')]}, {'day': 'wed', 'options': [opt('held-x')]}, {'day': 'fri', 'options': [opt('fri-1')]}, {'day': 'sat', 'options': [gn]}]}
+print(view_has_ideas(v)); print('|'.join(missing(v)))
+v['days'][1]['options'].append(opt('wed-1')); gn['stories_fresh'] = True
+print(view_has_ideas(v)); print('|'.join(missing(v)) or 'none')
+`], { cwd: ROOT, encoding: 'utf8' })
+    expect(why.stdout.trim().split('\n')).toEqual(['False', "wed: no options|good news: this week's five stories are not in (stories_due 2026-11-13); saturday-goodnews.yml finds them", 'True', 'none'])
     expect(text).toMatch(/if: steps\.guard\.outputs\.go == 'true'\n\s+uses: anthropics\/claude-code-action/)
     expect(text).toContain('Stop\n            after step 7.')
   })
