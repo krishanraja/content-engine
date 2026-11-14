@@ -14,7 +14,8 @@ Where things live:
     will live and the video runners need to know this". On the runner
     machines that is
     H:\\My Drive\\Ventures\\Active Ventures\\makeyourmindup\\1 Brand kit (permanent)\\Music:
-    env MINDMAKE_MUSIC_ROOT, else runtime.music_root in config/studio.json.
+    env MINDMAKE_MUSIC_ROOT when it is there, else the Music folder found by its
+    Drive ID (drive-paths.json, scripts/drive_paths.py), else runtime.music_root.
   - The ledger is config/music-library.json, committed. Audio is never
     committed (scripts/check-no-secrets.ts).
   - Only a track in the ledger, approved by Krish, with a licence that covers
@@ -55,6 +56,7 @@ from pathlib import Path
 
 if str(Path(__file__).resolve().parents[1]) not in sys.path:
     sys.path.insert(1, str(Path(__file__).resolve().parents[1]))
+import drive_paths  # noqa: E402  scripts/drive_paths.py: runtime folders found by their Drive IDs
 import bed_shape  # noqa: E402  scripts/bed_shape.py: the one bed shape (config/music-bed.json)
 
 REPO = Path(__file__).resolve().parents[2]
@@ -132,12 +134,20 @@ def save(data, path=None):
     ledger_path(path).write_text(json.dumps(data, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
 
-def music_root(data=None):
-    """The folder holding the audio: MINDMAKE_MUSIC_ROOT, else
-    runtime.music_root in config/studio.json, else on Windows the ledger's
-    default. None when none is set."""
+def music_root(data=None, drive_paths_file=None):
+    """The folder holding the audio: MINDMAKE_MUSIC_ROOT when it names a folder
+    that is there, else where the library sync last found the Music folder by
+    its Drive ID (drive-paths.json, scripts/drive_paths.py; 11 Nov a rename
+    above it broke the path), else MINDMAKE_MUSIC_ROOT as set, else
+    runtime.music_root in config/studio.json on Windows, else the ledger's
+    Windows default. None when none is set."""
     data = data or {}
     env = os.environ.get(data.get('root_env') or 'MINDMAKE_MUSIC_ROOT') or os.environ.get('MINDMAKE_MUSIC_ROOT')
+    if env and Path(env).is_dir():
+        return Path(env)
+    found = drive_paths.found_path('music_root', drive_paths_file)
+    if found:
+        return found
     if env:
         return Path(env)
     try:

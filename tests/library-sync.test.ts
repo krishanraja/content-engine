@@ -160,7 +160,8 @@ describe('the Heartside library in the same sync', () => {
 
   // Krish, 2026-11-09: "ideally ID so if folders move it doesnt matter".
   it('asks the engine where the folder is by its Drive ID before it uses the configured path', () => {
-    expect(sync).toContain('$heartside = Resolve-HeartsideRoot $config (Get-HeartsideFolder $client $base $token $machine)')
+    expect(sync).toContain('$heartsideFolder = Get-HeartsideFolder $client $base $token $machine')
+    expect(sync).toContain('$heartside = Resolve-HeartsideRoot $config $heartsideFolder')
     expect(sync).toContain("'/api/library/pending?machine={0}&limit=1&library=heartside'")
     const resolver = fn('Resolve-HeartsideRoot')
     // Gone or in the bin stops the pass before any fallback to an old path.
@@ -281,5 +282,109 @@ describe('the Heartside library in the same sync', () => {
   it('keeps its own clone up to date, as the recordings lane does', () => {
     expect(sync).toContain("$SourceFolderName = 'library-source'")
     expect(sync).toContain('pull --ff-only --quiet')
+  })
+})
+
+// 11 Nov: "Active" became "Active Ventures" above the library and music roots,
+// and both home computers lost them, found by path. Since 14 Nov the sync asks
+// the engine where every runtime folder is by its Drive ID, uses the library's,
+// and writes them all to drive-paths.json for the other readers on the computer.
+describe('the runtime folders by their Drive IDs', () => {
+  it('asks once a pass, uses the found library ahead of studio.json, and stops on a library gone from Drive', () => {
+    expect(sync).toContain("'/api/library/pending?machine={0}&limit=1&folders=1'")
+    expect(sync).toContain('$root = Resolve-LibraryRoot $config $folders')
+    const resolver = fn('Resolve-LibraryRoot')
+    expect(resolver.indexOf("-eq 'gone'")).toBeLessThan(resolver.indexOf('$root = $configured'))
+    expect(resolver.indexOf("$state -eq 'found'")).toBeLessThan(resolver.indexOf('$root = $configured'))
+    for (const name of ['Get-RuntimeFolders', 'Find-RuntimeFolder', 'ConvertTo-LocalDrivePath', 'Resolve-LibraryRoot']) {
+      expect(fn(name)).not.toMatch(/New-Item|CreateDirectory|mkdir/i)
+    }
+  })
+
+  it('writes drive-paths.json in the engine\'s runtime folder, only from an engine answer, in the shape the other repositories read', () => {
+    const writer = fn('Write-DrivePaths')
+    expect(writer).toContain('if ($null -eq $Folders) { return }')
+    expect(writer).toContain('if ($Check)')
+    for (const key of ['name', 'id', 'state', 'path', 'drive_path', 'reason']) expect(writer).toMatch(new RegExp(`\\n\\s+${key} = `))
+    expect(writer).toContain("written_by = 'library-sync'")
+    expect(fn('Get-DrivePathsFile')).toContain("Join-Path $folder 'drive-paths.json'")
+    // Every runtime folder the engine knows by ID, and Heartside's library.
+    expect(writer).toContain("name = 'heartside_library'")
+  })
+
+  describe.runIf(POWERSHELL !== null)('run in PowerShell against a folder fixture', { timeout: 60_000 }, () => {
+    const sep = process.platform === 'win32' ? '\\' : '/'
+    const at = (base: string, ...names: string[]) => [base, 'drive', 'My Drive', ...names].join(sep)
+    const OLD = ['Ventures', 'Active', 'makeyourmindup']
+    const NEW = ['Ventures', 'Active Ventures', 'makeyourmindup']
+    const found = (name: string, ...names: string[]) => ({ name, state: 'found', drive_id: `${name}-id-000000`, path: ['My Drive', ...names].join('/'), segments: ['My Drive', ...names] })
+    const run = (folders: unknown, setup: (base: string) => void) => {
+      const base = realpathSync.native(mkdtempSync(join(tmpdir(), 'runtime-folders-')))
+      try {
+        setup(base)
+        const configured = at(base, ...OLD)
+        const config = { runtime: { library_root: configured }, local_roots: { runtime: join(base, 'runtime') } }
+        const script = [
+          'Set-StrictMode -Version Latest',
+          "$ErrorActionPreference = 'Stop'",
+          "$LibraryRoot = ''",
+          '$Check = $false',
+          "$TopFolders = @('1 Brand kit (permanent)', '2 Channel art (permanent)', '3 Posts')",
+          '$script:Problems = New-Object System.Collections.Generic.List[string]',
+          '$script:Log = New-Object System.Collections.Generic.List[string]',
+          'function Write-Log([string]$Message) { $script:Log.Add($Message) }',
+          "function Get-Setting([string]$Name) { return '' }",
+          ...['Get-Field', 'Test-Inside', 'Test-SamePath', 'Assert-NoStudioOverlap', 'Find-RuntimeFolder', 'Get-DriveForDesktopRoot', 'ConvertTo-HeartsidePath', 'ConvertTo-LocalDrivePath', 'Get-DrivePathsFile', 'Write-DrivePaths', 'Resolve-LibraryRoot'].map(fn),
+          `$config = '${JSON.stringify(config).replace(/'/g, "''")}' | ConvertFrom-Json`,
+          `$folders = '${JSON.stringify(folders).replace(/'/g, "''")}' | ConvertFrom-Json`,
+          '$out = [ordered]@{ root = $null; error = $null; problems = $null }',
+          'Write-DrivePaths $config $folders $null $config.runtime.library_root',
+          'try { $out.root = Resolve-LibraryRoot $config $folders } catch { $out.error = $_.Exception.Message }',
+          '$out.problems = @($script:Problems)',
+          '$out | ConvertTo-Json -Compress',
+        ].join('\n')
+        const file = join(base, 'resolve.ps1')
+        writeFileSync(file, script)
+        const ran = spawnSync(POWERSHELL!, ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', file], { encoding: 'utf8', env: { ...process.env, TERM: 'dumb' } })
+        expect(ran.stderr).toBe('')
+        const out = JSON.parse(ran.stdout.trim().split('\n').pop()!) as { root: string | null; error: string | null; problems: string[] }
+        let paths: { folders: Array<{ name: string; id: string; state: string; path: string | null }> } | null = null
+        try { paths = JSON.parse(readFileSync(join(base, 'runtime', 'drive-paths.json'), 'utf8')) } catch { paths = null }
+        return { ...out, base, paths }
+      } finally {
+        rmSync(base, { recursive: true, force: true })
+      }
+    }
+
+    it('follows the 11 Nov rename that the configured path no longer names, and writes it for the other readers', () => {
+      const music = [...NEW, '1 Brand kit (permanent)', 'Music']
+      const out = run([found('library_root', ...NEW), found('music_root', ...music), { name: 'archive_root', state: 'unknown', drive_id: 'archive-id-0000', reason: 'no delegation' }],
+        (base) => mkdirSync(at(base, ...music), { recursive: true }))
+      expect(out.error).toBeNull()
+      expect(out.root).toBe(at(out.base, ...NEW))
+      expect(out.paths!.folders).toEqual([
+        expect.objectContaining({ name: 'library_root', id: 'library_root-id-000000', state: 'found', path: at(out.base, ...NEW) }),
+        expect.objectContaining({ name: 'music_root', state: 'found', path: at(out.base, ...music) }),
+        expect.objectContaining({ name: 'archive_root', state: 'unknown', path: null }),
+      ])
+    })
+
+    it('stops on a library in the bin, names the problem, and makes nothing, even where the old path is still there', () => {
+      const out = run([{ name: 'library_root', state: 'gone', problem: 'library_root_trashed', drive_id: 'x-id-0000000', reason: 'in the bin' }],
+        (base) => mkdirSync(at(base, ...OLD), { recursive: true }))
+      expect(out.root).toBeNull()
+      expect(out.error).toContain('gone from Drive')
+      expect(out.problems).toEqual(['library_root_trashed'])
+    })
+
+    it('falls back to studio.json when the engine cannot say, and marks a found folder this computer lacks', () => {
+      const out = run([found('library_root', 'Elsewhere', 'makeyourmindup')], (base) => mkdirSync(at(base, ...OLD), { recursive: true }))
+      expect(out.error).toBeNull()
+      expect(out.root).toBe(at(out.base, ...OLD))
+      expect(out.paths!.folders[0]).toMatchObject({ state: 'not_on_this_machine' })
+      const none = run(null, (base) => mkdirSync(at(base, ...OLD), { recursive: true }))
+      expect(none.root).toBe(at(none.base, ...OLD))
+      expect(none.paths).toBeNull()
+    })
   })
 })

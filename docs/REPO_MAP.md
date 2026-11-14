@@ -3314,16 +3314,27 @@ What the compiler looks for, as pure functions.
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
-### `apps/control-plane/api/library/_heartsideFolder.ts`
+### `apps/control-plane/api/library/_driveFolder.ts`
 
-- `const HEARTSIDE_LIBRARY_FOLDER_ID`
 - `const FOLDER_WALK_MAX_DEPTH`
 - `const FOLDER_CACHE_MS`
 - `const MY_DRIVE`
 - `interface DriveFolderMeta`
 - `type DriveLookup`
-- `type HeartsideFolder`
+- `interface FolderSubject`
+- `type DriveFolder<P>`
 - `function isPathSafeName(name: unknown): name is string`
+- `async function walkDriveFolder(folderId: string, rootId: string, lookup: DriveLookup, subject: FolderSubject): Promise<…`
+- `function resetDriveFolderCache(): void`
+- `async function resolveDriveFolders(wanted: ReadonlyArray<{ id: string; subject: FolderSubject }>, now = Date.now()): Pr…`
+
+### `apps/control-plane/api/library/_heartsideFolder.ts`
+
+- `const HEARTSIDE_LIBRARY_FOLDER_ID`
+- `export { FOLDER_CACHE_MS, FOLDER_WALK_MAX_DEPTH, MY_DRIVE, isPathSafeName }`
+- `export type { DriveFolderMeta, DriveLookup }`
+- `type HeartsideFolder`
+- `const HEARTSIDE_SUBJECT: FolderSubject`
 - `async function walkFolderPath(folderId: string, rootId: string, lookup: DriveLookup): Promise<HeartsideFolder>`
 - `function resetHeartsideFolderCache(): void`
 - `async function resolveHeartsideFolder(now = Date.now()): Promise<HeartsideFolder>`
@@ -3344,6 +3355,54 @@ What the compiler looks for, as pure functions.
 - `type InboxListing`
 - `async function listInbox(folderId: string): Promise<InboxListing>`
 - `async function copyDriveFile(fileId: string, uploadUrl: string, contentType: string, bytes: number, timeoutMs: number, …`
+
+### `apps/control-plane/api/library/_lanes.ts`
+
+- `const LANE_PREFIX`
+- `const LANE_PROBLEMS: Readonly<Record<string, string>>`
+- `const LANE_REPORT_FRESH_HOURS`
+- `interface WatchHealth`
+- `interface WindowsHealth`
+- `const PREFLIGHT_CHECKS: readonly string[]`
+- `interface PreflightHealth`
+- `const OVERNIGHT_REASONS: readonly string[]`
+- `interface OvernightCut`
+- `interface OvernightHealth`
+- `interface LaneReport`
+- `function parseWatchHealth(value: unknown): WatchHealth | undefined`
+- `function parseWindowsHealth(value: unknown): WindowsHealth | undefined`
+- `function parsePreflightHealth(value: unknown): PreflightHealth | undefined`
+- `function parseOvernightHealth(value: unknown): OvernightHealth | undefined`
+- `function overnightReadiness(reports: readonly LaneReport[], now: number): { primary: { machine: string; ok: boolean; at…`
+- `function parseLaneReport(value: unknown, now: string): LaneReport | null`
+- `function laneKey(machine: string): string`
+- `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
+- `async function writeLaneReport(bucket: string, report: LaneReport): Promise<boolean>`
+- `async function readLaneReports(bucket: string): Promise<{ reports: LaneReport[]; error: boolean }>`
+
+### `apps/control-plane/api/library/_lanes.ts`
+
+- `const LANE_PREFIX`
+- `const LANE_PROBLEMS: Readonly<Record<string, string>>`
+- `const LANE_REPORT_FRESH_HOURS`
+- `interface WatchHealth`
+- `interface WindowsHealth`
+- `const PREFLIGHT_CHECKS: readonly string[]`
+- `interface PreflightHealth`
+- `const OVERNIGHT_REASONS: readonly string[]`
+- `interface OvernightCut`
+- `interface OvernightHealth`
+- `interface LaneReport`
+- `function parseWatchHealth(value: unknown): WatchHealth | undefined`
+- `function parseWindowsHealth(value: unknown): WindowsHealth | undefined`
+- `function parsePreflightHealth(value: unknown): PreflightHealth | undefined`
+- `function parseOvernightHealth(value: unknown): OvernightHealth | undefined`
+- `function overnightReadiness(reports: readonly LaneReport[], now: number): { primary: { machine: string; ok: boolean; at…`
+- `function parseLaneReport(value: unknown, now: string): LaneReport | null`
+- `function laneKey(machine: string): string`
+- `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
+- `async function writeLaneReport(bucket: string, report: LaneReport): Promise<boolean>`
+- `async function readLaneReports(bucket: string): Promise<{ reports: LaneReport[]; error: boolean }>`
 
 ### `apps/control-plane/api/library/_lanes.ts`
 
@@ -3409,7 +3468,7 @@ What the compiler looks for, as pure functions.
 - `function parseLibraryConfirmRequest(value: unknown): Parsed<{ path: LibraryPath; sha256: string }>`
 - `const LIBRARY_PENDING_DEFAULT`
 - `const LIBRARY_PENDING_MAX`
-- `function parseLibraryPendingQuery(query: unknown): { machine: string; limit: number; library: LibraryName } | null`
+- `function parseLibraryPendingQuery(query: unknown): { machine: string; limit: number; library: LibraryName; folders: boo…`
 - `interface LibraryWrittenItem`
 - `function isBesideName(path: string, candidate: unknown): candidate is string`
 - `function parseLibraryWrittenRequest(value: unknown): { machine: string; items: LibraryWrittenItem[]; library: LibraryNa…`
@@ -3456,6 +3515,14 @@ Takes place themselves (Wave 2, W2.3): once the Inbox job has copied a take
 - `async function writeRecordingManifest(bucket: string, manifest: RecordingManifest): Promise<boolean>`
 - `function withName( previous: RecordingManifest | null, request: RecordingRequest, now: string, ): RecordingManifest`
 - `function recordingView(manifest: RecordingManifest)`
+
+### `apps/control-plane/api/library/_runtimeFolders.ts`
+
+- `const RUNTIME_FOLDER_NAMES`
+- `type RuntimeFolderName = typeof RUNTIME_FOLDER_NAMES[number]`
+- `type RuntimeFolder = DriveFolder & { name: RuntimeFolderName }`
+- `function runtimeFolderIds(config: unknown = studio): Array<{ name: RuntimeFolderName; id: string }>`
+- `async function resolveRuntimeFolders(now = Date.now()): Promise<RuntimeFolder[]>`
 
 ### `apps/control-plane/api/library/confirm.ts`
 

@@ -86,10 +86,26 @@ def style_problems(spec: dict) -> list[str]:
 
 
 def music_root() -> Path:
+    """MINDMAKE_MUSIC_ROOT when it names a folder that is there, else where the library sync last found the Music folder
+    by its Drive ID (drive-paths.json, scripts/drive_paths.py), else MINDMAKE_MUSIC_ROOT as set."""
     root = os.environ.get(MUSIC_ENV)
+    if root and Path(root).is_dir():
+        return Path(root)
+    found = _drive_paths().found_path('music_root')
+    if found:
+        return found
     if not root:
         raise ValueError(f'{MUSIC_ENV} is not set (python scripts/quick-edit/music.py fetch prints it)')
     return Path(root)
+
+
+def _drive_paths():
+    """scripts/drive_paths.py, a standalone module beside this package."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('drive_paths', ROOT / 'scripts' / 'drive_paths.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def library_path(row: dict) -> str:

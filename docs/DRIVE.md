@@ -93,6 +93,20 @@ home computer: `config/studio.json` rules, and a stale setting is reported.
 | `Heartside > 03b_Social-Schedule`, named `05_Social-Library` until Krish renamed it on 2026-11-09 (`1AHZLgwj1nHemNJeP56fQU6iTpgIEALzZ`, found by that ID; fallback path `H:\My Drive\Ventures\Active Ventures\Heartside\03b_Social-Schedule`, in `config/heartside-library.json`, not `studio.json`) | the library sync on the home computer (`MINDMAKE_HEARTSIDE_LIBRARY_ROOT` overrides it on one machine); Codex, which posts from it | Heartside's social library (Krish, 2026-11-03: "Why don't you duplicate that Python script for Heartside then? We're going to need to do a lot more of this type of stuff moving forward"). The sync writes only under `Posts`, one folder per post id (`Posts/F01`). Beside it, the growth engine's Codex README, posting strategy and schedule Sheets, which the sync never touches. Found by ID (Krish, 2026-11-09: "ideally ID so if folders move it doesnt matter"): the engine reads the folder by its ID as its owner (`GOOGLE_DRIVE_OWNER`, read only), walks its parents up to My Drive, and returns the path on the Heartside `GET /api/library/pending` answer (`folder`, `api/library/_heartsideFolder.ts`); the sync maps `My Drive/...` onto the drive that holds My Drive (`Resolve-HeartsideRoot`). A rename or a move needs no change here. A folder deleted or in the bin stops the Heartside pass with `heartside_library_gone` or `heartside_library_trashed`; a found folder not yet on the H: drive stops it with `heartside_library_root_missing`. No folder is ever made. When Google cannot be asked, the configured path is used. If the folder is replaced by a new one, its ID goes in `drive_id` and `HEARTSIDE_LIBRARY_FOLDER_ID` (a test keeps them equal). |
 | `makeyourmindup` (`1HHI0u24N3o3-yeprQzHdXVZtA7cNcKxh`; `H:\My Drive\Ventures\Active Ventures\makeyourmindup`). Inside it: `3 Posts` `17KdbFrZXKmGXkCaMpmntRD9rrAhnWkcT`, `1 Brand kit (permanent) > Music` `1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri`, `6 Research library` `12FKoQhLlUkzwJDKYao95YIY_H_HQupS6` (the engine's mirror, below) | the library sync on the home computer that files each post's assets (`MINDMAKE_LIBRARY_ROOT`, `runtime.library_root`), and the recordings upload on both, which reads `Video Engine > Inbox` | `1 Brand kit (permanent)`, `2 Channel art (permanent)`, `3 Posts` with one folder per post; the sync writes only under these three. Also `Video Engine` and `Video Engine brief and architecture (reference only)`. `00_Brand-Assets` is gone (archived 11 November 2026, below). Its own `READ ME FIRST.txt` describes the inside. |
 
+### Every runtime folder by its ID, on the home computers (14 Nov)
+
+On 11 Nov a rename above the library and music roots broke both home computers, which found them by the paths in
+`config/studio.json` `runtime.*`. Since 14 Nov the library sync asks the engine once a pass where every folder in
+`drive_ids` is now (`GET /api/library/pending?folders=1`, `api/library/_runtimeFolders.ts`, the same walk as
+Heartside's, `_driveFolder.ts`), uses the found `library_root` ahead of the configured path (`Resolve-LibraryRoot`;
+`library_root_gone` or `library_root_trashed` stops the pass with no fallback), and writes them all to
+`%LOCALAPPDATA%\makeyourmindup\drive-paths.json` (`Write-DrivePaths`). Music reads it before its configured path
+(`scripts/drive_paths.py`, `music.py`, `velib/sfx.py`); krish-clone, content-watcher and filearchives read the same
+file. Shape: `{"schema_version": 1, "written_at", "written_by": "library-sync", "folders": [{"name", "id", "state",
+"path", "drive_path", "reason"}]}`; a reader takes only `state: "found"`, whose `path` is a folder that is there on
+that computer (`not_on_this_machine`, `gone` and `unknown` are reported, never used). The file is written only from an
+engine answer, so a pass that could not ask keeps the last good one. `runtime.*` stays the fallback.
+
 ## The brand kit (Krish, 2026-11-11)
 
 Krish: "We need a canonical Brand Kit for maximum consistency. Then ... the engine needs to know where to go to get whatever it needs at any time."
