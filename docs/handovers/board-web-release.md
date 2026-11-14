@@ -21,7 +21,7 @@ paid fact checks, or new editorial decisions.
 
 ## Exact release targets and order
 
-1. Applied the additive board migration to Supabase `gojpffsrxybbpbdzzrvs`
+1. Applied the additive board migration to Supabase `<project-ref>`
    (Mindmaker OS). All seven tables have RLS; anon and general authenticated
    roles have no table reads; server service-role access is enabled.
 2. Content Engine PR104 merged as `c34fdd5422f8aec678d8f2ad2784fa65074bb7da`.
