@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-09","week_target":8,"current":3,"current_as_of":"2026-11-12","current_source":"Control Center content_ideas in the publication's series (3 published in the last 7 days)","urgency":4,"urgency_reason":"at 38% of this week's target"} --> **North Star number: U4, far behind.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 3, against 8 this week, on the way to 30 by 30 November 2026. A bold swing every day; work that does not move the number waits.
 
+- docs/AGENTS-REFERENCE.md no longer describes the retired publish boards as rules (rule 02's fixed-layout paragraph and rule 03's 11 Nov amendment moved verbatim to docs/history/2026-11-14-agents-reference-retired-boards.md), and docs/COST_GUARDS.md lists the three scheduled Claude jobs as the workflows define them (Sunday ideas, Engine learning weekly, the docs steward) instead of one. (2026-11-14)
 - Every subscribe link the publish kit writes is built from Growth's subscribe route, vendored with its sha256 (vendor/makeyourmindup/subscribe-route.json): four tags on a post (utm_campaign=growth), utm_content = content_of(<board item id>-<channel>), and a piece's own board item id for one cut is <piece_id>-<cut> (long, short or feature), so Control Center binds a sent post to its item exactly (I-09). (2026-11-14)
 - GET /api/library/find (engine key or Krish's cookie) answers lane B's contract: by library and sha256, or under a path prefix of one type, each ready file's library, path, storage key, sha256, bytes, type, role and approved, at most 50, never a URL, so Control Center's make_send_link links a library file in place (I-07). (2026-11-14)
 - The dead Apollo enrichment is gone from the engine (apps/control-plane/api/_enrich.ts apolloPerson and researchBrief's Apollo path, its .env.example line and a comment in _quota.ts): Apollo is a retired route. A person's research brief now takes its structured facts from People Data Labs alone, then the web research, as before. (2026-11-14)
@@ -51,7 +52,7 @@ Older lines: `docs/history/2026-11-14-NOW-moved-11.md` (it names every earlier m
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-14): Growth adds linkedin and spotify to the route's sources, or says the kit should stop tagging them; today they pass their channel name as utm_source.
+- Next (2026-11-14): when a workflow that runs Claude Code gains or loses a schedule, change the COST_GUARDS.md table in the same pull request.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Wed 11 (2026-11-11): approved in Krish's own words (picks/yes-wed-words); the board reads it as ready to post, both cuts and the pack in its 3 Posts folder.
 - Eye contact (2026-11-09): Wednesday runs `ve eyeline` per take (each has its own Maxine copy); visible contact needs the recording fix in EYE_CONTACT.md.
