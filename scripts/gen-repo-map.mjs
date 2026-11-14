@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Writes docs/REPO_MAP.md: the directories, the exported signatures of every TypeScript module (no bodies), the
 // content engine's routes and the Studio's stations. A session reads this map instead of opening files to find
-// where something lives. It reads committed (indexed) files only, so files a run leaves behind never change it. `--check` fails when the committed map is stale; `npm run verify` runs it.
+// where something lives. It reads committed (indexed) files only, so files a run leaves behind never change it. `--check` fails when the committed map is stale; `npm run verify` runs it. On a pull request in CI a stale map is a warning, and auto-merge.yml regenerates it on main after the merge.
 //
 // Usage: node scripts/gen-repo-map.mjs [--check]
 import { execFileSync } from 'node:child_process'
@@ -157,7 +157,15 @@ if (process.argv.includes('--check')) {
     const was = current.split('\n')
     const now = next.split('\n')
     const at = now.findIndex((line, i) => line !== was[i])
-    process.stderr.write(`docs/REPO_MAP.md is stale: run \`npm run repo-map\` and commit it (first difference, line ${at + 1}: committed ${JSON.stringify(was[at] ?? '')}, now ${JSON.stringify(now[at] ?? '')})\n`)
+    const where = `first difference, line ${at + 1}: committed ${JSON.stringify(was[at] ?? '')}, now ${JSON.stringify(now[at] ?? '')}`
+    // On a pull request in CI the map is only a map: two pull requests that each regenerate it make each other stale,
+    // and failing them for that is what had sessions merging around red CI (14 Nov, #650 and #604). auto-merge.yml
+    // regenerates it on main right after every merge, so a pull request is warned, never failed, for a stale map.
+    if (process.env.GITHUB_EVENT_NAME === 'pull_request') {
+      process.stdout.write(`::warning::docs/REPO_MAP.md is stale on this pull request (${where}); auto-merge regenerates it on main after the merge.\n`)
+      process.exit(0)
+    }
+    process.stderr.write(`docs/REPO_MAP.md is stale: run \`npm run repo-map\` and commit it (${where})\n`)
     process.exit(1)
   }
   process.stdout.write('docs/REPO_MAP.md is current\n')
