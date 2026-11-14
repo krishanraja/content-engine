@@ -106,7 +106,11 @@ def measure(image, lock, *, exempt=(), caption_words=None, ocr_words=None) -> di
         solid = float(word['conf']) >= 75 and sum(c.isalnum() for c in word['text']) >= 3
         if h < minimum and solid and not _inside(x + w / 2, y + h / 2, zones['marquee']):
             small.append(word)
+        # A word that starts above the caption zone's top edge is the last line of the card above it, not a stray
+        # caption-zone word: his approved calibration frames H-f1, H-f2 and P-f5 each end a card 7 to 18 px into the
+        # zone, and only real OCR (never run in CI before 14 Nov) saw them.
         if ((solid or float(word['conf']) >= 90) and _inside(x + w / 2, y + h / 2, zones['caption'])
+                and y >= zones['caption']['y']
                 and not {qc_captions.fold(t) for t in qc_captions._tokens(word['text'])}.issubset({qc_captions.fold(a) for a in allowed})
                 and not _fused(word['text'], allowed) and not _fragment(word['text'], allowed)):
             caption.append(word)

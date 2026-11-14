@@ -14,6 +14,8 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 sys.path.insert(0, str(ROOT / 'scripts' / 'quick-edit'))
 sys.path.insert(0, str(ROOT / 'scripts'))
 import channel_safe  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ocr_guard import real_ocr  # noqa: E402
 
 
 class Zones(unittest.TestCase):
@@ -107,7 +109,7 @@ class Frames(unittest.TestCase):
             self.assertIsNone(result['pass'])
             self.assertEqual(result['status'], 'not_run')
 
-    @unittest.skipUnless(shutil.which('tesseract'), 'tesseract is not installed here')
+    @real_ocr
     def test_real_ocr_finds_a_headline_under_the_top_bar(self):
         with tempfile.TemporaryDirectory() as temp:
             png = Path(temp) / 'frame.png'
@@ -116,10 +118,6 @@ class Frames(unittest.TestCase):
                             '-frames:v', '1', str(png)], check=True)
             result = channel_safe.frame_violations(png)
             self.assertFalse(result['pass'], result)
-
-
-if __name__ == '__main__':
-    unittest.main()
 
 
 class InstagramProfile(unittest.TestCase):
@@ -156,3 +154,7 @@ class InstagramProfile(unittest.TestCase):
         kept = 1920 - sum(z['box'][3] for z in crop)
         self.assertEqual(kept * 3, 1080 * 4)
         self.assertNotIn('instagram_grid', channel_safe.load()['shapes']['tall'])
+
+
+if __name__ == '__main__':
+    unittest.main()

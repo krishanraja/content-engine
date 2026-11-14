@@ -19,6 +19,8 @@ sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from velib import qc, qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_opening  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ocr_guard import real_ocr  # noqa: E402
 import ve  # noqa: E402
 import numpy as np  # noqa: E402
 
@@ -215,7 +217,7 @@ class QCModules(unittest.TestCase):
 
 
 class QCContracts(unittest.TestCase):
-    @unittest.skipIf(shutil.which('tesseract') is None, 'tesseract is not on PATH')
+    @real_ocr
     def test_real_highlighted_caption_crops(self):
         folder = ROOT / 'fixtures/ve/my-test-19s/ocr'
         for case in json.loads((folder / 'cases.json').read_text()):
