@@ -33,9 +33,21 @@ class Judge(unittest.TestCase):
 
     def test_too_short_other_venture_secret_and_build_files(self):
         self.assertFalse(rr.judge('research.md', 'short', True)[0])
-        self.assertIn('another venture', rr.judge('research.md', 'Heartside notes ' + 'y' * 900, False)[1])
+        self.assertIn('one other venture', rr.judge('research.md', 'Plain notes ' + 'y' * 900, False)[1])
         self.assertIn('key or a password', rr.judge('research.md', DOSSIER + 'api_key = "abcdefghijklmnopqrstuvwxyz123456"\n', True)[1])
         self.assertFalse(rr.judge('node_modules/x/research.md', DOSSIER, True)[0])
+
+    def test_another_ventures_research_goes_on_its_shelf(self):
+        # I-30 (Ruling, Krish, 2026-11-14): one other venture named, filed on its own shelf; none or two, listed as no.
+        self.assertEqual(rr.judge('research.md', 'Heartside notes ' + 'y' * 900, False), (True, 'research by name, for heartside'))
+        self.assertEqual(rr.venture_of('growth-mindmake/.scratch/research.md', 'y' * 900), 'mindmake')
+        self.assertIsNone(rr.venture_of('research.md', 'Heartside and Mindmake ' + 'y' * 900))
+        self.assertIsNone(rr.venture_of('research.md', 'mindmake-studio notes'))
+        self.assertIn('one other venture', rr.judge('research.md', 'Heartside and Mindmake ' + 'y' * 900, False)[1])
+        self.assertIn('email address or a phone number',
+                      rr.judge('research.md', 'Heartside notes, ask someone@example.com ' + 'y' * 900, False)[1])
+        self.assertIn('email address or a phone number',
+                      rr.judge('research.md', 'Heartside notes, call +44 20 7946 0958 ' + 'y' * 900, False)[1])
 
     def test_a_script_draft_is_not_research(self):
         self.assertFalse(rr.judge('wed-long-script.md', 'Make Your Mind Up\n' + 'words ' * 300, True)[0])
@@ -134,12 +146,13 @@ class Transcripts(unittest.TestCase):
             rows = list(csv.DictReader(fh, delimiter='\t'))
         yes = [r for r in rows if r['file'] == 'yes']
         self.assertEqual(sorted(r['sha256'] for r in yes),
-                         sorted(hashlib.sha256(t.encode()).hexdigest() for t in (DOSSIER, DOSSIER * 3)))
+                         sorted(hashlib.sha256(t.encode()).hexdigest() for t in (DOSSIER, DOSSIER * 3, 'Heartside research ' + 'z' * 900)))
         # The Write, the heredoc and the scratch copy are the same bytes: one line, on the piece its session named.
         line = next(r for r in yes if r['sha256'] == hashlib.sha256(DOSSIER.encode()).hexdigest())
         self.assertEqual(line['scope'], PIECE)
         self.assertIn('also found 2 more', line['why'])
-        self.assertIn('another venture', next(r['why'] for r in rows if r['title'] == 'other-research.md'))
+        other = next(r for r in rows if r['title'] == 'other-research.md')
+        self.assertEqual((other['file'], other['scope']), ('yes', 'venture:heartside'))
 
         calls = []
 
@@ -155,10 +168,16 @@ class Transcripts(unittest.TestCase):
                 self.assertEqual(rr.main(['file'] + args), 0)  # a second run sends nothing again
         finally:
             board_session.call = real
-        self.assertEqual(len(calls), 2)
+        self.assertEqual(len(calls), 3)
+        shelf = [b for _, _, b in calls if 'venture' in b]
+        self.assertEqual(len(shelf), 1)
+        self.assertEqual(shelf[0]['venture'], 'heartside')
+        self.assertFalse({'piece_id', 'week', 'day'} & set(shelf[0]))
         for method, path, body in calls:
             self.assertEqual((method, path), ('POST', '/api/content-ideas/store?op=text'))
-            self.assertEqual((body['kind'], body['source'], body.get('piece_id')), ('research', 'backfill', PIECE))
+            self.assertEqual((body['kind'], body['source']), ('research', 'backfill'))
+            if 'venture' not in body:
+                self.assertEqual(body.get('piece_id'), PIECE)
             self.assertTrue(body['material_key'].startswith('local:'))
             self.assertIn('Recovered by scripts/recover_research.py', body['note'])
 

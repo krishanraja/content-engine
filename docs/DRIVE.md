@@ -141,6 +141,14 @@ research. It is a mirror, never a second record: the record is the engine's piec
 and never deletes one. Research is not brand, so it never goes in `1 Brand kit (permanent)`; it is not ready to post,
 so it never goes in `3 Posts`.
 
+**Other ventures' shelves (I-30; Ruling, Krish, 2026-11-14).** Research another venture paid for (Mindmake, Heartside,
+Legibility, Full Time and the rest of `venture_registry`'s active slugs) goes in the same store on that venture's own
+shelf, scope `venture:<slug>` (`add_piece_material` or `POST /api/content-ideas/store?op=text` with `venture`). It is
+never copied into this library: the mirror keeps to Make Your Mind Up and skips every `venture:` scope. The door refuses
+`publication` (its research sits on its pieces and days), an unknown or inactive slug, and a text holding a key, an email
+address or a phone number. `scripts/recover_research.py` files a recovered document naming exactly one other venture on
+its shelf.
+
 | Inside the library | Found by | What it holds |
 |---|---|---|
 | `00 Index`, a Google Sheet | its ID, `1UejePwOc_6abqX1A3TrKXDZxej4C1OOvwVM3K3C29lo` | One row per document copied in: week, day, piece, series, kind, title, date added, Drive link, sha256, version, who added it, piece id and material id. One row per material: the sweep adds a row for each new copy and removes any later row for a material already listed. |

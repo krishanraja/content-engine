@@ -12,6 +12,9 @@ import { StoreError, addText, archive, confirmFile, listing, parseScope, readMat
 //   GET  /api/content-ideas/store?op=read&id=<material id>     a text as JSON; a file or link redirects (add &link=1 for JSON)
 //   POST /api/content-ideas/store?op=text   { piece_id | week+day, content, title?, kind?, role?, note?, session_id?, material_key?, base_version? }
 //   POST /api/content-ideas/store?op=link   { piece_id | week+day, url, title?, ... }
+//   POST op=text or op=link with { venture: <slug> } in place of a piece or a day: another venture's research shelf
+//        (I-30), store only, never copied to the Drive library; refused for publication, an unknown or inactive slug, and
+//        a text holding a key, an email address or a phone number (api/_pieceStore.ts, shelfRefusal)
 //   POST /api/content-ideas/store?op=upload-url  { piece_id | week+day, name, sha256, bytes }   then PUT the bytes, then:
 //   POST /api/content-ideas/store?op=confirm     { the same, title?, kind?, role?, note?, session_id?, material_key? }
 //   POST /api/content-ideas/store?op=archive     { id, reason? }   archived, never deleted
