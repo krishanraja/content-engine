@@ -1486,6 +1486,9 @@ The one Anthropic price table.
 - `function perplexityUsd(model: string, usage: unknown): number`
 - `const ANTHROPIC_WEB_SEARCH_USD`
 - `const OPENAI_EMBEDDING_PRICES: Record<string, number>`
+- `interface ProviderPrice`
+- `const PROVIDER_PRICES: Record<string, Record<string, ProviderPrice>>`
+- `function providerPrice(provider: string, model: string, day?: string): { in: number; out: number; search: number } | nu…`
 
 ### `apps/control-plane/api/_productionBrief.ts`
 

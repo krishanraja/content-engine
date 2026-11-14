@@ -184,3 +184,34 @@ export const OPENAI_EMBEDDING_PRICES: Record<string, number> = {
   'text-embedding-3-small': 0.02,
   'text-embedding-3-large': 0.13,
 }
+
+/**
+ * The other providers AEO's research run asks (POST /api/aeo/meter), USD per 1M tokens and per search call, each from
+ * the provider's own published price page, read 14 Nov 2026. Matched by the EXACT model id, never a prefix: "grok-4"
+ * as a prefix would price grok-4.7 at grok-4's rate. A rate with `until` holds through that day (UTC) and `then` after
+ * it. An id not here stays unpriced (`unpriced-model`), visibly a gap.
+ *
+ *   gpt-5             developers.openai.com/api/docs/pricing: $1.25 in, $10.00 out; "Web search preview (reasoning
+ *                     models)" $10.00 / 1k calls, its content tokens billed at model rates (already in the tokens).
+ *   gemini-3.6-flash  aistudio.google.com/docs/pricing (paid tier): $0.75 in, $3.75 out through 31 Dec 2026, then
+ *                     $1.50 and $7.50; Grounding with Google Search $14 / 1k requests after 5,000 free a month shared
+ *                     across Gemini 3 models. The meter cannot see that allowance, so every search is priced: an upper
+ *                     bound, never an undercount.
+ *   grok-4            docs.x.ai/developers/migration/may-15-retirement: grok-4-0709 is retired and served by grok-4.3,
+ *                     "billed at grok-4.3 pricing of $1.25 per 1M input tokens and $2.50 per 1M output tokens";
+ *                     docs.x.ai/developers/pricing: grok-4.3 the same, Web Search $5 / 1k calls.
+ */
+export interface ProviderPrice { in: number; out: number; search: number; until?: string; then?: { in: number; out: number; search: number } }
+export const PROVIDER_PRICES: Record<string, Record<string, ProviderPrice>> = {
+  openai: { 'gpt-5': { in: 1.25, out: 10, search: 0.01 } },
+  google: { 'gemini-3.6-flash': { in: 0.75, out: 3.75, search: 0.014, until: '2026-12-31', then: { in: 1.5, out: 7.5, search: 0.014 } } },
+  xai: { 'grok-4': { in: 1.25, out: 2.5, search: 0.005 }, 'grok-4.3': { in: 1.25, out: 2.5, search: 0.005 } },
+}
+
+/** The provider's published rate for a model on a day (YYYY-MM-DD, default today UTC), or null when there is none. */
+export function providerPrice(provider: string, model: string, day?: string): { in: number; out: number; search: number } | null {
+  const p = PROVIDER_PRICES[provider]?.[model]
+  if (!p) return null
+  const on = day && /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : new Date().toISOString().slice(0, 10)
+  return p.until && p.then && on > p.until ? p.then : { in: p.in, out: p.out, search: p.search }
+}
