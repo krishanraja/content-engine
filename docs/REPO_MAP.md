@@ -145,6 +145,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/learning/spoken-rules`
 - `/api/library/confirm`
 - `/api/library/file`
+- `/api/library/find`
 - `/api/library/pending`
 - `/api/library/recordings/confirm`
 - `/api/library/recordings/drive-inbox`
@@ -3482,6 +3483,13 @@ Takes place themselves (Wave 2, W2.3): once the Inbox job has copied a take
 
 ### `apps/control-plane/api/library/file.ts`
 
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/library/find.ts`
+
+- `const FIND_MAX`
+- `type FindQuery`
+- `function parseFindQuery(query: unknown): FindQuery | null`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/library/pending.ts`
