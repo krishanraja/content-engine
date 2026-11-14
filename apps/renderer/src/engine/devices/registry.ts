@@ -1,3 +1,4 @@
+import { Device as Checklist } from './checklist'
 import { Device as LivingScreen } from './living_screen'
 import { Device as LadderStage } from './ladder_stage'
 import { Device as QuotaChart } from './quota_chart'
@@ -32,6 +33,7 @@ import { Device as QuoteCard } from './quote_card'
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
+  checklist: Checklist,
   living_screen: LivingScreen,
   ladder_stage: LadderStage,
   quota_chart: QuotaChart,
