@@ -18,6 +18,7 @@ import { Device as HandPhoneStage } from './hand_phone_stage'
 import { Device as SlamWord } from './slam_word'
 import { Device as UnitField } from './unit_field'
 import { Device as VideoWall } from './video_wall'
+import { Device as ThroughLine } from './through_line'
 import type { DeviceRegistry } from './types'
 import { TestGrid } from './test_grid'
 import { Device as RecordCard } from './record_card'
@@ -45,6 +46,7 @@ export const DEVICES: DeviceRegistry = {
   slam_word: SlamWord,
   takeover: Takeover,
   video_wall: VideoWall,
+  through_line: ThroughLine,
   living_screen: LivingScreen,
   ladder_stage: LadderStage,
   quota_chart: QuotaChart,
