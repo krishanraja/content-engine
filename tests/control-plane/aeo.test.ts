@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'vitest'
 import {
-  EDITORIAL_AEO_SUBJECTS, MAX_IDEAS_PER_SUBJECT, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef,
-  isEditorialAeoSubject, probeRows, queryRows, validatePacket,
+  EDITORIAL_AEO_SUBJECTS, KRISH_DOMAINS, MAX_IDEAS_PER_SUBJECT, NOT_OURS, PACKET_FEATURES, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef,
+  brandChecksOf, brandNamesOf, heldProducts, isEditorialAeoSubject, probeRows, queryRows, validatePacket,
   type AeoPacket,
 } from '../../apps/control-plane/api/_aeo.ts'
 import { CONTENT_ENGINE_JOBS, contentEngineAttention } from '../../apps/control-plane/lib/contentEngineSchedule.ts'
@@ -205,4 +205,36 @@ test('what not to chase must point at questions the packet actually probed', () 
     not_worth_chasing: Array.from({ length: 7 }, () => ({ query_id: Q2, query: 'x', owned_by: [], why_not: 'y' })),
   }))
   assert.equal(tooMany.ok, false)
+})
+
+// AEO-Engine's brief (docs/briefs/2026-11-13-aeo-specialist.md), sections B and C:
+// what the context tells the engine about Krish and each subject.
+
+test("Krish's own sites are his, and fractionl.us is never ours (Ruling, Krish, 2026-11-13)", () => {
+  for (const d of ['krishraja.ai', 'krishraja.com', 'themindmaker.ai', 'mindmake.co']) assert.ok(KRISH_DOMAINS.includes(d), d)
+  assert.deepEqual([...NOT_OURS], ['fractionl.us'])
+  assert.ok(!KRISH_DOMAINS.some(d => NOT_OURS.includes(d)))
+})
+
+test('no optional packet field is listed until the ingest stores it', () => {
+  assert.deepEqual([...PACKET_FEATURES], [])
+})
+
+test('brand names and brand checks are read loosely and capped; a check with nothing to test is dropped', () => {
+  assert.deepEqual(brandNamesOf(['Heartside', '', 3, '  Mindmake  ']), ['Heartside', 'Mindmake'])
+  assert.deepEqual(brandNamesOf(null), [])
+  assert.deepEqual(brandChecksOf([{ question: 'What is fulltime.fm?', must_not: ['betting tips'], must: [] }]), [{ question: 'What is fulltime.fm?', must_not: ['betting tips'], must: [] }])
+  assert.deepEqual(brandChecksOf([{ question: 'No phrases?', must_not: [], must: [] }, { must_not: ['x'] }, 'nope']), [])
+  const four = Array.from({ length: 4 }, (_, i) => ({ question: `Q${i}?`, must_not: ['x'], must: [] }))
+  assert.equal(brandChecksOf(four).length, 3)
+})
+
+test('a venture is held only when its own venture engine is held; the specialist and active engines are not', () => {
+  const held = heldProducts([
+    { product_slug: 'legibility', role: 'venture', activation_state: 'held' },
+    { product_slug: 'full-time', role: 'venture', activation_state: 'held' },
+    { product_slug: 'heartside', role: 'venture', activation_state: 'active' },
+    { product_slug: 'mindmake', role: 'specialist', activation_state: 'held' },
+  ])
+  assert.deepEqual([...held].sort(), ['full-time', 'legibility'])
 })
