@@ -25,7 +25,9 @@ What counts as research: a text file (.md .txt .json .csv .html) of at least 800
 (research, sources, corpus, dossier, fact check or ledger, deep dive, evidence, findings, notes, interview, teardown,
 claims, citations, investigation, lock questions), or a write-up (.md .txt .html) citing at least five web pages. It must belong
 to Make Your Mind Up: from a Make Your Mind Up repository or session, or naming the show or one of its three series.
-Anything that looks like it holds a key or a password is listed and never filed.
+Research that names exactly one other venture (Mindmake, Heartside, Legibility, Full Time) goes on that venture's own
+shelf, venture:<slug>, never on a piece and never into the Drive library; one holding an email address or a phone number
+is listed and never filed there. Anything that looks like it holds a key or a password is listed and never filed.
 
 The list is .scratch/research-recovery/found.tsv (in this checkout; .scratch is never committed). Each line says where
 the document came from, what it is, where it will be filed and why, with `yes` or `no` in the first column. Change a
@@ -77,6 +79,18 @@ SECRET = re.compile(r'sk-ant-[\w-]{20,}|sk-[A-Za-z0-9]{32,}|gh[pousr]_[A-Za-z0-9
                     r'|xox[abpr]-[\w-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY|eyJ[\w-]{20,}\.eyJ[\w-]{20,}\.[\w-]{20,}'
                     r'|AIza[0-9A-Za-z_-]{35}|(?i:password|secret|api[_-]?key|token)\s*[:=]\s*["\']?[^\s"\']{16,}')
 URL = re.compile(r'https?://[^\s)\]>"\']+')
+# Another venture's research goes on its own shelf, venture:<slug> (I-30; Ruling, Krish, 2026-11-14). Only a document
+# that names exactly one of these (by its own words or the checkout it came from) is filed there; one naming none, or
+# several, is listed as no. A shelf never takes an email address or a phone number (the store's door refuses them too).
+VENTURES = {
+    'mindmake': re.compile(r'growth-mindmake|\bmindmake\b(?![-_.]?studio)|mindmake\.co\b', re.I),
+    'heartside': re.compile(r'\bheartside\b', re.I),
+    'legibility': re.compile(r'growth-legibility', re.I),
+    'full_time': re.compile(r'growth-fulltime', re.I),
+}
+CONTACT = re.compile(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}'
+                     r'|(?:^|[^\w+])\+\d{1,3}[\s.-]?\(?\d{1,4}\)?(?:[\s.-]?\d{2,4}){2,4}(?!\d)'
+                     r'|\(\d{3}\)\s?\d{3}[\s.-]\d{4}(?!\d)|(?<![\d.-])\d{3}[.-]\d{3}[.-]\d{4}(?![\d.-])')
 PIECE_LINE = re.compile(r'piece_id:\s*([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})', re.I)
 DATE = re.compile(r'(20\d\d)-(\d\d)-(\d\d)')
 HEREDOC = re.compile(r"cat\s+>\s*(['\"]?)([^\s'\"<>|;&]+)\1\s*<<-?\s*['\"]?([A-Za-z_]\w*)['\"]?\s*\n(.*?)\n\3\s*(?:\n|$)", re.S)
@@ -104,9 +118,21 @@ def judge(name: str, text: str, ours_hint: bool) -> tuple[bool, str]:
     cites = len(set(URL.findall(text))) if base.suffix.lower() in PROSE_SUFFIXES else 0
     if not (named or cites >= 5):
         return False, f'does not look like research (name, {cites} web pages cited)'
+    why = 'research by name' if named else f'cites {cites} web pages'
     if not (ours_hint or OURS.search(name) or OURS.search(text[:20000])):
-        return False, 'not clearly Make Your Mind Up (another venture?)'
-    return True, ('research by name' if named else f'cites {cites} web pages')
+        venture = venture_of(name, text)
+        if not venture:
+            return False, 'not clearly Make Your Mind Up or one other venture'
+        if CONTACT.search(text):
+            return False, f'{venture} research holding an email address or a phone number; a shelf never takes them'
+        return True, f'{why}, for {venture}'
+    return True, why
+
+
+def venture_of(name: str, text: str) -> str | None:
+    """The one other venture a document belongs to, or None when it names none or several."""
+    hits = [v for v, r in VENTURES.items() if r.search(name) or r.search(text[:20000])]
+    return hits[0] if len(hits) == 1 else None
 
 
 def place(name: str, text: str, written: str, session_piece: str | None) -> str:
@@ -376,8 +402,10 @@ def find(args) -> int:
         for d in stream:
             ok, why = judge(d['name'], d['text'], d['ours'])
             sha = hashlib.sha256(d['text'].encode('utf-8')).hexdigest()
+            venture = None if (not ok or d['ours'] or OURS.search(d['name']) or OURS.search(d['text'][:20000])) \
+                else venture_of(d['name'], d['text'])
             try:
-                scope = place(d['name'], d['text'], d['written'] or iso(0), d['piece']) if ok else ''
+                scope = (f'venture:{venture}' if venture else place(d['name'], d['text'], d['written'] or iso(0), d['piece'])) if ok else ''
             except ValueError:
                 ok, why, scope = False, 'no date to file it under; file it by hand', ''
             found.append({'file': 'yes' if ok else 'no', 'why': why, 'scope': scope,
@@ -385,7 +413,7 @@ def find(args) -> int:
                           'written': d['written'], 'origin': d['origin'], 'where': d['where'], 'text': d['text']})
     # One line per exact text. Of the places it was found, the line keeps the one to file (yes over no), then the one
     # that names its piece, then the earliest; the rest are counted in its why.
-    best = lambda f: (f['file'] != 'yes', f['scope'].startswith('day:') or not f['scope'], f['written'])
+    best = lambda f: (f['file'] != 'yes', f['scope'].startswith(('day:', 'venture:')) or not f['scope'], f['written'])
     by_sha: dict[str, dict] = {}
     for f in sorted(found, key=best):
         first = by_sha.get(f['sha256'])
@@ -410,7 +438,9 @@ def find(args) -> int:
     yes = sum(1 for r in rows if r['file'] == 'yes')
     print(f"Looked in {len(roots)} scratch folder(s), the git checkouts beside this one and the Claude Code and Codex "
           f"transcripts in {home}.")
-    print(f"Found {len(rows)} distinct documents; {yes} look like Make Your Mind Up research and are marked yes.")
+    shelf = sum(1 for r in rows if r['file'] == 'yes' and r['scope'].startswith('venture:'))
+    print(f"Found {len(rows)} distinct documents; {yes} look like research and are marked yes "
+          f"({yes - shelf} Make Your Mind Up, {shelf} for another venture's shelf).")
     print(f"The list: {out / 'found.tsv'}. Change yes or no in its first column, then run: "
           f"python scripts/recover_research.py file")
     return 0
@@ -451,8 +481,12 @@ def file_all(args) -> int:
                 ledger.write(json.dumps({'ok': False, 'sha256': row['sha256'], 'why': 'saved text missing or changed'}) + '\n')
                 continue
             scope = row['scope']
-            target = {'piece_id': scope} if not scope.startswith('day:') else dict(
-                zip(('week', 'day'), scope[4:].split('/', 1)))
+            if scope.startswith('venture:'):
+                target = {'venture': scope[len('venture:'):]}
+            elif scope.startswith('day:'):
+                target = dict(zip(('week', 'day'), scope[4:].split('/', 1)))
+            else:
+                target = {'piece_id': scope}
             if target.get('day') == 'week':
                 target.pop('day')
             body = {**target, 'content': text, 'title': title_of(row['title'], row['written']), 'kind': 'research',

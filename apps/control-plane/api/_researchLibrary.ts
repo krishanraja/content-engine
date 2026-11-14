@@ -197,8 +197,10 @@ const dayLabel = (date: string) => { const d = new Date(`${date}T00:00:00Z`); re
 const isDate = (s: unknown): s is string => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}/.test(s) && !isNaN(+new Date(`${s.slice(0, 10)}T00:00:00Z`))
 
 /** Is this material research the library keeps a copy of? */
-export function inLibrary(m: Pick<StoredMaterial, 'kind' | 'role' | 'storage' | 'archived_at' | 'bytes'>): boolean {
+export function inLibrary(m: Pick<StoredMaterial, 'kind' | 'role' | 'storage' | 'archived_at' | 'bytes'> & { scope?: string | null }): boolean {
   if (m.archived_at) return false
+  // Another venture's shelf (I-30) never reaches Make Your Mind Up's Drive library.
+  if (typeof m.scope === 'string' && m.scope.startsWith('venture:')) return false
   if (m.storage !== 'text' && m.storage !== 'bucket') return false
   if (!(Number(m.bytes) >= 0) || Number(m.bytes) > MIRROR_FILE_MAX) return false
   return (LIBRARY_KINDS as readonly string[]).includes(m.kind) || (LIBRARY_ROLES as readonly string[]).includes(String(m.role || ''))

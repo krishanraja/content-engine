@@ -1458,6 +1458,9 @@ The YouTube title and description for a piece's video, and the title and
 - `function parseReport(body: Body): ReportInput`
 - `async function report(db: StoreDb, input: ReportInput, by: string): Promise<Body>`
 - `interface MaterialInput`
+- `const VENTURE_SLUG`
+- `function shelfRefusal(...texts: Array<string | null | undefined>): 'holds_a_secret' | 'holds_an_email_address' | 'holds…`
+- `function ventureOf(body: Body): string | null`
 - `async function addToWorkingSet(db: StoreDb, pieceId: string, material: Material, tries = 6): Promise<{ ok: true; materi…`
 - `async function removeFromWorkingSet(db: StoreDb, pieceId: string, materialId: string, tries = 6): Promise<{ ok: true; m…`
 - `async function patchMeta(db: StoreDb, pieceId: string, patch: (meta: Body) => Body, tries = 6): Promise<{ ok: true; met…`
@@ -1657,7 +1660,7 @@ _relevance — shared topic/vertical relevance classifier for triage clearing.
 - `interface LibrarySource`
 - `interface MirrorOptions`
 - `interface MirrorReport`
-- `function inLibrary(m: Pick<StoredMaterial, 'kind' | 'role' | 'storage' | 'archived_at' | 'bytes'>): boolean`
+- `function inLibrary(m: Pick<StoredMaterial, 'kind' | 'role' | 'storage' | 'archived_at' | 'bytes'> & { scope?: string | …`
 - `const isSource = (m: Pick<StoredMaterial, 'kind' | 'role'>) =>`
 - `interface Place`
 - `function placeOf(m: StoredMaterial, piece: PieceInfo | null): Place`
